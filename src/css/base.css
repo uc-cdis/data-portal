@@ -1,0 +1,45 @@
+* {
+    box-sizing: border-box;
+    padding: 0px;
+}
+body {
+    background-image: url('../img/bg.jpg');
+}
+.flat-form{
+    margin:auto;
+    display: block;
+    margin-top: 200px;
+    width:500px;
+    background: #9aa5d8;
+    padding: 30px;
+}
+small {
+    color: white;
+    padding: 0;
+    display: block;
+}
+.logo-wrapper {
+    margin-bottom: 20px;
+}
+.logo-wrapper p {
+    display: inline;
+    font-size: 25px;
+    color: white;
+}
+.error.btn:hover {
+    background-color: #f1c40f;
+    cursor: auto;
+
+}
+ul {
+    list-style-type: none;
+}
+
+.button-inline {
+    background-color: #34ADDB;
+    padding: 5px 10px;
+}
+.right {
+    display: inline-block;
+    float:right;
+}
