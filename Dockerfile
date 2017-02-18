@@ -17,7 +17,7 @@ RUN apt-get -y install curl && \
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 RUN apt-get install -y npm
 RUN npm install webpack -g
-WORKDIR /data-portal
 COPY . /data-portal
+WORKDIR /data-portal
 RUN npm install
 RUN NODE_ENV=production webpack
