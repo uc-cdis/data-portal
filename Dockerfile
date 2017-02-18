@@ -19,4 +19,5 @@ RUN apt-get install -y npm
 RUN npm install webpack -g
 WORKDIR /data-portal
 COPY . /data-portal
+RUN npm install
 RUN NODE_ENV=production webpack
