@@ -24,3 +24,12 @@ export const button = css`
   font-size: 1em;
   margin-right: 1em;
 `;
+
+export const cube = css`
+  padding: 10px 20px;
+  display: inline-block;
+  &:hover,
+  &:focus,
+  &:active {
+    color: white;
+`;
