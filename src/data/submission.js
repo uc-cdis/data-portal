@@ -30,7 +30,7 @@ const SubmissionComponent = ( {submission} ) => {
       <ul>
         {submission.projects &&
           <div>
-            {submission.projects.map((project) => {console.log(project); return <div><ProjectLink to={'/'+project} key={project}>{project}</ProjectLink></div>})}
+           {submission.projects.map((project) => {console.log(project); return <span><ProjectLink to={'/'+project} key={project}>{project}</ProjectLink></span>})}
           </div>
         }
       </ul>
