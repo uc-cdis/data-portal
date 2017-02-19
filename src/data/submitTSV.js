@@ -8,13 +8,28 @@ import { button } from '../theme'
 const SubmitButton = styled.label`
   border: 1px solid darkgreen;
   color: darkgreen;
+  &:hover,
+  &:active,
+  &:focus {
+    color: #2e842e;
+    border-color: #2e842e;
+
+  }
   ${button};
 `;
 
 const UploadButton = styled.a`
-  border: 1px solid tomato;
-  color: tomato;
+  border: 1px solid ${props => props.theme.color_primary};
+  color: ${props => props.theme.color_primary};
   ${button};
+  &:hover,
+  &:active,
+  &:focus {
+    color: #c16161;
+    border-color: #c16161;
+
+  }
+
 `;
 
 const SubmissionResult = styled.div`
