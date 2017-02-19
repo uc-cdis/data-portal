@@ -24,7 +24,7 @@ const SubmissionResult = styled.div`
 `;
 const Status = styled.div`
   ${button};
-  background-color: ${props => (props.status == 'succeed') ? 'darkgreen' : 'gray'};
+  background-color: ${props => (props.status == 'succeed: 200') ? 'darkgreen' : 'gray'};
   color: white;
   margin-bottom: 1em;
 `;
