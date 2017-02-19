@@ -9,7 +9,7 @@ import { Link } from 'react-router';
 const ProjectSubmission = (props) => (
   <div>
     <Nav />
-    <h2>{props.params.project}</h2>
+    <h2>{props.params.project=='graphql' ? 'Query graph': props.params.project}</h2>
     <SubmitTSV />
   </div>
 )

@@ -2,7 +2,6 @@ import { fetchWrapper } from './actions'
 import { submissionapi_path } from '../localconf'
 
 export const fetchProjects = () => {
-
   return fetchWrapper({
     path: submissionapi_path + 'graphql',
     body: JSON.stringify({
@@ -30,4 +29,3 @@ export const receiveProjects = ({status, data}) => {
 
 
 }
-
