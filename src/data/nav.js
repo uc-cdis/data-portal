@@ -1,4 +1,5 @@
 import React from 'react';
+import { logoutAPI } from './actions';
 import { connect } from 'react-redux';
 import {basename, userapi_path} from '../localconf.js';
 import { Link } from 'react-router';
@@ -18,13 +19,13 @@ const Home = styled(Link)`
   }
 `
 
-const NavComponent = ({user}) => (
+const NavComponent = ({user, onLogoutClick}) => (
     <header>
       <Home className='fui-home' to='/'></Home>
       <nav className='nav'>
         <ul>
             <li className='logo'><a href='/'>{user.username}</a></li>
-            <li className='logout'><a href={ userapi_path+'/logout?next='+basename }>
+            <li className='logout'><a href='#' onClick={onLogoutClick}>
             <span className="fui-exit"></span>
               logout</a></li>
         </ul>
@@ -33,5 +34,8 @@ const NavComponent = ({user}) => (
 )
 const mapStateToProps = (state)=> {return {user: state.user}}
 
-const Nav = connect(mapStateToProps)(NavComponent)
+const mapDispatchToProps = (dispatch) => ({
+  onLogoutClick: ()=> dispatch(logoutAPI())
+})
+const Nav = connect(mapStateToProps, mapDispatchToProps)(NavComponent)
 export default Nav
