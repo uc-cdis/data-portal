@@ -1,5 +1,5 @@
 import React from 'react'
-import Nav from './Nav.js'
+import Nav from './nav.js'
 // import '../css/base.less'
 
 const App = () => (

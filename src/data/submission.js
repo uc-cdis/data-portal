@@ -9,6 +9,10 @@ const ProjectLink = styled(Link)`
   li;
   background: ${props => props.theme.color_tertiary};
   padding: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  margin-bottom: 1em;
+  margin-right: 1em; 
   color: white;
   &:hover,
   &:focus,
@@ -25,7 +29,11 @@ const SubmissionComponent = ( {submission} ) => {
       <Nav />
       <h3>Submission projects</h3>
       <ul>
-        {submission.projects.map((project) => {console.log(project); return <ProjectLink to={'/'+project} key={project}>{project}</ProjectLink>})}
+        {submission.projects &&
+          <div>
+          {submission.projects.map((project) => {console.log(project); return <ProjectLink to={'/'+project} key={project}>{project}</ProjectLink>})}
+          </div>
+        }
       </ul>
   </div>
   )

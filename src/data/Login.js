@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 const Login = () => (
   <section>
-    <p className='article'> Object storage for Bionimbus users </p>
+    <p className='article'>BPA Submission Portal</p>
     <a className="btn btn-primary navbar-btn btn-sm login-button" href={userapi_path + 'login/google' + '?redirect=' + location.origin + basename}> Login from Google </a>
   </section>
 )
