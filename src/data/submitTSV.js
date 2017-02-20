@@ -70,7 +70,7 @@ const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick }) => {
      {submission.submit_result &&
       <SubmissionResult>
         <Status status={submission.submit_status}>{submission.submit_status}</Status>
-        <Highlight >{JSON.stringify(submission.submit_result, null, '\t')}</Highlight>
+        <Highlight >{JSON.stringify(submission.submit_result, null, '    ')}</Highlight>
       </SubmissionResult>
      }
     </form>
