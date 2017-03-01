@@ -14,35 +14,34 @@ export const receiveSubmit = ( { status, data}) => {
     case 200:
       return {
         type: 'RECEIVE_SUBMISSION',
-        submit_status: 'succeed',
-        data: data
-      }
-    case 400:
-      return {
-        type: 'RECEIVE_SUBMISSION',
-        submit_status: 'failed',
+        submit_status: 'succeed: ' + status,
         data: data
       }
     default:
       return {
-        type: 'FETCH_ERROR',
-        submit_status: 'failed',
-        error: data
+        type: 'RECEIVE_SUBMISSION',
+        submit_status: 'failed: ' + status,
+        data: data
       }
   }
 }
-export const submitToServer = () => {
-  let program = 'bpa';
-  let project = 'test'
+
+export const submitToServer = (method='PUT') => {
   return (dispatch, getState) => {
+    let path = getState().routing.locationBeforeTransitions.pathname.split("-");
+    let program = path[0];
+    let project = path.slice(1).join('-');
     let submission = getState().submission;
+    if (path == 'graphql'){
+      method = 'POST'
+    }
     if (!submission.file) {
       return Promise.reject("No file to submit")
     }
     return dispatch(
       fetchWrapper({
         path: submissionapi_path + program + '/' + project + '/',
-        method: 'PUT',
+        method: method,
         custom_headers: {'Content-Type': submission.file_type},
         body: submission.file,
         handler: receiveSubmit

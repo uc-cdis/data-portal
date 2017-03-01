@@ -8,13 +8,28 @@ import { button } from '../theme'
 const SubmitButton = styled.label`
   border: 1px solid darkgreen;
   color: darkgreen;
+  &:hover,
+  &:active,
+  &:focus {
+    color: #2e842e;
+    border-color: #2e842e;
+
+  }
   ${button};
 `;
 
 const UploadButton = styled.a`
-  border: 1px solid tomato;
-  color: tomato;
+  border: 1px solid ${props => props.theme.color_primary};
+  color: ${props => props.theme.color_primary};
   ${button};
+  &:hover,
+  &:active,
+  &:focus {
+    color: #c16161;
+    border-color: #c16161;
+
+  }
+
 `;
 
 const SubmissionResult = styled.div`
@@ -24,7 +39,7 @@ const SubmissionResult = styled.div`
 `;
 const Status = styled.div`
   ${button};
-  background-color: ${props => (props.status == 'succeed') ? 'darkgreen' : 'gray'};
+  background-color: ${props => (props.status == 'succeed: 200') ? 'darkgreen' : 'gray'};
   color: white;
   margin-bottom: 1em;
 `;
@@ -55,7 +70,7 @@ const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick }) => {
      {submission.submit_result &&
       <SubmissionResult>
         <Status status={submission.submit_status}>{submission.submit_status}</Status>
-        <Highlight >{JSON.stringify(submission.submit_result, null, '\t')}</Highlight>
+        <Highlight >{JSON.stringify(submission.submit_result, null, '    ')}</Highlight>
       </SubmissionResult>
      }
     </form>

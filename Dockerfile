@@ -17,6 +17,9 @@ RUN apt-get -y install curl && \
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 RUN apt-get install -y npm
 RUN npm install webpack -g
-WORKDIR /data-portal
 COPY . /data-portal
+WORKDIR /data-portal
+RUN npm install
 RUN NODE_ENV=production webpack
+RUN cp nginx.conf /etc/nginx/conf.d/nginx.conf
+CMD /usr/bin/nginx -g 'daemon off;'

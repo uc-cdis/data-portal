@@ -2,11 +2,10 @@ import { fetchWrapper } from './actions'
 import { submissionapi_path } from '../localconf'
 
 export const fetchProjects = () => {
-
   return fetchWrapper({
     path: submissionapi_path + 'graphql',
     body: JSON.stringify({
-      'query': "query Test { project {code, project_id}}"
+      'query': "query Test { project(first:100) {code, project_id}}"
     }),
     method: 'POST',
     handler: receiveProjects
@@ -30,4 +29,3 @@ export const receiveProjects = ({status, data}) => {
 
 
 }
-

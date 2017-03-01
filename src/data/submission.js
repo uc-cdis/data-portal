@@ -7,15 +7,18 @@ import { Link } from 'react-router';
 const ProjectLink = styled(Link)`
   cursor: pointer;
   li;
-  background: ${props => props.theme.color_tertiary};
+  background: ghostwhite;
   padding: 5px;
-  color: white;
+  border-radius: 5px;
+  display: inline-block;
+  margin-bottom: 1em;
+  margin-right: 1em;
+  color: #8a6d3b;
   &:hover,
   &:focus,
   &:active {
-    color: ${props => props.theme.color_tertiary};
-    background: white;
-    border: 1px solid ${props => props.theme.color_tertiary};
+    border: 1px solid #8a6d3b;
+    color: #8a6d3b;
   }
 `
 
@@ -25,7 +28,11 @@ const SubmissionComponent = ( {submission} ) => {
       <Nav />
       <h3>Submission projects</h3>
       <ul>
-        {submission.projects.map((project) => {console.log(project); return <ProjectLink to={'/'+project} key={project}>{project}</ProjectLink>})}
+        {submission.projects &&
+          <div>
+           {submission.projects.map((project) => {return <ProjectLink to={'/'+project} key={project}>{project}</ProjectLink>})}
+          </div>
+        }
       </ul>
   </div>
   )

@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { userapi_path, headers } from '../configs.js'
+import { userapi_path, headers, basename, submissionapi_oauth_path } from '../configs.js'
 
 export const fetchWrapper = ({path, method='GET', body=null, handler, custom_headers, callback=()=>(null)}) => {
   return (dispatch) => {
@@ -32,6 +32,22 @@ export const fetchWrapper = ({path, method='GET', body=null, handler, custom_hea
   }
 }
 
+export const handleResponse = (type) => {
+  return ({data, status}) => {
+    switch (status) {
+      case 200:
+        return {
+          type: type,
+          data: data
+        }
+      default:
+        return {
+          type:  'FETCH_ERROR',
+          error: data
+        }
+    }
+  }
+}
 
 export const unauthorizedError = () => {
   return {
@@ -93,3 +109,12 @@ export const requireAuth = (store, additionalHooks) => {
     }).then(()=>callback())
   }
 }
+
+export const logoutAPI = () => {
+  return (dispatch) => dispatch(fetchWrapper({
+    path: submissionapi_oauth_path + 'logout',
+    handler: receiveAPILogout,
+  })).then(()=>document.location.replace(userapi_path+'/logout?next='+basename))
+}
+
+export const receiveAPILogout = handleResponse('RECEIVE_API_LOGOUT');

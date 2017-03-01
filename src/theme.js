@@ -3,9 +3,9 @@ import { css } from 'styled-components';
 
 export const theme = {
   main: 'mediumseagreen',
-  color_primary: '#349DDB',
-  color_secondary: '#FFC440',
-  color_tertiary: '#F15F3C', 
+  color_primary: '#800000',
+  color_secondary: '#008000',
+  color_tertiary: '#f1b13c',
   light_gray: '#f3f3f3',
   mid_light_gray: '#BCBCBC',
   mid_gray: '#8F8F8F',
@@ -23,4 +23,13 @@ export const button = css`
   line-height: 2em;
   font-size: 1em;
   margin-right: 1em;
+`;
+
+export const cube = css`
+  padding: 10px 20px;
+  display: inline-block;
+  &:hover,
+  &:focus,
+  &:active {
+    color: white;
 `;
