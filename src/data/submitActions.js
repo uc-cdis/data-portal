@@ -38,9 +38,14 @@ export const submitToServer = (method='PUT') => {
     if (!submission.file) {
       return Promise.reject("No file to submit")
     }
+
+    let sub_url = submissionapi_path;
+    if (program != '_root'){
+      sub_url = sub_url + program + '/' + project + '/';
+    }
     return dispatch(
       fetchWrapper({
-        path: submissionapi_path + program + '/' + project + '/',
+        path: sub_url,
         method: method,
         custom_headers: {'Content-Type': submission.file_type},
         body: submission.file,
