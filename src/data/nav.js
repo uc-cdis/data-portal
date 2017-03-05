@@ -18,9 +18,6 @@ const NavRight = styled.nav`
   top: 0;
   color: white;
 `
-
-
-  
 const Home = styled(Link)`
   background: gray;
   &:hover,
@@ -49,6 +46,9 @@ const Logo = styled(Link)`
 const Logout = styled(Link)`
   background: ${props => props.theme.mid_light_gray};
   float: left;
+  span {
+    vertical-align: middle;
+  }
   ${cube};
 `
 
