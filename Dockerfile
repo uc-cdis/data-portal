@@ -22,4 +22,4 @@ WORKDIR /data-portal
 RUN npm install
 RUN NODE_ENV=production webpack
 RUN cp nginx.conf /etc/nginx/conf.d/nginx.conf
-CMD /usr/bin/nginx -g 'daemon off;'
+CMD /usr/sbin/nginx -g 'daemon off;'
