@@ -52,8 +52,6 @@ const Status = styled.div`
 
 const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick, onFileChange }) => {
   let setValue = (event) => {
-    console.log(event.target.files);
-
     let f = event.target.files[0];
     let reader = new FileReader();
     reader.readAsBinaryString(f);
@@ -65,7 +63,6 @@ const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick, onFileCh
   let onChange = (newValue) => {
     onFileChange(newValue);
   }
-  console.log(submission);
   return (
     <form>
       <input type='file' onChange={setValue} name='file-upload' style={{display:'none'}} id='file-upload'/>
@@ -73,7 +70,7 @@ const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick, onFileCh
      {submission.file &&
         <UploadButton onClick={onSubmitClickEvent}>Submit</UploadButton>
      }
-      <AceEditor height="200px" mode="json" theme="kuroir" value={submission.file} onChange={onChange} id='uploaded'/>
+      <AceEditor width="100%" height="200px" mode="json" theme="kuroir" value={submission.file} onChange={onChange} id='uploaded'/>
      {submission.submit_result &&
       <SubmissionResult>
         <Status status={submission.submit_status}>{submission.submit_status}</Status>

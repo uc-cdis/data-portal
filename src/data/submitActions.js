@@ -42,10 +42,14 @@ export const submitToServer = (method='PUT') => {
     if (path == 'graphql'){
       method = 'POST'
     }
-    if (!submission.file) {
+    let file = submission.file;
+    if (!file) {
       return Promise.reject("No file to submit")
     }
-
+    else if (submission.file_type != 'text/tab-separated-values') {
+      // remove line break in json file
+      file = file.replace(/\n/g,'');
+    }
     let sub_url = submissionapi_path;
     if (program != '_root'){
       sub_url = sub_url + program + '/' + project + '/';
@@ -55,7 +59,7 @@ export const submitToServer = (method='PUT') => {
         path: sub_url,
         method: method,
         custom_headers: {'Content-Type': submission.file_type},
-        body: submission.file,
+        body: file,
         handler: receiveSubmit
       }))
   }
