@@ -3,7 +3,6 @@ import brace from 'brace';
 import 'brace/mode/json';
 import 'brace/theme/kuroir';
 import AceEditor from 'react-ace';
-import Highlight from 'react-highlight';
 import { uploadTSV, submitToServer, updateFileContent } from './submitActions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -45,7 +44,7 @@ const SubmissionResult = styled.div`
 `;
 const Status = styled.div`
   ${button};
-  background-color: ${props => (props.status == 'succeed: 200') ? 'darkgreen' : 'gray'};
+  background-color: ${props => (props.status == 'succeed: 200') ? '#168616' : 'gray'};
   color: white;
   margin-bottom: 1em;
 `;
@@ -70,11 +69,11 @@ const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick, onFileCh
      {submission.file &&
         <UploadButton onClick={onSubmitClickEvent}>Submit</UploadButton>
      }
-      <AceEditor width="100%" height="200px" mode="json" theme="kuroir" value={submission.file} onChange={onChange} id='uploaded'/>
+      <AceEditor width="100%" height="200px" mode={submission.file_type=='text/tab-separated-values'? '' : 'json'} theme="kuroir" value={submission.file} onChange={onChange} id='uploaded'/>
      {submission.submit_result &&
       <SubmissionResult>
         <Status status={submission.submit_status}>{submission.submit_status}</Status>
-        <Highlight >{JSON.stringify(submission.submit_result, null, '    ')}</Highlight>
+       <AceEditor width="100%" height="300px"  mode="json" theme="kuroir" readOnly={true} value={JSON.stringify(submission.submit_result, null, '    ')} />
       </SubmissionResult>
      }
     </form>
