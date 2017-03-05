@@ -1,4 +1,4 @@
-import { css } from 'styled-components';
+import styled, { css } from 'styled-components';
 
 
 export const theme = {
@@ -27,9 +27,24 @@ export const button = css`
 
 export const cube = css`
   padding: 10px 20px;
+  height: 50px;
+  color: white;
   display: inline-block;
   &:hover,
   &:focus,
   &:active {
     color: white;
+`;
+
+export const Box = styled.div`
+  min-width: 1000px;
+  margin: auto;
+  margin-top: 100px;
+  margin-bottom: 100px;
+  position: relative;
+  width: 65%;
+  background: white;
+  diplay: block;
+  padding: 80px 100px;
+
 `;

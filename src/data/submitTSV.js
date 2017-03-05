@@ -1,6 +1,10 @@
 import React from 'react';
+import brace from 'brace';
+import 'brace/mode/json';
+import 'brace/theme/kuroir';
+import AceEditor from 'react-ace';
 import Highlight from 'react-highlight';
-import { uploadTSV, submitToServer } from './submitActions';
+import { uploadTSV, submitToServer, updateFileContent } from './submitActions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { button } from '../theme'
@@ -8,6 +12,7 @@ import { button } from '../theme'
 const SubmitButton = styled.label`
   border: 1px solid darkgreen;
   color: darkgreen;
+  margin-bottom: 1em;
   &:hover,
   &:active,
   &:focus {
@@ -21,6 +26,7 @@ const SubmitButton = styled.label`
 const UploadButton = styled.a`
   border: 1px solid ${props => props.theme.color_primary};
   color: ${props => props.theme.color_primary};
+  margin-bottom: 1em;
   ${button};
   &:hover,
   &:active,
@@ -44,7 +50,7 @@ const Status = styled.div`
   margin-bottom: 1em;
 `;
 
-const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick }) => {
+const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick, onFileChange }) => {
   let setValue = (event) => {
     console.log(event.target.files);
 
@@ -56,17 +62,18 @@ const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick }) => {
   let onSubmitClickEvent = () => {
     onSubmitClick();
   }
+  let onChange = (newValue) => {
+    onFileChange(newValue);
+  }
   console.log(submission);
   return (
     <form>
       <input type='file' onChange={setValue} name='file-upload' style={{display:'none'}} id='file-upload'/>
-     {submission.file &&
-      <Highlight id='uploaded'>{submission.file}</Highlight>
-     }
       <SubmitButton htmlFor='file-upload'>Upload file</SubmitButton>
      {submission.file &&
         <UploadButton onClick={onSubmitClickEvent}>Submit</UploadButton>
      }
+      <AceEditor height="200px" mode="json" theme="kuroir" value={submission.file} onChange={onChange} id='uploaded'/>
      {submission.submit_result &&
       <SubmissionResult>
         <Status status={submission.submit_status}>{submission.submit_status}</Status>
@@ -86,7 +93,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-        onSubmitClick: () => dispatch(submitToServer())
+        onSubmitClick: () => dispatch(submitToServer()),
+        onFileChange: (value) => dispatch(updateFileContent(value)),
     }
 }
 

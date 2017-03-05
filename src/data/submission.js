@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box } from '../theme';
 import Nav from './nav.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -24,7 +25,7 @@ const ProjectLink = styled(Link)`
 
 const SubmissionComponent = ( {submission} ) => {
   return (
-    <div>
+    <Box>
       <Nav />
       <h3>Submission projects</h3>
       <ul>
@@ -34,7 +35,7 @@ const SubmissionComponent = ( {submission} ) => {
           </div>
         }
       </ul>
-  </div>
+  </Box>
   )
 
 }

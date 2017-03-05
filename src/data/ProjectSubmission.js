@@ -3,15 +3,16 @@ import Nav from './nav.js'
 import { connect } from 'react-redux';
 import SubmitTSV from './submitTSV'
 import styled from 'styled-components';
+import { Box } from '../theme';
 import { Link } from 'react-router';
 
 
 const ProjectSubmission = (props) => (
-  <div>
+  <Box>
     <Nav />
     <h2>{props.params.project=='graphql' ? 'Query graph': props.params.project}</h2>
     <SubmitTSV />
-  </div>
+  </Box>
 )
 
 export default ProjectSubmission;

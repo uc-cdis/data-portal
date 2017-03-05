@@ -9,6 +9,13 @@ export const uploadTSV = (value, type) => {
     dispatch( {'type': 'REQUEST_UPLOAD', 'file': value, 'file_type': type } )
   }
 }
+
+export const updateFileContent = ( value ) => {
+  return (dispatch) => {
+    dispatch( {'type': 'UPDATE_FILE', 'file': value} );
+  }
+}
+
 export const receiveSubmit = ( { status, data}) => {
   switch (status) {
     case 200:
