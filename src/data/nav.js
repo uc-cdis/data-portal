@@ -11,6 +11,13 @@ const NavLeft = styled.nav`
   left: 100px;
   position: absolute;
 `
+
+const NavRight = styled.nav`
+  position: absolute;
+  right: 100px;
+  top: 0;
+  color: white;
+`
 const Home = styled(Link)`
   background: gray;
   &:hover,
@@ -30,20 +37,35 @@ const Search = styled(Link)`
   ${cube};
 `
 
+const Logo = styled(Link)`
+  background: ${props => props.theme.color_primary};
+  float: left;
+  ${cube};
+`
+
+const Logout = styled(Link)`
+  background: ${props => props.theme.mid_light_gray};
+  float: left;
+  span {
+    vertical-align: middle;
+  }
+  ${cube};
+`
+
 const NavComponent = ({user, onLogoutClick}) => (
     <header>
       <NavLeft>
         <Home className='fui-home' to='/'></Home>
         <Search className='fui-search' to='/graphql'></Search>
       </NavLeft>
-      <nav className='nav'>
+      <NavRight>
         <ul>
-            <li className='logo'><a href='/'>{user.username}</a></li>
-            <li className='logout'><a href='#' onClick={onLogoutClick}>
-            <span className="fui-exit"></span>
-              logout</a></li>
+          <Logo to='/'><span>{user.username}</span></Logo>
+            <Logout to='#' onClick={onLogoutClick}>
+              <span  className='fui-exit'></span><span>Logout</span>
+            </Logout>
         </ul>
-    </nav>
+    </NavRight>
   </header>
 )
 const mapStateToProps = (state)=> {return {user: state.user}}

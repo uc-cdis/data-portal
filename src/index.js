@@ -18,22 +18,22 @@ import { createHistory } from 'history'
 import 'react-select/dist/react-select.css';
 import { basename } from './localconf.js';
 import { ThemeProvider } from 'styled-components';
-import { theme } from './theme';
+import { theme, Box } from './theme';
 
 let store = applyMiddleware(thunk)(createStore)(
-  reducers,
-  {user: {}, status: {}},
+reducers,
+{user: {}, status: {}},
 )
 
 
 const NoMatch = () => (
-  <div>
-  <Link to={`/`}>Page Not Found</Link>
-  </div>
+<div>
+<Link to={`/`}>Page Not Found</Link>
+</div>
 )
 
 const browserHistory = useRouterHistory(createHistory)({
-	basename: basename
+basename: basename
 });
 
 const history = syncHistoryWithStore(browserHistory, store)
@@ -45,9 +45,9 @@ setInterval(() => store.dispatch(fetchUser()), 10000)
 // keep the cloud middleware's session activated
 // setInterval(() => store.dispatch(fetchUrlAndLogin()), 10000)
 render(
-  <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <Router history={history}>
+<Provider store={store}>
+  <ThemeProvider theme={theme}>
+    <Router history={history}>
         <Route path='/login' component={Login} />
         <Route path='/' onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))} component={Submission} />
           <Route path='/:project'

@@ -1,6 +1,9 @@
 import React from 'react';
-import Highlight from 'react-highlight';
-import { uploadTSV, submitToServer } from './submitActions';
+import brace from 'brace';
+import 'brace/mode/json';
+import 'brace/theme/kuroir';
+import AceEditor from 'react-ace';
+import { uploadTSV, submitToServer, updateFileContent } from './submitActions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { button } from '../theme'
@@ -8,6 +11,7 @@ import { button } from '../theme'
 const SubmitButton = styled.label`
   border: 1px solid darkgreen;
   color: darkgreen;
+  margin-bottom: 1em;
   &:hover,
   &:active,
   &:focus {
@@ -21,6 +25,7 @@ const SubmitButton = styled.label`
 const UploadButton = styled.a`
   border: 1px solid ${props => props.theme.color_primary};
   color: ${props => props.theme.color_primary};
+  margin-bottom: 1em;
   ${button};
   &:hover,
   &:active,
@@ -39,15 +44,13 @@ const SubmissionResult = styled.div`
 `;
 const Status = styled.div`
   ${button};
-  background-color: ${props => (props.status == 'succeed: 200') ? 'darkgreen' : 'gray'};
+  background-color: ${props => (props.status == 'succeed: 200') ? '#168616' : 'gray'};
   color: white;
   margin-bottom: 1em;
 `;
 
-const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick }) => {
+const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick, onFileChange }) => {
   let setValue = (event) => {
-    console.log(event.target.files);
-
     let f = event.target.files[0];
     let reader = new FileReader();
     reader.readAsBinaryString(f);
@@ -56,21 +59,21 @@ const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick }) => {
   let onSubmitClickEvent = () => {
     onSubmitClick();
   }
-  console.log(submission);
+  let onChange = (newValue) => {
+    onFileChange(newValue);
+  }
   return (
     <form>
       <input type='file' onChange={setValue} name='file-upload' style={{display:'none'}} id='file-upload'/>
-     {submission.file &&
-      <Highlight id='uploaded'>{submission.file}</Highlight>
-     }
       <SubmitButton htmlFor='file-upload'>Upload file</SubmitButton>
      {submission.file &&
         <UploadButton onClick={onSubmitClickEvent}>Submit</UploadButton>
      }
+      <AceEditor width="100%" height="200px" mode={submission.file_type=='text/tab-separated-values'? '' : 'json'} theme="kuroir" value={submission.file} onChange={onChange} id='uploaded'/>
      {submission.submit_result &&
       <SubmissionResult>
         <Status status={submission.submit_status}>{submission.submit_status}</Status>
-        <Highlight >{JSON.stringify(submission.submit_result, null, '    ')}</Highlight>
+       <AceEditor width="100%" height="300px"  mode="json" theme="kuroir" readOnly={true} value={JSON.stringify(submission.submit_result, null, '    ')} />
       </SubmissionResult>
      }
     </form>
@@ -86,7 +89,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-        onSubmitClick: () => dispatch(submitToServer())
+        onSubmitClick: () => dispatch(submitToServer()),
+        onFileChange: (value) => dispatch(updateFileContent(value)),
     }
 }
 
