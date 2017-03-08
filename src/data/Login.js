@@ -12,7 +12,7 @@ const LoginButton = styled.a`
 `
 const Login = () => (
   <CentralBox>
-    <h3 className='article'>BPA Submission Portal</h3>
+    <h3 className='article'>BPA Metadata Submission Portal</h3>
     <LoginButton className="btn btn-primary navbar-btn btn-sm login-button" href={userapi_path + 'login/google' + '?redirect=' + location.origin + basename}> Login from Google </LoginButton>
   </CentralBox>
 )
