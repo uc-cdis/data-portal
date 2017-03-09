@@ -1,4 +1,5 @@
 import React from 'react'
+import QueryNode from './data/QueryNode'
 import { render } from 'react-dom'
 import GraphiQL from 'graphiql';
 import { Provider } from 'react-redux'
@@ -11,7 +12,7 @@ import Login from './data/Login'
 import Submission from './data/submission.js'
 import ProjectSubmission from './data/ProjectSubmission.js'
 // import { fetchInstances, fetchUrlAndLogin } from './compute/ComputeActions'
-import { loginSubmissionAPI } from './data/submitActions'
+import { loginSubmissionAPI, setProject } from './data/submitActions'
 import { Router, Route, Link, useRouterHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import { createHistory } from 'history'
@@ -53,6 +54,10 @@ render(
           <Route path='/:project'
             onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
             component={ProjectSubmission} />
+            <Route path='/:project/search'
+              onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
+              component={QueryNode} />
+
       </Router>
     </ThemeProvider>
   </Provider>,

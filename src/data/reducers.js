@@ -46,12 +46,19 @@ const submission = (state={}, action) => {
       return {...state, file:action.file}
     case 'RECEIVE_PROJECTS':
       return {...state, projects:action.data}
+    case 'RECEIVE_NODE_TYPES':
+      return {...state, node_types: action.data}
     case 'RECEIVE_AUTHORIZATION_URL':
       return {...state, oauth_url:action.url}
     case 'RECEIVE_SUBMISSION_LOGIN':
       return {...state, login:state.result, error:state.error}
     case 'RECEIVE_SUBMISSION':
       return {...state, submit_result:action.data, submit_status:action.submit_status}
+    case 'SUBMIT_SEARCH_FORM':
+      console.log(action.data);
+      return {...state, search_form: action.data}
+    case 'RECEIVE_SEARCH_ENTITIES':
+      return {...state, search_result: action.data, search_status: action.search_status}
     default:
       return state
   }

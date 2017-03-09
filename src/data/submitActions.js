@@ -1,5 +1,5 @@
 import { fetchWrapper } from './actions';
-import { fetchProjects }  from './queryactions';
+import { fetchProjects, fetchNodeTypes }  from './queryactions';
 import { submissionapi_path, submissionapi_oauth_path } from '../localconf';
 import { readFile } from '../utils';
 
@@ -74,9 +74,16 @@ export const fetchOAuthURL = () => {
   })
 }
 
+export const setProject = (project) => {
+  return {
+    type: 'SET_PROJECT',
+    project: project
+  }
+}
 export const loginSubmissionAPI = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
+    dispatch(fetchNodeTypes());
     return dispatch(fetchProjects()).then(()=>{
       console.log(getState())
       let projects = getState().submission.projects;

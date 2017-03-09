@@ -26,6 +26,27 @@ export const receiveProjects = ({status, data}) => {
         error: data
       }
   }
+}
 
+export const fetchNodeTypes = () => {
+  return fetchWrapper({
+    path: submissionapi_path + '_dictionary',
+    method: 'GET',
+    handler: receiveNodeTypes
+  })
+}
 
+export const receiveNodeTypes = ({status, data}) =>{
+  switch (status) {
+    case 200:
+      return {
+        type: 'RECEIVE_NODE_TYPES',
+        data: data['links'].map(link => link.split('/').pop())
+      }
+    default:
+      return {
+        type: 'FETCH_ERROR',
+        error: data
+      }
+  }
 }
