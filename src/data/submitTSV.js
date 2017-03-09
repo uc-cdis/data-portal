@@ -49,7 +49,7 @@ const Status = styled.div`
   margin-bottom: 1em;
 `;
 
-const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick, onFileChange }) => {
+const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, onFileChange }) => {
   let setValue = (event) => {
     let f = event.target.files[0];
     let reader = new FileReader();
@@ -69,7 +69,9 @@ const SubmitTSVComponent = ({ submission, onUploadClick, onSubmitClick, onFileCh
      {submission.file &&
         <UploadButton onClick={onSubmitClickEvent}>Submit</UploadButton>
      }
+     { (submission.file || path == 'graphql') &&
       <AceEditor width="100%" height="200px" mode={submission.file_type=='text/tab-separated-values'? '' : 'json'} theme="kuroir" value={submission.file} onChange={onChange} id='uploaded'/>
+     }
      {submission.submit_result &&
       <SubmissionResult>
         <Status status={submission.submit_status}>{submission.submit_status}</Status>

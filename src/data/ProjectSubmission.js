@@ -11,7 +11,7 @@ const ProjectSubmission = (props) => (
   <Box>
     <Nav />
     <h2>{props.params.project=='graphql' ? 'Query graph': props.params.project}</h2>
-    <SubmitTSV />
+    <SubmitTSV path={props.params.project} />
   </Box>
 )
 
