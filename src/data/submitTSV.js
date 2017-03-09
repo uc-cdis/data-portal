@@ -53,8 +53,14 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
   let setValue = (event) => {
     let f = event.target.files[0];
     let reader = new FileReader();
+    let file_type = f.type;
+    console.log(f);
+    if (f.name.endsWith('.tsv')){
+      file_type = 'text/tab-separated-values';
+    }
+    console.log(file_type);
     reader.readAsBinaryString(f);
-    reader.onload = ((e) => onUploadClick(e.target.result, f.type));
+    reader.onload = ((e) => onUploadClick(e.target.result, file_type));
   }
   let onSubmitClickEvent = () => {
     onSubmitClick();
