@@ -13,7 +13,6 @@ export const fetchProjects = () => {
 }
 
 export const receiveProjects = ({status, data}) => {
-  console.log(data);
   switch (status){
     case 200:
       return {

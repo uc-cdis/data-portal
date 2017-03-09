@@ -67,7 +67,6 @@ export const submitToServer = (method='PUT') => {
 
 export const fetchOAuthURL = () => {
 // Get cloud_middleware's authorization url
-  console.log('fetch url')
   return fetchWrapper({
     path: submissionapi_oauth_path + "authorization_url",
     handler: receiveAuthorizationUrl
@@ -78,7 +77,6 @@ export const loginSubmissionAPI = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
     return dispatch(fetchProjects()).then(()=>{
-      console.log(getState())
       let projects = getState().submission.projects;
       if (projects){
         // user already logged in

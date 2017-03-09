@@ -3,8 +3,7 @@ import { userapi_path, headers, basename, submissionapi_oauth_path } from '../co
 
 export const fetchWrapper = ({path, method='GET', body=null, handler, custom_headers, callback=()=>(null)}) => {
   return (dispatch) => {
-    console.log("fetch " + path)
-    console.log(body);
+    // console.log("fetch " + path)
     return fetch(path, {
       credentials: "same-origin",
       headers: {...headers, ...custom_headers},
