@@ -36,3 +36,32 @@ export const receiveSearchEntities = ({status, data}) => {
       }
   }
 } 
+
+export const deleteNode = ({id, project}) => {
+	let receiveDelete = ({status, data}) => {
+		return receiveDeleteResponse({status, data, id, project})
+	}
+  return fetchWrapper({
+    path: get_submit_path(project) + '/' + id,
+    method: 'DELETE',
+    handler: receiveDelete
+  })
+}
+
+export const receiveDeleteResponse = ({status, data, id, project}) => {
+	switch (status) {
+		case 200:
+			return {
+				type: 'DELETE_SUCCEED',
+				id: id
+			}
+
+		default:
+			return {
+				type: 'DELETE_FAIL',
+				id: id,
+				error: data
+			}
+	}
+
+}

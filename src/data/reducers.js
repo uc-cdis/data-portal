@@ -63,6 +63,17 @@ const submission = (state={}, action) => {
       return state
   }
 }
-const reducers = combineReducers({login, user, status, submission, form: formReducer, routing:routerReducer})
+
+const popups = (state={}, action) => {
+  switch (action.type) {
+    case 'UPDATE_POPUP':
+      return {...state, ...action.data}
+    default:
+      return state
+  }
+}
+
+
+const reducers = combineReducers({popups, login, user, status, submission, form: formReducer, routing:routerReducer})
 
 export default reducers

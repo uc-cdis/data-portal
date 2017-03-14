@@ -1,8 +1,6 @@
 import { fetchWrapper } from './actions';
 import { fetchProjects, fetchNodeTypes }  from './queryactions';
 import { submissionapi_path, submissionapi_oauth_path } from '../localconf';
-import { readFile } from '../utils';
-
 
 export const uploadTSV = (value, type) => {
   return (dispatch) => {

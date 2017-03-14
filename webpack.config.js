@@ -8,7 +8,7 @@ module.exports = {
   output: {
     path: './src/',
     filename: 'bundle.js',
-    publicPath: ''
+    publicPath: '/src/'
   },
   devServer: {
     historyApiFallback: true
@@ -47,5 +47,8 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.EnvironmentPlugin(['NODE_ENV'])
+  ]
 }

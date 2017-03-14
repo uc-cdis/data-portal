@@ -1,4 +1,6 @@
 import React from 'react';
+import { updatePopup } from './actions';
+import Popup from './Popup';
 import Nav from './nav';
 import styled, { css } from 'styled-components';
 import { input, reduxForm } from 'redux-form';
@@ -71,30 +73,36 @@ const QueryForm = ({node_types, project, onSearchFormSubmit}) =>  {
       </form>
   )
 }
-const Entity = ({value}) => {
+const Entity = ({value, onUpdatePopup}) => {
+  let onDelete = () => {
+    onUpdatePopup({nodedelete_popup: true});
+  }
   return (
     <li>
       <span>{value.submitter_id}</span> 
       <DownloadButton>Download</DownloadButton>
-      <DeleteButton>Delete</DeleteButton>
+      <DeleteButton onClick={onDelete}>Delete</DeleteButton>
     </li>
   )
 }
-const Entities = ({value}) => {
+const Entities = ({value, onUpdatePopup}) => {
   return (
     <ul>
-      {value.map( ( value) => <Entity key={value.submitter_id} value={value} /> )}
+      {value.map( ( value) => <Entity onUpdatePopup={onUpdatePopup} key={value.submitter_id} value={value} /> )}
     </ul>
   )
 }
-const QueryNodeComponent = ({params, submission, onSearchFormSubmit}) => {
+const QueryNodeComponent = ({params, submission, popups, onSearchFormSubmit, onUpdatePopup}) => {
   let project = params.project;
   return  (
     <Box>
       <Nav />
+      { popups.nodedelete_popup == true &&
+          <Popup message='test' onCancel={()=>onUpdatePopup({nodedelete_popup: false})}/>
+      }
       <QueryForm onSearchFormSubmit={onSearchFormSubmit} project={project} node_types={submission.node_types}/>
       { submission.search_status=='succeed: 200' &&
-          Object.entries(submission.search_result['data']).map((value) => { console.log(value); return (<Entities node_type={value[0]} key={value[0]} value={value[1]}/>)}) 
+          Object.entries(submission.search_result['data']).map((value) => { console.log(value); return (<Entities onUpdatePopup={onUpdatePopup} node_type={value[0]} key={value[0]} value={value[1]}/>)}) 
       }
     </Box>
   )
@@ -105,12 +113,14 @@ const mapStateToProps = (state, ownProps) => {
   console.log(state.submission);
   return {
     'submission': state.submission,
+    'popups': state.popups,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSearchFormSubmit: (value) => dispatch(submitSearchForm(value))
+    onSearchFormSubmit: (value) => dispatch(submitSearchForm(value)),
+    onUpdatePopup: (state) => dispatch(updatePopup(state))
   }
 }
 const QueryNode = connect(mapStateToProps, mapDispatchToProps)(QueryNodeComponent);

@@ -17,15 +17,26 @@ import { Router, Route, Link, useRouterHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import { createHistory } from 'history'
 import 'react-select/dist/react-select.css';
-import { basename } from './localconf.js';
+import { basename, dev } from './localconf.js';
 import { ThemeProvider } from 'styled-components';
 import { theme, Box } from './theme';
 
-let store = applyMiddleware(thunk)(createStore)(
-reducers,
-{user: {}, status: {}},
-)
+console.log(dev);
+let store;
+if ( dev == true) {
+	store = applyMiddleware(thunk)(createStore)(
+		reducers,
+		{user: {}, status: {}},
+			window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+	)
+}
+else {
+	store = applyMiddleware(thunk)(createStore)(
+		reducers,
+		{user: {}, status: {}},
+	)
 
+}
 
 const NoMatch = () => (
 <div>
