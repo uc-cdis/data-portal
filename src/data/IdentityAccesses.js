@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
 
+
 const ProjectLink = styled(Link)`
   cursor: pointer;
   li;
@@ -23,33 +24,33 @@ const ProjectLink = styled(Link)`
   }
 `;
 
-const SubmissionComponent = ( {submission} ) => {
-  return (
-    <Box>
-      <Nav />
-      <h3>Submission projects</h3>
-      <ul>
-        {submission.projects &&
-          <div>
-           {submission.projects.map((project) => {return <ProjectLink to={'/'+project} key={project}>{project}</ProjectLink>})}
-          </div>
-        }
-      </ul>
-  </Box>
-  )
+const IdentityComponent = ( {user} ) => {
+    return (
+        <Box>
+            <Nav />
+            <h3>Access Management</h3>
+            <ul>
+                {user.username &&
+                <div>
+                    Test access keys
+                </div>
+                }
+            </ul>
+        </Box>
+    )
 
 };
 
 const mapStateToProps = (state) => {
-  return {
-    'submission': state.submission
-  }
+    return {
+        'user': state.user
+    }
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {};
+    return {};
 };
 
 
-let Submission = connect(mapStateToProps, mapDispatchToProps)(SubmissionComponent);
-export default Submission;
+let User = connect(mapStateToProps, mapDispatchToProps)(IdentityComponent);
+export default User;

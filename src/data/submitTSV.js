@@ -76,17 +76,17 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
 					//pt.result  - readonly so assign binary
 					pt.content = binary;
 					$(pt).trigger('onload');
-			}
+			};
 			reader.readAsArrayBuffer(fileData);
 			}
 		}
-  }
+  };
   let onSubmitClickEvent = () => {
     onSubmitClick();
-  }
+  };
   let onChange = (newValue) => {
     onFileChange(newValue);
-  }
+  };
   return (
     <form>
       <input type='file' onChange={setValue} name='file-upload' style={{display:'none'}} id='file-upload'/>
@@ -105,13 +105,13 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
      }
     </form>
   )
-}
+};
 
 const mapStateToProps = (state) => {
   return {
     'submission': state.submission
   }
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -119,7 +119,7 @@ const mapDispatchToProps = (dispatch) => {
         onSubmitClick: () => dispatch(submitToServer()),
         onFileChange: (value) => dispatch(updateFileContent(value)),
     }
-}
+};
 
 
 let SubmitTSV = connect(mapStateToProps, mapDispatchToProps)(SubmitTSVComponent);

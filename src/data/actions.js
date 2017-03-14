@@ -20,16 +20,16 @@ export const fetchWrapper = ({path, method='GET', body=null, handler, custom_hea
           // # do nothing
         }
       }
-        dispatch(handler({status: response.status, data: data, headers:response.headers}))
-        callback()
+        dispatch(handler({status: response.status, data: data, headers:response.headers}));
+        callback();
         return Promise.resolve(data)
       })
     }).catch(error => {
-      console.log(error)
+      console.log(error);
       dispatch(connectionError())
     })
   }
-}
+};
 
 export const handleResponse = (type) => {
   return ({data, status}) => {
@@ -38,7 +38,7 @@ export const handleResponse = (type) => {
         return {
           type: type,
           data: data
-        }
+        };
       default:
         return {
           type:  'FETCH_ERROR',
@@ -46,22 +46,22 @@ export const handleResponse = (type) => {
         }
     }
   }
-}
+};
 
 export const unauthorizedError = () => {
   return {
     type: 'REQUEST_ERROR',
     error: 'unauthorized'
   }
-}
+};
 
 export const connectionError = () => {
-  console.log('connection error')
+  console.log('connection error');
   return {
     type: 'REQUEST_ERROR',
     error: 'connection_error'
   }
-}
+};
 
 
 export const receiveUser = ({status, data}) => {
@@ -70,27 +70,27 @@ export const receiveUser = ({status, data}) => {
       return {
         type: 'RECEIVE_USER',
         user: data
-      }
+      };
     default:
       return {
         type: 'FETCH_ERROR',
         error: data['error']
       }
   }
-}
+};
 
-
+// export const receiveUserAccess =
 
 export const startFetchUser = () => {
 
-}
+};
 
 export const fetchUser = () => {
   return fetchWrapper({
     path: userapi_path + "user/",
     handler: receiveUser
   })
-}
+};
 
 export const requireAuth = (store, additionalHooks) => {
   return  (nextState, replace, callback) => {
@@ -107,13 +107,21 @@ export const requireAuth = (store, additionalHooks) => {
       }
     }).then(()=>callback())
   }
-}
+};
 
 export const logoutAPI = () => {
   return (dispatch) => dispatch(fetchWrapper({
     path: submissionapi_oauth_path + 'logout',
     handler: receiveAPILogout,
   })).then(()=>document.location.replace(userapi_path+'/logout?next='+basename))
-}
+};
+
+export const fetchOAuthURL = (oauth_path) => {
+// Get cloud_middleware's authorization url
+  return fetchWrapper({
+    path: oauth_path + "authorization_url",
+    handler: receiveAuthorizationUrl
+  })
+};
 
 export const receiveAPILogout = handleResponse('RECEIVE_API_LOGOUT');

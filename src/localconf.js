@@ -1,5 +1,5 @@
 export const basename = '/';
-export const hostname = 'https://data.bloodpac.org/'
+export const hostname = 'http://api.bloodpac-data.org/';
 export const userapi_path = hostname + 'user/';
 export const submissionapi_path = hostname + 'api/v0/submission/';
 export const submissionapi_oauth_path = hostname + 'api/v0/oauth2/';

@@ -78,12 +78,12 @@ export const loginSubmissionAPI = () => {
         return Promise.resolve()
       }
     }).then(()=>dispatch(fetchOAuthURL(submissionapi_oauth_path))).then(()=>{
-        let url = getState().submission.oauth_url;
-        return dispatch(fetchWrapper({
-          path:url,
-          handler:receiveSubmissionLogin
-        }))}).then(()=>dispatch(fetchProjects()))
-    .catch((error) => console.log(error));
+      let url = getState().submission.oauth_url;
+      return dispatch(fetchWrapper({
+        path:url,
+        handler:receiveSubmissionLogin
+      }))}).then(()=>dispatch(fetchProjects()))
+      .catch((error) => console.log(error));
   }
 };
 
@@ -118,4 +118,3 @@ export const receiveAuthorizationUrl = ({status, data}) => {
       }
   }
 };
-

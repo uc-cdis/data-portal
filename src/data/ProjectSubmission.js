@@ -13,6 +13,6 @@ const ProjectSubmission = (props) => (
     <h2>{props.params.project=='graphql' ? 'Query graph': props.params.project}</h2>
     <SubmitTSV path={props.params.project} />
   </Box>
-)
+);
 
 export default ProjectSubmission;
