@@ -1,6 +1,13 @@
 import fetch from 'isomorphic-fetch'
 import { userapi_path, headers, basename, submissionapi_oauth_path } from '../configs.js'
 
+export const updatePopup = (state) => {
+  return {
+    type: 'UPDATE_POPUP',
+    data: state
+  }
+}
+
 export const fetchWrapper = ({path, method='GET', body=null, handler, custom_headers, callback=()=>(null)}) => {
   return (dispatch) => {
     // console.log("fetch " + path)
