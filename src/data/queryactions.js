@@ -10,7 +10,7 @@ export const fetchProjects = () => {
     method: 'POST',
     handler: receiveProjects
   })
-}
+};
 
 export const receiveProjects = ({status, data}) => {
   switch (status){
@@ -18,14 +18,14 @@ export const receiveProjects = ({status, data}) => {
       return {
         type: 'RECEIVE_PROJECTS',
         data: data['data']['project'].map(p => p.project_id)
-      }
+      };
     default:
       return {
         type: 'FETCH_ERROR',
         error: data
       }
   }
-}
+};
 
 export const fetchNodeTypes = () => {
   return fetchWrapper({
@@ -33,7 +33,7 @@ export const fetchNodeTypes = () => {
     method: 'GET',
     handler: receiveNodeTypes
   })
-}
+};
 
 export const receiveNodeTypes = ({status, data}) =>{
   switch (status) {
@@ -41,11 +41,11 @@ export const receiveNodeTypes = ({status, data}) =>{
       return {
         type: 'RECEIVE_NODE_TYPES',
         data: data['links'].map(link => link.split('/').pop())
-      }
+      };
     default:
       return {
         type: 'FETCH_ERROR',
         error: data
       }
   }
-}
+};

@@ -6,7 +6,7 @@ export const updatePopup = (state) => {
     type: 'UPDATE_POPUP',
     data: state
   }
-}
+};
 
 export const fetchWrapper = ({path, method='GET', body=null, handler, custom_headers, callback=()=>(null)}) => {
   return (dispatch) => {
@@ -17,7 +17,6 @@ export const fetchWrapper = ({path, method='GET', body=null, handler, custom_hea
       method: method,
       body: body,
     }).then(response => {
-
       return response.text().then(data => {
   	  if (data) {
         try {
@@ -130,5 +129,21 @@ export const fetchOAuthURL = (oauth_path) => {
     handler: receiveAuthorizationUrl
   })
 };
+
+export const receiveAuthorizationUrl = ({status, data}) => {
+  switch (status) {
+    case 200:
+      return {
+        type: 'RECEIVE_AUTHORIZATION_URL',
+        url: data
+      };
+    default:
+      return {
+        type: 'FETCH_ERROR',
+        error: data['error']
+      }
+  }
+};
+
 
 export const receiveAPILogout = handleResponse('RECEIVE_API_LOGOUT');

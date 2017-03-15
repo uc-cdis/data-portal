@@ -4,6 +4,7 @@ import Nav from './nav.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
+import AceEditor from 'react-ace';
 
 
 const ProjectLink = styled(Link)`
@@ -24,16 +25,22 @@ const ProjectLink = styled(Link)`
   }
 `;
 
+const AccessKeyPair = styled.div`
+  border-top: 1px dashed ${props => props.theme.mid_gray};
+  padding-top: 1em;
+  margin-top: 1em;
+`;
+
 const IdentityComponent = ( {user} ) => {
     return (
         <Box>
             <Nav />
             <h3>Access Management</h3>
             <ul>
-                {user.username &&
-                <div>
-                    Test access keys
-                </div>
+                {user.user_name &&
+                <AccessKeyPair>
+                  <AceEditor width="100%" height="300px"  mode="json" theme="kuroir" readOnly={true} value={JSON.stringify(user.access_key_pair, null, '    ')} />
+                </AccessKeyPair>
                 }
             </ul>
         </Box>

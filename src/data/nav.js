@@ -10,14 +10,14 @@ const NavLeft = styled.nav`
   top: 0px;
   left: 100px;
   position: absolute;
-`
+`;
 
 const NavRight = styled.nav`
   position: absolute;
   right: 100px;
   top: 0;
   color: white;
-`
+`;
 const Home = styled(Link)`
   background: gray;
   &:hover,
@@ -26,7 +26,7 @@ const Home = styled(Link)`
     background: ${props => props.theme.mid_gray};
   }
   ${cube};
-`
+`;
 const Search = styled(Link)`
   background: #daa520;
   &:hover,
@@ -35,7 +35,7 @@ const Search = styled(Link)`
     background: #e8b534;
   }
   ${cube};
-`
+`;
 
 const Logo = styled(Link)`
   background: ${props => props.theme.color_primary};
@@ -47,7 +47,7 @@ const Logo = styled(Link)`
   }
 
   ${cube};
-`
+`;
 
 const Logout = styled(Link)`
   background: ${props => props.theme.mid_light_gray};
@@ -63,7 +63,7 @@ const Logout = styled(Link)`
     vertical-align: middle;
   }
   ${cube};
-`
+`;
 
 const NavComponent = ({user, onLogoutClick}) => (
     <header>
@@ -80,11 +80,11 @@ const NavComponent = ({user, onLogoutClick}) => (
         </ul>
     </NavRight>
   </header>
-)
-const mapStateToProps = (state)=> {return {user: state.user}}
+);
+const mapStateToProps = (state)=> {return {user: state.user}};
 
 const mapDispatchToProps = (dispatch) => ({
   onLogoutClick: ()=> dispatch(logoutAPI())
-})
-const Nav = connect(mapStateToProps, mapDispatchToProps)(NavComponent)
+});
+const Nav = connect(mapStateToProps, mapDispatchToProps)(NavComponent);
 export default Nav

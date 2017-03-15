@@ -68,7 +68,8 @@ export const setProject = (project) => {
     type: 'SET_PROJECT',
     project: project
   }
-}
+};
+
 export const loginSubmissionAPI = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
@@ -108,19 +109,3 @@ export const receiveSubmissionLogin = ({status, data}) => {
     }
   }
 };
-
-export const receiveAuthorizationUrl = ({status, data}) => {
-  switch (status) {
-    case 200:
-      return {
-        type: 'RECEIVE_AUTHORIZATION_URL',
-        url: data
-      };
-    default:
-      return {
-        type: 'FETCH_ERROR',
-        error: data['error']
-      }
-  }
-};
-

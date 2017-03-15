@@ -6,9 +6,9 @@ module.exports = {
   exclude: '/node_modules/',
 
   output: {
-    path: './src/',
+    path: './',
     filename: 'bundle.js',
-    publicPath: '/src/'
+    publicPath: '/'
   },
   devServer: {
     historyApiFallback: true
@@ -51,4 +51,4 @@ module.exports = {
   plugins: [
     new webpack.EnvironmentPlugin(['NODE_ENV'])
   ]
-}
+};
