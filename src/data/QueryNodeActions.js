@@ -39,10 +39,10 @@ export const receiveSearchEntities = ({status, data}) => {
 }
 
 export const deleteNode = ({id, project}) => {
-	let receiveDelete = ({status, data}) => {
+  let receiveDelete = ({status, data}) => {
     console.log('receive delete');
-		return receiveDeleteResponse({status, data, id, project})
-	}
+    return receiveDeleteResponse({status, data, id, project})
+  }
   return fetchWrapper({
     path: get_submit_path(project) + '/' + 'entities/' + id,
     method: 'DELETE',
@@ -59,7 +59,7 @@ export const receiveDeleteResponse = ({status, data, id, project}) => {
           id: id
         });
         dispatch(updatePopup({nodedelete_popup: false}));
-				dispatch(clearDeleteSession());
+        return dispatch(clearDeleteSession());
 
       default:
         return dispatch({
@@ -100,8 +100,15 @@ export const receiveQueryNode = ({status, data}) => {
       }
   }
 }
+
 export const clearDeleteSession = () => {
-	return {
-		type: 'CLEAR_DELETE_SESSION'
-	}
+  return {
+    type: 'CLEAR_DELETE_SESSION'
+  }
+}
+
+export const clearQueryNodes = () => {
+  return {
+    type: 'CLEAR_QUERY_NODES'
+  }
 }

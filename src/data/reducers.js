@@ -54,6 +54,13 @@ const submission = (state={}, action) => {
       return {...state, login:state.result, error:state.error}
     case 'RECEIVE_SUBMISSION':
       return {...state, submit_result:action.data, submit_status:action.submit_status}
+    default:
+      return state;
+  }
+}
+
+const query_nodes = (state={}, action) => {
+  switch (action.type) {
     case 'SUBMIT_SEARCH_FORM':
       return {...state, search_form: action.data}
     case 'RECEIVE_SEARCH_ENTITIES':
@@ -61,13 +68,15 @@ const submission = (state={}, action) => {
     case 'REQUEST_DELETE_NODE':
       return {...state, request_delete_node: action.id}
     case 'DELETE_SUCCEED':
-      return {...state, search_result: removeDeletedNode(state, action.id)}
+      return {...state, search_result: removeDeletedNode(state, action.id), delete_error: null}
     case 'DELETE_FAIL':
       return {...state, delete_error: action.error}
     case 'RECEIVE_QUERY_NODE':
       return {...state, query_node: action.data}
-		case 'CLEAR_DELETE_SESSION':
-			return {...state, query_node: null, delete_error: null}
+    case 'CLEAR_DELETE_SESSION':
+      return {...state, query_node: null, delete_error: null}
+    case 'CLEAR_QUERY_NODES':
+      return {}
     default:
       return state
   }
@@ -92,6 +101,6 @@ const popups = (state={}, action) => {
 }
 
 
-const reducers = combineReducers({popups, login, user, status, submission, form: formReducer, routing:routerReducer})
+const reducers = combineReducers({popups, login, user, status, submission, query_nodes, form: formReducer, routing:routerReducer})
 
 export default reducers

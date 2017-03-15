@@ -23,7 +23,7 @@ const CancelButton = styled.a`
 
 const PopupMask = styled.section`
   position: fixed;
-	overflow-y: scroll;
+  overflow-y: scroll;
   top: 0px;
   width: 100%;
   height: 100%;
@@ -34,7 +34,7 @@ const PopupMask = styled.section`
 
 const PopupBox = styled.section`
   width: 50%;
-	overflow-y: scroll;
+  overflow-y: scroll;
   background: white;
   margin: auto;
   padding: 2em;
@@ -42,7 +42,7 @@ const PopupBox = styled.section`
 `;
 
 const Code = styled(Highlight)`
-	font-size: 0.8em;
+  font-size: 0.8em;
 `;
 const Message = styled.div`
   font-size: 1em;
@@ -54,15 +54,15 @@ const Popup = ({message, code, error, onClose, onCancel, onConfirm}) => {
     <PopupMask>
       <PopupBox>
         <Message>
-					<div>{message}</div>
-					{code &&
-					<Code className='json'> {code} </Code>
-					}
-					{error &&
-					<Code className='json'> {error} </Code>
-					}
+          <div>{message}</div>
+          {code &&
+          <Code className='json'> {code} </Code>
+          }
+          {error &&
+          <Code className='json'> {error} </Code>
+          }
 
-				</Message>
+        </Message>
         {onClose &&
           <CancelButton onClick={onClose}>close</CancelButton>
         }

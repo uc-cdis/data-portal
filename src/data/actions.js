@@ -19,7 +19,7 @@ export const fetchWrapper = ({path, method='GET', body=null, handler, custom_hea
     }).then(response => {
 
       return response.text().then(data => {
-  	  if (data) {
+      if (data) {
         try {
             data = JSON.parse(data)
         }
