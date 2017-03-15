@@ -1,11 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router';
+import { json_to_string, get_submit_path } from './utils'
 import { updatePopup } from './actions';
 import Popup from './Popup';
 import Nav from './nav';
 import styled, { css } from 'styled-components';
 import { input, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { submitSearchForm } from './QueryNodeActions';
+import { clearDeleteSession, fetchQueryNode, submitSearchForm, deleteNode, requestDeleteNode } from './QueryNodeActions';
 import { cube } from '../theme';
 import { Box } from '../theme';
 
@@ -29,7 +31,7 @@ const actionButton = css`
   cursor: pointer;
   float: right;
   display: inline-block;
-  margin-left: 1em;
+  margin-left: 2em;
   &:hover,
   &:active,
   &:focus {
@@ -53,13 +55,11 @@ const QueryForm = ({node_types, project, onSearchFormSubmit}) =>  {
   let nodes_for_query = node_types.filter((nt) => !['program', 'project'].includes(nt));
   let handleQuerySubmit = (event) => {
     event.preventDefault();
-    console.log(event.target);
     let form = event.target;
     let data = {project: project}
     for (var input of form) {
       data[input.name] = input.value;
     }
-    console.log(data);
     onSearchFormSubmit(data);
   }
   return (
@@ -73,36 +73,39 @@ const QueryForm = ({node_types, project, onSearchFormSubmit}) =>  {
       </form>
   )
 }
-const Entity = ({value, onUpdatePopup}) => {
+const Entity = ({value, project, onUpdatePopup, onRequestDeleteNode}) => {
   let onDelete = () => {
+    onRequestDeleteNode({project: project, id: value.id});
     onUpdatePopup({nodedelete_popup: true});
   }
   return (
     <li>
       <span>{value.submitter_id}</span> 
-      <DownloadButton>Download</DownloadButton>
+      <DownloadButton href={get_submit_path(project) + '/export?format=json&ids='+value.id}>Download</DownloadButton>
       <DeleteButton onClick={onDelete}>Delete</DeleteButton>
     </li>
   )
 }
-const Entities = ({value, onUpdatePopup}) => {
+const Entities = ({value, project, onUpdatePopup, onRequestDeleteNode}) => {
   return (
     <ul>
-      {value.map( ( value) => <Entity onUpdatePopup={onUpdatePopup} key={value.submitter_id} value={value} /> )}
+      {value.map( ( value) => <Entity project={project} onRequestDeleteNode={onRequestDeleteNode} onUpdatePopup={onUpdatePopup} key={value.submitter_id} value={value} /> )}
     </ul>
   )
 }
-const QueryNodeComponent = ({params, submission, popups, onSearchFormSubmit, onUpdatePopup}) => {
+
+const QueryNodeComponent = ({params, submission, query_nodes, popups, onSearchFormSubmit, onUpdatePopup, onDeleteNode, onRequestDeleteNode, onClearDeleteSession}) => {
   let project = params.project;
   return  (
     <Box>
       <Nav />
+      <h3>browse <Link to={'/' + project}>{project}</Link> </h3>
       { popups.nodedelete_popup == true &&
-          <Popup message='test' onCancel={()=>onUpdatePopup({nodedelete_popup: false})}/>
+          <Popup message={'Are you sure you want to delete this node?'} error={json_to_string(query_nodes.delete_error)} code={json_to_string(query_nodes.query_node)} onConfirm={()=>onDeleteNode({project, id:query_nodes.request_delete_node})} onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({nodedelete_popup: false})}}/>
       }
       <QueryForm onSearchFormSubmit={onSearchFormSubmit} project={project} node_types={submission.node_types}/>
-      { submission.search_status=='succeed: 200' &&
-          Object.entries(submission.search_result['data']).map((value) => { console.log(value); return (<Entities onUpdatePopup={onUpdatePopup} node_type={value[0]} key={value[0]} value={value[1]}/>)}) 
+      { query_nodes.search_status=='succeed: 200' &&
+          Object.entries(query_nodes.search_result['data']).map((value) => { return (<Entities project={project} onRequestDeleteNode={onRequestDeleteNode} onUpdatePopup={onUpdatePopup} node_type={value[0]} key={value[0]} value={value[1]}/>)}) 
       }
     </Box>
   )
@@ -110,9 +113,9 @@ const QueryNodeComponent = ({params, submission, popups, onSearchFormSubmit, onU
 
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state.submission);
   return {
     'submission': state.submission,
+    'query_nodes': state.query_nodes,
     'popups': state.popups,
   }
 }
@@ -120,7 +123,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onSearchFormSubmit: (value) => dispatch(submitSearchForm(value)),
-    onUpdatePopup: (state) => dispatch(updatePopup(state))
+    onUpdatePopup: (state) => dispatch(updatePopup(state)),
+    onClearDeleteSession: () => dispatch(clearDeleteSession()),
+    onDeleteNode: ({id, project}) => dispatch(deleteNode({id, project})),
+    onRequestDeleteNode: ({id, project}) => dispatch(fetchQueryNode({id, project})).then(()=>dispatch(requestDeleteNode({id}))),
   }
 }
 const QueryNode = connect(mapStateToProps, mapDispatchToProps)(QueryNodeComponent);

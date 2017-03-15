@@ -1,5 +1,6 @@
 import React from 'react'
 import QueryNode from './data/QueryNode'
+import { clearQueryNodes } from './data/QueryNodeActions'
 import { render } from 'react-dom'
 import GraphiQL from 'graphiql';
 import { Provider } from 'react-redux'
@@ -26,17 +27,17 @@ import { theme, Box } from './theme';
 console.log(dev);
 let store;
 if ( dev == true) {
-	store = applyMiddleware(thunk)(createStore)(
-		reducers,
-		{user: {}, status: {}},
-			window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-	)
+  store = applyMiddleware(thunk)(createStore)(
+    reducers,
+    {user: {}, status: {}},
+      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  )
 }
 else {
-	store = applyMiddleware(thunk)(createStore)(
-		reducers,
-		{user: {}, status: {}},
-	)
+  store = applyMiddleware(thunk)(createStore)(
+    reducers,
+    {user: {}, status: {}},
+  )
 }
 
 const NoMatch = () => (
@@ -70,7 +71,7 @@ render(
                onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
                component={ProjectSubmission} />
         <Route path='/:project/search'
-               onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
+               onEnter={requireAuth(store, ()=>{store.dispatch(clearQueryNodes()); return store.dispatch(loginSubmissionAPI())})}
                component={QueryNode} />
       </Router>
     </ThemeProvider>

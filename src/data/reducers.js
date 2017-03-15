@@ -65,8 +65,41 @@ const submission = (state={}, action) => {
     case 'RECEIVE_SEARCH_ENTITIES':
       return {...state, search_result: action.data, search_status: action.search_status};
     default:
+      return state;
+  }
+};
+
+const query_nodes = (state={}, action) => {
+  switch (action.type) {
+    case 'SUBMIT_SEARCH_FORM':
+      return {...state, search_form: action.data};
+    case 'RECEIVE_SEARCH_ENTITIES':
+      return {...state, search_result: action.data, search_status: action.search_status};
+    case 'REQUEST_DELETE_NODE':
+      return {...state, request_delete_node: action.id};
+    case 'DELETE_SUCCEED':
+      return {...state, search_result: removeDeletedNode(state, action.id), delete_error: null};
+    case 'DELETE_FAIL':
+      return {...state, delete_error: action.error};
+    case 'RECEIVE_QUERY_NODE':
+      return {...state, query_node: action.data};
+    case 'CLEAR_DELETE_SESSION':
+      return {...state, query_node: null, delete_error: null};
+    case 'CLEAR_QUERY_NODES':
+      return {};
+    default:
       return state
   }
+};
+
+const removeDeletedNode = (state, id) =>{
+  let search_result = state.search_result;
+  console.log(search_result);
+  // graphql response should always be {data: {node_type: [ nodes ] }}
+  let node_type = Object.keys(search_result['data'])[0];
+  let entities = search_result['data'][node_type];
+  search_result['data'][node_type] = entities.filter((entity) => entity['id'] != id);
+  return search_result;
 };
 
 const popups = (state={}, action) => {
@@ -79,6 +112,6 @@ const popups = (state={}, action) => {
 };
 
 
-const reducers = combineReducers({popups, login, user, status, submission, form: formReducer, routing:routerReducer});
+const reducers = combineReducers({popups, login, user, status, submission, query_nodes, form: formReducer, routing:routerReducer});
 
 export default reducers
