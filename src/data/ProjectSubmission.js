@@ -6,11 +6,25 @@ import styled from 'styled-components';
 import { Box } from '../theme';
 import { Link } from 'react-router';
 
+const Browse = styled(Link)`
+  display: inline-block;
+  font-style: italic;
+  margin-left: 2em;
+	padding: 0px 5px;
+  vertical-align: sub;
+  background: #e1f7e3
+`;
+export const Title = styled.h2`
+  display: inline-block;
+  vertical-align: middle;
+  margin: 15px 0px;
+`;
 
 const ProjectSubmission = (props) => (
   <Box>
     <Nav />
-    <h2>{props.params.project=='graphql' ? 'Query graph': props.params.project}</h2>
+    <Title>{props.params.project=='graphql' ? 'Query graph': props.params.project}</Title>
+    <Browse to={'/' + props.params.project + '/search'}>browse nodes</Browse>
     <SubmitTSV path={props.params.project} />
   </Box>
 )
