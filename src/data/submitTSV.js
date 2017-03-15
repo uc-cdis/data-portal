@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { button } from '../theme'
 
-const SubmitButton = styled.label`
+export const SubmitButton = styled.label`
   border: 1px solid darkgreen;
   color: darkgreen;
   margin-bottom: 1em;

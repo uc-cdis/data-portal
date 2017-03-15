@@ -40,11 +40,24 @@ const Search = styled(Link)`
 const Logo = styled(Link)`
   background: ${props => props.theme.color_primary};
   float: left;
+  &:hover,
+  &:focus,
+  &:active {
+    background: #ad1a1a;
+  }
+
   ${cube};
 `
 
 const Logout = styled(Link)`
   background: ${props => props.theme.mid_light_gray};
+  &:hover,
+  &:focus,
+  &:active {
+    background: #cecece;
+  }
+
+
   float: left;
   span {
     vertical-align: middle;

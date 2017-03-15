@@ -5,6 +5,7 @@ export const theme = {
   main: 'mediumseagreen',
   color_primary: '#800000',
   color_secondary: '#008000',
+  color_secondary_fade: '#159915',
   color_tertiary: '#f1b13c',
   light_gray: '#f3f3f3',
   mid_light_gray: '#BCBCBC',
