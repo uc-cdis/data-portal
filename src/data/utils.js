@@ -8,11 +8,11 @@ export const get_submit_path = (project) => {
 }
 
 export const json_to_string = (data) => {
-	let replacer = (key, value) => {
+  let replacer = (key, value) => {
     if (value == null) {
         return undefined;
       }
     return value;
   }
-	return JSON.stringify(data, replacer, '  ');
+  return JSON.stringify(data, replacer, '  ');
 }

@@ -25,7 +25,9 @@ const ProjectSubmission = (props) => (
   <Box>
     <Nav />
     <Title>{props.params.project=='graphql' ? 'Query graph': props.params.project}</Title>
+    {props.params.project != 'graphql' &&
     <Browse to={'/' + props.params.project + '/search'}>browse nodes</Browse>
+    }
     <SubmitTSV path={props.params.project} />
   </Box>
 )
