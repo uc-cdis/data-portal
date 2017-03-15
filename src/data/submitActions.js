@@ -80,8 +80,10 @@ export const setProject = (project) => {
 export const loginSubmissionAPI = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
-    dispatch(fetchNodeTypes());
-    return dispatch(fetchProjects()).then(()=>{
+    return dispatch(fetchNodeTypes()).then(() => {
+      dispatch(fetchProjects())
+    })
+    .then(()=>{
       let projects = getState().submission.projects;
       if (projects){
         // user already logged in
