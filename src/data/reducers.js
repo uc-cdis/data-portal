@@ -55,15 +55,33 @@ const submission = (state={}, action) => {
     case 'RECEIVE_SUBMISSION':
       return {...state, submit_result:action.data, submit_status:action.submit_status}
     case 'SUBMIT_SEARCH_FORM':
-      console.log(action.data);
       return {...state, search_form: action.data}
     case 'RECEIVE_SEARCH_ENTITIES':
       return {...state, search_result: action.data, search_status: action.search_status}
+    case 'REQUEST_DELETE_NODE':
+      return {...state, request_delete_node: action.id}
+    case 'DELETE_SUCCEED':
+      return {...state, search_result: removeDeletedNode(state, action.id)}
+    case 'DELETE_FAIL':
+      return {...state, delete_error: action.error}
+    case 'RECEIVE_QUERY_NODE':
+      return {...state, query_node: action.data}
+		case 'CLEAR_DELETE_SESSION':
+			return {...state, query_node: null, delete_error: null}
     default:
       return state
   }
 }
 
+const removeDeletedNode = (state, id) =>{
+  let search_result = state.search_result;
+  console.log(search_result);
+  // graphql response should always be {data: {node_type: [ nodes ] }}
+  let node_type = Object.keys(search_result['data'])[0];
+  let entities = search_result['data'][node_type];
+  search_result['data'][node_type] = entities.filter((entity) => entity['id'] != id)
+  return search_result;
+}
 const popups = (state={}, action) => {
   switch (action.type) {
     case 'UPDATE_POPUP':
