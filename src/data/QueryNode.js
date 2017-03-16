@@ -38,13 +38,16 @@ const actionButton = css`
     color: inherit;
   }
 `;
+
 const DownloadButton = styled.a`
    ${actionButton};
 `;
+
 const DeleteButton = styled.a`
   ${actionButton};
   color: ${props => props.theme.color_primary};
 `;
+
 const Input = styled.input`
   transition: 0.25s;
   margin-right: 1em;
@@ -62,7 +65,7 @@ const QueryForm = ({node_types, project, onSearchFormSubmit}) =>  {
       data[input.name] = input.value;
     }
     onSearchFormSubmit(data);
-  }
+  };
   return (
       <form onSubmit={handleQuerySubmit}>
         <Input list='node_types' placeholder='entity type' type='text' name='node_type' />
@@ -73,12 +76,13 @@ const QueryForm = ({node_types, project, onSearchFormSubmit}) =>  {
         <SearchButton type='submit' onSubmit={handleQuerySubmit} value='search' />
       </form>
   )
-}
+};
+
 const Entity = ({value, project, onUpdatePopup, onRequestDeleteNode}) => {
   let onDelete = () => {
     onRequestDeleteNode({project: project, id: value.id});
     onUpdatePopup({nodedelete_popup: true});
-  }
+  };
   return (
     <li>
       <span>{value.submitter_id}</span> 
@@ -86,14 +90,15 @@ const Entity = ({value, project, onUpdatePopup, onRequestDeleteNode}) => {
       <DeleteButton onClick={onDelete}>Delete</DeleteButton>
     </li>
   )
-}
+};
+
 const Entities = ({value, project, onUpdatePopup, onRequestDeleteNode}) => {
   return (
     <ul>
       {value.map( ( value) => <Entity project={project} onRequestDeleteNode={onRequestDeleteNode} onUpdatePopup={onUpdatePopup} key={value.submitter_id} value={value} /> )}
     </ul>
   )
-}
+};
 
 const QueryNodeComponent = ({params, submission, query_nodes, popups, onSearchFormSubmit, onUpdatePopup, onDeleteNode, onRequestDeleteNode, onClearDeleteSession}) => {
   let project = params.project;
@@ -102,15 +107,27 @@ const QueryNodeComponent = ({params, submission, query_nodes, popups, onSearchFo
       <Nav />
       <h3>browse <Link to={'/' + project}>{project}</Link> </h3>
       { popups.nodedelete_popup == true &&
-          <Popup message={'Are you sure you want to delete this node?'} error={json_to_string(query_nodes.delete_error)} code={json_to_string(query_nodes.query_node)} onConfirm={()=>onDeleteNode({project, id:query_nodes.request_delete_node})} onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({nodedelete_popup: false})}}/>
+          <Popup message={'Are you sure you want to delete this node?'}
+                 error={json_to_string(query_nodes.delete_error)}
+                 code={json_to_string(query_nodes.query_node)}
+                 onConfirm={()=>onDeleteNode({project, id:query_nodes.request_delete_node})}
+                 onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({nodedelete_popup: false})}}/>
       }
-      <QueryForm onSearchFormSubmit={onSearchFormSubmit} project={project} node_types={submission.node_types}/>
-      { query_nodes.search_status=='succeed: 200' &&
-          Object.entries(query_nodes.search_result['data']).map((value) => { return (<Entities project={project} onRequestDeleteNode={onRequestDeleteNode} onUpdatePopup={onUpdatePopup} node_type={value[0]} key={value[0]} value={value[1]}/>)}) 
+      <QueryForm onSearchFormSubmit={onSearchFormSubmit}
+                 project={project}
+                 node_types={submission.node_types}/>
+      {
+        query_nodes.search_status=='succeed: 200' &&
+        Object.entries(query_nodes.search_result['data']).map((value) => {
+          return (<Entities project={project}
+                            onRequestDeleteNode={onRequestDeleteNode}
+                            onUpdatePopup={onUpdatePopup}
+                            node_type={value[0]} key={value[0]} value={value[1]}/>)
+        })
       }
     </Box>
   )
-}
+};
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -119,7 +136,7 @@ const mapStateToProps = (state, ownProps) => {
     'query_nodes': state.query_nodes,
     'popups': state.popups,
   }
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -129,6 +146,6 @@ const mapDispatchToProps = (dispatch) => {
     onDeleteNode: ({id, project}) => dispatch(deleteNode({id, project})),
     onRequestDeleteNode: ({id, project}) => dispatch(fetchQueryNode({id, project})).then(()=>dispatch(requestDeleteNode({id}))),
   }
-}
+};
 const QueryNode = connect(mapStateToProps, mapDispatchToProps)(QueryNodeComponent);
 export default QueryNode;

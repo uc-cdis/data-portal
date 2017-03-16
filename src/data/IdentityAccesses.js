@@ -2,62 +2,87 @@ import React from 'react';
 import { Box } from '../theme';
 import Nav from './nav.js'
 import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { Link } from 'react-router';
-import AceEditor from 'react-ace';
+import styled, { css } from 'styled-components';
+import { fetchCloudAccess, deleteNode, requestDeleteNode } from './AccessActions';
 
-
-const ProjectLink = styled(Link)`
+const actionButton = css`
   cursor: pointer;
-  li;
-  background: ghostwhite;
-  padding: 5px;
-  border-radius: 5px;
+  float: right;
   display: inline-block;
-  margin-bottom: 1em;
-  margin-right: 1em;
-  color: #8a6d3b;
+  margin-left: 2em;
   &:hover,
-  &:focus,
-  &:active {
-    border: 1px solid #8a6d3b;
-    color: #8a6d3b;
+  &:active,
+  &:focus {
+    color: inherit;
   }
 `;
 
-const AccessKeyPair = styled.div`
-  border-top: 1px dashed ${props => props.theme.mid_gray};
-  padding-top: 1em;
-  margin-top: 1em;
+const InactivateButton = styled.a`
+  ${actionButton};
+  color: ${props => props.theme.color_primary};
 `;
 
-const IdentityComponent = ( {user} ) => {
-    return (
-        <Box>
-            <Nav />
-            <h3>Access Management</h3>
-            <ul>
-                {user.user_name &&
-                <AccessKeyPair>
-                  <AceEditor width="100%" height="300px"  mode="json" theme="kuroir" readOnly={true} value={JSON.stringify(user.access_key_pair, null, '    ')} />
-                </AccessKeyPair>
-                }
-            </ul>
-        </Box>
-    )
-
+const Entity = ({value}) => {
+  let onDelete = () => {
+    onRequestDeleteNode({project: project, id: value.id});
+    onUpdatePopup({nodedelete_popup: true});
+  };
+  return (
+    <tr>
+      <td width="40%">{value.access_key_id}</td>
+      <td width="40%">{value.create_date}</td>
+      <td width="10%" style={{'textAlign':'right'}}>{value.status}</td>
+      <td width="10%" style={{'textAlign':'left'}}>
+        <InactivateButton onClick={onDelete}>
+          Inactivate
+        </InactivateButton>
+      </td>
+    </tr>
+  )
 };
+
+const Entities = ({values}) => {
+  return (
+    <table width="100%">
+      <tbody>
+        <tr>
+          <th>Access key id</th><th>Created date</th>
+          <th colSpan="2" style={{'textAlign': 'center'}}>Status</th>
+        </tr>
+        {values.map( (item) => <Entity key={item.access_key_id} value={item} /> )}
+      </tbody>
+    </table>
+  )
+};
+
+const IdentityComponent = ({cloud_access}) => {
+  return  (
+    <Box>
+      <Nav />
+      <h3>Access keys</h3>
+        <Entities key='list_access_id' values={cloud_access.access_key_pairs}/>
+    </Box>
+  )
+};
+
 
 const mapStateToProps = (state) => {
     return {
-        'user': state.user
+        'cloud_access': state.cloud_access
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {};
+    return {
+      onUpdatePopup: (state) => dispatch(updatePopup(state)),
+      onDeleteNode: (access_key_id) => dispatch(deleteNode({id, project})),
+      onRequestDeleteNode: (access_key_id)
+        => dispatch(fetchCloudAccess()).then(
+          () => dispatch(requestDeleteKey({access_key_id}))
+      ),
+    };
 };
 
 
-let User = connect(mapStateToProps, mapDispatchToProps)(IdentityComponent);
-export default User;
+let CloudAccess = connect(mapStateToProps, mapDispatchToProps)(IdentityComponent);
+export default CloudAccess;
