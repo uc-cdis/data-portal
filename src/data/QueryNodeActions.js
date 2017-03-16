@@ -8,7 +8,7 @@ export const updateSearchForm = (value) => {
     type: 'UPDATE_SEARCH_FORM',
     form: value
   }
-}
+};
 
 
 export const submitSearchForm = ({node_type, submitter_id="", project}, url) => {
@@ -31,7 +31,7 @@ export const receiveSearchEntities = ({status, data}) => {
         type: 'RECEIVE_SEARCH_ENTITIES',
         search_status: 'succeed: ' + status,
         data: data
-      }
+      };
     default:
       return {
         type: 'RECEIVE_SEARCH_ENTITIES',
@@ -39,19 +39,19 @@ export const receiveSearchEntities = ({status, data}) => {
         data: data
       }
   }
-}
+};
 
 export const deleteNode = ({id, project}) => {
   let receiveDelete = ({status, data}) => {
     console.log('receive delete');
     return receiveDeleteResponse({status, data, id, project})
-  }
+  };
   return fetchWrapper({
     path: get_submit_path(project) + '/' + 'entities/' + id,
     method: 'DELETE',
     handler: receiveDelete
   })
-}
+};
 
 export const receiveDeleteResponse = ({status, data, id, project}) => {
   return (dispatch) => {
@@ -72,21 +72,21 @@ export const receiveDeleteResponse = ({status, data, id, project}) => {
         });
     }
   }
+};
 
-}
 export const storeNodeInfo = ({id}) => {
   return {
     type: 'STORE_NODE_INFO',
     id: id
   }
-}
+};
 
 export const fetchQueryNode = ({id, project}) => {
   return fetchWrapper({
     path: get_submit_path(project) + '/' + 'export?ids=' + id + '&format=json',
     handler: receiveQueryNode
   })
-}
+};
 
 export const receiveQueryNode = ({status, data}) => {
   switch (status) {
@@ -94,20 +94,20 @@ export const receiveQueryNode = ({status, data}) => {
       return {
         type: 'RECEIVE_QUERY_NODE',
         data: data[0]
-      }
+      };
     default:
       return {
         type: 'QUERY_ERROR',
         error: data
       }
   }
-}
+};
 
 export const clearDeleteSession = () => {
   return {
     type: 'CLEAR_DELETE_SESSION'
   }
-}
+};
 
 export const clearResultAndQuery = (nextState) => {
   return (dispatch, getState) => {
@@ -121,4 +121,4 @@ export const clearResultAndQuery = (nextState) => {
       );
     }
   }
-}
+};

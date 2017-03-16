@@ -27,8 +27,19 @@ const user = (state={}, action) => {
       return {...state, oauth_url:action.url};
     case 'FETCH_ERROR':
       return {...state, fetched_user: true, fetch_error: action.error};
-    case 'RECEIVE_USER_ACCESS':
-      return {...state, ...action.user, fetched_user: true, access_key_pair: action.access_key};
+    default:
+      return state
+  }
+};
+
+const cloud_access = (state={}, action) => {
+  switch (action.type){
+    case 'RECEIVE_CLOUD_ACCESS':
+      return {...state, ...action.cloud_access, access_key_pairs: action.access_keys};
+    case 'RECEIVE_MIDDLEWARE_LOGIN':
+      return {...state, login:state.result, error:state.error};
+    case 'FETCH_ERROR':
+      return {...state, fetch_error: action.error};
     default:
       return state
   }
@@ -114,6 +125,6 @@ const popups = (state={}, action) => {
 };
 
 
-const reducers = combineReducers({popups, login, user, status, submission, query_nodes, form: formReducer, routing:routerReducer});
+const reducers = combineReducers({popups, login, user, status, submission, query_nodes, cloud_access, form: formReducer, routing:routerReducer});
 
 export default reducers

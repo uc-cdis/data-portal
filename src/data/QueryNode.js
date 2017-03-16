@@ -41,9 +41,11 @@ const actionButton = css`
     color: inherit;
   }
 `;
+
 const DownloadButton = styled.a`
    ${actionButton};
 `;
+
 const DeleteButton = styled.a`
   ${actionButton};
   color: ${props => props.theme.color_primary};
@@ -130,7 +132,7 @@ const Entities = ({value, project, onUpdatePopup, onStoreNodeInfo}) => {
       {value.map( ( value) => <Entity project={project} onStoreNodeInfo={onStoreNodeInfo} onUpdatePopup={onUpdatePopup} key={value.submitter_id} value={value} /> )}
     </ul>
   )
-}
+};
 
 const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, onSearchFormSubmit, onUpdatePopup, onDeleteNode, onStoreNodeInfo, onClearDeleteSession}) => {
   let project = params.project;
@@ -151,7 +153,7 @@ const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, 
       }
     </Box>
   )
-}
+};
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -161,7 +163,7 @@ const mapStateToProps = (state, ownProps) => {
     'query_nodes': state.query_nodes,
     'popups': state.popups,
   }
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -171,6 +173,6 @@ const mapDispatchToProps = (dispatch) => {
     onDeleteNode: ({id, project}) => dispatch(deleteNode({id, project})),
     onStoreNodeInfo: ({id, project}) => dispatch(fetchQueryNode({id, project})).then(()=>dispatch(storeNodeInfo({id}))),
   }
-}
+};
 const QueryNode = connect(mapStateToProps, mapDispatchToProps)(QueryNodeComponent);
 export default QueryNode;
