@@ -57,7 +57,8 @@ const QueryForm = ({node_types, project, onSearchFormSubmit}) =>  {
     event.preventDefault();
     let form = event.target;
     let data = {project: project}
-    for (var input of form) {
+    for (let i =0; i<form.length; i++){
+      let input = form[i];
       data[input.name] = input.value;
     }
     onSearchFormSubmit(data);
