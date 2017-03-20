@@ -1,4 +1,4 @@
-import { fetchWrapper, fetchOAuthURL } from './actions';
+import { fetchWrapper, fetchOAuthURL, updatePopup } from './actions';
 import { fetchProjects }  from './queryactions';
 import { cloudmiddleware_path, cloudmiddleware_oauth_path } from '../localconf';
 import moment from 'moment';
@@ -49,49 +49,14 @@ export const fetchCloudAccess = () => {
   })
 };
 
-
-export const deleteAccessKey = (access_key_id) => {
-  let receiveDeleteKey = ({status, data}) => {
-    console.log('receive delete');
-    return receiveDeleteResponse({status, data, id, project})
-  };
-  return fetchWrapper({
-    path: cloudmiddleware_path + '/access_key',
-    method: 'DELETE',
-    handler: receiveDeleteKey
-  })
-};
-
-export const receiveDeleteResponse = ({status, data}) => {
-  return (dispatch) => {
-    switch (status) {
-      case 200:
-        dispatch({
-          type: 'DELETE_SUCCEED',
-          id: id
-        });
-        dispatch(updatePopup({nodedelete_popup: false}));
-        return dispatch(clearDeleteSession());
-
-      default:
-        return dispatch({
-          type: 'DELETE_FAIL',
-          id: id,
-          error: data
-        });
-    }
-  }
-};
-
-export const clearDeleteSession = () => {
-  return {
-    type: 'CLEAR_DELETE_SESSION'
-  }
+const convertTime = (value) => {
+  value['create_date'] = moment(value['create_date']).format('YYYY-MM-DD HH:mm:ss');
+  return value
 };
 
 const convertTimes = (values) => {
   values.map( item => {
-    item['create_date'] = moment(item['create_date']).format('YYYY-MM-DD HH:mm:ss');
+    convertTime(item)
   });
   return values;
 };
@@ -101,13 +66,134 @@ export const receiveCloudAccess = ({status, data}) => {
     case 200:
       return {
         type: 'RECEIVE_CLOUD_ACCESS',
-        cloud_access: data["user"],
-        access_keys: convertTimes(data["access_key"])
+        user: data["user"],
+        access_keys: convertTimes(data["access_keys"])
       };
     default:
       return {
-        type: 'FETCH_ERROR',
+        type: 'CLOUD_ACCESS_ERROR',
+        user: null,
         error: data['error']
       }
   }
 };
+
+export const requestDeleteKey = (access_key_id) => {
+  return {
+    type: 'REQUEST_DELETE_KEY',
+    access_key_id: access_key_id
+  }
+};
+
+export const deleteKey = (access_key_id) => {
+  let receiveDeleteKey = ({status, data}) => {
+    console.log('receive delete');
+    return receiveDeleteKeyResponse({status, data, access_key_id})
+  };
+  return fetchWrapper({
+    path: cloudmiddleware_path + 'access_key/' + access_key_id,
+    method: 'DELETE',
+    handler: receiveDeleteKey
+  })
+};
+
+export const receiveDeleteKeyResponse = ({status, data, access_key_id}) => {
+  return (dispatch) => {
+    switch (status) {
+      case 200:
+        dispatch({
+          type: 'DELETE_KEY_SUCCEED',
+          access_keys: convertTimes(data["access_keys"])
+        });
+        dispatch(updatePopup({key_delete_popup: false}));
+        return dispatch(clearDeleteSession());
+      default:
+        return dispatch({
+          type: 'DELETE_KEY_FAIL',
+          access_key_id: access_key_id,
+          error: data
+        });
+    }
+  }
+};
+
+export const clearDeleteSession = () => {
+  return {
+    type: 'CLEAR_DELETE_KEY_SESSION'
+  }
+};
+
+export const createKey = () => {
+  let receiveCreatedKey = ({status, data}) => {
+    console.log('receive delete');
+    return receiveCreatedKeyResponse({status, data})
+  };
+  return fetchWrapper({
+    path: cloudmiddleware_path + 'access_key',
+    method: 'POST',
+    handler: receiveCreatedKey
+  })
+};
+
+export const parseKeyToString = (content) => {
+  return 'access_key\tsecrect_key\n' + content['access_key_id'] + '\t' + content['secret_access_key'];
+};
+
+export const receiveCreatedKeyResponse = ({status, data}) => {
+  return (dispatch) => {
+    switch (status) {
+      case 200:
+        dispatch({
+          type: 'CREATE_SUCCEED',
+          access_key_pair: data,
+          str_access_key_pair: parseKeyToString(data)
+        });
+        dispatch(updatePopup({save_key_popup: true}));
+        return dispatch(fetchCloudAccess());
+      default:
+        dispatch({
+          type: 'CREATE_FAIL',
+          error: data['error']
+        });
+        return dispatch(updatePopup({save_key_popup: true}));
+    }
+  }
+};
+
+export const clearCreationSession = () => {
+  return {
+    type: 'CLEAR_CREATION_SESSION'
+  }
+};
+
+export const createUser = () => {
+  let receiveCreatedUser = ({status, data}) => {
+    console.log('receive delete');
+    return receiveCreatedUserResponse({status, data})
+  };
+  return fetchWrapper({
+    path: cloudmiddleware_path + 'aws_user',
+    method: 'POST',
+    handler: receiveCreatedUser
+  })
+};
+
+export const receiveCreatedUserResponse = ({status, data}) => {
+  return (dispatch) => {
+    switch (status) {
+      case 200:
+        return dispatch({
+          type: 'CREATE_USER_SUCCEED',
+          user: data["user"]
+        });
+      default:
+        dispatch({
+          type: 'CREATE_FAIL',
+          user: null,
+          error: data['error']
+        });
+        return dispatch(updatePopup({save_key_popup: true}));
+    }
+  }
+};
+
