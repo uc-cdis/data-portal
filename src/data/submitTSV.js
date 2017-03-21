@@ -53,32 +53,38 @@ const Status = styled.div`
 const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, onFileChange }) => {
   let setValue = (event) => {
     let f = event.target.files[0];
+    if (FileReader.prototype.readAsBinaryString === undefined) {
+      FileReader.prototype.readAsBinaryString = function (fileData) {
+        var binary = "";
+        var pt = this;
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var bytes = new Uint8Array(reader.result);
+          var length = bytes.byteLength;
+          for (var i = 0; i < length; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          //pt.result  - readonly so assign content to another property
+          pt.content = binary;
+          pt.onload();
+        }
+        reader.readAsArrayBuffer(fileData);
+      }
+    }
     let reader = new FileReader();
     let file_type = f.type;
     if (f.name.endsWith('.tsv')){
       file_type = 'text/tab-separated-values';
     }
+    reader.onload = function (e) {
+      if (e === undefined) {
+        var data = reader.content;
+      } else {
+        var data = e.target.result;
+      }
+      onUploadClick(data, predict_file_type(data, file_type));
+    };
     reader.readAsBinaryString(f);
-    reader.onload = ((e) => onUploadClick(e.target.result, predict_file_type(e.target.result, file_type)));
-		// Extend file reader
-    if (!FileReader.prototype.readAsBinaryString) {
-			FileReader.prototype.readAsBinaryString = function (fileData) {
-				 var binary = "";
-				 var pt = this;
-				 var reader = new FileReader();      
-				 reader.onload = function (e) {
-						 var bytes = new Uint8Array(reader.result);
-						 var length = bytes.byteLength;
-						 for (var i = 0; i < length; i++) {
-								 binary += String.fromCharCode(bytes[i]);
-						 }
-					//pt.result  - readonly so assign binary
-					pt.content = binary;
-					$(pt).trigger('onload');
-			};
-			reader.readAsArrayBuffer(fileData);
-			}
-		}
   };
   let onSubmitClickEvent = () => {
     onSubmitClick();
