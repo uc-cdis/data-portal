@@ -106,7 +106,7 @@ const QueryNodeComponent = ({params, submission, query_nodes, popups, onSearchFo
     <Box>
       <Nav />
       <h3>browse <Link to={'/' + project}>{project}</Link> </h3>
-      { popups.nodedelete_popup == true &&
+      { popups.nodedelete_popup ===true &&
           <Popup message={'Are you sure you want to delete this node?'}
                  error={json_to_string(query_nodes.delete_error)}
                  code={json_to_string(query_nodes.query_node)}
@@ -117,7 +117,7 @@ const QueryNodeComponent = ({params, submission, query_nodes, popups, onSearchFo
                  project={project}
                  node_types={submission.node_types}/>
       {
-        query_nodes.search_status=='succeed: 200' &&
+        query_nodes.search_status==='succeed: 200' &&
         Object.entries(query_nodes.search_result['data']).map((value) => {
           return (<Entities project={project}
                             onRequestDeleteNode={onRequestDeleteNode}
