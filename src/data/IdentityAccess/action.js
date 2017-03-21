@@ -1,6 +1,5 @@
-import { fetchWrapper, fetchOAuthURL, updatePopup } from './actions';
-import { fetchProjects }  from './queryactions';
-import { cloudmiddleware_path, cloudmiddleware_oauth_path } from '../localconf';
+import { fetchWrapper, fetchOAuthURL, updatePopup } from '../actions';
+import { cloudmiddleware_path, cloudmiddleware_oauth_path } from '../../localconf';
 import moment from 'moment';
 
 export const loginCloudMiddleware = () => {

@@ -1,13 +1,13 @@
 import React from 'react';
-import { Box } from '../theme';
-import Nav from './nav.js'
-import { json_to_string, get_submit_path } from './utils'
-import { updatePopup } from './actions';
-import {Popup, SavePopup} from './Popup';
+import Nav from '../nav.js'
+import { json_to_string, get_submit_path } from '../utils'
+import { updatePopup } from '../actions';
+import {Popup, SavePopup} from '../Popup';
 import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
-import { fetchCloudAccess, createUser, createKey, deleteKey, requestDeleteKey, clearDeleteSession, clearCreationSession } from './AccessActions';
-import { button } from '../theme'
+import { fetchCloudAccess, createUser, createKey, deleteKey,
+  requestDeleteKey, clearDeleteSession, clearCreationSession } from './action';
+import { button, Box } from '../../theme'
 
 const actionButton = css`
   cursor: pointer;
