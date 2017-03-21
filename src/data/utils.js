@@ -16,3 +16,17 @@ export const json_to_string = (data) => {
   }
   return JSON.stringify(data, replacer, '  ');
 };
+
+export const predict_file_type = (data, file_type) => {
+  json_type = 'application/json';
+  tsv_type = 'text/tab-separated-values';
+  if (data.indexOf('{') != -1 || data.indexOf('}') != -1){
+     return json_type;
+  }
+  if (data.indexOf('\t') != -1){
+    return tsv_type;
+  }
+  else {
+    return file_type;
+  }
+}
