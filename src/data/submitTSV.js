@@ -1,4 +1,5 @@
 import React from 'react';
+import { predict_file_type } from './utils';
 import brace from 'brace';
 import 'brace/mode/json';
 import 'brace/theme/kuroir';
@@ -54,13 +55,11 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
     let f = event.target.files[0];
     let reader = new FileReader();
     let file_type = f.type;
-    console.log(f);
     if (f.name.endsWith('.tsv')){
       file_type = 'text/tab-separated-values';
     }
-    console.log(file_type);
     reader.readAsBinaryString(f);
-    reader.onload = ((e) => onUploadClick(e.target.result, file_type));
+    reader.onload = ((e) => onUploadClick(e.target.result, predict_file_type(e.target.result, file_type)));
 		// Extend file reader
     if (!FileReader.prototype.readAsBinaryString) {
 			FileReader.prototype.readAsBinaryString = function (fileData) {
@@ -85,7 +84,7 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
     onSubmitClick();
   };
   let onChange = (newValue) => {
-    onFileChange(newValue);
+    onFileChange(newValue, submission.file_type);
   };
   return (
     <form>
