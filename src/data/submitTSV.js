@@ -72,18 +72,18 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
       }
     }
     let reader = new FileReader();
+    let file_type = f.type;
+    if (f.name.endsWith('.tsv')){
+      file_type = 'text/tab-separated-values';
+    }
     reader.onload = function (e) {
       if (e === undefined) {
         var data = reader.content;
       } else {
         var data = e.target.result;
       }
-      onUploadClick(data, file_type)
+      onUploadClick(data, predict_file_type(data, file_type));
     };
-    let file_type = f.type;
-    if (f.name.endsWith('.tsv')){
-      file_type = 'text/tab-separated-values';
-    }
     reader.readAsBinaryString(f);
   };
   let onSubmitClickEvent = () => {
