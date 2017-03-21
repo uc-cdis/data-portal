@@ -18,15 +18,15 @@ export const json_to_string = (data) => {
 };
 
 export const predict_file_type = (data, file_type) => {
-  json_type = 'application/json';
-  tsv_type = 'text/tab-separated-values';
+  let predict_type = file_type;
+  let json_type = 'application/json';
+  let tsv_type = 'text/tab-separated-values';
+
   if (data.indexOf('{') != -1 || data.indexOf('}') != -1){
-     return json_type;
+     predict_type = json_type;
   }
   if (data.indexOf('\t') != -1){
-    return tsv_type;
+    predict_type = tsv_type;
   }
-  else {
-    return file_type;
-  }
+  return predict_type;
 }

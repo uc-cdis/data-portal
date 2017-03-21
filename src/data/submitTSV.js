@@ -84,7 +84,7 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
     onSubmitClick();
   };
   let onChange = (newValue) => {
-    onFileChange(newValue);
+    onFileChange(newValue, submission.file_type);
   };
   return (
     <form>

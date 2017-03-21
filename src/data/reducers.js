@@ -48,7 +48,7 @@ const submission = (state={}, action) => {
     case 'REQUEST_UPLOAD':
       return {...state, file:action.file, file_type: action.file_type};
     case 'UPDATE_FILE':
-      return {...state, file:action.file};
+      return {...state, file:action.file, file_type: action.file_type};
     case 'RECEIVE_PROJECTS':
       return {...state, projects:action.data};
     case 'RECEIVE_NODE_TYPES':
