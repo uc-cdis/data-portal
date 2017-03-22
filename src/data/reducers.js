@@ -2,7 +2,7 @@ import 'babel-polyfill'
 import { reducer as formReducer } from 'redux-form'
 import { combineReducers } from 'redux'
 import {routerReducer} from 'react-router-redux'
-import {cloud_access} from './IdentityAccess/reducer'
+import {cloud_access} from './IdentityAccess/reducers'
 
 const status = (state={}, action) => {
   switch (action.type){

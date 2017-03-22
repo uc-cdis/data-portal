@@ -4,40 +4,11 @@ import { json_to_string, get_submit_path } from '../utils'
 import { updatePopup } from '../actions';
 import {Popup, SavePopup} from '../Popup';
 import { connect } from 'react-redux';
-import styled, { css } from 'styled-components';
 import { fetchCloudAccess, createUser, createKey, deleteKey,
-  requestDeleteKey, clearDeleteSession, clearCreationSession } from './action';
-import { button, Box } from '../../theme'
-
-const actionButton = css`
-  cursor: pointer;
-  float: right;
-  display: inline-block;
-  margin-left: 2em;
-  &:hover,
-  &:active,
-  &:focus {
-    color: inherit;
-  }
-`;
-
-export const RequestButton = styled.label`
-  border: 1px solid darkgreen;
-  color: darkgreen;
-  margin-bottom: 1em;
-  &:hover,
-  &:active,
-  &:focus {
-    color: #2e842e;
-    border-color: #2e842e;
-
-  }
-  ${button};
-`;
-const DeleteButton = styled.a`
-  ${actionButton};
-  color: ${props => props.theme.color_primary};
-`;
+  requestDeleteKey, clearDeleteSession, clearCreationSession } from './actions';
+import { Box } from '../../theme';
+import { RequestButton, DeleteButton } from './style';
+import * as constants from "./constants";
 
 const Entity = ({value, onUpdatePopup, onRequestDeleteKey}) => {
   let onDelete = () => {
@@ -51,7 +22,7 @@ const Entity = ({value, onUpdatePopup, onRequestDeleteKey}) => {
       <td width="10%">{value.status}</td>
       <td width="10%" style={{'textAlign':'left'}}>
         <DeleteButton onClick={onDelete}>
-          Delete
+          {constants.DELETE_BTN}
         </DeleteButton>
       </td>
     </tr>
@@ -63,8 +34,8 @@ const Entities = ({values, onUpdatePopup, onRequestDeleteKey}) => {
     <table width="100%">
       <tbody>
         <tr>
-          <th>Access key id</th><th>Created date</th>
-          <th>Status</th>
+          <th>{constants.ACCESS_KEY_ID_COLUMN}</th><th>{constants.CREATE_DATE_COLUMN}</th>
+          <th>{constants.STATUS_COLUMN}</th>
           <th></th>
         </tr>
         {values.map( (item) => <Entity key={item.access_key_id} value={item}
@@ -83,24 +54,24 @@ const IdentityComponent = ({cloud_access, popups, onCreateUser, onCreateKey, onC
       {
         !cloud_access.user &&
         <div>
-          You currently have no AWS access.<br/>
-          <RequestButton onClick={onCreateUser}>Create user access</RequestButton>
+          {constants.NO_ACCESS_MSG}<br/>
+          <RequestButton onClick={onCreateUser}>{constants.CREATE_USER_BTN}</RequestButton>
         </div>
       }
       {
         cloud_access.user &&
         <div>
-          <h3>Access keys</h3>
+          <h3>{constants.ACCESS_KEY_LBL}</h3>
           {
             popups.key_delete_popup === true &&
-            <Popup message={'Are you sure you want to make this key inactive?'}
+            <Popup message={constants.CONFIRM_DELETE_MSG}
                    error={json_to_string(cloud_access.delete_error)}
                    onConfirm={()=>onDeleteKey(cloud_access.request_delete_key)}
                    onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({key_delete_popup: false})}}/>
           }
           {
             popups.save_key_popup === true &&
-            <SavePopup message={'This secret key is only displayed this time. Please save it!'}
+            <SavePopup message={constants.SECRET_KEY_MSG}
                        error={json_to_string(cloud_access.create_error)}
                        display={cloud_access.access_key_pair}
                        savingStr={cloud_access.str_access_key_pair}
@@ -108,7 +79,7 @@ const IdentityComponent = ({cloud_access, popups, onCreateUser, onCreateKey, onC
                        filename={'accessKeys.txt'}
             />
           }
-          <RequestButton onClick={onCreateKey}>Create access key</RequestButton>
+          <RequestButton onClick={onCreateKey}>{constants.CREATE_ACCESS_KEY_BTN}</RequestButton>
           {
             cloud_access.access_key_pairs &&
             <Entities key='list_access_id' values={cloud_access.access_key_pairs}

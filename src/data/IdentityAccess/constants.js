@@ -1,0 +1,10 @@
+export const NO_ACCESS_MSG = "You currently have no AWS access.";
+export const CONFIRM_DELETE_MSG = 'Are you sure you want to make this key inactive?';
+export const SECRET_KEY_MSG = 'This secret key is only displayed this time. Please save it!';
+export const DELETE_BTN = 'Delete';
+export const CREATE_USER_BTN = 'Create user access';
+export const CREATE_ACCESS_KEY_BTN = 'Create access key';
+export const ACCESS_KEY_ID_COLUMN = 'Access key id';
+export const CREATE_DATE_COLUMN = 'Created date';
+export const STATUS_COLUMN = 'Status';
+export const ACCESS_KEY_LBL = 'Access keys';
