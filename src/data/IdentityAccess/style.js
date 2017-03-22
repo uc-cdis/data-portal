@@ -1,3 +1,32 @@
-/**
- * Created by thanhnd on 3/21/17.
- */
+import { button } from '../../theme';
+import styled, { css } from 'styled-components';
+
+export const actionButton = css`
+  cursor: pointer;
+  float: right;
+  display: inline-block;
+  margin-left: 2em;
+  &:hover,
+  &:active,
+  &:focus {
+    color: inherit;
+  }
+`;
+
+export const RequestButton = styled.label`
+  border: 1px solid darkgreen;
+  color: darkgreen;
+  margin-bottom: 1em;
+  &:hover,
+  &:active,
+  &:focus {
+    color: #2e842e;
+    border-color: #2e842e;
+
+  }
+  ${button};
+`;
+export const DeleteButton = styled.a`
+  ${actionButton};
+  color: ${props => props.theme.color_primary};
+`;
