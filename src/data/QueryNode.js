@@ -45,6 +45,10 @@ const DeleteButton = styled.a`
   ${actionButton};
   color: ${props => props.theme.color_primary};
 `;
+const ViewButton = styled.a`
+  ${actionButton};
+  color: #2B547E;
+`;
 const Input = styled.input`
   transition: 0.25s;
   margin-right: 1em;
@@ -79,10 +83,15 @@ const Entity = ({value, project, onUpdatePopup, onRequestDeleteNode}) => {
     onRequestDeleteNode({project: project, id: value.id});
     onUpdatePopup({nodedelete_popup: true});
   }
+  let onView = () => {
+    onRequestDeleteNode({project: project, id: value.id});
+    onUpdatePopup({view_popup: true});
+  }
   return (
     <li>
       <span>{value.submitter_id}</span> 
       <DownloadButton href={get_submit_path(project) + '/export?format=json&ids='+value.id}>Download</DownloadButton>
+      <ViewButton onClick={onView}>View</ViewButton>
       <DeleteButton onClick={onDelete}>Delete</DeleteButton>
     </li>
   )
@@ -103,6 +112,10 @@ const QueryNodeComponent = ({params, submission, query_nodes, popups, onSearchFo
       <h3>browse <Link to={'/' + project}>{project}</Link> </h3>
       { popups.nodedelete_popup == true &&
           <Popup message={'Are you sure you want to delete this node?'} error={json_to_string(query_nodes.delete_error)} code={json_to_string(query_nodes.query_node)} onConfirm={()=>onDeleteNode({project, id:query_nodes.request_delete_node})} onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({nodedelete_popup: false})}}/>
+      }
+      { popups.view_popup == true &&
+        query_nodes.query_node && 
+          <Popup message={query_nodes.query_node.submitter_id} error={json_to_string(query_nodes.delete_error)} code={json_to_string(query_nodes.query_node)} onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({view_popup: false})}}/>
       }
       <QueryForm onSearchFormSubmit={onSearchFormSubmit} project={project} node_types={submission.node_types}/>
       { query_nodes.search_status=='succeed: 200' &&
