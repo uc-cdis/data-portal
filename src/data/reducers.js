@@ -75,8 +75,8 @@ const query_nodes = (state={}, action) => {
       return {...state, search_form: action.data};
     case 'RECEIVE_SEARCH_ENTITIES':
       return {...state, search_result: action.data, search_status: action.search_status};
-    case 'REQUEST_DELETE_NODE':
-      return {...state, request_delete_node: action.id};
+    case 'STORE_NODE_INFO':
+      return {...state, stored_node_info: action.id};
     case 'DELETE_SUCCEED':
       return {...state, search_result: removeDeletedNode(state, action.id), delete_error: null};
     case 'DELETE_FAIL':
