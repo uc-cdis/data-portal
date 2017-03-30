@@ -115,7 +115,7 @@ const QueryNodeComponent = ({params, submission, query_nodes, popups, onSearchFo
       }
       { popups.view_popup == true &&
         query_nodes.query_node && 
-          <Popup message={query_nodes.query_node.submitter_id} error={json_to_string(query_nodes.delete_error)} code={json_to_string(query_nodes.query_node)} onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({view_popup: false})}}/>
+          <Popup message={query_nodes.query_node.submitter_id} error={json_to_string(query_nodes.delete_error)} code={json_to_string(query_nodes.query_node)} onClose={()=>{ onClearDeleteSession(); onUpdatePopup({view_popup: false})}}/>
       }
       <QueryForm onSearchFormSubmit={onSearchFormSubmit} project={project} node_types={submission.node_types}/>
       { query_nodes.search_status=='succeed: 200' &&
