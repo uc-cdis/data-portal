@@ -71,9 +71,9 @@ export const receiveDeleteResponse = ({status, data, id, project}) => {
   }
 
 }
-export const requestDeleteNode = ({id}) => {
+export const storeNodeInfo = ({id}) => {
   return {
-    type: 'REQUEST_DELETE_NODE',
+    type: 'STORE_NODE_INFO',
     id: id
   }
 }
