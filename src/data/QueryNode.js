@@ -19,6 +19,7 @@ const SearchButton = styled.input`
   margin-bottom: 1em;
   background-color: ${props => props.theme.color_secondary}; 
   border: 1px solid ${props => props.theme.color_secondary};
+  line-height: 34px;
   &:hover,
   &:active,
   &:focus {
@@ -53,6 +54,8 @@ const ViewButton = styled.a`
 `;
 const Input = styled.input`
   transition: 0.25s;
+  border: 1px solid #c1c1c1;
+  line-height: 34px;
   margin-right: 1em;
   padding: 0em 0.5em;
   border-radius: 5px;
