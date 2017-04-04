@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import { clearDeleteSession, fetchQueryNode, submitSearchForm, deleteNode, storeNodeInfo } from './QueryNodeActions';
 import { cube } from '../theme';
 import { Box } from '../theme';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 const SearchButton = styled.input`
   transition: 0.25s;
@@ -17,6 +19,7 @@ const SearchButton = styled.input`
   margin-bottom: 1em;
   background-color: ${props => props.theme.color_secondary}; 
   border: 1px solid ${props => props.theme.color_secondary};
+  line-height: 34px;
   &:hover,
   &:active,
   &:focus {
@@ -51,33 +54,56 @@ const ViewButton = styled.a`
 `;
 const Input = styled.input`
   transition: 0.25s;
+  border: 1px solid #c1c1c1;
+  line-height: 34px;
   margin-right: 1em;
   padding: 0em 0.5em;
+  border-radius: 5px;
 `;
 
-const QueryForm = ({node_types, project, onSearchFormSubmit}) =>  {
-  let nodes_for_query = node_types.filter((nt) => !['program', 'project'].includes(nt));
-  let handleQuerySubmit = (event) => {
+const Dropdown = styled(Select)`
+  width: 40%;
+  float: left;
+  margin-right: 1em;
+`;
+
+var QueryForm = React.createClass({
+  handleQuerySubmit (event) {
     event.preventDefault();
     let form = event.target;
-    let data = {project: project}
+    console.log(form);
+    let data = {project: this.props.project}
+    console.log(data);
     for (let i =0; i<form.length; i++){
       let input = form[i];
+      console.log(input);
       data[input.name] = input.value;
     }
-    onSearchFormSubmit(data);
+    console.log(data);
+    this.props.onSearchFormSubmit(data);
+  },
+  getInitialState () {
+    return {
+      selectValue: 'experiment'
+    };
+  },
+  updateValue (newValue) {
+    this.setState({
+      selectValue: newValue
+    });
+  },
+  render() {
+    var nodes_for_query = this.props.node_types.filter((nt) => !['program', 'project'].includes(nt));
+    var options = nodes_for_query.map( (node_type) => {return {value: node_type, label: node_type}});
+    return (
+        <form onSubmit={this.handleQuerySubmit}>
+          <Dropdown name="node_type" options={options} value={this.state.selectValue} onChange={this.updateValue}/>
+          <Input placeholder='submitter_id' type='text' name="submitter_id"/>
+          <SearchButton type='submit' onSubmit={this.handleQuerySubmit} value='search' />
+        </form>
+    )
   }
-  return (
-      <form onSubmit={handleQuerySubmit}>
-        <Input list='node_types' placeholder='entity type' type='text' name='node_type' />
-        <datalist id='node_types'>
-          {nodes_for_query.map( (node_type) => {return <option key={node_type} value={node_type}/>})}
-        </datalist>
-        <Input placeholder='submitter_id' type='text' name="submitter_id"/>
-        <SearchButton type='submit' onSubmit={handleQuerySubmit} value='search' />
-      </form>
-  )
-}
+});
 const Entity = ({value, project, onUpdatePopup, onStoreNodeInfo}) => {
   let onDelete = () => {
     onStoreNodeInfo({project: project, id: value.id});
