@@ -1,6 +1,6 @@
 import { fetchOAuthURL, fetchWrapper } from './actions';
 import { predict_file_type } from './utils';
-import { fetchProjects, fetchNodeTypes }  from './queryactions';
+import { fetchProjects, fetchDictionary }  from './queryactions';
 import { submissionapi_path, submissionapi_oauth_path } from '../localconf';
 
 export const uploadTSV = (value, type) => {
@@ -74,7 +74,7 @@ export const setProject = (project) => {
 export const loginSubmissionAPI = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
-    return dispatch(fetchNodeTypes()).then(() => {
+    return dispatch(fetchDictionary()).then(() => {
       dispatch(fetchProjects())
     })
     .then(()=>{
