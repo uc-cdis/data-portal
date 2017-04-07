@@ -53,6 +53,8 @@ const submission = (state={}, action) => {
       return {...state, projects:action.data};
     case 'RECEIVE_NODE_TYPES':
       return {...state, node_types: action.data};
+    case 'RECEIVE_DICTIONARY':
+      return{ ...state, dictionary:action.data, node_types: Object.keys(action.data).slice(2,)};
     case 'RECEIVE_AUTHORIZATION_URL':
       return {...state, oauth_url:action.url};
     case 'RECEIVE_SUBMISSION_LOGIN':
