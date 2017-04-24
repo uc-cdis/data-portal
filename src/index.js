@@ -17,7 +17,7 @@ import IdentityAccess from './data/IdentityAccesses.js'
 import { loginSubmissionAPI, setProject } from './data/submitActions'
 import { loginCloudMiddleware } from './data/AccessActions'
 import { Router, Route, Link, useRouterHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import { createHistory } from 'history'
 import 'react-select/dist/react-select.css';
 import { basename, dev } from './localconf.js';
@@ -25,16 +25,20 @@ import { ThemeProvider } from 'styled-components';
 import { theme, Box } from './theme';
 
 console.log(dev);
+const browserHistory = useRouterHistory(createHistory)({
+basename: basename
+});
+
 let store;
 if ( dev == true) {
-  store = applyMiddleware(thunk)(createStore)(
+  store = applyMiddleware(thunk, routerMiddleware(browserHistory))(createStore)(
     reducers,
     {user: {}, status: {}},
       window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   )
 }
 else {
-  store = applyMiddleware(thunk)(createStore)(
+  store = applyMiddleware(thunk, routerMiddleware(browserHistory))(createStore)(
     reducers,
     {user: {}, status: {}},
   )
@@ -46,9 +50,6 @@ const NoMatch = () => (
 </div>
 );
 
-const browserHistory = useRouterHistory(createHistory)({
-basename: basename
-});
 
 const history = syncHistoryWithStore(browserHistory, store);
 

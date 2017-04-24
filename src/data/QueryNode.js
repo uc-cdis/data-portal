@@ -71,16 +71,18 @@ var QueryForm = React.createClass({
   handleQuerySubmit (event) {
     event.preventDefault();
     let form = event.target;
-    console.log(form);
     let data = {project: this.props.project}
-    console.log(data);
+    let query_param = [];
+
     for (let i =0; i<form.length; i++){
       let input = form[i];
-      console.log(input);
-      data[input.name] = input.value;
+      if (input.name && input.value) {
+        query_param.push(input.name + '=' + input.value);
+        data[input.name] = input.value;
+      }
     }
-    console.log(data);
-    this.props.onSearchFormSubmit(data);
+    let url = `/${this.props.project}/search?${query_param.join('&')}`;
+    this.props.onSearchFormSubmit(data, url);
   },
   getInitialState () {
     return {
@@ -130,7 +132,10 @@ const Entities = ({value, project, onUpdatePopup, onStoreNodeInfo}) => {
   )
 }
 
-const QueryNodeComponent = ({params, submission, query_nodes, popups, onSearchFormSubmit, onUpdatePopup, onDeleteNode, onStoreNodeInfo, onClearDeleteSession}) => {
+const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, onSearchFormSubmit, onUpdatePopup, onDeleteNode, onStoreNodeInfo, onClearDeleteSession}) => {
+  if (Object.keys(ownProps.location.query).length != 0){
+    onSearchFormSubmit({project:params.project, ...ownProps.location.query}); 
+  }
   let project = params.project;
   return  (
     <Box>
@@ -155,6 +160,7 @@ const QueryNodeComponent = ({params, submission, query_nodes, popups, onSearchFo
 const mapStateToProps = (state, ownProps) => {
   return {
     'submission': state.submission,
+    'ownProps': ownProps,
     'query_nodes': state.query_nodes,
     'popups': state.popups,
   }
@@ -162,7 +168,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSearchFormSubmit: (value) => dispatch(submitSearchForm(value)),
+    onSearchFormSubmit: (value, url) => dispatch(submitSearchForm(value, url)),
     onUpdatePopup: (state) => dispatch(updatePopup(state)),
     onClearDeleteSession: () => dispatch(clearDeleteSession()),
     onDeleteNode: ({id, project}) => dispatch(deleteNode({id, project})),
