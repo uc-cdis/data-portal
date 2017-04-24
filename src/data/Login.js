@@ -18,7 +18,7 @@ const Login = (props) => {
   return (
   <CentralBox>
     <h3 className='article'>BPA Metadata Submission Portal</h3>
-    <LoginButton className="btn btn-primary navbar-btn btn-sm login-button" href={userapi_path + 'login/google' + '?redirect=' + location.origin + next}> login from Google </LoginButton>
+    <LoginButton className="btn btn-primary navbar-btn btn-sm login-button" href={userapi_path + 'login/google' + '?redirect=' + location.origin + next}> Login from Google </LoginButton>
   </CentralBox>
 )
 }
