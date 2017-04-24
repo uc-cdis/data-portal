@@ -110,8 +110,16 @@ export const clearDeleteSession = () => {
   }
 }
 
-export const clearQueryNodes = () => {
-  return {
-    type: 'CLEAR_QUERY_NODES'
+export const clearQueryNodes = (nextState) => {
+  return (dispatch, getState) => {
+    dispatch(
+    {type: 'CLEAR_QUERY_NODES'}
+    )
+    let location = getState().routing.locationBeforeTransitions;
+    if (Object.keys(location.query).length > 0){
+      dispatch(
+        submitSearchForm({project:nextState.params.project, ...location.query})
+      );
+    }
   }
 }
