@@ -4,7 +4,6 @@ import {Box, cube} from '../theme.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
-import ReactTable from 'react-table';
 
 const Table = styled.table`
 	position: relative;
@@ -27,9 +26,10 @@ const Table = styled.table`
 	overflow: auto;
 	-webkit-box-shadow: 0 0 6px rgba(0,0,0,0.5);
 	box-shadow:0 0 6px rgba(0,0,0,0.5);
+	margin: 1em;
 `;
 
-const Category = styled.thead`
+const TableHead = styled.thead`
 	background: #847c7c
 	color: white
 	display: -webkit-box;
@@ -48,24 +48,54 @@ const Category = styled.thead`
 		
 `;
 
-const TableBullet = ({})=>{
+ const TableRow = styled.tr`
+ 	padding: 0rem 0rem;
+    color: #222;
+    border-bottom: 1px solid rgba(0,0,0,0.065);
+    vertical-align: middle;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    display: block;
+    font-size: 1.3rem;
+    width: 100%;
+ `;
+
+ const TableData = styled.td`
+    width: ${props => props.right ? '80%' : '20%'};
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    overflow: scroll;
+    
+ `;
+
+
+const TableBullet = ({node, description})=>{
 	return(
-		<div> bullet </div>
+		<TableRow> 
+		<TableData>
+			<Link to={'/dd/' + node }> {node} </Link>
+		</TableData>
+		<TableData right>
+			{description}
+		</TableData>
+		</TableRow>
  )
 }
 
 
-const CategoryTable = ({dictionary, node_types, categories}) =>{
+const CategoryTable = ({dictionary, nodes, category}) =>{
 	return(
 	<Table>
-		<Category>
+		<TableHead>
 			<tr>
-			Category	
+			{category}	
 			</tr>
-		</Category>
+		</TableHead>
 
 		<tbody>
-			{<TableBullet/>}
+			{nodes.map( (node) => <TableBullet node={node} description={dictionary[node]["description"]}/> )}
 		</tbody>
 	</Table>
  )
@@ -86,13 +116,19 @@ const DataDictionaryViewer = ({submission}) =>{
 				categories[category] = [node_types[node]]
 			}
 		}
+		console.log(categories)
 		return categories
 	}
+	let categories = filterCategories(submission.dictionary, submission.node_types)
 	return (
 	<Box>
 		<Nav />
 		<h3> Data Dictionary Viewer </h3>
-		<CategoryTable dictionary={submission.dictionary} node_types={submission.node_types} categories = {filterCategories(submission.dictionary, submission.node_types)}/>
+		<p>The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data Dictionary.</p>
+		 {Object.keys(categories).map( (category) =>
+          <CategoryTable dictionary={submission.dictionary} nodes={categories[category]} category = {category}/> )}
+
+		
 	</Box>
 
  )
