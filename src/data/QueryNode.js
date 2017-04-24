@@ -133,9 +133,6 @@ const Entities = ({value, project, onUpdatePopup, onStoreNodeInfo}) => {
 }
 
 const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, onSearchFormSubmit, onUpdatePopup, onDeleteNode, onStoreNodeInfo, onClearDeleteSession}) => {
-  if (Object.keys(ownProps.location.query).length != 0){
-    onSearchFormSubmit({project:params.project, ...ownProps.location.query}); 
-  }
   let project = params.project;
   return  (
     <Box>

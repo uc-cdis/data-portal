@@ -72,7 +72,7 @@ render(
                onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
                component={ProjectSubmission} />
         <Route path='/:project/search'
-               onEnter={requireAuth(store, ()=>{store.dispatch(clearQueryNodes()); return store.dispatch(loginSubmissionAPI())})}
+               onEnter={requireAuth(store, (nextState)=>{store.dispatch(clearQueryNodes(nextState)); return store.dispatch(loginSubmissionAPI())})}
                component={QueryNode} />
       </Router>
     </ThemeProvider>
