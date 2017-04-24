@@ -37,6 +37,17 @@ const Search = styled(Link)`
   ${cube};
 `;
 
+const DataDict = styled(Link)`
+  background: gray;
+  &:hover,
+  &:focus,
+  &:active {
+    background: ${props => props.theme.mid_gray};
+  }
+  ${cube};
+`;
+
+
 const Logo = styled(Link)`
   background: ${props => props.theme.color_primary};
   float: left;
@@ -70,6 +81,7 @@ const NavComponent = ({user, onLogoutClick}) => (
       <NavLeft>
         <Home className='fui-home' to='/'></Home>
         <Search className='fui-search' to='/graphql'></Search>
+        <DataDict className= 'fui-bookmark' to='/DD'></DataDict>
       </NavLeft>
       <NavRight>
         <ul>

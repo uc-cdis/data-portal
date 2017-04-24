@@ -1,76 +1,9 @@
 import React from 'react'
 import Nav from './nav.js'
-import {Box, cube} from '../theme.js'
+import {Box, cube, Table, TableData, TableRow, TableHead} from '../theme.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
-
-const Table = styled.table`
-	position: relative;
-	border: 0;
-	* {
-		box-sizing: border-box;
-  	}
-  	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-box-orient: vertical;
-	-webkit-box-direction: normal;
-	-ms-flex-direction: column;
-	flex-direction: column;
-	-webkit-box-align: stretch;
-	-ms-flex-align: stretch;
-	align-items: stretch;
-	width: 100%;
-	border-collapse: collapse;
-	overflow: auto;
-	-webkit-box-shadow: 0 0 6px rgba(0,0,0,0.5);
-	box-shadow:0 0 6px rgba(0,0,0,0.5);
-	margin: 1em;
-`;
-
-const TableHead = styled.thead`
-	background: #847c7c
-	color: white
-	display: -webkit-box;
-	display: -ms-flexbox;
-		display: flex;
-		-webkit-box-orient: vertical;
-		-webkit-box-direction: normal;
-		-ms-flex-direction: column;
-		flex-direction: column;
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		user-select: none;
-		text-align: left;
-		padding: 5px 5px;
-		
-`;
-
- const TableRow = styled.tr`
- 	padding: 0rem 0rem;
-    color: #222;
-    border-bottom: 1px solid rgba(0,0,0,0.065);
-    vertical-align: middle;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    display: block;
-    font-size: 1.3rem;
-    width: 100%;
- `;
-
- const TableData = styled.td`
-    width: ${props => props.right ? '80%' : '20%'};
-    background: ${props => props.first_cr ? '#847c7c': 'white' };
-    color: ${props=> props.first_cr ? 'white' : '#222'};
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    overflow: scroll;
-    
- `;
 
 const LinkBullet = ({link, description})=>{
 	let required = link.required == true ? 'Yes':'No'
@@ -94,7 +27,8 @@ const LinkBullet = ({link, description})=>{
 }
 
 
-const NodeTable = ({dictionary, node, fields}) =>{
+const LinkTable = ({dictionary, node}) =>{
+	let fields = ['Name', 'Required?', 'Label']
 	let links = dictionary[node].links
 	return(
 	<Table>
@@ -112,7 +46,7 @@ const NodeTable = ({dictionary, node, fields}) =>{
  )
 }
 
-const LinkTable = ({node, dictionary}) => {
+const NodeTable = ({node, dictionary}) => {
 	return(
 	<Table> 
 		<TableRow>
@@ -144,11 +78,54 @@ const LinkTable = ({node, dictionary}) => {
 	)
 }
 
+const PropertyBullet = ({dictionary, property, node}) =>{
+	let description =  dictionary[node]['properties'][property]['description']
+	if (typeof description == 'undefined') {
+ 		if(typeof dictionary[node]['properties'][property]['term'] != 'undefined'){
+ 			description = dictionary[node]['properties'][property]['term']['description']
+ 		}else{
+ 			description = 'No Description'
+ 		}
+	}
+	return(
+		<TableRow> 	
+			<TableData> {property} </TableData>
+			<TableData> {dictionary[node]['properties'][property]['type']} </TableData>
+			<TableData> { description } </TableData>
+		</TableRow>
+	)
+}
+
+const PropertiesTable = ({dictionary, node}) =>{
+	let properties_fields = ['Property','Type','Description']
+	let properties = Object.keys(dictionary[node]['properties'])
+	return(
+		<Table> 
+			<TableHead>
+				<tr>
+				{properties_fields.map((field, i) =>
+  				<TableData first_cr key={i}>{field}</TableData> )}
+				
+				</tr>
+			</TableHead>
+
+			<tbody>
+				{
+				properties.map( (property, i) =>
+					<PropertyBullet key={i} dictionary={dictionary} property={property} node ={node} /> 
+				 )	
+				}
+
+			</tbody>
+		</Table>
+
+	
+	)
+}
+
 const DataDictionaryNodeType = ({params,submission}) =>{
 	let node = params.node
 	let dictionary = submission.dictionary
-	let properties_fields = ['Property','Type',]
-	let links_fields = ['Name', 'Required?', 'Label']
 	
 	return (
 	<Box>
@@ -156,32 +133,13 @@ const DataDictionaryNodeType = ({params,submission}) =>{
 		<h3> {node} </h3>
 
 		<h4> Summary </h4>
-			<LinkTable node={node} dictionary={dictionary} > </LinkTable>
+			<NodeTable node={node} dictionary={dictionary} > </NodeTable>
 
 		<h4> Links </h4>
-			<NodeTable dictionary={dictionary} node = {node} fields={links_fields} />
+			<LinkTable dictionary={dictionary} node = {node} />
 
 		<h4> Properties </h4>
-			<Table> 
-					<TableHead>
-						<tr>
-						{properties_fields.map((field, i) =>
-          				<TableData first_cr key={i}>{field}</TableData> )}
-						
-						</tr>
-					</TableHead>
-
-					<tbody>
-						{
-						Object.keys(dictionary[node]['properties']).map( (property, i) => 
-						<TableRow key={i}> 	
-							<TableData> {property} </TableData>
-							<TableData> {dictionary[node]['properties'][property]['type']} </TableData>
-						</TableRow> )	
-						}
-
-					</tbody>
-				</Table>
+			<PropertiesTable dictionary={dictionary}  node ={node} >  </PropertiesTable>
 		
 	</Box>
 
