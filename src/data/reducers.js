@@ -88,7 +88,7 @@ const query_nodes = (state={}, action) => {
     case 'CLEAR_DELETE_SESSION':
       return {...state, query_node: null, delete_error: null};
     case 'CLEAR_QUERY_NODES':
-      return {};
+      return {...state, query_node: null};
     default:
       return state
   }

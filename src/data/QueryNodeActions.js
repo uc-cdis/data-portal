@@ -89,7 +89,6 @@ export const fetchQueryNode = ({id, project}) => {
 }
 
 export const receiveQueryNode = ({status, data}) => {
-  console.log(data);
   switch (status) {
     case 200:
       return {
@@ -110,7 +109,7 @@ export const clearDeleteSession = () => {
   }
 }
 
-export const clearQueryNodes = (nextState) => {
+export const clearResultAndQuery = (nextState) => {
   return (dispatch, getState) => {
     dispatch(
     {type: 'CLEAR_QUERY_NODES'}
