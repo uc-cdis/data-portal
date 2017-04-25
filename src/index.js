@@ -1,6 +1,6 @@
 import React from 'react'
 import QueryNode from './data/QueryNode'
-import { clearQueryNodes } from './data/QueryNodeActions'
+import { clearResultAndQuery } from './data/QueryNodeActions'
 import { render } from 'react-dom'
 import GraphiQL from 'graphiql';
 import { Provider } from 'react-redux'
@@ -72,7 +72,7 @@ render(
                onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
                component={ProjectSubmission} />
         <Route path='/:project/search'
-               onEnter={requireAuth(store, (nextState)=>{store.dispatch(clearQueryNodes(nextState)); return store.dispatch(loginSubmissionAPI())})}
+          onEnter={requireAuth(store, (nextState)=>{return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState)))})}
                component={QueryNode} />
       </Router>
     </ThemeProvider>
