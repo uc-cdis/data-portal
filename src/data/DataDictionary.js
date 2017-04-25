@@ -7,71 +7,71 @@ import { Link } from 'react-router';
 
 
 const TableBullet = ({node, description})=>{
-	return(
-		<TableRow> 
-		<TableData>
-			<Link to={'/dd/' + node }> {node} </Link>
-		</TableData>
-		<TableData right>
-			{description}
-		</TableData>
-		</TableRow>
+  return(
+    <TableRow> 
+    <TableData>
+      <Link to={'/dd/' + node }> {node} </Link>
+    </TableData>
+    <TableData right>
+      {description}
+    </TableData>
+    </TableRow>
  )
 }
 
 
 const CategoryTable = ({dictionary, nodes, category}) =>{
-	return(
-	<Table>
-		<TableHead>
-			<tr>
+  return(
+  <Table>
+    <TableHead>
+      <tr>
         <td>
         {category}
         </td>
-			</tr>
-		</TableHead>
+      </tr>
+    </TableHead>
 
-		<tbody>
-			{nodes.map( (node) => <TableBullet node={node} key={node} description={dictionary[node]["description"]}/> )}
-		</tbody>
-	</Table>
+    <tbody>
+      {nodes.map( (node) => <TableBullet node={node} key={node} description={dictionary[node]["description"]}/> )}
+    </tbody>
+  </Table>
  )
 }
 
 
 const DataDictionaryViewer = ({submission}) =>{
-	let filterCategories = (dictionary, node_types) =>{
-		let categories = {}
-		for(let node in node_types){
-			let category = dictionary[node_types[node]]["category"]
+  let filterCategories = (dictionary, node_types) =>{
+    let categories = {}
+    for(let node in node_types){
+      let category = dictionary[node_types[node]]["category"]
       if (category == undefined){
         continue;
       }
-			if(categories.hasOwnProperty(category)){
-				categories[category].push(node_types[node])
-			}
-			else{
-				categories[category] = [node_types[node]]
-			}
-		}
-		return categories
-	}
-	let categories = filterCategories(submission.dictionary, submission.node_types)
-	return (
-	<Box>
-		<Nav />
-		<h3> Data Dictionary Viewer </h3>
-		<p>The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data Dictionary.</p>
-		 {Object.keys(categories).map( (category) =>
+      if(categories.hasOwnProperty(category)){
+        categories[category].push(node_types[node])
+      }
+      else{
+        categories[category] = [node_types[node]]
+      }
+    }
+    return categories
+  }
+  let categories = filterCategories(submission.dictionary, submission.node_types)
+  return (
+  <Box>
+    <Nav />
+    <h3> Data Dictionary Viewer </h3>
+    <p>The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data Dictionary.</p>
+     {Object.keys(categories).map( (category) =>
           <CategoryTable dictionary={submission.dictionary} key={category} nodes={categories[category]} category = {category}/> )}
 
-	</Box>
+  </Box>
 
  )
 }
 
 const mapStateToProps = (state)=> {return {
-	'submission': state.submission,
+  'submission': state.submission,
 }};
 
 const mapDispatchToProps = (dispatch) => ({

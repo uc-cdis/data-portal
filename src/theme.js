@@ -91,7 +91,6 @@ export const TableHead = styled.thead`
     user-select: none;
     text-align: left;
     padding: 5px 5px;
-    
 `;
 
 export const TableRow = styled.tr`
@@ -106,7 +105,7 @@ export const TableRow = styled.tr`
     display: table;
     font-size: 1.3rem;
     width: 100%;
- `;
+`;
 
 export const TableData = styled.td`
     width: ${props => props.right ? '80%' : '20%'};
@@ -116,8 +115,8 @@ export const TableData = styled.td`
     padding: 0.5rem 1rem;
     overflow: scroll;
     height: 100%;
-    
- `;
+`;
+
 export const Bullet = styled.li`
   list-style-type: disc;
   margin-left: 1em;
