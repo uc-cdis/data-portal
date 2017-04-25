@@ -35,6 +35,7 @@ small {
 }
 ul {
     list-style-type: none;
+    margin-bottom: 0em;
 }
 
 .button-inline {

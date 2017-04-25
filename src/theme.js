@@ -118,3 +118,7 @@ export const TableData = styled.td`
     height: 100%;
     
  `;
+export const Bullet = styled.li`
+  list-style-type: disc;
+  margin-left: 1em;
+`;

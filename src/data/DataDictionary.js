@@ -25,12 +25,14 @@ const CategoryTable = ({dictionary, nodes, category}) =>{
 	<Table>
 		<TableHead>
 			<tr>
-			{category}	
+        <td>
+        {category}
+        </td>
 			</tr>
 		</TableHead>
 
 		<tbody>
-			{nodes.map( (node) => <TableBullet node={node} description={dictionary[node]["description"]}/> )}
+			{nodes.map( (node) => <TableBullet node={node} key={node} description={dictionary[node]["description"]}/> )}
 		</tbody>
 	</Table>
  )
@@ -42,16 +44,16 @@ const DataDictionaryViewer = ({submission}) =>{
 		let categories = {}
 		for(let node in node_types){
 			let category = dictionary[node_types[node]]["category"]
-			
+      if (category == undefined){
+        continue;
+      }
 			if(categories.hasOwnProperty(category)){
-				console.log(categories[category])
-				categories[category].push(node_types[node]) 
+				categories[category].push(node_types[node])
 			}
 			else{
 				categories[category] = [node_types[node]]
 			}
 		}
-		console.log(categories)
 		return categories
 	}
 	let categories = filterCategories(submission.dictionary, submission.node_types)
@@ -61,9 +63,8 @@ const DataDictionaryViewer = ({submission}) =>{
 		<h3> Data Dictionary Viewer </h3>
 		<p>The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data Dictionary.</p>
 		 {Object.keys(categories).map( (category) =>
-          <CategoryTable dictionary={submission.dictionary} nodes={categories[category]} category = {category}/> )}
+          <CategoryTable dictionary={submission.dictionary} key={category} nodes={categories[category]} category = {category}/> )}
 
-		
 	</Box>
 
  )

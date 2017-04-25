@@ -1,14 +1,14 @@
 import React from 'react'
 import Nav from './nav.js'
-import {Box, cube, Table, TableData, TableRow, TableHead} from '../theme.js'
+import {Box, cube, Table, TableData, TableRow, TableHead, Bullet} from '../theme.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
 
-const LinkBullet = ({link, description})=>{
+const LinkBullet = ({link})=>{
 	let required = link.required == true ? 'Yes':'No'
 	return(
-		<TableRow> 
+		<TableRow>
 
 		<TableData>
 			<Link to={'/dd/' + link.target_type }> {link.name} </Link>
@@ -27,48 +27,61 @@ const LinkBullet = ({link, description})=>{
 }
 
 
-const LinkTable = ({dictionary, node}) =>{
-	let fields = ['Name', 'Required?', 'Label']
-	let links = dictionary[node].links
+const LinkTable = ({links, node}) =>{
+	let fields = ['Name', 'Required', 'Label']
 	return(
 	<Table>
 		<TableHead>
-			<tr>
+			<TableRow>
 			{fields.map((field, i) =>
           		<TableData first_cr key={i}>{field}</TableData>)}
-			</tr>
+			</TableRow>
 		</TableHead>
 
 		<tbody>
-			{links.map( (link, i) => <LinkBullet key={i} link={link} description={dictionary[node]["description"]}/> )}
+			{links.map( (link, i) => <LinkBullet key={i} link={link} /> )}
 		</tbody>
 	</Table>
  )
 }
 
-const NodeTable = ({node, dictionary}) => {
+const getType = ( schema ) => {
+  if ('type' in schema) {
+    if (typeof schema.type == 'string'){
+      return schema.type;
+    }
+    else {
+      return schema.type.join(', ');
+    }
+  }
+  else if ('enum' in schema) {
+    return schema.enum.join(', ');
+  }
+}
+
+const NodeTable = ({node}) => {
 	return(
-	<Table> 
+	<Table>
 		<TableRow>
-			<TableData first_cr> Type </TableData>
-			<TableData right>{ dictionary[node]['type']}</TableData>
+			<TableData first_cr> Title </TableData>
+			<TableData right>{ node['title'] }</TableData>
 		</TableRow>
 
 		<TableRow>
 			<TableData first_cr> Category </TableData>
-			<TableData right>{ dictionary[node]['category']}</TableData>
+			<TableData right>{ node['category']}</TableData>
 		</TableRow>
 
 		<TableRow>
 			<TableData first_cr> Description </TableData>
-			<TableData right>{ dictionary[node]['description']}</TableData>
+			<TableData right>{ node['description']}</TableData>
 		</TableRow>
 
 		<TableRow>
 			<TableData first_cr> Unique Keys </TableData>
-			<TableData right>{ 
+			<TableData right>{
 				<ul>
-				{dictionary[node]['uniqueKeys'].map( (key, i) => <li key={i}>{key}</li> )} 
+				{node['uniqueKeys'].map( (key, i) => <Bullet key={i}>{key.join(', ')}</Bullet> )} 
 				</ul>
 			}</TableData>
 		</TableRow>
@@ -78,42 +91,52 @@ const NodeTable = ({node, dictionary}) => {
 	)
 }
 
-const PropertyBullet = ({dictionary, property, node}) =>{
-	let description =  dictionary[node]['properties'][property]['description']
-	if (typeof description == 'undefined') {
- 		if(typeof dictionary[node]['properties'][property]['term'] != 'undefined'){
- 			description = dictionary[node]['properties'][property]['term']['description']
- 		}else{
- 			description = 'No Description'
- 		}
-	}
+const PropertyBullet = ({property_name, property, required}) =>{
+  let description = 'No Description';
+  console.log(required)
+  if ('description' in property){
+    description = property.description;
+  }
+  if ('term' in property){
+    description = property.term.description;
+  }
+
+  let type = getType(property);
+  if (type == undefined){
+    if ('oneOf' in property){
+      type = property['oneOf'].map((item, i) => getType(item)).join(', ');
+    }
+  }
+
 	return(
-		<TableRow> 	
-			<TableData> {property} </TableData>
-			<TableData> {dictionary[node]['properties'][property]['type']} </TableData>
+		<TableRow>
+			<TableData> { property_name } </TableData>
+			<TableData> { type } </TableData>
+      <TableData> { required ? "Yes" : "No" } </TableData>
 			<TableData> { description } </TableData>
 		</TableRow>
 	)
 }
 
-const PropertiesTable = ({dictionary, node}) =>{
-	let properties_fields = ['Property','Type','Description']
-	let properties = Object.keys(dictionary[node]['properties'])
+const PropertiesTable = ({node, required, links}) =>{
+	let properties_fields = ['Property','Type','Required', 'Description']
+  let linknames = links.map((link, i) => link['name']);
+	let properties = Object.keys(node['properties'])
 	return(
-		<Table> 
+		<Table>
 			<TableHead>
-				<tr>
+				<TableRow>
 				{properties_fields.map((field, i) =>
   				<TableData first_cr key={i}>{field}</TableData> )}
-				
-				</tr>
+				</TableRow>
 			</TableHead>
 
 			<tbody>
 				{
 				properties.map( (property, i) =>
-					<PropertyBullet key={i} dictionary={dictionary} property={property} node ={node} /> 
-				 )	
+          (linknames.indexOf(property) == -1) &&
+					<PropertyBullet key={i} required={property in required} property_name={property} property={node['properties'][property]}/>
+				 )
 				}
 
 			</tbody>
@@ -126,21 +149,31 @@ const PropertiesTable = ({dictionary, node}) =>{
 const DataDictionaryNodeType = ({params,submission}) =>{
 	let node = params.node
 	let dictionary = submission.dictionary
-	
+  let links = [];
+  let required = ('required' in dictionary[node]) ? dictionary[node].required : [];
+  console.log(required);
+  for (var link of submission.dictionary[node].links){
+    if (link.name != undefined){
+        links.push(link);
+    }
+    else {
+      links = links.concat(link['subgroup']);
+    }
+  }
 	return (
 	<Box>
 		<Nav />
 		<h3> {node} </h3>
 
 		<h4> Summary </h4>
-			<NodeTable node={node} dictionary={dictionary} > </NodeTable>
+			<NodeTable node={dictionary[node]} > </NodeTable>
 
 		<h4> Links </h4>
-			<LinkTable dictionary={dictionary} node = {node} />
+			<LinkTable links={links} node = {node} />
 
 		<h4> Properties </h4>
-			<PropertiesTable dictionary={dictionary}  node ={node} >  </PropertiesTable>
-		
+			<PropertiesTable links={links} required={required} node ={dictionary[node]} >  </PropertiesTable>
+
 	</Box>
 
  )
