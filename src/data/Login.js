@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '../theme';
-import { userapi_path, basename } from '../localconf.js';
+import { userapi_path, basename, appname, login } from '../localconf.js';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -17,8 +17,8 @@ const Login = (props) => {
   }
   return (
   <CentralBox>
-    <h3 className='article'>BPA Metadata Submission Portal</h3>
-    <LoginButton className="btn btn-primary navbar-btn btn-sm login-button" href={userapi_path + 'login/google' + '?redirect=' + location.origin + next}> Login from Google </LoginButton>
+    <h3 className='article'>{appname}</h3>
+    <LoginButton className="btn btn-primary navbar-btn btn-sm login-button" href={login.url + location.origin + next}>{login.title}</LoginButton>
   </CentralBox>
 )
 }

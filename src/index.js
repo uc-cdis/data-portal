@@ -22,7 +22,7 @@ import { Router, Route, Link, useRouterHistory } from 'react-router'
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import { createHistory } from 'history'
 import 'react-select/dist/react-select.css';
-import { mock_store, basename, dev } from './localconf.js';
+import { app, mock_store, basename, dev } from './localconf.js';
 import { ThemeProvider } from 'styled-components';
 import { theme, Box } from './theme';
 
@@ -66,6 +66,7 @@ const history = syncHistoryWithStore(browserHistory, store);
 setInterval(() => store.dispatch(fetchUser()), 10000);
 // keep the cloud middleware's session activated
 // setInterval(() => store.dispatch(fetchUrlAndLogin()), 10000)
+if (app == 'bpa'){
 render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
@@ -80,7 +81,7 @@ render(
                component={DataDictionary} />
         <Route path='/dd/:node'
                onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
-               component={DataDictionaryNode} />              
+               component={DataDictionaryNode} />
         <Route path='/:project'
                onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
                component={ProjectSubmission} />
@@ -92,5 +93,23 @@ render(
   </Provider>,
   document.getElementById('root')
 );
+
+} 
+else {
+render(
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <Router history={history}>
+        <Route path='/login' component={Login} />
+        <Route path='/'
+               onEnter={requireAuth(store, ()=>store.dispatch(loginCloudMiddleware()))}
+               component={IdentityAccess} />
+      </Router>
+    </ThemeProvider>
+  </Provider>,
+  document.getElementById('root')
+);
+
+}
 
 history.listen(location => console.log(location.pathname));
