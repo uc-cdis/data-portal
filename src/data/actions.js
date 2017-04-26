@@ -100,6 +100,7 @@ export const fetchUser = () => {
 
 export const requireAuth = (store, additionalHooks) => {
   return  (nextState, replace, callback) => {
+    window.scrollTo(0, 0);
     store.dispatch(fetchUser()).then(() =>{
       let { user } = store.getState();
       let location = nextState.location;

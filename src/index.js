@@ -1,4 +1,5 @@
 import React from 'react'
+import { dict } from './dictionary.js';
 import QueryNode from './data/QueryNode'
 import { clearResultAndQuery } from './data/QueryNodeActions'
 import { render } from 'react-dom'
@@ -10,6 +11,8 @@ import reducers from './data/reducers'
 import { requireAuth, fetchUser } from './data/actions'
 import App from './data/App'
 import Login from './data/Login'
+import DataDictionary from './data/DataDictionary.js'
+import DataDictionaryNode from './data/DataDictionaryNode.js'
 import Submission from './data/submission.js'
 import ProjectSubmission from './data/ProjectSubmission.js'
 import IdentityAccess from './data/IdentityAccesses.js'
@@ -20,7 +23,7 @@ import { Router, Route, Link, useRouterHistory } from 'react-router'
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import { createHistory } from 'history'
 import 'react-select/dist/react-select.css';
-import { basename, dev } from './localconf.js';
+import { mock_store, basename, dev } from './localconf.js';
 import { ThemeProvider } from 'styled-components';
 import { theme, Box } from './theme';
 
@@ -31,10 +34,14 @@ basename: basename
 
 let store;
 if ( dev == true) {
+  let data = {};
+  if (mock_store) {
+    data = {user: {username: "test"}, submission:{dictionary:dict, node_types: Object.keys(dict).slice(2,) }, status: {}};
+  }
   store = applyMiddleware(thunk, routerMiddleware(browserHistory))(createStore)(
     reducers,
-    {user: {}, status: {}},
-      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+    data,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   )
 }
 else {
@@ -68,6 +75,12 @@ render(
         <Route path='/identity'
                onEnter={requireAuth(store, ()=>store.dispatch(loginCloudMiddleware()))}
                component={IdentityAccess} />
+        <Route path='/dd'
+               onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
+               component={DataDictionary} />
+        <Route path='/dd/:node'
+               onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
+               component={DataDictionaryNode} />              
         <Route path='/:project'
                onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
                component={ProjectSubmission} />

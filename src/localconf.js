@@ -1,4 +1,5 @@
 export const dev = (process.env.NODE_ENV && process.env.NODE_ENV == 'dev');
+export const mock_store = (process.env.MOCK_STORE && process.env.MOCK_STORE == 'true');
 export const basename = '/';
 export const hostname = dev == true ? 'http://api.bloodpac-data.org/' : 'https://data.bloodpac.org/';
 export const userapi_path = hostname + 'user/';
