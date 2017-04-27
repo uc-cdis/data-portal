@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { json_to_string, get_submit_path } from './utils'
 import { updatePopup } from './actions';
-import Popup from './Popup';
+import { Popup } from './Popup';
 import Nav from './nav';
 import styled, { css } from 'styled-components';
 import { input, reduxForm } from 'redux-form';
