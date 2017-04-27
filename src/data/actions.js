@@ -100,13 +100,16 @@ export const fetchUser = () => {
 
 export const requireAuth = (store, additionalHooks) => {
   return  (nextState, replace, callback) => {
+    window.scrollTo(0, 0);
     store.dispatch(fetchUser()).then(() =>{
       let { user } = store.getState();
+      let location = nextState.location;
       if (!user.username) {
-        replace({ pathname: '/login', query: { next: nextState.location.pathname } });
+        let path = location.pathname=='/' ? '/' : '/' + location.pathname;
+        replace({ pathname: '/login', query: { next: path+nextState.location.search } });
       }
       if (additionalHooks){
-        return additionalHooks();
+        return additionalHooks(nextState, replace);
       }
       else {
         Promise.resolve()

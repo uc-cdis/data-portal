@@ -1,7 +1,8 @@
 import React from 'react';
+import { lighten } from 'polished';
 import { logoutAPI } from './actions';
 import { connect } from 'react-redux';
-import {basename, userapi_path} from '../localconf.js';
+import { basename, userapi_path, nav_items } from '../localconf.js';
 import { Link } from 'react-router';
 import styled from 'styled-components';
 import { cube } from '../theme.js';
@@ -18,21 +19,12 @@ const NavRight = styled.nav`
   top: 0;
   color: white;
 `;
-const Home = styled(Link)`
-  background: gray;
+const NavItem = styled(Link)`
+  background: ${props => props.bgcolor};
   &:hover,
   &:focus,
   &:active {
-    background: ${props => props.theme.mid_gray};
-  }
-  ${cube};
-`;
-const Search = styled(Link)`
-  background: #daa520;
-  &:hover,
-  &:focus,
-  &:active {
-    background: #e8b534;
+    background: ${props =>lighten(0.1, props.bgcolor)};
   }
   ${cube};
 `;
@@ -68,8 +60,8 @@ const Logout = styled(Link)`
 const NavComponent = ({user, onLogoutClick}) => (
     <header>
       <NavLeft>
-        <Home className='fui-home' to='/'></Home>
-        <Search className='fui-search' to='/graphql'></Search>
+        {nav_items.map((item, i) => <NavItem key={i} bgcolor={item.color} to={item.link} className={item.icon}></NavItem>)}
+
       </NavLeft>
       <NavRight>
         <ul>

@@ -23,6 +23,7 @@ const CancelButton = styled.a`
 `;
 
 const PopupMask = styled.section`
+  z-index: 100;
   position: fixed;
   overflow-y: scroll;
   top: 0px;

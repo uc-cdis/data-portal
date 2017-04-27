@@ -53,6 +53,8 @@ const submission = (state={}, action) => {
       return {...state, projects:action.data};
     case 'RECEIVE_NODE_TYPES':
       return {...state, node_types: action.data};
+    case 'RECEIVE_DICTIONARY':
+      return{ ...state, dictionary:action.data, node_types: Object.keys(action.data).slice(2,)};
     case 'RECEIVE_AUTHORIZATION_URL':
       return {...state, oauth_url:action.url};
     case 'RECEIVE_SUBMISSION_LOGIN':
@@ -75,8 +77,8 @@ const query_nodes = (state={}, action) => {
       return {...state, search_form: action.data};
     case 'RECEIVE_SEARCH_ENTITIES':
       return {...state, search_result: action.data, search_status: action.search_status};
-    case 'REQUEST_DELETE_NODE':
-      return {...state, request_delete_node: action.id};
+    case 'STORE_NODE_INFO':
+      return {...state, stored_node_info: action.id};
     case 'DELETE_SUCCEED':
       return {...state, search_result: removeDeletedNode(state, action.id), delete_error: null};
     case 'DELETE_FAIL':
@@ -86,7 +88,7 @@ const query_nodes = (state={}, action) => {
     case 'CLEAR_DELETE_SESSION':
       return {...state, query_node: null, delete_error: null};
     case 'CLEAR_QUERY_NODES':
-      return {};
+      return {...state, query_node: null};
     default:
       return state
   }

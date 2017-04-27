@@ -1,4 +1,5 @@
 import { fetchWrapper, updatePopup } from './actions';
+import { push } from 'react-router-redux';
 import { get_submit_path } from './utils';
 import { submissionapi_path, submissionapi_oauth_path } from '../localconf';
 
@@ -10,15 +11,17 @@ export const updateSearchForm = (value) => {
 };
 
 
-export const submitSearchForm = ({node_type, submitter_id, project}) => {
-  return fetchWrapper({
+export const submitSearchForm = ({node_type, submitter_id="", project}, url) => {
+  return (dispatch) => dispatch(fetchWrapper({
     path: submissionapi_path + 'graphql',
     body: JSON.stringify({
       'query': `query Test { ${node_type} (first: 100000, project_id: \"${project}\", quick_search: \"${submitter_id}\") {id, type, submitter_id}}`
     }),
     method: 'POST',
     handler: receiveSearchEntities
-  })
+  })).then(() => {
+    if (url) { return dispatch(push(url))}
+    else {return }});
 };
 
 export const receiveSearchEntities = ({status, data}) => {
@@ -71,9 +74,9 @@ export const receiveDeleteResponse = ({status, data, id, project}) => {
   }
 };
 
-export const requestDeleteNode = ({id}) => {
+export const storeNodeInfo = ({id}) => {
   return {
-    type: 'REQUEST_DELETE_NODE',
+    type: 'STORE_NODE_INFO',
     id: id
   }
 };
@@ -86,7 +89,6 @@ export const fetchQueryNode = ({id, project}) => {
 };
 
 export const receiveQueryNode = ({status, data}) => {
-  console.log(data);
   switch (status) {
     case 200:
       return {
@@ -107,8 +109,16 @@ export const clearDeleteSession = () => {
   }
 };
 
-export const clearQueryNodes = () => {
-  return {
-    type: 'CLEAR_QUERY_NODES'
+export const clearResultAndQuery = (nextState) => {
+  return (dispatch, getState) => {
+    dispatch(
+    {type: 'CLEAR_QUERY_NODES'}
+    )
+    let location = getState().routing.locationBeforeTransitions;
+    if (Object.keys(location.query).length > 0){
+      dispatch(
+        submitSearchForm({project:nextState.params.project, ...location.query})
+      );
+    }
   }
 };

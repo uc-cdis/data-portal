@@ -1,5 +1,5 @@
-# To run: docker run -d -v /path/to/local_settings.py:/var/www/user-api/local_settings.py --name=user-api -p 80:80 user-api
-# To check running container: docker exec -it user-api /bin/bash
+# To run: docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal 
+# To check running container: docker exec -it dataportal /bin/bash
  
 FROM ubuntu:16.04
 
@@ -22,4 +22,5 @@ WORKDIR /data-portal
 RUN npm install
 RUN NODE_ENV=production webpack
 RUN cp nginx.conf /etc/nginx/conf.d/nginx.conf
+RUN rm /etc/nginx/sites-enabled/default
 CMD /usr/sbin/nginx -g 'daemon off;'
