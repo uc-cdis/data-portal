@@ -102,7 +102,7 @@ render(
       <Router history={history}>
         <Route path='/login' component={Login} />
         <Route path='/'
-               onEnter={requireAuth(store, ()=>store.dispatch(loginCloudMiddleware()))}
+               onEnter={requireAuth(store)}
                component={IdentityAccess} />
       </Router>
     </ThemeProvider>

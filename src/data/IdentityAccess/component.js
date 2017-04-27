@@ -4,7 +4,7 @@ import { json_to_string, get_submit_path } from '../utils'
 import { updatePopup } from '../actions';
 import {Popup, SavePopup} from '../Popup';
 import { connect } from 'react-redux';
-import { fetchCloudAccess, createUser, createKey, deleteKey,
+import { fetchStorageAccess, createUser, createKey, deleteKey,
   requestDeleteKey, clearDeleteSession, clearCreationSession } from './actions';
 import { Box } from '../../theme';
 import { RequestButton, DeleteButton } from './style';
@@ -54,8 +54,7 @@ const IdentityComponent = ({cloud_access, popups, onCreateUser, onCreateKey, onC
       {
         !cloud_access.user &&
         <div>
-          {constants.NO_ACCESS_MSG}<br/>
-          <RequestButton onClick={onCreateUser}>{constants.CREATE_USER_BTN}</RequestButton>
+          {constants.NO_ACCESS_MSG}
         </div>
       }
       {
@@ -95,24 +94,24 @@ const IdentityComponent = ({cloud_access, popups, onCreateUser, onCreateKey, onC
 
 
 const mapStateToProps = (state) => {
-    return {
-      'cloud_access': state.cloud_access,
-      'popups': state.popups
-    }
+  return {
+    'cloud_access': state.cloud_access,
+    'popups': state.popups
+  }
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-      onCreateUser: (state) => dispatch(createUser()),
-      onCreateKey: (state) => dispatch(createKey()),
-      onUpdatePopup: (state) => dispatch(updatePopup(state)),
-      onDeleteKey: (access_key_id) => dispatch(deleteKey(access_key_id)),
-      onRequestDeleteKey: (access_key_id) => dispatch(fetchCloudAccess()).then(
-          () => dispatch(requestDeleteKey(access_key_id))
-      ),
-      onClearDeleteSession: () => dispatch(clearDeleteSession()),
-      onClearCreationSession: () => dispatch(clearCreationSession())
-    };
+  return {
+    onCreateUser: (state) => dispatch(createUser()),
+    onCreateKey: (state) => dispatch(createKey()),
+    onUpdatePopup: (state) => dispatch(updatePopup(state)),
+    onDeleteKey: (access_key_id) => dispatch(deleteKey(access_key_id)),
+    onRequestDeleteKey: (access_key_id) => dispatch(fetchStorageAccess()).then(
+        () => dispatch(requestDeleteKey(access_key_id))
+    ),
+    onClearDeleteSession: () => dispatch(clearDeleteSession()),
+    onClearCreationSession: () => dispatch(clearCreationSession())
+  };
 };
 
 let CloudAccess = connect(mapStateToProps, mapDispatchToProps)(IdentityComponent);

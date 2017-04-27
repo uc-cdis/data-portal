@@ -6,7 +6,7 @@ export const cloud_access = (state={}, action) => {
       return {...state, user: action.user, access_key_pairs: action.access_keys};
     case 'CLOUD_ACCESS_ERROR':
       return {...state, user: action.user, cloud_access_error: action.error};
-    case 'RECEIVE_MIDDLEWARE_LOGIN':
+    case 'RECEIVE_USERAPI_LOGIN':
       return {...state, login:state.result, error:state.error};
     case 'REQUEST_DELETE_KEY':
       return {...state, ...action.cloud_access, request_delete_key: action.access_key_id};

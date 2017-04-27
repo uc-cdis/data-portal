@@ -21,5 +21,6 @@ const Login = (props) => {
     <LoginButton className="btn btn-primary navbar-btn btn-sm login-button" href={login.url + location.origin + next}>{login.title}</LoginButton>
   </CentralBox>
 )
-}
+};
+
 export default Login

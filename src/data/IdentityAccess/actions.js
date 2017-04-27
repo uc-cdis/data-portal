@@ -1,11 +1,11 @@
 import { fetchWrapper, fetchOAuthURL, updatePopup } from '../actions';
-import { cloudmiddleware_path, cloudmiddleware_oauth_path } from '../../localconf';
+import { credential_path, credential_oauth_path } from '../../localconf';
 import moment from 'moment';
 
 export const loginCloudMiddleware = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
-    return dispatch(fetchCloudAccess()).then(()=>{
+    return dispatch(fetchStorageAccess()).then(()=>{
       let projects = getState().cloud_access.access_key_pair;
       if (projects){
         // user already logged in
@@ -14,26 +14,26 @@ export const loginCloudMiddleware = () => {
       else {
         return Promise.resolve()
       }
-    }).then(()=>dispatch(fetchOAuthURL(cloudmiddleware_oauth_path))).then(()=>{
+    }).then(()=>dispatch(fetchOAuthURL(credential_oauth_path))).then(()=>{
       let url = getState().user.oauth_url;
       return dispatch(fetchWrapper({
         path:url,
-        handler:receiveMiddlewareLogin
-      }))}).then(()=>dispatch(fetchCloudAccess()))
+        handler:receiveUserAPILogin
+      }))}).then(()=>dispatch(fetchStorageAccess()))
       .catch((error) => console.log(error));
   }
 };
 
-export const receiveMiddlewareLogin = ({status, data}) => {
+export const receiveUserAPILogin = ({status, data}) => {
   switch (status) {
     case 200:
       return {
-        type: 'RECEIVE_MIDDLEWARE_LOGIN',
+        type: 'RECEIVE_USERAPI_LOGIN',
         result: true
       };
     default: {
       return {
-        type: "RECEIVE_MIDDLEWARE_LOGIN",
+        type: "RECEIVE_USERAPI_LOGIN",
         result: false,
         error: data
       }
@@ -41,9 +41,9 @@ export const receiveMiddlewareLogin = ({status, data}) => {
   }
 };
 
-export const fetchCloudAccess = () => {
+export const fetchStorageAccess = () => {
   return fetchWrapper({
-    path: cloudmiddleware_path + "aws_user",
+    path: credential_path,
     handler: receiveCloudAccess
   })
 };
@@ -90,7 +90,7 @@ export const deleteKey = (access_key_id) => {
     return receiveDeleteKeyResponse({status, data, access_key_id})
   };
   return fetchWrapper({
-    path: cloudmiddleware_path + 'access_key/' + access_key_id,
+    path: credential_path + 'access_key/' + access_key_id,
     method: 'DELETE',
     handler: receiveDeleteKey
   })
@@ -128,7 +128,7 @@ export const createKey = () => {
     return receiveCreatedKeyResponse({status, data})
   };
   return fetchWrapper({
-    path: cloudmiddleware_path + 'access_key',
+    path: credential_path + 'access_key',
     method: 'POST',
     handler: receiveCreatedKey
   })
@@ -148,7 +148,7 @@ export const receiveCreatedKeyResponse = ({status, data}) => {
           str_access_key_pair: parseKeyToString(data)
         });
         dispatch(updatePopup({save_key_popup: true}));
-        return dispatch(fetchCloudAccess());
+        return dispatch(fetchStorageAccess());
       default:
         dispatch({
           type: 'CREATE_FAIL',
@@ -165,34 +165,33 @@ export const clearCreationSession = () => {
   }
 };
 
-export const createUser = () => {
-  let receiveCreatedUser = ({status, data}) => {
-    console.log('receive delete');
-    return receiveCreatedUserResponse({status, data})
-  };
-  return fetchWrapper({
-    path: cloudmiddleware_path + 'aws_user',
-    method: 'POST',
-    handler: receiveCreatedUser
-  })
-};
+// export const createUser = () => {
+//   let receiveCreatedUser = ({status, data}) => {
+//     console.log('receive delete');
+//     return receiveCreatedUserResponse({status, data})
+//   };
+//   return fetchWrapper({
+//     path: credential_path + 'aws_user',
+//     method: 'POST',
+//     handler: receiveCreatedUser
+//   })
+// };
 
-export const receiveCreatedUserResponse = ({status, data}) => {
-  return (dispatch) => {
-    switch (status) {
-      case 200:
-        return dispatch({
-          type: 'CREATE_USER_SUCCEED',
-          user: data["user"]
-        });
-      default:
-        dispatch({
-          type: 'CREATE_FAIL',
-          user: null,
-          error: data['error']
-        });
-        return dispatch(updatePopup({save_key_popup: true}));
-    }
-  }
-};
-
+// export const receiveCreatedUserResponse = ({status, data}) => {
+//   return (dispatch) => {
+//     switch (status) {
+//       case 200:
+//         return dispatch({
+//           type: 'CREATE_USER_SUCCEED',
+//           user: data["user"]
+//         });
+//       default:
+//         dispatch({
+//           type: 'CREATE_FAIL',
+//           user: null,
+//           error: data['error']
+//         });
+//         return dispatch(updatePopup({save_key_popup: true}));
+//     }
+//   }
+// };
