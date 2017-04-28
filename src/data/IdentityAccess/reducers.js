@@ -9,7 +9,7 @@ export const cloud_access = (state={}, action) => {
     case 'RECEIVE_USERAPI_LOGIN':
       return {...state, login:state.result, error:state.error};
     case 'REQUEST_DELETE_KEY':
-      return {...state, ...action.cloud_access, request_delete_key: action.access_key_id};
+      return {...state, ...action.cloud_access, request_delete_key: action.access_key};
     case 'CREATE_SUCCEED':
       return {...state, ...action.cloud_access, access_key_pair: action.access_key_pair,
         str_access_key_pair: action.str_access_key_pair, create_error: null};

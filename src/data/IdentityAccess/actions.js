@@ -78,7 +78,7 @@ export const receiveCloudAccess = ({status, data}) => {
 export const requestDeleteKey = (access_key) => {
   return {
     type: 'REQUEST_DELETE_KEY',
-    access_key_id: access_key
+    access_key: access_key
   }
 };
 
@@ -94,7 +94,7 @@ export const deleteKey = (access_key) => {
   })
 };
 
-export const receiveDeleteKeyResponse = ({status, data, access_key_id}) => {
+export const receiveDeleteKeyResponse = ({status, data, access_key}) => {
   return (dispatch) => {
     switch (status) {
       case 200:
@@ -107,7 +107,7 @@ export const receiveDeleteKeyResponse = ({status, data, access_key_id}) => {
       default:
         return dispatch({
           type: 'DELETE_KEY_FAIL',
-          access_key_id: access_key_id,
+          access_key: access_key,
           error: data
         });
     }

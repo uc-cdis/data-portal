@@ -32,7 +32,7 @@ const Entities = ({values, onUpdatePopup, onRequestDeleteKey}) => {
     <table width="100%">
       <tbody>
         <tr>
-          <th>{constants.ACCESS_KEY_ID_COLUMN}</th>
+          <th>{constants.ACCESS_KEY_COLUMN}</th>
           <th></th>
         </tr>
         {values.map( (item) => <Entity key={item.access_key} value={item}

@@ -111,7 +111,7 @@ export const SavePopup = ({message, display, savingStr, error, onClose, filename
               <table width="100%">
                 <tbody>
                   <tr><th>Access id</th><th>Secret key</th></tr>
-                  <tr><td width="40%">{display['access_key_id']}</td><td width="60%">{display['secret_access_key']}</td></tr>
+                  <tr><td width="40%">{display['access_key']}</td><td width="60%">{display['secret_key']}</td></tr>
                 </tbody>
               </table>
             </div>
