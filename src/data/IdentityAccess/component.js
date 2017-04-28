@@ -12,7 +12,7 @@ import * as constants from "./constants";
 
 const Entity = ({value, onUpdatePopup, onRequestDeleteKey}) => {
   let onDelete = () => {
-    onRequestDeleteKey(value.access_key_id);
+    onRequestDeleteKey(value.access_key);
     onUpdatePopup({key_delete_popup: true});
   };
   return (
