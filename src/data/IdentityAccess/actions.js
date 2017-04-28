@@ -133,7 +133,7 @@ export const createKey = () => {
 };
 
 export const parseKeyToString = (content) => {
-  return 'access_key\tsecrect_key\n' + content['access_key_id'] + '\t' + content['secret_access_key'];
+  return 'access_key\tsecrect_key\n' + content['access_key'] + '\t' + content['secret_key'];
 };
 
 export const receiveCreatedKeyResponse = ({status, data}) => {
