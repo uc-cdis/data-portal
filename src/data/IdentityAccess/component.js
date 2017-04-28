@@ -18,8 +18,6 @@ const Entity = ({value, onUpdatePopup, onRequestDeleteKey}) => {
   return (
     <tr>
       <td width="40%">{value.access_key}</td>
-      <td width="10%"></td>
-      <td width="40%">{value.status}</td>
       <td width="10%" style={{'textAlign':'left'}}>
         <DeleteButton onClick={onDelete}>
           {constants.DELETE_BTN}
@@ -34,8 +32,7 @@ const Entities = ({values, onUpdatePopup, onRequestDeleteKey}) => {
     <table width="100%">
       <tbody>
         <tr>
-          <th>{constants.ACCESS_KEY_ID_COLUMN}</th><th>{constants.CREATE_DATE_COLUMN}</th>
-          <th>{constants.STATUS_COLUMN}</th>
+          <th>{constants.ACCESS_KEY_ID_COLUMN}</th>
           <th></th>
         </tr>
         {values.map( (item) => <Entity key={item.access_key} value={item}
