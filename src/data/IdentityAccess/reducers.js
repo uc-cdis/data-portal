@@ -18,11 +18,11 @@ export const cloud_access = (state={}, action) => {
     case 'CREATE_FAIL':
       return {...state, create_error: action.error};
     case 'DELETE_KEY_SUCCEED':
-      return {...state, ...action.cloud_access, access_key_pairs: action.access_keys, delete_error: null};
+      return {...state, ...action.cloud_access, delete_error: null};
     case 'DELETE_KEY_FAIL':
       return {...state, delete_error: action.error};
     case 'CLEAR_DELETE_KEY_SESSION':
-      return {...state, delete_error: null};
+      return {...state, delete_error: null, request_delete_key: null};
     case 'CLEAR_CREATION_SESSION':
       return {...state, access_key_pair: null, str_access_key_pair: null, delete_error: null};
     case 'FETCH_ERROR':

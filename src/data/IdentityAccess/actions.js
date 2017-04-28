@@ -101,9 +101,9 @@ export const receiveDeleteKeyResponse = ({status, data, access_key}) => {
         dispatch({
           type: 'DELETE_KEY_SUCCEED',
         });
+        dispatch(clearDeleteSession())
         dispatch(updatePopup({key_delete_popup: false}));
-        dispatch(fetchStorageAccess());
-        return dispatch(clearDeleteSession());
+        return dispatch(fetchStorageAccess());
       default:
         return dispatch({
           type: 'DELETE_KEY_FAIL',
