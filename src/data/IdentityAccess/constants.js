@@ -1,4 +1,4 @@
-export const NO_ACCESS_MSG = "You currently have no AWS access.";
+export const NO_ACCESS_MSG = "You have no access to storage service. Please contact an admin to get it!";
 export const CONFIRM_DELETE_MSG = 'Are you sure you want to make this key inactive?';
 export const SECRET_KEY_MSG = 'This secret key is only displayed this time. Please save it!';
 export const DELETE_BTN = 'Delete';
