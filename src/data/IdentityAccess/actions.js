@@ -88,7 +88,7 @@ export const deleteKey = (access_key_id) => {
     return receiveDeleteKeyResponse({status, data, access_key_id})
   };
   return fetchWrapper({
-    path: credential_path + 'access_key/' + access_key_id,
+    path: credential_path + access_key_id,
     method: 'DELETE',
     handler: receiveDeleteKey
   })
