@@ -17,7 +17,7 @@ import Submission from './data/submission.js'
 import ProjectSubmission from './data/ProjectSubmission.js'
 import IdentityAccess from './data/IdentityAccess/component.js'
 import { loginSubmissionAPI, setProject } from './data/submitActions'
-import { loginCloudMiddleware } from './data/IdentityAccess/actions'
+import { loginCloudMiddleware, fetchStorageAccess } from './data/IdentityAccess/actions'
 import { Router, Route, Link, useRouterHistory } from 'react-router'
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import { createHistory } from 'history'
@@ -102,7 +102,7 @@ render(
       <Router history={history}>
         <Route path='/login' component={Login} />
         <Route path='/'
-               onEnter={requireAuth(store)}
+               onEnter={requireAuth(store, ()=>store.dispatch(fetchStorageAccess()))}
                component={IdentityAccess} />
       </Router>
     </ThemeProvider>

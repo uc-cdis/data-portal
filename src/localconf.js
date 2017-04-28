@@ -28,7 +28,7 @@ if (app === 'bpa'){
 
 else {
   hostname = dev === true ? 'http://api.bloodpac-data.org/' : 'https://bionimbus-pdc.opensciencedatacloud.org/';
-  userapi_path = hostname + 'api/';
+  userapi_path = dev === true ? hostname + 'user/' : hostname + 'api/';
   credential_path = userapi_path + 'credentials/cleversafe/';
   credential_oauth_path = userapi_path + 'oauth2/';
   appname = 'GDC Jamboree Portal';
