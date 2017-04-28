@@ -72,7 +72,7 @@ const IdentityComponent = ({cloud_access, popups, onCreateUser, onCreateKey, onC
             popups.save_key_popup === true &&
             <SavePopup message={constants.SECRET_KEY_MSG}
                        error={json_to_string(cloud_access.create_error)}
-                       display={cloud_access.access_key_pairs}
+                       display={cloud_access.access_key_pair}
                        savingStr={cloud_access.str_access_key_pair}
                        onClose={()=>{onUpdatePopup({save_key_popup: false}); onClearCreationSession()}}
                        filename={'accessKeys.txt'}

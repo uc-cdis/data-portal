@@ -126,7 +126,7 @@ export const createKey = () => {
     return receiveCreatedKeyResponse({status, data})
   };
   return fetchWrapper({
-    path: credential_path + 'access_key',
+    path: credential_path,
     method: 'POST',
     handler: receiveCreatedKey
   })
