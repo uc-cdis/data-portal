@@ -3,9 +3,9 @@ import 'babel-polyfill'
 export const cloud_access = (state={}, action) => {
   switch (action.type){
     case 'RECEIVE_CLOUD_ACCESS':
-      return {...state, user: action.user, access_key_pairs: action.access_keys};
+      return {...state, access_key_pairs: action.access_keys};
     case 'CLOUD_ACCESS_ERROR':
-      return {...state, user: action.user, cloud_access_error: action.error};
+      return {...state, cloud_access_error: action.error};
     case 'RECEIVE_USERAPI_LOGIN':
       return {...state, login:state.result, error:state.error};
     case 'REQUEST_DELETE_KEY':

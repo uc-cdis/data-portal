@@ -52,13 +52,13 @@ const IdentityComponent = ({cloud_access, popups, onCreateUser, onCreateKey, onC
     <Box>
       <Nav />
       {
-        !cloud_access.user &&
+        !cloud_access.access_key_pairs === undefined &&
         <div>
           {constants.NO_ACCESS_MSG}
         </div>
       }
       {
-        cloud_access.user &&
+        cloud_access.access_key_pairs !== undefined &&
         <div>
           <h3>{constants.ACCESS_KEY_LBL}</h3>
           {
@@ -72,7 +72,7 @@ const IdentityComponent = ({cloud_access, popups, onCreateUser, onCreateKey, onC
             popups.save_key_popup === true &&
             <SavePopup message={constants.SECRET_KEY_MSG}
                        error={json_to_string(cloud_access.create_error)}
-                       display={cloud_access.access_key_pair}
+                       display={cloud_access.access_key_pairs}
                        savingStr={cloud_access.str_access_key_pair}
                        onClose={()=>{onUpdatePopup({save_key_popup: false}); onClearCreationSession()}}
                        filename={'accessKeys.txt'}

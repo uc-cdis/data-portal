@@ -65,13 +65,11 @@ export const receiveCloudAccess = ({status, data}) => {
     case 200:
       return {
         type: 'RECEIVE_CLOUD_ACCESS',
-        user: data["user"],
-        access_keys: convertTimes(data["access_keys"])
+        access_keys: data,
       };
     default:
       return {
         type: 'CLOUD_ACCESS_ERROR',
-        user: null,
         error: data['error']
       }
   }
