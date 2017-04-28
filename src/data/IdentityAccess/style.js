@@ -30,3 +30,11 @@ export const DeleteButton = styled.a`
   ${actionButton};
   color: ${props => props.theme.color_primary};
 `;
+
+export const ProjectBullet = styled.li`
+  display: block;
+  width: 100%;
+  border: 1px solid #dfdfdf;
+  padding: 0.5em;
+  text-align: center;
+`;

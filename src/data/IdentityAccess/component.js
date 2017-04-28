@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { fetchStorageAccess, createUser, createKey, deleteKey,
   requestDeleteKey, clearDeleteSession, clearCreationSession } from './actions';
 import { Box } from '../../theme';
-import { RequestButton, DeleteButton } from './style';
+import { RequestButton, DeleteButton, ProjectBullet } from './style';
 import * as constants from "./constants";
 
 const Entity = ({value, onUpdatePopup, onRequestDeleteKey}) => {
@@ -43,7 +43,7 @@ const Entities = ({values, onUpdatePopup, onRequestDeleteKey}) => {
   )
 };
 
-const IdentityComponent = ({cloud_access, popups, onCreateUser, onCreateKey, onClearCreationSession, onUpdatePopup, onDeleteKey,
+const IdentityComponent = ({user, cloud_access, popups, onCreateUser, onCreateKey, onClearCreationSession, onUpdatePopup, onDeleteKey,
                              onRequestDeleteKey, onClearDeleteSession}) => {
   return  (
     <Box>
@@ -85,6 +85,12 @@ const IdentityComponent = ({cloud_access, popups, onCreateUser, onCreateKey, onC
           }
         </div>
       }
+      <ul>
+        <h4>{constants.LIST_PROJECT_MSG}</h4>
+        {Object.keys(user.project_access).filter(
+          (project) => user.project_access[project].indexOf('read-storage') != -1).map(
+            (project, i) => <ProjectBullet key={i}>{project}</ProjectBullet>)}
+      </ul>
     </Box>
   )
 };
@@ -92,6 +98,7 @@ const IdentityComponent = ({cloud_access, popups, onCreateUser, onCreateKey, onC
 
 const mapStateToProps = (state) => {
   return {
+    'user': state.user,
     'cloud_access': state.cloud_access,
     'popups': state.popups
   }

@@ -8,3 +8,4 @@ export const ACCESS_KEY_COLUMN = 'Access key';
 export const CREATE_DATE_COLUMN = 'Created date';
 export const STATUS_COLUMN = 'Status';
 export const ACCESS_KEY_LBL = 'Access keys';
+export const LIST_PROJECT_MSG = 'You have access to the following project(s)';
