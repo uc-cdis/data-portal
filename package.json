@@ -27,7 +27,7 @@
     "redux-form": "^6.5.0",
     "redux-thunk": "^2.1.0",
     "styled-components": "^1.4.3",
-    "underscore": "^1.8.3",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "babel-core": "^6.13.2",
