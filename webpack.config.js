@@ -49,6 +49,9 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.EnvironmentPlugin(['NODE_ENV'])
+    new webpack.EnvironmentPlugin(['NODE_ENV']),
+    new webpack.EnvironmentPlugin(['MOCK_STORE']),
+    new webpack.EnvironmentPlugin(['APP']),
+    new webpack.EnvironmentPlugin(['BASENAME']),
   ]
 };

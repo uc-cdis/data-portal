@@ -35,7 +35,6 @@ const UploadButton = styled.a`
     border-color: #c16161;
 
   }
-
 `;
 
 const SubmissionResult = styled.div`

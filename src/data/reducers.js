@@ -2,6 +2,7 @@ import 'babel-polyfill'
 import { reducer as formReducer } from 'redux-form'
 import { combineReducers } from 'redux'
 import {routerReducer} from 'react-router-redux'
+import {cloud_access} from './IdentityAccess/reducers'
 
 const status = (state={}, action) => {
   switch (action.type){
@@ -27,12 +28,11 @@ const user = (state={}, action) => {
       return {...state, oauth_url:action.url};
     case 'FETCH_ERROR':
       return {...state, fetched_user: true, fetch_error: action.error};
-    case 'RECEIVE_USER_ACCESS':
-      return {...state, ...action.user, fetched_user: true, access_key_pair: action.access_key};
     default:
       return state
   }
 };
+
 
 const login = (state={}, action) => {
   switch (action.type) {
@@ -100,7 +100,7 @@ const removeDeletedNode = (state, id) =>{
   // graphql response should always be {data: {node_type: [ nodes ] }}
   let node_type = Object.keys(search_result['data'])[0];
   let entities = search_result['data'][node_type];
-  search_result['data'][node_type] = entities.filter((entity) => entity['id'] != id);
+  search_result['data'][node_type] = entities.filter((entity) => entity['id'] !== id);
   return search_result;
 };
 
@@ -114,6 +114,6 @@ const popups = (state={}, action) => {
 };
 
 
-const reducers = combineReducers({popups, login, user, status, submission, query_nodes, form: formReducer, routing:routerReducer});
+const reducers = combineReducers({popups, login, user, status, submission, query_nodes, cloud_access, form: formReducer, routing:routerReducer});
 
 export default reducers
