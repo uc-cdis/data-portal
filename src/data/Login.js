@@ -13,7 +13,7 @@ const LoginButton = styled.a`
 const Login = (props) => {
   let next = basename;
   if (Object.keys(props.location.query).length != 0){
-    next = props.location.query.next;
+    next = basename + props.location.query.next;
   }
   return (
   <CentralBox>
