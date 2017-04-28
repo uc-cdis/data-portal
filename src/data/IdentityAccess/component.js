@@ -32,8 +32,9 @@ const Entities = ({values, onUpdatePopup, onRequestDeleteKey}) => {
     <table width="100%">
       <tbody>
         <tr>
-          <th>{constants.ACCESS_KEY_COLUMN}</th>
-          <th></th>
+          {values.length > 0 &&
+            <th>{constants.ACCESS_KEY_COLUMN}</th>
+          }
         </tr>
         {values.map( (item) => <Entity key={item.access_key} value={item}
                                        onUpdatePopup={onUpdatePopup}
@@ -57,7 +58,6 @@ const IdentityComponent = ({user, cloud_access, popups, onCreateUser, onCreateKe
       {
         cloud_access.access_key_pairs !== undefined &&
         <div>
-          <h3>{constants.ACCESS_KEY_LBL}</h3>
           {
             popups.key_delete_popup === true &&
             <Popup message={constants.CONFIRM_DELETE_MSG}
