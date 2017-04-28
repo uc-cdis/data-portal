@@ -102,9 +102,9 @@ const mapDispatchToProps = (dispatch) => {
     onCreateUser: (state) => dispatch(createUser()),
     onCreateKey: (state) => dispatch(createKey()),
     onUpdatePopup: (state) => dispatch(updatePopup(state)),
-    onDeleteKey: (access_key_id) => dispatch(deleteKey(access_key_id)),
-    onRequestDeleteKey: (access_key_id) => dispatch(fetchStorageAccess()).then(
-        () => dispatch(requestDeleteKey(access_key_id))
+    onDeleteKey: (access_key) => dispatch(deleteKey(access_key)),
+    onRequestDeleteKey: (access_key) => dispatch(fetchStorageAccess()).then(
+        () => dispatch(requestDeleteKey(access_key))
     ),
     onClearDeleteSession: () => dispatch(clearDeleteSession()),
     onClearCreationSession: () => dispatch(clearCreationSession())

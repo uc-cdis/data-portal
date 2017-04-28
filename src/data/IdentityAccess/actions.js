@@ -75,20 +75,20 @@ export const receiveCloudAccess = ({status, data}) => {
   }
 };
 
-export const requestDeleteKey = (access_key_id) => {
+export const requestDeleteKey = (access_key) => {
   return {
     type: 'REQUEST_DELETE_KEY',
-    access_key_id: access_key_id
+    access_key_id: access_key
   }
 };
 
-export const deleteKey = (access_key_id) => {
+export const deleteKey = (access_key) => {
   let receiveDeleteKey = ({status, data}) => {
     console.log('receive delete');
-    return receiveDeleteKeyResponse({status, data, access_key_id})
+    return receiveDeleteKeyResponse({status, data, access_key})
   };
   return fetchWrapper({
-    path: credential_path + access_key_id,
+    path: credential_path + access_key,
     method: 'DELETE',
     handler: receiveDeleteKey
   })
