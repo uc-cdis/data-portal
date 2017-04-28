@@ -97,12 +97,12 @@ export const deleteKey = (access_key) => {
 export const receiveDeleteKeyResponse = ({status, data, access_key}) => {
   return (dispatch) => {
     switch (status) {
-      case 200:
+      case 201:
         dispatch({
           type: 'DELETE_KEY_SUCCEED',
-          access_keys: convertTimes(data["access_keys"])
         });
         dispatch(updatePopup({key_delete_popup: false}));
+        dispatch(fetchStorageAccess());
         return dispatch(clearDeleteSession());
       default:
         return dispatch({
