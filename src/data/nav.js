@@ -64,12 +64,14 @@ const NavComponent = ({user, onLogoutClick}) => (
 
       </NavLeft>
       <NavRight>
+        { user.username !== undefined &&
         <ul>
           <Logo to='/'><span>{user.username}</span></Logo>
             <Logout to='#' onClick={onLogoutClick}>
               <span  className='fui-exit'></span><span>Logout</span>
             </Logout>
         </ul>
+        }
     </NavRight>
   </header>
 );

@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux'
 import reducers from './data/reducers'
-import { requireAuth, fetchUser } from './data/actions'
+import { requireAuth, enterHook, fetchUser } from './data/actions'
 import App from './data/App'
 import Login from './data/Login'
 import DataDictionary from './data/DataDictionary.js'
@@ -17,6 +17,7 @@ import Submission from './data/submission.js'
 import ProjectSubmission from './data/ProjectSubmission.js'
 import IdentityAccess from './data/IdentityAccess/component.js'
 import { loginSubmissionAPI, setProject } from './data/submitActions'
+import { fetchDictionary } from './data/queryactions.js';
 import { loginCloudMiddleware, fetchStorageAccess } from './data/IdentityAccess/actions'
 import { Router, Route, Link, useRouterHistory } from 'react-router'
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux'
@@ -77,10 +78,10 @@ render(
                onEnter={requireAuth(store, ()=>store.dispatch(loginCloudMiddleware()))}
                component={IdentityAccess} />
         <Route path='/dd'
-               onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
+               onEnter={enterHook(store, fetchDictionary)}
                component={DataDictionary} />
         <Route path='/dd/:node'
-               onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
+               onEnter={enterHook(store, fetchDictionary)}
                component={DataDictionaryNode} />
         <Route path='/:project'
                onEnter={requireAuth(store, ()=>store.dispatch(loginSubmissionAPI()))}
