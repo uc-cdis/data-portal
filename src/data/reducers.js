@@ -3,6 +3,7 @@ import { reducer as formReducer } from 'redux-form'
 import { combineReducers } from 'redux'
 import {routerReducer} from 'react-router-redux'
 import {cloud_access} from './IdentityAccess/reducers'
+import {certificate} from './Certificate/reducers'
 
 const status = (state={}, action) => {
   switch (action.type){
@@ -114,6 +115,6 @@ const popups = (state={}, action) => {
 };
 
 
-const reducers = combineReducers({popups, login, user, status, submission, query_nodes, cloud_access, form: formReducer, routing:routerReducer});
+const reducers = combineReducers({popups, login, user, status, submission, query_nodes, cloud_access, certificate, form: formReducer, routing:routerReducer});
 
 export default reducers

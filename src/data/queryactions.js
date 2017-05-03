@@ -1,5 +1,5 @@
-import { fetchWrapper } from './actions'
-import { submissionapi_path } from '../localconf'
+import { fetchWrapper } from './actions';
+import { submissionapi_path } from '../localconf';
 
 export const fetchProjects = () => {
   return fetchWrapper({
