@@ -118,6 +118,13 @@ export const requireAuth = (store, additionalHooks) => {
   }
 };
 
+export const enterHook = (store, hookAction) => {
+  return (nextState, replace, callback) => {
+    return store.dispatch(hookAction()).then(() => callback());
+  }
+
+}
+
 export const logoutAPI = () => {
   return (dispatch) => dispatch(fetchWrapper({
     path: submissionapi_oauth_path + 'logout',
