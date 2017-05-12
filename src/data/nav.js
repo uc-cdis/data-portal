@@ -19,6 +19,9 @@ const NavRight = styled.nav`
   top: 0;
   color: white;
 `;
+
+// TODO: due to issue https://github.com/styled-components/styled-components/issues/439,
+// bgcolor prop triggers react warning now, need to fix
 const NavItem = styled(Link)`
   background: ${props => props.bgcolor};
   &:hover,
@@ -28,7 +31,6 @@ const NavItem = styled(Link)`
   }
   ${cube};
 `;
-
 const Logo = styled(Link)`
   background: ${props => props.theme.color_primary};
   float: left;

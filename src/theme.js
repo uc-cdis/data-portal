@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 
-
 export const theme = {
   main: 'mediumseagreen',
   color_primary: '#800000',
@@ -12,7 +11,7 @@ export const theme = {
   mid_gray: '#8F8F8F',
   dark_gray: '#525252',
   box_padding_width: '100px',
-  box_padding_height: '80px',
+  box_padding_height: '80px'
 
 };
 
@@ -109,8 +108,8 @@ export const TableRow = styled.tr`
 
 export const TableData = styled.td`
     width: ${props => props.right ? '80%' : '20%'};
-    background: ${props => props.first_cr ? '#847c7c': 'white' };
-    color: ${props=> props.first_cr ? 'white' : '#222'};
+    background: ${props => props.first_cr ? '#847c7c' : 'white'};
+    color: ${props => props.first_cr ? 'white' : '#222'};
     display: table-cell;
     padding: 0.5rem 1rem;
     overflow: scroll;

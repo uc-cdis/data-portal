@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch'
-import { userapi_path, headers, basename, submissionapi_oauth_path } from '../configs.js'
+import _ from 'underscore';
+import { required_certs, userapi_path, headers, basename, submissionapi_oauth_path } from '../configs.js'
 
 export const updatePopup = (state) => {
   return {
@@ -107,6 +108,14 @@ export const requireAuth = (store, additionalHooks) => {
       if (!user.username) {
         let path = location.pathname=='/' ? '/' : '/' + location.pathname;
         replace({ pathname: '/login', query: { next: path+nextState.location.search } });
+      }
+      let has_certs = _.intersection(required_certs, user.certificates_uploaded).length !== required_certs.length;
+      // take quiz if this user doesn't have required certificate
+      if (location.pathname !== 'quiz' && has_certs ){
+        replace({pathname: '/quiz'});
+      }
+      if (location.pathname === 'quiz' && !has_certs) {
+        replace({pathname: '/'});
       }
       if (additionalHooks){
         return additionalHooks(nextState, replace);

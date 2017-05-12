@@ -1,4 +1,4 @@
-export * from './localconf.js'
+export * from './localconf.js';
 
 export const headers = new Headers({
   'Accept': 'application/json',
