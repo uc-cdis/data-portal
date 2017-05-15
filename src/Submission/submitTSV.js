@@ -1,10 +1,10 @@
 import React from 'react';
-import { predict_file_type } from './utils';
+import { predict_file_type } from '../utils';
 import brace from 'brace';
 import 'brace/mode/json';
 import 'brace/theme/kuroir';
 import AceEditor from 'react-ace';
-import { uploadTSV, submitToServer, updateFileContent } from './submitActions';
+import { uploadTSV, submitToServer, updateFileContent } from './actions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { button } from '../theme'

@@ -1,12 +1,12 @@
 import React from 'react';
-import Nav from '../nav.js'
+import Nav from '../Nav/component'
 import { json_to_string, get_submit_path } from '../utils'
 import { updatePopup } from '../actions';
-import {Popup, SavePopup} from '../Popup';
+import {Popup, SavePopup} from '../Popup/component';
 import { connect } from 'react-redux';
 import { fetchStorageAccess, createUser, createKey, deleteKey,
   requestDeleteKey, clearDeleteSession, clearCreationSession } from './actions';
-import { Box } from '../../theme';
+import { Box } from '../theme';
 import { RequestButton, DeleteButton, ProjectBullet } from './style';
 import * as constants from "./constants";
 

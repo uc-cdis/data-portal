@@ -1,6 +1,6 @@
 import React from 'react';
 import { lighten } from 'polished';
-import { logoutAPI } from './actions';
+import { logoutAPI } from '../actions';
 import { connect } from 'react-redux';
 import { basename, userapi_path, nav_items } from '../localconf.js';
 import { Link } from 'react-router';

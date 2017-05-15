@@ -1,5 +1,5 @@
 import { fetchWrapper, fetchOAuthURL, updatePopup } from '../actions';
-import { credential_path, credential_oauth_path } from '../../localconf';
+import { credential_path, credential_oauth_path } from '../localconf';
 import moment from 'moment';
 
 export const loginCloudMiddleware = () => {

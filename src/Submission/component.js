@@ -1,5 +1,5 @@
 import React from 'react';
-import Nav from './nav.js'
+import Nav from '../Nav/component.js'
 import { connect } from 'react-redux';
 import SubmitTSV from './submitTSV'
 import styled from 'styled-components';
