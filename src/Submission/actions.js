@@ -1,6 +1,6 @@
-import { fetchOAuthURL, fetchWrapper } from './actions';
-import { predict_file_type } from './utils';
-import { fetchProjects, fetchDictionary }  from './queryactions';
+import { fetchOAuthURL, fetchWrapper } from '../actions';
+import { predict_file_type } from '../utils';
+import { fetchProjects, fetchDictionary }  from '../queryactions';
 import { submissionapi_path, submissionapi_oauth_path } from '../localconf';
 
 export const uploadTSV = (value, type) => {

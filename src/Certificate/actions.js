@@ -1,5 +1,5 @@
-import { userapi_path } from '../../configs';
-import browserHistory from '../../history';
+import { userapi_path } from '../configs';
+import browserHistory from '../history';
 import { fetchWrapper, fetchOAuthURL, updatePopup } from '../actions';
 import { certificate_form } from './constants';
 

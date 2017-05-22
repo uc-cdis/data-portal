@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import { Form, FormError, RadioGroup, Radio } from 'react-form';
-import Nav from '../nav.js'
+import Nav from '../Nav/component.js'
 import { submitForm, updateForm } from './actions';
 import { connect } from 'react-redux';
-import { Box } from '../../theme';
+import { Box } from '../theme';
 import { QuestionItem, OptionBullet, SubmitButton, Tooltip } from './style';
 import * as constants from "./constants";
 

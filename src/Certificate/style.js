@@ -1,4 +1,4 @@
-import { button } from '../../theme';
+import { button } from '../theme';
 import styled, { css } from 'styled-components';
 
 export const OptionBullet = styled.p`

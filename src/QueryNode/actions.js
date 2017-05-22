@@ -1,6 +1,6 @@
-import { fetchWrapper, updatePopup } from './actions';
+import { fetchWrapper, updatePopup } from '../actions';
 import { push } from 'react-router-redux';
-import { get_submit_path } from './utils';
+import { get_submit_path } from '../utils';
 import { submissionapi_path, submissionapi_oauth_path } from '../localconf';
 
 export const updateSearchForm = (value) => {

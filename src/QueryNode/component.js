@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { json_to_string, get_submit_path } from './utils'
-import { updatePopup } from './actions';
-import { Popup } from './Popup';
-import Nav from './nav';
+import { json_to_string, get_submit_path } from '../utils'
+import { updatePopup } from '../actions';
+import { Popup } from '../Popup/component';
+import Nav from '../Nav/component';
 import styled, { css } from 'styled-components';
 import { input, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { clearDeleteSession, fetchQueryNode, submitSearchForm, deleteNode, storeNodeInfo } from './QueryNodeActions';
+import { clearDeleteSession, fetchQueryNode, submitSearchForm, deleteNode, storeNodeInfo } from './actions';
 import { cube } from '../theme';
 import { Box } from '../theme';
 import Select from 'react-select';

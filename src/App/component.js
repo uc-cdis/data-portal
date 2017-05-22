@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '../theme';
-import Nav from './nav.js'
+import Nav from '../Nav/component.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';

@@ -1,4 +1,4 @@
-import { submissionapi_path } from '../localconf';
+import { submissionapi_path } from './localconf';
 
 export const get_submit_path = (project) => {
   let path =project.split('-');
