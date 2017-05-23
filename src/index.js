@@ -27,6 +27,7 @@ import { app, mock_store, dev } from './localconf.js';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from './history';
 import { theme, Box } from './theme';
+import { required_certs } from './configs';
 
 
 let store;
@@ -36,7 +37,7 @@ const configureStore = () => {
       if (dev === true) {
         let data = {};
         if (mock_store) {
-          data = {user: {username: 'test'}, submission: {dictionary: dict, node_types: Object.keys(dict).slice(2) }, status: {}};
+          data = {user: {username: 'test', certificates_uploaded: required_certs }, submission: {dictionary: dict, node_types: Object.keys(dict).slice(2) }, status: {}};
         }
         const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
         store = compose(applyMiddleware(thunk, routerMiddleware(browserHistory)), autoRehydrate())(createStore)(
