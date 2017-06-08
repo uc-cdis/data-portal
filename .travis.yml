@@ -3,12 +3,18 @@ git:
   depth: 1
 node_js:
   - "7"
+
+cache:
+  directories:
+    - node_modules # NPM packages
+
 services:
     - docker
 
 install:
     - docker login quay.io -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
     - docker pull quay.io/cdis/bpa-data-portal:master
+    - npm install
 
 script:
     - npm test

@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Popup 1`] = `
+<section
+  className="sc-htpNat dDTzPz"
+>
+  <section
+    className="sc-bxivhb jJjITh"
+  >
+    <div
+      className="sc-EHOje gizWZa"
+    >
+      <div>
+        test
+      </div>
+    </div>
+    <a
+      className="sc-bwzfXH eBwlJa"
+      onClick={[Function]}
+    >
+      close
+    </a>
+    <a
+      className="sc-bdVaJa hiblcO"
+      onClick={[Function]}
+    >
+      confirm
+    </a>
+    <a
+      className="sc-bwzfXH eBwlJa"
+      onClick={[Function]}
+    >
+      cancel
+    </a>
+  </section>
+</section>
+`;
