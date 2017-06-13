@@ -84,6 +84,7 @@ let QueryForm = React.createClass({
       }
     }
     let url = `/${this.props.project}/search?${query_param.join('&')}`;
+    console.log(data);
     this.props.onSearchFormSubmit(data, url);
   },
   getInitialState () {
