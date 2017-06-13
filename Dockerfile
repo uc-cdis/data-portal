@@ -4,6 +4,9 @@
 FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND=noninteractive
+ARG APP=bpa
+ARG BASENAME
+ARG INDEXFILE="bpa-index.html"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -22,7 +25,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY . /data-portal
 WORKDIR /data-portal
-RUN npm install \
+RUN cp $APP-index.html index.html \
+    && cp src/img/$APP-favicon.ico src/img/favicon.ico \
+    && npm install \
     && NODE_ENV=production webpack \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default

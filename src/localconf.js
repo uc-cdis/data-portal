@@ -25,6 +25,25 @@ if (app === 'bpa') {
     url: userapi_path + 'login/google' + '?redirect=',
     title: 'Login from Google'
   };
+} else if (app === 'edc') {
+  hostname = dev === true ? 'https://play.opensciencedatacloud.org/' : 'https://play.opensciencedatacloud.org/';
+  required_certs = [];
+  userapi_path = hostname + 'user/';
+  submissionapi_path = hostname + 'api/v0/submission/';
+  submissionapi_oauth_path = hostname + 'api/v0/oauth2/';
+  credential_path = hostname + 'middleware/aws/v0/';
+  credential_oauth_path = hostname + 'middleware/oauth2/v0/';
+  graphql_path = hostname + 'api/v0/submission/graphql/';
+  appname = 'Environmental Data Commons Portal';
+  nav_items = [
+    {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
+    {'icon': 'fui-search', 'link': '/graphql', 'color': '#daa520'},
+    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'}
+  ];
+  login = {
+    url: userapi_path + 'login/google' + '?redirect=',
+    title: 'Login from Google'
+  };
 } else {
   hostname = dev === true ? 'http://api.bloodpac-data.org/' : 'https://bionimbus-pdc.opensciencedatacloud.org/';
   userapi_path = dev === true ? hostname + 'user/' : hostname + 'api/';
