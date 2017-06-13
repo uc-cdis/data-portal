@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY . /data-portal
 WORKDIR /data-portal
 RUN npm install \
-    && NODE_ENV=production APP=edc webpack \
+    && NODE_ENV=production webpack \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
 CMD /usr/sbin/nginx -g 'daemon off;'
