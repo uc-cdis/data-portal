@@ -27,6 +27,7 @@ import { app, mock_store, dev } from './localconf.js';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from './history';
 import { theme, Box } from './theme';
+import { getCounts } from './DataModelGraph/component'
 import { required_certs } from './configs';
 
 
@@ -94,7 +95,9 @@ async function init() {
               onEnter={enterHook(store, fetchDictionary)}
               component={DataDictionaryNode} />
             <Route path='/:project'
-              onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
+              onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI())
+                    .then(() => {store.dispatch(getCounts(store.getState().submission.node_types, location.pathname.slice(1, location.pathname.length)))})
+                )}
               component={ProjectSubmission} />
             <Route path='/:project/search'
               onEnter={requireAuth(store, (nextState) => { return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))); })}
