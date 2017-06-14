@@ -6,7 +6,6 @@ FROM ubuntu:16.04
 ENV DEBIAN_FRONTEND=noninteractive
 ARG APP=bpa
 ARG BASENAME
-ARG INDEXFILE="bpa-index.html"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
