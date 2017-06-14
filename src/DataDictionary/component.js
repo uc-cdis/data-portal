@@ -4,7 +4,7 @@ import {Box, cube, Table, TableData, TableRow, TableHead} from '../theme.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
-
+import { app } from '../localconf.js';
 
 const TableBullet = ({node, description})=>{
   return(
@@ -57,11 +57,15 @@ const DataDictionaryViewer = ({submission}) =>{
     return categories
   }
   let categories = filterCategories(submission.dictionary, submission.node_types)
+  let subHeader = "The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data Dictionary."
+  if (app === 'edc') {
+    subHeader = "The data dictionary viewer is a user-friendly interface for accessing the Environmental Data Commons Data Dictionary."
+  }
   return (
   <Box>
     <Nav />
     <h3> Data Dictionary Viewer </h3>
-    <p>The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data Dictionary.</p>
+    <p>{subHeader}</p>
      {Object.keys(categories).map( (category) =>
           <CategoryTable dictionary={submission.dictionary} key={category} nodes={categories[category]} category = {category}/> )}
 
