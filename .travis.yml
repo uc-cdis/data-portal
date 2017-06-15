@@ -12,7 +12,9 @@ install:
 script:
     - docker build -t quay.io/cdis/bpa-data-portal .
     - docker build --build-arg APP=edc --build-arg BASENAME="https://play.opensciencedatacloud.org/portal/" -t quay.io/cdis/edc-data-portal .
+    - docker build --build-arg APP=acct --build-arg BASENAME="https://acct.bionimbus.org/portal" -t quay.io/cdis/acct-data-portal .
 
 after_success:
     - docker push quay.io/cdis/bpa-data-portal
     - docker push quay.io/cdis/edc-data-portal
+    - docker push quay.io/cdis/acct-data-portal
