@@ -1,0 +1,18 @@
+language: python
+git:
+  depth: 1
+python:
+  - "2.7"
+services:
+    - docker
+
+install:
+    - docker login quay.io -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+
+script:
+    - docker build -t quay.io/cdis/bpa-data-portal .
+    - docker build --build-arg APP=edc --build-arg BASENAME="https://play.opensciencedatacloud.org/portal/" -t quay.io/cdis/edc-data-portal .
+
+after_success:
+    - docker push quay.io/cdis/bpa-data-portal
+    - docker push quay.io/cdis/edc-data-portal
