@@ -4,7 +4,7 @@
 FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND=noninteractive
-ARG APP=bpa
+ARG APP=acct
 ARG BASENAME
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
