@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY . /data-portal
 WORKDIR /data-portal
 RUN cp $APP-index.html index.html \
-    && cp src/img/$APP-favicon.ico src/img/favicon.ico \
+    && cp src/img/$APP-favicon.ico src/img/favicon.ico; exit 0 \
     && npm install \
     && NODE_ENV=production webpack \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
