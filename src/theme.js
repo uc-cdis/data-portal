@@ -120,3 +120,34 @@ export const Bullet = styled.li`
   list-style-type: disc;
   margin-left: 1em;
 `;
+<<<<<<< 77ee0473a2c6ece9d8a7d091cb6444c081f67d0e
+=======
+
+export const SubmitButton = styled.label`
+  border: 1px solid darkgreen;
+  color: darkgreen;
+  margin-bottom: 1em;
+  &:hover,
+  &:active,
+  &:focus {
+    color: #2e842e;
+    border-color: #2e842e;
+
+  }
+  ${button};
+`;
+
+export const UploadButton = styled.a`
+  border: 1px solid ${props => props.theme.color_primary};
+  color: ${props => props.theme.color_primary};
+  margin-bottom: 1em;
+  ${button};
+  &:hover,
+  &:active,
+  &:focus {
+    color: #c16161;
+    border-color: #c16161;
+
+  }
+`;
+>>>>>>> feat(submission):superficial components
