@@ -57,9 +57,11 @@ const DataDictionaryViewer = ({submission}) =>{
     return categories
   }
   let categories = filterCategories(submission.dictionary, submission.node_types)
-  let subHeader = "The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data Dictionary."
+  let subHeader = "This is a user-friendly interface for accessing the Data Dictionary"
   if (app === 'edc') {
     subHeader = "The data dictionary viewer is a user-friendly interface for accessing the Environmental Data Commons Data Dictionary."
+  } else if (app === 'bpa') {
+    subHeader = "The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data Dictionary."
   }
   return (
   <Box>

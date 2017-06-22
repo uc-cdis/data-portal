@@ -74,7 +74,7 @@ async function init() {
   const store= await configureStore();
   const history = syncHistoryWithStore(browserHistory, store);
   history.listen(location => console.log(location.pathname));
-  if (app === 'bpa' || app === 'edc' || app === 'acct') {
+  if (app !== 'gdc') {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
