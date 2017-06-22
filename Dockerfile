@@ -12,11 +12,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     git \
     nginx \
-    nodejs \
-    npm \
     python \
     vim \
-    && curl -sL https://deb.nodesource.com/setup | bash - \ 
+    && curl -sL https://deb.nodesource.com/setup_4.x | bash - \ 
+    && apt-get install -y --no-install-recommends nodejs npm\
     && ln -s /usr/bin/nodejs /usr/bin/node \
     && npm install webpack -g \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
