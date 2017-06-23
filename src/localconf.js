@@ -6,8 +6,9 @@ const basename = (process.env.BASENAME === undefined) ? '/' : process.env.BASENA
 let hostname, userapi_path, submissionapi_path, submissionapi_oauth_path, credential_path, credential_oauth_path, graphql_path, appname, nav_items, login;
 let required_certs = [];
 
+hostname = `${window.location.protocol}//${window.location.hostname}/`;
+
 if (app === 'bpa') {
-  hostname = dev === true ? 'http://api.bloodpac-data.org/' : 'https://data.bloodpac.org/';
   required_certs = dev === true ? ['security_quiz'] : [];
   userapi_path = hostname + 'user/';
   submissionapi_path = hostname + 'api/v0/submission/';
@@ -26,7 +27,6 @@ if (app === 'bpa') {
     title: 'Login from Google'
   };
 } else if (app === 'edc') {
-  hostname = 'https://play.opensciencedatacloud.org/';
   required_certs = [];
   userapi_path = hostname + 'user/';
   submissionapi_path = hostname + 'api/v0/submission/';
@@ -45,7 +45,6 @@ if (app === 'bpa') {
     title: 'Login from Google'
   };
 } else if (app === acct){
-  hostname = 'https://acct.bionimbus.org/';
   required_certs = [];
   userapi_path = hostname + 'user/';
   submissionapi_path = hostname + 'api/v0/submission/';
@@ -63,9 +62,7 @@ if (app === 'bpa') {
     url: userapi_path + 'login/google' + '?redirect=',
     title: 'Login from Google'
   };
-}
-else {
-  hostname = dev === true ? 'http://api.bloodpac-data.org/' : 'https://bionimbus-pdc.opensciencedatacloud.org/';
+} else {
   userapi_path = dev === true ? hostname + 'user/' : hostname + 'api/';
   credential_path = userapi_path + 'credentials/cleversafe/';
   credential_oauth_path = userapi_path + 'oauth2/';
