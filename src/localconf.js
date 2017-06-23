@@ -44,7 +44,7 @@ if (app === 'bpa') {
     url: userapi_path + 'login/google' + '?redirect=',
     title: 'Login from Google'
   };
-} else if (app === acct){
+} else if (app === 'acct'){
   required_certs = [];
   userapi_path = hostname + 'user/';
   submissionapi_path = hostname + 'api/v0/submission/';
@@ -62,7 +62,7 @@ if (app === 'bpa') {
     url: userapi_path + 'login/google' + '?redirect=',
     title: 'Login from Google'
   };
-} else {
+} else if (app ==='gdc') {
   userapi_path = dev === true ? hostname + 'user/' : hostname + 'api/';
   credential_path = userapi_path + 'credentials/cleversafe/';
   credential_oauth_path = userapi_path + 'oauth2/';
@@ -73,6 +73,24 @@ if (app === 'bpa') {
   login = {
     url: 'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',
     title: 'Login from NIH'
+  };
+} else {
+  required_certs = [];
+  userapi_path = hostname + 'user/';
+  submissionapi_path = hostname + 'api/v0/submission/';
+  submissionapi_oauth_path = hostname + 'api/v0/oauth2/';
+  credential_path = hostname + 'middleware/aws/v0/';
+  credential_oauth_path = hostname + 'middleware/oauth2/v0/';
+  graphql_path = hostname + 'api/v0/submission/graphql/';
+  appname = 'Generic Data Commons Portal';
+  nav_items = [
+    {'icon': 'fui-home', 'link': '/', 'color': '#1d3674'},
+    {'icon': 'fui-search', 'link': '/graphql', 'color': '#ad7e1c'},
+    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#1d3674'}
+  ];
+  login = {
+    url: userapi_path + 'login/google' + '?redirect=',
+    title: 'Login from Google'
   };
 }
 
