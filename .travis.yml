@@ -1,20 +1,20 @@
-language: python
+language: node_js
 git:
   depth: 1
-python:
-  - "2.7"
+node_js:
+  - "7"
 services:
     - docker
 
 install:
-    - docker login quay.io -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker login quay.io -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"; fi
 
 script:
-    - docker build --build-arg APP=bpa -t quay.io/cdis/bpa-data-portal .
-    - docker build --build-arg APP=edc --build-arg BASENAME="https://play.opensciencedatacloud.org/portal/" -t quay.io/cdis/edc-data-portal .
-    - docker build --build-arg APP=acct -t quay.io/cdis/acct-data-portal .
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker build --build-arg APP=bpa -t quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//-} .; fi
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker build --build-arg APP=edc --build-arg BASENAME="https://play.opensciencedatacloud.org/portal/" -t quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//-} .; fi
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker build --build-arg APP=acct -t quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//-} .; fi
 
 after_success:
-    - docker push quay.io/cdis/bpa-data-portal
-    - docker push quay.io/cdis/edc-data-portal
-    - docker push quay.io/cdis/acct-data-portal
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//-}; fi
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//-}; fi
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//-}; fi
