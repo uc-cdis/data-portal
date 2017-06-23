@@ -44,7 +44,7 @@ if (app === 'bpa') {
     url: userapi_path + 'login/google' + '?redirect=',
     title: 'Login from Google'
   };
-} else if (app === acct){
+} else if (app === 'acct'){
   required_certs = [];
   userapi_path = hostname + 'user/';
   submissionapi_path = hostname + 'api/v0/submission/';

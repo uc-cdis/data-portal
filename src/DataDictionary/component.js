@@ -3,12 +3,12 @@ import Nav from '../Nav/component.js'
 import {Box, cube, Table, TableData, TableRow, TableHead} from '../theme.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import * as constants from "./constants";
 import { Link } from 'react-router';
-import { app } from '../localconf.js';
 
 const TableBullet = ({node, description})=>{
   return(
-    <TableRow> 
+    <TableRow>
     <TableData>
       <Link to={'/dd/' + node }> {node} </Link>
     </TableData>
@@ -56,18 +56,12 @@ const DataDictionaryViewer = ({submission}) =>{
     }
     return categories
   }
-  let categories = filterCategories(submission.dictionary, submission.node_types)
-  let subHeader = "This is a user-friendly interface for accessing the Data Dictionary"
-  if (app === 'edc') {
-    subHeader = "The data dictionary viewer is a user-friendly interface for accessing the Environmental Data Commons Data Dictionary."
-  } else if (app === 'bpa') {
-    subHeader = "The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data Dictionary."
-  }
+  let categories = filterCategories(submission.dictionary, submission.node_types);
   return (
   <Box>
     <Nav />
     <h3> Data Dictionary Viewer </h3>
-    <p>{subHeader}</p>
+    <p>{constants.subHeader}</p>
      {Object.keys(categories).map( (category) =>
           <CategoryTable dictionary={submission.dictionary} key={category} nodes={categories[category]} category = {category}/> )}
 
@@ -81,7 +75,7 @@ const mapStateToProps = (state)=> {return {
 }};
 
 const mapDispatchToProps = (dispatch) => ({
-  
+
 });
 
 const DataDictionary = connect(mapStateToProps, mapDispatchToProps)(DataDictionaryViewer);
