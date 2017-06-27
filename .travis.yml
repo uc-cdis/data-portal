@@ -10,9 +10,9 @@ install:
     - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker login quay.io -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"; fi
 
 script:
-    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker build --build-arg APP=bpa -t quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//-} .; fi
-    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker build --build-arg APP=edc --build-arg BASENAME="https://play.opensciencedatacloud.org/portal/" -t quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//-} .; fi
-    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker build --build-arg APP=acct -t quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//-} .; fi
+    - docker build --build-arg APP=bpa -t quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//-} .
+    - docker build --build-arg APP=edc --build-arg BASENAME="https://play.opensciencedatacloud.org/portal/" -t quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//-} .
+    - docker build --build-arg APP=acct -t quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//-} .
 
 after_success:
     - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//-}; fi
