@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Box } from '../theme';
 import { Link } from 'react-router';
 import DataModelGraph from '../DataModelGraph/component';
+import { getCounts } from '../DataModelGraph/actions'
 
 const Browse = styled(Link)`
   display: inline-block;
@@ -22,28 +23,35 @@ export const Title = styled.h2`
   margin-right: 0.5em;
 `;
 
-const ProjectSubmissionComponent = (props) => (
+const ProjectSubmissionComponent = (props) => {
+  if (props.counts_search == undefined) {
+    props.onGetCounts(props.node_types, props.params.project)
+  }
+      
+  return (
   <Box>
     <Nav />
     <Title>{props.params.project=='graphql' ? 'Query graph': props.params.project}</Title>
     {props.params.project != 'graphql' &&
     <Browse to={'/' + props.params.project + '/search'}>browse nodes</Browse>
     }
-    { props.submission.counts_search != undefined 
-        && <DataModelGraph project={props.params.project}/>
-    }
     <SubmitTSV path={props.params.project} />
+    {props.counts_search != undefined 
+      && <DataModelGraph project={props.params.project}/> }
   </Box>
-);
+  );
+};
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    'submission': state.submission,
+    'node_types': state.submission.node_types,
+    'counts_search': state.submission.counts_search,
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    onGetCounts: (type, project) => dispatch(getCounts(type, project)),
   };
 }
 const ProjectSubmission = connect(mapStateToProps, mapDispatchToProps)(ProjectSubmissionComponent);
