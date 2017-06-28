@@ -167,5 +167,4 @@ export const receiveAuthorizationUrl = ({status, data}) => {
   }
 };
 
-
 export const receiveAPILogout = handleResponse('RECEIVE_API_LOGOUT');

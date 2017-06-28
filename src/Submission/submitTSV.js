@@ -8,7 +8,7 @@ import { uploadTSV, submitToServer, updateFileContent } from './actions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { button } from '../theme';
-import { getCounts } from '../DataModelGraph/component';
+import { getCounts } from '../DataModelGraph/actions';
 
 export const SubmitButton = styled.label`
   border: 1px solid darkgreen;
@@ -122,10 +122,13 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
         onSubmitClick: (type, project) => dispatch(submitToServer()).then(() => {dispatch(getCounts(type, project))}),
+      // To re-render the graph when new data is submitted, need to change the 
+      // counts that are stored in the state. A call to getCounts is made
+      // after the data is submitted to the database to query the database for
+      // the updated count info
         onFileChange: (value) => dispatch(updateFileContent(value)),
     }
 };
-
 
 let SubmitTSV = connect(mapStateToProps, mapDispatchToProps)(SubmitTSVComponent);
 export default SubmitTSV;
