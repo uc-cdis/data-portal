@@ -7,36 +7,10 @@ import AceEditor from 'react-ace';
 import { uploadTSV, submitToServer, updateFileContent } from './actions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { button } from '../theme';
 import { getCounts } from '../DataModelGraph/actions';
+import { button, SubmitButton, UploadButton } from '../theme'
 
-export const SubmitButton = styled.label`
-  border: 1px solid darkgreen;
-  color: darkgreen;
-  margin-bottom: 1em;
-  &:hover,
-  &:active,
-  &:focus {
-    color: #2e842e;
-    border-color: #2e842e;
 
-  }
-  ${button};
-`;
-
-const UploadButton = styled.a`
-  border: 1px solid ${props => props.theme.color_primary};
-  color: ${props => props.theme.color_primary};
-  margin-bottom: 1em;
-  ${button};
-  &:hover,
-  &:active,
-  &:focus {
-    color: #c16161;
-    border-color: #c16161;
-
-  }
-`;
 
 const SubmissionResult = styled.div`
   border-top: 1px dashed ${props => props.theme.mid_gray};
