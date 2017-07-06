@@ -61,7 +61,7 @@ const TextInput = ({name, required, description, onChange}) =>{
 			<Label htmlFor={name}> {name}: </Label>
 			{description != '' && <Input_Description>{description}</Input_Description>}
 			<br />
-			<Input type="text" name={name} required={required}/>
+			<Input type="text" name={name} required={required} onChange={onChange}/>
 			{required && <Required_Notification> {"*"} </Required_Notification>}
 			
 		</div>
@@ -76,7 +76,7 @@ const StyledTextInput = styled(TextInput)`
 const EnumInput = ({name, options, value, required, description, onChange}) => {
 	options = options.map( (option, i) => ({label:option, value:option}) );
 	
-	let wrapper = (newValue) =>{
+	let onChangeEnumWrapper = (newValue) =>{
 		onChange(name, newValue);
 	};
 
@@ -85,14 +85,12 @@ const EnumInput = ({name, options, value, required, description, onChange}) => {
 			<Label htmlFor={name}> {name}: </Label>
 			{description != '' && <Input_Description>{description}</Input_Description>}
 			<br />
-			<Dropdown name={name} options={options} value={value} onChange={wrapper} />
+			<Dropdown name={name} options={options} value={value} onChange={onChangeEnumWrapper} />
 			{required && <Required_Notification> {"*"} </Required_Notification>}
 			<br/> 
 		</div>
 
-	)
-
-};
+	)};
 
 class OneOfInput extends Component {
 	//couldn't make a generalized component as I would like to, so I am shortcircuiting the logic
@@ -133,7 +131,7 @@ class OneOfInput extends Component {
 			)
 		} else if(this.props.property[0].type == 'string' && this.props.property[1].type == 'null'){
 			return(
-				<TextInput name={this.props.name} required={this.props.required} description={this.props.description}  />
+				<StyledTextInput name={this.props.name} required={this.props.required} description={this.props.description} onChange={this.props.onChange} />
 			)
 		}else{
 			return(
@@ -174,9 +172,14 @@ class OneOfInput extends Component {
 const AnyOfInput =({name, node,properties, requireds, onChange}) =>{
 	//this is smelly code because it reuses logic from SubmitNodeForm, 
 	//I'd like to extract some of the code into another function
+
+	let onChangeAnyOfWrapper = (event) =>{
+  		onChange(name, event)
+	};
+
 	return(
 	<div>
-	<h1> {name}</h1>
+	<h1>{name}</h1>
 	{properties.map( (property, i)=> {
 		let description = ('description' in node.properties[property]) ? node.properties[property]['description'] : '';
 		if (description == ''){
@@ -185,15 +188,16 @@ const AnyOfInput =({name, node,properties, requireds, onChange}) =>{
         let required = (requireds.indexOf(property) > -1);
 		
 		return(
-			<StyledTextInput key={i} name={property} required={required} description={description} onChange={onChange}/>)
+			<StyledTextInput key={i} name={property} required={required} description={description} onChange={onChangeAnyOfWrapper}/>)
 	})}
 	</div>
 )};
 
-const SubmitNodeForm = ({node, properties, requireds, onChange, onChangeEnum}) => {
+const SubmitNodeForm = ({node, properties, requireds, onChange, onChangeEnum, onChangeAnyOf, handleSubmit}) => {
+
 	return(
 		<div>
-		<form>
+		<form onSubmit={handleSubmit} >
 		{properties.map( (property, i) => {
 				let description = ('description' in node.properties[property]) ? node.properties[property]['description'] : '';
 				if (description == ''){
@@ -222,19 +226,19 @@ const SubmitNodeForm = ({node, properties, requireds, onChange, onChangeEnum}) =
                		onChange={onChange}
                		onChangeEnum={onChangeEnum} />)
                }else if('anyOf' in node.properties[property]){
-               		 return(
-               			<AnyOfInput
-               			key={i}
-               			name={property} 
-               			node={node.properties[property].anyOf[0].items}
-               			properties={Object.keys(node.properties[property].anyOf[0].items.properties)}
-               			requireds={requireds}
-               			onChange={onChange} /> 
+               	return(
+               		<AnyOfInput
+               		key={i}
+               		name={property} 
+               		node={node.properties[property].anyOf[0].items}
+               		properties={Object.keys(node.properties[property].anyOf[0].items.properties)}
+               		requireds={requireds}
+               		onChange={onChangeAnyOf} /> 
                	)
                }else{
                	  return(<StyledTextInput key={i} name={property} required={required} description={description} onChange={onChange}/>)}
 		})}
-		<SubmitFormButton type="submit"> Submit Form </SubmitFormButton>
+		<SubmitFormButton type="submit" value="Submit"> Submit Form </SubmitFormButton>
 		</form>
 		</div>
 
@@ -251,8 +255,59 @@ class SubmitFormContainer extends Component {
 
 	state = {
 		chosenNode:{value: null, label:""},
-		fillForm: false,
 	}
+
+	handleSubmit = (event) => {
+		event.preventDefault();
+		console.log("HANDLING SUBMIT");
+		console.log(event.target.value);
+		console.log(this.state);	
+		
+  	}
+
+  	onChangeAnyOf = (name, event) =>{
+  		const target = event.target;
+  		const value = target.type === 'checkbox' ? target.checked : target.value;
+  		const subname = target.name;
+  		
+  		if(this.state[name] == null){
+  			this.setState({
+  				[name]: [{[subname]: value}]
+  			});
+  		}else if(this.state[name][this.state[name].length-1].hasOwnProperty(subname) == false){
+  			console.log("got here")
+  			console.log(this.state[name][this.state[name].length-1]);
+  			this.setState({
+  				[name]: [...this.state[name].slice(0,this.state[name].length-2),
+  					{...this.state[name][this.state[name].length-1], [subname]: value}]
+  			});
+  		}else{
+  			this.setState({
+  				[name]: this.state[name].push({[subname]: value})
+  			});
+  		}
+  	};
+
+  	onChange = (event) =>{
+  		const target = event.target;
+  		const value = target.type === 'checkbox' ? target.checked : target.value;
+  		const name = target.name;
+  		console.log("onChange TextInput:")
+  		console.log(name + " : " + value);
+  		this.setState({
+  			[name]: value
+  		});
+		}
+
+	onChangeEnum = (name, newValue) =>{
+		console.log("onChange Enum:");
+		console.log(name + " : " + newValue.value);
+		console.log(newValue);
+
+		this.setState({
+			[name]: newValue.value
+		});
+		}
 
 	render(){
 		let dictionary = this.props.submission.dictionary;
@@ -266,33 +321,10 @@ class SubmitFormContainer extends Component {
 			});
 		}
 
-		let onChange = (event) =>{
-			const target = event.target;
-		    const value = target.type === 'checkbox' ? target.checked : target.value;
-		    const name = target.name;
-		    
-		    console.log("onChange Vanilla:")
-		    console.log(name);
-		    console.log(value);
-		    
-		    this.setState({
-		      [name]: value
-		    });
-		};
-
-		let onChangeEnum = (name, newValue) =>{
-			console.log("onChange Enum:")
-			console.log(name + " : " + newValue.value);
-
-			this.setState({
-				[name]: newValue
-			});
-		};
-
 		return(
 			<div>
 			<form>
-				<SubmitButton onChange={onChange}> Fill Out Form </SubmitButton>
+				<SubmitButton onChange={this.onChange.bind(this)}> Fill Out Form </SubmitButton>
 				<Dropdown name='node_type' options={options} value={this.state.chosenNode} onChange={updateChosenNode} />
 			</form>
 			{(this.state.chosenNode.value != null) &&
@@ -304,8 +336,10 @@ class SubmitFormContainer extends Component {
 			   node={node}   
 			   properties={Object.keys(node.properties)}
 			   requireds={('required' in node) ? node.required : []}
-			   onChange={onChange}
-			   onChangeEnum={onChangeEnum} />
+			   onChange={this.onChange.bind(this)}
+			   onChangeEnum={this.onChangeEnum.bind(this)}
+			   onChangeAnyOf={this.onChangeAnyOf.bind(this)}
+			   handleSubmit={this.handleSubmit.bind(this)} />
 			</div>
 			}
 			</div>
