@@ -105,6 +105,43 @@ const Col4 = styled(TableData)`
   width: 40%;
 `;
 
+class CollapsibleList extends React.Component {
+  constructor(props) {
+    super(props);
+    if (this.props.items.length > 5) {
+      this.state = {
+        collapsed: 1
+      }
+    } else {
+      this.state = {
+        collapsed: 0
+      }
+    }
+  }
+  render() {
+    if (this.state.collapsed == 1) {
+      return (
+        <div>
+          {this.props.items.slice(0, 3).map((item) => <Bullet key={item}>{item}</Bullet>)}
+          <a href="#/" onClick={() => this.state.collapsed = 2}>{"More options"}</a>
+        </div>
+      );
+    } else if (this.state.collapsed == 2) {
+      return (
+        <div>
+          {this.props.items.map((item) => <Bullet key={item}>{item}</Bullet>)}
+          <a href="#/" onClick={() => this.state.collapsed = 1}>{"Fewer options"}</a>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          {this.props.items.map((item) => <Bullet key={item}>{item}</Bullet>)}
+        </div>
+      );
+    }
+  }
+}
 
 const PropertyBullet = ({property_name, property, required}) =>{
   let description = 'No Description';
@@ -125,7 +162,7 @@ const PropertyBullet = ({property_name, property, required}) =>{
   return(
     <TableRow>
       <Col1><div> { property_name }</div> </Col1>
-      <Col2> <ul>{ (type.indexOf(',') == -1) ? type : type.split(', ').map((item) => <Bullet>{item}</Bullet>)} </ul></Col2>
+      <Col2> <ul>{ (type.indexOf(',') == -1) ? type : <CollapsibleList items={type.split(', ')}/>} </ul></Col2>
       <Col3> { required ? "Yes" : "No" } </Col3>
       <Col4> { description } </Col4>
     </TableRow>
