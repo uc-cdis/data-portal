@@ -11,30 +11,34 @@ export const updatePopup = (state) => {
 
 export const fetchWrapper = ({path, method='GET', body=null, handler, custom_headers, callback=()=>(null)}) => {
   return (dispatch) => {
-    // console.log("fetch " + path)
-    return fetch(path, {
+    let request = {
       credentials: "same-origin",
       headers: {...headers, ...custom_headers},
       method: method,
       body: body,
-    }).then(response => {
+    }
+    const handleResponse = response => {
       return response.text().then(data => {
-      if (data) {
-        try {
-            data = JSON.parse(data)
+        if (data) {
+          try {
+              data = JSON.parse(data)
+          }
+          catch (e) {
+            // # do nothing
+          }
         }
-        catch (e) {
-          // # do nothing
-        }
-      }
         dispatch(handler({status: response.status, data: data, headers:response.headers}));
         callback();
         return Promise.resolve(data)
       })
-    }).catch(error => {
-      console.log(error);
-      dispatch(connectionError())
-    })
+    };
+    // console.log("fetch " + path)
+    return fetch(path, request)
+      .then(handleResponse)
+      .catch(error => {
+        console.log(error);
+        dispatch(connectionError())
+      })
   }
 };
 
@@ -100,7 +104,7 @@ export const fetchUser = () => {
 };
 
 export const requireAuth = (store, additionalHooks) => {
-  return  (nextState, replace, callback) => {
+  return (nextState, replace, callback) => {
     window.scrollTo(0, 0);
     store.dispatch(fetchUser()).then(() =>{
       let { user } = store.getState();
@@ -112,7 +116,7 @@ export const requireAuth = (store, additionalHooks) => {
       }
       let has_certs = _.intersection(required_certs, user.certificates_uploaded).length !== required_certs.length;
       // take quiz if this user doesn't have required certificate
-      if (location.pathname !== 'quiz' && has_certs ){
+      if (location.pathname !== 'quiz' && has_certs ) {
         replace({pathname: '/quiz'});
         return Promise.resolve()
       }
@@ -120,13 +124,13 @@ export const requireAuth = (store, additionalHooks) => {
         replace({pathname: '/'});
         return Promise.resolve()
       }
-      if (additionalHooks){
+      if (additionalHooks) {
         return additionalHooks(nextState, replace);
       }
       else {
         return Promise.resolve()
       }
-    }).then(()=>callback())
+    }).then(() => callback())
   }
 };
 
@@ -134,18 +138,17 @@ export const enterHook = (store, hookAction) => {
   return (nextState, replace, callback) => {
     return store.dispatch(hookAction()).then(() => callback());
   }
-
 }
 
 export const logoutAPI = () => {
   return (dispatch) => dispatch(fetchWrapper({
     path: submissionapi_oauth_path + 'logout',
     handler: receiveAPILogout,
-  })).then(()=>document.location.replace(userapi_path+'/logout?next='+basename))
+  })).then(() => document.location.replace(userapi_path+'/logout?next='+basename))
 };
 
 export const fetchOAuthURL = (oauth_path) => {
-// Get cloud_middleware's authorization url
+  // Get cloud_middleware's authorization url
   return fetchWrapper({
     path: oauth_path + "authorization_url",
     handler: receiveAuthorizationUrl
@@ -166,6 +169,5 @@ export const receiveAuthorizationUrl = ({status, data}) => {
       }
   }
 };
-
 
 export const receiveAPILogout = handleResponse('RECEIVE_API_LOGOUT');
