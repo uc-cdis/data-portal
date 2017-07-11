@@ -24,6 +24,12 @@ export const getCounts = (type, project) => {
   });
 }
 
+export const clearCounts = () => {
+  return {
+    type: 'CLEAR_COUNTS'
+  }
+}
+
 let receiveCounts = ({status, data}) => {
   switch (status){
     case 200:

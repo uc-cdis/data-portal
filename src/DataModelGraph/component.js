@@ -127,9 +127,28 @@ class DataModelGraphComponent extends React.Component {
     this.state = createNodesAndEdges(nextProps);
   } 
   render() {
+    let categories = Object.keys(this.props.dictionary).map((key) => {return this.props.dictionary[key];})
+      .reduce((acc, elem) => {
+        if (acc.indexOf(elem.category) === -1 && elem.category != undefined) {
+          acc.push(elem.category);
+        }
+      return acc;
+    }, []);
+    categories.sort(function(a, b) {
+      a = a.toLowerCase();
+      b = b.toLowerCase();
+      if (a < b) {
+        return -1;
+      } else if (a > b) {
+        return 1;
+      } else {
+        return 0;
+      }
+    })
+
     if (this.state.nodes.length != 0 && 'count' in this.state.nodes[this.state.nodes.length-1]) {
       return (
-        <CreateGraph nodes={this.state.nodes} edges={this.state.edges} node_types={this.props.node_types} project={this.props.project}/>
+        <CreateGraph nodes={this.state.nodes} edges={this.state.edges} categories={categories}/>
       );
     } else {
       return null;
@@ -141,7 +160,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     'dictionary': state.submission.dictionary,
     'counts_search': state.submission.counts_search,
-    'node_types': state.submission.node_types,
   };
 }
 

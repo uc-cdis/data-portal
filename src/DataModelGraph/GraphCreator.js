@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { submitSearchForm } from '../QueryNode/actions';
 
 
-function create_graph(nodes, edges, node_types) {
+function create_graph(nodes, edges, categories) {
   let min_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
   let min_y_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[1]))[0])
 
@@ -25,7 +25,7 @@ function create_graph(nodes, edges, node_types) {
 
   let graph = svg.append("g")
     .attr("transform", "translate(0,"+padding+")");
-  // legend is the text that matches categories to colories
+  // legend is the text that matches categories to color
   let legend = svg.append("g")
     .attr("transform", "translate(" + (width-legend_width) + "," + padding + ")");
 
@@ -41,7 +41,15 @@ function create_graph(nodes, edges, node_types) {
     .append('svg:path')
       .attr('d', 'M0,-5L10,0L0,5');
 
-  let color = d3.scaleOrdinal(d3.schemeCategory10);
+  let color = {
+    "administrative": d3.schemeCategory20[12],
+    "clinical": d3.schemeCategory20[11],
+    "biospecimen": d3.schemeCategory20[16],
+    "metadata_file": d3.schemeCategory20[17],
+    "index_file": d3.schemeCategory20[18],
+    "notation": d3.schemeCategory20[19],
+    "data_file": d3.schemeCategory20[20],
+  }
 
   let simulation = d3.forceSimulation()
       .force("link", d3.forceLink().id(function(d) { return d.name; }).strength(0.2))
@@ -68,6 +76,7 @@ function create_graph(nodes, edges, node_types) {
   let num_rows = fy_vals.length;
 
   let unclickable_nodes = ['program', 'project']
+  let node_types = nodes.map((node) => node.name)
   let nodes_for_query = node_types.filter((nt) => !unclickable_nodes.includes(nt));
 
   // Add search on clicking a node
@@ -92,12 +101,24 @@ function create_graph(nodes, edges, node_types) {
     }
     return acc;
   }, []);
+  unique_categories_array.sort(function(a, b) {
+      a = a.toLowerCase();
+      b = b.toLowerCase();
+      if (a < b) {
+        return -1;
+      } else if (a > b) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  )
 
   // Add nodes to graph
   node.append("ellipse")
       .attr("rx", radius)
       .attr("ry", radius/2)
-      .attr("fill", function(d) { return color(unique_categories_array.indexOf(d.category)); });
+      .attr("fill", function(d) { return color[d.category]; });
 
   let graph_font_size = "0.75em"
 
@@ -173,7 +194,7 @@ function create_graph(nodes, edges, node_types) {
       return (1.5*(2.5+i))+"em";
     })
     .attr("text-anchor", "middle")
-    .attr("fill", function(d, i) { return color(i)})
+    .attr("fill", function(d, i) { return color[d]})
     .style("font-size", legend_font_size)
     .text(function(d) {return d});
 
@@ -189,10 +210,10 @@ function create_graph(nodes, edges, node_types) {
 
 export default class CreateGraph extends React.Component {
   componentDidMount() {
-    {create_graph(this.props.nodes, this.props.edges, this.props.node_types)}
+    {create_graph(this.props.nodes, this.props.edges, this.props.categories)}
   }
   componentDidUpdate() {
-    {create_graph(this.props.nodes, this.props.edges, this.props.node_types)}
+    {create_graph(this.props.nodes, this.props.edges, this.props.categories)}
   }
   render() {
     let nodes = this.props.nodes

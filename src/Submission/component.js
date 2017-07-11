@@ -24,7 +24,7 @@ export const Title = styled.h2`
 `;
 
 const ProjectSubmissionComponent = (props) => {
-  if (props.counts_search == undefined) {
+  if (props.counts_search == undefined || props.counts_search == null) {
     props.onGetCounts(props.node_types, props.params.project)
   }
       
@@ -36,7 +36,7 @@ const ProjectSubmissionComponent = (props) => {
     <Browse to={'/' + props.params.project + '/search'}>browse nodes</Browse>
     }
     <SubmitTSV path={props.params.project} />
-    {props.counts_search != undefined 
+    {(props.counts_search != undefined || props.counts_search != null)
       && <DataModelGraph project={props.params.project}/> }
   </Box>
   );
