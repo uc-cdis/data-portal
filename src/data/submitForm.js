@@ -1,36 +1,11 @@
 import { uploadTSV, submitToServer, updateFileContent } from './submitActions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { button, UploadButton, SubmitButton } from '../theme';
+import { button, UploadButton, SubmitButton, Required_Notification, Dropdown, Input, Label } from '../theme';
 import React, {Component, PropTypes} from 'react';
-import Select from 'react-select';
 import Form from 'react-jsonschema-form';
+import {json_to_string} from './utils.js';
 
-const Required_Notification = styled.span`
-  color:#d45252; 
-  margin:5px 0 0 0; 
-  display:inline;
-  float: ${props=>props.istext ? 'right': ''};
-`;
-
-const Dropdown = styled(Select)`
-  width: 40%;
-  float: left;
-  margin-right: 1em;
-`;
-
-const Input = styled.input`
-	width: 400px;
-	height:20px;
-	padding: 5px 8px;
-`;
-
-const Label = styled.label`
-	margin: 3px;
-    display:inline-block;
-    padding-left:3px;
- 
-`;
 
 const Input_Description = styled.span`
 	font-size: 1rem;
@@ -53,6 +28,10 @@ const SubmitFormButton = styled.button`
     border-color: #2e842e;
 
   }
+`;
+
+const AnyOfSubProps = styled.div`
+	margin-left:50px;
 `;
 
 const TextInput = ({name, required, description, onChange}) =>{
@@ -174,12 +153,13 @@ const AnyOfInput =({name, node,properties, requireds, onChange}) =>{
 	//I'd like to extract some of the code into another function
 
 	let onChangeAnyOfWrapper = (event) =>{
-  		onChange(name, event)
+  		onChange(name, event,properties)
 	};
 
 	return(
 	<div>
-	<h1>{name}</h1>
+	<h6>{name}:</h6>
+	<AnyOfSubProps>
 	{properties.map( (property, i)=> {
 		let description = ('description' in node.properties[property]) ? node.properties[property]['description'] : '';
 		if (description == ''){
@@ -190,6 +170,7 @@ const AnyOfInput =({name, node,properties, requireds, onChange}) =>{
 		return(
 			<StyledTextInput key={i} name={property} required={required} description={description} onChange={onChangeAnyOfWrapper}/>)
 	})}
+	</AnyOfSubProps>
 	</div>
 )};
 
@@ -238,7 +219,7 @@ const SubmitNodeForm = ({node, properties, requireds, onChange, onChangeEnum, on
                }else{
                	  return(<StyledTextInput key={i} name={property} required={required} description={description} onChange={onChange}/>)}
 		})}
-		<SubmitFormButton type="submit" value="Submit"> Submit Form </SubmitFormButton>
+		<SubmitFormButton type="submit" value="Submit"> Upload Form </SubmitFormButton>
 		</form>
 		</div>
 
@@ -251,6 +232,8 @@ class SubmitFormContainer extends Component {
 	static propTypes = {
 		node_types: PropTypes.array,
 		submission: PropTypes.object,
+		onUploadClick: PropTypes.func,
+		onSubmitClick: PropTypes.func,
 	}
 
 	state = {
@@ -259,31 +242,37 @@ class SubmitFormContainer extends Component {
 
 	handleSubmit = (event) => {
 		event.preventDefault();
-		console.log("HANDLING SUBMIT");
-		console.log(event.target.value);
-		console.log(this.state);	
+		console.log("Handling Form Submit:");
+		console.log(this.state);
+
+		const objectWithoutKey = (object, key) => {
+  			const {[key]: deletedKey, ...otherKeys} = object;
+  			return otherKeys;
+		}
+
+		let value = objectWithoutKey(this.state, 'chosenNode');
+		value = json_to_string(value);
+		this.props.onUploadClick(value, 'application/json');
 		
   	}
 
-  	onChangeAnyOf = (name, event) =>{
+  	onChangeAnyOf = (name, event, properties) =>{
   		const target = event.target;
   		const value = target.type === 'checkbox' ? target.checked : target.value;
   		const subname = target.name;
-  		
+
   		if(this.state[name] == null){
   			this.setState({
   				[name]: [{[subname]: value}]
   			});
-  		}else if(this.state[name][this.state[name].length-1].hasOwnProperty(subname) == false){
-  			console.log("got here")
-  			console.log(this.state[name][this.state[name].length-1]);
+  		}else if(properties.every(prop => prop in this.state[name])){
   			this.setState({
-  				[name]: [...this.state[name].slice(0,this.state[name].length-2),
-  					{...this.state[name][this.state[name].length-1], [subname]: value}]
+  				[name]: this.state[name].push({[subname]: value})
   			});
   		}else{
   			this.setState({
-  				[name]: this.state[name].push({[subname]: value})
+  				[name]: [...this.state[name].slice(0,this.state[name].length-2),
+  					{...this.state[name][this.state[name].length-1], [subname]: value}]
   			});
   		}
   	};
@@ -297,7 +286,7 @@ class SubmitFormContainer extends Component {
   		this.setState({
   			[name]: value
   		});
-		}
+	};
 
 	onChangeEnum = (name, newValue) =>{
 		console.log("onChange Enum:");
@@ -307,7 +296,7 @@ class SubmitFormContainer extends Component {
 		this.setState({
 			[name]: newValue.value
 		});
-		}
+	};
 
 	render(){
 		let dictionary = this.props.submission.dictionary;
@@ -324,7 +313,7 @@ class SubmitFormContainer extends Component {
 		return(
 			<div>
 			<form>
-				<SubmitButton onChange={this.onChange.bind(this)}> Fill Out Form </SubmitButton>
+				<h5> Fill Out Form: </h5>
 				<Dropdown name='node_type' options={options} value={this.state.chosenNode} onChange={updateChosenNode} />
 			</form>
 			{(this.state.chosenNode.value != null) &&
@@ -359,7 +348,7 @@ const mapStateToProps = (state) => {
 
 const matpDispatchToProps = (dispatch) =>{
 		return{
-
+			onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
 		}
 };
 

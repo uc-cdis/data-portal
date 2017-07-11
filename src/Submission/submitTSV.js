@@ -11,18 +11,19 @@ import { getCounts } from '../DataModelGraph/actions';
 import { button, SubmitButton, UploadButton } from '../theme'
 
 
-
 const SubmissionResult = styled.div`
   border-top: 1px dashed ${props => props.theme.mid_gray};
   padding-top: 1em;
   margin-top: 1em;
 `;
+
 const Status = styled.div`
   ${button};
   background-color: ${props => (props.status == 'succeed: 200') ? '#168616' : 'gray'};
   color: white;
   margin-bottom: 1em;
 `;
+
 
 const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, onFileChange, dictionary }) => {
   let setValue = (event) => {
