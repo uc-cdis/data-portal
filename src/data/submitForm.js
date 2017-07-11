@@ -175,7 +175,7 @@ const AnyOfInput =({name, node,properties, requireds, onChange}) =>{
 )};
 
 const SubmitNodeForm = ({node, properties, requireds, onChange, onChangeEnum, onChangeAnyOf, handleSubmit}) => {
-
+	
 	return(
 		<div>
 		<form onSubmit={handleSubmit} >
@@ -242,8 +242,6 @@ class SubmitFormContainer extends Component {
 
 	handleSubmit = (event) => {
 		event.preventDefault();
-		console.log("Handling Form Submit:");
-		console.log(this.state);
 
 		const objectWithoutKey = (object, key) => {
   			const {[key]: deletedKey, ...otherKeys} = object;
@@ -281,18 +279,12 @@ class SubmitFormContainer extends Component {
   		const target = event.target;
   		const value = target.type === 'checkbox' ? target.checked : target.value;
   		const name = target.name;
-  		console.log("onChange TextInput:")
-  		console.log(name + " : " + value);
   		this.setState({
   			[name]: value
   		});
 	};
 
 	onChangeEnum = (name, newValue) =>{
-		console.log("onChange Enum:");
-		console.log(name + " : " + newValue.value);
-		console.log(newValue);
-
 		this.setState({
 			[name]: newValue.value
 		});
@@ -308,7 +300,8 @@ class SubmitFormContainer extends Component {
 			this.setState({
 				chosenNode: newValue
 			});
-		}
+		};
+
 
 		return(
 			<div>
@@ -323,7 +316,7 @@ class SubmitFormContainer extends Component {
 			   <br />
 			   <SubmitNodeForm 
 			   node={node}   
-			   properties={Object.keys(node.properties)}
+			   properties={Object.keys(node.properties).filter((prop) => node.systemProperties.indexOf(prop)<0)}
 			   requireds={('required' in node) ? node.required : []}
 			   onChange={this.onChange.bind(this)}
 			   onChangeEnum={this.onChangeEnum.bind(this)}
