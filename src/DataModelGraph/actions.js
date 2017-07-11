@@ -4,7 +4,7 @@ import { submissionapi_path } from '../localconf';
 export const getCounts = (type, project) => {
   let query = "{";
   function append_to_query(element) {
-    if (element != "metaschema") {
+    if (element !== "metaschema" && !element.startsWith('_')) {
       query = query + `_${element}_count (project_id:\"${project}\"),`;
     }
   }

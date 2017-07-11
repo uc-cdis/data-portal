@@ -33,6 +33,7 @@ function create_graph(nodes, edges, categories) {
   defs.append('svg:marker')
     .attr('id', 'end-arrow')
     .attr('viewBox', '0 -5 10 10')
+    .attr('fill', 'darkgray')
     .attr('refX', 0)
     .attr('refY', 0)
     .attr('markerWidth', 6)
@@ -45,10 +46,10 @@ function create_graph(nodes, edges, categories) {
     "administrative": d3.schemeCategory20[12],
     "clinical": d3.schemeCategory20[11],
     "biospecimen": d3.schemeCategory20[16],
-    "metadata_file": d3.schemeCategory20[17],
+    "metadata_file": d3.schemeCategory20b[14],
     "index_file": d3.schemeCategory20[18],
     "notation": d3.schemeCategory20[19],
-    "data_file": d3.schemeCategory20[20],
+    "data_file": d3.schemeCategory20[17],
   }
 
   let simulation = d3.forceSimulation()
@@ -61,7 +62,7 @@ function create_graph(nodes, edges, categories) {
     .enter().append("path")
       .attr("stroke-width", 2)
       .attr("marker-mid", "url(#end-arrow)")
-      .attr("stroke", "black")
+      .attr("stroke", "darkgray")
       .attr("fill", "none");
 
   // Calculate the appropriate position of each node on the graph
@@ -84,6 +85,7 @@ function create_graph(nodes, edges, categories) {
     .data(nodes)
     .enter().append("g")
       .classed("gnode", true)
+      .style('cursor', 'pointer')
       .attr("id", function(d) {return d.name})
       .on('click', function(d) {
         for (let i = 0; i < nodes_for_query.length; i++) {
@@ -117,8 +119,8 @@ function create_graph(nodes, edges, categories) {
   // Add nodes to graph
   node.append("ellipse")
       .attr("rx", radius)
-      .attr("ry", radius/2)
-      .attr("fill", function(d) { return color[d.category]; });
+      .attr("ry", radius* 0.6)
+      .attr("fill", function(d) { return color[d.category]; })
 
   let graph_font_size = "0.75em"
 
@@ -232,8 +234,7 @@ export default class CreateGraph extends React.Component {
       height: height,
       //width: width, 
       //margin: "0 auto",
-      border: "1px solid SlateGray",
-      backgroundColor: "LightGray",
+      backgroundColor: "#f4f4f4",
       marginTop: "10px",
     }
     return (
