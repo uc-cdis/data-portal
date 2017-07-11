@@ -9,8 +9,7 @@ function createNodesAndEdges(props) {
   let dictionary = props.dictionary;
   let nodes = [];
 
-  let nodes_to_hide = ["program"] // Only want to start from project, so hide program
-  //should this be automated to hide everything about project?
+  let nodes_to_hide = ["program"];
 
   Object.keys(dictionary).forEach(function(key,index) {
     if (dictionary[key].type == "object" && !nodes_to_hide.includes(key)) {
@@ -40,10 +39,10 @@ function createNodesAndEdges(props) {
     if (!val["name"].startsWith("_") && dictionary[val["name"]].links) {
       for (let i = 0; i < dictionary[val["name"]].links.length; i++) {
         if (dictionary[val["name"]].links[i].target_type) {
-          if (dictionary[val["name"]].links[i].target_type == "program" || val["name"] == "program") {
+          if (nodes_to_hide.includes(dictionary[val["name"]].links[i].target_type) || nodes_to_hide.includes(val["name"])) {
             continue;
           }
-          else if (exists_in_any_nodes(val["name"], nodes)) {
+          else if (exists_in_any_nodes(val["name"], nodes) && exists_in_any_nodes(dictionary[val["name"]].links[i].target_type, nodes)) {
             let edge = {
               source: val["name"],
               target: dictionary[val["name"]].links[i].target_type,
@@ -54,10 +53,10 @@ function createNodesAndEdges(props) {
         if (dictionary[val["name"]].links[i].subgroup) {
           for (let j = 0; j < dictionary[val["name"]].links[i].subgroup.length; j++) {
             if (dictionary[val["name"]].links[i].subgroup[j].target_type) {
-              if (dictionary[val["name"]].links[i].subgroup[j].target_type == "program" || val["name"] == "program") {
+              if (nodes_to_hide.includes(dictionary[val["name"]].links[i].subgroup[j].target_type) || nodes_to_hide.includes(val["name"])) {
                 continue;
               }
-              else if (exists_in_any_nodes(val["name"], nodes)) {
+              else if (exists_in_any_nodes(val["name"], nodes) && exists_in_any_nodes(dictionary[val["name"]].links[i].subgroup[j].target_type, nodes)) {
                 let edge = {
                   source: val["name"],
                   target: dictionary[val["name"]].links[i].subgroup[j].target_type,
@@ -111,6 +110,7 @@ function createNodesAndEdges(props) {
       }
     }
   }
+
 
   return {
     nodes: nodes,
