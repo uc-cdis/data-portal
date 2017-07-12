@@ -25,7 +25,7 @@ export const Title = styled.h2`
 
 const ProjectSubmissionComponent = (props) => {
   if (props.counts_search == undefined || props.counts_search == null) {
-    props.onGetCounts(props.node_types, props.params.project)
+    props.onGetCounts(props.node_types, props.params.project, props.dictionary)
   }
       
   return (
@@ -46,12 +46,13 @@ const mapStateToProps = (state, ownProps) => {
   return {
     'node_types': state.submission.node_types,
     'counts_search': state.submission.counts_search,
+    'dictionary': state.submission.dictionary,
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetCounts: (type, project) => dispatch(getCounts(type, project)),
+    onGetCounts: (type, project, dictionary) => dispatch(getCounts(type, project, dictionary)),
   };
 }
 const ProjectSubmission = connect(mapStateToProps, mapDispatchToProps)(ProjectSubmissionComponent);

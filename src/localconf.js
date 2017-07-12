@@ -9,7 +9,7 @@ let required_certs = [];
 hostname = `${window.location.protocol}//${window.location.hostname}/`;
 
 if (app === 'bpa') {
-  required_certs = dev === true ? ['security_quiz'] : [];
+  required_certs = dev === true ? [] : [];
   userapi_path = hostname + 'user/';
   submissionapi_path = hostname + 'api/v0/submission/';
   submissionapi_oauth_path = hostname + 'api/v0/oauth2/';

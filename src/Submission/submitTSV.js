@@ -50,7 +50,7 @@ const Status = styled.div`
   margin-bottom: 1em;
 `;
 
-const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, onFileChange }) => {
+const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, onFileChange, dictionary }) => {
   let setValue = (event) => {
     let f = event.target.files[0];
     if (FileReader.prototype.readAsBinaryString === undefined) {
@@ -87,7 +87,7 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
     reader.readAsBinaryString(f);
   };
   let onSubmitClickEvent = () => {
-    onSubmitClick(submission.node_types, path);
+    onSubmitClick(submission.node_types, path, submission.dictionary);
   };
   let onChange = (newValue) => {
     onFileChange(newValue, submission.file_type);
@@ -114,14 +114,15 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
 
 const mapStateToProps = (state) => {
   return {
-    'submission': state.submission
+    'submission': state.submission,
+    'dictionary': state.dictionary
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-        onSubmitClick: (type, project) => dispatch(submitToServer()).then(() => {dispatch(getCounts(type, project))}),
+        onSubmitClick: (type, project, dictionary) => dispatch(submitToServer()).then(() => {dispatch(getCounts(type, project, dictionary))}),
       // To re-render the graph when new data is submitted, need to change the 
       // counts that are stored in the state. A call to getCounts is made
       // after the data is submitted to the database to query the database for
