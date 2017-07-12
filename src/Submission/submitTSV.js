@@ -7,7 +7,8 @@ import AceEditor from 'react-ace';
 import { uploadTSV, submitToServer, updateFileContent } from './actions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { button } from '../theme'
+import { button } from '../theme';
+import { getCounts } from '../DataModelGraph/actions';
 
 export const SubmitButton = styled.label`
   border: 1px solid darkgreen;
@@ -86,7 +87,7 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
     reader.readAsBinaryString(f);
   };
   let onSubmitClickEvent = () => {
-    onSubmitClick();
+    onSubmitClick(submission.node_types, path);
   };
   let onChange = (newValue) => {
     onFileChange(newValue, submission.file_type);
@@ -120,11 +121,14 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-        onSubmitClick: () => dispatch(submitToServer()),
+        onSubmitClick: (type, project) => dispatch(submitToServer()).then(() => {dispatch(getCounts(type, project))}),
+      // To re-render the graph when new data is submitted, need to change the 
+      // counts that are stored in the state. A call to getCounts is made
+      // after the data is submitted to the database to query the database for
+      // the updated count info
         onFileChange: (value) => dispatch(updateFileContent(value)),
     }
 };
-
 
 let SubmitTSV = connect(mapStateToProps, mapDispatchToProps)(SubmitTSVComponent);
 export default SubmitTSV;

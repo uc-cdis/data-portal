@@ -20,6 +20,10 @@ export const submission = (state={}, action) => {
       return {...state, search_form: action.data};
     case 'RECEIVE_SEARCH_ENTITIES':
       return {...state, search_result: action.data, search_status: action.search_status};
+    case 'RECEIVE_COUNTS':
+      return { ...state, counts_search: action.data};
+    case 'CLEAR_COUNTS':
+      return { ...state, counts_search: null};
     default:
       return state;
   }

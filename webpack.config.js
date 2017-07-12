@@ -11,7 +11,8 @@ module.exports = {
     publicPath: '/'
   },
   devServer: {
-    historyApiFallback: true
+    historyApiFallback: true,
+    disableHostCheck: true,
   },
   module: {
     target: 'node',
