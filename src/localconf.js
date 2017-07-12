@@ -52,7 +52,7 @@ if (app === 'bpa') {
   credential_path = hostname + 'middleware/aws/v0/';
   credential_oauth_path = hostname + 'middleware/oauth2/v0/';
   graphql_path = hostname + 'api/v0/submission/graphql/';
-  appname = 'Environmental Data Commons Portal';
+  appname = 'ACCOuNT Data Commons Portal';
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
     {'icon': 'fui-search', 'link': '/graphql', 'color': '#daa520'},
