@@ -150,8 +150,8 @@ const PropertiesTable = ({node, required, links}) =>{
       <tbody>
         {
         properties.map( (property, i) =>
-          (linknames.indexOf(property) == -1) &&
-          <PropertyBullet key={i} required={property in required} property_name={property} property={node['properties'][property]}/>
+          (! linknames.includes(property)) &&
+          <PropertyBullet key={i} required={required.includes(property)} property_name={property} property={node['properties'][property]}/>
          )
         }
 

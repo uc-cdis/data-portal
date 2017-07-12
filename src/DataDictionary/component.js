@@ -3,12 +3,12 @@ import Nav from '../Nav/component.js'
 import {Box, cube, Table, TableData, TableRow, TableHead} from '../theme.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import * as constants from "./constants";
 import { Link } from 'react-router';
-
 
 const TableBullet = ({node, description})=>{
   return(
-    <TableRow> 
+    <TableRow>
     <TableData>
       <Link to={'/dd/' + node }> {node} </Link>
     </TableData>
@@ -56,12 +56,12 @@ const DataDictionaryViewer = ({submission}) =>{
     }
     return categories
   }
-  let categories = filterCategories(submission.dictionary, submission.node_types)
+  let categories = filterCategories(submission.dictionary, submission.node_types);
   return (
   <Box>
     <Nav />
     <h3> Data Dictionary Viewer </h3>
-    <p>The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data Dictionary.</p>
+    <p>{constants.subHeader}</p>
      {Object.keys(categories).map( (category) =>
           <CategoryTable dictionary={submission.dictionary} key={category} nodes={categories[category]} category = {category}/> )}
 
@@ -75,7 +75,7 @@ const mapStateToProps = (state)=> {return {
 }};
 
 const mapDispatchToProps = (dispatch) => ({
-  
+
 });
 
 const DataDictionary = connect(mapStateToProps, mapDispatchToProps)(DataDictionaryViewer);
