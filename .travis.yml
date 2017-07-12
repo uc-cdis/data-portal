@@ -11,6 +11,7 @@ install:
     - docker pull quay.io/cdis/bpa-data-portal:master
 
 script:
+    - npm test
     - |
       set -e
       docker build --cache-from quay.io/cdis/bpa-data-portal:master --build-arg APP=bpa -t quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} .
