@@ -41,6 +41,8 @@ function createNodesAndEdges(props) {
         if (dictionary[val["name"]].links[i].target_type) {
           if (nodes_to_hide.includes(dictionary[val["name"]].links[i].target_type) || nodes_to_hide.includes(val["name"])) {
             continue;
+          } else if (props.links_search[val["name"] + "_to_" + dictionary[val["name"]].links[i].target_type + "_link"] == 0) {
+            continue;
           }
           else if (exists_in_any_nodes(val["name"], nodes) && exists_in_any_nodes(dictionary[val["name"]].links[i].target_type, nodes)) {
             let edge = {
@@ -54,6 +56,8 @@ function createNodesAndEdges(props) {
           for (let j = 0; j < dictionary[val["name"]].links[i].subgroup.length; j++) {
             if (dictionary[val["name"]].links[i].subgroup[j].target_type) {
               if (nodes_to_hide.includes(dictionary[val["name"]].links[i].subgroup[j].target_type) || nodes_to_hide.includes(val["name"])) {
+                continue;
+              } else if (props.links_search[val["name"] + "_to_" + dictionary[val["name"]].links[i].subgroup[j].target_type + "_link"] == 0) {
                 continue;
               }
               else if (exists_in_any_nodes(val["name"], nodes) && exists_in_any_nodes(dictionary[val["name"]].links[i].subgroup[j].target_type, nodes)) {
@@ -160,6 +164,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     'dictionary': state.submission.dictionary,
     'counts_search': state.submission.counts_search,
+    'links_search': state.submission.links_search,
   };
 }
 

@@ -178,12 +178,20 @@ function create_graph(nodes, edges, categories) {
         + " " + (d.source.x + d.target.x)/2 + "," + (d.source.y + (height/num_rows)/3)
         + "T" + " " + d.target.x + "," + d.target.y;
       return curve;
+    } else if (d.source.fx == d.target.fx && d.source.fy - d.target.fy > radius * 2) {
+      let curve =  "M" + d.source.x + "," + d.source.y
+        + "Q" + (d.source.x + radius*1.5) + "," + d.source.y
+        + " " + (d.source.x + radius*1.5) + "," + ((d.source.y + d.target.y)/2)
+        + "T" + " " + d.target.x + "," + d.target.y;
+      return curve;
     } else {
       return "M" + d.source.x + "," + d.source.y
           + "L" + (d.source.x + d.target.x)/2 + "," + (d.source.y + d.target.y)/2
           + "L" + d.target.x + "," + d.target.y;
     }
   }
+
+  console.log(edges)
 
 
   let legend_font_size = "0.9em"
