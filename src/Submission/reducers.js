@@ -23,12 +23,10 @@ export const submission = (state={}, action) => {
     case 'RECEIVE_COUNTS':
       let links = {}
       for (var key in action.data) {
-        console.log(key)
         if (!key.startsWith("_")) {
           links[key] = action.data[key].length
         }
       }
-
       return { ...state, counts_search: action.data, links_search: links};
     case 'CLEAR_COUNTS':
       return { ...state, counts_search: null};

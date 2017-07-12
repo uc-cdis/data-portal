@@ -21,9 +21,7 @@ export const getCounts = (type, project, dictionary) => {
   });
 
   let nodes_to_hide = ["program"];
-  console.log(dictionary)
   for (var val in dictionary) {
-    console.log(val)
     if (!val.startsWith("_") && dictionary[val].links) {
       for (let i = 0; i < dictionary[val].links.length; i++) {
         if (dictionary[val].links[i].target_type) {
@@ -47,7 +45,6 @@ export const getCounts = (type, project, dictionary) => {
   };
 
   query = query.concat("}");
-  console.log(query)
   return fetchWrapper({
     path: submissionapi_path + 'graphql',
     body: JSON.stringify({
@@ -67,7 +64,6 @@ export const clearCounts = () => {
 let receiveCounts = ({status, data}) => {
   switch (status){
     case 200:
-      console.log(data)
       return {
         type: 'RECEIVE_COUNTS',
         data: data.data
