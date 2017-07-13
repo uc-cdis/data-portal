@@ -7,12 +7,12 @@ services:
     - docker
 
 install:
-    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker login quay.io -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"; fi
+    - docker login quay.io -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 script:
-    - docker build --build-arg APP=bpa -t quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} .
-    - docker build --build-arg APP=edc --build-arg BASENAME="/portal/" -t quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//_} .
-    - docker build --build-arg APP=acct -t quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//_} .
+    - docker build --cache-from quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} --build-arg APP=bpa -t quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} .
+    - docker build --cache-from quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//_} --build-arg APP=edc --build-arg BASENAME="/portal/" -t quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//_} .
+    - docker build --cache-from quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//_} --build-arg APP=acct -t quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//_} .
 
 after_success:
     - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_}; fi
