@@ -4,22 +4,23 @@
 FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND=noninteractive
-ARG APP=dev
-ARG BASENAME
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    ca-certificates \
     curl \
     git \
     nginx \
     python \
     vim \
-    && curl -sL https://deb.nodesource.com/setup_4.x | bash - \ 
-    && apt-get install -y --no-install-recommends nodejs npm\
-    && ln -s /usr/bin/nodejs /usr/bin/node \
+    && curl -sL https://deb.nodesource.com/setup_8.x | bash - \ 
+    && apt-get install -y --no-install-recommends nodejs \
     && npm install webpack -g \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
+
+ARG APP=dev
+ARG BASENAME
 
 COPY . /data-portal
 WORKDIR /data-portal
