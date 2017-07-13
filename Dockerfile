@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     python \
     vim \
-    && curl -sL https://deb.nodesource.com/setup_4.x | bash - \ 
+    && curl -sL https://deb.nodesource.com/setup_8.x | bash - \ 
     && apt-get install -y --no-install-recommends nodejs npm\
     && ln -s /usr/bin/nodejs /usr/bin/node \
     && npm install webpack -g \
