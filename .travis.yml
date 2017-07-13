@@ -11,9 +11,12 @@ install:
     - docker pull quay.io/cdis/bpa-data-portal:latest
 
 script:
-    - docker build --cache-from quay.io/cdis/bpa-data-portal:latest --build-arg APP=bpa -t quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} .
-    - docker build --cache-from quay.io/cdis/bpa-data-portal:latest --build-arg APP=edc --build-arg BASENAME="/portal/" -t quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//_} .
-    - docker build --cache-from quay.io/cdis/bpa-data-portal:latest --build-arg APP=acct -t quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//_} .
+    - |
+      set -e
+      docker build --cache-from quay.io/cdis/bpa-data-portal:latest --build-arg APP=bpa -t quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} .
+      docker build --cache-from quay.io/cdis/bpa-data-portal:latest --build-arg APP=edc --build-arg BASENAME="/portal/" -t quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//_} .
+      docker build --cache-from quay.io/cdis/bpa-data-portal:latest --build-arg APP=acct -t quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//_} .
+      set +e
 
 after_success:
     - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_}; fi
