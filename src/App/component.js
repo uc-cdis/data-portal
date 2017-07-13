@@ -4,6 +4,7 @@ import Nav from '../Nav/component.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
+import { BoxWithNavAndTimeout } from '../component';
 
 const ProjectLink = styled(Link)`
   cursor: pointer;
@@ -25,8 +26,7 @@ const ProjectLink = styled(Link)`
 
 const SubmissionComponent = ( {submission} ) => {
   return (
-    <Box>
-      <Nav />
+    <BoxWithNavAndTimeout>
       <h3>Submission projects</h3>
       <ul>
         {submission.projects &&
@@ -35,7 +35,7 @@ const SubmissionComponent = ( {submission} ) => {
           </div>
         }
       </ul>
-  </Box>
+    </BoxWithNavAndTimeout>
   )
 
 };

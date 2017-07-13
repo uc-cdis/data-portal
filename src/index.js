@@ -72,7 +72,7 @@ const NoMatch = () => (
 
 // render the app after the store is configured
 async function init() {
-  const store= await configureStore();
+  const store = await configureStore();
   const history = syncHistoryWithStore(browserHistory, store);
   history.listen(location => console.log(location.pathname));
   if (app !== 'gdc') {
