@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { button, UploadButton, SubmitButton, Required_Notification, Dropdown, Input, Label } from '../theme';
 import React, {Component, PropTypes} from 'react';
-import Form from 'react-jsonschema-form';
 import {json_to_string} from './utils.js';
 
 
@@ -52,24 +51,40 @@ const StyledTextInput = styled(TextInput)`
 	height: 50px;
 `;
 
-const EnumInput = ({name, options, value, required, description, onChange}) => {
-	options = options.map( (option, i) => ({label:option, value:option}) );
+class EnumInput extends Component {
+
+	static propTypes = {
+		name: PropTypes.string,
+		options: PropTypes.array,
+		required: PropTypes.bool,
+		description: PropTypes.string,
+		onChange: PropTypes.func,
+	}
+
+	state = {
+		chosenEnum: ''
+	}
+	render(){
+		let options = this.props.options.map( (option, i) => ({label:option, value:option}) );
+		
+		let onChangeEnumWrapper = (newValue) =>{
+			this.setState({
+				chosenEnum:newValue
+			});
+			this.props.onChange(this.props.name, newValue);
+		};
 	
-	let onChangeEnumWrapper = (newValue) =>{
-		onChange(name, newValue);
-	};
-
-	return(
-		<div>
-			<Label htmlFor={name}> {name}: </Label>
-			{description != '' && <Input_Description>{description}</Input_Description>}
-			<br />
-			<Dropdown name={name} options={options} value={value} onChange={onChangeEnumWrapper} />
-			{required && <Required_Notification> {"*"} </Required_Notification>}
-			<br/> 
-		</div>
-
-	)};
+		return(
+			<div>
+				<Label htmlFor={this.props.name}> {this.props.name}: </Label>
+				{this.props.description != '' && <Input_Description>{this.props.description}</Input_Description>}
+				<br />
+				<Dropdown name={this.props.name} options={options} value={this.state.chosenEnum} onChange={onChangeEnumWrapper} />
+				{this.props.required && <Required_Notification> {"*"} </Required_Notification>}
+				<br/> 
+			</div>
+	
+		)}};
 
 class OneOfInput extends Component {
 	//couldn't make a generalized component as I would like to, so I am shortcircuiting the logic
@@ -103,7 +118,6 @@ class OneOfInput extends Component {
 				<EnumInput 
 				name={this.props.name}
 				options={options}
-				value={this.props.value}
 				required={this.props.required}
 				description={this.props.description}
 				onChange={this.props.onChangeEnum}/>
@@ -137,7 +151,6 @@ class OneOfInput extends Component {
 				<EnumInput 
 				name={this.props.name} 
 				options={this.props.property[0].enum} 
-				value={this.props.value}
 				required={this.props.required}
 				description={this.props.description}
 				onChange={this.props.onChangeEnum} />
@@ -186,12 +199,13 @@ const SubmitNodeForm = ({node, properties, requireds, onChange, onChangeEnum, on
                }
                let required = (requireds.indexOf(property) > -1);
 
-               if('enum' in node.properties[property]){
+               if(property == 'type'){
+               		return
+               }else if('enum' in node.properties[property]){
                	return(
                		<EnumInput key={i} 
                		name={property} 
                		options={node.properties[property]['enum']} 
-               		value={property} 
                		onChange={onChangeEnum} 
                		required={required} 
                		description={description} />)
@@ -219,7 +233,7 @@ const SubmitNodeForm = ({node, properties, requireds, onChange, onChangeEnum, on
                }else{
                	  return(<StyledTextInput key={i} name={property} required={required} description={description} onChange={onChange}/>)}
 		})}
-		<SubmitFormButton type="submit" value="Submit"> Upload Form </SubmitFormButton>
+		<SubmitFormButton type="submit" value="Submit"> Upload Form to Submit </SubmitFormButton>
 		</form>
 		</div>
 
@@ -298,7 +312,8 @@ class SubmitFormContainer extends Component {
 
 		let updateChosenNode = (newValue) =>{
 			this.setState({
-				chosenNode: newValue
+				chosenNode: newValue,
+				type: newValue.value,
 			});
 		};
 
