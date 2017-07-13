@@ -5,21 +5,28 @@ import moment from 'moment';
 export const loginCloudMiddleware = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
-    return dispatch(fetchStorageAccess()).then(()=>{
+    const checkProjects = () => {
       let projects = getState().cloud_access.access_key_pair;
-      if (projects){
+      if (projects) {
         // user already logged in
         return Promise.reject("already logged in");
       }
       else {
         return Promise.resolve()
       }
-    }).then(()=>dispatch(fetchOAuthURL(credential_oauth_path))).then(()=>{
+    };
+    const dispatchFetchWrapper = () => {
       let url = getState().user.oauth_url;
       return dispatch(fetchWrapper({
-        path:url,
-        handler:receiveUserAPILogin
-      }))}).then(()=>dispatch(fetchStorageAccess()))
+        path: url,
+        handler: receiveUserAPILogin
+      }))
+    };
+    return dispatch(fetchStorageAccess())
+      .then(checkProjects)
+      .then(() => dispatch(fetchOAuthURL(credential_oauth_path)))
+      .then(dispatchFetchWrapper)
+      .then(() => dispatch(fetchStorageAccess()))
       .catch((error) => console.log(error));
   }
 };
@@ -54,9 +61,7 @@ const convertTime = (value) => {
 };
 
 const convertTimes = (values) => {
-  values.map( item => {
-    convertTime(item)
-  });
+  values.map(item => convertTime(item));
   return values;
 };
 
@@ -101,7 +106,7 @@ export const receiveDeleteKeyResponse = ({status, data, access_key}) => {
         dispatch({
           type: 'DELETE_KEY_SUCCEED',
         });
-        dispatch(clearDeleteSession())
+        dispatch(clearDeleteSession());
         dispatch(updatePopup({key_delete_popup: false}));
         return dispatch(fetchStorageAccess());
       default:

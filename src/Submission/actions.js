@@ -5,13 +5,13 @@ import { submissionapi_path, submissionapi_oauth_path } from '../localconf';
 
 export const uploadTSV = (value, type) => {
   return (dispatch) => {
-    dispatch( {'type': 'REQUEST_UPLOAD', 'file': value, 'file_type': type } )
+    dispatch({'type': 'REQUEST_UPLOAD', 'file': value, 'file_type': type })
   }
 };
 
 export const updateFileContent = ( value, file_type) => {
   return (dispatch) => {
-    dispatch( {'type': 'UPDATE_FILE', 'file': value, 'file_type': predict_file_type(value, file_type)} );
+    dispatch({'type': 'UPDATE_FILE', 'file': value, 'file_type': predict_file_type(value, file_type)});
   }
 };
 
@@ -38,7 +38,7 @@ export const submitToServer = (method='PUT') => {
     let program = path[0];
     let project = path.slice(1).join('-');
     let submission = getState().submission;
-    if (path == 'graphql'){
+    if (path == 'graphql') {
       method = 'POST'
     }
     let file = submission.file;
@@ -60,7 +60,8 @@ export const submitToServer = (method='PUT') => {
         custom_headers: {'Content-Type': submission.file_type},
         body: file,
         handler: receiveSubmit
-      }))
+      })
+    )
   }
 };
 
@@ -74,25 +75,30 @@ export const setProject = (project) => {
 export const loginSubmissionAPI = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
-    return dispatch(fetchDictionary()).then(() => {
-      dispatch(fetchProjects())
-    })
-    .then(()=>{
+    const checkProjects = () => {
       let projects = getState().submission.projects;
-      if (projects){
+      if (projects) {
         // user already logged in
         return Promise.reject("already logged in");
       }
       else {
         return Promise.resolve()
       }
-    }).then(()=>dispatch(fetchOAuthURL(submissionapi_oauth_path))).then(()=>{
-        let url = getState().submission.oauth_url;
-        return dispatch(fetchWrapper({
-          path:url,
-          handler:receiveSubmissionLogin
-        }))}).then(()=>dispatch(fetchProjects()))
-    .catch((error) => console.log(error));
+    };
+    const dispatchFetchWrapper = () => {
+      let url = getState().submission.oauth_url;
+      return dispatch(fetchWrapper({
+        path: url,
+        handler: receiveSubmissionLogin
+      }))
+    };
+    return dispatch(fetchDictionary())
+      .then(() => dispatch(fetchProjects()))
+      .then(checkProjects)
+      .then(() => dispatch(fetchOAuthURL(submissionapi_oauth_path)))
+      .then(dispatchFetchWrapper)
+      .then(() => dispatch(fetchProjects()))
+      .catch((error) => console.log(error));
   }
 };
 
