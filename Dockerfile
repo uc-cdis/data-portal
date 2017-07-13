@@ -4,8 +4,6 @@
 FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND=noninteractive
-ARG APP=dev
-ARG BASENAME
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -20,6 +18,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && npm install webpack -g \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
+
+ARG APP=dev
+ARG BASENAME
 
 COPY . /data-portal
 WORKDIR /data-portal
