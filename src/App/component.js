@@ -24,7 +24,7 @@ const ProjectLink = styled(Link)`
   }
 `;
 
-const SubmissionComponent = ( {submission} ) => {
+const SubmissionComponent = ({submission}) => {
   return (
     <BoxWithNavAndTimeout>
       <h3>Submission projects</h3>

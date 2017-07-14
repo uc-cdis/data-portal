@@ -101,14 +101,12 @@ const timeoutPopupMapState = (state) => {
 };
 
 const timeoutPopupMapDispatch = (dispatch) => {
-  return {
-    onConfirmDoLogout: () => dispatch(logoutAPI()),
-  }
+  return {}
 };
 
 export const TimeoutPopup = connect(timeoutPopupMapState, timeoutPopupMapDispatch)(({auth_popup, onConfirmDoLogout}) => {
   if (auth_popup) {
-    return <Popup message={'Your session has expired.'} confirmText="go to login" onConfirm={onConfirmDoLogout} />
+    return <Popup message={'Your session has expired or you are logged out. Please log in to continue.'} confirmText='go to login' onConfirm={() => document.location.replace('/login')} />
   }
   return (null)
 });
