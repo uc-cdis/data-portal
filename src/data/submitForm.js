@@ -18,7 +18,8 @@ const SubmitFormButton = styled.button`
   border: 1px solid darkgreen;
   color: darkgreen;
   background-color: white;
-  padding: .25em;
+  padding: .1em;
+  display:inline-block;
   margin-bottom: 1em;
   &:hover,
   &:active,
@@ -252,6 +253,7 @@ class SubmitFormContainer extends Component {
 
 	state = {
 		chosenNode:{value: null, label:""},
+		fill_form:false,
 	}
 
 	handleSubmit = (event) => {
@@ -266,7 +268,7 @@ class SubmitFormContainer extends Component {
 		value = json_to_string(value);
 		this.props.onUploadClick(value, 'application/json');
 		
-  	}
+  	};
 
   	onChangeAnyOf = (name, event, properties) =>{
   		const target = event.target;
@@ -304,6 +306,12 @@ class SubmitFormContainer extends Component {
 		});
 	};
 
+	onClick = () =>{
+		this.setState({
+			'fill_form': !(this.state.fill_form)
+		});
+	};
+
 	render(){
 		let dictionary = this.props.submission.dictionary;
 		let node_types = this.props.submission.node_types;
@@ -321,8 +329,9 @@ class SubmitFormContainer extends Component {
 		return(
 			<div>
 			<form>
-				<h5> Fill Out Form: </h5>
-				<Dropdown name='node_type' options={options} value={this.state.chosenNode} onChange={updateChosenNode} />
+				<SubmitFormButton htmlFor='fill_form'> Fill Out Form </SubmitFormButton>
+				<input type='checkbox' onClick={this.onClick} name='fill_form' style={{margin:'1em'}} ></input>
+				{this.state.fill_form && <Dropdown name='node_type' options={options} value={this.state.chosenNode} onChange={updateChosenNode} />}
 			</form>
 			{(this.state.chosenNode.value != null) &&
 			<div>
