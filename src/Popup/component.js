@@ -2,6 +2,9 @@ import React from 'react';
 import styled, {css} from 'styled-components';
 import Highlight from 'react-highlight';
 import AceEditor from 'react-ace';
+import { logoutAPI } from '../actions';
+import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 
 const button = css`
   display: inline-block;
@@ -59,9 +62,7 @@ const SavePopupBox = styled.section`
   overflow: hidden;
 `;
 
-
-export const Popup = ({message, code, error, onClose, onCancel, onConfirm}) => {
-
+export const Popup = ({message, code, error, closeText, cancelText, confirmText, onClose, onCancel, onConfirm}) => {
   return (
     <PopupMask>
       <PopupBox>
@@ -73,16 +74,15 @@ export const Popup = ({message, code, error, onClose, onCancel, onConfirm}) => {
           {error &&
           <Code className='json'> {error} </Code>
           }
-
         </Message>
         {onClose &&
-          <CancelButton onClick={onClose}>close</CancelButton>
+          <CancelButton onClick={onClose}>{closeText ? closeText : "close"}</CancelButton>
         }
         {onConfirm &&
-          <Button onClick={onConfirm}>confirm</Button>
+          <Button onClick={onConfirm}>{confirmText ? confirmText : "confirm"}</Button>
         }
         {onCancel &&
-          <CancelButton onClick={onCancel}>cancel</CancelButton>
+          <CancelButton onClick={onCancel}>{cancelText ? cancelText : "cancel"}</CancelButton>
         }
       </PopupBox>
     </PopupMask>
@@ -94,6 +94,29 @@ export const saveToFile = (savingStr, filename) => {
   let blob = new Blob([savingStr], {type: "text/plain;charset=utf-8"});
   FileSaver.saveAs(blob, filename);
 };
+
+const timeoutPopupMapState = (state) => {
+  return {
+    'auth_popup': state.popups.auth_popup,
+  }
+};
+
+const timeoutPopupMapDispatch = (dispatch) => {
+  return {}
+};
+
+const goToLogin = () => {
+    browserHistory.push('/login');
+    // Refresh the page.
+    window.location.reload(false);
+}
+
+export const TimeoutPopup = connect(timeoutPopupMapState, timeoutPopupMapDispatch)(({auth_popup, onConfirmDoLogout}) => {
+  if (auth_popup) {
+    return <Popup message={'Your session has expired or you are logged out. Please log in to continue.'} confirmText='go to login' onConfirm={goToLogin} />
+  }
+  return (null)
+});
 
 let copy = require('clipboard-plus');
 export const SavePopup = ({message, display, savingStr, error, onClose, filename}) => {

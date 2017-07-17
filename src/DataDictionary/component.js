@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import * as constants from "./constants";
 import { Link } from 'react-router';
+import { BoxWithNavAndTimeout } from '../component';
 
 const TableBullet = ({node, description})=>{
   return(
@@ -38,7 +39,6 @@ const CategoryTable = ({dictionary, nodes, category}) =>{
  )
 }
 
-
 const DataDictionaryViewer = ({submission}) =>{
   let filterCategories = (dictionary, node_types) =>{
     let categories = {}
@@ -58,16 +58,13 @@ const DataDictionaryViewer = ({submission}) =>{
   }
   let categories = filterCategories(submission.dictionary, submission.node_types);
   return (
-  <Box>
-    <Nav />
-    <h3> Data Dictionary Viewer </h3>
-    <p>{constants.subHeader}</p>
-     {Object.keys(categories).map( (category) =>
-          <CategoryTable dictionary={submission.dictionary} key={category} nodes={categories[category]} category = {category}/> )}
-
-  </Box>
-
- )
+    <BoxWithNavAndTimeout>
+      <h3> Data Dictionary Viewer </h3>
+      <p>{constants.subHeader}</p>
+      {Object.keys(categories).map((category) =>
+        <CategoryTable dictionary={submission.dictionary} key={category} nodes={categories[category]} category = {category}/> )}
+    </BoxWithNavAndTimeout>
+  )
 }
 
 const mapStateToProps = (state)=> {return {
@@ -75,7 +72,6 @@ const mapStateToProps = (state)=> {return {
 }};
 
 const mapDispatchToProps = (dispatch) => ({
-
 });
 
 const DataDictionary = connect(mapStateToProps, mapDispatchToProps)(DataDictionaryViewer);

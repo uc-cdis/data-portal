@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { Box } from '../theme';
 import { QuestionItem, OptionBullet, SubmitButton, Tooltip } from './style';
 import * as constants from "./constants";
+import { BoxWithNavAndTimeout } from '../component';
 
 class Question extends Component {
   render() {
@@ -45,7 +46,7 @@ class CertificateComponent extends Component {
     }
     let result = {};
     for (var item of constants.certificate_form){
-      result[[item.id]] = values[item.id] === item.options[item.answer] ? undefined: 'wrong answer';
+      result[[item.id]] = values[item.id] === item.options[item.answer] ? undefined : 'wrong answer';
     }
     return result;
   }
@@ -60,10 +61,9 @@ class CertificateComponent extends Component {
   }
   render() {
     return (
-      <Box>
-        <Nav />
+      <BoxWithNavAndTimeout>
         <h4>{constants.title}</h4>
-       <Form onSubmit={(values)=> {this.props.onSubmitForm(values)}}
+        <Form onSubmit={(values) => {this.props.onSubmitForm(values)}}
           validate={(values) => {return this.validateForm(values)}}
           defaultValues={this.props.certificate.certificate_result}>
 
@@ -77,11 +77,10 @@ class CertificateComponent extends Component {
               </form>
             )
           }}
-
         </Form>
-      </Box>
+      </BoxWithNavAndTimeout>
     )
-    }
+  }
 }
 
 const mapStateToProps = (state) => {

@@ -11,23 +11,23 @@ export const updatePopup = (state) => {
 
 export const fetchWrapper = ({path, method='GET', body=null, handler, custom_headers, callback=()=>(null)}) => {
   return (dispatch) => {
-    // console.log("fetch " + path)
-    return fetch(path, {
+    let request = {
       credentials: "same-origin",
       headers: {...headers, ...custom_headers},
       method: method,
       body: body,
-    }).then(response => {
+    }
+    return fetch(path, request).then(response => {
       return response.text().then(data => {
-      if (data) {
-        try {
-            data = JSON.parse(data)
+        if (data) {
+            try {
+                data = JSON.parse(data)
+            }
+            catch (e) {
+            // # do nothing
+            }
         }
-        catch (e) {
-          // # do nothing
-        }
-      }
-        dispatch(handler({status: response.status, data: data, headers:response.headers}));
+        dispatch(handler({status: response.status, data: data, headers: response.headers}));
         callback();
         return Promise.resolve(data)
       })
@@ -48,7 +48,7 @@ export const handleResponse = (type) => {
         };
       default:
         return {
-          type:  'FETCH_ERROR',
+          type: 'FETCH_ERROR',
           error: data
         }
     }
@@ -70,7 +70,6 @@ export const connectionError = () => {
   }
 };
 
-
 export const receiveUser = ({status, data}) => {
   switch (status) {
     case 200:
@@ -78,6 +77,11 @@ export const receiveUser = ({status, data}) => {
         type: 'RECEIVE_USER',
         user: data
       };
+    case 401:
+      return {
+        type: 'UPDATE_POPUP',
+        data: {auth_popup: true}
+      }
     default:
       return {
         type: 'FETCH_ERROR',
@@ -86,10 +90,7 @@ export const receiveUser = ({status, data}) => {
   }
 };
 
-// export const receiveUserAccess =
-
 export const startFetchUser = () => {
-
 };
 
 export const fetchUser = () => {
@@ -100,33 +101,31 @@ export const fetchUser = () => {
 };
 
 export const requireAuth = (store, additionalHooks) => {
-  return  (nextState, replace, callback) => {
+  return (nextState, replace, callback) => {
     window.scrollTo(0, 0);
-    store.dispatch(fetchUser()).then(() =>{
+    const resolvePromise = () => {
       let { user } = store.getState();
       let location = nextState.location;
       if (!user.username) {
-        let path = location.pathname=='/' ? '/' : '/' + location.pathname;
-        replace({ pathname: '/login', query: { next: path+nextState.location.search } });
+        let path = location.pathname == '/' ? '/' : '/' + location.pathname;
+        replace({pathname: '/login', query: {next: path+nextState.location.search}});
         return Promise.resolve()
       }
       let has_certs = _.intersection(required_certs, user.certificates_uploaded).length !== required_certs.length;
       // take quiz if this user doesn't have required certificate
-      if (location.pathname !== 'quiz' && has_certs ){
+      if (location.pathname !== 'quiz' && has_certs) {
         replace({pathname: '/quiz'});
-        return Promise.resolve()
-      }
-      if (location.pathname === 'quiz' && !has_certs) {
+      } else if (location.pathname === 'quiz' && !has_certs) {
         replace({pathname: '/'});
-        return Promise.resolve()
-      }
-      if (additionalHooks){
+      } else if (additionalHooks) {
         return additionalHooks(nextState, replace);
       }
-      else {
-        return Promise.resolve()
-      }
-    }).then(()=>callback())
+      return Promise.resolve()
+    };
+    store
+      .dispatch(fetchUser())
+      .then(resolvePromise)
+      .then(() => callback())
   }
 };
 
@@ -134,14 +133,13 @@ export const enterHook = (store, hookAction) => {
   return (nextState, replace, callback) => {
     return store.dispatch(hookAction()).then(() => callback());
   }
-
 }
 
 export const logoutAPI = () => {
   return (dispatch) => dispatch(fetchWrapper({
     path: submissionapi_oauth_path + 'logout',
     handler: receiveAPILogout,
-  })).then(()=>document.location.replace(userapi_path+'/logout?next='+basename))
+  })).then(() => document.location.replace(userapi_path+'/logout?next='+basename))
 };
 
 export const fetchOAuthURL = (oauth_path) => {

@@ -7,6 +7,7 @@ import { Box } from '../theme';
 import { Link } from 'react-router';
 import DataModelGraph from '../DataModelGraph/component';
 import { getCounts } from '../DataModelGraph/actions'
+import { BoxWithNavAndTimeout } from '../component';
 
 const Browse = styled(Link)`
   display: inline-block;
@@ -27,18 +28,17 @@ const ProjectSubmissionComponent = (props) => {
   if (props.counts_search == undefined || props.counts_search == null) {
     props.onGetCounts(props.node_types, props.params.project, props.dictionary)
   }
-      
+
   return (
-  <Box>
-    <Nav />
-    <Title>{props.params.project=='graphql' ? 'Query graph': props.params.project}</Title>
-    {props.params.project != 'graphql' &&
-    <Browse to={'/' + props.params.project + '/search'}>browse nodes</Browse>
-    }
-    <SubmitTSV path={props.params.project} />
-    {(props.counts_search != undefined || props.counts_search != null)
-      && <DataModelGraph project={props.params.project}/> }
-  </Box>
+    <BoxWithNavAndTimeout>
+      <Title>{props.params.project=='graphql' ? 'Query graph': props.params.project}</Title>
+      { props.params.project != 'graphql' &&
+        <Browse to={'/' + props.params.project + '/search'}>browse nodes</Browse>
+      }
+      <SubmitTSV path={props.params.project} />
+        {(props.counts_search != undefined || props.counts_search != null)
+        && <DataModelGraph project={props.params.project}/> }
+    </BoxWithNavAndTimeout>
   );
 };
 
