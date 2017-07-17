@@ -4,6 +4,7 @@ import Highlight from 'react-highlight';
 import AceEditor from 'react-ace';
 import { logoutAPI } from '../actions';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 
 const button = css`
   display: inline-block;
@@ -104,9 +105,15 @@ const timeoutPopupMapDispatch = (dispatch) => {
   return {}
 };
 
+const goToLogin = () => {
+    browserHistory.push('/login');
+    // Refresh the page.
+    window.location.reload(false);
+}
+
 export const TimeoutPopup = connect(timeoutPopupMapState, timeoutPopupMapDispatch)(({auth_popup, onConfirmDoLogout}) => {
   if (auth_popup) {
-    return <Popup message={'Your session has expired or you are logged out. Please log in to continue.'} confirmText='go to login' onConfirm={() => document.location.replace('/login')} />
+    return <Popup message={'Your session has expired or you are logged out. Please log in to continue.'} confirmText='go to login' onConfirm={goToLogin} />
   }
   return (null)
 });
