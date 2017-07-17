@@ -1,3 +1,5 @@
+import { removeDeletedNode } from '../reducers.js';
+
 export const query_nodes = (state={}, action) => {
   switch (action.type) {
     case 'SUBMIT_SEARCH_FORM':

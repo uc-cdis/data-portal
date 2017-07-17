@@ -38,7 +38,7 @@ const user = (state={}, action) => {
   }
 };
 
-const removeDeletedNode = (state, id) =>{
+export const removeDeletedNode = (state, id) =>{
   let search_result = state.search_result;
   console.log(search_result);
   // graphql response should always be {data: {node_type: [ nodes ] }}
