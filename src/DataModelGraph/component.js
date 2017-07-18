@@ -10,6 +10,9 @@ const ToggleButton = styled.a`
   border: 1px solid darkslategray;
   color: darkslategray;
   ${button};
+  position:absolute;
+  top:15px;
+  left:20px;
   &:hover,
   &:active,
   &:focus {
@@ -163,7 +166,7 @@ class DataModelGraphComponent extends React.Component {
     if (this.state.full_toggle) {
       if (this.state.full.nodes.length != 0 && 'count' in this.state.full.nodes[this.state.full.nodes.length-1]) {
         return (
-          <div>
+          <div style={{position: "relative"}}>
             <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
             <CreateGraph nodes={this.state.full.nodes} edges={this.state.full.edges} categories={categories}/>
           </div>
@@ -172,7 +175,7 @@ class DataModelGraphComponent extends React.Component {
     } else {
       if (this.state.compact.nodes.length != 0 && 'count' in this.state.compact.nodes[this.state.compact.nodes.length-1]) {
         return (
-          <div>
+          <div style={{position: "relative"}}>
             <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
             <CreateGraph nodes={this.state.compact.nodes} edges={this.state.compact.edges} categories={categories}/>
           </div>
