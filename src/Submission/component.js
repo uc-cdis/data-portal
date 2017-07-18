@@ -36,7 +36,7 @@ const ProjectSubmissionComponent = (props) => {
         <Browse to={'/' + props.params.project + '/search'}>browse nodes</Browse>
       }
       <SubmitTSV path={props.params.project} />
-        {(props.counts_search != undefined || props.counts_search != null)
+        {props.params.project != 'graphql' && (props.counts_search != undefined || props.counts_search != null)
         && <DataModelGraph project={props.params.project}/> }
     </BoxWithNavAndTimeout>
   );
