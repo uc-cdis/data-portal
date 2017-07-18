@@ -120,7 +120,21 @@ function create_graph(nodes, edges, categories) {
   node.append("ellipse")
       .attr("rx", radius)
       .attr("ry", radius* 0.6)
-      .attr("fill", function(d) { return color[d.category]; })
+      .attr("fill", function(d) { 
+        if (d.count == 0) {
+          return "#f4f4f4"
+        } else { 
+          return color[d.category]; 
+        }
+      })
+    .style("stroke", function (d) {
+      if (d.count == 0) {
+        return color[d.category]
+      } else {
+        return ""
+      }
+    })
+      .style("stroke-width", 1)
 
   let graph_font_size = "0.75em"
 
@@ -129,15 +143,15 @@ function create_graph(nodes, edges, categories) {
     let split_name = nodes[n].name.split("_");
     for (let i = 0; i < split_name.length; i++) {
       if (split_name.length > 2) {
-        nodes[n].adjust_pos = 1;
+        nodes[n].adjust_text_pos = 1;
       } else {
-        nodes[n].adjust_pos = 0;
+        nodes[n].adjust_text_pos = 0;
       }
       graph.select("#".concat(nodes[n].name))
         .append("text")
         .attr("text-anchor", "middle")
         .attr("font-size", graph_font_size)
-        .attr("dy", (0-(split_name.length-i-1)+nodes[n].adjust_pos)*0.9+'em')
+        .attr("dy", (0-(split_name.length-i-1)+nodes[n].adjust_text_pos)*0.9+'em')
         .text(split_name[i]);
     }
   }
@@ -146,7 +160,7 @@ function create_graph(nodes, edges, categories) {
     .attr("text-anchor", "middle")
     .attr("font-size", graph_font_size)
     .attr("dy", function(d) {
-      if (d.adjust_pos) {
+      if (d.adjust_text_pos) {
         return "2em";
       } else {
         return "1em";
@@ -162,7 +176,14 @@ function create_graph(nodes, edges, categories) {
       .links(edges)
 
   function ticked() {
-    link.attr("d", positionLink);
+    link.attr("d", positionLink)
+      .attr("stroke-dasharray", function(d) {
+        if (d.exists != undefined && d.exists == 0) {
+          return "5, 5";
+        } else {
+          return "0";
+        }
+      });
 
     node
         .attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
@@ -201,7 +222,7 @@ function create_graph(nodes, edges, categories) {
       return (1.5*(2.5+i))+"em";
     })
     .attr("text-anchor", "middle")
-    .attr("fill", function(d, i) { return color[d]})
+    .attr("fill", function(d) { return color[d]})
     .style("font-size", legend_font_size)
     .text(function(d) {return d});
 
@@ -217,14 +238,57 @@ function create_graph(nodes, edges, categories) {
 
 export default class CreateGraph extends React.Component {
   componentDidMount() {
-    {create_graph(this.props.nodes, this.props.edges, this.props.categories)}
+    create_graph(this.props.nodes, this.props.edges, this.props.categories)
   }
   componentDidUpdate() {
-    {create_graph(this.props.nodes, this.props.edges, this.props.categories)}
+    create_graph(this.props.nodes, this.props.edges, this.props.categories)
   }
   render() {
     let nodes = this.props.nodes
     let edges = this.props.edges
+
+    let root = "project"
+    let queue = [];
+    let layout = [];
+    let placed = [];
+    let layout_level = 0;
+
+    queue.push(root);
+    layout.push([root]);
+    while(queue.length != 0) {
+      let query = queue.shift(); //breadth first
+      for (let i = 0; i < edges.length; i++) {
+        if (edges[i].target == query || edges[i].target.name == query) {
+          if ((layout[layout_level].indexOf(query)) != -1) {
+            if (!layout[layout_level+1]) {
+              layout[layout_level+1] = [];
+            } 
+          } else {
+            layout_level += 1;
+            if (!layout[layout_level+1]) {
+              layout[layout_level+1] = [];
+            } 
+          }
+          queue.push(edges[i].source);
+          if ((layout[layout_level+1].indexOf(edges[i].source) == -1) && (placed.indexOf(edges[i].source) == -1)) {
+            layout[layout_level+1].push(edges[i].source);
+            placed.push(edges[i].source);
+          }
+        }
+      }
+      placed.push(query);
+    }
+
+    for (let i = 0; i < layout.length; i++) {
+      for (let j = 0; j < layout[i].length; j++) {
+        for (let k = 0; k < nodes.length; k++) {
+          if (nodes[k].name == layout[i][j]) {
+            nodes[k].position = [(j+1)/(layout[i].length+1),(i+1)/(layout.length+1)];
+            break;
+          }
+        }
+      }
+    }
 
     let min_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
     let min_y_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[1]))[0])
@@ -237,10 +301,9 @@ export default class CreateGraph extends React.Component {
 
     const divStyle = {
       height: height,
-      //width: width, 
-      //margin: "0 auto",
       backgroundColor: "#f4f4f4",
-      marginTop: "10px",
+      marginLeft: "auto",
+      marginRight: "auto",
     }
     return (
       <div style={divStyle}>
