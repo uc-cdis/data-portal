@@ -3,9 +3,23 @@ import CreateGraph from './GraphCreator';
 import { connect } from 'react-redux';
 import { getCounts } from './actions';
 import { submissionapi_path } from '../localconf';
+import { button } from '../theme';
+import styled from 'styled-components';
 
+const ToggleButton = styled.a`
+  border: 1px solid darkslategray;
+  color: darkslategray;
+  ${button};
+  &:hover,
+  &:active,
+  &:focus {
+    color: black;
+    border-color: black;
 
-function createNodesAndEdges(props) {
+  }
+`;
+
+function createNodesAndEdges(props, create_all) {
   let dictionary = props.dictionary;
   let nodes = [];
 
@@ -14,14 +28,14 @@ function createNodesAndEdges(props) {
   Object.keys(dictionary).forEach(function(key,index) {
     if (dictionary[key].type == "object" && !nodes_to_hide.includes(key)) {
       let count = props.counts_search["_".concat(key).concat("_count")];
-      if (count != 0) {
+      if (create_all || (!create_all && count != 0)) {
         let node = {
           name: key,
           category: dictionary[key].category,
           count: count,
         }
         nodes.push(node);
-      }
+      } 
     }
   });
 
@@ -42,12 +56,23 @@ function createNodesAndEdges(props) {
           if (nodes_to_hide.includes(dictionary[val["name"]].links[i].target_type) || nodes_to_hide.includes(val["name"])) {
             continue;
           } else if (props.links_search[val["name"] + "_to_" + dictionary[val["name"]].links[i].target_type + "_link"] == 0) {
+            if (create_all) {
+              let edge = {
+                source: val["name"],
+                target: dictionary[val["name"]].links[i].target_type,
+                exists: 0
+              }
+              edges.push(edge);
+            }
             continue;
           }
           else if (exists_in_any_nodes(val["name"], nodes) && exists_in_any_nodes(dictionary[val["name"]].links[i].target_type, nodes)) {
             let edge = {
               source: val["name"],
               target: dictionary[val["name"]].links[i].target_type,
+            }
+            if (create_all) {
+              edge.exists = 1
             }
             edges.push(edge);
           }
@@ -58,12 +83,23 @@ function createNodesAndEdges(props) {
               if (nodes_to_hide.includes(dictionary[val["name"]].links[i].subgroup[j].target_type) || nodes_to_hide.includes(val["name"])) {
                 continue;
               } else if (props.links_search[val["name"] + "_to_" + dictionary[val["name"]].links[i].subgroup[j].target_type + "_link"] == 0) {
+                if (create_all) {
+                  let edge = {
+                    source: val["name"],
+                    target: dictionary[val["name"]].links[i].subgroup[j].target_type,
+                    exists: 0
+                  }
+                  edges.push(edge);
+                }
                 continue;
               }
               else if (exists_in_any_nodes(val["name"], nodes) && exists_in_any_nodes(dictionary[val["name"]].links[i].subgroup[j].target_type, nodes)) {
                 let edge = {
                   source: val["name"],
                   target: dictionary[val["name"]].links[i].subgroup[j].target_type,
+                }
+                if (create_all) {
+                  edge.exists = 1
                 }
                 edges.push(edge);
               }
@@ -73,48 +109,6 @@ function createNodesAndEdges(props) {
       }
     }
   });
-  let root = "project"
-  let queue = [];
-  let layout = [];
-  let placed = [];
-  let layout_level = 0;
-  queue.push(root);
-  layout.push([root]);
-  while(queue.length != 0) {
-    let query = queue.shift(); //breadth first
-    for (let i = 0; i < edges.length; i++) {
-      if (edges[i].target == query) {
-        if ((layout[layout_level].indexOf(query)) != -1) {
-          if (!layout[layout_level+1]) {
-            layout[layout_level+1] = [];
-          } 
-        } else {
-          layout_level += 1;
-          if (!layout[layout_level+1]) {
-            layout[layout_level+1] = [];
-          } 
-        }
-        queue.push(edges[i].source);
-        if ((layout[layout_level+1].indexOf(edges[i].source) == -1) && (placed.indexOf(edges[i].source) == -1)) {
-          layout[layout_level+1].push(edges[i].source);
-          placed.push(edges[i].source);
-        }
-      }
-    }
-    placed.push(query);
-  }
-
-  for (let i = 0; i < layout.length; i++) {
-    for (let j = 0; j < layout[i].length; j++) {
-      for (let k = 0; k < nodes.length; k++) {
-        if (nodes[k].name == layout[i][j]) {
-          nodes[k].position = [(j+1)/(layout[i].length+1),(i+1)/(layout.length+1)];
-          break;
-        }
-      }
-    }
-  }
-
 
   return {
     nodes: nodes,
@@ -125,11 +119,27 @@ function createNodesAndEdges(props) {
 class DataModelGraphComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = createNodesAndEdges(props);
+    this.state = {
+      compact: undefined,
+      full: undefined, 
+      full_toggle: false
+    }
+    this.state.compact = createNodesAndEdges(props, this.state.full_toggle);
+    this.handleClick = this.handleClick.bind(this);
   }
   componentWillReceiveProps(nextProps) {
-    this.state = createNodesAndEdges(nextProps);
+    if (this.state.full_toggle) {
+      this.state.full = createNodesAndEdges(nextProps, this.state.full_toggle);
+    } else {
+      this.state.compact = createNodesAndEdges(nextProps, this.state.full_toggle);
+    }
   } 
+  handleClick() {
+    this.setState(prevState => ({
+      full_toggle: !prevState.full_toggle,
+      full: createNodesAndEdges(this.props,!this.state.full_toggle)
+    }));
+  }
   render() {
     let categories = Object.keys(this.props.dictionary).map((key) => {return this.props.dictionary[key];})
       .reduce((acc, elem) => {
@@ -150,13 +160,26 @@ class DataModelGraphComponent extends React.Component {
       }
     })
 
-    if (this.state.nodes.length != 0 && 'count' in this.state.nodes[this.state.nodes.length-1]) {
-      return (
-        <CreateGraph nodes={this.state.nodes} edges={this.state.edges} categories={categories}/>
-      );
+    if (this.state.full_toggle) {
+      if (this.state.full.nodes.length != 0 && 'count' in this.state.full.nodes[this.state.full.nodes.length-1]) {
+        return (
+          <div>
+            <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
+            <CreateGraph nodes={this.state.full.nodes} edges={this.state.full.edges} categories={categories}/>
+          </div>
+        );
+      } 
     } else {
-      return null;
-    }
+      if (this.state.compact.nodes.length != 0 && 'count' in this.state.compact.nodes[this.state.compact.nodes.length-1]) {
+        return (
+          <div>
+            <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
+            <CreateGraph nodes={this.state.compact.nodes} edges={this.state.compact.edges} categories={categories}/>
+          </div>
+        );
+      }
+    } 
+    return null;
   }
 }
 
