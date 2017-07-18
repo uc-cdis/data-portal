@@ -9,8 +9,6 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { getCounts } from '../DataModelGraph/actions';
 import { button, SubmitButton, UploadButton } from '../theme'
-import styled from 'styled-components';
-import { connect } from 'react-redux';
 
 
 const SubmissionResult = styled.div`
