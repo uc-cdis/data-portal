@@ -124,6 +124,7 @@ export const Bullet = styled.li`
 
 export const SubmitButton = styled.label`
   border: 1px solid darkgreen;
+  display:inline-block;
   color: darkgreen;
   margin-bottom: 1em;
   &:hover,
