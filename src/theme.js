@@ -37,7 +37,7 @@ export const cube = css`
 `;
 
 export const Box = styled.div`
-  min-width: 1000px;
+  min-width: 1200px;
   margin: auto;
   margin-top: 100px;
   margin-bottom: 100px;
