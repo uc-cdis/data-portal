@@ -1,9 +1,9 @@
-import { uploadTSV, submitToServer, updateFileContent } from './submitActions';
+import { uploadTSV, submitToServer, updateFileContent } from './actions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { button, UploadButton, SubmitButton, Required_Notification, Dropdown, Input, Label } from '../theme';
 import React, {Component, PropTypes} from 'react';
-import {json_to_string} from './utils.js';
+import {json_to_string} from '../utils.js';
 
 
 const Input_Description = styled.span`
@@ -333,7 +333,7 @@ class SubmitFormContainer extends Component {
 				<input type='checkbox' onClick={this.onClick} name='fill_form' style={{margin:'1em'}} ></input>
 				{this.state.fill_form && <Dropdown name='node_type' options={options} value={this.state.chosenNode} onChange={updateChosenNode} />}
 			</form>
-			{(this.state.chosenNode.value != null) &&
+			{(this.state.chosenNode.value != null) && this.state.fill_form &&
 			<div>
 			   <h5> Properties: </h5>
 			   <Required_Notification istext> * Denotes Required Property </Required_Notification>
