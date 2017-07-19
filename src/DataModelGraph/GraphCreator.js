@@ -4,7 +4,17 @@ import { connect } from 'react-redux';
 import { submitSearchForm } from '../QueryNode/actions';
 
 
-function create_graph(nodes, edges, categories) {
+function create_graph(nodes, edges, categories, template_nodes, template_edges) {
+
+  let present_nodes = undefined
+  let present_edges = undefined
+  if (template_nodes != undefined && template_edges != undefined) {
+    present_nodes = nodes;
+    present_edges = edges;
+    nodes = template_nodes;
+    edges = template_edges;
+  }
+
   let min_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
   let min_y_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[1]))[0])
 
