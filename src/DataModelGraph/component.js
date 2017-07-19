@@ -138,10 +138,17 @@ class DataModelGraphComponent extends React.Component {
     }
   } 
   handleClick() {
-    this.setState(prevState => ({
-      full_toggle: !prevState.full_toggle,
-      full: createNodesAndEdges(this.props,!this.state.full_toggle)
-    }));
+    if (this.state.full_toggle) {
+      this.setState(prevState => ({
+        full_toggle: !prevState.full_toggle,
+        compact: createNodesAndEdges(this.props,!this.state.full_toggle)
+      }));
+    } else {
+      this.setState(prevState => ({
+        full_toggle: !prevState.full_toggle,
+        full: createNodesAndEdges(this.props,!this.state.full_toggle)
+      }));
+    }
   }
   render() {
     let categories = Object.keys(this.props.dictionary).map((key) => {return this.props.dictionary[key];})
