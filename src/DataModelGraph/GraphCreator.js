@@ -1,8 +1,5 @@
 import * as d3 from "d3";
 import React from "react";
-import { connect } from 'react-redux';
-import { submitSearchForm } from '../QueryNode/actions';
-
 
 function create_graph(nodes, edges, categories) {
   let min_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
