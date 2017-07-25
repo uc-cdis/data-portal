@@ -13,3 +13,12 @@ export const BoxWithNavAndTimeout = ({children}) => {
     </Box>
   )
 };
+
+export const BoxWithNav = ({children}) => {
+  return (
+    <Box>
+      <Nav />
+      { children }
+    </Box>
+  )
+};

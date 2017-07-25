@@ -29,6 +29,7 @@ import browserHistory from './history';
 import { theme, Box } from './theme';
 import { clearCounts } from './DataModelGraph/actions'
 import { required_certs } from './configs';
+import { withBoxNav, withBoxNavTimeout } from './utils';
 
 
 let store;
@@ -81,25 +82,27 @@ async function init() {
         <ThemeProvider theme={theme}>
           <Router history={history}>
             <Route path='/login' component={Login} />
-            <Route path='/' onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))} component={Submission} />
+            <Route path='/'
+              onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
+              component={withBoxNavTimeout(Submission)} />
             <Route path='/identity'
               onEnter={requireAuth(store, () => store.dispatch(loginCloudMiddleware()))}
-              component={IdentityAccess} />
+              component={withBoxNavTimeout(IdentityAccess)} />
             <Route path='/quiz'
               onEnter={requireAuth(store)}
-              component={Certificate} />
+              component={withBoxNavTimeout(Certificate)} />
             <Route path='/dd'
               onEnter={enterHook(store, fetchDictionary)}
-              component={DataDictionary} />
+              component={withBoxNav(DataDictionary)} />
             <Route path='/dd/:node'
               onEnter={enterHook(store, fetchDictionary)}
-              component={DataDictionaryNode} />
+              component={withBoxNav(DataDictionaryNode)} />
             <Route path='/:project'
               onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))}
-              component={ProjectSubmission} />
+              component={withBoxNavTimeout(ProjectSubmission)} />
             <Route path='/:project/search'
               onEnter={requireAuth(store, (nextState) => { return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))); })}
-              component={QueryNode} />
+              component={withBoxNavTimeout(QueryNode)} />
           </Router>
         </ThemeProvider>
       </Provider>,
@@ -113,7 +116,7 @@ async function init() {
             <Route path='/login' component={Login} />
             <Route path='/'
               onEnter={requireAuth(store, () => store.dispatch(fetchStorageAccess()))}
-              component={IdentityAccess} />
+              component={withBoxNavTimeout(IdentityAccess)} />
           </Router>
         </ThemeProvider>
       </Provider>,

@@ -22,20 +22,20 @@ const TableBullet = ({node, description})=>{
 
 
 const CategoryTable = ({dictionary, nodes, category}) =>{
-  return(
-  <Table>
-    <TableHead>
-      <tr>
-        <td>
-        {category}
-        </td>
-      </tr>
-    </TableHead>
+  return (
+    <Table>
+      <TableHead>
+        <tr>
+          <td>
+          {category}
+          </td>
+        </tr>
+      </TableHead>
 
-    <tbody>
-      {nodes.map( (node) => <TableBullet node={node} key={node} description={dictionary[node]["description"]}/> )}
-    </tbody>
-  </Table>
+      <tbody>
+        {nodes.map( (node) => <TableBullet node={node} key={node} description={dictionary[node]["description"]}/> )}
+      </tbody>
+    </Table>
  )
 }
 
@@ -47,10 +47,9 @@ const DataDictionaryViewer = ({submission}) =>{
       if (category == undefined){
         continue;
       }
-      if(categories.hasOwnProperty(category)){
+      if (categories.hasOwnProperty(category)) {
         categories[category].push(node_types[node])
-      }
-      else{
+      } else {
         categories[category] = [node_types[node]]
       }
     }
@@ -58,12 +57,12 @@ const DataDictionaryViewer = ({submission}) =>{
   }
   let categories = filterCategories(submission.dictionary, submission.node_types);
   return (
-    <BoxWithNavAndTimeout>
+    <div>
       <h3> Data Dictionary Viewer </h3>
       <p>{constants.subHeader}</p>
       {Object.keys(categories).map((category) =>
         <CategoryTable dictionary={submission.dictionary} key={category} nodes={categories[category]} category = {category}/> )}
-    </BoxWithNavAndTimeout>
+    </div>
   )
 }
 
