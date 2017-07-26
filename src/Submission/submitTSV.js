@@ -8,7 +8,7 @@ import { uploadTSV, submitToServer, updateFileContent } from './actions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { getCounts } from '../DataModelGraph/actions';
-import { button, SubmitButton, UploadButton } from '../theme'
+import { button, UploadButton, SubmitButton } from '../theme'
 
 
 const SubmissionResult = styled.div`
@@ -70,9 +70,9 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
   return (
     <form>
       <input type='file' onChange={setValue} name='file-upload' style={{display:'none'}} id='file-upload'/>
-      <SubmitButton htmlFor='file-upload'>Upload file</SubmitButton>
+      <UploadButton htmlFor='file-upload'>Upload file</UploadButton>
      {submission.file &&
-        <UploadButton onClick={onSubmitClickEvent}>Submit</UploadButton>
+        <SubmitButton onClick={onSubmitClickEvent}>Submit</SubmitButton>
      }
      { (submission.file || path == 'graphql') &&
       <AceEditor width="100%" height="200px" style={{"marginBottom":"1em"}} mode={submission.file_type=='text/tab-separated-values'? '' : 'json'} theme="kuroir" value={submission.file} onChange={onChange} id='uploaded'/>
