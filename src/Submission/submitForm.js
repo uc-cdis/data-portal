@@ -4,30 +4,34 @@ import { connect } from 'react-redux';
 import { button, UploadButton, SubmitButton, Required_Notification, Dropdown, Input, Label } from '../theme';
 import React, {Component, PropTypes} from 'react';
 import {json_to_string} from '../utils.js';
+import {Toggle} from 'material-ui'
 
 
 const Input_Description = styled.span`
 	font-size: 1rem;
 	display:inline-block;
 	width: 750px;
-	margin-left: 10px;
-
 `;
 
-const SubmitFormButton = styled.button`
+
+const UploadFormButton = styled.button`
   border: 1px solid darkgreen;
-  color: darkgreen;
-  background-color: white;
-  padding: .1em;
   display:inline-block;
-  margin-bottom: 1em;
+  color: darkgreen;
+  margin: 1em 0em;
   &:hover,
   &:active,
   &:focus {
     color: #2e842e;
     border-color: #2e842e;
-
   }
+  border-radius: 3px;
+  padding: 0px 8px;
+  cursor: pointer;
+  line-height: 2em;
+  font-size: 1em;
+  margin-right: 1em;
+  background-color:white;
 `;
 
 const AnyOfSubProps = styled.div`
@@ -234,7 +238,7 @@ const SubmitNodeForm = ({node, properties, requireds, onChange, onChangeEnum, on
                }else{
                	  return(<StyledTextInput key={i} name={property} required={required} description={description} onChange={onChange}/>)}
 		})}
-		<SubmitFormButton type="submit" value="Submit"> Upload Form to Submit </SubmitFormButton>
+		<UploadFormButton type="submit" value="Submit"> Upload submission json from form </UploadFormButton>
 		</form>
 		</div>
 
@@ -265,6 +269,7 @@ class SubmitFormContainer extends Component {
 		}
 
 		let value = objectWithoutKey(this.state, 'chosenNode');
+		value = objectWithoutKey(value, 'fill_form');
 		value = json_to_string(value);
 		this.props.onUploadClick(value, 'application/json');
 		
@@ -329,8 +334,11 @@ class SubmitFormContainer extends Component {
 		return(
 			<div>
 			<form>
-				<SubmitFormButton htmlFor='fill_form'> Fill Out Form </SubmitFormButton>
+				<Toggle label="Use Form Submission" labelStyle={{width:''}} onToggle={this.onClick} />
+				{/*
+				<label htmlFor='fill_form'> Use Form Submission </label>	
 				<input type='checkbox' onClick={this.onClick} name='fill_form' style={{margin:'1em'}} ></input>
+			*/}
 				{this.state.fill_form && <Dropdown name='node_type' options={options} value={this.state.chosenNode} onChange={updateChosenNode} />}
 			</form>
 			{(this.state.chosenNode.value != null) && this.state.fill_form &&

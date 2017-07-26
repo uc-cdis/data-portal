@@ -29,6 +29,8 @@ import browserHistory from './history';
 import { theme, Box } from './theme';
 import { clearCounts } from './DataModelGraph/actions'
 import { required_certs } from './configs';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 
 let store;
@@ -79,6 +81,7 @@ async function init() {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
+        <MuiThemeProvider>
           <Router history={history}>
             <Route path='/login' component={Login} />
             <Route path='/' onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))} component={Submission} />
@@ -101,6 +104,7 @@ async function init() {
               onEnter={requireAuth(store, (nextState) => { return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))); })}
               component={QueryNode} />
           </Router>
+         </MuiThemeProvider> 
         </ThemeProvider>
       </Provider>,
     document.getElementById('root')
