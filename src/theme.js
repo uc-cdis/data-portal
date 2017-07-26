@@ -122,7 +122,7 @@ export const Bullet = styled.li`
   margin-left: 1em;
 `;
 
-export const SubmitButton = styled.label`
+export const UploadButton = styled.label`
   border: 1px solid darkgreen;
   display:inline-block;
   color: darkgreen;
@@ -136,7 +136,7 @@ export const SubmitButton = styled.label`
   }
   ${button};
 `;
-export const UploadButton = styled.a`
+export const SubmitButton = styled.a`
   border: 1px solid ${props => props.theme.color_primary};
   color: ${props => props.theme.color_primary};
   margin-bottom: 1em;
@@ -170,9 +170,8 @@ export const Input = styled.input`
 `;
 
 export const Label = styled.label`
-  margin: 3px;
+    margin: 3px;
     display:inline-block;
-    padding-left:3px;
  
 `;
 
