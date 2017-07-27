@@ -16,14 +16,12 @@ const SubmissionResult = styled.div`
   padding-top: 1em;
   margin-top: 1em;
 `;
-
 const Status = styled.div`
   ${button};
   background-color: ${props => (props.status == 'succeed: 200') ? '#168616' : 'gray'};
   color: white;
   margin-bottom: 1em;
 `;
-
 
 const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, onFileChange, dictionary }) => {
   let setValue = (event) => {
