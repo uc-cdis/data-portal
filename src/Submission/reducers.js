@@ -9,7 +9,7 @@ export const submission = (state={}, action) => {
     case 'RECEIVE_NODE_TYPES':
       return {...state, node_types: action.data};
     case 'RECEIVE_DICTIONARY':
-      return{ ...state, dictionary:action.data, node_types: Object.keys(action.data).filter( node => {return node.charAt(0) != '_'} )};
+      return{ ...state, dictionary:action.data, node_types: Object.keys(action.data).filter( node => {return node.charAt(0) != '_'})};
     case 'RECEIVE_AUTHORIZATION_URL':
       return {...state, oauth_url:action.url};
     case 'RECEIVE_SUBMISSION_LOGIN':

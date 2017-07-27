@@ -40,7 +40,7 @@ const ProjectSubmissionComponent = (props) => {
       {props.params.project != 'graphql' && <SubmitForm />}
       <SubmitTSV path={props.params.project} />
         {props.params.project != 'graphql' && (props.counts_search != undefined || props.counts_search != null)
-        && <DataModelGraph project={props.params.project}/> }    
+        && <DataModelGraph project={props.params.project}/> }
     </BoxWithNavAndTimeout>
   );
 };
