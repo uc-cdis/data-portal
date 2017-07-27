@@ -78,7 +78,6 @@ class EnumInput extends Component {
 			});
 			this.props.onChange(this.props.name, newValue);
 		};
-	
 		return(
 			<div>
 				<Label htmlFor={this.props.name}> {this.props.name}: </Label>
@@ -88,7 +87,6 @@ class EnumInput extends Component {
 				{this.props.required && <Required_Notification> {"*"} </Required_Notification>}
 				<br/> 
 			</div>
-	
 		)}};
 
 class OneOfInput extends Component {
@@ -108,8 +106,6 @@ class OneOfInput extends Component {
 	state = {
 		selectedOption: 'Text'
 	}
-
-
 
 	render(){
 		let radioChange = (newValue) =>{
@@ -163,7 +159,6 @@ class OneOfInput extends Component {
 				onChange={this.props.onChangeEnum} />
 				}
 				</div>
-
 			)}}
 };
 
@@ -214,7 +209,7 @@ const SubmitNodeForm = ({node,form, properties, requireds, onChange, onChangeEnu
                		options={node.properties[property]['enum']} 
                		onChange={onChangeEnum} 
                		required={required} 
-               		description={description} />)
+               		description={description}/>)
                } else if('oneOf' in node.properties[property]){
                	return(
                		<OneOfInput
@@ -244,7 +239,6 @@ const SubmitNodeForm = ({node,form, properties, requireds, onChange, onChangeEnu
 		<UploadFormButton type="submit" value="Submit"> Upload submission json from form </UploadFormButton>
 		</form>
 		</div>
-
 	)
 };
 
@@ -343,7 +337,7 @@ class SubmitFormContainer extends Component {
 			<div>
 			<form>
 				<Toggle label="Use Form Submission" labelStyle={{width:''}} onToggle={this.onFormToggle} />
-				{this.state.fill_form && <Dropdown name='node_type' options={options} value={this.state.chosenNode} onChange={updateChosenNode} />}
+				{this.state.fill_form && <Dropdown name='node_type' options={options} value={this.state.chosenNode} onChange={updateChosenNode}/>}
 			</form>
 			{(this.state.chosenNode.value != null) && this.state.fill_form &&
 			<div>
@@ -362,11 +356,8 @@ class SubmitFormContainer extends Component {
 			</div>
 			}
 			</div>
-			
 		)
-		
-	}
-
+  }
 };
 
 const mapStateToProps = (state) => {
