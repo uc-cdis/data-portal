@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import * as constants from "./constants";
 import { Link } from 'react-router';
-import { BoxWithNavAndTimeout } from '../component';
 
 const TableBullet = ({node, description})=>{
   return(

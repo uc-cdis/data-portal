@@ -2,7 +2,7 @@ import React from 'react';
 import { submissionapi_path } from './localconf';
 import { Box } from './theme';
 import Nav from './Nav/component';
-import { TimeoutPopup } from './Popup/component';
+import { AuthTimeoutPopup } from './Popup/component';
 
 export const get_submit_path = (project) => {
   let path = project.split('-');
@@ -35,35 +35,20 @@ export const predict_file_type = (data, file_type) => {
   return predict_type;
 }
 
-export const withBoxNav = (component) => {
-  return class extends React.Component {
-    constructor(props) {
-      super(props);
-    }
-    render() {
-      return (
-        <Box>
-          <Nav />
-          { component }
-        </Box>
-      )
-    }
+export const withBoxAndNav = (component) => {
+  (props) => {
+    <Box>
+      <Nav />
+      <component {...props} />
+    </Box>
   }
 };
 
-export const withBoxNavTimeout = (component) => {
-  return class extends React.Component {
-    constructor(props) {
-      super(props);
-    }
-    render() {
-      return (
-        <Box>
-          <Nav />
-          <TimeoutPopup />
-          { component }
-        </Box>
-      )
-    }
+export const withAuthTimeout = (component) => {
+  (props) => {
+    <div>
+      <AuthTimeoutPopup />
+      <component {...props} />
+    </div>
   }
 };
