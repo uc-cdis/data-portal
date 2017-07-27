@@ -38,13 +38,14 @@ const AnyOfSubProps = styled.div`
 	margin-left:50px;
 `;
 
-const TextInput = ({name, required, description, onChange}) =>{
+const TextInput = ({name, value, required, description, onChange}) =>{
+	console.log(value);
 	return(
 		<div>
 			<Label htmlFor={name}> {name}: </Label>
 			{description != '' && <Input_Description>{description}</Input_Description>}
 			<br />
-			<Input type="text" name={name} required={required} onChange={onChange}/>
+			<Input type="text" name={name} required={required} value={value ? value:""} onChange={onChange}/>
 			{required && <Required_Notification> {"*"} </Required_Notification>}
 			
 		</div>
@@ -96,6 +97,7 @@ class OneOfInput extends Component {
 
 	static propTypes = {
 		property: PropTypes.any,
+		value: PropTypes.any,
 		name: PropTypes.string,
 		value: PropTypes.string,
 		required: PropTypes.bool,
@@ -129,7 +131,7 @@ class OneOfInput extends Component {
 			)
 		} else if(this.props.property[0].type == 'string' && this.props.property[1].type == 'null'){
 			return(
-				<StyledTextInput name={this.props.name} required={this.props.required} description={this.props.description} onChange={this.props.onChange} />
+				<StyledTextInput name={this.props.name} value={this.props.value} required={this.props.required} description={this.props.description} onChange={this.props.onChange} />
 			)
 		}else{
 			return(
@@ -147,7 +149,8 @@ class OneOfInput extends Component {
 					</label>
 				{this.state.selectedOption == 'Number' && 
 				<StyledTextInput 
-				name={this.props.name} 
+				name={this.props.name}
+				value={this.props.value} 
 				description={this.props.description} 
 				required={this.props.required}
 				onChange={this.props.onChange}  />
@@ -166,7 +169,7 @@ class OneOfInput extends Component {
 			)}}
 };
 
-const AnyOfInput =({name, node,properties, requireds, onChange}) =>{
+const AnyOfInput =({name, values, node, properties, requireds, onChange}) =>{
 	//this is smelly code because it reuses logic from SubmitNodeForm, 
 	//I'd like to extract some of the code into another function
 
@@ -184,15 +187,15 @@ const AnyOfInput =({name, node,properties, requireds, onChange}) =>{
             description = ('term' in node.properties[property]) ? node.properties[property]['term']['description'] : '';
                }
         let required = (requireds.indexOf(property) > -1);
-		
+		//we use index 0 of values because AnyOfInput is hardcoded to be an array of length 1, an upcoming feature should be to add to this array
 		return(
-			<StyledTextInput key={i} name={property} required={required} description={description} onChange={onChangeAnyOfWrapper}/>)
+			<StyledTextInput key={i} name={property} value={values ? values[0][property]: ""} required={required} description={description} onChange={onChangeAnyOfWrapper}/>)
 	})}
 	</AnyOfSubProps>
 	</div>
 )};
 
-const SubmitNodeForm = ({node, properties, requireds, onChange, onChangeEnum, onChangeAnyOf, handleSubmit}) => {
+const SubmitNodeForm = ({node,form, properties, requireds, onChange, onChangeEnum, onChangeAnyOf, handleSubmit}) => {
 	
 	return(
 		<div>
@@ -217,7 +220,8 @@ const SubmitNodeForm = ({node, properties, requireds, onChange, onChangeEnum, on
                } else if('oneOf' in node.properties[property]){
                	return(
                		<OneOfInput
-               		key={i} 
+               		key={i}
+               		value={form[property]} 
                		property={node.properties[property]['oneOf']}
                		name={property}
                		value={property}
@@ -229,6 +233,7 @@ const SubmitNodeForm = ({node, properties, requireds, onChange, onChangeEnum, on
                	return(
                		<AnyOfInput
                		key={i}
+               		values={form[property]}
                		name={property} 
                		node={node.properties[property].anyOf[0].items}
                		properties={Object.keys(node.properties[property].anyOf[0].items.properties)}
@@ -236,7 +241,7 @@ const SubmitNodeForm = ({node, properties, requireds, onChange, onChangeEnum, on
                		onChange={onChangeAnyOf} /> 
                	)
                }else{
-               	  return(<StyledTextInput key={i} name={property} required={required} description={description} onChange={onChange}/>)}
+               	  return(<StyledTextInput key={i} name={property} value={form[property]} required={required} description={description} onChange={onChange}/>)}
 		})}
 		<UploadFormButton type="submit" value="Submit"> Upload submission json from form </UploadFormButton>
 		</form>
@@ -258,7 +263,13 @@ class SubmitFormContainer extends Component {
 	state = {
 		chosenNode:{value: null, label:""},
 		fill_form:false,
+		form: {}
 	}
+	onFormToggle = () =>{
+		this.setState({
+			'fill_form': !(this.state.fill_form)
+		});
+	};
 
 	handleSubmit = (event) => {
 		event.preventDefault();
@@ -268,11 +279,8 @@ class SubmitFormContainer extends Component {
   			return otherKeys;
 		}
 
-		let value = objectWithoutKey(this.state, 'chosenNode');
-		value = objectWithoutKey(value, 'fill_form');
-		value = json_to_string(value);
+		let value = json_to_string(this.state.form);
 		this.props.onUploadClick(value, 'application/json');
-		
   	};
 
   	onChangeAnyOf = (name, event, properties) =>{
@@ -280,19 +288,23 @@ class SubmitFormContainer extends Component {
   		const value = target.type === 'checkbox' ? target.checked : target.value;
   		const subname = target.name;
 
-  		if(this.state[name] == null){
+  		if(this.state.form[name] == null){
   			this.setState({
-  				[name]: [{[subname]: value}]
+  				form:{...this.state.form,
+  			  		[name]: [{[subname]: value}]
+  			  	}
   			});
-  		}else if(properties.every(prop => prop in this.state[name])){
+  		}else if(properties.every(prop => prop in this.state.form[name])){
   			this.setState({
-  				[name]: this.state[name].push({[subname]: value})
-  			});
+  				form:{...this.state.form,
+  			  		[name]: this.state.form[name].push({[subname]: value})
+  			  	}});
   		}else{
   			this.setState({
-  				[name]: [...this.state[name].slice(0,this.state[name].length-2),
-  					{...this.state[name][this.state[name].length-1], [subname]: value}]
-  			});
+  				form:{...this.state.form,
+  			  		[name]: [...this.state.form[name].slice(0,this.state.form[name].length-2),
+  			  		{...this.state.form[name][this.state.form[name].length-1], [subname]: value}]
+  			  	}});
   		}
   	};
 
@@ -301,20 +313,16 @@ class SubmitFormContainer extends Component {
   		const value = target.type === 'checkbox' ? target.checked : target.value;
   		const name = target.name;
   		this.setState({
-  			[name]: value
-  		});
+  			form:{...this.state.form, 
+  		  			[name]: value
+  		  		}});
 	};
 
 	onChangeEnum = (name, newValue) =>{
 		this.setState({
-			[name]: newValue.value
-		});
-	};
-
-	onClick = () =>{
-		this.setState({
-			'fill_form': !(this.state.fill_form)
-		});
+			form:{...this.state.form,
+					[name]: newValue.value
+				}});
 	};
 
 	render(){
@@ -326,7 +334,9 @@ class SubmitFormContainer extends Component {
 		let updateChosenNode = (newValue) =>{
 			this.setState({
 				chosenNode: newValue,
-				type: newValue.value,
+				form:{
+					type: newValue.value,
+				},
 			});
 		};
 
@@ -334,11 +344,7 @@ class SubmitFormContainer extends Component {
 		return(
 			<div>
 			<form>
-				<Toggle label="Use Form Submission" labelStyle={{width:''}} onToggle={this.onClick} />
-				{/*
-				<label htmlFor='fill_form'> Use Form Submission </label>	
-				<input type='checkbox' onClick={this.onClick} name='fill_form' style={{margin:'1em'}} ></input>
-			*/}
+				<Toggle label="Use Form Submission" labelStyle={{width:''}} onToggle={this.onFormToggle} />
 				{this.state.fill_form && <Dropdown name='node_type' options={options} value={this.state.chosenNode} onChange={updateChosenNode} />}
 			</form>
 			{(this.state.chosenNode.value != null) && this.state.fill_form &&
@@ -347,7 +353,8 @@ class SubmitFormContainer extends Component {
 			   <Required_Notification istext> * Denotes Required Property </Required_Notification>
 			   <br />
 			   <SubmitNodeForm 
-			   node={node}   
+			   node={node}
+			   form={this.state.form}   
 			   properties={Object.keys(node.properties).filter((prop) => node.systemProperties.indexOf(prop)<0)}
 			   requireds={('required' in node) ? node.required : []}
 			   onChange={this.onChange.bind(this)}
