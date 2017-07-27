@@ -46,8 +46,7 @@ const TextInput = ({name, value, required, description, onChange}) =>{
 			{description != '' && <Input_Description>{description}</Input_Description>}
 			<br />
 			<Input type="text" name={name} required={required} value={value ? value:""} onChange={onChange}/>
-			{required && <Required_Notification> {"*"} </Required_Notification>}
-			
+			{required && <Required_Notification> {"*"} </Required_Notification>}	
 		</div>
 	)
 };
@@ -163,7 +162,6 @@ class OneOfInput extends Component {
 				description={this.props.description}
 				onChange={this.props.onChangeEnum} />
 				}
-				
 				</div>
 
 			)}}
