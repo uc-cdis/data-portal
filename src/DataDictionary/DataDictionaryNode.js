@@ -81,7 +81,7 @@ const NodeTable = ({node}) => {
       <TableData first_cr> Unique Keys </TableData>
       <TableData right>{
         <ul>
-        {node['uniqueKeys'].map( (key, i) => <Bullet key={i}>{key.join(', ')}</Bullet> )} 
+        {node['uniqueKeys'].map( (key, i) => <Bullet key={i}>{key.join(', ')}</Bullet> )}
         </ul>
       }</TableData>
     </TableRow>
@@ -175,23 +175,20 @@ const DataDictionaryNodeType = ({params,submission}) =>{
     }
   }
   return (
-  <Box>
-    <Nav />
-    <h3> {node} </h3>
-    <Link to='/dd'>{'< top level dictionary'}</Link> 
+    <div>
+      <h3> {node} </h3>
+      <Link to='/dd'>{'< top level dictionary'}</Link>
 
-    <h4> Summary </h4>
+      <h4> Summary </h4>
       <NodeTable node={dictionary[node]} > </NodeTable>
 
-    <h4> Links </h4>
+      <h4> Links </h4>
       <LinkTable links={links} node = {node} />
 
-    <h4> Properties </h4>
+      <h4> Properties </h4>
       <PropertiesTable links={links} required={required} node ={dictionary[node]} >  </PropertiesTable>
-
-  </Box>
-
- )
+    </div>
+  )
 }
 
 const mapStateToProps = (state)=> {return {

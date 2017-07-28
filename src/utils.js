@@ -35,20 +35,20 @@ export const predict_file_type = (data, file_type) => {
   return predict_type;
 }
 
-export const withBoxAndNav = (component) => {
-  (props) => {
+export const withBoxAndNav = (Component) => {
+  return ({...props}) => (
     <Box>
       <Nav />
-      <component {...props} />
+      <Component {...props} />
     </Box>
-  }
+  )
 };
 
-export const withAuthTimeout = (component) => {
-  (props) => {
+export const withAuthTimeout = (Component) => {
+  return ({...props}) => (
     <div>
       <AuthTimeoutPopup />
-      <component {...props} />
+      <Component {...props} />
     </div>
-  }
+  )
 };
