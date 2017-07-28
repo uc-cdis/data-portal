@@ -100,12 +100,12 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
         <UploadButton onClick={onSubmitClickEvent}>Submit</UploadButton>
      }
      { (submission.file || path == 'graphql') &&
-      <AceEditor width="100%" height="200px" mode={submission.file_type=='text/tab-separated-values'? '' : 'json'} theme="kuroir" value={submission.file} onChange={onChange} id='uploaded'/>
+      <AceEditor width="100%" height="200px" style={{"marginBottom":"1em"}} mode={submission.file_type=='text/tab-separated-values'? '' : 'json'} theme="kuroir" value={submission.file} onChange={onChange} id='uploaded'/>
      }
      {submission.submit_result &&
       <SubmissionResult>
         <Status status={submission.submit_status}>{submission.submit_status}</Status>
-       <AceEditor width="100%" height="300px"  mode="json" theme="kuroir" readOnly={true} value={JSON.stringify(submission.submit_result, null, '    ')} />
+       <AceEditor width="100%" height="300px" style={{"marginBottom":"1em"}} mode="json" theme="kuroir" readOnly={true} value={JSON.stringify(submission.submit_result, null, '    ')} />
       </SubmissionResult>
      }
     </form>

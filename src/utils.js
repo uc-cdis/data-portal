@@ -25,12 +25,12 @@ export const predict_file_type = (data, file_type) => {
   let predict_type = file_type;
   let json_type = 'application/json';
   let tsv_type = 'text/tab-separated-values';
-
+  data = data.trim();
   if (data.indexOf('{') != -1 || data.indexOf('}') != -1) {
-     predict_type = json_type;
+     return json_type;
   }
   if (data.indexOf('\t') != -1) {
-    predict_type = tsv_type;
+    return tsv_type;
   }
   return predict_type;
 }

@@ -141,7 +141,7 @@ const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, 
     <div>
       <h3>browse <Link to={'/' + project}>{project}</Link> </h3>
       { popups.nodedelete_popup === true &&
-          <Popup message={'Are you sure you want to delete this node?'} error={json_to_string(query_nodes.delete_error)} code={json_to_string(query_nodes.query_node)} onConfirm={()=>onDeleteNode({project, id:query_nodes.stored_node_info})} onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({nodedelete_popup: false})}}/>
+          <Popup message={'Are you sure you want to delete this node?'} error={json_to_string(query_nodes.delete_error)} code={json_to_string(query_nodes.query_node)} onConfirm={()=>{onDeleteNode({project, id:query_nodes.stored_node_info}); onUpdatePopup({nodedelete_popup: false})}} onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({nodedelete_popup: false})}}/>
       }
       { popups.view_popup === true &&
         query_nodes.query_node &&

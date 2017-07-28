@@ -3,16 +3,24 @@ git:
   depth: 1
 node_js:
   - "7"
+
+cache:
+  directories:
+    - node_modules # NPM packages
+
 services:
     - docker
 
 install:
     - docker login quay.io -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
     - docker pull quay.io/cdis/bpa-data-portal:master
+    - npm install
 
 script:
+    - npm test
     - |
       set -e
+      git clean -f -fxd :/
       docker build --cache-from quay.io/cdis/bpa-data-portal:master --build-arg APP=bpa -t quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} .
       docker build --cache-from quay.io/cdis/bpa-data-portal:master --build-arg APP=edc --build-arg BASENAME="/portal/" -t quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//_} .
       docker build --cache-from quay.io/cdis/bpa-data-portal:master --build-arg APP=acct -t quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//_} .
