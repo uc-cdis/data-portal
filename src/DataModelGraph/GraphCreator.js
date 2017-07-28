@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import React from "react";
 
-function create_graph(nodes, edges, categories) {
+function create_graph(nodes, edges) {
   let min_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
   let min_y_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[1]))[0])
 
@@ -235,10 +235,10 @@ function create_graph(nodes, edges, categories) {
 
 export default class CreateGraph extends React.Component {
   componentDidMount() {
-    create_graph(this.props.nodes, this.props.edges, this.props.categories)
+    create_graph(this.props.nodes, this.props.edges)
   }
   componentDidUpdate() {
-    create_graph(this.props.nodes, this.props.edges, this.props.categories)
+    create_graph(this.props.nodes, this.props.edges)
   }
   render() {
     let nodes = this.props.nodes

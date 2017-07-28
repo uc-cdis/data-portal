@@ -18,7 +18,6 @@ const ToggleButton = styled.a`
   &:focus {
     color: black;
     border-color: black;
-
   }
 `;
 
@@ -151,31 +150,12 @@ class DataModelGraphComponent extends React.Component {
     }
   }
   render() {
-    let categories = Object.keys(this.props.dictionary).map((key) => {return this.props.dictionary[key];})
-      .reduce((acc, elem) => {
-        if (acc.indexOf(elem.category) === -1 && elem.category != undefined) {
-          acc.push(elem.category);
-        }
-      return acc;
-    }, []);
-    categories.sort(function(a, b) {
-      a = a.toLowerCase();
-      b = b.toLowerCase();
-      if (a < b) {
-        return -1;
-      } else if (a > b) {
-        return 1;
-      } else {
-        return 0;
-      }
-    })
-
     if (this.state.full_toggle) {
       if (this.state.full.nodes.length != 0 && 'count' in this.state.full.nodes[this.state.full.nodes.length-1]) {
         return (
           <div style={{position: "relative"}}>
             <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
-            <CreateGraph nodes={this.state.full.nodes} edges={this.state.full.edges} categories={categories}/>
+            <CreateGraph nodes={this.state.full.nodes} edges={this.state.full.edges}/>
           </div>
         );
       } 
@@ -184,7 +164,7 @@ class DataModelGraphComponent extends React.Component {
         return (
           <div style={{position: "relative"}}>
             <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
-            <CreateGraph nodes={this.state.compact.nodes} edges={this.state.compact.edges} categories={categories}/>
+            <CreateGraph nodes={this.state.compact.nodes} edges={this.state.compact.edges}/>
           </div>
         );
       }

@@ -1,9 +1,10 @@
 import React from 'react'
 import Nav from '../Nav/component.js'
-import {Box, cube, Table, TableData, TableRow, TableHead, Bullet} from '../theme.js'
+import {cube, Table, TableData, TableRow, TableHead, Bullet} from '../theme.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
+import CreateGraph from './GraphCreator';
 
 const LinkBullet = ({link})=>{
   let required = link.required == true ? 'Yes':'No'
@@ -201,9 +202,73 @@ const PropertiesTable = ({node, required, links}) =>{
 const DataDictionaryNodeType = ({params,submission}) =>{
   let node = params.node
   let dictionary = submission.dictionary
+
+  if (node == "graph") {
+    let nodes = [];
+
+    Object.keys(dictionary).forEach(function(key,index) {
+      if (dictionary[key].type == "object") {
+        let node = {
+          name: key,
+          category: dictionary[key].category,
+          properties: dictionary[key].properties,
+          required: dictionary[key].required
+        }
+        nodes.push(node);
+      } 
+    });
+
+    function exists_in_any_nodes(value, nodes) {
+      for (let i = 0; i < nodes.length; i++) {
+        if (nodes[i]["name"] == value) {
+          return 1; 
+        }
+      }
+      return 0;
+    }
+
+    let edges= [];
+    nodes.forEach(function(val,index) {
+      if (!val["name"].startsWith("_") && dictionary[val["name"]].links) {
+        for (let i = 0; i < dictionary[val["name"]].links.length; i++) {
+          if (dictionary[val["name"]].links[i].target_type) {
+            if (exists_in_any_nodes(val["name"], nodes) && exists_in_any_nodes(dictionary[val["name"]].links[i].target_type, nodes)) {
+              let edge = {
+                source: val["name"],
+                target: dictionary[val["name"]].links[i].target_type,
+              }
+              edges.push(edge);
+            }
+          }
+          if (dictionary[val["name"]].links[i].subgroup) {
+            for (let j = 0; j < dictionary[val["name"]].links[i].subgroup.length; j++) {
+              if (dictionary[val["name"]].links[i].subgroup[j].target_type) {
+                if (exists_in_any_nodes(val["name"], nodes) && exists_in_any_nodes(dictionary[val["name"]].links[i].subgroup[j].target_type, nodes)) {
+                  let edge = {
+                    source: val["name"],
+                    target: dictionary[val["name"]].links[i].subgroup[j].target_type,
+                  }
+                  edges.push(edge);
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+
+    return (
+    <div>
+      <h3> Data Dictionary Graph Viewer </h3>
+      <CreateGraph nodes={nodes} edges={edges} dictionary={dictionary}/>
+    </div>
+    )
+  }
+
   let links = [];
   let required = ('required' in dictionary[node]) ? dictionary[node].required : [];
-  for (var link of submission.dictionary[node].links){
+  for (var link of submission.dictionary[node].links) {
     if (link.name != undefined){
         links.push(link);
     }
