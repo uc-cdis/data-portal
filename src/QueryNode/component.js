@@ -3,14 +3,12 @@ import { Link } from 'react-router';
 import { json_to_string, get_submit_path } from '../utils'
 import { updatePopup } from '../actions';
 import { Popup } from '../Popup/component';
-import { BoxWithNavAndTimeout } from '../component'
 import Nav from '../Nav/component';
 import styled, { css } from 'styled-components';
 import { input, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { clearDeleteSession, fetchQueryNode, submitSearchForm, deleteNode, storeNodeInfo } from './actions';
 import { cube } from '../theme';
-import { Box } from '../theme';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
@@ -140,7 +138,7 @@ const Entities = ({value, project, onUpdatePopup, onStoreNodeInfo}) => {
 const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, onSearchFormSubmit, onUpdatePopup, onDeleteNode, onStoreNodeInfo, onClearDeleteSession}) => {
   let project = params.project;
   return  (
-    <BoxWithNavAndTimeout>
+    <div>
       <h3>browse <Link to={'/' + project}>{project}</Link> </h3>
       { popups.nodedelete_popup === true &&
           <Popup message={'Are you sure you want to delete this node?'} error={json_to_string(query_nodes.delete_error)} code={json_to_string(query_nodes.query_node)} onConfirm={()=>{onDeleteNode({project, id:query_nodes.stored_node_info}); onUpdatePopup({nodedelete_popup: false})}} onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({nodedelete_popup: false})}}/>
@@ -153,7 +151,7 @@ const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, 
       { query_nodes.search_status==='succeed: 200' &&
           Object.entries(query_nodes.search_result['data']).map((value) => { return (<Entities project={project} onStoreNodeInfo={onStoreNodeInfo} onUpdatePopup={onUpdatePopup} node_type={value[0]} key={value[0]} value={value[1]}/>)})
       }
-    </BoxWithNavAndTimeout>
+    </div>
   )
 };
 

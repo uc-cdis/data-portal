@@ -3,10 +3,8 @@ import { Form, FormError, RadioGroup, Radio } from 'react-form';
 import Nav from '../Nav/component.js'
 import { submitForm, updateForm } from './actions';
 import { connect } from 'react-redux';
-import { Box } from '../theme';
 import { QuestionItem, OptionBullet, SubmitButton, Tooltip } from './style';
 import * as constants from "./constants";
-import { BoxWithNavAndTimeout } from '../component';
 
 class Question extends Component {
   render() {
@@ -61,7 +59,7 @@ class CertificateComponent extends Component {
   }
   render() {
     return (
-      <BoxWithNavAndTimeout>
+      <div>
         <h4>{constants.title}</h4>
         <Form onSubmit={(values) => {this.props.onSubmitForm(values)}}
           validate={(values) => {return this.validateForm(values)}}
@@ -78,7 +76,7 @@ class CertificateComponent extends Component {
             )
           }}
         </Form>
-      </BoxWithNavAndTimeout>
+      </div>
     )
   }
 }

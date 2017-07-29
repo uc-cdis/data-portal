@@ -1,9 +1,7 @@
 import React from 'react';
-import Nav from '../Nav/component'
 import { json_to_string, get_submit_path } from '../utils'
 import { updatePopup } from '../actions';
 import { Popup, SavePopup } from '../Popup/component';
-import { BoxWithNavAndTimeout } from '../component'
 import { connect } from 'react-redux';
 import { fetchStorageAccess, createUser, createKey, deleteKey,
   requestDeleteKey, clearDeleteSession, clearCreationSession } from './actions';
@@ -48,7 +46,7 @@ const Entities = ({values, onUpdatePopup, onRequestDeleteKey}) => {
 const IdentityComponent = ({user, cloud_access, popups, onCreateUser, onCreateKey, onClearCreationSession, onUpdatePopup, onDeleteKey,
                              onRequestDeleteKey, onClearDeleteSession}) => {
   return  (
-    <BoxWithNavAndTimeout>
+    <div>
       {
         !cloud_access.access_key_pairs === undefined &&
         <div>
@@ -91,7 +89,7 @@ const IdentityComponent = ({user, cloud_access, popups, onCreateUser, onCreateKe
           (project) => user.project_access[project].indexOf('read-storage') != -1).map(
             (project, i) => <ProjectBullet key={i}>{project}</ProjectBullet>)}
       </ul>
-    </BoxWithNavAndTimeout>
+    </div>
   )
 };
 

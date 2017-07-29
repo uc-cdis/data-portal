@@ -1,10 +1,7 @@
 import React from 'react';
-import { Box } from '../theme';
-import Nav from '../Nav/component.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
-import { BoxWithNavAndTimeout } from '../component';
 
 const ProjectLink = styled(Link)`
   cursor: pointer;
@@ -26,18 +23,17 @@ const ProjectLink = styled(Link)`
 
 const SubmissionComponent = ({submission}) => {
   return (
-    <BoxWithNavAndTimeout>
+    <div>
       <h3>Submission projects</h3>
       <ul>
-        {submission.projects &&
+      {submission.projects &&
           <div>
-           {submission.projects.map((project) => {return <ProjectLink to={'/'+project} key={project}>{project}</ProjectLink>})}
+          {submission.projects.map((project) => {return <ProjectLink to={'/'+project} key={project}>{project}</ProjectLink>})}
           </div>
-        }
+      }
       </ul>
-    </BoxWithNavAndTimeout>
+    </div>
   )
-
 };
 
 const mapStateToProps = (state) => {

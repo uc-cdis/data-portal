@@ -3,11 +3,9 @@ import Nav from '../Nav/component.js'
 import { connect } from 'react-redux';
 import SubmitTSV from './submitTSV'
 import styled from 'styled-components';
-import { Box } from '../theme';
 import { Link } from 'react-router';
 import DataModelGraph from '../DataModelGraph/component';
 import { getCounts } from '../DataModelGraph/actions'
-import { BoxWithNavAndTimeout } from '../component';
 
 const Browse = styled(Link)`
   display: inline-block;
@@ -30,7 +28,7 @@ const ProjectSubmissionComponent = (props) => {
   }
 
   return (
-    <BoxWithNavAndTimeout>
+    <div>
       <Title>{props.params.project=='graphql' ? 'Query graph': props.params.project}</Title>
       { props.params.project != 'graphql' &&
         <Browse to={'/' + props.params.project + '/search'}>browse nodes</Browse>
@@ -38,7 +36,7 @@ const ProjectSubmissionComponent = (props) => {
       <SubmitTSV path={props.params.project} />
         {props.params.project != 'graphql' && (props.counts_search != undefined || props.counts_search != null)
         && <DataModelGraph project={props.params.project}/> }
-    </BoxWithNavAndTimeout>
+    </div>
   );
 };
 

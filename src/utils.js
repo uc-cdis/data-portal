@@ -1,7 +1,11 @@
+import React from 'react';
 import { submissionapi_path } from './localconf';
+import { Box } from './theme';
+import Nav from './Nav/component';
+import { AuthTimeoutPopup } from './Popup/component';
 
 export const get_submit_path = (project) => {
-  let path =project.split('-');
+  let path = project.split('-');
   let program_name = path[0];
   let project_code = path.slice(1).join('-');
   return submissionapi_path + '/' +  program_name + '/' + project_code;
@@ -22,11 +26,29 @@ export const predict_file_type = (data, file_type) => {
   let json_type = 'application/json';
   let tsv_type = 'text/tab-separated-values';
   data = data.trim();
-  if (data.indexOf('{') != -1 || data.indexOf('}') != -1){
+  if (data.indexOf('{') != -1 || data.indexOf('}') != -1) {
      return json_type;
   }
-  if (data.indexOf('\t') != -1){
+  if (data.indexOf('\t') != -1) {
     return tsv_type;
   }
   return predict_type;
 }
+
+export const withBoxAndNav = (Component) => {
+  return ({...props}) => (
+    <Box>
+      <Nav />
+      <Component {...props} />
+    </Box>
+  )
+};
+
+export const withAuthTimeout = (Component) => {
+  return ({...props}) => (
+    <div>
+      <AuthTimeoutPopup />
+      <Component {...props} />
+    </div>
+  )
+};
