@@ -1,4 +1,5 @@
 import React from 'react';
+import Relay from 'react-relay';
 import { dict } from './dictionary.js';
 import { persistStore, autoRehydrate } from 'redux-persist';
 import { render } from 'react-dom';
@@ -17,13 +18,14 @@ import Submission from './App/component';
 import ProjectSubmission from './Submission/component';
 import IdentityAccess from './IdentityAccess/component.js';
 import Certificate from './Certificate/component.js';
-import { loginSubmissionAPI, setProject } from './Submission/actions';
+import GraphQLQuery from "./GraphQLEditor/component";
+import { loginSubmissionAPI, setProject, loginAPI } from './Submission/actions';
 import { fetchDictionary } from './queryactions.js';
 import { loginCloudMiddleware, fetchStorageAccess } from './IdentityAccess/actions';
-import { Router, Route, Link } from 'react-router';
+import { Router, Route, Link, applyRouterMiddleware } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import 'react-select/dist/react-select.css';
-import { app, mock_store, dev } from './localconf.js';
+import { app, mock_store, dev, graphql_path } from './localconf.js';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from './history';
 import { theme, Box } from './theme';
@@ -32,6 +34,7 @@ import { required_certs } from './configs';
 import { withBoxAndNav, withAuthTimeout } from './utils';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import useRelay from 'react-router-relay'
 
 
 let store;
@@ -73,6 +76,13 @@ const NoMatch = () => (
   </div>
 );
 
+Relay.injectNetworkLayer(
+  new Relay.DefaultNetworkLayer(graphql_path,
+    {credentials: 'same-origin'})
+);
+
+const ViewerQueries = { viewer: () => Relay.QL`query { viewer }` }
+
 // render the app after the store is configured
 async function init() {
   const store = await configureStore();
@@ -83,11 +93,16 @@ async function init() {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
         <MuiThemeProvider>
-          <Router history={history}>
+          <Router history={history} environment={Relay.Store}
+                  render={applyRouterMiddleware(useRelay)}
+                  forceFetch>
             <Route path='/login' component={Login} />
-            <Route path='/'
-              onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
-              component={withBoxAndNav(withAuthTimeout(Submission))} />
+            <Route path='/' onEnter={requireAuth(store, () => store.dispatch(loginAPI()))}
+                   component={withBoxAndNav(withAuthTimeout(Submission))}
+                   queries={ViewerQueries} />
+            <Route path='/query'
+                   onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))}
+                   component={GraphQLQuery} />
             <Route path='/identity'
               onEnter={requireAuth(store, () => store.dispatch(loginCloudMiddleware()))}
               component={withBoxAndNav(withAuthTimeout(IdentityAccess))} />

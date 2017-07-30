@@ -1,7 +1,9 @@
 {
-  "presets": ["stage-0", "es2015", "react"],
+  "presets": ["stage-0", "es2015", "react", "react-app"],
   "plugins": [
     "dev-expression",
-    "transform-class-properties"
+    "transform-class-properties",
+    ["react-relay",
+      {"compat": true, "schema": "data/schema.graphql"}]
   ]
 }

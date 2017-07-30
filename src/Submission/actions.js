@@ -96,6 +96,19 @@ export const loginSubmissionAPI = () => {
   }
 };
 
+export const loginAPI = () => {
+  // Fetch projects, if unauthorized, login
+  return (dispatch, getState) => {
+    return dispatch(fetchOAuthURL(submissionapi_oauth_path)).then(()=>{
+      let url = getState().submission.oauth_url;
+      return dispatch(fetchWrapper({
+        path:url,
+        handler:receiveSubmissionLogin
+      }))})
+      .catch((error) => console.log(error));
+  }
+};
+
 export const receiveSubmissionLogin = ({status, data}) => {
   switch (status) {
     case 200:

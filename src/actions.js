@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import _ from 'underscore';
-import { required_certs, userapi_path, headers, basename, submissionapi_oauth_path } from './configs.js'
+import { required_certs, userapi_path, headers, basename, submissionapi_oauth_path, graphql_path } from './configs.js'
+import { fetchProjects, fetchDictionary }  from './queryactions';
 
 export const updatePopup = (state) => {
   return {
@@ -36,6 +37,25 @@ export const fetchWrapper = ({path, method='GET', body=null, handler, custom_hea
       dispatch(connectionError())
     })
   }
+};
+
+export const fetchGraphQL = (graphQLParams) => {
+  return fetch(graphql_path, {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(graphQLParams)
+  }).then(function (response) {
+    return response.text();
+  }).then(function (responseBody) {
+    try {
+      return JSON.parse(responseBody);
+    } catch (error) {
+      return responseBody;
+    }
+  });
 };
 
 export const handleResponse = (type) => {

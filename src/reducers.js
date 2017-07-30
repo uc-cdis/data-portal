@@ -8,6 +8,7 @@ import { login } from './Login/reducers';
 import { submission } from './Submission/reducers';
 import { query_nodes } from './QueryNode/reducers';
 import { popups } from './Popup/reducers';
+import { parameters } from './GraphQLEditor/reducers';
 
 const status = (state={}, action) => {
   switch (action.type){
@@ -41,13 +42,12 @@ const user = (state={}, action) => {
 export const removeDeletedNode = (state, id) =>{
   let search_result = state.search_result;
   console.log(search_result);
-  // graphql response should always be {data: {node_type: [ nodes ] }}
   let node_type = Object.keys(search_result['data'])[0];
   let entities = search_result['data'][node_type];
   search_result['data'][node_type] = entities.filter((entity) => entity['id'] !== id);
   return search_result;
 };
 
-const reducers = combineReducers({popups, login, user, status, submission, query_nodes, cloud_access, certificate, form: formReducer, routing:routerReducer});
+const reducers = combineReducers({popups, login, user, status, submission, query_nodes, cloud_access, certificate, parameters, form: formReducer, routing:routerReducer});
 
 export default reducers

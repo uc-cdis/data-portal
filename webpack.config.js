@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var nodeExternals = require('webpack-node-externals');
+var path = require('path');
 
 module.exports = {
   entry: ['babel-polyfill', './src/index.js'],
@@ -27,6 +28,10 @@ module.exports = {
         ],
       },
       {
+        test: /\.json$/,
+        loader: 'json'
+      },
+      {
         test: /\.less$/,
         loaders: [
           'style',
@@ -39,6 +44,10 @@ module.exports = {
         loader: "style!css"
       },
       {
+        test: /\.svg$/,
+        loader: 'file'
+      },
+      {
         test: /\.(png|jpg)$/,
         loaders: [
           'url'
@@ -46,8 +55,15 @@ module.exports = {
         query: {
           limit: 8192
         }
-      }
+      },
+      { test: /\.flow$/, loader: 'ignore-loader' }
     ]
+  },
+  resolve: {
+    alias: {
+      graphql:  path.resolve('./node_modules/graphql'),
+      react:    path.resolve('./node_modules/react')                // Same issue.
+    }
   },
   plugins: [
     new webpack.EnvironmentPlugin(['NODE_ENV']),
