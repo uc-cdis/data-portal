@@ -12,6 +12,10 @@ export const Title = styled.h2`
   margin-right: 0.5em;
 `;
 
+export const GraphBox = styled.div`
+  height: 100vh;
+`;
+
 let graphqlSchema = buildClientSchema(require('../../data/schema.json').data);
 let parameters = {};
 
@@ -25,7 +29,7 @@ const ProjectSubmissionComponent = (props) => {
 
   return (
     <div>
-      <div id="graphiql">
+      <GraphBox id="graphiql">
         <Title>Query graph</Title>
         <GraphiQL
           fetcher={fetchGraphQL}
@@ -34,7 +38,7 @@ const ProjectSubmissionComponent = (props) => {
           variables={parameters.variables}
           onEditQuery={editQuery}
           onEditVariables={editVariables} />
-      </div>
+      </GraphBox>
     </div>
   );
 };
