@@ -1,11 +1,8 @@
 import React from 'react';
+import { withBoxAndNav, withAuthTimeout } from '../utils';
 import Relay from 'react-relay'
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
-import Nav from '../Nav/component';
-import { Box } from '../theme';
-import {AuthTimeoutPopup} from "../Popup/component";
 
 const ProjectLink = styled(Link)`
   cursor: pointer;
@@ -31,30 +28,18 @@ class SubmissionComponent extends React.Component {
   };
   render () {
     return (
-      <Box>
-        <Nav />
-        <AuthTimeoutPopup />
+      <div>
         <h3>Submission projects</h3>
         <ul>
           {this.props.viewer.project.map((p)=> <ProjectLink to={'/'+p.project_id} key={p.project_id}>{p.project_id}</ProjectLink>)}
         </ul>
-      </Box>
+      </div>
     )
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    'submission': state.submission
-  }
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {};
-};
-
 let Submission = Relay.createContainer(
-  SubmissionComponent,
+  withBoxAndNav(withAuthTimeout(SubmissionComponent)),
   {
     fragments: {
       viewer: () => Relay.QL`
