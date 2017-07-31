@@ -12,9 +12,12 @@ A generic data portal that supports some basic interaction with [gdcapi](https:/
 npm install
 ```
 
-Then, update schema from gdcapi by running `npm run-script schema`. This command will update the latest schema that is used by Relay and GraphiQL. In local environment, this command can be run without paremeter. In production, an url to gdcapi should be specified as follow:
+Then, update schema from gdcapi by running `npm run-script schema`.
+This command will update the latest schema that is used by Relay and GraphiQL.
+Without parameter, it will point to the endpoint at local API (http://localhost:5000/v0/submission/getschema).
+Use the parameter to point to remote url (e.g. https://dev.bionimbus.org/api/v0/submission/getschema) as follow:
 ```
-npm run-script schema -- URL_TO_GDCAPI
+npm run-script schema -- https://dev.bionimbus.org/api/v0/submission/getschema
 ```
 
 ### Running

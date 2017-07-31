@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { BoxWithNavAndTimeout } from '../component';
 import { fetchGraphQL } from '../actions';
 import GraphiQL from 'graphiql';
 import { buildClientSchema } from 'graphql/utilities';
@@ -25,7 +24,7 @@ const ProjectSubmissionComponent = (props) => {
   };
 
   return (
-    <BoxWithNavAndTimeout>
+    <div>
       <div id="graphiql">
         <Title>Query graph</Title>
         <GraphiQL
@@ -36,7 +35,7 @@ const ProjectSubmissionComponent = (props) => {
           onEditQuery={editQuery}
           onEditVariables={editVariables} />
       </div>
-    </BoxWithNavAndTimeout>
+    </div>
   );
 };
 
