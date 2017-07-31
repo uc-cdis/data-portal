@@ -257,7 +257,6 @@ const DataDictionaryNodeType = ({params,submission}) =>{
       }
     });
 
-
     return (
     <div>
       <h3> Data Dictionary Graph Viewer </h3>
