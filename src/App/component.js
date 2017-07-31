@@ -3,6 +3,9 @@ import Relay from 'react-relay'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
+import Nav from '../Nav/component';
+import { Box } from '../theme';
+import {AuthTimeoutPopup} from "../Popup/component";
 
 const ProjectLink = styled(Link)`
   cursor: pointer;
@@ -28,12 +31,14 @@ class SubmissionComponent extends React.Component {
   };
   render () {
     return (
-      <div>
+      <Box>
+        <Nav />
+        <AuthTimeoutPopup />
         <h3>Submission projects</h3>
         <ul>
           {this.props.viewer.project.map((p)=> <ProjectLink to={'/'+p.project_id} key={p.project_id}>{p.project_id}</ProjectLink>)}
         </ul>
-      </div>
+      </Box>
     )
   }
 }

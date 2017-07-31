@@ -98,7 +98,7 @@ async function init() {
                   forceFetch>
             <Route path='/login' component={Login} />
             <Route path='/' onEnter={requireAuth(store, () => store.dispatch(loginAPI()))}
-                   component={withBoxAndNav(withAuthTimeout(Submission))}
+                   component={Submission}
                    queries={ViewerQueries} />
             <Route path='/query'
                    onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))}
