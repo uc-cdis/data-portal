@@ -1,5 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { withBoxAndNav, withAuthTimeout } from '../utils';
+import Relay from 'react-relay'
 import styled from 'styled-components';
 import { Link } from 'react-router';
 
@@ -21,31 +22,35 @@ const ProjectLink = styled(Link)`
   }
 `;
 
-const SubmissionComponent = ({submission}) => {
-  return (
-    <div>
-      <h3>Submission projects</h3>
-      <ul>
-      {submission.projects &&
-          <div>
-          {submission.projects.map((project) => {return <ProjectLink to={'/'+project} key={project}>{project}</ProjectLink>})}
-          </div>
-      }
-      </ul>
-    </div>
-  )
-};
-
-const mapStateToProps = (state) => {
-  return {
-    'submission': state.submission
+class SubmissionComponent extends React.Component {
+  static propTypes = {
+    viewer: React.PropTypes.object,
+  };
+  render () {
+    return (
+      <div>
+        <h3>Submission projects</h3>
+        <ul>
+          {this.props.viewer.project.map((p)=> <ProjectLink to={'/'+p.project_id} key={p.project_id}>{p.project_id}</ProjectLink>)}
+        </ul>
+      </div>
+    )
   }
-};
+}
 
-const mapDispatchToProps = (dispatch) => {
-  return {};
-};
-
-
-let Submission = connect(mapStateToProps, mapDispatchToProps)(SubmissionComponent);
+let Submission = Relay.createContainer(
+  withBoxAndNav(withAuthTimeout(SubmissionComponent)),
+  {
+    fragments: {
+      viewer: () => Relay.QL`
+          fragment on viewer {
+              project {
+                  project_id
+                  code
+              }
+          }
+      `,
+    },
+  },
+);
 export default Submission;

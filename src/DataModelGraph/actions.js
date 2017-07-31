@@ -15,7 +15,7 @@ export const getCounts = (type, project, dictionary) => {
   }
 
   type.forEach((element) => {
-    if (element != "program") {
+    if (element !== "program") {
       append_count_to_query(element);
     }
   });
@@ -53,13 +53,13 @@ export const getCounts = (type, project, dictionary) => {
     method: 'POST',
     handler: receiveCounts
   });
-}
+};
 
 export const clearCounts = () => {
   return {
     type: 'CLEAR_COUNTS'
   }
-}
+};
 
 let receiveCounts = ({status, data}) => {
   switch (status){

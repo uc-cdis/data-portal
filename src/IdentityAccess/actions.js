@@ -162,34 +162,3 @@ export const clearCreationSession = () => {
     type: 'CLEAR_CREATION_SESSION'
   }
 };
-
-// export const createUser = () => {
-//   let receiveCreatedUser = ({status, data}) => {
-//     console.log('receive delete');
-//     return receiveCreatedUserResponse({status, data})
-//   };
-//   return fetchWrapper({
-//     path: credential_path + 'aws_user',
-//     method: 'POST',
-//     handler: receiveCreatedUser
-//   })
-// };
-
-// export const receiveCreatedUserResponse = ({status, data}) => {
-//   return (dispatch) => {
-//     switch (status) {
-//       case 200:
-//         return dispatch({
-//           type: 'CREATE_USER_SUCCEED',
-//           user: data["user"]
-//         });
-//       default:
-//         dispatch({
-//           type: 'CREATE_FAIL',
-//           user: null,
-//           error: data['error']
-//         });
-//         return dispatch(updatePopup({save_key_popup: true}));
-//     }
-//   }
-// };
