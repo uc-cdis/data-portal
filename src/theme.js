@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import Select from 'react-select';
 
 export const theme = {
   main: 'mediumseagreen',
@@ -120,3 +121,57 @@ export const Bullet = styled.li`
   list-style-type: disc;
   margin-left: 1em;
 `;
+
+export const UploadButton = styled.label`
+  border: 1px solid darkgreen;
+  display:inline-block;
+  color: darkgreen;
+  margin-bottom: 1em;
+  &:hover,
+  &:active,
+  &:focus {
+    color: #2e842e;
+    border-color: #2e842e;
+
+  }
+  ${button};
+`;
+export const SubmitButton = styled.a`
+  border: 1px solid ${props => props.theme.color_primary};
+  color: ${props => props.theme.color_primary};
+  margin-bottom: 1em;
+  ${button};
+  &:hover,
+  &:active,
+  &:focus {
+    color: #c16161;
+    border-color: #c16161;
+
+  }
+`;
+
+export const Required_Notification = styled.span`
+  color:#d45252; 
+  margin:5px 0 0 0; 
+  display:inline;
+  float: ${props=>props.istext ? 'right': ''};
+`;
+
+export const Dropdown = styled(Select)`
+  width: 40%;
+  margin-right: 1em;
+  display:inline-block;
+`;
+
+export const Input = styled.input`
+  width: 400px;
+  height:20px;
+  padding: 15px 10px;
+`;
+
+export const Label = styled.label`
+    margin: 3px;
+    display:inline-block;
+ 
+`;
+

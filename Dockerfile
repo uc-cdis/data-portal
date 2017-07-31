@@ -1,6 +1,6 @@
 # To run: docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal 
 # To check running container: docker exec -it dataportal /bin/bash
- 
+
 FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -22,12 +22,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ARG APP=dev
 ARG BASENAME
 
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install
+RUN mkdir -p /data-portal && cp -a /tmp/node_modules /data-portal/
+
 COPY . /data-portal
 WORKDIR /data-portal
 RUN cp $APP-index.html index.html; \
     cp src/img/$APP-favicon.ico src/img/favicon.ico; \
-    npm install \
-    && NODE_ENV=production webpack \
+    NODE_ENV=production webpack \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
 CMD /usr/sbin/nginx -g 'daemon off;'

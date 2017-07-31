@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Nav from '../Nav/component.js'
 import { connect } from 'react-redux';
@@ -6,6 +7,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router';
 import DataModelGraph from '../DataModelGraph/component';
 import { getCounts } from '../DataModelGraph/actions'
+import SubmitForm from './submitForm';
 
 const Browse = styled(Link)`
   display: inline-block;
@@ -33,6 +35,7 @@ const ProjectSubmissionComponent = (props) => {
       { props.params.project != 'graphql' &&
         <Browse to={'/' + props.params.project + '/search'}>browse nodes</Browse>
       }
+      {props.params.project != 'graphql' && <SubmitForm />}
       <SubmitTSV path={props.params.project} />
         {props.params.project != 'graphql' && (props.counts_search != undefined || props.counts_search != null)
         && <DataModelGraph project={props.params.project}/> }

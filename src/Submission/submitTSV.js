@@ -7,36 +7,9 @@ import AceEditor from 'react-ace';
 import { uploadTSV, submitToServer, updateFileContent } from './actions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { button } from '../theme';
 import { getCounts } from '../DataModelGraph/actions';
+import { button, UploadButton, SubmitButton } from '../theme'
 
-export const SubmitButton = styled.label`
-  border: 1px solid darkgreen;
-  color: darkgreen;
-  margin-bottom: 1em;
-  &:hover,
-  &:active,
-  &:focus {
-    color: #2e842e;
-    border-color: #2e842e;
-
-  }
-  ${button};
-`;
-
-const UploadButton = styled.a`
-  border: 1px solid ${props => props.theme.color_primary};
-  color: ${props => props.theme.color_primary};
-  margin-bottom: 1em;
-  ${button};
-  &:hover,
-  &:active,
-  &:focus {
-    color: #c16161;
-    border-color: #c16161;
-
-  }
-`;
 
 const SubmissionResult = styled.div`
   border-top: 1px dashed ${props => props.theme.mid_gray};
@@ -95,9 +68,9 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
   return (
     <form>
       <input type='file' onChange={setValue} name='file-upload' style={{display:'none'}} id='file-upload'/>
-      <SubmitButton htmlFor='file-upload'>Upload file</SubmitButton>
+      <UploadButton htmlFor='file-upload'>Upload file</UploadButton>
      {submission.file &&
-        <UploadButton onClick={onSubmitClickEvent}>Submit</UploadButton>
+        <SubmitButton onClick={onSubmitClickEvent}>Submit</SubmitButton>
      }
      { (submission.file || path == 'graphql') &&
       <AceEditor width="100%" height="200px" style={{"marginBottom":"1em"}} mode={submission.file_type=='text/tab-separated-values'? '' : 'json'} theme="kuroir" value={submission.file} onChange={onChange} id='uploaded'/>
