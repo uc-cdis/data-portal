@@ -13,7 +13,7 @@ export const Title = styled.h2`
   margin-right: 0.5em;
 `;
 
-let graphqlSchema = buildClientSchema(require('../data/schema.json').data);
+let graphqlSchema = buildClientSchema(require('../../data/schema.json').data);
 let parameters = {};
 
 const ProjectSubmissionComponent = (props) => {

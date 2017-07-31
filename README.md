@@ -11,6 +11,13 @@ A generic data portal that supports some basic interaction with [gdcapi](https:/
 ```
 npm install
 ```
+
+Then, update schema from gdcapi by running `npm run-script schema`. This command will update the latest schema that is used by Relay and GraphiQL. In local environment, this command can be run without paremeter. In production, an url to gdcapi should be specified as follow:
+```
+npm run-script schema -- URL_TO_GDCAPI
+```
+
+### Running
 To run for development:
 ```
 export NODE_ENV=dev

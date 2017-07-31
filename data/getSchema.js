@@ -7,7 +7,7 @@ const {
 const path = require('path');
 
 const schemaPath = path.join(__dirname, 'schema');
-const SERVER = 'http://localhost:5000/v0/submission/getschema';
+const SERVER = process.argv.slice(2).pop() || 'http://localhost:5000/v0/submission/getschema';
 
 // Save JSON of full schema introspection for Babel Relay Plugin to use
 fetch(SERVER, {

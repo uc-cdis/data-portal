@@ -15,7 +15,7 @@ if (app === 'bpa') {
   submissionapi_oauth_path = hostname + 'api/v0/oauth2/';
   credential_path = hostname + 'middleware/aws/v0/';
   credential_oauth_path = hostname + 'middleware/oauth2/v0/';
-  graphql_path = hostname + 'api/v0/submission/graphql';
+  graphql_path = hostname + 'api/v0/submission/graphql/';
   appname = 'BPA Metadata Submission Portal';
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
