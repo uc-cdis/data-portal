@@ -2,22 +2,20 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 const {
   buildClientSchema,
-  introspectionQuery,
   printSchema,
-} = require('graphql/utilities');
+} = require('graphql/utilities/index');
 const path = require('path');
-const schemaPath = path.join(__dirname, 'schema');
 
+const schemaPath = path.join(__dirname, 'schema');
 const SERVER = 'http://localhost:5000/v0/submission/getschema';
 
 // Save JSON of full schema introspection for Babel Relay Plugin to use
 fetch(SERVER, {
-  method: 'POST',
+  method: 'GET',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
-  body: JSON.stringify({ query: introspectionQuery }),
 })
   .then(res => res.json())
   .then(schemaJSON => {

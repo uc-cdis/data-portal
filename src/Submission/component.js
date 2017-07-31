@@ -31,13 +31,13 @@ const ProjectSubmissionComponent = (props) => {
 
   return (
     <div>
-      <Title>{props.params.project=='graphql' ? 'Query graph': props.params.project}</Title>
-      { props.params.project != 'graphql' &&
+      <Title>{props.params.project}</Title>
+      {
         <Browse to={'/' + props.params.project + '/search'}>browse nodes</Browse>
       }
       {props.params.project != 'graphql' && <SubmitForm />}
       <SubmitTSV path={props.params.project} />
-        {props.params.project != 'graphql' && (props.counts_search != undefined || props.counts_search != null)
+        {(props.counts_search != undefined || props.counts_search != null)
         && <DataModelGraph project={props.params.project}/> }
     </div>
   );

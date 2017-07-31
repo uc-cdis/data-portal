@@ -1,5 +1,5 @@
 {
-  "presets": ["stage-0", "es2015", "react", "react-app"],
+  "presets": ["stage-0", ["es2015", { "modules": false }], "react", "react-app"],
   "plugins": [
     "dev-expression",
     "transform-class-properties",

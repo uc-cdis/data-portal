@@ -19,7 +19,7 @@ if (app === 'bpa') {
   appname = 'BPA Metadata Submission Portal';
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
-    {'icon': 'fui-search', 'link': '/graphql', 'color': '#daa520'},
+    {'icon': 'fui-search', 'link': '/query', 'color': '#daa520'},
     {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'}
   ];
   login = {
@@ -37,7 +37,7 @@ if (app === 'bpa') {
   appname = 'Environmental Data Commons Portal';
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
-    {'icon': 'fui-search', 'link': '/graphql', 'color': '#daa520'},
+    {'icon': 'fui-search', 'link': '/query', 'color': '#daa520'},
     {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'}
   ];
   login = {
@@ -55,7 +55,7 @@ if (app === 'bpa') {
   appname = 'ACCOuNT Data Commons Portal';
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
-    {'icon': 'fui-search', 'link': '/graphql', 'color': '#daa520'},
+    {'icon': 'fui-search', 'link': '/query', 'color': '#daa520'},
     {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'}
   ];
   login = {
@@ -85,7 +85,7 @@ if (app === 'bpa') {
   appname = 'Generic Data Commons Portal';
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#1d3674'},
-    {'icon': 'fui-search', 'link': '/graphql', 'color': '#ad7e1c'},
+    {'icon': 'fui-search', 'link': '/query', 'color': '#ad7e1c'},
     {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#1d3674'}
   ];
   login = {

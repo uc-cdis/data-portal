@@ -40,14 +40,14 @@ export const fetchWrapper = ({path, method='GET', body=null, handler, custom_hea
 };
 
 export const fetchGraphQL = (graphQLParams) => {
-  return fetch(graphql_path, {
+  let request = {
+    credentials: "same-origin",
+    headers: {...headers},
     method: 'post',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(graphQLParams)
-  }).then(function (response) {
+    body: JSON.stringify(graphQLParams),
+  };
+
+  return fetch(graphql_path, request).then(function (response) {
     return response.text();
   }).then(function (responseBody) {
     try {

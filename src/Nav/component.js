@@ -63,7 +63,6 @@ const NavComponent = ({user, onLogoutClick}) => (
     <header>
       <NavLeft>
         {nav_items.map((item, i) => <NavItem key={i} bgcolor={item.color} to={item.link} className={item.icon}></NavItem>)}
-
       </NavLeft>
       <NavRight>
         { user.username !== undefined &&
