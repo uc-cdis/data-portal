@@ -9,8 +9,8 @@ const ToggleButton = styled.a`
   color: darkslategray;
   ${button};
   position:absolute;
-  top:270px;
-  left:130px;
+  top:20px;
+  left:30px;
   z-index: 100;
   &:hover,
   &:active,
@@ -37,9 +37,6 @@ function create_graph(nodes, edges, radius=60, box_height_mult, box_width_mult, 
 
   let svg;
   svg = d3.select("#data_model_graph")
-  //.style("display", "block")
-  //.style("margin-left", "auto")
-  //.style("margin-right", "auto")
   .style("position", "absolute")
   .style("left", "50%")
     .style("transform", "translate(" + -width/2 + "px" + ",0)")
@@ -349,7 +346,7 @@ function add_tables(nodes, box_width, box_height, svg_width, svg_height) {
     .style('font-weight', (d) => d.required ? 'bold' : 'normal')
     .style('font-style', (d) => d.required ? 'italic' : 'normal')
     .selectAll("td")
-    .data(function(row) {return Object.entries(row).filter((x)=>x[0]!='required')}) //return Object.entries(row);})
+    .data(function(row) {return Object.entries(row).filter((x)=>x[0]!='required')}) 
     .enter()
     .append("td")
     .style('border', '1px solid black')
@@ -460,16 +457,6 @@ export default class CreateGraph extends React.Component {
       }
     }
 
-  let radius = 60
-  let box_height = radius * 4
-  let box_width = radius * 4
-
-  let max_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
-  let max_y_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[1]))[0])
-
-  let svg_width = max_x_pos * radius * 5
-  let svg_height = max_y_pos * radius * 5
-
     const divStyle = {
       width: "inherit",
       backgroundColor: "#f4f4f4",
@@ -478,11 +465,11 @@ export default class CreateGraph extends React.Component {
       position: "relative"
     }
     return (
-      <div style={{}}>
+      <div>
         <Link to={'/dd'}> Explore dictionary as a table </Link>
         <p style={{"fontSize": "75%", "marginTop": "1em"}}> <span style={{"fontWeight": "bold", "fontStyle": "italic"}}> Bold, italicized</span> properties are required</p>
-        <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
         <div style={divStyle} id="graph_wrapper">
+          <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
           <svg id="data_model_graph">
           </svg>
         </div>
