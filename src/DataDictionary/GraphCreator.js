@@ -9,8 +9,8 @@ const ToggleButton = styled.a`
   color: darkslategray;
   ${button};
   position:absolute;
-  top:90px;
-  left:20px;
+  top:270px;
+  left:130px;
   z-index: 100;
   &:hover,
   &:active,
@@ -32,11 +32,17 @@ function create_graph(nodes, edges, radius=60, box_height_mult, box_width_mult, 
   let box_height = radius * box_height_mult
   let box_width = radius * box_width_mult
 
+  d3.select("#graph_wrapper")
+    .style("height", height + "px")
+
   let svg;
   svg = d3.select("#data_model_graph")
-        .style("position", "relative")
-        .style("left", "50%")
-        .style("transform", "translateX(-50%)")
+  //.style("display", "block")
+  //.style("margin-left", "auto")
+  //.style("margin-right", "auto")
+  .style("position", "absolute")
+  .style("left", "50%")
+    .style("transform", "translate(" + -width/2 + "px" + ",0)")
         .attr("height", height)
         .attr("width", width)
   // Clear everything inside when re-rendering
@@ -280,26 +286,42 @@ function formatType(type) {
   }
 }
 
-function add_tables(nodes, box_width, box_height) {
-  let table_div = d3.select("#graph_wrapper").append('div')
+function add_tables(nodes, box_width, box_height, svg_width, svg_height) {
+  let table_div = d3.select("#graph_wrapper")
+  .append('div')
     .style("position", "absolute")
-    .style("top", "0px")
-    .style("left", "-214px") // Really bad magic number but I can't figure out how to center this in the div that wraps it D:
+    .style("left", "50%")
+    .style("top", "0")
+    .style("margin-left", svg_width/-2 + "px")
+    .style("width", svg_width + "px")
+    .style("height", svg_height + "px")
     .attr("id", "table_wrapper")
     .selectAll('div')
     .data(nodes)
     .enter()
   .append('div')
+    .style("position", "absolute")
+    .style("left", (d) => (d.fx - box_width/2 + 6) + "px")
+    .style("top", (d) => (d.fy - box_height/2 + 20) + "px")
+
+  table_div.append('a')
+    .attr("href", (d) => {
+      let uri = window.location.href
+      return uri.substring(0, uri.lastIndexOf('/')) + "/" + d.name
+    })
+    .attr("target", "_blank")
+    .style("font-size", 13 + "px")
+    .style("color", "black")
+    .style("font-weight", "bold")
+    .text((d) => d.name)
+
+  table_div.append('div')
     .style("width", box_width-12 + "px")
-    .style("height", box_height-25+ "px")
+    .style("height", box_height-30+ "px")
     .style("font-size", 12 + "px")
     .style("color", "black")
     .style("overflow", "auto")
-    .style("position", "absolute")
-    .style("left", (d) => (d.fx) + "px")
-    .style("top", (d) => (d.fy + 5) + "px")
-
-  table_div.append('table')
+  .append('table')
     .style('border-collapse', 'collapse')
     .style('border', '1px solid black')
     .style('width', '100%')
@@ -338,6 +360,7 @@ function add_tables(nodes, box_width, box_height) {
     d3.select("#".concat(nodes[n].name))
       .select("text")
       .attr("dy", -0.5*box_height+15)
+      .style("display", "none")
   }
 }
 
@@ -345,9 +368,16 @@ function create_full_graph(nodes, edges) {
   let radius = 60
   let box_height = radius * 4
   let box_width = radius * 4
+
+  let max_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
+  let max_y_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[1]))[0])
+
+  let svg_width = max_x_pos * radius * 5
+  let svg_height = max_y_pos * radius * 5
+  
   create_graph(nodes, edges, radius, 4, 4, 5)
 
-  add_tables(nodes, box_width, box_height)
+  add_tables(nodes, box_width, box_height, svg_width, svg_height)
 };
 
 function create_abridged_graph(nodes, edges) {
@@ -430,14 +460,25 @@ export default class CreateGraph extends React.Component {
       }
     }
 
+  let radius = 60
+  let box_height = radius * 4
+  let box_width = radius * 4
+
+  let max_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
+  let max_y_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[1]))[0])
+
+  let svg_width = max_x_pos * radius * 5
+  let svg_height = max_y_pos * radius * 5
+
     const divStyle = {
       width: "inherit",
       backgroundColor: "#f4f4f4",
       margin: "0 auto",
       textAlign: "center",
+      position: "relative"
     }
     return (
-      <div style={{position:'relative'}}>
+      <div style={{}}>
         <Link to={'/dd'}> Explore dictionary as a table </Link>
         <p style={{"fontSize": "75%", "marginTop": "1em"}}> <span style={{"fontWeight": "bold", "fontStyle": "italic"}}> Bold, italicized</span> properties are required</p>
         <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
