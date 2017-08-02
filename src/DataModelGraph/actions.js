@@ -1,18 +1,12 @@
 import { fetchWrapper } from '../actions';
 import { submissionapi_path } from '../localconf';
 
+/**
+ * getCounts: Compose and send a single graphql query to get a count of how 
+ *    many of each node and edge are in the current state
+ */
 export const getCounts = (type, project, dictionary) => {
   let query = "{";
-  function append_count_to_query(element) {
-    if (element !== "metaschema" && !element.startsWith('_')) {
-      query = query + `_${element}_count (project_id:\"${project}\"),`;
-    }
-  }
-  function append_link_to_query(source, dest, name) {
-    if (source !== "metaschema" && !source.startsWith('_')) {
-      query = query + `${source}_to_${dest}_link: ${source}(with_links: [\"${name}\"], first:1, project_id:\"${project}\"){submitter_id},`;
-    }
-  }
 
   type.forEach((element) => {
     if (element !== "program") {
@@ -53,6 +47,17 @@ export const getCounts = (type, project, dictionary) => {
     method: 'POST',
     handler: receiveCounts
   });
+
+  function append_count_to_query(element) {
+    if (element !== "metaschema" && !element.startsWith('_')) {
+      query = query + `_${element}_count (project_id:\"${project}\"),`;
+    }
+  }
+  function append_link_to_query(source, dest, name) {
+    if (source !== "metaschema" && !source.startsWith('_')) {
+      query = query + `${source}_to_${dest}_link: ${source}(with_links: [\"${name}\"], first:1, project_id:\"${project}\"){submitter_id},`;
+    }
+  }
 };
 
 export const clearCounts = () => {

@@ -1,19 +1,21 @@
 import React from 'react';
-import CreateGraph from './GraphCreator';
 import { connect } from 'react-redux';
 import { getCounts } from './actions';
 import { submissionapi_path } from '../localconf';
 import { button } from '../theme';
 import styled from 'styled-components';
 import { createNodesAndEdges } from '../utils'
+import { create_dm_graph } from './GraphCreator'
+import * as d3 from "d3";
 
-const ToggleButton = styled.a`
+export const ToggleButton = styled.a`
   border: 1px solid darkslategray;
   color: darkslategray;
   ${button};
   position:absolute;
   top:15px;
   left:20px;
+  z-index:100;
   &:hover,
   &:active,
   &:focus {
@@ -75,6 +77,84 @@ class DataModelGraphComponent extends React.Component {
       }
     } 
     return null;
+  }
+}
+
+class CreateGraph extends React.Component {
+  componentDidMount() {
+    create_dm_graph(this.props.nodes, this.props.edges)
+  }
+  componentDidUpdate() {
+    create_dm_graph(this.props.nodes, this.props.edges)
+  }
+  render() {
+    let nodes = this.props.nodes
+    let edges = this.props.edges
+
+    let root = "project"
+    let queue = [];
+    let layout = [];
+    let placed = [];
+    let layout_level = 0;
+
+    queue.push(root);
+    layout.push([root]);
+    while(queue.length != 0) {
+      let query = queue.shift(); //breadth first
+      for (let i = 0; i < edges.length; i++) {
+        if (edges[i].target == query || edges[i].target.name == query) {
+          if ((layout[layout_level].indexOf(query)) != -1) {
+            if (!layout[layout_level+1]) {
+              layout[layout_level+1] = [];
+            } 
+          } else {
+            layout_level += 1;
+            if (!layout[layout_level+1]) {
+              layout[layout_level+1] = [];
+            } 
+          }
+          queue.push(edges[i].source);
+          if ((layout[layout_level+1].indexOf(edges[i].source) == -1) && (placed.indexOf(edges[i].source) == -1)) {
+            layout[layout_level+1].push(edges[i].source);
+            placed.push(edges[i].source);
+          }
+        }
+      }
+      placed.push(query);
+    }
+
+    for (let i = 0; i < layout.length; i++) {
+      for (let j = 0; j < layout[i].length; j++) {
+        for (let k = 0; k < nodes.length; k++) {
+          if (nodes[k].name == layout[i][j]) {
+            nodes[k].position = [(j+1)/(layout[i].length+1),(i+1)/(layout.length+1)];
+            break;
+          }
+        }
+      }
+    }
+
+    let min_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
+    let min_y_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[1]))[0])
+
+    let padding = 25, 
+      radius = 60,
+      legend_width=125,
+      width = min_x_pos * radius * 2 + legend_width, 
+      height = min_y_pos * radius * 2 + padding;
+
+    const divStyle = {
+      height: height,
+      backgroundColor: "#f4f4f4",
+      marginLeft: "auto",
+      marginRight: "auto",
+    }
+    return (
+      <div style={divStyle}>
+        <svg id="data_model_graph" height={height} width={width}>
+        </svg>
+      </div>
+      );
   }
 }
 
