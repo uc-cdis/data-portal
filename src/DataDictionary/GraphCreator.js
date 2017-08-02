@@ -171,13 +171,6 @@ function create_graph(nodes, edges, radius=60, box_height_mult, box_width_mult, 
 
   function ticked() {
     link.attr("d", positionLink)
-      .attr("stroke-dasharray", function(d) {
-        if (d.exists != undefined && d.exists == 0) {
-          return "5, 5";
-        } else {
-          return "0";
-        }
-      });
 
     node
         .attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
@@ -355,7 +348,7 @@ function add_tables(nodes, box_width, box_height, svg_width, svg_height) {
 
   for (let n = 0; n < nodes.length; n++) {
     d3.select("#".concat(nodes[n].name))
-      .select("text")
+      .selectAll("text")
       .attr("dy", -0.5*box_height+15)
       .style("display", "none")
   }
@@ -374,6 +367,10 @@ function create_full_graph(nodes, edges) {
   
   create_graph(nodes, edges, radius, 4, 4, 5)
 
+  if (document.getElementById("table_wrapper") != null) {
+    document.getElementById("table_wrapper").remove();
+  }
+  
   add_tables(nodes, box_width, box_height, svg_width, svg_height)
 };
 
