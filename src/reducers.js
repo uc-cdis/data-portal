@@ -8,7 +8,7 @@ import { login } from './Login/reducers';
 import { submission } from './Submission/reducers';
 import { query_nodes } from './QueryNode/reducers';
 import { popups } from './Popup/reducers';
-import { parameters } from './GraphQLEditor/reducers';
+import { graphiql } from './GraphQLEditor/reducers';
 
 const status = (state={}, action) => {
   switch (action.type){
@@ -48,6 +48,6 @@ export const removeDeletedNode = (state, id) =>{
   return search_result;
 };
 
-const reducers = combineReducers({popups, login, user, status, submission, query_nodes, cloud_access, certificate, parameters, form: formReducer, routing:routerReducer});
+const reducers = combineReducers({popups, login, user, status, submission, query_nodes, cloud_access, certificate, graphiql, form: formReducer, routing:routerReducer});
 
 export default reducers

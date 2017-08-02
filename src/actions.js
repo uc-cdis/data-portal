@@ -43,7 +43,7 @@ export const fetchGraphQL = (graphQLParams) => {
   let request = {
     credentials: "same-origin",
     headers: {...headers},
-    method: 'post',
+    method: 'POST',
     body: JSON.stringify(graphQLParams),
   };
 
