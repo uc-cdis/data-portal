@@ -1,5 +1,5 @@
 import { fetchWrapper, fetchOAuthURL, updatePopup } from '../actions';
-import { credential_path, credential_oauth_path } from '../localconf';
+import { submissionapi_oauth_path, credential_cdis_path } from '../localconf';
 import moment from 'moment';
 
 export const loginCloudMiddleware = () => {
@@ -14,7 +14,7 @@ export const loginCloudMiddleware = () => {
       else {
         return Promise.resolve()
       }
-    }).then(()=>dispatch(fetchOAuthURL(credential_oauth_path))).then(()=>{
+    }).then(()=>dispatch(fetchOAuthURL(submissionapi_oauth_path))).then(()=>{
       let url = getState().user.oauth_url;
       return dispatch(fetchWrapper({
         path:url,
@@ -43,7 +43,7 @@ export const receiveUserAPILogin = ({status, data}) => {
 
 export const fetchStorageAccess = () => {
   return fetchWrapper({
-    path: credential_path,
+    path: credential_cdis_path,
     handler: receiveCloudAccess
   })
 };
@@ -82,13 +82,13 @@ export const requestDeleteKey = (access_key) => {
   }
 };
 
-export const deleteKey = (access_key) => {
+export const deleteKey = (access_key, keypairs_api) => {
   let receiveDeleteKey = ({status, data}) => {
     console.log('receive delete');
     return receiveDeleteKeyResponse({status, data, access_key})
   };
   return fetchWrapper({
-    path: credential_path + access_key,
+    path: keypairs_api + access_key,
     method: 'DELETE',
     handler: receiveDeleteKey
   })
@@ -120,13 +120,13 @@ export const clearDeleteSession = () => {
   }
 };
 
-export const createKey = () => {
+export const createKey = (keypairs_api) => {
   let receiveCreatedKey = ({status, data}) => {
     console.log('receive delete');
     return receiveCreatedKeyResponse({status, data})
   };
   return fetchWrapper({
-    path: credential_path,
+    path: keypairs_api,
     method: 'POST',
     handler: receiveCreatedKey
   })
