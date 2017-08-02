@@ -3,7 +3,7 @@ const mock_store = (process.env.MOCK_STORE && process.env.MOCK_STORE == 'true');
 
 const app = (process.env.APP === undefined) ? 'bpa' : process.env.APP;
 const basename = (process.env.BASENAME === undefined) ? '/' : process.env.BASENAME;
-let hostname, userapi_path, submissionapi_path, submissionapi_oauth_path, credential_path, credential_oauth_path, graphql_path, appname, nav_items, login;
+let hostname, userapi_path, submissionapi_path, submissionapi_oauth_path, credential_path, credential_oauth_path, graphql_path, graphql_schema_url, appname, nav_items, login;
 let required_certs = [];
 
 hostname = `${window.location.protocol}//${window.location.hostname}/`;
@@ -16,6 +16,7 @@ if (app === 'bpa') {
   credential_path = hostname + 'middleware/aws/v0/';
   credential_oauth_path = hostname + 'middleware/oauth2/v0/';
   graphql_path = hostname + 'api/v0/submission/graphql/';
+  graphql_schema_url = hostname + '/data/schema.json';
   appname = 'BPA Metadata Submission Portal';
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
@@ -34,6 +35,7 @@ if (app === 'bpa') {
   credential_path = hostname + 'middleware/aws/v0/';
   credential_oauth_path = hostname + 'middleware/oauth2/v0/';
   graphql_path = hostname + 'api/v0/submission/graphql/';
+  graphql_schema_url = hostname + '/data/schema.json';
   appname = 'Environmental Data Commons Portal';
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
@@ -52,6 +54,7 @@ if (app === 'bpa') {
   credential_path = hostname + 'middleware/aws/v0/';
   credential_oauth_path = hostname + 'middleware/oauth2/v0/';
   graphql_path = hostname + 'api/v0/submission/graphql/';
+  graphql_schema_url = hostname + '/data/schema.json';
   appname = 'ACCOuNT Data Commons Portal';
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
@@ -82,6 +85,7 @@ if (app === 'bpa') {
   credential_path = hostname + 'middleware/aws/v0/';
   credential_oauth_path = hostname + 'middleware/oauth2/v0/';
   graphql_path = hostname + 'api/v0/submission/graphql/';
+  graphql_schema_url = hostname + '/data/schema.json';
   appname = 'Generic Data Commons Portal';
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#1d3674'},
@@ -106,6 +110,7 @@ export {
   credential_path,
   credential_oauth_path,
   graphql_path,
+  graphql_schema_url,
   appname,
   nav_items,
   login,
