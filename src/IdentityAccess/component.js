@@ -3,16 +3,17 @@ import { json_to_string, get_submit_path } from '../utils'
 import { updatePopup } from '../actions';
 import { Popup, SavePopup } from '../Popup/component';
 import { connect } from 'react-redux';
-import { fetchStorageAccess, createUser, createKey, deleteKey,
+import { fetchStorageAccess, createKey, deleteKey,
   requestDeleteKey, clearDeleteSession, clearCreationSession } from './actions';
 import { Box } from '../theme';
 import { RequestButton, DeleteButton, ProjectBullet } from './style';
+import { credential_cdis_path } from '../localconf'
 import * as constants from "./constants";
 
-const Entity = ({value, onUpdatePopup, onRequestDeleteKey}) => {
+const Entity = ({keypairs_api, value, onUpdatePopup, onRequestDeleteKey}) => {
   let onDelete = () => {
-    onRequestDeleteKey(value.access_key);
-    onUpdatePopup({key_delete_popup: true});
+    onRequestDeleteKey(value.access_key, keypairs_api);
+    onUpdatePopup({key_delete_popup: true, keypairs_api: keypairs_api});
   };
   return (
     <tr>
@@ -26,7 +27,7 @@ const Entity = ({value, onUpdatePopup, onRequestDeleteKey}) => {
   )
 };
 
-const Entities = ({values, onUpdatePopup, onRequestDeleteKey}) => {
+const Entities = ({keypairs_api, values, onUpdatePopup, onRequestDeleteKey}) => {
   return (
     <table width="100%">
       <tbody>
@@ -35,16 +36,19 @@ const Entities = ({values, onUpdatePopup, onRequestDeleteKey}) => {
             <th>{constants.ACCESS_KEY_COLUMN}</th>
           }
         </tr>
-        {values.map( (item) => <Entity key={item.access_key} value={item}
-                                       onUpdatePopup={onUpdatePopup}
+        {values.map( (item) => <Entity key={item.access_key} keypairs_api={keypairs_api}
+                                       value={item} onUpdatePopup={onUpdatePopup}
                                        onRequestDeleteKey={onRequestDeleteKey}/> )}
       </tbody>
     </table>
   )
 };
 
-const IdentityComponent = ({user, cloud_access, popups, onCreateUser, onCreateKey, onClearCreationSession, onUpdatePopup, onDeleteKey,
+const IdentityComponent = ({user, cloud_access, popups, onCreateKey, onClearCreationSession, onUpdatePopup, onDeleteKey,
                              onRequestDeleteKey, onClearDeleteSession}) => {
+  let onCreate = () => {
+    onCreateKey(credential_cdis_path);
+  };
   return  (
     <div>
       {
@@ -60,7 +64,7 @@ const IdentityComponent = ({user, cloud_access, popups, onCreateUser, onCreateKe
             popups.key_delete_popup === true &&
             <Popup message={constants.CONFIRM_DELETE_MSG}
                    error={json_to_string(cloud_access.delete_error)}
-                   onConfirm={()=>onDeleteKey(cloud_access.request_delete_key)}
+                   onConfirm={()=>onDeleteKey(cloud_access.request_delete_key, popups.keypairs_api)}
                    onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({key_delete_popup: false})}}/>
           }
           {
@@ -73,10 +77,11 @@ const IdentityComponent = ({user, cloud_access, popups, onCreateUser, onCreateKe
                        filename={'accessKeys.txt'}
             />
           }
-          <RequestButton onClick={onCreateKey}>{constants.CREATE_ACCESS_KEY_BTN}</RequestButton>
+          <RequestButton onClick={onCreate}>{constants.CREATE_ACCESS_KEY_BTN}</RequestButton>
           {
             cloud_access.access_key_pairs &&
-            <Entities key='list_access_id' values={cloud_access.access_key_pairs}
+            <Entities key='list_access_id' keypairs_api={credential_cdis_path}
+                      values={cloud_access.access_key_pairs}
                       onUpdatePopup={onUpdatePopup}
                       onRequestDeleteKey={onRequestDeleteKey}
             />
@@ -86,7 +91,7 @@ const IdentityComponent = ({user, cloud_access, popups, onCreateUser, onCreateKe
       <ul>
         <h4>{constants.LIST_PROJECT_MSG}</h4>
         {Object.keys(user.project_access).filter(
-          (project) => user.project_access[project].indexOf('read-storage') != -1).map(
+          (project) => user.project_access[project].indexOf('read-storage') !== -1).map(
             (project, i) => <ProjectBullet key={i}>{project}</ProjectBullet>)}
       </ul>
     </div>
@@ -104,11 +109,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreateUser: (state) => dispatch(createUser()),
-    onCreateKey: (state) => dispatch(createKey()),
+    onCreateKey: (keypairs_api) => dispatch(createKey(keypairs_api)),
     onUpdatePopup: (state) => dispatch(updatePopup(state)),
-    onDeleteKey: (access_key) => dispatch(deleteKey(access_key)),
-    onRequestDeleteKey: (access_key) => dispatch(fetchStorageAccess()).then(
+    onDeleteKey: (access_key, keypairs_api) => dispatch(deleteKey(access_key, keypairs_api)),
+    onRequestDeleteKey: (access_key, keypairs_api) => dispatch(fetchStorageAccess(keypairs_api)).then(
         () => dispatch(requestDeleteKey(access_key))
     ),
     onClearDeleteSession: () => dispatch(clearDeleteSession()),

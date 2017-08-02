@@ -16,10 +16,11 @@ export const GraphBox = styled.div`
   height: 100vh;
 `;
 
-let graphqlSchema = buildClientSchema(require('../../data/schema.json').data);
+
 let parameters = {};
 
-const ProjectSubmissionComponent = (props) => {
+const ProjectSubmissionComponent = ({schema}) => {
+  let graphqlSchema = buildClientSchema(schema.data);
   let editQuery = (newQuery) => {
     parameters.query = newQuery;
   };
@@ -43,16 +44,14 @@ const ProjectSubmissionComponent = (props) => {
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
-    'parameters': state.parameters
-  };
+    'schema': state.graphiql.schema
+  }
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+});
 
 const GraphQLQuery = connect(mapStateToProps, mapDispatchToProps)(ProjectSubmissionComponent);
 export default GraphQLQuery;
