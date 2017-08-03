@@ -3,12 +3,15 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var nodeExternals = require('webpack-node-externals');
 var path = require('path');
 var basename = process.env.BASENAME || '/';
+// prefix for static file paths
+var path_prefix = basename.endsWith('/') ? basename.slice(0, basename.length-1) : basename
 var app = process.env.APP || 'dev';
 var title = {
   dev: 'Generic Data Commons',
   bpa: 'BPA Data Commons',
   edc: 'Environmental Data Commons',
   acct: 'ACCOuNT Data Commons',
+  gdc: 'Jamboree Data Access',
 }[app];
 
 
@@ -82,6 +85,7 @@ module.exports = {
     new webpack.EnvironmentPlugin(['BASENAME']),
     new HtmlWebpackPlugin({
       title: title,
+      basename: path_prefix,
       template: 'src/index.ejs',
       hash: true
     }),

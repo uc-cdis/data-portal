@@ -1,5 +1,6 @@
 node_modules/*
 src/bundle.js
 bundle.js
+index.html
 data/schema.graphql
 data/schema.json
