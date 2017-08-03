@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { button, UploadButton, SubmitButton, Required_Notification, Dropdown, Input, Label } from '../theme';
 import React, {Component, PropTypes} from 'react';
 import {json_to_string} from '../utils.js';
-import {Toggle} from 'material-ui'
+import {Toggle} from 'material-ui';
 
 
 const Input_Description = styled.span`
@@ -39,13 +39,12 @@ const AnyOfSubProps = styled.div`
 `;
 
 const TextInput = ({name, value, required, description, onChange}) =>{
-	console.log(value);
 	return(
 		<div>
 			<Label htmlFor={name}> {name}: </Label>
 			{description != '' && <Input_Description>{description}</Input_Description>}
 			<br />
-			<Input type="text" name={name} value={value ? value:""} onChange={onChange}/>
+			<Input type="text" name={name} value={value ? value:""} required={required} onChange={onChange}/>
 			{required && <Required_Notification> {"*"} </Required_Notification>}	
 		</div>
 	)
@@ -83,7 +82,7 @@ class EnumInput extends Component {
 				<Label htmlFor={this.props.name}> {this.props.name}: </Label>
 				{this.props.description != '' && <Input_Description>{this.props.description}</Input_Description>}
 				<br />
-				<Dropdown name={this.props.name} options={options} value={this.state.chosenEnum} onChange={onChangeEnumWrapper} />
+				<Dropdown name={this.props.name} options={options} required={this.props.required} value={this.state.chosenEnum} onChange={onChangeEnumWrapper} />
 				{this.props.required && <Required_Notification> {"*"} </Required_Notification>}
 				<br/> 
 			</div>
@@ -162,7 +161,7 @@ class OneOfInput extends Component {
 			)}}
 };
 
-const AnyOfInput =({name, values, node, properties, requireds, onChange}) =>{
+const AnyOfInput =({name, values, node, properties, required, requireds, onChange}) =>{
 	//this is smelly code because it reuses logic from SubmitNodeForm, 
 	//I'd like to extract some of the code into another function
 
@@ -172,17 +171,18 @@ const AnyOfInput =({name, values, node, properties, requireds, onChange}) =>{
 
 	return(
 	<div>
-	<h6>{name}:</h6>
+	<h6 style={{display:'inline'}}>{name}:</h6>
+  {required && <Required_Notification> {"*"} </Required_Notification>}
 	<AnyOfSubProps>
 	{properties.map( (property, i)=> {
 		let description = ('description' in node.properties[property]) ? node.properties[property]['description'] : '';
 		if (description == ''){
             description = ('term' in node.properties[property]) ? node.properties[property]['term']['description'] : '';
                }
-        let required = (requireds.indexOf(property) > -1);
+        let required_subprop = (requireds.indexOf(property) > -1);
 		//we use index 0 of values because AnyOfInput is hardcoded to be an array of length 1, an upcoming feature should be to add to this array
 		return(
-			<StyledTextInput key={i} name={property} value={values ? values[0][property]: ""} required={required} description={description} onChange={onChangeAnyOfWrapper}/>)
+			<StyledTextInput key={i} name={property} value={values ? values[0][property]: ""} required={required && required_subprop} description={description} onChange={onChangeAnyOfWrapper}/>)
 	})}
 	</AnyOfSubProps>
 	</div>
@@ -230,6 +230,7 @@ const SubmitNodeForm = ({node,form, properties, requireds, onChange, onChangeEnu
                		name={property} 
                		node={node.properties[property].anyOf[0].items}
                		properties={Object.keys(node.properties[property].anyOf[0].items.properties)}
+                  required={required}
                		requireds={requireds}
                		onChange={onChangeAnyOf} /> 
                	)
@@ -358,7 +359,7 @@ class SubmitFormContainer extends Component {
 			</div>
 		)
   }
-};
+  };
 
 const mapStateToProps = (state) => {
 	return{
@@ -368,8 +369,8 @@ const mapStateToProps = (state) => {
 
 
 const matpDispatchToProps = (dispatch) =>{
-		return{
-			onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
+    return{
+      onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
 		}
 };
 

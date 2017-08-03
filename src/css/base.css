@@ -46,3 +46,7 @@ ul {
     display: inline-block;
     float:right;
 }
+
+.Select.is-open {
+    z-index: 99 !important;
+}
