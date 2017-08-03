@@ -82,7 +82,7 @@ class EnumInput extends Component {
 				<Label htmlFor={this.props.name}> {this.props.name}: </Label>
 				{this.props.description != '' && <Input_Description>{this.props.description}</Input_Description>}
 				<br />
-				<Dropdown name={this.props.name} options={options} value={this.state.chosenEnum} onChange={onChangeEnumWrapper} />
+				<Dropdown name={this.props.name} options={options} required value={this.state.chosenEnum} onChange={onChangeEnumWrapper} />
 				{this.props.required && <Required_Notification> {"*"} </Required_Notification>}
 				<br/> 
 			</div>
