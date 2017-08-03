@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Nav from '../Nav/component.js'
 import { connect } from 'react-redux';
