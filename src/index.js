@@ -22,6 +22,7 @@ import GraphQLQuery from "./GraphQLEditor/component";
 import { loginSubmissionAPI, setProject, loginAPI } from './Submission/actions';
 import { fetchDictionary } from './queryactions.js';
 import { loginCloudMiddleware, fetchStorageAccess } from './IdentityAccess/actions';
+import { fetchSchema } from './GraphQLEditor/actions';
 import { Router, Route, Link, applyRouterMiddleware } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import 'react-select/dist/react-select.css';
@@ -101,7 +102,8 @@ async function init() {
                    component={(Submission)}
                    queries={ViewerQueries} />
             <Route path='/query'
-                   onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))}
+                   onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts()))
+                     .then(() => store.dispatch(fetchSchema())))}
                    component={withBoxAndNav(withAuthTimeout(GraphQLQuery))} />
             <Route path='/identity'
               onEnter={requireAuth(store, () => store.dispatch(loginCloudMiddleware()))}

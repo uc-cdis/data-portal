@@ -1,11 +1,8 @@
-export const parameters = (state={}, action) => {
+export const graphiql = (state={}, action) => {
   switch (action.type) {
-    case 'UPDATE_QUERY':
-      return {...state, query:action.query};
-    case 'UPDATE_VARIABLES':
-      return {...state, variables:action.variables};
+    case 'RECEIVE_SCHEMA_LOGIN':
+      return {...state, schema: action.schema};
     default:
       return state;
   }
 };
-
