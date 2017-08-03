@@ -19,7 +19,7 @@ import ProjectSubmission from './Submission/component';
 import IdentityAccess from './IdentityAccess/component.js';
 import Certificate from './Certificate/component.js';
 import GraphQLQuery from "./GraphQLEditor/component";
-import { loginSubmissionAPI, setProject, loginAPI } from './Submission/actions';
+import { loginSubmissionAPI, setProject } from './Submission/actions';
 import { fetchDictionary } from './queryactions.js';
 import { loginCloudMiddleware, fetchStorageAccess } from './IdentityAccess/actions';
 import { fetchSchema } from './GraphQLEditor/actions';
@@ -98,7 +98,7 @@ async function init() {
                   render={applyRouterMiddleware(useRelay)}
                   forceFetch>
             <Route path='/login' component={Login} />
-            <Route path='/' onEnter={requireAuth(store, () => store.dispatch(loginAPI()))}
+            <Route path='/' onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
                    component={(Submission)}
                    queries={ViewerQueries} />
             <Route path='/query'
