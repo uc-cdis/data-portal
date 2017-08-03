@@ -90,7 +90,6 @@ export const TableHead = styled.thead`
     -ms-user-select: none;
     user-select: none;
     text-align: left;
-    padding: 5px 5px;
 `;
 
 export const TableRow = styled.tr`

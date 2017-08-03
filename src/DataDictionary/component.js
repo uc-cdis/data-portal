@@ -24,11 +24,11 @@ const CategoryTable = ({dictionary, nodes, category}) =>{
   return (
     <Table>
       <TableHead>
-        <tr>
-          <td>
+        <TableRow>
+          <TableData first_cr>
           {category}
-          </td>
-        </tr>
+          </TableData>
+        </TableRow>
       </TableHead>
 
       <tbody>
