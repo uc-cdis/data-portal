@@ -44,7 +44,7 @@ const TextInput = ({name, value, required, description, onChange}) =>{
 			<Label htmlFor={name}> {name}: </Label>
 			{description != '' && <Input_Description>{description}</Input_Description>}
 			<br />
-			<Input type="text" name={name} value={value ? value:""} required onChange={onChange}/>
+			<Input type="text" name={name} value={value ? value:""} required={required} onChange={onChange}/>
 			{required && <Required_Notification> {"*"} </Required_Notification>}	
 		</div>
 	)
@@ -82,7 +82,7 @@ class EnumInput extends Component {
 				<Label htmlFor={this.props.name}> {this.props.name}: </Label>
 				{this.props.description != '' && <Input_Description>{this.props.description}</Input_Description>}
 				<br />
-				<Dropdown name={this.props.name} options={options} required value={this.state.chosenEnum} onChange={onChangeEnumWrapper} />
+				<Dropdown name={this.props.name} options={options} required={this.props.required} value={this.state.chosenEnum} onChange={onChangeEnumWrapper} />
 				{this.props.required && <Required_Notification> {"*"} </Required_Notification>}
 				<br/> 
 			</div>

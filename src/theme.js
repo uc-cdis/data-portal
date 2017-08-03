@@ -151,7 +151,7 @@ export const SubmitButton = styled.a`
 `;
 
 export const Required_Notification = styled.span`
-  color:#d45252;    
+  color:#d45252;
   margin:5px 0 0 0; 
   display:inline;
   float: ${props=>props.istext ? 'right': ''};
