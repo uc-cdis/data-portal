@@ -44,7 +44,7 @@ const TextInput = ({name, value, required, description, onChange}) =>{
 			<Label htmlFor={name}> {name}: </Label>
 			{description != '' && <Input_Description>{description}</Input_Description>}
 			<br />
-			<Input type="text" name={name} value={value ? value:""} onChange={onChange}/>
+			<Input type="text" name={name} value={value ? value:""} required onChange={onChange}/>
 			{required && <Required_Notification> {"*"} </Required_Notification>}	
 		</div>
 	)
