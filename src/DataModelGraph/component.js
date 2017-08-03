@@ -1,123 +1,29 @@
 import React from 'react';
-import CreateGraph from './GraphCreator';
 import { connect } from 'react-redux';
 import { getCounts } from './actions';
 import { submissionapi_path } from '../localconf';
 import { button } from '../theme';
 import styled from 'styled-components';
+import { createNodesAndEdges } from '../utils'
+import { create_dm_graph } from './GraphCreator'
+import * as d3 from "d3";
 
-const ToggleButton = styled.a`
+export const ToggleButton = styled.a`
   border: 1px solid darkslategray;
   color: darkslategray;
   ${button};
   position:absolute;
   top:15px;
   left:20px;
+  z-index:100;
   &:hover,
   &:active,
   &:focus {
     color: black;
     border-color: black;
-
   }
 `;
 
-function createNodesAndEdges(props, create_all) {
-  let dictionary = props.dictionary;
-  let nodes = [];
-
-  let nodes_to_hide = ["program"];
-
-  Object.keys(dictionary).forEach(function(key,index) {
-    if (dictionary[key].type == "object" && !nodes_to_hide.includes(key)) {
-      let count = props.counts_search["_".concat(key).concat("_count")];
-      if (create_all || (!create_all && count != 0)) {
-        let node = {
-          name: key,
-          category: dictionary[key].category,
-          count: count,
-        }
-        nodes.push(node);
-      } 
-    }
-  });
-
-  function exists_in_any_nodes(value, nodes) {
-    for (let i = 0; i < nodes.length; i++) {
-      if (nodes[i]["name"] == value) {
-        return 1; 
-      }
-    }
-    return 0;
-  }
-
-  let edges= [];
-  nodes.forEach(function(val,index) {
-    if (!val["name"].startsWith("_") && dictionary[val["name"]].links) {
-      for (let i = 0; i < dictionary[val["name"]].links.length; i++) {
-        if (dictionary[val["name"]].links[i].target_type) {
-          if (nodes_to_hide.includes(dictionary[val["name"]].links[i].target_type) || nodes_to_hide.includes(val["name"])) {
-            continue;
-          } else if (props.links_search[val["name"] + "_to_" + dictionary[val["name"]].links[i].target_type + "_link"] == 0) {
-            if (create_all) {
-              let edge = {
-                source: val["name"],
-                target: dictionary[val["name"]].links[i].target_type,
-                exists: 0
-              }
-              edges.push(edge);
-            }
-            continue;
-          }
-          else if (exists_in_any_nodes(val["name"], nodes) && exists_in_any_nodes(dictionary[val["name"]].links[i].target_type, nodes)) {
-            let edge = {
-              source: val["name"],
-              target: dictionary[val["name"]].links[i].target_type,
-            }
-            if (create_all) {
-              edge.exists = 1
-            }
-            edges.push(edge);
-          }
-        }
-        if (dictionary[val["name"]].links[i].subgroup) {
-          for (let j = 0; j < dictionary[val["name"]].links[i].subgroup.length; j++) {
-            if (dictionary[val["name"]].links[i].subgroup[j].target_type) {
-              if (nodes_to_hide.includes(dictionary[val["name"]].links[i].subgroup[j].target_type) || nodes_to_hide.includes(val["name"])) {
-                continue;
-              } else if (props.links_search[val["name"] + "_to_" + dictionary[val["name"]].links[i].subgroup[j].target_type + "_link"] == 0) {
-                if (create_all) {
-                  let edge = {
-                    source: val["name"],
-                    target: dictionary[val["name"]].links[i].subgroup[j].target_type,
-                    exists: 0
-                  }
-                  edges.push(edge);
-                }
-                continue;
-              }
-              else if (exists_in_any_nodes(val["name"], nodes) && exists_in_any_nodes(dictionary[val["name"]].links[i].subgroup[j].target_type, nodes)) {
-                let edge = {
-                  source: val["name"],
-                  target: dictionary[val["name"]].links[i].subgroup[j].target_type,
-                }
-                if (create_all) {
-                  edge.exists = 1
-                }
-                edges.push(edge);
-              }
-            }
-          }
-        }
-      }
-    }
-  });
-
-  return {
-    nodes: nodes,
-    edges: edges
-  };
-}
 
 class DataModelGraphComponent extends React.Component {
   constructor(props) {
@@ -151,31 +57,12 @@ class DataModelGraphComponent extends React.Component {
     }
   }
   render() {
-    let categories = Object.keys(this.props.dictionary).map((key) => {return this.props.dictionary[key];})
-      .reduce((acc, elem) => {
-        if (acc.indexOf(elem.category) === -1 && elem.category != undefined) {
-          acc.push(elem.category);
-        }
-      return acc;
-    }, []);
-    categories.sort(function(a, b) {
-      a = a.toLowerCase();
-      b = b.toLowerCase();
-      if (a < b) {
-        return -1;
-      } else if (a > b) {
-        return 1;
-      } else {
-        return 0;
-      }
-    })
-
     if (this.state.full_toggle) {
       if (this.state.full.nodes.length != 0 && 'count' in this.state.full.nodes[this.state.full.nodes.length-1]) {
         return (
           <div style={{position: "relative"}}>
             <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
-            <CreateGraph nodes={this.state.full.nodes} edges={this.state.full.edges} categories={categories}/>
+            <CreateGraph nodes={this.state.full.nodes} edges={this.state.full.edges}/>
           </div>
         );
       } 
@@ -184,12 +71,90 @@ class DataModelGraphComponent extends React.Component {
         return (
           <div style={{position: "relative"}}>
             <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
-            <CreateGraph nodes={this.state.compact.nodes} edges={this.state.compact.edges} categories={categories}/>
+            <CreateGraph nodes={this.state.compact.nodes} edges={this.state.compact.edges}/>
           </div>
         );
       }
     } 
     return null;
+  }
+}
+
+class CreateGraph extends React.Component {
+  componentDidMount() {
+    create_dm_graph(this.props.nodes, this.props.edges)
+  }
+  componentDidUpdate() {
+    create_dm_graph(this.props.nodes, this.props.edges)
+  }
+  render() {
+    let nodes = this.props.nodes
+    let edges = this.props.edges
+
+    let root = "project"
+    let queue = [];
+    let layout = [];
+    let placed = [];
+    let layout_level = 0;
+
+    queue.push(root);
+    layout.push([root]);
+    while(queue.length != 0) {
+      let query = queue.shift(); //breadth first
+      for (let i = 0; i < edges.length; i++) {
+        if (edges[i].target == query || edges[i].target.name == query) {
+          if ((layout[layout_level].indexOf(query)) != -1) {
+            if (!layout[layout_level+1]) {
+              layout[layout_level+1] = [];
+            } 
+          } else {
+            layout_level += 1;
+            if (!layout[layout_level+1]) {
+              layout[layout_level+1] = [];
+            } 
+          }
+          queue.push(edges[i].source);
+          if ((layout[layout_level+1].indexOf(edges[i].source) == -1) && (placed.indexOf(edges[i].source) == -1)) {
+            layout[layout_level+1].push(edges[i].source);
+            placed.push(edges[i].source);
+          }
+        }
+      }
+      placed.push(query);
+    }
+
+    for (let i = 0; i < layout.length; i++) {
+      for (let j = 0; j < layout[i].length; j++) {
+        for (let k = 0; k < nodes.length; k++) {
+          if (nodes[k].name == layout[i][j]) {
+            nodes[k].position = [(j+1)/(layout[i].length+1),(i+1)/(layout.length+1)];
+            break;
+          }
+        }
+      }
+    }
+
+    let min_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
+    let min_y_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[1]))[0])
+
+    let padding = 25, 
+      radius = 60,
+      legend_width=125,
+      width = min_x_pos * radius * 2 + legend_width, 
+      height = min_y_pos * radius * 2 + padding;
+
+    const divStyle = {
+      height: height,
+      backgroundColor: "#f4f4f4",
+      marginLeft: "auto",
+      marginRight: "auto",
+    }
+    return (
+      <div style={divStyle}>
+        <svg id="data_model_graph" height={height} width={width}>
+        </svg>
+      </div>
+      );
   }
 }
 

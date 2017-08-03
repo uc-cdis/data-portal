@@ -1,22 +1,27 @@
 import * as d3 from "d3";
 import React from "react";
+import { color, legend_creator, add_arrows, add_links, calculate_position } from "../utils"
 
-function create_graph(nodes, edges, categories) {
-  let min_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
-  let min_y_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[1]))[0])
+/**
+ * create_dm_graph: Creates a Data Model graph (oval nodes).
+ *    Needs position as property of each node (as fraction of 1 e.g. [0.5, 0.1] 
+ *    for placement at (0.5*svg_width, 0.1*svg_height))
+ */
+export function create_dm_graph(nodes, edges) {
+  let max_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
+  let max_y_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[1]))[0])
 
   let padding = 25, 
     radius = 60,
     legend_width=125,
-    width = min_x_pos * radius * 2 + legend_width, 
-    height = min_y_pos * radius * 2;
+    width = max_x_pos * radius * 2 + legend_width, 
+    height = max_y_pos * radius * 2;
 
   let svg;
   svg = d3.select("#data_model_graph")
         .style("display", "block")
         .style("margin-left", "auto")
         .style("margin-right", "auto")
-        .attr("border", 1)
   // Clear everything inside when re-rendering
   svg.selectAll("*").remove();
 
@@ -26,52 +31,13 @@ function create_graph(nodes, edges, categories) {
   let legend = svg.append("g")
     .attr("transform", "translate(" + (width-legend_width) + "," + padding + ")");
 
-  let defs = graph.append('svg:defs');
-  defs.append('svg:marker')
-    .attr('id', 'end-arrow')
-    .attr('viewBox', '0 -5 10 10')
-    .attr('fill', 'darkgray')
-    .attr('refX', 0)
-    .attr('refY', 0)
-    .attr('markerWidth', 6)
-    .attr('markerHeight', 6)
-    .attr('orient', 'auto')
-    .append('svg:path')
-      .attr('d', 'M0,-5L10,0L0,5');
+  let link = add_links(graph, edges)
 
-  let color = {
-    "administrative": d3.schemeCategory20[12],
-    "clinical": d3.schemeCategory20[11],
-    "biospecimen": d3.schemeCategory20[16],
-    "metadata_file": d3.schemeCategory20b[14],
-    "index_file": d3.schemeCategory20[18],
-    "notation": d3.schemeCategory20[19],
-    "data_file": d3.schemeCategory20[17],
-  }
+  add_arrows(graph)
 
-  let simulation = d3.forceSimulation()
-      .force("link", d3.forceLink().id(function(d) { return d.name; }).strength(0.2))
-      .force("collision", d3.forceCollide(radius*1.1));
-
-  let link = graph.append("g")
-    .selectAll("path")
-    .data(edges)
-    .enter().append("path")
-      .attr("stroke-width", 2)
-      .attr("marker-mid", "url(#end-arrow)")
-      .attr("stroke", "darkgray")
-      .attr("fill", "none");
-
-  // Calculate the appropriate position of each node on the graph
-  let fy_vals = []; 
-  for (let i = 0; i < nodes.length; i++) {
-    nodes[i].fx = nodes[i].position[0]*width;
-    nodes[i].fy = nodes[i].position[1]*height;
-    if (fy_vals.indexOf(nodes[i].fy) == -1) {
-      fy_vals.push(nodes[i].fy);
-    }
-  }
-  let num_rows = fy_vals.length;
+  let calc_pos_obj = calculate_position(nodes, width, height);
+  let num_rows = calc_pos_obj.fy_vals_length;
+  nodes = calc_pos_obj.nodes;
 
   let unclickable_nodes = ['program', 'project']
   let node_types = nodes.map((node) => node.name)
@@ -82,7 +48,13 @@ function create_graph(nodes, edges, categories) {
     .data(nodes)
     .enter().append("g")
       .classed("gnode", true)
-      .style('cursor', 'pointer')
+      .style('cursor', function(d) {
+        if (unclickable_nodes.indexOf(d.name) == -1) {
+          return 'pointer'
+        } else {
+          return ''
+        }
+      })
       .attr("id", function(d) {return d.name})
       .on('click', function(d) {
         for (let i = 0; i < nodes_for_query.length; i++) {
@@ -92,26 +64,6 @@ function create_graph(nodes, edges, categories) {
           }
         }
       });
-
-  // Find all unique categories 
-  let unique_categories_array = nodes.reduce((acc, elem) => {
-    if (acc.indexOf(elem.category) === -1) {
-      acc.push(elem.category);
-    }
-    return acc;
-  }, []);
-  unique_categories_array.sort(function(a, b) {
-      a = a.toLowerCase();
-      b = b.toLowerCase();
-      if (a < b) {
-        return -1;
-      } else if (a > b) {
-        return 1;
-      } else {
-        return 0;
-      }
-    }
-  )
 
   // Add nodes to graph
   node.append("ellipse")
@@ -164,6 +116,9 @@ function create_graph(nodes, edges, categories) {
       }
     });
 
+  let simulation = d3.forceSimulation()
+      .force("link", d3.forceLink().id(function(d) { return d.name; }))
+
   // Put the nodes and edges in the correct spots
   simulation
       .nodes(nodes)
@@ -209,105 +164,5 @@ function create_graph(nodes, edges, categories) {
     }
   }
 
-  let legend_font_size = "0.9em"
-  //Make Legend
-  legend.selectAll("text")
-    .data(unique_categories_array)
-    .enter().append("text")
-    .attr("x", legend_width/2)
-    .attr("y", function(d, i) {
-      return (1.5*(2.5+i))+"em";
-    })
-    .attr("text-anchor", "middle")
-    .attr("fill", function(d) { return color[d]})
-    .style("font-size", legend_font_size)
-    .text(function(d) {return d});
-
-  legend.append("text")
-    .attr("x", legend_width/2)
-    .attr("y", 2 +"em")
-    .attr("text-anchor", "middle")
-    .text("Categories")
-    .style("font-size", legend_font_size)
-    .style("text-decoration", "underline");
-
-};
-
-export default class CreateGraph extends React.Component {
-  componentDidMount() {
-    create_graph(this.props.nodes, this.props.edges, this.props.categories)
-  }
-  componentDidUpdate() {
-    create_graph(this.props.nodes, this.props.edges, this.props.categories)
-  }
-  render() {
-    let nodes = this.props.nodes
-    let edges = this.props.edges
-
-    let root = "project"
-    let queue = [];
-    let layout = [];
-    let placed = [];
-    let layout_level = 0;
-
-    queue.push(root);
-    layout.push([root]);
-    while(queue.length != 0) {
-      let query = queue.shift(); //breadth first
-      for (let i = 0; i < edges.length; i++) {
-        if (edges[i].target == query || edges[i].target.name == query) {
-          if ((layout[layout_level].indexOf(query)) != -1) {
-            if (!layout[layout_level+1]) {
-              layout[layout_level+1] = [];
-            } 
-          } else {
-            layout_level += 1;
-            if (!layout[layout_level+1]) {
-              layout[layout_level+1] = [];
-            } 
-          }
-          queue.push(edges[i].source);
-          if ((layout[layout_level+1].indexOf(edges[i].source) == -1) && (placed.indexOf(edges[i].source) == -1)) {
-            layout[layout_level+1].push(edges[i].source);
-            placed.push(edges[i].source);
-          }
-        }
-      }
-      placed.push(query);
-    }
-
-    for (let i = 0; i < layout.length; i++) {
-      for (let j = 0; j < layout[i].length; j++) {
-        for (let k = 0; k < nodes.length; k++) {
-          if (nodes[k].name == layout[i][j]) {
-            nodes[k].position = [(j+1)/(layout[i].length+1),(i+1)/(layout.length+1)];
-            break;
-          }
-        }
-      }
-    }
-
-    let min_x_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[0]))[0])
-    let min_y_pos = Math.round(1/d3.extent(nodes.map((node) => node.position[1]))[0])
-
-    let padding = 25, 
-      radius = 60,
-      legend_width=125,
-      width = min_x_pos * radius * 2 + legend_width, 
-      height = min_y_pos * radius * 2 + padding;
-
-    const divStyle = {
-      height: height,
-      backgroundColor: "#f4f4f4",
-      marginLeft: "auto",
-      marginRight: "auto",
-    }
-    return (
-      <div style={divStyle}>
-        <svg id="data_model_graph" height={height} width={width}>
-        </svg>
-      </div>
-      );
-  }
+  legend_creator(legend, nodes, legend_width, color)
 }
-

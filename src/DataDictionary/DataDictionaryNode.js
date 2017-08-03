@@ -1,9 +1,13 @@
 import React from 'react'
 import Nav from '../Nav/component.js'
-import {Box, cube, Table, TableData, TableRow, TableHead, Bullet} from '../theme.js'
+import {cube, Table, TableData, TableRow, TableHead, Bullet} from '../theme.js'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
+import { button } from '../theme';
+import { createNodesAndEdges } from '../utils';
+import { create_full_graph, create_abridged_graph } from './GraphCreator'
+import { ToggleButton } from '../DataModelGraph/component'
 
 const LinkBullet = ({link})=>{
   let required = link.required == true ? 'Yes':'No'
@@ -201,9 +205,23 @@ const PropertiesTable = ({node, required, links}) =>{
 const DataDictionaryNodeType = ({params,submission}) =>{
   let node = params.node
   let dictionary = submission.dictionary
+
+  if (node == "graph") {
+    let nodes_and_edges = createNodesAndEdges(submission, true, [])
+    let nodes = nodes_and_edges.nodes
+    let edges = nodes_and_edges.edges
+
+    return (
+    <div>
+      <h3> Data Dictionary Graph Viewer </h3>
+      <CreateGraph nodes={nodes} edges={edges} dictionary={dictionary}/>
+    </div>
+    )
+  }
+
   let links = [];
   let required = ('required' in dictionary[node]) ? dictionary[node].required : [];
-  for (var link of submission.dictionary[node].links){
+  for (var link of submission.dictionary[node].links) {
     if (link.name != undefined){
         links.push(link);
     }
@@ -226,6 +244,103 @@ const DataDictionaryNodeType = ({params,submission}) =>{
       <PropertiesTable links={links} required={required} node ={dictionary[node]} >  </PropertiesTable>
     </div>
   )
+}
+
+class CreateGraph extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      full_toggle: true
+    }
+    this.handleClick = this.handleClick.bind(this);
+  }
+  componentDidMount() {
+    if (this.state.full_toggle) {
+      create_full_graph(this.props.nodes, this.props.edges)
+    } else {
+      document.getElementById("table_wrapper").remove()
+      create_abridged_graph(this.props.nodes, this.props.edges)
+    }
+  }
+  componentDidUpdate() {
+    if (this.state.full_toggle) {
+      create_full_graph(this.props.nodes, this.props.edges)
+    } else {
+      document.getElementById("table_wrapper").remove()
+      create_abridged_graph(this.props.nodes, this.props.edges)
+    }
+  }
+  handleClick() {
+    this.setState(prevState => ({
+      full_toggle: !prevState.full_toggle,
+    }));
+  }
+  render() {
+    let nodes = this.props.nodes
+    let edges = this.props.edges
+
+    let root = "program"
+    let queue = [];
+    let layout = [];
+    let placed = [];
+    let layout_level = 0;
+
+    queue.push(root);
+    layout.push([root]);
+    while(queue.length != 0) {
+      let query = queue.shift(); //breadth first
+      for (let i = 0; i < edges.length; i++) {
+        if (edges[i].target == query || edges[i].target.name == query) {
+          if (!layout[layout_level+1]) {
+            layout[layout_level+1] = [];
+          } 
+          queue.push(edges[i].source);
+          if ((layout[layout_level+1].indexOf(edges[i].source) == -1) && (placed.indexOf(edges[i].source) == -1)) {
+            if (layout[layout_level+1].length >= 3) {
+              layout_level += 1;
+              if (!layout[layout_level+1]) {
+                layout[layout_level+1] = [];
+              }
+            }
+            layout[layout_level+1].push(edges[i].source);
+            placed.push(edges[i].source);
+          }
+        }
+      }
+      placed.push(query);
+    }
+
+    for (let i = 0; i < layout.length; i++) {
+      for (let j = 0; j < layout[i].length; j++) {
+        for (let k = 0; k < nodes.length; k++) {
+          if (nodes[k].name == layout[i][j]) {
+            nodes[k].position = [(j+1)/(layout[i].length+1),(i+1)/(layout.length+1)];
+            nodes[k].position_index = [j,i];
+            break;
+          }
+        }
+      }
+    }
+
+    const divStyle = {
+      width: "inherit",
+      backgroundColor: "#f4f4f4",
+      margin: "0 auto",
+      textAlign: "center",
+      position: "relative"
+    }
+    return (
+      <div>
+        <Link to={'/dd'}> Explore dictionary as a table </Link>
+        <p style={{"fontSize": "75%", "marginTop": "1em"}}> <span style={{"fontWeight": "bold", "fontStyle": "italic"}}> Bold, italicized</span> properties are required</p>
+        <div style={divStyle} id="graph_wrapper">
+          <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
+          <svg id="data_model_graph">
+          </svg>
+        </div>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state)=> {return {

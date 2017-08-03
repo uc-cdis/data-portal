@@ -59,6 +59,7 @@ const DataDictionaryViewer = ({submission}) =>{
     <div>
       <h3> Data Dictionary Viewer </h3>
       <p>{constants.subHeader}</p>
+      <Link to={'/dd/graph'}> Explore dictionary as a graph </Link>
       {Object.keys(categories).map((category) =>
         <CategoryTable dictionary={submission.dictionary} key={category} nodes={categories[category]} category = {category}/> )}
     </div>

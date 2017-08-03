@@ -29,7 +29,7 @@ export const submission = (state={}, action) => {
       }
       return { ...state, counts_search: action.data, links_search: links};
     case 'CLEAR_COUNTS':
-      return { ...state, counts_search: null};
+      return { ...state, counts_search: null, links_search: null};
     default:
       return state;
   }
