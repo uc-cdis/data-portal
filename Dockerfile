@@ -28,8 +28,7 @@ RUN mkdir -p /data-portal && cp -a /tmp/node_modules /data-portal/
 
 COPY . /data-portal
 WORKDIR /data-portal
-RUN cp $APP-index.html index.html; \
-    cp src/img/$APP-favicon.ico src/img/favicon.ico; \
+RUN cp src/img/$APP-favicon.ico src/img/favicon.ico; \
     NODE_ENV=production webpack \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default

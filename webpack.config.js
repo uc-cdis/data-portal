@@ -1,15 +1,25 @@
 var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var nodeExternals = require('webpack-node-externals');
 var path = require('path');
+var basename = process.env.BASENAME || '/';
+var app = process.env.APP || 'dev';
+var title = {
+  dev: 'Generic Data Commons',
+  bpa: 'BPA Data Commons',
+  edc: 'Environmental Data Commons',
+  acct: 'ACCOuNT Data Commons',
+}[app];
+
 
 module.exports = {
   entry: ['babel-polyfill', './src/index.js'],
   exclude: '/node_modules/',
 
   output: {
-    path: './',
+    path: __dirname,
     filename: 'bundle.js',
-    publicPath: '/'
+    publicPath: basename
   },
   devServer: {
     historyApiFallback: true,
@@ -70,5 +80,11 @@ module.exports = {
     new webpack.EnvironmentPlugin(['MOCK_STORE']),
     new webpack.EnvironmentPlugin(['APP']),
     new webpack.EnvironmentPlugin(['BASENAME']),
+    new HtmlWebpackPlugin({
+      title: title,
+      template: 'src/index.ejs',
+      hash: true
+    }),
+
   ]
 };
