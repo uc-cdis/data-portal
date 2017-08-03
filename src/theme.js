@@ -161,6 +161,7 @@ export const Dropdown = styled(Select)`
   width: 40%;
   margin-right: 1em;
   display:inline-block;
+  z-index:999;
 `;
 
 export const Input = styled.input`
