@@ -74,9 +74,9 @@ export const setProject = (project) => {
 export const loginSubmissionAPI = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
-    return dispatch(fetchDictionary()).then(() => {
+    return dispatch(fetchDictionary()).then(() =>
       dispatch(fetchProjects())
-    })
+    )
     .then(()=>{
       let projects = getState().submission.projects;
       if (projects){
@@ -93,19 +93,6 @@ export const loginSubmissionAPI = () => {
           handler:receiveSubmissionLogin
         }))}).then(()=>dispatch(fetchProjects()))
     .catch((error) => console.log(error));
-  }
-};
-
-export const loginAPI = () => {
-  // Fetch projects, if unauthorized, login
-  return (dispatch, getState) => {
-    return dispatch(fetchOAuthURL(submissionapi_oauth_path)).then(()=>{
-      let url = getState().submission.oauth_url;
-      return dispatch(fetchWrapper({
-        path:url,
-        handler:receiveSubmissionLogin
-      }))})
-      .catch((error) => console.log(error));
   }
 };
 
