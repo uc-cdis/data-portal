@@ -25,7 +25,9 @@ module.exports = {
     publicPath: basename
   },
   devServer: {
-    historyApiFallback: true,
+    historyApiFallback: {
+      index: 'dev.html',
+    },
     disableHostCheck: true,
   },
   module: {
