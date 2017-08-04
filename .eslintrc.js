@@ -8,7 +8,7 @@ module.exports = {
         "sourceType": "module",
         "ecmaVersion": 2017,
         "ecmaFeatures": {
-          "jsx": true
+          "jsx": true,
           "spread": true
         },
     },

@@ -258,7 +258,9 @@ class CreateGraph extends React.Component {
     if (this.state.full_toggle) {
       create_full_graph(this.props.nodes, this.props.edges)
     } else {
-      document.getElementById("table_wrapper").remove()
+      if (document.getElementById("table_wrapper") != null) {
+        document.getElementById("table_wrapper").remove()
+      }
       create_abridged_graph(this.props.nodes, this.props.edges)
     }
   }
@@ -266,7 +268,9 @@ class CreateGraph extends React.Component {
     if (this.state.full_toggle) {
       create_full_graph(this.props.nodes, this.props.edges)
     } else {
-      document.getElementById("table_wrapper").remove()
+      if (document.getElementById("table_wrapper") != null) {
+        document.getElementById("table_wrapper").remove()
+      }
       create_abridged_graph(this.props.nodes, this.props.edges)
     }
   }
@@ -334,9 +338,9 @@ class CreateGraph extends React.Component {
         <Link to={'/dd'}> Explore dictionary as a table </Link>
         <p style={{"fontSize": "75%", "marginTop": "1em"}}> <span style={{"fontWeight": "bold", "fontStyle": "italic"}}> Bold, italicized</span> properties are required</p>
         <div style={divStyle} id="graph_wrapper">
-          <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
           <svg id="data_model_graph">
           </svg>
+          <ToggleButton id="toggle_button" onClick={this.handleClick}>Toggle view</ToggleButton>
         </div>
       </div>
     );
