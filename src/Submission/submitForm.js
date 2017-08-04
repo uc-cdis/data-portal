@@ -50,11 +50,6 @@ const TextInput = ({name, value, required, description, onChange}) =>{
 	)
 };
 
-const StyledTextInput = styled(TextInput)`
-	width:500px;
-	height: 50px;
-`;
-
 class EnumInput extends Component {
 
 	static propTypes = {
@@ -125,7 +120,7 @@ class OneOfInput extends Component {
 			)
 		} else if(this.props.property[0].type == 'string' && this.props.property[1].type == 'null'){
 			return(
-				<StyledTextInput name={this.props.name} value={this.props.value} required={this.props.required} description={this.props.description} onChange={this.props.onChange} />
+				<TextInput name={this.props.name} value={this.props.value} required={this.props.required} description={this.props.description} onChange={this.props.onChange} />
 			)
 		}else{
 			return(
@@ -142,7 +137,7 @@ class OneOfInput extends Component {
 						Number
 					</label>
 				{this.state.selectedOption == 'Number' && 
-				<StyledTextInput 
+				<TextInput 
 				name={this.props.name}
 				value={this.props.value} 
 				description={this.props.description} 
@@ -182,7 +177,7 @@ const AnyOfInput =({name, values, node, properties, required, requireds, onChang
         let required_subprop = (requireds.indexOf(property) > -1);
 		//we use index 0 of values because AnyOfInput is hardcoded to be an array of length 1, an upcoming feature should be to add to this array
 		return(
-			<StyledTextInput key={i} name={property} value={values ? values[0][property]: ""} required={required && required_subprop} description={description} onChange={onChangeAnyOfWrapper}/>)
+			<TextInput key={i} name={property} value={values ? values[0][property]: ""} required={required && required_subprop} description={description} onChange={onChangeAnyOfWrapper}/>)
 	})}
 	</AnyOfSubProps>
 	</div>
@@ -235,7 +230,7 @@ const SubmitNodeForm = ({node,form, properties, requireds, onChange, onChangeEnu
                		onChange={onChangeAnyOf} /> 
                	)
                }else{
-               	  return(<StyledTextInput key={i} name={property} value={form[property]} required={required} description={description} onChange={onChange}/>)}
+               	  return(<TextInput key={i} name={property} value={form[property]} required={required} description={description} onChange={onChange}/>)}
 		})}
 		<UploadFormButton type="submit" value="Submit"> Upload submission json from form </UploadFormButton>
 		</form>

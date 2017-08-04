@@ -165,8 +165,8 @@ export const Dropdown = styled(Select)`
 
 export const Input = styled.input`
   width: 400px;
-  height:20px;
-  padding: 15px 10px;
+  height:40px;
+  padding: 0px 10px;
 `;
 
 export const Label = styled.label`
