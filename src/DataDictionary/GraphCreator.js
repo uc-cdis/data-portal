@@ -280,6 +280,8 @@ function add_tables(nodes, box_width, box_height, svg_width, svg_height) {
       .attr("dy", -0.5*box_height+15)
       .style("display", "none")
   }
+
+  d3.select("#graph_wrapper").select("a").style("z-index", "1")
 }
 
 export function create_full_graph(nodes, edges) {
