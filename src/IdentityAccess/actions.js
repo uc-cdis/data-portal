@@ -1,13 +1,14 @@
 import { fetchWrapper, fetchOAuthURL, updatePopup } from '../actions';
 import { submissionapi_oauth_path, credential_cdis_path } from '../localconf';
 import moment from 'moment';
+import {fetchProjects} from "../queryactions";
 
 export const loginCloudMiddleware = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
-    return dispatch(fetchStorageAccess()).then(()=>{
-      let projects = getState().cloud_access.access_key_pair;
-      if (projects){
+    return dispatch(fetchAccess()).then(()=>{
+      let keypair = getState().cloud_access.access_key_pair;
+      if (keypair){
         // user already logged in
         return Promise.reject("already logged in");
       }
@@ -19,7 +20,7 @@ export const loginCloudMiddleware = () => {
       return dispatch(fetchWrapper({
         path:url,
         handler:receiveUserAPILogin
-      }))}).then(()=>dispatch(fetchStorageAccess()))
+      }))}).then(()=>dispatch(fetchAccess())).then(()=>dispatch(fetchProjects()))
       .catch((error) => console.log(error));
   }
 };
@@ -41,7 +42,7 @@ export const receiveUserAPILogin = ({status, data}) => {
   }
 };
 
-export const fetchStorageAccess = () => {
+export const fetchAccess = () => {
   return fetchWrapper({
     path: credential_cdis_path,
     handler: receiveCloudAccess
@@ -53,19 +54,12 @@ const convertTime = (value) => {
   return value
 };
 
-const convertTimes = (values) => {
-  values.map( item => {
-    convertTime(item)
-  });
-  return values;
-};
-
 export const receiveCloudAccess = ({status, data}) => {
   switch (status) {
     case 200:
       return {
         type: 'RECEIVE_CLOUD_ACCESS',
-        access_keys: data,
+        access_keys: data.access_keys,
       };
     default:
       return {
@@ -101,9 +95,9 @@ export const receiveDeleteKeyResponse = ({status, data, access_key}) => {
         dispatch({
           type: 'DELETE_KEY_SUCCEED',
         });
-        dispatch(clearDeleteSession())
+        dispatch(clearDeleteSession());
         dispatch(updatePopup({key_delete_popup: false}));
-        return dispatch(fetchStorageAccess());
+        return dispatch(fetchAccess());
       default:
         return dispatch({
           type: 'DELETE_KEY_FAIL',
@@ -146,7 +140,7 @@ export const receiveCreatedKeyResponse = ({status, data}) => {
           str_access_key_pair: parseKeyToString(data)
         });
         dispatch(updatePopup({save_key_popup: true}));
-        return dispatch(fetchStorageAccess());
+        return dispatch(fetchAccess());
       default:
         dispatch({
           type: 'CREATE_FAIL',

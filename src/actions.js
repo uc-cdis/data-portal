@@ -21,12 +21,12 @@ export const fetchWrapper = ({path, method='GET', body=null, handler, custom_hea
     return fetch(path, request).then(response => {
       return response.text().then(data => {
         if (data) {
-            try {
-                data = JSON.parse(data)
-            }
-            catch (e) {
-            // # do nothing
-            }
+          try {
+              data = JSON.parse(data)
+          }
+          catch (e) {
+          // # do nothing
+          }
         }
         dispatch(handler({status: response.status, data: data, headers: response.headers}));
         callback();

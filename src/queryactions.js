@@ -17,7 +17,7 @@ export const receiveProjects = ({status, data}) => {
     case 200:
       return {
         type: 'RECEIVE_PROJECTS',
-        data: data['data']['project'].map(p => p.project_id)
+        data: data['data']['project']
       };
     default:
       return {

@@ -14,14 +14,14 @@ import Login from './Login/component';
 import QueryNode from './QueryNode/component';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
-import Submission from './App/component';
+import Submission from './components/ProjectListComponent';
 import ProjectSubmission from './Submission/component';
 import IdentityAccess from './IdentityAccess/component.js';
 import Certificate from './Certificate/component.js';
 import GraphQLQuery from "./GraphQLEditor/component";
 import { loginSubmissionAPI, setProject } from './Submission/actions';
 import { fetchDictionary } from './queryactions.js';
-import { loginCloudMiddleware, fetchStorageAccess } from './IdentityAccess/actions';
+import { loginCloudMiddleware, fetchAccess } from './IdentityAccess/actions';
 import { fetchSchema } from './GraphQLEditor/actions';
 import { Router, Route, Link, applyRouterMiddleware } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
@@ -136,7 +136,7 @@ async function init() {
           <Router history={history}>
             <Route path='/login' component={Login} />
             <Route path='/'
-              onEnter={requireAuth(store, () => store.dispatch(fetchStorageAccess()))}
+              onEnter={requireAuth(store, () => store.dispatch(fetchAccess()))}
               component={withBoxAndNav(withAuthTimeout(IdentityAccess))} />
           </Router>
         </ThemeProvider>
