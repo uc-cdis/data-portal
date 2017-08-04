@@ -15,7 +15,6 @@ export const ToggleButton = styled.a`
   position:absolute;
   top:15px;
   left:20px;
-  z-index:100;
   &:hover,
   &:active,
   &:focus {
