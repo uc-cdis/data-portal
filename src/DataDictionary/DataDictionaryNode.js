@@ -340,7 +340,7 @@ class CreateGraph extends React.Component {
         <div style={divStyle} id="graph_wrapper">
           <svg id="data_model_graph">
           </svg>
-          <ToggleButton onClick={this.handleClick}>Toggle view</ToggleButton>
+          <ToggleButton id="toggle_button" onClick={this.handleClick}>Toggle view</ToggleButton>
         </div>
       </div>
     );
