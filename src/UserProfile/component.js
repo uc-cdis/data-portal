@@ -43,7 +43,7 @@ const KeyPairsEntities = ({values, keypairs_api, onUpdatePopup, onRequestDeleteK
   )
 };
 
-const IdentityComponent = ({user, cloud_access, popups, submission, onCreateKey,
+export const IdentityComponent = ({user, user_profile, popups, submission, onCreateKey,
                              onClearCreationSession, onUpdatePopup, onDeleteKey,
                              onRequestDeleteKey, onClearDeleteSession}) => {
   let onCreate = () => {
@@ -55,19 +55,19 @@ const IdentityComponent = ({user, cloud_access, popups, submission, onCreateKey,
   return  (
     <div>
       {
-        cloud_access.access_key_pairs === undefined &&
+        user_profile.access_key_pairs === undefined &&
         <div>
           {constants.NO_ACCESS_MSG}
         </div>
       }
       {
-        cloud_access.access_key_pairs !== undefined && cloud_access.access_key_pairs !== [] &&
+        user_profile.access_key_pairs !== undefined && user_profile.access_key_pairs !== [] &&
         <div>
           {
             popups.key_delete_popup === true &&
             <Popup message={constants.CONFIRM_DELETE_MSG}
-                   error={json_to_string(cloud_access.delete_error)}
-                   onConfirm={()=>onDeleteKey(cloud_access.request_delete_key,
+                   error={json_to_string(user_profile.delete_error)}
+                   onConfirm={()=>onDeleteKey(user_profile.request_delete_key,
                               popups.keypairs_api)}
                    onCancel={()=>{ onClearDeleteSession();
                                    onUpdatePopup({key_delete_popup: false})}}/>
@@ -75,9 +75,9 @@ const IdentityComponent = ({user, cloud_access, popups, submission, onCreateKey,
           {
             popups.save_key_popup === true &&
             <SavePopup message={constants.SECRET_KEY_MSG}
-                       error={json_to_string(cloud_access.create_error)}
-                       display={cloud_access.access_key_pair}
-                       savingStr={cloud_access.str_access_key_pair}
+                       error={json_to_string(user_profile.create_error)}
+                       display={user_profile.access_key_pair}
+                       savingStr={user_profile.str_access_key_pair}
                        onClose={()=>{ onUpdatePopup({save_key_popup: false});
                                       onClearCreationSession()}}
                        filename={'accessKeys.txt'}
@@ -87,21 +87,21 @@ const IdentityComponent = ({user, cloud_access, popups, submission, onCreateKey,
             {constants.CREATE_ACCESS_KEY_BTN}
           </RequestButton>
           {
-            cloud_access.access_key_pairs.length === 0 &&
+            user_profile.access_key_pairs.length === 0 &&
             <div>
               {constants.NO_ACCESS_KEY}
             </div>
           }
           {
-            cloud_access.access_key_pairs.length > 0 &&
+            user_profile.access_key_pairs.length > 0 &&
             <h5>
               {constants.LIST_ACCESS_KEY_MSG}
             </h5>
           }
           {
-            cloud_access.access_key_pairs &&
+            user_profile.access_key_pairs &&
             <KeyPairsEntities key='list_access_id'
-                              values={cloud_access.access_key_pairs}
+                              values={user_profile.access_key_pairs}
                               keypairs_api={credential_cdis_path}
                               onUpdatePopup={onUpdatePopup}
                               onRequestDeleteKey={onRequestDeleteKey}
@@ -139,7 +139,7 @@ const IdentityComponent = ({user, cloud_access, popups, submission, onCreateKey,
 const mapStateToProps = (state) => {
   return {
     'user': state.user,
-    'cloud_access': state.cloud_access,
+    'user_profile': state.user_profile,
     'popups': state.popups,
     'submission': state.submission
   }
@@ -160,5 +160,5 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-let CloudAccess = connect(mapStateToProps, mapDispatchToProps)(IdentityComponent);
-export default CloudAccess;
+let UserProfile = connect(mapStateToProps, mapDispatchToProps)(IdentityComponent);
+export default UserProfile;

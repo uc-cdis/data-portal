@@ -7,7 +7,7 @@ export const loginCloudMiddleware = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
     return dispatch(fetchAccess()).then(()=>{
-      let keypair = getState().cloud_access.access_key_pair;
+      let keypair = getState().user_profile.access_key_pair;
       if (keypair){
         // user already logged in
         return Promise.reject("already logged in");
@@ -58,12 +58,12 @@ export const receiveCloudAccess = ({status, data}) => {
   switch (status) {
     case 200:
       return {
-        type: 'RECEIVE_CLOUD_ACCESS',
+        type: 'RECEIVE_USER_PROFILE',
         access_keys: data.access_keys,
       };
     default:
       return {
-        type: 'CLOUD_ACCESS_ERROR',
+        type: 'USER_PROFILE_ERROR',
         error: data['error']
       }
   }

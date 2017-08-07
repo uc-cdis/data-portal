@@ -16,12 +16,12 @@ import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
 import Submission from './components/ProjectListComponent';
 import ProjectSubmission from './Submission/component';
-import IdentityAccess from './IdentityAccess/component.js';
+import UserProfile from './UserProfile/component.js';
 import Certificate from './Certificate/component.js';
 import GraphQLQuery from "./GraphQLEditor/component";
 import { loginSubmissionAPI, setProject } from './Submission/actions';
 import { fetchDictionary } from './queryactions.js';
-import { loginCloudMiddleware, fetchAccess } from './IdentityAccess/actions';
+import { loginCloudMiddleware, fetchAccess } from './UserProfile/actions';
 import { fetchSchema } from './GraphQLEditor/actions';
 import { Router, Route, Link, applyRouterMiddleware } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
@@ -107,7 +107,7 @@ async function init() {
                    component={withBoxAndNav(withAuthTimeout(GraphQLQuery))} />
             <Route path='/identity'
               onEnter={requireAuth(store, () => store.dispatch(loginCloudMiddleware()))}
-              component={withBoxAndNav(withAuthTimeout(IdentityAccess))} />
+              component={withBoxAndNav(withAuthTimeout(UserProfile))} />
             <Route path='/quiz'
               onEnter={requireAuth(store)}
               component={withBoxAndNav(withAuthTimeout(Certificate))} />
