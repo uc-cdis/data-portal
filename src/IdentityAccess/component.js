@@ -21,7 +21,7 @@ const KeyPairsEntity = ({keypairs_api, value, onUpdatePopup, onRequestDeleteKey}
         <AccessKeyCell>{value.access_key}</AccessKeyCell>
         <ActionCell>
           <DeleteButton onClick={onDelete}>
-          {constants.DELETE_BTN}
+            {constants.DELETE_BTN}
           </DeleteButton>
         </ActionCell>
       </Bullet>
@@ -32,15 +32,19 @@ const KeyPairsEntity = ({keypairs_api, value, onUpdatePopup, onRequestDeleteKey}
 const KeyPairsEntities = ({values, keypairs_api, onUpdatePopup, onRequestDeleteKey}) => {
   return (
     <ul>
-      {values.length > 0 &&<li><AccessKeyHeader>{constants.ACCESS_KEY_COLUMN}</AccessKeyHeader></li>}
-      {values.map((item) => <KeyPairsEntity key={item.access_key} keypairs_api={keypairs_api}
-                                            value={item} onUpdatePopup={onUpdatePopup}
-                                            onRequestDeleteKey={onRequestDeleteKey}/> )}
+      {values.length > 0 && <li>
+        <AccessKeyHeader>{constants.ACCESS_KEY_COLUMN}</AccessKeyHeader>
+      </li>}
+      {values.map((item) =>
+        <KeyPairsEntity key={item.access_key} keypairs_api={keypairs_api}
+                        value={item} onUpdatePopup={onUpdatePopup}
+                        onRequestDeleteKey={onRequestDeleteKey}/> )}
     </ul>
   )
 };
 
-const IdentityComponent = ({user, cloud_access, popups, submission, onCreateKey, onClearCreationSession, onUpdatePopup, onDeleteKey,
+const IdentityComponent = ({user, cloud_access, popups, submission, onCreateKey,
+                             onClearCreationSession, onUpdatePopup, onDeleteKey,
                              onRequestDeleteKey, onClearDeleteSession}) => {
   let onCreate = () => {
     onCreateKey(credential_cdis_path);
@@ -63,8 +67,10 @@ const IdentityComponent = ({user, cloud_access, popups, submission, onCreateKey,
             popups.key_delete_popup === true &&
             <Popup message={constants.CONFIRM_DELETE_MSG}
                    error={json_to_string(cloud_access.delete_error)}
-                   onConfirm={()=>onDeleteKey(cloud_access.request_delete_key, popups.keypairs_api)}
-                   onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({key_delete_popup: false})}}/>
+                   onConfirm={()=>onDeleteKey(cloud_access.request_delete_key,
+                              popups.keypairs_api)}
+                   onCancel={()=>{ onClearDeleteSession();
+                                   onUpdatePopup({key_delete_popup: false})}}/>
           }
           {
             popups.save_key_popup === true &&
@@ -72,11 +78,14 @@ const IdentityComponent = ({user, cloud_access, popups, submission, onCreateKey,
                        error={json_to_string(cloud_access.create_error)}
                        display={cloud_access.access_key_pair}
                        savingStr={cloud_access.str_access_key_pair}
-                       onClose={()=>{onUpdatePopup({save_key_popup: false}); onClearCreationSession()}}
+                       onClose={()=>{ onUpdatePopup({save_key_popup: false});
+                                      onClearCreationSession()}}
                        filename={'accessKeys.txt'}
             />
           }
-          <RequestButton onClick={onCreate}>{constants.CREATE_ACCESS_KEY_BTN}</RequestButton>
+          <RequestButton onClick={onCreate}>
+            {constants.CREATE_ACCESS_KEY_BTN}
+          </RequestButton>
           {
             cloud_access.access_key_pairs.length === 0 &&
             <div>
@@ -91,25 +100,33 @@ const IdentityComponent = ({user, cloud_access, popups, submission, onCreateKey,
           }
           {
             cloud_access.access_key_pairs &&
-            <KeyPairsEntities key='list_access_id' values={cloud_access.access_key_pairs}
-                      keypairs_api={credential_cdis_path}
-                      onUpdatePopup={onUpdatePopup}
-                      onRequestDeleteKey={onRequestDeleteKey}
+            <KeyPairsEntities key='list_access_id'
+                              values={cloud_access.access_key_pairs}
+                              keypairs_api={credential_cdis_path}
+                              onUpdatePopup={onUpdatePopup}
+                              onRequestDeleteKey={onRequestDeleteKey}
             />
           }
         </div>
       }
       <ul>
         <h5>{constants.LIST_PROJECT_MSG}</h5>
-        <li><Bullet><ProjectHeader>{constants.PROJECT_COLUMN}</ProjectHeader><RightHeader>{constants.RIGHT_COLUMN}</RightHeader></Bullet></li>
+        <li>
+          <Bullet>
+            <ProjectHeader>{constants.PROJECT_COLUMN}</ProjectHeader>
+            <RightHeader>{constants.RIGHT_COLUMN}</RightHeader>
+          </Bullet>
+        </li>
         {accessible_projects.map(
           (p, i) =>
             <li key={4*i}>
               <Bullet key={4*i+1}>
-                <ProjectCell key={4*i+2} to={'/'+submission.projects[p]}>{submission.projects[p]}</ProjectCell>
+                <ProjectCell key={4*i+2} to={'/'+submission.projects[p]}>
+                  {submission.projects[p]}
+                </ProjectCell>
                 <RightCell key={4*i+3}>
                   {user.project_access[p].join(', ')}
-                  </RightCell>
+                </RightCell>
               </Bullet>
             </li>
         )}
@@ -132,8 +149,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onCreateKey: (keypairs_api) => dispatch(createKey(keypairs_api)),
     onUpdatePopup: (state) => dispatch(updatePopup(state)),
-    onDeleteKey: (access_key, keypairs_api) => dispatch(deleteKey(access_key, keypairs_api)),
-    onRequestDeleteKey: (access_key, keypairs_api) => dispatch(fetchAccess(keypairs_api)).then(
+    onDeleteKey: (access_key, keypairs_api) =>
+      dispatch(deleteKey(access_key, keypairs_api)),
+    onRequestDeleteKey: (access_key, keypairs_api) =>
+      dispatch(fetchAccess(keypairs_api)).then(
         () => dispatch(requestDeleteKey(access_key))
     ),
     onClearDeleteSession: () => dispatch(clearDeleteSession()),
