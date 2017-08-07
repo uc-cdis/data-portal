@@ -5,7 +5,7 @@ export const fetchProjects = () => {
   return fetchWrapper({
     path: submissionapi_path + 'graphql',
     body: JSON.stringify({
-      'query': "query Test { project(first:100) {code, project_id}}"
+      'query': "query Test { project(first:10000) {code, project_id}}"
     }),
     method: 'POST',
     handler: receiveProjects
