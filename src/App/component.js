@@ -44,7 +44,7 @@ let Submission = Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
           fragment on viewer {
-              project {
+              project (first: 10000) {
                   project_id
                   code
               }
