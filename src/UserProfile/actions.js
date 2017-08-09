@@ -3,7 +3,7 @@ import { submissionapi_oauth_path, credential_cdis_path } from '../localconf';
 import moment from 'moment';
 import {fetchProjects} from "../queryactions";
 
-export const loginCloudMiddleware = () => {
+export const loginUserProfile = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
     return dispatch(fetchAccess()).then(()=>{
@@ -57,6 +57,7 @@ const convertTime = (value) => {
 export const receiveCloudAccess = ({status, data}) => {
   switch (status) {
     case 200:
+      console.log('receive list key');
       return {
         type: 'RECEIVE_USER_PROFILE',
         access_keys: data.access_keys,
@@ -78,7 +79,6 @@ export const requestDeleteKey = (access_key) => {
 
 export const deleteKey = (access_key, keypairs_api) => {
   let receiveDeleteKey = ({status, data}) => {
-    console.log('receive delete');
     return receiveDeleteKeyResponse({status, data, access_key})
   };
   return fetchWrapper({
@@ -116,7 +116,6 @@ export const clearDeleteSession = () => {
 
 export const createKey = (keypairs_api) => {
   let receiveCreatedKey = ({status, data}) => {
-    console.log('receive delete');
     return receiveCreatedKeyResponse({status, data})
   };
   return fetchWrapper({
@@ -134,6 +133,7 @@ export const receiveCreatedKeyResponse = ({status, data}) => {
   return (dispatch) => {
     switch (status) {
       case 200:
+        console.log('receive create');
         dispatch({
           type: 'CREATE_SUCCEED',
           access_key_pair: data,

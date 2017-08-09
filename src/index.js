@@ -21,7 +21,7 @@ import Certificate from './Certificate/component.js';
 import GraphQLQuery from "./GraphQLEditor/component";
 import { loginSubmissionAPI, setProject } from './Submission/actions';
 import { fetchDictionary } from './queryactions.js';
-import { loginCloudMiddleware, fetchAccess } from './UserProfile/actions';
+import { loginUserProfile, fetchAccess } from './UserProfile/actions';
 import { fetchSchema } from './GraphQLEditor/actions';
 import { Router, Route, Link, applyRouterMiddleware } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
@@ -106,7 +106,7 @@ async function init() {
                      .then(() => store.dispatch(fetchSchema())))}
                    component={withBoxAndNav(withAuthTimeout(GraphQLQuery))} />
             <Route path='/identity'
-              onEnter={requireAuth(store, () => store.dispatch(loginCloudMiddleware()))}
+              onEnter={requireAuth(store, () => store.dispatch(loginUserProfile()))}
               component={withBoxAndNav(withAuthTimeout(UserProfile))} />
             <Route path='/quiz'
               onEnter={requireAuth(store)}

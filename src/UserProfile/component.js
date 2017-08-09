@@ -7,7 +7,7 @@ import { fetchAccess, createKey, deleteKey,
   requestDeleteKey, clearDeleteSession, clearCreationSession } from './actions';
 import { RequestButton, DeleteButton, Bullet, ProjectCell, RightCell, AccessKeyCell, ActionCell, Cell,
   AccessKeyHeader, ProjectHeader, RightHeader } from './style';
-import { credential_cdis_path } from '../localconf'
+import { credential_cdis_path } from '../localconf';
 import * as constants from "./constants";
 
 const KeyPairsEntity = ({keypairs_api, value, onUpdatePopup, onRequestDeleteKey}) => {

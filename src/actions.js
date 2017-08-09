@@ -1,4 +1,4 @@
-import fetch from 'isomorphic-fetch'
+import 'isomorphic-fetch';
 import _ from 'underscore';
 import { required_certs, userapi_path, headers, basename, submissionapi_oauth_path, graphql_path } from './configs.js'
 import { fetchProjects, fetchDictionary }  from './queryactions';
@@ -17,7 +17,7 @@ export const fetchWrapper = ({path, method='GET', body=null, handler, custom_hea
       headers: {...headers, ...custom_headers},
       method: method,
       body: body,
-    }
+    };
     return fetch(path, request).then(response => {
       return response.text().then(data => {
         if (data) {
