@@ -1,16 +1,10 @@
 import React from 'react';
 import UserProfile from './component';
-import chai from 'chai';
-import chaiEnzyme from 'chai-enzyme';
-import chaiArray from 'chai-arrays';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import { parseKeyToString, createKey } from './actions';
 import { RequestButton, Bullet, AccessKeyCell, ActionCell, DeleteButton } from './style';
 import { shallowWithStore } from '../setupJest';
-
-chai.use(chaiEnzyme);
-chai.use(chaiArray);
 
 const middleware = [ thunk ];
 const mockStore = configureMockStore(middleware);
@@ -35,13 +29,13 @@ it('User profile creating and listing', () => {
 
   const userProfilePage = shallowWithStore(<UserProfile />, store).first().shallow();
   let btn = userProfilePage.find(RequestButton);
-  chai.expect(btn).to.have.length(1);
+  expect(btn).toHaveLength(1);
   btn.simulate('click');
   userProfilePage.find(Bullet);
   userProfilePage.find(AccessKeyCell);
   userProfilePage.find(ActionCell);
   userProfilePage.find(DeleteButton);
-  chai.expect(btn).to.have.length(1);
+  expect(btn).toHaveLength(1);
 });
 
 it('Fetch creating and listing', () => {
@@ -71,7 +65,6 @@ it('Fetch creating and listing', () => {
   fetch.mockResponseOnce(JSON.stringify(expectedListKey), {status: 200});
   return store.dispatch(createKey("http://anything.com"))
     .then(() => {
-      console.log("Store actions: ");
       expect(store.getActions()).toEqual(expectedActions);
     });
 });

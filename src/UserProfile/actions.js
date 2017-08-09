@@ -57,7 +57,6 @@ const convertTime = (value) => {
 export const receiveCloudAccess = ({status, data}) => {
   switch (status) {
     case 200:
-      console.log('receive list key');
       return {
         type: 'RECEIVE_USER_PROFILE',
         access_keys: data.access_keys,
@@ -133,7 +132,6 @@ export const receiveCreatedKeyResponse = ({status, data}) => {
   return (dispatch) => {
     switch (status) {
       case 200:
-        console.log('receive create');
         dispatch({
           type: 'CREATE_SUCCEED',
           access_key_pair: data,
