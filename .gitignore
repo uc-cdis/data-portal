@@ -4,3 +4,5 @@ bundle.js
 index.html
 data/schema.graphql
 data/schema.json
+package-lock.json
+

@@ -17,7 +17,11 @@ body {
     /* background-image: url('../img/bg.jpg'); */
     /* background-size: cover; */
     min-height: 100%;
+<<<<<<< HEAD
     /* position: relative; */
+=======
+    position: relative;
+>>>>>>> fix(improvement): add explorer page
 }
 
 .flat-form{

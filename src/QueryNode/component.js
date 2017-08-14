@@ -11,6 +11,7 @@ import { clearDeleteSession, fetchQueryNode, submitSearchForm, deleteNode, store
 import { cube } from '../theme';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import Explorer from '../Explorer/component';
 
 const SearchButton = styled.input`
   transition: 0.25s;
@@ -72,7 +73,7 @@ class QueryForm extends React.Component {
   handleQuerySubmit (event) {
     event.preventDefault();
     let form = event.target;
-    let data = {project: this.props.project}
+    let data = {project: this.props.project};
     let query_param = [];
 
     for (let i =0; i<form.length; i++){
@@ -155,6 +156,7 @@ const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, 
       { query_nodes.search_status==='succeed: 200' &&
           Object.entries(query_nodes.search_result['data']).map((value) => { return (<Entities project={project} onStoreNodeInfo={onStoreNodeInfo} onUpdatePopup={onUpdatePopup} node_type={value[0]} key={value[0]} value={value[1]}/>)})
       }
+      <Explorer />
     </div>
   )
 };
