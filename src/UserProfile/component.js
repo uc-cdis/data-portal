@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { fetchAccess, createKey, deleteKey,
   requestDeleteKey, clearDeleteSession, clearCreationSession } from './actions';
 import { RequestButton, DeleteButton, Bullet, ProjectCell, RightCell, AccessKeyCell, ActionCell, Cell,
-  AccessKeyHeader, ProjectHeader, RightHeader } from './style';
+  AccessKeyHeader, ProjectHeader, RightHeader, AccessTable } from './style';
 import { credential_cdis_path } from '../localconf';
 import * as constants from "./constants";
 
@@ -49,9 +49,7 @@ export const IdentityComponent = ({user, user_profile, popups, submission, onCre
   let onCreate = () => {
     onCreateKey(credential_cdis_path);
   };
-  let accessible_projects = Object.keys(user.project_access).filter(
-    (p) => p in submission.projects).filter(
-    (project) => user.project_access[project].indexOf('read') !== -1);
+  let accessible_projects = Object.keys(user.project_access);
   return  (
     <div>
       {
@@ -109,28 +107,39 @@ export const IdentityComponent = ({user, user_profile, popups, submission, onCre
           }
         </div>
       }
-      <ul>
-        <h5>{constants.LIST_PROJECT_MSG}</h5>
-        <li>
-          <Bullet>
-            <ProjectHeader>{constants.PROJECT_COLUMN}</ProjectHeader>
-            <RightHeader>{constants.RIGHT_COLUMN}</RightHeader>
-          </Bullet>
-        </li>
-        {accessible_projects.map(
-          (p, i) =>
-            <li key={4*i}>
-              <Bullet key={4*i+1}>
-                <ProjectCell key={4*i+2} to={'/'+submission.projects[p]}>
-                  {submission.projects[p]}
-                </ProjectCell>
-                <RightCell key={4*i+3}>
-                  {user.project_access[p].join(', ')}
-                </RightCell>
-              </Bullet>
-            </li>
-        )}
-      </ul>
+      <AccessTable>
+        <ul>
+          <h5>{constants.LIST_PROJECT_MSG}</h5>
+          <li>
+            <Bullet>
+              <ProjectHeader>{constants.PROJECT_COLUMN}</ProjectHeader>
+              <RightHeader>{constants.RIGHT_COLUMN}</RightHeader>
+            </Bullet>
+          </li>
+          {accessible_projects.map(
+            (p, i) =>
+              <li key={4*i}>
+                <Bullet key={4*i+1}>
+                  {
+                    p in submission.projects &&
+                    <ProjectCell key={4*i+2} to={'/'+submission.projects[p]}>
+                      {p}
+                    </ProjectCell>
+                  }
+                  {
+                    !(p in submission.projects) &&
+                    <ProjectCell key={4*i+2}>
+                      {p}
+                    </ProjectCell>
+                  }
+                  <RightCell key={4*i+3}>
+                    {user.project_access[p].join(', ')}
+                  </RightCell>
+                </Bullet>
+              </li>
+          )}
+        </ul>
+      </AccessTable>
     </div>
   )
 };

@@ -1,4 +1,5 @@
-export const submission = (state={}, action) => {
+export const
+  submission = (state={}, action) => {
   switch (action.type) {
     case 'REQUEST_UPLOAD':
       return {...state, file:action.file, file_type: action.file_type};
