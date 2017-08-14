@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { fetchAccess, createKey, deleteKey,
   requestDeleteKey, clearDeleteSession, clearCreationSession } from './actions';
 import { RequestButton, DeleteButton, Bullet, ProjectCell, RightCell, AccessKeyCell, ActionCell, Cell,
-  AccessKeyHeader, ProjectHeader, RightHeader, AccessTable } from './style';
+  AccessKeyHeader, ProjectHeader, RightHeader, AccessTable, KeyPairTable } from './style';
 import { credential_cdis_path } from '../localconf';
 import * as constants from "./constants";
 
@@ -60,7 +60,7 @@ export const IdentityComponent = ({user, user_profile, popups, submission, onCre
       }
       {
         user_profile.access_key_pairs !== undefined && user_profile.access_key_pairs !== [] &&
-        <div>
+        <KeyPairTable>
           {
             popups.key_delete_popup === true &&
             <Popup message={constants.CONFIRM_DELETE_MSG}
@@ -105,7 +105,7 @@ export const IdentityComponent = ({user, user_profile, popups, submission, onCre
                               onRequestDeleteKey={onRequestDeleteKey}
             />
           }
-        </div>
+        </KeyPairTable>
       }
       <AccessTable>
         <ul>

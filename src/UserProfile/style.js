@@ -45,10 +45,6 @@ export const Header = styled.li`
   font-weight: bold;
 `;
 
-export const AccessTable = styled.div`
-  display: flex;
-`;
-
 export const AccessKeyHeader = styled(Header)`
   width: 100%;
 `;
@@ -59,6 +55,14 @@ export const ProjectHeader = styled(Header)`
 
 export const RightHeader = styled(Header)`
   width: 70%;
+`;
+
+export const KeyPairTable = styled.ul`
+  overflow: hidden;
+`;
+
+export const AccessTable = styled.div`
+  overflow: hidden;
 `;
 
 export const Cell = styled.li`
