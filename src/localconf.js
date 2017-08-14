@@ -22,7 +22,8 @@ if (app === 'bpa') {
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
     {'icon': 'fui-search', 'link': '/query', 'color': '#daa520'},
-    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'}
+    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'},
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -42,7 +43,8 @@ if (app === 'bpa') {
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
     {'icon': 'fui-search', 'link': '/query', 'color': '#daa520'},
-    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'}
+    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'},
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -62,7 +64,8 @@ if (app === 'bpa') {
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
     {'icon': 'fui-search', 'link': '/query', 'color': '#daa520'},
-    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'}
+    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'},
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -96,7 +99,8 @@ if (app === 'bpa') {
   nav_items = [
     {'icon': 'fui-home', 'link': '/', 'color': '#1d3674'},
     {'icon': 'fui-search', 'link': '/query', 'color': '#ad7e1c'},
-    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#1d3674'}
+    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#1d3674'},
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#ad7e1c'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
