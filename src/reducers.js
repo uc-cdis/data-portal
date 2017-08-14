@@ -10,6 +10,7 @@ import { homepage } from './Homepage/reducers';
 import { query_nodes } from './QueryNode/reducers';
 import { popups } from './Popup/reducers';
 import { graphiql } from './GraphQLEditor/reducers';
+import { explorer } from "./Explorer/reducers";
 
 const status = (state={}, action) => {
   switch (action.type){
@@ -49,6 +50,6 @@ export const removeDeletedNode = (state, id) =>{
   return search_result;
 };
 
-const reducers = combineReducers({homepage, popups, login, user, status, submission, query_nodes, user_profile, certificate, graphiql, form: formReducer, routing:routerReducer});
+const reducers = combineReducers({homepage, explorer, popups, login, user, status, submission, query_nodes, user_profile, certificate, graphiql, form: formReducer, routing:routerReducer});
 
 export default reducers

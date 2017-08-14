@@ -58,11 +58,11 @@ class EnumInput extends Component {
 		required: PropTypes.bool,
 		description: PropTypes.string,
 		onChange: PropTypes.func,
-	}
+	};
 
 	state = {
 		chosenEnum: ''
-	}
+	};
 	render(){
 		let options = this.props.options.map( (option, i) => ({label:option, value:option}) );
 		
@@ -81,7 +81,9 @@ class EnumInput extends Component {
 				{this.props.required && <Required_Notification> {"*"} </Required_Notification>}
 				<br/> 
 			</div>
-		)}};
+    )
+  }
+}
 
 class OneOfInput extends Component {
 	//couldn't make a generalized component as I would like to, so I am shortcircuiting the logic
@@ -95,11 +97,11 @@ class OneOfInput extends Component {
 		description: PropTypes.string,
 		onChange: PropTypes.func,
 		onChangeEnum: PropTypes.func
-	}
+	};
 
 	state = {
 		selectedOption: 'Text'
-	}
+	};
 
 	render(){
 		let radioChange = (newValue) =>{
@@ -154,7 +156,7 @@ class OneOfInput extends Component {
 				}
 				</div>
 			)}}
-};
+}
 
 const AnyOfInput =({name, values, node, properties, required, requireds, onChange}) =>{
 	//this is smelly code because it reuses logic from SubmitNodeForm, 
@@ -196,7 +198,7 @@ const SubmitNodeForm = ({node,form, properties, requireds, onChange, onChangeEnu
                let required = (requireds.indexOf(property) > -1);
 
                if(property == 'type'){
-               		return
+
                }else if('enum' in node.properties[property]){
                	return(
                		<EnumInput key={i} 
@@ -246,13 +248,13 @@ class SubmitFormContainer extends Component {
 		submission: PropTypes.object,
 		onUploadClick: PropTypes.func,
 		onSubmitClick: PropTypes.func,
-	}
+	};
 
 	state = {
 		chosenNode:{value: null, label:""},
 		fill_form:false,
 		form: {}
-	}
+	};
 	onFormToggle = () =>{
 		this.setState({
 			'fill_form': !(this.state.fill_form)
@@ -265,7 +267,7 @@ class SubmitFormContainer extends Component {
 		const objectWithoutKey = (object, key) => {
   			const {[key]: deletedKey, ...otherKeys} = object;
   			return otherKeys;
-		}
+		};
 
 		let value = json_to_string(this.state.form);
 		this.props.onUploadClick(value, 'application/json');
@@ -276,7 +278,7 @@ class SubmitFormContainer extends Component {
   		const value = target.type === 'checkbox' ? target.checked : target.value;
   		const subname = target.name;
 
-  		if(this.state.form[name] == null){
+  		if(this.state.form[name] === null){
   			this.setState({
   				form:{...this.state.form,
   			  		[name]: [{[subname]: value}]
@@ -335,7 +337,7 @@ class SubmitFormContainer extends Component {
 				<Toggle label="Use Form Submission" labelStyle={{width:''}} onToggle={this.onFormToggle} />
 				{this.state.fill_form && <Dropdown name='node_type' options={options} value={this.state.chosenNode} onChange={updateChosenNode}/>}
 			</form>
-			{(this.state.chosenNode.value != null) && this.state.fill_form &&
+			{(this.state.chosenNode.value !== null) && this.state.fill_form &&
 			<div>
 			   <h5> Properties: </h5>
 			   <Required_Notification istext> * Denotes Required Property </Required_Notification>
@@ -354,7 +356,7 @@ class SubmitFormContainer extends Component {
 			</div>
 		)
   }
-  };
+}
 
 const mapStateToProps = (state) => {
 	return{

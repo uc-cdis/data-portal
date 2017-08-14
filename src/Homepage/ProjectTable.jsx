@@ -1,5 +1,5 @@
 import React from 'react';
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic';
 import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router';
 import styled, { css } from 'styled-components';

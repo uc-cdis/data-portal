@@ -15,6 +15,7 @@ export const getCounts = (type, project, dictionary) => {
   });
 
   let nodes_to_hide = ["program"];
+  console.log("dictionary: " + dictionary);
   for (var val in dictionary) {
     if (!val.startsWith("_") && dictionary[val].links) {
       for (let i = 0; i < dictionary[val].links.length; i++) {

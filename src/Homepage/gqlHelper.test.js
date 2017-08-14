@@ -9,8 +9,11 @@ describe( "the gqlHelper", function() {
   const helper = GQLHelper.getGQLHelper( "exp" );
 
   it( "provides different helpers for different apps", function() {
-    const studyHelper = GQLHelper.getGQLHelper( "bhc" );
-    expect( studyHelper ).not.toBe( helper );   
+    const bhcHelper = GQLHelper.getGQLHelper( "bhc" );
+    expect( bhcHelper ).not.toBe( helper );
+    const bpaHelper = GQLHelper.getGQLHelper( "bpa" );
+    expect( bpaHelper ).not.toBe( helper );
+    expect( bpaHelper ).not.toBe( bhcHelper );   
   })
   it( "provides a base numFilesTotal fragment", function() {
     const frag = helper.numFilesTotalFragment;

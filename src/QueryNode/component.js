@@ -11,6 +11,7 @@ import { clearDeleteSession, fetchQueryNode, submitSearchForm, deleteNode, store
 import { cube } from '../theme';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import Explorer from '../Explorer/component';
 
 const SearchButton = styled.input`
   transition: 0.25s;
@@ -72,7 +73,7 @@ let QueryForm = React.createClass({
   handleQuerySubmit (event) {
     event.preventDefault();
     let form = event.target;
-    let data = {project: this.props.project}
+    let data = {project: this.props.project};
     let query_param = [];
 
     for (let i =0; i<form.length; i++){

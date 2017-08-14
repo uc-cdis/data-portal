@@ -28,6 +28,7 @@ export const receiveProjects = ({status, data}) => {
 };
 
 export const fetchDictionary = () => {
+  console.log("Fetch path: " + submissionapi_path);
   return fetchWrapper({
     path: submissionapi_path + '_dictionary/_all',
     method: 'GET',
@@ -41,14 +42,14 @@ export const receiveDictionary = ({status, data}) =>{
     return {
       type: 'RECEIVE_DICTIONARY',
       data: data,
-    }
+    };
     default:
       return{
         type:'FETCH_ERROR',
         error: data
       }
   }
-}
+};
 
 export const fetchNodeTypes = () => {
   return fetchWrapper({

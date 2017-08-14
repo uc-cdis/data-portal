@@ -23,11 +23,14 @@ const NavRight = styled.nav`
 // TODO: due to issue https://github.com/styled-components/styled-components/issues/439,
 // bgcolor prop triggers react warning now, need to fix
 const NavItem = styled(Link)`
-  background: ${props => props.bgcolor};
-  &:hover,
-  &:focus,
-  &:active {
-    background: ${props =>lighten(0.1, props.bgcolor)};
+  margin-right: 20px;
+  span {
+    vertical-align: middle;
+    padding-right: 5px;
+    padding-left: 0px !important;
+  }
+  button {
+    // color: white !important;
   }
   ${cube};
 `;
@@ -59,10 +62,15 @@ const Logout = styled(Link)`
   ${cube};
 `;
 
-const NavComponent = ({user, onLogoutClick}) => (
-    <header>
+const NavIcon = styled.div`
+  vertical-align: middle;
+  padding-left: 16px;
+`;
+
+const NavComponent = ({user, onLogoutClick, classes}) => (
+    <Header>
       <NavLeft>
-        {nav_items.map((item, i) => <NavItem key={i} bgcolor={item.color} to={item.link} className={item.icon}></NavItem>)}
+        {nav_items.map((item, i) => <NavItem key={i} to={item.link}><FlatButton primary={i==0} label={item.name}><NavIcon className="material-icons">{item.icon}</NavIcon> </FlatButton></NavItem>)}
       </NavLeft>
       <NavRight>
         { user.username !== undefined &&

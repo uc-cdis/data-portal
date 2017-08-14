@@ -60,7 +60,7 @@ export const Margin = styled.div`
   width: 100%;
 `;
 
-export const TableBarColor = '#847c7c';
+export const TableBarColor = '#585585';
 
 export const Table = styled.table`
   table-layout:auto;
@@ -188,3 +188,7 @@ export const Label = styled.label`
  
 `;
 
+export const Sidebar = styled.div`
+  float:left;
+  border-top: 2px solid tomato;
+`;

@@ -1,5 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
+import { dict } from './dictionary.js';
+import { persistStore, autoRehydrate } from 'redux-persist';
 import { render } from 'react-dom';
 import GraphiQL from 'graphiql';
 import { Provider } from 'react-redux';
@@ -8,6 +10,7 @@ import { clearResultAndQuery } from './QueryNode/actions';
 import Login from './Login/component';
 import RelayHomepage from './Homepage/RelayHomepage';
 import QueryNode from './QueryNode/component';
+import RelayExplorer, {ExplorerQuery} from './Explorer/component';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
 import ProjectSubmission from './Submission/component';
@@ -52,7 +55,29 @@ Relay.injectNetworkLayer(
 
 const homepageQueries = { 
   viewer: () => Relay.QL`query { viewer }`,  
+};
+
+/**
+ * Relay route supporting PTBRelayAdapter below -
+ * sets up per-project graphql query
+ */
+class ExplorerRoute extends Relay.Route {
+  static paramDefinitions = {
+    selected_projects: { required: true },
+    selected_file_formats: { required: true }
+  };
+
+  static queries = {
+    viewer: () => Relay.QL`
+        query {
+            viewer
+        }
+    `
+  };
+
+  static routeName = "ExplorerRoute"
 }
+
 
 let initialized = false;
 
@@ -98,6 +123,10 @@ async function init() {
             <Route path='/dd/:node'
               onEnter={enterHook(store, fetchDictionary)}
               component={withBoxAndNav(DataDictionaryNode)} />
+            <Route path='/files'
+              onEnter={requireAuth(store, (nextState) => { return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))); })}
+              component={RelayExplorer}
+              queries={homepageQueries}/>
             <Route path='/:project'
               onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))}
               component={withBoxAndNav(withAuthTimeout(ProjectSubmission))} />
@@ -105,7 +134,7 @@ async function init() {
               onEnter={requireAuth(store, (nextState) => { return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))); })}
               component={withBoxAndNav(withAuthTimeout(QueryNode))} />
           </Router>
-         </MuiThemeProvider> 
+         </MuiThemeProvider>
         </ThemeProvider>
       </Provider>,
     document.getElementById('root')
@@ -118,7 +147,7 @@ async function init() {
             <Route path='/login' component={Login} />
             <Route path='/'
               onEnter={requireAuth(store, () => store.dispatch(fetchAccess()))}
-              component={withBoxAndNav(withAuthTimeout(IdentityAccess))} />
+              component={withBoxAndNav(withAuthTimeout(UserProfile))} />
           </Router>
         </ThemeProvider>
       </Provider>,
