@@ -1,25 +1,26 @@
 import { fetchWrapper, fetchOAuthURL, updatePopup } from '../actions';
-import { credential_path, credential_oauth_path } from '../localconf';
+import { submissionapi_oauth_path, credential_cdis_path } from '../localconf';
 import moment from 'moment';
+import {fetchProjects} from "../queryactions";
 
-export const loginCloudMiddleware = () => {
+export const loginUserProfile = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
-    return dispatch(fetchStorageAccess()).then(()=>{
-      let projects = getState().cloud_access.access_key_pair;
-      if (projects){
+    return dispatch(fetchAccess()).then(()=>{
+      let keypair = getState().user_profile.access_key_pair;
+      if (keypair){
         // user already logged in
         return Promise.reject("already logged in");
       }
       else {
         return Promise.resolve()
       }
-    }).then(()=>dispatch(fetchOAuthURL(credential_oauth_path))).then(()=>{
+    }).then(()=>dispatch(fetchOAuthURL(submissionapi_oauth_path))).then(()=>{
       let url = getState().user.oauth_url;
       return dispatch(fetchWrapper({
         path:url,
         handler:receiveUserAPILogin
-      }))}).then(()=>dispatch(fetchStorageAccess()))
+      }))}).then(()=>dispatch(fetchAccess())).then(()=>dispatch(fetchProjects()))
       .catch((error) => console.log(error));
   }
 };
@@ -41,9 +42,9 @@ export const receiveUserAPILogin = ({status, data}) => {
   }
 };
 
-export const fetchStorageAccess = () => {
+export const fetchAccess = () => {
   return fetchWrapper({
-    path: credential_path,
+    path: credential_cdis_path,
     handler: receiveCloudAccess
   })
 };
@@ -53,23 +54,16 @@ const convertTime = (value) => {
   return value
 };
 
-const convertTimes = (values) => {
-  values.map( item => {
-    convertTime(item)
-  });
-  return values;
-};
-
 export const receiveCloudAccess = ({status, data}) => {
   switch (status) {
     case 200:
       return {
-        type: 'RECEIVE_CLOUD_ACCESS',
-        access_keys: data,
+        type: 'RECEIVE_USER_PROFILE',
+        access_keys: data.access_keys,
       };
     default:
       return {
-        type: 'CLOUD_ACCESS_ERROR',
+        type: 'USER_PROFILE_ERROR',
         error: data['error']
       }
   }
@@ -82,13 +76,12 @@ export const requestDeleteKey = (access_key) => {
   }
 };
 
-export const deleteKey = (access_key) => {
+export const deleteKey = (access_key, keypairs_api) => {
   let receiveDeleteKey = ({status, data}) => {
-    console.log('receive delete');
     return receiveDeleteKeyResponse({status, data, access_key})
   };
   return fetchWrapper({
-    path: credential_path + access_key,
+    path: keypairs_api + access_key,
     method: 'DELETE',
     handler: receiveDeleteKey
   })
@@ -101,9 +94,9 @@ export const receiveDeleteKeyResponse = ({status, data, access_key}) => {
         dispatch({
           type: 'DELETE_KEY_SUCCEED',
         });
-        dispatch(clearDeleteSession())
+        dispatch(clearDeleteSession());
         dispatch(updatePopup({key_delete_popup: false}));
-        return dispatch(fetchStorageAccess());
+        return dispatch(fetchAccess());
       default:
         return dispatch({
           type: 'DELETE_KEY_FAIL',
@@ -120,13 +113,12 @@ export const clearDeleteSession = () => {
   }
 };
 
-export const createKey = () => {
+export const createKey = (keypairs_api) => {
   let receiveCreatedKey = ({status, data}) => {
-    console.log('receive delete');
     return receiveCreatedKeyResponse({status, data})
   };
   return fetchWrapper({
-    path: credential_path,
+    path: keypairs_api,
     method: 'POST',
     handler: receiveCreatedKey
   })
@@ -146,7 +138,7 @@ export const receiveCreatedKeyResponse = ({status, data}) => {
           str_access_key_pair: parseKeyToString(data)
         });
         dispatch(updatePopup({save_key_popup: true}));
-        return dispatch(fetchStorageAccess());
+        return dispatch(fetchAccess());
       default:
         dispatch({
           type: 'CREATE_FAIL',

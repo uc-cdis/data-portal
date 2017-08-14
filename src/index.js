@@ -14,14 +14,14 @@ import Login from './Login/component';
 import QueryNode from './QueryNode/component';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
-import Submission from './App/component';
+import Submission from './components/ProjectListComponent';
 import ProjectSubmission from './Submission/component';
-import IdentityAccess from './IdentityAccess/component.js';
+import UserProfile from './UserProfile/component.js';
 import Certificate from './Certificate/component.js';
 import GraphQLQuery from "./GraphQLEditor/component";
 import { loginSubmissionAPI, setProject } from './Submission/actions';
 import { fetchDictionary } from './queryactions.js';
-import { loginCloudMiddleware, fetchStorageAccess } from './IdentityAccess/actions';
+import { loginUserProfile, fetchAccess } from './UserProfile/actions';
 import { fetchSchema } from './GraphQLEditor/actions';
 import { Router, Route, Link, applyRouterMiddleware } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
@@ -106,8 +106,8 @@ async function init() {
                      .then(() => store.dispatch(fetchSchema())))}
                    component={withBoxAndNav(withAuthTimeout(GraphQLQuery))} />
             <Route path='/identity'
-              onEnter={requireAuth(store, () => store.dispatch(loginCloudMiddleware()))}
-              component={withBoxAndNav(withAuthTimeout(IdentityAccess))} />
+              onEnter={requireAuth(store, () => store.dispatch(loginUserProfile()))}
+              component={withBoxAndNav(withAuthTimeout(UserProfile))} />
             <Route path='/quiz'
               onEnter={requireAuth(store)}
               component={withBoxAndNav(withAuthTimeout(Certificate))} />
@@ -136,7 +136,7 @@ async function init() {
           <Router history={history}>
             <Route path='/login' component={Login} />
             <Route path='/'
-              onEnter={requireAuth(store, () => store.dispatch(fetchStorageAccess()))}
+              onEnter={requireAuth(store, () => store.dispatch(fetchAccess()))}
               component={withBoxAndNav(withAuthTimeout(IdentityAccess))} />
           </Router>
         </ThemeProvider>

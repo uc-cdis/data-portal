@@ -12,7 +12,7 @@ const button = css`
   cursor: pointer;
   margin-left: 1em;
 `;
-const Button = styled.a`
+export const Button = styled.a`
   ${button};
 `;
 const CancelButton = styled.a`
@@ -25,7 +25,7 @@ const CancelButton = styled.a`
   ${button};
 `;
 
-const PopupMask = styled.section`
+export const PopupMask = styled.section`
   z-index: 100;
   position: fixed;
   overflow-y: scroll;

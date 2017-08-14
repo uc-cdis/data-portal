@@ -1,11 +1,12 @@
-export const submission = (state={}, action) => {
+export const
+  submission = (state={}, action) => {
   switch (action.type) {
     case 'REQUEST_UPLOAD':
       return {...state, file:action.file, file_type: action.file_type};
     case 'UPDATE_FILE':
       return {...state, file:action.file, file_type: action.file_type};
     case 'RECEIVE_PROJECTS':
-      return {...state, projects:action.data};
+      return {...state, projects:action.data.reduce(function(map, p) {map[p.code] = p.project_id; return map;}, {})};
     case 'RECEIVE_NODE_TYPES':
       return {...state, node_types: action.data};
     case 'RECEIVE_DICTIONARY':
