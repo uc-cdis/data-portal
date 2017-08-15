@@ -1,6 +1,6 @@
 import React from 'react';
 import { submissionapi_path } from './localconf';
-import { Box, Margin } from './theme';
+import { Box, Body, Margin } from './theme';
 import Nav from './Nav/component';
 import Footer from './Footer/component';
 import { AuthTimeoutPopup } from './Popup/component';
@@ -39,12 +39,16 @@ export const predict_file_type = (data, file_type) => {
 
 export const withBoxAndNav = (Component) => {
   return ({...props}) => (
-    <Box>
-      <Nav />
-      <Component {...props} />
-      <Margin />
+    <div>
+      <Box>
+        <Nav />
+        <Body>
+          <Component {...props} />
+        </Body>
+        <Margin />
+      </Box>
       <Footer />
-    </Box>
+    </div>
   )
 };
 
@@ -254,7 +258,7 @@ export function add_links(graph_svg, edges) {
 
 export function calculate_position(nodes, graph_width, graph_height) {
   // Calculate the appropriate position of each node on the graph
-  let fy_vals = []; 
+  let fy_vals = [];
   for (let i = 0; i < nodes.length; i++) {
     nodes[i].fx = nodes[i].position[0]*graph_width;
     nodes[i].fy = nodes[i].position[1]*graph_height;

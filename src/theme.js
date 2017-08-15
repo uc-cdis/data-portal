@@ -51,8 +51,13 @@ export const Box = styled.div`
   // width: 65%;
   // background: white;
   diplay: block;
-  padding: 80px 100px;
+  padding: 0px 0px;
 
+`;
+
+export const Body = styled.div`
+  padding: 50px 100px;
+  overflow: hidden;
 `;
 
 export const Margin = styled.div`

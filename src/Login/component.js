@@ -15,11 +15,12 @@ const CentralBox = styled(Box)`
   padding: 0px;
 `
 const LoginButton = styled.a`
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
-  border-radius: 50%;
-  height: 200px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
+  transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+  border-radius: 0px;
+  height: 50px;
   width: 200px;
-  line-height: 200px;
+  line-height: 50px;
   padding: 0px;
   font-size: 1em;
 `
@@ -29,11 +30,13 @@ const Login = (props) => {
     next = basename === '/' ? props.location.query.next : basename + props.location.query.next;
   }
   return (
-  <CentralBox>
-    <h3 className='article'>{appname}</h3>
-    <LoginButton className="btn btn-primary navbar-btn btn-sm login-button" href={login.url + location.origin + next}>{login.title}</LoginButton>
+  <div>
+    <CentralBox>
+      <h3 className='article'>{appname}</h3>
+      <LoginButton className="btn btn-primary navbar-btn btn-sm login-button" href={login.url + location.origin + next}>{login.title}</LoginButton>
+    </CentralBox>
     <Footer />
-  </CentralBox>
+  </div>
 )
 };
 
