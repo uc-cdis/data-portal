@@ -267,9 +267,22 @@ class SubmitFormContainer extends Component {
   			return otherKeys;
 		}
 
-		let value = json_to_string(this.state.form);
+    const removeEmptyProps = (object) =>{
+      for(let prop in object){
+        if(object[prop] == '' || object[prop] == null){
+          object = objectWithoutKey(object, prop)
+        }
+        if(typeof object[prop] === 'object' || typeof object[prop] === 'array'){
+          object[prop] = removeEmptyProps(object[prop])
+        }
+      }
+      return(object);
+    }
+    
+    let cleared_form = removeEmptyProps(this.state.form);
+		let value = json_to_string(cleared_form);
 		this.props.onUploadClick(value, 'application/json');
-  	};
+  };
 
   	onChangeAnyOf = (name, event, properties) =>{
   		const target = event.target;
