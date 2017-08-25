@@ -50,6 +50,27 @@ if (app === 'bpa') {
     url: userapi_path + 'login/google' + '?redirect=',
     title: 'Login from Google'
   };
+} else if (app === 'bhc') {
+  required_certs = [];
+  userapi_path = hostname + 'user/';
+  submissionapi_path = hostname + 'api/v0/submission/';
+  submissionapi_oauth_path = hostname + 'api/v0/oauth2/';
+  credential_path = hostname + 'middleware/aws/v0/access_key/';
+  credential_oauth_path = hostname + 'middleware/oauth2/v0/';
+  credential_cdis_path = userapi_path + 'credentials/cdis/';
+  graphql_path = hostname + 'api/v0/submission/graphql/';
+  graphql_schema_url = hostname + '/data/schema.json';
+  appname = 'The Brain Commons Portal';
+  nav_items = [
+    {'icon': 'fui-home', 'link': '/', 'color': '#A51C30'},
+    {'icon': 'fui-search', 'link': '/query', 'color': '#2D728F'},
+    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#A51C30'},
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#2D728F'}
+  ];
+  login = {
+    url: userapi_path + 'login/google' + '?redirect=',
+    title: 'Login from Google'
+  };
 } else if (app === 'acct'){
   required_certs = [];
   userapi_path = hostname + 'user/';
