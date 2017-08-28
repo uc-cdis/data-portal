@@ -12,21 +12,6 @@ const UpAndDown = keyframes`
   100% { opacity: 0; transform: translateY(0); }
 `;
 
-// const rotate360 = keyframes`
-// 	from {
-// 		transform: rotate(0deg);
-// 	}
-//
-// 	to {
-// 		transform: rotate(360deg);
-// 	}
-// `;
-//
-// export const Rotate = styled.div`
-// 	animation: ${rotate360} 2s linear infinite;
-// 	padding: 2rem 1rem;
-// `;
-
 export const LoadingSpinnerSVG = styled.svg`
   display: block;
   margin: 0 auto;
