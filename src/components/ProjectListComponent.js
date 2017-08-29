@@ -9,7 +9,7 @@ import ActionSearch from 'material-ui/svg-icons/action/search';
 import ActionBook from 'material-ui/svg-icons/action/book';
 
 
-let CountBox = styled.div`
+const CountBox = styled.div`
   float: left;
   width: 30%;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
@@ -24,7 +24,7 @@ let CountBox = styled.div`
     }
   }
 `;
-let Count = styled.span`
+const Count = styled.span`
   color: #ff4200;
   margin-right: 10px;
 `;
@@ -35,54 +35,81 @@ let CircleButton = styled(IconButton)`
   margin-right: 20px !important;
   margin-top: 20px !important;
 `;
-let CountCard = () => {
-  return (
-    <CountBox>
-      <h4>
-          Data Summary
-      </h4>
-      <ul>
-        <li><Count>30241</Count><span>Cases</span></li>
-        <li><Count>25013</Count><span>Experiments</span></li>
-        <li><Count>304</Count><span>Files</span></li>
-        <li><Count>43340</Count><span>Aliquots</span></li>
-      </ul>
-      <CircleButton><ActionSearch /></CircleButton>
-      <CircleButton><ActionBook /></CircleButton>
-    </CountBox>
-  )
-};
 
-class SubmissionComponent extends React.Component {
+/**
+ * Little card with a bunch of counters on it for cases, experiments, files, ...
+ */
+class CountCard extends React.Component {
+  render() {
+    return (
+      <CountBox>
+        <h4>
+            Data Summary
+        </h4>
+        <ul>
+          <li><Count>{ this.props.caseCount }</Count><span>Cases</span></li>
+          <li><Count>{ this.props.experimentCount }</Count><span>Experiments</span></li>
+          <li><Count>{ this.props.caseCount }</Count><span>Files</span></li>
+          <li><Count>{ this.props.aliquotCount }</Count><span>Aliquots</span></li>
+        </ul>
+        <CircleButton><ActionSearch /></CircleButton>
+        <CircleButton><ActionBook /></CircleButton>
+      </CountBox>
+    );
+  }
+}
+
+
+class ProjectListComponent extends React.Component {
   static propTypes = {
     viewer: React.PropTypes.object,
   };
   render () {
+    const projectList = [ /*
+        {name: 'bpa-test', experiments: 4000, cases: 2400, amt: 2400},
+        {name: 'ProjectB', experiments: 3000, cases: 1398, amt: 2210},
+        {name: 'ProjectC', experiments: 2000, cases: 9800, amt: 2290},
+        {name: 'ProjectD', experiments: 2780, cases: 3908, amt: 2000},
+        {name: 'ProjectE', experiments: 1890, cases: 4800, amt: 2181},
+        {name: 'ProjectRye', experiments: 2390, cases: 3800, amt: 2500},
+        */
+    ];
+
+    this.props.viewer.project.forEach(
+      (proj) => {
+        projectList.push( { name:proj.project_id, experiments: proj._experiments_count, cases: 2, amt: 0 });
+      }
+    );
+
+
     return (
       <div>
-        <CountCard />
-        <StackedBarChart />
+        <CountCard caseCount={ this.props.viewer._case_count } experimentCount={ this.props.viewer._experiment_count } fileCount="8888" aliquotCount={ this.props.viewer._aliquot_count } />
+        <StackedBarChart projectList={projectList} />
       </div>
     )
   }
 }
 
 
-let Submission = Relay.createContainer(
-  withBoxAndNav(withAuthTimeout(SubmissionComponent)),
+const ProjectList = Relay.createContainer(
+  withBoxAndNav(withAuthTimeout(ProjectListComponent)),
   {
     fragments: {
       viewer: () => Relay.QL`
           fragment on viewer {
-              project (first: 10000) {
-                  project_id
-                  code
+              project(first: 10000) {
+                project_id
+                code
+                _experiments_count
               }
               _case_count
               _experiment_count
+              _aliquot_count
           }
       `,
     },
   },
 );
-export default Submission;
+
+export default ProjectList;

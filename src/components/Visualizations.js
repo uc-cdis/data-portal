@@ -3,15 +3,6 @@ import styled from 'styled-components';
 import React from 'react';
 import {browserHistory} from 'react-router';
 
-const data = [
-      {name: 'bpa-test', experiments: 4000, cases: 2400, amt: 2400},
-      {name: 'ProjectB', experiments: 3000, cases: 1398, amt: 2210},
-      {name: 'ProjectC', experiments: 2000, cases: 9800, amt: 2290},
-      {name: 'ProjectD', experiments: 2780, cases: 3908, amt: 2000},
-      {name: 'ProjectE', experiments: 1890, cases: 4800, amt: 2181},
-      {name: 'ProjectF', experiments: 2390, cases: 3800, amt: 2500},
-      {name: 'ProjectG', experiments: 3490, cases: 4300, amt: 2100},
-];
 
 const FloatBox = styled.div`
   float: left;
@@ -20,23 +11,38 @@ const FloatBox = styled.div`
   padding-left: 10%;
 `;
 
-export const StackedBarChart = () => {
-  return (
-    <FloatBox>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart onClick={(e) => { browserHistory.push('/'+e.activeLabel); window.location.reload(false);}}  data={data}
-              margin={{top: 20, right: 30, left: 20, bottom: 5}}>
-         <h4>Project Submission status</h4>
-         <XAxis dataKey="name"/>
-         <YAxis/>
-         <Tooltip/>
-         <Legend />
-         <Bar dataKey="cases" stackId="a" fill="#8884d8" />
-         <Bar dataKey="experiments" stackId="a" fill="#82ca9d" />
-        </BarChart>
-      </ResponsiveContainer>
-  </FloatBox>
-  );
+/**
+ * Component shows stacked-bars - one stacked-bar for each project in props.projectList -
+ * where experiments are stacked on top of cases.  projectList looks like:
+ * 
+ * const data = [
+ *       {name: 'bpa-test', experiments: 4000, cases: 2400, amt: 2400},
+ *       {name: 'ProjectB', experiments: 3000, cases: 1398, amt: 2210},
+ *       {name: 'ProjectC', experiments: 2000, cases: 9800, amt: 2290},
+ *       {name: 'ProjectD', experiments: 2780, cases: 3908, amt: 2000},
+ *       {name: 'ProjectE', experiments: 1890, cases: 4800, amt: 2181},
+ *       {name: 'ProjectRye', experiments: 2390, cases: 3800, amt: 2500},
+ *   ];
+ */
+export class StackedBarChart extends React.Component  {
+  render() {
+    return (
+      <FloatBox>    
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart onClick={(e) => { browserHistory.push('/'+e.activeLabel); window.location.reload(false);}}  data={this.props.projectList}
+                margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+          <h4>Project Submission status</h4>
+          <XAxis dataKey="name"/>
+          <YAxis/>
+          <Tooltip/>
+          <Legend />
+          <Bar dataKey="cases" stackId="a" fill="#8884d8" />
+          <Bar dataKey="experiments" stackId="a" fill="#82ca9d" />
+          </BarChart>
+        </ResponsiveContainer>
+    </FloatBox>
+    );
+  }
 }
 
 

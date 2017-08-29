@@ -14,7 +14,7 @@ import Login from './Login/component';
 import QueryNode from './QueryNode/component';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
-import Submission from './components/ProjectListComponent';
+import ProjectList from './components/ProjectListComponent';
 import ProjectSubmission from './Submission/component';
 import UserProfile from './UserProfile/component.js';
 import Certificate from './Certificate/component.js';
@@ -43,7 +43,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 let store;
-const configureStore = () => {
+const configureStore = function () {
   return new Promise((resolve, reject) => {
     try {
       if (dev === true) {
@@ -103,7 +103,7 @@ async function init() {
                   forceFetch>
             <Route path='/login' component={Login} />
             <Route path='/' onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
-                   component={(Submission)}
+                   component={(ProjectList)}
                    queries={ViewerQueries} />
             <Route path='/query'
                    onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts()))
