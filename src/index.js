@@ -32,7 +32,7 @@ import browserHistory from './history';
 import { theme, Box } from './theme';
 import { clearCounts } from './DataModelGraph/actions'
 import { required_certs } from './configs';
-import { withBoxAndNav, withAuthTimeout } from './utils';
+import { asyncSetInterval, withBoxAndNav, withAuthTimeout } from './utils';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import useRelay from 'react-router-relay'
@@ -44,6 +44,10 @@ injectTapEventPlugin();
 
 let store;
 const configureStore = function () {
+  if ( store ) {
+    console.log( "WARNING: attempt to reconfigure store" );
+    return;  // only run this once!
+  }
   return new Promise((resolve, reject) => {
     try {
       if (dev === true) {
@@ -66,7 +70,8 @@ const configureStore = function () {
         );
       }
 
-      setInterval(() => store.dispatch(fetchUser()), 10000);
+      asyncSetInterval( () => store.dispatch(fetchUser()), 10000 );
+      
       const persister = persistStore(store, { whitelist: ['certificate']}, () => { console.log('rehydration complete'); resolve(store)});
     } catch (e) {
       reject(e);

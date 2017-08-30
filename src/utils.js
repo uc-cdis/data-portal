@@ -62,6 +62,29 @@ export const withAuthTimeout = (Component) => {
 };
 
 /**
+ * Little wrapper around setinterval with a guard to prevent an async function
+ * from being invoked multiple times.
+ * 
+ * @param {()=>Promise} lambda callback should return a Promise
+ * @param {int} timeoutMs passed through to setinterval
+ * @return the setinterval id (can be passed to clearinterval)
+ */
+export function asyncSetInterval( lambda, timeoutMs ) {
+  let isRunningGuard = false;
+  return setInterval(
+    function (){
+      if ( ! isRunningGuard ) {
+        isRunningGuard = true;
+      
+        lambda().then(
+          function () { isRunningGuard = false; }
+        );
+      }
+    }, timeoutMs
+  );
+}
+
+/**
  * createNodesAndEdges: Given a data dictionary that defines a set of nodes 
  *    and edges, returns the nodes and edges in correct format
  *
