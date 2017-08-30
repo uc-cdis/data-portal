@@ -68,7 +68,7 @@ const Dropdown = styled(Select)`
   margin-right: 1em;
 `;
 
-let QueryForm = React.createClass({
+class QueryForm extends React.Component {
   handleQuerySubmit (event) {
     event.preventDefault();
     let form = event.target;
@@ -84,17 +84,20 @@ let QueryForm = React.createClass({
     }
     let url = `/${this.props.project}/search?${query_param.join('&')}`;
     this.props.onSearchFormSubmit(data, url);
-  },
+  }
+
   getInitialState () {
     return {
       selectValue: 'experiment'
     };
-  },
+  }
+
   updateValue (newValue) {
     this.setState({
       selectValue: newValue
     });
-  },
+  }
+
   render() {
     let nodes_for_query = this.props.node_types.filter((nt) => !['program', 'project'].includes(nt));
     let options = nodes_for_query.map( (node_type) => {return {value: node_type, label: node_type}});
@@ -106,7 +109,7 @@ let QueryForm = React.createClass({
         </form>
     )
   }
-});
+}
 
 const Entity = ({value, project, onUpdatePopup, onStoreNodeInfo}) => {
   let onDelete = () => {
