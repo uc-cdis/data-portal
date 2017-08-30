@@ -1,5 +1,6 @@
 import {ResponsiveContainer, Cell, PieChart, Pie, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'Recharts';
 import styled from 'styled-components';
+import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
 import {browserHistory} from 'react-router';
 
@@ -68,12 +69,7 @@ const TooltipStyle = styled.div`
 `;
 
 
-const CustomTooltip  = React.createClass({
-  propTypes: {
-    type: React.PropTypes.string,
-    payload: React.PropTypes.array,
-    label: React.PropTypes.string,
-  },
+class CustomTooltip extends React.Component {
   render() {
     console.log(this.props);
     const { active } = this.props;
@@ -89,7 +85,13 @@ const CustomTooltip  = React.createClass({
 
     return null;
   }
-});
+}
+
+CustomTooltip.propTypes = {
+  type: PropTypes.string,
+  payload: PropTypes.array,
+  label: PropTypes.string,
+};
 
 
 
