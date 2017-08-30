@@ -109,7 +109,7 @@ const goToLogin = () => {
     browserHistory.push('/login');
     // Refresh the page.
     window.location.reload(false);
-}
+};
 
 export const AuthTimeoutPopup = connect(timeoutPopupMapState, timeoutPopupMapDispatch)(({auth_popup, onConfirmDoLogout}) => {
   if (auth_popup) {
