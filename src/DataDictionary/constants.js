@@ -7,3 +7,6 @@ if (app === 'edc') {
 else if (app === 'bpa') {
   subHeader = "The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data Dictionary.";
 }
+else if (app === 'bhc') {
+  subHeader = "The data dictionary viewer is a user-friendly interface for accessing the Data Dictionary used by the Brain Commons.";
+}
