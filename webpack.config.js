@@ -12,6 +12,7 @@ var title = {
   edc: 'Environmental Data Commons',
   acct: 'ACCOuNT Data Commons',
   gdc: 'Jamboree Data Access',
+  bhc: 'Brain Commons',
 }[app];
 
 

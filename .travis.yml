@@ -24,9 +24,11 @@ script:
       docker build --cache-from quay.io/cdis/bpa-data-portal:master --build-arg APP=bpa -t quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} .
       docker build --cache-from quay.io/cdis/bpa-data-portal:master --build-arg APP=edc --build-arg BASENAME="/portal/" -t quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//_} .
       docker build --cache-from quay.io/cdis/bpa-data-portal:master --build-arg APP=acct -t quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//_} .
+      docker build --cache-from quay.io/cdis/bpa-data-portal:master --build-arg APP=bhc -t quay.io/cdis/bhc-data-portal:${TRAVIS_BRANCH/\//_} .
       set +e
 
 after_success:
     - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_}; fi
     - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//_}; fi
     - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//_}; fi
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/bhc-data-portal:${TRAVIS_BRANCH/\//_}; fi
