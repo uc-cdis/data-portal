@@ -1,6 +1,6 @@
 import React from 'react';
-import { withBoxAndNav, withAuthTimeout } from '../utils';
 import Relay from 'react-relay'
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
 import { CustomPieChart, StackedBarChart } from './Visualizations.js';
@@ -60,40 +60,75 @@ class CountCard extends React.Component {
 }
 
 
-class ProjectListComponent extends React.Component {
-  static propTypes = {
-    viewer: React.PropTypes.object,
-  };
+/**
+ * Project dashbaord - list projects with various stats and links
+ * for submission page, whatever.
+ *   props { caseCount, experimnentCount, fileCount, aliquoteCount, projectList
+ *    }
+ * where
+ *    
+ *   const projectList = [ 
+ *       {name: 'bpa-test', experiments: 4000, cases: 2400, amt: 2400},
+ *       {name: 'ProjectB', experiments: 3000, cases: 1398, amt: 2210},
+ *       {name: 'ProjectC', experiments: 2000, cases: 9800, amt: 2290},
+ *       {name: 'ProjectD', experiments: 2780, cases: 3908, amt: 2000},
+ *       {name: 'ProjectE', experiments: 1890, cases: 4800, amt: 2181},
+ *       {name: 'ProjectRye', experiments: 2390, cases: 3800, amt: 2500},
+ *     
+ *   ];
+ */
+export class ProjectDashboard extends React.Component {
+  
   render () {
-    const projectList = [ /*
-        {name: 'bpa-test', experiments: 4000, cases: 2400, amt: 2400},
-        {name: 'ProjectB', experiments: 3000, cases: 1398, amt: 2210},
-        {name: 'ProjectC', experiments: 2000, cases: 9800, amt: 2290},
-        {name: 'ProjectD', experiments: 2780, cases: 3908, amt: 2000},
-        {name: 'ProjectE', experiments: 1890, cases: 4800, amt: 2181},
-        {name: 'ProjectRye', experiments: 2390, cases: 3800, amt: 2500},
-        */
-    ];
-
-    this.props.viewer.project.forEach(
-      (proj) => {
-        projectList.push( { name:proj.project_id, experiments: proj._experiments_count, cases: 2, amt: 0 });
-      }
-    );
-
-
+  
     return (
       <div>
-        <CountCard caseCount={ this.props.viewer._case_count } experimentCount={ this.props.viewer._experiment_count } fileCount="8888" aliquotCount={ this.props.viewer._aliquot_count } />
-        <StackedBarChart projectList={projectList} />
+        <CountCard caseCount={ this.props.caseCount } experimentCount={ this.props.experimentCount } fileCount="8888" aliquotCount={ this.props.aliquotCount } />
+        <StackedBarChart projectList={this.props.projectList} />
       </div>
     )
   }
 }
 
 
-const ProjectList = Relay.createContainer(
-  withBoxAndNav(withAuthTimeout(ProjectListComponent)),
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    'dictionary': state.submission.dictionary,
+    'counts_search': state.submission.counts_search,
+    'links_search': state.submission.links_search,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onGetCounts: (type, project) => dispatch(getCounts(type, project)),
+  };
+}
+
+export const ReduxProjectDashboard = connect(mapStateToProps, mapDispatchToProps)(ProjectDashboard);
+
+
+
+/**
+ * Relay customization of ProjectListComponent with nav and auth popup wrapped around it and
+ * relay magic.
+ */
+export const RelayProjectDashboard = Relay.createContainer(
+  function({viewer}) {
+    //
+    // Little helper translates relay graphql results to properties
+    // expected by the ProjectDashboard component
+    //
+    const cleanProps = {
+      projectList: viewer.project.map( function(proj) { return { name:proj.project_id, experiments: proj._experiments_count, cases: 2, amt: 0 }; }),
+      caseCount: viewer._case_count,
+      experimentCount: viewer._experiment_count,
+      aliquotCount: viewer._aliquot_count,
+    };
+
+    return <ProjectDashboard { ...cleanProps} />;
+  },
   {
     fragments: {
       viewer: () => Relay.QL`
@@ -107,9 +142,8 @@ const ProjectList = Relay.createContainer(
               _experiment_count
               _aliquot_count
           }
-      `,
+      `
     },
   },
 );
 
-export default ProjectList;
