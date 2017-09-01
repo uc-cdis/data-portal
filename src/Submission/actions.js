@@ -71,14 +71,30 @@ export const setProject = (project) => {
   }
 };
 
+let lastProjectFetchMs = 0;
+
 export const loginSubmissionAPI = () => {
   // Fetch projects, if unauthorized, login
   return (dispatch, getState) => {
-    return dispatch(fetchDictionary()).then(() =>
+    { // If already have fresh data, then exit
+      const state = getState();
+      if ( state.submission && state.submission.projects && lastProjectFetchMs + 30000 > Date.now() ) {
+        return Promise.resolve();
+      }
+      lastProjectFetchMs = Date.now();
+    }
+
+    return dispatch(
+      fetchDictionary()
+    ).then(() =>
       dispatch(fetchProjects())
-    )
-    .then(()=>{
-      let projects = getState().submission.projects;
+    ).then(()=>{
+      //
+      // I think the assumption here is that fetchProjects either succeeds or fails.
+      // If it fails, then we won't have any project data, and we'll go on
+      // to fetchOAuthURL bla bla ..
+      //
+      const projects = getState().submission.projects;
       if (projects){
         // user already logged in
         return Promise.reject("already logged in");
@@ -91,7 +107,11 @@ export const loginSubmissionAPI = () => {
         return dispatch(fetchWrapper({
           path:url,
           handler:receiveSubmissionLogin
-        }))}).then(()=>dispatch(fetchProjects()))
+        }))
+      }
+    ).then(
+      // why are we doing this again ?
+      ()=>dispatch(fetchProjects()))
     .catch((error) => console.log(error));
   }
 };
