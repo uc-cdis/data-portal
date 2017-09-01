@@ -14,7 +14,7 @@ import Login from './Login/component';
 import QueryNode from './QueryNode/component';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
-import ProjectList from './components/ProjectListComponent';
+import {ProjectDashboard,ReduxProjectDashboard,RelayProjectDashboard} from './components/ProjectDashboard';
 import ProjectSubmission from './Submission/component';
 import UserProfile from './UserProfile/component.js';
 import Certificate from './Certificate/component.js';
@@ -23,8 +23,15 @@ import { loginSubmissionAPI, setProject } from './Submission/actions';
 import { fetchDictionary } from './queryactions.js';
 import { loginUserProfile, fetchAccess } from './UserProfile/actions';
 import { fetchSchema } from './GraphQLEditor/actions';
+
 import { Router, Route, Link, applyRouterMiddleware } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
+/**
+ * NOTE: react-router-relay does not support relay modern (relay 1.+) - 
+ * only relay "classic" - see https://github.com/relay-tools/react-router-relay
+ */
+import useRelay from 'react-router-relay'
+
 import 'react-select/dist/react-select.css';
 import { app, mock_store, dev, graphql_path } from './localconf.js';
 import { ThemeProvider } from 'styled-components';
@@ -35,7 +42,7 @@ import { required_certs } from './configs';
 import { asyncSetInterval, withBoxAndNav, withAuthTimeout } from './utils';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import useRelay from 'react-router-relay'
+
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 // Needed for onTouchTap
@@ -91,7 +98,25 @@ Relay.injectNetworkLayer(
     {credentials: 'same-origin'})
 );
 
-const ViewerQueries = { viewer: () => Relay.QL`query { viewer }` }
+const homepageQueries = { 
+  viewer: () => Relay.QL`query { viewer }`,  
+}
+
+/**
+ * Relay (graphql injected) wrapped homepage
+ */
+const RelayHomepage = Relay.createContainer(
+  withBoxAndNav(withAuthTimeout(RelayProjectDashboard)),
+  {
+    fragments: {
+      viewer:() => Relay.QL`
+      fragment on viewer {
+        ${RelayProjectDashboard.getFragment( 'viewer' )}
+      }
+      `
+    }
+  }
+);
 
 // render the app after the store is configured
 async function init() {
@@ -105,11 +130,11 @@ async function init() {
         <MuiThemeProvider>
           <Router history={history} environment={Relay.Store}
                   render={applyRouterMiddleware(useRelay)}
-                  forceFetch>
+                  >
             <Route path='/login' component={Login} />
             <Route path='/' onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
-                   component={(ProjectList)}
-                   queries={ViewerQueries} />
+                   component={RelayHomepage}
+                   queries={homepageQueries} />
             <Route path='/query'
                    onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts()))
                      .then(() => store.dispatch(fetchSchema())))}
