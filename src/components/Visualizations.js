@@ -17,12 +17,8 @@ const FloatBox = styled.div`
  * where experiments are stacked on top of cases.  projectList looks like:
  * 
  * const data = [
- *       {name: 'bpa-test', experiments: 4000, cases: 2400, amt: 2400},
- *       {name: 'ProjectB', experiments: 3000, cases: 1398, amt: 2210},
- *       {name: 'ProjectC', experiments: 2000, cases: 9800, amt: 2290},
- *       {name: 'ProjectD', experiments: 2780, cases: 3908, amt: 2000},
- *       {name: 'ProjectE', experiments: 1890, cases: 4800, amt: 2181},
- *       {name: 'ProjectRye', experiments: 2390, cases: 3800, amt: 2500},
+ *       {name: 'bpa-test', experimentCount: 4000, caseCount: 2400, aliquotCount: 2400},
+ *       ...
  *   ];
  */
 export class StackedBarChart extends React.Component  {
@@ -37,8 +33,8 @@ export class StackedBarChart extends React.Component  {
           <YAxis/>
           <Tooltip/>
           <Legend />
-          <Bar dataKey="cases" stackId="a" fill="#8884d8" />
-          <Bar dataKey="experiments" stackId="a" fill="#82ca9d" />
+          <Bar dataKey="caseCount" stackId="a" fill="#8884d8" />
+          <Bar dataKey="experimentCount" stackId="a" fill="#82ca9d" />
           </BarChart>
         </ResponsiveContainer>
     </FloatBox>

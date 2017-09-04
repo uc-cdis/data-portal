@@ -7,6 +7,8 @@ import { CustomPieChart, StackedBarChart } from './Visualizations.js';
 import IconButton from 'material-ui/IconButton';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import ActionBook from 'material-ui/svg-icons/action/book';
+import {PDListAdapter,RelayProjectDetailList,ProjectDetailList,pdListRelayFactory} from './ProjectDetail';
+//import LoadingSpinner from "./Spinner/components";
 
 
 const CountBox = styled.div`
@@ -91,25 +93,6 @@ export class ProjectDashboard extends React.Component {
 }
 
 
-
-const mapStateToProps = (state, ownProps) => {
-  return {
-    'dictionary': state.submission.dictionary,
-    'counts_search': state.submission.counts_search,
-    'links_search': state.submission.links_search,
-  };
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onGetCounts: (type, project) => dispatch(getCounts(type, project)),
-  };
-}
-
-export const ReduxProjectDashboard = connect(mapStateToProps, mapDispatchToProps)(ProjectDashboard);
-
-
-
 /**
  * Relay customization of ProjectListComponent with nav and auth popup wrapped around it and
  * relay magic.
@@ -121,13 +104,16 @@ export const RelayProjectDashboard = Relay.createContainer(
     // expected by the ProjectDashboard component
     //
     const cleanProps = {
-      projectList: viewer.project.map( function(proj) { return { name:proj.project_id, experiments: proj._experiments_count, cases: 2, amt: 0 }; }),
+      projectList: viewer.project.map( function(proj) { return { name:proj.project_id, experimentCount: proj._experiments_count, caseCount: 2, aliquotCount: 0 }; }),
       caseCount: viewer._case_count,
       experimentCount: viewer._experiment_count,
       aliquotCount: viewer._aliquot_count,
     };
 
-    return <ProjectDashboard { ...cleanProps} />;
+    return <div>
+      <ProjectDashboard { ...cleanProps} />
+      <PDListAdapter projectList={cleanProps.projectList} />  
+      </div>
   },
   {
     fragments: {
@@ -147,3 +133,17 @@ export const RelayProjectDashboard = Relay.createContainer(
   },
 );
 
+/*
+<Relay.Render Container={RelayProjectDetailList}
+        queryConfig={ProjectDashboardRoute}
+        render={({done, error, props, retry, stale}) => {
+        if (error) {
+          return <b>Error! {error}</b>;
+        } else if (props) {
+          return <RelayProjectDetailList {...props} />;
+        } else {
+          return <LoadingSpinner />;
+        }
+      }}
+      />
+  */

@@ -14,7 +14,7 @@ import Login from './Login/component';
 import QueryNode from './QueryNode/component';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
-import {ProjectDashboard,ReduxProjectDashboard,RelayProjectDashboard} from './components/ProjectListComponent';
+import {ProjectDashboard,ReduxProjectDashboard,RelayProjectDashboard} from './components/ProjectDashboard';
 import ProjectSubmission from './Submission/component';
 import UserProfile from './UserProfile/component.js';
 import Certificate from './Certificate/component.js';
