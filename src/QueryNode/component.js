@@ -98,9 +98,10 @@ let QueryForm = React.createClass({
   render() {
     let nodes_for_query = this.props.node_types.filter((nt) => !['program', 'project'].includes(nt));
     let options = nodes_for_query.map( (node_type) => {return {value: node_type, label: node_type}});
+    let state = this.state || {};
     return (
         <form onSubmit={this.handleQuerySubmit}>
-          <Dropdown name="node_type" options={options} value={this.state.selectValue} onChange={this.updateValue}/>
+          <Dropdown name="node_type" options={options} value={state.selectValue} onChange={this.updateValue}/>
           <Input placeholder='submitter_id' type='text' name="submitter_id"/>
           <SearchButton type='submit' onSubmit={this.handleQuerySubmit} value='search' />
         </form>
