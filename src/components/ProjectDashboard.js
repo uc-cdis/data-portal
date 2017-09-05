@@ -2,6 +2,8 @@ import React from 'react';
 import Relay from 'react-relay'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { clearFix } from 'polished';
+
 import { Link } from 'react-router';
 import { CustomPieChart, StackedBarChart } from './Visualizations.js';
 import IconButton from 'material-ui/IconButton';
@@ -36,6 +38,10 @@ let CircleButton = styled(IconButton)`
   border-radius: 50%;
   margin-right: 20px !important;
   margin-top: 20px !important;
+`;
+
+const DashTopDiv = styled.div`
+  ${clearFix()}
 `;
 
 /**
@@ -84,10 +90,10 @@ export class ProjectDashboard extends React.Component {
   render () {
   
     return (
-      <div>
+      <DashTopDiv>
         <CountCard caseCount={ this.props.caseCount } experimentCount={ this.props.experimentCount } fileCount="8888" aliquotCount={ this.props.aliquotCount } />
         <StackedBarChart projectList={this.props.projectList} />
-      </div>
+      </DashTopDiv>
     )
   }
 }
@@ -110,7 +116,7 @@ export const RelayProjectDashboard = Relay.createContainer(
       aliquotCount: viewer._aliquot_count,
     };
 
-    return <div>
+    return <div className="clearfix">
       <ProjectDashboard { ...cleanProps} />
       <PDListAdapter projectList={cleanProps.projectList} />  
       </div>
