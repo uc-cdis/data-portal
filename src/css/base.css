@@ -3,8 +3,10 @@
     padding: 0px;
 }
 body {
-    background-image: url('../img/bg.jpg');
-    background-size: cover;
+    /* background-image: url('../img/bg.jpg'); */
+    /* background-size: cover; */
+    min-height: 100%;
+    /* position: relative; */
 }
 
 .flat-form{

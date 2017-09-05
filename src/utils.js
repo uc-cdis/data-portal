@@ -2,6 +2,7 @@ import React from 'react';
 import { submissionapi_path } from './localconf';
 import { Box } from './theme';
 import Nav from './Nav/component';
+import Footer from './components/Footer.jsx';
 import { AuthTimeoutPopup } from './Popup/component';
 import * as d3 from "d3";
 

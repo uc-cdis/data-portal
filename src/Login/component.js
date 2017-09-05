@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box } from '../theme';
+import Footer from '../components/Footer.jsx'
 import { userapi_path, basename, appname, login } from '../localconf.js';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
