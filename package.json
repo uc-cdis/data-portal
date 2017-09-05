@@ -17,7 +17,7 @@
     "material-ui": "^0.18.7",
     "material-ui-icons": "^1.0.0-alpha.19",
     "moment": "^2.18.0",
-    "polished": "^1.0.4",
+    "polished": "^1.7.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-ace": "^4.1.6",
