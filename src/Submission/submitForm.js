@@ -263,21 +263,21 @@ class SubmitFormContainer extends Component {
 		event.preventDefault();
 
 		const objectWithoutKey = (object, key) => {
-  			const {[key]: deletedKey, ...otherKeys} = object;
-  			return otherKeys;
+  		const {[key]: deletedKey, ...otherKeys} = object;
+  		return otherKeys;
 		}
 
-	    const removeEmptyProps = (object) =>{
-	      for(let prop in object){
-	        if(object[prop] == '' || object[prop] == null){
-	          object = objectWithoutKey(object, prop)
-	        }
-	        if(typeof object[prop] === 'object' || typeof object[prop] === 'array'){
-	          object[prop] = removeEmptyProps(object[prop])
-	        }
+	  const removeEmptyProps = (object) =>{
+	    for(let prop in object){
+	      if(object[prop] == '' || object[prop] == null){
+	        object = objectWithoutKey(object, prop);
 	      }
-	      return(object);
+	      if(typeof object[prop] === 'object' || typeof object[prop] === 'array'){
+	        object[prop] = removeEmptyProps(object[prop]);
+	      }
 	    }
+	    return(object);
+	  }
     
     let cleared_form = removeEmptyProps(this.state.form);
 		let value = json_to_string(cleared_form);
