@@ -49,7 +49,7 @@ margin-right: 10px;
  * Little ProjectDetail block to drop onto the project dashboard with properties:
  *       name, description, experimentCount, caseCount
  */
-export class ProjectDetail extends React.Component {
+export class ProjectTile extends React.Component {
   
   render () {
     const projectList = [ 
@@ -80,7 +80,7 @@ export class ProjectDetail extends React.Component {
 /**
  * Relay adapter for project detail
  */
-export const RelayProjectDetail = Relay.createContainer(
+export const RelayProjectTile = Relay.createContainer(
   function( dirtyProps ) { // graphql to props adapter
     const viewer = dirtyProps.viewer || {
       project: [{
@@ -92,7 +92,7 @@ export const RelayProjectDetail = Relay.createContainer(
     console.log( "RelayProjectDetail got details: ", dirtyProps );
     
     const props = { ...viewer.project[0], caseCount:viewer.caseCount };
-    return <ProjectDetail { ...props} />;
+    return <ProjectTile { ...props} />;
   },
   {
     initialVariables: { // don't forget this hint to the parent query!
@@ -111,72 +111,5 @@ export const RelayProjectDetail = Relay.createContainer(
   }
 );
 
-
-
-/**
- * List of project details (stack of cards?).  
- * Has projectList property where each entry has the properties
- * for a project detail.
- */
-export class ProjectDetailList extends React.Component {
-  render() {
-    return <div>
-      {
-        this.props.projectList.map(
-          (proj) => <ProjectDetail 
-                  key={proj.name}
-                  name={proj.name} experimentCount={proj.experimentCount}
-                  caseCount={proj.caseCount}
-                  />
-        )
-      }
-    </div>
-
-  }
-}
-
-
-class ProjectDetailRoute extends Relay.Route {
-  static paramDefinitions = {
-    name: {required: true},
-  };
-
-  static queries = {
-    viewer: () => Relay.QL`
-        query {
-          viewer
-        }
-    `
-    };
-
-  static routeName = "ProjectDetailRoute"
-}
-
-
-export class PDListAdapter extends ProjectDetailList {
-  render() {
-    return <div>
-      {
-        this.props.projectList.map(
-          (proj) =>
-            <Relay.Renderer key={proj.name} 
-                Container={RelayProjectDetail}
-                queryConfig={new ProjectDetailRoute( { name: proj.name } )}
-                environment={Relay.Store}
-                render={({done, error, props, retry, stale}) => {
-                  if (error) {
-                    return <b>Error! {error}</b>;
-                  } else if (props && props.viewer ) {
-                    return <RelayProjectDetail {...props} />;
-                  } else {
-                    return <b>Loading!</b>;
-                  }
-                }}
-                  />
-        )
-      }
-      </div>;
-  }
-}
 
 
