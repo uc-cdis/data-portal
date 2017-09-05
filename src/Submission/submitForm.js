@@ -279,7 +279,7 @@ class SubmitFormContainer extends Component {
 	      return(object);
 	    }
     
-    	let cleared_form = removeEmptyProps(this.state.form);
+    let cleared_form = removeEmptyProps(this.state.form);
 		let value = json_to_string(cleared_form);
 		this.props.onUploadClick(value, 'application/json');
     };
