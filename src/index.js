@@ -11,10 +11,10 @@ import reducers from './reducers';
 import { requireAuth, enterHook, fetchUser } from './actions';
 import { clearResultAndQuery } from './QueryNode/actions';
 import Login from './Login/component';
+import RelayHomepage from './Homepage/RelayHomepage';
 import QueryNode from './QueryNode/component';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
-import {ProjectDashboard,ReduxProjectDashboard,RelayProjectDashboard} from './Homepage/ProjectDashboard';
 import ProjectSubmission from './Submission/component';
 import UserProfile from './UserProfile/component.js';
 import Certificate from './Certificate/component.js';
@@ -102,21 +102,6 @@ const homepageQueries = {
   viewer: () => Relay.QL`query { viewer }`,  
 }
 
-/**
- * Relay (graphql injected) wrapped homepage
- */
-const RelayHomepage = Relay.createContainer(
-  withBoxAndNav(withAuthTimeout(RelayProjectDashboard)),
-  {
-    fragments: {
-      viewer:() => Relay.QL`
-      fragment on viewer {
-        ${RelayProjectDashboard.getFragment( 'viewer' )}
-      }
-      `
-    }
-  }
-);
 
 // render the app after the store is configured
 async function init() {

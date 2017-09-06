@@ -9,8 +9,9 @@ import { CustomPieChart, StackedBarChart } from './Visualizations.js';
 import IconButton from 'material-ui/IconButton';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import ActionBook from 'material-ui/svg-icons/action/book';
-import {PDListAdapter,RelayProjectDetailList,ProjectDetailList,pdListRelayFactory} from './ProjectDetail';
-//import LoadingSpinner from "./Spinner/components";
+import {PTBRelayAdapter} from './ProjectTileBoard.jsx';
+import {PTableRelayAdapter} from './ProjectTable.jsx';
+
 
 
 const CountBox = styled.div`
@@ -88,7 +89,6 @@ class CountCard extends React.Component {
 export class ProjectDashboard extends React.Component {
   
   render () {
-  
     return (
       <DashTopDiv>
         <CountCard caseCount={ this.props.caseCount } experimentCount={ this.props.experimentCount } fileCount="8888" aliquotCount={ this.props.aliquotCount } />
@@ -109,16 +109,20 @@ export const RelayProjectDashboard = Relay.createContainer(
     // Little helper translates relay graphql results to properties
     // expected by the ProjectDashboard component
     //
-    const cleanProps = {
-      projectList: viewer.project.map( function(proj) { return { name:proj.project_id, experimentCount: proj._experiments_count, caseCount: 2, aliquotCount: 0 }; }),
+    const projectList = viewer.project.map( function(proj) { return { name:proj.project_id, experimentCount: proj._experiments_count, caseCount: 2, aliquotCount: 0 }; }); 
+    const summaryCounts = {
       caseCount: viewer._case_count,
       experimentCount: viewer._experiment_count,
       aliquotCount: viewer._aliquot_count,
+      fileCount:200
+    };
+    const cleanProps = {
+      projectList:projectList, ...summaryCounts
     };
 
     return <div className="clearfix">
       <ProjectDashboard { ...cleanProps} />
-      <PDListAdapter projectList={cleanProps.projectList} />  
+      <PTableRelayAdapter projectList={cleanProps.projectList} summaryCounts={summaryCounts} />  
       </div>
   },
   {
@@ -138,18 +142,3 @@ export const RelayProjectDashboard = Relay.createContainer(
     },
   },
 );
-
-/*
-<Relay.Render Container={RelayProjectDetailList}
-        queryConfig={ProjectDashboardRoute}
-        render={({done, error, props, retry, stale}) => {
-        if (error) {
-          return <b>Error! {error}</b>;
-        } else if (props) {
-          return <RelayProjectDetailList {...props} />;
-        } else {
-          return <LoadingSpinner />;
-        }
-      }}
-      />
-  */
