@@ -35,6 +35,14 @@ export class CheckBoxGroup extends Component{
   state = {
     selected_items: []
   };
+
+  static propTypes = {
+    listItems: PropTypes.array,
+    group_name: PropTypes.string,
+    title: PropTypes.string,
+    onChange: PropTypes.func,
+  };
+
   onChangeBox = (item) => {
     if (!this.state.selected_items.includes(item))
       this.setState( ({selected_items}) => {
@@ -51,7 +59,7 @@ export class CheckBoxGroup extends Component{
     return(
       <div>
         {this.props.title}
-        {Object.keys(this.props.listItems).map((item, i)=>{
+        {this.props.listItems.map((item, i)=>{
           return(
             <div key={i}>
               <input type="checkbox" name={this.props.group_name}
