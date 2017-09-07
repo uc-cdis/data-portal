@@ -3,14 +3,12 @@ import { Link } from 'react-router';
 import React from 'react';
 
 const FooterSection = styled.footer`
-  position: absolute;
   text-align: center;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.87);
-  z-index: 1000;
+  position:fixed;
+  bottom:0;
+  z-index:1000;
 `;
 
 const Dictionary = styled(Link)`
