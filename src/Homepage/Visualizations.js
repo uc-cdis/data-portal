@@ -7,10 +7,12 @@ import {browserHistory} from 'react-router';
 
 const FloatBox = styled.div`
   float: left;
-  overflow: hidden;
+  overflow: auto;
   width: 70%;
-  padding-left: 10%;
+  min-width: 300px;
 `;
+
+// ${props => 100 + 50*props.projectList.length}px;
 
 /**
  * Component shows stacked-bars - one stacked-bar for each project in props.projectList -
@@ -23,11 +25,27 @@ const FloatBox = styled.div`
  */
 export class StackedBarChart extends React.Component  {
   render() {
+    // Fat bars look goofy, so try to size the chart based on the number of projects ...
+    const projectList = [].concat( this.props.projectList || [] );
+
+    // pad projectList to see what it looks like with more projects
+    /*
+    for( let i=0; projectList.length < 30; ++i ) {
+      projectList.push( { name:"bla-bla" + i, experimentCount:1, caseCount:1 } );
+    }
+    */
+
+    //const containerSize = 100 + projectList.length * 100;
+
     return (
       <FloatBox>    
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart onClick={(e) => { browserHistory.push('/'+e.activeLabel); window.location.reload(false);}}  data={this.props.projectList}
-                margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+          <BarChart onClick={(e) => { browserHistory.push('/'+e.activeLabel); window.location.reload(false);}}  
+                data={projectList}
+                margin={{top: 20, right: 30, left: 20, bottom: 5}}
+                barSize={projectList.length < 10 ? 50 : null }
+                layout="horizontal"
+                >
           <h4>Project Submission status</h4>
           <XAxis dataKey="name"/>
           <YAxis/>

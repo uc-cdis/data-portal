@@ -1,11 +1,13 @@
 import React from 'react';
 import Relay from 'react-relay'
+import { Link } from 'react-router';
 import styled, { css } from 'styled-components';
-import {TableBarColor} from '../theme.js'
+import {TableBarColor} from '../theme.js';
+import CircleButton from '../components/CircleButton.jsx';
+import ActionBook from 'material-ui/svg-icons/action/book';
 
 
 export const Table = styled.table`
-  width: 100%;
   border-collapse: collapse;
   overflow: auto;
   box-shadow:0 0 6px rgba(0,0,0,0.5);
@@ -41,6 +43,20 @@ export const TableColLabel = styled.th`
     font-weight: normal;
 `;
 
+class UglySubmitButton extends React.Component {
+  render() {
+    return <Link className={this.props.className} to={this.props.projName} title="Submit Data"><ActionBook style={{verticalAlign:"middle"}}/>Submit Data</Link>;
+  }
+}
+
+const SubmitButton = styled(UglySubmitButton)`
+vertical-align:middle;
+border-radius:3px;
+background-color:#dddddd;
+font-size:14px;
+padding:10px;
+`;
+
 
 /**
  * Table row component - fills in columns given project property
@@ -49,15 +65,32 @@ export class ProjectTR extends React.Component {
   render() {
     const proj = this.props.project;
     return <TableRow key={proj.name} summaryRow={!! this.props.summaryRow}>
-            <TableCell>{proj.name}</TableCell>
-            <TableCell>{proj.experimentCount}</TableCell>
-            <TableCell>{proj.caseCount}</TableCell>
-            <TableCell>{proj.aliquotCount}</TableCell>
-            <TableCell>{proj.fileCount}</TableCell>
+            <TableCell>
+                {proj.name}
+            </TableCell>
+            <TableCell>{proj.experimentCount}
+            </TableCell>
+            <TableCell>{proj.caseCount}
+            </TableCell>
+            <TableCell>{proj.aliquotCount}
+            </TableCell>
+            <TableCell>
+              {proj.fileCount}
+            </TableCell>  
+            <TableCell>
+                   {proj.name !== "Totals:" ? <SubmitButton projName={proj.name} /> : ""}
+            </TableCell>
           </TableRow>;
   }
 }
 
+/*
+<TableCell>
+              <svg width="200" height="20" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <rect fill="#8888d8" x="0" y="0" width="75" height="100" />
+              </svg>
+            </TableCell>
+            */
 
 /**
  * Table of projects.  
@@ -91,7 +124,8 @@ export class ProjectTable extends React.Component {
           <TableColLabel>Cases</TableColLabel>
           <TableColLabel>Aliquots</TableColLabel>
           <TableColLabel>Files</TableColLabel>
-      </TableRow>
+          <TableColLabel>Submit Data</TableColLabel>
+        </TableRow>
       </TableHead>
       <tbody>
         {

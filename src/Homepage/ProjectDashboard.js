@@ -3,10 +3,9 @@ import Relay from 'react-relay'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { clearFix } from 'polished';
-
+import CircleButton from '../components/CircleButton.jsx';
 import { Link } from 'react-router';
 import { CustomPieChart, StackedBarChart } from './Visualizations.js';
-import IconButton from 'material-ui/IconButton';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import ActionBook from 'material-ui/svg-icons/action/book';
 import {PTBRelayAdapter} from './ProjectTileBoard.jsx';
@@ -20,6 +19,7 @@ const CountBox = styled.div`
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
   padding: 30px;
   border-top: 3px solid #c87152;
+  min-width:300px; 
   ul {
     width: 100%;
     overflow: hidden;
@@ -29,17 +29,12 @@ const CountBox = styled.div`
     }
   }
 `;
+
 const Count = styled.span`
   color: #ff4200;
   margin-right: 10px;
 `;
 
-let CircleButton = styled(IconButton)`
-  background-color: #ebe7e5 !important;
-  border-radius: 50%;
-  margin-right: 20px !important;
-  margin-top: 20px !important;
-`;
 
 const DashTopDiv = styled.div`
   ${clearFix()}
@@ -61,13 +56,15 @@ class CountCard extends React.Component {
           <li><Count>{ this.props.caseCount }</Count><span>Files</span></li>
           <li><Count>{ this.props.aliquotCount }</Count><span>Aliquots</span></li>
         </ul>
-        <CircleButton><ActionSearch /></CircleButton>
-        <CircleButton><ActionBook /></CircleButton>
       </CountBox>
     );
   }
 }
 
+/*
+<CircleButton><ActionSearch /></CircleButton>
+        <CircleButton><ActionBook /></CircleButton>
+*/
 
 /**
  * Project dashbaord - list projects with various stats and links
