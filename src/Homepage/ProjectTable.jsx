@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components';
 import {TableBarColor} from '../theme.js';
 import CircleButton from '../components/CircleButton.jsx';
 import ActionBook from 'material-ui/svg-icons/action/book';
-
+import {GQLHelper} from './gqlHelper.js';
 
 export const Table = styled.table`
   border-collapse: collapse;
@@ -124,7 +124,7 @@ export class ProjectTable extends React.Component {
           <TableColLabel>Cases</TableColLabel>
           <TableColLabel>Aliquots</TableColLabel>
           <TableColLabel>Files</TableColLabel>
-          <TableColLabel>Submit Data</TableColLabel>
+          <TableColLabel></TableColLabel>
         </TableRow>
       </TableHead>
       <tbody>
@@ -161,6 +161,8 @@ class ProjectRoute extends Relay.Route {
 }
 
 
+const gqlHelper = new GQLHelper(null);
+
 /**
  * Relay adapter for project detail
  */
@@ -175,7 +177,8 @@ const RelayProjectTR = Relay.createContainer(
       aliquotCount: 0,
       fileCount: 0
     };
-    const proj = { ...viewer.project[0], caseCount: viewer.caseCount, aliquotCount:viewer.aliquotCount, fileCount:0 };
+    const {fileCount} = GQLHelper.extractFileInfo( viewer );
+    const proj = { ...viewer.project[0], caseCount: viewer.caseCount, aliquotCount:viewer.aliquotCount, fileCount:fileCount };
 
     //console.log( "RelayProjectDetail got details: ", dirtyProps );
 
@@ -194,6 +197,7 @@ const RelayProjectTR = Relay.createContainer(
          }
          caseCount:_case_count( project_id: $name )
          aliquotCount:_aliquot_count( project_id: $name )
+         ${gqlHelper.numFilesByProjectFragment}
        }`
     }
   }

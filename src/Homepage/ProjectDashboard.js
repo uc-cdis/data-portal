@@ -10,6 +10,7 @@ import ActionSearch from 'material-ui/svg-icons/action/search';
 import ActionBook from 'material-ui/svg-icons/action/book';
 import {PTBRelayAdapter} from './ProjectTileBoard.jsx';
 import {PTableRelayAdapter} from './ProjectTable.jsx';
+import {GQLHelper} from './gqlHelper.js';
 
 
 
@@ -53,7 +54,7 @@ class CountCard extends React.Component {
         <ul>
           <li><Count>{ this.props.caseCount }</Count><span>Cases</span></li>
           <li><Count>{ this.props.experimentCount }</Count><span>Experiments</span></li>
-          <li><Count>{ this.props.caseCount }</Count><span>Files</span></li>
+          <li><Count>{ this.props.fileCount }</Count><span>Files</span></li>
           <li><Count>{ this.props.aliquotCount }</Count><span>Aliquots</span></li>
         </ul>
       </CountBox>
@@ -83,17 +84,21 @@ class CountCard extends React.Component {
  *     
  *   ];
  */
-export class ProjectDashboard extends React.Component {
+export class LittleProjectDashboard extends React.Component {
   
   render () {
     return (
       <DashTopDiv>
-        <CountCard caseCount={ this.props.caseCount } experimentCount={ this.props.experimentCount } fileCount="8888" aliquotCount={ this.props.aliquotCount } />
+        <CountCard caseCount={ this.props.caseCount } experimentCount={ this.props.experimentCount } fileCount={this.props.fileCount} aliquotCount={ this.props.aliquotCount } />
         <StackedBarChart projectList={this.props.projectList} />
       </DashTopDiv>
     )
   }
 }
+
+
+
+const gqlHelper = new GQLHelper(null);
 
 
 /**
@@ -104,21 +109,24 @@ export const RelayProjectDashboard = Relay.createContainer(
   function({viewer}) {
     //
     // Little helper translates relay graphql results to properties
-    // expected by the ProjectDashboard component
+    // expected by the LittleProjectDashboard component
     //
     const projectList = viewer.project.map( function(proj) { return { name:proj.project_id, experimentCount: proj._experiments_count, caseCount: 2, aliquotCount: 0 }; }); 
+    const {fileCount} = GQLHelper.extractFileInfo( viewer );
+
+    //console.log( "Got filecount: " + fileCount );
     const summaryCounts = {
       caseCount: viewer._case_count,
       experimentCount: viewer._experiment_count,
       aliquotCount: viewer._aliquot_count,
-      fileCount:200
+      fileCount: fileCount
     };
     const cleanProps = {
       projectList:projectList, ...summaryCounts
     };
 
     return <div className="clearfix">
-      <ProjectDashboard { ...cleanProps} />
+      <LittleProjectDashboard { ...cleanProps} />
       <PTableRelayAdapter projectList={cleanProps.projectList} summaryCounts={summaryCounts} />  
       </div>
   },
@@ -134,6 +142,7 @@ export const RelayProjectDashboard = Relay.createContainer(
               _case_count
               _experiment_count
               _aliquot_count
+              ${gqlHelper.numFilesTotalFragment}           
           }
       `
     },
