@@ -1,5 +1,5 @@
 import React from 'react';
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { clearFix } from 'polished';

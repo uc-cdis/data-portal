@@ -1,4 +1,4 @@
-import Relay from 'react-relay';
+import Relay from 'react-relay/classic';
 import {ProjectDashboard,RelayProjectDashboard} from './ProjectDashboard.jsx';
 import { withBoxAndNav, withAuthTimeout } from '../utils';
 

@@ -1,6 +1,5 @@
-import Relay from 'react-relay';
+import Relay from 'react-relay/classic';
 import {app,dev} from '../localconf.js';
-
 
 /**
  * Little helper to re-use parsed graphql

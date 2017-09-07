@@ -1,5 +1,5 @@
 import React from 'react';
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
@@ -110,10 +110,10 @@ export const RelayProjectDashboard = Relay.createContainer(
       aliquotCount: viewer._aliquot_count,
     };
 
-    return <div>
+    return (<div>
       <ProjectDashboard { ...cleanProps} />
       <PDListAdapter projectList={cleanProps.projectList} />  
-      </div>
+      </div>);
   },
   {
     fragments: {

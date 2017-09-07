@@ -13,24 +13,6 @@ const LabelCheckBox = styled(Label)`
     vertical-align: middle;
 `;
 
-class CheckBox extends Component{
-  state = {
-    isCheck: false
-  };
-
-  render () {
-    return(
-      <div key={i}>
-        <input type="checkbox" name={this.props.group_name}
-               value={item} id={item}
-               checked={this.state.selected_items.includes(item)}
-               onChange={() => {this.onChangeBox(item)}}/>
-        <LabelCheckBox for={item}>{item}</LabelCheckBox>
-      </div>
-    );
-  }
-}
-
 export class CheckBoxGroup extends Component{
   state = {
     selected_items: []
@@ -44,17 +26,19 @@ export class CheckBoxGroup extends Component{
   };
 
   onChangeBox = (item) => {
-    if (!this.state.selected_items.includes(item))
+    let pos = this.state.selected_items.indexOf(item);
+    if (pos === -1)
       this.setState( ({selected_items}) => {
         selected_items.push(item);
         return {selected_items: selected_items};
       });
     else
       this.setState( ({selected_items}) => {
-        selected_items.splice(selected_items.indexOf(item), 1);
+        selected_items.splice(pos, 1);
         return {selected_items: selected_items};
       });
   };
+
   render () {
     return(
       <div>
@@ -65,7 +49,10 @@ export class CheckBoxGroup extends Component{
               <input type="checkbox" name={this.props.group_name}
                      value={item} id={item}
                      checked={this.state.selected_items.includes(item)}
-                     onChange={() => {this.onChangeBox(item)}}/>
+                     onChange={() => Promise.resolve(this.onChangeBox(item)).then(
+                       () => this.props.onChange(this.props.group_name, this.state.selected_items))
+                     }
+              />
               <LabelCheckBox for={item}>{item}</LabelCheckBox>
             </div>
           )

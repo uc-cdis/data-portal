@@ -2,79 +2,112 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {CheckBoxGroup} from "../components/CheckBox";
 import styled from 'styled-components';
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
+import {Sidebar} from "../theme";
+import Relay from 'react-relay/classic'
 
 const TableExplorer = ({})=>{
   return(
     <div>
-    TableExplorer
+    <div>
+        <ReactTable
+          data={['data,data,data,data,data']}
+          columns={[
+            {
+              Header: "File Name",
+              accessor: "firstName"
+            },
+            {
+              Header: "File Format",
+              id: "lastName",
+              accessor: d => d.lastName
+            },
+            {
+              Header: "File Size",
+              accessor: "age"
+            },
+            {
+              Header: "Status",
+              accessor: "status"
+            },
+            {
+              Header: "Visits",
+              accessor: "visits"
+            }
+          ]}
+          defaultPageSize={10}
+          className="-striped -highlight"
+        />
+        <br />
+      </div>
     </div>
   )
 };
 
-class Sidebar extends Component {
+class ExplorerSidebar extends Component {
   static propTypes = {
     projects: PropTypes.object,
     file_formats: PropTypes.array,
   };
 
-  state = {
-    form: {},
+  state = {};
+
+  onChangeCheckbox = (group_name, selected_items) =>{
+    this.setState({
+      ...this.state,
+      [group_name]: [selected_items]
+    });
   };
 
   render(){
     return(
-      <div>
+      <Sidebar>
       <CheckBoxGroup listItems={Object.values(this.props.projects)} title="Projects"
-                group_name="Project" onChange={() => alert("checked")}/>
+                group_name="Project" onChange={this.onChangeCheckbox.bind(this)}/>
       <CheckBoxGroup listItems={this.props.file_formats} title="File Formats"
-                group_name="file_formats" onChange={() => alert("checked")} />
-      </div>
+                group_name="file_formats" onChange={this.onChangeCheckbox.bind(this)} />
+      </Sidebar>
     );
   };
-}
+};
 
 class ExplorerComponent extends Component {
   static propTypes = {
     submission: PropTypes.object,
   };
 
-  aggregateFileFormats = (dictionary) =>{
-    let file_formats = new Set();
-    console.log(file_formats)
+  aggregateProperties = (dictionary, category, property) =>{
+    let aggregateSet = new Set();
     if(dictionary == 'undefined'){
-      return(file_formats);
+      return(aggregateSet);
     }
     for(let node in dictionary){
-      if(dictionary[node].hasOwnProperty('category') && dictionary[node]['category'] == 'data_file'){
-        if(dictionary[node]['properties']['data_type'].hasOwnProperty('enum')){
-          for(let file_format of dictionary[node]['properties']['data_type']['enum']){
-            if(!file_formats.has(file_format)){
-              file_formats.add(file_format);
+      if(dictionary[node].hasOwnProperty('category') && dictionary[node]['category'] == category){
+        if(dictionary[node]['properties'][property].hasOwnProperty('enum')){
+          for(let property_option of dictionary[node]['properties'][property]['enum']){
+            if(!aggregateSet.has(property_option)){
+              aggregateSet.add(property_option);
             }
           }
         }
       }
     }
-    return(file_formats);
+    return(aggregateSet);
   };
 
   state = {
     projects: this.props.submission.projects,
-<<<<<<< HEAD
-  };
-=======
     selected_projects: null,
-    file_formats: this.aggregateFileFormats(this.props.submission.dictionary),
-    dictionary:this.props.submission.dictionary,
+    file_formats: this.aggregateProperties(this.props.submission.dictionary, 'data_file', 'data_type'),
+    dictionary:this.props.submission.dictionary
 
-  }
->>>>>>> de94a34... feat(explorer): generate list of file_formats
-
+  };
 
   render(){
     return(
       <div>
-      <Sidebar projects={this.state.projects} file_formats={Array.from(this.state.file_formats.values())} />
+      <ExplorerSidebar projects={this.state.projects} file_formats={Array.from(this.state.file_formats.values())} />
       <TableExplorer />
       </div>
     )

@@ -1,5 +1,7 @@
 import React from 'react';
-import Relay from 'react-relay';
+import Relay from 'react-relay/classic';
+import { dict } from './dictionary.js';
+import { persistStore, autoRehydrate } from 'redux-persist';
 import { render } from 'react-dom';
 import GraphiQL from 'graphiql';
 import { Provider } from 'react-redux';
