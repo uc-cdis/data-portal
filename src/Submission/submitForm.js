@@ -212,7 +212,6 @@ const SubmitNodeForm = ({node,form, properties, requireds, onChange, onChangeEnu
                   value={form[property]} 
                   property={node.properties[property]['oneOf']}
                   name={property}
-                  value={form[property]}
                   required={required}
                   description={description}
                   onChange={onChange}
