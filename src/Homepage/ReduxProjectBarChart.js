@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { ProjectBarChart } from './Visualizations.js';
+import { ProjectBarChart } from './ProjectBarChart.jsx';
 
 
 // Map state.homepage.projectsByName to projectList 
