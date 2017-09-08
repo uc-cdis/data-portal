@@ -1,6 +1,6 @@
 import React from 'react';
 import { withBoxAndNav, withAuthTimeout } from '../utils';
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import styled from 'styled-components';
 import { Link } from 'react-router';
 
