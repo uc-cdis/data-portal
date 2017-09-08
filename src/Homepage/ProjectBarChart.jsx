@@ -23,10 +23,23 @@ const FloatBox = styled.div`
  *       ...
  *   ];
  */
-export class StackedBarChart extends React.Component  {
+export class ProjectBarChart extends React.Component  {
+  constructor(props) {
+    super(props);
+    /* This is not necessary - react-redux handles the state for us ... :-)
+    // More data on each project accumulates asynchronously as
+    // per-project graphql queries are resolved, so support
+    // updating each project as state ... :-p
+    //
+    this.state = (this.props.projectList || []).reduce( 
+      (acc,proj) => { acc[proj.name] = proj; return acc; }, {} 
+    );
+    */
+  }
+
   render() {
-    // Fat bars look goofy, so try to size the chart based on the number of projects ...
     const projectList = [].concat( this.props.projectList || [] );
+    //const projectList = Object.values(this.state).sort( (a,b) => { return a<b?-1:a===b?0:1; });
 
     // pad projectList to see what it looks like with more projects
     /*

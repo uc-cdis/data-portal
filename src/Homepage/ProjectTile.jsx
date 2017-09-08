@@ -3,7 +3,6 @@ import Relay from 'react-relay'
 import styled from 'styled-components';
 import { Link } from 'react-router';
 import { clearFix } from 'polished';
-import { CustomPieChart, StackedBarChart } from './Visualizations.js';
 
 import IconButton from 'material-ui/IconButton';
 import ActionSearch from 'material-ui/svg-icons/action/search';
@@ -70,7 +69,6 @@ export class ProjectTile extends React.Component {
           <li><Count>{ this.props.aliquotCount }</Count> <span>Aliquots</span></li>
         </ul>
           
-        <StackedBarChart projectList={projectList} />
       </DetailDiv>
     );
   }

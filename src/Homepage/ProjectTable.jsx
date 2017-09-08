@@ -6,6 +6,7 @@ import {TableBarColor} from '../theme.js';
 import CircleButton from '../components/CircleButton.jsx';
 import ActionBook from 'material-ui/svg-icons/action/book';
 import {GQLHelper} from './gqlHelper.js';
+import {getReduxStore} from '../reduxStore.js';
 
 export const Table = styled.table`
   border-collapse: collapse;
@@ -167,8 +168,8 @@ const gqlHelper = new GQLHelper(null);
  * Relay adapter for project detail
  */
 const RelayProjectTR = Relay.createContainer(
-  function (dirtyProps) { // graphql to props adapter
-    const viewer = dirtyProps.viewer || {
+  function (props,context) { // graphql to props adapter
+    const viewer = props.viewer || {
       project: [{
         name: "unknown",
         experimentCount: 0
@@ -180,8 +181,31 @@ const RelayProjectTR = Relay.createContainer(
     const {fileCount} = GQLHelper.extractFileInfo( viewer );
     const proj = { ...viewer.project[0], caseCount: viewer.caseCount, aliquotCount:viewer.aliquotCount, fileCount:fileCount };
 
-    //console.log( "RelayProjectDetail got details: ", dirtyProps );
+    //console.log( "RelayProjectDetail got details: ", props );
 
+    // Update redux store if data is not already there
+    getReduxStore().then(
+      (store) => {
+        const homeState = store.getState().homepage || {};
+        let old = {};
+        /* .. just for testing
+        const fakeProj = { ...proj };
+          fakeProj.caseCount=22;
+          fakeProj.experimentCount=11;
+        */
+        if ( homeState.projectsByName  ) {
+          old = homeState.projectsByName[proj.name] || old;
+        }
+        
+        if( old.experimentCount !== proj.experimentCount || old.caseCount !== proj.caseCount ||
+          old.aliquotCount !== proj.aliquotCount || old.fileCount !== proj.aliquotCount ) {
+          store.dispatch( { type: 'RECEIVE_PROJECT_DETAIL', data: proj } );
+          } /* else {
+          console.log( proj.name + " already in Redux store" );
+        } */
+      }
+    );
+    
     return <ProjectTR project={proj} />;
   },
   {
