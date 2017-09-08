@@ -1,5 +1,5 @@
 import Relay from 'react-relay';
-import {ProjectDashboard,RelayProjectDashboard} from './ProjectDashboard';
+import {ProjectDashboard,RelayProjectDashboard} from './ProjectDashboard.jsx';
 import { withBoxAndNav, withAuthTimeout } from '../utils';
 
 
