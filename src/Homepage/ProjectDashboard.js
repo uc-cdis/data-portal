@@ -5,13 +5,13 @@ import styled from 'styled-components';
 import { clearFix } from 'polished';
 import CircleButton from '../components/CircleButton.jsx';
 import { Link } from 'react-router';
-import { CustomPieChart, StackedBarChart } from './Visualizations.js';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import ActionBook from 'material-ui/svg-icons/action/book';
 import {PTBRelayAdapter} from './ProjectTileBoard.jsx';
 import {PTableRelayAdapter} from './ProjectTable.jsx';
 import {GQLHelper} from './gqlHelper.js';
-
+import {getReduxStore} from '../reduxStore.js';
+import ReduxProjectBarChart from "./ReduxProjectBarChart.js";
 
 
 const CountBox = styled.div`
@@ -62,6 +62,8 @@ class CountCard extends React.Component {
   }
 }
 
+
+
 /*
 <CircleButton><ActionSearch /></CircleButton>
         <CircleButton><ActionBook /></CircleButton>
@@ -90,9 +92,9 @@ export class LittleProjectDashboard extends React.Component {
     return (
       <DashTopDiv>
         <CountCard caseCount={ this.props.caseCount } experimentCount={ this.props.experimentCount } fileCount={this.props.fileCount} aliquotCount={ this.props.aliquotCount } />
-        <StackedBarChart projectList={this.props.projectList} />
+        <ReduxProjectBarChart projectList={this.props.projectList} />
       </DashTopDiv>
-    )
+    );
   }
 }
 
@@ -106,12 +108,14 @@ const gqlHelper = new GQLHelper(null);
  * relay magic.
  */
 export const RelayProjectDashboard = Relay.createContainer(
-  function({viewer}) {
+  function(props,context) {
+    const viewer = props.viewer;
+
     //
     // Little helper translates relay graphql results to properties
     // expected by the LittleProjectDashboard component
     //
-    const projectList = viewer.project.map( function(proj) { return { name:proj.project_id, experimentCount: proj._experiments_count, caseCount: 2, aliquotCount: 0 }; }); 
+    const projectList = viewer.project.map( function(proj) { return { name:proj.project_id, experimentCount: proj._experiments_count, caseCount: 0, aliquotCount: 0, fileCount:0 }; }); 
     const {fileCount} = GQLHelper.extractFileInfo( viewer );
 
     //console.log( "Got filecount: " + fileCount );
@@ -122,13 +126,26 @@ export const RelayProjectDashboard = Relay.createContainer(
       fileCount: fileCount
     };
     const cleanProps = {
-      projectList:projectList, ...summaryCounts
+      projectList:projectList, 
+      ...summaryCounts
     };
+
+    // Update redux store if data is not already there
+    getReduxStore().then(
+      (store) => {
+        const homeState = store.getState().homepage || {};
+        if ( ! homeState.projectsByName  ) {
+          store.dispatch( { type: 'RECEIVE_PROJECT_LIST', data: projectList } );      
+        } /* else {
+          console.log( "project list already in Redux store" );
+        } */
+      }
+    );
 
     return <div className="clearfix">
       <LittleProjectDashboard { ...cleanProps} />
       <PTableRelayAdapter projectList={cleanProps.projectList} summaryCounts={summaryCounts} />  
-      </div>
+      </div>;
   },
   {
     fragments: {
