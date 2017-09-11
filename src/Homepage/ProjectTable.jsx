@@ -1,5 +1,6 @@
 import React from 'react';
 import Relay from 'react-relay'
+import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router';
 import styled, { css } from 'styled-components';
 import {TableBarColor} from '../theme.js';
@@ -13,6 +14,8 @@ export const Table = styled.table`
   overflow: auto;
   box-shadow:0 0 6px rgba(0,0,0,0.5);
   margin: 1em 0em;
+  text-align:center;
+  width:100%;
 `;
 
 export const TableHead = styled.thead`
@@ -42,21 +45,14 @@ export const TableColLabel = styled.th`
     padding: 0.5rem 1rem;
     height: 100%;
     font-weight: normal;
+    text-align:center;
 `;
 
-class UglySubmitButton extends React.Component {
+class SubmitButton extends React.Component {
   render() {
-    return <Link className={this.props.className} to={this.props.projName} title="Submit Data"><ActionBook style={{verticalAlign:"middle"}}/>Submit Data</Link>;
+    return <Link to={this.props.projName} title="Submit Data"><FlatButton backgroundColor="#dddddd" label="Submit Data"/></Link>;
   }
 }
-
-const SubmitButton = styled(UglySubmitButton)`
-vertical-align:middle;
-border-radius:3px;
-background-color:#dddddd;
-font-size:14px;
-padding:10px;
-`;
 
 
 /**

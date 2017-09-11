@@ -17,6 +17,8 @@ import ReduxProjectBarChart from "./ReduxProjectBarChart.js";
 const CountBox = styled.div`
   float: left;
   width: 30%;
+  margin-top: 20px;
+  height: 230px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
   padding: 30px;
   border-top: 3px solid #c87152;
@@ -63,11 +65,6 @@ class CountCard extends React.Component {
 }
 
 
-
-/*
-<CircleButton><ActionSearch /></CircleButton>
-        <CircleButton><ActionBook /></CircleButton>
-*/
 
 /**
  * Project dashbaord - list projects with various stats and links
