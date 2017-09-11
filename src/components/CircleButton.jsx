@@ -6,7 +6,7 @@ const CircleButton = styled(IconButton)`
   background-color: #ebe7e5 !important;
   border-radius: 50%;
   margin-right: 20px !important;
-  margin-top: 20px !important;
+  margin-top: 10px !important;
 `;
 
 

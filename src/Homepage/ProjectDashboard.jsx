@@ -22,7 +22,7 @@ const CountBox = styled.div`
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
   padding: 30px;
   border-top: 3px solid #c87152;
-  min-width:300px; 
+  min-width:300px;
   ul {
     width: 100%;
     overflow: hidden;
@@ -59,6 +59,9 @@ class CountCard extends React.Component {
           <li><Count>{ this.props.fileCount }</Count><span>Files</span></li>
           <li><Count>{ this.props.aliquotCount }</Count><span>Aliquots</span></li>
         </ul>
+
+          <Link to="/query" title="Search"><CircleButton><ActionSearch /></CircleButton></Link>
+          <Link to="/dd" title="View Dictionary"><CircleButton><ActionBook /></CircleButton></Link>
       </CountBox>
     );
   }
