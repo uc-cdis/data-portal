@@ -1,6 +1,8 @@
 import React from 'react';
 import { ProjectTable, ProjectTR } from "./ProjectTable.jsx";
 import { shallow, mount } from 'enzyme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 
 
 test('Project table renders', () => {
@@ -18,7 +20,13 @@ test('Project table renders', () => {
     fileCount:200
   };
 
-  const table = mount( <ProjectTable projectList={projectList} summaryCounts={summaryCounts}/> );
+  // Material-UI components require the Mui theme ...
+  const table = mount( 
+    <MuiThemeProvider>
+      <ProjectTable projectList={projectList} summaryCounts={summaryCounts}/>
+    </MuiThemeProvider> 
+    );
   console.log( "ProjectTable looks like this: " + table.html() );
-  expect(table.find("tbody tr").length ).toBe( 1 );
+  // 2 == 1 data row + 1 summary totals row
+  expect(table.find("tbody tr").length ).toBe( 2 );
 });
