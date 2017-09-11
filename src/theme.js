@@ -65,6 +65,8 @@ export const Margin = styled.div`
   width: 100%;
 `;
 
+export const TableBarColor = '#847c7c';
+
 export const Table = styled.table`
   table-layout:auto;
   position: relative;
@@ -91,8 +93,8 @@ export const Table = styled.table`
 `;
 
 export const TableHead = styled.thead`
-  background: #847c7c
-  color: white
+  background: ${TableBarColor};
+  color: white;
   display: -webkit-box;
   display: -ms-flexbox;
     display: flex;
@@ -123,13 +125,14 @@ export const TableRow = styled.tr`
 
 export const TableData = styled.td`
     width: ${props => props.right ? '80%' : '20%'};
-    background: ${props => props.first_cr ? '#847c7c' : 'white'};
+    background: ${props => props.first_cr ? TableBarColor : 'white'};
     color: ${props => props.first_cr ? 'white' : '#222'};
     display: table-cell;
     padding: 0.5rem 1rem;
     overflow: scroll;
     height: 100%;
 `;
+
 
 export const Bullet = styled.li`
   list-style-type: disc;
