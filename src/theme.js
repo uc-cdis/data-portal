@@ -129,7 +129,7 @@ export const TableData = styled.td`
     color: ${props => props.first_cr ? 'white' : '#222'};
     display: table-cell;
     padding: 0.5rem 1rem;
-    overflow: scroll;
+    overflow: auto;
     height: 100%;
 `;
 
