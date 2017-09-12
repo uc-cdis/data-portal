@@ -1,4 +1,4 @@
-import {ResponsiveContainer, Cell, PieChart, Pie, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'Recharts';
+import {ResponsiveContainer, Cell, PieChart, Pie, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
