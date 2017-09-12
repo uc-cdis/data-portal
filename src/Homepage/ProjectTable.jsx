@@ -8,6 +8,11 @@ import CircleButton from '../components/CircleButton.jsx';
 import ActionBook from 'material-ui/svg-icons/action/book';
 import {GQLHelper} from './gqlHelper.js';
 import {getReduxStore} from '../reduxStore.js';
+import Translator from "./translate.js";
+
+
+const tor = Translator.getTranslator();
+
 
 export const Table = styled.table`
   border-collapse: collapse;
@@ -28,7 +33,6 @@ export const TableRow = styled.tr`
   color: #222;
   ${
     props => props.summaryRow ? `
-      border-top: 1px solid black;
       background-color: #eeeeee;
       `:"" 
   }
@@ -117,7 +121,7 @@ export class ProjectTable extends React.Component {
       <TableHead>
         <TableRow>
           <TableColLabel>Project</TableColLabel>
-          <TableColLabel>Experiments</TableColLabel>
+          <TableColLabel>{tor.translate( "Experiments" )}</TableColLabel>
           <TableColLabel>Cases</TableColLabel>
           <TableColLabel>Aliquots</TableColLabel>
           <TableColLabel>Files</TableColLabel>
@@ -158,7 +162,7 @@ class ProjectRoute extends Relay.Route {
 }
 
 
-const gqlHelper = new GQLHelper(null);
+const gqlHelper = GQLHelper.getGQLHelper();
 
 /**
  * Relay adapter for project detail
@@ -184,15 +188,10 @@ const RelayProjectTR = Relay.createContainer(
       (store) => {
         const homeState = store.getState().homepage || {};
         let old = {};
-        /* .. just for testing
-        const fakeProj = { ...proj };
-          fakeProj.caseCount=22;
-          fakeProj.experimentCount=11;
-        */
         if ( homeState.projectsByName  ) {
           old = homeState.projectsByName[proj.name] || old;
         }
-        
+
         if( old.experimentCount !== proj.experimentCount || old.caseCount !== proj.caseCount ||
           old.aliquotCount !== proj.aliquotCount || old.fileCount !== proj.aliquotCount ) {
           store.dispatch( { type: 'RECEIVE_PROJECT_DETAIL', data: proj } );
@@ -209,16 +208,7 @@ const RelayProjectTR = Relay.createContainer(
       name: null
     },
     fragments: {
-      viewer: () => Relay.QL`
-       fragment on viewer {
-         project(project_id: $name) {
-           name:project_id
-           experimentCount:_experiments_count
-         }
-         caseCount:_case_count( project_id: $name )
-         aliquotCount:_aliquot_count( project_id: $name )
-         ${gqlHelper.numFilesByProjectFragment}
-       }`
+      viewer: () => gqlHelper.projectTableTRFragment
     }
   }
 );
