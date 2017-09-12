@@ -1,8 +1,17 @@
 import {GQLHelper} from './gqlHelper.js';
 
+/**
+ * Note - these test will fail if the local dictionary
+ * is not an 'experiment' dictionary as the Relay.QL
+ * validation will kick in once we allocate a fragment.
+ */
 describe( "the gqlHelper", function() {
-  const helper = new GQLHelper( null );
+  const helper = GQLHelper.getGQLHelper( "exp" );
 
+  it( "provides different helpers for different apps", function() {
+    const studyHelper = GQLHelper.getGQLHelper( "bhc" );
+    expect( studyHelper ).not.toBe( helper );   
+  })
   it( "provides a base numFilesTotal fragment", function() {
     const frag = helper.numFilesTotalFragment;
 
@@ -15,6 +24,12 @@ describe( "the gqlHelper", function() {
 
     expect( !! frag ).toBe(true);
   });
+
+  it( "caches fragments", function() {
+    const frag1 = helper.projectDashboardFragment;
+    expect( frag1 ).toBeDefined();
+    expect( helper.projectDashboardFragment ).toBe( frag1 );
+  })
 
   it( "accumulates fileCount and fileData results", function() {
     const testData = {

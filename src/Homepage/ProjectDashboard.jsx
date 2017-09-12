@@ -11,6 +11,10 @@ import {PTableRelayAdapter} from './ProjectTable.jsx';
 import {GQLHelper} from './gqlHelper.js';
 import {getReduxStore} from '../reduxStore.js';
 import ReduxProjectBarChart from "./ReduxProjectBarChart.js";
+import Translator from "./translate.js";
+
+
+const tor = Translator.getTranslator();
 
 
 const CountBox = styled.div`
@@ -54,7 +58,7 @@ class CountCard extends React.Component {
         </h4>
         <ul>
           <li><Count>{ this.props.caseCount }</Count><span>Cases</span></li>
-          <li><Count>{ this.props.experimentCount }</Count><span>Experiments</span></li>
+          <li><Count>{ this.props.experimentCount }</Count><span>{tor.translate( "Experiments" )}</span></li>
           <li><Count>{ this.props.fileCount }</Count><span>Files</span></li>
           <li><Count>{ this.props.aliquotCount }</Count><span>Aliquots</span></li>
         </ul>
@@ -99,7 +103,7 @@ export class LittleProjectDashboard extends React.Component {
 
 
 
-const gqlHelper = new GQLHelper(null);
+const gqlHelper = GQLHelper.getGQLHelper();
 
 
 /**
@@ -148,19 +152,7 @@ export const RelayProjectDashboard = Relay.createContainer(
   },
   {
     fragments: {
-      viewer: () => Relay.QL`
-          fragment on viewer {
-              project(first: 10000) {
-                project_id
-                code
-                _experiments_count
-              }
-              _case_count
-              _experiment_count
-              _aliquot_count
-              ${gqlHelper.numFilesTotalFragment}           
-          }
-      `
+      viewer: () => gqlHelper.projectDashboardFragment
     },
   },
 );
