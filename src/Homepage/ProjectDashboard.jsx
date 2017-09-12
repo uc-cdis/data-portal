@@ -7,7 +7,6 @@ import CircleButton from '../components/CircleButton.jsx';
 import { Link } from 'react-router';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import ActionBook from 'material-ui/svg-icons/action/book';
-import {PTBRelayAdapter} from './ProjectTileBoard.jsx';
 import {PTableRelayAdapter} from './ProjectTable.jsx';
 import {GQLHelper} from './gqlHelper.js';
 import {getReduxStore} from '../reduxStore.js';
