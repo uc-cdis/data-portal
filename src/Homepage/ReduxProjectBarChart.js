@@ -5,7 +5,13 @@ import { ProjectBarChart } from './ProjectBarChart.jsx';
 // Map state.homepage.projectsByName to projectList 
 const mapStateToProps = (state)=> {
   if ( state.homepage && state.homepage.projectsByName ) {
-    const projectList = Object.values( state.homepage.projectsByName ).sort( (a,b) => a<b?-1:a===b?0:1 );
+    const projectList = Object.values( state.homepage.projectsByName ).sort( (a,b) => a<b?-1:a===b?0:1 ).map(
+      // Include 'studyCount' attribute for experiment vs study label support hack ...
+      (proj) => {
+        proj.studyCount = proj.experimentCount;
+        return proj;
+      }
+    );
     return { projectList };
   } else {
     return {};

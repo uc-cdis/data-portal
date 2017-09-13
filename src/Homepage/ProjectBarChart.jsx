@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
 import {browserHistory} from 'react-router';
+import Translator from "./translate.js";
+
+
+const tor = Translator.getTranslator();
 
 
 const FloatBox = styled.div`
@@ -48,7 +52,7 @@ export class ProjectBarChart extends React.Component  {
           <Tooltip/>
           <Legend />
           <Bar dataKey="caseCount" stackId="a" fill="#8884d8" />
-          <Bar dataKey="experimentCount" stackId="a" fill="#82ca9d" />
+          <Bar dataKey={tor.translate( "experimentCount" )} stackId="a" fill="#82ca9d" />
           </BarChart>
         </ResponsiveContainer>
     </FloatBox>
