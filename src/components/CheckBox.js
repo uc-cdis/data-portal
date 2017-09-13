@@ -13,6 +13,12 @@ const LabelCheckBox = styled(Label)`
     vertical-align: middle;
 `;
 
+const CheckBox = styled.div`
+   padding: 1em 0em;
+   border-bottom: 2px solid #7d7474;
+`;
+
+
 export class CheckBoxGroup extends Component{
   static propTypes = {
     listItems: PropTypes.array,
@@ -36,7 +42,7 @@ export class CheckBoxGroup extends Component{
     let selected_items = this.props.selected_items;
     console.log(selected_items);
     return(
-      <div>
+      <CheckBox>
         {this.props.title}
         {this.props.listItems.map((item, i)=>{
           return(
@@ -50,7 +56,14 @@ export class CheckBoxGroup extends Component{
             </div>
           )
         })}
-      </div>
+      </CheckBox>
     );
   }
 }
+
+export const StyledCheckBoxGroup = styled(CheckBoxGroup)`
+    padding: 0em 1em;
+    border-bottom: 2px solid #717b85;
+`; 
+
+

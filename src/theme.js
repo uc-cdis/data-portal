@@ -195,4 +195,5 @@ export const Label = styled.label`
 
 export const Sidebar = styled.div`
   float:left;
+  border-top: 2px solid tomato;
 `;

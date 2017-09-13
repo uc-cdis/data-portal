@@ -220,7 +220,7 @@ class BHCGQLHelper {
    * Same query as ExperimentGQLHelper
    */
   get numFilesByProjectFragment() {
-    return this._cache.get( "bhc_numFilesTotalFragment",
+    return this._cache.get( "bhc_numFilesByProject",
       () => Relay.QL`fragment on viewer {
           fileCount7:_app_checkup_count( project_id:$name )
           fileCount8:_cell_image_count( project_id:$name )          

@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {CheckBoxGroup} from '../components/CheckBox';
+import {StyledCheckBoxGroup} from '../components/CheckBox';
 import styled from 'styled-components';
 import 'react-table/react-table.css';
 import {Sidebar} from '../theme';
@@ -43,7 +43,7 @@ class TableExplorer extends Component{
                 accessor: 'category'
               }
             ]}
-            defaultPageSize={10}
+            defaultPageSize={20}
             className="-striped -highlight"
           />
           <br />
@@ -91,15 +91,15 @@ class ExplorerSidebar extends Component {
     console.log(this.props.selected_filters);
     return(
       <Sidebar>
-      <CheckBoxGroup listItems={projects} title="Projects"
+      <StyledCheckBoxGroup listItems={projects} title="Projects"
                      selected_items={this.props.selected_filters.projects}
                      group_name="projects"
                      onChange={(state) => this.props.onChange({...this.props.selected_filters, ...state})}/>
-      <CheckBoxGroup listItems={file_formats}
+      <StyledCheckBoxGroup listItems={file_formats}
                      selected_items={this.props.selected_filters.file_formats}
                      title="File Formats"
                      group_name="file_formats" onChange={(state) => this.props.onChange({...this.props.selected_filters, ...state})} />
-      <CheckBoxGroup listItems={file_types}
+      <StyledCheckBoxGroup listItems={file_types}
                      selected_items={this.props.selected_filters.file_types}
                      title="File Types"
                      group_name="file_types" onChange={(state) => this.props.onChange({...this.props.selected_filters, ...state})} />
@@ -142,11 +142,25 @@ class ExplorerComponent extends Component {
         explorerState.selected_filters.file_types !== props.relay.variables.file_types ||
         explorerState.selected_filters.file_formats !== props.relay.variables.file_formats)
       {
-        props.relay.setVariables({
-          selected_projects: explorerState.selected_filters.projects,
-          selected_file_types: explorerState.selected_filters.file_types,
-          selected_file_formats: explorerState.selected_filters.file_formats
-        });
+        props.relay.forceFetch({
+            selected_projects: explorerState.selected_filters.projects,
+            selected_file_types: explorerState.selected_filters.file_types,
+            selected_file_formats: explorerState.selected_filters.file_formats
+          }, (readyState) => {
+            if (! readyState.done)
+            {
+              console.log("Not done");
+              console.log(this.props.viewer);
+              console.log(readyState.events);
+            }
+            else if (readyState.done)
+            {
+              console.log("Done");
+              console.log(this.props.viewer);
+              console.log(readyState.events);
+            }
+          }
+        );
       }
     })});
   }
@@ -161,7 +175,7 @@ class ExplorerComponent extends Component {
       submitted_aligned_reads: [],
       submitted_unaligned_reads: [],
       submitted_somatic_mutation: [],
-      submitted_methylation: [],
+      mri_result: [],
       submitted_copy_number: []
     };
 
@@ -174,7 +188,7 @@ class ExplorerComponent extends Component {
     const files3 = viewer.submitted_somatic_mutation.map( function(file) {
       return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
     });
-    const files4 = viewer.submitted_methylation.map( function(file) {
+    const files4 = viewer.mri_result.map( function(file) {
       return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
     });
     const files5 = viewer.submitted_copy_number.map( function(file) {
@@ -230,7 +244,7 @@ export const RelayExplorerComponent = Relay.createContainer(
                   data_type
                   file_size
               }
-              submitted_methylation(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
+              mri_result(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
                   project_id
                   file_name
                   data_category
@@ -308,9 +322,9 @@ const RelayExplorer = Relay.createContainer(
   withBoxAndNav(withAuthTimeout(RelayExplorerComponent)),
   {
     fragments: {
-      viewer:(variables) => Relay.QL`
+      viewer:() => Relay.QL`
           fragment on viewer {
-              ${RelayExplorerComponent.getFragment( 'viewer', {...variables} )}
+              ${RelayExplorerComponent.getFragment( 'viewer' )}
           }
       `
     }
