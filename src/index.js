@@ -10,6 +10,7 @@ import { clearResultAndQuery } from './QueryNode/actions';
 import Login from './Login/component';
 import RelayHomepage from './Homepage/RelayHomepage';
 import QueryNode from './QueryNode/component';
+import RelayExplorer from './Explorer/component';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
 import ProjectSubmission from './Submission/component';
@@ -61,7 +62,7 @@ Relay.injectNetworkLayer(
 
 const homepageQueries = { 
   viewer: () => Relay.QL`query { viewer }`,  
-}
+};
 
 let initialized = false;
 
@@ -107,6 +108,10 @@ async function init() {
             <Route path='/dd/:node'
               onEnter={enterHook(store, fetchDictionary)}
               component={withBoxAndNav(DataDictionaryNode)} />
+            <Route path='/data'
+              onEnter={requireAuth(store, (nextState) => { return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))); })}
+              component={RelayExplorer}
+              queries={homepageQueries}/>
             <Route path='/:project'
               onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))}
               component={withBoxAndNav(withAuthTimeout(ProjectSubmission))} />
@@ -114,7 +119,7 @@ async function init() {
               onEnter={requireAuth(store, (nextState) => { return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))); })}
               component={withBoxAndNav(withAuthTimeout(QueryNode))} />
           </Router>
-         </MuiThemeProvider> 
+         </MuiThemeProvider>
         </ThemeProvider>
       </Provider>,
     document.getElementById('root')
@@ -127,7 +132,7 @@ async function init() {
             <Route path='/login' component={Login} />
             <Route path='/'
               onEnter={requireAuth(store, () => store.dispatch(fetchAccess()))}
-              component={withBoxAndNav(withAuthTimeout(IdentityAccess))} />
+              component={withBoxAndNav(withAuthTimeout(UserProfile))} />
           </Router>
         </ThemeProvider>
       </Provider>,

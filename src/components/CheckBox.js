@@ -14,15 +14,16 @@ const LabelCheckBox = styled(Label)`
 `;
 
 export class CheckBoxGroup extends Component{
-  state = {
-    selected_items: []
-  };
-
   static propTypes = {
     listItems: PropTypes.array,
     group_name: PropTypes.string,
+    selected_items: PropTypes.array,
     title: PropTypes.string,
     onChange: PropTypes.func,
+  };
+
+  state = {
+    selected_items: this.props.selected_items
   };
 
   onChangeBox = (item) => {

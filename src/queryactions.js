@@ -37,7 +37,6 @@ export const fetchDictionary = () => {
 };
 
 export const receiveDictionary = ({status, data}) =>{
-  console.log("received dict: " + data);
   switch (status){
     case 200:
     return {
