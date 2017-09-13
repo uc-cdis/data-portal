@@ -20,10 +20,10 @@ if (app === 'bpa') {
   graphql_schema_url = hostname + '/data/schema.json';
   appname = 'BPA Metadata Submission Portal';
   nav_items = [
-    {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
-    {'icon': 'fui-search', 'link': '/query', 'color': '#daa520'},
-    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'},
-    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520'}
+    {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2', 'name': 'home'},
+    {'icon': 'fui-query', 'link': '/query', 'color': '#daa520', 'name': 'query'},
+    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2', 'name': 'dictionary'},
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520', 'name': 'profile'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -41,10 +41,10 @@ if (app === 'bpa') {
   graphql_schema_url = hostname + '/data/schema.json';
   appname = 'Environmental Data Commons Portal';
   nav_items = [
-    {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
-    {'icon': 'fui-search', 'link': '/query', 'color': '#daa520'},
-    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'},
-    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520'}
+    {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2', 'name': 'home'},
+    {'icon': 'fui-query', 'link': '/query', 'color': '#daa520', 'name': 'query'},
+    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2', 'name': 'dictionary'},
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520', 'name': 'profile'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -83,10 +83,10 @@ if (app === 'bpa') {
   graphql_schema_url = hostname + '/data/schema.json';
   appname = 'ACCOuNT Data Commons Portal';
   nav_items = [
-    {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'},
-    {'icon': 'fui-search', 'link': '/query', 'color': '#daa520'},
-    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2'},
-    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520'}
+    {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2', 'name': 'home'},
+    {'icon': 'fui-query', 'link': '/query', 'color': '#daa520', 'name': 'query'},
+    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2', 'name': 'dictionary'},
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520', 'name': 'profile'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -100,7 +100,7 @@ if (app === 'bpa') {
   graphql_schema_url = hostname + 'data/schema.json';
   appname = 'GDC Jamboree Portal';
   nav_items = [
-    {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2'}
+    {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2', 'name': 'home'}
   ];
   login = {
     url: 'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',
@@ -118,10 +118,10 @@ if (app === 'bpa') {
   graphql_schema_url = hostname + '/data/schema.json';
   appname = 'Generic Data Commons Portal';
   nav_items = [
-    {'icon': 'fui-home', 'link': '/', 'color': '#1d3674'},
-    {'icon': 'fui-search', 'link': '/query', 'color': '#ad7e1c'},
-    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#1d3674'},
-    {'icon': 'fui-user', 'link': '/identity', 'color': '#ad7e1c'}
+    {'icon': 'fui-home', 'link': '/', 'color': '#1d3674', 'name': 'home'},
+    {'icon': 'fui-query', 'link': '/query', 'color': '#ad7e1c', 'name': 'query'},
+    {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#1d3674', 'name': 'dictionary'},
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520', 'name': 'profile'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',

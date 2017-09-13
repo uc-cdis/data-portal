@@ -2,9 +2,22 @@
     box-sizing: border-box;
     padding: 0px;
 }
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
 body {
-    background-image: url('../img/bg.jpg');
-    background-size: cover;
+    /* background-image: url('../img/bg.jpg'); */
+    /* background-size: cover; */
+    min-height: 100%;
+    /* position: relative; */
 }
 
 .flat-form{

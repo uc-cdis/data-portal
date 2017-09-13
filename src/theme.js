@@ -2,6 +2,11 @@ import styled, { css } from 'styled-components';
 import Select from 'react-select';
 
 export const theme = {
+  blue: '#59C3C3',
+  yellow: '#ffeb3b',
+  purple: '#D741A7',
+  cherry: '#E02F5E',
+  tomato: '#F06449',
   main: 'mediumseagreen',
   color_primary: '#800000',
   color_secondary: '#008000',
@@ -38,17 +43,29 @@ export const cube = css`
 `;
 
 export const Box = styled.div`
-  min-width: 1200px;
+  // min-width: 1200px;
   margin: auto;
-  margin-top: 100px;
-  margin-bottom: 100px;
+  // margin-top: 100px;
+  // margin-bottom: 100px;
   position: relative;
-  width: 65%;
-  background: white;
+  // width: 65%;
+  // background: white;
   diplay: block;
-  padding: 80px 100px;
+  padding: 0px 0px;
 
 `;
+
+export const Body = styled.div`
+  padding: 50px 100px;
+  overflow: hidden;
+`;
+
+export const Margin = styled.div`
+  height: 100px;
+  width: 100%;
+`;
+
+export const TableBarColor = '#585585';
 
 export const Table = styled.table`
   table-layout:auto;
@@ -76,8 +93,8 @@ export const Table = styled.table`
 `;
 
 export const TableHead = styled.thead`
-  background: #847c7c
-  color: white
+  background: ${TableBarColor};
+  color: white;
   display: -webkit-box;
   display: -ms-flexbox;
     display: flex;
@@ -108,13 +125,14 @@ export const TableRow = styled.tr`
 
 export const TableData = styled.td`
     width: ${props => props.right ? '80%' : '20%'};
-    background: ${props => props.first_cr ? '#847c7c' : 'white'};
+    background: ${props => props.first_cr ? TableBarColor : 'white'};
     color: ${props => props.first_cr ? 'white' : '#222'};
     display: table-cell;
     padding: 0.5rem 1rem;
-    overflow: scroll;
+    overflow: auto;
     height: 100%;
 `;
+
 
 export const Bullet = styled.li`
   list-style-type: disc;

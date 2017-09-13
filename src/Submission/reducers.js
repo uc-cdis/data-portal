@@ -1,5 +1,6 @@
-export const
-  submission = (state={}, action) => {
+import { getFileNodes, getNodeTypes } from '../graphutils';
+
+export const submission = (state={}, action) => {
   switch (action.type) {
     case 'REQUEST_UPLOAD':
       return {...state, file:action.file, file_type: action.file_type};
@@ -10,7 +11,7 @@ export const
     case 'RECEIVE_NODE_TYPES':
       return {...state, node_types: action.data};
     case 'RECEIVE_DICTIONARY':
-      return{ ...state, dictionary:action.data, node_types: Object.keys(action.data).filter( node => {return node.charAt(0) != '_'})};
+      return{ ...state, dictionary:action.data, node_types: getNodeTypes(action.data), file_nodes: getFileNodes(action.data)};
     case 'RECEIVE_AUTHORIZATION_URL':
       return {...state, oauth_url:action.url};
     case 'RECEIVE_SUBMISSION_LOGIN':

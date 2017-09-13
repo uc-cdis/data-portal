@@ -6,9 +6,12 @@ const {
 } = require('graphql/utilities/index');
 const path = require('path');
 
+console.log(__dirname)
 const schemaPath = path.join(__dirname, 'schema');
+console.log(schemaPath);
 const SERVER = process.argv.slice(2).pop() || 'http://localhost:5000/v0/submission/getschema';
 
+console.log(SERVER);
 // Save JSON of full schema introspection for Babel Relay Plugin to use
 fetch(SERVER, {
   method: 'GET',

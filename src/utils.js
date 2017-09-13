@@ -1,7 +1,8 @@
 import React from 'react';
 import { submissionapi_path } from './localconf';
-import { Box } from './theme';
+import { Box, Body, Margin } from './theme';
 import Nav from './Nav/component';
+import Footer from './components/Footer.jsx';
 import { AuthTimeoutPopup } from './Popup/component';
 import * as d3 from "d3";
 
@@ -38,10 +39,16 @@ export const predict_file_type = (data, file_type) => {
 
 export const withBoxAndNav = (Component) => {
   return ({...props}) => (
-    <Box>
-      <Nav />
-      <Component {...props} />
-    </Box>
+    <div>
+      <Box>
+        <Nav />
+        <Body>
+          <Component {...props} />
+        </Body>
+        <Margin />
+      </Box>
+      <Footer />
+    </div>
   )
 };
 
@@ -53,6 +60,29 @@ export const withAuthTimeout = (Component) => {
     </div>
   )
 };
+
+/**
+ * Little wrapper around setinterval with a guard to prevent an async function
+ * from being invoked multiple times.
+ * 
+ * @param {()=>Promise} lambda callback should return a Promise
+ * @param {int} timeoutMs passed through to setinterval
+ * @return the setinterval id (can be passed to clearinterval)
+ */
+export function asyncSetInterval( lambda, timeoutMs ) {
+  let isRunningGuard = false;
+  return setInterval(
+    function (){
+      if ( ! isRunningGuard ) {
+        isRunningGuard = true;
+      
+        lambda().then(
+          function () { isRunningGuard = false; }
+        );
+      }
+    }, timeoutMs
+  );
+}
 
 /**
  * createNodesAndEdges: Given a data dictionary that defines a set of nodes 
@@ -251,7 +281,7 @@ export function add_links(graph_svg, edges) {
 
 export function calculate_position(nodes, graph_width, graph_height) {
   // Calculate the appropriate position of each node on the graph
-  let fy_vals = []; 
+  let fy_vals = [];
   for (let i = 0; i < nodes.length; i++) {
     nodes[i].fx = nodes[i].position[0]*graph_width;
     nodes[i].fy = nodes[i].position[1]*graph_height;

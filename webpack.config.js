@@ -36,7 +36,7 @@ module.exports = {
     externals: [nodeExternals()],
     loaders: [
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
         loaders: [
           'babel',
