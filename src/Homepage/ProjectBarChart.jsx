@@ -11,7 +11,7 @@ const tor = Translator.getTranslator();
 
 const FloatBox = styled.div`
   float: left;
-  overflow: auto;
+  overflow: hidden;
   width: 70%;
   min-width: 300px;
   height: 300px;

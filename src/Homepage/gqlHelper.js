@@ -202,7 +202,7 @@ class BHCGQLHelper {
    */
   get numFilesTotalFragment() {
     return this._cache.get( "bhc_numFilesTotalFragment",
-      () => Reqlay.QL`fragment on viewer {
+      () => Relay.QL`fragment on viewer {
         fileCount7:_app_checkup_count
         fileCount8:_cell_image_count          
         fileCount9:_clinical_checkup_count          
@@ -222,7 +222,7 @@ class BHCGQLHelper {
    */
   get numFilesByProjectFragment() {
     return this._cache.get( "bhc_numFilesTotalFragment",
-      () => Reqlay.QL`fragment on viewer {
+      () => Relay.QL`fragment on viewer {
           fileCount7:_app_checkup_count( project_id:$name )
           fileCount8:_cell_image_count( project_id:$name )          
           fileCount9:_clinical_checkup_count( project_id:$name )          
