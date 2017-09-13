@@ -23,7 +23,8 @@ if (app === 'bpa') {
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2', 'name': 'home'},
     {'icon': 'fui-query', 'link': '/query', 'color': '#daa520', 'name': 'query'},
     {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2', 'name': 'dictionary'},
-    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520', 'name': 'profile'}
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520', 'name': 'profile'},
+    {'icon': 'fui-data', 'link': '/data', 'color': '#a2a2a2', 'name': 'data'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -44,7 +45,8 @@ if (app === 'bpa') {
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2', 'name': 'home'},
     {'icon': 'fui-query', 'link': '/query', 'color': '#daa520', 'name': 'query'},
     {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2', 'name': 'dictionary'},
-    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520', 'name': 'profile'}
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520', 'name': 'profile'},
+    {'icon': 'fui-data', 'link': '/data', 'color': '#a2a2a2', 'name': 'data'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -65,7 +67,8 @@ if (app === 'bpa') {
     {'icon': 'fui-home', 'link': '/', 'color': '#A51C30'},
     {'icon': 'fui-search', 'link': '/query', 'color': '#2D728F'},
     {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#A51C30'},
-    {'icon': 'fui-user', 'link': '/identity', 'color': '#2D728F'}
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#2D728F'},
+    {'icon': 'fui-data', 'link': '/data', 'color': '#A51C30', 'name': 'data'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -86,7 +89,8 @@ if (app === 'bpa') {
     {'icon': 'fui-home', 'link': '/', 'color': '#a2a2a2', 'name': 'home'},
     {'icon': 'fui-query', 'link': '/query', 'color': '#daa520', 'name': 'query'},
     {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#a2a2a2', 'name': 'dictionary'},
-    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520', 'name': 'profile'}
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520', 'name': 'profile'},
+    {'icon': 'fui-data', 'link': '/data', 'color': '#a2a2a2', 'name': 'data'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -121,7 +125,8 @@ if (app === 'bpa') {
     {'icon': 'fui-home', 'link': '/', 'color': '#1d3674', 'name': 'home'},
     {'icon': 'fui-query', 'link': '/query', 'color': '#ad7e1c', 'name': 'query'},
     {'icon': 'fui-bookmark', 'link': '/DD', 'color': '#1d3674', 'name': 'dictionary'},
-    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520', 'name': 'profile'}
+    {'icon': 'fui-user', 'link': '/identity', 'color': '#daa520', 'name': 'profile'},
+    {'icon': 'fui-data', 'link': '/data', 'color': '#1d3674', 'name': 'data'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',

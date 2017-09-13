@@ -56,45 +56,8 @@ class TableExplorer extends Component{
 class ExplorerSidebar extends Component {
   static propTypes = {
     projects: PropTypes.object,
-    file_formats: PropTypes.array,
+    dictionary: PropTypes.object,
     selected_filters: PropTypes.object,
-    onChange: PropTypes.func
-  };
-
-  state = {
-    selected_filters: this.props.selected_filters
-  };
-
-  onChangeCheckbox = (group_name, selected_items) =>{
-    this.setState({
-      ...this.state,
-      ...this.state.selected_filters,
-      [group_name]: selected_items
-    });
-    this.props.onChange(this.state);
-  };
-
-  render(){
-    return(
-      <Sidebar>
-      <CheckBoxGroup listItems={Object.values(this.props.projects)} title="Projects"
-                     selected_items={this.state.selected_filters.projects}
-                     group_name="projects"
-                     onChange={this.onChangeCheckbox.bind(this)}/>
-      <CheckBoxGroup listItems={this.props.file_formats}
-                     selected_items={this.state.selected_filters.file_formats}
-                     title="File Formats"
-                     group_name="file_formats" onChange={this.onChangeCheckbox.bind(this)} />
-      </Sidebar>
-    );
-  }
-}
-
-class ExplorerComponent extends Component {
-  static propTypes = {
-    submission: PropTypes.object,
-    selected_filters: PropTypes.object,
-    filesList: PropTypes.array,
     onChange: PropTypes.func
   };
 
@@ -117,38 +80,66 @@ class ExplorerComponent extends Component {
     return(aggregateSet);
   };
 
-  onChangeSelectedItems = (state) =>{
+  state = {
+    selected_filters: this.props.selected_filters,
+    projects: Object.values(this.props.projects),
+    file_formats: Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_type').values()),
+    dictionary:this.props.dictionary
+  };
+
+  onChangeCheckbox = (group_name, selected_items) =>{
     this.setState({
       ...this.state,
-      selected_filters: state.selected_filters,
+      selected_filters: {
+        ...this.state.selected_filters,
+        [group_name]: selected_items
+      }
     });
     this.props.onChange(this.state);
   };
 
-  state = {
-    projects: this.props.submission.projects,
-    selected_filters: this.props.selected_filters,
-    file_formats: this.aggregateProperties(this.props.submission.dictionary, 'data_file', 'data_type'),
-    dictionary:this.props.submission.dictionary
-  };
-
   render(){
     return(
-      <div>
-        <ExplorerSidebar projects={this.state.projects}
-                         selected_filters={this.state.selected_filters}
-                         file_formats={Array.from(this.state.file_formats.values())}
-                         onChange={this.onChangeSelectedItems.bind(this)} />
-        <TableExplorer filesList={this.props.filesList}/>
-      </div>
+      <Sidebar>
+      <CheckBoxGroup listItems={this.state.projects} title="Projects"
+                     selected_items={this.state.selected_filters.projects}
+                     group_name="projects"
+                     onChange={this.onChangeCheckbox.bind(this)}/>
+      <CheckBoxGroup listItems={this.state.file_formats}
+                     selected_items={this.state.selected_filters.file_formats}
+                     title="File Formats"
+                     group_name="file_formats" onChange={this.onChangeCheckbox.bind(this)} />
+      </Sidebar>
     );
   }
 }
 
+class ExplorerComponent extends Component {
+  static propTypes = {
+    submission: PropTypes.object,
+    selected_filters: PropTypes.object,
+    viewer: PropTypes.object
+  };
 
-export const RelayExplorerComponent = Relay.createContainer(
-  function(props,context) {
-    const viewer = props.viewer || {
+  resetVariables = () => {
+    this.props.relay.setVariables({
+      selected_projects: this.state.selected_filters.projects,
+      selected_file_formats: this.state.selected_filters.file_formats
+    });
+  };
+
+  getReduxState = () => {
+    let state = {};
+    getReduxStore().then(
+      (store) => {
+        state = store.getState();
+      }
+    );
+    return state;
+  };
+
+  create_list = () => {
+    const viewer = this.props.viewer || {
       submitted_aligned_reads: [],
       submitted_unaligned_reads: [],
       submitted_somatic_mutation: [],
@@ -171,53 +162,55 @@ export const RelayExplorerComponent = Relay.createContainer(
     let files5 = viewer.submitted_copy_number.map( function(file) {
       return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
     });
-    let filesList = [...files1, ...files2, ...files3, ...files4, ...files5 ];
+    return [...files1, ...files2, ...files3, ...files4, ...files5 ];
+  };
 
-    // Update redux store if data is not already there
-    getReduxStore().then(
-      (store) => {
-        let explorerState = store.getState().explorer;
-        if (! explorerState.refetched )
-          store.dispatch( { type: 'RECEIVE_FILE_LIST', data: filesList } );
+  onChangeSelectedItems = (state) =>{
+    Promise.resolve(this.setState({
+      ...state,
+      selected_filters: state.selected_filters
+    })).then(() => this.resetVariables());
+  };
+
+  state = {
+    selected_filters: this.getReduxState().explorer ? this.getReduxState().explorer.selected_filters : {projects: [], file_formats: []}
+  };
+
+  mapStateToProps = (state) => {
+    return{
+      'projects': state.submission.projects,
+      'dictionary': state.submission.dictionary,
+      'selected_filters': state.explorer.selected_filters || {projects: [], file_formats: []}
+    }
+  };
+
+  mapDispatchToProps = (dispatch) =>{
+    return{
+      onChange: (state) =>
+      {
+        this.onChangeSelectedItems(state);
+        dispatch({
+          type: 'SELECTED_LIST_CHANGED',
+          data: state.selected_filters
+        })
       }
-    );
+    }
+  };
 
-    const resetVariables = (state) => {
-      // console.log("reset variables: " + state.selected_filters.projects);
-      props.relay.setVariables({
-        selected_projects: state.selected_filters.projects,
-        selected_file_formats: state.selected_filters.file_formats
-      });
-      getReduxStore().then(
-        (store) => {
-          store.dispatch( { type: 'SELECTED_LIST_CHANGED', data: state.selected_filters } );
-        }
-      );
-    };
-
-    const mapStateToProps = (state) => {
-      return{
-        'submission': state.submission,
-        'filesList': state.explorer.filesList,
-        'selected_filters': state.explorer.selected_filters || {projects: [], file_formats: []}
-      }
-    };
-
-
-    const mapDispatchToProps = (dispatch) =>{
-      return{
-        onChange: (state) => dispatch(() => {resetVariables(state)})
-      }
-    };
-
-    let Explorer = connect(mapStateToProps, mapDispatchToProps)(ExplorerComponent);
-
-    return(
+  render() {
+    let fileList = this.create_list();
+    let SideBar = connect(this.mapStateToProps, this.mapDispatchToProps)(ExplorerSidebar);
+    return (
       <div>
-        <Explorer />
+        <SideBar/>
+        <TableExplorer filesList={fileList}/>
       </div>
     );
-  },
+  }
+}
+
+export const RelayExplorerComponent = Relay.createContainer(
+  ExplorerComponent,
   {
     initialVariables: {
       selected_projects: [],
