@@ -114,28 +114,53 @@ class ExplorerSidebar extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return{
+    'projects': state.submission.projects,
+    'dictionary': state.submission.dictionary,
+    'selected_filters': state.explorer.selected_filters || {projects: [], file_formats: []}
+  }
+};
+
+const mapDispatchToProps = (dispatch) =>{
+  return{
+    onChange: (state) =>
+    {
+      dispatch({
+        type: 'SELECTED_LIST_CHANGED',
+        data: state.selected_filters
+      });
+    }
+  }
+};
+
+const SideBar = connect(mapStateToProps, mapDispatchToProps)(ExplorerSidebar);
+
+
+
 class ExplorerComponent extends Component {
+  constructor(props) {
+    super(props);
+    getReduxStore().then((store) => {this.store = store}).then(
+      () => {
+        this.store.subscribe(() =>
+        {
+          const explorerState = this.store.getState().explorer;
+          if (explorerState.selected_filters)
+          {
+            props.relay.setVariables({
+              selected_projects: explorerState.selected_filters.projects,
+              selected_file_formats: explorerState.selected_filters.file_formats
+            });
+          }
+        })
+      }
+    );
+  }
   static propTypes = {
     submission: PropTypes.object,
     selected_filters: PropTypes.object,
     viewer: PropTypes.object
-  };
-
-  resetVariables = () => {
-    this.props.relay.setVariables({
-      selected_projects: this.state.selected_filters.projects,
-      selected_file_formats: this.state.selected_filters.file_formats
-    });
-  };
-
-  getReduxState = () => {
-    let state = {};
-    getReduxStore().then(
-      (store) => {
-        state = store.getState();
-      }
-    );
-    return state;
   };
 
   create_list = () => {
@@ -165,41 +190,9 @@ class ExplorerComponent extends Component {
     return [...files1, ...files2, ...files3, ...files4, ...files5 ];
   };
 
-  onChangeSelectedItems = (state) =>{
-    Promise.resolve(this.setState({
-      ...state,
-      selected_filters: state.selected_filters
-    })).then(() => this.resetVariables());
-  };
-
-  state = {
-    selected_filters: this.getReduxState().explorer ? this.getReduxState().explorer.selected_filters : {projects: [], file_formats: []}
-  };
-
-  mapStateToProps = (state) => {
-    return{
-      'projects': state.submission.projects,
-      'dictionary': state.submission.dictionary,
-      'selected_filters': state.explorer.selected_filters || {projects: [], file_formats: []}
-    }
-  };
-
-  mapDispatchToProps = (dispatch) =>{
-    return{
-      onChange: (state) =>
-      {
-        this.onChangeSelectedItems(state);
-        dispatch({
-          type: 'SELECTED_LIST_CHANGED',
-          data: state.selected_filters
-        })
-      }
-    }
-  };
 
   render() {
     let fileList = this.create_list();
-    let SideBar = connect(this.mapStateToProps, this.mapDispatchToProps)(ExplorerSidebar);
     return (
       <div>
         <SideBar/>
@@ -264,6 +257,58 @@ export const RelayExplorerComponent = Relay.createContainer(
     },
   },
 );
+
+
+/**
+ * Relay route supporting PTBRelayAdapter below -
+ * sets up per-project graphql query
+ */
+
+// class ExplorerRoute extends Relay.Route {
+//   static paramDefinitions = {
+//     selected_projects: { required: true },
+//     selected_file_formats: { required: true }
+//   };
+//
+//   static queries = {
+//     viewer: () => Relay.QL`
+//         query {
+//             viewer
+//         }
+//     `
+//   };
+//
+//   static routeName = "ExplorerRoute"
+// }
+//
+// export const ExplorerQuery = (props) => <Relay.Renderer Container={RelayExplorerComponent}
+//                                       queryConfig={new ExplorerRoute({ selected_file_formats:[], selected_projects:[]})}
+//                                       environment={Relay.Store}
+//                                       render={({ done, error, props, retry, stale }) => {
+//                                         if (error) {
+//                                           return <tr><td><b>Error! {error}</b></td></tr>;
+//                                         } else if (props && props.viewer) {
+//                                           return <RelayExplorerComponent {...props} />;
+//                                         } else {
+//                                           return <tr><td><b>Loading - put a spinner here?</b></td></tr>;
+//                                         }
+//                                       }}
+// />;
+
+
+// const RelayExplorer = Relay.createContainer(
+//   withBoxAndNav(withAuthTimeout(ExplorerQuery)),
+//   {
+//     fragments: {
+//       viewer:(variables) => Relay.QL`
+//           fragment on viewer {
+//               ${RelayExplorerComponent.getFragment( 'viewer', {...variables} )}
+//           }
+//       `
+//     }
+//   }
+// );
+// export default RelayExplorer;
 
 const RelayExplorer = Relay.createContainer(
   withBoxAndNav(withAuthTimeout(RelayExplorerComponent)),

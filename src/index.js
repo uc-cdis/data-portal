@@ -10,7 +10,7 @@ import { clearResultAndQuery } from './QueryNode/actions';
 import Login from './Login/component';
 import RelayHomepage from './Homepage/RelayHomepage';
 import QueryNode from './QueryNode/component';
-import RelayExplorer from './Explorer/component';
+import RelayExplorer, {ExplorerQuery} from './Explorer/component';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
 import ProjectSubmission from './Submission/component';
@@ -63,6 +63,28 @@ Relay.injectNetworkLayer(
 const homepageQueries = { 
   viewer: () => Relay.QL`query { viewer }`,  
 };
+
+/**
+ * Relay route supporting PTBRelayAdapter below -
+ * sets up per-project graphql query
+ */
+class ExplorerRoute extends Relay.Route {
+  static paramDefinitions = {
+    selected_projects: { required: true },
+    selected_file_formats: { required: true }
+  };
+
+  static queries = {
+    viewer: () => Relay.QL`
+        query {
+            viewer
+        }
+    `
+  };
+
+  static routeName = "ExplorerRoute"
+}
+
 
 let initialized = false;
 
