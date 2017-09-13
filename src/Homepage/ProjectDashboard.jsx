@@ -20,12 +20,14 @@ const tor = Translator.getTranslator();
 const CountBox = styled.div`
   float: left;
   width: 30%;
-  margin-top: 20px;
-  height: 230px;
+  height: 280px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
   padding: 30px;
   border-top: 3px solid #c87152;
   min-width:300px;
+  h4 {
+    margin-top: 0px;
+  }
   ul {
     width: 100%;
     overflow: hidden;
@@ -46,6 +48,12 @@ const DashTopDiv = styled.div`
   ${clearFix()}
 `;
 
+const Icon = styled.div`
+  color: #008000;
+  height: 24px;
+  margin-top: 10px;
+  margin-left: 20px;
+`;
 /**
  * Little card with a bunch of counters on it for cases, experiments, files, ...
  */
@@ -57,10 +65,25 @@ class CountCard extends React.Component {
             Data Summary
         </h4>
         <ul>
-          <li><Count>{ this.props.caseCount }</Count><span>Cases</span></li>
-          <li><Count>{ this.props.experimentCount }</Count><span>{tor.translate( "Experiments" )}</span></li>
-          <li><Count>{ this.props.fileCount }</Count><span>Files</span></li>
-          <li><Count>{ this.props.aliquotCount }</Count><span>Aliquots</span></li>
+          <li>
+            <Icon><i className="material-icons">account_circle</i></Icon>
+            <Count>{ this.props.caseCount }</Count>
+            <span>Cases</span>
+          </li>
+          <li>
+            <Icon><i className="material-icons">receipt</i></Icon>
+            <Count>{ this.props.experimentCount }</Count>
+            <span>{tor.translate( "Experiments" )}</span>
+          </li>
+          <li>
+            <Icon><i className="material-icons">description</i></Icon>
+            <Count>{ this.props.fileCount }</Count>
+            <span>Files</span>
+          </li>
+          <li>
+            <Icon><i className="material-icons">invert_colors</i></Icon>
+            <Count>{ this.props.aliquotCount }</Count>
+            <span>Aliquots</span></li>
         </ul>
 
           <Link to="/query" title="Search"><CircleButton><ActionSearch /></CircleButton></Link>

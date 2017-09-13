@@ -14,8 +14,7 @@ const FloatBox = styled.div`
   overflow: hidden;
   width: 70%;
   min-width: 300px;
-  height: 300px;
-  margin-top: 10px;
+  height: 340px;
 `;
 
 // ${props => 100 + 50*props.projectList.length}px;
