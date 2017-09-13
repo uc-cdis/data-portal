@@ -33,7 +33,6 @@ export const TableRow = styled.tr`
   color: #222;
   ${
     props => props.summaryRow ? `
-      border-top: 1px solid black;
       background-color: #eeeeee;
       `:"" 
   }
@@ -189,15 +188,10 @@ const RelayProjectTR = Relay.createContainer(
       (store) => {
         const homeState = store.getState().homepage || {};
         let old = {};
-        /* .. just for testing
-        const fakeProj = { ...proj };
-          fakeProj.caseCount=22;
-          fakeProj.experimentCount=11;
-        */
         if ( homeState.projectsByName  ) {
           old = homeState.projectsByName[proj.name] || old;
         }
-        
+
         if( old.experimentCount !== proj.experimentCount || old.caseCount !== proj.caseCount ||
           old.aliquotCount !== proj.aliquotCount || old.fileCount !== proj.aliquotCount ) {
           store.dispatch( { type: 'RECEIVE_PROJECT_DETAIL', data: proj } );

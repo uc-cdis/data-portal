@@ -157,7 +157,7 @@ class StudyGQLHelper {
         fragment on viewer {
           project(project_id: $name) {
             name:project_id
-            experimentCount:_study_count
+            experimentCount:_studies_count
           }
           caseCount:_case_count( project_id: $name )
           aliquotCount:_aliquot_count( project_id: $name )
@@ -170,18 +170,18 @@ class StudyGQLHelper {
    * Fragment attached to RelayProjectDashboard
    */
   get projectDashboardFragment() {
-    return this._cache.get( "study_projectDashboardFragment", 
+    return this._cache.get( "study_projectDashboardFragment",
       () => Relay.QL`
         fragment on viewer {
             project(first: 10000) {
               project_id
               code
-              _study_count
+              _studies_count
             }
             _case_count
-            _study_count
+            _experiment_count: _study_count
             _aliquot_count
-            ${this.numFilesTotalFragment}         
+            ${this.numFilesTotalFragment}
         }`
       );
   }
