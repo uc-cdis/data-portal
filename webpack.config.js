@@ -92,6 +92,8 @@ module.exports = {
       template: 'src/index.ejs',
       hash: true
     }),
-
-  ]
+  ],
+  externals:[{
+    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'
+  }]
 };

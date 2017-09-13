@@ -22,25 +22,19 @@ export class CheckBoxGroup extends Component{
     onChange: PropTypes.func,
   };
 
-  state = {
-    selected_items: this.props.selected_items
-  };
-
   onChangeBox = (item) => {
-    let pos = this.state.selected_items.indexOf(item);
+    let pos = this.props.selected_items.indexOf(item);
     if (pos === -1)
-      this.setState( ({selected_items}) => {
-        selected_items.push(item);
-        return {selected_items: selected_items};
-      });
+      this.props.selected_items.push(item);
     else
-      this.setState( ({selected_items}) => {
-        selected_items.splice(pos, 1);
-        return {selected_items: selected_items};
-      });
+      this.props.selected_items.splice(pos, 1);
+    let state = {[this.props.group_name]: this.props.selected_items};
+    this.props.onChange(state);
   };
 
   render () {
+    let selected_items = this.props.selected_items;
+    console.log(selected_items);
     return(
       <div>
         {this.props.title}
@@ -49,10 +43,8 @@ export class CheckBoxGroup extends Component{
             <div key={i}>
               <input type="checkbox" name={this.props.group_name}
                      value={item} id={item}
-                     checked={this.state.selected_items.includes(item)}
-                     onChange={() => Promise.resolve(this.onChangeBox(item)).then(
-                       () => this.props.onChange(this.props.group_name, this.state.selected_items))
-                     }
+                     checked={selected_items.includes(item)}
+                     onChange={() => this.onChangeBox(item)}
               />
               <LabelCheckBox for={item}>{item}</LabelCheckBox>
             </div>

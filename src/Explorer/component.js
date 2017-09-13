@@ -54,6 +54,10 @@ class TableExplorer extends Component{
 }
 
 class ExplorerSidebar extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   static propTypes = {
     projects: PropTypes.object,
     dictionary: PropTypes.object,
@@ -80,35 +84,25 @@ class ExplorerSidebar extends Component {
     return(aggregateSet);
   };
 
-  state = {
-    selected_filters: this.props.selected_filters,
-    projects: Object.values(this.props.projects),
-    file_formats: Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_type').values()),
-    dictionary:this.props.dictionary
-  };
-
-  onChangeCheckbox = (group_name, selected_items) =>{
-    this.setState({
-      ...this.state,
-      selected_filters: {
-        ...this.state.selected_filters,
-        [group_name]: selected_items
-      }
-    });
-    this.props.onChange(this.state);
-  };
-
   render(){
+    let projects = Object.values(this.props.projects);
+    let file_types = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_type').values());
+    let file_formats = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_format').values());
+    console.log(this.props.selected_filters);
     return(
       <Sidebar>
-      <CheckBoxGroup listItems={this.state.projects} title="Projects"
-                     selected_items={this.state.selected_filters.projects}
+      <CheckBoxGroup listItems={projects} title="Projects"
+                     selected_items={this.props.selected_filters.projects}
                      group_name="projects"
-                     onChange={this.onChangeCheckbox.bind(this)}/>
-      <CheckBoxGroup listItems={this.state.file_formats}
-                     selected_items={this.state.selected_filters.file_formats}
+                     onChange={(state) => this.props.onChange({...this.props.selected_filters, ...state})}/>
+      <CheckBoxGroup listItems={file_formats}
+                     selected_items={this.props.selected_filters.file_formats}
                      title="File Formats"
-                     group_name="file_formats" onChange={this.onChangeCheckbox.bind(this)} />
+                     group_name="file_formats" onChange={(state) => this.props.onChange({...this.props.selected_filters, ...state})} />
+      <CheckBoxGroup listItems={file_types}
+                     selected_items={this.props.selected_filters.file_types}
+                     title="File Types"
+                     group_name="file_types" onChange={(state) => this.props.onChange({...this.props.selected_filters, ...state})} />
       </Sidebar>
     );
   }
@@ -118,7 +112,7 @@ const mapStateToProps = (state) => {
   return{
     'projects': state.submission.projects,
     'dictionary': state.submission.dictionary,
-    'selected_filters': state.explorer.selected_filters || {projects: [], file_formats: []}
+    'selected_filters': state.explorer.selected_filters || {projects: [], file_types: [], file_formats: []}
   }
 };
 
@@ -128,7 +122,7 @@ const mapDispatchToProps = (dispatch) =>{
     {
       dispatch({
         type: 'SELECTED_LIST_CHANGED',
-        data: state.selected_filters
+        data: state
       });
     }
   }
@@ -136,26 +130,25 @@ const mapDispatchToProps = (dispatch) =>{
 
 const SideBar = connect(mapStateToProps, mapDispatchToProps)(ExplorerSidebar);
 
-
-
 class ExplorerComponent extends Component {
   constructor(props) {
     super(props);
-    getReduxStore().then((store) => {this.store = store}).then(
-      () => {
-        this.store.subscribe(() =>
-        {
-          const explorerState = this.store.getState().explorer;
-          if (explorerState.selected_filters)
-          {
-            props.relay.setVariables({
-              selected_projects: explorerState.selected_filters.projects,
-              selected_file_formats: explorerState.selected_filters.file_formats
-            });
-          }
-        })
+    getReduxStore().then((store) => {store.subscribe(() =>
+    {
+      const explorerState = store.getState().explorer;
+      if (! explorerState.selected_filters)
+        return;
+      if (explorerState.selected_filters.projects !== props.relay.variables.projects ||
+        explorerState.selected_filters.file_types !== props.relay.variables.file_types ||
+        explorerState.selected_filters.file_formats !== props.relay.variables.file_formats)
+      {
+        props.relay.setVariables({
+          selected_projects: explorerState.selected_filters.projects,
+          selected_file_types: explorerState.selected_filters.file_types,
+          selected_file_formats: explorerState.selected_filters.file_formats
+        });
       }
-    );
+    })});
   }
   static propTypes = {
     submission: PropTypes.object,
@@ -172,19 +165,19 @@ class ExplorerComponent extends Component {
       submitted_copy_number: []
     };
 
-    let files1 = viewer.submitted_aligned_reads.map( function(file) {
+    const files1 = viewer.submitted_aligned_reads.map( function(file) {
       return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
     });
-    let files2 = viewer.submitted_unaligned_reads.map( function(file) {
+    const files2 = viewer.submitted_unaligned_reads.map( function(file) {
       return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
     });
-    let files3 = viewer.submitted_somatic_mutation.map( function(file) {
+    const files3 = viewer.submitted_somatic_mutation.map( function(file) {
       return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
     });
-    let files4 = viewer.submitted_methylation.map( function(file) {
+    const files4 = viewer.submitted_methylation.map( function(file) {
       return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
     });
-    let files5 = viewer.submitted_copy_number.map( function(file) {
+    const files5 = viewer.submitted_copy_number.map( function(file) {
       return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
     });
     return [...files1, ...files2, ...files3, ...files4, ...files5 ];
@@ -192,7 +185,7 @@ class ExplorerComponent extends Component {
 
 
   render() {
-    let fileList = this.create_list();
+    const fileList = this.create_list();
     return (
       <div>
         <SideBar/>
@@ -207,12 +200,13 @@ export const RelayExplorerComponent = Relay.createContainer(
   {
     initialVariables: {
       selected_projects: [],
-      selected_file_formats: [],
+      selected_file_types: [],
+      selected_file_formats: []
     },
     fragments: {
       viewer: () => Relay.QL`
           fragment on viewer {
-              submitted_aligned_reads(first: 10000, project_id: $selected_projects) {
+              submitted_aligned_reads(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
                   project_id
                   file_name
                   data_category
@@ -220,7 +214,7 @@ export const RelayExplorerComponent = Relay.createContainer(
                   data_type
                   file_size
               }
-              submitted_unaligned_reads(first: 10000, project_id: $selected_projects) {
+              submitted_unaligned_reads(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
                   project_id
                   file_name
                   data_category
@@ -228,7 +222,7 @@ export const RelayExplorerComponent = Relay.createContainer(
                   data_type
                   file_size
               }
-              submitted_somatic_mutation(first: 10000, project_id: $selected_projects) {
+              submitted_somatic_mutation(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
                   project_id
                   file_name
                   data_category
@@ -236,7 +230,7 @@ export const RelayExplorerComponent = Relay.createContainer(
                   data_type
                   file_size
               }
-              submitted_methylation(first: 10000, project_id: $selected_projects) {
+              submitted_methylation(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
                   project_id
                   file_name
                   data_category
@@ -244,7 +238,7 @@ export const RelayExplorerComponent = Relay.createContainer(
                   data_type
                   file_size
               }
-              submitted_copy_number(first: 10000, project_id: $selected_projects) {
+              submitted_copy_number(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
                   project_id
                   file_name
                   data_category
@@ -267,7 +261,7 @@ export const RelayExplorerComponent = Relay.createContainer(
 // class ExplorerRoute extends Relay.Route {
 //   static paramDefinitions = {
 //     selected_projects: { required: true },
-//     selected_file_formats: { required: true }
+//     selected_file_types: { required: true }
 //   };
 //
 //   static queries = {
@@ -282,7 +276,7 @@ export const RelayExplorerComponent = Relay.createContainer(
 // }
 //
 // export const ExplorerQuery = (props) => <Relay.Renderer Container={RelayExplorerComponent}
-//                                       queryConfig={new ExplorerRoute({ selected_file_formats:[], selected_projects:[]})}
+//                                       queryConfig={new ExplorerRoute({ selected_file_types:[], selected_projects:[]})}
 //                                       environment={Relay.Store}
 //                                       render={({ done, error, props, retry, stale }) => {
 //                                         if (error) {
