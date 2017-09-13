@@ -132,9 +132,7 @@ class StudyGQLHelper {
    * Same query as ExperimentGQLHelper
    */
   get numFilesTotalFragment() {
-    return this._cache.get( "study_numFilesTotalFragment",
-      () => this._expHelper.numFilesTotalFragment
-      );
+    return this._expHelper.numFilesTotalFragment;
   }
 
 
@@ -142,9 +140,7 @@ class StudyGQLHelper {
    * Same query as ExperimentGQLHelper
    */
   get numFilesByProjectFragment() {
-      return this._cache.get( "study_numFilesByProjectFragment", 
-        () => this._expHelper.numFilesByProjectFragment
-      );
+      return this._expHelper.numFilesByProjectFragment;
   }
 
 
@@ -191,6 +187,98 @@ const studyHelperSingleton = new StudyGQLHelper();
 
 
 /**
+ * bhc (data.brainhealthcommons.org) has some of its own file types - otherwise
+ */
+class BHCGQLHelper {
+  constructor() {
+    this._cache = cacheSingleton;
+    this._studyHelper = studyHelperSingleton;
+  }
+
+
+  
+  /**
+   * Same query as ExperimentGQLHelper
+   */
+  get numFilesTotalFragment() {
+    return this._cache.get( "bhc_numFilesTotalFragment",
+      () => Reqlay.QL`fragment on viewer {
+        fileCount7:_app_checkup_count
+        fileCount8:_cell_image_count          
+        fileCount9:_clinical_checkup_count          
+        fileCount10:_derived_checkup_count          
+        fileCount11:_mass_cytometry_assay_count
+        fileCount12:_mass_cytometry_image_count
+        fileCount13:_mri_result_count
+        fileCount14:_sensor_checkup_count
+        fileCount15:_test_result_count          
+        ${this._studyHelper.numFilesTotalFragment}
+        }` );
+  }
+
+
+  /**
+   * Same query as ExperimentGQLHelper
+   */
+  get numFilesByProjectFragment() {
+    return this._cache.get( "bhc_numFilesTotalFragment",
+      () => Reqlay.QL`fragment on viewer {
+          fileCount7:_app_checkup_count( project_id:$name )
+          fileCount8:_cell_image_count( project_id:$name )          
+          fileCount9:_clinical_checkup_count( project_id:$name )          
+          fileCount10:_derived_checkup_count( project_id:$name )          
+          fileCount11:_mass_cytometry_assay_count( project_id:$name )
+          fileCount12:_mass_cytometry_image_count( project_id:$name )
+          fileCount13:_mri_result_count( project_id:$name )
+          fileCount14:_sensor_checkup_count( project_id:$name )
+          fileCount15:_test_result_count( project_id:$name )          
+          ${this._studyHelper.numFilesTotalFragment}
+        }` );
+  }
+
+
+  /**
+   * Fragment attached to RelayProjectTable's TR (table row)
+   */
+  get projectTableTRFragment() {
+    return this._cache.get( "bhc_projectTableTRFragment", 
+      () => Relay.QL`
+        fragment on viewer {
+          project(project_id: $name) {
+            name:project_id
+            experimentCount:_studies_count
+          }
+          caseCount:_case_count( project_id: $name )
+          aliquotCount:_aliquot_count( project_id: $name )
+          ${this.numFilesByProjectFragment}
+        }`
+      );
+  }
+
+  /**
+   * Fragment attached to RelayProjectDashboard
+   */
+  get projectDashboardFragment() {
+    return this._cache.get( "bhc_projectDashboardFragment",
+    () => Relay.QL`
+      fragment on viewer {
+          project(first: 10000) {
+            project_id
+            code
+            _studies_count
+          }
+          _case_count
+          _experiment_count: _study_count
+          _aliquot_count
+          ${this.numFilesTotalFragment}
+      }`
+    );
+  }
+}
+
+const bhcSingleton = new BHCGQLHelper();
+
+/**
  * App-aware GQLHelper - delegates to the appropriate helper for the given app
  */
 export class GQLHelper {
@@ -217,9 +305,12 @@ export class GQLHelper {
    * Little singleton factory - returns the appropriate helper for the app
    */
   static getGQLHelper( appName=app ) {
-    if ( appName === "bhc" || (appName === "bpa" && !dev) ) {
+    if ( appName === "bhc" ) {
+      return bhcSingleton;
+    } else if ( appName === "bpa" && !dev ) {
       return studyHelperSingleton;
     }
+    
     return expHelperSingleton;
   }
 
