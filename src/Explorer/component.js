@@ -1,57 +1,12 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {StyledCheckBoxGroup} from '../components/CheckBox';
-import styled from 'styled-components';
 import 'react-table/react-table.css';
 import {Sidebar} from '../theme';
-import ReactTable from 'react-table';
 import Relay from 'react-relay/classic';
 import { withAuthTimeout, withBoxAndNav} from '../utils';
 import {getReduxStore} from '../reduxStore.js';
-import {explorer} from "./reducers";
-
-class TableExplorer extends Component{
-  static propTypes = {
-    filesList: PropTypes.array
-  };
-
-  render(){
-    return(
-      <div>
-        <div>
-          <ReactTable
-            data= {this.props.filesList}
-            columns={[
-              {
-                Header: 'Project',
-                accessor: 'project_id'
-              },
-              {
-                Header: 'File Name',
-                accessor: 'name'
-              },
-              {
-                Header: 'File Format',
-                accessor: 'format'
-              },
-              {
-                Header: 'File Size',
-                accessor: 'size'
-              },
-              {
-                Header: 'Category',
-                accessor: 'category'
-              }
-            ]}
-            defaultPageSize={25}
-            className="-striped -highlight"
-          />
-          <br />
-        </div>
-      </div>
-    );
-  }
-}
+import ExplorerTable from "./ExplorerTable";
 
 class ExplorerSidebar extends Component {
   constructor(props) {
@@ -130,47 +85,22 @@ const mapDispatchToProps = (dispatch) =>{
 
 const SideBar = connect(mapStateToProps, mapDispatchToProps)(ExplorerSidebar);
 
+const mapFile = (listFile) => {
+  return listFile.map( function(file) {
+    return { project_id: file.project_id, name: file.file_name,
+      category: file.data_category, format: file.data_format,
+      type: file.data_type, size: file.file_size };
+  });
+};
+
 class ExplorerComponent extends Component {
-  constructor(props) {
-    super(props);
-    getReduxStore().then((store) => {store.subscribe(() =>
-    {
-      const explorerState = store.getState().explorer;
-      if (! explorerState.selected_filters)
-        return;
-      if (explorerState.selected_filters.projects !== props.relay.variables.projects ||
-        explorerState.selected_filters.file_types !== props.relay.variables.file_types ||
-        explorerState.selected_filters.file_formats !== props.relay.variables.file_formats)
-      {
-        props.relay.forceFetch({
-            selected_projects: explorerState.selected_filters.projects,
-            selected_file_types: explorerState.selected_filters.file_types,
-            selected_file_formats: explorerState.selected_filters.file_formats
-          }, (readyState) => {
-            if (! readyState.done)
-            {
-              console.log("Not done");
-              console.log(this.props.viewer);
-              console.log(readyState.events);
-            }
-            else if (readyState.done)
-            {
-              console.log("Done");
-              console.log(this.props.viewer);
-              console.log(readyState.events);
-            }
-          }
-        );
-      }
-    })});
-  }
   static propTypes = {
     submission: PropTypes.object,
     selected_filters: PropTypes.object,
     viewer: PropTypes.object
   };
 
-  create_list = () => {
+  createList = () => {
     const viewer = this.props.viewer || {
       submitted_aligned_reads: [],
       submitted_unaligned_reads: [],
@@ -179,31 +109,33 @@ class ExplorerComponent extends Component {
       submitted_copy_number: []
     };
 
-    const files1 = viewer.submitted_aligned_reads.map( function(file) {
-      return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
-    });
-    const files2 = viewer.submitted_unaligned_reads.map( function(file) {
-      return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
-    });
-    const files3 = viewer.submitted_somatic_mutation.map( function(file) {
-      return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
-    });
-    const files4 = viewer.mri_result.map( function(file) {
-      return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
-    });
-    const files5 = viewer.submitted_copy_number.map( function(file) {
-      return { project_id: file.project_id, name: file.file_name, category: file.data_category, format: file.data_format, size: file.file_size };
-    });
+    const files1 = mapFile(viewer.submitted_aligned_reads);
+    const files2 = mapFile(viewer.submitted_unaligned_reads);
+    const files3 = mapFile(viewer.submitted_somatic_mutation);
+    const files4 = mapFile(viewer.mri_result);
+    const files5 = mapFile(viewer.submitted_copy_number);
     return [...files1, ...files2, ...files3, ...files4, ...files5 ];
+  };
+
+  updateFilesList = () => {
+    let filesList = this.createList();
+    getReduxStore().then(
+      (store) => {
+        const explorerState = store.getState().explorer || {};
+        if ( ! explorerState.filesList  ) {
+          store.dispatch( { type: 'RECEIVE_FILE_LIST', data: filesList } );
+        }
+      }
+    );
   };
 
 
   render() {
-    const fileList = this.create_list();
+    this.updateFilesList();
     return (
       <div>
         <SideBar/>
-        <TableExplorer filesList={fileList}/>
+        <ExplorerTable />
       </div>
     );
   }
@@ -266,57 +198,6 @@ export const RelayExplorerComponent = Relay.createContainer(
   },
 );
 
-
-/**
- * Relay route supporting PTBRelayAdapter below -
- * sets up per-project graphql query
- */
-
-// class ExplorerRoute extends Relay.Route {
-//   static paramDefinitions = {
-//     selected_projects: { required: true },
-//     selected_file_types: { required: true }
-//   };
-//
-//   static queries = {
-//     viewer: () => Relay.QL`
-//         query {
-//             viewer
-//         }
-//     `
-//   };
-//
-//   static routeName = "ExplorerRoute"
-// }
-//
-// export const ExplorerQuery = (props) => <Relay.Renderer Container={RelayExplorerComponent}
-//                                       queryConfig={new ExplorerRoute({ selected_file_types:[], selected_projects:[]})}
-//                                       environment={Relay.Store}
-//                                       render={({ done, error, props, retry, stale }) => {
-//                                         if (error) {
-//                                           return <tr><td><b>Error! {error}</b></td></tr>;
-//                                         } else if (props && props.viewer) {
-//                                           return <RelayExplorerComponent {...props} />;
-//                                         } else {
-//                                           return <tr><td><b>Loading - put a spinner here?</b></td></tr>;
-//                                         }
-//                                       }}
-// />;
-
-
-// const RelayExplorer = Relay.createContainer(
-//   withBoxAndNav(withAuthTimeout(ExplorerQuery)),
-//   {
-//     fragments: {
-//       viewer:(variables) => Relay.QL`
-//           fragment on viewer {
-//               ${RelayExplorerComponent.getFragment( 'viewer', {...variables} )}
-//           }
-//       `
-//     }
-//   }
-// );
-// export default RelayExplorer;
 
 const RelayExplorer = Relay.createContainer(
   withBoxAndNav(withAuthTimeout(RelayExplorerComponent)),
