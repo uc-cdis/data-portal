@@ -130,7 +130,7 @@ async function init() {
             <Route path='/dd/:node'
               onEnter={enterHook(store, fetchDictionary)}
               component={withBoxAndNav(DataDictionaryNode)} />
-            <Route path='/data'
+            <Route path='/files'
               onEnter={requireAuth(store, (nextState) => { return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))); })}
               component={RelayExplorer}
               queries={homepageQueries}/>

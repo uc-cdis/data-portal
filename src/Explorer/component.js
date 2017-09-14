@@ -43,7 +43,7 @@ class TableExplorer extends Component{
                 accessor: 'category'
               }
             ]}
-            defaultPageSize={20}
+            defaultPageSize={25}
             className="-striped -highlight"
           />
           <br />

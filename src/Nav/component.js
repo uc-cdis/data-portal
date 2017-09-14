@@ -4,7 +4,6 @@ import { logoutAPI } from '../actions';
 import { connect } from 'react-redux';
 import { basename, userapi_path, nav_items } from '../localconf.js';
 import { Link } from 'react-router';
-import { NavLink } from 'react-router-dom'
 import styled from 'styled-components';
 import { cube } from '../theme.js';
 import PropTypes from 'prop-types';
@@ -31,7 +30,7 @@ const NavRight = styled.nav`
 
 // TODO: due to issue https://github.com/styled-components/styled-components/issues/439,
 // bgcolor prop triggers react warning now, need to fix
-const NavItem = styled(NavLink)`
+const NavItem = styled(Link)`
   margin-right: 20px;
   span {
     vertical-align: middle;

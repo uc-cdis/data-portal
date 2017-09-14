@@ -24,7 +24,7 @@ if (app === 'bpa') {
     {'icon': 'search', 'link': '/query', 'color': '#daa520', 'name': 'query'},
     {'icon': 'class', 'link': '/DD', 'color': '#a2a2a2', 'name': 'dictionary'},
     {'icon': 'face', 'link': '/identity', 'color': '#daa520', 'name': 'profile'},
-    {'icon': 'content_copy', 'link': '/data', 'color': '#a2a2a2', 'name': 'data'}
+    {'icon': 'content_copy', 'link': '/files', 'color': '#a2a2a2', 'name': 'data'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -46,7 +46,7 @@ if (app === 'bpa') {
     {'icon': 'search', 'link': '/query', 'color': '#daa520', 'name': 'query'},
     {'icon': 'class', 'link': '/DD', 'color': '#a2a2a2', 'name': 'dictionary'},
     {'icon': 'face', 'link': '/identity', 'color': '#daa520', 'name': 'profile'},
-    {'icon': 'content_copy', 'link': '/data', 'color': '#a2a2a2', 'name': 'data'}
+    {'icon': 'content_copy', 'link': '/files', 'color': '#a2a2a2', 'name': 'data'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -68,7 +68,7 @@ if (app === 'bpa') {
     {'icon': 'search', 'link': '/query', 'color': '#2D728F', 'name': 'query'},
     {'icon': 'class', 'link': '/DD', 'color': '#A51C30', 'name': 'dictionary'},
     {'icon': 'face', 'link': '/identity', 'color': '#2D728F', 'name': 'profile'},
-    {'icon': 'content_copy', 'link': '/data', 'color': '#a2a2a2', 'name': 'data'}
+    {'icon': 'content_copy', 'link': '/files', 'color': '#a2a2a2', 'name': 'data'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -90,7 +90,7 @@ if (app === 'bpa') {
     {'icon': 'search', 'link': '/query', 'color': '#daa520', 'name': 'query'},
     {'icon': 'class', 'link': '/DD', 'color': '#a2a2a2', 'name': 'dictionary'},
     {'icon': 'face', 'link': '/identity', 'color': '#daa520', 'name': 'profile'},
-    {'icon': 'content_copy', 'link': '/data', 'color': '#a2a2a2', 'name': 'data'}
+    {'icon': 'content_copy', 'link': '/files', 'color': '#a2a2a2', 'name': 'data'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
@@ -126,7 +126,7 @@ if (app === 'bpa') {
     {'icon': 'search', 'link': '/query', 'color': '#ad7e1c', 'name': 'query'},
     {'icon': 'class', 'link': '/DD', 'color': '#1d3674', 'name': 'dictionary'},
     {'icon': 'face', 'link': '/identity', 'color': '#daa520', 'name': 'profile'},
-    {'icon': 'content_copy', 'link': '/data', 'color': '#1d3674', 'name': 'data'}
+    {'icon': 'content_copy', 'link': '/files', 'color': '#1d3674', 'name': 'data'}
   ];
   login = {
     url: userapi_path + 'login/google' + '?redirect=',
