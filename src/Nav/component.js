@@ -4,6 +4,7 @@ import { logoutAPI } from '../actions';
 import { connect } from 'react-redux';
 import { basename, userapi_path, nav_items } from '../localconf.js';
 import { Link } from 'react-router';
+import { NavLink } from 'react-router-dom'
 import styled from 'styled-components';
 import { cube } from '../theme.js';
 import PropTypes from 'prop-types';
@@ -30,10 +31,12 @@ const NavRight = styled.nav`
 
 // TODO: due to issue https://github.com/styled-components/styled-components/issues/439,
 // bgcolor prop triggers react warning now, need to fix
-const NavItem = styled(Link)`
+const NavItem = styled(NavLink)`
+  margin-right: 20px;
   span {
     vertical-align: middle;
     padding-right: 5px;
+    padding-left: 0px !important;
   }
   button {
     // color: white !important;
@@ -68,11 +71,15 @@ const Logout = styled(Link)`
   ${cube};
 `;
 
+const NavIcon = styled.div`
+  vertical-align: middle;
+  padding-left: 16px;
+`;
 
 const NavComponent = ({user, onLogoutClick, classes}) => (
     <Header>
       <NavLeft>
-          {nav_items.map((item, i) => <NavItem key={i} to={item.link}><FlatButton primary={i==0} label={item.name}></FlatButton></NavItem>)}
+        {nav_items.map((item, i) => <NavItem key={i} to={item.link}><FlatButton primary={i==0} label={item.name}><NavIcon className="material-icons">{item.icon}</NavIcon> </FlatButton></NavItem>)}
       </NavLeft>
       <NavRight>
         { user.username !== undefined &&
