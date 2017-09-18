@@ -8,9 +8,10 @@ import { Provider } from 'react-redux';
 import { requireAuth, enterHook, fetchUser } from './actions';
 import { clearResultAndQuery } from './QueryNode/actions';
 import Login from './Login/component';
-import RelayHomepage from './Homepage/RelayHomepage';
+import RelayHomepage from './Homepage/RelayHomepage.jsx';
 import QueryNode from './QueryNode/component';
-import RelayExplorer, {ExplorerQuery} from './Explorer/component';
+import ExplorerPage from './Explorer/ExplorerPage';
+import RelayExplorer from './Explorer/component';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
 import ProjectSubmission from './Submission/component';
@@ -31,7 +32,7 @@ import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-rou
 import useRelay from 'react-router-relay'
 
 import 'react-select/dist/react-select.css';
-import { app, mock_store, dev, graphql_path } from './localconf.js';
+import { app, dev, graphqlPath } from './localconf.js';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from './history';
 import { theme, Box } from './theme';
@@ -47,36 +48,6 @@ const NoMatch = () => (
     <Link to={`/`}>Page Not Found</Link>
   </div>
 );
-
-Relay.injectNetworkLayer(
-  new Relay.DefaultNetworkLayer(graphql_path,
-    {credentials: 'same-origin'})
-);
-
-const homepageQueries = { 
-  viewer: () => Relay.QL`query { viewer }`,  
-};
-
-/**
- * Relay route supporting PTBRelayAdapter below -
- * sets up per-project graphql query
- */
-class ExplorerRoute extends Relay.Route {
-  static paramDefinitions = {
-    selected_projects: { required: true },
-    selected_file_formats: { required: true }
-  };
-
-  static queries = {
-    viewer: () => Relay.QL`
-        query {
-            viewer
-        }
-    `
-  };
-
-  static routeName = "ExplorerRoute"
-}
 
 
 let initialized = false;
@@ -100,13 +71,11 @@ async function init() {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
         <MuiThemeProvider>
-          <Router history={history} environment={Relay.Store}
-                  render={applyRouterMiddleware(useRelay)}
-                  >
+          <Router history={history}>
             <Route path='/login' component={Login} />
             <Route path='/' onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
                    component={RelayHomepage}
-                   queries={homepageQueries} />
+                    />
             <Route path='/query'
                    onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts()))
                      .then(() => store.dispatch(fetchSchema())))}
@@ -123,10 +92,9 @@ async function init() {
             <Route path='/dd/:node'
               onEnter={enterHook(store, fetchDictionary)}
               component={withBoxAndNav(DataDictionaryNode)} />
-            <Route path='/files'
+            <Route exact path='/files'
               onEnter={requireAuth(store, (nextState) => { return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))); })}
-              component={RelayExplorer}
-              queries={homepageQueries}/>
+              component={ExplorerPage}/>
             <Route path='/:project'
               onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))}
               component={withBoxAndNav(withAuthTimeout(ProjectSubmission))} />

@@ -1,7 +1,7 @@
 import { fetchWrapper, updatePopup } from '../actions';
 import { push } from 'react-router-redux';
 import { get_submit_path } from '../utils';
-import { submissionapi_path, submissionapi_oauth_path } from '../localconf';
+import { submissionApiPath, submissionApiOauthPath } from '../localconf';
 
 export const updateSearchForm = (value) => {
   return {
@@ -13,7 +13,7 @@ export const updateSearchForm = (value) => {
 
 export const submitSearchForm = ({node_type, submitter_id="", project}, url) => {
   return (dispatch) => dispatch(fetchWrapper({
-    path: submissionapi_path + 'graphql',
+    path: submissionApiPath + 'graphql',
     body: JSON.stringify({
       'query': `query Test { ${node_type} (first: 100000, project_id: \"${project}\", quick_search: \"${submitter_id}\") {id, type, submitter_id}}`
     }),

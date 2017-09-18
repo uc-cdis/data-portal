@@ -2,7 +2,7 @@ import React from 'react';
 import { lighten } from 'polished';
 import { logoutAPI } from '../actions';
 import { connect } from 'react-redux';
-import { basename, userapi_path, nav_items } from '../localconf.js';
+import { basename, userapiPath, navItems } from '../localconf.js';
 import { Link } from 'react-router';
 import styled from 'styled-components';
 import { cube } from '../theme.js';
@@ -70,7 +70,7 @@ const NavIcon = styled.div`
 const NavComponent = ({user, onLogoutClick, classes}) => (
     <Header>
       <NavLeft>
-        {nav_items.map((item, i) => <NavItem key={i} to={item.link}><FlatButton primary={i==0} label={item.name}><NavIcon className="material-icons">{item.icon}</NavIcon> </FlatButton></NavItem>)}
+        {navItems.map((item, i) => <NavItem key={i} to={item.link}><FlatButton primary={i==0} label={item.name}><NavIcon className="material-icons">{item.icon}</NavIcon> </FlatButton></NavItem>)}
       </NavLeft>
       <NavRight>
         { user.username !== undefined &&

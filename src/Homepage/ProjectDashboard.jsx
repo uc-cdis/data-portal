@@ -7,9 +7,7 @@ import CircleButton from '../components/CircleButton.jsx';
 import { Link } from 'react-router';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import ActionBook from 'material-ui/svg-icons/action/book';
-import {PTableRelayAdapter} from './ProjectTable.jsx';
-import {GQLHelper} from './gqlHelper.js';
-import {getReduxStore} from '../reduxStore.js';
+import {ProjectTable} from './ProjectTable.jsx';
 import ReduxProjectBarChart from "./ReduxProjectBarChart.js";
 import Translator from "./translate.js";
 
@@ -123,59 +121,24 @@ export class LittleProjectDashboard extends React.Component {
     );
   }
 }
+ 
 
+export function DashboardWith( Table ) {
+  return class ProjectDashboard extends React.Component {
+    render() {
+      const props = this.props;
+      const summaryCounts = this.props.summaryCounts || {};
+      const projectList = this.props.projectList || [];
+      return <div className="clearfix">
+          <LittleProjectDashboard projectList={projectList} experimentCount={summaryCounts.experimentCount} 
+                  caseCount={summaryCounts.caseCount} fileCount={summaryCounts.caseCount} 
+                  aliquotCount={summaryCounts.aliquotCount}
+                  />
+          <Table projectList={projectList} summaryCounts={summaryCounts} />  
+        </div>;
+    }
+  }
+}
 
+export const ProjectDashboard = DashboardWith( ProjectTable );
 
-const gqlHelper = GQLHelper.getGQLHelper();
-
-
-/**
- * Relay customization of ProjectListComponent with nav and auth popup wrapped around it and
- * relay magic.
- */
-export const RelayProjectDashboard = Relay.createContainer(
-  function(props,context) {
-    const viewer = props.viewer;
-
-    //
-    // Little helper translates relay graphql results to properties
-    // expected by the LittleProjectDashboard component
-    //
-    const projectList = viewer.project.map( function(proj) { return { name:proj.project_id, experimentCount: proj._experiments_count, caseCount: 0, aliquotCount: 0, fileCount:0 }; }); 
-    const {fileCount} = GQLHelper.extractFileInfo( viewer );
-
-    //console.log( "Got filecount: " + fileCount );
-    const summaryCounts = {
-      caseCount: viewer._case_count,
-      experimentCount: viewer._experiment_count,
-      aliquotCount: viewer._aliquot_count,
-      fileCount: fileCount
-    };
-    const cleanProps = {
-      projectList:projectList, 
-      ...summaryCounts
-    };
-
-    // Update redux store if data is not already there
-    getReduxStore().then(
-      (store) => {
-        const homeState = store.getState().homepage || {};
-        if ( ! homeState.projectsByName  ) {
-          store.dispatch( { type: 'RECEIVE_PROJECT_LIST', data: projectList } );      
-        } /* else {
-          console.log( "project list already in Redux store" );
-        } */
-      }
-    );
-
-    return <div className="clearfix">
-      <LittleProjectDashboard { ...cleanProps} />
-      <PTableRelayAdapter projectList={cleanProps.projectList} summaryCounts={summaryCounts} />  
-      </div>;
-  },
-  {
-    fragments: {
-      viewer: () => gqlHelper.projectDashboardFragment
-    },
-  },
-);

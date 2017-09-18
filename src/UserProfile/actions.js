@@ -1,5 +1,5 @@
 import { fetchWrapper, fetchOAuthURL, updatePopup } from '../actions';
-import { submissionapi_oauth_path, credential_cdis_path } from '../localconf';
+import { submissionApiOauthPath, credentialCdisPath } from '../localconf';
 import moment from 'moment';
 import {fetchProjects} from "../queryactions";
 
@@ -15,7 +15,7 @@ export const loginUserProfile = () => {
       else {
         return Promise.resolve()
       }
-    }).then(()=>dispatch(fetchOAuthURL(submissionapi_oauth_path))).then(()=>{
+    }).then(()=>dispatch(fetchOAuthURL(submissionApiOauthPath))).then(()=>{
       let url = getState().user.oauth_url;
       return dispatch(fetchWrapper({
         path:url,
@@ -44,7 +44,7 @@ export const receiveUserAPILogin = ({status, data}) => {
 
 export const fetchAccess = () => {
   return fetchWrapper({
-    path: credential_cdis_path,
+    path: credentialCdisPath,
     handler: receiveCloudAccess
   })
 };

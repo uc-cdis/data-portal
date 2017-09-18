@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getCounts } from './actions';
-import { submissionapi_path } from '../localconf';
+import { submissionApiPath } from '../localconf';
 import { button } from '../theme';
 import styled from 'styled-components';
 import { createNodesAndEdges } from '../utils'

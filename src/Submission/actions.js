@@ -1,7 +1,7 @@
 import { fetchOAuthURL, fetchWrapper } from '../actions';
 import { predict_file_type } from '../utils';
 import { fetchProjects, fetchDictionary }  from '../queryactions';
-import { submissionapi_path, submissionapi_oauth_path } from '../localconf';
+import { submissionApiPath, submissionApiOauthPath } from '../localconf';
 
 export const uploadTSV = (value, type) => {
   return (dispatch) => {
@@ -49,7 +49,7 @@ export const submitToServer = (method='PUT') => {
       // remove line break in json file
       file = file.replace(/\n/g,'');
     }
-    let sub_url = submissionapi_path;
+    let sub_url = submissionApiPath;
     if (program != '_root'){
       sub_url = sub_url + program + '/' + project + '/';
     }
@@ -102,7 +102,7 @@ export const loginSubmissionAPI = () => {
       else {
         return Promise.resolve()
       }
-    }).then(()=>dispatch(fetchOAuthURL(submissionapi_oauth_path))).then(()=>{
+    }).then(()=>dispatch(fetchOAuthURL(submissionApiOauthPath))).then(()=>{
         let url = getState().submission.oauth_url;
         return dispatch(fetchWrapper({
           path:url,

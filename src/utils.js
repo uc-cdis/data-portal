@@ -1,8 +1,7 @@
 import React from 'react';
-import { submissionapi_path } from './localconf';
+import { submissionApiPath } from './localconf';
 import { Box } from './theme';
 import Nav from './Nav/component';
-import Footer from './components/Footer.jsx';
 import { AuthTimeoutPopup } from './Popup/component';
 import * as d3 from "d3";
 
@@ -10,16 +9,16 @@ export const get_submit_path = (project) => {
   let path = project.split('-');
   let program_name = path[0];
   let project_code = path.slice(1).join('-');
-  return submissionapi_path + '/' +  program_name + '/' + project_code;
+  return submissionApiPath + '/' +  program_name + '/' + project_code;
 };
 
 export const json_to_string = (data) => {
   let replacer = (key, value) => {
-    if (value == null) {
+    if (value === null) {
         return undefined;
       }
     return value;
-  }
+  };
   return JSON.stringify(data, replacer, '  ');
 };
 
@@ -28,14 +27,14 @@ export const predict_file_type = (data, file_type) => {
   let json_type = 'application/json';
   let tsv_type = 'text/tab-separated-values';
   data = data.trim();
-  if (data.indexOf('{') != -1 || data.indexOf('}') != -1) {
+  if (data.indexOf('{') !== -1 || data.indexOf('}') !== -1) {
      return json_type;
   }
-  if (data.indexOf('\t') != -1) {
+  if (data.indexOf('\t') !== -1) {
     return tsv_type;
   }
   return predict_type;
-}
+};
 
 export const withBoxAndNav = (Component) => {
   return ({...props}) => (
@@ -73,19 +72,19 @@ export function createNodesAndEdges(props, create_all, nodes_to_hide=["program"]
   let nodes = [];
 
   Object.keys(dictionary).forEach(function(key,index) {
-    if (dictionary[key].type == "object" && !nodes_to_hide.includes(key)) {
-      let count = 0
-      if (props.counts_search != undefined) {
+    if (dictionary[key].type === "object" && !nodes_to_hide.includes(key)) {
+      let count = 0;
+      if (props.counts_search !== undefined) {
         count = props.counts_search["_".concat(key).concat("_count")];
       }
-      if (create_all || (!create_all && count != 0)) {
+      if (create_all || (!create_all && count !== 0)) {
         let node = {
           name: key,
           category: dictionary[key].category,
           count: count,
           properties: dictionary[key].properties,
           required: dictionary[key].required,
-        }
+        };
         nodes.push(node);
       } 
     }
@@ -98,13 +97,13 @@ export function createNodesAndEdges(props, create_all, nodes_to_hide=["program"]
         if (dictionary[val["name"]].links[i].target_type) {
           if (nodes_to_hide.includes(dictionary[val["name"]].links[i].target_type) || nodes_to_hide.includes(val["name"])) {
             continue;
-          } else if (props.links_search == undefined || props.links_search[val["name"] + "_to_" + dictionary[val["name"]].links[i].target_type + "_link"] == 0) {
+          } else if (props.links_search === undefined || props.links_search[val["name"] + "_to_" + dictionary[val["name"]].links[i].target_type + "_link"] === 0) {
             if (create_all) {
               let edge = {
                 source: val["name"],
                 target: dictionary[val["name"]].links[i].target_type,
                 exists: 0
-              }
+              };
               edges.push(edge);
             }
             continue;
@@ -113,7 +112,7 @@ export function createNodesAndEdges(props, create_all, nodes_to_hide=["program"]
             let edge = {
               source: val["name"],
               target: dictionary[val["name"]].links[i].target_type,
-            }
+            };
             if (create_all) {
               edge.exists = 1
             }
@@ -125,13 +124,13 @@ export function createNodesAndEdges(props, create_all, nodes_to_hide=["program"]
             if (dictionary[val["name"]].links[i].subgroup[j].target_type) {
               if (nodes_to_hide.includes(dictionary[val["name"]].links[i].subgroup[j].target_type) || nodes_to_hide.includes(val["name"])) {
                 continue;
-              } else if (props.links_search == undefined || props.links_search[val["name"] + "_to_" + dictionary[val["name"]].links[i].subgroup[j].target_type + "_link"] == 0) {
+              } else if (props.links_search === undefined || props.links_search[val["name"] + "_to_" + dictionary[val["name"]].links[i].subgroup[j].target_type + "_link"] === 0) {
                 if (create_all) {
                   let edge = {
                     source: val["name"],
                     target: dictionary[val["name"]].links[i].subgroup[j].target_type,
                     exists: 0
-                  }
+                  };
                   edges.push(edge);
                 }
                 continue;
@@ -140,7 +139,7 @@ export function createNodesAndEdges(props, create_all, nodes_to_hide=["program"]
                 let edge = {
                   source: val["name"],
                   target: dictionary[val["name"]].links[i].subgroup[j].target_type,
-                }
+                };
                 if (create_all) {
                   edge.exists = 1
                 }
@@ -160,7 +159,7 @@ export function createNodesAndEdges(props, create_all, nodes_to_hide=["program"]
 
   function exists_in_any_nodes(value, nodes) {
     for (let i = 0; i < nodes.length; i++) {
-      if (nodes[i]["name"] == value) {
+      if (nodes[i]["name"] === value) {
         return 1; 
       }
     }
@@ -176,7 +175,7 @@ export const color = {
   "index_file": d3.schemeCategory20[18],
   "notation": d3.schemeCategory20[19],
   "data_file": d3.schemeCategory20[17],
-}
+};
 
 export function legend_creator(legend_g, nodes, legend_width, color_scheme) {
   // Find all unique categories 
@@ -197,9 +196,9 @@ export function legend_creator(legend_g, nodes, legend_width, color_scheme) {
         return 0;
       }
     }
-  )
+  );
 
-  let legend_font_size = "0.9em"
+  let legend_font_size = "0.9em";
   //Make Legend
   legend_g.selectAll("text")
     .data(unique_categories_array)
@@ -256,7 +255,7 @@ export function calculate_position(nodes, graph_width, graph_height) {
   for (let i = 0; i < nodes.length; i++) {
     nodes[i].fx = nodes[i].position[0]*graph_width;
     nodes[i].fy = nodes[i].position[1]*graph_height;
-    if (fy_vals.indexOf(nodes[i].fy) == -1) {
+    if (fy_vals.indexOf(nodes[i].fy) === -1) {
       fy_vals.push(nodes[i].fy);
     }
   }

@@ -1,13 +1,10 @@
 import React from 'react';
-import Relay from 'react-relay/classic';
 import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router';
 import styled, { css } from 'styled-components';
 import {TableBarColor} from '../theme.js';
 import CircleButton from '../components/CircleButton.jsx';
 import ActionBook from 'material-ui/svg-icons/action/book';
-import {GQLHelper} from './gqlHelper.js';
-import {getReduxStore} from '../reduxStore.js';
 import Translator from "./translate.js";
 
 
@@ -108,7 +105,7 @@ export class ProjectTable extends React.Component {
   }
 
   render() {
-    const projectList = (this.props.projectList || []).sort( (a,b) => (a<b) ? -1 : (a === b) ? 0 : 1 );
+    const projectList = (this.props.projectList || []).sort( (a,b) => (a.name<b.name) ? -1 : (a.name === b.name) ? 0 : 1 );
     const sum = (key) => { projectList.map( (it) => it[key] ).reduce( (acc,it) => { acc+it }, 0 ) };
     const summaryCounts = this.props.summaryCounts || {
       experimentCount: sum( "experimentCount" ),
@@ -139,112 +136,4 @@ export class ProjectTable extends React.Component {
     </Table>;
   }
 }
-
-
-/**
- * Relay route supporting PTBRelayAdapter below -
- * sets up per-project graphql query
- */
-class ProjectRoute extends Relay.Route {
-  static paramDefinitions = {
-    name: { required: true },
-  };
-
-  static queries = {
-    viewer: () => Relay.QL`
-        query {
-          viewer
-        }
-    `
-  };
-
-  static routeName = "ProjectRoute"
-}
-
-
-const gqlHelper = GQLHelper.getGQLHelper();
-
-/**
- * Relay adapter for project detail
- */
-const RelayProjectTR = Relay.createContainer(
-  function (props,context) { // graphql to props adapter
-    const viewer = props.viewer || {
-      project: [{
-        name: "unknown",
-        experimentCount: 0
-      }],
-      caseCount: 0,
-      aliquotCount: 0,
-      fileCount: 0
-    };
-    const {fileCount} = GQLHelper.extractFileInfo( viewer );
-    const proj = { ...viewer.project[0], caseCount: viewer.caseCount, aliquotCount:viewer.aliquotCount, fileCount:fileCount };
-
-    //console.log( "RelayProjectDetail got details: ", props );
-
-    // Update redux store if data is not already there
-    getReduxStore().then(
-      (store) => {
-        const homeState = store.getState().homepage || {};
-        let old = {};
-        if ( homeState.projectsByName  ) {
-          old = homeState.projectsByName[proj.name] || old;
-        }
-
-        if( old.experimentCount !== proj.experimentCount || old.caseCount !== proj.caseCount ||
-          old.aliquotCount !== proj.aliquotCount || old.fileCount !== proj.aliquotCount ) {
-          store.dispatch( { type: 'RECEIVE_PROJECT_DETAIL', data: proj } );
-          } /* else {
-          console.log( proj.name + " already in Redux store" );
-        } */
-      }
-    );
-    
-    return <ProjectTR project={proj} />;
-  },
-  {
-    initialVariables: { // don't forget this hint to the parent query!
-      name: null
-    },
-    fragments: {
-      viewer: () => gqlHelper.projectTableTRFragment
-    }
-  }
-);
-
-
-/**
- * Little adapter to kick Relay into running a graphql query
- * per project to get all the data we need ...
- * Drops into the ProjectDashboard - which fetches
- * the original project list.
- */
-export class PTableRelayAdapter extends ProjectTable {
-  
-  /**
-   * Overrides rowRender in ProjectTable parent class
-   * @param {Object} proj 
-   */
-  rowRender(proj) {
-    return <Relay.Renderer key={proj.name}
-      Container={RelayProjectTR}
-      queryConfig={new ProjectRoute({ name: proj.name })}
-      environment={Relay.Store}
-      render={({ done, error, props, retry, stale }) => {
-        if (error) {
-          return <tr><td><b>Error! {error}</b></td></tr>;
-        } else if (props && props.viewer) {
-          return <RelayProjectTR {...props} />;
-        } else {
-          return <tr><td><b>Loading - put a spinner here?</b></td></tr>;
-        }
-      }}
-    />;   
-  }
-
-}
-
-
-
 

@@ -1,6 +1,6 @@
 import 'isomorphic-fetch';
 import _ from 'underscore';
-import { required_certs, userapi_path, headers, basename, submissionapi_oauth_path, graphql_path } from './configs.js'
+import { requiredCerts, userapiPath, headers, basename, submissionApiOauthPath, graphqlPath } from './configs.js'
 import { fetchProjects, fetchDictionary }  from './queryactions';
 
 export const updatePopup = (state) => {
@@ -47,7 +47,7 @@ export const fetchGraphQL = (graphQLParams) => {
     body: JSON.stringify(graphQLParams),
   };
 
-  return fetch(graphql_path, request).then(function (response) {
+  return fetch(graphqlPath, request).then(function (response) {
     return response.text();
   }).then(function (responseBody) {
     try {
@@ -115,7 +115,7 @@ export const startFetchUser = () => {
 
 export const fetchUser = () => {
   return fetchWrapper({
-    path: userapi_path + "user/",
+    path: userapiPath + "user/",
     handler: receiveUser
   })
 };
@@ -131,7 +131,7 @@ export const requireAuth = (store, additionalHooks) => {
         replace({pathname: '/login', query: {next: path+nextState.location.search}});
         return Promise.resolve()
       }
-      let has_certs = _.intersection(required_certs, user.certificates_uploaded).length !== required_certs.length;
+      let has_certs = _.intersection(requiredCerts, user.certificates_uploaded).length !== requiredCerts.length;
       // take quiz if this user doesn't have required certificate
       if (location.pathname !== 'quiz' && has_certs) {
         replace({pathname: '/quiz'});
@@ -157,9 +157,9 @@ export const enterHook = (store, hookAction) => {
 
 export const logoutAPI = () => {
   return (dispatch) => dispatch(fetchWrapper({
-    path: submissionapi_oauth_path + 'logout',
+    path: submissionApiOauthPath + 'logout',
     handler: receiveAPILogout,
-  })).then(() => document.location.replace(userapi_path+'/logout?next='+basename))
+  })).then(() => document.location.replace(userapiPath+'/logout?next='+basename))
 };
 
 export const fetchOAuthURL = (oauth_path) => {

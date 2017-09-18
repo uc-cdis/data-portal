@@ -1,12 +1,13 @@
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var nodeExternals = require('webpack-node-externals');
-var path = require('path');
-var basename = process.env.BASENAME || '/';
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const RelayCompilerWebpackPlugin = require('relay-compiler-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
+const path = require('path');
+const basename = process.env.BASENAME || '/';
 // prefix for static file paths
-var path_prefix = basename.endsWith('/') ? basename.slice(0, basename.length-1) : basename
-var app = process.env.APP || 'dev';
-var title = {
+const path_prefix = basename.endsWith('/') ? basename.slice(0, basename.length-1) : basename
+const app = process.env.APP || 'dev';
+const title = {
   dev: 'Generic Data Commons',
   bpa: 'BPA Data Commons',
   edc: 'Environmental Data Commons',
@@ -40,7 +41,6 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         loaders: [
           'babel',
-
         ],
       },
       {
@@ -86,12 +86,17 @@ module.exports = {
     new webpack.EnvironmentPlugin(['MOCK_STORE']),
     new webpack.EnvironmentPlugin(['APP']),
     new webpack.EnvironmentPlugin(['BASENAME']),
+    /*... doesn't work? ... 
+    new RelayCompilerWebpackPlugin({
+      schema: path.resolve(__dirname, './data/schema.json'), // or schema.graphql 
+      src: path.resolve(__dirname, './src'),
+    }), */
     new HtmlWebpackPlugin({
       title: title,
       basename: path_prefix,
       template: 'src/index.ejs',
       hash: true
-    }),
+    }), 
   ],
   externals:[{
     xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'

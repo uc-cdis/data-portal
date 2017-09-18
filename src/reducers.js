@@ -50,6 +50,9 @@ export const removeDeletedNode = (state, id) =>{
   return search_result;
 };
 
-const reducers = combineReducers({homepage, explorer, popups, login, user, status, submission, query_nodes, user_profile, certificate, graphiql, form: formReducer, routing:routerReducer});
+const reducers = combineReducers({explorer, homepage, popups, login, user, status, submission, query_nodes, 
+            user_profile, certificate, graphiql, form: formReducer, 
+            routing:routerReducer}
+          );
 
 export default reducers
