@@ -3,7 +3,8 @@
   "plugins": [
     "dev-expression",
     "transform-class-properties",
-    ["react-relay",
-      {"compat": true, "schema": "data/schema.graphql"}]
+    ["relay",
+      {"compat": true, "schema": "data/schema.graphql"}],
+    ["transform-runtime", { "polyfill": false }]
   ]
 }

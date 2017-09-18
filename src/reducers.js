@@ -6,7 +6,7 @@ import { user_profile } from './UserProfile/reducers';
 import { certificate } from './Certificate/reducers';
 import { login } from './Login/reducers';
 import { submission } from './Submission/reducers';
-import { homepage } from './Homepage/reducers';
+// import { homepage } from './Homepage/reducers';
 import { query_nodes } from './QueryNode/reducers';
 import { popups } from './Popup/reducers';
 import { graphiql } from './GraphQLEditor/reducers';
@@ -50,6 +50,6 @@ export const removeDeletedNode = (state, id) =>{
   return search_result;
 };
 
-const reducers = combineReducers({homepage, explorer, popups, login, user, status, submission, query_nodes, user_profile, certificate, graphiql, form: formReducer, routing:routerReducer});
+const reducers = combineReducers({explorer, popups, login, user, status, submission, query_nodes, user_profile, certificate, graphiql, form: formReducer, routing:routerReducer});
 
 export default reducers

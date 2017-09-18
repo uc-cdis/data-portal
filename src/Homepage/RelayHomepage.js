@@ -1,5 +1,7 @@
-import Relay from 'react-relay/classic';
-import {ProjectDashboard,RelayProjectDashboard} from './ProjectDashboard.jsx';
+import Relay, {Component} from 'react-relay';
+import {QueryRenderer, graphql} from 'react-relay';
+import environment from '../environment';
+import {RelayProjectDashboard} from './ProjectDashboard.jsx';
 import { withBoxAndNav, withAuthTimeout } from '../utils';
 
 
@@ -18,3 +20,34 @@ export default Relay.createContainer(
    }
  }
 );
+
+const HomepageQuery = graphql`
+    query ExplorerPageQuery{
+        viewer viewer {
+            ${RelayProjectDashboard.getFragment( 'viewer' )}
+        }
+    }
+`;
+
+class RelayHomepage extends Component {
+  render() {
+    return (
+      <QueryRenderer
+        environment={environment}
+        query={ExplorerPageQuery}
+        variables={{
+          selected_projects: [],
+          selected_file_types: [],
+          selected_file_formats: []
+        }}
+        render={({error, props}) => {
+          if (error) {
+            return <div>{error.message}</div>
+          } else if (props) {
+            return <RelayProjectDashboard viewer={props.viewer}/>}
+          return <div>Loading</div>
+        }
+        }
+      />)
+  }
+}

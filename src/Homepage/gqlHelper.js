@@ -1,4 +1,4 @@
-import Relay from 'react-relay/classic';
+import Relay, {graphql} from 'react-relay';
 import {app,dev} from '../localconf.js';
 
 /**
@@ -45,7 +45,7 @@ class ExperimentGQLHelper {
    */
   get numFilesTotalFragment() {
     return this._cache.get( "exp_numFilesTotalFragment",
-      () => Relay.QL`
+      graphql.experimental`
         fragment on viewer {
           fileCount1:_slide_image_count
           fileCount2:_submitted_aligned_reads_count
@@ -62,9 +62,11 @@ class ExperimentGQLHelper {
    * Returns Relay fragment configured to accept a project_id via a $name QL variable
    */
   get numFilesByProjectFragment() {
-      return this._cache.get( "exp_numFilesByProjectFragment", 
-        () => Relay.QL`
-          fragment on viewer {
+      return this._cache.get( "exp_numFilesByProjectFragment",
+        graphql.experimental`
+          fragment on viewer @argumentDefinitions(
+              name: {type: "String"}
+          ){
             fileCount1:_slide_image_count( project_id:$name )
             fileCount2:_submitted_aligned_reads_count( project_id:$name )
             fileCount3:_submitted_copy_number_count( project_id:$name )
@@ -80,9 +82,11 @@ class ExperimentGQLHelper {
    * Fragment attached to RelayProjectTable's TR (table row)
    */
   get projectTableTRFragment() {
-    return this._cache.get( "exp_projectTableTRFragment", 
-      () => Relay.QL`
-        fragment on viewer {
+    return this._cache.get( "exp_projectTableTRFragment",
+      graphql.experimental`
+        fragment on viewer @argumentDefinitions(
+            name: {type: "String"}
+        ){
           project(project_id: $name) {
             name:project_id
             experimentCount:_experiments_count
@@ -98,18 +102,18 @@ class ExperimentGQLHelper {
    * Fragment attached to RelayProjectDashboard
    */
   get projectDashboardFragment() {
-    return this._cache.get( "exp_projectDashboardFragment", 
-      () => Relay.QL`
+    return this._cache.get( "exp_projectDashboardFragment",
+      graphql.experimental`
         fragment on viewer {
-            project(first: 10000) {
-              project_id
-              code
-              _experiments_count
-            }
-            _case_count
-            _experiment_count
-            _aliquot_count
-            ${this.numFilesTotalFragment}         
+          project(first: 10000) {
+            project_id
+            code
+            _experiments_count
+          }
+          _case_count
+          _experiment_count
+          _aliquot_count
+          ${this.numFilesTotalFragment}         
         }`
       );
   }
@@ -147,9 +151,11 @@ class StudyGQLHelper {
    * Fragment attached to RelayProjectTable's TR (table row)
    */
   get projectTableTRFragment() {
-    return this._cache.get( "study_projectTableTRFragment", 
-      () => Relay.QL`
-        fragment on viewer {
+    return this._cache.get( "study_projectTableTRFragment",
+      graphql.experimental`
+        fragment on viewer @argumentDefinitions(
+            name: {type: "String"}
+        ){
           project(project_id: $name) {
             name:project_id
             experimentCount:_studies_count
@@ -166,17 +172,19 @@ class StudyGQLHelper {
    */
   get projectDashboardFragment() {
     return this._cache.get( "study_projectDashboardFragment",
-      () => Relay.QL`
-        fragment on viewer {
-            project(first: 10000) {
-              project_id
-              code
-              _studies_count
-            }
-            _case_count
-            _experiment_count: _study_count
-            _aliquot_count
-            ${this.numFilesTotalFragment}
+      graphql.experimental`
+        fragment on viewer @argumentDefinitions(
+          name: {type: "String"}
+        ){
+          project(first: 10000) {
+            project_id
+            code
+            _studies_count
+          }
+          _case_count
+          _experiment_count: _study_count
+          _aliquot_count
+          ${this.numFilesTotalFragment}
         }`
       );
   }
@@ -201,7 +209,7 @@ class BHCGQLHelper {
    */
   get numFilesTotalFragment() {
     return this._cache.get( "bhc_numFilesTotalFragment",
-      () => Relay.QL`fragment on viewer {
+      graphql.experimental`fragment on viewer {
         fileCount7:_app_checkup_count
         fileCount8:_cell_image_count          
         fileCount9:_clinical_checkup_count          
@@ -221,7 +229,11 @@ class BHCGQLHelper {
    */
   get numFilesByProjectFragment() {
     return this._cache.get( "bhc_numFilesByProject",
-      () => Relay.QL`fragment on viewer {
+      graphql.experimental`
+        fragment on viewer @argumentDefinitions(
+            name: {type: "String"}
+        )
+        {
           fileCount7:_app_checkup_count( project_id:$name )
           fileCount8:_cell_image_count( project_id:$name )          
           fileCount9:_clinical_checkup_count( project_id:$name )          
@@ -240,9 +252,12 @@ class BHCGQLHelper {
    * Fragment attached to RelayProjectTable's TR (table row)
    */
   get projectTableTRFragment() {
-    return this._cache.get( "bhc_projectTableTRFragment", 
-      () => Relay.QL`
-        fragment on viewer {
+    return this._cache.get( "bhc_projectTableTRFragment",
+      graphql.experimental`
+        fragment on viewer @argumentDefinitions(
+            name: {type: "String"}
+        )
+        {
           project(project_id: $name) {
             name:project_id
             experimentCount:_studies_count
@@ -259,8 +274,8 @@ class BHCGQLHelper {
    */
   get projectDashboardFragment() {
     return this._cache.get( "bhc_projectDashboardFragment",
-    () => Relay.QL`
-      fragment on viewer {
+      graphql.experimental`
+        fragment on viewer {
           project(first: 10000) {
             project_id
             code
@@ -270,7 +285,7 @@ class BHCGQLHelper {
           _experiment_count: _study_count
           _aliquot_count
           ${this.numFilesTotalFragment}
-      }`
+        }`
     );
   }
 }

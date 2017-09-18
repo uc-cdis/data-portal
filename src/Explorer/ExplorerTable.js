@@ -8,29 +8,6 @@ const passFilter = (filterList, item) => {
 };
 
 class ExplorerTableComponent extends Component{
-  constructor(props){
-    super(props);
-    getReduxStore().then((store) => {store.subscribe(() =>
-    {
-      const explorerState = store.getState().explorer;
-      if (!explorerState || ! explorerState.refetch_needed)
-        return;
-      const selected_filters = explorerState.selected_filters;
-      if (! selected_filters || !explorerState.filesList)
-        return;
-      let filesList = explorerState.filesList;
-      let filteredFilesList = filesList.filter( file => (
-        passFilter(selected_filters.projects, file.project_id)
-        && passFilter(selected_filters.file_types, file.type)
-        && passFilter(selected_filters.file_formats, file.format))
-      );
-      getReduxStore().then(
-        (store) => {
-          store.dispatch( { type: 'FILTERED_FILES_CHANGED', data: filteredFilesList } );
-        }
-      );
-    })});
-  }
   static propTypes = {
     filesList: PropTypes.array
   };
