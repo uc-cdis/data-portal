@@ -4,3 +4,4 @@ bundle.js
 index.html
 data/schema.graphql
 data/schema.json
+__generated__/

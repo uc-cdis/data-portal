@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { requireAuth, enterHook, fetchUser } from './actions';
 import { clearResultAndQuery } from './QueryNode/actions';
 import Login from './Login/component';
-import RelayHomepage from './Homepage/RelayHomepage';
+import RelayHomepage from './Homepage/RelayHomepage.jsx';
 import QueryNode from './QueryNode/component';
 import ExplorerPage from './Explorer/ExplorerPage';
 import RelayExplorer from './Explorer/component';
@@ -82,7 +82,7 @@ async function init() {
             <Route path='/login' component={Login} />
             <Route path='/' onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
                    component={RelayHomepage}
-                   queries={homepageQueries} />
+                    />
             <Route path='/query'
                    onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts()))
                      .then(() => store.dispatch(fetchSchema())))}

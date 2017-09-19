@@ -1,4 +1,4 @@
-import React, {, PropTypes} from 'react';
+import React from 'react';
 import {QueryRenderer, graphql} from 'react-relay';
 import environment from '../environment';
 import {RelayExplorerComponent} from './component';
@@ -11,7 +11,7 @@ const ExplorerPageQuery = graphql`
     }
 `;
 
-class ExplorerPage extends Component {
+class ExplorerPage extends React.Component {
   render() {
     return (
     <QueryRenderer
@@ -33,5 +33,6 @@ class ExplorerPage extends Component {
     />)
   }
 }
+
 
 export default ExplorerPage;

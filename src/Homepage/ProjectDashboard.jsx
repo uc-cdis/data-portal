@@ -1,17 +1,15 @@
-import React, {Component, PropTypes} from 'react';
-import Relay, {createFragmentContainer} from 'react-relay';
+import React from 'react';
+import Relay from 'react-relay/classic';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { clearFix } from 'polished';
 import CircleButton from '../components/CircleButton.jsx';
 import { Link } from 'react-router';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import ActionBook from 'material-ui/svg-icons/action/book';
-import {PTableRelayAdapter} from './ProjectTable.jsx';
-import {GQLHelper} from './gqlHelper.js';
-import {getReduxStore} from '../reduxStore.js';
+import {ProjectTable} from './ProjectTable.jsx';
 import ReduxProjectBarChart from "./ReduxProjectBarChart.js";
 import Translator from "./translate.js";
-import {withAuthTimeout, withBoxAndNav} from "../utils";
 
 
 const tor = Translator.getTranslator();
@@ -117,83 +115,30 @@ export class LittleProjectDashboard extends React.Component {
   render () {
     return (
       <DashTopDiv>
-        <CountCard caseCount={ this.props.caseCount } experimentCount={ this.props.experimentCount }
-                   fileCount={this.props.fileCount} aliquotCount={ this.props.aliquotCount } />
+        <CountCard caseCount={ this.props.caseCount } experimentCount={ this.props.experimentCount } fileCount={this.props.fileCount} aliquotCount={ this.props.aliquotCount } />
         <ReduxProjectBarChart projectList={this.props.projectList} />
       </DashTopDiv>
     );
   }
 }
+ 
 
-
-
-const gqlHelper = GQLHelper.getGQLHelper();
-
-class ProjectDashboardComponent extends Component {
-  static propTypes = {
-    viewer: PropTypes.object
-  };
-
-  createProjectList = () => {
-    projectList = this.props.viewer.project.map( function(proj) {
-      return {
-        name:proj.project_id,
-        experimentCount: proj._experiments_count,
-        caseCount: 0, aliquotCount: 0, fileCount:0
-      };
-    });
-    return projectList;
-  };
-
-  createSummaryCounts = () => {
-    viewer = this.props.viewer;
-    const {fileCount} = GQLHelper.extractFileInfo( viewer );
-    //console.log( "Got filecount: " + fileCount );
-    return {
-      caseCount: viewer._case_count,
-      experimentCount: viewer._experiment_count,
-      aliquotCount: viewer._aliquot_count,
-      fileCount: fileCount
-    };
-  };
-
-  updateProjectList = (projectList) => {
-    getReduxStore().then(
-      (store) => {
-        const homeState = store.getState().homepage || {};
-        if ( ! homeState.projectsByName  ) {
-          store.dispatch( { type: 'RECEIVE_PROJECT_LIST', data: projectList } );
-        } /* else {
-          console.log( "project list already in Redux store" );
-        } */
-      }
-    );
-  };
-
-  render() {
-    let projectList = this.createProjectList();
-    this.updateProjectList(projectList);
-    let summaryCounts = this.createSummaryCounts();
-    const cleanProps = {
-      projectList:projectList,
-      ...summaryCounts
-    };
-    return (
-      <div className="clearfix">
-        <LittleProjectDashboard { ...cleanProps} />
-        <PTableRelayAdapter projectList={cleanProps.projectList} summaryCounts={summaryCounts} />
-      </div>
-    );
+export function DashboardWith( Table ) {
+  return class ProjectDashboard extends React.Component {
+    render() {
+      const props = this.props;
+      const summaryCounts = this.props.summaryCounts || {};
+      const projectList = this.props.projectList || [];
+      return <div className="clearfix">
+          <LittleProjectDashboard projectList={projectList} experimentCount={summaryCounts.experimentCount} 
+                  caseCount={summaryCounts.caseCount} fileCount={summaryCounts.caseCount} 
+                  aliquotCount={summaryCounts.aliquotCount}
+                  />
+          <Table projectList={projectList} summaryCounts={summaryCounts} />  
+        </div>;
+    }
   }
 }
 
-/**
- * Relay customization of ProjectListComponent with nav and auth popup wrapped around it and
- * relay magic.
- */
-export const RelayProjectDashboard = createFragmentContainer(
-  withBoxAndNav(withAuthTimeout(ProjectDashboardComponent)),
-  {
-    viewer: () => gqlHelper.projectDashboardFragment
-  },
-);
+export const ProjectDashboard = DashboardWith( ProjectTable );
+

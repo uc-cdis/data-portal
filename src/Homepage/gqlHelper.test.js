@@ -6,32 +6,30 @@ import {GQLHelper} from './gqlHelper.js';
  * validation will kick in once we allocate a fragment.
  */
 describe( "the gqlHelper", function() {
-  const helper = GQLHelper.getGQLHelper( "exp" );
+  const helper = GQLHelper.getGQLHelper();
 
-  it( "provides different helpers for different apps", function() {
+  it( "support BHC dictionary", function() {
     const bhcHelper = GQLHelper.getGQLHelper( "bhc" );
-    expect( bhcHelper ).not.toBe( helper );
-    const bpaHelper = GQLHelper.getGQLHelper( "bpa" );
-    expect( bpaHelper ).not.toBe( helper );
-    expect( bpaHelper ).not.toBe( bhcHelper );   
-  })
-  it( "provides a base numFilesTotal fragment", function() {
-    const frag = helper.numFilesTotalFragment;
+    expect( bhcHelper ).toBe( helper );
+  });
 
-    expect( !! frag ).toBe(true);
+  it( "provides a base homepageQuery", function() {
+    const query = helper.homepageQuery;
+
+    expect( !! query ).toBe(true);
   });
 
 
-  it( "provides a base numFilesByProject fragment", function() {
-    const frag = helper.numFilesByProjectFragment;
+  it( "provides a base projectDetailDetail query", function() {
+    const query = helper.projectDetailQuery;
 
-    expect( !! frag ).toBe(true);
+    expect( !! query ).toBe(true);
   });
 
-  it( "caches fragments", function() {
-    const frag1 = helper.projectDashboardFragment;
+  it( "caches properties", function() {
+    const frag1 = helper.projectDetailQuery;
     expect( frag1 ).toBeDefined();
-    expect( helper.projectDashboardFragment ).toBe( frag1 );
+    expect( helper.projectDetailQuery ).toBe( frag1 );
   })
 
   it( "accumulates fileCount and fileData results", function() {
