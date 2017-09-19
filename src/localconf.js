@@ -1,7 +1,7 @@
 const dev = (process.env.NODE_ENV && process.env.NODE_ENV == 'dev');
 const mock_store = (process.env.MOCK_STORE && process.env.MOCK_STORE == 'true');
 
-const app = (process.env.APP === undefined) ? 'bpa' : process.env.APP;
+const app = (process.env.APP === undefined) ? 'bhc' : process.env.APP;
 const basename = (process.env.BASENAME === undefined) ? '/' : process.env.BASENAME;
 let hostname, userapi_path, submissionapi_path, submissionapi_oauth_path, credential_path, credential_oauth_path, credential_cdis_path, graphql_path, appname, nav_items, login, graphql_schema_url;
 let required_certs = [];

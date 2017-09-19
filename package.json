@@ -87,7 +87,7 @@
   "scripts": {
     "start": "BROWSER=none jailbreak-react-scripts start",
     "test": "jest",
-    "relay": "relay-compiler --src src --schema ./data/schema.graphql --extensions js jsx",
+    "relay": "relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.graphql --extensions js jsx",
     "schema": "node ./data/getSchema"
   },
   "graphql": {

@@ -2,21 +2,17 @@ import React from 'react';
 import {QueryRenderer, graphql} from 'react-relay';
 import environment from '../environment';
 import {RelayExplorerComponent} from './component';
+import {GQLHelper} from '../gqlHelper.js';
 
-const ExplorerPageQuery = graphql`
-    query ExplorerPageQuery{
-        viewer {
-            ...component_viewer
-        }
-    }
-`;
+const gqlHelper = GQLHelper.getGQLHelper();
+
 
 class ExplorerPage extends React.Component {
   render() {
     return (
     <QueryRenderer
       environment={environment}
-      query={ExplorerPageQuery}
+      query={gqlHelper.explorerPageQuery}
       variables={{
         selected_projects: [],
         selected_file_types: [],

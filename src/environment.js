@@ -9,7 +9,7 @@ import {headers, graphql_path} from './configs'
 
 const store = new Store(new RecordSource());
 
-const fetchQuery = (operation, variables) => {
+const fetchQuery = (operation, variables, cacheConfig) => {
   let request = {
     credentials: "same-origin",
     headers: {...headers},

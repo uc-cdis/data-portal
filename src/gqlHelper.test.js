@@ -8,11 +8,6 @@ import {GQLHelper} from './gqlHelper.js';
 describe( "the gqlHelper", function() {
   const helper = GQLHelper.getGQLHelper();
 
-  it( "support BHC dictionary", function() {
-    const bhcHelper = GQLHelper.getGQLHelper( "bhc" );
-    expect( bhcHelper ).toBe( helper );
-  });
-
   it( "provides a base homepageQuery", function() {
     const query = helper.homepageQuery;
 
@@ -20,7 +15,7 @@ describe( "the gqlHelper", function() {
   });
 
 
-  it( "provides a base projectDetailDetail query", function() {
+  it( "provides a base projectDetail query", function() {
     const query = helper.projectDetailQuery;
 
     expect( !! query ).toBe(true);

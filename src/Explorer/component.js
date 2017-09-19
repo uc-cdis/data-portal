@@ -2,40 +2,72 @@ import React, {Component, PropTypes} from 'react';
 import 'react-table/react-table.css';
 import Relay, {createRefetchContainer, graphql} from 'react-relay';
 import { withAuthTimeout, withBoxAndNav} from '../utils';
+import {GQLHelper} from '../gqlHelper.js';
 import {getReduxStore} from '../reduxStore.js';
 import ExplorerTable from "./ExplorerTable";
 import SideBar from "./ExplorerSideBar";
 
-const mapFile = (listFile) => {
-  return listFile.map( function(file) {
-    return { project_id: file.project_id, name: file.file_name,
-      category: file.data_category, format: file.data_format,
-      type: file.data_type, size: file.file_size };
-  });
-};
+
+const gqlHelper = GQLHelper.getGQLHelper();
+
+
 
 class ExplorerComponent extends Component {
   constructor(props){
     super(props);
-    getReduxStore().then((store) => {store.subscribe(() =>
-    {
-      const explorerState = store.getState().explorer;
-      if (!explorerState || ! explorerState.refetch_needed)
-        return;
-      const selected_filters = explorerState.selected_filters;
-      if (! selected_filters || !explorerState.filesList)
-        return;
-      if (explorerState.refetch_needed)
-        this._loadMore(selected_filters);
-    })});
+    
   }
 
+  
   static propTypes = {
     submission: PropTypes.object,
     selected_filters: PropTypes.object,
     viewer: PropTypes.object
   };
   viewer = {};
+
+  
+  /**
+   * Unsubscribe from Redux updates at unmount time
+   */
+  componentWillUnmount() {
+    if ( this.unsubscribe ) {
+      this.unsubscribe();
+      this.unsubscribe = null;
+    }
+  }
+  
+  /**
+   * Listens for filter updates in redux
+   */
+  _reduxFilterListener(store) {
+    const explorerState = store.getState().explorer;
+    if (!explorerState || ! explorerState.refetch_needed) {
+      return;
+    }
+    const selected_filters = explorerState.selected_filters;
+    if (! selected_filters || !explorerState.filesList) {
+      return;
+    }
+    if (explorerState.refetch_needed) {
+      this._loadMore(selected_filters);
+    }
+  }
+
+  /**
+   * Subscribe to Redux updates at mount time
+   */ 
+  componentWillMount() {
+    getReduxStore().then(
+      (store) => {
+        store.subscribe(
+          () => {
+            this._reduxFilterListener( store );
+          }
+        );
+      }
+    );
+  }
 
   createList = () => {
     const viewer = this.props.viewer || {
@@ -46,12 +78,22 @@ class ExplorerComponent extends Component {
       submitted_copy_number: []
     };
 
+    const fileList = GQLHelper.extractFileInfo( viewer ).fileData.map( 
+      function(file) {
+        return { project_id: file.project_id, name: file.file_name,
+          category: file.data_category, format: file.data_format,
+          type: file.data_type, size: file.file_size };
+      }
+    );
+    /*
     const files1 = mapFile(viewer.submitted_aligned_reads);
     const files2 = mapFile(viewer.submitted_unaligned_reads);
     const files3 = mapFile(viewer.submitted_somatic_mutation);
     const files4 = mapFile(viewer.submitted_methylation);
     const files5 = mapFile(viewer.submitted_copy_number);
     return [...files1, ...files2, ...files3, ...files4, ...files5 ];
+    */
+    return fileList;
   };
 
   updateFilesList = () => {
@@ -71,6 +113,12 @@ class ExplorerComponent extends Component {
     );
   };
 
+  /**
+   * Fetch data from relay in response to filter change
+   * or whatever ...
+   * 
+   * @param {*} selected_filters 
+   */
   _loadMore(selected_filters) {
     // Increments the number of stories being rendered by 10.
     const refetchVariables = {
@@ -95,70 +143,7 @@ class ExplorerComponent extends Component {
 export const RelayExplorerComponent = createRefetchContainer(
   withBoxAndNav(withAuthTimeout(ExplorerComponent)),
   {
-    viewer: graphql.experimental`
-      fragment component_viewer on viewer
-      @argumentDefinitions(
-          selected_projects: {type: "[String]"},
-          selected_file_types: {type: "[String]"},
-          selected_file_formats: {type: "[String]"}
-      )
-      {
-        submitted_aligned_reads(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
-          project_id
-          file_name
-          data_category
-          data_format
-          data_type
-          file_size
-        }
-        submitted_unaligned_reads(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
-          project_id
-          file_name
-          data_category
-          data_format
-          data_type
-          file_size
-        }
-        submitted_somatic_mutation(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
-          project_id
-          file_name
-          data_category
-          data_format
-          data_type
-          file_size
-        }
-        submitted_methylation(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
-          project_id
-          file_name
-          data_category
-          data_format
-          data_type
-          file_size
-        }
-        submitted_copy_number(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
-          project_id
-          file_name
-          data_category
-          data_format
-          data_type
-          file_size
-        }
-      }
-    `
+    viewer: gqlHelper.explorerPageFragment
   },
-  graphql.experimental`
-    query componentRefetchQuery(
-      $selected_projects: [String],
-      $selected_file_types: [String],
-      $selected_file_formats: [String]
-    )
-    {
-      viewer {
-        ...component_viewer @arguments(selected_projects: $selected_projects,
-            selected_file_types: $selected_file_types,
-            selected_file_formats: $selected_file_formats
-        )
-      }
-    }
-  `
+  gqlHelper.explorerRefreshQuery
 );
