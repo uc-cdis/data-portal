@@ -1,5 +1,5 @@
 import { fetchWrapper } from '../actions';
-import { submissionapi_path } from '../localconf';
+import { submissionApiPath } from '../localconf';
 
 /**
  * getCounts: Compose and send a single graphql query to get a count of how 
@@ -41,7 +41,7 @@ export const getCounts = (type, project, dictionary) => {
 
   query = query.concat("}");
   return fetchWrapper({
-    path: submissionapi_path + 'graphql',
+    path: submissionApiPath + 'graphql',
     body: JSON.stringify({
       'query': query 
     }),

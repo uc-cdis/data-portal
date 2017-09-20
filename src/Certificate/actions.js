@@ -1,4 +1,4 @@
-import { userapi_path } from '../configs';
+import { userapiPath } from '../configs';
 import browserHistory from '../history';
 import { fetchWrapper, fetchOAuthURL, updatePopup } from '../actions';
 import { certificate_form } from './constants';
@@ -12,7 +12,7 @@ export const updateForm = ( data ) => {
 
 export const submitForm = ( data ) => {
   return fetchWrapper({
-    path: userapi_path + '/user/cert/security_quiz?extension=txt',
+    path: userapiPath + '/user/cert/security_quiz?extension=txt',
     handler: receiveSubmitCert,
     body: JSON.stringify({answers: data, certificate_form:certificate_form}, null, '\t'),
     method: 'PUT'

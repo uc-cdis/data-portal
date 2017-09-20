@@ -1,5 +1,5 @@
 import React from 'react';
-import { submissionapi_path } from './localconf';
+import { submissionApiPath } from './localconf';
 import { Box, Body, Margin } from './theme';
 import Nav from './Nav/component';
 import Footer from './components/Footer.jsx';
@@ -10,7 +10,7 @@ export const get_submit_path = (project) => {
   let path = project.split('-');
   let program_name = path[0];
   let project_code = path.slice(1).join('-');
-  return submissionapi_path + '/' +  program_name + '/' + project_code;
+  return submissionApiPath + '/' +  program_name + '/' + project_code;
 };
 
 export const json_to_string = (data) => {

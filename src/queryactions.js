@@ -1,9 +1,9 @@
 import { fetchWrapper } from './actions';
-import { submissionapi_path } from './localconf';
+import { submissionApiPath } from './localconf';
 
 export const fetchProjects = () => {
   return fetchWrapper({
-    path: submissionapi_path + 'graphql',
+    path: submissionApiPath + 'graphql',
     body: JSON.stringify({
       'query': "query Test { project(first:10000) {code, project_id}}"
     }),
@@ -28,9 +28,9 @@ export const receiveProjects = ({status, data}) => {
 };
 
 export const fetchDictionary = () => {
-  console.log("Fetch path: " + submissionapi_path);
+  console.log("Fetch path: " + submissionApiPath);
   return fetchWrapper({
-    path: submissionapi_path + '_dictionary/_all',
+    path: submissionApiPath + '_dictionary/_all',
     method: 'GET',
     handler: receiveDictionary
   })
@@ -53,7 +53,7 @@ export const receiveDictionary = ({status, data}) =>{
 
 export const fetchNodeTypes = () => {
   return fetchWrapper({
-    path: submissionapi_path + '_dictionary',
+    path: submissionApiPath + '_dictionary',
     method: 'GET',
     handler: receiveNodeTypes
   })

@@ -7,7 +7,7 @@ import { fetchAccess, createKey, deleteKey,
   requestDeleteKey, clearDeleteSession, clearCreationSession } from './actions';
 import { RequestButton, DeleteButton, Bullet, ProjectCell, RightCell, AccessKeyCell, ActionCell, Cell,
   AccessKeyHeader, ProjectHeader, RightHeader, AccessTable, KeyPairTable } from './style';
-import { credential_cdis_path } from '../localconf';
+import { credentialCdisPath } from '../localconf';
 import * as constants from "./constants";
 
 const KeyPairsEntity = ({keypairs_api, value, onUpdatePopup, onRequestDeleteKey}) => {
@@ -47,7 +47,7 @@ export const IdentityComponent = ({user, user_profile, popups, submission, onCre
                              onClearCreationSession, onUpdatePopup, onDeleteKey,
                              onRequestDeleteKey, onClearDeleteSession}) => {
   let onCreate = () => {
-    onCreateKey(credential_cdis_path);
+    onCreateKey(credentialCdisPath);
   };
   let accessible_projects = Object.keys(user.project_access);
   return  (
@@ -100,7 +100,7 @@ export const IdentityComponent = ({user, user_profile, popups, submission, onCre
             user_profile.access_key_pairs &&
             <KeyPairsEntities key='list_access_id'
                               values={user_profile.access_key_pairs}
-                              keypairs_api={credential_cdis_path}
+                              keypairs_api={credentialCdisPath}
                               onUpdatePopup={onUpdatePopup}
                               onRequestDeleteKey={onRequestDeleteKey}
             />

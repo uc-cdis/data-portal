@@ -5,7 +5,7 @@ import {
   Store,
 } from 'relay-runtime';
 
-import {headers, graphql_path} from './configs'
+import {headers, graphqlPath} from './configs'
 
 const store = new Store(new RecordSource());
 
@@ -18,7 +18,7 @@ const fetchQuery = (operation, variables, cacheConfig) => {
     variables}),
   };
 
-  return fetch(graphql_path, request).then(function (response) {
+  return fetch(graphqlPath, request).then(function (response) {
     return response.text();
   }).then(function (responseBody) {
     try {

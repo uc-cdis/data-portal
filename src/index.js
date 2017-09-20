@@ -32,7 +32,7 @@ import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-rou
 import useRelay from 'react-router-relay'
 
 import 'react-select/dist/react-select.css';
-import { app, mock_store, dev, graphql_path } from './localconf.js';
+import { app, dev, graphqlPath } from './localconf.js';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from './history';
 import { theme, Box } from './theme';

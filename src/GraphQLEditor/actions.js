@@ -1,11 +1,11 @@
-import { graphql_schema_url } from '../localconf';
+import { graphqlSchemaUrl } from '../localconf';
 import { fetchWrapper } from '../actions';
 
 
 export const fetchSchema = () => {
   return (dispatch) => {
     return dispatch(fetchWrapper({
-      path: graphql_schema_url,
+      path: graphqlSchemaUrl,
       handler: receiveSchema
     }));
   };

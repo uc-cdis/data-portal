@@ -15,8 +15,8 @@ class ExplorerSidebar extends Component {
     onChange: PropTypes.func
   };
 
-  aggregateProperties = (dictionary, category, property) =>{
-    let aggregateSet = new Set();
+  aggregateProperties = (dictionary, category, property, initialSet ) =>{
+    let aggregateSet = initialSet || new Set();
     if(dictionary === 'undefined'){
       return(aggregateSet);
     }
@@ -36,9 +36,12 @@ class ExplorerSidebar extends Component {
 
   render(){
     let projects = Object.values(this.props.projects);
-    let file_types = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_type').values());
-    let file_formats = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_format').values());
-    console.log(this.props.selected_filters);
+    let file_types = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_type').values()).sort();
+    let file_formats = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_format', new Set( ['TIF', 'TSV', 'CSV' ])).values()).sort();
+
+
+    //console.log(this.props.selected_filters);
+    
     return(
       <Sidebar>
         <StyledCheckBoxGroup listItems={projects} title="Projects"
