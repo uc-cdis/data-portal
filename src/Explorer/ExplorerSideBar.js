@@ -37,7 +37,7 @@ class ExplorerSidebar extends Component {
   render(){
     let projects = Object.values(this.props.projects);
     let file_types = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_type').values()).sort();
-    let file_formats = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_format', new Set( ['TIF', 'TSV', 'CSV' ])).values()).sort();
+    let file_formats = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_format').values()).sort();
 
 
     //console.log(this.props.selected_filters);

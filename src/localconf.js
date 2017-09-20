@@ -9,7 +9,7 @@ function buildConfig( opts ) {
   const defaults = {
     dev: !! (process.env.NODE_ENV && process.env.NODE_ENV == 'dev'),
     mockStore: !! (process.env.MOCK_STORE && process.env.MOCK_STORE == 'true'),
-    app: (process.env.APP === undefined) ? 'bhc' : process.env.APP,
+    app: (process.env.APP === undefined) ? 'bpa' : process.env.APP,
     basename: (process.env.BASENAME === undefined) ? '/' : process.env.BASENAME,
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : "http://localhost"
   };
@@ -55,9 +55,7 @@ function buildConfig( opts ) {
       url: userapiPath + 'login/google' + '?redirect=',
       title: 'Login from Google'
     };
-    if ( ! dev ) {
-      gqlSetup.experimentType = "study";      
-    }
+    gqlSetup.experimentType = "study";
   } else if (app === 'edc') {
     requiredCerts = [];
     userapiPath = hostname + 'user/';
