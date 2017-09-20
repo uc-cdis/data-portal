@@ -78,22 +78,13 @@ class ExplorerComponent extends Component {
       submitted_copy_number: []
     };
 
-    const fileList = GQLHelper.extractFileInfo( viewer ).fileData.map( 
+    return GQLHelper.extractFileInfo( viewer ).fileData.map(
       function(file) {
         return { project_id: file.project_id, name: file.file_name,
           category: file.data_category, format: file.data_format,
           type: file.data_type, size: file.file_size };
       }
     );
-    /*
-    const files1 = mapFile(viewer.submitted_aligned_reads);
-    const files2 = mapFile(viewer.submitted_unaligned_reads);
-    const files3 = mapFile(viewer.submitted_somatic_mutation);
-    const files4 = mapFile(viewer.submitted_methylation);
-    const files5 = mapFile(viewer.submitted_copy_number);
-    return [...files1, ...files2, ...files3, ...files4, ...files5 ];
-    */
-    return fileList;
   };
 
   updateFilesList = () => {
