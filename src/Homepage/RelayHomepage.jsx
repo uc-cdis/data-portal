@@ -70,32 +70,30 @@ export class RelayProjectDashboard extends React.Component {
    */
   static transformRelayProps( relayProps ) {
     const {fileCount} = GQLHelper.extractFileInfo( relayProps );
-      const projectList = ( relayProps.projectList || [] ).map(
-        (proj) => {
-          // fill in missing properties
-          return Object.assign( { name: "unknown", experimentCount: 0, fileCount: 0, caseCount:0,aliquotCount:0 }, proj );
-        }
-      );
-      //console.log( "Got filecount: " + fileCount );
-      const summaryCounts = {
-        caseCount: relayProps.caseCount,
-        experimentCount: relayProps.experimentCount,
-        aliquotCount: relayProps.aliquotCount,
-        fileCount: fileCount
-      };
-      const cleanProps = {
-        projectList, 
-        summaryCounts
-      };
-
-      return cleanProps;
+    const projectList = ( relayProps.projectList || [] ).map(
+      (proj) => {
+        // fill in missing properties
+        return Object.assign( { name: "unknown", experimentCount: 0, fileCount: 0, caseCount:0,aliquotCount:0 }, proj );
+      }
+    );
+    //console.log( "Got filecount: " + fileCount );
+    const summaryCounts = {
+      caseCount: relayProps.caseCount,
+      experimentCount: relayProps.experimentCount,
+      aliquotCount: relayProps.aliquotCount,
+      fileCount: fileCount
+    };
+    return {
+      projectList,
+      summaryCounts
+    };
   }
 
   /**
    * Renderer for relay's QueryRender container
    * @param {Object} param QueryRender args
    */
-  renderHelper({error, props}) {
+  static renderHelper({error, props}) {
     if (error) {
       return <div>{error.message}</div>
     } else if (props) {
@@ -116,7 +114,7 @@ export class RelayProjectDashboard extends React.Component {
         gqlHelper.homepageQuery
       }
       variables={{}}
-      render={(opts) => { return this.renderHelper(opts); } }
+      render={(opts) => { return RelayProjectDashboard.renderHelper(opts); } }
     />);
 
   }
