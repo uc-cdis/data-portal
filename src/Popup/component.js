@@ -62,6 +62,10 @@ const SavePopupBox = styled.section`
   overflow: hidden;
 `;
 
+const Error = styled.h6`
+  color: red;
+`;
+
 export const Popup = ({message, code, error, closeText, cancelText, confirmText, onClose, onCancel, onConfirm}) => {
   return (
     <PopupMask>
@@ -71,6 +75,7 @@ export const Popup = ({message, code, error, closeText, cancelText, confirmText,
           {code &&
           <Code className='json'> {code} </Code>
           }
+          {error && <Error>Error</Error>}
           {error &&
           <Code className='json'> {error} </Code>
           }

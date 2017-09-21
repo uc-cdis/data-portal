@@ -55,13 +55,14 @@ export const deleteNode = ({id, project}) => {
 
 export const receiveDeleteResponse = ({status, data, id, project}) => {
   return (dispatch) => {
+    dispatch(updatePopup({nodedelete_popup: false, view_popup:false }));
+    
     switch (status) {
       case 200:
         dispatch({
           type: 'DELETE_SUCCEED',
           id: id
         });
-        dispatch(updatePopup({nodedelete_popup: false}));
         return dispatch(clearDeleteSession());
 
       default:
