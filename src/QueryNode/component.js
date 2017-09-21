@@ -147,11 +147,11 @@ const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, 
             onConfirm={
               ()=>{
                 onDeleteNode({project, id:query_nodes.stored_node_info}); 
-                onUpdatePopup({view_popup: "Waiting for delete to finish ...", nodedelete_popup:false });
+                onUpdatePopup({view_popup: 'Waiting for delete to finish ...', nodedelete_popup:false });
               }
             } 
             onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({nodedelete_popup:false }); }}
-            />
+          />
       }
       { // Error deleting node
         (! popups.nodedelete_popup) &&
@@ -160,8 +160,8 @@ const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, 
         query_nodes.delete_error &&
           <Popup message={'Error deleting: ' + query_nodes.query_node.submitter_id} error={json_to_string(query_nodes.delete_error)} 
             code={json_to_string(query_nodes.query_node)} 
-            onClose={()=>{ onClearDeleteSession(); onUpdatePopup({view_popup: false})}}
-            />
+            onClose={ ()=>{ onClearDeleteSession(); onUpdatePopup({view_popup: false}); } }
+          />
       }
       { // Waiting for node delete to finish
         (! popups.nodedelete_popup) &&
