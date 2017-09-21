@@ -16,6 +16,7 @@
     "material-ui": "^0.18.7",
     "moment": "^2.18.0",
     "polished": "^1.0.4",
+    "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-ace": "^4.1.6",
     "react-dom": "^15.6.1",
