@@ -10,7 +10,9 @@ import SideBar from "./ExplorerSideBar";
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
-
+const passFilter = (filterList, item) => {
+  return filterList.length === 0 || filterList.includes(item);
+};
 
 class ExplorerComponent extends Component {
   constructor(props){
@@ -42,7 +44,7 @@ class ExplorerComponent extends Component {
    */
   _reduxFilterListener(store) {
     const explorerState = store.getState().explorer;
-    if (!explorerState || ! explorerState.refetch_needed) {
+    if (!explorerState) {
       return;
     }
     const selected_filters = explorerState.selected_filters;
@@ -51,6 +53,19 @@ class ExplorerComponent extends Component {
     }
     if (explorerState.refetch_needed) {
       this._loadMore(selected_filters);
+    }
+    else if (explorerState.refiltering_needed) {
+      let filesList = explorerState.filesList;
+      let filteredFilesList = filesList.filter( file => (
+        passFilter(selected_filters.projects, file.project_id)
+        && passFilter(selected_filters.file_types, file.type)
+        && passFilter(selected_filters.file_formats, file.format))
+      );
+      getReduxStore().then(
+        (store) => {
+          store.dispatch( { type: 'FILTERED_FILES_CHANGED', data: filteredFilesList } );
+        }
+      );
     }
   }
 
@@ -71,11 +86,7 @@ class ExplorerComponent extends Component {
 
   createList = () => {
     const viewer = this.props.viewer || {
-      submitted_aligned_reads: [],
-      submitted_unaligned_reads: [],
-      submitted_somatic_mutation: [],
-      submitted_methylation: [],
-      submitted_copy_number: []
+      fileData1: []
     };
 
     return GQLHelper.extractFileInfo( viewer ).fileData.map(
