@@ -75,27 +75,27 @@ const NavIcon = styled.div`
   padding-left: 16px;
 `;
 
-const NavComponent = ({user, onLogoutClick, classes}) => (
-    <Header>
-      <NavLeft>
-        {navItems.map((item, i) => <NavItem key={i} to={item.link}><FlatButton primary={i==0} label={item.name}><NavIcon className="material-icons">{item.icon}</NavIcon> </FlatButton></NavItem>)}
-      </NavLeft>
-      <NavRight>
-        { user.username !== undefined &&
+const NavComponent = ({ user, onLogoutClick, classes }) => (
+  <Header>
+    <NavLeft>
+      {navItems.map((item, i) => <NavItem key={i} to={item.link}><FlatButton primary={i == 0} label={item.name}><NavIcon className="material-icons">{item.icon}</NavIcon> </FlatButton></NavItem>)}
+    </NavLeft>
+    <NavRight>
+      { user.username !== undefined &&
         <ul>
-          <NavItem to='/'><FlatButton label={user.username}></FlatButton></NavItem>
-          <NavItem to='#' onClick={onLogoutClick}>
-              <FlatButton><span  className='fui-exit'></span></FlatButton>
+          <NavItem to="/"><FlatButton label={user.username} /></NavItem>
+          <NavItem to="#" onClick={onLogoutClick}>
+            <FlatButton><span className="fui-exit" /></FlatButton>
           </NavItem>
         </ul>
-        }
+      }
     </NavRight>
   </Header>
 );
-const mapStateToProps = (state)=> {return {user: state.user}};
+const mapStateToProps = state => ({ user: state.user });
 
-const mapDispatchToProps = (dispatch) => ({
-  onLogoutClick: ()=> dispatch(logoutAPI())
+const mapDispatchToProps = dispatch => ({
+  onLogoutClick: () => dispatch(logoutAPI()),
 });
 const Nav = connect(mapStateToProps, mapDispatchToProps)(NavComponent);
-export default Nav
+export default Nav;

@@ -1,4 +1,4 @@
-export const explorer = (state={}, action) => {
+export const explorer = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_FILE_LIST': {
     return {
@@ -7,7 +7,7 @@ export const explorer = (state={}, action) => {
       filesListFiltered: action.data.filesList,
       selected_filters: action.data.selected_filters,
       refetch_needed: false,
-      refiltering_needed: false
+      refiltering_needed: false,
     };
   }
   case 'FILTERED_FILES_CHANGED': {
@@ -15,7 +15,7 @@ export const explorer = (state={}, action) => {
       ...state,
       filesListFiltered: action.data,
       refetch_needed: false,
-      refiltering_needed: false
+      refiltering_needed: false,
     };
   }
   case 'SELECTED_LIST_CHANGED': {
@@ -23,7 +23,7 @@ export const explorer = (state={}, action) => {
       ...state,
       selected_filters: action.data,
       refetch_needed: true,
-      refiltering_needed: false
+      refiltering_needed: false,
     };
   }
   case 'FILTERING_LIST_CHANGED': {
@@ -31,7 +31,7 @@ export const explorer = (state={}, action) => {
       ...state,
       selected_filters: action.data,
       refetch_needed: false,
-      refiltering_needed: true
+      refiltering_needed: true,
     };
   }
   default:

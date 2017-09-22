@@ -1,7 +1,7 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
-import {Label} from "../theme";
+import { Label } from '../theme';
 
 const LabelCheckBox = styled(Label)`
     white-space: nowrap;
@@ -19,7 +19,7 @@ const CheckBox = styled.div`
 `;
 
 
-export class CheckBoxGroup extends Component{
+export class CheckBoxGroup extends Component {
   static propTypes = {
     listItems: PropTypes.array,
     group_name: PropTypes.string,
@@ -29,34 +29,30 @@ export class CheckBoxGroup extends Component{
   };
 
   onChangeBox = (item) => {
-    let pos = this.props.selected_items.indexOf(item);
+    const pos = this.props.selected_items.indexOf(item);
     let selected_items = [];
-    if (pos === -1)
-      selected_items = [...this.props.selected_items, item];
-    else
-      selected_items = [...this.props.selected_items.slice(0, pos), ...this.props.selected_items.slice(pos + 1)];
-    let state = {[this.props.group_name]: selected_items};
+    if (pos === -1) { selected_items = [...this.props.selected_items, item]; } else { selected_items = [...this.props.selected_items.slice(0, pos), ...this.props.selected_items.slice(pos + 1)]; }
+    const state = { [this.props.group_name]: selected_items };
     this.props.onChange(state);
   };
 
-  render () {
-    let selected_items = this.props.selected_items;
+  render() {
+    const selected_items = this.props.selected_items;
     console.log(selected_items);
-    return(
+    return (
       <CheckBox>
         {this.props.title}
-        {this.props.listItems.map((item, i)=>{
-          return(
-            <div key={i}>
-              <input type="checkbox" name={this.props.group_name}
-                     value={item} id={item}
-                     checked={selected_items.includes(item)}
-                     onChange={() => this.onChangeBox(item)}
-              />
-              <LabelCheckBox for={item}>{item}</LabelCheckBox>
-            </div>
-          )
-        })}
+        {this.props.listItems.map((item, i) => (
+          <div key={i}>
+            <input
+              type="checkbox" name={this.props.group_name}
+              value={item} id={item}
+              checked={selected_items.includes(item)}
+              onChange={() => this.onChangeBox(item)}
+            />
+            <LabelCheckBox for={item}>{item}</LabelCheckBox>
+          </div>
+        ))}
       </CheckBox>
     );
   }
@@ -65,6 +61,5 @@ export class CheckBoxGroup extends Component{
 export const StyledCheckBoxGroup = styled(CheckBoxGroup)`
     padding: 0em 1em;
     border-bottom: 2px solid #717b85;
-`; 
-
+`;
 

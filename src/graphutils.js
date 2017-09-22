@@ -1,8 +1,4 @@
-export const getFileNodes = (dictionary) => {
-  return Object.keys(dictionary).filter( node => {return dictionary[node].category == 'data_file'})
-}
+export const getFileNodes = dictionary => Object.keys(dictionary).filter(node => dictionary[node].category == 'data_file');
 
-export const getNodeTypes = (dictionary) => {
-  return Object.keys(dictionary).filter( node => {return node.charAt(0) != '_'})
-}
+export const getNodeTypes = dictionary => Object.keys(dictionary).filter(node => node.charAt(0) != '_');
 

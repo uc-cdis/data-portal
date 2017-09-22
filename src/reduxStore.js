@@ -9,10 +9,8 @@ import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-rou
 import thunk from 'redux-thunk';
 
 
-
 let store;
 let storePromise;
-
 
 
 /**
@@ -24,18 +22,18 @@ let storePromise;
  * @return Promise<Store>
  */
 export const getReduxStore = function () {
-  if ( store ) { // singleton
+  if (store) { // singleton
     return Promise.resolve(store);
   }
-  if ( storePromise ) { // store setup is in process 
-    return storePromise; 
+  if (storePromise) { // store setup is in process 
+    return storePromise;
   }
   storePromise = new Promise((resolve, reject) => {
     try {
       if (dev === true) {
         let data = {};
         if (mockStore) {
-          data = {user: {username: 'test', certificates_uploaded: requiredCerts }, submission: {dictionary: dict, node_types: Object.keys(dict).slice(2) }, status: {}};
+          data = { user: { username: 'test', certificates_uploaded: requiredCerts }, submission: { dictionary: dict, node_types: Object.keys(dict).slice(2) }, status: {} };
         }
         const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
         store = compose(applyMiddleware(thunk, routerMiddleware(browserHistory)), autoRehydrate())(createStore)(
@@ -43,19 +41,18 @@ export const getReduxStore = function () {
           data,
           window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
         );
-      }
-      else {
+      } else {
         store = compose(applyMiddleware(thunk, routerMiddleware(browserHistory)), autoRehydrate())(createStore)(
           reducers,
-          {user: {}, status: {}},
-          autoRehydrate()
+          { user: {}, status: {} },
+          autoRehydrate(),
         );
       }
-      
-      const persister = persistStore(store, { whitelist: ['certificate']}, () => { console.log('rehydration complete'); resolve(store)});
+
+      const persister = persistStore(store, { whitelist: ['certificate'] }, () => { console.log('rehydration complete'); resolve(store); });
     } catch (e) {
       reject(e);
     }
   });
   return storePromise;
-}
+};

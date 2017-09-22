@@ -1,7 +1,5 @@
-$(document).ready(function(){
-    $("#change-account").click(function(){
-       $("#arn-form").toggle(); 
-    });
-
-
+$(document).ready(() => {
+  $('#change-account').click(() => {
+    $('#arn-form').toggle();
+  });
 });

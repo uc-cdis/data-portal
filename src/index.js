@@ -17,7 +17,7 @@ import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
 import ProjectSubmission from './Submission/component';
 import UserProfile from './UserProfile/component.js';
 import Certificate from './Certificate/component.js';
-import GraphQLQuery from "./GraphQLEditor/component";
+import GraphQLQuery from './GraphQLEditor/component';
 import { loginSubmissionAPI, setProject } from './Submission/actions';
 import { fetchDictionary } from './queryactions.js';
 import { loginUserProfile, fetchAccess } from './UserProfile/actions';
@@ -29,14 +29,14 @@ import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-rou
  * NOTE: react-router-relay does not support relay modern (relay 1.+) - 
  * only relay "classic" - see https://github.com/relay-tools/react-router-relay
  */
-import useRelay from 'react-router-relay'
+import useRelay from 'react-router-relay';
 
 import 'react-select/dist/react-select.css';
 import { app, dev, graphqlPath } from './localconf.js';
 import { ThemeProvider } from 'styled-components';
 import browserHistory from './history';
 import { theme, Box } from './theme';
-import { clearCounts } from './DataModelGraph/actions'
+import { clearCounts } from './DataModelGraph/actions';
 import { asyncSetInterval, withBoxAndNav, withAuthTimeout } from './utils';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -49,10 +49,9 @@ import { getReduxStore } from './reduxStore.js';
 injectTapEventPlugin();
 
 
-
 const NoMatch = () => (
   <div>
-    <Link to={`/`}>Page Not Found</Link>
+    <Link to={'/'}>Page Not Found</Link>
   </div>
 );
 
@@ -61,73 +60,92 @@ let initialized = false;
 
 // render the app after the store is configured
 async function init() {
-  if ( initialized ) {
-    console.log( "WARNING: attempt to re-initialize application" );
+  if (initialized) {
+    console.log('WARNING: attempt to re-initialize application');
     return;
   }
   initialized = true;
   const store = await getReduxStore();
 
   // not necessary to wait for this? ... await store.dispatch( fetchUser() );
-  asyncSetInterval( () => store.dispatch(fetchUser()), 10000 );
-  
+  asyncSetInterval(() => store.dispatch(fetchUser()), 10000);
+
   const history = syncHistoryWithStore(browserHistory, store);
   history.listen(location => console.log(location.pathname));
   if (app !== 'gdc') {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-        <MuiThemeProvider>
-          <Router history={history}>
-            <Route path='/login' component={Login} />
-            <Route path='/' onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
-                   component={RelayHomepage}
-                    />
-            <Route path='/query'
-                   onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts()))
-                     .then(() => store.dispatch(fetchSchema())))}
-                   component={withBoxAndNav(withAuthTimeout(GraphQLQuery))} />
-            <Route path='/identity'
-              onEnter={requireAuth(store, () => store.dispatch(loginUserProfile()))}
-              component={withBoxAndNav(withAuthTimeout(UserProfile))} />
-            <Route path='/quiz'
-              onEnter={requireAuth(store)}
-              component={withBoxAndNav(withAuthTimeout(Certificate))} />
-            <Route path='/dd'
-              onEnter={enterHook(store, fetchDictionary)}
-              component={withBoxAndNav(DataDictionary)} />
-            <Route path='/dd/:node'
-              onEnter={enterHook(store, fetchDictionary)}
-              component={withBoxAndNav(DataDictionaryNode)} />
-            <Route exact path='/files'
-              onEnter={requireAuth(store, (nextState) => { return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))); })}
-              component={ExplorerPage}/>
-            <Route path='/:project'
-              onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))}
-              component={withBoxAndNav(withAuthTimeout(ProjectSubmission))} />
-            <Route path='/:project/search'
-              onEnter={requireAuth(store, (nextState) => { return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))); })}
-              component={withBoxAndNav(withAuthTimeout(QueryNode))} />
-          </Router>
-         </MuiThemeProvider>
+          <MuiThemeProvider>
+            <Router history={history}>
+              <Route path="/login" component={Login} />
+              <Route
+                path="/" onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
+                component={RelayHomepage}
+              />
+              <Route
+                path="/query"
+                onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts()))
+                  .then(() => store.dispatch(fetchSchema())))}
+                component={withBoxAndNav(withAuthTimeout(GraphQLQuery))}
+              />
+              <Route
+                path="/identity"
+                onEnter={requireAuth(store, () => store.dispatch(loginUserProfile()))}
+                component={withBoxAndNav(withAuthTimeout(UserProfile))}
+              />
+              <Route
+                path="/quiz"
+                onEnter={requireAuth(store)}
+                component={withBoxAndNav(withAuthTimeout(Certificate))}
+              />
+              <Route
+                path="/dd"
+                onEnter={enterHook(store, fetchDictionary)}
+                component={withBoxAndNav(DataDictionary)}
+              />
+              <Route
+                path="/dd/:node"
+                onEnter={enterHook(store, fetchDictionary)}
+                component={withBoxAndNav(DataDictionaryNode)}
+              />
+              <Route
+                exact path="/files"
+                onEnter={requireAuth(store, nextState => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))))}
+                component={ExplorerPage}
+              />
+              <Route
+                path="/:project"
+                onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))}
+                component={withBoxAndNav(withAuthTimeout(ProjectSubmission))}
+              />
+              <Route
+                path="/:project/search"
+                onEnter={requireAuth(store, nextState => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))))}
+                component={withBoxAndNav(withAuthTimeout(QueryNode))}
+              />
+            </Router>
+          </MuiThemeProvider>
         </ThemeProvider>
       </Provider>,
-    document.getElementById('root')
-  );
+      document.getElementById('root'),
+    );
   } else {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <Route path='/login' component={Login} />
-            <Route path='/'
+            <Route path="/login" component={Login} />
+            <Route
+              path="/"
               onEnter={requireAuth(store, () => store.dispatch(fetchAccess()))}
-              component={withBoxAndNav(withAuthTimeout(UserProfile))} />
+              component={withBoxAndNav(withAuthTimeout(UserProfile))}
+            />
           </Router>
         </ThemeProvider>
       </Provider>,
-    document.getElementById('root')
-  );
+      document.getElementById('root'),
+    );
   }
 }
 init();

@@ -7,9 +7,9 @@ import CircleButton from '../components/CircleButton.jsx';
 import { Link } from 'react-router';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import ActionBook from 'material-ui/svg-icons/action/book';
-import {ProjectTable} from './ProjectTable.jsx';
-import ReduxProjectBarChart from "./ReduxProjectBarChart.js";
-import Translator from "./translate.js";
+import { ProjectTable } from './ProjectTable.jsx';
+import ReduxProjectBarChart from './ReduxProjectBarChart.js';
+import Translator from './translate.js';
 
 
 const tor = Translator.getTranslator();
@@ -71,7 +71,7 @@ class CountCard extends React.Component {
           <li>
             <Icon><i className="material-icons">receipt</i></Icon>
             <Count>{ this.props.experimentCount }</Count>
-            <span>{tor.translate( "Experiments" )}</span>
+            <span>{tor.translate('Experiments')}</span>
           </li>
           <li>
             <Icon><i className="material-icons">description</i></Icon>
@@ -84,8 +84,8 @@ class CountCard extends React.Component {
             <span>Aliquots</span></li>
         </ul>
 
-          <Link to="/query" title="Search"><CircleButton><ActionSearch /></CircleButton></Link>
-          <Link to="/dd" title="View Dictionary"><CircleButton><ActionBook /></CircleButton></Link>
+        <Link to="/query" title="Search"><CircleButton><ActionSearch /></CircleButton></Link>
+        <Link to="/dd" title="View Dictionary"><CircleButton><ActionBook /></CircleButton></Link>
       </CountBox>
     );
   }
@@ -109,34 +109,34 @@ class CountCard extends React.Component {
  *   ];
  */
 export class LittleProjectDashboard extends React.Component {
-  
-  render () {
+  render() {
     return (
       <DashTopDiv>
-        <CountCard caseCount={ this.props.caseCount } experimentCount={ this.props.experimentCount } fileCount={this.props.fileCount} aliquotCount={ this.props.aliquotCount } />
+        <CountCard caseCount={this.props.caseCount} experimentCount={this.props.experimentCount} fileCount={this.props.fileCount} aliquotCount={this.props.aliquotCount} />
         <ReduxProjectBarChart projectList={this.props.projectList} />
       </DashTopDiv>
     );
   }
 }
- 
 
-export function DashboardWith( Table ) {
+
+export function DashboardWith(Table) {
   return class ProjectDashboard extends React.Component {
     render() {
       const props = this.props;
       const summaryCounts = this.props.summaryCounts || {};
       const projectList = this.props.projectList || [];
-      return <div className="clearfix">
-          <LittleProjectDashboard projectList={projectList} experimentCount={summaryCounts.experimentCount} 
-                  caseCount={summaryCounts.caseCount} fileCount={summaryCounts.caseCount} 
-                  aliquotCount={summaryCounts.aliquotCount}
-                  />
-          <Table projectList={projectList} summaryCounts={summaryCounts} />  
-        </div>;
+      return (<div className="clearfix">
+        <LittleProjectDashboard
+          projectList={projectList} experimentCount={summaryCounts.experimentCount}
+          caseCount={summaryCounts.caseCount} fileCount={summaryCounts.caseCount}
+          aliquotCount={summaryCounts.aliquotCount}
+        />
+        <Table projectList={projectList} summaryCounts={summaryCounts} />
+      </div>);
     }
-  }
+  };
 }
 
-export const ProjectDashboard = DashboardWith( ProjectTable );
+export const ProjectDashboard = DashboardWith(ProjectTable);
 

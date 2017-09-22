@@ -1,44 +1,42 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import ReactTable from 'react-table';
-import {connect} from 'react-redux';
-import {getReduxStore} from '../reduxStore.js';
+import { connect } from 'react-redux';
+import { getReduxStore } from '../reduxStore.js';
 
-const passFilter = (filterList, item) => {
-  return filterList.length === 0 || filterList.includes(item);
-};
+const passFilter = (filterList, item) => filterList.length === 0 || filterList.includes(item);
 
-class ExplorerTableComponent extends Component{
+class ExplorerTableComponent extends Component {
   static propTypes = {
-    filesList: PropTypes.array
+    filesList: PropTypes.array,
   };
 
-  render(){
-    return(
+  render() {
+    return (
       <div>
         <div>
           <ReactTable
-            data= {this.props.filesList}
+            data={this.props.filesList}
             columns={[
               {
                 Header: 'Project',
-                accessor: 'project_id'
+                accessor: 'project_id',
               },
               {
                 Header: 'File Name',
-                accessor: 'name'
+                accessor: 'name',
               },
               {
                 Header: 'File Format',
-                accessor: 'format'
+                accessor: 'format',
               },
               {
                 Header: 'File Size',
-                accessor: 'size'
+                accessor: 'size',
               },
               {
                 Header: 'Category',
-                accessor: 'category'
-              }
+                accessor: 'category',
+              },
             ]}
             defaultPageSize={25}
             className="-striped -highlight"
@@ -50,17 +48,13 @@ class ExplorerTableComponent extends Component{
   }
 }
 
-const mapStateToProps = (state) => {
-  return{
-    'filesList': state.explorer.filesListFiltered
-  }
-};
+const mapStateToProps = state => ({
+  filesList: state.explorer.filesListFiltered,
+});
 
-const mapDispatchToProps = () =>{
-  return{
+const mapDispatchToProps = () => ({
 
-  }
-};
+});
 
 const ExplorerTable = connect(mapStateToProps, mapDispatchToProps)(ExplorerTableComponent);
 export default ExplorerTable;

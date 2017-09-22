@@ -1,9 +1,9 @@
-import {ResponsiveContainer, Cell, PieChart, Pie, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { ResponsiveContainer, Cell, PieChart, Pie, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
-import {browserHistory} from 'react-router';
-import Translator from "./translate.js";
+import { browserHistory } from 'react-router';
+import Translator from './translate.js';
 
 
 const tor = Translator.getTranslator();
@@ -28,53 +28,53 @@ const FloatBox = styled.div`
  *       ...
  *   ];
  */
-export class ProjectBarChart extends React.Component  {
+export class ProjectBarChart extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    const projectList = [].concat( this.props.projectList || [] );
+    const projectList = [].concat(this.props.projectList || []);
 
     return (
-      <FloatBox>    
+      <FloatBox>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart onClick={(e) => { browserHistory.push('/'+e.activeLabel); window.location.reload(false);}}  
-                data={projectList}
-                margin={{top: 20, right: 30, left: 20, bottom: 5}}
-                barSize={projectList.length < 10 ? 50 : null }
-                layout="horizontal"
-                >
-          <h4>Project Submission status</h4>
-          <XAxis dataKey="name"/>
-          <YAxis/>
-          <Tooltip/>
-          <Legend />
-          <Bar dataKey="caseCount" stackId="a" fill="#8884d8" />
-          <Bar dataKey={tor.translate( "experimentCount" )} stackId="a" fill="#82ca9d" />
+          <BarChart
+            onClick={(e) => { browserHistory.push(`/${e.activeLabel}`); window.location.reload(false); }}
+            data={projectList}
+            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+            barSize={projectList.length < 10 ? 50 : null}
+            layout="horizontal"
+          >
+            <h4>Project Submission status</h4>
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="caseCount" stackId="a" fill="#8884d8" />
+            <Bar dataKey={tor.translate('experimentCount')} stackId="a" fill="#82ca9d" />
           </BarChart>
         </ResponsiveContainer>
-    </FloatBox>
+      </FloatBox>
     );
   }
 }
 
 
-const data01 = [{name: 'Unaligned Reads Files', value: 400}, {name: 'Aligned Reads Files', value: 300},
-                  {name: 'Sequencing Assays', value: 300}, {name: 'Somatic Mutation Files', value: 200}]
+const data01 = [{ name: 'Unaligned Reads Files', value: 400 }, { name: 'Aligned Reads Files', value: 300 },
+  { name: 'Sequencing Assays', value: 300 }, { name: 'Somatic Mutation Files', value: 200 }];
 
-const data02 = [{name: 'A1', value: 100},
-                    {name: 'A2', value: 300},
-                   {name: 'B1', value: 100},
-                   {name: 'B2', value: 80},
-                   {name: 'B3', value: 40},
-                   {name: 'B4', value: 30},
-                   {name: 'B5', value: 50},
-                  {name: 'C1', value: 100},
-                  {name: 'C2', value: 200},
-                   {name: 'D1', value: 150},
-                   {name: 'D2', value: 50}]
-
+const data02 = [{ name: 'A1', value: 100 },
+  { name: 'A2', value: 300 },
+  { name: 'B1', value: 100 },
+  { name: 'B2', value: 80 },
+  { name: 'B3', value: 40 },
+  { name: 'B4', value: 30 },
+  { name: 'B5', value: 50 },
+  { name: 'C1', value: 100 },
+  { name: 'C2', value: 200 },
+  { name: 'D1', value: 150 },
+  { name: 'D2', value: 50 }];
 
 
 const TooltipStyle = styled.div`
@@ -107,16 +107,15 @@ CustomTooltip.propTypes = {
 };
 
 
-
 const COLORS = ['#8884d8', '#00C49F', '#FFBB28', '#FF8042'];
 export const CustomPieChart = () => (
-  <PieChart style={{float: 'left'}} width={400} height={300}>
+  <PieChart style={{ float: 'left' }} width={400} height={300}>
     <Pie startAngle={180} endAngle={0} data={data01} cx={200} cy={200} outerRadius={80} fill="#ffc658" label>
-    {
-        data01.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
-    }
+      {
+        data01.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]} />)
+      }
     </Pie>
     <Legend />
     <Tooltip content={<CustomTooltip />} />
   </PieChart>
-)
+);

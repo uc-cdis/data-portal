@@ -17,7 +17,7 @@ export const theme = {
   mid_gray: '#8F8F8F',
   dark_gray: '#525252',
   box_padding_width: '100px',
-  box_padding_height: '80px'
+  box_padding_height: '80px',
 
 };
 
@@ -124,9 +124,9 @@ export const TableRow = styled.tr`
 `;
 
 export const TableData = styled.td`
-    width: ${props => props.right ? '80%' : '20%'};
-    background: ${props => props.first_cr ? TableBarColor : 'white'};
-    color: ${props => props.first_cr ? 'white' : '#222'};
+    width: ${props => (props.right ? '80%' : '20%')};
+    background: ${props => (props.first_cr ? TableBarColor : 'white')};
+    color: ${props => (props.first_cr ? 'white' : '#222')};
     display: table-cell;
     padding: 0.5rem 1rem;
     overflow: auto;
@@ -171,7 +171,7 @@ export const Required_Notification = styled.span`
   color:#d45252;
   margin:5px 0 0 0; 
   display:inline;
-  float: ${props=>props.istext ? 'right': ''};
+  float: ${props => (props.istext ? 'right' : '')};
 `;
 
 export const Dropdown = styled(Select)`

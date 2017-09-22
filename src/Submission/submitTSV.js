@@ -8,7 +8,7 @@ import { uploadTSV, submitToServer, updateFileContent } from './actions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { getCounts } from '../DataModelGraph/actions';
-import { button, UploadButton, SubmitButton } from '../theme'
+import { button, UploadButton, SubmitButton } from '../theme';
 
 
 const SubmissionResult = styled.div`
@@ -18,35 +18,35 @@ const SubmissionResult = styled.div`
 `;
 const Status = styled.div`
   ${button};
-  background-color: ${props => (props.status == 'succeed: 200') ? '#168616' : 'gray'};
+  background-color: ${props => ((props.status == 'succeed: 200') ? '#168616' : 'gray')};
   color: white;
   margin-bottom: 1em;
 `;
 
 const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, onFileChange, dictionary }) => {
-  let setValue = (event) => {
-    let f = event.target.files[0];
+  const setValue = (event) => {
+    const f = event.target.files[0];
     if (FileReader.prototype.readAsBinaryString === undefined) {
       FileReader.prototype.readAsBinaryString = function (fileData) {
-        var binary = "";
-        var pt = this;
-        var reader = new FileReader();
+        let binary = '';
+        const pt = this;
+        const reader = new FileReader();
         reader.onload = function (e) {
-          var bytes = new Uint8Array(reader.result);
-          var length = bytes.byteLength;
-          for (var i = 0; i < length; i++) {
+          const bytes = new Uint8Array(reader.result);
+          const length = bytes.byteLength;
+          for (let i = 0; i < length; i++) {
             binary += String.fromCharCode(bytes[i]);
           }
-          //pt.result  - readonly so assign content to another property
+          // pt.result  - readonly so assign content to another property
           pt.content = binary;
           pt.onload();
-        }
+        };
         reader.readAsArrayBuffer(fileData);
-      }
+      };
     }
-    let reader = new FileReader();
+    const reader = new FileReader();
     let file_type = f.type;
-    if (f.name.endsWith('.tsv')){
+    if (f.name.endsWith('.tsv')) {
       file_type = 'text/tab-separated-values';
     }
     reader.onload = function (e) {
@@ -59,50 +59,46 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
     };
     reader.readAsBinaryString(f);
   };
-  let onSubmitClickEvent = () => {
+  const onSubmitClickEvent = () => {
     onSubmitClick(submission.node_types, path, submission.dictionary);
   };
-  let onChange = (newValue) => {
+  const onChange = (newValue) => {
     onFileChange(newValue, submission.file_type);
   };
   return (
     <form>
-      <input type='file' onChange={setValue} name='file-upload' style={{display:'none'}} id='file-upload'/>
-      <UploadButton htmlFor='file-upload'>Upload file</UploadButton>
-     {submission.file &&
-        <SubmitButton onClick={onSubmitClickEvent}>Submit</SubmitButton>
-     }
-     { (submission.file) &&
-      <AceEditor width="100%" height="200px" style={{"marginBottom":"1em"}} mode={submission.file_type=='text/tab-separated-values'? '' : 'json'} theme="kuroir" value={submission.file} onChange={onChange} id='uploaded'/>
-     }
-     {submission.submit_result &&
+      <input type="file" onChange={setValue} name="file-upload" style={{ display: 'none' }} id="file-upload" />
+      <UploadButton htmlFor="file-upload">Upload file</UploadButton>
+      {submission.file &&
+      <SubmitButton onClick={onSubmitClickEvent}>Submit</SubmitButton>
+      }
+      { (submission.file) &&
+      <AceEditor width="100%" height="200px" style={{ marginBottom: '1em' }} mode={submission.file_type == 'text/tab-separated-values' ? '' : 'json'} theme="kuroir" value={submission.file} onChange={onChange} id="uploaded" />
+      }
+      {submission.submit_result &&
       <SubmissionResult>
         <Status status={submission.submit_status}>{submission.submit_status}</Status>
-       <AceEditor width="100%" height="300px" style={{"marginBottom":"1em"}} mode="json" theme="kuroir" readOnly={true} value={JSON.stringify(submission.submit_result, null, '    ')} />
+        <AceEditor width="100%" height="300px" style={{ marginBottom: '1em' }} mode="json" theme="kuroir" readOnly value={JSON.stringify(submission.submit_result, null, '    ')} />
       </SubmissionResult>
-     }
+      }
     </form>
-  )
+  );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    'submission': state.submission,
-    'dictionary': state.dictionary
-  }
-};
+const mapStateToProps = state => ({
+  submission: state.submission,
+  dictionary: state.dictionary,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-        onSubmitClick: (type, project, dictionary) => dispatch(submitToServer()).then(() => {dispatch(getCounts(type, project, dictionary))}),
-      // To re-render the graph when new data is submitted, need to change the 
-      // counts that are stored in the state. A call to getCounts is made
-      // after the data is submitted to the database to query the database for
-      // the updated count info
-        onFileChange: (value) => dispatch(updateFileContent(value)),
-    }
-};
+const mapDispatchToProps = dispatch => ({
+  onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
+  onSubmitClick: (type, project, dictionary) => dispatch(submitToServer()).then(() => { dispatch(getCounts(type, project, dictionary)); }),
+  // To re-render the graph when new data is submitted, need to change the 
+  // counts that are stored in the state. A call to getCounts is made
+  // after the data is submitted to the database to query the database for
+  // the updated count info
+  onFileChange: value => dispatch(updateFileContent(value)),
+});
 
-let SubmitTSV = connect(mapStateToProps, mapDispatchToProps)(SubmitTSVComponent);
+const SubmitTSV = connect(mapStateToProps, mapDispatchToProps)(SubmitTSVComponent);
 export default SubmitTSV;

@@ -1,4 +1,4 @@
-import styled, {css, keyframes} from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 
 export const LoadingSpinnerWrap = styled.div`
   width: 100%;
