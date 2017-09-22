@@ -27,11 +27,11 @@ const Footer = () => (
   <FooterSection>
     <NavRight>
       <ul>
-          <Dictionary to='/dd'><span className='fui-bookmark'></span>View dictionary</Dictionary>
+        <Dictionary to="/dd"><span className="fui-bookmark" />View dictionary</Dictionary>
       </ul>
     </NavRight>
   </FooterSection>
 
-)
+);
 
 export default Footer;

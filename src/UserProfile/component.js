@@ -1,5 +1,5 @@
 import React from 'react';
-import { json_to_string, get_submit_path } from '../utils'
+import { json_to_string, get_submit_path } from '../utils';
 import { updatePopup } from '../actions';
 import { Popup, SavePopup } from '../Popup/component';
 import { connect } from 'react-redux';
@@ -8,12 +8,12 @@ import { fetchAccess, createKey, deleteKey,
 import { RequestButton, DeleteButton, Bullet, ProjectCell, RightCell, AccessKeyCell, ActionCell, Cell,
   AccessKeyHeader, ProjectHeader, RightHeader, AccessTable, KeyPairTable } from './style';
 import { credentialCdisPath } from '../localconf';
-import * as constants from "./constants";
+import * as constants from './constants';
 
-const KeyPairsEntity = ({keypairs_api, value, onUpdatePopup, onRequestDeleteKey}) => {
-  let onDelete = () => {
+const KeyPairsEntity = ({ keypairs_api, value, onUpdatePopup, onRequestDeleteKey }) => {
+  const onDelete = () => {
     onRequestDeleteKey(value.access_key, keypairs_api);
-    onUpdatePopup({key_delete_popup: true, keypairs_api: keypairs_api});
+    onUpdatePopup({ key_delete_popup: true, keypairs_api });
   };
   return (
     <li>
@@ -26,31 +26,31 @@ const KeyPairsEntity = ({keypairs_api, value, onUpdatePopup, onRequestDeleteKey}
         </ActionCell>
       </Bullet>
     </li>
-  )
+  );
 };
 
-const KeyPairsEntities = ({values, keypairs_api, onUpdatePopup, onRequestDeleteKey}) => {
-  return (
-    <ul>
-      {values.length > 0 && <li>
-        <AccessKeyHeader>{constants.ACCESS_KEY_COLUMN}</AccessKeyHeader>
-      </li>}
-      {values.map((item) =>
-        <KeyPairsEntity key={item.access_key} keypairs_api={keypairs_api}
-                        value={item} onUpdatePopup={onUpdatePopup}
-                        onRequestDeleteKey={onRequestDeleteKey}/> )}
-    </ul>
-  )
-};
+const KeyPairsEntities = ({ values, keypairs_api, onUpdatePopup, onRequestDeleteKey }) => (
+  <ul>
+    {values.length > 0 && <li>
+      <AccessKeyHeader>{constants.ACCESS_KEY_COLUMN}</AccessKeyHeader>
+    </li>}
+    {values.map(item =>
+      (<KeyPairsEntity
+        key={item.access_key} keypairs_api={keypairs_api}
+        value={item} onUpdatePopup={onUpdatePopup}
+        onRequestDeleteKey={onRequestDeleteKey}
+      />))}
+  </ul>
+);
 
-export const IdentityComponent = ({user, user_profile, popups, submission, onCreateKey,
-                             onClearCreationSession, onUpdatePopup, onDeleteKey,
-                             onRequestDeleteKey, onClearDeleteSession}) => {
-  let onCreate = () => {
+export const IdentityComponent = ({ user, user_profile, popups, submission, onCreateKey,
+  onClearCreationSession, onUpdatePopup, onDeleteKey,
+  onRequestDeleteKey, onClearDeleteSession }) => {
+  const onCreate = () => {
     onCreateKey(credentialCdisPath);
   };
-  let accessible_projects = Object.keys(user.project_access);
-  return  (
+  const accessible_projects = Object.keys(user.project_access);
+  return (
     <div>
       {
         user_profile.access_key_pairs === undefined &&
@@ -63,22 +63,29 @@ export const IdentityComponent = ({user, user_profile, popups, submission, onCre
         <KeyPairTable>
           {
             popups.key_delete_popup === true &&
-            <Popup message={constants.CONFIRM_DELETE_MSG}
-                   error={json_to_string(user_profile.delete_error)}
-                   onConfirm={()=>onDeleteKey(user_profile.request_delete_key,
-                              popups.keypairs_api)}
-                   onCancel={()=>{ onClearDeleteSession();
-                                   onUpdatePopup({key_delete_popup: false})}}/>
+            <Popup
+              message={constants.CONFIRM_DELETE_MSG}
+              error={json_to_string(user_profile.delete_error)}
+              onConfirm={() => onDeleteKey(user_profile.request_delete_key,
+                popups.keypairs_api)}
+              onCancel={() => {
+                onClearDeleteSession();
+                onUpdatePopup({ key_delete_popup: false });
+              }}
+            />
           }
           {
             popups.save_key_popup === true &&
-            <SavePopup message={constants.SECRET_KEY_MSG}
-                       error={json_to_string(user_profile.create_error)}
-                       display={user_profile.access_key_pair}
-                       savingStr={user_profile.str_access_key_pair}
-                       onClose={()=>{ onUpdatePopup({save_key_popup: false});
-                                      onClearCreationSession()}}
-                       filename={'accessKeys.txt'}
+            <SavePopup
+              message={constants.SECRET_KEY_MSG}
+              error={json_to_string(user_profile.create_error)}
+              display={user_profile.access_key_pair}
+              savingStr={user_profile.str_access_key_pair}
+              onClose={() => {
+                onUpdatePopup({ save_key_popup: false });
+                onClearCreationSession();
+              }}
+              filename={'accessKeys.txt'}
             />
           }
           <RequestButton onClick={onCreate}>
@@ -98,11 +105,12 @@ export const IdentityComponent = ({user, user_profile, popups, submission, onCre
           }
           {
             user_profile.access_key_pairs &&
-            <KeyPairsEntities key='list_access_id'
-                              values={user_profile.access_key_pairs}
-                              keypairs_api={credentialCdisPath}
-                              onUpdatePopup={onUpdatePopup}
-                              onRequestDeleteKey={onRequestDeleteKey}
+            <KeyPairsEntities
+              key="list_access_id"
+              values={user_profile.access_key_pairs}
+              keypairs_api={credentialCdisPath}
+              onUpdatePopup={onUpdatePopup}
+              onRequestDeleteKey={onRequestDeleteKey}
             />
           }
         </KeyPairTable>
@@ -118,56 +126,52 @@ export const IdentityComponent = ({user, user_profile, popups, submission, onCre
           </li>
           {accessible_projects.map(
             (p, i) =>
-              <li key={4*i}>
-                <Bullet key={4*i+1}>
+              (<li key={4 * i}>
+                <Bullet key={4 * i + 1}>
                   {
                     p in submission.projects &&
-                    <ProjectCell key={4*i+2} to={'/'+submission.projects[p]}>
+                    <ProjectCell key={4 * i + 2} to={`/${submission.projects[p]}`}>
                       {p}
                     </ProjectCell>
                   }
                   {
                     !(p in submission.projects) &&
-                    <ProjectCell key={4*i+2}>
+                    <ProjectCell key={4 * i + 2}>
                       {p}
                     </ProjectCell>
                   }
-                  <RightCell key={4*i+3}>
+                  <RightCell key={4 * i + 3}>
                     {user.project_access[p].join(', ')}
                   </RightCell>
                 </Bullet>
-              </li>
+              </li>),
           )}
         </ul>
       </AccessTable>
     </div>
-  )
+  );
 };
 
 
-const mapStateToProps = (state) => {
-  return {
-    'user': state.user,
-    'user_profile': state.user_profile,
-    'popups': state.popups,
-    'submission': state.submission
-  }
-};
+const mapStateToProps = state => ({
+  user: state.user,
+  user_profile: state.user_profile,
+  popups: state.popups,
+  submission: state.submission,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onCreateKey: (keypairs_api) => dispatch(createKey(keypairs_api)),
-    onUpdatePopup: (state) => dispatch(updatePopup(state)),
-    onDeleteKey: (access_key, keypairs_api) =>
-      dispatch(deleteKey(access_key, keypairs_api)),
-    onRequestDeleteKey: (access_key, keypairs_api) =>
-      dispatch(fetchAccess(keypairs_api)).then(
-        () => dispatch(requestDeleteKey(access_key))
+const mapDispatchToProps = dispatch => ({
+  onCreateKey: keypairs_api => dispatch(createKey(keypairs_api)),
+  onUpdatePopup: state => dispatch(updatePopup(state)),
+  onDeleteKey: (access_key, keypairs_api) =>
+    dispatch(deleteKey(access_key, keypairs_api)),
+  onRequestDeleteKey: (access_key, keypairs_api) =>
+    dispatch(fetchAccess(keypairs_api)).then(
+      () => dispatch(requestDeleteKey(access_key)),
     ),
-    onClearDeleteSession: () => dispatch(clearDeleteSession()),
-    onClearCreationSession: () => dispatch(clearCreationSession())
-  };
-};
+  onClearDeleteSession: () => dispatch(clearDeleteSession()),
+  onClearCreationSession: () => dispatch(clearCreationSession()),
+});
 
-let UserProfile = connect(mapStateToProps, mapDispatchToProps)(IdentityComponent);
+const UserProfile = connect(mapStateToProps, mapDispatchToProps)(IdentityComponent);
 export default UserProfile;

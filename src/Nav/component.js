@@ -13,6 +13,14 @@ const NavLeft = styled.nav`
   position: absolute;
 `;
 
+const Header = styled.header`
+  width: 100%;
+  // background-color: #dfdfdf;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  padding: 10px 100px;
+  overflow: hidden;
+`;
+
 const NavRight = styled.nav`
   position: absolute;
   right: 100px;
@@ -67,27 +75,27 @@ const NavIcon = styled.div`
   padding-left: 16px;
 `;
 
-const NavComponent = ({user, onLogoutClick, classes}) => (
-    <Header>
-      <NavLeft>
-        {navItems.map((item, i) => <NavItem key={i} to={item.link}><FlatButton primary={i==0} label={item.name}><NavIcon className="material-icons">{item.icon}</NavIcon> </FlatButton></NavItem>)}
-      </NavLeft>
-      <NavRight>
-        { user.username !== undefined &&
+const NavComponent = ({ user, onLogoutClick, classes }) => (
+  <Header>
+    <NavLeft>
+      {navItems.map((item, i) => <NavItem key={i} to={item.link}><FlatButton primary={i == 0} label={item.name}><NavIcon className="material-icons">{item.icon}</NavIcon> </FlatButton></NavItem>)}
+    </NavLeft>
+    <NavRight>
+      { user.username !== undefined &&
         <ul>
-          <Logo to='/'><span>{user.username}</span></Logo>
-            <Logout to='#' onClick={onLogoutClick}>
-              <span  className='fui-exit'></span><span>Logout</span>
-            </Logout>
+          <NavItem to="/"><FlatButton label={user.username} /></NavItem>
+          <NavItem to="#" onClick={onLogoutClick}>
+            <FlatButton><span className="fui-exit" /></FlatButton>
+          </NavItem>
         </ul>
-        }
+      }
     </NavRight>
-  </header>
+  </Header>
 );
-const mapStateToProps = (state)=> {return {user: state.user}};
+const mapStateToProps = state => ({ user: state.user });
 
-const mapDispatchToProps = (dispatch) => ({
-  onLogoutClick: ()=> dispatch(logoutAPI())
+const mapDispatchToProps = dispatch => ({
+  onLogoutClick: () => dispatch(logoutAPI()),
 });
 const Nav = connect(mapStateToProps, mapDispatchToProps)(NavComponent);
-export default Nav
+export default Nav;
