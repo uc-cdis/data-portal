@@ -4,7 +4,7 @@
     "dev-expression",
     "transform-class-properties",
     ["relay",
-      {"compat": true, "schema": "data/schema.graphql"}],
+      {"compat": true, "schema": "data/schema.json"}],
     ["transform-runtime", { "polyfill": false }]
   ]
 }

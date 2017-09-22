@@ -7,27 +7,31 @@
  */
 function buildConfig(opts) {
   const defaults = {
-    dev: !!(process.env.NODE_ENV && process.env.NODE_ENV == 'dev'),
-    mockStore: !!(process.env.MOCK_STORE && process.env.MOCK_STORE == 'true'),
-    app: (process.env.APP === undefined) ? 'bpa' : process.env.APP,
+    dev: !!(process.env.NODE_ENV && process.env.NODE_ENV === 'dev'),
+    mockStore: !!(process.env.MOCK_STORE && process.env.MOCK_STORE === 'true'),
+    app: (process.env.APP === undefined) ? 'generic' : process.env.APP,
     basename: (process.env.BASENAME === undefined) ? '/' : process.env.BASENAME,
-    hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost',
+    hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
   };
 
   const { dev, mockStore, app, basename, hostname } = Object.assign({}, defaults, opts);
 
-  let userapiPath,
-    submissionApiPath,
-    submissionApiOauthPath,
-    credentialPath,
-    credentialOauthPath,
-    credentialCdisPath,
-    graphqlPath,
-    appname,
-    navItems,
-    login,
-    graphqlSchemaUrl;
-  let requiredCerts = [];
+  let userapiPath = `${hostname}user/`;
+  const submissionApiPath = `${hostname}api/v0/submission/`;
+  const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
+  // let credentialOauthPath = `${hostname}middleware/oauth2/v0/`;
+  const credentialCdisPath = `${userapiPath}credentials/cdis/`;
+  const graphqlPath = `${hostname}api/v0/submission/graphql/`;
+  let login = {
+    url: `${userapiPath}login/google?redirect=`,
+    title: 'Login from Google',
+  };
+  const graphqlSchemaUrl = `${hostname}data/schema.json`;
+  // let credentialPath = `${hostname}middleware/aws/v0/access_key/`;
+
+  let appname = 'Unasigned';
+  let navItems = [];
+  const requiredCerts = [];
 
   // Support data/gqlSetup.js auto-generation of data-portal graphQL
   const gqlSetup = {
@@ -43,15 +47,6 @@ function buildConfig(opts) {
   };
 
   if (app === 'bpa') {
-    requiredCerts = dev === true ? [] : [];
-    userapiPath = `${hostname}user/`;
-    submissionApiPath = `${hostname}api/v0/submission/`;
-    submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
-    credentialPath = `${hostname}middleware/aws/v0/access_key/`;
-    credentialOauthPath = `${hostname}middleware/oauth2/v0/`;
-    credentialCdisPath = `${userapiPath}credentials/cdis/`;
-    graphqlPath = `${hostname}api/v0/submission/graphql/`;
-    graphqlSchemaUrl = `${hostname}/data/schema.json`;
     appname = 'BPA Metadata Submission Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
@@ -60,21 +55,8 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
     ];
-    login = {
-      url: `${userapiPath}login/google` + '?redirect=',
-      title: 'Login from Google',
-    };
     gqlSetup.experimentType = 'study';
   } else if (app === 'edc') {
-    requiredCerts = [];
-    userapiPath = `${hostname}user/`;
-    submissionApiPath = `${hostname}api/v0/submission/`;
-    submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
-    credentialPath = `${hostname}middleware/aws/v0/access_key/`;
-    credentialOauthPath = `${hostname}middleware/oauth2/v0/`;
-    credentialCdisPath = `${userapiPath}credentials/cdis/`;
-    graphqlPath = `${hostname}api/v0/submission/graphql/`;
-    graphqlSchemaUrl = `${hostname}/data/schema.json`;
     appname = 'Environmental Data Commons Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
@@ -83,20 +65,7 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
     ];
-    login = {
-      url: `${userapiPath}login/google` + '?redirect=',
-      title: 'Login from Google',
-    };
   } else if (app === 'bhc') {
-    requiredCerts = [];
-    userapiPath = `${hostname}user/`;
-    submissionApiPath = `${hostname}api/v0/submission/`;
-    submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
-    credentialPath = `${hostname}middleware/aws/v0/access_key/`;
-    credentialOauthPath = `${hostname}middleware/oauth2/v0/`;
-    credentialCdisPath = `${userapiPath}credentials/cdis/`;
-    graphqlPath = `${hostname}api/v0/submission/graphql/`;
-    graphqlSchemaUrl = `${hostname}/data/schema.json`;
     appname = 'The Brain Commons Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#A51C30', name: 'home' },
@@ -105,10 +74,6 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#2D728F', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#A51C30', name: 'data' },
     ];
-    login = {
-      url: `${userapiPath}login/google` + '?redirect=',
-      title: 'Login from Google',
-    };
 
     gqlSetup.fileTypeList = [
       'slide_image',
@@ -129,15 +94,6 @@ function buildConfig(opts) {
     ];
     gqlSetup.experimentType = 'study';
   } else if (app === 'acct') {
-    requiredCerts = [];
-    userapiPath = `${hostname}user/`;
-    submissionApiPath = `${hostname}api/v0/submission/`;
-    submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
-    credentialPath = `${hostname}middleware/aws/v0/`;
-    credentialOauthPath = `${hostname}middleware/oauth2/v0/`;
-    credentialCdisPath = `${userapiPath}credentials/cdis/`;
-    graphqlPath = `${hostname}api/v0/submission/graphql/`;
-    graphqlSchemaUrl = `${hostname}/data/schema.json`;
     appname = 'ACCOuNT Data Commons Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
@@ -146,16 +102,10 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
     ];
-    login = {
-      url: `${userapiPath}login/google` + '?redirect=',
-      title: 'Login from Google',
-    };
   } else if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
-    credentialPath = `${userapiPath}credentials/cleversafe/`;
-    credentialOauthPath = `${userapiPath}oauth2/`;
-    credentialCdisPath = `${userapiPath}credentials/cdis/`;
-    graphqlSchemaUrl = `${hostname}data/schema.json`;
+    // credentialPath = `${userapiPath}credentials/cleversafe/`;
+    // credentialOauthPath = `${userapiPath}oauth2/`;
     appname = 'GDC Jamboree Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
@@ -165,15 +115,6 @@ function buildConfig(opts) {
       title: 'Login from NIH',
     };
   } else {
-    requiredCerts = [];
-    userapiPath = `${hostname}user/`;
-    submissionApiPath = `${hostname}api/v0/submission/`;
-    submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
-    credentialPath = `${hostname}middleware/aws/v0/`;
-    credentialOauthPath = `${hostname}middleware/oauth2/v0/`;
-    credentialCdisPath = `${userapiPath}credentials/cdis/`;
-    graphqlPath = `${hostname}api/v0/submission/graphql/`;
-    graphqlSchemaUrl = `${hostname}/data/schema.json`;
     appname = 'Generic Data Commons Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#1d3674', name: 'home' },
@@ -182,10 +123,6 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#1d3674', name: 'data' },
     ];
-    login = {
-      url: `${userapiPath}login/google` + '?redirect=',
-      title: 'Login from Google',
-    };
   }
 
   const conf = {
