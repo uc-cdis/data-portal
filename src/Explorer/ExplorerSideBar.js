@@ -12,7 +12,8 @@ class ExplorerSidebar extends Component {
     projects: PropTypes.object,
     dictionary: PropTypes.object,
     selected_filters: PropTypes.object,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    onClientChange: PropTypes.func
   };
 
   aggregateProperties = (dictionary, category, property, initialSet ) =>{
@@ -51,11 +52,11 @@ class ExplorerSidebar extends Component {
         <StyledCheckBoxGroup listItems={file_formats}
                              selected_items={this.props.selected_filters.file_formats}
                              title="File Formats"
-                             group_name="file_formats" onChange={(state) => this.props.onChange({...this.props.selected_filters, ...state})} />
+                             group_name="file_formats" onChange={(state) => this.props.onClientChange({...this.props.selected_filters, ...state})} />
         <StyledCheckBoxGroup listItems={file_types}
                              selected_items={this.props.selected_filters.file_types}
                              title="File Types"
-                             group_name="file_types" onChange={(state) => this.props.onChange({...this.props.selected_filters, ...state})} />
+                             group_name="file_types" onChange={(state) => this.props.onClientChange({...this.props.selected_filters, ...state})} />
       </Sidebar>
     );
   }
@@ -77,7 +78,15 @@ const mapDispatchToProps = (dispatch) =>{
         type: 'SELECTED_LIST_CHANGED',
         data: state
       });
+    },
+    onClientChange: (state) =>
+    {
+      dispatch({
+        type: 'FILTERING_LIST_CHANGED',
+        data: state
+      });
     }
+
   }
 };
 
