@@ -10,8 +10,6 @@ import { connect } from 'react-redux';
 import { clearDeleteSession, fetchQueryNode, submitSearchForm, deleteNode, storeNodeInfo } from './actions';
 import { cube } from '../theme';
 import Select from 'react-select';
-import 'react-select/dist/react-select.css';
-import Explorer from '../Explorer/component';
 
 const SearchButton = styled.input`
   transition: 0.25s;
@@ -69,8 +67,20 @@ const Dropdown = styled(Select)`
   margin-right: 1em;
 `;
 
+<<<<<<< 3bbb6b03c72d11304358aa8e13f0952bbb724b19:src/QueryNode/component.js
 const QueryForm = React.createClass({
   handleQuerySubmit(event) {
+=======
+class QueryForm extends React.Component {
+  constructor( props ) {
+    super(props);
+    this.state = {
+      selectValue: 'experiment'
+    };
+  }
+
+  handleQuerySubmit (event) {
+>>>>>>> chore(QueryNode.test): tests for popup logic:src/QueryNode/QueryNode.jsx
     event.preventDefault();
     const form = event.target;
     const data = { project: this.props.project };
@@ -85,6 +95,7 @@ const QueryForm = React.createClass({
     }
     const url = `/${this.props.project}/search?${query_param.join('&')}`;
     this.props.onSearchFormSubmit(data, url);
+<<<<<<< 3bbb6b03c72d11304358aa8e13f0952bbb724b19:src/QueryNode/component.js
   },
   getInitialState() {
     return {
@@ -92,10 +103,17 @@ const QueryForm = React.createClass({
     };
   },
   updateValue(newValue) {
+=======
+  }
+
+
+  updateValue (newValue) {
+>>>>>>> chore(QueryNode.test): tests for popup logic:src/QueryNode/QueryNode.jsx
     this.setState({
       selectValue: newValue,
     });
-  },
+  }
+
   render() {
     const nodes_for_query = this.props.node_types.filter(nt => !['program', 'project'].includes(nt));
     const options = nodes_for_query.map(node_type => ({ value: node_type, label: node_type }));
@@ -107,8 +125,13 @@ const QueryForm = React.createClass({
         <SearchButton type="submit" onSubmit={this.handleQuerySubmit} value="search" />
       </form>
     );
+<<<<<<< 3bbb6b03c72d11304358aa8e13f0952bbb724b19:src/QueryNode/component.js
   },
 });
+=======
+  }
+}
+>>>>>>> chore(QueryNode.test): tests for popup logic:src/QueryNode/QueryNode.jsx
 
 const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
   const onDelete = () => {
@@ -137,12 +160,30 @@ const Entities = ({value, project, onUpdatePopup, onStoreNodeInfo}) => {
   );
 };
 
-const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, onSearchFormSubmit, onUpdatePopup, onDeleteNode, onStoreNodeInfo, onClearDeleteSession}) => {
-  const project = params.project;
-  const popup = (() => {
+
+/**
+ * QueryNode shows the details of a particular node
+ */
+export class QueryNode extends React.Component {
+  /** 
+   * Internal helper to select which popup variant - if any - should be rendered:
+   *    confirmDelete, waitForDelete, deleteFailed, viewNode, noPopup
+   * 
+   * @param {popups, query_nodes, onUpdatePopup, onDeleteNode, onClearDeleteSession} props including props.popups and props.query_nodes state passed into the component by Redux
+   * @return { state, popupEl } where state is string one of [confirmDelete, waitForDelete, ...], and 
+   *    popupEl is either null or a <Popup> properly configured to render
+   */
+  renderPopup( props ) {
+    const {query_nodes, popups,onUpdatePopup, onDeleteNode, onClearDeleteSession } = props;
+    const popup = {
+      state: "noPopup",
+      popupEl: null
+    };
+
     if ( popups.nodedelete_popup === true ) {
       // User clicked on node 'Delete' button
-      return <Popup message={'Are you sure you want to delete this node?'} error={json_to_string(query_nodes.delete_error)} 
+      popup.state = "confirmDelete";
+      popup.popupEl = <Popup message={'Are you sure you want to delete this node?'} error={json_to_string(query_nodes.delete_error)} 
         code={json_to_string(query_nodes.query_node)} 
         onConfirm={
           ()=>{
@@ -158,7 +199,8 @@ const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, 
       query_nodes.delete_error 
     ) {
       // Error deleting node
-      return <Popup message={'Error deleting: ' + query_nodes.query_node.submitter_id} error={json_to_string(query_nodes.delete_error)} 
+      popup.state = "deleteFailed";
+      popup.popupEl = <Popup message={'Error deleting: ' + query_nodes.query_node.submitter_id} error={json_to_string(query_nodes.delete_error)} 
         code={json_to_string(query_nodes.query_node)} 
         onClose={ ()=>{ onClearDeleteSession(); onUpdatePopup({view_popup: false}); } }
       />;
@@ -167,37 +209,45 @@ const QueryNodeComponent = ({params, ownProps, submission, query_nodes, popups, 
       query_nodes.query_node  
     ) {
       // Waiting for node delete to finish
-      return <Popup message={ popups.view_popup }  />;
+      popup.state = "waitForDelete";
+      popup.popupEl = <Popup message={ popups.view_popup }  />;
     } else if (! popups.nodedelete_popup &&
       popups.view_popup  &&
       query_nodes.query_node
     ) { 
       // View node button clicked
-      return <Popup message={query_nodes.query_node.submitter_id} code={json_to_string(query_nodes.query_node)} 
+      popup.state = "viewNode";
+      popup.popupEl = <Popup message={query_nodes.query_node.submitter_id} code={json_to_string(query_nodes.query_node)} 
         onClose={
           ()=>{
             onUpdatePopup({view_popup: false, nodedelete_popup:false });
           }
         } 
       />;
-    } else {
-      return "";
-    }
-  })();
+    } 
+    return popup;
+  }
 
-  
+  render() {
+    const {params, ownProps, submission, query_nodes, popups, onSearchFormSubmit, onUpdatePopup, 
+      onDeleteNode, onStoreNodeInfo, 
+      onClearDeleteSession
+    } = this.props;
+    const project = params.project;
+    const popupInfo = this.renderPopup( this.props );
 
-  
-  return  (
-    <div>
-      <h3>browse <Link to={'/' + project}>{project}</Link> </h3>
-      {popup}
-      <QueryForm onSearchFormSubmit={onSearchFormSubmit} project={project} node_types={submission.node_types}/>
-      { query_nodes.search_status==='succeed: 200' &&
-          Object.entries(query_nodes.search_result['data']).map((value) => { return (<Entities project={project} onStoreNodeInfo={onStoreNodeInfo} onUpdatePopup={onUpdatePopup} node_type={value[0]} key={value[0]} value={value[1]}/>)})
-      }
-    </div>
-  );
+    return  (
+      <div>
+        <h3>browse <Link to={'/' + project}>{project}</Link> </h3>
+        {popupInfo.popupEl}
+        <QueryForm onSearchFormSubmit={onSearchFormSubmit} project={project} node_types={submission.node_types}/>
+        { query_nodes.search_status==='succeed: 200' &&
+            Object.entries(query_nodes.search_result['data']).map((value) => { return (<Entities project={project} onStoreNodeInfo={onStoreNodeInfo} onUpdatePopup={onUpdatePopup} node_type={value[0]} key={value[0]} value={value[1]}/>)})
+        }
+      </div>
+    );
+  }
+
 };
 
 
@@ -214,6 +264,7 @@ const mapStateToProps = (state, ownProps) => {
   return result;
 };
 
+<<<<<<< 3bbb6b03c72d11304358aa8e13f0952bbb724b19:src/QueryNode/component.js
 const mapDispatchToProps = dispatch => ({
   onSearchFormSubmit: (value, url) => dispatch(submitSearchForm(value, url)),
   onUpdatePopup: state => dispatch(updatePopup(state)),
@@ -225,3 +276,18 @@ const mapDispatchToProps = dispatch => ({
 });
 const QueryNode = connect(mapStateToProps, mapDispatchToProps)(QueryNodeComponent);
 export default QueryNode;
+=======
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSearchFormSubmit: (value, url) => dispatch(submitSearchForm(value, url)),
+    onUpdatePopup: (state) => dispatch(updatePopup(state)),
+    onClearDeleteSession: () => dispatch(clearDeleteSession()),
+    onDeleteNode: ({id, project}) => {
+      dispatch(deleteNode({id, project}));
+    },
+    onStoreNodeInfo: ({id, project}) => dispatch(fetchQueryNode({id, project})).then(()=>dispatch(storeNodeInfo({id}))),
+  };
+};
+const ReduxQueryNode = connect(mapStateToProps, mapDispatchToProps)(QueryNode);
+export default ReduxQueryNode;
+>>>>>>> chore(QueryNode.test): tests for popup logic:src/QueryNode/QueryNode.jsx
