@@ -11,7 +11,7 @@ import reducers from './reducers';
 import { requireAuth, enterHook, fetchUser } from './actions';
 import { clearResultAndQuery } from './QueryNode/actions';
 import Login from './Login/component';
-import QueryNode from './QueryNode/component';
+import QueryNode from './QueryNode/QueryNode.jsx';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
 import Submission from './components/ProjectListComponent';
