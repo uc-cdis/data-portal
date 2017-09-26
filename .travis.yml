@@ -21,9 +21,9 @@ script:
     - |
       set -e
       docker build --cache-from quay.io/cdis/bpa-data-portal:master -t quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} .
-      docker tag quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//_} .
-      docker tag quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//_} .
-      docker tag quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} quay.io/cdis/bhc-data-portal:${TRAVIS_BRANCH/\//_} .
+      docker tag quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//_}
+      docker tag quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//_}
+      docker tag quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} quay.io/cdis/bhc-data-portal:${TRAVIS_BRANCH/\//_}
       set +e
 
 after_success:
