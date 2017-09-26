@@ -12,7 +12,22 @@ services:
     - docker
 
 install:
+    - docker login quay.io -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+    - docker pull quay.io/cdis/bpa-data-portal:master
     - npm install
 
 script:
     - npm test
+    - |
+      set -e
+      docker build --cache-from quay.io/cdis/bpa-data-portal:master -t quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} .
+      docker tag quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//_} .
+      docker tag quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//_} .
+      docker tag quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_} quay.io/cdis/bhc-data-portal:${TRAVIS_BRANCH/\//_} .
+      set +e
+
+after_success:
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/bpa-data-portal:${TRAVIS_BRANCH/\//_}; fi
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/edc-data-portal:${TRAVIS_BRANCH/\//_}; fi
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/acct-data-portal:${TRAVIS_BRANCH/\//_}; fi
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push quay.io/cdis/bhc-data-portal:${TRAVIS_BRANCH/\//_}; fi

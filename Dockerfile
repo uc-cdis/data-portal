@@ -23,6 +23,7 @@ ARG APP=dev
 ARG BASENAME
 
 ADD package.json /tmp/package.json
+ADD package-lock.json /tmp/package-lock.json
 RUN cd /tmp && npm install
 RUN mkdir -p /data-portal && cp -a /tmp/node_modules /data-portal/
 
@@ -32,4 +33,4 @@ RUN cp src/img/$APP-favicon.ico src/img/favicon.ico; \
     NODE_ENV=production webpack --bail \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
-CMD /usr/sbin/nginx -g 'daemon off;'
+CMD bash ./dockerStart.sh
