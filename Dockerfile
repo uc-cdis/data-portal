@@ -28,6 +28,7 @@ WORKDIR /data-portal
 RUN cp src/img/$APP-favicon.ico src/img/favicon.ico; \
     /bin/rm -rf node_modules \
     && npm install \
+    && npm run relay \
     && NODE_ENV=production webpack --bail \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
