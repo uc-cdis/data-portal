@@ -2,6 +2,11 @@ import styled, { css } from 'styled-components';
 import Select from 'react-select';
 
 export const theme = {
+  blue: '#59C3C3',
+  yellow: '#ffeb3b',
+  purple: '#D741A7',
+  cherry: '#E02F5E',
+  tomato: '#F06449',
   main: 'mediumseagreen',
   color_primary: '#800000',
   color_secondary: '#008000',
@@ -38,15 +43,15 @@ export const cube = css`
 `;
 
 export const Box = styled.div`
-  min-width: 1200px;
+  // min-width: 1200px;
   margin: auto;
-  margin-top: 100px;
-  margin-bottom: 100px;
+  // margin-top: 100px;
+  // margin-bottom: 100px;
   position: relative;
-  width: 65%;
-  background: white;
+  // width: 65%;
+  // background: white;
   diplay: block;
-  padding: 80px 100px;
+  padding: 0px 0px;
 
 `;
 

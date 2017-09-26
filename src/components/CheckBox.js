@@ -38,7 +38,7 @@ export class CheckBoxGroup extends Component {
 
   render() {
     const selected_items = this.props.selected_items;
-    console.log(selected_items);
+    //console.log(selected_items);
     return (
       <CheckBox>
         {this.props.title}

@@ -6,11 +6,13 @@ import { basename, userapiPath, navItems } from '../localconf.js';
 import { Link } from 'react-router';
 import styled from 'styled-components';
 import { cube } from '../theme.js';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import FlatButton from 'material-ui/FlatButton';
 
 const NavLeft = styled.nav`
   top: 0px;
-  left: 100px;
-  position: absolute;
+  float: left;
 `;
 
 const Header = styled.header`
@@ -22,9 +24,7 @@ const Header = styled.header`
 `;
 
 const NavRight = styled.nav`
-  position: absolute;
-  right: 100px;
-  top: 0;
+  float: right;
   color: white;
 `;
 
@@ -40,7 +40,7 @@ const NavItem = styled(Link)`
   button {
     // color: white !important;
   }
-  ${cube};
+  height: 100%;
 `;
 const Logo = styled(Link)`
   background: ${props => props.theme.color_primary};
