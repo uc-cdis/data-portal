@@ -55,7 +55,7 @@ module.exports = {
           'less'
         ]
       },
-      { 
+      {
         test: /\.css$/,
         loader: "style!css"
       },
@@ -86,9 +86,17 @@ module.exports = {
     new webpack.EnvironmentPlugin(['MOCK_STORE']),
     new webpack.EnvironmentPlugin(['APP']),
     new webpack.EnvironmentPlugin(['BASENAME']),
-    /*... doesn't work? ... 
+    new webpack.DefinePlugin({ // <-- key to reducing React's size
+      'process.env': {
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev')
+      }
+    }),
+    new webpack.optimize.DedupePlugin(), //dedupe similar code
+    new webpack.optimize.UglifyJsPlugin(), //minify everything
+    new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
+    /*... doesn't work? ...
     new RelayCompilerWebpackPlugin({
-      schema: path.resolve(__dirname, './data/schema.json'), // or schema.graphql 
+      schema: path.resolve(__dirname, './data/schema.json'), // or schema.graphql
       src: path.resolve(__dirname, './src'),
     }), */
     new HtmlWebpackPlugin({
@@ -96,7 +104,7 @@ module.exports = {
       basename: path_prefix,
       template: 'src/index.ejs',
       hash: true
-    }), 
+    }),
   ],
   externals:[{
     xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'
