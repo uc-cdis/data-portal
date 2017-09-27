@@ -5,7 +5,7 @@
 #
 set -eu
 
-if [ -f src/img/$APP-favicon.ico src/img/favicon.ico ]; then
+if [ -f src/img/$APP-favicon.ico ]; then
   cp src/img/$APP-favicon.ico src/img/favicon.ico
 fi
 
