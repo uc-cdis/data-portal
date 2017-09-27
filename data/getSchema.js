@@ -18,7 +18,8 @@ const { gdcSubPath } = (function () {
   function addSlash( path ) { return (path + '/').replace(/\/+$/, '/'); }
 
   if (process.argv.length < 3) {
-    return { status: "ok", gdcSubPath: addSlash( process.env.GDC_SUBPATH || 'http://localhost:5000/v0/submission/' ) };
+    const gdcDefaultPath = process.env.HOSTNAME ? `https://${process.env.HOSTNAME}/api/v0/submission/` : 'http://localhost:5000/v0/submission/';    
+    return { status: "ok", gdcSubPath: addSlash( process.env.GDC_SUBPATH || gdcDefaultPath ) };
   }
   const arg1 = process.argv[2];
   if (!arg1.match(/^https?\:\/\//)) {
@@ -58,7 +59,7 @@ async function fetchJson(url) {
     },
   }).then(res => res.json()
     ).catch(err => {
-      console.err("Error processing " + url, err);
+      console.error("Error processing " + url, err);
       return Promise.reject(err);
     });
 }

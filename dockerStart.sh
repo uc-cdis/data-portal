@@ -16,6 +16,7 @@ fi
 npm run schema
 npm run relay
 NODE_ENV=production webpack --bail
+gzip -kf bundle.js
 
 /usr/sbin/nginx -g 'daemon off;'
 

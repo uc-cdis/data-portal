@@ -22,15 +22,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ARG APP=dev
 ARG BASENAME
 
-ADD package.json /tmp/package.json
-ADD package-lock.json /tmp/package-lock.json
-RUN cd /tmp && npm install
-RUN mkdir -p /data-portal && cp -a /tmp/node_modules /data-portal/
-
+RUN mkdir -p /data-portal 
 COPY . /data-portal
 WORKDIR /data-portal
 RUN cp src/img/$APP-favicon.ico src/img/favicon.ico; \
-    NODE_ENV=production webpack --bail \
+    /bin/rm -rf node_modules \
+    && npm install \
+    && npm run relay \
+    && NODE_ENV=production webpack --bail \
+    && gzip -kf bundle.js \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
 CMD bash ./dockerStart.sh
