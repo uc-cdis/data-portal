@@ -59,7 +59,7 @@ async function fetchJson(url) {
     },
   }).then(res => res.json()
     ).catch(err => {
-      console.err("Error processing " + url, err);
+      console.error("Error processing " + url, err);
       return Promise.reject(err);
     });
 }
