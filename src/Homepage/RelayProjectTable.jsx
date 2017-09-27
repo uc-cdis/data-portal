@@ -60,7 +60,6 @@ export class RelayProjectTable extends ProjectTable {
         if (error) {
           return <tr><td><b>Error! {error}</b></td></tr>;
         } else if (props && props.project) {
-          console.log('RelayProjectTable got props: ', props);
           const { fileCount } = GQLHelper.extractFileInfo(props);
           const proj = { ...props.project[0], caseCount: props.caseCount, aliquotCount: props.aliquotCount, fileCount };
 
