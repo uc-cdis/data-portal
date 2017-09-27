@@ -200,7 +200,11 @@ export const color = {
   index_file: d3.schemeCategory20[18],
   notation: d3.schemeCategory20[19],
   data_file: d3.schemeCategory20[17],
+  satellite: d3.schemeCategory20[11],
+  radar: d3.schemeCategory20[16],
+  streamgauge: d3.schemeCategory20[19],
 };
+  
 
 export function legendCreator(legend_g, nodes, legend_width, color_scheme) {
   // Find all unique categories 
