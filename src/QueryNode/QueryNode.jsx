@@ -146,15 +146,47 @@ const Entities = ({value, project, onUpdatePopup, onStoreNodeInfo}) => {
  */
 export class QueryNode extends React.Component {
   /** 
-   * Internal helper to select which popup variant - if any - should be rendered:
-   *    confirmDelete, waitForDelete, deleteFailed, viewNode, noPopup
+   * Internal helper to render the "view node" popup if necessary
+   * based on the popups and query_nodes properties attached to this component.
    * 
-   * @param {popups, query_nodes, onUpdatePopup, onDeleteNode, onClearDeleteSession} props including props.popups and props.query_nodes state passed into the component by Redux
-   * @return { state, popupEl } where state is string one of [confirmDelete, waitForDelete, ...], and 
+   * @param {popups, query_nodes, onUpdatePopup} props including props.popups.view_popup and props.query_nodes state passed into the component by Redux
+   * @return { state, popupEl } where state (just used for testing) is string one of [viewNode, noPopup], and 
    *    popupEl is either null or a <Popup> properly configured to render
    */
-  renderPopup( props ) {
+  renderViewPopup( props ) {
     const {query_nodes, popups,onUpdatePopup, onDeleteNode, onClearDeleteSession } = props;
+    const popup = {
+      state: "noPopup",
+      popupEl: null
+    };
+
+    if (
+      popups.view_popup  &&
+      query_nodes.query_node
+    ) { 
+      // View node button clicked
+      popup.state = "viewNode";
+      popup.popupEl = <Popup message={query_nodes.query_node.submitter_id} code={json_to_string(query_nodes.query_node)} 
+        onClose={
+          ()=>{
+            onUpdatePopup({view_popup: false });
+          }
+        } 
+      />;
+    } 
+    return popup;
+  }
+
+  /** 
+   * Internal helper to render the "delete node" popup if necessary
+   * based on the popups and query_nodes properties attached to this component.
+   * 
+   * @param {params, popups, query_nodes, onUpdatePopup, onDeleteNode, onClearDeleteSession} props including params.project, props.popups and props.query_nodes state passed into the component by Redux
+   * @return { state, popupEl } where state (just used for testing) is string one of [confirmDelete, waitForDelete, deleteFailed, noPopup], and 
+   *    popupEl is either null or a <Popup> properly configured to render
+   */
+  renderDeletePopup( props ) {
+    const {params, query_nodes, popups,onUpdatePopup, onDeleteNode, onClearDeleteSession } = props;
     const popup = {
       state: "noPopup",
       popupEl: null
@@ -167,43 +199,23 @@ export class QueryNode extends React.Component {
         code={json_to_string(query_nodes.query_node)} 
         onConfirm={
           ()=>{
-            onDeleteNode({project, id:query_nodes.stored_node_info}); 
-            onUpdatePopup({view_popup: 'Waiting for delete to finish ...', nodedelete_popup:false });
+            onDeleteNode({project: params.project, id:query_nodes.stored_node_info}); 
+            onUpdatePopup({ nodedelete_popup: 'Waiting for delete to finish ...' });
           }
         } 
         onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({nodedelete_popup:false }); }}
       />;
-    } else if (! popups.nodedelete_popup &&
-      popups.view_popup === true &&
-      query_nodes.query_node &&
-      query_nodes.delete_error 
-    ) {
+    } else if ( query_nodes.query_node && query_nodes.delete_error ) {
       // Error deleting node
       popup.state = "deleteFailed";
       popup.popupEl = <Popup message={'Error deleting: ' + query_nodes.query_node.submitter_id} error={json_to_string(query_nodes.delete_error)} 
         code={json_to_string(query_nodes.query_node)} 
         onClose={ ()=>{ onClearDeleteSession(); onUpdatePopup({view_popup: false}); } }
       />;
-    } else if (! popups.nodedelete_popup &&
-      typeof popups.view_popup === 'string' &&
-      query_nodes.query_node  
-    ) {
+    } else if ( typeof popups.nodedelete_popup === 'string' && query_nodes.query_node  ) {
       // Waiting for node delete to finish
       popup.state = "waitForDelete";
-      popup.popupEl = <Popup message={ popups.view_popup }  />;
-    } else if (! popups.nodedelete_popup &&
-      popups.view_popup  &&
-      query_nodes.query_node
-    ) { 
-      // View node button clicked
-      popup.state = "viewNode";
-      popup.popupEl = <Popup message={query_nodes.query_node.submitter_id} code={json_to_string(query_nodes.query_node)} 
-        onClose={
-          ()=>{
-            onUpdatePopup({view_popup: false, nodedelete_popup:false });
-          }
-        } 
-      />;
+      popup.popupEl = <Popup message={ popups.nodedelete_popup }  />;
     } 
     return popup;
   }
@@ -214,12 +226,12 @@ export class QueryNode extends React.Component {
       onClearDeleteSession
     } = this.props;
     const project = params.project;
-    const popupInfo = this.renderPopup( this.props );
-
+    
     return  (
       <div>
         <h3>browse <Link to={'/' + project}>{project}</Link> </h3>
-        {popupInfo.popupEl}
+        {this.renderViewPopup( this.props ).popupEl}
+        {this.renderDeletePopup( this.props ).popupEl}
         <QueryForm onSearchFormSubmit={onSearchFormSubmit} project={project} node_types={submission.node_types}/>
         { query_nodes.search_status==='succeed: 200' &&
             Object.entries(query_nodes.search_result['data']).map((value) => { return (<Entities project={project} onStoreNodeInfo={onStoreNodeInfo} onUpdatePopup={onUpdatePopup} node_type={value[0]} key={value[0]} value={value[1]}/>)})
@@ -238,9 +250,6 @@ const mapStateToProps = (state, ownProps) => {
     'query_nodes': state.query_nodes,
     'popups': Object.assign( {}, state.popups )
   };
-  if ( (state.query_nodes && state.query_nodes.delete_error) && ! result.popups.view_popup ) {
-    result.popups.view_popup = true;
-  }
   return result;
 };
 
