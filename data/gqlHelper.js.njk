@@ -23,11 +23,11 @@ const helperSingleton = {
         projectList: project(first: 10000) {
           name: project_id
           code
-          experimentCount: _{{ experimentType | replace( 'study', 'studies' ) | replace( 'experiment', 'experiments' ) }}_count
+          {% if experimentType %}experimentCount: _{{ experimentType | replace( 'study', 'studies' ) | replace( 'experiment', 'experiments' ) }}_count{% endif %}
         }
-        caseCount: _case_count
-        experimentCount:  _{{ experimentType }}_count
-        aliquotCount: _aliquot_count
+        {% if hasCaseType %}caseCount: _case_count{% endif %}
+        {% if experimentType %}experimentCount:  _{{ experimentType }}_count{% endif %}
+        {% if hasAliquotType %}aliquotCount: _aliquot_count{% endif %}
         {% for fType in fileTypeList %}
         fileCount{{ loop.index }}: _{{ fType }}_count{% endfor %}
     }`,
@@ -36,11 +36,11 @@ const helperSingleton = {
         project( project_id:$name ) {
           name: project_id
           code
-          experimentCount:  _{{ experimentType | replace( 'study', 'studies' ) | replace( 'experiment', 'experiments' ) }}_count
+          {% if experimentType %}experimentCount:  _{{ experimentType | replace( 'study', 'studies' ) | replace( 'experiment', 'experiments' ) }}_count{% endif %}
         }
-        caseCount: _case_count( project_id:$name )
-        experimentCount: _{{ experimentType }}_count( project_id:$name )
-        aliquotCount: _aliquot_count( project_id:$name )
+        {% if hasCaseType %}caseCount: _case_count( project_id:$name ){% endif %}
+        {% if experimentType %}experimentCount: _{{ experimentType }}_count( project_id:$name ){% endif %}
+        {% if hasAliquotType %}aliquotCount: _aliquot_count( project_id:$name ){% endif %}
         {% for fType in fileTypeList %}
         fileCount{{ loop.index }}: _{{ fType }}_count( project_id:$name ){% endfor %}
     }`,
@@ -113,7 +113,7 @@ export class GQLHelper {
       (acc,it) => { let result=acc; if( Array.isArray( it ) ) { result = acc.concat( it ) } else { acc.push(it ); } return result }, 
       [] 
     );
-    return { fileCount: fileCount, fileData: fileData };
+    return { fileCount, fileData };
   }
 
 

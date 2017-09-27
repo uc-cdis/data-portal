@@ -131,7 +131,7 @@ export function DashboardWith(Table) {
       return (<div className="clearfix">
         <LittleProjectDashboard
           projectList={projectList} experimentCount={summaryCounts.experimentCount}
-          caseCount={summaryCounts.caseCount} fileCount={summaryCounts.caseCount}
+          caseCount={summaryCounts.caseCount} fileCount={summaryCounts.fileCount}
           aliquotCount={summaryCounts.aliquotCount}
         />
         <Table projectList={projectList} summaryCounts={summaryCounts} />

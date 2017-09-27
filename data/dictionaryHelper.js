@@ -7,12 +7,34 @@ const fs = require('fs');
  * @return {experimentType, fileTypeList} gqlSetup object used by data/gqlSetup.js
  */
 function dictToGQLSetup( dict ) {
-  const fileTypes = Object.keys( dict ).filter( key => typeof dict[key] === "object" && dict[ key ].category === "data_file" );
-  const experimentType = dict.hasOwnProperty( "experiment" ) ? "experiment" : "study";
+  const fileTypeList = Object.keys( dict ).filter( key => typeof dict[key] === "object" && dict[ key ].category === "data_file" );
+  // admin types that link to the 'project' level and are not project or program
+  const adminTypeList = Object.keys( dict ).filter( 
+    key => {
+      const entry = dict[key];
+      return key !== "program" && key !== "project" && typeof entry === "object" && entry.category === "administrative" 
+        && Array.isArray( entry.links ) && entry.links.length > 0;
+    } 
+  ).map(
+    key => {
+      const entry = dict[key];
+      return {
+        typeName: key,
+        entry: entry,
+        projectLink: entry.links.find( link => link.target_type === 'project' && link.required )
+      };
+    }
+  );
+  const adminLookup = adminTypeList.reduce( (db,info) => { db[info.typeName] = info; return db; }, {}  );
 
+  const experimentType = [ "experiment", "study" ].find( (name) => dict.hasOwnProperty(name) );
+    
   return {
-    fileTypeList: fileTypes,
-    experimentType: experimentType
+    fileTypeList,
+    adminTypeList,
+    experimentType,
+    hasCaseType: dict.hasOwnProperty( "case" ),
+    hasAliquotType: dict.hasOwnProperty( "aliquot" )
   };
 }
 
