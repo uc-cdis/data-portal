@@ -30,7 +30,7 @@ RUN cp src/img/$APP-favicon.ico src/img/favicon.ico; \
     && npm install \
     && npm run relay \
     && NODE_ENV=production webpack --bail \
-    && gzip bundle.js \
+    && gzip -kf bundle.js \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
 CMD bash ./dockerStart.sh
