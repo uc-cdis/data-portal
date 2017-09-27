@@ -29,7 +29,7 @@ export const predict_file_type = (data, file_type) => {
   const tsv_type = 'text/tab-separated-values';
   data = data.trim();
   if (data.indexOf('{') !== -1 || data.indexOf('}') !== -1) {
-     return json_type;
+    return json_type;
   }
   if (data.indexOf('\t') !== -1) {
     return tsv_type;
@@ -198,7 +198,7 @@ export const color = {
   metadata_file: d3.schemeCategory20b[14],
   index_file: d3.schemeCategory20[18],
   notation: d3.schemeCategory20[19],
-  data_file: d3.schemeCategory20[17]
+  data_file: d3.schemeCategory20[17],
 };
 
 export function legend_creator(legend_g, nodes, legend_width, color_scheme) {

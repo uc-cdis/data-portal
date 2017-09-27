@@ -69,8 +69,8 @@ const Dropdown = styled(Select)`
   margin-right: 1em;
 `;
 
-let QueryForm = React.createClass({
-  handleQuerySubmit (event) {
+const QueryForm = React.createClass({
+  handleQuerySubmit(event) {
     event.preventDefault();
     const form = event.target;
     const data = { project: this.props.project };
@@ -86,12 +86,12 @@ let QueryForm = React.createClass({
     const url = `/${this.props.project}/search?${query_param.join('&')}`;
     this.props.onSearchFormSubmit(data, url);
   },
-  getInitialState () {
+  getInitialState() {
     return {
       selectValue: 'experiment',
     };
   },
-  updateValue (newValue) {
+  updateValue(newValue) {
     this.setState({
       selectValue: newValue,
     });
@@ -107,7 +107,7 @@ let QueryForm = React.createClass({
         <SearchButton type="submit" onSubmit={this.handleQuerySubmit} value="search" />
       </form>
     );
-  }
+  },
 });
 
 const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
@@ -139,18 +139,19 @@ const QueryNodeComponent = ({ params, ownProps, submission, query_nodes, popups,
   const project = params.project;
   return (
     <div>
-      <h3>browse <Link to={'/' + project}>{project}</Link> </h3>
+      <h3>browse <Link to={`/${project}`}>{project}</Link> </h3>
       { // User clicked on node 'Delete' button
         popups.nodedelete_popup === true &&
-          <Popup message={'Are you sure you want to delete this node?'} error={json_to_string(query_nodes.delete_error)}
+          <Popup
+            message={'Are you sure you want to delete this node?'} error={json_to_string(query_nodes.delete_error)}
             code={json_to_string(query_nodes.query_node)}
             onConfirm={
-              ()=>{
-                onDeleteNode({project, id:query_nodes.stored_node_info});
-                onUpdatePopup({view_popup: 'Waiting for delete to finish ...', nodedelete_popup:false });
+              () => {
+                onDeleteNode({ project, id: query_nodes.stored_node_info });
+                onUpdatePopup({ view_popup: 'Waiting for delete to finish ...', nodedelete_popup: false });
               }
             }
-            onCancel={()=>{ onClearDeleteSession(); onUpdatePopup({nodedelete_popup:false }); }}
+            onCancel={() => { onClearDeleteSession(); onUpdatePopup({ nodedelete_popup: false }); }}
           />
       }
       { // Error deleting node
@@ -158,16 +159,17 @@ const QueryNodeComponent = ({ params, ownProps, submission, query_nodes, popups,
         popups.view_popup === true &&
         query_nodes.query_node &&
         query_nodes.delete_error &&
-          <Popup message={'Error deleting: ' + query_nodes.query_node.submitter_id} error={json_to_string(query_nodes.delete_error)} 
-            code={json_to_string(query_nodes.query_node)} 
-            onClose={ ()=>{ onClearDeleteSession(); onUpdatePopup({view_popup: false}); } }
+          <Popup
+            message={`Error deleting: ${query_nodes.query_node.submitter_id}`} error={json_to_string(query_nodes.delete_error)}
+            code={json_to_string(query_nodes.query_node)}
+            onClose={() => { onClearDeleteSession(); onUpdatePopup({ view_popup: false }); }}
           />
       }
       { // Waiting for node delete to finish
         (! popups.nodedelete_popup) &&
         typeof popups.view_popup === 'string' &&
-        query_nodes.query_node  &&
-          <Popup message={ popups.view_popup }  />
+        query_nodes.query_node &&
+          <Popup message={popups.view_popup} />
       }
       <QueryForm onSearchFormSubmit={onSearchFormSubmit} project={project} node_types={submission.node_types} />
       { query_nodes.search_status === 'succeed: 200' &&
@@ -180,27 +182,25 @@ const QueryNodeComponent = ({ params, ownProps, submission, query_nodes, popups,
 
 const mapStateToProps = (state, ownProps) => {
   const result = {
-    'submission': state.submission,
-    'ownProps': ownProps,
-    'query_nodes': state.query_nodes,
-    'popups': Object.assign( {}, state.popups )
+    submission: state.submission,
+    ownProps,
+    query_nodes: state.query_nodes,
+    popups: Object.assign({}, state.popups),
   };
-  if ( (state.query_nodes && state.query_nodes.delete_error) && ! result.popups.view_popup ) {
+  if ((state.query_nodes && state.query_nodes.delete_error) && ! result.popups.view_popup) {
     result.popups.view_popup = true;
   }
   return result;
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onSearchFormSubmit: (value, url) => dispatch(submitSearchForm(value, url)),
-    onUpdatePopup: (state) => dispatch(updatePopup(state)),
-    onClearDeleteSession: () => dispatch(clearDeleteSession()),
-    onDeleteNode: ({id, project}) => {
-      dispatch(deleteNode({id, project}));
-    },
-    onStoreNodeInfo: ({id, project}) => dispatch(fetchQueryNode({id, project})).then(()=>dispatch(storeNodeInfo({id}))),
-  }
-};
+const mapDispatchToProps = dispatch => ({
+  onSearchFormSubmit: (value, url) => dispatch(submitSearchForm(value, url)),
+  onUpdatePopup: state => dispatch(updatePopup(state)),
+  onClearDeleteSession: () => dispatch(clearDeleteSession()),
+  onDeleteNode: ({ id, project }) => {
+    dispatch(deleteNode({ id, project }));
+  },
+  onStoreNodeInfo: ({ id, project }) => dispatch(fetchQueryNode({ id, project })).then(() => dispatch(storeNodeInfo({ id }))),
+});
 const QueryNode = connect(mapStateToProps, mapDispatchToProps)(QueryNodeComponent);
 export default QueryNode;

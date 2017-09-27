@@ -92,7 +92,6 @@ class CountCard extends React.Component {
 }
 
 
-
 /**
  * Project dashbaord - list projects with various stats and links
  * for submission page, whatever.

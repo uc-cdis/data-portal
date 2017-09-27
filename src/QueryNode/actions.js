@@ -49,25 +49,23 @@ export const deleteNode = ({ id, project }) => {
   });
 };
 
-export const receiveDeleteResponse = ({status, data, id, project}) => {
-  return (dispatch) => {
-    dispatch(updatePopup({nodedelete_popup: false, view_popup: false}));
+export const receiveDeleteResponse = ({ status, data, id, project }) => (dispatch) => {
+  dispatch(updatePopup({ nodedelete_popup: false, view_popup: false }));
 
-    switch (status) {
-      case 200:
-        dispatch({
-          type: 'DELETE_SUCCEED',
-          id: id
-        });
-        return dispatch(clearDeleteSession());
-      default:
-        return dispatch({
-          type: 'DELETE_FAIL',
-          id,
-          error: data,
-        });
-    }
-  };
+  switch (status) {
+  case 200:
+    dispatch({
+      type: 'DELETE_SUCCEED',
+      id,
+    });
+    return dispatch(clearDeleteSession());
+  default:
+    return dispatch({
+      type: 'DELETE_FAIL',
+      id,
+      error: data,
+    });
+  }
 };
 
 export const storeNodeInfo = ({ id }) => ({

@@ -66,33 +66,31 @@ const Error = styled.h6`
   color: red;
 `;
 
-export const Popup = ({message, code, error, closeText, cancelText, confirmText, onClose, onCancel, onConfirm}) => {
-  return (
-    <PopupMask>
-      <PopupBox>
-        <Message>
-          <div>{message}</div>
-          {code &&
-          <Code className='json'> {code} </Code>
-          }
-          {error && <Error>Error</Error>}
-          {error &&
-          <Code className='json'> {error} </Code>
-          }
-        </Message>
-        {onClose &&
-        <CancelButton onClick={onClose}>{closeText ? closeText : "close"}</CancelButton>
+export const Popup = ({ message, code, error, closeText, cancelText, confirmText, onClose, onCancel, onConfirm }) => (
+  <PopupMask>
+    <PopupBox>
+      <Message>
+        <div>{message}</div>
+        {code &&
+          <Code className="json"> {code} </Code>
         }
-        {onConfirm &&
-        <Button onClick={onConfirm}>{confirmText ? confirmText : "confirm"}</Button>
+        {error && <Error>Error</Error>}
+        {error &&
+          <Code className="json"> {error} </Code>
         }
-        {onCancel &&
-        <CancelButton onClick={onCancel}>{cancelText ? cancelText : "cancel"}</CancelButton>
-        }
-      </PopupBox>
-    </PopupMask>
-  )
-};
+      </Message>
+      {onClose &&
+        <CancelButton onClick={onClose}>{closeText || 'close'}</CancelButton>
+      }
+      {onConfirm &&
+        <Button onClick={onConfirm}>{confirmText || 'confirm'}</Button>
+      }
+      {onCancel &&
+        <CancelButton onClick={onCancel}>{cancelText || 'cancel'}</CancelButton>
+      }
+    </PopupBox>
+  </PopupMask>
+);
 
 export const saveToFile = (savingStr, filename) => {
   const FileSaver = require('file-saver');
