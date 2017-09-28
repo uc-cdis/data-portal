@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
 import { browserHistory } from 'react-router';
-import Translator from './translate.js';
+import Translator from './translate';
 
 
 const tor = Translator.getTranslator();

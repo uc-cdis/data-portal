@@ -1,6 +1,6 @@
 import React from 'react';
-import Nav from '../Nav/component.js';
-import { Box, cube, Table, TableData, TableRow, TableHead } from '../theme.js';
+import Nav from '../Nav/component';
+import { Box, cube, Table, TableData, TableRow, TableHead } from '../theme';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import * as constants from './constants';

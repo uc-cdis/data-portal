@@ -1,4 +1,4 @@
-import Translator from './translate.js';
+import Translator from './translate';
 
 describe('the translator', () => {
   it('Caches a default translator', () => {

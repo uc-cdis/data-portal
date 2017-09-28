@@ -3,13 +3,13 @@ import Relay from 'react-relay/classic';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { clearFix } from 'polished';
-import CircleButton from '../components/CircleButton.jsx';
+import CircleButton from '../components/CircleButton';
 import { Link } from 'react-router';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import ActionBook from 'material-ui/svg-icons/action/book';
-import { ProjectTable } from './ProjectTable.jsx';
-import ReduxProjectBarChart from './ReduxProjectBarChart.js';
-import Translator from './translate.js';
+import { ProjectTable } from './ProjectTable';
+import ReduxProjectBarChart from './ReduxProjectBarChart';
+import Translator from './translate';
 
 
 const tor = Translator.getTranslator();

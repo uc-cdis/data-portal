@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { button, UploadButton, SubmitButton, Required_Notification, Dropdown, Input, Label } from '../theme';
 import React, { Component, PropTypes } from 'react';
-import { json_to_string } from '../utils.js';
+import { json_to_string } from '../utils';
 import { Toggle } from 'material-ui';
 
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
-import { GQLHelper } from '../gqlHelper.js';
-import { getReduxStore } from '../reduxStore.js';
+import { GQLHelper } from '../gqlHelper';
+import { getReduxStore } from '../reduxStore';
 import environment from '../environment';
-import { ProjectTable, ProjectTR } from './ProjectTable.jsx';
+import { ProjectTable, ProjectTR } from './ProjectTable';
 
 
 const gqlHelper = GQLHelper.getGQLHelper();

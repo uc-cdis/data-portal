@@ -1,4 +1,4 @@
-import { RelayProjectDashboard } from './RelayHomepage.jsx';
+import { RelayProjectDashboard } from './RelayHomepage';
 
 
 describe('RelayHomepage dashboard wrapper', () => {

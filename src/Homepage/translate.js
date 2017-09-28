@@ -1,4 +1,4 @@
-import { app, dev } from '../localconf.js';
+import { app, dev } from '../localconf';
 
 let singleton;
 

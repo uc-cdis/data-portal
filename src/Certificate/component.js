@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, FormError, RadioGroup, Radio } from 'react-form';
-import Nav from '../Nav/component.js';
+import Nav from '../Nav/component';
 import { submitForm, updateForm } from './actions';
 import { connect } from 'react-redux';
 import { QuestionItem, OptionBullet, SubmitButton, Tooltip } from './style';

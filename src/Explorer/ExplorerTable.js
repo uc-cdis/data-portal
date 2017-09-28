@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import ReactTable from 'react-table';
 import { connect } from 'react-redux';
-import { getReduxStore } from '../reduxStore.js';
+import { getReduxStore } from '../reduxStore';
 
 const passFilter = (filterList, item) => filterList.length === 0 || filterList.includes(item);
 

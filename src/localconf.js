@@ -33,7 +33,7 @@ function buildConfig(opts) {
   let navItems = [];
   const requiredCerts = [];
 
-  // Support data/gqlSetup.js auto-generation of data-portal graphQL
+  // Support data/gqlSetup auto-generation of data-portal graphQL
   const gqlSetup = {
     fileTypeList: [
       'slide_image',
@@ -148,5 +148,5 @@ function buildConfig(opts) {
 }
 
 const defaultConf = buildConfig();
-// Commonjs style export, so can load from nodejs into data/gqlSetup.js
+// Commonjs style export, so can load from nodejs into data/gqlSetup
 module.exports = defaultConf;

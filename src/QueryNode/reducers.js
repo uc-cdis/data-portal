@@ -1,4 +1,4 @@
-import { removeDeletedNode } from '../reducers.js';
+import { removeDeletedNode } from '../reducers';
 
 export const query_nodes = (state = {}, action) => {
   switch (action.type) {

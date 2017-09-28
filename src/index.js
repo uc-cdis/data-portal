@@ -1,19 +1,9 @@
 import React from 'react';
-import Relay from 'react-relay';
-import { dict } from './dictionary.js';
-import { persistStore, autoRehydrate } from 'redux-persist';
 import { render } from 'react-dom';
-import GraphiQL from 'graphiql';
 import { Provider } from 'react-redux';
-import { Router, Route, Link, applyRouterMiddleware } from 'react-router';
-import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
-/**
- * NOTE: react-router-relay does not support relay modern (relay 1.+) - 
- * only relay "classic" - see https://github.com/relay-tools/react-router-relay
- */
-import useRelay from 'react-router-relay';
+import { Router, Route, Link } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 import { ThemeProvider } from 'styled-components';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'react-select/dist/react-select.css';
@@ -31,13 +21,13 @@ import ProjectSubmission from './Submission/component';
 import UserProfile from './UserProfile/component';
 import Certificate from './Certificate/component';
 import GraphQLQuery from './GraphQLEditor/component';
-import { loginSubmissionAPI, setProject } from './Submission/actions';
+import { loginSubmissionAPI } from './Submission/actions';
 import { fetchDictionary } from './queryactions';
 import { loginUserProfile, fetchAccess } from './UserProfile/actions';
 import { fetchSchema } from './GraphQLEditor/actions';
-import { app, dev, graphqlPath } from './localconf';
+import { app } from './localconf';
 import browserHistory from './history';
-import { theme, Box } from './theme';
+import { theme } from './theme';
 import { clearCounts } from './DataModelGraph/actions';
 import { asyncSetInterval, withBoxAndNav, withAuthTimeout } from './utils';
 import { getReduxStore } from './reduxStore';
@@ -108,13 +98,18 @@ async function init() {
                 component={withBoxAndNav(DataDictionaryNode)}
               />
               <Route
-                exact path="/files"
-                onEnter={requireAuth(store, nextState => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))))}
+                exact 
+                path="/files"
+                onEnter={
+                  requireAuth(store, nextState => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))))
+                }
                 component={ExplorerPage}
               />
               <Route
                 path="/:project"
-                onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))}
+                onEnter={
+                  requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))
+                }
                 component={withBoxAndNav(withAuthTimeout(ProjectSubmission))}
               />
               <Route

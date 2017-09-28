@@ -2,7 +2,7 @@ import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
 import environment from '../environment';
 import { RelayExplorerComponent } from './component';
-import { GQLHelper } from '../gqlHelper.js';
+import { GQLHelper } from '../gqlHelper';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 

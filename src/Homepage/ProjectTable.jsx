@@ -2,10 +2,10 @@ import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router';
 import styled, { css } from 'styled-components';
-import { TableBarColor } from '../theme.js';
-import CircleButton from '../components/CircleButton.jsx';
+import { TableBarColor } from '../theme';
+import CircleButton from '../components/CircleButton';
 import ActionBook from 'material-ui/svg-icons/action/book';
-import Translator from './translate.js';
+import Translator from './translate';
 
 
 const tor = Translator.getTranslator();

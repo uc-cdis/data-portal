@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import 'react-table/react-table.css';
 import Relay, { createRefetchContainer, graphql } from 'react-relay';
 import { withAuthTimeout, withBoxAndNav } from '../utils';
-import { GQLHelper } from '../gqlHelper.js';
-import { getReduxStore } from '../reduxStore.js';
+import { GQLHelper } from '../gqlHelper';
+import { getReduxStore } from '../reduxStore';
 import ExplorerTable from './ExplorerTable';
 import SideBar from './ExplorerSideBar';
 

@@ -1,4 +1,4 @@
-import { GQLHelper } from './gqlHelper.js';
+import { GQLHelper } from './gqlHelper';
 
 /**
  * Note - these test will fail if the local dictionary

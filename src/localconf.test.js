@@ -1,4 +1,4 @@
-import conf from './localconf.js';
+import conf from './localconf';
 
 describe('The localconf', () => {
   const expectedKeys = [

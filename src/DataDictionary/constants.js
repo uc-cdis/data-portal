@@ -1,5 +1,5 @@
 export let subHeader = 'This is a user-friendly interface for accessing the Data Dictionary';
-import { app } from '../localconf.js';
+import { app } from '../localconf';
 
 if (app === 'edc') {
   subHeader = 'The data dictionary viewer is a user-friendly interface for accessing the Environmental Data Commons Data Dictionary.';

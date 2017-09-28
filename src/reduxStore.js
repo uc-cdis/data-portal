@@ -1,5 +1,5 @@
-import { dict } from './dictionary.js';
-import { app, mockStore, dev } from './localconf.js';
+import { dict } from './dictionary';
+import { app, mockStore, dev } from './localconf';
 import browserHistory from './history';
 import { persistStore, autoRehydrate } from 'redux-persist';
 import { createStore, applyMiddleware, compose } from 'redux';
