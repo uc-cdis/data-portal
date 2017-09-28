@@ -12,7 +12,6 @@ import { requireAuth, enterHook, fetchUser } from './actions';
 import { clearResultAndQuery } from './QueryNode/actions';
 import Login from './Login/component';
 import AmbiHomepage from './Homepage/AmbiHomepage';
-import QueryNode from './QueryNode/component';
 import ExplorerPage from './Explorer/ExplorerPage';
 import RelayExplorer from './Explorer/component';
 import QueryNode from './QueryNode/QueryNode';
