@@ -1,25 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { QueryRenderer, graphql } from 'react-relay';
 import environment from '../environment';
-import { ProjectDashboard, DashboardWith } from './ProjectDashboard.jsx';
-import { RelayProjectTable } from './RelayProjectTable.jsx';
+import { ProjectDashboard, DashboardWith } from './ProjectDashboard';
+import { RelayProjectTable } from './RelayProjectTable';
 import { withAuthTimeout, withBoxAndNav } from '../utils';
-import { Body, Box, Margin } from '../theme.js';
-import Nav from '../Nav/component';
-import Footer from '../components/Footer.jsx';
-import { GQLHelper } from '../gqlHelper.js';
-import { getReduxStore } from '../reduxStore.js';
+import { GQLHelper } from '../gqlHelper';
+import { getReduxStore } from '../reduxStore';
 
 
-/*
-const ExplorerPageQuery = graphql`
-    query ExplorerPageQuery{
-        viewer {
-            ...component_viewer
-        }
-    }
-`;
-*/
 
 const gqlHelper = GQLHelper.getGQLHelper();
 const DashboardWithRelayTable = DashboardWith(RelayProjectTable);
@@ -42,13 +31,13 @@ export class RelayProjectDashboard extends React.Component {
    * 
    * @param {Array<Proj>} projectList 
    */
-  static async updateRedux(projectList) {
+  static async updateRedux({ projectList, summaryCounts }) {
     // Update redux store if data is not already there
     return getReduxStore().then(
       (store) => {
         const homeState = store.getState().homepage || {};
-        if (! homeState.projectsByName) {
-          store.dispatch({ type: 'RECEIVE_PROJECT_LIST', data: projectList });
+        if (!homeState.projectsByName) {
+          store.dispatch({ type: 'RECEIVE_PROJECT_LIST', data: { projectList, summaryCounts } });
           return 'dispatch';
         }
         return 'NOOP';
@@ -98,7 +87,7 @@ export class RelayProjectDashboard extends React.Component {
     } else if (props) {
       // console.log( "Got props: ", props );
       const { projectList, summaryCounts } = RelayProjectDashboard.transformRelayProps(props);
-      RelayProjectDashboard.updateRedux(projectList);
+      RelayProjectDashboard.updateRedux({ projectList, summaryCounts });
 
       return <DashboardWithRelayTable projectList={projectList} summaryCounts={summaryCounts} />;
     }
@@ -119,12 +108,6 @@ export class RelayProjectDashboard extends React.Component {
 }
 
 
-class HelloThere {
-  render() {
-    return <h1>Hello, There!</h1>;
-  }
-}
-
 const RelayHomepage = withBoxAndNav(withAuthTimeout(RelayProjectDashboard));
 
 
@@ -133,17 +116,3 @@ const RelayHomepage = withBoxAndNav(withAuthTimeout(RelayProjectDashboard));
  */
 export default RelayHomepage;
 
-/*
-Relay.createContainer(
- withBoxAndNav(withAuthTimeout(RelayProjectDashboard)),
- {
-   fragments: {
-     viewer:() => Relay.QL`
-     fragment on viewer {
-       ${RelayProjectDashboard.getFragment( 'viewer' )}
-     }
-     `
-   }
- }
-);
-*/

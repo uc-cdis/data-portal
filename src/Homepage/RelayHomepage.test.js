@@ -37,7 +37,7 @@ describe('RelayHomepage dashboard wrapper', () => {
         experimentCount: 4,
       },
     ];
-    RelayProjectDashboard.updateRedux(projectList).then(
+    RelayProjectDashboard.updateRedux({ projectList, statusCounts:{} }).then(
       (status) => {
         expect(status === 'dispatch' || status === 'NOOP').toBe(true);
         done();

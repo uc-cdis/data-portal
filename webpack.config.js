@@ -16,6 +16,35 @@ const title = {
   bhc: 'Brain Commons',
 }[app];
 
+const plugins = [
+  new webpack.EnvironmentPlugin(['NODE_ENV']),
+  new webpack.EnvironmentPlugin(['MOCK_STORE']),
+  new webpack.EnvironmentPlugin(['APP']),
+  new webpack.EnvironmentPlugin(['BASENAME']),
+  new webpack.DefinePlugin({ // <-- key to reducing React's size
+    'process.env': {
+      'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev')
+    }
+  }),
+  new webpack.optimize.DedupePlugin(), //dedupe similar code
+  new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
+  /*... doesn't work? ...
+  new RelayCompilerWebpackPlugin({
+    schema: path.resolve(__dirname, './data/schema.json'), // or schema.graphql
+    src: path.resolve(__dirname, './src'),
+  }), */
+  new HtmlWebpackPlugin({
+    title: title,
+    basename: path_prefix,
+    template: 'src/index.ejs',
+    hash: true
+  }),
+];
+
+if ( process.env.NODE_ENV !== 'dev' ) {
+  // This slows things down a lot, so avoid when running local dev environment
+  plugins.push( new webpack.optimize.UglifyJsPlugin() ); //minify everything
+}
 
 module.exports = {
   entry: ['babel-polyfill', './src/index.js'],
@@ -79,33 +108,10 @@ module.exports = {
     alias: {
       graphql:  path.resolve('./node_modules/graphql'),
       react:    path.resolve('./node_modules/react')                // Same issue.
-    }
+    },
+    extensions: [ '', '.js', '.jsx', '.json' ]
   },
-  plugins: [
-    new webpack.EnvironmentPlugin(['NODE_ENV']),
-    new webpack.EnvironmentPlugin(['MOCK_STORE']),
-    new webpack.EnvironmentPlugin(['APP']),
-    new webpack.EnvironmentPlugin(['BASENAME']),
-    new webpack.DefinePlugin({ // <-- key to reducing React's size
-      'process.env': {
-        'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev')
-      }
-    }),
-    new webpack.optimize.DedupePlugin(), //dedupe similar code
-    new webpack.optimize.UglifyJsPlugin(), //minify everything
-    new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
-    /*... doesn't work? ...
-    new RelayCompilerWebpackPlugin({
-      schema: path.resolve(__dirname, './data/schema.json'), // or schema.graphql
-      src: path.resolve(__dirname, './src'),
-    }), */
-    new HtmlWebpackPlugin({
-      title: title,
-      basename: path_prefix,
-      template: 'src/index.ejs',
-      hash: true
-    }),
-  ],
+  plugins,
   externals:[{
     xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'
   }]
