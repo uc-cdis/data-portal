@@ -25,16 +25,15 @@ function dictToGQLSetup( dict ) {
       };
     }
   );
-  const adminLookup = adminTypeList.reduce( (db,info) => { db[info.typeName] = info; return db; }, {}  );
 
-  const experimentType = [ "experiment", "study" ].find( (name) => dict.hasOwnProperty(name) );
-    
+  const experimentType = [ "experiment", "study" ].find( name => Object.prototype.hasOwnProperty.call(dict,name) );
+
   return {
     fileTypeList,
     adminTypeList,
     experimentType,
-    hasCaseType: dict.hasOwnProperty( "case" ),
-    hasAliquotType: dict.hasOwnProperty( "aliquot" )
+    hasCaseType: Object.prototype.hasOwnProperty.call(dict,"case"),
+    hasAliquotType: Object.prototype.hasOwnProperty.call(dict,"aliquot")
   };
 }
 
