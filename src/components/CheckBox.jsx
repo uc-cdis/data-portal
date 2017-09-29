@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Label } from '../theme';
 
@@ -30,15 +29,19 @@ export class CheckBoxGroup extends Component {
 
   onChangeBox = (item) => {
     const pos = this.props.selected_items.indexOf(item);
-    let selected_items = [];
-    if (pos === -1) { selected_items = [...this.props.selected_items, item]; } else { selected_items = [...this.props.selected_items.slice(0, pos), ...this.props.selected_items.slice(pos + 1)]; }
-    const state = { [this.props.group_name]: selected_items };
+    let selectedItems = [];
+    if (pos === -1) { 
+      selectedItems = [...this.props.selected_items, item];
+    } else { 
+      selectedItems = [...this.props.selected_items.slice(0, pos), ...this.props.selected_items.slice(pos + 1)]; 
+    }
+    const state = { [this.props.group_name]: selectedItems };
     this.props.onChange(state);
   };
 
   render() {
-    const selected_items = this.props.selected_items;
-    // console.log(selected_items);
+    const selectedItems = this.props.selected_items;
+    // console.log(selectedItems);
     return (
       <CheckBox>
         {this.props.title}
@@ -47,7 +50,7 @@ export class CheckBoxGroup extends Component {
             <input
               type="checkbox" name={this.props.group_name}
               value={item} id={item}
-              checked={selected_items.includes(item)}
+              checked={selectedItems.includes(item)}
               onChange={() => this.onChangeBox(item)}
             />
             <LabelCheckBox for={item}>{item}</LabelCheckBox>

@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 import DataModelGraph from '../DataModelGraph/component';
 import { getCounts } from '../DataModelGraph/actions';
 import SubmitForm from './submitForm';
-import LoadingSpinner from '../Spinner/component';
+import Spinner from '../components/Spinner';
 
 const Browse = styled(Link)`
   display: inline-block;
@@ -38,7 +38,7 @@ const ProjectSubmissionComponent = (props) => {
       <SubmitForm />
       <SubmitTSV path={props.params.project} />
       {(props.counts_search === undefined || props.counts_search === null)
-        ? <LoadingSpinner /> :
+        ? <Spinner /> :
         <DataModelGraph project={props.params.project} /> }
     </div>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProjectTable, ProjectTR } from './ProjectTable';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 
