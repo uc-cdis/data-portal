@@ -1,5 +1,5 @@
 import { fetchOAuthURL, fetchWrapper } from '../actions';
-import { predict_file_type } from '../utils';
+import { predictFileType } from '../utils';
 import { fetchProjects, fetchDictionary } from '../queryactions';
 import { submissionApiPath, submissionApiOauthPath } from '../localconf';
 
@@ -8,7 +8,7 @@ export const uploadTSV = (value, type) => (dispatch) => {
 };
 
 export const updateFileContent = (value, file_type) => (dispatch) => {
-  dispatch({ type: 'UPDATE_FILE', file: value, file_type: predict_file_type(value, file_type) });
+  dispatch({ type: 'UPDATE_FILE', file: value, file_type: predictFileType(value, file_type) });
 };
 
 export const receiveSubmit = ({ status, data }) => {

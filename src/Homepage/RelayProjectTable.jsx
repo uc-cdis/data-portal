@@ -4,6 +4,7 @@ import { GQLHelper } from '../gqlHelper';
 import { getReduxStore } from '../reduxStore';
 import environment from '../environment';
 import { ProjectTable, ProjectTR } from './ProjectTable';
+import Spinner from '../components/Spinner';
 
 
 const gqlHelper = GQLHelper.getGQLHelper();
@@ -20,28 +21,6 @@ const gqlHelper = GQLHelper.getGQLHelper();
  * 
  */
 export class RelayProjectTable extends ProjectTable {
-  /*
-   * Overrides rowRender in ProjectTable parent class
-   * @param {Object} proj 
-   *
-  rowRender(proj) {
-    return <Relay.Renderer key={proj.name}
-      Container={RelayProjectTR}
-      queryConfig={new ProjectRoute({ name: proj.name })}
-      environment={environment}
-      render={({ done, error, props, retry, stale }) => {
-        if (error) {
-          return <tr><td><b>Error! {error}</b></td></tr>;
-        } else if (props && props.viewer) {
-          return <RelayProjectTR {...props} />;
-        } else {
-          return <tr><td><b>Loading - put a spinner here?</b></td></tr>;
-        }
-      }}
-    />;   
-  }
-  */
-
 
   /**
    * Overrides rowRender in ProjectTable parent class to fetch row data via Relay QueryRender.
@@ -87,7 +66,7 @@ export class RelayProjectTable extends ProjectTable {
 
           return <ProjectTR project={proj} />;
         }
-        return <tr><td><b>Loading - put a spinner here?</b></td></tr>;
+        return <tr><td><b>Loading... <Spinner /></b></td></tr>;
       }
       }
     />);

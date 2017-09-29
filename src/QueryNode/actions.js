@@ -1,6 +1,6 @@
 import { push } from 'react-router-redux';
 import { fetchWrapper, updatePopup } from '../actions';
-import { get_submit_path } from '../utils';
+import { getSubmitPath } from '../utils';
 import { submissionApiPath } from '../localconf';
 
 export const updateSearchForm = value => ({
@@ -43,7 +43,7 @@ export const deleteNode = ({ id, project }) => {
     return receiveDeleteResponse({ status, data, id, project });
   };
   return fetchWrapper({
-    path: `${get_submit_path(project)}/` + `entities/${id}`,
+    path: `${getSubmitPath(project)}/` + `entities/${id}`,
     method: 'DELETE',
     handler: receiveDelete,
   });
@@ -74,7 +74,7 @@ export const storeNodeInfo = ({ id }) => ({
 });
 
 export const fetchQueryNode = ({ id, project }) => fetchWrapper({
-  path: `${get_submit_path(project)}/` + `export?ids=${id}&format=json`,
+  path: `${getSubmitPath(project)}/` + `export?ids=${id}&format=json`,
   handler: receiveQueryNode,
 });
 

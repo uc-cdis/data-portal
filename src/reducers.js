@@ -6,7 +6,7 @@ import { user_profile } from './UserProfile/reducers';
 import { certificate } from './Certificate/reducers';
 import { login } from './Login/reducers';
 import { submission } from './Submission/reducers';
-import { homepage } from './Homepage/reducers';
+import homepage from './Homepage/reducers';
 import { query_nodes } from './QueryNode/reducers';
 import { popups } from './Popup/reducers';
 import { graphiql } from './GraphQLEditor/reducers';

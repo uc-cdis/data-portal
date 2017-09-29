@@ -5,7 +5,7 @@ import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import Select from 'react-select';
 
-import { json_to_string, get_submit_path } from '../utils';
+import { jsonToString, getSubmitPath } from '../utils';
 import { updatePopup } from '../actions';
 import { Popup } from '../Popup/component';
 import { clearDeleteSession, fetchQueryNode, submitSearchForm, deleteNode, storeNodeInfo } from './actions';
@@ -123,7 +123,7 @@ const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
   return (
     <li>
       <span>{value.submitter_id}</span>
-      <DownloadButton href={`${get_submit_path(project)}/export?format=json&ids=${value.id}`}>Download</DownloadButton>
+      <DownloadButton href={`${getSubmitPath(project)}/export?format=json&ids=${value.id}`}>Download</DownloadButton>
       <ViewButton onClick={onView}>View</ViewButton>
       <DeleteButton onClick={onDelete}>Delete</DeleteButton>
     </li>
@@ -163,7 +163,7 @@ export class QueryNode extends React.Component {
       // View node button clicked
       popup.state = 'viewNode';
       popup.popupEl = (<Popup
-        message={query_nodes.query_node.submitter_id} code={json_to_string(query_nodes.query_node)}
+        message={query_nodes.query_node.submitter_id} code={jsonToString(query_nodes.query_node)}
         onClose={
           () => {
             onUpdatePopup({ view_popup: false });
@@ -193,8 +193,8 @@ export class QueryNode extends React.Component {
       // User clicked on node 'Delete' button
       popup.state = 'confirmDelete';
       popup.popupEl = (<Popup
-        message={'Are you sure you want to delete this node?'} error={json_to_string(query_nodes.delete_error)}
-        code={json_to_string(query_nodes.query_node)}
+        message={'Are you sure you want to delete this node?'} error={jsonToString(query_nodes.delete_error)}
+        code={jsonToString(query_nodes.query_node)}
         onConfirm={
           () => {
             onDeleteNode({ project: params.project, id: query_nodes.stored_node_info });
@@ -207,8 +207,8 @@ export class QueryNode extends React.Component {
       // Error deleting node
       popup.state = 'deleteFailed';
       popup.popupEl = (<Popup
-        message={`Error deleting: ${query_nodes.query_node.submitter_id}`} error={json_to_string(query_nodes.delete_error)}
-        code={json_to_string(query_nodes.query_node)}
+        message={`Error deleting: ${query_nodes.query_node.submitter_id}`} error={jsonToString(query_nodes.delete_error)}
+        code={jsonToString(query_nodes.query_node)}
         onClose={() => { onClearDeleteSession(); onUpdatePopup({ nodedelete_popup: false }); }}
       />);
     } else if (typeof popups.nodedelete_popup === 'string' && query_nodes.query_node) {

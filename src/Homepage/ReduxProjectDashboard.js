@@ -14,8 +14,7 @@ const mapStateToProps = (state) => {
 };
 
 // Table does not dispatch anything
-const mapDispatchToProps = dispatch => ({
-});
+const mapDispatchToProps = function () { return {}; };
 
 export const ReduxProjectTable = connect(mapStateToProps, mapDispatchToProps)(ProjectTable);
 const DashboardWithReduxTable = DashboardWith(ReduxProjectTable);

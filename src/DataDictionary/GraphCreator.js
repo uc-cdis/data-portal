@@ -1,13 +1,13 @@
 import * as d3 from 'd3';
 import React from 'react';
-import { color, legend_creator, add_arrows, add_links, calculate_position } from '../utils';
+import { color, legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
 
 /**
- * create_dd_graph: Creates a Data Dictionary graph (rectangular nodes).
+ * createDDGraph: Creates a Data Dictionary graph (rectangular nodes).
  *    Needs position as property of each node (as fraction of 1 e.g. [0.5, 0.1] 
  *    for placement at (0.5*svg_width, 0.1*svg_height))
  */
-function create_dd_graph(nodes, edges, radius = 60, box_height_mult, box_width_mult, svg_height_mult) {
+function createDDGraph(nodes, edges, radius = 60, box_height_mult, box_width_mult, svg_height_mult) {
   const max_x_pos = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
   const max_y_pos = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
 
@@ -38,11 +38,11 @@ function create_dd_graph(nodes, edges, radius = 60, box_height_mult, box_width_m
   const legend = svg.append('g')
     .attr('transform', `translate(${width - legend_width * 2},${padding})`);
 
-  const link = add_links(graph, edges);
+  const link = addLinks(graph, edges);
 
-  add_arrows(graph);
+  addArrows(graph);
 
-  const calc_pos_obj = calculate_position(nodes, width, height);
+  const calc_pos_obj = calculatePosition(nodes, width, height);
   const num_rows = calc_pos_obj.fy_vals_length;
   nodes = calc_pos_obj.nodes;
 
@@ -130,7 +130,7 @@ function create_dd_graph(nodes, edges, radius = 60, box_height_mult, box_width_m
     }L${d.target.x},${d.target.y}`;
   }
 
-  legend_creator(legend, nodes, legend_width, color);
+  legendCreator(legend, nodes, legend_width, color);
 }
 
 /**
@@ -190,11 +190,11 @@ function formatType(type) {
 }
 
 /**
- * add_tables: Add tables to data dictionary graph.
+ * addTables: Add tables to data dictionary graph.
  *    Also hides the node names rendered by svg and replaces them with non-svg
  *    text so they remain clickable
  */
-function add_tables(nodes, box_width, box_height, svg_width, svg_height) {
+function addTables(nodes, box_width, box_height, svg_width, svg_height) {
   const table_div = d3.select('#graph_wrapper')
     .append('div')
     .style('position', 'absolute')
@@ -274,7 +274,7 @@ function add_tables(nodes, box_width, box_height, svg_width, svg_height) {
   d3.select('#graph_wrapper').select('#toggle_button').style('z-index', '1');
 }
 
-export function create_full_graph(nodes, edges) {
+export function createFullGraph(nodes, edges) {
   const radius = 60;
   const box_height = radius * 4;
   const box_width = radius * 4;
@@ -285,15 +285,15 @@ export function create_full_graph(nodes, edges) {
   const svg_width = max_x_pos * radius * 5;
   const svg_height = max_y_pos * radius * 5;
 
-  create_dd_graph(nodes, edges, radius, 4, 4, 5);
+  createDDGraph(nodes, edges, radius, 4, 4, 5);
 
   if (document.getElementById('table_wrapper') != null) {
     document.getElementById('table_wrapper').remove();
   }
 
-  add_tables(nodes, box_width, box_height, svg_width, svg_height);
+  addTables(nodes, box_width, box_height, svg_width, svg_height);
 }
 
 export function create_abridged_graph(nodes, edges) {
-  create_dd_graph(nodes, edges, 60, 1.5, 3, 3);
+  createDDGraph(nodes, edges, 60, 1.5, 3, 3);
 }

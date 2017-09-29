@@ -1,5 +1,5 @@
 import React from 'react';
-import { json_to_string, get_submit_path } from '../utils';
+import { jsonToString, getSubmitPath } from '../utils';
 import { updatePopup } from '../actions';
 import { Popup, SavePopup } from '../Popup/component';
 import { connect } from 'react-redux';
@@ -65,7 +65,7 @@ export const IdentityComponent = ({ user, user_profile, popups, submission, onCr
             popups.key_delete_popup === true &&
             <Popup
               message={constants.CONFIRM_DELETE_MSG}
-              error={json_to_string(user_profile.delete_error)}
+              error={jsonToString(user_profile.delete_error)}
               onConfirm={() => onDeleteKey(user_profile.request_delete_key,
                 popups.keypairs_api)}
               onCancel={() => {
@@ -78,7 +78,7 @@ export const IdentityComponent = ({ user, user_profile, popups, submission, onCr
             popups.save_key_popup === true &&
             <SavePopup
               message={constants.SECRET_KEY_MSG}
-              error={json_to_string(user_profile.create_error)}
+              error={jsonToString(user_profile.create_error)}
               display={user_profile.access_key_pair}
               savingStr={user_profile.str_access_key_pair}
               onClose={() => {

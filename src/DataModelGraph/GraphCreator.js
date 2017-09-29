@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import React from 'react';
-import { color, legend_creator, add_arrows, add_links, calculate_position } from '../utils';
+import { color, legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
 
 /**
  * create_dm_graph: Creates a Data Model graph (oval nodes).
@@ -31,11 +31,11 @@ export function create_dm_graph(nodes, edges) {
   const legend = svg.append('g')
     .attr('transform', `translate(${width - legend_width},${padding})`);
 
-  const link = add_links(graph, edges);
+  const link = addLinks(graph, edges);
 
-  add_arrows(graph);
+  addArrows(graph);
 
-  const calc_pos_obj = calculate_position(nodes, width, height);
+  const calc_pos_obj = calculatePosition(nodes, width, height);
   const num_rows = calc_pos_obj.fy_vals_length;
   nodes = calc_pos_obj.nodes;
 
@@ -156,5 +156,5 @@ export function create_dm_graph(nodes, edges) {
     }L${d.target.x},${d.target.y}`;
   }
 
-  legend_creator(legend, nodes, legend_width, color);
+  legendCreator(legend, nodes, legend_width, color);
 }

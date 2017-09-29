@@ -7,7 +7,7 @@ import { RelayProjectTable } from './RelayProjectTable';
 import { withAuthTimeout, withBoxAndNav } from '../utils';
 import { GQLHelper } from '../gqlHelper';
 import { getReduxStore } from '../reduxStore';
-
+import Spinner from '../components/Spinner';
 
 
 const gqlHelper = GQLHelper.getGQLHelper();
@@ -91,7 +91,7 @@ export class RelayProjectDashboard extends React.Component {
 
       return <DashboardWithRelayTable projectList={projectList} summaryCounts={summaryCounts} />;
     }
-    return <div>Loading</div>;
+    return <div>Loading... <Spinner /></div>;
   }
 
   render() {

@@ -3,6 +3,7 @@ import { QueryRenderer, graphql } from 'react-relay';
 import environment from '../environment';
 import { RelayExplorerComponent } from './component';
 import { GQLHelper } from '../gqlHelper';
+import Spinner from '../components/Spinner';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
@@ -24,7 +25,7 @@ class ExplorerPage extends React.Component {
           } else if (props) {
             return <RelayExplorerComponent viewer={props.viewer} />;
           }
-          return <div>Loading</div>;
+          return <div>Loading... <Spinner /></div>;
         }
         }
       />);

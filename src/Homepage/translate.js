@@ -7,9 +7,9 @@ let singleton;
  */
 export default class Translator {
   constructor(appName, language) {
-    this._appName = appName;
-    this._language = language;
-    this._mode = (appName === 'bhc' || (appName === 'bpa' && !dev)) ? 'study' : 'exp';
+    this.appName = appName;
+    this.language = language;
+    this.mode = (appName === 'bhc' || (appName === 'bpa' && !dev)) ? 'study' : 'exp';
   }
 
   /**
@@ -18,7 +18,7 @@ export default class Translator {
    * @return {String} translation
    */
   translate(word) {
-    if (this._mode === 'exp') {
+    if (this.mode === 'exp') {
       return word;
     }
     return word.replace(/^Experiments/, 'Studies',
@@ -33,7 +33,7 @@ export default class Translator {
    * Little factory
    */
   static getTranslator(appName = app, language = navigator.language) {
-    if (appName === singleton._appName && language === singleton._language) {
+    if (appName === singleton.appName && language === singleton.language) {
       return singleton;
     }
     return new Translator(appName, language);

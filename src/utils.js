@@ -1,19 +1,20 @@
 import React from 'react';
+import * as d3 from 'd3';
+
 import { submissionApiPath } from './localconf';
 import { Box, Body, Margin } from './theme';
 import Nav from './Nav/component';
 import Footer from './components/Footer';
 import { AuthTimeoutPopup } from './Popup/component';
-import * as d3 from 'd3';
 
-export const get_submit_path = (project) => {
+export const getSubmitPath = (project) => {
   const path = project.split('-');
   const program_name = path[0];
   const project_code = path.slice(1).join('-');
   return `${submissionApiPath}/${program_name}/${project_code}`;
 };
 
-export const json_to_string = (data) => {
+export const jsonToString = (data) => {
   const replacer = (key, value) => {
     if (value === null) {
       return undefined;
@@ -23,7 +24,7 @@ export const json_to_string = (data) => {
   return JSON.stringify(data, replacer, '  ');
 };
 
-export const predict_file_type = (data, file_type) => {
+export const predictFileType = (data, file_type) => {
   const predict_type = file_type;
   const json_type = 'application/json';
   const tsv_type = 'text/tab-separated-values';
@@ -69,7 +70,7 @@ export function asyncSetInterval(lambda, timeoutMs) {
   let isRunningGuard = false;
   return setInterval(
     () => {
-      if (! isRunningGuard) {
+      if (!isRunningGuard) {
         isRunningGuard = true;
 
         lambda().then(
@@ -201,7 +202,7 @@ export const color = {
   data_file: d3.schemeCategory20[17],
 };
 
-export function legend_creator(legend_g, nodes, legend_width, color_scheme) {
+export function legendCreator(legend_g, nodes, legend_width, color_scheme) {
   // Find all unique categories 
   const unique_categories_array = nodes.reduce((acc, elem) => {
     if (acc.indexOf(elem.category) === -1) {
@@ -243,7 +244,7 @@ export function legend_creator(legend_g, nodes, legend_width, color_scheme) {
 }
 
 
-export function add_arrows(graph_svg) {
+export function addArrows(graph_svg) {
   graph_svg.append('svg:defs')
     .append('svg:marker')
     .attr('id', 'end-arrow')
@@ -258,7 +259,7 @@ export function add_arrows(graph_svg) {
     .attr('d', 'M0,-5L10,0L0,5');
 }
 
-export function add_links(graph_svg, edges) {
+export function addLinks(graph_svg, edges) {
   return graph_svg.append('g')
     .selectAll('path')
     .data(edges)
@@ -271,7 +272,7 @@ export function add_links(graph_svg, edges) {
 }
 
 
-export function calculate_position(nodes, graph_width, graph_height) {
+export function calculatePosition(nodes, graph_width, graph_height) {
   // Calculate the appropriate position of each node on the graph
   const fy_vals = [];
   for (let i = 0; i < nodes.length; i++) {
@@ -282,4 +283,15 @@ export function calculate_position(nodes, graph_width, graph_height) {
     }
   }
   return { nodes, fy_vals_length: fy_vals.length };
+}
+
+
+/**
+ * Type agnostic compare thunk for Array.sort
+ * @param {*} a 
+ * @param {*} b 
+ */
+export function sortCompare(a, b) {
+  if (a === b) { return 0; }
+  return a < b ? -1 : 1;
 }

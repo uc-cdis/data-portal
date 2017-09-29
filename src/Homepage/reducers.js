@@ -1,4 +1,4 @@
-export const homepage = (state = {}, action) => {
+const homepage = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_PROJECT_LIST': {
     //
@@ -10,7 +10,7 @@ export const homepage = (state = {}, action) => {
       const old = projectsByName[proj.name] || {};
       projectsByName[proj.name] = Object.assign(old, proj);
     });
-    const summaryCounts = Object.assign( {}, state.summaryCounts || {}, action.data.summaryCounts );
+    const summaryCounts = Object.assign({}, state.summaryCounts || {}, action.data.summaryCounts);
     return { ...state, projectsByName, summaryCounts };
   }
   case 'RECEIVE_PROJECT_DETAIL': {
@@ -23,3 +23,4 @@ export const homepage = (state = {}, action) => {
   }
 };
 
+export default homepage;

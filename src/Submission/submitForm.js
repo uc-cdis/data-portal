@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { button, UploadButton, SubmitButton, Required_Notification, Dropdown, Input, Label } from '../theme';
 import React, { Component, PropTypes } from 'react';
-import { json_to_string } from '../utils';
+import { jsonToString } from '../utils';
 import { Toggle } from 'material-ui';
 
 
@@ -272,7 +272,7 @@ class SubmitFormContainer extends Component {
   			return otherKeys;
    };
 
-   const value = json_to_string(this.state.form);
+   const value = jsonToString(this.state.form);
    this.props.onUploadClick(value, 'application/json');
   	};
 

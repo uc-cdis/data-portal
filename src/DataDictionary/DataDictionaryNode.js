@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router';
 import { button } from '../theme';
 import { createNodesAndEdges } from '../utils';
-import { create_full_graph, create_abridged_graph } from './GraphCreator';
+import { createFullGraph, create_abridged_graph } from './GraphCreator';
 import { ToggleButton } from '../DataModelGraph/component';
 
 const LinkBullet = ({ link }) => {
@@ -250,7 +250,7 @@ class CreateGraph extends React.Component {
   }
   componentDidMount() {
     if (this.state.full_toggle) {
-      create_full_graph(this.props.nodes, this.props.edges);
+      createFullGraph(this.props.nodes, this.props.edges);
     } else {
       if (document.getElementById('table_wrapper') != null) {
         document.getElementById('table_wrapper').remove();
@@ -260,7 +260,7 @@ class CreateGraph extends React.Component {
   }
   componentDidUpdate() {
     if (this.state.full_toggle) {
-      create_full_graph(this.props.nodes, this.props.edges);
+      createFullGraph(this.props.nodes, this.props.edges);
     } else {
       if (document.getElementById('table_wrapper') != null) {
         document.getElementById('table_wrapper').remove();

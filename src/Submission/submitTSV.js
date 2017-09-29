@@ -1,5 +1,5 @@
 import React from 'react';
-import { predict_file_type } from '../utils';
+import { predictFileType } from '../utils';
 import brace from 'brace';
 import 'brace/mode/json';
 import 'brace/theme/kuroir';
@@ -55,7 +55,7 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
       } else {
         var data = e.target.result;
       }
-      onUploadClick(data, predict_file_type(data, file_type));
+      onUploadClick(data, predictFileType(data, file_type));
     };
     reader.readAsBinaryString(f);
   };
