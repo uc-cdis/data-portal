@@ -51,7 +51,7 @@ const helperSingleton = {
         }
     }`,
 
-    explorerPageFragment: graphql.experimental`
+    explorerPageFragment: graphql`
     fragment gqlHelperExplorerFragment on viewer
     @argumentDefinitions(
         selected_projects: {type: "[String]"},
@@ -70,7 +70,7 @@ const helperSingleton = {
       }{% endfor %}
     }
   `,
-  explorerRefreshQuery: graphql.experimental`
+  explorerRefreshQuery: graphql`
     query gqlHelperExplorerRefreshQuery (
       $selected_projects: [String],
       $selected_file_types: [String],
