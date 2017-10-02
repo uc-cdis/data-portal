@@ -91,7 +91,7 @@ export class RelayProjectDashboard extends React.Component {
 
       return <DashboardWithRelayTable projectList={projectList} summaryCounts={summaryCounts} />;
     }
-    return <div>Loading... <Spinner /></div>;
+    return <Spinner />;
   }
 
   render() {

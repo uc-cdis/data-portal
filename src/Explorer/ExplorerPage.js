@@ -25,7 +25,7 @@ class ExplorerPage extends React.Component {
           } else if (props) {
             return <RelayExplorerComponent viewer={props.viewer} />;
           }
-          return <div>Loading... <Spinner /></div>;
+          return <Spinner />;
         }
         }
       />);

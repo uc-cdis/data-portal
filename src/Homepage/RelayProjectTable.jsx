@@ -66,7 +66,7 @@ export class RelayProjectTable extends ProjectTable {
 
           return <ProjectTR project={proj} />;
         }
-        return <tr><td><b>Loading... <Spinner /></b></td></tr>;
+        return <tr><td><Spinner /></td></tr>;
       }
       }
     />);
