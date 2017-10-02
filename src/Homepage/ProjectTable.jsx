@@ -13,8 +13,8 @@ const tor = Translator.getTranslator();
 
 export const Table = styled.table`
   border-collapse: collapse;
+  border: 1px solid #dedede;
   overflow: auto;
-  box-shadow:0 0 6px rgba(0,0,0,0.5);
   margin: 1em 0em;
   text-align:center;
   width:100%;
@@ -27,6 +27,7 @@ export const TableHead = styled.thead`
 
 export const TableRow = styled.tr`
   padding: 0rem 0rem;
+  border-bottom: 1px solid #dedede;
   color: #222;
   ${
   props => (props.summaryRow ? `

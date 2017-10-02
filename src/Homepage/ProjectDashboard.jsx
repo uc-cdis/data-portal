@@ -32,6 +32,8 @@ const CountBox = styled.div`
     li {
       float: left;
       width: 50%;
+      padding-left: 10px;
+      padding-top: 10px;
     }
   }
 `;
@@ -83,9 +85,6 @@ class CountCard extends React.Component {
             <Count>{ this.props.aliquotCount }</Count>
             <span>Aliquots</span></li>
         </ul>
-
-        <Link to="/query" title="Search"><CircleButton><ActionSearch /></CircleButton></Link>
-        <Link to="/dd" title="View Dictionary"><CircleButton><ActionBook /></CircleButton></Link>
       </CountBox>
     );
   }

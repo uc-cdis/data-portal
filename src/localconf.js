@@ -53,7 +53,7 @@ function buildConfig(opts) {
       { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
-      { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
+      // { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
     ];
     gqlSetup.experimentType = 'study';
   } else if (app === 'edc') {
