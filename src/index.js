@@ -1,148 +1,144 @@
 import React from 'react';
-import Relay from 'react-relay';
-import { dict } from './dictionary.js';
-import { persistStore, autoRehydrate } from 'redux-persist';
 import { render } from 'react-dom';
-import GraphiQL from 'graphiql';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import { createStore, applyMiddleware, compose } from 'redux';
-import reducers from './reducers';
+import { Router, Route, Link } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
+import { ThemeProvider } from 'styled-components';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import 'react-select/dist/react-select.css';
+
 import { requireAuth, enterHook, fetchUser } from './actions';
 import { clearResultAndQuery } from './QueryNode/actions';
 import Login from './Login/component';
-import QueryNode from './QueryNode/component';
+import AmbiHomepage from './Homepage/AmbiHomepage';
+import ExplorerPage from './Explorer/ExplorerPage';
+import RelayExplorer from './Explorer/component';
+import QueryNode from './QueryNode/QueryNode';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
-import Submission from './components/ProjectListComponent';
 import ProjectSubmission from './Submission/component';
-import UserProfile from './UserProfile/component.js';
-import Certificate from './Certificate/component.js';
-import GraphQLQuery from "./GraphQLEditor/component";
-import { loginSubmissionAPI, setProject } from './Submission/actions';
-import { fetchDictionary } from './queryactions.js';
+import UserProfile from './UserProfile/component';
+import Certificate from './Certificate/component';
+import GraphQLQuery from './GraphQLEditor/component';
+import { loginSubmissionAPI } from './Submission/actions';
+import { fetchDictionary } from './queryactions';
 import { loginUserProfile, fetchAccess } from './UserProfile/actions';
 import { fetchSchema } from './GraphQLEditor/actions';
-import { Router, Route, Link, applyRouterMiddleware } from 'react-router';
-import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
-import 'react-select/dist/react-select.css';
-import { app, mock_store, dev, graphql_path } from './localconf.js';
-import { ThemeProvider } from 'styled-components';
+import { app } from './localconf';
 import browserHistory from './history';
-import { theme, Box } from './theme';
-import { clearCounts } from './DataModelGraph/actions'
-import { required_certs } from './configs';
-import { withBoxAndNav, withAuthTimeout } from './utils';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import useRelay from 'react-router-relay'
+import { theme } from './theme';
+import { clearCounts } from './DataModelGraph/actions';
+import { asyncSetInterval, withBoxAndNav, withAuthTimeout } from './utils';
+import { getReduxStore } from './reduxStore';
 
 
-let store;
-const configureStore = () => {
-  return new Promise((resolve, reject) => {
-    try {
-      if (dev === true) {
-        let data = {};
-        if (mock_store) {
-          data = {user: {username: 'test', certificates_uploaded: required_certs }, submission: {dictionary: dict, node_types: Object.keys(dict).slice(2) }, status: {}};
-        }
-        const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-        store = compose(applyMiddleware(thunk, routerMiddleware(browserHistory)), autoRehydrate())(createStore)(
-          reducers,
-          data,
-          window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-        );
-      }
-      else {
-        store = compose(applyMiddleware(thunk, routerMiddleware(browserHistory)), autoRehydrate())(createStore)(
-          reducers,
-          {user: {}, status: {}},
-          autoRehydrate()
-        );
-      }
-
-      setInterval(() => store.dispatch(fetchUser()), 10000);
-      const persister = persistStore(store, { whitelist: ['certificate']}, () => { console.log('rehydration complete'); resolve(store)});
-    } catch (e) {
-      reject(e);
-    }
-  });
-}
-
+// Needed for onTouchTap
+// http://stackoverflow.com/a/34015469/988941
+injectTapEventPlugin();
 
 const NoMatch = () => (
   <div>
-    <Link to={`/`}>Page Not Found</Link>
+    <Link to={'/'}>Page Not Found</Link>
   </div>
 );
 
-Relay.injectNetworkLayer(
-  new Relay.DefaultNetworkLayer(graphql_path,
-    {credentials: 'same-origin'})
-);
 
-const ViewerQueries = { viewer: () => Relay.QL`query { viewer }` }
+let initialized = false;
 
 // render the app after the store is configured
 async function init() {
-  const store = await configureStore();
+  if (initialized) {
+    console.log('WARNING: attempt to re-initialize application');
+    return;
+  }
+  initialized = true;
+  const store = await getReduxStore();
+
+  // not necessary to wait for this? ... await store.dispatch( fetchUser() );
+  asyncSetInterval(() => store.dispatch(fetchUser()), 10000);
+
   const history = syncHistoryWithStore(browserHistory, store);
   history.listen(location => console.log(location.pathname));
   if (app !== 'gdc') {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-        <MuiThemeProvider>
-          <Router history={history} environment={Relay.Store}
-                  render={applyRouterMiddleware(useRelay)}
-                  forceFetch>
-            <Route path='/login' component={Login} />
-            <Route path='/' onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
-                   component={(Submission)}
-                   queries={ViewerQueries} />
-            <Route path='/query'
-                   onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts()))
-                     .then(() => store.dispatch(fetchSchema())))}
-                   component={withBoxAndNav(withAuthTimeout(GraphQLQuery))} />
-            <Route path='/identity'
-              onEnter={requireAuth(store, () => store.dispatch(loginUserProfile()))}
-              component={withBoxAndNav(withAuthTimeout(UserProfile))} />
-            <Route path='/quiz'
-              onEnter={requireAuth(store)}
-              component={withBoxAndNav(withAuthTimeout(Certificate))} />
-            <Route path='/dd'
-              onEnter={enterHook(store, fetchDictionary)}
-              component={withBoxAndNav(DataDictionary)} />
-            <Route path='/dd/:node'
-              onEnter={enterHook(store, fetchDictionary)}
-              component={withBoxAndNav(DataDictionaryNode)} />
-            <Route path='/:project'
-              onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))}
-              component={withBoxAndNav(withAuthTimeout(ProjectSubmission))} />
-            <Route path='/:project/search'
-              onEnter={requireAuth(store, (nextState) => { return store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))); })}
-              component={withBoxAndNav(withAuthTimeout(QueryNode))} />
-          </Router>
-         </MuiThemeProvider> 
+          <MuiThemeProvider>
+            <Router history={history}>
+              <Route path="/login" component={Login} />
+              <Route
+                path="/" onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
+                component={AmbiHomepage}
+              />
+              <Route
+                path="/query"
+                onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts()))
+                  .then(() => store.dispatch(fetchSchema())))}
+                component={withBoxAndNav(withAuthTimeout(GraphQLQuery))}
+              />
+              <Route
+                path="/identity"
+                onEnter={requireAuth(store, () => store.dispatch(loginUserProfile()))}
+                component={withBoxAndNav(withAuthTimeout(UserProfile))}
+              />
+              <Route
+                path="/quiz"
+                onEnter={requireAuth(store)}
+                component={withBoxAndNav(withAuthTimeout(Certificate))}
+              />
+              <Route
+                path="/dd"
+                onEnter={enterHook(store, fetchDictionary)}
+                component={withBoxAndNav(DataDictionary)}
+              />
+              <Route
+                path="/dd/:node"
+                onEnter={enterHook(store, fetchDictionary)}
+                component={withBoxAndNav(DataDictionaryNode)}
+              />
+              <Route
+                exact 
+                path="/files"
+                onEnter={
+                  requireAuth(store, nextState => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))))
+                }
+                component={ExplorerPage}
+              />
+              <Route
+                path="/:project"
+                onEnter={
+                  requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))
+                }
+                component={withBoxAndNav(withAuthTimeout(ProjectSubmission))}
+              />
+              <Route
+                path="/:project/search"
+                onEnter={requireAuth(store, nextState => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))))}
+                component={withBoxAndNav(withAuthTimeout(QueryNode))}
+              />
+            </Router>
+          </MuiThemeProvider>
         </ThemeProvider>
       </Provider>,
-    document.getElementById('root')
-  );
+      document.getElementById('root'),
+    );
   } else {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <Route path='/login' component={Login} />
-            <Route path='/'
+            <Route path="/login" component={Login} />
+            <Route
+              path="/"
               onEnter={requireAuth(store, () => store.dispatch(fetchAccess()))}
-              component={withBoxAndNav(withAuthTimeout(IdentityAccess))} />
+              component={withBoxAndNav(withAuthTimeout(UserProfile))}
+            />
           </Router>
         </ThemeProvider>
       </Provider>,
-    document.getElementById('root')
-  );
+      document.getElementById('root'),
+    );
   }
 }
 init();

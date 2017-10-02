@@ -17,14 +17,14 @@ export const GraphBox = styled.div`
 `;
 
 
-let parameters = {};
+const parameters = {};
 
-const ProjectSubmissionComponent = ({schema}) => {
-  let graphqlSchema = buildClientSchema(schema.data);
-  let editQuery = (newQuery) => {
+const ProjectSubmissionComponent = ({ schema }) => {
+  const graphqlSchema = buildClientSchema(schema.data);
+  const editQuery = (newQuery) => {
     parameters.query = newQuery;
   };
-  let editVariables = (newVariables) => {
+  const editVariables = (newVariables) => {
     parameters.variables = newVariables;
   };
 
@@ -38,19 +38,18 @@ const ProjectSubmissionComponent = ({schema}) => {
           query={parameters.query}
           variables={parameters.variables}
           onEditQuery={editQuery}
-          onEditVariables={editVariables} />
+          onEditVariables={editVariables}
+        />
       </GraphBox>
     </div>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    'schema': state.graphiql.schema
-  }
-};
+const mapStateToProps = state => ({
+  schema: state.graphiql.schema,
+});
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
 });
 
 const GraphQLQuery = connect(mapStateToProps, mapDispatchToProps)(ProjectSubmissionComponent);

@@ -1,12 +1,16 @@
 module.exports = {
+    //"extends": "eslint:recommended",
+    "extends": "airbnb",
+    "root":true,
     "env": {
         "browser": true,
-        "es6": true
+        "es6": true,
+        "jest": true
     },
-    "extends": "eslint:recommended",
+    "parser": "babel-eslint",
     "parserOptions": {
         "sourceType": "module",
-        "ecmaVersion": 2017,
+        "ecmaVersion": 6,
         "ecmaFeatures": {
           "jsx": true,
           "spread": true

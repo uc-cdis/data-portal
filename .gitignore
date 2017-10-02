@@ -1,9 +1,9 @@
 node_modules/*
 src/bundle.js
+src/gqlHelper.js
 bundle.js
 index.html
 data/schema.graphql
 data/schema.json
 __generated__/
 *.log
-

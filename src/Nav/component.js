@@ -2,34 +2,45 @@ import React from 'react';
 import { lighten } from 'polished';
 import { logoutAPI } from '../actions';
 import { connect } from 'react-redux';
-import { basename, userapi_path, nav_items } from '../localconf.js';
+import { basename, userapiPath, navItems } from '../localconf';
 import { Link } from 'react-router';
 import styled from 'styled-components';
-import { cube } from '../theme.js';
+import { cube } from '../theme';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import FlatButton from 'material-ui/FlatButton';
 
 const NavLeft = styled.nav`
   top: 0px;
-  left: 100px;
-  position: absolute;
+  float: left;
+`;
+
+const Header = styled.header`
+  width: 100%;
+  // background-color: #dfdfdf;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  padding: 10px 100px;
+  overflow: hidden;
 `;
 
 const NavRight = styled.nav`
-  position: absolute;
-  right: 100px;
-  top: 0;
+  float: right;
   color: white;
 `;
 
 // TODO: due to issue https://github.com/styled-components/styled-components/issues/439,
 // bgcolor prop triggers react warning now, need to fix
 const NavItem = styled(Link)`
-  background: ${props => props.bgcolor};
-  &:hover,
-  &:focus,
-  &:active {
-    background: ${props =>lighten(0.1, props.bgcolor)};
+  margin-right: 20px;
+  span {
+    vertical-align: middle;
+    padding-right: 5px;
+    padding-left: 0px !important;
   }
-  ${cube};
+  button {
+    // color: white !important;
+  }
+  height: 100%;
 `;
 const Logo = styled(Link)`
   background: ${props => props.theme.color_primary};
@@ -59,27 +70,32 @@ const Logout = styled(Link)`
   ${cube};
 `;
 
-const NavComponent = ({user, onLogoutClick}) => (
-    <header>
-      <NavLeft>
-        {nav_items.map((item, i) => <NavItem key={i} bgcolor={item.color} to={item.link} className={item.icon}></NavItem>)}
-      </NavLeft>
-      <NavRight>
-        { user.username !== undefined &&
-        <ul>
-          <Logo to='/'><span>{user.username}</span></Logo>
-            <Logout to='#' onClick={onLogoutClick}>
-              <span  className='fui-exit'></span><span>Logout</span>
-            </Logout>
-        </ul>
-        }
-    </NavRight>
-  </header>
-);
-const mapStateToProps = (state)=> {return {user: state.user}};
+const NavIcon = styled.div`
+  vertical-align: middle;
+  padding-left: 16px;
+`;
 
-const mapDispatchToProps = (dispatch) => ({
-  onLogoutClick: ()=> dispatch(logoutAPI())
+const NavComponent = ({ user, onLogoutClick, classes }) => (
+  <Header>
+    <NavLeft>
+      {navItems.map((item, i) => <NavItem key={i} to={item.link}><FlatButton primary={i == 0} label={item.name}><NavIcon className="material-icons">{item.icon}</NavIcon> </FlatButton></NavItem>)}
+    </NavLeft>
+    <NavRight>
+      { user.username !== undefined &&
+        <ul>
+          <NavItem to="/"><FlatButton label={user.username} /></NavItem>
+          <NavItem to="#" onClick={onLogoutClick}>
+            <FlatButton><span className="fui-exit" /></FlatButton>
+          </NavItem>
+        </ul>
+      }
+    </NavRight>
+  </Header>
+);
+const mapStateToProps = state => ({ user: state.user });
+
+const mapDispatchToProps = dispatch => ({
+  onLogoutClick: () => dispatch(logoutAPI()),
 });
 const Nav = connect(mapStateToProps, mapDispatchToProps)(NavComponent);
-export default Nav
+export default Nav;
