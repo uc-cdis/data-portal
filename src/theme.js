@@ -57,7 +57,6 @@ export const Box = styled.div`
 
 export const Body = styled.div`
   padding: 50px 100px;
-  overflow: hidden;
 `;
 
 export const Margin = styled.div`

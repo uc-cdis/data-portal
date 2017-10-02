@@ -71,8 +71,10 @@ class QueryForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectValue: 'experiment',
+      selectValue: null,
     };
+    this.updateValue = this.updateValue.bind(this);
+    this.handleQuerySubmit = this.handleQuerySubmit.bind(this);
   }
 
   handleQuerySubmit(event) {
