@@ -1,30 +1,29 @@
 import React, { Component, PropTypes } from 'react';
-import 'react-table/react-table.css';
-import Relay, { createRefetchContainer, graphql } from 'react-relay';
+import { createRefetchContainer } from 'react-relay';
 import { withAuthTimeout, withBoxAndNav } from '../utils';
 import { GQLHelper } from '../gqlHelper';
 import { getReduxStore } from '../reduxStore';
-import ExplorerTable from './ExplorerTable';
+import ExplorerTabPanel from './ExplorerTabPanel';
 import SideBar from './ExplorerSideBar';
 
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
-const passFilter = (filterList, item) => filterList.length === 0 || filterList.includes(item);
-
 class ExplorerComponent extends Component {
-  constructor(props) {
-    super(props);
+  /**
+   * Subscribe to Redux updates at mount time
+   */ 
+  componentWillMount() {
+    getReduxStore().then(
+      (store) => {
+        store.subscribe(
+          () => {
+            this.reduxFilterListener(store);
+          },
+        );
+      },
+    );
   }
-
-
-  static propTypes = {
-    submission: PropTypes.object,
-    selected_filters: PropTypes.object,
-    viewer: PropTypes.object,
-  };
-  viewer = {};
-
 
   /**
    * Unsubscribe from Redux updates at unmount time
@@ -39,82 +38,76 @@ class ExplorerComponent extends Component {
   /**
    * Listens for filter updates in redux
    */
-  _reduxFilterListener(store) {
+  reduxFilterListener(store) {
     const explorerState = store.getState().explorer;
     if (!explorerState) {
       return;
     }
-    const selected_filters = explorerState.selected_filters;
-    if (! selected_filters || !explorerState.filesList) {
-      return;
-    }
-    if (explorerState.refetch_needed) {
-      this._loadMore(selected_filters);
-    } else if (explorerState.refiltering_needed) {
-      const filesList = explorerState.filesList;
-      const filteredFilesList = filesList.filter(file => (
-        passFilter(selected_filters.projects, file.project_id)
-        && passFilter(selected_filters.file_types, file.type)
-        && passFilter(selected_filters.file_formats, file.format)),
-      );
-      getReduxStore().then(
-        (store) => {
-          store.dispatch({ type: 'FILTERED_FILES_CHANGED', data: filteredFilesList });
-        },
-      );
+    if (explorerState.refetch_data || explorerState.more_data === 'REQUESTED') {
+      this.loadMore(explorerState.selected_filters,
+        explorerState.pageSize * explorerState.pagesPerTab,
+        explorerState.cursors);
     }
   }
 
-  /**
-   * Subscribe to Redux updates at mount time
-   */ 
-  componentWillMount() {
-    getReduxStore().then(
-      (store) => {
-        store.subscribe(
-          () => {
-            this._reduxFilterListener(store);
-          },
-        );
-      },
-    );
-  }
-
-  createList = () => {
-    const viewer = this.props.viewer || {
-      fileData1: [],
-    };
-
-    return GQLHelper.extractFileInfo(viewer).fileData.map(
-      file => ({ project_id: file.project_id,
+  mapDataToFile = filesList => filesList.map(
+    file => (
+      { project_id: file.project_id,
         name: file.file_name,
         category: file.data_category,
         format: file.data_format,
         type: file.data_type,
-        size: file.file_size }),
+        size: file.file_size,
+      }
+    ),
+  );
+
+  createList = () => {
+    const viewer = this.props.viewer || {
+      fileData: [],
+    };
+
+    const data = GQLHelper.extractFileDataToDict(viewer);
+    return Object.keys(data).reduce(
+      (d, key) => {
+        const result = d;
+        result[key] = this.mapDataToFile(data[key]);
+        return result;
+      }, {},
     );
-    /*
-    const files1 = mapFile(viewer.submitted_aligned_reads);
-    const files2 = mapFile(viewer.submitted_unaligned_reads);
-    const files3 = mapFile(viewer.submitted_somatic_mutation);
-    const files4 = mapFile(viewer.submitted_methylation);
-    const files5 = mapFile(viewer.submitted_copy_number);
-    return [...files1, ...files2, ...files3, ...files4, ...files5 ];
-    */
-    return fileList;
   };
 
-  updateFilesList = () => {
-    const filesList = this.createList();
+  updateFilesMap = () => {
+    const receivedFilesMap = this.createList();
     getReduxStore().then(
       (store) => {
-        const explorerState = store.getState().explorer || {};
-        if (! explorerState.filesList) {
+        const explorerState = store.getState().explorer;
+        const newLastPageSizes = Object.keys(receivedFilesMap).reduce((d, key) => {
+          const result = d;
+          result[key] = receivedFilesMap[key].length % explorerState.pageSize;
+          return result;
+        }, {});
+        const viewer = this.props.viewer || {
+          fileData: [],
+        };
+        const cursors = GQLHelper.updateOffset(viewer, explorerState.cursors || {});
+        let selectedFilters = { projects: [], file_types: [], file_formats: [] };
+        if (explorerState.refetch_data) {
+          selectedFilters = explorerState.selected_filters;
           store.dispatch({ type: 'RECEIVE_FILE_LIST',
-            data: { filesList, selected_filters: { projects: [], file_types: [], file_formats: [] } } });
-        } else if (explorerState.refetch_needed) {
-          store.dispatch({ type: 'RECEIVE_FILE_LIST',
-            data: { filesList, selected_filters: explorerState.selected_filters } });
+            data: { filesMap: receivedFilesMap,
+              selected_filters: selectedFilters,
+              lastPageSizes: newLastPageSizes,
+              cursors,
+            } });
+        } else if (explorerState.more_data === 'REQUESTED') {
+          selectedFilters = explorerState.selected_filters;
+          store.dispatch({ type: 'RECEIVE_NEXT_PART',
+            data: { filesMap: receivedFilesMap,
+              selected_filters: selectedFilters,
+              lastPageSizes: newLastPageSizes,
+              cursors,
+            } });
         }
       },
     );
@@ -123,25 +116,23 @@ class ExplorerComponent extends Component {
   /**
    * Fetch data from relay in response to filter change
    * or whatever ...
-   * 
-   * @param {*} selected_filters 
+   *
+   * @param {*} selectedFilters
+   * @param pageSize
+   * @param cursors
    */
-  _loadMore(selected_filters) {
-    // Increments the number of stories being rendered by 10.
-    const refetchVariables = {
-      selected_projects: selected_filters.projects,
-      selected_file_formats: selected_filters.file_formats,
-      selected_file_types: selected_filters.file_types,
-    };
+  loadMore(selectedFilters, pageSize, cursors) {
+    // Increments the number of stories being rendered by pageSize.
+    const refetchVariables = GQLHelper.getExplorerVariables(selectedFilters, pageSize, cursors);
     this.props.relay.refetch(refetchVariables, null);
   }
 
   render() {
-    this.updateFilesList();
+    this.updateFilesMap();
     return (
       <div>
         <SideBar />
-        <ExplorerTable />
+        <ExplorerTabPanel />
       </div>
     );
   }

@@ -73,7 +73,7 @@ export const Table = styled.table`
   * {
     box-sizing: border-box;
     }
-    display: -webkit-box;
+  display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
@@ -85,7 +85,7 @@ export const Table = styled.table`
   align-items: stretch;
   width: 100%;
   border-collapse: collapse;
-  overflow: auto;
+  overflow: hidden;
   -webkit-box-shadow: 0 0 6px rgba(0,0,0,0.5);
   box-shadow:0 0 6px rgba(0,0,0,0.5);
   margin: 1em 0em;
@@ -96,40 +96,40 @@ export const TableHead = styled.thead`
   color: white;
   display: -webkit-box;
   display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    text-align: left;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-align: left;
 `;
 
 export const TableRow = styled.tr`
   padding: 0rem 0rem;
-    color: #222;
-    border-bottom: 1px solid rgba(0,0,0,0.065);
-    vertical-align: middle;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    display: table;
-    font-size: 1.3rem;
-    width: 100%;
+  color: #222;
+  border-bottom: 1px solid rgba(0,0,0,0.065);
+  vertical-align: middle;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  display: table;
+  font-size: 1.3rem;
+  width: 100%;
 `;
 
 export const TableData = styled.td`
-    width: ${props => (props.right ? '80%' : '20%')};
-    background: ${props => (props.first_cr ? TableBarColor : 'white')};
-    color: ${props => (props.first_cr ? 'white' : '#222')};
-    display: table-cell;
-    padding: 0.5rem 1rem;
-    overflow: auto;
-    height: 100%;
+  width: ${props => (props.right ? '80%' : '20%')};
+  background: ${props => (props.first_cr ? TableBarColor : 'white')};
+  color: ${props => (props.first_cr ? 'white' : '#222')};
+  display: table-cell;
+  padding: 0.5rem 1rem;
+  overflow: auto;
+  height: 100%;
 `;
 
 
@@ -195,4 +195,39 @@ export const Label = styled.label`
 export const Sidebar = styled.div`
   float:left;
   border-top: 2px solid tomato;
+`;
+
+export const Cell = styled.li`
+  display: block;
+  float: left;
+  padding: 0.25rem 0px 0.25rem 0.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+export const ULTable = styled.ul`
+  overflow: hidden;
+`;
+
+export const DivTable = styled.div`
+  overflow: hidden;
+`;
+
+export const Header = styled.li`
+  display: block;
+  border-bottom: 1px solid #8f8f8f;
+  float: left;
+  padding-left: 0.5em;
+  font-size: 18px;
+`;
+
+export const Resizer = styled.div`
+  position: absolute;
+  top: 0;
+  right: -8px;
+  bottom: 0;
+  left: auto;
+  width: 16px;
+  cursor: col-resize;
 `;

@@ -54,13 +54,17 @@ const helperSingleton = {
     explorerPageFragment: graphql`
     fragment gqlHelperExplorerFragment on viewer
     @argumentDefinitions(
-        selected_projects: {type: "[String]"},
-        selected_file_types: {type: "[String]"},
-        selected_file_formats: {type: "[String]"}
+      {% for fType in fileTypeList %}firstValue_{{ fType }}: {type: "Int", defaultValue: 100},
+      cursor_{{ fType }}: {type: "Int"},
+      {% endfor %}
+      selected_projects: {type: "[String]"},
+      selected_file_types: {type: "[String]"},
+      selected_file_formats: {type: "[String]"}
     )
     {
       {% for fType in fileTypeList %}
-      fileData{{ loop.index }}:{{fType}}(first: 10000, project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
+      fileData_{{ fType }}:{{fType}}(first: $firstValue_{{ fType }} offset: $cursor_{{ fType }},
+      project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
         project_id
         file_name
         data_category
@@ -72,15 +76,22 @@ const helperSingleton = {
   `,
   explorerRefreshQuery: graphql`
     query gqlHelperExplorerRefreshQuery (
+      {% for fType in fileTypeList %}$firstValue_{{ fType }}: Int,
+      $cursor_{{ fType }}: Int,
+      {% endfor %}
       $selected_projects: [String],
       $selected_file_types: [String],
       $selected_file_formats: [String]
     )
     {
       viewer {
-        ...gqlHelperExplorerFragment @arguments(selected_projects: $selected_projects,
-            selected_file_types: $selected_file_types,
-            selected_file_formats: $selected_file_formats
+        ...gqlHelperExplorerFragment @arguments(
+          {% for fType in fileTypeList %}firstValue_{{ fType }}: $firstValue_{{ fType }},
+          cursor_{{ fType }}: $cursor_{{ fType }},
+          {% endfor %}
+          selected_projects: $selected_projects,
+          selected_file_types: $selected_file_types,
+          selected_file_formats: $selected_file_formats
         )
       }
     }
@@ -116,6 +127,15 @@ export class GQLHelper {
     return { fileCount, fileData };
   }
 
+  static extractFileDataToDict( data ) {
+    return Object.keys( data ).filter( key => key.indexOf( "fileData" ) === 0 ).reduce(
+      (acc,key) => {
+        acc[key.substr(key.indexOf("_") + 1)] = data[key];
+        return acc;
+      },
+      {}
+    );
+  }
 
   /**
    * Little singleton factory 
@@ -123,7 +143,34 @@ export class GQLHelper {
   static getGQLHelper( appName=app ) {
     return helperSingleton;
   }
-    
+
+  static getExplorerVariables(selected_filters, pageSize, cursors) {
+    return {
+      {% for fType in fileTypeList %}firstValue_{{ fType }}: pageSize,
+      cursor_{{ fType }}: ('{{ fType }}' in cursors) ? cursors['{{ fType }}'] : 0,
+      {% endfor %}
+      selected_projects: selected_filters ? selected_filters.projects : [],
+      selected_file_formats: selected_filters ? selected_filters.file_formats: [],
+      selected_file_types: selected_filters ? selected_filters.file_types : [],
+    }
+  }
+
+  static updateOffset(data, cursors) {
+    const fileLengthData = Object.keys( data ).filter( key => key.indexOf( "fileData" ) === 0 ).reduce(
+      (map, key) => {
+        map[key.substr(key.indexOf("_") + 1)] = data[key].length; return map;
+      },
+      {}
+    );
+    return Object.keys(fileLengthData).reduce(
+      (map, key) => {
+        let result = cursors;
+        if (key in result) {result[key] += fileLengthData[key]}
+        else {result[key] = fileLengthData[key]}
+        return result;
+      }, {}
+    );
+  }
 }
 
 
