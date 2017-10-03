@@ -5,7 +5,7 @@ const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 const basename = process.env.BASENAME || '/';
 // prefix for static file paths
-const path_prefix = basename.endsWith('/') ? basename.slice(0, basename.length-1) : basename
+const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length-1) : basename
 const app = process.env.APP || 'dev';
 const title = {
   dev: 'Generic Data Commons',
@@ -35,7 +35,7 @@ const plugins = [
   }), */
   new HtmlWebpackPlugin({
     title: title,
-    basename: path_prefix,
+    basename: pathPrefix,
     template: 'src/index.ejs',
     hash: true
   }),

@@ -9,9 +9,9 @@ import { AuthTimeoutPopup } from './Popup/component';
 
 export const getSubmitPath = (project) => {
   const path = project.split('-');
-  const program_name = path[0];
-  const project_code = path.slice(1).join('-');
-  return `${submissionApiPath}/${program_name}/${project_code}`;
+  const programName = path[0];
+  const projectCode = path.slice(1).join('-');
+  return `${submissionApiPath}/${programName}/${projectCode}`;
 };
 
 export const jsonToString = (data) => {
@@ -24,18 +24,18 @@ export const jsonToString = (data) => {
   return JSON.stringify(data, replacer, '  ');
 };
 
-export const predictFileType = (data, file_type) => {
-  const predict_type = file_type;
-  const json_type = 'application/json';
-  const tsv_type = 'text/tab-separated-values';
+export const predictFileType = (data, fileType) => {
+  const predictType = fileType;
+  const jsonType = 'application/json';
+  const tsvType = 'text/tab-separated-values';
   data = data.trim();
   if (data.indexOf('{') !== -1 || data.indexOf('}') !== -1) {
-    return json_type;
+    return jsonType;
   }
   if (data.indexOf('\t') !== -1) {
-    return tsv_type;
+    return tsvType;
   }
-  return predict_type;
+  return predictType;
 };
 
 export const withBoxAndNav = Component => ({ ...props }) => (
@@ -88,23 +88,23 @@ export function asyncSetInterval(lambda, timeoutMs) {
  * props: Object (normally taken from redux state) that includes dictionary 
  *    property defining the dictionary as well as other optional properties 
  *    such as counts_search and links_search (created by getCounts)
- * create_all: Include all nodes and edges or only those that are populated in
+ * createAll: Include all nodes and edges or only those that are populated in
  *    counts_search and links_search
- * nodes_to_hide: Array of nodes to hide from graph
+ * nodesToHide: Array of nodes to hide from graph
  *
  * Returns: Object containing nodes and edges
  */
-export function createNodesAndEdges(props, create_all, nodes_to_hide = ['program']) {
+export function createNodesAndEdges(props, createAll, nodesToHide = ['program']) {
   const dictionary = props.dictionary;
   const nodes = [];
 
-  Object.keys(dictionary).forEach((key, index) => {
-    if (dictionary[key].type === 'object' && !nodes_to_hide.includes(key)) {
+  Object.keys(dictionary).forEach((key) => {
+    if (dictionary[key].type === 'object' && !nodesToHide.includes(key)) {
       let count = 0;
-      if (props.counts_search != undefined) {
+      if (props.counts_search) {
         count = props.counts_search['_'.concat(key).concat('_count')];
       }
-      if (create_all || (!create_all && count !== 0)) {
+      if (createAll || (!createAll && count !== 0)) {
         const node = {
           name: key,
           category: dictionary[key].category,
@@ -118,14 +118,14 @@ export function createNodesAndEdges(props, create_all, nodes_to_hide = ['program
   });
 
   const edges = [];
-  nodes.forEach((val, index) => {
+  nodes.forEach((val) => {
     if (!val.name.startsWith('_') && dictionary[val.name].links) {
       for (let i = 0; i < dictionary[val.name].links.length; i++) {
         if (dictionary[val.name].links[i].target_type) {
-          if (nodes_to_hide.includes(dictionary[val.name].links[i].target_type) || nodes_to_hide.includes(val.name)) {
+          if (nodesToHide.includes(dictionary[val.name].links[i].target_type) || nodesToHide.includes(val.name)) {
             continue;
-          } else if (props.links_search == undefined || props.links_search[`${val.name}_to_${dictionary[val.name].links[i].target_type}_link`] == 0) {
-            if (create_all) {
+          } else if ((!props.links_search) || props.links_search[`${val.name}_to_${dictionary[val.name].links[i].target_type}_link`] == 0) {
+            if (createAll) {
               const edge = {
                 source: val.name,
                 target: dictionary[val.name].links[i].target_type,
@@ -134,12 +134,12 @@ export function createNodesAndEdges(props, create_all, nodes_to_hide = ['program
               edges.push(edge);
             }
             continue;
-          } else if (exists_in_any_nodes(val.name, nodes) && exists_in_any_nodes(dictionary[val.name].links[i].target_type, nodes)) {
+          } else if (existsInAnyNodes(val.name, nodes) && existsInAnyNodes(dictionary[val.name].links[i].target_type, nodes)) {
             const edge = {
               source: val.name,
               target: dictionary[val.name].links[i].target_type,
             };
-            if (create_all) {
+            if (createAll) {
               edge.exists = 1;
             }
             edges.push(edge);
@@ -148,10 +148,10 @@ export function createNodesAndEdges(props, create_all, nodes_to_hide = ['program
         if (dictionary[val.name].links[i].subgroup) {
           for (let j = 0; j < dictionary[val.name].links[i].subgroup.length; j++) {
             if (dictionary[val.name].links[i].subgroup[j].target_type) {
-              if (nodes_to_hide.includes(dictionary[val.name].links[i].subgroup[j].target_type) || nodes_to_hide.includes(val.name)) {
+              if (nodesToHide.includes(dictionary[val.name].links[i].subgroup[j].target_type) || nodesToHide.includes(val.name)) {
                 continue;
-              } else if (props.links_search == undefined || props.links_search[`${val.name}_to_${dictionary[val.name].links[i].subgroup[j].target_type}_link`] == 0) {
-                if (create_all) {
+              } else if ( (!props.links_search) || props.links_search[`${val.name}_to_${dictionary[val.name].links[i].subgroup[j].target_type}_link`] == 0) {
+                if (createAll) {
                   const edge = {
                     source: val.name,
                     target: dictionary[val.name].links[i].subgroup[j].target_type,
@@ -160,12 +160,12 @@ export function createNodesAndEdges(props, create_all, nodes_to_hide = ['program
                   edges.push(edge);
                 }
                 continue;
-              } else if (exists_in_any_nodes(val.name, nodes) && exists_in_any_nodes(dictionary[val.name].links[i].subgroup[j].target_type, nodes)) {
+              } else if (existsInAnyNodes(val.name, nodes) && existsInAnyNodes(dictionary[val.name].links[i].subgroup[j].target_type, nodes)) {
                 const edge = {
                   source: val.name,
                   target: dictionary[val.name].links[i].subgroup[j].target_type,
                 };
-                if (create_all) {
+                if (createAll) {
                   edge.exists = 1;
                 }
                 edges.push(edge);
@@ -182,9 +182,9 @@ export function createNodesAndEdges(props, create_all, nodes_to_hide = ['program
     edges,
   };
 
-  function exists_in_any_nodes(value, nodes) {
-    for (let i = 0; i < nodes.length; i++) {
-      if (nodes[i].name == value) {
+  function existsInAnyNodes(value, hayStack) {
+    for (let i = 0; i < hayStack.length; i++) {
+      if (hayStack[i].name === value) {
         return 1;
       }
     }
@@ -204,17 +204,17 @@ export const color = {
   radar: d3.schemeCategory20[16],
   streamgauge: d3.schemeCategory20[19],
 };
-  
 
-export function legendCreator(legend_g, nodes, legend_width, color_scheme) {
+
+export function legendCreator(legendGroup, nodes, legendWidth) {
   // Find all unique categories 
-  const unique_categories_array = nodes.reduce((acc, elem) => {
+  const uniqueCategoriesList = nodes.reduce((acc, elem) => {
     if (acc.indexOf(elem.category) === -1) {
       acc.push(elem.category);
     }
     return acc;
   }, []);
-  unique_categories_array.sort((a, b) => {
+  uniqueCategoriesList.sort((a, b) => {
     a = a.toLowerCase();
     b = b.toLowerCase();
     if (a < b) {
@@ -226,30 +226,30 @@ export function legendCreator(legend_g, nodes, legend_width, color_scheme) {
   },
   );
 
-  const legend_font_size = '0.9em';
+  const legendFontSize = '0.9em';
   // Make Legend
-  legend_g.selectAll('text')
-    .data(unique_categories_array)
+  legendGroup.selectAll('text')
+    .data(uniqueCategoriesList)
     .enter().append('text')
-    .attr('x', legend_width / 2)
+    .attr('x', legendWidth / 2)
     .attr('y', (d, i) => `${1.5 * (2.5 + i)}em`)
     .attr('text-anchor', 'middle')
     .attr('fill', d => color[d])
-    .style('font-size', legend_font_size)
+    .style('font-size', legendFontSize)
     .text(d => d);
 
-  legend_g.append('text')
-    .attr('x', legend_width / 2)
+  legendGroup.append('text')
+    .attr('x', legendWidth / 2)
     .attr('y', `${2}em`)
     .attr('text-anchor', 'middle')
     .text('Categories')
-    .style('font-size', legend_font_size)
+    .style('font-size', legendFontSize)
     .style('text-decoration', 'underline');
 }
 
 
-export function addArrows(graph_svg) {
-  graph_svg.append('svg:defs')
+export function addArrows(graphSvg) {
+  graphSvg.append('svg:defs')
     .append('svg:marker')
     .attr('id', 'end-arrow')
     .attr('viewBox', '0 -5 10 10')
@@ -263,8 +263,8 @@ export function addArrows(graph_svg) {
     .attr('d', 'M0,-5L10,0L0,5');
 }
 
-export function addLinks(graph_svg, edges) {
-  return graph_svg.append('g')
+export function addLinks(graphSvg, edges) {
+  return graphSvg.append('g')
     .selectAll('path')
     .data(edges)
     .enter()
@@ -276,17 +276,17 @@ export function addLinks(graph_svg, edges) {
 }
 
 
-export function calculatePosition(nodes, graph_width, graph_height) {
+export function calculatePosition(nodes, graphWidth, graphHeight) {
   // Calculate the appropriate position of each node on the graph
-  const fy_vals = [];
+  const fyVals = [];
   for (let i = 0; i < nodes.length; i++) {
-    nodes[i].fx = nodes[i].position[0] * graph_width;
-    nodes[i].fy = nodes[i].position[1] * graph_height;
-    if (fy_vals.indexOf(nodes[i].fy) === -1) {
-      fy_vals.push(nodes[i].fy);
+    nodes[i].fx = nodes[i].position[0] * graphWidth;
+    nodes[i].fy = nodes[i].position[1] * graphHeight;
+    if (fyVals.indexOf(nodes[i].fy) === -1) {
+      fyVals.push(nodes[i].fy);
     }
   }
-  return { nodes, fy_vals_length: fy_vals.length };
+  return { nodes, fyValsLength: fyVals.length };
 }
 
 

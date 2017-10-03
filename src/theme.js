@@ -196,38 +196,3 @@ export const Sidebar = styled.div`
   float:left;
   border-top: 2px solid tomato;
 `;
-
-export const Cell = styled.li`
-  display: block;
-  float: left;
-  padding: 0.25rem 0px 0.25rem 0.5em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`;
-
-export const ULTable = styled.ul`
-  overflow: hidden;
-`;
-
-export const DivTable = styled.div`
-  overflow: hidden;
-`;
-
-export const Header = styled.li`
-  display: block;
-  border-bottom: 1px solid #8f8f8f;
-  float: left;
-  padding-left: 0.5em;
-  font-size: 18px;
-`;
-
-export const Resizer = styled.div`
-  position: absolute;
-  top: 0;
-  right: -8px;
-  bottom: 0;
-  left: auto;
-  width: 16px;
-  cursor: col-resize;
-`;

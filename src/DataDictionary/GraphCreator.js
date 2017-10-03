@@ -1,32 +1,31 @@
 import * as d3 from 'd3';
-import React from 'react';
+
 import { color, legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
 
 /**
  * createDDGraph: Creates a Data Dictionary graph (rectangular nodes).
  *    Needs position as property of each node (as fraction of 1 e.g. [0.5, 0.1] 
- *    for placement at (0.5*svg_width, 0.1*svg_height))
+ *    for placement at (0.5*svgWidth, 0.1*svgHeight))
  */
-function createDDGraph(nodes, edges, radius = 60, box_height_mult, box_width_mult, svg_height_mult) {
-  const max_x_pos = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
-  const max_y_pos = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
+function createDDGraph(nodes, edges, radius = 60, boxHeightMult, boxWidthMult, svgHeightMult) {
+  const maxX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
+  const maxY = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
 
-  let padding = 25,
-    legend_width = 125,
-    width = max_x_pos * radius * 5,
-    height = max_y_pos * radius * svg_height_mult;
+  const padding = 25;
+  const legendWidth = 125;
+  const width = maxX * radius * 5;
+  const height = maxY * radius * svgHeightMult;
 
-  const box_height = radius * box_height_mult;
-  const box_width = radius * box_width_mult;
+  const boxHeight = radius * boxHeightMult;
+  const boxWidth = radius * boxWidthMult;
 
   d3.select('#graph_wrapper')
     .style('height', `${height}px`);
 
-  let svg;
-  svg = d3.select('#data_model_graph')
+  const svg = d3.select('#data_model_graph')
     .style('position', 'absolute')
     .style('left', '50%')
-    .style('transform', `translate(${-width / 2}px` + ',0)')
+    .style('transform', `translate(${-width / 2}px,0)`)
     .attr('height', height)
     .attr('width', width);
   // Clear everything inside when re-rendering
@@ -36,17 +35,13 @@ function createDDGraph(nodes, edges, radius = 60, box_height_mult, box_width_mul
     .attr('transform', `translate(0,${padding})`);
   // legend is the text that matches categories to color
   const legend = svg.append('g')
-    .attr('transform', `translate(${width - legend_width * 2},${padding})`);
+    .attr('transform', `translate(${width - legendWidth * 2},${padding})`);
 
   const link = addLinks(graph, edges);
 
   addArrows(graph);
-
-  const calc_pos_obj = calculatePosition(nodes, width, height);
-  const num_rows = calc_pos_obj.fy_vals_length;
-  nodes = calc_pos_obj.nodes;
-
-  const node_types = nodes.map(node => node.name);
+  calculatePosition(nodes, width, height); // augments nodes as side effect
+  const nodeTypes = nodes.map(node => node.name);
 
   // Add search on clicking a node
   const node = graph.selectAll('g.gnode')
@@ -56,8 +51,8 @@ function createDDGraph(nodes, edges, radius = 60, box_height_mult, box_width_mul
     .style('cursor', 'pointer')
     .attr('id', d => d.name)
     .on('click', (d) => {
-      for (let i = 0; i < node_types.length; i++) {
-        if (d.name == node_types[i]) {
+      for (let i = 0; i < nodeTypes.length; i++) {
+        if (d.name === nodeTypes[i]) {
           const s = window.location.href.split('/');
           window.open(`${s.slice(0, s.length - 1).join('/')}/${d.name}`);
           break;
@@ -67,27 +62,70 @@ function createDDGraph(nodes, edges, radius = 60, box_height_mult, box_width_mul
 
   // Add nodes to graph
   node.append('rect')
-    .attr('width', box_width)
-    .attr('height', box_height)
-    .attr('fill', d => '#f4f4f4')
-    .attr('transform', `translate(${box_width * -0.5},${box_height * -0.5})`)
+    .attr('width', boxWidth)
+    .attr('height', boxHeight)
+    .attr('fill', () => '#f4f4f4')
+    .attr('transform', `translate(${boxWidth * -0.5},${boxHeight * -0.5})`)
     .style('stroke', d => color[d.category])
     .style('stroke-width', 3);
 
-  const graph_font_size = '0.75em';
+  const fontSize = '0.75em';
 
   // Append text to nodes
   for (let n = 0; n < nodes.length; n++) {
     graph.select('#'.concat(nodes[n].name))
       .append('text')
       .attr('text-anchor', 'middle')
-      .attr('font-size', graph_font_size)
+      .attr('font-size', fontSize)
       .style('font-weight', 'bold')
       .text(nodes[n].name);
   }
 
   const simulation = d3.forceSimulation()
     .force('link', d3.forceLink().id(d => d.name));
+
+
+  function positionLink(d) {
+    if (d.source.fy === d.target.fy &&
+      Math.abs(d.source.position_index[0] - d.target.position_index[0]) > 1
+    ) {
+      const curve = `M${d.source.x},${d.source.y
+      }Q${d.source.x},${d.source.y + boxHeight / 2 * 1.25
+      } ${(d.source.x + d.target.x) / 2},${d.source.y + boxHeight / 2 * 1.25
+      }T ${d.target.x},${d.target.y}`;
+      return curve;
+    } else if (d.source.fx === d.target.fx &&
+      Math.abs(d.source.position_index[1] - d.target.position_index[1]) > 1
+    ) {
+      const curve = `M${d.source.x},${d.source.y
+      }Q${d.source.x + boxWidth / 2 * 1.25},${d.source.y
+      } ${d.source.x + boxWidth / 2 * 1.25},${(d.source.y + d.target.y) / 2
+      }T ${d.target.x},${d.target.y}`;
+      return curve;
+    } else if (
+      (Math.abs(d.source.position_index[0] - d.target.position_index[0]) ===
+        Math.abs(d.source.position_index[1] - d.target.position_index[1])
+      ) && Math.abs(d.source.position_index[1] - d.target.position_index[1]) >= 2
+    ) {
+      const curve = `M${d.source.x},${d.source.y
+      }Q${d.source.x},${(2 * d.source.y + d.target.y) / 3
+      } ${(2 * d.source.x + d.target.x) / 3},${(d.source.y + 2 * d.target.y) / 3
+      }T ${d.target.x},${d.target.y}`;
+      return curve;
+    }
+    return `M${d.source.x},${d.source.y
+    }L${(d.source.x + d.target.x) / 2},${(d.source.y + d.target.y) / 2
+    }L${d.target.x},${d.target.y}`;
+  }
+
+  function ticked() {
+    link.attr('d', positionLink);
+
+    node
+      .attr('cx', (d) => { d.x = Math.max(radius, Math.min(width - radius, d.x)); return d.x; })
+      .attr('cy', (d) => { d.y = Math.max(radius, Math.min(height - radius, d.y)); return d.y; })
+      .attr('transform', d => `translate(${[d.x, d.y]})`);
+  }
 
   // Put the nodes and edges in the correct spots
   simulation
@@ -97,40 +135,7 @@ function createDDGraph(nodes, edges, radius = 60, box_height_mult, box_width_mul
   simulation.force('link')
     .links(edges);
 
-  function ticked() {
-    link.attr('d', positionLink);
-
-    node
-      .attr('cx', d => d.x = Math.max(radius, Math.min(width - radius, d.x)))
-      .attr('cy', d => d.y = Math.max(radius, Math.min(height - radius, d.y)))
-      .attr('transform', d => `translate(${[d.x, d.y]})`);
-  }
-  function positionLink(d) {
-    if (d.source.fy == d.target.fy && Math.abs(d.source.position_index[0] - d.target.position_index[0]) > 1) {
-      const curve = `M${d.source.x},${d.source.y
-      }Q${d.source.x},${d.source.y + box_height / 2 * 1.25
-      } ${(d.source.x + d.target.x) / 2},${d.source.y + box_height / 2 * 1.25
-      }T` + ` ${d.target.x},${d.target.y}`;
-      return curve;
-    } else if (d.source.fx == d.target.fx && Math.abs(d.source.position_index[1] - d.target.position_index[1]) > 1) {
-      const curve = `M${d.source.x},${d.source.y
-      }Q${d.source.x + box_width / 2 * 1.25},${d.source.y
-      } ${d.source.x + box_width / 2 * 1.25},${(d.source.y + d.target.y) / 2
-      }T` + ` ${d.target.x},${d.target.y}`;
-      return curve;
-    } else if ((Math.abs(d.source.position_index[0] - d.target.position_index[0]) == Math.abs(d.source.position_index[1] - d.target.position_index[1])) && Math.abs(d.source.position_index[1] - d.target.position_index[1]) >= 2) {
-      const curve = `M${d.source.x},${d.source.y
-      }Q${d.source.x},${(2 * d.source.y + d.target.y) / 3
-      } ${(2 * d.source.x + d.target.x) / 3},${(d.source.y + 2 * d.target.y) / 3
-      }T` + ` ${d.target.x},${d.target.y}`;
-      return curve;
-    }
-    return `M${d.source.x},${d.source.y
-    }L${(d.source.x + d.target.x) / 2},${(d.source.y + d.target.y) / 2
-    }L${d.target.x},${d.target.y}`;
-  }
-
-  legendCreator(legend, nodes, legend_width, color);
+  legendCreator(legend, nodes, legendWidth, color);
 }
 
 /**
@@ -139,13 +144,13 @@ function createDDGraph(nodes, edges, radius = 60, box_height_mult, box_width_mul
  */
 function formatField(name) {
   if (name.length > 20) {
-    const split_name = name.split('_');
-    if (split_name.length == 1) {
+    const splitName = name.split('_');
+    if (splitName.length === 1) {
       return name;
     }
-    const mid = Math.ceil(split_name.length / 2);
-    let begin = split_name.slice(0, mid).join('_');
-    let end = split_name.slice(mid).join('_');
+    const mid = Math.ceil(splitName.length / 2);
+    let begin = splitName.slice(0, mid).join('_');
+    let end = splitName.slice(mid).join('_');
     if (begin.length > 20) {
       begin = formatField(begin);
     }
@@ -166,27 +171,28 @@ function formatType(type) {
     return type;
   } else if ('type' in type) {
     if (typeof type.type !== 'string') {
-      let filtered_type = type.type.filter(x => x != 'null');
-      filtered_type = filtered_type.join(',\n');
-      return filtered_type;
+      let filteredType = type.type.filter(x => x !== 'null');
+      filteredType = filteredType.join(',\n');
+      return filteredType;
     }
     return type.type;
   } else if ('enum' in type) {
     return 'enum';
   } else if ('oneOf' in type) {
-    if (typeof type.oneOf === 'object' && 'enum' in type.oneOf[0] && type.oneOf[0].enum[0] == 'uploading') {
+    if (typeof type.oneOf === 'object' && 'enum' in type.oneOf[0] && type.oneOf[0].enum[0] === 'uploading') {
       if ('downloadable' in type) {
         return 'enum';
       }
     }
-    let filtered_type = type.oneOf.map(x => x.type);
-    filtered_type = filtered_type.filter(x => x != 'null');
+    let filteredType = type.oneOf.map(x => x.type);
+    filteredType = filteredType.filter(x => x !== 'null');
     if (type.oneOf.length > 2) {
-      return `${filtered_type.slice(0, 2).join(', \n')}, etc.`;
+      return `${filteredType.slice(0, 2).join(', \n')}, etc.`;
     }
-    return filtered_type.join(', \n');
+    return filteredType.join(', \n');
   }
   console.log('Unexpected: ', type);
+  return 'unknown';
 }
 
 /**
@@ -194,25 +200,25 @@ function formatType(type) {
  *    Also hides the node names rendered by svg and replaces them with non-svg
  *    text so they remain clickable
  */
-function addTables(nodes, box_width, box_height, svg_width, svg_height) {
-  const table_div = d3.select('#graph_wrapper')
+function addTables(nodes, boxWidth, boxHeight, svgWidth, svgHeight) {
+  const tableDiv = d3.select('#graph_wrapper')
     .append('div')
     .style('position', 'absolute')
     .style('left', '50%')
     .style('top', '0')
-    .style('margin-left', `${svg_width / -2}px`)
-    .style('width', `${svg_width}px`)
-    .style('height', `${svg_height}px`)
+    .style('margin-left', `${svgWidth / -2}px`)
+    .style('width', `${svgWidth}px`)
+    .style('height', `${svgHeight}px`)
     .attr('id', 'table_wrapper')
     .selectAll('div')
     .data(nodes)
     .enter()
     .append('div')
     .style('position', 'absolute')
-    .style('left', d => `${d.fx - box_width / 2 + 6}px`)
-    .style('top', d => `${d.fy - box_height / 2 + 20}px`);
+    .style('left', d => `${d.fx - boxWidth / 2 + 6}px`)
+    .style('top', d => `${d.fy - boxHeight / 2 + 20}px`);
 
-  table_div.append('a')
+  tableDiv.append('a')
     .attr('href', (d) => {
       const uri = window.location.href;
       return `${uri.substring(0, uri.lastIndexOf('/'))}/${d.name}`;
@@ -223,9 +229,9 @@ function addTables(nodes, box_width, box_height, svg_width, svg_height) {
     .style('font-weight', 'bold')
     .text(d => d.name);
 
-  table_div.append('div')
-    .style('width', `${box_width - 12}px`)
-    .style('height', `${box_height - 30}px`)
+  tableDiv.append('div')
+    .style('width', `${boxWidth - 12}px`)
+    .style('height', `${boxHeight - 30}px`)
     .style('font-size', `${12}px`)
     .style('color', 'black')
     .style('overflow', 'auto')
@@ -236,19 +242,19 @@ function addTables(nodes, box_width, box_height, svg_width, svg_height) {
     .append('tbody')
     .selectAll('tr')
     .data((d) => {
-      const unsorted_arr = Object.entries(d.properties).filter(x => !('anyOf' in x[1])).map(x => ({ column: x[0], value: x[1] }));
-      const required_arr = [];
-      const not_required_arr = [];
-      unsorted_arr.forEach((val) => {
-        if (d.required != undefined && d.required.indexOf(val.column) != -1) {
+      const unsorted = Object.entries(d.properties).filter(x => !('anyOf' in x[1])).map(x => ({ column: x[0], value: x[1] }));
+      const isRequiredList = [];
+      const notRequiredList = [];
+      unsorted.forEach((val) => {
+        if (d.required && d.required.indexOf(val.column) !== -1) {
           val.required = true;
-          required_arr.push(val);
+          isRequiredList.push(val);
         } else {
           val.required = false;
-          not_required_arr.push(val);
+          notRequiredList.push(val);
         }
       });
-      return required_arr.concat(not_required_arr);
+      return isRequiredList.concat(notRequiredList);
     })
     .enter()
     .append('tr')
@@ -257,17 +263,17 @@ function addTables(nodes, box_width, box_height, svg_width, svg_height) {
     .style('font-weight', d => (d.required ? 'bold' : 'normal'))
     .style('font-style', d => (d.required ? 'italic' : 'normal'))
     .selectAll('td')
-    .data(row => Object.entries(row).filter(x => x[0] != 'required'))
+    .data(row => Object.entries(row).filter(x => x[0] !== 'required'))
     .enter()
     .append('td')
     .style('border', '1px solid black')
     .style('padding', '5px')
-    .text(d => (d[0] == 'column' ? formatField(d[1]) : formatType(d[1])));
+    .text(d => (d[0] === 'column' ? formatField(d[1]) : formatType(d[1])));
 
   for (let n = 0; n < nodes.length; n++) {
     d3.select('#'.concat(nodes[n].name))
       .selectAll('text')
-      .attr('dy', -0.5 * box_height + 15)
+      .attr('dy', -0.5 * boxHeight + 15)
       .style('display', 'none');
   }
 
@@ -276,14 +282,14 @@ function addTables(nodes, box_width, box_height, svg_width, svg_height) {
 
 export function createFullGraph(nodes, edges) {
   const radius = 60;
-  const box_height = radius * 4;
-  const box_width = radius * 4;
+  const boxHeight = radius * 4;
+  const boxWidth = radius * 4;
 
-  const max_x_pos = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
-  const max_y_pos = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
+  const maxX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
+  const maxY = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
 
-  const svg_width = max_x_pos * radius * 5;
-  const svg_height = max_y_pos * radius * 5;
+  const svgWidth = maxX * radius * 5;
+  const svgHeight = maxY * radius * 5;
 
   createDDGraph(nodes, edges, radius, 4, 4, 5);
 
@@ -291,9 +297,9 @@ export function createFullGraph(nodes, edges) {
     document.getElementById('table_wrapper').remove();
   }
 
-  addTables(nodes, box_width, box_height, svg_width, svg_height);
+  addTables(nodes, boxWidth, boxHeight, svgWidth, svgHeight);
 }
 
-export function create_abridged_graph(nodes, edges) {
+export function createAbridgedGraph(nodes, edges) {
   createDDGraph(nodes, edges, 60, 1.5, 3, 3);
 }

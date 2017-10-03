@@ -63,6 +63,7 @@ const getType = (schema) => {
 
 const NodeTable = ({ node }) => (
   <Table>
+    <tbody>
     <TableRow>
       <TableData first_cr> Title </TableData>
       <TableData right>{ node.title }</TableData>
@@ -85,9 +86,9 @@ const NodeTable = ({ node }) => (
           {node.uniqueKeys.map((key, i) => <Bullet key={i}>{key.join(', ')}</Bullet>)}
         </ul>
       }</TableData>
-    </TableRow>
 
-    <tbody />
+    </TableRow>
+    </tbody>
   </Table>
 );
 const Required = styled(TableData)`
@@ -192,50 +193,11 @@ const PropertiesTable = ({ node, required, links }) => {
   );
 };
 
-const DataDictionaryNodeType = ({ params, submission }) => {
-  const node = params.node;
-  const dictionary = submission.dictionary;
 
-  if (node === 'graph') {
-    const nodes_and_edges = createNodesAndEdges(submission, true, []);
-    const nodes = nodes_and_edges.nodes;
-    const edges = nodes_and_edges.edges;
-
-    return (
-      <div>
-        <h3> Data Dictionary Graph Viewer </h3>
-        <CreateGraph nodes={nodes} edges={edges} dictionary={dictionary} />
-      </div>
-    );
-  }
-
-  let links = [];
-  const required = ('required' in dictionary[node]) ? dictionary[node].required : [];
-  for (const link of submission.dictionary[node].links) {
-    if (link.name !== undefined) {
-      links.push(link);
-    } else {
-      links = links.concat(link.subgroup);
-    }
-  }
-  return (
-    <div>
-      <h3> {node} </h3>
-      <Link to="/dd">{'< top level dictionary'}</Link>
-
-      <h4> Summary </h4>
-      <NodeTable node={dictionary[node]} />
-
-      <h4> Links </h4>
-      <LinkTable links={links} node={node} />
-
-      <h4> Properties </h4>
-      <PropertiesTable links={links} required={required} node={dictionary[node]} />
-    </div>
-  );
-};
-
-class CreateGraph extends React.Component {
+/**
+ * Component handles rendering of dictionary types as a node graph
+ */
+class DictionaryGraph extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -276,7 +238,7 @@ class CreateGraph extends React.Component {
     const queue = [];
     const layout = [];
     const placed = [];
-    let layout_level = 0;
+    let layoutLevel = 0;
 
     queue.push(root);
     layout.push([root]);
@@ -295,7 +257,7 @@ class CreateGraph extends React.Component {
                 layout[layout_level + 1] = [];
               }
             }
-            layout[layout_level + 1].push(edges[i].source);
+            layout[layoutLevel + 1].push(edges[i].source);
             placed.push(edges[i].source);
           }
         }
@@ -335,12 +297,56 @@ class CreateGraph extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  submission: state.submission,
-});
 
-const mapDispatchToProps = dispatch => ({
-});
+/**
+ * Component renders a view with details of a particular dictionary type (node - /dd/typename) or
+ * of the whole dictionary (/dd/graph)
+ * 
+ * @param {*} param0 
+ */
+const DataDictionaryNode = ({ params, submission }) => {
+  const node = params.node;
+  const dictionary = submission.dictionary;
 
-const DataDictionaryNode = connect(mapStateToProps, mapDispatchToProps)(DataDictionaryNodeType);
+  if (node == 'graph') {
+    const nodes_and_edges = createNodesAndEdges(submission, true, []);
+    const nodes = nodes_and_edges.nodes;
+    const edges = nodes_and_edges.edges;
+
+    return (
+      <div>
+        <h3> Data Dictionary Graph Viewer </h3>
+        <DictionaryGraph nodes={nodes} edges={edges} dictionary={dictionary} />
+      </div>
+    );
+  }
+
+  let links = [];
+  const required = ('required' in dictionary[node]) ? dictionary[node].required : [];
+  for (const link of submission.dictionary[node].links) {
+    if (link.name != undefined) {
+      links.push(link);
+    } else {
+      links = links.concat(link.subgroup);
+    }
+  }
+  return (
+    <div>
+      <h3> {node} </h3>
+      <Link to="/dd">{'< top level dictionary'}</Link>
+
+      <h4> Summary </h4>
+      <NodeTable node={dictionary[node]} />
+
+      <h4> Links </h4>
+      <LinkTable links={links} node={node} />
+
+      <h4> Properties </h4>
+      <PropertiesTable links={links} required={required} node={dictionary[node]} />
+    </div>
+  );
+};
+
+
 export default DataDictionaryNode;
+

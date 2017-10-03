@@ -36,7 +36,7 @@ export function create_dm_graph(nodes, edges) {
   addArrows(graph);
 
   const calc_pos_obj = calculatePosition(nodes, width, height);
-  const num_rows = calc_pos_obj.fy_vals_length;
+  const num_rows = calc_pos_obj.fyValsLength;
   nodes = calc_pos_obj.nodes;
 
   const unclickable_nodes = ['program', 'project'];
