@@ -14,6 +14,14 @@ function buildConfig(opts) {
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
   };
 
+  //
+  // Override default basename if loading via /dev.html
+  // dev.html loads bundle.js via https://localhost...
+  //
+  if (typeof location !== 'undefined' && location.pathname.indexOf(`${defaults.basename}dev.html`) === 0) {
+    defaults.basename += 'dev.html';
+  }
+
   const { dev, mockStore, app, basename, hostname } = Object.assign({}, defaults, opts);
 
   let userapiPath = `${hostname}user/`;
