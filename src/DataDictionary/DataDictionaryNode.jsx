@@ -1,5 +1,4 @@
 import React from 'react';
-import Nav from '../Nav/component';
 import { cube, Table, TableData, TableRow, TableHead, Bullet } from '../theme';
 import { connect } from 'react-redux';
 import styled from 'styled-components';

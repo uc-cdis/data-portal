@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 
 import { submissionApiPath } from './localconf';
 import { Box, Body, Margin } from './theme';
-import Nav from './Nav/component';
+import Nav from './Nav/ReduxNavBar';
 import Footer from './components/Footer';
 import { AuthTimeoutPopup } from './Popup/component';
 
@@ -24,11 +24,11 @@ export const jsonToString = (data) => {
   return JSON.stringify(data, replacer, '  ');
 };
 
-export const predictFileType = (data, fileType) => {
+export const predictFileType = (dirtyData, fileType) => {
   const predictType = fileType;
   const jsonType = 'application/json';
   const tsvType = 'text/tab-separated-values';
-  data = data.trim();
+  const data = dirtyData.trim();
   if (data.indexOf('{') !== -1 || data.indexOf('}') !== -1) {
     return jsonType;
   }
@@ -85,111 +85,82 @@ export function asyncSetInterval(lambda, timeoutMs) {
  * createNodesAndEdges: Given a data dictionary that defines a set of nodes
  *    and edges, returns the nodes and edges in correct format
  *
- * props: Object (normally taken from redux state) that includes dictionary 
+ * @param props: Object (normally taken from redux state) that includes dictionary 
  *    property defining the dictionary as well as other optional properties 
- *    such as counts_search and links_search (created by getCounts)
- * createAll: Include all nodes and edges or only those that are populated in
+ *    such as counts_search and links_search (created by getCounts) with
+ *    information about the number of each type (node) and link (between 
+ *    nodes with a link's source and target types) that actually
+ *    exist in the data
+ * @param createAll: Include all nodes and edges or only those that are populated in
  *    counts_search and links_search
- * nodesToHide: Array of nodes to hide from graph
+ * @param nodesToHide: Array of nodes to hide from graph
  *
- * Returns: Object containing nodes and edges
+ * @returns: Object containing nodes and edges
  */
 export function createNodesAndEdges(props, createAll, nodesToHide = ['program']) {
   const dictionary = props.dictionary;
-  const nodes = [];
-
-  Object.keys(dictionary).forEach((key) => {
-    if (dictionary[key].type === 'object' && !nodesToHide.includes(key)) {
-      let count = 0;
-      if (props.counts_search) {
-        count = props.counts_search['_'.concat(key).concat('_count')];
-      }
-      if (createAll || (!createAll && count !== 0)) {
-        const node = {
+  const nodes = Object.keys(dictionary)
+    .filter(
+      key => !key.startsWith('_') && dictionary[key].type === 'object' && !nodesToHide.includes(key),
+    ).map(
+      (key) => {
+        let count = 0;
+        if (props.counts_search) {
+          count = props.counts_search[`_${key}_count`];
+        }
+        return {
           name: key,
-          category: dictionary[key].category,
           count,
-          properties: dictionary[key].properties,
-          required: dictionary[key].required,
+          ...dictionary[key],
         };
-        nodes.push(node);
-      }
-    }
-  });
+      },
+    ).filter(
+      node => createAll || node.count !== 0,
+    );
 
-  const edges = [];
-  nodes.forEach((val) => {
-    if (!val.name.startsWith('_') && dictionary[val.name].links) {
-      for (let i = 0; i < dictionary[val.name].links.length; i++) {
-        if (dictionary[val.name].links[i].target_type) {
-          if (nodesToHide.includes(dictionary[val.name].links[i].target_type) || nodesToHide.includes(val.name)) {
-            continue;
-          } else if ((!props.links_search) || props.links_search[`${val.name}_to_${dictionary[val.name].links[i].target_type}_link`] == 0) {
-            if (createAll) {
-              const edge = {
-                source: val.name,
-                target: dictionary[val.name].links[i].target_type,
-                exists: 0,
-              };
-              edges.push(edge);
-            }
-            continue;
-          } else if (existsInAnyNodes(val.name, nodes) && existsInAnyNodes(dictionary[val.name].links[i].target_type, nodes)) {
-            const edge = {
-              source: val.name,
-              target: dictionary[val.name].links[i].target_type,
-            };
-            if (createAll) {
-              edge.exists = 1;
-            }
-            edges.push(edge);
-          }
-        }
-        if (dictionary[val.name].links[i].subgroup) {
-          for (let j = 0; j < dictionary[val.name].links[i].subgroup.length; j++) {
-            if (dictionary[val.name].links[i].subgroup[j].target_type) {
-              if (nodesToHide.includes(dictionary[val.name].links[i].subgroup[j].target_type) || nodesToHide.includes(val.name)) {
-                continue;
-              } else if ( (!props.links_search) || props.links_search[`${val.name}_to_${dictionary[val.name].links[i].subgroup[j].target_type}_link`] == 0) {
-                if (createAll) {
-                  const edge = {
-                    source: val.name,
-                    target: dictionary[val.name].links[i].subgroup[j].target_type,
-                    exists: 0,
-                  };
-                  edges.push(edge);
-                }
-                continue;
-              } else if (existsInAnyNodes(val.name, nodes) && existsInAnyNodes(dictionary[val.name].links[i].subgroup[j].target_type, nodes)) {
-                const edge = {
-                  source: val.name,
-                  target: dictionary[val.name].links[i].subgroup[j].target_type,
-                };
-                if (createAll) {
-                  edge.exists = 1;
-                }
-                edges.push(edge);
-              }
-            }
-          }
-        }
+  const nameToNode = nodes.reduce((db, node) => { db[node.name] = node; return db; }, {});
+  const hideDb = nodesToHide.reduce((db, name) => { db[name] = true; return db; }, {});
+
+  const edges = nodes.filter(
+    node => node.links && node.links.length > 0,
+  ).reduce( // add each node's links to the edge list 
+    (list, node) => {
+      const newLinks = node.links.map(link => ({ source: node.name, target: link.target_type, exists: 1, ...link }));
+      return list.concat(newLinks);
+    }, []
+  ).reduce( // add link subgroups to the edge list
+    (list, link) => {
+      let result = list;
+      if (link.target) { // "subgroup" link entries in dictionary are not links themselves ...
+        result.push(link);
       }
-    }
-  });
+      if (link.subgroup) {
+        const sgLinks = link.subgroup.map(it => ({ source: link.source, target: it.target_type, exists: 1, ...it }));
+        result = list.concat(sgLinks);
+      }
+      return result;
+    }, [],
+  ).filter(
+    // target type exist and is not in hide list 
+    link => link.target && nameToNode[link.target] && !hideDb[link.target],
+  )
+    .map(
+      (link) => {
+        // decorate each link with its "exists" count if available 
+        //  (number of instances of link between source and target types in the data)
+        link.exists = props.links_search ? props.links_search[`${link.source}_to_${link.target}_link`] : undefined;
+        return link;
+      },
+    )
+    .filter(
+    // filter out if no instances of this link exists and createAll is not specified
+      link => createAll || link.exists || link.exists === undefined,
+    );
 
   return {
     nodes,
     edges,
   };
-
-  function existsInAnyNodes(value, hayStack) {
-    for (let i = 0; i < hayStack.length; i++) {
-      if (hayStack[i].name === value) {
-        return 1;
-      }
-    }
-    return 0;
-  }
 }
 
 export const color = {

@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router';
 
-import Nav from '../Nav/component';
 import { Box, cube, Table, TableData, TableRow, TableHead } from '../theme';
 import { app } from '../localconf';
 

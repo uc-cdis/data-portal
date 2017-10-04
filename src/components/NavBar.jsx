@@ -1,8 +1,5 @@
 import React from 'react';
 import { lighten } from 'polished';
-import { logoutAPI } from '../actions';
-import { connect } from 'react-redux';
-import { basename, userapiPath, navItems } from '../localconf';
 import { Link } from 'react-router';
 import styled from 'styled-components';
 import { cube } from '../theme';
@@ -75,10 +72,23 @@ const NavIcon = styled.div`
   padding-left: 16px;
 `;
 
-const NavComponent = ({ user, onLogoutClick, classes }) => (
+/**
+ * NavBar renders row of nav-items of form { name, icon, link }
+ * @param {navaItems,user,onLogoutClick} params 
+ */
+const NavBar = ({ navItems, user, onLogoutClick }) => (
   <Header>
     <NavLeft>
-      {navItems.map((item, i) => <NavItem key={i} to={item.link}><FlatButton primary={i == 0} label={item.name}><NavIcon className="material-icons">{item.icon}</NavIcon> </FlatButton></NavItem>)}
+      {
+        navItems.map(
+          (item, i) => 
+            <NavItem key={i} to={item.link}>
+              <FlatButton primary={i == 0} label={item.name}>
+                <NavIcon className="material-icons">{item.icon}</NavIcon>
+              </FlatButton>
+            </NavItem>
+        )
+      }
     </NavLeft>
     <NavRight>
       { user.username !== undefined &&
@@ -92,10 +102,5 @@ const NavComponent = ({ user, onLogoutClick, classes }) => (
     </NavRight>
   </Header>
 );
-const mapStateToProps = state => ({ user: state.user });
 
-const mapDispatchToProps = dispatch => ({
-  onLogoutClick: () => dispatch(logoutAPI()),
-});
-const Nav = connect(mapStateToProps, mapDispatchToProps)(NavComponent);
-export default Nav;
+export default NavBar;
