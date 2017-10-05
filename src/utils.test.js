@@ -1,4 +1,4 @@
-import { asyncSetInterval, createNodesAndEdges, sortCompare } from './utils';
+import { asyncSetInterval, sortCompare } from './utils';
 
 describe('the utils helper', () => {
   it('supports asyncSetInterval', (done) => {
@@ -37,31 +37,4 @@ describe('the utils helper', () => {
     expect(sortCompare(11, 2)).toBe(1);
   });
 
-  it('extracts nodes and edges from a dictionary', () => {
-    const testDict = {
-      program: {
-        type: 'object',
-        links: [{ target_type: 'a' }],
-      },
-      a: {
-        type: 'object',
-        links: [
-          { target_type: 'b' },
-          { target_type: 'c' },
-        ],
-      },
-      b: {
-        type: 'object',
-        links: [
-          { target_type: 'c' },
-        ],
-      },
-      c: {
-        type: 'object',
-      },
-    };
-    const { nodes, edges } = createNodesAndEdges({ dictionary: testDict }, true);
-    expect(nodes.length).toBe(3); // program is "hidden"
-    expect(edges.length).toBe(3);
-  });
 });

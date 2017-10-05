@@ -81,87 +81,7 @@ export function asyncSetInterval(lambda, timeoutMs) {
   );
 }
 
-/**
- * createNodesAndEdges: Given a data dictionary that defines a set of nodes
- *    and edges, returns the nodes and edges in correct format
- *
- * @param props: Object (normally taken from redux state) that includes dictionary 
- *    property defining the dictionary as well as other optional properties 
- *    such as counts_search and links_search (created by getCounts) with
- *    information about the number of each type (node) and link (between 
- *    nodes with a link's source and target types) that actually
- *    exist in the data
- * @param createAll: Include all nodes and edges or only those that are populated in
- *    counts_search and links_search
- * @param nodesToHide: Array of nodes to hide from graph
- *
- * @returns: Object containing nodes and edges
- */
-export function createNodesAndEdges(props, createAll, nodesToHide = ['program']) {
-  const dictionary = props.dictionary;
-  const nodes = Object.keys(dictionary)
-    .filter(
-      key => !key.startsWith('_') && dictionary[key].type === 'object' && !nodesToHide.includes(key),
-    ).map(
-      (key) => {
-        let count = 0;
-        if (props.counts_search) {
-          count = props.counts_search[`_${key}_count`];
-        }
-        return {
-          name: key,
-          count,
-          ...dictionary[key],
-        };
-      },
-    ).filter(
-      node => createAll || node.count !== 0,
-    );
 
-  const nameToNode = nodes.reduce((db, node) => { db[node.name] = node; return db; }, {});
-  const hideDb = nodesToHide.reduce((db, name) => { db[name] = true; return db; }, {});
-
-  const edges = nodes.filter(
-    node => node.links && node.links.length > 0,
-  ).reduce( // add each node's links to the edge list 
-    (list, node) => {
-      const newLinks = node.links.map(link => ({ source: node.name, target: link.target_type, exists: 1, ...link }));
-      return list.concat(newLinks);
-    }, []
-  ).reduce( // add link subgroups to the edge list
-    (list, link) => {
-      let result = list;
-      if (link.target) { // "subgroup" link entries in dictionary are not links themselves ...
-        result.push(link);
-      }
-      if (link.subgroup) {
-        const sgLinks = link.subgroup.map(it => ({ source: link.source, target: it.target_type, exists: 1, ...it }));
-        result = list.concat(sgLinks);
-      }
-      return result;
-    }, [],
-  ).filter(
-    // target type exist and is not in hide list 
-    link => link.target && nameToNode[link.target] && !hideDb[link.target],
-  )
-    .map(
-      (link) => {
-        // decorate each link with its "exists" count if available 
-        //  (number of instances of link between source and target types in the data)
-        link.exists = props.links_search ? props.links_search[`${link.source}_to_${link.target}_link`] : undefined;
-        return link;
-      },
-    )
-    .filter(
-    // filter out if no instances of this link exists and createAll is not specified
-      link => createAll || link.exists || link.exists === undefined,
-    );
-
-  return {
-    nodes,
-    edges,
-  };
-}
 
 export const color = {
   administrative: d3.schemeCategory20[12],
@@ -247,6 +167,14 @@ export function addLinks(graphSvg, edges) {
 }
 
 
+/**
+ * Compute SVG coordinates fx, fy for each node in nodes.
+ * Decorate each node with .fx and .fy property as side effect.
+ * 
+ * @param {Array<Node>} nodes each decorated with a position [width,height] in [0,1] 
+ * @param {*} graphWidth 
+ * @param {*} graphHeight 
+ */
 export function calculatePosition(nodes, graphWidth, graphHeight) {
   // Calculate the appropriate position of each node on the graph
   const fyVals = [];

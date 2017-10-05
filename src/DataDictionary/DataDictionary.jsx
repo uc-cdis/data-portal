@@ -1,12 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Link } from 'react-router';
 
-import { Box, cube, Table, TableData, TableRow, TableHead } from '../theme';
+import { Table, TableData, TableRow, TableHead } from '../theme';
 import { app } from '../localconf';
 
 
-const subHeader = (function(){
+const subHeader = (function () {
   let message = 'This is a user-friendly interface for accessing the Data Dictionary';
 
   if (app === 'edc') {
@@ -17,7 +16,7 @@ const subHeader = (function(){
     message = 'The data dictionary viewer is a user-friendly interface for accessing the Data Dictionary used by the Brain Commons.';
   }
   return message;
-})();
+}());
 
 const TableBullet = ({ node, description }) => (
   <TableRow>
@@ -42,7 +41,11 @@ const CategoryTable = ({ nodes, category }) => (
     </TableHead>
 
     <tbody>
-      {nodes.map(node => <TableBullet node={node.id} key={node.id} description={node.description} />)}
+      {
+        nodes.map(
+          node => <TableBullet node={node.id} key={node.id} description={node.description} />
+        )
+      }
     </tbody>
   </Table>
 );
@@ -57,15 +60,19 @@ const CategoryTable = ({ nodes, category }) => (
  * @return {} mapping from category to node list
  */
 export function category2NodeList(dictionary) {
-  return Object.keys( dictionary ).filter(
-      id => id.charAt(0) !== '_' && id === dictionary[id].id
-    ).map( id => dictionary[id] 
-    ).filter( node => node.category && node.id 
-    ).reduce( (lookup,node) => { 
+  return Object.keys(dictionary).filter(
+    id => id.charAt(0) !== '_' && id === dictionary[id].id
+  ).map(
+    id => dictionary[id]
+  ).filter(
+    node => node.category && node.id
+  ).reduce(
+    (lookup, node) => {
       if (!lookup[node.category]) { lookup[node.category] = []; }
-      lookup[node.category].push(node); 
-      return lookup; 
-    }, {});
+      lookup[node.category].push(node);
+      return lookup;
+    }, {}
+  );
 }
 
 /**
@@ -74,8 +81,8 @@ export function category2NodeList(dictionary) {
  * @param {dictionary} params 
  */
 const DataDictionary = ({ dictionary }) => {
-  const c2nl = category2NodeList( dictionary );
-    
+  const c2nl = category2NodeList(dictionary);
+
   return (
     <div>
       <h3> Data Dictionary Viewer </h3>

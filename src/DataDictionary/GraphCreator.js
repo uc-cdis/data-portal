@@ -87,7 +87,7 @@ function createDDGraph(nodes, edges, radius = 60, boxHeightMult, boxWidthMult, s
 
   function positionLink(d) {
     if (d.source.fy === d.target.fy &&
-      Math.abs(d.source.position_index[0] - d.target.position_index[0]) > 1
+      Math.abs(d.source.positionIndex[0] - d.target.positionIndex[0]) > 1
     ) {
       const curve = `M${d.source.x},${d.source.y
       }Q${d.source.x},${d.source.y + boxHeight / 2 * 1.25
@@ -95,7 +95,7 @@ function createDDGraph(nodes, edges, radius = 60, boxHeightMult, boxWidthMult, s
       }T ${d.target.x},${d.target.y}`;
       return curve;
     } else if (d.source.fx === d.target.fx &&
-      Math.abs(d.source.position_index[1] - d.target.position_index[1]) > 1
+      Math.abs(d.source.positionIndex[1] - d.target.positionIndex[1]) > 1
     ) {
       const curve = `M${d.source.x},${d.source.y
       }Q${d.source.x + boxWidth / 2 * 1.25},${d.source.y
@@ -103,9 +103,9 @@ function createDDGraph(nodes, edges, radius = 60, boxHeightMult, boxWidthMult, s
       }T ${d.target.x},${d.target.y}`;
       return curve;
     } else if (
-      (Math.abs(d.source.position_index[0] - d.target.position_index[0]) ===
-        Math.abs(d.source.position_index[1] - d.target.position_index[1])
-      ) && Math.abs(d.source.position_index[1] - d.target.position_index[1]) >= 2
+      (Math.abs(d.source.positionIndex[0] - d.target.positionIndex[0]) ===
+        Math.abs(d.source.positionIndex[1] - d.target.positionIndex[1])
+      ) && Math.abs(d.source.positionIndex[1] - d.target.positionIndex[1]) >= 2
     ) {
       const curve = `M${d.source.x},${d.source.y
       }Q${d.source.x},${(2 * d.source.y + d.target.y) / 3

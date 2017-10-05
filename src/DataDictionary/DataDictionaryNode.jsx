@@ -1,30 +1,26 @@
 import React from 'react';
-import { cube, Table, TableData, TableRow, TableHead, Bullet } from '../theme';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router';
-import { button } from '../theme';
-import { createNodesAndEdges } from '../utils';
-import { createFullGraph, create_abridged_graph } from './GraphCreator';
-import { ToggleButton } from '../DataModelGraph/component';
+
+import { Table, TableData, TableRow, TableHead, Bullet } from '../theme';
+import { assignNodePositions, createNodesAndEdges } from '../DataModelGraph/utils';
+import { createFullGraph, createAbridgedGraph } from './GraphCreator';
+import ToggleButton from '../DataModelGraph/ToggleButton';
+
 
 const LinkBullet = ({ link }) => {
-  const required = link.required == true ? 'Yes' : 'No';
+  const required = link.required ? 'Yes' : 'No';
   return (
     <TableRow>
-
       <TableData>
         <Link to={`/dd/${link.target_type}`}> {link.name} </Link>
       </TableData>
-
       <TableData>
         {required}
       </TableData>
-
       <TableData>
         {link.label}
       </TableData>
-
     </TableRow>
   );
 };
@@ -58,40 +54,39 @@ const getType = (schema) => {
   } else if ('enum' in schema) {
     return schema.enum.join(', ');
   }
+  return undefined;
 };
 
 const NodeTable = ({ node }) => (
   <Table>
     <tbody>
-    <TableRow>
-      <TableData first_cr> Title </TableData>
-      <TableData right>{ node.title }</TableData>
-    </TableRow>
+      <TableRow>
+        <TableData first_cr> Title </TableData>
+        <TableData right>{ node.title }</TableData>
+      </TableRow>
 
-    <TableRow>
-      <TableData first_cr> Category </TableData>
-      <TableData right>{ node.category}</TableData>
-    </TableRow>
+      <TableRow>
+        <TableData first_cr> Category </TableData>
+        <TableData right>{ node.category}</TableData>
+      </TableRow>
 
-    <TableRow>
-      <TableData first_cr> Description </TableData>
-      <TableData right>{ node.description}</TableData>
-    </TableRow>
+      <TableRow>
+        <TableData first_cr> Description </TableData>
+        <TableData right>{ node.description}</TableData>
+      </TableRow>
 
-    <TableRow>
-      <TableData first_cr> Unique Keys </TableData>
-      <TableData right>{
-        <ul>
-          {node.uniqueKeys.map((key, i) => <Bullet key={i}>{key.join(', ')}</Bullet>)}
-        </ul>
-      }</TableData>
+      <TableRow>
+        <TableData first_cr> Unique Keys </TableData>
+        <TableData right>{
+          <ul>
+            {node.uniqueKeys.map((key, i) => <Bullet key={i}>{key.join(', ')}</Bullet>)}
+          </ul>
+        }</TableData>
 
-    </TableRow>
+      </TableRow>
     </tbody>
   </Table>
 );
-const Required = styled(TableData)`
-`;
 const Col1 = styled(TableData)`
   width: 35%;
 `;
@@ -125,7 +120,7 @@ class CollapsibleList extends React.Component {
       return (
         <div>
           {this.props.items.map(item => <Bullet key={item}>{item}</Bullet>)}
-          <a href="#/" onClick={() => this.state.collapsed = 1}>{'Fewer options'}</a>
+          <a href="#/" onClick={() => { this.state.collapsed = 1; }}>{'Fewer options'}</a>
         </div>
       );
     }
@@ -147,7 +142,7 @@ const PropertyBullet = ({ property_name, property, required }) => {
   }
 
   let type = getType(property);
-  if (type === undefined) {
+  if (!type) {
     if ('oneOf' in property) {
       type = property.oneOf.map((item, i) => getType(item)).join(', ');
     }
@@ -165,7 +160,7 @@ const PropertyBullet = ({ property_name, property, required }) => {
 
 const PropertiesTable = ({ node, required, links }) => {
   const properties_fields = ['Property', 'Type', 'Required', 'Description'];
-  const linknames = links.map((link, i) => link.name);
+  const linknames = links.map(link => link.name);
   const properties = Object.keys(node.properties);
   return (
     <Table>
@@ -181,7 +176,7 @@ const PropertiesTable = ({ node, required, links }) => {
       <tbody>
         {
           properties.map((property, i) =>
-            (! linknames.includes(property)) &&
+            (!linknames.includes(property)) &&
             <PropertyBullet key={i} required={required.includes(property)} property_name={property} property={node.properties[property]} />,
           )
         }
@@ -211,7 +206,7 @@ class DictionaryGraph extends React.Component {
       if (document.getElementById('table_wrapper') !== null) {
         document.getElementById('table_wrapper').remove();
       }
-      create_abridged_graph(this.props.nodes, this.props.edges);
+      createAbridgedGraph(this.props.nodes, this.props.edges);
     }
   }
   componentDidUpdate() {
@@ -221,7 +216,7 @@ class DictionaryGraph extends React.Component {
       if (document.getElementById('table_wrapper') !== null) {
         document.getElementById('table_wrapper').remove();
       }
-      create_abridged_graph(this.props.nodes, this.props.edges);
+      createAbridgedGraph(this.props.nodes, this.props.edges);
     }
   }
   handleClick() {
@@ -233,49 +228,6 @@ class DictionaryGraph extends React.Component {
     const nodes = this.props.nodes;
     const edges = this.props.edges;
 
-    const root = 'program';
-    const queue = [];
-    const layout = [];
-    const placed = [];
-    let layoutLevel = 0;
-
-    queue.push(root);
-    layout.push([root]);
-    while (queue.length !== 0) {
-      const query = queue.shift(); // breadth first
-      for (let i = 0; i < edges.length; i++) {
-        if (edges[i].target === query || edges[i].target.name === query) {
-          if (!layout[layout_level + 1]) {
-            layout[layout_level + 1] = [];
-          }
-          queue.push(edges[i].source);
-          if ((layout[layout_level + 1].indexOf(edges[i].source) === -1) && (placed.indexOf(edges[i].source) == -1)) {
-            if (layout[layout_level + 1].length >= 3) {
-              layout_level += 1;
-              if (!layout[layout_level + 1]) {
-                layout[layout_level + 1] = [];
-              }
-            }
-            layout[layoutLevel + 1].push(edges[i].source);
-            placed.push(edges[i].source);
-          }
-        }
-      }
-      placed.push(query);
-    }
-
-    for (let i = 0; i < layout.length; i++) {
-      for (let j = 0; j < layout[i].length; j++) {
-        for (let k = 0; k < nodes.length; k++) {
-          if (nodes[k].name === layout[i][j]) {
-            nodes[k].position = [(j + 1) / (layout[i].length + 1), (i + 1) / (layout.length + 1)];
-            nodes[k].position_index = [j, i];
-            break;
-          }
-        }
-      }
-    }
-
     const divStyle = {
       width: 'inherit',
       backgroundColor: '#f4f4f4',
@@ -283,6 +235,7 @@ class DictionaryGraph extends React.Component {
       textAlign: 'center',
       position: 'relative',
     };
+    // Note: svg#data_model_graph is popuplated by createFull|AbridedGraph above
     return (
       <div>
         <Link to={'/dd'}> Explore dictionary as a table </Link>
@@ -307,10 +260,9 @@ const DataDictionaryNode = ({ params, submission }) => {
   const node = params.node;
   const dictionary = submission.dictionary;
 
-  if (node == 'graph') {
-    const nodes_and_edges = createNodesAndEdges(submission, true, []);
-    const nodes = nodes_and_edges.nodes;
-    const edges = nodes_and_edges.edges;
+  if (node === 'graph') {
+    const { nodes, edges } = createNodesAndEdges(submission, true, []);
+    assignNodePositions(nodes, edges, { numPerRow: 3 });
 
     return (
       <div>
@@ -322,13 +274,18 @@ const DataDictionaryNode = ({ params, submission }) => {
 
   let links = [];
   const required = ('required' in dictionary[node]) ? dictionary[node].required : [];
-  for (const link of submission.dictionary[node].links) {
-    if (link.name != undefined) {
-      links.push(link);
-    } else {
-      links = links.concat(link.subgroup);
-    }
+  if (submission.dictionary[node].links) {
+    submission.dictionary[node].links.forEach(
+      (link) => {
+        if (link.name) {
+          links.push(link);
+        } else if (link.subgroup) {
+          links = links.concat(link.subgroup);
+        }
+      }
+    );
   }
+
   return (
     <div>
       <h3> {node} </h3>

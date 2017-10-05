@@ -1,6 +1,26 @@
 import { fetchWrapper } from '../actions';
 import { submissionApiPath } from '../localconf';
 
+
+export const clearCounts = () => ({
+  type: 'CLEAR_COUNTS',
+});
+
+const receiveCounts = ({ status, data }) => {
+  switch (status) {
+    case 200:
+      return {
+        type: 'RECEIVE_COUNTS',
+        data: data.data,
+      };
+    default:
+      return {
+        type: 'FETCH_ERROR',
+        error: data.data,
+      };
+  }
+};
+
 /**
  * getCounts: Compose and send a single graphql query to get a count of how 
  *    many of each node and edge are in the current state
@@ -8,36 +28,54 @@ import { submissionApiPath } from '../localconf';
 export const getCounts = (type, project, dictionary) => {
   let query = '{';
 
+  function appendCountToQuery(element) {
+    if (element !== 'metaschema' && !element.startsWith('_')) {
+      query += `_${element}_count (project_id:"${project}"),`;
+    }
+  }
+
+  function appendLinkToQuery(source, dest, name) {
+    if (source !== 'metaschema' && !source.startsWith('_')) {
+      query += `${source}_to_${dest}_link: ${source}(with_links: ["${name}"], first:1, project_id:"${project}"){submitter_id},`;
+    }
+  }
+
   type.forEach((element) => {
     if (element !== 'program') {
-      append_count_to_query(element);
+      appendCountToQuery(element);
     }
   });
 
-  const nodes_to_hide = ['program'];
-  console.log(`dictionary: ${dictionary}`);
-  for (const val in dictionary) {
-    if (!val.startsWith('_') && dictionary[val].links) {
-      for (let i = 0; i < dictionary[val].links.length; i++) {
-        if (dictionary[val].links[i].target_type) {
-          if (nodes_to_hide.includes(dictionary[val].links[i].target_type) || nodes_to_hide.includes(val)) {
-            continue;
-          }
-          append_link_to_query(val, dictionary[val].links[i].target_type, dictionary[val].links[i].name);
-        }
-        if (dictionary[val].links[i].subgroup) {
-          for (let j = 0; j < dictionary[val].links[i].subgroup.length; j++) {
-            if (dictionary[val].links[i].subgroup[j].target_type) {
-              if (nodes_to_hide.includes(dictionary[val].links[i].subgroup[j].target_type) || nodes_to_hide.includes(val)) {
-                continue;
-              }
-              append_link_to_query(val, dictionary[val].links[i].subgroup[j].target_type, dictionary[val].links[i].subgroup[j].name);
-            }
-          }
-        }
+  const nodesToHide = { program: true };
+  // Add links to query
+  Object.keys(dictionary).filter(
+    name => (!name.startsWith('_' && dictionary[name].links))
+  ).reduce( // extract links from each node 
+    (linkList, name) => {
+      const node = dictionary[name];
+      const newLinks = node.links;
+      return newLinks ? newLinks.map(
+        l => ({ source: name, target: l.target_type, name: l.name, })
+      ).concat(linkList) : linkList;
+    }, []
+  ).reduce( // extract subgroups from each link
+    (linkList, link) => {
+      let result = linkList;
+      if (link.target) {
+        result.push(link);
       }
-    }
-  }
+      if (link.subgroup) {
+        result = link.subgroup.map(
+          sg => ({ source: link.source, target: sg.target_type, name: sg.name })
+        ).concat(linkList);
+      }
+      return result;
+    }, []
+  ).filter(
+    l => !nodesToHide[l.source] && !nodesToHide[l.target]
+  ).forEach(
+    ({ source, target, name }) => appendLinkToQuery(source, target, name)
+  );
 
   query = query.concat('}');
   return fetchWrapper({
@@ -48,34 +86,4 @@ export const getCounts = (type, project, dictionary) => {
     method: 'POST',
     handler: receiveCounts,
   });
-
-  function append_count_to_query(element) {
-    if (element !== 'metaschema' && !element.startsWith('_')) {
-      query += `_${element}_count (project_id:\"${project}\"),`;
-    }
-  }
-  function append_link_to_query(source, dest, name) {
-    if (source !== 'metaschema' && !source.startsWith('_')) {
-      query += `${source}_to_${dest}_link: ${source}(with_links: [\"${name}\"], first:1, project_id:\"${project}\"){submitter_id},`;
-    }
-  }
-};
-
-export const clearCounts = () => ({
-  type: 'CLEAR_COUNTS',
-});
-
-let receiveCounts = ({ status, data }) => {
-  switch (status) {
-  case 200:
-    return {
-      type: 'RECEIVE_COUNTS',
-      data: data.data,
-    };
-  default:
-    return {
-      type: 'FETCH_ERROR',
-      error: data.data,
-    };
-  }
 };
