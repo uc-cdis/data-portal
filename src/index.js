@@ -19,7 +19,7 @@ import DataDictionary from './DataDictionary/ReduxDataDictionary';
 import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
 import ProjectSubmission from './Submission/component';
 import UserProfile from './UserProfile/component';
-import Certificate from './Certificate/component';
+import CertificateQuiz from './Certificate/ReduxQuiz';
 import GraphQLQuery from './GraphQLEditor/component';
 import { loginSubmissionAPI } from './Submission/actions';
 import { fetchDictionary } from './queryactions';
@@ -85,7 +85,7 @@ async function init() {
               <Route
                 path="/quiz"
                 onEnter={requireAuth(store)}
-                component={withBoxAndNav(withAuthTimeout(Certificate))}
+                component={withBoxAndNav(withAuthTimeout(CertificateQuiz))}
               />
               <Route
                 path="/dd"

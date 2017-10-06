@@ -1,9 +1,50 @@
 import React, { Component } from 'react';
 import { Form, FormError, RadioGroup, Radio } from 'react-form';
-import { submitForm, updateForm } from './actions';
-import { connect } from 'react-redux';
-import { QuestionItem, OptionBullet, SubmitButton, Tooltip } from './style';
-import * as constants from './constants';
+import styled from 'styled-components';
+import { button } from '../theme';
+
+
+const OptionBullet = styled.p`
+  input {
+    margin-right: 1em;
+  }
+
+`;
+const QuestionItem = styled.section`
+  .FormError {
+    display: inline-block !important;
+    margin-left: 2em;
+    font-style: italic;
+    font-size: 0.8em;
+    color: red;
+  }
+`;
+const SubmitButton = styled.a`
+  color: darkgreen;
+  border: 1px solid darkgreen;
+  ${button};
+`;
+
+const Tooltip = styled.div`
+  display: inline-block;
+  margin-left: 1em;
+  position: relative;
+  & p{
+    display: none;
+  }
+  &:hover p {
+    display: block;
+    position: absolute;
+    left: 30px;
+    background: antiquewhite;
+    width: 300px;
+    padding: 0.5em;
+    margin: 0px;
+    line-height: 1.5em;
+    top: 0px;
+  }
+`;
+
 
 class Question extends Component {
   render() {
@@ -17,7 +58,13 @@ class Question extends Component {
           { this.props.showErrors && <FormError field={this.props.content.id} /> }
         </div>
         <RadioGroup showErrors={false} field={this.props.content.id}>
-          {this.props.content.options.map((option, i) => <OptionBullet key={i}><Radio onChange={this.props.onChange} name={this.props.content.id} value={option} />{option}</OptionBullet>,
+          {this.props.content.options.map(
+            (option, i) =>
+              (<OptionBullet key={i}><Radio
+                onChange={this.props.onChange}
+                name={this.props.content.id}
+                value={option}
+              />{option}</OptionBullet>),
           )}
         </RadioGroup>
       </QuestionItem>
@@ -25,9 +72,12 @@ class Question extends Component {
   }
 }
 
-class CertificateComponent extends Component {
-  constructor() {
-    super();
+/**
+ * Little quiz component - roperites: questionList, title, onSubmit
+ */
+class Quiz extends Component {
+  constructor(props) {
+    super(props);
     this.state = { display_error: false };
     // required to be able to pass to child
     this.hideError = this.hideError.bind(this);
@@ -38,9 +88,9 @@ class CertificateComponent extends Component {
       this.props.onUpdateForm(values);
     }
     const result = {};
-    for (const item of constants.certificate_form) {
+    this.props.questionList.forEach((item) => {
       result[[item.id]] = values[item.id] === item.options[item.answer] ? undefined : 'wrong answer';
-    }
+    });
     return result;
   }
   // hide errors when user is updating the form
@@ -53,19 +103,30 @@ class CertificateComponent extends Component {
     this.setState({ display_error: true });
   }
   render() {
+    const { questionList, title } = this.props;
+
     return (
       <div>
-        <h4>{constants.title}</h4>
+        <h4>{title}</h4>
         <Form
           onSubmit={(values) => { this.props.onSubmitForm(values); }}
           validate={values => this.validateForm(values)}
           defaultValues={this.props.certificate.certificate_result}
         >
 
-          {({ errors, submitForm }) => (
+          {({ submitForm }) => (
             <form>
               {
-                constants.certificate_form.map((item, i) => <Question content={item} onChange={this.hideError} index={i} key={i} showErrors={this.state.display_error} />)
+                questionList.map(
+                  (item, i) =>
+                    (<Question
+                      content={item}
+                      onChange={this.hideError}
+                      index={i}
+                      key={i}
+                      showErrors={this.state.display_error}
+                    />),
+                )
               }
               <SubmitButton type="submit" onClick={() => { submitForm(); this.showError(); }}>Submit</SubmitButton>
             </form>
@@ -76,15 +137,4 @@ class CertificateComponent extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.user,
-  certificate: state.certificate,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onUpdateForm: data => dispatch(updateForm(data)),
-  onSubmitForm: data => dispatch(submitForm(data)),
-});
-
-const Certificate = connect(mapStateToProps, mapDispatchToProps)(CertificateComponent);
-export default Certificate;
+export default Quiz;
