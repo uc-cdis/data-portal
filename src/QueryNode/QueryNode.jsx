@@ -2,13 +2,10 @@ import React from 'react';
 import { Link } from 'react-router';
 import styled, { css } from 'styled-components';
 import { reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
 import Select from 'react-select';
 
 import { jsonToString, getSubmitPath } from '../utils';
-import { updatePopup } from '../actions';
 import { Popup } from '../Popup/component';
-import { clearDeleteSession, fetchQueryNode, submitSearchForm, deleteNode, storeNodeInfo } from './actions';
 
 
 const SearchButton = styled.input`
@@ -142,7 +139,7 @@ const Entities = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => (
 /**
  * QueryNode shows the details of a particular node
  */
-export class QueryNode extends React.Component {
+class QueryNode extends React.Component {
   /** 
    * Internal helper to render the "view node" popup if necessary
    * based on the popups and query_nodes properties attached to this component.
@@ -252,25 +249,4 @@ export class QueryNode extends React.Component {
   }
 }
 
-
-const mapStateToProps = (state, ownProps) => {
-  const result = {
-    submission: state.submission,
-    ownProps,
-    query_nodes: state.query_nodes,
-    popups: Object.assign({}, state.popups),
-  };
-  return result;
-};
-
-const mapDispatchToProps = dispatch => ({
-  onSearchFormSubmit: (value, url) => dispatch(submitSearchForm(value, url)),
-  onUpdatePopup: state => dispatch(updatePopup(state)),
-  onClearDeleteSession: () => dispatch(clearDeleteSession()),
-  onDeleteNode: ({ id, project }) => {
-    dispatch(deleteNode({ id, project }));
-  },
-  onStoreNodeInfo: ({ id, project }) => dispatch(fetchQueryNode({ id, project })).then(() => dispatch(storeNodeInfo({ id }))),
-});
-const ReduxQueryNode = connect(mapStateToProps, mapDispatchToProps)(QueryNode);
-export default ReduxQueryNode;
+export default QueryNode;

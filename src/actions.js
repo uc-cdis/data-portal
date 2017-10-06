@@ -8,28 +8,68 @@ export const updatePopup = state => ({
   data: state,
 });
 
-export const fetchWrapper = ({ path, method = 'GET', body = null, handler, custom_headers, callback = () => (null) }) => (dispatch) => {
+
+/**
+ * Little helper issues fetch, then resolves response
+ * as text, and tries to JSON.parse the text before resolving, but
+ * ignores JSON.parse failure and reponse.status, and returns {response, data} either way.
+ * If dispatch is supplied, then dispatch(connectionError()) on fetch reject.
+ * 
+ * @method fetchJsonOrText
+ * @param {path,method=GET,body=null,customHeaders?, dispatch?} opts 
+ * @return Promise<{response,data,status,headers}
+ */
+export const fetchJsonOrText = (opts) => {
+  const { path, method = 'GET', body = null, customHeaders } = opts;
+
   const request = {
     credentials: 'same-origin',
-    headers: { ...headers, ...custom_headers },
+    headers: { ...headers, ...customHeaders },
     method,
     body,
   };
-  return fetch(path, request).then(response => response.text().then((data) => {
-    if (data) {
-      try {
-        data = JSON.parse(data);
-      } catch (e) {
-        // # do nothing
+  return fetch(path, request
+    ).then(
+      response => response.text().then(
+        (data) => {
+          if (data) {
+            try {
+              data = JSON.parse(data);
+            } catch (e) {
+              // # do nothing
+            }
+          }
+          return { response, data, status: response.status, headers: response.headers };
+        }),
+        (error) => {
+          if (dispatch) { dispatch(connectionError()); }
+          return Promise.reject(error);
+        }
+    );
+}
+
+/**
+ * Redux 'thunk' wrapper around fetchJsonOrText 
+ * invokes dispatch(handler( { status, data, headers} ) and callback()
+ * and propagates {response,data, status, headers} on resolved fetch, otherwise dipatch(connectionError()) on
+ * fetch rejection.
+ * May prefer this over straight call to fetchJsonOrText in Redux context due to
+ * conectionError() dispatch on fetch rejection. 
+ * 
+ * @param {path,method=GET,body=null,customerHeaders,handler,callback} opts
+ * @return Promise 
+ */
+export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders, handler, callback = () => (null) }) => (dispatch) => {
+  return fetchJsonOrText({ path, method, body, customHeaders, dispatch }
+    ).then(
+      ({ response,data }) => {
+        if ( handler ) {
+          dispatch(handler({ status: response.status, data, headers: response.headers }));
+        }
+        callback();
+        return { response, data, status: response.status, headers: response.headers };
       }
-    }
-    dispatch(handler({ status: response.status, data, headers: response.headers }));
-    callback();
-    return Promise.resolve(data);
-  })).catch((error) => {
-    console.log(error);
-    dispatch(connectionError());
-  });
+    );
 };
 
 export const fetchGraphQL = (graphQLParams) => {
@@ -77,33 +117,32 @@ export const connectionError = () => {
   };
 };
 
-export const receiveUser = ({ status, data }) => {
-  switch (status) {
-  case 200:
-    return {
-      type: 'RECEIVE_USER',
-      user: data,
-    };
-  case 401:
-    return {
-      type: 'UPDATE_POPUP',
-      data: { auth_popup: true },
-    };
-  default:
-    return {
-      type: 'FETCH_ERROR',
-      error: data.error,
-    };
-  }
-};
 
-export const startFetchUser = () => {
-};
 
-export const fetchUser = () => fetchWrapper({
+export const fetchUser = dispatch => fetchJsonOrText({
   path: `${userapiPath}user/`,
-  handler: receiveUser,
-});
+  dispatch
+}).then(
+  ({ status, data }) => {
+    switch (status) {
+    case 200:
+      return {
+        type: 'RECEIVE_USER',
+        user: data,
+      };
+    case 401:
+      return {
+        type: 'UPDATE_POPUP',
+        data: { auth_popup: true },
+      };
+    default:
+      return {
+        type: 'FETCH_ERROR',
+        error: data.error,
+      };
+    }
+  }
+).then((msg) => { dispatch(msg); });
 
 export const requireAuth = (store, additionalHooks) => (nextState, replace, callback) => {
   window.scrollTo(0, 0);
@@ -127,7 +166,7 @@ export const requireAuth = (store, additionalHooks) => (nextState, replace, call
     return Promise.resolve();
   };
   store
-    .dispatch(fetchUser())
+    .dispatch(fetchUser)
     .then(resolvePromise)
     .then(() => callback());
 };
@@ -139,27 +178,26 @@ export const logoutAPI = () => dispatch => dispatch(fetchWrapper({
   handler: receiveAPILogout,
 })).then(() => document.location.replace(`${userapiPath}/logout?next=${basename}`));
 
-export const fetchOAuthURL = oauth_path =>
+export const fetchOAuthURL = oauth_path => dispatch =>
 // Get cloud_middleware's authorization url
-  fetchWrapper({
+  fetchJsonOrText({
     path: `${oauth_path}authorization_url`,
-    handler: receiveAuthorizationUrl,
-  })
-;
-
-export const receiveAuthorizationUrl = ({ status, data }) => {
-  switch (status) {
-  case 200:
-    return {
-      type: 'RECEIVE_AUTHORIZATION_URL',
-      url: data,
-    };
-  default:
-    return {
-      type: 'FETCH_ERROR',
-      error: data.error,
-    };
-  }
-};
+    dispatch,
+  }).then(
+    ({ status, data }) => {
+      switch (status) {
+      case 200:
+        return {
+          type: 'RECEIVE_AUTHORIZATION_URL',
+          url: data,
+        };
+      default:
+        return {
+          type: 'FETCH_ERROR',
+          error: data.error,
+        };
+      }
+    }
+  ).then( msg => dispatch(msg) );
 
 export const receiveAPILogout = handleResponse('RECEIVE_API_LOGOUT');

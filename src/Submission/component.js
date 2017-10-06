@@ -4,7 +4,7 @@ import SubmitTSV from './submitTSV';
 import styled from 'styled-components';
 import { Link } from 'react-router';
 import DataModelGraph from '../DataModelGraph/ReduxDataModelGraph';
-import { getCounts } from '../DataModelGraph/actions';
+import { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
 import SubmitForm from './submitForm';
 import Spinner from '../components/Spinner';
 

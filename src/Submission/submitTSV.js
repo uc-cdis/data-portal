@@ -7,7 +7,7 @@ import AceEditor from 'react-ace';
 import { uploadTSV, submitToServer, updateFileContent } from './actions';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { getCounts } from '../DataModelGraph/actions';
+import { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
 import { button, UploadButton, SubmitButton } from '../theme';
 
 
