@@ -15,16 +15,6 @@ export const fetchWrapper = ({ path, method = 'GET', body = null, handler, custo
     method,
     body,
   };
-  if ( method === 'DELETE' ) {
-    // emulate failure
-    return new Promise( (resolve,reject) => {
-      setTimeout(
-        () => {
-          dispatch( handler( { status: 200, data: { error: "Frick jack" }, headers:{} } ) );
-        }, 5000
-      );
-    });
-  }
   return fetch(path, request).then(response => response.text().then((data) => {
     if (data) {
       try {
