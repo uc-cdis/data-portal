@@ -113,7 +113,7 @@ class CollapsibleList extends React.Component {
       return (
         <div>
           {this.props.items.slice(0, 3).map(item => <Bullet key={item}>{item}</Bullet>)}
-          <a href="#/" onClick={() => this.state.collapsed = 2}>{'More options'}</a>
+          <a href="#/" onClick={() => { this.state.collapsed = 2; }}>{'More options'}</a>
         </div>
       );
     } else if (this.state.collapsed === 2) {
@@ -144,7 +144,7 @@ const PropertyBullet = ({ property_name, property, required }) => {
   let type = getType(property);
   if (!type) {
     if ('oneOf' in property) {
-      type = property.oneOf.map((item, i) => getType(item)).join(', ');
+      type = property.oneOf.map((item) => getType(item)).join(', ');
     }
   }
 

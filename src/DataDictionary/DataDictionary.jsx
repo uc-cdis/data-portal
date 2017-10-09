@@ -43,7 +43,7 @@ const CategoryTable = ({ nodes, category }) => (
     <tbody>
       {
         nodes.map(
-          node => <TableBullet node={node.id} key={node.id} description={node.description} />
+          node => <TableBullet node={node.id} key={node.id} description={node.description} />,
         )
       }
     </tbody>
@@ -61,18 +61,19 @@ const CategoryTable = ({ nodes, category }) => (
  */
 export function category2NodeList(dictionary) {
   return Object.keys(dictionary).filter(
-    id => id.charAt(0) !== '_' && id === dictionary[id].id
+    id => id.charAt(0) !== '_' && id === dictionary[id].id,
   ).map(
-    id => dictionary[id]
+    id => dictionary[id],
   ).filter(
-    node => node.category && node.id
-  ).reduce(
-    (lookup, node) => {
-      if (!lookup[node.category]) { lookup[node.category] = []; }
-      lookup[node.category].push(node);
-      return lookup;
-    }, {}
-  );
+    node => node.category && node.id,
+  )
+    .reduce(
+      (lookup, node) => {
+        if (!lookup[node.category]) { lookup[node.category] = []; }
+        lookup[node.category].push(node);
+        return lookup;
+      }, {},
+    );
 }
 
 /**

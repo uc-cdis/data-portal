@@ -55,11 +55,11 @@ describe('the DataModelGraph utils helper', () => {
     expect(treeLevel2Names[1].length).toBe(2); // b, d
     expect(treeLevel2Names[2].length).toBe(4); // a, c, x, y
     expect(name2Level.d).toBe(1); // d on level 1
-    for (let level=0; level < treeLevel2Names.length; ++level) {
+    for (let level = 0; level < treeLevel2Names.length; ++level) {
       treeLevel2Names[level].forEach(
         (nodeName) => {
           expect(name2Level[nodeName]).toBe(level);
-        }
+        },
       );
     }
   });
@@ -76,14 +76,15 @@ describe('the DataModelGraph utils helper', () => {
         expect(node.position[1] > 0 && node.position[1] <= 1).toBe(true);
         expect(node.positionIndex[1]).toBe(name2Level[node.name]);
         expect(treeLevel2Names[node.positionIndex[1]][node.positionIndex[0]]).toBe(node.name);
-      }
+      },
     );
   });
 
   it('can organize nodes into rows', () => {
     const { nodes, edges } = buildTestData();
     assignNodePositions(nodes, edges, { numPerRow: 2 });
-    const maxRows = 1 + Math.round((nodes.length-1) / 2); // up to 2 nodes per row, root on own row
+    // up to 2 nodes per row, root on own row
+    const maxRows = 1 + Math.round((nodes.length - 1) / 2);
     nodes.forEach(
       (node) => {
         expect(Array.isArray(node.position)).toBe(true);
@@ -91,7 +92,7 @@ describe('the DataModelGraph utils helper', () => {
         expect(node.position[1] > 0 && node.position[1] <= 1).toBe(true);
         expect(node.positionIndex[0] < 2).toBe(true); // at most 2 nodes per row
         expect(node.positionIndex[1] < maxRows).toBe(true);
-      }
+      },
     );
   });
 });

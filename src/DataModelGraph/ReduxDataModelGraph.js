@@ -71,15 +71,14 @@ export const getCounts = (type, project, dictionary) => {
 
   query = query.concat('}');
 
-  return (dispatch) => {
-    return fetchJsonOrText({
-      path: `${submissionApiPath}graphql`,
-      body: JSON.stringify({
-        query,
-      }),
-      method: 'POST',
-      dispatch,
-    })
+  return dispatch => fetchJsonOrText({
+    path: `${submissionApiPath}graphql`,
+    body: JSON.stringify({
+      query,
+    }),
+    method: 'POST',
+    dispatch,
+  })
     .then(
       ({ status, data }) => {
         switch (status) {
@@ -94,11 +93,10 @@ export const getCounts = (type, project, dictionary) => {
             error: data.data,
           };
         }
-      }
+      },
     )
     .then((msg) => { dispatch(msg); });
-  };
-}
+};
 
 
 const mapStateToProps = state => ({

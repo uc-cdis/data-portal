@@ -46,7 +46,7 @@ export function createSvgGraph(nodes, edges) {
   addArrows(graph);
 
   // calculatePosition adds .fx, .fy to nodes as side effect
-  const calcPosObj = calculatePosition(nodes, width, height); 
+  const calcPosObj = calculatePosition(nodes, width, height);
   const numRows = calcPosObj.fyValsLength;
   const unclickableNodes = ['program', 'project'];
   const nodeTypes = nodes.map(node => node.name);
@@ -121,9 +121,25 @@ export function createSvgGraph(nodes, edges) {
       return '1em';
     });
 
-  // d3 "forces" layout - see http://d3indepth.com/force-layout/
-  const simulation = d3.forceSimulation()
-    .force('link', d3.forceLink().id(d => d.name));
+  // part of d3 simulation (below)
+  function positionLink(d) {
+    if (d.source.fy === d.target.fy) {
+      const curve = `M${d.source.x},${d.source.y
+      }Q${d.source.x},${d.source.y + (height / numRows) / 3
+      } ${(d.source.x + d.target.x) / 2},${d.source.y + (height / numRows) / 3
+      }T ${d.target.x},${d.target.y}`;
+      return curve;
+    } else if (d.source.fx === d.target.fx && (d.target.y - d.source.y) > (radius * 2)) {
+      const curve = `M${d.source.x},${d.source.y
+      }Q${d.source.x + radius * 1.25},${d.source.y
+      } ${d.source.x + radius * 1.25},${(d.source.y + d.target.y) / 2
+      }T ${d.target.x},${d.target.y}`;
+      return curve;
+    }
+    return `M${d.source.x},${d.source.y
+    }L${(d.source.x + d.target.x) / 2},${(d.source.y + d.target.y) / 2
+    }L${d.target.x},${d.target.y}`;
+  }
 
   // part of d3 simulation
   function ticked() {
@@ -140,25 +156,10 @@ export function createSvgGraph(nodes, edges) {
       .attr('cy', (d) => { d.y = Math.max(radius, Math.min(height - radius, d.y)); return d.y; })
       .attr('transform', d => `translate(${[d.x, d.y]})`);
   }
-  
-  function positionLink(d) {
-    if (d.source.fy === d.target.fy) {
-      const curve = `M${d.source.x},${d.source.y
-        }Q${d.source.x},${d.source.y + (height / numRows) / 3
-        } ${(d.source.x + d.target.x) / 2},${d.source.y + (height / numRows) / 3
-        }T ${d.target.x},${d.target.y}`;
-      return curve;
-    } else if (d.source.fx === d.target.fx && (d.target.y - d.source.y) > (radius * 2)) {
-      const curve = `M${d.source.x},${d.source.y
-        }Q${d.source.x + radius * 1.25},${d.source.y
-        } ${d.source.x + radius * 1.25},${(d.source.y + d.target.y) / 2
-        }T ${d.target.x},${d.target.y}`;
-      return curve;
-    }
-    return `M${d.source.x},${d.source.y
-      }L${(d.source.x + d.target.x) / 2},${(d.source.y + d.target.y) / 2
-      }L${d.target.x},${d.target.y}`;
-  }
+
+  // d3 "forces" layout - see http://d3indepth.com/force-layout/
+  const simulation = d3.forceSimulation()
+    .force('link', d3.forceLink().id(d => d.name));
 
   // Put the nodes and edges in the correct spots
   simulation
@@ -185,15 +186,34 @@ class SvgGraph extends React.Component {
   }
 
   componentDidMount() {
-    Object.assign(this.state, createSvgGraph(this.props.nodes, this.props.edges));
-  }
-
-  componentDidUpdate() {
+    //
+    // This is crazy, because createSvgGraph is going to add nodes
+    // to the react-managed DOM via a d3 simulation ...
+    //
     const { minX, minY } = createSvgGraph(this.props.nodes, this.props.edges);
     if (minX !== this.state.minX || minY !== this.state.minY) {
-      Object.assign(this.state, { minX, minY });
+      // this will result eventually in this.componentDidUpdate ...
+      //    https://reactjs.org/docs/react-component.html#componentwillupdate
+      this.setState(Object.assign(this.state, { minX, minY }));
     }
   }
+
+
+  componentDidUpdate() {
+    // break recursion with if: componentDidUpdate -> setState -> componentDidUpdate ...
+    //        https://reactjs.org/docs/react-component.html#componentwillupdate
+    if (this.state.nodes !== this.props.nodes || this.state.edges !== this.props.edges) {
+      const { minX, minY } = createSvgGraph(this.props.nodes, this.props.edges);
+      if (minX !== this.state.minX || minY !== this.state.minY) {
+        this.setState(
+          Object.assign(this.state, 
+            { minX, minY, nodes: this.props.nodes, edges: this.props.edges }
+          ),
+        );
+      }
+    }
+  }
+
 
   render() {
     const { minX, minY } = this.state;
@@ -206,6 +226,7 @@ class SvgGraph extends React.Component {
 
     const divStyle = {
       height,
+      width: `${width + 100}px`,
       backgroundColor: '#f4f4f4',
       marginLeft: 'auto',
       marginRight: 'auto',
