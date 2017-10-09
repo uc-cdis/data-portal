@@ -4,7 +4,6 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import { user_profile } from './UserProfile/reducers';
 import { certificate } from './Certificate/reducers';
-import { login } from './Login/reducers';
 import { submission } from './Submission/reducers';
 import homepage from './Homepage/reducers';
 import { query_nodes } from './QueryNode/reducers';
@@ -53,7 +52,6 @@ export const removeDeletedNode = (state, id) => {
 const reducers = combineReducers({ explorer,
   homepage,
   popups,
-  login,
   user,
   status,
   submission,

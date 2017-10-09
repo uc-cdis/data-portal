@@ -5,7 +5,7 @@ import { reduxForm } from 'redux-form';
 import Select from 'react-select';
 
 import { jsonToString, getSubmitPath } from '../utils';
-import { Popup } from '../Popup/component';
+import Popup from '../Popup/Popup';
 
 
 const SearchButton = styled.input`

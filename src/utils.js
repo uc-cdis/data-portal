@@ -5,7 +5,7 @@ import { submissionApiPath } from './localconf';
 import { Box, Body, Margin } from './theme';
 import Nav from './Nav/ReduxNavBar';
 import Footer from './components/Footer';
-import { AuthTimeoutPopup } from './Popup/component';
+import ReduxAuthTimeoutPopup from './Popup/ReduxAuthTimeoutPopup';
 
 export const getSubmitPath = (project) => {
   const path = project.split('-');
@@ -53,7 +53,7 @@ export const withBoxAndNav = Component => ({ ...props }) => (
 
 export const withAuthTimeout = Component => ({ ...props }) => (
   <div>
-    <AuthTimeoutPopup />
+    <ReduxAuthTimeoutPopup />
     <Component {...props} />
   </div>
 );

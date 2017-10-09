@@ -9,7 +9,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'react-select/dist/react-select.css';
 
 import { requireAuth, enterHook, fetchUser } from './actions';
-import Login from './Login/component';
+import Login from './Login/Login';
 import AmbiHomepage from './Homepage/AmbiHomepage';
 import ExplorerPage from './Explorer/ExplorerPage';
 import QueryNode, { clearResultAndQuery } from './QueryNode/ReduxQueryNode';

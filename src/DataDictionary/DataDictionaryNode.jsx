@@ -229,7 +229,7 @@ class DictionaryGraph extends React.Component {
     const edges = this.props.edges;
 
     const divStyle = {
-      width: 'inherit',
+      width: '1100px',
       backgroundColor: '#f4f4f4',
       margin: '0 auto',
       textAlign: 'center',

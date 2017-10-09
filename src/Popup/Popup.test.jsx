@@ -1,6 +1,6 @@
 import React from 'react';
-import { Popup } from './component';
 import renderer from 'react-test-renderer';
+import Popup from './Popup';
 
 
 test('Test Popup', () => {

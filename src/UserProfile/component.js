@@ -1,7 +1,8 @@
 import React from 'react';
 import { jsonToString, getSubmitPath } from '../utils';
 import { updatePopup } from '../actions';
-import { Popup, SavePopup } from '../Popup/component';
+import Popup from '../Popup/Popup';
+import SavePopup from '../Popup/SavePopup';
 import { connect } from 'react-redux';
 import { fetchAccess, createKey, deleteKey,
   requestDeleteKey, clearDeleteSession, clearCreationSession } from './actions';
