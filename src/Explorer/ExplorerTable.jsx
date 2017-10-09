@@ -9,7 +9,7 @@ import { getReduxStore } from '../reduxStore';
 const makeDefaultState = () => ({
   page: 0,
   originalPage: 0,
-  originalPageToSet: 0,
+  pageSize: 0
 });
 
 export class ExplorerTableComponent extends Component {
@@ -19,12 +19,14 @@ export class ExplorerTableComponent extends Component {
     lastPageSize: PropTypes.number,
     pageSize: PropTypes.number.isRequired,
     pageCount: PropTypes.number.isRequired,
+    originalPage: PropTypes.number,
     onPageLoadNextMore: PropTypes.func,
     onPageLoadPrevMore: PropTypes.func,
   };
 
   static defaultProps = {
     lastPageSize: 0,
+    originalPage: 0,
     onPageLoadNextMore: () => {},
     onPageLoadPrevMore: () => {},
   };
@@ -49,34 +51,30 @@ export class ExplorerTableComponent extends Component {
     this.resetState = this.resetState.bind(this);
   }
 
-  /**
-   * Subscribe to Redux updates at update time
-   */
-  componentWillUpdate() {
+  componentWillReceiveProps (nextProps) {
     getReduxStore().then(
       (store) => {
         const explorerState = store.getState().explorer;
-        if (explorerState.resetCurrentPage) {
-          this.setState({ page: 0, originalPage: 0 });
-          store.dispatch({
-            type: 'UNSET_RESET_CURRENT_PAGE',
-          });
-        } else if (explorerState.originalPageToReset.includes(this.props.name)
-          && explorerState.more_data === 'RECEIVED') {
-          this.setState({
-            page: this.state.originalPageToSet,
-            originalPage: this.state.originalPageToSet,
-          });
-          store.dispatch({
-            type: 'UNSET_RESET_ORIGIN_PAGE',
-          });
+        if (explorerState.more_data === 'RECEIVED') {
+          let filesList = nextProps.filesList;
+          const numberOfPages = filesList ? parseInt(filesList.length / nextProps.pageSize) : 0;
+          let newPage = nextProps.originalPage + (this.state.page % this.props.pageCount);
+          let page = (numberOfPages > this.state.page % this.props.pageCount)
+            ? newPage : (nextProps.originalPage + numberOfPages);
+          this.setState({page: page,
+            originalPage: nextProps.originalPage,
+            pageSize: nextProps.pageSize});
+          if (explorerState.originalPageToReset.includes(this.props.name))
+            store.dispatch({
+              type: 'UNSET_RESET_ORIGIN_PAGE',
+            });
         }
       },
     );
   }
 
   resetState() {
-    this.setState(makeDefaultState({}));
+    this.setState(makeDefaultState());
   }
 
   loadMoreNext() {
@@ -96,10 +94,14 @@ export class ExplorerTableComponent extends Component {
     const filesList = this.props.filesList
       ? this.props.filesList.slice(startingPage * this.props.pageSize,
         (startingPage * this.props.pageSize) + this.props.pageSize) : [];
-    const numberOfPages = this.props.filesList ? this.props.filesList.length / this.props.pageSize : 0;
     let pages = [];
-    for (let i = 0; i < numberOfPages; i += 1) {
-      pages = [...pages, this.state.originalPage + i];
+    if (this.state.pageSize > 0)
+    {
+      const numberOfPages = this.props.filesList ?
+        this.props.filesList.length / this.state.pageSize : 0;
+      for (let i = 0; i < numberOfPages; i += 1) {
+        pages = [...pages, this.state.originalPage + i];
+      }
     }
     return (
       <ExplorerTableStyle>
@@ -139,7 +141,8 @@ export class ExplorerTableComponent extends Component {
                   >
                     {item + 1}
                   </PageButton>))
-              }</TableFootCell>
+              }
+            </TableFootCell>
             <TableFootCell c_width={'20%'}>
               {
                 (this.props.lastPageSize === 0) &&

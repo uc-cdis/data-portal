@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryRenderer } from 'react-relay';
 import environment from '../environment';
-import { RelayExplorerComponent } from './component';
+import { RelayExplorerComponent } from './ExplorerComponent';
 import { GQLHelper } from '../gqlHelper';
 import Spinner from '../components/Spinner';
 

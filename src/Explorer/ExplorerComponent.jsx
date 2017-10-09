@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { createRefetchContainer } from 'react-relay';
-import { withAuthTimeout, withBoxAndNav } from '../utils';
+import { withAuthTimeout, withBoxAndNav, computeLastPageSizes } from '../utils';
 import { GQLHelper } from '../gqlHelper';
 import { getReduxStore } from '../reduxStore';
 import ExplorerTabPanel from './ExplorerTabPanel';
@@ -82,14 +82,12 @@ class ExplorerComponent extends Component {
     getReduxStore().then(
       (store) => {
         const explorerState = store.getState().explorer;
-        const newLastPageSizes = Object.keys(receivedFilesMap).reduce((d, key) => {
-          const result = d;
-          result[key] = receivedFilesMap[key].length % explorerState.pageSize;
-          return result;
-        }, {});
+        const lastPageSize = computeLastPageSizes(receivedFilesMap,
+          explorerState.pageSize);
         const viewer = this.props.viewer || {
           fileData: [],
         };
+        const queriedCursors = GQLHelper.getQueriedCursor(viewer, explorerState.cursors || {});
         const cursors = GQLHelper.updateOffset(viewer, explorerState.cursors || {});
         let selectedFilters = { projects: [], file_types: [], file_formats: [] };
         if (explorerState.refetch_data) {
@@ -97,16 +95,18 @@ class ExplorerComponent extends Component {
           store.dispatch({ type: 'RECEIVE_FILE_LIST',
             data: { filesMap: receivedFilesMap,
               selected_filters: selectedFilters,
-              lastPageSizes: newLastPageSizes,
+              lastPageSizes: lastPageSize,
               cursors,
+              queriedCursors,
             } });
         } else if (explorerState.more_data === 'REQUESTED') {
           selectedFilters = explorerState.selected_filters;
           store.dispatch({ type: 'RECEIVE_NEXT_PART',
             data: { filesMap: receivedFilesMap,
               selected_filters: selectedFilters,
-              lastPageSizes: newLastPageSizes,
+              lastPageSizes: lastPageSize,
               cursors,
+              queriedCursors,
             } });
         }
       },

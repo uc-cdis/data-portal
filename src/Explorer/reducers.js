@@ -11,18 +11,12 @@ export const explorer = (state = { filesMap: {},
       filesMap: action.data.filesMap,
       selected_filters: action.data.selected_filters,
       cursors: action.data.cursors,
+      queriedCursors: action.data.queriedCursors,
       lastPageSizes: action.data.lastPageSizes,
-      resetCurrentPage: true,
       originalPageToReset: [],
       resetActiveTab: true,
       refetch_data: false,
-    };
-  }
-
-  case 'UNSET_RESET_CURRENT_PAGE' : {
-    return {
-      ...state,
-      resetCurrentPage: false,
+      more_data: 'RECEIVED',
     };
   }
   case 'UNSET_RESET_ORIGIN_PAGE' : {
@@ -60,23 +54,17 @@ export const explorer = (state = { filesMap: {},
       filesMap: action.data.filesMap,
       selected_filters: action.data.selected_filters,
       cursors: action.data.cursors,
+      queriedCursors: action.data.queriedCursors,
       lastPageSizes: action.data.lastPageSizes,
       more_data: 'RECEIVED',
-    };
-  }
-  case 'FILTERING_LIST_CHANGED': {
-    return {
-      ...state,
-      selected_filters: action.data,
-      refetch_data: false,
-      refiltering_needed: true,
     };
   }
   case 'PAGE_SIZE_CHANGED': {
     return {
       ...state,
       pageSize: action.data.pageSize,
-      lastPageSizes: action.data.lastPageSizes,
+      cursors: action.data.cursors,
+      more_data: 'REQUESTED',
     };
   }
   default:

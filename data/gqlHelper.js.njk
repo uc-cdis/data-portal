@@ -155,6 +155,22 @@ export class GQLHelper {
     }
   }
 
+  static getQueriedCursor(data, cursors) {
+    const fileLengthData = Object.keys( data ).filter( key => key.indexOf( "fileData" ) === 0 ).reduce(
+      (map, key) => {
+        map[key.substr(key.indexOf("_") + 1)] = data[key].length; return map;
+      },
+      {}
+    );
+    return Object.keys(fileLengthData).reduce(
+      (map, key) => {
+        if (key in cursors) {map[key] = cursors[key]}
+        else {map[key] = 0}
+        return map;
+      }, {}
+    );
+  }
+
   static updateOffset(data, cursors) {
     const fileLengthData = Object.keys( data ).filter( key => key.indexOf( "fileData" ) === 0 ).reduce(
       (map, key) => {
@@ -164,10 +180,9 @@ export class GQLHelper {
     );
     return Object.keys(fileLengthData).reduce(
       (map, key) => {
-        let result = cursors;
-        if (key in result) {result[key] += fileLengthData[key]}
-        else {result[key] = fileLengthData[key]}
-        return result;
+        if (key in cursors) {map[key] = cursors[key] + fileLengthData[key]}
+        else {map[key] = fileLengthData[key]}
+        return map;
       }, {}
     );
   }

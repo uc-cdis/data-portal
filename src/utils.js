@@ -299,3 +299,11 @@ export function sortCompare(a, b) {
   if (a === b) { return 0; }
   return a < b ? -1 : 1;
 }
+
+export function computeLastPageSizes(filesMap, pageSize) {
+  return Object.keys(filesMap).reduce((d, key) => {
+    const result = d;
+    result[key] = filesMap[key].length % pageSize;
+    return result;
+  }, {});
+}

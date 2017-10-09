@@ -3,26 +3,30 @@ import { connect } from 'react-redux';
 import { ExplorerTabs, ExplorerTab, ExplorerTabBox } from './style';
 import { ExplorerTableComponent } from './ExplorerTable';
 import { getReduxStore } from '../reduxStore';
+import SelectComponent from '../components/SelectComponent';
+import { computeLastPageSizes } from '../utils';
 
 const makeDefaultState = () => ({
-  activeTabIndex: '',
+  activeTabIndex: ''
 });
 
 class TabSetComponent extends Component {
   static propTypes = {
     filesMap: PropTypes.object.isRequired,
     lastPageSizes: PropTypes.object.isRequired,
-    pageSize: PropTypes.number,
-    pagesPerTab: PropTypes.number,
+    pageSize: PropTypes.number.isRequired,
+    pagesPerTab: PropTypes.number.isRequired,
     cursors: PropTypes.object,
+    queriedCursors: PropTypes.object,
     onPageLoadMore: PropTypes.func,
+    onPageSizeChange: PropTypes.func
   };
 
   static defaultProps = {
     cursors: {},
-    pageSize: 20,
-    pagesPerTab: 5,
+    queriedCursors: {},
     onPageLoadMore: () => {},
+    onPageSizeChange: () => {}
   };
 
   constructor(props) {
@@ -63,29 +67,50 @@ class TabSetComponent extends Component {
     this.setState(makeDefaultState({}));
   }
 
-  updateTab(key, newValue) {
-    const numberOfItemPages = this.props.pageSize * this.props.pagesPerTab;
-    const newCursors = Object.keys(this.props.cursors).reduce(
+  updateCursors(key, newValue, pageSize) {
+    const numberOfItemPages = pageSize * this.props.pagesPerTab;
+    return Object.keys(this.props.cursors).reduce(
       (d, it) => {
         const result = d;
         if (it !== key) {
-          result[it] = this.props.cursors[it] > 0
-            ? this.props.cursors[it] - (numberOfItemPages -
-            (((2 * numberOfItemPages) - this.props.cursors[it]) % numberOfItemPages))
+          result[it] = this.props.queriedCursors
+            ? this.props.queriedCursors[it]
             : 0;
         } else if (newValue < 0) {
-          result[it] = this.props.cursors[it] + (2 * newValue) +
+          let tempRes = this.props.cursors[it] + (2 * newValue) +
             (((2 * numberOfItemPages) - this.props.cursors[it]) % numberOfItemPages);
+          result[it] = (tempRes >= 0) ? tempRes: 0
         } else {
           result[it] = this.props.cursors[it];
         }
         return result;
-      }, {},
+      }, {}
     );
+  }
+
+  updateTab(key, newValue) {
+    const newCursors = this.updateCursors(key, newValue, this.props.pageSize);
     this.props.onPageLoadMore({ cursors: newCursors, originalPageToReset: [key] });
   }
 
+  updateOriginalPage() {
+    return Object.keys(this.props.cursors).reduce(
+      (d, it) => {
+        d[it] = ((this.props.cursors[it] - 1) / this.props.pageSize)
+          - (((this.props.cursors[it] - 1) / this.props.pageSize) % this.props.pagesPerTab);
+        return d;
+      }, {}
+    );
+  }
+
+  doSelectChange(value) {
+    const newCursors = this.updateCursors('', 0, this.props.pageSize);
+    this.props.onPageSizeChange({cursors: newCursors, pageSize: parseInt(value)});
+  }
+
   render() {
+    let pageSizeValues = [5, 10, 20, 50];
+    let originalPages = this.updateOriginalPage();
     return (
       <div>
         <ExplorerTabs>
@@ -102,6 +127,10 @@ class TabSetComponent extends Component {
           }
         </ExplorerTabs>
         <div>
+          <SelectComponent values={pageSizeValues} title={"Page size: "}
+                           selectedValue={this.props.pageSize}
+                           onChange={(value) => this.doSelectChange(value)}
+          />
           {
             Object.keys(this.props.filesMap).map(
               (item, i) =>
@@ -114,6 +143,7 @@ class TabSetComponent extends Component {
                     lastPageSize={this.props.lastPageSizes[item]}
                     pageSize={this.props.pageSize}
                     pageCount={this.props.pagesPerTab}
+                    originalPage={originalPages[item]}
                     onPageLoadNextMore={
                       () => {
                         this.updateTab(item,
@@ -130,6 +160,10 @@ class TabSetComponent extends Component {
                 </ExplorerTabBox>,
             )
           }
+          <SelectComponent values={pageSizeValues} title={"Page size: "}
+                           selectedValue={this.props.pageSize}
+                           onChange={(value) => this.doSelectChange(value)}
+          />
         </div>
       </div>
     );
@@ -142,6 +176,7 @@ const mapStateToProps = state => ({
   pageSize: state.explorer.pageSize,
   pagesPerTab: state.explorer.pagesPerTab,
   cursors: state.explorer.cursors,
+  queriedCursors: state.explorer.queriedCursors
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -151,6 +186,12 @@ const mapDispatchToProps = dispatch => ({
       data: state,
     });
   },
+  onPageSizeChange: (state) => {
+    dispatch({
+      type: 'PAGE_SIZE_CHANGED',
+      data: state
+    });
+  }
 });
 
 const ExplorerTabPanel = connect(mapStateToProps, mapDispatchToProps)(TabSetComponent);

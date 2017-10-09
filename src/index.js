@@ -13,7 +13,7 @@ import { clearResultAndQuery } from './QueryNode/actions';
 import Login from './Login/component';
 import AmbiHomepage from './Homepage/AmbiHomepage';
 import ExplorerPage from './Explorer/ExplorerPage';
-import RelayExplorer from './Explorer/component';
+import RelayExplorer from './Explorer/ExplorerComponent';
 import QueryNode from './QueryNode/QueryNode';
 import DataDictionary from './DataDictionary/component';
 import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
