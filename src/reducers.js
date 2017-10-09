@@ -2,7 +2,7 @@ import 'babel-polyfill';
 import { reducer as formReducer } from 'redux-form';
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import { user_profile } from './UserProfile/reducers';
+import userProfile from './UserProfile/reducers';
 import { certificate } from './Certificate/reducers';
 import { submission } from './Submission/reducers';
 import homepage from './Homepage/reducers';
@@ -56,7 +56,7 @@ const reducers = combineReducers({ explorer,
   status,
   submission,
   query_nodes,
-  user_profile,
+  userProfile,
   certificate,
   graphiql,
   form: formReducer,

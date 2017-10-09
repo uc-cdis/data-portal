@@ -1,18 +1,18 @@
 import 'babel-polyfill';
 
-export const user_profile = (state = {}, action) => {
+const userProfile = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_USER_PROFILE':
     return { ...state, access_key_pairs: action.access_keys };
   case 'USER_PROFILE_ERROR':
-    return { ...state, user_profile_error: action.error };
+    return { ...state, userProfile_error: action.error };
   case 'RECEIVE_USERAPI_LOGIN':
     return { ...state, login: state.result, error: state.error };
   case 'REQUEST_DELETE_KEY':
-    return { ...state, ...action.user_profile, request_delete_key: action.access_key };
+    return { ...state, ...action.userProfile, request_delete_key: action.access_key };
   case 'CREATE_SUCCEED':
     return { ...state,
-      ...action.user_profile,
+      ...action.userProfile,
       access_key_pair: action.access_key_pair,
       str_access_key_pair: action.str_access_key_pair,
       create_error: null };
@@ -21,7 +21,7 @@ export const user_profile = (state = {}, action) => {
   case 'CREATE_FAIL':
     return { ...state, create_error: action.error };
   case 'DELETE_KEY_SUCCEED':
-    return { ...state, ...action.user_profile, delete_error: null };
+    return { ...state, ...action.userProfile, delete_error: null };
   case 'DELETE_KEY_FAIL':
     return { ...state, delete_error: action.error };
   case 'CLEAR_DELETE_KEY_SESSION':
@@ -34,3 +34,5 @@ export const user_profile = (state = {}, action) => {
     return state;
   }
 };
+
+export default userProfile;
