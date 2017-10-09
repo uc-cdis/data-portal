@@ -1,11 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import SubmitTSV from './submitTSV';
-import styled from 'styled-components';
 import { Link } from 'react-router';
+import styled from 'styled-components';
+
+import SubmitTSV from './SubmitTSV';
 import DataModelGraph from '../DataModelGraph/ReduxDataModelGraph';
-import { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
-import SubmitForm from './submitForm';
+import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 
 const Browse = styled(Link)`
@@ -23,10 +22,13 @@ export const Title = styled.h2`
   margin-right: 0.5em;
 `;
 
-const ProjectSubmissionComponent = (props) => {
+const ProjectSubmission = (props) => {
   if (props.counts_search === undefined || props.counts_search === null) {
     props.onGetCounts(props.node_types, props.params.project, props.dictionary);
   }
+
+  const MySubmitForm = props.submitForm || SubmitForm;
+  const MySubmitTSV = props.submitTSV || SubmitTSV;
 
   return (
     <div>
@@ -34,8 +36,8 @@ const ProjectSubmissionComponent = (props) => {
       {
         <Browse to={`/${props.params.project}/search`}>browse nodes</Browse>
       }
-      <SubmitForm />
-      <SubmitTSV path={props.params.project} />
+      <MySubmitForm />
+      <MySubmitTSV path={props.params.project} />
       {(props.counts_search === undefined || props.counts_search === null)
         ? <Spinner /> :
         <DataModelGraph project={props.params.project} /> }
@@ -43,14 +45,4 @@ const ProjectSubmissionComponent = (props) => {
   );
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  node_types: state.submission.node_types,
-  counts_search: state.submission.counts_search,
-  dictionary: state.submission.dictionary,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onGetCounts: (type, project, dictionary) => dispatch(getCounts(type, project, dictionary)),
-});
-const ProjectSubmission = connect(mapStateToProps, mapDispatchToProps)(ProjectSubmissionComponent);
 export default ProjectSubmission;

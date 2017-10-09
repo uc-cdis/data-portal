@@ -1,13 +1,11 @@
 import React from 'react';
-import { predictFileType } from '../utils';
+import styled from 'styled-components';
 import brace from 'brace';
 import 'brace/mode/json';
 import 'brace/theme/kuroir';
 import AceEditor from 'react-ace';
-import { uploadTSV, submitToServer, updateFileContent } from './actions';
-import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
+
+import { predictFileType } from '../utils';
 import { button, UploadButton, SubmitButton } from '../theme';
 
 
@@ -23,7 +21,7 @@ const Status = styled.div`
   margin-bottom: 1em;
 `;
 
-const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, onFileChange, dictionary }) => {
+const SubmitTSV = ({ path, submission, onUploadClick, onSubmitClick, onFileChange, dictionary }) => {
   const setValue = (event) => {
     const f = event.target.files[0];
     if (FileReader.prototype.readAsBinaryString === undefined) {
@@ -85,20 +83,4 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
   );
 };
 
-const mapStateToProps = state => ({
-  submission: state.submission,
-  dictionary: state.dictionary,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-  onSubmitClick: (type, project, dictionary) => dispatch(submitToServer()).then(() => { dispatch(getCounts(type, project, dictionary)); }),
-  // To re-render the graph when new data is submitted, need to change the 
-  // counts that are stored in the state. A call to getCounts is made
-  // after the data is submitted to the database to query the database for
-  // the updated count info
-  onFileChange: value => dispatch(updateFileContent(value)),
-});
-
-const SubmitTSV = connect(mapStateToProps, mapDispatchToProps)(SubmitTSVComponent);
 export default SubmitTSV;

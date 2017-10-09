@@ -75,10 +75,7 @@ export const loginUserProfile = () =>
         () => dispatch(fetchOAuthURL(submissionApiOauthPath)),
       )
       .then(
-        () => {
-          const url = getState().user.oauth_url;
-          return dispatch(fetchUserApiLogin(url));
-        },
+        oauthUrl => dispatch(fetchUserApiLogin(oauthUrl))
       )
       .then(() => dispatch(fetchAccess()))
       .then(() => dispatch(fetchProjects()))

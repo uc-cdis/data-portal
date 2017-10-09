@@ -1,10 +1,9 @@
-import { uploadTSV, submitToServer, updateFileContent } from './actions';
-import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { button, UploadButton, SubmitButton, Required_Notification, Dropdown, Input, Label } from '../theme';
 import React, { Component, PropTypes } from 'react';
-import { jsonToString } from '../utils';
+import styled from 'styled-components';
 import { Toggle } from 'material-ui';
+
+import { button, UploadButton, SubmitButton, Required_Notification, Dropdown, Input, Label } from '../theme';
+import { jsonToString } from '../utils';
 
 
 const Input_Description = styled.span`
@@ -245,7 +244,7 @@ const SubmitNodeForm = ({ node, form, properties, requireds, onChange, onChangeE
 );
 
 
-class SubmitFormContainer extends Component {
+class SubmitForm extends Component {
  static propTypes = {
    node_types: PropTypes.array,
    submission: PropTypes.object,
@@ -361,16 +360,5 @@ class SubmitFormContainer extends Component {
    );
  }
 }
-
-const mapStateToProps = state => ({
-  submission: state.submission,
-});
-
-
-const matpDispatchToProps = dispatch => ({
-  onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-});
-
-const SubmitForm = connect(mapStateToProps, matpDispatchToProps)(SubmitFormContainer);
 
 export default SubmitForm;
