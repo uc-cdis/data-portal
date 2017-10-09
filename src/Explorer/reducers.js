@@ -3,7 +3,10 @@ export const explorer = (state = { filesMap: {},
   originalPage: 0,
   lastPageSizes: {},
   refetch_data: true,
-  pagesPerTab: 5 }, action) => {
+  pagesPerTab: 5,
+  activeTab: '',
+  currentPages: {}
+  }, action) => {
   switch (action.type) {
   case 'RECEIVE_FILE_LIST': {
     return {
@@ -14,9 +17,10 @@ export const explorer = (state = { filesMap: {},
       queriedCursors: action.data.queriedCursors,
       lastPageSizes: action.data.lastPageSizes,
       originalPageToReset: [],
-      resetActiveTab: true,
       refetch_data: false,
-      more_data: 'RECEIVED',
+      moreData: 'RECEIVED',
+      activeTab: action.data.activeTab,
+      currentPages: action.data.currentPages
     };
   }
   case 'UNSET_RESET_ORIGIN_PAGE' : {
@@ -25,11 +29,17 @@ export const explorer = (state = { filesMap: {},
       originalPageToReset: [],
     };
   }
-  case 'UNSET_RESET_ACTIVE_TAB' : {
+  case 'SET_ACTIVE_TAB' : {
     return {
       ...state,
-      resetActiveTab: false,
+      activeTab: action.data.activeTab,
     };
+  }
+  case 'SET_CURRENT_PAGE': {
+    return {
+      ...state,
+      currentPages: action.data
+    }
   }
   case 'SELECTED_LIST_CHANGED': {
     return {
@@ -45,7 +55,7 @@ export const explorer = (state = { filesMap: {},
       ...state,
       cursors: action.data.cursors,
       originalPageToReset: action.data.originalPageToReset,
-      more_data: 'REQUESTED',
+      moreData: 'REQUESTED',
     };
   }
   case 'RECEIVE_NEXT_PART': {
@@ -56,7 +66,7 @@ export const explorer = (state = { filesMap: {},
       cursors: action.data.cursors,
       queriedCursors: action.data.queriedCursors,
       lastPageSizes: action.data.lastPageSizes,
-      more_data: 'RECEIVED',
+      moreData: 'RECEIVED',
     };
   }
   case 'PAGE_SIZE_CHANGED': {
@@ -64,7 +74,7 @@ export const explorer = (state = { filesMap: {},
       ...state,
       pageSize: action.data.pageSize,
       cursors: action.data.cursors,
-      more_data: 'REQUESTED',
+      moreData: 'REQUESTED',
     };
   }
   default:

@@ -155,7 +155,7 @@ export class GQLHelper {
     }
   }
 
-  static getQueriedCursor(data, cursors) {
+  static getDefaultDictionary(data, cursors) {
     const fileLengthData = Object.keys( data ).filter( key => key.indexOf( "fileData" ) === 0 ).reduce(
       (map, key) => {
         map[key.substr(key.indexOf("_") + 1)] = data[key].length; return map;

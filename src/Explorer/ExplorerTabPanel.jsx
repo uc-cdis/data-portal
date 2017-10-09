@@ -1,13 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { ExplorerTabs, ExplorerTab, ExplorerTabBox } from './style';
+import { ExplorerTabs, ExplorerTab, ExplorerTabBox, ExplorerTabFrame } from './style';
 import { ExplorerTableComponent } from './ExplorerTable';
 import { getReduxStore } from '../reduxStore';
 import SelectComponent from '../components/SelectComponent';
 import { computeLastPageSizes } from '../utils';
 
 const makeDefaultState = () => ({
-  activeTabIndex: ''
 });
 
 class TabSetComponent extends Component {
@@ -16,51 +15,28 @@ class TabSetComponent extends Component {
     lastPageSizes: PropTypes.object.isRequired,
     pageSize: PropTypes.number.isRequired,
     pagesPerTab: PropTypes.number.isRequired,
+    activeTab: PropTypes.string.isRequired,
+    currentPages: PropTypes.object.isRequired,
     cursors: PropTypes.object,
     queriedCursors: PropTypes.object,
+    onTabChange: PropTypes.func.isRequired,
     onPageLoadMore: PropTypes.func,
-    onPageSizeChange: PropTypes.func
+    onPageSizeChange: PropTypes.func,
+    onPageChange: PropTypes.func
   };
 
   static defaultProps = {
     cursors: {},
     queriedCursors: {},
     onPageLoadMore: () => {},
-    onPageSizeChange: () => {}
+    onPageSizeChange: () => {},
+    onPageChange: () => {}
   };
 
   constructor(props) {
     super(props);
     this.state = makeDefaultState();
     this.resetState = this.resetState.bind(this);
-  }
-
-  /**
-   * Subscribe to Redux updates at update time
-   */
-  componentWillUpdate() {
-    getReduxStore().then(
-      (store) => {
-        const explorerState = store.getState().explorer;
-        if (explorerState.resetActiveTab) {
-          const filesMap = explorerState.filesMap;
-          let found = false;
-          const activeTabIndex = Object.keys(filesMap).reduce(
-            (res, item) => {
-              if (!found && filesMap[item].length > 0) {
-                found = true;
-                return item;
-              }
-              return res;
-            }, '',
-          );
-          this.setState({ activeTabIndex });
-          store.dispatch({
-            type: 'UNSET_RESET_ACTIVE_TAB',
-          });
-        }
-      },
-    );
   }
 
   resetState() {
@@ -119,14 +95,16 @@ class TabSetComponent extends Component {
               (item, i) => (this.props.filesMap[item].length > 0) &&
               <ExplorerTab
                 key={i}
-                active={(item === this.state.activeTabIndex)}
-                onClick={() => this.setState({ activeTabIndex: item, reloading: false })}
+                active={(item === this.props.activeTab)}
+                onClick={
+                  () => this.props.onTabChange({ activeTab: item })
+                }
               >
                 {item.replace('submitted_', '').replace('_', ' ')}
               </ExplorerTab>)
           }
         </ExplorerTabs>
-        <div>
+        <ExplorerTabFrame>
           <SelectComponent values={pageSizeValues} title={"Page size: "}
                            selectedValue={this.props.pageSize}
                            onChange={(value) => this.doSelectChange(value)}
@@ -135,7 +113,7 @@ class TabSetComponent extends Component {
             Object.keys(this.props.filesMap).map(
               (item, i) =>
                 (this.props.filesMap[item].length > 0)
-                && <ExplorerTabBox key={2 * i} active={(item === this.state.activeTabIndex)}>
+                && <ExplorerTabBox key={2 * i} active={(item === this.props.activeTab)}>
                   <ExplorerTableComponent
                     key={(2 * i) + 1}
                     filesList={this.props.filesMap[item]}
@@ -148,6 +126,15 @@ class TabSetComponent extends Component {
                       () => {
                         this.updateTab(item,
                           this.props.pageSize * this.props.pagesPerTab);
+                      }
+                    }
+                    page={(item in this.props.currentPages)
+                      ? this.props.currentPages[item] : 0}
+                    onPageChange={
+                      (page) => {
+                        let currentPages = this.props.currentPages;
+                        currentPages[item] = page;
+                        this.props.onPageChange(currentPages)
                       }
                     }
                     onPageLoadPrevMore={
@@ -164,7 +151,7 @@ class TabSetComponent extends Component {
                            selectedValue={this.props.pageSize}
                            onChange={(value) => this.doSelectChange(value)}
           />
-        </div>
+        </ExplorerTabFrame>
       </div>
     );
   }
@@ -175,11 +162,19 @@ const mapStateToProps = state => ({
   lastPageSizes: state.explorer.lastPageSizes,
   pageSize: state.explorer.pageSize,
   pagesPerTab: state.explorer.pagesPerTab,
+  activeTab: state.explorer.activeTab,
   cursors: state.explorer.cursors,
-  queriedCursors: state.explorer.queriedCursors
+  queriedCursors: state.explorer.queriedCursors,
+  currentPages: state.explorer.currentPages
 });
 
 const mapDispatchToProps = dispatch => ({
+  onTabChange: (state) => {
+    dispatch({
+      type: 'SET_ACTIVE_TAB',
+      data: state,
+    });
+  },
   onPageLoadMore: (state) => {
     dispatch({
       type: 'REQUEST_NEXT_PART',
@@ -189,6 +184,12 @@ const mapDispatchToProps = dispatch => ({
   onPageSizeChange: (state) => {
     dispatch({
       type: 'PAGE_SIZE_CHANGED',
+      data: state
+    });
+  },
+  onPageChange: (state) => {
+    dispatch({
+      type: 'SET_CURRENT_PAGE',
       data: state
     });
   }

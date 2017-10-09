@@ -40,31 +40,6 @@ export const CategoryCell = styled(Cell)`
   text-overflow: ellipsis;
 `;
 
-export const ProjectHeader = styled(Header)`
-  width: 15%;
-`;
-
-export const FileNameHeader = styled(Header)`
-  width: 35%;
-`;
-
-export const FileFormatHeader = styled(Header)`
-  width: 10%;
-`;
-
-export const FileSizeHeader = styled(Header)`
-  width: 15%;
-`;
-
-export const CategoryHeader = styled(Header)`
-  width: 25%;
-`;
-
-export const Bullet = styled.ul`
-  display: block;
-  width: 400;
-`;
-
 const ExplorerTableBarColor = '#697e8d';
 
 export const TableData = styled.td`
@@ -154,12 +129,14 @@ export const ExplorerTab = styled.div`
   font-size: 15px;
 `;
 
-
-export const ExplorerTabBox = styled.div`
-  border: outset 1px gray;
+export const ExplorerTabFrame = styled.div`
+  display: inline-block;
   position: relative;
   margin-top: -2px;
+  border: outset 1px gray;
   padding: 10px;
-  width: 75%;
+`;
+
+export const ExplorerTabBox = styled.div`
   display:${props => (props.active ? 'inline-block' : 'none')};
 `;

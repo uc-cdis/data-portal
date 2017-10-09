@@ -43,7 +43,7 @@ class ExplorerComponent extends Component {
     if (!explorerState) {
       return;
     }
-    if (explorerState.refetch_data || explorerState.more_data === 'REQUESTED') {
+    if (explorerState.refetch_data || explorerState.moreData === 'REQUESTED') {
       this.loadMore(explorerState.selected_filters,
         explorerState.pageSize * explorerState.pagesPerTab,
         explorerState.cursors);
@@ -77,6 +77,19 @@ class ExplorerComponent extends Component {
     );
   };
 
+  getFirstActiveTab = (filesMap) => {
+    let found = false;
+    return Object.keys(filesMap).reduce(
+      (res, item) => {
+        if (!found && filesMap[item].length > 0) {
+          found = true;
+          return item;
+        }
+        return res;
+      }, '',
+    );
+  };
+
   updateFilesMap = () => {
     const receivedFilesMap = this.createList();
     getReduxStore().then(
@@ -87,10 +100,12 @@ class ExplorerComponent extends Component {
         const viewer = this.props.viewer || {
           fileData: [],
         };
-        const queriedCursors = GQLHelper.getQueriedCursor(viewer, explorerState.cursors || {});
+        const queriedCursors = GQLHelper.getDefaultDictionary(viewer, explorerState.cursors || {});
+        const currentPages = GQLHelper.getDefaultDictionary(viewer, {});
         const cursors = GQLHelper.updateOffset(viewer, explorerState.cursors || {});
         let selectedFilters = { projects: [], file_types: [], file_formats: [] };
         if (explorerState.refetch_data) {
+          let activeTab =  this.getFirstActiveTab(receivedFilesMap);
           selectedFilters = explorerState.selected_filters;
           store.dispatch({ type: 'RECEIVE_FILE_LIST',
             data: { filesMap: receivedFilesMap,
@@ -98,8 +113,10 @@ class ExplorerComponent extends Component {
               lastPageSizes: lastPageSize,
               cursors,
               queriedCursors,
+              activeTab: activeTab,
+              currentPages
             } });
-        } else if (explorerState.more_data === 'REQUESTED') {
+        } else if (explorerState.moreData === 'REQUESTED') {
           selectedFilters = explorerState.selected_filters;
           store.dispatch({ type: 'RECEIVE_NEXT_PART',
             data: { filesMap: receivedFilesMap,

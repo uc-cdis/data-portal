@@ -6,10 +6,10 @@ import { TableData, TableHeadCell,
   TableFootCell, PageButton, ArrowButton } from './style';
 import { getReduxStore } from '../reduxStore';
 
-const makeDefaultState = () => ({
-  page: 0,
-  originalPage: 0,
-  pageSize: 0
+const makeDefaultState = (page, pageSize, originalPage) => ({
+  page: page,
+  originalPage: originalPage,
+  pageSize: pageSize
 });
 
 export class ExplorerTableComponent extends Component {
@@ -19,9 +19,11 @@ export class ExplorerTableComponent extends Component {
     lastPageSize: PropTypes.number,
     pageSize: PropTypes.number.isRequired,
     pageCount: PropTypes.number.isRequired,
+    page: PropTypes.number.isRequired,
     originalPage: PropTypes.number,
     onPageLoadNextMore: PropTypes.func,
     onPageLoadPrevMore: PropTypes.func,
+    onPageChange: PropTypes.func
   };
 
   static defaultProps = {
@@ -29,6 +31,7 @@ export class ExplorerTableComponent extends Component {
     originalPage: 0,
     onPageLoadNextMore: () => {},
     onPageLoadPrevMore: () => {},
+    onPageChange: () => {},
   };
 
   static renderRow(file, column_widths, i) {
@@ -47,7 +50,7 @@ export class ExplorerTableComponent extends Component {
 
   constructor(props) {
     super(props);
-    this.state = makeDefaultState();
+    this.state = makeDefaultState(props.page, props.pageSize, props.originalPage);
     this.resetState = this.resetState.bind(this);
   }
 
@@ -55,15 +58,16 @@ export class ExplorerTableComponent extends Component {
     getReduxStore().then(
       (store) => {
         const explorerState = store.getState().explorer;
-        if (explorerState.more_data === 'RECEIVED') {
+        if (explorerState.moreData === 'RECEIVED') {
           let filesList = nextProps.filesList;
           const numberOfPages = filesList ? parseInt(filesList.length / nextProps.pageSize) : 0;
-          let newPage = nextProps.originalPage + (this.state.page % this.props.pageCount);
-          let page = (numberOfPages > this.state.page % this.props.pageCount)
+          let newPage = nextProps.originalPage + (this.props.page % this.props.pageCount);
+          let page = (numberOfPages > this.props.page % this.props.pageCount)
             ? newPage : (nextProps.originalPage + numberOfPages);
           this.setState({page: page,
             originalPage: nextProps.originalPage,
             pageSize: nextProps.pageSize});
+          this.props.onPageChange(page);
           if (explorerState.originalPageToReset.includes(this.props.name))
             store.dispatch({
               type: 'UNSET_RESET_ORIGIN_PAGE',
@@ -137,7 +141,12 @@ export class ExplorerTableComponent extends Component {
                   (<PageButton
                     key={i}
                     active={item === this.state.page}
-                    onClick={() => this.setState({ page: item })}
+                    onClick={
+                      () => {
+                        this.setState({page: item});
+                        this.props.onPageChange(item);
+                      }
+                    }
                   >
                     {item + 1}
                   </PageButton>))
