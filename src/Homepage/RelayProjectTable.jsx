@@ -40,7 +40,7 @@ export class RelayProjectTable extends ProjectTable {
           return <tr><td><b>Error! {error}</b></td></tr>;
         } else if (props && props.project) {
           const { fileCount } = GQLHelper.extractFileInfo(props);
-          const proj = { ...props.project[0], caseCount: props.caseCount, aliquotCount: props.aliquotCount, fileCount };
+          const proj = { ...props.project[0], experimentCount: props.experimentCount, caseCount: props.caseCount, aliquotCount: props.aliquotCount, fileCount };
 
           // Update redux store if data is not already there
           getReduxStore().then(
