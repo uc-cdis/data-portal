@@ -69,7 +69,7 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
       (link) => {
       // decorate each link with its "exists" count if available 
       //  (number of instances of link between source and target types in the data)
-        link.exists = props.links_search ? props.links_search[`${link.source}_to_${link.target}_link`] : undefined;
+        link.exists = props.links_search ? props.links_search[`${link.source}_${link.name}_to_${link.target}_link`] : undefined;
         return link;
       },
     )

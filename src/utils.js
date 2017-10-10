@@ -85,6 +85,7 @@ export function asyncSetInterval(lambda, timeoutMs) {
 
 export const color = {
   administrative: d3.schemeCategory20[12],
+  analysis: d3.schemeCategory20[13],
   clinical: d3.schemeCategory20[11],
   biospecimen: d3.schemeCategory20[16],
   metadata_file: d3.schemeCategory20b[14],

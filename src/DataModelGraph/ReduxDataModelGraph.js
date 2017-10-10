@@ -33,7 +33,7 @@ export const getCounts = (typeList, project, dictionary) => {
 
   function appendLinkToQuery(source, dest, name) {
     if (source !== 'metaschema' && !source.startsWith('_')) {
-      query += `${source}_to_${dest}_link: ${source}(with_links: ["${name}"], first:1, project_id:"${project}"){submitter_id},`;
+      query += `${source}_${name}_to_${dest}_link: ${source}(with_links: ["${name}"], first:1, project_id:"${project}"){submitter_id},`;
     }
   }
 
