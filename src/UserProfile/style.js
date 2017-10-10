@@ -1,4 +1,4 @@
-import { button } from '../theme';
+import { button, Cell, Header } from '../theme';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router';
 
@@ -23,7 +23,6 @@ export const RequestButton = styled.label`
   &:focus {
     color: #2e842e;
     border-color: #2e842e;
-
   }
   ${button};
 `;
@@ -35,14 +34,6 @@ export const DeleteButton = styled.a`
 export const Bullet = styled.ul`
   display: block;
   width: 500;
-`;
-
-export const Header = styled.li`
-  display: block;
-  border-bottom: 1px solid #8f8f8f;
-  float: left;
-  padding-left: 0.5em;
-  font-weight: bold;
 `;
 
 export const AccessKeyHeader = styled(Header)`
@@ -59,16 +50,6 @@ export const RightHeader = styled(Header)`
 
 export const KeyPairTable = styled.ul`
   overflow: hidden;
-`;
-
-export const AccessTable = styled.div`
-  overflow: hidden;
-`;
-
-export const Cell = styled.li`
-  display: block;
-  float: left;
-  padding-left: 0.5em;
 `;
 
 export const ProjectCell = styled(Link)`

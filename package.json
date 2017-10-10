@@ -34,7 +34,6 @@
     "react-router-redux": "^4.0.5",
     "react-router-relay": "^0.14.0",
     "react-select": "^1.0.0-rc.7",
-    "react-table": "^6.5.3",
     "react-tap-event-plugin": "^2.0.1",
     "recharts": "^1.0.0-apha.5",
     "redux": "^3.5.2",

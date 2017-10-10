@@ -62,7 +62,7 @@ const reducers = combineReducers({ explorer,
   certificate,
   graphiql,
   form: formReducer,
-  routing: routerReducer },
-);
+  routing: routerReducer,
+  },);
 
 export default reducers;

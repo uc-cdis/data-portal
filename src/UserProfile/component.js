@@ -6,8 +6,9 @@ import { connect } from 'react-redux';
 import { fetchAccess, createKey, deleteKey,
   requestDeleteKey, clearDeleteSession, clearCreationSession } from './actions';
 import { RequestButton, DeleteButton, Bullet, ProjectCell, RightCell, AccessKeyCell, ActionCell, Cell,
-  AccessKeyHeader, ProjectHeader, RightHeader, AccessTable, KeyPairTable } from './style';
+  AccessKeyHeader, ProjectHeader, RightHeader, KeyPairTable } from './style';
 import { credentialCdisPath } from '../localconf';
+import { DivTable } from '../theme';
 import * as constants from './constants';
 
 const KeyPairsEntity = ({ keypairs_api, value, onUpdatePopup, onRequestDeleteKey }) => {
@@ -115,7 +116,7 @@ export const IdentityComponent = ({ user, user_profile, popups, submission, onCr
           }
         </KeyPairTable>
       }
-      <AccessTable>
+      <DivTable>
         <ul>
           <h5>{constants.LIST_PROJECT_MSG}</h5>
           <li>
@@ -147,7 +148,7 @@ export const IdentityComponent = ({ user, user_profile, popups, submission, onCr
               </li>),
           )}
         </ul>
-      </AccessTable>
+      </DivTable>
     </div>
   );
 };
