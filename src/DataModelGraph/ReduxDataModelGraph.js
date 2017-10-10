@@ -12,10 +12,17 @@ export const clearCounts = {
 
 
 /**
- * getCounts: Compose and send a single graphql query to get a count of how 
- *    many of each node and edge are in the current state
+ * Compose and send a single graphql query to get a count of how 
+ * many of each node and edge are in the current state
+ * 
+ * @method getCounts
+ * @param {Array<string>} typeList
+ * @param {string} project
+ * @param {Object} dictionary
+ * @return {Function(dispatch => updates-redux-state)} async dispatch function
+ *     that fetches data from backend and updates redux when dispatched
  */
-export const getCounts = (type, project, dictionary) => {
+export const getCounts = (typeList, project, dictionary) => {
   let query = '{';
 
   function appendCountToQuery(element) {
@@ -30,7 +37,7 @@ export const getCounts = (type, project, dictionary) => {
     }
   }
 
-  type.forEach((element) => {
+  typeList.forEach((element) => {
     if (element !== 'program') {
       appendCountToQuery(element);
     }

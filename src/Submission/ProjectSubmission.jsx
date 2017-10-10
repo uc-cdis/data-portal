@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import SubmitTSV from './SubmitTSV';
-import DataModelGraph from '../DataModelGraph/ReduxDataModelGraph';
+import DataModelGraph from '../DataModelGraph/DataModelGraph';
 import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 
@@ -23,12 +24,14 @@ export const Title = styled.h2`
 `;
 
 const ProjectSubmission = (props) => {
-  if (props.counts_search === undefined || props.counts_search === null) {
-    props.onGetCounts(props.node_types, props.params.project, props.dictionary);
+  // hack to detect if dictionary data is available, and to trigger fetch if not
+  if (!props.dataIsReady) {
+    props.onGetCounts(props.typeList, props.params.project, props.dictionary);
   }
 
-  const MySubmitForm = props.submitForm || SubmitForm;
-  const MySubmitTSV = props.submitTSV || SubmitTSV;
+  const MySubmitForm = props.submitForm;
+  const MySubmitTSV = props.submitTSV;
+  const MyDataModelGraph = props.dataModelGraph;
 
   return (
     <div>
@@ -38,11 +41,32 @@ const ProjectSubmission = (props) => {
       }
       <MySubmitForm />
       <MySubmitTSV path={props.params.project} />
-      {(props.counts_search === undefined || props.counts_search === null)
+      { !props.dataIsReady
         ? <Spinner /> :
-        <DataModelGraph project={props.params.project} /> }
+        <MyDataModelGraph project={props.params.project} /> }
     </div>
   );
+};
+
+ProjectSubmission.propTypes = {
+  dataIsReady: PropTypes.bool,
+  params: PropTypes.shape({
+    project: PropTypes.string.isRequired,
+  }).isRequired,
+  dictionary: PropTypes.object.isRequired,
+  submitForm: PropTypes.func,
+  submitTSV: PropTypes.func,
+  dataModelGraph: PropTypes.func,
+  onGetCounts: PropTypes.func.isRequired,
+  typeList: PropTypes.array,
+};
+
+ProjectSubmission.defaultProps = {
+  dataIsReady: false,
+  submitForm: SubmitForm,
+  submitTSV: SubmitTSV,
+  dataModelGraph: DataModelGraph,
+  typeList: [],
 };
 
 export default ProjectSubmission;

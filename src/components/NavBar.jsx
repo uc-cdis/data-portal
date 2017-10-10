@@ -83,7 +83,7 @@ const NavBar = ({ navItems, user, onLogoutClick }) => (
         navItems.map(
           (item, i) => 
             <NavItem key={i} to={item.link}>
-              <FlatButton primary={i == 0} label={item.name}>
+              <FlatButton label={item.name}>
                 <NavIcon className="material-icons">{item.icon}</NavIcon>
               </FlatButton>
             </NavItem>

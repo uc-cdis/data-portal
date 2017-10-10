@@ -3,9 +3,9 @@ import ProjectSubmission from './ProjectSubmission';
 import SubmitTSV from './SubmitTSV';
 import SubmitForm from './SubmitForm';
 
-import { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
+import ReduxDataModelGraph, { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
 
-import { fetchOAuthURL, fetchWrapper } from '../actions';
+import { fetchJsonOrText, fetchOAuthURL } from '../actions';
 import { predictFileType } from '../utils';
 import { fetchProjects, fetchDictionary } from '../queryactions';
 import { submissionApiPath, submissionApiOauthPath } from '../localconf';
@@ -14,32 +14,30 @@ export const uploadTSV = (value, type) => (dispatch) => {
   dispatch({ type: 'REQUEST_UPLOAD', file: value, file_type: type });
 };
 
-export const updateFileContent = (value, file_type) => (dispatch) => {
-  dispatch({ type: 'UPDATE_FILE', file: value, file_type: predictFileType(value, file_type) });
+export const updateFileContent = (value, fileType) => (dispatch) => {
+  dispatch({ type: 'UPDATE_FILE', file: value, file_type: predictFileType(value, fileType) });
 };
 
 
-const submitToServer = (method = 'PUT') => (dispatch, getState) => {
+const submitToServer = (methodIn = 'PUT') => (dispatch, getState) => {
   const path = getState().routing.locationBeforeTransitions.pathname.split('-');
   const program = path[0];
   const project = path.slice(1).join('-');
   const submission = getState().submission;
-  if (path == 'graphql') {
-    method = 'POST';
-  }
+  const method = path === 'graphql' ? 'POST' : methodIn;
   let file = submission.file;
   if (!file) {
     return Promise.reject('No file to submit');
-  } else if (submission.file_type != 'text/tab-separated-values') {
+  } else if (submission.file_type !== 'text/tab-separated-values') {
     // remove line break in json file
     file = file.replace(/\n/g, '');
   }
-  let sub_url = submissionApiPath;
-  if (program != '_root') {
-    sub_url = `${sub_url + program}/${project}/`;
+  let subUrl = submissionApiPath;
+  if (program !== '_root') {
+    subUrl = `${subUrl + program}/${project}/`;
   }
   return fetchJsonOrText({
-    path: sub_url,
+    path: subUrl,
     method,
     custom_headers: { 'Content-Type': submission.file_type },
     body: file,
@@ -72,7 +70,9 @@ export const loginSubmissionAPI = () =>
   (dispatch, getState) => {
     { // If already have fresh data, then exit
       const state = getState();
-      if (state.submission && state.submission.projects && lastProjectFetchMs + 30000 > Date.now()) {
+      if (state.submission && state.submission.projects
+        && lastProjectFetchMs + 30000 > Date.now()
+      ) {
         return Promise.resolve();
       }
       lastProjectFetchMs = Date.now();
@@ -97,15 +97,7 @@ export const loginSubmissionAPI = () =>
       return Promise.resolve();
     })
       .then(() => dispatch(fetchOAuthURL(submissionApiOauthPath)))
-      .then(
-        (oauthUrl) => {
-          console.log(`Fetching oauthURL!${oauthUrl}`);
-          return fetchJsonOrText({
-            path: oauthUrl,
-            dispatch,
-          });
-        },
-      )
+      .then(oauthUrl => fetchJsonOrText({ path: oauthUrl, dispatch }))
       .then(
         ({ status, data }) => {
           switch (status) {
@@ -143,7 +135,9 @@ const ReduxSubmitTSV = (function () {
 
   const mapDispatchToProps = dispatch => ({
     onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-    onSubmitClick: (type, project, dictionary) => dispatch(submitToServer()).then(() => { dispatch(getCounts(type, project, dictionary)); }),
+    onSubmitClick: (type, project, dictionary) =>
+      dispatch(submitToServer())
+        .then(() => { dispatch(getCounts(type, project, dictionary)); }),
     // To re-render the graph when new data is submitted, need to change the 
     // counts that are stored in the state. A call to getCounts is made
     // after the data is submitted to the database to query the database for
@@ -169,16 +163,18 @@ const ReduxSubmitForm = (function () {
 
 
 const ReduxProjectSubmission = (function () {
-  const mapStateToProps = (state, ownProps) => ({
-    node_types: state.submission.node_types,
-    counts_search: state.submission.counts_search,
+  const mapStateToProps = state => ({
+    typeList: state.submission.node_types,
+    dataIsReady: !!state.submission.counts_search,
     dictionary: state.submission.dictionary,
     submitForm: ReduxSubmitForm,
     submitTSV: ReduxSubmitTSV,
+    dataModelGraph: ReduxDataModelGraph,
   });
 
   const mapDispatchToProps = dispatch => ({
-    onGetCounts: (type, project, dictionary) => dispatch(getCounts(type, project, dictionary)),
+    onGetCounts: (typeList, project, dictionary) =>
+      dispatch(getCounts(typeList, project, dictionary)),
   });
   return connect(mapStateToProps, mapDispatchToProps)(ProjectSubmission);
 }());

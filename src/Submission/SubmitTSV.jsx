@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import brace from 'brace';
+import brace from 'brace'; // needed by AceEditor
 import 'brace/mode/json';
 import 'brace/theme/kuroir';
 import AceEditor from 'react-ace';
+import PropTypes from 'prop-types';
 
 import { predictFileType } from '../utils';
 import { button, UploadButton, SubmitButton } from '../theme';
@@ -16,12 +17,12 @@ const SubmissionResult = styled.div`
 `;
 const Status = styled.div`
   ${button};
-  background-color: ${props => ((props.status == 'succeed: 200') ? '#168616' : 'gray')};
+  background-color: ${props => ((props.status === 'succeed: 200') ? '#168616' : 'gray')};
   color: white;
   margin-bottom: 1em;
 `;
 
-const SubmitTSV = ({ path, submission, onUploadClick, onSubmitClick, onFileChange, dictionary }) => {
+const SubmitTSV = ({ path, submission, onUploadClick, onSubmitClick, onFileChange }) => {
   const setValue = (event) => {
     const f = event.target.files[0];
     if (FileReader.prototype.readAsBinaryString === undefined) {
@@ -29,7 +30,7 @@ const SubmitTSV = ({ path, submission, onUploadClick, onSubmitClick, onFileChang
         let binary = '';
         const pt = this;
         const reader = new FileReader();
-        reader.onload = function (e) {
+        reader.onload = function () {
           const bytes = new Uint8Array(reader.result);
           const length = bytes.byteLength;
           for (let i = 0; i < length; i++) {
@@ -43,17 +44,13 @@ const SubmitTSV = ({ path, submission, onUploadClick, onSubmitClick, onFileChang
       };
     }
     const reader = new FileReader();
-    let file_type = f.type;
+    let fileType = f.type;
     if (f.name.endsWith('.tsv')) {
-      file_type = 'text/tab-separated-values';
+      fileType = 'text/tab-separated-values';
     }
     reader.onload = function (e) {
-      if (e === undefined) {
-        var data = reader.content;
-      } else {
-        var data = e.target.result;
-      }
-      onUploadClick(data, predictFileType(data, file_type));
+      const data = e ? e.target.result : reader.content;
+      onUploadClick(data, predictFileType(data, fileType));
     };
     reader.readAsBinaryString(f);
   };
@@ -71,7 +68,16 @@ const SubmitTSV = ({ path, submission, onUploadClick, onSubmitClick, onFileChang
       <SubmitButton onClick={onSubmitClickEvent}>Submit</SubmitButton>
       }
       { (submission.file) &&
-      <AceEditor width="100%" height="200px" style={{ marginBottom: '1em' }} mode={submission.file_type == 'text/tab-separated-values' ? '' : 'json'} theme="kuroir" value={submission.file} onChange={onChange} id="uploaded" />
+      <AceEditor
+        width="100%"
+        height="200px"
+        style={{ marginBottom: '1em' }}
+        mode={submission.file_type === 'text/tab-separated-values' ? '' : 'json'}
+        theme="kuroir"
+        value={submission.file}
+        onChange={onChange}
+        id="uploaded"
+      />
       }
       {submission.submit_result &&
       <SubmissionResult>
@@ -81,6 +87,14 @@ const SubmitTSV = ({ path, submission, onUploadClick, onSubmitClick, onFileChang
       }
     </form>
   );
+};
+
+SubmitTSV.propTypes = {
+  path: PropTypes.string.isRequired,
+  submission: PropTypes.object.isRequired,
+  onUploadClick: PropTypes.func.isRequired,
+  onSubmitClick: PropTypes.func.isRequired,
+  onFileChange: PropTypes.func.isRequired,
 };
 
 export default SubmitTSV;

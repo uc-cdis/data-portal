@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import userProfile from './UserProfile/reducers';
 import { certificate } from './Certificate/reducers';
-import { submission } from './Submission/reducers';
+import submission from './Submission/reducers';
 import homepage from './Homepage/reducers';
 import { query_nodes } from './QueryNode/reducers';
 import { popups } from './Popup/reducers';

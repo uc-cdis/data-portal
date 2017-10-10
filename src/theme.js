@@ -166,13 +166,6 @@ export const SubmitButton = styled.a`
   }
 `;
 
-export const Required_Notification = styled.span`
-  color:#d45252;
-  margin:5px 0 0 0; 
-  display:inline;
-  float: ${props => (props.istext ? 'right' : '')};
-`;
-
 export const Dropdown = styled(Select)`
   width: 40%;
   margin-right: 1em;

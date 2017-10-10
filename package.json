@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "babel-core": "^6.26.0",
+    "brace": "^0.10.0",
     "clipboard-plus": "^1.0.0",
     "d3": "^4.9.1",
     "fast-csv": "^2.4.0",
