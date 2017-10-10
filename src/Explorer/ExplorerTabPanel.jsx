@@ -19,7 +19,7 @@ class TabSetComponent extends Component {
     onTabChange: PropTypes.func.isRequired,
     onPageLoadMore: PropTypes.func,
     onPageSizeChange: PropTypes.func,
-    onPageChange: PropTypes.func
+    onPageChange: PropTypes.func,
   };
 
   static defaultProps = {
@@ -27,7 +27,7 @@ class TabSetComponent extends Component {
     queriedCursors: {},
     onPageLoadMore: () => {},
     onPageSizeChange: () => {},
-    onPageChange: () => {}
+    onPageChange: () => {},
   };
 
   constructor(props) {
@@ -50,14 +50,14 @@ class TabSetComponent extends Component {
             ? this.props.queriedCursors[it]
             : 0;
         } else if (newValue < 0) {
-          let tempRes = this.props.cursors[it] + (2 * newValue) +
+          const tempRes = this.props.cursors[it] + (2 * newValue) +
             (((2 * numberOfItemPages) - this.props.cursors[it]) % numberOfItemPages);
-          result[it] = (tempRes >= 0) ? tempRes: 0
+          result[it] = (tempRes >= 0) ? tempRes : 0;
         } else {
           result[it] = this.props.cursors[it];
         }
         return result;
-      }, {}
+      }, {},
     );
   }
 
@@ -72,17 +72,17 @@ class TabSetComponent extends Component {
         d[it] = ((this.props.cursors[it] - 1) / this.props.pageSize)
           - (((this.props.cursors[it] - 1) / this.props.pageSize) % this.props.pagesPerTab);
         return d;
-      }, {}
+      }, {},
     );
   }
 
   doSelectChange(value) {
     const newCursors = this.updateCursors('', 0, this.props.pageSize);
-    this.props.onPageSizeChange({cursors: newCursors, pageSize: parseInt(value)});
+    this.props.onPageSizeChange({ cursors: newCursors, pageSize: parseInt(value) });
   }
 
   render() {
-    let originalPages = this.updateOriginalPage();
+    const originalPages = this.updateOriginalPage();
     return (
       <div>
         <ExplorerTabs>
@@ -124,9 +124,9 @@ class TabSetComponent extends Component {
                       ? this.props.currentPages[item] : 0}
                     onPageChange={
                       (page) => {
-                        let currentPages = this.props.currentPages;
+                        const currentPages = this.props.currentPages;
                         currentPages[item] = page;
-                        this.props.onPageChange(currentPages)
+                        this.props.onPageChange(currentPages);
                       }
                     }
                     onPageLoadPrevMore={
@@ -135,7 +135,7 @@ class TabSetComponent extends Component {
                           -this.props.pageSize * this.props.pagesPerTab);
                       }
                     }
-                    onPageSizeChange={(value) => this.doSelectChange(value)}
+                    onPageSizeChange={value => this.doSelectChange(value)}
                   />
                 </ExplorerTabBox>,
             )
@@ -154,7 +154,7 @@ const mapStateToProps = state => ({
   activeTab: state.explorer.activeTab,
   cursors: state.explorer.cursors,
   queriedCursors: state.explorer.queriedCursors,
-  currentPages: state.explorer.currentPages
+  currentPages: state.explorer.currentPages,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -173,15 +173,15 @@ const mapDispatchToProps = dispatch => ({
   onPageSizeChange: (state) => {
     dispatch({
       type: 'PAGE_SIZE_CHANGED',
-      data: state
+      data: state,
     });
   },
   onPageChange: (state) => {
     dispatch({
       type: 'SET_CURRENT_PAGE',
-      data: state
+      data: state,
     });
-  }
+  },
 });
 
 const ExplorerTabPanel = connect(mapStateToProps, mapDispatchToProps)(TabSetComponent);

@@ -83,7 +83,7 @@ const mapStateToProps = state => ({
   selectedFilters: state.explorer.selected_filters || {
     projects: [],
     file_types: [],
-    file_formats: []
+    file_formats: [],
   },
 });
 
