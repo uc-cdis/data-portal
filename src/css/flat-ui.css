@@ -368,14 +368,17 @@ body {
   background-color: #fff;
   }
 a {
-  color: #16a085;
+  color: #0D99B7;
   text-decoration: none;
   -webkit-transition: .25s;
           transition: .25s;
   }
+a:active {
+  color: #90278E;
+}
 a:hover,
 a:focus {
-  color: #1abc9c;
+  color: #F6921E;
   text-decoration: none;
   }
 a:focus {

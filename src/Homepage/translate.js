@@ -10,6 +10,9 @@ export default class Translator {
     this.appName = appName;
     this.language = language;
     this.mode = (appName === 'bhc' || (appName === 'bpa' && !dev)) ? 'study' : 'exp';
+    if (appName === 'kf') {
+      this.mode = 'family';
+    }
   }
 
   /**
@@ -18,14 +21,20 @@ export default class Translator {
    * @return {String} translation
    */
   translate(word) {
-    if (this.mode === 'exp') {
-      return word;
+    if (this.mode === 'study') {
+      return word.replace(/^Experiments/, 'Studies',
+      ).replace(/^experiments/, 'studies',
+      ).replace(/^Experiment/, 'Study',
+      ).replace(/^experiment/, 'study',
+      );
+    } else if (this.mode === 'family') {
+      return word.replace(/^Experiments/, 'Families',
+      ).replace(/^experiments/, 'families',
+      ).replace(/^Experiment/, 'Family',
+      ).replace(/^experiment/, 'family',
+      );
     }
-    return word.replace(/^Experiments/, 'Studies',
-    ).replace(/^experiments/, 'studies',
-    ).replace(/^Experiment/, 'Study',
-    ).replace(/^experiment/, 'study',
-    );
+    return word;
   }
 
 
