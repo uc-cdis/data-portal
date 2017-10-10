@@ -145,6 +145,8 @@ const PropertyBullet = ({ property_name, property, required }) => {
   if (!type) {
     if ('oneOf' in property) {
       type = property.oneOf.map((item) => getType(item)).join(', ');
+    } else {
+      type = "UNDEFINED";
     }
   }
 
