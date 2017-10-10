@@ -1,14 +1,6 @@
 import styled from 'styled-components';
 import { Table, Sidebar } from '../theme';
 
-
-export const Header = styled.th`
-  border-bottom: 1px solid #8f8f8f;
-  padding-left: 0.5em;
-  font-size: 18px;
-`;
-
-
 export const Cell = styled.td`
   padding: 0.25rem 0px 0.25rem 0.5em;
   overflow: hidden;
@@ -16,31 +8,7 @@ export const Cell = styled.td`
   white-space: nowrap;
 `;
 
-
-export const ProjectCell = styled(Cell)`
-  width: 15%;
-`;
-
-export const FileNameCell = styled(Cell)`
-  width: 35%;
-  text-overflow: ellipsis;
-`;
-
-export const FileFormatCell = styled(Cell)`
-  width: 10%;
-`;
-
-export const FileSizeCell = styled(Cell)`
-  width: 15%;
-  text-overflow: ellipsis;
-`;
-
-export const CategoryCell = styled(Cell)`
-  width: 25%;
-  text-overflow: ellipsis;
-`;
-
-const ExplorerTableBarColor = '#697e8d';
+const ExplorerTableBarColor = '#ffffff';
 
 export const TableData = styled.td`
   max-width: 10vw;
@@ -57,17 +25,18 @@ export const TableData = styled.td`
 
 export const TableHeadCell = styled(TableData)`
   background: ${ExplorerTableBarColor};
-  color: white;
+  color: '#000000';
 `;
 
 export const TableFootCell = styled(TableData)`
   background: ${ExplorerTableBarColor};
-  color: white;
+  color: '#000000';
   text-align: center;
 `;
 
 export const ExplorerTableStyle = styled(Table)`
   width: 100%;
+  -webkit-box-shadow: none;
 `;
 
 export const ExplorerSidebarStyle = styled(Sidebar)`
@@ -91,13 +60,13 @@ export const TableFooter = styled.tfoot`
   text-align: center;
 `;
 
-const ActivePageButtonColor = '#7a7656';
+const ActivePageButtonColor = '#71594d';
 
 export const PageButton = styled.button`
   width: 30px;
   height: 30px;
   background: ${props => (props.active ? ActivePageButtonColor : ExplorerTableBarColor)};
-  color: white;
+  color: ${props => (props.active ? 'white' : '#000000')};
   outline: none;
   padding: 0.1rem;
 `;
@@ -106,7 +75,7 @@ export const ArrowButton = styled.button`
   width: 100%;
   height: 100%;
   background: ${ExplorerTableBarColor};
-  color: white;
+  color: '#000000';
   outline: none;
   padding: 0.1rem;
 `;
@@ -120,11 +89,11 @@ export const ExplorerTab = styled.div`
   display: inline-block;
   border: outset 1px gray;
   padding: 5px;
-  background-color: ${props => (props.active ? 'white' : '#fcf9ff')};
-  border-bottom: ${props => (props.active ? 'solid 3px white' : 'outset 2px gray')};
+  background-color: ${props => (props.active ? 'white' : '#f8fcf9')};
+  border-bottom: ${props => (props.active ? 'solid 2px white' : 'outset 1px gray')};
   margin-bottom:0px;
-  margin-left:3px;
-  margin-right:-3px;
+  margin-left:0px;
+  margin-right:0px;
   cursor:pointer;
   font-size: 15px;
 `;
@@ -132,7 +101,8 @@ export const ExplorerTab = styled.div`
 export const ExplorerTabFrame = styled.div`
   display: inline-block;
   position: relative;
-  margin-top: -2px;
+  margin-top: -1px;
+  margin-left:0px;
   border: outset 1px gray;
   padding: 10px;
 `;

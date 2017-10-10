@@ -5,8 +5,8 @@ export const explorer = (state = { filesMap: {},
   refetch_data: true,
   pagesPerTab: 5,
   activeTab: '',
-  currentPages: {}
-  }, action) => {
+  currentPages: {},
+}, action) => {
   switch (action.type) {
   case 'RECEIVE_FILE_LIST': {
     return {
@@ -20,7 +20,7 @@ export const explorer = (state = { filesMap: {},
       refetch_data: false,
       moreData: 'RECEIVED',
       activeTab: action.data.activeTab,
-      currentPages: action.data.currentPages
+      currentPages: action.data.currentPages,
     };
   }
   case 'UNSET_RESET_ORIGIN_PAGE' : {
@@ -38,8 +38,8 @@ export const explorer = (state = { filesMap: {},
   case 'SET_CURRENT_PAGE': {
     return {
       ...state,
-      currentPages: action.data
-    }
+      currentPages: action.data,
+    };
   }
   case 'SELECTED_LIST_CHANGED': {
     return {

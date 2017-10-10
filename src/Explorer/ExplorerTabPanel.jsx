@@ -2,9 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { ExplorerTabs, ExplorerTab, ExplorerTabBox, ExplorerTabFrame } from './style';
 import { ExplorerTableComponent } from './ExplorerTable';
-import { getReduxStore } from '../reduxStore';
-import SelectComponent from '../components/SelectComponent';
-import { computeLastPageSizes } from '../utils';
 
 const makeDefaultState = () => ({
 });
@@ -85,7 +82,6 @@ class TabSetComponent extends Component {
   }
 
   render() {
-    let pageSizeValues = [5, 10, 20, 50];
     let originalPages = this.updateOriginalPage();
     return (
       <div>
@@ -105,10 +101,6 @@ class TabSetComponent extends Component {
           }
         </ExplorerTabs>
         <ExplorerTabFrame>
-          <SelectComponent values={pageSizeValues} title={"Page size: "}
-                           selectedValue={this.props.pageSize}
-                           onChange={(value) => this.doSelectChange(value)}
-          />
           {
             Object.keys(this.props.filesMap).map(
               (item, i) =>
@@ -143,14 +135,11 @@ class TabSetComponent extends Component {
                           -this.props.pageSize * this.props.pagesPerTab);
                       }
                     }
+                    onPageSizeChange={(value) => this.doSelectChange(value)}
                   />
                 </ExplorerTabBox>,
             )
           }
-          <SelectComponent values={pageSizeValues} title={"Page size: "}
-                           selectedValue={this.props.pageSize}
-                           onChange={(value) => this.doSelectChange(value)}
-          />
         </ExplorerTabFrame>
       </div>
     );

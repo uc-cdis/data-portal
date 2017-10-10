@@ -5,6 +5,7 @@ import { TableData, TableHeadCell,
   ExplorerTableStyle, TableFooter,
   TableFootCell, PageButton, ArrowButton } from './style';
 import { getReduxStore } from '../reduxStore';
+import SelectComponent from '../components/SelectComponent';
 
 const makeDefaultState = (page, pageSize, originalPage) => ({
   page: page,
@@ -23,7 +24,8 @@ export class ExplorerTableComponent extends Component {
     originalPage: PropTypes.number,
     onPageLoadNextMore: PropTypes.func,
     onPageLoadPrevMore: PropTypes.func,
-    onPageChange: PropTypes.func
+    onPageChange: PropTypes.func,
+    onPageSizeChange: PropTypes.func
   };
 
   static defaultProps = {
@@ -99,6 +101,7 @@ export class ExplorerTableComponent extends Component {
       ? this.props.filesList.slice(startingPage * this.props.pageSize,
         (startingPage * this.props.pageSize) + this.props.pageSize) : [];
     let pages = [];
+    let pageSizeValues = [5, 10, 20, 50];
     if (this.state.pageSize > 0)
     {
       const numberOfPages = this.props.filesList ?
@@ -135,7 +138,7 @@ export class ExplorerTableComponent extends Component {
                 </ArrowButton>
               }
             </TableFootCell>
-            <TableFootCell c_width={'60%'}>
+            <TableFootCell c_width={'40%'}>
               {
                 pages.map((item, i) =>
                   (<PageButton
@@ -151,6 +154,12 @@ export class ExplorerTableComponent extends Component {
                     {item + 1}
                   </PageButton>))
               }
+            </TableFootCell>
+            <TableFootCell c_width={'20%'}>
+              <SelectComponent values={pageSizeValues} title={"Page size: "}
+                               selectedValue={this.props.pageSize}
+                               onChange={(value) => this.props.onPageSizeChange(value)}
+              />
             </TableFootCell>
             <TableFootCell c_width={'20%'}>
               {

@@ -1,9 +1,15 @@
 import React, { Component, PropTypes } from 'react';
+import styled from 'styled-components';
 
 
 const makeDefaultSelectedState = (value) => ({
   selectedValue: value
 });
+
+export const SelectionDiv = styled.div`
+  font-size: 15px;
+`;
+
 
 export default class SelectComponent extends Component {
   static propTypes = {
@@ -44,7 +50,7 @@ export default class SelectComponent extends Component {
 
   render() {
     return (
-      <div>
+      <SelectionDiv>
         <label>{this.props.title}</label>
         <select value={this.state.selectedValue}
                 onChange={(event) => this.doChangeSelectedValue(event.nativeEvent.target.value)}>
@@ -53,7 +59,7 @@ export default class SelectComponent extends Component {
             )
           )}
         </select>
-      </div>
+      </SelectionDiv>
     )
   }
 }
