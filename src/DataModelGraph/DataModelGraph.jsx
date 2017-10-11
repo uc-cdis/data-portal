@@ -32,20 +32,13 @@ class DataModelGraph extends React.Component {
   }
 
   render() {
-    if (this.state.fullToggle) {
-      if (this.state.full.nodes.length !== 0 && 'count' in this.state.full.nodes[this.state.full.nodes.length - 1]) {
-        return (
-          <div style={{ position: 'relative' }}>
-            <ToggleButton onClick={this.handleToggleClick}>Toggle view</ToggleButton>
-            <SvgGraph nodes={this.state.full.nodes} edges={this.state.full.edges} />
-          </div>
-        );
-      }
-    } else if (this.state.compact.nodes.length !== 0 && 'count' in this.state.compact.nodes[this.state.compact.nodes.length - 1]) {
+    const graph = this.state.fullToggle ? this.state.full : this.state.compact;
+
+    if (graph.nodes.length !== 0 && 'count' in graph.nodes[graph.nodes.length - 1]) {
       return (
         <div style={{ position: 'relative' }}>
           <ToggleButton onClick={this.handleToggleClick}>Toggle view</ToggleButton>
-          <SvgGraph nodes={this.state.compact.nodes} edges={this.state.compact.edges} />
+          <SvgGraph nodes={graph.nodes} edges={graph.edges} />
         </div>
       );
     }
