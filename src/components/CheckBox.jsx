@@ -10,6 +10,7 @@ const LabelCheckBox = styled(Label)`
     padding: 0px 0.25rem;
     margin-left: 0.3rem;
     vertical-align: middle;
+    line-height: 1.75
 `;
 
 const CheckBox = styled.div`
@@ -27,6 +28,13 @@ export class CheckBoxGroup extends Component {
     onChange: PropTypes.func,
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapsed: (props.listItems.length > 5) ? 1 : 0
+    };
+  }
+
   onChangeBox = (item) => {
     const pos = this.props.selected_items.indexOf(item);
     let selectedItems = [];
@@ -42,10 +50,14 @@ export class CheckBoxGroup extends Component {
   render() {
     const selectedItems = this.props.selected_items;
     // console.log(selectedItems);
+    let listItems = (this.state.collapsed === 1)
+      ? this.props.listItems.slice(0, 3)
+      : this.props.listItems;
+
     return (
       <CheckBox>
         {this.props.title}
-        {this.props.listItems.map((item, i) => (
+        {listItems.map((item, i) => (
           <div key={i}>
             <input
               type="checkbox" name={this.props.group_name}
@@ -56,6 +68,13 @@ export class CheckBoxGroup extends Component {
             <LabelCheckBox for={item}>{item}</LabelCheckBox>
           </div>
         ))}
+        {
+          (this.state.collapsed === 1) ?
+            <a href="#/" onClick={() => this.state.collapsed = 2}>{'More options'}</a>
+            : ((this.state.collapsed === 2)
+            ? <a href="#/" onClick={() => this.state.collapsed = 1}>{'Fewer options'}</a>
+            : "")
+        }
       </CheckBox>
     );
   }

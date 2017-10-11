@@ -108,25 +108,20 @@ const Col4 = styled(TableData)`
 class CollapsibleList extends React.Component {
   constructor(props) {
     super(props);
-    if (this.props.items.length > 5) {
-      this.state = {
-        collapsed: 1,
-      };
-    } else {
-      this.state = {
-        collapsed: 0,
-      };
-    }
+    this.state = {
+      collapsed: (props.items.length > 5) ? 1 : 0,
+    };
   }
+
   render() {
-    if (this.state.collapsed == 1) {
+    if (this.state.collapsed === 1) {
       return (
         <div>
           {this.props.items.slice(0, 3).map(item => <Bullet key={item}>{item}</Bullet>)}
           <a href="#/" onClick={() => this.state.collapsed = 2}>{'More options'}</a>
         </div>
       );
-    } else if (this.state.collapsed == 2) {
+    } else if (this.state.collapsed === 2) {
       return (
         <div>
           {this.props.items.map(item => <Bullet key={item}>{item}</Bullet>)}
@@ -152,7 +147,7 @@ const PropertyBullet = ({ property_name, property, required }) => {
   }
 
   let type = getType(property);
-  if (type == undefined) {
+  if (type === undefined) {
     if ('oneOf' in property) {
       type = property.oneOf.map((item, i) => getType(item)).join(', ');
     }
@@ -161,7 +156,7 @@ const PropertyBullet = ({ property_name, property, required }) => {
   return (
     <TableRow>
       <Col1><div> { property_name }</div> </Col1>
-      <Col2> <ul>{ (type.indexOf(',') == -1) ? type : <CollapsibleList items={type.split(', ')} />} </ul></Col2>
+      <Col2> <ul>{ (type.indexOf(',') === -1) ? type : <CollapsibleList items={type.split(', ')} />} </ul></Col2>
       <Col3> { required ? 'Yes' : 'No' } </Col3>
       <Col4> { description } </Col4>
     </TableRow>
@@ -201,7 +196,7 @@ const DataDictionaryNodeType = ({ params, submission }) => {
   const node = params.node;
   const dictionary = submission.dictionary;
 
-  if (node == 'graph') {
+  if (node === 'graph') {
     const nodes_and_edges = createNodesAndEdges(submission, true, []);
     const nodes = nodes_and_edges.nodes;
     const edges = nodes_and_edges.edges;
@@ -217,7 +212,7 @@ const DataDictionaryNodeType = ({ params, submission }) => {
   let links = [];
   const required = ('required' in dictionary[node]) ? dictionary[node].required : [];
   for (const link of submission.dictionary[node].links) {
-    if (link.name != undefined) {
+    if (link.name !== undefined) {
       links.push(link);
     } else {
       links = links.concat(link.subgroup);
@@ -252,7 +247,7 @@ class CreateGraph extends React.Component {
     if (this.state.full_toggle) {
       createFullGraph(this.props.nodes, this.props.edges);
     } else {
-      if (document.getElementById('table_wrapper') != null) {
+      if (document.getElementById('table_wrapper') !== null) {
         document.getElementById('table_wrapper').remove();
       }
       create_abridged_graph(this.props.nodes, this.props.edges);
@@ -262,7 +257,7 @@ class CreateGraph extends React.Component {
     if (this.state.full_toggle) {
       createFullGraph(this.props.nodes, this.props.edges);
     } else {
-      if (document.getElementById('table_wrapper') != null) {
+      if (document.getElementById('table_wrapper') !== null) {
         document.getElementById('table_wrapper').remove();
       }
       create_abridged_graph(this.props.nodes, this.props.edges);
@@ -285,15 +280,15 @@ class CreateGraph extends React.Component {
 
     queue.push(root);
     layout.push([root]);
-    while (queue.length != 0) {
+    while (queue.length !== 0) {
       const query = queue.shift(); // breadth first
       for (let i = 0; i < edges.length; i++) {
-        if (edges[i].target == query || edges[i].target.name == query) {
+        if (edges[i].target === query || edges[i].target.name === query) {
           if (!layout[layout_level + 1]) {
             layout[layout_level + 1] = [];
           }
           queue.push(edges[i].source);
-          if ((layout[layout_level + 1].indexOf(edges[i].source) == -1) && (placed.indexOf(edges[i].source) == -1)) {
+          if ((layout[layout_level + 1].indexOf(edges[i].source) === -1) && (placed.indexOf(edges[i].source) == -1)) {
             if (layout[layout_level + 1].length >= 3) {
               layout_level += 1;
               if (!layout[layout_level + 1]) {
@@ -311,7 +306,7 @@ class CreateGraph extends React.Component {
     for (let i = 0; i < layout.length; i++) {
       for (let j = 0; j < layout[i].length; j++) {
         for (let k = 0; k < nodes.length; k++) {
-          if (nodes[k].name == layout[i][j]) {
+          if (nodes[k].name === layout[i][j]) {
             nodes[k].position = [(j + 1) / (layout[i].length + 1), (i + 1) / (layout.length + 1)];
             nodes[k].position_index = [j, i];
             break;

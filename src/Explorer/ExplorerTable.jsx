@@ -44,7 +44,7 @@ export class ExplorerTableComponent extends Component {
         </TableData>
         <TableData c_width={column_widths[1]}>{file.name}</TableData>
         <TableData c_width={column_widths[2]}>{file.format}</TableData>
-        <TableData c_width={column_widths[3]}>{file.size}</TableData>
+        <TableData c_width={column_widths[3]} style={{textAlign: 'right'}}>{file.size}</TableData>
         <TableData c_width={column_widths[4]}>{file.category}</TableData>
       </TableRow>
     );
