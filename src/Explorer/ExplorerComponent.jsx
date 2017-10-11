@@ -146,8 +146,11 @@ class ExplorerComponent extends Component {
 
   render() {
     this.updateFilesMap();
+    const flexBox = {
+      display: 'flex',
+    };
     return (
-      <div>
+      <div style={flexBox}>
         <SideBar />
         <ExplorerTabPanel />
       </div>

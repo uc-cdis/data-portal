@@ -1,11 +1,9 @@
 import React from 'react';
-import { lighten } from 'polished';
 import { Link } from 'react-router';
 import styled from 'styled-components';
-import { cube } from '../theme';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
 import FlatButton from 'material-ui/FlatButton';
+
 
 const NavLeft = styled.nav`
   top: 0px;
@@ -30,41 +28,9 @@ const NavRight = styled.nav`
 const NavItem = styled(Link)`
   margin-right: 20px;
   span {
-    vertical-align: middle;
-    padding-right: 5px;
-    padding-left: 0px !important;
-  }
-  button {
-    // color: white !important;
+    padding-left: 4px !important;
   }
   height: 100%;
-`;
-const Logo = styled(Link)`
-  background: ${props => props.theme.color_primary};
-  float: left;
-  &:hover,
-  &:focus,
-  &:active {
-    background: #ad1a1a;
-  }
-
-  ${cube};
-`;
-
-const Logout = styled(Link)`
-  background: ${props => props.theme.mid_light_gray};
-  &:hover,
-  &:focus,
-  &:active {
-    background: #cecece;
-  }
-
-
-  float: left;
-  span {
-    vertical-align: middle;
-  }
-  ${cube};
 `;
 
 const NavIcon = styled.div`
@@ -81,12 +47,13 @@ const NavBar = ({ navItems, user, onLogoutClick }) => (
     <NavLeft>
       {
         navItems.map(
-          (item, i) => 
+          (item, i) => (
             <NavItem key={i} to={item.link}>
               <FlatButton label={item.name}>
                 <NavIcon className="material-icons">{item.icon}</NavIcon>
               </FlatButton>
             </NavItem>
+          )
         )
       }
     </NavLeft>
@@ -102,5 +69,11 @@ const NavBar = ({ navItems, user, onLogoutClick }) => (
     </NavRight>
   </Header>
 );
+
+NavBar.propTypes = {
+  navItems: PropTypes.array.isRequired,
+  user: PropTypes.shape({ username: PropTypes.string.isRequired }).isRequired,
+  onLogoutClick: PropTypes.func.isRequired,
+};
 
 export default NavBar;

@@ -83,8 +83,12 @@ class TabSetComponent extends Component {
 
   render() {
     const originalPages = this.updateOriginalPage();
+    const flexItem = {
+      flexBasis: '80%',
+      flexGrow: 1
+    };
     return (
-      <div>
+      <div style={flexItem}>
         <ExplorerTabs>
           {
             Object.keys(this.props.filesMap).map(

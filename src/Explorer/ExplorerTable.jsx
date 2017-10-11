@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
+import styled from 'styled-components';
 import { TableRow, TableHead } from '../theme';
 import { TableData, TableHeadCell,
-  ExplorerTableStyle, TableFooter,
+  TableFooter,
   TableFootCell, PageButton, ArrowButton } from './style';
 import { getReduxStore } from '../reduxStore';
 import SelectComponent from '../components/SelectComponent';
@@ -12,6 +13,13 @@ const makeDefaultState = (page, pageSize, originalPage) => ({
   originalPage,
   pageSize,
 });
+
+export const ExplorerTableStyle = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+`;
+
 
 export class ExplorerTableComponent extends Component {
   static propTypes = {
@@ -36,10 +44,10 @@ export class ExplorerTableComponent extends Component {
     onPageChange: () => {},
   };
 
-  static renderRow(file, column_widths, i) {
+  static renderRow(file, columnWidths, i) {
     return (
       <TableRow key={i}>
-        <TableData c_width={column_widths[0]}>
+        <TableData c_width={columnWidths[0]}>
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
         </TableData>
         <TableData c_width={column_widths[1]}>{file.name}</TableData>

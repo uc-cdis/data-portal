@@ -206,8 +206,8 @@ class SvgGraph extends React.Component {
       const { minX, minY } = createSvgGraph(this.props.nodes, this.props.edges);
       if (minX !== this.state.minX || minY !== this.state.minY) {
         this.setState(
-          Object.assign(this.state, 
-            { minX, minY, nodes: this.props.nodes, edges: this.props.edges }
+          Object.assign(this.state,
+            { minX, minY, nodes: this.props.nodes, edges: this.props.edges },
           ),
         );
       }
@@ -226,7 +226,6 @@ class SvgGraph extends React.Component {
 
     const divStyle = {
       height,
-      width: `${width + 100}px`,
       backgroundColor: '#f4f4f4',
       marginLeft: 'auto',
       marginRight: 'auto',

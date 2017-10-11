@@ -18,7 +18,6 @@ export const theme = {
   dark_gray: '#525252',
   box_padding_width: '100px',
   box_padding_height: '80px',
-
 };
 
 export const button = css`
