@@ -127,7 +127,7 @@ export const loginSubmissionAPI = () =>
 ;
 
 
-const ReduxSubmitTSV = (function () {
+const ReduxSubmitTSV = (() => {
   const mapStateToProps = state => ({
     submission: state.submission,
     dictionary: state.dictionary,
@@ -146,10 +146,10 @@ const ReduxSubmitTSV = (function () {
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(SubmitTSV);
-}());
+})();
 
 
-const ReduxSubmitForm = (function () {
+const ReduxSubmitForm = (() => {
   const mapStateToProps = state => ({
     submission: state.submission,
   });
@@ -159,10 +159,10 @@ const ReduxSubmitForm = (function () {
   });
 
   return connect(mapStateToProps, matpDispatchToProps)(SubmitForm);
-}());
+})();
 
 
-const ReduxProjectSubmission = (function () {
+const ReduxProjectSubmission = (() => {
   const mapStateToProps = state => ({
     typeList: state.submission.node_types,
     dataIsReady: !!state.submission.counts_search,
@@ -177,6 +177,6 @@ const ReduxProjectSubmission = (function () {
       dispatch(getCounts(typeList, project, dictionary)),
   });
   return connect(mapStateToProps, mapDispatchToProps)(ProjectSubmission);
-}());
+})();
 
 export default ReduxProjectSubmission;

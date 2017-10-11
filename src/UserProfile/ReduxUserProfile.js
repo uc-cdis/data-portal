@@ -75,7 +75,7 @@ export const loginUserProfile = () =>
         () => dispatch(fetchOAuthURL(submissionApiOauthPath)),
       )
       .then(
-        oauthUrl => dispatch(fetchUserApiLogin(oauthUrl))
+        oauthUrl => dispatch(fetchUserApiLogin(oauthUrl)),
       )
       .then(() => dispatch(fetchAccess()))
       .then(() => dispatch(fetchProjects()))
@@ -83,9 +83,9 @@ export const loginUserProfile = () =>
   ;
 
 
-const requestDeleteKey = access_key => ({
+const requestDeleteKey = accessKey => ({
   type: 'REQUEST_DELETE_KEY',
-  access_key,
+  access_key: accessKey,
 });
 
 const clearDeleteSession = () => ({
@@ -93,9 +93,9 @@ const clearDeleteSession = () => ({
 });
 
 
-const deleteKey = (access_key, keypairsApi) =>
+const deleteKey = (accessKey, keypairsApi) =>
   dispatch => fetchJsonOrText({
-    path: keypairsApi + access_key,
+    path: keypairsApi + accessKey,
     method: 'DELETE',
     dispatch,
   })
@@ -112,7 +112,7 @@ const deleteKey = (access_key, keypairsApi) =>
         default:
           return dispatch({
             type: 'DELETE_KEY_FAIL',
-            access_key,
+            access_key: accessKey,
             error: data,
           });
         }

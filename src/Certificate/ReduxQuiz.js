@@ -42,7 +42,6 @@ export const submitForm = (data, questionList) => fetchWrapper({
 });
 
 
-
 /**
  * answer is the index of the correct option
  */ 
