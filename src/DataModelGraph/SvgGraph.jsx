@@ -1,0 +1,241 @@
+import React from 'react';
+import * as d3 from 'd3';
+
+import { color, legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
+import { assignNodePositions } from './utils';
+
+
+/**
+ * createSvgGraph: builds an SVG graph (oval nodes) in the SVG DOM 
+ *    node with selector: svg#data_model_graph.
+ *    Needs position as property of each node (as fraction of 1 e.g. [0.5, 0.1] 
+ *    for placement at (0.5*svg_width, 0.1*svg_height))
+ *    Side effect - decorates each node in 'nodes' with a 'position' property
+ * 
+ * @param nodes
+ * @param edges
+ */
+export function createSvgGraph(nodes, edges) {
+  assignNodePositions(nodes, edges);
+  const minX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
+  const minY = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
+  const maxX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
+  const maxY = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
+
+  const padding = 25;
+  const radius = 60;
+  const legendWidth = 125;
+  const width = maxX * radius * 2 + legendWidth;
+  const height = maxY * radius * 2;
+
+  const svg = d3.select('#data_model_graph')
+    .style('display', 'block')
+    .style('margin-left', 'auto')
+    .style('margin-right', 'auto');
+  // Clear everything inside when re-rendering
+  svg.selectAll('*').remove();
+
+  const graph = svg.append('g')
+    .attr('transform', `translate(0,${padding})`);
+  // legend is the text that matches categories to color
+  const legend = svg.append('g')
+    .attr('transform', `translate(${width - legendWidth},${padding})`);
+
+  const link = addLinks(graph, edges);
+
+  addArrows(graph);
+
+  // calculatePosition adds .fx, .fy to nodes as side effect
+  const calcPosObj = calculatePosition(nodes, width, height);
+  const numRows = calcPosObj.fyValsLength;
+  const unclickableNodes = ['program', 'project'];
+  const nodeTypes = nodes.map(node => node.name);
+  const nodesForQuery = nodeTypes.filter(nt => !unclickableNodes.includes(nt));
+
+  // Add search on clicking a node
+  const node = graph.selectAll('g.gnode')
+    .data(nodes)
+    .enter().append('g')
+    .classed('gnode', true)
+    .style('cursor', (d) => {
+      if (unclickableNodes.indexOf(d.name) === -1) {
+        return 'pointer';
+      }
+      return '';
+    })
+    .attr('id', d => d.name)
+    .on('click', (d) => {
+      for (let i = 0; i < nodesForQuery.length; i++) {
+        if (d.name === nodesForQuery[i]) {
+          window.open(window.location.href.concat('/search?node_type='.concat(d.name)));
+          break;
+        }
+      }
+    });
+
+  // Add nodes to graph
+  node.append('ellipse')
+    .attr('rx', radius)
+    .attr('ry', radius * 0.6)
+    .attr('fill', (d) => {
+      if (d.count === 0) {
+        return '#f4f4f4';
+      }
+      return color[d.category];
+    })
+    .style('stroke', (d) => {
+      if (d.count === 0) {
+        return color[d.category];
+      }
+      return '';
+    })
+    .style('stroke-width', 1);
+
+  const graphFontSize = '0.75em';
+
+  // Append text to nodes
+  for (let n = 0; n < nodes.length; n++) {
+    const splitName = nodes[n].name.split('_');
+    for (let i = 0; i < splitName.length; i++) {
+      if (splitName.length > 2) {
+        nodes[n].adjust_text_pos = 1;
+      } else {
+        nodes[n].adjust_text_pos = 0;
+      }
+      graph.select('#'.concat(nodes[n].name))
+        .append('text')
+        .attr('text-anchor', 'middle')
+        .attr('font-size', graphFontSize)
+        .attr('dy', `${(0 - (splitName.length - i - 1) + nodes[n].adjust_text_pos) * 0.9}em`)
+        .text(splitName[i]);
+    }
+  }
+  node.append('text')
+    .text(d => (d.count))
+    .attr('text-anchor', 'middle')
+    .attr('font-size', graphFontSize)
+    .attr('dy', (d) => {
+      if (d.adjust_text_pos) {
+        return '2em';
+      }
+      return '1em';
+    });
+
+  // part of d3 simulation (below)
+  function positionLink(d) {
+    if (d.source.fy === d.target.fy) {
+      const curve = `M${d.source.x},${d.source.y
+      }Q${d.source.x},${d.source.y + (height / numRows) / 3
+      } ${(d.source.x + d.target.x) / 2},${d.source.y + (height / numRows) / 3
+      }T ${d.target.x},${d.target.y}`;
+      return curve;
+    } else if (d.source.fx === d.target.fx && (d.target.y - d.source.y) > (radius * 2)) {
+      const curve = `M${d.source.x},${d.source.y
+      }Q${d.source.x + radius * 1.25},${d.source.y
+      } ${d.source.x + radius * 1.25},${(d.source.y + d.target.y) / 2
+      }T ${d.target.x},${d.target.y}`;
+      return curve;
+    }
+    return `M${d.source.x},${d.source.y
+    }L${(d.source.x + d.target.x) / 2},${(d.source.y + d.target.y) / 2
+    }L${d.target.x},${d.target.y}`;
+  }
+
+  // part of d3 simulation
+  function ticked() {
+    link.attr('d', positionLink)
+      .attr('stroke-dasharray', (d) => {
+        if (d.exists === 0) {
+          return '5, 5';
+        }
+        return '0';
+      });
+
+    node
+      .attr('cx', (d) => { d.x = Math.max(radius, Math.min(width - radius, d.x)); return d.x; })
+      .attr('cy', (d) => { d.y = Math.max(radius, Math.min(height - radius, d.y)); return d.y; })
+      .attr('transform', d => `translate(${[d.x, d.y]})`);
+  }
+
+  // d3 "forces" layout - see http://d3indepth.com/force-layout/
+  const simulation = d3.forceSimulation()
+    .force('link', d3.forceLink().id(d => d.name));
+
+  // Put the nodes and edges in the correct spots
+  simulation
+    .nodes(nodes)
+    .on('tick', ticked);
+
+  simulation.force('link')
+    .links(edges);
+
+  legendCreator(legend, nodes, legendWidth, color);
+  return { minX, minY };
+}
+
+
+/**
+ * SVG graph based on given nodes and edges - assumes
+ * graph is basically a tree structure that can be
+ * layed out breadth first.
+ */
+class SvgGraph extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { minX: 100, minY: 100 };
+  }
+
+  componentDidMount() {
+    //
+    // This is crazy, because createSvgGraph is going to add nodes
+    // to the react-managed DOM via a d3 simulation ...
+    //
+    const { minX, minY } = createSvgGraph(this.props.nodes, this.props.edges);
+    if (minX !== this.state.minX || minY !== this.state.minY) {
+      // this will result eventually in this.componentDidUpdate ...
+      //    https://reactjs.org/docs/react-component.html#componentwillupdate
+      this.setState(Object.assign(this.state, { minX, minY }));
+    }
+  }
+
+
+  componentDidUpdate() {
+    // break recursion with if: componentDidUpdate -> setState -> componentDidUpdate ...
+    //        https://reactjs.org/docs/react-component.html#componentwillupdate
+    if (this.state.nodes !== this.props.nodes || this.state.edges !== this.props.edges) {
+      const { minX, minY } = createSvgGraph(this.props.nodes, this.props.edges);
+      if (minX !== this.state.minX || minY !== this.state.minY) {
+        this.setState(
+          Object.assign(this.state,
+            { minX, minY, nodes: this.props.nodes, edges: this.props.edges },
+          ),
+        );
+      }
+    }
+  }
+
+
+  render() {
+    const { minX, minY } = this.state;
+
+    const padding = 25;
+    const radius = 60;
+    const legendWidth = 125;
+    const width = minX * radius * 2 + legendWidth;
+    const height = minY * radius * 2 + padding;
+
+    const divStyle = {
+      height,
+      backgroundColor: '#f4f4f4',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    };
+    return (
+      <div style={divStyle}>
+        <svg id="data_model_graph" height={height} width={width} />
+      </div>
+    );
+  }
+}
+
+export default SvgGraph;

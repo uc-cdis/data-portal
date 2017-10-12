@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, Route, Link } from 'react-router';
+import { Router, Route } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { ThemeProvider } from 'styled-components';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -9,26 +9,21 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'react-select/dist/react-select.css';
 
 import { requireAuth, enterHook, fetchUser } from './actions';
-import { clearResultAndQuery } from './QueryNode/actions';
-import Login from './Login/component';
+import Login from './Login/Login';
 import AmbiHomepage from './Homepage/AmbiHomepage';
 import ExplorerPage from './Explorer/ExplorerPage';
-import RelayExplorer from './Explorer/ExplorerComponent';
-import QueryNode from './QueryNode/QueryNode';
-import DataDictionary from './DataDictionary/component';
-import DataDictionaryNode from './DataDictionary/DataDictionaryNode';
-import ProjectSubmission from './Submission/component';
-import UserProfile from './UserProfile/component';
-import Certificate from './Certificate/component';
-import GraphQLQuery from './GraphQLEditor/component';
-import { loginSubmissionAPI } from './Submission/actions';
+import QueryNode, { clearResultAndQuery } from './QueryNode/ReduxQueryNode';
+import DataDictionary from './DataDictionary/ReduxDataDictionary';
+import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
+import ProjectSubmission, { loginSubmissionAPI } from './Submission/ReduxProjectSubmission';
+import UserProfile, { loginUserProfile, fetchAccess } from './UserProfile/ReduxUserProfile';
+import CertificateQuiz from './Certificate/ReduxQuiz';
+import GraphQLQuery, { fetchSchema } from './GraphQLEditor/ReduxGqlEditor';
 import { fetchDictionary } from './queryactions';
-import { loginUserProfile, fetchAccess } from './UserProfile/actions';
-import { fetchSchema } from './GraphQLEditor/actions';
 import { app } from './localconf';
 import browserHistory from './history';
 import { theme } from './theme';
-import { clearCounts } from './DataModelGraph/actions';
+import { clearCounts } from './DataModelGraph/ReduxDataModelGraph';
 import { asyncSetInterval, withBoxAndNav, withAuthTimeout } from './utils';
 import { getReduxStore } from './reduxStore';
 
@@ -36,12 +31,6 @@ import { getReduxStore } from './reduxStore';
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
-
-const NoMatch = () => (
-  <div>
-    <Link to={'/'}>Page Not Found</Link>
-  </div>
-);
 
 
 let initialized = false;
@@ -55,8 +44,7 @@ async function init() {
   initialized = true;
   const store = await getReduxStore();
 
-  // not necessary to wait for this? ... await store.dispatch( fetchUser() );
-  asyncSetInterval(() => store.dispatch(fetchUser()), 10000);
+  asyncSetInterval(() => store.dispatch(fetchUser), 10000);
 
   const history = syncHistoryWithStore(browserHistory, store);
   history.listen(location => console.log(location.pathname));
@@ -68,13 +56,22 @@ async function init() {
             <Router history={history}>
               <Route path="/login" component={Login} />
               <Route
-                path="/" onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
+                path="/"
+                onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
                 component={AmbiHomepage}
               />
               <Route
                 path="/query"
-                onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts()))
-                  .then(() => store.dispatch(fetchSchema())))}
+                onEnter={
+                  requireAuth(
+                    store,
+                    () => {
+                      return store.dispatch(loginSubmissionAPI())
+                        .then(() => store.dispatch(clearCounts))
+                        .then(() => store.dispatch(fetchSchema));
+                    },
+                  )
+                }
                 component={withBoxAndNav(withAuthTimeout(GraphQLQuery))}
               />
               <Route
@@ -85,7 +82,7 @@ async function init() {
               <Route
                 path="/quiz"
                 onEnter={requireAuth(store)}
-                component={withBoxAndNav(withAuthTimeout(Certificate))}
+                component={withBoxAndNav(withAuthTimeout(CertificateQuiz))}
               />
               <Route
                 path="/dd"
@@ -98,17 +95,27 @@ async function init() {
                 component={withBoxAndNav(DataDictionaryNode)}
               />
               <Route
-                exact 
+                exact
                 path="/files"
                 onEnter={
-                  requireAuth(store, nextState => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))))
+                  requireAuth(store,
+                    (nextState) => {
+                      return store.dispatch(loginSubmissionAPI())
+                        .then(() => store.dispatch(clearResultAndQuery(nextState)));
+                    },
+                  )
                 }
                 component={ExplorerPage}
               />
               <Route
                 path="/:project"
                 onEnter={
-                  requireAuth(store, () => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearCounts())))
+                  requireAuth(store,
+                    () => {
+                      return store.dispatch(loginSubmissionAPI())
+                        .then(() => store.dispatch(clearCounts));
+                    },
+                  )
                 }
                 component={withBoxAndNav(withAuthTimeout(ProjectSubmission))}
               />

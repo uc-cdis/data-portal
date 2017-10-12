@@ -105,7 +105,7 @@ class ExplorerComponent extends Component {
         const cursors = GQLHelper.updateOffset(viewer, explorerState.cursors || {});
         let selectedFilters = { projects: [], file_types: [], file_formats: [] };
         if (explorerState.refetch_data) {
-          let activeTab =  this.getFirstActiveTab(receivedFilesMap);
+          const activeTab = this.getFirstActiveTab(receivedFilesMap);
           selectedFilters = explorerState.selected_filters;
           store.dispatch({ type: 'RECEIVE_FILE_LIST',
             data: { filesMap: receivedFilesMap,
@@ -113,8 +113,8 @@ class ExplorerComponent extends Component {
               lastPageSizes: lastPageSize,
               cursors,
               queriedCursors,
-              activeTab: activeTab,
-              currentPages
+              activeTab,
+              currentPages,
             } });
         } else if (explorerState.moreData === 'REQUESTED') {
           selectedFilters = explorerState.selected_filters;
@@ -146,8 +146,11 @@ class ExplorerComponent extends Component {
 
   render() {
     this.updateFilesMap();
+    const flexBox = {
+      display: 'flex',
+    };
     return (
-      <div>
+      <div style={flexBox}>
         <SideBar />
         <ExplorerTabPanel />
       </div>

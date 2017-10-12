@@ -1,9 +1,9 @@
 import React from 'react';
+import styled from 'styled-components';
+
 import { Box } from '../theme';
 import Footer from '../components/Footer';
-import { userapiPath, basename, appname, login } from '../localconf';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
+import { basename, appname, login } from '../localconf';
 
 const CentralBox = styled(Box)`
   text-align: center;

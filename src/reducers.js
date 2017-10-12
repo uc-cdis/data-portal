@@ -1,14 +1,12 @@
-import 'babel-polyfill';
 import { reducer as formReducer } from 'redux-form';
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import { user_profile } from './UserProfile/reducers';
+import userProfile from './UserProfile/reducers';
 import { certificate } from './Certificate/reducers';
-import { login } from './Login/reducers';
-import { submission } from './Submission/reducers';
+import submission from './Submission/reducers';
 import homepage from './Homepage/reducers';
 import { query_nodes } from './QueryNode/reducers';
-import { popups } from './Popup/reducers';
+import popups from './Popup/reducers';
 import { graphiql } from './GraphQLEditor/reducers';
 import { explorer } from './Explorer/reducers';
 
@@ -53,12 +51,11 @@ export const removeDeletedNode = (state, id) => {
 const reducers = combineReducers({ explorer,
   homepage,
   popups,
-  login,
   user,
   status,
   submission,
   query_nodes,
-  user_profile,
+  userProfile,
   certificate,
   graphiql,
   form: formReducer,

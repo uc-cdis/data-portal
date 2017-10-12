@@ -1,9 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { fetchGraphQL } from '../actions';
 import GraphiQL from 'graphiql';
 import { buildClientSchema } from 'graphql/utilities';
+import Spinner from '../components/Spinner';
 
 export const Title = styled.h2`
   display: inline-block;
@@ -19,7 +19,10 @@ export const GraphBox = styled.div`
 
 const parameters = {};
 
-const ProjectSubmissionComponent = ({ schema }) => {
+const GqlEditor = ({ schema }) => {
+  if ( ! schema ) {
+    return <Spinner />; // loading
+  }
   const graphqlSchema = buildClientSchema(schema.data);
   const editQuery = (newQuery) => {
     parameters.query = newQuery;
@@ -45,12 +48,4 @@ const ProjectSubmissionComponent = ({ schema }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  schema: state.graphiql.schema,
-});
-
-const mapDispatchToProps = dispatch => ({
-});
-
-const GraphQLQuery = connect(mapStateToProps, mapDispatchToProps)(ProjectSubmissionComponent);
-export default GraphQLQuery;
+export default GqlEditor;

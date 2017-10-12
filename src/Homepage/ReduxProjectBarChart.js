@@ -1,6 +1,9 @@
 import { connect } from 'react-redux';
 import { ProjectBarChart } from './ProjectBarChart';
 import { sortCompare } from '../utils';
+import Translator from './translate';
+
+const tor = Translator.getTranslator();
 
 // Map state.homepage.projectsByName to projectList 
 const mapStateToProps = (state) => {
@@ -11,6 +14,7 @@ const mapStateToProps = (state) => {
         // Include 'studyCount' attribute for experiment vs study label support hack ...
         (proj) => {
           proj.studyCount = proj.experimentCount;
+          proj[tor.translate('experimentCount')] = proj.experimentCount;
           return proj;
         },
       );

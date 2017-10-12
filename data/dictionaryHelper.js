@@ -26,7 +26,7 @@ function dictToGQLSetup(dict) {
     },
   );
 
-  const experimentType = ['experiment', 'study'].find(name => Object.prototype.hasOwnProperty.call(dict, name));
+  const experimentType = ['experiment', 'study', 'trio'].find(name => Object.prototype.hasOwnProperty.call(dict, name));
 
   return {
     fileTypeList,

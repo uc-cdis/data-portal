@@ -1,17 +1,23 @@
 import { getFileNodes, getNodeTypes } from '../graphutils';
 
-export const submission = (state = {}, action) => {
+const submission = (state = {}, action) => {
   switch (action.type) {
   case 'REQUEST_UPLOAD':
     return { ...state, file: action.file, file_type: action.file_type };
   case 'UPDATE_FILE':
     return { ...state, file: action.file, file_type: action.file_type };
   case 'RECEIVE_PROJECTS':
-    return { ...state, projects: action.data.reduce((map, p) => { map[p.code] = p.project_id; return map; }, {}) };
+    return { ...state,
+      projects: action.data.reduce((map, p) => { map[p.code] = p.project_id; return map; }, {}),
+    };
   case 'RECEIVE_NODE_TYPES':
     return { ...state, node_types: action.data };
   case 'RECEIVE_DICTIONARY':
-    return { ...state, dictionary: action.data, node_types: getNodeTypes(action.data), file_nodes: getFileNodes(action.data) };
+    return { ...state,
+      dictionary: action.data,
+      node_types: getNodeTypes(action.data),
+      file_nodes: getFileNodes(action.data),
+    };
   case 'RECEIVE_AUTHORIZATION_URL':
     return { ...state, oauth_url: action.url };
   case 'RECEIVE_SUBMISSION_LOGIN':
@@ -23,13 +29,11 @@ export const submission = (state = {}, action) => {
   case 'RECEIVE_SEARCH_ENTITIES':
     return { ...state, search_result: action.data, search_status: action.search_status };
   case 'RECEIVE_COUNTS':
-    const links = {};
-    for (const key in action.data) {
-      if (!key.startsWith('_')) {
-        links[key] = action.data[key].length;
-      }
-    }
-    return { ...state, counts_search: action.data, links_search: links };
+    return { ...state,
+      counts_search: action.data,
+      links_search: Object.entries(action.data)
+        .reduce((acc, entry) => { acc[entry[0]] = entry[1].length; return acc; }, {}),
+    };
   case 'CLEAR_COUNTS':
     return { ...state, counts_search: null, links_search: null };
   default:
@@ -37,3 +41,4 @@ export const submission = (state = {}, action) => {
   }
 };
 
+export default submission;

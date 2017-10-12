@@ -1,17 +1,25 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
+import styled from 'styled-components';
 import { TableRow, TableHead } from '../theme';
 import { TableData, TableHeadCell,
-  ExplorerTableStyle, TableFooter,
+  TableFooter,
   TableFootCell, PageButton, ArrowButton } from './style';
 import { getReduxStore } from '../reduxStore';
 import SelectComponent from '../components/SelectComponent';
 
 const makeDefaultState = (page, pageSize, originalPage) => ({
-  page: page,
-  originalPage: originalPage,
-  pageSize: pageSize
+  page,
+  originalPage,
+  pageSize,
 });
+
+export const ExplorerTableStyle = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+`;
+
 
 export class ExplorerTableComponent extends Component {
   static propTypes = {
@@ -25,7 +33,7 @@ export class ExplorerTableComponent extends Component {
     onPageLoadNextMore: PropTypes.func,
     onPageLoadPrevMore: PropTypes.func,
     onPageChange: PropTypes.func,
-    onPageSizeChange: PropTypes.func
+    onPageSizeChange: PropTypes.func,
   };
 
   static defaultProps = {
@@ -36,16 +44,16 @@ export class ExplorerTableComponent extends Component {
     onPageChange: () => {},
   };
 
-  static renderRow(file, column_widths, i) {
+  static renderRow(file, columnWidths, i) {
     return (
       <TableRow key={i}>
-        <TableData c_width={column_widths[0]}>
+        <TableData c_width={columnWidths[0]}>
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
         </TableData>
-        <TableData c_width={column_widths[1]}>{file.name}</TableData>
-        <TableData c_width={column_widths[2]}>{file.format}</TableData>
-        <TableData c_width={column_widths[3]} style={{textAlign: 'right'}}>{file.size}</TableData>
-        <TableData c_width={column_widths[4]}>{file.category}</TableData>
+        <TableData c_width={columnWidths[1]}>{file.name}</TableData>
+        <TableData c_width={columnWidths[2]}>{file.format}</TableData>
+        <TableData c_width={columnWidths[3]} style={{textAlign: 'right'}}>{file.size}</TableData>
+        <TableData c_width={columnWidths[4]}>{file.category}</TableData>
       </TableRow>
     );
   }
@@ -56,24 +64,25 @@ export class ExplorerTableComponent extends Component {
     this.resetState = this.resetState.bind(this);
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     getReduxStore().then(
       (store) => {
         const explorerState = store.getState().explorer;
         if (explorerState.moreData === 'RECEIVED') {
-          let filesList = nextProps.filesList;
+          const filesList = nextProps.filesList;
           const numberOfPages = filesList ? parseInt(filesList.length / nextProps.pageSize) : 0;
-          let newPage = nextProps.originalPage + (this.props.page % this.props.pageCount);
-          let page = (numberOfPages > this.props.page % this.props.pageCount)
+          const newPage = nextProps.originalPage + (this.props.page % this.props.pageCount);
+          const page = (numberOfPages > this.props.page % this.props.pageCount)
             ? newPage : (nextProps.originalPage + numberOfPages);
-          this.setState({page: page,
+          this.setState({ page,
             originalPage: nextProps.originalPage,
-            pageSize: nextProps.pageSize});
+            pageSize: nextProps.pageSize });
           this.props.onPageChange(page);
-          if (explorerState.originalPageToReset.includes(this.props.name))
+          if (explorerState.originalPageToReset.includes(this.props.name)) {
             store.dispatch({
               type: 'UNSET_RESET_ORIGIN_PAGE',
             });
+          }
         }
       },
     );
@@ -101,9 +110,8 @@ export class ExplorerTableComponent extends Component {
       ? this.props.filesList.slice(startingPage * this.props.pageSize,
         (startingPage * this.props.pageSize) + this.props.pageSize) : [];
     let pages = [];
-    let pageSizeValues = [5, 10, 20, 50];
-    if (this.state.pageSize > 0)
-    {
+    const pageSizeValues = [5, 10, 20, 50];
+    if (this.state.pageSize > 0) {
       const numberOfPages = this.props.filesList ?
         this.props.filesList.length / this.state.pageSize : 0;
       for (let i = 0; i < numberOfPages; i += 1) {
@@ -146,7 +154,7 @@ export class ExplorerTableComponent extends Component {
                     active={item === this.state.page}
                     onClick={
                       () => {
-                        this.setState({page: item});
+                        this.setState({ page: item });
                         this.props.onPageChange(item);
                       }
                     }
@@ -156,9 +164,11 @@ export class ExplorerTableComponent extends Component {
               }
             </TableFootCell>
             <TableFootCell c_width={'20%'}>
-              <SelectComponent values={pageSizeValues} title={"Page size: "}
-                               selectedValue={this.props.pageSize}
-                               onChange={(value) => this.props.onPageSizeChange(value)}
+              <SelectComponent
+                values={pageSizeValues}
+                title={'Page size: '}
+                selectedValue={this.props.pageSize}
+                onChange={value => this.props.onPageSizeChange(value)}
               />
             </TableFootCell>
             <TableFootCell c_width={'20%'}>

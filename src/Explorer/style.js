@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Table, Sidebar } from '../theme';
+import { Sidebar } from '../theme';
 
 export const Cell = styled.td`
   padding: 0.25rem 0px 0.25rem 0.5em;
@@ -32,11 +32,6 @@ export const TableFootCell = styled(TableData)`
   background: ${ExplorerTableBarColor};
   color: '#000000';
   text-align: center;
-`;
-
-export const ExplorerTableStyle = styled(Table)`
-  width: 100%;
-  -webkit-box-shadow: none;
 `;
 
 export const ExplorerSidebarStyle = styled(Sidebar)`
@@ -106,8 +101,9 @@ export const ExplorerTabFrame = styled.div`
   margin-left:0px;
   border: outset 1px gray;
   padding: 10px;
+  width: 100%;
 `;
 
 export const ExplorerTabBox = styled.div`
-  display:${props => (props.active ? 'inline-block' : 'none')};
+  display:${props => (props.active ? 'block' : 'none')};
 `;

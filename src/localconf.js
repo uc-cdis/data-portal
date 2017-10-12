@@ -73,6 +73,16 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
     ];
+  } else if (app === 'kf') {
+    appname = 'Gabriella Miller Kids First Pediatric Data Coordinating Center Portal';
+    navItems = [
+      { icon: 'home', link: '/', color: '#A51C30', name: 'home' },
+      { icon: 'search', link: '/query', color: '#2D728F', name: 'query' },
+      { icon: 'class', link: '/DD', color: '#A51C30', name: 'dictionary' },
+      { icon: 'face', link: '/identity', color: '#2D728F', name: 'profile' },
+      { icon: 'content_copy', link: '/files', color: '#A51C30', name: 'data' },
+    ];
+    gqlSetup.experimentType = 'trio';
   } else if (app === 'bhc') {
     appname = 'The Brain Commons Portal';
     navItems = [

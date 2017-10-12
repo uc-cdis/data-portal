@@ -1,4 +1,4 @@
-import { QueryNode } from './QueryNode';
+import QueryNode from './QueryNode';
 
 describe('QueryNode', () => {
   describe('the view-node popup logic', () => {

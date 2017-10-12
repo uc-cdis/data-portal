@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "babel-core": "^6.26.0",
+    "brace": "^0.10.0",
     "clipboard-plus": "^1.0.0",
     "d3": "^4.9.1",
     "fast-csv": "^2.4.0",
@@ -98,7 +99,8 @@
     "postinstall": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
     "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
     "schema": "node ./data/getSchema",
-    "eslint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' src"
+    "eslint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' src",
+    "elint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js'"
   },
   "graphql": {
     "file": "./data/schema.json"

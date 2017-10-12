@@ -23,7 +23,6 @@ const helperSingleton = {
         projectList: project(first: 10000) {
           name: project_id
           code
-          {% if experimentType %}experimentCount: _{{ experimentType | replace( 'study', 'studies' ) | replace( 'experiment', 'experiments' ) }}_count{% endif %}
         }
         {% if hasCaseType %}caseCount: _case_count{% endif %}
         {% if experimentType %}experimentCount:  _{{ experimentType }}_count{% endif %}
@@ -36,7 +35,6 @@ const helperSingleton = {
         project( project_id:$name ) {
           name: project_id
           code
-          {% if experimentType %}experimentCount:  _{{ experimentType | replace( 'study', 'studies' ) | replace( 'experiment', 'experiments' ) }}_count{% endif %}
         }
         {% if hasCaseType %}caseCount: _case_count( project_id:$name ){% endif %}
         {% if experimentType %}experimentCount: _{{ experimentType }}_count( project_id:$name ){% endif %}

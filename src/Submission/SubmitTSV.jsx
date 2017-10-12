@@ -1,13 +1,12 @@
 import React from 'react';
-import { predictFileType } from '../utils';
-import brace from 'brace';
+import styled from 'styled-components';
+import brace from 'brace'; // needed by AceEditor
 import 'brace/mode/json';
 import 'brace/theme/kuroir';
 import AceEditor from 'react-ace';
-import { uploadTSV, submitToServer, updateFileContent } from './actions';
-import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { getCounts } from '../DataModelGraph/actions';
+import PropTypes from 'prop-types';
+
+import { predictFileType } from '../utils';
 import { button, UploadButton, SubmitButton } from '../theme';
 
 
@@ -18,12 +17,12 @@ const SubmissionResult = styled.div`
 `;
 const Status = styled.div`
   ${button};
-  background-color: ${props => ((props.status == 'succeed: 200') ? '#168616' : 'gray')};
+  background-color: ${props => ((props.status === 'succeed: 200') ? '#168616' : 'gray')};
   color: white;
   margin-bottom: 1em;
 `;
 
-const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, onFileChange, dictionary }) => {
+const SubmitTSV = ({ path, submission, onUploadClick, onSubmitClick, onFileChange }) => {
   const setValue = (event) => {
     const f = event.target.files[0];
     if (FileReader.prototype.readAsBinaryString === undefined) {
@@ -31,7 +30,7 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
         let binary = '';
         const pt = this;
         const reader = new FileReader();
-        reader.onload = function (e) {
+        reader.onload = function () {
           const bytes = new Uint8Array(reader.result);
           const length = bytes.byteLength;
           for (let i = 0; i < length; i++) {
@@ -45,17 +44,13 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
       };
     }
     const reader = new FileReader();
-    let file_type = f.type;
+    let fileType = f.type;
     if (f.name.endsWith('.tsv')) {
-      file_type = 'text/tab-separated-values';
+      fileType = 'text/tab-separated-values';
     }
     reader.onload = function (e) {
-      if (e === undefined) {
-        var data = reader.content;
-      } else {
-        var data = e.target.result;
-      }
-      onUploadClick(data, predictFileType(data, file_type));
+      const data = e ? e.target.result : reader.content;
+      onUploadClick(data, predictFileType(data, fileType));
     };
     reader.readAsBinaryString(f);
   };
@@ -73,7 +68,16 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
       <SubmitButton onClick={onSubmitClickEvent}>Submit</SubmitButton>
       }
       { (submission.file) &&
-      <AceEditor width="100%" height="200px" style={{ marginBottom: '1em' }} mode={submission.file_type == 'text/tab-separated-values' ? '' : 'json'} theme="kuroir" value={submission.file} onChange={onChange} id="uploaded" />
+      <AceEditor
+        width="100%"
+        height="200px"
+        style={{ marginBottom: '1em' }}
+        mode={submission.file_type === 'text/tab-separated-values' ? '' : 'json'}
+        theme="kuroir"
+        value={submission.file}
+        onChange={onChange}
+        id="uploaded"
+      />
       }
       {submission.submit_result &&
       <SubmissionResult>
@@ -85,20 +89,12 @@ const SubmitTSVComponent = ({ path, submission, onUploadClick, onSubmitClick, on
   );
 };
 
-const mapStateToProps = state => ({
-  submission: state.submission,
-  dictionary: state.dictionary,
-});
+SubmitTSV.propTypes = {
+  path: PropTypes.string.isRequired,
+  submission: PropTypes.object.isRequired,
+  onUploadClick: PropTypes.func.isRequired,
+  onSubmitClick: PropTypes.func.isRequired,
+  onFileChange: PropTypes.func.isRequired,
+};
 
-const mapDispatchToProps = dispatch => ({
-  onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-  onSubmitClick: (type, project, dictionary) => dispatch(submitToServer()).then(() => { dispatch(getCounts(type, project, dictionary)); }),
-  // To re-render the graph when new data is submitted, need to change the 
-  // counts that are stored in the state. A call to getCounts is made
-  // after the data is submitted to the database to query the database for
-  // the updated count info
-  onFileChange: value => dispatch(updateFileContent(value)),
-});
-
-const SubmitTSV = connect(mapStateToProps, mapDispatchToProps)(SubmitTSVComponent);
 export default SubmitTSV;

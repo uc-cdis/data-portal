@@ -1,19 +1,17 @@
 import { asyncSetInterval, sortCompare } from './utils';
 
-describe('utils helper', () => {
+describe('the utils helper', () => {
   it('supports asyncSetInterval', (done) => {
     let callCount = 0;
 
     // callback takes 100ms to run
-    const callback = function () {
-      return new Promise(((resolve) => {
-        setTimeout(() => {
-          callCount += 1;
-          console.log(`callCount is: ${callCount}`);
-          resolve('ok');
-        }, 150);
-      }));
-    };
+    const callback = () => new Promise(((resolve) => {
+      setTimeout(() => {
+        callCount += 1;
+        console.log(`callCount is: ${callCount}`);
+        resolve('ok');
+      }, 150);
+    }));
 
     const id = asyncSetInterval(callback, 50);
     expect(id).toBeDefined();
@@ -38,4 +36,5 @@ describe('utils helper', () => {
     expect(sortCompare(234, 123)).toBe(1);
     expect(sortCompare(11, 2)).toBe(1);
   });
+
 });
