@@ -41,6 +41,7 @@ export const ExplorerTableStyle = styled(Table)`
 
 export const ExplorerSidebarStyle = styled(Sidebar)`
   width: 25%;
+  font-size: 15px;
 `;
 
 export const TableFooter = styled.tfoot`
