@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router';
 
 import { Table, TableData, TableRow, TableHead, Bullet } from '../theme';
@@ -144,9 +144,9 @@ const PropertyBullet = ({ property_name, property, required }) => {
   let type = getType(property);
   if (!type) {
     if ('oneOf' in property) {
-      type = property.oneOf.map((item) => getType(item)).join(', ');
+      type = property.oneOf.map(item => getType(item)).join(', ');
     } else {
-      type = "UNDEFINED";
+      type = 'UNDEFINED';
     }
   }
 
@@ -161,7 +161,6 @@ const PropertyBullet = ({ property_name, property, required }) => {
 };
 
 const PropertiesTable = ({ node, required, links }) => {
-  const properties_fields = ['Property', 'Type', 'Required', 'Description'];
   const linknames = links.map(link => link.name);
   const properties = Object.keys(node.properties);
   return (
@@ -177,9 +176,14 @@ const PropertiesTable = ({ node, required, links }) => {
 
       <tbody>
         {
-          properties.map((property, i) =>
+          properties.map(property =>
             (!linknames.includes(property)) &&
-            <PropertyBullet key={i} required={required.includes(property)} property_name={property} property={node.properties[property]} />,
+            <PropertyBullet
+              key={property}
+              required={required.includes(property)}
+              property_name={property}
+              property={node.properties[property]}
+            />,
           )
         }
 
@@ -188,6 +192,18 @@ const PropertiesTable = ({ node, required, links }) => {
 
   );
 };
+
+const actionButton = css`
+&:hover,
+&:active,
+&:focus {
+  color: inherit;
+}
+`;
+
+const DownloadButton = styled.a`
+ ${actionButton};
+`;
 
 
 /**
@@ -284,14 +300,16 @@ const DataDictionaryNode = ({ params, submission }) => {
         } else if (link.subgroup) {
           links = links.concat(link.subgroup);
         }
-      }
+      },
     );
   }
 
   return (
     <div>
-      <h3> {node} </h3>
       <Link to="/dd">{'< top level dictionary'}</Link>
+      <h3> {node} </h3>
+      Download template: <DownloadButton href={`/api/v0/submission/template/${node}?format=json`}>{'JSON'}</DownloadButton> | <DownloadButton href={`/api/v0/submission/template/${node}`}>{'TSV'}</DownloadButton>
+
 
       <h4> Summary </h4>
       <NodeTable node={dictionary[node]} />
