@@ -70,9 +70,9 @@ export class CheckBoxGroup extends Component {
         ))}
         {
           (this.state.collapsed === 1) ?
-            <a href="#/" onClick={() => this.state.collapsed = 2}>{'More options'}</a>
+            <a href="#/" onClick={() => this.setState({collapsed: 2})}>{'More options'}</a>
             : ((this.state.collapsed === 2)
-            ? <a href="#/" onClick={() => this.state.collapsed = 1}>{'Fewer options'}</a>
+            ? <a href="#/" onClick={() => this.setState({collapsed: 1})}>{'Fewer options'}</a>
             : "")
         }
       </CheckBox>
