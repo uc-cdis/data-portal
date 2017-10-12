@@ -1,4 +1,4 @@
-export const popups = (state = {}, action) => {
+const popups = (state = {}, action) => {
   switch (action.type) {
   case 'UPDATE_POPUP':
     return { ...state, ...action.data };
@@ -6,3 +6,5 @@ export const popups = (state = {}, action) => {
     return state;
   }
 };
+
+export default popups;

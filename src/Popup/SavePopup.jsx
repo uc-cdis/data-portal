@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { copy } from 'clipboard-plus';
+import copy from 'clipboard-plus';
 import FileSaver from 'file-saver';
+import PropTypes from 'prop-types';
 
 import { Button, CancelButton, PopupMask, Code, Message } from './Popup';
 
@@ -20,7 +21,7 @@ export const saveToFile = (savingStr, filename) => {
   FileSaver.saveAs(blob, filename);
 };
 
-export const SavePopup = ({ message, display, savingStr, error, onClose, filename }) => (
+const SavePopup = ({ message, display, savingStr, error, onClose, filename }) => (
   <PopupMask>
     <SavePopupBox>
       <Message>
@@ -44,7 +45,7 @@ export const SavePopup = ({ message, display, savingStr, error, onClose, filenam
         }
       </Message>
       {onClose &&
-      <CancelButton onClick={onClose}>close</CancelButton>
+      <CancelButton onClick={onClose}>Close</CancelButton>
       }
       {
         savingStr &&
@@ -57,3 +58,25 @@ export const SavePopup = ({ message, display, savingStr, error, onClose, filenam
     </SavePopupBox>
   </PopupMask>
 );
+
+SavePopup.propTypes = {
+  display: PropTypes.shape({
+    access_key: PropTypes.string.isRequired,
+    secret_key: PropTypes.string.isRequired,
+  }),
+  message: PropTypes.string,
+  savingStr: PropTypes.string,
+  error: PropTypes.string,
+  onClose: PropTypes.func.isRequired,
+  filename: PropTypes.string,
+};
+
+SavePopup.defaultProps = {
+  display: null,
+  message: '',
+  savingStr: '',
+  error: '',
+  filename: 'data.txt',
+};
+
+export default SavePopup;

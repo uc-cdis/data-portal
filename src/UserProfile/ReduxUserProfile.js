@@ -141,7 +141,7 @@ export const createKey = keypairsApi => dispatch => fetchJsonOrText({
       default:
         dispatch({
           type: 'CREATE_FAIL',
-          error: data.error,
+          error: `Error: ${(data.error || data.message)}`,
         });
         return dispatch(updatePopup({ save_key_popup: true }));
       }

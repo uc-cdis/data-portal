@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router';
+import PropTypes from 'prop-types';
 
 import { jsonToString } from '../utils';
 import Popup from '../Popup/Popup';
@@ -128,11 +129,23 @@ const KeyPairsEntity = ({ keypairsApi, value, onUpdatePopup, onRequestDeleteKey 
   );
 };
 
+const keyType = PropTypes.shape({
+  access_key: PropTypes.string.isRequired,
+});
+
+KeyPairsEntity.propTypes = {
+  keypairsApi: PropTypes.string.isRequired,
+  value: keyType.isRequired,
+  onUpdatePopup: PropTypes.func.isRequired,
+  onRequestDeleteKey: PropTypes.func.isRequired,
+};
+
+
 const KeyPairsEntities = ({ values, keypairsApi, onUpdatePopup, onRequestDeleteKey }) => (
   <ul>
-    {values.length > 0 && <li>
+    {values.length > 0 &&
       <AccessKeyHeader>{ACCESS_KEY_COLUMN}</AccessKeyHeader>
-    </li>}
+    }
     {values.map(item =>
       (<KeyPairsEntity
         key={item.access_key}
@@ -144,13 +157,21 @@ const KeyPairsEntities = ({ values, keypairsApi, onUpdatePopup, onRequestDeleteK
   </ul>
 );
 
+KeyPairsEntities.propTypes = {
+  keypairsApi: PropTypes.string.isRequired,
+  onUpdatePopup: PropTypes.func.isRequired,
+  onRequestDeleteKey: PropTypes.func.isRequired,
+  values: PropTypes.arrayOf(keyType).isRequired,
+};
+
+
 const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
   onClearCreationSession, onUpdatePopup, onDeleteKey,
   onRequestDeleteKey, onClearDeleteSession }) => {
   const onCreate = () => {
     onCreateKey(credentialCdisPath);
   };
-  const accessible_projects = Object.keys(user.project_access);
+  const accessibleProjects = Object.keys(user.project_access);
   return (
     <div>
       {
@@ -224,23 +245,23 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
               <RightHeader>{RIGHT_COLUMN}</RightHeader>
             </Bullet>
           </li>
-          {accessible_projects.map(
-            (p, i) =>
-              (<li key={4 * i}>
-                <Bullet key={4 * i + 1}>
+          {accessibleProjects.map(
+            p =>
+              (<li key={p}>
+                <Bullet>
                   {
                     p in submission.projects &&
-                    <ProjectCell key={4 * i + 2} to={`/${submission.projects[p]}`}>
+                    <ProjectCell to={`/${submission.projects[p]}`}>
                       {p}
                     </ProjectCell>
                   }
                   {
                     !(p in submission.projects) &&
-                    <ProjectCell key={4 * i + 2}>
+                    <ProjectCell>
                       {p}
                     </ProjectCell>
                   }
-                  <RightCell key={4 * i + 3}>
+                  <RightCell>
                     {user.project_access[p].join(', ')}
                   </RightCell>
                 </Bullet>
@@ -250,6 +271,19 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
       </AccessTable>
     </div>
   );
+};
+
+UserProfile.propTypes = {
+  user: PropTypes.object.isRequired,
+  userProfile: PropTypes.object.isRequired,
+  popups: PropTypes.object.isRequired,
+  submission: PropTypes.object.isRequired,
+  onClearCreationSession: PropTypes.func.isRequired,
+  onCreateKey: PropTypes.func.isRequired,
+  onUpdatePopup: PropTypes.func.isRequired,
+  onDeleteKey: PropTypes.func.isRequired,
+  onRequestDeleteKey: PropTypes.func.isRequired,
+  onClearDeleteSession: PropTypes.func.isRequired,
 };
 
 

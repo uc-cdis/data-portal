@@ -22,7 +22,7 @@ const ReduxAuthTimeoutPopup = connect(timeoutPopupMapState, timeoutPopupMapDispa
       return <Popup message={'Your session has expired or you are logged out. Please log in to continue.'} confirmText="go to login" onConfirm={goToLogin} />;
     }
     return (null);
-  }
+  },
 );
 
 

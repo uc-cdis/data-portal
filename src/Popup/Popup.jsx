@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import Highlight from 'react-highlight';
+import PropTypes from 'prop-types';
 
 
 const button = css`
@@ -34,7 +35,7 @@ export const PopupMask = styled.section`
   padding-top: 10em;
 `;
 
-const PopupBox = styled.section`
+export const PopupBox = styled.section`
   width: 50%;
   overflow-y: scroll;
   background: white;
@@ -43,7 +44,7 @@ const PopupBox = styled.section`
   overflow: hidden;
 `;
 
-const Code = styled(Highlight) `
+export const Code = styled(Highlight) `
   font-size: 0.8em;
 `;
 export const Message = styled.div`
@@ -82,5 +83,27 @@ const Popup = ({ message, code, error, closeText, cancelText, confirmText,
   </PopupMask>
 );
 
-export default Popup;
+Popup.propTypes = {
+  message: PropTypes.string.isRequired,
+  cancelText: PropTypes.string,
+  closeText: PropTypes.string,
+  confirmText: PropTypes.string,
+  code: PropTypes.string,
+  error: PropTypes.string,
+  onClose: PropTypes.func,
+  onConfirm: PropTypes.func,
+  onCancel: PropTypes.func,
+};
 
+Popup.defaultProps = {
+  cancelText: 'cancel',
+  closeText: 'close',
+  confirmText: 'confirm',
+  code: '',
+  error: '',
+  onClose: null,
+  onConfirm: null,
+  onCancel: null,
+};
+
+export default Popup;

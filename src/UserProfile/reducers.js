@@ -1,5 +1,3 @@
-import 'babel-polyfill';
-
 const userProfile = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_USER_PROFILE':
@@ -15,7 +13,8 @@ const userProfile = (state = {}, action) => {
       ...action.userProfile,
       access_key_pair: action.access_key_pair,
       str_access_key_pair: action.str_access_key_pair,
-      create_error: null };
+      create_error: null,
+    };
   case 'CREATE_USER_SUCCEED':
     return { ...state, user: action.user, create_error: null };
   case 'CREATE_FAIL':
