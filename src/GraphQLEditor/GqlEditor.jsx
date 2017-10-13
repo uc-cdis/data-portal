@@ -20,7 +20,7 @@ export const GraphBox = styled.div`
 const parameters = {};
 
 const GqlEditor = ({ schema }) => {
-  if ( ! schema ) {
+  if (! schema) {
     return <Spinner />; // loading
   }
   const graphqlSchema = buildClientSchema(schema.data);

@@ -63,11 +63,11 @@ const Popup = ({ message, code, error, closeText, cancelText, confirmText,
       <Message>
         <div>{message}</div>
         {code &&
-          <Code className="json"> {code} </Code>
+        <Code className="json"> {code} </Code>
         }
         {error && <Error>Error</Error>}
         {error &&
-          <Code className="json"> {error} </Code>
+        <Code className="json"> {error} </Code>
         }
       </Message>
       {onClose &&

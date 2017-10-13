@@ -19,7 +19,7 @@ export const jsonToString = (data, schema = {}) => {
     if (value === null) {
       return undefined;
     }
-    if (schema[key] === "number"){
+    if (schema[key] === 'number') {
       const castedValue = Number(value);
       if (isNaN(castedValue)) {
         return value;
@@ -87,7 +87,6 @@ export function asyncSetInterval(lambda, timeoutMs) {
     }, timeoutMs,
   );
 }
-
 
 
 export const color = {

@@ -4,12 +4,11 @@ import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-type
 import React from 'react';
 
 
-
 const data01 = [
   { name: 'Unaligned Reads Files', value: 400 },
   { name: 'Aligned Reads Files', value: 300 },
   { name: 'Sequencing Assays', value: 300 },
-  { name: 'Somatic Mutation Files', value: 200 }
+  { name: 'Somatic Mutation Files', value: 200 },
 ];
 
 
@@ -53,6 +52,6 @@ const CustomPieChart = function () {
       <Tooltip content={<CustomTooltip />} />
     </PieChart>
   );
-}
+};
 
 export default CustomPieChart;

@@ -162,7 +162,8 @@ class QueryNode extends React.Component {
       // View node button clicked
       popup.state = 'viewNode';
       popup.popupEl = (<Popup
-        message={query_nodes.query_node.submitter_id} code={jsonToString(query_nodes.query_node)}
+        message={query_nodes.query_node.submitter_id}
+        code={jsonToString(query_nodes.query_node)}
         onClose={
           () => {
             onUpdatePopup({ view_popup: false });
@@ -192,7 +193,8 @@ class QueryNode extends React.Component {
       // User clicked on node 'Delete' button
       popup.state = 'confirmDelete';
       popup.popupEl = (<Popup
-        message={'Are you sure you want to delete this node?'} error={jsonToString(query_nodes.delete_error)}
+        message={'Are you sure you want to delete this node?'}
+        error={jsonToString(query_nodes.delete_error)}
         code={jsonToString(query_nodes.query_node)}
         onConfirm={
           () => {
@@ -206,7 +208,8 @@ class QueryNode extends React.Component {
       // Error deleting node
       popup.state = 'deleteFailed';
       popup.popupEl = (<Popup
-        message={`Error deleting: ${query_nodes.query_node.submitter_id}`} error={jsonToString(query_nodes.delete_error)}
+        message={`Error deleting: ${query_nodes.query_node.submitter_id}`}
+        error={jsonToString(query_nodes.delete_error)}
         code={jsonToString(query_nodes.query_node)}
         onClose={() => { onClearDeleteSession(); onUpdatePopup({ nodedelete_popup: false }); }}
       />);

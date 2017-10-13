@@ -206,10 +206,9 @@ export const fetchOAuthURL = oauthPath => dispatch =>
   ).then(
     (msg) => {
       dispatch(msg);
-      if ( msg.url ) {
+      if (msg.url) {
         return msg.url;
-      } else {
-        throw new Error('OAuth authorization failed');
       }
-    }
+      throw new Error('OAuth authorization failed');
+    },
   );

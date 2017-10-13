@@ -60,6 +60,6 @@ const reducers = combineReducers({ explorer,
   graphiql,
   form: formReducer,
   routing: routerReducer,
-  },);
+});
 
 export default reducers;

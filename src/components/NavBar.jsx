@@ -53,7 +53,7 @@ const NavBar = ({ navItems, user, onLogoutClick }) => (
                 <NavIcon className="material-icons">{item.icon}</NavIcon>
               </FlatButton>
             </NavItem>
-          )
+          ),
         )
       }
     </NavLeft>
