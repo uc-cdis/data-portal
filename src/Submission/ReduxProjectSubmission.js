@@ -14,6 +14,11 @@ export const uploadTSV = (value, type) => (dispatch) => {
   dispatch({ type: 'REQUEST_UPLOAD', file: value, file_type: type });
 };
 
+export const updateFormSchema = formSchema => ({
+  type: 'UPDATE_FORM_SCHEMA',
+  formSchema,
+});
+
 export const updateFileContent = (value, fileType) => (dispatch) => {
   dispatch({ type: 'UPDATE_FILE', file: value, file_type: predictFileType(value, fileType) });
 };
@@ -156,6 +161,7 @@ const ReduxSubmitForm = (() => {
 
   const matpDispatchToProps = dispatch => ({
     onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
+    onUpdateFormSchema: (formSchema => dispatch(updateFormSchema(formSchema))),
   });
 
   return connect(mapStateToProps, matpDispatchToProps)(SubmitForm);
@@ -164,7 +170,7 @@ const ReduxSubmitForm = (() => {
 
 const ReduxProjectSubmission = (() => {
   const mapStateToProps = state => ({
-    typeList: state.submission.node_types,
+    typeList: state.submission.nodeTypes,
     dataIsReady: !!state.submission.counts_search,
     dictionary: state.submission.dictionary,
     submitForm: ReduxSubmitForm,

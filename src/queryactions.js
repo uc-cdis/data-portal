@@ -49,12 +49,6 @@ export const receiveDictionary = ({ status, data }) => {
   }
 };
 
-export const fetchNodeTypes = () => fetchWrapper({
-  path: `${submissionApiPath}_dictionary`,
-  method: 'GET',
-  handler: receiveNodeTypes,
-});
-
 export const receiveNodeTypes = ({ status, data }) => {
   switch (status) {
   case 200:
@@ -69,3 +63,9 @@ export const receiveNodeTypes = ({ status, data }) => {
     };
   }
 };
+
+export const fetchNodeTypes = () => fetchWrapper({
+  path: `${submissionApiPath}_dictionary`,
+  method: 'GET',
+  handler: receiveNodeTypes,
+});
