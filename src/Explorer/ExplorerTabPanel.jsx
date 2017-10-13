@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ExplorerTabs, ExplorerTab, ExplorerTabBox, ExplorerTabFrame } from './style';
 import { ExplorerTableComponent } from './ExplorerTable';
+import {setActiveTab, requestMoreData, changePage, changePageSize} from "./actions";
 
 const makeDefaultState = () => ({
 });
@@ -163,30 +164,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onTabChange: (state) => {
-    dispatch({
-      type: 'SET_ACTIVE_TAB',
-      data: state,
-    });
-  },
-  onPageLoadMore: (state) => {
-    dispatch({
-      type: 'REQUEST_NEXT_PART',
-      data: state,
-    });
-  },
-  onPageSizeChange: (state) => {
-    dispatch({
-      type: 'PAGE_SIZE_CHANGED',
-      data: state,
-    });
-  },
-  onPageChange: (state) => {
-    dispatch({
-      type: 'SET_CURRENT_PAGE',
-      data: state,
-    });
-  },
+  onTabChange: (state) => dispatch(setActiveTab(state)),
+  onPageLoadMore: (state) => dispatch(requestMoreData(state)),
+  onPageSizeChange: (state) => dispatch(changePageSize(state)),
+  onPageChange: (state) => dispatch(changePage(state))
 });
 
 const ExplorerTabPanel = connect(mapStateToProps, mapDispatchToProps)(TabSetComponent);
