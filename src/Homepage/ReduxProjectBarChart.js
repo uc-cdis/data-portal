@@ -24,7 +24,7 @@ const mapStateToProps = (state) => {
 };
 
 // Bar chart does not dispatch anything
-const mapDispatchToProps = function () { return {}; }
+const mapDispatchToProps = function () { return {}; };
 
 const ReduxProjectBarChart = connect(mapStateToProps, mapDispatchToProps)(ProjectBarChart);
 

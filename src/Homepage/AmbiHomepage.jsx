@@ -10,17 +10,17 @@ let dataInReduxDate = null;
 //
 // Set a flag once data is in Redux
 //
-getReduxStore().then( 
-  function(store) {
+getReduxStore().then(
+  (store) => {
     const unsub = store.subscribe(
-      function() {
-        if( store.homepage && store.homepage.projectList && store.homepage.summaryCounts ) {
+      () => {
+        if (store.homepage && store.homepage.projectList && store.homepage.summaryCounts) {
           dataInReduxDate = new Date();
           unsub();
         }
-      }
+      },
     );
-  }
+  },
 );
 
 /**
@@ -31,12 +31,11 @@ class AmbidextrousDashboard extends React.Component {
   render() {
     const nowMs = Date.now();
     // use redux if it has the data, and data is fresh
-    if ( dataInReduxDate && (nowMs - dataInReduxDate.getTime() < 300000) ) {
+    if (dataInReduxDate && (nowMs - dataInReduxDate.getTime() < 300000)) {
       return <ReduxProjectDashboard />;
-    } else {
-      dataInReduxDate = new Date();
-      return <RelayProjectDashboard />;
     }
+    dataInReduxDate = new Date();
+    return <RelayProjectDashboard />;
   }
 }
 

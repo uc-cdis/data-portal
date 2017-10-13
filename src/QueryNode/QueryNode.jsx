@@ -99,7 +99,7 @@ class QueryForm extends React.Component {
   }
 
   render() {
-    const nodes_for_query = this.props.node_types.filter(nt => !['program', 'project'].includes(nt));
+    const nodes_for_query = this.props.nodeTypes.filter(nt => !['program', 'project'].includes(nt));
     const options = nodes_for_query.map(node_type => ({ value: node_type, label: node_type }));
     const state = this.state || {};
     return (
@@ -162,7 +162,8 @@ class QueryNode extends React.Component {
       // View node button clicked
       popup.state = 'viewNode';
       popup.popupEl = (<Popup
-        message={query_nodes.query_node.submitter_id} code={jsonToString(query_nodes.query_node)}
+        message={query_nodes.query_node.submitter_id}
+        code={jsonToString(query_nodes.query_node)}
         onClose={
           () => {
             onUpdatePopup({ view_popup: false });
@@ -192,7 +193,8 @@ class QueryNode extends React.Component {
       // User clicked on node 'Delete' button
       popup.state = 'confirmDelete';
       popup.popupEl = (<Popup
-        message={'Are you sure you want to delete this node?'} error={jsonToString(query_nodes.delete_error)}
+        message={'Are you sure you want to delete this node?'}
+        error={jsonToString(query_nodes.delete_error)}
         code={jsonToString(query_nodes.query_node)}
         onConfirm={
           () => {
@@ -206,7 +208,8 @@ class QueryNode extends React.Component {
       // Error deleting node
       popup.state = 'deleteFailed';
       popup.popupEl = (<Popup
-        message={`Error deleting: ${query_nodes.query_node.submitter_id}`} error={jsonToString(query_nodes.delete_error)}
+        message={`Error deleting: ${query_nodes.query_node.submitter_id}`}
+        error={jsonToString(query_nodes.delete_error)}
         code={jsonToString(query_nodes.query_node)}
         onClose={() => { onClearDeleteSession(); onUpdatePopup({ nodedelete_popup: false }); }}
       />);
@@ -230,7 +233,7 @@ class QueryNode extends React.Component {
         <h3>browse <Link to={`/${project}`}>{project}</Link> </h3>
         {this.renderViewPopup(this.props).popupEl}
         {this.renderDeletePopup(this.props).popupEl}
-        <QueryForm onSearchFormSubmit={onSearchFormSubmit} project={project} node_types={submission.node_types} />
+        <QueryForm onSearchFormSubmit={onSearchFormSubmit} project={project} nodeTypes={submission.nodeTypes} />
         { query_nodes.search_status === 'succeed: 200' &&
             Object.entries(query_nodes.search_result.data).map(
               value => (<Entities

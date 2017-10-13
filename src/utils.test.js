@@ -36,5 +36,4 @@ describe('the utils helper', () => {
     expect(sortCompare(234, 123)).toBe(1);
     expect(sortCompare(11, 2)).toBe(1);
   });
-
 });

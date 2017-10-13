@@ -21,7 +21,6 @@ const gqlHelper = GQLHelper.getGQLHelper();
  * 
  */
 export class RelayProjectTable extends ProjectTable {
-
   /**
    * Overrides rowRender in ProjectTable parent class to fetch row data via Relay QueryRender.
    * 

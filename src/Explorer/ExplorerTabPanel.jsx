@@ -85,7 +85,7 @@ class TabSetComponent extends Component {
     const originalPages = this.updateOriginalPage();
     const flexItem = {
       flexBasis: '80%',
-      flexGrow: 1
+      flexGrow: 1,
     };
     return (
       <div style={flexItem}>

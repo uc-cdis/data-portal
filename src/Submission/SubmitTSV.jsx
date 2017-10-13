@@ -55,7 +55,7 @@ const SubmitTSV = ({ path, submission, onUploadClick, onSubmitClick, onFileChang
     reader.readAsBinaryString(f);
   };
   const onSubmitClickEvent = () => {
-    onSubmitClick(submission.node_types, path, submission.dictionary);
+    onSubmitClick(submission.nodeTypes, path, submission.dictionary);
   };
   const onChange = (newValue) => {
     onFileChange(newValue, submission.file_type);

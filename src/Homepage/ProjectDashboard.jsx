@@ -128,8 +128,10 @@ export function DashboardWith(Table) {
       const projectList = this.props.projectList || [];
       return (<div className="clearfix">
         <LittleProjectDashboard
-          projectList={projectList} experimentCount={summaryCounts.experimentCount}
-          caseCount={summaryCounts.caseCount} fileCount={summaryCounts.fileCount}
+          projectList={projectList}
+          experimentCount={summaryCounts.experimentCount}
+          caseCount={summaryCounts.caseCount}
+          fileCount={summaryCounts.fileCount}
           aliquotCount={summaryCounts.aliquotCount}
         />
         <Table projectList={projectList} summaryCounts={summaryCounts} />

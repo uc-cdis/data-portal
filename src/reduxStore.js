@@ -33,7 +33,7 @@ export const getReduxStore = function () {
       if (dev === true) {
         let data = {};
         if (mockStore) {
-          data = { user: { username: 'test', certificates_uploaded: requiredCerts }, submission: { dictionary: dict, node_types: Object.keys(dict).slice(2) }, status: {} };
+          data = { user: { username: 'test', certificates_uploaded: requiredCerts }, submission: { dictionary: dict, nodeTypes: Object.keys(dict).slice(2) }, status: {} };
         }
         const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
         store = compose(applyMiddleware(thunk, routerMiddleware(browserHistory)), autoRehydrate())(createStore)(

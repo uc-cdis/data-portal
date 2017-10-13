@@ -65,11 +65,9 @@ async function init() {
                 onEnter={
                   requireAuth(
                     store,
-                    () => {
-                      return store.dispatch(loginSubmissionAPI())
-                        .then(() => store.dispatch(clearCounts))
-                        .then(() => store.dispatch(fetchSchema));
-                    },
+                    () => store.dispatch(loginSubmissionAPI())
+                      .then(() => store.dispatch(clearCounts))
+                      .then(() => store.dispatch(fetchSchema)),
                   )
                 }
                 component={withBoxAndNav(withAuthTimeout(GraphQLQuery))}
@@ -99,10 +97,8 @@ async function init() {
                 path="/files"
                 onEnter={
                   requireAuth(store,
-                    (nextState) => {
-                      return store.dispatch(loginSubmissionAPI())
-                        .then(() => store.dispatch(clearResultAndQuery(nextState)));
-                    },
+                    nextState => store.dispatch(loginSubmissionAPI())
+                      .then(() => store.dispatch(clearResultAndQuery(nextState))),
                   )
                 }
                 component={ExplorerPage}
@@ -111,10 +107,8 @@ async function init() {
                 path="/:project"
                 onEnter={
                   requireAuth(store,
-                    () => {
-                      return store.dispatch(loginSubmissionAPI())
-                        .then(() => store.dispatch(clearCounts));
-                    },
+                    () => store.dispatch(loginSubmissionAPI())
+                      .then(() => store.dispatch(clearCounts)),
                   )
                 }
                 component={withBoxAndNav(withAuthTimeout(ProjectSubmission))}

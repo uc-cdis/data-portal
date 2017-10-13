@@ -14,10 +14,17 @@ export const getSubmitPath = (project) => {
   return `${submissionApiPath}/${programName}/${projectCode}`;
 };
 
-export const jsonToString = (data) => {
+export const jsonToString = (data, schema = {}) => {
   const replacer = (key, value) => {
     if (value === null) {
       return undefined;
+    }
+    if (schema[key] === 'number') {
+      const castedValue = Number(value);
+      if (isNaN(castedValue)) {
+        return value;
+      }
+      return castedValue;
     }
     return value;
   };
@@ -80,7 +87,6 @@ export function asyncSetInterval(lambda, timeoutMs) {
     }, timeoutMs,
   );
 }
-
 
 
 export const color = {
