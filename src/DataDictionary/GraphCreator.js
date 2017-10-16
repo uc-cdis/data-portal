@@ -1,13 +1,22 @@
-import * as d3 from 'd3';
+//import * as d3 from 'd3';
+import { select, selectAll } from 'd3-selection';
+import { forceSimulation, forceLink } from 'd3-force';
+import { extent } from 'd3-array';
 
 import { color, legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
+
+const d3 = {
+  select, selectAll, forceSimulation, forceLink, extent
+};
+
 
 /**
  * createDDGraph: Creates a Data Dictionary graph (rectangular nodes).
  *    Needs position as property of each node (as fraction of 1 e.g. [0.5, 0.1] 
  *    for placement at (0.5*svgWidth, 0.1*svgHeight))
  */
-function createDDGraph(nodes, edges, radius = 60, boxHeightMult, boxWidthMult, svgHeightMult) {
+function createDDGraph(nodesIn, edges, radius = 60, boxHeightMult, boxWidthMult, svgHeightMult) {
+  const nodes = nodesIn.filter(nd => !!nd.position); // ignore anchorless nodes
   const maxX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
   const maxY = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
 
@@ -280,11 +289,12 @@ function addTables(nodes, boxWidth, boxHeight, svgWidth, svgHeight) {
   d3.select('#graph_wrapper').select('#toggle_button').style('z-index', '1');
 }
 
-export function createFullGraph(nodes, edges) {
+export function createFullGraph(nodesIn, edges) {
   const radius = 60;
   const boxHeight = radius * 4;
   const boxWidth = radius * 4;
 
+  const nodes = nodesIn.filter(nd => !!nd.position); // ignore anchorless nodes
   const maxX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
   const maxY = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
 

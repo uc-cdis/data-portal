@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router';
+import PropTypes from 'prop-types';
 
 import { Table, TableData, TableRow, TableHead } from '../theme';
 import { app } from '../localconf';
 
 
-const subHeader = (function () {
+const subHeader = (() => {
   let message = 'This is a user-friendly interface for accessing the Data Dictionary';
 
   if (app === 'edc') {
@@ -16,7 +17,7 @@ const subHeader = (function () {
     message = 'The data dictionary viewer is a user-friendly interface for accessing the Data Dictionary used by the Brain Commons.';
   }
   return message;
-}());
+})();
 
 const TableBullet = ({ node, description }) => (
   <TableRow>
@@ -29,6 +30,14 @@ const TableBullet = ({ node, description }) => (
   </TableRow>
 );
 
+TableBullet.propTypes = {
+  node: PropTypes.string.isRequired,
+  description: PropTypes.string,
+};
+
+TableBullet.defaultProps = {
+  description: '',
+};
 
 const CategoryTable = ({ nodes, category }) => (
   <Table>
@@ -50,6 +59,15 @@ const CategoryTable = ({ nodes, category }) => (
   </Table>
 );
 
+CategoryTable.propTypes = {
+  category: PropTypes.string.isRequired,
+  nodes: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+};
 
 /**
  * Just exported for testing

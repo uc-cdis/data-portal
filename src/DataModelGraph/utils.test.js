@@ -17,9 +17,9 @@ describe('the DataModelGraph utils helper', () => {
 
   it('can ignore a node type in the dictionary', () => {
     const testData = buildTestData();
-    const { nodes, edges } = createNodesAndEdges({ dictionary: testData.dictionary }, true, [ 'project' ]);
-    expect(nodes.length).toBe(testData.nodes.length-1);
-    expect(edges.length).toBe(testData.edges.length-2);
+    const { nodes, edges } = createNodesAndEdges({ dictionary: testData.dictionary }, true, ['project']);
+    expect(nodes.length).toBe(testData.nodes.length - 1);
+    expect(edges.length).toBe(testData.edges.length - 2);
   });
 
   it('knows how to order nodes breadth first', () => {
@@ -32,7 +32,7 @@ describe('the DataModelGraph utils helper', () => {
     expect(treeLevel2Names[1].length).toBe(2); // b, d
     expect(treeLevel2Names[2].length).toBe(4); // a, c, x, y
     expect(name2Level.d).toBe(1); // d on level 1
-    for (let level = 0; level < treeLevel2Names.length; ++level) {
+    for (let level = 0; level < treeLevel2Names.length; level += 1) {
       treeLevel2Names[level].forEach(
         (nodeName) => {
           expect(name2Level[nodeName]).toBe(level);

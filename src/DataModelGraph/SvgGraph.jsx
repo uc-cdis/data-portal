@@ -7,7 +7,7 @@ import { color, legendCreator, addArrows, addLinks, calculatePosition } from '..
 import { assignNodePositions } from './utils';
 
 const d3 = {
-  select, selectAll, forceSimulation, forceLink, extent
+  select, selectAll, forceSimulation, forceLink, extent,
 };
 
 /**
@@ -211,8 +211,11 @@ class SvgGraph extends React.Component {
     // break recursion with if: componentDidUpdate -> setState -> componentDidUpdate ...
     //        https://reactjs.org/docs/react-component.html#componentwillupdate
     if (this.state.nodes !== this.props.nodes || this.state.edges !== this.props.edges) {
+      // createSvgGraph adds nodes to the DOM
       const { minX, minY } = createSvgGraph(this.props.nodes, this.props.edges);
       if (minX !== this.state.minX || minY !== this.state.minY) {
+        // Need to 'setState' to force a repaint when size of graph changes - something like that
+        // is going on
         this.setState(
           Object.assign(this.state,
             { minX, minY, nodes: this.props.nodes, edges: this.props.edges },

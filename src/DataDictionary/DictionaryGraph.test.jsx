@@ -1,16 +1,16 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import * as d3 from 'd3-selection';
 
-import DataModelGraph from './DataModelGraph';
-import { buildTestData } from './testData';
+import DictionaryGraph from './DictionaryGraph';
+import { buildTestData } from '../DataModelGraph/testData';
 
-describe('the DataModelGraph', () => {
+
+describe('the DictionaryGraph', () => {
   function buildTest() {
     const data = buildTestData();
     // Material-UI components require the Mui theme ...
     const $dom = mount(
-      <DataModelGraph
+      <DictionaryGraph
         dictionary={data.dictionary}
         counts_search={data.counts_search}
         links_search={data.links_search}
@@ -21,25 +21,21 @@ describe('the DataModelGraph', () => {
     return { ...data, $graph, $dom };
   }
 
-  it('boots to a compact view', () => {
+  it('boots to a full view', () => {
     const { $graph } = buildTest();
     expect($graph.length).toBe(1);
-    expect($graph.state('fullToggle')).toBe(false);
+    expect($graph.state('fullToggle')).toBe(true);
   });
 
   it('toggles between full and compact views', () => {
     const { $graph, $dom } = buildTest();
-    const $toggleButton = $dom.find('a#cd-dmg__toggle');
+    const $toggleButton = $dom.find('a#toggle_button');
     expect($toggleButton.length).toBe(1);
-    // For some reason not able to inspect svg accurately here ...?
-    expect(d3.selectAll('ellipse').size()).toBeDefined();
-
     $toggleButton.simulate('click');
-    expect($graph.state('fullToggle')).toBe(true);
+    expect($graph.state('fullToggle')).toBe(false);
     expect(document.querySelector('#data_model_graph')).toBeDefined();
-    // Not sure why this doesn't work ...?
-    // Could be jsdom does not support svg properly. 
-    // expect(d3.selectAll('ellipse').size()).toBe(nodes.length);
+    // jsdom does not yet support svg
+    // const ellipseList = document.querySelectorAll('ellipse');
   });
 
   it('has access to the DOM in jest', () => {

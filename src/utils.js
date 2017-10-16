@@ -1,5 +1,5 @@
 import React from 'react';
-import * as d3 from 'd3';
+import * as d3 from 'd3-scale';
 
 import { submissionApiPath } from './localconf';
 import { Box, Body, Margin } from './theme';
@@ -112,9 +112,9 @@ export function legendCreator(legendGroup, nodes, legendWidth) {
     }
     return acc;
   }, []);
-  uniqueCategoriesList.sort((a, b) => {
-    a = a.toLowerCase();
-    b = b.toLowerCase();
+  uniqueCategoriesList.sort((aIn, bIn) => {
+    const a = aIn.toLowerCase();
+    const b = bIn.toLowerCase();
     if (a < b) {
       return -1;
     } else if (a > b) {
@@ -185,7 +185,7 @@ export function addLinks(graphSvg, edges) {
 export function calculatePosition(nodes, graphWidth, graphHeight) {
   // Calculate the appropriate position of each node on the graph
   const fyVals = [];
-  for (let i = 0; i < nodes.length; i++) {
+  for (let i = 0; i < nodes.length; i += 1) {
     nodes[i].fx = nodes[i].position[0] * graphWidth;
     nodes[i].fy = nodes[i].position[1] * graphHeight;
     if (fyVals.indexOf(nodes[i].fy) === -1) {
