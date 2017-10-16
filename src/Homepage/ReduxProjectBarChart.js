@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { ProjectBarChart } from './ProjectBarChart';
+import ProjectBarChart from './ProjectBarChart';
 import { sortCompare } from '../utils';
 import Translator from './translate';
 

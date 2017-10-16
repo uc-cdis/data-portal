@@ -1,48 +1,25 @@
 import { assignNodePositions, createNodesAndEdges, findRoot, nodesBreadthFirst } from './utils';
+import { buildTestData } from './testData';
+
 
 describe('the DataModelGraph utils helper', () => {
-  function buildTestData() {
-    const nodes = ['project', 'a', 'b', 'c', 'd', 'x', 'y'].map(name => ({ name }));
-    const edges = [
-      { source: 'b', target: 'project' },
-      { source: 'a', target: 'b' }, { source: 'c', target: 'b' },
-      { source: 'x', target: 'b' }, { source: 'y', target: 'b' },
-      { source: 'd', target: 'c' }, { source: 'd', target: 'project' },
-    ];
-    return { nodes, edges };
-  }
-
   it('can find the root of a graph', () => {
     const { nodes, edges } = buildTestData();
     expect(findRoot(nodes, edges)).toBe('project');
   });
 
   it('extracts nodes and edges from a dictionary', () => {
-    const testDict = {
-      program: {
-        type: 'object',
-        links: [{ target_type: 'a' }],
-      },
-      a: {
-        type: 'object',
-        links: [
-          { target_type: 'b' },
-          { target_type: 'c' },
-        ],
-      },
-      b: {
-        type: 'object',
-        links: [
-          { target_type: 'c' },
-        ],
-      },
-      c: {
-        type: 'object',
-      },
-    };
-    const { nodes, edges } = createNodesAndEdges({ dictionary: testDict }, true);
-    expect(nodes.length).toBe(3); // program is "hidden"
-    expect(edges.length).toBe(3);
+    const testData = buildTestData();
+    const { nodes, edges } = createNodesAndEdges({ dictionary: testData.dictionary }, true);
+    expect(nodes.length).toBe(testData.nodes.length);
+    expect(edges.length).toBe(testData.edges.length);
+  });
+
+  it('can ignore a node type in the dictionary', () => {
+    const testData = buildTestData();
+    const { nodes, edges } = createNodesAndEdges({ dictionary: testData.dictionary }, true, [ 'project' ]);
+    expect(nodes.length).toBe(testData.nodes.length-1);
+    expect(edges.length).toBe(testData.edges.length-2);
   });
 
   it('knows how to order nodes breadth first', () => {

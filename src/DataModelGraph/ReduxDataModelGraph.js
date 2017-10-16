@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import DataModelGraph from './DataModelGraph';
 
-
 import { fetchJsonOrText } from '../actions';
 import { submissionApiPath } from '../localconf';
 

@@ -37,7 +37,7 @@ class DataModelGraph extends React.Component {
     if (graph.nodes.length !== 0 && 'count' in graph.nodes[graph.nodes.length - 1]) {
       return (
         <div style={{ position: 'relative' }}>
-          <ToggleButton onClick={this.handleToggleClick}>Toggle view</ToggleButton>
+          <ToggleButton id="cd-dmg__toggle" onClick={this.handleToggleClick}>Toggle view</ToggleButton>
           <SvgGraph nodes={graph.nodes} edges={graph.edges} />
         </div>
       );

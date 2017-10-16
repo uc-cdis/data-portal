@@ -13,7 +13,7 @@
  * @param createAll: Include all nodes and edges or only those that are populated in
  *    counts_search and links_search
  * @param nodesToHide: Array of nodes to hide from graph
- * @returns: Object containing nodes and edges
+ * @returns { nodes, edges } Object containing nodes and edges
  */
 export function createNodesAndEdges(props, createAll, nodesToHide = ['program']) {
   const dictionary = props.dictionary;
@@ -216,6 +216,7 @@ export function assignNodePositions(nodes, edges, opts) {
 
   // the tree has some number of levels with some number of nodes each,
   // but we may want to break each level down into multiple rows
+  // @return {rowNumber:[nodeNameList]}
   const row2Names = (() => {
     if (!opts || !opts.numPerRow) {
       return breadthFirstInfo.treeLevel2Names;

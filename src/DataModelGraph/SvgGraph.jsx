@@ -1,9 +1,14 @@
 import React from 'react';
-import * as d3 from 'd3';
+import { select, selectAll } from 'd3-selection';
+import { forceSimulation, forceLink } from 'd3-force';
+import { extent } from 'd3-array';
 
 import { color, legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
 import { assignNodePositions } from './utils';
 
+const d3 = {
+  select, selectAll, forceSimulation, forceLink, extent
+};
 
 /**
  * createSvgGraph: builds an SVG graph (oval nodes) in the SVG DOM 
@@ -15,8 +20,10 @@ import { assignNodePositions } from './utils';
  * @param nodes
  * @param edges
  */
-export function createSvgGraph(nodes, edges) {
-  assignNodePositions(nodes, edges);
+export function createSvgGraph(nodesIn, edges) {
+  assignNodePositions(nodesIn, edges);
+  // some nodes may not be linked under the root, so filter them out ...
+  const nodes = nodesIn.filter(nd => !!nd.position);
   const minX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
   const minY = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
   const maxX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
@@ -94,22 +101,23 @@ export function createSvgGraph(nodes, edges) {
   const graphFontSize = '0.75em';
 
   // Append text to nodes
-  for (let n = 0; n < nodes.length; n++) {
-    const splitName = nodes[n].name.split('_');
-    for (let i = 0; i < splitName.length; i++) {
-      if (splitName.length > 2) {
-        nodes[n].adjust_text_pos = 1;
-      } else {
-        nodes[n].adjust_text_pos = 0;
-      }
-      graph.select('#'.concat(nodes[n].name))
+  nodes.forEach((nodeInfo) => {
+    const splitName = nodeInfo.name.split('_');
+    if (splitName.length > 2) {
+      nodeInfo.adjust_text_pos = 1;
+    } else {
+      nodeInfo.adjust_text_pos = 0;
+    }
+    for (let i = 0; i < splitName.length; i++) { 
+      graph.select('#'.concat(nodeInfo.name))
         .append('text')
         .attr('text-anchor', 'middle')
         .attr('font-size', graphFontSize)
-        .attr('dy', `${(0 - (splitName.length - i - 1) + nodes[n].adjust_text_pos) * 0.9}em`)
+        .attr('dy', `${(0 - (splitName.length - i - 1) + nodeInfo.adjust_text_pos) * 0.9}em`)
         .text(splitName[i]);
     }
-  }
+  });
+
   node.append('text')
     .text(d => (d.count))
     .attr('text-anchor', 'middle')
