@@ -26,7 +26,7 @@ describe('the DataModelGraph utils helper', () => {
     const { nodes, edges } = buildTestData();
     const { bfOrder, treeLevel2Names, name2Level } = nodesBreadthFirst(nodes, edges);
     console.log('tree info', treeLevel2Names);
-    expect(bfOrder.length).toBe(nodes.length);
+    expect(bfOrder.length).toBe(nodes.length-1); // node z is floating ...
     expect(treeLevel2Names.length).toBe(3); // 'd' should fall under 'project' with 'b'
     expect(treeLevel2Names[0].length).toBe(1); // project
     expect(treeLevel2Names[1].length).toBe(2); // b, d
@@ -44,7 +44,7 @@ describe('the DataModelGraph utils helper', () => {
   it('assigns positions to nodes', () => {
     const { nodes, edges } = buildTestData();
     assignNodePositions(nodes, edges);
-    nodes.forEach(
+    nodes.filter(nd => nd.position).forEach(
       (node) => {
         const { treeLevel2Names, name2Level } = nodesBreadthFirst(nodes, edges);
 
@@ -62,13 +62,13 @@ describe('the DataModelGraph utils helper', () => {
     assignNodePositions(nodes, edges, { numPerRow: 2 });
     // up to 2 nodes per row, root on own row
     const maxRows = 1 + Math.round((nodes.length - 1) / 2);
-    nodes.forEach(
+    nodes.filter(nd => nd.position).forEach(
       (node) => {
         expect(Array.isArray(node.position)).toBe(true);
         expect(node.position[0] > 0 && node.position[0] <= 1).toBe(true);
         expect(node.position[1] > 0 && node.position[1] <= 1).toBe(true);
         expect(node.positionIndex[0] < 2).toBe(true); // at most 2 nodes per row
-        expect(node.positionIndex[1] < maxRows).toBe(true);
+        expect(node.positionIndex[1] ).toBeLessThan( maxRows );
       },
     );
   });
