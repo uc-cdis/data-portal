@@ -142,11 +142,11 @@ const ReduxSubmitTSV = (() => {
     onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
     onSubmitClick: (type, project, dictionary) =>
       dispatch(submitToServer())
-        .then(() => { dispatch(getCounts(type, project, dictionary)); }),
-    // To re-render the graph when new data is submitted, need to change the 
-    // counts that are stored in the state. A call to getCounts is made
-    // after the data is submitted to the database to query the database for
-    // the updated count info
+        .then(
+          () => {
+            // Update node counts in redux
+            dispatch(getCounts(type, project, dictionary));
+          }),
     onFileChange: value => dispatch(updateFileContent(value)),
   });
 
