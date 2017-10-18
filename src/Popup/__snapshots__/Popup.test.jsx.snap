@@ -19,19 +19,25 @@ exports[`Test Popup 1`] = `
     </div>
     <a
       className="sc-bwzfXH eBwlJa"
+      id="cd-popup__button_close"
       onClick={[Function]}
+      role="button"
     >
       close
     </a>
     <a
       className="sc-bdVaJa hiblcO"
+      id="cd-popup__button_confirm"
       onClick={[Function]}
+      role="button"
     >
       confirm
     </a>
     <a
       className="sc-bwzfXH eBwlJa"
+      id="cd-popup__button_cancel"
       onClick={[Function]}
+      role="button"
     >
       cancel
     </a>

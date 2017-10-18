@@ -71,13 +71,13 @@ const Popup = ({ message, code, error, closeText, cancelText, confirmText,
         }
       </Message>
       {onClose &&
-        <CancelButton onClick={onClose}>{closeText || 'close'}</CancelButton>
+        <CancelButton role="button" id="cd-popup__button_close" onClick={onClose}>{closeText || 'close'}</CancelButton>
       }
       {onConfirm &&
-        <Button onClick={onConfirm}>{confirmText || 'confirm'}</Button>
+        <Button role="button" id="cd-popup__button_confirm" onClick={onConfirm}>{confirmText || 'confirm'}</Button>
       }
       {onCancel &&
-        <CancelButton onClick={onCancel}>{cancelText || 'cancel'}</CancelButton>
+        <CancelButton role="button" id="cd-popup__button_cancel" onClick={onCancel}>{cancelText || 'cancel'}</CancelButton>
       }
     </PopupBox>
   </PopupMask>
