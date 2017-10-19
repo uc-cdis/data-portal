@@ -1,10 +1,8 @@
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { TableBarColor } from '../theme';
-import CircleButton from '../components/CircleButton';
-import ActionBook from 'material-ui/svg-icons/action/book';
 import Translator from './translate';
 
 

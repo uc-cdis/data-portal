@@ -1,12 +1,13 @@
-import { dict } from './dictionary';
-import { app, mockStore, dev } from './localconf';
-import browserHistory from './history';
 import { persistStore, autoRehydrate } from 'redux-persist';
 import { createStore, applyMiddleware, compose } from 'redux';
+import { routerMiddleware } from 'react-router-redux';
+import thunk from 'redux-thunk';
+
+import { dict } from './dictionary';
+import { mockStore, dev } from './localconf';
+import browserHistory from './history';
 import reducers from './reducers';
 import { requiredCerts } from './configs';
-import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux';
-import thunk from 'redux-thunk';
 
 
 let store;
@@ -21,7 +22,7 @@ let storePromise;
  * 
  * @return Promise<Store>
  */
-export const getReduxStore = function () {
+export const getReduxStore = () => {
   if (store) { // singleton
     return Promise.resolve(store);
   }
@@ -35,21 +36,29 @@ export const getReduxStore = function () {
         if (mockStore) {
           data = { user: { username: 'test', certificates_uploaded: requiredCerts }, submission: { dictionary: dict, nodeTypes: Object.keys(dict).slice(2) }, status: {} };
         }
-        const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-        store = compose(applyMiddleware(thunk, routerMiddleware(browserHistory)), autoRehydrate())(createStore)(
+        store = compose(
+          applyMiddleware(thunk, routerMiddleware(browserHistory)),
+          autoRehydrate(),
+        )(createStore)(
           reducers,
           data,
           window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
         );
       } else {
-        store = compose(applyMiddleware(thunk, routerMiddleware(browserHistory)), autoRehydrate())(createStore)(
+        store = compose(
+          applyMiddleware(thunk, routerMiddleware(browserHistory)),
+          autoRehydrate(),
+        )(createStore)(
           reducers,
           { user: {}, status: {} },
           autoRehydrate(),
         );
       }
 
-      const persister = persistStore(store, { whitelist: ['certificate'] }, () => { console.log('rehydration complete'); resolve(store); });
+      persistStore(store,
+        { whitelist: ['certificate'] },
+        () => { console.log('rehydration complete'); resolve(store); },
+      );
     } catch (e) {
       reject(e);
     }
