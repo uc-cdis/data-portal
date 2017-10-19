@@ -1,4 +1,4 @@
-import { asyncSetInterval, sortCompare } from './utils';
+import { asyncSetInterval, predictFileType, sortCompare } from './utils';
 
 describe('the utils helper', () => {
   it('supports asyncSetInterval', (done) => {
@@ -35,5 +35,11 @@ describe('the utils helper', () => {
     expect(sortCompare(123, 234)).toBe(-1);
     expect(sortCompare(234, 123)).toBe(1);
     expect(sortCompare(11, 2)).toBe(1);
+  });
+
+  it('predicts mime-type based on text shape', () => {
+    expect(predictFileType(JSON.stringify({ a: 1, b: 2 }), 'unknown')).toBe('application/json');
+    expect(predictFileType('a\tb\n1\t2\n', 'unknown')).toBe('text/tab-separated-values');
+    expect(predictFileType('', 'unknown')).toBe('unknown');
   });
 });
