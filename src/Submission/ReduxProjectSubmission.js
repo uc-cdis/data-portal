@@ -44,7 +44,7 @@ const submitToServer = (methodIn = 'PUT') => (dispatch, getState) => {
   return fetchJsonOrText({
     path: subUrl,
     method,
-    custom_headers: { 'Content-Type': submission.file_type },
+    customHeaders: { 'Content-Type': submission.file_type },
     body: file,
     dispatch,
   }).then(
