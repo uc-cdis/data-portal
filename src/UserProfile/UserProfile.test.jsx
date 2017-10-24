@@ -54,7 +54,7 @@ describe('the UserProfile component', () => {
     const $createBtn = $vdom.find(RequestButton);
     expect($createBtn).toHaveLength(1);
     $createBtn.simulate('click');
-    // should invoke onCreateKey callback ...
+    // should invoke onCreateKey callback (above - calls done()) ...
   });
 
   it('triggers delete-key events', (done) => {
@@ -71,6 +71,6 @@ describe('the UserProfile component', () => {
     const $deleteBtn = $vdom.find(DeleteButton);
     expect($deleteBtn).toHaveLength(2);
     $deleteBtn.at(0).simulate('click');
-    // should invoke onRequestDeleteKey callback ...
+    // should invoke onRequestDeleteKey callback  (above - calls done()) ...
   });
 });

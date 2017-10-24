@@ -6,6 +6,13 @@ import SubmitTSV from './SubmitTSV';
 describe('the TSV submission componet', () => {
   const testProjName = 'bogusProject';
 
+  /**
+   * Little helper for constructing a <SubmitTSV> jest/enzyme test
+   * 
+   * @param {file, submit_result, submit_status} submission property passed through to <SubmitTSV> 
+   * @param {function} submitCallback invoked by onSubmitClick property on <SubmitTSV>
+   * @return enzymejs wrapper of <SubmitTSV> with properties from params 
+   */
   function buildTest(submission = { file: '', submit_result: '', submit_status: 200 }, submitCallback = () => {}) {
     const $dom = mount(
       <SubmitTSV
@@ -31,6 +38,7 @@ describe('the TSV submission componet', () => {
     const state = { file: JSON.stringify({ type: 'whatever', submitter_id: 'frickjack' }), submit_result: '', submit_status: 200 };
     return new Promise((resolve) => {
       const { $dom } = buildTest(state, (typeStr, path) => {
+        // This function runs when the 'Submit' button is clicked
         expect(path).toBe(testProjName);
         resolve('ok');
       });
