@@ -77,7 +77,7 @@ const SubmissionResult = ({ status, data }) => {
   }
 
   return (
-    <Container>
+    <Container id="cd-submit-tsv__result">
       <Status status={status}>{status === 200 ? `succeeded: ${status}` : `failed: ${status}`}</Status>
       {summary}
       <p>Full response:</p>

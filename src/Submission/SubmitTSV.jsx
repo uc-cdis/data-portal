@@ -6,7 +6,7 @@ import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 
 import { predictFileType } from '../utils';
-import { button, UploadButton, SubmitButton } from '../theme';
+import { UploadButton, SubmitButton } from '../theme';
 import SubmissionResult from './SubmissionResult';
 
 
@@ -84,7 +84,7 @@ const SubmitTSV = ({ path, submission, onUploadClick, onSubmitClick, onFileChang
       />
       }
       {submission.submit_result &&
-      <SubmissionResult id="cd-submit-tsv__result" status={submission.submit_status} data={submission.submit_result} />
+      <SubmissionResult status={submission.submit_status} data={submission.submit_result} />
       }
     </form>
   );
