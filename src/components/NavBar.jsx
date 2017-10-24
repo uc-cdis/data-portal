@@ -72,7 +72,7 @@ const NavBar = ({ navItems, user, onLogoutClick }) => (
 
 NavBar.propTypes = {
   navItems: PropTypes.array.isRequired,
-  user: PropTypes.shape({ username: PropTypes.string.isRequired }).isRequired,
+  user: PropTypes.shape({ username: PropTypes.string }).isRequired,
   onLogoutClick: PropTypes.func.isRequired,
 };
 

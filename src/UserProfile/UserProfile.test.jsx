@@ -1,83 +1,76 @@
 import React from 'react';
-import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
+import { mount } from 'enzyme';
 
-import ReduxUserProfile, { parseKeyToString, createKey } from './ReduxUserProfile';
-import { RequestButton, Bullet, AccessKeyCell, ActionCell, DeleteButton } from './UserProfile';
-import { shallowWithStore } from '../setupJest';
+import UserProfile, { AccessKeyCell, DeleteButton, RequestButton } from './UserProfile';
 
-const middleware = [thunk];
-const mockStore = configureMockStore(middleware);
+describe('the UserProfile component', () => {
+  const testProps = {
+    user: {
+      project_access: {
+        frickjack: ['read', 'write'],
+      },
+    },
+    userProfile: {
+      access_key_pairs: [
+        { access_key: 'frickjack1' },
+        { access_key: 'frickjack2' },
+      ],
+    },
+    popups: {},
+    submission: {
+      projects: {
+        frickjack: 'program-frickjack',
+      },
+    },
+  };
 
+  const noop = () => {};
 
-describe('the userProfile component', () => {
-  it('can create, fetch, and list user access keys', () => {
-    const expectedCreatedKey = { access_key: 'abc', secret_key: 'xyz' };
-    const expectedListKey = {
-      access_keys: [{
-        access_key: 'abc',
-        secret_key: 'xyz',
-      }],
-    };
-    const state = {
-      user: { project_access: [] },
-      status: {},
-      userProfile: { access_key_pairs: [] },
-      popups: {},
-    };
-    const store = mockStore(state);
-
-    fetch.mockResponseOnce(JSON.stringify(expectedCreatedKey), { status: 200 });
-    fetch.mockResponseOnce(JSON.stringify(expectedListKey), { status: 200 });
-
-    const userProfilePage = shallowWithStore(<ReduxUserProfile />, store).first().shallow();
-    const btn = userProfilePage.find(RequestButton);
-    expect(btn).toHaveLength(1);
-    btn.simulate('click');
-    userProfilePage.find(Bullet);
-    userProfilePage.find(AccessKeyCell);
-    userProfilePage.find(ActionCell);
-    userProfilePage.find(DeleteButton);
-    expect(btn).toHaveLength(1);
+  it('lists access keys', () => {
+    const $vdom = mount(
+      <UserProfile
+        {...testProps}
+        onCreateKey={noop}
+        onClearCreationSession={noop}
+        onUpdatePopup={noop}
+        onDeleteKey={noop}
+        onRequestDeleteKey={noop}
+        onClearDeleteSession={noop}
+      />);
+    expect($vdom.find(AccessKeyCell)).toHaveLength(testProps.userProfile.access_key_pairs.length);
   });
 
-  it('updates the redux store', () => {
-    const expectedData = { access_key: 'abc', secret_key: 'xyz' };
-    const expectedPopup = { save_key_popup: true };
-    const expectedListKey = {
-      access_keys: [{
-        access_key: 'abc',
-        secret_key: 'xyz',
-      }],
-    };
-    const state = {
-      user: { project_access: [] },
-      status: {},
-      userProfile: { access_key_pairs: [] },
-      popups: {},
-    };
-    const store = mockStore(state);
-    const expectedActions = [
-      {
-        type: 'CREATE_SUCCEED',
-        access_key_pair: expectedData,
-        str_access_key_pair: parseKeyToString(expectedData),
-      },
-      {
-        type: 'UPDATE_POPUP',
-        data: expectedPopup,
-      },
-      {
-        type: 'RECEIVE_USER_PROFILE',
-        access_keys: expectedListKey.access_keys,
-      },
-    ];
+  it('triggers create-key events', (done) => {
+    const $vdom = mount(
+      <UserProfile
+        {...testProps}
+        onCreateKey={() => { done(); }}
+        onClearCreationSession={noop}
+        onUpdatePopup={noop}
+        onDeleteKey={noop}
+        onRequestDeleteKey={noop}
+        onClearDeleteSession={noop}
+      />);
+    const $createBtn = $vdom.find(RequestButton);
+    expect($createBtn).toHaveLength(1);
+    $createBtn.simulate('click');
+    // should invoke onCreateKey callback (above - calls done()) ...
+  });
 
-    fetch.mockResponseOnce(JSON.stringify(expectedData), { status: 200 });
-    fetch.mockResponseOnce(JSON.stringify(expectedListKey), { status: 200 });
-    return store.dispatch(createKey('http://anything.com'))
-      .then(() => {
-        expect(store.getActions()).toEqual(expectedActions);
-      });
+  it('triggers delete-key events', (done) => {
+    const $vdom = mount(
+      <UserProfile
+        {...testProps}
+        onCreateKey={noop}
+        onClearCreationSession={noop}
+        onUpdatePopup={noop}
+        onDeleteKey={noop}
+        onRequestDeleteKey={() => { done(); }}
+        onClearDeleteSession={noop}
+      />);
+    const $deleteBtn = $vdom.find(DeleteButton);
+    expect($deleteBtn).toHaveLength(2);
+    $deleteBtn.at(0).simulate('click');
+    // should invoke onRequestDeleteKey callback  (above - calls done()) ...
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProjectTable, ProjectTR } from './ProjectTable';
+import { ProjectTable } from './ProjectTable';
 import { mount } from 'enzyme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 

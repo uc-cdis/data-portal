@@ -1,11 +1,10 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router';
+import PropTypes from 'prop-types';
 
 import { Table, TableData, TableRow, TableHead, Bullet } from '../theme';
-import { assignNodePositions, createNodesAndEdges } from '../DataModelGraph/utils';
-import { createFullGraph, createAbridgedGraph } from './GraphCreator';
-import ToggleButton from '../DataModelGraph/ToggleButton';
+import DictionaryGraph from './DictionaryGraph';
 
 
 const LinkBullet = ({ link }) => {
@@ -25,20 +24,24 @@ const LinkBullet = ({ link }) => {
   );
 };
 
+LinkBullet.propTypes = {
+  target_type: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+};
 
-const LinkTable = ({ links, node }) => {
+const LinkTable = ({ links }) => {
   const fields = ['Name', 'Required', 'Label'];
   return (
     <Table>
       <TableHead>
         <TableRow>
-          {fields.map((field, i) =>
-            <TableData first_cr key={i}>{field}</TableData>)}
+          {fields.map((field) =>
+            <TableData first_cr key={field}>{field}</TableData>)}
         </TableRow>
       </TableHead>
 
       <tbody>
-        {links.map((link, i) => <LinkBullet key={i} link={link} />)}
+        {links.map(link => <LinkBullet key={link.name} link={link} />)}
       </tbody>
     </Table>
   );
@@ -132,7 +135,8 @@ class CollapsibleList extends React.Component {
   }
 }
 
-const PropertyBullet = ({ property_name, property, required }) => {
+const PropertyBullet = (props) => {
+  const { propertyName, property, required } = props;
   let description = 'No Description';
   if ('description' in property) {
     description = property.description;
@@ -152,7 +156,7 @@ const PropertyBullet = ({ property_name, property, required }) => {
 
   return (
     <TableRow>
-      <Col1><div> { property_name }</div> </Col1>
+      <Col1><div> { propertyName }</div> </Col1>
       <Col2> <ul>{ (type.indexOf(',') === -1) ? type : <CollapsibleList items={type.split(', ')} />} </ul></Col2>
       <Col3> { required ? 'Yes' : 'No' } </Col3>
       <Col4> { description } </Col4>
@@ -181,7 +185,7 @@ const PropertiesTable = ({ node, required, links }) => {
             <PropertyBullet
               key={property}
               required={required.includes(property)}
-              property_name={property}
+              propertyName={property}
               property={node.properties[property]}
             />,
           )
@@ -206,66 +210,6 @@ const DownloadButton = styled.a`
 `;
 
 
-/**
- * Component handles rendering of dictionary types as a node graph
- */
-class DictionaryGraph extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      full_toggle: true,
-    };
-    this.handleClick = this.handleClick.bind(this);
-  }
-  componentDidMount() {
-    if (this.state.full_toggle) {
-      createFullGraph(this.props.nodes, this.props.edges);
-    } else {
-      if (document.getElementById('table_wrapper') !== null) {
-        document.getElementById('table_wrapper').remove();
-      }
-      createAbridgedGraph(this.props.nodes, this.props.edges);
-    }
-  }
-  componentDidUpdate() {
-    if (this.state.full_toggle) {
-      createFullGraph(this.props.nodes, this.props.edges);
-    } else {
-      if (document.getElementById('table_wrapper') !== null) {
-        document.getElementById('table_wrapper').remove();
-      }
-      createAbridgedGraph(this.props.nodes, this.props.edges);
-    }
-  }
-  handleClick() {
-    this.setState(prevState => ({
-      full_toggle: !prevState.full_toggle,
-    }));
-  }
-  render() {
-    const nodes = this.props.nodes;
-    const edges = this.props.edges;
-
-    const divStyle = {
-      backgroundColor: '#f4f4f4',
-      margin: '0 auto',
-      textAlign: 'center',
-      position: 'relative',
-    };
-    // Note: svg#data_model_graph is popuplated by createFull|AbridedGraph above
-    return (
-      <div>
-        <Link to={'/dd'}> Explore dictionary as a table </Link>
-        <p style={{ fontSize: '75%', marginTop: '1em' }}> <span style={{ fontWeight: 'bold', fontStyle: 'italic' }}> Bold, italicized</span> properties are required</p>
-        <div style={divStyle} id="graph_wrapper">
-          <svg id="data_model_graph" />
-          <ToggleButton id="toggle_button" onClick={this.handleClick}>Toggle view</ToggleButton>
-        </div>
-      </div>
-    );
-  }
-}
-
 
 /**
  * Component renders a view with details of a particular dictionary type (node - /dd/typename) or
@@ -278,13 +222,10 @@ const DataDictionaryNode = ({ params, submission }) => {
   const dictionary = submission.dictionary;
 
   if (node === 'graph') {
-    const { nodes, edges } = createNodesAndEdges(submission, true, []);
-    assignNodePositions(nodes, edges, { numPerRow: 3 });
-
     return (
       <div>
         <h3> Data Dictionary Graph Viewer </h3>
-        <DictionaryGraph nodes={nodes} edges={edges} dictionary={dictionary} />
+        <DictionaryGraph dictionary={dictionary} counts_search={submission.counts_search} links_search={submission.links_search} />
       </div>
     );
   }

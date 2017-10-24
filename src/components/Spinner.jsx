@@ -1,7 +1,4 @@
-import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
-
-
+import React from 'react';
 import styled, { css, keyframes } from 'styled-components';
 
 export const LoadingSpinnerWrap = styled.div`

@@ -1,4 +1,4 @@
-import { ResponsiveContainer, Cell, PieChart, Pie, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis } from 'recharts';
 import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
@@ -17,8 +17,6 @@ const FloatBox = styled.div`
   height: 340px;
 `;
 
-// ${props => 100 + 50*props.projectList.length}px;
-
 /**
  * Component shows stacked-bars - one stacked-bar for each project in props.projectList -
  * where experiments are stacked on top of cases.  projectList looks like:
@@ -28,10 +26,12 @@ const FloatBox = styled.div`
  *       ...
  *   ];
  */
-export class ProjectBarChart extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+class ProjectBarChart extends React.Component {
+  static propTypes = {
+    projectList: PropTypes.arrayOf(
+      PropTypes.objectOf(PropTypes.number),
+    ).isRequired,
+  };
 
   render() {
     const projectList = [].concat(this.props.projectList || []);
@@ -60,3 +60,4 @@ export class ProjectBarChart extends React.Component {
   }
 }
 
+export default ProjectBarChart;

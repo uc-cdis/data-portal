@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { QueryRenderer, graphql } from 'react-relay';
+import { QueryRenderer } from 'react-relay';
 import environment from '../environment';
-import { ProjectDashboard, DashboardWith } from './ProjectDashboard';
+import { DashboardWith } from './ProjectDashboard';
 import { RelayProjectTable } from './RelayProjectTable';
 import { withAuthTimeout, withBoxAndNav } from '../utils';
 import { GQLHelper } from '../gqlHelper';

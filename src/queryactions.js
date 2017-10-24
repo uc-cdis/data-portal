@@ -1,71 +1,78 @@
-import { fetchWrapper } from './actions';
+import { fetchJsonOrText } from './actions';
 import { submissionApiPath } from './localconf';
 
-export const fetchProjects = () => fetchWrapper({
-  path: `${submissionApiPath}graphql`,
-  body: JSON.stringify({
-    query: 'query Test { project(first:10000) {code, project_id}}',
-  }),
-  method: 'POST',
-  handler: receiveProjects,
-});
+/*
+ * redux-thunk support asynchronous redux actions via 'thunks' -
+ * lambdas that accept dispatch and getState functions as arguments
+ */
 
-export const receiveProjects = ({ status, data }) => {
-  switch (status) {
-  case 200:
-    return {
-      type: 'RECEIVE_PROJECTS',
-      data: data.data.project,
-    };
-  default:
-    return {
-      type: 'FETCH_ERROR',
-      error: data,
-    };
-  }
-};
+export const fetchProjects = () => dispatch =>
+  fetchJsonOrText({
+    path: `${submissionApiPath}graphql`,
+    body: JSON.stringify({
+      query: 'query Test { project(first:10000) {code, project_id}}',
+    }),
+    method: 'POST',
+  })
+    .then(
+      ({ status, data }) => {
+        switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_PROJECTS',
+            data: data.data.project,
+          };
+        default:
+          return {
+            type: 'FETCH_ERROR',
+            error: data,
+          };
+        }
+      })
+    .then(msg => dispatch(msg));
 
-export const fetchDictionary = () => {
-  console.log(`Fetch path: ${submissionApiPath}`);
-  return fetchWrapper({
+
+export const fetchDictionary = () => dispatch =>
+  fetchJsonOrText({
     path: `${submissionApiPath}_dictionary/_all`,
     method: 'GET',
-    handler: receiveDictionary,
-  });
-};
+  })
+    .then(
+      ({ status, data }) => {
+        switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_DICTIONARY',
+            data,
+          };
+        default:
+          return {
+            type: 'FETCH_ERROR',
+            error: data,
+          };
+        }
+      })
+    .then(msg => dispatch(msg));
 
-export const receiveDictionary = ({ status, data }) => {
-  switch (status) {
-  case 200:
-    return {
-      type: 'RECEIVE_DICTIONARY',
-      data,
-    };
-  default:
-    return {
-      type: 'FETCH_ERROR',
-      error: data,
-    };
-  }
-};
 
-export const receiveNodeTypes = ({ status, data }) => {
-  switch (status) {
-  case 200:
-    return {
-      type: 'RECEIVE_NODE_TYPES',
-      data: data.links.map(link => link.split('/').pop()),
-    };
-  default:
-    return {
-      type: 'FETCH_ERROR',
-      error: data,
-    };
-  }
-};
-
-export const fetchNodeTypes = () => fetchWrapper({
-  path: `${submissionApiPath}_dictionary`,
-  method: 'GET',
-  handler: receiveNodeTypes,
-});
+export const fetchNodeTypes = () => dispatch =>
+  fetchJsonOrText({
+    path: `${submissionApiPath}_dictionary`,
+    method: 'GET',
+  })
+    .then(
+      ({ status, data }) => {
+        switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_NODE_TYPES',
+            data: data.links.map(link => link.split('/').pop()),
+          };
+        default:
+          return {
+            type: 'FETCH_ERROR',
+            error: data,
+          };
+        }
+      })
+    .then(msg => dispatch(msg));
