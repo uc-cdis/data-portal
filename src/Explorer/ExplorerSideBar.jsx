@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { StyledCheckBoxGroup } from '../components/CheckBox';
 import { ExplorerSidebarStyle } from './style';
+import {changeSelectedList} from './actions';
 
 class ExplorerSidebar extends Component {
   static propTypes = {
@@ -90,12 +91,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onChange: (state) => {
-    dispatch({
-      type: 'SELECTED_LIST_CHANGED',
-      data: state,
-    });
-  },
+  onChange: (state) => dispatch(changeSelectedList(state)),
 });
 
 const SideBar = connect(mapStateToProps, mapDispatchToProps)(ExplorerSidebar);

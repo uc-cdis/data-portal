@@ -25,3 +25,24 @@ export const changePage = (state) => (dispatch) => {
     data: state,
   });
 };
+
+export const changeSelectedList = (state) => (dispatch) => {
+  dispatch({
+    type: 'SELECTED_LIST_CHANGED',
+    data: state,
+  });
+};
+
+export const loadReceivedData = (state) => (dispatch) => {
+  dispatch({
+    type: 'RECEIVE_FILE_LIST',
+    data: state
+  });
+};
+
+export const loadReceivedMoreData = (state) => (dispatch) => {
+  dispatch({
+    type: 'RECEIVE_NEXT_PART',
+    data: state
+  });
+};

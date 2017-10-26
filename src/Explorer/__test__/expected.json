@@ -1,0 +1,405 @@
+{
+  "explorer":
+  {
+    "filesMap": {
+      "slide_image": [],
+      "cell_image": [],
+      "mass_cytometry_assay": [],
+      "mass_cytometry_image": [],
+      "submitted_aligned_reads": [
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-06.bam",
+          "size": 165508377.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-07.bam",
+          "size": 760562132.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-08.bam",
+          "size": 803314352.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-09.bam",
+          "size": 22175193.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-10.bam",
+          "size": 82059820.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-11.bam",
+          "size": 772553566.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-12.bam",
+          "size": 14125277.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-13.bam",
+          "size": 818201506.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-14.bam",
+          "size": 396481504.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-15.bam",
+          "size": 118433879.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-16.bam",
+          "size": 634179839.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-17.bam",
+          "size": 683190064.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-18.bam",
+          "size": 723597911.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-19.bam",
+          "size": 743979409.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-20.bam",
+          "size": 320975393.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-21.bam",
+          "size": 244783146.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-01.bam",
+          "size": 235642355.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-02.bam",
+          "size": 227404910.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-03.bam",
+          "size": 433567334.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-04.bam",
+          "size": 28350278.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Sequencing Data",
+          "format": "BAM",
+          "type": "Aligned Reads",
+          "name": "bam-05.bam",
+          "size": 219840132.0,
+          "project_id": "acct-bpa-test"
+        }
+      ],
+      "submitted_copy_number": [],
+      "submitted_methylation": [],
+      "submitted_somatic_mutation": [
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-06.bam",
+          "size": 165508377.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-07.bam",
+          "size": 760562132.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-08.bam",
+          "size": 803314352.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-09.bam",
+          "size": 22175193.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-10.bam",
+          "size": 82059820.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-11.bam",
+          "size": 772553566.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-12.bam",
+          "size": 14125277.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-13.bam",
+          "size": 818201506.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-14.bam",
+          "size": 396481504.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-15.bam",
+          "size": 118433879.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-16.bam",
+          "size": 634179839.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-17.bam",
+          "size": 683190064.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-18.bam",
+          "size": 723597911.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-19.bam",
+          "size": 743979409.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-20.bam",
+          "size": 320975393.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-21.bam",
+          "size": 244783146.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-01.bam",
+          "size": 235642355.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-02.bam",
+          "size": 227404910.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-03.bam",
+          "size": 433567334.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-04.bam",
+          "size": 28350278.0,
+          "project_id": "acct-bpa-test"
+        },
+        {
+          "category": "Simple Nucleotide/INDEL Variation",
+          "format": "VCF",
+          "type": "Raw Simple Somatic Mutation",
+          "name": "vcf-05.bam",
+          "size": 219840132.0,
+          "project_id": "acct-bpa-test"
+        }
+      ],
+      "submitted_unaligned_reads": []
+    },
+    "lastPageSizes": {
+      "cell_image": 0,
+      "mass_cytometry_assay": 0,
+      "mass_cytometry_image": 0,
+      "slide_image": 0,
+      "submitted_aligned_reads": 1,
+      "submitted_copy_number": 0,
+      "submitted_methylation": 0,
+      "submitted_somatic_mutation": 1,
+      "submitted_unaligned_reads": 0
+    },
+    "currentPages": {
+      "slide_image": 0,
+      "cell_image": 0,
+      "mass_cytometry_assay": 0,
+      "mass_cytometry_image": 0,
+      "submitted_aligned_reads": 0,
+      "submitted_copy_number": 0,
+      "submitted_methylation": 0,
+      "submitted_somatic_mutation": 0,
+      "submitted_unaligned_reads": 0
+    },
+    "cursors": {
+      "slide_image": 0,
+      "cell_image": 0,
+      "mass_cytometry_assay": 0,
+      "mass_cytometry_image": 0,
+      "submitted_aligned_reads": 21,
+      "submitted_copy_number": 0,
+      "submitted_methylation": 0,
+      "submitted_somatic_mutation": 21,
+      "submitted_unaligned_reads": 0
+    },
+    "queriedCursors": {
+      "slide_image": 0,
+      "cell_image": 0,
+      "mass_cytometry_assay": 0,
+      "mass_cytometry_image": 0,
+      "submitted_aligned_reads": 0,
+      "submitted_copy_number": 0,
+      "submitted_methylation": 0,
+      "submitted_somatic_mutation": 0,
+      "submitted_unaligned_reads": 0
+    },
+    "activeTab": "submitted_aligned_reads",
+    "refetch_data": false,
+    "moreData": "RECEIVED",
+    "originalPage": 0,
+    "originalPageToReset": [],
+    "pageSize": 20,
+    "pagesPerTab": 5
+  }
+}
