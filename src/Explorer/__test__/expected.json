@@ -3,9 +3,6 @@
   {
     "filesMap": {
       "slide_image": [],
-      "cell_image": [],
-      "mass_cytometry_assay": [],
-      "mass_cytometry_image": [],
       "submitted_aligned_reads": [
         {
           "category": "Sequencing Data",
@@ -351,9 +348,6 @@
       "submitted_unaligned_reads": []
     },
     "lastPageSizes": {
-      "cell_image": 0,
-      "mass_cytometry_assay": 0,
-      "mass_cytometry_image": 0,
       "slide_image": 0,
       "submitted_aligned_reads": 1,
       "submitted_copy_number": 0,
@@ -363,9 +357,6 @@
     },
     "currentPages": {
       "slide_image": 0,
-      "cell_image": 0,
-      "mass_cytometry_assay": 0,
-      "mass_cytometry_image": 0,
       "submitted_aligned_reads": 0,
       "submitted_copy_number": 0,
       "submitted_methylation": 0,
@@ -374,9 +365,6 @@
     },
     "cursors": {
       "slide_image": 0,
-      "cell_image": 0,
-      "mass_cytometry_assay": 0,
-      "mass_cytometry_image": 0,
       "submitted_aligned_reads": 21,
       "submitted_copy_number": 0,
       "submitted_methylation": 0,
@@ -385,9 +373,6 @@
     },
     "queriedCursors": {
       "slide_image": 0,
-      "cell_image": 0,
-      "mass_cytometry_assay": 0,
-      "mass_cytometry_image": 0,
       "submitted_aligned_reads": 0,
       "submitted_copy_number": 0,
       "submitted_methylation": 0,
