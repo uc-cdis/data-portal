@@ -48,22 +48,12 @@ const submitToServer = (methodIn = 'PUT') => (dispatch, getState) => {
     body: file,
     dispatch,
   }).then(
-    ({ status, data }) => {
-      switch (status) {
-      case 200:
-        return {
-          type: 'RECEIVE_SUBMISSION',
-          submit_status: `succeed: ${status}`,
-          data,
-        };
-      default:
-        return {
-          type: 'RECEIVE_SUBMISSION',
-          submit_status: `failed: ${status}`,
-          data,
-        };
-      }
-    },
+    ({ status, data }) => (
+      {
+        type: 'RECEIVE_SUBMISSION',
+        submit_status: status,
+        data,
+      }),
   ).then(msg => dispatch(msg));
 };
 

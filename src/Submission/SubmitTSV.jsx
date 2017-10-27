@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import brace from 'brace'; // needed by AceEditor
 import 'brace/mode/json';
 import 'brace/theme/kuroir';
@@ -7,20 +6,9 @@ import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 
 import { predictFileType } from '../utils';
-import { button, UploadButton, SubmitButton } from '../theme';
+import { UploadButton, SubmitButton } from '../theme';
+import SubmissionResult from './SubmissionResult';
 
-
-const SubmissionResult = styled.div`
-  border-top: 1px dashed ${props => props.theme.mid_gray};
-  padding-top: 1em;
-  margin-top: 1em;
-`;
-const Status = styled.div`
-  ${button};
-  background-color: ${props => ((props.status === 'succeed: 200') ? '#168616' : 'gray')};
-  color: white;
-  margin-bottom: 1em;
-`;
 
 /**
  * Manage TSV/JSON submission
@@ -96,10 +84,7 @@ const SubmitTSV = ({ path, submission, onUploadClick, onSubmitClick, onFileChang
       />
       }
       {submission.submit_result &&
-      <SubmissionResult id="cd-submit-tsv__result">
-        <Status status={submission.submit_status}>{submission.submit_status}</Status>
-        <AceEditor width="100%" height="300px" style={{ marginBottom: '1em' }} mode="json" theme="kuroir" readOnly value={JSON.stringify(submission.submit_result, null, '    ')} />
-      </SubmissionResult>
+      <SubmissionResult status={submission.submit_status} data={submission.submit_result} />
       }
     </form>
   );

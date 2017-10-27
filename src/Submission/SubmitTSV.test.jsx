@@ -53,7 +53,7 @@ describe('the TSV submission componet', () => {
   it('shows a submit result when appropriate', () => {
     const state = {
       file: JSON.stringify({ type: 'whatever', submitter_id: 'frickjack' }),
-      submit_result: JSON.stringify({ message: 'submission failed' }),
+      submit_result: { message: 'submission ok', entities: [{ type: 'frickjack' }] },
       submit_status: 200,
     };
     const { $dom } = buildTest(state);
