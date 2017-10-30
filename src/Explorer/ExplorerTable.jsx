@@ -38,6 +38,7 @@ export class ExplorerTableComponent extends Component {
   };
 
   static defaultProps = {
+    filesList: [],
     lastPageSize: 0,
     originalPage: 0,
     onPageLoadNextMore: () => {},
@@ -126,9 +127,12 @@ export class ExplorerTableComponent extends Component {
           <TableRow>
             {columns.map(
               (item, i) => (
-                item in specialAligns ?
-                  <TableHeadCell key={i} c_width={columnWidths[i]}
-                                 style={{ textAlign: specialAligns[item] }}>
+                (item in specialAligns) ?
+                  <TableHeadCell
+                    key={i}
+                    c_width={columnWidths[i]}
+                    style={{ textAlign: specialAligns[item] }}
+                  >
                     {item}
                   </TableHeadCell>
                   :
