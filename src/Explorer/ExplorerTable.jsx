@@ -170,7 +170,6 @@ export class ExplorerTableComponent extends Component {
               <SelectComponent
                 values={pageSizeValues}
                 title={'Page size: '}
-                selectWidth={'100px'}
                 selectedValue={this.props.pageSize}
                 onChange={value => this.props.onPageSizeChange(value)}
               />

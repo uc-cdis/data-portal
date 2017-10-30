@@ -46,7 +46,6 @@ export const predictFileType = (dirtyData, fileType) => {
 };
 
 export const withBoxAndNav = (Component, background) => ({ ...props }) => {
-  console.log(background);
   return (
     <div>
       <Box>
