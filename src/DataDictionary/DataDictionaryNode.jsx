@@ -35,7 +35,7 @@ const LinkTable = ({ links }) => {
     <Table>
       <TableHead>
         <TableRow>
-          {fields.map((field) =>
+          {fields.map(field =>
             <TableData first_cr key={field}>{field}</TableData>)}
         </TableRow>
       </TableHead>
@@ -208,7 +208,6 @@ const actionButton = css`
 const DownloadButton = styled.a`
  ${actionButton};
 `;
-
 
 
 /**

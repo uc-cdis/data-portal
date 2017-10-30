@@ -34,7 +34,7 @@ export default class SelectComponent extends Component {
     onChange: PropTypes.func,
     defaultSelect: PropTypes.any,
     placeholder: PropTypes.string,
-    selectedValue: PropTypes.number
+    selectedValue: PropTypes.number,
   };
 
   static defaultProps = {

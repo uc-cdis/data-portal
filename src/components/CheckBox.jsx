@@ -29,7 +29,7 @@ export class CheckBoxGroup extends Component {
     onChange: PropTypes.func.isRequired,
     lastChild: PropTypes.bool,
   };
-  
+
   static defaultProps = {
     lastChild: false,
   };
@@ -44,10 +44,10 @@ export class CheckBoxGroup extends Component {
     const pos = this.props.selectedItems.indexOf(item);
     let selectedItems = [];
 
-    if (pos === -1) { 
+    if (pos === -1) {
       selectedItems = [...this.props.selectedItems, item];
-    } else { 
-      selectedItems = [...this.props.selectedItems.slice(0, pos), ...this.props.selectedItems.slice(pos + 1)]; 
+    } else {
+      selectedItems = [...this.props.selectedItems.slice(0, pos), ...this.props.selectedItems.slice(pos + 1)];
     }
     const state = { [this.props.group_name]: selectedItems };
     this.props.onChange(state);

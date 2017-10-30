@@ -60,14 +60,14 @@ const SubmissionResult = ({ status, data }) => {
           Errors:
       </p>
       <AceEditor
-        width="100%"
-        height="300px"
-        style={{ marginBottom: '2em' }}
-        mode="json"
-        theme="kuroir"
-        readOnly
-        value={JSON.stringify(errorList, null, '    ')}
-      />
+          width="100%"
+          height="300px"
+          style={{ marginBottom: '2em' }}
+          mode="json"
+          theme="kuroir"
+          readOnly
+          value={JSON.stringify(errorList, null, '    ')}
+        />
       </div>);
     }
   } else if (status === 504) {

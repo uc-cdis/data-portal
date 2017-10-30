@@ -108,7 +108,7 @@ export function createSvgGraph(nodesIn, edges) {
     } else {
       nodeInfo.adjust_text_pos = 0;
     }
-    for (let i = 0; i < splitName.length; i++) { 
+    for (let i = 0; i < splitName.length; i++) {
       graph.select('#'.concat(nodeInfo.name))
         .append('text')
         .attr('text-anchor', 'middle')

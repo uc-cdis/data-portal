@@ -1,4 +1,4 @@
-//import * as d3 from 'd3';
+// import * as d3 from 'd3';
 import { select, selectAll } from 'd3-selection';
 import { forceSimulation, forceLink } from 'd3-force';
 import { extent } from 'd3-array';
@@ -6,7 +6,7 @@ import { extent } from 'd3-array';
 import { color, legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
 
 const d3 = {
-  select, selectAll, forceSimulation, forceLink, extent
+  select, selectAll, forceSimulation, forceLink, extent,
 };
 
 
