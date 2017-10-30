@@ -19,6 +19,8 @@ export const ExplorerTableStyle = styled.table`
   width: 100%;
   border-collapse: collapse;
   overflow: hidden;
+  font-size: 15px;
+
 `;
 
 
@@ -168,6 +170,7 @@ export class ExplorerTableComponent extends Component {
               <SelectComponent
                 values={pageSizeValues}
                 title={'Page size: '}
+                selectWidth={'100px'}
                 selectedValue={this.props.pageSize}
                 onChange={value => this.props.onPageSizeChange(value)}
               />

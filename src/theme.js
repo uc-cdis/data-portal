@@ -56,14 +56,16 @@ export const Box = styled.div`
 
 export const Body = styled.div`
   padding: 50px 100px;
+  background: ${props => props.background}
 `;
 
 export const Margin = styled.div`
   height: 100px;
+  background: ${props => props.background};
   width: 100%;
 `;
 
-export const TableBarColor = '#585585';
+export const TableBarColor = '#7d7474';
 
 export const Table = styled.table`
   table-layout:auto;
@@ -115,9 +117,9 @@ export const TableRow = styled.tr`
   text-overflow: ellipsis;
   overflow: hidden;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: visible;
   display: table;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   width: 100%;
 `;
 
@@ -186,5 +188,4 @@ export const Label = styled.label`
 
 export const Sidebar = styled.div`
   float:left;
-  border-top: 2px solid tomato;
 `;

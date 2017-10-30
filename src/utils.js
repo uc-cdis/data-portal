@@ -45,18 +45,23 @@ export const predictFileType = (dirtyData, fileType) => {
   return predictType;
 };
 
-export const withBoxAndNav = Component => ({ ...props }) => (
-  <div>
+export const withBoxAndNav = (Component, background) => ({  ...props }) => {
+  console.log(background);
+  return (
+    <div>
     <Box>
       <Nav />
-      <Body>
+      <Body background={background}>
         <Component {...props} />
       </Body>
-      <Margin />
+      <Margin background={background}/>
     </Box>
     <Footer />
   </div>
-);
+
+  )
+}
+  
 
 export const withAuthTimeout = Component => ({ ...props }) => (
   <div>

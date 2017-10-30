@@ -5,7 +5,7 @@ import { GQLHelper } from '../gqlHelper';
 import { getReduxStore } from '../reduxStore';
 import ExplorerTabPanel from './ExplorerTabPanel';
 import SideBar from './ExplorerSideBar';
-
+import { BodyBackground } from './style';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
@@ -159,7 +159,7 @@ class ExplorerComponent extends Component {
 }
 
 export const RelayExplorerComponent = createRefetchContainer(
-  withBoxAndNav(withAuthTimeout(ExplorerComponent)),
+  withBoxAndNav(withAuthTimeout(ExplorerComponent), BodyBackground),
   {
     viewer: gqlHelper.explorerPageFragment,
   },

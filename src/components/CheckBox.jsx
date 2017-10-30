@@ -16,19 +16,23 @@ const LabelCheckBox = styled(Label)`
 
 const CheckBox = styled.div`
    padding: 1em 0em;
-   border-bottom: 2px solid #7d7474;
+   border-bottom: ${props => (props.lastChild ? '0px' : '2px solid #7d7474')};
 `;
 
 
 export class CheckBoxGroup extends Component {
   static propTypes = {
-    listItems: PropTypes.array,
-    group_name: PropTypes.string,
-    selected_items: PropTypes.array,
-    title: PropTypes.string,
-    onChange: PropTypes.func,
+    listItems: PropTypes.array.isRequired,
+    group_name: PropTypes.string.isRequired,
+    selectedItems: PropTypes.array.isRequired,
+    title: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    lastChild: PropTypes.bool,
   };
-
+  
+  static defaultProps = {
+    lastChild: false,
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -37,26 +41,27 @@ export class CheckBoxGroup extends Component {
   }
 
   onChangeBox = (item) => {
-    const pos = this.props.selected_items.indexOf(item);
+    const pos = this.props.selectedItems.indexOf(item);
     let selectedItems = [];
-    if (pos === -1) {
-      selectedItems = [...this.props.selected_items, item];
-    } else {
-      selectedItems = [...this.props.selected_items.slice(0, pos), ...this.props.selected_items.slice(pos + 1)];
+
+    if (pos === -1) { 
+      selectedItems = [...this.props.selectedItems, item];
+    } else { 
+      selectedItems = [...this.props.selectedItems.slice(0, pos), ...this.props.selectedItems.slice(pos + 1)]; 
     }
     const state = { [this.props.group_name]: selectedItems };
     this.props.onChange(state);
   };
 
   render() {
-    const selectedItems = this.props.selected_items;
+    const selectedItems = this.props.selectedItems;
     // console.log(selectedItems);
     const listItems = (this.state.collapsed === 1)
       ? this.props.listItems.slice(0, 3)
       : this.props.listItems;
 
     return (
-      <CheckBox>
+      <CheckBox lastChild={this.props.lastChild}>
         {this.props.title}
         {listItems.map((item, i) => (
           <div key={i}>

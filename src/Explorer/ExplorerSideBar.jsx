@@ -55,22 +55,23 @@ class ExplorerSidebar extends Component {
         <StyledCheckBoxGroup
           listItems={projects}
           title="Projects"
-          selected_items={this.props.selectedFilters.projects}
+          selectedItems={this.props.selectedFilters.projects}
           group_name="projects"
           onChange={state => this.props.onChange({ ...this.props.selectedFilters, ...state })}
         />
         <StyledCheckBoxGroup
           listItems={fileFormats}
-          selected_items={this.props.selectedFilters.file_formats}
+          selectedItems={this.props.selectedFilters.file_formats}
           title="File Formats"
           group_name="file_formats"
           onChange={state => this.props.onChange({ ...this.props.selectedFilters, ...state })}
         />
         <StyledCheckBoxGroup
           listItems={fileTypes}
-          selected_items={this.props.selectedFilters.file_types}
+          selectedItems={this.props.selectedFilters.file_types}
           title="File Types"
           group_name="file_types"
+          lastChild
           onChange={state => this.props.onChange({ ...this.props.selectedFilters, ...state })}
         />
       </ExplorerSidebarStyle>
