@@ -32,5 +32,4 @@ class ExplorerPage extends Component {
   }
 }
 
-
 export default ExplorerPage;
