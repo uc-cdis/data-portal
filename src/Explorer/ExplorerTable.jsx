@@ -106,6 +106,7 @@ export class ExplorerTableComponent extends Component {
   render() {
     const columns = ['Project', 'File Name', 'Format', 'File Size', 'Category'];
     const columnWidths = ['20%', '35%', '10%', '15%', '20%'];
+    const specialAligns = {"File Size": "right"};
     const startingPage = (this.state.page - this.state.originalPage);
     const filesList = this.props.filesList
       ? this.props.filesList.slice(startingPage * this.props.pageSize,
@@ -124,9 +125,16 @@ export class ExplorerTableComponent extends Component {
         <TableHead>
           <TableRow>
             {columns.map(
-              (item, i) => (<TableHeadCell key={i} c_width={columnWidths[i]}>
-                {item}
-              </TableHeadCell>),
+              (item, i) => (
+                item in specialAligns ?
+                  <TableHeadCell key={i} c_width={columnWidths[i]} style={{ textAlign: specialAligns[item] }}>
+                    {item}
+                  </TableHeadCell>
+                  :
+                  <TableHeadCell key={i} c_width={columnWidths[i]}>
+                    {item}
+                  </TableHeadCell>
+              ),
             )}
           </TableRow>
         </TableHead>
