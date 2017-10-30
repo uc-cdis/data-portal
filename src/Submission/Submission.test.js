@@ -1,14 +1,10 @@
 import React from 'react';
-import * as testData from './__test__/data.json';
-import * as testExpected from './__test__/expected.json';
-import ExplorerPage from './ExplorerPage';
 import { mount } from 'enzyme'
 import { getReduxStore } from '../reduxStore';
 import { Provider } from 'react-redux';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { ThemeProvider } from 'styled-components';
 import { theme } from '../theme';
-import { changePageSize, changePage } from './actions';
+import ProjectSubmission from './ProjectSubmission';
 
 function renderComponent(ComponentClass, props) {
   return getReduxStore().then(
@@ -25,11 +21,11 @@ function renderComponent(ComponentClass, props) {
     });
 }
 
-describe('the Explorer component', () => {
+describe('the Submission component', () => {
   let initializedExplorer = testExpected.explorer;
   beforeEach(() => {
     fetch.mockResponseOnce(JSON.stringify(testData), { status: 200 });
-    return renderComponent(ExplorerPage, {viewer: testData.data.viewer});
+    return renderComponent(ProjectSubmission, {viewer: testData.data.viewer});
   });
 
   it('Update redux store when loading', () => {

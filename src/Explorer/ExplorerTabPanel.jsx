@@ -42,32 +42,6 @@ class TabSetComponent extends Component {
     this.setState(makeDefaultState({}));
   }
 
-  updateCursors(key, newValue, pageSize) {
-    const numberOfItemPages = pageSize * this.props.pagesPerTab;
-    return Object.keys(this.props.cursors).reduce(
-      (d, it) => {
-        const result = d;
-        if (it !== key) {
-          result[it] = this.props.queriedCursors
-            ? this.props.queriedCursors[it]
-            : 0;
-        } else if (newValue < 0) {
-          const tempRes = this.props.cursors[it] + (2 * newValue) +
-            (((2 * numberOfItemPages) - this.props.cursors[it]) % numberOfItemPages);
-          result[it] = (tempRes >= 0) ? tempRes : 0;
-        } else {
-          result[it] = this.props.cursors[it];
-        }
-        return result;
-      }, {},
-    );
-  }
-
-  updateTab(key, newValue) {
-    const newCursors = this.updateCursors(key, newValue, this.props.pageSize);
-    this.props.onPageLoadMore({ cursors: newCursors, originalPageToReset: [key] });
-  }
-
   updateOriginalPage() {
     return Object.keys(this.props.cursors).reduce(
       (d, it) => {
@@ -76,11 +50,6 @@ class TabSetComponent extends Component {
         return d;
       }, {},
     );
-  }
-
-  doSelectChange(value) {
-    const newCursors = this.updateCursors('', 0, this.props.pageSize);
-    this.props.onPageSizeChange({ cursors: newCursors, pageSize: parseInt(value) });
   }
 
   render() {
@@ -122,26 +91,45 @@ class TabSetComponent extends Component {
                     originalPage={originalPages[item]}
                     onPageLoadNextMore={
                       () => {
-                        this.updateTab(item,
-                          this.props.pageSize * this.props.pagesPerTab);
+                        this.props.onPageLoadMore(item,
+                          this.props.pageSize * this.props.pagesPerTab,
+                          {
+                            pageSize: this.props.pageSize,
+                            pagesPerTab: this.props.pagesPerTab,
+                            cursors: this.props.cursors,
+                            queriedCursors: this.props.queriedCursors
+                          });
                       }
                     }
                     page={(item in this.props.currentPages)
                       ? this.props.currentPages[item] : 0}
                     onPageChange={
                       (page) => {
-                        const currentPages = this.props.currentPages;
-                        currentPages[item] = page;
-                        this.props.onPageChange(currentPages);
+                        this.props.onPageChange(item, page, this.props.currentPages);
                       }
                     }
                     onPageLoadPrevMore={
                       () => {
-                        this.updateTab(item,
-                          -this.props.pageSize * this.props.pagesPerTab);
+                        this.props.onPageLoadMore(item,
+                          -this.props.pageSize * this.props.pagesPerTab,
+                          {
+                            pageSize: this.props.pageSize,
+                            pagesPerTab: this.props.pagesPerTab,
+                            cursors: this.props.cursors,
+                            queriedCursors: this.props.queriedCursors
+                          });
                       }
                     }
-                    onPageSizeChange={value => this.doSelectChange(value)}
+                    onPageSizeChange={
+                      value => this.props.onPageSizeChange(
+                        value,
+                        {
+                          oldPageSize: this.props.pageSize,
+                          pagesPerTab: this.props.pagesPerTab,
+                          cursors: this.props.cursors,
+                          queriedCursors: this.props.queriedCursors
+                        }
+                    )}
                   />
                 </ExplorerTabBox>,
             )
@@ -165,9 +153,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onTabChange: (state) => dispatch(setActiveTab(state)),
-  onPageLoadMore: (state) => dispatch(requestMoreData(state)),
-  onPageSizeChange: (state) => dispatch(changePageSize(state)),
-  onPageChange: (state) => dispatch(changePage(state))
+  onPageLoadMore: (key, newCursor, state) => dispatch(requestMoreData(key, newCursor, state)),
+  onPageSizeChange: (newPageSize, state) => dispatch(changePageSize(newPageSize, state)),
+  onPageChange: (tab, page, state) => dispatch(changePage(tab, page, state))
 });
 
 const ExplorerTabPanel = connect(mapStateToProps, mapDispatchToProps)(TabSetComponent);
