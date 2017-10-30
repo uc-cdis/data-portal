@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Select from 'react-select';
 
 
 const makeDefaultSelectedState = value => ({
@@ -9,8 +10,22 @@ const makeDefaultSelectedState = value => ({
 
 export const SelectionDiv = styled.div`
   font-size: 15px;
-`;
+  position: relative;
+  vertical-align: middle;  
+  span {
+    vertical-align: middle;
+    margin-right: 10px;
+  }
 
+  .Select-menu-outer {
+    top: auto;
+    bottom: 100%;
+  }
+`;
+const Dropdown = styled(Select)`
+  display: inline-block;
+  vertical-align: middle;
+`;
 
 export default class SelectComponent extends Component {
   static propTypes = {
@@ -18,12 +33,14 @@ export default class SelectComponent extends Component {
     values: PropTypes.arrayOf(PropTypes.number),
     onChange: PropTypes.func,
     defaultSelect: PropTypes.any,
+    placeholder: PropTypes.string,
     selectedValue: PropTypes.number,
   };
 
   static defaultProps = {
     title: '',
     values: [],
+    placeholder: 'Select...',
     defaultSelect: 0,
     selectedValue: 0,
     onChange: () => {},
@@ -49,18 +66,19 @@ export default class SelectComponent extends Component {
   }
 
   render() {
+    const options = this.props.values.map(value => ({ value, label: value }));
+
     return (
       <SelectionDiv>
-        <label>{this.props.title}</label>
-        <select
+        <span>{this.props.title}</span>
+        <Dropdown
+          name={this.props.title}
+          options={options}
           value={this.state.selectedValue}
-          onChange={event => this.doChangeSelectedValue(event.nativeEvent.target.value)}
-        >
-          {this.props.values.map((item, i) => (
-            <option key={i} value={item}>{item}</option>
-          ),
-          )}
-        </select>
+          placeholder={this.props.placeholder}
+          onChange={event => this.doChangeSelectedValue(event.value)}
+          clearable={false}
+        />
       </SelectionDiv>
     );
   }

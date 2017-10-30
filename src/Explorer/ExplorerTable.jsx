@@ -19,6 +19,8 @@ export const ExplorerTableStyle = styled.table`
   width: 100%;
   border-collapse: collapse;
   overflow: hidden;
+  font-size: 15px;
+
 `;
 
 

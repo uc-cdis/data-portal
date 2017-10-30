@@ -36,5 +36,6 @@ module.exports = {
         // see https://github.com/clayne11/eslint-import-resolver-meteor/issues/17
         // - seems to affect Codacy :-(
         "import/extensions": ["off", "never"],
+        "react/jsx-indent": "off"
     }
 };
