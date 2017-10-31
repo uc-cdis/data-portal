@@ -12,7 +12,7 @@ const NavLeft = styled.nav`
 
 const Header = styled.header`
   width: 100%;
-  // background-color: #dfdfdf;
+  background-color: white;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
   padding: 10px 100px;
   overflow: hidden;

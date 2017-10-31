@@ -2,7 +2,7 @@ import React from 'react';
 import * as d3 from 'd3-scale';
 
 import { submissionApiPath } from './localconf';
-import { Box, Body, Margin } from './theme';
+import { OuterWrapper, Box, Body, Margin } from './theme';
 import Nav from './Nav/ReduxNavBar';
 import Footer from './components/Footer';
 import ReduxAuthTimeoutPopup from './Popup/ReduxAuthTimeoutPopup';
@@ -47,8 +47,8 @@ export const predictFileType = (dirtyData, fileType) => {
 
 export const withBoxAndNav = (Component, background) => ({ ...props }) => {
   return (
-    <div>
-      <Box>
+    <OuterWrapper>
+      <Box background={background}>
         <Nav />
         <Body background={background}>
           <Component {...props} />
@@ -56,7 +56,7 @@ export const withBoxAndNav = (Component, background) => ({ ...props }) => {
         <Margin background={background} />
       </Box>
       <Footer />
-    </div>
+    </OuterWrapper>
 
   );
 };

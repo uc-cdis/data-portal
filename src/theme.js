@@ -51,12 +51,16 @@ export const Box = styled.div`
   // background: white;
   diplay: block;
   padding: 0px 0px;
-
+  background: ${props => props.background};
+  height: 100%;
 `;
 
+export const OuterWrapper = styled.div`
+  height: 100%;  
+`;
 export const Body = styled.div`
+  background: ${props => props.background};
   padding: 50px 100px;
-  background: ${props => props.background}
 `;
 
 export const Margin = styled.div`
