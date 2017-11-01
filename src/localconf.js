@@ -26,6 +26,7 @@ function buildConfig(opts) {
 
   let userapiPath = `${hostname}user/`;
   const submissionApiPath = `${hostname}api/v0/submission/`;
+  const apiPath = `${hostname}api/`;
   const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   // let credentialOauthPath = `${hostname}middleware/oauth2/v0/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;

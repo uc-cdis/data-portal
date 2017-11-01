@@ -181,7 +181,7 @@ export const receiveAPILogout = handleResponse('RECEIVE_API_LOGOUT');
 export const logoutAPI = () => dispatch => dispatch(fetchWrapper({
   path: `${submissionApiOauthPath}logout`,
   handler: receiveAPILogout,
-})).then(() => document.location.replace(`${userapiPath}/logout?next=${basename}`));
+})).then(() => document.location.replace(`${userapiPath}/logout?next=${location.origin + basename}`));
 
 export const fetchOAuthURL = oauthPath => dispatch =>
 // Get cloud_middleware's authorization url

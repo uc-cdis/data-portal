@@ -54,15 +54,15 @@ export const fetchDictionary = () => dispatch =>
           };
         }
       })
-    .then(msg => dispatch(msg));
-    /*
+    .then(msg => dispatch(msg))
     //Go AND FETCH THE DICITONARY VERSION INFO ...
     .then(() => {
-      fetchJsonOrText( { path: ... } ).then( (data) => {
-        setFooterDefaults( { dictionaryVersion: data.version } );
+      fetchJsonOrText( { path: `${apiPath}_version`, method: 'GET', } ).then( ({status, data}) => {
+        if (status == 200) {
+          setFooterDefaults( { dictionaryVersion: data.dictionary.version, apiVersion: data.version } );
+        }
       } )
-    })
-    */
+    });
 
 
 export const fetchNodeTypes = () => dispatch =>

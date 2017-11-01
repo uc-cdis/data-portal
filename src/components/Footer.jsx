@@ -22,22 +22,25 @@ const NavRight = styled.nav`
   padding: 10px 100px;
   color: white;
 `;
+const Versions = styled.span`
+  color: white;
+  padding:5px;
+`;
 
 const defaults = {
-  dictionaryVersion: "ZacVersion"
+  dictionaryVersion: "Unknown"
 };
 
 export function setDefaults(opts) {
   Object.assign(defaults, opts||{});
 }
 
-const Footer = ({ dockerVersion }) => {
-  dockerVersion = dockerVersion || defaults.dictionaryVersion;
+const Footer = ({ dictionaryVersion }) => {
+  dictionaryVersion = dictionaryVersion || defaults.dictionaryVersion;
   return <FooterSection>
     <NavRight>
-      <ul>
-        <Dictionary to="/dd"><span className="fui-bookmark" />View dictionary v{dockerVersion}</Dictionary>
-      </ul>
+      <Dictionary to="/dd"><span className="fui-bookmark" />View dictionary</Dictionary>
+      <Versions>Dictionary v{dictionaryVersion}</Versions>
     </NavRight>
   </FooterSection>
 };
