@@ -1,5 +1,5 @@
 import { fetchJsonOrText } from './actions';
-import { submissionApiPath } from './localconf';
+import { apiPath, submissionApiPath } from './localconf';
 
 // import { setFooterDefaults } from './components/Footer';
 
