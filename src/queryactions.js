@@ -1,6 +1,8 @@
 import { fetchJsonOrText } from './actions';
 import { submissionApiPath } from './localconf';
 
+// import { setFooterDefaults } from './components/Footer';
+
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -
  * lambdas that accept dispatch and getState functions as arguments
@@ -53,6 +55,14 @@ export const fetchDictionary = () => dispatch =>
         }
       })
     .then(msg => dispatch(msg));
+    /*
+    //Go AND FETCH THE DICITONARY VERSION INFO ...
+    .then(() => {
+      fetchJsonOrText( { path: ... } ).then( (data) => {
+        setFooterDefaults( { dictionaryVersion: data.version } );
+      } )
+    })
+    */
 
 
 export const fetchNodeTypes = () => dispatch =>
