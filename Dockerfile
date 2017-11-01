@@ -25,7 +25,9 @@ ARG BASENAME
 RUN mkdir -p /data-portal 
 COPY . /data-portal
 WORKDIR /data-portal
-RUN cp src/img/$APP-favicon.ico src/img/favicon.ico; \
+RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}\";" >src/versions.js \
+    && VERSION=`git describe --always --tags` && echo "export const portalVersion =\"${VERSION}\";" >>src/versions.js \
+    && cp src/img/$APP-favicon.ico src/img/favicon.ico; \
     /bin/rm -rf node_modules \
     && npm install \
     && npm run relay \

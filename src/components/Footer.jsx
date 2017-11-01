@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router';
 import React from 'react';
+import { portalVersion } from '../versions';
 
 const FooterSection = styled.footer`
   text-align: center;
@@ -37,10 +38,11 @@ export function setDefaults(opts) {
 
 const Footer = ({ dictionaryVersion }) => {
   dictionaryVersion = dictionaryVersion || defaults.dictionaryVersion;
+  apiVersion = apiVersion || defaults.apiVersion;
   return <FooterSection>
     <NavRight>
       <Dictionary to="/dd"><span className="fui-bookmark" />View dictionary</Dictionary>
-      <Versions>Dictionary v{dictionaryVersion}</Versions>
+      <Versions>Dictionary v{dictionaryVersion}, API v{apiVersion}, portal v{portalVersion}</Versions>
     </NavRight>
   </FooterSection>
 };

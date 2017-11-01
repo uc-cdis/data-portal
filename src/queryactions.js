@@ -1,7 +1,6 @@
 import { fetchJsonOrText } from './actions';
 import { apiPath, submissionApiPath } from './localconf';
-
-// import { setFooterDefaults } from './components/Footer';
+import { setFooterDefaults } from './components/Footer';
 
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -

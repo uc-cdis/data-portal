@@ -151,6 +151,7 @@ function buildConfig(opts) {
     basename,
     hostname,
     userapiPath,
+    apiPath,
     submissionApiPath,
     submissionApiOauthPath,
     credentialCdisPath,
