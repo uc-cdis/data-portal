@@ -8,9 +8,14 @@ import FlatButton from 'material-ui/FlatButton';
 const NavLeft = styled.nav`
   top: 0px;
   float: left;
+  padding-left: 220px;
 `;
 
 const Header = styled.header`
+  background-image: url(/src/img/ndh-header.png);
+  background-size: 200px 40px;
+  background-position: 100px 10px;
+  background-repeat: no-repeat; 
   width: 100%;
   background-color: white;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);

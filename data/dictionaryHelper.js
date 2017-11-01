@@ -33,7 +33,10 @@ function dictToGQLSetup(dict) {
     adminTypeList,
     experimentType,
     hasCaseType: Object.prototype.hasOwnProperty.call(dict, 'case'),
+    hasCoreVisit: Object.prototype.hasOwnProperty.call(dict, 'core_visit'),
     hasAliquotType: Object.prototype.hasOwnProperty.call(dict, 'aliquot'),
+    hasSummaryLabResult: Object.prototype.hasOwnProperty.call(dict, 'summary_lab_result'),
+    hasSummarySocioDemographic: Object.prototype.hasOwnProperty.call(dict, 'summary_socio_demographic'),
   };
 }
 

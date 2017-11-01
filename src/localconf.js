@@ -43,17 +43,17 @@ function buildConfig(opts) {
   const requiredCerts = [];
 
   // Support data/gqlSetup auto-generation of data-portal graphQL
-  const gqlSetup = {
-    fileTypeList: [
-      'slide_image',
-      'submitted_aligned_reads',
-      'submitted_copy_number',
-      'submitted_methylation',
-      'submitted_somatic_mutation',
-      'submitted_unaligned_reads',
-    ],
-    experimentType: 'experiment',
-  };
+  // const gqlSetup = {
+  //   fileTypeList: [
+  //     'slide_image',
+  //     'submitted_aligned_reads',
+  //     'submitted_copy_number',
+  //     'submitted_methylation',
+  //     'submitted_somatic_mutation',
+  //     'submitted_unaligned_reads',
+  //   ],
+  //   experimentType: 'experiment',
+  // };
 
   if (app === 'bpa') {
     appname = 'BPA Metadata Submission Portal';
@@ -64,7 +64,8 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
     ];
-    gqlSetup.experimentType = 'study';
+    // gqlSetup.experimentType = 'study';
+    countItems = ['']
   } else if (app === 'gtex') {
     appname = 'NIH Commons Pilot: GTEx Data Portal';
     navItems = [
@@ -74,7 +75,7 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
     ];
-    gqlSetup.experimentType = 'study';
+    // gqlSetup.experimentType = 'study';
   } else if (app === 'edc') {
     appname = 'Environmental Data Commons Portal';
     navItems = [
@@ -93,7 +94,7 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#2D728F', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#A51C30', name: 'data' },
     ];
-    gqlSetup.experimentType = 'trio';
+    // gqlSetup.experimentType = 'trio';
   } else if (app === 'bhc') {
     appname = 'The Brain Commons Portal';
     navItems = [
@@ -121,7 +122,7 @@ function buildConfig(opts) {
       'sensor_checkup',
       'test_result',
     ];
-    gqlSetup.experimentType = 'study';
+    // gqlSetup.experimentType = 'study';
   } else if (app === 'acct') {
     appname = 'ACCOuNT Data Commons Portal';
     navItems = [
@@ -145,6 +146,15 @@ function buildConfig(opts) {
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
+    ];
+  } else if (app === 'ndh') {
+    appname = 'Genomic Data Commons Portal';
+    navItems = [
+      { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
+      { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
+      { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
+      { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
+      { icon: 'content_copy', link: 'https://ndh-portal.bionimbus.org', color: '#a2a2a2', name: 'data' },
     ];
   } else if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
@@ -186,7 +196,7 @@ function buildConfig(opts) {
     navItems,
     login,
     requiredCerts,
-    gqlSetup,
+    // gqlSetup,
     buildConfig,
   };
   return conf;
