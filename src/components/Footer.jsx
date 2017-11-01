@@ -29,14 +29,15 @@ const Versions = styled.span`
 `;
 
 const defaults = {
-  dictionaryVersion: "Unknown"
+  dictionaryVersion: "Unknown",
+  apiVersion: "Unknown",
 };
 
-export function setDefaults(opts) {
+export function setFooterDefaults(opts) {
   Object.assign(defaults, opts||{});
 }
 
-const Footer = ({ dictionaryVersion }) => {
+const Footer = ({ dictionaryVersion, apiVersion }) => {
   dictionaryVersion = dictionaryVersion || defaults.dictionaryVersion;
   apiVersion = apiVersion || defaults.apiVersion;
   return <FooterSection>
