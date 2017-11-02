@@ -1,2 +1,2 @@
-export const portalVersion = "";
-export const portalCommit = "";
+export const portalVersion = '';
+export const portalCommit = '';

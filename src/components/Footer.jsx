@@ -1,6 +1,7 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Link } from 'react-router';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { portalVersion } from '../versions';
 
 const FooterSection = styled.footer`
@@ -29,23 +30,28 @@ const Versions = styled.span`
 `;
 
 const defaults = {
-  dictionaryVersion: "Unknown",
-  apiVersion: "Unknown",
+  dictionaryVersion: 'Unknown',
+  apiVersion: 'Unknown',
 };
 
 export function setFooterDefaults(opts) {
-  Object.assign(defaults, opts||{});
+  Object.assign(defaults, opts || {});
 }
 
 const Footer = ({ dictionaryVersion, apiVersion }) => {
-  dictionaryVersion = dictionaryVersion || defaults.dictionaryVersion;
-  apiVersion = apiVersion || defaults.apiVersion;
-  return <FooterSection>
+  const dictionaryVer = dictionaryVersion || defaults.dictionaryVersion;
+  const apiVer = apiVersion || defaults.apiVersion;
+  return (<FooterSection>
     <NavRight>
       <Dictionary to="/dd"><span className="fui-bookmark" />View dictionary</Dictionary>
-      <Versions>Dictionary v{dictionaryVersion}, API v{apiVersion}, portal v{portalVersion}</Versions>
+      <Versions>Dictionary v{dictionaryVer}, API v{apiVer}, Portal v{portalVersion}</Versions>
     </NavRight>
-  </FooterSection>
+  </FooterSection>);
+};
+
+Footer.propTypes = {
+  dictionaryVersion: PropTypes.string.isRequired,
+  apiVersion: PropTypes.string.isRequired,
 };
 
 export default Footer;
