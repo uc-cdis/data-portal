@@ -176,12 +176,16 @@ export const requireAuth = (store, additionalHooks) => (nextState, replace, call
 export const enterHook = (store, hookAction) =>
   (nextState, replace, callback) => store.dispatch(hookAction()).then(() => callback());
 
-export const receiveAPILogout = handleResponse('RECEIVE_API_LOGOUT');
 
-export const logoutAPI = () => dispatch => dispatch(fetchWrapper({
+export const logoutAPI = () => dispatch => fetchJsonOrText({
   path: `${submissionApiOauthPath}logout`,
-  handler: receiveAPILogout,
-})).then(() => document.location.replace(`${userapiPath}/logout?next=${basename}`));
+  dispatch,
+})
+  .then(handleResponse('RECEIVE_API_LOGOUT'))
+  .then(msg => dispatch(msg))
+  .then(
+    () => document.location.replace(`${userapiPath}/logout?next=${basename}`),
+  );
 
 export const fetchOAuthURL = oauthPath => dispatch =>
 // Get cloud_middleware's authorization url

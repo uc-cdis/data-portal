@@ -60,7 +60,7 @@ function createDDGraph(nodesIn, edges, radius = 60, boxHeightMult, boxWidthMult,
     .style('cursor', 'pointer')
     .attr('id', d => d.name)
     .on('click', (d) => {
-      for (let i = 0; i < nodeTypes.length; i++) {
+      for (let i = 0; i < nodeTypes.length; i += 1) {
         if (d.name === nodeTypes[i]) {
           const s = window.location.href.split('/');
           window.open(`${s.slice(0, s.length - 1).join('/')}/${d.name}`);

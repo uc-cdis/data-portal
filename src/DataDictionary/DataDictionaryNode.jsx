@@ -25,8 +25,12 @@ const LinkBullet = ({ link }) => {
 };
 
 LinkBullet.propTypes = {
-  target_type: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
+  link: PropTypes.shape(
+    {
+      target_type: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    },
+  ),
 };
 
 const LinkTable = ({ links }) => {
@@ -47,17 +51,42 @@ const LinkTable = ({ links }) => {
   );
 };
 
-const getType = (schema) => {
-  if ('type' in schema) {
-    if (typeof schema.type === 'string') {
-      return schema.type;
+/**
+ * Little helper to extract the type for some dictionary node property.
+ * Export just for testing.
+ * @param {Object} property one of the properties of a dictionary node
+ * @return {String|Array<String>} string for scalar types, array for enums
+ *                   and other listish types or 'UNDEFINED' if no
+ *                   type information availabale 
+ */
+export const getType = (property) => {
+  let type = 'UNDEFINED';
+  if ('type' in property) {
+    if (typeof property.type === 'string') {
+      type = property.type;
+    } else {
+      type = property.type;
     }
-
-    return schema.type.join(', ');
-  } else if ('enum' in schema) {
-    return schema.enum.join(', ');
+  } else if ('enum' in property) {
+    type = property.enum;
+  } else if ('oneOf' in property) {
+    // oneOf has nested type list - we want to flatten nested enums out here ...
+    type = property.oneOf
+      .map(item => getType(item))
+      .reduce(
+        (flatList, it) => {
+          if (Array.isArray(it)) {
+            return flatList.concat(it);
+          }
+          flatList.push(it);
+          return flatList;
+        }, [],
+      );
+  } else {
+    type = 'UNDEFINED';
   }
-  return undefined;
+
+  return type;
 };
 
 const NodeTable = ({ node }) => (
@@ -82,7 +111,14 @@ const NodeTable = ({ node }) => (
         <TableData first_cr> Unique Keys </TableData>
         <TableData right>{
           <ul>
-            {node.uniqueKeys.map((key, i) => <Bullet key={i}>{key.join(', ')}</Bullet>)}
+            {
+              node.uniqueKeys.map(
+                (key) => {
+                  const compoundKey = key.join(', ');
+                  return <Bullet key={compoundKey}>{compoundKey}</Bullet>;
+                }
+              )
+            }
           </ul>
         }</TableData>
 
@@ -145,26 +181,23 @@ const PropertyBullet = (props) => {
     description = property.term.description;
   }
 
-  let type = getType(property);
-  if (!type) {
-    if ('oneOf' in property) {
-      type = property.oneOf.map(item => getType(item)).join(', ');
-    } else {
-      type = 'UNDEFINED';
-    }
-  }
+  const type = getType(property);
 
   return (
     <TableRow>
       <Col1><div> { propertyName }</div> </Col1>
-      <Col2> <ul>{ (type.indexOf(',') === -1) ? type : <CollapsibleList items={type.split(', ')} />} </ul></Col2>
+      <Col2> <ul>{ (typeof type === 'string') ? type : <CollapsibleList items={type} />} </ul></Col2>
       <Col3> { required ? 'Yes' : 'No' } </Col3>
       <Col4> { description } </Col4>
     </TableRow>
   );
 };
 
-const PropertiesTable = ({ node, required, links }) => {
+/**
+ * Render table of dictionary node type's properties
+ * @param {node, required:boolean, links:Array} props
+ */
+export const PropertiesTable = ({ node, required, links }) => {
   const linknames = links.map(link => link.name);
   const properties = Object.keys(node.properties);
   return (
@@ -212,7 +245,7 @@ const DownloadButton = styled.a`
 
 /**
  * Component renders a view with details of a particular dictionary type (node - /dd/typename) or
- * of the whole dictionary (/dd/graph)
+ * of the whole dictionary (/dd/graph).
  * 
  * @param {*} param0 
  */
@@ -224,7 +257,11 @@ const DataDictionaryNode = ({ params, submission }) => {
     return (
       <div>
         <h3> Data Dictionary Graph Viewer </h3>
-        <DictionaryGraph dictionary={dictionary} counts_search={submission.counts_search} links_search={submission.links_search} />
+        <DictionaryGraph
+          dictionary={dictionary}
+          counts_search={submission.counts_search}
+          links_search={submission.links_search}
+        />
       </div>
     );
   }
@@ -262,6 +299,18 @@ const DataDictionaryNode = ({ params, submission }) => {
   );
 };
 
+DataDictionaryNode.propTypes = {
+  params: PropTypes.shape({
+    dictionary: PropTypes.object.isRequired,
+    node: PropTypes.string.isRequired,
+  }).isRequired,
+  submission: PropTypes.shape(
+    {
+      counts_search: PropTypes.objectOf(PropTypes.number),
+      links_search: PropTypes.objectOf(PropTypes.number),
+    },
+  ),
+};
 
 export default DataDictionaryNode;
 
