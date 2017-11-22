@@ -1,5 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import SubmitTSV from './SubmitTSV';
 
@@ -15,13 +16,15 @@ describe('the TSV submission componet', () => {
    */
   function buildTest(submission = { file: '', submit_result: '', submit_status: 200 }, submitCallback = () => {}) {
     const $dom = mount(
-      <SubmitTSV
-        path={testProjName}
-        submission={submission}
-        onUploadClick={() => { console.log('onUpload'); }}
-        onSubmitClick={(typeStr, path, dict) => { console.log('onSubmitClick'); submitCallback(typeStr, path, dict); }}
-        onFileChange={() => { console.log('onFileChange'); }}
-      />,
+      <MuiThemeProvider>
+        <SubmitTSV
+          path={testProjName}
+          submission={submission}
+          onUploadClick={() => { console.log('onUpload'); }}
+          onSubmitClick={(typeStr, path, dict) => { console.log('onSubmitClick'); submitCallback(typeStr, path, dict); }}
+          onFileChange={() => { console.log('onFileChange'); }}
+        />
+      </MuiThemeProvider>,
     );
 
     return { $dom };
