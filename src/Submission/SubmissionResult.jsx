@@ -50,20 +50,19 @@ class SubmissionResult extends React.Component {
     const { status, data } = this.props;
     let summary = null;
     const fullResponse = (() => {
-      if ( this.state.showFullResponse ) {
+      if (this.state.showFullResponse) {
         return (
           <div>
             <p>Details:</p>
             <AceEditor width="100%" height="300px" style={{ marginBottom: '1em' }} mode="json" theme="kuroir" readOnly value={JSON.stringify(data, null, '    ')} />
           </div>
         );
-      } else {
-        return (
-          <div>
-            <FlatButton backgroundColor="#ddddee" onClick={() => this.setState({ showFullResponse: true }) } label="Details"/>
-          </div>
-        );
       }
+      return (
+        <div>
+          <FlatButton backgroundColor="#ddddee" onClick={() => this.setState({ showFullResponse: true })} label="Details" />
+        </div>
+      );
     })();
 
     if (status === 200) {
