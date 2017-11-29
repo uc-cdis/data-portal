@@ -91,7 +91,7 @@ const SubmitTSV = ({ path, submission, onUploadClick, onSubmitClick, onFileChang
 };
 
 SubmitTSV.propTypes = {
-  path: PropTypes.string.isRequired,
+  path: PropTypes.string.isRequired,  // from react-router
   submission: PropTypes.shape({
     file: PropTypes.string,
     file_type: PropTypes.string,

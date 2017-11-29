@@ -2,10 +2,6 @@ import React from 'react';
 import * as d3 from 'd3-scale';
 
 import { submissionApiPath } from './localconf';
-import { OuterWrapper, Box, Body, Margin } from './theme';
-import Nav from './Nav/ReduxNavBar';
-import Footer from './components/Footer';
-import ReduxAuthTimeoutPopup from './Popup/ReduxAuthTimeoutPopup';
 
 export const getSubmitPath = (project) => {
   const path = project.split('-');
@@ -45,29 +41,6 @@ export const predictFileType = (dirtyData, fileType) => {
   return predictType;
 };
 
-export const withBoxAndNav = (Component, background) => ({ ...props }) => {
-  return (
-    <OuterWrapper>
-      <Box background={background}>
-        <Nav />
-        <Body background={background}>
-          <Component {...props} />
-        </Body>
-        <Margin background={background} />
-      </Box>
-      <Footer />
-    </OuterWrapper>
-
-  );
-};
-
-
-export const withAuthTimeout = Component => ({ ...props }) => (
-  <div>
-    <ReduxAuthTimeoutPopup />
-    <Component {...props} />
-  </div>
-);
 
 /**
  * Little wrapper around setinterval with a guard to prevent an async function

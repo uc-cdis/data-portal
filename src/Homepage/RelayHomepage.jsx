@@ -3,7 +3,6 @@ import { QueryRenderer } from 'react-relay';
 import environment from '../environment';
 import { DashboardWith } from './ProjectDashboard';
 import { RelayProjectTable } from './RelayProjectTable';
-import { withAuthTimeout, withBoxAndNav } from '../utils';
 import { GQLHelper } from '../gqlHelper';
 import { getReduxStore } from '../reduxStore';
 import Spinner from '../components/Spinner';
@@ -107,7 +106,7 @@ export class RelayProjectDashboard extends React.Component {
 }
 
 
-const RelayHomepage = withBoxAndNav(withAuthTimeout(RelayProjectDashboard));
+const RelayHomepage = RelayProjectDashboard;
 
 
 /**

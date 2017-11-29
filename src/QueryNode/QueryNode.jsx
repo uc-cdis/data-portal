@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { reduxForm } from 'redux-form';
 import Select from 'react-select';
@@ -156,6 +156,7 @@ class QueryNode extends React.Component {
     };
 
     if (
+      popups &&
       popups.view_popup &&
       query_nodes.query_node
     ) {
@@ -189,7 +190,7 @@ class QueryNode extends React.Component {
       popupEl: null,
     };
 
-    if (popups.nodedelete_popup === true) {
+    if (popups && popups.nodedelete_popup === true) {
       // User clicked on node 'Delete' button
       popup.state = 'confirmDelete';
       popup.popupEl = (<Popup
@@ -204,7 +205,7 @@ class QueryNode extends React.Component {
         }
         onCancel={() => { onClearDeleteSession(); onUpdatePopup({ nodedelete_popup: false }); }}
       />);
-    } else if (query_nodes.query_node && query_nodes.delete_error) {
+    } else if (query_nodes && query_nodes.query_node && query_nodes.delete_error) {
       // Error deleting node
       popup.state = 'deleteFailed';
       popup.popupEl = (<Popup
@@ -213,7 +214,7 @@ class QueryNode extends React.Component {
         code={jsonToString(query_nodes.query_node)}
         onClose={() => { onClearDeleteSession(); onUpdatePopup({ nodedelete_popup: false }); }}
       />);
-    } else if (typeof popups.nodedelete_popup === 'string' && query_nodes.query_node) {
+    } else if (popups && typeof popups.nodedelete_popup === 'string' && query_nodes && query_nodes.query_node) {
       // Waiting for node delete to finish
       popup.state = 'waitForDelete';
       popup.popupEl = <Popup message={popups.nodedelete_popup} />;
@@ -224,7 +225,7 @@ class QueryNode extends React.Component {
   render() {
     const { params, ownProps, submission, query_nodes, popups, onSearchFormSubmit, onUpdatePopup,
       onDeleteNode, onStoreNodeInfo,
-      onClearDeleteSession,
+      onClearDeleteSession, history
     } = this.props;
     const project = params.project;
 
@@ -233,7 +234,7 @@ class QueryNode extends React.Component {
         <h3>browse <Link to={`/${project}`}>{project}</Link> </h3>
         {this.renderViewPopup(this.props).popupEl}
         {this.renderDeletePopup(this.props).popupEl}
-        <QueryForm onSearchFormSubmit={onSearchFormSubmit} project={project} nodeTypes={submission.nodeTypes} />
+        <QueryForm onSearchFormSubmit={(data,url) => onSearchFormSubmit(data, url, history)} project={project} nodeTypes={submission.nodeTypes} />
         { query_nodes.search_status === 'succeed: 200' &&
             Object.entries(query_nodes.search_result.data).map(
               value => (<Entities

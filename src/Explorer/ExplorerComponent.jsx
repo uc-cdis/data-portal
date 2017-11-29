@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { createRefetchContainer } from 'react-relay';
-import { withAuthTimeout, withBoxAndNav, computeLastPageSizes } from '../utils';
+import { computeLastPageSizes } from '../utils';
 import { GQLHelper } from '../gqlHelper';
 import { getReduxStore } from '../reduxStore';
 import { ReduxExplorerTabPanel, ReduxSideBar } from './ReduxExplorer';
@@ -158,7 +158,7 @@ class ExplorerComponent extends Component {
 }
 
 export const RelayExplorerComponent = createRefetchContainer(
-  withBoxAndNav(withAuthTimeout(ExplorerComponent), BodyBackground),
+  ExplorerComponent,
   {
     viewer: gqlHelper.explorerPageFragment,
   },

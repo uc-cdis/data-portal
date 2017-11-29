@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import { assignNodePositions, createNodesAndEdges } from '../DataModelGraph/utils';
 import { createFullGraph, createAbridgedGraph } from './GraphCreator';

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+//import { push } from 'react-router-redux'; - not yet supported in react-router 4
 import { fetchJsonOrText, updatePopup } from '../actions';
 import { getSubmitPath } from '../utils';
 import { submissionApiPath } from '../localconf';
@@ -10,7 +10,7 @@ const clearDeleteSession = {
   type: 'CLEAR_DELETE_SESSION',
 };
 
-const submitSearchForm = (opts, url) =>
+const submitSearchForm = (opts, url, history) =>
   (dispatch) => {
     const nodeType = opts.node_type;
     const submitterId = opts.submitter_id || '';
@@ -47,7 +47,8 @@ const submitSearchForm = (opts, url) =>
       )
       .then(
         () => {
-          if (url) { return dispatch(push(url)); }
+          //if (url) { return dispatch(push(url)); }
+          if (url && history) { history.push(url); }
           return null;
         },
       );
@@ -110,18 +111,6 @@ const fetchQueryNode = ({ id, project }) =>
         },
       ).then((msg) => { dispatch(msg); });
 
-export const clearResultAndQuery = nextState => (dispatch, getState) => {
-  dispatch(
-    { type: 'CLEAR_QUERY_NODES' },
-  );
-  const location = getState().routing.locationBeforeTransitions;
-  if (Object.keys(location.query).length > 0) {
-    dispatch(
-      submitSearchForm({ project: nextState.params.project, ...location.query }),
-    );
-  }
-};
-
 
 const mapStateToProps = (state, ownProps) => {
   const result = {
@@ -134,7 +123,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onSearchFormSubmit: (value, url) => dispatch(submitSearchForm(value, url)),
+  onSearchFormSubmit: (value, url, history) => dispatch(submitSearchForm(value, url, history)),
   onUpdatePopup: state => dispatch(updatePopup(state)),
   onClearDeleteSession: () => dispatch(clearDeleteSession),
   onDeleteNode: ({ id, project }) => {

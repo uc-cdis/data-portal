@@ -49,7 +49,7 @@ export const Box = styled.div`
   position: relative;
   // width: 65%;
   // background: white;
-  diplay: block;
+  display: block;
   padding: 0px 0px;
   background: ${props => props.background};
   height: 100%;

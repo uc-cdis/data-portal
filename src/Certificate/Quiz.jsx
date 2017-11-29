@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, FormError, RadioGroup, Radio } from 'react-form';
 import styled from 'styled-components';
+
 import { button } from '../theme';
 
 
@@ -103,13 +104,13 @@ class Quiz extends Component {
     this.setState({ display_error: true });
   }
   render() {
-    const { questionList, title } = this.props;
+    const { questionList, title, history } = this.props;
 
     return (
       <div>
         <h4>{title}</h4>
         <Form
-          onSubmit={(values) => { this.props.onSubmitForm(values); }}
+          onSubmit={(values) => { this.props.onSubmitForm(values, history); }}
           validate={values => this.validateForm(values)}
           defaultValues={this.props.certificate.certificate_result}
         >

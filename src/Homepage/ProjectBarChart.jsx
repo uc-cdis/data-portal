@@ -2,7 +2,7 @@ import { ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis } fro
 import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
-import { browserHistory } from 'react-router';
+import { browserHistory } from 'react-router-dom';
 import Translator from './translate';
 
 

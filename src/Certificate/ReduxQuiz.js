@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import Quiz from './Quiz';
 import { userapiPath } from '../configs';
-import browserHistory from '../history';
 import { fetchWrapper } from '../actions';
 
 
@@ -15,10 +14,10 @@ export const updateForm = data => ({
   data,
 });
 
-export const receiveSubmitCert = ({ status }) => {
+export const receiveSubmitCert = ({ status }, history) => {
   switch (status) {
   case 201:
-    browserHistory.push('/');
+    history.push('/');
     return {
       type: 'RECEIVE_CERT_SUBMIT',
     };
@@ -36,7 +35,7 @@ export const receiveSubmitCert = ({ status }) => {
  */
 export const submitForm = (data, questionList) => fetchWrapper({
   path: `${userapiPath}/user/cert/security_quiz?extension=txt`,
-  handler: receiveSubmitCert,
+  handler: (result, history) => { receiveSubmitCert( result, history ) },
   body: JSON.stringify({ answers: data, certificate_form: questionList }, null, '\t'),
   method: 'PUT',
 });
@@ -74,7 +73,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onUpdateForm: data => dispatch(updateForm(data)),
-  onSubmitForm: data => dispatch(submitForm(data, questionList)),
+  onSubmitForm: (data, history) => dispatch(submitForm(data, questionList, history)),
 });
 
 const ReduxQuiz = connect(mapStateToProps, mapDispatchToProps)(Quiz);

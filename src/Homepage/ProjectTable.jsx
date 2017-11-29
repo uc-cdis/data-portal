@@ -1,6 +1,6 @@
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { TableBarColor } from '../theme';
 import Translator from './translate';

@@ -1,11 +1,10 @@
 import { persistStore, autoRehydrate } from 'redux-persist';
 import { createStore, applyMiddleware, compose } from 'redux';
-import { routerMiddleware } from 'react-router-redux';
+//import { routerMiddleware } from 'react-router-redux'; - not yet supporting router 4
 import thunk from 'redux-thunk';
 
 import { dict } from './dictionary';
 import { mockStore, dev } from './localconf';
-import browserHistory from './history';
 import reducers from './reducers';
 import { requiredCerts } from './configs';
 
@@ -37,7 +36,7 @@ export const getReduxStore = () => {
           data = { user: { username: 'test', certificates_uploaded: requiredCerts }, submission: { dictionary: dict, nodeTypes: Object.keys(dict).slice(2) }, status: {} };
         }
         store = compose(
-          applyMiddleware(thunk, routerMiddleware(browserHistory)),
+          applyMiddleware(thunk), //routerMiddleware(browserHistory)),
           autoRehydrate(),
         )(createStore)(
           reducers,
@@ -46,7 +45,7 @@ export const getReduxStore = () => {
         );
       } else {
         store = compose(
-          applyMiddleware(thunk, routerMiddleware(browserHistory)),
+          applyMiddleware(thunk), //routerMiddleware(browserHistory)),
           autoRehydrate(),
         )(createStore)(
           reducers,

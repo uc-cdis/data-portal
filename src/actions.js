@@ -1,6 +1,5 @@
 import 'isomorphic-fetch';
-import _ from 'underscore';
-import { requiredCerts, userapiPath, headers, basename, submissionApiOauthPath, graphqlPath } from './configs';
+import { userapiPath, headers, basename, submissionApiOauthPath, graphqlPath } from './configs';
 
 
 export const updatePopup = state => ({
@@ -16,19 +15,28 @@ export const connectionError = () => {
   };
 };
 
+
+const fetchCache = {}
+
 /**
  * Little helper issues fetch, then resolves response
  * as text, and tries to JSON.parse the text before resolving, but
  * ignores JSON.parse failure and reponse.status, and returns {response, data} either way.
  * If dispatch is supplied, then dispatch(connectionError()) on fetch reject.
+ * If useCache is supplied and method is GET, then text for 200 JSON responses are cached, and re-used, and
+ * the result promise only includes {data, status} - where JSON data is re-parsed
+ * every time to avoid mutation by the client
  * 
  * @method fetchJsonOrText
- * @param {path,method=GET,body=null,customHeaders?, dispatch?} opts 
- * @return Promise<{response,data,status,headers}
+ * @param {path,method=GET,body=null,customHeaders?, dispatch?, useCache?} opts 
+ * @return Promise<{response,data,status,headers}> or Promise<{data,status}> if useCache specified
  */
 export const fetchJsonOrText = (opts) => {
-  const { path, method = 'GET', body = null, customHeaders, dispatch } = opts;
+  const { path, method = 'GET', body = null, customHeaders, dispatch, useCache } = opts;
 
+  if (useCache && (method === 'GET') && fetchCache[path]) {
+    return Promise.resolve({status: 200, data: JSON.parse(fetchCache[path])});
+  }
   const request = {
     credentials: 'same-origin',
     headers: { ...headers, ...customHeaders },
@@ -43,6 +51,9 @@ export const fetchJsonOrText = (opts) => {
         if (data) {
           try {
             data = JSON.parse(data);
+            if (useCache && method === 'GET' && response.status === 200) {
+              fetchCache[path] = textData;
+            }
           } catch (e) {
             // # do nothing
           }
@@ -134,7 +145,7 @@ export const fetchUser = dispatch => fetchJsonOrText({
     case 401:
       return {
         type: 'UPDATE_POPUP',
-        data: { auth_popup: true },
+        data: { authPopup: true },
       };
     default:
       return {
@@ -145,33 +156,6 @@ export const fetchUser = dispatch => fetchJsonOrText({
   },
 ).then((msg) => { dispatch(msg); });
 
-export const requireAuth = (store, additionalHooks) => (nextState, replace, callback) => {
-  window.scrollTo(0, 0);
-  const resolvePromise = () => {
-    const { user } = store.getState();
-    const location = nextState.location;
-    if (!user.username) {
-      const path = location.pathname === '/' ? '/' : `/${location.pathname}`;
-      replace({ pathname: '/login', query: { next: path + nextState.location.search } });
-      return Promise.resolve();
-    }
-    const hasCerts =
-      _.intersection(requiredCerts, user.certificates_uploaded).length !== requiredCerts.length;
-    // take quiz if this user doesn't have required certificate
-    if (location.pathname !== 'quiz' && hasCerts) {
-      replace({ pathname: '/quiz' });
-    } else if (location.pathname === 'quiz' && !hasCerts) {
-      replace({ pathname: '/' });
-    } else if (additionalHooks) {
-      return additionalHooks(nextState, replace);
-    }
-    return Promise.resolve();
-  };
-  store
-    .dispatch(fetchUser)
-    .then(resolvePromise)
-    .then(() => callback());
-};
 
 export const enterHook = (store, hookAction) =>
   (nextState, replace, callback) => store.dispatch(hookAction()).then(() => callback());
@@ -187,32 +171,42 @@ export const logoutAPI = () => dispatch => fetchJsonOrText({
     () => document.location.replace(`${userapiPath}/logout?next=${basename}`),
   );
 
+
+/**
+ * Retrieve the oath endpoint for the service under the given oathPath
+ * 
+ * @param {String} oauthPath
+ * @return {(dispatch) => Promise<string>} dispatch function
+ */
 export const fetchOAuthURL = oauthPath => dispatch =>
-// Get cloud_middleware's authorization url
   fetchJsonOrText({
-    path: `${oauthPath}authorization_url`,
-    dispatch,
-  }).then(
-    ({ status, data }) => {
-      switch (status) {
-      case 200:
-        return {
-          type: 'RECEIVE_AUTHORIZATION_URL',
-          url: data,
-        };
-      default:
-        return {
-          type: 'FETCH_ERROR',
-          error: data.error,
-        };
-      }
-    },
-  ).then(
-    (msg) => {
-      dispatch(msg);
-      if (msg.url) {
-        return msg.url;
-      }
-      throw new Error('OAuth authorization failed');
-    },
-  );
+        path: `${oauthPath}authorization_url`,
+        dispatch,
+        useCache: true
+      })
+      .then(
+        ({ status, data }) => {
+          switch (status) {
+          case 200:
+            const result = {
+              type: 'RECEIVE_AUTHORIZATION_URL',
+              url: data,
+            };
+            return result; 
+          default:
+            return {
+              type: 'FETCH_ERROR',
+              error: data.error,
+            };
+          }
+        },
+      )
+      .then(
+        (msg) => {
+          dispatch(msg);
+          if (msg.url) {
+            return msg.url;
+          }
+          throw new Error('OAuth authorization failed');
+        },
+      );
