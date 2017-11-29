@@ -23,7 +23,8 @@ export const updateFileContent = (value, fileType) => (dispatch) => {
 };
 
 
-const submitToServer = (path, methodIn = 'PUT') => (dispatch, getState) => {
+const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) => {
+  const path = fullProject.split('-');
   const program = path[0];
   const project = path.slice(1).join('-');
   const submission = getState().submission;
@@ -67,8 +68,8 @@ const ReduxSubmitTSV = (() => {
 
   const mapDispatchToProps = dispatch => ({
     onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-    onSubmitClick: (type, path, dictionary) =>
-      dispatch(submitToServer(path))
+    onSubmitClick: (type, project, dictionary) =>
+      dispatch(submitToServer(project))
         .then(
           () => {
             // Update node counts in redux
@@ -96,13 +97,14 @@ const ReduxSubmitForm = (() => {
 
 
 const ReduxProjectSubmission = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state, ownProps) => ({
     typeList: state.submission.nodeTypes,
     dataIsReady: !!state.submission.counts_search,
     dictionary: state.submission.dictionary,
     submitForm: ReduxSubmitForm,
     submitTSV: ReduxSubmitTSV,
     dataModelGraph: ReduxDataModelGraph,
+    project: ownProps.params.project,
   });
 
   const mapDispatchToProps = dispatch => ({

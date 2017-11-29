@@ -301,12 +301,12 @@ const DataDictionaryNode = ({ params, submission }) => {
 
 DataDictionaryNode.propTypes = {
   params: PropTypes.shape({
-    dictionary: PropTypes.object.isRequired,
     node: PropTypes.string.isRequired,
   }).isRequired,
   submission: PropTypes.shape(
     {
       counts_search: PropTypes.objectOf(PropTypes.number),
+      dictionary: PropTypes.object.isRequired,
       links_search: PropTypes.objectOf(PropTypes.number),
     },
   ),

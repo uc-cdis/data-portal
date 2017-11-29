@@ -26,24 +26,26 @@ export const Title = styled.h2`
 const ProjectSubmission = (props) => {
   // hack to detect if dictionary data is available, and to trigger fetch if not
   if (!props.dataIsReady) {
-    props.onGetCounts(props.typeList, props.params.project, props.dictionary);
+    props.onGetCounts(props.typeList, props.project, props.dictionary);
   }
 
+  // Passing children in as props allows us to swap in different containers -
+  // dumb, redux, ...
   const MySubmitForm = props.submitForm;
   const MySubmitTSV = props.submitTSV;
   const MyDataModelGraph = props.dataModelGraph;
 
   return (
     <div>
-      <Title>{props.params.project}</Title>
+      <Title>{props.project}</Title>
       {
-        <Browse to={`/${props.params.project}/search`}>browse nodes</Browse>
+        <Browse to={`/${props.project}/search`}>browse nodes</Browse>
       }
       <MySubmitForm />
-      <MySubmitTSV path={props.params.project} />
+      <MySubmitTSV project={props.project} />
       { !props.dataIsReady
         ? <Spinner /> :
-        <MyDataModelGraph project={props.params.project} /> }
+        <MyDataModelGraph project={props.project} /> }
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { query_nodes } from './QueryNode/reducers';
 import popups from './Popup/reducers';
 import { graphiql } from './GraphQLEditor/reducers';
 import explorer from './Explorer/reducers';
+import { logoutListener } from './Login/ProtectedContent';
 
 const status = (state = {}, action) => {
   switch (action.type) {
@@ -41,7 +42,7 @@ const user = (state = {}, action) => {
 
 export const removeDeletedNode = (state, id) => {
   const search_result = state.search_result;
-  console.log(search_result);
+  //console.log(search_result);
   const node_type = Object.keys(search_result.data)[0];
   const entities = search_result.data[node_type];
   search_result.data[node_type] = entities.filter(entity => entity.id !== id);
@@ -59,7 +60,7 @@ const reducers = combineReducers({ explorer,
   certificate,
   graphiql,
   form: formReducer,
-  //routing: routerReducer,
+  auth: logoutListener,
 });
 
 export default reducers;

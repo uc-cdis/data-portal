@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import querystring from 'querystring';
 
 import { Box } from '../theme';
 import Footer from '../components/Footer';
@@ -19,14 +20,16 @@ const LoginButton = styled.a`
 `;
 const Login = (props) => {
   let next = basename;
-  if (Object.keys(props.location.query).length !== 0) {
-    next = basename === '/' ? props.location.query.next : basename + props.location.query.next;
+  const location = props.location; // this is the react-router "location"
+  const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/,'') : '');
+  if (queryParams.next) {
+    next = basename === '/' ? queryParams.next : basename + queryParmas.next;
   }
   return (
     <div>
       <CentralBox>
         <h3 className="article">{appname}</h3>
-        <LoginButton className="btn btn-primary navbar-btn btn-sm login-button" href={login.url + location.origin + next}>{login.title}</LoginButton>
+        <LoginButton className="btn btn-primary navbar-btn btn-sm login-button" href={login.url + window.location.origin + next}>{login.title}</LoginButton>
       </CentralBox>
       <Footer />
     </div>

@@ -7,8 +7,9 @@ import { ThemeProvider } from 'styled-components';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'react-select/dist/react-select.css';
+import querystring from 'querystring';
 
-import { requireAuth, enterHook, fetchUser } from './actions';
+import { fetchUser, fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
 import Login from './Login/Login';
 import ProtectedContent from './Login/ProtectedContent';
 import AmbiHomepage from './Homepage/AmbiHomepage';
@@ -16,10 +17,9 @@ import ExplorerPage from './Explorer/ExplorerPage';
 import DataDictionary from './DataDictionary/ReduxDataDictionary';
 import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
-import UserProfile, { loginUserProfile, fetchAccess } from './UserProfile/ReduxUserProfile';
+import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
 import CertificateQuiz from './Certificate/ReduxQuiz';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
-import { fetchDictionary, fetchSchema, fetchVersionInfo } from './queryactions';
 import { app, basename } from './localconf';
 import { OuterWrapper, Box, Body, Margin, theme } from './theme';
 import { asyncSetInterval } from './utils';
@@ -27,7 +27,8 @@ import { getReduxStore } from './reduxStore';
 import Nav from './Nav/ReduxNavBar';
 import Footer from './components/Footer';
 import ReduxAuthTimeoutPopup from './Popup/ReduxAuthTimeoutPopup';
-import QueryNode from './QueryNode/QueryNode';
+import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
+import { setFooterDefaults } from './components/Footer';
 
 
 // Needed for onTouchTap
@@ -45,7 +46,12 @@ async function init() {
     [
       store.dispatch(fetchSchema),
       store.dispatch(fetchDictionary),
-      fetchVersionInfo(),
+      fetchVersionInfo().then(({ status, data }) => {
+        if (status === 200) {
+          setFooterDefaults({ dictionaryVersion: data.dictionary.version,
+            apiVersion: data.version });
+        }
+      }),
     ] 
   );
   const background = null; // for now
@@ -66,7 +72,7 @@ async function init() {
                       <Route
                         exact
                         path="/"
-                        component={(props) => <AmbiHomepage  {...props} />}
+                        component={(props) => <ProtectedContent component={AmbiHomepage}  {...props} />}
                       />
                       <Route
                         path="/query"
@@ -74,7 +80,7 @@ async function init() {
                       />
                       <Route
                         path="/identity"
-                        component={(props) => <ProtectedContent component={UserProfile} {...props} />}
+                        component={(props) => <ProtectedContent filter={() => store.dispatch(fetchAccess())} component={UserProfile} {...props} />}
                       />
                       <Route
                         path="/quiz"
@@ -82,7 +88,7 @@ async function init() {
                       />
                       <Route
                         path="/dd/:node"
-                        component={DataDictionaryNode}
+                        component={(props) => <DataDictionaryNode params={props.match.params} {...props} />}
                       />
                       <Route
                         path="/dd"
@@ -94,7 +100,22 @@ async function init() {
                       />
                       <Route
                         path="/:project/search"
-                        component={(props) => <ProtectedContent component={QueryNode} {...props} />}
+                        component={
+                          (props) => {
+                            const queryFilter = () => {
+                              const location = props.location;
+                              const routeMatch = props.match;
+                              const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/,'') : '');
+                              if (Object.keys(queryParams).length > 0) {
+                                // Linking directly to a search result, so kick-off search here (rather than on button click)
+                                console.log('Dispatching search ...', { queryParams, match: props.match });
+                                return store.dispatch(submitSearchForm({ project: props.match.params.project, ...queryParams }));
+                              }
+                              return Promise.resolve('ok');
+                            };
+                            return (<ProtectedContent filter={queryFilter} component={ReduxQueryNode} {...props} />);
+                          }
+                        }
                       />
                       <Route
                         path="/:project"

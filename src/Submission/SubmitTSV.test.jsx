@@ -18,10 +18,10 @@ describe('the TSV submission componet', () => {
     const $dom = mount(
       <MuiThemeProvider>
         <SubmitTSV
-          path={testProjName}
+          project={testProjName}
           submission={submission}
           onUploadClick={() => { console.log('onUpload'); }}
-          onSubmitClick={(typeStr, path, dict) => { console.log('onSubmitClick'); submitCallback(typeStr, path, dict); }}
+          onSubmitClick={(typeStr, project, dict) => { console.log('onSubmitClick'); submitCallback(typeStr, project, dict); }}
           onFileChange={() => { console.log('onFileChange'); }}
         />
       </MuiThemeProvider>,
@@ -40,9 +40,9 @@ describe('the TSV submission componet', () => {
   it('shows a "submit" button when a tsv or json file has been uploaded', () => {
     const state = { file: JSON.stringify({ type: 'whatever', submitter_id: 'frickjack' }), submit_result: '', submit_status: 200 };
     return new Promise((resolve) => {
-      const { $dom } = buildTest(state, (typeStr, path) => {
+      const { $dom } = buildTest(state, (typeStr, project) => {
         // This function runs when the 'Submit' button is clicked
-        expect(path).toBe(testProjName);
+        expect(project).toBe(testProjName);
         resolve('ok');
       });
       expect($dom.find('label[id="cd-submit-tsv__upload-button"]').length).toBe(1);

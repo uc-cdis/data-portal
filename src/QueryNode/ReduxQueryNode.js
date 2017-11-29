@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+
 //import { push } from 'react-router-redux'; - not yet supported in react-router 4
 import { fetchJsonOrText, updatePopup } from '../actions';
 import { getSubmitPath } from '../utils';
@@ -6,11 +7,12 @@ import { submissionApiPath } from '../localconf';
 import QueryNode from './QueryNode';
 
 
+
 const clearDeleteSession = {
   type: 'CLEAR_DELETE_SESSION',
 };
 
-const submitSearchForm = (opts, url, history) =>
+export const submitSearchForm = (opts, url, history) =>
   (dispatch) => {
     const nodeType = opts.node_type;
     const submitterId = opts.submitter_id || '';
