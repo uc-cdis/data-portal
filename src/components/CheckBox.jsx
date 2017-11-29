@@ -7,6 +7,7 @@ const LabelCheckBox = styled(Label)`
     white-space: nowrap;
     text-overflow: ellipsis;
     min-width: 0px;
+    max-width: 12vw;
     overflow: hidden;
     padding: 0px 0.25rem;
     margin-left: 0.3rem;
