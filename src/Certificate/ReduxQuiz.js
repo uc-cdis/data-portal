@@ -33,9 +33,9 @@ export const receiveSubmitCert = ({ status }, history) => {
  * @param {*} data 
  * @param {*} questionList 
  */
-export const submitForm = (data, questionList) => fetchWrapper({
+export const submitForm = (data, questionList, history) => fetchWrapper({
   path: `${userapiPath}/user/cert/security_quiz?extension=txt`,
-  handler: (result, history) => { receiveSubmitCert( result, history ) },
+  handler: (result) => { receiveSubmitCert(result, history); },
   body: JSON.stringify({ answers: data, certificate_form: questionList }, null, '\t'),
   method: 'PUT',
 });
@@ -71,9 +71,10 @@ const mapStateToProps = state => ({
   title,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   onUpdateForm: data => dispatch(updateForm(data)),
-  onSubmitForm: (data, history) => dispatch(submitForm(data, questionList, history)),
+  // ownProps.history from react-router
+  onSubmitForm: data => dispatch(submitForm(data, questionList, ownProps.history)),
 });
 
 const ReduxQuiz = connect(mapStateToProps, mapDispatchToProps)(Quiz);
