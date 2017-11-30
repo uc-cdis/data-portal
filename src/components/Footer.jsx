@@ -43,7 +43,7 @@ Footer.propTypes = {
 };
 
 Footer.defaultProps = {
-  dictionarVersion: null,
+  dictionaryVersion: null,
   apiVersion: null,
 };
 

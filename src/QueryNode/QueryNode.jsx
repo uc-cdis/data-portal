@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { reduxForm } from 'redux-form';
 import Select from 'react-select';
+import PropTypes from 'prop-types';
 
 import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../Popup/Popup';
@@ -65,6 +65,10 @@ const Dropdown = styled(Select)`
 `;
 
 class QueryForm extends React.Component {
+  static propTypes = {
+    project: PropTypes.string.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -78,16 +82,16 @@ class QueryForm extends React.Component {
     event.preventDefault();
     const form = event.target;
     const data = { project: this.props.project };
-    const query_param = [];
+    const queryParam = [];
 
     for (let i = 0; i < form.length; i++) {
       const input = form[i];
       if (input.name && input.value) {
-        query_param.push(`${input.name}=${input.value}`);
+        queryParam.push(`${input.name}=${input.value}`);
         data[input.name] = input.value;
       }
     }
-    const url = `/${this.props.project}/search?${query_param.join('&')}`;
+    const url = `/${this.props.project}/search?${queryParam.join('&')}`;
     this.props.onSearchFormSubmit(data, url);
   }
 
@@ -129,12 +133,21 @@ const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
   );
 };
 
+Entity.propTypes = {
+  project: PropTypes.string.isRequired,
+  onUpdatePopup: PropTypes.func,
+  onStoreNodeInfo: PropTypes.func,
+};
+
 const Entities = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => (
   <ul>
     {value.map(value => <Entity project={project} onStoreNodeInfo={onStoreNodeInfo} onUpdatePopup={onUpdatePopup} key={value.submitter_id} value={value} />)}
   </ul>
 );
 
+Entities.propTypes = {
+  project: PropTypes.string.isRequired,
+};
 
 /**
  * QueryNode shows the details of a particular node
@@ -223,9 +236,9 @@ class QueryNode extends React.Component {
   }
 
   render() {
-    const { params, ownProps, submission, query_nodes, popups, onSearchFormSubmit, onUpdatePopup,
+    const { params, submission, query_nodes, popups, onSearchFormSubmit, onUpdatePopup,
       onDeleteNode, onStoreNodeInfo,
-      onClearDeleteSession, history
+      onClearDeleteSession, history,
     } = this.props;
     const project = params.project;
 
@@ -234,7 +247,11 @@ class QueryNode extends React.Component {
         <h3>browse <Link to={`/${project}`}>{project}</Link> </h3>
         {this.renderViewPopup(this.props).popupEl}
         {this.renderDeletePopup(this.props).popupEl}
-        <QueryForm onSearchFormSubmit={(data,url) => onSearchFormSubmit(data, url, history)} project={project} nodeTypes={submission.nodeTypes} />
+        <QueryForm
+          onSearchFormSubmit={(data, url) => onSearchFormSubmit(data, url, history)}
+          project={project}
+          nodeTypes={submission.nodeTypes}
+        />
         { query_nodes.search_status === 'succeed: 200' &&
             Object.entries(query_nodes.search_result.data).map(
               value => (<Entities

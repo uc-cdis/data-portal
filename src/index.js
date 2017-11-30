@@ -20,15 +20,14 @@ import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
 import CertificateQuiz from './Certificate/ReduxQuiz';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
-import { app, basename } from './localconf';
+import { basename } from './localconf';
 import { OuterWrapper, Box, Body, Margin, theme } from './theme';
 import { asyncSetInterval } from './utils';
 import { getReduxStore } from './reduxStore';
 import Nav from './Nav/ReduxNavBar';
-import Footer from './components/Footer';
+import Footer, { setFooterDefaults } from './components/Footer';
 import ReduxAuthTimeoutPopup from './Popup/ReduxAuthTimeoutPopup';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
-import { setFooterDefaults } from './components/Footer';
 
 
 // Needed for onTouchTap
@@ -42,7 +41,7 @@ async function init() {
 
   asyncSetInterval(() => store.dispatch(fetchUser), 60000);
 
-  await Promise.all( 
+  await Promise.all(
     [
       store.dispatch(fetchSchema),
       store.dispatch(fetchDictionary),
@@ -52,10 +51,10 @@ async function init() {
             apiVersion: data.version });
         }
       }),
-    ] 
+    ],
   );
   const background = null; // for now
-  
+
   render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
@@ -72,23 +71,29 @@ async function init() {
                       <Route
                         exact
                         path="/"
-                        component={(props) => <ProtectedContent component={AmbiHomepage}  {...props} />}
+                        component={
+                          props => <ProtectedContent component={AmbiHomepage} {...props} />
+                        }
                       />
                       <Route
                         path="/query"
-                        component={(props) => <ProtectedContent component={GraphQLQuery} {...props} />}
+                        component={
+                          props => <ProtectedContent component={GraphQLQuery} {...props} />
+                        }
                       />
                       <Route
                         path="/identity"
-                        component={(props) => <ProtectedContent filter={() => store.dispatch(fetchAccess())} component={UserProfile} {...props} />}
+                        component={
+                          props => <ProtectedContent filter={() => store.dispatch(fetchAccess())} component={UserProfile} {...props} />
+                        }
                       />
                       <Route
                         path="/quiz"
-                        component={(props) => <ProtectedContent component={CertificateQuiz} {...props} />}
+                        component={props => <ProtectedContent component={CertificateQuiz} {...props} />}
                       />
                       <Route
                         path="/dd/:node"
-                        component={(props) => <DataDictionaryNode params={props.match.params} {...props} />}
+                        component={props => <DataDictionaryNode params={props.match.params} {...props} />}
                       />
                       <Route
                         path="/dd"
@@ -96,7 +101,7 @@ async function init() {
                       />
                       <Route
                         path="/files"
-                        component={(props) => <ProtectedContent component={ExplorerPage} {...props} />}
+                        component={props => <ProtectedContent component={ExplorerPage} {...props} />}
                       />
                       <Route
                         path="/:project/search"
@@ -104,12 +109,13 @@ async function init() {
                           (props) => {
                             const queryFilter = () => {
                               const location = props.location;
-                              const routeMatch = props.match;
                               const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/,'') : '');
                               if (Object.keys(queryParams).length > 0) {
-                                // Linking directly to a search result, so kick-off search here (rather than on button click)
-                                console.log('Dispatching search ...', { queryParams, match: props.match });
-                                return store.dispatch(submitSearchForm({ project: props.match.params.project, ...queryParams }));
+                                // Linking directly to a search result, 
+                                // so kick-off search here (rather than on button click)
+                                return store.dispatch(
+                                  submitSearchForm({ project: props.match.params.project, ...queryParams }),
+                                );
                               }
                               return Promise.resolve('ok');
                             };
@@ -119,7 +125,7 @@ async function init() {
                       />
                       <Route
                         path="/:project"
-                        component={(props) => <ProtectedContent component={ProjectSubmission} {...props} />}
+                        component={props => <ProtectedContent component={ProjectSubmission} {...props} />}
                       />
                     </Switch>
                   </div>

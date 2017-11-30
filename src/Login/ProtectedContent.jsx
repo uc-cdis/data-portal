@@ -71,10 +71,10 @@ class ProtectedContent extends React.Component {
     // user is authenticated - now check if he has certs
     const isMissingCerts = intersection(requiredCerts, user.certificates_uploaded).length !== requiredCerts.length;
     // take quiz if this user doesn't have required certificate
-    if (this.props.location.pathname !== 'quiz' && isMissingCerts) {
+    if (this.props.location.pathname !== '/quiz' && isMissingCerts) {
       newState.redirectTo = '/quiz';
       // do not update lastAuthMs (indicates time of last successful auth)
-    } else if (this.props.location.pathname === 'quiz' && !isMissingCerts) {
+    } else if (this.props.location.pathname === '/quiz' && !isMissingCerts) {
       newState.redirectTo = '/';
     }
     return newState;

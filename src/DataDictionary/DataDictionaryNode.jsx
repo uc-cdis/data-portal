@@ -116,7 +116,7 @@ const NodeTable = ({ node }) => (
                 (key) => {
                   const compoundKey = key.join(', ');
                   return <Bullet key={compoundKey}>{compoundKey}</Bullet>;
-                }
+                },
               )
             }
           </ul>

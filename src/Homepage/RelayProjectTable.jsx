@@ -40,7 +40,13 @@ export class RelayProjectTable extends ProjectTable {
         } else if (props && props.project) {
           // Pull project data out of Relayjs graphql results passed to render via 'props'
           const { fileCount } = GQLHelper.extractFileInfo(props);
-          const projInfo = { ...props.project[0], experimentCount: props.experimentCount, caseCount: props.caseCount, aliquotCount: props.aliquotCount, fileCount };
+          const projInfo = {
+            ...props.project[0],
+            experimentCount: props.experimentCount,
+            caseCount: props.caseCount,
+            aliquotCount: props.aliquotCount,
+            fileCount,
+          };
 
           // Update redux store if data is not already there
           getReduxStore().then(
@@ -51,8 +57,11 @@ export class RelayProjectTable extends ProjectTable {
                 old = homeState.projectsByName[projInfo.name] || old;
               }
 
-              if (old.experimentCount !== projInfo.experimentCount || old.caseCount !== projInfo.caseCount ||
-                  old.aliquotCount !== projInfo.aliquotCount || old.fileCount !== projInfo.aliquotCount) {
+              if (old.experimentCount !== projInfo.experimentCount
+                  || old.caseCount !== projInfo.caseCount
+                  || old.aliquotCount !== projInfo.aliquotCount
+                  || old.fileCount !== projInfo.aliquotCount
+              ) {
                 store.dispatch({ type: 'RECEIVE_PROJECT_DETAIL', data: projInfo });
               } /* else {
                   console.log( projInfo.name + " already in Redux store" );

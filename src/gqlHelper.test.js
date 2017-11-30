@@ -11,14 +11,14 @@ describe('the gqlHelper', () => {
   it('provides a base homepageQuery', () => {
     const query = helper.homepageQuery;
 
-    expect(!! query).toBe(true);
+    expect(!!query).toBe(true);
   });
 
 
   it('provides a base projectDetail query', () => {
     const query = helper.projectDetailQuery;
 
-    expect(!! query).toBe(true);
+    expect(!!query).toBe(true);
   });
 
   it('caches properties', () => {

@@ -16,14 +16,15 @@ export const connectionError = () => {
 };
 
 
-const fetchCache = {}
+const fetchCache = {};
 
 /**
  * Little helper issues fetch, then resolves response
  * as text, and tries to JSON.parse the text before resolving, but
  * ignores JSON.parse failure and reponse.status, and returns {response, data} either way.
  * If dispatch is supplied, then dispatch(connectionError()) on fetch reject.
- * If useCache is supplied and method is GET, then text for 200 JSON responses are cached, and re-used, and
+ * If useCache is supplied and method is GET,
+ * then text for 200 JSON responses are cached, and re-used, and
  * the result promise only includes {data, status} - where JSON data is re-parsed
  * every time to avoid mutation by the client
  * 
@@ -35,7 +36,7 @@ export const fetchJsonOrText = (opts) => {
   const { path, method = 'GET', body = null, customHeaders, dispatch, useCache } = opts;
 
   if (useCache && (method === 'GET') && fetchCache[path]) {
-    return Promise.resolve({status: 200, data: JSON.parse(fetchCache[path])});
+    return Promise.resolve({ status: 200, data: JSON.parse(fetchCache[path]) });
   }
   const request = {
     credentials: 'same-origin',
@@ -176,36 +177,35 @@ export const logoutAPI = () => dispatch => fetchJsonOrText({
  */
 export const fetchOAuthURL = oauthPath => dispatch =>
   fetchJsonOrText({
-        path: `${oauthPath}authorization_url`,
-        dispatch,
-        useCache: true
-      })
-      .then(
-        ({ status, data }) => {
-          switch (status) {
-          case 200:
-            const result = {
-              type: 'RECEIVE_AUTHORIZATION_URL',
-              url: data,
-            };
-            return result; 
-          default:
-            return {
-              type: 'FETCH_ERROR',
-              error: data.error,
-            };
-          }
-        },
-      )
-      .then(
-        (msg) => {
-          dispatch(msg);
-          if (msg.url) {
-            return msg.url;
-          }
-          throw new Error('OAuth authorization failed');
-        },
-      );
+    path: `${oauthPath}authorization_url`,
+    dispatch,
+    useCache: true,
+  })
+    .then(
+      ({ status, data }) => {
+        switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_AUTHORIZATION_URL',
+            url: data,
+          };
+        default:
+          return {
+            type: 'FETCH_ERROR',
+            error: data.error,
+          };
+        }
+      },
+    )
+    .then(
+      (msg) => {
+        dispatch(msg);
+        if (msg.url) {
+          return msg.url;
+        }
+        throw new Error('OAuth authorization failed');
+      },
+    );
 
 
 /*
@@ -244,27 +244,29 @@ export const fetchProjects = () => dispatch =>
  * handled by router
  */
 export const fetchSchema = dispatch => fetchJsonOrText({ path: graphqlSchemaUrl, dispatch })
-.then(
-  ({ status, data }) => {
-    switch (status) {
-    case 200:
-      return dispatch(
-        {
-          type: 'RECEIVE_SCHEMA_LOGIN',
-          schema: data,
-        },
-      );
-    }
-  },
-);
+  .then(
+    ({ status, data }) => {
+      switch (status) {
+      case 200:
+        return dispatch(
+          {
+            type: 'RECEIVE_SCHEMA_LOGIN',
+            schema: data,
+          },
+        );
+      default:
+        return Promise.resolve('NOOP');
+      }
+    },
+  );
 
 
-export const fetchDictionary = dispatch => 
+export const fetchDictionary = dispatch =>
   fetchJsonOrText({
-        path: `${submissionApiPath}_dictionary/_all`,
-        method: 'GET',
-        useCache: true,
-      })
+    path: `${submissionApiPath}_dictionary/_all`,
+    method: 'GET',
+    useCache: true,
+  })
     .then(
       ({ status, data }) => {
         switch (status) {

@@ -1,4 +1,4 @@
-import { ResponsiveContainer, Cell, PieChart, Pie, Legend, Tooltip, BarChart, Bar, XAxis, YAxis } from 'recharts';
+import { Cell, PieChart, Pie, Legend, Tooltip } from 'recharts';
 import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
@@ -21,7 +21,7 @@ class CustomTooltip extends React.Component {
   render() {
     const { active } = this.props;
     if (active) {
-      const { payload, label } = this.props;
+      const { payload } = this.props;
       return (
         <TooltipStyle>
           <p className="label">{payload[0].payload.name}</p>
@@ -31,12 +31,19 @@ class CustomTooltip extends React.Component {
 
     return null;
   }
+
+  static propTypes = {
+    payload: PropTypes.array.isRequired,
+    label: PropTypes.string,
+    active: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    label: '',
+    active: false,
+  };
 }
 
-CustomTooltip.propTypes = {
-  payload: PropTypes.array,
-  label: PropTypes.string,
-};
 
 
 const COLORS = ['#8884d8', '#00C49F', '#FFBB28', '#FF8042'];

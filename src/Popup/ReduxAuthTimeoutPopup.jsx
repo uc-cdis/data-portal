@@ -13,10 +13,11 @@ const goToLogin = (history) => {
 
 const AuthPopup = withRouter(
   ({ history }) =>
-    <Popup message={'Your session has expired or you are logged out. Please log in to continue.'}
+    (<Popup
+      message={'Your session has expired or you are logged out. Please log in to continue.'}
       confirmText="go to login"
-      onConfirm={()  => { goToLogin(history); }}
-      />
+      onConfirm={() => { goToLogin(history); }}
+    />),
 );
 
 const timeoutPopupMapState = state => ({
@@ -29,9 +30,9 @@ const timeoutPopupMapDispatch = () => ({});
 const ReduxAuthTimeoutPopup = connect(timeoutPopupMapState, timeoutPopupMapDispatch)(
   ({ authPopup }) => {
     if (authPopup) {
-      <AuthPopup history={history} />;
+      return (<AuthPopup history={history} />);
     }
-    return (null);
+    return null;
   },
 );
 

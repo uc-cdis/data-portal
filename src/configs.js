@@ -1,5 +1,5 @@
 export * from './localconf';
-const csrftoken = document.cookie.replace(/(?:(?:^|.*;\s*)csrftoken\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+const csrftoken = document.cookie.replace(/(?:(?:^|.*;\s*)csrftoken\s*=\s*([^;]*).*$)|^.*$/, '$1');
 export const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',

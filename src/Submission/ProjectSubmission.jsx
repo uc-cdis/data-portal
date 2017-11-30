@@ -51,10 +51,8 @@ const ProjectSubmission = (props) => {
 };
 
 ProjectSubmission.propTypes = {
+  project: PropTypes.string.isRequired,
   dataIsReady: PropTypes.bool,
-  params: PropTypes.shape({
-    project: PropTypes.string.isRequired,
-  }).isRequired,
   dictionary: PropTypes.object.isRequired,
   submitForm: PropTypes.func,
   submitTSV: PropTypes.func,
