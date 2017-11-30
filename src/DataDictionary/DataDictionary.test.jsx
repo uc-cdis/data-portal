@@ -1,5 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { StaticRouter } from 'react-router-dom';
+
 import DataDictionary, { category2NodeList } from './DataDictionary';
 
 describe('the DataDictionary component', () => {
@@ -45,7 +47,11 @@ describe('the DataDictionary component', () => {
   });
 
   it('renders category tables', () => {
-    const ux = mount(<DataDictionary dictionary={testDict} />);
+    const ux = mount(
+      <StaticRouter location={{ pathname: '/dd' }}>
+        <DataDictionary dictionary={testDict} />
+      </StaticRouter>
+    );
     expect(ux.find('table').length).toBe(2);
   });
 });

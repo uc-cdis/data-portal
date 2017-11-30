@@ -1,7 +1,9 @@
 import React from 'react';
-import { ProjectTable } from './ProjectTable';
 import { mount } from 'enzyme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { StaticRouter } from 'react-router-dom';
+
+import { ProjectTable } from './ProjectTable';
 
 
 test('Project table renders', () => {
@@ -22,7 +24,9 @@ test('Project table renders', () => {
   // Material-UI components require the Mui theme ...
   const table = mount(
     <MuiThemeProvider>
-      <ProjectTable projectList={projectList} summaryCounts={summaryCounts} />
+      <StaticRouter location={{ pathname: '/identity' }}>
+        <ProjectTable projectList={projectList} summaryCounts={summaryCounts} />
+      </StaticRouter>
     </MuiThemeProvider>,
   );
   console.log(`ProjectTable looks like this: ${table.html()}`);
