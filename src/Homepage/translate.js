@@ -9,7 +9,7 @@ export default class Translator {
   constructor(appName, language) {
     this.appName = appName;
     this.language = language;
-    this.mode = (appName === 'bhc' || (appName === 'bpa' && !dev)) ? 'study' : 'exp';
+    this.mode = (appName === 'bhc' || appName === 'gtex' || (appName === 'bpa' && !dev)) ? 'study' : 'exp';
     if (appName === 'kf') {
       this.mode = 'trio';
     }
