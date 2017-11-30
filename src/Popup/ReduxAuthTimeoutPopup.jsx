@@ -30,7 +30,7 @@ const timeoutPopupMapDispatch = () => ({});
 const ReduxAuthTimeoutPopup = connect(timeoutPopupMapState, timeoutPopupMapDispatch)(
   ({ authPopup }) => {
     if (authPopup) {
-      return (<AuthPopup history={history} />);
+      return (<AuthPopup />);
     }
     return null;
   },
