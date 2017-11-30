@@ -26,7 +26,6 @@ import { asyncSetInterval } from './utils';
 import { getReduxStore } from './reduxStore';
 import Nav from './Nav/ReduxNavBar';
 import Footer, { setFooterDefaults } from './components/Footer';
-import ReduxAuthTimeoutPopup from './Popup/ReduxAuthTimeoutPopup';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 
 
@@ -64,71 +63,68 @@ async function init() {
               <Box background={background}>
                 <Nav />
                 <Body background={background}>
-                  <div>
-                    <ReduxAuthTimeoutPopup />
-                    <Switch>
-                      <Route path="/login" component={Login} />
-                      <Route
-                        exact
-                        path="/"
-                        component={
-                          props => <ProtectedContent component={AmbiHomepage} {...props} />
+                  <Switch>
+                    <Route path="/login" component={Login} />
+                    <Route
+                      exact
+                      path="/"
+                      component={
+                        props => <ProtectedContent component={AmbiHomepage} {...props} />
+                      }
+                    />
+                    <Route
+                      path="/query"
+                      component={
+                        props => <ProtectedContent component={GraphQLQuery} {...props} />
+                      }
+                    />
+                    <Route
+                      path="/identity"
+                      component={
+                        props => <ProtectedContent filter={() => store.dispatch(fetchAccess())} component={UserProfile} {...props} />
+                      }
+                    />
+                    <Route
+                      path="/quiz"
+                      component={props => <ProtectedContent component={CertificateQuiz} {...props} />}
+                    />
+                    <Route
+                      path="/dd/:node"
+                      component={props => <DataDictionaryNode params={props.match.params} {...props} />}
+                    />
+                    <Route
+                      path="/dd"
+                      component={DataDictionary}
+                    />
+                    <Route
+                      path="/files"
+                      component={props => <ProtectedContent component={ExplorerPage} {...props} />}
+                    />
+                    <Route
+                      path="/:project/search"
+                      component={
+                        (props) => {
+                          const queryFilter = () => {
+                            const location = props.location;
+                            const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/,'') : '');
+                            if (Object.keys(queryParams).length > 0) {
+                              // Linking directly to a search result, 
+                              // so kick-off search here (rather than on button click)
+                              return store.dispatch(
+                                submitSearchForm({ project: props.match.params.project, ...queryParams }),
+                              );
+                            }
+                            return Promise.resolve('ok');
+                          };
+                          return (<ProtectedContent filter={queryFilter} component={ReduxQueryNode} {...props} />);
                         }
-                      />
-                      <Route
-                        path="/query"
-                        component={
-                          props => <ProtectedContent component={GraphQLQuery} {...props} />
-                        }
-                      />
-                      <Route
-                        path="/identity"
-                        component={
-                          props => <ProtectedContent filter={() => store.dispatch(fetchAccess())} component={UserProfile} {...props} />
-                        }
-                      />
-                      <Route
-                        path="/quiz"
-                        component={props => <ProtectedContent component={CertificateQuiz} {...props} />}
-                      />
-                      <Route
-                        path="/dd/:node"
-                        component={props => <DataDictionaryNode params={props.match.params} {...props} />}
-                      />
-                      <Route
-                        path="/dd"
-                        component={DataDictionary}
-                      />
-                      <Route
-                        path="/files"
-                        component={props => <ProtectedContent component={ExplorerPage} {...props} />}
-                      />
-                      <Route
-                        path="/:project/search"
-                        component={
-                          (props) => {
-                            const queryFilter = () => {
-                              const location = props.location;
-                              const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/,'') : '');
-                              if (Object.keys(queryParams).length > 0) {
-                                // Linking directly to a search result, 
-                                // so kick-off search here (rather than on button click)
-                                return store.dispatch(
-                                  submitSearchForm({ project: props.match.params.project, ...queryParams }),
-                                );
-                              }
-                              return Promise.resolve('ok');
-                            };
-                            return (<ProtectedContent filter={queryFilter} component={ReduxQueryNode} {...props} />);
-                          }
-                        }
-                      />
-                      <Route
-                        path="/:project"
-                        component={props => <ProtectedContent component={ProjectSubmission} {...props} />}
-                      />
-                    </Switch>
-                  </div>
+                      }
+                    />
+                    <Route
+                      path="/:project"
+                      component={props => <ProtectedContent component={ProjectSubmission} {...props} />}
+                    />
+                  </Switch>
                 </Body>
                 <Margin background={background} />
               </Box>

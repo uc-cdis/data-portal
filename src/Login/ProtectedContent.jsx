@@ -5,7 +5,7 @@ import { fetchUser, fetchOAuthURL, fetchJsonOrText, fetchProjects } from '../act
 import Spinner from '../components/Spinner';
 import { getReduxStore } from '../reduxStore';
 import { requiredCerts, submissionApiOauthPath } from '../configs';
-
+import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 
 let lastAuthMs = 0;
 let lastTokenRefreshMs = 0;
@@ -14,10 +14,11 @@ let lastTokenRefreshMs = 0;
  * Redux listener - just clears auth-cache on logout
  */
 export function logoutListener(state={}, action) {
-  switch(action.type) {
-    case 'RECEIVE_API_LOGOUT':
-      lastAuthMs = 0;
-      lastTokenRefreshMs = 0;
+  switch (action.type) {
+  case 'RECEIVE_API_LOGOUT':
+    lastAuthMs = 0;
+    lastTokenRefreshMs = 0;
+  default: // noop
   }
   return state;
 }
@@ -29,14 +30,14 @@ export function logoutListener(state={}, action) {
  * @param bList {Array<String>}
  * @return list of intersecting elements
  */
-export function intersection( aList, bList ) {
-  const db = aList.concat(bList).reduce(
+export function intersection(aList, bList) {
+  const key2Count = aList.concat(bList).reduce(
     (db,it) => { if (db[it]) { db[it] += 1; } else { db[it] = 1; } return db; },
-    {} 
+    {},
   );
-  return Object.entries(db)
-  .filter(([k,v]) => v > 1)
-  .map(([k,v]) => k);
+  return Object.entries(key2Count)
+    .filter(([k, v]) => v > 1)
+    .map(([k]) => k);
 }
 
 /**
@@ -90,17 +91,17 @@ class ProtectedContent extends React.Component {
   checkLoginStatus = (store) => {
     const nowMs = Date.now();
     const newState = {
-            authenticated: true,
-            redirectTo: null,
-            user: store.getState().user,
-          };
+      authenticated: true,
+      redirectTo: null,
+      user: store.getState().user,
+    };
 
     if (nowMs - lastAuthMs < 60000) {
       // assume we're still logged in after 1 minute ...
       return Promise.resolve(newState);
     }
 
-    return store.dispatch(fetchUser)  // make an API call to see if we're still logged in ...
+    return store.dispatch(fetchUser) // make an API call to see if we're still logged in ...
       .then(
         () => {
           const { user } = store.getState();
@@ -112,78 +113,79 @@ class ProtectedContent extends React.Component {
             lastAuthMs = Date.now();
           }
           return newState;
-        }
-      );
-    };
-    
+        },
+    );
+  };
 
-    /**
-     * Filter refreshes the gdc-api token (acquired via oauth with user-api) if necessary.
-     * @method checkApiToken
-     * @param store Redux store
-     * @param newState
-     * @return newState passed through
-     */
-    checkApiToken = (store, newState) => {
-      const nowMs = Date.now();
- 
-      if (!newState.authenticated) {
-        return Promise.resolve(newState);
-      }
-      if ( nowMs - lastTokenRefreshMs < 41000 ) {
-        return Promise.resolve(newState);
-      }
-      return store.dispatch(fetchProjects())
-            .then(() => {
-              //
-              // The assumption here is that fetchProjects either succeeds or fails.
-              // If it fails (we won't have any project data), then we need to refresh our api token ...
-              //
-              const projects = store.getState().submission.projects;
-              if (projects) {
-                // user already has a valid token
-                return Promise.resolve(newState);
+  /**
+   * Filter refreshes the gdc-api token (acquired via oauth with user-api) if necessary.
+   * @method checkApiToken
+   * @param store Redux store
+   * @param newState
+   * @return newState passed through
+   */
+  checkApiToken = (store, newState) => {
+    const nowMs = Date.now();
+
+    if (!newState.authenticated) {
+      return Promise.resolve(newState);
+    }
+    if (nowMs - lastTokenRefreshMs < 41000) {
+      return Promise.resolve(newState);
+    }
+    return store.dispatch(fetchProjects())
+      .then(() => {
+        //
+        // The assumption here is that fetchProjects either succeeds or fails.
+        // If it fails (we won't have any project data), then we need to refresh our api token ...
+        //
+        const projects = store.getState().submission.projects;
+        if (projects) {
+          // user already has a valid token
+          return Promise.resolve(newState);
+        }
+        // else do the oauth dance
+        return store.dispatch(fetchOAuthURL(submissionApiOauthPath))
+          .then(
+            oauthUrl => fetchJsonOrText({ path: oauthUrl, dispatch: store.dispatch.bind(store) }))
+          .then(
+            ({ status, data }) => {
+              switch (status) {
+              case 200:
+                return {
+                  type: 'RECEIVE_SUBMISSION_LOGIN',
+                  result: true,
+                };
+              default: {
+                return {
+                  type: 'RECEIVE_SUBMISSION_LOGIN',
+                  result: false,
+                  error: data,
+                };
               }
-              // else do the oauth dance
-              return store.dispatch(fetchOAuthURL(submissionApiOauthPath))
-                .then(oauthUrl => fetchJsonOrText({ path: oauthUrl, dispatch: store.dispatch.bind(store) }))
-                .then(
-                  ({ status, data }) => {
-                    switch (status) {
-                    case 200:
-                      return {
-                        type: 'RECEIVE_SUBMISSION_LOGIN',
-                        result: true,
-                      };
-                    default: {
-                      return {
-                        type: 'RECEIVE_SUBMISSION_LOGIN',
-                        result: false,
-                        error: data,
-                      };
-                    }
-                    }
-                  },
-                )
-                .then(
-                  msg => store.dispatch(msg),
-                )
-                .then(
-                  // refetch the projects - since the earlier call failed with an invalid token ...
-                  () => store.dispatch(fetchProjects())
-                ).then(
-                  () => {
-                    lastTokenRefreshMs = Date.now();
-                    return newState;
-                  },
-                  () => {
-                    // something went wront - better just re-login
-                    newState.authenticated = false;
-                    newState.redirectTo = '/login';
-                    return newState;
-                  },
-                );
-              });
+              }
+            },
+          )
+          .then(
+            msg => store.dispatch(msg),
+          )
+          .then(
+            // refetch the projects - since the earlier call failed with an invalid token ...
+            () => store.dispatch(fetchProjects()),
+          )
+          .then(
+            () => {
+              lastTokenRefreshMs = Date.now();
+              return newState;
+            },
+            () => {
+              // something went wront - better just re-login
+              newState.authenticated = false;
+              newState.redirectTo = '/login';
+              return newState;
+            },
+          );
+      });
   };
 
   /**
@@ -193,41 +195,44 @@ class ProtectedContent extends React.Component {
    */
   componentDidMount() {
     getReduxStore().then(
-      store => {
-        return Promise.all(
+      store => 
+        Promise.all(
           [
             store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
             store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
-          ]
+          ],
         ).then(
           () => this.checkLoginStatus(store)
             .then(newState => this.checkQuizStatus(newState))
-            .then(newState => this.checkApiToken(store, newState))
+            .then(newState => this.checkApiToken(store, newState)),
         ).then(
           (newState) => {
             const filterPromise = (newState.authenticated && typeof this.props.filter === 'function') ? this.props.filter() : Promise.resolve('ok');
             const finish = () => this.setState(newState); // finally update the component state
             return filterPromise.then(finish, finish);
-          }
-        )
-      }
+          },
+        ),
     );
   }
 
   render() {
     const Component = this.props.component;
     window.scrollTo(0, 0);
-    if ( this.state.redirectTo ) {
+    if (this.state.redirectTo) {
       return (<Redirect to={this.state.redirectTo} />);
-    } else if ( this.state.authenticated ) {
+    } else if (this.state.authenticated) {
       let params = {};
-      if ( this.props.match ) {
+      if (this.props.match) {
         params = this.props.match.params || {};
       }
-      return (<Component params={params} location={this.props.location} history={this.props.history} />);  // pass through react-router matcher params ...
-    } else {
-      return (<Spinner />);
+      return (
+        <div>
+          <ReduxAuthTimeoutPopup />
+          <Component params={params} location={this.props.location} history={this.props.history} />
+        </div>
+      ); // pass through react-router matcher params ...
     }
+    return (<Spinner />);
   }
 }
 
