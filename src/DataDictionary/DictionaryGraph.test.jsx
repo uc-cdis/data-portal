@@ -27,7 +27,7 @@ describe('the DictionaryGraph', () => {
   it('boots to a full view', () => {
     const { $graph } = buildTest();
     expect($graph.length).toBe(1);
-    expect(!! $graph.find('div[data-toggle="full"]')).toBe(true);
+    expect(!!$graph.find('div[data-toggle="full"]')).toBe(true);
   });
 
   it('toggles between full and compact views', () => {
@@ -35,7 +35,7 @@ describe('the DictionaryGraph', () => {
     const $toggleButton = $dom.find('a#toggle_button');
     expect($toggleButton.length).toBe(1);
     $toggleButton.simulate('click');
-    expect(!! $graph.find('div[data-toggle="abridged"]')).toBe(true);
+    expect(!!$graph.find('div[data-toggle="abridged"]')).toBe(true);
     expect(document.querySelector('#data_model_graph')).toBeDefined();
     // jsdom does not yet support svg
     // const ellipseList = document.querySelectorAll('ellipse');

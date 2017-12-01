@@ -50,7 +50,7 @@ describe('the DataDictionary component', () => {
     const ux = mount(
       <StaticRouter location={{ pathname: '/dd' }}>
         <DataDictionary dictionary={testDict} />
-      </StaticRouter>
+      </StaticRouter>,
     );
     expect(ux.find('table').length).toBe(2);
   });

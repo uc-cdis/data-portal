@@ -13,11 +13,12 @@ let lastTokenRefreshMs = 0;
 /**
  * Redux listener - just clears auth-cache on logout
  */
-export function logoutListener(state={}, action) {
+export function logoutListener(state = {}, action) {
   switch (action.type) {
   case 'RECEIVE_API_LOGOUT':
     lastAuthMs = 0;
     lastTokenRefreshMs = 0;
+    break;
   default: // noop
   }
   return state;
@@ -32,7 +33,7 @@ export function logoutListener(state={}, action) {
  */
 export function intersection(aList, bList) {
   const key2Count = aList.concat(bList).reduce(
-    (db,it) => { if (db[it]) { db[it] += 1; } else { db[it] = 1; } return db; },
+    (db, it) => { if (db[it]) { db[it] += 1; } else { db[it] = 1; } return db; },
     {},
   );
   return Object.entries(key2Count)
@@ -72,10 +73,10 @@ class ProtectedContent extends React.Component {
     // user is authenticated - now check if he has certs
     const isMissingCerts = intersection(requiredCerts, user.certificates_uploaded).length !== requiredCerts.length;
     // take quiz if this user doesn't have required certificate
-    if (this.props.location.pathname !== '/quiz' && isMissingCerts) {
+    if (this.props.match.path !== '/quiz' && isMissingCerts) {
       newState.redirectTo = '/quiz';
       // do not update lastAuthMs (indicates time of last successful auth)
-    } else if (this.props.location.pathname === '/quiz' && !isMissingCerts) {
+    } else if (this.props.match.path === '/quiz' && !isMissingCerts) {
       newState.redirectTo = '/';
     }
     return newState;
@@ -195,7 +196,7 @@ class ProtectedContent extends React.Component {
    */
   componentDidMount() {
     getReduxStore().then(
-      store => 
+      store =>
         Promise.all(
           [
             store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters

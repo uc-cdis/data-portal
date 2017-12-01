@@ -21,9 +21,9 @@ const LoginButton = styled.a`
 const Login = (props) => {
   let next = basename;
   const location = props.location; // this is the react-router "location"
-  const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/,'') : '');
+  const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/, '') : '');
   if (queryParams.next) {
-    next = basename === '/' ? queryParams.next : basename + queryParmas.next;
+    next = basename === '/' ? queryParams.next : basename + queryParams.next;
   }
   return (
     <div>

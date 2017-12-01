@@ -1,6 +1,5 @@
 import { reducer as formReducer } from 'redux-form';
 import { combineReducers } from 'redux';
-//import { routerReducer } from 'react-router-redux';
 import userProfile from './UserProfile/reducers';
 import certificate from './Certificate/reducers';
 import submission from './Submission/reducers';

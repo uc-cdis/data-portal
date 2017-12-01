@@ -70,7 +70,7 @@ class Question extends Component {
         </div>
         <RadioGroup showErrors={false} field={this.props.content.id}>
           {
-            group => <div>
+            group => (<div>
               {
                 this.props.content.options.map(
                   (option, i) =>
@@ -82,7 +82,7 @@ class Question extends Component {
                     />{option}</OptionBullet>),
                 )
               }
-            </div>
+            </div>)
           }
         </RadioGroup>
       </QuestionItem>
