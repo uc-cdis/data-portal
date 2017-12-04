@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { StyledCheckBoxGroup } from '../components/CheckBox';
 import { ExplorerSidebarStyle } from './style';
+import {changeSelectedList} from './actions';
 
 class ExplorerSideBar extends Component {
   static propTypes = {

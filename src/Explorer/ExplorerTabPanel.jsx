@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ExplorerTabs, ExplorerTab, ExplorerTabBox, ExplorerTabFrame } from './style';
 import { ExplorerTableComponent } from './ExplorerTable';
+import {setActiveTab, requestMoreData, changePage, changePageSize} from "./actions";
 
 const makeDefaultState = () => ({
 });
