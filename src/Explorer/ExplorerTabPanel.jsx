@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ExplorerTabs, ExplorerTab, ExplorerTabBox, ExplorerTabFrame } from './style';
 import { ExplorerTableComponent } from './ExplorerTable';
-import {setActiveTab, requestMoreData, changePage, changePageSize} from "./actions";
 
 const makeDefaultState = () => ({
 });
 
-class TabSetComponent extends Component {
+class ExplorerTabPanel extends Component {
   static propTypes = {
     filesMap: PropTypes.object.isRequired,
     lastPageSizes: PropTypes.object.isRequired,
@@ -140,23 +139,4 @@ class TabSetComponent extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  filesMap: state.explorer.filesMap,
-  lastPageSizes: state.explorer.lastPageSizes,
-  pageSize: state.explorer.pageSize,
-  pagesPerTab: state.explorer.pagesPerTab,
-  activeTab: state.explorer.activeTab,
-  cursors: state.explorer.cursors,
-  queriedCursors: state.explorer.queriedCursors,
-  currentPages: state.explorer.currentPages,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onTabChange: (state) => dispatch(setActiveTab(state)),
-  onPageLoadMore: (key, newCursor, state) => dispatch(requestMoreData(key, newCursor, state)),
-  onPageSizeChange: (newPageSize, state) => dispatch(changePageSize(newPageSize, state)),
-  onPageChange: (tab, page, state) => dispatch(changePage(tab, page, state))
-});
-
-const ExplorerTabPanel = connect(mapStateToProps, mapDispatchToProps)(TabSetComponent);
 export default ExplorerTabPanel;

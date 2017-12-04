@@ -3,8 +3,7 @@ import { createRefetchContainer } from 'react-relay';
 import { withAuthTimeout, withBoxAndNav, computeLastPageSizes } from '../utils';
 import { GQLHelper } from '../gqlHelper';
 import { getReduxStore } from '../reduxStore';
-import ExplorerTabPanel from './ExplorerTabPanel';
-import SideBar from './ExplorerSideBar';
+import { ReduxExplorerTabPanel, ReduxSideBar } from './ReduxExplorer';
 import { BodyBackground } from './style';
 
 const gqlHelper = GQLHelper.getGQLHelper();
@@ -151,8 +150,8 @@ class ExplorerComponent extends Component {
     };
     return (
       <div style={flexBox}>
-        <SideBar />
-        <ExplorerTabPanel />
+        <ReduxSideBar />
+        <ReduxExplorerTabPanel />
       </div>
     );
   }

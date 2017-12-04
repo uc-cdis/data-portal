@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { ThemeProvider } from 'styled-components';
 import { theme } from '../theme';
-import { changePageSize, changePage } from './actions';
+import { changePageSize, changePage } from './ReduxExplorer';
 
 function renderComponent(ComponentClass, props) {
   return getReduxStore().then(

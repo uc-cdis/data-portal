@@ -1,4 +1,5 @@
 import { asyncSetInterval, predictFileType, sortCompare } from './utils';
+import 'jest';
 
 describe('the utils helper', () => {
   it('supports asyncSetInterval', (done) => {
@@ -10,6 +11,7 @@ describe('the utils helper', () => {
         callCount += 1;
         console.log(`callCount is: ${callCount}`);
         resolve('ok');
+        done();
       }, 150);
     }));
 

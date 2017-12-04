@@ -1,3 +1,7 @@
+import ExplorerSideBar from './ExplorerSideBar';
+import ExplorerTabPanel from './ExplorerTabPanel';
+import { connect } from 'react-redux';
+
 export const setActiveTab = (state) => (dispatch) => {
   dispatch({
     type: 'SET_ACTIVE_TAB',
@@ -30,20 +34,6 @@ export const changeSelectedList = (state) => (dispatch) => {
   dispatch({
     type: 'SELECTED_LIST_CHANGED',
     data: state,
-  });
-};
-
-export const loadReceivedData = (state) => (dispatch) => {
-  dispatch({
-    type: 'RECEIVE_FILE_LIST',
-    data: state
-  });
-};
-
-export const loadReceivedMoreData = (state) => (dispatch) => {
-  dispatch({
-    type: 'RECEIVE_NEXT_PART',
-    data: state
   });
 };
 
@@ -90,3 +80,45 @@ export const changePage = (tab, page, state) => dispatch => {
   state[tab] = page;
   return Promise.resolve(dispatch(doChangePage(state)));
 };
+
+export const ReduxExplorerTabPanel = (() => {
+  const mapStateToProps = state => ({
+    filesMap: state.explorer.filesMap,
+    lastPageSizes: state.explorer.lastPageSizes,
+    pageSize: state.explorer.pageSize,
+    pagesPerTab: state.explorer.pagesPerTab,
+    activeTab: state.explorer.activeTab,
+    cursors: state.explorer.cursors,
+    queriedCursors: state.explorer.queriedCursors,
+    currentPages: state.explorer.currentPages,
+  });
+
+  const mapDispatchToProps = dispatch => ({
+    onTabChange: (state) => dispatch(setActiveTab(state)),
+    onPageLoadMore: (key, newCursor, state) => dispatch(requestMoreData(key, newCursor, state)),
+    onPageSizeChange: (newPageSize, state) => dispatch(changePageSize(newPageSize, state)),
+    onPageChange: (tab, page, state) => dispatch(changePage(tab, page, state))
+  });
+
+  return connect(mapStateToProps, mapDispatchToProps)(ExplorerTabPanel);
+})();
+
+
+export const ReduxSideBar = (() => {
+  const mapStateToProps = state => ({
+    projects: state.submission.projects,
+    dictionary: state.submission.dictionary,
+    selectedFilters: state.explorer.selected_filters || {
+      projects: [],
+      file_types: [],
+      file_formats: [],
+    },
+  });
+
+  const mapDispatchToProps = dispatch => ({
+    onChange: (state) => dispatch(changeSelectedList(state)),
+  });
+
+  return connect(mapStateToProps, mapDispatchToProps)(ExplorerSideBar);
+})();
+
