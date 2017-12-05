@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { fetchUser, fetchOAuthURL, fetchJsonOrText, fetchProjects } from '../actions';
 import Spinner from '../components/Spinner';
@@ -9,6 +10,11 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 
 let lastAuthMs = 0;
 let lastTokenRefreshMs = 0;
+
+const Body = styled.div`
+  background: ${props => props.background};
+  padding: ${props => props.padding || '50px 100px'};
+`;
 
 /**
  * Redux listener - just clears auth-cache on logout
@@ -47,7 +53,9 @@ export function intersection(aList, bList) {
  * @param component required child component
  * @param location from react-router
  * @param history from react-router
- * @param params from react-router.match
+ * @param match from react-router.match
+ * @param public default false - set true to disable auth-guard
+ * @param background passed through to <Box background> wrapper for page-level background
  * @param filter {() => Promise} optional filter to apply before rendering the child component
  */
 class ProtectedContent extends React.Component {
@@ -115,7 +123,7 @@ class ProtectedContent extends React.Component {
           }
           return newState;
         },
-    );
+      );
   };
 
   /**
@@ -195,45 +203,54 @@ class ProtectedContent extends React.Component {
    * in the various ways we want it to be.
    */
   componentDidMount() {
-    getReduxStore().then(
-      store =>
-        Promise.all(
-          [
-            store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
-            store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
-          ],
-        ).then(
-          () => this.checkLoginStatus(store)
-            .then(newState => this.checkQuizStatus(newState))
-            .then(newState => this.checkApiToken(store, newState)),
-        ).then(
-          (newState) => {
-            const filterPromise = (newState.authenticated && typeof this.props.filter === 'function') ? this.props.filter() : Promise.resolve('ok');
-            const finish = () => this.setState(newState); // finally update the component state
-            return filterPromise.then(finish, finish);
-          },
-        ),
-    );
+    if (!this.props.public) {
+      getReduxStore().then(
+        store =>
+          Promise.all(
+            [
+              store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
+              store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
+            ],
+          ).then(
+            () => this.checkLoginStatus(store)
+              .then(newState => this.checkQuizStatus(newState))
+              .then(newState => this.checkApiToken(store, newState)),
+          ).then(
+            (newState) => {
+              const filterPromise = (newState.authenticated && typeof this.props.filter === 'function') ? this.props.filter() : Promise.resolve('ok');
+              const finish = () => this.setState(newState); // finally update the component state
+              return filterPromise.then(finish, finish);
+            },
+          ),
+      );
+    }
   }
 
   render() {
     const Component = this.props.component;
+    let params = {}; // router params
+    if (this.props.match) {
+      params = this.props.match.params || {};
+    }
+
     window.scrollTo(0, 0);
     if (this.state.redirectTo) {
       return (<Redirect to={this.state.redirectTo} />);
-    } else if (this.state.authenticated) {
-      let params = {};
-      if (this.props.match) {
-        params = this.props.match.params || {};
-      }
+    } else if ( this.props.public ) {
       return (
-        <div>
+        <Body {...this.props}>
+          <Component params={params} location={this.props.location} history={this.props.history} />
+        </Body>
+      );
+    } else if (this.state.authenticated ) {
+      return (
+        <Body {...this.props}>
           <ReduxAuthTimeoutPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
-        </div>
-      ); // pass through react-router matcher params ...
+        </Body>
+      );
     }
-    return (<Spinner />);
+    return (<Body {...this.props}><Spinner /></Body>);
   }
 }
 

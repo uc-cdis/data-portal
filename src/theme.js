@@ -58,10 +58,6 @@ export const Box = styled.div`
 export const OuterWrapper = styled.div`
   height: 100%;  
 `;
-export const Body = styled.div`
-  background: ${props => props.background};
-  padding: 50px 100px;
-`;
 
 export const Margin = styled.div`
   height: 100px;
