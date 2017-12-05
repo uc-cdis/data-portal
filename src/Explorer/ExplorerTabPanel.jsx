@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+
 import { ExplorerTabs, ExplorerTab, ExplorerTabBox, ExplorerTabFrame } from './style';
 import { ExplorerTableComponent } from './ExplorerTable';
 
-const makeDefaultState = () => ({
-});
 
-class TabSetComponent extends Component {
+class ExplorerTabPanel extends Component {
   static propTypes = {
     filesMap: PropTypes.object.isRequired,
     lastPageSizes: PropTypes.object.isRequired,
@@ -33,38 +31,12 @@ class TabSetComponent extends Component {
 
   constructor(props) {
     super(props);
-    this.state = makeDefaultState();
+    this.state = {};
     this.resetState = this.resetState.bind(this);
   }
 
   resetState() {
-    this.setState(makeDefaultState({}));
-  }
-
-  updateCursors(key, newValue, pageSize) {
-    const numberOfItemPages = pageSize * this.props.pagesPerTab;
-    return Object.keys(this.props.cursors).reduce(
-      (d, it) => {
-        const result = d;
-        if (it !== key) {
-          result[it] = this.props.queriedCursors
-            ? this.props.queriedCursors[it]
-            : 0;
-        } else if (newValue < 0) {
-          const tempRes = this.props.cursors[it] + (2 * newValue) +
-            (((2 * numberOfItemPages) - this.props.cursors[it]) % numberOfItemPages);
-          result[it] = (tempRes >= 0) ? tempRes : 0;
-        } else {
-          result[it] = this.props.cursors[it];
-        }
-        return result;
-      }, {},
-    );
-  }
-
-  updateTab(key, newValue) {
-    const newCursors = this.updateCursors(key, newValue, this.props.pageSize);
-    this.props.onPageLoadMore({ cursors: newCursors, originalPageToReset: [key] });
+    this.setState({});
   }
 
   updateOriginalPage() {
@@ -75,11 +47,6 @@ class TabSetComponent extends Component {
         return d;
       }, {},
     );
-  }
-
-  doSelectChange(value) {
-    const newCursors = this.updateCursors('', 0, this.props.pageSize);
-    this.props.onPageSizeChange({ cursors: newCursors, pageSize: parseInt(value) });
   }
 
   render() {
@@ -101,7 +68,7 @@ class TabSetComponent extends Component {
                   () => this.props.onTabChange({ activeTab: item })
                 }
               >
-                {item.replace('submitted_', '').replace('_', ' ')}
+                {item.replace('submitted_', '').replace(/_/g, ' ')}
               </ExplorerTab>)
           }
         </ExplorerTabs>
@@ -121,26 +88,46 @@ class TabSetComponent extends Component {
                     originalPage={originalPages[item]}
                     onPageLoadNextMore={
                       () => {
-                        this.updateTab(item,
-                          this.props.pageSize * this.props.pagesPerTab);
+                        this.props.onPageLoadMore(item,
+                          this.props.pageSize * this.props.pagesPerTab,
+                          {
+                            pageSize: this.props.pageSize,
+                            pagesPerTab: this.props.pagesPerTab,
+                            cursors: this.props.cursors,
+                            queriedCursors: this.props.queriedCursors,
+                          });
                       }
                     }
                     page={(item in this.props.currentPages)
                       ? this.props.currentPages[item] : 0}
                     onPageChange={
                       (page) => {
-                        const currentPages = this.props.currentPages;
-                        currentPages[item] = page;
-                        this.props.onPageChange(currentPages);
+                        this.props.onPageChange(item, page, this.props.currentPages);
                       }
                     }
                     onPageLoadPrevMore={
                       () => {
-                        this.updateTab(item,
-                          -this.props.pageSize * this.props.pagesPerTab);
+                        this.props.onPageLoadMore(item,
+                          -this.props.pageSize * this.props.pagesPerTab,
+                          {
+                            pageSize: this.props.pageSize,
+                            pagesPerTab: this.props.pagesPerTab,
+                            cursors: this.props.cursors,
+                            queriedCursors: this.props.queriedCursors,
+                          });
                       }
                     }
-                    onPageSizeChange={value => this.doSelectChange(value)}
+                    onPageSizeChange={
+                      value => this.props.onPageSizeChange(
+                        value,
+                        {
+                          oldPageSize: this.props.pageSize,
+                          pagesPerTab: this.props.pagesPerTab,
+                          cursors: this.props.cursors,
+                          queriedCursors: this.props.queriedCursors,
+                        },
+                      )
+                    }
                   />
                 </ExplorerTabBox>,
             )
@@ -151,43 +138,4 @@ class TabSetComponent extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  filesMap: state.explorer.filesMap,
-  lastPageSizes: state.explorer.lastPageSizes,
-  pageSize: state.explorer.pageSize,
-  pagesPerTab: state.explorer.pagesPerTab,
-  activeTab: state.explorer.activeTab,
-  cursors: state.explorer.cursors,
-  queriedCursors: state.explorer.queriedCursors,
-  currentPages: state.explorer.currentPages,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onTabChange: (state) => {
-    dispatch({
-      type: 'SET_ACTIVE_TAB',
-      data: state,
-    });
-  },
-  onPageLoadMore: (state) => {
-    dispatch({
-      type: 'REQUEST_NEXT_PART',
-      data: state,
-    });
-  },
-  onPageSizeChange: (state) => {
-    dispatch({
-      type: 'PAGE_SIZE_CHANGED',
-      data: state,
-    });
-  },
-  onPageChange: (state) => {
-    dispatch({
-      type: 'SET_CURRENT_PAGE',
-      data: state,
-    });
-  },
-});
-
-const ExplorerTabPanel = connect(mapStateToProps, mapDispatchToProps)(TabSetComponent);
 export default ExplorerTabPanel;

@@ -8,7 +8,7 @@ import homepage from './Homepage/reducers';
 import { query_nodes } from './QueryNode/reducers';
 import popups from './Popup/reducers';
 import { graphiql } from './GraphQLEditor/reducers';
-import { explorer } from './Explorer/reducers';
+import explorer from './Explorer/reducers';
 
 const status = (state = {}, action) => {
   switch (action.type) {

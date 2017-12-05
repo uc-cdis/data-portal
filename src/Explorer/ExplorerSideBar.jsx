@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { StyledCheckBoxGroup } from '../components/CheckBox';
 import { ExplorerSidebarStyle } from './style';
 
-class ExplorerSidebar extends Component {
+class ExplorerSideBar extends Component {
   static propTypes = {
     projects: PropTypes.object,
     dictionary: PropTypes.object,
@@ -79,24 +78,4 @@ class ExplorerSidebar extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  projects: state.submission.projects,
-  dictionary: state.submission.dictionary,
-  selectedFilters: state.explorer.selected_filters || {
-    projects: [],
-    file_types: [],
-    file_formats: [],
-  },
-});
-
-const mapDispatchToProps = dispatch => ({
-  onChange: (state) => {
-    dispatch({
-      type: 'SELECTED_LIST_CHANGED',
-      data: state,
-    });
-  },
-});
-
-const SideBar = connect(mapStateToProps, mapDispatchToProps)(ExplorerSidebar);
-export default SideBar;
+export default ExplorerSideBar;

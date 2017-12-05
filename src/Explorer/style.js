@@ -18,6 +18,7 @@ export const TableData = styled.td`
   display: table-cell;
   padding: 1rem 1rem;
   height: 100%;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
@@ -92,7 +93,6 @@ export const ExplorerTab = styled.div`
   cursor:pointer;
   padding: 10px;
   font-size: 15px;
-  display: inline-block;
   border: ${props => (props.active ? '1.5px solid #a9a9a9' : '0px')};
   border-bottom: 0px;
   border-top-left-radius: ${props => (props.active ? '5px' : '0px')};

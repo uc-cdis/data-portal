@@ -29,29 +29,22 @@ const Versions = styled.span`
   padding:5px;
 `;
 
-const defaults = {
-  dictionaryVersion: 'Unknown',
-  apiVersion: 'Unknown',
-};
-
-export function setFooterDefaults(opts) {
-  Object.assign(defaults, opts || {});
-}
-
-const Footer = ({ dictionaryVersion, apiVersion }) => {
-  const dictionaryVer = dictionaryVersion || defaults.dictionaryVersion;
-  const apiVer = apiVersion || defaults.apiVersion;
-  return (<FooterSection>
+const Footer = ({ dictionaryVersion, apiVersion }) =>
+  (<FooterSection>
     <NavRight>
       <Dictionary to="/dd"><span className="fui-bookmark" />View dictionary</Dictionary>
-      <Versions>Dictionary v{dictionaryVer}, API v{apiVer}, Portal v{portalVersion}</Versions>
+      <Versions>Dictionary v{dictionaryVersion}, API v{apiVersion}, Portal v{portalVersion}</Versions>
     </NavRight>
   </FooterSection>);
-};
 
 Footer.propTypes = {
   dictionaryVersion: PropTypes.string.isRequired,
   apiVersion: PropTypes.string.isRequired,
+};
+
+Footer.defaultProps = {
+  dictionaryVersion: 'Unknown',
+  apiVersion: 'Unknown',
 };
 
 export default Footer;

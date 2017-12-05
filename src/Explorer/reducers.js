@@ -1,4 +1,4 @@
-export const explorer = (state = { filesMap: {},
+const explorer = (state = { filesMap: {},
   pageSize: 20,
   originalPage: 0,
   lastPageSizes: {},
@@ -81,3 +81,5 @@ export const explorer = (state = { filesMap: {},
     return state;
   }
 };
+
+export default explorer;

@@ -1,5 +1,6 @@
 import { asyncSetInterval, predictFileType, sortCompare } from './utils';
 
+
 describe('the utils helper', () => {
   it('supports asyncSetInterval', (done) => {
     let callCount = 0;
@@ -10,6 +11,7 @@ describe('the utils helper', () => {
         callCount += 1;
         console.log(`callCount is: ${callCount}`);
         resolve('ok');
+        // not here - done() is called below after 400ms ... 
       }, 150);
     }));
 
