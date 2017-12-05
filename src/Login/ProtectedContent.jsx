@@ -40,19 +40,11 @@ export function logoutListener(state = {}, action) {
  */
 export function intersection(aList, bList) {
   const key2Count = aList.concat(bList).reduce(
-<<<<<<< HEAD
     (db, it) => { if (db[it]) { db[it] += 1; } else { db[it] = 1; } return db; },
     {},
   );
   return Object.entries(key2Count)
     .filter(kv => kv[1] > 1)
-=======
-    (db,it) => { if (db[it]) { db[it] += 1; } else { db[it] = 1; } return db; },
-    {},
-  );
-  return Object.entries(key2Count)
-    .filter(([k, v]) => v > 1)
->>>>>>> fix(AuthPopup): mv auth popup to ProtectedContent
     .map(([k]) => k);
 }
 
@@ -311,8 +303,12 @@ class ProtectedContent extends React.Component {
       console.log('got router params', this.props);
       return (<Component params={params} path={path} location={this.props.location} history={this.props.history} />);  // pass through react-router matcher params ...
     }
+<<<<<<< HEAD
     return (<Spinner />);
 >>>>>>> fix(AuthPopup): mv auth popup to ProtectedContent
+=======
+    return (<Body {...this.props}><Spinner /></Body>);
+>>>>>>> fix(bgcolor): refactor for bgcolor
   }
 }
 
