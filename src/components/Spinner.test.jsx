@@ -1,7 +1,7 @@
 import React from 'react';
-import Spinner from './Spinner';
 import { mount } from 'enzyme';
 
+import Spinner from './Spinner';
 
 it('Spinner displaying', () => {
   const spinner = mount(<Spinner />);

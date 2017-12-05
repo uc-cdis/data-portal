@@ -1,6 +1,7 @@
 global.fetch = require('jest-fetch-mock');
 
-import { shallow } from 'enzyme';
+import Enzyme, { shallow } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-15';
 
 export const shallowWithStore = (component, store) => {
   const context = {
@@ -8,3 +9,5 @@ export const shallowWithStore = (component, store) => {
   };
   return shallow(component, { context });
 };
+
+Enzyme.configure({ adapter: new Adapter() });

@@ -1,6 +1,6 @@
 import { fetchJsonOrText } from './actions';
 import { apiPath, submissionApiPath } from './localconf';
-import { setFooterDefaults } from './components/Footer';
+import Footer from './components/Footer';
 
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -
@@ -58,8 +58,11 @@ export const fetchDictionary = () => dispatch =>
     .then(() => {
       fetchJsonOrText({ path: `${apiPath}_version`, method: 'GET' }).then(({ status, data }) => {
         if (status === 200) {
-          setFooterDefaults({ dictionaryVersion: data.dictionary.version,
-            apiVersion: data.version });
+          Object.assign(Footer.defaultProps, 
+            { dictionaryVersion: data.dictionary.version,
+              apiVersion: data.version,
+            },
+          );
         }
       });
     });
