@@ -74,7 +74,7 @@ export class ExplorerTableComponent extends Component {
         const explorerState = store.getState().explorer;
         if (explorerState.moreData === 'RECEIVED') {
           const filesList = nextProps.filesList;
-          const numberOfPages = filesList ? parseInt(filesList.length / nextProps.pageSize) : 0;
+          const numberOfPages = filesList ? Math.ceil(filesList.length / nextProps.pageSize) : 0;
           const newPage = nextProps.originalPage + (this.props.page % this.props.pageCount);
           const page = (numberOfPages > this.props.page % this.props.pageCount)
             ? newPage : (nextProps.originalPage + numberOfPages);

@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+
 import { ExplorerTabs, ExplorerTab, ExplorerTabBox, ExplorerTabFrame } from './style';
 import { ExplorerTableComponent } from './ExplorerTable';
-import {setActiveTab, requestMoreData, changePage, changePageSize} from "./actions";
 
-const makeDefaultState = () => ({
-});
 
 class ExplorerTabPanel extends Component {
   static propTypes = {
@@ -34,12 +31,12 @@ class ExplorerTabPanel extends Component {
 
   constructor(props) {
     super(props);
-    this.state = makeDefaultState();
+    this.state = {};
     this.resetState = this.resetState.bind(this);
   }
 
   resetState() {
-    this.setState(makeDefaultState({}));
+    this.setState({});
   }
 
   updateOriginalPage() {
@@ -71,7 +68,7 @@ class ExplorerTabPanel extends Component {
                   () => this.props.onTabChange({ activeTab: item })
                 }
               >
-                {item.replace('submitted_', '').replace('_', ' ')}
+                {item.replace('submitted_', '').replace(/_/g, ' ')}
               </ExplorerTab>)
           }
         </ExplorerTabs>
@@ -97,7 +94,7 @@ class ExplorerTabPanel extends Component {
                             pageSize: this.props.pageSize,
                             pagesPerTab: this.props.pagesPerTab,
                             cursors: this.props.cursors,
-                            queriedCursors: this.props.queriedCursors
+                            queriedCursors: this.props.queriedCursors,
                           });
                       }
                     }
@@ -116,7 +113,7 @@ class ExplorerTabPanel extends Component {
                             pageSize: this.props.pageSize,
                             pagesPerTab: this.props.pagesPerTab,
                             cursors: this.props.cursors,
-                            queriedCursors: this.props.queriedCursors
+                            queriedCursors: this.props.queriedCursors,
                           });
                       }
                     }
@@ -127,9 +124,10 @@ class ExplorerTabPanel extends Component {
                           oldPageSize: this.props.pageSize,
                           pagesPerTab: this.props.pagesPerTab,
                           cursors: this.props.cursors,
-                          queriedCursors: this.props.queriedCursors
-                        }
-                    )}
+                          queriedCursors: this.props.queriedCursors,
+                        },
+                      )
+                    }
                   />
                 </ExplorerTabBox>,
             )

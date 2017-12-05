@@ -58,7 +58,7 @@ export const fetchDictionary = () => dispatch =>
     .then(() => {
       fetchJsonOrText({ path: `${apiPath}_version`, method: 'GET' }).then(({ status, data }) => {
         if (status === 200) {
-          Object.assign(Footer.defaultProps, 
+          Object.assign(Footer.defaultProps,
             { dictionaryVersion: data.dictionary.version,
               apiVersion: data.version,
             },

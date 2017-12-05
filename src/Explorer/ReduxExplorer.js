@@ -1,44 +1,40 @@
-import ExplorerSideBar from './ExplorerSideBar';
-import ExplorerTabPanel from './ExplorerTabPanel';
 import { connect } from 'react-redux';
 
-export const setActiveTab = (state) => (dispatch) => {
+import ExplorerSideBar from './ExplorerSideBar';
+import ExplorerTabPanel from './ExplorerTabPanel';
+
+export const setActiveTab = state => dispatch =>
   dispatch({
     type: 'SET_ACTIVE_TAB',
     data: state,
   });
-};
 
-export const doRequestMoreData = (state) => (dispatch) => {
+export const doRequestMoreData = state => dispatch =>
   dispatch({
     type: 'REQUEST_NEXT_PART',
     data: state,
   });
-};
 
-export const doChangePageSize = (state) => (dispatch) => {
-  return dispatch({
+export const doChangePageSize = state => dispatch =>
+  dispatch({
     type: 'PAGE_SIZE_CHANGED',
     data: state,
   });
-};
 
-export const doChangePage = (state) => (dispatch) => {
+export const doChangePage = state => dispatch =>
   dispatch({
     type: 'SET_CURRENT_PAGE',
     data: state,
   });
-};
 
-export const changeSelectedList = (state) => (dispatch) => {
+export const changeSelectedList = state => dispatch =>
   dispatch({
     type: 'SELECTED_LIST_CHANGED',
     data: state,
   });
-};
 
 const updateCursors = (key, newValue, pageSize, pagesPerTab,
-                       cursors, queriedCursors) => {
+  cursors, queriedCursors) => {
   const numberOfItemPages = pageSize * pagesPerTab;
   return Object.keys(cursors).reduce(
     (d, it) => {
@@ -57,7 +53,7 @@ const updateCursors = (key, newValue, pageSize, pagesPerTab,
   );
 };
 
-export const requestMoreData = (key, newCursor, state) => dispatch => {
+export const requestMoreData = (key, newCursor, state) => (dispatch) => {
   const newCursors = updateCursors(key,
     newCursor, state.pageSize,
     state.pagesPerTab,
@@ -65,18 +61,17 @@ export const requestMoreData = (key, newCursor, state) => dispatch => {
   return dispatch(doRequestMoreData({ cursors: newCursors, originalPageToReset: [key] }));
 };
 
-export const changePageSize = (newPageSize, state) => dispatch => {
+export const changePageSize = (newPageSize, state) => (dispatch) => {
   const newCursors = updateCursors('', 0, state.oldPageSize,
     state.pagesPerTab,
     state.cursors, state.queriedCursors);
-  console.log("in changePageSize");
   return Promise.resolve(dispatch(doChangePageSize({
     cursors: newCursors,
-    pageSize: parseInt(newPageSize)
+    pageSize: parseInt(newPageSize, 10),
   })));
 };
 
-export const changePage = (tab, page, state) => dispatch => {
+export const changePage = (tab, page, state) => (dispatch) => {
   state[tab] = page;
   return Promise.resolve(dispatch(doChangePage(state)));
 };
@@ -94,10 +89,10 @@ export const ReduxExplorerTabPanel = (() => {
   });
 
   const mapDispatchToProps = dispatch => ({
-    onTabChange: (state) => dispatch(setActiveTab(state)),
+    onTabChange: state => dispatch(setActiveTab(state)),
     onPageLoadMore: (key, newCursor, state) => dispatch(requestMoreData(key, newCursor, state)),
     onPageSizeChange: (newPageSize, state) => dispatch(changePageSize(newPageSize, state)),
-    onPageChange: (tab, page, state) => dispatch(changePage(tab, page, state))
+    onPageChange: (tab, page, state) => dispatch(changePage(tab, page, state)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(ExplorerTabPanel);
@@ -116,7 +111,7 @@ export const ReduxSideBar = (() => {
   });
 
   const mapDispatchToProps = dispatch => ({
-    onChange: (state) => dispatch(changeSelectedList(state)),
+    onChange: state => dispatch(changeSelectedList(state)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(ExplorerSideBar);
