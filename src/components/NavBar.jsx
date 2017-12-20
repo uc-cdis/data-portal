@@ -40,7 +40,7 @@ const NavIcon = styled.div`
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
- * @param {navaItems,user,onLogoutClick} params 
+ * @param {navaItems,user,onLogoutClick} params
  */
 const NavBar = ({ navItems, user, onLogoutClick }) => (
   <Header>

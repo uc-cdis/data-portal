@@ -73,8 +73,8 @@ CategoryTable.propTypes = {
  * Just exported for testing
  * Little helper that extacts a mapping of category-name to
  * the list of nodes in that category given a dictionary definition object
- * 
- * @param {Object} dictionary 
+ *
+ * @param {Object} dictionary
  * @return {} mapping from category to node list
  */
 export function category2NodeList(dictionary) {
@@ -96,8 +96,8 @@ export function category2NodeList(dictionary) {
 
 /**
  * Little components presents an overview of the types in a dictionary organized by category
- * 
- * @param {dictionary} params 
+ *
+ * @param {dictionary} params
  */
 const DataDictionary = ({ dictionary }) => {
   const c2nl = category2NodeList(dictionary);

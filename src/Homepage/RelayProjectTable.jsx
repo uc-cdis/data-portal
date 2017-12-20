@@ -18,13 +18,13 @@ const gqlHelper = GQLHelper.getGQLHelper();
  * Not a normal relay fragment container.
  * Overrides rowRender in ProjectTable parent class to fetch row data via Relay QueryRender.
  * Assumes higher level container injects the original undetailed list of projects.
- * 
+ *
  */
 export class RelayProjectTable extends ProjectTable {
   /**
    * Overrides rowRender in ProjectTable parent class to fetch row data via Relay QueryRender.
-   * 
-   * @param {Object} proj 
+   *
+   * @param {Object} proj
    */
   rowRender(proj) {
     return (<QueryRenderer

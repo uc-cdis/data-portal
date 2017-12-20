@@ -11,12 +11,12 @@ const d3 = {
 };
 
 /**
- * createSvgGraph: builds an SVG graph (oval nodes) in the SVG DOM 
+ * createSvgGraph: builds an SVG graph (oval nodes) in the SVG DOM
  *    node with selector: svg#data_model_graph.
- *    Needs position as property of each node (as fraction of 1 e.g. [0.5, 0.1] 
+ *    Needs position as property of each node (as fraction of 1 e.g. [0.5, 0.1]
  *    for placement at (0.5*svg_width, 0.1*svg_height))
  *    Side effect - decorates each node in 'nodes' with a 'position' property
- * 
+ *
  * @param nodes
  * @param edges
  */

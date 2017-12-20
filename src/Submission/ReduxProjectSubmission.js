@@ -57,7 +57,7 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
 };
 
 
-let lastProjectFetchMs = 0;
+const lastProjectFetchMs = 0;
 
 
 const ReduxSubmitTSV = (() => {

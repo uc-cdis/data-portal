@@ -45,7 +45,6 @@ class CustomTooltip extends React.Component {
 }
 
 
-
 const COLORS = ['#8884d8', '#00C49F', '#FFBB28', '#FF8042'];
 const CustomPieChart = function () {
   return (

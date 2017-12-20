@@ -90,9 +90,9 @@ export class ProjectTR extends React.Component {
             */
 
 /**
- * Table of projects.  
+ * Table of projects.
  * Has projectList property where each entry has the properties
- * for a project detail, and a summaryCounts property with 
+ * for a project detail, and a summaryCounts property with
  * prefetched totals (property details may be fetched lazily via Relay, whatever ...)
  */
 export class ProjectTable extends React.Component {

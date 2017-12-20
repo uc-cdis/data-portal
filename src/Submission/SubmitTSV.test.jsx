@@ -9,10 +9,10 @@ describe('the TSV submission componet', () => {
 
   /**
    * Little helper for constructing a <SubmitTSV> jest/enzyme test
-   * 
-   * @param {file, submit_result, submit_status} submission property passed through to <SubmitTSV> 
+   *
+   * @param {file, submit_result, submit_status} submission property passed through to <SubmitTSV>
    * @param {function} submitCallback invoked by onSubmitClick property on <SubmitTSV>
-   * @return enzymejs wrapper of <SubmitTSV> with properties from params 
+   * @return enzymejs wrapper of <SubmitTSV> with properties from params
    */
   function buildTest(submission = { file: '', submit_result: '', submit_status: 200 }, submitCallback = () => {}) {
     const $dom = mount(

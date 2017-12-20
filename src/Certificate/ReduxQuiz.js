@@ -7,7 +7,7 @@ import { fetchWrapper } from '../actions';
 /**
  * Redux action triggered by quiz form update
  * @method updateForm
- * @param {*} data 
+ * @param {*} data
  */
 export const updateForm = data => ({
   type: 'UPDATE_CERTIFICATE_FORM',
@@ -30,8 +30,8 @@ export const receiveSubmitCert = ({ status }, history) => {
 
 /**
  * Redux action triggered by quiz submit
- * @param {*} data 
- * @param {*} questionList 
+ * @param {*} data
+ * @param {*} questionList
  */
 export const submitForm = (data, questionList, history) => fetchWrapper({
   path: `${userapiPath}/user/cert/security_quiz?extension=txt`,
@@ -43,7 +43,7 @@ export const submitForm = (data, questionList, history) => fetchWrapper({
 
 /**
  * answer is the index of the correct option
- */ 
+ */
 const questionList = [
   {
     question: 'As a registered user, I can:',

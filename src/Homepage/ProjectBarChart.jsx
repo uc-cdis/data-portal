@@ -20,7 +20,7 @@ const FloatBox = styled.div`
 /**
  * Component shows stacked-bars - one stacked-bar for each project in props.projectList -
  * where experiments are stacked on top of cases.  projectList looks like:
- * 
+ *
  * const data = [
  *       {name: 'bpa-test', experimentCount: 4000, caseCount: 2400, aliquotCount: 2400},
  *       ...

@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import GqlEditor from './GqlEditor';
 
 
-
 const mapStateToProps = state => ({
   schema: state.graphiql.schema,
 });

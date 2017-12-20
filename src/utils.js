@@ -44,7 +44,7 @@ export const predictFileType = (dirtyData, fileType) => {
 /**
  * Little wrapper around setinterval with a guard to prevent an async function
  * from being invoked multiple times.
- * 
+ *
  * @param {()=>Promise} lambda callback should return a Promise
  * @param {int} timeoutMs passed through to setinterval
  * @return the setinterval id (can be passed to clearinterval)
@@ -81,7 +81,7 @@ export const color = {
 
 
 export function legendCreator(legendGroup, nodes, legendWidth) {
-  // Find all unique categories 
+  // Find all unique categories
   const uniqueCategoriesList = nodes.reduce((acc, elem) => {
     if (acc.indexOf(elem.category) === -1) {
       acc.push(elem.category);
@@ -153,10 +153,10 @@ export function addLinks(graphSvg, edges) {
 /**
  * Compute SVG coordinates fx, fy for each node in nodes.
  * Decorate each node with .fx and .fy property as side effect.
- * 
- * @param {Array<Node>} nodes each decorated with a position [width,height] in [0,1] 
- * @param {*} graphWidth 
- * @param {*} graphHeight 
+ *
+ * @param {Array<Node>} nodes each decorated with a position [width,height] in [0,1]
+ * @param {*} graphWidth
+ * @param {*} graphHeight
  */
 export function calculatePosition(nodes, graphWidth, graphHeight) {
   // Calculate the appropriate position of each node on the graph
@@ -174,8 +174,8 @@ export function calculatePosition(nodes, graphWidth, graphHeight) {
 
 /**
  * Type agnostic compare thunk for Array.sort
- * @param {*} a 
- * @param {*} b 
+ * @param {*} a
+ * @param {*} b
  */
 export function sortCompare(a, b) {
   if (a === b) { return 0; }

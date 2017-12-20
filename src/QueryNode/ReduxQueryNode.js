@@ -6,7 +6,6 @@ import { submissionApiPath } from '../localconf';
 import QueryNode from './QueryNode';
 
 
-
 const clearDeleteSession = {
   type: 'CLEAR_DELETE_SESSION',
 };
@@ -63,7 +62,7 @@ const deleteNode = ({ id, project }) =>
     })
       .then(
         ({ status, data }) => {
-        // console.log('receive delete');      
+        // console.log('receive delete');
           dispatch(updatePopup({ nodedelete_popup: false, view_popup: false }));
 
           switch (status) {

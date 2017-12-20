@@ -27,9 +27,9 @@ const fetchCache = {};
  * then text for 200 JSON responses are cached, and re-used, and
  * the result promise only includes {data, status} - where JSON data is re-parsed
  * every time to avoid mutation by the client
- * 
+ *
  * @method fetchJsonOrText
- * @param {path,method=GET,body=null,customHeaders?, dispatch?, useCache?} opts 
+ * @param {path,method=GET,body=null,customHeaders?, dispatch?, useCache?} opts
  * @return Promise<{response,data,status,headers}> or Promise<{data,status}> if useCache specified
  */
 export const fetchJsonOrText = (opts) => {
@@ -69,15 +69,15 @@ export const fetchJsonOrText = (opts) => {
 };
 
 /**
- * Redux 'thunk' wrapper around fetchJsonOrText 
+ * Redux 'thunk' wrapper around fetchJsonOrText
  * invokes dispatch(handler( { status, data, headers} ) and callback()
- * and propagates {response,data, status, headers} on resolved fetch, 
+ * and propagates {response,data, status, headers} on resolved fetch,
  * otherwise dipatch(connectionError()) on fetch rejection.
  * May prefer this over straight call to fetchJsonOrText in Redux context due to
- * conectionError() dispatch on fetch rejection. 
- * 
+ * conectionError() dispatch on fetch rejection.
+ *
  * @param {path,method=GET,body=null,customerHeaders,handler,callback} opts
- * @return Promise 
+ * @return Promise
  */
 export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders, handler, callback = () => (null) }) =>
   dispatch => fetchJsonOrText({ path, method, body, customHeaders, dispatch },
@@ -171,7 +171,7 @@ export const logoutAPI = () => dispatch => fetchJsonOrText({
 
 /**
  * Retrieve the oath endpoint for the service under the given oathPath
- * 
+ *
  * @param {String} oauthPath
  * @return {(dispatch) => Promise<string>} dispatch function
  */

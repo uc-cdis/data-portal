@@ -12,7 +12,7 @@ const d3 = {
 
 /**
  * createDDGraph: Creates a Data Dictionary graph (rectangular nodes).
- *    Needs position as property of each node (as fraction of 1 e.g. [0.5, 0.1] 
+ *    Needs position as property of each node (as fraction of 1 e.g. [0.5, 0.1]
  *    for placement at (0.5*svgWidth, 0.1*svgHeight))
  */
 function createDDGraph(nodesIn, edges, radius = 60, boxHeightMult, boxWidthMult, svgHeightMult) {
@@ -148,7 +148,7 @@ function createDDGraph(nodesIn, edges, radius = 60, boxHeightMult, boxWidthMult,
 }
 
 /**
- * formatField: Recurisvely inserts newline characters into strings that are 
+ * formatField: Recurisvely inserts newline characters into strings that are
  *    too long after underscores
  */
 function formatField(name) {
@@ -171,8 +171,8 @@ function formatField(name) {
   return name;
 }
 
-/** 
- * formatType: Turn different ways used to represent type in data dictionary 
+/**
+ * formatType: Turn different ways used to represent type in data dictionary
  *    into a string
  */
 function formatType(type) {

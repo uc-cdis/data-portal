@@ -57,7 +57,7 @@ const LinkTable = ({ links }) => {
  * @param {Object} property one of the properties of a dictionary node
  * @return {String|Array<String>} string for scalar types, array for enums
  *                   and other listish types or 'UNDEFINED' if no
- *                   type information availabale 
+ *                   type information availabale
  */
 export const getType = (property) => {
   let type = 'UNDEFINED';
@@ -246,8 +246,8 @@ const DownloadButton = styled.a`
 /**
  * Component renders a view with details of a particular dictionary type (node - /dd/typename) or
  * of the whole dictionary (/dd/graph).
- * 
- * @param {*} param0 
+ *
+ * @param {*} param0
  */
 const DataDictionaryNode = ({ params, submission }) => {
   const node = params.node;
