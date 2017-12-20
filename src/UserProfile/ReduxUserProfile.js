@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import UserProfile from './UserProfile';
-import { fetchOAuthURL, fetchJsonOrText, fetchProjects, updatePopup } from '../actions';
+import { fetchJsonOrText, updatePopup } from '../actions';
 import { submissionApiOauthPath, credentialCdisPath } from '../localconf';
 
 
