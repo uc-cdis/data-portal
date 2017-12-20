@@ -9,10 +9,15 @@ pipeline {
         checkout scm
       }
     }
-    stage('PlaceHolder') {
-      steps {
-        echo "Doing nothing for now"
-      }
+    stage('k8sDeploy') {
+        steps {
+            echo "GIT_BRANCH is $env.GIT_BRANCH"
+            echo "GIT_COMMIT is $env.GIT_COMMIT"
+            script {
+                def helper = new uchicago.cdis.KubeHelper(this);
+                helper.deployBranch("portal-service");
+            }
+        }
     }
   }
   post {
