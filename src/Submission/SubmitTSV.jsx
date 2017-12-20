@@ -12,7 +12,7 @@ import SubmissionResult from './SubmissionResult';
 
 /**
  * Manage TSV/JSON submission
- * 
+ *
  * @param {string} project of form program-project
  * @param {Function} onFileChange triggered when user edits something in tsv/json AceEditor
  */
@@ -91,7 +91,7 @@ const SubmitTSV = ({ project, submission, onUploadClick, onSubmitClick, onFileCh
 };
 
 SubmitTSV.propTypes = {
-  project: PropTypes.string.isRequired,  // from react-router
+  project: PropTypes.string.isRequired, // from react-router
   submission: PropTypes.shape({
     file: PropTypes.string,
     file_type: PropTypes.string,

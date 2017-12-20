@@ -39,8 +39,8 @@ describe('the UserProfile component', () => {
           onRequestDeleteKey={noop}
           onClearDeleteSession={noop}
         />
-      </StaticRouter>
-      );
+      </StaticRouter>,
+    );
     expect($vdom.find(AccessKeyCell)).toHaveLength(testProps.userProfile.access_key_pairs.length);
   });
 
@@ -75,8 +75,8 @@ describe('the UserProfile component', () => {
           onRequestDeleteKey={() => { done(); }}
           onClearDeleteSession={noop}
         />
-      </StaticRouter>
-      );
+      </StaticRouter>,
+    );
     const $deleteBtn = $vdom.find(DeleteButton);
     expect($deleteBtn).toHaveLength(2);
     $deleteBtn.at(0).simulate('click');

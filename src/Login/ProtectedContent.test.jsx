@@ -1,6 +1,3 @@
-import React from 'react';
-import { mount } from 'enzyme';
-
 import ProtectedContent, { intersection } from './ProtectedContent';
 
 describe('the ProtectedContent container', () => {

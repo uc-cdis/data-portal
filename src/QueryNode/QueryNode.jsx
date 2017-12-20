@@ -84,7 +84,7 @@ class QueryForm extends React.Component {
     const data = { project: this.props.project };
     const queryParam = [];
 
-    for (let i = 0; i < form.length; i++) {
+    for (let i = 0; i < form.length; i += 1) {
       const input = form[i];
       if (input.name && input.value) {
         queryParam.push(`${input.name}=${input.value}`);
@@ -103,8 +103,8 @@ class QueryForm extends React.Component {
   }
 
   render() {
-    const nodes_for_query = this.props.nodeTypes.filter(nt => !['program', 'project'].includes(nt));
-    const options = nodes_for_query.map(node_type => ({ value: node_type, label: node_type }));
+    const nodesForQuery = this.props.nodeTypes.filter(nt => !['program', 'project'].includes(nt));
+    const options = nodesForQuery.map(nodeType => ({ value: nodeType, label: nodeType }));
     const state = this.state || {};
     return (
       <form onSubmit={this.handleQuerySubmit}>
@@ -118,7 +118,9 @@ class QueryForm extends React.Component {
 
 const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
   const onDelete = () => {
-    onStoreNodeInfo({ project, id: value.id }).then(() => onUpdatePopup({ nodedelete_popup: true }));
+    onStoreNodeInfo({ project, id: value.id }).then(
+      () => onUpdatePopup({ nodedelete_popup: true }),
+    );
   };
   const onView = () => {
     onStoreNodeInfo({ project, id: value.id }).then(() => onUpdatePopup({ view_popup: true }));
@@ -139,6 +141,11 @@ Entity.propTypes = {
   onStoreNodeInfo: PropTypes.func,
 };
 
+Entity.defaultProps = {
+  onUpdatePopup: null,
+  onStoreNodeInfo: null,
+};
+
 const Entities = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => (
   <ul>
     {value.map(value => <Entity project={project} onStoreNodeInfo={onStoreNodeInfo} onUpdatePopup={onUpdatePopup} key={value.submitter_id} value={value} />)}
@@ -153,12 +160,12 @@ Entities.propTypes = {
  * QueryNode shows the details of a particular node
  */
 class QueryNode extends React.Component {
-  /** 
+  /**
    * Internal helper to render the "view node" popup if necessary
    * based on the popups and query_nodes properties attached to this component.
-   * 
+   *
    * @param {popups, query_nodes, onUpdatePopup} props including props.popups.view_popup and props.query_nodes state passed into the component by Redux
-   * @return { state, popupEl } where state (just used for testing) is string one of [viewNode, noPopup], and 
+   * @return { state, popupEl } where state (just used for testing) is string one of [viewNode, noPopup], and
    *    popupEl is either null or a <Popup> properly configured to render
    */
   renderViewPopup(props) {
@@ -188,12 +195,14 @@ class QueryNode extends React.Component {
     return popup;
   }
 
-  /** 
+  /**
    * Internal helper to render the "delete node" popup if necessary
    * based on the popups and query_nodes properties attached to this component.
-   * 
-   * @param {params, popups, query_nodes, onUpdatePopup, onDeleteNode, onClearDeleteSession} props including params.project, props.popups and props.query_nodes state passed into the component by Redux
-   * @return { state, popupEl } where state (just used for testing) is string one of [confirmDelete, waitForDelete, deleteFailed, noPopup], and 
+   *
+   * @param {params, popups, query_nodes, onUpdatePopup, onDeleteNode, onClearDeleteSession} props including
+   *        params.project, props.popups and props.query_nodes state passed into the component by Redux
+   * @return { state, popupEl } where state (just used for testing) is
+   *    string one of [confirmDelete, waitForDelete, deleteFailed, noPopup], and
    *    popupEl is either null or a <Popup> properly configured to render
    */
   renderDeletePopup(props) {

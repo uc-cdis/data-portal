@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 
-//import { push } from 'react-router-redux'; - not yet supported in react-router 4
 import { fetchJsonOrText, updatePopup } from '../actions';
 import { getSubmitPath } from '../utils';
 import { submissionApiPath } from '../localconf';
@@ -49,7 +48,6 @@ export const submitSearchForm = (opts, url, history) =>
       )
       .then(
         () => {
-          //if (url) { return dispatch(push(url)); }
           if (url && history) { history.push(url); }
           return null;
         },

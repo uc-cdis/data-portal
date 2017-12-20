@@ -2,7 +2,8 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-// not yet compatable with react-router 4.X - import { syncHistoryWithStore } from 'react-router-redux';
+// not yet compatable with react-router 4.X -
+// import { syncHistoryWithStore } from 'react-router-redux';
 import { ThemeProvider } from 'styled-components';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -82,7 +83,11 @@ async function init() {
                   <Route
                     path="/identity"
                     component={
-                      props => <ProtectedContent filter={() => store.dispatch(fetchAccess())} component={UserProfile} {...props} />
+                      props => (<ProtectedContent
+                        filter={() => store.dispatch(fetchAccess())}
+                        component={UserProfile}
+                        {...props}
+                      />)
                     }
                   />
                   <Route
@@ -91,15 +96,21 @@ async function init() {
                   />
                   <Route
                     path="/dd/:node"
-                    component={props => <ProtectedContent public component={DataDictionaryNode} {...props} />}
+                    component={
+                      props => <ProtectedContent public component={DataDictionaryNode} {...props} />
+                    }
                   />
                   <Route
                     path="/dd"
-                    component={props => <ProtectedContent public component={DataDictionary} {...props} />}
+                    component={
+                      props => <ProtectedContent public component={DataDictionary} {...props} />
+                    }
                   />
                   <Route
                     path="/files"
-                    component={props => <ProtectedContent background={'#ecebeb'} component={ExplorerPage} {...props} />}
+                    component={
+                      props => <ProtectedContent background={'#ecebeb'} component={ExplorerPage} {...props} />
+                    }
                   />
                   <Route
                     path="/:project/search"
@@ -123,7 +134,9 @@ async function init() {
                   />
                   <Route
                     path="/:project"
-                    component={props => <ProtectedContent component={ProjectSubmission} {...props} />}
+                    component={
+                      props => <ProtectedContent component={ProjectSubmission} {...props} />
+                    }
                   />
                 </Switch>
                 <Margin background={background} />

@@ -1,6 +1,6 @@
 import { persistStore, autoRehydrate } from 'redux-persist';
 import { createStore, applyMiddleware, compose } from 'redux';
-//import { routerMiddleware } from 'react-router-redux'; - not yet supporting router 4
+// import { routerMiddleware } from 'react-router-redux'; - not yet supporting router 4
 import thunk from 'redux-thunk';
 
 import { dict } from './dictionary';
@@ -18,14 +18,14 @@ let storePromise;
  * We want some Relayjs adapters to also update the Redux store,
  * so it's handy to be able to access the store outside of
  * the normal react-redux 'connect' mechanism.
- * 
+ *
  * @return Promise<Store>
  */
 export const getReduxStore = () => {
   if (store) { // singleton
     return Promise.resolve(store);
   }
-  if (storePromise) { // store setup is in process 
+  if (storePromise) { // store setup is in process
     return storePromise;
   }
   storePromise = new Promise((resolve, reject) => {
@@ -36,7 +36,7 @@ export const getReduxStore = () => {
           data = { user: { username: 'test', certificates_uploaded: requiredCerts }, submission: { dictionary: dict, nodeTypes: Object.keys(dict).slice(2) }, status: {} };
         }
         store = compose(
-          applyMiddleware(thunk), //routerMiddleware(browserHistory)),
+          applyMiddleware(thunk), // routerMiddleware(browserHistory)),
           autoRehydrate(),
         )(createStore)(
           reducers,
@@ -45,7 +45,7 @@ export const getReduxStore = () => {
         );
       } else {
         store = compose(
-          applyMiddleware(thunk), //routerMiddleware(browserHistory)),
+          applyMiddleware(thunk), // routerMiddleware(browserHistory)),
           autoRehydrate(),
         )(createStore)(
           reducers,
@@ -56,7 +56,7 @@ export const getReduxStore = () => {
 
       persistStore(store,
         { whitelist: ['certificate'] },
-        () => { console.log('rehydration complete'); resolve(store); },
+        () => { resolve(store); },
       );
     } catch (e) {
       reject(e);
