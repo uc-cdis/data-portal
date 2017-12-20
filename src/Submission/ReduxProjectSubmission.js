@@ -56,10 +56,6 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
   ).then(msg => dispatch(msg));
 };
 
-
-const lastProjectFetchMs = 0;
-
-
 const ReduxSubmitTSV = (() => {
   const mapStateToProps = state => ({
     submission: state.submission,

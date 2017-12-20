@@ -44,7 +44,7 @@ export function intersection(aList, bList) {
     {},
   );
   return Object.entries(key2Count)
-    .filter(([k, v]) => v > 1)
+    .filter(kv => kv[1] > 1)
     .map(([k]) => k);
 }
 
