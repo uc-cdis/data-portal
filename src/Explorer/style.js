@@ -114,8 +114,6 @@ export const ExplorerTabBox = styled.div`
   display:${props => (props.active ? 'block' : 'none')};
 `;
 
-export const BodyBackground = '#ecebeb';
-
 export const ExplorerTableRow = styled.tr`
   ${TableRow};
   overflow: visible;

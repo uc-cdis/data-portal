@@ -4,10 +4,10 @@
  *    and edges, returns the nodes and edges in correct format
  *
  * @method createNodesAndEdges
- * @param props: Object (normally taken from redux state) that includes dictionary 
- *    property defining the dictionary as well as other optional properties 
+ * @param props: Object (normally taken from redux state) that includes dictionary
+ *    property defining the dictionary as well as other optional properties
  *    such as counts_search and links_search (created by getCounts) with
- *    information about the number of each type (node) and link (between 
+ *    information about the number of each type (node) and link (between
  *    nodes with a link's source and target types) that actually
  *    exist in the data
  * @param createAll: Include all nodes and edges or only those that are populated in
@@ -40,7 +40,7 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
 
   const edges = nodes.filter(
     node => node.links && node.links.length > 0,
-  ).reduce( // add each node's links to the edge list 
+  ).reduce( // add each node's links to the edge list
     (list, node) => {
       const newLinks = node.links.map(
         link => ({ source: node.name, target: link.target_type, exists: 1, ...link }),
@@ -62,12 +62,12 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
       return result;
     }, [],
   ).filter(
-    // target type exist and is not in hide list 
+    // target type exist and is not in hide list
     link => (link.target && nameToNode[link.target] && !hideDb[link.target]),
   )
     .map(
       (link) => {
-      // decorate each link with its "exists" count if available 
+      // decorate each link with its "exists" count if available
       //  (number of instances of link between source and target types in the data)
         link.exists = props.links_search ? props.links_search[`${link.source}_${link.name}_to_${link.target}_link`] : undefined;
         return link;
@@ -95,7 +95,7 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
 export function findRoot(nodes, edges) {
   const couldBeRoot = edges.reduce(
     (db, edge) => {
-      // At some point the d3 force layout converts 
+      // At some point the d3 force layout converts
       //   edge.source and edge.target into node references ...
       const sourceName = typeof edge.source === 'object' ? edge.source.name : edge.source;
       if (db[sourceName]) {
@@ -103,7 +103,7 @@ export function findRoot(nodes, edges) {
       }
       return db;
     },
-    // initialize emptyDb - any node could be the root 
+    // initialize emptyDb - any node could be the root
     nodes.reduce((emptyDb, node) => { emptyDb[node.name] = true; return emptyDb; }, {}),
   );
   const rootNode = nodes.find(n => couldBeRoot[n.name]);
@@ -114,13 +114,13 @@ export function findRoot(nodes, edges) {
  * Arrange nodes in dictionary graph breadth first, and build level database.
  * If a node links to multiple parents, then place it under the highest parent ...
  * Exported for testing.
- * 
- * @param {Array} nodes 
+ *
+ * @param {Array} nodes
  * @param {Array} edges
- * @return { nodesBreadthFirst, treeLevel2Names, name2Level } where 
+ * @return { nodesBreadthFirst, treeLevel2Names, name2Level } where
  *          nodesBreadthFirst is array of node names, and
- *          treeLevel2Names is an array of arrays of node names, 
- *          and name2Level is a mapping of node name to level 
+ *          treeLevel2Names is an array of arrays of node names,
+ *          and name2Level is a mapping of node name to level
  */
 export function nodesBreadthFirst(nodes, edges) {
   const result = {
@@ -132,7 +132,7 @@ export function nodesBreadthFirst(nodes, edges) {
   // mapping of node name to edges that point into that node
   const name2EdgesIn = edges.reduce(
     (db, edge) => {
-      // At some point the d3 force layout converts edge.source 
+      // At some point the d3 force layout converts edge.source
       //   and edge.target into node references ...
       const targetName = typeof edge.target === 'object' ? edge.target.name : edge.target;
       if (db[targetName]) {
@@ -142,7 +142,7 @@ export function nodesBreadthFirst(nodes, edges) {
       }
       return db;
     },
-    // initialize emptyDb - include nodes that have no incoming edges (leaves) 
+    // initialize emptyDb - include nodes that have no incoming edges (leaves)
     nodes.reduce((emptyDb, node) => { emptyDb[node.name] = []; return emptyDb; }, {}),
   );
 
@@ -163,7 +163,7 @@ export function nodesBreadthFirst(nodes, edges) {
   }
 
   // queue.shift is O(n), so just keep pushing, and move the head
-  for (let head = 0; head < queue.length; head++) {
+  for (let head = 0; head < queue.length; head += 1) {
     const { query, level } = queue[head]; // breadth first
     result.bfOrder.push(query);
     processedNodes.add(query);
@@ -174,7 +174,7 @@ export function nodesBreadthFirst(nodes, edges) {
     result.name2Level[query] = level;
     name2EdgesIn[query].forEach(
       (edge) => {
-        // At some point the d3 force layout converts edge.source 
+        // At some point the d3 force layout converts edge.source
         //   and edge.target into node references ...
         const sourceName = typeof edge.source === 'object' ? edge.source.name : edge.source;
         if (name2EdgesIn[sourceName]) {
@@ -200,13 +200,13 @@ export function nodesBreadthFirst(nodes, edges) {
 /**
  * Decorate the nodes of a graph with a position based on the node's position in the graph
  * Exported for testing.  Decorates nodes with position property array [x,y] on a [0,1) space
- * 
+ *
  * @method assignNodePositions
  * @param nodes
  * @param edges
- * @param opts {breadthFirstInfo,numPerRow} breadthFirstInfo is output 
+ * @param opts {breadthFirstInfo,numPerRow} breadthFirstInfo is output
  *          from nodesBreadthFirst - otherwise call it ourselves,
- *          numPerRow specifies number of nodes per row if we want a 
+ *          numPerRow specifies number of nodes per row if we want a
  *          grid under the root rather than the tree structure
  */
 export function assignNodePositions(nodes, edges, opts) {

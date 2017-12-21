@@ -11,9 +11,9 @@ export const clearCounts = {
 
 
 /**
- * Compose and send a single graphql query to get a count of how 
+ * Compose and send a single graphql query to get a count of how
  * many of each node and edge are in the current state
- * 
+ *
  * @method getCounts
  * @param {Array<string>} typeList
  * @param {string} project
@@ -46,7 +46,7 @@ export const getCounts = (typeList, project, dictionary) => {
   // Add links to query
   Object.keys(dictionary).filter(
     name => (!name.startsWith('_' && dictionary[name].links)),
-  ).reduce( // extract links from each node 
+  ).reduce( // extract links from each node
     (linkList, name) => {
       const node = dictionary[name];
       const newLinks = node.links;

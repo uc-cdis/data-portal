@@ -1,7 +1,6 @@
 import React from 'react';
 import { RelayProjectDashboard } from './RelayHomepage';
 import ReduxProjectDashboard from './ReduxProjectDashboard';
-import { withAuthTimeout, withBoxAndNav } from '../utils';
 import { getReduxStore } from '../reduxStore';
 
 
@@ -43,7 +42,7 @@ class AmbidextrousDashboard extends React.Component {
 /**
  * Ambidextrous homepage
  */
-const AmbiHomepage = withBoxAndNav(withAuthTimeout(AmbidextrousDashboard));
+const AmbiHomepage = AmbidextrousDashboard;
 
 
 export default AmbiHomepage;

@@ -38,7 +38,7 @@ describe('the DataModelGraph', () => {
     expect($graph.state('fullToggle')).toBe(true);
     expect(document.querySelector('#data_model_graph')).toBeDefined();
     // Not sure why this doesn't work ...?
-    // Could be jsdom does not support svg properly. 
+    // Could be jsdom does not support svg properly.
     // expect(d3.selectAll('ellipse').size()).toBe(nodes.length);
   });
 

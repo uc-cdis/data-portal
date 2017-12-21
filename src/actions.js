@@ -1,6 +1,5 @@
 import 'isomorphic-fetch';
-import _ from 'underscore';
-import { requiredCerts, userapiPath, headers, basename, submissionApiOauthPath, graphqlPath } from './configs';
+import { apiPath, userapiPath, headers, basename, submissionApiOauthPath, submissionApiPath, graphqlPath, graphqlSchemaUrl } from './configs';
 
 
 export const updatePopup = state => ({
@@ -16,19 +15,29 @@ export const connectionError = () => {
   };
 };
 
+
+const fetchCache = {};
+
 /**
  * Little helper issues fetch, then resolves response
  * as text, and tries to JSON.parse the text before resolving, but
  * ignores JSON.parse failure and reponse.status, and returns {response, data} either way.
  * If dispatch is supplied, then dispatch(connectionError()) on fetch reject.
- * 
+ * If useCache is supplied and method is GET,
+ * then text for 200 JSON responses are cached, and re-used, and
+ * the result promise only includes {data, status} - where JSON data is re-parsed
+ * every time to avoid mutation by the client
+ *
  * @method fetchJsonOrText
- * @param {path,method=GET,body=null,customHeaders?, dispatch?} opts 
- * @return Promise<{response,data,status,headers}
+ * @param {path,method=GET,body=null,customHeaders?, dispatch?, useCache?} opts
+ * @return Promise<{response,data,status,headers}> or Promise<{data,status}> if useCache specified
  */
 export const fetchJsonOrText = (opts) => {
-  const { path, method = 'GET', body = null, customHeaders, dispatch } = opts;
+  const { path, method = 'GET', body = null, customHeaders, dispatch, useCache } = opts;
 
+  if (useCache && (method === 'GET') && fetchCache[path]) {
+    return Promise.resolve({ status: 200, data: JSON.parse(fetchCache[path]) });
+  }
   const request = {
     credentials: 'same-origin',
     headers: { ...headers, ...customHeaders },
@@ -43,6 +52,9 @@ export const fetchJsonOrText = (opts) => {
         if (data) {
           try {
             data = JSON.parse(data);
+            if (useCache && method === 'GET' && response.status === 200) {
+              fetchCache[path] = textData;
+            }
           } catch (e) {
             // # do nothing
           }
@@ -57,15 +69,15 @@ export const fetchJsonOrText = (opts) => {
 };
 
 /**
- * Redux 'thunk' wrapper around fetchJsonOrText 
+ * Redux 'thunk' wrapper around fetchJsonOrText
  * invokes dispatch(handler( { status, data, headers} ) and callback()
- * and propagates {response,data, status, headers} on resolved fetch, 
+ * and propagates {response,data, status, headers} on resolved fetch,
  * otherwise dipatch(connectionError()) on fetch rejection.
  * May prefer this over straight call to fetchJsonOrText in Redux context due to
- * conectionError() dispatch on fetch rejection. 
- * 
+ * conectionError() dispatch on fetch rejection.
+ *
  * @param {path,method=GET,body=null,customerHeaders,handler,callback} opts
- * @return Promise 
+ * @return Promise
  */
 export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders, handler, callback = () => (null) }) =>
   dispatch => fetchJsonOrText({ path, method, body, customHeaders, dispatch },
@@ -134,7 +146,7 @@ export const fetchUser = dispatch => fetchJsonOrText({
     case 401:
       return {
         type: 'UPDATE_POPUP',
-        data: { auth_popup: true },
+        data: { authPopup: true },
       };
     default:
       return {
@@ -144,37 +156,6 @@ export const fetchUser = dispatch => fetchJsonOrText({
     }
   },
 ).then((msg) => { dispatch(msg); });
-
-export const requireAuth = (store, additionalHooks) => (nextState, replace, callback) => {
-  window.scrollTo(0, 0);
-  const resolvePromise = () => {
-    const { user } = store.getState();
-    const location = nextState.location;
-    if (!user.username) {
-      const path = location.pathname === '/' ? '/' : `/${location.pathname}`;
-      replace({ pathname: '/login', query: { next: path + nextState.location.search } });
-      return Promise.resolve();
-    }
-    const hasCerts =
-      _.intersection(requiredCerts, user.certificates_uploaded).length !== requiredCerts.length;
-    // take quiz if this user doesn't have required certificate
-    if (location.pathname !== 'quiz' && hasCerts) {
-      replace({ pathname: '/quiz' });
-    } else if (location.pathname === 'quiz' && !hasCerts) {
-      replace({ pathname: '/' });
-    } else if (additionalHooks) {
-      return additionalHooks(nextState, replace);
-    }
-    return Promise.resolve();
-  };
-  store
-    .dispatch(fetchUser)
-    .then(resolvePromise)
-    .then(() => callback());
-};
-
-export const enterHook = (store, hookAction) =>
-  (nextState, replace, callback) => store.dispatch(hookAction()).then(() => callback());
 
 
 export const logoutAPI = () => dispatch => fetchJsonOrText({
@@ -187,32 +168,122 @@ export const logoutAPI = () => dispatch => fetchJsonOrText({
     () => document.location.replace(`${userapiPath}/logout?next=${basename}`),
   );
 
+
+/**
+ * Retrieve the oath endpoint for the service under the given oathPath
+ *
+ * @param {String} oauthPath
+ * @return {(dispatch) => Promise<string>} dispatch function
+ */
 export const fetchOAuthURL = oauthPath => dispatch =>
-// Get cloud_middleware's authorization url
   fetchJsonOrText({
     path: `${oauthPath}authorization_url`,
     dispatch,
-  }).then(
+    useCache: true,
+  })
+    .then(
+      ({ status, data }) => {
+        switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_AUTHORIZATION_URL',
+            url: data,
+          };
+        default:
+          return {
+            type: 'FETCH_ERROR',
+            error: data.error,
+          };
+        }
+      },
+    )
+    .then(
+      (msg) => {
+        dispatch(msg);
+        if (msg.url) {
+          return msg.url;
+        }
+        throw new Error('OAuth authorization failed');
+      },
+    );
+
+
+/*
+ * redux-thunk support asynchronous redux actions via 'thunks' -
+ * lambdas that accept dispatch and getState functions as arguments
+ */
+
+export const fetchProjects = () => dispatch =>
+  fetchJsonOrText({
+    path: `${submissionApiPath}graphql`,
+    body: JSON.stringify({
+      query: 'query Test { project(first:10000) {code, project_id}}',
+    }),
+    method: 'POST',
+  })
+    .then(
+      ({ status, data }) => {
+        switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_PROJECTS',
+            data: data.data.project,
+          };
+        default:
+          return {
+            type: 'FETCH_ERROR',
+            error: data,
+          };
+        }
+      })
+    .then(msg => dispatch(msg));
+
+
+/**
+ * Fetch the schema for graphi, and stuff it into redux -
+ * handled by router
+ */
+export const fetchSchema = dispatch => fetchJsonOrText({ path: graphqlSchemaUrl, dispatch })
+  .then(
     ({ status, data }) => {
       switch (status) {
       case 200:
-        return {
-          type: 'RECEIVE_AUTHORIZATION_URL',
-          url: data,
-        };
+        return dispatch(
+          {
+            type: 'RECEIVE_SCHEMA_LOGIN',
+            schema: data,
+          },
+        );
       default:
-        return {
-          type: 'FETCH_ERROR',
-          error: data.error,
-        };
+        return Promise.resolve('NOOP');
       }
-    },
-  ).then(
-    (msg) => {
-      dispatch(msg);
-      if (msg.url) {
-        return msg.url;
-      }
-      throw new Error('OAuth authorization failed');
     },
   );
+
+
+export const fetchDictionary = dispatch =>
+  fetchJsonOrText({
+    path: `${submissionApiPath}_dictionary/_all`,
+    method: 'GET',
+    useCache: true,
+  })
+    .then(
+      ({ status, data }) => {
+        switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_DICTIONARY',
+            data,
+          };
+        default:
+          return {
+            type: 'FETCH_ERROR',
+            error: data,
+          };
+        }
+      })
+    .then(msg => dispatch(msg));
+
+
+export const fetchVersionInfo = () =>
+  fetchJsonOrText({ path: `${apiPath}_version`, method: 'GET', useCache: true });

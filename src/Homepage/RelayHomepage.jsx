@@ -3,7 +3,6 @@ import { QueryRenderer } from 'react-relay';
 import environment from '../environment';
 import { DashboardWith } from './ProjectDashboard';
 import { RelayProjectTable } from './RelayProjectTable';
-import { withAuthTimeout, withBoxAndNav } from '../utils';
 import { GQLHelper } from '../gqlHelper';
 import { getReduxStore } from '../reduxStore';
 import Spinner from '../components/Spinner';
@@ -17,7 +16,7 @@ const DashboardWithRelayTable = DashboardWith(RelayProjectTable);
  * Relay modern QueryRenderer rendered ProjectDashboard.
  * Note - this is exported to support testing - it's really an module-private class
  * that corrdinates data-collection on the homepage.
- * 
+ *
  * @see https://medium.com/@ven_korolyov/relay-modern-refetch-container-c886296448c7
  * @see https://facebook.github.io/relay/docs/query-renderer.html
  */
@@ -27,8 +26,8 @@ export class RelayProjectDashboard extends React.Component {
    * The ReduxProjectBarChart renders a graph with project-details
    * as data flows into redux from Relay (RelayProjectTable supplements
    * redux with per-project details).
-   * 
-   * @param {Array<Proj>} projectList 
+   *
+   * @param {Array<Proj>} projectList
    */
   static async updateRedux({ projectList, summaryCounts }) {
     // Update redux store if data is not already there
@@ -51,7 +50,7 @@ export class RelayProjectDashboard extends React.Component {
   /**
    * Translate relay properties to {summaryCounts, projectList} structure
    * that is friendly to underlying components.
-   * 
+   *
    * @param relayProps
    * @return {projectList, summaryCounts}
    */
@@ -107,7 +106,7 @@ export class RelayProjectDashboard extends React.Component {
 }
 
 
-const RelayHomepage = withBoxAndNav(withAuthTimeout(RelayProjectDashboard));
+const RelayHomepage = RelayProjectDashboard;
 
 
 /**

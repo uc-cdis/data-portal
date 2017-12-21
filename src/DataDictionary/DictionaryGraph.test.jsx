@@ -1,5 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { StaticRouter } from 'react-router-dom';
 
 import DictionaryGraph from './DictionaryGraph';
 import { buildTestData } from '../DataModelGraph/testData';
@@ -10,21 +11,23 @@ describe('the DictionaryGraph', () => {
     const data = buildTestData();
     // Material-UI components require the Mui theme ...
     const $dom = mount(
-      <DictionaryGraph
-        dictionary={data.dictionary}
-        counts_search={data.counts_search}
-        links_search={data.links_search}
-      />,
+      <StaticRouter location={{ pathname: '/dd/graph' }}>
+        <DictionaryGraph
+          dictionary={data.dictionary}
+          counts_search={data.counts_search}
+          links_search={data.links_search}
+        />
+      </StaticRouter>,
     );
 
-    const $graph = $dom; // .find('DataModelGraph');
+    const $graph = $dom.find(DictionaryGraph);
     return { ...data, $graph, $dom };
   }
 
   it('boots to a full view', () => {
     const { $graph } = buildTest();
     expect($graph.length).toBe(1);
-    expect($graph.state('fullToggle')).toBe(true);
+    expect(!!$graph.find('div[data-toggle="full"]')).toBe(true);
   });
 
   it('toggles between full and compact views', () => {
@@ -32,7 +35,7 @@ describe('the DictionaryGraph', () => {
     const $toggleButton = $dom.find('a#toggle_button');
     expect($toggleButton.length).toBe(1);
     $toggleButton.simulate('click');
-    expect($graph.state('fullToggle')).toBe(false);
+    expect(!!$graph.find('div[data-toggle="abridged"]')).toBe(true);
     expect(document.querySelector('#data_model_graph')).toBeDefined();
     // jsdom does not yet support svg
     // const ellipseList = document.querySelectorAll('ellipse');

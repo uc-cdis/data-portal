@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import { assignNodePositions, createNodesAndEdges } from '../DataModelGraph/utils';
 import { createFullGraph, createAbridgedGraph } from './GraphCreator';
@@ -63,7 +63,7 @@ class DictionaryGraph extends React.Component {
     };
     // Note: svg#data_model_graph is popuplated by createFull|AbridedGraph above
     return (
-      <div>
+      <div data-toggle={this.state.fullToggle ? 'full' : 'abridged'}>
         <Link to={'/dd'}> Explore dictionary as a table </Link>
         <p style={{ fontSize: '75%', marginTop: '1em' }}> <span style={{ fontWeight: 'bold', fontStyle: 'italic' }}> Bold, italicized</span> properties are required</p>
         <div style={divStyle} id="graph_wrapper">

@@ -1,30 +1,39 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import Popup from './Popup';
 
 
-const timeoutPopupMapState = state => ({
-  auth_popup: state.popups.authPopup,
-});
-
-const timeoutPopupMapDispatch = () => ({});
-
-const goToLogin = () => {
-  browserHistory.push('/login');
+const goToLogin = (history) => {
+  history.push('/login');
   // Refresh the page.
   window.location.reload(false);
 };
 
+
+const AuthPopup = withRouter(
+  ({ history }) =>
+    (<Popup
+      message={'Your session has expired or you are logged out. Please log in to continue.'}
+      confirmText="go to login"
+      onConfirm={() => { goToLogin(history); }}
+    />),
+);
+
+const timeoutPopupMapState = state => ({
+  authPopup: state.popups.authPopup,
+});
+
+const timeoutPopupMapDispatch = () => ({});
+
+
 const ReduxAuthTimeoutPopup = connect(timeoutPopupMapState, timeoutPopupMapDispatch)(
   ({ authPopup }) => {
     if (authPopup) {
-      return <Popup message={'Your session has expired or you are logged out. Please log in to continue.'} confirmText="go to login" onConfirm={goToLogin} />;
+      return (<AuthPopup />);
     }
-    return (null);
+    return null;
   },
 );
 
-
 export default ReduxAuthTimeoutPopup;
-

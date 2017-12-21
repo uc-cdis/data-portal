@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { portalVersion } from '../versions';
@@ -38,8 +38,13 @@ const Footer = ({ dictionaryVersion, apiVersion }) =>
   </FooterSection>);
 
 Footer.propTypes = {
-  dictionaryVersion: PropTypes.string.isRequired,
-  apiVersion: PropTypes.string.isRequired,
+  dictionaryVersion: PropTypes.string,
+  apiVersion: PropTypes.string,
+};
+
+Footer.defaultProps = {
+  dictionaryVersion: null,
+  apiVersion: null,
 };
 
 Footer.defaultProps = {

@@ -5,7 +5,7 @@ import Translator from './translate';
 
 const tor = Translator.getTranslator();
 
-// Map state.homepage.projectsByName to projectList 
+// Map state.homepage.projectsByName to projectList
 const mapStateToProps = (state) => {
   if (state.homepage && state.homepage.projectsByName) {
     const projectList = Object.values(state.homepage.projectsByName)

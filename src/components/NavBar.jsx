@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import FlatButton from 'material-ui/FlatButton';
@@ -40,7 +40,7 @@ const NavIcon = styled.div`
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
- * @param {navaItems,user,onLogoutClick} params 
+ * @param {navaItems,user,onLogoutClick} params
  */
 const NavBar = ({ navItems, user, onLogoutClick }) => (
   <Header>

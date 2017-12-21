@@ -1,24 +1,23 @@
 import { connect } from 'react-redux';
 import Quiz from './Quiz';
 import { userapiPath } from '../configs';
-import browserHistory from '../history';
 import { fetchWrapper } from '../actions';
 
 
 /**
  * Redux action triggered by quiz form update
  * @method updateForm
- * @param {*} data 
+ * @param {*} data
  */
 export const updateForm = data => ({
   type: 'UPDATE_CERTIFICATE_FORM',
   data,
 });
 
-export const receiveSubmitCert = ({ status }) => {
+export const receiveSubmitCert = ({ status }, history) => {
   switch (status) {
   case 201:
-    browserHistory.push('/');
+    history.push('/');
     return {
       type: 'RECEIVE_CERT_SUBMIT',
     };
@@ -31,12 +30,12 @@ export const receiveSubmitCert = ({ status }) => {
 
 /**
  * Redux action triggered by quiz submit
- * @param {*} data 
- * @param {*} questionList 
+ * @param {*} data
+ * @param {*} questionList
  */
-export const submitForm = (data, questionList) => fetchWrapper({
+export const submitForm = (data, questionList, history) => fetchWrapper({
   path: `${userapiPath}/user/cert/security_quiz?extension=txt`,
-  handler: receiveSubmitCert,
+  handler: (result) => { receiveSubmitCert(result, history); },
   body: JSON.stringify({ answers: data, certificate_form: questionList }, null, '\t'),
   method: 'PUT',
 });
@@ -44,7 +43,7 @@ export const submitForm = (data, questionList) => fetchWrapper({
 
 /**
  * answer is the index of the correct option
- */ 
+ */
 const questionList = [
   {
     question: 'As a registered user, I can:',
@@ -72,9 +71,10 @@ const mapStateToProps = state => ({
   title,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   onUpdateForm: data => dispatch(updateForm(data)),
-  onSubmitForm: data => dispatch(submitForm(data, questionList)),
+  // ownProps.history from react-router
+  onSubmitForm: data => dispatch(submitForm(data, questionList, ownProps.history)),
 });
 
 const ReduxQuiz = connect(mapStateToProps, mapDispatchToProps)(Quiz);

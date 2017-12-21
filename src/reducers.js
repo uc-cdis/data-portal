@@ -1,14 +1,14 @@
 import { reducer as formReducer } from 'redux-form';
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
 import userProfile from './UserProfile/reducers';
-import { certificate } from './Certificate/reducers';
+import certificate from './Certificate/reducers';
 import submission from './Submission/reducers';
 import homepage from './Homepage/reducers';
-import { query_nodes } from './QueryNode/reducers';
+import queryNodes from './QueryNode/reducers';
 import popups from './Popup/reducers';
 import { graphiql } from './GraphQLEditor/reducers';
 import explorer from './Explorer/reducers';
+import { logoutListener } from './Login/ProtectedContent';
 
 const status = (state = {}, action) => {
   switch (action.type) {
@@ -40,12 +40,11 @@ const user = (state = {}, action) => {
 };
 
 export const removeDeletedNode = (state, id) => {
-  const search_result = state.search_result;
-  console.log(search_result);
-  const node_type = Object.keys(search_result.data)[0];
-  const entities = search_result.data[node_type];
-  search_result.data[node_type] = entities.filter(entity => entity.id !== id);
-  return search_result;
+  const searchResult = state.search_result;
+  const nodeType = Object.keys(searchResult.data)[0];
+  const entities = searchResult.data[nodeType];
+  searchResult.data[nodeType] = entities.filter(entity => entity.id !== id);
+  return searchResult;
 };
 
 const reducers = combineReducers({ explorer,
@@ -54,12 +53,12 @@ const reducers = combineReducers({ explorer,
   user,
   status,
   submission,
-  query_nodes,
+  query_nodes: queryNodes,
   userProfile,
   certificate,
   graphiql,
   form: formReducer,
-  routing: routerReducer,
+  auth: logoutListener,
 });
 
 export default reducers;

@@ -23,8 +23,8 @@ const CheckBox = styled.div`
 
 export class CheckBoxGroup extends Component {
   static propTypes = {
-    listItems: PropTypes.array.isRequired,
-    group_name: PropTypes.string.isRequired,
+    listItems: PropTypes.arrayOf(PropTypes.string).isRequired,
+    groupName: PropTypes.string.isRequired,
     selectedItems: PropTypes.array.isRequired,
     title: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
@@ -50,7 +50,7 @@ export class CheckBoxGroup extends Component {
     } else {
       selectedItems = [...this.props.selectedItems.slice(0, pos), ...this.props.selectedItems.slice(pos + 1)];
     }
-    const state = { [this.props.group_name]: selectedItems };
+    const state = { [this.props.groupName]: selectedItems };
     this.props.onChange(state);
   };
 
@@ -68,7 +68,7 @@ export class CheckBoxGroup extends Component {
           <div key={i}>
             <input
               type="checkbox"
-              name={this.props.group_name}
+              name={this.props.groupName}
               value={item}
               id={item}
               checked={selectedItems.includes(item)}

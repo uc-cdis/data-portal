@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { createRefetchContainer } from 'react-relay';
-import { withAuthTimeout, withBoxAndNav, computeLastPageSizes } from '../utils';
+import { computeLastPageSizes } from '../utils';
 import { GQLHelper } from '../gqlHelper';
 import { getReduxStore } from '../reduxStore';
 import { ReduxExplorerTabPanel, ReduxSideBar } from './ReduxExplorer';
-import { BodyBackground } from './style';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
 class ExplorerComponent extends Component {
   /**
    * Subscribe to Redux updates at mount time
-   */ 
+   */
   componentWillMount() {
     getReduxStore().then(
       (store) => {
@@ -145,11 +144,11 @@ class ExplorerComponent extends Component {
 
   render() {
     this.updateFilesMap();
-    const flexBox = {
+    const style = {
       display: 'flex',
     };
     return (
-      <div style={flexBox}>
+      <div style={style}>
         <ReduxSideBar />
         <ReduxExplorerTabPanel />
       </div>
@@ -158,7 +157,7 @@ class ExplorerComponent extends Component {
 }
 
 export const RelayExplorerComponent = createRefetchContainer(
-  withBoxAndNav(withAuthTimeout(ExplorerComponent), BodyBackground),
+  ExplorerComponent,
   {
     viewer: gqlHelper.explorerPageFragment,
   },

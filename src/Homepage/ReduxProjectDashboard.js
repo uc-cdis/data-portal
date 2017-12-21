@@ -3,7 +3,7 @@ import { DashboardWith } from './ProjectDashboard';
 import { ProjectTable } from './ProjectTable';
 
 
-// Map state.homepage.projectsByName to projectList 
+// Map state.homepage.projectsByName to projectList
 const mapStateToProps = (state) => {
   if (state.homepage && state.homepage.projectsByName) {
     const projectList = Object.values(state.homepage.projectsByName);

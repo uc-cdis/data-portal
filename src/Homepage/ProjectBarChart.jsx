@@ -2,7 +2,7 @@ import { ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis } fro
 import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
-import { browserHistory } from 'react-router';
+import { browserHistory } from 'react-router-dom';
 import Translator from './translate';
 
 
@@ -20,7 +20,7 @@ const FloatBox = styled.div`
 /**
  * Component shows stacked-bars - one stacked-bar for each project in props.projectList -
  * where experiments are stacked on top of cases.  projectList looks like:
- * 
+ *
  * const data = [
  *       {name: 'bpa-test', experimentCount: 4000, caseCount: 2400, aliquotCount: 2400},
  *       ...

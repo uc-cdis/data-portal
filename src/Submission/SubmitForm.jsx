@@ -333,9 +333,9 @@ const SubmitNodeForm = ({ node, form, properties, requireds, onChange, onChangeE
 
 
 /**
- * Form-based data submission.  The results of this form submission are subsequently 
+ * Form-based data submission.  The results of this form submission are subsequently
  * processed by the SubmitTSV component, and treated
- * the same way uploaded tsv/json data is treated. 
+ * the same way uploaded tsv/json data is treated.
  */
 class SubmitForm extends Component {
   static propTypes = {

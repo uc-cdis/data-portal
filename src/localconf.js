@@ -2,15 +2,15 @@
 /**
  * Setup configuration variables based on the "app" the data-portal is
  * being deployed into (Brain Health Commons, Blood Pack, ...)
- * 
+ *
  * @param {app, dev, basename, mockStore, hostname} opts overrides for defaults
  */
 function buildConfig(opts) {
   const defaults = {
     dev: !!(process.env.NODE_ENV && process.env.NODE_ENV === 'dev'),
     mockStore: !!(process.env.MOCK_STORE && process.env.MOCK_STORE === 'true'),
-    app: (process.env.APP === undefined) ? 'generic' : process.env.APP,
-    basename: (process.env.BASENAME === undefined) ? '/' : process.env.BASENAME,
+    app: process.env.APP || 'generic',
+    basename: process.env.BASENAME || '/',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
   };
 

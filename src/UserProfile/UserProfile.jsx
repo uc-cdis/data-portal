@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { jsonToString } from '../utils';
@@ -92,6 +92,13 @@ export const Cell = styled.li`
 `;
 
 export const ProjectCell = styled(Link)`
+  display: block;
+  float: left;
+  width: 30%;
+  padding-left: 0.5em;
+`;
+
+export const ProjectCellNoAccess = styled.div`
   display: block;
   float: left;
   width: 30%;
@@ -257,9 +264,9 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
                   }
                   {
                     !(p in submission.projects) &&
-                    <ProjectCell>
+                    <ProjectCellNoAccess>
                       {p}
-                    </ProjectCell>
+                    </ProjectCellNoAccess>
                   }
                   <RightCell>
                     {user.project_access[p].join(', ')}

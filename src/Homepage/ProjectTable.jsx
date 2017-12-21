@@ -1,6 +1,6 @@
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { TableBarColor } from '../theme';
 import Translator from './translate';
@@ -90,9 +90,9 @@ export class ProjectTR extends React.Component {
             */
 
 /**
- * Table of projects.  
+ * Table of projects.
  * Has projectList property where each entry has the properties
- * for a project detail, and a summaryCounts property with 
+ * for a project detail, and a summaryCounts property with
  * prefetched totals (property details may be fetched lazily via Relay, whatever ...)
  */
 export class ProjectTable extends React.Component {

@@ -36,9 +36,9 @@ const summaryListStyle = {
 /**
  * Present summary of a submission success or failure given
  * the HTTP status code and response data object.
- * 
+ *
  * @param {number} status
- * @param {object} data 
+ * @param {object} data
  */
 class SubmissionResult extends React.Component {
   constructor(props, context) {

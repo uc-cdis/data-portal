@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { Table, TableData, TableRow, TableHead, Bullet } from '../theme';
@@ -57,7 +57,7 @@ const LinkTable = ({ links }) => {
  * @param {Object} property one of the properties of a dictionary node
  * @return {String|Array<String>} string for scalar types, array for enums
  *                   and other listish types or 'UNDEFINED' if no
- *                   type information availabale 
+ *                   type information availabale
  */
 export const getType = (property) => {
   let type = 'UNDEFINED';
@@ -116,7 +116,7 @@ const NodeTable = ({ node }) => (
                 (key) => {
                   const compoundKey = key.join(', ');
                   return <Bullet key={compoundKey}>{compoundKey}</Bullet>;
-                }
+                },
               )
             }
           </ul>
@@ -246,8 +246,8 @@ const DownloadButton = styled.a`
 /**
  * Component renders a view with details of a particular dictionary type (node - /dd/typename) or
  * of the whole dictionary (/dd/graph).
- * 
- * @param {*} param0 
+ *
+ * @param {*} param0
  */
 const DataDictionaryNode = ({ params, submission }) => {
   const node = params.node;
@@ -301,12 +301,12 @@ const DataDictionaryNode = ({ params, submission }) => {
 
 DataDictionaryNode.propTypes = {
   params: PropTypes.shape({
-    dictionary: PropTypes.object.isRequired,
     node: PropTypes.string.isRequired,
   }).isRequired,
   submission: PropTypes.shape(
     {
       counts_search: PropTypes.objectOf(PropTypes.number),
+      dictionary: PropTypes.object.isRequired,
       links_search: PropTypes.objectOf(PropTypes.number),
     },
   ),

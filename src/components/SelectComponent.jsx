@@ -32,7 +32,6 @@ export default class SelectComponent extends Component {
     title: PropTypes.string,
     values: PropTypes.arrayOf(PropTypes.number),
     onChange: PropTypes.func,
-    defaultSelect: PropTypes.any,
     placeholder: PropTypes.string,
     selectedValue: PropTypes.number,
   };
@@ -41,7 +40,6 @@ export default class SelectComponent extends Component {
     title: '',
     values: [],
     placeholder: 'Select...',
-    defaultSelect: 0,
     selectedValue: 0,
     onChange: () => {},
   };

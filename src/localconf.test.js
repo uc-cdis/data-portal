@@ -30,7 +30,7 @@ describe('The localconf', () => {
   });
 
   it('Defines an \'app\' variable', () => {
-    expect(!! conf.app).toBe(true);
+    expect(!!conf.app).toBe(true);
   });
 
   it('supports buildConfig(app)', () => {

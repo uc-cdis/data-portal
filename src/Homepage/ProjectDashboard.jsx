@@ -91,15 +91,15 @@ class CountCard extends React.Component {
  *   props { caseCount, experimnentCount, fileCount, aliquoteCount, projectList
  *    }
  * where
- *    
- *   const projectList = [ 
+ *
+ *   const projectList = [
  *       {name: 'bpa-test', experiments: 4000, cases: 2400, amt: 2400},
  *       {name: 'ProjectB', experiments: 3000, cases: 1398, amt: 2210},
  *       {name: 'ProjectC', experiments: 2000, cases: 9800, amt: 2290},
  *       {name: 'ProjectD', experiments: 2780, cases: 3908, amt: 2000},
  *       {name: 'ProjectE', experiments: 1890, cases: 4800, amt: 2181},
  *       {name: 'ProjectRye', experiments: 2390, cases: 3800, amt: 2500},
- *     
+ *
  *   ];
  */
 export class LittleProjectDashboard extends React.Component {

@@ -1,12 +1,11 @@
 import { connect } from 'react-redux';
 
 import UserProfile from './UserProfile';
-import { fetchOAuthURL, fetchJsonOrText, updatePopup } from '../actions';
+import { fetchJsonOrText, updatePopup } from '../actions';
 import { submissionApiOauthPath, credentialCdisPath } from '../localconf';
-import { fetchProjects } from '../queryactions';
 
 
-const fetchAccess = () =>
+export const fetchAccess = () =>
   dispatch =>
     fetchJsonOrText({
       path: credentialCdisPath,
@@ -29,58 +28,6 @@ const fetchAccess = () =>
         },
       )
       .then(msg => dispatch(msg));
-
-
-const fetchUserApiLogin = userOauthUrl =>
-  dispatch =>
-    fetchJsonOrText(
-      {
-        path: userOauthUrl,
-        dispatch,
-      },
-    )
-      .then(
-        ({ status, data }) => {
-          switch (status) {
-          case 200:
-            return {
-              type: 'RECEIVE_USERAPI_LOGIN',
-              result: true,
-            };
-          default:
-            return {
-              type: 'RECEIVE_USERAPI_LOGIN',
-              result: false,
-              error: data,
-            };
-          }
-        })
-      .then(msg => dispatch(msg))
-  ;
-
-export const loginUserProfile = () =>
-  // Fetch projects, if unauthorized, login
-  (dispatch, getState) =>
-    dispatch(fetchAccess())
-      .then(
-        () => {
-          const keypair = getState().userProfile.access_key_pair;
-          if (keypair) {
-          // user already logged in
-            return Promise.reject('already logged in');
-          }
-          return Promise.resolve();
-        })
-      .then(
-        () => dispatch(fetchOAuthURL(submissionApiOauthPath)),
-      )
-      .then(
-        oauthUrl => dispatch(fetchUserApiLogin(oauthUrl)),
-      )
-      .then(() => dispatch(fetchAccess()))
-      .then(() => dispatch(fetchProjects()))
-      .catch(error => console.log(error))
-  ;
 
 
 const requestDeleteKey = accessKey => ({

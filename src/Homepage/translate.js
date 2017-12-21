@@ -17,7 +17,7 @@ export default class Translator {
 
   /**
    * Super simple for now - just to support Experiment vs Study apps
-   * @param {String} word 
+   * @param {String} word
    * @return {String} translation
    */
   translate(word) {

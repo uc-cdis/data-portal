@@ -1,31 +1,33 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, Route } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+// not yet compatable with react-router 4.X -
+// import { syncHistoryWithStore } from 'react-router-redux';
 import { ThemeProvider } from 'styled-components';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'react-select/dist/react-select.css';
+import querystring from 'querystring';
 
-import { requireAuth, enterHook, fetchUser } from './actions';
+import { fetchUser, fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
 import Login from './Login/Login';
+import ProtectedContent from './Login/ProtectedContent';
 import AmbiHomepage from './Homepage/AmbiHomepage';
 import ExplorerPage from './Explorer/ExplorerPage';
-import QueryNode, { clearResultAndQuery } from './QueryNode/ReduxQueryNode';
 import DataDictionary from './DataDictionary/ReduxDataDictionary';
 import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
-import ProjectSubmission, { loginSubmissionAPI } from './Submission/ReduxProjectSubmission';
-import UserProfile, { loginUserProfile, fetchAccess } from './UserProfile/ReduxUserProfile';
+import ProjectSubmission from './Submission/ReduxProjectSubmission';
+import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
 import CertificateQuiz from './Certificate/ReduxQuiz';
-import GraphQLQuery, { fetchSchema } from './GraphQLEditor/ReduxGqlEditor';
-import { fetchDictionary } from './queryactions';
-import { app } from './localconf';
-import browserHistory from './history';
-import { theme } from './theme';
-import { clearCounts } from './DataModelGraph/ReduxDataModelGraph';
-import { asyncSetInterval, withBoxAndNav, withAuthTimeout } from './utils';
+import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
+import { basename } from './localconf';
+import { OuterWrapper, Box, Margin, theme } from './theme';
+import { asyncSetInterval } from './utils';
 import { getReduxStore } from './reduxStore';
+import Nav from './Nav/ReduxNavBar';
+import Footer from './components/Footer';
+import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 
 
 // Needed for onTouchTap
@@ -33,113 +35,120 @@ import { getReduxStore } from './reduxStore';
 injectTapEventPlugin();
 
 
-let initialized = false;
-
 // render the app after the store is configured
 async function init() {
-  if (initialized) {
-    console.log('WARNING: attempt to re-initialize application');
-    return;
-  }
-  initialized = true;
   const store = await getReduxStore();
 
-  asyncSetInterval(() => store.dispatch(fetchUser), 10000);
+  asyncSetInterval(() => store.dispatch(fetchUser), 60000);
 
-  const history = syncHistoryWithStore(browserHistory, store);
-  history.listen(location => console.log(location.pathname));
-  if (app !== 'gdc') {
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <MuiThemeProvider>
-            <Router history={history}>
-              <Route path="/login" component={Login} />
-              <Route
-                path="/"
-                onEnter={requireAuth(store, () => store.dispatch(loginSubmissionAPI()))}
-                component={AmbiHomepage}
-              />
-              <Route
-                path="/query"
-                onEnter={
-                  requireAuth(
-                    store,
-                    () => store.dispatch(loginSubmissionAPI())
-                      .then(() => store.dispatch(clearCounts))
-                      .then(() => store.dispatch(fetchSchema)),
-                  )
-                }
-                component={withBoxAndNav(withAuthTimeout(GraphQLQuery))}
-              />
-              <Route
-                path="/identity"
-                onEnter={requireAuth(store, () => store.dispatch(loginUserProfile()))}
-                component={withBoxAndNav(withAuthTimeout(UserProfile))}
-              />
-              <Route
-                path="/quiz"
-                onEnter={requireAuth(store)}
-                component={withBoxAndNav(withAuthTimeout(CertificateQuiz))}
-              />
-              <Route
-                path="/dd"
-                onEnter={enterHook(store, fetchDictionary)}
-                component={withBoxAndNav(DataDictionary)}
-              />
-              <Route
-                path="/dd/:node"
-                onEnter={enterHook(store, fetchDictionary)}
-                component={withBoxAndNav(DataDictionaryNode)}
-              />
-              <Route
-                exact
-                path="/files"
-                onEnter={
-                  requireAuth(store,
-                    nextState => store.dispatch(loginSubmissionAPI())
-                      .then(() => store.dispatch(clearResultAndQuery(nextState))),
-                  )
-                }
-                component={ExplorerPage}
-              />
-              <Route
-                path="/:project"
-                onEnter={
-                  requireAuth(store,
-                    () => store.dispatch(loginSubmissionAPI())
-                      .then(() => store.dispatch(clearCounts)),
-                  )
-                }
-                component={withBoxAndNav(withAuthTimeout(ProjectSubmission))}
-              />
-              <Route
-                path="/:project/search"
-                onEnter={requireAuth(store, nextState => store.dispatch(loginSubmissionAPI()).then(() => store.dispatch(clearResultAndQuery(nextState))))}
-                component={withBoxAndNav(withAuthTimeout(QueryNode))}
-              />
-            </Router>
-          </MuiThemeProvider>
-        </ThemeProvider>
-      </Provider>,
-      document.getElementById('root'),
-    );
-  } else {
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <Route path="/login" component={Login} />
-            <Route
-              path="/"
-              onEnter={requireAuth(store, () => store.dispatch(fetchAccess()))}
-              component={withBoxAndNav(withAuthTimeout(UserProfile))}
-            />
-          </Router>
-        </ThemeProvider>
-      </Provider>,
-      document.getElementById('root'),
-    );
-  }
+  await Promise.all(
+    [
+      store.dispatch(fetchSchema),
+      store.dispatch(fetchDictionary),
+      fetchVersionInfo().then(({ status, data }) => {
+        if (status === 200) {
+          Object.assign(Footer.defaultProps,
+            { dictionaryVersion: data.dictionary.version,
+              apiVersion: data.version },
+          );
+        }
+      }),
+    ],
+  );
+  const background = null; // for now
+
+  render(
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <MuiThemeProvider>
+          <BrowserRouter basename={basename}>
+            <OuterWrapper>
+              <Box background={background}>
+                <Nav />
+                <Switch>
+                  <Route path="/login" component={Login} />
+                  <Route
+                    exact
+                    path="/"
+                    component={
+                      props => <ProtectedContent component={AmbiHomepage} {...props} />
+                    }
+                  />
+                  <Route
+                    path="/query"
+                    component={
+                      props => <ProtectedContent component={GraphQLQuery} {...props} />
+                    }
+                  />
+                  <Route
+                    path="/identity"
+                    component={
+                      props => (<ProtectedContent
+                        filter={() => store.dispatch(fetchAccess())}
+                        component={UserProfile}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
+                    path="/quiz"
+                    component={props => <ProtectedContent component={CertificateQuiz} {...props} />}
+                  />
+                  <Route
+                    path="/dd/:node"
+                    component={
+                      props => <ProtectedContent public component={DataDictionaryNode} {...props} />
+                    }
+                  />
+                  <Route
+                    path="/dd"
+                    component={
+                      props => <ProtectedContent public component={DataDictionary} {...props} />
+                    }
+                  />
+                  <Route
+                    path="/files"
+                    component={
+                      props => <ProtectedContent background={'#ecebeb'} component={ExplorerPage} {...props} />
+                    }
+                  />
+                  <Route
+                    path="/:project/search"
+                    component={
+                      (props) => {
+                        const queryFilter = () => {
+                          const location = props.location;
+                          const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/, '') : '');
+                          if (Object.keys(queryParams).length > 0) {
+                            // Linking directly to a search result,
+                            // so kick-off search here (rather than on button click)
+                            return store.dispatch(
+                              submitSearchForm({ project: props.match.params.project, ...queryParams }),
+                            );
+                          }
+                          return Promise.resolve('ok');
+                        };
+                        return (<ProtectedContent filter={queryFilter} component={ReduxQueryNode} {...props} />);
+                      }
+                    }
+                  />
+                  <Route
+                    path="/:project"
+                    component={
+                      props => <ProtectedContent component={ProjectSubmission} {...props} />
+                    }
+                  />
+                </Switch>
+                <Margin background={background} />
+              </Box>
+              <Footer />
+            </OuterWrapper>
+          </BrowserRouter>
+        </MuiThemeProvider>
+      </ThemeProvider>
+    </Provider>,
+    document.getElementById('root'),
+  );
 }
+
 init();

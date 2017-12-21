@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Form, FormError, RadioGroup, Radio } from 'react-form';
+import { Form, RadioGroup, Radio } from 'react-form';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+
 import { button } from '../theme';
 
 
@@ -8,7 +10,6 @@ const OptionBullet = styled.p`
   input {
     margin-right: 1em;
   }
-
 `;
 const QuestionItem = styled.section`
   .FormError {
@@ -47,6 +48,16 @@ const Tooltip = styled.div`
 
 
 class Question extends Component {
+  static propTypes = {
+    content: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
+    showErrors: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    showErrors: false,
+  };
+
   render() {
     return (
       <QuestionItem>
@@ -55,17 +66,24 @@ class Question extends Component {
           <Tooltip className="fui-question-circle">
             <p>{this.props.content.hint}</p>
           </Tooltip>
-          { this.props.showErrors && <FormError field={this.props.content.id} /> }
+          { this.props.showErrors && <div className={'FormError'}>Error!?!?</div> }
         </div>
         <RadioGroup showErrors={false} field={this.props.content.id}>
-          {this.props.content.options.map(
-            (option, i) =>
-              (<OptionBullet key={i}><Radio
-                onChange={this.props.onChange}
-                name={this.props.content.id}
-                value={option}
-              />{option}</OptionBullet>),
-          )}
+          {
+            group => (<div>
+              {
+                this.props.content.options.map(
+                  (option, i) =>
+                    (<OptionBullet key={i}><Radio
+                      onChange={this.props.onChange}
+                      name={this.props.content.id}
+                      value={option}
+                      group={group}
+                    />{option}</OptionBullet>),
+                )
+              }
+            </div>)
+          }
         </RadioGroup>
       </QuestionItem>
     );
@@ -76,12 +94,28 @@ class Question extends Component {
  * Little quiz component - roperites: questionList, title, onSubmit
  */
 class Quiz extends Component {
+  static propTypes = {
+    questionList: PropTypes.arrayOf(
+      PropTypes.shape(
+        {
+          question: PropTypes.string,
+          id: PropTypes.string,
+          options: PropTypes.arrayOf(PropTypes.string),
+          answer: PropTypes.number,
+          hint: PropTypes.string,
+        },
+      ),
+    ).isRequired,
+    onUpdateForm: PropTypes.func.isRequired,
+    onSubmitForm: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
+  };
+
   constructor(props) {
     super(props);
-    this.state = { display_error: false };
-    // required to be able to pass to child
-    this.hideError = this.hideError.bind(this);
+    this.state = { displayError: false };
   }
+
   validateForm(values) {
     // update redux store
     if (Object.keys(values).length > 0) {
@@ -95,16 +129,20 @@ class Quiz extends Component {
   }
   // hide errors when user is updating the form
   hideError() {
-    this.setState({ display_error: false });
+    if (this.state.displayError) {
+      this.setState({ displayError: false });
+    }
   }
 
   // show errors when user hits submit button
   showError() {
-    this.setState({ display_error: true });
+    if (!this.state.displayError) {
+      this.setState({ displayError: true });
+    }
   }
+
   render() {
     const { questionList, title } = this.props;
-
     return (
       <div>
         <h4>{title}</h4>
@@ -121,10 +159,10 @@ class Quiz extends Component {
                   (item, i) =>
                     (<Question
                       content={item}
-                      onChange={this.hideError}
+                      onChange={() => this.hideError()}
                       index={i}
                       key={i}
-                      showErrors={this.state.display_error}
+                      showErrors={this.state.displayError}
                     />),
                 )
               }
