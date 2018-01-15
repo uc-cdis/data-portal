@@ -227,7 +227,6 @@ class ProtectedContent extends React.Component {
       });
   };
 
-<<<<<<< HEAD
   /**
    * Filter the 'newState' for the ProtectedComponent.
    * User needs to take a security quiz before he/she can acquire tokens ...
@@ -252,19 +251,6 @@ class ProtectedContent extends React.Component {
     }
     return newState;
   };
-=======
-  componentDidMount() {
-    getReduxStore().then(
-      store => 
-        Promise.all(
-          [
-            store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
-            store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
-            this.requireAuth(store),
-          ]
-        ));
-  }
->>>>>>> fix(AuthPopup): mv auth popup to ProtectedContent
 
   render() {
     const Component = this.props.component;
@@ -276,7 +262,6 @@ class ProtectedContent extends React.Component {
     window.scrollTo(0, 0);
     if (this.state.redirectTo) {
       return (<Redirect to={this.state.redirectTo} />);
-<<<<<<< HEAD
     } else if (this.props.public) {
       return (
         <Body {...this.props}>
@@ -292,23 +277,6 @@ class ProtectedContent extends React.Component {
       );
     }
     return (<Body {...this.props}><Spinner /></Body>);
-=======
-    } else if (this.state.authenticated) {
-      let params = {};
-      let path = '';
-      if ( this.props.match ) {
-        params = this.props.match.params || {};
-        path = this.props.match.path || '';
-      }
-      console.log('got router params', this.props);
-      return (<Component params={params} path={path} location={this.props.location} history={this.props.history} />);  // pass through react-router matcher params ...
-    }
-<<<<<<< HEAD
-    return (<Spinner />);
->>>>>>> fix(AuthPopup): mv auth popup to ProtectedContent
-=======
-    return (<Body {...this.props}><Spinner /></Body>);
->>>>>>> fix(bgcolor): refactor for bgcolor
   }
 }
 
