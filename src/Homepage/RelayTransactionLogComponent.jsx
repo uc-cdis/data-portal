@@ -78,6 +78,11 @@ export class RelayTransactionLogComponent extends Component{
   }
 }
 
+const getLocalTime = (gmtTimeString) => {
+  let date = new Date(gmtTimeString);
+  return date.toLocaleString();
+};
+
 /**
  * Table row component - fills in columns given project property
  */
@@ -89,7 +94,7 @@ export class TransactionLogTR extends React.Component {
       </TableCell>
       <TableCell>{trans.committed_by}
       </TableCell>
-      <TableCell>{trans.created_datetime}
+      <TableCell>{getLocalTime(trans.created_datetime)}
       </TableCell>
       <TableCell>
         {trans.state}

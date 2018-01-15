@@ -136,7 +136,7 @@ function buildConfig(opts) {
     appname = 'Genomic Data Commons Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
-      { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
+      { icon: 'search', link: '/query', color: '#daa5Z20', name: 'query' },
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: 'https://ndh-portal.bionimbus.org', color: '#a2a2a2', name: 'data' },

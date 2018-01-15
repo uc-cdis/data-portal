@@ -53,6 +53,12 @@ const NavBar = ({ navItems, user, onLogoutClick }) => (
       {
         navItems.map(
           (item, i) => (
+            (item.link.startsWith('http')) ?
+              <a key={i} href={item.link}>
+                <FlatButton label={item.name}>
+                  <NavIcon className="material-icons">{item.icon}</NavIcon>
+                </FlatButton>
+              </a> :
             <NavItem key={i} to={item.link}>
               <FlatButton label={item.name}>
                 <NavIcon className="material-icons">{item.icon}</NavIcon>
