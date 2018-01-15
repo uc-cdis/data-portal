@@ -40,20 +40,27 @@ function buildConfig(opts) {
 
   let appname = 'Unasigned';
   let navItems = [];
+  let countNames = [];
+  let countPluralNames = [];
+  let dashboardIcons = [
+    'account_circle',
+    'receipt',
+    'description',
+    'invert_colors',
+  ];
+  let localTheme = {
+    'barGraph.lineColor': '#666666',
+    'barGraph.bar1Color': '#8884d8',
+    'barGraph.bar2Color': '#82ca9d',
+    'summary.borderTopColor': '#c87152',
+    'summary.borderColor': '#222222',
+    'summary.countColor': '#ff4200',
+    'summary.iconColor': '#008000',
+    'projectTable.summaryRowColor': '#eeeeee',
+    'projectTable.submitButtonColor': '#dddddd',
+    tableBarColor: '#7d7474',
+  };
   const requiredCerts = [];
-
-  // Support data/gqlSetup auto-generation of data-portal graphQL
-  // const gqlSetup = {
-  //   fileTypeList: [
-  //     'slide_image',
-  //     'submitted_aligned_reads',
-  //     'submitted_copy_number',
-  //     'submitted_methylation',
-  //     'submitted_somatic_mutation',
-  //     'submitted_unaligned_reads',
-  //   ],
-  //   experimentType: 'experiment',
-  // };
 
   if (app === 'bpa') {
     appname = 'BPA Metadata Submission Portal';
@@ -64,18 +71,40 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
     ];
-    // gqlSetup.experimentType = 'study';
-    countItems = ['']
+    countNames = [
+      'Case',
+      'Study',
+      'File',
+      'Aliquot',
+    ];
+    countPluralNames = [
+      'Cases',
+      'Studies',
+      'Files',
+      'Aliquots',
+    ];
   } else if (app === 'gtex') {
-    appname = 'NIH Commons Pilot: GTEx Data Portal';
+    appname = 'NIH Data Commons Consortium Pilot Phase\nGTEx & TOPMed Data Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
+      { icon: 'collections', link: 'https://gtex.bionimbus.org/dcp', color: '#a2a2a2', name: 'exploration' },
       { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
-      { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
+      { icon: 'dvr', link: 'https://gtex.bionimbus.org/jupyter', color: '#a2a2a2', name: 'workspace' },
     ];
-    // gqlSetup.experimentType = 'study';
+    countNames = [
+      'Case',
+      'Study',
+      'File',
+      'Aliquot',
+    ];
+    countPluralNames = [
+      'Cases',
+      'Studies',
+      'Files',
+      'Aliquots',
+    ];
   } else if (app === 'edc') {
     appname = 'Environmental Data Commons Portal';
     navItems = [
@@ -84,6 +113,25 @@ function buildConfig(opts) {
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
+      { icon: 'dvr', link: 'https://portal.occ-data.org/jup', color: '#a2a2a2', name: 'workspace' },
+    ];
+    countNames = [
+      'Satellite',
+      'Radar',
+      'File',
+      'Weather station',
+    ];
+    countPluralNames = [
+      'Satellites',
+      'Radars',
+      'Files',
+      'Weather stations',
+    ];
+    dashboardIcons = [
+      'satellite',
+      'track_changes',
+      'description',
+      'timeline',
     ];
   } else if (app === 'kf') {
     appname = 'Gabriella Miller Kids First Pediatric Data Coordinating Center Portal';
@@ -94,7 +142,30 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#2D728F', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#A51C30', name: 'data' },
     ];
-    // gqlSetup.experimentType = 'trio';
+    countNames = [
+      'Case',
+      'Trio',
+      'File',
+      'Aliquot',
+    ];
+    countPluralNames = [
+      'Cases',
+      'Trios',
+      'Files',
+      'Aliquots',
+    ];
+    localTheme = {
+      'barGraph.lineColor': '#DFDFDF',
+      'barGraph.bar1Color': '#00ADEE',
+      'barGraph.bar2Color': '#BE1E2D',
+      'summary.borderTopColor': '#F6921E',
+      'summary.borderColor': '#DFDFDF',
+      'summary.countColor': '#F6921E',
+      'summary.iconColor': '#00ADEE',
+      'projectTable.summaryRowColor': '#DFDFDF',
+      'projectTable.submitButtonColor': '#DFDFDF',
+      tableBarColor: '#CC3399',
+    };
   } else if (app === 'bhc') {
     appname = 'The Brain Commons Portal';
     navItems = [
@@ -103,26 +174,32 @@ function buildConfig(opts) {
       { icon: 'class', link: '/DD', color: '#A51C30', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#2D728F', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#A51C30', name: 'data' },
+      { icon: 'dvr', link: 'https://data.braincommons.org/workspace', color: '#a2a2a2', name: 'workspace' },
     ];
-
-    gqlSetup.fileTypeList = [
-      'slide_image',
-      'submitted_aligned_reads',
-      'submitted_copy_number',
-      'submitted_methylation',
-      'submitted_somatic_mutation',
-      'submitted_unaligned_reads',
-      'app_checkup',
-      'cell_image',
-      'clinical_checkup',
-      'derived_checkup',
-      'mass_cytometry_assay',
-      'mass_cytometry_image',
-      'mri_result',
-      'sensor_checkup',
-      'test_result',
+    countNames = [
+      'Case',
+      'Study',
+      'File',
+      'Aliquot',
     ];
-    // gqlSetup.experimentType = 'study';
+    countPluralNames = [
+      'Cases',
+      'Studies',
+      'Files',
+      'Aliquots',
+    ];
+    localTheme = {
+      'barGraph.lineColor': '#666666',
+      'barGraph.bar1Color': '#6193b1',
+      'barGraph.bar2Color': '#94af83',
+      'summary.borderTopColor': '#94af83',
+      'summary.borderColor': '#222222',
+      'summary.countColor': '#d00000',
+      'summary.iconColor': '#7aa19b',
+      'projectTable.summaryRowColor': '#565656',
+      'projectTable.submitButtonColor': '#dddddd',
+      tableBarColor: '#7d7474',
+    };
   } else if (app === 'acct') {
     appname = 'ACCOuNT Data Commons Portal';
     navItems = [
@@ -151,10 +228,22 @@ function buildConfig(opts) {
     appname = 'Genomic Data Commons Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
-      { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
+      { icon: 'search', link: '/query', color: '#daa5Z20', name: 'query' },
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: 'https://ndh-portal.bionimbus.org', color: '#a2a2a2', name: 'data' },
+    ];
+    countNames = [
+      'Case',
+      'Study',
+      'Lab record',
+      'Socio-demographic record',
+    ];
+    countPluralNames = [
+      'Cases',
+      'Studies',
+      'Lab records',
+      'Socio-demographic records',
     ];
   } else if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
@@ -168,6 +257,18 @@ function buildConfig(opts) {
       url: 'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',
       title: 'Login from NIH',
     };
+    countNames = [
+      'Case',
+      'Study',
+      'File',
+      'Aliquot',
+    ];
+    countPluralNames = [
+      'Cases',
+      'Studies',
+      'Files',
+      'Aliquots',
+    ];
   } else {
     appname = 'Generic Data Commons Portal';
     navItems = [
@@ -176,6 +277,18 @@ function buildConfig(opts) {
       { icon: 'class', link: '/DD', color: '#1d3674', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#1d3674', name: 'data' },
+    ];
+    countNames = [
+      'Case',
+      'Experiment',
+      'File',
+      'Aliquot',
+    ];
+    countPluralNames = [
+      'Cases',
+      'Experiments',
+      'Files',
+      'Aliquots',
     ];
   }
 
@@ -194,9 +307,12 @@ function buildConfig(opts) {
     graphqlSchemaUrl,
     appname,
     navItems,
+    countNames,
+    countPluralNames,
+    dashboardIcons,
+    localTheme,
     login,
     requiredCerts,
-    // gqlSetup,
     buildConfig,
   };
   return conf;

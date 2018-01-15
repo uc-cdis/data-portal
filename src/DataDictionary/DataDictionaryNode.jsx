@@ -93,8 +93,8 @@ const NodeTable = ({ node }) => (
   <Table>
     <tbody>
       <TableRow>
-        <TableData first_cr> Title </TableData>
-        <TableData right>{ node.title }</TableData>
+        <TableData first_cr> Id </TableData>
+        <TableData right>{ node.id }</TableData>
       </TableRow>
 
       <TableRow>
@@ -283,7 +283,7 @@ const DataDictionaryNode = ({ params, submission }) => {
   return (
     <div>
       <Link to="/dd">{'< top level dictionary'}</Link>
-      <h3> {node} </h3>
+      <h3> {dictionary[node].title} </h3>
       Download template: <DownloadButton href={`/api/v0/submission/template/${node}?format=json`}>{'JSON'}</DownloadButton> | <DownloadButton href={`/api/v0/submission/template/${node}`}>{'TSV'}</DownloadButton>
 
 

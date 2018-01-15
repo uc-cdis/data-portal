@@ -5,9 +5,25 @@
 #
 set -eu
 
-if [ -f src/img/$APP-favicon.ico ]; then
-  cp src/img/$APP-favicon.ico src/img/favicon.ico
+if [ -f custom/favicon/$APP-favicon.ico ]; then
+  cp custom/favicon/$APP-favicon.ico src/img/favicon.ico
 fi
+
+if [ -f custom/logo/$APP-logo.png ]; then
+  cp custom/logo/$APP-logo.png src/img/logo.png
+fi
+
+if [ -f custom/graphql/$APP-gql.njk ]; then
+  cat custom/graphql/gqlHeader.njk custom/graphql/$APP-gql.njk custom/graphql/gqlFooter.njk >data/gqlHelper.js.njk
+else
+  cat custom/graphql/gqlHeader.njk custom/graphql/gqlDefault.njk custom/graphql/gqlFooter.njk >data/gqlHelper.js.njk
+fi
+
+if [ -f custom/css/$APP.css ]; then
+  cp custom/css/$APP.css src/css/themeoverride.css
+fi
+
+rm -rf custom
 
 #
 # Note: GDC_SUBPATH environment variable specifies the submission-api endpoint

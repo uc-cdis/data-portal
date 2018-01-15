@@ -42,12 +42,9 @@ export class RelayProjectTable extends ProjectTable {
           const { fileCount } = GQLHelper.extractFileInfo(props);
           const projInfo = {
             ...props.project[0],
-            experimentCount: props.experimentCount,
-            caseCount: props.caseCount,
-            aliquotCount: props.aliquotCount,
-            coreVisitCount:  props.coreVisitCount,
-            summaryLabResultCount:  props.summaryLabResultCount,
-            summarySocioDemographicCount: props.summarySocioDemographicCount,
+            countOne: props.countOne,
+            countTwo: props.countTwo,
+            countThree: props.countThree,
             fileCount,
           };
 
@@ -60,13 +57,10 @@ export class RelayProjectTable extends ProjectTable {
                 old = homeState.projectsByName[projInfo.name] || old;
               }
 
-              if (old.experimentCount !== projInfo.experimentCount
-                  || old.caseCount !== projInfo.caseCount
-                  || old.aliquotCount !== projInfo.aliquotCount
-                  || old.fileCount !== projInfo.aliquotCount
-                  || old.coreVisitCount !== projInfo.coreVisitCount
-                  || old.summaryLabResultCount !== projInfo.summaryLabResultCount
-                  || old.summarySocioDemographicCount !== projInfo.summarySocioDemographicCount
+              if (old.countOne !== projInfo.countOne
+                  || old.countTwo !== projInfo.countTwo
+                  || old.countThree !== projInfo.countThree
+                  || old.fileCount !== projInfo.fileCount
               ) {
                 store.dispatch({ type: 'RECEIVE_PROJECT_DETAIL', data: projInfo });
               } /* else {

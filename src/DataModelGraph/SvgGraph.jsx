@@ -32,7 +32,7 @@ export function createSvgGraph(nodesIn, edges) {
   const padding = 25;
   const radius = 60;
   const legendWidth = 125;
-  const width = maxX * radius * 2 + legendWidth;
+  const width = (maxX * radius * 2) + legendWidth;
   const height = maxY * radius * 2;
 
   const svg = d3.select('#data_model_graph')
@@ -101,6 +101,7 @@ export function createSvgGraph(nodesIn, edges) {
   const graphFontSize = '0.75em';
 
   // Append text to nodes
+  /* eslint no-param-reassign: ["error", { "props": true }] */
   nodes.forEach((nodeInfo) => {
     const splitName = nodeInfo.name.split('_');
     if (splitName.length > 2) {
@@ -237,7 +238,7 @@ class SvgGraph extends React.Component {
 
     const divStyle = {
       height,
-      backgroundColor: '#f4f4f4',
+      backgroundColor: '#ffffff',
       marginLeft: 'auto',
       marginRight: 'auto',
     };

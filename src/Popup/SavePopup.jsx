@@ -55,7 +55,7 @@ const SavePopup = ({ message, display, savingStr, error, onClose, filename }) =>
         }
         {
           savingStr &&
-          <Button onClick={() => saveToFile(savingStr, filename)}>Save as</Button>
+          <Button onClick={() => saveToFile(savingStr, filename)}>Download credentials.json</Button>
         }
         {
           savingStr &&

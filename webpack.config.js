@@ -14,6 +14,8 @@ const title = {
   acct: 'ACCOuNT Data Commons',
   gdc: 'Jamboree Data Access',
   bhc: 'Brain Commons',
+  gtex: 'GTEx & TOPMed Data Commons Submission Portal',
+  kf: 'Kids First Data Coordinating Center Portal',
 }[app];
 
 const plugins = [

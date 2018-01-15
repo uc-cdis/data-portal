@@ -236,7 +236,7 @@ function addTables(nodes, boxWidth, boxHeight, svgWidth, svgHeight) {
     .style('font-size', `${13}px`)
     .style('color', 'black')
     .style('font-weight', 'bold')
-    .text(d => d.name);
+    .text(d => d.title);
 
   tableDiv.append('div')
     .style('width', `${boxWidth - 12}px`)

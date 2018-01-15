@@ -4,7 +4,7 @@ import { clearFix } from 'polished';
 import { ProjectTable } from './ProjectTable';
 import ReduxProjectBarChart from './ReduxProjectBarChart';
 import Translator from '../translate';
-import { app } from '../../localconf';
+import { countNames, countPluralNames, dashboardIcons, localTheme } from '../../localconf';
 
 const tor = Translator.getTranslator();
 
@@ -13,9 +13,9 @@ const CountBox = styled.div`
   float: left;
   width: 40%;
   height: 280px;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
   padding: 20px;
-  border-top: 3px solid #c87152;
+  border: 2px solid ${localTheme['summary.borderColor']};
+  border-top: 3px solid ${localTheme['summary.borderTopColor']};
   min-width:300px;
   h4 {
     margin-top: 0px;
@@ -33,7 +33,7 @@ const CountBox = styled.div`
 `;
 
 const Count = styled.span`
-  color: #ff4200;
+  color: ${localTheme['summary.countColor']};
   margin-right: 10px;
 `;
 
@@ -43,7 +43,7 @@ const DashTopDiv = styled.div`
 `;
 
 const Icon = styled.div`
-  color: #008000;
+  color: ${localTheme['summary.iconColor']};
   height: 24px;
   margin-top: 10px;
   margin-left: 20px;
@@ -56,26 +56,26 @@ class CountCard extends React.Component {
     return (
       <CountBox>
         <h4>
-            Data Summary
+            Project Submission Summary
         </h4>
         <ul>
           <li>
-            <Icon><i className="material-icons">account_circle</i></Icon>
+            <Icon><i className="material-icons">{ this.props.icons[0] }</i></Icon>
             <Count>{ this.props.count1.value }</Count>
             <span>{this.props.count1.label}</span>
           </li>
           <li>
-            <Icon><i className="material-icons">receipt</i></Icon>
+            <Icon><i className="material-icons">{ this.props.icons[1] }</i></Icon>
             <Count>{ this.props.count2.value }</Count>
             <span>{this.props.count2.label}</span>
           </li>
           <li>
-            <Icon><i className="material-icons">description</i></Icon>
+            <Icon><i className="material-icons">{ this.props.icons[2] }</i></Icon>
             <Count>{ this.props.count3.value }</Count>
             <span>{this.props.count3.label}</span>
           </li>
           <li>
-            <Icon><i className="material-icons">invert_colors</i></Icon>
+            <Icon><i className="material-icons">{ this.props.icons[3] }</i></Icon>
             <Count>{ this.props.count4.value }</Count>
             <span>{this.props.count4.label}</span>
           </li>
@@ -107,10 +107,13 @@ export class LittleProjectDashboard extends React.Component {
   render() {
     return (
       <DashTopDiv>
-        <CountCard count1={this.props.summaries[0]}
-                   count2={this.props.summaries[1]}
-                   count3={this.props.summaries[2]}
-                   count4={this.props.summaries[3]} />
+        <CountCard
+          count1={this.props.summaries[0]}
+          count2={this.props.summaries[1]}
+          count3={this.props.summaries[2]}
+          count4={this.props.summaries[3]}
+          icons={this.props.icons}
+        />
         <ReduxProjectBarChart projectList={this.props.projectList} />
       </DashTopDiv>
     );
@@ -123,24 +126,18 @@ export function DashboardWith(Table) {
     render() {
       const summaryCounts = this.props.summaryCounts || {};
       const projectList = this.props.projectList || [];
-      let summaries = [];
-      summaries.push({label: 'Cases', value: summaryCounts.caseCount});
-      summaries.push({label: tor.translate('Experiments'), value: summaryCounts.experimentCount});
-      if (app === 'ndh')
-      {
-        summaries.push({label: 'Lab records', value: summaryCounts.summaryLabResultCount});
-        summaries.push({label: 'Socio-demographic records', value: summaryCounts.summarySocioDemographicCount});
-      }
-      else {
-        summaries.push({label: 'Files', value: summaryCounts.fileCount});
-        summaries.push({label: 'Aliquots', value: summaryCounts.aliquotCount});
-      }
+      const summaries = [];
+      summaries.push({ label: countPluralNames[0], value: summaryCounts.countOne });
+      summaries.push({ label: countPluralNames[1], value: summaryCounts.countTwo });
+      summaries.push({ label: countPluralNames[2], value: (countNames[2] === 'File') ? summaryCounts.fileCount : summaryCounts.countThree });
+      summaries.push({ label: countPluralNames[3], value: summaryCounts.countThree });
       return (<div className="clearfix">
         <LittleProjectDashboard
           projectList={projectList}
           summaries={summaries}
+          icons={dashboardIcons}
         />
-        <Table projectList={projectList} summaries={summaries} />
+        <Table projectList={projectList} summaryCounts={summaryCounts} />
       </div>);
     }
   };

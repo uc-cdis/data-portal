@@ -1,0 +1,19 @@
+a {
+  color: #458cb9;
+  }
+a:hover,
+a:focus {
+  color: #404040;
+  }
+.btn-primary {
+ background-color: #458cb9;
+}
+.btn-primary:hover,
+.btn-primary.hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+  background-color: #404040;
+  border-color: #404040;
+  }

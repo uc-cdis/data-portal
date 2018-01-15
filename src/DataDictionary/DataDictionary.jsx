@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { Table, TableData, TableRow, TableHead } from '../theme';
 import { app } from '../localconf';
+import { capitalizeFirstLetter } from '../utils'
 
 
 const subHeader = (() => {
@@ -22,7 +23,7 @@ const subHeader = (() => {
 const TableBullet = ({ node, description }) => (
   <TableRow>
     <TableData>
-      <Link to={`/dd/${node}`}> {node} </Link>
+      <Link to={`/dd/${node.id}`}> {node.title} </Link>
     </TableData>
     <TableData right>
       {description}
@@ -31,7 +32,7 @@ const TableBullet = ({ node, description }) => (
 );
 
 TableBullet.propTypes = {
-  node: PropTypes.string.isRequired,
+  node: PropTypes.object.isRequired,
   description: PropTypes.string,
 };
 
@@ -44,7 +45,7 @@ const CategoryTable = ({ nodes, category }) => (
     <TableHead>
       <TableRow>
         <TableData first_cr>
-          {category}
+          {capitalizeFirstLetter(category)}
         </TableData>
       </TableRow>
     </TableHead>
@@ -52,7 +53,8 @@ const CategoryTable = ({ nodes, category }) => (
     <tbody>
       {
         nodes.map(
-          node => <TableBullet node={node.id} key={node.id} description={node.description} />,
+          node => <TableBullet node={node} key={node.id}
+            description={node.description} />,
         )
       }
     </tbody>

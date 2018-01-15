@@ -1,57 +1,18 @@
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { TableBarColor } from '../../theme';
 import Translator from '../translate';
-import { app } from '../../localconf';
+import { countNames, countPluralNames, localTheme } from '../../localconf';
+import { Table, TableHead, TableRow, TableColLabel, TableCell } from '../style';
 
 
 const tor = Translator.getTranslator();
 
-
-export const Table = styled.table`
-  border-collapse: collapse;
-  border: 1px solid #dedede;
-  overflow: auto;
-  margin: 1em 0em;
-  text-align:center;
-  width:100%;
-`;
-
-export const TableHead = styled.thead`
-  background: ${TableBarColor};
-  color: white;
-`;
-
-export const TableRow = styled.tr`
-  padding: 0rem 0rem;
-  border-bottom: 1px solid #dedede;
-  color: #222;
-  ${
-  props => (props.summaryRow ? `
-      background-color: #eeeeee;
-      ` : '')
-}
-`;
-
-
-export const TableCell = styled.td`
-    color: #222;
-    padding: 0.5rem 1rem;
-`;
-
-export const TableColLabel = styled.th`
-    color: white;
-    padding: 0.5rem 1rem;
-    height: 100%;
-    font-weight: normal;
-    text-align:center;
-`;
-
 class SubmitButton extends React.Component {
   render() {
-    return <Link to={this.props.projName} title="Submit Data"><FlatButton backgroundColor="#dddddd" label="Submit Data" /></Link>;
+    return (<Link to={this.props.projName} title="Submit or View Graph">
+      <FlatButton backgroundColor={localTheme['projectTable.submitButtonColor']} label="Submit or View Graph" />
+    </Link>);
   }
 }
 
@@ -66,14 +27,14 @@ export class ProjectTR extends React.Component {
       <TableCell>
         {proj.name}
       </TableCell>
-      <TableCell>{proj.experimentCount}
+      <TableCell>{proj.countOne}
       </TableCell>
-      <TableCell>{proj.caseCount}
+      <TableCell>{proj.countTwo}
       </TableCell>
-      <TableCell>{(app === 'ndh') ? proj.summaryLabResultCount : proj.aliquotCount}
+      <TableCell>{proj.countThree}
       </TableCell>
       <TableCell>
-        {(app === 'ndh') ? proj.summarySocioDemographicCount : proj.fileCount}
+        {(countNames[2] === 'File') ? proj.fileCount : proj.countThree}
       </TableCell>
       <TableCell>
         {proj.name !== 'Totals:' ? <SubmitButton projName={proj.name} /> : ''}
@@ -107,35 +68,40 @@ export class ProjectTable extends React.Component {
   render() {
     const projectList = (this.props.projectList || []).sort((a, b) => ((a.name < b.name) ? -1 : (a.name === b.name) ? 0 : 1));
     const sum = (key) => { projectList.map(it => it[key]).reduce((acc, it) => { acc + it; }, 0); };
-    const summaryCounts = this.props.summaries || {
-      count1: sum('experimentCount'),
-      count2: sum('case'),
-      count3: (app === 'ndh') ? sum('summaryLabResultCount') : sum('aliquotCount'),
-      count4: (app === 'ndh') ? sum('summarySocioDemographicCount') : sum('fileCount'),
+    const summaryCounts = this.props.summaryCounts || {
+      count1: sum('countTwo'),
+      count2: sum('countOne'),
+      count3: sum('countThree'),
+      count4: (countNames[2] === 'File') ? sum('fileCount') : sum('countThree'),
     };
-    let label3 = (app === 'ndh') ? 'Lab records' : 'Aliquots';
-    let label4 = (app === 'ndh') ? 'Socio-demographic records' : 'Files';
+    const label1 = countPluralNames[0];
+    const label2 = countPluralNames[1];
+    const label3 = countPluralNames[3];
+    const label4 = countPluralNames[2];
 
-    return (<Table>
-      <TableHead>
-        <TableRow>
-          <TableColLabel>Project</TableColLabel>
-          <TableColLabel>{tor.translate('Experiments')}</TableColLabel>
-          <TableColLabel>Cases</TableColLabel>
-          <TableColLabel>{label3}</TableColLabel>
-          <TableColLabel>{label4}</TableColLabel>
-          <TableColLabel />
-        </TableRow>
-      </TableHead>
-      <tbody>
-        {
-          projectList.map(
-            proj => this.rowRender(proj),
-          )
-        }
-        <ProjectTR key={summaryCounts} project={{ ...summaryCounts, name: 'Totals:' }} summaryRow />
-      </tbody>
-    </Table>);
+    return (<div>
+      <h5>List of Projects</h5>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableColLabel>Project</TableColLabel>
+            <TableColLabel>{label1}</TableColLabel>
+            <TableColLabel>{label2}</TableColLabel>
+            <TableColLabel>{label3}</TableColLabel>
+            <TableColLabel>{label4}</TableColLabel>
+            <TableColLabel />
+          </TableRow>
+        </TableHead>
+        <tbody>
+          {
+            projectList.map(
+              proj => this.rowRender(proj),
+            )
+          }
+          <ProjectTR key={summaryCounts} project={{ ...summaryCounts, name: 'Totals:' }} summaryRow />
+        </tbody>
+      </Table>
+    </div>);
   }
 }
 

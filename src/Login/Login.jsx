@@ -25,10 +25,15 @@ const Login = (props) => {
   if (queryParams.next) {
     next = basename === '/' ? queryParams.next : basename + queryParams.next;
   }
+  const appLines = appname.split('\n');
   return (
     <div>
       <CentralBox>
-        <h3 className="article">{appname}</h3>
+        <img src={ '/src/img/logo.png' } style={{ height: '80px' }} />
+        {
+          appLines.map(
+          (line) => <h3 className="article" key={line}>{line}</h3>,
+        )}
         <LoginButton className="btn btn-primary navbar-btn btn-sm login-button" href={login.url + window.location.origin + next}>{login.title}</LoginButton>
       </CentralBox>
       <Footer />

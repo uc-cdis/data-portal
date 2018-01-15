@@ -32,6 +32,7 @@ export const TableFootCell = styled(TableData)`
   background: ${ExplorerTableBarColor};
   color: '#000000';
   text-align: center;
+  overflow: visible;  
 `;
 
 export const ExplorerSidebarStyle = styled(Sidebar)`

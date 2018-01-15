@@ -6,7 +6,6 @@ import { RelayProjectTable } from './RelayProjectTable';
 import { GQLHelper } from '../../gqlHelper';
 import { getReduxStore } from '../../reduxStore';
 import Spinner from '../../components/Spinner';
-import { app } from '../../localconf';
 
 
 const gqlHelper = GQLHelper.getGQLHelper();
@@ -61,24 +60,18 @@ export class RelayProjectDashboard extends React.Component {
       proj =>
         // fill in missing properties
         Object.assign({ name: 'unknown',
-          experimentCount: 0,
+          countOne: 0,
           fileCount: 0,
-          caseCount: 0,
-          aliquotCount: 0,
-          coreVisitCount: 0,
-          summaryLabResultCount: 0,
-          summarySocioDemographicCount: 0,
+          countTwo: 0,
+          countThree: 0,
         }, proj),
 
     );
     // console.log( "Got filecount: " + fileCount );
     const summaryCounts = {
-      caseCount: relayProps.caseCount,
-      experimentCount: relayProps.experimentCount,
-      aliquotCount: relayProps.aliquotCount,
-      coreVisitCount: relayProps.coreVisitCount,
-      summaryLabResultCount: relayProps.summaryLabResultCount,
-      summarySocioDemographicCount: relayProps.summarySocioDemographicCount,
+      countOne: relayProps.countOne,
+      countTwo: relayProps.countTwo,
+      countThree: relayProps.countThree,
       fileCount,
     };
     return {

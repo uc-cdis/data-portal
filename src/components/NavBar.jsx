@@ -6,32 +6,35 @@ import FlatButton from 'material-ui/FlatButton';
 
 
 const NavLeft = styled.nav`
-  top: 0px;
+  width: 85%;
   float: left;
-  padding-left: 220px;
+  padding-left: 120px;
 `;
 
 const Header = styled.header`
-  background-image: url(/src/img/ndh-header.png);
-  background-size: 200px 40px;
-  background-position: 100px 10px;
+  background-image: url(/src/img/logo.png);
+  background-size: auto 70px;
+  background-position: 100px 5px;
   background-repeat: no-repeat; 
   width: 100%;
   background-color: white;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-  padding: 10px 100px;
+  border-bottom: 3px solid #DFDFDF;
+  padding: 18px 100px;
   overflow: hidden;
+  vertical-align: middle;
 `;
 
 const NavRight = styled.nav`
   float: right;
   color: white;
+  max-width: 15%;
+  overflow: hidden;
 `;
 
 // TODO: due to issue https://github.com/styled-components/styled-components/issues/439,
 // bgcolor prop triggers react warning now, need to fix
 const NavItem = styled(Link)`
-  margin-right: 20px;
+  margin-right: 4px;
   span {
     padding-left: 4px !important;
   }
@@ -40,7 +43,7 @@ const NavItem = styled(Link)`
 
 const NavIcon = styled.div`
   vertical-align: middle;
-  padding-left: 16px;
+  padding-left: 4px;
 `;
 
 /**
@@ -53,11 +56,17 @@ const NavBar = ({ navItems, user, onLogoutClick }) => (
       {
         navItems.map(
           (item, i) => (
-            <NavItem key={i} to={item.link}>
-              <FlatButton label={item.name}>
-                <NavIcon className="material-icons">{item.icon}</NavIcon>
-              </FlatButton>
-            </NavItem>
+            (item.link.startsWith('http')) ?
+              <a key={item.link} href={item.link}>
+                <FlatButton label={item.name} style={{ color : 'inherit', verticalAlign: 'middle' }}>
+                  <NavIcon className="material-icons">{item.icon}</NavIcon>
+                </FlatButton>
+              </a> :
+              <NavItem key={item.link} to={item.link}>
+                <FlatButton label={item.name} style={{ color : 'inherit', verticalAlign: 'middle' }}>
+                  <NavIcon className="material-icons">{item.icon}</NavIcon>
+                </FlatButton>
+              </NavItem>
           ),
         )
       }
@@ -65,9 +74,11 @@ const NavBar = ({ navItems, user, onLogoutClick }) => (
     <NavRight>
       { user.username !== undefined &&
         <ul>
-          <NavItem to="/"><FlatButton label={user.username} /></NavItem>
+          <NavItem to="/identity">
+            <FlatButton label={user.username.split('@',-1)[0]} style={{ color : 'inherit' }}/>
+          </NavItem>
           <NavItem to="#" onClick={onLogoutClick}>
-            <FlatButton><span className="fui-exit" /></FlatButton>
+            <FlatButton style={{ minWidth : '0px'}}><span className="fui-exit" /></FlatButton>
           </NavItem>
         </ul>
       }

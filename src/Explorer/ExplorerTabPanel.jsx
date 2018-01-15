@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { ExplorerTabs, ExplorerTab, ExplorerTabBox, ExplorerTabFrame } from './style';
 import { ExplorerTableComponent } from './ExplorerTable';
-
+import { capitalizeFirstLetter } from '../utils';
 
 class ExplorerTabPanel extends Component {
   static propTypes = {
@@ -68,7 +68,7 @@ class ExplorerTabPanel extends Component {
                   () => this.props.onTabChange({ activeTab: item })
                 }
               >
-                {item.replace('submitted_', '').replace(/_/g, ' ')}
+                {capitalizeFirstLetter(item)}
               </ExplorerTab>)
           }
         </ExplorerTabs>

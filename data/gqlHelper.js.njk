@@ -6,10 +6,7 @@
 //      https://mozilla.github.io/nunjucks/
 //
 
-import Relay from 'react-relay/classic';
-import {app,dev} from './localconf.js';
-import {graphql} from 'react-relay';
-
+import { graphql } from 'react-relay';
 
 
 /**
@@ -20,65 +17,59 @@ const helperSingleton = {
    * Fetch the initial list of projects and global node counts
    */
   homepageQuery: graphql`query gqlHelperHomepageQuery {
-        projectList: project(first: 10000) {
-          name: project_id
-          code
-        }
-        {% if hasCaseType %}caseCount: _case_count{% endif %}
-        {% if experimentType %}experimentCount:  _{{ experimentType }}_count{% endif %}
-        {% if hasAliquotType %}aliquotCount: _aliquot_count{% endif %}
-        {% if hasSummaryLabResult %}summaryLabResultCount: _summary_lab_result_count{% endif %}
-        {% if hasCoreVisit %}coreVisitCount: _core_visit_count{% endif %}
-        {% if hasSummarySocioDemographic %}summarySocioDemographicCount: _summary_socio_demographic_count{% endif %}
-        {% for fType in fileTypeList %}
-            fileCount{{ loop.index }}: _{{ fType }}_count
-        {% endfor %}
-    }`,
-  
-    projectDetailQuery: graphql`query gqlHelperProjectDetailQuery( $name: [String] ) {
-        project( project_id:$name ) {
-          name: project_id
-          code
-        }
-        {% if hasCaseType %}caseCount: _case_count( project_id:$name ){% endif %}
-        {% if experimentType %}experimentCount: _{{ experimentType }}_count( project_id:$name ){% endif %}
-        {% if hasAliquotType %}aliquotCount: _aliquot_count( project_id:$name ){% endif %}
-        {% if hasSummaryLabResult %}summaryLabResultCount: _summary_lab_result_count( project_id:$name ){% endif %}
-        {% if hasCoreVisit %}coreVisitCount: _core_visit_count( project_id:$name ){% endif %}
-        {% if hasSummarySocioDemographic %}summarySocioDemographicCount: _summary_socio_demographic_count( project_id:$name ){% endif %}
-        {% for fType in fileTypeList %}
-            fileCount{{ loop.index }}: _{{ fType }}_count( project_id:$name )
-        {% endfor %}
-    }`,
-
-    explorerPageQuery: graphql`query gqlHelperExplorerPageQuery{
-        viewer {
-            ...gqlHelperExplorerFragment
-        }
-    }`,
-
-    explorerPageFragment: graphql`
-    fragment gqlHelperExplorerFragment on viewer
-    @argumentDefinitions(
-      {% for fType in fileTypeList %}firstValue_{{ fType }}: {type: "Int", defaultValue: 100},
-      cursor_{{ fType }}: {type: "Int"},
-      {% endfor %}
-      selected_projects: {type: "[String]"},
-      selected_file_types: {type: "[String]"},
-      selected_file_formats: {type: "[String]"}
-    )
-    {
-      {% for fType in fileTypeList %}
-      fileData_{{ fType }}:{{fType}}(first: $firstValue_{{ fType }} offset: $cursor_{{ fType }},
-      project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
-        project_id
-        file_name
-        data_category
-        data_format
-        data_type
-        file_size
-      }{% endfor %}
+    projectList: project(first: 10000) {
+      name: project_id
+      code
     }
+    countOne: _case_count
+    countTwo:  _experiment_count
+    countThree: _aliquot_count
+    {% for fType in fileTypeList %}
+      fileCount{{ loop.index }}: _{{ fType }}_count
+    {% endfor %}
+  }`,
+
+  projectDetailQuery: graphql`query gqlHelperProjectDetailQuery( $name: [String] ) {
+    project( project_id:$name ) {
+      name: project_id
+      code
+    }
+    countOne: _case_count( project_id:$name )
+    countTwo: _experiment_count( project_id:$name )
+    countThree: _aliquot_count( project_id:$name )
+    {% for fType in fileTypeList %}
+      fileCount{{ loop.index }}: _{{ fType }}_count( project_id:$name )
+    {% endfor %}
+  }`,
+
+  explorerPageQuery: graphql`query gqlHelperExplorerPageQuery{
+    viewer {
+      ...gqlHelperExplorerFragment
+    }
+  }`,
+
+  explorerPageFragment: graphql`
+  fragment gqlHelperExplorerFragment on viewer
+  @argumentDefinitions(
+    {% for fType in fileTypeList %}firstValue_{{ fType }}: {type: "Int", defaultValue: 100},
+    cursor_{{ fType }}: {type: "Int"},
+    {% endfor %}
+    selected_projects: {type: "[String]"},
+    selected_file_types: {type: "[String]"},
+    selected_file_formats: {type: "[String]"}
+  )
+  {
+    {% for fType in fileTypeList %}
+    fileData_{{ fType }}: {{fType}}(first: $firstValue_{{ fType }} offset: $cursor_{{ fType }},
+    project_id: $selected_projects, data_type: $selected_file_types, data_format: $selected_file_formats) {
+      project_id
+      file_name
+      data_category
+      data_format
+      data_type
+      file_size
+    }{% endfor %}
+  }
   `,
   explorerRefreshQuery: graphql`
     query gqlHelperExplorerRefreshQuery (
@@ -122,76 +113,86 @@ export class GQLHelper {
    * @param {Object} data
    * @return {fileCount:sum,fileData:Array} 
    */
-  static extractFileInfo( data ) {
-    const fileCount = Object.keys( data ).filter( key => key.indexOf( "fileCount" ) === 0 ).map( key => data[key] 
-    ).reduce( (acc,it) => acc + it, 0 );
-    const fileData = Object.keys( data ).filter( key => key.indexOf( "fileData" ) === 0 ).map( key => data[key] 
-    ).reduce( 
-      (acc,it) => { let result=acc; if( Array.isArray( it ) ) { result = acc.concat( it ) } else { acc.push(it ); } return result }, 
-      [] 
-    );
+  static extractFileInfo(data) {
+    const fileCount = Object.keys(data).filter(key => key.indexOf('fileCount') === 0).map(key => data[key])
+      .reduce((acc, it) => acc + it, 0);
+    const fileData = Object.keys(data).filter(key => key.indexOf('fileData') === 0).map(key => data[key])
+      .reduce(
+        (acc, it) => {
+          let result = acc;
+          if (Array.isArray(it)) {
+            result = acc.concat(it);
+          } else {
+            acc.push(it);
+          }
+          return result;
+        }, []);
     return { fileCount, fileData };
   }
 
-  static extractFileDataToDict( data ) {
-    return Object.keys( data ).filter( key => key.indexOf( "fileData" ) === 0 ).reduce(
-      (acc,key) => {
-        acc[key.substr(key.indexOf("_") + 1)] = data[key];
+  static extractFileDataToDict(data) {
+    return Object.keys(data).filter(key => key.indexOf('fileData') === 0).reduce(
+      (acc, key) => {
+        acc[key.substr(key.indexOf('_') + 1)] = data[key];
         return acc;
-      },
-      {}
+      }, {},
     );
   }
 
   /**
    * Little singleton factory 
    */
-  static getGQLHelper( appName=app ) {
+  static getGQLHelper() {
     return helperSingleton;
   }
 
-  static getExplorerVariables(selected_filters, pageSize, cursors) {
+  static getExplorerVariables(selectedFilters, pageSize, cursors) {
     return {
       {% for fType in fileTypeList %}firstValue_{{ fType }}: pageSize,
-      cursor_{{ fType }}: ('{{ fType }}' in cursors) ? cursors['{{ fType }}'] : 0,
-      {% endfor %}
-      selected_projects: selected_filters ? selected_filters.projects : [],
-      selected_file_formats: selected_filters ? selected_filters.file_formats: [],
-      selected_file_types: selected_filters ? selected_filters.file_types : [],
-    }
+      cursor_{{ fType }}: ('{{ fType }}' in cursors) ? cursors.{{ fType }} : 0,
+      {% endfor %}selected_projects: selectedFilters ? selectedFilters.projects : [],
+      selected_file_formats: selectedFilters ? selectedFilters.file_formats : [],
+      selected_file_types: selectedFilters ? selectedFilters.file_types : [],
+    };
   }
 
   static getDefaultDictionary(data, cursors) {
-    const fileLengthData = Object.keys( data ).filter( key => key.indexOf( "fileData" ) === 0 ).reduce(
+    const fileLengthData = Object.keys(data).filter(key => key.indexOf('fileData') === 0).reduce(
       (map, key) => {
-        map[key.substr(key.indexOf("_") + 1)] = data[key].length; return map;
-      },
-      {}
+        const res = map;
+        res[key.substr(key.indexOf('_') + 1)] = data[key].length; return res;
+      }, {},
     );
     return Object.keys(fileLengthData).reduce(
       (map, key) => {
-        if (key in cursors) {map[key] = cursors[key]}
-        else {map[key] = 0}
-        return map;
-      }, {}
+        const res = map;
+        if (key in cursors) {
+          res[key] = cursors[key];
+        } else {
+          res[key] = 0;
+        }
+        return res;
+      }, {},
     );
   }
 
   static updateOffset(data, cursors) {
-    const fileLengthData = Object.keys( data ).filter( key => key.indexOf( "fileData" ) === 0 ).reduce(
+    const fileLengthData = Object.keys(data).filter(key => key.indexOf('fileData') === 0).reduce(
       (map, key) => {
-        map[key.substr(key.indexOf("_") + 1)] = data[key].length; return map;
-      },
-      {}
+        const res = map;
+        res[key.substr(key.indexOf('_') + 1)] = data[key].length; return res;
+      }, {},
     );
     return Object.keys(fileLengthData).reduce(
       (map, key) => {
-        if (key in cursors) {map[key] = cursors[key] + fileLengthData[key]}
-        else {map[key] = fileLengthData[key]}
-        return map;
-      }, {}
+        const res = map;
+        if (key in cursors) {
+          res[key] = cursors[key] + fileLengthData[key];
+        } else {
+          res[key] = fileLengthData[key];
+        }
+        return res;
+      }, {},
     );
   }
 }
-
-

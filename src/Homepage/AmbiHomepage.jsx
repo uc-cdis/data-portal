@@ -1,7 +1,7 @@
 import React from 'react';
 import { RelayProjectDashboard } from './Relay/RelayHomepage';
 import ReduxProjectDashboard from './Redux/ReduxProjectDashboard';
-import { RelayTransactionLogComponent } from "./RelayTransactionLogComponent";
+import { RelayTransactionLogComponent } from './Relay/RelayTransactionLogComponent';
 import { getReduxStore } from '../reduxStore';
 
 

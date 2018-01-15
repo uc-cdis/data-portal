@@ -163,7 +163,7 @@ export function nodesBreadthFirst(nodes, edges) {
   }
 
   // queue.shift is O(n), so just keep pushing, and move the head
-  for (let head = 0; head < queue.length; head+=1) {
+  for (let head = 0; head < queue.length; head += 1) {
     const { query, level } = queue[head]; // breadth first
     result.bfOrder.push(query);
     processedNodes.add(query);
