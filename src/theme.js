@@ -65,7 +65,7 @@ export const Margin = styled.div`
   width: 100%;
 `;
 
-export const TableBarColor = '#7d7474';
+export const TableBarColor = '#1d4c2e';
 
 export const Table = styled.table`
   table-layout:auto;
