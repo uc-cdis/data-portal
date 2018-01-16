@@ -1,12 +1,23 @@
 import React, {Component} from 'react';
 import { QueryRenderer } from 'react-relay';
-import FlatButton from 'material-ui/FlatButton';
 import environment from '../environment';
 import Spinner from '../components/Spinner';
 import { app } from '../localconf';
 import {graphql} from 'react-relay';
-import { Table, TableHead, TableRow, TableColLabel, TableCell } from "./style";
+import { Table, TableHead, TableRow, TableColLabel, TableCell, ColorSpan } from "./style";
+import styled from "styled-components";
 
+const SuccessBar = styled(ColorSpan)`
+  background-color: '#00ee00';
+`;
+
+const FailBar = styled(ColorSpan)`
+  background-color: '#ff0000';
+`;
+
+const PendingBar = styled(ColorSpan)`
+  background-color: '#ffcc00';
+`;
 
 export class RelayTransactionLogComponent extends Component{
   /**
@@ -62,9 +73,9 @@ export class TransactionLogTR extends React.Component {
         <TableCell>{getLocalTime(trans.created_datetime)}
         </TableCell>
         <TableCell>
-          {(trans.state === 'SUCCEEDED' && <FlatButton backgroundColor="#00ee00" hoverColor="#00ee00" label={trans.state} />)
-            || (trans.state === 'FAILED' && <FlatButton backgroundColor="#ff0000" hoverColor="#ff0000" label={trans.state} />)
-            || (trans.state === 'PENDING' && <FlatButton backgroundColor="#ffcc00" hoverColor="#ffcc00" label={trans.state} />)
+          {(trans.state === 'SUCCEEDED' && <ColorSpan >{trans.state}</ColorSpan>)
+          || (trans.state === 'FAILED' && <FailBar>{trans.state}</FailBar>)
+          || (trans.state === 'PENDING' && <PendingBar>{trans.state}</PendingBar>)
           }
         </TableCell>
       </TableRow>);
@@ -77,9 +88,9 @@ export class TransactionLogTR extends React.Component {
         <TableCell>{getLocalTime(trans.created_datetime)}
         </TableCell>
         <TableCell>
-          {(trans.state === 'SUCCEEDED' && <FlatButton backgroundColor="#00ee00" hoverColor="#00ee00" label={trans.state} />)
-          || (trans.state === 'FAILED' && <FlatButton backgroundColor="#ff0000" hoverColor="#ff0000" label={trans.state} />)
-          || (trans.state === 'PENDING' && <FlatButton backgroundColor="#ffcc00" hoverColor="#ffcc00" label={trans.state} />)
+          {(trans.state === 'SUCCEEDED' && <SuccessBar >{trans.state}</SuccessBar>)
+          || (trans.state === 'FAILED' && <FailBar>{trans.state}</FailBar>)
+          || (trans.state === 'PENDING' && <PendingBar>{trans.state}</PendingBar>)
           }
         </TableCell>
       </TableRow>);
@@ -90,7 +101,7 @@ export class TransactionLogTable extends React.Component {
   render() {
     return (
       <div>
-        <h5>Latest transactions</h5>
+        <h5>Recent submissions</h5>
         <Table>
           <TableHead>
             <TableRow key='header'>
