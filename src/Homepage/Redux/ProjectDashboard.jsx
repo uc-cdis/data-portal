@@ -140,7 +140,7 @@ export function DashboardWith(Table) {
           projectList={projectList}
           summaries={summaries}
         />
-        <Table projectList={projectList} summaries={summaries} />
+        <Table projectList={projectList} summaryCounts={summaryCounts} />
       </div>);
     }
   };

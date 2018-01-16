@@ -68,7 +68,7 @@ export class ProjectTable extends React.Component {
   render() {
     const projectList = (this.props.projectList || []).sort((a, b) => ((a.name < b.name) ? -1 : (a.name === b.name) ? 0 : 1));
     const sum = (key) => { projectList.map(it => it[key]).reduce((acc, it) => { acc + it; }, 0); };
-    const summaryCounts = this.props.summaries || {
+    const summaryCounts = this.props.summaryCounts || {
       count1: sum('experimentCount'),
       count2: sum('case'),
       count3: (app === 'ndh') ? sum('summaryLabResultCount') : sum('aliquotCount'),
