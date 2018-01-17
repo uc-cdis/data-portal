@@ -42,10 +42,6 @@ export const TableColLabel = styled.th`
   text-align:center;
 `;
 
-export const ColorBar = styled.div`
-  display: box;
-`;
-
 export const ColorSpan = styled.span`
   border: 10px;
   box-sizing: border-box;
