@@ -12,9 +12,9 @@ describe('the UserProfile component', () => {
       },
     },
     userProfile: {
-      access_key_pairs: [
-        { access_key: 'frickjack1' },
-        { access_key: 'frickjack2' },
+      jtis: [
+        { jti: 'f8733984-8164-4689-9c25-56707962d7e0', exp: 1459487258 },
+        { jti: 'f8733984-8164-4689-9c25-56707962d7e9', exp: 1459487259 },
       ],
     },
     popups: {},
@@ -41,7 +41,7 @@ describe('the UserProfile component', () => {
         />
       </StaticRouter>,
     );
-    expect($vdom.find(AccessKeyCell)).toHaveLength(testProps.userProfile.access_key_pairs.length);
+    expect($vdom.find(AccessKeyCell)).toHaveLength(testProps.userProfile.jtis.length);
   });
 
   it('triggers create-key events', (done) => {

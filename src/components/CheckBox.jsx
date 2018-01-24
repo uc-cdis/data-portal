@@ -48,7 +48,8 @@ export class CheckBoxGroup extends Component {
     if (pos === -1) {
       selectedItems = [...this.props.selectedItems, item];
     } else {
-      selectedItems = [...this.props.selectedItems.slice(0, pos), ...this.props.selectedItems.slice(pos + 1)];
+      selectedItems = [...this.props.selectedItems.slice(0, pos),
+        ...this.props.selectedItems.slice(pos + 1)];
     }
     const state = { [this.props.groupName]: selectedItems };
     this.props.onChange(state);

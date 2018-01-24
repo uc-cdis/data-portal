@@ -15,9 +15,12 @@ const SavePopupBox = styled.section`
   overflow: hidden;
 `;
 
+const ButtonGroup = styled.div`
+  width: 80%;
+`;
 
 export const saveToFile = (savingStr, filename) => {
-  const blob = new Blob([savingStr], { type: 'text/plain;charset=utf-8' });
+  const blob = new Blob([savingStr], { type: 'text/json;charset=utf-8' });
   FileSaver.saveAs(blob, filename);
 };
 
@@ -31,38 +34,42 @@ const SavePopup = ({ message, display, savingStr, error, onClose, filename }) =>
         }
         {
           display &&
-            <div>
-              <table width="100%">
-                <tbody>
-                  <tr><th>Access id</th><th>Secret key</th></tr>
-                  <tr><td width="40%">{display.access_key}</td><td width="60%">{display.secret_key}</td></tr>
-                </tbody>
-              </table>
-            </div>
+            <pre>
+              <b>Token id:</b><br />
+              <code>
+                {display.token_id} <br />
+              </code>
+              <b>Refresh token:</b><br />
+              <code>
+                {display.refresh_token}
+              </code>
+            </pre>
         }
         {error &&
         <Code className="plaintext"> {error} </Code>
         }
       </Message>
-      {onClose &&
-      <CancelButton onClick={onClose}>Close</CancelButton>
-      }
-      {
-        savingStr &&
+      <ButtonGroup>
+        {
+          onClose && <CancelButton onClick={onClose}>Close</CancelButton>
+        }
+        {
+          savingStr &&
           <Button onClick={() => saveToFile(savingStr, filename)}>Save as</Button>
-      }
-      {
-        savingStr &&
+        }
+        {
+          savingStr &&
           <Button onClick={() => copy(savingStr)}>Copy</Button>
-      }
+        }
+      </ButtonGroup>
     </SavePopupBox>
   </PopupMask>
 );
 
 SavePopup.propTypes = {
   display: PropTypes.shape({
-    access_key: PropTypes.string.isRequired,
-    secret_key: PropTypes.string.isRequired,
+    token_id: PropTypes.string.isRequired,
+    refresh_token: PropTypes.string.isRequired,
   }),
   message: PropTypes.string,
   savingStr: PropTypes.string,
