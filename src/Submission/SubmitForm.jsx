@@ -72,7 +72,13 @@ class TextInput extends Component {
         <Label htmlFor={this.props.name}> {this.props.name}: </Label>
         {this.props.description !== '' && <InputDescription>{this.props.description}</InputDescription>}
         <br />
-        <Input type="text" name={this.props.name} value={this.props.value || ''} required={this.props.required} onChange={this.props.onChange} />
+        <Input
+          type="text"
+          name={this.props.name}
+          value={this.props.value || ''}
+          required={this.props.required}
+          onChange={this.props.onChange}
+        />
         {this.props.required && <RequiredNotification> {'*'} </RequiredNotification>}
       </div>
     );
@@ -171,7 +177,8 @@ class OneOfInput extends Component {
       }
     };
 
-    if (this.props.property[0].hasOwnProperty('enum') && this.props.property[1].hasOwnProperty('enum')) {
+    if (Object.prototype.hasOwnProperty.call(this.props.property[0], 'enum')
+      && Object.prototype.hasOwnProperty.call(this.props.property[1], 'enum')) {
       const options = this.props.property[0].enum.concat(this.props.property[1].enum);
       return (
         <EnumInput
@@ -197,13 +204,25 @@ class OneOfInput extends Component {
       <div>
           What is your data type for {this.props.name}?
         <br />
-        <label>
-          <input type="radio" value="Text" checked={this.state.selectedOption === 'Text'} onChange={radioChange} />
+        <label htmlFor="textDataType">
+          <input
+            id="textDataType"
+            type="radio"
+            value="Text"
+            checked={this.state.selectedOption === 'Text'}
+            onChange={radioChange}
+          />
               Text
         </label>
 
-        <label>
-          <input type="radio" value="Number" checked={this.state.selectedOption === 'Number'} onChange={radioChange} />
+        <label htmlFor="numberDataType">
+          <input
+            id="numberDataType"
+            type="radio"
+            value="Number"
+            checked={this.state.selectedOption === 'Number'}
+            onChange={radioChange}
+          />
               Number
         </label>
         {this.state.selectedOption === 'Number' &&
@@ -251,14 +270,39 @@ const AnyOfInput = ({ name, values, node, properties, required, requireds, onCha
           // we use index 0 of values because AnyOfInput is hardcoded
           // to be an array of length 1, an upcoming feature should be to add to this array
           return (
-            <TextInput key={property} name={property} value={values ? values[0][property] : ''} required={required && requiredSubprop} description={description} onChange={onChangeAnyOfWrapper} />);
+            <TextInput
+              key={property}
+              name={property}
+              value={values ? values[0][property] : ''}
+              required={required && requiredSubprop}
+              description={description}
+              onChange={onChangeAnyOfWrapper}
+            />);
         })}
       </AnyOfSubProps>
     </div>
   );
 };
 
-const SubmitNodeForm = ({ node, form, properties, requireds, onChange, onChangeEnum, onChangeAnyOf, onUpdateFormSchema, handleSubmit }) => (
+AnyOfInput.propTypes = {
+  name: PropTypes.string.isRequired,
+  values: PropTypes.object.isRequired,
+  node: PropTypes.any.isRequired,
+  properties: PropTypes.array.isRequired,
+  required: PropTypes.bool.isRequired,
+  requireds: PropTypes.array,
+  onChange: PropTypes.func.isRequired,
+};
+
+
+AnyOfInput.defaultProps = {
+  requireds: [],
+};
+
+
+const SubmitNodeForm = ({ node, form, properties, requireds, onChange,
+  onChangeEnum, onChangeAnyOf, onUpdateFormSchema,
+  handleSubmit }) => (
   <div>
     <form onSubmit={handleSubmit} >
       {properties.map((property) => {
@@ -330,6 +374,23 @@ const SubmitNodeForm = ({ node, form, properties, requireds, onChange, onChangeE
     </form>
   </div>
 );
+
+SubmitNodeForm.propTypes = {
+  node: PropTypes.any.isRequired,
+  form: PropTypes.object.isRequired,
+  properties: PropTypes.object.isRequired,
+  requireds: PropTypes.array,
+  onChange: PropTypes.func.isRequired,
+  onChangeEnum: PropTypes.func.isRequired,
+  onChangeAnyOf: PropTypes.func.isRequired,
+  onUpdateFormSchema: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+};
+
+
+SubmitNodeForm.defaultProps = {
+  requireds: [],
+};
 
 
 /**
@@ -428,7 +489,12 @@ class SubmitForm extends Component {
       <div>
         <form>
           <Toggle label="Use Form Submission" labelStyle={{ width: '' }} onToggle={this.onFormToggle} />
-          {this.state.fill_form && <Dropdown name="nodeType" options={options} value={this.state.chosenNode} onChange={updateChosenNode} />}
+          {this.state.fill_form && <Dropdown
+            name="nodeType"
+            options={options}
+            value={this.state.chosenNode}
+            onChange={updateChosenNode}
+          />}
         </form>
         {(this.state.chosenNode.value !== null) && this.state.fill_form &&
         <div>

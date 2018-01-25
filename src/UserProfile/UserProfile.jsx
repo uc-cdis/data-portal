@@ -16,6 +16,7 @@ const SECRET_KEY_MSG = 'This secret key is only displayed this time. Please save
 const DELETE_BTN = 'Delete';
 const CREATE_ACCESS_KEY_BTN = 'Create access key';
 const ACCESS_KEY_COLUMN = 'Access key(s)';
+const EXPIRES_COLUMN = 'Expires';
 const PROJECT_COLUMN = 'Project(s)';
 const RIGHT_COLUMN = 'Right(s)';
 const LIST_PROJECT_MSG = 'You have access to the following project(s)';
@@ -66,8 +67,13 @@ export const Header = styled.li`
 `;
 
 export const AccessKeyHeader = styled(Header)`
-  width: 100%;
+  width: 40%;
 `;
+
+export const ExpiresHeader = styled(Header)`
+  width: 60%;
+`;
+
 
 export const ProjectHeader = styled(Header)`
   width: 30%;
@@ -110,22 +116,32 @@ export const RightCell = styled(Cell)`
 `;
 
 export const AccessKeyCell = styled(Cell)`
-  width: 70%;
+  width: 40%;
+`;
+
+export const ExpireCell = styled(Cell)`
+  width: 30%;
 `;
 
 export const ActionCell = styled(Cell)`
   width: 30%;
 `;
 
+const TimestampToDateTime = (timestamp) => {
+  const t = new Date(timestamp * 1000);
+  return t.toLocaleString();
+};
+
 const KeyPairsEntity = ({ keypairsApi, value, onUpdatePopup, onRequestDeleteKey }) => {
   const onDelete = () => {
-    onRequestDeleteKey(value.access_key, keypairsApi);
-    onUpdatePopup({ key_delete_popup: true, keypairsApi });
+    onRequestDeleteKey(value.jti, value.exp, keypairsApi);
+    onUpdatePopup({ deleteTokenPopup: true, keypairsApi });
   };
   return (
     <li>
       <Bullet>
-        <AccessKeyCell>{value.access_key}</AccessKeyCell>
+        <AccessKeyCell>{value.jti}</AccessKeyCell>
+        <ExpireCell>{TimestampToDateTime(value.exp)}</ExpireCell>
         <ActionCell>
           <DeleteButton onClick={onDelete}>
             {DELETE_BTN}
@@ -137,7 +153,8 @@ const KeyPairsEntity = ({ keypairsApi, value, onUpdatePopup, onRequestDeleteKey 
 };
 
 const keyType = PropTypes.shape({
-  access_key: PropTypes.string.isRequired,
+  jti: PropTypes.string.isRequired,
+  exp: PropTypes.number.isRequired,
 });
 
 KeyPairsEntity.propTypes = {
@@ -151,16 +168,23 @@ KeyPairsEntity.propTypes = {
 const KeyPairsEntities = ({ values, keypairsApi, onUpdatePopup, onRequestDeleteKey }) => (
   <ul>
     {values.length > 0 &&
-      <AccessKeyHeader>{ACCESS_KEY_COLUMN}</AccessKeyHeader>
+      <div>
+        <AccessKeyHeader>{ACCESS_KEY_COLUMN}</AccessKeyHeader>
+        <ExpiresHeader>{EXPIRES_COLUMN}</ExpiresHeader>
+      </div>
     }
-    {values.map(item =>
-      (<KeyPairsEntity
-        key={item.access_key}
-        keypairsApi={keypairsApi}
-        value={item}
-        onUpdatePopup={onUpdatePopup}
-        onRequestDeleteKey={onRequestDeleteKey}
-      />))}
+    <pre>
+      <code>
+        {values.map(item =>
+          (<KeyPairsEntity
+            key={item.jti}
+            keypairsApi={keypairsApi}
+            value={item}
+            onUpdatePopup={onUpdatePopup}
+            onRequestDeleteKey={onRequestDeleteKey}
+          />))}
+      </code>
+    </pre>
   </ul>
 );
 
@@ -182,60 +206,62 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
   return (
     <div>
       {
-        userProfile.access_key_pairs === undefined &&
+        userProfile.jtis === undefined &&
         <div>
           {NO_ACCESS_MSG}
         </div>
       }
       {
-        userProfile.access_key_pairs !== undefined && userProfile.access_key_pairs !== [] &&
+        userProfile.jtis !== undefined && userProfile.jtis !== [] &&
         <KeyPairTable>
           {
-            popups.key_delete_popup === true &&
+            popups.deleteTokenPopup === true &&
             <Popup
               message={CONFIRM_DELETE_MSG}
               error={jsonToString(userProfile.delete_error)}
-              onConfirm={() => onDeleteKey(userProfile.request_delete_key, popups.keypairsApi)}
+              onConfirm={() => onDeleteKey(userProfile.requestDeleteJTI,
+                userProfile.requestDeleteExp,
+                popups.keypairsApi)}
               onCancel={() => {
                 onClearDeleteSession();
-                onUpdatePopup({ key_delete_popup: false });
+                onUpdatePopup({ deleteTokenPopup: false });
               }}
             />
           }
           {
-            popups.save_key_popup === true &&
+            popups.saveTokenPopup === true &&
             <SavePopup
               message={SECRET_KEY_MSG}
               error={jsonToString(userProfile.create_error)}
-              display={userProfile.access_key_pair}
-              savingStr={userProfile.str_access_key_pair}
+              display={userProfile.refreshCred}
+              savingStr={userProfile.strRefreshCred}
               onClose={() => {
-                onUpdatePopup({ save_key_popup: false });
+                onUpdatePopup({ saveTokenPopup: false });
                 onClearCreationSession();
               }}
-              filename={'accessKeys.txt'}
+              filename={'accessKeys.json'}
             />
           }
           <RequestButton onClick={onCreate}>
             {CREATE_ACCESS_KEY_BTN}
           </RequestButton>
           {
-            userProfile.access_key_pairs.length === 0 &&
+            userProfile.jtis.length === 0 &&
             <div>
               {NO_ACCESS_KEY}
             </div>
           }
           {
-            userProfile.access_key_pairs.length > 0 &&
+            userProfile.jtis.length > 0 &&
             <h5>
               {LIST_ACCESS_KEY_MSG}
             </h5>
           }
           {
-            userProfile.access_key_pairs &&
+            userProfile.jtis &&
             <KeyPairsEntities
               key="list_access_id"
-              values={userProfile.access_key_pairs}
+              values={userProfile.jtis}
               keypairsApi={credentialCdisPath}
               onUpdatePopup={onUpdatePopup}
               onRequestDeleteKey={onRequestDeleteKey}
@@ -252,28 +278,32 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
               <RightHeader>{RIGHT_COLUMN}</RightHeader>
             </Bullet>
           </li>
-          {accessibleProjects.map(
-            p =>
-              (<li key={p}>
-                <Bullet>
-                  {
-                    p in submission.projects &&
-                    <ProjectCell to={`/${submission.projects[p]}`}>
-                      {p}
-                    </ProjectCell>
-                  }
-                  {
-                    !(p in submission.projects) &&
-                    <ProjectCellNoAccess>
-                      {p}
-                    </ProjectCellNoAccess>
-                  }
-                  <RightCell>
-                    {user.project_access[p].join(', ')}
-                  </RightCell>
-                </Bullet>
-              </li>),
-          )}
+          <pre>
+            <code>
+              {accessibleProjects.map(
+                p =>
+                  (<li key={p}>
+                    <Bullet>
+                      {
+                        p in submission.projects &&
+                        <ProjectCell to={`/${submission.projects[p]}`}>
+                          {p}
+                        </ProjectCell>
+                      }
+                      {
+                        !(p in submission.projects) &&
+                        <ProjectCellNoAccess>
+                          {p}
+                        </ProjectCellNoAccess>
+                      }
+                      <RightCell>
+                        {user.project_access[p].join(', ')}
+                      </RightCell>
+                    </Bullet>
+                  </li>),
+              )}
+            </code>
+          </pre>
         </ul>
       </AccessTable>
     </div>

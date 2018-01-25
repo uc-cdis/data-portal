@@ -10,9 +10,11 @@ const button = css`
   cursor: pointer;
   margin-left: 1em;
 `;
+
 export const Button = styled.a`
   ${button};
 `;
+
 export const CancelButton = styled.a`
   color: ${props => props.theme.dark_gray};
   &:hover,
@@ -49,6 +51,7 @@ export const Code = styled(Highlight) `
 `;
 export const Message = styled.div`
   font-size: 1em;
+  background: mid_light_gray;
 `;
 
 

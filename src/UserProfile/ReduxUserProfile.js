@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import UserProfile from './UserProfile';
 import { fetchJsonOrText, updatePopup } from '../actions';
-import { submissionApiOauthPath, credentialCdisPath } from '../localconf';
+import { credentialCdisPath } from '../localconf';
 
 
 export const fetchAccess = () =>
@@ -17,7 +17,7 @@ export const fetchAccess = () =>
           case 200:
             return {
               type: 'RECEIVE_USER_PROFILE',
-              access_keys: data.access_keys,
+              jtis: data.jtis,
             };
           default:
             return {
@@ -30,9 +30,10 @@ export const fetchAccess = () =>
       .then(msg => dispatch(msg));
 
 
-const requestDeleteKey = accessKey => ({
+const requestDeleteKey = (jti, exp) => ({
   type: 'REQUEST_DELETE_KEY',
-  access_key: accessKey,
+  jti,
+  exp,
 });
 
 const clearDeleteSession = () => ({
@@ -40,26 +41,33 @@ const clearDeleteSession = () => ({
 });
 
 
-const deleteKey = (accessKey, keypairsApi) =>
+/*
+  @param {string} jti is the token id
+  @param {number} exp is expiration
+*/
+const deleteKey = (jti, exp, keypairsApi) =>
   dispatch => fetchJsonOrText({
-    path: keypairsApi + accessKey,
+    path: keypairsApi + jti,
     method: 'DELETE',
+    body: JSON.stringify({
+      exp,
+    }),
     dispatch,
   })
     .then(
       ({ status, data }) => {
         switch (status) {
-        case 201:
+        case 202:
           dispatch({
             type: 'DELETE_KEY_SUCCEED',
           });
           dispatch(clearDeleteSession());
-          dispatch(updatePopup({ key_delete_popup: false }));
+          dispatch(updatePopup({ deleteTokenPopup: false }));
           return dispatch(fetchAccess());
         default:
           return dispatch({
             type: 'DELETE_KEY_FAIL',
-            access_key: accessKey,
+            jti,
             error: data,
           });
         }
@@ -67,12 +75,14 @@ const deleteKey = (accessKey, keypairsApi) =>
     );
 
 
-export const parseKeyToString = content => `access_key\tsecrect_key\n${content.access_key}\t${content.secret_key}`;
-
 export const createKey = keypairsApi => dispatch => fetchJsonOrText({
   path: keypairsApi,
   method: 'POST',
+  body: JSON.stringify({
+    scopes: ['data', 'user'],
+  }),
   dispatch,
+  customHeaders: { 'Content-Type': 'application/json' },
 })
   .then(
     ({ status, data }) => {
@@ -80,17 +90,17 @@ export const createKey = keypairsApi => dispatch => fetchJsonOrText({
       case 200:
         dispatch({
           type: 'CREATE_SUCCEED',
-          access_key_pair: data,
-          str_access_key_pair: parseKeyToString(data),
+          refreshCred: data,
+          strRefreshCred: JSON.stringify(data, null, '\t'),
         });
-        dispatch(updatePopup({ save_key_popup: true }));
+        dispatch(updatePopup({ saveTokenPopup: true }));
         return dispatch(fetchAccess());
       default:
         dispatch({
           type: 'CREATE_FAIL',
           error: `Error: ${(data.error || data.message)}`,
         });
-        return dispatch(updatePopup({ save_key_popup: true }));
+        return dispatch(updatePopup({ saveTokenPopup: true }));
       }
     },
   );
@@ -110,11 +120,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   onCreateKey: keypairsApi => dispatch(createKey(keypairsApi)),
   onUpdatePopup: state => dispatch(updatePopup(state)),
-  onDeleteKey: (accessKey, keypairsApi) =>
-    dispatch(deleteKey(accessKey, keypairsApi)),
-  onRequestDeleteKey: (accessKey, keypairsApi) =>
+  onDeleteKey: (jti, exp, keypairsApi) =>
+    dispatch(deleteKey(jti, exp, keypairsApi)),
+  onRequestDeleteKey: (jti, exp, keypairsApi) =>
     dispatch(fetchAccess(keypairsApi)).then(
-      () => dispatch(requestDeleteKey(accessKey)),
+      () => dispatch(requestDeleteKey(jti, exp)),
     ),
   onClearDeleteSession: () => dispatch(clearDeleteSession()),
   onClearCreationSession: () => dispatch(clearCreationSession()),

@@ -1,18 +1,21 @@
 const userProfile = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_USER_PROFILE':
-    return { ...state, access_key_pairs: action.access_keys };
+    return { ...state, jtis: action.jtis };
   case 'USER_PROFILE_ERROR':
     return { ...state, userProfile_error: action.error };
   case 'RECEIVE_USERAPI_LOGIN':
     return { ...state, login: state.result, error: state.error };
   case 'REQUEST_DELETE_KEY':
-    return { ...state, ...action.userProfile, request_delete_key: action.access_key };
+    return { ...state,
+      ...action.userProfile,
+      requestDeleteJTI: action.jti,
+      requestDeleteExp: action.exp };
   case 'CREATE_SUCCEED':
     return { ...state,
       ...action.userProfile,
-      access_key_pair: action.access_key_pair,
-      str_access_key_pair: action.str_access_key_pair,
+      refreshCred: action.refreshCred,
+      strRefreshCred: action.strRefreshCred,
       create_error: null,
     };
   case 'CREATE_USER_SUCCEED':

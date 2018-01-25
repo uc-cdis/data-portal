@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import { mount } from 'enzyme';
 
-import ReduxUserProfile, { parseKeyToString, createKey } from './ReduxUserProfile';
+import ReduxUserProfile, { createKey } from './ReduxUserProfile';
 import { RequestButton } from './UserProfile';
 
 const middleware = [thunk];
@@ -12,18 +12,43 @@ const mockStore = configureMockStore(middleware);
 
 describe('the userProfile component', () => {
   it('can create, fetch, and list user access keys', () => {
-    const expectedData = { access_key: 'abc', secret_key: 'xyz' };
-    const expectedPopup = { save_key_popup: true };
+    const expectedData = {
+      token_id: 'f8733984-8164-4689-9c25-56707962d7e0',
+      refresh_token: {
+        sub: '1234567',
+        iss: 'dcfauth:56fc3842ccf2c1c7ec5c5d14',
+        iat: 1459458458,
+        exp: 1459487258,
+        jti: 'f8733984-8164-4689-9c25-56707962d7e0',
+        aud: [
+          'refresh',
+        ],
+        azp: 'nIBmveVwqw0GNImXkIUwYD4uBg1Rnc98QlWLMm06',
+        access_aud: [
+          'user',
+        ],
+        context: {
+          user: {
+            name: 'NIH_USERNAME',
+            projects: {
+              phs000178: ['member'],
+              phs000218: ['member', 'submitter'],
+            },
+            email: 'user@university.edu',
+          },
+        },
+      },
+    };
+    const expectedPopup = { saveTokenPopup: true };
     const expectedListKey = {
-      access_keys: [{
-        access_key: 'abc',
-        secret_key: 'xyz',
-      }],
+      jtis: [
+        { jti: 'f8733984-8164-4689-9c25-56707962d7e0', exp: 1459487258 },
+      ],
     };
     const state = {
       user: { project_access: [] },
       status: {},
-      userProfile: { access_key_pairs: [] },
+      userProfile: { jtis: [] },
       popups: {},
     };
     const store = mockStore(state);
@@ -42,8 +67,8 @@ describe('the userProfile component', () => {
         const expectedActions = [
           {
             type: 'CREATE_SUCCEED',
-            access_key_pair: expectedData,
-            str_access_key_pair: parseKeyToString(expectedData),
+            refreshCred: expectedData,
+            strRefreshCred: JSON.stringify(expectedData, null, '\t'),
           },
           {
             type: 'UPDATE_POPUP',
@@ -51,7 +76,7 @@ describe('the userProfile component', () => {
           },
           {
             type: 'RECEIVE_USER_PROFILE',
-            access_keys: expectedListKey.access_keys,
+            jtis: expectedListKey.jtis,
           },
         ];
         try {
@@ -63,13 +88,38 @@ describe('the userProfile component', () => {
   });
 
   it('updates the redux store', () => {
-    const expectedData = { access_key: 'abc', secret_key: 'xyz' };
-    const expectedPopup = { save_key_popup: true };
+    const expectedData = {
+      token_id: 'f8733984-8164-4689-9c25-56707962d7e0',
+      refresh_token: {
+        sub: '1234567',
+        iss: 'dcfauth:56fc3842ccf2c1c7ec5c5d14',
+        iat: 1459458458,
+        exp: 1459487258,
+        jti: 'f8733984-8164-4689-9c25-56707962d7e0',
+        aud: [
+          'refresh',
+        ],
+        azp: 'nIBmveVwqw0GNImXkIUwYD4uBg1Rnc98QlWLMm06',
+        access_aud: [
+          'user',
+        ],
+        context: {
+          user: {
+            name: 'NIH_USERNAME',
+            projects: {
+              phs000178: ['member'],
+              phs000218: ['member', 'submitter'],
+            },
+            email: 'user@university.edu',
+          },
+        },
+      },
+    };
+    const expectedPopup = { saveTokenPopup: true };
     const expectedListKey = {
-      access_keys: [{
-        access_key: 'abc',
-        secret_key: 'xyz',
-      }],
+      jtis: [
+        { jti: 'f8733984-8164-4689-9c25-56707962d7e0', exp: 1459487258 },
+      ],
     };
     const state = {
       user: { project_access: [] },
@@ -81,8 +131,8 @@ describe('the userProfile component', () => {
     const expectedActions = [
       {
         type: 'CREATE_SUCCEED',
-        access_key_pair: expectedData,
-        str_access_key_pair: parseKeyToString(expectedData),
+        refreshCred: expectedData,
+        strRefreshCred: JSON.stringify(expectedData, null, '\t'),
       },
       {
         type: 'UPDATE_POPUP',
@@ -90,7 +140,7 @@ describe('the userProfile component', () => {
       },
       {
         type: 'RECEIVE_USER_PROFILE',
-        access_keys: expectedListKey.access_keys,
+        jtis: expectedListKey.jtis,
       },
     ];
 
