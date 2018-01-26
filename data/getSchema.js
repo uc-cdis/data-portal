@@ -17,7 +17,10 @@ const { gdcSubPath } = (function () {
   function addSlash(path) { return (`${path}/`).replace(/\/+$/, '/'); }
 
   if (process.argv.length < 3) {
-    const gdcDefaultPath = process.env.HOSTNAME ? `https://${process.env.HOSTNAME}/api/v0/submission/` : 'http://localhost:5000/v0/submission/';
+    let gdcDefaultPath = process.env.HOSTNAME ? `https://${process.env.HOSTNAME}/api/v0/submission/` : 'http://localhost:5000/v0/submission/';
+    if (gdcDefaultPath.startsWith('revproxy')) {
+      gdcDefaultPath = `http://${process.env.HOSTNAME}/api/v0/submission/`
+    }
     return { status: 'ok', gdcSubPath: addSlash(process.env.GDC_SUBPATH || gdcDefaultPath) };
   }
   const arg1 = process.argv[2];
