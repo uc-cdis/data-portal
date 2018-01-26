@@ -20,7 +20,7 @@ const ButtonGroup = styled.div`
 `;
 
 export const saveToFile = (savingStr, filename) => {
-  const blob = new Blob([savingStr], { type: 'text/json;charset=utf-8' });
+  const blob = new Blob([savingStr], { type: 'text/json' });
   FileSaver.saveAs(blob, filename);
 };
 
@@ -35,13 +35,13 @@ const SavePopup = ({ message, display, savingStr, error, onClose, filename }) =>
         {
           display &&
             <pre>
-              <b>Token id:</b><br />
+              <b>Key id:</b><br />
               <code>
-                {display.token_id} <br />
+                {display.key_id} <br />
               </code>
-              <b>Refresh token:</b><br />
+              <b>API key:</b><br />
               <code>
-                {display.refresh_token}
+                {display.api_key}
               </code>
             </pre>
         }
@@ -68,8 +68,8 @@ const SavePopup = ({ message, display, savingStr, error, onClose, filename }) =>
 
 SavePopup.propTypes = {
   display: PropTypes.shape({
-    token_id: PropTypes.string.isRequired,
-    refresh_token: PropTypes.string.isRequired,
+    key_id: PropTypes.string.isRequired,
+    api_key: PropTypes.string.isRequired,
   }),
   message: PropTypes.string,
   savingStr: PropTypes.string,
