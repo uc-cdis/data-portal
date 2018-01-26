@@ -10,17 +10,17 @@ import { button } from '../theme';
 import { credentialCdisPath } from '../localconf';
 
 const NO_ACCESS_MSG = 'You have no access to storage service. Please contact an admin to get it!';
-const NO_ACCESS_KEY = 'You don\'t have any access key. Please create one!';
+const NO_API_KEY = 'You don\'t have any API key. Please create one!';
 const CONFIRM_DELETE_MSG = 'Are you sure you want to make this key inactive?';
 const SECRET_KEY_MSG = 'This secret key is only displayed this time. Please save it!';
 const DELETE_BTN = 'Delete';
-const CREATE_ACCESS_KEY_BTN = 'Create access key';
-const ACCESS_KEY_COLUMN = 'Access key(s)';
+const CREATE_API_KEY_BTN = 'Create API key';
+const API_KEY_COLUMN = 'API key(s)';
 const EXPIRES_COLUMN = 'Expires';
 const PROJECT_COLUMN = 'Project(s)';
 const RIGHT_COLUMN = 'Right(s)';
 const LIST_PROJECT_MSG = 'You have access to the following project(s)';
-const LIST_ACCESS_KEY_MSG = 'You have the following access key(s)';
+const LIST_API_KEY_MSG = 'You have the following API key(s)';
 
 
 export const actionButton = css`
@@ -66,7 +66,7 @@ export const Header = styled.li`
   font-weight: bold;
 `;
 
-export const AccessKeyHeader = styled(Header)`
+export const APIKeyHeader = styled(Header)`
   width: 40%;
 `;
 
@@ -115,7 +115,7 @@ export const RightCell = styled(Cell)`
   width: 70%;
 `;
 
-export const AccessKeyCell = styled(Cell)`
+export const APIKeyCell = styled(Cell)`
   width: 40%;
 `;
 
@@ -140,7 +140,7 @@ const KeyPairsEntity = ({ keypairsApi, value, onUpdatePopup, onRequestDeleteKey 
   return (
     <li>
       <Bullet>
-        <AccessKeyCell>{value.jti}</AccessKeyCell>
+        <APIKeyCell>{value.jti}</APIKeyCell>
         <ExpireCell>{TimestampToDateTime(value.exp)}</ExpireCell>
         <ActionCell>
           <DeleteButton onClick={onDelete}>
@@ -169,7 +169,7 @@ const KeyPairsEntities = ({ values, keypairsApi, onUpdatePopup, onRequestDeleteK
   <ul>
     {values.length > 0 &&
       <div>
-        <AccessKeyHeader>{ACCESS_KEY_COLUMN}</AccessKeyHeader>
+        <APIKeyHeader>{API_KEY_COLUMN}</APIKeyHeader>
         <ExpiresHeader>{EXPIRES_COLUMN}</ExpiresHeader>
       </div>
     }
@@ -239,22 +239,22 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
                 onUpdatePopup({ saveTokenPopup: false });
                 onClearCreationSession();
               }}
-              filename={'accessKeys.json'}
+              filename={'credentials.json'}
             />
           }
           <RequestButton onClick={onCreate}>
-            {CREATE_ACCESS_KEY_BTN}
+            {CREATE_API_KEY_BTN}
           </RequestButton>
           {
             userProfile.jtis.length === 0 &&
             <div>
-              {NO_ACCESS_KEY}
+              {NO_API_KEY}
             </div>
           }
           {
             userProfile.jtis.length > 0 &&
             <h5>
-              {LIST_ACCESS_KEY_MSG}
+              {LIST_API_KEY_MSG}
             </h5>
           }
           {

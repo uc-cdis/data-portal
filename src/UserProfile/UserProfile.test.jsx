@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
-import UserProfile, { AccessKeyCell, DeleteButton, RequestButton } from './UserProfile';
+import UserProfile, { APIKeyCell, DeleteButton, RequestButton } from './UserProfile';
 
 describe('the UserProfile component', () => {
   const testProps = {
@@ -41,7 +41,7 @@ describe('the UserProfile component', () => {
         />
       </StaticRouter>,
     );
-    expect($vdom.find(AccessKeyCell)).toHaveLength(testProps.userProfile.jtis.length);
+    expect($vdom.find(APIKeyCell)).toHaveLength(testProps.userProfile.jtis.length);
   });
 
   it('triggers create-key events', (done) => {

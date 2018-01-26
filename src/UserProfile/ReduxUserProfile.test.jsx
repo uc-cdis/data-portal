@@ -13,8 +13,8 @@ const mockStore = configureMockStore(middleware);
 describe('the userProfile component', () => {
   it('can create, fetch, and list user access keys', () => {
     const expectedData = {
-      token_id: 'f8733984-8164-4689-9c25-56707962d7e0',
-      refresh_token: {
+      key_id: 'f8733984-8164-4689-9c25-56707962d7e0',
+      api_key: {
         sub: '1234567',
         iss: 'dcfauth:56fc3842ccf2c1c7ec5c5d14',
         iat: 1459458458,
@@ -89,8 +89,8 @@ describe('the userProfile component', () => {
 
   it('updates the redux store', () => {
     const expectedData = {
-      token_id: 'f8733984-8164-4689-9c25-56707962d7e0',
-      refresh_token: {
+      key_id: 'f8733984-8164-4689-9c25-56707962d7e0',
+      api_key: {
         sub: '1234567',
         iss: 'dcfauth:56fc3842ccf2c1c7ec5c5d14',
         iat: 1459458458,
