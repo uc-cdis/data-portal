@@ -79,7 +79,7 @@ export const createKey = keypairsApi => dispatch => fetchJsonOrText({
   path: keypairsApi,
   method: 'POST',
   body: JSON.stringify({
-    scopes: ['data', 'user'],
+    scope: ['data', 'user'],
   }),
   dispatch,
   customHeaders: { 'Content-Type': 'application/json' },
