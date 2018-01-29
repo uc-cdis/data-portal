@@ -39,7 +39,7 @@ export const fetchJsonOrText = (opts) => {
     return Promise.resolve({ status: 200, data: JSON.parse(fetchCache[path]) });
   }
   const request = {
-    credentials: 'same-origin',
+    credentials: 'include',
     headers: { ...headers, ...customHeaders },
     method,
     body,
@@ -96,7 +96,7 @@ export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders,
 
 export const fetchGraphQL = (graphQLParams) => {
   const request = {
-    credentials: 'same-origin',
+    credentials: 'include',
     headers: { ...headers },
     method: 'POST',
     body: JSON.stringify(graphQLParams),
