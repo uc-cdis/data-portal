@@ -20,5 +20,4 @@ export const ReduxProjectTable = connect(mapStateToProps, mapDispatchToProps)(Pr
 const DashboardWithReduxTable = DashboardWith(ReduxProjectTable);
 const ReduxProjectDashboard = connect(mapStateToProps, mapDispatchToProps)(DashboardWithReduxTable);
 
-
 export default ReduxProjectDashboard;

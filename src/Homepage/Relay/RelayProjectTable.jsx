@@ -1,11 +1,11 @@
 import React from 'react';
 import { QueryRenderer } from 'react-relay';
-import { GQLHelper } from '../gqlHelper';
-import { getReduxStore } from '../reduxStore';
-import environment from '../environment';
-import { ProjectTable, ProjectTR } from './ProjectTable';
-import Spinner from '../components/Spinner';
-
+import { GQLHelper } from '../../gqlHelper';
+import { getReduxStore } from '../../reduxStore';
+import environment from '../../environment';
+import { ProjectTable, ProjectTR } from '../Redux/ProjectTable';
+import Spinner from '../../components/Spinner';
+import { app } from '../../localconf';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
@@ -45,6 +45,9 @@ export class RelayProjectTable extends ProjectTable {
             experimentCount: props.experimentCount,
             caseCount: props.caseCount,
             aliquotCount: props.aliquotCount,
+            coreVisitCount:  props.coreVisitCount,
+            summaryLabResultCount:  props.summaryLabResultCount,
+            summarySocioDemographicCount: props.summarySocioDemographicCount,
             fileCount,
           };
 
@@ -61,6 +64,9 @@ export class RelayProjectTable extends ProjectTable {
                   || old.caseCount !== projInfo.caseCount
                   || old.aliquotCount !== projInfo.aliquotCount
                   || old.fileCount !== projInfo.aliquotCount
+                  || old.coreVisitCount !== projInfo.coreVisitCount
+                  || old.summaryLabResultCount !== projInfo.summaryLabResultCount
+                  || old.summarySocioDemographicCount !== projInfo.summarySocioDemographicCount
               ) {
                 store.dispatch({ type: 'RECEIVE_PROJECT_DETAIL', data: projInfo });
               } /* else {

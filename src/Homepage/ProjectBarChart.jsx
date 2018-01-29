@@ -12,7 +12,7 @@ const tor = Translator.getTranslator();
 const FloatBox = styled.div`
   float: left;
   overflow: hidden;
-  width: 70%;
+  width: 60%;
   min-width: 300px;
   height: 340px;
 `;
@@ -29,7 +29,7 @@ const FloatBox = styled.div`
 class ProjectBarChart extends React.Component {
   static propTypes = {
     projectList: PropTypes.arrayOf(
-      PropTypes.objectOf(PropTypes.number),
+      PropTypes.objectOf(PropTypes.any),
     ).isRequired,
   };
 
@@ -52,7 +52,7 @@ class ProjectBarChart extends React.Component {
             <Tooltip />
             <Legend />
             <Bar dataKey="caseCount" stackId="a" fill="#8884d8" />
-            <Bar dataKey={tor.translate('experimentCount')} stackId="a" fill="#82ca9d" />
+            <Bar dataKey="coreVisitCount" stackId="a" fill="#82ca9d" />
           </BarChart>
         </ResponsiveContainer>
       </FloatBox>

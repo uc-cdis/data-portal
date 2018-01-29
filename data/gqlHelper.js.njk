@@ -27,8 +27,12 @@ const helperSingleton = {
         {% if hasCaseType %}caseCount: _case_count{% endif %}
         {% if experimentType %}experimentCount:  _{{ experimentType }}_count{% endif %}
         {% if hasAliquotType %}aliquotCount: _aliquot_count{% endif %}
+        {% if hasSummaryLabResult %}summaryLabResultCount: _summary_lab_result_count{% endif %}
+        {% if hasCoreVisit %}coreVisitCount: _core_visit_count{% endif %}
+        {% if hasSummarySocioDemographic %}summarySocioDemographicCount: _summary_socio_demographic_count{% endif %}
         {% for fType in fileTypeList %}
-        fileCount{{ loop.index }}: _{{ fType }}_count{% endfor %}
+            fileCount{{ loop.index }}: _{{ fType }}_count
+        {% endfor %}
     }`,
   
     projectDetailQuery: graphql`query gqlHelperProjectDetailQuery( $name: [String] ) {
@@ -39,8 +43,12 @@ const helperSingleton = {
         {% if hasCaseType %}caseCount: _case_count( project_id:$name ){% endif %}
         {% if experimentType %}experimentCount: _{{ experimentType }}_count( project_id:$name ){% endif %}
         {% if hasAliquotType %}aliquotCount: _aliquot_count( project_id:$name ){% endif %}
+        {% if hasSummaryLabResult %}summaryLabResultCount: _summary_lab_result_count( project_id:$name ){% endif %}
+        {% if hasCoreVisit %}coreVisitCount: _core_visit_count( project_id:$name ){% endif %}
+        {% if hasSummarySocioDemographic %}summarySocioDemographicCount: _summary_socio_demographic_count( project_id:$name ){% endif %}
         {% for fType in fileTypeList %}
-        fileCount{{ loop.index }}: _{{ fType }}_count( project_id:$name ){% endfor %}
+            fileCount{{ loop.index }}: _{{ fType }}_count( project_id:$name )
+        {% endfor %}
     }`,
 
     explorerPageQuery: graphql`query gqlHelperExplorerPageQuery{

@@ -3,18 +3,18 @@ import styled from 'styled-components';
 import { clearFix } from 'polished';
 import { ProjectTable } from './ProjectTable';
 import ReduxProjectBarChart from './ReduxProjectBarChart';
-import Translator from './translate';
-
+import Translator from '../translate';
+import { app } from '../../localconf';
 
 const tor = Translator.getTranslator();
 
 
 const CountBox = styled.div`
   float: left;
-  width: 30%;
+  width: 40%;
   height: 280px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px, rgba(0, 0, 0, 0.23) 0px 3px 10px;
-  padding: 30px;
+  padding: 20px;
   border-top: 3px solid #c87152;
   min-width:300px;
   h4 {
@@ -61,23 +61,24 @@ class CountCard extends React.Component {
         <ul>
           <li>
             <Icon><i className="material-icons">account_circle</i></Icon>
-            <Count>{ this.props.caseCount }</Count>
-            <span>Cases</span>
+            <Count>{ this.props.count1.value }</Count>
+            <span>{this.props.count1.label}</span>
           </li>
           <li>
             <Icon><i className="material-icons">receipt</i></Icon>
-            <Count>{ this.props.experimentCount }</Count>
-            <span>{tor.translate('Experiments')}</span>
+            <Count>{ this.props.count2.value }</Count>
+            <span>{this.props.count2.label}</span>
           </li>
           <li>
             <Icon><i className="material-icons">description</i></Icon>
-            <Count>{ this.props.fileCount }</Count>
-            <span>Files</span>
+            <Count>{ this.props.count3.value }</Count>
+            <span>{this.props.count3.label}</span>
           </li>
           <li>
             <Icon><i className="material-icons">invert_colors</i></Icon>
-            <Count>{ this.props.aliquotCount }</Count>
-            <span>Aliquots</span></li>
+            <Count>{ this.props.count4.value }</Count>
+            <span>{this.props.count4.label}</span>
+          </li>
         </ul>
       </CountBox>
     );
@@ -106,7 +107,10 @@ export class LittleProjectDashboard extends React.Component {
   render() {
     return (
       <DashTopDiv>
-        <CountCard caseCount={this.props.caseCount} experimentCount={this.props.experimentCount} fileCount={this.props.fileCount} aliquotCount={this.props.aliquotCount} />
+        <CountCard count1={this.props.summaries[0]}
+                   count2={this.props.summaries[1]}
+                   count3={this.props.summaries[2]}
+                   count4={this.props.summaries[3]} />
         <ReduxProjectBarChart projectList={this.props.projectList} />
       </DashTopDiv>
     );
@@ -117,16 +121,24 @@ export class LittleProjectDashboard extends React.Component {
 export function DashboardWith(Table) {
   return class ProjectDashboard extends React.Component {
     render() {
-      const props = this.props;
       const summaryCounts = this.props.summaryCounts || {};
       const projectList = this.props.projectList || [];
+      let summaries = [];
+      summaries.push({label: 'Cases', value: summaryCounts.caseCount});
+      summaries.push({label: tor.translate('Experiments'), value: summaryCounts.experimentCount});
+      if (app === 'ndh')
+      {
+        summaries.push({label: 'Lab records', value: summaryCounts.summaryLabResultCount});
+        summaries.push({label: 'Socio-demographic records', value: summaryCounts.summarySocioDemographicCount});
+      }
+      else {
+        summaries.push({label: 'Files', value: summaryCounts.fileCount});
+        summaries.push({label: 'Aliquots', value: summaryCounts.aliquotCount});
+      }
       return (<div className="clearfix">
         <LittleProjectDashboard
           projectList={projectList}
-          experimentCount={summaryCounts.experimentCount}
-          caseCount={summaryCounts.caseCount}
-          fileCount={summaryCounts.fileCount}
-          aliquotCount={summaryCounts.aliquotCount}
+          summaries={summaries}
         />
         <Table projectList={projectList} summaryCounts={summaryCounts} />
       </div>);

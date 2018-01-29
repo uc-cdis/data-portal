@@ -17,7 +17,6 @@ describe('The localconf', () => {
     'navItems',
     'login',
     'requiredCerts',
-    'gqlSetup',
   ];
 
   it('Defines a bunch of configuration variables', () => {

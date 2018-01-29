@@ -1,11 +1,12 @@
 import React from 'react';
 import { QueryRenderer } from 'react-relay';
-import environment from '../environment';
-import { DashboardWith } from './ProjectDashboard';
+import environment from '../../environment';
+import { DashboardWith } from '../Redux/ProjectDashboard';
 import { RelayProjectTable } from './RelayProjectTable';
-import { GQLHelper } from '../gqlHelper';
-import { getReduxStore } from '../reduxStore';
-import Spinner from '../components/Spinner';
+import { GQLHelper } from '../../gqlHelper';
+import { getReduxStore } from '../../reduxStore';
+import Spinner from '../../components/Spinner';
+import { app } from '../../localconf';
 
 
 const gqlHelper = GQLHelper.getGQLHelper();
@@ -59,7 +60,15 @@ export class RelayProjectDashboard extends React.Component {
     const projectList = (relayProps.projectList || []).map(
       proj =>
         // fill in missing properties
-        Object.assign({ name: 'unknown', experimentCount: 0, fileCount: 0, caseCount: 0, aliquotCount: 0 }, proj),
+        Object.assign({ name: 'unknown',
+          experimentCount: 0,
+          fileCount: 0,
+          caseCount: 0,
+          aliquotCount: 0,
+          coreVisitCount: 0,
+          summaryLabResultCount: 0,
+          summarySocioDemographicCount: 0,
+        }, proj),
 
     );
     // console.log( "Got filecount: " + fileCount );
@@ -67,6 +76,9 @@ export class RelayProjectDashboard extends React.Component {
       caseCount: relayProps.caseCount,
       experimentCount: relayProps.experimentCount,
       aliquotCount: relayProps.aliquotCount,
+      coreVisitCount: relayProps.coreVisitCount,
+      summaryLabResultCount: relayProps.summaryLabResultCount,
+      summarySocioDemographicCount: relayProps.summarySocioDemographicCount,
       fileCount,
     };
     return {
