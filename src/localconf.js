@@ -24,13 +24,13 @@ function buildConfig(opts) {
 
   const { dev, mockStore, app, basename, hostname } = Object.assign({}, defaults, opts);
 
-  let userapiPath = `${hostname}user/`;
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
   const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   // let credentialOauthPath = `${hostname}middleware/oauth2/v0/`;
-  const credentialCdisPath = `${userapiPath}credentials/cdis/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
+  let userapiPath = `${hostname}user/`;
+  let credentialCdisPath = `${userapiPath}credentials/cdis/`;
   let login = {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',
@@ -124,6 +124,21 @@ function buildConfig(opts) {
     gqlSetup.experimentType = 'study';
   } else if (app === 'acct') {
     appname = 'ACCOuNT Data Commons Portal';
+    navItems = [
+      { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
+      { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
+      { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
+      { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
+      { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
+    ];
+  } else if (app === 'genomel') {
+    appname = 'GenoMEL Data Commons Portal';
+    const userapiPathOut = 'https://login.bionimbus.org/';
+    credentialCdisPath = `${userapiPath}credentials/cdis/`;
+    login = {
+      url: `${userapiPathOut}login/shib?redirect=`,
+      title: 'Login from NIH',
+    };
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
       { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
