@@ -228,11 +228,13 @@ export const fetchProjects = () => dispatch =>
           return {
             type: 'RECEIVE_PROJECTS',
             data: data.data.project,
+            status,
           };
         default:
           return {
             type: 'FETCH_ERROR',
             error: data,
+            status,
           };
         }
       })
