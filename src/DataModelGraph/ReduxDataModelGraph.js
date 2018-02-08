@@ -100,7 +100,7 @@ export const getCounts = (typeList, project, dictionary) => {
           };
         }
       },
-      (err) => { return { type: 'FETCH_ERROR', error: err }; },
+      err => ({ type: 'FETCH_ERROR', error: err }),
     )
     .then((msg) => { dispatch(msg); });
 };
