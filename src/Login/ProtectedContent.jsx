@@ -173,7 +173,7 @@ class ProtectedContent extends React.Component {
       return Promise.resolve(newState);
     }
     return store.dispatch(fetchProjects())
-      .then(() => {
+      .then((info) => {
         //
         // The assumption here is that fetchProjects either succeeds or fails.
         // If it fails (we won't have any project data), then we need to refresh our api token ...
@@ -182,8 +182,16 @@ class ProtectedContent extends React.Component {
         if (projects) {
           // user already has a valid token
           return Promise.resolve(newState);
+        } else if (info.status !== 403) {
+          // do not authenticate unless we have a 403
+          // there may be no projects at startup time,
+          // or some other weirdness ...
+          // The oauth dance below is only relevent for legacy commons - pre jwt
+          return Promise.resolve(newState);
         }
         // else do the oauth dance
+        // NOTE: this is DEPRECATED now - jwt access token
+        //      works across all services
         return store.dispatch(fetchOAuthURL(submissionApiOauthPath))
           .then(
             oauthUrl => fetchJsonOrText({ path: oauthUrl, dispatch: store.dispatch.bind(store) }))

@@ -44,7 +44,7 @@ const ProjectSubmission = (props) => {
       <MySubmitForm />
       <MySubmitTSV project={props.project} />
       { !props.dataIsReady
-        ? <Spinner /> :
+        ? ((props.project !== '_root') ? <Spinner /> : null) :
         <MyDataModelGraph project={props.project} /> }
     </div>
   );
