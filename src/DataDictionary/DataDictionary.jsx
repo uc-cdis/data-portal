@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { Table, TableData, TableRow, TableHead } from '../theme';
 import { app } from '../localconf';
-import { capitalizeFirstLetter } from '../utils'
+import { capitalizeFirstLetter } from '../utils';
 
 
 const subHeader = (() => {
@@ -53,8 +53,11 @@ const CategoryTable = ({ nodes, category }) => (
     <tbody>
       {
         nodes.map(
-          node => <TableBullet node={node} key={node.id}
-            description={node.description} />,
+          node => (<TableBullet
+            node={node}
+            key={node.id}
+            description={node.description}
+          />),
         )
       }
     </tbody>

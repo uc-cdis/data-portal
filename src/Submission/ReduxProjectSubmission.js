@@ -7,7 +7,7 @@ import ReduxDataModelGraph, { getCounts } from '../DataModelGraph/ReduxDataModel
 
 import { fetchJsonOrText } from '../actions';
 import { predictFileType } from '../utils';
-import { submissionApiPath, submissionApiOauthPath } from '../localconf';
+import { submissionApiPath } from '../localconf';
 
 export const uploadTSV = (value, type) => (dispatch) => {
   dispatch({ type: 'REQUEST_UPLOAD', file: value, file_type: type });

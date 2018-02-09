@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { DashboardWith } from './ProjectDashboard';
+import { DashboardWith } from './ParamProjectDashboard';
 import { ProjectTable } from './ProjectTable';
 
 

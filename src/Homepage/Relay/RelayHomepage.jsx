@@ -1,10 +1,10 @@
 import React from 'react';
 import { QueryRenderer } from 'react-relay';
 import environment from '../../environment';
-import { DashboardWith } from '../Redux/ProjectDashboard';
-import { RelayProjectTable } from './RelayProjectTable';
+import { DashboardWith } from '../Redux/ParamProjectDashboard';
+import RelayProjectTable from './RelayProjectTable';
 import { GQLHelper } from '../../gqlHelper';
-import { getReduxStore } from '../../reduxStore';
+import getReduxStore from '../../reduxStore';
 import Spinner from '../../components/Spinner';
 
 
@@ -41,7 +41,7 @@ export class RelayProjectDashboard extends React.Component {
         return 'NOOP';
       },
       (err) => {
-        console.log('WARNING: failed to load redux store', err);
+        console.error('WARNING: failed to load redux store', err);
         return 'ERR';
       },
     );

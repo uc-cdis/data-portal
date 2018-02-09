@@ -55,15 +55,15 @@ const NavBar = ({ navItems, user, onLogoutClick }) => (
     <NavLeft>
       {
         navItems.map(
-          (item, i) => (
+          item => (
             (item.link.startsWith('http')) ?
               <a key={item.link} href={item.link}>
-                <FlatButton label={item.name} style={{ color : 'inherit', verticalAlign: 'middle' }}>
+                <FlatButton label={item.name} style={{ color: 'inherit', verticalAlign: 'middle' }}>
                   <NavIcon className="material-icons">{item.icon}</NavIcon>
                 </FlatButton>
               </a> :
               <NavItem key={item.link} to={item.link}>
-                <FlatButton label={item.name} style={{ color : 'inherit', verticalAlign: 'middle' }}>
+                <FlatButton label={item.name} style={{ color: 'inherit', verticalAlign: 'middle' }}>
                   <NavIcon className="material-icons">{item.icon}</NavIcon>
                 </FlatButton>
               </NavItem>
@@ -75,10 +75,10 @@ const NavBar = ({ navItems, user, onLogoutClick }) => (
       { user.username !== undefined &&
         <ul>
           <NavItem to="/identity">
-            <FlatButton label={user.username.split('@',-1)[0]} style={{ color : 'inherit' }}/>
+            <FlatButton label={user.username.split('@', -1)[0]} style={{ color: 'inherit' }} />
           </NavItem>
           <NavItem to="#" onClick={onLogoutClick}>
-            <FlatButton style={{ minWidth : '0px'}}><span className="fui-exit" /></FlatButton>
+            <FlatButton style={{ minWidth: '0px' }}><span className="fui-exit" /></FlatButton>
           </NavItem>
         </ul>
       }

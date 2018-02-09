@@ -9,7 +9,6 @@ describe('the utils helper', () => {
     const callback = () => new Promise(((resolve) => {
       setTimeout(() => {
         callCount += 1;
-        console.log(`callCount is: ${callCount}`);
         resolve('ok');
         // not here - done() is called below after 400ms ...
       }, 150);
@@ -17,11 +16,9 @@ describe('the utils helper', () => {
 
     const id = asyncSetInterval(callback, 50);
     expect(id).toBeDefined();
-    console.log(`Got interval id: ${id}`);
 
     // after 250ms the callback should have executed twice
     setTimeout(() => {
-      console.log(`After delay call count is: ${callCount}`);
       clearInterval(id);
       expect(callCount).toBe(2);
       done();

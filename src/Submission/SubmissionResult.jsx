@@ -69,7 +69,10 @@ class SubmissionResult extends React.Component {
       // List number of entites of each type created
       const entityType2Count = (data.entities || [])
         .map(ent => ent.type || 'unknown')
-        .reduce((db, type) => { db[type] = (db[type] || 0) + 1; return db; }, {});
+        .reduce((db, type) => {
+          const res = db; res[type] = (res[type] || 0) + 1;
+          return res;
+        }, {});
       summary = (<div id="cd-summary__result_200" style={summaryDivStyle}>
         <p>Successfully created entities:</p>
         <ul style={summaryListStyle}>

@@ -6,7 +6,7 @@ import { TableRow, TableHead } from '../theme';
 import { TableData, TableHeadCell,
   TableFooter,
   TableFootCell, PageButton, ArrowButton } from './style';
-import { getReduxStore } from '../reduxStore';
+import getReduxStore from '../reduxStore';
 import SelectComponent from '../components/SelectComponent';
 
 const makeDefaultState = (page, pageSize, originalPage) => ({

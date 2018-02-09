@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { createRefetchContainer } from 'react-relay';
 import { computeLastPageSizes } from '../utils';
 import { GQLHelper } from '../gqlHelper';
-import { getReduxStore } from '../reduxStore';
+import getReduxStore from '../reduxStore';
 import { ReduxExplorerTabPanel, ReduxSideBar } from './ReduxExplorer';
 
 const gqlHelper = GQLHelper.getGQLHelper();

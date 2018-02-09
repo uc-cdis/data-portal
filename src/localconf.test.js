@@ -21,9 +21,9 @@ describe('The localconf', () => {
 
   it('Defines a bunch of configuration variables', () => {
     expectedKeys.forEach((key) => {
-      if (conf[key] === undefined) {
-        console.log(`conf[${key}] === ${conf[key]}`);
-      }
+      // if (conf[key] === undefined) {
+      //   console.log(`conf[${key}] === ${conf[key]}`);
+      // }
       expect(conf[key]).toBeDefined();
     });
   });

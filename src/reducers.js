@@ -6,7 +6,7 @@ import submission from './Submission/reducers';
 import homepage from './Homepage/reducers';
 import queryNodes from './QueryNode/reducers';
 import popups from './Popup/reducers';
-import { graphiql } from './GraphQLEditor/reducers';
+import graphiql from './GraphQLEditor/reducers';
 import explorer from './Explorer/reducers';
 import { logoutListener } from './Login/ProtectedContent';
 

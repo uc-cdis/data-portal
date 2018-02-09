@@ -194,9 +194,6 @@ export function computeLastPageSizes(filesMap, pageSize) {
 
 
 export function capitalizeFirstLetter(str) {
-  str = str.replace(/\_/gi, ' ');
-  return str.replace(/\w\S*/g,
-    (txt) => {
-      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
+  const res = str.replace(/_/gi, ' ');
+  return res.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 }

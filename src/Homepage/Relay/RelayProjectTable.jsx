@@ -1,11 +1,10 @@
 import React from 'react';
 import { QueryRenderer } from 'react-relay';
 import { GQLHelper } from '../../gqlHelper';
-import { getReduxStore } from '../../reduxStore';
+import getReduxStore from '../../reduxStore';
 import environment from '../../environment';
 import { ProjectTable, ProjectTR } from '../Redux/ProjectTable';
 import Spinner from '../../components/Spinner';
-import { app } from '../../localconf';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
@@ -20,7 +19,7 @@ const gqlHelper = GQLHelper.getGQLHelper();
  * Assumes higher level container injects the original undetailed list of projects.
  *
  */
-export class RelayProjectTable extends ProjectTable {
+class RelayProjectTable extends ProjectTable {
   /**
    * Overrides rowRender in ProjectTable parent class to fetch row data via Relay QueryRender.
    *
@@ -52,7 +51,9 @@ export class RelayProjectTable extends ProjectTable {
           getReduxStore().then(
             (store) => {
               const homeState = store.getState().homepage || {};
-              let old = {}; // old data already in redux - only dispatch update if we have newer data
+              // old data already in redux - only dispatch update
+              // if we have newer data
+              let old = {};
               if (homeState.projectsByName) {
                 old = homeState.projectsByName[projInfo.name] || old;
               }
@@ -69,7 +70,7 @@ export class RelayProjectTable extends ProjectTable {
             },
           ).catch(
             (err) => {
-              console.log('WARNING: failed to load redux store', err);
+              console.error('WARNING: failed to load redux store', err);
             },
           );
 
@@ -81,3 +82,5 @@ export class RelayProjectTable extends ProjectTable {
     />);
   }
 }
+
+export default RelayProjectTable;
