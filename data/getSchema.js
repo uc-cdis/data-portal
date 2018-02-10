@@ -52,7 +52,7 @@ const schemaPath = `${__dirname}/schema.json`;
 const dictUrl = `${gdcSubPath}_dictionary/_all`;
 const dictPath = `${__dirname}/dictionary.json`;
 const agent = new https.Agent({
-  rejectUnauthorized: false
+  rejectUnauthorized: false,
 });
 
 async function fetchJson(url) {

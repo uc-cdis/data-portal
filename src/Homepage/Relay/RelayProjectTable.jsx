@@ -3,7 +3,8 @@ import { QueryRenderer } from 'react-relay';
 import { GQLHelper } from '../../gqlHelper';
 import getReduxStore from '../../reduxStore';
 import environment from '../../environment';
-import { ProjectTable, ProjectTR } from '../Redux/ProjectTable';
+import ProjectTable from '../Redux/ProjectTable';
+import ProjectTR from '../Redux/ProjectRow';
 import Spinner from '../../components/Spinner';
 
 const gqlHelper = GQLHelper.getGQLHelper();
@@ -20,6 +21,7 @@ const gqlHelper = GQLHelper.getGQLHelper();
  *
  */
 class RelayProjectTable extends ProjectTable {
+  /* "class-methods-use-this": [<enabled>, { "exceptMethods": [<...rowRender>] }] */
   /**
    * Overrides rowRender in ProjectTable parent class to fetch row data via Relay QueryRender.
    *
@@ -64,12 +66,11 @@ class RelayProjectTable extends ProjectTable {
                   || old.fileCount !== projInfo.fileCount
               ) {
                 store.dispatch({ type: 'RECEIVE_PROJECT_DETAIL', data: projInfo });
-              } /* else {
-                  console.log( projInfo.name + " already in Redux store" );
-                } */
+              }
             },
           ).catch(
             (err) => {
+              /* eslint no-console: ["error", { allow: ["error"] }] */
               console.error('WARNING: failed to load redux store', err);
             },
           );

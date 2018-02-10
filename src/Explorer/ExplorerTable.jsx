@@ -46,6 +46,7 @@ export class ExplorerTableComponent extends Component {
     onPageLoadNextMore: () => {},
     onPageLoadPrevMore: () => {},
     onPageChange: () => {},
+    onPageSizeChange: () => {},
   };
 
   static renderRow(file, columnWidths, i) {
@@ -77,7 +78,7 @@ export class ExplorerTableComponent extends Component {
           const numberOfPages = filesList ? Math.ceil(filesList.length / nextProps.pageSize) : 0;
           const newPage = nextProps.originalPage + (this.props.page % this.props.pageCount);
           const page = (numberOfPages > this.props.page % this.props.pageCount)
-            ? newPage : (nextProps.originalPage + numberOfPages);
+            ? newPage : (nextProps.originalPage + (numberOfPages - 1));
           this.setState({ page,
             originalPage: nextProps.originalPage,
             pageSize: nextProps.pageSize });
@@ -131,14 +132,14 @@ export class ExplorerTableComponent extends Component {
               (item, i) => (
                 (item in specialAligns) ?
                   <TableHeadCell
-                    key={i}
+                    key={item}
                     c_width={columnWidths[i]}
                     style={{ textAlign: specialAligns[item] }}
                   >
                     {item}
                   </TableHeadCell>
                   :
-                  <TableHeadCell key={i} c_width={columnWidths[i]}>
+                  <TableHeadCell key={item} c_width={columnWidths[i]}>
                     {item}
                   </TableHeadCell>
               ),
@@ -164,9 +165,9 @@ export class ExplorerTableComponent extends Component {
             </TableFootCell>
             <TableFootCell c_width={'40%'}>
               {
-                pages.map((item, i) =>
+                pages.map(item =>
                   (<PageButton
-                    key={i}
+                    key={item}
                     active={item === this.state.page}
                     onClick={
                       () => {

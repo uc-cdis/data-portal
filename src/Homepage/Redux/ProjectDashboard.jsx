@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { clearFix } from 'polished';
 import ReduxProjectBarChart from './ReduxProjectBarChart';
-import { countNames, countPluralNames, dashboardIcons } from '../../localconf';
 import CountCard from './CountCard';
 
 const DashTopDiv = styled.div`

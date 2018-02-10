@@ -3,12 +3,17 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import FlatButton from 'material-ui/FlatButton';
+import { app } from '../localconf';
 
 
-const NavLeft = styled.nav`
+const NavLeft = (app === 'gtex') ? styled.nav`
   width: 85%;
   float: left;
-  padding-left: 120px;
+  padding-left: 150px;
+` : styled.nav`
+  width: 85%;
+  float: left;
+  padding-left: 200px;
 `;
 
 const Header = styled.header`

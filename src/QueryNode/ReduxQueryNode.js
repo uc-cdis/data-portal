@@ -115,7 +115,7 @@ const mapStateToProps = (state, ownProps) => {
   const result = {
     submission: state.submission,
     ownProps,
-    query_nodes: state.query_nodes,
+    queryNodes: state.queryNodes,
     popups: Object.assign({}, state.popups),
   };
   return result;

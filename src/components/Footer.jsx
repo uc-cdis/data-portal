@@ -26,14 +26,29 @@ const NavRight = styled.nav`
 `;
 const Versions = styled.span`
   color: white;
-  padding:5px;
+  padding: 5px;
+`;
+const Imgs = styled.span`
+  color: white;
+  padding: 5px;
+  clear: both;
 `;
 
 const Footer = ({ dictionaryVersion, apiVersion }) =>
   (<FooterSection>
     <NavRight>
       <Dictionary to="/dd"><span className="fui-bookmark" />View dictionary</Dictionary>
-      <Versions>Dictionary v{dictionaryVersion}, API v{apiVersion}, Portal v{portalVersion}</Versions>
+      <Versions>
+        Dictionary v{dictionaryVersion}, API v{apiVersion}, Portal v{portalVersion}<br />
+      </Versions>
+      <Imgs>
+        <a href={'https://cdis.uchicago.edu/gen3'}>
+          <img src={'/src/img/gen3.png'} style={{ height: '40px' }} alt={'Powered by Gen3'} />
+        </a>
+        <a href={'https://cdis.uchicago.edu/'}>
+          <img src={'/src/img/cdis.png'} style={{ height: '40px', paddingLeft: '15px' }} alt={'Developed in Chicago'} />
+        </a>
+      </Imgs>
     </NavRight>
   </FooterSection>);
 

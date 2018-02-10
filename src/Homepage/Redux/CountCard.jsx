@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { localTheme } from "../../localconf";
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
+import { localTheme } from '../../localconf';
 
 const CountBox = styled.div`
   float: left;
@@ -80,6 +80,11 @@ CountCard.propTypes = {
   count2: PropTypes.object.isRequired,
   count3: PropTypes.object.isRequired,
   count4: PropTypes.object.isRequired,
+  icons: PropTypes.array,
+};
+
+CountCard.defaultProps = {
+  icons: [],
 };
 
 export default CountCard;

@@ -13,6 +13,10 @@ if [ -f custom/logo/$APP-logo.png ]; then
   cp custom/logo/$APP-logo.png src/img/logo.png
 fi
 
+if [ -f custom/createdby/$APP.png ]; then
+  cp custom/createdby/$APP.png src/img/cdis.png
+fi
+
 if [ -f custom/graphql/$APP-gql.njk ]; then
   cat custom/graphql/gqlHeader.njk custom/graphql/$APP-gql.njk custom/graphql/gqlFooter.njk >data/gqlHelper.js.njk
 else

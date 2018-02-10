@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { StaticRouter } from 'react-router-dom';
 
-import { ProjectTable } from './ProjectTable';
+import ProjectTable from './ProjectTable';
 
 
 test('Project table renders', () => {

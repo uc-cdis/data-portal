@@ -31,8 +31,8 @@ export const getCounts = (typeList, project, dictionary) => {
   }
 
   function appendLinkToQuery(source, dest, name) {
-    if (source !== 'metaschema' && !source.startsWith('_')) {
-      query += `${source}_${name}_to_${dest}_link: ${source}(with_links: ["${name}"], first:1, project_id:"${project}"){submitter_id},`;
+    if (source.id !== 'metaschema' && !source.id.startsWith('_')) {
+      query += `${source.id}_${name}_to_${dest.id}_link: ${source.id}(with_links: ["${name}"], first:1, project_id:"${project}"){submitter_id},`;
     }
   }
 
@@ -51,7 +51,7 @@ export const getCounts = (typeList, project, dictionary) => {
       const node = dictionary[name];
       const newLinks = node.links;
       return newLinks ? newLinks.map(
-        l => ({ source: name, target: l.target_type, name: l.name }),
+        l => ({ source: dictionary[name], target: dictionary[l.target_type], name: l.name }),
       ).concat(linkList) : linkList;
     }, [],
   ).reduce( // extract subgroups from each link
@@ -62,14 +62,18 @@ export const getCounts = (typeList, project, dictionary) => {
       }
       if (link.subgroup) {
         result = link.subgroup.map(
-          sg => ({ source: link.source, target: sg.target_type, name: sg.name }),
+          sg => ({
+            source: dictionary[link.source],
+            target: dictionary[sg.target_type],
+            name: sg.name,
+          }),
         ).concat(linkList);
       }
       return result;
     }, [],
   )
     .filter(
-      l => !nodesToHide[l.source] && !nodesToHide[l.target],
+      l => !nodesToHide[l.source.id] && !nodesToHide[l.target.id],
     )
     .forEach(
       ({ source, target, name }) => appendLinkToQuery(source, target, name),

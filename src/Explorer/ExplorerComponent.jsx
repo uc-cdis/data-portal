@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { createRefetchContainer } from 'react-relay';
 import { computeLastPageSizes } from '../utils';
@@ -33,20 +34,18 @@ class ExplorerComponent extends Component {
     }
   }
 
-  /**
-   * Listens for filter updates in redux
-   */
-  reduxFilterListener(store) {
-    const explorerState = store.getState().explorer;
-    if (!explorerState) {
-      return;
-    }
-    if (explorerState.refetch_data || explorerState.moreData === 'REQUESTED') {
-      this.loadMore(explorerState.selected_filters,
-        explorerState.pageSize * explorerState.pagesPerTab,
-        explorerState.cursors);
-    }
-  }
+  getFirstActiveTab = (filesMap) => {
+    let found = false;
+    return Object.keys(filesMap).reduce(
+      (res, item) => {
+        if (!found && filesMap[item].length > 0) {
+          found = true;
+          return item;
+        }
+        return res;
+      }, '',
+    );
+  };
 
   mapDataToFile = filesList => filesList.map(
     file => (
@@ -75,18 +74,20 @@ class ExplorerComponent extends Component {
     );
   };
 
-  getFirstActiveTab = (filesMap) => {
-    let found = false;
-    return Object.keys(filesMap).reduce(
-      (res, item) => {
-        if (!found && filesMap[item].length > 0) {
-          found = true;
-          return item;
-        }
-        return res;
-      }, '',
-    );
-  };
+  /**
+   * Listens for filter updates in redux
+   */
+  reduxFilterListener(store) {
+    const explorerState = store.getState().explorer;
+    if (!explorerState) {
+      return;
+    }
+    if (explorerState.refetch_data || explorerState.moreData === 'REQUESTED') {
+      this.loadMore(explorerState.selected_filters,
+        explorerState.pageSize * explorerState.pagesPerTab,
+        explorerState.cursors);
+    }
+  }
 
   updateFilesMap = () => {
     const receivedFilesMap = this.createList();
@@ -156,10 +157,17 @@ class ExplorerComponent extends Component {
   }
 }
 
-export const RelayExplorerComponent = createRefetchContainer(
+ExplorerComponent.propTypes = {
+  viewer: PropTypes.object.isRequired,
+  relay: PropTypes.object.isRequired,
+};
+
+const RelayExplorerComponent = createRefetchContainer(
   ExplorerComponent,
   {
     viewer: gqlHelper.explorerPageFragment,
   },
   gqlHelper.explorerRefreshQuery,
 );
+
+export default RelayExplorerComponent;

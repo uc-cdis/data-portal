@@ -1,7 +1,7 @@
-import PropTypes from "prop-types";
-import {countNames, countPluralNames, dashboardIcons} from "../../localconf";
-import React, { Component } from "react";
-import LittleProjectDashboard from './ProjectDashboard'
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { countNames, countPluralNames, dashboardIcons } from '../../localconf';
+import LittleProjectDashboard from './ProjectDashboard';
 
 export function DashboardWith(Table) {
   return class ProjectDashboard extends Component {

@@ -41,6 +41,7 @@ export class RelayProjectDashboard extends React.Component {
         return 'NOOP';
       },
       (err) => {
+        /* eslint no-console: ["error", { allow: ["error"] }] */
         console.error('WARNING: failed to load redux store', err);
         return 'ERR';
       },
@@ -61,9 +62,9 @@ export class RelayProjectDashboard extends React.Component {
         // fill in missing properties
         Object.assign({ name: 'unknown',
           countOne: 0,
-          fileCount: 0,
           countTwo: 0,
           countThree: 0,
+          fileCount: 0,
         }, proj),
 
     );

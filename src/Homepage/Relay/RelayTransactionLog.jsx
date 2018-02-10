@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
+import PropTypes from 'prop-types';
 import environment from '../../environment';
 import Spinner from '../../components/Spinner';
 import TransactionLogTable from '../Redux/TransactionLogTable';
@@ -19,11 +20,11 @@ class RelayTransactionLog extends Component {
         }`
       }
       render={
-        ({ error, prop }) => {
+        ({ error, props }) => {
           if (error) {
             return <div>{error.message}</div>;
-          } else if (prop && prop.transaction_list) {
-            return <TransactionLogTable log={prop.transaction_list} />;
+          } else if (props && props.transaction_list) {
+            return <TransactionLogTable log={props.transaction_list} />;
           }
           return <Spinner />;
         }
@@ -31,5 +32,9 @@ class RelayTransactionLog extends Component {
     />);
   }
 }
+
+RelayTransactionLog.PropTypes = {
+  transaction_list: PropTypes.object.isRequired,
+};
 
 export default RelayTransactionLog;

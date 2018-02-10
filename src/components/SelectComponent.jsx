@@ -44,14 +44,16 @@ export default class SelectComponent extends Component {
     onChange: () => {},
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.selectedValue !== nextProps.selectedValue) { this.setState({ selectedValue: nextProps.selectedValue }); }
-  }
-
   constructor(props) {
     super(props);
     this.state = makeDefaultSelectedState(this.props.selectedValue);
     this.resetState = this.resetState.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.selectedValue !== nextProps.selectedValue) {
+      this.setState({ selectedValue: nextProps.selectedValue });
+    }
   }
 
   resetState() {

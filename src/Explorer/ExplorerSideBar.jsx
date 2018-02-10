@@ -25,9 +25,9 @@ class ExplorerSideBar extends Component {
     }
     aggregateSet = Object.keys(dictionary).reduce(
       (d, key) => {
-        if (dictionary[key].hasOwnProperty('category')
+        if (Object.prototype.hasOwnProperty.call(dictionary[key], 'category')
           && dictionary[key].category === category
-          && dictionary[key].properties[property].hasOwnProperty('enum')
+          && Object.prototype.hasOwnProperty.call(dictionary[key].properties[property], 'enum')
         ) {
           for (const propertyOption of dictionary[key].properties[property].enum) {
             if (!d.has(propertyOption)) {

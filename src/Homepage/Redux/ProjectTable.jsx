@@ -1,55 +1,14 @@
 import React from 'react';
-import FlatButton from 'material-ui/FlatButton';
-import { Link } from 'react-router-dom';
-import Translator from '../translate';
-import { countNames, countPluralNames, localTheme } from '../../localconf';
-import { Table, TableHead, TableRow, TableColLabel, TableCell } from '../style';
+import PropTypes from 'prop-types';
+import { countNames, countPluralNames } from '../../localconf';
+import { Table, TableHead, TableRow, TableColLabel } from '../style';
+import ProjectTR from './ProjectRow';
 
-
-const tor = Translator.getTranslator();
-
-class SubmitButton extends React.Component {
-  render() {
-    return (<Link to={this.props.projName} title="Submit or View Graph">
-      <FlatButton backgroundColor={localTheme['projectTable.submitButtonColor']} label="Submit or View Graph" />
-    </Link>);
-  }
+function compare(a, b) {
+  if (a.name < b.name) { return -1; }
+  if (a.name > b.name) { return 1; }
+  return 0;
 }
-
-
-/**
- * Table row component - fills in columns given project property
- */
-export class ProjectTR extends React.Component {
-  render() {
-    const proj = this.props.project;
-    return (<TableRow key={proj.name} summaryRow={!! this.props.summaryRow}>
-      <TableCell>
-        {proj.name}
-      </TableCell>
-      <TableCell>{proj.countOne}
-      </TableCell>
-      <TableCell>{proj.countTwo}
-      </TableCell>
-      <TableCell>{proj.countThree}
-      </TableCell>
-      <TableCell>
-        {(countNames[2] === 'File') ? proj.fileCount : proj.countThree}
-      </TableCell>
-      <TableCell>
-        {proj.name !== 'Totals:' ? <SubmitButton projName={proj.name} /> : ''}
-      </TableCell>
-    </TableRow>);
-  }
-}
-
-/*
-<TableCell>
-              <svg width="200" height="20" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <rect fill="#8888d8" x="0" y="0" width="75" height="100" />
-              </svg>
-            </TableCell>
-            */
 
 /**
  * Table of projects.
@@ -57,17 +16,21 @@ export class ProjectTR extends React.Component {
  * for a project detail, and a summaryCounts property with
  * prefetched totals (property details may be fetched lazily via Relay, whatever ...)
  */
-export class ProjectTable extends React.Component {
+class ProjectTable extends React.Component {
+  /* eslint class-methods-use-this: ["error", { "exceptMethods": ["rowRender"] }] */
   /**
    * default row renderer - just delegates to ProjectTR - can be overriden by subtypes, whatever
    */
   rowRender(proj) {
     return <ProjectTR key={proj.name} project={proj} />;
   }
-
   render() {
-    const projectList = (this.props.projectList || []).sort((a, b) => ((a.name < b.name) ? -1 : (a.name === b.name) ? 0 : 1));
-    const sum = (key) => { projectList.map(it => it[key]).reduce((acc, it) => { acc + it; }, 0); };
+    const projectList = (this.props.projectList || []).sort(
+      (a, b) => compare(a, b),
+    );
+    const sum = (key) => {
+      projectList.map(it => it[key]).reduce((acc, it) => acc + it, 0);
+    };
     const summaryCounts = this.props.summaryCounts || {
       count1: sum('countTwo'),
       count2: sum('countOne'),
@@ -98,10 +61,21 @@ export class ProjectTable extends React.Component {
               proj => this.rowRender(proj),
             )
           }
-          <ProjectTR key={summaryCounts} project={{ ...summaryCounts, name: 'Totals:' }} summaryRow />
+          <ProjectTR key={'summaryCounts'} project={{ ...summaryCounts, name: 'Totals:' }} summaryRow />
         </tbody>
       </Table>
     </div>);
   }
 }
 
+ProjectTable.propTypes = {
+  projectList: PropTypes.array,
+  summaryCounts: PropTypes.object,
+};
+
+ProjectTable.defaultProps = {
+  summaryCounts: {},
+  projectList: [],
+};
+
+export default ProjectTable;

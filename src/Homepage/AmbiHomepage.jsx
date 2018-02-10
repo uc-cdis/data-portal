@@ -1,7 +1,7 @@
 import React from 'react';
 import { RelayProjectDashboard } from './Relay/RelayHomepage';
 import ReduxProjectDashboard from './Redux/ReduxProjectDashboard';
-import RelayTransactionLogComponent from './Relay/RelayTransactionLog';
+import RelayTransactionLog from './Relay/RelayTransactionLog';
 import getReduxStore from '../reduxStore';
 
 
@@ -35,7 +35,7 @@ class AmbidextrousDashboard extends React.Component {
       return (
         <div>
           <ReduxProjectDashboard />
-          <RelayTransactionLogComponent />
+          <RelayTransactionLog />
         </div>
       );
     }
@@ -43,7 +43,7 @@ class AmbidextrousDashboard extends React.Component {
     return (
       <div>
         <RelayProjectDashboard />
-        <RelayTransactionLogComponent />
+        <RelayTransactionLog />
       </div>
     );
   }

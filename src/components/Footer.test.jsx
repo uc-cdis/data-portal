@@ -15,7 +15,7 @@ describe('The Footer component', () => {
       </StaticRouter>,
     );
     const span = footer.find('span');
-    expect(span.length).toBe(2);
+    expect(span.length).toBe(3);
     expect(span.at(1).text()).toMatch(/Dictionary vtest.test.test, API vapi.api.api/);
   });
 });

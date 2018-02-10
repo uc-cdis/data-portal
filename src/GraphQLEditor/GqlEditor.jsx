@@ -1,8 +1,9 @@
-import React from 'react';
-import styled from 'styled-components';
-import { fetchGraphQL } from '../actions';
 import GraphiQL from 'graphiql';
 import { buildClientSchema } from 'graphql/utilities';
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { fetchGraphQL } from '../actions';
 import Spinner from '../components/Spinner';
 
 export const Title = styled.h2`
@@ -20,7 +21,7 @@ export const GraphBox = styled.div`
 const parameters = {};
 
 const GqlEditor = ({ schema }) => {
-  if (! schema) {
+  if (!schema) {
     return <Spinner />; // loading
   }
   const graphqlSchema = buildClientSchema(schema.data);
@@ -46,6 +47,11 @@ const GqlEditor = ({ schema }) => {
       </GraphBox>
     </div>
   );
+};
+
+
+GqlEditor.propTypes = {
+  schema: PropTypes.object.isRequired,
 };
 
 export default GqlEditor;

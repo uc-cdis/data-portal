@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { DashboardWith } from './ParamProjectDashboard';
-import { ProjectTable } from './ProjectTable';
+import ProjectTable from './ProjectTable';
 
 
 // Map state.homepage.projectsByName to projectList
