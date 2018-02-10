@@ -111,7 +111,7 @@ export function findRoot(nodes, edges) {
       return db;
     },
     // initialize emptyDb - any node could be the root
-    nodes.reduce((emptyDb, node) => { emptyDb[node.id] = true; return emptyDb; }, {}),
+    nodes.reduce((emptyDb, node) => { const res = emptyDb; res[node.id] = true; return res; }, {}),
   );
   const rootNode = nodes.find(n => couldBeRoot[n.id]);
   return rootNode ? rootNode.id : null;
@@ -150,7 +150,7 @@ export function nodesBreadthFirst(nodes, edges) {
       return db;
     },
     // initialize emptyDb - include nodes that have no incoming edges (leaves)
-    nodes.reduce((emptyDb, node) => { emptyDb[node.id] = []; return emptyDb; }, {}),
+    nodes.reduce((emptyDb, node) => { const res = emptyDb; res[node.id] = []; return res; }, {}),
   );
 
   // root node has no edges coming out of it, just edges coming in
@@ -219,7 +219,9 @@ export function nodesBreadthFirst(nodes, edges) {
 export function assignNodePositions(nodes, edges, opts) {
   const breadthFirstInfo = (opts && opts.breadthFirstInfo) ?
     opts.breadthFirstInfo : nodesBreadthFirst(nodes, edges);
-  const name2Node = nodes.reduce((db, node) => { db[node.id] = node; return db; }, {});
+  const name2Node = nodes.reduce((db, node) => {
+    const res = db; res[node.id] = node; return res;
+  }, {});
 
   // the tree has some number of levels with some number of nodes each,
   // but we may want to break each level down into multiple rows

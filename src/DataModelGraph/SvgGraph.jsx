@@ -18,7 +18,7 @@ const d3 = {
  *    for placement at (0.5*svg_width, 0.1*svg_height))
  *    Side effect - decorates each node in 'nodes' with a 'position' property
  *
- * @param nodes
+ * @param nodesIn
  * @param edges
  */
 export function createSvgGraph(nodesIn, edges) {

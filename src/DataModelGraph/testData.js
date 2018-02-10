@@ -4,8 +4,8 @@
  */
 export function buildTestData() {
   const nodes = ['project', 'a', 'b', 'c', 'd', 'x', 'y', 'z']
-    .map(name => ({ name, links: [], type: 'object' }));
-  const nodeCounts = nodes.map((nd, i) => ({ key: `_${nd.name}_count`, value: i + 1 }))
+    .map(id => ({ id, title: id, links: [], type: 'object' }));
+  const nodeCounts = nodes.map((nd, i) => ({ key: `_${nd.id}_count`, value: i + 1 }))
     .reduce((db, entry) => { db[entry.key] = entry.value; return db; }, {});
   // 0 'z' nodes
   nodeCounts._z_count = 0;
@@ -16,9 +16,9 @@ export function buildTestData() {
     { source: 'x', name: 'bProp', target: 'b' }, { source: 'y', name: 'bProp', target: 'b' },
     { source: 'd', name: 'cProp', target: 'c' }, { source: 'd', name: 'projProp', target: 'project' },
   ];
-  const linkCounts = edges.map((edg, i) => ({ key: `${edg.source.name}_${edg.name}_to_${edg.target.name}_link`, value: i + 1 }))
+  const linkCounts = edges.map((edg, i) => ({ key: `${edg.source.id}_${edg.name}_to_${edg.target.id}_link`, value: i + 1 }))
     .reduce((db, entry) => { db[entry.key] = entry.value; return db; }, {});
-  const dictionary = nodes.reduce((db, nd) => { db[nd.name] = nd; return db; }, {});
+  const dictionary = nodes.reduce((db, nd) => { const res = db; res[nd.id] = nd; return res; }, {});
   edges.map(
     edg => (
       {
@@ -27,7 +27,7 @@ export function buildTestData() {
         edg,
       }), {},
   ).filter(({ source }) => !!source).forEach(({ source, edg }) => {
-    dictionary[source.name].links.push({ name: edg.name, target_type: edg.target });
+    dictionary[source.id].links.push({ name: edg.name, target_type: edg.target });
   });
   return { dictionary, nodes, edges, counts_search: nodeCounts, links_search: linkCounts };
 }
