@@ -64,6 +64,7 @@ export class RelayProjectDashboard extends React.Component {
           countOne: 0,
           countTwo: 0,
           countThree: 0,
+          countFour: 0,
           fileCount: 0,
         }, proj),
 
@@ -73,6 +74,7 @@ export class RelayProjectDashboard extends React.Component {
       countOne: relayProps.countOne,
       countTwo: relayProps.countTwo,
       countThree: relayProps.countThree,
+      countFour: relayProps.countFour,
       fileCount,
     };
     return {
