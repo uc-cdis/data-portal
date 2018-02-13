@@ -236,13 +236,13 @@ function buildConfig(opts) {
       { icon: 'content_copy', link: 'https://ndh-portal.bionimbus.org', color: '#a2a2a2', name: 'data' },
     ];
     countNames = [
-      'Case',
+      'Subject',
       'Study',
       'Lab record',
       'Socio-demographic record',
     ];
     countPluralNames = [
-      'Cases',
+      'Subjects',
       'Studies',
       'Lab records',
       'Socio-demographic records',
