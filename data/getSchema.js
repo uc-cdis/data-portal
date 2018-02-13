@@ -7,6 +7,7 @@
  *     https://dev.bionimbus.org/api/v0/submission/_dictionary/_all 
  */
 const https = require('https');
+const http = require('http');
 const fetch = require('node-fetch');
 const fs = require('fs');
 const {
@@ -20,7 +21,7 @@ const { gdcSubPath } = (function () {
   if (process.argv.length < 3) {
     let gdcDefaultPath = process.env.HOSTNAME ? `https://${process.env.HOSTNAME}/api/v0/submission/` : 'http://localhost:5000/v0/submission/';
     if (process.env.HOSTNAME.startsWith('revproxy')) {
-      gdcDefaultPath = `http://${process.env.HOSTNAME}/api/v0/submission/`
+      gdcDefaultPath = `http://${process.env.HOSTNAME}/api/v0/submission/`;
     }
     return { status: 'ok', gdcSubPath: addSlash(process.env.GDC_SUBPATH || gdcDefaultPath) };
   }
@@ -51,14 +52,17 @@ const schemaUrl = `${gdcSubPath}getschema`;
 const schemaPath = `${__dirname}/schema.json`;
 const dictUrl = `${gdcSubPath}_dictionary/_all`;
 const dictPath = `${__dirname}/dictionary.json`;
-const agent = new https.Agent({
+const httpAgent = new http.Agent({
+  rejectUnauthorized: false,
+});
+const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
 });
 
 async function fetchJson(url) {
   console.log(`Fetching ${url}`);
   return fetch(url, {
-    agent,
+    agent: url.match(/^https:/) ? httpsAgent : httpAgent,
     method: 'GET',
     headers: {
       Accept: 'application/json',
