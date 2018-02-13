@@ -7,7 +7,7 @@ const mapStateToProps = state => ({
   schema: state.graphiql.schema,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = () => ({
 });
 
 const ReduxGqlEditor = connect(mapStateToProps, mapDispatchToProps)(GqlEditor);

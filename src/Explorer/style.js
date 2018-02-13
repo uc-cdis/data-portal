@@ -32,6 +32,7 @@ export const TableFootCell = styled(TableData)`
   background: ${ExplorerTableBarColor};
   color: '#000000';
   text-align: center;
+  overflow: visible;  
 `;
 
 export const ExplorerSidebarStyle = styled(Sidebar)`
@@ -40,7 +41,7 @@ export const ExplorerSidebarStyle = styled(Sidebar)`
   background: ${ExplorerTableBarColor};
   margin-right: 2em;
   padding: 0em 2em;
-  border: 1px solid #a9a9a9;
+  border: 2px solid #a9a9a9;
   border-radius: 5px;
 `;
 
@@ -93,7 +94,7 @@ export const ExplorerTab = styled.div`
   cursor:pointer;
   padding: 10px;
   font-size: 15px;
-  border: ${props => (props.active ? '1.5px solid #a9a9a9' : '0px')};
+  border: ${props => (props.active ? '2px solid #a9a9a9' : '0px')};
   border-bottom: 0px;
   border-top-left-radius: ${props => (props.active ? '5px' : '0px')};
   border-top-right-radius: ${props => (props.active ? '5px' : '0px')};
@@ -107,7 +108,7 @@ export const ExplorerTabFrame = styled.div`
   margin-left:0px;
   background: ${ExplorerTableBarColor};
   width: 100%;
-  border: 1.5px solid #a9a9a9;
+  border: 2px solid #a9a9a9;
 `;
 
 export const ExplorerTabBox = styled.div`

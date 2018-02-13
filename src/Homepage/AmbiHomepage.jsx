@@ -1,7 +1,8 @@
 import React from 'react';
-import { RelayProjectDashboard } from './RelayHomepage';
-import ReduxProjectDashboard from './ReduxProjectDashboard';
-import { getReduxStore } from '../reduxStore';
+import { RelayProjectDashboard } from './Relay/RelayHomepage';
+import ReduxProjectDashboard from './Redux/ReduxProjectDashboard';
+import RelayTransactionLog from './Relay/RelayTransactionLog';
+import getReduxStore from '../reduxStore';
 
 
 let dataInReduxDate = null;
@@ -31,10 +32,20 @@ class AmbidextrousDashboard extends React.Component {
     const nowMs = Date.now();
     // use redux if it has the data, and data is fresh
     if (dataInReduxDate && (nowMs - dataInReduxDate.getTime() < 300000)) {
-      return <ReduxProjectDashboard />;
+      return (
+        <div>
+          <ReduxProjectDashboard />
+          <RelayTransactionLog />
+        </div>
+      );
     }
     dataInReduxDate = new Date();
-    return <RelayProjectDashboard />;
+    return (
+      <div>
+        <RelayProjectDashboard />
+        <RelayTransactionLog />
+      </div>
+    );
   }
 }
 

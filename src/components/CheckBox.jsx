@@ -65,8 +65,8 @@ export class CheckBoxGroup extends Component {
     return (
       <CheckBox lastChild={this.props.lastChild}>
         {this.props.title}
-        {listItems.map((item, i) => (
-          <div key={i}>
+        {listItems.map(item => (
+          <div key={item}>
             <input
               type="checkbox"
               name={this.props.groupName}

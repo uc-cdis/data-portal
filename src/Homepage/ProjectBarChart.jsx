@@ -3,16 +3,13 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
 import { browserHistory } from 'react-router-dom';
-import Translator from './translate';
-
-
-const tor = Translator.getTranslator();
+import { countNames, localTheme } from '../localconf';
 
 
 const FloatBox = styled.div`
   float: left;
   overflow: hidden;
-  width: 70%;
+  width: 60%;
   min-width: 300px;
   height: 340px;
 `;
@@ -29,7 +26,7 @@ const FloatBox = styled.div`
 class ProjectBarChart extends React.Component {
   static propTypes = {
     projectList: PropTypes.arrayOf(
-      PropTypes.objectOf(PropTypes.number),
+      PropTypes.objectOf(PropTypes.any),
     ).isRequired,
   };
 
@@ -47,12 +44,12 @@ class ProjectBarChart extends React.Component {
             layout="horizontal"
           >
             <h4>Project Submission status</h4>
-            <XAxis dataKey="name" />
-            <YAxis />
+            <XAxis dataKey="name" stroke={localTheme['barGraph.lineColor']} fill={localTheme['barGraph.lineColor']} />
+            <YAxis stroke={localTheme['barGraph.lineColor']} fill={localTheme['barGraph.lineColor']} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="caseCount" stackId="a" fill="#8884d8" />
-            <Bar dataKey={tor.translate('experimentCount')} stackId="a" fill="#82ca9d" />
+            <Bar name={countNames[0]} dataKey="countOne" stackId="a" fill={localTheme['barGraph.bar1Color']} />
+            <Bar name={countNames[1]} dataKey="countTwo" stackId="a" fill={localTheme['barGraph.bar2Color']} />
           </BarChart>
         </ResponsiveContainer>
       </FloatBox>

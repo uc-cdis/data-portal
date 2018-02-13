@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { fetchUser, fetchOAuthURL, fetchJsonOrText, fetchProjects } from '../actions';
 import Spinner from '../components/Spinner';
-import { getReduxStore } from '../reduxStore';
+import getReduxStore from '../reduxStore';
 import { requiredCerts, submissionApiOauthPath } from '../configs';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 
@@ -40,8 +40,11 @@ export function logoutListener(state = {}, action) {
  */
 export function intersection(aList, bList) {
   const key2Count = aList.concat(bList).reduce(
-    (db, it) => { if (db[it]) { db[it] += 1; } else { db[it] = 1; } return db; },
-    {},
+    (db, it) => {
+      const res = db;
+      if (res[it]) { res[it] += 1; } else { res[it] = 1; }
+      return res;
+    }, {},
   );
   return Object.entries(key2Count)
     .filter(kv => kv[1] > 1)

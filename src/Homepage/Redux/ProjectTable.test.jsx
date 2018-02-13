@@ -3,21 +3,21 @@ import { mount } from 'enzyme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { StaticRouter } from 'react-router-dom';
 
-import { ProjectTable } from './ProjectTable';
+import ProjectTable from './ProjectTable';
 
 
 test('Project table renders', () => {
   const projectList = [{
     name: 'frickjack',
-    experimentCount: 5,
-    caseCount: 20,
-    aliquotCount: 30,
+    countOne: 5,
+    countTwo: 20,
+    countThree: 30,
     fileCount: 200,
   }];
   const summaryCounts = {
-    experimentCount: 5,
-    caseCount: 20,
-    aliquotCount: 30,
+    countOne: 5,
+    countTwo: 20,
+    countThree: 30,
     fileCount: 200,
   };
 

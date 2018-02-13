@@ -5,7 +5,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { ThemeProvider } from 'styled-components';
 import { StaticRouter } from 'react-router-dom';
 
-import { getReduxStore } from '../reduxStore';
+import getReduxStore from '../reduxStore';
 import { theme } from '../theme';
 import { changePageSize, changePage } from './ReduxExplorer';
 import * as testData from './__test__/data.json';

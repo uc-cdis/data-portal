@@ -30,7 +30,7 @@ LinkBullet.propTypes = {
       target_type: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     },
-  ),
+  ).isRequired,
 };
 
 const LinkTable = ({ links }) => {
@@ -49,6 +49,10 @@ const LinkTable = ({ links }) => {
       </tbody>
     </Table>
   );
+};
+
+LinkTable.propTypes = {
+  links: PropTypes.array.isRequired,
 };
 
 /**
@@ -93,8 +97,8 @@ const NodeTable = ({ node }) => (
   <Table>
     <tbody>
       <TableRow>
-        <TableData first_cr> Title </TableData>
-        <TableData right>{ node.title }</TableData>
+        <TableData first_cr> Id </TableData>
+        <TableData right>{ node.id }</TableData>
       </TableRow>
 
       <TableRow>
@@ -126,6 +130,11 @@ const NodeTable = ({ node }) => (
     </tbody>
   </Table>
 );
+
+NodeTable.propTypes = {
+  node: PropTypes.object.isRequired,
+};
+
 const Col1 = styled(TableData)`
   width: 35%;
 `;
@@ -171,6 +180,14 @@ class CollapsibleList extends React.Component {
   }
 }
 
+CollapsibleList.propTypes = {
+  items: PropTypes.array.isRequired,
+};
+
+CollapsibleList.defaultProps = {
+  items: [],
+};
+
 const PropertyBullet = (props) => {
   const { propertyName, property, required } = props;
   let description = 'No Description';
@@ -191,6 +208,12 @@ const PropertyBullet = (props) => {
       <Col4> { description } </Col4>
     </TableRow>
   );
+};
+
+PropertyBullet.propTypes = {
+  property: PropTypes.object.isRequired,
+  propertyName: PropTypes.string.isRequired,
+  required: PropTypes.bool.isRequired,
 };
 
 /**
@@ -228,6 +251,12 @@ export const PropertiesTable = ({ node, required, links }) => {
     </Table>
 
   );
+};
+
+PropertiesTable.propTypes = {
+  node: PropTypes.object.isRequired,
+  links: PropTypes.array.isRequired,
+  required: PropTypes.bool.isRequired,
 };
 
 const actionButton = css`
@@ -283,7 +312,7 @@ const DataDictionaryNode = ({ params, submission }) => {
   return (
     <div>
       <Link to="/dd">{'< top level dictionary'}</Link>
-      <h3> {node} </h3>
+      <h3> {dictionary[node].title} </h3>
       Download template: <DownloadButton href={`/api/v0/submission/template/${node}?format=json`}>{'JSON'}</DownloadButton> | <DownloadButton href={`/api/v0/submission/template/${node}`}>{'TSV'}</DownloadButton>
 
 
@@ -309,7 +338,7 @@ DataDictionaryNode.propTypes = {
       dictionary: PropTypes.object.isRequired,
       links_search: PropTypes.objectOf(PropTypes.number),
     },
-  ),
+  ).isRequired,
 };
 
 export default DataDictionaryNode;

@@ -60,7 +60,6 @@ export const Bullet = styled.ul`
 
 export const Header = styled.li`
   display: block;
-  border-bottom: 1px solid #8f8f8f;
   float: left;
   padding-left: 0.5em;
   font-weight: bold;

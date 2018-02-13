@@ -10,7 +10,10 @@ const submission = (state = {}, action) => {
     return { ...state, formSchema: { ...state.formSchema, ...action.formSchema } };
   case 'RECEIVE_PROJECTS':
     return { ...state,
-      projects: action.data.reduce((map, p) => { map[p.code] = p.project_id; return map; }, {}),
+      projects: action.data.reduce((map, p) => {
+        const res = map;
+        res[p.code] = p.project_id; return res;
+      }, {}),
     };
   case 'RECEIVE_NODE_TYPES':
     return { ...state, nodeTypes: action.data };

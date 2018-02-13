@@ -76,7 +76,8 @@ export const color = {
   data_file: d3.schemeCategory20[17],
   satellite: d3.schemeCategory20[11],
   radar: d3.schemeCategory20[16],
-  streamgauge: d3.schemeCategory20[19],
+  stream_gauge: d3.schemeCategory20[19],
+  weather_station: d3.schemeCategory20[10],
 };
 
 
@@ -161,14 +162,15 @@ export function addLinks(graphSvg, edges) {
 export function calculatePosition(nodes, graphWidth, graphHeight) {
   // Calculate the appropriate position of each node on the graph
   const fyVals = [];
+  const retNodes = nodes;
   for (let i = 0; i < nodes.length; i += 1) {
-    nodes[i].fx = nodes[i].position[0] * graphWidth;
-    nodes[i].fy = nodes[i].position[1] * graphHeight;
-    if (fyVals.indexOf(nodes[i].fy) === -1) {
-      fyVals.push(nodes[i].fy);
+    retNodes[i].fx = retNodes[i].position[0] * graphWidth;
+    retNodes[i].fy = retNodes[i].position[1] * graphHeight;
+    if (fyVals.indexOf(retNodes[i].fy) === -1) {
+      fyVals.push(retNodes[i].fy);
     }
   }
-  return { nodes, fyValsLength: fyVals.length };
+  return { retNodes, fyValsLength: fyVals.length };
 }
 
 
@@ -188,4 +190,10 @@ export function computeLastPageSizes(filesMap, pageSize) {
     result[key] = filesMap[key].length % pageSize;
     return result;
   }, {});
+}
+
+
+export function capitalizeFirstLetter(str) {
+  const res = str.replace(/_/gi, ' ');
+  return res.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 }

@@ -6,6 +6,7 @@
  * Ex: https://dev.bionimbus.org/api/v0/submission/getschema
  *     https://dev.bionimbus.org/api/v0/submission/_dictionary/_all 
  */
+const https = require('https');
 const fetch = require('node-fetch');
 const fs = require('fs');
 const {
@@ -50,10 +51,14 @@ const schemaUrl = `${gdcSubPath}getschema`;
 const schemaPath = `${__dirname}/schema.json`;
 const dictUrl = `${gdcSubPath}_dictionary/_all`;
 const dictPath = `${__dirname}/dictionary.json`;
+const agent = new https.Agent({
+  rejectUnauthorized: false,
+});
 
 async function fetchJson(url) {
   console.log(`Fetching ${url}`);
   return fetch(url, {
+    agent,
     method: 'GET',
     headers: {
       Accept: 'application/json',

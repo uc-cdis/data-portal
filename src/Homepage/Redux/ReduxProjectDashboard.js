@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { DashboardWith } from './ProjectDashboard';
-import { ProjectTable } from './ProjectTable';
+import { DashboardWith } from './ParamProjectDashboard';
+import ProjectTable from './ProjectTable';
 
 
 // Map state.homepage.projectsByName to projectList
@@ -19,6 +19,5 @@ const mapDispatchToProps = function () { return {}; };
 export const ReduxProjectTable = connect(mapStateToProps, mapDispatchToProps)(ProjectTable);
 const DashboardWithReduxTable = DashboardWith(ReduxProjectTable);
 const ReduxProjectDashboard = connect(mapStateToProps, mapDispatchToProps)(DashboardWithReduxTable);
-
 
 export default ReduxProjectDashboard;

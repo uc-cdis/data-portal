@@ -44,13 +44,13 @@ function createDDGraph(nodesIn, edges, radius = 60, boxHeightMult, boxWidthMult,
     .attr('transform', `translate(0,${padding})`);
   // legend is the text that matches categories to color
   const legend = svg.append('g')
-    .attr('transform', `translate(${width - legendWidth * 2},${padding})`);
+    .attr('transform', `translate(${width - (2 * legendWidth)},${padding})`);
 
   const link = addLinks(graph, edges);
 
   addArrows(graph);
   calculatePosition(nodes, width, height); // augments nodes as side effect
-  const nodeTypes = nodes.map(node => node.name);
+  const nodeTypes = nodes.map(node => node.id);
 
   // Add search on clicking a node
   const node = graph.selectAll('g.gnode')
@@ -58,12 +58,12 @@ function createDDGraph(nodesIn, edges, radius = 60, boxHeightMult, boxWidthMult,
     .enter().append('g')
     .classed('gnode', true)
     .style('cursor', 'pointer')
-    .attr('id', d => d.name)
+    .attr('id', d => d.id)
     .on('click', (d) => {
       for (let i = 0; i < nodeTypes.length; i += 1) {
-        if (d.name === nodeTypes[i]) {
+        if (d.id === nodeTypes[i]) {
           const s = window.location.href.split('/');
-          window.open(`${s.slice(0, s.length - 1).join('/')}/${d.name}`);
+          window.open(`${s.slice(0, s.length - 1).join('/')}/${d.id}`);
           break;
         }
       }
@@ -81,46 +81,43 @@ function createDDGraph(nodesIn, edges, radius = 60, boxHeightMult, boxWidthMult,
   const fontSize = '0.75em';
 
   // Append text to nodes
-  for (let n = 0; n < nodes.length; n++) {
-    graph.select('#'.concat(nodes[n].name))
+  for (let n = 0; n < nodes.length; n += 1) {
+    graph.select('#'.concat(nodes[n].id))
       .append('text')
       .attr('text-anchor', 'middle')
       .attr('font-size', fontSize)
       .style('font-weight', 'bold')
-      .text(nodes[n].name);
+      .text(nodes[n].title);
   }
 
   const simulation = d3.forceSimulation()
-    .force('link', d3.forceLink().id(d => d.name));
+    .force('link', d3.forceLink().id(d => d.id));
 
 
   function positionLink(d) {
     if (d.source.fy === d.target.fy &&
       Math.abs(d.source.positionIndex[0] - d.target.positionIndex[0]) > 1
     ) {
-      const curve = `M${d.source.x},${d.source.y
-      }Q${d.source.x},${d.source.y + boxHeight / 2 * 1.25
-      } ${(d.source.x + d.target.x) / 2},${d.source.y + boxHeight / 2 * 1.25
+      return `M${d.source.x},${d.source.y
+      }Q${d.source.x},${d.source.y + ((boxHeight / 2) * 1.25)
+      } ${(d.source.x + d.target.x) / 2},${d.source.y + ((boxHeight / 2) * 1.25)
       }T ${d.target.x},${d.target.y}`;
-      return curve;
     } else if (d.source.fx === d.target.fx &&
       Math.abs(d.source.positionIndex[1] - d.target.positionIndex[1]) > 1
     ) {
-      const curve = `M${d.source.x},${d.source.y
-      }Q${d.source.x + boxWidth / 2 * 1.25},${d.source.y
-      } ${d.source.x + boxWidth / 2 * 1.25},${(d.source.y + d.target.y) / 2
+      return `M${d.source.x},${d.source.y
+      }Q${d.source.x + ((boxWidth / 2) * 1.25)},${d.source.y
+      } ${d.source.x + ((boxWidth / 2) * 1.25)},${(d.source.y + d.target.y) / 2
       }T ${d.target.x},${d.target.y}`;
-      return curve;
     } else if (
       (Math.abs(d.source.positionIndex[0] - d.target.positionIndex[0]) ===
         Math.abs(d.source.positionIndex[1] - d.target.positionIndex[1])
       ) && Math.abs(d.source.positionIndex[1] - d.target.positionIndex[1]) >= 2
     ) {
-      const curve = `M${d.source.x},${d.source.y
-      }Q${d.source.x},${(2 * d.source.y + d.target.y) / 3
-      } ${(2 * d.source.x + d.target.x) / 3},${(d.source.y + 2 * d.target.y) / 3
+      return `M${d.source.x},${d.source.y
+      }Q${d.source.x},${((2 * d.source.y) + d.target.y) / 3
+      } ${((2 * d.source.x) + d.target.x) / 3},${(d.source.y + (2 * d.target.y)) / 3
       }T ${d.target.x},${d.target.y}`;
-      return curve;
     }
     return `M${d.source.x},${d.source.y
     }L${(d.source.x + d.target.x) / 2},${(d.source.y + d.target.y) / 2
@@ -200,7 +197,6 @@ function formatType(type) {
     }
     return filteredType.join(', \n');
   }
-  console.log('Unexpected: ', type);
   return 'unknown';
 }
 
@@ -224,19 +220,19 @@ function addTables(nodes, boxWidth, boxHeight, svgWidth, svgHeight) {
     .enter()
     .append('div')
     .style('position', 'absolute')
-    .style('left', d => `${d.fx - boxWidth / 2 + 6}px`)
-    .style('top', d => `${d.fy - boxHeight / 2 + 20}px`);
+    .style('left', d => `${d.fx - ((boxWidth / 2) - 6)}px`)
+    .style('top', d => `${d.fy - ((boxHeight / 2) - 20)}px`);
 
   tableDiv.append('a')
     .attr('href', (d) => {
       const uri = window.location.href;
-      return `${uri.substring(0, uri.lastIndexOf('/'))}/${d.name}`;
+      return `${uri.substring(0, uri.lastIndexOf('/'))}/${d.id}`;
     })
     .attr('target', '_blank')
     .style('font-size', `${13}px`)
     .style('color', 'black')
     .style('font-weight', 'bold')
-    .text(d => d.name);
+    .text(d => d.title);
 
   tableDiv.append('div')
     .style('width', `${boxWidth - 12}px`)
@@ -279,22 +275,26 @@ function addTables(nodes, boxWidth, boxHeight, svgWidth, svgHeight) {
     .style('padding', '5px')
     .text(d => (d[0] === 'column' ? formatField(d[1]) : formatType(d[1])));
 
-  for (let n = 0; n < nodes.length; n++) {
-    d3.select('#'.concat(nodes[n].name))
+  for (let n = 0; n < nodes.length; n += 1) {
+    d3.select('#'.concat(nodes[n].id))
       .selectAll('text')
-      .attr('dy', -0.5 * boxHeight + 15)
+      .attr('dy', -(0.5 * boxHeight) + 15)
       .style('display', 'none');
   }
 
   d3.select('#graph_wrapper').select('#toggle_button').style('z-index', '1');
 }
 
-export function createFullGraph(nodesIn, edges) {
+export function createFullGraph(nodesIn, edgesIn) {
   const radius = 60;
   const boxHeight = radius * 4;
   const boxWidth = radius * 4;
 
   const nodes = nodesIn.filter(nd => !!nd.position); // ignore anchorless nodes
+  const nNames = nodes.map(n => n.id);
+  const edges = edgesIn.filter(
+    e => (nNames.includes(e.source.id) && nNames.includes(e.target.id)),
+  );
   const maxX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
   const maxY = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
 
@@ -310,6 +310,11 @@ export function createFullGraph(nodesIn, edges) {
   addTables(nodes, boxWidth, boxHeight, svgWidth, svgHeight);
 }
 
-export function createAbridgedGraph(nodes, edges) {
+export function createAbridgedGraph(nodesIn, edgesIn) {
+  const nodes = nodesIn.filter(nd => !!nd.position); // ignore anchorless nodes
+  const nNames = nodes.map(n => n.id);
+  const edges = edgesIn.filter(
+    e => (nNames.includes(e.source.id) && nNames.includes(e.target.id)),
+  );
   createDDGraph(nodes, edges, 60, 1.5, 3, 3);
 }

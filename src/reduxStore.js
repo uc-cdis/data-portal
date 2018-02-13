@@ -1,6 +1,5 @@
 import { persistStore, autoRehydrate } from 'redux-persist';
 import { createStore, applyMiddleware, compose } from 'redux';
-// import { routerMiddleware } from 'react-router-redux'; - not yet supporting router 4
 import thunk from 'redux-thunk';
 
 import { dict } from './dictionary';
@@ -13,6 +12,7 @@ let store;
 let storePromise;
 
 
+/* eslint no-underscore-dangle: [1, { "allowAfterThis": true }] */
 /**
  * Little lazy redux store singleton factory.
  * We want some Relayjs adapters to also update the Redux store,
@@ -21,7 +21,7 @@ let storePromise;
  *
  * @return Promise<Store>
  */
-export const getReduxStore = () => {
+const getReduxStore = () => {
   if (store) { // singleton
     return Promise.resolve(store);
   }
@@ -64,3 +64,5 @@ export const getReduxStore = () => {
   });
   return storePromise;
 };
+
+export default getReduxStore;

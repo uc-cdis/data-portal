@@ -8,21 +8,21 @@ describe('RelayHomepage dashboard wrapper', () => {
         { name: 'Fred', experimentCount: 2 },
         { name: 'Mary', experimentCount: 3 },
       ],
-      caseCount: 20,
-      aliquotCount: 25,
+      countOne: 20,
+      countTwo: 25,
       fileCount1: 10,
       fileCount2: 20,
       fileCount3: 30,
-      experimentCount: 35,
+      countThree: 35,
     };
 
     const { summaryCounts, projectList } = RelayProjectDashboard.transformRelayProps(relayProps);
     expect(typeof summaryCounts).toBe('object');
     expect(Array.isArray(projectList)).toBe(true);
-    expect(summaryCounts.experimentCount).toBe(35);
+    expect(summaryCounts.countThree).toBe(35);
     expect(summaryCounts.fileCount).toBe(60);
-    expect(summaryCounts.caseCount).toBe(20);
-    expect(summaryCounts.aliquotCount).toBe(25);
+    expect(summaryCounts.countOne).toBe(20);
+    expect(summaryCounts.countTwo).toBe(25);
     expect(projectList.length).toBe(2);
   });
 

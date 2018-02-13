@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import Select from 'react-select';
+import { localTheme } from '../src/localconf';
 
 export const theme = {
   blue: '#59C3C3',
@@ -65,7 +66,7 @@ export const Margin = styled.div`
   width: 100%;
 `;
 
-export const TableBarColor = '#7d7474';
+export const TableBarColor = localTheme.tableBarColor;
 
 export const Table = styled.table`
   table-layout:auto;
@@ -113,14 +114,14 @@ export const TableRow = styled.tr`
   padding: 0rem 0rem;
   color: #222;
   border-bottom: 1px solid rgba(0,0,0,0.065);
-  vertical-align: middle;
+  vertical-align: top;
   text-overflow: ellipsis;
   overflow: hidden;
   overflow-x: hidden;
   overflow-y: visible;
-  display: table;
   font-size: 1.5rem;
   width: 100%;
+  display: table;
 `;
 
 export const TableData = styled.td`

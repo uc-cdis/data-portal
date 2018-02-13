@@ -18,6 +18,16 @@ const TooltipStyle = styled.div`
 
 
 class CustomTooltip extends React.Component {
+  static propTypes = {
+    payload: PropTypes.array.isRequired,
+    active: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    payload: [],
+    active: false,
+  };
+
   render() {
     const { active } = this.props;
     if (active) {
@@ -31,33 +41,20 @@ class CustomTooltip extends React.Component {
 
     return null;
   }
-
-  static propTypes = {
-    payload: PropTypes.array.isRequired,
-    label: PropTypes.string,
-    active: PropTypes.bool,
-  };
-
-  static defaultProps = {
-    label: '',
-    active: false,
-  };
 }
 
 
 const COLORS = ['#8884d8', '#00C49F', '#FFBB28', '#FF8042'];
-const CustomPieChart = function () {
-  return (
-    <PieChart style={{ float: 'left' }} width={400} height={300}>
-      <Pie startAngle={180} endAngle={0} data={data01} cx={200} cy={200} outerRadius={80} fill="#ffc658" label>
-        {
-          data01.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]} />)
-        }
-      </Pie>
-      <Legend />
-      <Tooltip content={<CustomTooltip />} />
-    </PieChart>
-  );
-};
+const CustomPieChart = () => (
+  <PieChart style={{ float: 'left' }} width={400} height={300}>
+    <Pie startAngle={180} endAngle={0} data={data01} cx={200} cy={200} outerRadius={80} fill="#ffc658" label>
+      {
+        data01.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]} />)
+      }
+    </Pie>
+    <Legend />
+    <Tooltip content={<CustomTooltip />} />
+  </PieChart>
+);
 
 export default CustomPieChart;

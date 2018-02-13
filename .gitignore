@@ -7,3 +7,4 @@ data/schema.graphql
 data/schema.json
 __generated__/
 *.log
+.DS_Store

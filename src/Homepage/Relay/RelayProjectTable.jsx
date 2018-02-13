@@ -1,11 +1,11 @@
 import React from 'react';
 import { QueryRenderer } from 'react-relay';
-import { GQLHelper } from '../gqlHelper';
-import { getReduxStore } from '../reduxStore';
-import environment from '../environment';
-import { ProjectTable, ProjectTR } from './ProjectTable';
-import Spinner from '../components/Spinner';
-
+import { GQLHelper } from '../../gqlHelper';
+import getReduxStore from '../../reduxStore';
+import environment from '../../environment';
+import ProjectTable from '../Redux/ProjectTable';
+import ProjectTR from '../Redux/ProjectRow';
+import Spinner from '../../components/Spinner';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
@@ -20,7 +20,8 @@ const gqlHelper = GQLHelper.getGQLHelper();
  * Assumes higher level container injects the original undetailed list of projects.
  *
  */
-export class RelayProjectTable extends ProjectTable {
+class RelayProjectTable extends ProjectTable {
+  /* "class-methods-use-this": [<enabled>, { "exceptMethods": [<...rowRender>] }] */
   /**
    * Overrides rowRender in ProjectTable parent class to fetch row data via Relay QueryRender.
    *
@@ -42,9 +43,9 @@ export class RelayProjectTable extends ProjectTable {
           const { fileCount } = GQLHelper.extractFileInfo(props);
           const projInfo = {
             ...props.project[0],
-            experimentCount: props.experimentCount,
-            caseCount: props.caseCount,
-            aliquotCount: props.aliquotCount,
+            countOne: props.countOne,
+            countTwo: props.countTwo,
+            countThree: props.countThree,
             fileCount,
           };
 
@@ -52,24 +53,25 @@ export class RelayProjectTable extends ProjectTable {
           getReduxStore().then(
             (store) => {
               const homeState = store.getState().homepage || {};
-              let old = {}; // old data already in redux - only dispatch update if we have newer data
+              // old data already in redux - only dispatch update
+              // if we have newer data
+              let old = {};
               if (homeState.projectsByName) {
                 old = homeState.projectsByName[projInfo.name] || old;
               }
 
-              if (old.experimentCount !== projInfo.experimentCount
-                  || old.caseCount !== projInfo.caseCount
-                  || old.aliquotCount !== projInfo.aliquotCount
-                  || old.fileCount !== projInfo.aliquotCount
+              if (old.countOne !== projInfo.countOne
+                  || old.countTwo !== projInfo.countTwo
+                  || old.countThree !== projInfo.countThree
+                  || old.fileCount !== projInfo.fileCount
               ) {
                 store.dispatch({ type: 'RECEIVE_PROJECT_DETAIL', data: projInfo });
-              } /* else {
-                  console.log( projInfo.name + " already in Redux store" );
-                } */
+              }
             },
           ).catch(
             (err) => {
-              console.log('WARNING: failed to load redux store', err);
+              /* eslint no-console: ["error", { allow: ["error"] }] */
+              console.error('WARNING: failed to load redux store', err);
             },
           );
 
@@ -81,3 +83,5 @@ export class RelayProjectTable extends ProjectTable {
     />);
   }
 }
+
+export default RelayProjectTable;

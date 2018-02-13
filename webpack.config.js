@@ -14,6 +14,8 @@ const title = {
   acct: 'ACCOuNT Data Commons',
   gdc: 'Jamboree Data Access',
   bhc: 'Brain Commons',
+  gtex: 'GTEx & TOPMed Data Commons Submission Portal',
+  kf: 'Kids First Data Coordinating Center Portal',
 }[app];
 
 const plugins = [
@@ -47,7 +49,7 @@ if ( process.env.NODE_ENV !== 'dev' ) {
 }
 
 module.exports = {
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: ['babel-polyfill', './src/index.jsx'],
   exclude: '/node_modules/',
 
   output: {

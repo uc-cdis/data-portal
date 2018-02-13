@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
-import ProjectBarChart from './ProjectBarChart';
-import { sortCompare } from '../utils';
-import Translator from './translate';
+import ProjectBarChart from '../ProjectBarChart';
+import { sortCompare } from '../../utils';
+import Translator from '../translate';
 
 const tor = Translator.getTranslator();
 
@@ -13,9 +13,10 @@ const mapStateToProps = (state) => {
       .map(
         // Include 'studyCount' attribute for experiment vs study label support hack ...
         (proj) => {
-          proj.studyCount = proj.experimentCount;
-          proj[tor.translate('experimentCount')] = proj.experimentCount;
-          return proj;
+          const res = proj;
+          res.studyCount = res.experimentCount;
+          res[tor.translate('experimentCount')] = res.experimentCount;
+          return res;
         },
       );
     return { projectList };
@@ -24,7 +25,7 @@ const mapStateToProps = (state) => {
 };
 
 // Bar chart does not dispatch anything
-const mapDispatchToProps = function () { return {}; };
+const mapDispatchToProps = function mapDispatch() { return {}; };
 
 const ReduxProjectBarChart = connect(mapStateToProps, mapDispatchToProps)(ProjectBarChart);
 

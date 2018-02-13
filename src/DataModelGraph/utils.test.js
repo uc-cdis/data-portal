@@ -51,8 +51,8 @@ describe('the DataModelGraph utils helper', () => {
         expect(Array.isArray(node.position)).toBe(true);
         expect(node.position[0] > 0 && node.position[0] <= 1).toBe(true);
         expect(node.position[1] > 0 && node.position[1] <= 1).toBe(true);
-        expect(node.positionIndex[1]).toBe(name2Level[node.name]);
-        expect(treeLevel2Names[node.positionIndex[1]][node.positionIndex[0]]).toBe(node.name);
+        expect(node.positionIndex[1]).toBe(name2Level[node.id]);
+        expect(treeLevel2Names[node.positionIndex[1]][node.positionIndex[0]]).toBe(node.id);
       },
     );
   });

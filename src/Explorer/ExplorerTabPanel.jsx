@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { ExplorerTabs, ExplorerTab, ExplorerTabBox, ExplorerTabFrame } from './style';
 import { ExplorerTableComponent } from './ExplorerTable';
-
+import { capitalizeFirstLetter } from '../utils';
 
 class ExplorerTabPanel extends Component {
   static propTypes = {
@@ -42,9 +42,10 @@ class ExplorerTabPanel extends Component {
   updateOriginalPage() {
     return Object.keys(this.props.cursors).reduce(
       (d, it) => {
-        d[it] = ((this.props.cursors[it] - 1) / this.props.pageSize)
+        const res = d;
+        res[it] = ((this.props.cursors[it] - 1) / this.props.pageSize)
           - (((this.props.cursors[it] - 1) / this.props.pageSize) % this.props.pagesPerTab);
-        return d;
+        return res;
       }, {},
     );
   }
@@ -60,26 +61,26 @@ class ExplorerTabPanel extends Component {
         <ExplorerTabs>
           {
             Object.keys(this.props.filesMap).map(
-              (item, i) => (this.props.filesMap[item].length > 0) &&
+              item => (this.props.filesMap[item].length > 0) &&
               <ExplorerTab
-                key={i}
+                key={item}
                 active={(item === this.props.activeTab)}
                 onClick={
                   () => this.props.onTabChange({ activeTab: item })
                 }
               >
-                {item.replace('submitted_', '').replace(/_/g, ' ')}
+                {capitalizeFirstLetter(item)}
               </ExplorerTab>)
           }
         </ExplorerTabs>
         <ExplorerTabFrame>
           {
             Object.keys(this.props.filesMap).map(
-              (item, i) =>
+              item =>
                 (this.props.filesMap[item].length > 0)
-                && <ExplorerTabBox key={2 * i} active={(item === this.props.activeTab)}>
+                && <ExplorerTabBox key={`${item}-tab-box`} active={(item === this.props.activeTab)}>
                   <ExplorerTableComponent
-                    key={(2 * i) + 1}
+                    key={`${item}-tab-box`}
                     filesList={this.props.filesMap[item]}
                     name={item}
                     lastPageSize={this.props.lastPageSizes[item]}

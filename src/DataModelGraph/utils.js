@@ -26,7 +26,7 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
         count = props.counts_search[`_${key}_count`];
       }
       return {
-        name: key,
+        name: dictionary[key].title,
         count,
         ...dictionary[key],
       };
@@ -35,44 +35,51 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
     node => createAll || node.count !== 0,
   );
 
-  const nameToNode = nodes.reduce((db, node) => { db[node.name] = node; return db; }, {});
+  const nameToNode = nodes.reduce((db, node) => { db[node.id] = node; return db; }, {});
   const hideDb = nodesToHide.reduce((db, name) => { db[name] = true; return db; }, {});
 
   const edges = nodes.filter(
     node => node.links && node.links.length > 0,
-  ).reduce( // add each node's links to the edge list
-    (list, node) => {
-      const newLinks = node.links.map(
-        link => ({ source: node.name, target: link.target_type, exists: 1, ...link }),
-      );
-      return list.concat(newLinks);
-    }, [],
-  ).reduce( // add link subgroups to the edge list
-    (list, link) => {
-      let result = list;
-      if (link.target) { // "subgroup" link entries in dictionary are not links themselves ...
-        result.push(link);
-      }
-      if (link.subgroup) {
-        const sgLinks = link.subgroup.map(
-          it => ({ source: link.source, target: it.target_type, exists: 1, ...it }),
-        );
-        result = list.concat(sgLinks);
-      }
-      return result;
-    }, [],
-  ).filter(
-    // target type exist and is not in hide list
-    link => (link.target && nameToNode[link.target] && !hideDb[link.target]),
   )
+    .reduce( // add each node's links to the edge list
+      (list, node) => {
+        const newLinks = node.links.map(
+          link => ({ source: node, target: nameToNode[link.target_type], exists: 1, ...link }),
+        );
+        return list.concat(newLinks);
+      }, [])
+    .reduce( // add link subgroups to the edge list
+      (list, link) => {
+        let result = list;
+        if (link.target) { // "subgroup" link entries in dictionary are not links themselves ...
+          result.push(link);
+        }
+        if (link.subgroup) {
+          const sgLinks = link.subgroup.map(
+            it => ({
+              source: nameToNode[link.source.id],
+              target: nameToNode[it.target_type],
+              exists: 1,
+              ...it,
+            }),
+          );
+          result = result.concat(sgLinks);
+        }
+        return result;
+      }, [])
+    .filter(
+    // target type exist and is not in hide list
+      link => (link.target && link.target.id in nameToNode && !(link.target.id in hideDb)))
     .map(
       (link) => {
       // decorate each link with its "exists" count if available
       //  (number of instances of link between source and target types in the data)
-        link.exists = props.links_search ? props.links_search[`${link.source}_${link.name}_to_${link.target}_link`] : undefined;
-        return link;
-      },
-    )
+        const res = link;
+        res.exists = props.links_search
+          ? props.links_search[`${res.source.id}_${res.name}_to_${res.target.id}_link`] :
+          undefined;
+        return res;
+      })
     .filter(
     // filter out if no instances of this link exists and createAll is not specified
       link => createAll || link.exists || link.exists === undefined,
@@ -97,17 +104,17 @@ export function findRoot(nodes, edges) {
     (db, edge) => {
       // At some point the d3 force layout converts
       //   edge.source and edge.target into node references ...
-      const sourceName = typeof edge.source === 'object' ? edge.source.name : edge.source;
+      const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
       if (db[sourceName]) {
         db[sourceName] = false;
       }
       return db;
     },
     // initialize emptyDb - any node could be the root
-    nodes.reduce((emptyDb, node) => { emptyDb[node.name] = true; return emptyDb; }, {}),
+    nodes.reduce((emptyDb, node) => { const res = emptyDb; res[node.id] = true; return res; }, {}),
   );
-  const rootNode = nodes.find(n => couldBeRoot[n.name]);
-  return rootNode ? rootNode.name : null;
+  const rootNode = nodes.find(n => couldBeRoot[n.id]);
+  return rootNode ? rootNode.id : null;
 }
 
 /**
@@ -134,7 +141,7 @@ export function nodesBreadthFirst(nodes, edges) {
     (db, edge) => {
       // At some point the d3 force layout converts edge.source
       //   and edge.target into node references ...
-      const targetName = typeof edge.target === 'object' ? edge.target.name : edge.target;
+      const targetName = typeof edge.target === 'object' ? edge.target.id : edge.target;
       if (db[targetName]) {
         db[targetName].push(edge);
       } else {
@@ -143,7 +150,7 @@ export function nodesBreadthFirst(nodes, edges) {
       return db;
     },
     // initialize emptyDb - include nodes that have no incoming edges (leaves)
-    nodes.reduce((emptyDb, node) => { emptyDb[node.name] = []; return emptyDb; }, {}),
+    nodes.reduce((emptyDb, node) => { const res = emptyDb; res[node.id] = []; return res; }, {}),
   );
 
   // root node has no edges coming out of it, just edges coming in
@@ -176,7 +183,7 @@ export function nodesBreadthFirst(nodes, edges) {
       (edge) => {
         // At some point the d3 force layout converts edge.source
         //   and edge.target into node references ...
-        const sourceName = typeof edge.source === 'object' ? edge.source.name : edge.source;
+        const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
         if (name2EdgesIn[sourceName]) {
           if (!processedNodes.has(sourceName)) {
             //
@@ -212,7 +219,9 @@ export function nodesBreadthFirst(nodes, edges) {
 export function assignNodePositions(nodes, edges, opts) {
   const breadthFirstInfo = (opts && opts.breadthFirstInfo) ?
     opts.breadthFirstInfo : nodesBreadthFirst(nodes, edges);
-  const name2Node = nodes.reduce((db, node) => { db[node.name] = node; return db; }, {});
+  const name2Node = nodes.reduce((db, node) => {
+    const res = db; res[node.id] = node; return res;
+  }, {});
 
   // the tree has some number of levels with some number of nodes each,
   // but we may want to break each level down into multiple rows

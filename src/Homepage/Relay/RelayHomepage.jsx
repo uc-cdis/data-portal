@@ -1,11 +1,11 @@
 import React from 'react';
 import { QueryRenderer } from 'react-relay';
-import environment from '../environment';
-import { DashboardWith } from './ProjectDashboard';
-import { RelayProjectTable } from './RelayProjectTable';
-import { GQLHelper } from '../gqlHelper';
-import { getReduxStore } from '../reduxStore';
-import Spinner from '../components/Spinner';
+import environment from '../../environment';
+import { DashboardWith } from '../Redux/ParamProjectDashboard';
+import RelayProjectTable from './RelayProjectTable';
+import { GQLHelper } from '../../gqlHelper';
+import getReduxStore from '../../reduxStore';
+import Spinner from '../../components/Spinner';
 
 
 const gqlHelper = GQLHelper.getGQLHelper();
@@ -41,7 +41,8 @@ export class RelayProjectDashboard extends React.Component {
         return 'NOOP';
       },
       (err) => {
-        console.log('WARNING: failed to load redux store', err);
+        /* eslint no-console: ["error", { allow: ["error"] }] */
+        console.error('WARNING: failed to load redux store', err);
         return 'ERR';
       },
     );
@@ -59,14 +60,19 @@ export class RelayProjectDashboard extends React.Component {
     const projectList = (relayProps.projectList || []).map(
       proj =>
         // fill in missing properties
-        Object.assign({ name: 'unknown', experimentCount: 0, fileCount: 0, caseCount: 0, aliquotCount: 0 }, proj),
+        Object.assign({ name: 'unknown',
+          countOne: 0,
+          countTwo: 0,
+          countThree: 0,
+          fileCount: 0,
+        }, proj),
 
     );
     // console.log( "Got filecount: " + fileCount );
     const summaryCounts = {
-      caseCount: relayProps.caseCount,
-      experimentCount: relayProps.experimentCount,
-      aliquotCount: relayProps.aliquotCount,
+      countOne: relayProps.countOne,
+      countTwo: relayProps.countTwo,
+      countThree: relayProps.countThree,
       fileCount,
     };
     return {

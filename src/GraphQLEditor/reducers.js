@@ -1,4 +1,4 @@
-export const graphiql = (state = {}, action) => {
+const graphiql = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_SCHEMA_LOGIN':
     return { ...state, schema: action.schema };
@@ -6,3 +6,5 @@ export const graphiql = (state = {}, action) => {
     return state;
   }
 };
+
+export default graphiql;
