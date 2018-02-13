@@ -15,7 +15,7 @@ pipeline {
             echo "GIT_COMMIT is $env.GIT_COMMIT"
             script {
                 def helper = new uchicago.cdis.KubeHelper(this);
-                helper.deployBranch("portal-service");
+                //helper.deployBranch("portal-service");
             }
         }
     }
