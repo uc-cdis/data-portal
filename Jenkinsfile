@@ -15,14 +15,14 @@ pipeline {
             echo "GIT_COMMIT is $env.GIT_COMMIT"
             script {
                 def helper = new uchicago.cdis.KubeHelper(this);
-                helper.deployBranch("portal-service");
+                //helper.deployBranch("portal-service");
             }
         }
     }
   }
   post {
     success {
-      slackSend color: 'good', message: "https://jenkins.planx-pla.net/job/$env.JOB_NAME/\nuc-cdis/data-portal pipeline succeeded"
+      echo "https://jenkins.planx-pla.net/job/$env.JOB_NAME/\nuc-cdis/data-portal pipeline succeeded"
     }
     failure {
       slackSend color: 'bad', message: "https://jenkins.planx-pla.net/job/$env.JOB_NAME/\nuc-cdis/data-portal pipeline failed"
