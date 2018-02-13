@@ -21,7 +21,7 @@ class ProjectTR extends Component {
       <TableCell>{proj.countThree}
       </TableCell>
       <TableCell>
-        {(countNames[2] === 'File') ? proj.fileCount : proj.countThree}
+        {(countNames[2] === 'File') ? proj.fileCount : proj.countFour}
       </TableCell>
       <TableCell>
         {proj.name !== 'Totals:' ? <SubmitButton projName={proj.name} /> : ''}

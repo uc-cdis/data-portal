@@ -238,14 +238,14 @@ function buildConfig(opts) {
     countNames = [
       'Subject',
       'Study',
-      'Lab record',
       'Socio-demographic record',
+      'Lab record',
     ];
     countPluralNames = [
       'Subjects',
       'Studies',
-      'Lab records',
       'Socio-demographic records',
+      'Lab records',
     ];
   } else if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
