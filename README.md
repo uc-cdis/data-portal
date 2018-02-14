@@ -1,4 +1,5 @@
-# data-portal
+# Windmill data portal
+
 A generic data portal that supports some basic interaction with [gdcapi](https://github.com/uc-cdis/gdcapi/) and [user-api](https://github.com/uc-cdis/user-api).
 
 ## Get Started
