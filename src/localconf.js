@@ -87,11 +87,11 @@ function buildConfig(opts) {
     appname = 'NIH Data Commons Consortium Pilot Phase\nGTEx & TOPMed Data Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
-      { icon: 'collections', link: 'https://gtex.bionimbus.org/dcp', color: '#a2a2a2', name: 'exploration' },
+      { icon: 'collections', link: 'https://dcp.bionimbus.org/dcp', color: '#a2a2a2', name: 'exploration' },
       { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
-      { icon: 'dvr', link: 'https://gtex.bionimbus.org/jupyter', color: '#a2a2a2', name: 'workspace' },
+      { icon: 'dvr', link: 'https://dcp.bionimbus.org/jupyter', color: '#a2a2a2', name: 'workspace' },
     ];
     countNames = [
       'Case',
