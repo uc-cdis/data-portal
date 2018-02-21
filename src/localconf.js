@@ -215,10 +215,10 @@ function buildConfig(opts) {
     appname = 'GenoMEL Data Commons Portal';
     const userapiPathOut = 'https://login.bionimbus.org/';
     credentialCdisPath = `${userapiPath}credentials/cdis/`;
-    login = {
-      url: `${userapiPathOut}login/shib?redirect=`,
-      title: 'Login from NIH',
-    };
+    // login = {
+    //   url: `${userapiPathOut}login/shib?redirect=`,
+    //   title: 'Login from NIH',
+    // };
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
       { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
