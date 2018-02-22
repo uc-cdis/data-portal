@@ -6,38 +6,38 @@ const helperSingleton = {
    * Fetch the initial list of projects and global node counts
    */
   homepageQuery: graphql`query gqlHelperHomepageQuery {
-        projectList: project(first: 10000) {
-          name: project_id
-          code
-        }
-        countOne: _case_count
-        countTwo:  _sample_count
-        countThree: _aliquot_count
-        {% for fType in fileTypeList %}
-            fileCount{{ loop.index }}: _{{ fType }}_count
-        {% endfor %}
-    }`,
+    projectList: project(first: 10000) {
+      name: project_id
+      code
+    }
+    countOne: _case_count
+    countTwo:  _sample_count
+    countThree: _aliquot_count
+    {% for fType in fileTypeList %}
+      fileCount{{ loop.index }}: _{{ fType }}_count
+    {% endfor %}
+  }`,
 
-    projectDetailQuery: graphql`query gqlHelperProjectDetailQuery( $name: [String] ) {
-        project( project_id:$name ) {
-          name: project_id
-          code
-        }
-        countOne: _case_count( project_id:$name )
-        countTwo: _sample_count( project_id:$name )
-        countThree: _aliquot_count( project_id:$name )
-        {% for fType in fileTypeList %}
-            fileCount{{ loop.index }}: _{{ fType }}_count( project_id:$name )
-        {% endfor %}
-    }`,
+  projectDetailQuery: graphql`query gqlHelperProjectDetailQuery( $name: [String] ) {
+    project( project_id:$name ) {
+      name: project_id
+      code
+    }
+    countOne: _case_count( project_id:$name )
+    countTwo: _sample_count( project_id:$name )
+    countThree: _aliquot_count( project_id:$name )
+    {% for fType in fileTypeList %}
+      fileCount{{ loop.index }}: _{{ fType }}_count( project_id:$name )
+    {% endfor %}
+  }`,
 
-    explorerPageQuery: graphql`query gqlHelperExplorerPageQuery{
-        viewer {
-            ...gqlHelperExplorerFragment
-        }
-    }`,
+  explorerPageQuery: graphql`query gqlHelperExplorerPageQuery{
+    viewer {
+      ...gqlHelperExplorerFragment
+    }
+  }`,
 
-    explorerPageFragment: graphql`
+  explorerPageFragment: graphql`
     fragment gqlHelperExplorerFragment on viewer
     @argumentDefinitions(
       {% for fType in fileTypeList %}firstValue_{{ fType }}: {type: "Int", defaultValue: 100},

@@ -226,6 +226,18 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
     ];
+    countNames = [
+      'Case',
+      'Sample',
+      'Aliquot',
+      'File',
+    ];
+    countPluralNames = [
+      'Cases',
+      'Samples',
+      'Aliquots',
+      'Files',
+    ];
   } else if (app === 'ndh') {
     appname = 'Genomic Data Commons Portal';
     navItems = [
