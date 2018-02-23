@@ -57,7 +57,7 @@ const deleteKey = (jti, exp, keypairsApi) =>
     .then(
       ({ status, data }) => {
         switch (status) {
-        case 202:
+        case 204:
           dispatch({
             type: 'DELETE_KEY_SUCCEED',
           });
