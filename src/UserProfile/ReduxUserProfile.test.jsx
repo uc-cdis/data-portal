@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import { mount } from 'enzyme';
 
-import ReduxUserProfile, { createKey } from './ReduxUserProfile';
+import ReduxUserProfile, { createKey, deleteKey } from './ReduxUserProfile';
 import { RequestButton } from './UserProfile';
 
 const middleware = [thunk];
@@ -151,4 +151,41 @@ describe('the userProfile component', () => {
         expect(store.getActions()).toEqual(expectedActions);
       });
   });
+
+
+  it('can delete key', () => {
+    const jti = 'f8733984-8164-4689-9c25-56707962d7e0'
+    const exp = 1459487258
+    const keypairsApi ='test.com/action=delete'
+
+    const state = {
+      user: { project_access: [] },
+      status: {},
+      userProfile: { jtis: [] },
+      popups: {},
+    };
+
+    const store = mockStore(state);
+
+    const expectedPopup = { deleteTokenPopup: false };
+    const expectedActions = [
+      {
+        type: 'DELETE_KEY_SUCCEED',
+      },
+      {
+        type: 'CLEAR_DELETE_KEY_SESSION',
+      },
+      {
+        data: expectedPopup,
+        type: 'UPDATE_POPUP',
+      },
+    ];
+
+    fetch.mockResponseOnce(JSON.stringify(''), { status: 204 });
+    return store.dispatch(deleteKey(jti, exp, keypairsApi))
+      .then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+  });
+
 });
