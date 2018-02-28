@@ -215,16 +215,28 @@ function buildConfig(opts) {
     appname = 'GenoMEL Data Commons Portal';
     const userapiPathOut = 'https://login.bionimbus.org/';
     credentialCdisPath = `${userapiPath}credentials/cdis/`;
-    login = {
-      url: `${userapiPathOut}login/shib?redirect=`,
-      title: 'Login from NIH',
-    };
+    // login = {
+    //   url: `${userapiPathOut}login/shib?redirect=`,
+    //   title: 'Login from NIH',
+    // };
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
       { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
+    ];
+    countNames = [
+      'Case',
+      'Sample',
+      'Aliquot',
+      'File',
+    ];
+    countPluralNames = [
+      'Cases',
+      'Samples',
+      'Aliquots',
+      'Files',
     ];
   } else if (app === 'ndh') {
     appname = 'NIAID Data Hub Portal';
