@@ -42,7 +42,7 @@ class RelayProjectTable extends ProjectTable {
           // Pull project data out of Relayjs graphql results passed to render via 'props'
           const { fileCount } = GQLHelper.extractFileInfo(props);
           if (!props.countFour) {
-            props.countFour = 0
+            props.countFour = 0;
           }
           const projInfo = {
             ...props.project[0],
