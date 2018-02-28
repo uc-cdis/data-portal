@@ -15,7 +15,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     && curl -sL https://deb.nodesource.com/setup_8.x | bash - \ 
     && apt-get install -y --no-install-recommends nodejs \
-    && npm install webpack -g \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
@@ -30,7 +29,7 @@ RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}
     && /bin/rm -rf node_modules \
     && npm install \
     && npm run relay \
-    && NODE_ENV=production webpack --bail \
+    && NODE_ENV=production ./node_modules/.bin/webpack --bail \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
 CMD bash ./dockerStart.sh

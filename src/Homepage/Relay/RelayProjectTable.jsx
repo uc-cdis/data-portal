@@ -46,6 +46,7 @@ class RelayProjectTable extends ProjectTable {
             countOne: props.countOne,
             countTwo: props.countTwo,
             countThree: props.countThree,
+            countFour: props.countFour,
             fileCount,
           };
 
@@ -63,6 +64,7 @@ class RelayProjectTable extends ProjectTable {
               if (old.countOne !== projInfo.countOne
                   || old.countTwo !== projInfo.countTwo
                   || old.countThree !== projInfo.countThree
+                  || old.countFour !== projInfo.countFour
                   || old.fileCount !== projInfo.fileCount
               ) {
                 store.dispatch({ type: 'RECEIVE_PROJECT_DETAIL', data: projInfo });

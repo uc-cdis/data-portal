@@ -63,7 +63,7 @@ function buildConfig(opts) {
   const requiredCerts = [];
 
   if (app === 'bpa') {
-    appname = 'BPA Metadata Submission Portal';
+    appname = 'BloodPAC Metadata Submission Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
       { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
@@ -87,11 +87,11 @@ function buildConfig(opts) {
     appname = 'NIH Data Commons Consortium Pilot Phase\nGTEx & TOPMed Data Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
-      { icon: 'collections', link: 'https://gtex.bionimbus.org/dcp', color: '#a2a2a2', name: 'exploration' },
+      { icon: 'collections', link: 'https://dcp.bionimbus.org/dcp', color: '#a2a2a2', name: 'exploration' },
       { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
-      { icon: 'dvr', link: 'https://gtex.bionimbus.org/jupyter', color: '#a2a2a2', name: 'workspace' },
+      { icon: 'dvr', link: 'https://dcp.bionimbus.org/jupyter', color: '#a2a2a2', name: 'workspace' },
     ];
     countNames = [
       'Case',
@@ -215,10 +215,10 @@ function buildConfig(opts) {
     appname = 'GenoMEL Data Commons Portal';
     const userapiPathOut = 'https://login.bionimbus.org/';
     credentialCdisPath = `${userapiPath}credentials/cdis/`;
-    login = {
-      url: `${userapiPathOut}login/shib?redirect=`,
-      title: 'Login from NIH',
-    };
+    // login = {
+    //   url: `${userapiPathOut}login/shib?redirect=`,
+    //   title: 'Login from NIH',
+    // };
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
       { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
@@ -226,8 +226,20 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
     ];
+    countNames = [
+      'Case',
+      'Sample',
+      'Aliquot',
+      'File',
+    ];
+    countPluralNames = [
+      'Cases',
+      'Samples',
+      'Aliquots',
+      'Files',
+    ];
   } else if (app === 'ndh') {
-    appname = 'Genomic Data Commons Portal';
+    appname = 'NIAID Data Hub Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
       { icon: 'search', link: '/query', color: '#daa5Z20', name: 'query' },
@@ -236,16 +248,16 @@ function buildConfig(opts) {
       { icon: 'content_copy', link: 'https://ndh-portal.bionimbus.org', color: '#a2a2a2', name: 'data' },
     ];
     countNames = [
-      'Case',
+      'Subject',
       'Study',
-      'Lab record',
       'Socio-demographic record',
+      'Lab record',
     ];
     countPluralNames = [
-      'Cases',
+      'Subjects',
       'Studies',
-      'Lab records',
       'Socio-demographic records',
+      'Lab records',
     ];
   } else if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
