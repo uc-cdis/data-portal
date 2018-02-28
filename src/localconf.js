@@ -227,7 +227,7 @@ function buildConfig(opts) {
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
     ];
   } else if (app === 'ndh') {
-    appname = 'Genomic Data Commons Portal';
+    appname = 'NIAID Data Hub Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
       { icon: 'search', link: '/query', color: '#daa5Z20', name: 'query' },
