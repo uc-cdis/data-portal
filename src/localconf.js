@@ -63,7 +63,7 @@ function buildConfig(opts) {
   const requiredCerts = [];
 
   if (app === 'bpa') {
-    appname = 'BPA Metadata Submission Portal';
+    appname = 'BloodPAC Metadata Submission Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
       { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
