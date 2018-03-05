@@ -35,6 +35,7 @@ function buildConfig(opts) {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',
   };
+  const loginPath = `${userapiPath}login/`;
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
   // let credentialPath = `${hostname}middleware/aws/v0/access_key/`;
 
@@ -326,6 +327,7 @@ function buildConfig(opts) {
     dashboardIcons,
     localTheme,
     login,
+    loginPath,
     requiredCerts,
     buildConfig,
   };
