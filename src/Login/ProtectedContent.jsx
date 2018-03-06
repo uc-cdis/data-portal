@@ -119,8 +119,9 @@ class ProtectedContent extends React.Component {
                 : Promise.resolve('ok');
               // finally update the component state
               const finish = () => {
-                this.setState(newState);
-                this.setState({ dataLoaded: true });
+                const latestState = Object.assign({}, newState);
+                latestState.dataLoaded = true;
+                this.setState(latestState);
               };
               return filterPromise.then(
                 finish, finish,
@@ -138,8 +139,9 @@ class ProtectedContent extends React.Component {
             : Promise.resolve('ok');
           // finally update the component state
           const finish = () => {
-            this.setState(store);
-            this.setState({ dataLoaded: true });
+            const latestState = Object.assign({}, store);
+            latestState.dataLoaded = true;
+            this.setState(latestState);
           };
           return filterPromise.then(
             finish, finish,

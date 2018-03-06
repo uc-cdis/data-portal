@@ -144,13 +144,13 @@ function buildConfig(opts) {
       { icon: 'content_copy', link: '/files', color: '#A51C30', name: 'data' },
     ];
     countNames = [
-      'Case',
+      'Participant',
       'Trio',
       'File',
       'Aliquot',
     ];
     countPluralNames = [
-      'Cases',
+      'Participants',
       'Trios',
       'Files',
       'Aliquots',
