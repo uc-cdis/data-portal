@@ -8,6 +8,7 @@ import queryNodes from './QueryNode/reducers';
 import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import explorer from './Explorer/reducers';
+import login from './Login/reducers';
 import { logoutListener } from './Login/ProtectedContent';
 
 const status = (state = {}, action) => {
@@ -57,6 +58,7 @@ const reducers = combineReducers({ explorer,
   userProfile,
   certificate,
   graphiql,
+  login,
   form: formReducer,
   auth: logoutListener,
 });

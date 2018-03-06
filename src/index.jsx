@@ -9,7 +9,7 @@ import 'react-select/dist/react-select.css';
 import querystring from 'querystring';
 
 import { fetchUser, fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
-import Login from './Login/Login';
+import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 import AmbiHomepage from './Homepage/AmbiHomepage';
 import ExplorerPage from './Explorer/ExplorerPage';
@@ -64,7 +64,21 @@ async function init() {
               <Box background={background}>
                 <Nav />
                 <Switch>
-                  <Route path="/login" component={Login} />
+                  <Route
+                    path="/login"
+                    component={
+                      (
+                        props => (
+                          <ProtectedContent
+                            public
+                            filter={() => store.dispatch(fetchLogin())}
+                            component={ReduxLogin}
+                            {...props}
+                          />
+                        )
+                      )
+                    }
+                  />
                   <Route
                     exact
                     path="/"

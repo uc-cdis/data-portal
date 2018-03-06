@@ -88,10 +88,10 @@ class ProtectedContent extends React.Component {
     super(props, context);
     this.state = {
       authenticated: false,
+      dataLoaded: false,
       redirectTo: null,
     };
   }
-
 
   /**
    * We start out in an unauthenticatd state - after mount do
@@ -108,16 +108,43 @@ class ProtectedContent extends React.Component {
               store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
             ],
           ).then(
-            () => this.checkLoginStatus(store)
+            () => this.checkLoginStatus(store, this.state)
               .then(newState => this.checkQuizStatus(newState))
               .then(newState => this.checkApiToken(store, newState)),
           ).then(
             (newState) => {
-              const filterPromise = (newState.authenticated && typeof this.props.filter === 'function') ? this.props.filter() : Promise.resolve('ok');
-              const finish = () => this.setState(newState); // finally update the component state
-              return filterPromise.then(finish, finish);
+              const filterPromise = (newState.authenticated
+                && typeof this.props.filter === 'function')
+                ? this.props.filter()
+                : Promise.resolve('ok');
+              // finally update the component state
+              const finish = () => {
+                this.setState(newState);
+                this.setState({ dataLoaded: true });
+              };
+              return filterPromise.then(
+                finish, finish,
+              );
             },
           ),
+      );
+    }
+    else {
+      getReduxStore().then(
+        (store) => {
+          const filterPromise = (
+            typeof this.props.filter === 'function')
+            ? this.props.filter()
+            : Promise.resolve('ok');
+          // finally update the component state
+          const finish = () => {
+            this.setState(store);
+            this.setState({ dataLoaded: true });
+          };
+          return filterPromise.then(
+            finish, finish,
+          );
+        },
       );
     }
   }
@@ -127,15 +154,15 @@ class ProtectedContent extends React.Component {
    * Check if the user is logged in, and update state accordingly.
    * @method checkLoginStatus
    * @param {ReduxStore} store
+   * @param {ReduxStore} initialState
    * @return Promise<{redirectTo, authenticated, user}>
    */
-  checkLoginStatus = (store) => {
+  checkLoginStatus = (store, initialState) => {
+    const newState = Object.assign({}, initialState);
     const nowMs = Date.now();
-    const newState = {
-      authenticated: true,
-      redirectTo: null,
-      user: store.getState().user,
-    };
+    newState.authenticated = true;
+    newState.redirectTo = null;
+    newState.user = store.getState().user;
 
     if (nowMs - lastAuthMs < 60000) {
       // assume we're still logged in after 1 minute ...
@@ -273,16 +300,22 @@ class ProtectedContent extends React.Component {
     window.scrollTo(0, 0);
     if (this.state.redirectTo) {
       return (<Redirect to={this.state.redirectTo} />);
-    } else if (this.props.public) {
+    } else if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
         <Body {...this.props}>
           <Component params={params} location={this.props.location} history={this.props.history} />
         </Body>
       );
-    } else if (this.state.authenticated) {
+    } else if (!this.props.public && this.state.authenticated) {
       return (
         <Body {...this.props}>
           <ReduxAuthTimeoutPopup />
+          <Component params={params} location={this.props.location} history={this.props.history} />
+        </Body>
+      );
+    } else if (this.props.public && this.state.dataLoaded) {
+      return (
+        <Body {...this.props}>
           <Component params={params} location={this.props.location} history={this.props.history} />
         </Body>
       );
