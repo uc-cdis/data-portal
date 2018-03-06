@@ -26,15 +26,12 @@ const DashTopDiv = styled.div`
  *
  *   ];
  */
-class ProjectDashboard extends Component {
+class LittleProjectDashboard extends Component {
   render() {
     return (
       <DashTopDiv>
         <CountCard
-          count1={this.props.summaries[0]}
-          count2={this.props.summaries[1]}
-          count3={this.props.summaries[2]}
-          count4={this.props.summaries[3]}
+          countItems={this.props.summaries}
           icons={this.props.icons}
         />
         <ReduxProjectBarChart projectList={this.props.projectList} />
@@ -44,14 +41,14 @@ class ProjectDashboard extends Component {
 }
 
 
-ProjectDashboard.propTypes = {
+LittleProjectDashboard.propTypes = {
   summaries: PropTypes.arrayOf(PropTypes.object).isRequired,
   projectList: PropTypes.array.isRequired,
   icons: PropTypes.array,
 };
 
-ProjectDashboard.defaultProps = {
+LittleProjectDashboard.defaultProps = {
   icons: [],
 };
 
-export default ProjectDashboard;
+export default LittleProjectDashboard;

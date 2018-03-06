@@ -3,13 +3,15 @@
  * to which application specific variables are applied.
  */
 
-const nunjucks = require('nunjucks');
 const fs = require('fs');
-// const conf = require("../src/localconf.js" );
+const path = require('path');
+const nunjucks = require('nunjucks');
 const helper = require('./dictionaryHelper.js');
+const utils = require('./utils.js');
 
 const dataFolder = __dirname;
 const dictPath = `${dataFolder}/dictionary.json`;
+const paramPath = `${path.join(__dirname, '../src/parameters.json')}`;
 const templateName = 'gqlHelper.js.njk';
 
 
@@ -23,18 +25,33 @@ if (!fs.existsSync(dictPath)) {
   process.exit(2);
 }
 
-const dict = helper.loadJsonFile(dictPath);
+const dict = utils.loadJsonFile(dictPath);
 if (dict.status !== 'ok') {
   console.error(`Error loading dictionary at ${dictPath}`, dict.error);
   process.exit(3);
 }
 
-const gqlSetup = helper.dictToGQLSetup(dict.data);
+let gqlSetup = helper.dictToGQLSetup(dict.data);
 
 if (!gqlSetup) {
   console.error('ERR: unable to interpret data/dictionary.json - baling out');
   process.exit(4);
 }
+
+const params = utils.loadJsonFile(paramPath);
+if (params.status !== 'ok') {
+  console.error(`Error loading parameters file at ${paramPath}`, params.error);
+  process.exit(3);
+}
+
+const paramGQLSetup = helper.paramToGQLSetup(params.data);
+if (!paramGQLSetup) {
+  console.error('ERR: unable to interpret src/parameters.json - baling out');
+  process.exit(4);
+}
+
+gqlSetup = Object.assign(paramGQLSetup, gqlSetup);
+console.error(gqlSetup);
 
 if (process.argv.length > 2 && process.argv[2].match(/^-+h(elp)?$/)) {
   console.log(`
@@ -47,4 +64,3 @@ if (process.argv.length > 2 && process.argv[2].match(/^-+h(elp)?$/)) {
   nunjucks.configure(dataFolder, { autoescape: false });
   console.log(nunjucks.render(templateName, gqlSetup));
 }
-

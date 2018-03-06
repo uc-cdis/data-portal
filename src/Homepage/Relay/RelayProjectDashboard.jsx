@@ -20,14 +20,15 @@ const DashboardWithRelayTable = DashboardWith(RelayProjectTable);
  * @see https://medium.com/@ven_korolyov/relay-modern-refetch-container-c886296448c7
  * @see https://facebook.github.io/relay/docs/query-renderer.html
  */
-export class RelayProjectDashboard extends React.Component {
+class RelayProjectDashboard extends React.Component {
   /**
    * Update Redux with the project data from Relay if necessary.
    * The ReduxProjectBarChart renders a graph with project-details
    * as data flows into redux from Relay (RelayProjectTable supplements
    * redux with per-project details).
    *
-   * @param {Array<Proj>} projectList
+   * @param {Array<proj>} projectList
+   * @param {Array<counts>} summaryCounts
    */
   static async updateRedux({ projectList, summaryCounts }) {
     // Update redux store if data is not already there
@@ -61,22 +62,19 @@ export class RelayProjectDashboard extends React.Component {
       proj =>
         // fill in missing properties
         Object.assign({ name: 'unknown',
-          countOne: 0,
-          countTwo: 0,
-          countThree: 0,
-          countFour: 0,
-          fileCount: 0,
+          counts: [0, 0, 0, 0],
+          charts: [0, 0],
         }, proj),
 
     );
     // console.log( "Got filecount: " + fileCount );
-    const summaryCounts = {
-      countOne: relayProps.countOne,
-      countTwo: relayProps.countTwo,
-      countThree: relayProps.countThree,
-      countFour: relayProps.countFour,
-      fileCount,
-    };
+    let summaryCounts = Object.keys(relayProps).filter(
+      key => key.indexOf('count') === 0).map(key => key).sort()
+      .map(key => relayProps[key],
+      );
+    if (summaryCounts.length < 4) {
+      summaryCounts = [...summaryCounts, fileCount];
+    }
     return {
       projectList,
       summaryCounts,
@@ -113,12 +111,8 @@ export class RelayProjectDashboard extends React.Component {
   }
 }
 
-
-const RelayHomepage = RelayProjectDashboard;
-
-
 /**
  * Relay (graphql injected) wrapped homepage
  */
-export default RelayHomepage;
+export default RelayProjectDashboard;
 

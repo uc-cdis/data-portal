@@ -7,7 +7,7 @@ import ProjectTable from './ProjectTable';
 const mapStateToProps = (state) => {
   if (state.homepage && state.homepage.projectsByName) {
     const projectList = Object.values(state.homepage.projectsByName);
-    const summaryCounts = Object.assign({}, state.homepage.summaryCounts || {});
+    const summaryCounts = Object.assign([], state.homepage.summaryCounts || []);
     return { projectList, summaryCounts };
   }
   return {};

@@ -68,7 +68,7 @@ const ReduxSubmitTSV = (() => {
       dispatch(submitToServer(project))
         .then(
           () => {
-            // Update node counts in redux
+            // Update node countItems in redux
             dispatch(getCounts(type, project, dictionary));
           }),
     onFileChange: value => dispatch(updateFileContent(value)),

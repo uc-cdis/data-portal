@@ -21,11 +21,9 @@ const helperSingleton = {
       name: project_id
       code
     }
-    countOne: _case_count
-    countTwo:  _experiment_count
-    countThree: _aliquot_count
-    {% for fType in fileTypeList %}
-      fileCount{{ loop.index }}: _{{ fType }}_count
+    {% for count in boardCounts %}count{{ loop.index }}: {{ count }}
+    {% endfor %}
+    {% for fType in fileTypeList %}fileCount{{ loop.index }}: _{{ fType }}_count
     {% endfor %}
   }`,
 
@@ -34,11 +32,11 @@ const helperSingleton = {
       name: project_id
       code
     }
-    countOne: _case_count( project_id:$name )
-    countTwo: _experiment_count( project_id:$name )
-    countThree: _aliquot_count( project_id:$name )
-    {% for fType in fileTypeList %}
-      fileCount{{ loop.index }}: _{{ fType }}_count( project_id:$name )
+    {% for count in projectDetails %}count{{ loop.index }}: {{ count }}( project_id:$name )
+    {% endfor %}
+    {% for chart in chartCounts %}chart{{ loop.index }}: {{ chart }}( project_id:$name )
+    {% endfor %}
+    {% for fType in fileTypeList %}fileCount{{ loop.index }}: _{{ fType }}_count( project_id:$name )
     {% endfor %}
   }`,
 

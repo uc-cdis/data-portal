@@ -313,7 +313,7 @@ UserProfile.propTypes = {
   user: PropTypes.object.isRequired,
   userProfile: PropTypes.object.isRequired,
   popups: PropTypes.object.isRequired,
-  submission: PropTypes.object.isRequired,
+  submission: PropTypes.object,
   onClearCreationSession: PropTypes.func.isRequired,
   onCreateKey: PropTypes.func.isRequired,
   onUpdatePopup: PropTypes.func.isRequired,
@@ -322,5 +322,8 @@ UserProfile.propTypes = {
   onClearDeleteSession: PropTypes.func.isRequired,
 };
 
+UserProfile.defaultProps = {
+  submission: {},
+};
 
 export default UserProfile;

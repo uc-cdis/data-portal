@@ -11116,7 +11116,7 @@ export const dict = {
     $schema: 'http://json-schema.org/draft-04/schema#',
     additionalProperties: false,
     category: 'notation',
-    description: 'Information pertaining to processed results obtained from slides; often in the form of counts.\n',
+    description: 'Information pertaining to processed results obtained from slides; often in the form of countItems.\n',
     id: 'slide_count',
     links: [
       {

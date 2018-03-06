@@ -1,3 +1,19 @@
+import { paramByApp } from '../data/dictionaryHelper';
+
+const params = require('./parameters');
+
+function paramToNames(p) {
+  const countsAndDetails = paramByApp(p);
+  const boardPluralNames = countsAndDetails.boardCounts.map(item => item.plural);
+  if (boardPluralNames.length < 4) { boardPluralNames.push('Files'); }
+  const detailPluralNames = countsAndDetails.projectDetails.map(item => item.plural);
+  if (detailPluralNames.length < 4) { detailPluralNames.push('Files'); }
+  return {
+    boardPluralNames,
+    chartNames: countsAndDetails.chartCounts.map(item => item.name),
+    detailPluralNames,
+  };
+}
 
 /**
  * Setup configuration variables based on the "app" the data-portal is
@@ -41,8 +57,6 @@ function buildConfig(opts) {
 
   let appname = 'Unasigned';
   let navItems = [];
-  let countNames = [];
-  let countPluralNames = [];
   let dashboardIcons = [
     'account_circle',
     'receipt',
@@ -62,6 +76,7 @@ function buildConfig(opts) {
     tableBarColor: '#7d7474',
   };
   const requiredCerts = [];
+  const homepageParams = paramToNames(params);
 
   if (app === 'bpa') {
     appname = 'BloodPAC Metadata Submission Portal';
@@ -71,18 +86,6 @@ function buildConfig(opts) {
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
-    ];
-    countNames = [
-      'Case',
-      'Study',
-      'Aliquot',
-      'File',
-    ];
-    countPluralNames = [
-      'Cases',
-      'Studies',
-      'Aliquots',
-      'Files',
     ];
   } else if (app === 'gtex') {
     appname = 'NIH Data Commons Consortium Pilot Phase\nGTEx & TOPMed Data Portal';
@@ -94,18 +97,6 @@ function buildConfig(opts) {
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
       { icon: 'dvr', link: 'https://dcp.bionimbus.org/jupyter', color: '#a2a2a2', name: 'workspace' },
     ];
-    countNames = [
-      'Case',
-      'Study',
-      'Aliquot',
-      'File',
-    ];
-    countPluralNames = [
-      'Cases',
-      'Studies',
-      'Aliquots',
-      'Files',
-    ];
   } else if (app === 'edc') {
     appname = 'Environmental Data Commons Portal';
     navItems = [
@@ -115,18 +106,6 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
       { icon: 'dvr', link: 'https://portal.occ-data.org/jup', color: '#a2a2a2', name: 'workspace' },
-    ];
-    countNames = [
-      'Satellite',
-      'Radar',
-      'Weather station',
-      'File',
-    ];
-    countPluralNames = [
-      'Satellites',
-      'Radars',
-      'Weather stations',
-      'Files',
     ];
     dashboardIcons = [
       'satellite',
@@ -142,18 +121,6 @@ function buildConfig(opts) {
       { icon: 'class', link: '/DD', color: '#A51C30', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#2D728F', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#A51C30', name: 'data' },
-    ];
-    countNames = [
-      'Participant',
-      'Family relationship',
-      'Aliquot',
-      'File',
-    ];
-    countPluralNames = [
-      'Participants',
-      'Family relationships',
-      'Aliquots',
-      'Files',
     ];
     localTheme = {
       'barGraph.lineColor': '#DFDFDF',
@@ -178,18 +145,6 @@ function buildConfig(opts) {
       { icon: 'content_copy', link: '/files', color: '#A51C30', name: 'data' },
       { icon: 'dvr', link: 'https://data.braincommons.org/workspace', color: '#a2a2a2', name: 'workspace' },
       { icon: 'dvr', link: 'https://demo.braincommons.org/', color: '#a2a2a2', name: 'demo' },
-    ];
-    countNames = [
-      'Case',
-      'Study',
-      'Aliquot',
-      'File',
-    ];
-    countPluralNames = [
-      'Cases',
-      'Studies',
-      'Aliquots',
-      'Files',
     ];
     localTheme = {
       'barGraph.lineColor': '#666666',
@@ -227,18 +182,6 @@ function buildConfig(opts) {
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
     ];
-    countNames = [
-      'Case',
-      'Sample',
-      'Family',
-      'File',
-    ];
-    countPluralNames = [
-      'Cases',
-      'Samples',
-      'Families',
-      'Files',
-    ];
   } else if (app === 'ndh') {
     appname = 'NIAID Data Hub Portal';
     navItems = [
@@ -247,18 +190,6 @@ function buildConfig(opts) {
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: 'https://ndh-portal.bionimbus.org', color: '#a2a2a2', name: 'data' },
-    ];
-    countNames = [
-      'Subject',
-      'Study',
-      'Socio-demographic record',
-      'Lab record',
-    ];
-    countPluralNames = [
-      'Subjects',
-      'Studies',
-      'Socio-demographic records',
-      'Lab records',
     ];
   } else if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
@@ -272,18 +203,6 @@ function buildConfig(opts) {
       url: 'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',
       title: 'Login from NIH',
     };
-    countNames = [
-      'Case',
-      'Study',
-      'Aliquot',
-      'File',
-    ];
-    countPluralNames = [
-      'Cases',
-      'Studies',
-      'Aliquots',
-      'Files',
-    ];
   } else {
     appname = 'Generic Data Commons Portal';
     navItems = [
@@ -292,18 +211,6 @@ function buildConfig(opts) {
       { icon: 'class', link: '/DD', color: '#1d3674', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#1d3674', name: 'data' },
-    ];
-    countNames = [
-      'Case',
-      'Experiment',
-      'Aliquot',
-      'File',
-    ];
-    countPluralNames = [
-      'Cases',
-      'Experiments',
-      'Aliquots',
-      'Files',
     ];
   }
 
@@ -322,8 +229,9 @@ function buildConfig(opts) {
     graphqlSchemaUrl,
     appname,
     navItems,
-    countNames,
-    countPluralNames,
+    boardPluralNames: homepageParams.boardPluralNames,
+    chartNames: homepageParams.chartNames,
+    detailPluralNames: homepageParams.detailPluralNames,
     dashboardIcons,
     localTheme,
     login,

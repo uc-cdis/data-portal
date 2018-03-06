@@ -1,28 +1,25 @@
-import { RelayProjectDashboard } from './RelayHomepage';
+import RelayProjectDashboard from './RelayProjectDashboard';
 
 
-describe('RelayHomepage dashboard wrapper', () => {
+describe('RelayProjectDashboard dashboard wrapper', () => {
   it('translates Relay container properties to component properties', () => {
     const relayProps = {
       projectList: [
         { name: 'Fred', experimentCount: 2 },
         { name: 'Mary', experimentCount: 3 },
       ],
-      countOne: 20,
-      countTwo: 25,
+      count1: 20,
+      count2: 25,
+      count3: 35,
       fileCount1: 10,
       fileCount2: 20,
       fileCount3: 30,
-      countThree: 35,
     };
 
     const { summaryCounts, projectList } = RelayProjectDashboard.transformRelayProps(relayProps);
     expect(typeof summaryCounts).toBe('object');
     expect(Array.isArray(projectList)).toBe(true);
-    expect(summaryCounts.countThree).toBe(35);
-    expect(summaryCounts.fileCount).toBe(60);
-    expect(summaryCounts.countOne).toBe(20);
-    expect(summaryCounts.countTwo).toBe(25);
+    expect(summaryCounts).toEqual([20, 25, 35, 60]);
     expect(projectList.length).toBe(2);
   });
 

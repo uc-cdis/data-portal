@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { countNames, countPluralNames } from '../../localconf';
 import { Table, TableHead, TableRow, TableColLabel } from '../style';
 import ProjectTR from './ProjectRow';
 
@@ -28,19 +27,7 @@ class ProjectTable extends React.Component {
     const projectList = (this.props.projectList || []).sort(
       (a, b) => compare(a, b),
     );
-    const sum = (key) => {
-      projectList.map(it => it[key]).reduce((acc, it) => acc + it, 0);
-    };
-    const summaryCounts = this.props.summaryCounts || {
-      count1: sum('countTwo'),
-      count2: sum('countOne'),
-      count3: sum('countThree'),
-      count4: (countNames[3] === 'File') ? sum('fileCount') : sum('countFour'),
-    };
-    const label1 = countPluralNames[0];
-    const label2 = countPluralNames[1];
-    const label3 = countPluralNames[2];
-    const label4 = countPluralNames[3];
+    const summaries = this.props.summaries;
 
     return (<div>
       <h5>List of Projects</h5>
@@ -48,10 +35,11 @@ class ProjectTable extends React.Component {
         <TableHead>
           <TableRow>
             <TableColLabel>Project</TableColLabel>
-            <TableColLabel>{label1}</TableColLabel>
-            <TableColLabel>{label2}</TableColLabel>
-            <TableColLabel>{label3}</TableColLabel>
-            <TableColLabel>{label4}</TableColLabel>
+            {
+              summaries.map(
+                entry => <TableColLabel key={entry.label}>{entry.label}</TableColLabel>,
+              )
+            }
             <TableColLabel />
           </TableRow>
         </TableHead>
@@ -61,7 +49,13 @@ class ProjectTable extends React.Component {
               proj => this.rowRender(proj),
             )
           }
-          <ProjectTR key={'summaryCounts'} project={{ ...summaryCounts, name: 'Totals:' }} summaryRow />
+          <ProjectTR
+            key={'summaryCounts'}
+            project={{
+              counts: summaries.map(entry => entry.value),
+              name: 'Totals:' }}
+            summaryRow
+          />
         </tbody>
       </Table>
     </div>);
@@ -70,11 +64,11 @@ class ProjectTable extends React.Component {
 
 ProjectTable.propTypes = {
   projectList: PropTypes.array,
-  summaryCounts: PropTypes.object,
+  summaries: PropTypes.array,
 };
 
 ProjectTable.defaultProps = {
-  summaryCounts: {},
+  summaries: [],
   projectList: [],
 };
 

@@ -41,13 +41,24 @@ class RelayProjectTable extends ProjectTable {
         } else if (props && props.project) {
           // Pull project data out of Relayjs graphql results passed to render via 'props'
           const { fileCount } = GQLHelper.extractFileInfo(props);
+          let counts = Object.keys(props).filter(
+            key => key.indexOf('count') === 0).map(key => key).sort()
+            .map(
+              key => props[key],
+            );
+          if (counts.length < 4) {
+            counts = [...counts, fileCount];
+          }
+          const charts = Object.keys(props).filter(
+            key => key.indexOf('chart') === 0)
+            .map(key => key).sort()
+            .map(
+              key => props[key],
+            );
           const projInfo = {
             ...props.project[0],
-            countOne: props.countOne,
-            countTwo: props.countTwo,
-            countThree: props.countThree,
-            countFour: props.countFour,
-            fileCount,
+            counts,
+            charts,
           };
 
           // Update redux store if data is not already there
@@ -60,15 +71,15 @@ class RelayProjectTable extends ProjectTable {
               if (homeState.projectsByName) {
                 old = homeState.projectsByName[projInfo.name] || old;
               }
-
-              if (old.countOne !== projInfo.countOne
-                  || old.countTwo !== projInfo.countTwo
-                  || old.countThree !== projInfo.countThree
-                  || old.countFour !== projInfo.countFour
-                  || old.fileCount !== projInfo.fileCount
-              ) {
-                store.dispatch({ type: 'RECEIVE_PROJECT_DETAIL', data: projInfo });
+              let changed = false;
+              for (const index of projInfo.counts) {
+                if (index > old.counts.length - 1
+                  || old.counts[index] !== projInfo.counts[index]) {
+                  changed = true;
+                  break;
+                }
               }
+              if (changed) { store.dispatch({ type: 'RECEIVE_PROJECT_DETAIL', data: projInfo }); }
             },
           ).catch(
             (err) => {
@@ -77,7 +88,7 @@ class RelayProjectTable extends ProjectTable {
             },
           );
 
-          return <ProjectTR project={projInfo} />;
+          return <ProjectTR key={projInfo.name} project={projInfo} />;
         }
         return <tr><td><Spinner /></td></tr>;
       }

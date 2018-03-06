@@ -1,6 +1,3 @@
-const fs = require('fs');
-
-
 /**
  * Extract gqlSetup object from a dictionary
  * @param {Object} dict from dictionary.json or whatever: https://domain/api/v0/submission/_dictionary/_all
@@ -26,37 +23,47 @@ function dictToGQLSetup(dict) {
     },
   );
 
-  const experimentType = ['experiment', 'study', 'trio'].find(name => Object.prototype.hasOwnProperty.call(dict, name));
+  const experimentType = ['experiment', 'study', 'trio'].find(
+    name => Object.prototype.hasOwnProperty.call(dict, name),
+  );
 
   return {
     fileTypeList,
     adminTypeList,
     experimentType,
-    hasCaseType: Object.prototype.hasOwnProperty.call(dict, 'case'),
-    hasCoreVisit: Object.prototype.hasOwnProperty.call(dict, 'core_visit'),
-    hasAliquotType: Object.prototype.hasOwnProperty.call(dict, 'aliquot'),
-    hasSummaryLabResult: Object.prototype.hasOwnProperty.call(dict, 'summary_lab_result'),
-    hasSummarySocioDemographic: Object.prototype.hasOwnProperty.call(dict, 'summary_socio_demographic'),
   };
 }
 
-
-/**
- * Little helper for loading a json file
- * @param {string} path
- * @return {status, data, error} parsed json in data - or {} if path does not exist or is not json 
- */
-function loadJsonFile(path) {
-  try {
-    const content = fs.readFileSync(path);
-    return { status: 'ok', data: JSON.parse(content) };
-  } catch (err) {
-    // console.error( "Failed to load: " + path, err );
-    return { status: 'error', error: err };
+function paramByApp(params) {
+  let app = 'default';
+  if (process.env.APP && Object.keys(params).includes(process.env.APP)) {
+    app = process.env.APP;
   }
+  const paramApp = params[app];
+  const boardCounts = paramApp.boardCounts;
+  const chartCounts = paramApp.chartCounts;
+  let projectDetails = paramApp.projectDetails;
+  if (typeof projectDetails === 'string') {
+    projectDetails = paramApp[projectDetails];
+  }
+  return {
+    boardCounts,
+    chartCounts,
+    projectDetails,
+  };
+}
+
+function paramToGQLSetup(params) {
+  const countsAndDetails = paramByApp(params);
+  return {
+    boardCounts: countsAndDetails.boardCounts.map(item => item.graphql),
+    chartCounts: countsAndDetails.chartCounts.map(item => item.graphql),
+    projectDetails: countsAndDetails.projectDetails.map(item => item.graphql),
+  };
 }
 
 module.exports = {
   dictToGQLSetup,
-  loadJsonFile,
+  paramByApp,
+  paramToGQLSetup,
 };

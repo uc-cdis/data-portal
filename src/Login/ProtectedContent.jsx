@@ -129,8 +129,7 @@ class ProtectedContent extends React.Component {
             },
           ),
       );
-    }
-    else {
+    } else {
       getReduxStore().then(
         (store) => {
           const filterPromise = (

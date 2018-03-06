@@ -1,5 +1,5 @@
 import React from 'react';
-import { RelayProjectDashboard } from './Relay/RelayHomepage';
+import RelayProjectDashboard from './Relay/RelayProjectDashboard';
 import ReduxProjectDashboard from './Redux/ReduxProjectDashboard';
 import RelayTransactionLog from './Relay/RelayTransactionLog';
 import getReduxStore from '../reduxStore';
