@@ -145,13 +145,13 @@ function buildConfig(opts) {
     ];
     countNames = [
       'Participant',
-      'Trio',
+      'Family relationship',
       'File',
       'Aliquot',
     ];
     countPluralNames = [
       'Participants',
-      'Trios',
+      'Family relationships',
       'Files',
       'Aliquots',
     ];
