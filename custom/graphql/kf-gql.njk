@@ -10,8 +10,8 @@ const helperSingleton = {
           name: project_id
           code
         }
-        countOne: _case_count
-        countTwo:  _trio_count
+        countOne: _participant_count
+        countTwo:  _family_relationship_count
         countThree: _aliquot_count
         {% for fType in fileTypeList %}
             fileCount{{ loop.index }}: _{{ fType }}_count
@@ -23,8 +23,8 @@ const helperSingleton = {
           name: project_id
           code
         }
-        countOne: _case_count( project_id:$name )
-        countTwo: _trio_count( project_id:$name )
+        countOne: _participant_count( project_id:$name )
+        countTwo: _family_relationship_count( project_id:$name )
         countThree: _aliquot_count( project_id:$name )
         {% for fType in fileTypeList %}
             fileCount{{ loop.index }}: _{{ fType }}_count( project_id:$name )

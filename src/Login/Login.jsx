@@ -4,7 +4,6 @@ import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 
 import { Box } from '../theme';
-import Footer from '../components/Footer';
 import { basename, appname } from '../localconf';
 
 const CentralBox = styled(Box)`
@@ -59,9 +58,7 @@ class Login extends React.Component {
               ),
             )
           }
-
         </CentralBox>
-        <Footer />
       </div>
     );
   }
