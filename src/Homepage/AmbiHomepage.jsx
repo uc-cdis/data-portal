@@ -14,7 +14,9 @@ getReduxStore().then(
   (store) => {
     const unsub = store.subscribe(
       () => {
-        if (store.homepage && store.homepage.projectList && store.homepage.summaryCounts) {
+        const state = store.getState();
+        // console.log("Got some data?", state);
+        if (state.homepage && state.homepage.projectsByName && state.homepage.summaryCounts) {
           dataInReduxDate = new Date();
           unsub();
         }
@@ -32,6 +34,7 @@ class AmbidextrousDashboard extends React.Component {
     const nowMs = Date.now();
     // use redux if it has the data, and data is fresh
     if (dataInReduxDate && (nowMs - dataInReduxDate.getTime() < 300000)) {
+      // console.log("Rendering REDUX?", dataInReduxDate);
       return (
         <div>
           <ReduxProjectDashboard />
@@ -39,7 +42,11 @@ class AmbidextrousDashboard extends React.Component {
         </div>
       );
     }
-    dataInReduxDate = new Date();
+
+    // console.log("Rendering in RELAY");
+    if (dataInReduxDate) {
+      dataInReduxDate = new Date(); // refresh date after initial load has completed
+    }
     return (
       <div>
         <RelayProjectDashboard />
