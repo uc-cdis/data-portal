@@ -35,12 +35,12 @@ class ProjectTable extends React.Component {
       count1: sum('countTwo'),
       count2: sum('countOne'),
       count3: sum('countThree'),
-      count4: (countNames[2] === 'File') ? sum('fileCount') : sum('countFour'),
+      count4: (countNames[3] === 'File') ? sum('fileCount') : sum('countFour'),
     };
     const label1 = countPluralNames[0];
     const label2 = countPluralNames[1];
-    const label3 = countPluralNames[3];
-    const label4 = countPluralNames[2];
+    const label3 = countPluralNames[2];
+    const label4 = countPluralNames[3];
 
     return (<div>
       <h5>List of Projects</h5>
