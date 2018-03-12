@@ -16,8 +16,8 @@ export function DashboardWith(Table) {
       const summaries = [];
       summaries.push({ label: countPluralNames[0], value: summaryCounts.countOne });
       summaries.push({ label: countPluralNames[1], value: summaryCounts.countTwo });
-      summaries.push({ label: countPluralNames[2], value: (countNames[2] === 'File') ? summaryCounts.fileCount : summaryCounts.countFour });
-      summaries.push({ label: countPluralNames[3], value: summaryCounts.countThree });
+      summaries.push({ label: countPluralNames[2], value: summaryCounts.countThree });
+      summaries.push({ label: countPluralNames[3], value: (countNames[3] === 'File') ? summaryCounts.fileCount : summaryCounts.countFour });
       return (<div className="clearfix">
         <LittleProjectDashboard
           projectList={projectList}

@@ -12,7 +12,7 @@ const helperSingleton = {
     }
     countOne: _case_count
     countTwo:  _sample_count
-    countThree: _aliquot_count
+    countThree: _family_count
     {% for fType in fileTypeList %}
       fileCount{{ loop.index }}: _{{ fType }}_count
     {% endfor %}
@@ -25,7 +25,7 @@ const helperSingleton = {
     }
     countOne: _case_count( project_id:$name )
     countTwo: _sample_count( project_id:$name )
-    countThree: _aliquot_count( project_id:$name )
+    countThree: _family_count( project_id:$name )
     {% for fType in fileTypeList %}
       fileCount{{ loop.index }}: _{{ fType }}_count( project_id:$name )
     {% endfor %}

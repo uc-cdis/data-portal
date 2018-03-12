@@ -75,14 +75,14 @@ function buildConfig(opts) {
     countNames = [
       'Case',
       'Study',
-      'File',
       'Aliquot',
+      'File',
     ];
     countPluralNames = [
       'Cases',
       'Studies',
-      'Files',
       'Aliquots',
+      'Files',
     ];
   } else if (app === 'gtex') {
     appname = 'NIH Data Commons Consortium Pilot Phase\nGTEx & TOPMed Data Portal';
@@ -97,14 +97,14 @@ function buildConfig(opts) {
     countNames = [
       'Case',
       'Study',
-      'File',
       'Aliquot',
+      'File',
     ];
     countPluralNames = [
       'Cases',
       'Studies',
-      'Files',
       'Aliquots',
+      'Files',
     ];
   } else if (app === 'edc') {
     appname = 'Environmental Data Commons Portal';
@@ -119,14 +119,14 @@ function buildConfig(opts) {
     countNames = [
       'Satellite',
       'Radar',
-      'File',
       'Weather station',
+      'File',
     ];
     countPluralNames = [
       'Satellites',
       'Radars',
-      'Files',
       'Weather stations',
+      'Files',
     ];
     dashboardIcons = [
       'satellite',
@@ -146,14 +146,14 @@ function buildConfig(opts) {
     countNames = [
       'Participant',
       'Family relationship',
-      'File',
       'Aliquot',
+      'File',
     ];
     countPluralNames = [
       'Participants',
       'Family relationships',
-      'Files',
       'Aliquots',
+      'Files',
     ];
     localTheme = {
       'barGraph.lineColor': '#DFDFDF',
@@ -182,14 +182,14 @@ function buildConfig(opts) {
     countNames = [
       'Case',
       'Study',
-      'File',
       'Aliquot',
+      'File',
     ];
     countPluralNames = [
       'Cases',
       'Studies',
-      'Files',
       'Aliquots',
+      'Files',
     ];
     localTheme = {
       'barGraph.lineColor': '#666666',
@@ -230,13 +230,13 @@ function buildConfig(opts) {
     countNames = [
       'Case',
       'Sample',
-      'Aliquot',
+      'Family',
       'File',
     ];
     countPluralNames = [
       'Cases',
       'Samples',
-      'Aliquots',
+      'Families',
       'Files',
     ];
   } else if (app === 'ndh') {
@@ -275,14 +275,14 @@ function buildConfig(opts) {
     countNames = [
       'Case',
       'Study',
-      'File',
       'Aliquot',
+      'File',
     ];
     countPluralNames = [
       'Cases',
       'Studies',
-      'Files',
       'Aliquots',
+      'Files',
     ];
   } else {
     appname = 'Generic Data Commons Portal';
@@ -296,14 +296,14 @@ function buildConfig(opts) {
     countNames = [
       'Case',
       'Experiment',
-      'File',
       'Aliquot',
+      'File',
     ];
     countPluralNames = [
       'Cases',
       'Experiments',
-      'Files',
       'Aliquots',
+      'Files',
     ];
   }
 
