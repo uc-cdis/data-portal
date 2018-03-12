@@ -46,8 +46,8 @@ function buildConfig(opts) {
   let dashboardIcons = [
     'account_circle',
     'receipt',
-    'description',
     'invert_colors',
+    'description',
   ];
   let localTheme = {
     'barGraph.lineColor': '#666666',
