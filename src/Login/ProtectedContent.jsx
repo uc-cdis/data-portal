@@ -214,8 +214,10 @@ class ProtectedContent extends React.Component {
         if (projects) {
           // user already has a valid token
           return Promise.resolve(newState);
-        } else if (info.status !== 403) {
-          // do not authenticate unless we have a 403
+        } else if (info.status !== 403 || info.status !== 401) {
+          // do not authenticate unless we have a 403 or 401
+          // should only check 401 after we fix fence to return correct
+          // error code for all cases
           // there may be no projects at startup time,
           // or some other weirdness ...
           // The oauth dance below is only relevent for legacy commons - pre jwt
