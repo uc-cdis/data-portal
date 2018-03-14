@@ -58,13 +58,12 @@ export const deleteKey = (jti, exp, keypairsApi) =>
       ({ status, data }) => {
         switch (status) {
         case 204:
+          dispatch({
+            type: 'DELETE_KEY_SUCCEED',
+          });
           dispatch(clearDeleteSession());
           dispatch(updatePopup({ deleteTokenPopup: false }));
-          window.location.reload(false);
-          return dispatch({
-            type: 'DELETE_KEY_SUCCEED',
-            jti,
-          });
+          return dispatch(fetchAccess());
         default:
           return dispatch({
             type: 'DELETE_KEY_FAIL',

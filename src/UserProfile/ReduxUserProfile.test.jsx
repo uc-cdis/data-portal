@@ -153,9 +153,10 @@ describe('the userProfile component', () => {
   });
 
 
-  it('can delete key', () => {
+  it('can can delete key', () => {
     const jti = 'f8733984-8164-4689-9c25-56707962d7e0';
     const exp = 1459487258;
+    const body = {'exp': 1459487258};
     const keypairsApi = 'test.com/action=delete';
 
     const state = {
@@ -170,6 +171,9 @@ describe('the userProfile component', () => {
     const expectedPopup = { deleteTokenPopup: false };
     const expectedActions = [
       {
+        type: 'DELETE_KEY_SUCCEED',
+      },
+      {
         type: 'CLEAR_DELETE_KEY_SESSION',
       },
       {
@@ -177,12 +181,16 @@ describe('the userProfile component', () => {
         type: 'UPDATE_POPUP',
       },
       {
-        type: 'DELETE_KEY_SUCCEED',
-        jti,
+        type: 'RECEIVE_USER_PROFILE',
+        jtis: [],
       },
     ];
 
     fetch.mockResponseOnce(JSON.stringify(''), { status: 204 });
+    fetch.mockResponseOnce(JSON.stringify({'jtis': []}), { status: 200 });
+
+    const userProfilePage = mount(<ReduxUserProfile />, { context: { store } });
+
     return store.dispatch(deleteKey(jti, exp, keypairsApi))
       .then(() => {
         expect(store.getActions()).toEqual(expectedActions);
