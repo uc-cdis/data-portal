@@ -45,7 +45,7 @@ const clearDeleteSession = () => ({
   @param {string} jti is the token id
   @param {number} exp is expiration
 */
-const deleteKey = (jti, exp, keypairsApi) =>
+export const deleteKey = (jti, exp, keypairsApi) =>
   dispatch => fetchJsonOrText({
     path: keypairsApi + jti,
     method: 'DELETE',
@@ -57,7 +57,7 @@ const deleteKey = (jti, exp, keypairsApi) =>
     .then(
       ({ status, data }) => {
         switch (status) {
-        case 202:
+        case 204:
           dispatch({
             type: 'DELETE_KEY_SUCCEED',
           });
