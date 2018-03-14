@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
 import { browserHistory } from 'react-router-dom';
-import { countNames, localTheme } from '../localconf';
 
 
 const FloatBox = styled.div`
@@ -27,20 +26,43 @@ class ProjectBarChart extends React.Component {
   static propTypes = {
     projectList: PropTypes.arrayOf(
       PropTypes.objectOf(PropTypes.any),
-    ).isRequired,
+    ),
+    countNames: PropTypes.arrayOf(
+      PropTypes.string,
+    ),
+    localTheme: PropTypes.objectOf(
+      PropTypes.any,
+    ),
   };
 
   render() {
-    const projectList = [].concat(this.props.projectList || []);
-
+    const projectList = [...(this.props.projectList || [])];
+    const countNames = this.props.countNames;
+    const localTheme = this.props.localTheme;
+    const projectCharts = projectList.map(
+      (project) => {
+        const dict = { name: project.name };
+        Object.keys(project.charts).forEach(
+          (key) => { dict[`chart${key.toString()}`] = project.charts[key]; },
+        );
+        return dict;
+      },
+    );
+    let barNames = [];
+    if (projectCharts.length > 0) {
+      barNames = Object.keys(projectCharts[0]).filter(key => key.indexOf('chart') === 0).map(
+        name => name,
+      );
+    }
+    let countBar = 0;
     return (
       <FloatBox>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             onClick={(e) => { browserHistory.push(`/${e.activeLabel}`); window.location.reload(false); }}
-            data={projectList}
+            data={projectCharts}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-            barSize={projectList.length < 10 ? 50 : null}
+            barSize={projectCharts.length < 10 ? 50 : null}
             layout="horizontal"
           >
             <h4>Project Submission status</h4>
@@ -48,13 +70,35 @@ class ProjectBarChart extends React.Component {
             <YAxis stroke={localTheme['barGraph.lineColor']} fill={localTheme['barGraph.lineColor']} />
             <Tooltip />
             <Legend />
-            <Bar name={countNames[0]} dataKey="countOne" stackId="a" fill={localTheme['barGraph.bar1Color']} />
-            <Bar name={countNames[1]} dataKey="countTwo" stackId="a" fill={localTheme['barGraph.bar2Color']} />
+            {
+              barNames.map(
+                (barName, index) => {
+                  countBar += 1;
+                  return (
+                    <Bar
+                      key={countNames[index] + countBar.toString()}
+                      name={countNames[index]}
+                      dataKey={barName}
+                      stackId="a"
+                      fill={localTheme[`barGraph.bar${(index + 1).toString()}Color`]}
+                    />
+                  );
+                },
+
+              )
+            }
           </BarChart>
         </ResponsiveContainer>
       </FloatBox>
     );
   }
 }
+
+
+ProjectBarChart.defaultProps = {
+  projectList: [],
+  countNames: [],
+  localTheme: {},
+};
 
 export default ProjectBarChart;

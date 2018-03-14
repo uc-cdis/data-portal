@@ -17,12 +17,6 @@ if [ -f custom/createdby/$APP.png ]; then
   cp custom/createdby/$APP.png src/img/cdis.png
 fi
 
-if [ -f custom/graphql/$APP-gql.njk ]; then
-  cat custom/graphql/gqlHeader.njk custom/graphql/$APP-gql.njk custom/graphql/gqlFooter.njk >data/gqlHelper.js.njk
-else
-  cat custom/graphql/gqlHeader.njk custom/graphql/gqlDefault.njk custom/graphql/gqlFooter.njk >data/gqlHelper.js.njk
-fi
-
 if [ -f custom/css/$APP.css ]; then
   cp custom/css/$APP.css src/css/themeoverride.css
 fi

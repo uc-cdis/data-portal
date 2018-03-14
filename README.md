@@ -48,3 +48,46 @@ docker build -t dataportal --build-arg https_proxy=http://cloud-proxy:3128 --bui
 
 ### Deployment
 docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal
+
+### GraphQL configuration
+All the configurations of Homepage and Explorer page are specified src/parameters.json. For each common, we need to specify the following json entities:
+```
+"<common_name>": {
+  "boardCounts": [
+    {
+      "graphql": "_case_count",
+      "name": "Case",
+      "plural": "Cases"
+    },
+    {
+      "graphql": "_experiment_count",
+      "name": "Experiment",
+      "plural": "Experiments"
+    },
+    {
+      "graphql": "_aliquot_count",
+      "name": "Aliquot",
+      "plural": "Aliquots"
+    }
+  ],
+  "chartCounts": [
+    {
+      "graphql": "_case_count",
+      "name": "Case"
+    },
+    {
+      "graphql": "_experiment_count",
+      "name": "Experiment"
+    },
+    {
+      "graphql": "_aliquot_count",
+      "name": "Aliquot"
+    }
+  ],
+  "projectDetails": "boardCounts"
+}
+
+```
+- `boardCounts` are the counts that you want to display in the top-left of dashboard's
+- `chartCounts` are the counts that you want to display in the bar chart of dashboard's
+- `projectDetails` are the counts that you want to display in the list of projects. It could be same as `boardCounts`, in this case, you only need to point to `boardCounts`.

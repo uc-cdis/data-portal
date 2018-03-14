@@ -102,7 +102,7 @@
     "postinstall": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
     "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
     "schema": "node ./data/getSchema",
-    "eslint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' src",
+    "eslint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' src",
     "elint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'"
   },
   "graphql": {

@@ -173,7 +173,6 @@ export function calculatePosition(nodes, graphWidth, graphHeight) {
   return { retNodes, fyValsLength: fyVals.length };
 }
 
-
 /**
  * Type agnostic compare thunk for Array.sort
  * @param {*} a
@@ -191,7 +190,6 @@ export function computeLastPageSizes(filesMap, pageSize) {
     return result;
   }, {});
 }
-
 
 export function capitalizeFirstLetter(str) {
   const res = str.replace(/_/gi, ' ');

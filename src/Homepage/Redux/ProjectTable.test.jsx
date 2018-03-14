@@ -9,17 +9,9 @@ import ProjectTable from './ProjectTable';
 test('Project table renders', () => {
   const projectList = [{
     name: 'frickjack',
-    countOne: 5,
-    countTwo: 20,
-    countThree: 30,
-    fileCount: 200,
+    counts: [5, 20, 30, 200],
   }];
-  const summaryCounts = {
-    countOne: 5,
-    countTwo: 20,
-    countThree: 30,
-    fileCount: 200,
-  };
+  const summaryCounts = [5, 20, 30, 200];
 
   // Material-UI components require the Mui theme ...
   const table = mount(

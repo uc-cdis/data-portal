@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { countNames } from '../../localconf';
 import { TableRow, TableCell } from '../style';
 import SubmitButton from '../../components/SubmitButton';
 
@@ -10,23 +9,24 @@ import SubmitButton from '../../components/SubmitButton';
 class ProjectTR extends Component {
   render() {
     const proj = this.props.project;
-    return (<TableRow key={proj.name} summaryRow={!!this.props.summaryRow}>
-      <TableCell>
-        {proj.name}
-      </TableCell>
-      <TableCell>{proj.countOne}
-      </TableCell>
-      <TableCell>{proj.countTwo}
-      </TableCell>
-      <TableCell>{proj.countThree}
-      </TableCell>
-      <TableCell>
-        {(countNames[3] === 'File') ? proj.fileCount : proj.countFour}
-      </TableCell>
-      <TableCell>
-        {proj.name !== 'Totals:' ? <SubmitButton projName={proj.name} /> : ''}
-      </TableCell>
-    </TableRow>);
+    return (
+      <TableRow key={proj.name} summaryRow={!!this.props.summaryRow}>
+        <TableCell>
+          {proj.name}
+        </TableCell>
+        {
+          proj.counts.map(
+            (count, index) => (
+              <TableCell key={`${proj.name}count${index.toString()}`}>
+                {count}
+              </TableCell>
+            ),
+          )
+        }
+        <TableCell>
+          {proj.name !== 'Totals:' ? <SubmitButton projName={proj.name} /> : ''}
+        </TableCell>
+      </TableRow>);
   }
 }
 

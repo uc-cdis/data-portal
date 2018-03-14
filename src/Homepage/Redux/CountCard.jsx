@@ -49,26 +49,17 @@ class CountCard extends Component {
           Project Submission Summary
         </h4>
         <ul>
-          <li>
-            <Icon><i className="material-icons">{ this.props.icons[0] }</i></Icon>
-            <Count>{ this.props.count1.value }</Count>
-            <span>{this.props.count1.label}</span>
-          </li>
-          <li>
-            <Icon><i className="material-icons">{ this.props.icons[1] }</i></Icon>
-            <Count>{ this.props.count2.value }</Count>
-            <span>{this.props.count2.label}</span>
-          </li>
-          <li>
-            <Icon><i className="material-icons">{ this.props.icons[2] }</i></Icon>
-            <Count>{ this.props.count3.value }</Count>
-            <span>{this.props.count3.label}</span>
-          </li>
-          <li>
-            <Icon><i className="material-icons">{ this.props.icons[3] }</i></Icon>
-            <Count>{ this.props.count4.value }</Count>
-            <span>{this.props.count4.label}</span>
-          </li>
+          {
+            this.props.countItems.map(
+              (item, i) => (
+                <li key={item.label}>
+                  <Icon><i className="material-icons">{ this.props.icons[i] }</i></Icon>
+                  <Count>{item.value}</Count>
+                  <span>{item.label}</span>
+                </li>
+              ),
+            )
+          }
         </ul>
       </CountBox>
     );
@@ -76,10 +67,7 @@ class CountCard extends Component {
 }
 
 CountCard.propTypes = {
-  count1: PropTypes.object.isRequired,
-  count2: PropTypes.object.isRequired,
-  count3: PropTypes.object.isRequired,
-  count4: PropTypes.object.isRequired,
+  countItems: PropTypes.arrayOf(PropTypes.object).isRequired,
   icons: PropTypes.array,
 };
 
