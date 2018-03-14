@@ -156,7 +156,7 @@ describe('the userProfile component', () => {
   it('can can delete key', () => {
     const jti = 'f8733984-8164-4689-9c25-56707962d7e0';
     const exp = 1459487258;
-    const body = {'exp': 1459487258};
+    const body = { exp: 1459487258 };
     const keypairsApi = 'test.com/action=delete';
 
     const state = {
@@ -186,10 +186,9 @@ describe('the userProfile component', () => {
       },
     ];
 
-    fetch.mockResponseOnce(JSON.stringify(''), { status: 204 });
-    fetch.mockResponseOnce(JSON.stringify({'jtis': []}), { status: 200 });
+    fetch.mockResponseOnce(JSON.stringify(body), { status: 204 });
+    fetch.mockResponseOnce(JSON.stringify({ jtis: [] }), { status: 200 });
 
-    const userProfilePage = mount(<ReduxUserProfile />, { context: { store } });
 
     return store.dispatch(deleteKey(jti, exp, keypairsApi))
       .then(() => {
