@@ -71,14 +71,10 @@ class RelayProjectTable extends ProjectTable {
               if (homeState.projectsByName) {
                 old = homeState.projectsByName[projInfo.name] || old;
               }
-              let changed = false;
-              for (const index of projInfo.counts) {
-                if (index > old.counts.length - 1
-                  || old.counts[index] !== projInfo.counts[index]) {
-                  changed = true;
-                  break;
-                }
-              }
+              const changed = projInfo.counts.find(
+                (it, index) => index > old.counts.length - 1
+                  || old.counts[index] !== it,
+              );
               if (changed) { store.dispatch({ type: 'RECEIVE_PROJECT_DETAIL', data: projInfo }); }
             },
           ).catch(

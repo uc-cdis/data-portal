@@ -42,10 +42,8 @@ class ProjectBarChart extends React.Component {
     const projectCharts = projectList.map(
       (project) => {
         const dict = { name: project.name };
-        Object.keys(project.charts).map(
-          (key) => {
-            dict[`chart${key.toString()}`] = project.charts[key];
-          },
+        Object.keys(project.charts).forEach(
+          (key) => { dict[`chart${key.toString()}`] = project.charts[key]; },
         );
         return dict;
       },
