@@ -91,11 +91,11 @@ function buildConfig(opts) {
     appname = 'NIH Data Commons Consortium Pilot Phase\nGTEx & TOPMed Data Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
-      { icon: 'collections', link: 'https://dcp.bionimbus.org/dcp', color: '#a2a2a2', name: 'exploration' },
+      { icon: 'collections', link: `${hostname}dcp`, color: '#a2a2a2', name: 'exploration' },
       { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
-      { icon: 'dvr', link: 'https://dcp.bionimbus.org/jupyter', color: '#a2a2a2', name: 'workspace' },
+      { icon: 'dvr', link: `${hostname}jupyter`, color: '#a2a2a2', name: 'workspace' },
     ];
   } else if (app === 'edc') {
     appname = 'Environmental Data Commons Portal';
@@ -138,12 +138,12 @@ function buildConfig(opts) {
     appname = 'The Brain Commons Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#A51C30', name: 'home' },
-      { icon: 'collections', link: 'https://data.braincommons.org/bhc', color: '#a2a2a2', name: 'exploration' },
+      { icon: 'collections', link: `${hostname}bhc`, color: '#a2a2a2', name: 'exploration' },
       { icon: 'search', link: '/query', color: '#2D728F', name: 'query' },
       { icon: 'class', link: '/DD', color: '#A51C30', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#2D728F', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#A51C30', name: 'data' },
-      { icon: 'dvr', link: 'https://data.braincommons.org/workspace', color: '#a2a2a2', name: 'workspace' },
+      { icon: 'dvr', link: `${hostname}workspace/`, color: '#a2a2a2', name: 'workspace' },
       { icon: 'dvr', link: 'https://demo.braincommons.org/', color: '#a2a2a2', name: 'demo' },
     ];
     localTheme = {
@@ -186,10 +186,12 @@ function buildConfig(opts) {
     appname = 'NIAID Data Hub Portal';
     navItems = [
       { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
+      { icon: 'collections', link: `${hostname}ndh`, color: '#a2a2a2', name: 'exploration' },
       { icon: 'search', link: '/query', color: '#daa5Z20', name: 'query' },
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
-      { icon: 'content_copy', link: 'https://ndh-portal.bionimbus.org', color: '#a2a2a2', name: 'data' },
+      { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
+      { icon: 'dvr', link: `${hostname}workspace/`, color: '#a2a2a2', name: 'workspace' },
     ];
   } else if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
