@@ -105,7 +105,7 @@ function buildConfig(opts) {
       { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
       { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
       { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
-      { icon: 'dvr', link: '${hostname}workspace/', color: '#a2a2a2', name: 'workspace' },
+      { icon: 'dvr', link: `${hostname}workspace/`, color: '#a2a2a2', name: 'workspace' },
     ];
     dashboardIcons = [
       'satellite',
