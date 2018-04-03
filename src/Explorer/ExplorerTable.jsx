@@ -57,7 +57,7 @@ export class ExplorerTableComponent extends Component {
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
         </TableData>
         <TableData c_width={columnWidths[1]}>
-          <a key={file.name} href={`https://${hostname}/user/data/download/${file.uuid}?redirect`}>{file.name}</a>
+          <a key={file.name} href={`${hostname}user/data/download/${file.uuid}?redirect`}>{file.name}</a>
         </TableData>
         <TableData c_width={columnWidths[2]}>{file.format}</TableData>
         <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{file.size}</TableData>
