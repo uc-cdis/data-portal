@@ -8,6 +8,7 @@ import { TableData, TableHeadCell,
   TableFootCell, PageButton, ArrowButton } from './style';
 import getReduxStore from '../reduxStore';
 import SelectComponent from '../components/SelectComponent';
+import { hostname } from '../localconf';
 
 const makeDefaultState = (page, pageSize, originalPage) => ({
   page,
@@ -55,7 +56,9 @@ export class ExplorerTableComponent extends Component {
         <TableData c_width={columnWidths[0]}>
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
         </TableData>
-        <TableData c_width={columnWidths[1]}>{file.name}</TableData>
+        <TableData c_width={columnWidths[1]}>
+          <a key={file.name} href={`https://${hostname}/user/data/download/${file.uuid}?redirect`}>{file.name}</a>
+        </TableData>
         <TableData c_width={columnWidths[2]}>{file.format}</TableData>
         <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{file.size}</TableData>
         <TableData c_width={columnWidths[4]}>{file.category}</TableData>
