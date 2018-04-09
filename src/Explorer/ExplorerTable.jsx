@@ -28,7 +28,7 @@ export const ExplorerTableStyle = styled.table`
 export class ExplorerTableComponent extends Component {
   static propTypes = {
     user: PropTypes.object,
-    project_avail: PropTypes.object,
+    projectAvail: PropTypes.object,
     name: PropTypes.string.isRequired,
     filesList: PropTypes.array,
     lastPageSize: PropTypes.number,
@@ -52,22 +52,24 @@ export class ExplorerTableComponent extends Component {
     onPageSizeChange: () => {},
   };
 
-  static renderFileName(user, project_avail, project_id, uuid, name) {
-    const parts = project_id.split("-");
+  static renderFileName(user, projectAvail, projectID, uuid, name) {
+    const parts = projectID.split('-');
     const program = parts[0];
     const project = parts[1];
-    var hasAccess = false;
-    if (project_id in project_avail) {
-      if (project_avail[project_id] == 'Open') {
+    let hasAccess = false;
+    if ('undefined' !== typeof projectAvail && projectID in projectAvail) {
+      if (projectAvail[projectID] === 'Open') {
         hasAccess = true;
       }
     }
-    if (program in user.project_access) {
+    if ('undefined' !== typeof user && 'undefined' !== typeof user.project_access
+        && program in user.project_access) {
       if (user.project_access[program].includes('read-storage')) {
         hasAccess = true;
       }
     }
-    if (project in user.project_access) {
+    if ('undefined' !== typeof user && 'undefined' !== typeof user.project_access
+        && project in user.project_access) {
       if (user.project_access[project].includes('read-storage')) {
         hasAccess = true;
       }
@@ -80,8 +82,9 @@ export class ExplorerTableComponent extends Component {
     return filename;
   }
 
-  static renderRow(user, project_avail, file, columnWidths, i) {
-    const filename = ExplorerTableComponent.renderFileName(user, project_avail, file.project_id, file.uuid, file.name);
+  static renderRow(user, projectAvail, file, columnWidths, i) {
+    const filename = ExplorerTableComponent.renderFileName(user, projectAvail,
+                       file.project_id, file.uuid, file.name);
     return (
       <TableRow key={i}>
         <TableData c_width={columnWidths[0]}>
@@ -183,7 +186,8 @@ export class ExplorerTableComponent extends Component {
         <tbody>
           {
             filesList && filesList.map(
-              (item, i) => ExplorerTableComponent.renderRow(this.props.user, this.props.project_avail, item, columnWidths, i),
+              (item, i) => ExplorerTableComponent.renderRow(this.props.user,
+                             this.props.projectAvail, item, columnWidths, i),
             )
           }
         </tbody>

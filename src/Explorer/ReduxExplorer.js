@@ -87,7 +87,7 @@ export const ReduxExplorerTabPanel = (() => {
     queriedCursors: state.explorer.queriedCursors,
     currentPages: state.explorer.currentPages,
     user: state.user,
-    project_avail: state.submission.project_avail,
+    projectAvail: state.submission.projectAvail,
   });
 
   const mapDispatchToProps = dispatch => ({

@@ -16,7 +16,7 @@ class ExplorerTabPanel extends Component {
     cursors: PropTypes.object,
     queriedCursors: PropTypes.object,
     user: PropTypes.object,
-    project_avail: PropTypes.object,
+    projectAvail: PropTypes.object,
     onTabChange: PropTypes.func.isRequired,
     onPageLoadMore: PropTypes.func,
     onPageSizeChange: PropTypes.func,
@@ -83,7 +83,7 @@ class ExplorerTabPanel extends Component {
                 && <ExplorerTabBox key={`${item}-tab-box`} active={(item === this.props.activeTab)}>
                   <ExplorerTableComponent
                     user={this.props.user}
-                    project_avail={this.props.project_avail}
+                    projectAvail={this.props.projectAvail}
                     key={`${item}-tab-box`}
                     filesList={this.props.filesMap[item]}
                     name={item}
