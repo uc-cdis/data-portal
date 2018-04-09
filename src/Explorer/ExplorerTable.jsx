@@ -27,6 +27,8 @@ export const ExplorerTableStyle = styled.table`
 
 export class ExplorerTableComponent extends Component {
   static propTypes = {
+    user: PropTypes.object,
+    project_avail: PropTypes.object,
     name: PropTypes.string.isRequired,
     filesList: PropTypes.array,
     lastPageSize: PropTypes.number,
@@ -50,14 +52,43 @@ export class ExplorerTableComponent extends Component {
     onPageSizeChange: () => {},
   };
 
-  static renderRow(file, columnWidths, i) {
+  static renderFileName(user, project_avail, project_id, uuid, name) {
+    const parts = project_id.split("-");
+    const program = parts[0];
+    const project = parts[1];
+    var hasAccess = false;
+    if (project_id in project_avail) {
+      if (project_avail[project_id] == 'Open') {
+        hasAccess = true;
+      }
+    }
+    if (program in user.project_access) {
+      if (user.project_access[program].includes('read-storage')) {
+        hasAccess = true;
+      }
+    }
+    if (project in user.project_access) {
+      if (user.project_access[project].includes('read-storage')) {
+        hasAccess = true;
+      }
+    }
+    const filename = hasAccess ? (
+      <a key={name} href={`${hostname}user/data/download/${uuid}?redirect`}>{name}</a>
+    ) : (
+      <span>{name}</span>
+    );
+    return filename;
+  }
+
+  static renderRow(user, project_avail, file, columnWidths, i) {
+    const filename = ExplorerTableComponent.renderFileName(user, project_avail, file.project_id, file.uuid, file.name);
     return (
       <TableRow key={i}>
         <TableData c_width={columnWidths[0]}>
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
         </TableData>
         <TableData c_width={columnWidths[1]}>
-          <a key={file.name} href={`${hostname}user/data/download/${file.uuid}?redirect`}>{file.name}</a>
+          {filename}
         </TableData>
         <TableData c_width={columnWidths[2]}>{file.format}</TableData>
         <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{file.size}</TableData>
@@ -152,7 +183,7 @@ export class ExplorerTableComponent extends Component {
         <tbody>
           {
             filesList && filesList.map(
-              (item, i) => ExplorerTableComponent.renderRow(item, columnWidths, i),
+              (item, i) => ExplorerTableComponent.renderRow(this.props.user, this.props.project_avail, item, columnWidths, i),
             )
           }
         </tbody>

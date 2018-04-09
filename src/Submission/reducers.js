@@ -14,6 +14,10 @@ const submission = (state = {}, action) => {
         const res = map;
         res[p.code] = p.project_id; return res;
       }, {}),
+      project_avail: action.data.reduce((map, p) => {
+        const res = map;
+        res[p.project_id] = p.availability_type; return res;
+      }, {}),
     };
   case 'RECEIVE_NODE_TYPES':
     return { ...state, nodeTypes: action.data };
