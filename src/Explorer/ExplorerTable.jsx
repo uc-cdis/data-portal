@@ -43,6 +43,8 @@ export class ExplorerTableComponent extends Component {
   };
 
   static defaultProps = {
+    user: {},
+    projectAvail: {},
     filesList: [],
     lastPageSize: 0,
     originalPage: 0,
@@ -57,19 +59,17 @@ export class ExplorerTableComponent extends Component {
     const program = parts[0];
     const project = parts[1];
     let hasAccess = false;
-    if ('undefined' !== typeof projectAvail && projectID in projectAvail) {
+    if (projectID in projectAvail) {
       if (projectAvail[projectID] === 'Open') {
         hasAccess = true;
       }
     }
-    if ('undefined' !== typeof user && 'undefined' !== typeof user.project_access
-        && program in user.project_access) {
+    if ('project_access' in user && program in user.project_access) {
       if (user.project_access[program].includes('read-storage')) {
         hasAccess = true;
       }
     }
-    if ('undefined' !== typeof user && 'undefined' !== typeof user.project_access
-        && project in user.project_access) {
+    if ('project_access' in user && project in user.project_access) {
       if (user.project_access[project].includes('read-storage')) {
         hasAccess = true;
       }
@@ -84,7 +84,7 @@ export class ExplorerTableComponent extends Component {
 
   static renderRow(user, projectAvail, file, columnWidths, i) {
     const filename = ExplorerTableComponent.renderFileName(user, projectAvail,
-                       file.project_id, file.uuid, file.name);
+      file.project_id, file.uuid, file.name);
     return (
       <TableRow key={i}>
         <TableData c_width={columnWidths[0]}>
@@ -187,7 +187,7 @@ export class ExplorerTableComponent extends Component {
           {
             filesList && filesList.map(
               (item, i) => ExplorerTableComponent.renderRow(this.props.user,
-                             this.props.projectAvail, item, columnWidths, i),
+                this.props.projectAvail, item, columnWidths, i),
             )
           }
         </tbody>

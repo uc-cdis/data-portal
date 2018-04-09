@@ -26,6 +26,8 @@ class ExplorerTabPanel extends Component {
   static defaultProps = {
     cursors: {},
     queriedCursors: {},
+    user: {},
+    projectAvail: {},
     onPageLoadMore: () => {},
     onPageSizeChange: () => {},
     onPageChange: () => {},
