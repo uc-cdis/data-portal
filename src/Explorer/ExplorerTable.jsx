@@ -54,7 +54,7 @@ export class ExplorerTableComponent extends Component {
     onPageSizeChange: () => {},
   };
 
-  static renderFileName(user, projectAvail, projectID, uuid, name) {
+  static renderFileName(user, projectAvail, projectID, did, name) {
     const parts = projectID.split('-');
     const program = parts[0];
     const project = parts[1];
@@ -75,7 +75,7 @@ export class ExplorerTableComponent extends Component {
       }
     }
     const filename = hasAccess ? (
-      <a key={name} href={`${hostname}user/data/download/${uuid}?redirect`}>{name}</a>
+      <a key={name} href={`${hostname}user/data/download/${did}?redirect`}>{name}</a>
     ) : (
       <span>{name}</span>
     );
@@ -84,7 +84,7 @@ export class ExplorerTableComponent extends Component {
 
   static renderRow(user, projectAvail, file, columnWidths, i) {
     const filename = ExplorerTableComponent.renderFileName(user, projectAvail,
-      file.project_id, file.uuid, file.name);
+      file.project_id, file.did, file.name);
     return (
       <TableRow key={i}>
         <TableData c_width={columnWidths[0]}>

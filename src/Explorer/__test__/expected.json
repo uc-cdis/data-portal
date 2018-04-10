@@ -10,7 +10,7 @@
           "project_id": "acct-bpa-test",
           "size": 165508377,
           "type": "Aligned Reads",
-          "uuid": "6769fae8-16b1-4c93-904a-68290c48d747"
+          "did": "6769fae8-16b1-4c93-904a-68290c48d747"
         },
         {
           "category": "Sequencing Data",
@@ -19,7 +19,7 @@
           "project_id": "acct-bpa-test",
           "size": 760562132,
           "type": "Aligned Reads",
-          "uuid": "026bdd1d-15c8-4064-a1f9-4d83dce6666a"
+          "did": "026bdd1d-15c8-4064-a1f9-4d83dce6666a"
         },
         {
           "category": "Sequencing Data",
@@ -28,7 +28,7 @@
           "project_id": "acct-bpa-test",
           "size": 803314352,
           "type": "Aligned Reads",
-          "uuid": "f442074c-4b06-44ab-95e5-be39cc0e9250"
+          "did": "f442074c-4b06-44ab-95e5-be39cc0e9250"
         },
         {
           "category": "Sequencing Data",
@@ -37,7 +37,7 @@
           "project_id": "acct-bpa-test",
           "size": 22175193,
           "type": "Aligned Reads",
-          "uuid": "9449c55f-a07b-446f-b1ff-bd62815a9cd0"
+          "did": "9449c55f-a07b-446f-b1ff-bd62815a9cd0"
         },
         {
           "category": "Sequencing Data",
@@ -46,7 +46,7 @@
           "project_id": "acct-bpa-test",
           "size": 82059820,
           "type": "Aligned Reads",
-          "uuid": "f3992225-f089-4082-9e0d-3eff90b8c114"
+          "did": "f3992225-f089-4082-9e0d-3eff90b8c114"
         },
         {
           "category": "Sequencing Data",
@@ -55,7 +55,7 @@
           "project_id": "acct-bpa-test",
           "size": 772553566,
           "type": "Aligned Reads",
-          "uuid": "7cb6f42b-4aed-4f60-ac7c-3e58ba909a33"
+          "did": "7cb6f42b-4aed-4f60-ac7c-3e58ba909a33"
         },
         {
           "category": "Sequencing Data",
@@ -64,7 +64,7 @@
           "project_id": "acct-bpa-test",
           "size": 14125277,
           "type": "Aligned Reads",
-          "uuid": "39fa9fc3-858f-4191-b00b-26dfdb4c4e5a"
+          "did": "39fa9fc3-858f-4191-b00b-26dfdb4c4e5a"
         },
         {
           "category": "Sequencing Data",
@@ -73,7 +73,7 @@
           "project_id": "acct-bpa-test",
           "size": 818201506,
           "type": "Aligned Reads",
-          "uuid": "a6a40d71-4ceb-4866-8d02-9dbcec9fcda9"
+          "did": "a6a40d71-4ceb-4866-8d02-9dbcec9fcda9"
         },
         {
           "category": "Sequencing Data",
@@ -82,7 +82,7 @@
           "project_id": "acct-bpa-test",
           "size": 396481504,
           "type": "Aligned Reads",
-          "uuid": "faa0ab3e-f6ce-40b1-bf98-5c6aed31c47b"
+          "did": "faa0ab3e-f6ce-40b1-bf98-5c6aed31c47b"
         },
         {
           "category": "Sequencing Data",
@@ -91,7 +91,7 @@
           "project_id": "acct-bpa-test",
           "size": 118433879,
           "type": "Aligned Reads",
-          "uuid": "7b1f954b-1ed6-45f5-8100-cb3962ac264e"
+          "did": "7b1f954b-1ed6-45f5-8100-cb3962ac264e"
         },
         {
           "category": "Sequencing Data",
@@ -100,7 +100,7 @@
           "project_id": "acct-bpa-test",
           "size": 634179839,
           "type": "Aligned Reads",
-          "uuid": "fc217ba1-00f3-4feb-8d36-36c64f4a19b9"
+          "did": "fc217ba1-00f3-4feb-8d36-36c64f4a19b9"
         },
         {
           "category": "Sequencing Data",
@@ -109,7 +109,7 @@
           "project_id": "acct-bpa-test",
           "size": 683190064,
           "type": "Aligned Reads",
-          "uuid": "33cbc458-495e-4150-b087-a10d33a17dc9"
+          "did": "33cbc458-495e-4150-b087-a10d33a17dc9"
         },
         {
           "category": "Sequencing Data",
@@ -118,7 +118,7 @@
           "project_id": "acct-bpa-test",
           "size": 723597911,
           "type": "Aligned Reads",
-          "uuid": "80e960a9-2f67-46c3-899d-0aacee5fa919"
+          "did": "80e960a9-2f67-46c3-899d-0aacee5fa919"
         },
         {
           "category": "Sequencing Data",
@@ -127,7 +127,7 @@
           "project_id": "acct-bpa-test",
           "size": 743979409,
           "type": "Aligned Reads",
-          "uuid": "a7af2fc4-66fb-40b0-bbdf-b43e595dcab5"
+          "did": "a7af2fc4-66fb-40b0-bbdf-b43e595dcab5"
         },
         {
           "category": "Sequencing Data",
@@ -136,7 +136,7 @@
           "project_id": "acct-bpa-test",
           "size": 320975393,
           "type": "Aligned Reads",
-          "uuid": "de385659-0e71-4b11-93e1-b8f31a0db285"
+          "did": "de385659-0e71-4b11-93e1-b8f31a0db285"
         },
         {
           "category": "Sequencing Data",
@@ -145,7 +145,7 @@
           "project_id": "acct-bpa-test",
           "size": 244783146,
           "type": "Aligned Reads",
-          "uuid": "ca3f282c-ead8-4ab3-ad22-4b63e23aab3f"
+          "did": "ca3f282c-ead8-4ab3-ad22-4b63e23aab3f"
         },
         {
           "category": "Sequencing Data",
@@ -154,7 +154,7 @@
           "project_id": "acct-bpa-test",
           "size": 235642355,
           "type": "Aligned Reads",
-          "uuid": "313a7554-864b-4de5-b65a-1599f5e8f9a0"
+          "did": "313a7554-864b-4de5-b65a-1599f5e8f9a0"
         },
         {
           "category": "Sequencing Data",
@@ -163,7 +163,7 @@
           "project_id": "acct-bpa-test",
           "size": 227404910,
           "type": "Aligned Reads",
-          "uuid": "b4804da4-4119-4ef1-92ec-dbd9db0e7854"
+          "did": "b4804da4-4119-4ef1-92ec-dbd9db0e7854"
         },
         {
           "category": "Sequencing Data",
@@ -172,7 +172,7 @@
           "project_id": "acct-bpa-test",
           "size": 433567334,
           "type": "Aligned Reads",
-          "uuid": "34c9d1d1-386d-42a0-852e-1fcd1a59fa98"
+          "did": "34c9d1d1-386d-42a0-852e-1fcd1a59fa98"
         },
         {
           "category": "Sequencing Data",
@@ -181,7 +181,7 @@
           "project_id": "acct-bpa-test",
           "size": 28350278,
           "type": "Aligned Reads",
-          "uuid": "4ec98750-8ee9-46d0-8ca0-68d51b46bb00"
+          "did": "4ec98750-8ee9-46d0-8ca0-68d51b46bb00"
         },
         {
           "category": "Sequencing Data",
@@ -190,7 +190,7 @@
           "project_id": "acct-bpa-test",
           "size": 219840132,
           "type": "Aligned Reads",
-          "uuid": "56e59640-ec6f-4772-ad4d-458357bc544d"
+          "did": "56e59640-ec6f-4772-ad4d-458357bc544d"
         }
       ],
       "submitted_somatic_mutation": [
@@ -201,7 +201,7 @@
           "project_id": "acct-bpa-test",
           "size": 165508377,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "9451ec12-2217-4c16-98d1-e48d18e0ded5"
+          "did": "9451ec12-2217-4c16-98d1-e48d18e0ded5"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -210,7 +210,7 @@
           "project_id": "acct-bpa-test",
           "size": 760562132,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "fdf005e8-cfa0-4255-8522-0513b035d6c7"
+          "did": "fdf005e8-cfa0-4255-8522-0513b035d6c7"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -219,7 +219,7 @@
           "project_id": "acct-bpa-test",
           "size": 803314352,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "866aeddc-99a4-4273-94d4-9cb3fc979ee6"
+          "did": "866aeddc-99a4-4273-94d4-9cb3fc979ee6"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -228,7 +228,7 @@
           "project_id": "acct-bpa-test",
           "size": 22175193,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "c2721817-d127-4125-a790-b97bdfd22134"
+          "did": "c2721817-d127-4125-a790-b97bdfd22134"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -237,7 +237,7 @@
           "project_id": "acct-bpa-test",
           "size": 82059820,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "e3d8a206-a142-44df-acba-83659800e664"
+          "did": "e3d8a206-a142-44df-acba-83659800e664"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -246,7 +246,7 @@
           "project_id": "acct-bpa-test",
           "size": 772553566,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "24f6adef-20a6-4b75-90cf-dbcb5fa1a87e"
+          "did": "24f6adef-20a6-4b75-90cf-dbcb5fa1a87e"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -255,7 +255,7 @@
           "project_id": "acct-bpa-test",
           "size": 14125277,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "adbc9ec4-85a9-4d6c-958c-600505052898"
+          "did": "adbc9ec4-85a9-4d6c-958c-600505052898"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -264,7 +264,7 @@
           "project_id": "acct-bpa-test",
           "size": 818201506,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "dd39cd54-680d-4176-81d1-0edb930446b6"
+          "did": "dd39cd54-680d-4176-81d1-0edb930446b6"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -273,7 +273,7 @@
           "project_id": "acct-bpa-test",
           "size": 396481504,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "53be0837-8716-4b99-ad8d-80201973e77f"
+          "did": "53be0837-8716-4b99-ad8d-80201973e77f"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -282,7 +282,7 @@
           "project_id": "acct-bpa-test",
           "size": 118433879,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "49ec6c4b-0ac9-4685-a2af-4d23e1d1ee84"
+          "did": "49ec6c4b-0ac9-4685-a2af-4d23e1d1ee84"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -291,7 +291,7 @@
           "project_id": "acct-bpa-test",
           "size": 634179839,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "4ea23bfa-f09b-4035-bbe7-e8ba09c051ab"
+          "did": "4ea23bfa-f09b-4035-bbe7-e8ba09c051ab"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -300,7 +300,7 @@
           "project_id": "acct-bpa-test",
           "size": 683190064,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "185273d3-9f00-424f-ae61-4f4954130cd2"
+          "did": "185273d3-9f00-424f-ae61-4f4954130cd2"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -309,7 +309,7 @@
           "project_id": "acct-bpa-test",
           "size": 723597911,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "ac82384e-ef3e-466e-a12b-f4d003957165"
+          "did": "ac82384e-ef3e-466e-a12b-f4d003957165"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -318,7 +318,7 @@
           "project_id": "acct-bpa-test",
           "size": 743979409,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "bac7066b-18a6-4108-8023-c3838450514b"
+          "did": "bac7066b-18a6-4108-8023-c3838450514b"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -327,7 +327,7 @@
           "project_id": "acct-bpa-test",
           "size": 320975393,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "8f438e7f-c6a9-4328-8879-25cf7d539cf6"
+          "did": "8f438e7f-c6a9-4328-8879-25cf7d539cf6"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -336,7 +336,7 @@
           "project_id": "acct-bpa-test",
           "size": 244783146,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "0c48b716-9f67-4547-b486-37504ad4a391"
+          "did": "0c48b716-9f67-4547-b486-37504ad4a391"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -345,7 +345,7 @@
           "project_id": "acct-bpa-test",
           "size": 235642355,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "54e9d387-3b3e-469b-bf41-45f2e547b2ea"
+          "did": "54e9d387-3b3e-469b-bf41-45f2e547b2ea"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -354,7 +354,7 @@
           "project_id": "acct-bpa-test",
           "size": 227404910,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "a99387a4-659e-4326-b2e3-af45362d859a"
+          "did": "a99387a4-659e-4326-b2e3-af45362d859a"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -363,7 +363,7 @@
           "project_id": "acct-bpa-test",
           "size": 433567334,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "ce33c29e-e805-4316-9a00-eafdc1c41d7b"
+          "did": "ce33c29e-e805-4316-9a00-eafdc1c41d7b"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -372,7 +372,7 @@
           "project_id": "acct-bpa-test",
           "size": 28350278,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "7adb1299-f569-4389-8d99-6c07d221788e"
+          "did": "7adb1299-f569-4389-8d99-6c07d221788e"
         },
         {
           "category": "Simple Nucleotide/INDEL Variation",
@@ -381,7 +381,7 @@
           "project_id": "acct-bpa-test",
           "size": 219840132,
           "type": "Raw Simple Somatic Mutation",
-          "uuid": "c3954c7a-ca69-40a0-bb86-ae7572a6d9d5"
+          "did": "c3954c7a-ca69-40a0-bb86-ae7572a6d9d5"
         }
       ],
       "submitted_copy_number": [],
