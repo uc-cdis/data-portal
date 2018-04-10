@@ -8,7 +8,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'react-select/dist/react-select.css';
 import querystring from 'querystring';
 
-import { fetchUser, fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
+import { fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 import AmbiHomepage from './Homepage/AmbiHomepage';
@@ -21,7 +21,6 @@ import CertificateQuiz from './Certificate/ReduxQuiz';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import { basename } from './localconf';
 import { OuterWrapper, Box, Margin, theme } from './theme';
-import { asyncSetInterval } from './utils';
 import getReduxStore from './reduxStore';
 import Nav from './Nav/ReduxNavBar';
 import Footer from './components/Footer';
@@ -37,7 +36,7 @@ injectTapEventPlugin();
 async function init() {
   const store = await getReduxStore();
 
-  asyncSetInterval(() => store.dispatch(fetchUser), 60000);
+  // asyncSetInterval(() => store.dispatch(fetchUser), 60000);
 
   await Promise.all(
     [

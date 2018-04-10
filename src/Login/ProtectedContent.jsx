@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import { fetchUser, fetchOAuthURL, fetchJsonOrText, fetchProjects } from '../actions';
+import { fetchUser, fetchOAuthURL, fetchWithCreds, fetchProjects } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import { requiredCerts, submissionApiOauthPath } from '../configs';
@@ -227,7 +227,7 @@ class ProtectedContent extends React.Component {
         //      works across all services
         return store.dispatch(fetchOAuthURL(submissionApiOauthPath))
           .then(
-            oauthUrl => fetchJsonOrText({ path: oauthUrl, dispatch: store.dispatch.bind(store) }))
+            oauthUrl => fetchWithCreds({ path: oauthUrl, dispatch: store.dispatch.bind(store) }))
           .then(
             ({ status, data }) => {
               switch (status) {

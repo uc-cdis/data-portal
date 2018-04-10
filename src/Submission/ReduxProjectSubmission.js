@@ -5,7 +5,7 @@ import SubmitForm from './SubmitForm';
 
 import ReduxDataModelGraph, { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
 
-import { fetchJsonOrText } from '../actions';
+import { fetchWithCreds } from '../actions';
 import { predictFileType } from '../utils';
 import { submissionApiPath } from '../localconf';
 
@@ -40,7 +40,7 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
   if (program !== '_root') {
     subUrl = `${subUrl + program}/${project}/`;
   }
-  return fetchJsonOrText({
+  return fetchWithCreds({
     path: subUrl,
     method,
     customHeaders: { 'Content-Type': submission.file_type },

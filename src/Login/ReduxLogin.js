@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
 
 import Login from './Login';
-import { fetchJsonOrText } from '../actions';
+import { fetchWithCreds } from '../actions';
 import { loginPath } from '../localconf';
 
 
 export const fetchLogin = () =>
   dispatch =>
-    fetchJsonOrText({
+    fetchWithCreds({
       path: loginPath,
       dispatch,
     })
