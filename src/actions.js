@@ -217,7 +217,7 @@ export const fetchProjects = () => dispatch =>
   fetchJsonOrText({
     path: `${submissionApiPath}graphql`,
     body: JSON.stringify({
-      query: 'query Test { project(first:10000) {code, project_id}}',
+      query: 'query { project(first:0) {code, project_id, availability_type}}',
     }),
     method: 'POST',
   })

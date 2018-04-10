@@ -8,6 +8,7 @@ import { TableData, TableHeadCell,
   TableFootCell, PageButton, ArrowButton } from './style';
 import getReduxStore from '../reduxStore';
 import SelectComponent from '../components/SelectComponent';
+import { hostname } from '../localconf';
 
 const makeDefaultState = (page, pageSize, originalPage) => ({
   page,
@@ -26,6 +27,8 @@ export const ExplorerTableStyle = styled.table`
 
 export class ExplorerTableComponent extends Component {
   static propTypes = {
+    user: PropTypes.object,
+    projectAvail: PropTypes.object,
     name: PropTypes.string.isRequired,
     filesList: PropTypes.array,
     lastPageSize: PropTypes.number,
@@ -40,6 +43,8 @@ export class ExplorerTableComponent extends Component {
   };
 
   static defaultProps = {
+    user: {},
+    projectAvail: {},
     filesList: [],
     lastPageSize: 0,
     originalPage: 0,
@@ -49,13 +54,45 @@ export class ExplorerTableComponent extends Component {
     onPageSizeChange: () => {},
   };
 
-  static renderRow(file, columnWidths, i) {
+  static renderFileName(user, projectAvail, projectID, did, name) {
+    const parts = projectID.split('-');
+    const program = parts[0];
+    const project = parts[1];
+    let hasAccess = false;
+    if (projectID in projectAvail) {
+      if (projectAvail[projectID] === 'Open') {
+        hasAccess = true;
+      }
+    }
+    if ('project_access' in user && program in user.project_access) {
+      if (user.project_access[program].includes('read-storage')) {
+        hasAccess = true;
+      }
+    }
+    if ('project_access' in user && project in user.project_access) {
+      if (user.project_access[project].includes('read-storage')) {
+        hasAccess = true;
+      }
+    }
+    const filename = hasAccess ? (
+      <a key={name} href={`${hostname}user/data/download/${did}?redirect`}>{name}</a>
+    ) : (
+      <span>{name}</span>
+    );
+    return filename;
+  }
+
+  static renderRow(user, projectAvail, file, columnWidths, i) {
+    const filename = ExplorerTableComponent.renderFileName(user, projectAvail,
+      file.project_id, file.did, file.name);
     return (
       <TableRow key={i}>
         <TableData c_width={columnWidths[0]}>
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
         </TableData>
-        <TableData c_width={columnWidths[1]}>{file.name}</TableData>
+        <TableData c_width={columnWidths[1]}>
+          {filename}
+        </TableData>
         <TableData c_width={columnWidths[2]}>{file.format}</TableData>
         <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{file.size}</TableData>
         <TableData c_width={columnWidths[4]}>{file.category}</TableData>
@@ -149,7 +186,8 @@ export class ExplorerTableComponent extends Component {
         <tbody>
           {
             filesList && filesList.map(
-              (item, i) => ExplorerTableComponent.renderRow(item, columnWidths, i),
+              (item, i) => ExplorerTableComponent.renderRow(this.props.user,
+                this.props.projectAvail, item, columnWidths, i),
             )
           }
         </tbody>
