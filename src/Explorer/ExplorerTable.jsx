@@ -75,7 +75,7 @@ export class ExplorerTableComponent extends Component {
       }
     }
     const filename = hasAccess ? (
-      <a key={name} href={`${hostname}user/data/download/${did}?redirect`}>{name}</a>
+      <a key={name} href={`${hostname}user/data/download/${did}?expires_in=10&redirect`}>{name}</a>
     ) : (
       <span>{name}</span>
     );
