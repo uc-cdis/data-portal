@@ -8,7 +8,7 @@ import { TableData, TableHeadCell,
   TableFootCell, PageButton, ArrowButton } from './style';
 import getReduxStore from '../reduxStore';
 import SelectComponent from '../components/SelectComponent';
-import { hostname } from '../localconf';
+import { userapiPath } from '../localconf';
 
 const makeDefaultState = (page, pageSize, originalPage) => ({
   page,
@@ -75,7 +75,7 @@ export class ExplorerTableComponent extends Component {
       }
     }
     const filename = hasAccess ? (
-      <a key={name} href={`${hostname}user/data/download/${did}?expires_in=10&redirect`}>{name}</a>
+      <a key={name} href={`${userapiPath}data/download/${did}?expires_in=10&redirect`}>{name}</a>
     ) : (
       <span>{name}</span>
     );
