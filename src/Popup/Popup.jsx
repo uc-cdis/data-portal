@@ -42,6 +42,7 @@ export const PopupBox = styled.section`
   overflow-y: scroll;
   background: white;
   margin: auto;
+  margin-bottom: 6em;
   padding: 2em;
   overflow: hidden;
 `;
