@@ -25,13 +25,14 @@ export const getCounts = (typeList, project, dictionary) => {
   let query = '{';
 
   function appendCountToQuery(element) {
-    if (element !== 'metaschema' && !element.startsWith('_')) {
+    const node = dictionary[element];
+    if (element !== 'metaschema' && !element.startsWith('_') && node.category !== 'internal') {
       query += `_${element}_count (project_id:"${project}"),`;
     }
   }
 
   function appendLinkToQuery(source, dest, name) {
-    if (source.id !== 'metaschema' && !source.id.startsWith('_')) {
+    if (source.id !== 'metaschema' && !source.id.startsWith('_') && source.category !== 'internal') {
       query += `${source.id}_${name}_to_${dest.id}_link: ${source.id}(with_links: ["${name}"], first:1, project_id:"${project}"){submitter_id},`;
     }
   }
