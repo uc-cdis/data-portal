@@ -18,7 +18,8 @@
 export function createNodesAndEdges(props, createAll, nodesToHide = ['program']) {
   const dictionary = props.dictionary;
   const nodes = Object.keys(dictionary).filter(
-    key => !key.startsWith('_') && dictionary[key].type === 'object' && !nodesToHide.includes(key),
+    key => !key.startsWith('_') && dictionary[key].type === 'object'
+      && dictionary[key].category !== 'internal' && !nodesToHide.includes(key),
   ).map(
     (key) => {
       let count = 0;
@@ -84,7 +85,6 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
     // filter out if no instances of this link exists and createAll is not specified
       link => createAll || link.exists || link.exists === undefined,
     );
-
   return {
     nodes,
     edges,

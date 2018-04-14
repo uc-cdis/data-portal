@@ -46,35 +46,35 @@ export const getCounts = (typeList, project, dictionary) => {
   const nodesToHide = { program: true };
   // Add links to query
   Object.keys(dictionary).filter(
-    name => (!name.startsWith('_' && dictionary[name].links)),
+    name => (!name.startsWith('_' && dictionary[name].links) && dictionary[name].category !== 'internal'),
   ).reduce( // extract links from each node
     (linkList, name) => {
       const node = dictionary[name];
       const newLinks = node.links;
+      if (newLinks) { // extract subgroups from each link
+        const sgLinks = newLinks.reduce(
+          (listlist, link) => {
+            if (link.subgroup) {
+              return link.subgroup.map(
+                 sg => ({
+                  source: dictionary[name],
+                  target: dictionary[sg.target_type],
+                  name: sg.name,
+                 }),
+               ).concat(listlist);
+            }
+            return listlist;
+          }, [],
+        );
+        linkList = sgLinks.concat(linkList);
+      }
       return newLinks ? newLinks.map(
         l => ({ source: dictionary[name], target: dictionary[l.target_type], name: l.name }),
       ).concat(linkList) : linkList;
     }, [],
-  ).reduce( // extract subgroups from each link
-    (linkList, link) => {
-      let result = linkList;
-      if (link.target) {
-        result.push(link);
-      }
-      if (link.subgroup) {
-        result = link.subgroup.map(
-          sg => ({
-            source: dictionary[link.source],
-            target: dictionary[sg.target_type],
-            name: sg.name,
-          }),
-        ).concat(linkList);
-      }
-      return result;
-    }, [],
   )
     .filter(
-      l => !nodesToHide[l.source.id] && !nodesToHide[l.target.id],
+      l => l.source && l.target && !nodesToHide[l.source.id] && !nodesToHide[l.target.id],
     )
     .forEach(
       ({ source, target, name }) => appendLinkToQuery(source, target, name),
