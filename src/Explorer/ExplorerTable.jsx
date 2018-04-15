@@ -82,9 +82,15 @@ export class ExplorerTableComponent extends Component {
     return filename;
   }
 
+  static humanFileSize(size) {
+    var i = size == 0 ? 0 :Math.floor( Math.log(size) / Math.log(1024) );
+    return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+  }
+
   static renderRow(user, projectAvail, file, columnWidths, i) {
     const filename = ExplorerTableComponent.renderFileName(user, projectAvail,
       file.project_id, file.did, file.name);
+    const filesize = ExplorerTableComponent.humanFileSize(file.size);
     return (
       <TableRow key={i}>
         <TableData c_width={columnWidths[0]}>
@@ -94,7 +100,7 @@ export class ExplorerTableComponent extends Component {
           {filename}
         </TableData>
         <TableData c_width={columnWidths[2]}>{file.format}</TableData>
-        <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{file.size}</TableData>
+        <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{filesize}</TableData>
         <TableData c_width={columnWidths[4]}>{file.category}</TableData>
       </TableRow>
     );
