@@ -84,7 +84,9 @@ export class ExplorerTableComponent extends Component {
 
   static humanFileSize(size) {
     const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
-    return ((size / (1024 ** i)).toFixed(2) * 1) + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+    const sizeStr = (size / (1024 ** i)).toFixed(2) * 1;
+    const suffix = ['B', 'kB', 'MB', 'GB', 'TB'][i];
+    return `${sizeStr} ${suffix}`;
   }
 
   static renderRow(user, projectAvail, file, columnWidths, i) {

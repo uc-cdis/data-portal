@@ -51,6 +51,7 @@ export const getCounts = (typeList, project, dictionary) => {
     (linkList, name) => {
       const node = dictionary[name];
       const newLinks = node.links;
+      const results = linkList;
       if (newLinks) { // extract subgroups from each link
         const sgLinks = newLinks.reduce(
           (listlist, link) => {
@@ -66,11 +67,11 @@ export const getCounts = (typeList, project, dictionary) => {
             return listlist;
           }, [],
         );
-        linkList = sgLinks.concat(linkList);
+        results = sgLinks.concat(linkList);
       }
       return newLinks ? newLinks.map(
         l => ({ source: dictionary[name], target: dictionary[l.target_type], name: l.name }),
-      ).concat(linkList) : linkList;
+      ).concat(results) : results;
     }, [],
   )
     .filter(
