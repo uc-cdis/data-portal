@@ -187,8 +187,8 @@ export function nodesBreadthFirst(nodes, edges) {
       },
     );
   }
- 
-  // Reset and run for real 
+
+  // Reset and run for real
   queue = [];
   queue.push({ query: root, level: 0 });
 
@@ -208,7 +208,7 @@ export function nodesBreadthFirst(nodes, edges) {
         //   and edge.target into node references ...
         const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
         if (name2EdgesIn[sourceName]) {
-          if (!processedNodes.has(sourceName) && name2ActualLvl[sourceName] == (level + 1)) {
+          if (!processedNodes.has(sourceName) && name2ActualLvl[sourceName] === (level + 1)) {
             //
             // edge source has not yet been processed via another link from the source
             // to a node higher in the graph

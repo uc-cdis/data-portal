@@ -56,12 +56,12 @@ export const getCounts = (typeList, project, dictionary) => {
           (listlist, link) => {
             if (link.subgroup) {
               return link.subgroup.map(
-                 sg => ({
+                sg => ({
                   source: dictionary[name],
                   target: dictionary[sg.target_type],
                   name: sg.name,
-                 }),
-               ).concat(listlist);
+                }),
+              ).concat(listlist);
             }
             return listlist;
           }, [],

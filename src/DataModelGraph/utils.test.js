@@ -27,9 +27,9 @@ describe('the DataModelGraph utils helper', () => {
     const { bfOrder, treeLevel2Names, name2Level } = nodesBreadthFirst(nodes, edges);
     console.log('tree info', treeLevel2Names);
     expect(bfOrder.length).toBe(nodes.length - 1); // node z is floating ...
-    expect(treeLevel2Names.length).toBe(4); 
+    expect(treeLevel2Names.length).toBe(4);
     expect(treeLevel2Names[0].length).toBe(1); // project
-    expect(treeLevel2Names[1].length).toBe(1); 
+    expect(treeLevel2Names[1].length).toBe(1);
     expect(treeLevel2Names[2].length).toBe(4); // a, c, x, y
     expect(name2Level.d).toBe(3); // d on level 3
     for (let level = 0; level < treeLevel2Names.length; level += 1) {
