@@ -6,11 +6,7 @@ import FlatButton from 'material-ui/FlatButton';
 import { app } from '../localconf';
 
 
-const NavLeft = (app === 'gtex') ? styled.nav`
-  width: 85%;
-  float: left;
-  padding-left: 150px;
-` : styled.nav`
+const NavLeft = styled.nav`
   width: 85%;
   float: left;
   padding-left: 200px;
