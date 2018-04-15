@@ -51,7 +51,7 @@ export const getCounts = (typeList, project, dictionary) => {
     (linkList, name) => {
       const node = dictionary[name];
       const newLinks = node.links;
-      const results = linkList;
+      let results = linkList;
       if (newLinks) { // extract subgroups from each link
         const sgLinks = newLinks.reduce(
           (listlist, link) => {
