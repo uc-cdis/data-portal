@@ -20,7 +20,7 @@ const Header = styled.header`
   width: 100%;
   background-color: white;
   border-bottom: 3px solid #DFDFDF;
-  padding: 18px 100px;
+  padding: 22px 100px;
   overflow: hidden;
   vertical-align: middle;
 `;
