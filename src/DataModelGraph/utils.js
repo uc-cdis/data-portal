@@ -18,7 +18,8 @@
 export function createNodesAndEdges(props, createAll, nodesToHide = ['program']) {
   const dictionary = props.dictionary;
   const nodes = Object.keys(dictionary).filter(
-    key => !key.startsWith('_') && dictionary[key].type === 'object' && !nodesToHide.includes(key),
+    key => !key.startsWith('_') && dictionary[key].type === 'object'
+      && dictionary[key].category !== 'internal' && !nodesToHide.includes(key),
   ).map(
     (key) => {
       let count = 0;
@@ -84,7 +85,6 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
     // filter out if no instances of this link exists and createAll is not specified
       link => createAll || link.exists || link.exists === undefined,
     );
-
   return {
     nodes,
     edges,
@@ -161,13 +161,36 @@ export function nodesBreadthFirst(nodes, edges) {
   }
 
   const processedNodes = new Set(); // account for nodes that link to multiple other nodes
-  const queue = [];
+  let queue = [];
   queue.push({ query: root, level: 0 });
 
   // just 2b safe - could be user gives us a graph without a 'project'
   if (!name2EdgesIn[root]) {
     name2EdgesIn[root] = [];
   }
+
+  const name2ActualLvl = {};
+  // Run through this once to determine the actual level of each node
+  for (let head = 0; head < queue.length; head += 1) {
+    const { query, level } = queue[head]; // breadth first
+    name2ActualLvl[query] = level;
+    name2EdgesIn[query].forEach(
+      (edge) => {
+        // At some point the d3 force layout converts edge.source
+        //   and edge.target into node references ...
+        const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
+        if (name2EdgesIn[sourceName]) {
+          queue.push({ query: sourceName, level: level + 1 });
+        } else {
+          console.log(`Edge comes from unknown node ${sourceName}`);
+        }
+      },
+    );
+  }
+
+  // Reset and run for real
+  queue = [];
+  queue.push({ query: root, level: 0 });
 
   // queue.shift is O(n), so just keep pushing, and move the head
   for (let head = 0; head < queue.length; head += 1) {
@@ -185,7 +208,7 @@ export function nodesBreadthFirst(nodes, edges) {
         //   and edge.target into node references ...
         const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
         if (name2EdgesIn[sourceName]) {
-          if (!processedNodes.has(sourceName)) {
+          if (!processedNodes.has(sourceName) && name2ActualLvl[sourceName] === (level + 1)) {
             //
             // edge source has not yet been processed via another link from the source
             // to a node higher in the graph

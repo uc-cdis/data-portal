@@ -32,19 +32,18 @@ npm run relay
 ```
 Then browse to http://localhost:8080/webpack-dev-server/ . Since we are running it without APIs, this will only render static pages but any submission actions to APIs will fail.
 
-### Docker Build for Different Commons
-Environmental Commons:
+### Docker Build for Local Development
+Build the container image first
 ```
-docker build -t dataportal --build-arg https_proxy=http://cloud-proxy:3128 --build-arg http_proxy=http://cloud-proxy:3128 --build-arg APP=edc --build-arg BASENAME="https://play.opensciencedatacloud.org/portal/" .
+docker build -t windmill .
 ```
-BPA:
+
+Then run the container
 ```
-docker build -t dataportal --build-arg https_proxy=http://cloud-proxy:3128 --build-arg http_proxy=http://cloud-proxy:3128 .
+docker run --rm -e HOSTNAME=dev.example.net -e APP=dev -p 443:443 -ti windmill
 ```
-GDC Jamboree:
-```
-docker build -t dataportal --build-arg https_proxy=http://cloud-proxy:3128 --build-arg http_proxy=http://cloud-proxy:3128 --build-arg APP=gdc .
-```
+
+You will then need to visit `https://localhost` and accept the self-signed certificate warnings
 
 ### Deployment
 docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal
