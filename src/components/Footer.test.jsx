@@ -4,6 +4,15 @@ import { StaticRouter } from 'react-router-dom';
 
 import Footer from './Footer';
 
+const dictIcons = {
+  'gen3': (height) => {
+    return <img name='test' src='' height={height}/>
+  },
+  'uchicago': (height) => {
+    return <img name='test' src='' height={height}/>
+  },
+};
+
 describe('The Footer component', () => {
   it('Supports static defaults', () => {
     Object.assign(Footer.defaultProps,
@@ -11,7 +20,7 @@ describe('The Footer component', () => {
     );
     const footer = mount(
       <StaticRouter location={{ pathname: '/dd' }}>
-        <Footer />
+        <Footer dictIcons={dictIcons}/>
       </StaticRouter>,
     );
     const span = footer.find('span');
