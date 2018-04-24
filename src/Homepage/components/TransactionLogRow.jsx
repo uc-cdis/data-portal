@@ -3,16 +3,17 @@ import React from 'react';
 import styled from 'styled-components';
 import { TableRow, TableCell, ColorSpan, ColorBar } from '../style';
 
-const SuccessBar = styled(ColorBar)`
-  background: #004499;
+const StatusBar = styled.div`
+  font-size: 16px;
+  text-align: left;
 `;
 
-const FailBar = styled(ColorBar)`
-  background: #ff2200;
+const FailBar = styled(StatusBar)`
+  color: #ff2200;
 `;
 
-const PendingBar = styled(ColorBar)`
-  background: #aa6600;
+const PendingBar = styled(StatusBar)`
+  color: #ffffff;
 `;
 
 const getLocalTime = (gmtTimeString) => {
@@ -20,6 +21,10 @@ const getLocalTime = (gmtTimeString) => {
   const offsetMins = date.getTimezoneOffset();
   const offsetHous = -offsetMins / 60;
   return `${date.toLocaleString()} UTC${(offsetMins > 0) ? '' : '+'}${offsetHous}`;
+};
+
+const formatText = (text) => {
+  return text[0] + text.slice(1).toLowerCase();
 };
 
 /**
@@ -37,9 +42,10 @@ export class TransactionLogTR extends React.Component {
         <TableCell>{getLocalTime(trans.created_datetime)}
         </TableCell>
         <TableCell>
-          {(trans.state === 'SUCCEEDED' && <SuccessBar><ColorSpan >{trans.state}</ColorSpan></SuccessBar>)
-          || ((trans.state === 'FAILED' || trans.state === 'ERRORED') && <FailBar><ColorSpan >{trans.state}</ColorSpan></FailBar>)
-          || (trans.state === 'PENDING' && <PendingBar><ColorSpan >{trans.state}</ColorSpan></PendingBar>)
+          {
+            (trans.state === 'SUCCEEDED' && <StatusBar className='special-number'>{formatText(trans.state)}</StatusBar>)
+          || ((trans.state === 'FAILED' || trans.state === 'ERRORED') && <FailBar className='special-number'>{formatText(trans.state)}</FailBar>)
+          || (trans.state === 'PENDING' && <PendingBar className='special-number'>{formatText(trans.state)}</PendingBar>)
           }
         </TableCell>
       </TableRow>);
@@ -52,9 +58,10 @@ export class TransactionLogTR extends React.Component {
       <TableCell>{getLocalTime(trans.created_datetime)}
       </TableCell>
       <TableCell>
-        {(trans.state === 'SUCCEEDED' && <SuccessBar><ColorSpan >{trans.state}</ColorSpan></SuccessBar>)
-        || ((trans.state === 'FAILED' || trans.state === 'ERRORED') && <FailBar><ColorSpan >{trans.state}</ColorSpan></FailBar>)
-        || (trans.state === 'PENDING' && <PendingBar><ColorSpan >{trans.state}</ColorSpan></PendingBar>)
+        {
+          (trans.state === 'SUCCEEDED' && <StatusBar className='special-number'>{formatText(trans.state)}</StatusBar>)
+          || ((trans.state === 'FAILED' || trans.state === 'ERRORED') && <FailBar className='special-number'>{formatText(trans.state)}</FailBar>)
+          || (trans.state === 'PENDING' && <PendingBar className='special-number'>{formatText(trans.state)}</PendingBar>)
         }
       </TableCell>
     </TableRow>);

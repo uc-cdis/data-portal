@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import IconComponent from './Icon';
+import NavButton from './NavButton';
 
 const NavLeft = styled.nav`
   float: left;
@@ -23,23 +23,6 @@ const NavRight = styled.nav`
   float: right;
   color: white;
   overflow: hidden;
-`;
-
-const NavButton = styled.div`
-  padding: 16px 0px;
-  height: 80px;
-  width: 120px;
-  display: inline-block;
-  text-align: center;
-  opacity: 0.8;
-  &:hover {
-    opacity: 1;
-    border-bottom: 3px solid #ef8523;
-  }
-  &:active {
-    opacity: 1;
-    border-bottom: 3px solid #ef8523;
-  }
 `;
 
 const NavHome = styled(Link)`
@@ -88,60 +71,78 @@ const NavA = styled.a`
   text-align: center;
 `;
 
-const NavIcon = styled.div`
-  vertical-align: middle;
-  padding-left: 4px;
-`;
-
+const makeDefaultState = (selectedTabId) => ({
+  selectedTabId
+});
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
- * @param {navaItems,user,onLogoutClick} params
+ * @param { dictIcons, navTitle, navItems } params
  */
-const NavBar = ({ dictIcons, navTitle, navItems }) => {
-  return (
-    <div style={{width: "100%", backgroundColor: "white", borderBottom: "1px solid #9b9b9b"}}>
-      <Header>
-        <NavLeft>
-          <NavLogo style={{width: "240px"}}>
-            <img src="/src/img/logo.png" style={{height: "64px", display:"block",
-              paddingRight: "8px",
-              borderRight: "0.5px solid #9b9b9b"}}/>
-          </NavLogo>
-          <NavHome className="h3-typo" to=''>
-            {navTitle}
-          </NavHome>
-        </NavLeft>
-        <NavRight>
-          {
-            navItems.map(
-              item => {
-                return (
-                  (item.link.startsWith('http')) ?
-                    <NavA key={item.link} href={item.link}>
-                      <NavButton className="body-typo">
-                        <NavIcon>
-                          <IconComponent iconName={item.icon} dictIcons={dictIcons}/>
-                        </NavIcon>
-                        {item.name}
-                      </NavButton>
-                    </NavA> :
-                    <NavItem key={item.link} to={item.link}>
-                      <NavButton className="body-typo">
-                        <NavIcon>
-                          <IconComponent iconName={item.icon} dictIcons={dictIcons}/>
-                        </NavIcon>
-                        {item.name}
-                      </NavButton>
-                    </NavItem>
-                );
-              },
-            )
-          }
-        </NavRight>
-      </Header>
-    </div>
-  );
+class NavBar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = makeDefaultState(1);
+    this.resetState = this.resetState.bind(this);
+  }
+
+  resetState() {
+    this.setState(makeDefaultState());
+  }
+
+  isActive = (id) => {
+    return this.state.selectedTabId === id;
+  };
+
+  setActiveTab = (selectedTabId) => {
+    this.setState({ selectedTabId });
+  };
+
+  componentWillReceiveProps(nextProps) {
+
+  }
+
+  render () {
+    return (
+      <div style={{width: "100%", backgroundColor: "white", borderBottom: "1px solid #9b9b9b"}}>
+        <Header>
+          <NavLeft>
+            <NavLogo style={{width: "240px"}}>
+              <img src="/src/img/logo.png" style={{height: "64px", display:"block",
+                paddingRight: "8px",
+                borderRight: "0.5px solid #9b9b9b"}}/>
+            </NavLogo>
+            <div onClick={ () => this.setActiveTab('')} style={{display: "inline-block"}}>
+              <NavHome className="h3-typo" to=''>
+                {this.props.navTitle}
+              </NavHome>
+            </div>
+          </NavLeft>
+          <NavRight>
+            {
+              this.props.navItems.map(
+                item => {
+                  return (
+                    (item.link.startsWith('http')) ?
+                      <NavA key={item.link} href={item.link}>
+                        <NavButton item={ item } dictIcons={ this.props.dictIcons }
+                                   isActive={ this.isActive(item.link) }
+                                   onActiveTab={ () => this.setActiveTab(item.link) }/>
+                      </NavA> :
+                      <NavItem key={ item.link } to={ item.link }>
+                        <NavButton item={ item } dictIcons={ this.props.dictIcons }
+                                   isActive={ this.isActive(item.link) }
+                                   onActiveTab={ () => this.setActiveTab(item.link) }/>
+                      </NavItem>
+                  );
+                },
+              )
+            }
+          </NavRight>
+        </Header>
+      </div>
+    );
+  }
 };
 
 NavBar.propTypes = {

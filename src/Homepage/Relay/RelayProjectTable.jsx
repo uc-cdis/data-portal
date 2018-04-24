@@ -6,6 +6,7 @@ import environment from '../../environment';
 import ProjectTable from '../components/ProjectTable';
 import ProjectTR from '../components/ProjectRow';
 import Spinner from '../../components/Spinner';
+import dictIcons from '../../img/icons/index';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
@@ -27,7 +28,7 @@ class RelayProjectTable extends ProjectTable {
    *
    * @param {Object} proj
    */
-  rowRender(proj) {
+  rowRender(proj, i) {
     return (<QueryRenderer
       key={proj.name}
       environment={environment}
@@ -83,8 +84,8 @@ class RelayProjectTable extends ProjectTable {
               console.error('WARNING: failed to load redux store', err);
             },
           );
-
-          return <ProjectTR key={projInfo.name} project={projInfo} />;
+          return <ProjectTR key={projInfo.name} project={projInfo}
+                            index={i} dictIcons={dictIcons}/>;
         }
         return <tr><td><Spinner /></td></tr>;
       }

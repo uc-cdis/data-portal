@@ -126,7 +126,7 @@ export const TableRow = styled.tr`
   overflow: hidden;
   overflow-x: hidden;
   overflow-y: visible;
-  font-size: 1.5rem;
+  font-size: 16px;
   width: 100%;
   display: table;
 `;

@@ -16,7 +16,6 @@
     "d3-selection": "^1.1.0",
     "fast-csv": "^2.4.0",
     "file-saver": "^1.3.3",
-    "fsevents": "^1.1.3",
     "graphiql": "^0.11.11",
     "graphql": "^0.8.2",
     "history": "^4.7.2",
@@ -99,7 +98,11 @@
     "automock": false,
     "setupFiles": [
       "./src/setupJest.js"
-    ]
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
+      "<rootDir>/__mocks__/fileMock.js"
+    }
   },
   "scripts": {
     "start": "BROWSER=none jailbreak-react-scripts start",

@@ -14,9 +14,11 @@ let lastTokenRefreshMs = 0;
 
 const Body = styled.div`
   background: ${props => props.background};
-  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
   width: 1220px;
-  padding: ${props => props.padding || '50px 0px'};
+  padding: ${props => props.padding || '0px 0px 150px 0px'};
+  min-height: 900px;
 `;
 
 /**
@@ -61,7 +63,7 @@ export function intersection(aList, bList) {
  * @param history from react-router
  * @param match from react-router.match
  * @param public default false - set true to disable auth-guard
- * @param background passed through to <Box background> wrapper for page-level background
+ * @param background passed through to <Box background> wrapper for page.jsx-level background
  * @param filter {() => Promise} optional filter to apply before rendering the child component
  */
 class ProtectedContent extends React.Component {

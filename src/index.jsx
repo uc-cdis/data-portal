@@ -12,9 +12,10 @@ import querystring from 'querystring';
 import { fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
-import AmbiHomepage from './Homepage/AmbiHomepage';
+import HomePage from './Homepage/page';
+import DocumentPage from './Document/page';
 import ExplorerPage from './Explorer/ExplorerPage';
-import IndexPage from './Index/IndexPage';
+import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/ReduxDataDictionary';
 import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
@@ -24,7 +25,6 @@ import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import { basename } from './localconf';
 import { OuterWrapper, Box, Margin, theme } from './theme';
 import getReduxStore from './reduxStore';
-// import Nav from './Nav/ReduxNavBar';
 import NavBar from './components/NavBar';
 import Top from './Top/ReduxTopBar';
 import Footer from './components/Footer';
@@ -90,6 +90,20 @@ async function init() {
                     path="/"
                     component={
                       props => <ProtectedContent component={IndexPage} {...props} />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/submission"
+                    component={
+                      props => <ProtectedContent component={HomePage} {...props} />
+                    }
+                  />
+                  <Route
+                    exact
+                    path="/document"
+                    component={
+                      props => <ProtectedContent component={DocumentPage} {...props} />
                     }
                   />
                   <Route
@@ -164,7 +178,7 @@ async function init() {
                     }
                   />
                 </Switch>
-                <Margin background={background} />
+                {/*<Margin background={background} />*/}
               </Box>
               <Footer dictIcons={dictIcons}/>
             </OuterWrapper>

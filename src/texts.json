@@ -3,7 +3,8 @@
     "index": {
       "introduction": {
         "heading": "NIAID Data Commons Hub",
-        "text": "The NIAID Data Portal is a robust data-driven platform that allows researchers and bioinformaticians to search and download data for analysis."
+        "text": "The NIAID Data Hub supports the management, analysis and sharing of data for the research community.",
+        "link": "/submission"
       },
       "buttons": [
         {
@@ -42,7 +43,8 @@
     "index": {
       "introduction": {
         "heading": "NIAID Data Commons Hub",
-        "text": "The NIAID Data Portal is a robust data-driven platform that allows researchers and bioinformaticians to search and download data for analysis."
+        "text": "The NIAID Data Portal is a robust data-driven platform that allows researchers and bioinformaticians to search and download data for analysis.",
+        "link": "/submission"
       },
       "buttons": [
         {

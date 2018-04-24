@@ -16,9 +16,10 @@
 @orange: #ef8523;
 @silver: #e7e7e7;
 @white: #ffffff;
+@medium: 500;
 @semi-bold: 600;
 
-html {
+html, body {
   height: 100%;
 }
 
@@ -55,8 +56,7 @@ h4 {
 }
 
 body {
-  height: 100%;
-  min-height: 100%;
+  background: @cloud;
   position: relative;
   font-size: 14px;
   font-weight: normal;
@@ -125,18 +125,18 @@ button {
   width: 152px;
   height: 40px;
   font-size: 14px;
-  font-weight: @semi-bold;
+  font-weight: @medium;
 }
 
 .button-primary-white {
   border: 1px solid @light_gray;
   background-color: @white;
   color: @gray;
-  font-weight: @semi-bold;
+  font-weight: @medium;
   &:hover {
     border: 1px solid @black;
     color: @black;
-    font-weight: bold;
+    font-weight: @semi-bold;
   }
   &:active {
     border: 1px solid @orange;
@@ -147,11 +147,13 @@ button {
 .button-primary-orange {
   border: 1px solid @light_gray;
   background-color: @orange;
+  letter-spacing: .06rem;
   color: @white;
-  font-weight: @semi-bold;
+  font-weight: @medium;
   &:hover {
     border: 1px solid @gray;
-    font-weight: bold;
+    font-weight: @semi-bold;
+    background-color: @apricot;
   }
   &:active {
     opacity: 0.8;
@@ -196,6 +198,11 @@ ul {
 .button-inline {
   background-color: #34ADDB;
   padding: 5px 10px;
+}
+
+.button-active {
+  opacity: 1;
+  border-bottom: 3px solid #ef8523;
 }
 
 .right {

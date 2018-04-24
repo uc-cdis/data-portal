@@ -1,5 +1,6 @@
 import React from 'react';
 import { QueryRenderer } from 'react-relay';
+import { fetchQuery } from 'relay-runtime';
 import environment from '../../environment';
 import { DashboardWith } from '../components/ParamProjectDashboard';
 import RelayProjectTable from './RelayProjectTable';
@@ -110,6 +111,21 @@ class RelayProjectDashboard extends React.Component {
       />);
   }
 }
+
+
+const getProjectsList = () => {
+  fetchQuery(environment, gqlHelper.homepageQuery, {})
+    .then(
+      data => {
+        const { projectList, summaryCounts } = transformRelayProps(data);
+        updateRedux({ projectList, summaryCounts });
+        getProjectDetail(projectList);
+      },
+      error => {
+        updateReduxError(error);
+      }
+    )
+};
 
 /**
  * Relay (graphql injected) wrapped homepage

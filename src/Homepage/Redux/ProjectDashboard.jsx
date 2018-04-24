@@ -11,7 +11,7 @@ const DashTopDiv = styled.div`
 
 /**
  * Project dashbaord - list projects with various stats and links
- * for submission page, whatever.
+ * for submission page.jsx, whatever.
  *   props { caseCount, experimnentCount, fileCount, aliquoteCount, projectList
  *    }
  * where
@@ -34,7 +34,7 @@ class LittleProjectDashboard extends Component {
           countItems={this.props.summaries}
           icons={this.props.icons}
         />
-        <ReduxProjectBarChart projectList={this.props.projectList} />
+        {/*<ReduxProjectBarChart projectList={this.props.projectList} />*/}
       </DashTopDiv>
     );
   }
