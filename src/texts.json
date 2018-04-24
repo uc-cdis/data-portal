@@ -1,0 +1,80 @@
+{
+  "ndh": {
+    "index": {
+      "introduction": {
+        "heading": "NIAID Data Commons Hub",
+        "text": "The NIAID Data Portal is a robust data-driven platform that allows researchers and bioinformaticians to search and download data for analysis."
+      },
+      "buttons": [
+        {
+          "name": "Define Data Field",
+          "icon": "data-field-define",
+          "body": "The NIAID Data Hub define the data in a general way. Please study the dictionary before you start browsing.",
+          "link": "/DD",
+          "label": "Learn more"
+        },
+        {
+          "name": "Explore Data",
+          "icon": "data-explore",
+          "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
+          "link": "#hostname#ndh",
+          "label": "Explore data"
+        },
+        {
+          "name": "Access Data",
+          "icon": "data-access",
+          "body": "Use our selected tool to filter out the data you need.",
+          "link": "/query",
+          "label": "Query data"
+
+        },
+        {
+          "name": "Analyze Data",
+          "icon": "data-analyze",
+          "body": "Analyze your selected cases using Jupyter Notebooks in our secure cloud environment",
+          "link": "#hostname#workspace",
+          "label": "Run analysis"
+        }
+      ]
+    }
+  },
+  "default": {
+    "index": {
+      "introduction": {
+        "heading": "NIAID Data Commons Hub",
+        "text": "The NIAID Data Portal is a robust data-driven platform that allows researchers and bioinformaticians to search and download data for analysis."
+      },
+      "buttons": [
+        {
+          "name": "Define Data Field",
+          "icon": "data-field-define",
+          "body": "The NIAID Data Hub define the data in a general way. Please study the dictionary before you start browsing.",
+          "link": "/DD",
+          "label": "Learn more"
+        },
+        {
+          "name": "Explore Data",
+          "icon": "data-explore",
+          "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
+          "link": "#hostname#ndh",
+          "label": "Explore data"
+        },
+        {
+          "name": "Access Data",
+          "icon": "data-access",
+          "body": "Use our selected tool to filter out the data you need.",
+          "link": "/query",
+          "label": "Query data"
+
+        },
+        {
+          "name": "Analyze Data",
+          "icon": "data-analyze",
+          "body": "Analyze your selected cases using Jupyter Notebooks in our secure cloud environment",
+          "link": "#hostname#workspace",
+          "label": "Run analysis"
+        }
+      ]
+    }
+  }
+}

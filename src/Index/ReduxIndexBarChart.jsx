@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
-import ProjectBarChart from '../../components/ProjectBarChart';
-import { sortCompare } from '../../utils';
-import { chartNames, localTheme } from '../../localconf';
+import IndexBarChart from '../components/IndexBarChart';
+import { sortCompare } from '../utils';
+import { indexChartNames, localTheme } from '../localconf';
 
 // Map state.homepage.projectsByName to projectList
 const mapStateToProps = (state) => {
@@ -9,7 +9,7 @@ const mapStateToProps = (state) => {
     const projectList = Object.values(
       state.homepage.projectsByName,
     ).sort(sortCompare);
-    return { projectList, countNames: chartNames, localTheme };
+    return { projectList, countNames: indexChartNames, localTheme };
   }
   return {};
 };
@@ -17,6 +17,6 @@ const mapStateToProps = (state) => {
 // Bar chart does not dispatch anything
 const mapDispatchToProps = function mapDispatch() { return {}; };
 
-const ReduxProjectBarChart = connect(mapStateToProps, mapDispatchToProps)(ProjectBarChart);
+const ReduxIndexBarChart = connect(mapStateToProps, mapDispatchToProps)(IndexBarChart);
 
-export default ReduxProjectBarChart;
+export default ReduxIndexBarChart;

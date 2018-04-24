@@ -3,7 +3,7 @@ import { QueryRenderer, graphql } from 'react-relay';
 import PropTypes from 'prop-types';
 import environment from '../../environment';
 import Spinner from '../../components/Spinner';
-import TransactionLogTable from '../Redux/TransactionLogTable';
+import TransactionLogTable from '../components/TransactionLogTable';
 
 class RelayTransactionLog extends Component {
   render() {

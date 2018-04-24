@@ -8,14 +8,14 @@ import { capitalizeFirstLetter } from '../utils';
 
 
 const subHeader = (() => {
-  let message = 'This is a user-friendly interface for accessing the Data Dictionary';
+  let message = 'This is a user-friendly interface for accessing the Data IcoDictionary';
 
   if (app === 'edc') {
-    message = 'The data dictionary viewer is a user-friendly interface for accessing the Environmental Data Commons Data Dictionary.';
+    message = 'The data dictionary viewer is a user-friendly interface for accessing the Environmental Data Commons Data IcoDictionary.';
   } else if (app === 'bpa') {
-    message = 'The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data Dictionary.';
+    message = 'The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data IcoDictionary.';
   } else if (app === 'bhc') {
-    message = 'The data dictionary viewer is a user-friendly interface for accessing the Data Dictionary used by the Brain Commons.';
+    message = 'The data dictionary viewer is a user-friendly interface for accessing the Data IcoDictionary used by the Brain Commons.';
   }
   return message;
 })();

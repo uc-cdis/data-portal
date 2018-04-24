@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { clearFix } from 'polished';
 import ReduxProjectBarChart from './ReduxProjectBarChart';
-import CountCard from './CountCard';
+import CountCard from '../components/CountCard';
 
 const DashTopDiv = styled.div`
   ${clearFix()}

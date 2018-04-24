@@ -6,6 +6,7 @@ import { ThemeProvider } from 'styled-components';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'react-select/dist/react-select.css';
+import './css/base.less';
 import querystring from 'querystring';
 
 import { fetchUser, fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
@@ -13,6 +14,7 @@ import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 import AmbiHomepage from './Homepage/AmbiHomepage';
 import ExplorerPage from './Explorer/ExplorerPage';
+import IndexPage from './Index/IndexPage';
 import DataDictionary from './DataDictionary/ReduxDataDictionary';
 import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
@@ -23,9 +25,13 @@ import { basename } from './localconf';
 import { OuterWrapper, Box, Margin, theme } from './theme';
 import { asyncSetInterval } from './utils';
 import getReduxStore from './reduxStore';
-import Nav from './Nav/ReduxNavBar';
+// import Nav from './Nav/ReduxNavBar';
+import NavBar from './components/NavBar';
+import Top from './Top/ReduxTopBar';
 import Footer from './components/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
+import { navItems, navBar } from './localconf';
+import dictIcons from './img/icons/index';
 
 
 // Needed for onTouchTap
@@ -46,14 +52,14 @@ async function init() {
       fetchVersionInfo().then(({ status, data }) => {
         if (status === 200) {
           Object.assign(Footer.defaultProps,
-            { dictionaryVersion: data.dictionary.version,
-              apiVersion: data.version },
+            { dictionaryVersion: data.dictionary.version || 'unknown',
+              apiVersion: data.version || 'unknown' },
           );
         }
       }),
     ],
   );
-  const background = null; // for now
+  const background = "#f5f5f5"; // for now
 
   render(
     <Provider store={store}>
@@ -61,8 +67,9 @@ async function init() {
         <MuiThemeProvider>
           <BrowserRouter basename={basename}>
             <OuterWrapper>
-              <Box background={background}>
-                <Nav />
+              <Top />
+              <NavBar navTitle={navBar.title} navItems={navItems} dictIcons={dictIcons} />
+              <Box background={background} style={{width: "100%", margin: "auto"}}>
                 <Switch>
                   <Route
                     path="/login"
@@ -83,7 +90,7 @@ async function init() {
                     exact
                     path="/"
                     component={
-                      props => <ProtectedContent component={AmbiHomepage} {...props} />
+                      props => <ProtectedContent component={IndexPage} {...props} />
                     }
                   />
                   <Route
@@ -160,7 +167,7 @@ async function init() {
                 </Switch>
                 <Margin background={background} />
               </Box>
-              <Footer />
+              <Footer dictIcons={dictIcons}/>
             </OuterWrapper>
           </BrowserRouter>
         </MuiThemeProvider>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryRenderer } from 'react-relay';
 import environment from '../../environment';
-import { DashboardWith } from '../Redux/ParamProjectDashboard';
+import { DashboardWith } from '../components/ParamProjectDashboard';
 import RelayProjectTable from './RelayProjectTable';
 import { GQLHelper } from '../../gqlHelper';
 import getReduxStore from '../../reduxStore';

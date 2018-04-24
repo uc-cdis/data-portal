@@ -14,7 +14,9 @@ let lastTokenRefreshMs = 0;
 
 const Body = styled.div`
   background: ${props => props.background};
-  padding: ${props => props.padding || '50px 100px'};
+  margin: auto;
+  width: 1220px;
+  padding: ${props => props.padding || '50px 0px'};
 `;
 
 /**
