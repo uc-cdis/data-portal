@@ -1,11 +1,9 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const RelayCompilerWebpackPlugin = require('relay-compiler-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 const basename = process.env.BASENAME || '/';
-// prefix for static file paths
-const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length-1) : basename
+const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length-1) : basename;
 const app = process.env.APP || 'dev';
 const title = {
   dev: 'Generic Data Commons',
@@ -30,11 +28,6 @@ const plugins = [
   }),
   new webpack.optimize.DedupePlugin(), //dedupe similar code
   new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
-  /*... doesn't work? ...
-  new RelayCompilerWebpackPlugin({
-    schema: path.resolve(__dirname, './data/schema.json'), // or schema.graphql
-    src: path.resolve(__dirname, './src'),
-  }), */
   new HtmlWebpackPlugin({
     title: title,
     basename: pathPrefix,
@@ -88,11 +81,11 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: "style!css"
+        loader: 'style!css'
       },
       {
         test: /\.svg$/,
-        loader: 'file'
+        loaders: ['babel-loader', 'react-svg-loader'],
       },
       {
         test: /\.(png|jpg)$/,

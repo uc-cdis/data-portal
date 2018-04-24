@@ -1,6 +1,7 @@
 import { paramByApp } from '../data/dictionaryHelper';
 
-const params = require('./parameters');
+const params = require('./gql-parameters');
+const texts = require('./texts');
 
 function paramToNames(p) {
   const countsAndDetails = paramByApp(p);
@@ -11,6 +12,7 @@ function paramToNames(p) {
   return {
     boardPluralNames,
     chartNames: countsAndDetails.chartCounts.map(item => item.name),
+    indexChartNames: countsAndDetails.boardCounts.map(item => item.plural),
     detailPluralNames,
   };
 }
@@ -45,6 +47,9 @@ function buildConfig(opts) {
   const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   // let credentialOauthPath = `${hostname}middleware/oauth2/v0/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
+  let navBar = {
+    title: "NIAID Data Hub"
+  };
   let userapiPath = `${hostname}user/`;
   let credentialCdisPath = `${userapiPath}credentials/cdis/`;
   let login = {
@@ -57,6 +62,11 @@ function buildConfig(opts) {
 
   let appname = 'Unasigned';
   let navItems = [];
+  let topItems = [
+    { icon: 'upload-white', link: '/submission', name: 'Data Submission' },
+    { link: '/document', name: 'Document' },
+  ];
+  let indexDetails = texts.ndh.index;
   let dashboardIcons = [
     'account_circle',
     'receipt',
@@ -65,8 +75,10 @@ function buildConfig(opts) {
   ];
   let localTheme = {
     'barGraph.lineColor': '#666666',
-    'barGraph.bar1Color': '#8884d8',
-    'barGraph.bar2Color': '#82ca9d',
+    'barGraph.bar1Color': '#3283c8',
+    'barGraph.bar2Color': '#05b8ee',
+    'barGraph.bar3Color': '#ffffff',
+    'barGraph.bar4Color': '#eeeeee',
     'summary.borderTopColor': '#c87152',
     'summary.borderColor': '#222222',
     'summary.countColor': '#ff4200',
@@ -81,31 +93,29 @@ function buildConfig(opts) {
   if (app === 'bpa') {
     appname = 'BloodPAC Metadata Submission Portal';
     navItems = [
-      { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
-      { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
-      { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
-      { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
-      { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
+      { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'home' },
+      { icon: 'exploration', link: '/files', color: '#daa520', name: 'query' },
+      { icon: 'query', link: '/query', color: '#a2a2a2', name: 'dictionary' },
+      // { icon: 'workspace', link: `${hostname}workspace/`, color: '#daa520', name: 'profile' },
+      { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'data' },
     ];
   } else if (app === 'gtex') {
     appname = 'NIH Data Commons Consortium Pilot Phase\nGTEx & TOPMed Data Portal';
     navItems = [
-      { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
-      { icon: 'collections', link: `${hostname}shiny/`, color: '#a2a2a2', name: 'exploration' },
-      { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
-      { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
-      { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
-      { icon: 'dvr', link: `${hostname}workspace/`, color: '#a2a2a2', name: 'workspace' },
+      { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'Dictionary' },
+      { icon: 'exploration', link: `${hostname}dcp`, color: '#a2a2a2', name: 'Exploration' },
+      { icon: 'query', link: '/query', color: '#a2a2a2', name: 'Query' },
+      { icon: 'workspace', link: `${hostname}jupyter/`, color: '#a2a2a2', name: 'Workspace' },
+      { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'Profile' },
     ];
   } else if (app === 'edc') {
     appname = 'Environmental Data Commons Portal';
     navItems = [
-      { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
-      { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
-      { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
-      { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
-      { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
-      { icon: 'dvr', link: `${hostname}workspace/`, color: '#a2a2a2', name: 'workspace' },
+      { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
+      { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'exploration' },
+      { icon: 'query', link: '/query', color: '#a2a2a2', name: 'query' },
+      { icon: 'workspace', link: `${hostname}jupyter/`, color: '#a2a2a2', name: 'workspace' },
+      { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'profile' },
     ];
     dashboardIcons = [
       'satellite',
@@ -116,11 +126,11 @@ function buildConfig(opts) {
   } else if (app === 'kf') {
     appname = 'Gabriella Miller Kids First Pediatric Data Coordinating Center Portal';
     navItems = [
-      { icon: 'home', link: '/', color: '#A51C30', name: 'home' },
-      { icon: 'search', link: '/query', color: '#2D728F', name: 'query' },
-      { icon: 'class', link: '/DD', color: '#A51C30', name: 'dictionary' },
-      { icon: 'face', link: '/identity', color: '#2D728F', name: 'profile' },
-      { icon: 'content_copy', link: '/files', color: '#A51C30', name: 'data' },
+      { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
+      { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'exploration' },
+      { icon: 'query', link: '/query', color: '#a2a2a2', name: 'query' },
+      { icon: 'workspace', link: `${hostname}jupyter/`, color: '#a2a2a2', name: 'workspace' },
+      { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'profile' },
     ];
     localTheme = {
       'barGraph.lineColor': '#DFDFDF',
@@ -137,14 +147,11 @@ function buildConfig(opts) {
   } else if (app === 'bhc') {
     appname = 'The Brain Commons Portal';
     navItems = [
-      { icon: 'home', link: '/', color: '#A51C30', name: 'home' },
-      { icon: 'collections', link: `${hostname}shiny/`, color: '#a2a2a2', name: 'exploration' },
-      { icon: 'search', link: '/query', color: '#2D728F', name: 'query' },
-      { icon: 'class', link: '/DD', color: '#A51C30', name: 'dictionary' },
-      { icon: 'face', link: '/identity', color: '#2D728F', name: 'profile' },
-      { icon: 'content_copy', link: '/files', color: '#A51C30', name: 'data' },
-      { icon: 'dvr', link: `${hostname}workspace/`, color: '#a2a2a2', name: 'workspace' },
-      { icon: 'dvr', link: 'https://demo.braincommons.org/', color: '#a2a2a2', name: 'demo' },
+      { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
+      { icon: 'exploration', link: `${hostname}bhc`, color: '#a2a2a2', name: 'exploration' },
+      { icon: 'query', link: '/query', color: '#a2a2a2', name: 'query' },
+      { icon: 'workspace', link: `${hostname}workspace/`, color: '#a2a2a2', name: 'workspace' },
+      { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'profile' },
     ];
     localTheme = {
       'barGraph.lineColor': '#666666',
@@ -161,11 +168,10 @@ function buildConfig(opts) {
   } else if (app === 'acct') {
     appname = 'ACCOuNT Data Commons Portal';
     navItems = [
-      { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
-      { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
-      { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
-      { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
-      { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
+      { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
+      { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'exploration' },
+      { icon: 'query', link: '/query', color: '#a2a2a2', name: 'query' },
+      { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'profile' },
     ];
   } else if (app === 'genomel') {
     appname = 'GenoMEL Data Commons Portal';
@@ -176,22 +182,19 @@ function buildConfig(opts) {
     //   title: 'Login from NIH',
     // };
     navItems = [
-      { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
-      { icon: 'search', link: '/query', color: '#daa520', name: 'query' },
-      { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
-      { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
-      { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
+      { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
+      { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'data' },
+      { icon: 'query', link: '/query', color: '#a2a2a2', name: 'query' },
+      { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'profile' },
     ];
   } else if (app === 'ndh') {
     appname = 'NIAID Data Hub Portal';
     navItems = [
-      { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
-      { icon: 'collections', link: `${hostname}shiny/`, color: '#a2a2a2', name: 'exploration' },
-      { icon: 'search', link: '/query', color: '#daa5Z20', name: 'query' },
-      { icon: 'class', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
-      { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
-      { icon: 'content_copy', link: '/files', color: '#a2a2a2', name: 'data' },
-      { icon: 'dvr', link: `${hostname}workspace/`, color: '#a2a2a2', name: 'workspace' },
+      { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'Dictionary' },
+      { icon: 'exploration', link: `${hostname}ndh`, color: '#a2a2a2', name: 'Exploration' },
+      { icon: 'query', link: '/query', color: '#a2a2a2', name: 'Query' },
+      { icon: 'workspace', link: `${hostname}workspace/`, color: '#a2a2a2', name: 'Workspace' },
+      { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'Profile' },
     ];
   } else if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
@@ -208,11 +211,10 @@ function buildConfig(opts) {
   } else {
     appname = 'Generic Data Commons Portal';
     navItems = [
-      { icon: 'home', link: '/', color: '#1d3674', name: 'home' },
-      { icon: 'search', link: '/query', color: '#ad7e1c', name: 'query' },
-      { icon: 'class', link: '/DD', color: '#1d3674', name: 'dictionary' },
-      { icon: 'face', link: '/identity', color: '#daa520', name: 'profile' },
-      { icon: 'content_copy', link: '/files', color: '#1d3674', name: 'data' },
+      { icon: 'dictionary', link: '/DD', color: '#1d3674', name: 'dictionary' },
+      { icon: 'exploration', link: '/files', color: '#ad7e1c', name: 'exploration' },
+      { icon: 'query', link: '/query', color: '#1d3674', name: 'query' },
+      { icon: 'profile', link: '/identity', color: '#ad7e1c', name: 'profile' },
     ];
   }
 
@@ -230,16 +232,19 @@ function buildConfig(opts) {
     graphqlPath,
     graphqlSchemaUrl,
     appname,
+    navBar,
     navItems,
+    topItems,
+    indexDetails,
     boardPluralNames: homepageParams.boardPluralNames,
     chartNames: homepageParams.chartNames,
+    indexChartNames: homepageParams.indexChartNames,
     detailPluralNames: homepageParams.detailPluralNames,
     dashboardIcons,
     localTheme,
     login,
     loginPath,
     requiredCerts,
-    buildConfig,
   };
   return conf;
 }

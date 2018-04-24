@@ -3,8 +3,8 @@ import { QueryRenderer } from 'react-relay';
 import { GQLHelper } from '../../gqlHelper';
 import getReduxStore from '../../reduxStore';
 import environment from '../../environment';
-import ProjectTable from '../Redux/ProjectTable';
-import ProjectTR from '../Redux/ProjectRow';
+import ProjectTable from '../components/ProjectTable';
+import ProjectTR from '../components/ProjectRow';
 import Spinner from '../../components/Spinner';
 
 const gqlHelper = GQLHelper.getGQLHelper();

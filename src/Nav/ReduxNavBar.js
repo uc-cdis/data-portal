@@ -1,13 +1,15 @@
 import { connect } from 'react-redux';
-
-import { logoutAPI } from '../actions';
-import { navItems } from '../localconf';
+import { navBar, navItems } from '../localconf';
+import dictIcons from '../img/icons/index';
 import NavBar from '../components/NavBar';
 
-const mapStateToProps = state => ({ user: state.user, navItems });
+const mapStateToProps = state => ({
+  navTitle: navBar.title,
+  navItems,
+  dictIcons,
+});
 
 const mapDispatchToProps = dispatch => ({
-  onLogoutClick: () => dispatch(logoutAPI()),
 });
 const ReduxNavBar = connect(mapStateToProps, mapDispatchToProps)(NavBar);
 export default ReduxNavBar;

@@ -21,7 +21,7 @@ export const theme = {
   box_padding_height: '80px',
 };
 
-export const button = css`
+export const cdisButton = css`
   display: inline-block;
   border-radius: 3px;
   padding: 0px 8px;
@@ -42,6 +42,12 @@ export const cube = css`
     color: white;
 `;
 
+export const ButtonPrimaryWhite = styled.button`
+  border: 1px solid var(--light-gray);
+  background-color: var(--white);
+  &:hover
+`;
+
 export const Box = styled.div`
   // min-width: 1200px;
   margin: auto;
@@ -54,6 +60,7 @@ export const Box = styled.div`
   padding: 0px 0px;
   background: ${props => props.background};
   height: 100%;
+  text
 `;
 
 export const OuterWrapper = styled.div`
@@ -152,13 +159,13 @@ export const UploadButton = styled.label`
     border-color: #2e842e;
 
   }
-  ${button};
+  ${cdisButton};
 `;
 export const SubmitButton = styled.a`
   border: 1px solid ${props => props.theme.color_primary};
   color: ${props => props.theme.color_primary};
   margin-bottom: 1em;
-  ${button};
+  ${cdisButton};
   &:hover,
   &:active,
   &:focus {

@@ -11,7 +11,7 @@ const d3 = {
 
 
 /**
- * createDDGraph: Creates a Data Dictionary graph (rectangular nodes).
+ * createDDGraph: Creates a Data IcoDictionary graph (rectangular nodes).
  *    Needs position as property of each node (as fraction of 1 e.g. [0.5, 0.1]
  *    for placement at (0.5*svgWidth, 0.1*svgHeight))
  */

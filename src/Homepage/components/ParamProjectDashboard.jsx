@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { boardPluralNames, detailPluralNames, dashboardIcons } from '../../localconf';
-import LittleProjectDashboard from './ProjectDashboard';
+import LittleProjectDashboard from '../Redux/ProjectDashboard';
 
 export function DashboardWith(Table) {
   return class ProjectDashboard extends Component {

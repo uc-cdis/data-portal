@@ -8,7 +8,7 @@ import { browserHistory } from 'react-router-dom';
 const FloatBox = styled.div`
   float: left;
   overflow: hidden;
-  width: 60%;
+  width: 770px;
   min-width: 300px;
   height: 340px;
 `;

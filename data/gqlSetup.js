@@ -11,7 +11,7 @@ const utils = require('./utils.js');
 
 const dataFolder = __dirname;
 const dictPath = `${dataFolder}/dictionary.json`;
-const paramPath = `${path.join(__dirname, '../src/parameters.json')}`;
+const paramPath = `${path.join(__dirname, '../src/gql-parameters.json')}`;
 const templateName = 'gqlHelper.js.njk';
 
 
@@ -46,7 +46,7 @@ if (params.status !== 'ok') {
 
 const paramGQLSetup = helper.paramToGQLSetup(params.data);
 if (!paramGQLSetup) {
-  console.error('ERR: unable to interpret src/parameters.json - baling out');
+  console.error('ERR: unable to interpret src/gql-parameters.json - baling out');
   process.exit(4);
 }
 
