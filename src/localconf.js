@@ -219,10 +219,10 @@ function buildConfig(opts) {
   }
 
   const conf = {
-    dev,
-    mockStore,
     app,
     basename,
+    buildConfig,
+    dev,
     hostname,
     userapiPath,
     apiPath,
@@ -232,6 +232,7 @@ function buildConfig(opts) {
     graphqlPath,
     graphqlSchemaUrl,
     appname,
+    mockStore,
     navBar,
     navItems,
     topItems,
