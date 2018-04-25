@@ -32,6 +32,7 @@ import Footer from './components/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { navItems, navBar } from './localconf';
 import dictIcons from './img/icons/index';
+import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 
 
 // Needed for onTouchTap
@@ -111,6 +112,12 @@ async function init() {
                     path="/query"
                     component={
                       props => <ProtectedContent component={GraphQLQuery} {...props} />
+                    }
+                  />
+                  <Route
+                    path="/analysis"
+                    component={
+                      props => <ProtectedContent component={ReduxAnalysis} {...props} />
                     }
                   />
                   <Route

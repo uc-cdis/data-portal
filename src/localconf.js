@@ -51,6 +51,7 @@ function buildConfig(opts) {
     title: "NIAID Data Hub"
   };
   let userapiPath = `${hostname}user/`;
+  let jobapiPath = `${hostname}/job/`;
   let credentialCdisPath = `${userapiPath}credentials/cdis/`;
   let login = {
     url: `${userapiPath}login/google?redirect=`,
@@ -192,6 +193,7 @@ function buildConfig(opts) {
     navItems = [
       { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'Dictionary' },
       { icon: 'exploration', link: `${hostname}shiny/`, color: '#a2a2a2', name: 'Exploration' },
+      { icon: 'analysis', link: '/analysis', color: '#a2a2a2', name: 'Simulation' },
       { icon: 'query', link: '/query', color: '#a2a2a2', name: 'Query' },
       { icon: 'workspace', link: `${hostname}workspace/`, color: '#a2a2a2', name: 'Workspace' },
       { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'Profile' },
@@ -225,6 +227,7 @@ function buildConfig(opts) {
     dev,
     hostname,
     userapiPath,
+    jobapiPath,
     apiPath,
     submissionApiPath,
     submissionApiOauthPath,

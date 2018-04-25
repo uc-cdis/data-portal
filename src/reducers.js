@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import userProfile from './UserProfile/reducers';
 import certificate from './Certificate/reducers';
 import submission from './Submission/reducers';
+import analysis from './Analysis/reducers';
 import homepage from './Homepage/reducers';
 import queryNodes from './QueryNode/reducers';
 import popups from './Popup/reducers';
@@ -54,6 +55,7 @@ const reducers = combineReducers({ explorer,
   user,
   status,
   submission,
+  analysis,
   queryNodes,
   userProfile,
   certificate,

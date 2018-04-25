@@ -19,7 +19,13 @@
 @medium: 500;
 @semi-bold: 600;
 
-html, body {
+@-webkit-keyframes color-change {
+  0% { color: @gray; }
+  50% { color: @black; }
+  100% { color: @light_gray; }
+}
+
+html body{
   height: 100%;
 }
 
@@ -120,12 +126,36 @@ caption {
   color: @blue;
 }
 
-button {
+.button {
   border-radius: 4px;
   width: 152px;
   height: 40px;
   font-size: 14px;
   font-weight: @medium;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+button {
+  .button;
+}
+
+
+.text-input {
+  width: 152px;
+  height: 40px;
+  font-size: 14px;
+  border: 0;
+  background: white;
+  box-shadow: none;
+  border-radius: 0px;
+  padding:0px 10px;
+  margin-right: 20px;
+}
+.text-input:focus, .text-input:active {
+  box-shadow: none;
+  outline: none;
 }
 
 .button-primary-white {

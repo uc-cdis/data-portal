@@ -6,6 +6,7 @@ import IcoDataFieldDefine from './data-field-define.svg';
 import IcoDictionary from './dictionary.svg';
 import IcoExit from './exit.svg';
 import IcoExploration from './exploration.svg';
+import IcoAnalysis from './analysis.svg';
 import IcoGen3 from './gen3.svg';
 import IcoProfile from './profile.svg';
 import IcoQuery from './query.svg';
@@ -23,6 +24,7 @@ const dictIcons = {
   'dictionary': (height) => { return <IcoDictionary height={height}/> },
   'exit': (height) => { return <IcoExit height={height}/> },
   'exploration': (height) => { return <IcoExploration height={height}/> },
+  'analysis': (height) => { return <IcoAnalysis height={height}/> },
   'gen3': (height) => {
     return <IcoGen3
       height={height} style={{
