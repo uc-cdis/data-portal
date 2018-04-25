@@ -6,7 +6,7 @@ import IconComponent from './Icon';
 const NavDiv = styled.div`
   padding: 16px 0px;
   height: 80px;
-  width: 120px;
+  width: 110px;
   display: inline-block;
   text-align: center;
   opacity: 0.8;
