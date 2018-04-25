@@ -4,12 +4,10 @@ import { fetchQuery } from 'relay-runtime';
 import environment from '../environment';
 import { GQLHelper } from '../gqlHelper';
 import getReduxStore from '../reduxStore';
-import Spinner from '../components/Spinner';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
 const updateRedux = async ({ projectList, summaryCounts }) => {
-  // Update redux store if data is not already there
   return getReduxStore().then(
     (store) => {
       const homeState = store.getState().homepage || {};
@@ -39,7 +37,7 @@ const updateReduxError = async (error) => {
  * Translate relay properties to {summaryCounts, projectList} structure
  * that is friendly to underlying components.
  *
- * @param relayProps
+ * @param data
  * @return {projectList, summaryCounts}
  */
 const transformRelayProps = (data) => {

@@ -61,7 +61,7 @@ export function intersection(aList, bList) {
  * @param history from react-router
  * @param match from react-router.match
  * @param public default false - set true to disable auth-guard
- * @param background passed through to <Box background> wrapper for page-level background
+ * @param background passed through to <Box background> wrapper for page.jsx-level background
  * @param filter {() => Promise} optional filter to apply before rendering the child component
  */
 class ProtectedContent extends React.Component {

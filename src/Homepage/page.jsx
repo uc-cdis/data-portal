@@ -60,8 +60,7 @@ class AmbidextrousDashboard extends React.Component {
 /**
  * Ambidextrous homepage
  */
-const AmbiHomepage = AmbidextrousDashboard;
+const HomePage = AmbidextrousDashboard;
 
 
-export default AmbiHomepage;
-
+export default HomePage

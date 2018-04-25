@@ -44,7 +44,7 @@ describe('the Explorer component', () => {
     ),
   );
 
-  it('Update redux store when page size changed', () =>
+  it('Update redux store when page.jsx size changed', () =>
     getReduxStore().then(
       (store) => {
         fetch.mockResponse(JSON.stringify(testData), { status: 200 });
@@ -62,7 +62,7 @@ describe('the Explorer component', () => {
     ),
   );
 
-  it('Update redux store when current page changed', () =>
+  it('Update redux store when current page.jsx changed', () =>
     getReduxStore().then(
       (store) => {
         fetch.mockResponse(JSON.stringify(testData), { status: 200 });

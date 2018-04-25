@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const IntroDiv = styled.div`
   width: 450px;
@@ -36,7 +37,11 @@ class Introduction extends Component {
       <IntroDiv>
         <IntroTitle className="h1-typo">{this.props.data.heading}</IntroTitle>
         <IntroText className="high-light">{this.props.data.text}</IntroText>
-        <IntroButton className="button-primary-white">Submit Data</IntroButton>
+        <Link to={this.props.data.link}>
+          <IntroButton className="button-primary-white">
+            Submit Data
+          </IntroButton>
+        </Link>
       </IntroDiv>
     );
   }

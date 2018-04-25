@@ -16,7 +16,7 @@
 @orange: #ef8523;
 @silver: #e7e7e7;
 @white: #ffffff;
-@semi-bold: 600;
+@semi-bold: 500;
 
 html {
   height: 100%;
@@ -147,11 +147,13 @@ button {
 .button-primary-orange {
   border: 1px solid @light_gray;
   background-color: @orange;
+  letter-spacing: .06rem;
   color: @white;
-  font-weight: @semi-bold;
+  font-weight: 300;
   &:hover {
     border: 1px solid @gray;
-    font-weight: bold;
+    font-weight: @semi-bold;
+    background-color: @apricot;
   }
   &:active {
     opacity: 0.8;
@@ -196,6 +198,11 @@ ul {
 .button-inline {
   background-color: #34ADDB;
   padding: 5px 10px;
+}
+
+.button-active {
+  opacity: 1;
+  border-bottom: 3px solid #ef8523;
 }
 
 .right {
