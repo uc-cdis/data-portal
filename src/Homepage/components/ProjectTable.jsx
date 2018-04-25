@@ -30,18 +30,16 @@ class ProjectTable extends React.Component {
     const summaries = this.props.summaries;
 
     return (<div>
-      <h5>List of Projects</h5>
+      <h2>List of Projects</h2>
       <Table>
         <TableHead>
-          <TableRow>
-            <TableColLabel>Project</TableColLabel>
-            {
-              summaries.map(
-                entry => <TableColLabel key={entry.label}>{entry.label}</TableColLabel>,
-              )
-            }
-            <TableColLabel />
-          </TableRow>
+          <TableColLabel>Project</TableColLabel>
+          {
+            summaries.map(
+              entry => <TableColLabel key={entry.label}>{entry.label}</TableColLabel>,
+            )
+          }
+          <TableColLabel />
         </TableHead>
         <tbody>
           {

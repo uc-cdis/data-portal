@@ -3,40 +3,44 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { localTheme } from '../../localconf';
 
-const CountBox = styled.div`
+const Title = styled.div`
+  height: 120px;
+  width: 450px;
+  vertical-align: top;
+  padding-top: 10px;
+`;
+
+const TopBoard = styled.div`
   float: left;
-  width: 40%;
-  height: 280px;
+  width: 1220px;
+  display: inline-flex;
+`;
+
+const CountBox = styled.div`
+  display: inline-block;
+  &:first-child {
+    margin-left: 0px;
+  }
+  float: left;
+  background-color: #ffffff;
+  width: 180px;
+  height: 120px;
   padding: 20px;
-  border: 2px solid ${localTheme['summary.borderColor']};
-  border-top: 3px solid ${localTheme['summary.borderTopColor']};
-  min-width:300px;
-  h4 {
-    margin-top: 0px;
-  }
-  ul {
-    width: 100%;
-    overflow: hidden;
-    li {
-      float: left;
-      width: 50%;
-      padding-left: 10px;
-      padding-top: 10px;
-    }
-  }
+  margin-left: 15px;
+  position: relative;
 `;
 
-const Count = styled.span`
-  color: ${localTheme['summary.countColor']};
-  margin-right: 10px;
+const CountBoxTitle = styled.div`
+  margin-bottom: 15px;
+  vertical-align: top;
 `;
 
-const Icon = styled.div`
-  color: ${localTheme['summary.iconColor']};
-  height: 24px;
-  margin-top: 10px;
-  margin-left: 20px;
+const CountBoxNumber = styled.div`
+  position: absolute;
+  vertical-align: bottom;
+  bottom: 20px;
 `;
+
 
 /**
  * Little card with a bunch of counters on it for cases, experiments, files, ...
@@ -44,24 +48,27 @@ const Icon = styled.div`
 class CountCard extends Component {
   render() {
     return (
-      <CountBox>
-        <h4>
-          Project Submission Summary
-        </h4>
-        <ul>
+      <TopBoard>
+        <Title className='h1-typo'>
+          Data Submission Summary
+        </Title>
+        <div style={{display: "flex"}}>
           {
             this.props.countItems.map(
               (item, i) => (
-                <li key={item.label}>
-                  <Icon><i className="material-icons">{ this.props.icons[i] }</i></Icon>
-                  <Count>{item.value}</Count>
-                  <span>{item.label}</span>
-                </li>
+                <CountBox key={item.label}>
+                  <CountBoxTitle className='h4-typo'>
+                    {item.label}
+                  </CountBoxTitle>
+                  <CountBoxNumber className='special-number'>
+                    {item.value}
+                  </CountBoxNumber>
+                </CountBox>
               ),
             )
           }
-        </ul>
-      </CountBox>
+        </div>
+      </TopBoard>
     );
   }
 }

@@ -179,7 +179,7 @@ async function init() {
                     }
                   />
                 </Switch>
-                <Margin background={background} />
+                {/*<Margin background={background} />*/}
               </Box>
               <Footer dictIcons={dictIcons}/>
             </OuterWrapper>

@@ -7,15 +7,13 @@ class TransactionLogTable extends Component {
   render() {
     return (
       <div>
-        <h5>Recent Submissions</h5>
+        <h2>Recent Submissions</h2>
         <Table>
           <TableHead>
-            <TableRow key="header">
-              <TableColLabel>Id</TableColLabel>
-              <TableColLabel>Project</TableColLabel>
-              <TableColLabel>Created date</TableColLabel>
-              <TableColLabel>State</TableColLabel>
-            </TableRow>
+            <TableColLabel>Id</TableColLabel>
+            <TableColLabel>Project</TableColLabel>
+            <TableColLabel>Created date</TableColLabel>
+            <TableColLabel>State</TableColLabel>
           </TableHead>
           <tbody>
             {
