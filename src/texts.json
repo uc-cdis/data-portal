@@ -18,7 +18,7 @@
           "name": "Explore Data",
           "icon": "data-explore",
           "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
-          "link": "#hostname#ndh",
+          "link": "#hostname#shiny",
           "label": "Explore data"
         },
         {
@@ -58,7 +58,7 @@
           "name": "Explore Data",
           "icon": "data-explore",
           "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
-          "link": "#hostname#ndh",
+          "link": "#hostname#shiny",
           "label": "Explore data"
         },
         {

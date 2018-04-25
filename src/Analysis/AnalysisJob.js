@@ -67,9 +67,12 @@ export const checkJobStatus = (dispatch, getState) => {
     dispatch,
   }).then(
     ({ status, data }) => {
+      // stop fetching job status once it stops running
       if (data.status !== 'Running') {
         clearInterval(state.analysis.jobStatusInterval);
       }
+      // get the presigned url for the result to let the webpage
+      // to render the result data
       if (data.status === 'Completed') {
         return getResultDownloadUrl()
           .then((resultURL) => {
@@ -90,13 +93,17 @@ export const checkJobStatus = (dispatch, getState) => {
       }
     },
     err => ({ type: 'FETCH_ERROR', error: err }),
-  )
-    .then((msg) => { dispatch(msg); });
+  ).then((msg) => { dispatch(msg); });
 };
 
 
 export const submitJob = (did) => {
-  console.log('submit job');
+  // first get the presigned url for input download and output upload
+  // then dispatch the job with those urls
+  // then start pulling job status
+  // save the interval id in redux that can be used to clear the timer later
+
+  // TODO: need to get result urls from a Gen3 service
   return (dispatch) => {
     return Promise.all([getPresignedUrl(did, 'download'), getResultUploadUrl()])
       .then(values => dispatch(dispatchJob(values[0], values[1])))

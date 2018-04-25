@@ -20,8 +20,7 @@ const AnalysisApp = ({ app, submitJob, job, resultURL }) => {
     const inputId = e.target.input.value;
     submitJob(inputId);
   };
-  const isJobRunning = (job) => {
-    // return true;
+  const isJobRunning = () => {
     return job && job.status !== 'Completed';
   };
 
@@ -33,9 +32,10 @@ const AnalysisApp = ({ app, submitJob, job, resultURL }) => {
         <input className="text-input" type="text" placeholder="input data" name="input"/>
         <button href="#" className="button button-primary-orange" onSubmit={onSubmitJob} >Run simulation</button>
       </form>
-      {isJobRunning(job) &&
+      {isJobRunning() &&
         <JobStatus>Job running... </JobStatus>
       }
+      {/* TODO: only render if result is a image */}
       {(job && job.status === 'Completed') &&
         <ResultImage src={job.resultURL} alt="analysis result" />
       }
