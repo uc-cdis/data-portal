@@ -1,12 +1,12 @@
 import React from 'react';
 import { QueryRenderer } from 'react-relay';
+import { fetchQuery } from 'relay-runtime';
 import environment from '../../environment';
 import { DashboardWith } from '../components/ParamProjectDashboard';
 import RelayProjectTable from './RelayProjectTable';
 import { GQLHelper } from '../../gqlHelper';
 import getReduxStore from '../../reduxStore';
 import Spinner from '../../components/Spinner';
-import {fetchQuery} from "relay-runtime";
 
 
 const gqlHelper = GQLHelper.getGQLHelper();
