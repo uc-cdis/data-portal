@@ -10,10 +10,12 @@ class TransactionLogTable extends Component {
         <h2>Recent Submissions</h2>
         <Table>
           <TableHead>
-            <TableColLabel>Id</TableColLabel>
-            <TableColLabel>Project</TableColLabel>
-            <TableColLabel>Created date</TableColLabel>
-            <TableColLabel>State</TableColLabel>
+            <tr>
+              <TableColLabel>Id</TableColLabel>
+              <TableColLabel>Project</TableColLabel>
+              <TableColLabel>Created date</TableColLabel>
+              <TableColLabel>State</TableColLabel>
+            </tr>
           </TableHead>
           <tbody>
             {

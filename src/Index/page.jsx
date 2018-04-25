@@ -22,7 +22,7 @@ class IndexPageComponent extends React.Component {
     return (
       <div style={{width: "1220px"}}>
         <IndexTop>
-          <Introduction data={indexDetails.introduction}/>
+          <Introduction data={indexDetails.introduction} dictIcons={dictIcons}/>
           <ReduxIndexBarChart/>
         </IndexTop>
         <IndexButtonBar dictIcons={dictIcons} buttons={indexDetails.buttons} hostname={hostname}/>

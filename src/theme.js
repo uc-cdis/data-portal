@@ -67,11 +67,11 @@ export const OuterWrapper = styled.div`
   height: 100%;  
 `;
 
-// export const Margin = styled.div`
-//   height: 100px;
-//   background: ${props => props.background};
-//   width: 100%;
-// `;
+export const Margin = styled.div`
+  height: 100px;
+  background: ${props => props.background};
+  width: 100%;
+`;
 
 export const TableBarColor = localTheme.tableBarColor;
 

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, TableHead, TableRow, TableColLabel } from '../style';
 import ProjectTR from './ProjectRow';
+import dictIcons from "../../img/icons/index";
 
 function compare(a, b) {
   if (a.name < b.name) { return -1; }
@@ -20,8 +21,8 @@ class ProjectTable extends React.Component {
   /**
    * default row renderer - just delegates to ProjectTR - can be overriden by subtypes, whatever
    */
-  rowRender(proj) {
-    return <ProjectTR key={proj.name} project={proj} />;
+  rowRender(proj, i) {
+    return <ProjectTR key={proj.name} project={proj} index={i} dictIcons={dictIcons}/>;
   }
   render() {
     const projectList = (this.props.projectList || []).sort(
@@ -33,18 +34,20 @@ class ProjectTable extends React.Component {
       <h2>List of Projects</h2>
       <Table>
         <TableHead>
-          <TableColLabel>Project</TableColLabel>
-          {
-            summaries.map(
-              entry => <TableColLabel key={entry.label}>{entry.label}</TableColLabel>,
-            )
-          }
-          <TableColLabel />
+          <tr>
+            <TableColLabel>Project</TableColLabel>
+            {
+              summaries.map(
+                entry => <TableColLabel key={entry.label}>{entry.label}</TableColLabel>,
+              )
+            }
+            <TableColLabel />
+          </tr>
         </TableHead>
         <tbody>
           {
             projectList.map(
-              proj => this.rowRender(proj),
+              (proj, i) => this.rowRender(proj, i),
             )
           }
           <ProjectTR
@@ -53,6 +56,7 @@ class ProjectTable extends React.Component {
               counts: summaries.map(entry => entry.value),
               name: 'Totals:' }}
             summaryRow
+            index={projectList.length}
           />
         </tbody>
       </Table>

@@ -1,19 +1,39 @@
 import PropTypes from 'prop-types';
-import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router-dom';
+import IconComponent from './Icon';
 import { localTheme } from '../localconf';
 import React from 'react';
 
+
 class SubmitButton extends React.Component {
   render() {
-    return (<Link to={this.props.projName} title="Submit or View Graph">
-      <FlatButton backgroundColor={localTheme['projectTable.submitButtonColor']} label="Submit or View Graph" />
-    </Link>);
+    console.log(this.props.dictIcons);
+    return (
+      <Link to={this.props.link}>
+        {
+          this.props.dictIcons !== undefined ?
+            <button className={this.props.buttonClassName}>
+              Submit Data&emsp;&emsp;&emsp;
+              <IconComponent dictIcons={this.props.dictIcons} iconName='upload' height="14px"/>
+            </button> :
+            <button className={this.props.buttonClassName}>
+              Submit Data
+            </button>
+        }
+
+      </Link>
+    );
   }
 }
 
 SubmitButton.propTypes = {
-  projName: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired,
+  dictIcons: PropTypes.object,
+};
+
+SubmitButton.defaultProps = {
+  dictIcons: undefined,
+  buttonClassName: 'button-primary-white',
 };
 
 export default SubmitButton;
