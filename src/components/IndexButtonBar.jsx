@@ -61,7 +61,7 @@ const ThumbnailText = styled.div`
  */
 const IndexButtonBar = ({ dictIcons, buttons, hostname }) => {
   return (
-    <div style={{display: "flex"}}>
+    <div style={{display: "flex", padding: "40px 0px"}}>
       {
         buttons.map(
           item => {

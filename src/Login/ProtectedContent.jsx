@@ -17,7 +17,8 @@ const Body = styled.div`
   margin-left: auto;
   margin-right: auto;
   width: 1220px;
-  padding: ${props => props.padding || '50px 100px'};
+  padding: ${props => props.padding || '0px 0px 150px 0px'};
+  min-height: 900px;
 `;
 
 /**

@@ -191,7 +191,7 @@ function buildConfig(opts) {
     appname = 'NIAID Data Hub Portal';
     navItems = [
       { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'Dictionary' },
-      { icon: 'exploration', link: `${hostname}ndh`, color: '#a2a2a2', name: 'Exploration' },
+      { icon: 'exploration', link: `${hostname}shiny/`, color: '#a2a2a2', name: 'Exploration' },
       { icon: 'query', link: '/query', color: '#a2a2a2', name: 'Query' },
       { icon: 'workspace', link: `${hostname}workspace/`, color: '#a2a2a2', name: 'Workspace' },
       { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'Profile' },
