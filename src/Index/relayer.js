@@ -1,5 +1,3 @@
-import React from 'react';
-import { QueryRenderer } from 'react-relay';
 import { fetchQuery } from 'relay-runtime';
 import environment from '../environment';
 import { GQLHelper } from '../gqlHelper';
@@ -7,31 +5,26 @@ import getReduxStore from '../reduxStore';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
-const updateRedux = async ({ projectList, summaryCounts }) => {
-  return getReduxStore().then(
-    (store) => {
-      const homeState = store.getState().homepage || {};
-      if (!homeState.projectsByName) {
-        store.dispatch({ type: 'RECEIVE_PROJECT_LIST', data: { projectList, summaryCounts } });
-        return 'dispatch';
-      }
-      return 'NOOP';
-    },
-    (err) => {
-      /* eslint no-console: ["error", { allow: ["error"] }] */
-      console.error('WARNING: failed to load redux store', err);
-      return 'ERR';
-    },
-  );
-};
-
-const updateReduxError = async (error) => {
-  return getReduxStore().then(
-    (store) => {
-      store.dispatch({ type: 'RECEIVE_PROJECT_ERROR', data: error })
+const updateRedux = async ({ projectList, summaryCounts }) => getReduxStore().then(
+  (store) => {
+    const homeState = store.getState().homepage || {};
+    if (!homeState.projectsByName) {
+      store.dispatch({ type: 'RECEIVE_PROJECT_LIST', data: { projectList, summaryCounts } });
+      return 'dispatch';
     }
-  )
-};
+    return 'NOOP';
+  },
+  (err) => {
+    console.error('WARNING: failed to load redux store', err);
+    return 'ERR';
+  },
+);
+
+const updateReduxError = async error => getReduxStore().then(
+  (store) => {
+    store.dispatch({ type: 'RECEIVE_RELAY_FAIL', data: error });
+  },
+);
 
 /**
  * Translate relay properties to {summaryCounts, projectList} structure
@@ -78,14 +71,12 @@ const extractCounts = (data) => {
   return counts;
 };
 
-const extractCharts = (data) => {
-  return Object.keys(data).filter(
-    key => key.indexOf('chart') === 0)
-    .map(key => key).sort()
-    .map(
-      key => data[key],
-    );
-};
+const extractCharts = data => Object.keys(data).filter(
+  key => key.indexOf('chart') === 0)
+  .map(key => key).sort()
+  .map(
+    key => data[key],
+  );
 
 const updateProjectDetailToRedux = (projInfo) => {
   getReduxStore().then(
@@ -108,35 +99,63 @@ const updateProjectDetailToRedux = (projInfo) => {
       /* eslint no-console: ["error", { allow: ["error"] }] */
       console.error('WARNING: failed to load redux store', err);
     },
-  )
+  );
 };
 
 const getProjectDetail = (projectList) => {
   projectList.forEach((project) => {
-    fetchQuery(environment, gqlHelper.projectDetailQuery, {name: project.name})
-      .then(data => {
+    fetchQuery(environment, gqlHelper.projectDetailQuery, { name: project.name })
+      .then((data) => {
         const projInfo = {
           ...data.project[0],
           counts: extractCounts(data),
           charts: extractCharts(data),
         };
         updateProjectDetailToRedux(projInfo);
-      })
+      });
   });
 };
 
+const checkHomepageState = stateName => getReduxStore().then(
+  (store) => {
+    const homeState = store.getState().homepage || {};
+    const nowMs = Date.now();
+    if (!Object.prototype.hasOwnProperty.call(homeState, stateName) ||
+        (Object.prototype.hasOwnProperty.call(homeState, stateName)
+          && nowMs - homeState[stateName] > 300000)
+    ) {
+      return 'OLD';
+    }
+    return 'FRESH';
+  },
+  (err) => {
+    /* eslint no-console: ["error", { allow: ["error"] }] */
+    console.error('WARNING: failed to load redux store', err);
+    return 'ERR';
+  },
+);
+
 const getProjectsList = () => {
-  fetchQuery(environment, gqlHelper.homepageQuery, {})
-    .then(
-      data => {
-        const { projectList, summaryCounts } = transformRelayProps(data);
-        updateRedux({ projectList, summaryCounts });
-        getProjectDetail(projectList);
-      },
-      error => {
-        updateReduxError(error);
+  checkHomepageState('lastestListUpdating').then(
+    (res) => {
+      if (res === 'OLD') {
+        fetchQuery(environment, gqlHelper.homepageQuery, {})
+          .then(
+            (data) => {
+              const { projectList, summaryCounts } = transformRelayProps(data);
+              updateRedux({ projectList, summaryCounts })
+                .then(getProjectDetail(projectList));
+            },
+            (error) => {
+              updateReduxError(error);
+            },
+          );
       }
-    )
+    },
+    (error) => {
+      updateReduxError(error);
+    },
+  );
 };
 
 export default getProjectsList;

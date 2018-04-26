@@ -1,7 +1,10 @@
 import { connect } from 'react-redux';
-import IndexBarChart from '../components/IndexBarChart';
 import { sortCompare } from '../utils';
-import { indexChartNames, localTheme } from '../localconf';
+import { indexChartNames, localTheme, indexDetails, hostname } from '../localconf';
+import dictIcons from '../img/icons';
+import { setActive } from '../Top/reduxer';
+import IndexBarChart from '../components/charts/IndexBarChart';
+import IndexButtonBar from '../components/IndexButtonBar';
 
 export const ReduxIndexBarChart = (() => {
   const mapStateToProps = (state) => {
@@ -18,4 +21,20 @@ export const ReduxIndexBarChart = (() => {
   const mapDispatchToProps = function mapDispatch() { return {}; };
 
   return connect(mapStateToProps, mapDispatchToProps)(IndexBarChart);
+})();
+
+export const ReduxIndexButtonBar = (() => {
+  const mapStateToProps = state => ({
+    hostname,
+    buttons: indexDetails.buttons,
+    dictIcons,
+    activeTab: state.bar.active,
+  });
+
+  // Bar chart does not dispatch anything
+  const mapDispatchToProps = dispatch => ({
+    onActiveTab: link => dispatch(setActive(link)),
+  });
+
+  return connect(mapStateToProps, mapDispatchToProps)(IndexButtonBar);
 })();

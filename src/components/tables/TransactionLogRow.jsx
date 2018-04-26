@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import { TableRow, TableCell, ColorSpan, ColorBar } from '../style';
+import { TableRow, TableCell } from './style';
 
 const StatusBar = styled.div`
   font-size: 16px;
@@ -23,9 +23,7 @@ const getLocalTime = (gmtTimeString) => {
   return `${date.toLocaleString()} UTC${(offsetMins > 0) ? '' : '+'}${offsetHous}`;
 };
 
-const formatText = (text) => {
-  return text[0] + text.slice(1).toLowerCase();
-};
+const formatText = text => text[0] + text.slice(1).toLowerCase();
 
 /**
  * Table row component - fills in columns given project property
@@ -43,9 +41,9 @@ export class TransactionLogTR extends React.Component {
         </TableCell>
         <TableCell>
           {
-            (trans.state === 'SUCCEEDED' && <StatusBar className='special-number'>{formatText(trans.state)}</StatusBar>)
-          || ((trans.state === 'FAILED' || trans.state === 'ERRORED') && <FailBar className='special-number'>{formatText(trans.state)}</FailBar>)
-          || (trans.state === 'PENDING' && <PendingBar className='special-number'>{formatText(trans.state)}</PendingBar>)
+            (trans.state === 'SUCCEEDED' && <StatusBar className="special-number">{formatText(trans.state)}</StatusBar>)
+          || ((trans.state === 'FAILED' || trans.state === 'ERRORED') && <FailBar className="special-number">{formatText(trans.state)}</FailBar>)
+          || (trans.state === 'PENDING' && <PendingBar className="special-number">{formatText(trans.state)}</PendingBar>)
           }
         </TableCell>
       </TableRow>);
@@ -59,9 +57,9 @@ export class TransactionLogTR extends React.Component {
       </TableCell>
       <TableCell>
         {
-          (trans.state === 'SUCCEEDED' && <StatusBar className='special-number'>{formatText(trans.state)}</StatusBar>)
-          || ((trans.state === 'FAILED' || trans.state === 'ERRORED') && <FailBar className='special-number'>{formatText(trans.state)}</FailBar>)
-          || (trans.state === 'PENDING' && <PendingBar className='special-number'>{formatText(trans.state)}</PendingBar>)
+          (trans.state === 'SUCCEEDED' && <StatusBar className="special-number">{formatText(trans.state)}</StatusBar>)
+          || ((trans.state === 'FAILED' || trans.state === 'ERRORED') && <FailBar className="special-number">{formatText(trans.state)}</FailBar>)
+          || (trans.state === 'PENDING' && <PendingBar className="special-number">{formatText(trans.state)}</PendingBar>)
         }
       </TableCell>
     </TableRow>);

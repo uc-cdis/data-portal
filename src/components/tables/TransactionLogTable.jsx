@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, TableHead, TableRow, TableColLabel } from '../style';
+import { Table, TableHead, TableColLabel } from './style';
 import TransactionLogRow from './TransactionLogRow';
+import Spinner from '../Spinner';
 
 class TransactionLogTable extends Component {
   render() {
+    if (!this.props.log || this.props.log === []) { return <Spinner />; }
     return (
       <div>
         <h2>Recent Submissions</h2>

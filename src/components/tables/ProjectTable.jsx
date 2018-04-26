@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, TableHead, TableRow, TableColLabel } from '../style';
+import { Table, TableHead, TableColLabel } from './style';
 import ProjectTR from './ProjectRow';
-import dictIcons from "../../img/icons/index";
+import dictIcons from '../../img/icons/index';
 
 function compare(a, b) {
   if (a.name < b.name) { return -1; }
@@ -11,7 +11,7 @@ function compare(a, b) {
 }
 
 /**
- * Table of projects.
+ * Table of tables.
  * Has projectList property where each entry has the properties
  * for a project detail, and a summaryCounts property with
  * prefetched totals (property details may be fetched lazily via Relay, whatever ...)
@@ -22,7 +22,7 @@ class ProjectTable extends React.Component {
    * default row renderer - just delegates to ProjectTR - can be overriden by subtypes, whatever
    */
   rowRender(proj, i) {
-    return <ProjectTR key={proj.name} project={proj} index={i} dictIcons={dictIcons}/>;
+    return <ProjectTR key={proj.name} project={proj} index={i} dictIcons={dictIcons} />;
   }
   render() {
     const projectList = (this.props.projectList || []).sort(

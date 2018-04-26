@@ -12,40 +12,79 @@ import IcoGen3 from './gen3.svg';
 import IcoProfile from './profile.svg';
 import IcoQuery from './query.svg';
 import IcoSignature from './signature.svg';
-import IcoUchicago from './uchicago.svg';
 import IcoUpload from './upload.svg';
 import IcoUploadWhite from './upload-white.svg';
 import IcoWorkspace from './workspace.svg';
 
 const dictIcons = {
-  'analysis': (height) => { return <IcoAnalysis height={height}/> },
-  'data-access': (height) => { return <IcoDataAccess height={height}/> },
-  'data-analyze': (height) => { return <IcoDataAnalyze height={height}/> },
-  'data-explore': (height) => { return <IcoDataExplore height={height}/> },
-  'data-field-define': (height) => { return <IcoDataFieldDefine height={height}/> },
-  'dictionary': (height) => { return <IcoDictionary height={height}/> },
-  'exit': (height) => { return <IcoExit height={height}/> },
-  'exploration': (height) => { return <IcoExploration height={height}/> },
-  'files': (height) => { return <IcoFiles height={height}/> },
-  'gen3': (height) => {
-    return <IcoGen3
-      height={height} style={{
-        position:"absolute",
-        top:"-50%", bottom:"-50%",
-        marginTop:"auto", marginBottom:"auto"
-      }}/>},
-  'profile': (height) => { return <IcoProfile height={height}/> },
-  'query': (height) => { return <IcoQuery height={height}/> },
-  'upload': (height) => { return <IcoUpload height={height}/> },
-  'upload-white': (height) => { return <IcoUploadWhite height={height}/> },
-  'workspace': (height) => { return <IcoWorkspace height={height}/> },
-  'uchicago': (height) => {
-    return <IcoSignature
+  analysis: (height, customedStyles) => (
+    <IcoAnalysis
+      height={height}
+      style={{ ...customedStyles }}
+    />),
+  'data-access': (height, customedStyles) => (
+    <IcoDataAccess height={height} style={{ ...customedStyles }} />
+  ),
+  'data-analyze': (height, customedStyles) => (
+    <IcoDataAnalyze height={height} style={{ ...customedStyles }} />
+  ),
+  'data-explore': (height, customedStyles) => (
+    <IcoDataExplore height={height} style={{ ...customedStyles }} />
+  ),
+  'data-field-define': (height, customedStyles) => (
+    <IcoDataFieldDefine height={height} style={{ ...customedStyles }} />
+  ),
+  dictionary: (height, customedStyles) => (
+    <IcoDictionary height={height} style={{ ...customedStyles }} />
+  ),
+  exit: (height, customedStyles) => (
+    <IcoExit height={height} style={{ ...customedStyles }} />
+  ),
+  exploration: (height, customedStyles) => (
+    <IcoExploration height={height} style={{ ...customedStyles }} />
+  ),
+  files: (height, customedStyles) => (
+    <IcoFiles height={height} style={{ ...customedStyles }} />
+  ),
+  gen3: (height, customedStyles) => (<IcoGen3
+    height={height}
+    style={{
+      position: 'absolute',
+      top: '-50%',
+      bottom: '-50%',
+      marginTop: 'auto',
+      marginBottom: 'auto',
+      ...customedStyles,
+    }}
+  />),
+  profile: (height, customedStyles) => (
+    <IcoProfile height={height} style={{ ...customedStyles }} />
+  ),
+  query: (height, customedStyles) => (
+    <IcoQuery height={height} style={{ ...customedStyles }} />
+  ),
+  upload: (height, customedStyles) => (
+    <IcoUpload height={height} style={{ ...customedStyles }} />
+  ),
+  'upload-white': (height, customedStyles) => (
+    <IcoUploadWhite height={height} style={{ ...customedStyles }} />
+  ),
+  workspace: (height, customedStyles) => (
+    <IcoWorkspace height={height} style={{ ...customedStyles }} />
+  ),
+  uchicago: (height, customedStyles) => (
+    <IcoSignature
       height={height}
       style={{
-        position:"absolute",
-        top:"-50%", bottom:"-50%",
-        marginTop:"auto", marginBottom:"auto", fill: "#ffffff"}}/> },
+        position: 'absolute',
+        top: '-50%',
+        bottom: '-50%',
+        marginTop: 'auto',
+        marginBottom: 'auto',
+        ...customedStyles,
+      }}
+    />
+  ),
 };
 
 export default dictIcons;

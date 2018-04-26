@@ -3,7 +3,6 @@ const analysis = (state = {}, action) => {
   case 'RECEIVE_JOB_DISPATCH':
     return { ...state, job: action.data };
   case 'RECEIVE_JOB_STATUS': {
-    console.log(action);
     const job = { ...action.data, resultURL: action.resultURL };
     return { ...state, job };
   }

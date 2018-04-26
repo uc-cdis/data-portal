@@ -24,35 +24,33 @@ const getResultDownloadUrl = () => {
 };
 
 
-const dispatchJob = (inputURL, outputURL) => {
-  return dispatch => fetchJsonOrText({
-    path: `${jobapiPath}dispatch`,
-    body: JSON.stringify({
-      inputURL,
-      outputURL,
-    }),
-    method: 'POST',
-    dispatch,
-  })
-    .then(
-      ({ status, data }) => {
-        switch (status) {
-        case 200:
-          return {
-            type: 'RECEIVE_JOB_DISPATCH',
-            data,
-          };
-        default:
-          return {
-            type: 'FETCH_ERROR',
-            error: data,
-          };
-        }
-      },
-      err => ({ type: 'FETCH_ERROR', error: err }),
-    )
-    .then((msg) => { dispatch(msg); });
-};
+const dispatchJob = (inputURL, outputURL) => dispatch => fetchJsonOrText({
+  path: `${jobapiPath}dispatch`,
+  body: JSON.stringify({
+    inputURL,
+    outputURL,
+  }),
+  method: 'POST',
+  dispatch,
+})
+  .then(
+    ({ status, data }) => {
+      switch (status) {
+      case 200:
+        return {
+          type: 'RECEIVE_JOB_DISPATCH',
+          data,
+        };
+      default:
+        return {
+          type: 'FETCH_ERROR',
+          error: data,
+        };
+      }
+    },
+    err => ({ type: 'FETCH_ERROR', error: err }),
+  )
+  .then((msg) => { dispatch(msg); });
 
 
 export const checkJobStatus = (dispatch, getState) => {
@@ -75,9 +73,7 @@ export const checkJobStatus = (dispatch, getState) => {
       // to render the result data
       if (data.status === 'Completed') {
         return getResultDownloadUrl()
-          .then((resultURL) => {
-            return { type: 'RECEIVE_JOB_STATUS', data, resultURL };
-          });
+          .then(resultURL => ({ type: 'RECEIVE_JOB_STATUS', data, resultURL }));
       }
       switch (status) {
       case 200:
@@ -97,17 +93,15 @@ export const checkJobStatus = (dispatch, getState) => {
 };
 
 
-export const submitJob = (did) => {
+export const submitJob = did =>
   // first get the presigned url for input download and output upload
   // then dispatch the job with those urls
   // then start pulling job status
   // save the interval id in redux that can be used to clear the timer later
 
   // TODO: need to get result urls from a Gen3 service
-  return (dispatch) => {
-    return Promise.all([getPresignedUrl(did, 'download'), getResultUploadUrl()])
-      .then(values => dispatch(dispatchJob(values[0], values[1])))
-      .then(() => asyncSetInterval(() => dispatch(checkJobStatus), 1000))
-      .then((intervalValue) => { dispatch({ type: 'JOB_STATUS_INTERVAL', value: intervalValue }) });
-  };
-};
+  dispatch => Promise.all([getPresignedUrl(did, 'download'), getResultUploadUrl()])
+    .then(values => dispatch(dispatchJob(values[0], values[1])))
+    .then(() => asyncSetInterval(() => dispatch(checkJobStatus), 1000))
+    .then((intervalValue) => { dispatch({ type: 'JOB_STATUS_INTERVAL', value: intervalValue }); })
+;

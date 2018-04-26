@@ -47,11 +47,11 @@ function buildConfig(opts) {
   const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   // let credentialOauthPath = `${hostname}middleware/oauth2/v0/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
-  let navBar = {
-    title: "NIAID Data Hub"
+  const navBar = {
+    title: 'NIAID Data Hub',
   };
   let userapiPath = `${hostname}user/`;
-  let jobapiPath = `${hostname}/job/`;
+  const jobapiPath = `${hostname}/job/`;
   let credentialCdisPath = `${userapiPath}credentials/cdis/`;
   let login = {
     url: `${userapiPath}login/google?redirect=`,
@@ -63,11 +63,11 @@ function buildConfig(opts) {
 
   let appname = 'Unasigned';
   let navItems = [];
-  let topItems = [
+  const topItems = [
     { icon: 'upload-white', link: '/submission', name: 'Data Submission' },
-    { link: '/document', name: 'Document' },
+    { link: 'https://uc-cdis.github.io/gen3-user-doc/user-guide/guide-overview', name: 'Documentation' },
   ];
-  let indexDetails = texts.ndh.index;
+  let indexDetails = {};
   let dashboardIcons = [
     'account_circle',
     'receipt',
@@ -78,8 +78,8 @@ function buildConfig(opts) {
     'barGraph.lineColor': '#666666',
     'barGraph.bar1Color': '#3283c8',
     'barGraph.bar2Color': '#05b8ee',
-    'barGraph.bar3Color': '#ffffff',
-    'barGraph.bar4Color': '#eeeeee',
+    'barGraph.bar3Color': '#ef8523',
+    'barGraph.bar4Color': '#ff9635',
     'summary.borderTopColor': '#c87152',
     'summary.borderColor': '#222222',
     'summary.countColor': '#ff4200',
@@ -193,12 +193,13 @@ function buildConfig(opts) {
     navItems = [
       { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'Dictionary' },
       { icon: 'exploration', link: `${hostname}shiny/`, color: '#a2a2a2', name: 'Exploration' },
-      { icon: 'files', link: `/files`, color: '#a2a2a2', name: 'Files' },
+      { icon: 'files', link: '/files', color: '#a2a2a2', name: 'Files' },
       { icon: 'analysis', link: '/analysis', color: '#a2a2a2', name: 'Simulation' },
       { icon: 'query', link: '/query', color: '#a2a2a2', name: 'Query' },
       { icon: 'workspace', link: `${hostname}workspace/`, color: '#a2a2a2', name: 'Workspace' },
       { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'Profile' },
     ];
+    indexDetails = texts.ndh.index;
   } else if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
     // credentialPath = `${userapiPath}credentials/cleversafe/`;

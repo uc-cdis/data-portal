@@ -195,5 +195,4 @@ describe('the userProfile component', () => {
         expect(store.getActions()).toEqual(expectedActions);
       });
   });
-
 });

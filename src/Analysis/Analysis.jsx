@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import styled from 'styled-components';
 
 const ResultImage = styled.img`
@@ -14,22 +15,20 @@ const JobStatus = styled.p`
   animation: color-change 2s infinite;
 `;
 
-const AnalysisApp = ({ app, submitJob, job, resultURL }) => {
+const AnalysisApp = ({ app, submitJob, job }) => {
   const onSubmitJob = (e) => {
     e.preventDefault();
     const inputId = e.target.input.value;
     submitJob(inputId);
   };
-  const isJobRunning = () => {
-    return job && job.status !== 'Completed';
-  };
+  const isJobRunning = () => job && job.status !== 'Completed';
 
   return (
     <div>
       <h3>{app.name}</h3>
       <p>{app.description}</p>
       <form onSubmit={onSubmitJob}>
-        <input className="text-input" type="text" placeholder="input data" name="input"/>
+        <input className="text-input" type="text" placeholder="input data" name="input" />
         <button href="#" className="button button-primary-orange" onSubmit={onSubmitJob} >Run simulation</button>
       </form>
       {isJobRunning() &&
@@ -44,6 +43,12 @@ const AnalysisApp = ({ app, submitJob, job, resultURL }) => {
   );
 };
 
+AnalysisApp.propTypes = {
+  app: PropTypes.object.isRequired,
+  job: PropTypes.object.isRequired,
+  submitJob: PropTypes.object.isRequired,
+};
+
 const Analysis = ({ job, submitJob }) => {
   const virusSimApp = {
     name: 'NDH Virulence Simulation',
@@ -51,11 +56,16 @@ const Analysis = ({ job, submitJob }) => {
         using Phylogenies (HyPhy) tool over data submitted in the NIAID Data Hub. \n
         The simulation is focused on modeling a Bayesian Graph Model (BGM) based on a binary matrix input.
         The implemented example predicts the virulence status of different influenza strains based on their mutations
-        (the mutation panel is represented as the input binary matrix).`
+        (the mutation panel is represented as the input binary matrix).`,
   };
   return (
     <AnalysisApp job={job} submitJob={submitJob} app={virusSimApp} />
   );
+};
+
+Analysis.propTypes = {
+  job: PropTypes.object.isRequired,
+  submitJob: PropTypes.object.isRequired,
 };
 
 export default Analysis;

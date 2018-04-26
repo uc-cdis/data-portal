@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { TableBarColor } from '../theme';
 
 export const Table = styled.table`
   border-collapse: collapse;
@@ -22,9 +21,10 @@ export const TableRow = styled.tr`
   background-color: #ffffff;
   color: #000000;
   height: 60px;
+  font-size: 16px;
   ${
-    props => (props.oddRow ? `background-color: #f5f5f5;` : '')
-  }
+  props => (props.oddRow ? 'background-color: #f5f5f5;' : '')
+}
 `;
 
 
@@ -35,7 +35,7 @@ export const TableCell = styled.td`
 export const TableColLabel = styled.th`
   letter-spacing: .02rem;
   color: #000000;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: @semi-bold;
   text-align:center;
 `;

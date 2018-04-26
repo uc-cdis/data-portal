@@ -1,11 +1,10 @@
 import React from 'react';
-import Introduction from '../components/Introduction'
-import IndexButtonBar from '../components/IndexButtonBar';
-import dictIcons from "../img/icons";
-import { indexDetails, hostname } from "../localconf";
-import styled from "styled-components";
+import styled from 'styled-components';
+import Introduction from '../components/Introduction';
+import { ReduxIndexButtonBar, ReduxIndexBarChart } from './reduxer';
+import dictIcons from '../img/icons';
+import { indexDetails } from '../localconf';
 import getProjectsList from './relayer';
-import { ReduxIndexBarChart } from './reduxer';
 
 const IndexTop = styled.div`
   width: 100%;
@@ -20,12 +19,12 @@ class IndexPageComponent extends React.Component {
 
   render() {
     return (
-      <div style={{width: "1220px"}}>
+      <div style={{ width: '1220px' }}>
         <IndexTop>
-          <Introduction data={indexDetails.introduction} dictIcons={dictIcons}/>
-          <ReduxIndexBarChart/>
+          <Introduction data={indexDetails.introduction} dictIcons={dictIcons} />
+          <ReduxIndexBarChart />
         </IndexTop>
-        <IndexButtonBar dictIcons={dictIcons} buttons={indexDetails.buttons} hostname={hostname}/>
+        <ReduxIndexButtonBar />
       </div>
     );
   }

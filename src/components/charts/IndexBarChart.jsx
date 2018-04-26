@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
 import { browserHistory } from 'react-router-dom';
+import Spinner from '../Spinner';
+import TooltipCDIS from './TooltipCDIS';
+import Tick from './Tick';
 
 
 const FloatBox = styled.div`
@@ -14,27 +17,11 @@ const FloatBox = styled.div`
 `;
 
 const sortCount = (a, b) => {
-  let countA = a.counts.reduce((res, item) => {return res + item});
-  let countB = b.counts.reduce((res, item) => {return res + item});
+  const countA = a.counts.reduce((res, item) => res + item);
+  const countB = b.counts.reduce((res, item) => res + item);
   if (countA === countB) { return 0; }
   return countA < countB ? 1 : -1;
 };
-
-class Tick extends React.Component {
-  render() {
-    const { x, y, payload } = this.props;
-    const texts = payload.value.split('#');
-    return (
-      <g>
-        <text textAnchor="end" x={x} y={y} dy={0}>
-          <tspan className='special-number' fill='#3283C8'>{`${texts[0]} `}</tspan>
-          <tspan className='h4-typo'>{`${texts[1]}`}</tspan>
-        </text>
-      </g>
-    );
-  }
-}
-
 
 /**
  * Component shows stacked-bars - one stacked-bar for each project in props.projectList -
@@ -60,21 +47,20 @@ class IndexBarChart extends React.Component {
 
   render() {
     const projectList = [...(this.props.projectList.sort(sortCount) || [])];
+    if (projectList.length === 0) { return <Spinner />; }
     const localTheme = this.props.localTheme;
-    const indexChart = this.props.countNames.map(
-      (countName) => {
-        return { name: countName }
-      }
+    let indexChart = this.props.countNames.map(
+      countName => ({ name: countName }),
     );
-    let sumList = this.props.countNames.map( () => 0);
+    const sumList = this.props.countNames.map(() => 0);
     projectList.forEach(
-      (project, i) => {
+      (project) => {
         project.counts.forEach(
           (count, j) => {
             sumList[j] += count;
-          }
-        )
-      }
+          },
+        );
+      },
     );
 
     projectList.forEach(
@@ -82,31 +68,26 @@ class IndexBarChart extends React.Component {
         project.counts.forEach(
           (count, j) => {
             indexChart[j][`count${i}`] = (count / sumList[j]) * 100;
-          }
-        )
-      }
+          },
+        );
+      },
     );
 
-    indexChart.forEach(
+    indexChart = indexChart.map(
       (index, i) => {
-        index.name = `${sumList[i]}#${index.name}`;
-      }
+        const newIndex = index;
+        newIndex.name = `${sumList[i]}#${index.name}`;
+        return newIndex;
+      },
     );
 
-    let projectNames = projectList.map( (project) => { return project.code });
-    console.log(projectList);
-    console.log('Index charts');
-    console.log(indexChart);
+    const projectNames = projectList.map(project => project.code);
     let barNames = [];
     if (indexChart.length > 0) {
       barNames = Object.keys(indexChart[0]).filter(key => key.indexOf('count') === 0).map(
         name => name,
       );
     }
-    console.log('Bar names');
-    console.log(barNames);
-    console.log('Count names');
-    console.log(projectNames);
     let countBar = 0;
     return (
       <FloatBox>
@@ -118,12 +99,13 @@ class IndexBarChart extends React.Component {
             layout="vertical"
           >
             <h4>Project Submission status</h4>
-            <XAxis stroke={localTheme['barGraph.lineColor']} fill={localTheme['barGraph.lineColor']}  type='number'/>
-            <YAxis dataKey="name"
-                   tick={<Tick />}
-                   type='category'
+            <XAxis stroke={localTheme['barGraph.lineColor']} fill={localTheme['barGraph.lineColor']} type="number" />
+            <YAxis
+              dataKey="name"
+              tick={<Tick />}
+              type="category"
             />
-            <Tooltip />
+            <Tooltip content={<TooltipCDIS />} />
             <Legend />
             {
               barNames.map(

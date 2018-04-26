@@ -9,20 +9,19 @@ const IntroDiv = styled.div`
 `;
 
 const IntroTitle = styled.div`
-  margin-top: 75px;
+  margin-top: 35px;
   margin-bottom: 25px;
   line-height: 0.5em;
 `;
 
 const IntroText = styled.div`
-  margin-top: 25px;
   padding: 10px 0px;
   text-align: left;
 
   margin-left: auto;
   margin-right: auto;
   margin-top: 25px;
-  margin-bottom: 75px;
+  margin-bottom: 25px;
 `;
 
 class Introduction extends Component {
@@ -40,11 +39,11 @@ class Introduction extends Component {
           link={this.props.data.link}
           dictIcons={this.props.dictIcons}
           style={{
-            marginLeft: "auto",
-            marginRight: "auto",
-            marginTop: "25px",
-            marginBottom: "75px"
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginBottom: '75px',
           }}
+          iconColor={'#'}
         />
       </IntroDiv>
     );

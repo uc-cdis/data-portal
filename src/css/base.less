@@ -161,12 +161,15 @@ button {
 .button-primary-white {
   border: 1px solid @light_gray;
   background-color: @white;
-  color: @gray;
   font-weight: @medium;
+  color: @gray;
+  fill: @gray;
+  &:hover svg path,
   &:hover {
     border: 1px solid @black;
-    color: @black;
     font-weight: @semi-bold;
+    color: @black;
+    fill: @black;
   }
   &:active {
     border: 1px solid @orange;
@@ -179,6 +182,7 @@ button {
   background-color: @orange;
   letter-spacing: .06rem;
   color: @white;
+  fill: @white;
   font-weight: @medium;
   &:hover {
     border: 1px solid @gray;
@@ -233,6 +237,10 @@ ul {
 .button-active {
   opacity: 1;
   border-bottom: 3px solid #ef8523;
+}
+
+.button-top-active {
+  border-bottom: 1px solid #ffffff;
 }
 
 .right {

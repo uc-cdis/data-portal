@@ -21,7 +21,6 @@ test('Project table renders', () => {
       </StaticRouter>
     </MuiThemeProvider>,
   );
-  console.log(`ProjectTable looks like this: ${table.html()}`);
   // 2 == 1 data row + 1 summary totals row
   expect(table.find('tbody tr').length).toBe(2);
 });

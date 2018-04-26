@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { localTheme } from '../../localconf';
 
 const Title = styled.div`
   height: 120px;
@@ -49,18 +48,18 @@ class CountCard extends Component {
   render() {
     return (
       <TopBoard>
-        <Title className='h1-typo'>
+        <Title className="h1-typo">
           Data Submission Summary
         </Title>
-        <div style={{display: "flex"}}>
+        <div style={{ display: 'flex' }}>
           {
             this.props.countItems.map(
-              (item, i) => (
+              item => (
                 <CountBox key={item.label}>
-                  <CountBoxTitle className='h4-typo'>
+                  <CountBoxTitle className="h4-typo">
                     {item.label}
                   </CountBoxTitle>
-                  <CountBoxNumber className='special-number'>
+                  <CountBoxNumber className="special-number">
                     {item.value}
                   </CountBoxNumber>
                 </CountBox>
@@ -75,11 +74,6 @@ class CountCard extends Component {
 
 CountCard.propTypes = {
   countItems: PropTypes.arrayOf(PropTypes.object).isRequired,
-  icons: PropTypes.array,
-};
-
-CountCard.defaultProps = {
-  icons: [],
 };
 
 export default CountCard;

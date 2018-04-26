@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { TableRow, TableCell } from '../style';
-import SubmitButton from '../../components/SubmitButton';
+import { TableRow, TableCell } from './style';
+import SubmitButton from '../SubmitButton';
 
 /**
  * Table row component - fills in columns given project property
@@ -9,9 +9,7 @@ import SubmitButton from '../../components/SubmitButton';
 class ProjectTR extends Component {
   render() {
     const proj = this.props.project;
-    console.log(`${proj.name}: ${this.props.index}`);
-    if (this.props.index % 2 === 1)
-    {
+    if (this.props.index % 2 === 1) {
       return (
         <TableRow key={proj.name} summaryRow={!!this.props.summaryRow} oddRow>
           <TableCell className={'h4-typo'}>
@@ -31,7 +29,7 @@ class ProjectTR extends Component {
               proj.name !== 'Totals:' ?
                 <SubmitButton
                   link={`/${proj.name}`}
-                  buttonClassName='button-primary-orange'
+                  buttonClassName="button-primary-orange"
                   dictIcons={this.props.dictIcons}
                 /> : ''
             }
@@ -57,7 +55,7 @@ class ProjectTR extends Component {
             proj.name !== 'Totals:' ?
               <SubmitButton
                 link={`/${proj.name}`}
-                buttonClassName='button-primary-orange'
+                buttonClassName="button-primary-orange"
                 dictIcons={this.props.dictIcons}
               /> : ''
           }
@@ -75,7 +73,7 @@ ProjectTR.propTypes = {
 
 ProjectTR.defaultProps = {
   summaryRow: false,
-  dictIcons: undefined
+  dictIcons: undefined,
 };
 
 export default ProjectTR;

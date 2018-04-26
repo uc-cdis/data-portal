@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 const basename = process.env.BASENAME || '/';
-const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length-1) : basename;
+const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
 const app = process.env.APP || 'dev';
 const title = {
   dev: 'Generic Data Commons',
@@ -76,12 +76,12 @@ module.exports = {
         loaders: [
           'style',
           'css',
-          'less'
+          'less',
         ]
       },
       {
         test: /\.css$/,
-        loader: 'style!css'
+        loader: 'style!css',
       },
       {
         test: /\.svg$/,

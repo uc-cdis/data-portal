@@ -5,12 +5,8 @@ import { StaticRouter } from 'react-router-dom';
 import Footer from './Footer';
 
 const dictIcons = {
-  'gen3': (height) => {
-    return <img name='test' src='' height={height}/>
-  },
-  'uchicago': (height) => {
-    return <img name='test' src='' height={height}/>
-  },
+  gen3: height => <img name="test" src="" height={height} alt="" />,
+  uchicago: height => <img name="test" src="" height={height} alt="" />,
 };
 
 describe('The Footer component', () => {
@@ -20,7 +16,7 @@ describe('The Footer component', () => {
     );
     const footer = mount(
       <StaticRouter location={{ pathname: '/dd' }}>
-        <Footer dictIcons={dictIcons}/>
+        <Footer dictIcons={dictIcons} />
       </StaticRouter>,
     );
     // const span = footer.find('span');

@@ -17,7 +17,7 @@ const Body = styled.div`
   margin-left: auto;
   margin-right: auto;
   width: 1220px;
-  padding: ${props => props.padding || '50px 0px 150px 0px'};
+  padding: ${props => props.padding || '40px 0px 150px 0px'};
   min-height: 900px;
 `;
 
@@ -221,7 +221,7 @@ class ProtectedContent extends React.Component {
           // do not authenticate unless we have a 403 or 401
           // should only check 401 after we fix fence to return correct
           // error code for all cases
-          // there may be no projects at startup time,
+          // there may be no tables at startup time,
           // or some other weirdness ...
           // The oauth dance below is only relevent for legacy commons - pre jwt
           return Promise.resolve(newState);
@@ -254,7 +254,7 @@ class ProtectedContent extends React.Component {
             msg => store.dispatch(msg),
           )
           .then(
-            // refetch the projects - since the earlier call failed with an invalid token ...
+            // refetch the tables - since the earlier call failed with an invalid token ...
             () => store.dispatch(fetchProjects()),
           )
           .then(

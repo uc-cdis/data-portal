@@ -6,9 +6,9 @@ import { ThemeProvider } from 'styled-components';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'react-select/dist/react-select.css';
-import './css/base.less';
 import querystring from 'querystring';
 
+import './css/base.less';
 import { fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
@@ -22,14 +22,12 @@ import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
 import CertificateQuiz from './Certificate/ReduxQuiz';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
-import { basename } from './localconf';
-import { OuterWrapper, Box, Margin, theme } from './theme';
+import { OuterWrapper, Box, theme } from './theme';
 import getReduxStore from './reduxStore';
-import NavBar from './components/NavBar';
-import Top from './Top/ReduxTopBar';
-import Footer from './components/Footer';
+import { ReduxNavBar, ReduxTopBar } from './Top/reduxer';
+import Footer from './components/layout/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
-import { navItems, navBar } from './localconf';
+import { basename } from './localconf';
 import dictIcons from './img/icons/index';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 
@@ -59,7 +57,7 @@ async function init() {
       }),
     ],
   );
-  const background = "#f5f5f5"; // for now
+  const background = '#f5f5f5'; // for now
 
   render(
     <Provider store={store}>
@@ -67,9 +65,9 @@ async function init() {
         <MuiThemeProvider>
           <BrowserRouter basename={basename}>
             <OuterWrapper>
-              <Top />
-              <NavBar navTitle={navBar.title} navItems={navItems} dictIcons={dictIcons} />
-              <Box background={background} style={{width: "100%", margin: "auto"}}>
+              <ReduxTopBar />
+              <ReduxNavBar />
+              <Box background={background} style={{ width: '100%', margin: 'auto' }}>
                 <Switch>
                   <Route
                     path="/login"
@@ -185,9 +183,9 @@ async function init() {
                     }
                   />
                 </Switch>
-                {/*<Margin background={background} />*/}
+                {/* <Margin background={background} /> */}
               </Box>
-              <Footer dictIcons={dictIcons}/>
+              <Footer dictIcons={dictIcons} />
             </OuterWrapper>
           </BrowserRouter>
         </MuiThemeProvider>
