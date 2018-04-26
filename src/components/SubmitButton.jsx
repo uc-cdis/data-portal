@@ -13,7 +13,7 @@ class SubmitButton extends React.Component {
         {
           this.props.dictIcons !== undefined ?
             <button className={this.props.buttonClassName}>
-              Submit Data&emsp;&emsp;&emsp;
+              Submit Data&emsp;
               <IconComponent dictIcons={this.props.dictIcons} iconName='upload' height="14px"/>
             </button> :
             <button className={this.props.buttonClassName}>

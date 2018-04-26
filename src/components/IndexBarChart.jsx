@@ -20,6 +20,11 @@ const sortCount = (a, b) => {
   return countA < countB ? 1 : -1;
 };
 
+const TooltipPopup = styled.div`
+  background-color: #ffffff;
+  padding: 0px 20px 20px 20px;
+`;
+
 class Tick extends React.Component {
   render() {
     const { x, y, payload } = this.props;
@@ -35,6 +40,32 @@ class Tick extends React.Component {
   }
 }
 
+class TooltipCDIS extends React.Component {
+  render() {
+    const { active } = this.props;
+
+    if (active) {
+      const { payload, label } = this.props;
+      const txts = label.split('#');
+      const number = parseInt(txts[0]);
+      console.log(`paload tooltip`);
+      console.log(payload);
+      return (
+        <TooltipPopup className="custom-tooltip">
+          <h2>{`${txts[1]}`}</h2>
+          {
+            payload.map(
+              (item) => {
+                return <div style={{color: `${item.fill}`}} className="body-typo">{`${item.name} : ${Math.round((item.value/100) * number)}`}</div>
+              }
+            )
+          }
+        </TooltipPopup>
+      );
+    }
+    return null;
+  }
+}
 
 /**
  * Component shows stacked-bars - one stacked-bar for each project in props.projectList -
@@ -123,7 +154,7 @@ class IndexBarChart extends React.Component {
                    tick={<Tick />}
                    type='category'
             />
-            <Tooltip />
+            <Tooltip content={<TooltipCDIS/>}/>
             <Legend />
             {
               barNames.map(
