@@ -18,6 +18,46 @@ export const connectionError = () => {
 
 const fetchCache = {};
 
+const getJsonOrText = (path, response, useCache, method = 'GET') => response.text().then(
+  (textData) => {
+    let data = textData;
+    if (data) {
+      try {
+        data = JSON.parse(data);
+        if (useCache && method === 'GET' && response.status === 200) {
+          fetchCache[path] = textData;
+        }
+      } catch (e) {
+        // # do nothing
+      }
+    }
+    return { response, data, status: response.status, headers: response.headers };
+  });
+
+let pendingRequest = null;
+export const fetchCreds = (opts) => {
+  if (pendingRequest)
+    return pendingRequest;
+  const { path=`${userapiPath}user/`, method = 'GET', dispatch } = opts;
+  const request = {
+    credentials: 'include',
+    headers: { ...headers },
+    method,
+  };
+  pendingRequest = fetch(path, request).then(
+    response => {
+      pendingRequest = null;
+      return Promise.resolve(getJsonOrText(path, response, false))
+    },
+    (error) => {
+      pendingRequest = null;
+      if (dispatch) { dispatch(connectionError()); }
+      return Promise.reject(error);
+    },
+  );
+  return pendingRequest;
+};
+
 /**
  * Little helper issues fetch, then resolves response
  * as text, and tries to JSON.parse the text before resolving, but
@@ -28,11 +68,11 @@ const fetchCache = {};
  * the result promise only includes {data, status} - where JSON data is re-parsed
  * every time to avoid mutation by the client
  *
- * @method fetchJsonOrText
+ * @method fetchWithCreds
  * @param {path,method=GET,body=null,customHeaders?, dispatch?, useCache?} opts
  * @return Promise<{response,data,status,headers}> or Promise<{data,status}> if useCache specified
  */
-export const fetchJsonOrText = (opts) => {
+export const fetchWithCreds = (opts) => {
   const { path, method = 'GET', body = null, customHeaders, dispatch, useCache } = opts;
 
   if (useCache && (method === 'GET') && fetchCache[path]) {
@@ -46,21 +86,29 @@ export const fetchJsonOrText = (opts) => {
   };
   return fetch(path, request,
   ).then(
-    response => response.text().then(
-      (textData) => {
-        let data = textData;
-        if (data) {
-          try {
-            data = JSON.parse(data);
-            if (useCache && method === 'GET' && response.status === 200) {
-              fetchCache[path] = textData;
-            }
-          } catch (e) {
-            // # do nothing
+    (response) => {
+      if (response.status !== 403 && response.status !== 401) {
+        return Promise.resolve(getJsonOrText(path, response, useCache, method));
+      }
+      return Promise.resolve(fetchCreds({dispatch,
+      }).then(
+        (resp) => {
+          switch (resp.status) {
+          case 200:
+            return Promise.resolve(fetch(path, request).then(
+              getJsonOrText(path, resp, useCache, method),
+            ));
+          default:
+            return {
+              response: resp,
+              data: { data: {} },
+              status: resp.status,
+              headers: resp.headers,
+            };
           }
-        }
-        return { response, data, status: response.status, headers: response.headers };
-      }),
+        },
+      ));
+    },
     (error) => {
       if (dispatch) { dispatch(connectionError()); }
       return Promise.reject(error);
@@ -69,18 +117,18 @@ export const fetchJsonOrText = (opts) => {
 };
 
 /**
- * Redux 'thunk' wrapper around fetchJsonOrText
+ * Redux 'thunk' wrapper around fetchWithCreds
  * invokes dispatch(handler( { status, data, headers} ) and callback()
  * and propagates {response,data, status, headers} on resolved fetch,
  * otherwise dipatch(connectionError()) on fetch rejection.
- * May prefer this over straight call to fetchJsonOrText in Redux context due to
+ * May prefer this over straight call to fetchWithCreds in Redux context due to
  * conectionError() dispatch on fetch rejection.
  *
- * @param {path,method=GET,body=null,customerHeaders,handler,callback} opts
+ * @param { path, method=GET, body=null, customerHeaders, handler, callback } opts
  * @return Promise
  */
 export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders, handler, callback = () => (null) }) =>
-  dispatch => fetchJsonOrText({ path, method, body, customHeaders, dispatch },
+  dispatch => fetchWithCreds({ path, method, body, customHeaders, dispatch },
   ).then(
     ({ response, data }) => {
       const result = { response, data, status: response.status, headers: response.headers };
@@ -102,13 +150,15 @@ export const fetchGraphQL = (graphQLParams) => {
     body: JSON.stringify(graphQLParams),
   };
 
-  return fetch(graphqlPath, request).then(response => response.text()).then((responseBody) => {
-    try {
-      return JSON.parse(responseBody);
-    } catch (error) {
-      return responseBody;
-    }
-  });
+  return fetch(graphqlPath, request)
+    .then(response => response.text())
+    .then((responseBody) => {
+      try {
+        return JSON.parse(responseBody);
+      } catch (error) {
+        return responseBody;
+      }
+    });
 };
 
 export const handleResponse = type => ({ data, status }) => {
@@ -126,14 +176,7 @@ export const handleResponse = type => ({ data, status }) => {
   }
 };
 
-export const unauthorizedError = () => ({
-  type: 'REQUEST_ERROR',
-  error: 'unauthorized',
-});
-
-
-export const fetchUser = dispatch => fetchJsonOrText({
-  path: `${userapiPath}user/`,
+export const fetchUser = dispatch => fetchCreds({
   dispatch,
 }).then(
   ({ status, data }) => {
@@ -158,7 +201,7 @@ export const fetchUser = dispatch => fetchJsonOrText({
 ).then((msg) => { dispatch(msg); });
 
 
-export const logoutAPI = () => dispatch => fetchJsonOrText({
+export const logoutAPI = () => dispatch => fetchWithCreds({
   path: `${submissionApiOauthPath}logout`,
   dispatch,
 })
@@ -176,7 +219,7 @@ export const logoutAPI = () => dispatch => fetchJsonOrText({
  * @return {(dispatch) => Promise<string>} dispatch function
  */
 export const fetchOAuthURL = oauthPath => dispatch =>
-  fetchJsonOrText({
+  fetchWithCreds({
     path: `${oauthPath}authorization_url`,
     dispatch,
     useCache: true,
@@ -214,7 +257,7 @@ export const fetchOAuthURL = oauthPath => dispatch =>
  */
 
 export const fetchProjects = () => dispatch =>
-  fetchJsonOrText({
+  fetchWithCreds({
     path: `${submissionApiPath}graphql`,
     body: JSON.stringify({
       query: 'query { project(first:0) {code, project_id, availability_type}}',
@@ -245,7 +288,7 @@ export const fetchProjects = () => dispatch =>
  * Fetch the schema for graphi, and stuff it into redux -
  * handled by router
  */
-export const fetchSchema = dispatch => fetchJsonOrText({ path: graphqlSchemaUrl, dispatch })
+export const fetchSchema = dispatch => fetchWithCreds({ path: graphqlSchemaUrl, dispatch })
   .then(
     ({ status, data }) => {
       switch (status) {
@@ -264,7 +307,7 @@ export const fetchSchema = dispatch => fetchJsonOrText({ path: graphqlSchemaUrl,
 
 
 export const fetchDictionary = dispatch =>
-  fetchJsonOrText({
+  fetchWithCreds({
     path: `${submissionApiPath}_dictionary/_all`,
     method: 'GET',
     useCache: true,
@@ -288,4 +331,4 @@ export const fetchDictionary = dispatch =>
 
 
 export const fetchVersionInfo = () =>
-  fetchJsonOrText({ path: `${apiPath}_version`, method: 'GET', useCache: true });
+  fetchWithCreds({ path: `${apiPath}_version`, method: 'GET', useCache: true });

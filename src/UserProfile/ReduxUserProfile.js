@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
 
 import UserProfile from './UserProfile';
-import { fetchJsonOrText, updatePopup } from '../actions';
+import { fetchWithCreds, updatePopup } from '../actions';
 import { credentialCdisPath } from '../localconf';
 
 
 export const fetchAccess = () =>
   dispatch =>
-    fetchJsonOrText({
+    fetchWithCreds({
       path: credentialCdisPath,
       dispatch,
     })
@@ -46,7 +46,7 @@ const clearDeleteSession = () => ({
   @param {number} exp is expiration
 */
 export const deleteKey = (jti, exp, keypairsApi) =>
-  dispatch => fetchJsonOrText({
+  dispatch => fetchWithCreds({
     path: keypairsApi + jti,
     method: 'DELETE',
     body: JSON.stringify({
@@ -75,7 +75,7 @@ export const deleteKey = (jti, exp, keypairsApi) =>
     );
 
 
-export const createKey = keypairsApi => dispatch => fetchJsonOrText({
+export const createKey = keypairsApi => dispatch => fetchWithCreds({
   path: keypairsApi,
   method: 'POST',
   body: JSON.stringify({
