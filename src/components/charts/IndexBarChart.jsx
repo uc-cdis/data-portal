@@ -23,6 +23,70 @@ const sortCount = (a, b) => {
   return countA < countB ? 1 : -1;
 };
 
+const getTopList = (projectList) => {
+  const topList = projectList.slice(0, 4);
+  const others = projectList.slice(4, projectList.length);
+  const other = others.reduce((data, item) => {
+    const res = { ...data };
+    res.counts = data.counts.map(
+      (count, idx) => count + item.counts[idx],
+    );
+    return res;
+  });
+  other.code = 'others';
+  topList.push(other);
+  return topList;
+};
+
+const computeSummations = (projectList, countNames) => {
+  const sumList = countNames.map(() => 0);
+  projectList.forEach(
+    (project) => {
+      project.counts.forEach(
+        (count, j) => {
+          sumList[j] += count;
+        },
+      );
+    },
+  );
+  return sumList;
+};
+
+const createChartData = (projectList, countNames, sumList) => {
+  let indexChart = countNames.map(
+    countName => ({ name: countName }),
+  );
+  projectList.forEach(
+    (project, i) => {
+      project.counts.forEach(
+        (count, j) => {
+          indexChart[j][`count${i}`] = (sumList[j] > 0) ?
+            ((count * 100) / sumList[j]).toFixed(2) : 0;
+        },
+      );
+    },
+  );
+
+  indexChart = indexChart.map(
+    (index, i) => {
+      const newIndex = index;
+      newIndex.name = `${sumList[i]}#${index.name}`;
+      return newIndex;
+    },
+  );
+  return indexChart;
+};
+
+const createBarNames = (indexChart) => {
+  let barNames = [];
+  if (indexChart.length > 0) {
+    barNames = Object.keys(indexChart[0]).filter(key => key.indexOf('count') === 0).map(
+      name => name,
+    );
+  }
+  return barNames;
+};
+
 /**
  * Component shows stacked-bars - one stacked-bar for each project in props.projectList -
  * where experiments are stacked on top of cases.  projectList looks like:
@@ -46,48 +110,18 @@ class IndexBarChart extends React.Component {
   };
 
   render() {
-    const projectList = [...(this.props.projectList.sort(sortCount) || [])];
-    if (projectList.length === 0) { return <Spinner />; }
-    const localTheme = this.props.localTheme;
-    let indexChart = this.props.countNames.map(
-      countName => ({ name: countName }),
-    );
-    const sumList = this.props.countNames.map(() => 0);
-    projectList.forEach(
-      (project) => {
-        project.counts.forEach(
-          (count, j) => {
-            sumList[j] += count;
-          },
-        );
-      },
-    );
-
-    projectList.forEach(
-      (project, i) => {
-        project.counts.forEach(
-          (count, j) => {
-            indexChart[j][`count${i}`] = (count / sumList[j]) * 100;
-          },
-        );
-      },
-    );
-
-    indexChart = indexChart.map(
-      (index, i) => {
-        const newIndex = index;
-        newIndex.name = `${sumList[i]}#${index.name}`;
-        return newIndex;
-      },
-    );
-
-    const projectNames = projectList.map(project => project.code);
-    let barNames = [];
-    if (indexChart.length > 0) {
-      barNames = Object.keys(indexChart[0]).filter(key => key.indexOf('count') === 0).map(
-        name => name,
-      );
+    if (this.props.projectList.length === 0) {
+      return <Spinner />;
     }
+    const projectList = [...this.props.projectList.sort(sortCount)];
+    const topList = (projectList.length <= 5) ? projectList : getTopList(projectList);
+
+    const localTheme = this.props.localTheme;
+    const sumList = computeSummations(topList, this.props.countNames);
+    const indexChart = createChartData(topList, this.props.countNames, sumList);
+
+    const projectNames = topList.map(project => project.code);
+    const barNames = createBarNames(indexChart);
     let countBar = 0;
     return (
       <FloatBox>
@@ -99,7 +133,15 @@ class IndexBarChart extends React.Component {
             layout="vertical"
           >
             <h4>Project Submission status</h4>
-            <XAxis stroke={localTheme['barGraph.lineColor']} fill={localTheme['barGraph.lineColor']} type="number" />
+            <XAxis
+              stroke={localTheme['barGraph.lineColor']}
+              fill={localTheme['barGraph.lineColor']}
+              domain={[0, 100]}
+              ticks={[0, 25, 50, 75, 100]}
+              allowDecimals={false}
+              unit="%"
+              type="number"
+            />
             <YAxis
               dataKey="name"
               tick={<Tick />}

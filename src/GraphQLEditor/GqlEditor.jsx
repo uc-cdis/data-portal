@@ -14,7 +14,8 @@ export const Title = styled.h2`
 `;
 
 export const GraphBox = styled.div`
-  height: 100vh;
+  height: 90vh;
+  padding: 
 `;
 
 

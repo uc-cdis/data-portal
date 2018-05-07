@@ -4,14 +4,12 @@ import PropTypes from 'prop-types';
 import { portalVersion } from '../../versions';
 import IconComponent from '../Icon';
 
-const FooterSection = styled.div`
+const FooterSection = styled.footer`
   width: 100%;
   background-color: #4a4a4a;
-  position:fixed;
-  bottom:0;
-  z-index:1000;
   text-align: center;
   vertical-align: middle;
+  height: 100px;
 `;
 
 const FooterGroup = styled.nav`
@@ -38,7 +36,7 @@ const FooterIcon = styled.div`
   }
   height: 100px;
   position: relative;
-  display: inline-block;
+  display: table;
 `;
 
 const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
@@ -58,10 +56,20 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
       </div>
       <div style={{ display: 'inline-flex', width: '500px' }}>
         <FooterIcon style={{ width: '70px' }}>
-          <IconComponent dictIcons={dictIcons} iconName="gen3" height="37px" />
+          <div style={{ verticalAlign: 'middle',
+            display: 'table-cell',
+          }}
+          >
+            <IconComponent dictIcons={dictIcons} iconName="gen3" height="37px" />
+          </div>
         </FooterIcon>
         <FooterIcon style={{ width: '390px' }}>
-          <IconComponent dictIcons={dictIcons} iconName="uchicago" height="37px" svgStyles={{ fill: '#ffffff' }} />
+          <div style={{ verticalAlign: 'middle',
+            display: 'table-cell',
+          }}
+          >
+            <IconComponent dictIcons={dictIcons} iconName="uchicago" height="37px" svgStyles={{ fill: '#ffffff' }} />
+          </div>
         </FooterIcon>
       </div>
     </FooterGroup>

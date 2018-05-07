@@ -25,7 +25,6 @@ const LIST_API_KEY_MSG = 'You have the following API key(s)';
 
 export const actionButton = css`
   cursor: pointer;
-  float: right;
   display: inline-block;
   margin-left: 2em;
   &:hover,
@@ -34,23 +33,12 @@ export const actionButton = css`
     color: inherit;
   }
 `;
+//
+// export const RequestButton = styled.a`
+// `;
 
-export const RequestButton = styled.label`
-  border: 1px solid darkgreen;
-  color: darkgreen;
-  margin-bottom: 1em;
-  &:hover,
-  &:active,
-  &:focus {
-    color: #2e842e;
-    border-color: #2e842e;
-
-  }
-  ${button};
-`;
 export const DeleteButton = styled.a`
   ${actionButton};
-  color: ${props => props.theme.color_primary};
 `;
 
 export const Bullet = styled.ul`
@@ -59,8 +47,7 @@ export const Bullet = styled.ul`
 `;
 
 export const Header = styled.li`
-  display: block;
-  float: left;
+  display: inline-block;
   padding-left: 0.5em;
   font-weight: bold;
 `;
@@ -91,21 +78,18 @@ export const AccessTable = styled.div`
 `;
 
 export const Cell = styled.li`
-  display: block;
-  float: left;
+  display: inline-block;
   padding-left: 0.5em;
 `;
 
 export const ProjectCell = styled(Link)`
-  display: block;
-  float: left;
+  display: inline-block;
   width: 30%;
   padding-left: 0.5em;
 `;
 
 export const ProjectCellNoAccess = styled.div`
-  display: block;
-  float: left;
+  display: inline-block;
   width: 30%;
   padding-left: 0.5em;
 `;
@@ -162,7 +146,6 @@ KeyPairsEntity.propTypes = {
   onUpdatePopup: PropTypes.func.isRequired,
   onRequestDeleteKey: PropTypes.func.isRequired,
 };
-
 
 const KeyPairsEntities = ({ values, keypairsApi, onUpdatePopup, onRequestDeleteKey }) => (
   <ul>
@@ -241,9 +224,15 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
               filename={'credentials.json'}
             />
           }
-          <RequestButton onClick={onCreate}>
-            {CREATE_API_KEY_BTN}
-          </RequestButton>
+          <a>
+            <button
+              id="create_key_button"
+              onClick={onCreate}
+              className="button-primary-white"
+            >
+              {CREATE_API_KEY_BTN}
+            </button>
+          </a>
           {
             userProfile.jtis.length === 0 &&
             <div>

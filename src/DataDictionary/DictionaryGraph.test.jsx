@@ -32,7 +32,7 @@ describe('the DictionaryGraph', () => {
 
   it('toggles between full and compact views', () => {
     const { $graph, $dom } = buildTest();
-    const $toggleButton = $dom.find('a#toggle_button');
+    const $toggleButton = $dom.find('button#toggle_button');
     expect($toggleButton.length).toBe(1);
     $toggleButton.simulate('click');
     expect(!!$graph.find('div[data-toggle="abridged"]')).toBe(true);

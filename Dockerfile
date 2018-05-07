@@ -30,6 +30,7 @@ RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}
     && /bin/rm -rf node_modules \
     && npm install \
     && npm run relay \
+    && npm run text \
     && NODE_ENV=production ./node_modules/.bin/webpack --bail \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default

@@ -108,8 +108,8 @@ const DataDictionary = ({ dictionary }) => {
   const c2nl = category2NodeList(dictionary);
 
   return (
-    <div style={{ paddingBottom: '100px' }}>
-      <h3> Data Dictionary Viewer </h3>
+    <div style={{ paddingBottom: '30px' }}>
+      <div className="h3-typo"> Data Dictionary Viewer </div>
       <p>{subHeader}</p>
       <Link to={'/dd/graph'}> Explore dictionary as a graph </Link>
       {Object.keys(c2nl).map(category =>

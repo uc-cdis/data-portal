@@ -1,14 +1,14 @@
 import { connect } from 'react-redux';
-import { boardPluralNames, detailPluralNames } from '../localconf';
+import { components } from '../text';
 import ProjectDashboard from '../components/ProjectDashboard';
 import TransactionLogTable from '../components/tables/TransactionLogTable';
 
 const extractData = (summaryCounts) => {
   const summaries = Object.keys(summaryCounts).map(
-    key => ({ label: boardPluralNames[key], value: summaryCounts[key] }),
+    key => ({ label: components.charts.boardPluralNames[key], value: summaryCounts[key] }),
   );
   const details = Object.keys(summaryCounts).map(
-    key => ({ label: detailPluralNames[key], value: summaryCounts[key] }),
+    key => ({ label: components.charts.detailPluralNames[key], value: summaryCounts[key] }),
   );
   return { summaries, details };
 };
@@ -26,7 +26,7 @@ export const ReduxProjectDashboard = (() => {
   };
 
   // Table does not dispatch anything
-  const mapDispatchToProps = () => {};
+  const mapDispatchToProps = null;
 
   return connect(mapStateToProps, mapDispatchToProps)(ProjectDashboard);
 })();
@@ -41,7 +41,7 @@ export const ReduxTransaction = (() => {
   };
 
   // Table does not dispatch anything
-  const mapDispatchToProps = () => {};
+  const mapDispatchToProps = null;
 
   return connect(mapStateToProps, mapDispatchToProps)(TransactionLogTable);
 })();

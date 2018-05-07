@@ -4,14 +4,12 @@
  */
 
 const fs = require('fs');
-const path = require('path');
 const nunjucks = require('nunjucks');
 const helper = require('./dictionaryHelper.js');
 const utils = require('./utils.js');
 
 const dataFolder = __dirname;
 const dictPath = `${dataFolder}/dictionary.json`;
-const paramPath = `${path.join(__dirname, '../src/gql-parameters.json')}`;
 const templateName = 'gqlHelper.js.njk';
 
 
@@ -38,15 +36,9 @@ if (!gqlSetup) {
   process.exit(4);
 }
 
-const params = utils.loadJsonFile(paramPath);
-if (params.status !== 'ok') {
-  console.error(`Error loading parameters file at ${paramPath}`, params.error);
-  process.exit(3);
-}
-
-const paramGQLSetup = helper.paramToGQLSetup(params.data);
+const paramGQLSetup = helper.paramSetup();
 if (!paramGQLSetup) {
-  console.error('ERR: unable to interpret src/gql-parameters.json - baling out');
+  console.error('ERR: unable to interpret data/parameters.js - baling out');
   process.exit(4);
 }
 

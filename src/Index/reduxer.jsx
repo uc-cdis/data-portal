@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 import { sortCompare } from '../utils';
-import { indexChartNames, localTheme, indexDetails, hostname } from '../localconf';
+import { localTheme } from '../localconf';
 import dictIcons from '../img/icons';
 import { setActive } from '../Top/reduxer';
 import IndexBarChart from '../components/charts/IndexBarChart';
 import IndexButtonBar from '../components/IndexButtonBar';
+import { components } from '../text';
 
 export const ReduxIndexBarChart = (() => {
   const mapStateToProps = (state) => {
@@ -12,7 +13,7 @@ export const ReduxIndexBarChart = (() => {
       const projectList = Object.values(
         state.homepage.projectsByName,
       ).sort(sortCompare);
-      return { projectList, countNames: indexChartNames, localTheme };
+      return { projectList, countNames: components.charts.indexChartNames, localTheme };
     }
     return {};
   };
@@ -25,8 +26,7 @@ export const ReduxIndexBarChart = (() => {
 
 export const ReduxIndexButtonBar = (() => {
   const mapStateToProps = state => ({
-    hostname,
-    buttons: indexDetails.buttons,
+    buttons: components.index.buttons,
     dictIcons,
     activeTab: state.bar.active,
   });

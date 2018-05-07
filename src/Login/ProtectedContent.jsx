@@ -17,8 +17,7 @@ const Body = styled.div`
   margin-left: auto;
   margin-right: auto;
   width: 1220px;
-  padding: ${props => props.padding || '40px 0px 150px 0px'};
-  min-height: 900px;
+  padding: ${props => props.padding || '40px 0px 40px 0px'};
 `;
 
 /**
@@ -85,7 +84,7 @@ class ProtectedContent extends React.Component {
   static defaultProps = {
     public: false,
     background: null,
-    filter: () => Promise.resolve('ok'),
+    filter: null,
   };
 
   constructor(props, context) {
@@ -303,7 +302,6 @@ class ProtectedContent extends React.Component {
     if (this.props.match) {
       params = this.props.match.params || {};
     }
-
     window.scrollTo(0, 0);
     if (this.state.redirectTo) {
       return (<Redirect to={this.state.redirectTo} />);

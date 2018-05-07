@@ -95,7 +95,7 @@ export const fetchWithCreds = (opts) => {
           switch (resp.status) {
           case 200:
             return Promise.resolve(fetch(path, request).then(
-              getJsonOrText(path, resp, useCache, method),
+              res => getJsonOrText(path, res, useCache, method),
             ));
           default:
             return {

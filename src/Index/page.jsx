@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Introduction from '../components/Introduction';
 import { ReduxIndexButtonBar, ReduxIndexBarChart } from './reduxer';
 import dictIcons from '../img/icons';
-import { indexDetails } from '../localconf';
+import { components } from '../text';
 import getProjectsList from './relayer';
 
 const IndexTop = styled.div`
@@ -21,7 +21,7 @@ class IndexPageComponent extends React.Component {
     return (
       <div style={{ width: '1220px' }}>
         <IndexTop>
-          <Introduction data={indexDetails.introduction} dictIcons={dictIcons} />
+          <Introduction data={components.index.introduction} dictIcons={dictIcons} />
           <ReduxIndexBarChart />
         </IndexTop>
         <ReduxIndexButtonBar />

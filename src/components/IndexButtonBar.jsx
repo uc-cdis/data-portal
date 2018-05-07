@@ -61,44 +61,41 @@ const ThumbnailText = styled.div`
 class IndexButtonBar extends Component {
   render() {
     return (
-      <div style={{ display: 'flex', padding: '40px 0px' }}>
+      <div style={{ display: 'flex', padding: '40px 0px 0px 0px' }}>
         {
           this.props.buttons.map(
-            (item) => {
-              const link = item.link.replace('#hostname#', this.props.hostname);
-              return (
-                <IndexThumbnailButton key={item.name}>
-                  <ThumbnailTitle className="h3-typo">{item.name}</ThumbnailTitle>
-                  <IndexIcon>
-                    <IconComponent
-                      dictIcons={this.props.dictIcons}
-                      iconName={item.icon}
-                      height="90px"
-                    />
-                  </IndexIcon>
-                  <ThumbnailText className="body-typo">{item.body}</ThumbnailText>
-                  {
-                    link.startsWith('http') ?
-                      <BarItemA href={link}>
-                        <button
-                          className="button-primary-orange"
-                          onClick={() => this.props.onActiveTab(link)}
-                        >
-                          {item.label}
-                        </button>
-                      </BarItemA> :
-                      <BarItem to={link}>
-                        <button
-                          className="button-primary-orange"
-                          onClick={() => this.props.onActiveTab(link)}
-                        >
-                          {item.label}
-                        </button>
-                      </BarItem>
-                  }
-                </IndexThumbnailButton>
-              );
-            },
+            item => (
+              <IndexThumbnailButton key={item.name}>
+                <ThumbnailTitle className="h3-typo">{item.name}</ThumbnailTitle>
+                <IndexIcon>
+                  <IconComponent
+                    dictIcons={this.props.dictIcons}
+                    iconName={item.icon}
+                    height="90px"
+                  />
+                </IndexIcon>
+                <ThumbnailText className="body-typo">{item.body}</ThumbnailText>
+                {
+                  item.link.startsWith('http') ?
+                    <BarItemA href={item.link}>
+                      <button
+                        className="button-primary-orange"
+                        onClick={() => this.props.onActiveTab(item.link)}
+                      >
+                        {item.label}
+                      </button>
+                    </BarItemA> :
+                    <BarItem to={item.link}>
+                      <button
+                        className="button-primary-orange"
+                        onClick={() => this.props.onActiveTab(item.link)}
+                      >
+                        {item.label}
+                      </button>
+                    </BarItem>
+                }
+              </IndexThumbnailButton>
+            ),
           )
         }
       </div>
@@ -109,7 +106,6 @@ class IndexButtonBar extends Component {
 IndexButtonBar.propTypes = {
   dictIcons: PropTypes.object.isRequired,
   buttons: PropTypes.array.isRequired,
-  hostname: PropTypes.string.isRequired,
   onActiveTab: PropTypes.func,
 };
 

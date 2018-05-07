@@ -85,10 +85,7 @@ class NavBar extends Component {
     this.props.onInitActive();
   }
 
-  isActive = (id) => {
-    console.log(`link to check = ${id}`);
-    return this.props.activeTab === id;
-  };
+  isActive = id => this.props.activeTab === id;
 
   render() {
     return (

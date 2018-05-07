@@ -210,7 +210,7 @@ function addTables(nodes, boxWidth, boxHeight, svgWidth, svgHeight) {
     .append('div')
     .style('position', 'absolute')
     .style('left', '50%')
-    .style('top', '0')
+    .style('top', '40')
     .style('margin-left', `${svgWidth / -2}px`)
     .style('width', `${svgWidth}px`)
     .style('height', `${svgHeight}px`)
@@ -220,10 +220,13 @@ function addTables(nodes, boxWidth, boxHeight, svgWidth, svgHeight) {
     .enter()
     .append('div')
     .style('position', 'absolute')
+    .style('padding-top', '8px')
     .style('left', d => `${d.fx - ((boxWidth / 2) - 6)}px`)
     .style('top', d => `${d.fy - ((boxHeight / 2) - 20)}px`);
 
-  tableDiv.append('a')
+  tableDiv.append('div')
+    .style('text-align', 'center')
+    .append('a')
     .attr('href', (d) => {
       const uri = window.location.href;
       return `${uri.substring(0, uri.lastIndexOf('/'))}/${d.id}`;
@@ -231,6 +234,7 @@ function addTables(nodes, boxWidth, boxHeight, svgWidth, svgHeight) {
     .attr('target', '_blank')
     .style('font-size', `${13}px`)
     .style('color', 'black')
+    .style('text-align', 'center')
     .style('font-weight', 'bold')
     .text(d => d.title);
 

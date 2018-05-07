@@ -38,7 +38,9 @@ const plugins = [
 
 if ( process.env.NODE_ENV !== 'dev' ) {
   // This slows things down a lot, so avoid when running local dev environment
-  plugins.push( new webpack.optimize.UglifyJsPlugin() ); //minify everything
+  plugins.push(new webpack.optimize.UglifyJsPlugin({
+    mangle: false,
+  })); //minify everything
 }
 
 module.exports = {

@@ -34,17 +34,21 @@ function dictToGQLSetup(dict) {
   };
 }
 
-function paramByApp(params) {
+function paramByApp(params, key) {
   let app = 'default';
-  if (process.env.APP && Object.keys(params).includes(process.env.APP)) {
+  if (process.env.APP && (Object.keys(params).includes(process.env.APP)
+    && Object.keys(params[process.env.APP]).includes(key))) {
     app = process.env.APP;
   }
-  const paramApp = params[app];
-  const boardCounts = paramApp.boardCounts;
-  const chartCounts = paramApp.chartCounts;
-  let projectDetails = paramApp.projectDetails;
+  return params[app][key];
+}
+
+function getGraphQL(graphQLParams) {
+  const boardCounts = graphQLParams.boardCounts;
+  const chartCounts = graphQLParams.chartCounts;
+  let projectDetails = graphQLParams.projectDetails;
   if (typeof projectDetails === 'string') {
-    projectDetails = paramApp[projectDetails];
+    projectDetails = graphQLParams[projectDetails];
   }
   return {
     boardCounts,
@@ -53,8 +57,10 @@ function paramByApp(params) {
   };
 }
 
-function paramToGQLSetup(params) {
-  const countsAndDetails = paramByApp(params);
+const { params } = require('./parameters');
+
+function paramSetup() {
+  const countsAndDetails = getGraphQL(paramByApp(params, 'graphql'));
   return {
     boardCounts: countsAndDetails.boardCounts.map(item => item.graphql),
     chartCounts: countsAndDetails.chartCounts.map(item => item.graphql),
@@ -64,6 +70,7 @@ function paramToGQLSetup(params) {
 
 module.exports = {
   dictToGQLSetup,
+  getGraphQL,
   paramByApp,
-  paramToGQLSetup,
+  paramSetup,
 };

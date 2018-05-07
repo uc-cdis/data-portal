@@ -57,7 +57,7 @@ describe('the userProfile component', () => {
     fetch.mockResponseOnce(JSON.stringify(expectedListKey), { status: 200 });
 
     const userProfilePage = mount(<ReduxUserProfile />, { context: { store } });
-    const btn = userProfilePage.find(RequestButton);
+    const btn = userProfilePage.find('button[id="create_key_button"]');
     expect(btn).toHaveLength(1);
     btn.simulate('click');
     return new Promise((resolve, reject) => {

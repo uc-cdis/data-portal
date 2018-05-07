@@ -4,6 +4,8 @@ import IcoDataAccess from './data-access.svg';
 import IcoDataAnalyze from './data-analyze.svg';
 import IcoDataExplore from './data-explore.svg';
 import IcoDataFieldDefine from './data-field-define.svg';
+import IcoDataFiles from './data-files.svg';
+import IcoDataSubmit from './data-submit.svg';
 import IcoDictionary from './dictionary.svg';
 import IcoExit from './exit.svg';
 import IcoExploration from './exploration.svg';
@@ -34,6 +36,12 @@ const dictIcons = {
   'data-field-define': (height, customedStyles) => (
     <IcoDataFieldDefine height={height} style={{ ...customedStyles }} />
   ),
+  'data-files': (height, customedStyles) => (
+    <IcoDataFiles height={height} style={{ ...customedStyles }} />
+  ),
+  'data-submit': (height, customedStyles) => (
+    <IcoDataSubmit height={height} style={{ ...customedStyles }} />
+  ),
   dictionary: (height, customedStyles) => (
     <IcoDictionary height={height} style={{ ...customedStyles }} />
   ),
@@ -48,14 +56,7 @@ const dictIcons = {
   ),
   gen3: (height, customedStyles) => (<IcoGen3
     height={height}
-    style={{
-      position: 'absolute',
-      top: '-50%',
-      bottom: '-50%',
-      marginTop: 'auto',
-      marginBottom: 'auto',
-      ...customedStyles,
-    }}
+    style={{ ...customedStyles }}
   />),
   profile: (height, customedStyles) => (
     <IcoProfile height={height} style={{ ...customedStyles }} />
@@ -75,14 +76,7 @@ const dictIcons = {
   uchicago: (height, customedStyles) => (
     <IcoSignature
       height={height}
-      style={{
-        position: 'absolute',
-        top: '-50%',
-        bottom: '-50%',
-        marginTop: 'auto',
-        marginBottom: 'auto',
-        ...customedStyles,
-      }}
+      style={{ ...customedStyles }}
     />
   ),
 };

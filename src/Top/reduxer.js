@@ -1,17 +1,14 @@
 import { connect } from 'react-redux';
-import { navBar, navItems, topItems } from '../localconf';
 import NavBar from '../components/layout/NavBar';
 import TopBar from '../components/layout/TopBar';
 import dictIcons from '../img/icons/index';
 import { logoutAPI } from '../actions';
+import { components } from '../text';
 
-export const setActive = (link) => {
-  console.log(`active link ${link}`);
-  return {
-    type: 'ACTIVE_CHANGED',
-    data: link,
-  };
-};
+export const setActive = link => ({
+  type: 'ACTIVE_CHANGED',
+  data: link,
+});
 
 export const initActive = link => ({
   type: 'ACTIVE_INIT',
@@ -20,8 +17,8 @@ export const initActive = link => ({
 
 export const ReduxNavBar = (() => {
   const mapStateToProps = state => ({
-    navTitle: navBar.title,
-    navItems,
+    navTitle: components.navigation.title,
+    navItems: components.navigation.items,
     dictIcons,
     activeTab: state.bar.active,
   });
@@ -37,8 +34,8 @@ export const ReduxNavBar = (() => {
 
 export const ReduxTopBar = (() => {
   const mapStateToProps = state => ({
-    navTitle: navBar.title,
-    topItems,
+    navTitle: components.navigation.title,
+    topItems: components.topBar.items,
     dictIcons,
     activeTab: state.bar.active,
     user: state.user,

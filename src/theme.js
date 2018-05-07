@@ -64,7 +64,7 @@ export const Box = styled.div`
 `;
 
 export const OuterWrapper = styled.div`
-  height: 100%;  
+  height: 100%;
 `;
 
 export const Margin = styled.div`
@@ -148,31 +148,19 @@ export const Bullet = styled.li`
 `;
 
 export const UploadButton = styled.label`
-  border: 1px solid darkgreen;
   display:inline-block;
-  color: darkgreen;
-  margin-bottom: 1em;
-  &:hover,
-  &:active,
-  &:focus {
-    color: #2e842e;
-    border-color: #2e842e;
-
+  text-align: center;
+  border-radius: 4px;
+  line-height: 40px;
+  height: 40px;
+  width: 152px;
+  font-size: 14px;
+  &:hover {
+    cursor: pointer;
   }
-  ${cdisButton};
 `;
 export const SubmitButton = styled.a`
-  border: 1px solid ${props => props.theme.color_primary};
-  color: ${props => props.theme.color_primary};
-  margin-bottom: 1em;
-  ${cdisButton};
-  &:hover,
-  &:active,
-  &:focus {
-    color: #c16161;
-    border-color: #c16161;
-
-  }
+  border-radius: 4px;
 `;
 
 export const Dropdown = styled(Select)`

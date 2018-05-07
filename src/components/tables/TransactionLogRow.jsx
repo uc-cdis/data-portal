@@ -13,7 +13,7 @@ const FailBar = styled(StatusBar)`
 `;
 
 const PendingBar = styled(StatusBar)`
-  color: #ffffff;
+  color: #999900;
 `;
 
 const getLocalTime = (gmtTimeString) => {

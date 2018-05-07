@@ -7,15 +7,15 @@
 
     <link href="https://fonts.googleapis.com/icon?family=Source+Sans+Pro" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="all" href="<%= htmlWebpackPlugin.options.basename %>/src/css/flat-ui.css">
-    <link rel="stylesheet" type="text/css" media="all" href="<%= htmlWebpackPlugin.options.basename %>/src/css/themeoverride.css">
     <link rel="stylesheet/less" type="text/css" media="all" href="<%= htmlWebpackPlugin.options.basename %>/src/css/base.less">
-    <link rel="stylesheet" type="text/css" media="all" href="<%= htmlWebpackPlugin.options.basename %>/node_modules/highlight.js/styles/default.css">
     <link rel="stylesheet" type="text/css" media="all" href="<%= htmlWebpackPlugin.options.basename %>/src/css/graphiql.css" />
     <link rel="icon"
     type="image/png" href="<%= htmlWebpackPlugin.options.basename %>/src/img/favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
-      <div id="root"></div>
+    <div id="root"></div>
+    <div id="append-root" class="spacer"></div>
+    <div id="foot-root" class="footer"></div>
   </body>
 </html>
