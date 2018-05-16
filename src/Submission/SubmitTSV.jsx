@@ -66,11 +66,14 @@ const SubmitTSV = ({ project, submission, onUploadClick, onSubmitClick, onFileCh
 
   return (
     <form>
-      <input type="file" onChange={processUpload} name="file-upload" style={{ display: 'none' }} id="file-upload" />
-      <UploadButton id="cd-submit-tsv__upload-button" htmlFor="file-upload">Upload file</UploadButton>
-      {submission.file &&
-      <SubmitButton id="cd-submit-tsv__submit-button" onClick={onSubmitClickEvent}>Submit</SubmitButton>
-      }
+      <div style={{ marginBottom: '1em', display: 'block' }}>
+        <input type="file" onChange={processUpload} name="file-upload" style={{ display: 'none' }} id="file-upload" />
+        <UploadButton id="cd-submit-tsv__upload-button" className="button-primary-white" htmlFor="file-upload">Upload file</UploadButton>
+        &emsp;
+        {submission.file &&
+          <UploadButton id="cd-submit-tsv__submit-button" className="button-primary-white" onClick={onSubmitClickEvent}>Submit</UploadButton>
+        }
+      </div>
       { (submission.file) &&
       <AceEditor
         width="100%"

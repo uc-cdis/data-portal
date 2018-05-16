@@ -29,6 +29,7 @@ rm -rf custom
 #
 npm run schema
 npm run relay
+npm run text
 NODE_ENV=production ./node_modules/.bin/webpack --bail
 
 /usr/sbin/nginx -g 'daemon off;'

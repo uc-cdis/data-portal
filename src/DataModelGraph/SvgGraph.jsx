@@ -38,6 +38,7 @@ export function createSvgGraph(nodesIn, edges) {
 
   const svg = d3.select('#data_model_graph')
     .style('display', 'block')
+    .style('background-color', '#ffffff')
     .style('margin-left', 'auto')
     .style('margin-right', 'auto');
   // Clear everything inside when re-rendering
@@ -239,6 +240,7 @@ class SvgGraph extends React.Component {
       height,
       backgroundColor: '#ffffff',
       marginLeft: 'auto',
+      marginTop: '10px',
       marginRight: 'auto',
     };
     return (

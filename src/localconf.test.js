@@ -14,7 +14,6 @@ describe('The localconf', () => {
     'graphqlPath',
     'graphqlSchemaUrl',
     'appname',
-    'navItems',
     'login',
     'requiredCerts',
   ];

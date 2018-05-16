@@ -1,19 +1,47 @@
 import PropTypes from 'prop-types';
-import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router-dom';
-import { localTheme } from '../localconf';
+import IconComponent from './Icon';
 import React from 'react';
+
 
 class SubmitButton extends React.Component {
   render() {
-    return (<Link to={this.props.projName} title="Submit or View Graph">
-      <FlatButton backgroundColor={localTheme['projectTable.submitButtonColor']} label="Submit or View Graph" />
-    </Link>);
+    let styles = {};
+    if (this.props.iconColor && this.props.iconColor !== '') { styles = { fill: this.props.iconColor }; }
+    return (
+      <Link to={this.props.link}>
+        {
+          this.props.dictIcons !== undefined ?
+            <button className={this.props.buttonClassName}>
+              Submit Data&ensp;
+              <IconComponent
+                dictIcons={this.props.dictIcons}
+                iconName="upload"
+                height="14px"
+                svgStyles={{ ...styles }}
+              />
+            </button> :
+            <button className={this.props.buttonClassName}>
+              Submit Data
+            </button>
+        }
+
+      </Link>
+    );
   }
 }
 
 SubmitButton.propTypes = {
-  projName: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired,
+  dictIcons: PropTypes.object,
+  buttonClassName: PropTypes.string,
+  iconColor: PropTypes.string,
+};
+
+SubmitButton.defaultProps = {
+  dictIcons: undefined,
+  buttonClassName: 'button-primary-white',
+  iconColor: '',
 };
 
 export default SubmitButton;

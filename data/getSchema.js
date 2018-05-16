@@ -20,9 +20,9 @@ const { gdcSubPath } = (function () {
 
   if (process.argv.length < 3) {
     let gdcDefaultPath = 'http://localhost:5000/v0/submission/';
-    
+
     if (process.env.HOSTNAME) {
-      gdcDefaultPath = `https://${process.env.HOSTNAME}/api/v0/submission/`; 
+      gdcDefaultPath = `https://${process.env.HOSTNAME}/api/v0/submission/`;
       if (process.env.HOSTNAME.startsWith('revproxy')) {
         gdcDefaultPath = `http://${process.env.HOSTNAME}/api/v0/submission/`;
       }

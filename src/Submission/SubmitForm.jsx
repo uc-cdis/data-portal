@@ -21,24 +21,10 @@ const InputDescription = styled.span`
 `;
 
 
-const UploadFormButton = styled.button`
-  border: 1px solid darkgreen;
+const UploadFormButton = styled.a`
   display:inline-block;
-  color: darkgreen;
-  margin: 1em 0em;
-  &:hover,
-  &:active,
-  &:focus {
-    color: #2e842e;
-    border-color: #2e842e;
-  }
   border-radius: 3px;
-  padding: 0px 8px;
-  cursor: pointer;
-  line-height: 2em;
-  font-size: 1em;
-  margin-right: 1em;
-  background-color:white;
+  margin-bottom: 10px;
 `;
 
 const AnyOfSubProps = styled.div`
@@ -370,7 +356,11 @@ const SubmitNodeForm = ({ node, form, properties, requireds, onChange,
             onChange={onChange}
           />);
       })}
-      <UploadFormButton type="submit" value="Submit"> Upload submission json from form </UploadFormButton>
+      <UploadFormButton>
+        <button type="submit" value="Submit" className="button-primary-white" style={{ width: '250px' }}>
+          Upload submission json from form
+        </button>
+      </UploadFormButton>
     </form>
   </div>
 );

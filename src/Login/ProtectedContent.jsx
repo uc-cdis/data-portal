@@ -14,7 +14,10 @@ let lastTokenRefreshMs = 0;
 
 const Body = styled.div`
   background: ${props => props.background};
-  padding: ${props => props.padding || '50px 100px'};
+  margin-left: auto;
+  margin-right: auto;
+  width: 1220px;
+  padding: ${props => props.padding || '40px 0px 40px 0px'};
 `;
 
 /**
@@ -59,7 +62,7 @@ export function intersection(aList, bList) {
  * @param history from react-router
  * @param match from react-router.match
  * @param public default false - set true to disable auth-guard
- * @param background passed through to <Box background> wrapper for page-level background
+ * @param background passed through to <Box background> wrapper for page.jsx-level background
  * @param filter {() => Promise} optional filter to apply before rendering the child component
  */
 class ProtectedContent extends React.Component {
@@ -81,7 +84,7 @@ class ProtectedContent extends React.Component {
   static defaultProps = {
     public: false,
     background: null,
-    filter: () => Promise.resolve('ok'),
+    filter: null,
   };
 
   constructor(props, context) {
@@ -217,7 +220,7 @@ class ProtectedContent extends React.Component {
           // do not authenticate unless we have a 403 or 401
           // should only check 401 after we fix fence to return correct
           // error code for all cases
-          // there may be no projects at startup time,
+          // there may be no tables at startup time,
           // or some other weirdness ...
           // The oauth dance below is only relevent for legacy commons - pre jwt
           return Promise.resolve(newState);
@@ -250,7 +253,7 @@ class ProtectedContent extends React.Component {
             msg => store.dispatch(msg),
           )
           .then(
-            // refetch the projects - since the earlier call failed with an invalid token ...
+            // refetch the tables - since the earlier call failed with an invalid token ...
             () => store.dispatch(fetchProjects()),
           )
           .then(
@@ -299,7 +302,6 @@ class ProtectedContent extends React.Component {
     if (this.props.match) {
       params = this.props.match.params || {};
     }
-
     window.scrollTo(0, 0);
     if (this.state.redirectTo) {
       return (<Redirect to={this.state.redirectTo} />);

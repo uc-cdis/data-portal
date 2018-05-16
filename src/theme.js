@@ -21,7 +21,7 @@ export const theme = {
   box_padding_height: '80px',
 };
 
-export const button = css`
+export const cdisButton = css`
   display: inline-block;
   border-radius: 3px;
   padding: 0px 8px;
@@ -42,6 +42,12 @@ export const cube = css`
     color: white;
 `;
 
+export const ButtonPrimaryWhite = styled.button`
+  border: 1px solid var(--light-gray);
+  background-color: var(--white);
+  &:hover
+`;
+
 export const Box = styled.div`
   // min-width: 1200px;
   margin: auto;
@@ -54,10 +60,11 @@ export const Box = styled.div`
   padding: 0px 0px;
   background: ${props => props.background};
   height: 100%;
+  text
 `;
 
 export const OuterWrapper = styled.div`
-  height: 100%;  
+  height: 100%;
 `;
 
 export const Margin = styled.div`
@@ -119,7 +126,7 @@ export const TableRow = styled.tr`
   overflow: hidden;
   overflow-x: hidden;
   overflow-y: visible;
-  font-size: 1.5rem;
+  font-size: 16px;
   width: 100%;
   display: table;
 `;
@@ -141,31 +148,19 @@ export const Bullet = styled.li`
 `;
 
 export const UploadButton = styled.label`
-  border: 1px solid darkgreen;
   display:inline-block;
-  color: darkgreen;
-  margin-bottom: 1em;
-  &:hover,
-  &:active,
-  &:focus {
-    color: #2e842e;
-    border-color: #2e842e;
-
+  text-align: center;
+  border-radius: 4px;
+  line-height: 40px;
+  height: 40px;
+  width: 152px;
+  font-size: 14px;
+  &:hover {
+    cursor: pointer;
   }
-  ${button};
 `;
 export const SubmitButton = styled.a`
-  border: 1px solid ${props => props.theme.color_primary};
-  color: ${props => props.theme.color_primary};
-  margin-bottom: 1em;
-  ${button};
-  &:hover,
-  &:active,
-  &:focus {
-    color: #c16161;
-    border-color: #c16161;
-
-  }
+  border-radius: 4px;
 `;
 
 export const Dropdown = styled(Select)`

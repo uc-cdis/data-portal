@@ -36,18 +36,17 @@ const getJsonOrText = (path, response, useCache, method = 'GET') => response.tex
 
 let pendingRequest = null;
 export const fetchCreds = (opts) => {
-  if (pendingRequest)
-    return pendingRequest;
-  const { path=`${userapiPath}user/`, method = 'GET', dispatch } = opts;
+  if (pendingRequest) { return pendingRequest; }
+  const { path = `${userapiPath}user/`, method = 'GET', dispatch } = opts;
   const request = {
     credentials: 'include',
     headers: { ...headers },
     method,
   };
   pendingRequest = fetch(path, request).then(
-    response => {
+    (response) => {
       pendingRequest = null;
-      return Promise.resolve(getJsonOrText(path, response, false))
+      return Promise.resolve(getJsonOrText(path, response, false));
     },
     (error) => {
       pendingRequest = null;
@@ -90,13 +89,13 @@ export const fetchWithCreds = (opts) => {
       if (response.status !== 403 && response.status !== 401) {
         return Promise.resolve(getJsonOrText(path, response, useCache, method));
       }
-      return Promise.resolve(fetchCreds({dispatch,
+      return Promise.resolve(fetchCreds({ dispatch,
       }).then(
         (resp) => {
           switch (resp.status) {
           case 200:
             return Promise.resolve(fetch(path, request).then(
-              getJsonOrText(path, resp, useCache, method),
+              res => getJsonOrText(path, res, useCache, method),
             ));
           default:
             return {
