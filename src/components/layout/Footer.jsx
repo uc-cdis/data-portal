@@ -22,17 +22,10 @@ const FooterGroup = styled.nav`
 
 const Versions = styled.div`
   color: white;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border-left: 2px solid #458099;
-  padding-left: 5px;
-`;
-
-const VersionsContainer = styled.div`
-  margin: auto;
+  width: 220px;
   vertical-align: middle;
   display: inline-block;
-  width: 220px;
+  margin: auto;
 `;
 
 const FooterIcon = styled.div`
@@ -54,10 +47,10 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
           [{ name: 'Dictionary', version: dictionaryVersion },
             { name: 'API', version: apiVersion },
             { name: 'Portal', version: portalVersion }].map(
-            item => (<VersionsContainer><Versions key={item.name}>
-              <div className="h4-typo" style={{ color: '#cdcdcd', verticalAlign: 'middle' }}>{item.name}</div>
+            item => (<Versions key={item.name}>
+              <div className="h4-typo" style={{ color: 'white', verticalAlign: 'middle' }}>{item.name}</div>
               <div className="body-typo" style={{ color: 'white', verticalAlign: 'middle' }}>v{item.version}</div>
-            </Versions></VersionsContainer>),
+            </Versions>),
           )
         }
       </div>
@@ -67,7 +60,9 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
             display: 'table-cell',
           }}
           >
-            <IconComponent dictIcons={dictIcons} iconName="gen3" height="37px" />
+            <a href={'https://cdis.uchicago.edu/gen3'} target="_blank">
+              <IconComponent dictIcons={dictIcons} iconName="gen3" height="37px" />
+            </a>
           </div>
         </FooterIcon>
         <FooterIcon style={{ width: '390px' }}>
@@ -75,7 +70,9 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
             display: 'table-cell',
           }}
           >
-            <IconComponent dictIcons={dictIcons} iconName="uchicago" height="37px" svgStyles={{ fill: '#ffffff' }} />
+            <a href={'https://cdis.uchicago.edu/'} target="_blank">
+              <IconComponent dictIcons={dictIcons} iconName="uchicago" height="37px" svgStyles={{ fill: '#ffffff' }} />
+            </a>
           </div>
         </FooterIcon>
       </div>

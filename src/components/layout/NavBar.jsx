@@ -52,9 +52,9 @@ const NavLogo = styled.div`
 // TODO: due to issue https://github.com/styled-components/styled-components/issues/439,
 // bgcolor prop triggers react warning now, need to fix
 const NavItem = styled(Link)`
-  border-left: 2px solid #f4f4f4;
+  border-left: 1px solid #d1d1d1;
   &:last-child {
-    border-right: 2px solid #f4f4f4;
+    border-right: 1px solid #d1d1d1;
   }
   height: 100%;
   display: inline-block;
@@ -62,9 +62,9 @@ const NavItem = styled(Link)`
 `;
 
 const NavA = styled.a`  
-  border-left: 2px solid #f4f4f4;
+  border-left: 1px solid #d1d1d1;
   &:last-child {
-    border-right: 2px solid #f4f4f4;
+    border-right: 1px solid #d1d1d1;
   }
   height: 100%;
   display: inline-block;
@@ -89,7 +89,7 @@ class NavBar extends Component {
 
   render() {
     return (
-      <div style={{ width: '100%', backgroundColor: 'white', borderBottom: '2px solid #e6e6e6' }}>
+      <div style={{ width: '100%', backgroundColor: 'white', borderBottom: '1px solid #d1d1d1' }}>
         <Header>
           <NavLeft>
             <NavLogo>
@@ -98,7 +98,7 @@ class NavBar extends Component {
                 style={{ height: '64px',
                   display: 'block',
                   paddingRight: '8px',
-                  borderRight: '2px solid #f4f4f4' }}
+                  borderRight: '1px solid #d1d1d1' }}
                 alt=""
               />
             </NavLogo>
