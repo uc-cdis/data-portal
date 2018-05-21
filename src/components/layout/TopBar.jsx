@@ -20,27 +20,31 @@ const TopRight = styled.nav`
 
 // TODO: due to issue https://github.com/styled-components/styled-components/issues/439,
 const TopItem = styled(Link)`
-  border-right: 1px solid #9b9b9b;
+  border-right: 2px solid #6896c6;
   &:last-child {
     border-right: 0px;
   }
-  height: 40px;
+  height: 20px;
   display: inline-block;
   text-align: center;
   vertical-align: middle;
-  padding: 10px 0px;
+  padding: 0px 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 
 const TopA = styled.a`  
-  border-right: 1px solid #9b9b9b;
+  border-right: 2px solid #6896c6;
   &:last-child {
     border-right: 0px;
   }
-  height: 40px;
+  height: 20px;
   display: inline-block;
   text-align: center;
   vertical-align: middle;
-  padding: 10px 0px;
+  padding: 0px 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 
 TopIconButton.propTypes = {

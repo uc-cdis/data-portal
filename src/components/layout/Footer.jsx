@@ -22,10 +22,17 @@ const FooterGroup = styled.nav`
 
 const Versions = styled.div`
   color: white;
-  width: 220px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-left: 2px solid #458099;
+  padding-left: 5px;
+`;
+
+const VersionsContainer = styled.div`
+  margin: auto;
   vertical-align: middle;
   display: inline-block;
-  margin: auto;
+  width: 220px;
 `;
 
 const FooterIcon = styled.div`
@@ -47,10 +54,10 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
           [{ name: 'Dictionary', version: dictionaryVersion },
             { name: 'API', version: apiVersion },
             { name: 'Portal', version: portalVersion }].map(
-            item => (<Versions key={item.name}>
-              <div className="h4-typo" style={{ color: 'white', verticalAlign: 'middle' }}>{item.name}</div>
+            item => (<VersionsContainer><Versions key={item.name}>
+              <div className="h4-typo" style={{ color: '#cdcdcd', verticalAlign: 'middle' }}>{item.name}</div>
               <div className="body-typo" style={{ color: 'white', verticalAlign: 'middle' }}>v{item.version}</div>
-            </Versions>),
+            </Versions></VersionsContainer>),
           )
         }
       </div>
