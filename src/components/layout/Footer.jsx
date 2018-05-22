@@ -60,7 +60,9 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
             display: 'table-cell',
           }}
           >
-            <IconComponent dictIcons={dictIcons} iconName="gen3" height="37px" />
+            <a href={'https://cdis.uchicago.edu/gen3'} target="_blank">
+              <IconComponent dictIcons={dictIcons} iconName="gen3" height="37px" />
+            </a>
           </div>
         </FooterIcon>
         <FooterIcon style={{ width: '390px' }}>
@@ -68,7 +70,9 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
             display: 'table-cell',
           }}
           >
-            <IconComponent dictIcons={dictIcons} iconName="uchicago" height="37px" svgStyles={{ fill: '#ffffff' }} />
+            <a href={'https://cdis.uchicago.edu/'} target="_blank">
+              <IconComponent dictIcons={dictIcons} iconName="uchicago" height="37px" svgStyles={{ fill: '#ffffff' }} />
+            </a>
           </div>
         </FooterIcon>
       </div>

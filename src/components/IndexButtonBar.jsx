@@ -12,6 +12,8 @@ const IndexThumbnailButton = styled.div`
   text-align: center;
   width: 290px;
   margin-left: 20px;
+  border: 1px solid #e7e7e7;
+  border-radius: 4px;
   &:first-child {
     margin-left: 0px;
   }

@@ -146,6 +146,8 @@ class IndexBarChart extends React.Component {
               dataKey="name"
               tick={<Tick />}
               type="category"
+              axisLine={false}
+              tickLine={false}
             />
             <Tooltip content={<TooltipCDIS />} />
             <Legend />

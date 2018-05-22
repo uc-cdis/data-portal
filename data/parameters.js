@@ -2,7 +2,7 @@ const commonNames = {
   acct: 'ACCOuNT',
   bhc: 'BRAIN',
   bpa: 'BloodPAC',
-  edc: 'Environment',
+  edc: 'Environmental',
   genomel: 'Genomel',
   gdc: 'Jamboree',
   gtex: 'Data Common Pilot',
@@ -98,7 +98,7 @@ const params = {
             name: 'Explore Data',
             icon: 'data-explore',
             body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
-            link: '#hostname#shiny',
+            link: '#hostname#shiny/',
             label: 'Explore data',
           },
           {
@@ -113,7 +113,7 @@ const params = {
             name: 'Analyze Data',
             icon: 'data-analyze',
             body: 'Analyze your selected cases using Jupyter Notebooks in our secure cloud environment',
-            link: '#hostname#workspace',
+            link: '#hostname#workspace/',
             label: 'Run analysis',
           },
         ],
@@ -129,7 +129,7 @@ const params = {
           },
           {
             icon: 'exploration',
-            link: '#hostname#shiny',
+            link: '#hostname#shiny/',
             color: '#a2a2a2',
             name: 'Exploration',
           },
@@ -297,8 +297,46 @@ const params = {
     },
     components: {
       appName: 'Environmental Data Commons Portal',
+      index: {
+        introduction: {
+          heading: 'Environmental Data Commons',
+          text: 'The Environmental Data Commons supports the management, analysis and sharing of environmental data for the research community and aims to accelerate discoveries in environmental science and development of technologies for monitoring and studying the environment. The data hub supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.',
+          link: '/submission',
+        },
+        buttons: [
+          {
+            name: 'Define Data Field',
+            icon: 'data-field-define',
+            body: 'The data are defined in a generic way by the dictionary. Please study the dictionary before you start browsing.',
+            link: '/DD',
+            label: 'Learn more',
+          },
+          {
+            name: 'Explore Data',
+            icon: 'data-explore',
+            body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
+            link: '#hostname#shiny/',
+            label: 'Explore data',
+          },
+          {
+            name: 'Access Data',
+            icon: 'data-access',
+            body: 'Use our selected tool to filter out the data you need.',
+            link: '/query',
+            label: 'Query data',
+
+          },
+          {
+            name: 'Analyze Data',
+            icon: 'data-analyze',
+            body: 'Analyze your selected cases using Jupyter Notebooks in our secure cloud environment',
+            link: '#hostname#workspace/',
+            label: 'Run analysis',
+          },
+        ],
+      },
       navigation: {
-        title: 'Environmental Data Hub',
+        title: 'Environmental Data Commons',
         items: [
           {
             icon: 'dictionary',
@@ -362,6 +400,44 @@ const params = {
     },
     components: {
       appName: 'Genomel Metadata Submission Portal',
+      index: {
+        introduction: {
+          heading: 'Genomel Data Hub',
+          text: 'The GenoMEL data commons supports the management, analysis and sharing of human melanoma data for the research community and aims to accelerate discovery and development of therapies, vaccines, diagnostic tests, and other technologies for the treatment and prevention of melanoma. The data hub supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.',
+          link: '/submission',
+        },
+        buttons: [
+          {
+            name: 'Define Data Field',
+            icon: 'data-field-define',
+            body: 'The data are defined in a generic way by the dictionary. Please study the dictionary before you start browsing.',
+            link: '/DD',
+            label: 'Learn more',
+          },
+          {
+            name: 'Explore Data',
+            icon: 'data-explore',
+            body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
+            link: '#hostname#shiny/',
+            label: 'Explore data',
+          },
+          {
+            name: 'Access Data',
+            icon: 'data-access',
+            body: 'Use our selected tool to filter out the data you need.',
+            link: '/query',
+            label: 'Query data',
+
+          },
+          {
+            name: 'Analyze Data',
+            icon: 'data-analyze',
+            body: 'Analyze your selected cases using Jupyter Notebooks in our secure cloud environment',
+            link: '#hostname#workspace/',
+            label: 'Run analysis',
+          },
+        ],
+      },
       navigation: {
         title: 'Genomel Data Hub',
         items: [
@@ -454,7 +530,7 @@ const params = {
             name: 'Explore Data',
             icon: 'data-explore',
             body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
-            link: '#hostname#shiny',
+            link: '#hostname#shiny/',
             label: 'Explore data',
           },
           {
@@ -469,7 +545,7 @@ const params = {
             name: 'Analyze Data',
             icon: 'data-analyze',
             body: 'Analyze your selected cases using Jupyter Notebooks in our secure cloud environment',
-            link: '#hostname#workspace',
+            link: '#hostname#workspace/',
             label: 'Run analysis',
           },
         ],
@@ -478,7 +554,7 @@ const params = {
         title: 'DCP Data Hub',
         items: [
           { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'Dictionary' },
-          { icon: 'exploration', link: '#hostname#shiny', color: '#a2a2a2', name: 'Exploration' },
+          { icon: 'exploration', link: '#hostname#shiny/', color: '#a2a2a2', name: 'Exploration' },
           { icon: 'query', link: '/query', color: '#a2a2a2', name: 'Query' },
           { icon: 'workspace', link: '#hostname#workspace/', color: '#a2a2a2', name: 'Workspace' },
           { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'Profile' },
@@ -557,7 +633,7 @@ const params = {
             name: 'Analyze Data',
             icon: 'data-analyze',
             body: 'Analyze your selected cases using Jupyter Notebooks in our secure cloud environment',
-            link: '#hostname#workspace',
+            link: '#hostname#workspace/',
             label: 'Run analysis',
           },
         ],
@@ -650,7 +726,7 @@ const params = {
             name: 'Analyze Data',
             icon: 'data-analyze',
             body: 'Analyze your selected cases using Jupyter Notebooks in our secure cloud environment',
-            link: '#hostname#workspace',
+            link: '#hostname#workspace/',
             label: 'Run analysis',
           },
         ],
@@ -724,7 +800,7 @@ const params = {
             name: 'Explore Data',
             icon: 'data-explore',
             body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
-            link: '#hostname#shiny',
+            link: '#hostname#shiny/',
             label: 'Explore data',
           },
           {
@@ -754,6 +830,7 @@ const params = {
           },
           { icon: 'files', link: '/files', color: '#a2a2a2', name: 'Files' },
           { icon: 'query', link: '/query', color: '#a2a2a2', name: 'Query' },
+          { icon: 'workspace', link: '#hostname#workspace/', color: '#a2a2a2', name: 'Workspace' },
           {
             icon: 'profile',
             link: '/identity',
