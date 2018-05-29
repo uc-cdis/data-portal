@@ -66,9 +66,7 @@ function buildConfig(opts) {
   };
   const requiredCerts = [];
 
-  if (app === 'bpa') {
-  } else if (app === 'gtex') {
-  } else if (app === 'edc') {
+  if (app === 'edc') {
     dashboardIcons = [
       'satellite',
       'track_changes',
@@ -107,16 +105,12 @@ function buildConfig(opts) {
       'projectTable.submitButtonColor': '#dddddd',
       tableBarColor: '#7d7474',
     };
-  } else if (app === 'acct') {
-  } else if (app === 'genomel') {
-  } else if (app === 'ndh') {
   } else if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
     login = {
       url: 'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',
       title: 'Login from NIH',
     };
-  } else {
   }
 
   const conf = {

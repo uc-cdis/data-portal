@@ -217,7 +217,7 @@ PropertyBullet.propTypes = {
 };
 
 /**
- * Render table of dictionary node type's properties
+ * Render tables of dictionary node type's properties
  * @param {node, required:boolean, links:Array} props
  */
 export const PropertiesTable = ({ node, required, links }) => {

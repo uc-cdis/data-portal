@@ -41,6 +41,12 @@ const params = {
           },
         ],
       },
+      login: {
+        title: 'ACCOuNT',
+        subTitle: 'search, compare, and download data',
+        text: 'This website provides a centralized, cloud-based discovery portal for African American pharmacogenomics data and aims to accelerate discovery of novel genetic variants in African Americans related to clinically actionable cardiovascular phenotypes.',
+        contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
+      },
     },
   },
   bhc: {
@@ -154,6 +160,12 @@ const params = {
           },
         ],
       },
+      login: {
+        title: 'Cohen Veterans Brain Health Commons',
+        subTitle: 'search, compare, and download data',
+        text: 'This website provides a centralized, cloud-based discovery portal for the brain health research community and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for the treatment and prevention of diseases impacting the brain.',
+        contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
+      },
     },
   },
   bpa: {
@@ -263,6 +275,12 @@ const params = {
         ],
       },
     },
+    login: {
+      title: 'BloodPAC Data Portal',
+      subTitle: 'search, compare, and download data',
+      text: 'This website combines liquid biopsy data from academic, government, and industry partners and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for the treatment and prevention of cancer.',
+      contact: 'If you have any questions about access or the registration process, please contact bpa-support@datacommons.io',
+    },
   },
   edc: {
     graphql: {
@@ -364,6 +382,12 @@ const params = {
             name: 'Profile',
           },
         ],
+      },
+      login: {
+        title: 'Environmental Data Commons',
+        subTitle: 'search, compare, and download data',
+        text: 'This website provides a centralized, cloud-based portal for the open redistribution and analysis of environmental datasets and satellite imagery from OCC stakeholders like NASA and NOAA and aims to support the earth science research community as well as human assisted disaster relief.',
+        contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
       },
     },
   },
@@ -560,6 +584,12 @@ const params = {
           { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'Profile' },
         ],
       },
+      login: {
+        title: 'Data Commons Pilot',
+        subTitle: 'search, compare, and download data',
+        text: 'This website supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer.',
+        contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
+      },
     },
   },
   kf: {
@@ -647,6 +677,12 @@ const params = {
           { icon: 'workspace', link: '#hostname#jupyter/', color: '#a2a2a2', name: 'workspace' },
           { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'profile' },
         ],
+      },
+      login: {
+        title: 'Kids First Data Resource Center',
+        subTitle: 'search, compare, and download data',
+        text: 'This website provides a centralized, cloud-based discovery portal for childhood cancer and structural birth defects genetic data to help accelerate research and promote new discoveries in pediatric oncology.',
+        contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
       },
     },
   },
@@ -742,6 +778,12 @@ const params = {
           { icon: 'workspace', link: '#hostname#workspace/', color: '#a2a2a2', name: 'Workspace' },
           { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'Profile' },
         ],
+      },
+      login: {
+        title: 'NIAID Data Commons Hub',
+        subTitle: 'search, compare, and download data',
+        text: 'The website combines government datasets from 3 divisions of NIAID to create clean, easy to navigate visualizations for data-driven discovery within Allergy and Infectious Diseases.',
+        contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
       },
     },
   },
@@ -952,6 +994,12 @@ const params = {
           { icon: 'upload-white', link: '/submission', name: 'Data Submission' },
           { link: 'https://uc-cdis.github.io/gen3-user-doc/user-guide/guide-overview', name: 'Documentation' },
         ],
+      },
+      login: {
+        title: 'Generic Data Commons Hub',
+        subTitle: 'search, compare, and download data',
+        text: 'This website supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer.',
+        contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
       },
     },
   },

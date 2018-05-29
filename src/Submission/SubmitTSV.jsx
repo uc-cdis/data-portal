@@ -6,7 +6,7 @@ import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 
 import { predictFileType } from '../utils';
-import { UploadButton, SubmitButton } from '../theme';
+import { UploadButton } from '../theme';
 import SubmissionResult from './SubmissionResult';
 
 

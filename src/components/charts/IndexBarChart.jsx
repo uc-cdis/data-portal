@@ -14,6 +14,7 @@ const FloatBox = styled.div`
   width: 770px;
   min-width: 300px;
   height: 340px;
+  margin-top: -30px;
 `;
 
 const sortCount = (a, b) => {

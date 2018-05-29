@@ -2,10 +2,8 @@ import QueryNode from './QueryNode';
 
 describe('QueryNode', () => {
   describe('the view-node popup logic', () => {
-    const testNode = new QueryNode({});
-
     it('detects the \'noPopup\' case', () => {
-      const result = testNode.renderViewPopup({
+      const result = QueryNode.renderViewPopup({
         popups: {},
         queryNodes: {},
       });
@@ -14,9 +12,9 @@ describe('QueryNode', () => {
     });
 
     it('detects the \'viewNode\' case', () => {
-      const result = testNode.renderViewPopup({
+      const result = QueryNode.renderViewPopup({
         popups: { view_popup: true },
-        queryNodes: { query_node: true },
+        queryNodes: { query_node: { submitter_id: '1' } },
       });
 
       expect(result.state).toBe('viewNode');
@@ -24,10 +22,8 @@ describe('QueryNode', () => {
   });
 
   describe('the delete-node popup logic', () => {
-    const testNode = new QueryNode({});
-
     it('detects the \'noPopup\' case', () => {
-      const result = testNode.renderDeletePopup({
+      const result = QueryNode.renderDeletePopup({
         popups: {},
         queryNodes: {},
       });
@@ -36,27 +32,27 @@ describe('QueryNode', () => {
     });
 
     it('detects the \'confirmDelete\' case', () => {
-      const result = testNode.renderDeletePopup({
+      const result = QueryNode.renderDeletePopup({
         popups: { nodedelete_popup: true },
-        queryNodes: { },
+        queryNodes: { query_node: { submitter_id: '1' } },
       });
 
       expect(result.state).toBe('confirmDelete');
     });
 
     it('detects the \'deleteFailed\' case', () => {
-      const result = testNode.renderDeletePopup({
+      const result = QueryNode.renderDeletePopup({
         popups: { nodedelete_popup: false, view_popup: false },
-        queryNodes: { query_node: true, delete_error: 'some error' },
+        queryNodes: { query_node: { submitter_id: '1' }, delete_error: 'some error' },
       });
 
       expect(result.state).toBe('deleteFailed');
     });
 
     it('detects the \'waitForDelete\' case', () => {
-      const result = testNode.renderDeletePopup({
+      const result = QueryNode.renderDeletePopup({
         popups: { nodedelete_popup: 'wait message', view_popup: false },
-        queryNodes: { query_node: true },
+        queryNodes: { query_node: { submitter_id: '1' } },
       });
 
       expect(result.state).toBe('waitForDelete');

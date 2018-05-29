@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import SubmitButton from './SubmitButton';
+import IconicLink from './buttons/IconicLink';
 
 const IntroDiv = styled.div`
   width: 450px;
@@ -9,7 +9,6 @@ const IntroDiv = styled.div`
 `;
 
 const IntroTitle = styled.div`
-  margin-top: 35px;
   margin-bottom: 25px;
   line-height: 1.0em;
 `;
@@ -35,7 +34,7 @@ class Introduction extends Component {
       <IntroDiv>
         <IntroTitle className="h1-typo">{this.props.data.heading}</IntroTitle>
         <IntroText className="high-light">{this.props.data.text}</IntroText>
-        <SubmitButton
+        <IconicLink
           link={this.props.data.link}
           dictIcons={this.props.dictIcons}
           style={{
@@ -43,7 +42,9 @@ class Introduction extends Component {
             marginRight: 'auto',
             marginBottom: '75px',
           }}
-          iconColor={'#'}
+          icon="upload"
+          iconColor="#"
+          caption="Submit Data"
         />
       </IntroDiv>
     );

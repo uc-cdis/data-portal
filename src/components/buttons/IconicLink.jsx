@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import IconComponent from './Icon';
 import React from 'react';
+import IconComponent from '../Icon';
 
 
-class SubmitButton extends React.Component {
+class IconicLink extends React.Component {
   render() {
     let styles = {};
     if (this.props.iconColor && this.props.iconColor !== '') { styles = { fill: this.props.iconColor }; }
@@ -13,35 +13,38 @@ class SubmitButton extends React.Component {
         {
           this.props.dictIcons !== undefined ?
             <button className={this.props.buttonClassName}>
-              Submit Data&ensp;
+              {this.props.caption}&ensp;
               <IconComponent
                 dictIcons={this.props.dictIcons}
-                iconName="upload"
+                iconName={this.props.icon}
                 height="14px"
                 svgStyles={{ ...styles }}
               />
             </button> :
             <button className={this.props.buttonClassName}>
-              Submit Data
+              {this.props.caption}
             </button>
         }
-
       </Link>
     );
   }
 }
 
-SubmitButton.propTypes = {
+IconicLink.propTypes = {
   link: PropTypes.string.isRequired,
   dictIcons: PropTypes.object,
-  buttonClassName: PropTypes.string,
+  icon: PropTypes.string,
   iconColor: PropTypes.string,
+  caption: PropTypes.string,
+  buttonClassName: PropTypes.string,
 };
 
-SubmitButton.defaultProps = {
+IconicLink.defaultProps = {
   dictIcons: undefined,
-  buttonClassName: 'button-primary-white',
+  icon: '',
   iconColor: '',
+  caption: '',
+  buttonClassName: 'button-primary-white',
 };
 
-export default SubmitButton;
+export default IconicLink;
