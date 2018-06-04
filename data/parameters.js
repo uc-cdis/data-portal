@@ -5,7 +5,7 @@ const commonNames = {
   edc: 'Environmental',
   genomel: 'Genomel',
   gdc: 'Jamboree',
-  gtex: 'Data Commons Pilot & Data Stage',
+  gtex: 'Data Commons Pilot & Data STAGE',
   kf: 'Kids First',
   ndh: 'NIAID',
   default: 'Generic',
