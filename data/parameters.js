@@ -639,7 +639,7 @@ const params = {
         ],
       },
       navigation: {
-        title: 'Kids First Data Commons,
+        title: 'Kids First Data Commons',
         items: [
           { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
           { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'exploration' },
