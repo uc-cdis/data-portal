@@ -78,7 +78,7 @@ const params = {
       appName: 'The Brain Commons Portal',
       index: {
         introduction: {
-          heading: 'Data Commons',
+          heading: 'Brain Commons',
           text: 'The Brain Commons supports the management, analysis and sharing of brain health data for the research community and ' +
           'aims to accelerate discovery and development of therapies, diagnostic tests, ' +
           'and other technologies for treatment and prevention of diseases impacting the brain. ' +
