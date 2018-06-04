@@ -1,12 +1,12 @@
 const commonNames = {
   acct: 'ACCOuNT',
-  bhc: 'BRAIN',
+  bhc: 'Brain',
   bpa: 'BloodPAC',
   edc: 'Environmental',
   genomel: 'Genomel',
   gdc: 'Jamboree',
-  gtex: 'Data Common Pilot',
-  kf: 'KidsFirst',
+  gtex: 'Data Commons Pilot & Data Stage',
+  kf: 'Kids First',
   ndh: 'NIAID',
   default: 'Generic',
 };
@@ -16,7 +16,7 @@ const params = {
     components: {
       appName: 'ACCOuNT Data Commons Portal',
       navigation: {
-        title: 'ACCOuNT Data Hub',
+        title: 'ACCOuNT Data Commons',
         items: [
           {
             icon: 'dictionary',
@@ -78,8 +78,8 @@ const params = {
       appName: 'The Brain Commons Portal',
       index: {
         introduction: {
-          heading: 'Data Commons Hub',
-          text: 'The Brain Health Data Commons supports the management, analysis and sharing of brain health data for the research community and ' +
+          heading: 'Data Commons',
+          text: 'The Brain Commons supports the management, analysis and sharing of brain health data for the research community and ' +
           'aims to accelerate discovery and development of therapies, diagnostic tests, ' +
           'and other technologies for treatment and prevention of diseases impacting the brain. ' +
           'The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, ' +
@@ -90,7 +90,7 @@ const params = {
           {
             name: 'Define Data Field',
             icon: 'data-field-define',
-            body: `The ${commonNames.bhc} Data Hub define the data in a general way. Please study the dictionary before you start browsing.`,
+            body: `The ${commonNames.bhc} Commons define the data in a general way. Please study the dictionary before you start browsing.`,
             link: '/DD',
             label: 'Learn more',
           },
@@ -119,7 +119,7 @@ const params = {
         ],
       },
       navigation: {
-        title: 'BRAIN Data Hub',
+        title: 'Brain Commons',
         items: [
           {
             icon: 'dictionary',
@@ -191,7 +191,7 @@ const params = {
       appName: 'BloodPAC Metadata Submission Portal',
       index: {
         introduction: {
-          heading: 'Data Commons Hub',
+          heading: 'BloodPAC Data Commons',
           text: 'The Blood Profiling Atlas in Cancer (BloodPAC) supports the management, ' +
           'analysis and sharing of liquid biopsy data for the oncology research community and aims to accelerate discovery and development of therapies, ' +
           'diagnostic tests, and other technologies for cancer treatment and prevention. ' +
@@ -233,7 +233,7 @@ const params = {
         ],
       },
       navigation: {
-        title: 'BloodPAC Data Hub',
+        title: 'BloodPAC Data Commons',
         items: [
           { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'Dictionary' },
           {
@@ -402,7 +402,7 @@ const params = {
       appName: 'Genomel Metadata Submission Portal',
       index: {
         introduction: {
-          heading: 'Genomel Data Hub',
+          heading: 'Genomel Data Commons',
           text: 'The GenoMEL data commons supports the management, analysis and sharing of human melanoma data for the research community and aims to accelerate discovery and development of therapies, vaccines, diagnostic tests, and other technologies for the treatment and prevention of melanoma. The data hub supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.',
           link: '/submission',
         },
@@ -439,7 +439,7 @@ const params = {
         ],
       },
       navigation: {
-        title: 'Genomel Data Hub',
+        title: 'Genomel Data Commons',
         items: [
           {
             icon: 'dictionary',
@@ -507,11 +507,11 @@ const params = {
       projectDetails: 'boardCounts',
     },
     components: {
-      appName: 'NIH Data Commons Consortium Pilot Phase\nGTEx & TOPMed Data Portal',
+      appName: 'NIH Data Commons Consortium Pilot Phase\nNHLBI Data STAGE\nGTEx & TOPMed Data Portal',
       index: {
         introduction: {
-          heading: 'Data Commons Pilot',
-          text: 'The Data Commons Pilot supports the management, analysis and sharing of human disease data for the research community ' +
+          heading: 'Data Commons Pilot & Data STAGE',
+          text: 'The Data Commons Pilot & Data STAGE supports the management, analysis and sharing of human disease data for the research community ' +
           'and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, ' +
           'diagnostic tests, and other technologies for diseases like cancer. ' +
           'The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, ' +
@@ -522,7 +522,7 @@ const params = {
           {
             name: 'Define Data Field',
             icon: 'data-field-define',
-            body: 'The Data Commons Pilot define the data in a general way. Please study the dictionary before you start browsing.',
+            body: 'The Data Commons Pilot & Data STAGE define the data in a general way. Please study the dictionary before you start browsing.',
             link: '/DD',
             label: 'Learn more',
           },
@@ -551,7 +551,7 @@ const params = {
         ],
       },
       navigation: {
-        title: 'DCP Data Hub',
+        title: 'DCP & Data STAGE',
         items: [
           { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'Dictionary' },
           { icon: 'exploration', link: '#hostname#shiny/', color: '#a2a2a2', name: 'Exploration' },
@@ -597,7 +597,7 @@ const params = {
       appName: 'Gabriella Miller Kids First Pediatric Data Coordinating Center Portal',
       index: {
         introduction: {
-          heading: 'Kids First Data Common',
+          heading: 'Kids First Data Commons',
           text: 'The Kids First data commons supports the management, analysis and sharing of data for ' +
           'the pediatric oncology research community and aims to accelerate discovery and development of therapies, diagnostic tests, ' +
           'and other technologies for the treatment and prevention of cancer in children. ' +
@@ -639,7 +639,7 @@ const params = {
         ],
       },
       navigation: {
-        title: 'KidFirst Data hub',
+        title: 'Kids First Data Commons,
         items: [
           { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
           { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'exploration' },
@@ -687,10 +687,10 @@ const params = {
       projectDetails: 'boardCounts',
     },
     components: {
-      appName: 'NIAID Data Hub Portal',
+      appName: 'NIAID Data Hub',
       index: {
         introduction: {
-          heading: 'NIAID Data Commons Hub',
+          heading: 'NIAID Data Hub',
           text: 'The NIAID Data Hub supports the management, analysis and sharing of immunologic data ' +
           'for the research community and aims to accelerate discovery and development of therapies, ' +
           'vaccines, diagnostic tests, and other technologies for the treatment and prevention of infectious, immunologic, and allergic diseases. ' +
@@ -892,7 +892,7 @@ const params = {
       appName: 'Generic Data Commons Portal',
       index: {
         introduction: {
-          heading: 'Data Commons Hub',
+          heading: 'Data Commons',
           text: `The ${commonNames.default} Data Hub supports the management, analysis and sharing of data for the research community.`,
           link: '/submission',
         },
@@ -900,7 +900,7 @@ const params = {
           {
             name: 'Define Data Field',
             icon: 'data-field-define',
-            body: `The ${commonNames.default} Data Hub define the data in a general way. Please study the dictionary before you start browsing.`,
+            body: `The ${commonNames.default} Data Commons define the data in a general way. Please study the dictionary before you start browsing.`,
             link: '/DD',
             label: 'Learn more',
           },
@@ -922,7 +922,7 @@ const params = {
         ],
       },
       navigation: {
-        title: 'Generic Data Hub',
+        title: 'Generic Data Commons',
         items: [
           {
             icon: 'dictionary',
