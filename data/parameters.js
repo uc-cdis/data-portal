@@ -749,106 +749,106 @@ const params = {
     graphql: {
       boardCounts: [
         {
-            graphql: '_data_collection_count',
-            name: 'Data Collection',
-            plural: 'Data Collections',
+          graphql: '_data_collection_count',
+          name: 'Data Collection',
+          plural: 'Data Collections',
         },
         {
-            graphql: '_clinical_supplement_count',
-            name: 'Clinical Supplement',
-            plural: 'Clinical Supplements',
+          graphql: '_clinical_supplement_count',
+          name: 'Clinical Supplement',
+          plural: 'Clinical Supplements',
         },
         {
-            graphql: '_submitted_unaligned_reads_count',
-            name: 'Submitted Unaligned Reads',
-            plural: 'Submitted Unaligned Reads Files',
+          graphql: '_submitted_unaligned_reads_count',
+          name: 'Submitted Unaligned Reads',
+          plural: 'Submitted Unaligned Reads Files',
         },
         {
-            graphql: '_image_exam_file_count',
-            name: 'Image Exam File',
-            plural: 'Image Exam Files',
+          graphql: '_image_exam_file_count',
+          name: 'Image Exam File',
+          plural: 'Image Exam Files',
         },
       ],
       chartCounts: [
         {
-            graphql: '_data_collection_count',
-            name: 'Data Collection',
+          graphql: '_data_collection_count',
+          name: 'Data Collection',
         },
         {
-            graphql: '_clinical_supplement_count',
-            name: 'Clinical Supplement',
+          graphql: '_clinical_supplement_count',
+          name: 'Clinical Supplement',
         },
         {
-            graphql: '_submitted_unaligned_reads_count',
-            name: 'Submitted Unaligned Reads',
+          graphql: '_submitted_unaligned_reads_count',
+          name: 'Submitted Unaligned Reads',
         },
         {
-            graphql: '_image_exam_file_count',
-            name: 'Image Exam File',
+          graphql: '_image_exam_file_count',
+          name: 'Image Exam File',
         },
       ],
       projectDetails: 'boardCounts',
-  },
-  components: {
+    },
+    components: {
       appName: 'The VA Precision Oncology Data Portal',
       index: {
         introduction: {
-            heading: 'VA Data Portal',
-            text: 'The VA Data Commons supports the management, analysis and sharing of US military veteran oncologic data for the research community' +
-            'and aims to accelerate discovery and development of therapies, diagnostic tests, ' +
-            'and other technologies for precision oncology. The data commons supports cross-' +
-            'project analyses by harmonizing data from different projects through the collaborative ' +
-            'development of a data dictionary, providing an API for data queries and download, and ' +
-            'providing a cloud-based analysis workspace with rich tools and resources.',
-            link: '/submission',
+          heading: 'VA Data Portal',
+          text: 'The VA Data Commons supports the management, analysis and sharing of US military veteran oncologic data for the research community' +
+          'and aims to accelerate discovery and development of therapies, diagnostic tests, ' +
+          'and other technologies for precision oncology. The data commons supports cross-' +
+          'project analyses by harmonizing data from different projects through the collaborative ' +
+          'development of a data dictionary, providing an API for data queries and download, and ' +
+          'providing a cloud-based analysis workspace with rich tools and resources.',
+          link: '/submission',
         },
         buttons: [
-            {
-              name: 'Define Data Field',
-              icon: 'data-field-define',
-              body: `The VA Data Portal defines the data in a general way. Please study the dictionary before you start browsing.`,
-              link: '/DD',
-              label: 'Learn more',
-            },
-            {
-              name: 'View/Submit Data',
-              icon: 'data-submit',
-              body: 'View or submit data to a project.',
-              link: '/submission',
-              label: 'Submit data',
-            },
-            {
-              name: 'Access Data',
-              icon: 'data-access',
-              body: 'Use our selected tool to filter out the data you need.',
-              link: '/query',
-              label: 'Query data',
+          {
+            name: 'Define Data Field',
+            icon: 'data-field-define',
+            body: 'The VA Data Portal defines the data in a general way. Please study the dictionary before you start browsing.',
+            link: '/DD',
+            label: 'Learn more',
+          },
+          {
+            name: 'View/Submit Data',
+            icon: 'data-submit',
+            body: 'View or submit data to a project.',
+            link: '/submission',
+            label: 'Submit data',
+          },
+          {
+            name: 'Access Data',
+            icon: 'data-access',
+            body: 'Use our selected tool to filter out the data you need.',
+            link: '/query',
+            label: 'Query data',
 
-            },
+          },
         ],
       },
       navigation: {
         title: 'VA Data Portal',
         items: [
-            {
-              icon: 'dictionary',
-              link: '/DD',
-              color: '#a2a2a2',
-              name: 'Dictionary',
-            },
-            { icon: 'files', link: '/files', color: '#a2a2a2', name: 'Files' },
-            {
-              icon: 'query',
-              link: '/query',
-              color: '#a2a2a2',
-              name: 'Query',
-            },
-            {
-              icon: 'profile',
-              link: '/identity',
-              color: '#a2a2a2',
-              name: 'Profile',
-            },
+          {
+            icon: 'dictionary',
+            link: '/DD',
+            color: '#a2a2a2',
+            name: 'Dictionary',
+          },
+          { icon: 'files', link: '/files', color: '#a2a2a2', name: 'Files' },
+          {
+            icon: 'query',
+            link: '/query',
+            color: '#a2a2a2',
+            name: 'Query',
+          },
+          {
+            icon: 'profile',
+            link: '/identity',
+            color: '#a2a2a2',
+            name: 'Profile',
+          },
         ],
       },
     },
