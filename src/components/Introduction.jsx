@@ -11,7 +11,7 @@ const IntroDiv = styled.div`
 const IntroTitle = styled.div`
   margin-top: 35px;
   margin-bottom: 25px;
-  line-height: 0.5em;
+  line-height: 1.0em;
 `;
 
 const IntroText = styled.div`
