@@ -5,7 +5,7 @@ import Select from 'react-select';
 import PropTypes from 'prop-types';
 
 import { jsonToString, getSubmitPath } from '../utils';
-import Popup from '../Popup/Popup';
+import Popup from '../components/Popup';
 
 
 const SearchButton = styled.input`
@@ -203,11 +203,15 @@ class QueryNode extends React.Component {
    * is string one of [viewNode, noPopup], and
    *    popupEl is either null or a <Popup> properly configured to render
    */
-  renderViewPopup(props) {
+  static renderViewPopup(props) {
     const { queryNodes, popups, onUpdatePopup } = props;
     const popup = {
       state: 'noPopup',
       popupEl: null,
+    };
+
+    const closeViewPopup = () => {
+      onUpdatePopup({ view_popup: false });
     };
 
     if (
@@ -218,13 +222,15 @@ class QueryNode extends React.Component {
       // View node button clicked
       popup.state = 'viewNode';
       popup.popupEl = (<Popup
-        message={queryNodes.query_node.submitter_id}
-        code={jsonToString(queryNodes.query_node)}
-        onClose={
-          () => {
-            onUpdatePopup({ view_popup: false });
-          }
-        }
+        title={queryNodes.query_node.submitter_id}
+        lines={[{ code: jsonToString(queryNodes.query_node) }]}
+        onClose={closeViewPopup}
+        rightButtons={[
+          {
+            caption: 'Close',
+            fn: closeViewPopup,
+          },
+        ]}
       />);
     }
     return popup;
@@ -243,41 +249,60 @@ class QueryNode extends React.Component {
    *    string one of [confirmDelete, waitForDelete, deleteFailed, noPopup], and
    *    popupEl is either null or a <Popup> properly configured to render
    */
-  renderDeletePopup(props) {
+  static renderDeletePopup(props) {
     const { params, queryNodes, popups, onUpdatePopup, onDeleteNode, onClearDeleteSession } = props;
     const popup = {
       state: 'noPopup',
       popupEl: null,
+    };
+    const closeDelete = () => {
+      onClearDeleteSession();
+      onUpdatePopup({ nodedelete_popup: false });
     };
 
     if (popups && popups.nodedelete_popup === true) {
       // User clicked on node 'Delete' button
       popup.state = 'confirmDelete';
       popup.popupEl = (<Popup
+        title={queryNodes.query_node.submitter_id}
         message={'Are you sure you want to delete this node?'}
         error={jsonToString(queryNodes.delete_error)}
-        code={jsonToString(queryNodes.query_node)}
-        onConfirm={
-          () => {
-            onDeleteNode({ project: params.project, id: queryNodes.stored_node_info });
-            onUpdatePopup({ nodedelete_popup: 'Waiting for delete to finish ...' });
-          }
-        }
-        onCancel={() => { onClearDeleteSession(); onUpdatePopup({ nodedelete_popup: false }); }}
+        lines={[{ code: jsonToString(queryNodes.query_node) }]}
+        leftButtons={[
+          {
+            caption: 'Cancel',
+            fn: closeDelete,
+          },
+        ]}
+        rightButtons={[
+          {
+            caption: 'Confirm',
+            fn: () => {
+              onDeleteNode({ project: params.project, id: queryNodes.stored_node_info });
+              onUpdatePopup({ nodedelete_popup: 'Waiting for delete to finish ...' });
+            },
+          },
+        ]}
+        onClose={closeDelete}
       />);
     } else if (queryNodes && queryNodes.query_node && queryNodes.delete_error) {
       // Error deleting node
       popup.state = 'deleteFailed';
       popup.popupEl = (<Popup
+        title={queryNodes.query_node.submitter_id}
         message={`Error deleting: ${queryNodes.query_node.submitter_id}`}
         error={jsonToString(queryNodes.delete_error)}
-        code={jsonToString(queryNodes.query_node)}
-        onClose={() => { onClearDeleteSession(); onUpdatePopup({ nodedelete_popup: false }); }}
+        lines={[{ code: jsonToString(queryNodes.query_node) }]}
+        onClose={closeDelete}
       />);
     } else if (popups && typeof popups.nodedelete_popup === 'string' && queryNodes && queryNodes.query_node) {
       // Waiting for node delete to finish
       popup.state = 'waitForDelete';
-      popup.popupEl = <Popup message={popups.nodedelete_popup} />;
+      popup.popupEl = (<Popup
+        title={queryNodes.query_node.submitter_id}
+        message={popups.nodedelete_popup}
+        onClose={() => onUpdatePopup({ nodedelete_popup: false })}
+      />);
     }
     return popup;
   }
@@ -289,22 +314,21 @@ class QueryNode extends React.Component {
       <div>
         <h3>browse <Link to={`/${project}`}>{project}</Link> </h3>
         {
-          this.renderViewPopup({
+          QueryNode.renderViewPopup({
             queryNodes: this.props.queryNodes,
             popups: this.props.popups,
             onUpdatePopup: this.props.onUpdatePopup,
           }).popupEl
         }
         {
-          this.renderDeletePopup(
-            {
-              params: this.props.params,
-              queryNodes: this.props.queryNodes,
-              popups: this.props.popups,
-              onUpdatePopup: this.props.onUpdatePopup,
-              onDeleteNode: this.props.onDeleteNode,
-              onClearDeleteSession: this.props.onClearDeleteSession,
-            }).popupEl
+          QueryNode.renderDeletePopup({
+            params: this.props.params,
+            queryNodes: this.props.queryNodes,
+            popups: this.props.popups,
+            onUpdatePopup: this.props.onUpdatePopup,
+            onDeleteNode: this.props.onDeleteNode,
+            onClearDeleteSession: this.props.onClearDeleteSession,
+          }).popupEl
         }
         <QueryForm
           onSearchFormSubmit={

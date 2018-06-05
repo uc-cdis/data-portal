@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import IconComponent from '../Icon';
 import PropTypes from 'prop-types';
+import IconComponent from '../Icon';
 
 const TopButton = styled.div`
   background-color: #3283c8;

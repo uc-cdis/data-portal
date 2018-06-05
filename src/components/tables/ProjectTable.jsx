@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, TableHead, TableColLabel } from './style';
-import ProjectTR from './ProjectRow';
+import Table from './base/Table';
+import IconicLink from '../buttons/IconicLink';
 import dictIcons from '../../img/icons/index';
 
 function compare(a, b) {
@@ -10,57 +10,44 @@ function compare(a, b) {
   return 0;
 }
 
-/**
- * Table of tables.
- * Has projectList property where each entry has the properties
- * for a project detail, and a summaryCounts property with
- * prefetched totals (property details may be fetched lazily via Relay, whatever ...)
- */
 class ProjectTable extends React.Component {
   /* eslint class-methods-use-this: ["error", { "exceptMethods": ["rowRender"] }] */
   /**
    * default row renderer - just delegates to ProjectTR - can be overriden by subtypes, whatever
    */
-  rowRender(proj, i) {
-    return <ProjectTR key={proj.name} project={proj} index={i} dictIcons={dictIcons} />;
-  }
+
+  getHeaders = (summaries) => {
+    const summaryFields = summaries.map(entry => entry.label);
+    return ['Project', ...summaryFields, ''];
+  };
+
+  getData = projectList => projectList.map(proj => [
+    proj.name,
+    ...proj.counts,
+    <IconicLink
+      key={proj.name}
+      link={`/${proj.name}`}
+      buttonClassName="button-primary-orange"
+      dictIcons={dictIcons}
+      icon="upload"
+      caption="Submit Data"
+    />,
+  ]);
+
+  getFooter = (summaries) => {
+    const totalCounts = summaries.map(entry => entry.value);
+    return ['Totals', ...totalCounts, ''];
+  };
+
   render() {
     const projectList = (this.props.projectList || []).sort(
       (a, b) => compare(a, b),
     );
-    const summaries = this.props.summaries;
-
-    return (<div>
-      <h2>List of Projects</h2>
-      <Table>
-        <TableHead>
-          <tr>
-            <TableColLabel>Project</TableColLabel>
-            {
-              summaries.map(
-                entry => <TableColLabel key={entry.label}>{entry.label}</TableColLabel>,
-              )
-            }
-            <TableColLabel />
-          </tr>
-        </TableHead>
-        <tbody>
-          {
-            projectList.map(
-              (proj, i) => this.rowRender(proj, i),
-            )
-          }
-          <ProjectTR
-            key={'summaryCounts'}
-            project={{
-              counts: summaries.map(entry => entry.value),
-              name: 'Totals:' }}
-            summaryRow
-            index={projectList.length}
-          />
-        </tbody>
-      </Table>
-    </div>);
+    return (<Table
+      header={this.getHeaders(this.props.summaries)}
+      data={this.getData(projectList)}
+      footer={this.getFooter(this.props.summaries)}
+    />);
   }
 }
 

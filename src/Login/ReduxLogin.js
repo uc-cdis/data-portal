@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import Login from './Login';
 import { fetchWithCreds } from '../actions';
 import { loginPath } from '../localconf';
+import dictIcons from '../img/icons/sliding';
+import { components } from '../text';
 
 
 export const fetchLogin = () =>
@@ -43,6 +45,8 @@ export const fetchLogin = () =>
 
 const mapStateToProps = state => ({
   providers: state.login.providers,
+  dictIcons,
+  data: components.login,
 });
 
 const mapDispatchToProps = () => ({

@@ -17,7 +17,7 @@ const Body = styled.div`
   margin-left: auto;
   margin-right: auto;
   width: 1220px;
-  padding: ${props => props.padding || '40px 0px 40px 0px'};
+  padding: ${props => props.padding};
 `;
 
 /**

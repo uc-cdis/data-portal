@@ -2,6 +2,8 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
+import dictIcons from '../img/icons/sliding';
+import { components } from '../text';
 import Login, { LoginButton } from './Login';
 
 describe('the Login component', () => {
@@ -19,6 +21,8 @@ describe('the Login component', () => {
       },
     ],
     location: window.location,
+    dictIcons,
+    data: components.login,
   };
 
   it('lists login providers', () => {

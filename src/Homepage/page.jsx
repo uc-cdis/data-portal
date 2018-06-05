@@ -12,7 +12,7 @@ class HomePage extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{ paddingTop: '40px' }}>
         <ReduxProjectDashboard />
         <ReduxTransaction />
       </div>

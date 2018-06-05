@@ -1,16 +1,23 @@
 import React from 'react';
 import IcoAnalysis from './analysis.svg';
+import IcoCopy from './copy.svg';
+import IcoCross from './cross.svg';
+import IcoCrossKey from './cross-key.svg';
 import IcoDataAccess from './data-access.svg';
 import IcoDataAnalyze from './data-analyze.svg';
 import IcoDataExplore from './data-explore.svg';
 import IcoDataFieldDefine from './data-field-define.svg';
 import IcoDataFiles from './data-files.svg';
 import IcoDataSubmit from './data-submit.svg';
+import IcoDelete from './delete.svg';
 import IcoDictionary from './dictionary.svg';
+import IcoDownload from './download.svg';
 import IcoExit from './exit.svg';
 import IcoExploration from './exploration.svg';
 import IcoFiles from './files.svg';
 import IcoGen3 from './gen3.svg';
+import IcoGene from './gene.svg';
+import IcoKey from './key.svg';
 import IcoProfile from './profile.svg';
 import IcoQuery from './query.svg';
 import IcoSignature from './signature.svg';
@@ -24,6 +31,15 @@ const dictIcons = {
       height={height}
       style={{ ...customedStyles }}
     />),
+  copy: (height, customedStyles) => (
+    <IcoCopy height={height} style={{ ...customedStyles }} />
+  ),
+  cross: (height, customedStyles) => (
+    <IcoCross height={height} style={{ ...customedStyles }} />
+  ),
+  'cross-key': (height, customedStyles) => (
+    <IcoCrossKey height={height} style={{ ...customedStyles }} />
+  ),
   'data-access': (height, customedStyles) => (
     <IcoDataAccess height={height} style={{ ...customedStyles }} />
   ),
@@ -42,8 +58,14 @@ const dictIcons = {
   'data-submit': (height, customedStyles) => (
     <IcoDataSubmit height={height} style={{ ...customedStyles }} />
   ),
+  delete: (height, customedStyles) => (
+    <IcoDelete height={height} style={{ ...customedStyles }} />
+  ),
   dictionary: (height, customedStyles) => (
     <IcoDictionary height={height} style={{ ...customedStyles }} />
+  ),
+  download: (height, customedStyles) => (
+    <IcoDownload height={height} style={{ ...customedStyles }} />
   ),
   exit: (height, customedStyles) => (
     <IcoExit height={height} style={{ ...customedStyles }} />
@@ -58,6 +80,15 @@ const dictIcons = {
     height={height}
     style={{ ...customedStyles }}
   />),
+  gene: (height, customedStyles) => (
+    <IcoGene
+      height={height}
+      style={{ ...customedStyles }}
+    />
+  ),
+  key: (height, customedStyles) => (
+    <IcoKey height={height} style={{ ...customedStyles }} />
+  ),
   profile: (height, customedStyles) => (
     <IcoProfile height={height} style={{ ...customedStyles }} />
   ),

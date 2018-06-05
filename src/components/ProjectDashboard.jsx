@@ -6,7 +6,7 @@ import CountCard from './CountCard';
 import ProjectTable from './tables/ProjectTable';
 
 const DashTopDiv = styled.div`
-  ${clearFix()}
+  ${clearFix()},
 `;
 
 class ProjectDashboard extends Component {

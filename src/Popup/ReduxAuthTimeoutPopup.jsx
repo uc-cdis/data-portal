@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Popup from './Popup';
+import Popup from '../components/Popup';
 
 
 const goToLogin = (history) => {
@@ -15,8 +15,12 @@ const AuthPopup = withRouter(
   ({ history }) =>
     (<Popup
       message={'Your session has expired or you are logged out. Please log in to continue.'}
-      confirmText="go to login"
-      onConfirm={() => { goToLogin(history); }}
+      rightButtons={[
+        {
+          caption: 'go to login',
+          fn: () => { goToLogin(history); },
+        },
+      ]}
     />),
 );
 
