@@ -5,7 +5,7 @@ import dictIcons from '../img/icons';
 import { setActive } from '../Top/reduxer';
 import IndexBarChart from '../components/charts/IndexBarChart';
 import IndexButtonBar from '../components/IndexButtonBar';
-import { components } from '../text';
+import { components } from '../params';
 
 export const ReduxIndexBarChart = (() => {
   const mapStateToProps = (state) => {

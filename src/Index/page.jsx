@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Introduction from '../components/Introduction';
 import { ReduxIndexButtonBar, ReduxIndexBarChart } from './reduxer';
 import dictIcons from '../img/icons';
-import { components } from '../text';
+import { components } from '../params';
 import getProjectsList from './relayer';
 
 const IndexTop = styled.div`

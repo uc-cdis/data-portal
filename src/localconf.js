@@ -1,4 +1,4 @@
-const { components } = require('./text');
+const { components } = require('./params');
 
 /**
  * Setup configuration variables based on the "app" the data-portal is
@@ -13,6 +13,7 @@ function buildConfig(opts) {
     app: process.env.APP || 'generic',
     basename: process.env.BASENAME || '/',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
+    gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
   };
 
   //
@@ -23,7 +24,14 @@ function buildConfig(opts) {
     defaults.basename += 'dev.html';
   }
 
-  const { dev, mockStore, app, basename, hostname } = Object.assign({}, defaults, opts);
+  const {
+    dev,
+    mockStore,
+    app,
+    basename,
+    hostname,
+    gaDebug,
+  } = Object.assign({}, defaults, opts);
 
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
@@ -39,13 +47,7 @@ function buildConfig(opts) {
   const loginPath = `${userapiPath}login/`;
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
 
-  let dashboardIcons = [
-    'account_circle',
-    'receipt',
-    'invert_colors',
-    'description',
-  ];
-  let localTheme = {
+  const localTheme = {
     'barGraph.lineColor': '#666666',
     'barGraph.bar1Color': '#3283c8',
     'barGraph.bar2Color': '#7ec500',
@@ -66,46 +68,7 @@ function buildConfig(opts) {
   };
   const requiredCerts = [];
 
-  if (app === 'edc') {
-    dashboardIcons = [
-      'satellite',
-      'track_changes',
-      'description',
-      'timeline',
-    ];
-  } else if (app === 'kf') {
-    localTheme = {
-      'barGraph.lineColor': '#dfdfdf',
-      'barGraph.bar1Color': '#00adee',
-      'barGraph.bar2Color': '#be1e2d',
-      'barGraph.bar3Color': '#ef8523',
-      'barGraph.bar4Color': '#ff9635',
-      'barGraph.bar5Color': '#e74c3c',
-      'summary.borderTopColor': '#f6921e',
-      'summary.borderColor': '#dfdfdf',
-      'summary.countColor': '#f6921e',
-      'summary.iconColor': '#00adee',
-      'projectTable.summaryRowColor': '#dfdfdf',
-      'projectTable.submitButtonColor': '#dfdfdf',
-      tableBarColor: '#CC3399',
-    };
-  } else if (app === 'bhc') {
-    localTheme = {
-      'barGraph.lineColor': '#666666',
-      'barGraph.bar1Color': '#6193b1',
-      'barGraph.bar2Color': '#94af83',
-      'barGraph.bar3Color': '#ef8523',
-      'barGraph.bar4Color': '#ff9635',
-      'barGraph.bar5Color': '#e74c3c',
-      'summary.borderTopColor': '#94af83',
-      'summary.borderColor': '#222222',
-      'summary.countColor': '#d00000',
-      'summary.iconColor': '#7aa19b',
-      'projectTable.summaryRowColor': '#565656',
-      'projectTable.submitButtonColor': '#dddddd',
-      tableBarColor: '#7d7474',
-    };
-  } else if (app === 'gdc') {
+  if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
     login = {
       url: 'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',
@@ -119,6 +82,7 @@ function buildConfig(opts) {
     buildConfig,
     dev,
     hostname,
+    gaDebug,
     userapiPath,
     jobapiPath,
     apiPath,
@@ -129,7 +93,6 @@ function buildConfig(opts) {
     graphqlSchemaUrl,
     appname: components.appName,
     mockStore,
-    dashboardIcons,
     localTheme,
     login,
     loginPath,

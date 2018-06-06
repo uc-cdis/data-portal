@@ -3,7 +3,7 @@ import NavBar from '../components/layout/NavBar';
 import TopBar from '../components/layout/TopBar';
 import dictIcons from '../img/icons/index';
 import { logoutAPI } from '../actions';
-import { components } from '../text';
+import { components } from '../params';
 
 export const setActive = link => ({
   type: 'ACTIVE_CHANGED',

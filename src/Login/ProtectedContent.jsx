@@ -17,7 +17,6 @@ const Body = styled.div`
   margin-left: auto;
   margin-right: auto;
   width: 1220px;
-  padding: ${props => props.padding};
 `;
 
 /**
@@ -303,29 +302,32 @@ class ProtectedContent extends React.Component {
       params = this.props.match.params || {};
     }
     window.scrollTo(0, 0);
+    const styleProps = {
+      background: this.props.background,
+    };
     if (this.state.redirectTo) {
       return (<Redirect to={this.state.redirectTo} />);
     } else if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
-        <Body {...this.props}>
+        <Body {...styleProps}>
           <Component params={params} location={this.props.location} history={this.props.history} />
         </Body>
       );
     } else if (!this.props.public && this.state.authenticated) {
       return (
-        <Body {...this.props}>
+        <Body {...styleProps}>
           <ReduxAuthTimeoutPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
         </Body>
       );
     } else if (this.props.public && this.state.dataLoaded) {
       return (
-        <Body {...this.props}>
+        <Body {...styleProps}>
           <Component params={params} location={this.props.location} history={this.props.history} />
         </Body>
       );
     }
-    return (<Body {...this.props}><Spinner /></Body>);
+    return (<Body {...styleProps}><Spinner /></Body>);
   }
 }
 

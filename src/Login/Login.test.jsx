@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
 import dictIcons from '../img/icons/sliding';
-import { components } from '../text';
+import { components } from '../params';
 import Login, { LoginButton } from './Login';
 
 describe('the Login component', () => {

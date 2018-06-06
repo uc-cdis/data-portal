@@ -50,6 +50,7 @@ const params = {
     },
   },
   bhc: {
+    gaTrackingId: 'UA-119127212-4',
     graphql: {
       boardCounts: [
         {
@@ -169,6 +170,7 @@ const params = {
     },
   },
   bpa: {
+    gaTrackingId: 'UA-119127212-2',
     graphql: {
       boardCounts: [
         {
@@ -274,15 +276,16 @@ const params = {
           { link: 'https://www.synapse.org/#!Synapse:syn8011461/wiki/411591', name: 'Documentation' },
         ],
       },
-    },
-    login: {
-      title: 'BloodPAC Data Portal',
-      subTitle: 'search, compare, and download data',
-      text: 'This website combines liquid biopsy data from academic, government, and industry partners and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for the treatment and prevention of cancer.',
-      contact: 'If you have any questions about access or the registration process, please contact bpa-support@datacommons.io',
+      login: {
+        title: 'BloodPAC Data Portal',
+        subTitle: 'search, compare, and download data',
+        text: 'This website combines liquid biopsy data from academic, government, and industry partners and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for the treatment and prevention of cancer.',
+        contact: 'If you have any questions about access or the registration process, please contact bpa-support@datacommons.io',
+      },
     },
   },
   edc: {
+    gaTrackingId: 'UA-119127212-7',
     graphql: {
       boardCounts: [
         {
@@ -500,6 +503,7 @@ const params = {
     },
   },
   gtex: {
+    gaTrackingId: 'UA-119127212-5',
     graphql: {
       boardCounts: [
         {
@@ -593,6 +597,7 @@ const params = {
     },
   },
   kf: {
+    gaTrackingId: 'UA-119127212-6',
     graphql: {
       boardCounts: [
         {
@@ -687,6 +692,7 @@ const params = {
     },
   },
   ndh: {
+    gaTrackingId: 'UA-119127212-1',
     graphql: {
       boardCounts: [
         {
@@ -896,6 +902,7 @@ const params = {
     },
   },
   default: {
+    gaTrackingId: 'undefined',
     graphql: {
       boardCounts: [
         {
@@ -959,7 +966,13 @@ const params = {
             body: 'Use our selected tool to filter out the data you need.',
             link: '/query',
             label: 'Query data',
-
+          },
+          {
+            name: 'Submit Data',
+            icon: 'data-submit',
+            body: 'Submit Data based on the dictionary.',
+            link: '/submission',
+            label: 'Submit data',
           },
         ],
       },
