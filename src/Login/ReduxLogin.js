@@ -4,7 +4,7 @@ import Login from './Login';
 import { fetchWithCreds } from '../actions';
 import { loginPath } from '../localconf';
 import dictIcons from '../img/icons/sliding';
-import { components } from '../text';
+import { components } from '../params';
 
 
 export const fetchLogin = () =>

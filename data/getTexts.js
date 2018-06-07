@@ -24,6 +24,7 @@ function paramByDefault(prs, key) {
 }
 
 const defaultTexts = paramByDefault(params, 'components');
+const defaultGA = paramByDefault(params, 'gaTrackingId');
 
 function fillDefaultValues(values, defaultValues) {
   const res = values;
@@ -89,7 +90,8 @@ function stringify(value, variables = [], spaces = 0) {
   return doStringify(value, variables, 0, spaces);
 }
 
+console.log(`const gaTracking = '${defaultGA}';`);
 console.log('const hostname = typeof window !== \'undefined\' ? `${window.location.protocol}//${window.location.hostname}/` : \'http://localhost/\';');
 console.log(`const components = ${stringify(fillDefaultValues(componentTexts, defaultTexts), ['hostname'], 2)};`);
 
-console.log('module.exports = { components };');
+console.log('module.exports = { components, gaTracking };');

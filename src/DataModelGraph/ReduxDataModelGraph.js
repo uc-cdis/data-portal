@@ -4,12 +4,6 @@ import DataModelGraph from './DataModelGraph';
 import { fetchWithCreds } from '../actions';
 import { submissionApiPath } from '../localconf';
 
-
-export const clearCounts = {
-  type: 'CLEAR_COUNTS',
-};
-
-
 /**
  * Compose and send a single graphql query to get a count of how
  * many of each node and edge are in the current state

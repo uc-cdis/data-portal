@@ -15,6 +15,6 @@ install:
     - npm install --force
 
 script:
-    - npm run text
+    - npm run params
     - npm test
     - bash ./testSchema.sh

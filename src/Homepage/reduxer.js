@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { components } from '../text';
+import { components } from '../params';
 import ProjectDashboard from '../components/ProjectDashboard';
 import TransactionLogTable from '../components/tables/TransactionLogTable';
 

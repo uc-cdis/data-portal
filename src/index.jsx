@@ -27,9 +27,12 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar } from './Top/reduxer';
 import Footer from './components/layout/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
-import { basename } from './localconf';
+import { basename, dev, gaDebug } from './localconf';
 import dictIcons from './img/icons/index';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
+import ReactGA from 'react-ga';
+import { gaTracking } from './params';
+import GA, { RouteTracker } from './components/GoogleAnalytics';
 
 
 // Needed for onTouchTap
@@ -41,7 +44,8 @@ async function init() {
   const store = await getReduxStore();
 
   // asyncSetInterval(() => store.dispatch(fetchUser), 60000);
-
+  ReactGA.initialize(gaTracking);
+  ReactGA.pageview(window.location.pathname + window.location.search);
   await Promise.all(
     [
       store.dispatch(fetchSchema),
@@ -65,6 +69,7 @@ async function init() {
           <MuiThemeProvider>
             <BrowserRouter basename={basename}>
               <OuterWrapper>
+                { GA.init(gaTracking, dev, gaDebug) && <RouteTracker /> }
                 <ReduxTopBar />
                 <ReduxNavBar />
                 <Box background={background} style={{ width: '100%', margin: 'auto' }}>

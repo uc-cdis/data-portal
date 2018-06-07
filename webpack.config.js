@@ -6,14 +6,15 @@ const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
 const app = process.env.APP || 'dev';
 const title = {
-  dev: 'Generic Data Commons',
-  bpa: 'BPA Data Commons',
-  edc: 'Environmental Data Commons',
   acct: 'ACCOuNT Data Commons',
-  gdc: 'Jamboree Data Access',
   bhc: 'Brain Commons',
+  bpa: 'BPA Data Commons',
   gtex: 'GTEx & TOPMed Data Commons Submission Portal',
+  dev: 'Generic Data Commons',
+  edc: 'Environmental Data Commons',
+  gdc: 'Jamboree Data Access',
   kf: 'Kids First Data Coordinating Center Portal',
+  ndh: 'NIAID Data Hub',
 }[app];
 
 const plugins = [

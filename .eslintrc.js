@@ -39,6 +39,6 @@ module.exports = {
         "react/jsx-indent": "off",
         "react/forbid-prop-types": "off",
         "react/prefer-stateless-function": "off",
-        "react/jsx-curly-brace-presence": "never",
+        "react/jsx-curly-brace-presence": ["off", "ignore"],
     },
 };

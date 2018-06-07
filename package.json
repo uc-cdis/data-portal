@@ -35,6 +35,7 @@
     "react-ace": "^6.1.0",
     "react-dom": "^16.3.2",
     "react-form": "^3.5.5",
+    "react-ga": "^2.5.3",
     "react-highlight": "^0.12.0",
     "react-motion": "^0.5.2",
     "react-redux": "^5.0.7",
@@ -109,7 +110,7 @@
     "postinstall": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
     "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
     "schema": "node ./data/getSchema",
-    "text": "node ./data/getTexts > src/text.js",
+    "params": "node ./data/getTexts > src/params.js",
     "eslint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --fix src",
     "elint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'"
   },
