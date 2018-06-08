@@ -42,7 +42,7 @@ const params = {
         ],
       },
       login: {
-        title: 'ACCOuNT',
+        title: 'ACCOuNT Data Commons',
         subTitle: 'search, compare, and download data',
         text: 'This website provides a centralized, cloud-based discovery portal for African American pharmacogenomics data and aims to accelerate discovery of novel genetic variants in African Americans related to clinically actionable cardiovascular phenotypes.',
         contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
@@ -162,7 +162,7 @@ const params = {
         ],
       },
       login: {
-        title: 'Cohen Veterans Brain Health Commons',
+        title: 'Brain Commons',
         subTitle: 'search, compare, and download data',
         text: 'This website provides a centralized, cloud-based discovery portal for the brain health research community and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for the treatment and prevention of diseases impacting the brain.',
         contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
@@ -218,7 +218,7 @@ const params = {
           {
             name: 'Define Data Field',
             icon: 'data-field-define',
-            body: 'The BloodPAC Data Hub define the data in a general way. Please study the dictionary before you start browsing.',
+            body: 'The BloodPAC Data Commons define the data in a general way. Please study the dictionary before you start browsing.',
             link: '/DD',
             label: 'Learn more',
           },
@@ -277,7 +277,7 @@ const params = {
         ],
       },
       login: {
-        title: 'BloodPAC Data Portal',
+        title: 'BloodPAC Data Commons',
         subTitle: 'search, compare, and download data',
         text: 'This website combines liquid biopsy data from academic, government, and industry partners and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for the treatment and prevention of cancer.',
         contact: 'If you have any questions about access or the registration process, please contact bpa-support@datacommons.io',
@@ -321,7 +321,7 @@ const params = {
       index: {
         introduction: {
           heading: 'Environmental Data Commons',
-          text: 'The Environmental Data Commons supports the management, analysis and sharing of environmental data for the research community and aims to accelerate discoveries in environmental science and development of technologies for monitoring and studying the environment. The data hub supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.',
+          text: 'The Environmental Data Commons supports the management, analysis and sharing of environmental data for the research community and aims to accelerate discoveries in environmental science and development of technologies for monitoring and studying the environment. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.',
           link: '/submission',
         },
         buttons: [
@@ -430,7 +430,7 @@ const params = {
       index: {
         introduction: {
           heading: 'Genomel Data Commons',
-          text: 'The GenoMEL data commons supports the management, analysis and sharing of human melanoma data for the research community and aims to accelerate discovery and development of therapies, vaccines, diagnostic tests, and other technologies for the treatment and prevention of melanoma. The data hub supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.',
+          text: 'The GenoMEL data commons supports the management, analysis and sharing of human melanoma data for the research community and aims to accelerate discovery and development of therapies, vaccines, diagnostic tests, and other technologies for the treatment and prevention of melanoma. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.',
           link: '/submission',
         },
         buttons: [
@@ -589,7 +589,7 @@ const params = {
         ],
       },
       login: {
-        title: 'Data Commons Pilot',
+        title: 'Data Commons Pilot & Data STAGE',
         subTitle: 'search, compare, and download data',
         text: 'This website supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer.',
         contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
@@ -786,7 +786,7 @@ const params = {
         ],
       },
       login: {
-        title: 'NIAID Data Commons Hub',
+        title: 'NIAID Data Hub',
         subTitle: 'search, compare, and download data',
         text: 'The website combines government datasets from 3 divisions of NIAID to create clean, easy to navigate visualizations for data-driven discovery within Allergy and Infectious Diseases.',
         contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
@@ -942,7 +942,7 @@ const params = {
       index: {
         introduction: {
           heading: 'Data Commons',
-          text: `The ${commonNames.default} Data Hub supports the management, analysis and sharing of data for the research community.`,
+          text: `The ${commonNames.default} Data Commons supports the management, analysis and sharing of data for the research community.`,
           link: '/submission',
         },
         buttons: [
@@ -1009,7 +1009,7 @@ const params = {
         ],
       },
       login: {
-        title: 'Generic Data Commons Hub',
+        title: 'Generic Data Commons',
         subTitle: 'search, compare, and download data',
         text: 'This website supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer.',
         contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
