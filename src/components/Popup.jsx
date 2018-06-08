@@ -24,6 +24,7 @@ export const PopupBox = styled.section`
   margin: auto;
   overflow: hidden;
   border-radius: 8px;
+  border: 1px solid #9b9b9b;
 `;
 
 export const PopupTitleBar = styled.div`

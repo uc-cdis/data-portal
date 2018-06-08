@@ -42,6 +42,9 @@ class KeyTable extends React.Component {
       title={LIST_API_KEY_MSG}
       header={[API_KEY_COLUMN, EXPIRES_COLUMN, '']}
       data={this.getData(this.props.jtis)}
+      colStyles={[
+        { textAlign: 'left' }, { textAlign: 'left' }, { textAlign: 'center' },
+      ]}
     />);
   }
 }

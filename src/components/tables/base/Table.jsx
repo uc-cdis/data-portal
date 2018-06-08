@@ -23,9 +23,10 @@ class Table extends React.Component {
       <div>
         <h2>{this.props.title}</h2>
         <Tb>
-          <TableHead cols={this.props.header} />
+          <TableHead cols={this.props.header} colStyles={this.props.colStyles} />
           {
-            this.props.footer.length > 0 && <TableFoot cols={this.props.footer} />
+            this.props.footer.length > 0 &&
+            <TableFoot cols={this.props.footer} colStyles={this.props.colStyles} />
           }
           <tbody>
             {
@@ -33,6 +34,7 @@ class Table extends React.Component {
                 key={`${this.props.title}_${i}`}
                 cols={datum}
                 idx={i}
+                colStyles={this.props.colStyles}
               />))
             }
           </tbody>
@@ -47,6 +49,7 @@ Table.propTypes = {
   header: PropTypes.array,
   data: PropTypes.array,
   footer: PropTypes.array,
+  colStyles: PropTypes.array,
 };
 
 Table.defaultProps = {
@@ -54,6 +57,7 @@ Table.defaultProps = {
   header: [],
   data: [],
   footer: [],
+  colStyles: [],
 };
 
 export default Table;
