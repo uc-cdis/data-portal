@@ -5,6 +5,7 @@ const path = require('path');
 const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
 const app = process.env.APP || 'dev';
+
 const title = {
   acct: 'ACCOuNT Data Commons',
   bhc: 'Brain Commons',

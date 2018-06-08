@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Toggle } from 'material-ui';
+import Toggle from 'react-toggle';
 import PropTypes from 'prop-types';
 
 import { Dropdown, Input, Label } from '../theme';
 import { jsonToString } from '../utils';
-
+import 'react-toggle/style.css';
 
 export const RequiredNotification = styled.span`
   color:#d45252;
@@ -478,7 +478,12 @@ class SubmitForm extends Component {
     return (
       <div>
         <form>
-          <Toggle label="Use Form Submission" labelStyle={{ width: '' }} onToggle={this.onFormToggle} />
+          <div style={{display: 'table'}}>
+            <label style={{display: 'table-cell', verticalAlign:'middle'}}>Use Form Submission</label>
+            <div style={{display: 'table-cell', verticalAlign:'middle', paddingLeft: '10px'}}>
+              <Toggle defaultChecked={this.state.fill_form} onChange={this.onFormToggle} />
+            </div>
+          </div>
           {this.state.fill_form && <Dropdown
             name="nodeType"
             options={options}

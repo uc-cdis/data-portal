@@ -156,8 +156,8 @@ class ProtectedContent extends React.Component {
    * Start filter the 'newState' for the checkLoginStatus component.
    * Check if the user is logged in, and update state accordingly.
    * @method checkLoginStatus
-   * @param {ReduxStore} store
-   * @param {ReduxStore} initialState
+   * @param {store} store
+   * @param {initialState} initialState
    * @return Promise<{redirectTo, authenticated, user}>
    */
   checkLoginStatus = (store, initialState) => {

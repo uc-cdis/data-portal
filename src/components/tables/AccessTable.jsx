@@ -11,13 +11,11 @@ const RIGHT_COLUMN = 'Right(s)';
 export const ProjectCell = styled(Link)`
   display: inline-block;
   width: 30%;
-  padding-left: 0.5em;
 `;
 
 export const ProjectCellNoAccess = styled.div`
   display: inline-block;
   width: 30%;
-  padding-left: 0.5em;
 `;
 
 class AccessTable extends React.Component {
@@ -43,6 +41,9 @@ class AccessTable extends React.Component {
       title={LIST_PROJECT_MSG}
       header={[PROJECT_COLUMN, RIGHT_COLUMN]}
       data={this.getData(projectKeys, this.props.projectsAccesses, this.props.projects)}
+      colStyles={[
+        { textAlign: 'left' }, { textAlign: 'left' },
+      ]}
     />);
   }
 }

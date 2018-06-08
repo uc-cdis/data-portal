@@ -5,9 +5,9 @@ import 'brace/mode/json';
 import 'brace/theme/kuroir';
 import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
-import FlatButton from 'material-ui/FlatButton';
 
 import { button } from '../theme';
+import IconicButton from '../components/buttons/IconicButton';
 
 const Container = styled.div`
 border-top: 1px dashed ${props => props.theme.mid_gray};
@@ -60,7 +60,7 @@ class SubmissionResult extends React.Component {
       }
       return (
         <div>
-          <FlatButton backgroundColor="#ddddee" onClick={() => this.setState({ showFullResponse: true })} label="Details" />
+          <IconicButton onClick={() => this.setState({ showFullResponse: true })} caption="Details" />
         </div>
       );
     })();

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Table from './Table';
 
 export const THead = styled.thead`
   height: 36px;
@@ -24,9 +25,15 @@ class TableHead extends Component {
         <tr>
           {
             this.props.cols.map((col, i) => (
-              <ColHead key={`col_${col}_${i}`}>
+              this.props.colStyles.length <= i ? <ColHead key={`col_${col}_${i}`}>
                 {col}
-              </ColHead>
+              </ColHead> :
+                <ColHead
+                  key={`col_${col}_${i}`}
+                  style={{ ...this.props.colStyles[i], padding: '0.5rem 1rem' }}
+                >
+                  {col}
+                </ColHead>
             ))
           }
         </tr>
@@ -37,6 +44,11 @@ class TableHead extends Component {
 
 TableHead.propTypes = {
   cols: PropTypes.array.isRequired,
+  colStyles: PropTypes.array,
+};
+
+TableHead.defaultProps = {
+  colStyles: [],
 };
 
 export default TableHead;

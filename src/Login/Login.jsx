@@ -120,7 +120,12 @@ class Login extends React.Component {
               ),
             )
           }
-          <div>{this.props.data.contact}</div>
+          <div>
+            {this.props.data.contact}
+            <a href={`mailto:${this.props.data.email}`}>
+              {this.props.data.email}
+            </a>{'.'}
+          </div>
         </CentralBox>
         <RightBox style={{ height: `${this.state.height}px` }}>
           <SlidingWindow
