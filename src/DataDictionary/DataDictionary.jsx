@@ -108,7 +108,7 @@ const DataDictionary = ({ dictionary }) => {
   const c2nl = category2NodeList(dictionary);
 
   return (
-    <div style={{ paddingBottom: '30px' }}>
+    <div style={{ padding: '40px 0px' }}>
       <div className="h3-typo"> Data Dictionary Viewer </div>
       <p>{subHeader}</p>
       <Link to={'/dd/graph'}> Explore dictionary as a graph </Link>

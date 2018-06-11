@@ -28,6 +28,7 @@
     "material-ui-icons": "^1.0.0-alpha.19",
     "moment": "^2.18.0",
     "node-fetch": "^1.7.3",
+    "npm": "^6.1.0",
     "nunjucks": "^3.0.1",
     "polished": "^1.0.4",
     "prop-types": "^15.6.0",
@@ -53,8 +54,8 @@
     "redux-thunk": "^2.2.0",
     "relay-compiler": "^1.6.0",
     "relay-runtime": "^1.6.0",
-    "styled-components": "^3.2.6",
     "style-loader": "^0.21.0",
+    "styled-components": "^3.2.6",
     "svg-fill-loader": "^0.0.8",
     "underscore": "^1.8.3"
   },

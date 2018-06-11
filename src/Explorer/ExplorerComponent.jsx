@@ -148,6 +148,7 @@ class ExplorerComponent extends Component {
     this.updateFilesMap();
     const style = {
       display: 'flex',
+      padding: '40px 0px',
     };
     return (
       <div style={style}>

@@ -76,7 +76,7 @@ function buildConfig(opts) {
     };
   }
 
-  const conf = {
+  return {
     app,
     basename,
     buildConfig,
@@ -98,7 +98,6 @@ function buildConfig(opts) {
     loginPath,
     requiredCerts,
   };
-  return conf;
 }
 
 const defaultConf = buildConfig();

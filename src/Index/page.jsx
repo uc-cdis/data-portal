@@ -19,7 +19,7 @@ class IndexPageComponent extends React.Component {
 
   render() {
     return (
-      <div style={{ width: '1220px', paddingTop: '75px' }}>
+      <div style={{ width: '1220px', padding: '75px 0px 40px 0px' }}>
         <IndexTop>
           <Introduction data={components.index.introduction} dictIcons={dictIcons} />
           <ReduxIndexBarChart />

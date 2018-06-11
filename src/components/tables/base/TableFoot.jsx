@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import TableHead from './TableHead';
 
 export const TFoot = styled.tfoot`
   height: 36px;
@@ -20,9 +21,11 @@ class TableFoot extends Component {
         <tr>
           {
             this.props.cols.map((col, i) => (
-              <TCell key={`col_${col.name}_${i}`}>
-                {col.name}
-              </TCell>
+              this.props.colStyles.length <= i ?
+                <TCell key={`col_${col.name}_${i}`}>{col.name}</TCell> :
+                <TCell key={`col_${col.name}_${i}`} style={this.props.colStyles[i]}>
+                  {col.name}
+                </TCell>
             ))
           }
         </tr>
@@ -33,6 +36,11 @@ class TableFoot extends Component {
 
 TableFoot.propTypes = {
   cols: PropTypes.array.isRequired,
+  colStyles: PropTypes.array,
+};
+
+TableFoot.defaultProps = {
+  colStyles: [],
 };
 
 export default TableFoot;

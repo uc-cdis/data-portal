@@ -41,6 +41,13 @@ html, body {
   height: 100px; /* .push must be the same height as .footer */
 }
 
+a {
+  color: @apricot;
+  &:hover {
+    color: @orange;
+  }
+}
+
 h1 {
   font-size: 32px;
   font-weight: @semi-bold;
@@ -100,6 +107,7 @@ pre {
   white-space: -pre-wrap;      /* Opera 4-6 */
   white-space: -o-pre-wrap;    /* Opera 7 */
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  border: 1px solid @light_gray;
 }
 
 caption {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import TableHead from './TableHead';
 
 export const TRow = styled.tr`
   padding: 0rem 0rem;
@@ -21,7 +22,9 @@ export const TCell = styled.td`
 
 class TableRow extends Component {
   renderCols = cols => cols.map((col, i) => (
-    <TCell key={`col_${i}`}>{col}</TCell>
+    this.props.colStyles.length <= i ?
+      <TCell key={`col_${i}`}>{col}</TCell> :
+      <TCell key={`col_${i}`} style={this.props.colStyles[i]}>{col}</TCell>
   ));
 
   render() {
@@ -47,6 +50,11 @@ class TableRow extends Component {
 TableRow.propTypes = {
   cols: PropTypes.array.isRequired,
   idx: PropTypes.number.isRequired,
+  colStyles: PropTypes.array,
+};
+
+TableRow.defaultProps = {
+  colStyles: [],
 };
 
 export default TableRow;
