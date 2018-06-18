@@ -328,14 +328,14 @@ const params = {
       index: {
         introduction: {
           heading: 'Data Commons',
-          text: `The National Cancer Institute Data Commons Framework supports the management, analysis and sharing of data for the research community.`,
+          text: 'The National Cancer Institute Data Commons Framework supports the management, analysis and sharing of data for the research community.',
           link: '/submission',
         },
         buttons: [
           {
             name: 'Define Data Field',
             icon: 'data-field-define',
-            body: `The National Cancer Institute Data Commons Framework defines the data in a general way. Please study the dictionary before you start browsing.`,
+            body: 'The National Cancer Institute Data Commons Framework defines the data in a general way. Please study the dictionary before you start browsing.',
             link: '/DD',
             label: 'Learn more',
           },
