@@ -681,7 +681,6 @@ const params = {
           { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
           { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'exploration' },
           { icon: 'query', link: '/query', color: '#a2a2a2', name: 'query' },
-          { icon: 'workspace', link: '#hostname#jupyter/', color: '#a2a2a2', name: 'workspace' },
           { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'profile' },
         ],
       },
