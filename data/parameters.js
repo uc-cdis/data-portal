@@ -633,7 +633,7 @@ const params = {
       projectDetails: 'boardCounts',
     },
     components: {
-      appName: 'Gabriella Miller Kids First Pediatric Data Catalog Portal',
+      appName: 'Kids First Data Catalog Portal',
       index: {
         introduction: {
           heading: 'Kids First Data Catalog',
