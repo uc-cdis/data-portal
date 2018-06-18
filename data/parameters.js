@@ -54,9 +54,9 @@ const params = {
     graphql: {
       boardCounts: [
         {
-          graphql: '_case_count',
-          name: 'Case',
-          plural: 'Cases',
+          graphql: '_subject_count',
+          name: 'Subject',
+          plural: 'Subjects',
         },
         {
           graphql: '_study_count',
@@ -71,8 +71,8 @@ const params = {
       ],
       chartCounts: [
         {
-          graphql: '_case_count',
-          name: 'Case',
+          graphql: '_subject_count',
+          name: 'Subject',
         },
         {
           graphql: '_study_count',
