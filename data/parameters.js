@@ -667,23 +667,21 @@ const params = {
       projectDetails: 'boardCounts',
     },
     components: {
-      appName: 'Gabriella Miller Kids First Pediatric Data Coordinating Center Portal',
+      appName: 'Kids First Data Catalog Portal',
       index: {
         introduction: {
-          heading: 'Kids First Data Commons',
-          text: 'The Kids First data commons supports the management, analysis and sharing of data for ' +
-          'the pediatric oncology research community and aims to accelerate discovery and development of therapies, diagnostic tests, ' +
-          'and other technologies for the treatment and prevention of cancer in children. ' +
-          'The data commons supports cross-project analyses by harmonizing data from different projects through ' +
-          'the collaborative development of a data dictionary, providing an API for data queries and download, ' +
-          'and providing a cloud-based analysis workspace with rich tools and resources.',
+          heading: 'Kids First Data Catalog',
+          text: 'The Kids First Data Catalog supports the Kids First Data Resource Center by providing ' +
+          'digital object services that allow interoperability between data commons, including ' +
+          'authentication and authorization for controlled access data. For more information about the ' +
+          'overall Kids First Data Resource Center see https://kidsfirstdrc.org.',
           link: '/submission',
         },
         buttons: [
           {
             name: 'Define Data Field',
             icon: 'data-field-define',
-            body: 'The Data Commons Pilot define the data in a general way. Please study the dictionary before you start browsing.',
+            body: 'The Data Catalog defines the data in a general way. Please study the dictionary before you start browsing.',
             link: '/DD',
             label: 'Learn more',
           },
@@ -712,21 +710,20 @@ const params = {
         ],
       },
       navigation: {
-        title: 'Kids First Data Commons',
+        title: 'Kids First Data Catalog',
         items: [
           { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
           { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'exploration' },
           { icon: 'query', link: '/query', color: '#a2a2a2', name: 'query' },
-          { icon: 'workspace', link: '#hostname#jupyter/', color: '#a2a2a2', name: 'workspace' },
           { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'profile' },
         ],
       },
       login: {
-        title: 'Kids First Data Resource Center',
+        title: 'Kids First Data Catalog',
         subTitle: 'search, compare, and download data',
-        text: 'This website provides a centralized, cloud-based discovery portal for childhood cancer and structural birth defects genetic data to help accelerate research and promote new discoveries in pediatric oncology.',
+        text: 'The Kids First Data Catalog supports the Kids First Data Resource Center by providing a digital object services that allow interoperability between data commons, including authentication and authorization for controlled access data. For more information about the overall Kids First Data Resource Center see https://kidsfirstdrc.org.',
         contact: 'If you have any questions about access or the registration process, please contact ',
-        email: 'support@datacommons.io',
+        email: 'support@kidsfirstdrc.org',
       },
     },
   },
