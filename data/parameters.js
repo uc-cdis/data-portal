@@ -638,7 +638,7 @@ const params = {
         introduction: {
           heading: 'Kids First Data Catalog',
           text: 'The Kids First Data Catalog supports the Kids First Data Resource Center by providing ' +
-          'a digital object services that allow interoperability between data commons, including ' +
+          'digital object services that allow interoperability between data commons, including ' +
           'authentication and authorization for controlled access data. For more information about the ' +
           'overall Kids First Data Resource Center see https://kidsfirstdrc.org.',
           link: '/submission',
