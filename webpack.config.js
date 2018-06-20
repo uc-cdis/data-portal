@@ -9,6 +9,7 @@ const title = {
   acct: 'ACCOuNT Data Commons',
   bhc: 'Brain Commons',
   bpa: 'BPA Data Commons',
+  dcf: 'National Cancer Institue Data Commons Framework',
   gtex: 'GTEx & TOPMed Data Commons Submission Portal',
   dev: 'Generic Data Commons',
   edc: 'Environmental Data Commons',
