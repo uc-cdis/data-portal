@@ -14,6 +14,40 @@ const commonNames = {
 
 const params = {
   acct: {
+    graphql: {
+      boardCounts: [
+        {
+          graphql: '_subject_count',
+          name: 'Subject',
+          plural: 'Subjects',
+        },
+        {
+          graphql: '_study_count',
+          name: 'Study',
+          plural: 'Studies',
+        },
+        {
+          graphql: '_aliquot_count',
+          name: 'Aliquot',
+          plural: 'Aliquots',
+        },
+      ],
+      chartCounts: [
+        {
+          graphql: '_subject_count',
+          name: 'Subject',
+        },
+        {
+          graphql: '_study_count',
+          name: 'Study',
+        },
+        {
+          graphql: '_aliquot_count',
+          name: 'Aliquot',
+        },
+      ],
+      projectDetails: 'boardCounts',
+    },
     components: {
       appName: 'ACCOuNT Data Commons Portal',
       navigation: {
