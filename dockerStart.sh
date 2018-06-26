@@ -3,7 +3,7 @@
 # Little startup script fetches data dictionary, and runs the relay
 # compiler, then webpack before launching nginx
 #
-set -eu
+# set -eu
 
 if [ -f custom/favicon/$APP-favicon.ico ]; then
   cp custom/favicon/$APP-favicon.ico src/img/favicon.ico
