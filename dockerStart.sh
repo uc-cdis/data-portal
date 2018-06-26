@@ -30,7 +30,7 @@ rm -rf custom
 npm run schema
 until [$? -eq 0]
 do
-    sleep 5
+    sleep 1
     npm run schema
 done
 npm run relay
