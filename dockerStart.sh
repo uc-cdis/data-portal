@@ -3,7 +3,7 @@
 # Little startup script fetches data dictionary, and runs the relay
 # compiler, then webpack before launching nginx
 #
-set -eu
+# set -eu
 
 if [ -f custom/favicon/$APP-favicon.ico ]; then
   cp custom/favicon/$APP-favicon.ico src/img/favicon.ico
@@ -28,6 +28,11 @@ rm -rf custom
 #    to fetch the dictionary from at startup
 #
 npm run schema
+until [$? -eq 0]
+do
+    sleep 1
+    npm run schema
+done
 npm run relay
 npm run params
 NODE_ENV=production ./node_modules/.bin/webpack --bail
