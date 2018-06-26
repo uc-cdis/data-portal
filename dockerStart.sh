@@ -28,6 +28,11 @@ rm -rf custom
 #    to fetch the dictionary from at startup
 #
 npm run schema
+until [$? -eq 0]
+do
+    sleep 5
+    npm run schema
+done
 npm run relay
 npm run params
 NODE_ENV=production ./node_modules/.bin/webpack --bail
