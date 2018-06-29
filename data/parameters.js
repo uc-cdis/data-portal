@@ -844,6 +844,78 @@ const params = {
       },
     },
   },
+  'ncrdc-demo': {
+    graphql: {
+      boardCounts: [
+        {
+          graphql: '_subject_count',
+          name: 'Subject',
+          plural: 'Subjects',
+        },
+        {
+          graphql: '_study_count',
+          name: 'Study',
+          plural: 'Studies',
+        },
+        {
+          graphql: '_aliquot_count',
+          name: 'Aliquot',
+          plural: 'Aliquots',
+        },
+      ],
+      chartCounts: [
+        {
+          graphql: '_subject_count',
+          name: 'Subject',
+        },
+        {
+          graphql: '_study_count',
+          name: 'Study',
+        },
+        {
+          graphql: '_aliquot_count',
+          name: 'Aliquot',
+        },
+      ],
+      projectDetails: 'boardCounts',
+    },
+    components: {
+      appName: 'DCF Sandbox',
+      navigation: {
+        title: 'DCF Sandbox',
+        items: [
+          {
+            icon: 'dictionary',
+            link: '/DD',
+            color: '#a2a2a2',
+            name: 'Dictionary',
+          },
+          {
+            icon: 'exploration',
+            link: '/files',
+            color: '#a2a2a2',
+            name: 'Exploration',
+          },
+          {
+            icon: 'query', link: '/query', color: '#a2a2a2', name: 'query',
+          },
+          {
+            icon: 'profile',
+            link: '/identity',
+            color: '#a2a2a2',
+            name: 'Profile',
+          },
+        ],
+      },
+      login: {
+        title: 'DCF Sandbox',
+        subTitle: 'explore, analyze, and share research data',
+        text: 'The Data Common Frameworks (DCF) supports the management, analysis and sharing of many different types of biomedical for the research community with the goal of accelerating research in the molecular basis for disease and matching targeted therapies that factor in each patient\'s unique biology.',
+        contact: 'If you have any questions about access or the registration process, please contact ',
+        email: 'support@datacommons.io',
+      },
+    },
+  },
   ndh: {
     gaTrackingId: 'UA-119127212-1',
     graphql: {
