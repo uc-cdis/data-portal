@@ -910,7 +910,7 @@ const params = {
       login: {
         title: 'DCF Sandbox',
         subTitle: 'explore, analyze, and share research data',
-        text: 'The Data Common Frameworks (DCF) supports the management, analysis and sharing of many different types of biomedical for the research community with the goal of accelerating research in the molecular basis for disease and matching targeted therapies that factor in each patient\'s unique biology.',
+        text: 'The Data Common Frameworks (DCF) supports the management, analysis and sharing of many different types of biomedical data for the research community with the goal of accelerating research in the molecular basis for disease and matching targeted therapies that factor in each patient\'s unique biology.',
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@datacommons.io',
       },
