@@ -31,7 +31,7 @@ import { basename, dev, gaDebug } from './localconf';
 import dictIcons from './img/icons/index';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 import ReactGA from 'react-ga';
-import { gaTracking } from './params';
+import { gaTrackingId } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 
 
@@ -44,7 +44,7 @@ async function init() {
   const store = await getReduxStore();
 
   // asyncSetInterval(() => store.dispatch(fetchUser), 60000);
-  ReactGA.initialize(gaTracking);
+  ReactGA.initialize(gaTrackingId);
   ReactGA.pageview(window.location.pathname + window.location.search);
   await Promise.all(
     [
@@ -69,7 +69,7 @@ async function init() {
           <MuiThemeProvider>
             <BrowserRouter basename={basename}>
               <OuterWrapper>
-                { GA.init(gaTracking, dev, gaDebug) && <RouteTracker /> }
+                { GA.init(gaTrackingId, dev, gaDebug) && <RouteTracker /> }
                 <ReduxTopBar />
                 <ReduxNavBar />
                 <Box background={background} style={{ width: '100%', margin: 'auto' }}>
