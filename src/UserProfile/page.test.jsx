@@ -2,10 +2,10 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
-import UserProfile, { CREATE_API_KEY_BTN } from './UserProfile';
+import UserProfilePage, { CREATE_API_KEY_BTN } from './page';
 import { DELETE_BTN } from '../components/tables/KeyTable';
 
-describe('the UserProfile component', () => {
+describe('the Page component', () => {
   const testProps = {
     user: {
       project_access: {
@@ -31,7 +31,7 @@ describe('the UserProfile component', () => {
   it('lists access keys', () => {
     const $vdom = mount(
       <StaticRouter location={{ pathname: '/identity' }}>
-        <UserProfile
+        <UserProfilePage
           {...testProps}
           onCreateKey={noop}
           onClearCreationSession={noop}
@@ -48,7 +48,7 @@ describe('the UserProfile component', () => {
   it('triggers create-key events', (done) => {
     const $vdom = mount(
       <StaticRouter location={{ pathname: '/identity' }}>
-        <UserProfile
+        <UserProfilePage
           {...testProps}
           onCreateKey={() => { done(); }}
           onClearCreationSession={noop}
@@ -67,7 +67,7 @@ describe('the UserProfile component', () => {
   it('triggers delete-key events', (done) => {
     const $vdom = mount(
       <StaticRouter location={{ pathname: '/identity' }}>
-        <UserProfile
+        <UserProfilePage
           {...testProps}
           onCreateKey={noop}
           onClearCreationSession={noop}

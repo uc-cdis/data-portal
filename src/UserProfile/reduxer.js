@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import UserProfile from './UserProfile';
+import UserProfilePage from './page';
 import { fetchWithCreds, updatePopup } from '../actions';
 import { credentialCdisPath } from '../localconf';
 
@@ -128,5 +128,5 @@ const mapDispatchToProps = dispatch => ({
   onClearCreationSession: () => dispatch(clearCreationSession()),
 });
 
-const ReduxUserProfile = connect(mapStateToProps, mapDispatchToProps)(UserProfile);
-export default ReduxUserProfile;
+const Reduxer = connect(mapStateToProps, mapDispatchToProps)(UserProfilePage);
+export default Reduxer;

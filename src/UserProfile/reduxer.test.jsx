@@ -3,8 +3,8 @@ import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import { mount } from 'enzyme';
 
-import ReduxUserProfile, { createKey, deleteKey } from './ReduxUserProfile';
-import { CREATE_API_KEY_BTN } from './UserProfile';
+import Reduxer, { createKey, deleteKey } from './reduxer';
+import { CREATE_API_KEY_BTN } from './page';
 
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
@@ -56,7 +56,7 @@ describe('the userProfile component', () => {
     fetch.mockResponseOnce(JSON.stringify(expectedData), { status: 200 });
     fetch.mockResponseOnce(JSON.stringify(expectedListKey), { status: 200 });
 
-    const userProfilePage = mount(<ReduxUserProfile />, { context: { store } });
+    const userProfilePage = mount(<Reduxer />, { context: { store } });
     const btn = userProfilePage.find(`button[name="${CREATE_API_KEY_BTN}"]`);
     expect(btn).toHaveLength(1);
     btn.simulate('click');
