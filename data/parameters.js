@@ -14,6 +14,7 @@ const commonNames = {
 
 const params = {
   acct: {
+    gaTrackingId: 'UA-119127212-11',
     graphql: {
       boardCounts: [
         {
@@ -549,6 +550,7 @@ const params = {
     },
   },
   genomel: {
+    gaTrackingId: 'UA-119127212-12',
     graphql: {
       boardCounts: [
         {
@@ -845,6 +847,7 @@ const params = {
     },
   },
   'ncrdc-demo': {
+    gaTrackingId: 'UA-119127212-9',
     graphql: {
       boardCounts: [
         {
@@ -1020,6 +1023,7 @@ const params = {
     },
   },
   va: {
+    gaTrackingId: 'UA-119127212-10',
     graphql: {
       boardCounts: [
         {
