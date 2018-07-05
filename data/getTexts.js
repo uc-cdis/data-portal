@@ -24,7 +24,7 @@ function paramByDefault(prs, key) {
 }
 
 const defaultTexts = paramByDefault(params, 'components');
-const defaultGA = paramByDefault(params, 'gaTrackingId');
+const defaultGA = paramByApp(params, 'gaTrackingId');
 
 function fillDefaultValues(values, defaultValues) {
   const res = values;
