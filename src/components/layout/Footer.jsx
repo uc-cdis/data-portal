@@ -45,7 +45,7 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
       <div style={{ display: 'inline-flex', float: 'left', width: '720px', height: '100px' }}>
         {
           [{ name: 'Dictionary', version: dictionaryVersion },
-            { name: 'API', version: apiVersion },
+            { name: 'Submission', version: apiVersion },
             { name: 'Portal', version: portalVersion }].map(
             item => (<Versions key={item.name}>
               <div className="h4-typo" style={{ color: 'white', verticalAlign: 'middle' }}>{item.name}</div>
