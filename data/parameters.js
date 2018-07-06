@@ -763,9 +763,9 @@ const params = {
           plural: 'Participants',
         },
         {
-          graphql: '_family_relationship_count',
-          name: 'Family relationship',
-          plural: 'Family relationships',
+          graphql: '_family_count',
+          name: 'Family',
+          plural: 'Families',
         },
         {
           graphql: '_aliquot_count',
@@ -776,11 +776,11 @@ const params = {
       chartCounts: [
         {
           graphql: '_participant_count',
-          name: 'Case',
+          name: 'Participant',
         },
         {
-          graphql: '_family_relationship_count',
-          name: 'Sample',
+          graphql: '_family_count',
+          name: 'Family',
         },
       ],
       projectDetails: 'boardCounts',
@@ -937,11 +937,6 @@ const params = {
           graphql: '_summary_lab_result_count',
           name: 'Lab record',
           plural: 'Lab records',
-        },
-        {
-          graphql: '_summary_socio_demographic_count',
-          name: 'Socio-demographic record',
-          plural: 'Socio-demographic records',
         },
       ],
       chartCounts: [

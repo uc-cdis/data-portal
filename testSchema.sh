@@ -10,7 +10,7 @@ testCases=(
 [dev]="dev.planx-pla.net"
 [edc]="portal.occ-data.org"
 [genomel]="genomel.bionimbus.org"
-[kf]="gen3qa.kids-first.io"
+[kf]="dcf-interop.kidsfirstdrc.org"
 [ndh]="niaid.bionimbus.org"
 )
 for APP in "${!testCases[@]}"; do
