@@ -8,6 +8,7 @@ const commonNames = {
   gdc: 'Jamboree',
   gtex: 'Data Commons Pilot & Data STAGE',
   kf: 'Kids First',
+  kfDcfInterop: 'Kids First',
   ndh: 'NIAID',
   default: 'Generic',
 };
@@ -846,6 +847,100 @@ const params = {
       },
     },
   },
+  kfDcfInterop: {
+    // TODO - new GA tracking id?
+    gaTrackingId: 'UA-119127212-6',
+    graphql: {
+      boardCounts: [
+        {
+          graphql: '_participant_count',
+          name: 'Participant',
+          plural: 'Participants',
+        },
+        {
+          graphql: '_family_count',
+          name: 'Family',
+          plural: 'Families',
+        },
+        {
+          graphql: '_aliquot_count',
+          name: 'Aliquot',
+          plural: 'Aliquots',
+        },
+      ],
+      chartCounts: [
+        {
+          graphql: '_participant_count',
+          name: 'Participant',
+        },
+        {
+          graphql: '_family_count',
+          name: 'Family',
+        },
+      ],
+      projectDetails: 'boardCounts',
+    },
+    components: {
+      appName: 'Kids First Data Catalog Portal',
+      index: {
+        introduction: {
+          heading: 'Kids First Data Catalog',
+          text: 'The Kids First Data Catalog supports the Kids First Data Resource Center by providing ' +
+          'digital object services that allow interoperability between data commons, including ' +
+          'authentication and authorization for controlled access data. For more information about the ' +
+          'overall Kids First Data Resource Center see https://kidsfirstdrc.org.',
+          link: '/submission',
+        },
+        buttons: [
+          {
+            name: 'Define Data Field',
+            icon: 'data-field-define',
+            body: 'The Data Catalog defines the data in a general way. Please study the dictionary before you start browsing.',
+            link: '/DD',
+            label: 'Learn more',
+          },
+          {
+            name: 'Explore Data',
+            icon: 'data-explore',
+            body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
+            link: '#hostname#shiny',
+            label: 'Explore data',
+          },
+          {
+            name: 'Access Data',
+            icon: 'data-access',
+            body: 'Use our selected tool to filter out the data you need.',
+            link: '/query',
+            label: 'Query data',
+
+          },
+          {
+            name: 'Analyze Data',
+            icon: 'data-analyze',
+            body: 'Analyze your selected cases using Jupyter Notebooks in our secure cloud environment',
+            link: '#hostname#workspace/',
+            label: 'Run analysis',
+          },
+        ],
+      },
+      navigation: {
+        title: 'Kids First Data Catalog',
+        items: [
+          { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
+          { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'exploration' },
+          { icon: 'query', link: '/query', color: '#a2a2a2', name: 'query' },
+          { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'profile' },
+        ],
+      },
+      login: {
+        title: 'Kids First Data Catalog',
+        subTitle: 'search, compare, and download data',
+        text: 'The Kids First Data Catalog supports the Kids First Data Resource Center by providing a digital object services that allow interoperability between data commons, including authentication and authorization for controlled access data. For more information about the overall Kids First Data Resource Center see https://kidsfirstdrc.org.',
+        contact: 'If you have any questions about access or the registration process, please contact ',
+        email: 'support@kidsfirstdrc.org',
+      },
+    },
+  },
   'ncrdc-demo': {
     gaTrackingId: 'UA-119127212-9',
     graphql: {
@@ -937,11 +1032,6 @@ const params = {
           graphql: '_summary_lab_result_count',
           name: 'Lab record',
           plural: 'Lab records',
-        },
-        {
-          graphql: '_summary_socio_demographic_count',
-          name: 'Socio-demographic record',
-          plural: 'Socio-demographic records',
         },
       ],
       chartCounts: [
