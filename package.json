@@ -60,9 +60,12 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^3.4.8",
+    "@storybook/cli": "^4.0.0-alpha.12",
+    "@storybook/react": "^4.0.0-alpha.12",
     "babel-eslint": "^8.0.0",
     "babel-jest": "^21.2.0",
-    "babel-loader": "^6.4.1",
+    "babel-loader": "^7.0.0",
     "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-relay": "^1.3.0",
     "babel-plugin-syntax-jsx": "^6.18.0",
@@ -113,7 +116,8 @@
     "schema": "node ./data/getSchema",
     "params": "node ./data/getTexts > src/params.js",
     "eslint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --fix src",
-    "elint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'"
+    "elint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'",
+    "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "graphql": {
     "file": "./data/schema.json"
