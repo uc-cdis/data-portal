@@ -9,15 +9,15 @@ import IconicLink from '../components/buttons/IconicLink';
 storiesOf('IconicButton', module)
   .add('with caption', () => (
     <IconicButton
-    onClick={action('clicked')}
-    caption="Hello Button"
+      onClick={action('clicked')}
+      caption="Hello Button"
     />
   ))
   .add('with color', () => (
     <IconicButton
-    onClick={action('clicked')}
-    iconColor="#ef8523"
-    caption="When you click me, I'm orange!"
+      onClick={action('clicked')}
+      iconColor="#ef8523"
+      caption="When you click me, I'm orange!"
     />
   ));
 
