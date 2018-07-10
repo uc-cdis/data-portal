@@ -1,6 +1,5 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 
 import 'react-select/dist/react-select.css';
 import '../css/base.less';
@@ -34,4 +33,4 @@ const countItems = [
 storiesOf('CountCard', module)
   .add('default', () => (
     <CountCard countItems={countItems} />
-  ))
+  ));
