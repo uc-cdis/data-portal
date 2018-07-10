@@ -1,18 +1,37 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import IconicButton from '../components/buttons/IconicButton';
 
-storiesOf('IconicButton', module)
-  .add('with caption', () => (
-    <IconicButton
-      onClick={action('clicked')}
-      caption="Hello Button"
-    />
+import 'react-select/dist/react-select.css';
+import '../css/base.less';
+import '../css/graphiql.css';
+
+import CountCard from '../components/CountCard';
+
+const countItems = [
+  {
+    label: "test1",
+    value: "1"
+  },
+  {
+    label: "test2",
+    value: "2",
+  },
+  {
+    label: "test3",
+    value: "3",
+  },
+  {
+    label: "test4",
+    value: "4",
+  },
+  {
+    label: "test5",
+    value: "5",
+  }
+];
+
+storiesOf('CountCard', module)
+  .add('default', () => (
+    <CountCard countItems={countItems} />
   ))
-  .add('with color', () => (
-    <IconicButton
-      onClick={action('clicked')}
-      iconColor="#000"
-    />
-  ));

@@ -24,20 +24,24 @@ module.exports = {
       {
         test: /\.less$/,
         loaders: [
-          'style',
-          'css',
-          'less',
+          'style-loader',
+          'css-loader',
+          'less-loader',
         ]
       },
       {
         test: /\.css$/,
-        loader: 'style!css',
+        loader: 'style-loader!css-loader',
       },
       {
         test: /\.svg$/,
         loaders: ['babel-loader', 'react-svg-loader'],
       },
-      { test: /\.flow$/, loader: 'ignore-loader' }
+      {
+        test: /\.(png|jpg|eot|ttf|woff)$/,
+        loader: 'url-loader',
+      },
+      { test: /\.flow$/, loader: 'ignore-loader' },
     ]
   },
   resolve: {
