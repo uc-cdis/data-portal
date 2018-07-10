@@ -21,29 +21,29 @@ storiesOf('IconicButton', module)
     />
   ));
 
-const context = {}
+const context = {};
 
-  storiesOf('IconicLink', module)
-    .add('with caption', () => (
-      <StaticRouter context={context}>
-        <Route>
-          <IconicLink
-            onClick={action('clicked')}
-            link='test.com'
-            iconColor="#ef8523"
-            caption="Hello Link"
-          />
-        </Route>
-      </StaticRouter>
-    ))
-    .add('with color', () => (
-      <StaticRouter context={context}>
-        <Route>
-          <IconicLink
-            onClick={action('clicked')}
-            link='test.com'
-            caption="When you click me, I'm orange!"
-          />
-        </Route>
-      </StaticRouter>
-    ));
+storiesOf('IconicLink', module)
+.add('with caption', () => (
+  <StaticRouter context={context}>
+    <Route>
+      <IconicLink
+        onClick={action('clicked')}
+        link="test.com"
+        iconColor="#ef8523"
+        caption="Hello Link"
+      />
+    </Route>
+  </StaticRouter>
+))
+.add('with color', () => (
+  <StaticRouter context={context}>
+    <Route>
+      <IconicLink
+        onClick={action('clicked')}
+        link='test.com'
+        caption="When you click me, I'm orange!"
+      />
+    </Route>
+  </StaticRouter>
+));
