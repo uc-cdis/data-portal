@@ -27,13 +27,14 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar } from './Top/reduxer';
 import Footer from './components/layout/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
-import { basename, dev, gaDebug } from './localconf';
+import { basename, dev, gaDebug, devFeaturesEnabled } from './localconf';
 import dictIcons from './img/icons/index';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 import ReactGA from 'react-ga';
 import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/DataExplorer';
+import FakeDataExplorer from './DataExplorer/FakeDataExplorer';
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -61,7 +62,7 @@ async function init() {
     ],
   );
   const background = '#f5f5f5'; // for now
-
+  console.log(dev);
   render(
     <div>
       <Provider store={store}>
@@ -190,10 +191,13 @@ async function init() {
                         }
                       }
                     />
-                    <Route
-                      path="/explorer"
-                      component={DataExplorer}
-                    />
+                    { devFeaturesEnabled ?
+                      <Route
+                        path="/explorer"
+                        component={DataExplorer}
+                      />
+                      : null
+                    }
                     <Route
                       path="/:project"
                       component={

@@ -14,6 +14,7 @@ function buildConfig(opts) {
     basename: process.env.BASENAME || '/',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
+    devFeaturesEnabled: true,
   };
 
   //
@@ -31,6 +32,7 @@ function buildConfig(opts) {
     basename,
     hostname,
     gaDebug,
+    devFeaturesEnabled,
   } = Object.assign({}, defaults, opts);
 
   const submissionApiPath = `${hostname}api/v0/submission/`;
@@ -97,6 +99,7 @@ function buildConfig(opts) {
     login,
     loginPath,
     requiredCerts,
+    devFeaturesEnabled,
   };
 }
 
