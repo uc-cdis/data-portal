@@ -10,7 +10,7 @@ To verify it was set correctly, use:
 
 function isEnabled(featureName) {
   const featureFlags = JSON.parse(window.sessionStorage.getItem('gen3Features')) || {};
-  return !! featureFlags[featureName];
+  return !!featureFlags[featureName];
 }
 
 export default isEnabled;
