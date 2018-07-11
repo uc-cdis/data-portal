@@ -5,7 +5,7 @@ In the browser dev tools console, type:
 (replace 'featureName' with the feature to be enabled.)
 
 To verify it was set correctly, use:
-`JSON.parse(sessionStorage.getItem('gen3Features'))['featureMame']
+`JSON.parse(sessionStorage.getItem('gen3Features'))['featureName']
 */
 
 function isEnabled(featureName) {
