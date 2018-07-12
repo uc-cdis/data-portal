@@ -71,6 +71,12 @@ const params = {
             icon: 'query', link: '/query', color: '#a2a2a2', name: 'query',
           },
           {
+            icon: 'workspace',
+            link: '#hostname#workspace/',
+            color: '#a2a2a2',
+            name: 'Workspace',
+          },
+          {
             icon: 'profile',
             link: '/identity',
             color: '#a2a2a2',
