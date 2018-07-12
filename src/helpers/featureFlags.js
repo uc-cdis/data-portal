@@ -16,8 +16,8 @@ import { params } from '../../data/parameters';
   Will return true if either of these types of flags is set to true
 */
 function isEnabled(featureName) {
-  let compileTimeFlags = paramByApp(params, 'featureFlags') || {};
-  let runTimeFlags = JSON.parse(window.sessionStorage.getItem('gen3Features')) || {};
+  const compileTimeFlags = paramByApp(params, 'featureFlags') || {};
+  const runTimeFlags = JSON.parse(window.sessionStorage.getItem('gen3Features')) || {};
   return !!compileTimeFlags[featureName] || !!runTimeFlags[featureName];
 }
 
