@@ -109,6 +109,12 @@ const params = {
             icon: 'query', link: '/query', color: '#a2a2a2', name: 'query',
           },
           {
+            icon: 'workspace',
+            link: '#hostname#workspace/',
+            color: '#a2a2a2',
+            name: 'Workspace',
+          },
+          {
             icon: 'profile',
             link: '/identity',
             color: '#a2a2a2',
@@ -1373,6 +1379,9 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@datacommons.io',
       },
+    },
+    featureFlags: {
+      explorer: true,
     },
   },
 };
