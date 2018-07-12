@@ -5,7 +5,7 @@ jest.mock('../../data/parameters', () => ({
         testFlag: false,
       },
     },
-  }
+  },
 }));
 
 import isEnabled from './featureFlags';
