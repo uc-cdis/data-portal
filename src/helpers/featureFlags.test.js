@@ -4,7 +4,7 @@ jest.mock('../../data/parameters', () => ({
       featureFlags: {
         testFlag: false,
       },
-    }
+    },
   }
 }));
 
