@@ -1342,6 +1342,9 @@ const params = {
         email: 'support@datacommons.io',
       },
     },
+    featureFlags: {
+      explorer: true,
+    },
   },
 };
 
