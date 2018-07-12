@@ -93,16 +93,13 @@ export class ExplorerTableComponent extends Component {
     const filename = ExplorerTableComponent.renderFileName(user, projectAvail,
       file.project_id, file.did, file.name);
     const filesize = ExplorerTableComponent.humanFileSize(file.size);
-    console.log("file attributes:");
-    console.log(Object.keys(file));
     return (
       <TableRow key={i}>
         <TableData c_width={columnWidths[0]}>
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
         </TableData>
         <TableData c_width={columnWidths[1]}>
-          {filename}
-          // <Link to={`/${file.object_id}`}>{filename}</Link>
+          <Link to={`/files/${file.object_id}`}>{filename}</Link>
         </TableData>
         <TableData c_width={columnWidths[2]}>{file.format}</TableData>
         <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{filesize}</TableData>
