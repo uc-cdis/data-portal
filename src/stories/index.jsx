@@ -5,6 +5,7 @@ import '../css/base.less';
 import '../css/graphiql.css';
 
 import CountCard from '../components/CountCard';
+import DataSummaryCardGroup from '../components/DataSummaryCardGroup';
 
 const countItems = [
   {
@@ -29,7 +30,10 @@ const countItems = [
   },
 ];
 
-storiesOf('CountCard', module)
-  .add('default', () => (
+storiesOf('Summaries', module)
+  .add('CountCard', () => (
     <CountCard countItems={countItems} />
-  ));
+  ))
+  .add('DataSummaryCardGroup', () => (
+    <DataSummaryCardGroup summaryItems={countItems} connected />
+  ))
