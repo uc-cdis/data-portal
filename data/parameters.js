@@ -972,7 +972,7 @@ const params = {
         ],
       },
       navigation: {
-        title: 'Gen3 Data Commons Cataol',
+        title: 'Gen3 Data Commons Catalog',
         items: [
           { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
           { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'exploration' },
