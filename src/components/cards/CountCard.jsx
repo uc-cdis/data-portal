@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import CountBox from './CountBox';
 
 const Title = styled.div`
   height: 120px;
@@ -14,32 +15,6 @@ const TopBoard = styled.div`
   width: 1220px;
   display: inline-flex;
 `;
-
-const CountBox = styled.div`
-  display: inline-block;
-  &:first-child {
-    margin-left: 0px;
-  }
-  float: left;
-  background-color: #ffffff;
-  width: 180px;
-  height: 120px;
-  padding: 20px;
-  margin-left: 15px;
-  position: relative;
-`;
-
-const CountBoxTitle = styled.div`
-  margin-bottom: 15px;
-  vertical-align: top;
-`;
-
-const CountBoxNumber = styled.div`
-  position: absolute;
-  vertical-align: bottom;
-  bottom: 20px;
-`;
-
 
 /**
  * Little card with a bunch of counters on it for cases, experiments, files, ...
@@ -55,14 +30,7 @@ class CountCard extends Component {
           {
             this.props.countItems.map(
               item => (
-                <CountBox key={item.label}>
-                  <CountBoxTitle className="h4-typo">
-                    {item.label}
-                  </CountBoxTitle>
-                  <CountBoxNumber className="special-number">
-                    {item.value}
-                  </CountBoxNumber>
-                </CountBox>
+                <CountBox key={item.label} label={item.label} value={item.value} />
               ),
             )
           }
