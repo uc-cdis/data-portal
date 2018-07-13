@@ -925,14 +925,18 @@ const params = {
       projectDetails: 'boardCounts',
     },
     components: {
-      appName: 'Kids First Data Catalog Portal',
+      appName: 'Gen3 Data Commons Catalog',
       index: {
         introduction: {
-          heading: 'Kids First Data Catalog',
-          text: 'The Kids First Data Catalog supports the Kids First Data Resource Center by providing ' +
-          'digital object services that allow interoperability between data commons, including ' +
-          'authentication and authorization for controlled access data. For more information about the ' +
-          'overall Kids First Data Resource Center see https://kidsfirstdrc.org.',
+          heading: 'Gen3 Data Commons Catalog',
+          text: 'Gen3 is an open source Data Commons platform (https://gen3.org/) supporting a number of ' +
+          'large-scale NIH- and non-NIH Commons including the NCI\'s Genomic Data Commons, NHLBI\'s Data ' +
+          'Stage, the NIH Data Commons Pilot, and the Bloodpac Data Commons. As such the Gen3 Data ' +
+          'Catalog supports the Kids First Data Resource Center by providing digital object services that ' +
+          'allow interoperability between existing and future Gen3 data commons, including authentication ' +
+          'and authorization for controlled access data.' +
+          'For more information about the overall Kids First Data Resource Center and associated tools/portals' +
+          'see https://kidsfirstdrc.org.',
           link: '/submission',
         },
         buttons: [
@@ -968,7 +972,7 @@ const params = {
         ],
       },
       navigation: {
-        title: 'Kids First Data Catalog',
+        title: 'Gen3 Data Commons Cataol',
         items: [
           { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
           { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'exploration' },
@@ -977,9 +981,9 @@ const params = {
         ],
       },
       login: {
-        title: 'Kids First Data Catalog',
+        title: 'Gen3 Data Commons',
         subTitle: 'search, compare, and download data',
-        text: 'The Kids First Data Catalog supports the Kids First Data Resource Center by providing a digital object services that allow interoperability between data commons, including authentication and authorization for controlled access data. For more information about the overall Kids First Data Resource Center see https://kidsfirstdrc.org.',
+        text: 'Gen3 is an open source Data Commons platform (https://gen3.org/) supporting a number of large-scale NIH- and non-NIH Commons including the NCI\'s Genomic Data Commons, NHLBI\'s Data Stage, the NIH Data Commons Pilot, and the Bloodpac Data Commons. As such the Gen3 Data Catalog supports the Kids First Data Resource Center by providing digital object services that allow interoperability between existing and future Gen3 data commons, including authentication and authorization for controlled access data. For more information about the overall Kids First Data Resource Center and associated tools/portals see https://kidsfirstdrc.org.',
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@kidsfirstdrc.org',
       },
