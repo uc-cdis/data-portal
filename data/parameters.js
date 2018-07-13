@@ -8,7 +8,7 @@ const commonNames = {
   gdc: 'Jamboree',
   gtex: 'Data Commons Pilot & Data STAGE',
   kf: 'Kids First',
-  kfDcfInterop: 'Kids First',
+  kfDcfInterop: 'Gen3 Interop',
   ndh: 'NIAID',
   default: 'Generic',
 };
