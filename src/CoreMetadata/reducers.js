@@ -3,7 +3,7 @@ const coreMetadata = (state = {}, action) => {
   case 'RECEIVE_CORE_METADATA':
     return { ...state, metadata: action.metadata };
   case 'CORE_METADATA_ERROR':
-    return { ...state, coreMetadata_error: action.error };
+    return { ...state, metadata_error: action.error };
   default:
     return state;
   }

@@ -9,12 +9,6 @@ import IconComponent from '../components/Icon';
 
 const BACK_CAPTION = 'Back to data overview'
 
-export const Column = styled.div`
-  float: left;
-  width: 50%;
-  padding: 20px 50px 20px 0px;
-`;
-
 export const BackComponent = styled.div`
   display: inline;
   padding-right: 15px;
@@ -38,14 +32,28 @@ class BackLink extends Component {
   }
 }
 
+export const ColumnL = styled.div`
+  float: left;
+  width: 50%;
+  padding: 20px 25px 20px 0px;
+`;
+
+export const ColumnR = styled.div`
+  float: left;
+  width: 50%;
+  padding: 20px 0px 20px 25px;
+`;
+
 class CoreMetadataPage extends Component {
   render() {
     return (
       <div>
         <BackLink/>
         <div>
-          <Column><ReduxFileTypePicture dictIcons={dictIcons}/></Column>
-          <Column><ReduxCoreMetadataHeader/></Column>
+          <ColumnL>
+            <ReduxFileTypePicture dictIcons={dictIcons}/>
+          </ColumnL>
+          <ColumnR><ReduxCoreMetadataHeader/></ColumnR>
         </div>
         <ReduxCoreMetadataTable/>
       </div>

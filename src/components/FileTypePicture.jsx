@@ -17,15 +17,30 @@ export const CenteredPicture = styled.div`
   padding-bottom: 50px;
 `;
 
+function dataFormatToFileType(data_format) {
+  const file_types = ['csv', 'tar', 'png', 'txt', 'zip', 'raw', 'tsv'];
+  if (!(data_format.toLowerCase() in file_types))
+    return undefined;
+  return data_format.toLowerCase();
+}
+
 class FileTypePicture extends Component {
     render() {
-      return (
-          <WhiteContainer>
-            <CenteredPicture>
-              <IconComponent dictIcons={this.props.dictIcons} iconName="zip" height="100%" />
-            </CenteredPicture>
-          </WhiteContainer>
+      let file_type = dataFormatToFileType(this.props.data_format);
+      if (!file_type)
+        return null;
+      let content = (
+        <WhiteContainer>
+          <CenteredPicture>
+            <IconComponent
+              dictIcons={this.props.dictIcons}
+              iconName={file_type}
+              height="100%"
+            />
+          </CenteredPicture>
+        </WhiteContainer>
       );
+      return (content);
     }
 }
 

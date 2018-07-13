@@ -1,5 +1,5 @@
 import React from 'react';
-import IcoBack from './file_icons/back.svg';
+import IcoBack from './back.svg';
 import IcoCSV from './file_icons/csv.svg';
 import IcoPNG from './file_icons/png.svg';
 import IcoRAW from './file_icons/raw.svg';
