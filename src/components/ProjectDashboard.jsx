@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { clearFix } from 'polished';
-import CountCard from './CountCard';
+import CountCard from './cards/CountCard';
 import ProjectTable from './tables/ProjectTable';
 
 const DashTopDiv = styled.div`

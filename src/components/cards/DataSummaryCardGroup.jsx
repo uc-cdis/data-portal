@@ -93,23 +93,15 @@ class DataSummaryCardGroup extends Component {
   }
 }
 
-/**
-summaryItems format example : [
-  { label: 'test1', value: 123 },
-  { label: 'test2', value: 234 },
-  { label: 'test3', value: 345 },
-  { label: 'test4', value: 123 },
-  { label: 'test5', value: 234 },
-  { label: 'test6', value: 345 },
-  [ // for now we support 2nd hierarchy labels
-    { label: 'test7', value: 345 },
-    { label: 'test8', value: 345 },
-  ],
-  { label: 'test9', value: 345 },
-];
-*/
+const summaryValueShape = PropTypes.shape({
+  name: PropTypes.string,
+  value: PropTypes.number
+});
+const summarySubValueShape = PropTypes.arrayOf(summaryValueShape);
 DataSummaryCardGroup.propTypes = {
-  summaryItems: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
+  summaryItems: PropTypes.arrayOf(
+    PropTypes.oneOfType([summaryValueShape, summarySubValueShape])
+    ).isRequired,
   connected: PropTypes.bool,
 };
 
