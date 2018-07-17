@@ -4,6 +4,7 @@
   "description": "Bionimbus Data Portal",
   "main": "index.js",
   "dependencies": {
+    "@arranger/components": "^0.4.10",
     "babel-core": "^6.26.0",
     "brace": "^0.10.0",
     "clipboard-plus": "^1.0.0",
