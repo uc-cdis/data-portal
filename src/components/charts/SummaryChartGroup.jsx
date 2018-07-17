@@ -7,12 +7,13 @@ import SummaryBarChart from './SummaryBarChart';
 const SummaryChartGroupWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: ${props => props.width};
 `;
 
 const SummaryChart = styled.div`
   display: inline-block;
   background-color: #ffffff;
+  flex-basis: 0;
   flex-grow: 1;
   margin: 0;
   position: relative;
@@ -22,27 +23,39 @@ const SummaryChartLeftBorder = styled.div`
   position: absolute;
   top: 10px;
   bottom: 10px;
-  border-left: solid gray 1px;
 `;
 
 class SummaryChartGroup extends Component {
   render() {
+    const width = (typeof this.props.width === 'number') ? `${this.props.width}px` : this.props.width;
     return (
-      <SummaryChartGroupWrapper>
+      <SummaryChartGroupWrapper width={width}>
         {
           this.props.summaries.map(
             (item, index) => (
               <SummaryChart key={'summary-chart-'.concat(index)}>
                 {
-                  index > 0 && <SummaryChartLeftBorder />
+                  index > 0 && <SummaryChartLeftBorder className="left-silver-border" />
                 }
                 {
                   item.type === 'pie'
-                    ? <SummaryPieChart data={item.data} title={item.title} />
-                    : <SummaryBarChart data={item.data} title={item.title} vertical monoColor />
+                    ? (
+                      <SummaryPieChart
+                        data={item.data}
+                        title={item.title}
+                        localTheme={this.props.localTheme}
+                      />
+                    ) : (
+                      <SummaryBarChart
+                        data={item.data}
+                        title={item.title}
+                        localTheme={this.props.localTheme}
+                        vertical
+                        monoColor
+                      />
+                    )
                 }
               </SummaryChart>
-
             ),
           )
         }
@@ -53,6 +66,12 @@ class SummaryChartGroup extends Component {
 
 SummaryChartGroup.propTypes = {
   summaries: PropTypes.arrayOf(PropTypes.object).isRequired,
+  localTheme: PropTypes.object.isRequired,
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+};
+
+SummaryChartGroup.defaultProps = {
+  width: '100%',
 };
 
 export default SummaryChartGroup;

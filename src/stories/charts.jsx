@@ -5,6 +5,7 @@ import SummaryBarChart from '../components/charts/SummaryBarChart';
 import SummaryPieChart from '../components/charts/SummaryPieChart';
 import SummaryChartGroup from '../components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart';
+import { localTheme } from '../localconf';
 
 const payload = [
   { name: 'test1' },
@@ -21,12 +22,23 @@ const chartData = [
   { name: 'CA04', value: 189 },
 ];
 
+const chartData1 = [
+  { name: 'H1N1', value: 400 },
+  { name: 'VN1203', value: 300 },
+];
+
+const chartData2 = [
+  { name: 'H1N1', value: 400 },
+  { name: 'VN1203', value: 300 },
+  { name: 'HIV', value: 300 },
+];
+
 const summaries = [
-  { type: 'bar', data: chartData },
-  { type: 'pie', data: chartData },
-  { type: 'pie', data: chartData },
-  { type: 'bar', data: chartData },
-  { type: 'bar', data: chartData },
+  { type: 'bar', title: 'Gender', data: chartData1 },
+  { type: 'pie', title: 'Birth-Year', data: chartData },
+  { type: 'pie', title: 'Species', data: chartData1 },
+  { type: 'bar', title: 'Race', data: chartData2 },
+  { type: 'bar', title: 'Virus', data: chartData },
 ];
 
 storiesOf('Chart', module)
@@ -34,13 +46,16 @@ storiesOf('Chart', module)
     <CustomPieChart payload={payload} />
   ))
   .add('SummaryBarChart', () => (
-    <SummaryBarChart data={chartData} title="bar chart title" vertical monoColor={false} />
+    <SummaryBarChart data={chartData} title="bar chart title" vertical monoColor={false} localTheme={localTheme} />
+  ))
+  .add('SummaryBarChart with monoColor={true}', () => (
+    <SummaryBarChart data={chartData} title="bar chart title" vertical monoColor={true} localTheme={localTheme} />
   ))
   .add('SummaryPieChart', () => (
-    <SummaryPieChart data={chartData} title="pie chart title" />
+    <SummaryPieChart data={chartData} title="pie chart title" localTheme={localTheme}/>
   ))
   .add('SummaryChartGroup', () => (
-    <SummaryChartGroup summaries={summaries} />
+    <SummaryChartGroup summaries={summaries} width={1010} localTheme={localTheme} />
   ))
   .add('PercentageStackedBarChart', () => (
     <PercentageStackedBarChart data={chartData} />
