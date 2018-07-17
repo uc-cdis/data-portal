@@ -50,8 +50,7 @@ class ExplorerComponent extends Component {
   mapDataToFile = filesList => filesList.map(
     file => (
       { project_id: file.project_id,
-        did: file.id,
-        object_id: file.object_id,
+        did: file.object_id,
         name: file.file_name,
         category: file.data_category,
         format: file.data_format,

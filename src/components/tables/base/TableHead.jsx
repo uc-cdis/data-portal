@@ -30,7 +30,7 @@ class TableHead extends Component {
               </ColHead> :
                 <ColHead
                   key={`col_${col}_${i}`}
-                  style={{ ...this.props.colStyles[i], padding: '0.5rem 1rem' }}
+                  style={{ ...this.props.colStyles[i] }}
                 >
                   {col}
                 </ColHead>

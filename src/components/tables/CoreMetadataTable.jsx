@@ -10,12 +10,13 @@ export const TitleCell = styled.div`
 `;
 
 function firstCharToUppercase(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function isHeaderField(fieldName) {
-    const headerFields = ['file_name', 'data_type', 'description', 'data_format', 'file_size', 'object_id', 'updated_datetime'];
-    return (headerFields.indexOf(fieldName) >= 0);
+  // TODO: remove data_type, add type
+  const headerFields = ['file_name', 'data_type', 'description', 'data_format', 'file_size', 'object_id', 'updated_datetime'];
+  return (headerFields.indexOf(fieldName) >= 0);
 }
 
 class CoreMetadataTable extends Component {
@@ -34,7 +35,7 @@ class CoreMetadataTable extends Component {
       <Table
         header={[TABLE_TITLE, '']}
         data={this.dataTransform(this.props.metadata)}
-        colStyles={[{ textAlign: 'left', width: '15%' }, { textAlign: 'left' },]}
+        colStyles={[{ paddingLeft: '0px', textAlign: 'left', width: '15%' }, { textAlign: 'left' },]}
       />
     );
   }

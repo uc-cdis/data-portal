@@ -1,19 +1,27 @@
 import React from 'react';
-import IcoBack from './back.svg';
-import IcoCSV from './file_icons/csv.svg';
-import IcoPNG from './file_icons/png.svg';
-import IcoRAW from './file_icons/raw.svg';
-import IcoTAR from './file_icons/tar.svg';
-import IcoTSV from './file_icons/tsv.svg';
-import IcoTXT from './file_icons/txt.svg';
-import IcoZIP from './file_icons/zip.svg';
+import IcoBAM from './bam.svg';
+import IcoBED from './bed.svg';
+import IcoCSV from './csv.svg';
+import IcoFile from './file.svg';
+import IcoPNG from './png.svg';
+import IcoRAW from './raw.svg';
+import IcoTAR from './tar.svg';
+import IcoTSV from './tsv.svg';
+import IcoTXT from './txt.svg';
+import IcoZIP from './zip.svg';
 
 const dictIcons = {
-  back: (height, customedStyles) => (
-    <IcoBack height={height} style={{ ...customedStyles }} />
+  bam: (height, customedStyles) => (
+    <IcoBAM height={height} style={{ ...customedStyles }} />
+  ),
+  bed: (height, customedStyles) => (
+    <IcoBED height={height} style={{ ...customedStyles }} />
   ),
   csv: (height, customedStyles) => (
     <IcoCSV height={height} style={{ ...customedStyles }} />
+  ),
+  file: (height, customedStyles) => (
+    <IcoFile height={height} style={{ ...customedStyles }} />
   ),
   png: (height, customedStyles) => (
     <IcoPNG height={height} style={{ ...customedStyles }} />

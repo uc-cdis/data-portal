@@ -54,6 +54,7 @@ export class ExplorerTableComponent extends Component {
     onPageSizeChange: () => {},
   };
 
+  // TODO: remove?
   static renderFileName(user, projectAvail, projectID, did, name) {
     const parts = projectID.split('-');
     const program = parts[0];
@@ -99,7 +100,7 @@ export class ExplorerTableComponent extends Component {
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
         </TableData>
         <TableData c_width={columnWidths[1]}>
-          <Link to={`/files/${file.object_id}`}>{filename}</Link>
+          <Link to={`/files/${file.did}`}>{filename}</Link>
         </TableData>
         <TableData c_width={columnWidths[2]}>{file.format}</TableData>
         <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{filesize}</TableData>

@@ -17,16 +17,15 @@ export const CenteredPicture = styled.div`
   padding-bottom: 50px;
 `;
 
-function dataFormatToFileType(data_format) {
-  const file_types = ['csv', 'tar', 'png', 'txt', 'zip', 'raw', 'tsv'];
-  if (!(data_format.toLowerCase() in file_types))
-    return undefined;
-  return data_format.toLowerCase();
+function dataFormatToFileType(dictIcons, data_format) {
+  const file_types = Object.keys(dictIcons); // list of available types
+  let format = data_format.toLowerCase();
+  return format in file_types ? format : 'file';
 }
 
 class FileTypePicture extends Component {
     render() {
-      let file_type = dataFormatToFileType(this.props.data_format);
+      let file_type = dataFormatToFileType(this.props.dictIcons, this.props.data_format);
       if (!file_type)
         return null;
       let content = (

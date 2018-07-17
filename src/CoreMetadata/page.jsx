@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { ReduxCoreMetadataHeader } from './reduxer';
 import { ReduxFileTypePicture } from './reduxer';
 import { ReduxCoreMetadataTable } from './reduxer';
-import dictIcons from '../img/icons/coremetadata';
+import dictIcons from '../img/icons/file-icons/file-icons';
+import dictIconsIndex from '../img/icons/index';
 import IconComponent from '../components/Icon';
 
 const BACK_CAPTION = 'Back to data overview'
@@ -21,7 +22,7 @@ class BackLink extends Component {
         <br/>
         <BackComponent>
           <IconComponent
-            dictIcons={dictIcons}
+            dictIcons={dictIconsIndex}
             iconName="back"
             height="12px"
           />
