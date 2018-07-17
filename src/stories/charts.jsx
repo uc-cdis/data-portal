@@ -46,13 +46,13 @@ storiesOf('Chart', module)
     <CustomPieChart payload={payload} />
   ))
   .add('SummaryBarChart', () => (
-    <SummaryBarChart data={chartData} title="bar chart title" vertical monoColor={false} localTheme={localTheme} />
+    <SummaryBarChart data={chartData} title="bar chart title" vertical localTheme={localTheme} />
   ))
-  .add('SummaryBarChart with monoColor={true}', () => (
-    <SummaryBarChart data={chartData} title="bar chart title" vertical monoColor={true} localTheme={localTheme} />
+  .add('SummaryBarChart with monoColor', () => (
+    <SummaryBarChart data={chartData} title="bar chart title" vertical monoColor localTheme={localTheme} />
   ))
   .add('SummaryPieChart', () => (
-    <SummaryPieChart data={chartData} title="pie chart title" localTheme={localTheme}/>
+    <SummaryPieChart data={chartData} title="pie chart title" localTheme={localTheme} />
   ))
   .add('SummaryChartGroup', () => (
     <SummaryChartGroup summaries={summaries} width={1010} localTheme={localTheme} />

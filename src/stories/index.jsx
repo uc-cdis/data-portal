@@ -47,7 +47,7 @@ const countItems2 = [
     {
       label: 'sub2',
       value: 43,
-    }
+    },
   ],
   {
     label: 'test2',
@@ -72,8 +72,8 @@ storiesOf('Summaries', module)
     <CountCard countItems={countItems} />
   ))
   .add('DataSummaryCardGroup', () => (
-    <DataSummaryCardGroup summaryItems={countItems} connected={true} />
+    <DataSummaryCardGroup summaryItems={countItems} connected />
   ))
   .add('DataSummaryCardGroup with sub items', () => (
-    <DataSummaryCardGroup summaryItems={countItems2} connected={true} />
-  ))
+    <DataSummaryCardGroup summaryItems={countItems2} connected />
+  ));

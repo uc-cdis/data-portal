@@ -48,7 +48,7 @@ const calculateBarChartData = (data, showPercentage, percentageFixedPoint) => {
     return data.map((entry, index, array) => {
       let percentage;
       if (index < array.length - 1) {
-        percentage = entry.value * 100 / sum;
+        percentage = (entry.value * 100) / sum;
       } else {
         percentage = percentLeft;
       }
@@ -68,10 +68,13 @@ class SummaryBarChart extends React.Component {
       return this.props.localTheme[`barGraph.bar${i}Color`];
     };
     const monoFillColor = this.props.monoColor ? this.props.color : undefined;
-    const barChartHeight = this.props.data.length * this.props.barSize
-      + (this.props.data.length + 1) * this.props.barGap + 2;
-    const barChartData = calculateBarChartData(this.props.data,
-      this.props.showPercentage, this.props.percentageFixedPoint);
+    const barChartHeight = (this.props.data.length * this.props.barSize)
+      + ((this.props.data.length + 1) * this.props.barGap) + 2;
+    const barChartData = calculateBarChartData(
+      this.props.data,
+      this.props.showPercentage,
+      this.props.percentageFixedPoint,
+    );
     const dataKey = this.props.showPercentage ? 'percentage' : 'value';
     const toPercentageFormatter = per => (`${per}%`);
     return (

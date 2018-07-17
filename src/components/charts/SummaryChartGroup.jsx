@@ -31,33 +31,31 @@ class SummaryChartGroup extends Component {
     return (
       <SummaryChartGroupWrapper width={width}>
         {
-          this.props.summaries.map(
-            (item, index) => (
-              <SummaryChart key={'summary-chart-'.concat(index)}>
-                {
-                  index > 0 && <SummaryChartLeftBorder className="left-silver-border" />
-                }
-                {
-                  item.type === 'pie'
-                    ? (
-                      <SummaryPieChart
-                        data={item.data}
-                        title={item.title}
-                        localTheme={this.props.localTheme}
-                      />
-                    ) : (
-                      <SummaryBarChart
-                        data={item.data}
-                        title={item.title}
-                        localTheme={this.props.localTheme}
-                        vertical
-                        monoColor
-                      />
-                    )
-                }
-              </SummaryChart>
-            ),
-          )
+          this.props.summaries.map((item, index) => (
+            <SummaryChart key={'summary-chart-'.concat(index)}>
+              {
+                index > 0 && <SummaryChartLeftBorder className="left-silver-border" />
+              }
+              {
+                item.type === 'pie'
+                  ? (
+                    <SummaryPieChart
+                      data={item.data}
+                      title={item.title}
+                      localTheme={this.props.localTheme}
+                    />
+                  ) : (
+                    <SummaryBarChart
+                      data={item.data}
+                      title={item.title}
+                      localTheme={this.props.localTheme}
+                      vertical
+                      monoColor
+                    />
+                  )
+              }
+            </SummaryChart>
+          ))
         }
       </SummaryChartGroupWrapper>
     );

@@ -62,31 +62,29 @@ class DataSummaryCardGroup extends Component {
     return (
       <DataSummaryCardGroupWrapper className={'data-summary-card-group '.concat(this.props.connected ? 'connected-data-summary-card-group' : 'separated-data-summary-card-group')}>
         {
-          this.props.summaryItems.map(
-            (item, index) => (
-              <SummaryCard key={`card-${item.label || item[0].label}`} widthPercentage={widthPercentage}>
-                {this.props.connected && index > 0
-                  && <SummaryCardLeftBorder className="left-silver-border" />
-                }
-                {
-                  !item.length ? (<CountBox label={item.label} value={item.value} align="center" />) : (
-                    <SubCountBoxesWrapper>
-                      {
-                        item.map((subItem, subIndex) => (
-                          <SubCountBoxWrapper key={`sub-count-box-${subItem.label}`}>
-                            {subIndex > 0
-                              && <SummarySubCardLeftBorder className="left-silver-border" />
-                            }
-                            <CountBox label={subItem.label} value={subItem.value} align="center" />
-                          </SubCountBoxWrapper>
-                        ))
-                      }
-                    </SubCountBoxesWrapper>
-                  )
-                }
-              </SummaryCard>
-            ),
-          )
+          this.props.summaryItems.map((item, index) => (
+            <SummaryCard key={`card-${item.label || item[0].label}`} widthPercentage={widthPercentage}>
+              {this.props.connected && index > 0
+                && <SummaryCardLeftBorder className="left-silver-border" />
+              }
+              {
+                !item.length ? (<CountBox label={item.label} value={item.value} align="center" />) : (
+                  <SubCountBoxesWrapper>
+                    {
+                      item.map((subItem, subIndex) => (
+                        <SubCountBoxWrapper key={`sub-count-box-${subItem.label}`}>
+                          {subIndex > 0
+                            && <SummarySubCardLeftBorder className="left-silver-border" />
+                          }
+                          <CountBox label={subItem.label} value={subItem.value} align="center" />
+                        </SubCountBoxWrapper>
+                      ))
+                    }
+                  </SubCountBoxesWrapper>
+                )
+              }
+            </SummaryCard>
+          ))
         }
       </DataSummaryCardGroupWrapper>
     );
@@ -95,13 +93,14 @@ class DataSummaryCardGroup extends Component {
 
 const summaryValueShape = PropTypes.shape({
   name: PropTypes.string,
-  value: PropTypes.number
+  value: PropTypes.number,
 });
 const summarySubValueShape = PropTypes.arrayOf(summaryValueShape);
 DataSummaryCardGroup.propTypes = {
-  summaryItems: PropTypes.arrayOf(
-    PropTypes.oneOfType([summaryValueShape, summarySubValueShape])
-    ).isRequired,
+  summaryItems: PropTypes.arrayOf(PropTypes.oneOfType([
+    summaryValueShape,
+    summarySubValueShape,
+  ])).isRequired,
   connected: PropTypes.bool,
 };
 
