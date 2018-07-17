@@ -76,7 +76,7 @@ class SummaryBarChart extends React.Component {
       this.props.percentageFixedPoint,
     );
     const dataKey = this.props.showPercentage ? 'percentage' : 'value';
-    const toPercentageFormatter = per => (`${per}%`);
+    const toPercentageFormatter = v => (this.props.showPercentage ? `${v}%` : v);
     return (
       <BarChartWrapper>
         <BarChartTitle className="h4-typo">
