@@ -14,12 +14,12 @@ const payload = [
 ];
 
 const chartData = [
-  { name: 'H1N1', value: 400 },
-  { name: 'VN1203', value: 300 },
-  { name: 'HIV', value: 300 },
-  { name: 'HuCoV_EMC', value: 200 },
-  { name: 'SARS_CoV', value: 278 },
-  { name: 'CA04', value: 189 },
+  { name: 'H1N1', value: 4000 },
+  { name: 'VN1203', value: 3000 },
+  { name: 'HIV', value: 2800 },
+  { name: 'HuCoV_EMC', value: 2000 },
+  { name: 'SARS_CoV', value: 2708 },
+  { name: 'CA04', value: 1890 },
 ];
 
 const chartData1 = [
@@ -58,5 +58,5 @@ storiesOf('Chart', module)
     <SummaryChartGroup summaries={summaries} width={1010} localTheme={localTheme} />
   ))
   .add('PercentageStackedBarChart', () => (
-    <PercentageStackedBarChart data={chartData} />
+    <PercentageStackedBarChart data={chartData} localTheme={localTheme} />
   ));
