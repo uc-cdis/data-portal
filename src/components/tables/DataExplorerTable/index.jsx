@@ -1,25 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import '@arranger/components/public/themeStyles/beagle/beagle.css';
 import { Table } from '@arranger/components/dist/DataTable';
-import { CurrentSQON } from '@arranger/components/dist/Arranger';
 import IconicButton from '../../buttons/IconicButton';
 import dictIcons from '../../../img/icons';
 import './DataExplorerTable.less';
 
 class DataExplorerTable extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       selectedTableRows: [],
       downloading: false,
     };
     this.onBDBagDownload = this.onBDBagDownload.bind(this);
-  }
-
-  setSelectedTableRows(rows) {
-    this.setState({ selectedTableRows: rows });
   }
 
   onBDBagDownload() {
@@ -30,6 +24,10 @@ class DataExplorerTable extends React.Component {
   onClinicalDownload() {
     // TODO: export selected rows
     this.setState({ downloading: true });
+  }
+
+  setSelectedTableRows(rows) {
+    this.setState({ selectedTableRows: rows });
   }
 
   render() {
@@ -71,6 +69,6 @@ class DataExplorerTable extends React.Component {
 DataExplorerTable.propTypes = {
   config: PropTypes.object.isRequired,
   fetchData: PropTypes.func.isRequired,
-}
+};
 
 export default DataExplorerTable;

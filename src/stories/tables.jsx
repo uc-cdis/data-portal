@@ -130,36 +130,33 @@ const dummyConfig = {
 const dummyData = Array(100)
   .fill()
   .map((_, i) => ({
-      case_id: i,
-      project: "ndh-Charlie",
-      study: "MACS",
-      gender: "Male",
-      vital_status: "Alive",
-      ethnicity: "Hispanic or Latino",
-      race: "White",
-      birth_year: 1941,
-      death_year: null,
-      species: "None",
-      number_visits: 26,
-      lab_records: 26,
-      drug_records: 26,
-      mrna_records: 26,
-    }));
+    case_id: i,
+    project: 'ndh-Charlie',
+    study: 'MACS',
+    gender: 'Male',
+    vital_status: 'Alive',
+    ethnicity: 'Hispanic or Latino',
+    race: 'White',
+    birth_year: 1941,
+    death_year: null,
+    species: 'None',
+    number_visits: 26,
+    lab_records: 26,
+    drug_records: 26,
+    mrna_records: 26,
+  }));
 
-const fetchDummyData = ({ config, sort, offset, first }) => {
-  return Promise.resolve({
-    total: dummyData.length,
-    data: dummyData.sort((a, b) => {
-      var x = a[sort.field];
-      var y = b[sort.field];
-      if (sort.order == 'asc') {
-        return (x > y ? 1 : -1);
-      } else {
-        return (x > y ? -1 : 1);
-      }
-    }).slice(offset, offset + first),
-  });
-};
+const fetchDummyData = ({ sort, offset, first }) => Promise.resolve({
+  total: dummyData.length,
+  data: dummyData.sort((a, b) => {
+    const x = a[sort.field];
+    const y = b[sort.field];
+    if (sort.order === 'asc') {
+      return (x > y ? 1 : -1);
+    }
+    return (x > y ? -1 : 1);
+  }).slice(offset, offset + first),
+});
 
 storiesOf('Tables', module)
   .add('Data Explorer Table', () => (

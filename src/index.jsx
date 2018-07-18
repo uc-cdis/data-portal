@@ -33,7 +33,7 @@ import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 import ReactGA from 'react-ga';
 import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
-import DataExplorer from './DataExplorer/DataExplorer';
+import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
 
 // Needed for onTouchTap
