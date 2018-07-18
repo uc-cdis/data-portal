@@ -26,7 +26,7 @@ const plugins = [
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev'),
-      'REACT_APP_ARRANGER_API': JSON.stringify('/')
+      REACT_APP_ARRANGER_API: JSON.stringify('/'),
     }
   }),
   new webpack.optimize.DedupePlugin(), //dedupe similar code

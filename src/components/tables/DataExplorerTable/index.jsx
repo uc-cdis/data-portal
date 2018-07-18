@@ -4,27 +4,27 @@ import '@arranger/components/public/themeStyles/beagle/beagle.css';
 import DataTable from '@arranger/components/dist/DataTable';
 import IconicButton from '../../buttons/IconicButton';
 import dictIcons from '../../../img/icons';
+import fileDownload from 'js-file-download';
 import './DataExplorerTable.less';
 
 class DataExplorerTable extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       selectedTableRows: [],
-      downloading: false,
     };
     this.onBDBagDownload = this.onBDBagDownload.bind(this);
     this.onClinicalDownload = this.onClinicalDownload.bind(this);
   }
 
   onBDBagDownload() {
-    // TODO: export selected rows
-    this.setState({ downloading: true });
+    // TODO: look up selected data by id and download as CSV
+    fileDownload(this.state.selectedTableRows, 'BDBagManifest.csv')
   }
 
   onClinicalDownload() {
-    // TODO: export selected rows
-    this.setState({ downloading: true });
+    // TODO: look up selected data by id and download as CSV
+    fileDownload(this.state.selectedTableRows, 'Clinical.csv')
   }
 
   setSelectedTableRows(rows) {
@@ -69,6 +69,6 @@ class DataExplorerTable extends React.Component {
 DataExplorerTable.propTypes = {
   config: PropTypes.object.isRequired,
   fetchData: PropTypes.func.isRequired,
-}
+};
 
 export default DataExplorerTable;

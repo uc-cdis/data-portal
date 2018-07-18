@@ -22,6 +22,7 @@
     "history": "^4.7.2",
     "ignore-loader": "^0.1.2",
     "isomorphic-fetch": "^2.2.1",
+    "js-file-download": "^0.4.1",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "material-design-icons": "^3.0.1",
