@@ -20,7 +20,7 @@
   padding: 2px 2px;
   outline: none;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   border: 1px solid @silver;
   border-radius: 4px;
@@ -29,10 +29,18 @@
   font-size: 14px;
 }
 
+.data-explorer-table__button svg path {
+  fill: @light_gray;
+}
+
 .data-explorer-table__button:hover {
   background-color: @apricot;
   border: 1px solid @silver;
   color: @white;
+}
+
+.data-explorer-table__button:hover svg path {
+  fill: @white;
 }
 
 /* Overriding Arranger styles, don't adbere to BEM */
