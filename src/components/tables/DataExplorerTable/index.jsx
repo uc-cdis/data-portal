@@ -19,12 +19,12 @@ class DataExplorerTable extends React.Component {
 
   onBDBagDownload() {
     // TODO: look up selected data by id and download as CSV
-    fileDownload(this.state.selectedTableRows, 'BDBagManifest.csv')
+    fileDownload(this.state.selectedTableRows, 'BDBagManifest.csv');
   }
 
   onClinicalDownload() {
     // TODO: look up selected data by id and download as CSV
-    fileDownload(this.state.selectedTableRows, 'Clinical.csv')
+    fileDownload(this.state.selectedTableRows, 'Clinical.csv');
   }
 
   setSelectedTableRows(rows) {
