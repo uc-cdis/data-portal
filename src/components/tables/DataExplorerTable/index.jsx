@@ -34,25 +34,23 @@ class DataExplorerTable extends React.Component {
   render() {
     return (
       <div className="data-explorer-table">
-        <div className="data-explorer-table__header">
-          <div className="data-explorer-table__download-buttons">
-            <IconicButton
-              buttonClassName="data-explorer-table__button"
-              caption="Download BDBag Manifest"
-              onClick={this.onBDBagDownload}
-              dictIcons={dictIcons}
-              icon="download"
-              iconColor="#9b9b9b"
-            />
-            <IconicButton
-              buttonClassName="data-explorer-table__button"
-              caption="Download Clinical"
-              onClick={this.onClinicalDownload}
-              dictIcons={dictIcons}
-              icon="download"
-              iconColor="#9b9b9b"
-            />
-          </div>
+        <div className="data-explorer-table__download-buttons">
+          <IconicButton
+            buttonClassName="data-explorer-table__button"
+            caption="Download BDBag Manifest"
+            onClick={this.onBDBagDownload}
+            dictIcons={dictIcons}
+            icon="download"
+            iconColor="#9b9b9b"
+          />
+          <IconicButton
+            buttonClassName="data-explorer-table__button"
+            caption="Download Clinical"
+            onClick={this.onClinicalDownload}
+            dictIcons={dictIcons}
+            icon="download"
+            iconColor="#9b9b9b"
+          />
         </div>
         <div className="data-explorer-table__arranger-table">
           <DataTable
