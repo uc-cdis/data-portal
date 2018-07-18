@@ -59,7 +59,9 @@ const downloadFile = id => (dispatch, getState) => {
 
 export const ReduxCoreMetadataHeader = (() => {
   const mapStateToProps = (state) => ({
-    metadata: state.coreMetadata.metadata
+    metadata: state.coreMetadata.metadata,
+    user: state.user,
+    projectAvail: state.submission.projectAvail,
   });
 
   const mapDispatchToProps = dispatch => ({
@@ -71,7 +73,7 @@ export const ReduxCoreMetadataHeader = (() => {
 
 export const ReduxFileTypePicture = (() => {
   const mapStateToProps = (state) => ({
-    data_format: state.coreMetadata.metadata.data_format
+    data_format: state.coreMetadata.metadata.data_format,
   });
 
   const mapDispatchToProps = dispatch => ({
@@ -82,7 +84,7 @@ export const ReduxFileTypePicture = (() => {
 
 export const ReduxCoreMetadataTable = (() => {
   const mapStateToProps = (state) => ({
-    metadata: state.coreMetadata.metadata
+    metadata: state.coreMetadata.metadata,
   });
 
   const mapDispatchToProps = dispatch => ({

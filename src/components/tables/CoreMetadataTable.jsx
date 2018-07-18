@@ -13,17 +13,19 @@ function firstCharToUppercase(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function isHeaderField(fieldName) {
-  // TODO: remove data_type, add type
-  const headerFields = ['file_name', 'data_type', 'description', 'data_format', 'file_size', 'object_id', 'updated_datetime'];
-  return (headerFields.indexOf(fieldName) >= 0);
+function fieldInTable(fieldName) {
+  // only add in the table fields that are not in the header
+  const headerFields = ['file_name', 'type', 'description', 'data_format', 'file_size', 'object_id', 'updated_datetime'];
+  const doNotDisplay = ['project_id'];
+  return (headerFields.indexOf(fieldName) == -1
+    && doNotDisplay.indexOf(fieldName) == -1);
 }
 
 class CoreMetadataTable extends Component {
   dataTransform = metadata => Object.keys(metadata)
   .sort() // alphabetical order
   .filter(function(key) {
-    return !isHeaderField(key); // only add non-header fields to the table
+    return fieldInTable(key);
   })
   .map(key => [
     <TitleCell>{firstCharToUppercase(key)}</TitleCell>,
