@@ -1,4 +1,5 @@
 import React from 'react';
+import './DataExplorer.less';
 
 class DataExplorer extends React.Component {
   render() {

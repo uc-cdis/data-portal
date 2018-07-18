@@ -1,0 +1,76 @@
+import React from 'react';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import '@arranger/components/public/themeStyles/beagle/beagle.css';
+import { Table } from '@arranger/components/dist/DataTable';
+import { CurrentSQON } from '@arranger/components/dist/Arranger';
+import IconicButton from '../../buttons/IconicButton';
+import dictIcons from '../../../img/icons';
+import './DataExplorerTable.less';
+
+class DataExplorerTable extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      selectedTableRows: [],
+      downloading: false,
+    };
+    this.onBDBagDownload = this.onBDBagDownload.bind(this);
+  }
+
+  setSelectedTableRows(rows) {
+    this.setState({ selectedTableRows: rows });
+  }
+
+  onBDBagDownload() {
+    // TODO: export selected rows
+    this.setState({ downloading: true });
+  }
+
+  onClinicalDownload() {
+    // TODO: export selected rows
+    this.setState({ downloading: true });
+  }
+
+  render() {
+    return (
+      <div className="data-explorer-table">
+        <div className="data-explorer-table__header">
+          <h3>Showing 1-20 models of 2,111 Subjects</h3>
+          <div className="data-explorer-table__download-buttons">
+            <IconicButton
+              buttonClassName="data-explorer-table__button"
+              caption="Download BDBag Manifest"
+              onClick={this.onBDBagDownload}
+              dictIcons={dictIcons}
+              icon="download"
+              iconColor="#9b9b9b"
+            />
+            <IconicButton
+              buttonClassName="data-explorer-table__button"
+              caption="Download Clinical"
+              onClick={this.onClinicalDownload}
+              dictIcons={dictIcons}
+              icon="download"
+              iconColor="#9b9b9b"
+            />
+          </div>
+        </div>
+        <div className="data-explorer-table__arranger-table">
+          <Table
+            config={this.props.config}
+            fetchData={this.props.fetchData}
+            setSelectedTableRows={rows => this.setSelectedTableRows(rows)}
+          />
+        </div>
+      </div>
+    );
+  }
+}
+
+DataExplorerTable.propTypes = {
+  config: PropTypes.object.isRequired,
+  fetchData: PropTypes.func.isRequired,
+}
+
+export default DataExplorerTable;

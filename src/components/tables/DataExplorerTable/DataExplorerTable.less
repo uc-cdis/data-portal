@@ -1,0 +1,168 @@
+@import '../../../css/base.less';
+
+.data-explorer-table { }
+
+.data-explorer-table__header {
+  font-family: @body-font;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.data-explorer-table__download-buttons {
+  display: flex;
+}
+
+.data-explorer-table__button {
+  margin: 0 10px;
+  width: 220px;
+  height: 40px;
+  padding: 2px 2px;
+  outline: none;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: 1px solid @silver;
+  border-radius: 4px;
+  background-color: @white;
+  color: @light_gray;
+  font-size: 14px;
+}
+
+.data-explorer-table__button:hover {
+  background-color: @apricot;
+  border: 1px solid @silver;
+  color: @white;
+}
+
+/* Overriding Arranger styles, don't adbere to BEM */
+.data-explorer-table__arranger-table {
+  .ReactTable {
+    border: 1px solid @silver;
+  }
+
+  .ReactTable div {
+    font-family: @body-font;
+  }
+
+  .ReactTable .rt-thead {
+    background-color: @white;
+  }
+
+  .ReactTable .rt-thead.-header {
+    box-shadow: 0 0px 0px 0;
+    border-bottom: 1px solid @black;
+    font-size: 12px;
+    color: @black;
+  }
+
+  .ReactTable .rt-thead .rt-th.-sort-asc,
+  .ReactTable .rt-thead .rt-td.-sort-asc,
+  .ReactTable .rt-thead .rt-th.-sort-desc,
+  .ReactTable .rt-thead .rt-td.-sort-desc {
+    box-shadow: 0 0px 0px 0;
+  }
+
+  .ReactTable.-striped .rt-tr.-odd {
+    background-color: @cloud;
+  }
+
+  // All cells in table
+  .ReactTable .rt-th,
+  .ReactTable .rt-td {
+    white-space: normal;
+    outline: none;
+    border: none;
+    font-size: 12px;
+  }
+
+  // Table header
+  .ReactTable .rt-thead .rt-tr {
+    text-align: left;
+  }
+
+  // Column headers
+  .ReactTable .rt-th,
+  .ReactTable .rt-resizable-header-content {
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.02rem;
+    font-weight: @semi-bold;
+    color: @black;
+  }
+
+  // Table row
+  .ReactTable .rt-tr {
+    height: 50px;
+
+    &:first-child {
+      text-align: left !important; // have to override inline style
+
+      input[type="checkbox"] {
+        cursor: pointer;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        outline: 0;
+        background: @white;
+        height: 18px;
+        width: 18px;
+        border: 1px solid @light_gray;
+        border-radius: 2px;
+      }
+
+      input[type="checkbox"]:checked {
+        background: @orange;
+      }
+
+      // defines check in checkbox
+      input[type="checkbox"]:after {
+        content: '';
+        position: relative;
+        left: 40%;
+        top: 20%;
+        width: 15%;
+        height: 40%;
+        border: solid #fff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        display: none;
+      }
+
+      input[type="checkbox"]:checked:after {
+        display: block;
+      }
+    }
+  }
+
+  // Cells in table rows
+  .ReactTable .rt-td {
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.03rem;
+    color: @gray;
+  }
+
+  // Dropdown to select number of rows
+  .ReactTable .-pagination .-pageSizeOptions {
+    select {
+      border: 1px solid @silver;
+      border-radius: 2px;
+      height: 35px;
+    }
+  }
+
+  // Overall Pagination component
+  .ReactTable .-pagination .-pageJump {
+    display: flex;
+    border: 1px solid @silver;
+    border-radius: 2px;
+    height: 35px;
+    background-color: @white;
+  }
+
+  // Current page for pagination
+  .ReactTable .-pagination_button.-current {
+    color: @blue;
+  }
+}
