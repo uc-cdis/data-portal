@@ -8,7 +8,7 @@ const commonNames = {
   gdc: 'Jamboree',
   gtex: 'Data Commons Pilot & Data STAGE',
   kf: 'Kids First',
-  kfDcfInterop: 'Kids First',
+  kfDcfInterop: 'Pediatric Cancer Commons Pilot',
   ndh: 'NIAID',
   default: 'Generic',
 };
@@ -925,21 +925,26 @@ const params = {
       projectDetails: 'boardCounts',
     },
     components: {
-      appName: 'Kids First Data Catalog Portal',
+      appName: 'Pediatric Cancer Commons Pilot',
       index: {
         introduction: {
-          heading: 'Kids First Data Catalog',
-          text: 'The Kids First Data Catalog supports the Kids First Data Resource Center by providing ' +
-          'digital object services that allow interoperability between data commons, including ' +
-          'authentication and authorization for controlled access data. For more information about the ' +
-          'overall Kids First Data Resource Center see https://kidsfirstdrc.org.',
+          heading: 'Pediatric Cancer Commons Pilot',
+          text: 'The Pediatric Cancer Commons Pilot is a Trusted Partner of the NIH supported by Gen 3.' +
+          'Gen3 is an open source Data Commons platform (https://gen3.org/) supporting a number of ' +
+          'large-scale NIH- and non-NIH Commons including the NCI\'s Genomic Data Commons, NHLBI\'s Data ' +
+          'Stage, the NIH Data Commons Pilot, and the Bloodpac Data Commons. As such the Pediatric Cancer ' +
+          'Commons Pilot also supports the Kids First Data Resource Center by providing digital object services ' +
+          'that allow interoperability between existing and future Gen3 data commons, including authentication ' +
+          'and authorization for controlled access data.' +
+          'For more information about the overall Kids First Data Resource Center and associated tools/portals' +
+          'see https://kidsfirstdrc.org.',
           link: '/submission',
         },
         buttons: [
           {
             name: 'Define Data Field',
             icon: 'data-field-define',
-            body: 'The Data Catalog defines the data in a general way. Please study the dictionary before you start browsing.',
+            body: 'The Pediatric Cancer Commons Pilot defines the data in a general way. Please study the dictionary before you start browsing.',
             link: '/DD',
             label: 'Learn more',
           },
@@ -968,7 +973,7 @@ const params = {
         ],
       },
       navigation: {
-        title: 'Kids First Data Catalog',
+        title: 'Pediatric Cancer Commons Pilot',
         items: [
           { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
           { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'exploration' },
@@ -977,9 +982,9 @@ const params = {
         ],
       },
       login: {
-        title: 'Kids First Data Catalog',
+        title: 'Pediatric Cancer Commons Pilot',
         subTitle: 'search, compare, and download data',
-        text: 'The Kids First Data Catalog supports the Kids First Data Resource Center by providing a digital object services that allow interoperability between data commons, including authentication and authorization for controlled access data. For more information about the overall Kids First Data Resource Center see https://kidsfirstdrc.org.',
+        text: 'The Pediatric Cancer Commons Pilot is a Trusted Partner of the NIH powered by Gen3. Gen3 is an open source Data Commons platform (https://gen3.org/) supporting a number of large-scale NIH- and non-NIH Commons including the NCI\'s Genomic Data Commons, NHLBI\'s Data Stage, the NIH Data Commons Pilot, and the Bloodpac Data Commons. As such the Gen3 Data Catalog supports the Kids First Data Resource Center by providing digital object services that allow interoperability between existing and future Gen3 data commons, including authentication and authorization for controlled access data. For more information about the overall Kids First Data Resource Center and associated tools/portals see https://kidsfirstdrc.org.',
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@kidsfirstdrc.org',
       },
