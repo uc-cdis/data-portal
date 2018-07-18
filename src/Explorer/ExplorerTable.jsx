@@ -58,7 +58,7 @@ export class ExplorerTableComponent extends Component {
     const parts = projectID.split('-');
     const program = parts[0];
     parts.shift();
-    const project = parts.join(' ');
+    const project = parts.join('-');
     let hasAccess = false;
     if (projectID in projectAvail) {
       if (projectAvail[projectID] === 'Open') {
