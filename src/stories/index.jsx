@@ -1,6 +1,5 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import '@arranger/components/public/themeStyles/beagle/beagle.css';
 import 'react-select/dist/react-select.css';
 import '../css/base.less';
 import '../css/graphiql.css';

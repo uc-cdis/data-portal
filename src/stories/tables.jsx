@@ -2,93 +2,172 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import 'regenerator-runtime/runtime';
+import DataExplorerTable from '../components/tables/DataExplorerTable';
 import { Table } from '@arranger/components/dist/DataTable';
+import '@arranger/components/public/themeStyles/beagle/beagle.css';
 
 const dummyConfig = {
   timestamp: '2018-01-12T16:42:07.495Z',
-  type: 'files',
-  keyField: 'file_id',
-  defaultSorted: [{ id: 'access', desc: false }],
+  type: 'cases',
+  keyField: 'case_id',
+  defaultSorted: [{ id: 'case_id', desc: false }],
   columns: [
     {
       show: true,
-      Header: 'Access',
+      Header: 'Case.ID',
       type: 'string',
       sortable: true,
       canChangeShow: true,
-      accessor: 'access',
+      accessor: 'case_id',
     },
     {
       show: true,
-      Header: 'File Id',
+      Header: 'Project',
       type: 'string',
       sortable: true,
       canChangeShow: true,
-      accessor: 'file_id',
+      accessor: 'project',
     },
     {
       show: true,
-      Header: 'File Name',
+      Header: 'Study',
       type: 'string',
       sortable: true,
       canChangeShow: true,
-      accessor: 'file_name',
+      accessor: 'study',
     },
     {
       show: true,
-      Header: 'Data Type',
+      Header: 'Gender',
       type: 'string',
       sortable: true,
       canChangeShow: true,
-      accessor: 'data_type',
+      accessor: 'gender',
     },
     {
       show: true,
-      Header: 'File Size',
-      type: 'bits',
+      Header: 'Vital Status',
+      type: 'string',
       sortable: true,
       canChangeShow: true,
-      accessor: 'file_size',
+      accessor: 'vital_status',
+    },
+    {
+      show: true,
+      Header: 'Ethnicity',
+      type: 'string',
+      sortable: true,
+      canChangeShow: true,
+      accessor: 'ethnicity',
+    },
+    {
+      show: true,
+      Header: 'Race',
+      type: 'string',
+      sortable: true,
+      canChangeShow: true,
+      accessor: 'race',
+    },
+    {
+      show: true,
+      Header: 'Birth Year',
+      type: 'integer',
+      sortable: true,
+      canChangeShow: true,
+      accessor: 'birth_year',
+    },
+    {
+      show: true,
+      Header: 'Death Year',
+      type: 'integer',
+      sortable: true,
+      canChangeShow: true,
+      accessor: 'death_year',
+    },
+    {
+      show: true,
+      Header: 'Species',
+      type: 'string',
+      sortable: true,
+      canChangeShow: true,
+      accessor: 'species',
+    },
+    {
+      show: true,
+      Header: 'Number Visits',
+      type: 'integer',
+      sortable: true,
+      canChangeShow: true,
+      accessor: 'number_visits',
+    },
+    {
+      show: true,
+      Header: 'Lab Records',
+      type: 'integer',
+      sortable: true,
+      canChangeShow: true,
+      accessor: 'lab_records',
+    },
+    {
+      show: true,
+      Header: 'Drug Records',
+      type: 'integer',
+      sortable: true,
+      canChangeShow: true,
+      accessor: 'drug_records',
+    },
+    {
+      show: true,
+      Header: 'mRNA Array Records',
+      type: 'integer',
+      sortable: true,
+      canChangeShow: true,
+      accessor: 'mrna_records',
     },
   ],
 };
 
-var count = 0;
-
 const dummyData = Array(100)
   .fill()
-  .map(() => {
-    const cases = Array(Math.floor(Math.random() * 10))
-      .fill()
-      .map(() => ({
-        node: {
-          primary_site: count,
-        },
-      }));
-    return {
-      access: Math.random() > 0.5 ? 'controlled' : 'open',
-      file_id: count,
-      file_name: count,
-      data_type: count,
-      file_size: Math.floor(Math.random() * 10000000),
-      cases: {
-        hits: {
-          total: cases.length,
-          edges: cases,
-        },
-      },
-    };
-    count += 1;
-  });
+  .map((_, i) => ({
+      case_id: i,
+      project: "ndh-Charlie",
+      study: "MACS",
+      gender: "Male",
+      vital_status: "Alive",
+      ethnicity: "Hispanic or Latino",
+      race: "White",
+      birth_year: 1941,
+      death_year: null,
+      species: "None",
+      number_visits: 26,
+      lab_records: 26,
+      drug_records: 26,
+      mrna_records: 26,
+    }));
 
 const fetchDummyData = ({ config, sort, offset, first }) => {
   return Promise.resolve({
     total: dummyData.length,
-    data: dummyData,
+    data: dummyData.sort((a, b) => {
+      var x = a[sort.field];
+      var y = b[sort.field];
+      if (sort.order == 'asc') {
+        return (x > y ? 1 : -1);
+      } else {
+        return (x > y ? -1 : 1);
+      }
+    }).slice(offset, offset + first),
   });
 };
 
 storiesOf('Tables', module)
+  .add('Data Explorer Table', () => (
+    <DataExplorerTable
+      config={dummyConfig}
+      fetchData={fetchDummyData}
+    />
+  ))
   .add('Arranger Table', () => (
     <Table
       config={dummyConfig}
