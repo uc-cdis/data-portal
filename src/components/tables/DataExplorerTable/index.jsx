@@ -1,19 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '@arranger/components/public/themeStyles/beagle/beagle.css';
-import { Table } from '@arranger/components/dist/DataTable';
+import DataTable from '@arranger/components/dist/DataTable';
 import IconicButton from '../../buttons/IconicButton';
 import dictIcons from '../../../img/icons';
 import './DataExplorerTable.less';
 
 class DataExplorerTable extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       selectedTableRows: [],
       downloading: false,
     };
     this.onBDBagDownload = this.onBDBagDownload.bind(this);
+    this.onClinicalDownload = this.onClinicalDownload.bind(this);
   }
 
   onBDBagDownload() {
@@ -34,7 +35,6 @@ class DataExplorerTable extends React.Component {
     return (
       <div className="data-explorer-table">
         <div className="data-explorer-table__header">
-          <h3>Showing 1-20 models of 2,111 Subjects</h3>
           <div className="data-explorer-table__download-buttons">
             <IconicButton
               buttonClassName="data-explorer-table__button"
@@ -55,10 +55,12 @@ class DataExplorerTable extends React.Component {
           </div>
         </div>
         <div className="data-explorer-table__arranger-table">
-          <Table
+          <DataTable
             config={this.props.config}
             fetchData={this.props.fetchData}
             setSelectedTableRows={rows => this.setSelectedTableRows(rows)}
+            allowTSVExport={false}
+            allowTogglingColumns={false}
           />
         </div>
       </div>
@@ -69,6 +71,6 @@ class DataExplorerTable extends React.Component {
 DataExplorerTable.propTypes = {
   config: PropTypes.object.isRequired,
   fetchData: PropTypes.func.isRequired,
-};
+}
 
 export default DataExplorerTable;

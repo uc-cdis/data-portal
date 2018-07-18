@@ -8,7 +8,7 @@ import '@arranger/components/public/themeStyles/beagle/beagle.css';
 
 const dummyConfig = {
   timestamp: '2018-01-12T16:42:07.495Z',
-  type: 'cases',
+  type: 'subjects',
   keyField: 'case_id',
   defaultSorted: [{ id: 'case_id', desc: false }],
   columns: [

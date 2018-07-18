@@ -1,6 +1,9 @@
 @import '../../../css/base.less';
 
-.data-explorer-table { }
+.data-explorer-table {
+  padding: 10px 10px;
+  background-color: @white;
+}
 
 .data-explorer-table__header {
   font-family: @body-font;
@@ -10,11 +13,12 @@
 }
 
 .data-explorer-table__download-buttons {
+  width: 100%;
   display: flex;
 }
 
 .data-explorer-table__button {
-  margin: 0 10px;
+  margin-right: 10px;
   width: 220px;
   height: 40px;
   padding: 2px 2px;
@@ -43,36 +47,23 @@
   fill: @white;
 }
 
-/* Overriding Arranger styles, don't adbere to BEM */
+/* Overriding Arranger styles, don't adhere to BEM */
 .data-explorer-table__arranger-table {
-  .ReactTable {
-    border: 1px solid @silver;
-  }
 
-  .ReactTable div {
+  // Required to override font
+  div {
     font-family: @body-font;
   }
 
-  .ReactTable .rt-thead {
-    background-color: @white;
+  // Top of table where text and search box is located
+  .tableToolbar {
+    padding-left: 0;
+    padding-right: 0;
   }
 
-  .ReactTable .rt-thead.-header {
-    box-shadow: 0 0px 0px 0;
-    border-bottom: 1px solid @black;
-    font-size: 12px;
-    color: @black;
-  }
-
-  .ReactTable .rt-thead .rt-th.-sort-asc,
-  .ReactTable .rt-thead .rt-td.-sort-asc,
-  .ReactTable .rt-thead .rt-th.-sort-desc,
-  .ReactTable .rt-thead .rt-td.-sort-desc {
-    box-shadow: 0 0px 0px 0;
-  }
-
-  .ReactTable.-striped .rt-tr.-odd {
-    background-color: @cloud;
+  // Overall table
+  .ReactTable {
+    border: 1px solid @silver;
   }
 
   // All cells in table
@@ -86,7 +77,10 @@
 
   // Table header
   .ReactTable .rt-thead .rt-tr {
+    background-color: @white;
     text-align: left;
+    box-shadow: 0 0px 0px 0;
+    border-bottom: 1px solid @black;
   }
 
   // Column headers
@@ -97,6 +91,14 @@
     letter-spacing: 0.02rem;
     font-weight: @semi-bold;
     color: @black;
+  }
+
+  // Sorting behavior on column headers
+  .ReactTable .rt-thead .rt-th.-sort-asc,
+  .ReactTable .rt-thead .rt-td.-sort-asc,
+  .ReactTable .rt-thead .rt-th.-sort-desc,
+  .ReactTable .rt-thead .rt-td.-sort-desc {
+    box-shadow: 0 0px 0px 0;
   }
 
   // Table row
@@ -141,6 +143,11 @@
         display: block;
       }
     }
+  }
+
+  // Odd rows
+  .ReactTable.-striped .rt-tr.-odd {
+    background-color: @cloud;
   }
 
   // Cells in table rows
