@@ -57,7 +57,8 @@ export class ExplorerTableComponent extends Component {
   static renderFileName(user, projectAvail, projectID, did, name) {
     const parts = projectID.split('-');
     const program = parts[0];
-    const project = parts[1];
+    parts.shift();
+    const project = parts.join('-');
     let hasAccess = false;
     if (projectID in projectAvail) {
       if (projectAvail[projectID] === 'Open') {
