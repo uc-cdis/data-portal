@@ -1,34 +1,10 @@
 import {
   PieChart, Pie, Tooltip, Cell,
 } from 'recharts';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ChartsHelper from './ChartsHelper';
-
-const PieChartWrapper = styled.div`
-  width: 100%;
-  padding: 12px;
-  background-color: white;
-`;
-
-const PieChartTitle = styled.div`
-  text-align: center;
-  border-bottom: solid black 1px;
-  line-height: 10px;
-  height: 22px;
-`;
-
-const PieChartInnerWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
-const PieChartLegendWrapper = styled.div`
-  width: 70px;
-  flexGrow: 0;
-  padding-top: 8px;
-`;
+import './SummaryPieChart.less';
 
 const pieChartStyle = {
   flexGrow: 1,
@@ -36,15 +12,6 @@ const pieChartStyle = {
   justifyContent: 'flex-end',
   marginTop: '22px',
 };
-
-const LegendItemWrapper = styled.div`
-  text-align: right;
-  margin-bottom: 22px;
-`;
-
-const LegendItemValue = styled.div`
-  margin-top: 8px;
-`;
 
 class SummaryPieChart extends React.Component {
   render() {
@@ -60,27 +27,27 @@ class SummaryPieChart extends React.Component {
     const dataKey = ChartsHelper.getDataKey(this.props.showPercentage);
 
     return (
-      <PieChartWrapper>
-        <PieChartTitle className="h4-typo">
+      <div className="summary-pie-chart">
+        <div className="summary-pie-chart__title h4-typo">
           {this.props.title}
-        </PieChartTitle>
-        <PieChartInnerWrapper>
-          <PieChartLegendWrapper>
+        </div>
+        <div className="summary-pie-chart__body">
+          <div className="summary-pie-chart__legend">
             {
               barChartData.map(entry => (
-                <LegendItemWrapper key={'text'.concat(entry.name)}>
+                <div className="summary-pie-chart__legend-item" key={'text'.concat(entry.name)}>
                   <div className="form-body">
                     {entry.name}
                   </div>
-                  <LegendItemValue className="form-special-number">
+                  <div className="summary-pie-chart__legend-item-value form-special-number">
                     {
                       // this.props.showPercentage ? `${entry[dataKey]}%` : entry[dataKey]
                       ChartsHelper.percentageFormatter(this.props.showPercentage)(entry[dataKey])
                     }
-                  </LegendItemValue>
-                </LegendItemWrapper>))
+                  </div>
+                </div>))
             }
-          </PieChartLegendWrapper>
+          </div>
           <PieChart
             width={this.props.outerRadius * 2}
             height={this.props.outerRadius * 2}
@@ -105,8 +72,8 @@ class SummaryPieChart extends React.Component {
             </Pie>
             <Tooltip formatter={ChartsHelper.percentageFormatter(this.props.showPercentage)} />
           </PieChart>
-        </PieChartInnerWrapper>
-      </PieChartWrapper>
+        </div>
+      </div>
     );
   }
 }

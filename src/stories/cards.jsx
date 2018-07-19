@@ -1,6 +1,5 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import CountCard from '../components/cards/CountCard';
 import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup';
 
 const countItems0 = [
@@ -71,11 +70,8 @@ const countItems2 = [
 ];
 
 storiesOf('Cards', module)
-  .add('CountCard', () => (
-    <CountCard countItems={countItems0} />
-  ))
   .add('DataSummaryCardGroup', () => (
-    <DataSummaryCardGroup summaryItems={countItems1} height={120} width={760} align="left" />
+    <DataSummaryCardGroup summaryItems={countItems0} height={120} width={760} align="left" />
   ))
   .add('DataSummaryCardGroup connected', () => (
     <DataSummaryCardGroup summaryItems={countItems1} connected />
@@ -83,4 +79,3 @@ storiesOf('Cards', module)
   .add('DataSummaryCardGroup with sub items', () => (
     <DataSummaryCardGroup summaryItems={countItems2} connected />
   ));
-  

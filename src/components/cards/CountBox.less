@@ -1,0 +1,32 @@
+@import '../../css/base.less';
+
+.count-box {
+  height: 100%;
+  &--align-center {
+    width: 100%;
+    display: flex;
+    padding: 26px;
+    background-color: none;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+  }
+
+  &--align-left {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  &__title {
+    &--align-left {
+      margin-bottom: 15px;
+      vertical-align: top;
+    }
+    &--align-right {
+      line-height: 100%;
+      margin-bottom: 11px;
+    }
+  }
+}

@@ -1,0 +1,32 @@
+
+
+.percentage-bar-chart {
+  width: 1010px;
+  height: 155px;
+  display: flex;
+  background-color: white;
+
+  &__legend {
+    -webkit-column-count: 2; /* Chrome, Safari, Opera */
+    -moz-column-count: 2; /* Firefox */
+    column-count: 2;
+    width: 430px;
+    padding-top: 22px;
+    padding-left: 25px;
+    padding-right: 25px;
+
+    &-color {
+      display: inline-block;
+      height: 10px;
+      width: 10px;
+    }
+
+    &-name {
+      margin-left: 6px;
+    }
+
+    &-value {
+      margin-left: 6px;
+    }
+  }
+}

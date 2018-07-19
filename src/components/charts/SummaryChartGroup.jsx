@@ -1,40 +1,19 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import SummaryPieChart from './SummaryPieChart';
 import SummaryBarChart from './SummaryBarChart';
-
-const SummaryChartGroupWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: ${props => props.width};
-`;
-
-const SummaryChart = styled.div`
-  display: inline-block;
-  background-color: #ffffff;
-  flex-basis: 0;
-  flex-grow: 1;
-  margin: 0;
-  position: relative;
-`;
-
-const SummaryChartLeftBorder = styled.div`
-  position: absolute;
-  top: 10px;
-  bottom: 10px;
-`;
+import './SummaryChartGroup.less';
 
 class SummaryChartGroup extends Component {
   render() {
     const width = (typeof this.props.width === 'number') ? `${this.props.width}px` : this.props.width;
     return (
-      <SummaryChartGroupWrapper width={width}>
+      <div className="summary-chart-group" style={{ width }}>
         {
           this.props.summaries.map((item, index) => (
-            <SummaryChart key={'summary-chart-'.concat(index)}>
+            <div className="summary-chart-group__column" key={index}>
               {
-                index > 0 && <SummaryChartLeftBorder className="left-silver-border" />
+                index > 0 && <div className="summary-chart-group__column-left-border" />
               }
               {
                 item.type === 'pie'
@@ -54,10 +33,10 @@ class SummaryChartGroup extends Component {
                     />
                   )
               }
-            </SummaryChart>
+            </div>
           ))
         }
-      </SummaryChartGroupWrapper>
+      </div>
     );
   }
 }

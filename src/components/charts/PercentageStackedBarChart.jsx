@@ -5,31 +5,10 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'underscore';
-import styled from 'styled-components';
 import ChartsHelper from './ChartsHelper';
+import './PercentageStackedBarChart.less';
 
 const getPercentageDataLabels = chartData => chartData.map(entry => entry.name);
-
-const stackedBarChartStyle = {
-  backgroundColor: '#FFFFFF',
-};
-
-const PercentageStackedBarChartWrapper = styled.div`
-  width: 1010px;
-  height: 155px;
-  display: flex;
-  background-color: white;
-`;
-
-const LegendWrapper = styled.div`
-  -webkit-column-count: 2; /* Chrome, Safari, Opera */
-  -moz-column-count: 2; /* Firefox */
-  column-count: 2;
-  width: 430px;
-  padding-top: 22px;
-  padding-left: 25px;
-  padding-right: 25px;
-`;
 
 const xAxisStyle = {
   fontSize: '10px',
@@ -45,37 +24,16 @@ const labelListStyle = {
   fontWeight: 600,
 };
 
-const LegendColorBlock = styled.span`
-  background-color: ${props => props.fill};
-  display: inline-block;
-  height: 10px;
-  width: 10px;
-`;
-
-const LegendNameText = styled.span`
-  margin-left: 6px;
-`;
-
-const LegendValueText = styled.span`
-  margin-left: 6px;
-`;
-
 class PercentageStackedBarChart extends React.Component {
   render() {
-    const getCategoryColor = (index) => {
-      // map index to (1-9)
-      const i = (index % 9) + 1;
-      return this.props.localTheme[`barGraph.bar${i}Color`];
-    };
     const percentageData = ChartsHelper.getPercentageData(
       this.props.data,
       this.props.percentageFixedPoint,
     );
     const percentageDataLabels = getPercentageDataLabels(this.props.data);
     return (
-      <PercentageStackedBarChartWrapper>
+      <div className="percentage-bar-chart">
         <BarChart
-          style={stackedBarChartStyle}
           width={580}
           height={155}
           data={percentageData}
@@ -104,31 +62,36 @@ class PercentageStackedBarChart extends React.Component {
                 key={name}
                 dataKey={name}
                 stackId="a"
-                fill={getCategoryColor(index)}
+                fill={ChartsHelper.getCategoryColor(index, this.props.localTheme)}
               >
-                <LabelList dataKey={name} position="center" style={labelListStyle} formatter={ChartsHelper.addPercentage} />
+                <LabelList dataKey={name} position="center" style={labelListStyle} formatter={ChartsHelper.addPercentage} className="percentage-bar-chart__label-list" />
               </Bar>
             ))
           }
         </BarChart>
-        <LegendWrapper>
+        <div className="percentage-bar-chart__legend">
           <ul>
             {
               percentageDataLabels.map((name, index) => (
                 <li key={`label-${name}`}>
-                  <LegendColorBlock fill={getCategoryColor(index)} />
-                  <LegendNameText className="form-body">
+                  <span
+                    className="percentage-bar-chart__legend-color"
+                    style={{
+                      background: ChartsHelper.getCategoryColor(index, this.props.localTheme),
+                    }}
+                  />
+                  <span className="percentage-bar-chart__legend-name form-body">
                     {name}
-                  </LegendNameText>
-                  <LegendValueText className="form-caption">
+                  </span>
+                  <span className="percentage-bar-chart__legend-value form-caption">
                     {'('.concat(Number(this.props.data[index].value).toLocaleString()).concat(')')}
-                  </LegendValueText>
+                  </span>
                 </li>
               ))
             }
           </ul>
-        </LegendWrapper>
-      </PercentageStackedBarChartWrapper>
+        </div>
+      </div>
     );
   }
 }

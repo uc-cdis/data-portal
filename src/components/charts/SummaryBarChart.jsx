@@ -2,27 +2,10 @@ import {
   ResponsiveContainer, BarChart, Bar,
   Tooltip, XAxis, YAxis, LabelList, Cell,
 } from 'recharts';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ChartsHelper from './ChartsHelper';
-
-const BarChartTitle = styled.div`
-  text-align: center;
-  border-bottom: solid black 1px;
-  line-height: 10px;
-  height: 22px;
-`;
-
-const BarChartWrapper = styled.div`
-  padding: 12px;
-  background-color: white;
-  & svg {
-    overflow: visible;
-  }
-  width: 100%;
-  height: 100%;
-`;
+import './SummaryBarChart.less';
 
 const yAxisStyle = {
   fontSize: '12px',
@@ -52,10 +35,10 @@ class SummaryBarChart extends React.Component {
     );
     const dataKey = ChartsHelper.getDataKey(this.props.showPercentage);
     return (
-      <BarChartWrapper>
-        <BarChartTitle className="h4-typo">
+      <div className="summary-bar-chart">
+        <div className="summary-bar-chart__title h4-typo">
           {this.props.title}
-        </BarChartTitle>
+        </div>
         <ResponsiveContainer width="100%" height={barChartHeight}>
           <BarChart
             layout={this.props.vertical ? 'vertical' : 'horizontal'}
@@ -81,7 +64,7 @@ class SummaryBarChart extends React.Component {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
-      </BarChartWrapper>
+      </div>
     );
   }
 }
