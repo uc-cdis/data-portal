@@ -4,6 +4,7 @@ import { action } from '@storybook/addon-actions';
 import SingleSelectFilter from '../components/filters/SingleSelectFilter/.';
 import FilterSection from '../components/filters/FilterSection/.';
 import FilterList from '../components/filters/FilterList/.';
+import FilterGroup from '../components/filters/FilterGroup/.';
 
 const filterOptions = [
   { text: "test1", filterType: "singleSelect" },
@@ -17,6 +18,23 @@ const filterSections = [
   { title: "Section 2", options: filterOptions },
 ];
 
+const filterSections2 = [
+  { title: "Section 3", options: filterOptions },
+  { title: "Section 4", options: filterOptions },
+];
+
+const filterSections3 = [
+  { title: "Section 5", options: filterOptions },
+  { title: "Section 6", options: filterOptions },
+];
+
+const tabs = [
+  { sections: filterSections, title: "Section1" },
+  { sections: filterSections2, title: "Section2" },
+  { sections: filterSections3, title: "This is a long section name" },
+  { sections: filterSections, title: "Section3" },
+]
+
 storiesOf('Filters', module)
   .add('SingleSelectFilter', () => (
     <div>
@@ -29,4 +47,7 @@ storiesOf('Filters', module)
   ))
   .add('FilterList', () => (
     <FilterList sections={filterSections} />
+  ))
+  .add('FilterGroup', () => (
+    <FilterGroup tabs={tabs} />
   ));
