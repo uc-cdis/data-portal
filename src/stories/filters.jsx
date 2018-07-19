@@ -5,5 +5,8 @@ import SingleSelectFilter from '../components/filters/SingleSelectFilter/.';
 
 storiesOf('Filters', module)
   .add('SingleSelectFilter', () => (
-    <SingleSelectFilter label='test1'/>
+    <div>
+      <SingleSelectFilter label='test1' onSelect={action('checked')}/>
+      <SingleSelectFilter label='test2' onSelect={action('checked')}/>
+    </div>
   ));
