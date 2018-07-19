@@ -24,7 +24,11 @@ class ProjectDashboard extends Component {
             Data Submission Summary
           </Title>
           <DataSummaryCardGroup
-            width={760} height={120} summaryItems={this.props.summaries} align="left" />
+            width={760}
+            height={120}
+            summaryItems={this.props.summaries}
+            align="left"
+          />
           {/* <ReduxProjectBarChart projectList={this.props.projectList} /> */}
         </DashTopDiv>
         <ProjectTable projectList={projectList} summaries={this.props.details} />
