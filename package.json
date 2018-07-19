@@ -29,6 +29,7 @@
     "material-ui": "^0.19.2",
     "material-ui-icons": "^1.0.0-alpha.19",
     "moment": "^2.18.0",
+    "multisort": "^0.5.3",
     "node-fetch": "^1.7.3",
     "npm": "^6.1.0",
     "nunjucks": "^3.0.1",
