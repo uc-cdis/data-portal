@@ -69,36 +69,6 @@
     outline: none;
     border: none;
     font-size: 12px;
-  }
-
-  // Table header
-  .ReactTable .rt-thead .rt-tr {
-    background-color: @white;
-    text-align: left;
-    box-shadow: 0 0px 0px 0;
-    border-bottom: 1px solid @black;
-  }
-
-  // Column headers
-  .ReactTable .rt-th,
-  .ReactTable .rt-resizable-header-content {
-    display: flex;
-    align-items: center;
-    letter-spacing: 0.02rem;
-    font-weight: @semi-bold;
-    color: @black;
-  }
-
-  // Sorting behavior on column headers
-  .ReactTable .rt-thead .rt-th.-sort-asc,
-  .ReactTable .rt-thead .rt-td.-sort-asc,
-  .ReactTable .rt-thead .rt-th.-sort-desc,
-  .ReactTable .rt-thead .rt-td.-sort-desc {
-    box-shadow: 0 0px 0px 0;
-  }
-
-  // Table row
-  .ReactTable .rt-tr {
     height: 50px;
 
     &:first-child {
@@ -138,7 +108,33 @@
       input[type="checkbox"]:checked:after {
         display: block;
       }
-    }
+     }
+  }
+
+  // Table header
+  .ReactTable .rt-thead .rt-tr {
+    background-color: @white;
+    text-align: left;
+    box-shadow: 0 0px 0px 0;
+    border-bottom: 1px solid @black;
+  }
+
+  // Column headers
+  .ReactTable .rt-th,
+  .ReactTable .rt-resizable-header-content {
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.02rem;
+    font-weight: @semi-bold;
+    color: @black;
+  }
+
+  // Sorting behavior on column headers
+  .ReactTable .rt-thead .rt-th.-sort-asc,
+  .ReactTable .rt-thead .rt-td.-sort-asc,
+  .ReactTable .rt-thead .rt-th.-sort-desc,
+  .ReactTable .rt-thead .rt-td.-sort-desc {
+    box-shadow: 0 0px 0px 0;
   }
 
   // Odd rows
