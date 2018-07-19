@@ -49,6 +49,7 @@
   .tableToolbar {
     padding-left: 0;
     padding-right: 0;
+    font-size: 16px;
   }
 
   // Overall table
@@ -62,7 +63,6 @@
     white-space: normal;
     outline: none;
     border: none;
-    font-size: 12px;
     height: 50px;
 
     &:first-child {
@@ -114,13 +114,14 @@
   }
 
   // Column headers
-  .ReactTable .rt-th,
-  .ReactTable .rt-resizable-header-content {
+  .rt-th,
+  .rt-resizable-header-content {
     display: flex;
     align-items: center;
     letter-spacing: 0.02rem;
     font-weight: @semi-bold;
     color: @black;
+    font-size: 14px;
   }
 
   // Sorting behavior on column headers
@@ -142,6 +143,7 @@
     align-items: center;
     letter-spacing: 0.03rem;
     color: @gray;
+    font-size: 12px;
   }
 
   // Dropdown to select number of rows
