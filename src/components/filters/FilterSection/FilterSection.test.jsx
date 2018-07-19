@@ -25,11 +25,6 @@ describe('FilterSection', () => {
     expect(component.find(FilterSection).length).toBe(1);
   });
 
-  it('has the proper class name when closed', () => {
-    expect(component.instance().state.isExpanded).toBe(false);
-    expect(component.find('.filter-section--closed').length).toBe(1);
-  });
-
   it('toggles expand on click', () => {
     expect(component.instance().state.isExpanded).toBe(false);
     expect(component.find('button').length).toBe(1);

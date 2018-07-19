@@ -3,6 +3,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import SingleSelectFilter from '../components/filters/SingleSelectFilter/.';
 import FilterSection from '../components/filters/FilterSection/.';
+import FilterList from '../components/filters/FilterList/.';
 
 const filterOptions = [
   { text: "test1", filterType: "singleSelect" },
@@ -24,7 +25,8 @@ storiesOf('Filters', module)
     </div>
   ))
   .add('FilterSection', () => (
-    <div>
-      <FilterSection title={"Section 1"} options={filterOptions} />
-    </div>
+    <FilterSection title={"Section 1"} options={filterOptions} />
+  ))
+  .add('FilterList', () => (
+    <FilterList sections={filterSections} />
   ));

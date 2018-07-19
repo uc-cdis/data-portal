@@ -19,7 +19,7 @@ class FilterSection extends React.Component {
 
   render() {
     return (
-      <div className={"filter-section".concat(!this.state.isExpanded ? " filter-section--closed" : "")}>
+      <div className="filter-section">
         <div className="filter-section__header">
           <p className="filter-section__title">{this.props.title}</p>
           <button onClick={this.toggleSection}>Icon</button>
