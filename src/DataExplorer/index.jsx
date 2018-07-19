@@ -2,6 +2,7 @@ import React from 'react';
 import multisort from 'multisort';
 import DataExplorerTable from '../components/tables/DataExplorerTable/.';
 
+// Skeleton for connecting GraphQL data
 const dummyConfig = {
   timestamp: '2018-01-12T16:42:07.495Z',
   type: 'subjects',
