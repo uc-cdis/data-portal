@@ -5,6 +5,7 @@ function loadStories() {
   require('../src/stories/buttons.jsx');
   require('../src/stories/charts.jsx');
   require('../src/stories/tables.jsx');
+  require('../src/stories/cards.jsx')
 }
 
 configure(loadStories, module);

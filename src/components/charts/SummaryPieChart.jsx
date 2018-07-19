@@ -1,10 +1,10 @@
-
 import {
   PieChart, Pie, Tooltip, Cell,
 } from 'recharts';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ChartsHelper from './ChartsHelper';
 
 const PieChartWrapper = styled.div`
   width: 100%;
@@ -37,55 +37,28 @@ const pieChartStyle = {
   marginTop: '22px',
 };
 
-const LegendWrapper = styled.div`
+const LegendItemWrapper = styled.div`
   text-align: right;
   margin-bottom: 22px;
 `;
 
-const LegendName = styled.div`
-`;
-
-const LegendValue = styled.div`
+const LegendItemValue = styled.div`
   margin-top: 8px;
 `;
-
-const calculateBarChartData = (data, showPercentage, percentageFixedPoint) => {
-  if (showPercentage) {
-    let sum = 0;
-    data.forEach((d) => { sum += d.value; });
-    let percentLeft = 100;
-    return data.map((entry, index, array) => {
-      let percentage;
-      if (index < array.length - 1) {
-        percentage = (entry.value * 100) / sum;
-      } else {
-        percentage = percentLeft;
-      }
-      percentage = Number(Number.parseFloat(percentage).toFixed(percentageFixedPoint));
-      percentLeft -= percentage;
-      return Object.assign({ percentage }, entry);
-    });
-  }
-  return data;
-};
 
 class SummaryPieChart extends React.Component {
   render() {
     const useTwoColors = this.props.data.length === 2;
-    const getCategoryColor = (index) => {
-      if (useTwoColors) {
-        return this.props.localTheme[`pieChartTwoColor.pie${(index % 2) + 1}Color`];
-      }
-      const i = (index % 9) + 1;
-      return this.props.localTheme[`barGraph.bar${i}Color`];
-    };
-    const barChartData = calculateBarChartData(
+    const getColor = useTwoColors
+      ? ChartsHelper.getCategoryColorFrom2Colors
+      : ChartsHelper.getCategoryColor;
+    const barChartData = ChartsHelper.calculateBarChartData(
       this.props.data,
       this.props.showPercentage,
       this.props.percentageFixedPoint,
     );
-    const dataKey = this.props.showPercentage ? 'percentage' : 'value';
-    const toPercentageFormatter = v => (this.props.showPercentage ? `${v}%` : v);
+    const dataKey = ChartsHelper.getDataKey(this.props.showPercentage);
+
     return (
       <PieChartWrapper>
         <PieChartTitle className="h4-typo">
@@ -95,16 +68,17 @@ class SummaryPieChart extends React.Component {
           <PieChartLegendWrapper>
             {
               barChartData.map(entry => (
-                <LegendWrapper className="form-body" key={'text'.concat(entry.name)}>
-                  <LegendName>
+                <LegendItemWrapper key={'text'.concat(entry.name)}>
+                  <div className="form-body">
                     {entry.name}
-                  </LegendName>
-                  <LegendValue className="form-special-number">
+                  </div>
+                  <LegendItemValue className="form-special-number">
                     {
-                      this.props.showPercentage ? `${entry[dataKey]}%` : entry[dataKey]
+                      // this.props.showPercentage ? `${entry[dataKey]}%` : entry[dataKey]
+                      ChartsHelper.percentageFormatter(this.props.showPercentage)(entry[dataKey])
                     }
-                  </LegendValue>
-                </LegendWrapper>))
+                  </LegendItemValue>
+                </LegendItemWrapper>))
             }
           </PieChartLegendWrapper>
           <PieChart
@@ -123,13 +97,13 @@ class SummaryPieChart extends React.Component {
               {
                 barChartData.map((entry, index) => (
                   <Cell
-                    key={'pie'.concat(index)}
+                    key={index}
                     dataKey={dataKey}
-                    fill={getCategoryColor(index)}
+                    fill={getColor(index, this.props.localTheme, useTwoColors)}
                   />))
               }
             </Pie>
-            <Tooltip formatter={toPercentageFormatter} />
+            <Tooltip formatter={ChartsHelper.percentageFormatter(this.props.showPercentage)} />
           </PieChart>
         </PieChartInnerWrapper>
       </PieChartWrapper>

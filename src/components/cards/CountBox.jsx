@@ -14,22 +14,14 @@ const CountBoxTitle = styled.div`
 `;
 
 const CountBoxNumber = styled.div`
-  .align-left & {
-    position: absolute;
-    bottom: 20px;
-  }
 `;
 
 const CountBoxWrapper = styled.div`
-  &:first-child {
-    margin-left: 0px;
-  }
+  height: 100%;
 
   &.align-center { 
     width: 100%;
-    height: 100%;
     display: flex;
-    margin-left: 0
     padding: 0,
     backgroundColor: none;
     flex-direction: column;
@@ -38,13 +30,10 @@ const CountBoxWrapper = styled.div`
   }
 
   &.align-left {
-    position: relative;
-    width: 180px;
-    height: 120px;
     padding: 20px;
-    margin-left: 15px;
-    background-color: #ffffff;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 `;
 
@@ -66,11 +55,11 @@ class CountBox extends Component {
 CountBox.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.number.isRequired,
-  align: PropTypes.string,
+  align: PropTypes.oneOf(['left', 'center']),
 };
 
 CountBox.defaultProps = {
-  align: 'left',
+  align: 'center',
 };
 
 export default CountBox;

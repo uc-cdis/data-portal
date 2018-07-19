@@ -1,4 +1,3 @@
-
 import {
   ResponsiveContainer, BarChart, Bar,
   Tooltip, XAxis, YAxis, LabelList, Cell,
@@ -6,6 +5,7 @@ import {
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ChartsHelper from './ChartsHelper';
 
 const BarChartTitle = styled.div`
   text-align: center;
@@ -40,43 +40,17 @@ const labelValueStyle = {
   color: '#3283c8',
 };
 
-const calculateBarChartData = (data, showPercentage, percentageFixedPoint) => {
-  if (showPercentage) {
-    let sum = 0;
-    data.forEach((d) => { sum += d.value; });
-    let percentLeft = 100;
-    return data.map((entry, index, array) => {
-      let percentage;
-      if (index < array.length - 1) {
-        percentage = (entry.value * 100) / sum;
-      } else {
-        percentage = percentLeft;
-      }
-      percentage = Number(Number.parseFloat(percentage).toFixed(percentageFixedPoint));
-      percentLeft -= percentage;
-      return Object.assign({ percentage }, entry);
-    });
-  }
-  return data;
-};
-
 class SummaryBarChart extends React.Component {
   render() {
-    const getCategoryColor = (index) => {
-      // map index to (1-9)
-      const i = (index % 9) + 1;
-      return this.props.localTheme[`barGraph.bar${i}Color`];
-    };
     const monoFillColor = this.props.monoColor ? this.props.color : undefined;
     const barChartHeight = (this.props.data.length * this.props.barSize)
       + ((this.props.data.length + 1) * this.props.barGap) + 2;
-    const barChartData = calculateBarChartData(
+    const barChartData = ChartsHelper.calculateBarChartData(
       this.props.data,
       this.props.showPercentage,
       this.props.percentageFixedPoint,
     );
-    const dataKey = this.props.showPercentage ? 'percentage' : 'value';
-    const toPercentageFormatter = v => (this.props.showPercentage ? `${v}%` : v);
+    const dataKey = ChartsHelper.getDataKey(this.props.showPercentage);
     return (
       <BarChartWrapper>
         <BarChartTitle className="h4-typo">
@@ -90,16 +64,20 @@ class SummaryBarChart extends React.Component {
             barSize={this.props.barSize}
             margin={{ top: 4, right: 35, left: 15 }}
           >
-            <Tooltip formatter={toPercentageFormatter} />
+            <Tooltip formatter={ChartsHelper.percentageFormatter(this.props.showPercentage)} />
             <XAxis axisLine={false} tickLine={false} type="number" hide />
             <YAxis axisLine={false} tickLine={false} dataKey="name" type="category" style={yAxisStyle} interval={0} />
             <Bar dataKey={dataKey}>
               {
                 barChartData.map((entry, index) => (
-                  <Cell key={'bar'.concat(index)} fill={monoFillColor || getCategoryColor(index)} />
+                  <Cell
+                    key={index}
+                    fill={monoFillColor
+                      || ChartsHelper.getCategoryColor(index, this.props.localTheme)}
+                  />
                 ))
               }
-              <LabelList dataKey={dataKey} position="right" offset={8} style={labelValueStyle} formatter={toPercentageFormatter} />
+              <LabelList dataKey={dataKey} position="right" offset={8} style={labelValueStyle} formatter={ChartsHelper.percentageFormatter(this.props.showPercentage)} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

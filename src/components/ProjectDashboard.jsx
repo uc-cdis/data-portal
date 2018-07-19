@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { clearFix } from 'polished';
-import CountCard from './cards/CountCard';
+import DataSummaryCardGroup from './cards/DataSummaryCardGroup';
 import ProjectTable from './tables/ProjectTable';
 
 const DashTopDiv = styled.div`
-  ${clearFix()},
+  height: 120px;
+  display: flex;
+`;
+
+const Title = styled.div`
+  padding-top: 10px;
+  flex-basis: 460px;
 `;
 
 class ProjectDashboard extends Component {
@@ -15,9 +20,11 @@ class ProjectDashboard extends Component {
     return (
       <div className="clearfix">
         <DashTopDiv>
-          <CountCard
-            countItems={this.props.summaries}
-          />
+          <Title className="h1-typo">
+            Data Submission Summary
+          </Title>
+          <DataSummaryCardGroup
+            width={760} height={120} summaryItems={this.props.summaries} align="left" />
           {/* <ReduxProjectBarChart projectList={this.props.projectList} /> */}
         </DashTopDiv>
         <ProjectTable projectList={projectList} summaries={this.props.details} />
@@ -25,7 +32,6 @@ class ProjectDashboard extends Component {
     );
   }
 }
-
 
 ProjectDashboard.propTypes = {
   summaries: PropTypes.arrayOf(PropTypes.object).isRequired,

@@ -6,24 +6,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'underscore';
 import styled from 'styled-components';
-
-const getPercentageData = (chartData, percentageFixedPoint) => {
-  const result = {};
-  const sum = chartData.reduce((a, entry) => a + entry.value, 0);
-  let percentLeft = 100;
-  chartData.forEach((entry, index, array) => {
-    let percentage;
-    if (index < array.length - 1) {
-      percentage = (entry.value * 100) / sum;
-    } else {
-      percentage = percentLeft;
-    }
-    percentage = Number(Number.parseFloat(percentage).toFixed(percentageFixedPoint));
-    percentLeft -= percentage;
-    result[entry.name] = percentage;
-  });
-  return [result];
-};
+import ChartsHelper from './ChartsHelper';
 
 const getPercentageDataLabels = chartData => chartData.map(entry => entry.name);
 
@@ -84,9 +67,11 @@ class PercentageStackedBarChart extends React.Component {
       const i = (index % 9) + 1;
       return this.props.localTheme[`barGraph.bar${i}Color`];
     };
-    const percentageData = getPercentageData(this.props.data, this.props.percentageFixedPoint);
+    const percentageData = ChartsHelper.getPercentageData(
+      this.props.data,
+      this.props.percentageFixedPoint,
+    );
     const percentageDataLabels = getPercentageDataLabels(this.props.data);
-    const toPercentageFormatter = per => (`${per}%`);
     return (
       <PercentageStackedBarChartWrapper>
         <BarChart
@@ -110,7 +95,7 @@ class PercentageStackedBarChart extends React.Component {
             domain={[0, 100]}
             tickMargin={10}
             style={xAxisStyle}
-            tickFormatter={toPercentageFormatter}
+            tickFormatter={ChartsHelper.addPercentage}
           />
           <YAxis axisLine={false} tickLine={false} dataKey="name" type="category" hide />
           {
@@ -121,7 +106,7 @@ class PercentageStackedBarChart extends React.Component {
                 stackId="a"
                 fill={getCategoryColor(index)}
               >
-                <LabelList dataKey={name} position="center" style={labelListStyle} formatter={toPercentageFormatter} />
+                <LabelList dataKey={name} position="center" style={labelListStyle} formatter={ChartsHelper.addPercentage} />
               </Bar>
             ))
           }

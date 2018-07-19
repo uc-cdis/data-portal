@@ -5,24 +5,23 @@ import CountBox from './CountBox';
 
 const DataSummaryCardGroupWrapper = styled.div`
   display: flex;
-  &.connected-count-card-wrapper {
-    width: 100%;
-  }
+  width: ${props => props.width};
+  flex-basis: ${props => props.width};
 `;
 
 const SummaryCard = styled.div`
   display: inline-block;
   background-color: #ffffff;
-  height: 97px;
+  height: ${props => props.height}px;
   flex-grow: 1;
-  flex-basis: ${props => props.widthPercentage}%;
-  .separated-data-summary-card-group & {
+  flex-basis: 0;
+  .separated & {
     margin-left: 15px;
     &:first-child {
       margin-left: 0px;
     }
   }
-  .connected-data-summary-card-group & {
+  .connected & {
     margin: 0;
     &:first-child {
       border: none;
@@ -53,30 +52,41 @@ const SummarySubCardLeftBorder = styled.div`
   bottom: 28px;
 `;
 
+
 /**
  * Little card with a bunch of counters on it for cases, experiments, files, ...
  */
 class DataSummaryCardGroup extends Component {
   render() {
-    const widthPercentage = 100 / this.props.summaryItems.length;
+    const totalWidth = typeof this.props.width === 'string' || `${this.props.width}px`;
     return (
-      <DataSummaryCardGroupWrapper className={'data-summary-card-group '.concat(this.props.connected ? 'connected-data-summary-card-group' : 'separated-data-summary-card-group')}>
+      <DataSummaryCardGroupWrapper className={this.props.connected ? 'connected' : 'separated'} width={totalWidth}>
         {
           this.props.summaryItems.map((item, index) => (
-            <SummaryCard key={`card-${item.label || item[0].label}`} widthPercentage={widthPercentage}>
+            <SummaryCard key={index} height={this.props.height}>
               {this.props.connected && index > 0
                 && <SummaryCardLeftBorder className="left-silver-border" />
               }
               {
-                !item.length ? (<CountBox label={item.label} value={item.value} align="center" />) : (
+                !item.length ? (
+                  <CountBox
+                    label={item.label}
+                    value={item.value}
+                    align={this.props.align}
+                  />
+                ) : (
                   <SubCountBoxesWrapper>
                     {
                       item.map((subItem, subIndex) => (
-                        <SubCountBoxWrapper key={`sub-count-box-${subItem.label}`}>
+                        <SubCountBoxWrapper key={subIndex}>
                           {subIndex > 0
                             && <SummarySubCardLeftBorder className="left-silver-border" />
                           }
-                          <CountBox label={subItem.label} value={subItem.value} align="center" />
+                          <CountBox
+                            label={subItem.label}
+                            value={subItem.value}
+                            align={this.props.align}
+                          />
                         </SubCountBoxWrapper>
                       ))
                     }
@@ -92,7 +102,7 @@ class DataSummaryCardGroup extends Component {
 }
 
 const summaryValueShape = PropTypes.shape({
-  name: PropTypes.string,
+  label: PropTypes.string,
   value: PropTypes.number,
 });
 const summarySubValueShape = PropTypes.arrayOf(summaryValueShape);
@@ -102,10 +112,16 @@ DataSummaryCardGroup.propTypes = {
     summarySubValueShape,
   ])).isRequired,
   connected: PropTypes.bool,
+  align: PropTypes.oneOf(['left', 'center']),
+  width: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+  height: PropTypes.number,
 };
 
 DataSummaryCardGroup.defaultProps = {
   connected: false,
+  align: 'center',
+  width: '100%',
+  height: 97,
 };
 
 export default DataSummaryCardGroup;
