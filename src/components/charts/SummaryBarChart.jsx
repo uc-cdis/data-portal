@@ -54,7 +54,7 @@ class SummaryBarChart extends React.Component {
               {
                 barChartData.map((entry, index) => (
                   <Cell
-                    key={index}
+                    key={dataKey}
                     fill={monoFillColor
                       || ChartsHelper.getCategoryColor(index, this.props.localTheme)}
                   />

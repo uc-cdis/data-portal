@@ -11,7 +11,7 @@ class SummaryChartGroup extends Component {
       <div className="summary-chart-group" style={{ width }}>
         {
           this.props.summaries.map((item, index) => (
-            <div className="summary-chart-group__column" key={index}>
+            <div className="summary-chart-group__column" key={item.title}>
               {
                 index > 0 && <div className="summary-chart-group__column-left-border" />
               }

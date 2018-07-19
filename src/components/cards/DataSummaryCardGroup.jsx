@@ -21,7 +21,7 @@ class DataSummaryCardGroup extends Component {
           this.props.summaryItems.map((item, index) => (
             <div
               className={'data-summary-card-group__card'.concat(this.props.connected ? ' connected' : ' separated')}
-              key={index}
+              key={item.label || item[0].label}
             >
               {this.props.connected && index > 0
                 && <div className="data-summary-card-group__card-left-border" />
@@ -37,7 +37,7 @@ class DataSummaryCardGroup extends Component {
                   <div className="data-summary-card-group__sub-card-group">
                     {
                       item.map((subItem, subIndex) => (
-                        <div className="data-summary-card-group__sub-card-item" key={subIndex}>
+                        <div className="data-summary-card-group__sub-card-item" key={subItem.label}>
                           {subIndex > 0
                             && <div className="data-summary-card-group__sub-card-left-border" />
                           }

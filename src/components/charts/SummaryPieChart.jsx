@@ -64,7 +64,7 @@ class SummaryPieChart extends React.Component {
               {
                 barChartData.map((entry, index) => (
                   <Cell
-                    key={index}
+                    key={dataKey}
                     dataKey={dataKey}
                     fill={getColor(index, this.props.localTheme, useTwoColors)}
                   />))
