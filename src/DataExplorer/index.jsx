@@ -1,6 +1,6 @@
 import React from 'react';
-import DataExplorerTable from '../components/tables/DataExplorerTable/.';
 import multisort from 'multisort';
+import DataExplorerTable from '../components/tables/DataExplorerTable/.';
 
 const dummyConfig = {
   timestamp: '2018-01-12T16:42:07.495Z',
@@ -59,33 +59,31 @@ const dummyConfig = {
   ],
 };
 
-const fetchGQL = ({ sort, offset, first }) => {
-  return fetch(
-    '/api/v0/flat-search/search/graphql',
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      body: JSON.stringify(
-        {
-          query: "{ subject { hits { edges { node { name, project, study, gender, ethnicity, race, file_type }}}}}",
-        }
-      ),
-    }
-  ).then(
-    res => res.json()
-  ).then(
-    (json) => {
-      const cleanData = json.data.subject.hits.edges.map( it => it.node );
-      const searchCriteria = sort.map(s =>
-        s.order == 'desc' ? '~'.concat(s.field) : s.field.toString()
-      )
-      return {
-        total: cleanData.length,
-        data: multisort(cleanData, searchCriteria).slice(offset, offset + first)
-      };
-    }
-  );
-};
+const fetchGQL = ({ sort, offset, first }) => fetch(
+  '/api/v0/flat-search/search/graphql',
+  {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    body: JSON.stringify(
+      {
+        query: '{ subject { hits { edges { node { name, project, study, gender, ethnicity, race, file_type }}}}}',
+      },
+    ),
+  },
+).then(
+  res => res.json(),
+).then(
+  (json) => {
+    const cleanData = json.data.subject.hits.edges.map(it => it.node);
+    const searchCriteria = sort.map(s =>
+      (s.order === 'desc' ? '~'.concat(s.field) : s.field.toString()),
+    );
+    return {
+      total: cleanData.length,
+      data: multisort(cleanData, searchCriteria).slice(offset, offset + first),
+    };
+  },
+);
 
 
 class DataExplorer extends React.Component {

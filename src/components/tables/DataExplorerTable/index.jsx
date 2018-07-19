@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '@arranger/components/public/themeStyles/beagle/beagle.css';
 import DataTable from '@arranger/components/dist/DataTable';
+import '@arranger/components/public/themeStyles/beagle/beagle.css';
+import fileDownload from 'js-file-download';
 import IconicButton from '../../buttons/IconicButton';
 import dictIcons from '../../../img/icons';
-import fileDownload from 'js-file-download';
 import './DataExplorerTable.less';
 
 class DataExplorerTable extends React.Component {
