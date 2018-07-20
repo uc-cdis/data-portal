@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SingleSelectFilter from '../SingleSelectFilter/.';
 import RangeFilter from '../RangeFilter/.';
+import FontAwesome from 'react-fontawesome';
 import './FilterSection.less';
 
 class FilterSection extends React.Component {
@@ -22,7 +23,10 @@ class FilterSection extends React.Component {
       <div className="filter-section">
         <div className="filter-section__header">
           <p className="filter-section__title">{this.props.title}</p>
-          <button onClick={this.toggleSection}>Icon</button>
+          <FontAwesome
+            name={this.state.isExpanded ? "chevron-down" : "chevron-up"}
+            onClick={this.toggleSection}
+          />
         </div>
         {
           this.state.isExpanded ?
