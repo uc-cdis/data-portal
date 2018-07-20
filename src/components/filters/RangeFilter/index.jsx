@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import './RangeFilter.less';
@@ -13,14 +12,14 @@ class RangeFilter extends React.Component {
     this.state = {
       lowerBound: this.props.min,
       upperBound: this.props.max,
-    }
+    };
     this.onSliderChange = this.onSliderChange.bind(this);
   }
 
   onSliderChange(range) {
     this.setState({ lowerBound: range[0], upperBound: range[1] }, () => {
       if (this.props.onDrag) {
-        this.props.onDrag(this.state.lowerBound, this.state.upperBound)
+        this.props.onDrag(this.state.lowerBound, this.state.upperBound);
       }
     });
   }
@@ -46,10 +45,10 @@ class RangeFilter extends React.Component {
 }
 
 RangeFilter.propTypes = {
-  label: PropTypes.string,
-  onDrag: PropTypes.func,
+  label: PropTypes.string.isRequired,
+  onDrag: PropTypes.func.isRequired,
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
-}
+};
 
 export default RangeFilter;

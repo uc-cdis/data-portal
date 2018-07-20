@@ -3,8 +3,9 @@ import { mount } from 'enzyme';
 import RangeFilter from '.';
 
 describe('RangeFilter', () => {
+  const onDrag = jest.fn();
   const component = mount(
-    <RangeFilter min={0} max={100} />
+    <RangeFilter min={0} max={100} onDrag={onDrag} />,
   );
 
   it('renders', () => {
@@ -18,4 +19,4 @@ describe('RangeFilter', () => {
     expect(component.instance().state.lowerBound).toBe(30);
     expect(component.instance().state.upperBound).toBe(55);
   });
-})
+});

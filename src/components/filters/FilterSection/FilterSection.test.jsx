@@ -4,21 +4,28 @@ import FilterSection from '.';
 
 describe('FilterSection', () => {
   const singleSelectOptions = [
-    { text: "test1", filterType: "singleSelect" },
-    { text: "test2", filterType: "singleSelect" },
-    { text: "test3", filterType: "singleSelect" },
-    { text: "test4", filterType: "singleSelect" },
+    { text: 'test1', filterType: 'singleSelect' },
+    { text: 'test2', filterType: 'singleSelect' },
+    { text: 'test3', filterType: 'singleSelect' },
+    { text: 'test4', filterType: 'singleSelect' },
   ];
 
   const mixedOptions = [
-    { text: "test1", filterType: "singleSelect" },
-    { text: "test2", filterType: "range", min: 0, max: 100 },
-    { text: "test3", filterType: "range", min: 0, max: 100 },
-    { text: "test4", filterType: "singleSelect" },
+    { text: 'test1', filterType: 'singleSelect' },
+    { text: 'test2', filterType: 'range', min: 0, max: 100 },
+    { text: 'test3', filterType: 'range', min: 0, max: 100 },
+    { text: 'test4', filterType: 'singleSelect' },
   ];
 
+  const onDrag = jest.fn();
+  const onSelect = jest.fn();
   const component = mount(
-    <FilterSection title="Section Title" options={singleSelectOptions} />
+    <FilterSection
+      title="Section Title"
+      options={singleSelectOptions}
+      onSelect={onSelect}
+      onDrag={onDrag}
+    />,
   );
 
   it('renders', () => {
@@ -33,11 +40,15 @@ describe('FilterSection', () => {
   });
 
   it('picks the right kind of filter to display', () => {
-    console.log(component.html());
     expect(component.find('.single-select-filter').length).toBe(singleSelectOptions.length);
     expect(component.find('.range-filter').length).toBe(0);
     const mixedFilterComponent = mount(
-      <FilterSection title="Section Title" options={mixedOptions} />
+      <FilterSection
+        title="Section Title"
+        options={mixedOptions}
+        onSelect={onSelect}
+        onDrag={onDrag}
+      />,
     );
     mixedFilterComponent.find('.fa').simulate('click');
     expect(mixedFilterComponent.find('.single-select-filter').length).toBe(2);

@@ -26,9 +26,9 @@ FilterList.propTypes = {
     title: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.shape({
       text: PropTypes.string,
-      filterType: PropTypes.oneOf(["singleSelect", "range"]),
+      filterType: PropTypes.oneOf(['singleSelect', 'range']),
     })),
-  })),
-}
+  })).isRequired,
+};
 
 export default FilterList;

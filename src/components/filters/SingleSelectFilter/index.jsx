@@ -19,6 +19,7 @@ class SingleSelectFilter extends React.Component {
 
 SingleSelectFilter.propTypes = {
   label: PropTypes.string.isRequired,
-  onSelect: PropTypes.func,
-}
+  onSelect: PropTypes.func.isRequired,
+};
+
 export default SingleSelectFilter;

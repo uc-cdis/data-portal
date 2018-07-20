@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import FontAwesome from 'react-fontawesome';
 import SingleSelectFilter from '../SingleSelectFilter/.';
 import RangeFilter from '../RangeFilter/.';
-import FontAwesome from 'react-fontawesome';
 import './FilterSection.less';
 
 class FilterSection extends React.Component {
@@ -10,7 +10,7 @@ class FilterSection extends React.Component {
     super(props);
     this.state = {
       isExpanded: false,
-    }
+    };
     this.toggleSection = this.toggleSection.bind(this);
   }
 
@@ -24,7 +24,7 @@ class FilterSection extends React.Component {
         <div className="filter-section__header">
           <p className="filter-section__title">{this.props.title}</p>
           <FontAwesome
-            name={this.state.isExpanded ? "chevron-down" : "chevron-up"}
+            name={this.state.isExpanded ? 'chevron-down' : 'chevron-up'}
             onClick={this.toggleSection}
           />
         </div>
@@ -32,13 +32,13 @@ class FilterSection extends React.Component {
           {
             this.state.isExpanded ?
               this.props.options.map((option, index) => (
-                option.filterType === "singleSelect" ?
+                option.filterType === 'singleSelect' ?
                   <SingleSelectFilter
                     key={index}
                     label={option.text}
                     onSelect={this.props.onSelect}
                   />
-                :
+                  :
                   <RangeFilter
                     key={index}
                     label={option.text}
@@ -47,7 +47,7 @@ class FilterSection extends React.Component {
                     onDrag={this.props.onDrag}
                   />
               ))
-            : null
+              : null
           }
         </div>
       </div>
@@ -58,11 +58,16 @@ class FilterSection extends React.Component {
 FilterSection.propTypes = {
   title: PropTypes.string,
   options: PropTypes.arrayOf(PropTypes.shape({
-    text: PropTypes.string,
-    filterType: PropTypes.oneOf(["singleSelect", "range"]),
+    text: PropTypes.string.isRequired,
+    filterType: PropTypes.oneOf(['singleSelect', 'range']).isRequired,
   })),
-  onSelect: PropTypes.func,
-  onDrag: PropTypes.func,
-}
+  onSelect: PropTypes.func.isRequired,
+  onDrag: PropTypes.func.isRequired,
+};
+
+FilterSection.defaultProps = {
+  title: '',
+  options: [],
+};
 
 export default FilterSection;
