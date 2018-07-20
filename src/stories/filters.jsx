@@ -11,7 +11,12 @@ const filterOptions = [
   { text: 'test1', filterType: 'singleSelect' },
   { text: 'test2', filterType: 'singleSelect' },
   { text: 'test3', filterType: 'singleSelect' },
-  { text: 'test4', filterType: 'range', min: 0, max: 1000 },
+  {
+    text: 'test4',
+    filterType: 'range',
+    min: 0,
+    max: 1000,
+  },
 ];
 
 const filterSections = [

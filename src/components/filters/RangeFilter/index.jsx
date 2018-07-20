@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Slider from 'rc-slider';
+import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import './RangeFilter.less';
-
-const Range = Slider.Range;
 
 class RangeFilter extends React.Component {
   constructor(props) {

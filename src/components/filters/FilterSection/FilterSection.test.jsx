@@ -12,8 +12,18 @@ describe('FilterSection', () => {
 
   const mixedOptions = [
     { text: 'test1', filterType: 'singleSelect' },
-    { text: 'test2', filterType: 'range', min: 0, max: 100 },
-    { text: 'test3', filterType: 'range', min: 0, max: 100 },
+    {
+      text: 'test2',
+      filterType: 'range',
+      min: 0,
+      max: 100,
+    },
+    {
+      text: 'test3',
+      filterType: 'range',
+      min: 0,
+      max: 100,
+    },
     { text: 'test4', filterType: 'singleSelect' },
   ];
 

@@ -27,6 +27,7 @@ class FilterGroup extends React.Component {
                 tabIndex={this.state.selectedTab.index}
                 className={'filter-group__tab'.concat(this.state.selectedTab.index === index ? ' filter-group__tab--selected' : '')}
                 onClick={() => this.selectTab(tab, index)}
+                onKeyDown={() => this.selectTab(tab, index)}
               >
                 <p className="filter-group__tab-title">
                   {tab.title}
