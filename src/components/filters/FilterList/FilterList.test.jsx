@@ -7,7 +7,7 @@ describe('FilterList', () => {
     { text: "test1", filterType: "singleSelect" },
     { text: "test2", filterType: "singleSelect" },
     { text: "test3", filterType: "singleSelect" },
-    { text: "test4", filterType: "range" },
+    { text: "test4", filterType: "range", min: 0, max: 100 },
   ];
 
   const filterSections = [

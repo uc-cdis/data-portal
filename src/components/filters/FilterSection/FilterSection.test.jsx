@@ -12,8 +12,8 @@ describe('FilterSection', () => {
 
   const mixedOptions = [
     { text: "test1", filterType: "singleSelect" },
-    { text: "test2", filterType: "range" },
-    { text: "test3", filterType: "range" },
+    { text: "test2", filterType: "range", min: 0, max: 100 },
+    { text: "test3", filterType: "range", min: 0, max: 100 },
     { text: "test4", filterType: "singleSelect" },
   ];
 
@@ -27,19 +27,20 @@ describe('FilterSection', () => {
 
   it('toggles expand on click', () => {
     expect(component.instance().state.isExpanded).toBe(false);
-    expect(component.find('button').length).toBe(1);
-    component.find('button').simulate('click');
+    expect(component.find('.fa').length).toBe(1);
+    component.find('.fa').simulate('click');
     expect(component.instance().state.isExpanded).toBe(true);
   });
 
   it('picks the right kind of filter to display', () => {
-    expect(component.find('SingleSelectFilter').length).toBe(singleSelectOptions.length);
-    expect(component.find('RangeFilter').length).toBe(0);
+    console.log(component.html());
+    expect(component.find('.single-select-filter').length).toBe(singleSelectOptions.length);
+    expect(component.find('.range-filter').length).toBe(0);
     const mixedFilterComponent = mount(
       <FilterSection title="Section Title" options={mixedOptions} />
     );
-    mixedFilterComponent.find('button').simulate('click');
-    expect(mixedFilterComponent.find('SingleSelectFilter').length).toBe(2);
-    expect(mixedFilterComponent.find('RangeFilter').length).toBe(2);
+    mixedFilterComponent.find('.fa').simulate('click');
+    expect(mixedFilterComponent.find('.single-select-filter').length).toBe(2);
+    expect(mixedFilterComponent.find('.range-filter').length).toBe(2);
   });
 });
