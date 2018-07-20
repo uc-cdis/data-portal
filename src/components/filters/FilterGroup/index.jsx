@@ -36,7 +36,10 @@ class FilterGroup extends React.Component {
           }
         </div>
         <div className="filter-group__filter-area">
-          <FilterList sections={this.state.selectedTab.sections} />
+          <FilterList
+            {...this.props}
+            sections={this.state.selectedTab.sections}
+          />
         </div>
       </div>
     );

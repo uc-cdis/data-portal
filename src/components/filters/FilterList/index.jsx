@@ -10,6 +10,7 @@ class FilterList extends React.Component {
         {
           this.props.sections.map((section, index) => (
             <FilterSection
+              {...this.props}
               key={index}
               title={section.title}
               options={section.options}
