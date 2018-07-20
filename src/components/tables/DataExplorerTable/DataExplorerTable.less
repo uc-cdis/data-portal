@@ -1,0 +1,171 @@
+@import '../../../css/base.less';
+
+.data-explorer-table {
+  padding: 10px 10px;
+  background-color: @white;
+}
+
+.data-explorer-table__download-buttons {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.data-explorer-table__button {
+  margin-right: 10px;
+  width: 220px;
+  height: 40px;
+  padding: 2px 2px;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid @silver;
+  border-radius: 4px;
+  background-color: @white;
+  color: @light_gray;
+  font-size: 14px;
+}
+
+.data-explorer-table__button svg path {
+  fill: @light_gray;
+}
+
+.data-explorer-table__button:hover {
+  background-color: @apricot;
+  border: 1px solid @silver;
+  color: @white;
+}
+
+.data-explorer-table__button:hover svg path {
+  fill: @white;
+}
+
+/* Overriding default Arranger styles, don't adhere to BEM */
+.data-explorer-table__arranger-table {
+
+  // Top of table where text and search box is located
+  .tableToolbar {
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 16px;
+  }
+
+  // Overall table
+  .ReactTable {
+    border: 1px solid @silver;
+  }
+
+  // All cells in table
+  .ReactTable .rt-th,
+  .ReactTable .rt-td {
+    white-space: normal;
+    outline: none;
+    border: none;
+    height: 50px;
+
+    &:first-child {
+      text-align: left !important; // have to override inline style
+
+      input[type="checkbox"] {
+        cursor: pointer;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        outline: 0;
+        background: @white;
+        height: 18px;
+        width: 18px;
+        border: 1px solid @light_gray;
+        border-radius: 2px;
+      }
+
+      input[type="checkbox"]:checked {
+        background: @orange;
+      }
+
+      // defines check in checkbox
+      input[type="checkbox"]:after {
+        content: '';
+        position: relative;
+        left: 40%;
+        top: 20%;
+        width: 15%;
+        height: 40%;
+        border: solid #fff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        display: none;
+      }
+
+      input[type="checkbox"]:checked:after {
+        display: block;
+      }
+     }
+  }
+
+  // Table header
+  .ReactTable .rt-thead .rt-tr {
+    background-color: @white;
+    text-align: left;
+    box-shadow: 0 0px 0px 0;
+    border-bottom: 1px solid @black;
+  }
+
+  // Column headers
+  .rt-th,
+  .rt-resizable-header-content {
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.02rem;
+    font-weight: @semi-bold;
+    color: @black;
+    font-size: 14px;
+  }
+
+  // Sorting behavior on column headers
+  .ReactTable .rt-thead .rt-th.-sort-asc,
+  .ReactTable .rt-thead .rt-td.-sort-asc,
+  .ReactTable .rt-thead .rt-th.-sort-desc,
+  .ReactTable .rt-thead .rt-td.-sort-desc {
+    box-shadow: 0 0px 0px 0;
+  }
+
+  // Odd rows
+  .ReactTable.-striped .rt-tr.-odd {
+    background-color: @cloud;
+  }
+
+  // Cells in table rows
+  .ReactTable .rt-td {
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.03rem;
+    color: @gray;
+    font-size: 12px;
+  }
+
+  // Dropdown to select number of rows
+  .ReactTable .-pagination .-pageSizeOptions {
+    select {
+      border: 1px solid @silver;
+      border-radius: 2px;
+      height: 35px;
+    }
+  }
+
+  // Overall Pagination component
+  .ReactTable .-pagination .-pageJump {
+    display: flex;
+    border: 1px solid @silver;
+    border-radius: 2px;
+    height: 35px;
+    background-color: @white;
+  }
+
+  // Current page for pagination
+  .ReactTable .-pagination_button.-current {
+    color: @blue;
+  }
+}

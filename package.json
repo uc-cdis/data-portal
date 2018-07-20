@@ -4,6 +4,7 @@
   "description": "Bionimbus Data Portal",
   "main": "index.js",
   "dependencies": {
+    "@arranger/components": "^0.4.10",
     "babel-core": "^6.26.0",
     "brace": "^0.10.0",
     "clipboard-plus": "^1.0.0",
@@ -21,12 +22,14 @@
     "history": "^4.7.2",
     "ignore-loader": "^0.1.2",
     "isomorphic-fetch": "^2.2.1",
+    "js-file-download": "^0.4.1",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "material-design-icons": "^3.0.1",
     "material-ui": "^0.19.2",
     "material-ui-icons": "^1.0.0-alpha.19",
     "moment": "^2.18.0",
+    "multisort": "^0.5.3",
     "node-fetch": "^1.7.3",
     "npm": "^6.1.0",
     "nunjucks": "^3.0.1",
@@ -63,7 +66,7 @@
     "@storybook/addon-actions": "^3.4.8",
     "@storybook/cli": "^3.4.8",
     "@storybook/react": "^3.4.8",
-    "babel-eslint": "^8.0.0",
+    "babel-eslint": "7.2.3",
     "babel-jest": "^21.2.0",
     "babel-loader": "^6.4.1",
     "babel-plugin-dev-expression": "^0.2.1",
@@ -77,7 +80,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "eslint": "^4.7.2",
+    "eslint": "^4.10.2",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
@@ -106,7 +109,8 @@
       "./src/setupJest.js"
     ],
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js"
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
     },
     "setupTestFrameworkScriptFile": "mock-local-storage"
   },
