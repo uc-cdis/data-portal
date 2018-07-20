@@ -32,6 +32,7 @@
     "nunjucks": "^3.0.1",
     "polished": "^1.0.4",
     "prop-types": "^15.6.0",
+    "rc-slider": "^8.6.1",
     "react": "^16.3.2",
     "react-ace": "^6.1.0",
     "react-dom": "^16.3.2",

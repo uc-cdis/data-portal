@@ -11,7 +11,7 @@ class SingleSelectFilter extends React.Component {
           type="checkbox"
           onClick={this.props.onSelect}
         />
-        <p className="single-select-filter__label">{this.props.label}</p>
+        <p>{this.props.label}</p>
       </div>
     );
   }

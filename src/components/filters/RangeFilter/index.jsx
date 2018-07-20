@@ -1,11 +1,55 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import ReactDOM from 'react-dom';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
+import './RangeFilter.less';
+
+const Range = Slider.Range;
 
 class RangeFilter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      lowerBound: this.props.min,
+      upperBound: this.props.max,
+    }
+    this.onSliderChange = this.onSliderChange.bind(this);
+  }
+
+  onSliderChange(range) {
+    this.setState({ lowerBound: range[0], upperBound: range[1] }, () => {
+      if (this.props.onDrag) {
+        this.props.onDrag(this.state.lowerBound, this.state.upperBound)
+      }
+    });
+  }
+
   render() {
     return (
-      <p>This will be a range filter</p>
+      <div className="range-filter">
+        <p className="range-filter__title">{this.props.label}</p>
+        <div className="range-filter__bounds">
+          <p>{this.state.lowerBound}</p>
+          <p>{this.state.upperBound}</p>
+        </div>
+        <Range
+          className="range-filter__slider"
+          min={this.props.min}
+          max={this.props.max}
+          value={[this.state.lowerBound, this.state.upperBound]}
+          onChange={this.onSliderChange}
+        />
+      </div>
     );
   }
+}
+
+RangeFilter.propTypes = {
+  label: PropTypes.string,
+  onDrag: PropTypes.func,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
 }
 
 export default RangeFilter;

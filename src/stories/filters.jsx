@@ -2,6 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import SingleSelectFilter from '../components/filters/SingleSelectFilter/.';
+import RangeFilter from '../components/filters/RangeFilter';
 import FilterSection from '../components/filters/FilterSection/.';
 import FilterList from '../components/filters/FilterList/.';
 import FilterGroup from '../components/filters/FilterGroup/.';
@@ -10,7 +11,7 @@ const filterOptions = [
   { text: "test1", filterType: "singleSelect" },
   { text: "test2", filterType: "singleSelect" },
   { text: "test3", filterType: "singleSelect" },
-  { text: "test4", filterType: "range" },
+  { text: "test4", filterType: "range", min: 0, max: 1000 },
 ];
 
 const filterSections = [
@@ -43,6 +44,16 @@ storiesOf('Filters', module)
     <div>
       <SingleSelectFilter label='test1' onSelect={action('checked')}/>
       <SingleSelectFilter label='test2' onSelect={action('checked')}/>
+    </div>
+  ))
+  .add('RangeFilter', () => (
+    <div>
+      <RangeFilter
+        label='test1'
+        onDrag={action('range change')}
+        min={1941}
+        max={2018}
+      />
     </div>
   ))
   .add('FilterSection', () => (
