@@ -90,3 +90,80 @@ All the configurations of Homepage and Explorer page are specified src/parameter
 - `boardCounts` are the counts that you want to display in the top-left of dashboard's
 - `chartCounts` are the counts that you want to display in the bar chart of dashboard's
 - `projectDetails` are the counts that you want to display in the list of projects. It could be same as `boardCounts`, in this case, you only need to point to `boardCounts`.
+
+### Style Guide
+When styling components, we adhere to a few rules. We style using class selectors (`.class-name` instead of `#class-name`), and separate class names with hypens instead of camel case (`.class-name` instead of `.className`). The CSS file should be named {component}.css, and be in the same folder as the component. It is then imported into the component's .jsx file.
+
+We are moving toward using the [BEM methodology](http://getbem.com/introduction/) in terms of CSS organizational conventions. This means we are dividing chunks of code within a component into blocks, are avoiding nesting components, and are using the naming convention of `{block}__{elements}--{modifer}`. `{element}` and `{modifier}` are optional depending on the situation - see the [BEM guidelines](http://getbem.com/introduction/) for more examples.
+
+For our example, say we have a simple component called `Component`:
+```
+import './Component.css';
+
+class Component extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>This is my component</h1>
+        <button>Submit</button>
+        <button>Cancel</button>
+      </div>
+    );
+  }
+}
+```
+Our block would be `.component`, and elements in that block would consist of the buttons and the title. So our CSS would look like this, based on the BEM naming conventions:
+
+```
+.component { }
+.component__title { }
+.component__button { }
+```
+
+And the code would look like this:
+
+```
+import './Component.css';
+
+class Component extends React.Component {
+  render() {
+    return (
+      <div className="component">
+        <h1 className="component__title">This is my component</h1>
+        <button className="component__button">Submit</button>
+        <button className="component__button">Cancel</button>
+      </div>
+    );
+  }
+}
+```
+
+The buttons can also have modifiers - let's say we want two different colors depending on if the button is a submit button or a cancel button. Then our CSS and code would look something like this, respectively:
+
+```
+.component { }
+.component__title { }
+.component__button { }
+.component__button--submit {
+  color: blue;
+}
+.component__button--cancel {
+  color: red;
+}
+```
+
+```
+import './Component.css';
+
+class Component extends React.Component {
+  render() {
+    return (
+      <div className="component">
+        <h1 className="component__title">This is my component</h1>
+        <button className="component__button component__button--submit">Submit</button>
+        <button className="component__button component__button--cancel">Cancel</button>
+      </div>
+    );
+  }
+}
+```
