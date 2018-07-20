@@ -16,11 +16,14 @@ const filterOptions = [
 const filterSections = [
   { title: "Section 1", options: filterOptions },
   { title: "Section 2", options: filterOptions },
+  { title: "Section 3", options: filterOptions },
 ];
 
 const filterSections2 = [
   { title: "Section 3", options: filterOptions },
   { title: "Section 4", options: filterOptions },
+  { title: "Section 5", options: filterOptions },
+  { title: "Section 6", options: filterOptions },
 ];
 
 const filterSections3 = [

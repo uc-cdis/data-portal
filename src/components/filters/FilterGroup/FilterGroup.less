@@ -13,12 +13,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid @silver;
+  border-top: 1px solid @silver;
+  border-left: 1px solid @silver;
+  border-right: 1px solid @silver;
+  border-bottom: 2px solid @black;
   border-radius: 12px 12px 0px 0px;
   height: 28px;
   background-color: @white;
 }
 
+.filter-group__tab--selected {
+  border-bottom: 1px solid @white;
+}
+
 .filter-group__tab-title {
   padding: 0 10px;
+}
+
+.filter-group__filter-area {
+  min-width: 170px;
+  max-width: 80%;
 }

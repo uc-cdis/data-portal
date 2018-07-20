@@ -7,12 +7,12 @@ class FilterGroup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTab: this.props.tabs[0],
+      selectedTab: {index: 0, ...this.props.tabs[0]},
     }
   }
 
-  selectTab(tab) {
-    this.setState({ selectedTab: tab });
+  selectTab(tab, index) {
+    this.setState({ selectedTab: {index, ...tab} });
   }
 
   render() {
@@ -23,8 +23,8 @@ class FilterGroup extends React.Component {
           this.props.tabs.map((tab, index) => (
             <div
               key={index}
-              className="filter-group__tab"
-              onClick={() => this.selectTab(tab)}
+              className={"filter-group__tab".concat(this.state.selectedTab.index === index ? " filter-group__tab--selected" : "")}
+              onClick={() => this.selectTab(tab, index)}
             >
               <p className="filter-group__tab-title">
                 {tab.title}
@@ -33,7 +33,9 @@ class FilterGroup extends React.Component {
           ))
         }
         </div>
-        <FilterList sections={this.state.selectedTab.sections} />
+        <div className="filter-group__filter-area">
+          <FilterList sections={this.state.selectedTab.sections} />
+        </div>
       </div>
     );
   }
