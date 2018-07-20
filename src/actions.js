@@ -341,7 +341,7 @@ export const fetchDataForArrangerTable = ({ sort, offset, first }) => fetch(
     headers: { 'Content-Type': 'application/json; charset=utf-8' },
     body: JSON.stringify(
       {
-        query: components.dataExplorerTableProperties.graphqlQuery
+        query: components.dataExplorerTableProperties.graphqlQuery,
       },
     ),
   },

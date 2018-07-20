@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import DataExplorerTable from '../components/tables/DataExplorerTable/.';
 import { components } from '../params';
 import { fetchDataForArrangerTable } from '../actions';
