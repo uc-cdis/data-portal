@@ -20,7 +20,8 @@ function fileSizeTransform(size) {
 function canUserDownload(user, projectAvail, projectID, did, name) {
   const parts = projectID.split('-');
   const program = parts[0];
-  const project = parts[1];
+  parts.shift();
+  const project = parts.join('-');
   let hasAccess = false;
   if (projectID in projectAvail) {
     if (projectAvail[projectID] === 'Open') {
@@ -37,7 +38,6 @@ function canUserDownload(user, projectAvail, projectID, did, name) {
       hasAccess = true;
     }
   }
-  hasAccess = true; // TODO: remove
   return hasAccess;
 }
 
@@ -66,7 +66,7 @@ class CoreMetadataHeader extends Component {
           <br/>
           {fileTypeTransform(this.props.metadata.type)}
         </p>
-        <p className='body-typo'>{this.props.metadata.description} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> {/* TODO: remove lorem ipsum */}
+        <p className='body-typo'>{this.props.metadata.description}</p>
         { downloadButton }
         <div className='body-typo'>
           {this.props.metadata.data_format} | {fileSizeTransform(this.props.metadata.file_size)} | {this.props.metadata.object_id} | {this.dateTransform(this.props.metadata.updated_datetime)}
