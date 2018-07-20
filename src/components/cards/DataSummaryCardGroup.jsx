@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CountBox from './CountBox';
 import './DataSummaryCardGroup.less';
+import {parseParamWidth} from '../../utils.js';
 
-/**
- * Little card with a bunch of counters on it for cases, experiments, files, ...
- */
 class DataSummaryCardGroup extends Component {
   render() {
-    const totalWidth = typeof this.props.width === 'string' || `${this.props.width}px`;
+    const totalWidth = parseParamWidth(this.props.width);
+    typeof this.props.width === 'string' || `${this.props.width}px`;
     return (
       <div
         className="data-summary-card-group"
@@ -20,11 +19,11 @@ class DataSummaryCardGroup extends Component {
         {
           this.props.summaryItems.map((item, index) => (
             <div
-              className={'data-summary-card-group__card'.concat(this.props.connected ? ' connected' : ' separated')}
+              className={'data-summary-card-group__'.concat(this.props.connected ? 'connected' : 'separated').concat('-card')}
               key={item.label || item[0].label}
             >
               {this.props.connected && index > 0
-                && <div className="data-summary-card-group__card-left-border" />
+                && <div className="left-border" />
               }
               {
                 !item.length ? (
@@ -39,7 +38,7 @@ class DataSummaryCardGroup extends Component {
                       item.map((subItem, subIndex) => (
                         <div className="data-summary-card-group__sub-card-item" key={subItem.label}>
                           {subIndex > 0
-                            && <div className="data-summary-card-group__sub-card-left-border" />
+                            && <div className="left-border" />
                           }
                           <CountBox
                             label={subItem.label}

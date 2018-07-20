@@ -5,7 +5,7 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import ChartsHelper from './ChartsHelper';
-import './SummaryBarChart.less';
+import './SummaryHorizontalBarChart.less';
 
 const yAxisStyle = {
   fontSize: '12px',
@@ -25,23 +25,22 @@ const labelValueStyle = {
 
 class SummaryBarChart extends React.Component {
   render() {
-    const monoFillColor = this.props.monoColor ? this.props.color : undefined;
     const barChartHeight = (this.props.data.length * this.props.barSize)
       + ((this.props.data.length + 1) * this.props.barGap) + 2;
-    const barChartData = ChartsHelper.calculateBarChartData(
+    const barChartData = ChartsHelper.calculateChartData(
       this.props.data,
       this.props.showPercentage,
       this.props.percentageFixedPoint,
     );
     const dataKey = ChartsHelper.getDataKey(this.props.showPercentage);
     return (
-      <div className="summary-bar-chart">
-        <div className="summary-bar-chart__title h4-typo">
+      <div className="summary-horizontal-bar-chart">
+        <div className="summary-horizontal-bar-chart__title h4-typo">
           {this.props.title}
         </div>
         <ResponsiveContainer width="100%" height={barChartHeight}>
           <BarChart
-            layout={this.props.vertical ? 'vertical' : 'horizontal'}
+            layout="vertical"
             data={barChartData}
             barCategoryGap={this.props.barGap}
             barSize={this.props.barSize}
@@ -55,7 +54,7 @@ class SummaryBarChart extends React.Component {
                 barChartData.map((entry, index) => (
                   <Cell
                     key={dataKey}
-                    fill={monoFillColor
+                    fill={this.props.color
                       || ChartsHelper.getCategoryColor(index, this.props.localTheme)}
                   />
                 ))
@@ -78,8 +77,6 @@ SummaryBarChart.propTypes = {
   title: PropTypes.string.isRequired,
   data: PropTypes.arrayOf(ChartDataShape).isRequired,
   localTheme: PropTypes.object.isRequired,
-  vertical: PropTypes.bool,
-  monoColor: PropTypes.bool,
   color: PropTypes.string,
   barSize: PropTypes.number,
   barGap: PropTypes.number,
@@ -88,9 +85,7 @@ SummaryBarChart.propTypes = {
 };
 
 SummaryBarChart.defaultProps = {
-  vertical: false,
-  monoColor: false,
-  color: '#3283c8',
+  color: undefined,
   barSize: 11,
   barGap: 8,
   showPercentage: true,

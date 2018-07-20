@@ -2,31 +2,27 @@
 
 .count-box {
   height: 100%;
-  &--align-center {
-    width: 100%;
-    display: flex;
-    padding: 26px;
-    background-color: none;
-    flex-direction: column;
-    justify-content: space-between;
-    text-align: center;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
-  &--align-left {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
+.count-box--align-center {
+  padding: 26px;
+  background-color: none;
+  text-align: center;
+}
 
-  &__title {
-    &--align-left {
-      margin-bottom: 15px;
-      vertical-align: top;
-    }
-    &--align-right {
-      line-height: 100%;
-      margin-bottom: 11px;
-    }
-  }
+.count-box--align-left {
+  padding: 20px;
+}
+
+.count-box__title--align-left {
+  margin-bottom: 15px;
+  vertical-align: top;
+}
+
+.count-box__title--align-right {
+  line-height: 100%;
+  margin-bottom: 11px;
 }

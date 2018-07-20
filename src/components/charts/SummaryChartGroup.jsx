@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SummaryPieChart from './SummaryPieChart';
-import SummaryBarChart from './SummaryBarChart';
+import SummaryHorizontalBarChart from './SummaryHorizontalBarChart';
 import './SummaryChartGroup.less';
+import ChartsHelper from './ChartsHelper.js';
+import {parseParamWidth} from '../../utils.js';
 
 class SummaryChartGroup extends Component {
   render() {
-    const width = (typeof this.props.width === 'number') ? `${this.props.width}px` : this.props.width;
+    const width = parseParamWidth(this.props.width);
     return (
       <div className="summary-chart-group" style={{ width }}>
         {
@@ -24,12 +26,12 @@ class SummaryChartGroup extends Component {
                       localTheme={this.props.localTheme}
                     />
                   ) : (
-                    <SummaryBarChart
+                    <SummaryHorizontalBarChart
                       data={item.data}
                       title={item.title}
                       localTheme={this.props.localTheme}
                       vertical
-                      monoColor
+                      color="#3283c8"
                     />
                   )
               }

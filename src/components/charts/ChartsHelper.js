@@ -1,9 +1,8 @@
-
 const percentageFormatter = showPercentage => v => (showPercentage ? `${v}%` : v);
 
 const addPercentage = v => (percentageFormatter(true)(v));
 
-const calculateBarChartData = (data, showPercentage, percentageFixedPoint) => {
+const calculateChartData = (data, showPercentage, percentageFixedPoint) => {
   if (showPercentage) {
     const sum = data.reduce((a, entry) => a + entry.value, 0);
     let percentRemaining = 100;
@@ -53,7 +52,7 @@ const getDataKey = showPercentage => (showPercentage ? 'percentage' : 'value');
 module.exports = {
   percentageFormatter,
   addPercentage,
-  calculateBarChartData,
+  calculateChartData,
   getPercentageData,
   getCategoryColor,
   getCategoryColorFrom2Colors,

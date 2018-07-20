@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import SummaryBarChart from '../components/charts/SummaryBarChart';
+import SummaryHorizontalBarChart from '../components/charts/SummaryHorizontalBarChart';
 import SummaryPieChart from '../components/charts/SummaryPieChart';
 import SummaryChartGroup from '../components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart';
@@ -35,11 +35,11 @@ const summaries = [
 ];
 
 storiesOf('Chart', module)
-  .add('SummaryBarChart', () => (
-    <SummaryBarChart data={chartData} title="bar chart title" vertical localTheme={localTheme} showPercentage={false} />
+  .add('SummaryHorizontalBarChart', () => (
+    <SummaryHorizontalBarChart data={chartData} title="bar chart title" localTheme={localTheme} showPercentage={false} />
   ))
-  .add('SummaryBarChart with monoColor and percentage', () => (
-    <SummaryBarChart data={chartData} title="bar chart title" vertical monoColor localTheme={localTheme} />
+  .add('SummaryHorizontalBarChart with single color and percentage', () => (
+    <SummaryHorizontalBarChart data={chartData} title="bar chart title" vertical color="#3283c8" localTheme={localTheme} />
   ))
   .add('SummaryPieChart', () => (
     <SummaryPieChart data={chartData} title="pie chart title" localTheme={localTheme} showPercentage />

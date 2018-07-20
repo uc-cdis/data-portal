@@ -19,7 +19,7 @@ class SummaryPieChart extends React.Component {
     const getColor = useTwoColors
       ? ChartsHelper.getCategoryColorFrom2Colors
       : ChartsHelper.getCategoryColor;
-    const barChartData = ChartsHelper.calculateBarChartData(
+    const pieChartData = ChartsHelper.calculateChartData(
       this.props.data,
       this.props.showPercentage,
       this.props.percentageFixedPoint,
@@ -34,14 +34,13 @@ class SummaryPieChart extends React.Component {
         <div className="summary-pie-chart__body">
           <div className="summary-pie-chart__legend">
             {
-              barChartData.map(entry => (
+              pieChartData.map(entry => (
                 <div className="summary-pie-chart__legend-item" key={'text'.concat(entry.name)}>
                   <div className="form-body">
                     {entry.name}
                   </div>
                   <div className="summary-pie-chart__legend-item-value form-special-number">
                     {
-                      // this.props.showPercentage ? `${entry[dataKey]}%` : entry[dataKey]
                       ChartsHelper.percentageFormatter(this.props.showPercentage)(entry[dataKey])
                     }
                   </div>
@@ -56,13 +55,13 @@ class SummaryPieChart extends React.Component {
             <Pie
               dataKey={dataKey}
               isAnimationActive={false}
-              data={barChartData}
+              data={pieChartData}
               innerRadius={this.props.innerRadius}
               outerRadius={this.props.outerRadius}
               fill="#8884d8"
             >
               {
-                barChartData.map((entry, index) => (
+                pieChartData.map((entry, index) => (
                   <Cell
                     key={dataKey}
                     dataKey={dataKey}
