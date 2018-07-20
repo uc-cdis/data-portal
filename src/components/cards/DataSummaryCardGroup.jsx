@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CountBox from './CountBox';
 import './DataSummaryCardGroup.less';
-import {parseParamWidth} from '../../utils.js';
+import { parseParamWidth } from '../../utils.js';
 
 class DataSummaryCardGroup extends Component {
   render() {
     const totalWidth = parseParamWidth(this.props.width);
-    typeof this.props.width === 'string' || `${this.props.width}px`;
     return (
       <div
         className="data-summary-card-group"

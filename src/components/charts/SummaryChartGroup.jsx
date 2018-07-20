@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import SummaryPieChart from './SummaryPieChart';
 import SummaryHorizontalBarChart from './SummaryHorizontalBarChart';
 import './SummaryChartGroup.less';
-import ChartsHelper from './ChartsHelper.js';
-import {parseParamWidth} from '../../utils.js';
+import { parseParamWidth } from '../../utils.js';
 
 class SummaryChartGroup extends Component {
   render() {
