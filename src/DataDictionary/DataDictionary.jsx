@@ -111,7 +111,7 @@ const DataDictionary = ({ dictionary }) => {
     <div style={{ padding: '40px 0px' }}>
       <div className="h3-typo"> Data Dictionary Viewer </div>
       <p>{subHeader}</p>
-      <Link to={'/dd/graph'}> Explore dictionary as a graph </Link>
+      <Link to={'/dd/graph'} className="h3-typo">Explore dictionary as a graph</Link>
       {Object.keys(c2nl).map(category =>
         <CategoryTable key={category} nodes={c2nl[category]} category={category} />)}
     </div>

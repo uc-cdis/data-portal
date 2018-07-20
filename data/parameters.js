@@ -8,12 +8,14 @@ const commonNames = {
   gdc: 'Jamboree',
   gtex: 'Data Commons Pilot & Data STAGE',
   kf: 'Kids First',
+  kfDcfInterop: 'Pediatric Cancer Commons Pilot',
   ndh: 'NIAID',
   default: 'Generic',
 };
 
 const params = {
   acct: {
+    gaTrackingId: 'UA-119127212-11',
     graphql: {
       boardCounts: [
         {
@@ -50,6 +52,44 @@ const params = {
     },
     components: {
       appName: 'ACCOuNT Data Commons Portal',
+      index: {
+        introduction: {
+          heading: 'ACCOuNT Data Commons',
+          text: 'The ACCOuNT Data Commons supports the mission of the African American Cardiovascular Pharmacogenomics Consortium (ACCOuNT), thereby allowing others in the African American pharmacogenomics scientific community to easily access and use the findings of the various projects and "accounting" for African American pharmacogenomics in precision medicine. The commons is part of the ACCOuNT Data Harmonization and Analysis Core.',
+          link: '/submission',
+        },
+        buttons: [
+          {
+            name: 'Define Data Field',
+            icon: 'data-field-define',
+            body: 'The ACCOuNT Data Commons define the data in a general way. Please study the dictionary before you start browsing.',
+            link: '/DD',
+            label: 'Learn more',
+          },
+          {
+            name: 'Explore Data',
+            icon: 'data-explore',
+            body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
+            link: '/files',
+            label: 'Explore data',
+          },
+          {
+            name: 'Access Data',
+            icon: 'data-access',
+            body: 'Use our selected tool to filter out the data you need.',
+            link: '/query',
+            label: 'Query data',
+
+          },
+          {
+            name: 'Analyze Data',
+            icon: 'data-analyze',
+            body: 'Analyze your selected cases using Jupyter Notebooks in our secure cloud environment',
+            link: '#hostname#workspace/',
+            label: 'Run analysis',
+          },
+        ],
+      },
       navigation: {
         title: 'ACCOuNT Data Commons',
         items: [
@@ -67,6 +107,12 @@ const params = {
           },
           {
             icon: 'query', link: '/query', color: '#a2a2a2', name: 'query',
+          },
+          {
+            icon: 'workspace',
+            link: '#hostname#workspace/',
+            color: '#a2a2a2',
+            name: 'Workspace',
           },
           {
             icon: 'profile',
@@ -549,6 +595,7 @@ const params = {
     },
   },
   genomel: {
+    gaTrackingId: 'UA-119127212-12',
     graphql: {
       boardCounts: [
         {
@@ -844,6 +891,178 @@ const params = {
       },
     },
   },
+  kfDcfInterop: {
+    // TODO - new GA tracking id?
+    gaTrackingId: 'UA-119127212-6',
+    graphql: {
+      boardCounts: [
+        {
+          graphql: '_participant_count',
+          name: 'Participant',
+          plural: 'Participants',
+        },
+        {
+          graphql: '_family_count',
+          name: 'Family',
+          plural: 'Families',
+        },
+        {
+          graphql: '_aliquot_count',
+          name: 'Aliquot',
+          plural: 'Aliquots',
+        },
+      ],
+      chartCounts: [
+        {
+          graphql: '_participant_count',
+          name: 'Participant',
+        },
+        {
+          graphql: '_family_count',
+          name: 'Family',
+        },
+      ],
+      projectDetails: 'boardCounts',
+    },
+    components: {
+      appName: 'Pediatric Cancer Commons Pilot',
+      index: {
+        introduction: {
+          heading: 'Pediatric Cancer Commons Pilot',
+          text: 'The Pediatric Cancer Commons Pilot is a Trusted Partner of the NIH supported by Gen 3.' +
+          'Gen3 is an open source Data Commons platform (https://gen3.org/) supporting a number of ' +
+          'large-scale NIH- and non-NIH Commons including the NCI\'s Genomic Data Commons, NHLBI\'s Data ' +
+          'Stage, the NIH Data Commons Pilot, and the Bloodpac Data Commons. As such the Pediatric Cancer ' +
+          'Commons Pilot also supports the Kids First Data Resource Center by providing digital object services ' +
+          'that allow interoperability between existing and future Gen3 data commons, including authentication ' +
+          'and authorization for controlled access data.' +
+          'For more information about the overall Kids First Data Resource Center and associated tools/portals' +
+          'see https://kidsfirstdrc.org.',
+          link: '/submission',
+        },
+        buttons: [
+          {
+            name: 'Define Data Field',
+            icon: 'data-field-define',
+            body: 'The Pediatric Cancer Commons Pilot defines the data in a general way. Please study the dictionary before you start browsing.',
+            link: '/DD',
+            label: 'Learn more',
+          },
+          {
+            name: 'Explore Data',
+            icon: 'data-explore',
+            body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
+            link: '#hostname#shiny',
+            label: 'Explore data',
+          },
+          {
+            name: 'Access Data',
+            icon: 'data-access',
+            body: 'Use our selected tool to filter out the data you need.',
+            link: '/query',
+            label: 'Query data',
+
+          },
+          {
+            name: 'Analyze Data',
+            icon: 'data-analyze',
+            body: 'Analyze your selected cases using Jupyter Notebooks in our secure cloud environment',
+            link: '#hostname#workspace/',
+            label: 'Run analysis',
+          },
+        ],
+      },
+      navigation: {
+        title: 'Pediatric Cancer Commons Pilot',
+        items: [
+          { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'dictionary' },
+          { icon: 'exploration', link: '/files', color: '#a2a2a2', name: 'exploration' },
+          { icon: 'query', link: '/query', color: '#a2a2a2', name: 'query' },
+          { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'profile' },
+        ],
+      },
+      login: {
+        title: 'Pediatric Cancer Commons Pilot',
+        subTitle: 'search, compare, and download data',
+        text: 'The Pediatric Cancer Commons Pilot is a Trusted Partner of the NIH powered by Gen3. Gen3 is an open source Data Commons platform (https://gen3.org/) supporting a number of large-scale NIH- and non-NIH Commons including the NCI\'s Genomic Data Commons, NHLBI\'s Data Stage, the NIH Data Commons Pilot, and the Bloodpac Data Commons. As such the Gen3 Data Catalog supports the Kids First Data Resource Center by providing digital object services that allow interoperability between existing and future Gen3 data commons, including authentication and authorization for controlled access data. For more information about the overall Kids First Data Resource Center and associated tools/portals see https://kidsfirstdrc.org.',
+        contact: 'If you have any questions about access or the registration process, please contact ',
+        email: 'support@kidsfirstdrc.org',
+      },
+    },
+  },
+  'ncrdc-demo': {
+    gaTrackingId: 'UA-119127212-9',
+    graphql: {
+      boardCounts: [
+        {
+          graphql: '_subject_count',
+          name: 'Subject',
+          plural: 'Subjects',
+        },
+        {
+          graphql: '_study_count',
+          name: 'Study',
+          plural: 'Studies',
+        },
+        {
+          graphql: '_aliquot_count',
+          name: 'Aliquot',
+          plural: 'Aliquots',
+        },
+      ],
+      chartCounts: [
+        {
+          graphql: '_subject_count',
+          name: 'Subject',
+        },
+        {
+          graphql: '_study_count',
+          name: 'Study',
+        },
+        {
+          graphql: '_aliquot_count',
+          name: 'Aliquot',
+        },
+      ],
+      projectDetails: 'boardCounts',
+    },
+    components: {
+      appName: 'DCF Sandbox',
+      navigation: {
+        title: 'DCF Sandbox',
+        items: [
+          {
+            icon: 'dictionary',
+            link: '/DD',
+            color: '#a2a2a2',
+            name: 'Dictionary',
+          },
+          {
+            icon: 'exploration',
+            link: '/files',
+            color: '#a2a2a2',
+            name: 'Exploration',
+          },
+          {
+            icon: 'query', link: '/query', color: '#a2a2a2', name: 'query',
+          },
+          {
+            icon: 'profile',
+            link: '/identity',
+            color: '#a2a2a2',
+            name: 'Profile',
+          },
+        ],
+      },
+      login: {
+        title: 'DCF Sandbox',
+        subTitle: 'explore, analyze, and share research data',
+        text: 'The Data Common Frameworks (DCF) supports the management, analysis and sharing of many different types of biomedical data for the research community with the goal of accelerating research in the molecular basis for disease and matching targeted therapies that factor in each patient\'s unique biology.',
+        contact: 'If you have any questions about access or the registration process, please contact ',
+        email: 'support@datacommons.io',
+      },
+    },
+  },
   ndh: {
     gaTrackingId: 'UA-119127212-1',
     graphql: {
@@ -862,11 +1081,6 @@ const params = {
           graphql: '_summary_lab_result_count',
           name: 'Lab record',
           plural: 'Lab records',
-        },
-        {
-          graphql: '_summary_socio_demographic_count',
-          name: 'Socio-demographic record',
-          plural: 'Socio-demographic records',
         },
       ],
       chartCounts: [
@@ -948,6 +1162,7 @@ const params = {
     },
   },
   va: {
+    gaTrackingId: 'UA-119127212-10',
     graphql: {
       boardCounts: [
         {
@@ -1169,6 +1384,9 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@datacommons.io',
       },
+    },
+    featureFlags: {
+      explorer: true,
     },
   },
 };
