@@ -21,12 +21,4 @@ describe('<SummaryHorizontalBarChart />', () => {
   it('renders', () => {
     expect(charts.length).toBe(1);
   });
-
-  it('should render all bar retangles', () => {
-    expect(charts.find('.recharts-layer.recharts-bar-rectangle').length).toBe(chartData.length);
-  });
-
-  it('should render all legend items', () => {
-    expect(charts.find('.recharts-text.recharts-cartesian-axis-tick-value').length).toBe(chartData.length);
-  });
 });
