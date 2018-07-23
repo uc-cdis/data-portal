@@ -39,7 +39,7 @@ storiesOf('Chart', module)
     <SummaryHorizontalBarChart data={chartData} title="bar chart title" localTheme={localTheme} showPercentage={false} />
   ))
   .add('SummaryHorizontalBarChart with single color and percentage', () => (
-    <SummaryHorizontalBarChart data={chartData} title="bar chart title" vertical color="#3283c8" localTheme={localTheme} />
+    <SummaryHorizontalBarChart data={chartData} title="bar chart title" color="#3283c8" localTheme={localTheme} />
   ))
   .add('SummaryPieChart', () => (
     <SummaryPieChart data={chartData} title="pie chart title" localTheme={localTheme} showPercentage />
