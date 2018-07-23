@@ -40,7 +40,7 @@ function buildConfig(opts) {
   let userapiPath = `${hostname}user/`;
   const jobapiPath = `${hostname}/job/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
-  const coreMetadataPath = `${hostname}coremetadata/json/`;
+  const coreMetadataPath = `${hostname}coremetadata/`;
   let login = {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',

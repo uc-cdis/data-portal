@@ -9,6 +9,7 @@ export const fetchCoreMetadata = (object_id) =>
   dispatch =>
     fetchWithCreds({
       path: coreMetadataPath + object_id,
+      customHeaders: { 'Accept' : 'application/json' },
       dispatch,
     })
       .then(
