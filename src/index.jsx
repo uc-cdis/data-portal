@@ -35,7 +35,8 @@ import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 import ReactGA from 'react-ga';
 import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
-
+import DataExplorer from './DataExplorer/DataExplorer';
+import isEnabled from './helpers/featureFlags';
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -201,6 +202,13 @@ async function init() {
                         }
                       }
                     />
+                    { isEnabled('explorer') ?
+                      <Route
+                        path="/explorer"
+                        component={DataExplorer}
+                      />
+                      : null
+                    }
                     <Route
                       path="/:project"
                       component={
