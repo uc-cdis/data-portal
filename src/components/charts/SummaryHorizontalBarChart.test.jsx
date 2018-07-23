@@ -13,12 +13,25 @@ describe('<SummaryHorizontalBarChart />', () => {
     { name: 'CA04', value: 1890 },
   ];
 
-  const charts = mount(
+  const wrapper = mount(
+    <div style={{ width: 500, height: 500 }}>
     <SummaryHorizontalBarChart data={chartData} title="bar chart title" color="#3283c8" localTheme={localTheme} />
-  ).find(SummaryHorizontalBarChart);
+    </div>
+  );
+  const charts = wrapper.find(SummaryHorizontalBarChart);
+  console.log(wrapper.html());
+  console.log(charts.html());
 
   it('renders', () => {
     expect(charts.length).toBe(1);
+  });
+
+  it('should render all bar retangles', () => {
+    expect(charts.find('.recharts-layer.recharts-bar-rectangle').length).toBe(chartData.length);
+  });
+
+  it('should render all legend items', () => {
+    expect(charts.find('.recharts-text.recharts-cartesian-axis-tick-value').length).toBe(chartData.length);
   });
 
 });

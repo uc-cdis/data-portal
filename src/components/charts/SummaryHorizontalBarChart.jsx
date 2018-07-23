@@ -4,7 +4,7 @@ import {
 } from 'recharts';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ChartsHelper from './ChartsHelper';
+import helper from './helper';
 import './SummaryHorizontalBarChart.less';
 
 const yAxisStyle = {
@@ -27,12 +27,12 @@ class SummaryBarChart extends React.Component {
   render() {
     const barChartHeight = (this.props.data.length * this.props.barSize)
       + ((this.props.data.length + 1) * this.props.barGap) + 2;
-    const barChartData = ChartsHelper.calculateChartData(
+    const barChartData = helper.calculateChartData(
       this.props.data,
       this.props.showPercentage,
       this.props.percentageFixedPoint,
     );
-    const dataKey = ChartsHelper.getDataKey(this.props.showPercentage);
+    const dataKey = helper.getDataKey(this.props.showPercentage);
     return (
       <div className="summary-horizontal-bar-chart">
         <div className="summary-horizontal-bar-chart__title h4-typo">
@@ -46,7 +46,7 @@ class SummaryBarChart extends React.Component {
             barSize={this.props.barSize}
             margin={{ top: 4, right: 35, left: 15 }}
           >
-            <Tooltip formatter={ChartsHelper.percentageFormatter(this.props.showPercentage)} />
+            <Tooltip formatter={helper.percentageFormatter(this.props.showPercentage)} />
             <XAxis axisLine={false} tickLine={false} type="number" hide />
             <YAxis axisLine={false} tickLine={false} dataKey="name" type="category" style={yAxisStyle} interval={0} />
             <Bar dataKey={dataKey}>
@@ -55,11 +55,11 @@ class SummaryBarChart extends React.Component {
                   <Cell
                     key={dataKey}
                     fill={this.props.color
-                      || ChartsHelper.getCategoryColor(index, this.props.localTheme)}
+                      || helper.getCategoryColor(index, this.props.localTheme)}
                   />
                 ))
               }
-              <LabelList dataKey={dataKey} position="right" offset={8} style={labelValueStyle} formatter={ChartsHelper.percentageFormatter(this.props.showPercentage)} />
+              <LabelList dataKey={dataKey} position="right" offset={8} style={labelValueStyle} formatter={helper.percentageFormatter(this.props.showPercentage)} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

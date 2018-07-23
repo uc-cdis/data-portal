@@ -3,7 +3,7 @@ import {
 } from 'recharts';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ChartsHelper from './ChartsHelper';
+import helper from './helper';
 import './SummaryPieChart.less';
 
 const pieChartStyle = {
@@ -17,14 +17,14 @@ class SummaryPieChart extends React.Component {
   render() {
     const useTwoColors = this.props.data.length === 2;
     const getColor = useTwoColors
-      ? ChartsHelper.getCategoryColorFrom2Colors
-      : ChartsHelper.getCategoryColor;
-    const pieChartData = ChartsHelper.calculateChartData(
+      ? helper.getCategoryColorFrom2Colors
+      : helper.getCategoryColor;
+    const pieChartData = helper.calculateChartData(
       this.props.data,
       this.props.showPercentage,
       this.props.percentageFixedPoint,
     );
-    const dataKey = ChartsHelper.getDataKey(this.props.showPercentage);
+    const dataKey = helper.getDataKey(this.props.showPercentage);
 
     return (
       <div className="summary-pie-chart">
@@ -41,7 +41,7 @@ class SummaryPieChart extends React.Component {
                   </div>
                   <div className="summary-pie-chart__legend-item-value form-special-number">
                     {
-                      ChartsHelper.percentageFormatter(this.props.showPercentage)(entry[dataKey])
+                      helper.percentageFormatter(this.props.showPercentage)(entry[dataKey])
                     }
                   </div>
                 </div>))
@@ -69,7 +69,7 @@ class SummaryPieChart extends React.Component {
                   />))
               }
             </Pie>
-            <Tooltip formatter={ChartsHelper.percentageFormatter(this.props.showPercentage)} />
+            <Tooltip formatter={helper.percentageFormatter(this.props.showPercentage)} />
           </PieChart>
         </div>
       </div>

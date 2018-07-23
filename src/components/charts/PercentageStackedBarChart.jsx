@@ -5,7 +5,7 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'underscore';
-import ChartsHelper from './ChartsHelper';
+import helper from './helper';
 import './PercentageStackedBarChart.less';
 
 const getPercentageDataLabels = chartData => chartData.map(entry => entry.name);
@@ -26,7 +26,7 @@ const labelListStyle = {
 
 class PercentageStackedBarChart extends React.Component {
   render() {
-    const percentageData = ChartsHelper.getPercentageData(
+    const percentageData = helper.getPercentageData(
       this.props.data,
       this.props.percentageFixedPoint,
     );
@@ -53,7 +53,7 @@ class PercentageStackedBarChart extends React.Component {
             domain={[0, 100]}
             tickMargin={10}
             style={xAxisStyle}
-            tickFormatter={ChartsHelper.addPercentage}
+            tickFormatter={helper.addPercentage}
           />
           <YAxis axisLine={false} tickLine={false} dataKey="name" type="category" hide />
           {
@@ -62,9 +62,9 @@ class PercentageStackedBarChart extends React.Component {
                 key={name}
                 dataKey={name}
                 stackId="a"
-                fill={ChartsHelper.getCategoryColor(index, this.props.localTheme)}
+                fill={helper.getCategoryColor(index, this.props.localTheme)}
               >
-                <LabelList dataKey={name} position="center" style={labelListStyle} formatter={ChartsHelper.addPercentage} className="percentage-bar-chart__label-list" />
+                <LabelList dataKey={name} position="center" style={labelListStyle} formatter={helper.addPercentage} className="percentage-bar-chart__label-list" />
               </Bar>
             ))
           }
@@ -77,7 +77,7 @@ class PercentageStackedBarChart extends React.Component {
                   <span
                     className="percentage-bar-chart__legend-color"
                     style={{
-                      background: ChartsHelper.getCategoryColor(index, this.props.localTheme),
+                      background: helper.getCategoryColor(index, this.props.localTheme),
                     }}
                   />
                   <span className="percentage-bar-chart__legend-name form-body">
