@@ -14,13 +14,9 @@ describe('<SummaryHorizontalBarChart />', () => {
   ];
 
   const wrapper = mount(
-    <div style={{ width: 500, height: 500 }}>
-    <SummaryHorizontalBarChart data={chartData} title="bar chart title" color="#3283c8" localTheme={localTheme} />
-    </div>
+    <SummaryHorizontalBarChart data={chartData} title="bar chart title" color="#3283c8" localTheme={localTheme} />,
   );
   const charts = wrapper.find(SummaryHorizontalBarChart);
-  console.log(wrapper.html());
-  console.log(charts.html());
 
   it('renders', () => {
     expect(charts.length).toBe(1);
@@ -33,5 +29,4 @@ describe('<SummaryHorizontalBarChart />', () => {
   it('should render all legend items', () => {
     expect(charts.find('.recharts-text.recharts-cartesian-axis-tick-value').length).toBe(chartData.length);
   });
-
 });
