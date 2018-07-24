@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DataTable from '@arranger/components/dist/DataTable';
+import { Table } from '@arranger/components/dist/Arranger';
 import '@arranger/components/public/themeStyles/beagle/beagle.css';
 import fileDownload from 'js-file-download';
 import IconicButton from '../../buttons/IconicButton';
@@ -53,10 +53,8 @@ class DataExplorerTable extends React.Component {
           />
         </div>
         <div className="data-explorer-table__arranger-table">
-          <DataTable
-            config={this.props.config}
-            fetchData={this.props.fetchData}
-            setSelectedTableRows={rows => this.setSelectedTableRows(rows)}
+          <Table
+            {...this.props}
             allowTSVExport={false}
             allowTogglingColumns={false}
           />
@@ -67,8 +65,6 @@ class DataExplorerTable extends React.Component {
 }
 
 DataExplorerTable.propTypes = {
-  config: PropTypes.object.isRequired,
-  fetchData: PropTypes.func.isRequired,
 };
 
 export default DataExplorerTable;
