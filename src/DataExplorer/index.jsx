@@ -2,6 +2,8 @@ import React from 'react';
 import { Arranger, CurrentSQON, Aggregations } from '@arranger/components/dist/Arranger';
 import { flattenAggregations } from '@arranger/middleware';
 import DataExplorerTable from '../components/tables/DataExplorerTable/.';
+import DataExplorerSummary from '../DataExplorer/DataExplorerSummary';
+import SummaryChartGroup from '../components/charts/SummaryChartGroup';
 import { components } from '../params';
 import { fetchDataForArrangerTable } from '../actions';
 import './DataExplorer.less';
@@ -15,7 +17,6 @@ class DataExplorer extends React.Component {
         graphqlField={'subject'}
         projectId={'v1'}
         render={props => {
-
           return (
             <div className='data-explorer'>
               <div className='data-explorer__filters'>
@@ -23,7 +24,7 @@ class DataExplorer extends React.Component {
               </div>
               <div className='data-explorer__results'>
                 <CurrentSQON {...props} />
-                <Charts {...props} />
+                <DataExplorerSummary {...props} />
                 <DataExplorerTable {...props} />
               </div>
             </div>
