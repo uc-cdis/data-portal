@@ -1,8 +1,7 @@
 import React from 'react';
 import ArrangerWrapper from '../components/ArrangerWrapper';
-import { CurrentSQON, Aggregations } from '@arranger/components/dist/Arranger';
+import DataExplorerFilters from './DataExplorerFilters';
 import DataExplorerResults from './DataExplorerResults';
-import SummaryChartGroup from '../components/charts/SummaryChartGroup';
 import './DataExplorer.less';
 
 class DataExplorer extends React.Component {
@@ -17,7 +16,7 @@ class DataExplorer extends React.Component {
           graphqlField={graphqlField}
           projectId={projectId}
         >
-          <Aggregations className="data-explorer__filters" />
+          <DataExplorerFilters />
           <DataExplorerResults />
       </ArrangerWrapper>
     </div>

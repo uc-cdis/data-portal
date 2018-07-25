@@ -38,7 +38,7 @@ class ArrangerWrapper extends React.Component {
                     aggs={stateArgs.aggs.filter(agg => agg.field != "name")}
                     render={({ data }) => (
                       <React.Fragment>
-                        {this.renderComponent({ ...arrangerArgs, arrangerDatA: data })}
+                        {this.renderComponent({ ...arrangerArgs, arrangerData: data })}
                       </React.Fragment>
                     )}
                   />
