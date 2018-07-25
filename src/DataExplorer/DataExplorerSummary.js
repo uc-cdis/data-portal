@@ -40,7 +40,11 @@ class DataExplorerSummary extends React.Component {
   ).then(res => res.json()
 ).then(json => {
     console.log("first call", json);
-    this.setState({ temp: json.data.subject.aggsState.state }, () => {
+    this.setState({
+      temp: json.data.subject.aggsState.state,
+      mapping: json.data.subject.mapping,
+     }, () => {
+       const { mapping } = this.state;
       this.state.temp.map(x => {
         const type =
           this.getMappingTypeOfField({ field: x.field, mapping }) || x.type
