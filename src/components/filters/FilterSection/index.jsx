@@ -11,10 +11,9 @@ class FilterSection extends React.Component {
     this.state = {
       isExpanded: false,
     };
-    this.toggleSection = this.toggleSection.bind(this);
   }
 
-  toggleSection() {
+  toggleSection = () => {
     this.setState({ isExpanded: !this.state.isExpanded });
   }
 
