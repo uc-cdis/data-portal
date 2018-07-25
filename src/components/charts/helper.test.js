@@ -63,4 +63,79 @@ describe('helper', () => {
     expect(helper.getDataKey(true)).toBe('percentage');
     expect(helper.getDataKey(false)).toBe('value');
   });
+
+  const ethnicityFieldJSON = {
+    buckets: [
+      { doc_count: 4, key: 'White' },
+      { doc_count: 2, key: 'Hispanic' },
+      { doc_count: 5, key: 'Black' },
+    ],
+  };
+
+  const projectFieldJSON = {
+    buckets: [
+      { doc_count: 3, key: 'Proj-1' },
+      { doc_count: 7, key: 'Proj-2' },
+      { doc_count: 1, key: 'Proj-3' },
+      { doc_count: 5, key: 'Proj-4' },
+    ],
+  };
+
+  const ethnicityChartData = [
+    { name: 'White', value: 4 },
+    { name: 'Hispanic', value: 2 },
+    { name: 'Black', value: 5 },
+  ];
+
+  const ethnicityCountData = { label: 'Ethnicity', value: 3 };
+
+  const projectCountData = { label: 'Projects', value: 4 };
+
+  const summaryData = {
+    title: 'Ethnicity',
+    type: 'pie',
+    data: ethnicityChartData,
+  };
+
+  const rawData = {
+    subject: {
+      aggregations: {
+        ethnicity: ethnicityFieldJSON,
+        project: projectFieldJSON,
+      }
+    }
+  };
+
+  const arrangerConfig = {
+    charts: {
+      ethnicity: {
+        chartType: 'pie',
+        title: 'Ethnicity'
+      },
+      project: {
+        chartType: 'count',
+        title: 'Projects',
+      },
+    }
+  };
+
+  it('returns chart data as expected', () => {
+    expect(helper.transformArrangerDataToChart(ethnicityFieldJSON)).toEqual(ethnicityChartData);
+  });
+
+  it('returns count data as expected', () => {
+    expect(helper.transformDataToCount(ethnicityFieldJSON, 'Ethnicity')).toEqual(ethnicityCountData);
+  })
+
+  it('returns chart summaries as expected', () => {
+    expect(helper.transformArrangerDataToSummary(ethnicityFieldJSON, 'pie', 'Ethnicity')).toEqual(summaryData);
+  });
+
+  it('gets summaries', () => {
+    let summaries = helper.getSummaries(rawData, arrangerConfig);
+    expect(summaries.countItems).toEqual([projectCountData]);
+    expect(summaries.charts).toEqual([summaryData]);
+    expect(summaries.horizontalBarCharts).toEqual([]);
+  })
+
 });
