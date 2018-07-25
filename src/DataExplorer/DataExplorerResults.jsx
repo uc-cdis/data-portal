@@ -54,41 +54,37 @@ class DataExplorerResults extends React.Component {
     if (data && data.subject.aggregations) {
       let fields = data.subject.aggregations;
       Object.keys(fields).map(field => {
-        switch(field) {
-          case 'project':
-            return countItems.push(this.transformDataToCount(fields[field], field))
-          case 'study':
-            return countItems.push(this.transformDataToCount(fields[field], field))
-          case 'ethnicity':
-            return horizontalBarCharts.push(this.transformArrangerDataToSummary(fields[field], 'bar', field))
-          case 'file_type':
-            return countItems.push(this.transformDataToCount(fields[field], field))
-          case 'gender':
-            return charts.push(this.transformArrangerDataToSummary(fields[field], 'bar', field))
-          case 'race':
-            return charts.push(this.transformArrangerDataToSummary(fields[field], 'pie', field))
-          case 'vital_status':
-            return charts.push(this.transformArrangerDataToSummary(fields[field], 'bar', field))
-          default:
-            return
+        let fieldConfig = this.props.arrangerConfig.charts[field]
+        if (fieldConfig) {
+          switch(fieldConfig.chartType) {
+            case 'count':
+              return countItems.push(this.transformDataToCount(fields[field], fieldConfig.title));
+            case 'pie':
+            case 'bar':
+              return charts.push(this.transformArrangerDataToSummary(fields[field], fieldConfig.chartType, fieldConfig.title));
+            case 'horizontalBar':
+              return horizontalBarCharts.push(this.transformArrangerDataToSummary(fields[field], fieldConfig.chartType, fieldConfig.title));
+            default:
+              return;
           }
+        }
       })
-      return { charts: charts, countItems: countItems, horizontalBarCharts: horizontalBarCharts};
     }
+    return { charts: charts, countItems: countItems, horizontalBarCharts: horizontalBarCharts};
   }
 
   render() {
-    const data = this.props.arrangerData;
+    const summaries = this.props.arrangerData ? this.getSummaries(this.props.arrangerData) : null;
     return (
       <div className="data-explorer__results">
         <h4 onClick={this.toggleVisualization}>Data Summary</h4>
         <CurrentSQON className="data-explorer__sqon" {...this.props} />
-        { data && this.state.showVisualization ?
+        { summaries && this.state.showVisualization ?
           <div className="data-explorer__visualizations">
-            <DataSummaryCardGroup summaryItems={this.getSummaries(data).countItems} connected />
-            <SummaryChartGroup summaries={this.getSummaries(data).charts} localTheme={localTheme} />
+            <DataSummaryCardGroup summaryItems={summaries.countItems} connected />
+            <SummaryChartGroup summaries={summaries.charts} localTheme={localTheme} />
             {
-              this.getSummaries(data).horizontalBarCharts.map((chart, i) =>
+              summaries.horizontalBarCharts.map((chart, i) =>
                 <SummaryHorizontalBarChart key={i} data={chart.data} title={chart.title} localTheme={localTheme} />
               )
             }

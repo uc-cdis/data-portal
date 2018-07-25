@@ -2,22 +2,22 @@ import React from 'react';
 import ArrangerWrapper from '../components/ArrangerWrapper';
 import DataExplorerFilters from './DataExplorerFilters';
 import DataExplorerResults from './DataExplorerResults';
+import { paramByApp } from '../../data/dictionaryHelper';
+import { params } from '../../data/parameters';
 import './DataExplorer.less';
 
 class DataExplorer extends React.Component {
   render() {
-    const index = '';
-    const graphqlField = 'subject';
-    const projectId = 'search';
+    const arrangerConfig = paramByApp(params, 'arrangerConfig') || {};
     return (
       <div className="data-explorer">
         <ArrangerWrapper
-          index={index}
-          graphqlField={graphqlField}
-          projectId={projectId}
+          index={arrangerConfig.index}
+          graphqlField={arrangerConfig.graphqlField}
+          projectId={arrangerConfig.projectId}
         >
           <DataExplorerFilters />
-          <DataExplorerResults />
+          <DataExplorerResults arrangerConfig={arrangerConfig}/>
       </ArrangerWrapper>
     </div>
     );

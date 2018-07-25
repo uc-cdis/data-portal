@@ -1384,68 +1384,45 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@datacommons.io',
       },
-      dataExplorerTableProperties: {
-        tableConfig: {
-          timestamp: '2018-01-12T16:42:07.495Z',
-          type: 'subjects',
-          keyField: 'name',
-          defaultSorted: [{ id: 'name', desc: false }],
-          columns: [
-            {
-              show: true,
-              Header: 'Case.ID',
-              type: 'string',
-              sortable: true,
-              canChangeShow: true,
-              accessor: 'name',
-            },
-            {
-              show: true,
-              Header: 'Project',
-              type: 'string',
-              sortable: true,
-              canChangeShow: true,
-              accessor: 'project',
-            },
-            {
-              show: true,
-              Header: 'Study',
-              type: 'string',
-              sortable: true,
-              canChangeShow: true,
-              accessor: 'study',
-            },
-            {
-              show: true,
-              Header: 'Gender',
-              type: 'string',
-              sortable: true,
-              canChangeShow: true,
-              accessor: 'gender',
-            },
-            {
-              show: true,
-              Header: 'Ethnicity',
-              type: 'string',
-              sortable: true,
-              canChangeShow: true,
-              accessor: 'ethnicity',
-            },
-            {
-              show: true,
-              Header: 'Race',
-              type: 'string',
-              sortable: true,
-              canChangeShow: true,
-              accessor: 'race',
-            },
-          ],
-        },
-        graphqlQuery: '{ subject { hits { edges { node { name, project, study, gender, ethnicity, race, file_type }}}}}',
-      },
     },
     featureFlags: {
       explorer: true,
+    },
+    arrangerConfig: {
+      charts: {
+        project: {
+          chartType: 'count',
+          title: 'Projects',
+        },
+        study: {
+          chartType: 'count',
+          title: 'Studies',
+        },
+        ethnicity: {
+          chartType: 'horizontalBar',
+          title: 'Ethnicity',
+        },
+        file_type: {
+          chartType: 'bar',
+          title: 'File Type'
+        },
+        gender: {
+          chartType: 'bar',
+          title: 'Gender',
+        },
+        race: {
+          chartType: 'pie',
+          title: 'Race',
+        },
+        vital_status: {
+          chartType: 'bar',
+          title: 'Vital Status',
+        },
+      },
+      projectId: 'search',
+      graphqlField: 'subject',
+      api: 'localhost:3000',
+      index: '',
     },
   },
 };
