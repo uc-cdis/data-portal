@@ -164,9 +164,13 @@ async function init() {
                       exact
                       path="/files/:object_id"
                       component={
-                        props => <ProtectedContent
-                        filter={() => store.dispatch(fetchCoreMetadata(props.match.params.object_id))}
-                        component={CoreMetadataPage} {...props} />
+                        props => (<ProtectedContent
+                          filter={() =>
+                            store.dispatch(fetchCoreMetadata(props.match.params.object_id))
+                          }
+                          component={CoreMetadataPage}
+                          {...props}
+                        />)
                       }
                     />
                     <Route

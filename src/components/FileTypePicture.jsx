@@ -17,30 +17,29 @@ export const CenteredPicture = styled.div`
   padding-bottom: 50px;
 `;
 
-function dataFormatToFileType(dictIcons, data_format) {
-  const file_types = Object.keys(dictIcons); // list of available types
-  let format = data_format.toLowerCase();
-  return format in file_types ? format : 'file';
+function dataFormatToFileType(dictIcons, dataFormat) {
+  const fileTypes = Object.keys(dictIcons); // list of available types
+  const format = dataFormat.toLowerCase();
+  return format in fileTypes ? format : 'file';
 }
 
 class FileTypePicture extends Component {
-    render() {
-      let file_type = dataFormatToFileType(this.props.dictIcons, this.props.data_format);
-      if (!file_type)
-        return null;
-      let content = (
-        <WhiteContainer>
-          <CenteredPicture>
-            <IconComponent
-              dictIcons={this.props.dictIcons}
-              iconName={file_type}
-              height="100%"
-            />
-          </CenteredPicture>
-        </WhiteContainer>
-      );
-      return (content);
-    }
+  render() {
+    const fileType = dataFormatToFileType(this.props.dictIcons, this.props.data_format);
+    if (!fileType) return null;
+    const content = (
+      <WhiteContainer>
+        <CenteredPicture>
+          <IconComponent
+            dictIcons={this.props.dictIcons}
+            iconName={fileType}
+            height="100%"
+          />
+        </CenteredPicture>
+      </WhiteContainer>
+    );
+    return (content);
+  }
 }
 
 FileTypePicture.propTypes = {

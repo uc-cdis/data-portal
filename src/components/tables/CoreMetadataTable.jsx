@@ -17,27 +17,25 @@ function fieldInTable(fieldName) {
   // only add in the table fields that are not in the header
   const headerFields = ['file_name', 'type', 'description', 'data_format', 'file_size', 'object_id', 'updated_datetime'];
   const doNotDisplay = ['project_id'];
-  return (headerFields.indexOf(fieldName) == -1
-    && doNotDisplay.indexOf(fieldName) == -1);
+  return (headerFields.indexOf(fieldName) === -1
+    && doNotDisplay.indexOf(fieldName) === -1);
 }
 
 class CoreMetadataTable extends Component {
   dataTransform = metadata => Object.keys(metadata)
-  .sort() // alphabetical order
-  .filter(function(key) {
-    return fieldInTable(key);
-  })
-  .map(key => [
-    <TitleCell>{firstCharToUppercase(key)}</TitleCell>,
-    metadata[key],
-  ]);
+    .sort() // alphabetical order
+    .filter(key => fieldInTable(key))
+    .map(key => [
+      <TitleCell>{firstCharToUppercase(key)}</TitleCell>,
+      metadata[key],
+    ]);
 
   render() {
     return (
       <Table
         header={[TABLE_TITLE, '']}
         data={this.dataTransform(this.props.metadata)}
-        colStyles={[{ paddingLeft: '0px', textAlign: 'left', width: '15%' }, { textAlign: 'left' },]}
+        colStyles={[{ paddingLeft: '0px', textAlign: 'left', width: '15%' }, { textAlign: 'left' }]}
       />
     );
   }

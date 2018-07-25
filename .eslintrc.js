@@ -33,6 +33,13 @@ module.exports = {
             "error",
             "always"
         ],
+        "jsx-a11y/anchor-is-valid": [ "error", {
+          "components": [ "Link" ],
+          "specialLink": [ "to" ]
+        }],
+        "no-unused-vars": [
+          "error",
+          { "argsIgnorePattern": "dispatch" }],
         // see https://github.com/clayne11/eslint-import-resolver-meteor/issues/17
         // - seems to affect Codacy :-(
         "import/extensions": ["off", "never"],

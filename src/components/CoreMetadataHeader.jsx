@@ -1,13 +1,12 @@
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-const DOWNLOAD_BTN_CAPTION = 'Download'
+const DOWNLOAD_BTN_CAPTION = 'Download';
 
 function fileTypeTransform(type) {
   let t = type.replace(/_/g, ' '); // '-' to ' '
   t = t.replace(/\b\w/g, l => l.toUpperCase()); // capitalize words
-  return '| ' + t + ' |';
+  return `| ${t} |`;
 }
 
 function fileSizeTransform(size) {
@@ -17,7 +16,7 @@ function fileSizeTransform(size) {
   return `${sizeStr} ${suffix}`;
 }
 
-function canUserDownload(user, projectAvail, projectID, did, name) {
+function canUserDownload(user, projectAvail, projectID) {
   const parts = projectID.split('-');
   const program = parts[0];
   parts.shift();
@@ -42,35 +41,36 @@ function canUserDownload(user, projectAvail, projectID, did, name) {
 }
 
 class CoreMetadataHeader extends Component {
-  dateTransform = date => 'Updated on ' + date.substr(0, 10);
+  dateTransform = date => `Updated on ${date.substr(0, 10)}`;
 
   render() {
-
     // display the download button if the user can download this file
-    const user = this.props.user, projectAvail = this.props.projectAvail, project_id = this.props.metadata.project_id, did = this.props.metadata.object_id, name = this.props.metadata.file_name;
-    const canDownload = canUserDownload(user, projectAvail, project_id, did, name);
+    const { user, projectAvail } = this.props;
+    const projectId = this.props.metadata.project_id;
+    const canDownload = canUserDownload(user, projectAvail, projectId);
     let downloadButton = null;
     if (canDownload) {
-      downloadButton =
-      <button
-        onClick={this.props.onDownloadFile}
-        className='button-primary-orange'>
-        {DOWNLOAD_BTN_CAPTION}
-      </button>
+      downloadButton = (
+        <button
+          onClick={this.props.onDownloadFile}
+          className="button-primary-orange"
+        >
+          {DOWNLOAD_BTN_CAPTION}
+        </button>);
     }
 
+    const properties = `${this.props.metadata.data_format} | ${fileSizeTransform(this.props.metadata.file_size)} | ${this.props.metadata.object_id} | ${this.dateTransform(this.props.metadata.updated_datetime)}`;
+
     return (
-      <div className='body-typo'>
-        <p className='h3-typo'>
+      <div className="body-typo">
+        <p className="h3-typo">
           {this.props.metadata.file_name}
-          <br/>
+          <br />
           {fileTypeTransform(this.props.metadata.type)}
         </p>
-        <p className='body-typo'>{this.props.metadata.description}</p>
+        <p className="body-typo">{this.props.metadata.description}</p>
         { downloadButton }
-        <div className='body-typo'>
-          {this.props.metadata.data_format} | {fileSizeTransform(this.props.metadata.file_size)} | {this.props.metadata.object_id} | {this.dateTransform(this.props.metadata.updated_datetime)}
-        </div>
+        <div className="body-typo">{properties}</div>
       </div>
     );
   }

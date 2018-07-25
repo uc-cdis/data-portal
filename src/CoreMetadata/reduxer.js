@@ -1,43 +1,41 @@
 import { connect } from 'react-redux';
-import CoreMetadataHeader from '../components/CoreMetadataHeader'
-import FileTypePicture from '../components/FileTypePicture'
-import CoreMetadataTable from '../components/tables/CoreMetadataTable'
+import CoreMetadataHeader from '../components/CoreMetadataHeader';
+import FileTypePicture from '../components/FileTypePicture';
+import CoreMetadataTable from '../components/tables/CoreMetadataTable';
 import { coreMetadataPath, userapiPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 
-export const fetchCoreMetadata = (object_id) =>
+export const fetchCoreMetadata = objectId =>
   dispatch =>
     fetchWithCreds({
-      path: coreMetadataPath + object_id,
-      customHeaders: { 'Accept' : 'application/json' },
+      path: coreMetadataPath + objectId,
+      customHeaders: { Accept: 'application/json' },
       dispatch,
     })
-      .then(
-        ({ status, data }) => {
-          switch (status) {
-          case 200:
-            return {
-              type: 'RECEIVE_CORE_METADATA',
-              metadata: data,
-            };
-          default:
-            return {
-              type: 'CORE_METADATA_ERROR',
-              error: data.error,
-            };
-          }
-        },
-      )
+      .then(({ status, data }) => {
+        switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_CORE_METADATA',
+            metadata: data,
+          };
+        default:
+          return {
+            type: 'CORE_METADATA_ERROR',
+            error: data.error,
+          };
+        }
+      })
       .then(msg => dispatch(msg));
 
-const downloadFile = id => (dispatch, getState) => {
+const downloadFile = id => (dispatch) => {
   const path = `${userapiPath}data/download/${id}?expires_in=10&redirect`;
   const method = 'GET';
   return fetchWithCreds({
-    path: path,
+    path,
     method,
-  }).then(
-    ({ status, data }) => {
+  })
+    .then(({ status, data }) => {
       switch (status) {
       case 200:
         return {
@@ -50,30 +48,29 @@ const downloadFile = id => (dispatch, getState) => {
           error: data.error,
         };
       }
-      },
-    )
-    .then(function(msg) {
+    })
+    .then((msg) => {
       dispatch(msg);
       window.location.href = path; // redirect to download
     });
 };
 
 export const ReduxCoreMetadataHeader = (() => {
-  const mapStateToProps = (state) => ({
+  const mapStateToProps = state => ({
     metadata: state.coreMetadata.metadata,
     user: state.user,
     projectAvail: state.submission.projectAvail,
   });
 
   const mapDispatchToProps = dispatch => ({
-    onDownloadFile: (id => dispatch(downloadFile(id))),
+    onDownloadFile: id => dispatch(downloadFile(id)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(CoreMetadataHeader);
 })();
 
 export const ReduxFileTypePicture = (() => {
-  const mapStateToProps = (state) => ({
+  const mapStateToProps = state => ({
     data_format: state.coreMetadata.metadata.data_format,
   });
 
@@ -84,7 +81,7 @@ export const ReduxFileTypePicture = (() => {
 })();
 
 export const ReduxCoreMetadataTable = (() => {
-  const mapStateToProps = (state) => ({
+  const mapStateToProps = state => ({
     metadata: state.coreMetadata.metadata,
   });
 

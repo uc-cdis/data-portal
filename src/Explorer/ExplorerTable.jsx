@@ -62,7 +62,6 @@ export class ExplorerTableComponent extends Component {
   }
 
   static renderRow(user, projectAvail, file, columnWidths, i) {
-    const filename = <span>{file.name}</span>
     const filesize = ExplorerTableComponent.humanFileSize(file.size);
     return (
       <TableRow key={i}>
@@ -70,7 +69,7 @@ export class ExplorerTableComponent extends Component {
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
         </TableData>
         <TableData c_width={columnWidths[1]}>
-          <Link to={`/files/${file.did}`}>{filename}</Link>
+          <Link to={`/files/${file.did}`}>{file.name}</Link>
         </TableData>
         <TableData c_width={columnWidths[2]}>{file.format}</TableData>
         <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{filesize}</TableData>
