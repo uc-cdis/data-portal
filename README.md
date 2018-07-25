@@ -32,6 +32,24 @@ npm run relay
 ```
 Then browse to http://localhost:8080/webpack-dev-server/ . Since we are running it without APIs, this will only render static pages but any submission actions to APIs will fail.
 
+To run Storybook:
+`npm run storybook`
+
+To run with Arranger components:
+1. Set local environment variables:
+  - $STORYBOOK_ARRANGER_API: localhost:3000
+  - $STORYBOOK_PROJECT_ID: search
+  - $REACT_APP_ARRANGER_API: localhost:3000
+  - $REACT_APP_PROJECT_ID: search
+2. Run ElasticSearch at localhost:9200
+3. Run `gen3-arranger` server (`npm start`)
+4. Populate ElasticSearch DB using `es_gen_data()` function from `gen3-arranger`
+5. Follow the [Arranger](https://github.com/overture-stack/arranger) setup steps - run the server and the dashboard.
+6. At the Arranger Dashboard (localhost:6060), add a new version called 'dev'.
+7. Click on 'dev' and add a new index. Name: subject, Index: gen3-dev-subject, ES Type: subject.
+8. Go back to Versions and hit the lightning bolt. The endpoint should go from a red arrow to a green arrow.
+9. At this point, running the Data Portal from our Storybook should work.
+
 ### Docker Build for Local Development
 Build the container image first
 ```

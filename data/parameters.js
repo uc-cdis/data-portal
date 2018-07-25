@@ -1407,11 +1407,11 @@ const params = {
           title: 'File Type'
         },
         gender: {
-          chartType: 'bar',
+          chartType: 'pie',
           title: 'Gender',
         },
         race: {
-          chartType: 'pie',
+          chartType: 'bar',
           title: 'Race',
         },
         vital_status: {

@@ -12,6 +12,7 @@ class DataExplorer extends React.Component {
     return (
       <div className="data-explorer">
         <ArrangerWrapper
+          api={'localhost:3000'}
           index={arrangerConfig.index}
           graphqlField={arrangerConfig.graphqlField}
           projectId={arrangerConfig.projectId}

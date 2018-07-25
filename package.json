@@ -38,6 +38,7 @@
     "react": "^16.3.2",
     "react-ace": "^6.1.0",
     "react-dom": "^16.3.2",
+    "react-fontawesome": "^1.6.1",
     "react-form": "^3.5.5",
     "react-ga": "^2.5.3",
     "react-highlight": "^0.12.0",
