@@ -15,7 +15,7 @@ const TopIconButton = ({ dictIcons, item, onActiveTab = () => {}, isActive = fal
     /> : ''}
   </div>
 );
- 
+
 TopIconButton.propTypes = {
   item: PropTypes.object.isRequired,
   dictIcons: PropTypes.object.isRequired,
