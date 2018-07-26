@@ -4,16 +4,12 @@ import { Arranger } from '@arranger/components/dist/Arranger';
 import { AggsState, AggsQuery } from '@arranger/components/dist/Aggs';
 
 class ArrangerWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.renderComponent = this.renderComponent.bind(this);
-  }
-
-  renderComponent(props) {
-    return React.Children.map(this.props.children, child => React.cloneElement(child, {
-      ...props,
-    }));
-  }
+  renderComponent = props => (
+    React.Children.map(this.props.children, child =>
+      React.cloneElement(child, { ...props },
+      ),
+    )
+  );
 
   render() {
     return (
@@ -50,7 +46,10 @@ ArrangerWrapper.propTypes = {
   index: PropTypes.string.isRequired,
   graphqlField: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
-  children: PropTypes.array.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]).isRequired,
 };
 
 export default ArrangerWrapper;
