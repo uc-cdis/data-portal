@@ -21,7 +21,6 @@ describe('ArrangerWrapper', () => {
     const { children } = component.instance().props;
     const { renderComponent } = component.instance();
     expect(children.props.className).toBe('test');
-    
     const clones = renderComponent({ arg1: 'arg1', arg2: 'arg2' });
     expect(clones.length).toBe(1);
     expect(clones[0].props.className).toBe(children.props.className);
