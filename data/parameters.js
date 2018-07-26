@@ -1398,20 +1398,20 @@ const params = {
           chartType: 'count',
           title: 'Studies',
         },
+        file_type: {
+          chartType: 'count',
+          title: 'File Types',
+        },
         ethnicity: {
           chartType: 'stackedBar',
           title: 'Ethnicity',
-        },
-        file_type: {
-          chartType: 'bar',
-          title: 'File Type',
         },
         gender: {
           chartType: 'pie',
           title: 'Gender',
         },
         race: {
-          chartType: 'bar',
+          chartType: 'pie',
           title: 'Race',
         },
         vital_status: {

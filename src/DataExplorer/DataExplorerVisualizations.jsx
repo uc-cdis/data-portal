@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
 import { CurrentSQON } from '@arranger/components/dist/Arranger';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DataExplorerTable from '../components/tables/DataExplorerTable';
 import SummaryChartGroup from '../components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart';
@@ -35,9 +35,10 @@ class DataExplorerVisualizations extends React.Component {
           tabIndex={0}
         >
           <h4>Data Summary</h4>
-          <FontAwesome
+          <FontAwesomeIcon
             className="data-explorer__visualizations-title-icon"
-            name={this.state.showVisualization ? 'chevron-down' : 'chevron-up'}
+            icon={this.state.showVisualization ? 'angle-down' : 'angle-up'}
+            size="lg"
           />
         </div>
         <CurrentSQON className="data-explorer__sqon" {...this.props} />
