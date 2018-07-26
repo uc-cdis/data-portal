@@ -1404,7 +1404,7 @@ const params = {
         },
         file_type: {
           chartType: 'bar',
-          title: 'File Type'
+          title: 'File Type',
         },
         gender: {
           chartType: 'pie',

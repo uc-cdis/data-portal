@@ -13,7 +13,6 @@ class DataExplorerVisualizations extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      summaries: [],
       showVisualization: true,
     };
   }
@@ -32,6 +31,7 @@ class DataExplorerVisualizations extends React.Component {
           className="data-explorer__visualizations-title"
           onClick={this.toggleVisualization}
           role="button"
+          onKeyDown={this.toggleVisualization}
           tabIndex={0}
         >
           <h4>Data Summary</h4>

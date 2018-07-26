@@ -18,9 +18,10 @@ describe('ArrangerWrapper', () => {
   });
 
   it('uses renderComponent to send props to its children', () => {
-    const children = component.instance().props.children;
+    const { children } = component.instance().props;
+    const { renderComponent } = component.instance();
     expect(children.props.className).toBe('test');
-    const renderComponent = component.instance().renderComponent;
+    
     const clones = renderComponent({ arg1: 'arg1', arg2: 'arg2' });
     expect(clones.length).toBe(1);
     expect(clones[0].props.className).toBe(children.props.className);
