@@ -9,13 +9,13 @@ import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup';
 import { getSummaries } from '../components/charts/helper';
 import { localTheme } from '../localconf';
 
-class DataExplorerResults extends React.Component {
+class DataExplorerVisualizations extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       summaries: [],
       showVisualization: true,
-    }
+    };
   }
 
   toggleVisualization = () => {
@@ -40,15 +40,25 @@ class DataExplorerResults extends React.Component {
             <SummaryChartGroup summaries={summaries.charts} localTheme={localTheme} />
             {
               summaries.horizontalBarCharts.map((chart, i) =>
-                <SummaryHorizontalBarChart key={i} data={chart.data} title={chart.title} localTheme={localTheme} />
+                <SummaryHorizontalBarChart key={i} data={chart.data} title={chart.title} localTheme={localTheme} />,
               )
             }
           </div>
-        : null}
+          : null}
         <DataExplorerTable {...this.props} />
       </div>
-    )
+    );
   }
 }
 
-export default DataExplorerResults;
+DataExplorerVisualizations.propTypes = {
+  arrangerData: PropTypes.object,
+  arrangerConfig: PropTypes.object,
+};
+
+DataExplorerVisualizations.defaultProps = {
+  arrangerData: null,
+  arrangerConfig: {},
+};
+
+export default DataExplorerVisualizations;

@@ -10,11 +10,9 @@ class ArrangerWrapper extends React.Component {
   }
 
   renderComponent(props) {
-    return React.Children.map(this.props.children, child => {
-      return React.cloneElement(child, {
-        ...props
-      })
-    })
+    return React.Children.map(this.props.children, child => React.cloneElement(child, {
+      ...props,
+    }));
   }
 
   render() {
@@ -23,30 +21,26 @@ class ArrangerWrapper extends React.Component {
         index={this.props.index}
         graphqlField={this.props.graphqlField}
         projectId={this.props.projectId}
-        render={arrangerArgs => {
-          return (
-            <AggsState
-              {...arrangerArgs}
-              render={stateArgs => {
-                return (
-                  <AggsQuery
-                    api={arrangerArgs.api}
-                    debounceTime={300}
-                    projectId={arrangerArgs.projectId}
-                    index={arrangerArgs.graphqlField}
-                    sqon={arrangerArgs.sqon}
-                    aggs={stateArgs.aggs.filter(agg => agg.field != "name")}
-                    render={({ data }) => (
-                      <React.Fragment>
-                        {this.renderComponent({ ...arrangerArgs, arrangerData: data })}
-                      </React.Fragment>
-                    )}
-                  />
-                )
-              }}
-            />
-          )
-        }}
+        render={arrangerArgs => (
+          <AggsState
+            {...arrangerArgs}
+            render={stateArgs => (
+              <AggsQuery
+                api={arrangerArgs.api}
+                debounceTime={300}
+                projectId={arrangerArgs.projectId}
+                index={arrangerArgs.graphqlField}
+                sqon={arrangerArgs.sqon}
+                aggs={stateArgs.aggs.filter(agg => agg.field != 'name')}
+                render={({ data }) => (
+                  <React.Fragment>
+                    {this.renderComponent({ ...arrangerArgs, arrangerData: data })}
+                  </React.Fragment>
+                )}
+              />
+            )}
+          />
+        )}
       />
     );
   }
@@ -56,6 +50,6 @@ ArrangerWrapper.propTypes = {
   index: PropTypes.string.isRequired,
   graphqlField: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
-}
+};
 
 export default ArrangerWrapper;

@@ -6,7 +6,7 @@ function loadStories() {
   require('../src/stories/charts.jsx');
   require('../src/stories/tables.jsx');
   require('../src/stories/cards.jsx')
-  require('../src/stories/portal.jsx');
+  require('../src/stories/explorer.jsx');
   require('../src/stories/filters.jsx');
 }
 

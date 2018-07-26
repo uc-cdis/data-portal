@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Aggregations } from '@arranger/components/dist/Arranger';
 
 class DataExplorerFilters extends React.Component {
@@ -11,5 +12,13 @@ class DataExplorerFilters extends React.Component {
     );
   }
 }
+
+DataExplorerFilters.propTypes = {
+  arrangerData: PropTypes.object,
+};
+
+DataExplorerFilters.defaultProps = {
+  arrangerData: {},
+};
 
 export default DataExplorerFilters;

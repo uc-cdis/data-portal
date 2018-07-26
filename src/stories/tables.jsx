@@ -1,10 +1,9 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import 'regenerator-runtime/runtime';
-import DataExplorerTable from '../components/tables/DataExplorerTable/.';
 import { Table } from '@arranger/components/dist/DataTable';
 import '@arranger/components/public/themeStyles/beagle/beagle.css';
+import DataExplorerTable from '../components/tables/DataExplorerTable/.';
 
 const dummyConfig = {
   timestamp: '2018-01-12T16:42:07.495Z',

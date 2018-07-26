@@ -332,30 +332,3 @@ export const fetchDictionary = dispatch =>
 
 export const fetchVersionInfo = () =>
   fetchWithCreds({ path: `${apiPath}_version`, method: 'GET', useCache: true });
-
-// Fetches GraphQL for Data Explorer Arranger table
-export const fetchDataForArrangerTable = ({ sort, offset, first }) => fetch(
-  '/api/v0/flat-search/search/graphql',
-  {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json; charset=utf-8' },
-    body: JSON.stringify(
-      {
-        query: components.dataExplorerTableProperties.graphqlQuery,
-      },
-    ),
-  },
-).then(
-  res => res.json(),
-).then(
-  (json) => {
-    const cleanData = json.data.subject.hits.edges.map(it => it.node);
-    const searchCriteria = sort.map(s =>
-      (s.order === 'desc' ? '~'.concat(s.field) : s.field.toString()),
-    );
-    return {
-      total: cleanData.length,
-      data: multisort(cleanData, searchCriteria).slice(offset, offset + first),
-    };
-  },
-);

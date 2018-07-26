@@ -1421,7 +1421,6 @@ const params = {
       },
       projectId: 'search',
       graphqlField: 'subject',
-      api: 'localhost:3000',
       index: '',
     },
   },

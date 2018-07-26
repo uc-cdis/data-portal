@@ -49,58 +49,53 @@ const getCategoryColorFrom2Colors = (index, localTheme) => localTheme[`pieChartT
 
 const getDataKey = showPercentage => (showPercentage ? 'percentage' : 'value');
 
-const transformArrangerDataToSummary = (field, chartType, title) => {
-  return {
-    type: chartType,
-    title: title,
-    data: transformArrangerDataToChart(field),
-  }
-}
+const transformArrangerDataToSummary = (field, chartType, title) => ({
+  type: chartType,
+  title,
+  data: transformArrangerDataToChart(field),
+});
 
 const transformArrangerDataToChart = (field) => {
-  let chartData = [];
-  field.buckets.map(bucket => {
+  const chartData = [];
+  field.buckets.map((bucket) => {
     chartData.push({
       name: bucket.key,
       value: bucket.doc_count,
-    })
-  })
+    });
+  });
   return chartData;
-}
+};
 
-const transformDataToCount = (field, label) => {
-  return {
-    label: label,
-    value: field.buckets.length,
-  }
-}
+const transformDataToCount = (field, label) => ({
+  label,
+  value: field.buckets.length,
+});
 
 const getSummaries = (data, arrangerConfig) => {
-  let countItems = [];
-  let charts = [];
-  let horizontalBarCharts = [];
+  const countItems = [];
+  const charts = [];
+  const horizontalBarCharts = [];
 
   if (data && data.subject.aggregations) {
-    let fields = data.subject.aggregations;
-    Object.keys(fields).map(field => {
-      let fieldConfig = arrangerConfig.charts[field]
+    const fields = data.subject.aggregations;
+    Object.keys(fields).map((field) => {
+      const fieldConfig = arrangerConfig.charts[field];
       if (fieldConfig) {
-        switch(fieldConfig.chartType) {
-          case 'count':
-            return countItems.push(transformDataToCount(fields[field], fieldConfig.title));
-          case 'pie':
-          case 'bar':
-            return charts.push(transformArrangerDataToSummary(fields[field], fieldConfig.chartType, fieldConfig.title));
-          case 'horizontalBar':
-            return horizontalBarCharts.push(transformArrangerDataToSummary(fields[field], fieldConfig.chartType, fieldConfig.title));
-          default:
-            return;
+        switch (fieldConfig.chartType) {
+        case 'count':
+          return countItems.push(transformDataToCount(fields[field], fieldConfig.title));
+        case 'pie':
+        case 'bar':
+          return charts.push(transformArrangerDataToSummary(fields[field], fieldConfig.chartType, fieldConfig.title));
+        case 'horizontalBar':
+          return horizontalBarCharts.push(transformArrangerDataToSummary(fields[field], fieldConfig.chartType, fieldConfig.title));
+        default:
         }
       }
-    })
+    });
   }
-  return { charts: charts, countItems: countItems, horizontalBarCharts: horizontalBarCharts};
-}
+  return { charts, countItems, horizontalBarCharts };
+};
 
 module.exports = {
   percentageFormatter,

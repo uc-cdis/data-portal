@@ -14,8 +14,6 @@ function buildConfig(opts) {
     basename: process.env.BASENAME || '/',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
-    arrangerProjectId: process.env.REACT_APP_PROJECT_ID || process.env.STORYBOOK_PROJECT_ID,
-    arrangerApi: process.env.REACT_APP_ARRANGER_API || process.env.STORYBOOK_ARRANGER_API,
   };
 
   //

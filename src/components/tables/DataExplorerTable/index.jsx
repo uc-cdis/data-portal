@@ -8,27 +8,14 @@ import dictIcons from '../../../img/icons';
 import './DataExplorerTable.less';
 
 class DataExplorerTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedTableRows: [],
-    };
-    this.onBDBagDownload = this.onBDBagDownload.bind(this);
-    this.onClinicalDownload = this.onClinicalDownload.bind(this);
-  }
-
-  onBDBagDownload() {
+  onBDBagDownload = () => {
     // TODO: look up selected data by id and download as CSV
-    fileDownload(this.state.selectedTableRows, 'BDBagManifest.csv');
+    fileDownload(this.props.selectedTableRows, 'BDBagManifest.csv');
   }
 
-  onClinicalDownload() {
+  onClinicalDownload = () => {
     // TODO: look up selected data by id and download as CSV
-    fileDownload(this.state.selectedTableRows, 'Clinical.csv');
-  }
-
-  setSelectedTableRows(rows) {
-    this.setState({ selectedTableRows: rows });
+    fileDownload(this.props.selectedTableRows, 'Clinical.csv');
   }
 
   render() {
@@ -65,6 +52,14 @@ class DataExplorerTable extends React.Component {
 }
 
 DataExplorerTable.propTypes = {
+  arrangerConfig: PropTypes.object,
+  arrangerData: PropTypes.object,
+  selectedTableRows: PropTypes.array.isRequired,
+};
+
+DataExplorerTable.defaultProps = {
+  arrangerConfig: {},
+  arrangerData: null,
 };
 
 export default DataExplorerTable;

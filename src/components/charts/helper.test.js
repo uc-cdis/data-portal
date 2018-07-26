@@ -102,21 +102,21 @@ describe('helper', () => {
       aggregations: {
         ethnicity: ethnicityFieldJSON,
         project: projectFieldJSON,
-      }
-    }
+      },
+    },
   };
 
   const arrangerConfig = {
     charts: {
       ethnicity: {
         chartType: 'pie',
-        title: 'Ethnicity'
+        title: 'Ethnicity',
       },
       project: {
         chartType: 'count',
         title: 'Projects',
       },
-    }
+    },
   };
 
   it('returns chart data as expected', () => {
@@ -125,17 +125,16 @@ describe('helper', () => {
 
   it('returns count data as expected', () => {
     expect(helper.transformDataToCount(ethnicityFieldJSON, 'Ethnicity')).toEqual(ethnicityCountData);
-  })
+  });
 
   it('returns chart summaries as expected', () => {
     expect(helper.transformArrangerDataToSummary(ethnicityFieldJSON, 'pie', 'Ethnicity')).toEqual(summaryData);
   });
 
   it('gets summaries', () => {
-    let summaries = helper.getSummaries(rawData, arrangerConfig);
+    const summaries = helper.getSummaries(rawData, arrangerConfig);
     expect(summaries.countItems).toEqual([projectCountData]);
     expect(summaries.charts).toEqual([summaryData]);
     expect(summaries.horizontalBarCharts).toEqual([]);
-  })
-
+  });
 });
