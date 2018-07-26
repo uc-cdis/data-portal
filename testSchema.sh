@@ -11,7 +11,6 @@ gtex "dcp.bionimbus.org"
 dev "dev.planx-pla.net"
 edc "portal.occ-data.org"
 genomel "genomel.bionimbus.org"
-kf "data.kidsfirstdrc.org"
 kfDcfInterop "dcf-interop.kidsfirstdrc.org"
 ndh "niaid.bionimbus.org"
 )
