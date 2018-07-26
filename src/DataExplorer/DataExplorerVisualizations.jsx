@@ -27,19 +27,22 @@ class DataExplorerVisualizations extends React.Component {
       getSummaries(this.props.arrangerData, this.props.arrangerConfig)
       : null;
     return (
-      <div className="data-explorer__results">
+      <div className="data-explorer__visualizations">
         <div
-          className="data-explorer__results-title"
+          className="data-explorer__visualizations-title"
           onClick={this.toggleVisualization}
           role="button"
           tabIndex={0}
         >
           <h4>Data Summary</h4>
-          <FontAwesome name={this.state.showVisualization ? 'chevron-down' : 'chevron-up'} />
+          <FontAwesome
+            className="data-explorer__visualizations-title-icon"
+            name={this.state.showVisualization ? "chevron-down" : "chevron-up"}
+          />
         </div>
         <CurrentSQON className="data-explorer__sqon" {...this.props} />
         { summaries && this.state.showVisualization ?
-          <div className="data-explorer__visualizations">
+          <div className="data-explorer__charts">
             <DataSummaryCardGroup summaryItems={summaries.countItems} connected />
             <SummaryChartGroup summaries={summaries.charts} localTheme={localTheme} />
             {
