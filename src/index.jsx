@@ -194,7 +194,9 @@ async function init() {
                     { isEnabled('explorer') ?
                       <Route
                         path="/explorer"
-                        component={DataExplorer}
+                        component={
+                          props => <ProtectedContent component={DataExplorer} {...props} />
+                        }
                       />
                       : null
                     }
