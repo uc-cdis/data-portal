@@ -37,7 +37,7 @@ class DataExplorerVisualizations extends React.Component {
           <h4>Data Summary</h4>
           <FontAwesome
             className="data-explorer__visualizations-title-icon"
-            name={this.state.showVisualization ? "chevron-down" : "chevron-up"}
+            name={this.state.showVisualization ? 'chevron-down' : 'chevron-up'}
           />
         </div>
         <CurrentSQON className="data-explorer__sqon" {...this.props} />

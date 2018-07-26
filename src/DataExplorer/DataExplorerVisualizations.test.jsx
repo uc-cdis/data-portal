@@ -29,11 +29,11 @@ describe('DataExplorerVisualizations', () => {
     <DataExplorerVisualizations
       arrangerData={arrangerData}
       arrangerConfig={arrangerConfig}
-    />
+    />,
   );
 
   const noDataComponent = mount(
-    <DataExplorerVisualizations arrangerConfig={arrangerConfig} />
+    <DataExplorerVisualizations arrangerConfig={arrangerConfig} />,
   );
 
   it('renders', () => {
