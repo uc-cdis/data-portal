@@ -17,4 +17,4 @@ install:
 script:
     - npm run params
     - npm test
-    - bash ./testSchema.sh
+    #- bash ./testSchema.sh - going to add back in
