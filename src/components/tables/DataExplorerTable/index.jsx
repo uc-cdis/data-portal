@@ -54,12 +54,13 @@ class DataExplorerTable extends React.Component {
 DataExplorerTable.propTypes = {
   arrangerConfig: PropTypes.object,
   arrangerData: PropTypes.object,
-  selectedTableRows: PropTypes.array.isRequired,
+  selectedTableRows: PropTypes.array,
 };
 
 DataExplorerTable.defaultProps = {
   arrangerConfig: {},
   arrangerData: null,
+  selectedTableRows: [],
 };
 
 export default DataExplorerTable;
