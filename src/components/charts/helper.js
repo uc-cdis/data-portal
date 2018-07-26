@@ -71,10 +71,10 @@ const transformDataToCount = (field, label) => ({
   value: field.buckets.length,
 });
 
-const getSummaries = (data, arrangerConfig) => {
+const getCharts = (data, arrangerConfig) => {
   const countItems = [];
-  const charts = [];
-  const horizontalBarCharts = [];
+  const summaries = [];
+  const stackedBarCharts = [];
 
   if (data && data.subject.aggregations) {
     const fields = data.subject.aggregations;
@@ -87,15 +87,15 @@ const getSummaries = (data, arrangerConfig) => {
           break;
         case 'pie':
         case 'bar':
-          charts.push(
+          summaries.push(
             transformArrangerDataToSummary(
               fields[field],
               fieldConfig.chartType,
               fieldConfig.title),
           );
           break;
-        case 'horizontalBar':
-          horizontalBarCharts.push(
+        case 'stackedBar':
+          stackedBarCharts.push(
             transformArrangerDataToSummary(
               fields[field],
               fieldConfig.chartType,
@@ -108,7 +108,7 @@ const getSummaries = (data, arrangerConfig) => {
       }
     });
   }
-  return { charts, countItems, horizontalBarCharts };
+  return { summaries, countItems, stackedBarCharts };
 };
 
 module.exports = {
@@ -122,5 +122,5 @@ module.exports = {
   transformDataToCount,
   transformArrangerDataToChart,
   transformArrangerDataToSummary,
-  getSummaries,
+  getCharts,
 };

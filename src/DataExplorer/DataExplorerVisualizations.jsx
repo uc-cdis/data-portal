@@ -4,9 +4,9 @@ import FontAwesome from 'react-fontawesome';
 import { CurrentSQON } from '@arranger/components/dist/Arranger';
 import DataExplorerTable from '../components/tables/DataExplorerTable';
 import SummaryChartGroup from '../components/charts/SummaryChartGroup';
-import SummaryHorizontalBarChart from '../components/charts/SummaryHorizontalBarChart';
+import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart';
 import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup';
-import { getSummaries } from '../components/charts/helper';
+import { getCharts } from '../components/charts/helper';
 import { localTheme } from '../localconf';
 
 class DataExplorerVisualizations extends React.Component {
@@ -22,8 +22,8 @@ class DataExplorerVisualizations extends React.Component {
   }
 
   render() {
-    const summaries = this.props.arrangerData ?
-      getSummaries(this.props.arrangerData, this.props.arrangerConfig)
+    const charts = this.props.arrangerData ?
+      getCharts(this.props.arrangerData, this.props.arrangerConfig)
       : null;
     return (
       <div className="data-explorer__visualizations">
@@ -41,17 +41,18 @@ class DataExplorerVisualizations extends React.Component {
           />
         </div>
         <CurrentSQON className="data-explorer__sqon" {...this.props} />
-        { summaries && this.state.showVisualization ?
+        { charts && this.state.showVisualization ?
           <div className="data-explorer__charts">
-            <DataSummaryCardGroup summaryItems={summaries.countItems} connected />
-            <SummaryChartGroup summaries={summaries.charts} localTheme={localTheme} />
+            <DataSummaryCardGroup summaryItems={charts.countItems} connected />
+            <SummaryChartGroup summaries={charts.summaries} localTheme={localTheme} />
             {
-              summaries.horizontalBarCharts.map((chart, i) =>
-                (<SummaryHorizontalBarChart
+              charts.stackedBarCharts.map((chart, i) =>
+                (<PercentageStackedBarChart
                   key={i}
                   data={chart.data}
                   title={chart.title}
                   localTheme={localTheme}
+                  width="100%"
                 />),
               )
             }

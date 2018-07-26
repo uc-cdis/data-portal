@@ -1399,7 +1399,7 @@ const params = {
           title: 'Studies',
         },
         ethnicity: {
-          chartType: 'horizontalBar',
+          chartType: 'stackedBar',
           title: 'Ethnicity',
         },
         file_type: {

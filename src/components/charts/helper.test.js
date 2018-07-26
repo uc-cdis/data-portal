@@ -131,10 +131,10 @@ describe('helper', () => {
     expect(helper.transformArrangerDataToSummary(ethnicityFieldJSON, 'pie', 'Ethnicity')).toEqual(summaryData);
   });
 
-  it('gets summaries', () => {
-    const summaries = helper.getSummaries(rawData, arrangerConfig);
-    expect(summaries.countItems).toEqual([projectCountData]);
-    expect(summaries.charts).toEqual([summaryData]);
-    expect(summaries.horizontalBarCharts).toEqual([]);
+  it('gets charts', () => {
+    const charts = helper.getCharts(rawData, arrangerConfig);
+    expect(charts.countItems).toEqual([projectCountData]);
+    expect(charts.summaries).toEqual([summaryData]);
+    expect(charts.stackedBarCharts).toEqual([]);
   });
 });
