@@ -31,7 +31,7 @@ class ArrangerWrapper extends React.Component {
                 projectId={arrangerArgs.projectId}
                 index={arrangerArgs.graphqlField}
                 sqon={arrangerArgs.sqon}
-                aggs={stateArgs.aggs.filter(agg => agg.field != 'name')}
+                aggs={stateArgs.aggs.filter(agg => agg.field !== 'name')}
                 render={({ data }) => (
                   <React.Fragment>
                     {this.renderComponent({ ...arrangerArgs, arrangerData: data })}
@@ -50,6 +50,7 @@ ArrangerWrapper.propTypes = {
   index: PropTypes.string.isRequired,
   graphqlField: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
+  children: PropTypes.array.isRequired,
 };
 
 export default ArrangerWrapper;

@@ -23,12 +23,16 @@ class DataExplorerVisualizations extends React.Component {
   }
 
   render() {
-    const summaries = this.props.arrangerData ? getSummaries(this.props.arrangerData, this.props.arrangerConfig) : null;
+    const summaries = this.props.arrangerData ?
+      getSummaries(this.props.arrangerData, this.props.arrangerConfig)
+      : null;
     return (
       <div className="data-explorer__results">
         <div
           className="data-explorer__results-title"
           onClick={this.toggleVisualization}
+          role="button"
+          tabIndex={0}
         >
           <h4>Data Summary</h4>
           <FontAwesome name={this.state.showVisualization ? 'chevron-down' : 'chevron-up'} />
@@ -40,7 +44,12 @@ class DataExplorerVisualizations extends React.Component {
             <SummaryChartGroup summaries={summaries.charts} localTheme={localTheme} />
             {
               summaries.horizontalBarCharts.map((chart, i) =>
-                <SummaryHorizontalBarChart key={i} data={chart.data} title={chart.title} localTheme={localTheme} />,
+                (<SummaryHorizontalBarChart
+                  key={i}
+                  data={chart.data}
+                  title={chart.title}
+                  localTheme={localTheme}
+                />),
               )
             }
           </div>

@@ -1,7 +1,5 @@
 import 'isomorphic-fetch';
-import multisort from 'multisort';
 import { apiPath, userapiPath, headers, basename, submissionApiOauthPath, submissionApiPath, graphqlPath, graphqlSchemaUrl } from './configs';
-import { components } from './params';
 
 export const updatePopup = state => ({
   type: 'UPDATE_POPUP',

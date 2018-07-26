@@ -49,22 +49,22 @@ const getCategoryColorFrom2Colors = (index, localTheme) => localTheme[`pieChartT
 
 const getDataKey = showPercentage => (showPercentage ? 'percentage' : 'value');
 
+const transformArrangerDataToChart = (field) => {
+  const chartData = [];
+  field.buckets.map(bucket =>
+    chartData.push({
+      name: bucket.key,
+      value: bucket.doc_count,
+    }),
+  );
+  return chartData;
+};
+
 const transformArrangerDataToSummary = (field, chartType, title) => ({
   type: chartType,
   title,
   data: transformArrangerDataToChart(field),
 });
-
-const transformArrangerDataToChart = (field) => {
-  const chartData = [];
-  field.buckets.map((bucket) => {
-    chartData.push({
-      name: bucket.key,
-      value: bucket.doc_count,
-    });
-  });
-  return chartData;
-};
 
 const transformDataToCount = (field, label) => ({
   label,
@@ -78,18 +78,32 @@ const getSummaries = (data, arrangerConfig) => {
 
   if (data && data.subject.aggregations) {
     const fields = data.subject.aggregations;
-    Object.keys(fields).map((field) => {
+    Object.keys(fields).forEach((field) => {
       const fieldConfig = arrangerConfig.charts[field];
       if (fieldConfig) {
         switch (fieldConfig.chartType) {
         case 'count':
-          return countItems.push(transformDataToCount(fields[field], fieldConfig.title));
+          countItems.push(transformDataToCount(fields[field], fieldConfig.title));
+          break;
         case 'pie':
         case 'bar':
-          return charts.push(transformArrangerDataToSummary(fields[field], fieldConfig.chartType, fieldConfig.title));
+          charts.push(
+            transformArrangerDataToSummary(
+              fields[field],
+              fieldConfig.chartType,
+              fieldConfig.title),
+          );
+          break;
         case 'horizontalBar':
-          return horizontalBarCharts.push(transformArrangerDataToSummary(fields[field], fieldConfig.chartType, fieldConfig.title));
+          horizontalBarCharts.push(
+            transformArrangerDataToSummary(
+              fields[field],
+              fieldConfig.chartType,
+              fieldConfig.title),
+          );
+          break;
         default:
+          break;
         }
       }
     });

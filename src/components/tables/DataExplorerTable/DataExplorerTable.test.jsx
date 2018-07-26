@@ -3,8 +3,6 @@ import { mount } from 'enzyme';
 import DataExplorerTable from '.';
 
 describe('DataExplorerTable', () => {
-  const arrangerConfig = {};
-  const arrangerData = {};
   const selectedTableRows = [];
 
   const component = mount(
