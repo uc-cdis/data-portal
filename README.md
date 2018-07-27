@@ -39,7 +39,7 @@ To run with Arranger components:
 1. Set local environment variables:
   - $STORYBOOK_ARRANGER_API: localhost:3000
   - $STORYBOOK_PROJECT_ID: search
-  - $REACT_APP_ARRANGER_API: localhost:3000
+  - $REACT_APP_ARRANGER_API: /api/v0/flat-search
   - $REACT_APP_PROJECT_ID: search
 2. Run ElasticSearch at localhost:9200
 3. Run `gen3-arranger` server (`npm start`)
