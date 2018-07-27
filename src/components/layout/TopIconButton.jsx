@@ -5,7 +5,7 @@ import './TopIconButton.less';
 
 const TopIconButton = ({ dictIcons, item, onActiveTab = () => {}, isActive = false }) => (
   <div
-    className={isActive ? 'top-icon-button button-top-active' : 'top-icon-button'}
+    className={isActive ? 'top-icon-button button-top-active body-typo' : 'top-icon-button body-typo'}
     onClick={onActiveTab}
   >
     {item.name}&nbsp;{item.icon ? <IconComponent
