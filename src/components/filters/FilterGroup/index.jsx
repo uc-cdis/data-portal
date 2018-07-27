@@ -16,6 +16,7 @@ class FilterGroup extends React.Component {
   }
 
   render() {
+    console.log(this.props.tabs[this.state.selectedTab.index]);
     return (
       <div className="filter-group">
         <div className="filter-group__tabs">
@@ -30,17 +31,14 @@ class FilterGroup extends React.Component {
                 onKeyDown={() => this.selectTab(tab, index)}
               >
                 <p className="filter-group__tab-title">
-                  {tab.title}
+                  {this.props.filterConfig.tabs[tab.key].title}
                 </p>
               </div>
             ))
           }
         </div>
         <div className="filter-group__filter-area">
-          <FilterList
-            {...this.props}
-            sections={this.state.selectedTab.sections}
-          />
+          {this.props.tabs[this.state.selectedTab.index]}
         </div>
       </div>
     );
@@ -48,16 +46,7 @@ class FilterGroup extends React.Component {
 }
 
 FilterGroup.propTypes = {
-  tabs: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.string,
-    sections: PropTypes.arrayOf(PropTypes.shape({
-      title: PropTypes.string,
-      options: PropTypes.arrayOf(PropTypes.shape({
-        text: PropTypes.string,
-        filterType: PropTypes.oneOf(['singleSelect', 'range']),
-      })),
-    })),
-  })).isRequired,
+  tabs: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default FilterGroup;

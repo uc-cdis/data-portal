@@ -16,7 +16,7 @@ class DataExplorer extends React.Component {
           graphqlField={arrangerConfig.graphqlField}
           projectId={arrangerConfig.projectId}
         >
-          <DataExplorerFilters />
+          <DataExplorerFilters arrangerConfig={arrangerConfig} />
           <DataExplorerVisualizations arrangerConfig={arrangerConfig} />
         </ArrangerWrapper>
       </div>
