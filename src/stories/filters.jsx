@@ -7,71 +7,123 @@ import FilterSection from '../components/filters/FilterSection/.';
 import FilterList from '../components/filters/FilterList/.';
 import FilterGroup from '../components/filters/FilterGroup/.';
 
-const filterOptions = [
-  { text: 'test1', filterType: 'singleSelect' },
-  { text: 'test2', filterType: 'singleSelect' },
-  { text: 'test3', filterType: 'singleSelect' },
+const projectOptions = [
+  { text: 'ndh-CHARLIE', filterType: 'singleSelect' },
+  { text: 'ndh-dait-microbiome', filterType: 'singleSelect' },
+  { text: 'ndh-dmid-LMV', filterType: 'singleSelect' },
+  { text: 'ndh-vir-simulation', filterType: 'singleSelect' },
+  { text: 'ndh-test', filterType: 'singleSelect' },
+];
+
+const studyOptions = [
+  { text: 'MACS', filterType: 'singleSelect' },
+  { text: 'WIHS', filterType: 'singleSelect' },
+];
+
+const genderOptions = [
+  { text: 'Male', filterType: 'singleSelect' },
+  { text: 'Female', filterType: 'singleSelect' },
+];
+
+const ageOptions = [
   {
-    text: 'test4',
+    text: 'Year of Birth',
     filterType: 'range',
-    min: 0,
-    max: 1000,
+    min: 1914,
+    max: 2018,
   },
 ];
 
-const filterSections = [
-  { title: 'Section 1', options: filterOptions },
-  { title: 'Section 2', options: filterOptions },
-  { title: 'Section 3', options: filterOptions },
+const raceOptions = [
+  { text: 'White', filterType: 'singleSelect' },
+  { text: 'Black', filterType: 'singleSelect' },
+  {
+    text: 'American Indian or Alaskan Native',
+    filterType: 'singleSelect',
+  },
+  { text: 'Asian/Pacific Islander', filterType: 'singleSelect' },
+  { text: 'Multiracial', filterType: 'singleSelect' },
+  { text: 'Other', filterType: 'singleSelect' },
 ];
 
-const filterSections2 = [
-  { title: 'Section 3', options: filterOptions },
-  { title: 'Section 4', options: filterOptions },
-  { title: 'Section 5', options: filterOptions },
-  { title: 'Section 6', options: filterOptions },
+const ethnicityOptions = [
+  { text: 'Hispanic or Latino', filterType: 'singleSelect' },
+  { text: 'Not Hispanic or Latino', filterType: 'singleSelect' },
+  { text: 'Unknown', filterType: 'singleSelect' },
 ];
 
-const filterSections3 = [
-  { title: 'Section 5', options: filterOptions },
-  { title: 'Section 6', options: filterOptions },
+const fileTypeOptions = [
+  { text: 'mRNA Array', filterType: 'singleSelect' },
+  { text: 'Unaligned Reads', filterType: 'singleSelect' },
+  { text: 'Lipidomic MS', filterType: 'singleSelect' },
+  { text: 'Proteomic MS', filterType: 'singleSelect' },
+  { text: 'Metabolomic MS', filterType: 'singleSelect' },
+];
+
+const fileFormatOptions = [
+  { text: 'BAM', filterType: 'singleSelect' },
+  { text: 'BED', filterType: 'singleSelect' },
+  { text: 'CSV', filterType: 'singleSelect' },
+  { text: 'FASTQ', filterType: 'singleSelect' },
+  { text: 'IDAT', filterType: 'singleSelect' },
+  { text: 'PNG', filterType: 'singleSelect' },
+  { text: 'RAW', filterType: 'singleSelect' },
+  { text: 'TAR', filterType: 'singleSelect' },
+  { text: 'TSV', filterType: 'singleSelect' },
+  { text: 'TXT', filterType: 'singleSelect' },
+];
+
+const projectSections = [
+  { title: 'Project', options: projectOptions },
+  { title: 'Study', options: studyOptions },
+];
+
+const subjectSections = [
+  { title: 'Gender', options: genderOptions },
+  { title: 'Year of Birth', options: ageOptions },
+  { title: 'Race', options: raceOptions },
+  { title: 'Ethnicity', options: ethnicityOptions },
+];
+
+const fileSections = [
+  { title: 'File Types', options: fileTypeOptions },
+  { title: 'File Formats', options: fileFormatOptions },
 ];
 
 const tabs = [
-  { sections: filterSections, title: 'Section1' },
-  { sections: filterSections2, title: 'Section2' },
-  { sections: filterSections3, title: 'This is a long section name' },
-  { sections: filterSections, title: 'Section3' },
+  { sections: projectSections, title: 'Project' },
+  { sections: subjectSections, title: 'Subject' },
+  { sections: fileSections, title: 'File' },
 ];
 
 storiesOf('Filters', module)
   .add('SingleSelectFilter', () => (
     <div>
-      <SingleSelectFilter label="test1" onSelect={action('checked')} />
-      <SingleSelectFilter label="test2" onSelect={action('checked')} />
+      <SingleSelectFilter label="Male" onSelect={action('checked')} />
+      <SingleSelectFilter label="Female" onSelect={action('checked')} />
     </div>
   ))
   .add('RangeFilter', () => (
     <div>
       <RangeFilter
-        label="test1"
+        label="Age"
         onDrag={action('range change')}
-        min={1941}
-        max={2018}
+        min={0}
+        max={100}
       />
     </div>
   ))
   .add('FilterSection', () => (
     <FilterSection
-      title={'Section 1'}
-      options={filterOptions}
+      title={'Ethnicity'}
+      options={ethnicityOptions}
       onSelect={action('checked')}
       onDrag={action('range change')}
     />
   ))
   .add('FilterList', () => (
     <FilterList
-      sections={filterSections}
+      sections={subjectSections}
       onSelect={action('checked')}
       onDrag={action('range change')}
     />
