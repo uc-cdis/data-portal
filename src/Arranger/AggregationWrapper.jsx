@@ -13,8 +13,7 @@ const transformTabs = (tabs) => {
   return tabs;
 }
 
-// TODO compare to ArrangerWrapper
-const FiltersWrapper = ({
+const AggregationWrapper = ({
   filters,
   onTermSelected = () => {},
   setSQON,
@@ -88,4 +87,4 @@ const FiltersWrapper = ({
   );
 };
 
-export default FiltersWrapper;
+export default AggregationWrapper;

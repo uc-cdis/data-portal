@@ -1,5 +1,5 @@
 import React from 'react';
-import ArrangerWrapper from '../components/ArrangerWrapper';
+import ArrangerWrapper from '../Arranger/ArrangerWrapper';
 import DataExplorerFilters from './DataExplorerFilters';
 import DataExplorerVisualizations from './DataExplorerVisualizations';
 import { paramByApp } from '../../data/dictionaryHelper';
