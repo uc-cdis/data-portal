@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import { TableRow, TableHead } from '../theme';
 import { TableData, TableHeadCell,
   TableFooter,
@@ -9,21 +8,13 @@ import { TableData, TableHeadCell,
 import getReduxStore from '../reduxStore';
 import SelectComponent from '../components/SelectComponent';
 import { userapiPath } from '../localconf';
+import './ExplorerTable.less';
 
 const makeDefaultState = (page, pageSize, originalPage) => ({
   page,
   originalPage,
   pageSize,
 });
-
-export const ExplorerTableStyle = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  overflow: hidden;
-  font-size: 15px;
-
-`;
-
 
 export class ExplorerTableComponent extends Component {
   static propTypes = {
@@ -140,7 +131,7 @@ export class ExplorerTableComponent extends Component {
       }
     }
     return (
-      <ExplorerTableStyle>
+      <table className="explorer-table">
         <TableHead>
           <TableRow>
             {columns.map(
@@ -214,7 +205,7 @@ export class ExplorerTableComponent extends Component {
             </TableFootCell>
           </TableRow>
         </TableFooter>
-      </ExplorerTableStyle>
+      </table>
     );
   }
 }

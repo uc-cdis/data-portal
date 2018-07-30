@@ -1,16 +1,8 @@
 import React, { Component } from 'react';
 import { Form } from 'react-form';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
-import { button } from '../theme';
 import Question from './Question';
-
-const SubmitButton = styled.a`
-  color: darkgreen;
-  border: 1px solid darkgreen;
-  ${button};
-`;
+import './Quiz.less';
 
 /**
  * Little quiz component - roperites: questionList, title, onSubmit
@@ -93,7 +85,7 @@ class Quiz extends Component {
                     />),
                 )
               }
-              <SubmitButton type="submit" onClick={() => { submitForm(); this.showError(); }}>Submit</SubmitButton>
+              <a className="quiz__submit-button" type="submit" onClick={() => { submitForm(); this.showError(); }}>Submit</a>
             </form>
           )}
         </Form>

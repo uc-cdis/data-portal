@@ -1,19 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
-import styled from 'styled-components';
-
-const ResultImage = styled.img`
-  border-radius: 10px;
-  margin-top: 2em;
-  box-shadow: 0px 0px 5px #dfdfdf;
-  padding: 20px 20px;
-  background: white;
-`;
-const JobStatus = styled.p`
-  margin-top: 1em;
-  font-style: italic;
-  animation: color-change 2s infinite;
-`;
+import './Analysis.less';
 
 const AnalysisApp = ({ app, submitJob, job }) => {
   const onSubmitJob = (e) => {
@@ -32,11 +19,11 @@ const AnalysisApp = ({ app, submitJob, job }) => {
         <button href="#" className="button button-primary-orange" onSubmit={onSubmitJob} >Run simulation</button>
       </form>
       {isJobRunning() &&
-        <JobStatus>Job running... </JobStatus>
+        <p className="job-status">Job running... </p>
       }
       {/* TODO: only render if result is a image */}
       {(job && job.status === 'Completed') &&
-        <ResultImage src={job.resultURL} alt="analysis result" />
+        <img className="result-image" src={job.resultURL} alt="analysis result" />
       }
     </div>
 
