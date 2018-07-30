@@ -7,6 +7,10 @@ import SubmitTSV from './SubmitTSV';
 describe('the TSV submission componet', () => {
   const testProjName = 'bogusProject';
 
+  var editor = ace.edit("editor");
+  editor.getSession().setMode("ace/mode/javascript");
+  editor.$blockScrolling = Infinity;
+
   /**
    * Little helper for constructing a <SubmitTSV> jest/enzyme test
    *
