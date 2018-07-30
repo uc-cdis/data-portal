@@ -1,4 +1,4 @@
-# To run: docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal 
+# To run: docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal
 # To check running container: docker exec -it dataportal /bin/bash
 
 FROM ubuntu:16.04
@@ -13,22 +13,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     python \
     vim \
-    && curl -sL https://deb.nodesource.com/setup_8.x | bash - \ 
+    && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
+    && rm -rf /var/lib/apt/lists/* \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
 ARG APP=dev
 ARG BASENAME
 
-RUN mkdir -p /data-portal 
+RUN mkdir -p /data-portal
 COPY . /data-portal
 WORKDIR /data-portal
 RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}\";" >src/versions.js \
     && VERSION=`git describe --always --tags` && echo "export const portalVersion =\"${VERSION}\";" >>src/versions.js \
     && /bin/rm -rf .git \
     && /bin/rm -rf node_modules \
-    && npm install \
+    && npm ci \
     && npm run relay \
     && npm run params \
     && NODE_ENV=production ./node_modules/.bin/webpack --bail \
@@ -36,7 +37,7 @@ RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}
     && rm /etc/nginx/sites-enabled/default
 
 # In standard prod these will be overwritten by volume mounts
-# Provided here for ease of use in development and 
+# Provided here for ease of use in development and
 # non-standard deployment environments
 
 RUN mkdir /mnt/ssl \

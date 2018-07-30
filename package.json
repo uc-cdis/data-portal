@@ -5,6 +5,11 @@
   "main": "index.js",
   "dependencies": {
     "@arranger/components": "^0.4.10",
+    "@fortawesome/fontawesome-svg-core": "^1.2.2",
+    "@fortawesome/free-solid-svg-icons": "^5.2.0",
+    "@fortawesome/react-fontawesome": "^0.1.0",
+    "@storybook/addon-actions": "^3.4.8",
+    "@storybook/react": "^3.4.8",
     "babel-core": "^6.26.0",
     "brace": "^0.10.0",
     "clipboard-plus": "^1.0.0",
@@ -39,7 +44,6 @@
     "react": "^16.3.2",
     "react-ace": "^6.1.0",
     "react-dom": "^16.3.2",
-    "react-fontawesome": "^1.6.1",
     "react-form": "^3.5.5",
     "react-ga": "^2.5.3",
     "react-highlight": "^0.12.0",
@@ -65,9 +69,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^3.4.8",
     "@storybook/cli": "^3.4.8",
-    "@storybook/react": "^3.4.8",
     "babel-eslint": "7.2.3",
     "babel-jest": "^21.2.0",
     "babel-loader": "^6.4.1",

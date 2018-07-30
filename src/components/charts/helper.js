@@ -49,6 +49,68 @@ const getCategoryColorFrom2Colors = (index, localTheme) => localTheme[`pieChartT
 
 const getDataKey = showPercentage => (showPercentage ? 'percentage' : 'value');
 
+const transformArrangerDataToChart = (field) => {
+  const chartData = [];
+  field.buckets.map(bucket =>
+    chartData.push({
+      name: bucket.key,
+      value: bucket.doc_count,
+    }),
+  );
+  return chartData;
+};
+
+const transformArrangerDataToSummary = (field, chartType, title) => ({
+  type: chartType,
+  title,
+  data: transformArrangerDataToChart(field),
+});
+
+const transformDataToCount = (field, label) => ({
+  label,
+  value: field.buckets.length,
+});
+
+const getCharts = (data, arrangerConfig) => {
+  const countItems = [];
+  const summaries = [];
+  const stackedBarCharts = [];
+
+  if (data && data.subject.aggregations) {
+    const fields = data.subject.aggregations;
+    Object.keys(fields).forEach((field) => {
+      const fieldConfig = arrangerConfig.charts[field];
+      if (fieldConfig) {
+        switch (fieldConfig.chartType) {
+        case 'count':
+          countItems.push(transformDataToCount(fields[field], fieldConfig.title));
+          break;
+        case 'pie':
+        case 'bar':
+          summaries.push(
+            transformArrangerDataToSummary(
+              fields[field],
+              fieldConfig.chartType,
+              fieldConfig.title),
+          );
+          break;
+        case 'stackedBar':
+          stackedBarCharts.push(
+            transformArrangerDataToSummary(
+              fields[field],
+              fieldConfig.chartType,
+              fieldConfig.title),
+          );
+          break;
+        default:
+          break;
+        }
+      }
+    });
+  }
+  return { summaries, countItems, stackedBarCharts };
+};
+
 module.exports = {
   percentageFormatter,
   addPercentage,
@@ -57,4 +119,8 @@ module.exports = {
   getCategoryColor,
   getCategoryColorFrom2Colors,
   getDataKey,
+  transformDataToCount,
+  transformArrangerDataToChart,
+  transformArrangerDataToSummary,
+  getCharts,
 };

@@ -23,10 +23,13 @@ const plugins = [
   new webpack.EnvironmentPlugin(['MOCK_STORE']),
   new webpack.EnvironmentPlugin(['APP']),
   new webpack.EnvironmentPlugin(['BASENAME']),
+  new webpack.EnvironmentPlugin(['REACT_APP_PROJECT_ID']),
+  new webpack.EnvironmentPlugin(['REACT_APP_ARRANGER_API']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev'),
-      REACT_APP_ARRANGER_API: JSON.stringify('/'),
+      REACT_APP_PROJECT_ID: JSON.stringify(process.env.REACT_APP_PROJECT_ID),
+      REACT_APP_ARRANGER_API: JSON.stringify(process.env.REACT_APP_ARRANGER_API),
     }
   }),
   new webpack.optimize.DedupePlugin(), //dedupe similar code
