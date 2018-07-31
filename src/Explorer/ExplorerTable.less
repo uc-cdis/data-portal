@@ -1,5 +1,6 @@
 @explorer-table-bar-color: #ffffff;
 @active-page-button-color: #71594d;
+@explorer-table-head-bar-color: #7d7474;
 
 .explorer-table {
   width: 100%;
@@ -23,7 +24,7 @@
 }
 
 .explorer-table__table-head {
-  background: @table-bar-color;
+  background: @explorer-table-head-bar-color;
   color: white;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -43,7 +44,7 @@
   max-width: 10vw;
   width: 20%;
   background: white;
-  color: white;
+  color: #222;
   display: table-cell;
   padding: 1rem 1rem;
   height: 100%;
@@ -120,13 +121,14 @@
   height: 30px;
   border: 0px;
   background: @explorer-table-bar-color;
-  color: ${props => (props.active ? 'white' : '#000000')};
+  color: #000000;
   outline: none;
   padding: 0.1rem;
 }
 
 .explorer-table__page-button--active {
   background: @active-page-button-color;
+  color: white;
 }
 
 .explorer-table__arrow-button {

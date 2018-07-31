@@ -152,7 +152,7 @@ export class ExplorerTableComponent extends Component {
           {
             filesList && filesList.map(
               (item, i) => ExplorerTableComponent.renderRow(this.props.user,
-                this.props.projectAvail, item, columnWidths, i),
+                this.props.projectAvail, item, i),
             )
           }
         </tbody>
@@ -172,7 +172,7 @@ export class ExplorerTableComponent extends Component {
                   (<button
                     className={`explorer-table__page-button ${item === this.state.page ? 'explorer-table__page-button--active' : ''}`}
                     key={item}
-                    active={item === this.state.page}
+                    active={item === this.state.page ? 'true' : 'false'}
                     onClick={
                       () => {
                         this.setState({ page: item });
