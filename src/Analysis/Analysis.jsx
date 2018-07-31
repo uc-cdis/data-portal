@@ -19,11 +19,11 @@ const AnalysisApp = ({ app, submitJob, job }) => {
         <button href="#" className="button button-primary-orange" onSubmit={onSubmitJob} >Run simulation</button>
       </form>
       {isJobRunning() &&
-        <p className="job-status">Job running... </p>
+        <p className="analysis__job-status">Job running... </p>
       }
       {/* TODO: only render if result is a image */}
       {(job && job.status === 'Completed') &&
-        <img className="result-image" src={job.resultURL} alt="analysis result" />
+        <img className="analysis__result-image" src={job.resultURL} alt="analysis result" />
       }
     </div>
 

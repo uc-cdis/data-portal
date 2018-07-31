@@ -1,14 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Table, TableRow, TableHead, Bullet } from '../theme';
 import DictionaryGraph from './DictionaryGraph';
 import './DataDictionaryNode.less';
 
 const LinkBullet = ({ link }) => {
   const required = link.required ? 'Yes' : 'No';
   return (
-    <TableRow>
+    <tr className="data-dictionary__table-row">
       <td className="data-dictionary__table-data">
         <Link to={`/dd/${link.target_type}`}> {link.name} </Link>
       </td>
@@ -18,7 +17,7 @@ const LinkBullet = ({ link }) => {
       <td className="data-dictionary__table-data">
         {link.label}
       </td>
-    </TableRow>
+    </tr>
   );
 };
 
@@ -34,18 +33,18 @@ LinkBullet.propTypes = {
 const LinkTable = ({ links }) => {
   const fields = ['Name', 'Required', 'Label'];
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
+    <table className="data-dictionary__table">
+      <thead className="data-dictionary__table-head">
+        <tr className="data-dictionary__table-row">
           {fields.map(field =>
             <td className="data-dictionary__table-data data-dictionary__table-data--head" key={field}>{field}</td>)}
-        </TableRow>
-      </TableHead>
+        </tr>
+      </thead>
 
       <tbody>
         {links.map(link => <LinkBullet key={link.name} link={link} />)}
       </tbody>
-    </Table>
+    </table>
   );
 };
 
@@ -92,24 +91,24 @@ export const getType = (property) => {
 };
 
 const NodeTable = ({ node }) => (
-  <Table>
+  <table className="data-dictionary__table">
     <tbody>
-      <TableRow>
+      <tr className="data-dictionary__table-row">
         <td className="data-dictionary__table-data data-dictionary__table-data--head"> Id </td>
         <td className="data-dictionary__table-data data-dictionary__table-data--right">{ node.id }</td>
-      </TableRow>
+      </tr>
 
-      <TableRow>
+      <tr className="data-dictionary__table-row">
         <td className="data-dictionary__table-data data-dictionary__table-data--head"> Category </td>
         <td className="data-dictionary__table-data data-dictionary__table-data--right">{ node.category}</td>
-      </TableRow>
+      </tr>
 
-      <TableRow>
+      <tr className="data-dictionary__table-row">
         <td className="data-dictionary__table-data data-dictionary__table-data--head"> Description </td>
         <td className="data-dictionary__table-data data-dictionary__table-data--right">{ node.description}</td>
-      </TableRow>
+      </tr>
 
-      <TableRow>
+      <tr className="data-dictionary__table-row">
         <td className="data-dictionary__table-data data-dictionary__table-data--head"> Unique Keys </td>
         <td className="data-dictionary__table-data data-dictionary__table-data--right">
           {
@@ -118,16 +117,16 @@ const NodeTable = ({ node }) => (
                 node.uniqueKeys.map(
                   (key) => {
                     const compoundKey = key.join(', ');
-                    return <Bullet key={compoundKey}>{compoundKey}</Bullet>;
+                    return <li className="data-dictionary__bullet" key={compoundKey}>{compoundKey}</li>;
                   },
                 )
               }
             </ul>
           }
         </td>
-      </TableRow>
+      </tr>
     </tbody>
-  </Table>
+  </table>
 );
 
 NodeTable.propTypes = {
@@ -146,21 +145,21 @@ class CollapsibleList extends React.Component {
     if (this.state.collapsed === 1) {
       return (
         <div>
-          {this.props.items.slice(0, 3).map(item => <Bullet key={item}>{item}</Bullet>)}
+          {this.props.items.slice(0, 3).map(item => <li className="data-dictionary__bullet" key={item}>{item}</li>)}
           <a href="#/" onClick={() => { this.state.collapsed = 2; }}>{'More options'}</a>
         </div>
       );
     } else if (this.state.collapsed === 2) {
       return (
         <div>
-          {this.props.items.map(item => <Bullet key={item}>{item}</Bullet>)}
+          {this.props.items.map(item => <li className="data-dictionary__bullet" key={item}>{item}</li>)}
           <a href="#/" onClick={() => { this.state.collapsed = 1; }}>{'Fewer options'}</a>
         </div>
       );
     }
     return (
       <div>
-        {this.props.items.map(item => <Bullet key={item}>{item}</Bullet>)}
+        {this.props.items.map(item => <li className="data-dictionary__bullet" key={item}>{item}</li>)}
       </div>
     );
   }
@@ -187,12 +186,12 @@ const PropertyBullet = (props) => {
   const type = getType(property);
 
   return (
-    <TableRow>
+    <tr className="data-dictionary__table-row">
       <td className="data-dictionary__table-data data-dictionary__table-data--column-1"><div> { propertyName }</div> </td>
       <td className="data-dictionary__table-data data-dictionary__table-data--column-2"> <ul>{ (typeof type === 'string') ? type : <CollapsibleList items={type} />} </ul></td>
       <td className="data-dictionary__table-data data-dictionary__table-data--column-3"> { required ? 'Yes' : 'No' } </td>
       <td className="data-dictionary__table-data data-dictionary__table-data--column-4"> { description } </td>
-    </TableRow>
+    </tr>
   );
 };
 
@@ -210,15 +209,15 @@ export const PropertiesTable = ({ node, required, links }) => {
   const linknames = links.map(link => link.name);
   const properties = Object.keys(node.properties);
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
+    <table className="data-dictionary__table">
+      <thead className="data-dictionary__table-head">
+        <tr className="data-dictionary__table-row">
           <td className="data-dictionary__table-data data-dictionary__table-data--column-1 data-dictionary__table-data--head">Property</td>
           <td className="data-dictionary__table-data data-dictionary__table-data--column-2 data-dictionary__table-data--head">Type</td>
           <td className="data-dictionary__table-data data-dictionary__table-data--column-3 data-dictionary__table-data--head">Required</td>
           <td className="data-dictionary__table-data data-dictionary__table-data--column-4 data-dictionary__table-data--head">Description</td>
-        </TableRow>
-      </TableHead>
+        </tr>
+      </thead>
 
       <tbody>
         {
@@ -234,7 +233,7 @@ export const PropertiesTable = ({ node, required, links }) => {
         }
 
       </tbody>
-    </Table>
+    </table>
 
   );
 };
@@ -287,7 +286,7 @@ const DataDictionaryNode = ({ params, submission }) => {
     <div>
       <Link to="/dd">{'< top level dictionary'}</Link>
       <h3> {dictionary[node].title} </h3>
-      Download template: <a className="download-button" href={`/api/v0/submission/template/${node}?format=json`}>{'JSON'}</a> | <a className="download-button" href={`/api/v0/submission/template/${node}`}>{'TSV'}</a>
+      Download template: <a className="data-dictionary__download-button" href={`/api/v0/submission/template/${node}?format=json`}>{'JSON'}</a> | <a className="data-dictionary__download-button" href={`/api/v0/submission/template/${node}`}>{'TSV'}</a>
 
 
       <h4> Summary </h4>

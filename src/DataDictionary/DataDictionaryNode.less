@@ -1,6 +1,8 @@
-.download-button:hover,
-.download-button:active,
-.download-button:focus {
+@table-bar-color: #7d7474;
+
+.data-dictionary__download-button:hover,
+.data-dictionary__download-button:active,
+.data-dictionary__download-button:focus {
   color: inherit;
 }
 
@@ -32,9 +34,70 @@
 
 .data-dictionary__table-data--head {
   color: white;
-  background: #7d7474;
+  background: @table-bar-color;
 }
 
 .data-dictionary__table-data--right {
   width: 80%;
+}
+
+.data-dictionary__table {
+  table-layout:auto;
+  position: relative;
+  border: 0;
+  * {
+    box-sizing: border-box;
+    }
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  -webkit-box-shadow: 0 0 6px rgba(0,0,0,0.5);
+  box-shadow:0 0 6px rgba(0,0,0,0.5);
+  margin: 1em 0em;
+}
+
+.data-dictionary__table-row {
+  padding: 0rem 0rem;
+  color: #222;
+  border-bottom: 1px solid rgba(0,0,0,0.065);
+  vertical-align: top;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
+  font-size: 16px;
+  width: 100%;
+  display: table;
+}
+
+.data-dictionary__table-head {
+  background: @table-bar-color;
+  color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-align: left;
+}
+
+.data-dictionary__bullet {
+  list-style-type: disc;
+  margin-left: 1em;
 }
