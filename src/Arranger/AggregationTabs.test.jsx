@@ -2,6 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import AggregationTabs from './AggregationTabs';
 
+// TODO: fix Arranger tests [PXD-1313]
 describe('AggregationTabs', () => {
   const filterConfig = {
     tabs: [{
