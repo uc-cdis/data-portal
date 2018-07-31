@@ -17,6 +17,14 @@ const BaseWrapper = ({ className, ...props }) => (
   <div {...props} className={`aggregations ${className}`} />
 );
 
+BaseWrapper.propTypes = {
+  className: PropTypes.string,
+};
+
+BaseWrapper.defaultProps = {
+  className: '',
+};
+
 const AggregationTabs = ({
   filterConfig,
   onTermSelected = () => {},
@@ -35,65 +43,86 @@ const AggregationTabs = ({
     getBooleanAggProps: () => ({}),
     getDatesAggProps: () => ({}),
   },
-}) => {
-  return (
-    <Wrapper style={style} className={className}>
-      <AggsState
-        api={api}
-        projectId={projectId}
-        graphqlField={graphqlField}
-        render={aggsState => {
-          const aggs = aggsState.aggs.filter(x => x.show);
-          // Dividing data into tabs
-          let tabs = [];
-          filterConfig.tabs.map((tab, i) => {
-            const tabAggs = aggs.filter(agg => tab.fields.includes(agg.field));
-            tabs.push(
-              <AggsQuery
-                key={i}
-                api={api}
-                debounceTime={300}
-                projectId={projectId}
-                index={graphqlField}
-                sqon={sqon}
-                aggs={tabAggs}
-                render={({ data }) =>
-                  data &&
-                  aggs
-                    .map(agg => ({
-                      ...agg,
-                      ...data[graphqlField].aggregations[agg.field],
-                      ...data[graphqlField].extended.find(
-                        x => x.field.replace(/\./g, '__') === agg.field,
-                      ),
-                      onValueChange: ({ sqon, value }) => {
-                        onTermSelected(value);
-                        setSQON(sqon);
-                      },
-                      key: agg.field,
-                      sqon,
-                      containerRef,
-                    }))
-                    .map(agg => {
-                      if (aggComponents[agg.type]) {
-                        return (aggComponents[agg.type]({ ...agg, ...componentProps }))
-                      }
-                    })
-                  }
-                />
-              )
-            })
-          return (
-            <FilterGroup tabs={tabs} filterConfig={filterConfig} />
-          )}
-        }
-      />
-    </Wrapper>
-  );
-};
+}) => (
+  <Wrapper style={style} className={className}>
+    <AggsState
+      api={api}
+      projectId={projectId}
+      graphqlField={graphqlField}
+      render={(aggsState) => {
+        const aggs = aggsState.aggs.filter(x => x.show);
+        // Dividing data into tabs
+        const tabs = [];
+        filterConfig.tabs.forEach((tab, i) => {
+          const tabAggs = aggs.filter(agg => tab.fields.includes(agg.field));
+          tabs.push(
+            <AggsQuery
+              key={i}
+              api={api}
+              debounceTime={300}
+              projectId={projectId}
+              index={graphqlField}
+              sqon={sqon}
+              aggs={tabAggs}
+              render={({ data }) =>
+                data &&
+                aggs
+                  .map(agg => ({
+                    ...agg,
+                    ...data[graphqlField].aggregations[agg.field],
+                    ...data[graphqlField].extended.find(
+                      x => x.field.replace(/\./g, '__') === agg.field,
+                    ),
+                    onValueChange: ({ sqon, value }) => {
+                      onTermSelected(value);
+                      setSQON(sqon);
+                    },
+                    key: agg.field,
+                    sqon,
+                    containerRef,
+                  }))
+                  .map((agg) => {
+                    if (aggComponents[agg.type]) {
+                      return (aggComponents[agg.type]({ ...agg, ...componentProps }));
+                    }
+                    return null;
+                  })
+              }
+            />,
+          );
+        });
+        return (
+          <FilterGroup tabs={tabs} filterConfig={filterConfig} />
+        );
+      }
+      }
+    />
+  </Wrapper>
+);
 
 AggregationTabs.propTypes = {
+  className: PropTypes.string,
+  onTermSelected: PropTypes.func,
+  setSQON: PropTypes.func.isRequired,
   filterConfig: PropTypes.object.isRequired,
-}
+  sqon: PropTypes.object,
+  projectId: PropTypes.string.isRequired,
+  graphqlField: PropTypes.string.isRequired,
+  api: PropTypes.func.isRequired,
+  style: PropTypes.object,
+  Wrapper: PropTypes.func,
+  containerRef: PropTypes.string,
+  componentProps: PropTypes.object,
+};
+
+AggregationTabs.defaultProps = {
+  className: '',
+  onTermSelected: () => {},
+  sqon: null,
+  style: null,
+  Wrapper: BaseWrapper,
+  containerRef: null,
+  componentProps: null,
+};
 
 export default AggregationTabs;

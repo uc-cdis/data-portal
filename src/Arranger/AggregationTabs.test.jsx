@@ -18,7 +18,7 @@ describe('AggregationTabs', () => {
         'ethnicity',
         'gender',
         'vital_status',
-      ]
+      ],
     },
     {
       title: 'File',
@@ -30,6 +30,14 @@ describe('AggregationTabs', () => {
 
 
   const component = mount(
-    <AggregationTabs
-  )
-})
+    <AggregationTabs filterConfig={filterConfig} />,
+  );
+
+  test.skip('it renders', () => {
+
+  });
+
+  test.skip('it divides into tabs based on config', () => {
+
+  });
+});
