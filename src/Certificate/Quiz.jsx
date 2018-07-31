@@ -85,7 +85,7 @@ class Quiz extends Component {
                     />),
                 )
               }
-              <a className="quiz__submit-button" type="submit" onClick={() => { submitForm(); this.showError(); }}>Submit</a>
+              <button className="quiz__submit-button" type="button" onClick={() => { submitForm(); this.showError(); }}>Submit</button>
             </form>
           )}
         </Form>

@@ -133,7 +133,7 @@ export class ExplorerTableComponent extends Component {
               (item, i) => (
                 (item in specialAligns) ?
                   <td
-                  className={`explorer-table__table-data explorer-table__table-data--head-cell explorer-table__table-data--column-${i}`}
+                    className={`explorer-table__table-data explorer-table__table-data--head-cell explorer-table__table-data--column-${i}`}
                     key={item}
                     style={{ textAlign: specialAligns[item] }}
                   >
@@ -141,7 +141,9 @@ export class ExplorerTableComponent extends Component {
                   </td>
                   :
                   <td
-                  className={`explorer-table__table-data explorer-table__table-data--head-cell explorer-table__table-data--column-${i}`} key={item}>
+                    className={`explorer-table__table-data explorer-table__table-data--head-cell explorer-table__table-data--column-${i}`}
+                    key={item}
+                  >
                     {item}
                   </td>
               ),
