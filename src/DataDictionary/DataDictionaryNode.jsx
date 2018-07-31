@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import DictionaryGraph from './DictionaryGraph';
-import './DataDictionaryNode.less';
+import './DataDictionary.less';
 
 const LinkBullet = ({ link }) => {
   const required = link.required ? 'Yes' : 'No';
