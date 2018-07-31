@@ -170,8 +170,8 @@ export class ExplorerTableComponent extends Component {
             </td>
             <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-1">
               {
-                pages.map(item =>
-                  (<button
+                pages.map(item => (
+                  <button
                     className={`explorer-table__page-button ${item === this.state.page ? 'explorer-table__page-button--active' : ''}`}
                     key={item}
                     active={item === this.state.page ? 'true' : 'false'}
@@ -183,7 +183,8 @@ export class ExplorerTableComponent extends Component {
                     }
                   >
                     {item + 1}
-                  </button>))
+                  </button>
+                ))
               }
             </td>
             <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-2">
