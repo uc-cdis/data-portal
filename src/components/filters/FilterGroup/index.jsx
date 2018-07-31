@@ -16,7 +16,6 @@ class FilterGroup extends React.Component {
   }
 
   render() {
-    console.log(this.props.tabs[this.state.selectedTab.index]);
     return (
       <div className="filter-group">
         <div className="filter-group__tabs">

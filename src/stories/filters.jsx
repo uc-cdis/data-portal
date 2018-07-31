@@ -96,6 +96,31 @@ const tabs = [
   { sections: fileSections, title: 'File' },
 ];
 
+const filterConfig = {
+  tabs: [{
+    title: 'Project',
+    fields: [
+      'project',
+      'study',
+    ],
+  },
+  {
+    title: 'Subject',
+    fields: [
+      'race',
+      'ethnicity',
+      'gender',
+      'vital_status',
+    ]
+  },
+  {
+    title: 'File',
+    fields: [
+      'file_type',
+    ],
+  }],
+};
+
 storiesOf('Filters', module)
   .add('SingleSelectFilter', () => (
     <div>
@@ -124,13 +149,6 @@ storiesOf('Filters', module)
   .add('FilterList', () => (
     <FilterList
       sections={subjectSections}
-      onSelect={action('checked')}
-      onDrag={action('range change')}
-    />
-  ))
-  .add('FilterGroup', () => (
-    <FilterGroup
-      tabs={tabs}
       onSelect={action('checked')}
       onDrag={action('range change')}
     />

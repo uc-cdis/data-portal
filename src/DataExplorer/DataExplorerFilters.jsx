@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Aggregations } from '@arranger/components/dist/Arranger';
-import AggregationWrapper from '../Arranger/AggregationWrapper';
+import AggregationTabs from '../Arranger/AggregationTabs';
 
 class DataExplorerFilters extends React.Component {
   render() {
     const data = this.props.arrangerData;
-    const filters = this.props.arrangerConfig.filters;
+    const filterConfig = this.props.arrangerConfig.filters;
     const aggs = <Aggregations {...this.props} />;
     return (
       <div className="data-explorer__filters">
-        <h4>Filters</h4>
-        <AggregationWrapper filters={filters} {...this.props} />
+        <h4 className="data-explorer__filters-title">Filters</h4>
+        <AggregationTabs filterConfig={filterConfig} {...this.props} />
       </div>
     );
   }

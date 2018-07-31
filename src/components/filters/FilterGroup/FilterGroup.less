@@ -22,6 +22,10 @@
   height: 28px;
   background-color: @silver;
   outline: none;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: @semi-bold;
+  color: @black;
 }
 
 .filter-group__tab--selected {
@@ -31,8 +35,135 @@
 
 .filter-group__tab-title {
   padding: 0 10px;
+  margin: 0;
+  font-size: 10px;
+  line-height: 1em;
+  font-weight: @semi-bold;
 }
 
 .filter-group__filter-area {
   min-width: 170px;
+  border-bottom: 1px solid @silver;
+  border-left: 1px solid @silver;
+  border-right: 1px solid @silver;
+  border-radius: 4px;
+  background-color: @white;
+}
+
+/* Arranger style overrides */
+
+.filter-group__filter-area {
+  .aggregation-card {
+    padding: 12px 12px;
+    margin: 0 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top: 1px solid @silver;
+  }
+
+  .aggregation-card input[type='checkbox'] {
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: 0;
+    background: @white;
+    height: 18px;
+    width: 18px;
+    border: 1px solid @light_gray;
+    border-radius: 2px;
+  }
+
+  .aggregation-card input[type='checkbox']:checked {
+    background: @orange;
+  }
+
+  // defines check in checkbox
+  .aggregation-card input[type='checkbox']:after {
+    content: '';
+    position: relative;
+    left: 40%;
+    top: 20%;
+    width: 15%;
+    height: 40%;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    display: none;
+  }
+
+  .aggregation-card input[type='checkbox']:checked:after {
+    display: block;
+  }
+
+  .aggregation-card .header {
+    margin: 0;
+  }
+
+  .aggregation-card .title-wrapper {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    border: none;
+  }
+
+  .aggregation-card .title-wrapper .title {
+    font-size: 10px;
+    font-weight: @semi-bold;
+    color: @black;
+  }
+
+  .aggregation-card .arrow {
+    color: @light_gray;
+  }
+
+  .aggregation-card .action-icon {
+    display: flex;
+  }
+
+  .aggregation-card .bucket {
+    font-size: 12px;
+    color: @gray;
+  }
+
+  .aggregation-card .bucket-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .aggregation-card .bucket-item .bucket-link {
+    display: flex;
+    align-items: center;
+  }
+
+  .aggregation-card .bucket-item .bucket-count {
+    font-size: 10px;
+    font-weight: @semi-bold;
+    color: @blue;
+    height: 19px;
+    width: 19px;
+    background-color: @silver;
+    border-radius: 2px;
+    padding: 0 0;
+    justify-content: center;
+  }
+
+
+  .aggregation-card .showMore-wrapper {
+    font-size: 12px;
+    color: @blue;
+  }
+
+  .showMore-wrapper.more::before {
+    content: '';
+  }
+
+  .showMore-wrapper.less::before {
+    content: '';
+  }
+
+  svg {
+    fill: @light_gray;
+  }
 }

@@ -1,20 +1,24 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import { AggsState, AggsQuery } from '@arranger/components/dist/Aggs';
 import aggComponents from '@arranger/components/dist/Aggs/aggComponentsMap.js';
 import FilterGroup from '../components/filters/FilterGroup/.';
+
+/*
+* The AggregationTabs component uses part of the Arranger codebase that
+* creates aggregations - Arranger divides the data into fields, and allows the user
+* to filter on those fields. We are using it to divide the aggregations into
+* the different tabs we need on our filters.
+* Tabs and the fields in each tab are specifeied in params.js, and this component
+* will use that configuration to divide the aggregations into tabs.
+*/
 
 const BaseWrapper = ({ className, ...props }) => (
   <div {...props} className={`aggregations ${className}`} />
 );
 
-const transformTabs = (tabs) => {
-  console.log('tabs', tabs);
-  return tabs;
-}
-
-const AggregationWrapper = ({
-  filters,
+const AggregationTabs = ({
+  filterConfig,
   onTermSelected = () => {},
   setSQON,
   sqon,
@@ -40,8 +44,9 @@ const AggregationWrapper = ({
         graphqlField={graphqlField}
         render={aggsState => {
           const aggs = aggsState.aggs.filter(x => x.show);
+          // Dividing data into tabs
           let tabs = [];
-          filters.tabs.map((tab, i) => {
+          filterConfig.tabs.map((tab, i) => {
             const tabAggs = aggs.filter(agg => tab.fields.includes(agg.field));
             tabs.push(
               <AggsQuery
@@ -79,7 +84,7 @@ const AggregationWrapper = ({
               )
             })
           return (
-            <FilterGroup tabs={tabs} filterConfig={filters}/>
+            <FilterGroup tabs={tabs} filterConfig={filterConfig} />
           )}
         }
       />
@@ -87,4 +92,8 @@ const AggregationWrapper = ({
   );
 };
 
-export default AggregationWrapper;
+AggregationTabs.propTypes = {
+  filterConfig: PropTypes.object.isRequired,
+}
+
+export default AggregationTabs;
