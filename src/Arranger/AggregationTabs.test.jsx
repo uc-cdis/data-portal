@@ -30,14 +30,19 @@ describe('AggregationTabs', () => {
 
 
   const component = mount(
-    <AggregationTabs filterConfig={filterConfig} />,
+    <AggregationTabs
+      filterConfig={filterConfig}
+      setSQON={jest.fn()}
+      projectId={''}
+      graphqlField={''}
+    />,
   );
 
   test.skip('it renders', () => {
-
+    expect(component.find(AggregationTabs).length).toBe(1);
   });
 
   test.skip('it divides into tabs based on config', () => {
-
+    expect(component.find('.filter-group__tab').length).toBe(filterConfig.tabs.length);
   });
 });

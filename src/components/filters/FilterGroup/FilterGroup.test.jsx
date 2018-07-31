@@ -84,6 +84,19 @@ describe('FilterGroup', () => {
     expect(component.find('.filter-group__tab').length).toBe(tabs.length);
   });
 
+  it('displays the correct tab title', () => {
+    expect(component.find('.filter-group__tab-title').length).toBe(3);
+    expect(
+      component.find('.filter-group__tab-title').at(0).text()
+    ).toBe(filterConfig.tabs[0].title);
+    expect(
+      component.find('.filter-group__tab-title').at(1).text()
+    ).toBe(filterConfig.tabs[1].title);
+    expect(
+      component.find('.filter-group__tab-title').at(2).text()
+    ).toBe(filterConfig.tabs[2].title);
+  });
+
   it('selects the tab on click', () => {
     expect(component.instance().state.selectedTabIndex).toBe(0);
     component.find('.filter-group__tab').at(2).simulate('click');
