@@ -9,13 +9,13 @@ const LinkBullet = ({ link }) => {
   const required = link.required ? 'Yes' : 'No';
   return (
     <TableRow>
-      <td className="property-bullet__table-data">
+      <td className="data-dictionary__table-data">
         <Link to={`/dd/${link.target_type}`}> {link.name} </Link>
       </td>
-      <td className="property-bullet__table-data">
+      <td className="data-dictionary__table-data">
         {required}
       </td>
-      <td className="property-bullet__table-data">
+      <td className="data-dictionary__table-data">
         {link.label}
       </td>
     </TableRow>
@@ -38,7 +38,7 @@ const LinkTable = ({ links }) => {
       <TableHead>
         <TableRow>
           {fields.map(field =>
-            <td className="property-bullet__table-data property-bullet__table-head" key={field}>{field}</td>)}
+            <td className="data-dictionary__table-data data-dictionary__table-data--head" key={field}>{field}</td>)}
         </TableRow>
       </TableHead>
 
@@ -95,23 +95,23 @@ const NodeTable = ({ node }) => (
   <Table>
     <tbody>
       <TableRow>
-        <td className="property-bullet__table-data property-bullet__table-head"> Id </td>
-        <td className="property-bullet__table-data property-bullet__table-data--right">{ node.id }</td>
+        <td className="data-dictionary__table-data data-dictionary__table-data--head"> Id </td>
+        <td className="data-dictionary__table-data data-dictionary__table-data--right">{ node.id }</td>
       </TableRow>
 
       <TableRow>
-        <td className="property-bullet__table-data property-bullet__table-head"> Category </td>
-        <td className="property-bullet__table-data property-bullet__table-data--right">{ node.category}</td>
+        <td className="data-dictionary__table-data data-dictionary__table-data--head"> Category </td>
+        <td className="data-dictionary__table-data data-dictionary__table-data--right">{ node.category}</td>
       </TableRow>
 
       <TableRow>
-        <td className="property-bullet__table-data property-bullet__table-head"> Description </td>
-        <td className="property-bullet__table-data property-bullet__table-data--right">{ node.description}</td>
+        <td className="data-dictionary__table-data data-dictionary__table-data--head"> Description </td>
+        <td className="data-dictionary__table-data data-dictionary__table-data--right">{ node.description}</td>
       </TableRow>
 
       <TableRow>
-        <td className="property-bullet__table-data property-bullet__table-head"> Unique Keys </td>
-        <td className="property-bullet__table-data property-bullet__table-data--right">{
+        <td className="data-dictionary__table-data data-dictionary__table-data--head"> Unique Keys </td>
+        <td className="data-dictionary__table-data data-dictionary__table-data--right">{
           <ul>
             {
               node.uniqueKeys.map(
@@ -187,10 +187,10 @@ const PropertyBullet = (props) => {
 
   return (
     <TableRow>
-      <td className="property-bullet__table-data property-bullet__table-data--column-1"><div> { propertyName }</div> </td>
-      <td className="property-bullet__table-data property-bullet__table-data--column-2"> <ul>{ (typeof type === 'string') ? type : <CollapsibleList items={type} />} </ul></td>
-      <td className="property-bullet__table-data property-bullet__table-data--column-3"> { required ? 'Yes' : 'No' } </td>
-      <td className="property-bullet__table-data property-bullet__table-data--column-4"> { description } </td>
+      <td className="data-dictionary__table-data data-dictionary__table-data--column-1"><div> { propertyName }</div> </td>
+      <td className="data-dictionary__table-data data-dictionary__table-data--column-2"> <ul>{ (typeof type === 'string') ? type : <CollapsibleList items={type} />} </ul></td>
+      <td className="data-dictionary__table-data data-dictionary__table-data--column-3"> { required ? 'Yes' : 'No' } </td>
+      <td className="data-dictionary__table-data data-dictionary__table-data--column-4"> { description } </td>
     </TableRow>
   );
 };
@@ -212,10 +212,10 @@ export const PropertiesTable = ({ node, required, links }) => {
     <Table>
       <TableHead>
         <TableRow>
-          <td className="property-bullet__table-data property-bullet__table-data--column-1 property-bullet__table-head">Property</td>
-          <td className="property-bullet__table-data property-bullet__table-data--column-2 property-bullet__table-head">Type</td>
-          <td className="property-bullet__table-data property-bullet__table-data--column-3 property-bullet__table-head">Required</td>
-          <td className="property-bullet__table-data property-bullet__table-data--column-4 property-bullet__table-head">Description</td>
+          <td className="data-dictionary__table-data data-dictionary__table-data--column-1 data-dictionary__table-data--head">Property</td>
+          <td className="data-dictionary__table-data data-dictionary__table-data--column-2 data-dictionary__table-data--head">Type</td>
+          <td className="data-dictionary__table-data data-dictionary__table-data--column-3 data-dictionary__table-data--head">Required</td>
+          <td className="data-dictionary__table-data data-dictionary__table-data--column-4 data-dictionary__table-data--head">Description</td>
         </TableRow>
       </TableHead>
 
