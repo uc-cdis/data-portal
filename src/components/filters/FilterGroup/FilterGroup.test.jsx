@@ -87,13 +87,13 @@ describe('FilterGroup', () => {
   it('displays the correct tab title', () => {
     expect(component.find('.filter-group__tab-title').length).toBe(3);
     expect(
-      component.find('.filter-group__tab-title').at(0).text()
+      component.find('.filter-group__tab-title').at(0).text(),
     ).toBe(filterConfig.tabs[0].title);
     expect(
-      component.find('.filter-group__tab-title').at(1).text()
+      component.find('.filter-group__tab-title').at(1).text(),
     ).toBe(filterConfig.tabs[1].title);
     expect(
-      component.find('.filter-group__tab-title').at(2).text()
+      component.find('.filter-group__tab-title').at(2).text(),
     ).toBe(filterConfig.tabs[2].title);
   });
 
