@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { fetchGraphQL } from '../actions';
 import Spinner from '../components/Spinner';
-import './GqlEditor.less'
+import './GqlEditor.less';
 
 const parameters = {};
 

@@ -111,19 +111,20 @@ const NodeTable = ({ node }) => (
 
       <TableRow>
         <td className="data-dictionary__table-data data-dictionary__table-data--head"> Unique Keys </td>
-        <td className="data-dictionary__table-data data-dictionary__table-data--right">{
-          <ul>
-            {
-              node.uniqueKeys.map(
-                (key) => {
-                  const compoundKey = key.join(', ');
-                  return <Bullet key={compoundKey}>{compoundKey}</Bullet>;
-                },
-              )
-            }
-          </ul>
-        }</td>
-
+        <td className="data-dictionary__table-data data-dictionary__table-data--right">
+          {
+            <ul>
+              {
+                node.uniqueKeys.map(
+                  (key) => {
+                    const compoundKey = key.join(', ');
+                    return <Bullet key={compoundKey}>{compoundKey}</Bullet>;
+                  },
+                )
+              }
+            </ul>
+          }
+        </td>
       </TableRow>
     </tbody>
   </Table>

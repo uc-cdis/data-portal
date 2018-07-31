@@ -35,7 +35,9 @@ class Question extends Component {
                       name={this.props.content.id}
                       value={option}
                       group={group}
-                    />{option}</p>),
+                    />
+                      {option}
+                    </p>),
                 )
               }
             </div>)
