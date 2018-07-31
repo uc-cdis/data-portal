@@ -33,12 +33,13 @@ class Question extends Component {
                     <p
                       className="question__option-bullet"
                       key={option}
-                    ><Radio
-                      onChange={this.props.onChange}
-                      name={this.props.content.id}
-                      value={option}
-                      group={group}
-                    />
+                    >
+                      <Radio
+                        onChange={this.props.onChange}
+                        name={this.props.content.id}
+                        value={option}
+                        group={group}
+                      />
                       {option}
                     </p>
                   ),
