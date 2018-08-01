@@ -7,12 +7,13 @@ import SubmitTSV from './SubmitTSV';
 describe('the TSV submission componet', () => {
   const testProjName = 'bogusProject';
   /* Mutes large warning:
-  * Could not load worker TypeError: (window.URL || window.webkitURL).createObjectURL is not a function
+  * "Could not load worker TypeError:
+  * (window.URL || window.webkitURL).createObjectURL is not a function"
   * Currently no easy workaround
   */
   global.console.warn = jest.fn();
 
-   /* Little helper for constructing a <SubmitTSV> jest/enzyme test
+  /* Little helper for constructing a <SubmitTSV> jest/enzyme test
    *
    * @param {file, submit_result, submit_status} submission property passed through to <SubmitTSV>
    * @param {function} submitCallback invoked by onSubmitClick property on <SubmitTSV>
