@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import ArrangerWrapper from '../components/ArrangerWrapper';
+import ArrangerWrapper from '../Arranger/ArrangerWrapper';
 import DataExplorerTable from '../components/tables/DataExplorerTable/.';
 
 storiesOf('Tables', module)

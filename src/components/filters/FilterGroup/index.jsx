@@ -1,18 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FilterList from '../FilterList/.';
 import './FilterGroup.less';
 
 class FilterGroup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTab: { index: 0, ...this.props.tabs[0] },
+      selectedTabIndex: 0,
     };
   }
 
-  selectTab(tab, index) {
-    this.setState({ selectedTab: { index, ...tab } });
+  selectTab(index) {
+    this.setState({ selectedTabIndex: index });
   }
 
   render() {
@@ -24,23 +23,20 @@ class FilterGroup extends React.Component {
               <div
                 key={index}
                 role="button"
-                tabIndex={this.state.selectedTab.index}
-                className={'filter-group__tab'.concat(this.state.selectedTab.index === index ? ' filter-group__tab--selected' : '')}
-                onClick={() => this.selectTab(tab, index)}
-                onKeyDown={() => this.selectTab(tab, index)}
+                tabIndex={index}
+                className={'filter-group__tab'.concat(this.state.selectedTabIndex === index ? ' filter-group__tab--selected' : '')}
+                onClick={() => this.selectTab(index)}
+                onKeyDown={() => this.selectTab(index)}
               >
                 <p className="filter-group__tab-title">
-                  {tab.title}
+                  {this.props.filterConfig.tabs[tab.key].title}
                 </p>
               </div>
             ))
           }
         </div>
         <div className="filter-group__filter-area">
-          <FilterList
-            {...this.props}
-            sections={this.state.selectedTab.sections}
-          />
+          {React.cloneElement(this.props.tabs[this.state.selectedTabIndex], { ...this.props })}
         </div>
       </div>
     );
@@ -48,16 +44,13 @@ class FilterGroup extends React.Component {
 }
 
 FilterGroup.propTypes = {
-  tabs: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.string,
-    sections: PropTypes.arrayOf(PropTypes.shape({
+  tabs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  filterConfig: PropTypes.shape({
+    tabs: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string,
-      options: PropTypes.arrayOf(PropTypes.shape({
-        text: PropTypes.string,
-        filterType: PropTypes.oneOf(['singleSelect', 'range']),
-      })),
+      fields: PropTypes.arrayOf(PropTypes.string),
     })),
-  })).isRequired,
+  }).isRequired,
 };
 
 export default FilterGroup;

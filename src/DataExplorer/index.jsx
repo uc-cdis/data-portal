@@ -1,5 +1,5 @@
 import React from 'react';
-import ArrangerWrapper from '../components/ArrangerWrapper';
+import ArrangerWrapper from '../Arranger/ArrangerWrapper';
 import DataExplorerFilters from './DataExplorerFilters';
 import DataExplorerVisualizations from './DataExplorerVisualizations';
 import { paramByApp } from '../../data/dictionaryHelper';
@@ -16,7 +16,7 @@ class DataExplorer extends React.Component {
           graphqlField={arrangerConfig.graphqlField}
           projectId={arrangerConfig.projectId}
         >
-          <DataExplorerFilters />
+          <DataExplorerFilters arrangerConfig={arrangerConfig} />
           <DataExplorerVisualizations arrangerConfig={arrangerConfig} />
         </ArrangerWrapper>
       </div>

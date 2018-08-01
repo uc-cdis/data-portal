@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import FilterGroup from '.';
+import FilterList from '../FilterList/.';
 
 describe('FilterGroup', () => {
   const filterOptions = [
@@ -34,19 +35,40 @@ describe('FilterGroup', () => {
   ];
 
   const tabs = [
-    { sections: filterSections, title: 'Section1' },
-    { sections: filterSections2, title: 'Section2' },
-    { sections: filterSections3, title: 'This is a long section name' },
-    { sections: filterSections, title: 'Section3' },
+    <FilterList key={0} sections={filterSections} />,
+    <FilterList key={1} sections={filterSections2} />,
+    <FilterList key={2} sections={filterSections3} />,
   ];
 
-  const onSelect = jest.fn();
-  const onDrag = jest.fn();
+  const filterConfig = {
+    tabs: [{
+      title: 'Project',
+      fields: [
+        'project',
+        'study',
+      ],
+    },
+    {
+      title: 'Subject',
+      fields: [
+        'race',
+        'ethnicity',
+        'gender',
+        'vital_status',
+      ],
+    },
+    {
+      title: 'File',
+      fields: [
+        'file_type',
+      ],
+    }],
+  };
+
   const component = mount(
     <FilterGroup
       tabs={tabs}
-      onSelect={onSelect}
-      onDrag={onDrag}
+      filterConfig={filterConfig}
     />,
   );
 
@@ -62,17 +84,30 @@ describe('FilterGroup', () => {
     expect(component.find('.filter-group__tab').length).toBe(tabs.length);
   });
 
+  it('displays the correct tab title', () => {
+    expect(component.find('.filter-group__tab-title').length).toBe(3);
+    expect(
+      component.find('.filter-group__tab-title').at(0).text(),
+    ).toBe(filterConfig.tabs[0].title);
+    expect(
+      component.find('.filter-group__tab-title').at(1).text(),
+    ).toBe(filterConfig.tabs[1].title);
+    expect(
+      component.find('.filter-group__tab-title').at(2).text(),
+    ).toBe(filterConfig.tabs[2].title);
+  });
+
   it('selects the tab on click', () => {
-    expect(component.instance().state.selectedTab.index).toBe(0);
+    expect(component.instance().state.selectedTabIndex).toBe(0);
     component.find('.filter-group__tab').at(2).simulate('click');
-    expect(component.instance().state.selectedTab.index).toBe(2);
+    expect(component.instance().state.selectedTabIndex).toBe(2);
   });
 
   it('changes the class for the selected tab', () => {
-    expect(component.instance().state.selectedTab.index).toBe(0);
+    expect(component.instance().state.selectedTabIndex).toBe(0);
     expect(component.find('.filter-group__tab--selected').length).toBe(1);
     component.find('.filter-group__tab').at(2).simulate('click');
-    expect(component.instance().state.selectedTab.index).toBe(2);
+    expect(component.instance().state.selectedTabIndex).toBe(2);
     expect(component.find('.filter-group__tab--selected').length).toBe(1);
   });
 });
