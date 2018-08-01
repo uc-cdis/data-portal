@@ -21,7 +21,7 @@ import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/ReduxDataDictionary';
 import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
-import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
+import UserProfile, { fetchAccess } from './UserProfile/reduxer';
 import CertificateQuiz from './Certificate/ReduxQuiz';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import { OuterWrapper, Box, theme } from './theme';

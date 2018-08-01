@@ -27,9 +27,11 @@ export const saveToFile = (savingStr, filename) => {
   FileSaver.saveAs(blob, filename);
 };
 
-const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
+const UserProfilePage = ({
+  user, userProfile, popups, submission, onCreateKey,
   onClearCreationSession, onUpdatePopup, onDeleteKey,
-  onRequestDeleteKey, onClearDeleteSession }) => {
+  onRequestDeleteKey, onClearDeleteSession
+}) => {
   const onCreate = () => {
     onCreateKey(credentialCdisPath);
   };
@@ -148,7 +150,7 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
   );
 };
 
-UserProfile.propTypes = {
+UserProfilePage.propTypes = {
   user: PropTypes.object.isRequired,
   userProfile: PropTypes.object.isRequired,
   popups: PropTypes.object.isRequired,
@@ -161,8 +163,8 @@ UserProfile.propTypes = {
   onClearDeleteSession: PropTypes.func.isRequired,
 };
 
-UserProfile.defaultProps = {
+UserProfilePage.defaultProps = {
   submission: {},
 };
 
-export default UserProfile;
+export default UserProfilePage;

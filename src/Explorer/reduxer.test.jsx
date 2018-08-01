@@ -7,7 +7,7 @@ import { StaticRouter } from 'react-router-dom';
 
 import getReduxStore from '../reduxStore';
 import { theme } from '../theme';
-import { changePageSize, changePage } from './ReduxExplorer';
+import { changePageSize, changePage } from './reduxer';
 import * as testData from './__test__/data.json';
 import * as testExpected from './__test__/expected.json';
 import ExplorerPage from './ExplorerPage';

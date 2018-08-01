@@ -4,6 +4,7 @@ import environment from '../environment';
 import RelayExplorerComponent from './ExplorerComponent';
 import { GQLHelper } from '../gqlHelper';
 import Spinner from '../components/Spinner';
+import { fetchQuery } from 'relay-runtime';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
@@ -33,3 +34,17 @@ class ExplorerPage extends Component {
 }
 
 export default ExplorerPage;
+
+// const getFilesList = () => {
+//   fetchQuery(
+//     environment,
+//     gqlHelper.explorerPageQuery,
+//     {
+//       selected_projects: [],
+//       selected_file_types: [],
+//       selected_file_formats: [],
+//     }
+//   ).then(
+//
+//   )
+// };
