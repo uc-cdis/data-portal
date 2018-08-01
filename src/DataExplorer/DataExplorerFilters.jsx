@@ -15,7 +15,7 @@ class DataExplorerFilters extends React.Component {
               filterConfig={filterConfig}
               {...this.props}
             />
-          : <Aggregations {...this.props} />
+            : <Aggregations {...this.props} />
         }
       </div>
     );

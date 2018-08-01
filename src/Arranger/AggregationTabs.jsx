@@ -56,6 +56,7 @@ const AggregationTabs = ({
         filterConfig.tabs.forEach((tab, i) => {
           const tabAggs = aggs.filter(agg => tab.fields.includes(agg.field));
           tabs.push(
+            /* eslint-disable */
             <AggsQuery
               key={i}
               api={api}
@@ -89,6 +90,7 @@ const AggregationTabs = ({
                   })
               }
             />,
+            /* eslint-enable */
           );
         });
         return (

@@ -1434,7 +1434,7 @@ const params = {
             'ethnicity',
             'gender',
             'vital_status',
-          ]
+          ],
         },
         {
           title: 'File',
