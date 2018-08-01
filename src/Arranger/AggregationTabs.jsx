@@ -54,7 +54,13 @@ const AggregationTabs = ({
         // Dividing data into tabs
         const tabs = [];
         filterConfig.tabs.forEach((tab, i) => {
-          const tabAggs = aggs.filter(agg => tab.fields.includes(agg.field));
+          const sections = [];
+          tab.fields.forEach((field) => {
+            const section = aggs.find(agg => agg.field === field);
+            if (section) {
+              sections.push(section);
+            }
+          });
           tabs.push(
             /* eslint-disable */
             <AggsQuery
@@ -64,7 +70,7 @@ const AggregationTabs = ({
               projectId={projectId}
               index={graphqlField}
               sqon={sqon}
-              aggs={tabAggs}
+              aggs={sections}
               render={({ data }) =>
                 data &&
                 aggs
