@@ -111,7 +111,6 @@ const NodeTable = ({ node }) => (
       <tr className="data-dictionary__table-row">
         <td className="data-dictionary__table-data data-dictionary__table-data--head"> Unique Keys </td>
         <td className="data-dictionary__table-data data-dictionary__table-data--right">
-          {
             <ul>
               {
                 node.uniqueKeys.map(
@@ -122,7 +121,6 @@ const NodeTable = ({ node }) => (
                 )
               }
             </ul>
-          }
         </td>
       </tr>
     </tbody>
