@@ -27,6 +27,7 @@ class DataExplorerVisualizations extends React.Component {
       : null;
     return (
       <div className="data-explorer__visualizations">
+        <CurrentSQON className="data-explorer__sqon" {...this.props} />
         <div
           className="data-explorer__visualizations-title"
           onClick={this.toggleVisualization}
@@ -41,7 +42,6 @@ class DataExplorerVisualizations extends React.Component {
             size="lg"
           />
         </div>
-        <CurrentSQON className="data-explorer__sqon" {...this.props} />
         { charts && this.state.showVisualization ?
           <div className="data-explorer__charts">
             <DataSummaryCardGroup summaryItems={charts.countItems} connected />

@@ -22,6 +22,10 @@
   height: 28px;
   background-color: @silver;
   outline: none;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: @semi-bold;
+  color: @black;
 }
 
 .filter-group__tab--selected {
@@ -31,9 +35,17 @@
 
 .filter-group__tab-title {
   padding: 0 10px;
+  margin: 0;
+  font-size: 10px;
+  line-height: 1em;
+  font-weight: @semi-bold;
 }
 
 .filter-group__filter-area {
   min-width: 170px;
-  max-width: 50%;
+  border-bottom: 1px solid @silver;
+  border-left: 1px solid @silver;
+  border-right: 1px solid @silver;
+  border-radius: 4px;
+  background-color: @white;
 }

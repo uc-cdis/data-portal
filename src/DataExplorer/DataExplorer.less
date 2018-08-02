@@ -2,11 +2,15 @@
 
 .data-explorer {
   display: flex;
-  margin: 30px 30px;
+  margin: 17px 30px;
 }
 
 .data-explorer__filters {
   width: 20%;
+}
+
+.data-explorer__filters-title {
+  margin: 10px 0;
 }
 
 .data-explorer__visualizations {
@@ -21,6 +25,11 @@
   align-items: center;
   outline: none;
   cursor: pointer;
+  margin: 10px 0;
+}
+
+.data-explorer__visualizations-title h4 {
+  margin: 0;
 }
 
 .data-explorer__visualizations-title-icon {
@@ -41,6 +50,164 @@
   margin-bottom: 34px;
 }
 
-.data-explorer__visualizations .sqon-view {
-  margin: 10px 0 7px 0;
+/* Overrides Arranger Aggregation styles */
+
+.data-explorer__filters {
+  .aggregation-card {
+    padding: 12px 12px;
+    margin: 0 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top: 1px solid @silver;
+  }
+
+  .aggregation-card input[type='checkbox'] {
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: 0;
+    background: @white;
+    height: 18px;
+    width: 18px;
+    border: 1px solid @light_gray;
+    border-radius: 2px;
+  }
+
+  .aggregation-card input[type='checkbox']:checked {
+    background: @orange;
+  }
+
+  // defines check in checkbox
+  .aggregation-card input[type='checkbox']:after {
+    content: '';
+    position: relative;
+    left: 40%;
+    top: 20%;
+    width: 15%;
+    height: 40%;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    display: none;
+  }
+
+  .aggregation-card input[type='checkbox']:checked:after {
+    display: block;
+  }
+
+  .aggregation-card .header {
+    margin: 0;
+  }
+
+  .aggregation-card .title-wrapper {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    border: none;
+  }
+
+  .aggregation-card .title-wrapper .title {
+    font-size: 10px;
+    font-weight: @semi-bold;
+    color: @black;
+  }
+
+  .aggregation-card .arrow {
+    color: @light_gray;
+  }
+
+  .aggregation-card .action-icon {
+    display: flex;
+  }
+
+  .aggregation-card .bucket {
+    font-size: 12px;
+    color: @gray;
+  }
+
+  .aggregation-card .bucket-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .aggregation-card .bucket-item .bucket-link {
+    display: flex;
+    align-items: center;
+  }
+
+  .aggregation-card .bucket-item .bucket-count {
+    font-size: 10px;
+    font-weight: @semi-bold;
+    color: @blue;
+    height: 19px;
+    width: 19px;
+    background-color: @silver;
+    border-radius: 2px;
+    padding: 0 0;
+    justify-content: center;
+  }
+
+
+  .aggregation-card .showMore-wrapper {
+    font-size: 12px;
+    color: @blue;
+  }
+
+  .showMore-wrapper.more::before {
+    content: '';
+  }
+
+  .showMore-wrapper.less::before {
+    content: '';
+  }
+
+  svg {
+    fill: @light_gray;
+  }
+}
+
+/* Overrides Arranger CurrentSQON styles */
+.sqon-view {
+  background-color: @cloud;
+  border: 0;
+  padding: 0;
+  margin-top: 0;
+}
+
+.sqon-group:first-child {
+  margin-top: 0;
+}
+
+.sqon-clear {
+  border: 1px solid @light_gray;
+  color: @white;
+  background-color: @blue;
+  text-transform: none;
+  font-family: @body-font;
+}
+
+.sqon-more,
+.sqon-less {
+  border: 1px solid @light_gray;
+  color: @blue;
+  text-transform: none;
+  font-family: @body-font;
+}
+
+.sqon-field,
+.sqon-op {
+  font-size: 12px;
+  color: @gray;
+  text-transform: none;
+}
+
+.sqon-value-group {
+  color: @blue;
+}
+
+.sqon-value {
+  background-color: @orange;
+  border: 1px solid @light_gray;
 }

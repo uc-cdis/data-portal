@@ -1419,6 +1419,30 @@ const params = {
           title: 'Vital Status',
         },
       },
+      filters: {
+        tabs: [{
+          title: 'Project',
+          fields: [
+            'project',
+            'study',
+          ],
+        },
+        {
+          title: 'Subject',
+          fields: [
+            'race',
+            'ethnicity',
+            'gender',
+            'vital_status',
+          ],
+        },
+        {
+          title: 'File',
+          fields: [
+            'file_type',
+          ],
+        }],
+      },
       projectId: 'search',
       graphqlField: 'subject',
       index: '',
