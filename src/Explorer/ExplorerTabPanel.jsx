@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { ExplorerTabs, ExplorerTab, ExplorerTabBox, ExplorerTabFrame } from './style';
-import { ExplorerTableComponent } from './ExplorerTable';
+import ExplorerTableComponent from './ExplorerTable';
 import { capitalizeFirstLetter } from '../utils';
 
 class ExplorerTabPanel extends Component {

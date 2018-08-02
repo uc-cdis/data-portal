@@ -174,17 +174,16 @@ export function nodesBreadthFirst(nodes, edges) {
   for (let head = 0; head < queue.length; head += 1) {
     const { query, level } = queue[head]; // breadth first
     name2ActualLvl[query] = level;
-    name2EdgesIn[query].forEach(
-      (edge) => {
-        // At some point the d3 force layout converts edge.source
-        //   and edge.target into node references ...
-        const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
-        if (name2EdgesIn[sourceName]) {
-          queue.push({ query: sourceName, level: level + 1 });
-        } else {
-          console.log(`Edge comes from unknown node ${sourceName}`);
-        }
-      },
+    name2EdgesIn[query].forEach((edge) => {
+      // At some point the d3 force layout converts edge.source
+      //   and edge.target into node references ...
+      const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
+      if (name2EdgesIn[sourceName]) {
+        queue.push({ query: sourceName, level: level + 1 });
+      } else {
+        console.log(`Edge comes from unknown node ${sourceName}`);
+      }
+    },
     );
   }
 

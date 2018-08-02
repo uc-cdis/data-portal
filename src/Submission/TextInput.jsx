@@ -1,5 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { Input, Label } from '../theme';
+
+const RequiredNotification = styled.span`
+  color:#d45252;
+  margin:5px 0 0 0;
+  display:inline;
+  float: ${props => (props.istext ? 'right' : '')};
+`;
+
+const InputDescription = styled.span`
+  font-size: 1rem;
+  display:inline-block;
+  width: 750px;
+`;
 
 class TextInput extends Component {
   static propTypes = {
@@ -40,3 +55,5 @@ class TextInput extends Component {
     );
   }
 }
+
+export default TextInput;

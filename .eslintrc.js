@@ -67,8 +67,8 @@ module.exports = {
     {
       "files": [
         "src/DataDictionary/GraphCreator.js",
-        "src/DataModelGraph/SvgGraph.jsx",
         "src/DataModelGraph/testData.js",
+        "src/DataModelGraph/utils.js",
       ],
       "rules": {
         "no-param-reassign": "off" // for D3 charts
@@ -82,5 +82,11 @@ module.exports = {
         "no-underscore-dangle": "off" // for previously named var
       }
     },
+    {
+      "files": [ "src/DataModelGraph/utils.js" ],
+      "rules": {
+        "no-loop-func": "off" // for D3 config
+      }
+    }
   ],
 };

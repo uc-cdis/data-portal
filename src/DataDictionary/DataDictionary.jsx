@@ -92,9 +92,10 @@ export function category2NodeList(dictionary) {
   )
     .reduce(
       (lookup, node) => {
-        if (!lookup[node.category]) { lookup[node.category] = []; }
-        lookup[node.category].push(node);
-        return lookup;
+        let category = lookup[node.category];
+        if (!lookup[node.category]) { category = []; }
+        category.push(node);
+        return Object.assign({}, lookup, { [node.category]: category });
       }, {},
     );
 }
@@ -116,6 +117,14 @@ const DataDictionary = ({ dictionary }) => {
         <CategoryTable key={category} nodes={c2nl[category]} category={category} />)}
     </div>
   );
+};
+
+DataDictionary.propTypes = {
+  dictionary: PropTypes.object,
+};
+
+DataDictionary.defaultProps = {
+  dictionary: {},
 };
 
 export default DataDictionary;

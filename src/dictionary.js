@@ -1,4 +1,4 @@
-export const dict = {
+const dict = {
   _definitions: {
     UUID: {
       pattern: '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$',
@@ -13294,3 +13294,5 @@ export const dict = {
     validators: null,
   },
 };
+
+export default dict;

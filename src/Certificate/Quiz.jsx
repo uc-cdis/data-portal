@@ -36,6 +36,7 @@ class Quiz extends Component {
 
   static defaultProps = {
     certificate: null,
+    questionList: [],
   };
 
   constructor(props) {

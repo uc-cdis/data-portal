@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import TextInput from './TextInput';
+import EnumInput from './EnumInput';
 
 class OneOfInput extends Component {
   // couldn't make a generalized component as I would like to, so I am shortcircuiting the logic
@@ -112,3 +114,5 @@ class OneOfInput extends Component {
     );
   }
 }
+
+export default OneOfInput;

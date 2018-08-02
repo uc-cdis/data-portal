@@ -19,18 +19,7 @@ class DictionaryGraph extends React.Component {
   }
 
   componentDidMount() {
-    const { nodes, edges } = createNodesAndEdges(this.props, true, []);
-    assignNodePositions(nodes, edges, { numPerRow: 3 });
-    this.setState({ nodes, edges }, () => {
-      if (this.state.fullToggle) {
-        createFullGraph(this.state.nodes, this.state.edges);
-      } else {
-        if (document.getElementById('table_wrapper') !== null) {
-          document.getElementById('table_wrapper').remove();
-        }
-        createAbridgedGraph(this.state.nodes, this.state.edges);
-      }
-    });
+    this.onMount();
   }
 
   componentDidUpdate() {
@@ -46,6 +35,21 @@ class DictionaryGraph extends React.Component {
       }
       createAbridgedGraph(this.state.nodes, this.state.edges);
     }
+  }
+
+  onMount = () => {
+    const { nodes, edges } = createNodesAndEdges(this.props, true, []);
+    assignNodePositions(nodes, edges, { numPerRow: 3 });
+    this.setState({ nodes, edges }, () => {
+      if (this.state.fullToggle) {
+        createFullGraph(this.state.nodes, this.state.edges);
+      } else {
+        if (document.getElementById('table_wrapper') !== null) {
+          document.getElementById('table_wrapper').remove();
+        }
+        createAbridgedGraph(this.state.nodes, this.state.edges);
+      }
+    });
   }
 
   handleClick() {

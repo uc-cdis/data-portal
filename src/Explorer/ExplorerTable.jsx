@@ -21,92 +21,14 @@ export const ExplorerTableStyle = styled.table`
   border-collapse: collapse;
   overflow: hidden;
   font-size: 15px;
-
 `;
 
-
-export class ExplorerTableComponent extends Component {
-  static propTypes = {
-    user: PropTypes.object,
-    projectAvail: PropTypes.object,
-    name: PropTypes.string.isRequired,
-    filesList: PropTypes.array,
-    lastPageSize: PropTypes.number,
-    pageSize: PropTypes.number.isRequired,
-    pageCount: PropTypes.number.isRequired,
-    page: PropTypes.number.isRequired,
-    originalPage: PropTypes.number,
-    onPageLoadNextMore: PropTypes.func,
-    onPageLoadPrevMore: PropTypes.func,
-    onPageChange: PropTypes.func,
-    onPageSizeChange: PropTypes.func,
-  };
-
-  static defaultProps = {
-    user: {},
-    projectAvail: {},
-    filesList: [],
-    lastPageSize: 0,
-    originalPage: 0,
-    onPageLoadNextMore: () => {},
-    onPageLoadPrevMore: () => {},
-    onPageChange: () => {},
-    onPageSizeChange: () => {},
-  };
-
-  static renderFileName(user, projectAvail, projectID, did, name) {
-    const parts = projectID.split('-');
-    const program = parts[0];
-    parts.shift();
-    const project = parts.join('-');
-    let hasAccess = false;
-    if (projectID in projectAvail) {
-      if (projectAvail[projectID] === 'Open') {
-        hasAccess = true;
-      }
-    }
-    if ('project_access' in user && program in user.project_access) {
-      if (user.project_access[program].includes('read-storage')) {
-        hasAccess = true;
-      }
-    }
-    if ('project_access' in user && project in user.project_access) {
-      if (user.project_access[project].includes('read-storage')) {
-        hasAccess = true;
-      }
-    }
-    const filename = hasAccess ? (
-      <a key={name} href={`${userapiPath}data/download/${did}?expires_in=10&redirect`}>{name}</a>
-    ) : (
-      <span>{name}</span>
-    );
-    return filename;
-  }
-
+class ExplorerTableComponent extends Component {
   static humanFileSize(size) {
     const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
     const sizeStr = (size / (1024 ** i)).toFixed(2) * 1;
     const suffix = ['B', 'KB', 'MB', 'GB', 'TB'][i];
     return `${sizeStr} ${suffix}`;
-  }
-
-  static renderRow(user, projectAvail, file, columnWidths, i) {
-    const filename = ExplorerTableComponent.renderFileName(user, projectAvail,
-      file.project_id, file.did, file.name);
-    const filesize = ExplorerTableComponent.humanFileSize(file.size);
-    return (
-      <TableRow key={i}>
-        <TableData c_width={columnWidths[0]}>
-          <Link to={`/${file.project_id}`}>{file.project_id}</Link>
-        </TableData>
-        <TableData c_width={columnWidths[1]}>
-          {filename}
-        </TableData>
-        <TableData c_width={columnWidths[2]}>{file.format}</TableData>
-        <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{filesize}</TableData>
-        <TableData c_width={columnWidths[4]}>{file.category}</TableData>
-      </TableRow>
-    );
   }
 
   constructor(props) {
@@ -151,6 +73,54 @@ export class ExplorerTableComponent extends Component {
   loadMorePrev() {
     this.setState({ originalPageToSet: this.state.originalPage - this.props.pageCount });
     this.props.onPageLoadPrevMore();
+  }
+
+  static renderFileName(user, projectAvail, projectID, did, name) {
+    const parts = projectID.split('-');
+    const program = parts[0];
+    parts.shift();
+    const project = parts.join('-');
+    let hasAccess = false;
+    if (projectID in projectAvail) {
+      if (projectAvail[projectID] === 'Open') {
+        hasAccess = true;
+      }
+    }
+    if ('project_access' in user && program in user.project_access) {
+      if (user.project_access[program].includes('read-storage')) {
+        hasAccess = true;
+      }
+    }
+    if ('project_access' in user && project in user.project_access) {
+      if (user.project_access[project].includes('read-storage')) {
+        hasAccess = true;
+      }
+    }
+    const filename = hasAccess ? (
+      <a key={name} href={`${userapiPath}data/download/${did}?expires_in=10&redirect`}>{name}</a>
+    ) : (
+      <span>{name}</span>
+    );
+    return filename;
+  }
+
+  static renderRow(user, projectAvail, file, columnWidths, i) {
+    const filename = ExplorerTableComponent.renderFileName(user, projectAvail,
+      file.project_id, file.did, file.name);
+    const filesize = ExplorerTableComponent.humanFileSize(file.size);
+    return (
+      <TableRow key={i}>
+        <TableData c_width={columnWidths[0]}>
+          <Link to={`/${file.project_id}`}>{file.project_id}</Link>
+        </TableData>
+        <TableData c_width={columnWidths[1]}>
+          {filename}
+        </TableData>
+        <TableData c_width={columnWidths[2]}>{file.format}</TableData>
+        <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{filesize}</TableData>
+        <TableData c_width={columnWidths[4]}>{file.category}</TableData>
+      </TableRow>
+    );
   }
 
   render() {
@@ -249,3 +219,33 @@ export class ExplorerTableComponent extends Component {
     );
   }
 }
+
+ExplorerTableComponent.propTypes = {
+  user: PropTypes.object,
+  projectAvail: PropTypes.object,
+  name: PropTypes.string.isRequired,
+  filesList: PropTypes.array,
+  lastPageSize: PropTypes.number,
+  pageSize: PropTypes.number.isRequired,
+  pageCount: PropTypes.number.isRequired,
+  page: PropTypes.number.isRequired,
+  originalPage: PropTypes.number,
+  onPageLoadNextMore: PropTypes.func,
+  onPageLoadPrevMore: PropTypes.func,
+  onPageChange: PropTypes.func,
+  onPageSizeChange: PropTypes.func,
+};
+
+ExplorerTableComponent.defaultProps = {
+  user: {},
+  projectAvail: {},
+  filesList: [],
+  lastPageSize: 0,
+  originalPage: 0,
+  onPageLoadNextMore: () => {},
+  onPageLoadPrevMore: () => {},
+  onPageChange: () => {},
+  onPageSizeChange: () => {},
+};
+
+export default ExplorerTableComponent;

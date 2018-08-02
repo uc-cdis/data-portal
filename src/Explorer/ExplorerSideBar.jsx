@@ -29,11 +29,11 @@ class ExplorerSideBar extends Component {
           && dictionary[key].category === category
           && Object.prototype.hasOwnProperty.call(dictionary[key].properties[property], 'enum')
         ) {
-          for (const propertyOption of dictionary[key].properties[property].enum) {
+          dictionary[key].properties[property].enum.forEach((propertyOption) => {
             if (!d.has(propertyOption)) {
               d.add(propertyOption);
             }
-          }
+          });
         }
         return d;
       }, initialSet || new Set(),

@@ -3,25 +3,18 @@ import styled from 'styled-components';
 import { Toggle } from 'material-ui';
 import PropTypes from 'prop-types';
 
-import { Dropdown, Input, Label } from '../theme';
+import { Dropdown } from '../theme';
 import { jsonToString } from '../utils';
 import TextInput from './TextInput';
 import OneOfInput from './OneOfInput';
 import EnumInput from './EnumInput';
 
-export const RequiredNotification = styled.span`
+const RequiredNotification = styled.span`
   color:#d45252;
   margin:5px 0 0 0;
   display:inline;
   float: ${props => (props.istext ? 'right' : '')};
 `;
-
-const InputDescription = styled.span`
-  font-size: 1rem;
-  display:inline-block;
-  width: 750px;
-`;
-
 
 const UploadFormButton = styled.a`
   display:inline-block;

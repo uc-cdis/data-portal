@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 
-import { basename, appname } from '../localconf';
+import { basename } from '../localconf';
 import SlidingWindow from '../components/SlidingWindow';
 
 const CentralBox = styled.div`

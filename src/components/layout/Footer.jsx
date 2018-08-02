@@ -17,7 +17,7 @@ const FooterGroup = styled.nav`
   color: white;
   vertical-align: middle;
   margin: auto;
-  text-align: left;  
+  text-align: left;
 `;
 
 const Versions = styled.div`
@@ -60,7 +60,7 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
             display: 'table-cell',
           }}
           >
-            <a href={'https://cdis.uchicago.edu/gen3'} target="_blank">
+            <a href={'https://cdis.uchicago.edu/gen3'} target="_blank" rel="noopener noreferrer"> {/* fixes security risk */}
               <IconComponent dictIcons={dictIcons} iconName="gen3" height="37px" />
             </a>
           </div>
@@ -70,7 +70,7 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
             display: 'table-cell',
           }}
           >
-            <a href={'https://cdis.uchicago.edu/'} target="_blank">
+            <a href={'https://cdis.uchicago.edu/'} target="_blank" rel="noopener noreferrer"> {/* fixes security risk */}
               <IconComponent dictIcons={dictIcons} iconName="uchicago" height="37px" svgStyles={{ fill: '#ffffff' }} />
             </a>
           </div>
