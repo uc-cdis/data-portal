@@ -12,35 +12,7 @@ const makeDefaultState = (page, pageSize, originalPage) => ({
   pageSize,
 });
 
-export class ExplorerTableComponent extends Component {
-  static propTypes = {
-    user: PropTypes.object,
-    projectAvail: PropTypes.object,
-    name: PropTypes.string.isRequired,
-    filesList: PropTypes.array,
-    lastPageSize: PropTypes.number,
-    pageSize: PropTypes.number.isRequired,
-    pageCount: PropTypes.number.isRequired,
-    page: PropTypes.number.isRequired,
-    originalPage: PropTypes.number,
-    onPageLoadNextMore: PropTypes.func,
-    onPageLoadPrevMore: PropTypes.func,
-    onPageChange: PropTypes.func,
-    onPageSizeChange: PropTypes.func,
-  };
-
-  static defaultProps = {
-    user: {},
-    projectAvail: {},
-    filesList: [],
-    lastPageSize: 0,
-    originalPage: 0,
-    onPageLoadNextMore: () => {},
-    onPageLoadPrevMore: () => {},
-    onPageChange: () => {},
-    onPageSizeChange: () => {},
-  };
-
+class ExplorerTableComponent extends Component {
   static humanFileSize(size) {
     const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
     const sizeStr = (size / (1024 ** i)).toFixed(2) * 1;
@@ -122,21 +94,19 @@ export class ExplorerTableComponent extends Component {
   }
 
   static renderRow(user, projectAvail, file, columnWidths, i) {
-    const filename = ExplorerTableComponent.renderFileName(user, projectAvail,
-      file.project_id, file.did, file.name);
     const filesize = ExplorerTableComponent.humanFileSize(file.size);
     return (
-      <TableRow key={i}>
-        <TableData c_width={columnWidths[0]}>
+      <tr className="explorer-table__table-row" key={i}>
+        <td className="explorer-table__table-data explorer-table__table-data--column-0">
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
-        </TableData>
-        <TableData c_width={columnWidths[1]}>
-          {filename}
-        </TableData>
-        <TableData c_width={columnWidths[2]}>{file.format}</TableData>
-        <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{filesize}</TableData>
-        <TableData c_width={columnWidths[4]}>{file.category}</TableData>
-      </TableRow>
+        </td>
+        <td className="explorer-table__table-data explorer-table__table-data--column-1">
+          <Link to={`/files/${file.did}`}>{file.name}</Link>
+        </td>
+        <td className="explorer-table__table-data explorer-table__table-data--column-2">{file.format}</td>
+        <td className="explorer-table__table-data explorer-table__table-data--column-3">{filesize}</td>
+        <td className="explorer-table__table-data explorer-table__table-data--column-4">{file.category}</td>
+      </tr>
     );
   }
 

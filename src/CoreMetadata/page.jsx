@@ -20,7 +20,7 @@ class CoreMetadataPage extends Component {
   render() {
     return (
       <div>
-        <BackLink url='/files' label='Back to data overview' />
+        <BackLink url="/files" label="Back to data overview" />
         <div>
           <ColumnL>
             <ReduxFileTypePicture dictIcons={dictIcons} />
