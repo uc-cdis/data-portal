@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import dictIcons from '../img/icons/index';
 import IconComponent from '../components/Icon';
-
-const BACK_CAPTION = 'Back to data overview';
 
 export const BackComponent = styled.div`
   display: inline;
@@ -14,7 +13,7 @@ export const BackComponent = styled.div`
 class BackLink extends Component {
   render() {
     return (
-      <Link to={'/files'}>
+      <Link to={this.props.url}>
         <br />
         <BackComponent>
           <IconComponent
@@ -23,10 +22,15 @@ class BackLink extends Component {
             height="12px"
           />
         </BackComponent>
-        <BackComponent>{BACK_CAPTION}</BackComponent>
+        <BackComponent>{this.props.label}</BackComponent>
       </Link>
     );
   }
 }
+
+BackLink.propTypes = {
+  url: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+};
 
 export default BackLink;

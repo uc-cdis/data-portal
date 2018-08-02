@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Table from './base/Table';
+import Table from '../components/tables/base/Table';
 
 const TABLE_TITLE = 'More Data Info';
 

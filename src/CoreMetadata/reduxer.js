@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
-import CoreMetadataHeader from '../components/CoreMetadataHeader';
+import CoreMetadataHeader from './CoreMetadataHeader';
 import FileTypePicture from '../components/FileTypePicture';
-import CoreMetadataTable from '../components/tables/CoreMetadataTable';
+import CoreMetadataTable from './CoreMetadataTable';
 import { coreMetadataPath, userapiPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 

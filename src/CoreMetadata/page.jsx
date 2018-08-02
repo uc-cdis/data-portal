@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import BackLink from '../components/BackLink';
-import { ReduxCoreMetadataHeader } from './reduxer';
-import { ReduxFileTypePicture } from './reduxer';
-import { ReduxCoreMetadataTable } from './reduxer';
+import { ReduxCoreMetadataHeader, ReduxFileTypePicture, ReduxCoreMetadataTable } from './reduxer';
 import dictIcons from '../img/icons/file-icons/file-icons';
 
 export const ColumnL = styled.div`
@@ -22,7 +20,7 @@ class CoreMetadataPage extends Component {
   render() {
     return (
       <div>
-        <BackLink />
+        <BackLink url='/files' label='Back to data overview' />
         <div>
           <ColumnL>
             <ReduxFileTypePicture dictIcons={dictIcons} />
