@@ -17,6 +17,8 @@ import ProtectedContent from './Login/ProtectedContent';
 import HomePage from './Homepage/page';
 import DocumentPage from './Document/page';
 import ExplorerPage from './Explorer/ExplorerPage';
+import CoreMetadataPage from './CoreMetadata/page';
+import { fetchCoreMetadata } from './CoreMetadata/reduxer';
 import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/ReduxDataDictionary';
 import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
@@ -160,6 +162,19 @@ async function init() {
                       path="/dd"
                       component={
                         props => <ProtectedContent public component={DataDictionary} {...props} />
+                      }
+                    />
+                    <Route
+                      exact
+                      path="/files/:object_id"
+                      component={
+                        props => (<ProtectedContent
+                          filter={() =>
+                            store.dispatch(fetchCoreMetadata(props.match.params.object_id))
+                          }
+                          component={CoreMetadataPage}
+                          {...props}
+                        />)
                       }
                     />
                     <Route

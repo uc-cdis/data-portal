@@ -16,6 +16,7 @@ testCases=(
 for APP in "${!testCases[@]}"; do
   export APP
   export HOSTNAME="${testCases[$APP]}"
+  echo "Run setup for $APP $HOSTNAME"
   npm run schema
   npm run relay
 done

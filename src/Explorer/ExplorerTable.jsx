@@ -54,35 +54,6 @@ export class ExplorerTableComponent extends Component {
     onPageSizeChange: () => {},
   };
 
-  static renderFileName(user, projectAvail, projectID, did, name) {
-    const parts = projectID.split('-');
-    const program = parts[0];
-    parts.shift();
-    const project = parts.join('-');
-    let hasAccess = false;
-    if (projectID in projectAvail) {
-      if (projectAvail[projectID] === 'Open') {
-        hasAccess = true;
-      }
-    }
-    if ('project_access' in user && program in user.project_access) {
-      if (user.project_access[program].includes('read-storage')) {
-        hasAccess = true;
-      }
-    }
-    if ('project_access' in user && project in user.project_access) {
-      if (user.project_access[project].includes('read-storage')) {
-        hasAccess = true;
-      }
-    }
-    const filename = hasAccess ? (
-      <a key={name} href={`${userapiPath}data/download/${did}?expires_in=10&redirect`}>{name}</a>
-    ) : (
-      <span>{name}</span>
-    );
-    return filename;
-  }
-
   static humanFileSize(size) {
     const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
     const sizeStr = (size / (1024 ** i)).toFixed(2) * 1;
@@ -91,8 +62,6 @@ export class ExplorerTableComponent extends Component {
   }
 
   static renderRow(user, projectAvail, file, columnWidths, i) {
-    const filename = ExplorerTableComponent.renderFileName(user, projectAvail,
-      file.project_id, file.did, file.name);
     const filesize = ExplorerTableComponent.humanFileSize(file.size);
     return (
       <TableRow key={i}>
@@ -100,7 +69,7 @@ export class ExplorerTableComponent extends Component {
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
         </TableData>
         <TableData c_width={columnWidths[1]}>
-          {filename}
+          <Link to={`/files/${file.did}`}>{file.name}</Link>
         </TableData>
         <TableData c_width={columnWidths[2]}>{file.format}</TableData>
         <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{filesize}</TableData>
