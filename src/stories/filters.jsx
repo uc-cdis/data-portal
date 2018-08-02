@@ -25,15 +25,6 @@ const genderOptions = [
   { text: 'Female', filterType: 'singleSelect' },
 ];
 
-const ageOptions = [
-  {
-    text: 'Year of Birth',
-    filterType: 'range',
-    min: 1914,
-    max: 2018,
-  },
-];
-
 const raceOptions = [
   { text: 'White', filterType: 'singleSelect' },
   { text: 'Black', filterType: 'singleSelect' },
@@ -60,19 +51,6 @@ const fileTypeOptions = [
   { text: 'Metabolomic MS', filterType: 'singleSelect' },
 ];
 
-const fileFormatOptions = [
-  { text: 'BAM', filterType: 'singleSelect' },
-  { text: 'BED', filterType: 'singleSelect' },
-  { text: 'CSV', filterType: 'singleSelect' },
-  { text: 'FASTQ', filterType: 'singleSelect' },
-  { text: 'IDAT', filterType: 'singleSelect' },
-  { text: 'PNG', filterType: 'singleSelect' },
-  { text: 'RAW', filterType: 'singleSelect' },
-  { text: 'TAR', filterType: 'singleSelect' },
-  { text: 'TSV', filterType: 'singleSelect' },
-  { text: 'TXT', filterType: 'singleSelect' },
-];
-
 const projectSections = [
   { title: 'Project', options: projectOptions },
   { title: 'Study', options: studyOptions },
@@ -80,21 +58,43 @@ const projectSections = [
 
 const subjectSections = [
   { title: 'Gender', options: genderOptions },
-  { title: 'Year of Birth', options: ageOptions },
   { title: 'Race', options: raceOptions },
   { title: 'Ethnicity', options: ethnicityOptions },
 ];
 
 const fileSections = [
   { title: 'File Types', options: fileTypeOptions },
-  { title: 'File Formats', options: fileFormatOptions },
 ];
 
 const tabs = [
-  { sections: projectSections, title: 'Project' },
-  { sections: subjectSections, title: 'Subject' },
-  { sections: fileSections, title: 'File' },
+  <FilterList key={0} sections={projectSections} />,
+  <FilterList key={1} sections={subjectSections} />,
+  <FilterList key={2} sections={fileSections} />,
 ];
+
+const filterConfig = {
+  tabs: [{
+    title: 'Project',
+    fields: [
+      'project',
+      'study',
+    ],
+  },
+  {
+    title: 'Subject',
+    fields: [
+      'race',
+      'ethnicity',
+      'gender',
+    ],
+  },
+  {
+    title: 'File',
+    fields: [
+      'file_type',
+    ],
+  }],
+};
 
 storiesOf('Filters', module)
   .add('SingleSelectFilter', () => (
@@ -131,6 +131,7 @@ storiesOf('Filters', module)
   .add('FilterGroup', () => (
     <FilterGroup
       tabs={tabs}
+      filterConfig={filterConfig}
       onSelect={action('checked')}
       onDrag={action('range change')}
     />
