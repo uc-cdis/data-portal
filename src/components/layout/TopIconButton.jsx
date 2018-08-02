@@ -7,6 +7,9 @@ const TopIconButton = ({ dictIcons, item, onActiveTab = () => {}, isActive = fal
   <div
     className={isActive ? 'top-icon-button button-top-active body-typo' : 'top-icon-button body-typo'}
     onClick={onActiveTab}
+    onKeyDown={onActiveTab}
+    role="button"
+    tabIndex={0}
   >
     {item.name}&nbsp;{item.icon ? <IconComponent
       dictIcons={dictIcons}

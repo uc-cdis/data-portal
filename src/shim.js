@@ -1,4 +1,6 @@
 // needed to mute errors in console for tests
-global.requestAnimationFrame = function (callback) {
+const muteError = (callback) => {
   setTimeout(callback, 0);
 };
+
+global.requestAnimationFrame = muteError;

@@ -48,10 +48,38 @@ module.exports = {
       "files": [
         "src/Submission/SubmitTSV.test.jsx",
         "src/DataModelGraph/utils.js",
+        "src/DataModelGraph/utils.test.js",
         "src/actions.js",
       ],
       "rules": {
-        "no-console": "off"
+        "no-console": "off" // for logging errors
+      }
+    },
+    {
+      "files": [
+        "src/Submission/SubmitTSV.jsx",
+        "src/Submission/SubmissionResult.jsx",
+      ],
+      "rules": {
+        "no-unused-vars": "off" // for 'brace' - required by AceEditor
+      }
+    },
+    {
+      "files": [
+        "src/DataDictionary/GraphCreator.js",
+        "src/DataModelGraph/SvgGraph.jsx",
+        "src/DataModelGraph/testData.js",
+      ],
+      "rules": {
+        "no-param-reassign": "off" // for D3 charts
+      }
+    },
+    {
+      "files": [
+        "src/DataModelGraph/testData.js",
+      ],
+      "rules": {
+        "no-underscore-dange": "off" // for previously name var
       }
     }
   ],
