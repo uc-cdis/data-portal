@@ -25,7 +25,8 @@ class TopBar extends Component {
               this.props.topItems.map(
                 item => (
                   (item.link.startsWith('http')) ?
-                    <a className="top-bar__link"
+                    <a
+                      className="top-bar__link"
                       key={item.link}
                       href={item.link}
                       target="_blank"
@@ -53,12 +54,13 @@ class TopBar extends Component {
               )
             }
             {
-              this.props.user.username !== undefined && <Link className="top-bar__link" to="#" onClick={this.props.onLogoutClick}>
-                <TopIconButton
-                  dictIcons={this.props.dictIcons}
-                  item={{ name: this.props.user.username, icon: 'exit' }}
-                />
-              </Link>
+              this.props.user.username !== undefined 
+              && <Link className="top-bar__link" to="#" onClick={this.props.onLogoutClick}>
+                  <TopIconButton
+                    dictIcons={this.props.dictIcons}
+                    item={{ name: this.props.user.username, icon: 'exit' }}
+                 />
+                </Link>
             }
           </nav>
         </header>

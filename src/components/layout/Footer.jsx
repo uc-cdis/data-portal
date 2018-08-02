@@ -12,10 +12,12 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
           [{ name: 'Dictionary', version: dictionaryVersion },
             { name: 'Submission', version: apiVersion },
             { name: 'Portal', version: portalVersion }].map(
-            item => (<div className="footer__version" key={item.name}>
-              <div className="h4-typo footer__version-name">{item.name}</div>
-              <div className="body-typo footer__version-value">v{item.version}</div>
-            </div>),
+            item => (
+              <div className="footer__version" key={item.name}>
+                <div className="h4-typo footer__version-name">{item.name}</div>
+                <div className="body-typo footer__version-value">v{item.version}</div>
+              </div>
+            ),
           )
         }
       </div>
