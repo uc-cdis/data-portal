@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { assignNodePositions, createNodesAndEdges } from '../DataModelGraph/utils';
 import { createFullGraph, createAbridgedGraph } from './GraphCreator';
-import ToggleButton from '../DataModelGraph/ToggleButton';
-
 
 /**
  * Component handles rendering of dictionary types as a node graph
@@ -72,13 +70,11 @@ class DictionaryGraph extends React.Component {
           <span style={{ fontWeight: 'bold', fontStyle: 'italic' }}> Bold, italicized</span> properties are required
         </p>
         <div style={divStyle} id="graph_wrapper">
-          <ToggleButton style={{ marginBottom: '10px', zIndex: '10000' }}>
-            <button
-              id="toggle_button"
-              className="button-primary-white"
-              onClick={this.handleClick}
-            >Toggle view</button>
-          </ToggleButton>
+          <button
+            id="toggle_button"
+            className="button-primary-white"
+            onClick={this.handleClick}
+          >Toggle view</button>
           <div>
             <svg id="data_model_graph" />
           </div>

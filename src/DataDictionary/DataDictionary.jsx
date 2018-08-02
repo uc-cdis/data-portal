@@ -1,11 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
-import { Table, TableData, TableRow, TableHead } from '../theme';
 import { app } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
-
+import './DataDictionary.less';
 
 const subHeader = (() => {
   let message = 'This is a user-friendly interface for accessing the Data IcoDictionary';
@@ -21,14 +19,14 @@ const subHeader = (() => {
 })();
 
 const TableBullet = ({ node, description }) => (
-  <TableRow>
-    <TableData>
+  <tr className="data-dictionary__table-row">
+    <td className="data-dictionary__table-data">
       <Link to={`/dd/${node.id}`}> {node.title} </Link>
-    </TableData>
-    <TableData right>
+    </td>
+    <td className="data-dictionary__table-data data-dictionary__table-data--right">
       {description}
-    </TableData>
-  </TableRow>
+    </td>
+  </tr>
 );
 
 TableBullet.propTypes = {
@@ -41,14 +39,14 @@ TableBullet.defaultProps = {
 };
 
 const CategoryTable = ({ nodes, category }) => (
-  <Table>
-    <TableHead>
-      <TableRow>
-        <TableData first_cr>
+  <table className="data-dictionary__table">
+    <thead className="data-dictionary__table-head">
+      <tr className="data-dictionary__table-row">
+        <td className="data-dictionary__table-data data-dictionary__table-data--head">
           {capitalizeFirstLetter(category)}
-        </TableData>
-      </TableRow>
-    </TableHead>
+        </td>
+      </tr>
+    </thead>
 
     <tbody>
       {
@@ -61,7 +59,7 @@ const CategoryTable = ({ nodes, category }) => (
         )
       }
     </tbody>
-  </Table>
+  </table>
 );
 
 CategoryTable.propTypes = {

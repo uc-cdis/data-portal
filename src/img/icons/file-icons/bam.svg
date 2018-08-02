@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="152px" height="217px" viewBox="0 0 152 217" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51 (57462) - http://www.bohemiancoding.com/sketch -->
+    <title>BAM</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="BAM" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group">
+            <path d="M53.7376024,0 L53.245433,0.473720886 L53.245433,43.3834066 C53.245433,47.7771079 49.5168773,51.3719545 44.9597536,51.3719545 L0.454055232,51.3719545 L0,51.8105257 L0,209.011452 C0,213.405153 3.72855573,217 8.28567941,217 L142.879913,217 C147.437037,217 151.165592,213.405153 151.165592,209.011452 L151.165592,7.98854782 C151.165592,3.59484652 147.437037,0 142.879913,0 L53.7376024,0 Z" id="Fill-1" fill="#18A15E"></path>
+            <path d="M45.6446266,51.8566176 C50.2333233,51.8566176 53.9877115,48.250429 53.9877115,43.842865 L53.9877115,0.797794118 L0.830580177,51.8566176 L45.6446266,51.8566176 Z" id="Fill-7" fill="#7EC500"></path>
+            <polygon id="Fill-9" fill="#7EC500" points="85.5497583 16.7536765 102.991942 16.7536765 102.991942 0 85.5497583 0"></polygon>
+            <polygon id="Fill-11" fill="#7EC500" points="102.991942 33.5073529 120.434126 33.5073529 120.434126 16.7536765 102.991942 16.7536765"></polygon>
+            <polygon id="Fill-12" fill="#7EC500" points="85.5497583 49.4632353 102.991942 49.4632353 102.991942 32.7095588 85.5497583 32.7095588"></polygon>
+            <polygon id="Fill-13" fill="#7EC500" points="102.991942 66.2169118 120.434126 66.2169118 120.434126 49.4632353 102.991942 49.4632353"></polygon>
+            <polygon id="Fill-14" fill="#7EC500" points="85.5497583 82.1727941 102.991942 82.1727941 102.991942 65.4191176 85.5497583 65.4191176"></polygon>
+            <polygon id="Fill-16" fill="#7EC500" points="102.991942 106.106618 120.434126 106.106618 120.434126 78.9816176 102.991942 78.9816176"></polygon>
+        </g>
+        <text font-family="TTNorms-Bold, TT Norms" font-size="20" font-weight="bold" line-spacing="51" letter-spacing="1.058333" fill="#FFFFFF">
+            <tspan x="51.5228638" y="171.5625">BAM</tspan>
+        </text>
+        <g id="Group-2" transform="translate(25.000000, 67.000000)" fill="#000000" stroke="#000000" stroke-width="3">
+            <circle id="Oval-2" cx="20" cy="20" r="20"></circle>
+        </g>
+        <g id="Group-2" transform="translate(89.000000, 67.000000)" fill="#000000" stroke="#000000" stroke-width="3">
+            <circle id="Oval-2" cx="20" cy="20" r="20"></circle>
+        </g>
+        <circle id="Oval-4" fill="#FFFFFF" fill-rule="nonzero" cx="41" cy="82" r="8"></circle>
+        <circle id="Oval-4" fill="#FFFFFF" fill-rule="nonzero" cx="105" cy="82" r="8"></circle>
+        <circle id="Oval-4" fill="#FFFFFF" fill-rule="nonzero" cx="51" cy="94" r="4"></circle>
+        <circle id="Oval-4" fill="#FFFFFF" fill-rule="nonzero" cx="115" cy="94" r="4"></circle>
+        <g id="Group-3" transform="translate(18.000000, 114.000000)" fill-rule="nonzero">
+            <path d="M17.1887396,2 C29.5098861,6.37095607 39.3991174,10.8212762 62.5785345,10.8212762 C85.7579515,10.8212762 92.7018093,5.9521746 103.195119,2 C113.688429,-1.9521746 124.181739,9.13392439 113.688429,19.8755246 C103.195119,30.6171247 62.5785345,35.7555362 40.8325062,32.717002 C19.0864779,29.6784678 4.78582711,23.4471714 1.75369721,14.9090638 C-1.2784327,6.37095607 4.86759305,-2.37095607 17.1887396,2 Z" id="Path-17" stroke="#D0021B" stroke-width="2" fill="#000000"></path>
+            <polyline id="Path-18" fill="#D8D8D8" points="37.2467902 9.14313569 35.244423 17.173366 49.0818255 20.1503575 50.1014641 11.2062505"></polyline>
+            <polyline id="Path-19" fill="#D8D8D8" points="73.0604714 11.4125751 75.5585712 19.6318661 89.760518 16.6799458 88.0055805 8.93494106"></polyline>
+        </g>
+    </g>
+</svg>
