@@ -1,3 +1,6 @@
+import isEnabled from './featureFlags';
+import { params } from '../../data/parameters';
+
 jest.mock('../../data/parameters', () => ({
   params: {
     default: {
@@ -7,9 +10,6 @@ jest.mock('../../data/parameters', () => ({
     },
   },
 }));
-
-import isEnabled from './featureFlags';
-import { params } from '../../data/parameters';
 
 describe('featureFlags', () => {
   beforeEach(() => {

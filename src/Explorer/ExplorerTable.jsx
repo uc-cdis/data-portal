@@ -1,29 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { TableRow, TableHead } from '../theme';
-import { TableData, TableHeadCell,
-  TableFooter,
-  TableFootCell, PageButton, ArrowButton } from './style';
 import getReduxStore from '../reduxStore';
 import SelectComponent from '../components/SelectComponent';
 import { userapiPath } from '../localconf';
+import './ExplorerTable.less';
 
 const makeDefaultState = (page, pageSize, originalPage) => ({
   page,
   originalPage,
   pageSize,
 });
-
-export const ExplorerTableStyle = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  overflow: hidden;
-  font-size: 15px;
-
-`;
-
 
 export class ExplorerTableComponent extends Component {
   static propTypes = {
@@ -64,17 +51,17 @@ export class ExplorerTableComponent extends Component {
   static renderRow(user, projectAvail, file, columnWidths, i) {
     const filesize = ExplorerTableComponent.humanFileSize(file.size);
     return (
-      <TableRow key={i}>
-        <TableData c_width={columnWidths[0]}>
+      <tr className="explorer-table__table-row" key={i}>
+        <td className="explorer-table__table-data explorer-table__table-data--column-0">
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
-        </TableData>
-        <TableData c_width={columnWidths[1]}>
+        </td>
+        <td className="explorer-table__table-data explorer-table__table-data--column-1">
           <Link to={`/files/${file.did}`}>{file.name}</Link>
-        </TableData>
-        <TableData c_width={columnWidths[2]}>{file.format}</TableData>
-        <TableData c_width={columnWidths[3]} style={{ textAlign: 'right' }}>{filesize}</TableData>
-        <TableData c_width={columnWidths[4]}>{file.category}</TableData>
-      </TableRow>
+        </td>
+        <td className="explorer-table__table-data explorer-table__table-data--column-2">{file.format}</td>
+        <td className="explorer-table__table-data explorer-table__table-data--column-3">{filesize}</td>
+        <td className="explorer-table__table-data explorer-table__table-data--column-4">{file.category}</td>
+      </tr>
     );
   }
 
@@ -124,7 +111,6 @@ export class ExplorerTableComponent extends Component {
 
   render() {
     const columns = ['Project', 'File Name', 'Format', 'File Size', 'Category'];
-    const columnWidths = ['20%', '35%', '10%', '15%', '20%'];
     const specialAligns = { 'File Size': 'right' };
     const startingPage = (this.state.page - this.state.originalPage);
     const filesList = this.props.filesList
@@ -140,51 +126,55 @@ export class ExplorerTableComponent extends Component {
       }
     }
     return (
-      <ExplorerTableStyle>
-        <TableHead>
-          <TableRow>
+      <table className="explorer-table">
+        <thead className="explorer-table__table-head">
+          <tr className="explorer-table__table-row">
             {columns.map(
               (item, i) => (
                 (item in specialAligns) ?
-                  <TableHeadCell
+                  <td
+                    className={`explorer-table__table-data explorer-table__table-data--head-cell explorer-table__table-data--column-${i}`}
                     key={item}
-                    c_width={columnWidths[i]}
                     style={{ textAlign: specialAligns[item] }}
                   >
                     {item}
-                  </TableHeadCell>
+                  </td>
                   :
-                  <TableHeadCell key={item} c_width={columnWidths[i]}>
+                  <td
+                    className={`explorer-table__table-data explorer-table__table-data--head-cell explorer-table__table-data--column-${i}`}
+                    key={item}
+                  >
                     {item}
-                  </TableHeadCell>
+                  </td>
               ),
             )}
-          </TableRow>
-        </TableHead>
+          </tr>
+        </thead>
         <tbody>
           {
             filesList && filesList.map(
               (item, i) => ExplorerTableComponent.renderRow(this.props.user,
-                this.props.projectAvail, item, columnWidths, i),
+                this.props.projectAvail, item, i),
             )
           }
         </tbody>
-        <TableFooter>
-          <TableRow>
-            <TableFootCell c_width={'20%'}>
+        <tfoot className="explorer-table__table-foot">
+          <tr className="explorer-table__table-row">
+            <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-0">
               {
                 (this.state.originalPage > 0) &&
-                <ArrowButton onClick={() => this.loadMorePrev()}>
+                <button className="explorer-table__arrow-button" onClick={() => this.loadMorePrev()}>
                   Prev {this.props.pageCount}
-                </ArrowButton>
+                </button>
               }
-            </TableFootCell>
-            <TableFootCell c_width={'40%'}>
+            </td>
+            <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-1">
               {
-                pages.map(item =>
-                  (<PageButton
+                pages.map(item => (
+                  <button
+                    className={`explorer-table__page-button ${item === this.state.page ? 'explorer-table__page-button--active' : ''}`}
                     key={item}
-                    active={item === this.state.page}
+                    active={item === this.state.page ? 'true' : 'false'}
                     onClick={
                       () => {
                         this.setState({ page: item });
@@ -193,28 +183,29 @@ export class ExplorerTableComponent extends Component {
                     }
                   >
                     {item + 1}
-                  </PageButton>))
+                  </button>
+                ))
               }
-            </TableFootCell>
-            <TableFootCell c_width={'20%'}>
+            </td>
+            <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-2">
               <SelectComponent
                 values={pageSizeValues}
                 title={'Page size: '}
                 selectedValue={this.props.pageSize}
                 onChange={value => this.props.onPageSizeChange(value)}
               />
-            </TableFootCell>
-            <TableFootCell c_width={'20%'}>
+            </td>
+            <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-3">
               {
                 (this.props.lastPageSize === 0) &&
-                <ArrowButton onClick={() => this.loadMoreNext()}>
+                <button className="explorer-table__arrow-button" onClick={() => this.loadMoreNext()}>
                   Next {this.props.pageCount}
-                </ArrowButton>
+                </button>
               }
-            </TableFootCell>
-          </TableRow>
-        </TableFooter>
-      </ExplorerTableStyle>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
     );
   }
 }

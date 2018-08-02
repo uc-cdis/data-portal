@@ -2,22 +2,9 @@ import GraphiQL from 'graphiql';
 import { buildClientSchema } from 'graphql/utilities';
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { fetchGraphQL } from '../actions';
 import Spinner from '../components/Spinner';
-
-export const Title = styled.h2`
-  display: inline-block;
-  vertical-align: middle;
-  margin: 15px 0px;
-  margin-right: 0.5em;
-`;
-
-export const GraphBox = styled.div`
-  height: 90vh;
-  padding: 
-`;
-
+import './GqlEditor.less';
 
 const parameters = {};
 
@@ -35,8 +22,8 @@ const GqlEditor = ({ schema }) => {
 
   return (
     <div>
-      <GraphBox id="graphiql">
-        <Title>Query graph</Title>
+      <div className="gql-editor" id="graphiql">
+        <h2 className="gql-editor__title">Query graph</h2>
         <GraphiQL
           fetcher={fetchGraphQL}
           schema={graphqlSchema}
@@ -45,7 +32,7 @@ const GqlEditor = ({ schema }) => {
           onEditQuery={editQuery}
           onEditVariables={editVariables}
         />
-      </GraphBox>
+      </div>
     </div>
   );
 };
