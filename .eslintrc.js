@@ -79,8 +79,8 @@ module.exports = {
         "src/DataModelGraph/testData.js",
       ],
       "rules": {
-        "no-underscore-dange": "off" // for previously name var
+        "no-underscore-dangle": "off" // for previously named var
       }
-    }
+    },
   ],
 };
