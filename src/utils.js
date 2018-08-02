@@ -195,3 +195,5 @@ export function capitalizeFirstLetter(str) {
   const res = str.replace(/_/gi, ' ');
   return res.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 }
+
+export const parseParamWidth = width => ((typeof width === 'number') ? `${width}px` : width);

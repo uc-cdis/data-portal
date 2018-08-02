@@ -7,6 +7,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'react-select/dist/react-select.css';
 import querystring from 'querystring';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 
 import './css/base.less';
 import { fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
@@ -35,7 +37,7 @@ import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 import ReactGA from 'react-ga';
 import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
-import DataExplorer from './DataExplorer/DataExplorer';
+import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
 
 // Needed for onTouchTap
@@ -64,6 +66,8 @@ async function init() {
     ],
   );
   const background = '#f5f5f5'; // for now
+  // FontAwesome icons
+  library.add(faAngleUp, faAngleDown);
 
   render(
     <div>
@@ -209,7 +213,9 @@ async function init() {
                     { isEnabled('explorer') ?
                       <Route
                         path="/explorer"
-                        component={DataExplorer}
+                        component={
+                          props => <ProtectedContent component={DataExplorer} {...props} />
+                        }
                       />
                       : null
                     }

@@ -1388,6 +1388,65 @@ const params = {
     featureFlags: {
       explorer: true,
     },
+    arrangerConfig: {
+      charts: {
+        project: {
+          chartType: 'count',
+          title: 'Projects',
+        },
+        study: {
+          chartType: 'count',
+          title: 'Studies',
+        },
+        file_type: {
+          chartType: 'count',
+          title: 'File Types',
+        },
+        ethnicity: {
+          chartType: 'stackedBar',
+          title: 'Ethnicity',
+        },
+        gender: {
+          chartType: 'pie',
+          title: 'Gender',
+        },
+        race: {
+          chartType: 'pie',
+          title: 'Race',
+        },
+        vital_status: {
+          chartType: 'bar',
+          title: 'Vital Status',
+        },
+      },
+      filters: {
+        tabs: [{
+          title: 'Project',
+          fields: [
+            'project',
+            'study',
+          ],
+        },
+        {
+          title: 'Subject',
+          fields: [
+            'race',
+            'ethnicity',
+            'gender',
+            'vital_status',
+          ],
+        },
+        {
+          title: 'File',
+          fields: [
+            'file_type',
+          ],
+        }],
+      },
+      projectId: 'search',
+      graphqlField: 'subject',
+      index: '',
+    },
   },
 };
 

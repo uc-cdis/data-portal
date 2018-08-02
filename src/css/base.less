@@ -17,6 +17,7 @@
 @white: #ffffff;
 @medium: 500;
 @semi-bold: 600;
+@body-font: 'Source Sans Pro', sans-serif;
 
 @-webkit-keyframes color-change {
   0% { color: @gray; }
@@ -25,12 +26,16 @@
 }
 
 html, body {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: @body-font;
   margin: 0;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   max-height: 1080px;
+}
+
+div {
+  font-family: @body-font; // needed to override Arranger styles
 }
 
 .spacer {
@@ -312,4 +317,28 @@ ul {
 
   /* Support for IE. */
   font-feature-settings: 'liga';
+}
+
+.form-body {
+  font-size: 12px;
+  font-weight: regular;
+  line-height: 1em;
+  letter-spacing: .03rem;
+  color: @gray;
+}
+
+.form-special-number {
+  font-size: 18px; 
+  font-weight: @semi-bold; 
+  line-height: 1em; 
+  letter-spacing: .02rem; 
+  color: @blue;
+}
+
+.form-caption {
+  font-size: 10px;
+  font-weight: @semi-bold;
+  line-height: 1em;
+  letter-spacing: .02rem;
+  color: @blue;
 }

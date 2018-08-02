@@ -65,6 +65,8 @@ function buildConfig(opts) {
     'summary.iconColor': '#008000',
     'projectTable.summaryRowColor': '#eeeeee',
     'projectTable.submitButtonColor': '#dddddd',
+    'pieChartTwoColor.pie1Color': '#3283c8',
+    'pieChartTwoColor.pie2Color': '#e7e7e7',
     tableBarColor: '#7d7474',
   };
   const requiredCerts = [];

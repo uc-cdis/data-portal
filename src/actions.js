@@ -1,7 +1,6 @@
 import 'isomorphic-fetch';
 import { apiPath, userapiPath, headers, basename, submissionApiOauthPath, submissionApiPath, graphqlPath, graphqlSchemaUrl } from './configs';
 
-
 export const updatePopup = state => ({
   type: 'UPDATE_POPUP',
   data: state,
