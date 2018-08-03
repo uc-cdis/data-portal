@@ -88,6 +88,18 @@ module.exports = {
       "rules": {
         "no-loop-func": "off" // for D3 config
       }
+    },
+    {
+      "files": [ "src/Explorer/ExplorerTable.jsx" ],
+      "rules": {
+        "jsx-a11y/anchor-is-valid": "off" // for relative links
+      }
+    },
+    {
+      "files": [ "src/QueryNode/QueryForm.jsx" ],
+      "rules": {
+        "react/no-unused-state": "off" // state gets passed
+      }
     }
   ],
 };
