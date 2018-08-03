@@ -82,7 +82,7 @@ const SubmitTSV = ({ project, submission, onUploadClick, onSubmitClick, onFileCh
         mode={submission.file_type === 'text/tab-separated-values' ? '' : 'json'}
         theme="kuroir"
         value={submission.file}
-        editorProps={{ $blockScrolling: Infinity }}
+        editorProps={{ $blockScrolling: Infinity }} // mutes console warning
         onChange={onChange}
         id="uploaded"
       />

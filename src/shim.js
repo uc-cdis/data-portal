@@ -1,4 +1,4 @@
-// needed to mute errors in console for tests
+// needed to mute "TypeError: window.requestAnimationFrame is not a function"
 const muteError = (callback) => {
   setTimeout(callback, 0);
 };
