@@ -60,7 +60,7 @@ class TopBar extends Component {
                   dictIcons={this.props.dictIcons}
                   item={{ name: this.props.user.username, icon: 'exit' }}
                 />
-                </Link>
+              </Link>
             }
           </nav>
         </header>

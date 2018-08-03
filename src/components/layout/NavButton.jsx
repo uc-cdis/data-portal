@@ -5,8 +5,10 @@ import './NavButton.less';
 
 const NavButton = ({ dictIcons, item, onActiveTab, isActive }) => (
   <div
+    role="button"
     className={isActive ? 'body-typo button-active nav-button' : 'body-typo nav-button'}
     onClick={onActiveTab}
+    onKeyPress={onActiveTab}
   >
     <div className="nav-button__icon">
       <IconComponent iconName={item.icon} dictIcons={dictIcons} />

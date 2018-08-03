@@ -19,7 +19,7 @@ class NavBar extends Component {
     return (
       <div className="nav-bar">
         <header className="nav-bar__header">
-          <nav className="nav-bar__nav nav-bar__nav--left">
+          <nav className="nav-bar__nav--left">
             <div className="nav-bar__logo">
               <img
                 className="nav-bar__logo-img"
@@ -33,12 +33,12 @@ class NavBar extends Component {
               </Link>
             </div>
           </nav>
-          <nav className="nav-bar__nav nav-bar__nav--right">
+          <nav className="nav-bar__nav--right">
             {
               this.props.navItems.map(
                 item => (
                   (item.link.startsWith('http')) ?
-                    <a className="nav-bar__link" key={item.link} href={item.link}>
+                    <a className="nav-bar__link nav-bar__link--right" key={item.link} href={item.link}>
                       <NavButton
                         item={item}
                         dictIcons={this.props.dictIcons}
@@ -46,7 +46,7 @@ class NavBar extends Component {
                         onActiveTab={() => this.props.onActiveTab(item.link)}
                       />
                     </a> :
-                    <Link className="nav-bar__link" key={item.link} to={item.link}>
+                    <Link className="nav-bar__link nav-bar__link--right" key={item.link} to={item.link}>
                       <NavButton
                         item={item}
                         dictIcons={this.props.dictIcons}
