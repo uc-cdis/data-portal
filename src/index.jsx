@@ -10,7 +10,7 @@ import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 
-import './css/base.less';
+import '@gen3/ui-component/dist/css/base.less';
 import { fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
