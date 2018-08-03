@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import getReduxStore from '../reduxStore';
 import SelectComponent from '../components/SelectComponent';
-import { userapiPath } from '../localconf';
 import './ExplorerTable.less';
 
 const makeDefaultState = (page, pageSize, originalPage) => ({
@@ -64,39 +63,10 @@ class ExplorerTableComponent extends Component {
     this.props.onPageLoadPrevMore();
   }
 
-  static renderFileName(user, projectAvail, projectID, did, name) {
-    const parts = projectID.split('-');
-    const program = parts[0];
-    parts.shift();
-    const project = parts.join('-');
-    let hasAccess = false;
-    if (projectID in projectAvail) {
-      if (projectAvail[projectID] === 'Open') {
-        hasAccess = true;
-      }
-    }
-    if ('project_access' in user && program in user.project_access) {
-      if (user.project_access[program].includes('read-storage')) {
-        hasAccess = true;
-      }
-    }
-    if ('project_access' in user && project in user.project_access) {
-      if (user.project_access[project].includes('read-storage')) {
-        hasAccess = true;
-      }
-    }
-    const filename = hasAccess ? (
-      <a key={name} href={`${userapiPath}data/download/${did}?expires_in=10&redirect`}>{name}</a>
-    ) : (
-      <span>{name}</span>
-    );
-    return filename;
-  }
-
-  static renderRow(user, projectAvail, file, columnWidths, i) {
+  static renderRow(user, projectAvail, file, i) {
     const filesize = ExplorerTableComponent.humanFileSize(file.size);
     return (
-      <tr className="explorer-table__table-row" key={i}>
+      <tr key={i} className="explorer-table__table-row">
         <td className="explorer-table__table-data explorer-table__table-data--column-0">
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
         </td>
