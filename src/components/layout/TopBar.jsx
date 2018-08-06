@@ -16,7 +16,6 @@ TopIconButton.propTypes = {
 class TopBar extends Component {
   isActive = id => this.props.activeTab === id;
 
-
   render() {
     return (
       <div className="top-bar">
