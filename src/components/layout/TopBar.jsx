@@ -56,11 +56,11 @@ class TopBar extends Component {
             {
               this.props.user.username !== undefined
               && <Link className="top-bar__link" to="#" onClick={this.props.onLogoutClick}>
-                <TopIconButton
-                  dictIcons={this.props.dictIcons}
-                  item={{ name: this.props.user.username, icon: 'exit' }}
-                />
-              </Link>
+                  <TopIconButton
+                    dictIcons={this.props.dictIcons}
+                    item={{ name: this.props.user.username, icon: 'exit' }}
+                  />
+                </Link>
             }
           </nav>
         </header>

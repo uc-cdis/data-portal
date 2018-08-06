@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import IconComponent from '../Icon';
 import './NavButton.less';
 
-const NavButton = ({ dictIcons, item, onActiveTab, isActive }) => (
+const NavButton = ({ dictIcons, item, onActiveTab, isActive, tabIndex }) => (
   <div
     role="button"
+    tabIndex={tabIndex}
     className={isActive ? 'body-typo button-active nav-button' : 'body-typo nav-button'}
     onClick={onActiveTab}
     onKeyPress={onActiveTab}
@@ -22,6 +23,7 @@ NavButton.propTypes = {
   dictIcons: PropTypes.object.isRequired,
   isActive: PropTypes.bool.isRequired,
   onActiveTab: PropTypes.func.isRequired,
+  tabIndex: PropTypes.number.isRequired,
 };
 
 export default NavButton;

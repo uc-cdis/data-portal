@@ -27,7 +27,13 @@ class NavBar extends Component {
                 alt=""
               />
             </div>
-            <div className="nav-bar__home-button" onClick={() => this.props.onActiveTab('')}>
+            <div
+              role="button"
+              tabIndex={0}
+              className="nav-bar__home-button"
+              onClick={() => this.props.onActiveTab('')}
+              onKeyPress={() => this.props.onActiveTab('')}
+            >
               <Link className="h3-typo nav-bar__link nav-bar__link--home" to="">
                 {this.props.navTitle}
               </Link>
@@ -36,7 +42,7 @@ class NavBar extends Component {
           <nav className="nav-bar__nav--right">
             {
               this.props.navItems.map(
-                item => (
+                (item, index) => (
                   (item.link.startsWith('http')) ?
                     <a className="nav-bar__link nav-bar__link--right" key={item.link} href={item.link}>
                       <NavButton
@@ -44,6 +50,7 @@ class NavBar extends Component {
                         dictIcons={this.props.dictIcons}
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
+                        tabIndex={index + 1}
                       />
                     </a> :
                     <Link className="nav-bar__link nav-bar__link--right" key={item.link} to={item.link}>
@@ -52,6 +59,7 @@ class NavBar extends Component {
                         dictIcons={this.props.dictIcons}
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
+                        tabIndex={index + 1}
                       />
                     </Link>
                 ),
