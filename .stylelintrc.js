@@ -1,7 +1,4 @@
 module.exports = {
-  "plugins": [
-    "stylelint-selector-bem-pattern",
-  ],
   "rules": {
     "indentation": 2,
     "max-nesting-depth": 1,
