@@ -102,7 +102,6 @@
     "redux-mock-store": "^1.2.3",
     "relay-compiler-webpack-plugin": "^0.3.0",
     "stylelint": "^9.4.0",
-    "stylelint-selector-bem-pattern": "^2.0.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1",

@@ -3,14 +3,14 @@ module.exports = {
     "stylelint-selector-bem-pattern",
   ],
   "rules": {
-    "plugin/selector-bem-pattern": {
-      "componentName": "[a-z]+",
-      "componentSelectors": {
-        "initial": "^\\.{componentName}(?:-[a-z]+)?$",
-        "combined": "^\\.combined-{componentName}-[a-z]+$"
-      },
-      "utilitySelectors": "^\\.util-[a-z]+$"
-    },
+    "indentation": 2,
+    "max-nesting-depth": 1,
+    "declaration-colon-space-after": "always",
+    "declaration-colon-space-before": "never",
+    "declaration-block-semicolon-newline-after": "always",
+    "block-closing-brace-newline-after": "always",
+    "block-opening-brace-newline-after": "always",
+    "block-opening-brace-space-before": "always",
     "color-no-invalid-hex": true,
     "unit-no-unknown": true,
     "property-no-unknown": true,
@@ -20,12 +20,5 @@ module.exports = {
     "color-named": "always-where-possible",
     "declaration-no-important": true,
     "length-zero-no-unit": true,
-    "declaration-colon-space-after": "always",
-    "declaration-colon-space-before": "never",
-    "declaration-block-semicolon-newline-after": "always",
-    "block-closing-brace-newline-after": "always",
-    "block-opening-brace-newline-after": "always",
-    "block-opening-brace-space-before": "always",
-    "indentation": 2,
   },
 };
