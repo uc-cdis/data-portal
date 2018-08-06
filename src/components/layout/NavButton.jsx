@@ -1,45 +1,35 @@
 import React from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import IconComponent from '../Icon';
+import './NavButton.less';
 
-const NavDiv = styled.div`
-  padding: 16px 0px;
-  height: 80px;
-  width: 110px;
-  display: inline-block;
-  text-align: center;
-  opacity: 0.8;
-  &:hover {
-    opacity: 1;
-    border-bottom: 3px solid #ef8523;
-  }
-`;
-
-
-const NavIcon = styled.div`
-  vertical-align: middle;
-  padding-left: 4px;
-`;
-
-const NavButton = ({ dictIcons, item, onActiveTab, isActive }) => (
-  <NavDiv
-    className={isActive ? 'body-typo button-active' : 'body-typo'}
+const NavButton = ({
+  dictIcons,
+  item,
+  onActiveTab,
+  isActive,
+  tabIndex,
+}) => (
+  <div
+    role="button"
+    tabIndex={tabIndex}
+    className={isActive ? 'body-typo button-active nav-button' : 'body-typo nav-button'}
     onClick={onActiveTab}
+    onKeyPress={onActiveTab}
   >
-    <NavIcon>
+    <div className="nav-button__icon">
       <IconComponent iconName={item.icon} dictIcons={dictIcons} />
-    </NavIcon>
+    </div>
     {item.name}
-  </NavDiv>
+  </div>
 );
-
 
 NavButton.propTypes = {
   item: PropTypes.object.isRequired,
   dictIcons: PropTypes.object.isRequired,
   isActive: PropTypes.bool.isRequired,
   onActiveTab: PropTypes.func.isRequired,
+  tabIndex: PropTypes.number.isRequired,
 };
 
 export default NavButton;

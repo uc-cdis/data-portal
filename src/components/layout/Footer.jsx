@@ -1,83 +1,40 @@
-import styled from 'styled-components';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { portalVersion } from '../../versions';
 import IconComponent from '../Icon';
-
-const FooterSection = styled.footer`
-  width: 100%;
-  background-color: #4a4a4a;
-  text-align: center;
-  vertical-align: middle;
-  height: 100px;
-`;
-
-const FooterGroup = styled.nav`
-  width: 1220px;
-  color: white;
-  vertical-align: middle;
-  margin: auto;
-  text-align: left;
-`;
-
-const Versions = styled.div`
-  color: white;
-  width: 220px;
-  vertical-align: middle;
-  display: inline-block;
-  margin: auto;
-`;
-
-const FooterIcon = styled.div`
-  vertical-align: middle;
-  margin-left: 40px;
-  &:first-child {
-    margin-left: 0;
-  }
-  height: 100px;
-  position: relative;
-  display: table;
-`;
+import './Footer.less';
 
 const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
-  <FooterSection>
-    <FooterGroup>
-      <div style={{ display: 'inline-flex', float: 'left', width: '720px', height: '100px' }}>
+  <footer className="footer">
+    <nav className="footer__nav">
+      <div className="footer__version-area">
         {
           [{ name: 'Dictionary', version: dictionaryVersion },
             { name: 'Submission', version: apiVersion },
             { name: 'Portal', version: portalVersion }].map(
-            item => (<Versions key={item.name}>
-              <div className="h4-typo" style={{ color: 'white', verticalAlign: 'middle' }}>{item.name}</div>
-              <div className="body-typo" style={{ color: 'white', verticalAlign: 'middle' }}>v{item.version}</div>
-            </Versions>),
+            item => (
+              <div className="footer__version" key={item.name}>
+                <div className="h4-typo footer__version-name">{item.name}</div>
+                <div className="body-typo footer__version-value">v{item.version}</div>
+              </div>
+            ),
           )
         }
       </div>
-      <div style={{ display: 'inline-flex', width: '500px' }}>
-        <FooterIcon style={{ width: '70px' }}>
-          <div style={{ verticalAlign: 'middle',
-            display: 'table-cell',
-          }}
-          >
-            <a href={'https://cdis.uchicago.edu/gen3'} target="_blank" rel="noopener noreferrer"> {/* fixes security risk */}
-              <IconComponent dictIcons={dictIcons} iconName="gen3" height="37px" />
-            </a>
-          </div>
-        </FooterIcon>
-        <FooterIcon style={{ width: '390px' }}>
-          <div style={{ verticalAlign: 'middle',
-            display: 'table-cell',
-          }}
-          >
-            <a href={'https://cdis.uchicago.edu/'} target="_blank" rel="noopener noreferrer"> {/* fixes security risk */}
-              <IconComponent dictIcons={dictIcons} iconName="uchicago" height="37px" svgStyles={{ fill: '#ffffff' }} />
-            </a>
-          </div>
-        </FooterIcon>
+      <div className="footer__logo-area">
+        <div className="footer__icon footer__icon--gen3">
+          <a href={'https://cdis.uchicago.edu/gen3'} target="_blank">
+            <IconComponent dictIcons={dictIcons} iconName="gen3" height="37px" />
+          </a>
+        </div>
+        <div className="footer__icon footer__icon--uchicago">
+          <a href={'https://cdis.uchicago.edu/'} target="_blank">
+            <IconComponent dictIcons={dictIcons} iconName="uchicago" height="37px" svgStyles={{ fill: '#ffffff' }} />
+          </a>
+        </div>
       </div>
-    </FooterGroup>
-  </FooterSection>
+    </nav>
+  </footer>
 );
 
 Footer.propTypes = {

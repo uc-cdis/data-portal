@@ -1,9 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import FileSaver from 'file-saver';
 import copy from 'clipboard-plus';
-
 import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
 import { credentialCdisPath } from '../localconf';
@@ -11,16 +9,13 @@ import KeyTable from '../components/tables/KeyTable';
 import AccessTable from '../components/tables/AccessTable';
 import IconicButton from '../components/buttons/IconicButton';
 import dictIcons from '../img/icons/index';
+import './UserProfile.less';
 
 const NO_ACCESS_MSG = 'You have no access to storage service. Please contact an admin to get it!';
 const NO_API_KEY = 'You don\'t have any API key. Please create one!';
 const CONFIRM_DELETE_MSG = 'Are you sure you want to make this key inactive?';
 const SECRET_KEY_MSG = 'This secret key is only displayed this time. Please save it!';
 export const CREATE_API_KEY_BTN = 'Create API key';
-
-export const KeyPairTable = styled.ul`
-  overflow: hidden;
-`;
 
 export const saveToFile = (savingStr, filename) => {
   const blob = new Blob([savingStr], { type: 'text/json' });
@@ -45,7 +40,7 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
   };
 
   return (
-    <div style={{ padding: '40px 0px' }}>
+    <div className="user-profile">
       {
         userProfile.jtis === undefined &&
         <div>
@@ -54,7 +49,7 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
       }
       {
         userProfile.jtis !== undefined && userProfile.jtis !== [] &&
-        <KeyPairTable>
+        <ul className="user-profile__key-pair-table">
           {
             popups.deleteTokenPopup === true &&
             <Popup
@@ -141,7 +136,7 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
               }
             />
           }
-        </KeyPairTable>
+        </ul>
       }
       <AccessTable projects={submission.projects} projectsAccesses={user.project_access} />
     </div>

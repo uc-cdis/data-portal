@@ -1,0 +1,67 @@
+@import '~@gen3/ui-component/dist/css/base.less';
+
+.nav-bar {
+  width: 100%;
+  background-color: white;
+  border-bottom: 1px solid #d1d1d1;
+}
+
+.nav-bar__nav--left {
+  float: left;
+  display: inline-flex;
+}
+
+.nav-bar__nav--right {
+  float: right;
+  color: white;
+  overflow: hidden;
+}
+
+.nav-bar__header {
+  overflow: hidden;
+  margin: auto;
+  width: 1220px;
+}
+
+.nav-bar__link {
+  color: #606060;
+  display: inline-block;
+  text-align: center;
+}
+
+.nav-bar__link--right {
+  border-left: 1px solid #d1d1d1;
+}
+
+.nav-bar__link--right:last-child {
+  border-right: 1px solid #d1d1d1;
+}
+
+.nav-bar__link--home {
+  padding-top: 4px;
+}
+
+.nav-bar__link--home:hover {
+  color: @black;
+  opacity: 1;
+  border-bottom: 3px solid @orange;
+}
+
+.nav-bar__logo {
+  padding: 8px 0px;
+  display: inline-block;
+}
+
+.nav-bar__logo-img {
+  height: 64px;
+  display: block;
+  padding-right: 8px;
+  border-right: 1px solid #d1d1d1;
+}
+
+.nav-bar__home-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 10px;
+}

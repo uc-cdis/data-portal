@@ -1,80 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import NavButton from './NavButton';
-
-const NavLeft = styled.nav`
-  float: left;
-  display: inline-block;
-`;
-
-const Header = styled.header`
-  background-size: auto 48px;
-  background-repeat: no-repeat; 
-  background-color: white;
-  overflow: hidden;
-  margin: auto;
-  width: 1220px;
-  vertical-align: middle;
-`;
-
-const NavRight = styled.nav`
-  float: right;
-  color: white;
-  overflow: hidden;
-`;
-
-const NavHome = styled(Link)`
-  padding: 4px 0px 0px 0px;
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  color: #606060;
-  &:hover {
-    color: #000000;
-    border-bottom: 3px solid #ef8523;
-  }
-  &:active {
-    color: #000000;
-    border-bottom: 3px solid #ef8523;
-  }
-`;
-
-const NavLogo = styled.div`
-  padding: 8px 0px;
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  color: #606060;
-`;
-
-// TODO: due to issue https://github.com/styled-components/styled-components/issues/439,
-// bgcolor prop triggers react warning now, need to fix
-const NavItem = styled(Link)`
-  border-left: 1px solid #d1d1d1;
-  &:last-child {
-    border-right: 1px solid #d1d1d1;
-  }
-  height: 100%;
-  display: inline-block;
-  text-align: center;
-`;
-
-const NavA = styled.a`  
-  border-left: 1px solid #d1d1d1;
-  &:last-child {
-    border-right: 1px solid #d1d1d1;
-  }
-  height: 100%;
-  display: inline-block;
-  text-align: center;
-`;
-
-const HomeButton = styled.div`
-  padding: 0px 10px;
-  display: inline-block;
-`;
+import './NavBar.less';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
@@ -89,51 +17,56 @@ class NavBar extends Component {
 
   render() {
     return (
-      <div style={{ width: '100%', backgroundColor: 'white', borderBottom: '1px solid #d1d1d1' }}>
-        <Header>
-          <NavLeft>
-            <NavLogo>
+      <div className="nav-bar">
+        <header className="nav-bar__header">
+          <nav className="nav-bar__nav--left">
+            <div className="nav-bar__logo">
               <img
+                className="nav-bar__logo-img"
                 src="/src/img/logo.png"
-                style={{ height: '64px',
-                  display: 'block',
-                  paddingRight: '8px',
-                  borderRight: '1px solid #d1d1d1' }}
                 alt=""
               />
-            </NavLogo>
-            <HomeButton onClick={() => this.props.onActiveTab('')}>
-              <NavHome className="h3-typo" to="">
+            </div>
+            <div
+              role="button"
+              tabIndex={0}
+              className="nav-bar__home-button"
+              onClick={() => this.props.onActiveTab('')}
+              onKeyPress={() => this.props.onActiveTab('')}
+            >
+              <Link className="h3-typo nav-bar__link nav-bar__link--home" to="">
                 {this.props.navTitle}
-              </NavHome>
-            </HomeButton>
-          </NavLeft>
-          <NavRight>
+              </Link>
+            </div>
+          </nav>
+          <nav className="nav-bar__nav--right">
             {
               this.props.navItems.map(
-                item => (
+                (item, index) => (
                   (item.link.startsWith('http')) ?
-                    <NavA key={item.link} href={item.link}>
+                    <a className="nav-bar__link nav-bar__link--right" key={item.link} href={item.link}>
                       <NavButton
                         item={item}
                         dictIcons={this.props.dictIcons}
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
+                        tabIndex={index + 1}
                       />
-                    </NavA> :
-                    <NavItem key={item.link} to={item.link}>
+                    </a> :
+                    <Link className="nav-bar__link nav-bar__link--right" key={item.link} to={item.link}>
                       <NavButton
                         item={item}
                         dictIcons={this.props.dictIcons}
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
+                        tabIndex={index + 1}
                       />
-                    </NavItem>
+                    </Link>
                 ),
               )
             }
-          </NavRight>
-        </Header>
+          </nav>
+        </header>
       </div>
     );
   }

@@ -1,8 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
 import { fetchUser, fetchOAuthURL, fetchWithCreds, fetchProjects } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
@@ -11,13 +9,6 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 
 let lastAuthMs = 0;
 let lastTokenRefreshMs = 0;
-
-const Body = styled.div`
-  background: ${props => props.background};
-  margin-left: auto;
-  margin-right: auto;
-  width: 1220px;
-`;
 
 /**
  * Redux listener - just clears auth-cache on logout
@@ -61,7 +52,6 @@ export function intersection(aList, bList) {
  * @param history from react-router
  * @param match from react-router.match
  * @param public default false - set true to disable auth-guard
- * @param background passed through to <Box background> wrapper for page.jsx-level background
  * @param filter {() => Promise} optional filter to apply before rendering the child component
  */
 class ProtectedContent extends React.Component {
@@ -76,13 +66,11 @@ class ProtectedContent extends React.Component {
       },
     ).isRequired,
     public: PropTypes.bool,
-    background: PropTypes.string,
     filter: PropTypes.func,
   };
 
   static defaultProps = {
     public: false,
-    background: null,
     filter: null,
   };
 
@@ -302,32 +290,29 @@ class ProtectedContent extends React.Component {
       params = this.props.match.params || {};
     }
     window.scrollTo(0, 0);
-    const styleProps = {
-      background: this.props.background,
-    };
     if (this.state.redirectTo) {
       return (<Redirect to={this.state.redirectTo} />);
     } else if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
-        <Body {...styleProps}>
+        <div>
           <Component params={params} location={this.props.location} history={this.props.history} />
-        </Body>
+        </div>
       );
     } else if (!this.props.public && this.state.authenticated) {
       return (
-        <Body {...styleProps}>
+        <div>
           <ReduxAuthTimeoutPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
-        </Body>
+        </div>
       );
     } else if (this.props.public && this.state.dataLoaded) {
       return (
-        <Body {...styleProps}>
+        <div>
           <Component params={params} location={this.props.location} history={this.props.history} />
-        </Body>
+        </div>
       );
     }
-    return (<Body {...styleProps}><Spinner /></Body>);
+    return (<div><Spinner /></div>);
   }
 }
 
