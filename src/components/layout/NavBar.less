@@ -1,3 +1,5 @@
+@import '~@gen3/ui-component/dist/css/base.less';
+
 .nav-bar {
   width: 100%;
   background-color: white;
@@ -37,6 +39,12 @@
 
 .nav-bar__link--home {
   padding-top: 4px;
+}
+
+.nav-bar__link--home:hover {
+  color: @black;
+  opacity: 1;
+  border-bottom: 3px solid @orange;
 }
 
 .nav-bar__logo {
