@@ -33,6 +33,6 @@ describe('the Login component', () => {
         />
       </StaticRouter>,
     );
-    expect($vdom.find(LoginButton)).toHaveLength(testProps.providers.length);
+    expect($vdom.find('.login-page__entries')).toHaveLength(testProps.providers.length);
   });
 });

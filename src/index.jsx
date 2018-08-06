@@ -26,7 +26,7 @@ import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
 import CertificateQuiz from './Certificate/ReduxQuiz';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
-import { OuterWrapper, Box, theme } from './theme';
+import { theme } from './theme';
 import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar } from './Top/reduxer';
 import Footer from './components/layout/Footer';
@@ -39,6 +39,7 @@ import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
+import './index.less';
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -75,11 +76,11 @@ async function init() {
         <ThemeProvider theme={theme}>
           <MuiThemeProvider>
             <BrowserRouter basename={basename}>
-              <OuterWrapper>
+              <div>
                 { GA.init(gaTracking, dev, gaDebug) && <RouteTracker /> }
                 <ReduxTopBar />
                 <ReduxNavBar />
-                <Box background={background} style={{ width: '100%', margin: 'auto' }}>
+                <div className="main-content">
                   <Switch>
                     <Route
                       path="/login"
@@ -180,7 +181,7 @@ async function init() {
                     <Route
                       path="/files"
                       component={
-                        props => <ProtectedContent background={'#ecebeb'} component={ExplorerPage} {...props} />
+                        props => <ProtectedContent component={ExplorerPage} {...props} />
                       }
                     />
                     <Route
@@ -226,8 +227,8 @@ async function init() {
                       }
                     />
                   </Switch>
-                </Box>
-              </OuterWrapper>
+                </div>
+              </div>
             </BrowserRouter>
           </MuiThemeProvider>
         </ThemeProvider>

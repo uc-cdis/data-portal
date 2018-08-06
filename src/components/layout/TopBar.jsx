@@ -1,51 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
-
-const Header = styled.header`
-  background-color: #3283c8;
-  overflow: hidden;
-  vertical-align: middle;
-  margin: auto;
-  width: 1216px;
-`;
-
-const TopRight = styled.nav`
-  float: right;
-  color: white;
-  overflow: hidden;
-`;
-
-// TODO: due to issue https://github.com/styled-components/styled-components/issues/439,
-const TopItem = styled(Link)`
-  border-right: 2px solid #6896c6;
-  &:last-child {
-    border-right: 0px;
-  }
-  height: 20px;
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  padding: 0px 0px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-`;
-
-const TopA = styled.a`  
-  border-right: 2px solid #6896c6;
-  &:last-child {
-    border-right: 0px;
-  }
-  height: 20px;
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  padding: 0px 0px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-`;
+import './TopBar.less';
 
 TopIconButton.propTypes = {
   item: PropTypes.shape({ name: PropTypes.string, icon: PropTypes.string }).isRequired,
@@ -61,42 +18,52 @@ class TopBar extends Component {
 
   render() {
     return (
-      <div style={{ width: '100%', backgroundColor: '#3283c8' }}>
-        <Header>
-          <TopRight>
+      <div className="top-bar">
+        <header className="top-bar__header">
+          <nav className="top-bar__nav">
             {
               this.props.topItems.map(
                 item => (
                   (item.link.startsWith('http')) ?
-                    <TopA key={item.link} href={item.link} target="_blank">
+                    <a
+                      className="top-bar__link"
+                      key={item.link}
+                      href={item.link}
+                      target="_blank"
+                    >
                       <TopIconButton
                         dictIcons={this.props.dictIcons}
                         item={item}
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
                       />
-                    </TopA> :
-                    <TopItem key={item.link} to={item.link}>
+                    </a> :
+                    <Link
+                      className="top-bar__link"
+                      key={item.link}
+                      to={item.link}
+                    >
                       <TopIconButton
                         dictIcons={this.props.dictIcons}
                         item={item}
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
                       />
-                    </TopItem>
+                    </Link>
                 ),
               )
             }
             {
-              this.props.user.username !== undefined && <TopItem to="#" onClick={this.props.onLogoutClick}>
+              this.props.user.username !== undefined
+              && <Link className="top-bar__link" to="#" onClick={this.props.onLogoutClick}>
                 <TopIconButton
                   dictIcons={this.props.dictIcons}
                   item={{ name: this.props.user.username, icon: 'exit' }}
                 />
-              </TopItem>
+              </Link>
             }
-          </TopRight>
-        </Header>
+          </nav>
+        </header>
       </div>
     );
   }
