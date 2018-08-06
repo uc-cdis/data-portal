@@ -66,7 +66,6 @@ async function init() {
       }),
     ],
   );
-  const background = '#f5f5f5'; // for now
   // FontAwesome icons
   library.add(faAngleUp, faAngleDown);
 

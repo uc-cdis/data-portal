@@ -4,7 +4,7 @@ import { StaticRouter } from 'react-router-dom';
 
 import dictIcons from '../img/icons/sliding';
 import { components } from '../params';
-import Login, { LoginButton } from './Login';
+import Login from './Login';
 
 describe('the Login component', () => {
   const testProps = {

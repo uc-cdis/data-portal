@@ -23,12 +23,12 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
       </div>
       <div className="footer__logo-area">
         <div className="footer__icon footer__icon--gen3">
-          <a href={'https://cdis.uchicago.edu/gen3'} target="_blank">
+          <a href={'https://cdis.uchicago.edu/gen3'} target="_blank" rel="noopener noreferrer"> {/* fixes security risk */}
             <IconComponent dictIcons={dictIcons} iconName="gen3" height="37px" />
           </a>
         </div>
         <div className="footer__icon footer__icon--uchicago">
-          <a href={'https://cdis.uchicago.edu/'} target="_blank">
+          <a href={'https://cdis.uchicago.edu/'} target="_blank" rel="noopener noreferrer"> {/* fixes security risk */}
             <IconComponent dictIcons={dictIcons} iconName="uchicago" height="37px" svgStyles={{ fill: '#ffffff' }} />
           </a>
         </div>
