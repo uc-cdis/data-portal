@@ -3,7 +3,13 @@ import PropTypes from 'prop-types';
 import IconComponent from '../Icon';
 import './NavButton.less';
 
-const NavButton = ({ dictIcons, item, onActiveTab, isActive, tabIndex }) => (
+const NavButton = ({
+  dictIcons,
+  item,
+  onActiveTab,
+  isActive,
+  tabIndex,
+}) => (
   <div
     role="button"
     tabIndex={tabIndex}
