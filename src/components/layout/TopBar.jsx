@@ -16,6 +16,7 @@ TopIconButton.propTypes = {
 class TopBar extends Component {
   isActive = id => this.props.activeTab === id;
 
+
   render() {
     return (
       <div className="top-bar">
@@ -60,7 +61,7 @@ class TopBar extends Component {
                   dictIcons={this.props.dictIcons}
                   item={{ name: this.props.user.username, icon: 'exit' }}
                 />
-                 </Link>
+              </Link>
             }
           </nav>
         </header>
