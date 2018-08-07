@@ -131,7 +131,7 @@
     "eslint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --fix src",
     "elint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'",
     "storybook": "start-storybook -p 9001 -c .storybook",
-    "stylelint": "stylelint **/*.less **/.css --config .stylelintrc.js --fix"
+    "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --config .stylelintrc.js --fix"
   },
   "graphql": {
     "file": "./data/schema.json"
