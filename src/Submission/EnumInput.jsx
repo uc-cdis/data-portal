@@ -54,3 +54,5 @@ class EnumInput extends Component {
     );
   }
 }
+
+export default EnumInput;

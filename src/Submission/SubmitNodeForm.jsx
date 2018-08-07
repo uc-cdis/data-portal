@@ -1,3 +1,4 @@
+import React from 'react';
 import OneOfInput from './OneOfInput';
 import EnumInput from './EnumInput';
 import AnyOfInput from './AnyOfInput';
@@ -101,7 +102,8 @@ SubmitNodeForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
 };
 
-
 SubmitNodeForm.defaultProps = {
   requireds: [],
 };
+
+export default SubmitNodeForm;
