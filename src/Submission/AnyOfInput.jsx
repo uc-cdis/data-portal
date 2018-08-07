@@ -3,7 +3,15 @@ import PropTypes from 'prop-types';
 import TextInput from './TextInput';
 import './AnyOfInput.less';
 
-const AnyOfInput = ({ name, values, node, properties, required, requireds, onChange }) => {
+const AnyOfInput = ({
+  name,
+  values,
+  node,
+  properties,
+  required,
+  requireds,
+  onChange,
+}) => {
   // this is smelly code because it reuses logic from SubmitNodeForm,
   // I'd like to extract some of the code into another function
 
