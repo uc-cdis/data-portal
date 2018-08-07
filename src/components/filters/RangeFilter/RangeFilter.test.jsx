@@ -5,7 +5,7 @@ import RangeFilter from '.';
 describe('RangeFilter', () => {
   const onDrag = jest.fn();
   const component = mount(
-    <RangeFilter min={0} max={100} onDrag={onDrag} />,
+    <RangeFilter min={0} max={100} onDrag={onDrag} label='' />,
   );
 
   it('renders', () => {
