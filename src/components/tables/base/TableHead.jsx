@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Table from './Table';
 
 export const THead = styled.thead`
   height: 36px;

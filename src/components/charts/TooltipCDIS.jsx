@@ -16,11 +16,11 @@ class TooltipCDIS extends React.Component {
       const txts = label.split('#');
       const number = parseInt(txts[0], 10);
       return (
-        <TooltipPopup className="custom-tooltip">
+        <TooltipPopup className='custom-tooltip'>
           <h2>{`${txts[1]}`}</h2>
           {
             payload.map(
-              item => <div key={item.name} style={{ color: `${item.fill}` }} className="body-typo">{`${item.name} : ${Math.round((item.value / 100) * number)}`}</div>,
+              item => <div key={item.name} style={{ color: `${item.fill}` }} className='body-typo'>{`${item.name} : ${Math.round((item.value / 100) * number)}`}</div>,
             )
           }
         </TooltipPopup>

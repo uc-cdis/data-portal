@@ -15,15 +15,15 @@ const AnalysisApp = ({ app, submitJob, job }) => {
       <h3>{app.name}</h3>
       <p>{app.description}</p>
       <form onSubmit={onSubmitJob}>
-        <input className="text-input" type="text" placeholder="input data" name="input" />
-        <button href="#" className="button button-primary-orange" onSubmit={onSubmitJob} >Run simulation</button>
+        <input className='text-input' type='text' placeholder='input data' name='input' />
+        <button href='#' className='button button-primary-orange' onSubmit={onSubmitJob} >Run simulation</button>
       </form>
       {isJobRunning() &&
-        <p className="analysis__job-status">Job running... </p>
+        <p className='analysis__job-status'>Job running... </p>
       }
       {/* TODO: only render if result is a image */}
       {(job && job.status === 'Completed') &&
-        <img className="analysis__result-image" src={job.resultURL} alt="analysis result" />
+        <img className='analysis__result-image' src={job.resultURL} alt='analysis result' />
       }
     </div>
 

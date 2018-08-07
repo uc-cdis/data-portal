@@ -126,12 +126,12 @@ class IndexBarChart extends React.Component {
     let countBar = 0;
     return (
       <FloatBox>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width='100%' height='100%'>
           <BarChart
             onClick={(e) => { browserHistory.push(`/${e.activeLabel}`); window.location.reload(false); }}
             data={indexChart}
             margin={{ top: 20, right: 0, left: 250, bottom: 5 }}
-            layout="vertical"
+            layout='vertical'
           >
             <h4>Project Submission status</h4>
             <XAxis
@@ -140,13 +140,13 @@ class IndexBarChart extends React.Component {
               domain={[0, 100]}
               ticks={[0, 25, 50, 75, 100]}
               allowDecimals={false}
-              unit="%"
-              type="number"
+              unit='%'
+              type='number'
             />
             <YAxis
-              dataKey="name"
+              dataKey='name'
               tick={<Tick />}
-              type="category"
+              type='category'
               axisLine={false}
               tickLine={false}
             />
@@ -161,7 +161,7 @@ class IndexBarChart extends React.Component {
                       key={projectNames[index] + countBar.toString()}
                       name={projectNames[index]}
                       dataKey={barName}
-                      stackId="a"
+                      stackId='a'
                       fill={localTheme[`barGraph.bar${(index + 1).toString()}Color`]}
                     />
                   );

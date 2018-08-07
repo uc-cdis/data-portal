@@ -36,13 +36,13 @@ const summaries = [
 
 storiesOf('Chart', module)
   .add('SummaryHorizontalBarChart', () => (
-    <SummaryHorizontalBarChart data={chartData} title="bar chart title" localTheme={localTheme} showPercentage={false} />
+    <SummaryHorizontalBarChart data={chartData} title='bar chart title' localTheme={localTheme} showPercentage={false} />
   ))
   .add('SummaryHorizontalBarChart with single color and percentage', () => (
-    <SummaryHorizontalBarChart data={chartData} title="bar chart title" color="#3283c8" localTheme={localTheme} />
+    <SummaryHorizontalBarChart data={chartData} title='bar chart title' color='#3283c8' localTheme={localTheme} />
   ))
   .add('SummaryPieChart', () => (
-    <SummaryPieChart data={chartData} title="pie chart title" localTheme={localTheme} showPercentage />
+    <SummaryPieChart data={chartData} title='pie chart title' localTheme={localTheme} showPercentage />
   ))
   .add('SummaryChartGroup', () => (
     <SummaryChartGroup summaries={summaries} width={1010} localTheme={localTheme} />

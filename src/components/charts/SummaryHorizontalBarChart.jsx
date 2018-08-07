@@ -34,21 +34,21 @@ class SummaryBarChart extends React.Component {
     );
     const dataKey = helper.getDataKey(this.props.showPercentage);
     return (
-      <div className="summary-horizontal-bar-chart">
-        <div className="summary-horizontal-bar-chart__title h4-typo">
+      <div className='summary-horizontal-bar-chart'>
+        <div className='summary-horizontal-bar-chart__title h4-typo'>
           {this.props.title}
         </div>
-        <ResponsiveContainer width="100%" height={barChartHeight}>
+        <ResponsiveContainer width='100%' height={barChartHeight}>
           <BarChart
-            layout="vertical"
+            layout='vertical'
             data={barChartData}
             barCategoryGap={this.props.barGap}
             barSize={this.props.barSize}
             margin={{ top: 4, right: 35, left: 15 }}
           >
             <Tooltip formatter={helper.percentageFormatter(this.props.showPercentage)} />
-            <XAxis axisLine={false} tickLine={false} type="number" hide />
-            <YAxis axisLine={false} tickLine={false} dataKey="name" type="category" style={yAxisStyle} interval={0} />
+            <XAxis axisLine={false} tickLine={false} type='number' hide />
+            <YAxis axisLine={false} tickLine={false} dataKey='name' type='category' style={yAxisStyle} interval={0} />
             <Bar dataKey={dataKey}>
               {
                 barChartData.map((entry, index) => (
@@ -59,7 +59,7 @@ class SummaryBarChart extends React.Component {
                   />
                 ))
               }
-              <LabelList dataKey={dataKey} position="right" offset={8} style={labelValueStyle} formatter={helper.percentageFormatter(this.props.showPercentage)} />
+              <LabelList dataKey={dataKey} position='right' offset={8} style={labelValueStyle} formatter={helper.percentageFormatter(this.props.showPercentage)} />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

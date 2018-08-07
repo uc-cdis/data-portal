@@ -32,8 +32,8 @@ class Introduction extends Component {
   render() {
     return (
       <IntroDiv>
-        <IntroTitle className="h1-typo">{this.props.data.heading}</IntroTitle>
-        <IntroText className="high-light">{this.props.data.text}</IntroText>
+        <IntroTitle className='h1-typo'>{this.props.data.heading}</IntroTitle>
+        <IntroText className='high-light'>{this.props.data.text}</IntroText>
         <IconicLink
           link={this.props.data.link}
           dictIcons={this.props.dictIcons}
@@ -42,9 +42,9 @@ class Introduction extends Component {
             marginRight: 'auto',
             marginBottom: '75px',
           }}
-          icon="upload"
-          iconColor="#"
-          caption="Submit Data"
+          icon='upload'
+          iconColor='#'
+          caption='Submit Data'
         />
       </IntroDiv>
     );

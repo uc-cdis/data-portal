@@ -40,7 +40,7 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
   };
 
   return (
-    <div className="user-profile">
+    <div className='user-profile'>
       {
         userProfile.jtis === undefined &&
         <div>
@@ -49,14 +49,14 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
       }
       {
         userProfile.jtis !== undefined && userProfile.jtis !== [] &&
-        <ul className="user-profile__key-pair-table">
+        <ul className='user-profile__key-pair-table'>
           {
             popups.deleteTokenPopup === true &&
             <Popup
               message={CONFIRM_DELETE_MSG}
               error={jsonToString(userProfile.delete_error)}
-              iconName="cross-key"
-              title="Inactivate API Key"
+              iconName='cross-key'
+              title='Inactivate API Key'
               leftButtons={[
                 {
                   caption: 'Cancel',
@@ -88,8 +88,8 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
                   code: userProfile.refreshCred.api_key.replace(/./g, '*'),
                 },
               ]}
-              iconName="key"
-              title="Created API Key"
+              iconName='key'
+              title='Created API Key'
               leftButtons={[
                 {
                   caption: 'Close',
@@ -115,8 +115,8 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
             onClick={onCreate}
             caption={CREATE_API_KEY_BTN}
             dictIcons={dictIcons}
-            icon="key"
-            buttonClassName="button-primary-orange"
+            icon='key'
+            buttonClassName='button-primary-orange'
           />
           {
             userProfile.jtis.length === 0 &&

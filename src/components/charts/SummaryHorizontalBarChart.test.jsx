@@ -14,7 +14,7 @@ describe('<SummaryHorizontalBarChart />', () => {
   ];
 
   const wrapper = mount(
-    <SummaryHorizontalBarChart data={chartData} title="bar chart title" color="#3283c8" localTheme={localTheme} />,
+    <SummaryHorizontalBarChart data={chartData} title='bar chart title' color='#3283c8' localTheme={localTheme} />,
   );
   const charts = wrapper.find(SummaryHorizontalBarChart);
 

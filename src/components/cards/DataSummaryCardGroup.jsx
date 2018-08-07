@@ -9,7 +9,7 @@ class DataSummaryCardGroup extends Component {
     const totalWidth = parseParamWidth(this.props.width);
     return (
       <div
-        className="data-summary-card-group"
+        className='data-summary-card-group'
         style={{
           width: totalWidth,
           height: this.props.height,
@@ -22,7 +22,7 @@ class DataSummaryCardGroup extends Component {
               key={item.label || item[0].label}
             >
               {this.props.connected && index > 0
-                && <div className="left-border" />
+                && <div className='left-border' />
               }
               {
                 !item.length ? (
@@ -32,12 +32,12 @@ class DataSummaryCardGroup extends Component {
                     align={this.props.align}
                   />
                 ) : (
-                  <div className="data-summary-card-group__sub-card-group">
+                  <div className='data-summary-card-group__sub-card-group'>
                     {
                       item.map((subItem, subIndex) => (
-                        <div className="data-summary-card-group__sub-card-item" key={subItem.label}>
+                        <div className='data-summary-card-group__sub-card-item' key={subItem.label}>
                           {subIndex > 0
-                            && <div className="left-border" />
+                            && <div className='left-border' />
                           }
                           <CountBox
                             label={subItem.label}

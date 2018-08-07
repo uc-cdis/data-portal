@@ -11,13 +11,13 @@ const NavButton = ({
   tabIndex,
 }) => (
   <div
-    role="button"
+    role='button'
     tabIndex={tabIndex}
     className={isActive ? 'body-typo button-active nav-button' : 'body-typo nav-button'}
     onClick={onActiveTab}
     onKeyPress={onActiveTab}
   >
-    <div className="nav-button__icon">
+    <div className='nav-button__icon'>
       <IconComponent iconName={item.icon} dictIcons={dictIcons} />
     </div>
     {item.name}

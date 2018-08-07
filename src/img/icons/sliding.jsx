@@ -9,14 +9,14 @@ const dictIcons = {
         width={width}
         height={height}
         style={{ ...customedStyles }}
-        preserveAspectRatio="xMinYMin slice"
+        preserveAspectRatio='xMinYMin slice'
       />);
     }
     return (<IcoGene
       height={height}
       viewBox={`0 ${scrollY} ${scrollX + 211} ${scrollY + height}`}
       style={{ ...customedStyles }}
-      preserveAspectRatio="xMinYMin slice"
+      preserveAspectRatio='xMinYMin slice'
     />);
   },
 };

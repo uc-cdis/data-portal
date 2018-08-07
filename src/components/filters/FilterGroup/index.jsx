@@ -16,26 +16,26 @@ class FilterGroup extends React.Component {
 
   render() {
     return (
-      <div className="filter-group">
-        <div className="filter-group__tabs">
+      <div className='filter-group'>
+        <div className='filter-group__tabs'>
           {
             this.props.tabs.map((tab, index) => (
               <div
                 key={index}
-                role="button"
+                role='button'
                 tabIndex={index}
                 className={'filter-group__tab'.concat(this.state.selectedTabIndex === index ? ' filter-group__tab--selected' : '')}
                 onClick={() => this.selectTab(index)}
                 onKeyDown={() => this.selectTab(index)}
               >
-                <p className="filter-group__tab-title">
+                <p className='filter-group__tab-title'>
                   {this.props.filterConfig.tabs[tab.key].title}
                 </p>
               </div>
             ))
           }
         </div>
-        <div className="filter-group__filter-area">
+        <div className='filter-group__filter-area'>
           {React.cloneElement(this.props.tabs[this.state.selectedTabIndex], { ...this.props })}
         </div>
       </div>

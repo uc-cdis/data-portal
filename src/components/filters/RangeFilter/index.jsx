@@ -23,14 +23,14 @@ class RangeFilter extends React.Component {
 
   render() {
     return (
-      <div className="range-filter">
-        <p className="range-filter__title">{this.props.label}</p>
-        <div className="range-filter__bounds">
+      <div className='range-filter'>
+        <p className='range-filter__title'>{this.props.label}</p>
+        <div className='range-filter__bounds'>
           <p>{this.state.lowerBound}</p>
           <p>{this.state.upperBound}</p>
         </div>
         <Range
-          className="range-filter__slider"
+          className='range-filter__slider'
           min={this.props.min}
           max={this.props.max}
           value={[this.state.lowerBound, this.state.upperBound]}
