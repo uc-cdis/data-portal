@@ -25,7 +25,7 @@ function dataFormatToFileType(dictIcons, dataFormat) {
 
 class FileTypePicture extends Component {
   render() {
-    const dataFormat = this.props.metadata ? this.props.metadata.data_format : 'file'
+    const dataFormat = this.props.metadata ? this.props.metadata.data_format : 'file';
     const fileType = dataFormatToFileType(this.props.dictIcons, dataFormat);
     if (!fileType) return null;
     const content = (

@@ -22,7 +22,7 @@ function fieldInTable(fieldName) {
 }
 
 class CoreMetadataTable extends Component {
-  dataTransform = metadata => metadata ?
+  dataTransform = metadata => (metadata ?
     Object.keys(metadata)
       .sort() // alphabetical order
       .filter(key => fieldInTable(key))
@@ -30,7 +30,7 @@ class CoreMetadataTable extends Component {
         <TitleCell>{firstCharToUppercase(key)}</TitleCell>,
         metadata[key],
       ])
-    : [];
+    : []);
 
   render() {
     return (
