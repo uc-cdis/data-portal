@@ -37,7 +37,7 @@ IconicLink.propTypes = {
   iconColor: PropTypes.string,
   caption: PropTypes.string,
   orangeButton: PropTypes.bool,
-  className: PropTypes.string, 
+  className: PropTypes.string,
 };
 
 IconicLink.defaultProps = {

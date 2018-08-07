@@ -6,7 +6,7 @@ import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
 import './QueryNode.less';
 
-const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
+const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo, tabindexStart }) => {
   const onDelete = () => {
     onStoreNodeInfo({ project, id: value.id }).then(
       () => onUpdatePopup({ nodedelete_popup: true }),
@@ -18,9 +18,9 @@ const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
   return (
     <li>
       <span>{value.submitter_id}</span>
-      <a className='query-node__button query-node__button--download' href={`${getSubmitPath(project)}/export?format=json&ids=${value.id}`}>Download</a>
-      <a className='query-node__button query-node__button--view' onClick={onView}>View</a>
-      <a className='query-node__button query-node__button--delete' onClick={onDelete}>Delete</a>
+      <a role='button' tabIndex={tabindexStart} className='query-node__button query-node__button--download' href={`${getSubmitPath(project)}/export?format=json&ids=${value.id}`}>Download</a>
+      <a role='button' tabIndex={tabindexStart + 1} className='query-node__button query-node__button--view' onClick={onView}>View</a>
+      <a role='button' tabIndex={tabindexStart + 2} className='query-node__button query-node__button--delete' onClick={onDelete}>Delete</a>
     </li>
   );
 };
@@ -28,6 +28,7 @@ const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
 Entity.propTypes = {
   project: PropTypes.string.isRequired,
   value: PropTypes.object.isRequired,
+  tabindexStart: PropTypes.number.isRequired,
   onUpdatePopup: PropTypes.func,
   onStoreNodeInfo: PropTypes.func,
 };
@@ -43,12 +44,13 @@ const Entities = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => (
   <ul>
     {
       value.map(
-        v => (<Entity
+        (v, i) => (<Entity
           project={project}
           onStoreNodeInfo={onStoreNodeInfo}
           onUpdatePopup={onUpdatePopup}
           key={v.submitter_id}
           value={v}
+          tabindexStart={i * 3}
         />),
       )
     }

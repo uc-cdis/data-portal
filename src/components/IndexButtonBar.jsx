@@ -11,23 +11,23 @@ import './IndexButtonBar.less';
 class IndexButtonBar extends Component {
   render() {
     return (
-      <div className="index-button-bar">
+      <div className='index-button-bar'>
         {
           this.props.buttons.map(
             item => (
-              <div className="index-button-bar__thumbnail-button" key={item.name}>
-                <div className="h3-typo index-button-bar__thumbnail-title">{item.name}</div>
-                <div className="index-button-bar__icon">
+              <div className='index-button-bar__thumbnail-button' key={item.name}>
+                <div className='h3-typo index-button-bar__thumbnail-title'>{item.name}</div>
+                <div className='index-button-bar__icon'>
                   <IconComponent
                     dictIcons={this.props.dictIcons}
                     iconName={item.icon}
                     height='90px'
                   />
                 </div>
-                <div className="body-typo index-button-bar__thumbnail-text">{item.body}</div>
+                <div className='body-typo index-button-bar__thumbnail-text'>{item.body}</div>
                 {
                   item.link.startsWith('http') ?
-                    <a className="index-button-bar__item" href={item.link}>
+                    <a className='index-button-bar__item' href={item.link}>
                       <button
                         className='button-primary-orange'
                         onClick={() => this.props.onActiveTab(item.link)}
@@ -35,7 +35,7 @@ class IndexButtonBar extends Component {
                         {item.label}
                       </button>
                     </a> :
-                    <Link className="index-button-bar__item" to={item.link}>
+                    <Link className='index-button-bar__item' to={item.link}>
                       <button
                         className='button-primary-orange'
                         onClick={() => this.props.onActiveTab(item.link)}

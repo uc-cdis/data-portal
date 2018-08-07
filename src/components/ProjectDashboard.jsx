@@ -9,8 +9,8 @@ class ProjectDashboard extends Component {
     const projectList = this.props.projectList || [];
     return (
       <React.Fragment>
-        <div className="project-dashboard">
-          <div className="h1-typo project-dashboard__title">
+        <div className='project-dashboard'>
+          <div className='h1-typo project-dashboard__title'>
             Data Submission Summary
           </div>
           <DataSummaryCardGroup

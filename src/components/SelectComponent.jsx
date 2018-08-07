@@ -6,7 +6,7 @@ import './SelectComponent.less';
 const makeDefaultSelectedState = value => ({
   selectedValue: value,
 });
- 
+
 export default class SelectComponent extends Component {
   static propTypes = {
     title: PropTypes.string,
@@ -49,10 +49,10 @@ export default class SelectComponent extends Component {
     const options = this.props.values.map(value => ({ value, label: value }));
 
     return (
-      <div className="selection">
-        <span className="selection__title">{this.props.title}</span>
+      <div className='selection'>
+        <span className='selection__title'>{this.props.title}</span>
         <Select
-          className="selection__select"
+          className='selection__select'
           name={this.props.title}
           options={options}
           value={this.state.selectedValue}

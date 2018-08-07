@@ -10,10 +10,10 @@ const Popup = ({
   iconName, leftButtons, rightButtons,
   onClose,
 }) => (
-  <div className="popup__mask">
-    <div className="popup__box">
-      <div className="popup__title">
-        <div className="popup__icon">
+  <div className='popup__mask'>
+    <div className='popup__box'>
+      <div className='popup__title'>
+        <div className='popup__icon'>
           {
             iconName !== '' &&
             <IconComponent
@@ -22,11 +22,11 @@ const Popup = ({
               svgStyles={{ verticalAlign: 'middle', marginRight: '17px', display: 'inline-flex' }}
             />
           }
-          <div className="h2-typo popup__title-text">{title}</div>
+          <div className='h2-typo popup__title-text'>{title}</div>
         </div>
         {
           onClose &&
-          <div className="popup__button" onClick={onClose}>
+          <div role='button' tabIndex={-1} className='popup__button' onClick={onClose}>
             <IconComponent
               iconName='cross'
               dictIcons={dictIcons}
@@ -35,8 +35,8 @@ const Popup = ({
           </div>
         }
       </div>
-      <div className="popup__message">
-        { message && <div className="high-light">{message}</div> }
+      <div className='popup__message'>
+        { message && <div className='high-light'>{message}</div> }
         {
           lines.length > 0 &&
           <pre>
@@ -52,11 +52,11 @@ const Popup = ({
             }
           </pre>
         }
-        { error && <h6 className="popup__error">Error</h6> }
+        { error && <h6 className='popup__error'>Error</h6> }
         { error && <code>{error}</code> }
       </div>
-      <div className="popup__foot">
-        <div className="popup__left-foot">
+      <div className='popup__foot'>
+        <div className='popup__left-foot'>
           {
             leftButtons.map((btn, i) => [
               i > 0 && ' ',
@@ -77,7 +77,7 @@ const Popup = ({
             ])
           }
         </div>
-        <div className="popup__right-foot">
+        <div className='popup__right-foot'>
           {
             rightButtons.map((btn, i) => [
               i > 0 && ' ',

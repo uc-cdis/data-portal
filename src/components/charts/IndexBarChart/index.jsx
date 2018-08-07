@@ -115,8 +115,8 @@ class IndexBarChart extends React.Component {
     const barNames = createBarNames(indexChart);
     let countBar = 0;
     return (
-      <div className="index-bar-chart">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className='index-bar-chart'>
+        <ResponsiveContainer width='100%' height='100%'>
           <BarChart
             onClick={(e) => { browserHistory.push(`/${e.activeLabel}`); window.location.reload(false); }}
             data={indexChart}

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Label } from '../theme';
 import './CheckBox.less';
 
 export class CheckBoxGroup extends Component {
@@ -70,7 +69,7 @@ export class CheckBoxGroup extends Component {
               checked={selectedItems.includes(item)}
               onChange={() => this.onChangeBox(item)}
             />
-            <label className='checkbox__label' for={item}>{item}</label>
+            <label className='checkbox__label' htmlFor={item}>{item}</label>
           </div>
         ))}
         {this.displayOptions()}

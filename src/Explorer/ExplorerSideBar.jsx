@@ -47,7 +47,7 @@ class ExplorerSideBar extends Component {
     const fileFormats = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_format').values()).sort();
 
     return (
-      <div className="explorer-side-bar">
+      <div className='explorer-side-bar'>
         <CheckBoxGroup
           listItems={projects}
           title='Projects'
@@ -65,8 +65,8 @@ class ExplorerSideBar extends Component {
         <CheckBoxGroup
           listItems={fileTypes}
           selectedItems={this.props.selectedFilters.file_types}
-          title="File Types"
-          groupName="file_types"
+          title='File Types'
+          groupName='file_types'
           onChange={state => this.props.onChange({ ...this.props.selectedFilters, ...state })}
         />
       </div>

@@ -11,7 +11,7 @@ class TooltipCDIS extends React.Component {
       const txts = label.split('#');
       const number = parseInt(txts[0], 10);
       return (
-        <div className="cdis-tooltip">
+        <div className='cdis-tooltip'>
           <h2>{`${txts[1]}`}</h2>
           {
             payload.map(
