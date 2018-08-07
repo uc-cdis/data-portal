@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyledCheckBoxGroup } from '../components/CheckBox';
+import { CheckBoxGroup } from '../components/CheckBox';
 import { ExplorerSidebarStyle } from './style';
 
 class ExplorerSideBar extends Component {
@@ -46,31 +46,27 @@ class ExplorerSideBar extends Component {
     const fileTypes = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_type').values()).sort();
     const fileFormats = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_format').values()).sort();
 
-
-    // console.log(this.props.selected_filters);
-
     return (
       <ExplorerSidebarStyle>
-        <StyledCheckBoxGroup
+        <CheckBoxGroup
           listItems={projects}
           title='Projects'
           selectedItems={this.props.selectedFilters.projects}
           groupName='projects'
           onChange={state => this.props.onChange({ ...this.props.selectedFilters, ...state })}
         />
-        <StyledCheckBoxGroup
+        <CheckBoxGroup
           listItems={fileFormats}
           selectedItems={this.props.selectedFilters.file_formats}
           title='File Formats'
           groupName='file_formats'
           onChange={state => this.props.onChange({ ...this.props.selectedFilters, ...state })}
         />
-        <StyledCheckBoxGroup
+        <CheckBoxGroup
           listItems={fileTypes}
           selectedItems={this.props.selectedFilters.file_types}
-          title='File Types'
-          groupName='file_types'
-          lastChild
+          title="File Types"
+          groupName="file_types"
           onChange={state => this.props.onChange({ ...this.props.selectedFilters, ...state })}
         />
       </ExplorerSidebarStyle>

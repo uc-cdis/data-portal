@@ -1,11 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components'; // see https://github.com/facebook/prop-types#prop-types
-
-const TooltipPopup = styled.div`
-  background-color: #ffffff;
-  padding: 0px 20px 20px 20px;
-`;
+import './TooltipCDIS.less';
 
 class TooltipCDIS extends React.Component {
   render() {
@@ -16,14 +11,14 @@ class TooltipCDIS extends React.Component {
       const txts = label.split('#');
       const number = parseInt(txts[0], 10);
       return (
-        <TooltipPopup className='custom-tooltip'>
+        <div className="cdis-tooltip">
           <h2>{`${txts[1]}`}</h2>
           {
             payload.map(
               item => <div key={item.name} style={{ color: `${item.fill}` }} className='body-typo'>{`${item.name} : ${Math.round((item.value / 100) * number)}`}</div>,
             )
           }
-        </TooltipPopup>
+        </div>
       );
     }
     return null;

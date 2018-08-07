@@ -1,60 +1,8 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import IconComponent from './Icon';
-
-const IndexThumbnailButton = styled.div`
-  background-color: white;
-  display: inline-block;
-  height: 360px;
-  padding: 20px 20px;
-  text-align: center;
-  width: 290px;
-  margin-left: 20px;
-  border: 1px solid #e7e7e7;
-  border-radius: 4px;
-  &:first-child {
-    margin-left: 0px;
-  }
-  position: relative;
-`;
-
-
-const IndexIcon = styled.div`
-  vertical-align: middle;
-  padding-left: 4px;
-`;
-
-const BarItem = styled(Link)`
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  bottom: 30px;
-`;
-
-const BarItemA = styled.a`
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  bottom: 30px;
-`;
-
-const ThumbnailTitle = styled.div`
-  margin-bottom: 15px;
-`;
-
-const ThumbnailText = styled.div`
-  margin-top: 30px;
-  border-top: 1px solid #e7e7e7;
-  padding: 10px 10px;
-  text-align: left;
-`;
-
+import './IndexButtonBar.less';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
@@ -63,40 +11,40 @@ const ThumbnailText = styled.div`
 class IndexButtonBar extends Component {
   render() {
     return (
-      <div style={{ display: 'flex', padding: '40px 0px 0px 0px' }}>
+      <div className="index-button-bar">
         {
           this.props.buttons.map(
             item => (
-              <IndexThumbnailButton key={item.name}>
-                <ThumbnailTitle className='h3-typo'>{item.name}</ThumbnailTitle>
-                <IndexIcon>
+              <div className="index-button-bar__thumbnail-button" key={item.name}>
+                <div className="h3-typo index-button-bar__thumbnail-title">{item.name}</div>
+                <div className="index-button-bar__icon">
                   <IconComponent
                     dictIcons={this.props.dictIcons}
                     iconName={item.icon}
                     height='90px'
                   />
-                </IndexIcon>
-                <ThumbnailText className='body-typo'>{item.body}</ThumbnailText>
+                </div>
+                <div className="body-typo index-button-bar__thumbnail-text">{item.body}</div>
                 {
                   item.link.startsWith('http') ?
-                    <BarItemA href={item.link}>
+                    <a className="index-button-bar__item" href={item.link}>
                       <button
                         className='button-primary-orange'
                         onClick={() => this.props.onActiveTab(item.link)}
                       >
                         {item.label}
                       </button>
-                    </BarItemA> :
-                    <BarItem to={item.link}>
+                    </a> :
+                    <Link className="index-button-bar__item" to={item.link}>
                       <button
                         className='button-primary-orange'
                         onClick={() => this.props.onActiveTab(item.link)}
                       >
                         {item.label}
                       </button>
-                    </BarItem>
+                    </Link>
                 }
-              </IndexThumbnailButton>
+              </div>
             ),
           )
         }

@@ -1,28 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import DataSummaryCardGroup from './cards/DataSummaryCardGroup';
 import ProjectTable from './tables/ProjectTable';
-
-const DashTopDiv = styled.div`
-  height: 120px;
-  display: flex;
-`;
-
-const Title = styled.div`
-  padding-top: 10px;
-  flex-basis: 460px;
-`;
+import './ProjectDashboard.less';
 
 class ProjectDashboard extends Component {
   render() {
     const projectList = this.props.projectList || [];
     return (
-      <div className='clearfix'>
-        <DashTopDiv>
-          <Title className='h1-typo'>
+      <React.Fragment>
+        <div className="project-dashboard">
+          <div className="h1-typo project-dashboard__title">
             Data Submission Summary
-          </Title>
+          </div>
           <DataSummaryCardGroup
             width={760}
             height={120}
@@ -30,9 +20,9 @@ class ProjectDashboard extends Component {
             align='left'
           />
           {/* <ReduxProjectBarChart projectList={this.props.projectList} /> */}
-        </DashTopDiv>
+        </div>
         <ProjectTable projectList={projectList} summaries={this.props.details} />
-      </div>
+      </React.Fragment>
     );
   }
 }

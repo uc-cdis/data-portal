@@ -1,36 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import Select from 'react-select';
 import PropTypes from 'prop-types';
-
 import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
-
-const actionButton = css`
-  cursor: pointer;
-  float: right;
-  display: inline-block;
-  margin-left: 2em;
-  &:hover,
-  &:active,
-  &:focus {
-    color: inherit;
-  }
-`;
-
-const DownloadButton = styled.a`
-   ${actionButton};
-`;
-
-const DeleteButton = styled.a`
-  ${actionButton};
-  color: ${props => props.theme.color_primary};
-`;
-const ViewButton = styled.a`
-  ${actionButton};
-  color: #2B547E;
-`;
+import './QueryNode.less';
 
 const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
   const onDelete = () => {
@@ -44,9 +19,9 @@ const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
   return (
     <li>
       <span>{value.submitter_id}</span>
-      <DownloadButton href={`${getSubmitPath(project)}/export?format=json&ids=${value.id}`}>Download</DownloadButton>
-      <ViewButton onClick={onView}>View</ViewButton>
-      <DeleteButton onClick={onDelete}>Delete</DeleteButton>
+      <a className="query-node__button query-node__button--download" href={`${getSubmitPath(project)}/export?format=json&ids=${value.id}`}>Download</a>
+      <a className="query-node__button query-node__button--view" onClick={onView}>View</a>
+      <a className="query-node__button query-node__button--delete" onClick={onDelete}>Delete</a>
     </li>
   );
 };
