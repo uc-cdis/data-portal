@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import getReduxStore from '../reduxStore';
 import SelectComponent from '../components/SelectComponent';
-import { userapiPath } from '../localconf';
 import './ExplorerTable.less';
 
 const makeDefaultState = (page, pageSize, originalPage) => ({
@@ -12,57 +11,12 @@ const makeDefaultState = (page, pageSize, originalPage) => ({
   pageSize,
 });
 
-export class ExplorerTableComponent extends Component {
-  static propTypes = {
-    user: PropTypes.object,
-    projectAvail: PropTypes.object,
-    name: PropTypes.string.isRequired,
-    filesList: PropTypes.array,
-    lastPageSize: PropTypes.number,
-    pageSize: PropTypes.number.isRequired,
-    pageCount: PropTypes.number.isRequired,
-    page: PropTypes.number.isRequired,
-    originalPage: PropTypes.number,
-    onPageLoadNextMore: PropTypes.func,
-    onPageLoadPrevMore: PropTypes.func,
-    onPageChange: PropTypes.func,
-    onPageSizeChange: PropTypes.func,
-  };
-
-  static defaultProps = {
-    user: {},
-    projectAvail: {},
-    filesList: [],
-    lastPageSize: 0,
-    originalPage: 0,
-    onPageLoadNextMore: () => {},
-    onPageLoadPrevMore: () => {},
-    onPageChange: () => {},
-    onPageSizeChange: () => {},
-  };
-
+class ExplorerTableComponent extends Component {
   static humanFileSize(size) {
     const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
     const sizeStr = (size / (1024 ** i)).toFixed(2) * 1;
     const suffix = ['B', 'KB', 'MB', 'GB', 'TB'][i];
     return `${sizeStr} ${suffix}`;
-  }
-
-  static renderRow(user, projectAvail, file, columnWidths, i) {
-    const filesize = ExplorerTableComponent.humanFileSize(file.size);
-    return (
-      <tr className="explorer-table__table-row" key={i}>
-        <td className="explorer-table__table-data explorer-table__table-data--column-0">
-          <Link to={`/${file.project_id}`}>{file.project_id}</Link>
-        </td>
-        <td className="explorer-table__table-data explorer-table__table-data--column-1">
-          <Link to={`/files/${file.did}`}>{file.name}</Link>
-        </td>
-        <td className="explorer-table__table-data explorer-table__table-data--column-2">{file.format}</td>
-        <td className="explorer-table__table-data explorer-table__table-data--column-3">{filesize}</td>
-        <td className="explorer-table__table-data explorer-table__table-data--column-4">{file.category}</td>
-      </tr>
-    );
   }
 
   constructor(props) {
@@ -109,6 +63,23 @@ export class ExplorerTableComponent extends Component {
     this.props.onPageLoadPrevMore();
   }
 
+  static renderRow(user, projectAvail, file, i) {
+    const filesize = ExplorerTableComponent.humanFileSize(file.size);
+    return (
+      <tr key={i} className='explorer-table__table-row'>
+        <td className='explorer-table__table-data explorer-table__table-data--column-0'>
+          <Link to={`/${file.project_id}`}>{file.project_id}</Link>
+        </td>
+        <td className='explorer-table__table-data explorer-table__table-data--column-1'>
+          <Link to={`/files/${file.did}`}>{file.name}</Link>
+        </td>
+        <td className='explorer-table__table-data explorer-table__table-data--column-2'>{file.format}</td>
+        <td className='explorer-table__table-data explorer-table__table-data--column-3'>{filesize}</td>
+        <td className='explorer-table__table-data explorer-table__table-data--column-4'>{file.category}</td>
+      </tr>
+    );
+  }
+
   render() {
     const columns = ['Project', 'File Name', 'Format', 'File Size', 'Category'];
     const specialAligns = { 'File Size': 'right' };
@@ -126,9 +97,9 @@ export class ExplorerTableComponent extends Component {
       }
     }
     return (
-      <table className="explorer-table">
-        <thead className="explorer-table__table-head">
-          <tr className="explorer-table__table-row">
+      <table className='explorer-table'>
+        <thead className='explorer-table__table-head'>
+          <tr className='explorer-table__table-row'>
             {columns.map(
               (item, i) => (
                 (item in specialAligns) ?
@@ -158,17 +129,17 @@ export class ExplorerTableComponent extends Component {
             )
           }
         </tbody>
-        <tfoot className="explorer-table__table-foot">
-          <tr className="explorer-table__table-row">
-            <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-0">
+        <tfoot className='explorer-table__table-foot'>
+          <tr className='explorer-table__table-row'>
+            <td className='explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-0'>
               {
                 (this.state.originalPage > 0) &&
-                <button className="explorer-table__arrow-button" onClick={() => this.loadMorePrev()}>
+                <button className='explorer-table__arrow-button' onClick={() => this.loadMorePrev()}>
                   Prev {this.props.pageCount}
                 </button>
               }
             </td>
-            <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-1">
+            <td className='explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-1'>
               {
                 pages.map(item => (
                   <button
@@ -187,7 +158,7 @@ export class ExplorerTableComponent extends Component {
                 ))
               }
             </td>
-            <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-2">
+            <td className='explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-2'>
               <SelectComponent
                 values={pageSizeValues}
                 title={'Page size: '}
@@ -195,10 +166,10 @@ export class ExplorerTableComponent extends Component {
                 onChange={value => this.props.onPageSizeChange(value)}
               />
             </td>
-            <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-3">
+            <td className='explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-3'>
               {
                 (this.props.lastPageSize === 0) &&
-                <button className="explorer-table__arrow-button" onClick={() => this.loadMoreNext()}>
+                <button className='explorer-table__arrow-button' onClick={() => this.loadMoreNext()}>
                   Next {this.props.pageCount}
                 </button>
               }
@@ -209,3 +180,33 @@ export class ExplorerTableComponent extends Component {
     );
   }
 }
+
+ExplorerTableComponent.propTypes = {
+  user: PropTypes.object,
+  projectAvail: PropTypes.object,
+  name: PropTypes.string.isRequired,
+  filesList: PropTypes.array,
+  lastPageSize: PropTypes.number,
+  pageSize: PropTypes.number.isRequired,
+  pageCount: PropTypes.number.isRequired,
+  page: PropTypes.number.isRequired,
+  originalPage: PropTypes.number,
+  onPageLoadNextMore: PropTypes.func,
+  onPageLoadPrevMore: PropTypes.func,
+  onPageChange: PropTypes.func,
+  onPageSizeChange: PropTypes.func,
+};
+
+ExplorerTableComponent.defaultProps = {
+  user: {},
+  projectAvail: {},
+  filesList: [],
+  lastPageSize: 0,
+  originalPage: 0,
+  onPageLoadNextMore: () => {},
+  onPageLoadPrevMore: () => {},
+  onPageChange: () => {},
+  onPageSizeChange: () => {},
+};
+
+export default ExplorerTableComponent;

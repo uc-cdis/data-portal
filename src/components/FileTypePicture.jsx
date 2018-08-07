@@ -33,7 +33,7 @@ class FileTypePicture extends Component {
           <IconComponent
             dictIcons={this.props.dictIcons}
             iconName={fileType}
-            height="100%"
+            height='100%'
           />
         </CenteredPicture>
       </WhiteContainer>

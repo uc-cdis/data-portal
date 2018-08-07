@@ -18,16 +18,16 @@ class ProjectDashboard extends Component {
   render() {
     const projectList = this.props.projectList || [];
     return (
-      <div className="clearfix">
+      <div className='clearfix'>
         <DashTopDiv>
-          <Title className="h1-typo">
+          <Title className='h1-typo'>
             Data Submission Summary
           </Title>
           <DataSummaryCardGroup
             width={760}
             height={120}
             summaryItems={this.props.summaries}
-            align="left"
+            align='left'
           />
           {/* <ReduxProjectBarChart projectList={this.props.projectList} /> */}
         </DashTopDiv>

@@ -50,7 +50,7 @@ class AccessTable extends React.Component {
 
 AccessTable.propTypes = {
   projects: PropTypes.object,
-  projectsAccesses: PropTypes.object,
+  projectsAccesses: PropTypes.array,
 
 };
 

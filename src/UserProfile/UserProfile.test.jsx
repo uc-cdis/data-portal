@@ -30,7 +30,7 @@ describe('the UserProfile component', () => {
 
   it('lists access keys', () => {
     const $vdom = mount(
-      <StaticRouter location={{ pathname: '/identity' }}>
+      <StaticRouter location={{ pathname: '/identity' }} context={{}}>
         <UserProfile
           {...testProps}
           onCreateKey={noop}
@@ -47,7 +47,7 @@ describe('the UserProfile component', () => {
 
   it('triggers create-key events', (done) => {
     const $vdom = mount(
-      <StaticRouter location={{ pathname: '/identity' }}>
+      <StaticRouter location={{ pathname: '/identity' }} context={{}}>
         <UserProfile
           {...testProps}
           onCreateKey={() => { done(); }}
@@ -66,7 +66,7 @@ describe('the UserProfile component', () => {
 
   it('triggers delete-key events', (done) => {
     const $vdom = mount(
-      <StaticRouter location={{ pathname: '/identity' }}>
+      <StaticRouter location={{ pathname: '/identity' }} context={{}}>
         <UserProfile
           {...testProps}
           onCreateKey={noop}

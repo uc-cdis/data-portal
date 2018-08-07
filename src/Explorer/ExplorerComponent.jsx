@@ -5,6 +5,7 @@ import { computeLastPageSizes } from '../utils';
 import { GQLHelper } from '../gqlHelper';
 import getReduxStore from '../reduxStore';
 import { ReduxExplorerTabPanel, ReduxSideBar } from './ReduxExplorer';
+import './ExplorerComponent.less';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
@@ -146,12 +147,8 @@ class ExplorerComponent extends Component {
 
   render() {
     this.updateFilesMap();
-    const style = {
-      display: 'flex',
-      padding: '40px 0px',
-    };
     return (
-      <div style={style}>
+      <div className='explorer-component'>
         <ReduxSideBar />
         <ReduxExplorerTabPanel />
       </div>

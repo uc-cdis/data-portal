@@ -6,7 +6,7 @@ import './FilterList.less';
 class FilterList extends React.Component {
   render() {
     return (
-      <div className="filter-list">
+      <div className='filter-list'>
         {
           this.props.sections.map((section, index) => (
             <FilterSection

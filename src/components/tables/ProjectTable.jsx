@@ -27,10 +27,10 @@ class ProjectTable extends React.Component {
     <IconicLink
       key={proj.name}
       link={`/${proj.name}`}
-      buttonClassName="button-primary-orange"
+      buttonClassName='button-primary-orange'
       dictIcons={dictIcons}
-      icon="upload"
-      caption="Submit Data"
+      icon='upload'
+      caption='Submit Data'
     />,
   ]);
 

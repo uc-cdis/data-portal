@@ -1,54 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 
-import { basename, appname } from '../localconf';
+import { basename } from '../localconf';
 import SlidingWindow from '../components/SlidingWindow';
-
-const CentralBox = styled.div`
-  text-align: center;
-  width: 756px;
-  margin: auto 0px;
-  padding: 0px 100px;
-  vertical-align: middle;
-  display: table-cell;
-  color: #000000;
-`;
-
-const LoginFrame = styled.div`
-  display: table;
-`;
-
-const LeftBox = styled.div`
-  width: 257px;
-  text-align: center;
-  padding: 0px;
-  float: left;
-  min-height: 100%;
-`;
-
-const RightBox = styled.div`
-  width: 257px;
-  text-align: center;
-  padding: 0px;
-  float: right;
-  min-height: 100%;
-`;
-
-const Line = styled.hr`
-  width: 30px;
-  height: 5px;
-  text-align: center;
-  color: #9b9b9b;
-  background-color: #9b9b9b;
-  text-align: center;
-  margin: 17px auto;
-`;
-
-export const LoginButton = styled.a`
-  font-size: 1em;
-`;
+import './Login.less';
 
 const getInitialState = height => ({ height });
 
@@ -93,29 +49,33 @@ class Login extends React.Component {
       next = basename === '/' ? queryParams.next : basename + queryParams.next;
     }
     return (
-      <LoginFrame>
-        <LeftBox style={{ height: `${this.state.height}px` }}>
+      <div className='login-page'>
+        <div className='login-page__side-box'>
           <SlidingWindow
             iconName={'gene'}
             dictIcons={this.props.dictIcons}
             height={this.state.height}
             scrollY={window.scrollY}
           />
-        </LeftBox>
-        <CentralBox>
-          <div className="h1-typo" style={{ marginBottom: '11px', lineHeight: '40px' }}>{this.props.data.title}</div>
-          <div className="high-light" style={{ textTransform: 'uppercase' }}>{this.props.data.subTitle}</div>
-          <Line />
-          <div className="body-typo">{this.props.data.text}</div>
+        </div>
+        <div className='login-page__central-content'>
+          <div className='h1-typo login-page__title'>
+            {this.props.data.title}
+          </div>
+          <div className='high-light login-page__sub-title'>
+            {this.props.data.subTitle}
+          </div>
+          <hr className='login-page__separator' />
+          <div className='body-typo'>{this.props.data.text}</div>
           {
             this.props.providers.map(
               p => (
-                <div key={p.id} style={{ margin: '25px 0px' }}>
-                  <LoginButton href={`${p.url}?redirect=${window.location.origin}${next}`}>
-                    <button className="button-primary-orange">
+                <div key={p.id} className='login-page__entries'>
+                  <a href={`${p.url}?redirect=${window.location.origin}${next}`}>
+                    <button className='button-primary-orange'>
                       {p.name}
                     </button>
-                  </LoginButton>
+                  </a>
                 </div>
               ),
             )
@@ -126,16 +86,16 @@ class Login extends React.Component {
               {this.props.data.email}
             </a>{'.'}
           </div>
-        </CentralBox>
-        <RightBox style={{ height: `${this.state.height}px` }}>
+        </div>
+        <div className='login-page__side-box'>
           <SlidingWindow
             iconName={'gene'}
             dictIcons={this.props.dictIcons}
             height={this.state.height}
             scrollY={window.scrollY}
           />
-        </RightBox>
-      </LoginFrame>
+        </div>
+      </div>
     );
   }
 }

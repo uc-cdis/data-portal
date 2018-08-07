@@ -69,6 +69,8 @@ describe('FilterGroup', () => {
     <FilterGroup
       tabs={tabs}
       filterConfig={filterConfig}
+      onSelect={jest.fn()}
+      onDrag={jest.fn()}
     />,
   );
 

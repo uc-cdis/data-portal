@@ -35,7 +35,7 @@ describe('FilterSection', () => {
   const onSelect = jest.fn();
   const component = mount(
     <FilterSection
-      title="Section Title"
+      title='Section Title'
       options={singleSelectOptions}
       onSelect={onSelect}
       onDrag={onDrag}
@@ -58,7 +58,7 @@ describe('FilterSection', () => {
     expect(component.find('.range-filter').length).toBe(0);
     const mixedFilterComponent = mount(
       <FilterSection
-        title="Section Title"
+        title='Section Title'
         options={mixedOptions}
         onSelect={onSelect}
         onDrag={onDrag}

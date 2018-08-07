@@ -28,11 +28,11 @@ class TransactionLogTable extends Component {
   };
 
   stateToColor = state => (state === 'SUCCEEDED' &&
-      <StatusBar className="special-number">{formatText(state)}</StatusBar>)
+      <StatusBar className='special-number'>{formatText(state)}</StatusBar>)
     || ((state === 'FAILED' || state === 'ERRORED') &&
-      <FailBar className="special-number">{formatText(state)}</FailBar>)
+      <FailBar className='special-number'>{formatText(state)}</FailBar>)
     || (state === 'PENDING' &&
-      <PendingBar className="special-number">{formatText(state)}</PendingBar>);
+      <PendingBar className='special-number'>{formatText(state)}</PendingBar>);
 
   dataTransform = logs => logs.map(entry => [
     entry.id, entry.project_id,
@@ -43,7 +43,7 @@ class TransactionLogTable extends Component {
   render() {
     if (!this.props.log || this.props.log === []) { return <Spinner />; }
     return (<Table
-      title="Recent Submissions"
+      title='Recent Submissions'
       header={['Id', 'Project', 'Create', 'State']}
       data={this.dataTransform(this.props.log)}
     />);

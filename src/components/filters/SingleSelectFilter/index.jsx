@@ -5,10 +5,10 @@ import './SingleSelectFilter.less';
 class SingleSelectFilter extends React.Component {
   render() {
     return (
-      <div className="single-select-filter">
+      <div className='single-select-filter'>
         <input
-          className="single-select-filter__checkbox"
-          type="checkbox"
+          className='single-select-filter__checkbox'
+          type='checkbox'
           onClick={this.props.onSelect}
         />
         <p>{this.props.label}</p>

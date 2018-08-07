@@ -26,24 +26,24 @@ class DataExplorerVisualizations extends React.Component {
       getCharts(this.props.arrangerData, this.props.arrangerConfig)
       : null;
     return (
-      <div className="data-explorer__visualizations">
-        <CurrentSQON className="data-explorer__sqon" {...this.props} />
+      <div className='data-explorer__visualizations'>
+        <CurrentSQON className='data-explorer__sqon' {...this.props} />
         <div
-          className="data-explorer__visualizations-title"
+          className='data-explorer__visualizations-title'
           onClick={this.toggleVisualization}
-          role="button"
+          role='button'
           onKeyDown={this.toggleVisualization}
           tabIndex={0}
         >
           <h4>Data Summary</h4>
           <FontAwesomeIcon
-            className="data-explorer__visualizations-title-icon"
+            className='data-explorer__visualizations-title-icon'
             icon={this.state.showVisualization ? 'angle-down' : 'angle-up'}
-            size="lg"
+            size='lg'
           />
         </div>
         { charts && this.state.showVisualization ?
-          <div className="data-explorer__charts">
+          <div className='data-explorer__charts'>
             <DataSummaryCardGroup summaryItems={charts.countItems} connected />
             <SummaryChartGroup summaries={charts.summaries} localTheme={localTheme} />
             {
@@ -53,7 +53,7 @@ class DataExplorerVisualizations extends React.Component {
                   data={chart.data}
                   title={chart.title}
                   localTheme={localTheme}
-                  width="100%"
+                  width='100%'
                 />),
               )
             }

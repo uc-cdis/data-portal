@@ -19,7 +19,7 @@ function renderComponent(ComponentClass, props) {
         <Provider store={store}>
           <ThemeProvider theme={theme}>
             <MuiThemeProvider>
-              <StaticRouter location={{ pathname: '/files' }}>
+              <StaticRouter location={{ pathname: '/files' }} context={{}}>
                 <ComponentClass {...props} />
               </StaticRouter>
             </MuiThemeProvider>

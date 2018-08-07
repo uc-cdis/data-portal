@@ -4,7 +4,7 @@ import { StaticRouter } from 'react-router-dom';
 
 import dictIcons from '../img/icons/sliding';
 import { components } from '../params';
-import Login, { LoginButton } from './Login';
+import Login from './Login';
 
 describe('the Login component', () => {
   const testProps = {
@@ -33,6 +33,6 @@ describe('the Login component', () => {
         />
       </StaticRouter>,
     );
-    expect($vdom.find(LoginButton)).toHaveLength(testProps.providers.length);
+    expect($vdom.find('.login-page__entries')).toHaveLength(testProps.providers.length);
   });
 });

@@ -7,8 +7,8 @@ import './DataExplorerTable.less';
 class DataExplorerTable extends React.Component {
   render() {
     return (
-      <div className="data-explorer-table">
-        <div className="data-explorer-table__arranger-table">
+      <div className='data-explorer-table'>
+        <div className='data-explorer-table__arranger-table'>
           <Table
             {...this.props}
             allowTSVExport={false}

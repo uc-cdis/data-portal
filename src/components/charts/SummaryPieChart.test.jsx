@@ -14,7 +14,7 @@ describe('<SummaryPieChart />', () => {
   ];
 
   const charts = mount(<SummaryPieChart
-    title="test"
+    title='test'
     data={chartData}
     localTheme={localTheme}
   />).find(SummaryPieChart);

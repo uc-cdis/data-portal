@@ -19,11 +19,11 @@ const subHeader = (() => {
 })();
 
 const TableBullet = ({ node, description }) => (
-  <tr className="data-dictionary__table-row">
-    <td className="data-dictionary__table-data">
+  <tr className='data-dictionary__table-row'>
+    <td className='data-dictionary__table-data'>
       <Link to={`/dd/${node.id}`}> {node.title} </Link>
     </td>
-    <td className="data-dictionary__table-data data-dictionary__table-data--right">
+    <td className='data-dictionary__table-data data-dictionary__table-data--right'>
       {description}
     </td>
   </tr>
@@ -39,10 +39,10 @@ TableBullet.defaultProps = {
 };
 
 const CategoryTable = ({ nodes, category }) => (
-  <table className="data-dictionary__table">
-    <thead className="data-dictionary__table-head">
-      <tr className="data-dictionary__table-row">
-        <td className="data-dictionary__table-data data-dictionary__table-data--head">
+  <table className='data-dictionary__table'>
+    <thead className='data-dictionary__table-head'>
+      <tr className='data-dictionary__table-row'>
+        <td className='data-dictionary__table-data data-dictionary__table-data--head'>
           {capitalizeFirstLetter(category)}
         </td>
       </tr>
@@ -80,6 +80,7 @@ CategoryTable.propTypes = {
  * @param {Object} dictionary
  * @return {} mapping from category to node list
  */
+/* eslint-disable no-param-reassign */
 export function category2NodeList(dictionary) {
   return Object.keys(dictionary).filter(
     id => id.charAt(0) !== '_' && id === dictionary[id].id,
@@ -96,6 +97,7 @@ export function category2NodeList(dictionary) {
       }, {},
     );
 }
+/* eslint-enable no-param-reassign */
 
 /**
  * Little components presents an overview of the types in a dictionary organized by category
@@ -107,13 +109,21 @@ const DataDictionary = ({ dictionary }) => {
 
   return (
     <div style={{ padding: '40px 0px' }}>
-      <div className="h3-typo"> Data Dictionary Viewer </div>
+      <div className='h3-typo'> Data Dictionary Viewer </div>
       <p>{subHeader}</p>
-      <Link to={'/dd/graph'} className="h3-typo">Explore dictionary as a graph</Link>
+      <Link to={'/dd/graph'} className='h3-typo'>Explore dictionary as a graph</Link>
       {Object.keys(c2nl).map(category =>
         <CategoryTable key={category} nodes={c2nl[category]} category={category} />)}
     </div>
   );
+};
+
+DataDictionary.propTypes = {
+  dictionary: PropTypes.object,
+};
+
+DataDictionary.defaultProps = {
+  dictionary: {},
 };
 
 export default DataDictionary;
