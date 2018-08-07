@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Select from 'react-select';
 import PropTypes from 'prop-types';
 import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
@@ -19,9 +18,9 @@ const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
   return (
     <li>
       <span>{value.submitter_id}</span>
-      <a className="query-node__button query-node__button--download" href={`${getSubmitPath(project)}/export?format=json&ids=${value.id}`}>Download</a>
-      <a className="query-node__button query-node__button--view" onClick={onView}>View</a>
-      <a className="query-node__button query-node__button--delete" onClick={onDelete}>Delete</a>
+      <a className='query-node__button query-node__button--download' href={`${getSubmitPath(project)}/export?format=json&ids=${value.id}`}>Download</a>
+      <a className='query-node__button query-node__button--view' onClick={onView}>View</a>
+      <a className='query-node__button query-node__button--delete' onClick={onDelete}>Delete</a>
     </li>
   );
 };
@@ -73,7 +72,7 @@ Entities.defaultProps = {
  */
 class QueryNode extends React.Component {
   /**
-   * Internal helper to render the "view node" popup if necessary
+   * Internal helper to render the 'view node" popup if necessary
    * based on the popups and queryNodes properties attached to this component.
    *
    * @param {popups, queryNodes, onUpdatePopup} props including
