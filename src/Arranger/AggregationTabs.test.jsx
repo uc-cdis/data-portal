@@ -36,6 +36,7 @@ describe('AggregationTabs', () => {
       setSQON={jest.fn()}
       projectId={''}
       graphqlField={''}
+      api={''}
     />,
   );
 
