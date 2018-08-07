@@ -34,6 +34,15 @@ const ProjectSubmission = (props) => {
   const MySubmitForm = props.submitForm;
   const MySubmitTSV = props.submitTSV;
   const MyDataModelGraph = props.dataModelGraph;
+  const displayData = () => {
+    if (!props.dataIsReady) {
+      if (props.project !== '_root') {
+        return <Spinner />;
+      }
+      return null;
+    }
+    return <MyDataModelGraph project={props.project} />;
+  };
 
   return (
     <div>
@@ -43,9 +52,7 @@ const ProjectSubmission = (props) => {
       }
       <MySubmitForm />
       <MySubmitTSV project={props.project} />
-      { !props.dataIsReady
-        ? ((props.project !== '_root') ? <Spinner /> : null) :
-        <MyDataModelGraph project={props.project} /> }
+      { displayData() }
     </div>
   );
 };

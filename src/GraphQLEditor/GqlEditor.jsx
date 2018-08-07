@@ -22,8 +22,8 @@ const GqlEditor = ({ schema }) => {
 
   return (
     <div>
-      <div className="gql-editor" id="graphiql">
-        <h2 className="gql-editor__title">Query graph</h2>
+      <div className='gql-editor' id='graphiql'>
+        <h2 className='gql-editor__title'>Query graph</h2>
         <GraphiQL
           fetcher={fetchGraphQL}
           schema={graphqlSchema}

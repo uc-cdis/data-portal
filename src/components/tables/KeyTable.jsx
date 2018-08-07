@@ -32,8 +32,8 @@ class KeyTable extends React.Component {
       onClick={() => this.props.onDelete(jti)}
       caption={DELETE_BTN}
       dictIcons={dictIcons}
-      icon="delete"
-      buttonClassName="button-primary-white"
+      icon='delete'
+      buttonClassName='button-primary-white'
     />,
   ]);
 

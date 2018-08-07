@@ -28,6 +28,7 @@ class Quiz extends Component {
 
   static defaultProps = {
     certificate: null,
+    questionList: [],
   };
 
   constructor(props) {
@@ -85,7 +86,7 @@ class Quiz extends Component {
                     />),
                 )
               }
-              <button className="quiz__submit-button" type="button" onClick={() => { submitForm(); this.showError(); }}>Submit</button>
+              <button className='quiz__submit-button' type='button' onClick={() => { submitForm(); this.showError(); }}>Submit</button>
             </form>
           )}
         </Form>

@@ -18,8 +18,8 @@ class BackLink extends Component {
         <BackComponent>
           <IconComponent
             dictIcons={dictIcons}
-            iconName="back"
-            height="12px"
+            iconName='back'
+            height='12px'
           />
         </BackComponent>
         <BackComponent>{this.props.label}</BackComponent>

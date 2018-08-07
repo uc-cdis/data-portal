@@ -7,14 +7,14 @@ import './DataDictionary.less';
 const LinkBullet = ({ link }) => {
   const required = link.required ? 'Yes' : 'No';
   return (
-    <tr className="data-dictionary__table-row">
-      <td className="data-dictionary__table-data">
+    <tr className='data-dictionary__table-row'>
+      <td className='data-dictionary__table-data'>
         <Link to={`/dd/${link.target_type}`}> {link.name} </Link>
       </td>
-      <td className="data-dictionary__table-data">
+      <td className='data-dictionary__table-data'>
         {required}
       </td>
-      <td className="data-dictionary__table-data">
+      <td className='data-dictionary__table-data'>
         {link.label}
       </td>
     </tr>
@@ -33,11 +33,11 @@ LinkBullet.propTypes = {
 const LinkTable = ({ links }) => {
   const fields = ['Name', 'Required', 'Label'];
   return (
-    <table className="data-dictionary__table">
-      <thead className="data-dictionary__table-head">
-        <tr className="data-dictionary__table-row">
+    <table className='data-dictionary__table'>
+      <thead className='data-dictionary__table-head'>
+        <tr className='data-dictionary__table-row'>
           {fields.map(field =>
-            <td className="data-dictionary__table-data data-dictionary__table-data--head" key={field}>{field}</td>)}
+            <td className='data-dictionary__table-data data-dictionary__table-data--head' key={field}>{field}</td>)}
         </tr>
       </thead>
 
@@ -91,32 +91,32 @@ export const getType = (property) => {
 };
 
 const NodeTable = ({ node }) => (
-  <table className="data-dictionary__table">
+  <table className='data-dictionary__table'>
     <tbody>
-      <tr className="data-dictionary__table-row">
-        <td className="data-dictionary__table-data data-dictionary__table-data--head"> Id </td>
-        <td className="data-dictionary__table-data data-dictionary__table-data--right">{ node.id }</td>
+      <tr className='data-dictionary__table-row'>
+        <td className='data-dictionary__table-data data-dictionary__table-data--head'> Id </td>
+        <td className='data-dictionary__table-data data-dictionary__table-data--right'>{ node.id }</td>
       </tr>
 
-      <tr className="data-dictionary__table-row">
-        <td className="data-dictionary__table-data data-dictionary__table-data--head"> Category </td>
-        <td className="data-dictionary__table-data data-dictionary__table-data--right">{ node.category}</td>
+      <tr className='data-dictionary__table-row'>
+        <td className='data-dictionary__table-data data-dictionary__table-data--head'> Category </td>
+        <td className='data-dictionary__table-data data-dictionary__table-data--right'>{ node.category}</td>
       </tr>
 
-      <tr className="data-dictionary__table-row">
-        <td className="data-dictionary__table-data data-dictionary__table-data--head"> Description </td>
-        <td className="data-dictionary__table-data data-dictionary__table-data--right">{ node.description}</td>
+      <tr className='data-dictionary__table-row'>
+        <td className='data-dictionary__table-data data-dictionary__table-data--head'> Description </td>
+        <td className='data-dictionary__table-data data-dictionary__table-data--right'>{ node.description}</td>
       </tr>
 
-      <tr className="data-dictionary__table-row">
-        <td className="data-dictionary__table-data data-dictionary__table-data--head"> Unique Keys </td>
-        <td className="data-dictionary__table-data data-dictionary__table-data--right">
+      <tr className='data-dictionary__table-row'>
+        <td className='data-dictionary__table-data data-dictionary__table-data--head'> Unique Keys </td>
+        <td className='data-dictionary__table-data data-dictionary__table-data--right'>
           <ul>
             {
               node.uniqueKeys.map(
                 (key) => {
                   const compoundKey = key.join(', ');
-                  return <li className="data-dictionary__bullet" key={compoundKey}>{compoundKey}</li>;
+                  return <li className='data-dictionary__bullet' key={compoundKey}>{compoundKey}</li>;
                 },
               )
             }
@@ -143,21 +143,21 @@ class CollapsibleList extends React.Component {
     if (this.state.collapsed === 1) {
       return (
         <div>
-          {this.props.items.slice(0, 3).map(item => <li className="data-dictionary__bullet" key={item}>{item}</li>)}
-          <a href="#/" onClick={() => { this.state.collapsed = 2; }}>{'More options'}</a>
+          {this.props.items.slice(0, 3).map(item => <li className='data-dictionary__bullet' key={item}>{item}</li>)}
+          <a href='#/' onClick={() => { this.state.collapsed = 2; }}>{'More options'}</a>
         </div>
       );
     } else if (this.state.collapsed === 2) {
       return (
         <div>
-          {this.props.items.map(item => <li className="data-dictionary__bullet" key={item}>{item}</li>)}
-          <a href="#/" onClick={() => { this.state.collapsed = 1; }}>{'Fewer options'}</a>
+          {this.props.items.map(item => <li className='data-dictionary__bullet' key={item}>{item}</li>)}
+          <a href='#/' onClick={() => { this.state.collapsed = 1; }}>{'Fewer options'}</a>
         </div>
       );
     }
     return (
       <div>
-        {this.props.items.map(item => <li className="data-dictionary__bullet" key={item}>{item}</li>)}
+        {this.props.items.map(item => <li className='data-dictionary__bullet' key={item}>{item}</li>)}
       </div>
     );
   }
@@ -184,11 +184,11 @@ const PropertyBullet = (props) => {
   const type = getType(property);
 
   return (
-    <tr className="data-dictionary__table-row">
-      <td className="data-dictionary__table-data data-dictionary__table-data--column-1"><div> { propertyName }</div> </td>
-      <td className="data-dictionary__table-data data-dictionary__table-data--column-2"> <ul>{ (typeof type === 'string') ? type : <CollapsibleList items={type} />} </ul></td>
-      <td className="data-dictionary__table-data data-dictionary__table-data--column-3"> { required ? 'Yes' : 'No' } </td>
-      <td className="data-dictionary__table-data data-dictionary__table-data--column-4"> { description } </td>
+    <tr className='data-dictionary__table-row'>
+      <td className='data-dictionary__table-data data-dictionary__table-data--column-1'><div> { propertyName }</div> </td>
+      <td className='data-dictionary__table-data data-dictionary__table-data--column-2'> <ul>{ (typeof type === 'string') ? type : <CollapsibleList items={type} />} </ul></td>
+      <td className='data-dictionary__table-data data-dictionary__table-data--column-3'> { required ? 'Yes' : 'No' } </td>
+      <td className='data-dictionary__table-data data-dictionary__table-data--column-4'> { description } </td>
     </tr>
   );
 };
@@ -207,13 +207,13 @@ export const PropertiesTable = ({ node, required, links }) => {
   const linknames = links.map(link => link.name);
   const properties = Object.keys(node.properties);
   return (
-    <table className="data-dictionary__table">
-      <thead className="data-dictionary__table-head">
-        <tr className="data-dictionary__table-row">
-          <td className="data-dictionary__table-data data-dictionary__table-data--column-1 data-dictionary__table-data--head">Property</td>
-          <td className="data-dictionary__table-data data-dictionary__table-data--column-2 data-dictionary__table-data--head">Type</td>
-          <td className="data-dictionary__table-data data-dictionary__table-data--column-3 data-dictionary__table-data--head">Required</td>
-          <td className="data-dictionary__table-data data-dictionary__table-data--column-4 data-dictionary__table-data--head">Description</td>
+    <table className='data-dictionary__table'>
+      <thead className='data-dictionary__table-head'>
+        <tr className='data-dictionary__table-row'>
+          <td className='data-dictionary__table-data data-dictionary__table-data--column-1 data-dictionary__table-data--head'>Property</td>
+          <td className='data-dictionary__table-data data-dictionary__table-data--column-2 data-dictionary__table-data--head'>Type</td>
+          <td className='data-dictionary__table-data data-dictionary__table-data--column-3 data-dictionary__table-data--head'>Required</td>
+          <td className='data-dictionary__table-data data-dictionary__table-data--column-4 data-dictionary__table-data--head'>Description</td>
         </tr>
       </thead>
 
@@ -282,9 +282,9 @@ const DataDictionaryNode = ({ params, submission }) => {
 
   return (
     <div>
-      <Link to="/dd">{'< top level dictionary'}</Link>
+      <Link to='/dd'>{'< top level dictionary'}</Link>
       <h3> {dictionary[node].title} </h3>
-      Download template: <a className="data-dictionary__download-button" href={`/api/v0/submission/template/${node}?format=json`}>{'JSON'}</a> | <a className="data-dictionary__download-button" href={`/api/v0/submission/template/${node}`}>{'TSV'}</a>
+      Download template: <a className='data-dictionary__download-button' href={`/api/v0/submission/template/${node}?format=json`}>{'JSON'}</a> | <a className='data-dictionary__download-button' href={`/api/v0/submission/template/${node}`}>{'TSV'}</a>
 
 
       <h4> Summary </h4>

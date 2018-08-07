@@ -148,7 +148,7 @@ class ExplorerComponent extends Component {
   render() {
     this.updateFilesMap();
     return (
-      <div className="explorer-component">
+      <div className='explorer-component'>
         <ReduxSideBar />
         <ReduxExplorerTabPanel />
       </div>

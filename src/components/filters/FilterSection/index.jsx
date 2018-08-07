@@ -19,15 +19,15 @@ class FilterSection extends React.Component {
 
   render() {
     return (
-      <div className="filter-section">
-        <div className="filter-section__header">
-          <p className="filter-section__title">{this.props.title}</p>
+      <div className='filter-section'>
+        <div className='filter-section__header'>
+          <p className='filter-section__title'>{this.props.title}</p>
           <FontAwesomeIcon
             icon={this.state.isExpanded ? 'angle-down' : 'angle-up'}
             onClick={this.toggleSection}
           />
         </div>
-        <div className="filter-section__options">
+        <div className='filter-section__options'>
           {
             this.state.isExpanded ?
               this.props.options.map((option, index) => (

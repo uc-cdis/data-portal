@@ -67,23 +67,24 @@ const SubmitTSV = ({ project, submission, onUploadClick, onSubmitClick, onFileCh
   return (
     <form>
       <div style={{ marginBottom: '1em', display: 'block' }}>
-        <input type="file" onChange={processUpload} name="file-upload" style={{ display: 'none' }} id="file-upload" />
-        <UploadButton id="cd-submit-tsv__upload-button" className="button-primary-white" htmlFor="file-upload">Upload file</UploadButton>
+        <input type='file' onChange={processUpload} name='file-upload' style={{ display: 'none' }} id='file-upload' />
+        <UploadButton id='cd-submit-tsv__upload-button' className='button-primary-white' htmlFor='file-upload'>Upload file</UploadButton>
         &emsp;
         {submission.file &&
-          <UploadButton id="cd-submit-tsv__submit-button" className="button-primary-white" onClick={onSubmitClickEvent}>Submit</UploadButton>
+          <UploadButton id='cd-submit-tsv__submit-button' className='button-primary-white' onClick={onSubmitClickEvent}>Submit</UploadButton>
         }
       </div>
       { (submission.file) &&
       <AceEditor
-        width="100%"
-        height="200px"
+        width='100%'
+        height='200px'
         style={{ marginBottom: '1em' }}
         mode={submission.file_type === 'text/tab-separated-values' ? '' : 'json'}
-        theme="kuroir"
+        theme='kuroir'
         value={submission.file}
+        editorProps={{ $blockScrolling: Infinity }} // mutes console warning
         onChange={onChange}
-        id="uploaded"
+        id='uploaded'
       />
       }
       {submission.submit_result &&

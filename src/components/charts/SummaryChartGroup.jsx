@@ -9,12 +9,12 @@ class SummaryChartGroup extends Component {
   render() {
     const width = parseParamWidth(this.props.width);
     return (
-      <div className="summary-chart-group" style={{ width }}>
+      <div className='summary-chart-group' style={{ width }}>
         {
           this.props.summaries.map((item, index) => (
-            <div className="summary-chart-group__column" key={item.title}>
+            <div className='summary-chart-group__column' key={item.title}>
               {
-                index > 0 && <div className="summary-chart-group__column-left-border" />
+                index > 0 && <div className='summary-chart-group__column-left-border' />
               }
               {
                 item.type === 'pie'
@@ -30,7 +30,7 @@ class SummaryChartGroup extends Component {
                       title={item.title}
                       localTheme={this.props.localTheme}
                       vertical
-                      color="#3283c8"
+                      color='#3283c8'
                     />
                   )
               }

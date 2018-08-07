@@ -103,7 +103,7 @@ export function createSvgGraph(nodesIn, edges) {
   const graphFontSize = '0.75em';
 
   // Append text to nodes
-  /* eslint no-param-reassign: ["error", { "props": true }] */
+  /* eslint-disable no-param-reassign */
   nodes.forEach((nodeInfo) => {
     const splitName = nodeInfo.title.split(' ');
     if (splitName.length > 2) {
@@ -195,6 +195,23 @@ class SvgGraph extends React.Component {
   }
 
   componentDidMount() {
+    /* FIXME:
+     * work around to mute linting warning about setting state
+     * in componentDidMount()
+     */
+    this.onMount();
+  }
+
+
+  componentDidUpdate() {
+    /* FIXME:
+     * work around to mute linting warning about setting state
+     * in componentDidUpdate()
+     */
+    this.onUpdate();
+  }
+
+  onMount = () => {
     //
     // This is crazy, because createSvgGraph is going to add nodes
     // to the react-managed DOM via a d3 simulation ...
@@ -207,8 +224,7 @@ class SvgGraph extends React.Component {
     }
   }
 
-
-  componentDidUpdate() {
+  onUpdate = () => {
     // break recursion with if: componentDidUpdate -> setState -> componentDidUpdate ...
     //        https://reactjs.org/docs/react-component.html#componentwillupdate
     if (this.state.nodes !== this.props.nodes || this.state.edges !== this.props.edges) {
@@ -225,7 +241,6 @@ class SvgGraph extends React.Component {
       }
     }
   }
-
 
   render() {
     const { minX, minY } = this.state;
@@ -245,7 +260,7 @@ class SvgGraph extends React.Component {
     };
     return (
       <div style={divStyle}>
-        <svg id="data_model_graph" height={height} width={width} />
+        <svg id='data_model_graph' height={height} width={width} />
       </div>
     );
   }

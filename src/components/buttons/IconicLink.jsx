@@ -17,7 +17,7 @@ class IconicLink extends React.Component {
               <IconComponent
                 dictIcons={this.props.dictIcons}
                 iconName={this.props.icon}
-                height="14px"
+                height='14px'
                 svgStyles={{ ...styles }}
               />
             </button> :

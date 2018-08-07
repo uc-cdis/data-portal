@@ -10,13 +10,13 @@ storiesOf('IconicButton', module)
   .add('with caption', () => (
     <IconicButton
       onClick={action('clicked')}
-      caption="Hello Button"
+      caption='Hello Button'
     />
   ))
   .add('with color', () => (
     <IconicButton
       onClick={action('clicked')}
-      iconColor="#ef8523"
+      iconColor='#ef8523'
       caption="When you click me, I'm orange!"
     />
   ));
@@ -29,9 +29,9 @@ storiesOf('IconicLink', module)
       <Route>
         <IconicLink
           onClick={action('clicked')}
-          link="test.com"
-          iconColor="#ef8523"
-          caption="Hello Link"
+          link='test.com'
+          iconColor='#ef8523'
+          caption='Hello Link'
         />
       </Route>
     </StaticRouter>
@@ -41,7 +41,7 @@ storiesOf('IconicLink', module)
       <Route>
         <IconicLink
           onClick={action('clicked')}
-          link="test.com"
+          link='test.com'
           caption="When you click me, I'm orange!"
         />
       </Route>

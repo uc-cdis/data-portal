@@ -55,6 +55,23 @@ export class CheckBoxGroup extends Component {
     this.props.onChange(state);
   };
 
+  displayOptions = () => {
+    if (this.state.collapsed === 1) {
+      return (
+        <a href='#/' onClick={() => this.setState({ collapsed: 2 })}>
+          {'More Options'}
+        </a>
+      );
+    } else if (this.state.collapsed === 2) {
+      return (
+        <a href='#/' onClick={() => this.setState({ collapsed: 1 })}>
+          {'Fewer options'}
+        </a>
+      );
+    }
+    return '';
+  };
+
   render() {
     const selectedItems = this.props.selectedItems;
     // console.log(selectedItems);
@@ -68,7 +85,7 @@ export class CheckBoxGroup extends Component {
         {listItems.map(item => (
           <div key={item}>
             <input
-              type="checkbox"
+              type='checkbox'
               name={this.props.groupName}
               value={item}
               id={item}
@@ -78,13 +95,7 @@ export class CheckBoxGroup extends Component {
             <LabelCheckBox for={item}>{item}</LabelCheckBox>
           </div>
         ))}
-        {
-          (this.state.collapsed === 1) ?
-            <a href="#/" onClick={() => this.setState({ collapsed: 2 })}>{'More options'}</a>
-            : ((this.state.collapsed === 2)
-              ? <a href="#/" onClick={() => this.setState({ collapsed: 1 })}>{'Fewer options'}</a>
-              : '')
-        }
+        {this.displayOptions()}
       </CheckBox>
     );
   }
@@ -94,4 +105,3 @@ export const StyledCheckBoxGroup = styled(CheckBoxGroup)`
     padding: 0em 1em;
     border-bottom: 2px solid #717b85;
 `;
-
