@@ -22,7 +22,7 @@ export const fetchCoreMetadata = objectId =>
         default:
           return {
             type: 'CORE_METADATA_ERROR',
-            error: data.error,
+            error: data,
           };
         }
       })
@@ -58,6 +58,7 @@ const downloadFile = id => (dispatch) => {
 export const ReduxCoreMetadataHeader = (() => {
   const mapStateToProps = state => ({
     metadata: state.coreMetadata.metadata,
+    error: state.coreMetadata.error,
     user: state.user,
     projectAvail: state.submission.projectAvail,
   });
@@ -71,7 +72,7 @@ export const ReduxCoreMetadataHeader = (() => {
 
 export const ReduxFileTypePicture = (() => {
   const mapStateToProps = state => ({
-    data_format: state.coreMetadata.metadata.data_format,
+    metadata: state.coreMetadata.metadata,
   });
 
   const mapDispatchToProps = dispatch => ({
