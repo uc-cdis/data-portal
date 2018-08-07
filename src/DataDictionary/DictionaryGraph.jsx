@@ -17,6 +17,10 @@ class DictionaryGraph extends React.Component {
   }
 
   componentDidMount() {
+    /* FIXME:
+     * work around to mute linting warning about setting state
+     * in componentDidMount()
+     */
     this.onMount();
   }
 
