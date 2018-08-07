@@ -179,7 +179,6 @@ export const Input = styled.input`
 export const Label = styled.label`
     margin: 3px;
     display:inline-block;
- 
 `;
 
 export const Sidebar = styled.div`
