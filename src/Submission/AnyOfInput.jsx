@@ -21,9 +21,9 @@ const AnyOfInput = ({
 
   return (
     <div>
-      <h6 className='submit-form__name'>{name}:</h6>
-      {required && <span className='submit-form__required-notification'> {'*'} </span>}
-      <div className='submit-form__sub-props'>
+      <h6 className='any-of-input__name'>{name}:</h6>
+      {required && <span className='any-of-input__required-notification'> {'*'} </span>}
+      <div className='any-of-input__sub-props'>
         {properties.map((property) => {
           let description = ('description' in node.properties[property]) ? node.properties[property].description : '';
           if (description === '') {
