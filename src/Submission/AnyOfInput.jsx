@@ -1,7 +1,7 @@
 import React from 'react';
-import TextInput from './TextInput';
 import PropTypes from 'prop-types';
-import './AnyOfInput.less'
+import TextInput from './TextInput';
+import './AnyOfInput.less';
 
 const AnyOfInput = ({ name, values, node, properties, required, requireds, onChange }) => {
   // this is smelly code because it reuses logic from SubmitNodeForm,
@@ -53,4 +53,4 @@ AnyOfInput.defaultProps = {
   requireds: [],
 };
 
-export default AnyOfInput
+export default AnyOfInput;

@@ -30,9 +30,9 @@ const ProjectSubmission = (props) => {
 
   return (
     <div>
-      <h2 className="project-submission__title">{props.project}</h2>
+      <h2 className='project-submission__title'>{props.project}</h2>
       {
-        <Link className="project-submission__link" to={`/${props.project}/search`}>browse nodes</Link>
+        <Link className='project-submission__link' to={`/${props.project}/search`}>browse nodes</Link>
       }
       <MySubmitForm />
       <MySubmitTSV project={props.project} />

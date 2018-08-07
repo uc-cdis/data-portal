@@ -40,7 +40,7 @@ class KeyTable extends React.Component {
 
   render() {
     return (
-      <div className="key-table">
+      <div className='key-table'>
         <Table
           title={LIST_API_KEY_MSG}
           header={[API_KEY_COLUMN, EXPIRES_COLUMN, '']}

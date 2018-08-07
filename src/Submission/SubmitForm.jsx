@@ -3,10 +3,6 @@ import { Toggle } from 'material-ui';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { jsonToString } from '../utils';
-import TextInput from './TextInput';
-import OneOfInput from './OneOfInput';
-import EnumInput from './EnumInput';
-import AnyOfInput from './AnyOfInput';
 import SubmitNodeForm from './SubmitNodeForm';
 import './SubmitForm.less';
 

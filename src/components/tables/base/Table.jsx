@@ -14,7 +14,7 @@ class Table extends React.Component {
     return (
       <div>
         <h2>{this.props.title}</h2>
-        <table className="base-table__body">
+        <table className='base-table__body'>
           <TableHead
             cols={this.props.header}
           />

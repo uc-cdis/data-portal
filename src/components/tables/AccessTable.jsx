@@ -16,10 +16,10 @@ class AccessTable extends React.Component {
 
   getData = (projectKeys, projectsAccesses, projects) => projectKeys.map(p => [
     p in projects ?
-      <Link className="access-table__project-cell" to={`/${projects[p]}`}>
+      <Link className='access-table__project-cell' to={`/${projects[p]}`}>
         {p}
       </Link> :
-      <div className="access-table__project-cell">
+      <div className='access-table__project-cell'>
         {p}
       </div>,
     projectsAccesses[p].join(', '),
@@ -28,7 +28,7 @@ class AccessTable extends React.Component {
   render() {
     const projectKeys = Object.keys(this.props.projectsAccesses);
     return (
-      <div className="access-table">
+      <div className='access-table'>
         <Table
           title={LIST_PROJECT_MSG}
           header={[PROJECT_COLUMN, RIGHT_COLUMN]}
