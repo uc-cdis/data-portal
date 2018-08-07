@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from '@arranger/components/dist/Arranger';
-import '@arranger/components/public/themeStyles/beagle/beagle.css';
 import './DataExplorerTable.less';
 
 class DataExplorerTable extends React.Component {
