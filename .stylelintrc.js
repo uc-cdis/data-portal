@@ -14,7 +14,6 @@ module.exports = {
     "no-descending-specificity": true,
     "no-duplicate-at-import-rules": true,
     "no-duplicate-selectors": true,
-    "color-named": "always-where-possible",
     "declaration-no-important": true,
     "length-zero-no-unit": true,
   },
