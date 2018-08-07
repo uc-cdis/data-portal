@@ -1326,7 +1326,7 @@ const params = {
             name: 'Explore Data',
             icon: 'data-explore',
             body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
-            link: '#hostname#shiny/',
+            link: '/explorer',
             label: 'Explore data',
           },
           {
@@ -1356,7 +1356,7 @@ const params = {
           },
           {
             icon: 'exploration',
-            link: '#hostname#shiny/',
+            link: '/explorer',
             color: '#a2a2a2',
             name: 'Exploration',
           },
