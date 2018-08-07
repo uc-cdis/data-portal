@@ -57,7 +57,7 @@ export class CheckBoxGroup extends Component {
       : this.props.listItems;
 
     return (
-      <div className='checkbox'>
+      <div className='checkbox-group'>
         {this.props.title}
         {listItems.map(item => (
           <div key={item}>
@@ -69,7 +69,7 @@ export class CheckBoxGroup extends Component {
               checked={selectedItems.includes(item)}
               onChange={() => this.onChangeBox(item)}
             />
-            <label className='checkbox__label' htmlFor={item}>{item}</label>
+            <label className='checkbox-group__label' htmlFor={item}>{item}</label>
           </div>
         ))}
         {this.displayOptions()}
