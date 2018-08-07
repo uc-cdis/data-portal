@@ -44,6 +44,8 @@ class CoreMetadataHeader extends Component {
   dateTransform = date => `Updated on ${date.substr(0, 10)}`;
 
   render() {
+
+  if (this.props.metadata) {
     // display the download button if the user can download this file
     const { user, projectAvail } = this.props;
     const projectId = this.props.metadata.project_id;
@@ -74,13 +76,30 @@ class CoreMetadataHeader extends Component {
       </div>
     );
   }
+
+  // if there is no core metadata to display
+  else {
+    return (
+      <p className="body-typo">
+        Error: {this.props.error}
+      </p>
+    );
+  }
+
+  }
 }
 
 CoreMetadataHeader.propTypes = {
-  metadata: PropTypes.object.isRequired,
+  metadata: PropTypes.object,
+  error: PropTypes.string,
   onDownloadFile: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   projectAvail: PropTypes.object.isRequired,
+};
+
+CoreMetadataHeader.defaultProps = {
+  metadata: null,
+  error: null,
 };
 
 export default CoreMetadataHeader;
