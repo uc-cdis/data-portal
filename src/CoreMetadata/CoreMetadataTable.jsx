@@ -22,13 +22,15 @@ function fieldInTable(fieldName) {
 }
 
 class CoreMetadataTable extends Component {
-  dataTransform = metadata => Object.keys(metadata)
-    .sort() // alphabetical order
-    .filter(key => fieldInTable(key))
-    .map(key => [
-      <TitleCell>{firstCharToUppercase(key)}</TitleCell>,
-      metadata[key],
-    ]);
+  dataTransform = metadata => metadata ?
+    Object.keys(metadata)
+      .sort() // alphabetical order
+      .filter(key => fieldInTable(key))
+      .map(key => [
+        <TitleCell>{firstCharToUppercase(key)}</TitleCell>,
+        metadata[key],
+      ])
+    : [];
 
   render() {
     return (
@@ -42,7 +44,11 @@ class CoreMetadataTable extends Component {
 }
 
 CoreMetadataTable.propTypes = {
-  metadata: PropTypes.object.isRequired,
+  metadata: PropTypes.object,
+};
+
+CoreMetadataTable.defaultProps = {
+  metadata: null,
 };
 
 export default CoreMetadataTable;
