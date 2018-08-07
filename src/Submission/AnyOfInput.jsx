@@ -1,4 +1,5 @@
 import TextInput from './TextInput';
+import PropTypes from 'prop-types';
 import './AnyOfInput.less'
 
 const AnyOfInput = ({ name, values, node, properties, required, requireds, onChange }) => {

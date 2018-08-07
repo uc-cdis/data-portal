@@ -2,6 +2,7 @@ import OneOfInput from './OneOfInput';
 import EnumInput from './EnumInput';
 import AnyOfInput from './AnyOfInput';
 import TextInput from './TextInput';
+import PropTypes from 'prop-types';
 import './SubmitNodeForm.less';
 
 const SubmitNodeForm = ({
