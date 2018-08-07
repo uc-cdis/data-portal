@@ -252,7 +252,7 @@ class SvgGraph extends React.Component {
     };
     return (
       <div style={divStyle}>
-        <svg id="data_model_graph" height={height} width={width} />
+        <svg id='data_model_graph' height={height} width={width} />
       </div>
     );
   }

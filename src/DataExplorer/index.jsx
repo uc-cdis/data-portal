@@ -10,7 +10,7 @@ class DataExplorer extends React.Component {
   render() {
     const arrangerConfig = paramByApp(params, 'arrangerConfig') || {};
     return (
-      <div className="data-explorer">
+      <div className='data-explorer'>
         <ArrangerWrapper
           index={arrangerConfig.index}
           graphqlField={arrangerConfig.graphqlField}

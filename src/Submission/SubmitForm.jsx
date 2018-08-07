@@ -101,7 +101,7 @@ const SubmitNodeForm = ({ node, form, properties, requireds, onChange,
               onChange={onChangeEnum}
               required={required}
               onUpdateFormSchema={onUpdateFormSchema}
-              propertyType="string"
+              propertyType='string'
               description={description}
             />);
         } else if ('oneOf' in node.properties[property]) {
@@ -149,7 +149,7 @@ const SubmitNodeForm = ({ node, form, properties, requireds, onChange,
           />);
       })}
       <UploadFormButton>
-        <button type="submit" value="Submit" className="button-primary-white" style={{ width: '250px' }}>
+        <button type='submit' value='Submit' className='button-primary-white' style={{ width: '250px' }}>
           Upload submission json from form
         </button>
       </UploadFormButton>
@@ -270,9 +270,9 @@ class SubmitForm extends Component {
     return (
       <div>
         <form>
-          <Toggle label="Use Form Submission" labelStyle={{ width: '' }} onToggle={this.onFormToggle} />
+          <Toggle label='Use Form Submission' labelStyle={{ width: '' }} onToggle={this.onFormToggle} />
           {this.state.fill_form && <Dropdown
-            name="nodeType"
+            name='nodeType'
             options={options}
             value={this.state.chosenNode}
             onChange={updateChosenNode}

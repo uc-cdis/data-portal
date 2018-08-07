@@ -71,22 +71,22 @@ class OneOfInput extends Component {
       <div>
           What is your data type for {this.props.name}?
         <br />
-        <label htmlFor="textDataType">
+        <label htmlFor='textDataType'>
           <input
-            id="textDataType"
-            type="radio"
-            value="Text"
+            id='textDataType'
+            type='radio'
+            value='Text'
             checked={this.state.selectedOption === 'Text'}
             onChange={radioChange}
           />
               Text
         </label>
 
-        <label htmlFor="numberDataType">
+        <label htmlFor='numberDataType'>
           <input
-            id="numberDataType"
-            type="radio"
-            value="Number"
+            id='numberDataType'
+            type='radio'
+            value='Number'
             checked={this.state.selectedOption === 'Number'}
             onChange={radioChange}
           />

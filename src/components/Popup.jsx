@@ -73,13 +73,13 @@ const Popup = ({
               svgStyles={{ verticalAlign: 'middle', marginRight: '17px', display: 'inline-flex' }}
             />
           }
-          <div className="h2-typo" style={{ display: 'inline-flex' }}>{title}</div>
+          <div className='h2-typo' style={{ display: 'inline-flex' }}>{title}</div>
         </div>
         {
           onClose &&
           <Btn onClick={onClose}>
             <IconComponent
-              iconName="cross"
+              iconName='cross'
               dictIcons={dictIcons}
               svgStyles={{ verticalAlign: 'middle' }}
             />
@@ -87,14 +87,14 @@ const Popup = ({
         }
       </PopupTitleBar>
       <Message>
-        { message && <div className="high-light">{message}</div> }
+        { message && <div className='high-light'>{message}</div> }
         {
           lines.length > 0 &&
           <pre>
             {
               lines.map((l, i) => (
                 <div key={`line_${i}`}>
-                  {l.label && [<b className="h3-typo">{l.label}</b>, <br />]}
+                  {l.label && [<b className='h3-typo'>{l.label}</b>, <br />]}
                   <code>
                     {l.code} <br />
                   </code>
@@ -115,7 +115,7 @@ const Popup = ({
                 key={btn.caption}
                 onClick={btn.fn}
                 caption={btn.caption}
-                buttonClassName="button-primary-white"
+                buttonClassName='button-primary-white'
               /> :
                 <IconicButton
                   key={btn.caption}
@@ -123,7 +123,7 @@ const Popup = ({
                   caption={btn.caption}
                   icon={btn.icon}
                   dictIcons={dictIcons}
-                  buttonClassName="button-primary-white"
+                  buttonClassName='button-primary-white'
                 />,
             ])
           }
@@ -136,7 +136,7 @@ const Popup = ({
                 key={btn.caption}
                 onClick={btn.fn}
                 caption={btn.caption}
-                buttonClassName="button-primary-orange"
+                buttonClassName='button-primary-orange'
               /> :
                 <IconicButton
                   key={btn.caption}
@@ -144,7 +144,7 @@ const Popup = ({
                   caption={btn.caption}
                   icon={btn.icon}
                   dictIcons={dictIcons}
-                  buttonClassName="button-primary-orange"
+                  buttonClassName='button-primary-orange'
                 />,
             ])
           }

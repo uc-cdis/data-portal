@@ -68,20 +68,20 @@ class IndexButtonBar extends Component {
           this.props.buttons.map(
             item => (
               <IndexThumbnailButton key={item.name}>
-                <ThumbnailTitle className="h3-typo">{item.name}</ThumbnailTitle>
+                <ThumbnailTitle className='h3-typo'>{item.name}</ThumbnailTitle>
                 <IndexIcon>
                   <IconComponent
                     dictIcons={this.props.dictIcons}
                     iconName={item.icon}
-                    height="90px"
+                    height='90px'
                   />
                 </IndexIcon>
-                <ThumbnailText className="body-typo">{item.body}</ThumbnailText>
+                <ThumbnailText className='body-typo'>{item.body}</ThumbnailText>
                 {
                   item.link.startsWith('http') ?
                     <BarItemA href={item.link}>
                       <button
-                        className="button-primary-orange"
+                        className='button-primary-orange'
                         onClick={() => this.props.onActiveTab(item.link)}
                       >
                         {item.label}
@@ -89,7 +89,7 @@ class IndexButtonBar extends Component {
                     </BarItemA> :
                     <BarItem to={item.link}>
                       <button
-                        className="button-primary-orange"
+                        className='button-primary-orange'
                         onClick={() => this.props.onActiveTab(item.link)}
                       >
                         {item.label}

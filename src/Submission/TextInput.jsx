@@ -44,7 +44,7 @@ class TextInput extends Component {
         {this.props.description !== '' && <InputDescription>{this.props.description}</InputDescription>}
         <br />
         <Input
-          type="text"
+          type='text'
           name={this.props.name}
           value={this.props.value || ''}
           required={this.props.required}

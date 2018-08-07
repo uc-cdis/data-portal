@@ -29,6 +29,10 @@ module.exports = {
           "error",
           "single"
       ],
+      "jsx-quotes": [
+        "error",
+        "prefer-single",
+      ],
       "semi": [
           "error",
           "always"
@@ -42,6 +46,7 @@ module.exports = {
       "react/jsx-curly-brace-presence": ["off", "ignore"],
       "function-paren-newline": ["off", "ignore"],
       "react/no-array-index-key" : ["off, ignore"],
+
   },
   "overrides": [
     {

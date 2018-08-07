@@ -58,13 +58,13 @@ export class CheckBoxGroup extends Component {
   displayOptions = () => {
     if (this.state.collapsed === 1) {
       return (
-        <a href="#/" onClick={() => this.setState({ collapsed: 2 })}>
+        <a href='#/' onClick={() => this.setState({ collapsed: 2 })}>
           {'More Options'}
         </a>
       );
     } else if (this.state.collapsed === 2) {
       return (
-        <a href="#/" onClick={() => this.setState({ collapsed: 1 })}>
+        <a href='#/' onClick={() => this.setState({ collapsed: 1 })}>
           {'Fewer options'}
         </a>
       );
@@ -85,7 +85,7 @@ export class CheckBoxGroup extends Component {
         {listItems.map(item => (
           <div key={item}>
             <input
-              type="checkbox"
+              type='checkbox'
               name={this.props.groupName}
               value={item}
               id={item}

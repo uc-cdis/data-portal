@@ -19,10 +19,10 @@ class Question extends Component {
       <section>
         <div>
           <span>{this.props.content.question}</span>
-          <div className="fui-question-circle question__tooltip">
+          <div className='fui-question-circle question__tooltip'>
             <p>{this.props.content.hint}</p>
           </div>
-          { this.props.showErrors && <div className="FormError question__form-error">Error!?!?</div> }
+          { this.props.showErrors && <div className='FormError question__form-error'>Error!?!?</div> }
         </div>
         <RadioGroup showErrors={false} field={this.props.content.id}>
           {
@@ -31,7 +31,7 @@ class Question extends Component {
                 this.props.content.options.map(
                   option => (
                     <p
-                      className="question__option-bullet"
+                      className='question__option-bullet'
                       key={option}
                     >
                       <Radio

@@ -17,34 +17,34 @@ class NavBar extends Component {
 
   render() {
     return (
-      <div className="nav-bar">
-        <header className="nav-bar__header">
-          <nav className="nav-bar__nav--left">
-            <div className="nav-bar__logo">
+      <div className='nav-bar'>
+        <header className='nav-bar__header'>
+          <nav className='nav-bar__nav--left'>
+            <div className='nav-bar__logo'>
               <img
-                className="nav-bar__logo-img"
-                src="/src/img/logo.png"
-                alt=""
+                className='nav-bar__logo-img'
+                src='/src/img/logo.png'
+                alt=''
               />
             </div>
             <div
-              role="button"
+              role='button'
               tabIndex={0}
-              className="nav-bar__home-button"
+              className='nav-bar__home-button'
               onClick={() => this.props.onActiveTab('')}
               onKeyPress={() => this.props.onActiveTab('')}
             >
-              <Link className="h3-typo nav-bar__link nav-bar__link--home" to="">
+              <Link className='h3-typo nav-bar__link nav-bar__link--home' to=''>
                 {this.props.navTitle}
               </Link>
             </div>
           </nav>
-          <nav className="nav-bar__nav--right">
+          <nav className='nav-bar__nav--right'>
             {
               this.props.navItems.map(
                 (item, index) => (
                   (item.link.startsWith('http')) ?
-                    <a className="nav-bar__link nav-bar__link--right" key={item.link} href={item.link}>
+                    <a className='nav-bar__link nav-bar__link--right' key={item.link} href={item.link}>
                       <NavButton
                         item={item}
                         dictIcons={this.props.dictIcons}
@@ -53,7 +53,7 @@ class NavBar extends Component {
                         tabIndex={index + 1}
                       />
                     </a> :
-                    <Link className="nav-bar__link nav-bar__link--right" key={item.link} to={item.link}>
+                    <Link className='nav-bar__link nav-bar__link--right' key={item.link} to={item.link}>
                       <NavButton
                         item={item}
                         dictIcons={this.props.dictIcons}

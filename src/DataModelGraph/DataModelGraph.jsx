@@ -34,10 +34,10 @@ class DataModelGraph extends React.Component {
 
     if (graph.nodes.length !== 0 && 'count' in graph.nodes[graph.nodes.length - 1]) {
       return (
-        <div className="data-model-graph">
+        <div className='data-model-graph'>
           <button
-            id="cd-dmg__toggle"
-            className="button-primary-white"
+            id='cd-dmg__toggle'
+            className='button-primary-white'
             onClick={this.handleToggleClick}
           >Toggle view
           </button>

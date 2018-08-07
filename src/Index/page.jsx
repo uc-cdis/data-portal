@@ -14,8 +14,8 @@ class IndexPageComponent extends React.Component {
 
   render() {
     return (
-      <div className="index-page">
-        <div className="index-page__top">
+      <div className='index-page'>
+        <div className='index-page__top'>
           <Introduction data={components.index.introduction} dictIcons={dictIcons} />
           <ReduxIndexBarChart />
         </div>

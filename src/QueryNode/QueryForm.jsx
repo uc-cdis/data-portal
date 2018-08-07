@@ -79,9 +79,9 @@ class QueryForm extends React.Component {
     const state = this.state || {};
     return (
       <form onSubmit={this.handleQuerySubmit}>
-        <Dropdown name="node_type" options={options} value={state.selectValue} onChange={this.updateValue} />
-        <Input placeholder="submitter_id" type="text" name="submitter_id" />
-        <SearchButton type="submit" onSubmit={this.handleQuerySubmit} value="search" />
+        <Dropdown name='node_type' options={options} value={state.selectValue} onChange={this.updateValue} />
+        <Input placeholder='submitter_id' type='text' name='submitter_id' />
+        <SearchButton type='submit' onSubmit={this.handleQuerySubmit} value='search' />
       </form>
     );
   }

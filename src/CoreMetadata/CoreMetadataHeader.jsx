@@ -53,7 +53,7 @@ class CoreMetadataHeader extends Component {
       downloadButton = (
         <button
           onClick={this.props.onDownloadFile}
-          className="button-primary-orange"
+          className='button-primary-orange'
         >
           {DOWNLOAD_BTN_CAPTION}
         </button>);
@@ -62,15 +62,15 @@ class CoreMetadataHeader extends Component {
     const properties = `${this.props.metadata.data_format} | ${fileSizeTransform(this.props.metadata.file_size)} | ${this.props.metadata.object_id} | ${this.dateTransform(this.props.metadata.updated_datetime)}`;
 
     return (
-      <div className="body-typo">
-        <p className="h3-typo">
+      <div className='body-typo'>
+        <p className='h3-typo'>
           {this.props.metadata.file_name}
           <br />
           {fileTypeTransform(this.props.metadata.type)}
         </p>
-        <p className="body-typo">{this.props.metadata.description}</p>
+        <p className='body-typo'>{this.props.metadata.description}</p>
         { downloadButton }
-        <div className="body-typo">{properties}</div>
+        <div className='body-typo'>{properties}</div>
       </div>
     );
   }

@@ -8,13 +8,13 @@ const TopIconButton = ({ dictIcons, item, onActiveTab = () => {}, isActive = fal
     className={isActive ? 'top-icon-button button-top-active body-typo' : 'top-icon-button body-typo'}
     onClick={onActiveTab}
     onKeyDown={onActiveTab}
-    role="button"
+    role='button'
     tabIndex={0}
   >
     {item.name}&nbsp;{item.icon ? <IconComponent
       dictIcons={dictIcons}
       iconName={item.icon}
-      height="14px"
+      height='14px'
     /> : ''}
   </div>
 );

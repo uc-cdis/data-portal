@@ -49,8 +49,8 @@ class Login extends React.Component {
       next = basename === '/' ? queryParams.next : basename + queryParams.next;
     }
     return (
-      <div className="login-page">
-        <div className="login-page__side-box">
+      <div className='login-page'>
+        <div className='login-page__side-box'>
           <SlidingWindow
             iconName={'gene'}
             dictIcons={this.props.dictIcons}
@@ -58,21 +58,21 @@ class Login extends React.Component {
             scrollY={window.scrollY}
           />
         </div>
-        <div className="login-page__central-content">
-          <div className="h1-typo login-page__title">
+        <div className='login-page__central-content'>
+          <div className='h1-typo login-page__title'>
             {this.props.data.title}
           </div>
-          <div className="high-light login-page__sub-title">
+          <div className='high-light login-page__sub-title'>
             {this.props.data.subTitle}
           </div>
-          <hr className="login-page__separator" />
-          <div className="body-typo">{this.props.data.text}</div>
+          <hr className='login-page__separator' />
+          <div className='body-typo'>{this.props.data.text}</div>
           {
             this.props.providers.map(
               p => (
-                <div key={p.id} className="login-page__entries">
+                <div key={p.id} className='login-page__entries'>
                   <a href={`${p.url}?redirect=${window.location.origin}${next}`}>
-                    <button className="button-primary-orange">
+                    <button className='button-primary-orange'>
                       {p.name}
                     </button>
                   </a>
@@ -87,7 +87,7 @@ class Login extends React.Component {
             </a>{'.'}
           </div>
         </div>
-        <div className="login-page__side-box">
+        <div className='login-page__side-box'>
           <SlidingWindow
             iconName={'gene'}
             dictIcons={this.props.dictIcons}

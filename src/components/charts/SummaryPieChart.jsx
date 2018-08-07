@@ -27,19 +27,19 @@ class SummaryPieChart extends React.Component {
     const dataKey = helper.getDataKey(this.props.showPercentage);
 
     return (
-      <div className="summary-pie-chart">
-        <div className="summary-pie-chart__title h4-typo">
+      <div className='summary-pie-chart'>
+        <div className='summary-pie-chart__title h4-typo'>
           {this.props.title}
         </div>
-        <div className="summary-pie-chart__body">
-          <div className="summary-pie-chart__legend">
+        <div className='summary-pie-chart__body'>
+          <div className='summary-pie-chart__legend'>
             {
               pieChartData.map(entry => (
-                <div className="summary-pie-chart__legend-item" key={'text'.concat(entry.name)}>
-                  <div className="form-body">
+                <div className='summary-pie-chart__legend-item' key={'text'.concat(entry.name)}>
+                  <div className='form-body'>
                     {entry.name}
                   </div>
-                  <div className="summary-pie-chart__legend-item-value form-special-number">
+                  <div className='summary-pie-chart__legend-item-value form-special-number'>
                     {
                       helper.percentageFormatter(this.props.showPercentage)(entry[dataKey])
                     }
@@ -58,7 +58,7 @@ class SummaryPieChart extends React.Component {
               data={pieChartData}
               innerRadius={this.props.innerRadius}
               outerRadius={this.props.outerRadius}
-              fill="#8884d8"
+              fill='#8884d8'
             >
               {
                 pieChartData.map((entry, index) => (

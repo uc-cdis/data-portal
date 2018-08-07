@@ -71,7 +71,7 @@ const countItems2 = [
 
 storiesOf('Cards', module)
   .add('DataSummaryCardGroup', () => (
-    <DataSummaryCardGroup summaryItems={countItems0} height={120} width={760} align="left" />
+    <DataSummaryCardGroup summaryItems={countItems0} height={120} width={760} align='left' />
   ))
   .add('DataSummaryCardGroup connected', () => (
     <DataSummaryCardGroup summaryItems={countItems1} connected />

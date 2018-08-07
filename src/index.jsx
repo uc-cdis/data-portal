@@ -79,10 +79,10 @@ async function init() {
                 { GA.init(gaTracking, dev, gaDebug) && <RouteTracker /> }
                 <ReduxTopBar />
                 <ReduxNavBar />
-                <div className="main-content">
+                <div className='main-content'>
                   <Switch>
                     <Route
-                      path="/login"
+                      path='/login'
                       component={
                         (
                           props => (
@@ -98,39 +98,39 @@ async function init() {
                     />
                     <Route
                       exact
-                      path="/"
+                      path='/'
                       component={
                         props => <ProtectedContent component={IndexPage} {...props} />
                       }
                     />
                     <Route
                       exact
-                      path="/submission"
+                      path='/submission'
                       component={
                         props => <ProtectedContent component={HomePage} {...props} />
                       }
                     />
                     <Route
                       exact
-                      path="/document"
+                      path='/document'
                       component={
                         props => <ProtectedContent component={DocumentPage} {...props} />
                       }
                     />
                     <Route
-                      path="/query"
+                      path='/query'
                       component={
                         props => <ProtectedContent component={GraphQLQuery} {...props} />
                       }
                     />
                     <Route
-                      path="/analysis"
+                      path='/analysis'
                       component={
                         props => <ProtectedContent component={ReduxAnalysis} {...props} />
                       }
                     />
                     <Route
-                      path="/identity"
+                      path='/identity'
                       component={
                         props => (<ProtectedContent
                           filter={() => store.dispatch(fetchAccess())}
@@ -140,7 +140,7 @@ async function init() {
                       }
                     />
                     <Route
-                      path="/quiz"
+                      path='/quiz'
                       component={
                         props => (<ProtectedContent
                           component={CertificateQuiz}
@@ -149,7 +149,7 @@ async function init() {
                       }
                     />
                     <Route
-                      path="/dd/:node"
+                      path='/dd/:node'
                       component={
                         props => (<ProtectedContent
                           public
@@ -159,14 +159,14 @@ async function init() {
                       }
                     />
                     <Route
-                      path="/dd"
+                      path='/dd'
                       component={
                         props => <ProtectedContent public component={DataDictionary} {...props} />
                       }
                     />
                     <Route
                       exact
-                      path="/files/:object_id"
+                      path='/files/:object_id'
                       component={
                         props => (<ProtectedContent
                           filter={() =>
@@ -178,13 +178,13 @@ async function init() {
                       }
                     />
                     <Route
-                      path="/files"
+                      path='/files'
                       component={
                         props => <ProtectedContent component={ExplorerPage} {...props} />
                       }
                     />
                     <Route
-                      path="/:project/search"
+                      path='/:project/search'
                       component={
                         (props) => {
                           const queryFilter = () => {
@@ -212,7 +212,7 @@ async function init() {
                     />
                     { isEnabled('explorer') ?
                       <Route
-                        path="/explorer"
+                        path='/explorer'
                         component={
                           props => <ProtectedContent component={DataExplorer} {...props} />
                         }
@@ -220,7 +220,7 @@ async function init() {
                       : null
                     }
                     <Route
-                      path="/:project"
+                      path='/:project'
                       component={
                         props => <ProtectedContent component={ProjectSubmission} {...props} />
                       }

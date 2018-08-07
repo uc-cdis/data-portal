@@ -99,14 +99,14 @@ const filterConfig = {
 storiesOf('Filters', module)
   .add('SingleSelectFilter', () => (
     <div>
-      <SingleSelectFilter label="Male" onSelect={action('checked')} />
-      <SingleSelectFilter label="Female" onSelect={action('checked')} />
+      <SingleSelectFilter label='Male' onSelect={action('checked')} />
+      <SingleSelectFilter label='Female' onSelect={action('checked')} />
     </div>
   ))
   .add('RangeFilter', () => (
     <div>
       <RangeFilter
-        label="Age"
+        label='Age'
         onDrag={action('range change')}
         min={0}
         max={100}

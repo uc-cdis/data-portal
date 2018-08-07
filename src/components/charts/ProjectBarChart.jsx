@@ -57,16 +57,16 @@ class ProjectBarChart extends React.Component {
     let countBar = 0;
     return (
       <FloatBox>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width='100%' height='100%'>
           <BarChart
             onClick={(e) => { browserHistory.push(`/${e.activeLabel}`); window.location.reload(false); }}
             data={projectCharts}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
             barSize={projectCharts.length < 10 ? 50 : null}
-            layout="horizontal"
+            layout='horizontal'
           >
             <h4>Project Submission status</h4>
-            <XAxis dataKey="name" stroke={localTheme['barGraph.lineColor']} fill={localTheme['barGraph.lineColor']} />
+            <XAxis dataKey='name' stroke={localTheme['barGraph.lineColor']} fill={localTheme['barGraph.lineColor']} />
             <YAxis stroke={localTheme['barGraph.lineColor']} fill={localTheme['barGraph.lineColor']} />
             <Tooltip />
             <Legend />
@@ -79,7 +79,7 @@ class ProjectBarChart extends React.Component {
                       key={countNames[index] + countBar.toString()}
                       name={countNames[index]}
                       dataKey={barName}
-                      stackId="a"
+                      stackId='a'
                       fill={localTheme[`barGraph.bar${(index + 1).toString()}Color`]}
                     />
                   );

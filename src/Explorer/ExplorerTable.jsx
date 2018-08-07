@@ -66,16 +66,16 @@ class ExplorerTableComponent extends Component {
   static renderRow(user, projectAvail, file, i) {
     const filesize = ExplorerTableComponent.humanFileSize(file.size);
     return (
-      <tr key={i} className="explorer-table__table-row">
-        <td className="explorer-table__table-data explorer-table__table-data--column-0">
+      <tr key={i} className='explorer-table__table-row'>
+        <td className='explorer-table__table-data explorer-table__table-data--column-0'>
           <Link to={`/${file.project_id}`}>{file.project_id}</Link>
         </td>
-        <td className="explorer-table__table-data explorer-table__table-data--column-1">
+        <td className='explorer-table__table-data explorer-table__table-data--column-1'>
           <Link to={`/files/${file.did}`}>{file.name}</Link>
         </td>
-        <td className="explorer-table__table-data explorer-table__table-data--column-2">{file.format}</td>
-        <td className="explorer-table__table-data explorer-table__table-data--column-3">{filesize}</td>
-        <td className="explorer-table__table-data explorer-table__table-data--column-4">{file.category}</td>
+        <td className='explorer-table__table-data explorer-table__table-data--column-2'>{file.format}</td>
+        <td className='explorer-table__table-data explorer-table__table-data--column-3'>{filesize}</td>
+        <td className='explorer-table__table-data explorer-table__table-data--column-4'>{file.category}</td>
       </tr>
     );
   }
@@ -97,9 +97,9 @@ class ExplorerTableComponent extends Component {
       }
     }
     return (
-      <table className="explorer-table">
-        <thead className="explorer-table__table-head">
-          <tr className="explorer-table__table-row">
+      <table className='explorer-table'>
+        <thead className='explorer-table__table-head'>
+          <tr className='explorer-table__table-row'>
             {columns.map(
               (item, i) => (
                 (item in specialAligns) ?
@@ -129,17 +129,17 @@ class ExplorerTableComponent extends Component {
             )
           }
         </tbody>
-        <tfoot className="explorer-table__table-foot">
-          <tr className="explorer-table__table-row">
-            <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-0">
+        <tfoot className='explorer-table__table-foot'>
+          <tr className='explorer-table__table-row'>
+            <td className='explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-0'>
               {
                 (this.state.originalPage > 0) &&
-                <button className="explorer-table__arrow-button" onClick={() => this.loadMorePrev()}>
+                <button className='explorer-table__arrow-button' onClick={() => this.loadMorePrev()}>
                   Prev {this.props.pageCount}
                 </button>
               }
             </td>
-            <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-1">
+            <td className='explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-1'>
               {
                 pages.map(item => (
                   <button
@@ -158,7 +158,7 @@ class ExplorerTableComponent extends Component {
                 ))
               }
             </td>
-            <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-2">
+            <td className='explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-2'>
               <SelectComponent
                 values={pageSizeValues}
                 title={'Page size: '}
@@ -166,10 +166,10 @@ class ExplorerTableComponent extends Component {
                 onChange={value => this.props.onPageSizeChange(value)}
               />
             </td>
-            <td className="explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-3">
+            <td className='explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-3'>
               {
                 (this.props.lastPageSize === 0) &&
-                <button className="explorer-table__arrow-button" onClick={() => this.loadMoreNext()}>
+                <button className='explorer-table__arrow-button' onClick={() => this.loadMoreNext()}>
                   Next {this.props.pageCount}
                 </button>
               }

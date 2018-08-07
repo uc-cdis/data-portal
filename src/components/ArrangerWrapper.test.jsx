@@ -12,7 +12,7 @@ describe('ArrangerWrapper', () => {
         graphqlField={'field'}
         projectId={'id'}
       >
-        <div className="test" />
+        <div className='test' />
       </ArrangerWrapper>,
     );
     expect(component.find(ArrangerWrapper).length).toBe(1);
@@ -26,7 +26,7 @@ describe('ArrangerWrapper', () => {
         graphqlField={'field'}
         projectId={'id'}
       >
-        <div className="test" />
+        <div className='test' />
       </ArrangerWrapper>,
     );
     const { children } = component.instance().props;
