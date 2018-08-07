@@ -97,4 +97,9 @@ CoreMetadataHeader.propTypes = {
   projectAvail: PropTypes.object.isRequired,
 };
 
+CoreMetadataHeader.defaultProps = {
+  metadata: null,
+  error: null,
+};
+
 export default CoreMetadataHeader;

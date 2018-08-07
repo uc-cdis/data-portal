@@ -47,4 +47,8 @@ CoreMetadataTable.propTypes = {
   metadata: PropTypes.object,
 };
 
+CoreMetadataTable.defaultProps = {
+  metadata: null,
+};
+
 export default CoreMetadataTable;
