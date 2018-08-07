@@ -43,6 +43,7 @@
 }
 
 /* Overriding default Arranger styles, don't adhere to BEM */
+/* stylelint-disable */
 .data-explorer-table__arranger-table {
 
   // Top of table where text and search box is located
@@ -139,7 +140,7 @@
         top: 20%;
         width: 15%;
         height: 40%;
-        border: solid #fff;
+        border: solid @white;
         border-width: 0 2px 2px 0;
         transform: rotate(45deg);
         display: none;
@@ -148,14 +149,14 @@
       input[type="checkbox"]:checked:after {
         display: block;
       }
-     }
+    }
   }
 
   // Table header
   .ReactTable .rt-thead .rt-tr {
     background-color: @white;
     text-align: left;
-    box-shadow: 0 0px 0px 0;
+    box-shadow: 0 0 0 0;
     border-bottom: 1px solid @black;
   }
 
@@ -175,7 +176,7 @@
   .ReactTable .rt-thead .rt-td.-sort-asc,
   .ReactTable .rt-thead .rt-th.-sort-desc,
   .ReactTable .rt-thead .rt-td.-sort-desc {
-    box-shadow: 0 0px 0px 0;
+    box-shadow: 0 0 0 0;
   }
 
   // Odd rows
@@ -244,3 +245,4 @@
     color: @blue;
   }
 }
+/* stylelint-enable */

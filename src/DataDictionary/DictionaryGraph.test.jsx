@@ -11,7 +11,7 @@ describe('the DictionaryGraph', () => {
     const data = buildTestData();
     // Material-UI components require the Mui theme ...
     const $dom = mount(
-      <StaticRouter location={{ pathname: '/dd/graph' }}>
+      <StaticRouter location={{ pathname: '/dd/graph' }} context={{}}>
         <DictionaryGraph
           dictionary={data.dictionary}
           counts_search={data.counts_search}
