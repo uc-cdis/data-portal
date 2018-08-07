@@ -101,6 +101,7 @@
     "react-test-renderer": "^16.3.2",
     "redux-mock-store": "^1.2.3",
     "relay-compiler-webpack-plugin": "^0.3.0",
+    "stylelint": "^9.4.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1",
@@ -129,7 +130,8 @@
     "params": "node ./data/getTexts > src/params.js",
     "eslint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --fix src",
     "elint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'",
-    "storybook": "start-storybook -p 9001 -c .storybook"
+    "storybook": "start-storybook -p 9001 -c .storybook",
+    "stylelint": "stylelint **/*.less **/.css --config .stylelintrc.js --fix"
   },
   "graphql": {
     "file": "./data/schema.json"

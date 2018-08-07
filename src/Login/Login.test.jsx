@@ -27,7 +27,7 @@ describe('the Login component', () => {
 
   it('lists login providers', () => {
     const $vdom = mount(
-      <StaticRouter location={{ pathname: '/login' }}>
+      <StaticRouter location={{ pathname: '/login' }} context={{}}>
         <Login
           {...testProps}
         />
