@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Table from './base/Table';
 import dictIcons from '../../img/icons/index';
 import IconicButton from '../buttons/IconicButton';
+import './KeyTable.less';
 
 const LIST_API_KEY_MSG = 'You have the following API key(s)';
 const API_KEY_COLUMN = 'API key(s)';
@@ -38,14 +39,15 @@ class KeyTable extends React.Component {
   ]);
 
   render() {
-    return (<Table
-      title={LIST_API_KEY_MSG}
-      header={[API_KEY_COLUMN, EXPIRES_COLUMN, '']}
-      data={this.getData(this.props.jtis)}
-      colStyles={[
-        { textAlign: 'left' }, { textAlign: 'left' }, { textAlign: 'center' },
-      ]}
-    />);
+    return (
+      <div className='key-table'>
+        <Table
+          title={LIST_API_KEY_MSG}
+          header={[API_KEY_COLUMN, EXPIRES_COLUMN, '']}
+          data={this.getData(this.props.jtis)}
+        />
+      </div>
+    );
   }
 }
 

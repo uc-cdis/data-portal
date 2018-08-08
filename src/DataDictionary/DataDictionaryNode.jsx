@@ -285,8 +285,6 @@ const DataDictionaryNode = ({ params, submission }) => {
       <Link to='/dd'>{'< top level dictionary'}</Link>
       <h3> {dictionary[node].title} </h3>
       Download template: <a className='data-dictionary__download-button' href={`/api/v0/submission/template/${node}?format=json`}>{'JSON'}</a> | <a className='data-dictionary__download-button' href={`/api/v0/submission/template/${node}`}>{'TSV'}</a>
-
-
       <h4> Summary </h4>
       <NodeTable node={dictionary[node]} />
 
