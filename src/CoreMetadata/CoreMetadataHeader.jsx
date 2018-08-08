@@ -54,7 +54,7 @@ class CoreMetadataHeader extends Component {
     if (canDownload) {
       downloadButton = (
         <button
-          onClick={this.props.onDownloadFile}
+          onClick={() => this.props.onDownloadFile(this.props.metadata.object_id)}
           className='button-primary-orange'
         >
           {DOWNLOAD_BTN_CAPTION}
