@@ -27,11 +27,31 @@ describe('the DataModelGraph utils helper', () => {
     const { bfOrder, treeLevel2Names, name2Level } = nodesBreadthFirst(nodes, edges);
     console.log('tree info', treeLevel2Names);
     expect(bfOrder.length).toBe(nodes.length - 1); // node z is floating ...
-    expect(treeLevel2Names.length).toBe(4);
+    expect(treeLevel2Names.length).toBe(3);
     expect(treeLevel2Names[0].length).toBe(1); // project
-    expect(treeLevel2Names[1].length).toBe(1);
+    expect(treeLevel2Names[1].length).toBe(2); // b, d
     expect(treeLevel2Names[2].length).toBe(4); // a, c, x, y
-    expect(name2Level.d).toBe(3); // d on level 3
+    for (let level = 0; level < treeLevel2Names.length; level += 1) {
+      treeLevel2Names[level].forEach(
+        (nodeName) => {
+          expect(name2Level[nodeName]).toBe(level);
+        },
+      );
+    }
+  });
+
+  it('doesnt visit nodes more than once', () => {
+    const { nodes, edges } = buildTestData();
+    edges.push({ source: 'b', name: 'projProp', target: 'c' }); // link from c <--> b
+    edges.push({ source: 'b', name: 'projProp', target: 'd' }); // link from d --> b
+    edges.push({ source: 'd', name: 'projProp', target: 'b' }); // link from b --> d
+    const { bfOrder, treeLevel2Names, name2Level } = nodesBreadthFirst(nodes, edges);
+    console.log('tree info', treeLevel2Names);
+    expect(bfOrder.length).toBe(nodes.length - 1); // node z is floating ...
+    expect(treeLevel2Names.length).toBe(3);
+    expect(treeLevel2Names[0].length).toBe(1); // project
+    expect(treeLevel2Names[1].length).toBe(2); // b, d
+    expect(treeLevel2Names[2].length).toBe(4); // a, c, x, y
     for (let level = 0; level < treeLevel2Names.length; level += 1) {
       treeLevel2Names[level].forEach(
         (nodeName) => {
