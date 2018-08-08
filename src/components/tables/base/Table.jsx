@@ -1,17 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import TableRow from './TableRow';
 import TableFoot from './TableFoot';
 import TableHead from './TableHead';
-
-export const Tb = styled.table`
-  border-collapse: collapse;
-  overflow: auto;
-  margin: 1em 0em;
-  text-align:center;
-  width:100%;
-`;
+import './Table.less';
 
 class Table extends React.Component {
   /* eslint class-methods-use-this: ["error", { "exceptMethods": ["rowRender"] }] */
@@ -22,23 +14,27 @@ class Table extends React.Component {
     return (
       <div>
         <h2>{this.props.title}</h2>
-        <Tb>
-          <TableHead cols={this.props.header} colStyles={this.props.colStyles} />
+        <table className='base-table__body'>
+          <TableHead
+            cols={this.props.header}
+          />
           {
             this.props.footer.length > 0 &&
-            <TableFoot cols={this.props.footer} colStyles={this.props.colStyles} />
+            <TableFoot
+              cols={this.props.footer}
+            />
           }
           <tbody>
             {
-              this.props.data.map((datum, i) => (<TableRow
-                key={`${this.props.title}_${i}`}
-                cols={datum}
-                idx={i}
-                colStyles={this.props.colStyles}
-              />))
+              this.props.data.map((datum, i) => (
+                <TableRow
+                  key={`${this.props.title}_${i}`}
+                  cols={datum}
+                />
+              ))
             }
           </tbody>
-        </Tb>
+        </table>
       </div>
     );
   }
@@ -49,7 +45,6 @@ Table.propTypes = {
   header: PropTypes.array,
   data: PropTypes.array,
   footer: PropTypes.array,
-  colStyles: PropTypes.array,
 };
 
 Table.defaultProps = {
@@ -57,7 +52,6 @@ Table.defaultProps = {
   header: [],
   data: [],
   footer: [],
-  colStyles: [],
 };
 
 export default Table;

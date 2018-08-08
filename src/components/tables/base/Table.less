@@ -1,0 +1,39 @@
+.base-table__body {
+  border-collapse: collapse;
+  overflow: auto;
+  margin: 1em 0;
+  text-align: center;
+  width: 100%;
+}
+
+.base-table__head,
+.base-table__foot {
+  height: 36px;
+  border-top: 2px solid #000000;
+  border-bottom: 1px solid #dedede;
+}
+
+.base-table__column-head {
+  letter-spacing: .02rem;
+  color: #000000;
+  font-size: 16px;
+  font-weight: 600;
+  padding: .5rem 1rem;
+}
+
+.base-table__row {
+  padding: 0 0;
+  border-bottom: 1px solid #dedede;
+  background-color: #ffffff;
+  color: #000000;
+  height: 60px;
+  font-size: 16px;
+}
+
+.base-table__row--stripe-color:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+.base-table__cell {
+  padding: 0.5rem 1rem;
+}

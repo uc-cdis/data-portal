@@ -38,7 +38,7 @@ describe('the TSV submission componet', () => {
   it('hides the "submit" button when data is not available', () => {
     const { $dom } = buildTest({ file: '', submit_result: '', submit_status: 200 });
     expect($dom.find('label[id="cd-submit-tsv__upload-button"]').length).toBe(1);
-    expect($dom.find('label[id="cd-submit-tsv__submit-button"]').length).toBe(0);
+    expect($dom.find('button[id="cd-submit-tsv__submit-button"]').length).toBe(0);
     expect($dom.find('div[id="cd-submit-tsv__result"]').length).toBe(0);
   });
 
@@ -51,7 +51,7 @@ describe('the TSV submission componet', () => {
         resolve('ok');
       });
       expect($dom.find('label[id="cd-submit-tsv__upload-button"]').length).toBe(1);
-      const $submit = $dom.find('label[id="cd-submit-tsv__submit-button"]');
+      const $submit = $dom.find('button[id="cd-submit-tsv__submit-button"]');
       expect($submit.length).toBe(1);
       expect($dom.find('div[id="cd-submit-tsv__result"]').length).toBe(0);
       $submit.simulate('click');
@@ -66,7 +66,7 @@ describe('the TSV submission componet', () => {
     };
     const { $dom } = buildTest(state);
     expect($dom.find('label[id="cd-submit-tsv__upload-button"]').length).toBe(1);
-    expect($dom.find('label[id="cd-submit-tsv__submit-button"]').length).toBe(1);
+    expect($dom.find('button[id="cd-submit-tsv__submit-button"]').length).toBe(1);
     expect($dom.find('div[id="cd-submit-tsv__result"]').length).toBe(1);
   });
 });
