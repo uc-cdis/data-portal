@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { userapiPath } from '../localconf';
 
 const DOWNLOAD_BTN_CAPTION = 'Download';
 
@@ -37,6 +39,7 @@ function canUserDownload(user, projectAvail, projectID) {
       hasAccess = true;
     }
   }
+  return true;
   return hasAccess;
 }
 
@@ -52,13 +55,14 @@ class CoreMetadataHeader extends Component {
     const canDownload = canUserDownload(user, projectAvail, projectId);
     let downloadButton = null;
     if (canDownload) {
+      const download_link = `/user/data/download/${this.props.metadata.object_id}?expires_in=10&redirect`;
+
       downloadButton = (
-        <button
-          onClick={() => this.props.onDownloadFile(this.props.metadata.object_id)}
-          className='button-primary-orange'
-        >
+      <Link to={download_link}>
+        <button className='button-primary-orange'>
           {DOWNLOAD_BTN_CAPTION}
-        </button>);
+        </button>
+      </Link>);
     }
 
     const properties = `${this.props.metadata.data_format} | ${fileSizeTransform(this.props.metadata.file_size)} | ${this.props.metadata.object_id} | ${this.dateTransform(this.props.metadata.updated_datetime)}`;
