@@ -12,7 +12,7 @@ class IconicLink extends React.Component {
       <Link className={this.props.className} to={this.props.link}>
         {
           this.props.dictIcons !== undefined ?
-            <button className={this.props.orangeButton ? 'button-primary-orange' : 'button-primary-white'}>
+            <button className={this.props.buttonClassName}>
               {this.props.caption}&ensp;
               <IconComponent
                 dictIcons={this.props.dictIcons}
@@ -21,7 +21,7 @@ class IconicLink extends React.Component {
                 svgStyles={{ ...styles }}
               />
             </button> :
-            <button className={this.props.orangeButton ? 'button-primary-orange' : 'button-primary-white'}>
+            <button className={this.props.buttonClassName}>
               {this.props.caption}
             </button>
         }
@@ -36,7 +36,7 @@ IconicLink.propTypes = {
   icon: PropTypes.string,
   iconColor: PropTypes.string,
   caption: PropTypes.string,
-  orangeButton: PropTypes.bool,
+  buttonClassName: PropTypes.string,
   className: PropTypes.string,
 };
 
@@ -45,7 +45,7 @@ IconicLink.defaultProps = {
   icon: '',
   iconColor: '',
   caption: '',
-  orangeButton: false,
+  buttonClassName: 'button-primary-white',
   className: '',
 };
 
