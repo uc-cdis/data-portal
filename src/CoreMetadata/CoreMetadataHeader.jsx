@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { userapiPath } from '../localconf';
 
 const DOWNLOAD_BTN_CAPTION = 'Download';
@@ -58,11 +57,11 @@ class CoreMetadataHeader extends Component {
       const download_link = `/user/data/download/${this.props.metadata.object_id}?expires_in=10&redirect`;
 
       downloadButton = (
-      <Link to={download_link}>
+      <a href={download_link}>
         <button className='button-primary-orange'>
           {DOWNLOAD_BTN_CAPTION}
         </button>
-      </Link>);
+      </a>);
     }
 
     const properties = `${this.props.metadata.data_format} | ${fileSizeTransform(this.props.metadata.file_size)} | ${this.props.metadata.object_id} | ${this.dateTransform(this.props.metadata.updated_datetime)}`;
