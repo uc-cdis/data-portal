@@ -713,6 +713,36 @@ const params = {
   gdc: {
     components: {
       appName: 'GDC Jamboree Portal',
+      buttons: [
+        {
+          name: 'Define Data Field',
+          icon: 'data-field-define',
+          body: `The ${commonNames.default} Data Commons define the data in a general way. Please study the dictionary before you start browsing.`,
+          link: '/DD',
+          label: 'Learn more',
+        },
+        {
+          name: 'Explore Data',
+          icon: 'data-explore',
+          body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
+          link: '#hostname#shiny/',
+          label: 'Explore data',
+        },
+        {
+          name: 'Access Data',
+          icon: 'data-access',
+          body: 'Use our selected tool to filter out the data you need.',
+          link: '/query',
+          label: 'Query data',
+        },
+        {
+          name: 'Submit Data',
+          icon: 'data-submit',
+          body: 'Submit Data based on the dictionary.',
+          link: '/submission',
+          label: 'Submit data',
+        },
+      ],
       navigation: {
         title: 'Jamboree',
         items: [
@@ -1058,6 +1088,36 @@ const params = {
     },
     components: {
       appName: 'DCF Sandbox',
+      buttons: [
+        {
+          name: 'Define Data Field',
+          icon: 'data-field-define',
+          body: `The ${commonNames.default} Data Commons define the data in a general way. Please study the dictionary before you start browsing.`,
+          link: '/DD',
+          label: 'Learn more',
+        },
+        {
+          name: 'Explore Data',
+          icon: 'data-explore',
+          body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
+          link: '#hostname#shiny/',
+          label: 'Explore data',
+        },
+        {
+          name: 'Access Data',
+          icon: 'data-access',
+          body: 'Use our selected tool to filter out the data you need.',
+          link: '/query',
+          label: 'Query data',
+        },
+        {
+          name: 'Submit Data',
+          icon: 'data-submit',
+          body: 'Submit Data based on the dictionary.',
+          link: '/submission',
+          label: 'Submit data',
+        },
+      ],
       navigation: {
         title: 'DCF Sandbox',
         items: [
