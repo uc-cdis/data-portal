@@ -129,6 +129,9 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   bhc: {
     gaTrackingId: 'UA-119127212-4',
@@ -250,6 +253,9 @@ const params = {
         email: 'support@datacommons.io',
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   bpa: {
     gaTrackingId: 'UA-119127212-2',
@@ -365,6 +371,9 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'bpa-support@datacommons.io',
       },
+    },
+    featureFlags: {
+      explorer: false,
     },
   },
   dcf: {
@@ -482,6 +491,9 @@ const params = {
         email: 'support@datacommons.io',
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   edc: {
     gaTrackingId: 'UA-119127212-7',
@@ -593,6 +605,9 @@ const params = {
         email: 'support@datacommons.io',
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   genomel: {
     gaTrackingId: 'UA-119127212-12',
@@ -691,6 +706,9 @@ const params = {
         ],
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   gdc: {
     components: {
@@ -701,6 +719,9 @@ const params = {
           { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
         ],
       },
+    },
+    featureFlags: {
+      explorer: false,
     },
   },
   gtex: {
@@ -797,6 +818,9 @@ const params = {
         email: 'support@datacommons.io',
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   kf: {
     gaTrackingId: 'UA-119127212-6',
@@ -889,6 +913,9 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@kidsfirstdrc.org',
       },
+    },
+    featureFlags: {
+      explorer: false,
     },
   },
   kfDcfInterop: {
@@ -989,6 +1016,9 @@ const params = {
         email: 'support@kidsfirstdrc.org',
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   'ncrdc-demo': {
     gaTrackingId: 'UA-119127212-9',
@@ -1061,6 +1091,9 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@datacommons.io',
       },
+    },
+    featureFlags: {
+      explorer: false,
     },
   },
   ndh: {
@@ -1159,6 +1192,9 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@datacommons.io',
       },
+    },
+    featureFlags: {
+      explorer: false,
     },
   },
   va: {
@@ -1268,6 +1304,9 @@ const params = {
           },
         ],
       },
+    },
+    featureFlags: {
+      explorer: false,
     },
   },
   default: {
