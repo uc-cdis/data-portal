@@ -129,6 +129,9 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact support@datacommons.io',
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   bhc: {
     gaTrackingId: 'UA-119127212-4',
@@ -250,6 +253,9 @@ const params = {
         email: 'support@datacommons.io',
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   bpa: {
     gaTrackingId: 'UA-119127212-2',
@@ -365,6 +371,9 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'bpa-support@datacommons.io',
       },
+    },
+    featureFlags: {
+      explorer: false,
     },
   },
   dcf: {
@@ -482,6 +491,9 @@ const params = {
         email: 'support@datacommons.io',
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   edc: {
     gaTrackingId: 'UA-119127212-7',
@@ -593,6 +605,9 @@ const params = {
         email: 'support@datacommons.io',
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   genomel: {
     gaTrackingId: 'UA-119127212-12',
@@ -691,16 +706,52 @@ const params = {
         ],
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   gdc: {
     components: {
       appName: 'GDC Jamboree Portal',
+      buttons: [
+        {
+          name: 'Define Data Field',
+          icon: 'data-field-define',
+          body: `The ${commonNames.default} Data Commons define the data in a general way. Please study the dictionary before you start browsing.`,
+          link: '/DD',
+          label: 'Learn more',
+        },
+        {
+          name: 'Explore Data',
+          icon: 'data-explore',
+          body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
+          link: '#hostname#shiny/',
+          label: 'Explore data',
+        },
+        {
+          name: 'Access Data',
+          icon: 'data-access',
+          body: 'Use our selected tool to filter out the data you need.',
+          link: '/query',
+          label: 'Query data',
+        },
+        {
+          name: 'Submit Data',
+          icon: 'data-submit',
+          body: 'Submit Data based on the dictionary.',
+          link: '/submission',
+          label: 'Submit data',
+        },
+      ],
       navigation: {
         title: 'Jamboree',
         items: [
           { icon: 'home', link: '/', color: '#a2a2a2', name: 'home' },
         ],
       },
+    },
+    featureFlags: {
+      explorer: false,
     },
   },
   gtex: {
@@ -797,6 +848,9 @@ const params = {
         email: 'support@datacommons.io',
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   kf: {
     gaTrackingId: 'UA-119127212-6',
@@ -889,6 +943,9 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@kidsfirstdrc.org',
       },
+    },
+    featureFlags: {
+      explorer: false,
     },
   },
   kfDcfInterop: {
@@ -989,6 +1046,9 @@ const params = {
         email: 'support@kidsfirstdrc.org',
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   'ncrdc-demo': {
     gaTrackingId: 'UA-119127212-9',
@@ -1028,6 +1088,36 @@ const params = {
     },
     components: {
       appName: 'DCF Sandbox',
+      buttons: [
+        {
+          name: 'Define Data Field',
+          icon: 'data-field-define',
+          body: `The ${commonNames.default} Data Commons define the data in a general way. Please study the dictionary before you start browsing.`,
+          link: '/DD',
+          label: 'Learn more',
+        },
+        {
+          name: 'Explore Data',
+          icon: 'data-explore',
+          body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
+          link: '#hostname#shiny/',
+          label: 'Explore data',
+        },
+        {
+          name: 'Access Data',
+          icon: 'data-access',
+          body: 'Use our selected tool to filter out the data you need.',
+          link: '/query',
+          label: 'Query data',
+        },
+        {
+          name: 'Submit Data',
+          icon: 'data-submit',
+          body: 'Submit Data based on the dictionary.',
+          link: '/submission',
+          label: 'Submit data',
+        },
+      ],
       navigation: {
         title: 'DCF Sandbox',
         items: [
@@ -1061,6 +1151,9 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@datacommons.io',
       },
+    },
+    featureFlags: {
+      explorer: false,
     },
   },
   ndh: {
@@ -1159,6 +1252,9 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@datacommons.io',
       },
+    },
+    featureFlags: {
+      explorer: false,
     },
   },
   va: {
@@ -1269,6 +1365,9 @@ const params = {
         ],
       },
     },
+    featureFlags: {
+      explorer: false,
+    },
   },
   default: {
     gaTrackingId: 'undefined',
@@ -1326,7 +1425,7 @@ const params = {
             name: 'Explore Data',
             icon: 'data-explore',
             body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
-            link: '#hostname#shiny/',
+            link: '/explorer',
             label: 'Explore data',
           },
           {
@@ -1356,7 +1455,7 @@ const params = {
           },
           {
             icon: 'exploration',
-            link: '#hostname#shiny/',
+            link: '/explorer',
             color: '#a2a2a2',
             name: 'Exploration',
           },

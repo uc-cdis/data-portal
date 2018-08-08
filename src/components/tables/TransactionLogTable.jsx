@@ -1,21 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import Table from './base/Table';
 import Spinner from '../Spinner';
-
-const StatusBar = styled.div`
-  font-size: 16px;
-  text-align: left;
-`;
-
-const FailBar = styled(StatusBar)`
-  color: #ff2200;
-`;
-
-const PendingBar = styled(StatusBar)`
-  color: #999900;
-`;
+import './TransactionLogTable.less';
 
 const formatText = text => text[0] + text.slice(1).toLowerCase();
 
@@ -28,11 +15,11 @@ class TransactionLogTable extends Component {
   };
 
   stateToColor = state => (state === 'SUCCEEDED' &&
-      <StatusBar className='special-number'>{formatText(state)}</StatusBar>)
+      <div className='form-special-number transaction-log-table__status-bar'>{formatText(state)}</div>)
     || ((state === 'FAILED' || state === 'ERRORED') &&
-      <FailBar className='special-number'>{formatText(state)}</FailBar>)
+      <div className='form-special-number transaction-log-table__status-bar transaction-log-table__status-bar--fail'>{formatText(state)}</div>)
     || (state === 'PENDING' &&
-      <PendingBar className='special-number'>{formatText(state)}</PendingBar>);
+      <div className='form-special-number transaction-log-table__status-bar transaction-log-table__status-bar--pending'>{formatText(state)}</div>);
 
   dataTransform = logs => logs.map(entry => [
     entry.id, entry.project_id,
