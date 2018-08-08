@@ -26,7 +26,7 @@ const Popup = ({
         </div>
         {
           onClose &&
-          <div role='button' tabIndex={-1} className='popup__button' onClick={onClose}>
+          <div role='button' tabIndex={-1} className='popup__close-button' onClick={onClose}>
             <IconComponent
               iconName='cross'
               dictIcons={dictIcons}
