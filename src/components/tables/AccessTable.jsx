@@ -1,22 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Table from './base/Table';
+import './AccessTable.less';
 
 const LIST_PROJECT_MSG = 'You have access to the following project(s)';
 const PROJECT_COLUMN = 'Project(s)';
 const RIGHT_COLUMN = 'Right(s)';
-
-export const ProjectCell = styled(Link)`
-  display: inline-block;
-  width: 30%;
-`;
-
-export const ProjectCellNoAccess = styled.div`
-  display: inline-block;
-  width: 30%;
-`;
 
 class AccessTable extends React.Component {
   /* eslint class-methods-use-this: ["error", { "exceptMethods": ["rowRender"] }] */
@@ -26,25 +16,26 @@ class AccessTable extends React.Component {
 
   getData = (projectKeys, projectsAccesses, projects) => projectKeys.map(p => [
     p in projects ?
-      <ProjectCell to={`/${projects[p]}`}>
+      <Link className='access-table__project-cell' to={`/${projects[p]}`}>
         {p}
-      </ProjectCell> :
-      <ProjectCellNoAccess>
+      </Link> :
+      <div className='access-table__project-cell'>
         {p}
-      </ProjectCellNoAccess>,
+      </div>,
     projectsAccesses[p].join(', '),
   ]);
 
   render() {
     const projectKeys = Object.keys(this.props.projectsAccesses);
-    return (<Table
-      title={LIST_PROJECT_MSG}
-      header={[PROJECT_COLUMN, RIGHT_COLUMN]}
-      data={this.getData(projectKeys, this.props.projectsAccesses, this.props.projects)}
-      colStyles={[
-        { textAlign: 'left' }, { textAlign: 'left' },
-      ]}
-    />);
+    return (
+      <div className='access-table'>
+        <Table
+          title={LIST_PROJECT_MSG}
+          header={[PROJECT_COLUMN, RIGHT_COLUMN]}
+          data={this.getData(projectKeys, this.props.projectsAccesses, this.props.projects)}
+        />
+      </div>
+    );
   }
 }
 

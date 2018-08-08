@@ -131,7 +131,7 @@ class ExplorerTableComponent extends Component {
         </tbody>
         <tfoot className='explorer-table__table-foot'>
           <tr className='explorer-table__table-row'>
-            <td className='explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-0'>
+            <td className='explorer-table__table-data explorer-table__table-data--foot-column-0'>
               {
                 (this.state.originalPage > 0) &&
                 <button className='explorer-table__arrow-button' onClick={() => this.loadMorePrev()}>
@@ -139,7 +139,7 @@ class ExplorerTableComponent extends Component {
                 </button>
               }
             </td>
-            <td className='explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-1'>
+            <td className='explorer-table__table-data explorer-table__table-data--foot-column-1'>
               {
                 pages.map(item => (
                   <button
@@ -158,7 +158,7 @@ class ExplorerTableComponent extends Component {
                 ))
               }
             </td>
-            <td className='explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-2'>
+            <td className='explorer-table__table-data explorer-table__table-data--foot-column-2'>
               <SelectComponent
                 values={pageSizeValues}
                 title={'Page size: '}
@@ -166,7 +166,7 @@ class ExplorerTableComponent extends Component {
                 onChange={value => this.props.onPageSizeChange(value)}
               />
             </td>
-            <td className='explorer-table__table-data explorer-table__table-data--foot-cell explorer-table__table-data--foot-column-3'>
+            <td className='explorer-table__table-data explorer-table__table-data--foot-column-3'>
               {
                 (this.props.lastPageSize === 0) &&
                 <button className='explorer-table__arrow-button' onClick={() => this.loadMoreNext()}>
