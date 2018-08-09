@@ -2,7 +2,6 @@ import React from 'react';
 import { mount } from 'enzyme';
 import DataExplorer from '.';
 
-// TODO: skipping tests because Arranger causes them to time out [PXD-1313]
 describe('DataExplorer', () => {
   it('renders', () => {
     const component = mount(<DataExplorer />);

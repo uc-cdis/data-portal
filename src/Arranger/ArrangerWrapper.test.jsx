@@ -2,7 +2,6 @@ import React from 'react';
 import { mount } from 'enzyme';
 import ArrangerWrapper from './ArrangerWrapper';
 
-// TODO: skipping tests because Arranger causes them to time out [PXD-1313]
 describe('ArrangerWrapper', () => {
   it('renders', () => {
     const component = mount(
