@@ -16,7 +16,7 @@ test('Project tables renders', () => {
   // Material-UI components require the Mui theme ...
   const table = mount(
     <MuiThemeProvider>
-      <StaticRouter location={{ pathname: '/identity' }}>
+      <StaticRouter location={{ pathname: '/identity' }} context={{}}>
         <ProjectTable projectList={projectList} summaryCounts={summaryCounts} />
       </StaticRouter>
     </MuiThemeProvider>,
