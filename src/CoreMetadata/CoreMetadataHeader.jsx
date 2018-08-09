@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { userapiPath } from '../localconf';
 
 const DOWNLOAD_BTN_CAPTION = 'Download';
 
@@ -38,7 +37,6 @@ function canUserDownload(user, projectAvail, projectID) {
       hasAccess = true;
     }
   }
-  return true;
   return hasAccess;
 }
 
@@ -54,14 +52,14 @@ class CoreMetadataHeader extends Component {
     const canDownload = canUserDownload(user, projectAvail, projectId);
     let downloadButton = null;
     if (canDownload) {
-      const download_link = `/user/data/download/${this.props.metadata.object_id}?expires_in=10&redirect`;
+      const downloadLink = `/user/data/download/${this.props.metadata.object_id}?expires_in=10&redirect`;
 
       downloadButton = (
-      <a href={download_link}>
-        <button className='button-primary-orange'>
-          {DOWNLOAD_BTN_CAPTION}
-        </button>
-      </a>);
+        <a href={downloadLink}>
+          <button className='button-primary-orange'>
+            {DOWNLOAD_BTN_CAPTION}
+          </button>
+        </a>);
     }
 
     const properties = `${this.props.metadata.data_format} | ${fileSizeTransform(this.props.metadata.file_size)} | ${this.props.metadata.object_id} | ${this.dateTransform(this.props.metadata.updated_datetime)}`;
@@ -95,7 +93,6 @@ class CoreMetadataHeader extends Component {
 CoreMetadataHeader.propTypes = {
   metadata: PropTypes.object,
   error: PropTypes.string,
-  onDownloadFile: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   projectAvail: PropTypes.object.isRequired,
 };
