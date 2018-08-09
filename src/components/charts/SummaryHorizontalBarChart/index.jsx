@@ -23,6 +23,7 @@ const labelValueStyle = {
   color: '#3283c8',
 };
 
+// FIXME: add back in animation (https://github.com/recharts/recharts/issues/1083)
 class SummaryBarChart extends React.Component {
   render() {
     const barChartHeight = (this.props.data.length * this.props.barSize)
@@ -49,7 +50,7 @@ class SummaryBarChart extends React.Component {
             <Tooltip formatter={helper.percentageFormatter(this.props.showPercentage)} />
             <XAxis axisLine={false} tickLine={false} type='number' hide />
             <YAxis axisLine={false} tickLine={false} dataKey='name' type='category' style={yAxisStyle} interval={0} />
-            <Bar dataKey={dataKey}>
+            <Bar dataKey={dataKey} isAnimationActive={false}>
               {
                 barChartData.map((entry, index) => (
                   <Cell
