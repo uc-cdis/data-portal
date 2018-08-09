@@ -1,27 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import IconicLink from './buttons/IconicLink';
-
-const IntroDiv = styled.div`
-  width: 450px;
-  position: relative;
-`;
-
-const IntroTitle = styled.div`
-  margin-bottom: 25px;
-  line-height: 1.0em;
-`;
-
-const IntroText = styled.div`
-  padding: 10px 0px;
-  text-align: left;
-
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 25px;
-  margin-bottom: 25px;
-`;
+import './Introduction.less';
 
 class Introduction extends Component {
   static propTypes = {
@@ -31,22 +11,18 @@ class Introduction extends Component {
 
   render() {
     return (
-      <IntroDiv>
-        <IntroTitle className='h1-typo'>{this.props.data.heading}</IntroTitle>
-        <IntroText className='high-light'>{this.props.data.text}</IntroText>
+      <div className='introduction'>
+        <div className='h1-typo introduction__title'>{this.props.data.heading}</div>
+        <div className='high-light introduction__text'>{this.props.data.text}</div>
         <IconicLink
           link={this.props.data.link}
           dictIcons={this.props.dictIcons}
-          style={{
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            marginBottom: '75px',
-          }}
+          className='introduction__icon'
           icon='upload'
           iconColor='#'
           caption='Submit Data'
         />
-      </IntroDiv>
+      </div>
     );
   }
 }

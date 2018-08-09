@@ -1,31 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import Select from 'react-select';
-
+import './SelectComponent.less';
 
 const makeDefaultSelectedState = value => ({
   selectedValue: value,
 });
-
-export const SelectionDiv = styled.div`
-  font-size: 15px;
-  position: relative;
-  vertical-align: middle;  
-  span {
-    vertical-align: middle;
-    margin-right: 10px;
-  }
-
-  .Select-menu-outer {
-    top: auto;
-    bottom: 100%;
-  }
-`;
-const Dropdown = styled(Select)`
-  display: inline-block;
-  vertical-align: middle;
-`;
 
 export default class SelectComponent extends Component {
   static propTypes = {
@@ -69,9 +49,10 @@ export default class SelectComponent extends Component {
     const options = this.props.values.map(value => ({ value, label: value }));
 
     return (
-      <SelectionDiv>
-        <span>{this.props.title}</span>
-        <Dropdown
+      <div className='selection'>
+        <span className='selection__title'>{this.props.title}</span>
+        <Select
+          className='selection__select'
           name={this.props.title}
           options={options}
           value={this.state.selectedValue}
@@ -79,7 +60,7 @@ export default class SelectComponent extends Component {
           onChange={event => this.doChangeSelectedValue(event.value)}
           clearable={false}
         />
-      </SelectionDiv>
+      </div>
     );
   }
 }

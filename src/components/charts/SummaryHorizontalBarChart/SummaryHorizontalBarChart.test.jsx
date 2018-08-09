@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { localTheme } from '../../localconf';
-import SummaryHorizontalBarChart from './SummaryHorizontalBarChart';
+import { localTheme } from '../../../localconf';
+import SummaryHorizontalBarChart from '.';
 
 describe('<SummaryHorizontalBarChart />', () => {
   const chartData = [

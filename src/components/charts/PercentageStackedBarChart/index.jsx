@@ -5,7 +5,7 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'underscore';
-import helper from './helper';
+import helper from '../helper';
 import './PercentageStackedBarChart.less';
 
 const getPercentageDataLabels = chartData => chartData.map(entry => entry.name);

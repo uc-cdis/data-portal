@@ -9,7 +9,7 @@ class IconicLink extends React.Component {
     let styles = {};
     if (this.props.iconColor && this.props.iconColor !== '') { styles = { fill: this.props.iconColor }; }
     return (
-      <Link to={this.props.link}>
+      <Link className={this.props.className} to={this.props.link}>
         {
           this.props.dictIcons !== undefined ?
             <button className={this.props.buttonClassName}>
@@ -37,6 +37,7 @@ IconicLink.propTypes = {
   iconColor: PropTypes.string,
   caption: PropTypes.string,
   buttonClassName: PropTypes.string,
+  className: PropTypes.string,
 };
 
 IconicLink.defaultProps = {
@@ -45,6 +46,7 @@ IconicLink.defaultProps = {
   iconColor: '',
   caption: '',
   buttonClassName: 'button-primary-white',
+  className: '',
 };
 
 export default IconicLink;
