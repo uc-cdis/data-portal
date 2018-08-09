@@ -40,11 +40,11 @@ describe('AggregationTabs', () => {
     />,
   );
 
-  test.skip('it renders', () => {
+  it('renders', () => {
     expect(component.find(AggregationTabs).length).toBe(1);
   });
 
-  test.skip('it divides into tabs based on config', () => {
+  it('divides into tabs based on config', () => {
     expect(component.find('.filter-group__tab').length).toBe(filterConfig.tabs.length);
   });
 });
