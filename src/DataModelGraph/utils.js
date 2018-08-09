@@ -135,7 +135,7 @@ export function nodesBreadthFirst(nodes, edges) {
     treeLevel2Names: [],
     name2Level: {},
   };
-  
+
   // mapping of node name to edges that point into that node
   const name2EdgesIn = edges.reduce(
     (db, edge) => {
@@ -172,7 +172,7 @@ export function nodesBreadthFirst(nodes, edges) {
   // keep track of how many times a node has been visited
   // avoids infinite loop
   const processedNodesCount = new Map();
-  const maxProcessedCount = nodes.length * edges.length;
+  const maxProcessedCount = nodes.length;
   const name2ActualLvl = {};
   // Run through this once to determine the actual level of each node
   for (let head = 0; head < queue.length; head += 1) {
@@ -201,6 +201,37 @@ export function nodesBreadthFirst(nodes, edges) {
     },
     );
   }
+
+  // const levelList = {};
+  // Object.keys(name2ActualLvl).forEach((key) => {
+  //   const value = name2ActualLvl[key];
+  //   if (levelList[value]) {
+  //     levelList[value].push(key);
+  //   } else {
+  //     levelList[value] = [key];
+  //   }
+  // });
+  // console.log('original levels', levelList);
+  //
+  // const compressedLevels = {};
+  // var j = 0;
+  // for (var i = 0; i < Object.keys(levelList).length; ++i) {
+  //   while (!levelList[j]) {
+  //     ++j;
+  //   }
+  //   compressedLevels[i] = levelList[j];
+  //   ++j;
+  // }
+  //
+  // console.log('compressed levels', compressedLevels);
+  //
+  // Object.keys(compressedLevels).forEach((level) => {
+  //   compressedLevels[level].forEach((node) => {
+  //     name2ActualLvl[node] = parseInt(level);
+  //   });
+  // });
+  // console.log('name2ActualLvl', name2ActualLvl);
+
 
   // Reset and run for real
   queue = [];
