@@ -135,10 +135,7 @@ export function nodesBreadthFirst(nodes, edges) {
     treeLevel2Names: [],
     name2Level: {},
   };
-
-  console.log('number of nodes:', nodes.length);
-  console.log('number of edges:', edges.length);
-
+  
   // mapping of node name to edges that point into that node
   const name2EdgesIn = edges.reduce(
     (db, edge) => {
@@ -172,12 +169,15 @@ export function nodesBreadthFirst(nodes, edges) {
     name2EdgesIn[root] = [];
   }
 
+  // keep track of how many times a node has been visited
+  // avoids infinite loop
   const processedNodesCount = new Map();
+  const maxProcessedCount = nodes.length * edges.length;
   const name2ActualLvl = {};
   // Run through this once to determine the actual level of each node
   for (let head = 0; head < queue.length; head += 1) {
     const { query, level } = queue[head]; // breadth first
-    // visited node - increment # of visits
+    // visited node -> increment # of visits
     if (processedNodesCount.has(query)) {
       processedNodesCount.set(query, processedNodesCount.get(query) + 1);
     } else {
@@ -189,7 +189,10 @@ export function nodesBreadthFirst(nodes, edges) {
       //   and edge.target into node references ...
       const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
       if (name2EdgesIn[sourceName]) {
-        if ((processedNodesCount.has(sourceName) && processedNodesCount.get(sourceName) < (nodes.length * edges.length)) || !processedNodesCount.has(sourceName)) {
+        // only queue node if its number of visits is < nodes * edges
+        if ((processedNodesCount.has(sourceName) &&
+          processedNodesCount.get(sourceName) < maxProcessedCount) ||
+          !processedNodesCount.has(sourceName)) {
           queue.push({ query: sourceName, level: level + 1 });
         }
       } else {
