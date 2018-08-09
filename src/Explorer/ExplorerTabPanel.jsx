@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { ExplorerTabs, ExplorerTab, ExplorerTabBox, ExplorerTabFrame } from './style';
 import ExplorerTableComponent from './ExplorerTable';
 import { capitalizeFirstLetter } from '../utils';
+import './ExplorerTabPanel.less';
 
 class ExplorerTabPanel extends Component {
   static propTypes = {
@@ -56,33 +56,41 @@ class ExplorerTabPanel extends Component {
 
   render() {
     const originalPages = this.updateOriginalPage();
-    const flexItem = {
-      flexBasis: '80%',
-      flexGrow: 1,
-    };
     return (
-      <div style={flexItem}>
-        <ExplorerTabs>
+      <div className='explorer-tab-panel'>
+        <div className='explorer-tab-panel__tab-group'>
           {
             Object.keys(this.props.filesMap).map(
               item => (this.props.filesMap[item].length > 0) &&
-              <ExplorerTab
+              <div
+                role='button'
+                tabIndex={-1}
+                className={item === this.props.activeTab
+                  ? 'explorer-tab-panel__tab-item explorer-tab-panel__tab-item--active'
+                  : 'explorer-tab-panel__tab-item'}
                 key={item}
-                active={(item === this.props.activeTab)}
+                active={item === this.props.activeTab ? 'true' : 'false'}
                 onClick={
                   () => this.props.onTabChange({ activeTab: item })
                 }
               >
                 {capitalizeFirstLetter(item)}
-              </ExplorerTab>)
+              </div>)
           }
-        </ExplorerTabs>
-        <ExplorerTabFrame>
+        </div>
+        <div className='explorer-tab-panel__frame'>
           {
             Object.keys(this.props.filesMap).map(
               item =>
                 (this.props.filesMap[item].length > 0)
-                && <ExplorerTabBox key={`${item}-tab-box`} active={(item === this.props.activeTab)}>
+                &&
+                <div
+                  className={item === this.props.activeTab
+                    ? 'explorer-tab-panel__tab-box--active'
+                    : 'explorer-tab-panel__tab-box--inactive'}
+                  key={`${item}-tab-box`}
+                  active={item === this.props.activeTab ? 'true' : 'false'}
+                >
                   <ExplorerTableComponent
                     user={this.props.user}
                     projectAvail={this.props.projectAvail}
@@ -136,10 +144,10 @@ class ExplorerTabPanel extends Component {
                       )
                     }
                   />
-                </ExplorerTabBox>,
+                </div>,
             )
           }
-        </ExplorerTabFrame>
+        </div>
       </div>
     );
   }

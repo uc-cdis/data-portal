@@ -1,17 +1,8 @@
 import { ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis } from 'recharts';
-import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
 import { browserHistory } from 'react-router-dom';
-
-
-const FloatBox = styled.div`
-  float: left;
-  overflow: hidden;
-  width: 770px;
-  min-width: 300px;
-  height: 340px;
-`;
+import './ProjectBarChart.less';
 
 /**
  * Component shows stacked-bars - one stacked-bar for each project in props.projectList -
@@ -56,7 +47,7 @@ class ProjectBarChart extends React.Component {
     }
     let countBar = 0;
     return (
-      <FloatBox>
+      <div className='project-bar-chart'>
         <ResponsiveContainer width='100%' height='100%'>
           <BarChart
             onClick={(e) => { browserHistory.push(`/${e.activeLabel}`); window.location.reload(false); }}
@@ -89,7 +80,7 @@ class ProjectBarChart extends React.Component {
             }
           </BarChart>
         </ResponsiveContainer>
-      </FloatBox>
+      </div>
     );
   }
 }

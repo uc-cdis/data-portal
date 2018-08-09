@@ -1,13 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import Table from '../components/tables/base/Table';
+import './CoreMetadataTable.less';
 
 const TABLE_TITLE = 'More Data Info';
-
-export const TitleCell = styled.div`
-  font-weight: bold;
-`;
 
 function firstCharToUppercase(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -22,15 +18,15 @@ function fieldInTable(fieldName) {
 }
 
 class CoreMetadataTable extends Component {
-  dataTransform = metadata => metadata ?
+  dataTransform = metadata => (metadata ?
     Object.keys(metadata)
       .sort() // alphabetical order
       .filter(key => fieldInTable(key))
       .map(key => [
-        <TitleCell>{firstCharToUppercase(key)}</TitleCell>,
+        <div className='core-metadata-table__title-cell'>{firstCharToUppercase(key)}</div>,
         metadata[key],
       ])
-    : [];
+    : []);
 
   render() {
     return (

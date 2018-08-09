@@ -1,28 +1,23 @@
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import dictIcons from '../img/icons/index';
 import IconComponent from '../components/Icon';
-
-export const BackComponent = styled.div`
-  display: inline;
-  padding-right: 15px;
-`;
+import './BackLink.less';
 
 class BackLink extends Component {
   render() {
     return (
       <Link to={this.props.url}>
         <br />
-        <BackComponent>
+        <div className='back-link'>
           <IconComponent
             dictIcons={dictIcons}
             iconName='back'
             height='12px'
           />
-        </BackComponent>
-        <BackComponent>{this.props.label}</BackComponent>
+        </div>
+        <div className='back-link'>{this.props.label}</div>
       </Link>
     );
   }

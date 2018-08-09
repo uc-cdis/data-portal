@@ -1,9 +1,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import SummaryChartGroup from './SummaryChartGroup.jsx';
-import { localTheme } from '../../localconf';
-import SummaryPieChart from './SummaryPieChart';
-import SummaryHorizontalBarChart from './SummaryHorizontalBarChart';
+import SummaryChartGroup from '.';
+import { localTheme } from '../../../localconf';
+import SummaryPieChart from '../SummaryPieChart';
+import SummaryHorizontalBarChart from '../SummaryHorizontalBarChart';
 
 describe('<SummaryChartGroup />', () => {
   const chartData = [
