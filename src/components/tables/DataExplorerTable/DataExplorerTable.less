@@ -48,14 +48,60 @@
 
   // Top of table where text and search box is located
   .tableToolbar {
-    padding-left: 0;
-    padding-right: 0;
+    padding: 14px 0 12px 0;
     font-size: 16px;
+    background: white;
+  }
+
+  .tableToolbar .buttonWrapper {
+    display: flex;
+  }
+
+  .tableToolbar .buttonWrapper button {
+    display: flex;
+    background: none;
+    border: none;
+  }
+
+  .tableToolbar .inputWrapper {
+    border: none;
+  }
+
+  .tableToolbar .group {
+    margin-left: 10px;
+    display: flex;
+  }
+
+  .tableToolbar .group > * {
+    background-color: none;
+    display: flex;
+    border: solid 1px #cacbcf;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .tableToolbar .group > :first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+  .tableToolbar .group > :last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  .range-wrapper {
+    min-height: 2.7rem;
   }
 
   // Overall table
+  .scroll-react-table .ReactTable {
+    flex-grow: 1;
+  }
+
   .ReactTable {
     border: 1px solid @silver;
+    font-size: 0.8rem;
+    background: white;
   }
 
   // All cells in table
@@ -147,13 +193,23 @@
     font-size: 12px;
   }
 
+  // Pagination area at bottom
+  .ReactTable .-pagination {
+    height: 64px;
+    box-shadow: 0 0px 0px 0;
+    border-top: 1px solid @silver;
+    padding: 15px;
+  }
+
   // Dropdown to select number of rows
   .ReactTable .-pagination .-pageSizeOptions {
-    select {
-      border: 1px solid @silver;
-      border-radius: 2px;
-      height: 35px;
-    }
+    margin: 0;
+  }
+
+  .ReactTable .-pagination .-pageSizeOptions select {
+    border: 1px solid @silver;
+    border-radius: 2px;
+    height: 35px;
   }
 
   // Overall Pagination component
@@ -163,6 +219,25 @@
     border-radius: 2px;
     height: 35px;
     background-color: @white;
+    overflow: hidden;
+  }
+
+  // Buttons to jump pages
+  .ReactTable .-pagination_button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: @light_gray;
+    border-right: solid 1px @silver;
+    min-width: 34px;
+    padding-left: 0px;
+    padding-right: 0px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ReactTable .-pagination_button:last-child {
+    border-right: none;
   }
 
   // Current page for pagination
