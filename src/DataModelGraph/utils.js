@@ -136,6 +136,9 @@ export function nodesBreadthFirst(nodes, edges) {
     name2Level: {},
   };
 
+  console.log('number of nodes:', nodes.length);
+  console.log('number of edges:', edges.length);
+
   // mapping of node name to edges that point into that node
   const name2EdgesIn = edges.reduce(
     (db, edge) => {
@@ -169,19 +172,24 @@ export function nodesBreadthFirst(nodes, edges) {
     name2EdgesIn[root] = [];
   }
 
+  const processedNodesCount = new Map();
   const name2ActualLvl = {};
   // Run through this once to determine the actual level of each node
   for (let head = 0; head < queue.length; head += 1) {
     const { query, level } = queue[head]; // breadth first
-    processedNodes.add(query);
+    // visited node - increment # of visits
+    if (processedNodesCount.has(query)) {
+      processedNodesCount.set(query, processedNodesCount.get(query) + 1);
+    } else {
+      processedNodesCount.set(query, 1);
+    }
     name2ActualLvl[query] = level;
     name2EdgesIn[query].forEach((edge) => {
       // At some point the d3 force layout converts edge.source
       //   and edge.target into node references ...
       const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
       if (name2EdgesIn[sourceName]) {
-        if (!processedNodes.has(sourceName)) {
-          processedNodes.add(sourceName); // don't double-queue a node
+        if ((processedNodesCount.has(sourceName) && processedNodesCount.get(sourceName) < (nodes.length * edges.length)) || !processedNodesCount.has(sourceName)) {
           queue.push({ query: sourceName, level: level + 1 });
         }
       } else {
@@ -194,7 +202,6 @@ export function nodesBreadthFirst(nodes, edges) {
   // Reset and run for real
   queue = [];
   queue.push({ query: root, level: 0 });
-  processedNodes.clear();
 
   // queue.shift is O(n), so just keep pushing, and move the head
   for (let head = 0; head < queue.length; head += 1) {
