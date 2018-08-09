@@ -30,11 +30,12 @@ class CoreMetadataTable extends Component {
 
   render() {
     return (
-      <Table
-        header={[TABLE_TITLE, '']}
-        data={this.dataTransform(this.props.metadata)}
-        colStyles={[{ paddingLeft: '0px', textAlign: 'left', width: '15%' }, { textAlign: 'left' }]}
-      />
+      <div className='core-metadata-table'>
+        <Table
+          header={[TABLE_TITLE, '']}
+          data={this.dataTransform(this.props.metadata)}
+        />
+      </div>
     );
   }
 }
