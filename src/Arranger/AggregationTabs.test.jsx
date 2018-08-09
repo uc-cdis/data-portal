@@ -2,7 +2,6 @@ import React from 'react';
 import { mount } from 'enzyme';
 import AggregationTabs from './AggregationTabs';
 
-// TODO: fix Arranger tests [PXD-1313]
 describe('AggregationTabs', () => {
   const filterConfig = {
     tabs: [{
@@ -40,11 +39,11 @@ describe('AggregationTabs', () => {
     />,
   );
 
-  test.skip('it renders', () => {
+  it('renders', () => {
     expect(component.find(AggregationTabs).length).toBe(1);
   });
 
-  test.skip('it divides into tabs based on config', () => {
+  it('divides into tabs based on config', () => {
     expect(component.find('.filter-group__tab').length).toBe(filterConfig.tabs.length);
   });
 });

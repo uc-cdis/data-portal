@@ -4,7 +4,7 @@
   "description": "Bionimbus Data Portal",
   "main": "index.js",
   "dependencies": {
-    "@arranger/components": "^0.4.10",
+    "@arranger/components": "^0.4.15",
     "@fortawesome/fontawesome-svg-core": "^1.2.2",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.0",

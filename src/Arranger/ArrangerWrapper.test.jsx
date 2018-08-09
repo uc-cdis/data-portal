@@ -2,9 +2,8 @@ import React from 'react';
 import { mount } from 'enzyme';
 import ArrangerWrapper from './ArrangerWrapper';
 
-// TODO: skipping tests because Arranger causes them to time out [PXD-1313]
 describe('ArrangerWrapper', () => {
-  test.skip('it renders', () => {
+  it('renders', () => {
     const component = mount(
       <ArrangerWrapper
         api={'localhost'}
@@ -18,7 +17,7 @@ describe('ArrangerWrapper', () => {
     expect(component.find(ArrangerWrapper).length).toBe(1);
   });
 
-  test.skip('it uses renderComponent to send props to its children', () => {
+  it('uses renderComponent to send props to its children', () => {
     const component = mount(
       <ArrangerWrapper
         api={'localhost'}
