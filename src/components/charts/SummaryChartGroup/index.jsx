@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import SummaryPieChart from './SummaryPieChart';
-import SummaryHorizontalBarChart from './SummaryHorizontalBarChart';
+import SummaryPieChart from '../SummaryPieChart';
+import SummaryHorizontalBarChart from '../SummaryHorizontalBarChart';
 import './SummaryChartGroup.less';
-import { parseParamWidth } from '../../utils.js';
+import { parseParamWidth } from '../../../utils.js';
 
 class SummaryChartGroup extends Component {
   render() {

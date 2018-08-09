@@ -1,25 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Label } from '../theme';
-
-const LabelCheckBox = styled(Label)`
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    min-width: 0px;
-    max-width: 12vw;
-    overflow: hidden;
-    padding: 0px 0.25rem;
-    margin-left: 0.3rem;
-    vertical-align: middle;
-    line-height: 1.75
-`;
-
-const CheckBox = styled.div`
-   padding: 1em 0em;
-   border-bottom: ${props => (props.lastChild ? '0px' : '2px solid #7d7474')};
-`;
-
+import './CheckBox.less';
 
 export class CheckBoxGroup extends Component {
   static propTypes = {
@@ -28,12 +9,8 @@ export class CheckBoxGroup extends Component {
     selectedItems: PropTypes.array.isRequired,
     title: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
-    lastChild: PropTypes.bool,
   };
 
-  static defaultProps = {
-    lastChild: false,
-  };
   constructor(props) {
     super(props);
     this.state = {
@@ -59,7 +36,7 @@ export class CheckBoxGroup extends Component {
     if (this.state.collapsed === 1) {
       return (
         <a href='#/' onClick={() => this.setState({ collapsed: 2 })}>
-          {'More Options'}
+          {'More options'}
         </a>
       );
     } else if (this.state.collapsed === 2) {
@@ -80,7 +57,7 @@ export class CheckBoxGroup extends Component {
       : this.props.listItems;
 
     return (
-      <CheckBox lastChild={this.props.lastChild}>
+      <div className='checkbox-group'>
         {this.props.title}
         {listItems.map(item => (
           <div key={item}>
@@ -92,16 +69,13 @@ export class CheckBoxGroup extends Component {
               checked={selectedItems.includes(item)}
               onChange={() => this.onChangeBox(item)}
             />
-            <LabelCheckBox for={item}>{item}</LabelCheckBox>
+            <label className='checkbox-group__label' htmlFor={item}>{item}</label>
           </div>
         ))}
         {this.displayOptions()}
-      </CheckBox>
+      </div>
     );
   }
 }
 
-export const StyledCheckBoxGroup = styled(CheckBoxGroup)`
-    padding: 0em 1em;
-    border-bottom: 2px solid #717b85;
-`;
+export default CheckBoxGroup;

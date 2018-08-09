@@ -1,21 +1,11 @@
 import { ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis } from 'recharts';
-import styled from 'styled-components';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
 import { browserHistory } from 'react-router-dom';
-import Spinner from '../Spinner';
-import TooltipCDIS from './TooltipCDIS';
-import Tick from './Tick';
-
-
-const FloatBox = styled.div`
-  float: left;
-  overflow: hidden;
-  width: 770px;
-  min-width: 300px;
-  height: 340px;
-  margin-top: -30px;
-`;
+import Spinner from '../../Spinner';
+import TooltipCDIS from '../TooltipCDIS/.';
+import Tick from '../Tick';
+import './IndexBarChart.less';
 
 const sortCount = (a, b) => {
   const countA = a.counts.reduce((res, item) => res + item);
@@ -125,7 +115,7 @@ class IndexBarChart extends React.Component {
     const barNames = createBarNames(indexChart);
     let countBar = 0;
     return (
-      <FloatBox>
+      <div className='index-bar-chart'>
         <ResponsiveContainer width='100%' height='100%'>
           <BarChart
             onClick={(e) => { browserHistory.push(`/${e.activeLabel}`); window.location.reload(false); }}
@@ -171,7 +161,7 @@ class IndexBarChart extends React.Component {
             }
           </BarChart>
         </ResponsiveContainer>
-      </FloatBox>
+      </div>
     );
   }
 }

@@ -1,38 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
-
 import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
+import './QueryNode.less';
 
-const actionButton = css`
-  cursor: pointer;
-  float: right;
-  display: inline-block;
-  margin-left: 2em;
-  &:hover,
-  &:active,
-  &:focus {
-    color: inherit;
-  }
-`;
-
-const DownloadButton = styled.a`
-   ${actionButton};
-`;
-
-const DeleteButton = styled.a`
-  ${actionButton};
-  color: ${props => props.theme.color_primary};
-`;
-const ViewButton = styled.a`
-  ${actionButton};
-  color: #2B547E;
-`;
-
-const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
+const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo, tabindexStart }) => {
   const onDelete = () => {
     onStoreNodeInfo({ project, id: value.id }).then(
       () => onUpdatePopup({ nodedelete_popup: true }),
@@ -44,9 +18,9 @@ const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
   return (
     <li>
       <span>{value.submitter_id}</span>
-      <DownloadButton href={`${getSubmitPath(project)}/export?format=json&ids=${value.id}`}>Download</DownloadButton>
-      <ViewButton onClick={onView}>View</ViewButton>
-      <DeleteButton onClick={onDelete}>Delete</DeleteButton>
+      <a role='button' tabIndex={tabindexStart} className='query-node__button query-node__button--download' href={`${getSubmitPath(project)}/export?format=json&ids=${value.id}`}>Download</a>
+      <a role='button' tabIndex={tabindexStart + 1} className='query-node__button query-node__button--view' onClick={onView}>View</a>
+      <a role='button' tabIndex={tabindexStart + 2} className='query-node__button query-node__button--delete' onClick={onDelete}>Delete</a>
     </li>
   );
 };
@@ -54,6 +28,7 @@ const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => {
 Entity.propTypes = {
   project: PropTypes.string.isRequired,
   value: PropTypes.object.isRequired,
+  tabindexStart: PropTypes.number.isRequired,
   onUpdatePopup: PropTypes.func,
   onStoreNodeInfo: PropTypes.func,
 };
@@ -69,12 +44,13 @@ const Entities = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => (
   <ul>
     {
       value.map(
-        v => (<Entity
+        (v, i) => (<Entity
           project={project}
           onStoreNodeInfo={onStoreNodeInfo}
           onUpdatePopup={onUpdatePopup}
           key={v.submitter_id}
           value={v}
+          tabindexStart={i * 3}
         />),
       )
     }
@@ -98,7 +74,7 @@ Entities.defaultProps = {
  */
 class QueryNode extends React.Component {
   /**
-   * Internal helper to render the "view node" popup if necessary
+   * Internal helper to render the 'view node" popup if necessary
    * based on the popups and queryNodes properties attached to this component.
    *
    * @param {popups, queryNodes, onUpdatePopup} props including
