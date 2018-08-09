@@ -27,7 +27,7 @@ import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
 import CertificateQuiz from './Certificate/ReduxQuiz';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
-import { theme } from './theme';
+import theme from './theme';
 import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar } from './Top/reduxer';
 import Footer from './components/layout/Footer';
@@ -166,11 +166,11 @@ async function init() {
                     />
                     <Route
                       exact
-                      path='/files/:object_id'
+                      path='/files/*'
                       component={
                         props => (<ProtectedContent
                           filter={() =>
-                            store.dispatch(fetchCoreMetadata(props.match.params.object_id))
+                            store.dispatch(fetchCoreMetadata(props.match.params[0]))
                           }
                           component={CoreMetadataPage}
                           {...props}

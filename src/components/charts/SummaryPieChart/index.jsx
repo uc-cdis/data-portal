@@ -3,7 +3,7 @@ import {
 } from 'recharts';
 import PropTypes from 'prop-types';
 import React from 'react';
-import helper from './helper';
+import helper from '../helper';
 import './SummaryPieChart.less';
 
 const pieChartStyle = {

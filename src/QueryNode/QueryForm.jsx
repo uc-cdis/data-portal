@@ -1,39 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import Select from 'react-select';
-
-const SearchButton = styled.input`
-  transition: 0.25s;
-  color: white;
-  margin-bottom: 1em;
-  background-color: ${props => props.theme.color_secondary};
-  border: 1px solid ${props => props.theme.color_secondary};
-  line-height: 34px;
-  &:hover,
-  &:active,
-  &:focus {
-    background-color: ${props => props.theme.color_secondary_fade};
-    border: 1px solid ${props => props.theme.color_secondary_fade};
-
-  }
-  padding: 0em 0.5em;
-`;
-
-const Dropdown = styled(Select)`
-  width: 40%;
-  float: left;
-  margin-right: 1em;
-`;
-
-const Input = styled.input`
-  transition: 0.25s;
-  border: 1px solid #c1c1c1;
-  line-height: 34px;
-  margin-right: 1em;
-  padding: 0em 0.5em;
-  border-radius: 5px;
-`;
+import './QueryForm.less';
 
 class QueryForm extends React.Component {
   static propTypes = {
@@ -79,9 +47,9 @@ class QueryForm extends React.Component {
     const state = this.state || {};
     return (
       <form onSubmit={this.handleQuerySubmit}>
-        <Dropdown name='node_type' options={options} value={state.selectValue} onChange={this.updateValue} />
-        <Input placeholder='submitter_id' type='text' name='submitter_id' />
-        <SearchButton type='submit' onSubmit={this.handleQuerySubmit} value='search' />
+        <Select className='query-form__select' name='node_type' options={options} value={state.selectValue} onChange={this.updateValue} />
+        <input className='query-form__input' placeholder='submitter_id' type='text' name='submitter_id' />
+        <input className='query-form__search-button' type='submit' onSubmit={this.handleQuerySubmit} value='search' />
       </form>
     );
   }

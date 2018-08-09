@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { CurrentSQON } from '@arranger/components/dist/Arranger';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DataExplorerTable from '../components/tables/DataExplorerTable';
-import SummaryChartGroup from '../components/charts/SummaryChartGroup';
-import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart';
-import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup';
+import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
+import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart/.';
+import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup/.';
 import { getCharts } from '../components/charts/helper';
 import { localTheme } from '../localconf';
 
