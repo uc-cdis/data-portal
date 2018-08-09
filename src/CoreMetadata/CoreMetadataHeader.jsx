@@ -45,19 +45,20 @@ class CoreMetadataHeader extends Component {
 
   render() {
     if (this.props.metadata) {
-    // display the download button if the user can download this file
+      // display the download button if the user can download this file
       const { user, projectAvail } = this.props;
       const projectId = this.props.metadata.project_id;
       const canDownload = canUserDownload(user, projectAvail, projectId);
       let downloadButton = null;
       if (canDownload) {
+        const downloadLink = `/user/data/download/${this.props.metadata.object_id}?expires_in=10&redirect`;
+
         downloadButton = (
-          <button
-            onClick={this.props.onDownloadFile}
-            className='button-primary-orange'
-          >
-            {DOWNLOAD_BTN_CAPTION}
-          </button>);
+          <a href={downloadLink}>
+            <button className='button-primary-orange'>
+              {DOWNLOAD_BTN_CAPTION}
+            </button>
+          </a>);
       }
 
       const properties = `${this.props.metadata.data_format} | ${fileSizeTransform(this.props.metadata.file_size)} | ${this.props.metadata.object_id} | ${this.dateTransform(this.props.metadata.updated_datetime)}`;
@@ -89,7 +90,6 @@ class CoreMetadataHeader extends Component {
 CoreMetadataHeader.propTypes = {
   metadata: PropTypes.object,
   error: PropTypes.string,
-  onDownloadFile: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   projectAvail: PropTypes.object.isRequired,
 };
