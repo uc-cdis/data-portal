@@ -118,6 +118,31 @@ export function findRoot(nodes, edges) {
 }
 
 /**
+ * Detect and keep track of cycles in the graph to avoid infinite loops
+ * @method findCycles
+ * @param nodes
+ * @param edges
+ * @return {Map} map of cycles for easy lookup
+ */
+export function isAncestor(node, currentNode, name2EdgesIn, visitedNodes) {
+  console.log('comparing', node, 'to', currentNode);
+  if (node === currentNode || visitedNodes.has(node)) {
+    console.log(node, currentNode, 'heyyyy');
+    return true;
+  }
+  console.log('edges for', node, name2EdgesIn[node]);
+  visitedNodes.add(node);
+  if (name2EdgesIn[node].length > 0) {
+    name2EdgesIn[node].forEach(edge => {
+      const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
+      return isAncestor(sourceName, currentNode, name2EdgesIn, visitedNodes);
+    })
+  } else {
+    return false;
+  }
+}
+
+/**
  * Arrange nodes in dictionary graph breadth first, and build level database.
  * If a node links to multiple parents, then place it under the highest parent ...
  * Exported for testing.
@@ -168,24 +193,28 @@ export function nodesBreadthFirst(nodes, edges) {
   if (!name2EdgesIn[root]) {
     name2EdgesIn[root] = [];
   }
+  console.log(name2EdgesIn);
+  //console.log('is ancestor?', isAncestor('annotation', 'analysis_metadata', name2EdgesIn, new Set()));
+  console.log(isAncestor('analysis_metadata', 'annotation', name2EdgesIn, new Set()));
 
   const name2ActualLvl = {};
-  // Run through this once to determine the actual level of each node
-  for (let head = 0; head < queue.length; head += 1) {
-    const { query, level } = queue[head]; // breadth first
-    name2ActualLvl[query] = level;
-    name2EdgesIn[query].forEach((edge) => {
-      // At some point the d3 force layout converts edge.source
-      //   and edge.target into node references ...
-      const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
-      if (name2EdgesIn[sourceName]) {
-        queue.push({ query: sourceName, level: level + 1 });
-      } else {
-        console.log(`Edge comes from unknown node ${sourceName}`);
-      }
-    },
-    );
-  }
+  // //Run through this once to determine the actual level of each node
+  // for (let head = 0; head < queue.length; head += 1) {
+  //   const { query, level, edge } = queue[head]; // breadth first
+  //   name2ActualLvl[query] = level;
+  //   name2EdgesIn[query].forEach((edge) => {
+  //     // At some point the d3 force layout converts edge.source
+  //     //   and edge.target into node references ...
+  //     const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
+  //     console.log('checking ancestry of', sourceName, 'for node', query);
+  //     if (!isAncestor(sourceName, query, name2EdgesIn, new Set()) && name2EdgesIn[sourceName]) {
+  //       queue.push({ query: sourceName, level: level + 1, edge: edge });
+  //     } else {
+  //       console.log(`Edge comes from unknown node ${sourceName}`);
+  //     }
+  //   },
+  //   );
+  // }
 
   // Reset and run for real
   queue = [];
