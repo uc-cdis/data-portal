@@ -1,8 +1,7 @@
 @import '~@gen3/ui-component/dist/css/base.less';
 
 .data-explorer-table {
-  padding: 12px 12px;
-  background-color: @white;
+  background-color: @cloud;
 }
 
 .data-explorer-table__download-buttons {
@@ -45,12 +44,10 @@
 /* Overriding default Arranger styles, don't adhere to BEM */
 /* stylelint-disable */
 .data-explorer-table__arranger-table {
-
   // Top of table where text and search box is located
   .tableToolbar {
-    padding: 14px 0 12px 0;
+    margin-bottom: 10px;
     font-size: 16px;
-    background: white;
   }
 
   .tableToolbar .buttonWrapper {
@@ -95,7 +92,7 @@
 
   // Overall table
   .scroll-react-table .ReactTable {
-    flex-grow: 1;
+    //flex-grow: 1;
   }
 
   .ReactTable {
@@ -111,9 +108,12 @@
     outline: none;
     border: none;
     height: 50px;
+    padding: 7px 12px;
 
     &:first-child {
       text-align: left !important; // have to override inline style
+      max-width: 50px !important;
+      width: 50px !important;
 
       input[type="checkbox"] {
         cursor: pointer;
