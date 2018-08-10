@@ -101,6 +101,14 @@
     background: white;
   }
 
+  .ReactTable .rt-thead.-header {
+    min-width: 954px !important; // need to override inline style
+  }
+
+  .ReactTable .rt-tbody {
+    min-width: 954px !important; // need to override inline style
+  }
+
   // All cells in table
   .ReactTable .rt-th,
   .ReactTable .rt-td {
@@ -196,7 +204,7 @@
   // Pagination area at bottom
   .ReactTable .-pagination {
     height: 64px;
-    box-shadow: 0 0px 0px 0;
+    box-shadow: 0 0 0 0;
     border-top: 1px solid @silver;
     padding: 15px;
   }
@@ -230,8 +238,8 @@
     color: @light_gray;
     border-right: solid 1px @silver;
     min-width: 34px;
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
     align-items: center;
     justify-content: center;
   }
