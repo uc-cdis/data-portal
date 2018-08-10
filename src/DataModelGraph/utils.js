@@ -118,28 +118,35 @@ export function findRoot(nodes, edges) {
 }
 
 /**
- * Detect and keep track of cycles in the graph to avoid infinite loops
- * @method findCycles
- * @param nodes
- * @param edges
- * @return {Map} map of cycles for easy lookup
+ * Return true if the source node is an ancestor of the current node
+ * @method isAncestor
+ * @param currentNode
+ * @param source
+ * @param name2EdgesIn
+ * @return {boolean}
  */
-export function isAncestor(node, currentNode, name2EdgesIn, visitedNodes) {
-  console.log('comparing', node, 'to', currentNode);
-  if (node === currentNode || visitedNodes.has(node)) {
-    console.log(node, currentNode, 'heyyyy');
-    return true;
-  }
-  console.log('edges for', node, name2EdgesIn[node]);
-  visitedNodes.add(node);
-  if (name2EdgesIn[node].length > 0) {
+export function isAncestor(currentNode, source, name2EdgesIn) {
+  const visitedNodes = new Set();
+  let stack = [currentNode];
+  visitedNodes.add(source);
+  console.log('visitedNodes', visitedNodes)
+  for (let head = stack.length - 1; head >= 0; --head) {
+    let node = stack[head];
+    console.log('visiting', node);
+    if (visitedNodes.has(node)) {
+      console.log('yes!')
+      return true;
+    }
+    visitedNodes.add(node);
     name2EdgesIn[node].forEach(edge => {
       const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
-      return isAncestor(sourceName, currentNode, name2EdgesIn, visitedNodes);
-    })
-  } else {
-    return false;
+      console.log('pushing', sourceName);
+      stack.push(sourceName);
+    });
+    console.log('stack', stack);
   }
+  console.log('stack empty');
+  return false;
 }
 
 /**
@@ -193,28 +200,33 @@ export function nodesBreadthFirst(nodes, edges) {
   if (!name2EdgesIn[root]) {
     name2EdgesIn[root] = [];
   }
-  console.log(name2EdgesIn);
-  //console.log('is ancestor?', isAncestor('annotation', 'analysis_metadata', name2EdgesIn, new Set()));
-  console.log(isAncestor('analysis_metadata', 'annotation', name2EdgesIn, new Set()));
 
   const name2ActualLvl = {};
-  // //Run through this once to determine the actual level of each node
-  // for (let head = 0; head < queue.length; head += 1) {
-  //   const { query, level, edge } = queue[head]; // breadth first
-  //   name2ActualLvl[query] = level;
-  //   name2EdgesIn[query].forEach((edge) => {
-  //     // At some point the d3 force layout converts edge.source
-  //     //   and edge.target into node references ...
-  //     const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
-  //     console.log('checking ancestry of', sourceName, 'for node', query);
-  //     if (!isAncestor(sourceName, query, name2EdgesIn, new Set()) && name2EdgesIn[sourceName]) {
-  //       queue.push({ query: sourceName, level: level + 1, edge: edge });
-  //     } else {
-  //       console.log(`Edge comes from unknown node ${sourceName}`);
-  //     }
-  //   },
-  //   );
-  // }
+  const ancestors = new Map(); // caching ancestor pairs
+  //Run through this once to determine the actual level of each node
+  for (let head = 0; head < queue.length; head += 1) {
+    const { query, level } = queue[head]; // breadth first
+    console.log('looking at', query);
+    name2ActualLvl[query] = level;
+    name2EdgesIn[query].forEach((edge) => {
+      // At some point the d3 force layout converts edge.source
+      //   and edge.target into node references ...
+      const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
+      if (name2EdgesIn[sourceName]) {
+        let ancestor = ancestors.get(sourceName) || isAncestor(query, sourceName, name2EdgesIn);
+        if (!ancestor) { // only push node if it is not an ancestor of the current node, or else --> cycle
+          console.log('nope');
+          queue.push({ query: sourceName, level: level + 1 });
+        } else {
+          console.log('yep')
+          ancestors.set(sourceName, query);
+        }
+      } else {
+        console.log(`Edge comes from unknown node ${sourceName}`);
+      }
+    },
+    );
+  }
 
   // Reset and run for real
   queue = [];
