@@ -118,32 +118,44 @@ export function findRoot(nodes, edges) {
 }
 
 /**
- * Return true if the source node is an ancestor of the current node
- * @method isAncestor
- * @param currentNode
- * @param source
+ * Returns the hierarchy of the tree in the form of a map
+ * Each (key, value) consists of (node, node's descendants including the node itself)
+ * @method getTreeHierarchy
+ * @param root
  * @param name2EdgesIn
- * @return {boolean}
+ * @return {map}
  */
-export function isAncestor(currentNode, source, name2EdgesIn) {
-  const visitedNodes = new Set();
-  let stack = [source];
-  while (stack.length > 0) {
-    let head = stack.length - 1;
-    let node = stack[head];
-    if (node === currentNode) {
-      return true;
+export function getTreeHierarchy(root, name2EdgesIn) {
+  let hierarchy = getTreeHierarchyHelper(root, name2EdgesIn, new Map());
+  return hierarchy;
+}
+
+/**
+ * Recursive helper function for getTreeHierarchy
+ * Returns the hierarchy of the tree in the form of a map
+ * Each (key, value) consists of (node, node's descendants including the node itself)
+ * @method getTreeHierarchyHelper
+ * @param root
+ * @param name2EdgesIn
+ * @param hierarchy
+ * @return {map}
+ */
+function getTreeHierarchyHelper(node, name2EdgesIn, hierarchy) {
+  let descendants = new Set();
+  descendants.add(node);
+  hierarchy.set(node, descendants);
+  name2EdgesIn[node].forEach(edge => {
+    const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
+    if (!hierarchy.get(sourceName)) { // don't want to visit node again
+      hierarchy = getTreeHierarchyHelper(sourceName, name2EdgesIn, hierarchy);
+      descendants.add(sourceName);
+      hierarchy.get(sourceName).forEach(n => {
+        descendants.add(n);
+      })
     }
-    stack.pop();
-    visitedNodes.add(node);
-    name2EdgesIn[node].forEach(edge => {
-      const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
-      if (!visitedNodes.has(sourceName)) {
-        stack.push(sourceName);
-      }
-    });
-  }
-  return false;
+  })
+  hierarchy.set(node, descendants);
+  return hierarchy;
 }
 
 /**
@@ -199,7 +211,7 @@ export function nodesBreadthFirst(nodes, edges) {
   }
 
   const name2ActualLvl = {};
-  let ancestorsMap = new Map();
+  let hierarchy = getTreeHierarchy(root, name2EdgesIn);
   //Run through this once to determine the actual level of each node
   for (let head = 0; head < queue.length; head += 1) {
     const { query, level } = queue[head]; // breadth first
@@ -209,12 +221,9 @@ export function nodesBreadthFirst(nodes, edges) {
       //   and edge.target into node references ...
       const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
       if (name2EdgesIn[sourceName]) {
-        let ancestor = ancestorsMap.get([sourceName, query]) === undefined ? isAncestor(query, sourceName, name2EdgesIn) : ancestorsMap.get([sourceName, query]);
-        if (!ancestor) { // only push node if it is not an ancestor of the current node, or else --> cycle
-          ancestorsMap.set([sourceName, query], false);
+        let isAncestor = hierarchy.get(sourceName).has(query);
+        if (!isAncestor) { // only push node if it is not an ancestor of the current node, or else --> cycle
           queue.push({ query: sourceName, level: level + 1 });
-        } else {
-          ancestorsMap.set([sourceName, query], true);
         }
       } else {
         console.log(`Edge comes from unknown node ${sourceName}`);

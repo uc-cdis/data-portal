@@ -1,4 +1,4 @@
-import { assignNodePositions, createNodesAndEdges, findRoot, nodesBreadthFirst, isAncestor } from './utils';
+import { assignNodePositions, createNodesAndEdges, findRoot, nodesBreadthFirst, getTreeHierarchy } from './utils';
 import { buildTestData } from './testData';
 
 
@@ -22,7 +22,7 @@ describe('the DataModelGraph utils helper', () => {
     expect(edges.length).toBe(testData.edges.length - 2);
   });
 
-  it('can determine if one node is an ancestor of another', () => {
+  it('can determines the hierarchy of a tree', () => {
     const { nodes, edges } = buildTestData();
     const name2EdgesIn = edges.reduce(
       (db, edge) => {
@@ -37,10 +37,14 @@ describe('the DataModelGraph utils helper', () => {
       // initialize emptyDb - include nodes that have no incoming edges (leaves)
       nodes.reduce((emptyDb, node) => { const res = emptyDb; res[node.id] = []; return res; }, {}),
     );
-    edges.forEach(edge => {
-      expect(isAncestor(edge.source, edge.target, name2EdgesIn)).toBe(true);
-      expect(isAncestor(edge.target, edge.source, name2EdgesIn)).toBe(false);
-    });
+    let hierarchy = getTreeHierarchy(findRoot(nodes, edges), name2EdgesIn);
+    expect(hierarchy.get('project').size).toBe(7);
+    expect(hierarchy.get('b').size).toBe(6);
+    expect(hierarchy.get('c').size).toBe(2);
+    expect(hierarchy.get('d').size).toBe(1);
+    expect(hierarchy.get('a').size).toBe(1);
+    expect(hierarchy.get('x').size).toBe(1);
+    expect(hierarchy.get('y').size).toBe(1);
   });
 
   it('knows how to order nodes breadth first', () => {
