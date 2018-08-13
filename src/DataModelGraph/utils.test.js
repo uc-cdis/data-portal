@@ -37,7 +37,7 @@ describe('the DataModelGraph utils helper', () => {
       // initialize emptyDb - include nodes that have no incoming edges (leaves)
       nodes.reduce((emptyDb, node) => { const res = emptyDb; res[node.id] = []; return res; }, {}),
     );
-    let hierarchy = getTreeHierarchy(findRoot(nodes, edges), name2EdgesIn);
+    const hierarchy = getTreeHierarchy(findRoot(nodes, edges), name2EdgesIn);
     expect(hierarchy.get('project').size).toBe(7);
     expect(hierarchy.get('b').size).toBe(6);
     expect(hierarchy.get('c').size).toBe(2);
