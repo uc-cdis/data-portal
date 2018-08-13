@@ -126,26 +126,28 @@ export function findRoot(nodes, edges) {
  * @return {boolean}
  */
 export function isAncestor(currentNode, source, name2EdgesIn) {
+  console.log('is', source, 'an ancestor of', currentNode, '?');
   const visitedNodes = new Set();
-  let stack = [currentNode];
-  visitedNodes.add(source);
-  console.log('visitedNodes', visitedNodes)
-  for (let head = stack.length - 1; head >= 0; --head) {
+  let stack = [source];
+  while (stack.length > 0) {
+    let head = stack.length - 1;
     let node = stack[head];
-    console.log('visiting', node);
-    if (visitedNodes.has(node)) {
-      console.log('yes!')
+    if (node === currentNode) {
+      console.log('yep!')
       return true;
     }
+    stack.pop();
     visitedNodes.add(node);
+    console.log('edges in', node);
     name2EdgesIn[node].forEach(edge => {
+      console.log(edge);
       const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
-      console.log('pushing', sourceName);
-      stack.push(sourceName);
+      if (!visitedNodes.has(sourceName)) {
+        stack.push(sourceName);
+      }
     });
-    console.log('stack', stack);
   }
-  console.log('stack empty');
+  console.log('nope!')
   return false;
 }
 
@@ -201,8 +203,12 @@ export function nodesBreadthFirst(nodes, edges) {
     name2EdgesIn[root] = [];
   }
 
+  console.log('edges', edges.map(edge => { edge.source, edge.target }));
+  console.log('project', name2EdgesIn['project']);
+  console.log('program', name2EdgesIn['program']);
+
   const name2ActualLvl = {};
-  const ancestors = new Map(); // caching ancestor pairs
+  let ancestorsMap = new Map();
   //Run through this once to determine the actual level of each node
   for (let head = 0; head < queue.length; head += 1) {
     const { query, level } = queue[head]; // breadth first
@@ -213,14 +219,16 @@ export function nodesBreadthFirst(nodes, edges) {
       //   and edge.target into node references ...
       const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
       if (name2EdgesIn[sourceName]) {
-        let ancestor = ancestors.get(sourceName) || isAncestor(query, sourceName, name2EdgesIn);
+        let ancestor = ancestorsMap.get([sourceName, query]) === undefined ? isAncestor(query, sourceName, name2EdgesIn) : ancestorsMap.get([sourceName, query]);
         if (!ancestor) { // only push node if it is not an ancestor of the current node, or else --> cycle
-          console.log('nope');
+          console.log(sourceName, 'is NOT an ancestor of', query);
+          ancestorsMap.set([sourceName, query], false);
           queue.push({ query: sourceName, level: level + 1 });
         } else {
-          console.log('yep')
-          ancestors.set(sourceName, query);
+          console.log(sourceName, 'is an ancestor of', query);
+          ancestorsMap.set([sourceName, query], true);
         }
+        console.log('ancestors map:', ancestorsMap);
       } else {
         console.log(`Edge comes from unknown node ${sourceName}`);
       }
