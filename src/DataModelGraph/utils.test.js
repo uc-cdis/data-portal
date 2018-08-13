@@ -1,4 +1,4 @@
-import { assignNodePositions, createNodesAndEdges, findRoot, nodesBreadthFirst } from './utils';
+import { assignNodePositions, createNodesAndEdges, findRoot, nodesBreadthFirst, getTreeHierarchy } from './utils';
 import { buildTestData } from './testData';
 
 
@@ -20,6 +20,31 @@ describe('the DataModelGraph utils helper', () => {
     const { nodes, edges } = createNodesAndEdges({ dictionary: testData.dictionary }, true, ['project']);
     expect(nodes.length).toBe(testData.nodes.length - 1);
     expect(edges.length).toBe(testData.edges.length - 2);
+  });
+
+  it('can determines the hierarchy of a tree', () => {
+    const { nodes, edges } = buildTestData();
+    const name2EdgesIn = edges.reduce(
+      (db, edge) => {
+        const targetName = typeof edge.target === 'object' ? edge.target.id : edge.target;
+        if (db[targetName]) {
+          db[targetName].push(edge);
+        } else {
+          console.error(`Edge points to unknown node: ${targetName}`);
+        }
+        return db;
+      },
+      // initialize emptyDb - include nodes that have no incoming edges (leaves)
+      nodes.reduce((emptyDb, node) => { const res = emptyDb; res[node.id] = []; return res; }, {}),
+    );
+    const hierarchy = getTreeHierarchy(findRoot(nodes, edges), name2EdgesIn);
+    expect(hierarchy.get('project').size).toBe(7);
+    expect(hierarchy.get('b').size).toBe(6);
+    expect(hierarchy.get('c').size).toBe(2);
+    expect(hierarchy.get('d').size).toBe(1);
+    expect(hierarchy.get('a').size).toBe(1);
+    expect(hierarchy.get('x').size).toBe(1);
+    expect(hierarchy.get('y').size).toBe(1);
   });
 
   it('knows how to order nodes breadth first', () => {
