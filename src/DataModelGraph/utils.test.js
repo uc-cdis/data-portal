@@ -23,7 +23,6 @@ describe('the DataModelGraph utils helper', () => {
   });
 
   it('can determine if one node is an ancestor of another', () => {
-    console.log('ANCESTOR TEST');
     const { nodes, edges } = buildTestData();
     const name2EdgesIn = edges.reduce(
       (db, edge) => {

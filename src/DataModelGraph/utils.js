@@ -126,28 +126,23 @@ export function findRoot(nodes, edges) {
  * @return {boolean}
  */
 export function isAncestor(currentNode, source, name2EdgesIn) {
-  console.log('is', source, 'an ancestor of', currentNode, '?');
   const visitedNodes = new Set();
   let stack = [source];
   while (stack.length > 0) {
     let head = stack.length - 1;
     let node = stack[head];
     if (node === currentNode) {
-      console.log('yep!')
       return true;
     }
     stack.pop();
     visitedNodes.add(node);
-    console.log('edges in', node);
     name2EdgesIn[node].forEach(edge => {
-      console.log(edge);
       const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
       if (!visitedNodes.has(sourceName)) {
         stack.push(sourceName);
       }
     });
   }
-  console.log('nope!')
   return false;
 }
 
@@ -203,16 +198,11 @@ export function nodesBreadthFirst(nodes, edges) {
     name2EdgesIn[root] = [];
   }
 
-  console.log('edges', edges.map(edge => { edge.source, edge.target }));
-  console.log('project', name2EdgesIn['project']);
-  console.log('program', name2EdgesIn['program']);
-
   const name2ActualLvl = {};
   let ancestorsMap = new Map();
   //Run through this once to determine the actual level of each node
   for (let head = 0; head < queue.length; head += 1) {
     const { query, level } = queue[head]; // breadth first
-    console.log('looking at', query);
     name2ActualLvl[query] = level;
     name2EdgesIn[query].forEach((edge) => {
       // At some point the d3 force layout converts edge.source
@@ -221,14 +211,11 @@ export function nodesBreadthFirst(nodes, edges) {
       if (name2EdgesIn[sourceName]) {
         let ancestor = ancestorsMap.get([sourceName, query]) === undefined ? isAncestor(query, sourceName, name2EdgesIn) : ancestorsMap.get([sourceName, query]);
         if (!ancestor) { // only push node if it is not an ancestor of the current node, or else --> cycle
-          console.log(sourceName, 'is NOT an ancestor of', query);
           ancestorsMap.set([sourceName, query], false);
           queue.push({ query: sourceName, level: level + 1 });
         } else {
-          console.log(sourceName, 'is an ancestor of', query);
           ancestorsMap.set([sourceName, query], true);
         }
-        console.log('ancestors map:', ancestorsMap);
       } else {
         console.log(`Edge comes from unknown node ${sourceName}`);
       }
