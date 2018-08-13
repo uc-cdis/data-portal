@@ -1,8 +1,7 @@
 @import '~@gen3/ui-component/dist/css/base.less';
 
 .data-explorer-table {
-  padding: 12px 12px;
-  background-color: @white;
+  background-color: @cloud;
 }
 
 .data-explorer-table__download-buttons {
@@ -45,12 +44,10 @@
 /* Overriding default Arranger styles, don't adhere to BEM */
 /* stylelint-disable */
 .data-explorer-table__arranger-table {
-
   // Top of table where text and search box is located
   .tableToolbar {
-    padding: 14px 0 12px 0;
+    margin-bottom: 10px;
     font-size: 16px;
-    background: white;
   }
 
   .tableToolbar .buttonWrapper {
@@ -104,6 +101,14 @@
     background: white;
   }
 
+  .ReactTable .rt-thead.-header {
+    min-width: 954px !important; // need to override inline style
+  }
+
+  .ReactTable .rt-tbody {
+    min-width: 954px !important; // need to override inline style
+  }
+
   // All cells in table
   .ReactTable .rt-th,
   .ReactTable .rt-td {
@@ -111,9 +116,12 @@
     outline: none;
     border: none;
     height: 50px;
+    padding: 7px 12px;
 
     &:first-child {
       text-align: left !important; // have to override inline style
+      max-width: 50px !important;
+      width: 50px !important;
 
       input[type="checkbox"] {
         cursor: pointer;
@@ -196,7 +204,7 @@
   // Pagination area at bottom
   .ReactTable .-pagination {
     height: 64px;
-    box-shadow: 0 0px 0px 0;
+    box-shadow: 0 0 0 0;
     border-top: 1px solid @silver;
     padding: 15px;
   }
@@ -230,8 +238,8 @@
     color: @light_gray;
     border-right: solid 1px @silver;
     min-width: 34px;
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
     align-items: center;
     justify-content: center;
   }

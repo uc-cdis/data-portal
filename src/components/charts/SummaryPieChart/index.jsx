@@ -28,8 +28,8 @@ class SummaryPieChart extends React.Component {
 
     return (
       <div className='summary-pie-chart'>
-        <div className='summary-pie-chart__title h4-typo'>
-          {this.props.title}
+        <div className='summary-pie-chart__title-box'>
+          <p className='summary-pie-chart__title h4-typo'>{this.props.title}</p>
         </div>
         <div className='summary-pie-chart__body'>
           <div className='summary-pie-chart__legend'>
