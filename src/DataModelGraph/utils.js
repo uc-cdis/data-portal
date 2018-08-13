@@ -154,8 +154,7 @@ function getTreeHierarchyHelper(node, name2EdgesIn, hierarchy) {
  * @return {map}
  */
 export function getTreeHierarchy(root, name2EdgesIn) {
-  const hierarchy = getTreeHierarchyHelper(root, name2EdgesIn, new Map());
-  return hierarchy;
+  return getTreeHierarchyHelper(root, name2EdgesIn, new Map());
 }
 
 /**
