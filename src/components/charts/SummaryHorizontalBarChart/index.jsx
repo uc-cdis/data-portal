@@ -36,8 +36,10 @@ class SummaryBarChart extends React.Component {
     const dataKey = helper.getDataKey(this.props.showPercentage);
     return (
       <div className='summary-horizontal-bar-chart'>
-        <div className='summary-horizontal-bar-chart__title h4-typo'>
-          {this.props.title}
+        <div className='summary-horizontal-bar-chart__title-box'>
+          <p className='summary-horizontal-bar-chart__title h4-typo'>
+            {this.props.title}
+          </p>
         </div>
         <ResponsiveContainer width='100%' height={barChartHeight}>
           <BarChart
