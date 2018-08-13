@@ -169,23 +169,69 @@ export function nodesBreadthFirst(nodes, edges) {
     name2EdgesIn[root] = [];
   }
 
+  // keep track of how many times a node has been visited
+  // avoids infinite loop
+  const processedNodesCount = new Map();
+  const maxProcessedCount = nodes.length;
   const name2ActualLvl = {};
   // Run through this once to determine the actual level of each node
   for (let head = 0; head < queue.length; head += 1) {
     const { query, level } = queue[head]; // breadth first
+    // visited node -> increment # of visits
+    if (processedNodesCount.has(query)) {
+      processedNodesCount.set(query, processedNodesCount.get(query) + 1);
+    } else {
+      processedNodesCount.set(query, 1);
+    }
     name2ActualLvl[query] = level;
     name2EdgesIn[query].forEach((edge) => {
       // At some point the d3 force layout converts edge.source
       //   and edge.target into node references ...
       const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
       if (name2EdgesIn[sourceName]) {
-        queue.push({ query: sourceName, level: level + 1 });
+        // only queue node if its number of visits is < nodes * edges
+        if ((processedNodesCount.has(sourceName) &&
+          processedNodesCount.get(sourceName) < maxProcessedCount) ||
+          !processedNodesCount.has(sourceName)) {
+          queue.push({ query: sourceName, level: level + 1 });
+        }
       } else {
         console.log(`Edge comes from unknown node ${sourceName}`);
       }
     },
     );
   }
+
+  // const levelList = {};
+  // Object.keys(name2ActualLvl).forEach((key) => {
+  //   const value = name2ActualLvl[key];
+  //   if (levelList[value]) {
+  //     levelList[value].push(key);
+  //   } else {
+  //     levelList[value] = [key];
+  //   }
+  // });
+  // console.log('original levels', levelList);
+  //
+  // const compressedLevels = {};
+  // var j = 0;
+  // for (var i = 0; i < Object.keys(levelList).length; ++i) {
+  //   while (!levelList[j]) {
+  //     ++j;
+  //   }
+  //   compressedLevels[i] = levelList[j];
+  //   ++j;
+  // }
+  //
+  // console.log('compressed levels', compressedLevels);
+  //
+  // Object.keys(compressedLevels).forEach((level) => {
+  //   compressedLevels[level].forEach((node) => {
+  //     name2ActualLvl[node] = parseInt(level);
+  //   });
+  // });
+  // console.log('name2ActualLvl', name2ActualLvl);
+
 
   // Reset and run for real
   queue = [];
