@@ -1,7 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import SummaryChartGroup from '.';
-import { localTheme } from '../../../localconf';
 import SummaryPieChart from '../SummaryPieChart';
 import SummaryHorizontalBarChart from '../SummaryHorizontalBarChart';
 
@@ -37,7 +36,6 @@ describe('<SummaryChartGroup />', () => {
   const charts = mount(<SummaryChartGroup
     summaries={summaries}
     width={1010}
-    localTheme={localTheme}
   />);
 
   it('renders', () => {

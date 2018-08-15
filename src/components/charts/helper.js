@@ -1,3 +1,5 @@
+import { colorsForCharts } from '../../localconf';
+
 const percentageFormatter = showPercentage => v => (showPercentage ? `${v}%` : v);
 
 const addPercentage = v => (percentageFormatter(true)(v));
@@ -39,13 +41,9 @@ const getPercentageData = (chartData, percentageFixedPoint) => {
   return [result];
 };
 
-const getCategoryColor = (index, localTheme) => {
-  // map index to (1-9)
-  const i = (index % 9) + 1;
-  return localTheme[`barGraph.bar${i}Color`];
-};
+const getCategoryColor = index => (colorsForCharts.categorical9Colors[index % 9]);
 
-const getCategoryColorFrom2Colors = (index, localTheme) => localTheme[`pieChartTwoColor.pie${(index % 2) + 1}Color`];
+const getCategoryColorFrom2Colors = index => colorsForCharts.categorical2Colors[index % 2];
 
 const getDataKey = showPercentage => (showPercentage ? 'percentage' : 'value');
 

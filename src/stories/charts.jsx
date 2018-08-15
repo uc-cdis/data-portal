@@ -4,7 +4,6 @@ import SummaryHorizontalBarChart from '../components/charts/SummaryHorizontalBar
 import SummaryPieChart from '../components/charts/SummaryPieChart';
 import SummaryChartGroup from '../components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart';
-import { localTheme } from '../localconf';
 
 const chartData = [
   { name: 'H1N1', value: 4000 },
@@ -36,17 +35,17 @@ const summaries = [
 
 storiesOf('Chart', module)
   .add('SummaryHorizontalBarChart', () => (
-    <SummaryHorizontalBarChart data={chartData} title='bar chart title' localTheme={localTheme} showPercentage={false} />
+    <SummaryHorizontalBarChart data={chartData} title='bar chart title' showPercentage={false} />
   ))
   .add('SummaryHorizontalBarChart with single color and percentage', () => (
-    <SummaryHorizontalBarChart data={chartData} title='bar chart title' color='#3283c8' localTheme={localTheme} />
+    <SummaryHorizontalBarChart data={chartData} title='bar chart title' color='#3283c8' />
   ))
   .add('SummaryPieChart', () => (
-    <SummaryPieChart data={chartData} title='pie chart title' localTheme={localTheme} showPercentage />
+    <SummaryPieChart data={chartData} title='pie chart title' showPercentage />
   ))
   .add('SummaryChartGroup', () => (
-    <SummaryChartGroup summaries={summaries} width={1010} localTheme={localTheme} />
+    <SummaryChartGroup summaries={summaries} width={1010} />
   ))
   .add('PercentageStackedBarChart', () => (
-    <PercentageStackedBarChart data={chartData} localTheme={localTheme} />
+    <PercentageStackedBarChart data={chartData} />
   ));

@@ -1,6 +1,5 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { localTheme } from '../../../localconf';
 import SummaryPieChart from '.';
 
 describe('<SummaryPieChart />', () => {
@@ -16,7 +15,6 @@ describe('<SummaryPieChart />', () => {
   const charts = mount(<SummaryPieChart
     title='test'
     data={chartData}
-    localTheme={localTheme}
   />).find(SummaryPieChart);
 
   it('renders', () => {

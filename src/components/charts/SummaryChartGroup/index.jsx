@@ -22,13 +22,11 @@ class SummaryChartGroup extends Component {
                     <SummaryPieChart
                       data={item.data}
                       title={item.title}
-                      localTheme={this.props.localTheme}
                     />
                   ) : (
                     <SummaryHorizontalBarChart
                       data={item.data}
                       title={item.title}
-                      localTheme={this.props.localTheme}
                       vertical
                       color='#3283c8'
                     />
@@ -44,7 +42,6 @@ class SummaryChartGroup extends Component {
 
 SummaryChartGroup.propTypes = {
   summaries: PropTypes.arrayOf(PropTypes.object).isRequired,
-  localTheme: PropTypes.object.isRequired,
   width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
