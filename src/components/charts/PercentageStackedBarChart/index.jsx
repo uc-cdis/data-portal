@@ -24,7 +24,6 @@ const labelListStyle = {
   fontWeight: 600,
 };
 
-
 // FIXME: add back in animation (https://github.com/recharts/recharts/issues/1083)
 class PercentageStackedBarChart extends React.Component {
   render() {
@@ -64,8 +63,8 @@ class PercentageStackedBarChart extends React.Component {
                 key={name}
                 dataKey={name}
                 stackId='a'
-                fill={helper.getCategoryColor(index, this.props.localTheme)}
                 isAnimationActive={false}
+                fill={helper.getCategoryColor(index)}
               >
                 <LabelList dataKey={name} position='center' style={labelListStyle} formatter={helper.addPercentage} className='percentage-bar-chart__label-list' />
               </Bar>
@@ -80,7 +79,7 @@ class PercentageStackedBarChart extends React.Component {
                   <span
                     className='percentage-bar-chart__legend-color'
                     style={{
-                      background: helper.getCategoryColor(index, this.props.localTheme),
+                      background: helper.getCategoryColor(index),
                     }}
                   />
                   <span className='percentage-bar-chart__legend-name form-body'>
@@ -106,7 +105,6 @@ const ChartDataShape = PropTypes.shape({
 
 PercentageStackedBarChart.propTypes = {
   data: PropTypes.arrayOf(ChartDataShape).isRequired,
-  localTheme: PropTypes.object.isRequired,
   percentageFixedPoint: PropTypes.number,
 };
 

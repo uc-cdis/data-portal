@@ -58,7 +58,7 @@ class SummaryBarChart extends React.Component {
                   <Cell
                     key={dataKey}
                     fill={this.props.color
-                      || helper.getCategoryColor(index, this.props.localTheme)}
+                      || helper.getCategoryColor(index)}
                   />
                 ))
               }
@@ -79,7 +79,6 @@ const ChartDataShape = PropTypes.shape({
 SummaryBarChart.propTypes = {
   title: PropTypes.string.isRequired,
   data: PropTypes.arrayOf(ChartDataShape).isRequired,
-  localTheme: PropTypes.object.isRequired,
   color: PropTypes.string,
   barSize: PropTypes.number,
   barGap: PropTypes.number,

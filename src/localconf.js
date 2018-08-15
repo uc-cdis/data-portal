@@ -48,27 +48,24 @@ function buildConfig(opts) {
   const loginPath = `${userapiPath}login/`;
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
 
-  const localTheme = {
-    'barGraph.lineColor': '#666666',
-    'barGraph.bar1Color': '#3283c8',
-    'barGraph.bar2Color': '#7ec500',
-    'barGraph.bar3Color': '#ad91ff',
-    'barGraph.bar4Color': '#f4b940',
-    'barGraph.bar5Color': '#e74c3c',
-    'barGraph.bar6Color': '#05b8ee',
-    'barGraph.bar7Color': '#ff7abc',
-    'barGraph.bar8Color': '#ef8523',
-    'barGraph.bar9Color': '#26d9b1',
-    'summary.borderTopColor': '#c87152',
-    'summary.borderColor': '#222222',
-    'summary.countColor': '#ff4200',
-    'summary.iconColor': '#008000',
-    'projectTable.summaryRowColor': '#eeeeee',
-    'projectTable.submitButtonColor': '#dddddd',
-    'pieChartTwoColor.pie1Color': '#3283c8',
-    'pieChartTwoColor.pie2Color': '#e7e7e7',
-    tableBarColor: '#7d7474',
+  const colorsForCharts = {
+    categorical9Colors: [
+      '#3283c8',
+      '#7ec500',
+      '#ad91ff',
+      '#f4b940',
+      '#e74c3c',
+      '#05b8ee',
+      '#ff7abc',
+      '#ef8523',
+      '#26d9b1',
+    ],
+    categorical2Colors: [
+      '#3283c8',
+      '#e7e7e7',
+    ],
   };
+
   const requiredCerts = [];
 
   if (app === 'gdc') {
@@ -97,7 +94,7 @@ function buildConfig(opts) {
     graphqlSchemaUrl,
     appname: components.appName,
     mockStore,
-    localTheme,
+    colorsForCharts,
     login,
     loginPath,
     requiredCerts,

@@ -1,6 +1,5 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { localTheme } from '../../../localconf';
 import SummaryHorizontalBarChart from '.';
 
 describe('<SummaryHorizontalBarChart />', () => {
@@ -14,7 +13,7 @@ describe('<SummaryHorizontalBarChart />', () => {
   ];
 
   const wrapper = mount(
-    <SummaryHorizontalBarChart data={chartData} title='bar chart title' color='#3283c8' localTheme={localTheme} />,
+    <SummaryHorizontalBarChart data={chartData} title='bar chart title' color='#3283c8' />,
   );
   const charts = wrapper.find(SummaryHorizontalBarChart);
 

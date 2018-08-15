@@ -6,6 +6,7 @@ import Spinner from '../../Spinner';
 import TooltipCDIS from '../TooltipCDIS/.';
 import Tick from '../Tick';
 import './IndexBarChart.less';
+import helper from '../helper';
 
 const sortCount = (a, b) => {
   const countA = a.counts.reduce((res, item) => res + item);
@@ -95,9 +96,7 @@ class IndexBarChart extends React.Component {
     countNames: PropTypes.arrayOf(
       PropTypes.string,
     ),
-    localTheme: PropTypes.objectOf(
-      PropTypes.any,
-    ),
+    xAxisColor: PropTypes.string,
   };
 
   render() {
@@ -106,11 +105,8 @@ class IndexBarChart extends React.Component {
     }
     const projectList = [...this.props.projectList.sort(sortCount)];
     const topList = (projectList.length <= 5) ? projectList : getTopList(projectList);
-
-    const localTheme = this.props.localTheme;
     const sumList = computeSummations(topList, this.props.countNames);
     const indexChart = createChartData(topList, this.props.countNames, sumList);
-
     const projectNames = topList.map(project => project.code);
     const barNames = createBarNames(indexChart);
     let countBar = 0;
@@ -125,8 +121,8 @@ class IndexBarChart extends React.Component {
           >
             <h4>Project Submission status</h4>
             <XAxis
-              stroke={localTheme['barGraph.lineColor']}
-              fill={localTheme['barGraph.lineColor']}
+              stroke={this.props.xAxisColor}
+              fill={this.props.xAxisColor}
               domain={[0, 100]}
               ticks={[0, 25, 50, 75, 100]}
               allowDecimals={false}
@@ -152,7 +148,7 @@ class IndexBarChart extends React.Component {
                       name={projectNames[index]}
                       dataKey={barName}
                       stackId='a'
-                      fill={localTheme[`barGraph.bar${(index + 1).toString()}Color`]}
+                      fill={helper.getCategoryColor(index)}
                     />
                   );
                 },
@@ -166,11 +162,10 @@ class IndexBarChart extends React.Component {
   }
 }
 
-
 IndexBarChart.defaultProps = {
   projectList: [],
   countNames: [],
-  localTheme: {},
+  xAxisColor: '#666666',
 };
 
 export default IndexBarChart;

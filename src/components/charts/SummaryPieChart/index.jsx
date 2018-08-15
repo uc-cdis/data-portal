@@ -65,7 +65,7 @@ class SummaryPieChart extends React.Component {
                   <Cell
                     key={dataKey}
                     dataKey={dataKey}
-                    fill={getColor(index, this.props.localTheme, useTwoColors)}
+                    fill={getColor(index)}
                   />))
               }
             </Pie>
@@ -85,7 +85,6 @@ const ChartDataShape = PropTypes.shape({
 SummaryPieChart.propTypes = {
   title: PropTypes.string.isRequired,
   data: PropTypes.arrayOf(ChartDataShape).isRequired,
-  localTheme: PropTypes.object.isRequired,
   innerRadius: PropTypes.number,
   outerRadius: PropTypes.number,
   showPercentage: PropTypes.bool,

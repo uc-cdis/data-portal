@@ -7,7 +7,6 @@ import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart/.';
 import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup/.';
 import { getCharts } from '../components/charts/helper';
-import { localTheme } from '../localconf';
 
 class DataExplorerVisualizations extends React.Component {
   constructor(props) {
@@ -45,14 +44,13 @@ class DataExplorerVisualizations extends React.Component {
         { charts && this.state.showVisualization ?
           <div className='data-explorer__charts'>
             <DataSummaryCardGroup summaryItems={charts.countItems} connected />
-            <SummaryChartGroup summaries={charts.summaries} localTheme={localTheme} />
+            <SummaryChartGroup summaries={charts.summaries} />
             {
               charts.stackedBarCharts.map((chart, i) =>
                 (<PercentageStackedBarChart
                   key={i}
                   data={chart.data}
                   title={chart.title}
-                  localTheme={localTheme}
                   width='100%'
                 />),
               )

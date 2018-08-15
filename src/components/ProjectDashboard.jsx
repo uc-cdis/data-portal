@@ -19,7 +19,6 @@ class ProjectDashboard extends Component {
             summaryItems={this.props.summaries}
             align='left'
           />
-          {/* <ReduxProjectBarChart projectList={this.props.projectList} /> */}
         </div>
         <ProjectTable projectList={projectList} summaries={this.props.details} />
       </React.Fragment>
