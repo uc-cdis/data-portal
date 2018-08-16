@@ -54,6 +54,26 @@ describe('helper', () => {
     expect(helper.getDataKey(false)).toBe('value');
   });
 
+  const noSelectSqonCount = Infinity;
+  const noSelectSqonValues = undefined;
+
+  const selectWhiteSqon = {
+    op: 'and',
+    content: [
+      {
+        op: 'in',
+        content: {
+          field: 'ethnicity',
+          value: [
+            'White',
+          ],
+        },
+      },
+    ],
+  };
+  const selectWhiteSqonCount = 1;
+  const selectWhiteSqonValues = ['White'];
+
   const ethnicityFieldJSON = {
     buckets: [
       { doc_count: 4, key: 'White' },
@@ -110,15 +130,17 @@ describe('helper', () => {
   };
 
   it('returns chart data as expected', () => {
-    expect(helper.transformArrangerDataToChart(ethnicityFieldJSON)).toEqual(ethnicityChartData);
+    expect(helper.transformArrangerDataToChart(ethnicityFieldJSON, noSelectSqonValues))
+      .toEqual(ethnicityChartData);
   });
 
   it('returns count data as expected', () => {
-    expect(helper.transformDataToCount(ethnicityFieldJSON, 'Ethnicity')).toEqual(ethnicityCountData);
+    expect(helper.transformDataToCount(ethnicityFieldJSON, 'Ethnicity', noSelectSqonCount))
+      .toEqual(ethnicityCountData);
   });
 
   it('returns chart summaries as expected', () => {
-    expect(helper.transformArrangerDataToSummary(ethnicityFieldJSON, 'pie', 'Ethnicity')).toEqual(summaryData);
+    expect(helper.transformArrangerDataToSummary(ethnicityFieldJSON, 'pie', 'Ethnicity', noSelectSqonValues)).toEqual(summaryData);
   });
 
   it('gets charts', () => {
@@ -126,5 +148,10 @@ describe('helper', () => {
     expect(charts.countItems).toEqual([projectCountData]);
     expect(charts.summaries).toEqual([summaryData]);
     expect(charts.stackedBarCharts).toEqual([]);
+  });
+
+  it('return sqon count and values as expected', () => {
+    expect(helper.getSQONCount(selectWhiteSqon, 'ethnicity')).toEqual(selectWhiteSqonCount);
+    expect(helper.getSQONValues(selectWhiteSqon, 'ethnicity')).toEqual(selectWhiteSqonValues);
   });
 });
