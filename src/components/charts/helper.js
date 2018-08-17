@@ -50,7 +50,7 @@ const getDataKey = showPercentage => (showPercentage ? 'percentage' : 'value');
 const transformArrangerDataToChart = (field, sqonValues) => {
   const chartData = [];
   field.buckets
-    .filter(bucket => (sqonValues === undefined || sqonValues.includes(bucket.key)))
+    .filter(bucket => (sqonValues === null || sqonValues.includes(bucket.key)))
     .forEach(bucket =>
       chartData.push({
         name: bucket.key,
@@ -66,25 +66,21 @@ const transformArrangerDataToSummary = (field, chartType, title, sqonValues) => 
   data: transformArrangerDataToChart(field, sqonValues),
 });
 
-const transformDataToCount = (field, label, sqonCount) => ({
+const transformDataToCount = (field, label, sqonValues) => ({
   label,
-  value: Math.min(field.buckets.length, sqonCount),
+  value: sqonValues ? Math.min(field.buckets.length, sqonValues.length) : field.buckets.length,
 });
 
+/**
+ * Return an array of selected values in a given field
+ * If no value selected, return null
+ */
 const getSQONValues = (sqon, field) => {
-  if (!sqon || !sqon.content) return undefined;
+  if (!sqon || !sqon.content) return null;
   const sqonItems = sqon.content.filter(item => item.content.field === field);
-  if (!sqonItems || sqonItems.length !== 1) return undefined;
+  if (!sqonItems || sqonItems.length !== 1) return null;
   const sqonValues = sqonItems[0].content.value;
   return sqonValues;
-};
-
-const getSQONCount = (sqon, field) => {
-  if (!sqon || !sqon.content) return Infinity;
-  const sqonItems = sqon.content.filter(item => item.content.field === field);
-  if (!sqonItems || sqonItems.length !== 1) return Infinity;
-  const sqonCount = sqonItems[0].content.value.length;
-  return sqonCount;
 };
 
 const getCharts = (data, arrangerConfig, sqon) => {
@@ -97,11 +93,10 @@ const getCharts = (data, arrangerConfig, sqon) => {
     Object.keys(fields).forEach((field) => {
       const fieldConfig = arrangerConfig.charts[field];
       const sqonValues = getSQONValues(sqon, field);
-      const sqonCount = getSQONCount(sqon, field);
       if (fieldConfig) {
         switch (fieldConfig.chartType) {
         case 'count':
-          countItems.push(transformDataToCount(fields[field], fieldConfig.title, sqonCount));
+          countItems.push(transformDataToCount(fields[field], fieldConfig.title, sqonValues));
           break;
         case 'pie':
         case 'bar':
@@ -143,6 +138,5 @@ module.exports = {
   transformArrangerDataToChart,
   transformArrangerDataToSummary,
   getCharts,
-  getSQONCount,
   getSQONValues,
 };

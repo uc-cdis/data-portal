@@ -54,9 +54,7 @@ describe('helper', () => {
     expect(helper.getDataKey(false)).toBe('value');
   });
 
-  const noSelectSqonCount = Infinity;
-  const noSelectSqonValues = undefined;
-
+  const noSelectSqonValues = null;
   const selectWhiteSqon = {
     op: 'and',
     content: [
@@ -71,7 +69,6 @@ describe('helper', () => {
       },
     ],
   };
-  const selectWhiteSqonCount = 1;
   const selectWhiteSqonValues = ['White'];
 
   const ethnicityFieldJSON = {
@@ -135,7 +132,7 @@ describe('helper', () => {
   });
 
   it('returns count data as expected', () => {
-    expect(helper.transformDataToCount(ethnicityFieldJSON, 'Ethnicity', noSelectSqonCount))
+    expect(helper.transformDataToCount(ethnicityFieldJSON, 'Ethnicity', noSelectSqonValues))
       .toEqual(ethnicityCountData);
   });
 
@@ -150,8 +147,7 @@ describe('helper', () => {
     expect(charts.stackedBarCharts).toEqual([]);
   });
 
-  it('return sqon count and values as expected', () => {
-    expect(helper.getSQONCount(selectWhiteSqon, 'ethnicity')).toEqual(selectWhiteSqonCount);
+  it('return selecetd values from SQON as expected', () => {
     expect(helper.getSQONValues(selectWhiteSqon, 'ethnicity')).toEqual(selectWhiteSqonValues);
   });
 });
