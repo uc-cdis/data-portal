@@ -94,7 +94,12 @@ describe('helper', () => {
     { name: 'Black', value: 5 },
   ];
 
+  const ethnicityChartDataWithOnlyWhiteSelected = [
+    { name: 'White', value: 4 },
+  ];
+
   const ethnicityCountData = { label: 'Ethnicity', value: 3 };
+  const ethnicityCountDataWithOnlyWhiteSelected = { label: 'Ethnicity', value: 1 };
 
   const projectCountData = { label: 'Projects', value: 4 };
 
@@ -102,6 +107,12 @@ describe('helper', () => {
     title: 'Ethnicity',
     type: 'pie',
     data: ethnicityChartData,
+  };
+
+  const summaryDataWithOnlyWhiteSelected = {
+    title: 'Ethnicity',
+    type: 'pie',
+    data: ethnicityChartDataWithOnlyWhiteSelected,
   };
 
   const rawData = {
@@ -129,15 +140,21 @@ describe('helper', () => {
   it('returns chart data as expected', () => {
     expect(helper.transformArrangerDataToChart(ethnicityFieldJSON, noSelectSqonValues))
       .toEqual(ethnicityChartData);
+    expect(helper.transformArrangerDataToChart(ethnicityFieldJSON, selectWhiteSqonValues))
+      .toEqual(ethnicityChartDataWithOnlyWhiteSelected);
   });
 
   it('returns count data as expected', () => {
     expect(helper.transformDataToCount(ethnicityFieldJSON, 'Ethnicity', noSelectSqonValues))
       .toEqual(ethnicityCountData);
+    expect(helper.transformDataToCount(ethnicityFieldJSON, 'Ethnicity', selectWhiteSqonValues))
+      .toEqual(ethnicityCountDataWithOnlyWhiteSelected);
   });
 
   it('returns chart summaries as expected', () => {
     expect(helper.transformArrangerDataToSummary(ethnicityFieldJSON, 'pie', 'Ethnicity', noSelectSqonValues)).toEqual(summaryData);
+    expect(helper.transformArrangerDataToSummary(ethnicityFieldJSON, 'pie', 'Ethnicity',
+      selectWhiteSqonValues)).toEqual(summaryDataWithOnlyWhiteSelected);
   });
 
   it('gets charts', () => {
@@ -149,5 +166,6 @@ describe('helper', () => {
 
   it('return selecetd values from SQON as expected', () => {
     expect(helper.getSQONValues(selectWhiteSqon, 'ethnicity')).toEqual(selectWhiteSqonValues);
+    expect(helper.getSQONValues(noSelectSqonValues, 'ethnicity')).toEqual(null);
   });
 });
