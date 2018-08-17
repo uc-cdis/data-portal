@@ -22,7 +22,7 @@ class DataExplorerVisualizations extends React.Component {
 
   render() {
     const charts = this.props.arrangerData ?
-      getCharts(this.props.arrangerData, this.props.arrangerConfig)
+      getCharts(this.props.arrangerData, this.props.arrangerConfig, this.props.sqon)
       : null;
     return (
       <div className='data-explorer__visualizations'>
@@ -66,11 +66,13 @@ class DataExplorerVisualizations extends React.Component {
 DataExplorerVisualizations.propTypes = {
   arrangerData: PropTypes.object,
   arrangerConfig: PropTypes.object,
+  sqon: PropTypes.object,
 };
 
 DataExplorerVisualizations.defaultProps = {
   arrangerData: null,
   arrangerConfig: {},
+  sqon: null,
 };
 
 export default DataExplorerVisualizations;

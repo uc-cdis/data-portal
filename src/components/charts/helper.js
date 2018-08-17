@@ -47,29 +47,43 @@ const getCategoryColorFrom2Colors = index => colorsForCharts.categorical2Colors[
 
 const getDataKey = showPercentage => (showPercentage ? 'percentage' : 'value');
 
-const transformArrangerDataToChart = (field) => {
+const transformArrangerDataToChart = (field, sqonValues) => {
   const chartData = [];
-  field.buckets.map(bucket =>
-    chartData.push({
-      name: bucket.key,
-      value: bucket.doc_count,
-    }),
-  );
+  field.buckets
+    .filter(bucket => (sqonValues === null || sqonValues.includes(bucket.key)))
+    .forEach(bucket =>
+      chartData.push({
+        name: bucket.key,
+        value: bucket.doc_count,
+      }),
+    );
   return chartData;
 };
 
-const transformArrangerDataToSummary = (field, chartType, title) => ({
+const transformArrangerDataToSummary = (field, chartType, title, sqonValues) => ({
   type: chartType,
   title,
-  data: transformArrangerDataToChart(field),
+  data: transformArrangerDataToChart(field, sqonValues),
 });
 
-const transformDataToCount = (field, label) => ({
+const transformDataToCount = (field, label, sqonValues) => ({
   label,
-  value: field.buckets.length,
+  value: sqonValues ? Math.min(field.buckets.length, sqonValues.length) : field.buckets.length,
 });
 
-const getCharts = (data, arrangerConfig) => {
+/**
+ * Return an array of selected values in a given field
+ * If no value selected, return null
+ */
+const getSQONValues = (sqon, field) => {
+  if (!sqon || !sqon.content) return null;
+  const sqonItems = sqon.content.filter(item => item.content.field === field);
+  if (!sqonItems || sqonItems.length !== 1) return null;
+  const sqonValues = sqonItems[0].content.value;
+  return sqonValues;
+};
+
+const getCharts = (data, arrangerConfig, sqon) => {
   const countItems = [];
   const summaries = [];
   const stackedBarCharts = [];
@@ -78,10 +92,11 @@ const getCharts = (data, arrangerConfig) => {
     const fields = data.subject.aggregations;
     Object.keys(fields).forEach((field) => {
       const fieldConfig = arrangerConfig.charts[field];
+      const sqonValues = getSQONValues(sqon, field);
       if (fieldConfig) {
         switch (fieldConfig.chartType) {
         case 'count':
-          countItems.push(transformDataToCount(fields[field], fieldConfig.title));
+          countItems.push(transformDataToCount(fields[field], fieldConfig.title, sqonValues));
           break;
         case 'pie':
         case 'bar':
@@ -89,7 +104,8 @@ const getCharts = (data, arrangerConfig) => {
             transformArrangerDataToSummary(
               fields[field],
               fieldConfig.chartType,
-              fieldConfig.title),
+              fieldConfig.title,
+              sqonValues),
           );
           break;
         case 'stackedBar':
@@ -97,7 +113,8 @@ const getCharts = (data, arrangerConfig) => {
             transformArrangerDataToSummary(
               fields[field],
               fieldConfig.chartType,
-              fieldConfig.title),
+              fieldConfig.title,
+              sqonValues),
           );
           break;
         default:
@@ -121,4 +138,5 @@ module.exports = {
   transformArrangerDataToChart,
   transformArrangerDataToSummary,
   getCharts,
+  getSQONValues,
 };
