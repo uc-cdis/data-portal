@@ -1,8 +1,11 @@
+env:
+  - REACT_APP_DISABLE_SOCKET=true
+  
 language: node_js
 git:
   depth: 1
 node_js:
-  - "8"
+  - "10"
 
 cache:
   directories:
@@ -15,5 +18,8 @@ install:
     - npm install --force
 
 script:
+    - npm run params
     - npm test
     - bash ./testSchema.sh
+    - npm run eslint
+    - npm run stylelint

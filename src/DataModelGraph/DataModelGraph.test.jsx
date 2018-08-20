@@ -29,7 +29,7 @@ describe('the DataModelGraph', () => {
 
   it('toggles between full and compact views', () => {
     const { $graph, $dom } = buildTest();
-    const $toggleButton = $dom.find('a#cd-dmg__toggle');
+    const $toggleButton = $dom.find('#cd-dmg__toggle');
     expect($toggleButton.length).toBe(1);
     // For some reason not able to inspect svg accurately here ...?
     expect(d3.selectAll('ellipse').size()).toBeDefined();

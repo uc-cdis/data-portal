@@ -1,0 +1,256 @@
+@import '~@gen3/ui-component/dist/css/base.less';
+
+.data-explorer-table {
+  background-color: @cloud;
+}
+
+.data-explorer-table__download-buttons {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.data-explorer-table__button {
+  margin-right: 10px;
+  width: 220px;
+  height: 40px;
+  padding: 2px 2px;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid @silver;
+  border-radius: 4px;
+  background-color: @white;
+  color: @light_gray;
+  font-size: 14px;
+}
+
+.data-explorer-table__button svg path {
+  fill: @light_gray;
+}
+
+.data-explorer-table__button:hover {
+  background-color: @apricot;
+  border: 1px solid @silver;
+  color: @white;
+}
+
+.data-explorer-table__button:hover svg path {
+  fill: @white;
+}
+
+/* Overriding default Arranger styles, don't adhere to BEM */
+/* stylelint-disable */
+.data-explorer-table__arranger-table {
+  // Top of table where text and search box is located
+  .tableToolbar {
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  .tableToolbar .buttonWrapper {
+    display: flex;
+  }
+
+  .tableToolbar .buttonWrapper button {
+    display: flex;
+    background: none;
+    border: none;
+  }
+
+  .tableToolbar .inputWrapper {
+    border: none;
+  }
+
+  .tableToolbar .group {
+    margin-left: 10px;
+    display: flex;
+  }
+
+  .tableToolbar .group > * {
+    background-color: none;
+    display: flex;
+    border: solid 1px #cacbcf;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .tableToolbar .group > :first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+  .tableToolbar .group > :last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  .range-wrapper {
+    min-height: 2.7rem;
+  }
+
+  // Overall table
+  .scroll-react-table .ReactTable {
+    flex-grow: 1;
+  }
+
+  .ReactTable {
+    border: 1px solid @silver;
+    font-size: 0.8rem;
+    background: white;
+  }
+
+  .ReactTable .rt-thead.-header {
+    min-width: 954px !important; // need to override inline style
+  }
+
+  .ReactTable .rt-tbody {
+    min-width: 954px !important; // need to override inline style
+  }
+
+  // All cells in table
+  .ReactTable .rt-th,
+  .ReactTable .rt-td {
+    white-space: normal;
+    outline: none;
+    border: none;
+    height: 50px;
+    padding: 7px 12px;
+
+    &:first-child {
+      text-align: left !important; // have to override inline style
+      max-width: 50px !important;
+      width: 50px !important;
+
+      input[type="checkbox"] {
+        cursor: pointer;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        outline: 0;
+        background: @white;
+        height: 18px;
+        width: 18px;
+        border: 1px solid @light_gray;
+        border-radius: 2px;
+      }
+
+      input[type="checkbox"]:checked {
+        background: @orange;
+      }
+
+      // defines check in checkbox
+      input[type="checkbox"]:after {
+        content: '';
+        position: relative;
+        left: 40%;
+        top: 20%;
+        width: 15%;
+        height: 40%;
+        border: solid @white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        display: none;
+      }
+
+      input[type="checkbox"]:checked:after {
+        display: block;
+      }
+    }
+  }
+
+  // Table header
+  .ReactTable .rt-thead .rt-tr {
+    background-color: @white;
+    text-align: left;
+    box-shadow: 0 0 0 0;
+    border-bottom: 1px solid @black;
+  }
+
+  // Column headers
+  .rt-th,
+  .rt-resizable-header-content {
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.02rem;
+    font-weight: @semi-bold;
+    color: @black;
+    font-size: 14px;
+  }
+
+  // Sorting behavior on column headers
+  .ReactTable .rt-thead .rt-th.-sort-asc,
+  .ReactTable .rt-thead .rt-td.-sort-asc,
+  .ReactTable .rt-thead .rt-th.-sort-desc,
+  .ReactTable .rt-thead .rt-td.-sort-desc {
+    box-shadow: 0 0 0 0;
+  }
+
+  // Odd rows
+  .ReactTable.-striped .rt-tr.-odd {
+    background-color: @cloud;
+  }
+
+  // Cells in table rows
+  .ReactTable .rt-td {
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.03rem;
+    color: @gray;
+    font-size: 12px;
+  }
+
+  // Pagination area at bottom
+  .ReactTable .-pagination {
+    height: 64px;
+    box-shadow: 0 0 0 0;
+    border-top: 1px solid @silver;
+    padding: 15px;
+  }
+
+  // Dropdown to select number of rows
+  .ReactTable .-pagination .-pageSizeOptions {
+    margin: 0;
+  }
+
+  .ReactTable .-pagination .-pageSizeOptions select {
+    border: 1px solid @silver;
+    border-radius: 2px;
+    height: 35px;
+  }
+
+  // Overall Pagination component
+  .ReactTable .-pagination .-pageJump {
+    display: flex;
+    border: 1px solid @silver;
+    border-radius: 2px;
+    height: 35px;
+    background-color: @white;
+    overflow: hidden;
+  }
+
+  // Buttons to jump pages
+  .ReactTable .-pagination_button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: @light_gray;
+    border-right: solid 1px @silver;
+    min-width: 34px;
+    padding-left: 0;
+    padding-right: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ReactTable .-pagination_button:last-child {
+    border-right: none;
+  }
+
+  // Current page for pagination
+  .ReactTable .-pagination_button.-current {
+    color: @blue;
+  }
+}
+/* stylelint-enable */

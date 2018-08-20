@@ -6,7 +6,7 @@ import { ThemeProvider } from 'styled-components';
 import { StaticRouter } from 'react-router-dom';
 
 import getReduxStore from '../reduxStore';
-import { theme } from '../theme';
+import theme from '../theme';
 import { changePageSize, changePage } from './ReduxExplorer';
 import * as testData from './__test__/data.json';
 import * as testExpected from './__test__/expected.json';
@@ -19,7 +19,7 @@ function renderComponent(ComponentClass, props) {
         <Provider store={store}>
           <ThemeProvider theme={theme}>
             <MuiThemeProvider>
-              <StaticRouter location={{ pathname: '/files' }}>
+              <StaticRouter location={{ pathname: '/files' }} context={{}}>
                 <ComponentClass {...props} />
               </StaticRouter>
             </MuiThemeProvider>
@@ -44,7 +44,7 @@ describe('the Explorer component', () => {
     ),
   );
 
-  it('Update redux store when page size changed', () =>
+  it('Update redux store when page.jsx size changed', () =>
     getReduxStore().then(
       (store) => {
         fetch.mockResponse(JSON.stringify(testData), { status: 200 });
@@ -62,7 +62,7 @@ describe('the Explorer component', () => {
     ),
   );
 
-  it('Update redux store when current page changed', () =>
+  it('Update redux store when current page.jsx changed', () =>
     getReduxStore().then(
       (store) => {
         fetch.mockResponse(JSON.stringify(testData), { status: 200 });

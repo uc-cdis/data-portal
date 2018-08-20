@@ -1,14 +1,8 @@
 import { connect } from 'react-redux';
 import DataModelGraph from './DataModelGraph';
 
-import { fetchJsonOrText } from '../actions';
+import { fetchWithCreds } from '../actions';
 import { submissionApiPath } from '../localconf';
-
-
-export const clearCounts = {
-  type: 'CLEAR_COUNTS',
-};
-
 
 /**
  * Compose and send a single graphql query to get a count of how
@@ -83,7 +77,7 @@ export const getCounts = (typeList, project, dictionary) => {
 
   query = query.concat('}');
 
-  return dispatch => fetchJsonOrText({
+  return dispatch => fetchWithCreds({
     path: `${submissionApiPath}graphql`,
     body: JSON.stringify({
       query,

@@ -1,9 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
-import { fetchUser, fetchOAuthURL, fetchJsonOrText, fetchProjects } from '../actions';
+import { fetchUser, fetchOAuthURL, fetchWithCreds, fetchProjects } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import { requiredCerts, submissionApiOauthPath } from '../configs';
@@ -11,11 +9,6 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 
 let lastAuthMs = 0;
 let lastTokenRefreshMs = 0;
-
-const Body = styled.div`
-  background: ${props => props.background};
-  padding: ${props => props.padding || '50px 100px'};
-`;
 
 /**
  * Redux listener - just clears auth-cache on logout
@@ -59,7 +52,6 @@ export function intersection(aList, bList) {
  * @param history from react-router
  * @param match from react-router.match
  * @param public default false - set true to disable auth-guard
- * @param background passed through to <Box background> wrapper for page-level background
  * @param filter {() => Promise} optional filter to apply before rendering the child component
  */
 class ProtectedContent extends React.Component {
@@ -74,14 +66,12 @@ class ProtectedContent extends React.Component {
       },
     ).isRequired,
     public: PropTypes.bool,
-    background: PropTypes.string,
     filter: PropTypes.func,
   };
 
   static defaultProps = {
     public: false,
-    background: null,
-    filter: () => Promise.resolve('ok'),
+    filter: null,
   };
 
   constructor(props, context) {
@@ -154,8 +144,8 @@ class ProtectedContent extends React.Component {
    * Start filter the 'newState' for the checkLoginStatus component.
    * Check if the user is logged in, and update state accordingly.
    * @method checkLoginStatus
-   * @param {ReduxStore} store
-   * @param {ReduxStore} initialState
+   * @param {store} store
+   * @param {initialState} initialState
    * @return Promise<{redirectTo, authenticated, user}>
    */
   checkLoginStatus = (store, initialState) => {
@@ -217,7 +207,7 @@ class ProtectedContent extends React.Component {
           // do not authenticate unless we have a 403 or 401
           // should only check 401 after we fix fence to return correct
           // error code for all cases
-          // there may be no projects at startup time,
+          // there may be no tables at startup time,
           // or some other weirdness ...
           // The oauth dance below is only relevent for legacy commons - pre jwt
           return Promise.resolve(newState);
@@ -227,7 +217,7 @@ class ProtectedContent extends React.Component {
         //      works across all services
         return store.dispatch(fetchOAuthURL(submissionApiOauthPath))
           .then(
-            oauthUrl => fetchJsonOrText({ path: oauthUrl, dispatch: store.dispatch.bind(store) }))
+            oauthUrl => fetchWithCreds({ path: oauthUrl, dispatch: store.dispatch.bind(store) }))
           .then(
             ({ status, data }) => {
               switch (status) {
@@ -250,7 +240,7 @@ class ProtectedContent extends React.Component {
             msg => store.dispatch(msg),
           )
           .then(
-            // refetch the projects - since the earlier call failed with an invalid token ...
+            // refetch the tables - since the earlier call failed with an invalid token ...
             () => store.dispatch(fetchProjects()),
           )
           .then(
@@ -299,31 +289,30 @@ class ProtectedContent extends React.Component {
     if (this.props.match) {
       params = this.props.match.params || {};
     }
-
     window.scrollTo(0, 0);
     if (this.state.redirectTo) {
       return (<Redirect to={this.state.redirectTo} />);
     } else if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
-        <Body {...this.props}>
+        <div>
           <Component params={params} location={this.props.location} history={this.props.history} />
-        </Body>
+        </div>
       );
     } else if (!this.props.public && this.state.authenticated) {
       return (
-        <Body {...this.props}>
+        <div>
           <ReduxAuthTimeoutPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
-        </Body>
+        </div>
       );
     } else if (this.props.public && this.state.dataLoaded) {
       return (
-        <Body {...this.props}>
+        <div>
           <Component params={params} location={this.props.location} history={this.props.history} />
-        </Body>
+        </div>
       );
     }
-    return (<Body {...this.props}><Spinner /></Body>);
+    return (<div><Spinner /></div>);
   }
 }
 

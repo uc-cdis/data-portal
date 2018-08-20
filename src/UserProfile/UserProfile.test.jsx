@@ -2,7 +2,8 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
-import UserProfile, { APIKeyCell, DeleteButton, RequestButton } from './UserProfile';
+import UserProfile, { CREATE_API_KEY_BTN } from './UserProfile';
+import { DELETE_BTN } from '../components/tables/KeyTable';
 
 describe('the UserProfile component', () => {
   const testProps = {
@@ -29,7 +30,7 @@ describe('the UserProfile component', () => {
 
   it('lists access keys', () => {
     const $vdom = mount(
-      <StaticRouter location={{ pathname: '/identity' }}>
+      <StaticRouter location={{ pathname: '/identity' }} context={{}}>
         <UserProfile
           {...testProps}
           onCreateKey={noop}
@@ -41,12 +42,12 @@ describe('the UserProfile component', () => {
         />
       </StaticRouter>,
     );
-    expect($vdom.find(APIKeyCell)).toHaveLength(testProps.userProfile.jtis.length);
+    expect($vdom.find('tbody tr')).toHaveLength(testProps.userProfile.jtis.length + 1);
   });
 
   it('triggers create-key events', (done) => {
     const $vdom = mount(
-      <StaticRouter location={{ pathname: '/identity' }}>
+      <StaticRouter location={{ pathname: '/identity' }} context={{}}>
         <UserProfile
           {...testProps}
           onCreateKey={() => { done(); }}
@@ -57,7 +58,7 @@ describe('the UserProfile component', () => {
           onClearDeleteSession={noop}
         />
       </StaticRouter>);
-    const $createBtn = $vdom.find(RequestButton);
+    const $createBtn = $vdom.find(`button[name="${CREATE_API_KEY_BTN}"]`);
     expect($createBtn).toHaveLength(1);
     $createBtn.simulate('click');
     // should invoke onCreateKey callback (above - calls done()) ...
@@ -65,7 +66,7 @@ describe('the UserProfile component', () => {
 
   it('triggers delete-key events', (done) => {
     const $vdom = mount(
-      <StaticRouter location={{ pathname: '/identity' }}>
+      <StaticRouter location={{ pathname: '/identity' }} context={{}}>
         <UserProfile
           {...testProps}
           onCreateKey={noop}
@@ -77,7 +78,7 @@ describe('the UserProfile component', () => {
         />
       </StaticRouter>,
     );
-    const $deleteBtn = $vdom.find(DeleteButton);
+    const $deleteBtn = $vdom.find(`button[name="${DELETE_BTN}"]`);
     expect($deleteBtn).toHaveLength(2);
     $deleteBtn.at(0).simulate('click');
     // should invoke onRequestDeleteKey callback  (above - calls done()) ...

@@ -1,23 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 
-import { Box } from '../theme';
-import { basename, appname } from '../localconf';
+import { basename } from '../localconf';
+import SlidingWindow from '../components/SlidingWindow';
+import './Login.less';
 
-const CentralBox = styled(Box)`
-  text-align: center;
-  margin: 0px;
-  position: fixed;
-  width: 100%;
-  left: 0px;
-  padding: 0px;
-`;
-
-export const LoginButton = styled.a`
-  font-size: 1em;
-`;
+const getInitialState = height => ({ height });
 
 class Login extends React.Component {
   static propTypes = {
@@ -25,7 +14,32 @@ class Login extends React.Component {
       PropTypes.objectOf(PropTypes.any),
     ).isRequired,
     location: PropTypes.object.isRequired,
+    dictIcons: PropTypes.object.isRequired,
+    data: PropTypes.object.isRequired,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = getInitialState(window.innerHeight - 221);
+    this.resetState = this.resetState.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.updateDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateDimensions);
+  }
+
+  updateDimensions() {
+    this.setState({ height: window.innerHeight - 221 });
+  }
+
+  resetState() {
+    this.setState(getInitialState());
+  }
 
   render() {
     let next = basename;
@@ -34,31 +48,53 @@ class Login extends React.Component {
     if (queryParams.next) {
       next = basename === '/' ? queryParams.next : basename + queryParams.next;
     }
-    const appLines = appname.split('\n');
     return (
-      <div>
-        <CentralBox>
-          <img src={'/src/img/logo.png'} style={{ height: '80px' }} alt={''} />
-          {
-            appLines.map(
-              line => <h3 className="article" key={line}>{line}</h3>,
-            )
-          }
+      <div className='login-page'>
+        <div className='login-page__side-box'>
+          <SlidingWindow
+            iconName={'gene'}
+            dictIcons={this.props.dictIcons}
+            height={this.state.height}
+            scrollY={window.scrollY}
+          />
+        </div>
+        <div className='login-page__central-content'>
+          <div className='h1-typo login-page__title'>
+            {this.props.data.title}
+          </div>
+          <div className='high-light login-page__sub-title'>
+            {this.props.data.subTitle}
+          </div>
+          <hr className='login-page__separator' />
+          <div className='body-typo'>{this.props.data.text}</div>
           {
             this.props.providers.map(
               p => (
-                <div key={p.id}>
-                  <LoginButton
-                    className="btn btn-primary navbar-btn btn-sm login-button"
-                    href={`${p.url}?redirect=${window.location.origin}${next}`}
-                  >
-                    {p.name}
-                  </LoginButton>
+                <div key={p.id} className='login-page__entries'>
+                  <a href={`${p.url}?redirect=${window.location.origin}${next}`}>
+                    <button className='button-primary-orange'>
+                      {p.name}
+                    </button>
+                  </a>
                 </div>
               ),
             )
           }
-        </CentralBox>
+          <div>
+            {this.props.data.contact}
+            <a href={`mailto:${this.props.data.email}`}>
+              {this.props.data.email}
+            </a>{'.'}
+          </div>
+        </div>
+        <div className='login-page__side-box'>
+          <SlidingWindow
+            iconName={'gene'}
+            dictIcons={this.props.dictIcons}
+            height={this.state.height}
+            scrollY={window.scrollY}
+          />
+        </div>
       </div>
     );
   }

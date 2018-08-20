@@ -1,27 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
 import SubmitTSV from './SubmitTSV';
 import DataModelGraph from '../DataModelGraph/DataModelGraph';
 import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
-
-const Browse = styled(Link)`
-  display: inline-block;
-  font-style: italic;
-  padding: 0px 5px;
-  vertical-align: sub;
-  background: #e1f7e3
-  margin-bottom: 15px;
-`;
-export const Title = styled.h2`
-  display: inline-block;
-  vertical-align: middle;
-  margin: 15px 0px;
-  margin-right: 0.5em;
-`;
+import './ProjectSubmission.less';
 
 const ProjectSubmission = (props) => {
   // hack to detect if dictionary data is available, and to trigger fetch if not
@@ -34,18 +18,25 @@ const ProjectSubmission = (props) => {
   const MySubmitForm = props.submitForm;
   const MySubmitTSV = props.submitTSV;
   const MyDataModelGraph = props.dataModelGraph;
+  const displayData = () => {
+    if (!props.dataIsReady) {
+      if (props.project !== '_root') {
+        return <Spinner />;
+      }
+      return null;
+    }
+    return <MyDataModelGraph project={props.project} />;
+  };
 
   return (
     <div>
-      <Title>{props.project}</Title>
+      <h2 className='project-submission__title'>{props.project}</h2>
       {
-        <Browse to={`/${props.project}/search`}>browse nodes</Browse>
+        <Link className='project-submission__link' to={`/${props.project}/search`}>browse nodes</Link>
       }
       <MySubmitForm />
       <MySubmitTSV project={props.project} />
-      { !props.dataIsReady
-        ? ((props.project !== '_root') ? <Spinner /> : null) :
-        <MyDataModelGraph project={props.project} /> }
+      { displayData() }
     </div>
   );
 };

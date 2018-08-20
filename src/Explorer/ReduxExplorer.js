@@ -72,8 +72,9 @@ export const changePageSize = (newPageSize, state) => (dispatch) => {
 };
 
 export const changePage = (tab, page, state) => (dispatch) => {
-  state[tab] = page;
-  return Promise.resolve(dispatch(doChangePage(state)));
+  const newState = state;
+  newState[tab] = page;
+  return Promise.resolve(dispatch(doChangePage(newState)));
 };
 
 export const ReduxExplorerTabPanel = (() => {
@@ -118,4 +119,3 @@ export const ReduxSideBar = (() => {
 
   return connect(mapStateToProps, mapDispatchToProps)(ExplorerSideBar);
 })();
-

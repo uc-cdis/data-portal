@@ -118,6 +118,46 @@ export function findRoot(nodes, edges) {
 }
 
 /**
+ * Recursive helper function for getTreeHierarchy
+ * Returns the hierarchy of the tree in the form of a map
+ * Each (key, value) consists of (node, node's descendants including the node itself)
+ * @method getTreeHierarchyHelper
+ * @param root
+ * @param name2EdgesIn
+ * @param hierarchy
+ * @return {map}
+ */
+function getTreeHierarchyHelper(node, name2EdgesIn, hierarchy) {
+  const descendants = new Set();
+  descendants.add(node);
+  hierarchy.set(node, descendants);
+  name2EdgesIn[node].forEach((edge) => {
+    const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
+    if (!hierarchy.get(sourceName)) { // don't want to visit node again
+      hierarchy = getTreeHierarchyHelper(sourceName, name2EdgesIn, hierarchy);
+      descendants.add(sourceName);
+      hierarchy.get(sourceName).forEach((n) => {
+        descendants.add(n);
+      });
+    }
+  });
+  hierarchy.set(node, descendants);
+  return hierarchy;
+}
+
+/**
+ * Returns the hierarchy of the tree in the form of a map
+ * Each (key, value) consists of (node, node's descendants including the node itself)
+ * @method getTreeHierarchy
+ * @param root
+ * @param name2EdgesIn
+ * @return {map}
+ */
+export function getTreeHierarchy(root, name2EdgesIn) {
+  return getTreeHierarchyHelper(root, name2EdgesIn, new Map());
+}
+
+/**
  * Arrange nodes in dictionary graph breadth first, and build level database.
  * If a node links to multiple parents, then place it under the highest parent ...
  * Exported for testing.
@@ -170,21 +210,25 @@ export function nodesBreadthFirst(nodes, edges) {
   }
 
   const name2ActualLvl = {};
+  const hierarchy = getTreeHierarchy(root, name2EdgesIn);
   // Run through this once to determine the actual level of each node
   for (let head = 0; head < queue.length; head += 1) {
     const { query, level } = queue[head]; // breadth first
     name2ActualLvl[query] = level;
-    name2EdgesIn[query].forEach(
-      (edge) => {
-        // At some point the d3 force layout converts edge.source
-        //   and edge.target into node references ...
-        const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
-        if (name2EdgesIn[sourceName]) {
+    name2EdgesIn[query].forEach((edge) => {
+      // At some point the d3 force layout converts edge.source
+      //   and edge.target into node references ...
+      const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
+      if (name2EdgesIn[sourceName]) {
+        const isAncestor = hierarchy.get(sourceName).has(query);
+        // only push node if it is not an ancestor of the current node, or else --> cycle
+        if (!isAncestor) {
           queue.push({ query: sourceName, level: level + 1 });
-        } else {
-          console.log(`Edge comes from unknown node ${sourceName}`);
         }
-      },
+      } else {
+        console.log(`Edge comes from unknown node ${sourceName}`);
+      }
+    },
     );
   }
 

@@ -2,7 +2,9 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
-import Login, { LoginButton } from './Login';
+import dictIcons from '../img/icons/sliding';
+import { components } from '../params';
+import Login from './Login';
 
 describe('the Login component', () => {
   const testProps = {
@@ -19,16 +21,18 @@ describe('the Login component', () => {
       },
     ],
     location: window.location,
+    dictIcons,
+    data: components.login,
   };
 
   it('lists login providers', () => {
     const $vdom = mount(
-      <StaticRouter location={{ pathname: '/login' }}>
+      <StaticRouter location={{ pathname: '/login' }} context={{}}>
         <Login
           {...testProps}
         />
       </StaticRouter>,
     );
-    expect($vdom.find(LoginButton)).toHaveLength(testProps.providers.length);
+    expect($vdom.find('.login-page__entries')).toHaveLength(testProps.providers.length);
   });
 });

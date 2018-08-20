@@ -11,7 +11,7 @@ describe('the DictionaryGraph', () => {
     const data = buildTestData();
     // Material-UI components require the Mui theme ...
     const $dom = mount(
-      <StaticRouter location={{ pathname: '/dd/graph' }}>
+      <StaticRouter location={{ pathname: '/dd/graph' }} context={{}}>
         <DictionaryGraph
           dictionary={data.dictionary}
           counts_search={data.counts_search}
@@ -32,7 +32,7 @@ describe('the DictionaryGraph', () => {
 
   it('toggles between full and compact views', () => {
     const { $graph, $dom } = buildTest();
-    const $toggleButton = $dom.find('a#toggle_button');
+    const $toggleButton = $dom.find('button#toggle_button');
     expect($toggleButton.length).toBe(1);
     $toggleButton.simulate('click');
     expect(!!$graph.find('div[data-toggle="abridged"]')).toBe(true);

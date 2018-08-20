@@ -2,7 +2,7 @@
 /**
  * Little helper for building test data
  */
-export function buildTestData() {
+function buildTestData() {
   const nodes = ['project', 'a', 'b', 'c', 'd', 'x', 'y', 'z']
     .map(id => ({ id, title: id, links: [], type: 'object' }));
   const nodeCounts = nodes.map((nd, i) => ({ key: `_${nd.id}_count`, value: i + 1 }))
@@ -31,3 +31,5 @@ export function buildTestData() {
   });
   return { dictionary, nodes, edges, counts_search: nodeCounts, links_search: linkCounts };
 }
+
+module.exports = { buildTestData };

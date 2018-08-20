@@ -2,7 +2,7 @@ const homepage = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_PROJECT_LIST': {
     //
-    // Note - save projectsByName, b/c we acquire more data for individual projects
+    // Note - save projectsByName, b/c we acquire more data for individual tables
     // over time
     //
     const projectsByName = Object.assign({}, state.projectsByName || {});
@@ -10,13 +10,24 @@ const homepage = (state = {}, action) => {
       const old = projectsByName[proj.name] || {};
       projectsByName[proj.name] = Object.assign(old, proj);
     });
-    const summaryCounts = Object.assign({}, state.summaryCounts || {}, action.data.summaryCounts);
-    return { ...state, projectsByName, summaryCounts };
+    const summaryCounts = Object.assign(
+      {}, state.summaryCounts || {}, action.data.summaryCounts,
+    );
+    const lastestListUpdating = Date.now();
+    // const { error, ...state } = state;
+    return { ...state, projectsByName, summaryCounts, lastestListUpdating };
   }
   case 'RECEIVE_PROJECT_DETAIL': {
     const projectsByName = Object.assign({}, state.projectsByName || {});
     projectsByName[action.data.name] = action.data;
-    return { ...state, projectsByName };
+    const lastestDetailsUpdating = Date.now();
+    return { ...state, projectsByName, lastestDetailsUpdating };
+  }
+  case 'RECEIVE_TRANSACTION_LIST': {
+    return { ...state, transactions: action.data };
+  }
+  case 'RECEIVE_RELAY_FAIL': {
+    return { ...state, error: action.data };
   }
   default:
     return state;

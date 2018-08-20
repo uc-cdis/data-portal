@@ -1,0 +1,48 @@
+@import '~@gen3/ui-component/dist/css/base.less';
+
+.data-summary-card-group {
+  display: flex;
+}
+
+.data-summary-card-group__connected-card,
+.data-summary-card-group__separated-card {
+  background-color: @white;
+  flex-grow: 1;
+  flex-basis: 0;
+  position: relative;
+}
+
+.data-summary-card-group__separated-card {
+  margin-left: 15px;
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+.data-summary-card-group__connected-card {
+  margin: 0;
+}
+
+.data-summary-card-group__connected-card .left-border {
+  position: absolute;
+  top: 7px;
+  bottom: 7px;
+  border-left: solid @silver 1px;
+}
+
+.data-summary-card-group__sub-card-group {
+  display: flex;
+  height: 100%;
+}
+
+.data-summary-card-group__sub-card-item {
+  flex-grow: 1;
+  height: 100%;
+}
+
+.data-summary-card-group__sub-card-item .left-border {
+  position: absolute;
+  top: 28px;
+  bottom: 28px;
+  border-left: solid @silver 1px;
+}

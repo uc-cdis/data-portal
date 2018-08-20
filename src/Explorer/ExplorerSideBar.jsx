@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyledCheckBoxGroup } from '../components/CheckBox';
-import { ExplorerSidebarStyle } from './style';
+import { CheckBoxGroup } from '../components/CheckBox';
+import './ExplorerSideBar.less';
 
 class ExplorerSideBar extends Component {
   static propTypes = {
@@ -29,11 +29,11 @@ class ExplorerSideBar extends Component {
           && dictionary[key].category === category
           && Object.prototype.hasOwnProperty.call(dictionary[key].properties[property], 'enum')
         ) {
-          for (const propertyOption of dictionary[key].properties[property].enum) {
+          dictionary[key].properties[property].enum.forEach((propertyOption) => {
             if (!d.has(propertyOption)) {
               d.add(propertyOption);
             }
-          }
+          });
         }
         return d;
       }, initialSet || new Set(),
@@ -46,34 +46,30 @@ class ExplorerSideBar extends Component {
     const fileTypes = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_type').values()).sort();
     const fileFormats = Array.from(this.aggregateProperties(this.props.dictionary, 'data_file', 'data_format').values()).sort();
 
-
-    // console.log(this.props.selected_filters);
-
     return (
-      <ExplorerSidebarStyle>
-        <StyledCheckBoxGroup
+      <div className='explorer-side-bar'>
+        <CheckBoxGroup
           listItems={projects}
-          title="Projects"
+          title='Projects'
           selectedItems={this.props.selectedFilters.projects}
-          groupName="projects"
+          groupName='projects'
           onChange={state => this.props.onChange({ ...this.props.selectedFilters, ...state })}
         />
-        <StyledCheckBoxGroup
+        <CheckBoxGroup
           listItems={fileFormats}
           selectedItems={this.props.selectedFilters.file_formats}
-          title="File Formats"
-          groupName="file_formats"
+          title='File Formats'
+          groupName='file_formats'
           onChange={state => this.props.onChange({ ...this.props.selectedFilters, ...state })}
         />
-        <StyledCheckBoxGroup
+        <CheckBoxGroup
           listItems={fileTypes}
           selectedItems={this.props.selectedFilters.file_types}
-          title="File Types"
-          groupName="file_types"
-          lastChild
+          title='File Types'
+          groupName='file_types'
           onChange={state => this.props.onChange({ ...this.props.selectedFilters, ...state })}
         />
-      </ExplorerSidebarStyle>
+      </div>
     );
   }
 }

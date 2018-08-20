@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import { fetchJsonOrText, updatePopup } from '../actions';
+import { fetchWithCreds, updatePopup } from '../actions';
 import { getSubmitPath } from '../utils';
 import { submissionApiPath } from '../localconf';
 import QueryNode from './QueryNode';
@@ -16,7 +16,7 @@ export const submitSearchForm = (opts, url, history) =>
     const submitterId = opts.submitter_id || '';
     const project = opts.project;
 
-    return fetchJsonOrText({
+    return fetchWithCreds({
       path: `${submissionApiPath}graphql`,
       body: JSON.stringify({
         query: `query Test { ${nodeType} (first: 100000, project_id: "${project}", quick_search: "${submitterId}") {id, type, submitter_id}}`,
@@ -55,7 +55,7 @@ export const submitSearchForm = (opts, url, history) =>
 
 const deleteNode = ({ id, project }) =>
   dispatch =>
-    fetchJsonOrText({
+    fetchWithCreds({
       path: `${getSubmitPath(project)}/entities/${id}`,
       method: 'DELETE',
       dispatch,
@@ -89,7 +89,7 @@ const storeNodeInfo = ({ id }) => ({
 
 const fetchQueryNode = ({ id, project }) =>
   dispatch =>
-    fetchJsonOrText({
+    fetchWithCreds({
       path: `${getSubmitPath(project)}/export?ids=${id}&format=json`,
       dispatch,
     })

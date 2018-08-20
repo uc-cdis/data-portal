@@ -1,13 +1,15 @@
 import { connect } from 'react-redux';
 
 import Login from './Login';
-import { fetchJsonOrText } from '../actions';
+import { fetchWithCreds } from '../actions';
 import { loginPath } from '../localconf';
+import dictIcons from '../img/icons/sliding';
+import { components } from '../params';
 
 
 export const fetchLogin = () =>
   dispatch =>
-    fetchJsonOrText({
+    fetchWithCreds({
       path: loginPath,
       dispatch,
     })
@@ -43,6 +45,8 @@ export const fetchLogin = () =>
 
 const mapStateToProps = state => ({
   providers: state.login.providers,
+  dictIcons,
+  data: components.login,
 });
 
 const mapDispatchToProps = () => ({

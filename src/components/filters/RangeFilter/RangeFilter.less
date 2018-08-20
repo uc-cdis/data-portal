@@ -1,0 +1,39 @@
+@import '~@gen3/ui-component/dist/css/base.less';
+
+.range-filter {
+  width: 100%;
+  padding: 14px 14px;
+}
+
+.range-filter__title {
+
+}
+
+.range-filter__bounds {
+  display: flex;
+  justify-content: space-between;
+  margin: 14px 0;
+}
+
+// Overrides for rc-slider
+
+.rc-slider-handle {
+  border-radius: 0;
+  width: 10px;
+  border: 1px solid @light_gray;
+  outline: none;
+}
+
+.rc-slider-handle:hover {
+  border: 1px solid @blue;
+}
+
+.rc-slider-handle:active {
+  border: 1px solid @blue;
+  box-shadow: 0 0 5px @blue;
+}
+
+.rc-slider-track {
+  background-color: @orange;
+  border-radius: 2px;
+}

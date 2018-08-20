@@ -6,9 +6,14 @@ import SubmitTSV from './SubmitTSV';
 
 describe('the TSV submission componet', () => {
   const testProjName = 'bogusProject';
+  /* Mutes large warning:
+  * "Could not load worker TypeError:
+  * (window.URL || window.webkitURL).createObjectURL is not a function"
+  * Currently no easy workaround
+  */
+  global.console.warn = jest.fn();
 
-  /**
-   * Little helper for constructing a <SubmitTSV> jest/enzyme test
+  /* Little helper for constructing a <SubmitTSV> jest/enzyme test
    *
    * @param {file, submit_result, submit_status} submission property passed through to <SubmitTSV>
    * @param {function} submitCallback invoked by onSubmitClick property on <SubmitTSV>
@@ -33,7 +38,7 @@ describe('the TSV submission componet', () => {
   it('hides the "submit" button when data is not available', () => {
     const { $dom } = buildTest({ file: '', submit_result: '', submit_status: 200 });
     expect($dom.find('label[id="cd-submit-tsv__upload-button"]').length).toBe(1);
-    expect($dom.find('a[id="cd-submit-tsv__submit-button"]').length).toBe(0);
+    expect($dom.find('button[id="cd-submit-tsv__submit-button"]').length).toBe(0);
     expect($dom.find('div[id="cd-submit-tsv__result"]').length).toBe(0);
   });
 
@@ -46,7 +51,7 @@ describe('the TSV submission componet', () => {
         resolve('ok');
       });
       expect($dom.find('label[id="cd-submit-tsv__upload-button"]').length).toBe(1);
-      const $submit = $dom.find('a[id="cd-submit-tsv__submit-button"]');
+      const $submit = $dom.find('button[id="cd-submit-tsv__submit-button"]');
       expect($submit.length).toBe(1);
       expect($dom.find('div[id="cd-submit-tsv__result"]').length).toBe(0);
       $submit.simulate('click');
@@ -61,7 +66,7 @@ describe('the TSV submission componet', () => {
     };
     const { $dom } = buildTest(state);
     expect($dom.find('label[id="cd-submit-tsv__upload-button"]').length).toBe(1);
-    expect($dom.find('a[id="cd-submit-tsv__submit-button"]').length).toBe(1);
+    expect($dom.find('button[id="cd-submit-tsv__submit-button"]').length).toBe(1);
     expect($dom.find('div[id="cd-submit-tsv__result"]').length).toBe(1);
   });
 });

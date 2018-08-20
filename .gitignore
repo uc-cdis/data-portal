@@ -5,6 +5,7 @@ bundle.js
 index.html
 data/schema.graphql
 data/schema.json
+src/params.js
 __generated__/
 *.log
 .DS_Store

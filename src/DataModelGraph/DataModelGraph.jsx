@@ -1,9 +1,7 @@
 import React from 'react';
-
 import { createNodesAndEdges } from './utils';
 import SvgGraph from './SvgGraph';
-import ToggleButton from './ToggleButton';
-
+import './DataModelGraph.less';
 
 /**
  * Wraps SVG graph in a toggle button that toggles between 'full' and 'compact' view
@@ -36,8 +34,13 @@ class DataModelGraph extends React.Component {
 
     if (graph.nodes.length !== 0 && 'count' in graph.nodes[graph.nodes.length - 1]) {
       return (
-        <div style={{ position: 'relative' }}>
-          <ToggleButton id="cd-dmg__toggle" onClick={this.handleToggleClick}>Toggle view</ToggleButton>
+        <div className='data-model-graph'>
+          <button
+            id='cd-dmg__toggle'
+            className='button-primary-white'
+            onClick={this.handleToggleClick}
+          >Toggle view
+          </button>
           <SvgGraph nodes={graph.nodes} edges={graph.edges} />
         </div>
       );

@@ -1,14 +1,17 @@
 import { reducer as formReducer } from 'redux-form';
 import { combineReducers } from 'redux';
 import userProfile from './UserProfile/reducers';
+import coreMetadata from './CoreMetadata/reducers';
 import certificate from './Certificate/reducers';
 import submission from './Submission/reducers';
+import analysis from './Analysis/reducers';
 import homepage from './Homepage/reducers';
 import queryNodes from './QueryNode/reducers';
 import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import explorer from './Explorer/reducers';
 import login from './Login/reducers';
+import bar from './Top/reducers';
 import { logoutListener } from './Login/ProtectedContent';
 
 const status = (state = {}, action) => {
@@ -49,13 +52,16 @@ export const removeDeletedNode = (state, id) => {
 };
 
 const reducers = combineReducers({ explorer,
+  bar,
   homepage,
   popups,
   user,
   status,
   submission,
+  analysis,
   queryNodes,
   userProfile,
+  coreMetadata,
   certificate,
   graphiql,
   login,

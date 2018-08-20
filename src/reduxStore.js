@@ -12,7 +12,7 @@ let store;
 let storePromise;
 
 
-/* eslint no-underscore-dangle: [1, { "allowAfterThis": true }] */
+/* eslint-disable no-underscore-dangle */
 /**
  * Little lazy redux store singleton factory.
  * We want some Relayjs adapters to also update the Redux store,

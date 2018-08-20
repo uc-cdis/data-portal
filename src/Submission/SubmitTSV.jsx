@@ -4,11 +4,9 @@ import 'brace/mode/json';
 import 'brace/theme/kuroir';
 import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
-
 import { predictFileType } from '../utils';
-import { UploadButton, SubmitButton } from '../theme';
 import SubmissionResult from './SubmissionResult';
-
+import './SubmitTSV.less';
 
 /**
  * Manage TSV/JSON submission
@@ -66,21 +64,46 @@ const SubmitTSV = ({ project, submission, onUploadClick, onSubmitClick, onFileCh
 
   return (
     <form>
-      <input type="file" onChange={processUpload} name="file-upload" style={{ display: 'none' }} id="file-upload" />
-      <UploadButton id="cd-submit-tsv__upload-button" htmlFor="file-upload">Upload file</UploadButton>
-      {submission.file &&
-      <SubmitButton id="cd-submit-tsv__submit-button" onClick={onSubmitClickEvent}>Submit</SubmitButton>
-      }
+      <div className='submit-tsv'>
+        <label
+          className='button-primary-white submit-tsv__upload-button'
+          id='cd-submit-tsv__upload-button'
+          htmlFor='file-upload'
+        >
+          <input
+            type='file'
+            onChange={processUpload}
+            name='file-upload'
+            className='submit-tsv__file-upload'
+            id='file-upload'
+          />
+          Upload file
+        </label>
+        &emsp;
+        {submission.file &&
+          <button
+            type='button'
+            className='submit-tsv__upload-button button-primary-white'
+            id='cd-submit-tsv__submit-button'
+            onClick={onSubmitClickEvent}
+            onKeyPress={onSubmitClickEvent}
+          >
+            Submit
+          </button>
+        }
+
+      </div>
       { (submission.file) &&
       <AceEditor
-        width="100%"
-        height="200px"
-        style={{ marginBottom: '1em' }}
+        width='100%'
+        height='200px'
+        className='submit-tsv__ace-editor'
         mode={submission.file_type === 'text/tab-separated-values' ? '' : 'json'}
-        theme="kuroir"
+        theme='kuroir'
         value={submission.file}
+        editorProps={{ $blockScrolling: Infinity }} // mutes console warning
         onChange={onChange}
-        id="uploaded"
+        id='uploaded'
       />
       }
       {submission.submit_result &&
