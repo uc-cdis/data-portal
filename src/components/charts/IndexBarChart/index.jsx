@@ -96,7 +96,7 @@ class IndexBarChart extends React.Component {
     countNames: PropTypes.arrayOf(
       PropTypes.string,
     ),
-    xAxisColor: PropTypes.string,
+    xAxisStyle: PropTypes.object,
     barChartStyle: PropTypes.object,
   };
 
@@ -111,7 +111,7 @@ class IndexBarChart extends React.Component {
     const projectNames = topList.map(project => project.code);
     const barNames = createBarNames(indexChart);
     let countBar = 0;
-    const { barChartStyle, xAxisStyle, } = this.props;
+    const { barChartStyle, xAxisStyle } = this.props;
     return (
       <div className='index-bar-chart'>
         <ResponsiveContainer width='100%' height='100%'>
