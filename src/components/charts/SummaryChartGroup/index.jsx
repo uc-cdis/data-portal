@@ -28,7 +28,7 @@ class SummaryChartGroup extends Component {
                       data={item.data}
                       title={item.title}
                       vertical
-                      color='#3283c8'
+                      color={this.props.barChartColor}
                     />
                   )
               }
@@ -43,10 +43,12 @@ class SummaryChartGroup extends Component {
 SummaryChartGroup.propTypes = {
   summaries: PropTypes.arrayOf(PropTypes.object).isRequired,
   width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  barChartColor: PropTypes.string,
 };
 
 SummaryChartGroup.defaultProps = {
   width: '100%',
+  barChartColor: '#3283c8',
 };
 
 export default SummaryChartGroup;

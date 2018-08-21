@@ -6,13 +6,6 @@ import React from 'react';
 import helper from '../helper';
 import './SummaryPieChart.less';
 
-const pieChartStyle = {
-  flexGrow: 1,
-  display: 'flex',
-  justifyContent: 'flex-end',
-  marginTop: '22px',
-};
-
 class SummaryPieChart extends React.Component {
   render() {
     const useTwoColors = this.props.data.length === 2;
@@ -50,7 +43,7 @@ class SummaryPieChart extends React.Component {
           <PieChart
             width={this.props.outerRadius * 2}
             height={this.props.outerRadius * 2}
-            style={pieChartStyle}
+            style={this.props.pieChartStyle}
           >
             <Pie
               dataKey={dataKey}
@@ -58,7 +51,7 @@ class SummaryPieChart extends React.Component {
               data={pieChartData}
               innerRadius={this.props.innerRadius}
               outerRadius={this.props.outerRadius}
-              fill='#8884d8'
+              fill={this.props.pieChartStyle.fill}
             >
               {
                 pieChartData.map((entry, index) => (
@@ -89,6 +82,7 @@ SummaryPieChart.propTypes = {
   outerRadius: PropTypes.number,
   showPercentage: PropTypes.bool,
   percentageFixedPoint: PropTypes.number,
+  pieChartStyle: PropTypes.object,
 };
 
 SummaryPieChart.defaultProps = {
@@ -96,6 +90,13 @@ SummaryPieChart.defaultProps = {
   outerRadius: 43,
   showPercentage: true,
   percentageFixedPoint: 2,
+  pieChartStyle: {
+    flexGrow: 1,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: '22px',
+    fill: '#8884d8',
+  },
 };
 
 export default SummaryPieChart;
