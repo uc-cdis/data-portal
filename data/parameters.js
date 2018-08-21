@@ -879,7 +879,7 @@ const params = {
         {
           graphql: '_study_count',
           name: 'Study',
-        }
+        },
       ],
       projectDetails: 'boardCounts',
     },
