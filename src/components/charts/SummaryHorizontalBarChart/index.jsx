@@ -10,7 +10,12 @@ import './SummaryHorizontalBarChart.less';
 // FIXME: add back in animation (https://github.com/recharts/recharts/issues/1083)
 class SummaryBarChart extends React.Component {
   render() {
-    const { barChartStyle, labelValueStyle, xAxisStyle, yAxisStyle } = this.props;
+    const {
+      barChartStyle,
+      labelValueStyle,
+      xAxisStyle,
+      yAxisStyle,
+    } = this.props;
     const barChartHeight = (this.props.data.length * barChartStyle.barSize)
       + ((this.props.data.length + 1) * barChartStyle.barGap) + 2;
     const barChartData = helper.calculateChartData(
