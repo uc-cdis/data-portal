@@ -852,6 +852,38 @@ const params = {
       explorer: false,
     },
   },
+  ibdgc: {
+    graphql: {
+      boardCounts: [
+        {
+          graphql: '_case_count',
+          name: 'Case',
+          plural: 'Cases',
+        },
+        {
+          graphql: '_study_count',
+          name: 'Study',
+          plural: 'Studies',
+        },
+        {
+          graphql: '_aliquot_count',
+          name: 'Aliquot',
+          plural: 'Aliquots',
+        },
+      ],
+      chartCounts: [
+        {
+          graphql: '_case_count',
+          name: 'Case',
+        },
+        {
+          graphql: '_study_count',
+          name: 'Study',
+        },
+      ],
+      projectDetails: 'boardCounts',
+    },
+  },
   kf: {
     gaTrackingId: 'UA-119127212-6',
     graphql: {
