@@ -869,7 +869,7 @@ const params = {
           graphql: '_aliquot_count',
           name: 'Aliquot',
           plural: 'Aliquots',
-        }
+        },
       ],
       chartCounts: [
         {
