@@ -7,27 +7,17 @@ import React from 'react';
 import helper from '../helper';
 import './SummaryHorizontalBarChart.less';
 
-const yAxisStyle = {
-  fontSize: '12px',
-  fontWeight: 'regular',
-  lineHeight: '1em',
-  letterSpacing: '.03rem',
-  color: '#606060',
-};
-
-const labelValueStyle = {
-  fontSize: '10px',
-  fontWeight: 600,
-  lineHeight: '1em',
-  letterSpacing: '.02rem',
-  color: '#3283c8',
-};
-
 // FIXME: add back in animation (https://github.com/recharts/recharts/issues/1083)
 class SummaryBarChart extends React.Component {
   render() {
-    const barChartHeight = (this.props.data.length * this.props.barSize)
-      + ((this.props.data.length + 1) * this.props.barGap) + 2;
+    const {
+      barChartStyle,
+      labelValueStyle,
+      xAxisStyle,
+      yAxisStyle,
+    } = this.props;
+    const barChartHeight = (this.props.data.length * barChartStyle.barSize)
+      + ((this.props.data.length + 1) * barChartStyle.barGap) + 2;
     const barChartData = helper.calculateChartData(
       this.props.data,
       this.props.showPercentage,
@@ -43,15 +33,22 @@ class SummaryBarChart extends React.Component {
         </div>
         <ResponsiveContainer width='100%' height={barChartHeight}>
           <BarChart
-            layout='vertical'
+            layout={barChartStyle.layout}
             data={barChartData}
-            barCategoryGap={this.props.barGap}
-            barSize={this.props.barSize}
-            margin={{ top: 4, right: 35, left: 15 }}
+            barCategoryGap={barChartStyle.barGap}
+            barSize={barChartStyle.barSize}
+            margin={barChartStyle.margins}
           >
             <Tooltip formatter={helper.percentageFormatter(this.props.showPercentage)} />
-            <XAxis axisLine={false} tickLine={false} type='number' hide />
-            <YAxis axisLine={false} tickLine={false} dataKey='name' type='category' style={yAxisStyle} interval={0} />
+            <XAxis {...xAxisStyle} type='number' hide />
+            <YAxis
+              axisLine={yAxisStyle.axisLine}
+              tickLine={yAxisStyle.tickLine}
+              dataKey='name'
+              type='category'
+              style={yAxisStyle}
+              interval={0}
+            />
             <Bar dataKey={dataKey} isAnimationActive={false}>
               {
                 barChartData.map((entry, index) => (
@@ -62,7 +59,13 @@ class SummaryBarChart extends React.Component {
                   />
                 ))
               }
-              <LabelList dataKey={dataKey} position='right' offset={8} style={labelValueStyle} formatter={helper.percentageFormatter(this.props.showPercentage)} />
+              <LabelList
+                dataKey={dataKey}
+                position={labelValueStyle.position}
+                offset={labelValueStyle.offset}
+                style={labelValueStyle}
+                formatter={helper.percentageFormatter(this.props.showPercentage)}
+              />
             </Bar>
           </BarChart>
         </ResponsiveContainer>
@@ -80,18 +83,50 @@ SummaryBarChart.propTypes = {
   title: PropTypes.string.isRequired,
   data: PropTypes.arrayOf(ChartDataShape).isRequired,
   color: PropTypes.string,
-  barSize: PropTypes.number,
-  barGap: PropTypes.number,
   showPercentage: PropTypes.bool,
   percentageFixedPoint: PropTypes.number,
+  xAxisStyle: PropTypes.object,
+  yAxisStyle: PropTypes.object,
+  labelValueStyle: PropTypes.object,
+  barChartStyle: PropTypes.object,
 };
 
 SummaryBarChart.defaultProps = {
   color: undefined,
-  barSize: 11,
-  barGap: 8,
   showPercentage: true,
   percentageFixedPoint: 2,
+  xAxisStyle: {
+    axisLine: false,
+    tickLine: false,
+  },
+  yAxisStyle: {
+    fontSize: '12px',
+    fontWeight: 'regular',
+    lineHeight: '1em',
+    letterSpacing: '.03rem',
+    color: '#606060',
+    axisLine: false,
+    tickLine: false,
+  },
+  labelValueStyle: {
+    fontSize: '10px',
+    fontWeight: 600,
+    lineHeight: '1em',
+    letterSpacing: '.02rem',
+    color: '#3283c8',
+    position: 'right',
+    offset: 8,
+  },
+  barChartStyle: {
+    margins: {
+      top: 4,
+      right: 35,
+      left: 15,
+    },
+    layout: 'vertical',
+    barSize: 11,
+    barGap: 8,
+  },
 };
 
 export default SummaryBarChart;

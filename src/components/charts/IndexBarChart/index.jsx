@@ -96,7 +96,8 @@ class IndexBarChart extends React.Component {
     countNames: PropTypes.arrayOf(
       PropTypes.string,
     ),
-    xAxisColor: PropTypes.string,
+    xAxisStyle: PropTypes.object,
+    barChartStyle: PropTypes.object,
   };
 
   render() {
@@ -110,22 +111,21 @@ class IndexBarChart extends React.Component {
     const projectNames = topList.map(project => project.code);
     const barNames = createBarNames(indexChart);
     let countBar = 0;
+    const { barChartStyle, xAxisStyle } = this.props;
     return (
       <div className='index-bar-chart'>
         <ResponsiveContainer width='100%' height='100%'>
           <BarChart
             onClick={(e) => { browserHistory.push(`/${e.activeLabel}`); window.location.reload(false); }}
             data={indexChart}
-            margin={{ top: 20, right: 0, left: 250, bottom: 5 }}
-            layout='vertical'
+            margin={barChartStyle.margins}
+            layout={barChartStyle.layout}
           >
             <h4>Project Submission status</h4>
             <XAxis
-              stroke={this.props.xAxisColor}
-              fill={this.props.xAxisColor}
-              domain={[0, 100]}
-              ticks={[0, 25, 50, 75, 100]}
-              allowDecimals={false}
+              {...xAxisStyle}
+              stroke={xAxisStyle.color}
+              fill={xAxisStyle.color}
               unit='%'
               type='number'
             />
@@ -165,7 +165,21 @@ class IndexBarChart extends React.Component {
 IndexBarChart.defaultProps = {
   projectList: [],
   countNames: [],
-  xAxisColor: '#666666',
+  xAxisStyle: {
+    color: '#666666',
+    domain: [0, 100],
+    ticks: [0, 25, 50, 75, 100],
+    allowDecimals: false,
+  },
+  barChartStyle: {
+    margins: {
+      top: 20,
+      right: 0,
+      left: 250,
+      bottom: 5,
+    },
+    layout: 'vertical',
+  },
 };
 
 export default IndexBarChart;
