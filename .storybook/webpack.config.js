@@ -2,11 +2,6 @@ const path = require('path');
 const basename = process.env.BASENAME || '/';
 const webpack = require('webpack');
 
-const plugins = [
-  new webpack.EnvironmentPlugin(['STORYBOOK_PROJECT_ID']),
-  new webpack.EnvironmentPlugin(['STORYBOOK_ARRANGER_API']),
-];
-
 module.exports = {
   entry: ['babel-polyfill', '../src/index.jsx'],
   output: {
@@ -50,7 +45,6 @@ module.exports = {
       { test: /\.flow$/, loader: 'ignore-loader' },
     ]
   },
-  plugins,
   resolve: {
     alias: {
       graphql:  path.resolve('./node_modules/graphql'),

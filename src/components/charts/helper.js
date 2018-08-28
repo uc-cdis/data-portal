@@ -88,8 +88,8 @@ const getCharts = (data, arrangerConfig, sqon) => {
   const summaries = [];
   const stackedBarCharts = [];
 
-  if (data && data.subject.aggregations) {
-    const fields = data.subject.aggregations;
+  if (data && data[arrangerConfig.graphqlField].aggregations) {
+    const fields = data[arrangerConfig.graphqlField].aggregations;
     Object.keys(fields).forEach((field) => {
       const fieldConfig = arrangerConfig.charts[field];
       const sqonValues = getSQONValues(sqon, field);
