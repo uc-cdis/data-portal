@@ -125,6 +125,7 @@ describe('helper', () => {
   };
 
   const arrangerConfig = {
+    graphqlField: 'subject',
     charts: {
       ethnicity: {
         chartType: 'pie',

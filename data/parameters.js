@@ -254,7 +254,36 @@ const params = {
       },
     },
     featureFlags: {
-      explorer: false,
+      explorer: true,
+    },
+    arrangerConfig: {
+      charts: {
+        ethnicity: {
+          chartType: 'stackedBar',
+          title: 'Ethnicity',
+        },
+        gender: {
+          chartType: 'pie',
+          title: 'Gender',
+        },
+        race: {
+          chartType: 'pie',
+          title: 'Race',
+        },
+      },
+      filters: {
+        tabs: [{
+          title: 'Subject',
+          fields: [
+            'race',
+            'ethnicity',
+            'gender',
+          ],
+        }],
+      },
+      projectId: 'search',
+      graphqlField: 'etl',
+      index: '',
     },
   },
   bpa: {

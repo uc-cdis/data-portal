@@ -17,6 +17,7 @@ describe('DataExplorerVisualizations', () => {
   };
 
   const arrangerConfig = {
+    graphqlField: 'subject',
     charts: {
       gender: {
         chartType: 'bar',
