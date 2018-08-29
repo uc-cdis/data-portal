@@ -258,8 +258,16 @@ const params = {
     },
     arrangerConfig: {
       charts: {
+        project_id: {
+          chartType: 'count',
+          title: 'Projects',
+        },
+        submitter_id: {
+          chartType: 'count',
+          title: 'Submitters',
+        },
         ethnicity: {
-          chartType: 'stackedBar',
+          chartType: 'pie',
           title: 'Ethnicity',
         },
         gender: {
@@ -267,7 +275,7 @@ const params = {
           title: 'Gender',
         },
         race: {
-          chartType: 'pie',
+          chartType: 'stackedBar',
           title: 'Race',
         },
       },
@@ -279,10 +287,22 @@ const params = {
             'ethnicity',
             'gender',
           ],
+        },
+        {
+          title: 'Diagnosis',
+          fields: [
+            'alcohol_use_score',
+            'childhood_trauma_score',
+            'childhood_trauma_diagnosis',
+            'depression_diagnosis',
+            'depression_severity',
+            'tbi_diagnosis',
+            'experimental_group',
+          ],
         }],
       },
       projectId: 'search',
-      graphqlField: 'etl',
+      graphqlField: 'subject',
       index: '',
     },
   },
