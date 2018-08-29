@@ -81,6 +81,7 @@
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
   }
+
   .tableToolbar .group > :last-child {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -101,22 +102,13 @@
     background: white;
   }
 
-  .ReactTable .rt-thead.-header {
-    min-width: 954px !important; // need to override inline style
-  }
-
-  .ReactTable .rt-tbody {
-    min-width: 954px !important; // need to override inline style
-  }
-
   // All cells in table
   .ReactTable .rt-th,
   .ReactTable .rt-td {
     white-space: normal;
     outline: none;
     border: none;
-    height: 50px;
-    padding: 7px 12px;
+    padding: 6px 12px;
 
     &:first-child {
       text-align: left !important; // have to override inline style
@@ -161,6 +153,11 @@
   }
 
   // Table header
+  .ReactTable .rt-thead {
+    overflow: hidden;
+    box-shadow: 0 0 0 0;
+  }
+
   .ReactTable .rt-thead .rt-tr {
     background-color: @white;
     text-align: left;
