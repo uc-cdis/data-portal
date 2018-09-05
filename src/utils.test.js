@@ -2,7 +2,7 @@ import { asyncSetInterval, predictFileType, sortCompare } from './utils';
 
 
 describe('the utils helper', () => {
-  it('supports asyncSetInterval', (done) => {
+  it.skip('supports asyncSetInterval', (done) => {
     let callCount = 0;
 
     // callback takes 100ms to run

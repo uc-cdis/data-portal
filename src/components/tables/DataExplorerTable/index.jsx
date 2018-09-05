@@ -12,6 +12,7 @@ class DataExplorerTable extends React.Component {
             {...this.props}
             allowTSVExport={false}
             allowTogglingColumns={false}
+            customActions={this.props.customActions}
           />
         </div>
       </div>
@@ -22,11 +23,13 @@ class DataExplorerTable extends React.Component {
 DataExplorerTable.propTypes = {
   arrangerConfig: PropTypes.object,
   arrangerData: PropTypes.object,
+  customActions: PropTypes.object,
 };
 
 DataExplorerTable.defaultProps = {
   arrangerConfig: {},
   arrangerData: null,
+  customActions: null,
 };
 
 export default DataExplorerTable;
