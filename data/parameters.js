@@ -266,38 +266,53 @@ const params = {
           chartType: 'count',
           title: 'Submitters',
         },
-        ethnicity: {
-          chartType: 'pie',
-          title: 'Ethnicity',
+        primary_diagnosis: {
+          chartType: 'stackedBar',
+          title: 'Primary Diagnosis',
         },
         gender: {
           chartType: 'pie',
           title: 'Gender',
         },
         race: {
-          chartType: 'stackedBar',
+          chartType: 'bar',
           title: 'Race',
         },
       },
       filters: {
         tabs: [{
+          title: 'Project',
+          fields: [
+            'project_id'
+          ],
+        },
+        {
           title: 'Subject',
           fields: [
             'race',
             'ethnicity',
             'gender',
+            'experimental_group',
+            'demopd_ageassess_age_at_pd',
+          ],
+        },
+        {
+          title: 'Medical History',
+          fields: [
+            'CHWREG_lifetime_smokeless_tobacco',
+            'alclfreg_lifetime_alcohol',
+            'hinj_ever_had_a_head_injury_or_concussion',
+            'mriyn_mri_completed'
+            'ASPREG_regular_aspirin',
+            'IBUREG_regular_ibuprofen_based_non_aspirin',
+            'lrrk2sub_does_subject_carry_lrrk2_mutation'
           ],
         },
         {
           title: 'Diagnosis',
           fields: [
-            'alcohol_use_score',
-            'childhood_trauma_score',
-            'childhood_trauma_diagnosis',
-            'depression_diagnosis',
-            'depression_severity',
-            'tbi_diagnosis',
-            'experimental_group',
+            'primary_diagnosis',
+            'NP1DPRS_depressed_moods',
           ],
         }],
       },
@@ -898,8 +913,82 @@ const params = {
       },
     },
     featureFlags: {
-      explorer: false,
+      explorer: true,
     },
+    arrangerConfig: {
+      charts: {
+        project: {
+          chartType: 'project_id',
+          title: 'Projects',
+        },
+        study: {
+          chartType: 'submitter_id',
+          title: 'Cases',
+        },
+        bmi: {
+          chartType: 'stackedBar',
+          title: 'BMI',
+        },
+        gender: {
+          chartType: 'pie',
+          title: 'Gender',
+        },
+        race: {
+          chartType: 'bar',
+          title: 'Race',
+        },
+      },
+      filters: {
+        tabs: [{
+          title: 'Project',
+          fields: [
+            'project_id',
+            'consent_codes',
+          ],
+        },
+        {
+          title: 'Subject',
+          fields: [
+            'race',
+            'ethnicity',
+            'gender',
+            'bmi',
+            'age_at_index',
+          ],
+        },
+        {
+          title: 'Medical History',
+          fields: [
+            'diabetes',
+            'hypertension',
+            'cerebrovascular_disease',
+            'chronic_respiratory_disease',
+            'coronary_artery_disease',
+            'asthma',
+            'cabg_presence',
+            'copd',
+            'emphysema',
+            'heart_failure',
+            'myocardial_infarction',
+            'stroke',
+            'smoking_status',
+            'hypertension_meds',
+          ],
+        },
+        {
+          title: 'Diagnosis',
+          fields: [
+            'biospecimen_anatomic_site',
+            'diastolic_blood_pressure',
+            'systolic_blood_pressure',
+            'metabolic_syndrome_diagnosis',
+          ],
+        }],
+      },
+      projectId: 'search',
+      graphqlField: 'subject',
+      index: '',
+    }
   },
   ibdgc: {
     graphql: {
