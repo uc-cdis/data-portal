@@ -302,7 +302,7 @@ const params = {
             'CHWREG_lifetime_smokeless_tobacco',
             'alclfreg_lifetime_alcohol',
             'hinj_ever_had_a_head_injury_or_concussion',
-            'mriyn_mri_completed'
+            'mriyn_mri_completed',
             'ASPREG_regular_aspirin',
             'IBUREG_regular_ibuprofen_based_non_aspirin',
             'lrrk2sub_does_subject_carry_lrrk2_mutation'
