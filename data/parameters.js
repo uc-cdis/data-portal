@@ -299,8 +299,6 @@ const params = {
         {
           title: 'Medical History',
           fields: [
-            'CHWREG_lifetime_smokeless_tobacco',
-            'alclfreg_lifetime_alcohol',
             'hinj_ever_had_a_head_injury_or_concussion',
             'mriyn_mri_completed',
             'ASPREG_regular_aspirin',
@@ -317,7 +315,7 @@ const params = {
         }],
       },
       projectId: 'search',
-      graphqlField: 'subject',
+      graphqlField: 'case',
       index: '',
     },
   },
@@ -925,10 +923,6 @@ const params = {
           chartType: 'submitter_id',
           title: 'Cases',
         },
-        bmi: {
-          chartType: 'stackedBar',
-          title: 'BMI',
-        },
         gender: {
           chartType: 'pie',
           title: 'Gender',
@@ -986,7 +980,7 @@ const params = {
         }],
       },
       projectId: 'search',
-      graphqlField: 'subject',
+      graphqlField: 'case',
       index: '',
     }
   },
