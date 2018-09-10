@@ -307,7 +307,7 @@ const params = {
       },
       projectId: 'search',
       graphqlField: 'case',
-      index: '',
+      index: 'etl',
     },
   },
   bpa: {
