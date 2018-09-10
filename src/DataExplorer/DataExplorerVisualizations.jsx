@@ -8,7 +8,7 @@ import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart/.';
 import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup/.';
 import { getCharts } from '../components/charts/helper';
-import { downloadManifest } from './utils.js';
+import { downloadManifest, downloadData } from './utils.js';
 
 class DataExplorerVisualizations extends React.Component {
   constructor(props) {
@@ -18,12 +18,24 @@ class DataExplorerVisualizations extends React.Component {
     };
   }
 
-  onDownloadManifest = () => {
+  onDownloadManifest = fileName => () => {
     if (this.props.selectedTableRows.length === 0) return;
     downloadManifest(this.props.api,
       this.props.projectId,
       this.props.selectedTableRows,
       this.props.arrangerConfig,
+      fileName,
+    );
+  }
+
+  onDownloadData = fileName => () => {
+    if (this.props.selectedTableRows.length === 0) return;
+    downloadData(
+      this.props.api,
+      this.props.projectId,
+      this.props.selectedTableRows,
+      this.props.arrangerConfig,
+      fileName,
     );
   }
 
@@ -36,19 +48,30 @@ class DataExplorerVisualizations extends React.Component {
       getCharts(this.props.arrangerData, this.props.arrangerConfig, this.props.sqon)
       : null;
     const selectedTableRowsCount = this.props.selectedTableRows.length;
-
-    const DOWNLOAD_MANIFEST_BUTTON_TEXT = 'Download Manifest';
     const tableToolbarActions = (
       <React.Fragment>
-        <Button
-          onClick={this.onDownloadManifest}
-          label={DOWNLOAD_MANIFEST_BUTTON_TEXT}
-          rightIcon='download'
-          leftIcon='datafile'
-          className='data-explorer__manifest-button'
-          buttonType='primary'
-          enabled={selectedTableRowsCount > 0}
-        />
+        {
+          this.props.explorerTableConfig.buttons.map((buttonConfig) => {
+            let clickFunc = () => {};
+            if (buttonConfig.type === 'data') {
+              clickFunc = this.onDownloadData;
+            }
+            if (buttonConfig.type === 'manifest') {
+              clickFunc = this.onDownloadManifest;
+            }
+            return (<Button
+              key={buttonConfig.type}
+              onClick={clickFunc(buttonConfig.fileName)}
+              label={buttonConfig.title}
+              rightIcon='download'
+              leftIcon={buttonConfig.icon}
+              className='data-explorer__download-button'
+              buttonType='primary'
+              enabled={selectedTableRowsCount > 0}
+            />);
+          },
+          )
+        }
       </React.Fragment>
     );
     return (
@@ -97,6 +120,7 @@ DataExplorerVisualizations.propTypes = {
   selectedTableRows: PropTypes.array,
   projectId: PropTypes.string,
   api: PropTypes.func,
+  explorerTableConfig: PropTypes.object,
 };
 
 DataExplorerVisualizations.defaultProps = {
@@ -106,6 +130,7 @@ DataExplorerVisualizations.defaultProps = {
   selectedTableRows: [],
   projectId: 'search',
   api: () => {},
+  explorerTableConfig: { buttons: [] },
 };
 
 export default DataExplorerVisualizations;

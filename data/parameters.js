@@ -1564,6 +1564,24 @@ const params = {
         contact: 'If you have any questions about access or the registration process, please contact ',
         email: 'support@datacommons.io',
       },
+      explorer: {
+        table: {
+          buttons: [
+            {
+              type: 'data', 
+              title: 'Download Clinical',
+              icon: 'clinical',
+              fileName: 'clinical.json',
+            },
+            {
+              type: 'manifest',
+              title: 'Download Manifest',
+              icon: 'datafile',
+              fileName: 'manifest.json',
+            },
+          ]
+        }
+      }
     },
     featureFlags: {
       explorer: true,
