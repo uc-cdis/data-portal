@@ -1626,6 +1626,11 @@ const params = {
       projectId: 'search',
       graphqlField: 'subject',
       index: '',
+      manifestMapping: {
+        fileIndexType: 'file',
+        fileIdField: 'uuid',
+        fileReferenceIdField: 'subject_id',
+      },
     },
   },
 };
