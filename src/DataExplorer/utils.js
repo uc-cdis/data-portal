@@ -1,5 +1,17 @@
 import FileSaver from 'file-saver';
 
+const MSG_FAILED_DOWNLOAD = 'Failed to download file';
+
+/*
+* Constructs graphql string for arranger to get data.
+*   selectedTableRows - list of id for selected data
+*   indexType - type name of index for query
+*   filterFieldId - field name for filetering
+*   nodeList - list of node for respone
+*   isGettingCount - if set true, only get count of total hits;
+*      if set false, need to provide actual `count` for next argument
+*   count - count of hits for response. Required if `isGettingCount` if false
+*/
 export const constructGraphQLQuery = (
   selectedTableRows,
   indexType,
@@ -22,7 +34,7 @@ export const constructGraphQLQuery = (
   };
   const getContentQuery = `edges {
                           node {
-                            ${nodeList.join('\n')}
+                            ${nodeList.join('\n                            ')}
                           }
                         }`;
   const gqlQuery = {
@@ -41,12 +53,21 @@ export const constructGraphQLQuery = (
   return gqlQuery;
 };
 
-const MSG_FAILED_DOWNLOAD = 'Failed to download manifest file';
-const queryFileMappingData = async (apiFunc, projectId, selectedTableRows, arrangerConfig) => {
+/**
+* Query arranger for data file mapping by a list of IDs
+*   apiFunc - function created by arranger for fetching data
+*   projectId - arranger project ID
+*   idList - list of ids for query
+*   arrangerConfig - arranger configuration object, must has following keys for manifest query:
+*       graphqlField - the data type name for arranger
+*       manifestMapping.fileIndexType - type name of file index
+*       manifestMapping.fileReferenceIdField - field name of reference field in file index
+*/
+const queryFileMappingData = async (apiFunc, projectId, idList, arrangerConfig) => {
   const countQuery = await apiFunc({
     endpoint: `/${projectId}/graphql`,
     body: constructGraphQLQuery(
-      selectedTableRows,
+      idList,
       arrangerConfig.manifestMapping.fileIndexType,
       arrangerConfig.manifestMapping.fileReferenceIdField,
       [
@@ -62,7 +83,7 @@ const queryFileMappingData = async (apiFunc, projectId, selectedTableRows, arran
   const manifest = await apiFunc({
     endpoint: `/${projectId}/graphql`,
     body: constructGraphQLQuery(
-      selectedTableRows,
+      idList,
       arrangerConfig.manifestMapping.fileIndexType,
       arrangerConfig.manifestMapping.fileReferenceIdField,
       [
@@ -81,24 +102,7 @@ const queryFileMappingData = async (apiFunc, projectId, selectedTableRows, arran
   return manifestJSON;
 };
 
-export const downloadManifest = async (
-  apiFunc,
-  projectId,
-  selectedTableRows,
-  arrangerConfig,
-  fileName,
-) => {
-  const manifestJSON = await queryFileMappingData(
-    apiFunc,
-    projectId,
-    selectedTableRows,
-    arrangerConfig,
-  );
-  const blob = new Blob([JSON.stringify(manifestJSON, null, 2)], { type: 'text/json' });
-  FileSaver.saveAs(blob, fileName);
-};
-
-const getColumns = async (apiFunc, projectId, arrangerConfig) => {
+const getArrangerTableColumns = async (apiFunc, projectId, arrangerConfig) => {
   const body = {
     query: `query columnsStateQuery
             {
@@ -130,22 +134,30 @@ const getColumns = async (apiFunc, projectId, arrangerConfig) => {
   return columns;
 };
 
-const querySelectedData = async (
+/**
+* Query arranger for data by a list of IDs
+*   apiFunc - function created by arranger for fetching data
+*   projectId - arranger project ID
+*   idList - list of ids for query
+*   arrangerConfig - arranger configuration object, must has `graphqlField` key for index type name
+*   fields - list of fields for query
+*/
+const queryDataByIds = async (
   apiFunc,
   projectId,
-  selectedTableRows,
+  idList,
   arrangerConfig,
-  columns,
+  fields,
 ) => {
   const responseData = await apiFunc({
     endpoint: `/${projectId}/graphql`,
     body: constructGraphQLQuery(
-      selectedTableRows,
+      idList,
       arrangerConfig.graphqlField,
       '_id', // Arranger always uses this for table index
-      [...columns],
+      [...fields],
       false,
-      selectedTableRows.length,
+      idList.length,
     ),
   });
   if (!responseData) {
@@ -156,6 +168,14 @@ const querySelectedData = async (
   return responseDataJSON;
 };
 
+/*
+* Download selected data in arranger table. Arguments:
+*   apiFunc - function created by arranger for fetching data
+*   projectId - arranger project ID
+*   selectedTableRows - list of ids of selected rows
+*   fileName - file name for downloading
+*   arrangerConfig - arranger configuration object, has `graphqlField` key as arranger type name
+*/
 export const downloadData = async (
   apiFunc,
   projectId,
@@ -163,12 +183,12 @@ export const downloadData = async (
   arrangerConfig,
   fileName,
 ) => {
-  const columns = await getColumns(
+  const columns = await getArrangerTableColumns(
     apiFunc,
     projectId,
     arrangerConfig,
   );
-  const responseDataJSON = await querySelectedData(
+  const responseDataJSON = await queryDataByIds(
     apiFunc,
     projectId,
     selectedTableRows,
@@ -176,5 +196,34 @@ export const downloadData = async (
     columns,
   );
   const blob = new Blob([JSON.stringify(responseDataJSON, null, 2)], { type: 'text/json' });
+  FileSaver.saveAs(blob, fileName);
+};
+
+/*
+* Download manifest data for selected rows in arranger table. Arguments:
+*   apiFunc - function created by arranger for fetching data
+*   projectId - arranger project ID
+*   selectedTableRows - list of ids of selected rows
+*   fileName - file name for downloading
+*   arrangerConfig - arranger configuration object, should include following keys:
+*       graphqlField - the data type name for arranger
+*       manifestMapping.fileIndexType - type name of file index
+*       manifestMapping.fileReferenceIdField - field name of reference field in file index
+*
+*/
+export const downloadManifest = async (
+  apiFunc,
+  projectId,
+  selectedTableRows,
+  arrangerConfig,
+  fileName,
+) => {
+  const manifestJSON = await queryFileMappingData(
+    apiFunc,
+    projectId,
+    selectedTableRows,
+    arrangerConfig,
+  );
+  const blob = new Blob([JSON.stringify(manifestJSON, null, 2)], { type: 'text/json' });
   FileSaver.saveAs(blob, fileName);
 };

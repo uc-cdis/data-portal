@@ -61,7 +61,7 @@ describe('utils for downloading manifest', () => {
                     edges {
                           node {
                             uuid
-subject_id
+                            subject_id
                           }
                         }
                   }
