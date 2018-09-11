@@ -266,9 +266,9 @@ const params = {
           chartType: 'count',
           title: 'Submitters',
         },
-        primary_diagnosis: {
+        ethnicity: {
           chartType: 'stackedBar',
-          title: 'Primary Diagnosis',
+          title: 'Ethnicity',
         },
         gender: {
           chartType: 'pie',
@@ -281,12 +281,6 @@ const params = {
       },
       filters: {
         tabs: [{
-          title: 'Project',
-          fields: [
-            'project_id'
-          ],
-        },
-        {
           title: 'Subject',
           fields: [
             'race',
@@ -299,9 +293,33 @@ const params = {
         {
           title: 'Medical History',
           fields: [
-            'primary_diagnosis',
+            'alcohol_use_score',
+            'ASPREG_regular_aspirin',
+            'childhood_trauma_score',
+            'childhood_trauma_diagnosis',
+            'depression_diagnosis',
+            'depression_severity',
             'hinj_ever_had_a_head_injury_or_concussion',
+            'IBUREG_regular_ibuprofen_based_non_aspirin',
+            'lrrk2sub_does_subject_carry_lrrk2_mutation',
             'mriyn_mri_completed',
+            'NP1DPRS_depressed_moods',
+            'primary_diagnosis',
+            'tbi_diagnosis',
+            'total_tbi',
+          ],
+        },
+        {
+          title: 'Counts',
+          fields: [
+            '_aliquots_count',
+            '_analytes_count',
+            '_mri_images_count',
+            '_read_groups_count',
+            '_samples_count',
+            '_submitted_unaligned_reads_count',
+            '_submitted_expression_array_files_count',
+
           ],
         }],
       },
