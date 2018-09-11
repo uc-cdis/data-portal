@@ -1568,7 +1568,7 @@ const params = {
         table: {
           buttons: [
             {
-              type: 'data', 
+              type: 'data',
               title: 'Download Clinical',
               icon: 'clinical',
               fileName: 'clinical.json',
@@ -1579,9 +1579,9 @@ const params = {
               icon: 'datafile',
               fileName: 'manifest.json',
             },
-          ]
-        }
-      }
+          ],
+        },
+      },
     },
     featureFlags: {
       explorer: true,
