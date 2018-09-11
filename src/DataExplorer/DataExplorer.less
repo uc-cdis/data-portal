@@ -406,3 +406,31 @@
 .dropDownHeader .dropDownButton {
   border: none;
 }
+
+.input-range-wrapper > div:nth-last-child(-n+2) {
+  height: 0;
+  visibility: hidden;
+}
+
+.input-range__slider {
+  background: @cloud;
+  border-radius: 2px;
+  border: 1px solid @light_gray;
+  width: 10px;
+  height: 18px;
+}
+
+.input-range__track--active {
+  background: @orange;
+  height: 6px;
+  border-radius: 2px;
+}
+
+.input-range__label-container {
+  left: -80%;
+  font-size: 12px;
+  font-weight: regular;
+  line-height: 1em;
+  letter-spacing: .03rem;
+  color: @gray;
+}
