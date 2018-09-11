@@ -266,9 +266,9 @@ const params = {
           chartType: 'count',
           title: 'Submitters',
         },
-        ethnicity: {
+        primary_diagnosis: {
           chartType: 'stackedBar',
-          title: 'primary_diagnosis',
+          title: 'Primary Diagnosis',
         },
         gender: {
           chartType: 'pie',
