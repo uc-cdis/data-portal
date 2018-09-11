@@ -268,7 +268,7 @@ const params = {
         },
         ethnicity: {
           chartType: 'stackedBar',
-          title: 'Ethnicity',
+          title: 'primary_diagnosis',
         },
         gender: {
           chartType: 'pie',
@@ -277,6 +277,10 @@ const params = {
         race: {
           chartType: 'bar',
           title: 'Race',
+        },
+        demopd_ageassess_age_at_pd: {
+          chartType: 'bar',
+          title: 'Age At Assessment',
         },
       },
       filters: {
