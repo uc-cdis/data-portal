@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { CurrentSQON } from '@arranger/components/dist/Arranger';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Button from '@gen3/ui-component/dist/components/Button';
 import DataExplorerTable from '../components/tables/DataExplorerTable';
 import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart/.';
 import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup/.';
 import { getCharts } from '../components/charts/helper';
+import { downloadManifest } from './utils.js';
 
 class DataExplorerVisualizations extends React.Component {
   constructor(props) {
@@ -14,6 +16,15 @@ class DataExplorerVisualizations extends React.Component {
     this.state = {
       showVisualization: true,
     };
+  }
+
+  onDownloadManifest = () => {
+    if (this.props.selectedTableRows.length === 0) return;
+    downloadManifest(this.props.api,
+      this.props.projectId,
+      this.props.selectedTableRows,
+      this.props.arrangerConfig,
+    );
   }
 
   toggleVisualization = () => {
@@ -24,6 +35,22 @@ class DataExplorerVisualizations extends React.Component {
     const charts = this.props.arrangerData ?
       getCharts(this.props.arrangerData, this.props.arrangerConfig, this.props.sqon)
       : null;
+    const selectedTableRowsCount = this.props.selectedTableRows.length;
+
+    const DOWNLOAD_MANIFEST_BUTTON_TEXT = 'Download Manifest';
+    const tableToolbarActions = (
+      <React.Fragment>
+        <Button
+          onClick={this.onDownloadManifest}
+          label={DOWNLOAD_MANIFEST_BUTTON_TEXT}
+          rightIcon='download'
+          leftIcon='datafile'
+          className='data-explorer__manifest-button'
+          buttonType='primary'
+          enabled={selectedTableRowsCount > 0}
+        />
+      </React.Fragment>
+    );
     return (
       <div className='data-explorer__visualizations'>
         <CurrentSQON className='data-explorer__sqon' {...this.props} />
@@ -57,7 +84,7 @@ class DataExplorerVisualizations extends React.Component {
             }
           </div>
           : null}
-        <DataExplorerTable {...this.props} />
+        <DataExplorerTable {...this.props} customActions={tableToolbarActions} />
       </div>
     );
   }
@@ -67,12 +94,18 @@ DataExplorerVisualizations.propTypes = {
   arrangerData: PropTypes.object,
   arrangerConfig: PropTypes.object,
   sqon: PropTypes.object,
+  selectedTableRows: PropTypes.array,
+  projectId: PropTypes.string,
+  api: PropTypes.func,
 };
 
 DataExplorerVisualizations.defaultProps = {
   arrangerData: null,
   arrangerConfig: {},
   sqon: null,
+  selectedTableRows: [],
+  projectId: 'search',
+  api: () => {},
 };
 
 export default DataExplorerVisualizations;
