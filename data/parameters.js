@@ -285,12 +285,11 @@ const params = {
       },
       filters: {
         tabs: [{
-          title: 'Subject',
+          title: 'Case',
           fields: [
             'race',
             'ethnicity',
             'gender',
-            'experimental_group',
             'demopd_ageassess_age_at_pd',
           ],
         },
@@ -311,19 +310,6 @@ const params = {
             'primary_diagnosis',
             'tbi_diagnosis',
             'total_tbi',
-          ],
-        },
-        {
-          title: 'Counts',
-          fields: [
-            '_aliquots_count',
-            '_analytes_count',
-            '_mri_images_count',
-            '_read_groups_count',
-            '_samples_count',
-            '_submitted_unaligned_reads_count',
-            '_submitted_expression_array_files_count',
-
           ],
         }],
       },
@@ -947,7 +933,7 @@ const params = {
       },
       filters: {
         tabs: [{
-          title: 'Subject',
+          title: 'Case',
           fields: [
             'consent_codes',
             'race',
