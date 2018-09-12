@@ -928,12 +928,12 @@ const params = {
     },
     arrangerConfig: {
       charts: {
-        project: {
-          chartType: 'project_id',
+        project_id: {
+          chartType: 'count',
           title: 'Projects',
         },
-        study: {
-          chartType: 'submitter_id',
+        node_id: {
+          chartType: 'count',
           title: 'Cases',
         },
         gender: {
