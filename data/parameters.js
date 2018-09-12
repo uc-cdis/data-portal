@@ -933,18 +933,7 @@ const params = {
       },
       filters: {
         tabs: [{
-          title: 'Case',
-          fields: [
-            'consent_codes',
-            'race',
-            'ethnicity',
-            'gender',
-            'bmi',
-            'age_at_index',
-          ],
-        },
-        {
-          title: 'Medical History',
+          title: 'Family History',
           fields: [
             'diabetes',
             'hypertension',
@@ -969,6 +958,17 @@ const params = {
             'diastolic_blood_pressure',
             'systolic_blood_pressure',
             'metabolic_syndrome_diagnosis',
+          ],
+        },
+        {
+          title: 'Case',
+          fields: [
+            'consent_codes',
+            'race',
+            'ethnicity',
+            'gender',
+            'bmi',
+            'age_at_index',
           ],
         }],
       },
