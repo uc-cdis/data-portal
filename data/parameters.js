@@ -262,9 +262,9 @@ const params = {
           chartType: 'count',
           title: 'Projects',
         },
-        submitter_id: {
+        node_id: {
           chartType: 'count',
-          title: 'Submitters',
+          title: 'Cases',
         },
         primary_diagnosis: {
           chartType: 'stackedBar',
@@ -278,9 +278,9 @@ const params = {
           chartType: 'bar',
           title: 'Race',
         },
-        demopd_ageassess_age_at_pd: {
+        ethnicity: {
           chartType: 'bar',
-          title: 'Age At Assessment',
+          title: 'Ethnicity',
         },
       },
       filters: {
