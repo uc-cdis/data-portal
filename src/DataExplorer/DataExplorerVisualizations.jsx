@@ -51,26 +51,30 @@ class DataExplorerVisualizations extends React.Component {
     const tableToolbarActions = (
       <React.Fragment>
         {
-          this.props.explorerTableConfig.buttons.map((buttonConfig) => {
-            let clickFunc = () => {};
-            if (buttonConfig.type === 'data') {
-              clickFunc = this.onDownloadData;
-            }
-            if (buttonConfig.type === 'manifest') {
-              clickFunc = this.onDownloadManifest;
-            }
-            return (<Button
-              key={buttonConfig.type}
-              onClick={clickFunc(buttonConfig.fileName)}
-              label={buttonConfig.title}
-              rightIcon='download'
-              leftIcon={buttonConfig.icon}
-              className='data-explorer__download-button'
-              buttonType='primary'
-              enabled={selectedTableRowsCount > 0}
-            />);
-          },
-          )
+          this.props.explorerTableConfig
+          && this.props.explorerTableConfig.buttons
+          && this.props.explorerTableConfig.buttons
+            .filter(buttonConfig => buttonConfig.enabled)
+            .map((buttonConfig) => {
+              let clickFunc = () => {};
+              if (buttonConfig.type === 'data') {
+                clickFunc = this.onDownloadData;
+              }
+              if (buttonConfig.type === 'manifest') {
+                clickFunc = this.onDownloadManifest;
+              }
+              return (<Button
+                key={buttonConfig.type}
+                onClick={clickFunc(buttonConfig.fileName)}
+                label={buttonConfig.title}
+                rightIcon='download'
+                leftIcon={buttonConfig.icon}
+                className='data-explorer__download-button'
+                buttonType='primary'
+                enabled={selectedTableRowsCount > 0}
+              />);
+            },
+            )
         }
       </React.Fragment>
     );

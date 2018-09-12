@@ -1634,12 +1634,14 @@ const params = {
       table: {
         buttons: [
           {
+            enabled: true,
             type: 'data',
             title: 'Download Clinical',
             icon: 'clinical',
             fileName: 'clinical.json',
           },
           {
+            enabled: false,
             type: 'manifest',
             title: 'Download Manifest',
             icon: 'datafile',
