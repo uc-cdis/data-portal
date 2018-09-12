@@ -947,15 +947,9 @@ const params = {
       },
       filters: {
         tabs: [{
-          title: 'Project',
-          fields: [
-            'project_id',
-            'consent_codes',
-          ],
-        },
-        {
           title: 'Subject',
           fields: [
+            'consent_codes',
             'race',
             'ethnicity',
             'gender',
