@@ -134,7 +134,7 @@ DataExplorerVisualizations.defaultProps = {
   selectedTableRows: [],
   projectId: 'search',
   api: () => {},
-  explorerTableConfig: { buttons: [] },
+  explorerTableConfig: {},
 };
 
 export default DataExplorerVisualizations;

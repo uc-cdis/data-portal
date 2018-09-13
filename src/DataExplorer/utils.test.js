@@ -1,4 +1,4 @@
-import { constructGraphQLQuery } from './utils';
+import { constructGraphQLQuery, hasKeyChain } from './utils';
 
 describe('utils for downloading manifest', () => {
   const selectedTableRows = ['1', '2'];
@@ -75,5 +75,15 @@ describe('utils for downloading manifest', () => {
   it('build graphql query string', () => {
     expect(queryForCount).toEqual(expectedQueryForCount);
     expect(queryForData).toEqual(expectedQueryForData);
+  });
+
+  const testObject = { a: { b: { c: 1 } } };
+  const hasKeys = 'a.b.c';
+  const hasNoKeys = 'a.b.c.d';
+  it('returns correctly from hasKeyChain function', () => {
+    expect(hasKeyChain(testObject, hasKeys)).toBe(true);
+    expect(hasKeyChain(testObject, hasNoKeys)).toBe(false);
+    expect(hasKeyChain({}, hasNoKeys)).toBe(false);
+    expect(hasKeyChain(null, hasNoKeys)).toBe(false);
   });
 });

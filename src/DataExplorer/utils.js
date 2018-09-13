@@ -3,6 +3,29 @@ import FileSaver from 'file-saver';
 const MSG_FAILED_DOWNLOAD = 'Failed to download file';
 
 /*
+* Check if an object as chain of keys
+* obj - object
+* keyChainString - keys separated by dotf
+* return: boolean, whether object as keys
+* e.g.: obj={ a: { b: {c: 1 } } }, keyChainString='a.b.c', return true
+* e.g.: obj={ a: { b: 1 } }, keyChainString='a.b.c', return false
+*/
+export const hasKeyChain = (obj, keyChainString) => {
+  if (!obj) return false;
+  const keyList = keyChainString.split('.');
+  if (keyList.length === 0) return false;
+  let o = obj;
+  for (let i = 0; i < keyList.length; i += 1) {
+    const key = keyList[i];
+    if (!o[key]) {
+      return false;
+    }
+    o = o[key];
+  }
+  return true;
+};
+
+/*
 * Constructs graphql string for arranger to get data.
 *   selectedTableRows - list of id for selected data
 *   indexType - type name of index for query
@@ -64,6 +87,10 @@ export const constructGraphQLQuery = (
 *       manifestMapping.fileReferenceIdField - field name of reference field in file index
 */
 const queryFileMappingData = async (apiFunc, projectId, idList, arrangerConfig) => {
+  if (!hasKeyChain(arrangerConfig, 'manifestMapping.fileIndexType')
+    || !hasKeyChain(arrangerConfig, 'manifestMapping.fileReferenceIdField')) {
+    throw MSG_FAILED_DOWNLOAD;
+  }
   const countQuery = await apiFunc({
     endpoint: `/${projectId}/graphql`,
     body: constructGraphQLQuery(
@@ -103,6 +130,9 @@ const queryFileMappingData = async (apiFunc, projectId, idList, arrangerConfig) 
 };
 
 const getArrangerTableColumns = async (apiFunc, projectId, arrangerConfig) => {
+  if (!hasKeyChain(arrangerConfig, 'graphqlField')) {
+    throw MSG_FAILED_DOWNLOAD;
+  }
   const body = {
     query: `query columnsStateQuery
             {
@@ -128,6 +158,9 @@ const getArrangerTableColumns = async (apiFunc, projectId, arrangerConfig) => {
     endpoint: `/${projectId}/graphql`,
     body,
   });
+  if (!hasKeyChain(response, `data.${arrangerConfig.graphqlField}.columnsState.state.columns`)) {
+    throw MSG_FAILED_DOWNLOAD;
+  }
   const columns = response.data[arrangerConfig.graphqlField].columnsState.state.columns
     .filter(col => col.show)
     .map(col => col.field);
@@ -149,6 +182,9 @@ const queryDataByIds = async (
   arrangerConfig,
   fields,
 ) => {
+  if (!hasKeyChain(arrangerConfig, 'graphqlField')) {
+    throw MSG_FAILED_DOWNLOAD;
+  }
   const responseData = await apiFunc({
     endpoint: `/${projectId}/graphql`,
     body: constructGraphQLQuery(
@@ -161,6 +197,9 @@ const queryDataByIds = async (
     ),
   });
   if (!responseData) {
+    throw MSG_FAILED_DOWNLOAD;
+  }
+  if (!hasKeyChain(responseData, `data.${arrangerConfig.graphqlField}.hits.edges`)) {
     throw MSG_FAILED_DOWNLOAD;
   }
   const responseDataJSON = responseData.data[arrangerConfig.graphqlField]
