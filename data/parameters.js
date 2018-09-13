@@ -1419,6 +1419,13 @@ const params = {
             label: 'Query data',
 
           },
+          {
+            name: 'Analyze Data',
+            icon: 'data-analyze',
+            body: 'Analyze your selected cases using Jupyter Notebooks in our secure cloud environment',
+            link: '#hostname#workspace/',
+            label: 'Run analysis',
+          },
         ],
       },
       navigation: {
@@ -1437,6 +1444,7 @@ const params = {
             color: '#a2a2a2',
             name: 'Query',
           },
+          { icon: 'workspace', link: '#hostname#workspace/', color: '#a2a2a2', name: 'Workspace' },
           {
             icon: 'profile',
             link: '/identity',
