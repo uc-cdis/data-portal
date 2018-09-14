@@ -28,6 +28,7 @@ export NODE_ENV=dev
 export MOCK_STORE=true
 npm run schema
 npm run relay
+npm run params
 ./node_modules/.bin/webpack-dev-server --hot
 ```
 Then browse to http://localhost:8080/webpack-dev-server/ . Since we are running it without APIs, this will only render static pages but any submission actions to APIs will fail.

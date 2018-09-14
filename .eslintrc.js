@@ -55,6 +55,9 @@ module.exports = {
         "src/DataModelGraph/utils.js",
         "src/DataModelGraph/utils.test.js",
         "src/actions.js",
+        "data/getSchema.js",
+        "data/getTexts.js",
+        "data/gqlSetup.js",
       ],
       "rules": {
         "no-console": "off" // for logging errors
@@ -105,6 +108,19 @@ module.exports = {
       "rules": {
         "react/no-unused-state": "off" // state gets passed
       }
-    }
+    },
+    {
+      "files": [ "data/getSchema.js" ],
+      "rules": {
+        "func-names": "off" // for schema
+      } 
+    },
+    {
+      "files": [ "data/getTexts.js" ],
+      "rules": {
+        "no-useless-escape": "off",
+        "no-template-curly-in-string": "off",
+      }
+    },
   ],
 };

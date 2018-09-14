@@ -9,6 +9,7 @@ import './DataExplorer.less';
 class DataExplorer extends React.Component {
   render() {
     const arrangerConfig = paramByApp(params, 'arrangerConfig') || {};
+    const explorerTableConfig = arrangerConfig.table || {};
     return (
       <div className='data-explorer'>
         <ArrangerWrapper
@@ -17,7 +18,10 @@ class DataExplorer extends React.Component {
           projectId={arrangerConfig.projectId}
         >
           <DataExplorerFilters arrangerConfig={arrangerConfig} />
-          <DataExplorerVisualizations arrangerConfig={arrangerConfig} />
+          <DataExplorerVisualizations
+            arrangerConfig={arrangerConfig}
+            explorerTableConfig={explorerTableConfig}
+          />
         </ArrangerWrapper>
       </div>
     );
