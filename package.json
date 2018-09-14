@@ -129,7 +129,7 @@
     "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
     "schema": "node ./data/getSchema",
     "params": "node ./data/getTexts > src/params.js",
-    "eslint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --fix src",
+    "eslint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --fix src data",
     "elint": "eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'",
     "storybook": "STORYBOOK_PROJECT_ID=search STORYBOOK_ARRANGER_API=http://localhost:3000 start-storybook -p 9001 -c .storybook",
     "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --config .stylelintrc.js --fix"

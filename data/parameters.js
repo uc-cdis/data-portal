@@ -1707,6 +1707,24 @@ const params = {
         fileIdField: 'uuid',
         fileReferenceIdField: 'subject_id',
       },
+      table: {
+        buttons: [
+          {
+            enabled: true,
+            type: 'data',
+            title: 'Download Clinical',
+            icon: 'clinical',
+            fileName: 'clinical.json',
+          },
+          {
+            enabled: false,
+            type: 'manifest',
+            title: 'Download Manifest',
+            icon: 'datafile',
+            fileName: 'manifest.json',
+          },
+        ],
+      },
     },
   },
 };
