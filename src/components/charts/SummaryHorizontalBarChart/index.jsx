@@ -14,7 +14,6 @@ class SummaryBarChart extends React.Component {
       barChartStyle,
       labelValueStyle,
       xAxisStyle,
-      yAxisStyle,
     } = this.props;
     const barChartHeight = (this.props.data.length * barChartStyle.barSize)
       + ((this.props.data.length + 1) * barChartStyle.barGap) + 2;
@@ -31,44 +30,61 @@ class SummaryBarChart extends React.Component {
             {this.props.title}
           </p>
         </div>
-        <ResponsiveContainer width='100%' height={barChartHeight}>
-          <BarChart
-            layout={barChartStyle.layout}
-            data={barChartData}
-            barCategoryGap={barChartStyle.barGap}
-            barSize={barChartStyle.barSize}
-            margin={barChartStyle.margins}
-          >
-            <Tooltip formatter={helper.percentageFormatter(this.props.showPercentage)} />
-            <XAxis {...xAxisStyle} type='number' hide />
-            <YAxis
-              axisLine={yAxisStyle.axisLine}
-              tickLine={yAxisStyle.tickLine}
-              dataKey='name'
-              type='category'
-              style={yAxisStyle}
-              interval={0}
-            />
-            <Bar dataKey={dataKey} isAnimationActive={false}>
-              {
-                barChartData.map((entry, index) => (
-                  <Cell
-                    key={dataKey}
-                    fill={this.props.color
-                      || helper.getCategoryColor(index)}
+        <div>
+          <div className='summary-horizontal-bar-chart__legend'>
+            {
+              barChartData.map((entry, i) => (
+                <div
+                  key={i}
+                  className='summary-horizontal-bar-chart__legend-item'
+                >
+                  {entry.name}
+                </div>
+              ))
+            }
+          </div>
+          <div className='summary-horizontal-bar-chart__responsive-container'>
+            <ResponsiveContainer width='100%' height={barChartHeight}>
+              <BarChart
+                layout={barChartStyle.layout}
+                data={barChartData}
+                barCategoryGap={barChartStyle.barGap}
+                barSize={barChartStyle.barSize}
+                margin={barChartStyle.margins}
+              >
+                <Tooltip
+                  formatter={helper.percentageFormatter(this.props.showPercentage)}
+                />
+                <XAxis {...xAxisStyle} type='number' hide />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  dataKey='name'
+                  type='category'
+                  hide
+                />
+                <Bar dataKey={dataKey} isAnimationActive={false}>
+                  {
+                    barChartData.map((entry, index) => (
+                      <Cell
+                        key={dataKey}
+                        fill={this.props.color
+                          || helper.getCategoryColor(index)}
+                      />
+                    ))
+                  }
+                  <LabelList
+                    dataKey={dataKey}
+                    position={labelValueStyle.position}
+                    offset={labelValueStyle.offset}
+                    style={labelValueStyle}
+                    formatter={helper.percentageFormatter(this.props.showPercentage)}
                   />
-                ))
-              }
-              <LabelList
-                dataKey={dataKey}
-                position={labelValueStyle.position}
-                offset={labelValueStyle.offset}
-                style={labelValueStyle}
-                formatter={helper.percentageFormatter(this.props.showPercentage)}
-              />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
     );
   }
@@ -86,7 +102,6 @@ SummaryBarChart.propTypes = {
   showPercentage: PropTypes.bool,
   percentageFixedPoint: PropTypes.number,
   xAxisStyle: PropTypes.object,
-  yAxisStyle: PropTypes.object,
   labelValueStyle: PropTypes.object,
   barChartStyle: PropTypes.object,
 };
@@ -96,15 +111,6 @@ SummaryBarChart.defaultProps = {
   showPercentage: true,
   percentageFixedPoint: 2,
   xAxisStyle: {
-    axisLine: false,
-    tickLine: false,
-  },
-  yAxisStyle: {
-    fontSize: '12px',
-    fontWeight: 'regular',
-    lineHeight: '1em',
-    letterSpacing: '.03rem',
-    color: '#606060',
     axisLine: false,
     tickLine: false,
   },

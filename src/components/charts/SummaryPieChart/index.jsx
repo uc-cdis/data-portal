@@ -29,7 +29,7 @@ class SummaryPieChart extends React.Component {
             {
               pieChartData.map(entry => (
                 <div className='summary-pie-chart__legend-item' key={'text'.concat(entry.name)}>
-                  <div className='form-body'>
+                  <div className='form-body summary-pie-chart__legend-item-name'>
                     {entry.name}
                   </div>
                   <div className='summary-pie-chart__legend-item-value form-special-number'>
