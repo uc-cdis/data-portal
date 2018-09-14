@@ -62,10 +62,10 @@ class PercentageStackedBarChart extends React.Component {
                       background: helper.getCategoryColor(index),
                     }}
                   />
-                  <span className='percentage-bar-chart__legend-name form-body'>
+                  <span className='percentage-bar-chart__legend-name'>
                     {name}
                   </span>
-                  <span className='percentage-bar-chart__legend-value form-caption'>
+                  <span className='percentage-bar-chart__legend-value'>
                     {'('.concat(Number(this.props.data[index].value).toLocaleString()).concat(')')}
                   </span>
                 </li>
