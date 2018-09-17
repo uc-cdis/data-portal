@@ -262,47 +262,59 @@ const params = {
           chartType: 'count',
           title: 'Projects',
         },
-        submitter_id: {
+        node_id: {
           chartType: 'count',
-          title: 'Submitters',
+          title: 'Cases',
         },
-        ethnicity: {
-          chartType: 'pie',
-          title: 'Ethnicity',
+        primary_diagnosis: {
+          chartType: 'stackedBar',
+          title: 'Primary Diagnosis',
         },
         gender: {
           chartType: 'pie',
           title: 'Gender',
         },
         race: {
-          chartType: 'stackedBar',
+          chartType: 'bar',
           title: 'Race',
+        },
+        ethnicity: {
+          chartType: 'bar',
+          title: 'Ethnicity',
         },
       },
       filters: {
         tabs: [{
-          title: 'Subject',
+          title: 'Case',
           fields: [
             'race',
             'ethnicity',
             'gender',
+            'demopd_ageassess_age_at_pd',
           ],
         },
         {
-          title: 'Diagnosis',
+          title: 'Medical History',
           fields: [
             'alcohol_use_score',
+            'ASPREG_regular_aspirin',
             'childhood_trauma_score',
             'childhood_trauma_diagnosis',
             'depression_diagnosis',
             'depression_severity',
+            'hinj_ever_had_a_head_injury_or_concussion',
+            'IBUREG_regular_ibuprofen_based_non_aspirin',
+            'lrrk2sub_does_subject_carry_lrrk2_mutation',
+            'mriyn_mri_completed',
+            'NP1DPRS_depressed_moods',
+            'primary_diagnosis',
             'tbi_diagnosis',
-            'experimental_group',
+            'total_tbi',
           ],
         }],
       },
       projectId: 'search',
-      graphqlField: 'subject',
+      graphqlField: 'case',
       index: '',
     },
   },
@@ -898,7 +910,71 @@ const params = {
       },
     },
     featureFlags: {
-      explorer: false,
+      explorer: true,
+    },
+    arrangerConfig: {
+      charts: {
+        project_id: {
+          chartType: 'count',
+          title: 'Projects',
+        },
+        node_id: {
+          chartType: 'count',
+          title: 'Cases',
+        },
+        gender: {
+          chartType: 'pie',
+          title: 'Gender',
+        },
+        race: {
+          chartType: 'bar',
+          title: 'Race',
+        },
+      },
+      filters: {
+        tabs: [{
+          title: 'Family History',
+          fields: [
+            'diabetes',
+            'hypertension',
+            'cerebrovascular_disease',
+            'chronic_respiratory_disease',
+            'coronary_artery_disease',
+            'asthma',
+            'cabg_presence',
+            'copd',
+            'emphysema',
+            'heart_failure',
+            'myocardial_infarction',
+            'stroke',
+            'smoking_status',
+            'hypertension_meds',
+          ],
+        },
+        {
+          title: 'Diagnosis',
+          fields: [
+            'biospecimen_anatomic_site',
+            'diastolic_blood_pressure',
+            'systolic_blood_pressure',
+            'metabolic_syndrome_diagnosis',
+          ],
+        },
+        {
+          title: 'Case',
+          fields: [
+            'consent_codes',
+            'race',
+            'ethnicity',
+            'gender',
+            'bmi',
+            'age_at_index',
+          ],
+        }],
+      },
+      projectId: 'search',
+      graphqlField: 'case',
+      index: '',
     },
   },
   ibdgc: {

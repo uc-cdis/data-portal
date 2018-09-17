@@ -55,17 +55,17 @@ class PercentageStackedBarChart extends React.Component {
           <ul>
             {
               percentageDataLabels.map((name, index) => (
-                <li key={`label-${name}`}>
+                <li className='percentage-bar-chart__legend-item' key={`label-${name}`}>
                   <span
                     className='percentage-bar-chart__legend-color'
                     style={{
                       background: helper.getCategoryColor(index),
                     }}
                   />
-                  <span className='percentage-bar-chart__legend-name form-body'>
+                  <span className='percentage-bar-chart__legend-name'>
                     {name}
                   </span>
-                  <span className='percentage-bar-chart__legend-value form-caption'>
+                  <span className='percentage-bar-chart__legend-value'>
                     {'('.concat(Number(this.props.data[index].value).toLocaleString()).concat(')')}
                   </span>
                 </li>

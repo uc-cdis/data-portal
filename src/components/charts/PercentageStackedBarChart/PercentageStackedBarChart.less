@@ -2,14 +2,22 @@
   display: flex;
   background-color: white;
   padding: 12px 12px;
+  font-size: 14px;
+  line-height: 1em;
+  letter-spacing: .03rem;
+  color: #606060;
 }
 
 .percentage-bar-chart__legend {
   -webkit-column-count: 2; /* Chrome, Safari, Opera */
   -moz-column-count: 2; /* Firefox */
   column-count: 2;
-  width: 430px;
+  width: 40%;
   margin-left: 25px;
+}
+
+.percentage-bar-chart__legend-item {
+  margin-top: 8px;
 }
 
 .percentage-bar-chart__legend-color {
@@ -24,4 +32,8 @@
 
 .percentage-bar-chart__legend-value {
   margin-left: 6px;
+}
+
+.recharts-wrapper {
+  width: 60%;
 }
