@@ -975,7 +975,7 @@ const params = {
       projectId: 'search',
       graphqlField: 'case',
       index: '',
-    }
+    },
   },
   ibdgc: {
     graphql: {
