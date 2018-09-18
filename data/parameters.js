@@ -1411,7 +1411,44 @@ const params = {
       },
     },
     featureFlags: {
-      explorer: false,
+      explorer: true,
+    },
+    arrangerConfig: {
+      charts:{
+        gender: {
+          chartType: 'pie',
+          title: 'Gender',
+        },
+        race: {
+          chartType: 'bar',
+          title: 'Race',
+        },
+        ethnicity: {
+          chartType: 'stackedBar',
+          title: 'Ethnicity',
+        }
+      },
+      filters: {
+        tabs: [{
+          title: 'Subject',
+          fields: [
+            'gender',
+            'race',
+            'ethnicity',
+            'vital_status',
+            'year_of_birth',
+          ],
+        },
+        {
+          title: 'Diagnosis',
+          fields: [
+            'virus_type',
+          ],
+        }],
+      },
+      projectId: 'search',
+      graphqlField: 'subject',
+      index: '',
     },
   },
   va: {
