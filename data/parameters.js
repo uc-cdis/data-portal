@@ -1435,14 +1435,12 @@ const params = {
             'gender',
             'race',
             'ethnicity',
-            'vital_status',
-            'year_of_birth',
           ],
         },
         {
           title: 'Diagnosis',
           fields: [
-            'virus_type',
+            'primary_diagnosis',
           ],
         }],
       },
