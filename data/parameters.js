@@ -1417,7 +1417,7 @@ const params = {
       charts:{
         project_id: {
           chartType: 'count',
-          title: 'Project',
+          title: 'Projects',
         },
         gender: {
           chartType: 'pie',
