@@ -1,6 +1,6 @@
 import FileSaver from 'file-saver';
 
-const MSG_FAILED_DOWNLOAD = 'Failed to download file';
+export const MSG_FAILED_DOWNLOAD = 'Failed to download file';
 
 /*
 * Check if an object as chain of keys
