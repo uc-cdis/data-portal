@@ -4,7 +4,7 @@ import DataExplorerFilters from './DataExplorerFilters';
 import DataExplorerVisualizations from './DataExplorerVisualizations';
 import { paramByApp } from '../../data/dictionaryHelper';
 import { params } from '../../data/parameters';
-import defaultApi from '../arrangerApi';
+import { arrangerApi } from '../Arranger/utils';
 import './DataExplorer.less';
 
 class DataExplorer extends React.Component {
@@ -17,13 +17,13 @@ class DataExplorer extends React.Component {
           index={arrangerConfig.index}
           graphqlField={arrangerConfig.graphqlField}
           projectId={arrangerConfig.projectId}
-          api={defaultApi}
+          api={arrangerApi}
         >
-          <DataExplorerFilters arrangerConfig={arrangerConfig} api={defaultApi} />
+          <DataExplorerFilters arrangerConfig={arrangerConfig} api={arrangerApi} />
           <DataExplorerVisualizations
             arrangerConfig={arrangerConfig}
             explorerTableConfig={explorerTableConfig}
-            api={defaultApi}
+            api={arrangerApi}
           />
         </ArrangerWrapper>
       </div>
