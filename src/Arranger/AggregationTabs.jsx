@@ -65,13 +65,13 @@ class AggregationTabs extends React.Component {
                         ...data[graphqlField].extended.find(
                           elt => elt.field.replace(/\./g, '__') === agg.field,
                         ),
-                        onValueChange: (sqon, value) => {
+                        key: agg.field,
+                        containerRef,
+                        onValueChange: ({ sqon, value }) => {
                           onTermSelected(value);
                           setSQON(sqon);
                         },
-                        key: agg.field,
                         sqon,
-                        containerRef,
                       }))
                       .map((agg) => {
                         if (aggComponents[agg.type]) {
