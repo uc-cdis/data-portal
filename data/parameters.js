@@ -1204,7 +1204,46 @@ const params = {
       },
     },
     featureFlags: {
-      explorer: false,
+      explorer: true,
+    },
+    arrangerConfig: {
+      charts: {
+        project_id: {
+          chartType: 'count',
+          title: 'Projects',
+        },
+        node_id: {
+          chartType: 'count',
+          title: 'Cases',
+        },
+        ethnicity: {
+          chartType: 'stackedBar',
+          title: 'Ethnicity',
+        },
+        gender: {
+          chartType: 'pie',
+          title: 'Gender',
+        },
+        race: {
+          chartType: 'pie',
+          title: 'Race',
+        },
+      },
+      filters: {
+        tabs: [{
+          title: 'Participant',
+          fields: [
+            'project_id',
+            'consent_type',
+            'gender',
+            'race',
+            'ethnicity',
+          ],
+        }],
+      },
+      projectId: 'search',
+      graphqlField: 'participant',
+      index: '',
     },
   },
   'ncrdc-demo': {
