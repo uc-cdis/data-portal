@@ -871,7 +871,7 @@ const params = {
             name: 'Explore Data',
             icon: 'data-explore',
             body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
-            link: 'explorer/',
+            link: '/explorer',
             label: 'Explore data',
           },
           {
