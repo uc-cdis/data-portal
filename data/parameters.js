@@ -1225,7 +1225,7 @@ const params = {
           title: 'Gender',
         },
         race: {
-          chartType: 'pie',
+          chartType: 'bar',
           title: 'Race',
         },
       },
