@@ -9,6 +9,7 @@ import PercentageStackedBarChart from '../components/charts/PercentageStackedBar
 import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup/.';
 import { getCharts } from '../components/charts/helper';
 import { downloadManifest, downloadData } from './utils.js';
+import { exportToCloud } from './custom/bdbag';
 
 class DataExplorerVisualizations extends React.Component {
   constructor(props) {
@@ -39,6 +40,16 @@ class DataExplorerVisualizations extends React.Component {
     );
   }
 
+  onExportToCloud = () => {
+    if (this.props.selectedTableRows.length === 0) return;
+    exportToCloud(
+      this.props.api,
+      this.props.projectId,
+      this.props.selectedTableRows,
+      this.props.arrangerConfig,
+    );
+  }
+
   toggleVisualization = () => {
     this.setState({ showVisualization: !this.state.showVisualization });
   }
@@ -58,17 +69,20 @@ class DataExplorerVisualizations extends React.Component {
             .map((buttonConfig) => {
               let clickFunc = () => {};
               if (buttonConfig.type === 'data') {
-                clickFunc = this.onDownloadData;
+                clickFunc = this.onDownloadData(buttonConfig.fileName);
               }
               if (buttonConfig.type === 'manifest') {
-                clickFunc = this.onDownloadManifest;
+                clickFunc = this.onDownloadManifest(buttonConfig.fileName);
+              }
+              if (buttonConfig.type === 'export') {
+                clickFunc = this.onExportToCloud;
               }
               return (<Button
                 key={buttonConfig.type}
-                onClick={clickFunc(buttonConfig.fileName)}
+                onClick={clickFunc}
                 label={buttonConfig.title}
-                rightIcon='download'
-                leftIcon={buttonConfig.icon}
+                leftIcon={buttonConfig.leftIcon}
+                rightIcon={buttonConfig.rightIcon}
                 className='data-explorer__download-button'
                 buttonType='primary'
                 enabled={selectedTableRowsCount > 0}
