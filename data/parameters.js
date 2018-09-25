@@ -947,17 +947,14 @@ const params = {
             'heart_failure',
             'myocardial_infarction',
             'stroke',
-            'smoking_status',
             'hypertension_meds',
           ],
         },
         {
           title: 'Diagnosis',
           fields: [
-            'biospecimen_anatomic_site',
             'diastolic_blood_pressure',
             'systolic_blood_pressure',
-            'metabolic_syndrome_diagnosis',
           ],
         },
         {
