@@ -960,6 +960,7 @@ const params = {
         {
           title: 'Case',
           fields: [
+            'project_id',
             'consent_codes',
             'race',
             'ethnicity',
