@@ -9,24 +9,24 @@ import FilterGroup from '../components/filters/FilterGroup/.';
 * tabs - Arranger divides the data into fields, and allows the user
 * to filter on those fields. We are using it to divide the aggregations into
 * the different tabs we need on our filters.
-* Tabs and the fields in each tab are specifeied in params.js, and this component
+* Tabs and the fields in each tab are specified in params.js, and this component
 * will use that configuration to divide the aggregations into tabs.
 */
 
 class AggregationTabs extends React.Component {
   render() {
     const {
+      api,
+      className,
+      componentProps,
+      containerRef,
       filterConfig,
+      graphqlField,
       onTermSelected,
+      projectId,
       setSQON,
       sqon,
-      projectId,
-      graphqlField,
-      className,
       style,
-      api,
-      containerRef,
-      componentProps,
     } = this.props;
     return (
       <div style={style} className={`aggregations ${className}`}>
@@ -51,11 +51,11 @@ class AggregationTabs extends React.Component {
                 <AggsQuery
                   key={i}
                   api={api}
-                  debounceTime={300}
                   projectId={projectId}
                   index={graphqlField}
-                  sqon={sqon}
                   aggs={sections}
+                  sqon={sqon}
+                  debounceTime={300}
                   render={({ data }) =>
                     data &&
                     aggs
@@ -65,7 +65,7 @@ class AggregationTabs extends React.Component {
                         ...data[graphqlField].extended.find(
                           elt => elt.field.replace(/\./g, '__') === agg.field,
                         ),
-                        onValueChange: ({ sqon, value }) => {
+                        onValueChange: (sqon, value) => {
                           onTermSelected(value);
                           setSQON(sqon);
                         },
