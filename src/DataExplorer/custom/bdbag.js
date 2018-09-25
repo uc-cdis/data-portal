@@ -88,7 +88,7 @@ export const exportToCloud = async (
     method: 'POST',
     body: JSON.stringify(body),
   }).then((r) => {
-    const url = r.data;
+    const url = encodeURIComponent(r.data);
     document.location.replace(`https://bvdp-saturn-prod.appspot.com/#import-data?url=${url}`);
   });
 };
