@@ -871,7 +871,7 @@ const params = {
             name: 'Explore Data',
             icon: 'data-explore',
             body: 'The Exploration Page gives you insights and a clear overview under selected factors.',
-            link: '#hostname#shiny/',
+            link: 'explorer/',
             label: 'Explore data',
           },
           {
@@ -1409,48 +1409,7 @@ const params = {
       },
     },
     featureFlags: {
-      explorer: true,
-    },
-    arrangerConfig: {
-      charts:{
-        project_id: {
-          chartType: 'count',
-          title: 'Projects',
-        },
-        gender: {
-          chartType: 'pie',
-          title: 'Gender',
-        },
-        race: {
-          chartType: 'bar',
-          title: 'Race',
-        },
-        ethnicity: {
-          chartType: 'stackedBar',
-          title: 'Ethnicity',
-        }
-      },
-      filters: {
-        tabs: [{
-          title: 'Subject',
-          fields: [
-            'gender',
-            'race',
-            'ethnicity',
-            'vital_status',
-            'year_of_birth',
-          ],
-        },
-        {
-          title: 'Diagnosis',
-          fields: [
-            'virus_type',
-          ],
-        }],
-      },
-      projectId: 'search',
-      graphqlField: 'subject',
-      index: '',
+      explorer: false,
     },
   },
   va: {
