@@ -895,7 +895,7 @@ const params = {
         title: 'DCP & Data STAGE',
         items: [
           { icon: 'dictionary', link: '/DD', color: '#a2a2a2', name: 'Dictionary' },
-          { icon: 'exploration', link: '#hostname#shiny/', color: '#a2a2a2', name: 'Exploration' },
+          { icon: 'exploration', link: '/explorer', color: '#a2a2a2', name: 'Exploration' },
           { icon: 'query', link: '/query', color: '#a2a2a2', name: 'Query' },
           { icon: 'workspace', link: '#hostname#workspace/', color: '#a2a2a2', name: 'Workspace' },
           { icon: 'profile', link: '/identity', color: '#a2a2a2', name: 'Profile' },
@@ -947,22 +947,20 @@ const params = {
             'heart_failure',
             'myocardial_infarction',
             'stroke',
-            'smoking_status',
             'hypertension_meds',
           ],
         },
         {
           title: 'Diagnosis',
           fields: [
-            'biospecimen_anatomic_site',
             'diastolic_blood_pressure',
             'systolic_blood_pressure',
-            'metabolic_syndrome_diagnosis',
           ],
         },
         {
           title: 'Case',
           fields: [
+            'project_id',
             'consent_codes',
             'race',
             'ethnicity',
@@ -1411,7 +1409,48 @@ const params = {
       },
     },
     featureFlags: {
-      explorer: false,
+      explorer: true,
+    },
+    arrangerConfig: {
+      charts:{
+        project_id: {
+          chartType: 'count',
+          title: 'Projects',
+        },
+        gender: {
+          chartType: 'pie',
+          title: 'Gender',
+        },
+        race: {
+          chartType: 'bar',
+          title: 'Race',
+        },
+        ethnicity: {
+          chartType: 'stackedBar',
+          title: 'Ethnicity',
+        }
+      },
+      filters: {
+        tabs: [{
+          title: 'Subject',
+          fields: [
+            'gender',
+            'race',
+            'ethnicity',
+            'vital_status',
+            'year_of_birth',
+          ],
+        },
+        {
+          title: 'Diagnosis',
+          fields: [
+            'virus_type',
+          ],
+        }],
+      },
+      projectId: 'search',
+      graphqlField: 'subject',
+      index: '',
     },
   },
   va: {
