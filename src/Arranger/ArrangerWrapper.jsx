@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Arranger } from '@arranger/components/dist/Arranger';
 import { AggsState, AggsQuery } from '@arranger/components/dist/Aggs';
-import defaultApi from '../arrangerApi';
+import { arrangerApi } from './utils';
 
 /*
 * The ArrangerWrapper component can be used to get props and data from Arranger
@@ -40,14 +40,14 @@ class ArrangerWrapper extends React.Component {
         index={this.props.index}
         graphqlField={this.props.graphqlField}
         projectId={this.props.projectId}
-        api={defaultApi}
+        api={arrangerApi}
         render={arrangerArgs => (
           <AggsState
             {...arrangerArgs}
-            api={defaultApi}
+            api={arrangerApi}
             render={stateArgs => (
               <AggsQuery
-                api={defaultApi}
+                api={arrangerApi}
                 debounceTime={300}
                 projectId={arrangerArgs.projectId}
                 index={arrangerArgs.graphqlField}
