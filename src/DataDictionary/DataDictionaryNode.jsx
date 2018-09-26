@@ -173,13 +173,24 @@ CollapsibleList.defaultProps = {
 
 const PropertyBullet = (props) => {
   const { propertyName, property, required } = props;
-  let description = 'No Description';
+  let rawDescription = 'No Description';
   if ('description' in property) {
-    description = property.description;
+    rawDescription = property.description;
   }
   if ('term' in property) {
-    description = property.term.description;
+    rawDescription = property.term.description;
   }
+  const descriptionElements = (
+    <React.Fragment>
+      {
+        rawDescription.split('\\n').map(desc => (
+          <span className='data-dictionary__description-para'>
+            {desc}
+          </span>
+        ))
+      }
+    </React.Fragment>
+  );
 
   const type = getType(property);
 
@@ -188,7 +199,7 @@ const PropertyBullet = (props) => {
       <td className='data-dictionary__table-data data-dictionary__table-data--column-1'><div> { propertyName }</div> </td>
       <td className='data-dictionary__table-data data-dictionary__table-data--column-2'> <ul>{ (typeof type === 'string') ? type : <CollapsibleList items={type} />} </ul></td>
       <td className='data-dictionary__table-data data-dictionary__table-data--column-3'> { required ? 'Yes' : 'No' } </td>
-      <td className='data-dictionary__table-data data-dictionary__table-data--column-4'> { description } </td>
+      <td className='data-dictionary__table-data data-dictionary__table-data--column-4'> { descriptionElements } </td>
     </tr>
   );
 };
