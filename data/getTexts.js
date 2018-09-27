@@ -90,8 +90,39 @@ function stringify(value, variables = [], spaces = 0) {
   return doStringify(value, variables, 0, spaces);
 }
 
+/**
+ * Build a configuration that does a 2-level merge
+ * of the default and app configs excluding 'components'
+ * 
+ * @param {string} app defaults to process.env.APP || "default"
+ * @param {[string}]:config} params dictionary of application configs
+ * @return 2-level merged app config
+ */
+function buildConfig(app, params) {
+  app = app || process.env.APP || 'default';
+  
+  const appConfig = params[app] || {};
+  const defaultConfig = params.default || {};
+  const result = { ...defaultConfig, ...appConfig };
+  delete result.components;
+  const keys = [ ...(new Set(Object.keys(appConfig).concat(Object.keys(defaultConfig)))) ];
+  Object.keys(result).forEach(
+    (k) => {
+      if (typeof result[k] === 'object') {
+        const defaultVal = defaultConfig[k];
+        const appVal = appConfig[k];
+        if (defaultVal && appVal && typeof defaultVal === 'object' && typeof appVal === 'object') {
+          result[k] = { ...defaultVal, ...appVal };
+        }
+      }
+    }
+  );
+  return result;
+}
+
+const config = buildConfig(process.env.app, params);
 console.log(`const gaTracking = '${defaultGA}';`);
 console.log('const hostname = typeof window !== \'undefined\' ? `${window.location.protocol}//${window.location.hostname}/` : \'http://localhost/\';');
 console.log(`const components = ${stringify(fillDefaultValues(componentTexts, defaultTexts), ['hostname'], 2)};`);
-
-console.log('module.exports = { components, gaTracking };');
+console.log(`const config = ${JSON.stringify(config, null, '  ')};`);
+console.log('module.exports = { components, config, gaTracking };');
