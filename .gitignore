@@ -6,6 +6,7 @@ index.html
 data/schema.graphql
 data/schema.json
 src/params.js
+src/css/themeoverrides.css
 __generated__/
 *.log
 .DS_Store
