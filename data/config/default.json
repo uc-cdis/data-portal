@@ -209,14 +209,16 @@
           "enabled": true,
           "type": "data",
           "title": "Download Clinical",
-          "icon": "clinical",
+          "leftIcon": "clinical",
+          "rightIcon": "download",
           "fileName": "clinical.json"
         },
         {
           "enabled": false,
           "type": "manifest",
           "title": "Download Manifest",
-          "icon": "datafile",
+          "leftIcon": "datafile",
+          "rightIcon": "download",
           "fileName": "manifest.json"
         }
       ]
