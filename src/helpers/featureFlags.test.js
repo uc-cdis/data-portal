@@ -1,20 +1,20 @@
 import isEnabled from './featureFlags';
-import { params } from '../../data/parameters';
+import { config } from '../params';
 
-jest.mock('../../data/parameters', () => ({
-  params: {
-    default: {
-      featureFlags: {
-        testFlag: false,
-      },
-    },
+jest.mock('../params', () => ({
+  components: {
   },
+  config: {
+    featureFlags: {
+      testFlag: false,
+    },
+  }
 }));
 
 describe('featureFlags', () => {
   beforeEach(() => {
     global.sessionStorage.clear();
-    params.default.featureFlags.testFlag = false;
+    config.featureFlags.testFlag = false;
   });
 
   it('returns false if the flag was not enabled anywhere', () => {
@@ -29,13 +29,13 @@ describe('featureFlags', () => {
 
   it('returns true if the flag has been enabled in default config', () => {
     expect(isEnabled('testFlag')).toBe(false);
-    params.default.featureFlags.testFlag = true;
+    config.featureFlags.testFlag = true;
     expect(isEnabled('testFlag')).toBe(true);
   });
 
   it('returns false if default config is empty', () => {
     expect(isEnabled('testFlag')).toBe(false);
-    params.default.featureFlags = {};
+    config.featureFlags = {};
     expect(isEnabled('testFlag')).toBe(false);
   });
 });
