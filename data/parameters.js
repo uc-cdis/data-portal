@@ -1626,7 +1626,7 @@ const params = {
       },
     },
     featureFlags: {
-      explorer: false,
+      explorer: true,
     },
   },
   default: {
