@@ -8,7 +8,7 @@ jest.mock('../params', () => ({
     featureFlags: {
       testFlag: false,
     },
-  }
+  },
 }));
 
 describe('featureFlags', () => {
