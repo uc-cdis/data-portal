@@ -87,8 +87,12 @@ export const exportToCloud = async (
     path: '/api/v0/submission/graphql/',
     method: 'POST',
     body: JSON.stringify(body),
-  }).then((r) => {
-    const url = encodeURIComponent(r.data);
-    document.location.replace(`https://bvdp-saturn-prod.appspot.com/#import-data?url=${url}`);
-  });
+  })
+    .then((r) => {
+      if (!r || r.status !== 200) {
+        throw MSG_FAILED_DOWNLOAD;
+      }
+      const url = encodeURIComponent(r.data);
+      document.location.replace(`https://bvdp-saturn-prod.appspot.com/#import-data?url=${url}`);
+    });
 };
