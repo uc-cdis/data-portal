@@ -176,6 +176,18 @@
         }
       ]
     },
+    "table": {
+      "buttons": [
+        {
+          "enabled": true,
+          "type": "data",
+          "title": "Download Clinical",
+          "leftIcon": "clinical",
+          "rightIcon": "download",
+          "fileName": "clinical.json"
+        }
+      ]
+    },
     "projectId": "search",
     "graphqlField": "subject",
     "index": ""
