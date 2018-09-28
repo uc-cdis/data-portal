@@ -77,15 +77,16 @@ async function fetchJsonRetry(urlStr, opts) {
   let doRequest = null; // for eslint happiness
 
   async function doRetry(reason) {
+    if (retryCount > retryBackoff.length) {
+      return Promise.reject(`failed fetch ${reason}, max retries ${retryBackoff.length} exceeded for ${urlStr}`);
+    }
+
     return new Promise(((resolve) => {
       // sleep and try again ...
-      const retryIndex = retryCount < retryBackoff.length - 1 ?
-        retryCount : retryBackoff.length - 1;
+      const retryIndex = Math.min(retryCount, retryBackoff.length-1);
       const sleepMs = retryBackoff[retryIndex] + Math.floor(Math.random() * 2000);
-      if (retryCount < retryBackoff.length) {
-        retryCount += 1;
-      }
-      console.log(`failed fetch ${reason}, sleeping ${sleepMs} then retry ${urlStr}`);
+      retryCount += 1;
+      console.log(`failed fetch - ${reason}, sleeping ${sleepMs} then retry ${urlStr}`);
       setTimeout(() => {
         resolve('ok');
         console.log(`Retrying ${urlStr} after sleep - ${retryCount}`);
@@ -101,21 +102,14 @@ async function fetchJsonRetry(urlStr, opts) {
     ).then(
       (res) => {
         if (res.status === 200) {
-          return res.json();
+          return res.json().catch(
+            (err) => doRetry(`failed json parse - ${err}`),
+          );
         }
-        if (retryCount < retryBackoff.length) {
-          return doRetry('throttling from server');
-        }
-        if (retryCount > 0) {
-          console.log(`No more retries for ${urlStr} - retry count ${retryCount}, status ${res.status}`);
-        }
-        return Promise.reject(`failed fetch, got ${res.status} on ${urlStr}`);
+        return doRetry(`non-200 from server: ${res.status}`);
       },
       (err) => {
-        if (retryCount < retryBackoff.length) {
-          return doRetry(err);
-        }
-        return Promise.reject(err);
+        return doRetry(err);
       },
     );
   };
