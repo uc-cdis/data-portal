@@ -2,7 +2,7 @@ import React from 'react';
 import ArrangerWrapper from '../Arranger/ArrangerWrapper';
 import DataExplorerFilters from './DataExplorerFilters';
 import DataExplorerVisualizations from './DataExplorerVisualizations';
-import { arrangerApi } from '../Arranger/utils';
+import arrangerApi from '../Arranger/utils';
 import { config } from '../params';
 import './DataExplorer.less';
 
