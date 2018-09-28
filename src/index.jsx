@@ -39,6 +39,7 @@ import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
+import Workspace from './Workspace';
 import './index.less';
 
 // Needed for onTouchTap
@@ -181,6 +182,12 @@ async function init() {
                       path='/files'
                       component={
                         props => <ProtectedContent component={ExplorerPage} {...props} />
+                      }
+                    />
+                    <Route
+                      path='/lw_workspace'
+                      component={
+                        props => <ProtectedContent component={Workspace} {...props} />
                       }
                     />
                     <Route
