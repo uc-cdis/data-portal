@@ -21,6 +21,18 @@ Use the parameter to point to remote url (e.g. https://dev.bionimbus.org/api/v0/
 npm run-script schema -- https://dev.bionimbus.org/api/v0/submission/getschema
 ```
 
+### dev.html
+
+The portal's `/dev.html` path loads javascript and most css
+from `localhost`.  Test code under local development with this procedure:
+* install nginx locally with a self signed SSL certificate: https://github.com/uc-cdis/cdis-wiki/blob/master/dev/Local-development-for-Gen3.md#nginx-installation
+* load https://localhost, and accept the self signed certificate 
+* launch webpack in `dev -hot` mode - configuring local code with the same configuration as the server to test against.  For example - if we intend to test against qa-brian, then:
+```
+HOSTNAME=qa-brain.planx-pla.net APP=bhc NODE_ENV=dev bash ./runWebpack.sh
+```
+* Load the test environment's `/dev.html` - ex: https://qa-brian.planx-pla.net/dev.html
+
 ### Running
 To run for development:
 ```
@@ -31,6 +43,12 @@ npm run relay
 npm run params
 ./node_modules/.bin/webpack-dev-server --hot
 ```
+or easier:
+```
+# HOSTNAME == where to download the dictionary from, should match APP
+HOSTNAME=qa-dcp.planx-pla.net APP=gtex NODE_ENV=dev bash ./runWebpack.sh
+```
+
 Then browse to http://localhost:8080/webpack-dev-server/ . Since we are running it without APIs, this will only render static pages but any submission actions to APIs will fail.
 
 To run Storybook:
