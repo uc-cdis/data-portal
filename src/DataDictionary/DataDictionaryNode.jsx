@@ -183,6 +183,7 @@ const PropertyBullet = (props) => {
   const descriptionElements = (
     <React.Fragment>
       {
+        rawDescription &&
         rawDescription.split('\\n').map(desc => (
           <span className='data-dictionary__description-para'>
             {desc}
