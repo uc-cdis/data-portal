@@ -106,6 +106,9 @@ const queryFileMappingData = async (apiFunc, projectId, idList, arrangerConfig) 
   if (!countQuery) {
     throw MSG_FAILED_DOWNLOAD;
   }
+  if (!hasKeyChain(countQuery, `data.${arrangerConfig.manifestMapping.fileIndexType}.hits.total`)) {
+    throw MSG_FAILED_DOWNLOAD;
+  }
   const count = countQuery.data[arrangerConfig.manifestMapping.fileIndexType].hits.total;
   const manifest = await apiFunc({
     endpoint: `/${projectId}/graphql`,
