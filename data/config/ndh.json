@@ -176,6 +176,11 @@
         }
       ]
     },
+    "manifestMapping": {
+      "fileIndexType": "file",
+      "fileIdField": "object_id",
+      "fileReferenceIdField": "subject_id"
+    },
     "table": {
       "buttons": [
         {
@@ -185,6 +190,14 @@
           "leftIcon": "clinical",
           "rightIcon": "download",
           "fileName": "clinical.json"
+        },
+        {
+          "enabled": true,
+          "type": "manifest",
+          "title": "Download Manifest",
+          "leftIcon": "datafile",
+          "rightIcon": "download",
+          "fileName": "manifest.json"
         }
       ]
     },
