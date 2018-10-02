@@ -179,7 +179,8 @@
     "manifestMapping": {
       "fileIndexType": "file",
       "fileIdField": "object_id",
-      "fileReferenceIdField": "subject_id"
+      "fileReferenceIdFieldInFileIndex": "subject_id",
+      "fileReferenceIdFieldInDataIndex": "node_id"
     },
     "table": {
       "buttons": [
