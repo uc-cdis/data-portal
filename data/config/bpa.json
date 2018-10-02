@@ -57,7 +57,7 @@
           "name": "Explore Data",
           "icon": "data-files",
           "body": "The File page gives you insights and a clear overview of data.",
-          "link": "/explorer",
+          "link": "/files",
           "label": "Explore data"
         },
         {
