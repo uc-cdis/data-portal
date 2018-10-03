@@ -198,11 +198,6 @@
     "projectId": "search",
     "graphqlField": "subject",
     "index": "",
-    "manifestMapping": {
-      "fileIndexType": "file",
-      "fileIdField": "uuid",
-      "fileReferenceIdField": "subject_id"
-    },
     "table": {
       "buttons": [
         {
@@ -212,14 +207,6 @@
           "leftIcon": "clinical",
           "rightIcon": "download",
           "fileName": "clinical.json"
-        },
-        {
-          "enabled": false,
-          "type": "manifest",
-          "title": "Download Manifest",
-          "leftIcon": "datafile",
-          "rightIcon": "download",
-          "fileName": "manifest.json"
         }
       ]
     }
