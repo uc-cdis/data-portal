@@ -296,8 +296,8 @@ export const calculateDropdownButtonConfigs = (explorerTableConfig) => {
         ret[dropdownId] = {
           cnt: buttonCount,
           dropdownConfig: drpdnCfg,
-          buttonConfigs }
-        ;
+          buttonConfigs,
+        };
         return ret;
       }, {});
   return dropdownConfig;

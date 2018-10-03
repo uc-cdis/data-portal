@@ -103,27 +103,29 @@ class DataExplorerVisualizations extends React.Component {
             .filter(dropdownId => (dropdownConfigs[dropdownId].cnt > 1))
             .map((dropdownId) => {
               const entry = dropdownConfigs[dropdownId];
-              const buttonConfigs = entry.buttonConfigs;
-              const title = entry.dropdownConfig.title;
+              const btnConfigs = entry.buttonConfigs;
+              const dropdownTitle = entry.dropdownConfig.title;
               return (
                 <Dropdown
                   key={dropdownId}
                   className='data-explorer__dropdown'
                   disabled={selectedTableRowsCount === 0}
                 >
-                  <Dropdown.Toggle>{title}</Dropdown.Toggle>
+                  <Dropdown.Button>{dropdownTitle}</Dropdown.Button>
                   <Dropdown.Menu>
                     {
-                      buttonConfigs.map((btnCfg) => {
+                      btnConfigs.map((btnCfg) => {
                         const onClick = this.getOnClickFunction(btnCfg);
-                        return (<Dropdown.Item
-                          key={btnCfg.type}
-                          leftIcon='datafile'
-                          rightIcon='download'
-                          onClick={onClick}
-                        >
-                          {btnCfg.title}
-                        </Dropdown.Item>);
+                        return (
+                          <Dropdown.Item
+                            key={btnCfg.type}
+                            leftIcon='datafile'
+                            rightIcon='download'
+                            onClick={onClick}
+                          >
+                            {btnCfg.title}
+                          </Dropdown.Item>
+                        );
                       })
                     }
                   </Dropdown.Menu>
