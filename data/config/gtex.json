@@ -180,6 +180,11 @@
     "index": "",
     "table": {
       "referenceId": "submitter_id",
+      "dropdowns": {
+        "download": {
+          "title": "Download"
+        }
+      },
       "buttons": [
         {
           "enabled": true,
@@ -187,7 +192,8 @@
           "title": "Download Clinical",
           "leftIcon": "clinical",
           "rightIcon": "download",
-          "fileName": "clinical.json"
+          "fileName": "clinical.json",
+          "dropdownId": "download"
         },
         {
           "enabled": false,
@@ -195,13 +201,15 @@
           "title": "Download Manifest",
           "leftIcon": "datafile",
           "rightIcon": "download",
-          "fileName": "manifest.json"
+          "fileName": "manifest.json",
+          "dropdownId": "download"
         },
         {
           "enabled": true,
           "type": "export",
           "title": "Export to Saturn",
-          "rightIcon": "upload"
+          "rightIcon": "external-link",
+          "leftIcon": "planet"
         }
       ]
     }
