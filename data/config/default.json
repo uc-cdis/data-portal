@@ -203,10 +203,10 @@
         {
           "enabled": true,
           "type": "data",
-          "title": "Download Clinical",
-          "leftIcon": "clinical",
+          "title": "Download Data",
+          "leftIcon": "user",
           "rightIcon": "download",
-          "fileName": "clinical.json"
+          "fileName": "data.json"
         }
       ]
     }

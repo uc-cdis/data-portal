@@ -182,6 +182,18 @@
     },
     "projectId": "search",
     "graphqlField": "case",
-    "index": ""
+    "index": "",
+    "table": {
+      "buttons": [
+        {
+          "enabled": true,
+          "type": "data",
+          "title": "Download Data",
+          "leftIcon": "user",
+          "rightIcon": "download",
+          "fileName": "data.json"
+        }
+      ]
+    }
   }
 }
