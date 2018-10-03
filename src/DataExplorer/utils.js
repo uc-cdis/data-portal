@@ -84,11 +84,11 @@ export const constructGraphQLQuery = (
 *   arrangerConfig - arranger configuration object, must has following keys for manifest query:
 *       graphqlField - the data type name for arranger
 *       manifestMapping.fileIndexType - type name of file index
-*       manifestMapping.fileReferenceIdField - field name of reference field in file index
+*       manifestMapping.fileReferenceIdFieldInFileIndex - name of reference field in file index
 */
 const queryFileMappingData = async (apiFunc, projectId, idList, arrangerConfig) => {
   if (!hasKeyChain(arrangerConfig, 'manifestMapping.fileIndexType')
-    || !hasKeyChain(arrangerConfig, 'manifestMapping.fileReferenceIdField')) {
+    || !hasKeyChain(arrangerConfig, 'manifestMapping.fileReferenceIdFieldInFileIndex')) {
     throw MSG_FAILED_DOWNLOAD;
   }
   const countQuery = await apiFunc({
@@ -96,10 +96,10 @@ const queryFileMappingData = async (apiFunc, projectId, idList, arrangerConfig) 
     body: constructGraphQLQuery(
       idList,
       arrangerConfig.manifestMapping.fileIndexType,
-      arrangerConfig.manifestMapping.fileReferenceIdField,
+      arrangerConfig.manifestMapping.fileReferenceIdFieldInFileIndex,
       [
         arrangerConfig.manifestMapping.fileIdField,
-        arrangerConfig.manifestMapping.fileReferenceIdField,
+        arrangerConfig.manifestMapping.fileReferenceIdFieldInFileIndex,
       ],
       true),
   });
@@ -115,10 +115,10 @@ const queryFileMappingData = async (apiFunc, projectId, idList, arrangerConfig) 
     body: constructGraphQLQuery(
       idList,
       arrangerConfig.manifestMapping.fileIndexType,
-      arrangerConfig.manifestMapping.fileReferenceIdField,
+      arrangerConfig.manifestMapping.fileReferenceIdFieldInFileIndex,
       [
         arrangerConfig.manifestMapping.fileIdField,
-        arrangerConfig.manifestMapping.fileReferenceIdField,
+        arrangerConfig.manifestMapping.fileReferenceIdFieldInFileIndex,
       ],
       false,
       count,
@@ -250,7 +250,8 @@ export const downloadData = async (
 *   arrangerConfig - arranger configuration object, should include following keys:
 *       graphqlField - the data type name for arranger
 *       manifestMapping.fileIndexType - type name of file index
-*       manifestMapping.fileReferenceIdField - field name of reference field in file index
+*       manifestMapping.fileReferenceIdFieldInFileIndex - name of reference field in file index
+*       manifestMapping.fileReferenceIdFieldInDataIndex - name of reference field in data index
 *
 */
 export const downloadManifest = async (
@@ -260,10 +261,25 @@ export const downloadManifest = async (
   arrangerConfig,
   fileName,
 ) => {
-  const manifestJSON = await queryFileMappingData(
+  if (!hasKeyChain(arrangerConfig, 'manifestMapping.fileReferenceIdFieldInDataIndex')) {
+    throw MSG_FAILED_DOWNLOAD;
+  }
+  const idList = (await queryDataByIds(
     apiFunc,
     projectId,
     selectedTableRows,
+    arrangerConfig,
+    [arrangerConfig.manifestMapping.fileReferenceIdFieldInDataIndex],
+  )).map((d) => {
+    if (!d[arrangerConfig.manifestMapping.fileReferenceIdFieldInDataIndex]) {
+      throw MSG_FAILED_DOWNLOAD;
+    }
+    return d[arrangerConfig.manifestMapping.fileReferenceIdFieldInDataIndex];
+  });
+  const manifestJSON = await queryFileMappingData(
+    apiFunc,
+    projectId,
+    idList,
     arrangerConfig,
   );
   const blob = new Blob([JSON.stringify(manifestJSON, null, 2)], { type: 'text/json' });
