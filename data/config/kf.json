@@ -135,7 +135,16 @@
     "filters": {
       "tabs": [
         {
-          "title": "Participant",
+          "title": "Phenotype",
+          "fields": [
+            "asthma",
+            "coronary_artery_disease",
+            "hypertension",
+            "stroke"
+          ]
+        },
+        {
+          "title": "Case",
           "fields": [
             "project_id",
             "consent_type",
@@ -147,7 +156,7 @@
       ]
     },
     "projectId": "search",
-    "graphqlField": "participant",
+    "graphqlField": "case",
     "index": ""
   }
 }
