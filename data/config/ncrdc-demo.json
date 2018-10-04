@@ -48,7 +48,7 @@
         "name": "Explore Data",
         "icon": "data-explore",
         "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
-        "link": "#hostname#shiny/",
+        "link": "explorer",
         "label": "Explore data"
       },
       {
@@ -104,6 +104,83 @@
     }
   },
   "featureFlags": {
-    "explorer": false
+    "explorer": true
+  },
+  "arrangerConfig": {
+    "charts": {
+      "project_id": {
+        "chartType": "count",
+        "title": "Projects"
+      },
+      "submitter_id": {
+        "chartType": "count",
+        "title": "Subjects"
+      },
+      "gender": {
+        "chartType": "pie",
+        "title": "Gender"
+      },
+      "race": {
+        "chartType": "bar",
+        "title": "Race"
+      },
+      "ethnicity": {
+        "chartType": "bar",
+        "title": "Ethnicity"
+      }
+    },
+    "filters": {
+      "tabs": [
+        {
+          "title": "Subject",
+          "fields":[
+            "project_id",
+            "gender",
+            "race",
+            "ethnicity"
+          ]
+        }, {
+          "title": "Diagnosis",
+          "fields": [
+            "arthxbase",
+            "bshbvstat",
+            "bshcvstat",
+            "cd4nadir",
+            "status",
+            "virus_type",
+            "virus_subtype"
+          ]
+        }
+      ]
+    },
+    "manifestMapping": {
+      "fileIndexType": "file",
+      "fileIdField": "object_id",
+      "fileReferenceIdFieldInFileIndex": "subject_id",
+      "fileReferenceIdFieldInDataIndex": "node_id"
+    },
+    "table": {
+      "buttons": [
+        {
+          "enabled": true,
+          "type": "data",
+          "title": "Download Clinical",
+          "leftIcon": "user",
+          "rightIcon": "download",
+          "fileName": "clinical.json"
+        },
+        {
+          "enabled": true,
+          "type": "manifest",
+          "title": "Download Manifest",
+          "leftIcon": "datafile",
+          "rightIcon": "download",
+          "fileName": "manifest.json"
+        }
+      ]
+    },
+    "projectId": "search",
+    "graphqlField": "subject",
+    "index": ""
   }
 }
