@@ -159,7 +159,7 @@
           "fileName": "clinical.json"
         },
         {
-          "enabled": true,
+          "enabled": false,
           "type": "manifest",
           "title": "Download Manifest",
           "leftIcon": "datafile",
