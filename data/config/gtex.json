@@ -190,7 +190,7 @@
           "enabled": true,
           "type": "data",
           "title": "Download Clinical",
-          "leftIcon": "clinical",
+          "leftIcon": "user",
           "rightIcon": "download",
           "fileName": "clinical.json",
           "dropdownId": "download"
