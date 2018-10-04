@@ -48,7 +48,7 @@
         "name": "Explore Data",
         "icon": "data-explore",
         "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
-        "link": "explorer",
+        "link": "/explorer",
         "label": "Explore data"
       },
       {
@@ -77,7 +77,7 @@
         },
         {
           "icon": "exploration",
-          "link": "/files",
+          "link": "/explorer",
           "color": "#a2a2a2",
           "name": "Exploration"
         },
