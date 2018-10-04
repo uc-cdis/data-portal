@@ -17,7 +17,7 @@ export const hasKeyChain = (obj, keyChainString) => {
   let o = obj;
   for (let i = 0; i < keyList.length; i += 1) {
     const key = keyList[i];
-    if (!o[key]) {
+    if (o[key] === undefined) {
       return false;
     }
     o = o[key];
