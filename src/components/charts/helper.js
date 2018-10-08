@@ -131,7 +131,6 @@ const getCharts = (data, arrangerConfig, sqon) => {
       }
     });
   }
-  console.log({ summaries, countItems, stackedBarCharts });
   return { summaries, countItems, stackedBarCharts };
 };
 
