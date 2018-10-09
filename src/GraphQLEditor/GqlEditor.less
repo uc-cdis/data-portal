@@ -1,10 +1,13 @@
 .gql-editor {
-  height: 90vh;
+  height: calc(~"100vh - 181px");
 }
 
 .gql-editor__title {
-  display: inline-block;
-  vertical-align: middle;
-  margin: 15px 0;
-  margin-right: 0.5em;
+  line-height: 80px;
+  vertical-align: center;
+  margin: 0;
+}
+
+.gql-editor .graphiql-container {
+  height: calc(~"100vh - 181px - 80px");
 }
