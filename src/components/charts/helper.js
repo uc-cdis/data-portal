@@ -47,13 +47,21 @@ const getCategoryColorFrom2Colors = index => colorsForCharts.categorical2Colors[
 
 const getDataKey = showPercentage => (showPercentage ? 'percentage' : 'value');
 
+
+const prettifyValueName = (name) => {
+  if (name === '__missing__') {
+    return 'No Data';
+  }
+  return name;
+};
+
 const transformArrangerDataToChart = (field, sqonValues) => {
   const chartData = [];
   field.buckets
     .filter(bucket => (sqonValues === null || sqonValues.includes(bucket.key)))
     .forEach(bucket =>
       chartData.push({
-        name: bucket.key,
+        name: prettifyValueName(bucket.key),
         value: bucket.doc_count,
       }),
     );
