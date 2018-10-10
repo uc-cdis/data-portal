@@ -179,7 +179,6 @@
     "graphqlField": "case",
     "index": "",
     "table": {
-      "referenceId": "submitter_id",
       "dropdowns": {
         "download": {
           "title": "Download"
@@ -207,9 +206,10 @@
         {
           "enabled": true,
           "type": "export",
-          "title": "Export to Saturn",
+          "title": "Export All to Saturn",
           "rightIcon": "external-link",
-          "leftIcon": "planet"
+          "leftIcon": "planet",
+          "applyToAll": true
         }
       ]
     }

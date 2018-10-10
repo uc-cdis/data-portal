@@ -9,8 +9,9 @@ import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart/.';
 import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup/.';
 import { getCharts } from '../components/charts/helper';
-import { downloadManifest, downloadData, calculateDropdownButtonConfigs } from './utils.js';
-import { exportToCloud } from './custom/bdbag';
+import { downloadManifest, downloadData } from './actionHelper';
+import { calculateDropdownButtonConfigs } from './utils';
+import { exportAllDataInTableToCloud, exportAllSelectedDataToCloud } from './custom/bdbag';
 
 class DataExplorerVisualizations extends React.Component {
   constructor(props) {
@@ -41,14 +42,22 @@ class DataExplorerVisualizations extends React.Component {
     );
   }
 
-  onExportToCloud = () => {
-    if (this.props.selectedTableRows.length === 0) return;
-    exportToCloud(
-      this.props.api,
-      this.props.projectId,
-      this.props.selectedTableRows,
-      this.props.arrangerConfig,
-    );
+  onExportToCloud = applyToAll => () => {
+    if (applyToAll) {
+      exportAllDataInTableToCloud(
+        this.props.api,
+        this.props.projectId,
+        this.props.arrangerConfig,
+        this.props.sqon,
+      );
+    } else {
+      exportAllSelectedDataToCloud(
+        this.props.api,
+        this.props.projectId,
+        this.props.arrangerConfig,
+        this.props.selectedTableRows,
+      );
+    }
   }
 
   getOnClickFunction = (buttonConfig) => {
@@ -60,7 +69,7 @@ class DataExplorerVisualizations extends React.Component {
       clickFunc = this.onDownloadManifest(buttonConfig.fileName);
     }
     if (buttonConfig.type === 'export') {
-      clickFunc = this.onExportToCloud;
+      clickFunc = this.onExportToCloud(buttonConfig.applyToAll);
     }
     return clickFunc;
   }
@@ -71,6 +80,7 @@ class DataExplorerVisualizations extends React.Component {
 
   renderButton = (buttonConfig) => {
     const clickFunc = this.getOnClickFunction(buttonConfig);
+    const buttonEnabled = buttonConfig.applyToAll || buttonConfig.uiEnabled;
     return (<Button
       key={buttonConfig.type}
       onClick={clickFunc}
@@ -79,7 +89,7 @@ class DataExplorerVisualizations extends React.Component {
       rightIcon={buttonConfig.rightIcon}
       className='data-explorer__download-button'
       buttonType='primary'
-      enabled={buttonConfig.uiEnabled}
+      enabled={buttonEnabled}
     />);
   }
 
