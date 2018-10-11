@@ -78,6 +78,7 @@ export const color = {
   radar: d3.schemeCategory20[16],
   stream_gauge: d3.schemeCategory20[19],
   weather_station: d3.schemeCategory20[10],
+  medical_history: d3.schemeCategory20[1],
 };
 
 

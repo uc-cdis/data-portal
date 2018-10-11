@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Arranger } from '@arranger/components/dist/Arranger';
 import { AggsState, AggsQuery } from '@arranger/components/dist/Aggs';
-import { arrangerApi } from './utils';
+import arrangerApi from './utils';
 
 /*
 * The ArrangerWrapper component can be used to get props and data from Arranger

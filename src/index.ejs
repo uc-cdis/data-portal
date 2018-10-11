@@ -14,8 +14,11 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
+
     <div id="root"></div>
     <div id="append-root" class="spacer"></div>
     <div id="foot-root" class="footer"></div>
+    <link id="gen3-theme-overrides" rel="stylesheet" type="text/css" href="<%= htmlWebpackPlugin.options.basename %>/src/css/themeoverrides.css"/>
+
   </body>
 </html>

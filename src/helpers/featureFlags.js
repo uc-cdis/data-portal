@@ -7,8 +7,9 @@
   `JSON.parse(sessionStorage.getItem('gen3Features'))['featureName']
 */
 
-import { paramByApp } from '../../data/dictionaryHelper';
-import { params } from '../../data/parameters';
+import { config } from '../params';
+
+const featureFlags = config.featureFlags;
 
 /*
   Will check parameters.js to see if there is default config for feature flags
@@ -16,7 +17,7 @@ import { params } from '../../data/parameters';
   Will return true if either of these types of flags is set to true
 */
 function isEnabled(featureName) {
-  const compileTimeFlags = paramByApp(params, 'featureFlags') || {};
+  const compileTimeFlags = featureFlags;
   const runTimeFlags = JSON.parse(window.sessionStorage.getItem('gen3Features')) || {};
   return !!compileTimeFlags[featureName] || !!runTimeFlags[featureName];
 }
