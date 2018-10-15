@@ -50,7 +50,7 @@
           "name": "Explore Data",
           "icon": "data-explore",
           "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
-          "link": "#hostname#shiny",
+          "link": "/explorer",
           "label": "Explore data"
         },
         {

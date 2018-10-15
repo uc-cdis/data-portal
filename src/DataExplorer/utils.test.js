@@ -6,16 +6,17 @@ describe('utils for downloading manifest', () => {
     manifestMapping: {
       fileIndexType: 'file',
       fileIdField: 'uuid',
-      fileReferenceIdField: 'subject_id',
+      fileReferenceIdFieldInFileIndex: 'subject_id',
+      fileReferenceIdFieldInDataIndex: 'node_id'
     },
   };
   const queryForCount = constructGraphQLQuery(
     selectedTableRows,
     arrangerConfig.manifestMapping.fileIndexType,
-    arrangerConfig.manifestMapping.fileReferenceIdField,
+    arrangerConfig.manifestMapping.fileReferenceIdFieldInFileIndex,
     [
       arrangerConfig.manifestMapping.fileIdField,
-      arrangerConfig.manifestMapping.fileReferenceIdField,
+      arrangerConfig.manifestMapping.fileReferenceIdFieldInFileIndex,
     ],
     true);
   const expectedSqonVariable = {
@@ -47,10 +48,10 @@ describe('utils for downloading manifest', () => {
   const queryForData = constructGraphQLQuery(
     selectedTableRows,
     arrangerConfig.manifestMapping.fileIndexType,
-    arrangerConfig.manifestMapping.fileReferenceIdField,
+    arrangerConfig.manifestMapping.fileReferenceIdFieldInFileIndex,
     [
       arrangerConfig.manifestMapping.fileIdField,
-      arrangerConfig.manifestMapping.fileReferenceIdField,
+      arrangerConfig.manifestMapping.fileReferenceIdFieldInFileIndex,
     ],
     false,
     fakeReturnCount);

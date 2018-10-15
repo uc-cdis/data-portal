@@ -176,15 +176,29 @@
         }
       ]
     },
+    "manifestMapping": {
+      "fileIndexType": "file",
+      "fileIdField": "object_id",
+      "fileReferenceIdFieldInFileIndex": "subject_id",
+      "fileReferenceIdFieldInDataIndex": "node_id"
+    },
     "table": {
       "buttons": [
         {
           "enabled": true,
           "type": "data",
           "title": "Download Clinical",
-          "leftIcon": "clinical",
+          "leftIcon": "user",
           "rightIcon": "download",
           "fileName": "clinical.json"
+        },
+        {
+          "enabled": true,
+          "type": "manifest",
+          "title": "Download Manifest",
+          "leftIcon": "datafile",
+          "rightIcon": "download",
+          "fileName": "manifest.json"
         }
       ]
     },

@@ -17,7 +17,7 @@ export const hasKeyChain = (obj, keyChainString) => {
   let o = obj;
   for (let i = 0; i < keyList.length; i += 1) {
     const key = keyList[i];
-    if (!o[key]) {
+    if (o[key] === undefined) {
       return false;
     }
     o = o[key];
@@ -84,11 +84,11 @@ export const constructGraphQLQuery = (
 *   arrangerConfig - arranger configuration object, must has following keys for manifest query:
 *       graphqlField - the data type name for arranger
 *       manifestMapping.fileIndexType - type name of file index
-*       manifestMapping.fileReferenceIdField - field name of reference field in file index
+*       manifestMapping.fileReferenceIdFieldInFileIndex - name of reference field in file index
 */
 const queryFileMappingData = async (apiFunc, projectId, idList, arrangerConfig) => {
   if (!hasKeyChain(arrangerConfig, 'manifestMapping.fileIndexType')
-    || !hasKeyChain(arrangerConfig, 'manifestMapping.fileReferenceIdField')) {
+    || !hasKeyChain(arrangerConfig, 'manifestMapping.fileReferenceIdFieldInFileIndex')) {
     throw MSG_FAILED_DOWNLOAD;
   }
   const countQuery = await apiFunc({
@@ -96,14 +96,17 @@ const queryFileMappingData = async (apiFunc, projectId, idList, arrangerConfig) 
     body: constructGraphQLQuery(
       idList,
       arrangerConfig.manifestMapping.fileIndexType,
-      arrangerConfig.manifestMapping.fileReferenceIdField,
+      arrangerConfig.manifestMapping.fileReferenceIdFieldInFileIndex,
       [
         arrangerConfig.manifestMapping.fileIdField,
-        arrangerConfig.manifestMapping.fileReferenceIdField,
+        arrangerConfig.manifestMapping.fileReferenceIdFieldInFileIndex,
       ],
       true),
   });
   if (!countQuery) {
+    throw MSG_FAILED_DOWNLOAD;
+  }
+  if (!hasKeyChain(countQuery, `data.${arrangerConfig.manifestMapping.fileIndexType}.hits.total`)) {
     throw MSG_FAILED_DOWNLOAD;
   }
   const count = countQuery.data[arrangerConfig.manifestMapping.fileIndexType].hits.total;
@@ -112,10 +115,10 @@ const queryFileMappingData = async (apiFunc, projectId, idList, arrangerConfig) 
     body: constructGraphQLQuery(
       idList,
       arrangerConfig.manifestMapping.fileIndexType,
-      arrangerConfig.manifestMapping.fileReferenceIdField,
+      arrangerConfig.manifestMapping.fileReferenceIdFieldInFileIndex,
       [
         arrangerConfig.manifestMapping.fileIdField,
-        arrangerConfig.manifestMapping.fileReferenceIdField,
+        arrangerConfig.manifestMapping.fileReferenceIdFieldInFileIndex,
       ],
       false,
       count,
@@ -247,7 +250,8 @@ export const downloadData = async (
 *   arrangerConfig - arranger configuration object, should include following keys:
 *       graphqlField - the data type name for arranger
 *       manifestMapping.fileIndexType - type name of file index
-*       manifestMapping.fileReferenceIdField - field name of reference field in file index
+*       manifestMapping.fileReferenceIdFieldInFileIndex - name of reference field in file index
+*       manifestMapping.fileReferenceIdFieldInDataIndex - name of reference field in data index
 *
 */
 export const downloadManifest = async (
@@ -257,12 +261,60 @@ export const downloadManifest = async (
   arrangerConfig,
   fileName,
 ) => {
-  const manifestJSON = await queryFileMappingData(
+  if (!hasKeyChain(arrangerConfig, 'manifestMapping.fileReferenceIdFieldInDataIndex')) {
+    throw MSG_FAILED_DOWNLOAD;
+  }
+  const idList = (await queryDataByIds(
     apiFunc,
     projectId,
     selectedTableRows,
     arrangerConfig,
+    [arrangerConfig.manifestMapping.fileReferenceIdFieldInDataIndex],
+  )).map((d) => {
+    if (!d[arrangerConfig.manifestMapping.fileReferenceIdFieldInDataIndex]) {
+      throw MSG_FAILED_DOWNLOAD;
+    }
+    return d[arrangerConfig.manifestMapping.fileReferenceIdFieldInDataIndex];
+  });
+  const manifestJSON = await queryFileMappingData(
+    apiFunc,
+    projectId,
+    idList,
+    arrangerConfig,
   );
   const blob = new Blob([JSON.stringify(manifestJSON, null, 2)], { type: 'text/json' });
   FileSaver.saveAs(blob, fileName);
+};
+
+/*
+* Buttons are grouped by their dropdownId value.
+* This function calculates and groups buttons under the same dropdown,
+* and return a map of dropdown ID and related infos for that dropdown:
+*   cnt: how many buttons under this dropdown
+*   dropdownConfig: infos for this dropdown, e.g. "title"
+*   buttonConfigs: a list of button configs (includes buttion title, button type, etc.)
+*/
+export const calculateDropdownButtonConfigs = (explorerTableConfig) => {
+  const dropdownConfig = explorerTableConfig
+    && explorerTableConfig.dropdowns
+    && Object.keys(explorerTableConfig.dropdowns).length > 0
+    && Object.keys(explorerTableConfig.dropdowns)
+      .reduce((map, dropdownId) => {
+        const buttonCount = explorerTableConfig.buttons
+          .filter(btnCfg => btnCfg.enabled)
+          .filter(btnCfg => btnCfg.dropdownId && btnCfg.dropdownId === dropdownId)
+          .length;
+        const drpdnCfg = explorerTableConfig.dropdowns[dropdownId];
+        const buttonConfigs = explorerTableConfig.buttons
+          .filter(btnCfg => btnCfg.enabled)
+          .filter(btnCfg => btnCfg.dropdownId && btnCfg.dropdownId === dropdownId);
+        const ret = Object.assign({}, map);
+        ret[dropdownId] = {
+          cnt: buttonCount,
+          dropdownConfig: drpdnCfg,
+          buttonConfigs,
+        };
+        return ret;
+      }, {});
+  return dropdownConfig;
 };
