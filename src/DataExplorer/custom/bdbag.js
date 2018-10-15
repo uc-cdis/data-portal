@@ -5,7 +5,7 @@ export const getBDBagQuery = referenceIDList => `{
             participants: 
               case(first:0, submitter_id: ["${referenceIDList.join('","')}"])
               {
-                 _participant_id:submitter_id
+                 _participant_id:id
               }
               samples:sample(first:0, with_path_to_any:[
               ${referenceIDList.map(item => (`{type: "case", submitter_id: "${item}"}`))}
@@ -13,8 +13,8 @@ export const getBDBagQuery = referenceIDList => `{
                 composition
                 submitter_specimen_type:biospecimen_anatomic_site
                 cases {
-                    participant:submitter_id
-                    donor_uuid:id
+                    participant:id
+                    donor_id:id
                     project:project_id
                 }
                 
@@ -42,6 +42,12 @@ export const getBDBagQuery = referenceIDList => `{
                                file_dos_uri1:object_id
                                file_path1:file_name            
                            }
+                           simple_germline_variations{
+                               file_type3:data_format
+                               upload_file_id3:object_id
+                               file_dos_uri3:object_id
+                               file_path3:file_name
+                          }
                         }                                                      
                     }
                 }
