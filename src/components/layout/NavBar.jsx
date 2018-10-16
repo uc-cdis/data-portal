@@ -21,7 +21,11 @@ class NavBar extends Component {
         <header className='nav-bar__header'>
           <nav className='nav-bar__nav--left'>
             <div className='nav-bar__logo'>
-              <Link to=''>
+              <Link
+                to=''
+                onClick={() => this.props.onActiveTab('')}
+                onKeyPress={() => this.props.onActiveTab('')}
+              >
                 <img
                   className='nav-bar__logo-img'
                   src='/src/img/logo.png'
