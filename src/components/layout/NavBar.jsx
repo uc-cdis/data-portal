@@ -27,17 +27,21 @@ class NavBar extends Component {
                 alt=''
               />
             </div>
-            <div
-              role='button'
-              tabIndex={0}
-              className='nav-bar__home-button'
-              onClick={() => this.props.onActiveTab('')}
-              onKeyPress={() => this.props.onActiveTab('')}
-            >
-              <Link className='h3-typo nav-bar__link nav-bar__link--home' to=''>
-                {this.props.navTitle}
-              </Link>
-            </div>
+            {
+              this.props.navTitle && (
+                <div
+                  role='button'
+                  tabIndex={0}
+                  className='nav-bar__home-button'
+                  onClick={() => this.props.onActiveTab('')}
+                  onKeyPress={() => this.props.onActiveTab('')}
+                >
+                  <Link className='h3-typo nav-bar__link nav-bar__link--home' to=''>
+                    {this.props.navTitle}
+                  </Link>
+                </div>
+              )
+            }
           </nav>
           <nav className='nav-bar__nav--right'>
             {
@@ -75,7 +79,7 @@ class NavBar extends Component {
 NavBar.propTypes = {
   navItems: PropTypes.array.isRequired,
   dictIcons: PropTypes.object.isRequired,
-  navTitle: PropTypes.string.isRequired,
+  navTitle: PropTypes.string,
   activeTab: PropTypes.string,
   onActiveTab: PropTypes.func,
   onInitActive: PropTypes.func,
@@ -85,6 +89,7 @@ NavBar.defaultProps = {
   activeTab: '',
   onActiveTab: () => {},
   onInitActive: () => {},
+  navTitle: null,
 };
 
 export default NavBar;

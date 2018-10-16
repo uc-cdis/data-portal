@@ -1,9 +1,9 @@
-@import '~@gen3/ui-component/dist/css/base.less';
+@import '~@gen3/ui-component/dist/css/base.css';
 
 .nav-bar {
   width: 100%;
-  background-color: white;
-  border-bottom: 1px solid #d1d1d1;
+  background-color: var(--g3-color__white);
+  border-bottom: 1px solid var(--g3-color__smoke);
 }
 
 .nav-bar__nav--left {
@@ -13,7 +13,7 @@
 
 .nav-bar__nav--right {
   float: right;
-  color: white;
+  color: var(--g3-color__white);
   overflow: hidden;
 }
 
@@ -24,17 +24,17 @@
 }
 
 .nav-bar__link {
-  color: #606060;
+  color: var(--g3-color__gray);
   display: inline-block;
   text-align: center;
 }
 
 .nav-bar__link--right {
-  border-left: 1px solid #d1d1d1;
+  border-left: 1px solid var(--g3-color__smoke);
 }
 
 .nav-bar__link--right:last-child {
-  border-right: 1px solid #d1d1d1;
+  border-right: 1px solid var(--g3-color__smoke);
 }
 
 .nav-bar__link--home {
@@ -42,9 +42,9 @@
 }
 
 .nav-bar__link--home:hover {
-  color: @black;
+  color: var(--g3-color__black);
   opacity: 1;
-  border-bottom: 3px solid @orange;
+  border-bottom: 3px solid var(--g3-color__highlight-orange);
 }
 
 .nav-bar__logo {
@@ -56,7 +56,6 @@
   height: 64px;
   display: block;
   padding-right: 8px;
-  border-right: 1px solid #d1d1d1;
 }
 
 .nav-bar__home-button {
@@ -64,4 +63,7 @@
   flex-direction: column;
   justify-content: center;
   padding-left: 10px;
+  height: 64px;
+  margin: auto;
+  border-left: 1px solid var(--g3-color__smoke);
 }
