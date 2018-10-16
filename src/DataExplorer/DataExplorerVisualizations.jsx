@@ -57,24 +57,6 @@ class DataExplorerVisualizations extends React.Component {
     this.refreshManifestEntryCount(selectedTableRows);
   }
 
-  refreshManifestEntryCount = (selectedTableRows) => {
-    if (this.props.explorerTableConfig
-      && this.props.explorerTableConfig.buttons
-      && this.props.explorerTableConfig.buttons.some(btnCfg => {
-        return btnCfg.type === 'manifest' && btnCfg.enabled;
-      })) 
-    {
-      getManifestEntryCount(
-        this.props.api,
-        this.props.projectId,
-        selectedTableRows,
-        this.props.arrangerConfig,
-      ).then(r => {
-        this.setState({ manifestEntryCount: r });
-      });
-    }
-  }
-
   getOnClickFunction = (buttonConfig) => {
     let clickFunc = () => {};
     if (buttonConfig.type === 'data') {
@@ -89,8 +71,31 @@ class DataExplorerVisualizations extends React.Component {
     return clickFunc;
   }
 
+  refreshManifestEntryCount = (selectedTableRows) => {
+    if (this.props.explorerTableConfig
+      && this.props.explorerTableConfig.buttons
+      && this.props.explorerTableConfig.buttons.some(btnCfg => btnCfg.type === 'manifest' && btnCfg.enabled)) {
+      getManifestEntryCount(
+        this.props.api,
+        this.props.projectId,
+        selectedTableRows,
+        this.props.arrangerConfig,
+      ).then((r) => {
+        this.setState({ manifestEntryCount: r });
+      });
+    }
+  }
+
   toggleVisualization = () => {
     this.setState({ showVisualization: !this.state.showVisualization });
+  }
+
+  isButtonEnabled = (buttonConfig) => {
+    if (buttonConfig.type === 'manifest') {
+      return this.state.manifestEntryCount > 0;
+    }
+
+    return this.props.selectedTableRows.length > 0;
   }
 
   renderButton = (buttonConfig) => {
@@ -105,15 +110,6 @@ class DataExplorerVisualizations extends React.Component {
       buttonType='primary'
       enabled={this.isButtonEnabled(buttonConfig)}
     />);
-  }
-
-  isButtonEnabled = (buttonConfig) => {
-    if (buttonConfig.type === 'manifest') {
-      return this.state.manifestEntryCount > 0;
-    }
-    else {
-      return this.props.selectedTableRows.length > 0;
-    }
   }
 
   render() {

@@ -11,7 +11,7 @@ class DataExplorerTable extends React.Component {
     };
   }
 
-  setSelectedTableRows = selectedTableRows => {
+  setSelectedTableRows = (selectedTableRows) => {
     this.props.setSelectedTableRows(selectedTableRows);
     this.setState({ selectedTableRows });
     this.props.onSelectedRowsChange(selectedTableRows);
@@ -40,13 +40,15 @@ DataExplorerTable.propTypes = {
   arrangerData: PropTypes.object,
   customActions: PropTypes.object,
   onSelectedRowsChange: PropTypes.func,
+  setSelectedTableRows: PropTypes.func,
 };
 
 DataExplorerTable.defaultProps = {
   arrangerConfig: {},
   arrangerData: null,
   customActions: null,
-  onSelectedRowsChange: ()=>{},
+  onSelectedRowsChange: () => {},
+  setSelectedTableRows: () => {},
 };
 
 export default DataExplorerTable;
