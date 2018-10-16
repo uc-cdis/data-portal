@@ -21,11 +21,13 @@ class NavBar extends Component {
         <header className='nav-bar__header'>
           <nav className='nav-bar__nav--left'>
             <div className='nav-bar__logo'>
-              <img
-                className='nav-bar__logo-img'
-                src='/src/img/logo.png'
-                alt=''
-              />
+              <a href='/'>
+                <img
+                  className='nav-bar__logo-img'
+                  src='/src/img/logo.png'
+                  alt=''
+                />
+              </a>
             </div>
             {
               this.props.navTitle && (
