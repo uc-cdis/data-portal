@@ -4,6 +4,19 @@ import { Table } from '@arranger/components/dist/Arranger';
 import './DataExplorerTable.less';
 
 class DataExplorerTable extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedTableRows: [],
+    };
+  }
+
+  setSelectedTableRows = selectedTableRows => {
+    this.props.setSelectedTableRows(selectedTableRows);
+    this.setState({ selectedTableRows });
+    this.props.onSelectedRowsChange(selectedTableRows);
+  };
+
   render() {
     return (
       <div className='data-explorer-table'>
@@ -13,6 +26,8 @@ class DataExplorerTable extends React.Component {
             allowTSVExport={false}
             allowTogglingColumns={false}
             customActions={this.props.customActions}
+            selectedTableRows={this.state.selectedTableRows}
+            setSelectedTableRows={this.setSelectedTableRows}
           />
         </div>
       </div>
@@ -24,12 +39,14 @@ DataExplorerTable.propTypes = {
   arrangerConfig: PropTypes.object,
   arrangerData: PropTypes.object,
   customActions: PropTypes.object,
+  onSelectedRowsChange: PropTypes.func,
 };
 
 DataExplorerTable.defaultProps = {
   arrangerConfig: {},
   arrangerData: null,
   customActions: null,
+  onSelectedRowsChange: ()=>{},
 };
 
 export default DataExplorerTable;
