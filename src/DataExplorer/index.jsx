@@ -23,7 +23,6 @@ class DataExplorer extends React.Component {
   }
 
   updateUserActivity = () => {
-    console.log('click')
     this.setState({ mostRecentActivityTimestamp: Date.now() });
   }
 
@@ -33,7 +32,6 @@ class DataExplorer extends React.Component {
         store.dispatch(logoutAPI())
       });
     } else {
-      console.log('fence api')
       fetch(userapiPath); // hitting Fence endpoint refreshes token
       setTimeout(this.refreshSession, this.props.refreshSessionTime);
     }
