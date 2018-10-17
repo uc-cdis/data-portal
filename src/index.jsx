@@ -185,7 +185,7 @@ async function init() {
                       }
                     />
                     <Route
-                      path='/lw_workspace'
+                      path='/workspace'
                       component={
                         props => <ProtectedContent component={Workspace} {...props} />
                       }
