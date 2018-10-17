@@ -19,7 +19,7 @@ class DataExplorer extends React.Component {
   componentDidMount() {
     window.addEventListener('mousedown', this.updateUserActivity, false);
     window.addEventListener('keypress', this.updateUserActivity, false);
-    setTimeout(this.refreshSession, this.props.refreshSessionTime); // check session every 10 min
+    setTimeout(this.refreshSession, this.props.refreshSessionTime); // check session every X min
   }
 
   updateUserActivity = () => {
@@ -27,7 +27,7 @@ class DataExplorer extends React.Component {
   }
 
   refreshSession = () => {
-    if (Date.now() - this.state.mostRecentActivityTimestamp > this.props.inactiveTimeLimit) { // If 30 min have passed
+    if (Date.now() - this.state.mostRecentActivityTimestamp > this.props.inactiveTimeLimit) { // If user has been inactive for Y min
       getReduxStore().then(store => {
         store.dispatch(logoutAPI())
       });
