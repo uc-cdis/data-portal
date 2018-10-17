@@ -39,6 +39,7 @@ import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
+import SessionMonitor from './SessionMonitor/.';
 import './index.less';
 
 // Needed for onTouchTap
@@ -77,6 +78,7 @@ async function init() {
             <BrowserRouter basename={basename}>
               <div>
                 { GA.init(gaTracking, dev, gaDebug) && <RouteTracker /> }
+                <SessionMonitor />
                 <ReduxTopBar />
                 <ReduxNavBar />
                 <div className='main-content'>
