@@ -3,13 +3,12 @@ import { mount } from 'enzyme';
 import DataExplorer from '.';
 
 describe('DataExplorer', () => {
+  const component = mount(
+    <DataExplorer refreshSessionTime={1} inactiveTimeLimit={2}/>
+  );
+
   it('renders', () => {
-    const component = mount(<DataExplorer />);
     expect(component.find(DataExplorer).length).toBe(1);
-  });
-
-  it('registers mouse clicks', () => {
-
   });
 
   it('logs the user out after inactivity', () => {
