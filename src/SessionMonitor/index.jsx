@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { loginPath, userapiPath } from '../localconf';
+import { userapiPath } from '../localconf';
 import getReduxStore from '../reduxStore';
 import { logoutAPI } from '../actions';
 
@@ -21,9 +21,10 @@ class SessionMonitor extends React.Component {
   }
 
   refreshSession = () => {
-    if (Date.now() - this.state.mostRecentActivityTimestamp > this.props.inactiveTimeLimit) { // If user has been inactive for Y min
-      getReduxStore().then(store => {
-        store.dispatch(logoutAPI())
+    // If user has been inactive for Y min
+    if (Date.now() - this.state.mostRecentActivityTimestamp > this.props.inactiveTimeLimit) {
+      getReduxStore().then((store) => {
+        store.dispatch(logoutAPI());
       });
     } else {
       fetch(userapiPath); // hitting Fence endpoint refreshes token

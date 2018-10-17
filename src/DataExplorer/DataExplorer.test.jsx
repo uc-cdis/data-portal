@@ -3,42 +3,8 @@ import { mount } from 'enzyme';
 import DataExplorer from '.';
 
 describe('DataExplorer', () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.clearAllTimers();
-  });
-
   it('renders', () => {
-    const component = mount(
-      <DataExplorer refreshSessionTime={1000} inactiveTimeLimit={-1}/>
-    );
+    const component = mount(<DataExplorer />);
     expect(component.find(DataExplorer).length).toBe(1);
-  });
-
-  it('logs the user out after inactivity', () => {
-    const component = mount(
-      <DataExplorer refreshSessionTime={500} inactiveTimeLimit={-1}/>
-    );
-    setTimeout(() => {
-      const refreshSessionSpy = jest.spyOn(component.instance(), 'refreshSession')
-      expect(refreshSessionSpy).toHaveBeenCalledTimes(1);
-      expect(setTimeout).not.toHaveBeenCalled();
-      expect(fetch).not.toHaveBeenCalled();
-    }, 1000);
-  });
-
-  it('refreshes the users token if active', () => {
-    const component = mount(
-      <DataExplorer refreshSessionTime={500} inactiveTimeLimit={-1}/>
-    );
-    setTimeout(() => {
-      const refreshSessionSpy = jest.spyOn(component.instance(), 'refreshSession')
-      expect(refreshSessionSpy).toHaveBeenCalledTimes(1);
-      expect(setTimeout).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledTimes(1);
-    }, 1000);
   });
 });

@@ -13,10 +13,10 @@ describe('SessionMonitor', () => {
 
   it('logs the user out after inactivity', () => {
     const component = mount(
-      <SessionMonitor refreshSessionTime={500} inactiveTimeLimit={-1}/>
+      <SessionMonitor refreshSessionTime={500} inactiveTimeLimit={-1} />,
     );
     setTimeout(() => {
-      const refreshSessionSpy = jest.spyOn(component.instance(), 'refreshSession')
+      const refreshSessionSpy = jest.spyOn(component.instance(), 'refreshSession');
       expect(refreshSessionSpy).toHaveBeenCalledTimes(1);
       expect(setTimeout).not.toHaveBeenCalled();
       expect(fetch).not.toHaveBeenCalled();
@@ -25,10 +25,10 @@ describe('SessionMonitor', () => {
 
   it('refreshes the users token if active', () => {
     const component = mount(
-      <SessionMonitor refreshSessionTime={500} inactiveTimeLimit={-1}/>
+      <SessionMonitor refreshSessionTime={500} inactiveTimeLimit={-1} />,
     );
     setTimeout(() => {
-      const refreshSessionSpy = jest.spyOn(component.instance(), 'refreshSession')
+      const refreshSessionSpy = jest.spyOn(component.instance(), 'refreshSession');
       expect(refreshSessionSpy).toHaveBeenCalledTimes(1);
       expect(setTimeout).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledTimes(1);
