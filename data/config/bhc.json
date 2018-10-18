@@ -50,7 +50,7 @@
           "name": "Explore Data",
           "icon": "data-explore",
           "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
-          "link": "#hostname#shiny/",
+          "link": "/explorer",
           "label": "Explore data"
         },
         {
@@ -80,7 +80,7 @@
         },
         {
           "icon": "exploration",
-          "link": "#hostname#shiny/",
+          "link": "/explorer",
           "color": "#a2a2a2",
           "name": "Exploration"
         },
@@ -131,10 +131,6 @@
         "chartType": "count",
         "title": "Cases"
       },
-      "primary_diagnosis": {
-        "chartType": "stackedBar",
-        "title": "Primary Diagnosis"
-      },
       "gender": {
         "chartType": "pie",
         "title": "Gender"
@@ -156,26 +152,7 @@
             "race",
             "ethnicity",
             "gender",
-            "demopd_ageassess_age_at_pd"
-          ]
-        },
-        {
-          "title": "Medical History",
-          "fields": [
-            "alcohol_use_score",
-            "ASPREG_regular_aspirin",
-            "childhood_trauma_score",
-            "childhood_trauma_diagnosis",
-            "depression_diagnosis",
-            "depression_severity",
-            "hinj_ever_had_a_head_injury_or_concussion",
-            "IBUREG_regular_ibuprofen_based_non_aspirin",
-            "lrrk2sub_does_subject_carry_lrrk2_mutation",
-            "mriyn_mri_completed",
-            "NP1DPRS_depressed_moods",
-            "primary_diagnosis",
-            "tbi_diagnosis",
-            "total_tbi"
+            "project_id"
           ]
         }
       ]
