@@ -4,14 +4,8 @@ import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
 
-TopIconButton.propTypes = {
-  item: PropTypes.shape({ name: PropTypes.string, icon: PropTypes.string }).isRequired,
-  dictIcons: PropTypes.object.isRequired,
-};
-
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
- * @param {dictIcons, topItems,user,onLogoutClick} params
  */
 class TopBar extends Component {
   isActive = id => this.props.activeTab === id;
@@ -33,8 +27,8 @@ class TopBar extends Component {
                       rel='noopener noreferrer'
                     >
                       <TopIconButton
-                        dictIcons={this.props.dictIcons}
-                        item={item}
+                        name={item.name}
+                        icon={item.icon}
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
                       />
@@ -45,8 +39,8 @@ class TopBar extends Component {
                       to={item.link}
                     >
                       <TopIconButton
-                        dictIcons={this.props.dictIcons}
-                        item={item}
+                        name={item.name}
+                        icon={item.icon}
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
                       />
@@ -56,12 +50,25 @@ class TopBar extends Component {
             }
             {
               this.props.user.username !== undefined
-              && <Link className='top-bar__link' to='#' onClick={this.props.onLogoutClick}>
-                <TopIconButton
-                  dictIcons={this.props.dictIcons}
-                  item={{ name: this.props.user.username, icon: 'exit' }}
-                />
-              </Link>
+              &&
+              (
+                <React.Fragment>
+                  <Link className='top-bar__link' to='/identity'>
+                    <TopIconButton
+                      icon='user-circle'
+                      name={this.props.user.username}
+                      isActive={this.isActive('/identity')}
+                      onActiveTab={() => this.props.onActiveTab('/identity')}
+                    />
+                  </Link>
+                  <Link className='top-bar__link' to='#' onClick={this.props.onLogoutClick}>
+                    <TopIconButton
+                      icon='exit'
+                      name='Logout'
+                    />
+                  </Link>
+                </React.Fragment>
+              )
             }
           </nav>
         </header>
@@ -71,7 +78,6 @@ class TopBar extends Component {
 }
 
 TopBar.propTypes = {
-  dictIcons: PropTypes.object.isRequired,
   topItems: PropTypes.array.isRequired,
   user: PropTypes.shape({ username: PropTypes.string }).isRequired,
   activeTab: PropTypes.string,

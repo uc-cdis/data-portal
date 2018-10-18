@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import IconComponent from '../Icon';
 import './TopIconButton.less';
 
-const TopIconButton = ({ dictIcons, item, onActiveTab = () => {}, isActive = false }) => (
+const TopIconButton = ({ name, icon, onActiveTab = () => {}, isActive = false }) => (
   <div
     className={isActive ? 'top-icon-button button-top-active body-typo' : 'top-icon-button body-typo'}
     onClick={onActiveTab}
@@ -11,22 +10,21 @@ const TopIconButton = ({ dictIcons, item, onActiveTab = () => {}, isActive = fal
     role='button'
     tabIndex={0}
   >
-    {item.name}&nbsp;{item.icon ? <IconComponent
-      dictIcons={dictIcons}
-      iconName={item.icon}
-      height='14px'
+    {name}&nbsp;{icon ? <i
+      className={`g3-icon g3-icon--${icon} top-icon-button__icon`}
     /> : ''}
   </div>
 );
 
 TopIconButton.propTypes = {
-  item: PropTypes.object.isRequired,
-  dictIcons: PropTypes.object.isRequired,
+  name: PropTypes.string.isRequired,
+  icon: PropTypes.string,
   isActive: PropTypes.bool.isRequired,
   onActiveTab: PropTypes.func,
 };
 
 TopIconButton.defaultProps = {
+  icon: null,
   onActiveTab: () => {},
   isActive: false,
 };
