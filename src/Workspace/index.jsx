@@ -8,7 +8,7 @@ class Workspace extends React.Component {
         title='Workspace'
         frameBorder='0'
         className='workspace'
-        src='/workspace/'
+        src='/lw-workspace/'
       />
     );
   }
