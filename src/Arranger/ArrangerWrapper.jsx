@@ -34,6 +34,14 @@ class ArrangerWrapper extends React.Component {
     )
   );
 
+  filterAggregationFields = (aggs) => {
+    if (this.props.charts) {
+      return aggs.filter(agg => Object.keys(this.props.charts).includes(agg.field));
+    } else {
+      return aggs.filter(agg => agg.field !== 'name');
+    }
+  }
+
   render() {
     return (
       <Arranger
@@ -52,7 +60,7 @@ class ArrangerWrapper extends React.Component {
                 projectId={arrangerArgs.projectId}
                 index={arrangerArgs.graphqlField}
                 sqon={arrangerArgs.sqon}
-                aggs={stateArgs.aggs.filter(agg => agg.field !== 'name')}
+                aggs={this.filterAggregationFields(stateArgs.aggs)}
                 render={({ data }) => (
                   <React.Fragment>
                     {this.renderComponent({ ...arrangerArgs, arrangerData: data })}
@@ -71,10 +79,15 @@ ArrangerWrapper.propTypes = {
   index: PropTypes.string.isRequired,
   graphqlField: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
+  charts: PropTypes.object,
   children: PropTypes.oneOfType([
     PropTypes.object,
     PropTypes.array,
   ]).isRequired,
+};
+
+ArrangerWrapper.defaultProps = {
+  charts: null,
 };
 
 export default ArrangerWrapper;
