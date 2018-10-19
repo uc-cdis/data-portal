@@ -27,20 +27,19 @@ import arrangerApi from './utils';
 */
 
 class ArrangerWrapper extends React.Component {
+  filterAggregationFields = (aggs) => {
+    if (this.props.charts) {
+      return aggs.filter(agg => Object.keys(this.props.charts).includes(agg.field));
+    }
+    return aggs.filter(agg => agg.field !== 'name');
+  };
+
   renderComponent = props => (
     React.Children.map(this.props.children, child =>
       React.cloneElement(child, { ...props },
       ),
     )
   );
-
-  filterAggregationFields = (aggs) => {
-    if (this.props.charts) {
-      return aggs.filter(agg => Object.keys(this.props.charts).includes(agg.field));
-    } else {
-      return aggs.filter(agg => agg.field !== 'name');
-    }
-  }
 
   render() {
     return (
