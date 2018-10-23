@@ -72,6 +72,13 @@
           "body": "Use our selected tool to filter out the data you need.",
           "link": "/query",
           "label": "Query data"
+        },
+        {
+          "name": "Analyze Data",
+          "icon": "data-analyze",
+          "body": "Analyze your selected cases using Jupyter Notebooks in our secure cloud environment",
+          "link": "#hostname#workspace/",
+          "label": "Run analysis"
         }
       ]
     },
@@ -95,6 +102,12 @@
           "link": "/query",
           "color": "#a2a2a2",
           "name": "Query"
+        },
+        {
+          "icon": "workspace",
+          "link": "#hostname#workspace/",
+          "color": "#a2a2a2",
+          "name": "Workspace"
         },
         {
           "icon": "profile",
