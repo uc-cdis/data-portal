@@ -74,7 +74,7 @@ export const downloadManifest = async (
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
     throw MSG_DOWNLOAD_MANIFEST_FAIL;
   }
-  const fileIDList = (await queryDataByIds(
+  const resourceIDList = (await queryDataByIds(
     apiFunc,
     projectId,
     selectedTableRows,
@@ -91,7 +91,7 @@ export const downloadManifest = async (
     projectId,
     arrangerConfig.manifestMapping.resourceIndexType,
     arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-    fileIDList,
+    resourceIDList,
     [
       arrangerConfig.manifestMapping.resourceIdField,
       arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
@@ -128,7 +128,7 @@ export const getManifestEntryCount = async (
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
     throw MSG_GET_MANIFEST_COUNT_FAIL;
   }
-  const fileIDList = (await queryDataByIds(
+  const resourceIDList = (await queryDataByIds(
     apiFunc,
     projectId,
     selectedTableRows,
@@ -145,7 +145,7 @@ export const getManifestEntryCount = async (
     projectId,
     arrangerConfig.manifestMapping.resourceIndexType,
     arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-    fileIDList,
+    resourceIDList,
   );
   return manifestEntryCount;
 };
