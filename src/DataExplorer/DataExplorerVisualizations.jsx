@@ -10,7 +10,7 @@ import PercentageStackedBarChart from '../components/charts/PercentageStackedBar
 import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup/.';
 import { getCharts } from '../components/charts/helper';
 import { downloadManifest, downloadData, getManifestEntryCount } from './actionHelper';
-import { calculateDropdownButtonConfigs } from './utils';
+import { calculateDropdownButtonConfigs, humanizeNumber } from './utils';
 import { exportAllSelectedDataToCloud } from './custom/bdbag';
 
 class DataExplorerVisualizations extends React.Component {
@@ -102,7 +102,7 @@ class DataExplorerVisualizations extends React.Component {
     const clickFunc = this.getOnClickFunction(buttonConfig);
     let buttonTitle = buttonConfig.title;
     if (buttonConfig.type === 'manifest' && this.props.selectedTableRows.length > 0) {
-      buttonTitle = `${buttonConfig.title} (${this.state.manifestEntryCount})`;
+      buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
     return (<Button
       key={buttonConfig.type}

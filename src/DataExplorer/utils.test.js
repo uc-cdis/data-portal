@@ -1,4 +1,4 @@
-import { hasKeyChain, calculateDropdownButtonConfigs } from './utils';
+import { hasKeyChain, calculateDropdownButtonConfigs, humanizeNumber } from './utils';
 
 describe('utils for data visualization explorer', () => {
   it('returns correctly from hasKeyChain function', () => {
@@ -70,6 +70,15 @@ describe('utils for data visualization explorer', () => {
       },
     };
     expect(calculateDropdownButtonConfigs(input)).toEqual(expectOutput);
+  });
+
+  it('humanize number', () => {
+    expect(humanizeNumber(12)).toBe(12);
+    expect(humanizeNumber(1200, 1)).toBe('1.2K');
+    expect(humanizeNumber(1200000, 1)).toBe('1.2M');
+    expect(humanizeNumber(1200000000, 1)).toBe('1.2B');
+    expect(humanizeNumber(1200000000000, 1)).toBe('1.2T');
+    expect(humanizeNumber(1200000000000000, 1)).toBe('1.2Qa');
   });
 });
 
