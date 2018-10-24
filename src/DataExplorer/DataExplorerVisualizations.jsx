@@ -92,7 +92,7 @@ class DataExplorerVisualizations extends React.Component {
 
   isButtonEnabled = (buttonConfig) => {
     if (buttonConfig.type === 'manifest') {
-      return this.state.manifestEntryCount > 0;
+      return this.props.selectedTableRows.length > 0 && this.state.manifestEntryCount > 0;
     }
 
     return this.props.selectedTableRows.length > 0;
@@ -100,10 +100,14 @@ class DataExplorerVisualizations extends React.Component {
 
   renderButton = (buttonConfig) => {
     const clickFunc = this.getOnClickFunction(buttonConfig);
+    let buttonTitle = buttonConfig.title;
+    if (buttonConfig.type === 'manifest' && this.props.selectedTableRows.length > 0) {
+      buttonTitle = `${buttonConfig.title} (${this.state.manifestEntryCount})`;
+    }
     return (<Button
       key={buttonConfig.type}
       onClick={clickFunc}
-      label={buttonConfig.title}
+      label={buttonTitle}
       leftIcon={buttonConfig.leftIcon}
       rightIcon={buttonConfig.rightIcon}
       className='data-explorer__download-button'
