@@ -9,20 +9,23 @@ import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart/.';
 import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup/.';
 import { getCharts } from '../components/charts/helper';
-import { downloadManifest, downloadData, calculateDropdownButtonConfigs } from './utils.js';
-import { exportToCloud } from './custom/bdbag';
+import { downloadManifest, downloadData, getManifestEntryCount } from './actionHelper';
+import { calculateDropdownButtonConfigs, humanizeNumber } from './utils';
+import { exportAllSelectedDataToCloud } from './custom/bdbag';
 
 class DataExplorerVisualizations extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       showVisualization: true,
+      manifestEntryCount: 0,
     };
   }
 
   onDownloadManifest = fileName => () => {
     if (this.props.selectedTableRows.length === 0) return;
-    downloadManifest(this.props.api,
+    downloadManifest(
+      this.props.api,
       this.props.projectId,
       this.props.selectedTableRows,
       this.props.arrangerConfig,
@@ -42,13 +45,16 @@ class DataExplorerVisualizations extends React.Component {
   }
 
   onExportToCloud = () => {
-    if (this.props.selectedTableRows.length === 0) return;
-    exportToCloud(
+    exportAllSelectedDataToCloud(
       this.props.api,
       this.props.projectId,
-      this.props.selectedTableRows,
       this.props.arrangerConfig,
+      this.props.selectedTableRows,
     );
+  }
+
+  onSelectedRowsChange = (selectedTableRows) => {
+    this.refreshManifestEntryCount(selectedTableRows);
   }
 
   getOnClickFunction = (buttonConfig) => {
@@ -65,21 +71,48 @@ class DataExplorerVisualizations extends React.Component {
     return clickFunc;
   }
 
+  refreshManifestEntryCount = (selectedTableRows) => {
+    if (this.props.explorerTableConfig
+      && this.props.explorerTableConfig.buttons
+      && this.props.explorerTableConfig.buttons.some(btnCfg => btnCfg.type === 'manifest' && btnCfg.enabled)) {
+      getManifestEntryCount(
+        this.props.api,
+        this.props.projectId,
+        selectedTableRows,
+        this.props.arrangerConfig,
+      ).then((r) => {
+        this.setState({ manifestEntryCount: r });
+      });
+    }
+  }
+
   toggleVisualization = () => {
     this.setState({ showVisualization: !this.state.showVisualization });
   }
 
+  isButtonEnabled = (buttonConfig) => {
+    if (buttonConfig.type === 'manifest') {
+      return this.props.selectedTableRows.length > 0 && this.state.manifestEntryCount > 0;
+    }
+
+    return this.props.selectedTableRows.length > 0;
+  }
+
   renderButton = (buttonConfig) => {
     const clickFunc = this.getOnClickFunction(buttonConfig);
+    let buttonTitle = buttonConfig.title;
+    if (buttonConfig.type === 'manifest' && this.props.selectedTableRows.length > 0) {
+      buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
+    }
     return (<Button
       key={buttonConfig.type}
       onClick={clickFunc}
-      label={buttonConfig.title}
+      label={buttonTitle}
       leftIcon={buttonConfig.leftIcon}
       rightIcon={buttonConfig.rightIcon}
       className='data-explorer__download-button'
       buttonType='primary'
-      enabled={buttonConfig.uiEnabled}
+      enabled={this.isButtonEnabled(buttonConfig)}
     />);
   }
 
@@ -149,7 +182,7 @@ class DataExplorerVisualizations extends React.Component {
             )
             .filter(buttonConfig => buttonConfig.enabled)
             .map(buttonConfig =>
-              this.renderButton({ ...buttonConfig, uiEnabled: selectedTableRowsCount > 0 }))
+              this.renderButton(buttonConfig))
         }
       </React.Fragment>
     );
@@ -186,7 +219,11 @@ class DataExplorerVisualizations extends React.Component {
             }
           </div>
           : null}
-        <DataExplorerTable {...this.props} customActions={tableToolbarActions} />
+        <DataExplorerTable
+          customActions={tableToolbarActions}
+          onSelectedRowsChange={this.onSelectedRowsChange}
+          {...this.props}
+        />
       </div>
     );
   }
