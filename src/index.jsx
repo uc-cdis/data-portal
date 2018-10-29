@@ -41,7 +41,6 @@ import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
 import SessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
-
 import './index.less';
 
 // Needed for onTouchTap
