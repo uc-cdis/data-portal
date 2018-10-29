@@ -79,6 +79,12 @@ export const color = {
   stream_gauge: d3.schemeCategory20[19],
   weather_station: d3.schemeCategory20[10],
   medical_history: d3.schemeCategory20[1],
+  clinical_assessment: d3.schemeCategory20[2],
+  data_observations: d3.schemeCategory20[3],
+  experimental_methods: d3.schemeCategory20[4],
+  Imaging: d3.schemeCategory20[5],
+  study_administration: d3.schemeCategory20[6],
+  subject_characteristics: d3.schemeCategory20[7],
 };
 
 
