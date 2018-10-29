@@ -70,7 +70,6 @@
       ]
     },
     "navigation": {
-      "title": "NIAID Data Hub",
       "items": [
         {
           "icon": "dictionary",
@@ -177,10 +176,10 @@
       ]
     },
     "manifestMapping": {
-      "fileIndexType": "file",
-      "fileIdField": "object_id",
-      "fileReferenceIdFieldInFileIndex": "subject_id",
-      "fileReferenceIdFieldInDataIndex": "node_id"
+      "resourceIndexType": "file",
+      "resourceIdField": "object_id",
+      "referenceIdFieldInResourceIndex": "subject_id",
+      "referenceIdFieldInDataIndex": "node_id"
     },
     "table": {
       "buttons": [
