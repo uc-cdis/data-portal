@@ -37,6 +37,7 @@ function buildConfig(opts) {
   const apiPath = `${hostname}api/`;
   const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
+  const arrangerGraphqlPath = `${hostname}api/v0/flat-search/search/graphql`
   let userapiPath = `${hostname}user/`;
   const jobapiPath = `${hostname}/job/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
@@ -91,6 +92,7 @@ function buildConfig(opts) {
     credentialCdisPath,
     coreMetadataPath,
     graphqlPath,
+    arrangerGraphqlPath,
     graphqlSchemaUrl,
     appname: components.appName,
     mockStore,

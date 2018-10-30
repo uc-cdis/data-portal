@@ -5,6 +5,7 @@ import GqlEditor from './GqlEditor';
 
 const mapStateToProps = state => ({
   schema: state.graphiql.schema,
+  endpoint: props.location.search,
 });
 
 const mapDispatchToProps = () => ({
