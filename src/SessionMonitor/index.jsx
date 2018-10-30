@@ -45,8 +45,8 @@ SessionMonitor.propTypes = {
 };
 
 SessionMonitor.defaultProps = {
-  refreshSessionTime: 600000,
-  inactiveTimeLimit: 1800000,
+  refreshSessionTime: 10 * 60 * 1000,
+  inactiveTimeLimit: 30 * 60 * 1000,
 };
 
 export default SessionMonitor;
