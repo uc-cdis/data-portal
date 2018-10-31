@@ -43,6 +43,10 @@ import SessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import './index.less';
 
+// monitor user's session
+const sessionMonitor = new SessionMonitor();
+sessionMonitor.start();
+
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
@@ -79,7 +83,6 @@ async function init() {
             <BrowserRouter basename={basename}>
               <div>
                 { GA.init(gaTracking, dev, gaDebug) && <RouteTracker /> }
-                <SessionMonitor />
                 <ReduxTopBar />
                 <ReduxNavBar />
                 <div className='main-content'>

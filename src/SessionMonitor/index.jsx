@@ -1,52 +1,56 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import { userapiPath } from '../localconf';
 import getReduxStore from '../reduxStore';
 import { logoutAPI } from '../actions';
 
-class SessionMonitor extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { mostRecentActivityTimestamp: Date.now() };
+/* eslint-disable class-methods-use-this */
+class SessionMonitor {
+  constructor(updateSessionTime, inactiveTimeLimit) {
+    this.updateSessionTime = updateSessionTime || 10 * 60 * 1000;
+    this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
+    this.mostRecentActivityTimestamp = Date.now();
+    this.interval = null;
   }
 
-  componentDidMount() {
-    window.addEventListener('mousedown', this.updateUserActivity, false);
-    window.addEventListener('keypress', this.updateUserActivity, false);
-    setTimeout(this.refreshSession, this.props.refreshSessionTime); // check session every X min
+  start() {
+    window.addEventListener('mousedown', () => this.updateUserActivity(), false);
+    window.addEventListener('keypress', () => this.updateUserActivity(), false);
+    this.interval = setInterval(
+      () => this.updateSession(),
+      this.updateSessionTime,
+    ); // check session every X min
   }
 
-  updateUserActivity = () => {
-    this.setState({ mostRecentActivityTimestamp: Date.now() });
+  stop() {
+    clearInterval(this.interval);
+    window.removeEventListener('mousedown', this.updateUserActivity(), false);
+    window.removeEventListener('keypress', this.updateUserActivity(), false);
   }
 
-  refreshSession = () => {
+  updateUserActivity() {
+    this.mostRecentActivityTimestamp = Date.now();
+  }
+
+  updateSession() {
     // If user has been inactive for Y min
-    if (Date.now() - this.state.mostRecentActivityTimestamp > this.props.inactiveTimeLimit) {
-      getReduxStore().then((store) => {
-        store.dispatch(logoutAPI());
-      });
+    if (Date.now() - this.mostRecentActivityTimestamp >= this.inactiveTimeLimit) {
+      this.logoutUser();
+    } else if (Date.now() - this.mostRecentActivityTimestamp < this.inactiveTimeLimit) {
+      this.refreshSession();
     } else {
-      fetch(userapiPath); // hitting Fence endpoint refreshes token
-      setTimeout(this.refreshSession, this.props.refreshSessionTime);
+      console.log('Error calculating inactive time');
     }
   }
 
-  render() {
-    return (
-      <React.Fragment />
-    );
+  refreshSession() {
+    // hitting Fence endpoint refreshes token
+    fetch(userapiPath);
+  }
+
+  logoutUser() {
+    getReduxStore().then((store) => {
+      store.dispatch(logoutAPI());
+    });
   }
 }
-
-SessionMonitor.propTypes = {
-  refreshSessionTime: PropTypes.number,
-  inactiveTimeLimit: PropTypes.number,
-};
-
-SessionMonitor.defaultProps = {
-  refreshSessionTime: 10 * 60 * 1000,
-  inactiveTimeLimit: 30 * 60 * 1000,
-};
 
 export default SessionMonitor;

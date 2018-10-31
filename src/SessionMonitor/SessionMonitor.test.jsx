@@ -1,5 +1,3 @@
-import React from 'react';
-import { mount } from 'enzyme';
 import SessionMonitor from '.';
 
 describe('SessionMonitor', () => {
@@ -12,26 +10,22 @@ describe('SessionMonitor', () => {
   });
 
   it('logs the user out after inactivity', () => {
-    const component = mount(
-      <SessionMonitor refreshSessionTime={500} inactiveTimeLimit={-1} />,
-    );
-    setTimeout(() => {
-      const refreshSessionSpy = jest.spyOn(component.instance(), 'refreshSession');
-      expect(refreshSessionSpy).toHaveBeenCalledTimes(1);
-      expect(setTimeout).not.toHaveBeenCalled();
-      expect(fetch).not.toHaveBeenCalled();
-    }, 1000);
+    const sessionMonitor = new SessionMonitor(500, -1);
+    const refreshSessionSpy = jest.spyOn(sessionMonitor, 'refreshSession');
+    const logoutUserSpy = jest.spyOn(sessionMonitor, 'logoutUser');
+
+    sessionMonitor.updateSession();
+    expect(refreshSessionSpy).not.toHaveBeenCalled();
+    expect(logoutUserSpy).toHaveBeenCalledTimes(1);
   });
 
   it('refreshes the users token if active', () => {
-    const component = mount(
-      <SessionMonitor refreshSessionTime={500} inactiveTimeLimit={-1} />,
-    );
-    setTimeout(() => {
-      const refreshSessionSpy = jest.spyOn(component.instance(), 'refreshSession');
-      expect(refreshSessionSpy).toHaveBeenCalledTimes(1);
-      expect(setTimeout).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledTimes(1);
-    }, 1000);
+    const sessionMonitor = new SessionMonitor(500, 10000000);
+    const refreshSessionSpy = jest.spyOn(sessionMonitor, 'refreshSession');
+    const logoutUserSpy = jest.spyOn(sessionMonitor, 'logoutUser');
+
+    sessionMonitor.updateSession();
+    expect(refreshSessionSpy).toHaveBeenCalledTimes(1);
+    expect(logoutUserSpy).not.toHaveBeenCalled();
   });
 });

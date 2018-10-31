@@ -58,6 +58,7 @@ module.exports = {
         "data/getSchema.js",
         "data/getTexts.js",
         "data/gqlSetup.js",
+        "src/SessionMonitor/index.jsx",
       ],
       "rules": {
         "no-console": "off" // for logging errors
@@ -113,7 +114,7 @@ module.exports = {
       "files": [ "data/getSchema.js" ],
       "rules": {
         "func-names": "off" // for schema
-      } 
+      }
     },
     {
       "files": [ "data/getTexts.js" ],
