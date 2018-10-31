@@ -39,12 +39,11 @@ import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
-import SessionMonitor from './SessionMonitor';
+import { singleton as sessionMonitor } from './SessionMonitor';
 import Workspace from './Workspace';
 import './index.less';
 
 // monitor user's session
-const sessionMonitor = new SessionMonitor();
 sessionMonitor.start();
 
 // Needed for onTouchTap

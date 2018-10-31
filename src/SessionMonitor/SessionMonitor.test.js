@@ -1,4 +1,4 @@
-import SessionMonitor from '.';
+import { SessionMonitor } from '.';
 
 describe('SessionMonitor', () => {
   beforeEach(() => {
