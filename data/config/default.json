@@ -133,8 +133,35 @@
       "text": "This website supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer.",
       "contact": "If you have any questions about access or the registration process, please contact ",
       "email": "support@datacommons.io"
+    },
+    "quiz": {
+      "title": "BloodPAC User agreement",
+      "questions": [
+        {
+          "name": "The first question",
+          "question": "As a registered user, I can do the following things without any problem. Is it true or not:",
+          "options": ["Browse public Project", "Upload file", "Download file", "Invite people"],
+          "answer": 0,
+          "hint": "Some information about this question"
+        },
+        {
+          "name": "The second question",
+          "question": "In order to be a register user, I must do the following things otherwise:",
+          "options": ["Agree the user agreement", "Accept a consent", "None of them", "Both of them"],
+          "answer": 2,
+          "hint": "Some information about this question"
+        },
+        {
+          "name": "The third question",
+          "question": "How can I share data with other people according to the policy of the commons",
+          "options": ["I can not share data", "I can only share data with BPA memebers", "I can share data with family", "I can share data with my wife"],
+          "answer": 1,
+          "hint": "Some information about this question"
+        }
+      ]
     }
   },
+  "requiredCerts": ["security_quiz"],
   "featureFlags": {
     "explorer": true
   },

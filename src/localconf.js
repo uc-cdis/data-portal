@@ -1,4 +1,4 @@
-const { components } = require('./params');
+const { components, requiredCerts } = require('./params');
 
 /**
  * Setup configuration variables based on the "app" the data-portal is
@@ -65,8 +65,6 @@ function buildConfig(opts) {
       '#e7e7e7',
     ],
   };
-
-  const requiredCerts = [];
 
   if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
