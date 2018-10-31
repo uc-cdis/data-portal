@@ -3,7 +3,7 @@ import getReduxStore from '../reduxStore';
 import { logoutAPI } from '../actions';
 
 /* eslint-disable class-methods-use-this */
-class SessionMonitor {
+export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
     this.updateSessionTime = updateSessionTime || 10 * 60 * 1000;
     this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
@@ -59,7 +59,4 @@ class SessionMonitor {
 }
 
 const singleton = new SessionMonitor();
-module.exports = {
-  singleton,
-  SessionMonitor,
-};
+export default singleton;

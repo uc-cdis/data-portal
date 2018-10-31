@@ -39,7 +39,7 @@ import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
-import { singleton as sessionMonitor } from './SessionMonitor';
+import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import './index.less';
 
