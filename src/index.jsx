@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, createPortal } from 'react-dom';
+import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
@@ -33,7 +33,6 @@ import { ReduxNavBar, ReduxTopBar } from './Top/reduxer';
 import Footer from './components/layout/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug } from './localconf';
-import dictIcons from './img/icons/index';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
@@ -238,12 +237,12 @@ async function init() {
                     />
                   </Switch>
                 </div>
+                <Footer />
               </div>
             </BrowserRouter>
           </MuiThemeProvider>
         </ThemeProvider>
       </Provider>
-      { createPortal(<Footer dictIcons={dictIcons} />, document.getElementById('foot-root'))}
     </div>,
     document.getElementById('root'),
   );
