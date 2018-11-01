@@ -4,7 +4,7 @@ import 'brace/mode/json';
 import 'brace/theme/kuroir';
 import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
-import FlatButton from 'material-ui/FlatButton';
+import Button from '@gen3/ui-component/dist/components/Button';
 import './SubmissionResult.less';
 
 /**
@@ -34,7 +34,11 @@ class SubmissionResult extends React.Component {
       }
       return (
         <div>
-          <FlatButton backgroundColor='#ddddee' onClick={() => this.setState({ showFullResponse: true })} label='Details' />
+          <Button
+            buttonType='secondary'
+            onClick={() => this.setState({ showFullResponse: true })}
+            label='Details'
+          />
         </div>
       );
     })();
