@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { portalVersion } from '../../versions';
-import IconComponent from '../Icon';
 import './Footer.less';
 
-const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
+const Footer = ({ dictionaryVersion, apiVersion }) => (
   <footer className='footer'>
     <nav className='footer__nav'>
       <div className='footer__version-area'>
@@ -22,23 +21,28 @@ const Footer = ({ dictIcons, dictionaryVersion, apiVersion }) => (
         }
       </div>
       <div className='footer__logo-area'>
-        <div className='footer__icon footer__icon--gen3'>
-          <a href={'https://cdis.uchicago.edu/gen3'} target='_blank' rel='noopener noreferrer'> {/* fixes security risk */}
-            <IconComponent dictIcons={dictIcons} iconName='gen3' height='37px' />
-          </a>
-        </div>
-        <div className='footer__icon footer__icon--uchicago'>
-          <a href={'https://cdis.uchicago.edu/'} target='_blank' rel='noopener noreferrer'> {/* fixes security risk */}
-            <IconComponent dictIcons={dictIcons} iconName='uchicago' height='37px' svgStyles={{ fill: '#ffffff' }} />
-          </a>
-        </div>
+        <a
+          target='_blank'
+          href='https://ctds.uchicago.edu/gen3'
+          className='footer__icon'
+          rel='noopener noreferrer'
+        >
+          <img className='footer__img' src='/src/img/gen3.png' alt='Gen3' />
+        </a>
+        <a
+          target='_blank'
+          href='https://ctds.uchicago.edu/'
+          className='footer__icon'
+          rel='noopener noreferrer'
+        >
+          <img className='footer__img' src='/src/img/createdby.png' alt='Uchicago CTDS' />
+        </a>
       </div>
     </nav>
   </footer>
 );
 
 Footer.propTypes = {
-  dictIcons: PropTypes.object.isRequired,
   dictionaryVersion: PropTypes.string,
   apiVersion: PropTypes.string,
 };
