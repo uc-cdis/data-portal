@@ -1,7 +1,5 @@
-@import '~@gen3/ui-component/dist/css/base.css';
-
 .nav-bar {
-  width: 100%;
+  width: 100vw;
   background-color: var(--g3-color__white);
   border-bottom: 1px solid var(--g3-color__smoke);
 }
@@ -18,9 +16,15 @@
 }
 
 .nav-bar__header {
+  background-color: white;
   overflow: hidden;
   margin: auto;
   width: 1220px;
+}
+
+.nav-bar__header--full-width {
+  width: inherit;
+  padding: 0 20px;
 }
 
 .nav-bar__link {

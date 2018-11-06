@@ -1,0 +1,58 @@
+:root {
+  --data-dictionary__left-width: 300px;
+  --data-dictionary__left-bg-color: var(--g3-color__white);
+
+  --data-dictionary__switch-active-bg-color: var(--g3-color__base-blue);
+  --data-dictionary__switch-active-text-color: var(--g3-color__white);
+  --data-dictionary__switch-border-color: var(--g3-color__gray);
+}
+
+.data-dictionary {
+  display: flex;
+  height: calc(100vh - 121px);
+}
+
+.data-dictionary__left {
+  width: var(--data-dictionary__left-width);
+  height: 100%;
+  background-color: var(--data-dictionary__left-bg-color);
+  padding: 10px;
+}
+
+.data-dictionary__right {
+  width: calc(100vw - var(--data-dictionary__left-width));
+  overflow-y: scroll;
+}
+
+.data-dictionary__graph {
+  overflow: hidden;
+  height: 100%;
+}
+
+.data-dictionary__graph--hidden,
+.data-dictionary__table--hidden {
+  display: none;
+}
+
+.data-dictionary__switch {
+  width: 100%;
+  display: flex;
+  border: 1px solid var(--data-dictionary__switch-border-color);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.data-dictionary__switch-button {
+  width: 50%;
+  text-align: center;
+  padding: 10px;
+}
+
+.data-dictionary__switch-button:last-child {
+  border-left: 1px solid var(--data-dictionary__switch-border-color);
+}
+
+.data-dictionary__switch-button--active {
+  background-color: var(--data-dictionary__switch-active-bg-color);
+  color: var(--data-dictionary__switch-active-text-color);
+}

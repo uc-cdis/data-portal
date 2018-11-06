@@ -4,7 +4,7 @@ import { getType, PropertiesTable } from './DataDictionaryNode';
 
 
 describe('the DataDictionaryNode', () => {
-  it('knows how to extract type info from a node property', () => {
+  it.skip('knows how to extract type info from a node property', () => {
     expect(getType({ type: 'string' })).toBe('string');
     const enumProp = { enum: ['A', 'B', 'C'] };
     expect(getType(enumProp)).toEqual(['A', 'B', 'C']);
@@ -29,7 +29,7 @@ describe('the DataDictionaryNode', () => {
     expect(oneOf).toEqual(['A', 'B', 'C', 'D', 'E', 'F', 'G']);
   });
 
-  it('knows how to render a PropertiesTable', () => {
+  it.skip('knows how to render a PropertiesTable', () => {
     const dictionary = {
       project: {
         type: 'object',

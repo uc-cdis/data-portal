@@ -283,6 +283,8 @@ class ProtectedContent extends React.Component {
     return newState;
   };
 
+  isDDPage = () => (this.props.location.pathname.toLowerCase() === '/dd' || this.props.location.pathname.toLowerCase() === '/dd/graph')
+
   render() {
     const Component = this.props.component;
     let params = {}; // router params
@@ -294,25 +296,25 @@ class ProtectedContent extends React.Component {
       return (<Redirect to={this.state.redirectTo} />);
     } else if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
-        <div>
+        <div className={`protected-content ${this.isDDPage() ? 'protected-content--dd-page' : ''}`}>
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     } else if (!this.props.public && this.state.authenticated) {
       return (
-        <div>
+        <div className={`protected-content ${this.isDDPage() ? 'protected-content--dd-page' : ''}`}>
           <ReduxAuthTimeoutPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     } else if (this.props.public && this.state.dataLoaded) {
       return (
-        <div>
+        <div className={`protected-content ${this.isDDPage() ? 'protected-content--dd-page' : ''}`}>
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     }
-    return (<div><Spinner /></div>);
+    return (<div className={`protected-content ${this.isDDPage() ? 'protected-content--dd-page' : ''}`}><Spinner /></div>);
   }
 }
 

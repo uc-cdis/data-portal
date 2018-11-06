@@ -1,20 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import DictionaryGraph from './DictionaryGraph';
-import './DataDictionary.less';
+import './DataDictionaryTable.less';
 
 const LinkBullet = ({ link }) => {
   const required = link.required ? 'Yes' : 'No';
   return (
-    <tr className='data-dictionary__table-row'>
-      <td className='data-dictionary__table-data'>
+    <tr className='data-dictionary-table__row'>
+      <td className='data-dictionary-table__data'>
         <Link to={`/dd/${link.target_type}`}> {link.name} </Link>
       </td>
-      <td className='data-dictionary__table-data'>
+      <td className='data-dictionary-table__data'>
         {required}
       </td>
-      <td className='data-dictionary__table-data'>
+      <td className='data-dictionary-table__data'>
         {link.label}
       </td>
     </tr>
@@ -33,11 +32,11 @@ LinkBullet.propTypes = {
 const LinkTable = ({ links }) => {
   const fields = ['Name', 'Required', 'Label'];
   return (
-    <table className='data-dictionary__table'>
-      <thead className='data-dictionary__table-head'>
-        <tr className='data-dictionary__table-row'>
+    <table className='data-dictionary-table'>
+      <thead className='data-dictionary-table__head'>
+        <tr className='data-dictionary-table__row'>
           {fields.map(field =>
-            <td className='data-dictionary__table-data data-dictionary__table-data--head' key={field}>{field}</td>)}
+            <td className='data-dictionary-table__data data-dictionary-table__data--head' key={field}>{field}</td>)}
         </tr>
       </thead>
 
@@ -91,26 +90,26 @@ export const getType = (property) => {
 };
 
 const NodeTable = ({ node }) => (
-  <table className='data-dictionary__table'>
+  <table className='data-dictionary-table'>
     <tbody>
-      <tr className='data-dictionary__table-row'>
-        <td className='data-dictionary__table-data data-dictionary__table-data--head'> Id </td>
-        <td className='data-dictionary__table-data data-dictionary__table-data--right'>{ node.id }</td>
+      <tr className='data-dictionary-table__row'>
+        <td className='data-dictionary-table__data data-dictionary-table__data--head'> Id </td>
+        <td className='data-dictionary-table__data data-dictionary-table__data--right'>{ node.id }</td>
       </tr>
 
-      <tr className='data-dictionary__table-row'>
-        <td className='data-dictionary__table-data data-dictionary__table-data--head'> Category </td>
-        <td className='data-dictionary__table-data data-dictionary__table-data--right'>{ node.category}</td>
+      <tr className='data-dictionary-table__row'>
+        <td className='data-dictionary-table__data data-dictionary-table__data--head'> Category </td>
+        <td className='data-dictionary-table__data data-dictionary-table__data--right'>{ node.category}</td>
       </tr>
 
-      <tr className='data-dictionary__table-row'>
-        <td className='data-dictionary__table-data data-dictionary__table-data--head'> Description </td>
-        <td className='data-dictionary__table-data data-dictionary__table-data--right'>{ node.description}</td>
+      <tr className='data-dictionary-table__row'>
+        <td className='data-dictionary-table__data data-dictionary-table__data--head'> Description </td>
+        <td className='data-dictionary-table__data data-dictionary-table__data--right'>{ node.description}</td>
       </tr>
 
-      <tr className='data-dictionary__table-row'>
-        <td className='data-dictionary__table-data data-dictionary__table-data--head'> Unique Keys </td>
-        <td className='data-dictionary__table-data data-dictionary__table-data--right'>
+      <tr className='data-dictionary-table__row'>
+        <td className='data-dictionary-table__data data-dictionary-table__data--head'> Unique Keys </td>
+        <td className='data-dictionary-table__data data-dictionary-table__data--right'>
           <ul>
             {
               node.uniqueKeys.map(
@@ -196,11 +195,11 @@ const PropertyBullet = (props) => {
   const type = getType(property);
 
   return (
-    <tr className='data-dictionary__table-row'>
-      <td className='data-dictionary__table-data data-dictionary__table-data--column-1'><div> { propertyName }</div> </td>
-      <td className='data-dictionary__table-data data-dictionary__table-data--column-2'> <ul>{ (typeof type === 'string') ? type : <CollapsibleList items={type} />} </ul></td>
-      <td className='data-dictionary__table-data data-dictionary__table-data--column-3'> { required ? 'Yes' : 'No' } </td>
-      <td className='data-dictionary__table-data data-dictionary__table-data--column-4'> { descriptionElements } </td>
+    <tr className='data-dictionary-table__row'>
+      <td className='data-dictionary-table__data data-dictionary-table__data--column-1'><div> { propertyName }</div> </td>
+      <td className='data-dictionary-table__data data-dictionary-table__data--column-2'> <ul>{ (typeof type === 'string') ? type : <CollapsibleList items={type} />} </ul></td>
+      <td className='data-dictionary-table__data data-dictionary-table__data--column-3'> { required ? 'Yes' : 'No' } </td>
+      <td className='data-dictionary-table__data data-dictionary-table__data--column-4'> { descriptionElements } </td>
     </tr>
   );
 };
@@ -219,13 +218,13 @@ export const PropertiesTable = ({ node, required, links }) => {
   const linknames = links.map(link => link.name);
   const properties = Object.keys(node.properties);
   return (
-    <table className='data-dictionary__table'>
-      <thead className='data-dictionary__table-head'>
-        <tr className='data-dictionary__table-row'>
-          <td className='data-dictionary__table-data data-dictionary__table-data--column-1 data-dictionary__table-data--head'>Property</td>
-          <td className='data-dictionary__table-data data-dictionary__table-data--column-2 data-dictionary__table-data--head'>Type</td>
-          <td className='data-dictionary__table-data data-dictionary__table-data--column-3 data-dictionary__table-data--head'>Required</td>
-          <td className='data-dictionary__table-data data-dictionary__table-data--column-4 data-dictionary__table-data--head'>Description</td>
+    <table className='data-dictionary-table'>
+      <thead className='data-dictionary-table__head'>
+        <tr className='data-dictionary-table__row'>
+          <td className='data-dictionary-table__data data-dictionary-table__data--column-1 data-dictionary-table__data--head'>Property</td>
+          <td className='data-dictionary-table__data data-dictionary-table__data--column-2 data-dictionary-table__data--head'>Type</td>
+          <td className='data-dictionary-table__data data-dictionary-table__data--column-3 data-dictionary-table__data--head'>Required</td>
+          <td className='data-dictionary-table__data data-dictionary-table__data--column-4 data-dictionary-table__data--head'>Description</td>
         </tr>
       </thead>
 
@@ -264,20 +263,6 @@ PropertiesTable.propTypes = {
 const DataDictionaryNode = ({ params, submission }) => {
   const node = params.node;
   const dictionary = submission.dictionary;
-
-  if (node === 'graph') {
-    return (
-      <div>
-        <h3> Data Dictionary Graph Viewer </h3>
-        <DictionaryGraph
-          dictionary={dictionary}
-          counts_search={submission.counts_search}
-          links_search={submission.links_search}
-        />
-      </div>
-    );
-  }
-
   let links = [];
   const required = ('required' in dictionary[node]) ? dictionary[node].required : [];
   if (submission.dictionary[node].links) {

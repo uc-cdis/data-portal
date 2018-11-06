@@ -69,7 +69,8 @@
     "styled-components": "^3.2.6",
     "svg-fill-loader": "^0.0.8",
     "underscore": "^1.8.3",
-    "url-join": "^4.0.0"
+    "url-join": "^4.0.0",
+    "viz.js": "2.0.0"
   },
   "devDependencies": {
     "@storybook/cli": "^3.4.8",

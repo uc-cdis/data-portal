@@ -1,3 +1,29 @@
+const getGraphToDotString = (nodes, edges, treeLevel2Names) => {
+  const whRatio = 1;
+  let graphString = 'digraph dictionary {\n';
+  // graphString += 'concentrate=true\n';
+  // graphString += 'splines=curved\n';
+  graphString += 'size="5, 5"\n';
+  graphString += `ratio=${whRatio}\n`;
+  nodes.forEach((node) => {
+    graphString += `${node.id} [type="${node.category}" \
+label="${node.name}" \
+fixedsize=true width=1.2 height=.8 \
+shape=rectangle
+]\n`;
+  });
+  edges.forEach((edge) => {
+    graphString += `${edge.source.id} -> ${edge.target.id}[arrowhead=none tailport=s ]\n`;
+  });
+  if (treeLevel2Names) {
+    treeLevel2Names.forEach((level) => {
+      graphString += `{rank = same ${level.join(' ')}}\n`;
+    });
+  }
+  graphString += '}';
+  // console.log(graphString);
+  return graphString;
+};
 
 /**
  * Given a data dictionary that defines a set of nodes
@@ -90,7 +116,6 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
     edges,
   };
 }
-
 
 /**
  * Find the root of the given graph (no edges out)
@@ -266,7 +291,6 @@ export function nodesBreadthFirst(nodes, edges) {
       },
     );
   }
-
   return result;
 }
 
@@ -335,4 +359,11 @@ export function assignNodePositions(nodes, edges, opts) {
         });
     },
   );
+  return breadthFirstInfo;
+}
+
+export function createDotStrinByNodesEdges(nodes, edges) {
+  const posInfo = assignNodePositions(nodes, edges);
+  const dotString = getGraphToDotString(nodes, edges, posInfo.treeLevel2Names);
+  return dotString;
 }

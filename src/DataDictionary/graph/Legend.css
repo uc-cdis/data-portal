@@ -1,0 +1,65 @@
+.data-dictionary-graph-legend {
+  position: absolute;
+  padding: 15px;
+  right: 15px;
+  top: 136px;
+  background-color: white;
+  max-width: 300px;
+  min-width: 200px;
+}
+
+.data-dictionary-graph-legend--toggled {
+  background-color: unset;
+  min-width: unset;
+}
+
+.data-dictionary-graph-legend__item {
+  line-height: 20px;
+  vertical-align: middle;
+  margin-bottom: 15px;
+  display: flex;
+}
+
+.data-dictionary-graph-legend__item:last-child {
+  margin-bottom: 0;
+}
+
+.data-dictionary-graph-legend__circle-wrapper {
+  display: block;
+  height: 20px;
+}
+
+.data-dictionary-graph-legend__circle {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.data-dictionary-graph-legend__text {
+  margin-left: 15px;
+  word-break: break-all;
+  display: block;
+}
+
+.data-dictionary-graph-legend__svg-line {
+  position: relative;
+  top: 8px;
+}
+
+.data-dictionary-graph-legend__close {
+  position: absolute;
+  right: 15px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--g3-color__gray);
+  cursor: pointer;
+}
+
+.data-dictionary-graph-legend__close:hover {
+  background-color: var(--g3-color__lightgray);
+}
+
+.data-dictionary-graph-legend__info {
+  cursor: pointer;
+}

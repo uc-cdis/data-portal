@@ -1,29 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { app } from '../localconf';
-import { capitalizeFirstLetter } from '../utils';
-import './DataDictionary.less';
-
-const subHeader = (() => {
-  let message = 'This is a user-friendly interface for accessing the Data IcoDictionary';
-
-  if (app === 'edc') {
-    message = 'The data dictionary viewer is a user-friendly interface for accessing the Environmental Data Commons Data IcoDictionary.';
-  } else if (app === 'bpa') {
-    message = 'The BPA data dictionary viewer is a user-friendly interface for accessing the BPA Data IcoDictionary.';
-  } else if (app === 'bhc') {
-    message = 'The data dictionary viewer is a user-friendly interface for accessing the Data IcoDictionary used by the Brain Commons.';
-  }
-  return message;
-})();
+import { capitalizeFirstLetter } from '../../utils';
+import './DataDictionaryTable.less';
 
 const TableBullet = ({ node, description }) => (
-  <tr className='data-dictionary__table-row'>
-    <td className='data-dictionary__table-data'>
+  <tr className='data-dictionary-table__row'>
+    <td className='data-dictionary-table__data'>
       <Link to={`/dd/${node.id}`}> {node.title} </Link>
     </td>
-    <td className='data-dictionary__table-data data-dictionary__table-data--right'>
+    <td className='data-dictionary-table__data data-dictionary-table__data--right'>
       {description}
     </td>
   </tr>
@@ -39,10 +25,10 @@ TableBullet.defaultProps = {
 };
 
 const CategoryTable = ({ nodes, category }) => (
-  <table className='data-dictionary__table'>
-    <thead className='data-dictionary__table-head'>
-      <tr className='data-dictionary__table-row'>
-        <td className='data-dictionary__table-data data-dictionary__table-data--head'>
+  <table className='data-dictionary-table'>
+    <thead className='data-dictionary-table__head'>
+      <tr className='data-dictionary-table__row'>
+        <td className='data-dictionary-table__data data-dictionary-table__data--head'>
           {capitalizeFirstLetter(category)}
         </td>
       </tr>
@@ -104,26 +90,23 @@ export function category2NodeList(dictionary) {
  *
  * @param {dictionary} params
  */
-const DataDictionary = ({ dictionary }) => {
+const DataDictionaryTable = ({ dictionary }) => {
   const c2nl = category2NodeList(dictionary);
 
   return (
-    <div style={{ padding: '40px 0px' }}>
-      <div className='h3-typo'> Data Dictionary Viewer </div>
-      <p>{subHeader}</p>
-      <Link to={'/dd/graph'} className='h3-typo'>Explore dictionary as a graph</Link>
+    <React.Fragment>
       {Object.keys(c2nl).map(category =>
         <CategoryTable key={category} nodes={c2nl[category]} category={category} />)}
-    </div>
+    </React.Fragment>
   );
 };
 
-DataDictionary.propTypes = {
+DataDictionaryTable.propTypes = {
   dictionary: PropTypes.object,
 };
 
-DataDictionary.defaultProps = {
+DataDictionaryTable.defaultProps = {
   dictionary: {},
 };
 
-export default DataDictionary;
+export default DataDictionaryTable;
