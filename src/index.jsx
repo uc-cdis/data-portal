@@ -241,6 +241,7 @@ async function init() {
                     />
                   </Switch>
                 </div>
+                <ReduxFooter />
               </div>
             </BrowserRouter>
           </MuiThemeProvider>
