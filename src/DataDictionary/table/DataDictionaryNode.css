@@ -5,6 +5,9 @@
   display: flex;
   justify-content: space-between;
   padding: 10px;
+  border-left-width: 5px;
+  border-left-style: solid;
+  border-left-color: var(--dictionary-border-color);
 }
 
 .data-dictionary-node__title {
@@ -54,4 +57,13 @@
   width: 50px;
   height: 30px;
   margin: 0 6px;
+  padding: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  text-align: center;
+}
+
+.data-dictionary-node__download-button:hover, 
+.data-dictionary-node__download-button:active {
+  color: white;
 }

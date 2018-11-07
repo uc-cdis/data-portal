@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { humanizeString, getTypeIconSVG, getTypeColor } from './utils';
+import { humanizeString, getTypeIconSVG } from './utils';
+import { getCategoryColor } from '../../utils';
 import RequiredIcon from './icons/required.svg';
 import NotRequiredIcon from './icons/notrequired.svg';
 import InfoIcon from './icons/info.svg';
@@ -41,7 +42,7 @@ class Legend extends React.Component {
                 </div>
                 {
                   this.props.items.map((type) => {
-                    const itemColor = getTypeColor(type);
+                    const itemColor = getCategoryColor(type);
                     const IconSvg = getTypeIconSVG(type);
                     return (
                       <div

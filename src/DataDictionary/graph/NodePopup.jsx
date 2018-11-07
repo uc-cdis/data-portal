@@ -7,10 +7,6 @@ class NodePopup extends React.Component {
     super(props);
   }
 
-  componentDidMount() {
-    this.tooltipElement = React.createRef();
-  }
-
   render() {
     const svgBoundingBox = this.props.highlightingNodeSVGElement ? this.props.highlightingNodeSVGElement.getBoundingClientRect() : { top: 0, left: 0, width: 0, bottom: 0 };
     const popupWidth = 240;
@@ -18,7 +14,6 @@ class NodePopup extends React.Component {
     const popupTop = svgBoundingBox.bottom;
     return (
       <div
-        ref={this.tooltipElement}
         className='node-popup'
         style={{
           top: popupTop,

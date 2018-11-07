@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M10,0 C15.523,0 20,4.477 20,10 C20,15.522 15.523,20 10,20 C4.477,20 0,15.522 0,10 C0,4.478 4.477,0 10,0 Z" id="path-1"></path>
+        <path d="M0.5,0 L4.045,0 C4.322,0 4.545,0.224 4.545,0.5 L4.545,1.5 C4.545,1.776 4.322,2 4.045,2 L0.5,2 C0.224,2 0,1.776 0,1.5 L0,0.5 C0,0.224 0.224,0 0.5,0 Z" id="path-3"></path>
+        <path d="M0.955,0 L4.5,0 C4.776,0 5,0.224 5,0.5 L5,1.5 C5,1.776 4.776,2 4.5,2 L0.955,2 C0.678,2 0.455,1.776 0.455,1.5 L0.455,0.5 C0.455,0.224 0.678,0 0.955,0 Z" id="path-5"></path>
+        <path d="M1,0 L4.545,0 C4.822,0 5.045,0.224 5.045,0.5 L5.045,1.5 C5.045,1.776 4.822,2 4.545,2 L1,2 C0.724,2 0.5,1.776 0.5,1.5 L0.5,0.5 C0.5,0.224 0.724,0 1,0 Z" id="path-7"></path>
+        <path d="M1.455,0 L5,0 C5.276,0 5.5,0.224 5.5,0.5 L5.5,1.5 C5.5,1.776 5.276,2 5,2 L1.455,2 C1.178,2 0.955,1.776 0.955,1.5 L0.955,0.5 C0.955,0.224 1.178,0 1.455,0 Z" id="path-9"></path>
+        <path d="M0.5,0 L4.045,0 C4.322,0 4.545,0.224 4.545,0.5 L4.545,1.5 C4.545,1.776 4.322,2 4.045,2 L0.5,2 C0.224,2 0,1.776 0,1.5 L0,0.5 C0,0.224 0.224,0 0.5,0 Z" id="path-11"></path>
+        <path d="M0.955,0 L4.5,0 C4.776,0 5,0.224 5,0.5 L5,1.5 C5,1.776 4.776,2 4.5,2 L0.955,2 C0.678,2 0.455,1.776 0.455,1.5 L0.455,0.5 C0.455,0.224 0.678,0 0.955,0 Z" id="path-13"></path>
+    </defs>
+    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group">
+            <g id="Group-1724">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Clip-1723"></g>
+                <polygon id="Fill-1722" fill="#26D9B1" mask="url(#mask-2)" points="-5 -5 25 -5 25 25 -5 25"></polygon>
+            </g>
+            <g id="Group-1727" transform="translate(4.000000, 6.000000)">
+                <mask id="mask-4" fill="white">
+                    <use xlink:href="#path-3"></use>
+                </mask>
+                <g id="Clip-1726"></g>
+                <polygon id="Fill-1725" fill="#FFFFFF" mask="url(#mask-4)" points="-5 -5 9.545 -5 9.545 7 -5 7"></polygon>
+            </g>
+            <g id="Group-1730" transform="translate(9.000000, 6.000000)">
+                <mask id="mask-6" fill="white">
+                    <use xlink:href="#path-5"></use>
+                </mask>
+                <g id="Clip-1729"></g>
+                <polygon id="Fill-1728" fill="#FFFFFF" mask="url(#mask-6)" points="-4.545 -5 10 -5 10 7 -4.545 7"></polygon>
+            </g>
+            <g id="Group-1733" transform="translate(5.000000, 9.000000)">
+                <mask id="mask-8" fill="white">
+                    <use xlink:href="#path-7"></use>
+                </mask>
+                <g id="Clip-1732"></g>
+                <polygon id="Fill-1731" fill="#FFFFFF" mask="url(#mask-8)" points="-4.5 -5 10.045 -5 10.045 7 -4.5 7"></polygon>
+            </g>
+            <g id="Group-1736" transform="translate(10.000000, 9.000000)">
+                <mask id="mask-10" fill="white">
+                    <use xlink:href="#path-9"></use>
+                </mask>
+                <g id="Clip-1735"></g>
+                <polygon id="Fill-1734" fill="#FFFFFF" mask="url(#mask-10)" points="-4.045 -5 10.5 -5 10.5 7 -4.045 7"></polygon>
+            </g>
+            <g id="Group-1739" transform="translate(7.000000, 12.000000)">
+                <mask id="mask-12" fill="white">
+                    <use xlink:href="#path-11"></use>
+                </mask>
+                <g id="Clip-1738"></g>
+                <polygon id="Fill-1737" fill="#FFFFFF" mask="url(#mask-12)" points="-5 -5 9.545 -5 9.545 7 -5 7"></polygon>
+            </g>
+            <g id="Group-1742" transform="translate(12.000000, 12.000000)">
+                <mask id="mask-14" fill="white">
+                    <use xlink:href="#path-13"></use>
+                </mask>
+                <g id="Clip-1741"></g>
+                <polygon id="Fill-1740" fill="#FFFFFF" mask="url(#mask-14)" points="-4.545 -5 10 -5 10 7 -4.545 7"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

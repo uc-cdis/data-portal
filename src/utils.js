@@ -65,28 +65,31 @@ export function asyncSetInterval(lambda, timeoutMs) {
 }
 
 
-export const color = {
-  administrative: '#A893F8',
-  analysis: '#EE82BA',
-  clinical: '#53B6E9',
-  biospecimen: '#55AB68',
-  metadata_file: '#EBBB58',
-  index_file: '#68D5B3',
-  notation: '#D65746',
-  data_file: '#8EC23B',
-  satellite: d3.schemeCategory20[11],
-  radar: d3.schemeCategory20[16],
-  stream_gauge: d3.schemeCategory20[19],
-  weather_station: d3.schemeCategory20[10],
-  medical_history: '#53B6E9',
-  clinical_assessment: d3.schemeCategory20[2],
-  data_observations: d3.schemeCategory20[3],
-  experimental_methods: d3.schemeCategory20[4],
-  Imaging: d3.schemeCategory20[5],
-  study_administration: d3.schemeCategory20[6],
-  subject_characteristics: d3.schemeCategory20[7],
+export const getCategoryColor = (category) => {
+  const colorMap = {
+    clinical: '#05B8EE',
+    biospecimen: '#27AE60',
+    data_file: '#7EC500',
+    metadata_file: '#F4B940',
+    analysis: '#FF7ABC',
+    administrative: '#AD91FF',
+    notation: '#E74C3C',
+    index_file: '#26D9B1',
+    clinical_assessment: '#3283C8',
+    medical_history: '#05B8EE',
+    satellite: d3.schemeCategory20[11],
+    radar: d3.schemeCategory20[16],
+    stream_gauge: d3.schemeCategory20[19],
+    weather_station: d3.schemeCategory20[10],
+    data_observations: d3.schemeCategory20[3],
+    experimental_methods: d3.schemeCategory20[4],
+    Imaging: d3.schemeCategory20[5],
+    study_administration: d3.schemeCategory20[6],
+    subject_characteristics: d3.schemeCategory20[7],
+  };
+  const defaultColor = '#9B9B9B';
+  return colorMap[category] ? colorMap[category] : defaultColor;
 };
-
 
 export function legendCreator(legendGroup, nodes, legendWidth) {
   // Find all unique categories
@@ -116,7 +119,7 @@ export function legendCreator(legendGroup, nodes, legendWidth) {
     .attr('x', legendWidth / 2)
     .attr('y', (d, i) => `${1.5 * (2.5 + i)}em`)
     .attr('text-anchor', 'middle')
-    .attr('fill', d => color[d])
+    .attr('fill', d => getCategoryColor(d))
     .style('font-size', legendFontSize)
     .text(d => d);
 

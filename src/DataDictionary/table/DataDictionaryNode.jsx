@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { getCategoryColor } from '../../utils';
 import DataDictionaryPropertyTable from './DataDictionaryPropertyTable';
 import './DataDictionaryNode.css';
 
@@ -19,7 +20,7 @@ class DataDictionaryNode extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className='data-dictionary-node'>
+        <div className='data-dictionary-node' style={{ borderLeftColor: getCategoryColor(this.props.node.category) }}>
           <span className='data-dictionary-node__title' onClick={() => this.handleClickNode(this.props.node.id)}>
             <i className='g3-icon g3-icon--datafile data-dictionary-node__file-icon' />
             {this.props.node.title}
@@ -30,10 +31,20 @@ class DataDictionaryNode extends React.Component {
           </span>
           <div className='data-dictionary-node__download-group'>
             <span className='data-dictionary-node__button-wrap'>
-              <button className='data-dictionary-node__download-button'>JSON</button>
+              <a
+                className='data-dictionary-node__download-button'
+                href={`/api/v0/submission/template/${this.props.node.id}?format=json`}
+              >
+                JSON
+              </a>
             </span>
             <span className='data-dictionary-node__button-wrap'>
-              <button className='data-dictionary-node__download-button'>TSV</button>
+              <a
+                className='data-dictionary-node__download-button'
+                href={`/api/v0/submission/template/${this.props.node.id}?format=tsv`}
+              >
+                TSV
+              </a>
             </span>
           </div>
         </div>

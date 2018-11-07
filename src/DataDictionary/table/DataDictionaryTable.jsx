@@ -1,46 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { capitalizeFirstLetter } from '../../utils';
-import DataDictionaryNode from './DataDictionaryNode';
 import './DataDictionaryTable.css';
-
-const DataDictionaryCategory = ({ nodes, category, highlightingNodeID, onExpandNode }) => (
-  <div className='data-dictionary-table__category'>
-    <div className='data-dictionary-table__category-head'>
-      <span>
-        {capitalizeFirstLetter(category)}
-      </span>
-      <span className='data-dictionary-table__category-download_template'>Download Template</span>
-    </div>
-    {
-      nodes.map(
-        node => (<DataDictionaryNode
-          node={node}
-          key={node.id}
-          description={node.description}
-          expanded={highlightingNodeID && highlightingNodeID === node.id}
-          onExpandNode={onExpandNode}
-        />),
-      )
-    }
-  </div>
-);
-
-DataDictionaryCategory.propTypes = {
-  category: PropTypes.string.isRequired,
-  nodes: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      description: PropTypes.string,
-    }),
-  ).isRequired,
-  highlightingNodeID: PropTypes.string,
-};
-
-DataDictionaryCategory.defaultProps = {
-  highlightingNodeID: null,
-};
+import DataDictionaryCategory from './DataDictionaryCategory';
 
 /**
  * Just exported for testing
@@ -72,16 +33,36 @@ export function category2NodeList(dictionary) {
 }
 /* eslint-enable no-param-reassign */
 
+const getNodePropertyCount = (dictionary) => {
+  const res = Object.keys(dictionary).filter(
+    id => id.charAt(0) !== '_' && id === dictionary[id].id,
+  ).map(
+    id => dictionary[id],
+  ).filter(
+    node => node.category && node.id,
+  )
+    .reduce((acc, node) => {
+      acc.nodesCount += 1;
+      acc.propertiesCount += Object.keys(node.properties).length;
+      return acc;
+    }, {
+      nodesCount: 0,
+      propertiesCount: 0,
+    });
+  return {
+    nodesCount: res.nodesCount,
+    propertiesCount: res.propertiesCount,
+  };
+};
+
 /**
  * Little components presents an overview of the types in a dictionary organized by category
  *
  * @param {dictionary} params
  */
-const DataDictionaryTable = ({ dictionary, highlightingNodeID, onExpandNode }) => {
+const DataDictionaryTable = ({ dictionary, highlightingNodeID, onExpandNode, dictionaryName }) => {
   const c2nl = category2NodeList(dictionary);
-  const dictionaryName = 'Test';
-  const nodesCount = 0;
-  const propertiesCount = 0;
+  const { nodesCount, propertiesCount } = getNodePropertyCount(dictionary);
   return (
     <React.Fragment>
       <p>
@@ -108,12 +89,14 @@ DataDictionaryTable.propTypes = {
   dictionary: PropTypes.object,
   highlightingNodeID: PropTypes.string,
   onExpandNode: PropTypes.func,
+  dictionaryName: PropTypes.string,
 };
 
 DataDictionaryTable.defaultProps = {
   dictionary: {},
   highlightingNodeID: null,
   onExpandNode: () => {},
+  dictionaryName: '',
 };
 
 export default DataDictionaryTable;

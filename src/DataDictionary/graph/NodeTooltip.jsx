@@ -7,10 +7,6 @@ class NodeTooltip extends React.Component {
     super(props);
   }
 
-  componentDidMount() {
-    this.tooltipElement = React.createRef();
-  }
-
   render() {
     const svgBoundingBox = this.props.hoveringNodeSVGElement ? this.props.hoveringNodeSVGElement.getBoundingClientRect() : { top: 0, left: 0, width: 0 };
     const tooltipWidth = 120;
@@ -19,7 +15,6 @@ class NodeTooltip extends React.Component {
     const tooltipBottom = window.innerHeight - svgBoundingBox.top + gap;
     return (
       <div
-        ref={this.tooltipElement}
         className='node-tooltip'
         style={{
           bottom: tooltipBottom,

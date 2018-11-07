@@ -1,19 +1,19 @@
 :root {
-  --dictionary-border-color: var(--g3-color__silver);
   --dictionary-header-color: var(--g3-color__gray);
+  --dictionary-border-color: var(--g3-color__silver);
 }
 
 .data-dictionary-table__category {
   margin: 20px 0;
-  border-left-width: 5px;
-  border-left-style: solid;
-  border-left-color: var(--dictionary-border-color);
 }
 
 .data-dictionary-table__category-head {
   background: var(--dictionary-header-color);
   color: var(--g3-color__white);
   padding: 10px;
+  border-left-width: 5px;
+  border-left-style: solid;
+  border-left-color: var(--dictionary-border-color);
 }
 
 .data-dictionary-table__category-download_template {

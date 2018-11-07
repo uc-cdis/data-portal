@@ -4,7 +4,8 @@ import Viz from 'viz.js';
 import _ from 'underscore';
 import { Module, render } from 'viz.js/full.render';
 import { createNodesAndEdges, createDotStrinByNodesEdges } from '../../DataModelGraph/utils';
-import { getTypeColor, truncateLines } from './utils';
+import { truncateLines } from './utils';
+import { getCategoryColor } from '../../utils';
 
 class GraphCalculator extends React.Component {
   constructor(props) {
@@ -110,7 +111,7 @@ class GraphCalculator extends React.Component {
               .filter(edge => edge.target.id === n.name)
               .map(edge => edge.source.id);
 
-            const nodeColor = getTypeColor(n.type);
+            const nodeColor = getCategoryColor(n.type);
             const iconRadius = 10;
             const textPadding = 20;
             const fontSize = 10;
