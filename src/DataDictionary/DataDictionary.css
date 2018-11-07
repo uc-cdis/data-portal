@@ -29,6 +29,10 @@
   height: 100%;
 }
 
+.data-dictionary__table {
+  padding: 20px;
+}
+
 .data-dictionary__graph--hidden,
 .data-dictionary__table--hidden {
   display: none;

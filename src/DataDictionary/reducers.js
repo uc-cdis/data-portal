@@ -96,6 +96,18 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       furtherHighlightingNodeID: newFurtherHighlightingNodeID,
     };
   }
+  case 'TABLE_EXPAND_NODE_ID': {
+    let newHighlightingNode = null;
+    const newFurtherHighlightingNodeID = null;
+    if (action.nodeID) {
+      newHighlightingNode = state.nodes.find(n => n.id === action.nodeID);
+    }
+    return {
+      ...state,
+      highlightingNode: newHighlightingNode,
+      furtherHighlightingNodeID: newFurtherHighlightingNodeID,
+    };
+  }
   default:
     return state;
   }

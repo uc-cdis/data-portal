@@ -1,0 +1,36 @@
+.data-dictionary-property-table {
+  margin: 10px 0 20px 40px;
+  position: relative;
+}
+
+.data-dictionary-property-table__table {
+  background-color: var(--g3-color__white);
+  border-collapse: collapse;
+  border: 1px solid var(--dictionary-border-color);
+}
+
+.data-dictionary-property-table__summary {
+  margin: 5px 0;
+}
+
+.data-dictionary-property-table__data {
+  padding: 10px;
+  border: 1px solid var(--dictionary-border-color);
+}
+
+.data-dictionary-property-table__head {
+  background-color: var(--dictionary-header-color);
+  color: var(--g3-color__white);
+}
+
+.data-dictionary-property-table__close {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+}
+
+.data-dictionary-property-table__close-icon {
+  position: relative;
+  top: 5px;
+  margin-left: 10px;
+}

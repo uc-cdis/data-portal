@@ -1,0 +1,57 @@
+.data-dictionary-node {
+  background: var(--g3-color__white);
+  border-bottom: 1px solid var(--dictionary-border-color);
+  border-right: 1px solid var(--dictionary-border-color);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.data-dictionary-node__title {
+  width: 200px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.data-dictionary-node__file-icon {
+  margin-right: 10px;
+  position: relative;
+  top: 3px;
+}
+
+.data-dictionary-node__toggle-icon {
+  margin-left: 10px;
+  position: relative;
+  top: 3px;
+}
+
+.data-dictionary-node__description {
+  flex-grow: 1;
+  padding: 0 10px;
+}
+
+.data-dictionary-node__download-group {
+  display: inline;
+  width: 140px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding-left: 10px;
+  border-left: 1px solid var(--dictionary-border-color);
+}
+
+.data-dictionary-node__button-wrap {
+  border-right: 1px solid var(--dictionary-border-color);
+}
+
+.data-dictionary-node__button-wrap:last-child {
+  border-right: none;
+}
+
+.data-dictionary-node__download-button {
+  background-color: var(--g3-color__base-blue);
+  color: white;
+  width: 50px;
+  height: 30px;
+  margin: 0 6px;
+}

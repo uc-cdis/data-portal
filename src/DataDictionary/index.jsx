@@ -1,5 +1,5 @@
 import React from 'react';
-import ReduxDataDictionaryTable from './table/ReduxDataDictionaryTable';
+import { ReduxDataDictionaryTable } from './table/reduxer';
 import DataDictionaryGraph from './graph/DataDictionaryGraph';
 import './DataDictionary.css';
 
@@ -27,16 +27,16 @@ class DataDictionary extends React.Component {
         <div className='data-dictionary__left'>
           <div className='data-dictionary__switch'>
             <span
-              className={`data-dictionary__switch-button ${this.state.graphView ? '' : 'data-dictionary__switch-button--active'}`}
-              onClick={() => { this.setGraphView(false); }}
-            >
-              Table
-            </span>
-            <span
               className={`data-dictionary__switch-button ${!this.state.graphView ? '' : 'data-dictionary__switch-button--active'}`}
               onClick={() => { this.setGraphView(true); }}
             >
-              Graph
+              Graph View
+            </span>
+            <span
+              className={`data-dictionary__switch-button ${this.state.graphView ? '' : 'data-dictionary__switch-button--active'}`}
+              onClick={() => { this.setGraphView(false); }}
+            >
+              Table View
             </span>
           </div>
           <div className='data-dictionary__model-structure' />

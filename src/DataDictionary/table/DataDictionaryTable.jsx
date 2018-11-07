@@ -2,60 +2,44 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { capitalizeFirstLetter } from '../../utils';
-import './DataDictionaryTable.less';
+import DataDictionaryNode from './DataDictionaryNode';
+import './DataDictionaryTable.css';
 
-const TableBullet = ({ node, description }) => (
-  <tr className='data-dictionary-table__row'>
-    <td className='data-dictionary-table__data'>
-      <Link to={`/dd/${node.id}`}> {node.title} </Link>
-    </td>
-    <td className='data-dictionary-table__data data-dictionary-table__data--right'>
-      {description}
-    </td>
-  </tr>
+const DataDictionaryCategory = ({ nodes, category, highlightingNodeID, onExpandNode }) => (
+  <div className='data-dictionary-table__category'>
+    <div className='data-dictionary-table__category-head'>
+      <span>
+        {capitalizeFirstLetter(category)}
+      </span>
+      <span className='data-dictionary-table__category-download_template'>Download Template</span>
+    </div>
+    {
+      nodes.map(
+        node => (<DataDictionaryNode
+          node={node}
+          key={node.id}
+          description={node.description}
+          expanded={highlightingNodeID && highlightingNodeID === node.id}
+          onExpandNode={onExpandNode}
+        />),
+      )
+    }
+  </div>
 );
 
-TableBullet.propTypes = {
-  node: PropTypes.object.isRequired,
-  description: PropTypes.string,
-};
-
-TableBullet.defaultProps = {
-  description: '',
-};
-
-const CategoryTable = ({ nodes, category }) => (
-  <table className='data-dictionary-table'>
-    <thead className='data-dictionary-table__head'>
-      <tr className='data-dictionary-table__row'>
-        <td className='data-dictionary-table__data data-dictionary-table__data--head'>
-          {capitalizeFirstLetter(category)}
-        </td>
-      </tr>
-    </thead>
-
-    <tbody>
-      {
-        nodes.map(
-          node => (<TableBullet
-            node={node}
-            key={node.id}
-            description={node.description}
-          />),
-        )
-      }
-    </tbody>
-  </table>
-);
-
-CategoryTable.propTypes = {
+DataDictionaryCategory.propTypes = {
   category: PropTypes.string.isRequired,
   nodes: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
+      description: PropTypes.string,
     }),
   ).isRequired,
+  highlightingNodeID: PropTypes.string,
+};
+
+DataDictionaryCategory.defaultProps = {
+  highlightingNodeID: null,
 };
 
 /**
@@ -68,7 +52,7 @@ CategoryTable.propTypes = {
  */
 /* eslint-disable no-param-reassign */
 export function category2NodeList(dictionary) {
-  return Object.keys(dictionary).filter(
+  const res = Object.keys(dictionary).filter(
     id => id.charAt(0) !== '_' && id === dictionary[id].id,
   ).map(
     id => dictionary[id],
@@ -77,11 +61,14 @@ export function category2NodeList(dictionary) {
   )
     .reduce(
       (lookup, node) => {
-        if (!lookup[node.category]) { lookup[node.category] = []; }
+        if (!lookup[node.category]) {
+          lookup[node.category] = [];
+        }
         lookup[node.category].push(node);
         return lookup;
       }, {},
     );
+  return res;
 }
 /* eslint-enable no-param-reassign */
 
@@ -90,23 +77,43 @@ export function category2NodeList(dictionary) {
  *
  * @param {dictionary} params
  */
-const DataDictionaryTable = ({ dictionary }) => {
+const DataDictionaryTable = ({ dictionary, highlightingNodeID, onExpandNode }) => {
   const c2nl = category2NodeList(dictionary);
-
+  const dictionaryName = 'Test';
+  const nodesCount = 0;
+  const propertiesCount = 0;
   return (
     <React.Fragment>
+      <p>
+        <span>{dictionaryName}</span>
+        <span> dictionary has </span>
+        <span>{nodesCount}</span>
+        <span> nodes and </span>
+        <span>{propertiesCount}</span>
+        <span> properties </span>
+      </p>
       {Object.keys(c2nl).map(category =>
-        <CategoryTable key={category} nodes={c2nl[category]} category={category} />)}
+        (<DataDictionaryCategory
+          key={category}
+          nodes={c2nl[category]}
+          category={category}
+          highlightingNodeID={highlightingNodeID}
+          onExpandNode={onExpandNode}
+        />))}
     </React.Fragment>
   );
 };
 
 DataDictionaryTable.propTypes = {
   dictionary: PropTypes.object,
+  highlightingNodeID: PropTypes.string,
+  onExpandNode: PropTypes.func,
 };
 
 DataDictionaryTable.defaultProps = {
   dictionary: {},
+  highlightingNodeID: null,
+  onExpandNode: () => {},
 };
 
 export default DataDictionaryTable;
