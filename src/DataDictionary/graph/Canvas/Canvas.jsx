@@ -17,7 +17,7 @@ class Canvas extends React.Component {
         .scaleExtent([this.props.minZoom, this.props.maxZoom])
         .translateExtent([this.props.topLeftTranslateLimit, this.props.bottomRightTranslateLimit])
         .on('zoom', () => {
-          //this.handleCanvasUpdate();
+          this.handleCanvasUpdate();
           this.zoomTarget
             .attr('transform', d3.event.transform);
         });
@@ -78,14 +78,14 @@ class Canvas extends React.Component {
     return (
       <div className='canvas' ref={this.canvasElement} style={{ width: '100%', height: '100%' }}>
         <div className='canvas__zoom-button-group'>
-          <div className='canvas__zoom-button'>
-            <i className='canvas__zoom-icon g3-icon g3-icon--reset' onClick={this.handleReset} />
+          <div className='canvas__zoom-button' onClick={this.handleReset}>
+            <i className='canvas__zoom-icon g3-icon g3-icon--reset' />
           </div>
-          <div className='canvas__zoom-button'>
-            <i className='canvas__zoom-icon g3-icon g3-icon--plus' onClick={this.handleZoomIn} />
+          <div className='canvas__zoom-button' onClick={this.handleZoomIn}>
+            <i className='canvas__zoom-icon g3-icon g3-icon--plus' />
           </div>
-          <div className='canvas__zoom-button'>
-            <i className='canvas__zoom-icon canvas__zoom-icon--zoom-in g3-icon g3-icon--minus' onClick={this.handleZoomOut} />
+          <div className='canvas__zoom-button' onClick={this.handleZoomOut}>
+            <i className='canvas__zoom-icon canvas__zoom-icon--zoom-in g3-icon g3-icon--minus' />
           </div>
         </div>
         <svg

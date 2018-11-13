@@ -1,15 +1,6 @@
 import { connect } from 'react-redux';
+import { setGraphView, setOverlayPropertyTableHidden } from '../action.js';
 import DataModelStructure from './DataModelStructure';
-
-const setGraphView = isGraphView => ({
-  type: 'GRAPH_TABLE_VIEW',
-  isGraphView,
-});
-
-const setOverlayPropertyTableHidden = isHidden => ({
-  type: 'GRAPH_OVERLAY_PROPERTY_HIDDEN',
-  isHidden,
-});
 
 const ReduxDataModelStructure = (() => {
   const mapStateToProps = state => ({

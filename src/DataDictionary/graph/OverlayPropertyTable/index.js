@@ -1,10 +1,6 @@
 import { connect } from 'react-redux';
+import { setOverlayPropertyTableHidden } from '../../action.js';
 import OverlayPropertyTable from './OverlayPropertyTable';
-
-const setOverlayPropertyTableHidden = isHidden => ({
-  type: 'GRAPH_OVERLAY_PROPERTY_HIDDEN',
-  isHidden,
-});
 
 const ReduxOverlayPropertyTable = (() => {
   const mapStateToProps = state => {
