@@ -19,7 +19,6 @@ const ddgraphInitialState = {
 const ddgraph = (state = ddgraphInitialState, action) => {
   switch (action.type) {
   case 'GRAPH_TABLE_VIEW': {
-    console.log(action);
     return {
       ...state, 
       isGraphView: action.isGraphView,
@@ -114,13 +113,16 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     };
   }
   case 'TABLE_EXPAND_NODE_ID': {
+    console.log('reducer: ', action);
     let newHighlightingNode = null;
     const newFurtherHighlightingNodeID = null;
     if (action.nodeID) {
       newHighlightingNode = state.nodes.find(n => n.id === action.nodeID);
+      console.log(newHighlightingNode);
     }
     return {
       ...state,
+      tableExpandNodeID: action.nodeID, 
       highlightingNode: newHighlightingNode,
       furtherHighlightingNodeID: newFurtherHighlightingNodeID,
     };

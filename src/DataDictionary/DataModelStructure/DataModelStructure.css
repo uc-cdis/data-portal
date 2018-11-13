@@ -9,6 +9,7 @@
 .data-model-structure__containter {
   position: relative;
   padding-left: 50px;
+  padding-right: 15px;
 }
 
 .data-model-structure__node {
@@ -18,6 +19,7 @@
 
 .data-model-structure__node-name {
   color: var(--g3-color__base-blue);
+  word-break: break-all;
 }
 
 .data-model-structure__node-name--last {

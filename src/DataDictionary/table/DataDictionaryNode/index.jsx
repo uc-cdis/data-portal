@@ -7,6 +7,7 @@ import './DataDictionaryNode.css';
 
 class DataDictionaryNode extends React.Component {
   handleClickNode(nodeID) {
+    console.log(nodeID);
     if (!this.props.expanded) {
       this.props.onExpandNode(nodeID);
     } else {

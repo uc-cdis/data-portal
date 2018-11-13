@@ -72,3 +72,8 @@ export const setExpandNode = nodeID => ({
   type: 'TABLE_EXPAND_NODE_ID',
   nodeID,
 });
+
+const setGraphView = isGraphView => ({
+  type: 'GRAPH_TABLE_VIEW',
+  isGraphView,
+});

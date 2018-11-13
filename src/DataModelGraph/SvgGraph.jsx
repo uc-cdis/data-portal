@@ -178,7 +178,7 @@ export function createSvgGraph(nodesIn, edges) {
   simulation.force('link')
     .links(edges);
 
-  legendCreator(legend, nodes, legendWidth, color);
+  legendCreator(legend, nodes, legendWidth);
   return { minX, minY };
 }
 

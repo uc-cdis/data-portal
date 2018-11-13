@@ -50,7 +50,7 @@ class GraphDrawer extends React.Component {
         transform={`scale(${fittingScale}) translate(${fittingTransX}, ${fittingTransY}) `}
       >
         { // edges
-          this.props.edges.map((edge) => {
+          this.props.edges.map((edge, i) => {
             let edgeRelatedClassModifier = '';
             if (this.props.highlightingNode) {
               if (this.props.furtherHighlightingNodeID) { // if clicked a futher node under highlighting mode
@@ -72,7 +72,7 @@ class GraphDrawer extends React.Component {
             const edgeRequiredClassModifier = edge.required ? 'graph-drawer__link--required' : '';
             return (
               <path
-                key={`${edge.source}-${edge.target}`}
+                key={`${edge.source}-${edge.target}-${i}`}
                 className={`graph-drawer__link ${edgeRequiredClassModifier} ${edgeRelatedClassModifier}`}
                 d={edge.pathString}
               />

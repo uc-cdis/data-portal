@@ -2,6 +2,7 @@
   background-color: var(--g3-color__white);
   border-collapse: collapse;
   border: 1px solid var(--dictionary-border-color);
+  width: 100%;
 }
 
 .data-dictionary-property-table__data {

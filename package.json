@@ -8,7 +8,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.2",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.0",
-    "@gen3/ui-component": "0.0.17",
+    "@gen3/ui-component": "0.0.18",
     "@storybook/addon-actions": "^3.4.8",
     "@storybook/react": "^3.4.8",
     "babel-core": "^6.26.0",
