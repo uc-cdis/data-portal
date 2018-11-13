@@ -44,17 +44,6 @@ class DataDictionaryPropertyTable extends React.Component {
   render() {
     return (
       <div className='data-dictionary-property-table'>
-        <i className='' />
-        <span className='data-dictionary-property-table__close' onClick={this.props.onClose}>
-          Close tab
-          <i className='g3-icon g3-icon--cross data-dictionary-property-table__close-icon' />
-        </span>
-        <div className='data-dictionary-property-table__summary'>
-          <span>{this.props.nodeName}</span>
-          <span> has </span>
-          <span>{Object.keys(this.props.properties).length}</span>
-          <span> properties. </span>
-        </div>
         <table className='data-dictionary-property-table__table'>
           <thead className='data-dictionary-property-table__head'>
             <tr className='data-dictionary-property-table__row'>
@@ -67,7 +56,15 @@ class DataDictionaryPropertyTable extends React.Component {
           </thead>
           <tbody>
             {
-              Object.keys(this.props.properties).map((propertyKey) => {
+              Object.keys(this.props.properties)
+              .sort((k1, k2) => {
+                const required1 = this.props.requiredProperties.includes(k1);
+                const required2 = this.props.requiredProperties.includes(k2);
+                if (required1) return -1;
+                if (required2) return 1;
+                return 0;
+              })
+              .map((propertyKey) => {
                 const property = this.props.properties[propertyKey];
                 const type = getType(property);
                 let rawDescription = 'No Description';
@@ -82,13 +79,14 @@ class DataDictionaryPropertyTable extends React.Component {
                     {
                       rawDescription &&
                       rawDescription.split('\\n').map((desc, i) => (
-                        <span key={`${propertyKey}-desc-${i}`} className='data-dictionary__description-para'>
+                        <span key={`${propertyKey}-desc-${i}`}>
                           {desc}
                         </span>
                       ))
                     }
                   </React.Fragment>
                 );
+                const isRequired = this.props.requiredProperties.includes(propertyKey);
                 return (
                   <tr key={propertyKey}>
                     <td className='data-dictionary-property-table__data'>{propertyKey}</td>
@@ -101,7 +99,16 @@ class DataDictionaryPropertyTable extends React.Component {
                         }
                       </ul>
                     </td>
-                    <td className='data-dictionary-property-table__data'>{this.props.requiredProperties.includes(propertyKey) ? 'True' : 'False'}</td>
+                    <td className='data-dictionary-property-table__data'>
+                      { isRequired ? (
+                          <span className='data-dictionary-property-table__required'>
+                            <i className='g3-icon g3-icon--star data-dictionary-property-table__required-icon' />Required
+                          </span>
+                        ) : (
+                          <span>No</span>
+                        )
+                      }
+                    </td>
                     <td className='data-dictionary-property-table__data'>{descriptionElements}</td>
                     <td className='data-dictionary-property-table__data' />
                   </tr>
@@ -120,12 +127,10 @@ DataDictionaryPropertyTable.propTypes = {
   nodeName: PropTypes.string.isRequired,
   properties: PropTypes.object.isRequired,
   requiredProperties: PropTypes.array,
-  onClose: PropTypes.func,
 };
 
 DataDictionaryPropertyTable.defaultProps = {
   requiredProperties: [],
-  onClose: () => {},
 };
 
 export default DataDictionaryPropertyTable;

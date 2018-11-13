@@ -61,6 +61,21 @@ const clickBlankSpace = () => ({
   type: 'GRAPH_CLICK_BLANK_SPACE',
 });
 
+const setDataModelStructure = (dataModelStructure) => ({
+  type: 'GRAPH_DATA_MODEL_STRUCTURE',
+  dataModelStructure,
+});
+
+const setCanvasBoundingRect = (canvasBoundingRect) => ({
+  type: 'GRAPH_CANVAS_BOUNDING_RECT',
+  canvasBoundingRect,
+});
+
+const setOverlayPropertyTableHidden = isHidden => ({
+  type: 'GRAPH_OVERLAY_PROPERTY_HIDDEN',
+  isHidden,
+});
+
 export const ReduxGraphCalculator = (() => {
   const mapStateToProps = state => ({
     dictionary: state.submission.dictionary,
@@ -78,6 +93,7 @@ export const ReduxGraphCalculator = (() => {
     onHighlightRelatedNodesCalculated: relatedNodeIDs => dispatch(setRelatedNodeIDs(relatedNodeIDs)),
     onFurtherClickableNodeIDsCalculated: furtherClickableNodeIDs => dispatch(setFurtherClickableNodeIDs(furtherClickableNodeIDs)),
     onFurtherHighlightedPathCalculated: furtherHighlightedPath => dispatch(setFurtherHighlightedPath(furtherHighlightedPath)),
+    onDataModelStructureCalculated: dataModelStructure => dispatch(setDataModelStructure(dataModelStructure)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(GraphCalculator);
@@ -124,6 +140,7 @@ export const ReduxCanvas = (() => {
   const mapDispatchToProps = dispatch => ({
     onClickBlankSpace: () => dispatch(clickBlankSpace()),
     onCanvasUpdate: svgCTM => dispatch(setSVGCTM(svgCTM)),
+    onCanvasTopLeftUpdate: canvasBoundingRect => dispatch(setCanvasBoundingRect(canvasBoundingRect)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(Canvas);
@@ -134,6 +151,7 @@ export const ReduxNodeTooltip = (() => {
     hoveringNode: state.ddgraph.hoveringNode,
     hoveringNodeSVGElement: state.ddgraph.hoveringNodeSVGElement,
     svgCTM: state.ddgraph.svgCTM,
+    canvasBoundingRect: state.ddgraph.canvasBoundingRect,
   });
 
   return connect(mapStateToProps)(NodeTooltip);
@@ -144,10 +162,12 @@ export const ReduxNodePopup = (() => {
     highlightingNode: state.ddgraph.highlightingNode,
     highlightingNodeSVGElement: state.ddgraph.highlightingNodeSVGElement,
     svgCTM: state.ddgraph.svgCTM,
+    canvasBoundingRect: state.ddgraph.canvasBoundingRect,
   });
 
   const mapDispatchToProps = dispatch => ({
     onClosePopup: () => dispatch(setHighlightingNode(null)),
+    onOpenOverlayPropertyTable: () => dispatch(setOverlayPropertyTableHidden(false)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(NodePopup);

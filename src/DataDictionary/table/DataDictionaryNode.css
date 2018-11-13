@@ -11,7 +11,7 @@
 }
 
 .data-dictionary-node__title {
-  width: 200px;
+  width: 260px;
   flex-grow: 0;
   flex-shrink: 0;
   cursor: pointer;
@@ -52,18 +52,36 @@
 }
 
 .data-dictionary-node__download-button {
-  background-color: var(--g3-color__base-blue);
-  color: white;
   width: 50px;
+  min-width: unset;
   height: 30px;
   margin: 0 6px;
-  padding: 5px;
-  border-radius: 5px;
-  display: inline-block;
-  text-align: center;
+  padding: unset;
+  font-weight: normal;
 }
 
 .data-dictionary-node__download-button:hover, 
 .data-dictionary-node__download-button:active {
   color: white;
+}
+
+.data-dictionary-node__property {
+  margin: 10px 0 20px 40px;
+  position: relative;
+}
+
+.data-dictionary-node__property-summary {
+  margin: 5px 0;
+}
+
+.data-dictionary-node__property-close {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+}
+
+.data-dictionary-node__property-close-icon {
+  position: relative;
+  top: 5px;
+  margin-left: 10px;
 }

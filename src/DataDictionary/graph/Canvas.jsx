@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import './Canvas.css';
 
 class Canvas extends React.Component {
   constructor(props) {
@@ -12,17 +13,19 @@ class Canvas extends React.Component {
   }
 
   componentDidMount() {
-    d3.select('.canvas__overlay')
-      .style('fill', 'none')
-      .style('pointer-events', 'all')
-      .call(d3.zoom()
+    this.zoomBehavior = d3.zoom()
         .scaleExtent([this.props.minZoom, this.props.maxZoom])
         .translateExtent([this.props.topLeftTranslateLimit, this.props.bottomRightTranslateLimit])
         .on('zoom', () => {
-          this.handleCanvasUpdate();
-          d3.select('.canvas__container')
+          //this.handleCanvasUpdate();
+          this.zoomTarget
             .attr('transform', d3.event.transform);
-        }));
+        });
+    this.zoomTarget = d3.select('.canvas__container');
+    this.zoomCatcher = d3.select('.canvas__overlay')
+      .style('fill', 'none')
+      .style('pointer-events', 'all')
+      .call(this.zoomBehavior);
     this.updateCanvasSize();
     window.addEventListener('resize', this.handleResize);
   }
@@ -49,15 +52,42 @@ class Canvas extends React.Component {
     const canvasTransform = this.svgElement.current.getScreenCTM()
       .inverse().multiply(this.containerElement.current.getScreenCTM());
     this.props.onCanvasUpdate(canvasTransform);
+    const canvasBoundingRect = this.canvasElement.current.getBoundingClientRect();
+    this.props.onCanvasTopLeftUpdate(canvasBoundingRect);
   }
 
   handleClick = () => {
     this.props.onClickBlankSpace();
   }
 
+  handleZoomIn = () => {
+    var transform = d3.zoomTransform(this.zoomCatcher.node());
+    this.zoomCatcher.call(this.zoomBehavior.transform, transform.scale(1.1));
+  }
+
+  handleZoomOut = () => {
+    var transform = d3.zoomTransform(this.zoomCatcher.node());
+    this.zoomCatcher.call(this.zoomBehavior.transform, transform.scale(0.9));
+  }
+
+  handleReset = () => {
+    this.zoomCatcher.call(this.zoomBehavior.transform, d3.zoomIdentity)
+  }
+
   render() {
     return (
       <div className='canvas' ref={this.canvasElement} style={{ width: '100%', height: '100%' }}>
+        <div className='canvas__zoom-button-group'>
+          <div className='canvas__zoom-button'>
+            <i className='canvas__zoom-icon g3-icon g3-icon--reset' onClick={this.handleReset} />
+          </div>
+          <div className='canvas__zoom-button'>
+            <i className='canvas__zoom-icon g3-icon g3-icon--plus' onClick={this.handleZoomIn} />
+          </div>
+          <div className='canvas__zoom-button'>
+            <i className='canvas__zoom-icon canvas__zoom-icon--zoom-in g3-icon g3-icon--minus' onClick={this.handleZoomOut} />
+          </div>
+        </div>
         <svg
           className='canvas__svg'
           ref={this.svgElement}
@@ -99,6 +129,7 @@ Canvas.propTypes = {
   ]).isRequired,
   onClickBlankSpace: PropTypes.func,
   onCanvasUpdate: PropTypes.func,
+  onCanvasTopLeftUpdate: PropTypes.func, 
 };
 
 Canvas.defaultProps = {
@@ -108,6 +139,7 @@ Canvas.defaultProps = {
   bottomRightTranslateLimit: [+Infinity, +Infinity],
   onClickBlankSpace: () => {},
   onCanvasUpdate: () => {},
+  onCanvasTopLeftUpdate: () => {},
 };
 
 export default Canvas;

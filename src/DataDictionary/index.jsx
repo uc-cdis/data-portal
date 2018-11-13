@@ -1,61 +1,21 @@
-import React from 'react';
-import { ReduxDataDictionaryTable } from './table/reduxer';
-import DataDictionaryGraph from './graph/DataDictionaryGraph';
-import './DataDictionary.css';
+import { connect } from 'react-redux';
+import DataDictionary from './DataDictionary';
 
-class DataDictionary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      graphView: true,
-    };
-    this.rightElement = React.createRef();
-  }
+const setGraphView = isGraphView => ({
+  type: 'GRAPH_TABLE_VIEW',
+  isGraphView,
+});
 
-  componentDidMount() {
-  }
+const ReduxDataDictionary = (() => {
+  const mapStateToProps = state => ({
+    isGraphView: state.ddgraph.isGraphView,
+  });
 
-  setGraphView = (isGraphView) => {
-    this.setState({
-      graphView: isGraphView,
-    });
-  }
+  const mapDispatchToProps = dispatch => ({
+    onSetGraphView: (isGraphView) => dispatch(setGraphView(isGraphView)),
+  });
 
-  render() {
-    return (
-      <div className='data-dictionary'>
-        <div className='data-dictionary__left'>
-          <div className='data-dictionary__switch'>
-            <span
-              className={`data-dictionary__switch-button ${!this.state.graphView ? '' : 'data-dictionary__switch-button--active'}`}
-              onClick={() => { this.setGraphView(true); }}
-            >
-              Graph View
-            </span>
-            <span
-              className={`data-dictionary__switch-button ${this.state.graphView ? '' : 'data-dictionary__switch-button--active'}`}
-              onClick={() => { this.setGraphView(false); }}
-            >
-              Table View
-            </span>
-          </div>
-          <div className='data-dictionary__model-structure' />
-          <div className='data-dictionary__search' />
-          <div className='data-dictionary__search-history' />
-        </div>
-        <div
-          className='data-dictionary__right'
-        >
-          <div className={`data-dictionary__table ${!this.state.graphView ? '' : 'data-dictionary__table--hidden'}`}>
-            <ReduxDataDictionaryTable />
-          </div>
-          <div className={`data-dictionary__graph ${this.state.graphView ? '' : 'data-dictionary__graph--hidden'}`}>
-            <DataDictionaryGraph />
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
+  return connect(mapStateToProps, mapDispatchToProps)(DataDictionary);
+})();
 
-export default DataDictionary;
+export default ReduxDataDictionary;

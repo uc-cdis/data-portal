@@ -11,7 +11,7 @@ class NodeTooltip extends React.Component {
     const svgBoundingBox = this.props.hoveringNodeSVGElement ? this.props.hoveringNodeSVGElement.getBoundingClientRect() : { top: 0, left: 0, width: 0 };
     const tooltipWidth = 120;
     const gap = 10;
-    const tooltipLeft = svgBoundingBox.left + svgBoundingBox.width / 2;
+    const tooltipLeft = svgBoundingBox.left - this.props.canvasBoundingRect.left + svgBoundingBox.width / 2;
     const tooltipBottom = window.innerHeight - svgBoundingBox.top + gap;
     return (
       <div
@@ -43,12 +43,14 @@ NodeTooltip.propTypes = {
   hoveringNode: PropTypes.object,
   hoveringNodeSVGElement: PropTypes.object,
   svgCTM: PropTypes.object,
+  canvasBoundingRect: PropTypes.object,
 };
 
 NodeTooltip.defaultProps = {
   hoveringNode: null,
   hoveringNodeSVGElement: null,
   svgCTM: null,
+  canvasBoundingRect: {top: 0, left: 0},
 };
 
 export default NodeTooltip;

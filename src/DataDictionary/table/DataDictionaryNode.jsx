@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getCategoryColor } from '../../utils';
+import Button from '@gen3/ui-component/dist/components/Button';
 import DataDictionaryPropertyTable from './DataDictionaryPropertyTable';
 import './DataDictionaryNode.css';
 
@@ -31,31 +32,42 @@ class DataDictionaryNode extends React.Component {
           </span>
           <div className='data-dictionary-node__download-group'>
             <span className='data-dictionary-node__button-wrap'>
-              <a
+              <Button
                 className='data-dictionary-node__download-button'
-                href={`/api/v0/submission/template/${this.props.node.id}?format=json`}
-              >
-                JSON
-              </a>
+                onClick={()=> {window.open(`/api/v0/submission/template/${this.props.node.id}?format=json`)}}
+                label='JSON'
+                buttonType='secondary'
+              />
             </span>
             <span className='data-dictionary-node__button-wrap'>
-              <a
+              <Button
                 className='data-dictionary-node__download-button'
-                href={`/api/v0/submission/template/${this.props.node.id}?format=tsv`}
-              >
-                TSV
-              </a>
+                onClick={()=>{window.open(`/api/v0/submission/template/${this.props.node.id}?format=tsv`)}}
+                label='TSV'
+                buttonType='secondary'
+              />
             </span>
           </div>
         </div>
         {
           this.props.expanded && (
-            <DataDictionaryPropertyTable
-              nodeName={this.props.node.title}
-              properties={this.props.node.properties}
-              requiredProperties={this.props.node.required}
-              onClose={this.handleCloseNode}
-            />
+            <div className='data-dictionary-node__property'>
+              <span className='data-dictionary-node__property-close' onClick={this.handleCloseNode}>
+                Close tab
+                <i className='g3-icon g3-icon--cross data-dictionary-node__property-close-icon' />
+              </span>
+              <div className='data-dictionary-node__property-summary'>
+                <span>{this.props.node.title}</span>
+                <span> has </span>
+                <span>{Object.keys(this.props.node.properties).length}</span>
+                <span> properties. </span>
+              </div>
+              <DataDictionaryPropertyTable
+                nodeName={this.props.node.title}
+                properties={this.props.node.properties}
+                requiredProperties={this.props.node.required}
+              />
+            </div>
           )
         }
       </React.Fragment>

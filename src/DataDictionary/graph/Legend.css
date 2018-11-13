@@ -2,15 +2,17 @@
   position: absolute;
   padding: 15px;
   right: 15px;
-  top: 136px;
+  top: 15px;
   background-color: white;
   max-width: 300px;
   min-width: 200px;
+  z-index: 1;
 }
 
 .data-dictionary-graph-legend--toggled {
   background-color: unset;
   min-width: unset;
+  padding: 0;
 }
 
 .data-dictionary-graph-legend__item {

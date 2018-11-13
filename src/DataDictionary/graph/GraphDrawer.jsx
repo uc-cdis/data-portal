@@ -82,7 +82,7 @@ class GraphDrawer extends React.Component {
         { // nodes
           this.props.nodes.map((node) => {
             const IconSVG = getTypeIconSVG(node.type);
-            const textTopY = node.iconRadius + node.textPadding;
+            const textTopY = node.textPadding;
             let nodeHighlightedClassModifier = '';
             let nodeClickableClassModifier = '';
             if (this.props.highlightingNode) {
@@ -108,7 +108,7 @@ class GraphDrawer extends React.Component {
                 <rect
                   className='data-dictionary-graph__node-rect'
                   x={-node.width / 2}
-                  y={node.iconRadius}
+                  y={0}
                   width={node.width}
                   height={node.height}
                   rx={4}
@@ -132,11 +132,16 @@ class GraphDrawer extends React.Component {
                 }
                 {
                   <g
-                    transform={`translate(${-node.iconRadius}, 0)`}
+                    transform={`translate(${-node.iconRadius}, ${-node.iconRadius})`}
                   >
                     {
                       IconSVG ? <IconSVG /> : (
-                        <circle cx={10} cy={10} r={10} fill={node.color} />
+                        <circle
+                          cx={node.iconRadius}
+                          cy={node.iconRadius}
+                          r={node.iconRadius}
+                          fill={node.color}
+                        />
                       )
                     }
                   </g>

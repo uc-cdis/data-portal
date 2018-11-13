@@ -1,0 +1,64 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { ReduxDataDictionaryTable } from './table/reduxer';
+import ReduxDataModelStructure from './DataModelStructure';
+import DataDictionaryGraph from './graph/DataDictionaryGraph';
+import './DataDictionary.css';
+
+class DataDictionary extends React.Component {
+  setGraphView = (isGraphView) => {
+    console.log(isGraphView);
+    this.props.onSetGraphView(isGraphView);
+  }
+
+  render() {
+    return (
+      <div className='data-dictionary'>
+        <div className='data-dictionary__left'>
+          <div className='data-dictionary__switch'>
+            <span
+              className={`data-dictionary__switch-button ${!this.props.isGraphView ? '' : 'data-dictionary__switch-button--active'}`}
+              onClick={() => { this.setGraphView(true); }}
+            >
+              Graph View
+            </span>
+            <span
+              className={`data-dictionary__switch-button ${this.props.isGraphView ? '' : 'data-dictionary__switch-button--active'}`}
+              onClick={() => { this.setGraphView(false); }}
+            >
+              Table View
+            </span>
+          </div>
+          <div className='data-dictionary__model-structure'>
+            <ReduxDataModelStructure />
+          </div>
+          <div className='data-dictionary__search' />
+          <div className='data-dictionary__search-history' />
+        </div>
+        <div
+          className='data-dictionary__right'
+        >
+          <div className={`data-dictionary__table ${!this.props.isGraphView ? '' : 'data-dictionary__table--hidden'}`}>
+            <ReduxDataDictionaryTable />
+          </div>
+          <div className={`data-dictionary__graph ${this.props.isGraphView ? '' : 'data-dictionary__graph--hidden'}`}>
+            <DataDictionaryGraph />
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+DataDictionary.propTypes = {
+  onSetGraphView: PropTypes.func, 
+  isGraphView: PropTypes.bool, 
+};
+
+DataDictionary.defaultProps = {
+  onSetGraphView: () => {},
+  isGraphView: true,
+};
+
+
+export default DataDictionary;

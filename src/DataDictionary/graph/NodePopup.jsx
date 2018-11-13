@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from '@gen3/ui-component/dist/components/Button';
 import './NodePopup.css';
 
 class NodePopup extends React.Component {
@@ -7,11 +8,15 @@ class NodePopup extends React.Component {
     super(props);
   }
 
+  handleClickPropertyButton = () => {
+    this.props.onOpenOverlayPropertyTable();
+  }
+
   render() {
     const svgBoundingBox = this.props.highlightingNodeSVGElement ? this.props.highlightingNodeSVGElement.getBoundingClientRect() : { top: 0, left: 0, width: 0, bottom: 0 };
     const popupWidth = 240;
-    const popupLeft = svgBoundingBox.left + svgBoundingBox.width / 2;
-    const popupTop = svgBoundingBox.bottom;
+    const popupLeft = svgBoundingBox.left - this.props.canvasBoundingRect.left + svgBoundingBox.width / 2;
+    const popupTop = svgBoundingBox.bottom - this.props.canvasBoundingRect.top;
     return (
       <div
         className='node-popup'
@@ -26,7 +31,12 @@ class NodePopup extends React.Component {
               <div className='node-popup__content'>
                 <li className='node-popup__list-item'>{this.props.highlightingNode.requiredPropertiesCount} required properties</li>
                 <li className='node-popup__list-item'>{this.props.highlightingNode.optionalPropertiesCount} optional properties</li>
-                <button className='node-popup__button'>Open properties</button>
+                <Button
+                  className='node-popup__button'
+                  onClick={this.handleClickPropertyButton}
+                  label='Open properties'
+                  buttonType='secondary'
+                />
               </div>
               <span className='node-popup__arrow node-popup__arrow--outer' />
               <span className='node-popup__arrow node-popup__arrow--inner' />
@@ -47,6 +57,8 @@ NodePopup.propTypes = {
   highlightingNodeSVGElement: PropTypes.object,
   svgCTM: PropTypes.object,
   onClosePopup: PropTypes.func,
+  canvasBoundingRect: PropTypes.object,
+  onOpenOverlayPropertyTable: PropTypes.func, 
 };
 
 NodePopup.defaultProps = {
@@ -54,6 +66,8 @@ NodePopup.defaultProps = {
   highlightingNodeSVGElement: null,
   svgCTM: null,
   onClosePopup: () => {},
+  canvasBoundingRect: {top: 0, left: 0},
+  onOpenOverlayPropertyTable: () => {},
 };
 
 export default NodePopup;

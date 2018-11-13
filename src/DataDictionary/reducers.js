@@ -1,4 +1,5 @@
 const ddgraphInitialState = {
+  isGraphView: true,
   layoutInitialized: false,
   nodes: [],
   edges: [],
@@ -10,10 +11,20 @@ const ddgraphInitialState = {
   highlightingNodeSVGElement: null,
   relatedNodeIDs: [],
   furtherHighlightingNodeIDs: [],
+  dataModelStructure: null,
+  overlayPropertyHidden: true,
+  canvasBoundingRect: {top: 0, left: 0},
 };
 
 const ddgraph = (state = ddgraphInitialState, action) => {
   switch (action.type) {
+  case 'GRAPH_TABLE_VIEW': {
+    console.log(action);
+    return {
+      ...state, 
+      isGraphView: action.isGraphView,
+    }
+  }
   case 'GRAPH_LAYOUT': {
     return {
       ...state,
@@ -54,6 +65,12 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       ...state,
       svgCTM: action.svgCTM,
     };
+  }
+  case 'GRAPH_CANVAS_BOUNDING_RECT': {
+    return {
+      ...state,
+      canvasBoundingRect: action.canvasBoundingRect,
+    }
   }
   case 'GRAPH_RELATED_NODE': {
     return {
@@ -107,6 +124,18 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       highlightingNode: newHighlightingNode,
       furtherHighlightingNodeID: newFurtherHighlightingNodeID,
     };
+  }
+  case 'GRAPH_DATA_MODEL_STRUCTURE': {
+    return {
+      ...state, 
+      dataModelStructure: action.dataModelStructure,
+    }
+  }
+  case 'GRAPH_OVERLAY_PROPERTY_HIDDEN': {
+    return {
+      ...state,
+      overlayPropertyHidden: action.isHidden,
+    }
   }
   default:
     return state;

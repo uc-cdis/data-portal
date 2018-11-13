@@ -1,5 +1,6 @@
 import React from 'react';
 import { ReduxGraphCalculator, ReduxGraphDrawer, ReduxLegend, ReduxCanvas, ReduxNodeTooltip, ReduxNodePopup } from './reduxer';
+import ReduxOverlayPropertyTable from './OverlayPropertyTable';
 
 class DataDictionaryGraph extends React.Component {
   render() {
@@ -12,6 +13,7 @@ class DataDictionaryGraph extends React.Component {
         </ReduxCanvas>
         <ReduxNodeTooltip />
         <ReduxNodePopup />
+        <ReduxOverlayPropertyTable />
       </React.Fragment>
     );
   }

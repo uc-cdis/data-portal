@@ -1,10 +1,6 @@
 :root {
-  --data-dictionary__left-width: 300px;
-  --data-dictionary__left-bg-color: var(--g3-color__white);
-
-  --data-dictionary__switch-active-bg-color: var(--g3-color__base-blue);
-  --data-dictionary__switch-active-text-color: var(--g3-color__white);
-  --data-dictionary__switch-border-color: var(--g3-color__gray);
+  --data-dictionary__left-width: 320px;
+  --data-dictionary__switch-border-radius: 8px;
 }
 
 .data-dictionary {
@@ -15,8 +11,7 @@
 .data-dictionary__left {
   width: var(--data-dictionary__left-width);
   height: 100%;
-  background-color: var(--data-dictionary__left-bg-color);
-  padding: 10px;
+  background-color: var(--g3-color__white);
 }
 
 .data-dictionary__right {
@@ -27,6 +22,7 @@
 .data-dictionary__graph {
   overflow: hidden;
   height: 100%;
+  position: relative;
 }
 
 .data-dictionary__table {
@@ -39,11 +35,14 @@
 }
 
 .data-dictionary__switch {
-  width: 100%;
   display: flex;
-  border: 1px solid var(--data-dictionary__switch-border-color);
-  border-radius: 4px;
+  border: 1px solid var(--g3-color__black);
+  border-radius: var(--data-dictionary__switch-border-radius);
   cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: .02rem;
+  margin: 15px;
 }
 
 .data-dictionary__switch-button {
@@ -52,11 +51,23 @@
   padding: 10px;
 }
 
+.data-dictionary__switch-button:hover {
+  background-color: var(--g3-color__base-blue-light);
+  color: var(--g3-color__white);
+}
+
+.data-dictionary__switch-button:first-child {
+  border-top-left-radius: var(--data-dictionary__switch-border-radius);
+  border-bottom-left-radius: var(--data-dictionary__switch-border-radius);
+}
+
 .data-dictionary__switch-button:last-child {
   border-left: 1px solid var(--data-dictionary__switch-border-color);
+  border-top-right-radius: var(--data-dictionary__switch-border-radius);
+  border-bottom-right-radius: var(--data-dictionary__switch-border-radius);
 }
 
 .data-dictionary__switch-button--active {
-  background-color: var(--data-dictionary__switch-active-bg-color);
-  color: var(--data-dictionary__switch-active-text-color);
+  background-color: var(--g3-color__base-blue);
+  color: var(--g3-color__white);
 }
