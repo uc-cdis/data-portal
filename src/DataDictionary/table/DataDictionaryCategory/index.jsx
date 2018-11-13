@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {getTypeIconSVG} from '../graph/utils';
-import { capitalizeFirstLetter, getCategoryColor } from '../../utils';
-import DataDictionaryNode from './DataDictionaryNode';
+import { getCategoryColor, getTypeIconSVG } from '../../utils';
+import { capitalizeFirstLetter } from '../../../utils';
+import DataDictionaryNode from '../DataDictionaryNode/.';
 import './DataDictionaryCategory.css';
 
 class DataDictionaryCategory extends React.Component {

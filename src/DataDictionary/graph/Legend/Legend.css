@@ -44,9 +44,13 @@
   display: block;
 }
 
-.data-dictionary-graph-legend__svg-line {
+.data-dictionary-graph-legend__required-icon {
   position: relative;
   top: 8px;
+}
+
+.data-dictionary-graph-legend__required-icon--required {
+  background-color: var(--g3-color__highlight-orange);
 }
 
 .data-dictionary-graph-legend__close {
@@ -64,4 +68,16 @@
 
 .data-dictionary-graph-legend__info {
   cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: block;
+  background-color: var(--g3-color__base-blue);
+}
+
+.data-dictionary-graph-legend__info-icon {
+  position: relative;
+  top: 6px;
+  left: 11px;
+  background-color: var(--g3-color__white);
 }

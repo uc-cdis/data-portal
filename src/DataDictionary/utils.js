@@ -44,3 +44,20 @@ export const getTypeIconSVG = (type) => {
 };
 
 export const humanizeString = str => (str.charAt(0).toUpperCase() + str.substring(1).toLowerCase()).replace('_', ' ');
+
+export const getCategoryColor = (category) => {
+  const colorMap = {
+    clinical: '#05B8EE',
+    biospecimen: '#27AE60',
+    data_file: '#7EC500',
+    metadata_file: '#F4B940',
+    analysis: '#FF7ABC',
+    administrative: '#AD91FF',
+    notation: '#E74C3C',
+    index_file: '#26D9B1',
+    clinical_assessment: '#3283C8',
+    medical_history: '#05B8EE',
+  };
+  const defaultColor = '#9B9B9B';
+  return colorMap[category] ? colorMap[category] : defaultColor;
+};

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {getTypeIconSVG} from '../graph/utils';
+import {getTypeIconSVG} from '../utils';
 import Button from '@gen3/ui-component/dist/components/Button';
 import './DataModelStructure.css';
 

@@ -1,11 +1,7 @@
 import { connect } from 'react-redux';
+import localconf from '../../../localconf';
+import { setExpandNode } from '../../action.js';
 import DataDictionaryTable from './DataDictionaryTable';
-import localconf from '../../localconf';
-
-const setExpandNode = nodeID => ({
-  type: 'TABLE_EXPAND_NODE_ID',
-  nodeID,
-});
 
 export const ReduxDataDictionaryTable = (() => {
   const mapStateToProps = state => ({

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './DataDictionaryTable.css';
-import DataDictionaryCategory from './DataDictionaryCategory';
+import DataDictionaryCategory from '../DataDictionaryCategory/.';
 
 /**
  * Just exported for testing

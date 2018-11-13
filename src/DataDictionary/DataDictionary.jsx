@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ReduxDataDictionaryTable } from './table/reduxer';
+import { ReduxDataDictionaryTable } from './table/DataDictionaryTable';
 import ReduxDataModelStructure from './DataModelStructure';
-import DataDictionaryGraph from './graph/DataDictionaryGraph';
+import DataDictionaryGraph from './graph/DataDictionaryGraph/.';
 import './DataDictionary.css';
 
 class DataDictionary extends React.Component {

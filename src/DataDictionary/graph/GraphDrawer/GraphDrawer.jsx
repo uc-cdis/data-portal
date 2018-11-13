@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getTypeIconSVG } from './utils';
-import './DataDictionaryGraph.css';
+import { getTypeIconSVG } from '../../utils';
+import './GraphDrawer.css';
 
 class GraphDrawer extends React.Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class GraphDrawer extends React.Component {
     );
     return (
       <g
-        className='data-dictionary-graph'
+        className='graph-drawer'
         transform={`scale(${fittingScale}) translate(${fittingTransX}, ${fittingTransY}) `}
       >
         { // edges
@@ -56,24 +56,24 @@ class GraphDrawer extends React.Component {
               if (this.props.furtherHighlightingNodeID) { // if clicked a futher node under highlighting mode
                 const isEdgeAlongFurtherHighlightedPath = this.props.furtherHighlightedPath.find(e => (e.source === edge.source && e.target === edge.target));
                 if (isEdgeAlongFurtherHighlightedPath) {
-                  edgeRelatedClassModifier = 'data-dictionary-graph__link--highlighted';
+                  edgeRelatedClassModifier = 'graph-drawer__link--highlighted';
                 } else {
-                  edgeRelatedClassModifier = 'data-dictionary-graph__link--not-highlighted';
+                  edgeRelatedClassModifier = 'graph-drawer__link--not-highlighted';
                 }
               } else {
                 const isEdgeRelatedToHighlightedNode = this.props.relatedNodeIDs.includes(edge.source) && this.props.relatedNodeIDs.includes(edge.target);
                 if (isEdgeRelatedToHighlightedNode) {
-                  edgeRelatedClassModifier = 'data-dictionary-graph__link--highlighted';
+                  edgeRelatedClassModifier = 'graph-drawer__link--highlighted';
                 } else {
-                  edgeRelatedClassModifier = 'data-dictionary-graph__link--not-highlighted';
+                  edgeRelatedClassModifier = 'graph-drawer__link--not-highlighted';
                 }
               }
             }
-            const edgeRequiredClassModifier = edge.required ? 'data-dictionary-graph__link--required' : '';
+            const edgeRequiredClassModifier = edge.required ? 'graph-drawer__link--required' : '';
             return (
               <path
                 key={`${edge.source}-${edge.target}`}
-                className={`data-dictionary-graph__link ${edgeRequiredClassModifier} ${edgeRelatedClassModifier}`}
+                className={`graph-drawer__link ${edgeRequiredClassModifier} ${edgeRelatedClassModifier}`}
                 d={edge.pathString}
               />
             );
@@ -86,27 +86,27 @@ class GraphDrawer extends React.Component {
             let nodeHighlightedClassModifier = '';
             let nodeClickableClassModifier = '';
             if (this.props.highlightingNode) {
-              nodeClickableClassModifier = this.props.furtherClickableNodeIDs.includes(node.id) ? 'data-dictionary-graph__node--clickable' : 'data-dictionary-graph__node--not-clickable';
+              nodeClickableClassModifier = this.props.furtherClickableNodeIDs.includes(node.id) ? 'graph-drawer__node--clickable' : 'graph-drawer__node--not-clickable';
               if (this.props.furtherHighlightingNodeID) {
-                nodeHighlightedClassModifier = this.props.furtherHighlightedPath.find(e => (e.source === node.id || e.target === node.id)) ? 'data-dictionary-graph__node--highlighted' : 'data-dictionary-graph__node--not-highlighted';
+                nodeHighlightedClassModifier = this.props.furtherHighlightedPath.find(e => (e.source === node.id || e.target === node.id)) ? 'graph-drawer__node--highlighted' : 'graph-drawer__node--not-highlighted';
               } else {
-                nodeHighlightedClassModifier = this.props.relatedNodeIDs.includes(node.id) ? 'data-dictionary-graph__node--highlighted' : 'data-dictionary-graph__node--not-highlighted';
+                nodeHighlightedClassModifier = this.props.relatedNodeIDs.includes(node.id) ? 'graph-drawer__node--highlighted' : 'graph-drawer__node--not-highlighted';
               }
             } else {
-              nodeClickableClassModifier = 'data-dictionary-graph__node--clickable';
+              nodeClickableClassModifier = 'graph-drawer__node--clickable';
             }
             return (
               <g
                 key={node.id}
                 transform={`translate(${node.topCenterX}, ${node.topCenterY}) `}
-                className={`data-dictionary-graph__node ${nodeHighlightedClassModifier} ${nodeClickableClassModifier}`}
+                className={`graph-drawer__node ${nodeHighlightedClassModifier} ${nodeClickableClassModifier}`}
                 onMouseOver={e => this.onMouseOver(node, e)}
                 onMouseOut={this.onMouseOut}
                 onClick={e => this.onClick(node, e)}
                 id={node.id}
               >
                 <rect
-                  className='data-dictionary-graph__node-rect'
+                  className='graph-drawer__node-rect'
                   x={-node.width / 2}
                   y={0}
                   width={node.width}
@@ -119,7 +119,7 @@ class GraphDrawer extends React.Component {
                   node.names.map((row, i) => (
                     <text
                       key={`${node.id}-${i}`}
-                      className='data-dictionary-graph__text'
+                      className='graph-drawer__text'
                       x={0}
                       y={textTopY + i * this.props.fontSize}
                       textAnchor='middle'

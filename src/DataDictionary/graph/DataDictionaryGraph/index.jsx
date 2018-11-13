@@ -1,6 +1,11 @@
 import React from 'react';
-import { ReduxGraphCalculator, ReduxGraphDrawer, ReduxLegend, ReduxCanvas, ReduxNodeTooltip, ReduxNodePopup } from './reduxer';
-import ReduxOverlayPropertyTable from './OverlayPropertyTable';
+import ReduxGraphCalculator from '../GraphCalculator/.';
+import ReduxLegend from '../Legend/.';
+import ReduxCanvas from '../Canvas/.';
+import ReduxGraphDrawer from '../GraphDrawer/.';
+import ReduxNodeTooltip from '../NodeTooltip/.';
+import ReduxNodePopup from '../NodePopup/.';
+import ReduxOverlayPropertyTable from '../OverlayPropertyTable/.';
 
 class DataDictionaryGraph extends React.Component {
   render() {

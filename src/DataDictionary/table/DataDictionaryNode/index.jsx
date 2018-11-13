@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getCategoryColor } from '../../utils';
 import Button from '@gen3/ui-component/dist/components/Button';
-import DataDictionaryPropertyTable from './DataDictionaryPropertyTable';
+import DataDictionaryPropertyTable from '../DataDictionaryPropertyTable/.';
 import './DataDictionaryNode.css';
 
 class DataDictionaryNode extends React.Component {

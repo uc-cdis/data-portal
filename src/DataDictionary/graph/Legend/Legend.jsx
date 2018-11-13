@@ -1,10 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { humanizeString, getTypeIconSVG } from './utils';
-import { getCategoryColor } from '../../utils';
-import RequiredIcon from './icons/required.svg';
-import NotRequiredIcon from './icons/notrequired.svg';
-import InfoIcon from './icons/info.svg';
+import { humanizeString, getTypeIconSVG, getCategoryColor } from '../../utils';
 import './Legend.css';
 
 class Legend extends React.Component {
@@ -33,12 +29,12 @@ class Legend extends React.Component {
                   onClick={this.toggleLegend}
                 />
                 <div className='data-dictionary-graph-legend__item body'>
-                  <RequiredIcon className='data-dictionary-graph-legend__svg-line' />
-                  <span className='data-dictionary-graph-legend__text'>Required</span>
+                  <i className='data-dictionary-graph-legend__required-icon data-dictionary-graph-legend__required-icon--required g3-icon g3-icon--minus' />
+                  <span className='data-dictionary-graph-legend__text'>Required Link</span>
                 </div>
                 <div className='data-dictionary-graph-legend__item body'>
-                  <NotRequiredIcon className='data-dictionary-graph-legend__svg-line' />
-                  <span className='data-dictionary-graph-legend__text'>Not Required</span>
+                  <i className='data-dictionary-graph-legend__required-icon data-dictionary-graph-legend__required-icon g3-icon g3-icon--minus' />
+                  <span className='data-dictionary-graph-legend__text'>Not Required Link</span>
                 </div>
                 {
                   this.props.items.map((type) => {
@@ -67,10 +63,12 @@ class Legend extends React.Component {
               </React.Fragment>
             )
             : (
-              <InfoIcon
+              <span
                 className='data-dictionary-graph-legend__info'
                 onClick={this.toggleLegend}
-              />
+              >
+                <i className='data-dictionary-graph-legend__info-icon g3-icon g3-icon--question-mark' />
+              </span>
             )
         }
       </div>

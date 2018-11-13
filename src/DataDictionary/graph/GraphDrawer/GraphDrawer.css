@@ -1,0 +1,52 @@
+:root {
+  --opacity--not-highlighted: 0.1;
+}
+
+.graph-drawer__node-rect {
+  fill: var(--g3-color__white);
+  stroke-width: 2px;
+}
+
+.graph-drawer__node:hover .graph-drawer__node-rect {
+  fill: var(--g3-color__highlight-orange);
+}
+
+.graph-drawer__link {
+  fill: none;
+  stroke: black;
+}
+
+.graph-drawer__link--required {
+  stroke: var(--g3-color__highlight-orange);;
+}
+
+.graph-drawer__link--highlighted {
+  stroke-width: 3px;
+}
+
+.graph-drawer__link--not-highlighted {
+  opacity: var(--opacity--not-highlighted)
+}
+
+.graph-drawer__node--not-highlighted {
+  opacity: var(--opacity--not-highlighted);
+  cursor: none;
+  pointer-events: none;
+}
+
+.graph-drawer__node--clickable {
+  cursor: pointer;
+}
+
+.graph-drawer__node--not-clickable {
+  cursor: default;
+}
+
+.graph-drawer__text {
+  font-weight: 600;
+  fill: var(--g3-color__black);
+}
+
+.graph-drawer__node:hover .graph-drawer__text {
+  fill: var(--g3-color__white);
+}

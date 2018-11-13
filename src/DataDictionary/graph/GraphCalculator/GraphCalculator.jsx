@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import Viz from 'viz.js';
 import _ from 'underscore';
 import { Module, render } from 'viz.js/full.render';
-import { createNodesAndEdges, createDotStrinByNodesEdges } from '../../DataModelGraph/utils';
-import { truncateLines } from './utils';
-import { getCategoryColor } from '../../utils';
+import { createNodesAndEdges, createDotStrinByNodesEdges } from '../../../DataModelGraph/utils';
+import { truncateLines, getCategoryColor } from '../../utils';
 
 class GraphCalculator extends React.Component {
   constructor(props) {

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
-import {getTypeIconSVG} from '../utils';
-import DataDictionaryPropertyTable from '../../table/DataDictionaryPropertyTable';
+import { getTypeIconSVG } from '../../utils';
+import DataDictionaryPropertyTable from '../../table/DataDictionaryPropertyTable/.';
 import './OverlayPropertyTable.css';
 
 class OverlayPropertyTable extends React.Component {
