@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Button from '@gen3/ui-component/dist/components/Button';
 import QuizStatus from './QuizStatus';
 import './QuizSummary.less';
 
@@ -18,19 +19,16 @@ class QuizSummary extends Component {
 
   render() {
     const finishedAnswer = (this.props.notDone.length + this.props.wrongs.length === 0);
-    const btnCls = finishedAnswer ? 'g3-button--primary' : 'g3-button--secondary';
     return (
       <div className='quiz__right'>
         <div className='quiz__right--box'>
           <QuizStatus title='Not Answered Yet:' questions={this.props.notDone} />
           <QuizStatus title='Incorrect:' questions={this.props.wrongs} />
-          <button
-            className={btnCls}
-            disabled={!finishedAnswer}
+          <Button
+            label='Submit'
+            enabled={finishedAnswer}
             onClick={this.props.onSubmit}
-          >
-            Submit
-          </button>
+          />
         </div>
       </div>
     );

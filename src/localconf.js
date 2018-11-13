@@ -96,6 +96,7 @@ function buildConfig(opts) {
     login,
     loginPath,
     requiredCerts,
+    certs: components.certs,
   };
 }
 

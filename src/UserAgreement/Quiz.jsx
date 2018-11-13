@@ -22,7 +22,7 @@ const makeDefaultState = (questions) => {
 };
 
 /**
- * Little quiz component - roperites: questionList, title, onSubmit
+ * Little quiz component - properties: questionList, title, description, onSubmit
  */
 class Quiz extends Component {
   static propTypes = {
@@ -38,6 +38,7 @@ class Quiz extends Component {
       ),
     ),
     title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
     onSubmit: PropTypes.func.isRequired,
   };
 
@@ -54,16 +55,15 @@ class Quiz extends Component {
   }
 
   componentDidMount() {
-    this.menuHeight = this.menu.offsetHeight;
-    this.qsList.addEventListener('scroll',
-      () => this.handleScroll(this.qsList));
+    this.quizContent.addEventListener('scroll',
+      () => this.handleScroll(this.quizContent));
     const currentQ = this.qsDom[getQuestionSectionId(Object.values(this.qsDom).length)];
     this.lastOffsetTop = currentQ.offsetTop;
   }
 
   componentWillUnmount() {
-    this.qsList.removeEventListener('scroll',
-      () => this.handleScroll(this.qsList));
+    this.quizContent.removeEventListener('scroll',
+      () => this.handleScroll(this.quizContent));
   }
 
   setCurrentSection(sectionIdx) {
@@ -99,27 +99,41 @@ class Quiz extends Component {
       this.scrolledByClick = false;
       return;
     }
-    const curPos = ctrl.scrollTop + ctrl.offsetTop;
     // Get id of current scroll item
-    let { lastOffsetTop } = this;
-    let firstActiveIdx = this.state.currentSection;
+    const curPos = ctrl.scrollTop + ctrl.offsetTop;
+    // lastOffsetTop is set in constructor, store the offsetTop
+    // of the last element in list of question (also section list)
+    // let { lastOffsetTop } = this;
+    // get index of current active section
+    let curActiveIdx = this.state.currentSection;
+    // for each item in section list (question list)
+    // compare with the current position, if the top of section > curPos
+    // => if yes, first line of item is still displayed in the screen
     Object.values(this.qs).forEach((item) => {
       const dom = this.qsDom[getQuestionSectionId(item.props.idx + 1)];
       if (dom.offsetTop >= curPos) {
-        if (dom.offsetTop <= lastOffsetTop &&
-          curPos + ctrl.offsetHeight >= dom.offsetTop + (dom.offsetHeight * 0.9)) {
-          lastOffsetTop = dom.offsetTop;
-          firstActiveIdx = item.props.idx;
+        // if the first line of item < the last selected element
+        // and check if the last position of item has already displayed
+        // in the subscreen
+        if (curPos + ctrl.offsetHeight >= dom.offsetTop + (dom.offsetHeight * 0.9)) {
+          // => if two above tests is correct, set the current section to this item
+          // => also set the last element for this item,
+          // by this way, we can select the lowest item
+          // displayed in screen as current item
+          // lastOffsetTop = dom.offsetTop;
+          curActiveIdx = getQuestionSectionId(item.props.idx + 1);
         }
       }
     });
-    if (firstActiveIdx !== this.state.currentSection) { this.setCurrentSection(firstActiveIdx); }
+    if (curActiveIdx !== this.state.currentSection) {
+      this.setState({ currentSection: curActiveIdx });
+    }
   }
 
   handleClick(e, idx) {
     this.setCurrentSection(idx);
-    this.qsList.scrollTop = this.qsDom[getQuestionSectionId(idx + 1)].offsetTop
-      - this.qsList.offsetTop;
+    this.quizContent.scrollTop = this.qsDom[getQuestionSectionId(idx + 1)].offsetTop
+      - this.quizContent.offsetTop;
     e.preventDefault();
     this.scrolledByClick = true;
   }
@@ -130,7 +144,7 @@ class Quiz extends Component {
   }
 
   render() {
-    const { questionList, title } = this.props;
+    const { questionList, title, description } = this.props;
     return (
       <div className='quiz__form'>
         <div className='quiz__title'>
@@ -158,26 +172,28 @@ class Quiz extends Component {
             }
           </div>
         </div>
-        <div
-          ref={(elem) => { this.qsList = elem; }}
-          className='quiz__questions'
-        >
-          {
-            questionList.map(
-              (item, i) =>
-                (
-                  <div ref={(elem) => { this.qsDom[getQuestionSectionId(i + 1)] = elem; }} key={`question${i}`}>
-                    <Question
-                      content={item}
-                      ref={(elem) => { this.qs[getQuestionSectionId(i + 1)] = elem; }}
-                      idx={i}
-                      sectionId={getQuestionSectionId(i + 1)}
-                      onChange={isCorrect => this.answerQuestion(i, isCorrect)}
-                    />
-                  </div>
-                ),
-            )
-          }
+        <div className='quiz__content' ref={(elem) => { this.quizContent = elem; }}>
+          <h3 className='quiz__description h3'>{description}</h3>
+          <div
+            ref={(elem) => { this.qsList = elem; }}
+          >
+            {
+              questionList.map(
+                (item, i) =>
+                  (
+                    <div ref={(elem) => { this.qsDom[getQuestionSectionId(i + 1)] = elem; }} key={`question${i}`}>
+                      <Question
+                        content={item}
+                        ref={(elem) => { this.qs[getQuestionSectionId(i + 1)] = elem; }}
+                        idx={i}
+                        sectionId={getQuestionSectionId(i + 1)}
+                        onChange={isCorrect => this.answerQuestion(i, isCorrect)}
+                      />
+                    </div>
+                  ),
+              )
+            }
+          </div>
         </div>
         <QuizSummary
           notDone={this.state.notDone}

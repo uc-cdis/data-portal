@@ -58,7 +58,7 @@ describe('the User Agreement component', () => {
     const optionLength = quiz.questions.reduce(
       (res, item) => (res + item.options.length), 0,
     );
-    expect($vdom.find('.quiz__questions')).toHaveLength(1);
+    expect($vdom.find('.quiz__content')).toHaveLength(1);
     expect($vdom.find('.question__content')).toHaveLength(quiz.questions.length);
     expect($vdom.find('.question__name.h4')).toHaveLength(quiz.questions.length);
     expect($vdom.find('.option__bullet')).toHaveLength(optionLength);

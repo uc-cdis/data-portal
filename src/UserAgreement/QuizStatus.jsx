@@ -18,7 +18,7 @@ class QuizStatus extends Component {
     let strQuestions = '';
     let styleCls = 'quiz__status-title';
     if (this.props.questions.length > 0) {
-      strQuestions = this.props.questions.reduce((res, item) => (res + `#${item + 1}, `), strQuestions);
+      strQuestions = this.props.questions.reduce((res, item) => (`${res}#${item + 1}, `), strQuestions);
       strQuestions = `Question(s): ${strQuestions.slice(0, -2)}`;
       styleCls = 'quiz__status-title--incorrect';
     } else { strQuestions = 0; }
