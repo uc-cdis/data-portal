@@ -15,7 +15,7 @@ class OverlayPropertyTable extends React.Component {
     const IconSVG = getTypeIconSVG(this.props.node.category);
     return (
       <div className='overlay-property-table'>
-        <div className='overlay-property-table__background'></div>
+        <div className='overlay-property-table__background' />
         <div className='overlay-property-table__container'>
           <div className='overlay-property-table__header'>
             <Button
@@ -34,18 +34,18 @@ class OverlayPropertyTable extends React.Component {
             />
             <div className='overlay-property-table__header-table'>
               <div className='overlay-property-table__category'>
-                <IconSVG className='overlay-property-table__category-icon'/>
+                <IconSVG className='overlay-property-table__category-icon' />
                 <h4 className='overlay-property-table__category-text'>{this.props.node.category}</h4>
                 <Button
                   className='overlay-property-table__download-button'
-                  onClick={()=>{window.open(`/api/v0/submission/template/${this.props.node.id}?format=tsv`)}}
+                  onClick={() => { window.open(`/api/v0/submission/template/${this.props.node.id}?format=tsv`); }}
                   label='TSV'
                   buttonType='secondary'
                   rightIcon='download'
                 />
                 <Button
                   className='overlay-property-table__download-button'
-                  onClick={()=>{window.open(`/api/v0/submission/template/${this.props.node.id}?format=json`)}}
+                  onClick={() => { window.open(`/api/v0/submission/template/${this.props.node.id}?format=json`); }}
                   label='JSON'
                   buttonType='secondary'
                   rightIcon='download'
@@ -62,7 +62,7 @@ class OverlayPropertyTable extends React.Component {
             </div>
           </div>
           <div className='overlay-property-table__property'>
-            <DataDictionaryPropertyTable 
+            <DataDictionaryPropertyTable
               nodeName={this.props.node.title}
               properties={this.props.node.properties}
               requiredProperties={this.props.node.required}
@@ -77,7 +77,7 @@ class OverlayPropertyTable extends React.Component {
 OverlayPropertyTable.propTypes = {
   hidden: PropTypes.bool,
   node: PropTypes.object,
-  onCloseOverlayPropertyTable: PropTypes.func, 
+  onCloseOverlayPropertyTable: PropTypes.func,
 };
 
 OverlayPropertyTable.defaultProps = {

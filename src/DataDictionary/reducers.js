@@ -13,16 +13,16 @@ const ddgraphInitialState = {
   furtherHighlightingNodeIDs: [],
   dataModelStructure: null,
   overlayPropertyHidden: true,
-  canvasBoundingRect: {top: 0, left: 0},
+  canvasBoundingRect: { top: 0, left: 0 },
 };
 
 const ddgraph = (state = ddgraphInitialState, action) => {
   switch (action.type) {
   case 'GRAPH_TABLE_VIEW': {
     return {
-      ...state, 
+      ...state,
       isGraphView: action.isGraphView,
-    }
+    };
   }
   case 'GRAPH_LAYOUT': {
     return {
@@ -69,7 +69,7 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     return {
       ...state,
       canvasBoundingRect: action.canvasBoundingRect,
-    }
+    };
   }
   case 'GRAPH_RELATED_NODE': {
     return {
@@ -113,31 +113,29 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     };
   }
   case 'TABLE_EXPAND_NODE_ID': {
-    console.log('reducer: ', action);
     let newHighlightingNode = null;
     const newFurtherHighlightingNodeID = null;
     if (action.nodeID) {
       newHighlightingNode = state.nodes.find(n => n.id === action.nodeID);
-      console.log(newHighlightingNode);
     }
     return {
       ...state,
-      tableExpandNodeID: action.nodeID, 
+      tableExpandNodeID: action.nodeID,
       highlightingNode: newHighlightingNode,
       furtherHighlightingNodeID: newFurtherHighlightingNodeID,
     };
   }
   case 'GRAPH_DATA_MODEL_STRUCTURE': {
     return {
-      ...state, 
+      ...state,
       dataModelStructure: action.dataModelStructure,
-    }
+    };
   }
   case 'GRAPH_OVERLAY_PROPERTY_HIDDEN': {
     return {
       ...state,
       overlayPropertyHidden: action.isHidden,
-    }
+    };
   }
   default:
     return state;

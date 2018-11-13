@@ -58,7 +58,7 @@ NodePopup.propTypes = {
   svgCTM: PropTypes.object,
   onClosePopup: PropTypes.func,
   canvasBoundingRect: PropTypes.object,
-  onOpenOverlayPropertyTable: PropTypes.func, 
+  onOpenOverlayPropertyTable: PropTypes.func,
 };
 
 NodePopup.defaultProps = {
@@ -66,7 +66,7 @@ NodePopup.defaultProps = {
   highlightingNodeSVGElement: null,
   svgCTM: null,
   onClosePopup: () => {},
-  canvasBoundingRect: {top: 0, left: 0},
+  canvasBoundingRect: { top: 0, left: 0 },
   onOpenOverlayPropertyTable: () => {},
 };
 

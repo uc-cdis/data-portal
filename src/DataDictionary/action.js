@@ -7,7 +7,7 @@ export const setSVGCTM = svgCTM => ({
   svgCTM,
 });
 
-export const setCanvasBoundingRect = (canvasBoundingRect) => ({
+export const setCanvasBoundingRect = canvasBoundingRect => ({
   type: 'GRAPH_CANVAS_BOUNDING_RECT',
   canvasBoundingRect,
 });
@@ -22,7 +22,7 @@ export const setFurtherHighlightedPath = furtherHighlightedPath => ({
   furtherHighlightedPath,
 });
 
-export const setDataModelStructure = (dataModelStructure) => ({
+export const setDataModelStructure = dataModelStructure => ({
   type: 'GRAPH_DATA_MODEL_STRUCTURE',
   dataModelStructure,
 });
@@ -73,7 +73,7 @@ export const setExpandNode = nodeID => ({
   nodeID,
 });
 
-const setGraphView = isGraphView => ({
+export const setGraphView = isGraphView => ({
   type: 'GRAPH_TABLE_VIEW',
   isGraphView,
 });

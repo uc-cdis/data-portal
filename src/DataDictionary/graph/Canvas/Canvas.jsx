@@ -14,13 +14,13 @@ class Canvas extends React.Component {
 
   componentDidMount() {
     this.zoomBehavior = d3.zoom()
-        .scaleExtent([this.props.minZoom, this.props.maxZoom])
-        .translateExtent([this.props.topLeftTranslateLimit, this.props.bottomRightTranslateLimit])
-        .on('zoom', () => {
-          this.handleCanvasUpdate();
-          this.zoomTarget
-            .attr('transform', d3.event.transform);
-        });
+      .scaleExtent([this.props.minZoom, this.props.maxZoom])
+      .translateExtent([this.props.topLeftTranslateLimit, this.props.bottomRightTranslateLimit])
+      .on('zoom', () => {
+        this.handleCanvasUpdate();
+        this.zoomTarget
+          .attr('transform', d3.event.transform);
+      });
     this.zoomTarget = d3.select('.canvas__container');
     this.zoomCatcher = d3.select('.canvas__overlay')
       .style('fill', 'none')
@@ -61,30 +61,45 @@ class Canvas extends React.Component {
   }
 
   handleZoomIn = () => {
-    var transform = d3.zoomTransform(this.zoomCatcher.node());
+    const transform = d3.zoomTransform(this.zoomCatcher.node());
     this.zoomCatcher.call(this.zoomBehavior.transform, transform.scale(1.1));
   }
 
   handleZoomOut = () => {
-    var transform = d3.zoomTransform(this.zoomCatcher.node());
+    const transform = d3.zoomTransform(this.zoomCatcher.node());
     this.zoomCatcher.call(this.zoomBehavior.transform, transform.scale(0.9));
   }
 
   handleReset = () => {
-    this.zoomCatcher.call(this.zoomBehavior.transform, d3.zoomIdentity)
+    this.zoomCatcher.call(this.zoomBehavior.transform, d3.zoomIdentity);
   }
 
   render() {
     return (
       <div className='canvas' ref={this.canvasElement} style={{ width: '100%', height: '100%' }}>
         <div className='canvas__zoom-button-group'>
-          <div className='canvas__zoom-button' onClick={this.handleReset}>
+          <div
+            className='canvas__zoom-button'
+            onClick={this.handleReset}
+            role='button'
+            tabIndex={-1}
+          >
             <i className='canvas__zoom-icon g3-icon g3-icon--reset' />
           </div>
-          <div className='canvas__zoom-button' onClick={this.handleZoomIn}>
+          <div
+            className='canvas__zoom-button'
+            onClick={this.handleZoomIn}
+            role='button'
+            tabIndex={-1}
+          >
             <i className='canvas__zoom-icon g3-icon g3-icon--plus' />
           </div>
-          <div className='canvas__zoom-button' onClick={this.handleZoomOut}>
+          <div
+            className='canvas__zoom-button'
+            onClick={this.handleZoomOut}
+            role='button'
+            tabIndex={-1}
+          >
             <i className='canvas__zoom-icon canvas__zoom-icon--zoom-in g3-icon g3-icon--minus' />
           </div>
         </div>
@@ -129,7 +144,7 @@ Canvas.propTypes = {
   ]).isRequired,
   onClickBlankSpace: PropTypes.func,
   onCanvasUpdate: PropTypes.func,
-  onCanvasTopLeftUpdate: PropTypes.func, 
+  onCanvasTopLeftUpdate: PropTypes.func,
 };
 
 Canvas.defaultProps = {

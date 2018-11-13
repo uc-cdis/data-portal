@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {getTypeIconSVG} from '../utils';
 import Button from '@gen3/ui-component/dist/components/Button';
+import { getTypeIconSVG } from '../utils';
 import './DataModelStructure.css';
 
 class DataModelStructure extends React.Component {
@@ -20,12 +20,12 @@ class DataModelStructure extends React.Component {
       <div className='data-model-structure'>
         <h4 className='data-model-structure__header'>Data Model Structure</h4>
         <div className='data-model-structure__containter'>
-          <div className='data-model-structure__path-line'/>
+          <div className='data-model-structure__path-line' />
           {
             this.props.dataModelStructure.map((entry, i) => {
-              const {nodeID, nodeIDsBefore, linksBefore, category} = entry;
+              const { nodeID, nodeIDsBefore, linksBefore, category } = entry;
               const IconSVG = getTypeIconSVG(category);
-              const lastNodeModier = (i === this.props.dataModelStructure.length-1) ? 'data-model-structure__node-name--last' : '';
+              const lastNodeModier = (i === this.props.dataModelStructure.length - 1) ? 'data-model-structure__node-name--last' : '';
               return (
                 <React.Fragment key={nodeID}>
                   {
@@ -45,7 +45,7 @@ class DataModelStructure extends React.Component {
                       </React.Fragment>
                     )
                   }
-                  <div className={`data-model-structure__node`}>
+                  <div className={'data-model-structure__node'}>
                     <IconSVG className='data-model-structure__icon' />
                     <span className={`data-model-structure__node-name ${lastNodeModier} introduction`}>{nodeID}</span>
                   </div>
@@ -72,9 +72,9 @@ class DataModelStructure extends React.Component {
 
 DataModelStructure.propTypes = {
   dataModelStructure: PropTypes.arrayOf(PropTypes.object),
-  isGraphView: PropTypes.bool, 
-  onSetGraphView: PropTypes.func, 
-  onOpenOverlayPropertyTable: PropTypes.func, 
+  isGraphView: PropTypes.bool,
+  onSetGraphView: PropTypes.func,
+  onOpenOverlayPropertyTable: PropTypes.func,
 };
 
 DataModelStructure.defaultProps = {

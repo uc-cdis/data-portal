@@ -50,7 +50,7 @@ NodeTooltip.defaultProps = {
   hoveringNode: null,
   hoveringNodeSVGElement: null,
   svgCTM: null,
-  canvasBoundingRect: {top: 0, left: 0},
+  canvasBoundingRect: { top: 0, left: 0 },
 };
 
 export default NodeTooltip;

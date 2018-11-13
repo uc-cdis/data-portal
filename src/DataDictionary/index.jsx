@@ -1,10 +1,6 @@
 import { connect } from 'react-redux';
+import { setGraphView } from './action.js';
 import DataDictionary from './DataDictionary';
-
-const setGraphView = isGraphView => ({
-  type: 'GRAPH_TABLE_VIEW',
-  isGraphView,
-});
 
 const ReduxDataDictionary = (() => {
   const mapStateToProps = state => ({
@@ -12,7 +8,7 @@ const ReduxDataDictionary = (() => {
   });
 
   const mapDispatchToProps = dispatch => ({
-    onSetGraphView: (isGraphView) => dispatch(setGraphView(isGraphView)),
+    onSetGraphView: isGraphView => dispatch(setGraphView(isGraphView)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(DataDictionary);

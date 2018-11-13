@@ -7,7 +7,6 @@ import './DataDictionaryNode.css';
 
 class DataDictionaryNode extends React.Component {
   handleClickNode(nodeID) {
-    console.log(nodeID);
     if (!this.props.expanded) {
       this.props.onExpandNode(nodeID);
     } else {
@@ -35,7 +34,7 @@ class DataDictionaryNode extends React.Component {
             <span className='data-dictionary-node__button-wrap'>
               <Button
                 className='data-dictionary-node__download-button'
-                onClick={()=> {window.open(`/api/v0/submission/template/${this.props.node.id}?format=json`)}}
+                onClick={() => { window.open(`/api/v0/submission/template/${this.props.node.id}?format=json`); }}
                 label='JSON'
                 buttonType='secondary'
               />
@@ -43,7 +42,7 @@ class DataDictionaryNode extends React.Component {
             <span className='data-dictionary-node__button-wrap'>
               <Button
                 className='data-dictionary-node__download-button'
-                onClick={()=>{window.open(`/api/v0/submission/template/${this.props.node.id}?format=tsv`)}}
+                onClick={() => { window.open(`/api/v0/submission/template/${this.props.node.id}?format=tsv`); }}
                 label='TSV'
                 buttonType='secondary'
               />

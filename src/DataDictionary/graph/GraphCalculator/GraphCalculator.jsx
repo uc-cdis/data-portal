@@ -31,9 +31,9 @@ class GraphCalculator extends React.Component {
     const relatedNodes = [];
     let currentLevelNodeIDs = highlightingNode.outLinks;
     while (currentLevelNodeIDs.length > 0) {
-      let nextLevelNodeIDs = [];
+      const nextLevelNodeIDs = [];
       currentLevelNodeIDs.forEach((nodeId) => {
-        if (relatedNodes.find(n=>n.id === nodeId) || nextLevelNodeIDs.includes(nodeId)) return;
+        if (relatedNodes.find(n => n.id === nodeId) || nextLevelNodeIDs.includes(nodeId)) return;
         const originNode = this.props.nodes.find(n => (n.id === nodeId));
         relatedNodes.push(originNode);
         const nextLevel = originNode.outLinks;
@@ -50,7 +50,7 @@ class GraphCalculator extends React.Component {
     const relatedNodeIDs = [];
     let currentLevelNodeIDs = highlightingNode.outLinks;
     while (currentLevelNodeIDs.length > 0) {
-      let nextLevelNodeIDs = [];
+      const nextLevelNodeIDs = [];
       currentLevelNodeIDs.forEach((nodeId) => {
         if (relatedNodeIDs.includes(nodeId) || nextLevelNodeIDs.includes(nodeId)) return;
         relatedNodeIDs.push(nodeId);
@@ -72,19 +72,19 @@ class GraphCalculator extends React.Component {
       target: outID,
     }));
     while (currentLevelNodeIDs.length > 0) {
-      let nextLevelNodeIDs = [];
+      const nextLevelNodeIDs = [];
       currentLevelNodeIDs.forEach((nodeID) => {
         if (nextLevelNodeIDs.includes(nodeID)) return;
         const originNode = this.props.nodes.find(n => (n.id === nodeID));
         const nextLevel = originNode.outLinks;
         nextLevel.forEach((outNodeID) => {
-          if (nextLevelNodeIDs.includes(outNodeID) 
-            || currentLevelNodeIDs.includes(outNodeID)) return;
-          nextLevelNodeIDs.push(outNodeID);
           relatedLinks.push({
             source: nodeID,
             target: outNodeID,
           });
+          if (nextLevelNodeIDs.includes(outNodeID)
+            || currentLevelNodeIDs.includes(outNodeID)) return;
+          nextLevelNodeIDs.push(outNodeID);
         });
       });
       currentLevelNodeIDs = nextLevelNodeIDs;
@@ -240,27 +240,22 @@ class GraphCalculator extends React.Component {
   }
 
   isArticulationNode(targetNodeID, startingNodeID, subgraphNodeIDs, subgraphEdges) {
-    console.log('isArticulationNode: targetNodeID = ', targetNodeID, 'startingNodeID = ', startingNodeID);
-    // calculate connected node without target node, 
+    // calculate connected node without target node,
     let currentLevelNodeIDs = [startingNodeID];
-    let nodeIDsInSubgraphWithoutTargetNode = [];
+    const nodeIDsInSubgraphWithoutTargetNode = [];
     while (currentLevelNodeIDs.length > 0) {
-      let nextLevelNodeIDs = [];
-      currentLevelNodeIDs.forEach(nodeID => {
+      const nextLevelNodeIDs = [];
+      currentLevelNodeIDs.forEach((nodeID) => {
         if (nodeIDsInSubgraphWithoutTargetNode.includes(nodeID) || nextLevelNodeIDs.includes(nodeID)) return;
         nodeIDsInSubgraphWithoutTargetNode.push(nodeID);
         const node = this.props.nodes.find(n => n.id === nodeID);
-        const inNeighbors = node.inLinks.filter(inNodeID => {
-          return subgraphEdges.find(e => e.source === inNodeID && e.target === nodeID);
-        });
-        const outNeighbors = node.outLinks.filter(outNodeID => {
-          return subgraphEdges.find(e => e.target === outNodeID && e.source === nodeID);
-        });
+        const inNeighbors = node.inLinks.filter(inNodeID => subgraphEdges.find(e => e.source === inNodeID && e.target === nodeID));
+        const outNeighbors = node.outLinks.filter(outNodeID => subgraphEdges.find(e => e.target === outNodeID && e.source === nodeID));
         const neighborNodeIDs = [...inNeighbors, ...outNeighbors];
         neighborNodeIDs
           .filter(nid => subgraphNodeIDs.includes(nid))
           .filter(nid => (nid !== targetNodeID))
-          .forEach(nid => {
+          .forEach((nid) => {
             nextLevelNodeIDs.push(nid);
           });
       });
@@ -272,8 +267,8 @@ class GraphCalculator extends React.Component {
   }
 
   getArticulationNodesInSubgraph(startingNodeID, subgraphNodeIDs, subgraphEdges) {
-    let articulationNodeIDs = [];
-    subgraphNodeIDs.forEach(nodeID => {
+    const articulationNodeIDs = [];
+    subgraphNodeIDs.forEach((nodeID) => {
       if (this.isArticulationNode(nodeID, startingNodeID, subgraphNodeIDs, subgraphEdges)) {
         articulationNodeIDs.push(nodeID);
       }
@@ -283,29 +278,25 @@ class GraphCalculator extends React.Component {
 
   getNodesAndLinksBetweenArticulationNodes(startingNodeID, endingNodeID, subgraphNodeIDs, subgraphEdges) {
     const startingNode = this.props.nodes.find(node => node.id === startingNodeID);
-    let betweenNodeIDs = [];
-    const firstLevelOutNodeIDs = startingNode.outLinks.filter(outNodeID => {
-      return subgraphEdges.find(e => e.source === startingNodeID && e.target === outNodeID);
-    });
+    const betweenNodeIDs = [];
+    const firstLevelOutNodeIDs = startingNode.outLinks.filter(outNodeID => subgraphEdges.find(e => e.source === startingNodeID && e.target === outNodeID));
     let currentLevelNodeIDs = firstLevelOutNodeIDs;
-    let betweenLinks = firstLevelOutNodeIDs.map(outID => ({source: startingNodeID, target: outID}));
+    const betweenLinks = firstLevelOutNodeIDs.map(outID => ({ source: startingNodeID, target: outID }));
     while (currentLevelNodeIDs.length > 0) {
-      let nextLevelNodeIDs = [];
+      const nextLevelNodeIDs = [];
       currentLevelNodeIDs.forEach((nodeID) => {
         if (betweenNodeIDs.includes(nodeID) || nextLevelNodeIDs.includes(nodeID) || nodeID === endingNodeID) return;
         betweenNodeIDs.push(nodeID);
         const node = this.props.nodes.find(n => (n.id === nodeID));
         const outNOdeIDsInSubgraph = node.outLinks
           .filter(outNodeID => subgraphNodeIDs.includes(outNodeID))
-          .filter(outNodeID => {
-            return subgraphEdges.find(e => e.source === nodeID && e.target === outNodeID);
+          .filter(outNodeID => subgraphEdges.find(e => e.source === nodeID && e.target === outNodeID));
+        outNOdeIDsInSubgraph.forEach((outNodeID) => {
+          betweenLinks.push({
+            source: nodeID,
+            target: outNodeID,
           });
-        outNOdeIDsInSubgraph.forEach(outNodeID => {
-            betweenLinks.push({
-              source: nodeID,
-              target: outNodeID,
-            });
-          });
+        });
         outNOdeIDsInSubgraph
           .filter(outNodeID => outNodeID !== endingNodeID)
           .forEach((outNodeID) => {
@@ -321,32 +312,26 @@ class GraphCalculator extends React.Component {
   }
 
   BFSTraverseSubgraph(subgraphNodeIDs, subgraphEdges) {
-    console.log('traverse: ', subgraphNodeIDs, subgraphEdges);
     let currentLevelNodeIDs = [];
-    subgraphNodeIDs.forEach(nodeID => {
+    subgraphNodeIDs.forEach((nodeID) => {
       const node = this.props.nodes.find(n => n.id === nodeID);
       const inLinks = node.inLinks
         .filter(inNodeID => subgraphNodeIDs.includes(inNodeID))
-        .filter(inNodeID => {
-          return subgraphEdges.find(e => e.target === nodeID && subgraphNodeIDs.includes(e.source));
-        })
+        .filter(inNodeID => subgraphEdges.find(e => e.target === nodeID && subgraphNodeIDs.includes(e.source)))
         .filter(inNodeID => (inNodeID !== nodeID));
-      console.log(nodeID, ' inlinks: ', inLinks);
       if (!inLinks || inLinks.length === 0) {
         currentLevelNodeIDs.push(nodeID);
       }
     });
-    let resultNodeIDs = [];
+    const resultNodeIDs = [];
     while (currentLevelNodeIDs.length > 0) {
-      let nextLevelNodeIDs = [];
-      currentLevelNodeIDs.forEach(nodeID => {
+      const nextLevelNodeIDs = [];
+      currentLevelNodeIDs.forEach((nodeID) => {
         if (!resultNodeIDs.includes(nodeID)) resultNodeIDs.push(nodeID);
         const node = this.props.nodes.find(n => n.id === nodeID);
         if (!node) return;
-        const outNeighbors = node.outLinks.filter(outNodeID => {
-          return subgraphEdges.find(e => e.source === nodeID && outNodeID === e.target);
-        });
-        outNeighbors.forEach(outNodeID => {
+        const outNeighbors = node.outLinks.filter(outNodeID => subgraphEdges.find(e => e.source === nodeID && outNodeID === e.target));
+        outNeighbors.forEach((outNodeID) => {
           if (currentLevelNodeIDs.includes(outNodeID) || nextLevelNodeIDs.includes(outNodeID)) {
             return;
           }
@@ -355,40 +340,35 @@ class GraphCalculator extends React.Component {
       });
       currentLevelNodeIDs = nextLevelNodeIDs;
     }
-    console.log('bfs result: ', resultNodeIDs);
     return resultNodeIDs;
   }
 
   sortNodesByTopology(nodeIDsToSort, subgraphNodeIDs, subgraphEdges) {
     const graphBFSTraverse = this.BFSTraverseSubgraph(subgraphNodeIDs, subgraphEdges);
     const sortedNodeIDs = graphBFSTraverse.filter(nodeID => nodeIDsToSort.includes(nodeID));
-    console.log('sorted nodes by topo: ', sortedNodeIDs);
     return sortedNodeIDs;
   }
 
   calculateDataModelStructure(startingNode, subgraphNodeIDs, subgraphEdges) {
     if (!startingNode) return null;
-    console.log('calculate data model: ', startingNode, subgraphNodeIDs, subgraphEdges);
     const startingNodeID = startingNode.id;
-    let articulationNodeIDs = this.getArticulationNodesInSubgraph(
+    const articulationNodeIDs = this.getArticulationNodesInSubgraph(
       startingNodeID,
       subgraphNodeIDs,
       subgraphEdges,
     );
-    console.log('articulationNodeIDs: ', articulationNodeIDs);
 
     const sortedArticulationNodeIDs = this.sortNodesByTopology(articulationNodeIDs, subgraphNodeIDs, subgraphEdges);
-    console.log('sorted: ', sortedArticulationNodeIDs);
     let resultStructure = [];
-    for (let i = 1; i < sortedArticulationNodeIDs.length; i ++) {
-      const { nodeIDs, links } = this.getNodesAndLinksBetweenArticulationNodes(sortedArticulationNodeIDs[i-1], sortedArticulationNodeIDs[i], subgraphNodeIDs, subgraphEdges);
+    for (let i = 1; i < sortedArticulationNodeIDs.length; i++) {
+      const { nodeIDs, links } = this.getNodesAndLinksBetweenArticulationNodes(sortedArticulationNodeIDs[i - 1], sortedArticulationNodeIDs[i], subgraphNodeIDs, subgraphEdges);
       resultStructure.push({
-        nodeID: sortedArticulationNodeIDs[i-1],
+        nodeID: sortedArticulationNodeIDs[i - 1],
         nodeIDsBefore: nodeIDs,
         linksBefore: links,
       });
     }
-    const lastArticulationNodeID = sortedArticulationNodeIDs[sortedArticulationNodeIDs.length-1];
+    const lastArticulationNodeID = sortedArticulationNodeIDs[sortedArticulationNodeIDs.length - 1];
     const lastArticulationNode = this.props.nodes.find(node => node.id === lastArticulationNodeID);
     const nodeIDsBeforeLastArticulationNode = this.getAllChildrenNodeIDs(lastArticulationNode);
     const linksBeforeLastArticulationNode = this.getAllChildrenLinks(lastArticulationNode);
@@ -402,20 +382,19 @@ class GraphCalculator extends React.Component {
         nodeID: nodeIDsBeforeLastArticulationNode[0],
         nodeIDsBefore: [],
         linksBefore: [],
-      })
+      });
     }
-    
-    resultStructure = resultStructure.map(entry => {
-      const {nodeID, nodeIDsBefore, linksBefore} = entry;
+
+    resultStructure = resultStructure.map((entry) => {
+      const { nodeID, nodeIDsBefore, linksBefore } = entry;
       const category = this.props.nodes.find(n => n.id === nodeID).type;
       return {
         nodeID,
         nodeIDsBefore,
         linksBefore,
         category,
-      }
+      };
     }).reverse();
-    console.log('data model structure: ', resultStructure);
     return resultStructure;
   }
 
@@ -437,19 +416,17 @@ class GraphCalculator extends React.Component {
     }
 
     // update data model structure
-    if (this.oldHighlightingNode !== newHighlightingNode 
+    if (this.oldHighlightingNode !== newHighlightingNode
       || this.oldFurtherHighlightingNodeID !== newFurtherHighlightingNodeID) {
-
       if (newFurtherHighlightingNodeID) {
-        let subgraphNodeIDs = [];
+        const subgraphNodeIDs = [];
         const furtherHighlightedPath = this.calculateFurtherHighlightedPath(newHighlightingNode, newFurtherHighlightingNodeID);
-        furtherHighlightedPath.forEach(e => {
+        furtherHighlightedPath.forEach((e) => {
           if (!subgraphNodeIDs.includes(e.source)) subgraphNodeIDs.push(e.source);
           if (!subgraphNodeIDs.includes(e.target)) subgraphNodeIDs.push(e.target);
-        })
-        console.log(subgraphNodeIDs);
+        });
         const dataModelStructure = this.calculateDataModelStructure(
-          newHighlightingNode, 
+          newHighlightingNode,
           subgraphNodeIDs,
           furtherHighlightedPath,
         );
@@ -457,15 +434,14 @@ class GraphCalculator extends React.Component {
       } else if (newHighlightingNode) {
         const relatedHighlightedNodeIDs = this.calculateHighlightRelatedNodeIDs(newHighlightingNode);
         const dataModelStructure = this.calculateDataModelStructure(
-          newHighlightingNode, 
-          relatedHighlightedNodeIDs, 
+          newHighlightingNode,
+          relatedHighlightedNodeIDs,
           this.props.edges
             .filter(e => relatedHighlightedNodeIDs.includes(e.source) && relatedHighlightedNodeIDs.includes(e.target))
-            .map(e => ({source: e.source, target: e.target})),
+            .map(e => ({ source: e.source, target: e.target })),
         );
         this.props.onDataModelStructureCalculated(dataModelStructure);
-      }
-      else {
+      } else {
         this.props.onDataModelStructureCalculated(null);
       }
     }
@@ -492,7 +468,7 @@ GraphCalculator.propTypes = {
   furtherHighlightingNodeID: PropTypes.string,
   onFurtherClickableNodeIDsCalculated: PropTypes.func,
   onFurtherHighlightedPathCalculated: PropTypes.func,
-  onDataModelStructureCalculated: PropTypes.func, 
+  onDataModelStructureCalculated: PropTypes.func,
 };
 
 GraphCalculator.defaultProps = {

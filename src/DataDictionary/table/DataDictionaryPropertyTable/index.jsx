@@ -57,63 +57,63 @@ class DataDictionaryPropertyTable extends React.Component {
           <tbody>
             {
               Object.keys(this.props.properties)
-              .sort((k1, k2) => {
-                const required1 = this.props.requiredProperties.includes(k1);
-                const required2 = this.props.requiredProperties.includes(k2);
-                if (required1) return -1;
-                if (required2) return 1;
-                return 0;
-              })
-              .map((propertyKey) => {
-                const property = this.props.properties[propertyKey];
-                const type = getType(property);
-                let rawDescription = 'No Description';
-                if ('description' in property) {
-                  rawDescription = property.description;
-                }
-                if ('term' in property) {
-                  rawDescription = property.term.description;
-                }
-                const descriptionElements = (
-                  <React.Fragment>
-                    {
-                      rawDescription &&
+                .sort((k1, k2) => {
+                  const required1 = this.props.requiredProperties.includes(k1);
+                  const required2 = this.props.requiredProperties.includes(k2);
+                  if (required1) return -1;
+                  if (required2) return 1;
+                  return 0;
+                })
+                .map((propertyKey) => {
+                  const property = this.props.properties[propertyKey];
+                  const type = getType(property);
+                  let rawDescription = 'No Description';
+                  if ('description' in property) {
+                    rawDescription = property.description;
+                  }
+                  if ('term' in property) {
+                    rawDescription = property.term.description;
+                  }
+                  const descriptionElements = (
+                    <React.Fragment>
+                      {
+                        rawDescription &&
                       rawDescription.split('\\n').map((desc, i) => (
                         <span key={`${propertyKey}-desc-${i}`}>
                           {desc}
                         </span>
                       ))
-                    }
-                  </React.Fragment>
-                );
-                const isRequired = this.props.requiredProperties.includes(propertyKey);
-                return (
-                  <tr key={propertyKey}>
-                    <td className='data-dictionary-property-table__data'>{propertyKey}</td>
-                    <td className='data-dictionary-property-table__data'>
-                      <ul>
-                        {
-                          typeof type === 'string' ? (<li>{type}</li>) : type.map(t => (
-                            <li key={t}>{t}</li>
-                          ))
-                        }
-                      </ul>
-                    </td>
-                    <td className='data-dictionary-property-table__data'>
-                      { isRequired ? (
+                      }
+                    </React.Fragment>
+                  );
+                  const isRequired = this.props.requiredProperties.includes(propertyKey);
+                  return (
+                    <tr key={propertyKey}>
+                      <td className='data-dictionary-property-table__data'>{propertyKey}</td>
+                      <td className='data-dictionary-property-table__data'>
+                        <ul>
+                          {
+                            typeof type === 'string' ? (<li>{type}</li>) : type.map(t => (
+                              <li key={t}>{t}</li>
+                            ))
+                          }
+                        </ul>
+                      </td>
+                      <td className='data-dictionary-property-table__data'>
+                        { isRequired ? (
                           <span className='data-dictionary-property-table__required'>
                             <i className='g3-icon g3-icon--star data-dictionary-property-table__required-icon' />Required
                           </span>
                         ) : (
                           <span>No</span>
                         )
-                      }
-                    </td>
-                    <td className='data-dictionary-property-table__data'>{descriptionElements}</td>
-                    <td className='data-dictionary-property-table__data' />
-                  </tr>
-                );
-              })
+                        }
+                      </td>
+                      <td className='data-dictionary-property-table__data'>{descriptionElements}</td>
+                      <td className='data-dictionary-property-table__data' />
+                    </tr>
+                  );
+                })
             }
 
           </tbody>

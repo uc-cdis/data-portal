@@ -3,7 +3,7 @@ import {
   setHoveringNode,
   setHighlightingNode,
   setFurtherHighlightingNodeID,
-} from '../../action.js'
+} from '../../action.js';
 import GraphDrawer from './GraphDrawer';
 
 const ReduxGraphDrawer = (() => {

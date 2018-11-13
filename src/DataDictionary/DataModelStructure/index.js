@@ -9,7 +9,7 @@ const ReduxDataModelStructure = (() => {
   });
 
   const mapDispatchToProps = dispatch => ({
-    onSetGraphView: (isGraphView) => dispatch(setGraphView(isGraphView)),
+    onSetGraphView: isGraphView => dispatch(setGraphView(isGraphView)),
     onOpenOverlayPropertyTable: () => dispatch(setOverlayPropertyTableHidden(false)),
   });
 

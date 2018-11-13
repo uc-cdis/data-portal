@@ -7,7 +7,6 @@ import './DataDictionary.css';
 
 class DataDictionary extends React.Component {
   setGraphView = (isGraphView) => {
-    console.log(isGraphView);
     this.props.onSetGraphView(isGraphView);
   }
 
@@ -19,12 +18,16 @@ class DataDictionary extends React.Component {
             <span
               className={`data-dictionary__switch-button ${!this.props.isGraphView ? '' : 'data-dictionary__switch-button--active'}`}
               onClick={() => { this.setGraphView(true); }}
+              role='button'
+              tabIndex={0}
             >
               Graph View
             </span>
             <span
               className={`data-dictionary__switch-button ${this.props.isGraphView ? '' : 'data-dictionary__switch-button--active'}`}
               onClick={() => { this.setGraphView(false); }}
+              role='button'
+              tabIndex={1}
             >
               Table View
             </span>
@@ -51,8 +54,8 @@ class DataDictionary extends React.Component {
 }
 
 DataDictionary.propTypes = {
-  onSetGraphView: PropTypes.func, 
-  isGraphView: PropTypes.bool, 
+  onSetGraphView: PropTypes.func,
+  isGraphView: PropTypes.bool,
 };
 
 DataDictionary.defaultProps = {

@@ -3,12 +3,10 @@ import { setOverlayPropertyTableHidden } from '../../action.js';
 import OverlayPropertyTable from './OverlayPropertyTable';
 
 const ReduxOverlayPropertyTable = (() => {
-  const mapStateToProps = state => {
-    return {
-      hidden: state.ddgraph.overlayPropertyHidden,
-      node: state.ddgraph.highlightingNode ? state.submission.dictionary[state.ddgraph.highlightingNode.id] : null,
-    }
-  };
+  const mapStateToProps = state => ({
+    hidden: state.ddgraph.overlayPropertyHidden,
+    node: state.ddgraph.highlightingNode ? state.submission.dictionary[state.ddgraph.highlightingNode.id] : null,
+  });
 
   const mapDispatchToProps = dispatch => ({
     onCloseOverlayPropertyTable: () => dispatch(setOverlayPropertyTableHidden(true)),

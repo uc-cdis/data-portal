@@ -21,7 +21,6 @@ shape=rectangle
     });
   }
   graphString += '}';
-  // console.log(graphString);
   return graphString;
 };
 
