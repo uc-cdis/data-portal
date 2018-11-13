@@ -358,7 +358,11 @@ class GraphCalculator extends React.Component {
       subgraphEdges,
     );
 
+    if (!articulationNodeIDs || articulationNodeIDs.length === 0) return null;
     const sortedArticulationNodeIDs = this.sortNodesByTopology(articulationNodeIDs, subgraphNodeIDs, subgraphEdges);
+    if (!sortedArticulationNodeIDs || sortedArticulationNodeIDs.length === 0) { // loop in graph
+      return null; 
+    }
     let resultStructure = [];
     for (let i = 1; i < sortedArticulationNodeIDs.length; i++) {
       const { nodeIDs, links } = this.getNodesAndLinksBetweenArticulationNodes(sortedArticulationNodeIDs[i - 1], sortedArticulationNodeIDs[i], subgraphNodeIDs, subgraphEdges);
