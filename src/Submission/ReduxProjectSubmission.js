@@ -83,12 +83,12 @@ const ReduxSubmitForm = (() => {
     submission: state.submission,
   });
 
-  const matpDispatchToProps = dispatch => ({
+  const mapDispatchToProps = dispatch => ({
     onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
     onUpdateFormSchema: (formSchema => dispatch(updateFormSchema(formSchema))),
   });
 
-  return connect(mapStateToProps, matpDispatchToProps)(SubmitForm);
+  return connect(mapStateToProps, mapDispatchToProps)(SubmitForm);
 })();
 
 

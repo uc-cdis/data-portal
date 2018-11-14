@@ -43,11 +43,15 @@ class ProjectTable extends React.Component {
     const projectList = (this.props.projectList || []).sort(
       (a, b) => compare(a, b),
     );
-    return (<Table
-      header={this.getHeaders(this.props.summaries)}
-      data={this.getData(projectList)}
-      footer={this.getFooter(this.props.summaries)}
-    />);
+    return (
+      <div className='project-table'>
+        <Table
+          title='List of Projects'
+          header={this.getHeaders(this.props.summaries)}
+          data={this.getData(projectList)}
+        />
+      </div>
+    );
   }
 }
 

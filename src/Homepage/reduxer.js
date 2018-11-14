@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { components } from '../params';
-import ProjectDashboard from '../components/ProjectDashboard';
+import ProjectDashboard from '../Submission/ProjectDashboard';
 import TransactionLogTable from '../components/tables/TransactionLogTable';
 
 const extractData = (summaryCounts) => {

@@ -14,6 +14,16 @@ class TransactionLogTable extends Component {
     return `${date.toLocaleString()} UTC${(offsetMins > 0) ? '' : '+'}${offsetHous}`;
   };
 
+  getTotalFileSize = (documents) => {
+    let totalSize = 0
+    if (documents) {
+      documents.forEach(doc =>
+        totalSize += doc.doc_size || 0
+      )
+    }
+    return totalSize
+  };
+
   stateToColor = state => (state === 'SUCCEEDED' &&
       <div className='form-special-number transaction-log-table__status-bar'>{formatText(state)}</div>)
     || ((state === 'FAILED' || state === 'ERRORED') &&
@@ -22,8 +32,9 @@ class TransactionLogTable extends Component {
       <div className='form-special-number transaction-log-table__status-bar transaction-log-table__status-bar--pending'>{formatText(state)}</div>);
 
   dataTransform = logs => logs.map(entry => [
-    entry.id, entry.project_id,
+    entry.id, entry.submitter, entry.project_id,
     this.getLocalTime(entry.created_datetime),
+    `${this.getTotalFileSize(entry.documents)}B`,
     this.stateToColor(entry.state),
   ]);
 
@@ -31,7 +42,7 @@ class TransactionLogTable extends Component {
     if (!this.props.log || this.props.log === []) { return <Spinner />; }
     return (<Table
       title='Recent Submissions'
-      header={['Id', 'Project', 'Create', 'State']}
+      header={['Id', "Submitter", 'Project', 'Created date', 'File Size', 'State']}
       data={this.dataTransform(this.props.log)}
     />);
   }

@@ -1,27 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DataSummaryCardGroup from './cards/DataSummaryCardGroup';
-import ProjectTable from './tables/ProjectTable';
+import ProjectTable from '../components/tables/ProjectTable';
+import SubmissionHeader from './SubmissionHeader';
 import './ProjectDashboard.less';
 
 class ProjectDashboard extends Component {
   render() {
     const projectList = this.props.projectList || [];
     return (
-      <React.Fragment>
-        <div className='project-dashboard'>
-          <div className='h1-typo project-dashboard__title'>
-            Data Submission Summary
-          </div>
-          <DataSummaryCardGroup
-            width={760}
-            height={120}
-            summaryItems={this.props.summaries}
-            align='left'
-          />
+      <div className='project-dashboard'>
+        <div className='h1-typo project-dashboard__title'>
+          Data Submission
         </div>
+        <SubmissionHeader />
         <ProjectTable projectList={projectList} summaries={this.props.details} />
-      </React.Fragment>
+      </div>
     );
   }
 }
