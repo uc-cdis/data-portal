@@ -1,11 +1,10 @@
 import Viz from 'viz.js';
 import { Module, render } from 'viz.js/full.render';
 import _ from 'underscore';
-import { createNodesAndEdges, createDotStrinByNodesEdges } from '../../../DataModelGraph/utils';
+import { createNodesAndEdges, createDotStrinByNodesEdges } from '../../../GraphUtils/utils';
 import { truncateLines, getCategoryColor } from '../../utils';
 
-export const getAllTypes = (layoutResult) => {
-  const { nodes } = layoutResult;
+export const getAllTypes = (nodes) => {
   const types = nodes.map(node => node.type);
   const uniqueTypes = _.uniq(types);
   return uniqueTypes;
@@ -111,6 +110,10 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
           const requiredPropertiesCount = originNode.required ? originNode.required.length : 0;
           const optionalPropertiesCount = originNode.properties ?
             Object.keys(originNode.properties).length - requiredPropertiesCount : 0;
+          let nodeLevel = 0;
+          if (originNode && originNode.positionIndex && originNode.positionIndex.length >= 2) {
+            nodeLevel = originNode.positionIndex[1];
+          }
           return {
             id: n.name,
             type: n.type,
@@ -124,7 +127,7 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
             textPadding,
             names: nodeNames,
             label: n.label,
-            level: originNode.positionIndex[1],
+            level: nodeLevel,
             outLinks,
             inLinks,
             _gvid: n._gvid,
@@ -181,15 +184,60 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
 };
 /* eslint-enable no-underscore-dangle */
 
+export const getNodeIDsThatHaveNoInLinks = (
+  subgraphNodeIDs,
+  subgraphEdges,
+  wholeGraphNodes,
+) => {
+  const resultIDs = [];
+  subgraphNodeIDs.forEach((nodeID) => {
+    const node = wholeGraphNodes.find(n => n.id === nodeID);
+    const inLinks = node.inLinks
+      .filter(inNodeID => subgraphNodeIDs.includes(inNodeID))
+      .filter(inNodeID => subgraphEdges.find(e =>
+        e.target === nodeID && e.source === inNodeID && subgraphNodeIDs.includes(e.source)))
+      .filter(inNodeID => (inNodeID !== nodeID));
+    if (!inLinks || inLinks.length === 0) {
+      resultIDs.push(nodeID);
+    }
+  });
+  return resultIDs;
+};
+
+export const getNodeIDsThatHaveNoOutLinks = (
+  subgraphNodeIDs,
+  subgraphEdges,
+  wholeGraphNodes,
+) => {
+  const resultIDs = [];
+  subgraphNodeIDs.forEach((nodeID) => {
+    const node = wholeGraphNodes.find(n => n.id === nodeID);
+    const outLinks = node.outLinks
+      .filter(inNodeID => subgraphNodeIDs.includes(inNodeID))
+      .filter(inNodeID => subgraphEdges.find(e =>
+        e.source === nodeID && e.target === inNodeID && subgraphNodeIDs.includes(e.target)))
+      .filter(inNodeID => (inNodeID !== nodeID));
+    if (!outLinks || outLinks.length === 0) {
+      resultIDs.push(nodeID);
+    }
+  });
+  return resultIDs;
+};
+
 export const isArticulationNodeInSubgraph = (
   targetNodeID,
-  startingNodeID,
   subgraphNodeIDs,
   subgraphEdges,
   wholeGraphNodes,
 ) => {
   // step.1: calculate connected node count if there's no target node in subgraph
-  let currentLevelNodeIDs = [startingNodeID];
+  const nodeIdsWithoutInLinks = getNodeIDsThatHaveNoInLinks(
+    subgraphNodeIDs,
+    subgraphEdges,
+    wholeGraphNodes,
+  );
+  if (nodeIdsWithoutInLinks.includes(targetNodeID)) return false;
+  let currentLevelNodeIDs = nodeIdsWithoutInLinks;
   const nodeIDsInSubgraphWithoutTargetNode = [];
   while (currentLevelNodeIDs.length > 0) {
     const nextLevelNodeIDs = [];
@@ -227,7 +275,6 @@ export const getArticulationNodesInSubgraph = (
   subgraphNodeIDs.forEach((nodeID) => {
     if (isArticulationNodeInSubgraph(
       nodeID,
-      startingNodeID,
       subgraphNodeIDs,
       subgraphEdges,
       wholeGraphNodes,
@@ -285,7 +332,7 @@ export const sortNodesByTopology = (
   return sortedNodeIDs;
 };
 
-export const getNodesAndLinksBetweenArticulationNodesInSubgraph = (
+export const getNodesAndLinksSummaryBetweenNodesInSubgraph = (
   startingNodeID,
   endingNodeID,
   subgraphNodeIDs,
@@ -332,4 +379,135 @@ export const getNodesAndLinksBetweenArticulationNodesInSubgraph = (
     nodeIDs: betweenNodeIDs,
     links: betweenLinks,
   };
+};
+
+export const calculateFurtherHighlightedPath = (
+  newHighlightingNode,
+  newFurtherHighlightingNodeID,
+  wholeGraphNodes,
+) => {
+  if (!newHighlightingNode || !newFurtherHighlightingNodeID) {
+    return [];
+  }
+  const node = wholeGraphNodes.find(n => n.id === newFurtherHighlightingNodeID);
+  const furtherHighlightedPath = getAllChildrenLinks(node, wholeGraphNodes);
+  furtherHighlightedPath.push({
+    source: newHighlightingNode.id,
+    target: newFurtherHighlightingNodeID,
+  });
+  return furtherHighlightedPath;
+};
+
+export const calculateHighlightRelatedNodeIDs = (
+  newHighlightingNode,
+  wholeGraphNodes,
+) => {
+  if (!newHighlightingNode) {
+    return [];
+  }
+  const relatedNodeIDs = getAllChildrenNodeIDs(newHighlightingNode, wholeGraphNodes);
+  if (!relatedNodeIDs.includes(newHighlightingNode.id)) {
+    return [newHighlightingNode.id, ...relatedNodeIDs];
+  }
+  return relatedNodeIDs;
+};
+
+export const getSingleEndDescendentNodeID = (
+  subgraphNodeIDs,
+  subgraphEdges,
+  wholeGraphNodes,
+) => {
+  const nodeIDs = getNodeIDsThatHaveNoOutLinks(subgraphNodeIDs, subgraphEdges, wholeGraphNodes);
+  if (nodeIDs.length === 1) return nodeIDs[0];
+  return null;
+};
+
+export const calculateDataModelStructure = (
+  startingNode,
+  subgraphNodeIDs,
+  subgraphEdges,
+  wholeGraphNodes,
+) => {
+  if (!startingNode) return null;
+  const startingNodeID = startingNode.id;
+  const summaryNodeIDs = getArticulationNodesInSubgraph(
+    startingNodeID,
+    subgraphNodeIDs,
+    subgraphEdges,
+    wholeGraphNodes,
+  );
+  summaryNodeIDs.push(startingNodeID);
+
+  if (!summaryNodeIDs || summaryNodeIDs.length === 0) return null;
+  const sortedArticulationNodeIDs = sortNodesByTopology(
+    summaryNodeIDs,
+    subgraphNodeIDs,
+    subgraphEdges,
+    wholeGraphNodes,
+  );
+  if (!sortedArticulationNodeIDs || sortedArticulationNodeIDs.length === 0) { // loop in graph
+    return null;
+  }
+
+  const resultCriticalNodeIDs = sortedArticulationNodeIDs;
+  // if there's a single end descendent node
+  const singleDescendentNodeID = getSingleEndDescendentNodeID(
+    subgraphNodeIDs,
+    subgraphEdges,
+    wholeGraphNodes,
+  );
+  if (singleDescendentNodeID) {
+    resultCriticalNodeIDs.push(singleDescendentNodeID);
+  }
+
+  let resultStructure = [];
+  for (let i = 1; i < resultCriticalNodeIDs.length; i += 1) {
+    const { nodeIDs, links } = getNodesAndLinksSummaryBetweenNodesInSubgraph(
+      resultCriticalNodeIDs[i - 1],
+      resultCriticalNodeIDs[i],
+      subgraphNodeIDs,
+      subgraphEdges,
+      wholeGraphNodes,
+    );
+    resultStructure.push({
+      nodeID: resultCriticalNodeIDs[i - 1],
+      nodeIDsBefore: nodeIDs,
+      linksBefore: links,
+    });
+  }
+
+  if (singleDescendentNodeID) {
+    resultStructure.push({
+      nodeID: singleDescendentNodeID,
+      nodeIDsBefore: [],
+      linksBefore: [],
+    });
+  } else {
+    const lastCriticalNodeID = resultCriticalNodeIDs[resultCriticalNodeIDs.length - 1];
+    const nodeIDsBeforeNode = getAllChildrenNodeIDs(
+      lastCriticalNodeID,
+      wholeGraphNodes,
+    );
+    const linksBeforeNode = getAllChildrenLinks(
+      lastCriticalNodeID,
+      wholeGraphNodes,
+    );
+    resultStructure.push({
+      nodeID: lastCriticalNodeID,
+      nodeIDsBefore: nodeIDsBeforeNode,
+      linksBefore: linksBeforeNode,
+    });
+  }
+
+  resultStructure = resultStructure.map((entry) => {
+    const { nodeID, nodeIDsBefore, linksBefore } = entry;
+    const category = wholeGraphNodes.find(n => n.id === nodeID).type;
+    return {
+      nodeID,
+      nodeIDsBefore,
+      linksBefore,
+      category,
+    };
+  }).reverse();
+  return resultStructure;
 };

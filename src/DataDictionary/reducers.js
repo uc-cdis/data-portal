@@ -10,7 +10,7 @@ const ddgraphInitialState = {
   highlightingNode: null,
   highlightingNodeSVGElement: null,
   relatedNodeIDs: [],
-  furtherHighlightingNodeIDs: [],
+  furtherHighlightingNodeID: null,
   dataModelStructure: null,
   overlayPropertyHidden: true,
   canvasBoundingRect: { top: 0, left: 0 },

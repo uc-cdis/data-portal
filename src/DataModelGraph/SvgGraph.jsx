@@ -5,7 +5,7 @@ import { forceSimulation, forceLink } from 'd3-force';
 import { extent } from 'd3-array';
 
 import { getCategoryColor, legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
-import { assignNodePositions } from './utils';
+import { assignNodePositions } from '../GraphUtils/utils';
 
 const d3 = {
   select, selectAll, forceSimulation, forceLink, extent,
