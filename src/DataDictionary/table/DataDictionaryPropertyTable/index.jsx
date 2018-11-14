@@ -1,44 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { getType } from '../../utils';
 import './DataDictionaryPropertyTable.css';
-
-/**
- * Little helper to extract the type for some dictionary node property.
- * Export just for testing.
- * @param {Object} property one of the properties of a dictionary node
- * @return {String|Array<String>} string for scalar types, array for enums
- *                   and other listish types or 'UNDEFINED' if no
- *                   type information availabale
- */
-export const getType = (property) => {
-  let type = 'UNDEFINED';
-  if ('type' in property) {
-    if (typeof property.type === 'string') {
-      type = property.type;
-    } else {
-      type = property.type;
-    }
-  } else if ('enum' in property) {
-    type = property.enum;
-  } else if ('oneOf' in property) {
-    // oneOf has nested type list - we want to flatten nested enums out here ...
-    type = property.oneOf
-      .map(item => getType(item))
-      .reduce(
-        (flatList, it) => {
-          if (Array.isArray(it)) {
-            return flatList.concat(it);
-          }
-          flatList.push(it);
-          return flatList;
-        }, [],
-      );
-  } else {
-    type = 'UNDEFINED';
-  }
-
-  return type;
-};
 
 class DataDictionaryPropertyTable extends React.Component {
   render() {
@@ -47,11 +10,36 @@ class DataDictionaryPropertyTable extends React.Component {
         <table className='data-dictionary-property-table__table'>
           <thead className='data-dictionary-property-table__head'>
             <tr className='data-dictionary-property-table__row'>
-              <td className='data-dictionary-property-table__data'>Property</td>
-              <td className='data-dictionary-property-table__data'>Type</td>
-              <td className='data-dictionary-property-table__data'>Required</td>
-              <td className='data-dictionary-property-table__data'>Description</td>
-              <td className='data-dictionary-property-table__data'>Term</td>
+              <td
+                className='data-dictionary-property-table__data
+                data-dictionary-property-table__data--property'
+              >
+                Property
+              </td>
+              <td
+                className='data-dictionary-property-table__data
+                data-dictionary-property-table__data--type'
+              >
+                Type
+              </td>
+              <td
+                className='data-dictionary-property-table__data
+                data-dictionary-property-table__data--required'
+              >
+                Required
+              </td>
+              <td
+                className='data-dictionary-property-table__data
+                data-dictionary-property-table__data--description'
+              >
+                Description
+              </td>
+              <td
+                className='data-dictionary-property-table__data
+                data-dictionary-property-table__data--term'
+              >
+                Term
+              </td>
             </tr>
           </thead>
           <tbody>
@@ -124,7 +112,6 @@ class DataDictionaryPropertyTable extends React.Component {
 }
 
 DataDictionaryPropertyTable.propTypes = {
-  nodeName: PropTypes.string.isRequired,
   properties: PropTypes.object.isRequired,
   requiredProperties: PropTypes.array,
 };

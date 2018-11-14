@@ -23,10 +23,14 @@ const ReduxGraphCalculator = (() => {
   const mapDispatchToProps = dispatch => ({
     onGraphLayoutCalculated: layout => dispatch(setGraphLayout(layout)),
     onGraphLegendCalculated: legendItems => dispatch(setGraphLegend(legendItems)),
-    onHighlightRelatedNodesCalculated: relatedNodeIDs => dispatch(setRelatedNodeIDs(relatedNodeIDs)),
-    onFurtherClickableNodeIDsCalculated: furtherClickableNodeIDs => dispatch(setFurtherClickableNodeIDs(furtherClickableNodeIDs)),
-    onFurtherHighlightedPathCalculated: furtherHighlightedPath => dispatch(setFurtherHighlightedPath(furtherHighlightedPath)),
-    onDataModelStructureCalculated: dataModelStructure => dispatch(setDataModelStructure(dataModelStructure)),
+    onHighlightRelatedNodesCalculated: relatedNodeIDs =>
+      dispatch(setRelatedNodeIDs(relatedNodeIDs)),
+    onFurtherClickableNodeIDsCalculated: furtherClickableNodeIDs =>
+      dispatch(setFurtherClickableNodeIDs(furtherClickableNodeIDs)),
+    onFurtherHighlightedPathCalculated: furtherHighlightedPath =>
+      dispatch(setFurtherHighlightedPath(furtherHighlightedPath)),
+    onDataModelStructureCalculated: dataModelStructure =>
+      dispatch(setDataModelStructure(dataModelStructure)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(GraphCalculator);

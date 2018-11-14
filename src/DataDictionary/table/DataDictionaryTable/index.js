@@ -3,10 +3,11 @@ import localconf from '../../../localconf';
 import { setExpandNode } from '../../action.js';
 import DataDictionaryTable from './DataDictionaryTable';
 
-export const ReduxDataDictionaryTable = (() => {
+const ReduxDataDictionaryTable = (() => {
   const mapStateToProps = state => ({
     dictionary: state.submission.dictionary,
-    highlightingNodeID: state.ddgraph.highlightingNode ? state.ddgraph.highlightingNode.id : state.ddgraph.tableExpandNodeID,
+    highlightingNodeID: state.ddgraph.highlightingNode
+      ? state.ddgraph.highlightingNode.id : state.ddgraph.tableExpandNodeID,
     dictionaryName: localconf.appname,
   });
 
@@ -17,3 +18,5 @@ export const ReduxDataDictionaryTable = (() => {
 
   return connect(mapStateToProps, mapDispatchToProps)(DataDictionaryTable);
 })();
+
+export default ReduxDataDictionaryTable;

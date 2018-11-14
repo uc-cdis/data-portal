@@ -15,6 +15,7 @@
   flex-grow: 0;
   flex-shrink: 0;
   cursor: pointer;
+  outline: none;
 }
 
 .data-dictionary-node__file-icon {
@@ -78,6 +79,7 @@
   position: absolute;
   right: 0;
   cursor: pointer;
+  outline: none;
 }
 
 .data-dictionary-node__property-close-icon {

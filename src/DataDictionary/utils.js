@@ -1,5 +1,3 @@
-import React from 'react';
-
 import IconAdministrative from './icons/icon_administrative.svg';
 import IconAnalysis from './icons/icon_analysis.svg';
 import IconBiospecimen from './icons/icon_biospecimen.svg';
@@ -60,4 +58,42 @@ export const getCategoryColor = (category) => {
   };
   const defaultColor = '#9B9B9B';
   return colorMap[category] ? colorMap[category] : defaultColor;
+};
+
+/**
+ * Little helper to extract the type for some dictionary node property.
+ * Export just for testing.
+ * @param {Object} property one of the properties of a dictionary node
+ * @return {String|Array<String>} string for scalar types, array for enums
+ *                   and other listish types or 'UNDEFINED' if no
+ *                   type information availabale
+ */
+export const getType = (property) => {
+  let type = 'UNDEFINED';
+  if ('type' in property) {
+    if (typeof property.type === 'string') {
+      type = property.type;
+    } else {
+      type = property.type;
+    }
+  } else if ('enum' in property) {
+    type = property.enum;
+  } else if ('oneOf' in property) {
+    // oneOf has nested type list - we want to flatten nested enums out here ...
+    type = property.oneOf
+      .map(item => getType(item))
+      .reduce(
+        (flatList, it) => {
+          if (Array.isArray(it)) {
+            return flatList.concat(it);
+          }
+          flatList.push(it);
+          return flatList;
+        }, [],
+      );
+  } else {
+    type = 'UNDEFINED';
+  }
+
+  return type;
 };

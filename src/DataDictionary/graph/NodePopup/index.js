@@ -9,7 +9,6 @@ const ReduxNodePopup = (() => {
   const mapStateToProps = state => ({
     highlightingNode: state.ddgraph.highlightingNode,
     highlightingNodeSVGElement: state.ddgraph.highlightingNodeSVGElement,
-    svgCTM: state.ddgraph.svgCTM,
     canvasBoundingRect: state.ddgraph.canvasBoundingRect,
   });
 

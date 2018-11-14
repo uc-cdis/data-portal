@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ReduxDataDictionaryTable } from './table/DataDictionaryTable';
+import ReduxDataDictionaryTable from './table/DataDictionaryTable';
 import ReduxDataModelStructure from './DataModelStructure';
 import DataDictionaryGraph from './graph/DataDictionaryGraph/.';
 import './DataDictionary.css';
@@ -27,7 +27,7 @@ class DataDictionary extends React.Component {
               className={`data-dictionary__switch-button ${this.props.isGraphView ? '' : 'data-dictionary__switch-button--active'}`}
               onClick={() => { this.setGraphView(false); }}
               role='button'
-              tabIndex={1}
+              tabIndex={0}
             >
               Table View
             </span>

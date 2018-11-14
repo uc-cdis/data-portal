@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getCategoryColor } from '../../utils';
 import Button from '@gen3/ui-component/dist/components/Button';
+import { getCategoryColor } from '../../utils';
 import DataDictionaryPropertyTable from '../DataDictionaryPropertyTable/.';
 import './DataDictionaryNode.css';
 
@@ -22,7 +22,12 @@ class DataDictionaryNode extends React.Component {
     return (
       <React.Fragment>
         <div className='data-dictionary-node' style={{ borderLeftColor: getCategoryColor(this.props.node.category) }}>
-          <span className='data-dictionary-node__title' onClick={() => this.handleClickNode(this.props.node.id)}>
+          <span
+            className='data-dictionary-node__title'
+            onClick={() => this.handleClickNode(this.props.node.id)}
+            role='button'
+            tabIndex={0}
+          >
             <i className='g3-icon g3-icon--datafile data-dictionary-node__file-icon' />
             {this.props.node.title}
             <i className={`g3-icon g3-icon--chevron-${this.props.expanded ? 'down' : 'right'} data-dictionary-node__toggle-icon`} />
@@ -52,7 +57,12 @@ class DataDictionaryNode extends React.Component {
         {
           this.props.expanded && (
             <div className='data-dictionary-node__property'>
-              <span className='data-dictionary-node__property-close' onClick={this.handleCloseNode}>
+              <span
+                className='data-dictionary-node__property-close'
+                onClick={this.handleCloseNode}
+                role='button'
+                tabIndex={0}
+              >
                 Close tab
                 <i className='g3-icon g3-icon--cross data-dictionary-node__property-close-icon' />
               </span>
@@ -63,7 +73,6 @@ class DataDictionaryNode extends React.Component {
                 <span> properties. </span>
               </div>
               <DataDictionaryPropertyTable
-                nodeName={this.props.node.title}
                 properties={this.props.node.properties}
                 requiredProperties={this.props.node.required}
               />

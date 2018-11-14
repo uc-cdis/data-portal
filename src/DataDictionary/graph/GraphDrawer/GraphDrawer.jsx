@@ -4,10 +4,6 @@ import { getTypeIconSVG } from '../../utils';
 import './GraphDrawer.css';
 
 class GraphDrawer extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   onMouseOver = (node, e) => {
     const hoveringNodeSVGElement = e.currentTarget;
     this.props.onHoverNode(node, hoveringNodeSVGElement);
@@ -21,13 +17,11 @@ class GraphDrawer extends React.Component {
     if (!this.props.highlightingNode) { // if no node is highlighted yet
       const highlightingNodeSVGElement = e.currentTarget;
       this.props.onClickNode(node, highlightingNodeSVGElement);
-    } else { // further click after highlighting some nodes
-      if (this.props.furtherClickableNodeIDs.length > 1
-        && this.props.furtherClickableNodeIDs.includes(node.id)) {
-        // only allow clicking clickable nodes
-        // (only children of highlighted nodes are designed to be clickable)
-        this.props.onFurtherClickNode(node.id);
-      }
+    } else if (this.props.furtherClickableNodeIDs.length > 1
+      && this.props.furtherClickableNodeIDs.includes(node.id)) {
+      // only allow clicking clickable nodes
+      // (only children of highlighted nodes are designed to be clickable)
+      this.props.onFurtherClickNode(node.id);
     }
   }
 
@@ -53,15 +47,19 @@ class GraphDrawer extends React.Component {
           this.props.edges.map((edge, i) => {
             let edgeRelatedClassModifier = '';
             if (this.props.highlightingNode) {
-              if (this.props.furtherHighlightingNodeID) { // if clicked a futher node under highlighting mode
-                const isEdgeAlongFurtherHighlightedPath = this.props.furtherHighlightedPath.find(e => (e.source === edge.source && e.target === edge.target));
+              // if clicked a futher node under highlighting mode
+              if (this.props.furtherHighlightingNodeID) {
+                const isEdgeAlongFurtherHighlightedPath = this.props.furtherHighlightedPath
+                  .find(e => (e.source === edge.source && e.target === edge.target));
                 if (isEdgeAlongFurtherHighlightedPath) {
                   edgeRelatedClassModifier = 'graph-drawer__link--highlighted';
                 } else {
                   edgeRelatedClassModifier = 'graph-drawer__link--not-highlighted';
                 }
               } else {
-                const isEdgeRelatedToHighlightedNode = this.props.relatedNodeIDs.includes(edge.source) && this.props.relatedNodeIDs.includes(edge.target);
+                const isEdgeRelatedToHighlightedNode =
+                  this.props.relatedNodeIDs.includes(edge.source)
+                  && this.props.relatedNodeIDs.includes(edge.target);
                 if (isEdgeRelatedToHighlightedNode) {
                   edgeRelatedClassModifier = 'graph-drawer__link--highlighted';
                 } else {
@@ -86,11 +84,15 @@ class GraphDrawer extends React.Component {
             let nodeHighlightedClassModifier = '';
             let nodeClickableClassModifier = '';
             if (this.props.highlightingNode) {
-              nodeClickableClassModifier = this.props.furtherClickableNodeIDs.includes(node.id) ? 'graph-drawer__node--clickable' : 'graph-drawer__node--not-clickable';
+              nodeClickableClassModifier = this.props.furtherClickableNodeIDs.includes(node.id)
+                ? 'graph-drawer__node--clickable' : 'graph-drawer__node--not-clickable';
               if (this.props.furtherHighlightingNodeID) {
-                nodeHighlightedClassModifier = this.props.furtherHighlightedPath.find(e => (e.source === node.id || e.target === node.id)) ? 'graph-drawer__node--highlighted' : 'graph-drawer__node--not-highlighted';
+                nodeHighlightedClassModifier = this.props.furtherHighlightedPath
+                  .find(e => (e.source === node.id || e.target === node.id))
+                  ? 'graph-drawer__node--highlighted' : 'graph-drawer__node--not-highlighted';
               } else {
-                nodeHighlightedClassModifier = this.props.relatedNodeIDs.includes(node.id) ? 'graph-drawer__node--highlighted' : 'graph-drawer__node--not-highlighted';
+                nodeHighlightedClassModifier = this.props.relatedNodeIDs.includes(node.id)
+                  ? 'graph-drawer__node--highlighted' : 'graph-drawer__node--not-highlighted';
               }
             } else {
               nodeClickableClassModifier = 'graph-drawer__node--clickable';
@@ -121,7 +123,7 @@ class GraphDrawer extends React.Component {
                       key={`${node.id}-${i}`}
                       className='graph-drawer__text'
                       x={0}
-                      y={textTopY + i * this.props.fontSize}
+                      y={textTopY + (i * this.props.fontSize)}
                       textAnchor='middle'
                       alignmentBaseline='hanging'
                       fontSize={this.props.fontSize}
@@ -161,14 +163,11 @@ GraphDrawer.propTypes = {
   graphBoundingBox: PropTypes.array,
   layoutInitialized: PropTypes.bool,
   fontSize: PropTypes.number,
-  nodeBorderWidth: PropTypes.number,
-  nodeBorderDefaultColor: PropTypes.string,
   canvasWidth: PropTypes.number,
   canvasHeight: PropTypes.number,
   onHoverNode: PropTypes.func,
   onCancelHoverNode: PropTypes.func,
   onClickNode: PropTypes.func,
-  hoveringNode: PropTypes.object,
   highlightingNode: PropTypes.object,
   relatedNodeIDs: PropTypes.array,
   onFurtherClickNode: PropTypes.func,
@@ -183,14 +182,11 @@ GraphDrawer.defaultProps = {
   graphBoundingBox: [],
   layoutInitialized: false,
   fontSize: 10,
-  nodeBorderWidth: 2,
-  nodeBorderDefaultColor: '#9B9B9B',
   canvasWidth: 1000,
   canvasHeight: 1000,
   onHoverNode: () => {},
   onCancelHoverNode: () => {},
   onClickNode: () => {},
-  hoveringNode: null,
   highlightingNode: null,
   relatedNodeIDs: [],
   onFurtherClickNode: () => {},

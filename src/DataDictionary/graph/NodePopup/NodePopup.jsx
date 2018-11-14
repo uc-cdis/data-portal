@@ -4,18 +4,16 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import './NodePopup.css';
 
 class NodePopup extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleClickPropertyButton = () => {
     this.props.onOpenOverlayPropertyTable();
   }
 
   render() {
-    const svgBoundingBox = this.props.highlightingNodeSVGElement ? this.props.highlightingNodeSVGElement.getBoundingClientRect() : { top: 0, left: 0, width: 0, bottom: 0 };
-    const popupWidth = 240;
-    const popupLeft = svgBoundingBox.left - this.props.canvasBoundingRect.left + svgBoundingBox.width / 2;
+    const svgBoundingBox = this.props.highlightingNodeSVGElement
+      ? this.props.highlightingNodeSVGElement.getBoundingClientRect()
+      : { top: 0, left: 0, width: 0, bottom: 0 };
+    const popupLeft = (svgBoundingBox.left - this.props.canvasBoundingRect.left)
+      + (svgBoundingBox.width / 2);
     const popupTop = svgBoundingBox.bottom - this.props.canvasBoundingRect.top;
     return (
       <div
@@ -43,6 +41,8 @@ class NodePopup extends React.Component {
               <i
                 className='node-popup__close g3-icon g3-icon--cross'
                 onClick={this.props.onClosePopup}
+                role='button'
+                tabIndex={0}
               />
             </div>
           )
@@ -55,7 +55,6 @@ class NodePopup extends React.Component {
 NodePopup.propTypes = {
   highlightingNode: PropTypes.object,
   highlightingNodeSVGElement: PropTypes.object,
-  svgCTM: PropTypes.object,
   onClosePopup: PropTypes.func,
   canvasBoundingRect: PropTypes.object,
   onOpenOverlayPropertyTable: PropTypes.func,
@@ -64,7 +63,6 @@ NodePopup.propTypes = {
 NodePopup.defaultProps = {
   highlightingNode: null,
   highlightingNodeSVGElement: null,
-  svgCTM: null,
   onClosePopup: () => {},
   canvasBoundingRect: { top: 0, left: 0 },
   onOpenOverlayPropertyTable: () => {},

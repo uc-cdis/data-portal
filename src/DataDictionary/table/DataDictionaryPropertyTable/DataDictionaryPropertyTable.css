@@ -10,6 +10,27 @@
   border: 1px solid var(--dictionary-border-color);
 }
 
+.data-dictionary-property-table__data--property {
+  width: 13%;
+}
+
+.data-dictionary-property-table__data--type {
+  width: 12%;
+}
+
+.data-dictionary-property-table__data--required {
+  width: 8%;
+}
+
+.data-dictionary-property-table__data--description {
+  width: 59%;
+}
+
+.data-dictionary-property-table__data--term {
+  width: 8%;
+}
+
+
 .data-dictionary-property-table__head {
   background-color: var(--dictionary-header-color);
   color: var(--g3-color__white);

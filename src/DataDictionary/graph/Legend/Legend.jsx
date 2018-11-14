@@ -27,6 +27,8 @@ class Legend extends React.Component {
                 <i
                   className='data-dictionary-graph-legend__close g3-icon g3-icon--cross'
                   onClick={this.toggleLegend}
+                  role='button'
+                  tabIndex={0}
                 />
                 <div className='data-dictionary-graph-legend__item body'>
                   <i className='data-dictionary-graph-legend__required-icon data-dictionary-graph-legend__required-icon--required g3-icon g3-icon--minus' />
@@ -66,6 +68,8 @@ class Legend extends React.Component {
               <span
                 className='data-dictionary-graph-legend__info'
                 onClick={this.toggleLegend}
+                role='button'
+                tabIndex={0}
               >
                 <i className='data-dictionary-graph-legend__info-icon g3-icon g3-icon--question-mark' />
               </span>

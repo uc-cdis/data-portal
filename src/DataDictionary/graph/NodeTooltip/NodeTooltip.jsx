@@ -3,16 +3,13 @@ import PropTypes from 'prop-types';
 import './NodeTooltip.css';
 
 class NodeTooltip extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    const svgBoundingBox = this.props.hoveringNodeSVGElement ? this.props.hoveringNodeSVGElement.getBoundingClientRect() : { top: 0, left: 0, width: 0 };
-    const tooltipWidth = 120;
+    const svgBoundingBox = this.props.hoveringNodeSVGElement
+      ? this.props.hoveringNodeSVGElement.getBoundingClientRect() : { top: 0, left: 0, width: 0 };
     const gap = 10;
-    const tooltipLeft = svgBoundingBox.left - this.props.canvasBoundingRect.left + svgBoundingBox.width / 2;
-    const tooltipBottom = window.innerHeight - svgBoundingBox.top + gap;
+    const tooltipLeft = (svgBoundingBox.left - this.props.canvasBoundingRect.left)
+      + (svgBoundingBox.width / 2);
+    const tooltipBottom = (window.innerHeight - svgBoundingBox.top) + gap;
     return (
       <div
         className='node-tooltip'

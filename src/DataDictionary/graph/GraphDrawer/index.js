@@ -12,7 +12,6 @@ const ReduxGraphDrawer = (() => {
     edges: state.ddgraph.edges,
     graphBoundingBox: state.ddgraph.graphBoundingBox,
     layoutInitialized: state.ddgraph.layoutInitialized,
-    hoveringNode: state.ddgraph.hoveringNode,
     highlightingNode: state.ddgraph.highlightingNode,
     relatedNodeIDs: state.ddgraph.relatedNodeIDs,
     furtherClickableNodeIDs: state.ddgraph.furtherClickableNodeIDs,

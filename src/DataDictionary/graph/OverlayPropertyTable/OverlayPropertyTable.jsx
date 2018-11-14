@@ -63,7 +63,6 @@ class OverlayPropertyTable extends React.Component {
           </div>
           <div className='overlay-property-table__property'>
             <DataDictionaryPropertyTable
-              nodeName={this.props.node.title}
               properties={this.props.node.properties}
               requiredProperties={this.props.node.required}
             />

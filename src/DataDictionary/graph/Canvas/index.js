@@ -3,7 +3,7 @@ import { clickBlankSpace, setSVGCTM, setCanvasBoundingRect } from '../../action.
 import Canvas from './Canvas';
 
 const ReduxCanvas = (() => {
-  const mapStateToProps = () => {};
+  const mapStateToProps = () => ({});
 
   const mapDispatchToProps = dispatch => ({
     onClickBlankSpace: () => dispatch(clickBlankSpace()),
