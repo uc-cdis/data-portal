@@ -16,7 +16,7 @@ const title = {
   gdc: 'Jamboree Data Access',
   kf: 'Kids First Data Coordinating Center Portal',
   ndh: 'NIAID Data Hub',
-}[app];
+} [app];
 
 const plugins = [
   new webpack.EnvironmentPlugin(['NODE_ENV']),
@@ -36,15 +36,29 @@ const plugins = [
   }),
   new webpack.optimize.DedupePlugin(), //dedupe similar code
   new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
-  new HtmlWebpackPlugin({
+];
+
+// add 'robots' meta tag in headers for bhc
+if (process.env.APP == 'bhc') {
+  plugins.push(new HtmlWebpackPlugin({
+    title: title,
+    basename: pathPrefix,
+    'meta': {
+      'robots': 'noindex,nofollow'
+    },
+    template: 'src/index.ejs',
+    hash: trueß
+  }));
+} else {
+  plugins.push(new HtmlWebpackPlugin({
     title: title,
     basename: pathPrefix,
     template: 'src/index.ejs',
     hash: true
-  }),
-];
+  }));
+}
 
-if ( process.env.NODE_ENV !== 'dev' ) {
+if (process.env.NODE_ENV !== 'dev') {
   // This slows things down a lot, so avoid when running local dev environment
   plugins.push(new webpack.optimize.UglifyJsPlugin({
     mangle: false,
@@ -69,8 +83,7 @@ module.exports = {
   module: {
     target: 'node',
     externals: [nodeExternals()],
-    loaders: [
-      {
+    loaders: [{
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
         loaders: [
@@ -106,18 +119,21 @@ module.exports = {
           limit: 8192
         }
       },
-      { test: /\.flow$/, loader: 'ignore-loader' }
+      {
+        test: /\.flow$/,
+        loader: 'ignore-loader'
+      }
     ]
   },
   resolve: {
     alias: {
-      graphql:  path.resolve('./node_modules/graphql'),
-      react:    path.resolve('./node_modules/react')                // Same issue.
+      graphql: path.resolve('./node_modules/graphql'),
+      react: path.resolve('./node_modules/react') // Same issue.
     },
-    extensions: [ '', '.js', '.jsx', '.json' ]
+    extensions: ['', '.js', '.jsx', '.json']
   },
   plugins,
-  externals:[{
+  externals: [{
     xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'
   }]
 };
