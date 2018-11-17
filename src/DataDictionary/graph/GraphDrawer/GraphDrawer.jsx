@@ -10,6 +10,15 @@ class GraphDrawer extends React.Component {
     this.graphDomRef = React.createRef();
   }
 
+  componentDidUpdate() {
+    if (this.props.isGraphView
+      && this.props.highlightingNode
+      && !this.props.highlightingNodeSVGElement) {
+      const highlightingNodeSVGElement = this.getHighlightingNodeSVGElement();
+      this.props.onHighlightingNodeSVGElementUpdated(highlightingNodeSVGElement);
+    }
+  }
+
   onMouseOver = (node, e) => {
     const hoveringNodeSVGElement = e.currentTarget;
     this.props.onHoverNode(node, hoveringNodeSVGElement);
@@ -32,17 +41,10 @@ class GraphDrawer extends React.Component {
   }
 
   getHighlightingNodeSVGElement() {
-    // const highlightingNodeSVGElement = this.graphDomRef.current.getElementsByClassName(this.currentHighlightingNodeClassName);
-
-    const highlightingNodeSVGElement = document.querySelector(`.${this.currentHighlightingNodeClassName}`);
+    const highlightingNodeSVGElement = document.querySelector(
+      `.${this.currentHighlightingNodeClassName}`,
+    );
     return highlightingNodeSVGElement;
-  }
-
-  componentDidUpdate() {
-    if (this.props.isGraphView && this.props.highlightingNode && !this.props.highlightingNodeSVGElement) {
-      const highlightingNodeSVGElement = this.getHighlightingNodeSVGElement();
-      this.props.onHighlightingNodeSVGElementUpdated(highlightingNodeSVGElement);
-    }
   }
 
   render() {

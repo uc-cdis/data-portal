@@ -436,7 +436,8 @@ export const calculateDataModelStructure = (
     subgraphEdges,
     wholeGraphNodes,
   );
-  const unsortedCriticalNodeIDs = articulationNodeIDs.includes(startingNodeID) ? articulationNodeIDs : [...articulationNodeIDs, startingNodeID];
+  const unsortedCriticalNodeIDs = articulationNodeIDs.includes(startingNodeID)
+    ? articulationNodeIDs : [...articulationNodeIDs, startingNodeID];
 
   if (!unsortedCriticalNodeIDs || unsortedCriticalNodeIDs.length === 0) return null;
   const sortedCriticalNodeIDs = sortNodesByTopology(
