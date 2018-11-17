@@ -6,8 +6,7 @@ import DataDictionaryTable from './DataDictionaryTable';
 const ReduxDataDictionaryTable = (() => {
   const mapStateToProps = state => ({
     dictionary: state.submission.dictionary,
-    highlightingNodeID: state.ddgraph.highlightingNode
-      ? state.ddgraph.highlightingNode.id : state.ddgraph.tableExpandNodeID,
+    highlightingNodeID: state.ddgraph.tableExpandNodeID,
     dictionaryName: localconf.appname,
   });
 

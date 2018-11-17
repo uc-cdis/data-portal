@@ -28,9 +28,6 @@ class NodeTooltip extends React.Component {
             </div>
           )
         }
-        <div className='node-tooltip__canvas-ctm-placeholder'>
-          {typeof (this.props.svgCTM)}
-        </div>
       </div>
     );
   }
@@ -39,14 +36,12 @@ class NodeTooltip extends React.Component {
 NodeTooltip.propTypes = {
   hoveringNode: PropTypes.object,
   hoveringNodeSVGElement: PropTypes.object,
-  svgCTM: PropTypes.object,
   canvasBoundingRect: PropTypes.object,
 };
 
 NodeTooltip.defaultProps = {
   hoveringNode: null,
   hoveringNodeSVGElement: null,
-  svgCTM: null,
   canvasBoundingRect: { top: 0, left: 0 },
 };
 

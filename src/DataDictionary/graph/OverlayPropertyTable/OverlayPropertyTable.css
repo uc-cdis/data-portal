@@ -16,13 +16,14 @@
   z-index: -1;
 }
 
-.overlay-property-table__container {
+.overlay-property-table__fixed-container {
   height: 100%;
   overflow-y: scroll;
   padding: 15px;
 }
 
 .overlay-property-table__header {
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 3;
@@ -33,7 +34,6 @@
 }
 
 .overlay-property-table__header-table {
-  border: 1px solid var(--dictionary-border-color);
   margin-top: 15px;
 }
 
@@ -51,21 +51,20 @@
 }
 
 .overlay-property-table__node {
-  padding: 0 15px;
   background-color: var(--g3-color__white);
   display: flex;
+  min-height: 40px;
+  padding: 15px;
 }
 
 .overlay-property-table__node-title {
   width: 25%;
-  line-height: 40px;
-  vertical-align: middle;
+  line-height: 1.6rem;
 }
 
 .overlay-property-table__node-description {
   width: 75%;
-  line-height: 40px;
-  vertical-align: middle;
+  line-height: 1.6rem;
 }
 
 .overlay-property-table__category-icon {

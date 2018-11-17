@@ -13,7 +13,7 @@ const ReduxNodePopup = (() => {
   });
 
   const mapDispatchToProps = dispatch => ({
-    onClosePopup: () => dispatch(setHighlightingNode(null)),
+    onClosePopup: () => dispatch(setHighlightingNode(null, null)),
     onOpenOverlayPropertyTable: () => dispatch(setOverlayPropertyTableHidden(false)),
   });
 

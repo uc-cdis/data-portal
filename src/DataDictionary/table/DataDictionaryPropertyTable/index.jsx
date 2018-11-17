@@ -5,41 +5,43 @@ import './DataDictionaryPropertyTable.css';
 
 class DataDictionaryPropertyTable extends React.Component {
   render() {
+    const borderModifier = this.props.hasBorder ? ''
+      : 'data-dictionary-property-table--without-border';
     return (
-      <div className='data-dictionary-property-table'>
+      <div className={`data-dictionary-property-table ${borderModifier}`}>
         <table className='data-dictionary-property-table__table'>
           <thead className='data-dictionary-property-table__head'>
             <tr className='data-dictionary-property-table__row'>
-              <td
+              <th
                 className='data-dictionary-property-table__data
                 data-dictionary-property-table__data--property'
               >
                 Property
-              </td>
-              <td
+              </th>
+              <th
                 className='data-dictionary-property-table__data
                 data-dictionary-property-table__data--type'
               >
                 Type
-              </td>
-              <td
+              </th>
+              <th
                 className='data-dictionary-property-table__data
                 data-dictionary-property-table__data--required'
               >
                 Required
-              </td>
-              <td
+              </th>
+              <th
                 className='data-dictionary-property-table__data
                 data-dictionary-property-table__data--description'
               >
                 Description
-              </td>
-              <td
+              </th>
+              <th
                 className='data-dictionary-property-table__data
                 data-dictionary-property-table__data--term'
               >
                 Term
-              </td>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -114,10 +116,12 @@ class DataDictionaryPropertyTable extends React.Component {
 DataDictionaryPropertyTable.propTypes = {
   properties: PropTypes.object.isRequired,
   requiredProperties: PropTypes.array,
+  hasBorder: PropTypes.bool,
 };
 
 DataDictionaryPropertyTable.defaultProps = {
   requiredProperties: [],
+  hasBorder: true,
 };
 
 export default DataDictionaryPropertyTable;

@@ -5,7 +5,6 @@ const ReduxNodeTooltip = (() => {
   const mapStateToProps = state => ({
     hoveringNode: state.ddgraph.hoveringNode,
     hoveringNodeSVGElement: state.ddgraph.hoveringNodeSVGElement,
-    svgCTM: state.ddgraph.svgCTM,
     canvasBoundingRect: state.ddgraph.canvasBoundingRect,
   });
 

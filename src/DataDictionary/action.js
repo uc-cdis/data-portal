@@ -37,8 +37,6 @@ export const setGraphLayout = layout => ({
   nodes: layout.nodes,
   edges: layout.edges,
   graphBoundingBox: layout.graphBoundingBox,
-  hoveringNode: null,
-  highlightingNode: null,
 });
 
 export const setGraphLegend = legendItems => ({
@@ -77,3 +75,14 @@ export const setGraphView = isGraphView => ({
   type: 'GRAPH_TABLE_VIEW',
   isGraphView,
 });
+
+export const setNeedReset = needReset => ({
+  type: 'GRAPH_CANVAS_NEED_RESET',
+  needReset,
+});
+
+export const setHighlightingNodeSVGElement = highlightingNodeSVGElement => ({
+  type: 'GRAPH_HIGHLIGHTING_NODE_SVG_ELEMENT',
+  highlightingNodeSVGElement,
+});
+

@@ -7,6 +7,7 @@ import './DataModelStructure.css';
 class DataModelStructure extends React.Component {
   handleClickGraphButton = () => {
     this.props.onSetGraphView(true);
+    this.props.onResetGraphCanvas();
   };
 
   handleClickOverlayPropertyButton = () => {
@@ -75,6 +76,7 @@ DataModelStructure.propTypes = {
   isGraphView: PropTypes.bool,
   onSetGraphView: PropTypes.func,
   onOpenOverlayPropertyTable: PropTypes.func,
+  onResetGraphCanvas: PropTypes.func,
 };
 
 DataModelStructure.defaultProps = {
@@ -82,6 +84,7 @@ DataModelStructure.defaultProps = {
   isGraphView: true,
   onSetGraphView: () => {},
   onOpenOverlayPropertyTable: () => {},
+  onResetGraphCanvas: () => {},
 };
 
 export default DataModelStructure;

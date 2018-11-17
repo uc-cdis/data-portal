@@ -30,6 +30,13 @@ class Canvas extends React.Component {
     window.addEventListener('resize', this.handleResize);
   }
 
+  componentDidUpdate() {
+    if (this.props.needReset) {
+      this.handleReset();
+      this.props.onResetCanvasFinished();
+    }
+  }
+
   componentWillUnmount() {
     d3.select('.canvas__overlay')
       .on('.zoom', null);
@@ -37,7 +44,9 @@ class Canvas extends React.Component {
   }
 
   handleResize = () => {
-    this.updateCanvasSize();
+    if (this.props.isGraphView) {
+      this.updateCanvasSize();
+    }
   }
 
   updateCanvasSize() {
@@ -53,6 +62,7 @@ class Canvas extends React.Component {
       .inverse().multiply(this.containerElement.current.getScreenCTM());
     this.props.onCanvasUpdate(canvasTransform);
     const canvasBoundingRect = this.canvasElement.current.getBoundingClientRect();
+    window.canvasElem = this.canvasElement.current;
     this.props.onCanvasTopLeftUpdate(canvasBoundingRect);
   }
 
@@ -145,6 +155,9 @@ Canvas.propTypes = {
   onClickBlankSpace: PropTypes.func,
   onCanvasUpdate: PropTypes.func,
   onCanvasTopLeftUpdate: PropTypes.func,
+  isGraphView: PropTypes.bool,
+  needReset: PropTypes.bool,
+  onResetCanvasFinished: PropTypes.func,
 };
 
 Canvas.defaultProps = {
@@ -155,6 +168,9 @@ Canvas.defaultProps = {
   onClickBlankSpace: () => {},
   onCanvasUpdate: () => {},
   onCanvasTopLeftUpdate: () => {},
+  isGraphView: true,
+  needReset: false,
+  onResetCanvasFinished: () => {},
 };
 
 export default Canvas;

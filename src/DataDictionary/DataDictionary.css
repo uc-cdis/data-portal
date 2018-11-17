@@ -1,6 +1,6 @@
 :root {
   --data-dictionary__left-width: 320px;
-  --data-dictionary__switch-border-radius: 8px;
+  --data-dictionary__switch-border-radius: 4px;
 }
 
 .data-dictionary {
@@ -13,6 +13,7 @@
   min-width: var(--data-dictionary__left-width);
   height: 100%;
   background-color: var(--g3-color__white);
+  overflow-y: scroll;
 }
 
 .data-dictionary__right {

@@ -430,33 +430,34 @@ export const calculateDataModelStructure = (
 ) => {
   if (!startingNode) return null;
   const startingNodeID = startingNode.id;
-  const summaryNodeIDs = getArticulationNodesInSubgraph(
+  const articulationNodeIDs = getArticulationNodesInSubgraph(
     startingNodeID,
     subgraphNodeIDs,
     subgraphEdges,
     wholeGraphNodes,
   );
-  summaryNodeIDs.push(startingNodeID);
+  const unsortedCriticalNodeIDs = articulationNodeIDs.includes(startingNodeID) ? articulationNodeIDs : [...articulationNodeIDs, startingNodeID];
 
-  if (!summaryNodeIDs || summaryNodeIDs.length === 0) return null;
-  const sortedArticulationNodeIDs = sortNodesByTopology(
-    summaryNodeIDs,
+  if (!unsortedCriticalNodeIDs || unsortedCriticalNodeIDs.length === 0) return null;
+  const sortedCriticalNodeIDs = sortNodesByTopology(
+    unsortedCriticalNodeIDs,
     subgraphNodeIDs,
     subgraphEdges,
     wholeGraphNodes,
   );
-  if (!sortedArticulationNodeIDs || sortedArticulationNodeIDs.length === 0) { // loop in graph
+  if (!sortedCriticalNodeIDs || sortedCriticalNodeIDs.length === 0) { // loop in graph
     return null;
   }
 
-  const resultCriticalNodeIDs = sortedArticulationNodeIDs;
+  const resultCriticalNodeIDs = sortedCriticalNodeIDs;
   // if there's a single end descendent node
   const singleDescendentNodeID = getSingleEndDescendentNodeID(
     subgraphNodeIDs,
     subgraphEdges,
     wholeGraphNodes,
   );
-  if (singleDescendentNodeID) {
+  // add single descendent node if not counted in critical nodes list
+  if (singleDescendentNodeID && !resultCriticalNodeIDs.includes(singleDescendentNodeID)) {
     resultCriticalNodeIDs.push(singleDescendentNodeID);
   }
 
@@ -483,6 +484,7 @@ export const calculateDataModelStructure = (
       linksBefore: [],
     });
   } else {
+    // summary for all rest descendent nodes after last critical node
     const lastCriticalNodeID = resultCriticalNodeIDs[resultCriticalNodeIDs.length - 1];
     const nodeIDsBeforeNode = getAllChildrenNodeIDs(
       lastCriticalNodeID,

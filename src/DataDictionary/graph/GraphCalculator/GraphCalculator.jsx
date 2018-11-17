@@ -51,41 +51,19 @@ class GraphCalculator extends React.Component {
       this.props.onFurtherHighlightedPathCalculated(furtherHighlightedPath);
     }
 
-    // update data model structure
+    // update data model structure if update highlighted/furtherHighlighted node
     if (this.oldHighlightingNode !== newHighlightingNode
-      || this.oldFurtherHighlightingNodeID !== newFurtherHighlightingNodeID) {
+      || this.oldFurtherHighlightingNodeID !== newFurtherHighlightingNodeID
+    ) {
       if (newFurtherHighlightingNodeID) {
-        const subgraphNodeIDs = [];
-        const furtherHighlightedPath = calculateFurtherHighlightedPath(
+        const dataModelStructure = this.getDataModelStructureForFurtherHighlightedNodes(
           newHighlightingNode,
           newFurtherHighlightingNodeID,
-          this.props.nodes,
-        );
-        furtherHighlightedPath.forEach((e) => {
-          if (!subgraphNodeIDs.includes(e.source)) subgraphNodeIDs.push(e.source);
-          if (!subgraphNodeIDs.includes(e.target)) subgraphNodeIDs.push(e.target);
-        });
-        const dataModelStructure = calculateDataModelStructure(
-          newHighlightingNode,
-          subgraphNodeIDs,
-          furtherHighlightedPath,
-          this.props.nodes,
         );
         this.props.onDataModelStructureCalculated(dataModelStructure);
       } else if (newHighlightingNode) {
-        const relatedHighlightedNodeIDs = calculateHighlightRelatedNodeIDs(
+        const dataModelStructure = this.getDataModelStructureForHighlightedNodes(
           newHighlightingNode,
-          this.props.nodes,
-        );
-        const subgraphEdges = this.props.edges
-          .filter(e => (relatedHighlightedNodeIDs.includes(e.source)
-            && relatedHighlightedNodeIDs.includes(e.target)))
-          .map(e => ({ source: e.source, target: e.target }));
-        const dataModelStructure = calculateDataModelStructure(
-          newHighlightingNode,
-          relatedHighlightedNodeIDs,
-          subgraphEdges,
-          this.props.nodes,
         );
         this.props.onDataModelStructureCalculated(dataModelStructure);
       } else {
@@ -95,6 +73,47 @@ class GraphCalculator extends React.Component {
 
     this.oldHighlightingNode = newHighlightingNode;
     this.oldFurtherHighlightingNodeID = newFurtherHighlightingNodeID;
+  }
+
+  getDataModelStructureForHighlightedNodes(newHighlightingNode) {
+    const relatedHighlightedNodeIDs = calculateHighlightRelatedNodeIDs(
+      newHighlightingNode,
+      this.props.nodes,
+    );
+    const subgraphEdges = this.props.edges
+      .filter(e => (relatedHighlightedNodeIDs.includes(e.source)
+        && relatedHighlightedNodeIDs.includes(e.target)))
+      .map(e => ({ source: e.source, target: e.target }));
+    const dataModelStructure = calculateDataModelStructure(
+      newHighlightingNode,
+      relatedHighlightedNodeIDs,
+      subgraphEdges,
+      this.props.nodes,
+    );
+    return dataModelStructure;
+  }
+
+  getDataModelStructureForFurtherHighlightedNodes(
+    newHighlightingNode,
+    newFurtherHighlightingNodeID,
+  ) {
+    const subgraphNodeIDs = [];
+    const furtherHighlightedPath = calculateFurtherHighlightedPath(
+      newHighlightingNode,
+      newFurtherHighlightingNodeID,
+      this.props.nodes,
+    );
+    furtherHighlightedPath.forEach((e) => {
+      if (!subgraphNodeIDs.includes(e.source)) subgraphNodeIDs.push(e.source);
+      if (!subgraphNodeIDs.includes(e.target)) subgraphNodeIDs.push(e.target);
+    });
+    const dataModelStructure = calculateDataModelStructure(
+      newHighlightingNode,
+      subgraphNodeIDs,
+      furtherHighlightedPath,
+      this.props.nodes,
+    );
+    return dataModelStructure;
   }
 
   render() {
