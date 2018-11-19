@@ -34,29 +34,15 @@ const plugins = [
       REACT_APP_DISABLE_SOCKET: JSON.stringify(process.env.REACT_APP_DISABLE_SOCKET || 'true'),
     }
   }),
-  new webpack.optimize.DedupePlugin(), //dedupe similar code
-  new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
-];
-
-// add 'robots' meta tag in headers for bhc
-if (process.env.APP == 'bhc') {
-  plugins.push(new HtmlWebpackPlugin({
-    title: title,
-    basename: pathPrefix,
-    'meta': {
-      'robots': 'noindex,nofollow'
-    },
-    template: 'src/index.ejs',
-    hash: trueß
-  }));
-} else {
-  plugins.push(new HtmlWebpackPlugin({
+  new HtmlWebpackPlugin({
     title: title,
     basename: pathPrefix,
     template: 'src/index.ejs',
     hash: true
-  }));
-}
+  }),
+  new webpack.optimize.DedupePlugin(), //dedupe similar code
+  new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
+];
 
 if (process.env.NODE_ENV !== 'dev') {
   // This slows things down a lot, so avoid when running local dev environment

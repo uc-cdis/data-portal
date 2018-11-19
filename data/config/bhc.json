@@ -119,7 +119,8 @@
     }
   },
   "featureFlags": {
-    "explorer": true
+    "explorer": true,
+    "noindex": true
   },
   "arrangerConfig": {
     "charts": {

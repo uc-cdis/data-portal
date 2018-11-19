@@ -10,6 +10,7 @@ import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
+import { Helmet } from 'react-helmet';
 
 import '@gen3/ui-component/dist/css/base.less';
 import { fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
@@ -63,8 +64,10 @@ async function init() {
       fetchVersionInfo().then(({ status, data }) => {
         if (status === 200) {
           Object.assign(Footer.defaultProps,
-            { dictionaryVersion: data.dictionary.version || 'unknown',
-              apiVersion: data.version || 'unknown' },
+            {
+              dictionaryVersion: data.dictionary.version || 'unknown',
+              apiVersion: data.version || 'unknown'
+            },
           );
         }
       }),
@@ -74,17 +77,23 @@ async function init() {
   library.add(faAngleUp, faAngleDown);
 
   render(
-    <div>
+    < div >
       <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <MuiThemeProvider>
-            <BrowserRouter basename={basename}>
-              <div>
-                { GA.init(gaTracking, dev, gaDebug) && <RouteTracker /> }
-                <ReduxTopBar />
-                <ReduxNavBar />
-                <div className='main-content'>
-                  <Switch>
+      <ThemeProvider theme={theme}>
+        <MuiThemeProvider>
+          <BrowserRouter basename={basename}>
+            <div>
+              {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+              {isEnabled('noindex') ?
+                <Helmet>
+                  <meta name="robots" content="noindex,nofollow" />
+                </Helmet>
+                : null
+              }
+              <ReduxTopBar />
+              <ReduxNavBar />
+              <div className='main-content'>
+                <Switch>
                     <Route
                       path='/login'
                       component={
@@ -220,7 +229,7 @@ async function init() {
                         }
                       }
                     />
-                    { isEnabled('explorer') ?
+                    {isEnabled('explorer') ?
                       <Route
                         path='/explorer'
                         component={
@@ -236,14 +245,14 @@ async function init() {
                       }
                     />
                   </Switch>
-                </div>
-                <Footer />
               </div>
-            </BrowserRouter>
-          </MuiThemeProvider>
-        </ThemeProvider>
+              <Footer />
+            </div>
+          </BrowserRouter>
+        </MuiThemeProvider>
+      </ThemeProvider>
       </Provider>
-    </div>,
+    </div >,
     document.getElementById('root'),
   );
 }
