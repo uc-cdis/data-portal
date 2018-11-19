@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import NavBar from '../components/layout/NavBar';
 import TopBar from '../components/layout/TopBar';
+import Footer from '../components/layout/Footer';
 import dictIcons from '../img/icons/index';
 import { logoutAPI } from '../actions';
 import { components } from '../params';
@@ -47,4 +48,11 @@ export const ReduxTopBar = (() => {
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(TopBar);
+})();
+
+export const ReduxFooter = (() => {
+  const mapStateToProps = () => ({
+    logos: components.footerLogos,
+  });
+  return connect(mapStateToProps)(Footer);
 })();

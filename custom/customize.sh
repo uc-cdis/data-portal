@@ -27,3 +27,7 @@ if [ -f custom/css/$APP.css ]; then
 else
   echo "/* generated file - see customize.sh */" > src/css/themeoverrides.css
 fi
+
+if [ -d custom/sponsors ]; then
+  cp -r custom/sponsors src/img/sponsors
+fi
