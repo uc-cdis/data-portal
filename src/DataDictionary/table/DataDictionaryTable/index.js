@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import localconf from '../../../localconf';
+import { appname } from '../../../localconf';
 import { setExpandNode } from '../../action.js';
 import DataDictionaryTable from './DataDictionaryTable';
 
@@ -7,7 +7,7 @@ const ReduxDataDictionaryTable = (() => {
   const mapStateToProps = state => ({
     dictionary: state.submission.dictionary,
     highlightingNodeID: state.ddgraph.tableExpandNodeID,
-    dictionaryName: localconf.appname,
+    dictionaryName: appname,
   });
 
   const mapDispatchToProps = dispatch => ({

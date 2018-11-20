@@ -1,5 +1,5 @@
 :root {
-  --data-dictionary__left-width: 320px;
+  --data-dictionary__sidebar-width: 320px;
   --data-dictionary__switch-border-radius: 4px;
 }
 
@@ -8,16 +8,16 @@
   height: calc(100vh - 121px);
 }
 
-.data-dictionary__left {
-  width: var(--data-dictionary__left-width);
-  min-width: var(--data-dictionary__left-width);
+.data-dictionary__sidebar {
+  width: var(--data-dictionary__sidebar-width);
+  min-width: var(--data-dictionary__sidebar-width);
   height: 100%;
   background-color: var(--g3-color__white);
   overflow-y: scroll;
 }
 
-.data-dictionary__right {
-  width: calc(100vw - var(--data-dictionary__left-width));
+.data-dictionary__main {
+  width: calc(100vw - var(--data-dictionary__sidebar-width));
   min-width: 900px;
   overflow-y: scroll;
 }

@@ -1,3 +1,4 @@
+import { dataDictionaryTemplatePath } from '../localconf';
 import IconAdministrative from './icons/icon_administrative.svg';
 import IconAnalysis from './icons/icon_analysis.svg';
 import IconBiospecimen from './icons/icon_biospecimen.svg';
@@ -96,4 +97,12 @@ export const getType = (property) => {
   }
 
   return type;
+};
+
+
+export const downloadTemplate = (format, nodeId) => {
+  if (format === 'tsv' || format === 'json') {
+    const templatePath = `${dataDictionaryTemplatePath}${nodeId}?format=${format}`;
+    window.open(templatePath);
+  }
 };

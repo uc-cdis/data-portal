@@ -1,29 +1,3 @@
-const getGraphToDotString = (nodes, edges, treeLevel2Names) => {
-  const whRatio = 1;
-  let graphString = 'digraph dictionary {\n';
-  // graphString += 'concentrate=true\n';
-  // graphString += 'splines=curved\n';
-  graphString += 'size="5, 5"\n';
-  graphString += `ratio=${whRatio}\n`;
-  nodes.forEach((node) => {
-    graphString += `${node.id} [type="${node.category}" \
-label="${node.name}" \
-fixedsize=true width=1.2 height=.8 \
-shape=rectangle
-]\n`;
-  });
-  edges.forEach((edge) => {
-    graphString += `${edge.source.id} -> ${edge.target.id}[arrowhead=none tailport=s ]\n`;
-  });
-  if (treeLevel2Names) {
-    treeLevel2Names.forEach((level) => {
-      graphString += `{rank = same ${level.join(' ')}}\n`;
-    });
-  }
-  graphString += '}';
-  return graphString;
-};
-
 /**
  * Given a data dictionary that defines a set of nodes
  *    and edges, returns the nodes and edges in correct format
@@ -361,8 +335,43 @@ export function assignNodePositions(nodes, edges, opts) {
   return breadthFirstInfo;
 }
 
+/**
+ * convert graph structure to string using DOT language
+ * DOT Language ref: http://www.graphviz.org/doc/info/lang.html
+ * @param {Array} nodes
+ * @param {Array} edges
+ * @params {Object} treeLevel2Names - levels and nodes in each level, {levelNum:[nodeNameList]}
+ * @returns {string} graph translated into DOT language
+ */
+const buildGraphVizDOTString = (nodes, edges, treeLevel2Names) => {
+  const whRatio = 1;
+  const canvasSize = 5;
+  const nodeWidth = 1.2;
+  const nodeHeight = 0.8;
+  let graphString = 'digraph dictionary {\n';
+  graphString += `size="${canvasSize}, ${canvasSize}"\n`; 
+  graphString += `ratio=${whRatio}\n`;
+  nodes.forEach((node) => {
+    graphString += `${node.id} [type="${node.category}" \
+label="${node.name}" \
+fixedsize=true width=${nodeWidth} height=${nodeHeight} \
+shape=rectangle
+]\n`;
+  });
+  edges.forEach((edge) => {
+    graphString += `${edge.source.id} -> ${edge.target.id}[arrowhead=none tailport=s ]\n`;
+  });
+  if (treeLevel2Names) {
+    treeLevel2Names.forEach((level) => {
+      graphString += `{rank = same ${level.join(' ')}}\n`;
+    });
+  }
+  graphString += '}';
+  return graphString;
+};
+
 export function createDotStrinByNodesEdges(nodes, edges) {
   const posInfo = assignNodePositions(nodes, edges);
-  const dotString = getGraphToDotString(nodes, edges, posInfo.treeLevel2Names);
+  const dotString = buildGraphVizDOTString(nodes, edges, posInfo.treeLevel2Names);
   return dotString;
 }

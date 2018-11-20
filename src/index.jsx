@@ -22,7 +22,6 @@ import CoreMetadataPage from './CoreMetadata/page';
 import { fetchCoreMetadata } from './CoreMetadata/reduxer';
 import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/.';
-// import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
 import CertificateQuiz from './Certificate/ReduxQuiz';

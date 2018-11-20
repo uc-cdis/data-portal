@@ -383,17 +383,17 @@ export const getNodesAndLinksSummaryBetweenNodesInSubgraph = (
 
 export const calculateFurtherHighlightedPath = (
   newHighlightingNode,
-  newFurtherHighlightingNodeID,
+  newSecondHighlightingNodeID,
   wholeGraphNodes,
 ) => {
-  if (!newHighlightingNode || !newFurtherHighlightingNodeID) {
+  if (!newHighlightingNode || !newSecondHighlightingNodeID) {
     return [];
   }
-  const node = wholeGraphNodes.find(n => n.id === newFurtherHighlightingNodeID);
+  const node = wholeGraphNodes.find(n => n.id === newSecondHighlightingNodeID);
   const furtherHighlightedPath = getAllChildrenLinks(node, wholeGraphNodes);
   furtherHighlightedPath.push({
     source: newHighlightingNode.id,
-    target: newFurtherHighlightingNodeID,
+    target: newSecondHighlightingNodeID,
   });
   return furtherHighlightedPath;
 };

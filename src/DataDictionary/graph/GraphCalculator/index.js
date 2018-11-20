@@ -17,7 +17,7 @@ const ReduxGraphCalculator = (() => {
     highlightingNode: state.ddgraph.highlightingNode,
     nodes: state.ddgraph.nodes,
     edges: state.ddgraph.edges,
-    furtherHighlightingNodeID: state.ddgraph.furtherHighlightingNodeID,
+    secondHighlightingNodeID: state.ddgraph.secondHighlightingNodeID,
   });
 
   const mapDispatchToProps = dispatch => ({
@@ -25,8 +25,8 @@ const ReduxGraphCalculator = (() => {
     onGraphLegendCalculated: legendItems => dispatch(setGraphLegend(legendItems)),
     onHighlightRelatedNodesCalculated: relatedNodeIDs =>
       dispatch(setRelatedNodeIDs(relatedNodeIDs)),
-    onFurtherClickableNodeIDsCalculated: furtherClickableNodeIDs =>
-      dispatch(setFurtherClickableNodeIDs(furtherClickableNodeIDs)),
+    onFurtherClickableNodeIDsCalculated: clickableHighlightedNodeIDs =>
+      dispatch(setFurtherClickableNodeIDs(clickableHighlightedNodeIDs)),
     onFurtherHighlightedPathCalculated: furtherHighlightedPath =>
       dispatch(setFurtherHighlightedPath(furtherHighlightedPath)),
     onDataModelStructureCalculated: dataModelStructure =>

@@ -1,3 +1,7 @@
+:root {
+  --overlay-property-table-header-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
 .overlay-property-table {
   position: absolute;
   top: 0;
@@ -29,12 +33,17 @@
   z-index: 3;
 }
 
-.overlay-property-table__close-right {
+.overlay-property-table__close {
+  box-shadow: var(--overlay-property-table-header-box-shadow);
+}
+
+.overlay-property-table__close--right {
   float: right;
 }
 
 .overlay-property-table__header-table {
   margin-top: 15px;
+  box-shadow: var(--overlay-property-table-header-box-shadow);
 }
 
 .overlay-property-table__category {
@@ -80,10 +89,10 @@
 
 .overlay-property-table__download-button {
   width: 80px;
-  min-width: unset;
+  min-width: unset; /* override .g3-button's 152px min-width */
   height: 30px;
   margin: 5px 0 0 15px;
-  padding: unset;
+  padding: unset; /* override .g3-button's paddings */
   float: right;
   font-weight: normal;
 }

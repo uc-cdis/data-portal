@@ -32,8 +32,8 @@ class GraphDrawer extends React.Component {
     if (!this.props.highlightingNode) { // if no node is highlighted yet
       const highlightingNodeSVGElement = e.currentTarget;
       this.props.onClickNode(node, highlightingNodeSVGElement);
-    } else if (this.props.furtherClickableNodeIDs.length > 1
-      && this.props.furtherClickableNodeIDs.includes(node.id)) {
+    } else if (this.props.clickableHighlightedNodeIDs.length > 1
+      && this.props.clickableHighlightedNodeIDs.includes(node.id)) {
       // only allow clicking clickable nodes
       // (only children of highlighted nodes are designed to be clickable)
       this.props.onFurtherClickNode(node.id);
@@ -78,7 +78,7 @@ class GraphDrawer extends React.Component {
             let edgeRelatedClassModifier = '';
             if (this.props.highlightingNode) {
               // if clicked a futher node under highlighting mode
-              if (this.props.furtherHighlightingNodeID) {
+              if (this.props.secondHighlightingNodeID) {
                 const isEdgeAlongFurtherHighlightedPath = this.props.furtherHighlightedPath
                   .find(e => (e.source === edge.source && e.target === edge.target));
                 if (isEdgeAlongFurtherHighlightedPath) {
@@ -115,9 +115,9 @@ class GraphDrawer extends React.Component {
             let nodeClickableClassModifier = '';
             let nodeIsCurrentHighlightingClassModifier = '';
             if (this.props.highlightingNode) {
-              nodeClickableClassModifier = this.props.furtherClickableNodeIDs.includes(node.id)
+              nodeClickableClassModifier = this.props.clickableHighlightedNodeIDs.includes(node.id)
                 ? clickableNodeClassName : notClickableNodeClassName;
-              if (this.props.furtherHighlightingNodeID) {
+              if (this.props.secondHighlightingNodeID) {
                 nodeHighlightedClassModifier = this.props.furtherHighlightedPath
                   .find(e => (e.source === node.id || e.target === node.id))
                   ? highlightedNodeClassName : notHighlightedNodeClassName;
@@ -208,8 +208,8 @@ GraphDrawer.propTypes = {
   highlightingNode: PropTypes.object,
   relatedNodeIDs: PropTypes.array,
   onFurtherClickNode: PropTypes.func,
-  furtherHighlightingNodeID: PropTypes.string,
-  furtherClickableNodeIDs: PropTypes.arrayOf(PropTypes.string),
+  secondHighlightingNodeID: PropTypes.string,
+  clickableHighlightedNodeIDs: PropTypes.arrayOf(PropTypes.string),
   furtherHighlightedPath: PropTypes.arrayOf(PropTypes.object),
   highlightingNodeSVGElement: PropTypes.object,
   onHighlightingNodeSVGElementUpdated: PropTypes.func,
@@ -230,8 +230,8 @@ GraphDrawer.defaultProps = {
   highlightingNode: null,
   relatedNodeIDs: [],
   onFurtherClickNode: () => {},
-  furtherHighlightingNodeID: null,
-  furtherClickableNodeIDs: [],
+  secondHighlightingNodeID: null,
+  clickableHighlightedNodeIDs: [],
   furtherHighlightedPath: [],
   highlightingNodeSVGElement: null,
   onHighlightingNodeSVGElementUpdated: () => {},

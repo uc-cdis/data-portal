@@ -6,7 +6,10 @@ import './Canvas.css';
 class Canvas extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      canvasWidth: 0,
+      canvasHeight: 0,
+    };
     this.canvasElement = React.createRef();
     this.svgElement = React.createRef();
     this.containerElement = React.createRef();

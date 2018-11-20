@@ -8,13 +8,13 @@ export const setSVGCTM = svgCTM => ({
 });
 
 export const setCanvasBoundingRect = canvasBoundingRect => ({
-  type: 'GRAPH_CANVAS_BOUNDING_RECT',
+  type: 'GRAPH_CANVAS_BOUNDING_RECT_UPDATE',
   canvasBoundingRect,
 });
 
-export const setFurtherClickableNodeIDs = furtherClickableNodeIDs => ({
+export const setFurtherClickableNodeIDs = clickableHighlightedNodeIDs => ({
   type: 'GRAPH_FURTHER_CLICKABLE_NODES',
-  furtherClickableNodeIDs,
+  clickableHighlightedNodeIDs,
 });
 
 export const setFurtherHighlightedPath = furtherHighlightedPath => ({

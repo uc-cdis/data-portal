@@ -16,9 +16,9 @@ const ReduxGraphDrawer = (() => {
     highlightingNode: state.ddgraph.highlightingNode,
     highlightingNodeSVGElement: state.ddgraph.highlightingNodeSVGElement,
     relatedNodeIDs: state.ddgraph.relatedNodeIDs,
-    furtherClickableNodeIDs: state.ddgraph.furtherClickableNodeIDs,
+    clickableHighlightedNodeIDs: state.ddgraph.clickableHighlightedNodeIDs,
     furtherHighlightedPath: state.ddgraph.furtherHighlightedPath,
-    furtherHighlightingNodeID: state.ddgraph.furtherHighlightingNodeID,
+    secondHighlightingNodeID: state.ddgraph.secondHighlightingNodeID,
     isGraphView: state.ddgraph.isGraphView,
   });
 

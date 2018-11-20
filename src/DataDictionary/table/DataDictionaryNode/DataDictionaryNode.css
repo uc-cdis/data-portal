@@ -54,10 +54,10 @@
 
 .data-dictionary-node__download-button {
   width: 50px;
-  min-width: unset;
+  min-width: unset; /* override .g3-button's 152px min-width */
   height: 30px;
   margin: 0 6px;
-  padding: unset;
+  padding: unset; /* override .g3-button's paddings */
   font-weight: normal;
 }
 

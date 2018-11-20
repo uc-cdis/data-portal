@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { getCategoryColor } from '../../utils';
+import { getCategoryColor, downloadTemplate } from '../../utils';
 import DataDictionaryPropertyTable from '../DataDictionaryPropertyTable/.';
 import './DataDictionaryNode.css';
 
@@ -39,7 +39,7 @@ class DataDictionaryNode extends React.Component {
             <span className='data-dictionary-node__button-wrap'>
               <Button
                 className='data-dictionary-node__download-button'
-                onClick={() => { window.open(`/api/v0/submission/template/${this.props.node.id}?format=json`); }}
+                onClick={() => { downloadTemplate('json', this.props.node.id) }}
                 label='JSON'
                 buttonType='secondary'
               />
@@ -47,7 +47,7 @@ class DataDictionaryNode extends React.Component {
             <span className='data-dictionary-node__button-wrap'>
               <Button
                 className='data-dictionary-node__download-button'
-                onClick={() => { window.open(`/api/v0/submission/template/${this.props.node.id}?format=tsv`); }}
+                onClick={() => { downloadTemplate('tsv', this.props.node.id) }}
                 label='TSV'
                 buttonType='secondary'
               />

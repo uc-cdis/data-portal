@@ -45,7 +45,7 @@ describe('GraphCalculator', () => {
     expect(furtherClickableCallback.mock.calls.length).toBe(1);
     expect(dataModelCallback.mock.calls.length).toBe(1);
     graphCalculator.setProps({
-      furtherHighlightingNodeID: testGraph1.testFurtherClickNodeID,
+      secondHighlightingNodeID: testGraph1.testFurtherClickNodeID,
     });
     expect(furtherPathCallback.mock.calls.length).toBe(1);
     expect(dataModelCallback.mock.calls.length).toBe(2);

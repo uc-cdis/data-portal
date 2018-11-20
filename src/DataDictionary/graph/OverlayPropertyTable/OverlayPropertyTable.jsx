@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { getTypeIconSVG } from '../../utils';
+import { getTypeIconSVG, downloadTemplate } from '../../utils';
 import DataDictionaryPropertyTable from '../../table/DataDictionaryPropertyTable/.';
 import './OverlayPropertyTable.css';
 
@@ -22,7 +22,7 @@ class OverlayPropertyTable extends React.Component {
               <Button
                 onClick={this.handleClose}
                 label='Back to Graph Data Model'
-                className='overlay-property-table__close-left'
+                className='overlay-property-table__close'
                 leftIcon='back'
                 buttonType='secondary'
               />
@@ -30,7 +30,7 @@ class OverlayPropertyTable extends React.Component {
                 onClick={this.handleClose}
                 label='Close'
                 rightIcon='cross'
-                className='overlay-property-table__close-right'
+                className='overlay-property-table__close overlay-property-table__close--right'
                 buttonType='secondary'
               />
               <div className='overlay-property-table__header-table'>
@@ -39,14 +39,14 @@ class OverlayPropertyTable extends React.Component {
                   <h4 className='overlay-property-table__category-text'>{this.props.node.category}</h4>
                   <Button
                     className='overlay-property-table__download-button'
-                    onClick={() => { window.open(`/api/v0/submission/template/${this.props.node.id}?format=tsv`); }}
+                    onClick={() => {downloadTemplate('tsv', this.props.node.id)}}
                     label='TSV'
                     buttonType='secondary'
                     rightIcon='download'
                   />
                   <Button
                     className='overlay-property-table__download-button'
-                    onClick={() => { window.open(`/api/v0/submission/template/${this.props.node.id}?format=json`); }}
+                    onClick={() => {downloadTemplate('json', this.props.node.id)}}
                     label='JSON'
                     buttonType='secondary'
                     rightIcon='download'

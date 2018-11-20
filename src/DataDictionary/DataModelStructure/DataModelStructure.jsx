@@ -26,7 +26,7 @@ class DataModelStructure extends React.Component {
             this.props.dataModelStructure.map((entry, i) => {
               const { nodeID, nodeIDsBefore, linksBefore, category } = entry;
               const IconSVG = getTypeIconSVG(category);
-              const lastNodeModier = (i === this.props.dataModelStructure.length - 1) ? 'data-model-structure__node-name--last' : '';
+              const lastNodeModifier = (i === this.props.dataModelStructure.length - 1) ? 'data-model-structure__node-name--last' : '';
               return (
                 <React.Fragment key={nodeID}>
                   {
@@ -48,7 +48,7 @@ class DataModelStructure extends React.Component {
                   }
                   <div className={'data-model-structure__node'}>
                     <IconSVG className='data-model-structure__icon' />
-                    <span className={`data-model-structure__node-name ${lastNodeModier} introduction`}>{nodeID}</span>
+                    <span className={`data-model-structure__node-name ${lastNodeModifier} introduction`}>{nodeID}</span>
                   </div>
                 </React.Fragment>
               );

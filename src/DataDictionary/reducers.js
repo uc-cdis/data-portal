@@ -10,7 +10,7 @@ const ddgraphInitialState = {
   highlightingNode: null,
   highlightingNodeSVGElement: null,
   relatedNodeIDs: [],
-  furtherHighlightingNodeID: null,
+  secondHighlightingNodeID: null,
   dataModelStructure: null,
   overlayPropertyHidden: true,
   canvasBoundingRect: { top: 0, left: 0 },
@@ -55,7 +55,7 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       svgCTM: action.svgCTM,
     };
   }
-  case 'GRAPH_CANVAS_BOUNDING_RECT': {
+  case 'GRAPH_CANVAS_BOUNDING_RECT_UPDATE': {
     return {
       ...state,
       canvasBoundingRect: action.canvasBoundingRect,
@@ -68,16 +68,16 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     };
   }
   case 'GRAPH_FURTHER_HIGHLIGHT_NODE': {
-    const newFurtherHighlightingNodeID = action.nodeID;
+    const newSecondHighlightingNodeID = action.nodeID;
     return {
       ...state,
-      furtherHighlightingNodeID: newFurtherHighlightingNodeID,
+      secondHighlightingNodeID: newSecondHighlightingNodeID,
     };
   }
   case 'GRAPH_FURTHER_CLICKABLE_NODES': {
     return {
       ...state,
-      furtherClickableNodeIDs: action.furtherClickableNodeIDs,
+      clickableHighlightedNodeIDs: action.clickableHighlightedNodeIDs,
     };
   }
   case 'GRAPH_FURTHER_HIGHLIGHT_PATH': {
@@ -122,18 +122,18 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       ...state,
       highlightingNode: newHighlightingNode,
       highlightingNodeSVGElement: newHighlightingNodeSVGElement,
-      furtherHighlightingNodeID: null,
+      secondHighlightingNodeID: null,
       tableExpandNodeID: newTableExpandNodeID,
     };
   }
   case 'GRAPH_CLICK_BLANK_SPACE': {
     let newHighlightingNode = state.highlightingNode;
-    let newFurtherHighlightingNodeID = state.furtherHighlightingNodeID;
+    let newSecondHighlightingNodeID = state.secondHighlightingNodeID;
     let newTableExpandNodeID = state.tableExpandNodeID;
     let newHighlightingNodeSVGElement = state.highlightingNodeSVGElement;
     if (state.highlightingNode) {
-      if (state.furtherHighlightingNodeID) {
-        newFurtherHighlightingNodeID = null;
+      if (state.secondHighlightingNodeID) {
+        newSecondHighlightingNodeID = null;
       } else {
         newHighlightingNode = null;
         newTableExpandNodeID = null;
@@ -143,7 +143,7 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     return {
       ...state,
       highlightingNode: newHighlightingNode,
-      furtherHighlightingNodeID: newFurtherHighlightingNodeID,
+      secondHighlightingNodeID: newSecondHighlightingNodeID,
       tableExpandNodeID: newTableExpandNodeID,
       highlightingNodeSVGElement: newHighlightingNodeSVGElement,
     };
@@ -157,7 +157,7 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       ...state,
       tableExpandNodeID: action.nodeID,
       highlightingNode: newHighlightingNode,
-      furtherHighlightingNodeID: null,
+      secondHighlightingNodeID: null,
       highlightingNodeSVGElement: null,
     };
   }

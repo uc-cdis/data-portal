@@ -13,7 +13,7 @@ class DataDictionary extends React.Component {
   render() {
     return (
       <div className='data-dictionary'>
-        <div className='data-dictionary__left'>
+        <div className='data-dictionary__sidebar'>
           <div className='data-dictionary__switch'>
             <span
               className={`data-dictionary__switch-button ${!this.props.isGraphView ? '' : 'data-dictionary__switch-button--active'}`}
@@ -39,7 +39,7 @@ class DataDictionary extends React.Component {
           <div className='data-dictionary__search-history' />
         </div>
         <div
-          className='data-dictionary__right'
+          className='data-dictionary__main'
         >
           <div className={`data-dictionary__table ${!this.props.isGraphView ? '' : 'data-dictionary__table--hidden'}`}>
             <ReduxDataDictionaryTable />

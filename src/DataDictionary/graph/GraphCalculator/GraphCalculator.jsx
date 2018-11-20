@@ -30,22 +30,22 @@ class GraphCalculator extends React.Component {
   componentWillUpdate(nextProps) {
     // if the highlighted node is updated, calculate related highlighted nodes
     const newHighlightingNode = nextProps.highlightingNode;
-    const newFurtherHighlightingNodeID = nextProps.furtherHighlightingNodeID;
+    const newSecondHighlightingNodeID = nextProps.secondHighlightingNodeID;
     if (this.oldHighlightingNode !== newHighlightingNode) {
       const relatedHighlightedNodeIDs = calculateHighlightRelatedNodeIDs(
         newHighlightingNode,
         this.props.nodes,
       );
       this.props.onHighlightRelatedNodesCalculated(relatedHighlightedNodeIDs);
-      const furtherClickableNodeIDs = newHighlightingNode ? newHighlightingNode.outLinks : [];
-      this.props.onFurtherClickableNodeIDsCalculated(furtherClickableNodeIDs);
+      const clickableHighlightedNodeIDs = newHighlightingNode ? newHighlightingNode.outLinks : [];
+      this.props.onFurtherClickableNodeIDsCalculated(clickableHighlightedNodeIDs);
     }
 
-    // if the further highlighted node is updated, calculate related highlighted nodes
-    if (this.oldFurtherHighlightingNodeID !== newFurtherHighlightingNodeID) {
+    // if the second highlighted node is updated, calculate related highlighted nodes
+    if (this.oldFurtherHighlightingNodeID !== newSecondHighlightingNodeID) {
       const furtherHighlightedPath = calculateFurtherHighlightedPath(
         newHighlightingNode,
-        newFurtherHighlightingNodeID,
+        newSecondHighlightingNodeID,
         this.props.nodes,
       );
       this.props.onFurtherHighlightedPathCalculated(furtherHighlightedPath);
@@ -53,12 +53,12 @@ class GraphCalculator extends React.Component {
 
     // update data model structure if update highlighted/furtherHighlighted node
     if (this.oldHighlightingNode !== newHighlightingNode
-      || this.oldFurtherHighlightingNodeID !== newFurtherHighlightingNodeID
+      || this.oldFurtherHighlightingNodeID !== newSecondHighlightingNodeID
     ) {
-      if (newFurtherHighlightingNodeID) {
+      if (newSecondHighlightingNodeID) {
         const dataModelStructure = this.getDataModelStructureForFurtherHighlightedNodes(
           newHighlightingNode,
-          newFurtherHighlightingNodeID,
+          newSecondHighlightingNodeID,
         );
         this.props.onDataModelStructureCalculated(dataModelStructure);
       } else if (newHighlightingNode) {
@@ -72,7 +72,7 @@ class GraphCalculator extends React.Component {
     }
 
     this.oldHighlightingNode = newHighlightingNode;
-    this.oldFurtherHighlightingNodeID = newFurtherHighlightingNodeID;
+    this.oldFurtherHighlightingNodeID = newSecondHighlightingNodeID;
   }
 
   getDataModelStructureForHighlightedNodes(newHighlightingNode) {
@@ -95,12 +95,12 @@ class GraphCalculator extends React.Component {
 
   getDataModelStructureForFurtherHighlightedNodes(
     newHighlightingNode,
-    newFurtherHighlightingNodeID,
+    newSecondHighlightingNodeID,
   ) {
     const subgraphNodeIDs = [];
     const furtherHighlightedPath = calculateFurtherHighlightedPath(
       newHighlightingNode,
-      newFurtherHighlightingNodeID,
+      newSecondHighlightingNodeID,
       this.props.nodes,
     );
     furtherHighlightedPath.forEach((e) => {
@@ -127,12 +127,12 @@ GraphCalculator.propTypes = {
   linksSearch: PropTypes.array,
   onGraphLayoutCalculated: PropTypes.func,
   onGraphLegendCalculated: PropTypes.func,
-  highlightingNode: PropTypes.object,
   nodes: PropTypes.arrayOf(PropTypes.object),
   edges: PropTypes.arrayOf(PropTypes.object),
+  highlightingNode: PropTypes.object,
   onHighlightRelatedNodesCalculated: PropTypes.func,
-  furtherHighlightingNodeID: PropTypes.string,
   onFurtherClickableNodeIDsCalculated: PropTypes.func,
+  secondHighlightingNodeID: PropTypes.string,
   onFurtherHighlightedPathCalculated: PropTypes.func,
   onDataModelStructureCalculated: PropTypes.func,
 };
@@ -147,7 +147,7 @@ GraphCalculator.defaultProps = {
   nodes: [],
   edges: [],
   onHighlightRelatedNodesCalculated: () => {},
-  furtherHighlightingNodeID: null,
+  secondHighlightingNodeID: null,
   onFurtherClickableNodeIDsCalculated: () => {},
   onFurtherHighlightedPathCalculated: () => {},
   onDataModelStructureCalculated: () => {},

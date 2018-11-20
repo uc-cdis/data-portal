@@ -36,7 +36,7 @@ class Legend extends React.Component {
                 </div>
                 <div className='data-dictionary-graph-legend__item body'>
                   <i className='data-dictionary-graph-legend__required-icon data-dictionary-graph-legend__required-icon g3-icon g3-icon--minus' />
-                  <span className='data-dictionary-graph-legend__text'>Not Required Link</span>
+                  <span className='data-dictionary-graph-legend__text'>Optional Link</span>
                 </div>
                 {
                   this.props.items.map((type) => {
