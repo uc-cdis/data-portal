@@ -94,9 +94,9 @@ You will then need to visit `https://localhost` and accept the self-signed certi
 docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal
 
 ### GraphQL configuration
-All the configurations of Homepage and Explorer page are specified src/parameters.json. For each common, we need to specify the following json entities:
+All the configurations of Homepage and Explorer page are specified data/config/<common-name>.json. For each common, we need to specify the following json entities:
 ```
-"<common_name>": {
+"graphql": {
   "boardCounts": [
     {
       "graphql": "_case_count",
@@ -135,6 +135,48 @@ All the configurations of Homepage and Explorer page are specified src/parameter
 - `boardCounts` are the counts that you want to display in the top-left of dashboard's
 - `chartCounts` are the counts that you want to display in the bar chart of dashboard's
 - `projectDetails` are the counts that you want to display in the list of projects. It could be same as `boardCounts`, in this case, you only need to point to `boardCounts`.
+
+### Certificates configuration
+All the configurations of necessary certificates are define in src/<common-name>.json. For each common, we need to specify the following json entities:
+```
+"components": {
+  "certs": {
+    "<certificate-name>": {
+      "title": "BloodPAC User agreement",
+      "description": "The agreement on what you can and need to do in a Commons.",
+      "questions": [
+        {
+          "name": "Things you can do after registration",
+          "question": "As a registered user, I can do the following things without any problem. Is it true or not:",
+          "options": ["Browse public Project", "Upload file", "Download file", "Invite people"],
+          "answer": 0,
+          "hint": "Some information about this question"
+        },
+        {
+          "name": "Things you need to do to become the registered user",
+          "question": "In order to be a register user, I must do the following things otherwise:",
+          "options": ["Agree the user agreement", "Accept a consent", "None of them", "Both of them"],
+          "answer": 2,
+          "hint": "Some information about this question"
+        },
+        {
+          "name": "Things you can do with data",
+          "question": "How can I share data with other people according to the policy of the commons",
+          "options": ["I can not share data", "I can only share data with BPA memebers", "I can share data with family", "I can share data with my wife"],
+          "answer": 1,
+          "hint": "Some information about this question"
+        }
+      ]
+    }
+  }
+}
+
+```
+Then, specify all the required certificates that need to be completed before using the portal in following entry:
+```
+"requiredCerts": ["<certificate-name>"]
+```
+Default is an empty list.
 
 ### Style Guide
 When styling components, we adhere to a few rules. We style using class selectors (`.class-name` instead of `#class-name`), and separate class names with hypens instead of camel case (`.class-name` instead of `.className`). The CSS file should be named {component}.css, and be in the same folder as the component. It is then imported into the component's .jsx file.
