@@ -41,6 +41,7 @@ function buildConfig(opts) {
   const jobapiPath = `${hostname}/job/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
+  const indexdPath = `${hostname}index/`;
   let login = {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',
@@ -90,6 +91,7 @@ function buildConfig(opts) {
     submissionApiOauthPath,
     credentialCdisPath,
     coreMetadataPath,
+    indexdPath,
     graphqlPath,
     graphqlSchemaUrl,
     appname: components.appName,

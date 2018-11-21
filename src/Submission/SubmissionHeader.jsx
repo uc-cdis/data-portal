@@ -11,6 +11,7 @@ export class SubmissionHeader extends React.Component {
   }
 
   render() {
+    console.log(window.location)
     return (
       <div className='submission-header'>
         <div className='submission-header-section'>
@@ -52,7 +53,7 @@ export class SubmissionHeader extends React.Component {
               Mapping files to metadata in order to create medical meaning.
             </div>
             <Button
-              onClick={() => console.log('click')}
+              onClick={() => window.location.href = `${window.location.href}/map-files`}
               className='submission-header-section__button'
               label="Map My Files"
               buttonType='primary'

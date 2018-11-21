@@ -24,6 +24,7 @@ import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/ReduxDataDictionary';
 import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
+import ReduxMapFiles from './Submission/ReduxMapFiles';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
 import CertificateQuiz from './Certificate/ReduxQuiz';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
@@ -112,6 +113,13 @@ async function init() {
                       path='/submission'
                       component={
                         props => <ProtectedContent component={HomePage} {...props} />
+                      }
+                    />
+                    <Route
+                      exact
+                      path='/submission/map-files'
+                      component={
+                        props => <ProtectedContent component={ReduxMapFiles} {...props} />
                       }
                     />
                     <Route

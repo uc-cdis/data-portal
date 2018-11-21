@@ -1,26 +1,39 @@
-.checkbox-group {
-  padding: 1em 0;
-  border-bottom: 2px solid #7d7474;
-  margin-bottom: 0;
-  margin-top: 0;
-}
+@import '~@gen3/ui-component/dist/css/base.less';
 
-.checkbox-group:last-child {
-  border-bottom: 0;
-}
-
-.checkbox-group__label {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  min-width: 0;
-  max-width: 12vw;
-  overflow: hidden;
-  padding: 0 0.25rem;
-  margin-left: 0.3rem;
-  margin-top: 3px;
-  margin-right: 3px;
-  margin-bottom: 3px;
+.checkbox input[type='checkbox'] {
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: 0;
+  background: @white;
+  height: 18px;
+  width: 18px;
+  border: 1px solid @light_gray;
+  border-radius: 2px;
+  margin-right: 5px;
+  flex-shrink: 0;
   vertical-align: middle;
-  line-height: 1.75;
-  display: inline-block;
+}
+
+.checkbox input[type='checkbox']:checked {
+  background: @orange;
+}
+
+// defines check in checkbox
+.checkbox input[type='checkbox']:after {
+  content: '';
+  position: relative;
+  left: 40%;
+  top: 20%;
+  width: 15%;
+  height: 40%;
+  border: solid @white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  display: none;
+}
+
+.checkbox input[type='checkbox']:checked:after {
+  display: block;
 }
