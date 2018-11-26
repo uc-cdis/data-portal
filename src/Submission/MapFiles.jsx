@@ -12,8 +12,9 @@ class MapFiles extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
-        selectedFileDids: [],
-        filesByDate: [],
+        selectedFileIdsByGroup: {},
+        unselectedFileIdsByGroup: {},
+        filesByDate: {},
       };
   }
 
@@ -23,71 +24,63 @@ class MapFiles extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.unmappedFiles !== this.props.unmappedFiles) {
-      this.sortUnmappedFiles()
+      this.onUpdate();
     }
   }
 
-  shouldBeSelected = did => {
-    console.log('should did', did, 'be selected?');
-    return this.state.selectedFileDids.includes(did);
-  }
-
-  onToggleCheckBox = did => {
-    this.state.selectedFileDids.includes(did) ? this.onFileDeselect(did) : this.onFileSelect(did);
-  }
-
-  onFileSelect = did => {
-    console.log('selecting did', did)
-    this.setState({
-      selectedFileDids: this.state.selectedFileDids.concat(did),
-    });
-  }
-
-  onFileDeselect = did => {
-    this.setState({
-      selectedFileDids: this.state.selectedFileDids.filter(id => id !== did),
-    }, () => console.log(this.state.selectedFileDids));
-  }
-
-  toggleSelectAll = index => {
-    console.log('index is', index)
-    let files = this.state.filesByDate[parseInt(index)];
-    let allSelected = true;
-    console.log('files', files)
-    for (let file of files) {
-      if (!this.state.selectedFileDids.includes(file.did)) {
-        console.log('all are not selected')
-        allSelected = false;
-        break;
-      }
-    };
-    allSelected ? this.deselectAll(index) : this.selectAll(index);
-  }
-
-  deselectAll = index => {
-    console.log('deselecting all')
-    let ids = [index];
-    this.state.filesByDate[index].forEach(file => {
-      ids.push(file.did)
+  createFileMapByGroup = () => {
+    let unselectedMap = {};
+    let selectedMap = {};
+    let index = 0;
+    Object.keys(this.state.filesByDate).forEach(key => {
+      unselectedMap[index] = this.state.filesByDate[key].map(arr => arr.did);
+      selectedMap[index] = [];
+      index += 1
     })
-    this.setState({
-      selectedFileDids: this.state.selectedFileDids.filter(id => !ids.includes(id))
-    })
+    this.setState({ unselectedFileIdsByGroup: unselectedMap, selectedFileIdsByGroup: selectedMap })
   }
 
-  selectAll = index => {
-    console.log('selecting all')
-    let ids = [index];
-    this.state.filesByDate[index].forEach(file => {
-      console.log('checking did', file.did)
-      if (!this.state.selectedFileDids.includes(file.did)) {
-        ids.push(file.did)
-      }
-    })
-    console.log('final ids are', ids)
+  getTableHeaderText = files => {
+    let date = moment(files[0].created_date).format('MM/DD/YY')
+    return `uploaded on ${date}, ${files.length} ${files.length > 1 ? 'files' : 'file'}`
+  }
+
+  isSelected = (index, did) => {
+    if (this.state.selectedFileIdsByGroup[index]) {
+      return this.state.selectedFileIdsByGroup[index].includes(did);
+    }
+    return false;
+  }
+
+  isSelectAll = index => {
+    if (this.state.unselectedFileIdsByGroup[index]) {
+      return this.state.unselectedFileIdsByGroup[index].length == 0;
+    }
+    return false;
+  }
+
+  onUpdate = () => {
     this.setState({
-      selectedFileDids: this.state.selectedFileDids.concat(ids)
-    })
+      filesByDate: this.sortUnmappedFiles()
+    }, () => this.createFileMapByGroup());
+  }
+
+  addToMap = (map, index, did) => {
+    let tempMap = map;
+    tempMap[index] = tempMap[index].concat(did);
+    return tempMap;
+  }
+
+  removeFromMap = (map, index, did) => {
+    let tempMap = map;
+    tempMap[index] = tempMap[index].filter(id => id !== did);
+    return tempMap;
+  }
+
+  setMapValue = (map, index, value) => {
+    let tempMap = map;
+    tempMap[index] = value;
+    return tempMap;
   }
 
   sortUnmappedFiles = () => {
@@ -100,20 +93,42 @@ class MapFiles extends React.Component {
         sortedFiles[fileDate] = [file];
       }
     });
-    this.setState({
-      filesByDate: Object.values(sortedFiles)
-    });
+    return sortedFiles;
   }
 
-  getTableHeaderText = files => {
-    let date = moment(files[0].created_date).format('MM/DD/YY')
-    return `uploaded on ${date}, ${files.length} ${files.length > 1 ? 'files' : 'file'}`
+  toggleCheckBox = (index, did) => {
+    if (this.isSelected(index, did)) {
+      this.setState({
+        selectedFileIdsByGroup: this.removeFromMap(this.state.selectedFileIdsByGroup, index, did),
+        unselectedFileIdsByGroup: this.addToMap(this.state.unselectedFileIdsByGroup, index, did)
+      });
+    } else {
+      this.setState({
+        selectedFileIdsByGroup: this.addToMap(this.state.selectedFileIdsByGroup, index, did),
+        unselectedFileIdsByGroup: this.removeFromMap(this.state.unselectedFileIdsByGroup, index, did)
+      })
+    }
+  }
+
+  toggleSelectAll = index => {
+    if (this.state.unselectedFileIdsByGroup[index].length == 0) {
+      this.setState({
+        unselectedFileIdsByGroup: this.setMapValue(this.state.unselectedFileIdsByGroup, index, this.state.selectedFileIdsByGroup[index]),
+        selectedFileIdsByGroup: this.setMapValue(this.state.selectedFileIdsByGroup, index, [])
+      })
+    } else {
+      const newIds = this.state.selectedFileIdsByGroup[index].concat(this.state.unselectedFileIdsByGroup[index]);
+      this.setState({
+        selectedFileIdsByGroup: this.setMapValue(this.state.selectedFileIdsByGroup, index, newIds),
+        unselectedFileIdsByGroup: this.setMapValue(this.state.unselectedFileIdsByGroup, index, [])
+      })
+    }
   }
 
   render() {
     let buttons = [
       <Dropdown buttonType='primary'>
-        <Dropdown.Button onClick={() => console.log('click')}>
+        <Dropdown.Button>
             Download Template
         </Dropdown.Button>
         <Dropdown.Menu>
@@ -140,46 +155,48 @@ class MapFiles extends React.Component {
         />
         <div className='map-files__tables'>
           {
-            this.state.filesByDate.map((files, i) => (
-              <React.Fragment key={i}>
-                <div className='h2-typo'>{this.getTableHeaderText(files)}</div>
-                <table className='map-files__table'>
-                  <tbody>
-                    <tr className='map-files__table-header'>
-                      <th className='map-files__table-checkbox'>
-                        <CheckBox
-                          id={`${i}`}
-                          isSelected={this.shouldBeSelected(`${i}`)}
-                          onChange={this.toggleSelectAll}
-                        />
-                      </th>
-                      <th>File Name</th>
-                      <th>Size</th>
-                      <th>Uploaded date</th>
-                      <th>Status</th>
-                    </tr>
-                    {
-                      files.map(file =>
-                        <tr key={file.did} className='map-files__table-row'>
-                          <td className='map-files__table-checkbox'>
-                            <CheckBox
-                              id={file.did}
-                              item={file}
-                              isSelected={this.shouldBeSelected(file.did)}
-                              onChange={this.onToggleCheckBox}
-                            />
-                          </td>
-                          <td>{file.file_name}</td>
-                          <td>{file.size}B</td>
-                          <td>{moment(file.created_date).format('MM/DD/YY, hh:mm:ss a Z')}</td>
-                          <td>Generating</td>
-                        </tr>
-                      )
-                    }
-                  </tbody>
-                </table>
-              </React.Fragment>
-            ))
+            Object.keys(this.state.filesByDate).map((key, i) => {
+              const files = this.state.filesByDate[key];
+              return (
+                <React.Fragment key={i}>
+                  <div className='h2-typo'>{this.getTableHeaderText(files)}</div>
+                  <table className='map-files__table'>
+                    <tbody>
+                      <tr className='map-files__table-header'>
+                        <th className='map-files__table-checkbox'>
+                          <CheckBox
+                            id={`${i}`}
+                            isSelected={this.isSelectAll(i)}
+                            onChange={() => this.toggleSelectAll(i)}
+                          />
+                        </th>
+                        <th>File Name</th>
+                        <th>Size</th>
+                        <th>Uploaded date</th>
+                        <th>Status</th>
+                      </tr>
+                      {
+                        files.map(file =>
+                          <tr key={file.did} className='map-files__table-row'>
+                            <td className='map-files__table-checkbox'>
+                              <CheckBox
+                                id={file.did}
+                                item={file}
+                                isSelected={this.isSelected(i, file.did)}
+                                onChange={() => this.toggleCheckBox(i, file.did)}
+                              />
+                            </td>
+                            <td>{file.file_name}</td>
+                            <td>{file.size}B</td>
+                            <td>{moment(file.created_date).format('MM/DD/YY, hh:mm:ss a Z')}</td>
+                            <td>Generating</td>
+                          </tr>
+                        )
+                      }
+                    </tbody>
+                  </table>
+                </React.Fragment>
+              )})
           }
         </div>
       </div>
