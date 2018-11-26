@@ -45,6 +45,15 @@ class MapFiles extends React.Component {
     return `uploaded on ${date}, ${files.length} ${files.length > 1 ? 'files' : 'file'}`
   }
 
+  isMapEmpty = map => {
+    for (var key in map) {
+      if (map[key] && map[key].length > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   isSelected = (index, did) => {
     if (this.state.selectedFileIdsByGroup[index]) {
       return this.state.selectedFileIdsByGroup[index].includes(did);
@@ -57,6 +66,12 @@ class MapFiles extends React.Component {
       return this.state.unselectedFileIdsByGroup[index].length == 0;
     }
     return false;
+  }
+
+  onCompletion = () => {
+    let arrIds = Object.values(this.state.selectedFileIdsByGroup);
+    let flatIds = arrIds.reduce((totalArr, currentArr) => totalArr.concat(currentArr))
+    this.props.mapSelectedFiles(flatIds);
   }
 
   onUpdate = () => {
@@ -127,7 +142,7 @@ class MapFiles extends React.Component {
 
   render() {
     let buttons = [
-      <Dropdown buttonType='primary'>
+      <Dropdown buttonType='primary' disabled={this.isMapEmpty(this.state.selectedFileIdsByGroup)}>
         <Dropdown.Button>
             Download Template
         </Dropdown.Button>
@@ -137,11 +152,12 @@ class MapFiles extends React.Component {
         </Dropdown.Menu>
       </Dropdown>,
       <Button
-        onClick={() => console.log('map')}
+        onClick={this.onCompletion}
         label='Map Files'
         rightIcon='graph'
         buttonType='primary'
         className='g3-icon g3-icon--lg'
+        enabled={!this.isMapEmpty(this.state.selectedFileIdsByGroup)}
       />
     ];
 

@@ -102,6 +102,7 @@ const mockData = {
   ]
 };
 
+// TODO: Remove mock data
 const fetchUnmappedFiles = () => {
   return dispatch => fetchWithCreds({
     path: `${indexdPath}index?acl=null`,
@@ -125,6 +126,13 @@ const fetchUnmappedFiles = () => {
     ).then((msg) => { dispatch(msg); });
 };
 
+const mapSelectedFiles = files => {
+  return {
+    type: 'RECEIVE_FILES_TO_MAP',
+    data: files,
+  };
+}
+
 const ReduxMapFiles = (() => {
   const mapStateToProps = state => ({
     unmappedFiles: state.submission.unmappedFiles
@@ -132,6 +140,7 @@ const ReduxMapFiles = (() => {
 
   const mapDispatchToProps = dispatch => ({
     fetchUnmappedFiles: () => dispatch(fetchUnmappedFiles()),
+    mapSelectedFiles: (files) => dispatch(mapSelectedFiles(files)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(MapFiles);
