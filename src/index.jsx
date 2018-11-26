@@ -25,6 +25,7 @@ import DataDictionary from './DataDictionary/ReduxDataDictionary';
 import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import ReduxMapFiles from './Submission/ReduxMapFiles';
+import ReduxMapDataModel from './Submission/ReduxMapDataModel';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
 import CertificateQuiz from './Certificate/ReduxQuiz';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
@@ -117,9 +118,16 @@ async function init() {
                     />
                     <Route
                       exact
-                      path='/submission/map-files'
+                      path='/submission/files'
                       component={
                         props => <ProtectedContent component={ReduxMapFiles} {...props} />
+                      }
+                    />
+                    <Route
+                      exact
+                      path='/submission/map'
+                      component={
+                        props => <ProtectedContent component={ReduxMapDataModel} {...props} />
                       }
                     />
                     <Route

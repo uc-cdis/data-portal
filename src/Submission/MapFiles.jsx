@@ -72,6 +72,7 @@ class MapFiles extends React.Component {
     let arrIds = Object.values(this.state.selectedFileIdsByGroup);
     let flatIds = arrIds.reduce((totalArr, currentArr) => totalArr.concat(currentArr))
     this.props.mapSelectedFiles(flatIds);
+    this.props.history.push('/submission/map')
   }
 
   onUpdate = () => {
