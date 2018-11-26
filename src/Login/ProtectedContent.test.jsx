@@ -1,4 +1,4 @@
-import { intersection } from './ProtectedContent';
+import { intersection } from '../utils';
 
 describe('the ProtectedContent.jsx container', () => {
   it('can compute the intersection of 2 lists', () => {

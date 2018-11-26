@@ -83,7 +83,7 @@ async function fetchJsonRetry(urlStr, opts) {
 
     return new Promise(((resolve) => {
       // sleep and try again ...
-      const retryIndex = Math.min(retryCount, retryBackoff.length-1);
+      const retryIndex = Math.min(retryCount, retryBackoff.length - 1);
       const sleepMs = retryBackoff[retryIndex] + Math.floor(Math.random() * 2000);
       retryCount += 1;
       console.log(`failed fetch - ${reason}, sleeping ${sleepMs} then retry ${urlStr}`);
@@ -103,14 +103,12 @@ async function fetchJsonRetry(urlStr, opts) {
       (res) => {
         if (res.status === 200) {
           return res.json().catch(
-            (err) => doRetry(`failed json parse - ${err}`),
+            err => doRetry(`failed json parse - ${err}`),
           );
         }
         return doRetry(`non-200 from server: ${res.status}`);
       },
-      (err) => {
-        return doRetry(err);
-      },
+      err => doRetry(err),
     );
   };
 

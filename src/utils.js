@@ -203,4 +203,37 @@ export function capitalizeFirstLetter(str) {
   return res.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 }
 
+/**
+ * Avoid importing underscore just for this ... export for testing
+ * @method intersection
+ * @param aList {Array<String>}
+ * @param bList {Array<String>}
+ * @return list of intersecting elements
+ */
+export function intersection(aList, bList) {
+  const key2Count = aList.concat(bList).reduce(
+    (db, it) => {
+      const res = db;
+      if (res[it]) { res[it] += 1; } else { res[it] = 1; }
+      return res;
+    }, {},
+  );
+  return Object.entries(key2Count)
+    .filter(kv => kv[1] > 1)
+    .map(([k]) => k);
+}
+
+export function minus(aList, bList) {
+  const key2Count = aList.concat(bList).concat(aList).reduce(
+    (db, it) => {
+      const res = db;
+      if (res[it]) { res[it] += 1; } else { res[it] = 1; }
+      return res;
+    }, {},
+  );
+  return Object.entries(key2Count)
+    .filter(kv => kv[1] === 2)
+    .map(([k]) => k);
+}
+
 export const parseParamWidth = width => ((typeof width === 'number') ? `${width}px` : width);
