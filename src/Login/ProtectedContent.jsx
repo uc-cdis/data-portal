@@ -6,6 +6,7 @@ import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import { requiredCerts, submissionApiOauthPath } from '../configs';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
+import { intersection } from '../utils';
 
 let lastAuthMs = 0;
 let lastTokenRefreshMs = 0;
@@ -22,26 +23,6 @@ export function logoutListener(state = {}, action) {
   default: // noop
   }
   return state;
-}
-
-/**
- * Avoid importing underscore just for this ... export for testing
- * @method intersection
- * @param aList {Array<String>}
- * @param bList {Array<String>}
- * @return list of intersecting elements
- */
-export function intersection(aList, bList) {
-  const key2Count = aList.concat(bList).reduce(
-    (db, it) => {
-      const res = db;
-      if (res[it]) { res[it] += 1; } else { res[it] = 1; }
-      return res;
-    }, {},
-  );
-  return Object.entries(key2Count)
-    .filter(kv => kv[1] > 1)
-    .map(([k]) => k);
 }
 
 /**
@@ -249,7 +230,7 @@ class ProtectedContent extends React.Component {
               return newState;
             },
             () => {
-              // something went wront - better just re-login
+              // something went wrong - better just re-login
               newState.authenticated = false;
               newState.redirectTo = '/login';
               return newState;

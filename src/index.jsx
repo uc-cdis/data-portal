@@ -24,7 +24,7 @@ import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/.';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
-import CertificateQuiz from './Certificate/ReduxQuiz';
+import UserAgreementCert from './UserAgreement/ReduxCertPopup';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
 import getReduxStore from './reduxStore';
@@ -146,7 +146,7 @@ async function init() {
                       path='/quiz'
                       component={
                         props => (<ProtectedContent
-                          component={CertificateQuiz}
+                          component={UserAgreementCert}
                           {...props}
                         />)
                       }

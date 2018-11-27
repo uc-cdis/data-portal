@@ -2,7 +2,7 @@ import { reducer as formReducer } from 'redux-form';
 import { combineReducers } from 'redux';
 import userProfile from './UserProfile/reducers';
 import coreMetadata from './CoreMetadata/reducers';
-import certificate from './Certificate/reducers';
+import certificate from './UserAgreement/reducers';
 import submission from './Submission/reducers';
 import analysis from './Analysis/reducers';
 import homepage from './Homepage/reducers';
