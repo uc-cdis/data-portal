@@ -9,8 +9,8 @@
   text-align: center;
   vertical-align: middle;
   padding: 3px 8px;
-  left: -60px; /* tooltipWidth / 2 */
-  width: 120px; /* tooltipWidth = 120 */
+  left: -70px; /* tooltipWidth / 2 */
+  width: 140px; /* tooltipWidth = 140 */
 }
 
 .node-tooltip__arrow {

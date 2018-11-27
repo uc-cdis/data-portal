@@ -37,7 +37,7 @@ class DataDictionaryNode extends React.Component {
           <span
             className='data-dictionary-node__title'
           >
-            <i className='g3-icon g3-icon--datafile data-dictionary-node__file-icon' />
+            <i className='g3-icon g3-icon--folder data-dictionary-node__file-icon' />
             {this.props.node.title}
             <i className={`g3-icon g3-icon--chevron-${this.props.expanded ? 'down' : 'right'} data-dictionary-node__toggle-icon`} />
           </span>
@@ -52,6 +52,7 @@ class DataDictionaryNode extends React.Component {
                 className='data-dictionary-node__download-button'
                 onClick={(e) => { this.handleDownloadTemplate(e, 'json'); }}
                 label='JSON'
+                rightIcon='download'
                 buttonType='secondary'
               />
             </span>
@@ -60,6 +61,7 @@ class DataDictionaryNode extends React.Component {
                 className='data-dictionary-node__download-button'
                 onClick={(e) => { this.handleDownloadTemplate(e, 'tsv'); }}
                 label='TSV'
+                rightIcon='download'
                 buttonType='secondary'
               />
             </span>

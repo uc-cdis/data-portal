@@ -1,6 +1,7 @@
 :root {
   --data-dictionary__sidebar-width: 320px;
   --data-dictionary__switch-border-radius: 4px;
+  --data-dictionary__switch-border-color: var(--g3-color__black);
 }
 
 .data-dictionary {
@@ -14,6 +15,7 @@
   height: 100%;
   background-color: var(--g3-color__white);
   overflow-y: scroll;
+  border-right: 1px solid var(--g3-color__smoke);
 }
 
 .data-dictionary__main {
@@ -39,7 +41,7 @@
 
 .data-dictionary__switch {
   display: flex;
-  border: 1px solid var(--g3-color__black);
+  border: 1px solid var(--data-dictionary__switch-border-color);
   border-radius: var(--data-dictionary__switch-border-radius);
   cursor: pointer;
   font-size: 18px;
@@ -53,6 +55,7 @@
   text-align: center;
   padding: 10px;
   outline: none;
+  border-left: 1px solid var(--data-dictionary__switch-border-color);
 }
 
 .data-dictionary__switch-button:hover {
@@ -61,12 +64,12 @@
 }
 
 .data-dictionary__switch-button:first-child {
+  border-left: none;
   border-top-left-radius: var(--data-dictionary__switch-border-radius);
   border-bottom-left-radius: var(--data-dictionary__switch-border-radius);
 }
 
 .data-dictionary__switch-button:last-child {
-  border-left: 1px solid var(--data-dictionary__switch-border-color);
   border-top-right-radius: var(--data-dictionary__switch-border-radius);
   border-bottom-right-radius: var(--data-dictionary__switch-border-radius);
 }

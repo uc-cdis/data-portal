@@ -113,7 +113,8 @@ class GraphDrawer extends React.Component {
               && node.textPadding !== undefined && node.topCenterX !== undefined
               && node.topCenterY !== undefined && node.width !== undefined
               && node.height !== undefined && node.color !== undefined
-              && node.names !== undefined && node.iconRadius !== undefined)) {
+              && node.names !== undefined && node.iconRadius !== undefined)
+              && node.textLineGap !== undefined && node.fontSize !== undefined) {
               return null;
             }
             const IconSVG = getCategoryIconSVG(node.type);
@@ -167,10 +168,10 @@ class GraphDrawer extends React.Component {
                       key={`${node.id}-${i}`}
                       className='graph-drawer__text'
                       x={0}
-                      y={textTopY + (i * this.props.fontSize)}
+                      y={textTopY + (i * (node.fontSize + node.textLineGap))}
                       textAnchor='middle'
                       alignmentBaseline='hanging'
-                      fontSize={this.props.fontSize}
+                      fontSize={node.fontSize}
                     >
                       {row}
                     </text>
@@ -206,7 +207,6 @@ GraphDrawer.propTypes = {
   edges: PropTypes.arrayOf(PropTypes.object),
   graphBoundingBox: PropTypes.array,
   layoutInitialized: PropTypes.bool,
-  fontSize: PropTypes.number,
   canvasWidth: PropTypes.number,
   canvasHeight: PropTypes.number,
   onHoverNode: PropTypes.func,
@@ -228,7 +228,6 @@ GraphDrawer.defaultProps = {
   edges: [],
   graphBoundingBox: [[0, 0], [0, 1], [1, 1], [1, 0]],
   layoutInitialized: false,
-  fontSize: 10,
   canvasWidth: 1000,
   canvasHeight: 1000,
   onHoverNode: () => {},

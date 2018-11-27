@@ -2,7 +2,7 @@ import Viz from 'viz.js';
 import { Module, render } from 'viz.js/full.render';
 import _ from 'underscore';
 import { createNodesAndEdges, createDotStrinByNodesEdges } from '../../../GraphUtils/utils';
-import { truncateLines } from '../../utils';
+import { truncateLines, graphStyleConfig } from '../../utils';
 import { getCategoryColor } from '../../NodeCategories/helper';
 
 export const getAllTypes = (nodes) => {
@@ -86,7 +86,7 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
             x2: -Infinity,
             y2: -Infinity,
           });
-          const iconRadius = 10;
+          const iconRadius = graphStyleConfig.nodeIconRadius;
           const topCenterX = (boundingBox.x1 + boundingBox.x2) / 2;
           const topCenterY = boundingBox.y1;
           const width = boundingBox.x2 - boundingBox.x1;
@@ -100,13 +100,14 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
             .map(edge => edge.source.id);
 
           const nodeColor = getCategoryColor(n.type);
-          const textPadding = 20;
-          const fontSize = 10;
+          const textPadding = graphStyleConfig.nodeContentPadding;
+          const fontSize = graphStyleConfig.nodeTextFontSize;
+          const textLineGap = graphStyleConfig.nodeTextLineGap;
           const nodeNames = truncateLines(n.label);
           const rectMinHeight = height;
           const rectHeight = Math.max(
             rectMinHeight,
-            (textPadding * 2) + (nodeNames.length * fontSize),
+            (textPadding * 2) + (nodeNames.length * (fontSize + textLineGap)),
           );
           const requiredPropertiesCount = originNode.required ? originNode.required.length : 0;
           const optionalPropertiesCount = originNode.properties ?
@@ -126,6 +127,8 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
             color: nodeColor,
             iconRadius,
             textPadding,
+            fontSize,
+            textLineGap,
             names: nodeNames,
             label: n.label,
             level: nodeLevel,

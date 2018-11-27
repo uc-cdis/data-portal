@@ -31,10 +31,36 @@ describe('the DataDictionaryNode', () => {
 
   it('knows how to break sentences', () => {
     const testStr = 'The quick brown fox jumps over the lazy dog';
-    const breakResult = ['The quick', 'brown fox', 'jumps over', 'the lazy', 'dog'];
+    const breakResult = [
+      'The quick',
+      'brown fox',
+      'jumps over',
+      'the lazy',
+      'dog',
+    ];
     expect(truncateLines(testStr)).toEqual(breakResult);
     expect(truncateLines('test')).toEqual(['test']);
-    expect(truncateLines('testareallinglongstringwithoutspace')).toEqual(['testareallinglongstringwithoutspace']);
+
+    const longStr = 'testareallinglongstringwithoutspace';
+    const longStrBreakResult = [
+      'testareal-',
+      'linglongs-',
+      'tringwith-',
+      'outspace',
+    ];
+    expect(truncateLines(longStr)).toEqual(longStrBreakResult);
+
+    const testStrWithALongWord = 'The quick brown fox jumps over a lazyyyyyyyyyy dog';
+    const withALongWordResult = [
+      'The quick',
+      'brown fox',
+      'jumps over',
+      'a lazyyyy-',
+      'yyyyyy dog',
+    ];
+    expect(truncateLines(testStrWithALongWord)).toEqual(withALongWordResult);
+
+    expect(truncateLines('Publication')).toEqual(['Publication']);
   });
 
   it('could download data dictionary template', () => {

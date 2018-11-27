@@ -1,18 +1,42 @@
 import { dataDictionaryTemplatePath } from '../localconf';
 
-export const truncateLines = (str, maxCharInRow = 10) => {
+const concatTwoWords = (w1, w2) => {
+  if (w1.length === 0) return w2;
+  if (w2.length === 0) return w1;
+  return `${w1} ${w2}`;
+};
+
+export const truncateLines = (str, maxCharInRow = 10, breakwordMinLength = 12) => {
   const wordsList = str.split(' ');
   const res = [];
-  let cur = wordsList[0];
-  for (let i = 1; i < wordsList.length; i += 1) {
-    if (cur.length + wordsList[i].length > maxCharInRow) {
-      res.push(cur);
-      cur = wordsList[i];
-    } else {
-      cur = `${cur} ${wordsList[i]}`;
+  let currentLine = '';
+  for (let i = 0; i < wordsList.length; i += 1) {
+    // if adding a new word will make the current line too long
+    if (concatTwoWords(currentLine, wordsList[i]).length > maxCharInRow) {
+      // if the new word itself is too long, break it
+      if (wordsList[i].length > breakwordMinLength) {
+        let breakPos = maxCharInRow - currentLine.length - 1;
+        if (currentLine.length > 0) breakPos -= 1; // 1 more for space
+        res.push(`${concatTwoWords(currentLine, wordsList[i].substring(0, breakPos))}-`);
+
+        // break the rest of the new word if it's still too long
+        while (breakPos + maxCharInRow < wordsList[i].length) {
+          const nextBreakPos = (breakPos + maxCharInRow) - 1;
+          res.push(`${wordsList[i].substring(breakPos, nextBreakPos)}-`);
+          breakPos = nextBreakPos;
+        }
+        currentLine = wordsList[i].substring(breakPos);
+      } else { // else, end current line and create a new line
+        if (currentLine.length > 0) { // avoid adding first empty line
+          res.push(currentLine);
+        }
+        currentLine = wordsList[i];
+      }
+    } else { // else, just add the new word to current line
+      currentLine = concatTwoWords(currentLine, wordsList[i]);
     }
   }
-  res.push(cur);
+  res.push(currentLine);
   return res;
 };
 
@@ -54,10 +78,17 @@ export const getType = (property) => {
   return type;
 };
 
-
 export const downloadTemplate = (format, nodeId) => {
   if (format === 'tsv' || format === 'json') {
     const templatePath = `${dataDictionaryTemplatePath}${nodeId}?format=${format}`;
     window.open(templatePath);
   }
 };
+
+export const graphStyleConfig = {
+  nodeTextFontSize: 10,
+  nodeTextLineGap: 4,
+  nodeContentPadding: 20,
+  nodeIconRadius: 10,
+};
+
