@@ -2,7 +2,8 @@ import Viz from 'viz.js';
 import { Module, render } from 'viz.js/full.render';
 import _ from 'underscore';
 import { createNodesAndEdges, createDotStrinByNodesEdges } from '../../../GraphUtils/utils';
-import { truncateLines, getCategoryColor } from '../../utils';
+import { truncateLines } from '../../utils';
+import { getCategoryColor } from '../../NodeCategories/helper';
 
 export const getAllTypes = (nodes) => {
   const types = nodes.map(node => node.type);

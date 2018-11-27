@@ -1,7 +1,3 @@
-:root {
-  --overlay-property-table-header-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
 .overlay-property-table {
   position: absolute;
   top: 0;
@@ -34,16 +30,21 @@
 }
 
 .overlay-property-table__close {
-  box-shadow: var(--overlay-property-table-header-box-shadow);
+  float: right;
+  color: var(--g3-color__white);
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+.overlay-property-table__close-icon {
+  background-color: var(--g3-color__white);
+  margin-left: 8px;
+  position: relative;
+  top: 1px;
 }
 
 .overlay-property-table__close--right {
   float: right;
-}
-
-.overlay-property-table__header-table {
-  margin-top: 15px;
-  box-shadow: var(--overlay-property-table-header-box-shadow);
 }
 
 .overlay-property-table__category {
@@ -95,4 +96,5 @@
   padding: unset; /* override .g3-button's paddings */
   float: right;
   font-weight: normal;
+  border: none;
 }

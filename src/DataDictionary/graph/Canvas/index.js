@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { clickBlankSpace, setSVGCTM, setCanvasBoundingRect, setNeedReset } from '../../action.js';
+import { clickBlankSpace, setCanvasBoundingRect, setNeedReset } from '../../action.js';
 import Canvas from './Canvas';
 
 const ReduxCanvas = (() => {
@@ -10,8 +10,7 @@ const ReduxCanvas = (() => {
 
   const mapDispatchToProps = dispatch => ({
     onClickBlankSpace: () => dispatch(clickBlankSpace()),
-    onCanvasUpdate: svgCTM => dispatch(setSVGCTM(svgCTM)),
-    onCanvasTopLeftUpdate:
+    onCanvasBoundingBoxUpdate:
       canvasBoundingRect => dispatch(setCanvasBoundingRect(canvasBoundingRect)),
     onResetCanvasFinished: () => dispatch(setNeedReset(false)),
   });

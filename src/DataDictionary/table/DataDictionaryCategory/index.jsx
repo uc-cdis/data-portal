@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getCategoryColor, getTypeIconSVG } from '../../utils';
+import { getCategoryColor, getCategoryIconSVG } from '../../NodeCategories/helper';
 import { capitalizeFirstLetter } from '../../../utils';
 import DataDictionaryNode from '../DataDictionaryNode/.';
 import './DataDictionaryCategory.css';
 
 class DataDictionaryCategory extends React.Component {
   render() {
-    const IconSVG = getTypeIconSVG(this.props.category);
+    const IconSVG = getCategoryIconSVG(this.props.category);
     return (<div className='data-dictionary-category'>
       <div className='data-dictionary-category__head' style={{ borderLeftColor: getCategoryColor(this.props.category) }}>
         <IconSVG className='data-dictionary-category__icon' />

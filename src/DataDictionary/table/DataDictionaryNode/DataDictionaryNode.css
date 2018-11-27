@@ -8,14 +8,14 @@
   border-left-width: 5px;
   border-left-style: solid;
   border-left-color: var(--dictionary-border-color);
+  cursor: pointer;
+  outline: none;
 }
 
 .data-dictionary-node__title {
   width: 260px;
   flex-grow: 0;
   flex-shrink: 0;
-  cursor: pointer;
-  outline: none;
 }
 
 .data-dictionary-node__file-icon {

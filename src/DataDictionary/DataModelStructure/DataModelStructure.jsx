@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { getTypeIconSVG } from '../utils';
+import { getCategoryIconSVG } from '../NodeCategories/helper';
 import './DataModelStructure.css';
 
 class DataModelStructure extends React.Component {
@@ -12,7 +12,7 @@ class DataModelStructure extends React.Component {
 
   handleClickOverlayPropertyButton = () => {
     this.props.onSetGraphView(true);
-    this.props.onOpenOverlayPropertyTable();
+    this.props.onSetOverlayPropertyTableHidden(!this.props.overlayPropertyHidden);
   };
 
   render() {
@@ -25,7 +25,7 @@ class DataModelStructure extends React.Component {
           {
             this.props.dataModelStructure.map((entry, i) => {
               const { nodeID, nodeIDsBefore, linksBefore, category } = entry;
-              const IconSVG = getTypeIconSVG(category);
+              const IconSVG = getCategoryIconSVG(category);
               const lastNodeModifier = (i === this.props.dataModelStructure.length - 1) ? 'data-model-structure__node-name--last' : '';
               return (
                 <React.Fragment key={nodeID}>
@@ -46,7 +46,7 @@ class DataModelStructure extends React.Component {
                       </React.Fragment>
                     )
                   }
-                  <div className={'data-model-structure__node'}>
+                  <div className='data-model-structure__node'>
                     <IconSVG className='data-model-structure__icon' />
                     <span className={`data-model-structure__node-name ${lastNodeModifier} introduction`}>{nodeID}</span>
                   </div>
@@ -59,7 +59,7 @@ class DataModelStructure extends React.Component {
           this.props.isGraphView && (
             <Button
               onClick={this.handleClickOverlayPropertyButton}
-              label='Open properties'
+              label={this.props.overlayPropertyHidden ? 'Open properties' : 'Close perperties'}
               className='data-model-structure__table-button'
               rightIcon='list'
               buttonType='primary'
@@ -75,16 +75,18 @@ DataModelStructure.propTypes = {
   dataModelStructure: PropTypes.arrayOf(PropTypes.object),
   isGraphView: PropTypes.bool,
   onSetGraphView: PropTypes.func,
-  onOpenOverlayPropertyTable: PropTypes.func,
+  onSetOverlayPropertyTableHidden: PropTypes.func,
   onResetGraphCanvas: PropTypes.func,
+  overlayPropertyHidden: PropTypes.bool,
 };
 
 DataModelStructure.defaultProps = {
   dataModelStructure: null,
   isGraphView: true,
   onSetGraphView: () => {},
-  onOpenOverlayPropertyTable: () => {},
+  onSetOverlayPropertyTableHidden: () => {},
   onResetGraphCanvas: () => {},
+  overlayPropertyHidden: true,
 };
 
 export default DataModelStructure;

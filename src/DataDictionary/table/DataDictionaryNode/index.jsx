@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { getCategoryColor, downloadTemplate } from '../../utils';
+import { downloadTemplate } from '../../utils';
+import { getCategoryColor } from '../../NodeCategories/helper';
 import DataDictionaryPropertyTable from '../DataDictionaryPropertyTable/.';
 import './DataDictionaryNode.css';
 
@@ -18,28 +19,38 @@ class DataDictionaryNode extends React.Component {
     this.props.onExpandNode(null);
   }
 
+  handleDownloadTemplate = (e, format) => {
+    e.stopPropagation(); // no toggling
+    downloadTemplate(format, this.props.node.id);
+  }
+
   render() {
     return (
       <React.Fragment>
-        <div className='data-dictionary-node' style={{ borderLeftColor: getCategoryColor(this.props.node.category) }}>
+        <div
+          className='data-dictionary-node'
+          style={{ borderLeftColor: getCategoryColor(this.props.node.category) }}
+          onClick={() => this.handleClickNode(this.props.node.id)}
+          role='button'
+          tabIndex={0}
+        >
           <span
             className='data-dictionary-node__title'
-            onClick={() => this.handleClickNode(this.props.node.id)}
-            role='button'
-            tabIndex={0}
           >
             <i className='g3-icon g3-icon--datafile data-dictionary-node__file-icon' />
             {this.props.node.title}
             <i className={`g3-icon g3-icon--chevron-${this.props.expanded ? 'down' : 'right'} data-dictionary-node__toggle-icon`} />
           </span>
-          <span className='data-dictionary-node__description'>
+          <span
+            className='data-dictionary-node__description'
+          >
             {this.props.description}
           </span>
           <div className='data-dictionary-node__download-group'>
             <span className='data-dictionary-node__button-wrap'>
               <Button
                 className='data-dictionary-node__download-button'
-                onClick={() => { downloadTemplate('json', this.props.node.id) }}
+                onClick={(e) => { this.handleDownloadTemplate(e, 'json'); }}
                 label='JSON'
                 buttonType='secondary'
               />
@@ -47,7 +58,7 @@ class DataDictionaryNode extends React.Component {
             <span className='data-dictionary-node__button-wrap'>
               <Button
                 className='data-dictionary-node__download-button'
-                onClick={() => { downloadTemplate('tsv', this.props.node.id) }}
+                onClick={(e) => { this.handleDownloadTemplate(e, 'tsv'); }}
                 label='TSV'
                 buttonType='secondary'
               />

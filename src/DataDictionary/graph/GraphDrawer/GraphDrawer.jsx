@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getTypeIconSVG } from '../../utils';
+import { getCategoryIconSVG } from '../../NodeCategories/helper';
 import './GraphDrawer.css';
 
 class GraphDrawer extends React.Component {
@@ -108,8 +108,15 @@ class GraphDrawer extends React.Component {
           })
         }
         { // nodes
-          this.props.nodes.map((node) => {
-            const IconSVG = getTypeIconSVG(node.type);
+          this.props.nodes.map((node) => { // check required keys
+            if (!(node.id !== undefined && node.type !== undefined
+              && node.textPadding !== undefined && node.topCenterX !== undefined
+              && node.topCenterY !== undefined && node.width !== undefined
+              && node.height !== undefined && node.color !== undefined
+              && node.names !== undefined && node.iconRadius !== undefined)) {
+              return null;
+            }
+            const IconSVG = getCategoryIconSVG(node.type);
             const textTopY = node.textPadding;
             let nodeHighlightedClassModifier = '';
             let nodeClickableClassModifier = '';
@@ -219,7 +226,7 @@ GraphDrawer.propTypes = {
 GraphDrawer.defaultProps = {
   nodes: [],
   edges: [],
-  graphBoundingBox: [],
+  graphBoundingBox: [[0, 0], [0, 1], [1, 1], [1, 0]],
   layoutInitialized: false,
   fontSize: 10,
   canvasWidth: 1000,

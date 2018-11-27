@@ -349,7 +349,7 @@ const buildGraphVizDOTString = (nodes, edges, treeLevel2Names) => {
   const nodeWidth = 1.2;
   const nodeHeight = 0.8;
   let graphString = 'digraph dictionary {\n';
-  graphString += `size="${canvasSize}, ${canvasSize}"\n`; 
+  graphString += `size="${canvasSize}, ${canvasSize}"\n`;
   graphString += `ratio=${whRatio}\n`;
   nodes.forEach((node) => {
     graphString += `${node.id} [type="${node.category}" \

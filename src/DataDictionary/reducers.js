@@ -49,12 +49,6 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       hoveringNodeSVGElement: action.hoveringNodeSVGElement,
     };
   }
-  case 'GRAPH_CANVAS_UPDATE': {
-    return {
-      ...state,
-      svgCTM: action.svgCTM,
-    };
-  }
   case 'GRAPH_CANVAS_BOUNDING_RECT_UPDATE': {
     return {
       ...state,

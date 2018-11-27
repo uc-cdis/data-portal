@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { humanizeString, getTypeIconSVG, getCategoryColor } from '../../utils';
+import { capitalizeFirstLetter } from '../../../utils';
+import { getCategoryIconSVG, getCategoryColor } from '../../NodeCategories/helper';
 import './Legend.css';
 
 class Legend extends React.Component {
@@ -39,12 +40,12 @@ class Legend extends React.Component {
                   <span className='data-dictionary-graph-legend__text'>Optional Link</span>
                 </div>
                 {
-                  this.props.items.map((type) => {
-                    const itemColor = getCategoryColor(type);
-                    const IconSvg = getTypeIconSVG(type);
+                  this.props.items.map((category) => {
+                    const itemColor = getCategoryColor(category);
+                    const IconSvg = getCategoryIconSVG(category);
                     return (
                       <div
-                        key={type}
+                        key={category}
                         className='data-dictionary-graph-legend__item body'
                       >
                         <span className='data-dictionary-graph-legend__circle-wrapper'>
@@ -57,7 +58,7 @@ class Legend extends React.Component {
                             )
                           }
                         </span>
-                        <span className='data-dictionary-graph-legend__text'>{humanizeString(type)}</span>
+                        <span className='data-dictionary-graph-legend__text'>{capitalizeFirstLetter(category)}</span>
                       </div>
                     );
                   })

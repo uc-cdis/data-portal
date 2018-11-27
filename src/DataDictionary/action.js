@@ -2,11 +2,6 @@ export const clickBlankSpace = () => ({
   type: 'GRAPH_CLICK_BLANK_SPACE',
 });
 
-export const setSVGCTM = svgCTM => ({
-  type: 'GRAPH_CANVAS_UPDATE',
-  svgCTM,
-});
-
 export const setCanvasBoundingRect = canvasBoundingRect => ({
   type: 'GRAPH_CANVAS_BOUNDING_RECT_UPDATE',
   canvasBoundingRect,

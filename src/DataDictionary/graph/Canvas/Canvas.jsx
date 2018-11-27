@@ -1,7 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as d3 from 'd3';
+import { select, event } from 'd3-selection';
+import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
 import './Canvas.css';
+
+const d3 = {
+  select,
+  zoom,
+  zoomTransform,
+  zoomIdentity,
+  get event() { return event; }, // https://stackoverflow.com/a/40048292
+};
 
 class Canvas extends React.Component {
   constructor(props) {
@@ -61,12 +70,9 @@ class Canvas extends React.Component {
   }
 
   handleCanvasUpdate = () => {
-    const canvasTransform = this.svgElement.current.getScreenCTM()
-      .inverse().multiply(this.containerElement.current.getScreenCTM());
-    this.props.onCanvasUpdate(canvasTransform);
     const canvasBoundingRect = this.canvasElement.current.getBoundingClientRect();
     window.canvasElem = this.canvasElement.current;
-    this.props.onCanvasTopLeftUpdate(canvasBoundingRect);
+    this.props.onCanvasBoundingBoxUpdate(canvasBoundingRect);
   }
 
   handleClick = () => {
@@ -92,7 +98,7 @@ class Canvas extends React.Component {
       <div className='canvas' ref={this.canvasElement} style={{ width: '100%', height: '100%' }}>
         <div className='canvas__zoom-button-group'>
           <div
-            className='canvas__zoom-button'
+            className='canvas__zoom-button canvas__zoom-button--reset'
             onClick={this.handleReset}
             role='button'
             tabIndex={-1}
@@ -100,7 +106,7 @@ class Canvas extends React.Component {
             <i className='canvas__zoom-icon g3-icon g3-icon--reset' />
           </div>
           <div
-            className='canvas__zoom-button'
+            className='canvas__zoom-button canvas__zoom-button--zoom-in'
             onClick={this.handleZoomIn}
             role='button'
             tabIndex={-1}
@@ -108,7 +114,7 @@ class Canvas extends React.Component {
             <i className='canvas__zoom-icon g3-icon g3-icon--plus' />
           </div>
           <div
-            className='canvas__zoom-button'
+            className='canvas__zoom-button canvas__zoom-button--zoom-out'
             onClick={this.handleZoomOut}
             role='button'
             tabIndex={-1}
@@ -156,8 +162,7 @@ Canvas.propTypes = {
     PropTypes.node,
   ]).isRequired,
   onClickBlankSpace: PropTypes.func,
-  onCanvasUpdate: PropTypes.func,
-  onCanvasTopLeftUpdate: PropTypes.func,
+  onCanvasBoundingBoxUpdate: PropTypes.func,
   isGraphView: PropTypes.bool,
   needReset: PropTypes.bool,
   onResetCanvasFinished: PropTypes.func,
@@ -169,8 +174,7 @@ Canvas.defaultProps = {
   topLeftTranslateLimit: [-Infinity, -Infinity],
   bottomRightTranslateLimit: [+Infinity, +Infinity],
   onClickBlankSpace: () => {},
-  onCanvasUpdate: () => {},
-  onCanvasTopLeftUpdate: () => {},
+  onCanvasBoundingBoxUpdate: () => {},
   isGraphView: true,
   needReset: false,
   onResetCanvasFinished: () => {},

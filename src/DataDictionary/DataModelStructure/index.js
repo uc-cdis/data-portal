@@ -6,11 +6,12 @@ const ReduxDataModelStructure = (() => {
   const mapStateToProps = state => ({
     dataModelStructure: state.ddgraph.dataModelStructure,
     isGraphView: state.ddgraph.isGraphView,
+    overlayPropertyHidden: state.ddgraph.overlayPropertyHidden,
   });
 
   const mapDispatchToProps = dispatch => ({
     onSetGraphView: isGraphView => dispatch(setGraphView(isGraphView)),
-    onOpenOverlayPropertyTable: () => dispatch(setOverlayPropertyTableHidden(false)),
+    onSetOverlayPropertyTableHidden: hidden => dispatch(setOverlayPropertyTableHidden(hidden)),
     onResetGraphCanvas: () => dispatch(setNeedReset(true)),
   });
 

@@ -1,6 +1,7 @@
 import {
   getType,
   truncateLines,
+  downloadTemplate,
 } from './utils';
 
 describe('the DataDictionaryNode', () => {
@@ -8,7 +9,6 @@ describe('the DataDictionaryNode', () => {
     expect(getType({ type: 'string' })).toBe('string');
     const enumProp = { enum: ['A', 'B', 'C'] };
     expect(getType(enumProp)).toEqual(['A', 'B', 'C']);
-
     const oneOf = getType({
       oneOf: [
         {
@@ -30,6 +30,16 @@ describe('the DataDictionaryNode', () => {
   });
 
   it('knows how to break sentences', () => {
-    expect();
+    const testStr = 'The quick brown fox jumps over the lazy dog';
+    const breakResult = ['The quick', 'brown fox', 'jumps over', 'the lazy', 'dog'];
+    expect(truncateLines(testStr)).toEqual(breakResult);
+    expect(truncateLines('test')).toEqual(['test']);
+    expect(truncateLines('testareallinglongstringwithoutspace')).toEqual(['testareallinglongstringwithoutspace']);
+  });
+
+  it('could download data dictionary template', () => {
+    window.open = jest.fn();
+    downloadTemplate('tsv', 'test-id');
+    expect(window.open).toBeCalled();
   });
 });

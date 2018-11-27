@@ -1,7 +1,5 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { StaticRouter } from 'react-router-dom';
-
 import DataDictionaryTable, { category2NodeList } from './DataDictionaryTable';
 
 describe('the DataDictionaryTable component', () => {
@@ -10,35 +8,41 @@ describe('the DataDictionaryTable component', () => {
       id: 'a1',
       category: 'A',
       description: 'whatever',
+      properties: [],
     },
     a2: {
       id: 'a2',
       category: 'A',
       description: 'whatever',
+      properties: [],
     },
     b1: {
       id: 'b1',
       category: 'B',
       description: 'whatever',
+      properties: [],
     },
     b2: {
       id: 'b2',
       category: 'B',
       description: 'whatever',
+      properties: [],
     },
     b3: {
       id: 'b3',
       category: 'B',
       description: 'whatever',
+      properties: [],
     },
     b4: {
       id: 'b4',
       category: 'B',
       description: 'whatever',
+      properties: [],
     },
   };
 
-  it.skip('knows how to organize dictionary types by category', () => {
+  it('knows how to organize dictionary types by category', () => {
     const mapping = category2NodeList(testDict);
     expect(Array.isArray(mapping.A)).toBe(true);
     expect(Array.isArray(mapping.B)).toBe(true);
@@ -46,12 +50,10 @@ describe('the DataDictionaryTable component', () => {
     expect(mapping.B.length).toBe(4);
   });
 
-  it.skip('renders category tables', () => {
-    const ux = mount(
-      <StaticRouter location={{ pathname: '/dd' }}>
-        <DataDictionaryTable dictionary={testDict} />
-      </StaticRouter>,
+  it('renders', () => {
+    const wrapper = mount(
+      <DataDictionaryTable dictionary={testDict} />,
     );
-    expect(ux.find('table').length).toBe(2);
+    expect(wrapper.find(DataDictionaryTable).length).toBe(1);
   });
 });
