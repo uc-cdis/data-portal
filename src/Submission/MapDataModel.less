@@ -40,6 +40,30 @@
   padding: 40px 25px;
 }
 
+.map-data-model__node-form-section {
+  display: flex;
+}
+
+.map-data-model__required-fields-section {
+  display: flex;
+  flex-flow: column;
+  padding: 40px 25px;
+  width: 100%;
+}
+
+.map-data-model__required-field {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  border-bottom: 1px solid @silver;
+  padding: 20px 0;
+}
+
+.map-data-model__required-field .h4-typo {
+  margin-left: 10px;
+  display: inline;
+}
+
 .map-data-model__form-section .h4-typo {
   margin: 0 0 20px 0;
 }
@@ -61,8 +85,19 @@
   background-color: @cloud;
 }
 
+.map-data-model__dropdown-section {
+  display: flex;
+  align-items: center;
+}
+
 .map-data-model__dropdown {
   width: 400px;
+  display: flex;
+}
+
+.map-data-model__checkmark {
+  display: inline;
+  margin-left: 10px;
 }
 
 /* Select component overrides */

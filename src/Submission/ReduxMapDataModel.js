@@ -1,12 +1,14 @@
 import { connect } from 'react-redux';
 import MapDataModel from './MapDataModel';
 import { fetchWithCreds } from '../actions';
-import { indexdPath } from '../localconf';
 
 
 const ReduxMapDataModel = (() => {
   const mapStateToProps = state => ({
-    filesToMap: state.submission.filesToMap
+    filesToMap: state.submission.filesToMap,
+    projects: state.homepage.projectsByName,
+    nodeTypes: state.submission.nodeTypes,
+    dictionary: state.submission.dictionary,
   });
 
   const mapDispatchToProps = dispatch => ({

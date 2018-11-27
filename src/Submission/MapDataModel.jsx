@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import BackLink from '../components/BackLink';
+import getProjectsList from '../Index/relayer';
+import RequiredIcon from '../img/icons/required.svg';
+import CheckmarkIcon from '../img/icons/status_confirm.svg';
 import './MapDataModel.less';
 
 class MapDataModel extends React.Component {
@@ -13,6 +16,10 @@ class MapDataModel extends React.Component {
     }
   }
 
+  componentDidMount() {
+    getProjectsList();
+  }
+
   selectProjectId = option => {
     this.setState({ projectId: option ? option.value : null });
   }
@@ -22,6 +29,11 @@ class MapDataModel extends React.Component {
   }
 
   render() {
+    const projectList = this.props.projects ? Object.keys(this.props.projects) : [];
+    const projectOptions = projectList.map(key => ({ value: this.props.projects[key].code, label: this.props.projects[key].name }));
+    const nodeOptions = this.props.nodeTypes ? this.props.nodeTypes.map(node => ({ value: node, label: node })) : [];
+    const requiredNodeProperties = this.state.nodeType ? this.props.dictionary[this.state.nodeType].required : null;
+    console.log('node options', this.props.dictionary[this.state.nodeType])
     return(
       <div className='map-data-model'>
         <BackLink url='/submission/files' label='Back to My Files' />
@@ -35,32 +47,45 @@ class MapDataModel extends React.Component {
           </div>
           <div className='map-data-model__form-section'>
             <div className='h4-typo'>Project</div>
+            <div className='map-data-model__dropdown-section'>
               <Select
-                className='map-data-model__dropdown .map-data-model__dropdown--required introduction'
+                className='map-data-model__dropdown map-data-model__dropdown--required introduction'
                 value={this.state.projectId}
                 placeholder={'Select your project'}
-                options={[
-                  {value: 'proj1', label: 'Project 1'},
-                  {value: 'proj2', label: 'Project 2'},
-                  {value: 'proj3', label: 'Project 3'}
-                ]}
+                options={projectOptions}
                 onChange={this.selectProjectId}
               />
+              { this.state.projectId ? <CheckmarkIcon className='map-data-model__checkmark'/> : null }
+            </div>
           </div>
-          <div className='map-data-model__form-section'>
-            <div className='h4-typo'>File Node</div>
-              <Select
-                className='map-data-model__dropdown introduction'
-                value={this.state.nodeType}
-                placeholder='Select your node'
-                options={[
-                  {value: 'node1', label: 'Node 1'},
-                  {value: 'node2', label: 'Node 2'},
-                  {value: 'node3', label: 'Node 3'},
-                  {value: 'node4', label: 'Node 4'},
-                ]}
-                onChange={this.selectNodeType}
-              />
+          <div className='map-data-model__node-form-section'>
+            <div className='map-data-model__form-section'>
+              <div className='h4-typo'>File Node</div>
+              <div className='map-data-model__dropdown-section'>
+                <Select
+                  className='map-data-model__dropdown introduction'
+                  value={this.state.nodeType}
+                  placeholder='Select your node'
+                  options={nodeOptions}
+                  onChange={this.selectNodeType}
+                />
+                { this.state.nodeType ? <CheckmarkIcon className='map-data-model__checkmark'/> : null }
+              </div>
+            </div>
+            {
+              requiredNodeProperties ? (
+                <div className='map-data-model__required-fields-section'>
+                  <div className='h4-typo'>Required Fields</div>
+                  {
+                    requiredNodeProperties.map((prop, i) =>
+                      <div key={i} className='map-data-model__required-field'>
+                        <RequiredIcon />
+                        <div className='h4-typo'>{prop}</div>
+                      </div>
+                  )}
+                </div>
+              ) : null
+            }
           </div>
           <div className='map-data-model__header'>
             <div className='h3-typo'>Add Details</div>
