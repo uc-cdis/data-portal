@@ -14,9 +14,103 @@
   flex-flow: column;
   justify-content: center;
   border: 1px solid @gray;
+  margin-bottom: 40px;
+  background-color: @white;
 }
 
 .map-data-model__header {
   background-color: @blue;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  padding: 0 25px;
+  border-bottom: 1px solid @gray;
+}
+
+.map-data-model__header .h3-typo {
   color: @white;
+}
+
+.map-data-model__form-section {
+  border-bottom: 1px solid @silver;
+  display: flex;
+  flex-flow: column;
+  padding: 40px 25px;
+}
+
+.map-data-model__form-section .h4-typo {
+  margin: 0 0 20px 0;
+}
+
+.map-data-model__file-section {
+  display: flex;
+  padding: 25px;
+  border-bottom: 1px solid @silver;
+  padding: 40px 25px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.map-data-model__file-section > * {
+  flex-basis: 30%;
+}
+
+.map-data-model__dropdown--required {
+  background-color: @cloud;
+}
+
+.map-data-model__dropdown {
+  width: 400px;
+}
+
+/* Select component overrides */
+.map-data-model__form-section {
+
+  .Select-control {
+    border: 1px solid @blue;
+    border-radius: 0;
+  }
+
+  .Select.has-value > .Select-control {
+    border: 1px solid @black;
+  }
+
+  .Select-placeholder {
+    color: @blue;
+  }
+
+  .Select-arrow {
+    border-color: @blue transparent transparent;
+  }
+
+  .Select-menu-outer {
+    border: 1px solid black;
+    border-radius: 0;
+  }
+
+  .Select-option {
+    color: @blue;
+    border-radius: 0;
+  }
+
+  .Select-option.is-focused {
+    color: @white;
+    background-color: @gray;
+  }
+
+  .Select.is-open > .Select-control {
+    border-color: @black;
+  }
+
+  .Select.is-open > .Select-control .Select-arrow {
+    border-color: transparent transparent @blue;
+  }
+}
+
+.map-data-model__dropdown--required {
+  .Select-control {
+    background-color: @cloud;
+  }
 }
