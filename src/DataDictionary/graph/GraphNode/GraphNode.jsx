@@ -5,12 +5,6 @@ import './GraphNode.css';
 
 class GraphNode extends React.Component {
   render() {
-    const nodeFadedClassModifier = this.props.isFaded
-      ? 'graph-node--faded' : '';
-    const nodeClickableClassModifier = this.props.isClickable
-      ? 'graph-node--clickable' : 'graph-node--not-clickable';
-    const nodeIsCurrentHighlightingClassModifier = this.props.isHighlightingNode
-      ? this.props.highlightingNodeClassName : '';
     if (!(this.props.node.id !== undefined && this.props.node.type !== undefined
       && this.props.node.textPadding !== undefined && this.props.node.topCenterX !== undefined
       && this.props.node.topCenterY !== undefined && this.props.node.width !== undefined
@@ -19,6 +13,12 @@ class GraphNode extends React.Component {
       && this.props.node.textLineGap !== undefined && this.props.node.fontSize !== undefined) {
       return null;
     }
+    const nodeFadedClassModifier = this.props.isFaded
+      ? 'graph-node--faded' : '';
+    const nodeClickableClassModifier = this.props.isClickable
+      ? 'graph-node--clickable' : 'graph-node--not-clickable';
+    const nodeIsCurrentHighlightingClassModifier = this.props.isHighlightingNode
+      ? this.props.highlightingNodeClassName : '';
     const IconSVG = getCategoryIconSVG(this.props.node.type);
     const textTopY = this.props.node.textPadding;
     return (
@@ -80,8 +80,23 @@ class GraphNode extends React.Component {
   }
 }
 
+const GraphNodeShape = PropTypes.shape({
+  id: PropTypes.string,
+  type: PropTypes.string,
+  textPadding: PropTypes.number,
+  topCenterX: PropTypes.number,
+  topCenterY: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  color: PropTypes.string,
+  names: PropTypes.arrayOf(PropTypes.string),
+  iconRadius: PropTypes.number,
+  textLineGap: PropTypes.number,
+  fontSize: PropTypes.number,
+});
+
 GraphNode.propTypes = {
-  node: PropTypes.object.isRequired,
+  node: GraphNodeShape.isRequired,
   highlightingNodeClassName: PropTypes.string.isRequired,
   isHighlightingNode: PropTypes.bool.isRequired,
   isFaded: PropTypes.bool.isRequired,
