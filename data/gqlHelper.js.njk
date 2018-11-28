@@ -92,6 +92,20 @@ const helperSingleton = {
       }
     }
   `,
+  submitterIdQuery: graphql`
+    query gqlHelperSubmitterIdQuery( $project_id: String, $submitter_id: String ) {
+      datanode(project_id:$project_id, submitter_id:$submitter_id) {
+        submitter_id
+      }
+    }
+  `,
+  parentSubmitterIdQuery: graphql`
+    query gqlHelperParentSubmitterIdQuery( $project_id: String, $submitter_id: String, $type: [String] ) {
+      datanode(project_id:$project_id, submitter_id:$submitter_id, of_type:$type) {
+        submitter_id
+      }
+    }
+  `,
 };
 
 

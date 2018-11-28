@@ -8,7 +8,7 @@ const ReduxMapDataModel = (() => {
     filesToMap: state.submission.filesToMap,
     projects: state.homepage.projectsByName,
     nodeTypes: state.submission.nodeTypes,
-    dictionary: state.submission.dictionary,
+    dictionary: state.submission.dictionary
   });
 
   const mapDispatchToProps = dispatch => ({

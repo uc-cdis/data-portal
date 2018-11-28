@@ -20,6 +20,7 @@ class MapFiles extends React.Component {
 
   componentDidMount() {
     this.props.fetchUnmappedFiles();
+    this.onUpdate();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -71,7 +72,8 @@ class MapFiles extends React.Component {
   onCompletion = () => {
     let arrIds = Object.values(this.state.selectedFileIdsByGroup);
     let flatIds = arrIds.reduce((totalArr, currentArr) => totalArr.concat(currentArr))
-    this.props.mapSelectedFiles(flatIds);
+    let files = this.props.unmappedFiles.filter(file => flatIds.includes(file.did));
+    this.props.mapSelectedFiles(files);
     this.props.history.push('/submission/map')
   }
 

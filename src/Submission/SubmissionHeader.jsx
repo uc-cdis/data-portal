@@ -11,7 +11,6 @@ export class SubmissionHeader extends React.Component {
   }
 
   render() {
-    console.log(window.location)
     return (
       <div className='submission-header'>
         <div className='submission-header-section'>
