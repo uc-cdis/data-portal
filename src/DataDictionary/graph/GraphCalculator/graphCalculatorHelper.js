@@ -385,7 +385,7 @@ export const getNodesAndLinksSummaryBetweenNodesInSubgraph = (
   };
 };
 
-export const calculateFurtherHighlightedPath = (
+export const calculatePathRelatedToSecondHighlightingNode = (
   newHighlightingNode,
   newSecondHighlightingNodeID,
   wholeGraphNodes,
@@ -394,12 +394,12 @@ export const calculateFurtherHighlightedPath = (
     return [];
   }
   const node = wholeGraphNodes.find(n => n.id === newSecondHighlightingNodeID);
-  const furtherHighlightedPath = getAllChildrenLinks(node, wholeGraphNodes);
-  furtherHighlightedPath.push({
+  const pathRelatedToSecondHighlightingNode = getAllChildrenLinks(node, wholeGraphNodes);
+  pathRelatedToSecondHighlightingNode.push({
     source: newHighlightingNode.id,
     target: newSecondHighlightingNodeID,
   });
-  return furtherHighlightedPath;
+  return pathRelatedToSecondHighlightingNode;
 };
 
 export const calculateHighlightRelatedNodeIDs = (

@@ -11,20 +11,20 @@
   fill: var(--g3-color__highlight-orange);
 }
 
-.graph-drawer__link {
+.graph-drawer__edge {
   fill: none;
   stroke: black;
 }
 
-.graph-drawer__link--required {
+.graph-drawer__edge--required {
   stroke: var(--g3-color__highlight-orange);;
 }
 
-.graph-drawer__link--highlighted {
+.graph-drawer__edge--highlighted {
   stroke-width: 3px;
 }
 
-.graph-drawer__link--not-highlighted {
+.graph-drawer__edge--not-highlighted {
   opacity: var(--opacity--not-highlighted)
 }
 

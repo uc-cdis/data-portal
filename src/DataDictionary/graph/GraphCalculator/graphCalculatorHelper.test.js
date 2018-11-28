@@ -15,7 +15,7 @@ import {
   getNodeIDsThatHaveNoInLinks,
   getNodeIDsThatHaveNoOutLinks,
   calculateHighlightRelatedNodeIDs,
-  calculateFurtherHighlightedPath,
+  calculatePathRelatedToSecondHighlightingNode,
   calculateDataModelStructure,
 } from './graphCalculatorHelper';
 
@@ -113,7 +113,7 @@ describe('graphCalculatorHelper', () => {
     expect(resultNodeIDsWithoutOutLinks).toEqual(testGraph1.expectedNodeIDsWithNoOutLinks);
   });
 
-  it('can calculate related highlighted node IDs', () => {
+  it('can calculate related highlighting node IDs', () => {
     const relatedHighlightingNodeIDs = calculateHighlightRelatedNodeIDs(
       testGraph1.testClickNode,
       testGraph1.graphNodes,
@@ -121,13 +121,13 @@ describe('graphCalculatorHelper', () => {
     expect(relatedHighlightingNodeIDs).toEqual(testGraph1.expectedRelatedNodeIDs);
   });
 
-  it('can calculate further highlighted node path', () => {
-    const furtherHighlightedPath = calculateFurtherHighlightedPath(
+  it('can calculate second highlighting node path', () => {
+    const pathRelatedToSecondHighlightingNode = calculatePathRelatedToSecondHighlightingNode(
       testGraph1.testClickNode,
-      testGraph1.testFurtherClickNodeID,
+      testGraph1.testSecondClickNodeID,
       testGraph1.graphNodes,
     );
-    expect(furtherHighlightedPath).toEqual(testGraph1.expectedFurtherHighlightedPath);
+    expect(pathRelatedToSecondHighlightingNode).toEqual(testGraph1.expectedSecondHighlightedPath);
   });
 
   it('can calculate data model structure', () => {

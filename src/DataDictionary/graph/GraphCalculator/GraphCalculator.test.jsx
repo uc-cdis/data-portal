@@ -11,8 +11,8 @@ describe('GraphCalculator', () => {
   const layoutCallback = jest.fn();
   const legendCallback = jest.fn();
   const highlightCallback = jest.fn();
-  const furtherClickableCallback = jest.fn();
-  const furtherPathCallback = jest.fn();
+  const candidateCalculatedCallback = jest.fn();
+  const pathCallback = jest.fn();
   const dataModelCallback = jest.fn();
   const graphCalculator = mount(
     <GraphCalculator
@@ -22,8 +22,8 @@ describe('GraphCalculator', () => {
       onGraphLayoutCalculated={layoutCallback}
       onGraphLegendCalculated={legendCallback}
       onHighlightRelatedNodesCalculated={highlightCallback}
-      onFurtherClickableNodeIDsCalculated={furtherClickableCallback}
-      onFurtherHighlightedPathCalculated={furtherPathCallback}
+      onSecondHighlightingNodeCandidateIDsCalculated={candidateCalculatedCallback}
+      onPathRelatedToSecondHighlightingNodeCalculated={pathCallback}
       onDataModelStructureCalculated={dataModelCallback}
     />,
   );
@@ -42,12 +42,12 @@ describe('GraphCalculator', () => {
       highlightingNode: testGraph1.testClickNode,
     });
     expect(highlightCallback.mock.calls.length).toBe(1);
-    expect(furtherClickableCallback.mock.calls.length).toBe(1);
+    expect(candidateCalculatedCallback.mock.calls.length).toBe(1);
     expect(dataModelCallback.mock.calls.length).toBe(1);
     graphCalculator.setProps({
-      secondHighlightingNodeID: testGraph1.testFurtherClickNodeID,
+      secondHighlightingNodeID: testGraph1.testSecondClickNodeID,
     });
-    expect(furtherPathCallback.mock.calls.length).toBe(1);
+    expect(pathCallback.mock.calls.length).toBe(1);
     expect(dataModelCallback.mock.calls.length).toBe(2);
   });
 });

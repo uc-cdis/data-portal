@@ -32,11 +32,11 @@ class GraphDrawer extends React.Component {
     if (!this.props.highlightingNode) { // if no node is highlighted yet
       const highlightingNodeSVGElement = e.currentTarget;
       this.props.onClickNode(node, highlightingNodeSVGElement);
-    } else if (this.props.clickableHighlightedNodeIDs.length > 1
-      && this.props.clickableHighlightedNodeIDs.includes(node.id)) {
+    } else if (this.props.secondHighlightingNodeCandidateIDs.length > 1
+      && this.props.secondHighlightingNodeCandidateIDs.includes(node.id)) {
       // only allow clicking clickable nodes
       // (only children of highlighted nodes are designed to be clickable)
-      this.props.onFurtherClickNode(node.id);
+      this.props.onClickNodeAsSecondHighlightingNode(node.id);
     }
   }
 
@@ -64,9 +64,9 @@ class GraphDrawer extends React.Component {
     const notClickableNodeClassName = 'graph-drawer__node--not-clickable';
     const highlightedNodeClassName = 'graph-drawer__node--highlighted';
     const notHighlightedNodeClassName = 'graph-drawer__node--not-highlighted';
-    const highlightedLinkClassName = 'graph-drawer__link--highlighted';
-    const notHighlightedLinkClassName = 'graph-drawer__link--not-highlighted';
-    const requiredLinkClassName = 'graph-drawer__link--required';
+    const highlightedLinkClassName = 'graph-drawer__edge--highlighted';
+    const notHighlightedLinkClassName = 'graph-drawer__edge--not-highlighted';
+    const requiredLinkClassName = 'graph-drawer__edge--required';
     return (
       <g
         className='graph-drawer'
@@ -79,9 +79,10 @@ class GraphDrawer extends React.Component {
             if (this.props.highlightingNode) {
               // if clicked a futher node under highlighting mode
               if (this.props.secondHighlightingNodeID) {
-                const isEdgeAlongFurtherHighlightedPath = this.props.furtherHighlightedPath
-                  .find(e => (e.source === edge.source && e.target === edge.target));
-                if (isEdgeAlongFurtherHighlightedPath) {
+                const isEdgeAlongPathRelatedToSecondHighlightNode =
+                  this.props.pathRelatedToSecondHighlightingNode
+                    .find(e => (e.source === edge.source && e.target === edge.target));
+                if (isEdgeAlongPathRelatedToSecondHighlightNode) {
                   edgeRelatedClassModifier = highlightedLinkClassName;
                 } else {
                   edgeRelatedClassModifier = notHighlightedLinkClassName;
@@ -101,7 +102,7 @@ class GraphDrawer extends React.Component {
             return (
               <path
                 key={`${edge.source}-${edge.target}-${i}`}
-                className={`graph-drawer__link ${edgeRequiredClassModifier} ${edgeRelatedClassModifier}`}
+                className={`graph-drawer__edge ${edgeRequiredClassModifier} ${edgeRelatedClassModifier}`}
                 d={edge.pathString}
               />
             );
@@ -123,10 +124,11 @@ class GraphDrawer extends React.Component {
             let nodeClickableClassModifier = '';
             let nodeIsCurrentHighlightingClassModifier = '';
             if (this.props.highlightingNode) {
-              nodeClickableClassModifier = this.props.clickableHighlightedNodeIDs.includes(node.id)
-                ? clickableNodeClassName : notClickableNodeClassName;
+              nodeClickableClassModifier =
+                this.props.secondHighlightingNodeCandidateIDs.includes(node.id)
+                  ? clickableNodeClassName : notClickableNodeClassName;
               if (this.props.secondHighlightingNodeID) {
-                nodeHighlightedClassModifier = this.props.furtherHighlightedPath
+                nodeHighlightedClassModifier = this.props.pathRelatedToSecondHighlightingNode
                   .find(e => (e.source === node.id || e.target === node.id))
                   ? highlightedNodeClassName : notHighlightedNodeClassName;
               } else {
@@ -214,10 +216,10 @@ GraphDrawer.propTypes = {
   onClickNode: PropTypes.func,
   highlightingNode: PropTypes.object,
   relatedNodeIDs: PropTypes.array,
-  onFurtherClickNode: PropTypes.func,
+  onClickNodeAsSecondHighlightingNode: PropTypes.func,
   secondHighlightingNodeID: PropTypes.string,
-  clickableHighlightedNodeIDs: PropTypes.arrayOf(PropTypes.string),
-  furtherHighlightedPath: PropTypes.arrayOf(PropTypes.object),
+  secondHighlightingNodeCandidateIDs: PropTypes.arrayOf(PropTypes.string),
+  pathRelatedToSecondHighlightingNode: PropTypes.arrayOf(PropTypes.object),
   highlightingNodeSVGElement: PropTypes.object,
   onHighlightingNodeSVGElementUpdated: PropTypes.func,
   isGraphView: PropTypes.bool,
@@ -235,10 +237,10 @@ GraphDrawer.defaultProps = {
   onClickNode: () => {},
   highlightingNode: null,
   relatedNodeIDs: [],
-  onFurtherClickNode: () => {},
+  onClickNodeAsSecondHighlightingNode: () => {},
   secondHighlightingNodeID: null,
-  clickableHighlightedNodeIDs: [],
-  furtherHighlightedPath: [],
+  secondHighlightingNodeCandidateIDs: [],
+  pathRelatedToSecondHighlightingNode: [],
   highlightingNodeSVGElement: null,
   onHighlightingNodeSVGElementUpdated: () => {},
   isGraphView: true,

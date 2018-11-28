@@ -4,8 +4,8 @@ import {
   setGraphLayout,
   setGraphLegend,
   setRelatedNodeIDs,
-  setFurtherClickableNodeIDs,
-  setFurtherHighlightedPath,
+  setSecondHighlightingNodeCandidateIDs,
+  setPathRelatedToSecondHighlightingNode,
   setDataModelStructure,
 } from '../../action.js';
 
@@ -25,10 +25,10 @@ const ReduxGraphCalculator = (() => {
     onGraphLegendCalculated: legendItems => dispatch(setGraphLegend(legendItems)),
     onHighlightRelatedNodesCalculated: relatedNodeIDs =>
       dispatch(setRelatedNodeIDs(relatedNodeIDs)),
-    onFurtherClickableNodeIDsCalculated: clickableHighlightedNodeIDs =>
-      dispatch(setFurtherClickableNodeIDs(clickableHighlightedNodeIDs)),
-    onFurtherHighlightedPathCalculated: furtherHighlightedPath =>
-      dispatch(setFurtherHighlightedPath(furtherHighlightedPath)),
+    onSecondHighlightingNodeCandidateIDsCalculated: secondHighlightingNodeCandidateIDs =>
+      dispatch(setSecondHighlightingNodeCandidateIDs(secondHighlightingNodeCandidateIDs)),
+    onPathRelatedToSecondHighlightingNodeCalculated: pathRelatedToSecondHighlightingNode =>
+      dispatch(setPathRelatedToSecondHighlightingNode(pathRelatedToSecondHighlightingNode)),
     onDataModelStructureCalculated: dataModelStructure =>
       dispatch(setDataModelStructure(dataModelStructure)),
   });

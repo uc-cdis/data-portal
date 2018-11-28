@@ -168,8 +168,8 @@ export const testGraph1 = {
     type: 't3',
   },
   expectedRelatedNodeIDs: ['E', 'B', 'C', 'A'],
-  testFurtherClickNodeID: 'B',
-  expectedFurtherHighlightedPath: [
+  testSecondClickNodeID: 'B',
+  expectedSecondHighlightedPath: [
     { source: 'B', target: 'A' },
     { source: 'E', target: 'B' },
   ],

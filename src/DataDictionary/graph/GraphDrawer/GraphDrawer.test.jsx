@@ -10,10 +10,10 @@ describe('GraphDrawer', () => {
   const hoverFunc = jest.fn();
   const cancelHoverFunc = jest.fn();
   const clickFunc = jest.fn();
-  const furtherClickFunc = jest.fn();
+  const secondClickFunc = jest.fn();
   const svgElemUpdatedFunc = jest.fn();
 
-  it('can render nodes and links in graph', async () => {
+  it('can render nodes and edges in graph', async () => {
     const { dictionary } = buildTestData();
     const layout = await calculateGraphLayout(dictionary);
     const graphDrawer = mount(
@@ -25,7 +25,7 @@ describe('GraphDrawer', () => {
     );
     expect(graphDrawer.find(GraphDrawer).length).toBe(1);
     expect(graphDrawer.find('.graph-drawer__node').length).toBe(layout.nodes.length);
-    expect(graphDrawer.find('.graph-drawer__link').length).toBe(layout.edges.length);
+    expect(graphDrawer.find('.graph-drawer__edge').length).toBe(layout.edges.length);
   });
 
   it('can hover and click nodes, and update svg element', async () => {
@@ -39,7 +39,7 @@ describe('GraphDrawer', () => {
         onHoverNode={hoverFunc}
         onCancelHoverNode={cancelHoverFunc}
         onClickNode={clickFunc}
-        onFurtherClickNode={furtherClickFunc}
+        onClickNodeAsSecondHighlightingNode={secondClickFunc}
         onHighlightingNodeSVGElementUpdated={svgElemUpdatedFunc}
       />,
     );
@@ -53,10 +53,10 @@ describe('GraphDrawer', () => {
     expect(clickFunc.mock.calls.length).toBe(1);
     graphDrawer.setProps({
       highlightingNode: layout.nodes[0],
-      clickableHighlightedNodeIDs: layout.nodes.map(node => node.id),
+      secondHighlightingNodeCandidateIDs: layout.nodes.map(node => node.id),
     });
     secondNodeElem.simulate('click');
-    expect(furtherClickFunc.mock.calls.length).toBe(1);
+    expect(secondClickFunc.mock.calls.length).toBe(1);
     expect(svgElemUpdatedFunc.mock.calls.length).toBe(1);
   });
 });

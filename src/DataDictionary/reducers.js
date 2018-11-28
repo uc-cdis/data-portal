@@ -20,14 +20,14 @@ const ddgraphInitialState = {
 
 const ddgraph = (state = ddgraphInitialState, action) => {
   switch (action.type) {
-  case 'GRAPH_TABLE_VIEW': {
+  case 'TOGGLE_GRAPH_TABLE_VIEW': {
     return {
       ...state,
       isGraphView: action.isGraphView,
       overlayPropertyHidden: true,
     };
   }
-  case 'GRAPH_LAYOUT': {
+  case 'GRAPH_LAYOUT_CALCULATED': {
     return {
       ...state,
       nodes: action.nodes,
@@ -36,75 +36,75 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       layoutInitialized: true,
     };
   }
-  case 'GRAPH_LEGEND': {
+  case 'GRAPH_LEGEND_CALCULATED': {
     return {
       ...state,
       legendItems: action.legendItems,
     };
   }
-  case 'GRAPH_HOVER_NODE': {
+  case 'GRAPH_UPDATE_HOVERING_NODE': {
     return {
       ...state,
       hoveringNode: action.node,
       hoveringNodeSVGElement: action.hoveringNodeSVGElement,
     };
   }
-  case 'GRAPH_CANVAS_BOUNDING_RECT_UPDATE': {
+  case 'GRAPH_UPDATE_CANVAS_BOUNDING_RECT': {
     return {
       ...state,
       canvasBoundingRect: action.canvasBoundingRect,
     };
   }
-  case 'GRAPH_RELATED_NODE': {
+  case 'GRAPH_UPDATE_RELATED_HIGHLIGHTING_NODE': {
     return {
       ...state,
       relatedNodeIDs: action.relatedNodeIDs,
     };
   }
-  case 'GRAPH_FURTHER_HIGHLIGHT_NODE': {
+  case 'GRAPH_SECOND_HIGHLIGHTING_NODE': {
     const newSecondHighlightingNodeID = action.nodeID;
     return {
       ...state,
       secondHighlightingNodeID: newSecondHighlightingNodeID,
     };
   }
-  case 'GRAPH_FURTHER_CLICKABLE_NODES': {
+  case 'GRAPH_UPDATE_SECOND_HIGHLIGHTING_NODE_CANDIDATES': {
     return {
       ...state,
-      clickableHighlightedNodeIDs: action.clickableHighlightedNodeIDs,
+      secondHighlightingNodeCandidateIDs: action.secondHighlightingNodeCandidateIDs,
     };
   }
-  case 'GRAPH_FURTHER_HIGHLIGHT_PATH': {
+  case 'GRAPH_UPDATE_PATH_RELATED_TO_SECOND_HIGHLIGHTING_NODE': {
     return {
       ...state,
-      furtherHighlightedPath: action.furtherHighlightedPath,
+      pathRelatedToSecondHighlightingNode: action.pathRelatedToSecondHighlightingNode,
     };
   }
-  case 'GRAPH_DATA_MODEL_STRUCTURE': {
+  case 'GRAPH_UPDATE_DATA_MODEL_STRUCTURE': {
     return {
       ...state,
       dataModelStructure: action.dataModelStructure,
     };
   }
-  case 'GRAPH_OVERLAY_PROPERTY_HIDDEN': {
+  case 'GRAPH_SET_OVERLAY_PROPERTY_TABLE_HIDDEN': {
     return {
       ...state,
       overlayPropertyHidden: action.isHidden,
     };
   }
-  case 'GRAPH_CANVAS_NEED_RESET': {
+  case 'GRAPH_CANVAS_RESET_REQUIRED': {
     return {
       ...state,
       needReset: action.needReset,
     };
   }
-  case 'GRAPH_HIGHLIGHTING_NODE_SVG_ELEMENT': {
+  case 'GRAPH_HIGHLIGHTING_NODE_SVG_ELEMENT_UPDATED': {
     return {
       ...state,
       highlightingNodeSVGElement: action.highlightingNodeSVGElement,
     };
   }
-  case 'GRAPH_HIGHLIGHT_NODE': {
+  case 'GRAPH_UPDATE_HIGHLIGHTING_NODE': {
     let newHighlightingNode = null;
     let newHighlightingNodeSVGElement = null;
     if (action.node && (!state.highlightingNode || state.highlightingNode.id !== action.node.id)) {
@@ -142,7 +142,7 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       highlightingNodeSVGElement: newHighlightingNodeSVGElement,
     };
   }
-  case 'TABLE_EXPAND_NODE_ID': {
+  case 'TABLE_EXPAND_NODE': {
     let newHighlightingNode = null;
     if (action.nodeID) {
       newHighlightingNode = state.nodes.find(n => n.id === action.nodeID);

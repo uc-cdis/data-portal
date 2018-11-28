@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   setHoveringNode,
   setHighlightingNode,
-  setFurtherHighlightingNodeID,
+  setSecondHighlightingNodeID,
   setHighlightingNodeSVGElement,
 } from '../../action.js';
 import GraphDrawer from './GraphDrawer';
@@ -16,8 +16,8 @@ const ReduxGraphDrawer = (() => {
     highlightingNode: state.ddgraph.highlightingNode,
     highlightingNodeSVGElement: state.ddgraph.highlightingNodeSVGElement,
     relatedNodeIDs: state.ddgraph.relatedNodeIDs,
-    clickableHighlightedNodeIDs: state.ddgraph.clickableHighlightedNodeIDs,
-    furtherHighlightedPath: state.ddgraph.furtherHighlightedPath,
+    secondHighlightingNodeCandidateIDs: state.ddgraph.secondHighlightingNodeCandidateIDs,
+    pathRelatedToSecondHighlightingNode: state.ddgraph.pathRelatedToSecondHighlightingNode,
     secondHighlightingNodeID: state.ddgraph.secondHighlightingNodeID,
     isGraphView: state.ddgraph.isGraphView,
   });
@@ -28,7 +28,7 @@ const ReduxGraphDrawer = (() => {
     onCancelHoverNode: () => dispatch(setHoveringNode(null)),
     onClickNode: (node, highlightingNodeSVGElement) =>
       dispatch(setHighlightingNode(node, highlightingNodeSVGElement)),
-    onFurtherClickNode: nodeID => dispatch(setFurtherHighlightingNodeID(nodeID)),
+    onClickNodeAsSecondHighlightingNode: nodeID => dispatch(setSecondHighlightingNodeID(nodeID)),
     onHighlightingNodeSVGElementUpdated: highlightingNodeSVGElement =>
       dispatch(setHighlightingNodeSVGElement(highlightingNodeSVGElement)),
   });

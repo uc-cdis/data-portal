@@ -3,81 +3,81 @@ export const clickBlankSpace = () => ({
 });
 
 export const setCanvasBoundingRect = canvasBoundingRect => ({
-  type: 'GRAPH_CANVAS_BOUNDING_RECT_UPDATE',
+  type: 'GRAPH_UPDATE_CANVAS_BOUNDING_RECT',
   canvasBoundingRect,
 });
 
-export const setFurtherClickableNodeIDs = clickableHighlightedNodeIDs => ({
-  type: 'GRAPH_FURTHER_CLICKABLE_NODES',
-  clickableHighlightedNodeIDs,
+export const setSecondHighlightingNodeCandidateIDs = secondHighlightingNodeCandidateIDs => ({
+  type: 'GRAPH_UPDATE_SECOND_HIGHLIGHTING_NODE_CANDIDATES',
+  secondHighlightingNodeCandidateIDs,
 });
 
-export const setFurtherHighlightedPath = furtherHighlightedPath => ({
-  type: 'GRAPH_FURTHER_HIGHLIGHT_PATH',
-  furtherHighlightedPath,
+export const setPathRelatedToSecondHighlightingNode = pathRelatedToSecondHighlightingNode => ({
+  type: 'GRAPH_UPDATE_PATH_RELATED_TO_SECOND_HIGHLIGHTING_NODE',
+  pathRelatedToSecondHighlightingNode,
 });
 
 export const setDataModelStructure = dataModelStructure => ({
-  type: 'GRAPH_DATA_MODEL_STRUCTURE',
+  type: 'GRAPH_UPDATE_DATA_MODEL_STRUCTURE',
   dataModelStructure,
 });
 
 export const setRelatedNodeIDs = relatedNodeIDs => ({
-  type: 'GRAPH_RELATED_NODE',
+  type: 'GRAPH_UPDATE_RELATED_HIGHLIGHTING_NODE',
   relatedNodeIDs,
 });
 
 export const setGraphLayout = layout => ({
-  type: 'GRAPH_LAYOUT',
+  type: 'GRAPH_LAYOUT_CALCULATED',
   nodes: layout.nodes,
   edges: layout.edges,
   graphBoundingBox: layout.graphBoundingBox,
 });
 
 export const setGraphLegend = legendItems => ({
-  type: 'GRAPH_LEGEND',
+  type: 'GRAPH_LEGEND_CALCULATED',
   legendItems,
 });
 
 export const setHoveringNode = (node, hoveringNodeSVGElement) => ({
-  type: 'GRAPH_HOVER_NODE',
+  type: 'GRAPH_UPDATE_HOVERING_NODE',
   node,
   hoveringNodeSVGElement,
 });
 
 export const setHighlightingNode = (node, highlightingNodeSVGElement) => ({
-  type: 'GRAPH_HIGHLIGHT_NODE',
+  type: 'GRAPH_UPDATE_HIGHLIGHTING_NODE',
   node,
   highlightingNodeSVGElement,
 });
 
-export const setFurtherHighlightingNodeID = nodeID => ({
-  type: 'GRAPH_FURTHER_HIGHLIGHT_NODE',
+export const setSecondHighlightingNodeID = nodeID => ({
+  type: 'GRAPH_SECOND_HIGHLIGHTING_NODE',
   nodeID,
 });
 
 export const setOverlayPropertyTableHidden = isHidden => ({
-  type: 'GRAPH_OVERLAY_PROPERTY_HIDDEN',
+  type: 'GRAPH_SET_OVERLAY_PROPERTY_TABLE_HIDDEN',
   isHidden,
 });
 
 export const setExpandNode = nodeID => ({
-  type: 'TABLE_EXPAND_NODE_ID',
+  type: 'TABLE_EXPAND_NODE',
   nodeID,
 });
 
 export const setGraphView = isGraphView => ({
-  type: 'GRAPH_TABLE_VIEW',
+  type: 'TOGGLE_GRAPH_TABLE_VIEW',
   isGraphView,
 });
 
 export const setNeedReset = needReset => ({
-  type: 'GRAPH_CANVAS_NEED_RESET',
+  type: 'GRAPH_CANVAS_RESET_REQUIRED',
   needReset,
 });
 
 export const setHighlightingNodeSVGElement = highlightingNodeSVGElement => ({
-  type: 'GRAPH_HIGHLIGHTING_NODE_SVG_ELEMENT',
+  type: 'GRAPH_HIGHLIGHTING_NODE_SVG_ELEMENT_UPDATED',
   highlightingNodeSVGElement,
 });
 
