@@ -24,8 +24,8 @@ describe('GraphDrawer', () => {
       />,
     );
     expect(graphDrawer.find(GraphDrawer).length).toBe(1);
-    expect(graphDrawer.find('.graph-drawer__node').length).toBe(layout.nodes.length);
-    expect(graphDrawer.find('.graph-drawer__edge').length).toBe(layout.edges.length);
+    expect(graphDrawer.find('.graph-node').length).toBe(layout.nodes.length);
+    expect(graphDrawer.find('.graph-edge').length).toBe(layout.edges.length);
   });
 
   it('can hover and click nodes, and update svg element', async () => {
@@ -43,8 +43,8 @@ describe('GraphDrawer', () => {
         onHighlightingNodeSVGElementUpdated={svgElemUpdatedFunc}
       />,
     );
-    const firstNodeElem = graphDrawer.find('.graph-drawer__node').first();
-    const secondNodeElem = graphDrawer.find('.graph-drawer__node').at(1);
+    const firstNodeElem = graphDrawer.find('.graph-node').first();
+    const secondNodeElem = graphDrawer.find('.graph-node').at(1);
     firstNodeElem.simulate('mouseover');
     expect(hoverFunc.mock.calls.length).toBe(1);
     firstNodeElem.simulate('mouseout');

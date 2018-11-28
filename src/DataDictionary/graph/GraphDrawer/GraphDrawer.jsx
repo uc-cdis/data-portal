@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getCategoryIconSVG } from '../../NodeCategories/helper';
+import GraphNode from '../GraphNode/GraphNode';
+import GraphEdge from '../GraphEdge/GraphEdge';
 import './GraphDrawer.css';
 
 class GraphDrawer extends React.Component {
@@ -19,16 +20,16 @@ class GraphDrawer extends React.Component {
     }
   }
 
-  onMouseOver = (node, e) => {
+  onMouseOverNode = (node, e) => {
     const hoveringNodeSVGElement = e.currentTarget;
     this.props.onHoverNode(node, hoveringNodeSVGElement);
   }
 
-  onMouseOut = () => {
+  onMouseOutNode = () => {
     this.props.onCancelHoverNode();
   }
 
-  onClick = (node, e) => {
+  onClickNode = (node, e) => {
     if (!this.props.highlightingNode) { // if no node is highlighted yet
       const highlightingNodeSVGElement = e.currentTarget;
       this.props.onClickNode(node, highlightingNodeSVGElement);
@@ -60,142 +61,70 @@ class GraphDrawer extends React.Component {
     const fittingTransY = Math.abs(
       (boundingBoxLength - (this.props.canvasHeight / fittingScale)) / 2,
     );
-    const clickableNodeClassName = 'graph-drawer__node--clickable';
-    const notClickableNodeClassName = 'graph-drawer__node--not-clickable';
-    const highlightedNodeClassName = 'graph-drawer__node--highlighted';
-    const notHighlightedNodeClassName = 'graph-drawer__node--not-highlighted';
-    const highlightedLinkClassName = 'graph-drawer__edge--highlighted';
-    const notHighlightedLinkClassName = 'graph-drawer__edge--not-highlighted';
-    const requiredLinkClassName = 'graph-drawer__edge--required';
     return (
       <g
         className='graph-drawer'
         transform={`scale(${fittingScale}) translate(${fittingTransX}, ${fittingTransY}) `}
         ref={this.graphDomRef}
       >
-        { // edges
+        {
           this.props.edges.map((edge, i) => {
-            let edgeRelatedClassModifier = '';
+            let isEdgeFaded = false;
+            let isEdgeHighlighted = false;
             if (this.props.highlightingNode) {
-              // if clicked a futher node under highlighting mode
               if (this.props.secondHighlightingNodeID) {
                 const isEdgeAlongPathRelatedToSecondHighlightNode =
-                  this.props.pathRelatedToSecondHighlightingNode
+                  !!this.props.pathRelatedToSecondHighlightingNode
                     .find(e => (e.source === edge.source && e.target === edge.target));
-                if (isEdgeAlongPathRelatedToSecondHighlightNode) {
-                  edgeRelatedClassModifier = highlightedLinkClassName;
-                } else {
-                  edgeRelatedClassModifier = notHighlightedLinkClassName;
-                }
+                isEdgeFaded = !isEdgeAlongPathRelatedToSecondHighlightNode;
+                isEdgeHighlighted = isEdgeAlongPathRelatedToSecondHighlightNode;
               } else {
                 const isEdgeRelatedToHighlightedNode =
                   this.props.relatedNodeIDs.includes(edge.source)
                   && this.props.relatedNodeIDs.includes(edge.target);
-                if (isEdgeRelatedToHighlightedNode) {
-                  edgeRelatedClassModifier = highlightedLinkClassName;
-                } else {
-                  edgeRelatedClassModifier = notHighlightedLinkClassName;
-                }
+                isEdgeFaded = !isEdgeRelatedToHighlightedNode;
+                isEdgeHighlighted = isEdgeRelatedToHighlightedNode;
               }
             }
-            const edgeRequiredClassModifier = edge.required ? requiredLinkClassName : '';
             return (
-              <path
+              <GraphEdge
                 key={`${edge.source}-${edge.target}-${i}`}
-                className={`graph-drawer__edge ${edgeRequiredClassModifier} ${edgeRelatedClassModifier}`}
-                d={edge.pathString}
+                edge={edge}
+                isRequired={edge.required}
+                isFaded={isEdgeFaded}
+                isHighlighted={isEdgeHighlighted}
               />
             );
           })
         }
-        { // nodes
-          this.props.nodes.map((node) => { // check required keys
-            if (!(node.id !== undefined && node.type !== undefined
-              && node.textPadding !== undefined && node.topCenterX !== undefined
-              && node.topCenterY !== undefined && node.width !== undefined
-              && node.height !== undefined && node.color !== undefined
-              && node.names !== undefined && node.iconRadius !== undefined)
-              && node.textLineGap !== undefined && node.fontSize !== undefined) {
-              return null;
-            }
-            const IconSVG = getCategoryIconSVG(node.type);
-            const textTopY = node.textPadding;
-            let nodeHighlightedClassModifier = '';
-            let nodeClickableClassModifier = '';
-            let nodeIsCurrentHighlightingClassModifier = '';
+        {
+          this.props.nodes.map((node) => {
+            let isNodeFaded = false;
+            let isNodeClickable = true;
+            let isHighlightingNode = false;
             if (this.props.highlightingNode) {
-              nodeClickableClassModifier =
-                this.props.secondHighlightingNodeCandidateIDs.includes(node.id)
-                  ? clickableNodeClassName : notClickableNodeClassName;
+              isHighlightingNode = (this.props.highlightingNode.id === node.id);
+              isNodeClickable =
+                this.props.secondHighlightingNodeCandidateIDs.includes(node.id);
               if (this.props.secondHighlightingNodeID) {
-                nodeHighlightedClassModifier = this.props.pathRelatedToSecondHighlightingNode
-                  .find(e => (e.source === node.id || e.target === node.id))
-                  ? highlightedNodeClassName : notHighlightedNodeClassName;
+                isNodeFaded = !this.props.pathRelatedToSecondHighlightingNode
+                  .find(e => (e.source === node.id || e.target === node.id));
               } else {
-                nodeHighlightedClassModifier = this.props.relatedNodeIDs.includes(node.id)
-                  ? highlightedNodeClassName : notHighlightedNodeClassName;
+                isNodeFaded = !this.props.relatedNodeIDs.includes(node.id);
               }
-              if (this.props.highlightingNode.id === node.id) {
-                nodeIsCurrentHighlightingClassModifier = this.currentHighlightingNodeClassName;
-              }
-            } else {
-              nodeClickableClassModifier = clickableNodeClassName;
             }
             return (
-              <g
+              <GraphNode
                 key={node.id}
-                transform={`translate(${node.topCenterX}, ${node.topCenterY}) `}
-                className={`graph-drawer__node 
-                  ${nodeHighlightedClassModifier} 
-                  ${nodeClickableClassModifier}
-                  ${nodeIsCurrentHighlightingClassModifier}`}
-                onMouseOver={e => this.onMouseOver(node, e)}
-                onMouseOut={this.onMouseOut}
-                onClick={e => this.onClick(node, e)}
-                id={node.id}
-              >
-                <rect
-                  className='graph-drawer__node-rect'
-                  x={-node.width / 2}
-                  y={0}
-                  width={node.width}
-                  height={node.height}
-                  rx={4}
-                  ry={4}
-                  stroke={node.color}
-                />
-                {
-                  node.names.map((row, i) => (
-                    <text
-                      key={`${node.id}-${i}`}
-                      className='graph-drawer__text'
-                      x={0}
-                      y={textTopY + (i * (node.fontSize + node.textLineGap))}
-                      textAnchor='middle'
-                      alignmentBaseline='hanging'
-                      fontSize={node.fontSize}
-                    >
-                      {row}
-                    </text>
-                  ))
-                }
-                {
-                  <g
-                    transform={`translate(${-node.iconRadius}, ${-node.iconRadius})`}
-                  >
-                    {
-                      IconSVG ? <IconSVG /> : (
-                        <circle
-                          cx={node.iconRadius}
-                          cy={node.iconRadius}
-                          r={node.iconRadius}
-                          fill={node.color}
-                        />
-                      )
-                    }
-                  </g>
-                }
-              </g>
+                node={node}
+                highlightingNodeClassName={this.currentHighlightingNodeClassName}
+                isHighlightingNode={isHighlightingNode}
+                isFaded={isNodeFaded}
+                isClickable={isNodeClickable}
+                onMouseOver={e => this.onMouseOverNode(node, e)}
+                onMouseOut={this.onMouseOutNode}
+                onClick={e => this.onClickNode(node, e)}
+              />
             );
           })
         }
@@ -245,6 +174,5 @@ GraphDrawer.defaultProps = {
   onHighlightingNodeSVGElementUpdated: () => {},
   isGraphView: true,
 };
-
 
 export default GraphDrawer;
