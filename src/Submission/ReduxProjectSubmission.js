@@ -7,7 +7,7 @@ import ReduxDataModelGraph, { getCounts } from '../DataModelGraph/ReduxDataModel
 
 import { fetchWithCreds } from '../actions';
 import { predictFileType } from '../utils';
-import { submissionApiPath } from '../localconf';
+import { submissionApiPath, lineLimit } from '../localconf';
 
 export const uploadTSV = (value, type) => (dispatch) => {
   dispatch({ type: 'REQUEST_UPLOAD', file: value, file_type: type });
@@ -24,6 +24,8 @@ export const updateFileContent = (value, fileType) => (dispatch) => {
 
 
 const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) => {
+  const fileArray = [];
+  const resolvedPromisesArray = [];
   const path = fullProject.split('-');
   const program = path[0];
   const project = path.slice(1).join('-');
@@ -36,24 +38,57 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
     // remove line break in json file
     file = file.replace(/\n/g, '');
   }
+
+  let i = 0;
+  if (submission.file_type === 'text/tab-separated-values') {
+    const fileSplited = file.split(/\n/g);
+    let fileHeader = fileSplited.shift();
+    fileHeader += '\r';
+    if (fileSplited.length > lineLimit) {
+      i = lineLimit;
+      let fileChunk = fileHeader;
+      while (fileSplited.length > 0) {
+        fileChunk += fileSplited.shift();
+        fileChunk += '\r';
+        i -= 1;
+        if (i === 0) {
+          fileArray.push(fileChunk);
+          fileChunk = fileHeader;
+          i = lineLimit;
+        }
+      }
+      if (fileChunk !== fileHeader) {
+        fileArray.push(fileChunk);
+      }
+    } else {
+      fileArray.push(file);
+    }
+  } else {
+    fileArray.push(file);
+  }
   let subUrl = submissionApiPath;
   if (program !== '_root') {
     subUrl = `${subUrl + program}/${project}/`;
   }
-  return fetchWithCreds({
-    path: subUrl,
-    method,
-    customHeaders: { 'Content-Type': submission.file_type },
-    body: file,
-    dispatch,
-  }).then(
-    ({ status, data }) => (
-      {
-        type: 'RECEIVE_SUBMISSION',
-        submit_status: status,
-        data,
-      }),
-  ).then(msg => dispatch(msg));
+
+  for (i = 0; i < fileArray.length; i += 1) {
+    const lastPromise = fetchWithCreds({
+      path: subUrl,
+      method,
+      customHeaders: { 'Content-Type': submission.file_type },
+      body: fileArray[i],
+      dispatch,
+    }).then(
+      ({ status, data }) => (
+        {
+          type: 'RECEIVE_SUBMISSION',
+          submit_status: status,
+          data,
+        }),
+    ).then(msg => dispatch(msg));
+    resolvedPromisesArray.push(lastPromise);
+  }
+  return Promise.all(resolvedPromisesArray);
 };
 
 const ReduxSubmitTSV = (() => {
