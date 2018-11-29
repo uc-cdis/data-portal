@@ -1,7 +1,9 @@
 import { connect } from 'react-redux';
 import MapDataModel from './MapDataModel';
 import { fetchWithCreds } from '../actions';
-
+import { GQLHelper } from '../gqlHelper';
+import { fetchQuery } from 'relay-runtime';
+import environment from '../environment';
 
 const ReduxMapDataModel = (() => {
   const mapStateToProps = state => ({

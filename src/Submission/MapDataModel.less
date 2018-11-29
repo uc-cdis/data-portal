@@ -54,9 +54,22 @@
 .map-data-model__required-field {
   display: flex;
   align-items: center;
-  height: 50px;
+  height: 70px;
   border-bottom: 1px solid @silver;
   padding: 20px 0;
+}
+
+.map-data-model__optional-fields-button {
+  display: flex;
+  align-items: center;
+  color: @blue;
+  height: 70px;
+  padding: 20px 0;
+  cursor: pointer;
+}
+
+.map-data-model__optional-fields-button > * {
+  margin-right: 10px;
 }
 
 .map-data-model__required-field .h4-typo {
@@ -105,11 +118,6 @@
   background-color: @cloud;
 }
 
-.map-data-model__dropdown-section {
-  display: flex;
-  align-items: center;
-}
-
 .map-data-model__dropdown {
   width: 400px;
   display: flex;
@@ -118,6 +126,26 @@
 .map-data-model__checkmark {
   display: inline;
   margin-left: 10px;
+}
+
+.map-data-model__input {
+  width: 260px;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  border: 1px solid @blue;
+  background-color: @cloud;
+  padding: 15px 10px;
+  display: inline-block;
+}
+
+.red-border {
+  border: 1px solid red;
+  margin-right: 10px;
+}
+
+.invalid-text.body-typo {
+  color: red;
 }
 
 /* Select component overrides */
