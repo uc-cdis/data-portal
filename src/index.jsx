@@ -29,12 +29,12 @@ import UserAgreementCert from './UserAgreement/ReduxCertPopup';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
 import getReduxStore from './reduxStore';
-import { ReduxNavBar, ReduxTopBar } from './Top/reduxer';
+import { ReduxNavBar, ReduxTopBar } from './Layout/reduxer';
 import Footer from './components/layout/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug } from './localconf';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
-import { gaTracking } from './params';
+import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
@@ -237,7 +237,7 @@ async function init() {
                     />
                   </Switch>
                 </div>
-                <Footer />
+                <Footer logos={components.footerLogos} />
               </div>
             </BrowserRouter>
           </MuiThemeProvider>
