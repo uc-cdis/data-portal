@@ -6,7 +6,8 @@ import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import { requiredCerts, submissionApiOauthPath } from '../configs';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
-import { intersection } from '../utils';
+import { intersection, isPageFullScreen } from '../utils';
+import './ProtectedContent.css';
 
 let lastAuthMs = 0;
 let lastTokenRefreshMs = 0;
@@ -264,8 +265,6 @@ class ProtectedContent extends React.Component {
     return newState;
   };
 
-  isDDPage = () => (this.props.location.pathname.toLowerCase() === '/dd' || this.props.location.pathname.toLowerCase() === '/dd/graph')
-
   render() {
     const Component = this.props.component;
     let params = {}; // router params
@@ -273,29 +272,30 @@ class ProtectedContent extends React.Component {
       params = this.props.match.params || {};
     }
     window.scrollTo(0, 0);
+    const pageFullWidthClassModifier = isPageFullScreen(this.props.location.pathname) ? 'protected-content--full-screen' : '';
     if (this.state.redirectTo) {
       return (<Redirect to={this.state.redirectTo} />);
     } else if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
-        <div className={`protected-content ${this.isDDPage() ? 'protected-content--dd-page' : ''}`}>
+        <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     } else if (!this.props.public && this.state.authenticated) {
       return (
-        <div className={`protected-content ${this.isDDPage() ? 'protected-content--dd-page' : ''}`}>
+        <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <ReduxAuthTimeoutPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     } else if (this.props.public && this.state.dataLoaded) {
       return (
-        <div className={`protected-content ${this.isDDPage() ? 'protected-content--dd-page' : ''}`}>
+        <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     }
-    return (<div className={`protected-content ${this.isDDPage() ? 'protected-content--dd-page' : ''}`}><Spinner /></div>);
+    return (<div className={`protected-content ${pageFullWidthClassModifier}`}><Spinner /></div>);
   }
 }
 

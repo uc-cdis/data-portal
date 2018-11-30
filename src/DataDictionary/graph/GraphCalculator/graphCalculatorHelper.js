@@ -3,60 +3,25 @@ import { Module, render } from 'viz.js/full.render';
 import _ from 'underscore';
 import { createNodesAndEdges, createDotStrinByNodesEdges } from '../../../GraphUtils/utils';
 import { truncateLines, graphStyleConfig } from '../../utils';
+import {
+  getAllChildrenNodeIDs,
+  getAllChildrenLinks,
+  getArticulationNodesInSubgraph,
+  sortNodesByTopology,
+  getSingleEndDescendentNodeID,
+  getNodesAndLinksSummaryBetweenNodesInSubgraph,
+} from './graphStructureHelper.js';
 import { getCategoryColor } from '../../NodeCategories/helper';
 
+/**
+ * Get a set of types from an array of nodes
+ * @param {Node[]} nodes
+ * @returns {string[]} array of type names(duplicating names removed) of given nodes
+ */
 export const getAllTypes = (nodes) => {
   const types = nodes.map(node => node.type);
   const uniqueTypes = _.uniq(types);
   return uniqueTypes;
-};
-
-export const getAllChildrenNodeIDs = (highlightingNode, nodes) => {
-  const relatedNodeIDs = [];
-  let currentLevelNodeIDs = highlightingNode.outLinks;
-  while (currentLevelNodeIDs.length > 0) {
-    const nextLevelNodeIDs = [];
-    currentLevelNodeIDs.forEach((nodeId) => {
-      if (relatedNodeIDs.includes(nodeId) || nextLevelNodeIDs.includes(nodeId)) return;
-      relatedNodeIDs.push(nodeId);
-      const originNode = nodes.find(n => (n.id === nodeId));
-      const nextLevel = originNode.outLinks;
-      nextLevel.forEach((outNodeId) => {
-        nextLevelNodeIDs.push(outNodeId);
-      });
-    });
-    currentLevelNodeIDs = nextLevelNodeIDs;
-  }
-  return relatedNodeIDs;
-};
-
-export const getAllChildrenLinks = (startingNode, nodes) => {
-  let currentLevelNodeIDs = startingNode.outLinks;
-  const relatedLinks = currentLevelNodeIDs.map(outID => ({
-    source: startingNode.id,
-    target: outID,
-  }));
-  while (currentLevelNodeIDs.length > 0) {
-    const nextLevelNodeIDs = [];
-    for (let i = 0; i < currentLevelNodeIDs.length; i += 1) {
-      const nodeID = currentLevelNodeIDs[i];
-      if (nextLevelNodeIDs.includes(nodeID)) break;
-      const originNode = nodes.find(n => (n.id === nodeID));
-      const nextLevel = originNode.outLinks;
-      for (let j = 0; j < nextLevel.length; j += 1) {
-        const outNodeID = nextLevel[j];
-        relatedLinks.push({
-          source: nodeID,
-          target: outNodeID,
-        });
-        if (nextLevelNodeIDs.includes(outNodeID)
-          || currentLevelNodeIDs.includes(outNodeID)) break;
-        nextLevelNodeIDs.push(outNodeID);
-      }
-    }
-    currentLevelNodeIDs = nextLevelNodeIDs;
-  }
-  return relatedLinks;
 };
 
 /* eslint-disable no-underscore-dangle */
@@ -188,244 +153,72 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
 };
 /* eslint-enable no-underscore-dangle */
 
-export const getNodeIDsThatHaveNoInLinks = (
-  subgraphNodeIDs,
-  subgraphEdges,
-  wholeGraphNodes,
-) => {
-  const resultIDs = [];
-  subgraphNodeIDs.forEach((nodeID) => {
-    const node = wholeGraphNodes.find(n => n.id === nodeID);
-    const inLinks = node.inLinks
-      .filter(inNodeID => subgraphNodeIDs.includes(inNodeID))
-      .filter(inNodeID => subgraphEdges.find(e =>
-        e.target === nodeID && e.source === inNodeID && subgraphNodeIDs.includes(e.source)))
-      .filter(inNodeID => (inNodeID !== nodeID));
-    if (!inLinks || inLinks.length === 0) {
-      resultIDs.push(nodeID);
-    }
-  });
-  return resultIDs;
-};
-
-export const getNodeIDsThatHaveNoOutLinks = (
-  subgraphNodeIDs,
-  subgraphEdges,
-  wholeGraphNodes,
-) => {
-  const resultIDs = [];
-  subgraphNodeIDs.forEach((nodeID) => {
-    const node = wholeGraphNodes.find(n => n.id === nodeID);
-    const outLinks = node.outLinks
-      .filter(inNodeID => subgraphNodeIDs.includes(inNodeID))
-      .filter(inNodeID => subgraphEdges.find(e =>
-        e.source === nodeID && e.target === inNodeID && subgraphNodeIDs.includes(e.target)))
-      .filter(inNodeID => (inNodeID !== nodeID));
-    if (!outLinks || outLinks.length === 0) {
-      resultIDs.push(nodeID);
-    }
-  });
-  return resultIDs;
-};
-
-export const isArticulationNodeInSubgraph = (
-  targetNodeID,
-  subgraphNodeIDs,
-  subgraphEdges,
-  wholeGraphNodes,
-) => {
-  // step.1: calculate connected node count if there's no target node in subgraph
-  const nodeIdsWithoutInLinks = getNodeIDsThatHaveNoInLinks(
-    subgraphNodeIDs,
-    subgraphEdges,
-    wholeGraphNodes,
-  );
-  if (nodeIdsWithoutInLinks.includes(targetNodeID)) return false;
-  let currentLevelNodeIDs = nodeIdsWithoutInLinks;
-  const nodeIDsInSubgraphWithoutTargetNode = [];
-  while (currentLevelNodeIDs.length > 0) {
-    const nextLevelNodeIDs = [];
-    currentLevelNodeIDs.forEach((nodeID) => {
-      if (nodeIDsInSubgraphWithoutTargetNode.includes(nodeID)
-        || nextLevelNodeIDs.includes(nodeID)) return;
-      nodeIDsInSubgraphWithoutTargetNode.push(nodeID);
-      const node = wholeGraphNodes.find(n => n.id === nodeID);
-      const inNeighbors = node.inLinks
-        .filter(inNodeID => subgraphEdges.find(e => e.source === inNodeID && e.target === nodeID));
-      const outNeighbors = node.outLinks.filter(outNodeID =>
-        subgraphEdges.find(e => e.target === outNodeID && e.source === nodeID));
-      const neighborNodeIDs = [...inNeighbors, ...outNeighbors];
-      neighborNodeIDs
-        .filter(nid => subgraphNodeIDs.includes(nid))
-        .filter(nid => (nid !== targetNodeID))
-        .forEach((nid) => {
-          nextLevelNodeIDs.push(nid);
-        });
-    });
-    currentLevelNodeIDs = nextLevelNodeIDs;
-  }
-
-  // step.2: if node count equals subgraph's node count - 1, then not articulation node
-  return (nodeIDsInSubgraphWithoutTargetNode.length !== subgraphNodeIDs.length - 1);
-};
-
-export const getArticulationNodesInSubgraph = (
-  startingNodeID,
-  subgraphNodeIDs,
-  subgraphEdges,
-  wholeGraphNodes,
-) => {
-  const articulationNodeIDs = [];
-  subgraphNodeIDs.forEach((nodeID) => {
-    if (isArticulationNodeInSubgraph(
-      nodeID,
-      subgraphNodeIDs,
-      subgraphEdges,
-      wholeGraphNodes,
-    )) {
-      articulationNodeIDs.push(nodeID);
-    }
-  });
-  return articulationNodeIDs;
-};
-
-export const BFSTraverseSubgraph = (subgraphNodeIDs, subgraphEdges, wholeGraphNodes) => {
-  let currentLevelNodeIDs = [];
-  subgraphNodeIDs.forEach((nodeID) => {
-    const node = wholeGraphNodes.find(n => n.id === nodeID);
-    const inLinks = node.inLinks
-      .filter(inNodeID => subgraphNodeIDs.includes(inNodeID))
-      .filter(inNodeID => subgraphEdges.find(e =>
-        e.target === nodeID && e.source === inNodeID && subgraphNodeIDs.includes(e.source)))
-      .filter(inNodeID => (inNodeID !== nodeID));
-    if (!inLinks || inLinks.length === 0) {
-      currentLevelNodeIDs.push(nodeID);
-    }
-  });
-  const resultNodeIDs = [];
-  while (currentLevelNodeIDs.length > 0) {
-    const nextLevelNodeIDs = [];
-    for (let i = 0; i < currentLevelNodeIDs.length; i += 1) {
-      const nodeID = currentLevelNodeIDs[i];
-      if (!resultNodeIDs.includes(nodeID)) resultNodeIDs.push(nodeID);
-      const node = wholeGraphNodes.find(n => n.id === nodeID);
-      if (!node) break;
-      const outNeighbors = node.outLinks.filter(outNodeID =>
-        subgraphEdges.find(e => e.source === nodeID && outNodeID === e.target));
-      for (let j = 0; j < outNeighbors.length; j += 1) {
-        const outNodeID = outNeighbors[j];
-        if (currentLevelNodeIDs.includes(outNodeID) || nextLevelNodeIDs.includes(outNodeID)) {
-          break;
-        }
-        nextLevelNodeIDs.push(outNodeID);
-      }
-    }
-    currentLevelNodeIDs = nextLevelNodeIDs;
-  }
-  return resultNodeIDs;
-};
-
-export const sortNodesByTopology = (
-  nodeIDsToSort,
-  subgraphNodeIDs,
-  subgraphEdges,
-  wholeGraphNodes,
-) => {
-  const graphBFSTraverse = BFSTraverseSubgraph(subgraphNodeIDs, subgraphEdges, wholeGraphNodes);
-  const sortedNodeIDs = graphBFSTraverse.filter(nodeID => nodeIDsToSort.includes(nodeID));
-  return sortedNodeIDs;
-};
-
-export const getNodesAndLinksSummaryBetweenNodesInSubgraph = (
-  startingNodeID,
-  endingNodeID,
-  subgraphNodeIDs,
-  subgraphEdges,
-  wholeGraphNodes,
-) => {
-  const startingNode = wholeGraphNodes.find(node => node.id === startingNodeID);
-  const betweenNodeIDs = [];
-  const firstLevelOutNodeIDs = startingNode.outLinks.filter(outNodeID =>
-    subgraphEdges.find(e => e.source === startingNodeID && e.target === outNodeID));
-  let currentLevelNodeIDs = firstLevelOutNodeIDs;
-  const betweenLinks = firstLevelOutNodeIDs.map(outID => ({
-    source: startingNodeID,
-    target: outID,
-  }));
-  while (currentLevelNodeIDs.length > 0) {
-    const nextLevelNodeIDs = [];
-    currentLevelNodeIDs.forEach((nodeID) => {
-      if (betweenNodeIDs.includes(nodeID)
-        || nextLevelNodeIDs.includes(nodeID)
-        || nodeID === endingNodeID
-      ) return;
-      betweenNodeIDs.push(nodeID);
-      const node = wholeGraphNodes.find(n => (n.id === nodeID));
-      const outNOdeIDsInSubgraph = node.outLinks
-        .filter(outNodeID => subgraphNodeIDs.includes(outNodeID))
-        .filter(outNodeID => subgraphEdges.find(e =>
-          e.source === nodeID && e.target === outNodeID));
-      outNOdeIDsInSubgraph.forEach((outNodeID) => {
-        betweenLinks.push({
-          source: nodeID,
-          target: outNodeID,
-        });
-      });
-      outNOdeIDsInSubgraph
-        .filter(outNodeID => outNodeID !== endingNodeID)
-        .forEach((outNodeID) => {
-          nextLevelNodeIDs.push(outNodeID);
-        });
-    });
-    currentLevelNodeIDs = nextLevelNodeIDs;
-  }
-  return {
-    nodeIDs: betweenNodeIDs,
-    links: betweenLinks,
-  };
-};
-
-export const calculatePathRelatedToSecondHighlightingNode = (
-  newHighlightingNode,
-  newSecondHighlightingNodeID,
-  wholeGraphNodes,
-) => {
-  if (!newHighlightingNode || !newSecondHighlightingNodeID) {
-    return [];
-  }
-  const node = wholeGraphNodes.find(n => n.id === newSecondHighlightingNodeID);
-  const pathRelatedToSecondHighlightingNode = getAllChildrenLinks(node, wholeGraphNodes);
-  pathRelatedToSecondHighlightingNode.push({
-    source: newHighlightingNode.id,
-    target: newSecondHighlightingNodeID,
-  });
-  return pathRelatedToSecondHighlightingNode;
-};
-
+/**
+ * Get all node IDs that are descendent of the first highlighting node
+ * @param {Node} highlightingNode - the first highlighting node
+ * @param {Node[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @returns {string[]} array of node IDs that are descendent of the first highlighting node
+ */
 export const calculateHighlightRelatedNodeIDs = (
-  newHighlightingNode,
+  highlightingNode,
   wholeGraphNodes,
 ) => {
-  if (!newHighlightingNode) {
+  if (!highlightingNode) {
     return [];
   }
-  const relatedNodeIDs = getAllChildrenNodeIDs(newHighlightingNode, wholeGraphNodes);
-  if (!relatedNodeIDs.includes(newHighlightingNode.id)) {
-    return [newHighlightingNode.id, ...relatedNodeIDs];
+  const relatedNodeIDs = getAllChildrenNodeIDs(highlightingNode, wholeGraphNodes);
+  if (!relatedNodeIDs.includes(highlightingNode.id)) {
+    return [highlightingNode.id, ...relatedNodeIDs];
   }
   return relatedNodeIDs;
 };
 
-export const getSingleEndDescendentNodeID = (
-  subgraphNodeIDs,
-  subgraphEdges,
+/**
+ * Get all routes that pass the second highlighting node and ends at the first highlighting node
+ * @param {Node} highlightingNode - the first highlighting node
+ * @param {string} secondHighlightingNodeID - the second highlighting node ID
+ * @param {Node[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @returns {Edge[]} array of links along  routes that pass
+ *                   the second and ends at the first highlighting node
+ */
+export const calculatePathRelatedToSecondHighlightingNode = (
+  highlightingNode,
+  secondHighlightingNodeID,
   wholeGraphNodes,
 ) => {
-  const nodeIDs = getNodeIDsThatHaveNoOutLinks(subgraphNodeIDs, subgraphEdges, wholeGraphNodes);
-  if (nodeIDs.length === 1) return nodeIDs[0];
-  return null;
+  if (!highlightingNode || !secondHighlightingNodeID) {
+    return [];
+  }
+  const node = wholeGraphNodes.find(n => n.id === secondHighlightingNodeID);
+  const pathRelatedToSecondHighlightingNode = getAllChildrenLinks(node, wholeGraphNodes);
+  pathRelatedToSecondHighlightingNode.push({
+    source: highlightingNode.id,
+    target: secondHighlightingNodeID,
+  });
+  return pathRelatedToSecondHighlightingNode;
 };
 
+/**
+ * For a given node in subgraph, summary about how do its descendent structure look like.
+ * I.e., which nodes along the descendent structure, and how many nodes/links between.
+ * (A node's descendent structure means nodes and links that are started from this node)
+ * @param {Node} startingNode
+ * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
+ * @param {Edge[]} subgraphEdges - array of edges in subgraph
+ * @param {Node[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @returns {Object[]} array of ordered items, each refers to a descendent node,
+ *                     its category, nodes and links between this item and previous item
+ * Calculating process:
+ *    step.1: find all critical nodes in subgraph
+             (critical nodes here means all articulation nodes in subgraph and the starting node)
+ *    step.2: sort those nodes by linking order (source nodes come before target node)
+ *    step.3: if there's a single node that is also descendent to all other node, add it to list
+ *    step.4: for all nodes in critical node list, get summary description for all pairs
+ *           of neighbor nodes (summary description means how many nodes and links between)
+ *    step.4.1 (optional): if there isn't a single descendent node, get summary description
+ *           for all of the rest nodes
+ *    step.5: return final data model structure
+ */
 export const calculateDataModelStructure = (
   startingNode,
   subgraphNodeIDs,
@@ -434,16 +227,17 @@ export const calculateDataModelStructure = (
 ) => {
   if (!startingNode) return null;
   const startingNodeID = startingNode.id;
+  // step.1
   const articulationNodeIDs = getArticulationNodesInSubgraph(
-    startingNodeID,
     subgraphNodeIDs,
     subgraphEdges,
     wholeGraphNodes,
   );
   const unsortedCriticalNodeIDs = articulationNodeIDs.includes(startingNodeID)
     ? articulationNodeIDs : [...articulationNodeIDs, startingNodeID];
-
   if (!unsortedCriticalNodeIDs || unsortedCriticalNodeIDs.length === 0) return null;
+
+  // step.2
   const sortedCriticalNodeIDs = sortNodesByTopology(
     unsortedCriticalNodeIDs,
     subgraphNodeIDs,
@@ -453,9 +247,9 @@ export const calculateDataModelStructure = (
   if (!sortedCriticalNodeIDs || sortedCriticalNodeIDs.length === 0) { // loop in graph
     return null;
   }
-
   const resultCriticalNodeIDs = sortedCriticalNodeIDs;
-  // if there's a single end descendent node
+
+  // step.3 if there's a single end descendent node
   const singleDescendentNodeID = getSingleEndDescendentNodeID(
     subgraphNodeIDs,
     subgraphEdges,
@@ -466,6 +260,7 @@ export const calculateDataModelStructure = (
     resultCriticalNodeIDs.push(singleDescendentNodeID);
   }
 
+  // step.4
   let resultStructure = [];
   for (let i = 1; i < resultCriticalNodeIDs.length; i += 1) {
     const { nodeIDs, links } = getNodesAndLinksSummaryBetweenNodesInSubgraph(
@@ -488,7 +283,7 @@ export const calculateDataModelStructure = (
       nodeIDsBefore: [],
       linksBefore: [],
     });
-  } else {
+  } else { // step.4.1 (optional)
     // summary for all rest descendent nodes after last critical node
     const lastCriticalNodeID = resultCriticalNodeIDs[resultCriticalNodeIDs.length - 1];
     const nodeIDsBeforeNode = getAllChildrenNodeIDs(
@@ -506,6 +301,7 @@ export const calculateDataModelStructure = (
     });
   }
 
+  // step.5
   resultStructure = resultStructure.map((entry) => {
     const { nodeID, nodeIDsBefore, linksBefore } = entry;
     const category = wholeGraphNodes.find(n => n.id === nodeID).type;

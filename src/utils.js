@@ -240,3 +240,8 @@ export function minus(aList, bList) {
 }
 
 export const parseParamWidth = width => ((typeof width === 'number') ? `${width}px` : width);
+
+export const isPageFullScreen = pathname => (
+  pathname.toLowerCase() === '/dd'
+  || pathname.toLowerCase().startsWith('/dd/')
+);

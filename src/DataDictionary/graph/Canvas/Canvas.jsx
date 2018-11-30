@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { select, event } from 'd3-selection';
+import { transition } from 'd3-transition';
+import { easeLinear } from 'd3-ease';
 import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
+
 import './Canvas.css';
 
 const d3 = {
@@ -9,6 +12,8 @@ const d3 = {
   zoom,
   zoomTransform,
   zoomIdentity,
+  transition,
+  easeLinear,
   get event() { return event; }, // https://stackoverflow.com/a/40048292
 };
 
@@ -22,6 +27,9 @@ class Canvas extends React.Component {
     this.canvasElement = React.createRef();
     this.svgElement = React.createRef();
     this.containerElement = React.createRef();
+    this.transition = d3.transition()
+      .duration(150)
+      .ease(d3.easeLinear);
   }
 
   componentDidMount() {
@@ -79,18 +87,37 @@ class Canvas extends React.Component {
     this.props.onClickBlankSpace();
   }
 
-  handleZoomIn = () => {
+  zoomAction = (k) => {
     const transform = d3.zoomTransform(this.zoomCatcher.node());
-    this.zoomCatcher.call(this.zoomBehavior.transform, transform.scale(1.1));
+
+    // if zoomin (k>1), translate toward negative direction, if zoomout, toward positive
+    const translateSign = k > 1 ? -1 : +1;
+
+    this.zoomCatcher
+      .transition(this.transition)
+      .call(
+        this.zoomBehavior.transform,
+        transform
+          .translate(
+            translateSign * (this.state.canvasWidth / 2) * Math.abs(k - 1),
+            translateSign * (this.state.canvasHeight / 2) * Math.abs(k - 1),
+          )
+          .scale(k),
+      );
+  }
+
+  handleZoomIn = () => {
+    this.zoomAction(1.2);
   }
 
   handleZoomOut = () => {
-    const transform = d3.zoomTransform(this.zoomCatcher.node());
-    this.zoomCatcher.call(this.zoomBehavior.transform, transform.scale(0.9));
+    this.zoomAction(0.8);
   }
 
   handleReset = () => {
-    this.zoomCatcher.call(this.zoomBehavior.transform, d3.zoomIdentity);
+    this.zoomCatcher
+      .transition(this.transition)
+      .call(this.zoomBehavior.transform, d3.zoomIdentity);
   }
 
   render() {

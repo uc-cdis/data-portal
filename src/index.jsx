@@ -39,7 +39,6 @@ import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
-import './index.less';
 
 // monitor user's session
 sessionMonitor.start();
