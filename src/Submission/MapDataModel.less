@@ -33,6 +33,11 @@
   color: @white;
 }
 
+.map-data-model__details {
+  padding: 20px 25px;
+  width: 100%;
+}
+
 .map-data-model__form-section {
   border-bottom: 1px solid @silver;
   display: flex;
@@ -57,19 +62,6 @@
   height: 70px;
   border-bottom: 1px solid @silver;
   padding: 20px 0;
-}
-
-.map-data-model__optional-fields-button {
-  display: flex;
-  align-items: center;
-  color: @blue;
-  height: 70px;
-  padding: 20px 0;
-  cursor: pointer;
-}
-
-.map-data-model__optional-fields-button > * {
-  margin-right: 10px;
 }
 
 .map-data-model__required-field .h4-typo {
@@ -112,6 +104,7 @@
 
 .map-data-model__file-row-cell {
   padding: 20px 25px;
+  vertical-align: top;
 }
 
 .map-data-model__dropdown--required {
@@ -121,11 +114,6 @@
 .map-data-model__dropdown {
   width: 400px;
   display: flex;
-}
-
-.map-data-model__checkmark {
-  display: inline;
-  margin-left: 10px;
 }
 
 .map-data-model__input {
@@ -139,17 +127,22 @@
   display: inline-block;
 }
 
-.red-border {
+.red-border .Select-control {
   border: 1px solid red;
-  margin-right: 10px;
 }
 
 .invalid-text.body-typo {
   color: red;
 }
 
+.map-data-model__file-row-cell .Select-control,
+.map-data-model__file-row-cell .Select-menu-outer {
+  width: 260px;
+}
+
 /* Select component overrides */
-.map-data-model__form-section {
+.map-data-model__form-section,
+.map-data-model__file-row-cell {
 
   .Select-control {
     border: 1px solid @blue;
