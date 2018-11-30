@@ -11,7 +11,7 @@ import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import explorer from './Explorer/reducers';
 import login from './Login/reducers';
-import bar from './Top/reducers';
+import bar from './Layout/reducers';
 import { logoutListener } from './Login/ProtectedContent';
 
 const status = (state = {}, action) => {
