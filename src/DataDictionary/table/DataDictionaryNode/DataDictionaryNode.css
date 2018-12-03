@@ -1,0 +1,107 @@
+.data-dictionary-node {
+  background: var(--g3-color__white);
+  border-bottom: 1px solid var(--dictionary-border-color);
+  border-right: 1px solid var(--dictionary-border-color);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 5px 10px 10px;
+  border-left-width: 5px;
+  border-left-style: solid;
+  border-left-color: var(--dictionary-border-color);
+  cursor: pointer;
+  outline: none;
+}
+
+.data-dictionary-node__title {
+  width: 260px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.data-dictionary-node:hover .data-dictionary-node__title {
+  color: var(--g3-color__base-blue);
+}
+
+.data-dictionary-node__file-icon {
+  margin-right: 10px;
+  position: relative;
+  top: 3px;
+}
+
+.data-dictionary-node__toggle-icon {
+  margin-left: 10px;
+  position: relative;
+  top: 3px;
+}
+
+.data-dictionary-node__description {
+  flex-grow: 1;
+  padding: 0 10px;
+}
+
+.data-dictionary-node__download-group {
+  display: inline;
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding-left: 5px;
+  border-left: 1px solid var(--dictionary-border-color);
+}
+
+.data-dictionary-node__button-wrap {
+  border-right: 1px solid var(--dictionary-border-color);
+}
+
+.data-dictionary-node__button-wrap:last-child {
+  border-right: none;
+}
+
+.data-dictionary-node__download-button {
+  width: 70px;
+  min-width: unset; /* override .g3-button's 152px min-width */
+  height: 30px;
+  margin: 0 6px;
+  padding: unset; /* override .g3-button's paddings */
+  font-weight: normal;
+}
+
+.data-dictionary-node__download-button:hover, 
+.data-dictionary-node__download-button:active {
+  color: white;
+}
+
+.data-dictionary-node__download-button .g3-icon {
+  position: relative;
+  top: 1px;
+  left: -2px;
+}
+
+.data-dictionary-node__property {
+  margin: 10px 0 20px 40px;
+  position: relative;
+}
+
+.data-dictionary-node__property-summary {
+  margin: 5px 0;
+}
+
+.data-dictionary-node__property-close {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.data-dictionary-node__property-close:hover {
+  color: var(--g3-color__black);
+}
+
+.data-dictionary-node__property-close-icon {
+  position: relative;
+  top: 4px;
+  margin-left: 10px;
+  background-color: var(--g3-color__gray);
+}
+
+.data-dictionary-node__property-close:hover .data-dictionary-node__property-close-icon {
+  background-color: var(--g3-color__black);
+}

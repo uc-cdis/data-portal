@@ -2,7 +2,7 @@ import { reducer as formReducer } from 'redux-form';
 import { combineReducers } from 'redux';
 import userProfile from './UserProfile/reducers';
 import coreMetadata from './CoreMetadata/reducers';
-import certificate from './Certificate/reducers';
+import certificate from './UserAgreement/reducers';
 import submission from './Submission/reducers';
 import analysis from './Analysis/reducers';
 import homepage from './Homepage/reducers';
@@ -11,7 +11,8 @@ import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import explorer from './Explorer/reducers';
 import login from './Login/reducers';
-import bar from './Top/reducers';
+import bar from './Layout/reducers';
+import ddgraph from './DataDictionary/reducers';
 import { logoutListener } from './Login/ProtectedContent';
 
 const status = (state = {}, action) => {
@@ -67,6 +68,7 @@ const reducers = combineReducers({ explorer,
   login,
   form: formReducer,
   auth: logoutListener,
+  ddgraph,
 });
 
 export default reducers;

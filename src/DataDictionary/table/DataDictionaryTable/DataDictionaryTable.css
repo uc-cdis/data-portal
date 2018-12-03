@@ -1,0 +1,5 @@
+:root {
+  --dictionary-header-color: var(--g3-color__gray);
+  --dictionary-border-color: var(--g3-color__silver);
+  --dictionary-border-color--hover: var(--g3-color__lightgray);
+}

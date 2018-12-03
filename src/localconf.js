@@ -1,4 +1,4 @@
-const { components } = require('./params');
+const { components, requiredCerts } = require('./params');
 
 /**
  * Setup configuration variables based on the "app" the data-portal is
@@ -37,6 +37,7 @@ function buildConfig(opts) {
   const apiPath = `${hostname}api/`;
   const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
+  const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   let userapiPath = `${hostname}user/`;
   const jobapiPath = `${hostname}/job/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
@@ -66,8 +67,6 @@ function buildConfig(opts) {
     ],
   };
 
-  const requiredCerts = [];
-
   if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
     login = {
@@ -91,6 +90,7 @@ function buildConfig(opts) {
     credentialCdisPath,
     coreMetadataPath,
     graphqlPath,
+    dataDictionaryTemplatePath,
     graphqlSchemaUrl,
     appname: components.appName,
     mockStore,
@@ -98,6 +98,7 @@ function buildConfig(opts) {
     login,
     loginPath,
     requiredCerts,
+    certs: components.certs,
   };
 }
 
