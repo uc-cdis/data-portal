@@ -16,7 +16,7 @@ class InputWithIcon extends React.Component {
               placeholder={this.props.inputPlaceholderText}
               options={this.props.inputOptions}
               onChange={this.props.inputOnChange}
-              isMulti={this.props.isMulti}
+              multi={this.props.isMulti}
             />
           ) : (
             <input

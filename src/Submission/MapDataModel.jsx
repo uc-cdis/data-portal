@@ -128,6 +128,7 @@ class MapDataModel extends React.Component {
     const nodeOptions = this.props.nodeTypes ? this.props.nodeTypes.map(node => ({ value: node, label: node })) : [];
     const requiredNodeProperties = this.state.nodeType ? this.props.dictionary[this.state.nodeType].required : null;
     const optionalNodeProperties = this.state.nodeType ? this.getOptionalNodeProperties(requiredNodeProperties) : null;
+    console.log('dictionary', this.props.dictionary)
     return(
       <div className='map-data-model'>
         <BackLink url='/submission/files' label='Back to My Files' />
@@ -233,7 +234,7 @@ class MapDataModel extends React.Component {
                                 iconSvg={InvalidIcon}
                                 text='One or more of these parent IDs does not exist.'
                                 textClassName='invalid-text body-typo'
-                                isMulti={link.multiplicity !== 'one_to_one'}
+                                isMulti
                               />
                             </React.Fragment>
                           )

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Button from '@gen3/ui-component/dist/components/Button';
-import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
 import CheckBox from '../components/CheckBox';
@@ -145,15 +144,6 @@ class MapFiles extends React.Component {
 
   render() {
     let buttons = [
-      <Dropdown buttonType='primary' disabled={this.isMapEmpty(this.state.selectedFileIdsByGroup)}>
-        <Dropdown.Button>
-            Download Template
-        </Dropdown.Button>
-        <Dropdown.Menu>
-          <Dropdown.Item onClick={() => console.log('TSV clicked')} rightIcon='download'>TSV</Dropdown.Item>
-          <Dropdown.Item onClick={() => console.log('JSON clicked')} rightIcon='download'>JSON</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>,
       <Button
         onClick={this.onCompletion}
         label='Map Files'
