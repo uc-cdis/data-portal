@@ -26,22 +26,24 @@ class Footer extends Component {
             }
           </div>
           <div className='footer__logo-area'>
-            <a
-              target='_blank'
-              href='https://ctds.uchicago.edu/gen3'
-              className='footer__icon'
-              rel='noopener noreferrer'
-            >
-              <img className='footer__img' src='/src/img/gen3.png' alt='Gen3' />
-            </a>
-            <a
-              target='_blank'
-              href='https://ctds.uchicago.edu/'
-              className='footer__icon'
-              rel='noopener noreferrer'
-            >
-              <img className='footer__img' src='/src/img/createdby.png' alt='Uchicago CTDS' />
-            </a>
+            {
+              this.props.logos.map((logoObj, i) => (
+                <a
+                  key={i}
+                  target='_blank'
+                  href={logoObj.href}
+                  className='footer__icon'
+                  rel='noopener noreferrer'
+                >
+                  <img
+                    className='footer__img'
+                    src={logoObj.src}
+                    alt={logoObj.alt}
+                    style={{ height: logoObj.height ? logoObj.height : 60 }}
+                  />
+                </a>
+              ))
+            }
           </div>
         </nav>
       </footer>
@@ -49,10 +51,18 @@ class Footer extends Component {
   }
 }
 
+const LogoObject = PropTypes.shape({
+  src: PropTypes.string.isRequired,
+  href: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+  height: PropTypes.number,
+});
+
 Footer.propTypes = {
   dictionaryVersion: PropTypes.string,
   apiVersion: PropTypes.string,
   hidden: PropTypes.bool,
+  logos: PropTypes.arrayOf(LogoObject).isRequired,
 };
 
 Footer.defaultProps = {
