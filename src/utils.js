@@ -79,6 +79,12 @@ export const color = {
   stream_gauge: d3.schemeCategory20[19],
   weather_station: d3.schemeCategory20[10],
   medical_history: d3.schemeCategory20[1],
+  clinical_assessment: d3.schemeCategory20[2],
+  data_observations: d3.schemeCategory20[3],
+  experimental_methods: d3.schemeCategory20[4],
+  Imaging: d3.schemeCategory20[5],
+  study_administration: d3.schemeCategory20[6],
+  subject_characteristics: d3.schemeCategory20[7],
 };
 
 
@@ -195,6 +201,39 @@ export function computeLastPageSizes(filesMap, pageSize) {
 export function capitalizeFirstLetter(str) {
   const res = str.replace(/_/gi, ' ');
   return res.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+}
+
+/**
+ * Avoid importing underscore just for this ... export for testing
+ * @method intersection
+ * @param aList {Array<String>}
+ * @param bList {Array<String>}
+ * @return list of intersecting elements
+ */
+export function intersection(aList, bList) {
+  const key2Count = aList.concat(bList).reduce(
+    (db, it) => {
+      const res = db;
+      if (res[it]) { res[it] += 1; } else { res[it] = 1; }
+      return res;
+    }, {},
+  );
+  return Object.entries(key2Count)
+    .filter(kv => kv[1] > 1)
+    .map(([k]) => k);
+}
+
+export function minus(aList, bList) {
+  const key2Count = aList.concat(bList).concat(aList).reduce(
+    (db, it) => {
+      const res = db;
+      if (res[it]) { res[it] += 1; } else { res[it] = 1; }
+      return res;
+    }, {},
+  );
+  return Object.entries(key2Count)
+    .filter(kv => kv[1] === 2)
+    .map(([k]) => k);
 }
 
 export const parseParamWidth = width => ((typeof width === 'number') ? `${width}px` : width);

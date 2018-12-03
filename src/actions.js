@@ -193,30 +193,33 @@ export const handleResponse = type => ({ data, status }) => {
   }
 };
 
+const handleFetchUser = ({ status, data }) => {
+  switch (status) {
+  case 200:
+    return {
+      type: 'RECEIVE_USER',
+      user: data,
+    };
+  case 401:
+    return {
+      type: 'UPDATE_POPUP',
+      data: { authPopup: true },
+    };
+  default:
+    return {
+      type: 'FETCH_ERROR',
+      error: data.error,
+    };
+  }
+};
+
 export const fetchUser = dispatch => fetchCreds({
   dispatch,
 }).then(
-  ({ status, data }) => {
-    switch (status) {
-    case 200:
-      return {
-        type: 'RECEIVE_USER',
-        user: data,
-      };
-    case 401:
-      return {
-        type: 'UPDATE_POPUP',
-        data: { authPopup: true },
-      };
-    default:
-      return {
-        type: 'FETCH_ERROR',
-        error: data.error,
-      };
-    }
-  },
-).then((msg) => { dispatch(msg); });
+  (status, data) => handleFetchUser(status, data),
+).then(msg => dispatch(msg));
 
+export const refreshUser = () => fetchUser;
 
 export const logoutAPI = () => dispatch => fetchWithCreds({
   path: `${submissionApiOauthPath}logout`,

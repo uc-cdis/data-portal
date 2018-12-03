@@ -122,7 +122,7 @@
           "name": "Data Submission"
         },
         {
-          "link": "https://uc-cdis.github.io/gen3-user-doc/user-guide/guide-overview",
+          "link": "https://gen3.org/resources/user/",
           "name": "Documentation"
         }
       ]
@@ -133,8 +133,50 @@
       "text": "This website supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer.",
       "contact": "If you have any questions about access or the registration process, please contact ",
       "email": "support@datacommons.io"
-    }
+    },
+    "certs": {
+      "security_quiz": {
+        "title": "BloodPAC User agreement",
+        "description": "The agreement on what you can and need to do in a Commons.",
+        "questions": [
+          {
+            "name": "Things you can do after registration",
+            "question": "As a registered user, I can do the following things without any problem. Is it true or not:",
+            "options": ["Browse public Project", "Upload file", "Download file", "Invite people"],
+            "answer": 0,
+            "hint": "Some information about this question"
+          },
+          {
+            "name": "Things you need to do to become the registered user",
+            "question": "In order to be a register user, I must do the following things otherwise:",
+            "options": ["Agree the user agreement", "Accept a consent", "None of them", "Both of them"],
+            "answer": 2,
+            "hint": "Some information about this question"
+          },
+          {
+            "name": "Things you can do with data",
+            "question": "How can I share data with other people according to the policy of the commons",
+            "options": ["I can not share data", "I can only share data with BPA memebers", "I can share data with family", "I can share data with my wife"],
+            "answer": 1,
+            "hint": "Some information about this question"
+          }
+        ]
+      }
+    },
+    "footerLogos": [
+      {
+        "src": "/src/img/gen3.png",
+        "href": "https://ctds.uchicago.edu/gen3",
+        "alt": "Gen3 Data Commons"
+      },
+      {
+        "src": "/src/img/createdby.png",
+        "href": "https://ctds.uchicago.edu/",
+        "alt": "Center for Translational Data Science at the University of Chicago"
+      }
+    ]
   },
+  "requiredCerts": [],
   "featureFlags": {
     "explorer": true
   },

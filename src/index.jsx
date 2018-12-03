@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, createPortal } from 'react-dom';
+import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
@@ -25,22 +25,25 @@ import DataDictionary from './DataDictionary/ReduxDataDictionary';
 import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
-import CertificateQuiz from './Certificate/ReduxQuiz';
+import UserAgreementCert from './UserAgreement/ReduxCertPopup';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
 import getReduxStore from './reduxStore';
-import { ReduxNavBar, ReduxTopBar } from './Top/reduxer';
+import { ReduxNavBar, ReduxTopBar } from './Layout/reduxer';
 import Footer from './components/layout/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug } from './localconf';
-import dictIcons from './img/icons/index';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
-import { gaTracking } from './params';
+import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
+import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import './index.less';
+
+// monitor user's session
+sessionMonitor.start();
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -144,7 +147,7 @@ async function init() {
                       path='/quiz'
                       component={
                         props => (<ProtectedContent
-                          component={CertificateQuiz}
+                          component={UserAgreementCert}
                           {...props}
                         />)
                       }
@@ -234,12 +237,12 @@ async function init() {
                     />
                   </Switch>
                 </div>
+                <Footer logos={components.footerLogos} />
               </div>
             </BrowserRouter>
           </MuiThemeProvider>
         </ThemeProvider>
       </Provider>
-      { createPortal(<Footer dictIcons={dictIcons} />, document.getElementById('foot-root'))}
     </div>,
     document.getElementById('root'),
   );

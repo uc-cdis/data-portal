@@ -15,7 +15,7 @@
 }
 
 .footer__version-area {
-  display: inline-flex;
+  display: flex;
   float: left;
   width: 720px;
   height: 100px;
@@ -23,14 +23,17 @@
 
 .footer__logo-area {
   display: inline-flex;
-  width: 500px;
+  float: right;
+  justify-content: flex-end;
 }
 
 .footer__version {
-  width: 220px;
   vertical-align: middle;
-  display: inline-block;
-  margin: auto;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  flex-grow: 1;
 }
 
 // FIXME: css refactor WIG
@@ -40,23 +43,20 @@
 }
 
 .footer__icon {
-  vertical-align: middle;
   margin-left: 40px;
-  height: 100px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  line-height: 100px;
 }
 
 .footer__icon:first-child {
   margin-left: 0;
 }
 
-.footer__icon--gen3 {
-  width: 70px;
+.footer__img {
+  height: 60px;
+  display: inline;
+  vertical-align: middle;
 }
 
-.footer__icon--uchicago {
-  width: 390px;
+.footer__gen3-img {
+  
 }
