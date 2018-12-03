@@ -5,6 +5,8 @@ import Footer from '../components/layout/Footer';
 import dictIcons from '../img/icons/index';
 import { logoutAPI } from '../actions';
 import { components } from '../params';
+import { isPageFullScreen } from '../utils';
+import { portalVersion } from '../versions';
 
 export const setActive = link => ({
   type: 'ACTIVE_CHANGED',
@@ -16,16 +18,13 @@ export const initActive = link => ({
   data: link,
 });
 
-const isDDPage = activeTab => (activeTab && (activeTab.toLowerCase() === '/dd'
-    || activeTab.toLowerCase() === '/dd/graph'));
-
 export const ReduxNavBar = (() => {
   const mapStateToProps = state => ({
     navTitle: components.navigation.title,
     navItems: components.navigation.items,
     dictIcons,
     activeTab: state.bar.active,
-    isFullWidth: isDDPage(state.bar.active),
+    isFullWidth: isPageFullScreen(state.bar.active),
   });
 
   // Bar chart does not dispatch anything
@@ -43,7 +42,7 @@ export const ReduxTopBar = (() => {
     topItems: components.topBar.items,
     activeTab: state.bar.active,
     user: state.user,
-    isFullWidth: isDDPage(state.bar.active),
+    isFullWidth: isPageFullScreen(state.bar.active),
   });
 
   // Bar chart does not dispatch anything
@@ -57,8 +56,8 @@ export const ReduxTopBar = (() => {
 
 export const ReduxFooter = (() => {
   const mapStateToProps = state => ({
-    dictIcons,
-    hidden: isDDPage(state.bar.active),
+    versions: portalVersion,
+    hidden: isPageFullScreen(state.bar.active),
   });
 
   return connect(mapStateToProps)(Footer);

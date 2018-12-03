@@ -28,7 +28,7 @@ import UserAgreementCert from './UserAgreement/ReduxCertPopup';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
 import getReduxStore from './reduxStore';
-import { ReduxNavBar, ReduxTopBar } from './Layout/reduxer';
+import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import Footer from './components/layout/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug } from './localconf';
@@ -239,7 +239,7 @@ async function init() {
                     />
                   </Switch>
                 </div>
-                <Footer logos={components.footerLogos} />
+                <ReduxFooter logos={components.footerLogos} />
               </div>
             </BrowserRouter>
           </MuiThemeProvider>
