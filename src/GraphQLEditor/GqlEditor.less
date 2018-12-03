@@ -1,3 +1,5 @@
+@import '~@gen3/ui-component/dist/css/base.less';
+
 .gql-editor {
   height: calc(~"100vh - 181px");
 }
@@ -10,4 +12,14 @@
 
 .gql-editor .graphiql-container {
   height: calc(~"100vh - 181px - 80px");
+}
+
+.gql-editor__button {
+  float: right;
+  margin-top: 10px;
+}
+
+.gql-editor__button--active {
+  background-color: @gray;
+  color: @white;
 }
