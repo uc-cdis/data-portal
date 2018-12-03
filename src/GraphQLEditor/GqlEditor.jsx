@@ -3,7 +3,6 @@ import { buildClientSchema } from 'graphql/utilities';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import React from 'react';
 import PropTypes from 'prop-types';
-import querystring from 'querystring';
 import { fetchGraphQL, fetchArrangerGraphQL } from '../actions';
 import Spinner from '../components/Spinner';
 import './GqlEditor.less';
@@ -18,7 +17,7 @@ class GqlEditor extends React.Component {
     };
   }
 
-  selectEndpoint = index => {
+  selectEndpoint = (index) => {
     this.setState({ selectedEndpointIndex: index });
   }
 
@@ -44,27 +43,25 @@ class GqlEditor extends React.Component {
         name: 'Flat Model',
         endpoint: fetchArrangerGraphQL,
         schema: null,
-      }
+      },
     ];
 
     return (
       <div>
         <div className='gql-editor__button'>
-        <Dropdown>
-          <Dropdown.Button>Select Endpoint</Dropdown.Button>
+          <Dropdown>
+            <Dropdown.Button>Select Endpoint</Dropdown.Button>
             <Dropdown.Menu>
               {
-                buttons.map((button, i) => {
-                  return (
-                    <Dropdown.Item
-                      key={i}
-                      className={this.state.selectedEndpointIndex === i ? 'gql-editor__button--active' : ''}
-                      onClick={() => this.selectEndpoint(i)}
-                    >
-                      {button.name}
-                    </Dropdown.Item>
-                  )
-                })
+                buttons.map((button, i) => (
+                  <Dropdown.Item
+                    key={i}
+                    className={this.state.selectedEndpointIndex === i ? 'gql-editor__button--active' : ''}
+                    onClick={() => this.selectEndpoint(i)}
+                  >
+                    {button.name}
+                  </Dropdown.Item>
+                ))
               }
             </Dropdown.Menu>
           </Dropdown>
@@ -83,7 +80,7 @@ class GqlEditor extends React.Component {
       </div>
     );
   }
-};
+}
 
 
 GqlEditor.propTypes = {
