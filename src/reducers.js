@@ -12,6 +12,7 @@ import graphiql from './GraphQLEditor/reducers';
 import explorer from './Explorer/reducers';
 import login from './Login/reducers';
 import bar from './Layout/reducers';
+import ddgraph from './DataDictionary/reducers';
 import { logoutListener } from './Login/ProtectedContent';
 
 const status = (state = {}, action) => {
@@ -67,6 +68,7 @@ const reducers = combineReducers({ explorer,
   login,
   form: formReducer,
   auth: logoutListener,
+  ddgraph,
 });
 
 export default reducers;

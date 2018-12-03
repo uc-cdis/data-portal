@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import * as d3 from 'd3-selection';
 
 import DataModelGraph from './DataModelGraph';
-import { buildTestData } from './testData';
+import { buildTestData } from '../GraphUtils/testData';
 
 describe('the DataModelGraph', () => {
   function buildTest() {
