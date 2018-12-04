@@ -49,36 +49,36 @@ class GqlEditor extends React.Component {
     const index = this.state.selectedEndpointIndex < dropdownItems.length ? this.state.selectedEndpointIndex : 0;
 
     return (
-      <div>
-        <div className='gql-editor__button'>
-          <Dropdown>
-            <Dropdown.Button>Select Endpoint</Dropdown.Button>
-            <Dropdown.Menu>
-              {
-                dropdownItems.map((item, i) => (
-                  <Dropdown.Item
-                    key={i}
-                    className={index === i ? 'gql-editor__button--active' : ''}
-                    onClick={() => this.selectEndpoint(i, dropdownItems.length)}
-                  >
-                    {item.name}
-                  </Dropdown.Item>
-                ))
-              }
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-        <div className='gql-editor' id='graphiql'>
+      <div className='gql-editor' id='graphiql'>
+        <div className='gql-editor__header'>
           <h2 className='gql-editor__title'>Query graph</h2>
-          <GraphiQL
-            fetcher={dropdownItems[index].endpoint}
-            schema={dropdownItems[index].schema}
-            query={parameters.query}
-            variables={parameters.variables}
-            onEditQuery={editQuery}
-            onEditVariables={editVariables}
-          />
+          <div className='gql-editor__button'>
+            <Dropdown>
+              <Dropdown.Button>Select Endpoint</Dropdown.Button>
+              <Dropdown.Menu>
+                {
+                  dropdownItems.map((item, i) => (
+                    <Dropdown.Item
+                      key={i}
+                      className={index === i ? 'gql-editor__button--active' : ''}
+                      onClick={() => this.selectEndpoint(i, dropdownItems.length)}
+                    >
+                      {item.name}
+                    </Dropdown.Item>
+                  ))
+                }
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
         </div>
+        <GraphiQL
+          fetcher={dropdownItems[index].endpoint}
+          schema={dropdownItems[index].schema}
+          query={parameters.query}
+          variables={parameters.variables}
+          onEditQuery={editQuery}
+          onEditVariables={editVariables}
+        />
       </div>
     );
   }
