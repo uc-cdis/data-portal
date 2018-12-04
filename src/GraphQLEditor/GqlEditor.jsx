@@ -17,12 +17,11 @@ class GqlEditor extends React.Component {
     };
   }
 
-  selectEndpoint = index => {
-    this.setState({ selectedEndpointIndex: index });
-  }
+  getOtherIndex = index =>
+    +!index // will either return 0 or 1
 
-  getOtherIndex = index => {
-    return + !index; // will either return 0 or 1
+  selectEndpoint = (index) => {
+    this.setState({ selectedEndpointIndex: index });
   }
 
   render() {
@@ -51,7 +50,9 @@ class GqlEditor extends React.Component {
     ];
 
     // If provided endpoint is not 0 or 1, default to 0 (graph model)
-    const index = this.state.selectedEndpointIndex < options.length ? this.state.selectedEndpointIndex : 0;
+    const index = this.state.selectedEndpointIndex < options.length ?
+      this.state.selectedEndpointIndex
+      : 0;
 
     return (
       <div className='gql-editor' id='graphiql'>
