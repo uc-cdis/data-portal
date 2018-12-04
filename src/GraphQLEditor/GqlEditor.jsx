@@ -1,6 +1,6 @@
 import GraphiQL from 'graphiql';
 import { buildClientSchema } from 'graphql/utilities';
-import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import Button from '@gen3/ui-component/dist/components/Button';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fetchGraphQL, fetchArrangerGraphQL } from '../actions';
@@ -21,6 +21,10 @@ class GqlEditor extends React.Component {
     this.setState({ selectedEndpointIndex: index });
   }
 
+  getOtherIndex = index => {
+    return + !index;
+  }
+
   render() {
     if (!this.props.schema) {
       return <Spinner />; // loading
@@ -33,7 +37,7 @@ class GqlEditor extends React.Component {
       parameters.variables = newVariables;
     };
 
-    const dropdownItems = [
+    const options = [
       {
         name: 'Graph Model',
         endpoint: fetchGraphQL,
@@ -46,34 +50,23 @@ class GqlEditor extends React.Component {
       },
     ];
 
-    const index = this.state.selectedEndpointIndex < dropdownItems.length ? this.state.selectedEndpointIndex : 0;
+    const index = this.state.selectedEndpointIndex < options.length ? this.state.selectedEndpointIndex : 0;
 
     return (
       <div className='gql-editor' id='graphiql'>
         <div className='gql-editor__header'>
           <h2 className='gql-editor__title'>Query graph</h2>
           <div className='gql-editor__button'>
-            <Dropdown>
-              <Dropdown.Button>Select Endpoint</Dropdown.Button>
-              <Dropdown.Menu>
-                {
-                  dropdownItems.map((item, i) => (
-                    <Dropdown.Item
-                      key={i}
-                      className={index === i ? 'gql-editor__button--active' : ''}
-                      onClick={() => this.selectEndpoint(i, dropdownItems.length)}
-                    >
-                      {item.name}
-                    </Dropdown.Item>
-                  ))
-                }
-              </Dropdown.Menu>
-            </Dropdown>
+            <Button
+              onClick={() => this.selectEndpoint(this.getOtherIndex(index))}
+              label={`Switch to ${options[this.getOtherIndex(index)].name}`}
+              buttonType='primary'
+            />
           </div>
         </div>
         <GraphiQL
-          fetcher={dropdownItems[index].endpoint}
-          schema={dropdownItems[index].schema}
+          fetcher={options[index].endpoint}
+          schema={options[index].schema}
           query={parameters.query}
           variables={parameters.variables}
           onEditQuery={editQuery}
