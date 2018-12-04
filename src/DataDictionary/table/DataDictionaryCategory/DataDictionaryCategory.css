@@ -1,0 +1,21 @@
+.data-dictionary-category {
+  margin: 20px 0;
+}
+
+.data-dictionary-category__head {
+  background: var(--dictionary-header-color);
+  color: var(--g3-color__white);
+  padding: 10px;
+  border-left: 5px solid var(--dictionary-border-color);
+}
+
+.data-dictionary-category__download_template {
+  float: right;
+  margin-right: 4px;
+}
+
+
+.data-dictionary-category__icon {
+  vertical-align: middle;
+  margin-right: 10px;
+}

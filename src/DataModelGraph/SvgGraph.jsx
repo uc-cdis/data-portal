@@ -4,8 +4,8 @@ import { select, selectAll } from 'd3-selection';
 import { forceSimulation, forceLink } from 'd3-force';
 import { extent } from 'd3-array';
 
-import { color, legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
-import { assignNodePositions } from './utils';
+import { getCategoryColor, legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
+import { assignNodePositions } from '../GraphUtils/utils';
 
 const d3 = {
   select, selectAll, forceSimulation, forceLink, extent,
@@ -90,11 +90,11 @@ export function createSvgGraph(nodesIn, edges) {
       if (d.count === 0) {
         return '#f4f4f4';
       }
-      return color[d.category];
+      return getCategoryColor(d.category);
     })
     .style('stroke', (d) => {
       if (d.count === 0) {
-        return color[d.category];
+        return getCategoryColor(d.category);
       }
       return '';
     })
@@ -178,7 +178,7 @@ export function createSvgGraph(nodesIn, edges) {
   simulation.force('link')
     .links(edges);
 
-  legendCreator(legend, nodes, legendWidth, color);
+  legendCreator(legend, nodes, legendWidth);
   return { minX, minY };
 }
 

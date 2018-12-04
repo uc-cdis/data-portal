@@ -18,7 +18,7 @@ class NavBar extends Component {
   render() {
     return (
       <div className='nav-bar'>
-        <header className='nav-bar__header'>
+        <header className={`nav-bar__header ${this.props.isFullWidth ? 'nav-bar__header--full-width' : ''}`}>
           <nav className='nav-bar__nav--left'>
             <div className='nav-bar__logo'>
               <Link
@@ -89,6 +89,7 @@ NavBar.propTypes = {
   activeTab: PropTypes.string,
   onActiveTab: PropTypes.func,
   onInitActive: PropTypes.func,
+  isFullWidth: PropTypes.bool,
 };
 
 NavBar.defaultProps = {
@@ -96,6 +97,7 @@ NavBar.defaultProps = {
   onActiveTab: () => {},
   onInitActive: () => {},
   navTitle: null,
+  isFullWidth: false,
 };
 
 export default NavBar;

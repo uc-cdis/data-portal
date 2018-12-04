@@ -1,0 +1,54 @@
+.data-model-structure {
+  border-top: 1px solid var(--g3-color__silver);
+}
+
+.data-model-structure__header {
+  padding: 15px 15px 10px 15px;
+}
+
+.data-model-structure__containter {
+  position: relative;
+  padding-left: 50px;
+  padding-right: 15px;
+}
+
+.data-model-structure__node {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.data-model-structure__node-name {
+  color: var(--g3-color__base-blue);
+  word-break: break-all;
+}
+
+.data-model-structure__node-name--last {
+  font-weight: 600;
+}
+
+.data-model-structure__path-line {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 25px;
+  border-left: 1px solid var(--g3-color__lightgray);
+}
+
+.data-model-structure__icon {
+  position: absolute;
+  left: -35px;
+  top: 5px;
+}
+
+.data-model-structure__summary-between {
+  margin-bottom: 10px;
+}
+
+.data-model-structure__table-button {
+  margin: 15px;
+}
+
+.data-model-structure__graph-button {
+  height: 35px;
+  margin-bottom: 10px;
+}

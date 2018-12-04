@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { portalVersion } from '../../versions';
 import './Footer.less';
 
-class Footer extends React.Component {
+class Footer extends Component {
   render() {
+    if (this.props.hidden) {
+      return (<React.Fragment />);
+    }
     return (
       <footer className='footer'>
         <nav className='footer__nav'>
@@ -12,7 +14,7 @@ class Footer extends React.Component {
             {
               [{ name: 'Dictionary', version: this.props.dictionaryVersion },
                 { name: 'Submission', version: this.props.apiVersion },
-                { name: 'Portal', version: portalVersion }].map(
+                { name: 'Portal', version: this.props.portalVersion }].map(
                 item => (
                   <div className='footer__version' key={item.name}>
                     <div className='h4-typo footer__version-name'>{item.name}</div>
@@ -58,12 +60,16 @@ const LogoObject = PropTypes.shape({
 Footer.propTypes = {
   dictionaryVersion: PropTypes.string,
   apiVersion: PropTypes.string,
+  hidden: PropTypes.bool,
+  portalVersion: PropTypes.string,
   logos: PropTypes.arrayOf(LogoObject).isRequired,
 };
 
 Footer.defaultProps = {
   dictionaryVersion: 'Unknown',
   apiVersion: 'Unknown',
+  hidden: false,
+  portalVersion: 'Unknown',
 };
 
 export default Footer;

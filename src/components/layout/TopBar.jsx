@@ -13,7 +13,7 @@ class TopBar extends Component {
   render() {
     return (
       <div className='top-bar'>
-        <header className='top-bar__header'>
+        <header className={`top-bar__header ${this.props.isFullWidth ? 'top-bar__header--full-width' : ''}`}>
           <nav className='top-bar__nav'>
             {
               this.props.topItems.map(
@@ -83,11 +83,13 @@ TopBar.propTypes = {
   activeTab: PropTypes.string,
   onActiveTab: PropTypes.func,
   onLogoutClick: PropTypes.func.isRequired,
+  isFullWidth: PropTypes.bool,
 };
 
 TopBar.defaultProps = {
   activeTab: '',
   onActiveTab: () => {},
+  isFullWidth: false,
 };
 
 export default TopBar;
