@@ -22,7 +22,7 @@ class GqlEditor extends React.Component {
   }
 
   getOtherIndex = index => {
-    return + !index;
+    return + !index; // will either return 0 or 1
   }
 
   render() {
@@ -50,6 +50,7 @@ class GqlEditor extends React.Component {
       },
     ];
 
+    // If provided endpoint is not 0 or 1, default to 0 (graph model)
     const index = this.state.selectedEndpointIndex < options.length ? this.state.selectedEndpointIndex : 0;
 
     return (
