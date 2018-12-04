@@ -91,11 +91,8 @@ function buildConfig(opts) {
     credentialCdisPath,
     coreMetadataPath,
     graphqlPath,
-<<<<<<< HEAD
-    arrangerGraphqlPath,
-=======
     dataDictionaryTemplatePath,
->>>>>>> master
+    arrangerGraphqlPath,
     graphqlSchemaUrl,
     appname: components.appName,
     mockStore,
