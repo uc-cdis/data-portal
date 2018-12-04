@@ -1,5 +1,5 @@
 import React from 'react';
-import { createNodesAndEdges } from './utils';
+import { createNodesAndEdges } from '../GraphUtils/utils';
 import SvgGraph from './SvgGraph';
 import './DataModelGraph.less';
 

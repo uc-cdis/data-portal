@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { sortCompare } from '../utils';
 import dictIcons from '../img/icons';
-import { setActive } from '../Top/reduxer';
+import { setActive } from '../Layout/reduxer';
 import IndexBarChart from '../components/charts/IndexBarChart/.';
 import IndexButtonBar from '../components/IndexButtonBar';
 import { components } from '../params';

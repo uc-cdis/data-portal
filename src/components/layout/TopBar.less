@@ -1,16 +1,19 @@
-@import '~@gen3/ui-component/dist/css/base.less';
-
 .top-bar {
-  width: 100%;
-  background-color: @blue;
+  width: 100vw;
+  background-color: var(--g3-color__base-blue);
 }
 
 .top-bar__header {
-  background-color: @blue;
+  background-color: var(--g3-color__base-blue);
   overflow: hidden;
   vertical-align: middle;
   margin: auto;
   width: 1216px;
+}
+
+.top-bar__header--full-width {
+  min-width: 100vw;
+  padding: 0 20px;
 }
 
 .top-bar__nav {

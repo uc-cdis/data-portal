@@ -21,8 +21,7 @@ import ExplorerPage from './Explorer/ExplorerPage';
 import CoreMetadataPage from './CoreMetadata/page';
 import { fetchCoreMetadata } from './CoreMetadata/reduxer';
 import IndexPage from './Index/page';
-import DataDictionary from './DataDictionary/ReduxDataDictionary';
-import DataDictionaryNode from './DataDictionary/ReduxDataDictionaryNode';
+import DataDictionary from './DataDictionary/.';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import ReduxMapFiles from './Submission/ReduxMapFiles';
 import ReduxMapDataModel from './Submission/ReduxMapDataModel';
@@ -31,18 +30,17 @@ import UserAgreementCert from './UserAgreement/ReduxCertPopup';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
 import getReduxStore from './reduxStore';
-import { ReduxNavBar, ReduxTopBar } from './Top/reduxer';
+import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import Footer from './components/layout/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug } from './localconf';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
-import { gaTracking } from './params';
+import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
-import './index.less';
 
 // monitor user's session
 sessionMonitor.start();
@@ -173,7 +171,7 @@ async function init() {
                       component={
                         props => (<ProtectedContent
                           public
-                          component={DataDictionaryNode}
+                          component={DataDictionary}
                           {...props}
                         />)
                       }
@@ -181,7 +179,11 @@ async function init() {
                     <Route
                       path='/dd'
                       component={
-                        props => <ProtectedContent public component={DataDictionary} {...props} />
+                        props => (<ProtectedContent
+                          public
+                          component={DataDictionary}
+                          {...props}
+                        />)
                       }
                     />
                     <Route
@@ -253,7 +255,7 @@ async function init() {
                     />
                   </Switch>
                 </div>
-                <Footer />
+                <ReduxFooter logos={components.footerLogos} />
               </div>
             </BrowserRouter>
           </MuiThemeProvider>

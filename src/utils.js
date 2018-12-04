@@ -65,28 +65,31 @@ export function asyncSetInterval(lambda, timeoutMs) {
 }
 
 
-export const color = {
-  administrative: d3.schemeCategory20[12],
-  analysis: d3.schemeCategory20[13],
-  clinical: d3.schemeCategory20[11],
-  biospecimen: d3.schemeCategory20[16],
-  metadata_file: d3.schemeCategory20b[14],
-  index_file: d3.schemeCategory20[18],
-  notation: d3.schemeCategory20[19],
-  data_file: d3.schemeCategory20[17],
-  satellite: d3.schemeCategory20[11],
-  radar: d3.schemeCategory20[16],
-  stream_gauge: d3.schemeCategory20[19],
-  weather_station: d3.schemeCategory20[10],
-  medical_history: d3.schemeCategory20[1],
-  clinical_assessment: d3.schemeCategory20[2],
-  data_observations: d3.schemeCategory20[3],
-  experimental_methods: d3.schemeCategory20[4],
-  Imaging: d3.schemeCategory20[5],
-  study_administration: d3.schemeCategory20[6],
-  subject_characteristics: d3.schemeCategory20[7],
+export const getCategoryColor = (category) => {
+  const colorMap = {
+    clinical: '#05B8EE',
+    biospecimen: '#27AE60',
+    data_file: '#7EC500',
+    metadata_file: '#F4B940',
+    analysis: '#FF7ABC',
+    administrative: '#AD91FF',
+    notation: '#E74C3C',
+    index_file: '#26D9B1',
+    clinical_assessment: '#3283C8',
+    medical_history: '#05B8EE',
+    satellite: d3.schemeCategory20[11],
+    radar: d3.schemeCategory20[16],
+    stream_gauge: d3.schemeCategory20[19],
+    weather_station: d3.schemeCategory20[10],
+    data_observations: d3.schemeCategory20[3],
+    experimental_methods: d3.schemeCategory20[4],
+    Imaging: d3.schemeCategory20[5],
+    study_administration: d3.schemeCategory20[6],
+    subject_characteristics: d3.schemeCategory20[7],
+  };
+  const defaultColor = '#9B9B9B';
+  return colorMap[category] ? colorMap[category] : defaultColor;
 };
-
 
 export function legendCreator(legendGroup, nodes, legendWidth) {
   // Find all unique categories
@@ -116,7 +119,7 @@ export function legendCreator(legendGroup, nodes, legendWidth) {
     .attr('x', legendWidth / 2)
     .attr('y', (d, i) => `${1.5 * (2.5 + i)}em`)
     .attr('text-anchor', 'middle')
-    .attr('fill', d => color[d])
+    .attr('fill', d => getCategoryColor(d))
     .style('font-size', legendFontSize)
     .text(d => d);
 
@@ -237,3 +240,7 @@ export function minus(aList, bList) {
 }
 
 export const parseParamWidth = width => ((typeof width === 'number') ? `${width}px` : width);
+
+export const isPageFullScreen = pathname => (
+  pathname && (pathname.toLowerCase() === '/dd'
+    || pathname.toLowerCase().startsWith('/dd/')));
