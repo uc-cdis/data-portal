@@ -17,7 +17,7 @@ class GqlEditor extends React.Component {
     };
   }
 
-  selectEndpoint = (index) => {
+  selectEndpoint = index => {
     this.setState({ selectedEndpointIndex: index });
   }
 
@@ -33,7 +33,7 @@ class GqlEditor extends React.Component {
       parameters.variables = newVariables;
     };
 
-    const buttons = [
+    const dropdownItems = [
       {
         name: 'Graph Model',
         endpoint: fetchGraphQL,
@@ -46,6 +46,8 @@ class GqlEditor extends React.Component {
       },
     ];
 
+    const index = this.state.selectedEndpointIndex < dropdownItems.length ? this.state.selectedEndpointIndex : 0;
+
     return (
       <div>
         <div className='gql-editor__button'>
@@ -53,13 +55,13 @@ class GqlEditor extends React.Component {
             <Dropdown.Button>Select Endpoint</Dropdown.Button>
             <Dropdown.Menu>
               {
-                buttons.map((button, i) => (
+                dropdownItems.map((item, i) => (
                   <Dropdown.Item
                     key={i}
-                    className={this.state.selectedEndpointIndex === i ? 'gql-editor__button--active' : ''}
-                    onClick={() => this.selectEndpoint(i)}
+                    className={index === i ? 'gql-editor__button--active' : ''}
+                    onClick={() => this.selectEndpoint(i, dropdownItems.length)}
                   >
-                    {button.name}
+                    {item.name}
                   </Dropdown.Item>
                 ))
               }
@@ -69,8 +71,8 @@ class GqlEditor extends React.Component {
         <div className='gql-editor' id='graphiql'>
           <h2 className='gql-editor__title'>Query graph</h2>
           <GraphiQL
-            fetcher={buttons[this.state.selectedEndpointIndex].endpoint}
-            schema={buttons[this.state.selectedEndpointIndex].schema}
+            fetcher={dropdownItems[index].endpoint}
+            schema={dropdownItems[index].schema}
             query={parameters.query}
             variables={parameters.variables}
             onEditQuery={editQuery}
