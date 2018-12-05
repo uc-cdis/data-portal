@@ -11,7 +11,6 @@
     "@gen3/ui-component": "0.0.18",
     "@storybook/addon-actions": "^3.4.8",
     "@storybook/react": "^3.4.8",
-    "ajv": "^6.5.5",
     "babel-core": "^6.26.0",
     "babel-polyfill": "^6.13.0",
     "brace": "^0.10.0",

@@ -64,7 +64,7 @@ async function init() {
           Object.assign(Footer.defaultProps,
             {
               dictionaryVersion: data.dictionary.version || 'unknown',
-              apiVersion: data.version || 'unknown'
+              apiVersion: data.version || 'unknown',
             },
           );
         }
@@ -75,23 +75,23 @@ async function init() {
   library.add(faAngleUp, faAngleDown);
 
   render(
-    < div >
+    <div>
       <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <MuiThemeProvider>
-          <BrowserRouter basename={basename}>
-            <div>
-              {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
-              {isEnabled('noindex') ?
-                <Helmet>
-                  <meta name="robots" content="noindex,nofollow" />
-                </Helmet>
-                : null
-              }
-              <ReduxTopBar />
-              <ReduxNavBar />
-              <div className='main-content'>
-                <Switch>
+        <ThemeProvider theme={theme}>
+          <MuiThemeProvider>
+            <BrowserRouter basename={basename}>
+              <div>
+                {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+                {isEnabled('noIndex') ?
+                  <Helmet>
+                    <meta name='robots' content='noindex,nofollow' />
+                  </Helmet>
+                  : null
+                }
+                <ReduxTopBar />
+                <ReduxNavBar />
+                <div className='main-content'>
+                  <Switch>
                     <Route
                       path='/login'
                       component={
@@ -250,13 +250,11 @@ async function init() {
                 </div>
                 <ReduxFooter logos={components.footerLogos} />
               </div>
-              <Footer />
-            </div>
-          </BrowserRouter>
-        </MuiThemeProvider>
-      </ThemeProvider>
+            </BrowserRouter>
+          </MuiThemeProvider>
+        </ThemeProvider>
       </Provider>
-    </div >,
+    </div>,
     document.getElementById('root'),
   );
 }
