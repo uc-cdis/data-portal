@@ -39,22 +39,23 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
     file = file.replace(/\n/g, '');
   }
 
-  let i = 0;
+
   if (submission.file_type === 'text/tab-separated-values') {
     const fileSplited = file.split(/\n/g);
-    let fileHeader = fileSplited.shift();
-    fileHeader += '\r';
-    if (fileSplited.length > lineLimit) {
-      i = lineLimit;
+    if (fileSplited.length > lineLimit && lineLimit > 0) {
+      let fileHeader = fileSplited[0];
+      fileHeader += '\r';
+      let count = lineLimit;
       let fileChunk = fileHeader;
-      while (fileSplited.length > 0) {
-        fileChunk += fileSplited.shift();
+
+      for (let i = 1; i < fileSplited.length; i += 1) {
+        fileChunk += fileSplited[i];
         fileChunk += '\r';
-        i -= 1;
-        if (i === 0) {
+        count -= 1;
+        if (count === 0) {
           fileArray.push(fileChunk);
           fileChunk = fileHeader;
-          i = lineLimit;
+          count = lineLimit;
         }
       }
       if (fileChunk !== fileHeader) {
@@ -71,7 +72,7 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
     subUrl = `${subUrl + program}/${project}/`;
   }
 
-  for (i = 0; i < fileArray.length; i += 1) {
+  for (let i = 0; i < fileArray.length; i += 1) {
     const lastPromise = fetchWithCreds({
       path: subUrl,
       method,
