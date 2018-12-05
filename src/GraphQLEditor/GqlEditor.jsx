@@ -5,6 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { fetchGraphQL, fetchArrangerGraphQL } from '../actions';
 import Spinner from '../components/Spinner';
+import { config } from '../params';
 import './GqlEditor.less';
 
 const parameters = {};
@@ -41,13 +42,16 @@ class GqlEditor extends React.Component {
         name: 'Graph Model',
         endpoint: fetchGraphQL,
         schema: graphqlSchema,
-      },
-      {
+      }
+    ];
+
+    if (config.arrangerConfig) {
+      options.push({
         name: 'Flat Model',
         endpoint: fetchArrangerGraphQL,
         schema: null,
-      },
-    ];
+      })
+    }
 
     // If provided endpoint is not 0 or 1, default to 0 (graph model)
     const index = this.state.selectedEndpointIndex < options.length ?
@@ -58,13 +62,17 @@ class GqlEditor extends React.Component {
       <div className='gql-editor' id='graphiql'>
         <div className='gql-editor__header'>
           <h2 className='gql-editor__title'>Query graph</h2>
-          <div className='gql-editor__button'>
-            <Button
-              onClick={() => this.selectEndpoint(this.getOtherIndex(index))}
-              label={`Switch to ${options[this.getOtherIndex(index)].name}`}
-              buttonType='primary'
-            />
-          </div>
+          {
+            options.length > 1 ? (
+              <div className='gql-editor__button'>
+                <Button
+                  onClick={() => this.selectEndpoint(this.getOtherIndex(index))}
+                  label={`Switch to ${options[this.getOtherIndex(index)].name}`}
+                  buttonType='primary'
+                />
+              </div>
+            ) : null
+          }
         </div>
         <GraphiQL
           fetcher={options[index].endpoint}
