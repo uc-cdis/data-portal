@@ -1,0 +1,85 @@
+.data-dictionary-graph-legend {
+  position: absolute;
+  padding: 15px;
+  right: 15px;
+  top: 15px;
+  background-color: white;
+  max-width: 300px;
+  min-width: 200px;
+  z-index: 1;
+}
+
+.data-dictionary-graph-legend--toggled {
+  background-color: unset;
+  min-width: unset;
+  padding: 0;
+}
+
+.data-dictionary-graph-legend__item {
+  line-height: 20px;
+  vertical-align: middle;
+  margin-bottom: 15px;
+  display: flex;
+}
+
+.data-dictionary-graph-legend__item:last-child {
+  margin-bottom: 0;
+}
+
+.data-dictionary-graph-legend__circle-wrapper {
+  display: block;
+  height: 20px;
+}
+
+.data-dictionary-graph-legend__circle {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.data-dictionary-graph-legend__text {
+  margin-left: 15px;
+  word-break: break-all;
+  display: block;
+}
+
+.data-dictionary-graph-legend__required-icon {
+  position: relative;
+  top: 8px;
+}
+
+.data-dictionary-graph-legend__required-icon--required {
+  background-color: var(--g3-color__highlight-orange);
+}
+
+.data-dictionary-graph-legend__close {
+  position: absolute;
+  right: 15px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--g3-color__gray);
+  cursor: pointer;
+  outline: none;
+}
+
+.data-dictionary-graph-legend__close:hover {
+  background-color: var(--g3-color__lightgray);
+}
+
+.data-dictionary-graph-legend__info {
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: block;
+  background-color: var(--g3-color__base-blue);
+  outline: none;
+}
+
+.data-dictionary-graph-legend__info-icon {
+  position: relative;
+  top: 6px;
+  left: 11px;
+  background-color: var(--g3-color__white);
+}

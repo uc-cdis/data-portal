@@ -6,6 +6,8 @@ import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import { requiredCerts, submissionApiOauthPath } from '../configs';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
+import { intersection, isPageFullScreen } from '../utils';
+import './ProtectedContent.css';
 
 let lastAuthMs = 0;
 let lastTokenRefreshMs = 0;
@@ -22,26 +24,6 @@ export function logoutListener(state = {}, action) {
   default: // noop
   }
   return state;
-}
-
-/**
- * Avoid importing underscore just for this ... export for testing
- * @method intersection
- * @param aList {Array<String>}
- * @param bList {Array<String>}
- * @return list of intersecting elements
- */
-export function intersection(aList, bList) {
-  const key2Count = aList.concat(bList).reduce(
-    (db, it) => {
-      const res = db;
-      if (res[it]) { res[it] += 1; } else { res[it] = 1; }
-      return res;
-    }, {},
-  );
-  return Object.entries(key2Count)
-    .filter(kv => kv[1] > 1)
-    .map(([k]) => k);
 }
 
 /**
@@ -249,7 +231,7 @@ class ProtectedContent extends React.Component {
               return newState;
             },
             () => {
-              // something went wront - better just re-login
+              // something went wrong - better just re-login
               newState.authenticated = false;
               newState.redirectTo = '/login';
               return newState;
@@ -290,29 +272,30 @@ class ProtectedContent extends React.Component {
       params = this.props.match.params || {};
     }
     window.scrollTo(0, 0);
+    const pageFullWidthClassModifier = isPageFullScreen(this.props.location.pathname) ? 'protected-content--full-screen' : '';
     if (this.state.redirectTo) {
       return (<Redirect to={this.state.redirectTo} />);
     } else if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
-        <div>
+        <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     } else if (!this.props.public && this.state.authenticated) {
       return (
-        <div>
+        <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <ReduxAuthTimeoutPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     } else if (this.props.public && this.state.dataLoaded) {
       return (
-        <div>
+        <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     }
-    return (<div><Spinner /></div>);
+    return (<div className={`protected-content ${pageFullWidthClassModifier}`}><Spinner /></div>);
   }
 }
 

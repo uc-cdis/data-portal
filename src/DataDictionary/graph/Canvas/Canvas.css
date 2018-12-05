@@ -1,0 +1,32 @@
+.canvas__zoom-button-group {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
+.canvas__zoom-button {
+  background-color: var(--g3-color__base-blue);
+  width: 30px;
+  height: 30px;
+  margin-bottom: 10px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.canvas__zoom-button:hover,
+.canvas__zoom-button:active {
+  background-color: var(--g3-color__base-blue-light);
+}
+
+.canvas__zoom-icon {
+  background-color: var(--g3-color__white);
+  width: 20px;
+  height: 20px;
+  margin-top: 5px;
+}
+
+.canvas__zoom-icon--zoom-in {
+  position: relative;
+  top: 9px;
+}

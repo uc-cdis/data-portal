@@ -1,0 +1,37 @@
+
+.graph-node--faded {
+  opacity: var(--opacity--faded);
+  cursor: none;
+  pointer-events: none;
+}
+
+.graph-node--clickable {
+  cursor: pointer;
+}
+
+.graph-node--not-clickable {
+  cursor: default;
+}
+
+.graph-node__rect {
+  fill: var(--g3-color__white);
+  stroke-width: 2px;
+}
+
+.graph-node:hover .graph-node__rect {
+  fill: var(--g3-color__highlight-orange);
+}
+
+.graph-node__text {
+  font-weight: 600;
+  fill: var(--g3-color__black);
+  pointer-events: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.graph-node:hover .graph-node__text {
+  fill: var(--g3-color__white);
+}

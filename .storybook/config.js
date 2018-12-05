@@ -10,6 +10,7 @@ function loadStories() {
   require('../src/stories/cards.jsx')
   require('../src/stories/explorer.jsx');
   require('../src/stories/filters.jsx');
+  require('../src/stories/user-agreement.jsx');
   library.add(faAngleUp, faAngleDown);
 }
 
