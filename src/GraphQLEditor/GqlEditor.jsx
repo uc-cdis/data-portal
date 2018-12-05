@@ -42,7 +42,7 @@ class GqlEditor extends React.Component {
         name: 'Graph Model',
         endpoint: fetchGraphQL,
         schema: graphqlSchema,
-      }
+      },
     ];
 
     if (config.arrangerConfig) {
@@ -50,7 +50,7 @@ class GqlEditor extends React.Component {
         name: 'Flat Model',
         endpoint: fetchArrangerGraphQL,
         schema: null,
-      })
+      });
     }
 
     // If provided endpoint is not 0 or 1, default to 0 (graph model)
