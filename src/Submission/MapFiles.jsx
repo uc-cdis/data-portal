@@ -5,6 +5,7 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
 import CheckBox from '../components/CheckBox';
+import StatusReadyIcon from '../img/icons/status_ready.svg';
 import './MapFiles.less';
 
 class MapFiles extends React.Component {
@@ -187,7 +188,7 @@ class MapFiles extends React.Component {
                       </tr>
                       {
                         files.map(file => {
-                          const status = file.hashes ? 'Ready' : 'Generating';
+                          const status = file.hashes ? 'Ready' : 'generating';
                           return (
                             <tr key={file.did} className='map-files__table-row'>
                               <td className='map-files__table-checkbox'>
@@ -201,7 +202,10 @@ class MapFiles extends React.Component {
                               <td>{file.file_name}</td>
                               <td>{file.size}B</td>
                               <td>{moment(file.created_date).format('MM/DD/YY, hh:mm:ss a Z')}</td>
-                              <td className={`introduction map-files__status--${status.toLowerCase()}`}>{status}</td>
+                              <td className={`map-files__status--${status.toLowerCase()}`}>
+                                { status === 'Ready' ? <StatusReadyIcon /> : null }
+                                <div className='h2-typo'>{status}</div>
+                              </td>
                             </tr>
                           )
                         })
