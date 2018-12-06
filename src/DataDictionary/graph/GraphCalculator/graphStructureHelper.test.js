@@ -14,12 +14,12 @@ import {
 
 describe('graphCalculatorHelper', () => {
   it('can get all children node IDs', () => {
-    const resultNodeIDs = getAllChildrenNodeIDs(testGraph1.startingNode, testGraph1.graphNodes);
+    const resultNodeIDs = getAllChildrenNodeIDs(testGraph1.startingNode.id, testGraph1.graphNodes);
     expect(resultNodeIDs).toEqual(testGraph1.expectedChildrenNodeIDs);
   });
 
   it('can get all children links', () => {
-    const resultLinks = getAllChildrenLinks(testGraph1.startingNode, testGraph1.graphNodes);
+    const resultLinks = getAllChildrenLinks(testGraph1.startingNode.id, testGraph1.graphNodes);
     expect(resultLinks).toEqual(testGraph1.expectedChildrenLinks);
   });
 

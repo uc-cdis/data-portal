@@ -166,7 +166,7 @@ export const calculateHighlightRelatedNodeIDs = (
   if (!highlightingNode) {
     return [];
   }
-  const relatedNodeIDs = getAllChildrenNodeIDs(highlightingNode, wholeGraphNodes);
+  const relatedNodeIDs = getAllChildrenNodeIDs(highlightingNode.id, wholeGraphNodes);
   if (!relatedNodeIDs.includes(highlightingNode.id)) {
     return [highlightingNode.id, ...relatedNodeIDs];
   }
@@ -189,8 +189,8 @@ export const calculatePathRelatedToSecondHighlightingNode = (
   if (!highlightingNode || !secondHighlightingNodeID) {
     return [];
   }
-  const node = wholeGraphNodes.find(n => n.id === secondHighlightingNodeID);
-  const pathRelatedToSecondHighlightingNode = getAllChildrenLinks(node, wholeGraphNodes);
+  const pathRelatedToSecondHighlightingNode = getAllChildrenLinks(secondHighlightingNodeID, wholeGraphNodes);
+  console.log('pathRelatedToSecondHighlightingNode = ', pathRelatedToSecondHighlightingNode);
   pathRelatedToSecondHighlightingNode.push({
     source: highlightingNode.id,
     target: secondHighlightingNodeID,
