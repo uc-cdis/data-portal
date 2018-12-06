@@ -189,8 +189,10 @@ export const calculatePathRelatedToSecondHighlightingNode = (
   if (!highlightingNode || !secondHighlightingNodeID) {
     return [];
   }
-  const pathRelatedToSecondHighlightingNode = getAllChildrenLinks(secondHighlightingNodeID, wholeGraphNodes);
-  console.log('pathRelatedToSecondHighlightingNode = ', pathRelatedToSecondHighlightingNode);
+  const pathRelatedToSecondHighlightingNode = getAllChildrenLinks(
+    secondHighlightingNodeID,
+    wholeGraphNodes,
+  );
   pathRelatedToSecondHighlightingNode.push({
     source: highlightingNode.id,
     target: secondHighlightingNodeID,

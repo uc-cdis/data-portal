@@ -20,7 +20,6 @@
 export const getAllChildrenNodeIDs = (startingNodeID, wholeGraphNodes) => {
   const relatedNodeIDs = [];
   const startingNode = wholeGraphNodes.find(n => n.id === startingNodeID);
-  console.log('get all children node IDs, starting node = ', startingNode);
   let currentLevelNodeIDs = startingNode.outLinks;
   while (currentLevelNodeIDs && currentLevelNodeIDs.length > 0) {
     const nextLevelNodeIDs = [];
@@ -47,17 +46,16 @@ export const getAllChildrenNodeIDs = (startingNodeID, wholeGraphNodes) => {
 export const getAllChildrenLinks = (startingNodeID, wholeGraphNodes) => {
   const startingNode = wholeGraphNodes.find(n => n.id === startingNodeID);
   let currentLevelNodeIDs = startingNode.outLinks;
-  console.log('get all links, startingNode = ', startingNode);
   const relatedLinks = currentLevelNodeIDs.map(outID => ({
     source: startingNode.id,
     target: outID,
   }));
-  let sourceNodeHistory = {};
+  const sourceNodeHistory = {};
   while (currentLevelNodeIDs.length > 0) {
     const nextLevelNodeIDs = [];
     for (let i = 0; i < currentLevelNodeIDs.length; i += 1) {
       const nodeID = currentLevelNodeIDs[i];
-      if (sourceNodeHistory[nodeID]) continue;
+      if (sourceNodeHistory[nodeID]) continue; // eslint-disable-line no-continue
       const originNode = wholeGraphNodes.find(n => (n.id === nodeID));
       const nextLevel = originNode.outLinks;
       for (let j = 0; j < nextLevel.length; j += 1) {
