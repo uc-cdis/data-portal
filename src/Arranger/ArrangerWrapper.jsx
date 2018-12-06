@@ -29,7 +29,12 @@ import arrangerApi from './utils';
 class ArrangerWrapper extends React.Component {
   filterAggregationFields = (aggs) => {
     if (this.props.charts) {
-      return aggs.filter(agg => Object.keys(this.props.charts).includes(agg.field));
+      const fields = aggs.filter(agg => Object.keys(this.props.charts).includes(agg.field));
+      if (fields.length > 0) {
+        return fields;
+      } else { // else all the aggs were filtered, and things are screwed up
+        console.log('Bad props.charts data - ignoring in aggreagtions filters');
+      }
     }
     return aggs.filter(agg => agg.field !== 'name');
   };
@@ -52,7 +57,8 @@ class ArrangerWrapper extends React.Component {
           <AggsState
             {...arrangerArgs}
             api={arrangerApi}
-            render={stateArgs => (
+            render={stateArgs => {
+              return (
               <AggsQuery
                 api={arrangerApi}
                 debounceTime={300}
@@ -66,7 +72,11 @@ class ArrangerWrapper extends React.Component {
                   </React.Fragment>
                 )}
               />
-            )}
+            )
+                }
+          }
+
+
           />
         )}
       />
