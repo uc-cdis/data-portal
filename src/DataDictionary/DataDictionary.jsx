@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ReduxDataDictionaryTable from './table/DataDictionaryTable';
 import ReduxDataModelStructure from './DataModelStructure';
 import DataDictionaryGraph from './graph/DataDictionaryGraph/.';
+import ReduxDictionarySearcher from './search/DictionarySearcher/.';
 import './DataDictionary.css';
 
 class DataDictionary extends React.Component {
@@ -32,10 +33,8 @@ class DataDictionary extends React.Component {
               Table View
             </span>
           </div>
-          <div className='data-dictionary__model-structure'>
-            <ReduxDataModelStructure />
-          </div>
-          <div className='data-dictionary__search' />
+          <ReduxDictionarySearcher />
+          <ReduxDataModelStructure />
           <div className='data-dictionary__search-history' />
         </div>
         <div

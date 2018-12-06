@@ -81,3 +81,12 @@ export const setHighlightingNodeSVGElement = highlightingNodeSVGElement => ({
   highlightingNodeSVGElement,
 });
 
+export const setIsSearching = isSearching => ({
+  type: 'SEARCH_SET_IS_SEARCHING_STATUS',
+  isSearching,
+});
+
+export const setSearchResult = searchResult => ({
+  type: 'SEARCH_RESULT_UPDATED',
+  searchResult,
+});

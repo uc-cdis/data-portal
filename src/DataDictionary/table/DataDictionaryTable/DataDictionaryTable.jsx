@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './DataDictionaryTable.css';
+import { parseDictionaryNodes } from '../../utils';
 import DataDictionaryCategory from '../DataDictionaryCategory/.';
 
 /**
@@ -34,13 +35,7 @@ export function category2NodeList(dictionary) {
 /* eslint-enable no-param-reassign */
 
 const getNodePropertyCount = (dictionary) => {
-  const res = Object.keys(dictionary).filter(
-    id => id.charAt(0) !== '_' && id === dictionary[id].id,
-  ).map(
-    id => dictionary[id],
-  ).filter(
-    node => node.category && node.id,
-  )
+  const res = parseDictionaryNodes(dictionary)
     .reduce((acc, node) => {
       acc.nodesCount += 1;
       acc.propertiesCount += Object.keys(node.properties).length;

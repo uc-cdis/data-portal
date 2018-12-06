@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getType } from '../../utils';
+import { getType, getPropertyDescription } from '../../utils';
 import './DataDictionaryPropertyTable.css';
 
 class DataDictionaryPropertyTable extends React.Component {
@@ -57,13 +57,8 @@ class DataDictionaryPropertyTable extends React.Component {
                 .map((propertyKey) => {
                   const property = this.props.properties[propertyKey];
                   const type = getType(property);
-                  let rawDescription = 'No Description';
-                  if ('description' in property) {
-                    rawDescription = property.description;
-                  }
-                  if ('term' in property) {
-                    rawDescription = property.term.description;
-                  }
+                  let rawDescription = getPropertyDescription(property);
+                  if (!rawDescription) rawDescription = 'No Description';
                   const descriptionElements = (
                     <React.Fragment>
                       {

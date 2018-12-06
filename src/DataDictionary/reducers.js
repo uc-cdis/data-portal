@@ -155,6 +155,18 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       highlightingNodeSVGElement: null,
     };
   }
+  case 'SEARCH_SET_IS_SEARCHING_STATUS': {
+    return {
+      ...state,
+      isSearching: action.isSearching,
+    };
+  }
+  case 'SEARCH_RESULT_UPDATED': {
+    return {
+      ...state,
+      searchResult: action.searchResult,
+    };
+  }
   default:
     return state;
   }

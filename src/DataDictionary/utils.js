@@ -92,3 +92,21 @@ export const graphStyleConfig = {
   nodeIconRadius: 10,
 };
 
+export const parseDictionaryNodes = dictionary => Object.keys(dictionary).filter(
+  id => id.charAt(0) !== '_' && id === dictionary[id].id,
+).map(
+  id => dictionary[id],
+).filter(
+  node => node.category && node.id,
+);
+
+export const getPropertyDescription = (property) => {
+  let description;
+  if ('description' in property) {
+    description = property.description;
+  }
+  if ('term' in property) {
+    description = property.term.description;
+  }
+  return description;
+};
