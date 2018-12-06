@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ProjectTable from '../components/tables/ProjectTable';
-import SubmissionHeader from './SubmissionHeader';
+import ReduxSubmissionHeader from './ReduxSubmissionHeader';
 import './ProjectDashboard.less';
 
 class ProjectDashboard extends Component {
@@ -12,7 +12,7 @@ class ProjectDashboard extends Component {
         <div className='h1-typo project-dashboard__title'>
           Data Submission
         </div>
-        <SubmissionHeader />
+        <ReduxSubmissionHeader />
         <ProjectTable projectList={projectList} summaries={this.props.details} />
       </div>
     );

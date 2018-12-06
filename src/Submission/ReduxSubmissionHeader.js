@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import MapFiles from './MapFiles';
+import SubmissionHeader from './SubmissionHeader';
 import { fetchWithCreds } from '../actions';
 import { indexdPath } from '../localconf';
 
@@ -42,7 +42,7 @@ const mockData = {
       "did":"0156d02a-2a58-4479112",
       "file_name":"File 3",
       "form":"object",
-      "hashes":null,
+      "hashes":{"md5":"9616a77e"},
       "metadata":{},
       "rev":"20ab",
       "size":16,
@@ -74,7 +74,7 @@ const mockData = {
       "did":"0156d02a-2a58-4479890",
       "file_name":"File 5",
       "form":"object",
-      "hashes":null,
+      "hashes":{"md5":"9616a77e"},
       "metadata":{},
       "rev":"20ab",
       "size":51,
@@ -103,17 +103,21 @@ const mockData = {
 };
 
 // TODO: Remove mock data
-const fetchUnmappedFiles = () => {
+const fetchUnmappedFileStats = () => {
   return dispatch => fetchWithCreds({
     path: `${indexdPath}index?acl=null`,
     method: 'GET',
   }).then(
     ({ status, data }) => {
+      console.log('data', mockData)
       switch (status) {
         case 200:
           return {
-            type: 'RECEIVE_UNMAPPED_FILES',
-            data: mockData.records,
+            type: 'RECEIVE_UNMAPPED_FILE_STATISTICS',
+            data: {
+              count: mockData.records.length,
+              totalSize: mockData.records.reduce((total, current) => total + current.size, 0)
+            },
           };
         default:
           return {
@@ -126,24 +130,17 @@ const fetchUnmappedFiles = () => {
     ).then((msg) => { dispatch(msg); });
 };
 
-const mapSelectedFiles = files => {
-  return {
-    type: 'RECEIVE_FILES_TO_MAP',
-    data: files,
-  };
-}
-
-const ReduxMapFiles = (() => {
+const ReduxSubmissionHeader = (() => {
   const mapStateToProps = state => ({
-    unmappedFiles: state.submission.unmappedFiles
+    unmappedFileCount: state.submission.unmappedFileCount,
+    unmappedFileSize: state.submission.unmappedFileSize
   });
 
   const mapDispatchToProps = dispatch => ({
-    fetchUnmappedFiles: () => dispatch(fetchUnmappedFiles()),
-    mapSelectedFiles: (files) => dispatch(mapSelectedFiles(files)),
+    fetchUnmappedFileStats: () => dispatch(fetchUnmappedFileStats()),
   });
 
-  return connect(mapStateToProps, mapDispatchToProps)(MapFiles);
+  return connect(mapStateToProps, mapDispatchToProps)(SubmissionHeader);
 })();
 
-export default ReduxMapFiles;
+export default ReduxSubmissionHeader;

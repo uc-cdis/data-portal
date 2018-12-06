@@ -6,6 +6,10 @@ import MapFilesSvg from '../img/mapfiles.svg';
 import './SubmissionHeader.less';
 
 export class SubmissionHeader extends React.Component {
+  componentDidMount = () => {
+    this.props.fetchUnmappedFileStats();
+  }
+
   openGen3DataClient = () => {
     window.open('https://github.com/uc-cdis/cdis-data-client', '_blank');
   }
@@ -47,7 +51,7 @@ export class SubmissionHeader extends React.Component {
           </div>
           <div className='submission-header-section-info'>
             <div className='h3-typo'>Map My Files</div>
-            <div className='h4-typo'>500 files | 2.3 GB</div>
+            <div className='h4-typo'>{this.props.unmappedFileCount} files | {this.props.unmappedFileSize} B</div>
             <div className='body-typo'>
               Mapping files to metadata in order to create medical meaning.
             </div>

@@ -11,8 +11,8 @@ class MapFiles extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
-        selectedFileIdsByGroup: {},
-        unselectedFileIdsByGroup: {},
+        selectedFilesByGroup: {},
+        unselectedFilesByGroup: {},
         filesByDate: {},
       };
   }
@@ -33,11 +33,11 @@ class MapFiles extends React.Component {
     let selectedMap = {};
     let index = 0;
     Object.keys(this.state.filesByDate).forEach(key => {
-      unselectedMap[index] = this.state.filesByDate[key].map(arr => arr.did);
+      unselectedMap[index] = this.state.filesByDate[key];
       selectedMap[index] = [];
       index += 1
     })
-    this.setState({ unselectedFileIdsByGroup: unselectedMap, selectedFileIdsByGroup: selectedMap })
+    this.setState({ unselectedFilesByGroup: unselectedMap, selectedFilesByGroup: selectedMap })
   }
 
   getTableHeaderText = files => {
@@ -54,25 +54,24 @@ class MapFiles extends React.Component {
     return true;
   }
 
-  isSelected = (index, did) => {
-    if (this.state.selectedFileIdsByGroup[index]) {
-      return this.state.selectedFileIdsByGroup[index].includes(did);
+  isSelected = (index, file) => {
+    if (this.state.selectedFilesByGroup[index]) {
+      return this.state.selectedFilesByGroup[index].includes(file);
     }
     return false;
   }
 
   isSelectAll = index => {
-    if (this.state.unselectedFileIdsByGroup[index]) {
-      return this.state.unselectedFileIdsByGroup[index].length == 0;
+    if (this.state.unselectedFilesByGroup[index]) {
+      return this.state.unselectedFilesByGroup[index].length == 0;
     }
     return false;
   }
 
   onCompletion = () => {
-    let arrIds = Object.values(this.state.selectedFileIdsByGroup);
-    let flatIds = arrIds.reduce((totalArr, currentArr) => totalArr.concat(currentArr))
-    let files = this.props.unmappedFiles.filter(file => flatIds.includes(file.did));
-    this.props.mapSelectedFiles(files);
+    let groupedFiles = Object.values(this.state.selectedFilesByGroup);
+    let flatFiles = groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr))
+    this.props.mapSelectedFiles(flatFiles);
     this.props.history.push('/submission/map')
   }
 
@@ -82,15 +81,15 @@ class MapFiles extends React.Component {
     }, () => this.createFileMapByGroup());
   }
 
-  addToMap = (map, index, did) => {
+  addToMap = (map, index, file) => {
     let tempMap = map;
-    tempMap[index] = tempMap[index].concat(did);
+    tempMap[index] = tempMap[index].concat(file);
     return tempMap;
   }
 
-  removeFromMap = (map, index, did) => {
+  removeFromMap = (map, index, file) => {
     let tempMap = map;
-    tempMap[index] = tempMap[index].filter(id => id !== did);
+    tempMap[index] = tempMap[index].filter(elt => elt.did !== file.did);
     return tempMap;
   }
 
@@ -113,31 +112,33 @@ class MapFiles extends React.Component {
     return sortedFiles;
   }
 
-  toggleCheckBox = (index, did) => {
-    if (this.isSelected(index, did)) {
+  toggleCheckBox = (index, file) => {
+    if (this.isSelected(index, file)) {
       this.setState({
-        selectedFileIdsByGroup: this.removeFromMap(this.state.selectedFileIdsByGroup, index, did),
-        unselectedFileIdsByGroup: this.addToMap(this.state.unselectedFileIdsByGroup, index, did)
+        selectedFilesByGroup: this.removeFromMap(this.state.selectedFilesByGroup, index, file),
+        unselectedFilesByGroup: this.addToMap(this.state.unselectedFilesByGroup, index, file)
       });
     } else {
-      this.setState({
-        selectedFileIdsByGroup: this.addToMap(this.state.selectedFileIdsByGroup, index, did),
-        unselectedFileIdsByGroup: this.removeFromMap(this.state.unselectedFileIdsByGroup, index, did)
-      })
+      if (file.hashes) {
+        this.setState({
+          selectedFilesByGroup: this.addToMap(this.state.selectedFilesByGroup, index, file),
+          unselectedFilesByGroup: this.removeFromMap(this.state.unselectedFilesByGroup, index, file)
+        })
+      }
     }
   }
 
   toggleSelectAll = index => {
-    if (this.state.unselectedFileIdsByGroup[index].length == 0) {
+    if (this.state.unselectedFilesByGroup[index].length == 0) {
       this.setState({
-        unselectedFileIdsByGroup: this.setMapValue(this.state.unselectedFileIdsByGroup, index, this.state.selectedFileIdsByGroup[index]),
-        selectedFileIdsByGroup: this.setMapValue(this.state.selectedFileIdsByGroup, index, [])
+        unselectedFilesByGroup: this.setMapValue(this.state.unselectedFilesByGroup, index, this.state.selectedFilesByGroup[index]),
+        selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, [])
       })
     } else {
-      const newIds = this.state.selectedFileIdsByGroup[index].concat(this.state.unselectedFileIdsByGroup[index]);
+      const newFiles = this.state.selectedFilesByGroup[index].concat(this.state.unselectedFilesByGroup[index].filter(file => file.hashes !== null));
       this.setState({
-        selectedFileIdsByGroup: this.setMapValue(this.state.selectedFileIdsByGroup, index, newIds),
-        unselectedFileIdsByGroup: this.setMapValue(this.state.unselectedFileIdsByGroup, index, [])
+        selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, newFiles),
+        unselectedFilesByGroup: this.setMapValue(this.state.unselectedFilesByGroup, index, [])
       })
     }
   }
@@ -150,7 +151,7 @@ class MapFiles extends React.Component {
         rightIcon='graph'
         buttonType='primary'
         className='g3-icon g3-icon--lg'
-        enabled={!this.isMapEmpty(this.state.selectedFileIdsByGroup)}
+        enabled={!this.isMapEmpty(this.state.selectedFilesByGroup)}
       />
     ];
 
@@ -185,22 +186,25 @@ class MapFiles extends React.Component {
                         <th>Status</th>
                       </tr>
                       {
-                        files.map(file =>
-                          <tr key={file.did} className='map-files__table-row'>
-                            <td className='map-files__table-checkbox'>
-                              <CheckBox
-                                id={file.did}
-                                item={file}
-                                isSelected={this.isSelected(i, file.did)}
-                                onChange={() => this.toggleCheckBox(i, file.did)}
-                              />
-                            </td>
-                            <td>{file.file_name}</td>
-                            <td>{file.size}B</td>
-                            <td>{moment(file.created_date).format('MM/DD/YY, hh:mm:ss a Z')}</td>
-                            <td>Generating</td>
-                          </tr>
-                        )
+                        files.map(file => {
+                          const status = file.hashes ? 'Ready' : 'Generating';
+                          return (
+                            <tr key={file.did} className='map-files__table-row'>
+                              <td className='map-files__table-checkbox'>
+                                <CheckBox
+                                  id={file.did}
+                                  item={file}
+                                  isSelected={this.isSelected(i, file)}
+                                  onChange={() => this.toggleCheckBox(i, file)}
+                                />
+                              </td>
+                              <td>{file.file_name}</td>
+                              <td>{file.size}B</td>
+                              <td>{moment(file.created_date).format('MM/DD/YY, hh:mm:ss a Z')}</td>
+                              <td className={`introduction map-files__status--${status.toLowerCase()}`}>{status}</td>
+                            </tr>
+                          )
+                        })
                       }
                     </tbody>
                   </table>
