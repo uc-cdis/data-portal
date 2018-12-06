@@ -10,6 +10,7 @@ import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
+import { Helmet } from 'react-helmet';
 
 import '@gen3/ui-component/dist/css/base.less';
 import { fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
@@ -61,8 +62,10 @@ async function init() {
       fetchVersionInfo().then(({ status, data }) => {
         if (status === 200) {
           Object.assign(Footer.defaultProps,
-            { dictionaryVersion: data.dictionary.version || 'unknown',
-              apiVersion: data.version || 'unknown' },
+            {
+              dictionaryVersion: data.dictionary.version || 'unknown',
+              apiVersion: data.version || 'unknown',
+            },
           );
         }
       }),
@@ -78,7 +81,13 @@ async function init() {
           <MuiThemeProvider>
             <BrowserRouter basename={basename}>
               <div>
-                { GA.init(gaTracking, dev, gaDebug) && <RouteTracker /> }
+                {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+                {isEnabled('noIndex') ?
+                  <Helmet>
+                    <meta name='robots' content='noindex,nofollow' />
+                  </Helmet>
+                  : null
+                }
                 <ReduxTopBar />
                 <ReduxNavBar />
                 <div className='main-content'>
@@ -222,7 +231,7 @@ async function init() {
                         }
                       }
                     />
-                    { isEnabled('explorer') ?
+                    {isEnabled('explorer') ?
                       <Route
                         path='/explorer'
                         component={
