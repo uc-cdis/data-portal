@@ -71,7 +71,9 @@ class GraphDrawer extends React.Component {
           this.props.edges.map((edge, i) => {
             let isEdgeFaded = false;
             let isEdgeHighlighted = false;
-            if (this.props.highlightingNode) {
+            if (this.props.matchedNodeIDs && this.props.matchedNodeIDs.length > 0) {
+              isEdgeFaded = true;
+            } else if (this.props.highlightingNode) {
               if (this.props.secondHighlightingNodeID) {
                 const isEdgeAlongPathRelatedToSecondHighlightNode =
                   !!this.props.pathRelatedToSecondHighlightingNode
@@ -102,7 +104,10 @@ class GraphDrawer extends React.Component {
             let isNodeFaded = false;
             let isNodeClickable = true;
             let isHighlightingNode = false;
-            if (this.props.highlightingNode) {
+            if (this.props.matchedNodeIDs && this.props.matchedNodeIDs.length > 0) {
+              isNodeFaded = !this.props.matchedNodeIDs.includes(node.id);
+              isNodeClickable = !isNodeFaded;
+            } else if (this.props.highlightingNode) {
               isHighlightingNode = (this.props.highlightingNode.id === node.id);
               isNodeClickable =
                 this.props.secondHighlightingNodeCandidateIDs.includes(node.id);
@@ -152,6 +157,7 @@ GraphDrawer.propTypes = {
   highlightingNodeSVGElement: PropTypes.object,
   onHighlightingNodeSVGElementUpdated: PropTypes.func,
   isGraphView: PropTypes.bool,
+  matchedNodeIDs: PropTypes.arrayOf(PropTypes.string),
 };
 
 GraphDrawer.defaultProps = {
@@ -173,6 +179,7 @@ GraphDrawer.defaultProps = {
   highlightingNodeSVGElement: null,
   onHighlightingNodeSVGElementUpdated: () => {},
   isGraphView: true,
+  matchedNodeIDs: [],
 };
 
 export default GraphDrawer;

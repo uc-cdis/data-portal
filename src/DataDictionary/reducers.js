@@ -165,6 +165,8 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     return {
       ...state,
       searchResult: action.searchResult,
+      matchedNodeIDs: action.searchResult
+        && action.searchResult.map(resItem => resItem.item.id),
     };
   }
   default:

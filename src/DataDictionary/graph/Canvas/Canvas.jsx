@@ -197,7 +197,7 @@ Canvas.propTypes = {
 
 Canvas.defaultProps = {
   minZoom: 0.1,
-  maxZoom: 5,
+  maxZoom: 10,
   topLeftTranslateLimit: [-Infinity, -Infinity],
   bottomRightTranslateLimit: [+Infinity, +Infinity],
   onClickBlankSpace: () => {},

@@ -30,6 +30,7 @@ class DataDictionarySearcher extends React.Component {
     let matchedPropertiesCount = 0;
     let matchedTypesCount = 0;
     let matchedDescriptionsCount = 0;
+    const matchedNodesCount = result.length;
     result.forEach((resItem) => {
       resItem.matches.forEach((matchedItem) => {
         switch (matchedItem.key) {
@@ -51,6 +52,7 @@ class DataDictionarySearcher extends React.Component {
       matchedPropertiesCount,
       matchedTypesCount,
       matchedDescriptionsCount,
+      matchedNodesCount,
     };
   }
 
@@ -166,6 +168,11 @@ class DataDictionarySearcher extends React.Component {
                   onKeyPress={this.onClearResult}
                 >Clear Result</span>
               </div>
+              <li className='dictionary-searcher__result-item body'>
+                <span className='dictionary-searcher__result-count'>
+                  {this.state.searchResult.summary.matchedNodesCount}
+                </span> matched Nodes
+              </li>
               <li className='dictionary-searcher__result-item body'>
                 <span className='dictionary-searcher__result-count'>
                   {this.state.searchResult.summary.matchedPropertiesCount}
