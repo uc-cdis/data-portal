@@ -105,7 +105,7 @@ const mockData = {
 // TODO: Remove mock data
 const fetchUnmappedFileStats = () => {
   return dispatch => fetchWithCreds({
-    path: `${indexdPath}index?acl=null`,
+    path: `${indexdPath}index?acl=[]`,
     method: 'GET',
   }).then(
     ({ status, data }) => {
@@ -114,14 +114,14 @@ const fetchUnmappedFileStats = () => {
           return {
             type: 'RECEIVE_UNMAPPED_FILE_STATISTICS',
             data: {
-              count: mockData.records.length,
-              totalSize: mockData.records.reduce((total, current) => total + current.size, 0)
+              count: data.records.length,
+              totalSize: data.records.reduce((total, current) => total + current.size, 0)
             },
           };
         default:
           return {
             type: 'FETCH_ERROR',
-            error: mockData.records,
+            error: data.records,
           };
         }
       },
