@@ -6,7 +6,6 @@
   margin: 40px 0 20px 0;
 }
 
-
 .map-data-model__form {
   display: flex;
   flex-flow: column;
@@ -31,23 +30,26 @@
   color: var(--g3-color__white);
 }
 
-.map-data-model__details {
-  padding: 20px 25px;
-  width: 100%;
-}
-
 .map-data-model__form-section {
-  border-bottom: 1px solid var(--g3-color__silver);
   display: flex;
   flex-flow: column;
   padding: 40px 25px;
+}
+
+.map-data-model__form-section .h4-typo,
+.map-data-model__detail-section .h4-typo {
+  margin-bottom: 10px;
 }
 
 .map-data-model__node-form-section {
   display: flex;
 }
 
-.map-data-model__required-fields-section {
+.map-data-model__border-bottom {
+  border-bottom: 1px solid var(--g3-color__silver);
+}
+
+.map-data-model__detail-section {
   display: flex;
   flex-flow: column;
   padding: 40px 25px;
@@ -63,8 +65,21 @@
 }
 
 .map-data-model__required-field .h4-typo {
-  margin-left: 10px;
+  margin: 0 10px;
   display: inline;
+}
+
+.map-data-model__required-field-info {
+  width: 215px;
+}
+
+.map-data-model__parent-section {
+  width: 520px;
+}
+
+.map-data-model__parent-id-section {
+  border: none;
+  margin-top: 20px;
 }
 
 .map-data-model__dropdown--required {
@@ -77,7 +92,7 @@
 }
 
 .map-data-model__input {
-  width: 260px;
+  width: 400px;
   display: flex;
   align-items: center;
   height: 36px;
@@ -87,21 +102,30 @@
   display: inline-block;
 }
 
-.red-border .Select-control {
-  border: 1px solid red;
+.map-data-model__submission-footer {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  height: 130px;
+  background-color: var(--g3-color__bg-coal);
+  padding: 15px 30px;
 }
 
-.invalid-text.body-typo {
-  color: red;
-}
-
-.map-data-model__file-row-cell .Select-control,
-.map-data-model__file-row-cell .Select-menu-outer {
-  width: 260px;
+.map-data-model__submission-footer-text {
+  color: var(--g3-color__white);
+  margin-right: 20px;
+  width: unset;
 }
 
 /* Select component overrides */
-.map-data-model__form-section {
+.map-data-model__form-section,
+.map-data-model__required-field,
+.map-data-model__detail-section {
 
   .Select-control {
     border: 1px solid var(--g3-color__base-blue);
@@ -123,6 +147,10 @@
   .Select-menu-outer {
     border: 1px solid var(--g3-color__black);
     border-radius: 0;
+  }
+
+  .Select-menu {
+    max-height: 176px;
   }
 
   .Select-option {

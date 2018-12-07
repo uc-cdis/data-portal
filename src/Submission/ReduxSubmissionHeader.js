@@ -109,7 +109,6 @@ const fetchUnmappedFileStats = () => {
     method: 'GET',
   }).then(
     ({ status, data }) => {
-      console.log('data', mockData)
       switch (status) {
         case 200:
           return {
