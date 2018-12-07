@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
+import { fetchQuery } from 'relay-runtime';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import getProjectsList from '../Index/relayer';
@@ -8,7 +8,6 @@ import RequiredIcon from '../img/icons/required.svg';
 import CheckmarkIcon from '../img/icons/status_confirm.svg';
 import InputWithIcon from '../components/InputWithIcon';
 import { GQLHelper } from '../gqlHelper';
-import { fetchQuery } from 'relay-runtime';
 import environment from '../environment';
 import './MapDataModel.less';
 
@@ -24,33 +23,30 @@ class MapDataModel extends React.Component {
       parentNodeType: 'core_metadata_collection',
       parentNodeId: null,
       validParentIds: [],
-    }
+    };
   }
 
   componentDidMount() {
-    if (this.props.filesToMap.length == 0) {
+    if (this.props.filesToMap.length === 0) {
       this.props.history.push('/submission/files');
     }
     getProjectsList();
   }
 
-  fetchAllSubmitterIds = () => {
-    if (this.state.parentNodeType && this.state.nodeType && this.state.projectId) {
-      fetchQuery(
-        environment,
-        gqlHelper.allSubmitterIdsByTypeQuery,
-        { project_id: this.state.project,  type: this.state.parentNodeType }
-      ).then(data => {
-        if (data && data.datanode) {
-          this.setState({ validParentIds: data.datanode });
-        }
-      })
-    } else {
-      this.setState({ validParentIds: [] });
+  setRequiredProperties = () => {
+    let props = [];
+    const map = {};
+    if (this.state.nodeType) {
+      props = this.props.dictionary[this.state.nodeType].required.filter(prop => prop !== 'submitter_id' &&
+        prop !== 'file_size' && prop !== 'file_name' && prop !== 'md5sum' &&
+        !this.props.dictionary[this.state.nodeType].systemProperties.includes(prop) &&
+        !this.props.dictionary[this.state.nodeType].links.map(link => link.name).includes(prop));
     }
+    props.forEach((prop) => { map[prop] = null; });
+    this.setState({ requiredFields: map });
   }
 
-  selectNodeType = option => {
+  selectNodeType = (option) => {
     this.setState({ nodeType: option ? option.value : null }, () => {
       this.setRequiredProperties();
       this.selectParentNodeId(null);
@@ -58,18 +54,18 @@ class MapDataModel extends React.Component {
     });
   }
 
-  selectParentNodeId = option => {
-    this.setState({ parentNodeId: option ? option.value : null});
+  selectParentNodeId = (option) => {
+    this.setState({ parentNodeId: option ? option.value : null });
   }
 
-  selectParentNodeType = option => {
+  selectParentNodeType = (option) => {
     this.setState({
       parentNodeType: option ? option.value : null,
       parentNodeId: null,
     }, this.fetchAllSubmitterIds);
   }
 
-  selectProjectId = option => {
+  selectProjectId = (option) => {
     this.setState({ projectId: option ? option.value : null }, () => {
       this.fetchAllSubmitterIds();
       this.selectParentNodeId(null);
@@ -77,44 +73,47 @@ class MapDataModel extends React.Component {
   }
 
   selectRequiredField = (option, prop) => {
-    let fields = this.state.requiredFields;
+    const fields = this.state.requiredFields;
     fields[prop] = option ? option.value : null;
     this.setState({ requiredFields: fields });
   }
 
-  setRequiredProperties = () => {
-    let props = [];
-    let map = {};
-    if (this.state.nodeType) {
-      props = this.props.dictionary[this.state.nodeType].required.filter(prop => prop !== 'submitter_id' &&
-        prop !== 'file_size' && prop !== 'file_name' && prop !== 'md5sum' &&
-        !this.props.dictionary[this.state.nodeType].systemProperties.includes(prop) &&
-        !this.props.dictionary[this.state.nodeType].links.map(link => link.name).includes(prop));
+  fetchAllSubmitterIds = () => {
+    if (this.state.parentNodeType && this.state.nodeType && this.state.projectId) {
+      fetchQuery(
+        environment,
+        gqlHelper.allSubmitterIdsByTypeQuery,
+        { project_id: this.state.project, type: this.state.parentNodeType },
+      ).then((data) => {
+        if (data && data.datanode) {
+          this.setState({ validParentIds: data.datanode });
+        }
+      });
+    } else {
+      this.setState({ validParentIds: [] });
     }
-    props.forEach(prop => map[prop] = null);
-    this.setState({ requiredFields: map });
   }
 
   submit = () => {
     console.log('submitting!');
   }
 
-  isValidSubmission = () => {
-    return !!this.state.projectId && !!this.state.nodeType &&
+  isValidSubmission = () => !!this.state.projectId && !!this.state.nodeType &&
       !!this.state.parentNodeType && !!this.state.parentNodeId &&
       !Object.values(this.state.requiredFields).includes(null)
-  }
 
   render() {
     const projectList = this.props.projects ? Object.keys(this.props.projects) : [];
-    const projectOptions = projectList.map(key => ({ value: this.props.projects[key].code, label: this.props.projects[key].name }));
-    const nodeOptions = this.props.nodeTypes ? this.props.nodeTypes.map(node => ({ value: node, label: node })) : [];
-    const linkOptions = this.state.nodeType ?
-      this.props.dictionary[this.state.nodeType].links.map(link => ({ value: link.target_type, label: link.name }))
+    const projectOptions = projectList.map(key =>
+      ({ value: this.props.projects[key].code, label: this.props.projects[key].name }),
+    );
+    const nodeOptions = this.props.nodeTypes ?
+      this.props.nodeTypes.map(node => ({ value: node, label: node }))
       : [];
     const parentIdOptions = this.state.validParentIds ?
-      this.state.validParentIds.map(parent => ({ value: parent.submitter_id, label: parent.submitter_id }))
-      : [];
+      this.state.validParentIds.map(parent =>
+        ({ value: parent.submitter_id, label: parent.submitter_id }),
+      ) : [];
 
     return (
       <div className='map-data-model'>
@@ -158,7 +157,7 @@ class MapDataModel extends React.Component {
                   {
                     Object.keys(this.state.requiredFields).map((prop, i) => {
                       const type = this.props.dictionary[this.state.nodeType].properties[prop];
-                      let inputValue = this.state.requiredFields[prop];
+                      const inputValue = this.state.requiredFields[prop];
 
                       return (
                         <div key={i} className='map-data-model__required-field'>
@@ -167,26 +166,28 @@ class MapDataModel extends React.Component {
                             <div className='h4-typo'>{prop}</div>
                           </div>
                           {
-                            type['enum'] ?
+                            type.enum ?
                               <InputWithIcon
                                 inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
                                 inputValue={inputValue}
                                 inputPlaceholderText='Select your field'
-                                inputOptions={type['enum'].map(option => ({ value: option, label: option }))}
-                                inputOnChange={(e) => this.selectRequiredField(e, prop)}
+                                inputOptions={type.enum.map(option =>
+                                  ({ value: option, label: option }),
+                                )}
+                                inputOnChange={e => this.selectRequiredField(e, prop)}
                                 iconSvg={CheckmarkIcon}
                                 shouldDisplayIcon={!!this.state.requiredFields[prop]}
                               />
                               : <InputWithIcon
-                                  inputClassName='map-data-model__input map-data-model__input--required introduction'
-                                  inputValue={inputValue}
-                                  inputOnChange={(e) => this.selectRequiredField(e, prop)}
-                                  iconSvg={CheckmarkIcon}
-                                  shouldDisplayIcon={!!this.state.requiredFields[prop]}
+                                inputClassName='map-data-model__input map-data-model__input--required introduction'
+                                inputValue={inputValue}
+                                inputOnChange={e => this.selectRequiredField(e, prop)}
+                                iconSvg={CheckmarkIcon}
+                                shouldDisplayIcon={!!this.state.requiredFields[prop]}
                               />
                           }
                         </div>
-                      )
+                      );
                     })
                   }
                 </div>
@@ -203,7 +204,7 @@ class MapDataModel extends React.Component {
                 <div className='h4-typo'>{this.state.parentNodeType}</div>
               </div>
               {
-                parentIdOptions ?
+                parentIdOptions.length > 0 ?
                   <InputWithIcon
                     inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
                     inputValue={this.state.parentNodeId}
@@ -213,9 +214,9 @@ class MapDataModel extends React.Component {
                     iconSvg={CheckmarkIcon}
                     shouldDisplayIcon={!!this.state.parentNodeId}
                   />
-                : <p>No available collections to link to. Please create a
-                {this.state.parentNodeType} node on this project to continue. </p>
-            }
+                  : <p>No available collections to link to. Please create a
+                    {this.state.parentNodeType} node on this project to continue. </p>
+              }
             </div>
           </div>
         </div>
@@ -234,7 +235,7 @@ class MapDataModel extends React.Component {
           ) : null
         }
       </div>
-    )
+    );
   }
 }
 
@@ -243,6 +244,7 @@ MapDataModel.propTypes = {
   projects: PropTypes.object,
   dictionary: PropTypes.object,
   nodeTypes: PropTypes.array,
+  history: PropTypes.array.isRequired,
 };
 
 MapDataModel.defaultProps = {

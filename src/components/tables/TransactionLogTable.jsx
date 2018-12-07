@@ -15,13 +15,13 @@ class TransactionLogTable extends Component {
   };
 
   getTotalFileSize = (documents) => {
-    let totalSize = 0
+    let totalSize = 0;
     if (documents) {
       documents.forEach(doc =>
-        totalSize += doc.doc_size || 0
-      )
+        totalSize += doc.doc_size || 0,
+      );
     }
-    return totalSize
+    return totalSize;
   };
 
   stateToColor = state => (state === 'SUCCEEDED' &&
@@ -42,7 +42,7 @@ class TransactionLogTable extends Component {
     if (!this.props.log || this.props.log === []) { return <Spinner />; }
     return (<Table
       title='Recent Submissions'
-      header={['Id', "Submitter", 'Project', 'Created date', 'File Size', 'State']}
+      header={['Id', 'Submitter', 'Project', 'Created date', 'File Size', 'State']}
       data={this.dataTransform(this.props.log)}
     />);
   }

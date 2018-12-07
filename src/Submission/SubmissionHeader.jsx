@@ -39,7 +39,7 @@ export class SubmissionHeader extends React.Component {
               className='submission-header-section__button'
               label='Read tutorials'
               buttonType='default'
-              enabled={true}
+              enabled
             />
           </div>
           <div className='submission-header-section-info'>
@@ -54,7 +54,7 @@ export class SubmissionHeader extends React.Component {
               label='Download App'
               rightIcon='download'
               buttonType='default'
-              enabled={true}
+              enabled
             />
           </div>
         </div>
@@ -69,11 +69,11 @@ export class SubmissionHeader extends React.Component {
               Mapping files to metadata in order to create medical meaning.
             </div>
             <Button
-              onClick={() => window.location.href = `${window.location.href}/files`}
+              onClick={() => { window.location.href = `${window.location.href}/files`; }}
               className='submission-header-section__button'
-              label="Map My Files"
+              label='Map My Files'
               buttonType='primary'
-              enabled={true}
+              enabled
             />
           </div>
         </div>
@@ -81,5 +81,16 @@ export class SubmissionHeader extends React.Component {
     );
   }
 }
+
+SubmissionHeader.propTypes = {
+  unmappedFileSize: PropTypes.number,
+  unmappedFileCount: PropTypes.number,
+  fetchUnmappedFileStats: PropTypes.func.isRequired,
+};
+
+SubmissionHeader.defaultProps = {
+  unmappedFileSize: 0,
+  unmappedFileCount: 0,
+};
 
 export default SubmissionHeader;

@@ -10,12 +10,12 @@ import './MapFiles.less';
 
 class MapFiles extends React.Component {
   constructor(props) {
-      super(props);
-      this.state = {
-        selectedFilesByGroup: {},
-        unselectedFilesByGroup: {},
-        filesByDate: {},
-      };
+    super(props);
+    this.state = {
+      selectedFilesByGroup: {},
+      unselectedFilesByGroup: {},
+      filesByDate: {},
+    };
   }
 
   componentDidMount() {
@@ -23,36 +23,53 @@ class MapFiles extends React.Component {
     this.onUpdate();
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps) {
     if (prevProps.unmappedFiles !== this.props.unmappedFiles) {
       this.onUpdate();
     }
   }
 
-  createFileMapByGroup = () => {
-    let unselectedMap = {};
-    let selectedMap = {};
-    let index = 0;
-    Object.keys(this.state.filesByDate).forEach(key => {
-      unselectedMap[index] = this.state.filesByDate[key];
-      selectedMap[index] = [];
-      index += 1
-    })
-    this.setState({ unselectedFilesByGroup: unselectedMap, selectedFilesByGroup: selectedMap })
+  onCompletion = () => {
+    const groupedFiles = Object.values(this.state.selectedFilesByGroup);
+    const flatFiles = groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr));
+    this.props.mapSelectedFiles(flatFiles);
+    this.props.history.push('/submission/map');
   }
 
-  getTableHeaderText = files => {
-    let date = moment(files[0].created_date).format('MM/DD/YY')
-    return `uploaded on ${date}, ${files.length} ${files.length > 1 ? 'files' : 'file'}`
+  onUpdate = () => {
+    this.setState({
+      filesByDate: this.sortUnmappedFiles(),
+    }, () => this.createFileMapByGroup());
   }
 
-  isMapEmpty = map => {
-    for (var key in map) {
-      if (map[key] && map[key].length > 0) {
-        return false;
-      }
+  getTableHeaderText = (files) => {
+    const date = moment(files[0].created_date).format('MM/DD/YY');
+    return `uploaded on ${date}, ${files.length} ${files.length > 1 ? 'files' : 'file'}`;
+  }
+
+  setMapValue = (map, index, value) => {
+    const tempMap = map;
+    tempMap[index] = value;
+    return tempMap;
+  }
+
+  addToMap = (map, index, file) => {
+    const tempMap = map;
+    tempMap[index] = tempMap[index].concat(file);
+    return tempMap;
+  }
+
+  removeFromMap = (map, index, file) => {
+    const tempMap = map;
+    tempMap[index] = tempMap[index].filter(elt => elt.did !== file.did);
+    return tempMap;
+  }
+
+  isSelectAll = (index) => {
+    if (this.state.unselectedFilesByGroup[index]) {
+      return this.state.unselectedFilesByGroup[index].length === 0;
     }
-    return true;
+    return false;
   }
 
   isSelected = (index, file) => {
@@ -62,48 +79,33 @@ class MapFiles extends React.Component {
     return false;
   }
 
-  isSelectAll = index => {
-    if (this.state.unselectedFilesByGroup[index]) {
-      return this.state.unselectedFilesByGroup[index].length == 0;
+  isMapEmpty = (map) => {
+    /* eslint-disable no-restricted-syntax */
+    for (const key in map) {
+      if (map[key] && map[key].length > 0) {
+        return false;
+      }
     }
-    return false;
+    return true;
+    /* eslint-enable */
   }
 
-  onCompletion = () => {
-    let groupedFiles = Object.values(this.state.selectedFilesByGroup);
-    let flatFiles = groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr))
-    this.props.mapSelectedFiles(flatFiles);
-    this.props.history.push('/submission/map')
-  }
-
-  onUpdate = () => {
-    this.setState({
-      filesByDate: this.sortUnmappedFiles()
-    }, () => this.createFileMapByGroup());
-  }
-
-  addToMap = (map, index, file) => {
-    let tempMap = map;
-    tempMap[index] = tempMap[index].concat(file);
-    return tempMap;
-  }
-
-  removeFromMap = (map, index, file) => {
-    let tempMap = map;
-    tempMap[index] = tempMap[index].filter(elt => elt.did !== file.did);
-    return tempMap;
-  }
-
-  setMapValue = (map, index, value) => {
-    let tempMap = map;
-    tempMap[index] = value;
-    return tempMap;
+  createFileMapByGroup = () => {
+    const unselectedMap = {};
+    const selectedMap = {};
+    let index = 0;
+    Object.keys(this.state.filesByDate).forEach((key) => {
+      unselectedMap[index] = this.state.filesByDate[key];
+      selectedMap[index] = [];
+      index += 1;
+    });
+    this.setState({ unselectedFilesByGroup: unselectedMap, selectedFilesByGroup: selectedMap });
   }
 
   sortUnmappedFiles = () => {
-    let sortedFiles = {};
-    this.props.unmappedFiles.map(file => {
-      let fileDate = moment(file.created_date).format('MM/DD/YY');
+    const sortedFiles = {};
+    this.props.unmappedFiles.forEach((file) => {
+      const fileDate = moment(file.created_date).format('MM/DD/YY');
       if (sortedFiles[fileDate]) {
         sortedFiles[fileDate].push(file);
       } else {
@@ -117,35 +119,40 @@ class MapFiles extends React.Component {
     if (this.isSelected(index, file)) {
       this.setState({
         selectedFilesByGroup: this.removeFromMap(this.state.selectedFilesByGroup, index, file),
-        unselectedFilesByGroup: this.addToMap(this.state.unselectedFilesByGroup, index, file)
+        unselectedFilesByGroup: this.addToMap(this.state.unselectedFilesByGroup, index, file),
       });
-    } else {
-      if (file.hashes) {
-        this.setState({
-          selectedFilesByGroup: this.addToMap(this.state.selectedFilesByGroup, index, file),
-          unselectedFilesByGroup: this.removeFromMap(this.state.unselectedFilesByGroup, index, file)
-        })
-      }
+    } else if (file.hashes) {
+      this.setState({
+        selectedFilesByGroup: this.addToMap(this.state.selectedFilesByGroup, index, file),
+        unselectedFilesByGroup: this.removeFromMap(this.state.unselectedFilesByGroup, index, file),
+      });
     }
   }
 
-  toggleSelectAll = index => {
-    if (this.state.unselectedFilesByGroup[index].length == 0) {
+  toggleSelectAll = (index) => {
+    if (this.state.unselectedFilesByGroup[index].length === 0) {
       this.setState({
-        unselectedFilesByGroup: this.setMapValue(this.state.unselectedFilesByGroup, index, this.state.selectedFilesByGroup[index]),
-        selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, [])
-      })
+        unselectedFilesByGroup:
+          this.setMapValue(
+            this.state.unselectedFilesByGroup,
+            index,
+            this.state.selectedFilesByGroup[index],
+          ),
+        selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, []),
+      });
     } else {
-      const newFiles = this.state.selectedFilesByGroup[index].concat(this.state.unselectedFilesByGroup[index].filter(file => file.hashes !== null));
+      const newFiles = this.state.selectedFilesByGroup[index].concat(
+        this.state.unselectedFilesByGroup[index].filter(file => file.hashes !== null),
+      );
       this.setState({
         selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, newFiles),
-        unselectedFilesByGroup: this.setMapValue(this.state.unselectedFilesByGroup, index, [])
-      })
+        unselectedFilesByGroup: this.setMapValue(this.state.unselectedFilesByGroup, index, []),
+      });
     }
   }
 
   render() {
-    let buttons = [
+    const buttons = [
       <Button
         onClick={this.onCompletion}
         label='Map Files'
@@ -153,7 +160,7 @@ class MapFiles extends React.Component {
         buttonType='primary'
         className='g3-icon g3-icon--lg'
         enabled={!this.isMapEmpty(this.state.selectedFilesByGroup)}
-      />
+      />,
     ];
 
     return (
@@ -161,7 +168,7 @@ class MapFiles extends React.Component {
         <BackLink url='/submission' label='Back to Data Submission' />
         <div className='h1-typo'>My Files</div>
         <StickyToolbar
-          title="Unmapped Files"
+          title='Unmapped Files'
           toolbarElts={buttons}
         />
         <div className='map-files__tables'>
@@ -187,7 +194,7 @@ class MapFiles extends React.Component {
                         <th>Status</th>
                       </tr>
                       {
-                        files.map(file => {
+                        files.map((file) => {
                           const status = file.hashes ? 'Ready' : 'generating';
                           return (
                             <tr key={file.did} className='map-files__table-row'>
@@ -207,13 +214,14 @@ class MapFiles extends React.Component {
                                 <div className='h2-typo'>{status}</div>
                               </td>
                             </tr>
-                          )
+                          );
                         })
                       }
                     </tbody>
                   </table>
                 </React.Fragment>
-              )})
+              );
+            })
           }
         </div>
       </div>
@@ -223,6 +231,9 @@ class MapFiles extends React.Component {
 
 MapFiles.propTypes = {
   unmappedFiles: PropTypes.array,
+  fetchUnmappedFiles: PropTypes.func.isRequired,
+  mapSelectedFiles: PropTypes.func.isRequired,
+  history: PropTypes.array.isRequired,
 };
 
 MapFiles.defaultProps = {

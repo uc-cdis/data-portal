@@ -3,12 +3,8 @@ import PropTypes from 'prop-types';
 import './CheckBox.less';
 
 class CheckBox extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  onChange = e => {
-    this.props.onChange(this.props.id)
+  onChange = () => {
+    this.props.onChange(this.props.id);
   }
 
   render() {
@@ -22,7 +18,7 @@ class CheckBox extends React.Component {
           onChange={this.onChange}
         />
       </div>
-    )
+    );
   }
 }
 
@@ -31,10 +27,10 @@ CheckBox.propTypes = {
   item: PropTypes.object,
   onChange: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
-}
+};
 
 CheckBox.defaultProps = {
   item: {},
-}
+};
 
 export default CheckBox;
