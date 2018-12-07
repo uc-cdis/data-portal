@@ -112,12 +112,12 @@ const fetchUnmappedFiles = () => dispatch => fetchWithCreds({
     case 200:
       return {
         type: 'RECEIVE_UNMAPPED_FILES',
-        data: mockData.records,
+        data: data.records,
       };
     default:
       return {
         type: 'FETCH_ERROR',
-        error: mockData.records,
+        error: data.records,
       };
     }
   },

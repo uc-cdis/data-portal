@@ -104,10 +104,11 @@ const mockData = {
 
 // TODO: Remove mock data
 const fetchUnmappedFileStats = () => dispatch => fetchWithCreds({
-  path: `${indexdPath}index?acl=[]`,
+  path: `${indexdPath}index?acl=null`,
   method: 'GET',
 }).then(
   ({ status, data }) => {
+    console.log('data', data)
     switch (status) {
     case 200:
       return {

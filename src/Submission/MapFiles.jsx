@@ -207,7 +207,7 @@ class MapFiles extends React.Component {
                                 />
                               </td>
                               <td>{file.file_name}</td>
-                              <td>{file.size}B</td>
+                              <td>{file.size ? file.size : 0}B</td>
                               <td>{moment(file.created_date).format('MM/DD/YY, hh:mm:ss a Z')}</td>
                               <td className={`map-files__status--${status.toLowerCase()}`}>
                                 { status === 'Ready' ? <StatusReadyIcon /> : null }
@@ -233,7 +233,7 @@ MapFiles.propTypes = {
   unmappedFiles: PropTypes.array,
   fetchUnmappedFiles: PropTypes.func.isRequired,
   mapSelectedFiles: PropTypes.func.isRequired,
-  history: PropTypes.array.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 MapFiles.defaultProps = {

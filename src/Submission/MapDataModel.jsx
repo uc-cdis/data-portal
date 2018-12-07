@@ -214,8 +214,10 @@ class MapDataModel extends React.Component {
                     iconSvg={CheckmarkIcon}
                     shouldDisplayIcon={!!this.state.parentNodeId}
                   />
-                  : <p>No available collections to link to. Please create a
-                    {this.state.parentNodeType} node on this project to continue. </p>
+                  : <p className='map-data-model__missing-node'>
+                    No available collections to link to. Please create a
+                    {this.state.parentNodeType} node on this project to continue.
+                    </p>
               }
             </div>
           </div>
@@ -244,7 +246,7 @@ MapDataModel.propTypes = {
   projects: PropTypes.object,
   dictionary: PropTypes.object,
   nodeTypes: PropTypes.array,
-  history: PropTypes.array.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 MapDataModel.defaultProps = {
