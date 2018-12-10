@@ -121,7 +121,7 @@ class MapFiles extends React.Component {
         selectedFilesByGroup: this.removeFromMap(this.state.selectedFilesByGroup, index, file),
         unselectedFilesByGroup: this.addToMap(this.state.unselectedFilesByGroup, index, file),
       });
-    } else if (file.hashes) {
+    } else if (file.hashes) { // file status == ready, so it is selectable
       this.setState({
         selectedFilesByGroup: this.addToMap(this.state.selectedFilesByGroup, index, file),
         unselectedFilesByGroup: this.removeFromMap(this.state.unselectedFilesByGroup, index, file),
@@ -140,7 +140,7 @@ class MapFiles extends React.Component {
           ),
         selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, []),
       });
-    } else {
+    } else { // only select "ready" files
       const newFiles = this.state.selectedFilesByGroup[index].concat(
         this.state.unselectedFilesByGroup[index].filter(file => file.hashes !== null),
       );

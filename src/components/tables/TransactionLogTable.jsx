@@ -17,9 +17,9 @@ class TransactionLogTable extends Component {
   getTotalFileSize = (documents) => {
     let totalSize = 0;
     if (documents) {
-      documents.forEach(doc =>
-        totalSize += doc.doc_size || 0,
-      );
+      documents.forEach((doc) => {
+        totalSize += doc.doc_size || 0;
+      });
     }
     return totalSize;
   };

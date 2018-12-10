@@ -27,7 +27,7 @@ class MapDataModel extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.filesToMap.length === 0) {
+    if (this.props.filesToMap.length === 0) { // redirect if no files
       this.props.history.push('/submission/files');
     }
     getProjectsList();
@@ -179,7 +179,7 @@ class MapDataModel extends React.Component {
                                 shouldDisplayIcon={!!this.state.requiredFields[prop]}
                               />
                               : <InputWithIcon
-                                inputClassName='map-data-model__input map-data-model__input--required introduction'
+                                inputClassName='map-data-model__input introduction'
                                 inputValue={inputValue}
                                 inputOnChange={e => this.selectRequiredField(e, prop)}
                                 iconSvg={CheckmarkIcon}
@@ -217,7 +217,7 @@ class MapDataModel extends React.Component {
                   : <p className='map-data-model__missing-node'>
                     No available collections to link to. Please create a
                     {this.state.parentNodeType} node on this project to continue.
-                    </p>
+                  </p>
               }
             </div>
           </div>

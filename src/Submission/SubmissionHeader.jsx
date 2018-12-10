@@ -30,19 +30,19 @@ export class SubmissionHeader extends React.Component {
             </div>
           ) : null
         }
-        <div className='submission-header-section'>
-          <div className='submission-header-section-image'>
-            <div className='submission-header-section-image__clear' />
+        <div className='submission-header__section'>
+          <div className='submission-header__section-image'>
+            <div className='submission-header__section-image--clear' />
             <Gen3ClientSvg />
             <Button
               onClick={this.openGen3DataClient}
-              className='submission-header-section__button'
+              className='submission-header__section-button'
               label='Read tutorials'
               buttonType='default'
               enabled
             />
           </div>
-          <div className='submission-header-section-info'>
+          <div className='submission-header__section-info'>
             <div className='h3-typo'>Gen3 Client</div>
             <div className='h4-typo'>Powerful Uploading for Large Files</div>
             <div className='body-typo'>
@@ -50,7 +50,7 @@ export class SubmissionHeader extends React.Component {
             </div>
             <Button
               onClick={this.openGen3DataClient}
-              className='submission-header-section__button'
+              className='submission-header__section-button'
               label='Download App'
               rightIcon='download'
               buttonType='default'
@@ -58,11 +58,11 @@ export class SubmissionHeader extends React.Component {
             />
           </div>
         </div>
-        <div className='submission-header-section'>
-          <div className='submission-header-section-image'>
+        <div className='submission-header__section'>
+          <div className='submission-header__section-image'>
             <MapFilesSvg />
           </div>
-          <div className='submission-header-section-info'>
+          <div className='submission-header__section-info'>
             <div className='h3-typo'>Map My Files</div>
             <div className='h4-typo'>{this.props.unmappedFileCount} files | {this.props.unmappedFileSize} B</div>
             <div className='body-typo'>
@@ -70,7 +70,7 @@ export class SubmissionHeader extends React.Component {
             </div>
             <Button
               onClick={() => { window.location.href = `${window.location.href}/files`; }}
-              className='submission-header-section__button'
+              className='submission-header__section-button'
               label='Map My Files'
               buttonType='primary'
               enabled

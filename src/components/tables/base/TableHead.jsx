@@ -6,7 +6,7 @@ class TableHead extends Component {
   calculateWidth = (colNum) => {
     if (colNum === 0) {
       return 10;
-    } else if (colNum == 3) {
+    } else if (colNum === 3) {
       return 20;
     }
     return 100 / this.props.cols.length;
