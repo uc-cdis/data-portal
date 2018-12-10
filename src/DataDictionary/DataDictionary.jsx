@@ -4,11 +4,21 @@ import ReduxDataDictionaryTable from './table/DataDictionaryTable';
 import ReduxDataModelStructure from './DataModelStructure';
 import DataDictionaryGraph from './graph/DataDictionaryGraph/.';
 import ReduxDictionarySearcher from './search/DictionarySearcher/.';
+import ReduxDictionarySearchHistory from './search/DictionarySearchHistory/.';
 import './DataDictionary.css';
 
 class DataDictionary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.dictionarySearcherRef = React.createRef();
+  }
+
   setGraphView = (isGraphView) => {
     this.props.onSetGraphView(isGraphView);
+  }
+
+  handleClickSearchHistoryItem = (keyword) => {
+    this.dictionarySearcherRef.current.getWrappedInstance().launchSearchFromOutside(keyword);
   }
 
   render() {
@@ -33,8 +43,11 @@ class DataDictionary extends React.Component {
               Table View
             </span>
           </div>
-          <ReduxDictionarySearcher />
+          <ReduxDictionarySearcher ref={this.dictionarySearcherRef} />
           <ReduxDataModelStructure />
+          <ReduxDictionarySearchHistory
+            onClickSearchHistoryItem={this.handleClickSearchHistoryItem}
+          />
           <div className='data-dictionary__search-history' />
         </div>
         <div

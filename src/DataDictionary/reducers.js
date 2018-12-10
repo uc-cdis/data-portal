@@ -1,3 +1,9 @@
+import {
+  getSearchHistoryItems,
+  clearSearchHistoryItems,
+  addSearchHistoryItems,
+} from './utils';
+
 const ddgraphInitialState = {
   isGraphView: true,
   layoutInitialized: false,
@@ -16,6 +22,7 @@ const ddgraphInitialState = {
   canvasBoundingRect: { top: 0, left: 0 },
   needReset: false,
   tableExpandNodeID: null,
+  searchHistoryItems: getSearchHistoryItems(),
 };
 
 const ddgraph = (state = ddgraphInitialState, action) => {
@@ -167,6 +174,18 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       searchResult: action.searchResult,
       matchedNodeIDs: action.searchResult
         && action.searchResult.map(resItem => resItem.item.id),
+    };
+  }
+  case 'SEARCH_CLEAR_HISTORY': {
+    return {
+      ...state,
+      searchHistoryItems: clearSearchHistoryItems(),
+    };
+  }
+  case 'SEARCH_HISTORY_ITEM_CREATED': {
+    return {
+      ...state,
+      searchHistoryItems: addSearchHistoryItems(action.searchHistoryItem),
     };
   }
   default:

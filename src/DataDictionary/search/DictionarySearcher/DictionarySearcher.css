@@ -22,5 +22,11 @@
 .dictionary-searcher__result-clear {
   color: var(--g3-color__base-blue);
   cursor: pointer;
-  margin-left: 15px;
+  float: right;
+  outline: none;
+
+}
+
+.dictionary-searcher__result-clear:hover {
+  color: var(--g3-color__base-blue-light);
 }

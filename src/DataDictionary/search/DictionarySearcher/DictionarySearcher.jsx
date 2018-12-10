@@ -3,10 +3,14 @@ import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import AutoComplete from '@gen3/ui-component/dist/components/AutoComplete';
 import Fuse from 'fuse.js';
-import { parseDictionaryNodes, getPropertyDescription, getType } from '../../utils';
+import {
+  parseDictionaryNodes,
+  getPropertyDescription,
+  getType,
+} from '../../utils';
 import './DictionarySearcher.css';
 
-class DataDictionarySearcher extends React.Component {
+class DictionarySearcher extends React.Component {
   constructor(props) {
     super(props);
     this.searchHandler = this.prepareSearch(props.dictionary);
@@ -86,18 +90,28 @@ class DataDictionarySearcher extends React.Component {
     return new Fuse(searchData, options);
   }
 
+  launchSearchFromOutside = (keyword) => {
+    this.autoCompleteRef.current.setInputText(keyword);
+    this.search(keyword);
+  }
+
   search = (str) => {
     this.props.setIsSearching(true);
     const result = this.searchHandler.search(str).filter(resItem => resItem.matches.length > 0);
     this.props.setIsSearching(false);
     this.props.onSearchResultUpdated(result);
+    const summary = this.getSearchSummary(result);
     this.setState({
       searched: true,
       searchResult: {
         matchedNodes: result,
-        summary: this.getSearchSummary(result),
+        summary,
       },
       suggestionList: [],
+    });
+    this.props.onSearchHistoryItemCreated({
+      keywordStr: str,
+      matchedCount: summary.matchedNodesCount,
     });
   }
 
@@ -209,17 +223,19 @@ class DataDictionarySearcher extends React.Component {
   }
 }
 
-DataDictionarySearcher.propTypes = {
+DictionarySearcher.propTypes = {
   dictionary: PropTypes.object.isRequired,
   setIsSearching: PropTypes.func,
   onSearchResultUpdated: PropTypes.func,
   isGraphView: PropTypes.bool,
+  onSearchHistoryItemCreated: PropTypes.func,
 };
 
-DataDictionarySearcher.defaultProps = {
+DictionarySearcher.defaultProps = {
   setIsSearching: () => {},
   onSearchResultUpdated: () => {},
   isGraphView: true,
+  onSearchHistoryItemCreated: () => {},
 };
 
-export default DataDictionarySearcher;
+export default DictionarySearcher;

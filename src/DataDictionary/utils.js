@@ -110,3 +110,33 @@ export const getPropertyDescription = (property) => {
   }
   return description;
 };
+
+const searchHistoryLocalStorageKey = 'datadictionary:searchHistory';
+export const getSearchHistoryItems = () => {
+  const items = JSON.parse(localStorage.getItem(searchHistoryLocalStorageKey));
+  return items;
+};
+
+export const addSearchHistoryItems = (searchHistoryItem) => {
+  const { keywordStr } = searchHistoryItem;
+  if (!keywordStr || keywordStr.length === 0) return getSearchHistoryItems();
+  const prevHistory = JSON.parse(localStorage.getItem(searchHistoryLocalStorageKey));
+  let newHistory = [];
+  if (prevHistory) newHistory = prevHistory.slice(0); // clone array
+
+  // if item already exists, need to remove item before adding to the beginning
+  if (prevHistory && prevHistory.find(item => item.keywordStr === keywordStr)) {
+    const index = prevHistory.findIndex(item => item.keywordStr === keywordStr);
+    newHistory = prevHistory.slice(0);
+    newHistory.splice(index, 1); // remove item
+  }
+  newHistory.unshift(searchHistoryItem); // add to the beginning
+  localStorage.setItem(searchHistoryLocalStorageKey, JSON.stringify(newHistory));
+  return newHistory;
+};
+
+export const clearSearchHistoryItems = () => {
+  const newHistory = [];
+  localStorage.setItem(searchHistoryLocalStorageKey, JSON.stringify(newHistory));
+  return newHistory;
+};

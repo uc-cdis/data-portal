@@ -90,3 +90,12 @@ export const setSearchResult = searchResult => ({
   type: 'SEARCH_RESULT_UPDATED',
   searchResult,
 });
+
+export const clearSearchHistoryItems = () => ({
+  type: 'SEARCH_CLEAR_HISTORY',
+});
+
+export const addSearchHistoryItem = searchHistoryItem => ({
+  type: 'SEARCH_HISTORY_ITEM_CREATED',
+  searchHistoryItem,
+});
