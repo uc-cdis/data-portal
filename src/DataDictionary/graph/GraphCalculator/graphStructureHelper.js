@@ -13,14 +13,15 @@
 
 /**
  * Get all descendent node IDs from a given node
- * @param {Node[]} startingNode
+ * @param {string} startingNodeID
  * @param {Object[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {string[]} array of descendent node IDs
  */
-export const getAllChildrenNodeIDs = (startingNode, wholeGraphNodes) => {
+export const getAllChildrenNodeIDs = (startingNodeID, wholeGraphNodes) => {
   const relatedNodeIDs = [];
+  const startingNode = wholeGraphNodes.find(n => n.id === startingNodeID);
   let currentLevelNodeIDs = startingNode.outLinks;
-  while (currentLevelNodeIDs.length > 0) {
+  while (currentLevelNodeIDs && currentLevelNodeIDs.length > 0) {
     const nextLevelNodeIDs = [];
     currentLevelNodeIDs.forEach((nodeId) => {
       if (relatedNodeIDs.includes(nodeId) || nextLevelNodeIDs.includes(nodeId)) return;
@@ -38,21 +39,23 @@ export const getAllChildrenNodeIDs = (startingNode, wholeGraphNodes) => {
 
 /**
  * Get all children links from a given node
- * @param {Node[]} startingNode
+ * @param {string} startingNodeID
  * @param {Object[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {Edge[]} array of descendent links
  */
-export const getAllChildrenLinks = (startingNode, wholeGraphNodes) => {
+export const getAllChildrenLinks = (startingNodeID, wholeGraphNodes) => {
+  const startingNode = wholeGraphNodes.find(n => n.id === startingNodeID);
   let currentLevelNodeIDs = startingNode.outLinks;
   const relatedLinks = currentLevelNodeIDs.map(outID => ({
     source: startingNode.id,
     target: outID,
   }));
+  const sourceNodeHistory = {};
   while (currentLevelNodeIDs.length > 0) {
     const nextLevelNodeIDs = [];
     for (let i = 0; i < currentLevelNodeIDs.length; i += 1) {
       const nodeID = currentLevelNodeIDs[i];
-      if (nextLevelNodeIDs.includes(nodeID)) break;
+      if (sourceNodeHistory[nodeID]) continue; // eslint-disable-line no-continue
       const originNode = wholeGraphNodes.find(n => (n.id === nodeID));
       const nextLevel = originNode.outLinks;
       for (let j = 0; j < nextLevel.length; j += 1) {
@@ -61,8 +64,7 @@ export const getAllChildrenLinks = (startingNode, wholeGraphNodes) => {
           source: nodeID,
           target: outNodeID,
         });
-        if (nextLevelNodeIDs.includes(outNodeID)
-          || currentLevelNodeIDs.includes(outNodeID)) break;
+        sourceNodeHistory[nodeID] = true;
         nextLevelNodeIDs.push(outNodeID);
       }
     }
