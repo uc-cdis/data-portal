@@ -166,7 +166,7 @@ class MapFiles extends React.Component {
   }
 
   isFileReady = file =>
-    return true
+    file.hashes && Object.keys(file.hashes).length > 0;
 
 
   render() {
