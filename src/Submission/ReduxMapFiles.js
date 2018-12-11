@@ -3,8 +3,8 @@ import MapFiles from './MapFiles';
 import { fetchWithCreds } from '../actions';
 import { indexdPath } from '../localconf';
 
-const fetchUnmappedFiles = () => dispatch => fetchWithCreds({
-  path: `${indexdPath}index?acl=null`,
+const fetchUnmappedFiles = user => dispatch => fetchWithCreds({
+  path: `${indexdPath}index?acl=null&uploader=${user}`,
   method: 'GET',
 }).then(
   ({ status, data }) => {
@@ -32,10 +32,11 @@ const mapSelectedFiles = files => ({
 const ReduxMapFiles = (() => {
   const mapStateToProps = state => ({
     unmappedFiles: state.submission.unmappedFiles,
+    user: state.user,
   });
 
   const mapDispatchToProps = dispatch => ({
-    fetchUnmappedFiles: () => dispatch(fetchUnmappedFiles()),
+    fetchUnmappedFiles: user => dispatch(fetchUnmappedFiles(user)),
     mapSelectedFiles: files => dispatch(mapSelectedFiles(files)),
   });
 

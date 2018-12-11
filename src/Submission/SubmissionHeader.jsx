@@ -8,7 +8,7 @@ import './SubmissionHeader.less';
 
 export class SubmissionHeader extends React.Component {
   componentDidMount = () => {
-    this.props.fetchUnmappedFileStats();
+    this.props.fetchUnmappedFileStats(this.props.user.username);
   }
 
   openGen3DataClient = () => {
@@ -16,6 +16,7 @@ export class SubmissionHeader extends React.Component {
   }
 
   render() {
+    console.log('this.props', this.props);
     const params = queryString.parse(window.location.search);
     const filesMapped = params && params.filesMapped ? parseInt(params.filesMapped, 10) : null;
 

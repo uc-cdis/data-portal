@@ -3,8 +3,8 @@ import SubmissionHeader from './SubmissionHeader';
 import { fetchWithCreds } from '../actions';
 import { indexdPath } from '../localconf';
 
-const fetchUnmappedFileStats = () => dispatch => fetchWithCreds({
-  path: `${indexdPath}index?acl=null`,
+const fetchUnmappedFileStats = user => dispatch => fetchWithCreds({
+  path: `${indexdPath}index?acl=null&uploader=${user}`,
   method: 'GET',
 }).then(
   ({ status, data }) => {
@@ -31,10 +31,11 @@ const ReduxSubmissionHeader = (() => {
   const mapStateToProps = state => ({
     unmappedFileCount: state.submission.unmappedFileCount,
     unmappedFileSize: state.submission.unmappedFileSize,
+    user: state.user,
   });
 
   const mapDispatchToProps = dispatch => ({
-    fetchUnmappedFileStats: () => dispatch(fetchUnmappedFileStats()),
+    fetchUnmappedFileStats: (user) => dispatch(fetchUnmappedFileStats(user)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(SubmissionHeader);

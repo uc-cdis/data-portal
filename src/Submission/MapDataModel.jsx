@@ -95,7 +95,19 @@ class MapDataModel extends React.Component {
   }
 
   submit = () => {
-    console.log('submitting!');
+    const json = {
+      type: this.state.nodeType,
+      ...requiredFields,
+      file_name: this.props.filesToMap[0].file_name,
+      object_id: this.props.filesToMap[0].did,
+      submitter_id: `${this.state.projectId}_${this.props.filesToMap[0].file_name}`,
+      project_id: this.state.projectId,
+      file_size: this.props.filesToMap[0].file_size,
+      md5sum: this.props.filesToMap[0].md5sum,
+    }
+
+    json[this.state.parentNodeType] = { submitter_id: this.state.parentNodeId };
+    console.log('json to submit', json)
   }
 
   isValidSubmission = () => !!this.state.projectId && !!this.state.nodeType &&
@@ -166,7 +178,7 @@ class MapDataModel extends React.Component {
                             <div className='h4-typo'>{prop}</div>
                           </div>
                           {
-                            type.enum ?
+                            type && type.enum ?
                               <InputWithIcon
                                 inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
                                 inputValue={inputValue}
@@ -216,7 +228,7 @@ class MapDataModel extends React.Component {
                   />
                   : <p className='map-data-model__missing-node'>
                     No available collections to link to. Please create a
-                    {this.state.parentNodeType} node on this project to continue.
+                    &nbsp; {this.state.parentNodeType} node on this project to continue.
                   </p>
               }
             </div>
