@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { createMemoryHistory } from 'history'
+import { createMemoryHistory } from 'history';
 import { StaticRouter } from 'react-router-dom';
 import MapFiles from './MapFiles';
 import * as testData from './__test__/data.json';
@@ -21,7 +21,7 @@ describe('MapFiles', () => {
         unmappedFiles={testData.records}
         user={user}
       />
-    </StaticRouter>
+    </StaticRouter>,
   );
   const instance = component.find(MapFiles).instance();
 
@@ -31,13 +31,13 @@ describe('MapFiles', () => {
 
   it('groups files by date', () => {
     instance.onUpdate();
-    Object.keys(instance.state.filesByDate).forEach(date => {
-      let values = instance.state.filesByDate[date];
+    Object.keys(instance.state.filesByDate).forEach((date) => {
+      const values = instance.state.filesByDate[date];
       expect(values.length).toEqual(testGroupedData[date].length);
-      values.forEach(val => {
-        expect(testGroupedData[date].map(file => file.did).includes(val.did))
-      })
-    })
+      values.forEach((val) => {
+        expect(testGroupedData[date].map(file => file.did).includes(val.did));
+      });
+    });
   });
 
   it('updates a map value', () => {
@@ -79,52 +79,52 @@ describe('MapFiles', () => {
   it('returns if all files should be selected', () => {
     instance.setState({
       selectedFilesByGroup: {
-        '1': new Set('value1', 'value2'),
-        '2': new Set('value3'),
+        1: new Set('value1', 'value2'),
+        2: new Set('value3'),
       },
       unselectedFilesByGroup: {
-        '1': new Set(),
-        '2': new Set(),
-      }
-    })
+        1: new Set(),
+        2: new Set(),
+      },
+    });
     expect(instance.isSelectAll('1')).toBe(true);
 
     instance.setState({
       unselectedFilesByGroup: {
-        '1': new Set('value1', 'value2'),
-        '2': new Set('value3'),
+        1: new Set('value1', 'value2'),
+        2: new Set('value3'),
       },
       selectedFilesByGroup: {
-        '1': new Set(),
-        '2': new Set(),
-      }
-    })
+        1: new Set(),
+        2: new Set(),
+      },
+    });
     expect(instance.isSelectAll('1')).toBe(false);
 
     instance.setState({
       unselectedFilesByGroup: {
-        '1': new Set(),
-        '2': new Set(),
+        1: new Set(),
+        2: new Set(),
       },
       selectedFilesByGroup: {
-        '1': new Set(),
-        '2': new Set(),
-      }
-    })
+        1: new Set(),
+        2: new Set(),
+      },
+    });
     expect(instance.isSelectAll('1')).toBe(false);
   });
 
-  it('returns if a file should be selected', () =>{
+  it('returns if a file should be selected', () => {
     instance.setState({
       selectedFilesByGroup: {
-        '1': new Set('1', '2'),
-        '2': new Set('3'),
+        1: new Set('1', '2'),
+        2: new Set('3'),
       },
       unselectedFilesByGroup: {
-        '1': new Set(),
-        '2': new Set(),
-      }
-    })
+        1: new Set(),
+        2: new Set(),
+      },
+    });
 
     expect(instance.isSelected('1', '1')).toBe(true);
     expect(instance.isSelected('2', '1')).toBe(false);
@@ -132,7 +132,7 @@ describe('MapFiles', () => {
   });
 
   it('returns if a map is empty', () => {
-    let map = {
+    const map = {
       field1: new Set(['value1', 'value2']),
       field2: new Set(['value3']),
     };
@@ -144,34 +144,34 @@ describe('MapFiles', () => {
   it('toggles a checkbox', () => {
     instance.setState({
       selectedFilesByGroup: {
-        '09/11/18': new Set()
+        '09/11/18': new Set(),
       },
       unselectedFilesByGroup: {
-        '09/11/18': new Set([testGroupedData['09/11/18']])
-      }
+        '09/11/18': new Set([testGroupedData['09/11/18']]),
+      },
     });
 
-    let date = '09/11/18';
-    let file = testGroupedData['09/11/18'].find(file => instance.isFileReady(file));
+    const date = '09/11/18';
+    const fileToToggle = testGroupedData['09/11/18'].find(file => instance.isFileReady(file));
 
-    expect(file).toBeDefined();
-    instance.toggleCheckBox(date, file);
-    expect(!instance.state.unselectedFilesByGroup[date].has(file));
-    expect(instance.state.selectedFilesByGroup[date].has(file));
+    expect(fileToToggle).toBeDefined();
+    instance.toggleCheckBox(date, fileToToggle);
+    expect(!instance.state.unselectedFilesByGroup[date].has(fileToToggle));
+    expect(instance.state.selectedFilesByGroup[date].has(fileToToggle));
 
-    instance.toggleCheckBox(date, file);
-    expect(instance.state.unselectedFilesByGroup[date].has(file));
-    expect(!instance.state.selectedFilesByGroup[date].has(file));
+    instance.toggleCheckBox(date, fileToToggle);
+    expect(instance.state.unselectedFilesByGroup[date].has(fileToToggle));
+    expect(!instance.state.selectedFilesByGroup[date].has(fileToToggle));
   });
 
   it('toggles select all', () => {
     instance.setState({
       selectedFilesByGroup: {
-        '0': new Set()
+        0: new Set(),
       },
       unselectedFilesByGroup: {
-        '0': new Set(['1', '2', '3', '4'])
-      }
+        0: new Set(['1', '2', '3', '4']),
+      },
     });
 
     instance.toggleSelectAll('0');
@@ -180,11 +180,11 @@ describe('MapFiles', () => {
 
     instance.setState({
       selectedFilesByGroup: {
-        '0': new Set(['1', '2'])
+        0: new Set(['1', '2']),
       },
       unselectedFilesByGroup: {
-        '0': new Set(['3', '4'])
-      }
+        0: new Set(['3', '4']),
+      },
     });
 
     instance.toggleSelectAll('0');
@@ -193,11 +193,11 @@ describe('MapFiles', () => {
 
     instance.setState({
       selectedFilesByGroup: {
-        '0': new Set(['1', '2', '3', '4'])
+        0: new Set(['1', '2', '3', '4']),
       },
       unselectedFilesByGroup: {
-        '0': new Set()
-      }
+        0: new Set(),
+      },
     });
 
     instance.toggleSelectAll('0');
@@ -210,10 +210,14 @@ describe('MapFiles', () => {
   });
 
   it('returns if a file is ready to be mapped', () => {
-    let files = testData.records.filter(file => file.hashes && Object.keys(file.hashes).length === 0);
+    const files = testData.records.filter(file =>
+      file.hashes && Object.keys(file.hashes).length === 0,
+    );
     expect(files.length).toBeGreaterThan(0);
     expect(instance.isFileReady(files[0])).toBe(false);
-    let readyFiles = testData.records.filter(file => file.hashes && Object.keys(file.hashes).length > 0);
+    const readyFiles = testData.records.filter(file =>
+      file.hashes && Object.keys(file.hashes).length > 0,
+    );
     expect(readyFiles.length).toBeGreaterThan(0);
     expect(instance.isFileReady(readyFiles[0])).toBe(true);
   });

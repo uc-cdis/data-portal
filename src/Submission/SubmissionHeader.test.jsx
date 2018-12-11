@@ -1,8 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { StaticRouter } from 'react-router-dom';
 import SubmissionHeader from './SubmissionHeader';
-import getReduxStore from '../reduxStore';
 
 describe('SubmissionHeader', () => {
   const user = {
@@ -12,7 +10,7 @@ describe('SubmissionHeader', () => {
 
   it('renders', () => {
     const component = mount(
-      <SubmissionHeader user={user} fetchUnmappedFileStats={mockFetch}/>
+      <SubmissionHeader user={user} fetchUnmappedFileStats={mockFetch} />,
     );
     expect(component.find(SubmissionHeader).length).toBe(1);
   });

@@ -5,7 +5,7 @@ import Gen3ClientSvg from '../img/gen3client.svg';
 import MapFilesSvg from '../img/mapfiles.svg';
 import './SubmissionHeader.less';
 
-export class SubmissionHeader extends React.Component {
+class SubmissionHeader extends React.Component {
   componentDidMount = () => {
     this.props.fetchUnmappedFileStats(this.props.user.username);
   }
@@ -73,6 +73,7 @@ SubmissionHeader.propTypes = {
   unmappedFileSize: PropTypes.number,
   unmappedFileCount: PropTypes.number,
   fetchUnmappedFileStats: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 SubmissionHeader.defaultProps = {

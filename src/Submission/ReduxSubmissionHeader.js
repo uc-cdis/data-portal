@@ -35,7 +35,7 @@ const ReduxSubmissionHeader = (() => {
   });
 
   const mapDispatchToProps = dispatch => ({
-    fetchUnmappedFileStats: (user) => dispatch(fetchUnmappedFileStats(user)),
+    fetchUnmappedFileStats: user => dispatch(fetchUnmappedFileStats(user)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(SubmissionHeader);

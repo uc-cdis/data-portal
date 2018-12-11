@@ -151,22 +151,24 @@ class MapFiles extends React.Component {
       } else { // only select "ready" files
         const newFiles = this.state.selectedFilesByGroup[index];
         const unselectedFiles = this.state.unselectedFilesByGroup[index];
-        this.state.unselectedFilesByGroup[index].forEach(file => {
-          newFiles.add(file)
+        this.state.unselectedFilesByGroup[index].forEach((file) => {
+          newFiles.add(file);
           unselectedFiles.delete(file);
         });
         this.setState({
           selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, newFiles),
-          unselectedFilesByGroup: this.setMapValue(this.state.unselectedFilesByGroup, index, unselectedFiles),
+          unselectedFilesByGroup: this.setMapValue(
+            this.state.unselectedFilesByGroup, index, unselectedFiles,
+          ),
         });
       }
     }
   }
 
-  isFileReady = file => {
-    return file.hashes && Object.keys(file.hashes).length > 0;
-    // return true;
-  }
+  isFileReady = file =>
+    // return file.hashes && Object.keys(file.hashes).length > 0;
+    true
+
 
   render() {
     const buttons = [
@@ -265,6 +267,7 @@ MapFiles.propTypes = {
   fetchUnmappedFiles: PropTypes.func.isRequired,
   mapSelectedFiles: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 MapFiles.defaultProps = {
