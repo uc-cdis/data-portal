@@ -210,11 +210,6 @@ describe('MapFiles', () => {
   });
 
   it('returns if a file is ready to be mapped', () => {
-    const files = testData.records.filter(file =>
-      file.hashes && Object.keys(file.hashes).length === 0,
-    );
-    expect(files.length).toBeGreaterThan(0);
-    expect(instance.isFileReady(files[0])).toBe(false);
     const readyFiles = testData.records.filter(file =>
       file.hashes && Object.keys(file.hashes).length > 0,
     );
