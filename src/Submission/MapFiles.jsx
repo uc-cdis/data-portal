@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import queryString from 'query-string';
 import moment from 'moment';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
@@ -55,13 +56,17 @@ class MapFiles extends React.Component {
 
   addToMap = (map, index, file) => {
     const tempMap = map;
-    tempMap[index].add(file);
+    if (tempMap[index]) {
+      tempMap[index].add(file);
+    }
     return tempMap;
   }
 
   removeFromMap = (map, index, file) => {
     const tempMap = map;
-    tempMap[index].delete(file)
+    if (tempMap[index]) {
+      tempMap[index].delete(file);
+    }
     return tempMap;
   }
 
@@ -132,33 +137,35 @@ class MapFiles extends React.Component {
   }
 
   toggleSelectAll = (index) => {
-    if (this.state.unselectedFilesByGroup[index].size === 0) {
-      this.setState({
-        unselectedFilesByGroup:
-          this.setMapValue(
-            this.state.unselectedFilesByGroup,
-            index,
-            this.state.selectedFilesByGroup[index],
-          ),
-        selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, new Set()),
-      });
-    } else { // only select "ready" files
-      const newFiles = this.state.selectedFilesByGroup[index];
-      const unselectedFiles = this.state.unselectedFilesByGroup[index];
-      this.state.unselectedFilesByGroup[index].forEach(file => {
-        newFiles.add(file)
-        unselectedFiles.delete(file);
-      });
-      this.setState({
-        selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, newFiles),
-        unselectedFilesByGroup: this.setMapValue(this.state.unselectedFilesByGroup, index, unselectedFiles),
-      });
+    if (this.state.unselectedFilesByGroup[index]) {
+      if (this.state.unselectedFilesByGroup[index].size === 0) {
+        this.setState({
+          unselectedFilesByGroup:
+            this.setMapValue(
+              this.state.unselectedFilesByGroup,
+              index,
+              this.state.selectedFilesByGroup[index],
+            ),
+          selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, new Set()),
+        });
+      } else { // only select "ready" files
+        const newFiles = this.state.selectedFilesByGroup[index];
+        const unselectedFiles = this.state.unselectedFilesByGroup[index];
+        this.state.unselectedFilesByGroup[index].forEach(file => {
+          newFiles.add(file)
+          unselectedFiles.delete(file);
+        });
+        this.setState({
+          selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, newFiles),
+          unselectedFilesByGroup: this.setMapValue(this.state.unselectedFilesByGroup, index, unselectedFiles),
+        });
+      }
     }
   }
 
   isFileReady = file => {
-    // file.hashes && Object.keys(file.hashes).length > 0;
-    return true;
+    return file.hashes && Object.keys(file.hashes).length > 0;
+    // return true;
   }
 
   render() {
@@ -173,8 +180,22 @@ class MapFiles extends React.Component {
       />,
     ];
 
+    const params = queryString.parse(window.location.search);
+    const message = params && params.message ? params.message : null;
+
     return (
       <div className='map-files'>
+        {
+          message ? (
+            <div className='map-files__notification-wrapper'>
+              <div className='map-files__notification'>
+                <p className='map-files__notification-text'>
+                  {message}
+                </p>
+              </div>
+            </div>
+          ) : null
+        }
         <BackLink url='/submission' label='Back to Data Submission' />
         <div className='h1-typo'>My Files</div>
         <StickyToolbar

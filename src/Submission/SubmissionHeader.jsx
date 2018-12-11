@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Gen3ClientSvg from '../img/gen3client.svg';
 import MapFilesSvg from '../img/mapfiles.svg';
@@ -16,21 +15,8 @@ export class SubmissionHeader extends React.Component {
   }
 
   render() {
-    console.log('this.props', this.props);
-    const params = queryString.parse(window.location.search);
-    const filesMapped = params && params.filesMapped ? parseInt(params.filesMapped, 10) : null;
-
     return (
       <div className='submission-header'>
-        {
-          filesMapped ? (
-            <div className='submission-header__notification'>
-              <p className='submission-header__notification-text'>
-                {filesMapped} files successfully mapped!
-              </p>
-            </div>
-          ) : null
-        }
         <div className='submission-header__section'>
           <div className='submission-header__section-image'>
             <div className='submission-header__section-image--clear' />

@@ -95,19 +95,33 @@ class MapDataModel extends React.Component {
   }
 
   submit = () => {
-    const json = {
-      type: this.state.nodeType,
-      ...requiredFields,
-      file_name: this.props.filesToMap[0].file_name,
-      object_id: this.props.filesToMap[0].did,
-      submitter_id: `${this.state.projectId}_${this.props.filesToMap[0].file_name}`,
-      project_id: this.state.projectId,
-      file_size: this.props.filesToMap[0].file_size,
-      md5sum: this.props.filesToMap[0].md5sum,
-    }
+    let json = [];
+    this.props.filesToMap.forEach(file => {
+      let obj = {
+        type: this.state.nodeType,
+        ...this.state.requiredFields,
+        file_name: file.file_name,
+        object_id: file.did,
+        submitter_id: `${this.state.projectId}_${file.file_name.substring(0, file.file_name.lastIndexOf("."))}_${file.did.substring(0, 4)}`,
+        project_id: this.state.projectId,
+        file_size: 10,//this.props.filesToMap[0].file_size,
+        md5sum: "testSum",//this.props.filesToMap[0].md5sum,
+      }
 
-    json[this.state.parentNodeType] = { submitter_id: this.state.parentNodeId };
+      obj[this.props.dictionary[this.state.parentNodeType].links[0].backref] = { submitter_id: this.state.parentNodeId };
+      json.push(obj);
+    });
+
+    const programProject = this.state.projectId.split(/-(.+)/);
+    console.log('program, project', programProject);
     console.log('json to submit', json)
+    let message = `${this.props.filesToMap.length} files mapped successfully!`;
+    // this.props.submitFiles(programProject[0], programProject[1], json).then(res => {
+    //   if (!res.success) {
+    //     message = res.message;
+    //   }
+    //   this.props.history.push(`/submission/files?message=${message}`)
+    // });
   }
 
   isValidSubmission = () => !!this.state.projectId && !!this.state.nodeType &&
@@ -115,9 +129,10 @@ class MapDataModel extends React.Component {
       !Object.values(this.state.requiredFields).includes(null)
 
   render() {
+    console.log('dictionary', this.props.dictionary)
     const projectList = this.props.projects ? Object.keys(this.props.projects) : [];
     const projectOptions = projectList.map(key =>
-      ({ value: this.props.projects[key].code, label: this.props.projects[key].name }),
+      ({ value: this.props.projects[key].name, label: this.props.projects[key].name }),
     );
     const nodeOptions = this.props.nodeTypes ?
       this.props.nodeTypes.map(node => ({ value: node, label: node }))

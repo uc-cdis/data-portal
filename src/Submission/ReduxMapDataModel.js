@@ -1,5 +1,29 @@
 import { connect } from 'react-redux';
 import MapDataModel from './MapDataModel';
+import { fetchWithCreds } from '../actions';
+import { headers, submissionApiPath } from '../configs';
+
+export const submitFiles = (program, project, params) => {
+  console.log('submitting', program, project, params);
+  console.log('sending headers', headers)
+  const request = {
+    credentials: 'include',
+    headers: { ...headers },
+    method: 'POST',
+    body: JSON.stringify(params),
+  };
+
+  return fetch(`${submissionApiPath}${program}/${project}`, request)
+    .then(response => response.text())
+    .then((responseBody) => {
+      console.log('responseBody', responseBody)
+      try {
+        return JSON.parse(responseBody);
+      } catch (error) {
+        return responseBody;
+      }
+    });
+};
 
 const ReduxMapDataModel = (() => {
   const mapStateToProps = state => ({
@@ -10,6 +34,7 @@ const ReduxMapDataModel = (() => {
   });
 
   const mapDispatchToProps = () => ({
+    submitFiles: (program, project, params) => submitFiles(program, project, params)
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(MapDataModel);
