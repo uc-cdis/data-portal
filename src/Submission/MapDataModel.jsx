@@ -115,8 +115,6 @@ class MapDataModel extends React.Component {
     });
 
     const programProject = this.state.projectId.split(/-(.+)/);
-    console.log('program, project', programProject);
-    console.log('json to submit', json);
     let message = `${this.props.filesToMap.length} files mapped successfully!`;
     this.props.submitFiles(programProject[0], programProject[1], json).then((res) => {
       if (!res.success) {
