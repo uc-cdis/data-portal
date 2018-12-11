@@ -32,20 +32,18 @@ class DictionarySearcher extends React.Component {
 
   getSearchSummary = (result) => {
     let matchedPropertiesCount = 0;
-    let matchedTypesCount = 0;
-    let matchedDescriptionsCount = 0;
-    const matchedNodesCount = result.length;
+    let matchedNodesCount = 0;
     result.forEach((resItem) => {
       resItem.matches.forEach((matchedItem) => {
         switch (matchedItem.key) {
         case 'properties.type':
-          matchedTypesCount += 1;
-          break;
         case 'properties.name':
+        case 'properties.description':
           matchedPropertiesCount += 1;
           break;
-        case 'properties.description':
-          matchedDescriptionsCount += 1;
+        case 'id':
+        case 'description':
+          matchedNodesCount += 1;
           break;
         default:
           break;
@@ -54,15 +52,13 @@ class DictionarySearcher extends React.Component {
     });
     return {
       matchedPropertiesCount,
-      matchedTypesCount,
-      matchedDescriptionsCount,
       matchedNodesCount,
     };
   }
 
   prepareSearch = (dictionary) => {
     const options = {
-      keys: ['description', 'properties.name', 'properties.description', 'properties.type'],
+      keys: ['id', 'description', 'properties.name', 'properties.description', 'properties.type'],
       includeMatches: true,
       threshold: 0.3,
       shouldSort: true,
@@ -123,7 +119,7 @@ class DictionarySearcher extends React.Component {
         summary: {},
       },
     });
-    this.props.onSearchResultUpdated([]);
+    this.props.onSearchResultCleared();
   }
 
   inputChangeFunc = (inputText) => {
@@ -192,16 +188,6 @@ class DictionarySearcher extends React.Component {
                   {this.state.searchResult.summary.matchedPropertiesCount}
                 </span> matches in Properties
               </li>
-              <li className='dictionary-searcher__result-item body'>
-                <span className='dictionary-searcher__result-count'>
-                  {this.state.searchResult.summary.matchedTypesCount}
-                </span> matches in Types
-              </li>
-              <li className='dictionary-searcher__result-item body'>
-                <span className='dictionary-searcher__result-count'>
-                  {this.state.searchResult.summary.matchedDescriptionsCount}
-                </span> matches in Descriptions
-              </li>
               {
                 this.props.isGraphView && (
                   <Button
@@ -229,6 +215,7 @@ DictionarySearcher.propTypes = {
   onSearchResultUpdated: PropTypes.func,
   isGraphView: PropTypes.bool,
   onSearchHistoryItemCreated: PropTypes.func,
+  onSearchResultCleared: PropTypes.func,
 };
 
 DictionarySearcher.defaultProps = {
@@ -236,6 +223,7 @@ DictionarySearcher.defaultProps = {
   onSearchResultUpdated: () => {},
   isGraphView: true,
   onSearchHistoryItemCreated: () => {},
+  onSearchResultCleared: () => {},
 };
 
 export default DictionarySearcher;

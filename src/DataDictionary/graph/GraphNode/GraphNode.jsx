@@ -4,6 +4,14 @@ import { getCategoryIconSVG } from '../../NodeCategories/helper';
 import './GraphNode.css';
 
 class GraphNode extends React.Component {
+  constructor(props) {
+    super(props);
+    this.svgElement = React.createRef();
+  }
+  getSVGElement() {
+    return this.svgElement.current;
+  }
+
   render() {
     if (!(this.props.node.id !== undefined && this.props.node.type !== undefined
       && this.props.node.textPadding !== undefined && this.props.node.topCenterX !== undefined
@@ -23,6 +31,7 @@ class GraphNode extends React.Component {
     const textTopY = this.props.node.textPadding;
     return (
       <g
+        ref={this.svgElement}
         key={this.props.node.id}
         transform={`translate(${this.props.node.topCenterX}, ${this.props.node.topCenterY}) `}
         className={`graph-node 

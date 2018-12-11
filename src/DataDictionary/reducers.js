@@ -23,6 +23,9 @@ const ddgraphInitialState = {
   needReset: false,
   tableExpandNodeID: null,
   searchHistoryItems: getSearchHistoryItems(),
+  graphNodesSVGElements: null,
+  matchedNodeIDs: [],
+  matchedNodeExpandingStatus: {},
 };
 
 const ddgraph = (state = ddgraphInitialState, action) => {
@@ -132,7 +135,12 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     let newSecondHighlightingNodeID = state.secondHighlightingNodeID;
     let newTableExpandNodeID = state.tableExpandNodeID;
     let newHighlightingNodeSVGElement = state.highlightingNodeSVGElement;
-    if (state.highlightingNode) {
+    if (state.matchedNodeIDs && state.matchedNodeIDs.length > 0) {
+      return {
+        ...state,
+        matchedNodeExpandingStatus: {},
+      };
+    } else if (state.highlightingNode) {
       if (state.secondHighlightingNodeID) {
         newSecondHighlightingNodeID = null;
       } else {
@@ -186,6 +194,28 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     return {
       ...state,
       searchHistoryItems: addSearchHistoryItems(action.searchHistoryItem),
+    };
+  }
+  case 'GRAPH_NODES_SVG_ELEMENTS_UPDATED': {
+    return {
+      ...state,
+      graphNodesSVGElements: action.graphNodesSVGElements,
+    };
+  }
+  case 'GRAPH_MATCHED_NODE_EXPANDED' : {
+    const newMatchedNodeExtendStatus = Object.assign({}, state.matchedNodeExpandingStatus);
+    newMatchedNodeExtendStatus[action.nodeID] = action.expanding;
+    return {
+      ...state,
+      matchedNodeExpandingStatus: newMatchedNodeExtendStatus,
+    };
+  }
+  case 'SEARCH_RESULT_CLEARED': {
+    return {
+      ...state,
+      searchResult: [],
+      matchedNodeIDs: [],
+      matchedNodeExpandingStatus: {},
     };
   }
   default:

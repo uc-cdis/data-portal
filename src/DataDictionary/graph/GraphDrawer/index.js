@@ -4,6 +4,8 @@ import {
   setHighlightingNode,
   setSecondHighlightingNodeID,
   setHighlightingNodeSVGElement,
+  setGraphNodesSVGElements,
+  setMatchedNodeExpandingStatus,
 } from '../../action.js';
 import GraphDrawer from './GraphDrawer';
 
@@ -21,6 +23,7 @@ const ReduxGraphDrawer = (() => {
     secondHighlightingNodeID: state.ddgraph.secondHighlightingNodeID,
     isGraphView: state.ddgraph.isGraphView,
     matchedNodeIDs: state.ddgraph.matchedNodeIDs,
+    graphNodesSVGElements: state.ddgraph.graphNodesSVGElements,
   });
 
   const mapDispatchToProps = dispatch => ({
@@ -32,6 +35,9 @@ const ReduxGraphDrawer = (() => {
     onClickNodeAsSecondHighlightingNode: nodeID => dispatch(setSecondHighlightingNodeID(nodeID)),
     onHighlightingNodeSVGElementUpdated: highlightingNodeSVGElement =>
       dispatch(setHighlightingNodeSVGElement(highlightingNodeSVGElement)),
+    onGraphNodesSVGElementsUpdated: graphNodesSVGElements =>
+      dispatch(setGraphNodesSVGElements(graphNodesSVGElements)),
+    onExpandMatchedNode: nodeID => dispatch(setMatchedNodeExpandingStatus(nodeID, true)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(GraphDrawer);

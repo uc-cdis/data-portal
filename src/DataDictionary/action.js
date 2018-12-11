@@ -99,3 +99,18 @@ export const addSearchHistoryItem = searchHistoryItem => ({
   type: 'SEARCH_HISTORY_ITEM_CREATED',
   searchHistoryItem,
 });
+
+export const setGraphNodesSVGElements = graphNodesSVGElements => ({
+  type: 'GRAPH_NODES_SVG_ELEMENTS_UPDATED',
+  graphNodesSVGElements,
+});
+
+export const setMatchedNodeExpandingStatus = (nodeID, expanding) => ({
+  type: 'GRAPH_MATCHED_NODE_EXPANDED',
+  nodeID,
+  expanding,
+});
+
+export const clearSearchResult = () => ({
+  type: 'SEARCH_RESULT_CLEARED',
+});

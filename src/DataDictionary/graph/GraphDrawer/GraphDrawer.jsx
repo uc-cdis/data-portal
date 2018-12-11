@@ -9,14 +9,32 @@ class GraphDrawer extends React.Component {
     super(props);
     this.currentHighlightingNodeClassName = 'graph-drawer__node--current-highlighting';
     this.graphDomRef = React.createRef();
+    this.graphNodeRefs = [];
   }
 
   componentDidUpdate() {
+    // check if need update highlightingNodeSVGElement
     if (this.props.isGraphView
       && this.props.highlightingNode
       && !this.props.highlightingNodeSVGElement) {
       const highlightingNodeSVGElement = this.getHighlightingNodeSVGElement();
       this.props.onHighlightingNodeSVGElementUpdated(highlightingNodeSVGElement);
+    }
+
+    // check if need update all node's svg elements
+    // this only happens once, at the first time graph is rendered
+    if (this.props.isGraphView
+       && this.props.layoutInitialized
+       && !this.props.graphNodesSVGElements) {
+      const graphNodesSVGElements = this.props.nodes.map(node => ({
+        nodeID: node.id,
+        svgElement: this.getNodeRef(node.id).current.getSVGElement(),
+      }))
+        .reduce((acc, cur) => {
+          acc[cur.nodeID] = cur.svgElement;
+          return acc;
+        }, {});
+      this.props.onGraphNodesSVGElementsUpdated(graphNodesSVGElements);
     }
   }
 
@@ -30,7 +48,11 @@ class GraphDrawer extends React.Component {
   }
 
   onClickNode = (node, e) => {
-    if (!this.props.highlightingNode) { // if no node is highlighted yet
+    if (this.props.matchedNodeIDs && this.props.matchedNodeIDs.length > 0) { // if in search mode
+      if (this.props.matchedNodeIDs.includes(node.id)) {
+        this.props.onExpandMatchedNode(node.id);
+      }
+    } else if (!this.props.highlightingNode) { // if no node is highlighted yet
       const highlightingNodeSVGElement = e.currentTarget;
       this.props.onClickNode(node, highlightingNodeSVGElement);
     } else if (this.props.secondHighlightingNodeCandidateIDs.length > 1
@@ -46,6 +68,13 @@ class GraphDrawer extends React.Component {
       `.${this.currentHighlightingNodeClassName}`,
     );
     return highlightingNodeSVGElement;
+  }
+
+  getNodeRef = (nodeID) => {
+    if (!this.graphNodeRefs[nodeID]) {
+      this.graphNodeRefs[nodeID] = React.createRef();
+    }
+    return this.graphNodeRefs[nodeID];
   }
 
   render() {
@@ -129,6 +158,7 @@ class GraphDrawer extends React.Component {
                 onMouseOver={e => this.onMouseOverNode(node, e)}
                 onMouseOut={this.onMouseOutNode}
                 onClick={e => this.onClickNode(node, e)}
+                ref={this.getNodeRef(node.id)}
               />
             );
           })
@@ -158,6 +188,9 @@ GraphDrawer.propTypes = {
   onHighlightingNodeSVGElementUpdated: PropTypes.func,
   isGraphView: PropTypes.bool,
   matchedNodeIDs: PropTypes.arrayOf(PropTypes.string),
+  graphNodesSVGElements: PropTypes.object,
+  onGraphNodesSVGElementsUpdated: PropTypes.func,
+  onExpandMatchedNode: PropTypes.func,
 };
 
 GraphDrawer.defaultProps = {
@@ -180,6 +213,9 @@ GraphDrawer.defaultProps = {
   onHighlightingNodeSVGElementUpdated: () => {},
   isGraphView: true,
   matchedNodeIDs: [],
+  graphNodesSVGElements: null,
+  onGraphNodesSVGElementsUpdated: () => {},
+  onExpandMatchedNode: () => {},
 };
 
 export default GraphDrawer;

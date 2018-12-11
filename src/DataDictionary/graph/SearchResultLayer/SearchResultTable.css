@@ -1,0 +1,106 @@
+.search-result-table {
+  position: absolute;
+  width: 800px;
+}
+
+.search-result-table__header {
+  background-color: var(--g3-color__white);
+  border: 1px solid var(--g3-color__black);
+}
+
+.search-result-table__close {
+  margin: 10px 0;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.search-result-table__close-text {
+  color: var(--g3-color__gray);
+}
+
+.search-result-table__close-icon.g3-icon {
+  background-color: var(--g3-color__gray);
+  position: relative;
+  top: 4px;
+  margin-left: 5px;
+}
+
+.search-result-table__action-group {
+  background-color: var(--dictionary-header-color);
+  height: 40px;
+  padding: 4px 15px;
+}
+
+.search-result-table__button-wrapper {
+  float: right;
+  padding: 0 8px;
+  border-left: 1px solid var(--dictionary-border-color);
+}
+
+.search-result-table__button-wrapper:first-child {
+  padding-right: 0;
+}
+
+.search-result-table__button-wrapper:last-child {
+  border-left: none;
+}
+
+.search-result-table__button {
+  height: 30px;
+  min-width: unset;
+  padding: 0 10px;
+  font-weight: normal;
+  border: none;
+}
+
+.search-result-table__button--download .g3-icon {
+  position: relative;
+  top: 1px;
+}
+
+.search-result-table__description {
+  padding: 15px;
+}
+
+.search-result-table__property {
+  width: 100%;
+  background-color: var(--g3-color__white);
+  border: 1px solid var(--g3-color__black);
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.search-result-table__property-row--head {
+  background-color: var(--dictionary-header-color);
+  color: var(--g3-color__white);
+}
+
+.search-result-table__property-cell {
+  border: 1px solid var(--dictionary-border-color);
+  padding: 15px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.search-result-table__highlight {
+  color: var(--g3-color__highlight-orange);
+  font-weight: 600;
+}
+
+.search-result-table__property tr:first-child th.search-result-table__property-cell {
+  border-top: 0;
+}
+.search-result-table__property tr:last-child td.search-result-table__property-cell {
+  border-bottom: 0;
+}
+.search-result-table__property tr td.search-result-table__property-cell:first-child,
+.search-result-table__property tr th.search-result-table__property-cell:first-child {
+  border-left: 0;
+}
+.search-result-table__property tr td.search-result-table__property-cell:last-child,
+.search-result-table__property tr th.search-result-table__property-cell:last-child {
+  border-right: 0;
+}

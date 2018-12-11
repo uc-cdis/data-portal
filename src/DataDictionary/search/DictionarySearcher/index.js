@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setIsSearching, setSearchResult, addSearchHistoryItem } from '../../action';
+import { setIsSearching, setSearchResult, addSearchHistoryItem, clearSearchResult } from '../../action';
 import DictionarySearcher from './DictionarySearcher';
 
 const ReduxDictionarySearcher = (() => {
@@ -13,6 +13,7 @@ const ReduxDictionarySearcher = (() => {
     onSearchResultUpdated: result => dispatch(setSearchResult(result)),
     onSearchHistoryItemCreated: searchHistoryItem =>
       dispatch(addSearchHistoryItem(searchHistoryItem)),
+    onSearchResultCleared: () => dispatch(clearSearchResult()),
   });
 
   return connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(DictionarySearcher);

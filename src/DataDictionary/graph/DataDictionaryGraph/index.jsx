@@ -6,6 +6,7 @@ import ReduxGraphDrawer from '../GraphDrawer/.';
 import ReduxNodeTooltip from '../NodeTooltip/.';
 import ReduxNodePopup from '../NodePopup/.';
 import ReduxOverlayPropertyTable from '../OverlayPropertyTable/.';
+import ReduxSearchResultLayer from '../SearchResultLayer/.';
 
 class DataDictionaryGraph extends React.Component {
   render() {
@@ -19,6 +20,7 @@ class DataDictionaryGraph extends React.Component {
         <ReduxNodeTooltip />
         <ReduxNodePopup />
         <ReduxOverlayPropertyTable />
+        <ReduxSearchResultLayer />
       </React.Fragment>
     );
   }
