@@ -23,6 +23,7 @@ class MapDataModel extends React.Component {
       parentNodeType: 'core_metadata_collection',
       parentNodeId: null,
       validParentIds: [],
+      parentTypesOfSelectedNode: {},
     };
   }
 
@@ -40,14 +41,18 @@ class MapDataModel extends React.Component {
       props = this.props.dictionary[this.state.nodeType].required.filter(prop => prop !== 'submitter_id' &&
         prop !== 'file_size' && prop !== 'file_name' && prop !== 'md5sum' &&
         !this.props.dictionary[this.state.nodeType].systemProperties.includes(prop) &&
-        !this.props.dictionary[this.state.nodeType].links.map(link => link.name).includes(prop));
+        !Object.keys(this.state.parentTypesOfSelectedNode)
+          .map(key => this.state.parentTypesOfSelectedNode[key]).includes(prop));
     }
     props.forEach((prop) => { map[prop] = null; });
     this.setState({ requiredFields: map });
   }
 
   selectNodeType = (option) => {
-    this.setState({ nodeType: option ? option.value : null }, () => {
+    this.setState({
+      nodeType: option ? option.value : null,
+      parentTypesOfSelectedNode: option ? this.getParentNodes(this.props.dictionary[option.value].links, {}) : {},
+    }, () => {
       this.setRequiredProperties();
       this.selectParentNodeId(null);
       this.fetchAllSubmitterIds();
@@ -79,7 +84,8 @@ class MapDataModel extends React.Component {
   }
 
   fetchAllSubmitterIds = () => {
-    if (this.state.parentNodeType && this.state.nodeType && this.state.projectId) {
+    if (this.state.parentNodeType && this.state.nodeType && this.state.projectId &&
+      this.state.parentTypesOfSelectedNode[this.state.parentNodeType]) {
       fetchQuery(
         environment,
         gqlHelper.allSubmitterIdsByTypeQuery,
@@ -104,11 +110,11 @@ class MapDataModel extends React.Component {
         object_id: file.did,
         submitter_id: `${this.state.projectId}_${file.file_name.substring(0, file.file_name.lastIndexOf('.'))}_${file.did.substring(0, 4)}`,
         project_id: this.state.projectId,
-        file_size: 10, // this.props.filesToMap[0].file_size,
-        md5sum: 'testSum', // this.props.filesToMap[0].md5sum,
+        file_size: file.size,
+        md5sum: file.hashes ? file.hashes.md5sum : null,
       };
 
-      obj[this.props.dictionary[this.state.parentNodeType].links[0].backref] = {
+      obj[this.state.parentTypesOfSelectedNode[this.state.parentNodeType].name] = {
         submitter_id: this.state.parentNodeId,
       };
       json.push(obj);
@@ -118,7 +124,9 @@ class MapDataModel extends React.Component {
     let message = `${this.props.filesToMap.length} files mapped successfully!`;
     this.props.submitFiles(programProject[0], programProject[1], json).then((res) => {
       if (!res.success) {
-        message = res.message;
+        message = res.entities && res.entities.length > 0 && res.entities[0].errors ?
+          res.entities[0].errors.map(error => error.message).toString()
+          : res.message;
       }
       this.props.history.push(`/submission/files?message=${message}`);
     });
@@ -127,6 +135,17 @@ class MapDataModel extends React.Component {
   isValidSubmission = () => !!this.state.projectId && !!this.state.nodeType &&
       !!this.state.parentNodeType && !!this.state.parentNodeId &&
       !Object.values(this.state.requiredFields).includes(null)
+
+  getParentNodes = (links, parents) => {
+    links.forEach((link) => {
+      if (link.subgroup) {
+        parents = (this.getParentNodes(link.subgroup, parents));
+      } else {
+        parents[link.target_type] = link;
+      }
+    });
+    return parents;
+  }
 
   render() {
     const projectList = this.props.projects ? Object.keys(this.props.projects) : [];

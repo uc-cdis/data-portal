@@ -167,7 +167,6 @@ class MapFiles extends React.Component {
 
   isFileReady = file => true
 
-
   render() {
     const buttons = [
       <Button
