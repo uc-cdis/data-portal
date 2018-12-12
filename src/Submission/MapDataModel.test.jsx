@@ -56,7 +56,13 @@ describe('MapDataModel', () => {
   });
 
   it('sets the initial state for required properties', () => {
-    instance.setState({ nodeType: 'aligned_reads_index' });
+    instance.setState({
+      nodeType: 'aligned_reads_index',
+      parentTypesOfSelectedNode: {
+        name: 'core_metadata_collections',
+        target_type: 'core_metadata_collection',
+      },
+    });
     expect(instance.state.requiredFields).toEqual({});
     instance.setRequiredProperties();
     expect(instance.state.requiredFields).toEqual({
@@ -157,5 +163,57 @@ describe('MapDataModel', () => {
     });
 
     expect(instance.isValidSubmission()).toEqual(false);
+  });
+
+  it('gets parents of a node recursivly', () => {
+    const level1Node = {
+      links: [
+        { name: 'level1Parent', target_type: 'level1Parents' },
+        { name: 'level1Parent2', target_type: 'level1Parents2' },
+      ],
+    };
+
+    const level1NodeExpected = {
+      level1Parents: { name: 'level1Parent', target_type: 'level1Parents' },
+      level1Parents2: { name: 'level1Parent2', target_type: 'level1Parents2' },
+    };
+
+    expect(instance.getParentNodes(level1Node.links, {})).toEqual(level1NodeExpected);
+
+    const level2Node = {
+      links: [{
+        subgroup: [
+          { name: 'level2Parent', target_type: 'level2Parents' },
+          { name: 'level2Parent2', target_type: 'level2Parents2' },
+        ],
+      }],
+    };
+
+    const level2NodeExpected = {
+      level2Parents: { name: 'level2Parent', target_type: 'level2Parents' },
+      level2Parents2: { name: 'level2Parent2', target_type: 'level2Parents2' },
+    };
+
+    expect(instance.getParentNodes(level2Node.links, {})).toEqual(level2NodeExpected);
+
+    const level3Node = {
+      links: [{
+        subgroup: [{
+          subgroup: [{
+            subgroup: [
+              { name: 'level3Parent', target_type: 'level3Parents' },
+              { name: 'level3Parent2', target_type: 'level3Parents2' },
+            ],
+          }],
+        }],
+      }],
+    };
+
+    const level3NodeExpected = {
+      level3Parents: { name: 'level3Parent', target_type: 'level3Parents' },
+      level3Parents2: { name: 'level3Parent2', target_type: 'level3Parents2' },
+    };
+
+    expect(instance.getParentNodes(level3Node.links, {})).toEqual(level3NodeExpected);
   });
 });
