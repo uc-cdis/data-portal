@@ -4,7 +4,7 @@ import { fetchWithCreds } from '../actions';
 import { indexdPath } from '../localconf';
 
 const fetchUnmappedFiles = user => dispatch => fetchWithCreds({
-  path: `${indexdPath}index?acl=null&uploader=${user}`,
+  path: `${indexdPath}index?acl=null`,
   method: 'GET',
 }).then(
   ({ status, data }) => {
