@@ -42,7 +42,7 @@ class MapDataModel extends React.Component {
         prop !== 'file_size' && prop !== 'file_name' && prop !== 'md5sum' &&
         !this.props.dictionary[this.state.nodeType].systemProperties.includes(prop) &&
         !Object.keys(this.state.parentTypesOfSelectedNode)
-          .map(key => this.state.parentTypesOfSelectedNode[key]).includes(prop));
+          .map(key => this.state.parentTypesOfSelectedNode[key].name).includes(prop));
     }
     props.forEach((prop) => { map[prop] = null; });
     this.setState({ requiredFields: map });
@@ -94,7 +94,12 @@ class MapDataModel extends React.Component {
 
   selectRequiredField = (option, prop) => {
     const fields = this.state.requiredFields;
-    fields[prop] = option ? option.value : null;
+    fields[prop] = null;
+    if (option && option.target) {
+      fields[prop] = option.target.value;
+    } else if (option && option.value) {
+      fields[prop] = option.value;
+    }
     this.setState({ requiredFields: fields });
   }
 
@@ -158,7 +163,10 @@ class MapDataModel extends React.Component {
       ({ value: this.props.projects[key].name, label: this.props.projects[key].name }),
     );
     const nodeOptions = this.props.nodeTypes ?
-      this.props.nodeTypes.map(node => ({ value: node, label: node }))
+      this.props.nodeTypes.filter(node =>
+        this.props.dictionary[node] && this.props.dictionary[node].category &&
+        this.props.dictionary[node].category.endsWith('_file'))
+        .map(node => ({ value: node, label: node }))
       : [];
     const parentIdOptions = this.state.validParentIds ?
       this.state.validParentIds.map(parent =>
