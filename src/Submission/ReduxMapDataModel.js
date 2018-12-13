@@ -13,7 +13,6 @@ export const submitFiles = (program, project, params) => {
   return fetch(`${submissionApiPath}${program}/${project}`, request)
     .then(response => response.text())
     .then((responseBody) => {
-      console.log('responseBody', responseBody);
       try {
         return JSON.parse(responseBody);
       } catch (error) {

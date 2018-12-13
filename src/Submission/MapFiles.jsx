@@ -31,6 +31,10 @@ class MapFiles extends React.Component {
     }
   }
 
+  onScroll = (isScrolling) => {
+    this.setState({ isScrolling });
+  }
+
   onCompletion = () => {
     const groupedFiles = Object.values(this.state.selectedFilesByGroup).map(set => Array.from(set));
     const flatFiles = groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr));
@@ -167,10 +171,6 @@ class MapFiles extends React.Component {
   }
 
   isFileReady = file => true
-
-  onScroll = isScrolling => {
-    this.setState({ isScrolling: isScrolling });
-  }
 
   render() {
     const buttons = [

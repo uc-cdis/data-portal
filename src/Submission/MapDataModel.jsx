@@ -156,17 +156,6 @@ class MapDataModel extends React.Component {
       !!this.state.parentNodeType && !!this.state.parentNodeId &&
       !Object.values(this.state.requiredFields).includes(null)
 
-  getParentNodes = (links, parents) => {
-    links.forEach((link) => {
-      if (link.subgroup) {
-        parents = (this.getParentNodes(link.subgroup, parents));
-      } else {
-        parents[link.target_type] = link;
-      }
-    });
-    return parents;
-  }
-
   render() {
     const projectList = this.props.projects ? Object.keys(this.props.projects) : [];
     const projectOptions = projectList.map(key =>

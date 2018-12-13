@@ -20,7 +20,6 @@ class ProjectDashboard extends Component {
 }
 
 ProjectDashboard.propTypes = {
-  summaries: PropTypes.arrayOf(PropTypes.object).isRequired,
   details: PropTypes.arrayOf(PropTypes.object).isRequired,
   projectList: PropTypes.array.isRequired,
 };

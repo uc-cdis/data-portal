@@ -8,11 +8,15 @@ class StickyToolbar extends React.Component {
     this.state = {
       scrollPos: 0,
       isScrolling: false,
-    }
+    };
   }
 
   componentDidMount() {
     window.addEventListener('scroll', this.scrollToTop);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.scrollToTop);
   }
 
   scrollToTop = () => {
@@ -21,12 +25,8 @@ class StickyToolbar extends React.Component {
       isScrolling = false;
     }
 
-    this.setState({ isScrolling: isScrolling, scrollPos: window.pageYOffset });
+    this.setState({ isScrolling, scrollPos: window.pageYOffset });
     this.props.onScroll(isScrolling);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.scrollToTop);
   }
 
   render() {
@@ -57,7 +57,7 @@ StickyToolbar.defaultProps = {
   title: '',
   toolbarElts: [],
   scrollPosition: 10,
-  onScroll: () => {}
+  onScroll: () => {},
 };
 
 export default StickyToolbar;
