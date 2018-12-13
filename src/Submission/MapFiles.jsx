@@ -16,6 +16,7 @@ class MapFiles extends React.Component {
       selectedFilesByGroup: {},
       unselectedFilesByGroup: {},
       filesByDate: {},
+      isScrolling: false,
     };
   }
 
@@ -167,6 +168,10 @@ class MapFiles extends React.Component {
 
   isFileReady = file => true
 
+  onScroll = isScrolling => {
+    this.setState({ isScrolling: isScrolling });
+  }
+
   render() {
     const buttons = [
       <Button
@@ -200,8 +205,10 @@ class MapFiles extends React.Component {
         <StickyToolbar
           title='Unmapped Files'
           toolbarElts={buttons}
+          scrollPosition={248}
+          onScroll={this.onScroll}
         />
-        <div className='map-files__tables'>
+        <div className={'map-files__tables'.concat(this.state.isScrolling ? ' map-files__tables--scrolling' : '')}>
           {
             Object.keys(this.state.filesByDate).map((key, i) => {
               const files = this.state.filesByDate[key];

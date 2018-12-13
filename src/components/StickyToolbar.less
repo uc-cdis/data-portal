@@ -1,15 +1,18 @@
-@import '~@gen3/ui-component/dist/css/base.less';
-
 .sticky-toolbar {
   display: flex;
-  position: fixed;
   justify-content: space-between;
   align-items: center;
   width: 1220px;
   height: 80px;
-  margin-bottom: 20px;
   border-bottom: 3px solid black;
+  background-color: var(--g3-color__bg-cloud);
+}
+
+.sticky-toolbar--scrolling {
+  position: fixed;
+  margin-bottom: 20px;
   z-index: 10;
+  top: 0px;
 }
 
 .sticky-toolbar__elts > * {
