@@ -4,9 +4,10 @@ import { createMemoryHistory } from 'history';
 import { StaticRouter } from 'react-router-dom';
 import MapDataModel from './MapDataModel';
 import * as testData from './__test__/data.json';
-import * as relayer from '../Index/relayer';
+import getProjectsList from '../Index/relayer';
 
-jest.mock(relayer, () => jest.fn());
+jest.mock('../Index/relayer');
+getProjectsList.mockImplementation(() => jest.fn());
 
 describe('MapDataModel', () => {
   const history = createMemoryHistory('/submission/map');
@@ -25,6 +26,7 @@ describe('MapDataModel', () => {
       systemProperties: ['id', 'project_id', 'created_datetime'],
     },
   };
+  const submitFiles = jest.fn();
 
   const component = mount(
     <StaticRouter location={{ pathname: '/submission/map' }} context={{}}>
@@ -34,6 +36,7 @@ describe('MapDataModel', () => {
         dictionary={dictionary}
         nodeTypes={['aligned_reads_index']}
         history={history}
+        submitFiles={submitFiles}
       />
     </StaticRouter>,
   );
