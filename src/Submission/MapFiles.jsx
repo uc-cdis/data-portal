@@ -170,7 +170,8 @@ class MapFiles extends React.Component {
     }
   }
 
-  isFileReady = file => true
+  isFileReady = file => file.hashes && Object.keys(file.hashes).length > 0;
+
 
   render() {
     const buttons = [

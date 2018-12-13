@@ -27,7 +27,7 @@ const getTransactionList = () => {
           submitter
           project_id
           created_datetime
-    		  documents {
+          documents {
             doc_size
             doc
           }
