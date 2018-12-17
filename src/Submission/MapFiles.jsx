@@ -78,7 +78,8 @@ class MapFiles extends React.Component {
 
   isSelectAll = (index) => {
     if (this.state.selectedFilesByGroup[index]) {
-      return this.state.allFilesByGroup[index].size === this.state.selectedFilesByGroup[index].size;
+      return this.state.allFilesByGroup[index].size === this.state.selectedFilesByGroup[index].size
+        && this.state.selectedFilesByGroup[index].size > 0;
     }
     return false;
   }
@@ -226,6 +227,8 @@ class MapFiles extends React.Component {
                                   item={file}
                                   isSelected={this.isSelected(i, file)}
                                   onChange={() => this.toggleCheckBox(i, file)}
+                                  isEnabled={status === 'Ready'}
+                                  disabledText={'This file is not ready to be mapped yet.'}
                                 />
                               </td>
                               <td>{file.file_name}</td>
@@ -233,7 +236,7 @@ class MapFiles extends React.Component {
                               <td>{moment(file.created_date).format('MM/DD/YY, hh:mm:ss a Z')}</td>
                               <td className={`map-files__status--${status.toLowerCase()}`}>
                                 { status === 'Ready' ? <StatusReadyIcon /> : null }
-                                <div className='h2-typo'>{status}</div>
+                                <div className='h2-typo'>{ status === 'Ready' ? status : `${status}...`}</div>
                               </td>
                             </tr>
                           );

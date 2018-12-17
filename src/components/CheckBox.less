@@ -16,6 +16,11 @@
   vertical-align: middle;
 }
 
+.checkbox--disabled input[type='checkbox'] {
+  cursor: not-allowed;
+  border: 1px solid var(--g3-color__silver);
+}
+
 .checkbox input[type='checkbox']:checked {
   background: @orange;
 }

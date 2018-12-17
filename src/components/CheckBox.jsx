@@ -9,13 +9,14 @@ class CheckBox extends React.Component {
 
   render() {
     return (
-      <div className='checkbox'>
+      <div className={'checkbox '.concat(!this.props.isEnabled ? 'checkbox--disabled' : '')}>
         <input
           type='checkbox'
           id={this.props.id}
           value={this.props.item}
           checked={this.props.isSelected}
           onChange={this.onChange}
+          title={this.props.isEnabled ? null : this.props.disabledText}
         />
       </div>
     );
@@ -27,10 +28,14 @@ CheckBox.propTypes = {
   item: PropTypes.object,
   onChange: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
+  isEnabled: PropTypes.bool,
+  disabledText: PropTypes.string,
 };
 
 CheckBox.defaultProps = {
   item: {},
+  isEnabled: true,
+  disabledText: null,
 };
 
 export default CheckBox;
