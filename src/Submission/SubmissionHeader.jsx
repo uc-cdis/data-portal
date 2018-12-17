@@ -11,7 +11,11 @@ class SubmissionHeader extends React.Component {
   }
 
   openGen3DataClient = () => {
-    window.open('https://github.com/uc-cdis/cdis-data-client', '_blank');
+    window.open('https://github.com/uc-cdis/cdis-data-client/releases', '_blank');
+  }
+
+  openGen3Tutorials = () => {
+    window.open('https://gen3.org/resources/user/gen3-client/', '_blank');
   }
 
   render() {
@@ -22,9 +26,9 @@ class SubmissionHeader extends React.Component {
             <div className='submission-header__section-image--clear' />
             <Gen3ClientSvg />
             <Button
-              onClick={this.openGen3DataClient}
+              onClick={this.openGen3Tutorials}
               className='submission-header__section-button'
-              label='Read tutorials'
+              label='Read Tutorials'
               buttonType='default'
               enabled
             />
