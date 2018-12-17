@@ -7,6 +7,7 @@ import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
 import CheckBox from '../components/CheckBox';
 import StatusReadyIcon from '../img/icons/status_ready.svg';
+import { calculateFileSize } from './utils.js';
 import './MapFiles.less';
 
 class MapFiles extends React.Component {
@@ -153,7 +154,7 @@ class MapFiles extends React.Component {
             ),
           selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, new Set()),
         });
-      } else { // only select "ready" files
+      } else {
         const newFiles = this.state.selectedFilesByGroup[index];
         const unselectedFiles = this.state.unselectedFilesByGroup[index];
         this.state.unselectedFilesByGroup[index].forEach((file) => {
@@ -170,7 +171,7 @@ class MapFiles extends React.Component {
     }
   }
 
-  isFileReady = file => file.hashes && Object.keys(file.hashes).length > 0;
+  isFileReady = file => true //file.hashes && Object.keys(file.hashes).length > 0;
 
 
   render() {
@@ -245,7 +246,7 @@ class MapFiles extends React.Component {
                                 />
                               </td>
                               <td>{file.file_name}</td>
-                              <td>{file.size ? file.size : 0}B</td>
+                              <td>{file.size ? calculateFileSize(file.size) : '0B'}</td>
                               <td>{moment(file.created_date).format('MM/DD/YY, hh:mm:ss a Z')}</td>
                               <td className={`map-files__status--${status.toLowerCase()}`}>
                                 { status === 'Ready' ? <StatusReadyIcon /> : null }

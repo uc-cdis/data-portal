@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Table from './base/Table';
 import Spinner from '../Spinner';
+import { calculateFileSize } from '../../Submission/utils.js';
 import './TransactionLogTable.less';
 
 const formatText = text => text[0] + text.slice(1).toLowerCase();
@@ -34,7 +35,7 @@ class TransactionLogTable extends Component {
   dataTransform = logs => logs.map(entry => [
     entry.id, entry.submitter, entry.project_id,
     this.getLocalTime(entry.created_datetime),
-    `${this.getTotalFileSize(entry.documents)}B`,
+    calculateFileSize(this.getTotalFileSize(entry.documents)),
     this.stateToColor(entry.state),
   ]);
 
@@ -42,7 +43,7 @@ class TransactionLogTable extends Component {
     if (!this.props.log || this.props.log === []) { return <Spinner />; }
     return (<Table
       title='Recent Submissions'
-      header={['Id', 'Submitter', 'Project', 'Created date', 'File Size', 'State']}
+      header={['Id', 'Submitter', 'Project', 'Created Date', 'File Size', 'State']}
       data={this.dataTransform(this.props.log)}
     />);
   }
