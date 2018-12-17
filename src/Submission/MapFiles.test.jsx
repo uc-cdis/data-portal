@@ -82,15 +82,15 @@ describe('MapFiles', () => {
         1: new Set('value1', 'value2'),
         2: new Set('value3'),
       },
-      unselectedFilesByGroup: {
-        1: new Set(),
+      allFilesByGroup: {
+        1: new Set('value1', 'value2'),
         2: new Set(),
       },
     });
     expect(instance.isSelectAll('1')).toBe(true);
 
     instance.setState({
-      unselectedFilesByGroup: {
+      allFilesByGroup: {
         1: new Set('value1', 'value2'),
         2: new Set('value3'),
       },
@@ -102,16 +102,16 @@ describe('MapFiles', () => {
     expect(instance.isSelectAll('1')).toBe(false);
 
     instance.setState({
-      unselectedFilesByGroup: {
+      allFilesByGroup: {
         1: new Set(),
-        2: new Set(),
+        2: new Set('value1'),
       },
       selectedFilesByGroup: {
         1: new Set(),
         2: new Set(),
       },
     });
-    expect(instance.isSelectAll('1')).toBe(false);
+    expect(instance.isSelectAll('2')).toBe(false);
   });
 
   it('returns if a file should be selected', () => {
@@ -120,14 +120,15 @@ describe('MapFiles', () => {
         1: new Set('1', '2'),
         2: new Set('3'),
       },
-      unselectedFilesByGroup: {
-        1: new Set(),
-        2: new Set(),
+      allFilesByGroup: {
+        1: new Set('1', '2'),
+        2: new Set('3', '4'),
       },
     });
 
     expect(instance.isSelected('1', '1')).toBe(true);
     expect(instance.isSelected('2', '1')).toBe(false);
+    expect(instance.isSelected('2', '4')).toBe(false);
     expect(instance.isSelected('3', '1')).toBe(false);
   });
 
@@ -146,7 +147,7 @@ describe('MapFiles', () => {
       selectedFilesByGroup: {
         '09/11/18': new Set(),
       },
-      unselectedFilesByGroup: {
+      allFilesByGroup: {
         '09/11/18': new Set([testGroupedData['09/11/18']]),
       },
     });
@@ -156,11 +157,9 @@ describe('MapFiles', () => {
 
     expect(fileToToggle).toBeDefined();
     instance.toggleCheckBox(date, fileToToggle);
-    expect(!instance.state.unselectedFilesByGroup[date].has(fileToToggle));
     expect(instance.state.selectedFilesByGroup[date].has(fileToToggle));
 
     instance.toggleCheckBox(date, fileToToggle);
-    expect(instance.state.unselectedFilesByGroup[date].has(fileToToggle));
     expect(!instance.state.selectedFilesByGroup[date].has(fileToToggle));
   });
 
@@ -169,44 +168,40 @@ describe('MapFiles', () => {
       selectedFilesByGroup: {
         0: new Set(),
       },
-      unselectedFilesByGroup: {
+      allFilesByGroup: {
         0: new Set(['1', '2', '3', '4']),
       },
     });
 
     instance.toggleSelectAll('0');
     expect(instance.state.selectedFilesByGroup['0']).toEqual(new Set(['1', '2', '3', '4']));
-    expect(instance.state.unselectedFilesByGroup['0']).toEqual(new Set());
 
     instance.setState({
       selectedFilesByGroup: {
         0: new Set(['1', '2']),
       },
-      unselectedFilesByGroup: {
-        0: new Set(['3', '4']),
+      allFilesByGroup: {
+        0: new Set(['1', '2', '3', '4']),
       },
     });
 
     instance.toggleSelectAll('0');
     expect(instance.state.selectedFilesByGroup['0']).toEqual(new Set(['1', '2', '3', '4']));
-    expect(instance.state.unselectedFilesByGroup['0']).toEqual(new Set());
 
     instance.setState({
       selectedFilesByGroup: {
         0: new Set(['1', '2', '3', '4']),
       },
       unselectedFilesByGroup: {
-        0: new Set(),
+        0: new Set(['1', '2', '3', '4']),
       },
     });
 
     instance.toggleSelectAll('0');
     expect(instance.state.selectedFilesByGroup['0']).toEqual(new Set());
-    expect(instance.state.unselectedFilesByGroup['0']).toEqual(new Set(['1', '2', '3', '4']));
 
     instance.toggleSelectAll('3');
     expect(instance.state.selectedFilesByGroup['0']).toEqual(new Set());
-    expect(instance.state.unselectedFilesByGroup['0']).toEqual(new Set(['1', '2', '3', '4']));
   });
 
   it('returns if a file is ready to be mapped', () => {

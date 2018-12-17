@@ -4,7 +4,6 @@ import { fetchQuery } from 'relay-runtime';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import getProjectsList from '../Index/relayer';
-import RequiredIcon from '../img/icons/required.svg';
 import CheckmarkIcon from '../img/icons/status_confirm.svg';
 import InputWithIcon from '../components/InputWithIcon';
 import { GQLHelper } from '../gqlHelper';
@@ -219,7 +218,7 @@ class MapDataModel extends React.Component {
                       return (
                         <div key={i} className='map-data-model__required-field'>
                           <div className='map-data-model__required-field-info'>
-                            <i className='g3-icon g3-icon--star'/>
+                            <i className='g3-icon g3-icon--star' />
                             <div className='h4-typo'>{prop}</div>
                           </div>
                           {
