@@ -32,18 +32,18 @@ class DictionarySearchHistory extends React.Component {
           <div>
             {
               this.props.searchHistoryItems && this.props.searchHistoryItems.map((item) => {
-                const zeroCountModifier = item.matchedCount === 0 ? 'dicionary-search-history__item-count--zero' : '';
+                const zeroCountModifier = item.matchedCount === 0 ? 'dictionary-search-history__item-badge--zero' : '';
                 return (
                   <div
-                    className='dicionary-search-history__item'
+                    className='dictionary-search-history__item'
                     key={item.keywordStr}
                     onClick={() => this.handleClick(item.keywordStr)}
                     role='button'
                     onKeyPress={() => this.handleClick(item.keywordStr)}
                     tabIndex={0}
                   >
-                    <span className='dicionary-search-history__item-keyword'>{item.keywordStr}</span>
-                    <span className={`dicionary-search-history__item-count ${zeroCountModifier}`}>{item.matchedCount}</span>
+                    <span className='dictionary-search-history__item-keyword'>{item.keywordStr}</span>
+                    <span className={`dictionary-search-history__item-badge ${zeroCountModifier}`}>{item.matchedCount}</span>
                   </div>
                 );
               })
