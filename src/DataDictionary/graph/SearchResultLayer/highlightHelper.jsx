@@ -74,22 +74,22 @@ export const getPropertyNameFragment = (propertyName, matchedItem) => {
   return propertyNameFragment;
 };
 
-export const getPropertyTypeFragment = (property, matchedItem) => {
+export const getPropertyTypeFragment = (property, typeMatchList) => {
   const type = getType(property);
   let propertyTypeFragment;
-  const matchedIndices = matchedItem ? matchedItem.indices : [];
   if (typeof type === 'string') {
     propertyTypeFragment = (
       <li>
-        {addHighlightingSpans(type, matchedIndices)}
+        {addHighlightingSpans(type, typeMatchList[0] ? typeMatchList[0].indices : [])}
       </li>
     );
   } else {
     propertyTypeFragment = type.map((t, i) => {
-      if (matchedItem && t === matchedItem.value) {
+      const matchedTypeItem = typeMatchList.find(matchItem => matchItem.value === t);
+      if (matchedTypeItem) {
         return (
           <li key={i}>
-            {addHighlightingSpans(t, matchedIndices)}
+            {addHighlightingSpans(t, matchedTypeItem.indices)}
           </li>
         );
       }
@@ -125,27 +125,27 @@ export const getNodeDescriptionFragment = (allMatches, description) => {
 export const getMatchInsideProperty = (propertyIndex, property, allMatches) => {
   let nameMatch = null;
   let descriptionMatch = null;
-  let typeMatch = null;
+  const typeMatchList = [];
   allMatches.forEach((item) => {
     if (item.key === 'properties.name' && item.arrayIndex === propertyIndex) {
       nameMatch = item;
     } else if (item.key === 'properties.description' && item.arrayIndex === propertyIndex) {
       descriptionMatch = item;
-    } else {
+    } else if (item.key === 'properties.type') {
       const type = getType(property);
       if (typeof type === 'string') {
         if (type === item.value) {
-          typeMatch = item;
+          typeMatchList.push(item);
         }
       } else if (type.includes(item.value)) {
-        typeMatch = item;
+        typeMatchList.push(item);
       }
     }
   });
   return {
     nameMatch,
     descriptionMatch,
-    typeMatch,
+    typeMatchList,
   };
 };
 
@@ -156,16 +156,16 @@ export const getMatchesSummaryForProperties = (allProperties, allMatches) => {
     const {
       nameMatch,
       descriptionMatch,
-      typeMatch,
+      typeMatchList,
     } = getMatchInsideProperty(propertyIndex, property, allMatches);
     const summaryItem = {
       propertyKey,
       property,
       nameMatch,
       descriptionMatch,
-      typeMatch,
+      typeMatchList,
     };
-    if (nameMatch || descriptionMatch || typeMatch) {
+    if (nameMatch || descriptionMatch || typeMatchList.length > 0) {
       matchedPropertiesSummary.push(summaryItem);
     }
   });

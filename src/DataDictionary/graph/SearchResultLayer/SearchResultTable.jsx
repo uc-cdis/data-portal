@@ -103,7 +103,7 @@ class SearchResultTable extends React.Component {
                       property,
                       nameMatch,
                       descriptionMatch,
-                      typeMatch,
+                      typeMatchList,
                     } = matchedSummaryItem;
                     const propertyNameFragment = getPropertyNameFragment(
                       propertyKey,
@@ -111,7 +111,7 @@ class SearchResultTable extends React.Component {
                     );
                     const propertyTypeFragment = getPropertyTypeFragment(
                       property,
-                      typeMatch,
+                      typeMatchList,
                     );
                     const propertyDescriptionFragment = getPropertyDescriptionFragment(
                       property,

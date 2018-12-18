@@ -155,12 +155,12 @@ class DictionarySearcher extends React.Component {
               <li className='dictionary-searcher__result-item body'>
                 <span className='dictionary-searcher__result-count'>
                   {this.state.searchResult.summary.matchedNodesCount}
-                </span> matched Nodes
+                </span> matches in nodes
               </li>
               <li className='dictionary-searcher__result-item body'>
                 <span className='dictionary-searcher__result-count'>
                   {this.state.searchResult.summary.matchedPropertiesCount}
-                </span> matches in Properties
+                </span> matches in node properties
               </li>
               {
                 this.props.isGraphView && (

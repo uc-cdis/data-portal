@@ -184,6 +184,7 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       searchResult: action.searchResult,
       matchedNodeIDs: action.searchResult
         && action.searchResult.map(resItem => resItem.item.id),
+      isGraphView: true,
     };
   }
   case 'SEARCH_CLEAR_HISTORY': {
