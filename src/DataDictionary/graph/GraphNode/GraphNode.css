@@ -45,5 +45,5 @@
 
 .graph-node:hover .graph-node__text--highlight,
 .graph-node:hover .graph-node__tspan--highlight {
-  fill: var(--g3-color__base-blue);
+  fill: var(--g3-color__black);
 }

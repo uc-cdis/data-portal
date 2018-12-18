@@ -173,7 +173,7 @@ export const MatchedItemShape = PropTypes.shape({
 export const SearchItemPropertyShape = PropTypes.shape({
   name: PropTypes.string,
   description: PropTypes.string,
-  type: PropTypes.oneOf(PropTypes.arrayOf(PropTypes.string), PropTypes.string),
+  type: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
 });
 
 export const SearchItemShape = PropTypes.shape({
