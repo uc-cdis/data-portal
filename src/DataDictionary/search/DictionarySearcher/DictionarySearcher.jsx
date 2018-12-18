@@ -52,7 +52,15 @@ class DictionarySearcher extends React.Component {
 
   search = (str) => {
     this.props.setIsSearching(true);
-    const result = this.searchHandler.search(str).filter(resItem => resItem.matches.length > 0);
+    const result = this.searchHandler.search(str)
+      .map((resItem) => {
+        const copyResItem = { item: resItem.item };
+        // A bug in Fuse sometimes returns wrong indices
+        copyResItem.matches = resItem.matches
+          .filter(matchItem => matchItem.indices[0][1] >= matchItem.indices[0][0]);
+        return copyResItem;
+      })
+      .filter(resItem => resItem.matches.length > 0);
     this.props.setIsSearching(false);
     this.props.onSearchResultUpdated(result);
     const summary = getSearchSummary(result);

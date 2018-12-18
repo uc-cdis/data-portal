@@ -22,35 +22,40 @@ class GraphNode extends React.Component {
     const nodeNameRows = this.props.node.names;
     const matchedNodeNameIndices = this.props.matchedNodeNameIndices;
     let currentHighlightIndex = 0;
-    while (currentRowIndex < nodeNameRows.length) {
+    const textAttrBase = {
+      x: 0,
+      textAnchor: 'middle',
+      alignmentBaseline: 'hanging',
+      fontSize: this.props.node.fontSize,
+      className: 'graph-node__text',
+    };
+    const tspanAttrBase = {
+      textAnchor: 'middle',
+      alignmentBaseline: 'hanging',
+      fontSize: this.props.node.fontSize,
+    };
+    const tspanAttr = {
+      ...tspanAttrBase,
+      className: 'graph-node__tspan',
+    };
+    const tspanHighlightAttr = {
+      ...tspanAttrBase,
+      className: 'graph-node__tspan graph-node__tspan--highlight',
+    };
+    while (currentRowIndex < nodeNameRows.length) { // for each row
       const currentRowStr = nodeNameRows[currentRowIndex];
       rowEndIndex = rowStartIndex + currentRowStr.length;
       const textY = this.props.node.textPadding +
         (currentRowIndex * (this.props.node.fontSize + this.props.node.textLineGap));
       const textAttr = {
+        ...textAttrBase,
         key: currentRowIndex,
-        x: 0,
         y: textY,
-        textAnchor: 'middle',
-        alignmentBaseline: 'hanging',
-        fontSize: this.props.node.fontSize,
-        className: 'graph-node__text',
-      };
-      const tspanAttrBase = {
-        textAnchor: 'middle',
-        alignmentBaseline: 'hanging',
-        fontSize: this.props.node.fontSize,
-      };
-      const tspanAttr = {
-        ...tspanAttrBase,
-        className: 'graph-node__tspan',
-      };
-      const tspanHighlightAttr = {
-        ...tspanAttrBase,
-        className: 'graph-node__tspan graph-node__tspan--highlight',
       };
       let cursorInRow = 0;
       const currentRowFragment = [];
+
+      // Go over all highlighted text in current row
       while (currentHighlightIndex < matchedNodeNameIndices.length) {
         const highlightStartIndex = matchedNodeNameIndices[currentHighlightIndex][0];
         const highlightEndIndex = matchedNodeNameIndices[currentHighlightIndex][1] + 1;
@@ -91,17 +96,21 @@ class GraphNode extends React.Component {
           break;
         }
       }
+
+      // Check text in the current row are all added to the list
       if (cursorInRow < currentRowStr.length) {
         currentRowFragment.push((
           <tspan key={cursorInRow} {...tspanAttr}>{currentRowStr.substring(cursorInRow)}</tspan>
         ));
       }
+
+      // Add all fragment of current line to the node title fragment list
       nodeTitleFragment.push((
         <text {...textAttr}>{currentRowFragment}</text>
       ));
       currentRowIndex += 1;
       rowStartIndex += currentRowStr.length + 1;
-    }
+    } // end of while, go to the next row
     return nodeTitleFragment;
   };
 

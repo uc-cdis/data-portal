@@ -150,9 +150,6 @@ class GraphDrawer extends React.Component {
                 isNodeFaded = !this.props.relatedNodeIDs.includes(node.id);
               }
             }
-
-            // TODO: move to searcher
-
             let matchedNodeNameIndices = [];
             this.props.searchResult.forEach((item) => {
               if (item.item.id === node.id) {
