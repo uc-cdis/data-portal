@@ -13,7 +13,6 @@ class GraphCalculator extends React.Component {
     super(props);
     this.oldHighlightingNode = null;
     this.oldSecondHighlightingNodeID = null;
-    console.log(this.props.dictionary);
     window.dictionary = this.props.dictionary;
   }
 

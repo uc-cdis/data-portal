@@ -122,13 +122,13 @@ const searchHistoryLocalStorageKey = 'datadictionary:searchHistory';
 /**
  * Get search history items from localStorage
  * @returns {SearchHistoryItem[]} array of search history items
- */ 
+ */
 export const getSearchHistoryItems = () => {
   const items = JSON.parse(localStorage.getItem(searchHistoryLocalStorageKey));
   return items;
 };
 
-/** 
+/**
  * Add search history item to localStorage
  * @params {SearchHistoryItem} searchHistoryItem - item to add into localStorage
  * @returns {SearchHistoryItem[]} array of new search history items
@@ -151,9 +151,9 @@ export const addSearchHistoryItems = (searchHistoryItem) => {
   return newHistory;
 };
 
-/** 
+/**
  * Clear search history item in localStorage
- * @returns {SearchHistoryItem[]} empty array as new search history items 
+ * @returns {SearchHistoryItem[]} empty array as new search history items
  */
 export const clearSearchHistoryItems = () => {
   const newHistory = [];

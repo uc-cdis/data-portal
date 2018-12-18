@@ -6,10 +6,10 @@ import {
 } from '../../utils';
 
 /**
- * Prepare search items for Fuse.io library, call Fuse constructor 
- * and return a search instance handler. 
- * For calling search function using search instance hanlder, just call handler.search(keyword), 
- * it will return an array of SearchResultItemShape (see ../../utils). 
+ * Prepare search items for Fuse.io library, call Fuse constructor
+ * and return a search instance handler.
+ * For calling search function using search instance hanlder, just call handler.search(keyword),
+ * it will return an array of SearchResultItemShape (see ../../utils).
  * @params [Object] dictionary
  * @returns [Object] Fuse search instance
  */
@@ -51,8 +51,8 @@ export const prepareSearch = (dictionary) => {
 };
 
 /**
- * Prepare search items for Fuse.io library, call Fuse constructor 
- * and return a search instance handler. 
+ * Prepare search items for Fuse.io library, call Fuse constructor
+ * and return a search instance handler.
  * @params [SearchResultItemShape[]] search result (SearchResultItemShape from '../../utils')
  * @returns [Object] summary: { matchedPropertiesCount: number, matchedNodesCount: number }
  */

@@ -1,5 +1,3 @@
-import React from 'react';
-import { mount } from 'enzyme';
 import { prepareSearch, getSearchSummary } from './searchHelper';
 
 describe('dictionary search helper', () => {
@@ -11,7 +9,7 @@ describe('dictionary search helper', () => {
         description: 'whatever',
         properties: [
           {
-            name: 'test', 
+            name: 'test',
             description: 'test description',
             type: 'test type',
           },
