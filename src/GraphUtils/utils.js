@@ -362,8 +362,8 @@ shape=rectangle
     graphString += `${edge.source.id} -> ${edge.target.id}[arrowhead=none tailport=s ]\n`;
   });
   if (treeLevel2Names) {
-    treeLevel2Names.forEach((level) => {
-      graphString += `{rank = same ${level.join(' ')}}\n`;
+    treeLevel2Names.forEach((IDsInThisLevel, i) => {
+      graphString += `{rank=${i} ${IDsInThisLevel.join(' ')}}\n`;
     });
   }
   graphString += '}';

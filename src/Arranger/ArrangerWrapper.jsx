@@ -29,7 +29,11 @@ import arrangerApi from './utils';
 class ArrangerWrapper extends React.Component {
   filterAggregationFields = (aggs) => {
     if (this.props.charts) {
-      return aggs.filter(agg => Object.keys(this.props.charts).includes(agg.field));
+      const fields = aggs.filter(agg => Object.keys(this.props.charts).includes(agg.field));
+      if (fields.length > 0) {
+        return fields;
+      } // else all the aggs were filtered, and things are screwed up
+      console.log('Bad props.charts data - ignoring in aggreagtions filters'); // eslint-disable-line no-console
     }
     return aggs.filter(agg => agg.field !== 'name');
   };
@@ -66,7 +70,10 @@ class ArrangerWrapper extends React.Component {
                   </React.Fragment>
                 )}
               />
-            )}
+            )
+            }
+
+
           />
         )}
       />

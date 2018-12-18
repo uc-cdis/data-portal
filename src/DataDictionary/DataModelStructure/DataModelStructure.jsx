@@ -59,7 +59,7 @@ class DataModelStructure extends React.Component {
           this.props.isGraphView && (
             <Button
               onClick={this.handleClickOverlayPropertyButton}
-              label={this.props.overlayPropertyHidden ? 'Open properties' : 'Close perperties'}
+              label={this.props.overlayPropertyHidden ? 'Open properties' : 'Close properties'}
               className='data-model-structure__table-button'
               rightIcon='list'
               buttonType='primary'
