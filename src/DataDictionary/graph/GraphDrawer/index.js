@@ -23,7 +23,7 @@ const ReduxGraphDrawer = (() => {
     secondHighlightingNodeID: state.ddgraph.secondHighlightingNodeID,
     isGraphView: state.ddgraph.isGraphView,
     matchedNodeIDs: state.ddgraph.matchedNodeIDs,
-    graphNodesSVGElements: state.ddgraph.graphNodesSVGElements,
+    searchResult: state.ddgraph.searchResult,
   });
 
   const mapDispatchToProps = dispatch => ({

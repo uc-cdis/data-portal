@@ -2,89 +2,48 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import AutoComplete from '@gen3/ui-component/dist/components/AutoComplete';
-import Fuse from 'fuse.js';
-import {
-  parseDictionaryNodes,
-  getPropertyDescription,
-  getType,
-} from '../../utils';
+import { prepareSearch, getSearchSummary } from './searchHelper';
 import './DictionarySearcher.css';
 
 class DictionarySearcher extends React.Component {
   constructor(props) {
     super(props);
-    this.searchHandler = this.prepareSearch(props.dictionary);
+    this.searchHandler = prepareSearch(props.dictionary);
     this.autoCompleteRef = React.createRef();
     this.state = {
       suggestionList: [],
-      searched: false,
+      isSearchFinished: false,
       searchResult: {
         matchedNodes: [],
         summary: {},
       },
     };
+    if (this.props.currentSearchKeyword) {
+      this.search(this.props.currentSearchKeyword);
+    }
+  }
+
+  componentDidMount() {
+    // resume search status after switching back from other pages
+    if (this.props.currentSearchKeyword) {
+      this.autoCompleteRef.current.setInputText(this.props.currentSearchKeyword);
+      this.search(this.props.currentSearchKeyword);
+      this.forceUpdate();
+    }
   }
 
   onClearResult = () => {
     this.resetSearchResult();
     this.autoCompleteRef.current.clearInput();
-  }
+  };
 
-  getSearchSummary = (result) => {
-    let matchedPropertiesCount = 0;
-    let matchedNodesCount = 0;
-    result.forEach((resItem) => {
-      resItem.matches.forEach((matchedItem) => {
-        switch (matchedItem.key) {
-        case 'properties.type':
-        case 'properties.name':
-        case 'properties.description':
-          matchedPropertiesCount += 1;
-          break;
-        case 'id':
-        case 'description':
-          matchedNodesCount += 1;
-          break;
-        default:
-          break;
-        }
-      });
-    });
-    return {
-      matchedPropertiesCount,
-      matchedNodesCount,
-    };
-  }
+  onExpandAllResults = () => {
+    this.props.onExpandAllMatchedNodePopups();
+  };
 
-  prepareSearch = (dictionary) => {
-    const options = {
-      keys: ['id', 'description', 'properties.name', 'properties.description', 'properties.type'],
-      includeMatches: true,
-      threshold: 0.3,
-      shouldSort: true,
-      includeScore: true,
-      minMatchCharLength: 2,
-    };
-    const searchData = parseDictionaryNodes(dictionary)
-      .map((node) => {
-        const properties = Object.keys(node.properties).map((propertyKey) => {
-          let type = getType(node.properties[propertyKey]);
-          if (type === 'UNDEFINED') type = undefined;
-          return {
-            name: propertyKey,
-            description: getPropertyDescription(node.properties[propertyKey]),
-            type,
-          };
-        });
-        return {
-          id: node.id,
-          title: node.title,
-          description: node.description,
-          properties,
-        };
-      });
-    return new Fuse(searchData, options);
-  }
+  onCollapseAllResults = () => {
+    this.props.onCollapseAllMatchedNodePopups();
+  };
 
   launchSearchFromOutside = (keyword) => {
     this.autoCompleteRef.current.setInputText(keyword);
@@ -96,9 +55,9 @@ class DictionarySearcher extends React.Component {
     const result = this.searchHandler.search(str).filter(resItem => resItem.matches.length > 0);
     this.props.setIsSearching(false);
     this.props.onSearchResultUpdated(result);
-    const summary = this.getSearchSummary(result);
+    const summary = getSearchSummary(result);
     this.setState({
-      searched: true,
+      isSearchFinished: true,
       searchResult: {
         matchedNodes: result,
         summary,
@@ -109,18 +68,19 @@ class DictionarySearcher extends React.Component {
       keywordStr: str,
       matchedCount: summary.matchedNodesCount,
     });
-  }
+    this.props.onSaveCurrentSearchKeyword(str);
+  };
 
   resetSearchResult = () => {
     this.setState({
-      searched: false,
+      isSearchFinished: false,
       searchResult: {
         matchedNodes: [],
         summary: {},
       },
     });
     this.props.onSearchResultCleared();
-  }
+  };
 
   inputChangeFunc = (inputText) => {
     this.resetSearchResult();
@@ -147,6 +107,7 @@ class DictionarySearcher extends React.Component {
   };
 
   suggestionItemClickFunc = (suggestionItem) => {
+    this.autoCompleteRef.current.setInputText(suggestionItem.fullString);
     this.search(suggestionItem.fullString);
   };
 
@@ -155,6 +116,10 @@ class DictionarySearcher extends React.Component {
   };
 
   render() {
+    const hasAtLeastOneNodeExpanded = this.props.matchedNodeExpandingStatus && Object.keys(
+      this.props.matchedNodeExpandingStatus,
+    )
+      .find(nid => this.props.matchedNodeExpandingStatus[nid]);
     return (
       <div className='data-dictionary-searcher'>
         <AutoComplete
@@ -166,7 +131,7 @@ class DictionarySearcher extends React.Component {
           onSubmitInput={this.submitInputFunc}
         />
         {
-          this.state.searched && this.state.searchResult.matchedNodes.length > 0 ? (
+          this.state.isSearchFinished && this.state.searchResult.matchedNodes.length > 0 ? (
             <React.Fragment>
               <div className='dictionary-searcher__result'>
                 <h4 className='dictionary-searcher__result-text'>Search Results</h4>
@@ -191,15 +156,17 @@ class DictionarySearcher extends React.Component {
               {
                 this.props.isGraphView && (
                   <Button
-                    label={'Extend All Results'}
+                    label={hasAtLeastOneNodeExpanded ? 'Collapse All Results' : 'Expand All Results'}
+                    onClick={hasAtLeastOneNodeExpanded ? this.onCollapseAllResults
+                      : this.onExpandAllResults}
                     buttonType='default'
-                    rightIcon={'eye'}
+                    rightIcon={hasAtLeastOneNodeExpanded ? 'eye-close' : 'eye'}
                   />
                 )
               }
             </React.Fragment>
           ) : (
-            this.state.searched && (
+            this.state.isSearchFinished && (
               <p>0 result found. Please try another keyword.</p>
             )
           )
@@ -216,6 +183,11 @@ DictionarySearcher.propTypes = {
   isGraphView: PropTypes.bool,
   onSearchHistoryItemCreated: PropTypes.func,
   onSearchResultCleared: PropTypes.func,
+  matchedNodeExpandingStatus: PropTypes.object,
+  onCollapseAllMatchedNodePopups: PropTypes.func,
+  onExpandAllMatchedNodePopups: PropTypes.func,
+  onSaveCurrentSearchKeyword: PropTypes.func,
+  currentSearchKeyword: PropTypes.string,
 };
 
 DictionarySearcher.defaultProps = {
@@ -224,6 +196,11 @@ DictionarySearcher.defaultProps = {
   isGraphView: true,
   onSearchHistoryItemCreated: () => {},
   onSearchResultCleared: () => {},
+  matchedNodeExpandingStatus: {},
+  onCollapseAllMatchedNodePopups: () => {},
+  onExpandAllMatchedNodePopups: () => {},
+  onSaveCurrentSearchKeyword: () => {},
+  currentSearchKeyword: '',
 };
 
 export default DictionarySearcher;

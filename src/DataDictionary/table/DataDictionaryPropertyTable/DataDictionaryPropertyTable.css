@@ -8,6 +8,7 @@
   padding: 10px;
   border: 1px solid var(--dictionary-border-color);
   text-align: left;
+  vertical-align: top;
 }
 
 .data-dictionary-property-table__data--property {

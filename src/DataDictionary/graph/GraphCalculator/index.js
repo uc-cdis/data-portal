@@ -18,6 +18,7 @@ const ReduxGraphCalculator = (() => {
     nodes: state.ddgraph.nodes,
     edges: state.ddgraph.edges,
     secondHighlightingNodeID: state.ddgraph.secondHighlightingNodeID,
+    layoutInitialized: state.ddgraph.layoutInitialized,
   });
 
   const mapDispatchToProps = dispatch => ({

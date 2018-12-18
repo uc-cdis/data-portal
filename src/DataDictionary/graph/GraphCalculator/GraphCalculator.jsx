@@ -13,18 +13,22 @@ class GraphCalculator extends React.Component {
     super(props);
     this.oldHighlightingNode = null;
     this.oldSecondHighlightingNodeID = null;
+    console.log(this.props.dictionary);
+    window.dictionary = this.props.dictionary;
   }
 
   componentDidMount() {
-    calculateGraphLayout(
-      this.props.dictionary,
-      this.props.countsSearch,
-      this.props.linksSearch,
-    ).then((layoutResult) => {
-      this.props.onGraphLayoutCalculated(layoutResult);
-      const legendItems = getAllTypes(layoutResult.nodes);
-      this.props.onGraphLegendCalculated(legendItems);
-    });
+    if (!this.props.layoutInitialized) {
+      calculateGraphLayout(
+        this.props.dictionary,
+        this.props.countsSearch,
+        this.props.linksSearch,
+      ).then((layoutResult) => {
+        this.props.onGraphLayoutCalculated(layoutResult);
+        const legendItems = getAllTypes(layoutResult.nodes);
+        this.props.onGraphLegendCalculated(legendItems);
+      });
+    }
   }
 
   componentWillUpdate(nextProps) {
@@ -137,6 +141,7 @@ GraphCalculator.propTypes = {
   secondHighlightingNodeID: PropTypes.string,
   onPathRelatedToSecondHighlightingNodeCalculated: PropTypes.func,
   onDataModelStructureCalculated: PropTypes.func,
+  layoutInitialized: PropTypes.bool,
 };
 
 GraphCalculator.defaultProps = {
@@ -153,6 +158,7 @@ GraphCalculator.defaultProps = {
   onSecondHighlightingNodeCandidateIDsCalculated: () => {},
   onPathRelatedToSecondHighlightingNodeCalculated: () => {},
   onDataModelStructureCalculated: () => {},
+  layoutInitialized: false,
 };
 
 export default GraphCalculator;

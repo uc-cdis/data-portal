@@ -85,9 +85,17 @@
   vertical-align: top;
 }
 
-.search-result-table__highlight {
+.search-result-table__span {
+  display: inline;
+}
+
+.search-result-table__span--highlight {
   color: var(--g3-color__highlight-orange);
   font-weight: 600;
+}
+
+.search-result-table__span--new-line {
+  display: block;
 }
 
 .search-result-table__property tr:first-child th.search-result-table__property-cell {

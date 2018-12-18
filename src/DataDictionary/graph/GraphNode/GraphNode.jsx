@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getCategoryIconSVG } from '../../NodeCategories/helper';
+import { MatchedIndicesShape } from '../../utils';
 import './GraphNode.css';
 
 class GraphNode extends React.Component {
@@ -8,9 +9,101 @@ class GraphNode extends React.Component {
     super(props);
     this.svgElement = React.createRef();
   }
+
   getSVGElement() {
     return this.svgElement.current;
   }
+
+  getNodeTitleFragment = () => {
+    const nodeTitleFragment = [];
+    let currentRowIndex = 0;
+    let rowStartIndex = 0;
+    let rowEndIndex;
+    const nodeNameRows = this.props.node.names;
+    const matchedNodeNameIndices = this.props.matchedNodeNameIndices;
+    let currentHighlightIndex = 0;
+    while (currentRowIndex < nodeNameRows.length) {
+      const currentRowStr = nodeNameRows[currentRowIndex];
+      rowEndIndex = rowStartIndex + currentRowStr.length;
+      const textY = this.props.node.textPadding +
+        (currentRowIndex * (this.props.node.fontSize + this.props.node.textLineGap));
+      const textAttr = {
+        key: currentRowIndex,
+        x: 0,
+        y: textY,
+        textAnchor: 'middle',
+        alignmentBaseline: 'hanging',
+        fontSize: this.props.node.fontSize,
+        className: 'graph-node__text',
+      };
+      const tspanAttrBase = {
+        textAnchor: 'middle',
+        alignmentBaseline: 'hanging',
+        fontSize: this.props.node.fontSize,
+      };
+      const tspanAttr = {
+        ...tspanAttrBase,
+        className: 'graph-node__tspan',
+      };
+      const tspanHighlightAttr = {
+        ...tspanAttrBase,
+        className: 'graph-node__tspan graph-node__tspan--highlight',
+      };
+      let cursorInRow = 0;
+      const currentRowFragment = [];
+      while (currentHighlightIndex < matchedNodeNameIndices.length) {
+        const highlightStartIndex = matchedNodeNameIndices[currentHighlightIndex][0];
+        const highlightEndIndex = matchedNodeNameIndices[currentHighlightIndex][1] + 1;
+        if (highlightStartIndex > rowEndIndex) {
+          currentRowFragment.push((
+            <tspan key={cursorInRow} {...tspanAttr}>
+              {currentRowStr.substring(cursorInRow)}
+            </tspan>
+          ));
+          cursorInRow = currentRowStr.length;
+          break;
+        }
+        const highlightStartIndexInRow = highlightStartIndex - rowStartIndex;
+        const highlightEndIndexInRow = highlightEndIndex - rowStartIndex;
+        if (cursorInRow < highlightStartIndexInRow) {
+          currentRowFragment.push((
+            <tspan key={cursorInRow} {...tspanAttr}>
+              {currentRowStr.substring(cursorInRow, highlightStartIndexInRow)}
+            </tspan>
+          ));
+          cursorInRow = highlightStartIndexInRow;
+        }
+        if (highlightEndIndex <= rowEndIndex) {
+          currentRowFragment.push((
+            <tspan key={cursorInRow} {...tspanHighlightAttr}>
+              {currentRowStr.substring(cursorInRow, highlightEndIndexInRow)}
+            </tspan>
+          ));
+          cursorInRow = highlightEndIndexInRow;
+          currentHighlightIndex += 1;
+        } else {
+          currentRowFragment.push((
+            <tspan key={cursorInRow} {...tspanHighlightAttr}>
+              {currentRowStr.substring(cursorInRow)}
+            </tspan>
+          ));
+          cursorInRow = currentRowStr.lenght;
+          break;
+        }
+      }
+      if (cursorInRow < currentRowStr.length) {
+        currentRowFragment.push((
+          <tspan key={cursorInRow} {...tspanAttr}>{currentRowStr.substring(cursorInRow)}</tspan>
+        ));
+      }
+      nodeTitleFragment.push((
+        <text {...textAttr}>{currentRowFragment}</text>
+      ));
+      currentRowIndex += 1;
+      rowStartIndex += currentRowStr.length + 1;
+    }
+    return nodeTitleFragment;
+  };
 
   render() {
     if (!(this.props.node.id !== undefined && this.props.node.type !== undefined
@@ -28,7 +121,6 @@ class GraphNode extends React.Component {
     const nodeIsCurrentHighlightingClassModifier = this.props.isHighlightingNode
       ? this.props.highlightingNodeClassName : '';
     const IconSVG = getCategoryIconSVG(this.props.node.type);
-    const textTopY = this.props.node.textPadding;
     return (
       <g
         ref={this.svgElement}
@@ -53,21 +145,7 @@ class GraphNode extends React.Component {
           ry={4}
           stroke={this.props.node.color}
         />
-        {
-          this.props.node.names.map((row, i) => (
-            <text
-              key={`${this.props.node.id}-${i}`}
-              className='graph-node__text'
-              x={0}
-              y={textTopY + (i * (this.props.node.fontSize + this.props.node.textLineGap))}
-              textAnchor='middle'
-              alignmentBaseline='hanging'
-              fontSize={this.props.node.fontSize}
-            >
-              {row}
-            </text>
-          ))
-        }
+        {this.getNodeTitleFragment()}
         {
           <g
             transform={`translate(${-this.props.node.iconRadius}, ${-this.props.node.iconRadius})`}
@@ -113,12 +191,14 @@ GraphNode.propTypes = {
   onMouseOver: PropTypes.func,
   onMouseOut: PropTypes.func,
   onClick: PropTypes.func,
+  matchedNodeNameIndices: MatchedIndicesShape,
 };
 
 GraphNode.defaultProps = {
   onMouseOver: () => {},
   onMouseOut: () => {},
   onClick: () => {},
+  matchedNodeNameIndices: [],
 };
 
 export default GraphNode;

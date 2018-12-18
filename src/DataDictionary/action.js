@@ -114,3 +114,16 @@ export const setMatchedNodeExpandingStatus = (nodeID, expanding) => ({
 export const clearSearchResult = () => ({
   type: 'SEARCH_RESULT_CLEARED',
 });
+
+export const collapseAllMatchedNodePopups = () => ({
+  type: 'GRAPH_MATCHED_NODE_ALL_COLLAPSED',
+});
+
+export const expandAllMAtchedNodePopups = () => ({
+  type: 'GRAPH_MATCHED_NODE_ALL_EXPANDED',
+});
+
+export const saveCurrentSearchKeyword = keyword => ({
+  type: 'SEARCH_SAVE_CURRENT_KEYWORD',
+  keyword,
+});

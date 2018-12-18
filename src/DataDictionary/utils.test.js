@@ -2,6 +2,9 @@ import {
   getType,
   truncateLines,
   downloadTemplate,
+  getSearchHistoryItems,
+  addSearchHistoryItems,
+  clearSearchHistoryItems,
 } from './utils';
 
 describe('the DataDictionaryNode', () => {
@@ -68,4 +71,55 @@ describe('the DataDictionaryNode', () => {
     downloadTemplate('tsv', 'test-id');
     expect(window.open).toBeCalled();
   });
+
+  it('knows how to get, add, and clear search history from localStorage', () => {
+    const ls1 = getSearchHistoryItems();
+    expect(ls1).toEqual(null);
+    const item1 = {
+      keywordStr: 'test keyword',
+      matchedCount: 10,
+    };
+    const item2 = {
+      keywordStr: 'test keyword2',
+      matchedCount: 11,
+    };
+    const ls2 = addSearchHistoryItems(item1);
+    expect(ls2).toEqual([item1]);
+    const ls3 = addSearchHistoryItems(item2);
+    expect(ls3).toEqual([item2, item1]);
+    expect(clearSearchHistoryItems()).toEqual([]);
+  });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

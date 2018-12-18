@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SearchResultTable from './SearchResultTable';
 import OverlayPropertyTable from '../OverlayPropertyTable/OverlayPropertyTable';
+import { SearchResultItemShape } from '../../utils';
 import './SearchResultLayer.css';
 
 class SearchResultLayer extends React.Component {
@@ -70,7 +71,7 @@ SearchResultLayer.propTypes = {
   matchedNodeIDs: PropTypes.arrayOf(PropTypes.string),
   matchedNodeExpandingStatus: PropTypes.object,
   dictionary: PropTypes.object,
-  searchResult: PropTypes.arrayOf(PropTypes.object),
+  searchResult: PropTypes.arrayOf(SearchResultItemShape),
   onClosePopup: PropTypes.func,
   canvasBoundingRect: PropTypes.object,
 };

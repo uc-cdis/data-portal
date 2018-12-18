@@ -26,6 +26,8 @@ const ddgraphInitialState = {
   graphNodesSVGElements: null,
   matchedNodeIDs: [],
   matchedNodeExpandingStatus: {},
+  currentSearchKeyword: '',
+  searchResult: [],
 };
 
 const ddgraph = (state = ddgraphInitialState, action) => {
@@ -216,6 +218,29 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       searchResult: [],
       matchedNodeIDs: [],
       matchedNodeExpandingStatus: {},
+      currentSearchKeyword: '',
+    };
+  }
+  case 'GRAPH_MATCHED_NODE_ALL_EXPANDED': {
+    const newMatchedNodeExtendStatus = {};
+    state.matchedNodeIDs.forEach((nodeID) => {
+      newMatchedNodeExtendStatus[nodeID] = true;
+    });
+    return {
+      ...state,
+      matchedNodeExpandingStatus: newMatchedNodeExtendStatus,
+    };
+  }
+  case 'GRAPH_MATCHED_NODE_ALL_COLLAPSED': {
+    return {
+      ...state,
+      matchedNodeExpandingStatus: {},
+    };
+  }
+  case 'SEARCH_SAVE_CURRENT_KEYWORD': {
+    return {
+      ...state,
+      currentSearchKeyword: action.keyword,
     };
   }
   default:

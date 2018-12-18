@@ -64,9 +64,9 @@ class DataDictionaryPropertyTable extends React.Component {
                       {
                         rawDescription &&
                       rawDescription.split('\\n').map((desc, i) => (
-                        <span key={`${propertyKey}-desc-${i}`}>
+                        <div key={`${propertyKey}-desc-${i}`}>
                           {desc}
-                        </span>
+                        </div>
                       ))
                       }
                     </React.Fragment>

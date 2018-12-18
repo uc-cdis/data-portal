@@ -22,7 +22,8 @@
   fill: var(--g3-color__highlight-orange);
 }
 
-.graph-node__text {
+.graph-node__text,
+.graph-node__tspan {
   font-weight: 600;
   fill: var(--g3-color__black);
   pointer-events: none;
@@ -32,6 +33,17 @@
   user-select: none;
 }
 
-.graph-node:hover .graph-node__text {
+.graph-node__text--highlight,
+.graph-node__tspan--highlight {
+  fill: var(--g3-color__highlight-orange);
+}
+
+.graph-node:hover .graph-node__text,
+.graph-node:hover .graph-node__tspan {
   fill: var(--g3-color__white);
+}
+
+.graph-node:hover .graph-node__text--highlight,
+.graph-node:hover .graph-node__tspan--highlight {
+  fill: var(--g3-color__base-blue);
 }

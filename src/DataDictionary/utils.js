@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { dataDictionaryTemplatePath } from '../localconf';
 
 const concatTwoWords = (w1, w2) => {
@@ -112,11 +113,26 @@ export const getPropertyDescription = (property) => {
 };
 
 const searchHistoryLocalStorageKey = 'datadictionary:searchHistory';
+/**
+ * @typedef {Object} SearchHistoryItem
+ * @property {string} keywordStr - keywordStr of this item
+ * @property {integer} matchedCount - matched count for this keyword
+ */
+
+/**
+ * Get search history items from localStorage
+ * @returns {SearchHistoryItem[]} array of search history items
+ */ 
 export const getSearchHistoryItems = () => {
   const items = JSON.parse(localStorage.getItem(searchHistoryLocalStorageKey));
   return items;
 };
 
+/** 
+ * Add search history item to localStorage
+ * @params {SearchHistoryItem} searchHistoryItem - item to add into localStorage
+ * @returns {SearchHistoryItem[]} array of new search history items
+ */
 export const addSearchHistoryItems = (searchHistoryItem) => {
   const { keywordStr } = searchHistoryItem;
   if (!keywordStr || keywordStr.length === 0) return getSearchHistoryItems();
@@ -135,8 +151,39 @@ export const addSearchHistoryItems = (searchHistoryItem) => {
   return newHistory;
 };
 
+/** 
+ * Clear search history item in localStorage
+ * @returns {SearchHistoryItem[]} empty array as new search history items 
+ */
 export const clearSearchHistoryItems = () => {
   const newHistory = [];
   localStorage.setItem(searchHistoryLocalStorageKey, JSON.stringify(newHistory));
   return newHistory;
 };
+
+export const MatchedIndicesShape = PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number));
+
+export const MatchedItemShape = PropTypes.shape({
+  indices: MatchedIndicesShape,
+  arrayIndex: PropTypes.number,
+  key: PropTypes.string,
+  value: PropTypes.string,
+});
+
+export const SearchItemPropertyShape = PropTypes.shape({
+  name: PropTypes.string,
+  description: PropTypes.string,
+  type: PropTypes.oneOf(PropTypes.arrayOf(PropTypes.string), PropTypes.string),
+});
+
+export const SearchItemShape = PropTypes.shape({
+  id: PropTypes.string,
+  title: PropTypes.string,
+  description: PropTypes.string,
+  properties: PropTypes.arrayOf(SearchItemPropertyShape),
+});
+
+export const SearchResultItemShape = PropTypes.shape({
+  item: SearchItemShape,
+  matches: PropTypes.arrayOf(MatchedItemShape),
+});

@@ -79,7 +79,6 @@ class Canvas extends React.Component {
 
   handleCanvasUpdate = () => {
     const canvasBoundingRect = this.canvasElement.current.getBoundingClientRect();
-    window.canvasElem = this.canvasElement.current;
     this.props.onCanvasBoundingBoxUpdate(canvasBoundingRect);
   }
 

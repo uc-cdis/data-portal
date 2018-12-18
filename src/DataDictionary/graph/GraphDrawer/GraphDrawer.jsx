@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import GraphNode from '../GraphNode/GraphNode';
 import GraphEdge from '../GraphEdge/GraphEdge';
+import { SearchResultItemShape } from '../../utils';
 import './GraphDrawer.css';
 
 class GraphDrawer extends React.Component {
@@ -10,6 +11,7 @@ class GraphDrawer extends React.Component {
     this.currentHighlightingNodeClassName = 'graph-drawer__node--current-highlighting';
     this.graphDomRef = React.createRef();
     this.graphNodeRefs = [];
+    this.nodeSVGElementInitialized = false;
   }
 
   componentDidUpdate() {
@@ -25,7 +27,7 @@ class GraphDrawer extends React.Component {
     // this only happens once, at the first time graph is rendered
     if (this.props.isGraphView
        && this.props.layoutInitialized
-       && !this.props.graphNodesSVGElements) {
+       && !this.nodeSVGElementInitialized) {
       const graphNodesSVGElements = this.props.nodes.map(node => ({
         nodeID: node.id,
         svgElement: this.getNodeRef(node.id).current.getSVGElement(),
@@ -34,6 +36,7 @@ class GraphDrawer extends React.Component {
           acc[cur.nodeID] = cur.svgElement;
           return acc;
         }, {});
+      this.nodeSVGElementInitialized = true;
       this.props.onGraphNodesSVGElementsUpdated(graphNodesSVGElements);
     }
   }
@@ -147,6 +150,19 @@ class GraphDrawer extends React.Component {
                 isNodeFaded = !this.props.relatedNodeIDs.includes(node.id);
               }
             }
+
+            // TODO: move to searcher
+
+            let matchedNodeNameIndices = [];
+            this.props.searchResult.forEach((item) => {
+              if (item.item.id === node.id) {
+                item.matches.forEach((matchItem) => {
+                  if (matchItem.key === 'title') {
+                    matchedNodeNameIndices = matchItem.indices;
+                  }
+                });
+              }
+            });
             return (
               <GraphNode
                 key={node.id}
@@ -159,6 +175,7 @@ class GraphDrawer extends React.Component {
                 onMouseOut={this.onMouseOutNode}
                 onClick={e => this.onClickNode(node, e)}
                 ref={this.getNodeRef(node.id)}
+                matchedNodeNameIndices={matchedNodeNameIndices}
               />
             );
           })
@@ -188,9 +205,9 @@ GraphDrawer.propTypes = {
   onHighlightingNodeSVGElementUpdated: PropTypes.func,
   isGraphView: PropTypes.bool,
   matchedNodeIDs: PropTypes.arrayOf(PropTypes.string),
-  graphNodesSVGElements: PropTypes.object,
   onGraphNodesSVGElementsUpdated: PropTypes.func,
   onExpandMatchedNode: PropTypes.func,
+  searchResult: PropTypes.arrayOf(SearchResultItemShape),
 };
 
 GraphDrawer.defaultProps = {
@@ -213,9 +230,9 @@ GraphDrawer.defaultProps = {
   onHighlightingNodeSVGElementUpdated: () => {},
   isGraphView: true,
   matchedNodeIDs: [],
-  graphNodesSVGElements: null,
   onGraphNodesSVGElementsUpdated: () => {},
   onExpandMatchedNode: () => {},
+  searchResult: [],
 };
 
 export default GraphDrawer;
