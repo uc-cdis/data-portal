@@ -83,6 +83,7 @@ class DictionarySearcher extends React.Component {
   };
 
   inputChangeFunc = (inputText) => {
+    this.props.onStartSearching();
     this.resetSearchResult();
     const result = this.searchHandler.search(inputText);
     const matchedStrings = {};
@@ -188,6 +189,7 @@ DictionarySearcher.propTypes = {
   onExpandAllMatchedNodePopups: PropTypes.func,
   onSaveCurrentSearchKeyword: PropTypes.func,
   currentSearchKeyword: PropTypes.string,
+  onStartSearching: PropTypes.func,
 };
 
 DictionarySearcher.defaultProps = {
@@ -201,6 +203,7 @@ DictionarySearcher.defaultProps = {
   onExpandAllMatchedNodePopups: () => {},
   onSaveCurrentSearchKeyword: () => {},
   currentSearchKeyword: '',
+  onStartSearching: () => {},
 };
 
 export default DictionarySearcher;

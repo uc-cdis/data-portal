@@ -7,6 +7,7 @@ import {
   collapseAllMatchedNodePopups,
   expandAllMAtchedNodePopups,
   saveCurrentSearchKeyword,
+  setHighlightingNode,
 } from '../../action';
 import DictionarySearcher from './DictionarySearcher';
 
@@ -27,6 +28,7 @@ const ReduxDictionarySearcher = (() => {
     onCollapseAllMatchedNodePopups: () => dispatch(collapseAllMatchedNodePopups()),
     onExpandAllMatchedNodePopups: () => dispatch(expandAllMAtchedNodePopups()),
     onSaveCurrentSearchKeyword: keyword => dispatch(saveCurrentSearchKeyword(keyword)),
+    onStartSearching: () => dispatch(setHighlightingNode()),
   });
 
   return connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(DictionarySearcher);
