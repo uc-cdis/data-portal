@@ -23,6 +23,5 @@ test('Project tables renders', () => {
   );
   // 2 == 1 data row + 1 summary totals row
   expect(table.find('tbody tr').length).toBe(1);
-  expect(table.find('tfoot tr').length).toBe(1);
   expect(table.find('thead tr').length).toBe(1);
 });
