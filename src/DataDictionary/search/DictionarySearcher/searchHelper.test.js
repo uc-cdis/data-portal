@@ -51,6 +51,9 @@ describe('dictionary search helper', () => {
     expect(result).toBeDefined();
     const summary = getSearchSummary(result);
     expect(summary.matchedPropertiesCount).toBeDefined();
-    expect(summary.matchedNodesCount).toBeDefined();
+    expect(summary.matchedNodeNameAndDescriptionsCount).toBeDefined();
+    expect(summary.matchedNodeIDsInNameAndDescription).toBeDefined();
+    expect(summary.matchedNodeIDsInProperties).toBeDefined();
+    expect(summary.generalMatchedNodeIDs).toBeDefined();
   });
 });
