@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getCategoryIconSVG } from '../../NodeCategories/helper';
 import { MatchedIndicesShape } from '../../utils';
+import { getNodeTitleSVGFragment } from '../../highlightHelper';
 import './GraphNode.css';
 
 class GraphNode extends React.Component {
@@ -13,106 +14,6 @@ class GraphNode extends React.Component {
   getSVGElement() {
     return this.svgElement.current;
   }
-
-  getNodeTitleFragment = () => {
-    const nodeTitleFragment = [];
-    let currentRowIndex = 0;
-    let rowStartIndex = 0;
-    let rowEndIndex;
-    const nodeNameRows = this.props.node.names;
-    const matchedNodeNameIndices = this.props.matchedNodeNameIndices;
-    let currentHighlightIndex = 0;
-    const textAttrBase = {
-      x: 0,
-      textAnchor: 'middle',
-      alignmentBaseline: 'hanging',
-      fontSize: this.props.node.fontSize,
-      className: 'graph-node__text',
-    };
-    const tspanAttrBase = {
-      textAnchor: 'middle',
-      alignmentBaseline: 'hanging',
-      fontSize: this.props.node.fontSize,
-    };
-    const tspanAttr = {
-      ...tspanAttrBase,
-      className: 'graph-node__tspan',
-    };
-    const tspanHighlightAttr = {
-      ...tspanAttrBase,
-      className: 'graph-node__tspan graph-node__tspan--highlight',
-    };
-    while (currentRowIndex < nodeNameRows.length) { // for each row
-      const currentRowStr = nodeNameRows[currentRowIndex];
-      rowEndIndex = rowStartIndex + currentRowStr.length;
-      const textY = this.props.node.textPadding +
-        (currentRowIndex * (this.props.node.fontSize + this.props.node.textLineGap));
-      const textAttr = {
-        ...textAttrBase,
-        key: currentRowIndex,
-        y: textY,
-      };
-      let cursorInRow = 0;
-      const currentRowFragment = [];
-
-      // Go over all highlighted text in current row
-      while (currentHighlightIndex < matchedNodeNameIndices.length) {
-        const highlightStartIndex = matchedNodeNameIndices[currentHighlightIndex][0];
-        const highlightEndIndex = matchedNodeNameIndices[currentHighlightIndex][1] + 1;
-        if (highlightStartIndex > rowEndIndex) {
-          currentRowFragment.push((
-            <tspan key={cursorInRow} {...tspanAttr}>
-              {currentRowStr.substring(cursorInRow)}
-            </tspan>
-          ));
-          cursorInRow = currentRowStr.length;
-          break;
-        }
-        const highlightStartIndexInRow = highlightStartIndex - rowStartIndex;
-        const highlightEndIndexInRow = highlightEndIndex - rowStartIndex;
-        if (cursorInRow < highlightStartIndexInRow) {
-          currentRowFragment.push((
-            <tspan key={cursorInRow} {...tspanAttr}>
-              {currentRowStr.substring(cursorInRow, highlightStartIndexInRow)}
-            </tspan>
-          ));
-          cursorInRow = highlightStartIndexInRow;
-        }
-        if (highlightEndIndex <= rowEndIndex) {
-          currentRowFragment.push((
-            <tspan key={cursorInRow} {...tspanHighlightAttr}>
-              {currentRowStr.substring(cursorInRow, highlightEndIndexInRow)}
-            </tspan>
-          ));
-          cursorInRow = highlightEndIndexInRow;
-          currentHighlightIndex += 1;
-        } else {
-          currentRowFragment.push((
-            <tspan key={cursorInRow} {...tspanHighlightAttr}>
-              {currentRowStr.substring(cursorInRow)}
-            </tspan>
-          ));
-          cursorInRow = currentRowStr.lenght;
-          break;
-        }
-      }
-
-      // Check text in the current row are all added to the list
-      if (cursorInRow < currentRowStr.length) {
-        currentRowFragment.push((
-          <tspan key={cursorInRow} {...tspanAttr}>{currentRowStr.substring(cursorInRow)}</tspan>
-        ));
-      }
-
-      // Add all fragment of current line to the node title fragment list
-      nodeTitleFragment.push((
-        <text {...textAttr}>{currentRowFragment}</text>
-      ));
-      currentRowIndex += 1;
-      rowStartIndex += currentRowStr.length + 1;
-    } // end of while, go to the next row
-    return nodeTitleFragment;
-  };
 
   render() {
     if (!(this.props.node.id !== undefined && this.props.node.type !== undefined
@@ -154,7 +55,15 @@ class GraphNode extends React.Component {
           ry={4}
           stroke={this.props.node.color}
         />
-        {this.getNodeTitleFragment()}
+        {
+          getNodeTitleSVGFragment(
+            this.props.node.names,
+            this.props.matchedNodeNameIndices,
+            this.props.node.fontSize,
+            this.props.node.textPadding,
+            this.props.node.textLineGap,
+          )
+        }
         {
           <g
             transform={`translate(${-this.props.node.iconRadius}, ${-this.props.node.iconRadius})`}

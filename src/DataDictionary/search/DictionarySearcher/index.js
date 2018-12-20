@@ -4,18 +4,14 @@ import {
   setSearchResult,
   addSearchHistoryItem,
   clearSearchResult,
-  collapseAllMatchedNodePopups,
-  expandAllMAtchedNodePopups,
   saveCurrentSearchKeyword,
-  setHighlightingNode,
+  resetGraphHighlight,
 } from '../../action';
 import DictionarySearcher from './DictionarySearcher';
 
 const ReduxDictionarySearcher = (() => {
   const mapStateToProps = state => ({
     dictionary: state.submission.dictionary,
-    isGraphView: state.ddgraph.isGraphView,
-    matchedNodeExpandingStatus: state.ddgraph.matchedNodeExpandingStatus,
     currentSearchKeyword: state.ddgraph.currentSearchKeyword,
   });
 
@@ -25,10 +21,8 @@ const ReduxDictionarySearcher = (() => {
     onSearchHistoryItemCreated: searchHistoryItem =>
       dispatch(addSearchHistoryItem(searchHistoryItem)),
     onSearchResultCleared: () => dispatch(clearSearchResult()),
-    onCollapseAllMatchedNodePopups: () => dispatch(collapseAllMatchedNodePopups()),
-    onExpandAllMatchedNodePopups: () => dispatch(expandAllMAtchedNodePopups()),
     onSaveCurrentSearchKeyword: keyword => dispatch(saveCurrentSearchKeyword(keyword)),
-    onStartSearching: () => dispatch(setHighlightingNode()),
+    onStartSearching: () => dispatch(resetGraphHighlight()),
   });
 
   return connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(DictionarySearcher);

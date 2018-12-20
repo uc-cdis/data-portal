@@ -1,12 +1,9 @@
 import { connect } from 'react-redux';
 import {
-  setHoveringNode,
-  setHighlightingNode,
-  setSecondHighlightingNodeID,
-  setHighlightingNodeSVGElement,
+  hoverNode,
+  clickNode,
   setGraphNodesSVGElements,
-  setMatchedNodeExpandingStatus,
-} from '../../action.js';
+} from '../../action';
 import GraphDrawer from './GraphDrawer';
 
 const ReduxGraphDrawer = (() => {
@@ -16,7 +13,6 @@ const ReduxGraphDrawer = (() => {
     graphBoundingBox: state.ddgraph.graphBoundingBox,
     layoutInitialized: state.ddgraph.layoutInitialized,
     highlightingNode: state.ddgraph.highlightingNode,
-    highlightingNodeSVGElement: state.ddgraph.highlightingNodeSVGElement,
     relatedNodeIDs: state.ddgraph.relatedNodeIDs,
     secondHighlightingNodeCandidateIDs: state.ddgraph.secondHighlightingNodeCandidateIDs,
     pathRelatedToSecondHighlightingNode: state.ddgraph.pathRelatedToSecondHighlightingNode,
@@ -27,17 +23,11 @@ const ReduxGraphDrawer = (() => {
   });
 
   const mapDispatchToProps = dispatch => ({
-    onHoverNode: (node, hoveringNodeSVGElement) =>
-      dispatch(setHoveringNode(node, hoveringNodeSVGElement)),
-    onCancelHoverNode: () => dispatch(setHoveringNode(null)),
-    onClickNode: (node, highlightingNodeSVGElement) =>
-      dispatch(setHighlightingNode(node, highlightingNodeSVGElement)),
-    onClickNodeAsSecondHighlightingNode: nodeID => dispatch(setSecondHighlightingNodeID(nodeID)),
-    onHighlightingNodeSVGElementUpdated: highlightingNodeSVGElement =>
-      dispatch(setHighlightingNodeSVGElement(highlightingNodeSVGElement)),
+    onHoverNode: nodeID => dispatch(hoverNode(nodeID)),
+    onCancelHoverNode: () => dispatch(hoverNode(null)),
+    onClickNode: nodeID => dispatch(clickNode(nodeID)),
     onGraphNodesSVGElementsUpdated: graphNodesSVGElements =>
       dispatch(setGraphNodesSVGElements(graphNodesSVGElements)),
-    onExpandMatchedNode: nodeID => dispatch(setMatchedNodeExpandingStatus(nodeID, true)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(GraphDrawer);

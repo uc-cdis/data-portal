@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@gen3/ui-component/dist/components/Button';
 import AutoComplete from '@gen3/ui-component/dist/components/AutoComplete';
 import { prepareSearch, getSearchSummary } from './searchHelper';
 import './DictionarySearcher.css';
@@ -35,14 +34,6 @@ class DictionarySearcher extends React.Component {
   onClearResult = () => {
     this.resetSearchResult();
     this.autoCompleteRef.current.clearInput();
-  };
-
-  onExpandAllResults = () => {
-    this.props.onExpandAllMatchedNodePopups();
-  };
-
-  onCollapseAllResults = () => {
-    this.props.onCollapseAllMatchedNodePopups();
   };
 
   launchSearchFromOutside = (keyword) => {
@@ -125,10 +116,6 @@ class DictionarySearcher extends React.Component {
   };
 
   render() {
-    const hasAtLeastOneNodeExpanded = this.props.matchedNodeExpandingStatus && Object.keys(
-      this.props.matchedNodeExpandingStatus,
-    )
-      .find(nid => this.props.matchedNodeExpandingStatus[nid]);
     return (
       <div className='data-dictionary-searcher'>
         <AutoComplete
@@ -162,17 +149,6 @@ class DictionarySearcher extends React.Component {
                   {this.state.searchResult.summary.matchedPropertiesCount}
                 </span> matches in node properties
               </li>
-              {
-                this.props.isGraphView && (
-                  <Button
-                    label={hasAtLeastOneNodeExpanded ? 'Collapse All Results' : 'Expand All Results'}
-                    onClick={hasAtLeastOneNodeExpanded ? this.onCollapseAllResults
-                      : this.onExpandAllResults}
-                    buttonType='default'
-                    rightIcon={hasAtLeastOneNodeExpanded ? 'eye-close' : 'eye'}
-                  />
-                )
-              }
             </React.Fragment>
           ) : (
             this.state.isSearchFinished && (
@@ -189,12 +165,8 @@ DictionarySearcher.propTypes = {
   dictionary: PropTypes.object.isRequired,
   setIsSearching: PropTypes.func,
   onSearchResultUpdated: PropTypes.func,
-  isGraphView: PropTypes.bool,
   onSearchHistoryItemCreated: PropTypes.func,
   onSearchResultCleared: PropTypes.func,
-  matchedNodeExpandingStatus: PropTypes.object,
-  onCollapseAllMatchedNodePopups: PropTypes.func,
-  onExpandAllMatchedNodePopups: PropTypes.func,
   onSaveCurrentSearchKeyword: PropTypes.func,
   currentSearchKeyword: PropTypes.string,
   onStartSearching: PropTypes.func,
@@ -203,12 +175,8 @@ DictionarySearcher.propTypes = {
 DictionarySearcher.defaultProps = {
   setIsSearching: () => {},
   onSearchResultUpdated: () => {},
-  isGraphView: true,
   onSearchHistoryItemCreated: () => {},
   onSearchResultCleared: () => {},
-  matchedNodeExpandingStatus: {},
-  onCollapseAllMatchedNodePopups: () => {},
-  onExpandAllMatchedNodePopups: () => {},
   onSaveCurrentSearchKeyword: () => {},
   currentSearchKeyword: '',
   onStartSearching: () => {},

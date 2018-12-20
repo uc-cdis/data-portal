@@ -1,19 +1,59 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { downloadTemplate } from '../../utils';
+import { downloadTemplate, SearchResultItemShape } from '../../utils';
 import { getCategoryIconSVG } from '../../NodeCategories/helper';
+import {
+  getNodeDescriptionFragment,
+  getNodeTitleFragment,
+} from '../../highlightHelper';
 import DataDictionaryPropertyTable from '../../table/DataDictionaryPropertyTable/.';
 import './OverlayPropertyTable.css';
 
 class OverlayPropertyTable extends React.Component {
+  getTitle = () => {
+    if (this.props.isSearchMode) {
+      const nodeTitleFragment = getNodeTitleFragment(
+        this.props.matchedResult.matches,
+        this.props.node.title,
+        'overlay-property-table__span',
+      );
+      return nodeTitleFragment;
+    }
+
+    return this.props.node.title;
+  };
+
+  getDescription = () => {
+    if (this.props.isSearchMode) {
+      const nodeDescriptionFragment = getNodeDescriptionFragment(
+        this.props.matchedResult.matches,
+        this.props.node.description,
+        'overlay-property-table__span',
+      );
+      return nodeDescriptionFragment;
+    }
+
+    return this.props.node.description;
+  };
+
   handleClose = () => {
     this.props.onCloseOverlayPropertyTable();
+  };
+
+  handleSeeFull = () => {
+    this.props.onOpenMatchedNode();
+  };
+
+  handleSeeOnlyMatched = () => {
+    this.props.onCloseMatchedNode();
   };
 
   render() {
     if (!this.props.node || this.props.hidden) return (<React.Fragment />);
     const IconSVG = getCategoryIconSVG(this.props.node.category);
+    const searchedNodeNotOpened = this.props.isSearchMode && !this.props.isSearchResultNodeOpened;
+    const needHighlightSearchResult = this.props.isSearchMode;
     return (
       <div className='overlay-property-table'>
         <div className='overlay-property-table__background' />
@@ -23,6 +63,17 @@ class OverlayPropertyTable extends React.Component {
               <div className='overlay-property-table__category'>
                 <IconSVG className='overlay-property-table__category-icon' />
                 <h4 className='overlay-property-table__category-text'>{this.props.node.category}</h4>
+                {
+                  this.props.isSearchMode && (
+                    <Button
+                      className='overlay-property-table__toggle-node'
+                      onClick={searchedNodeNotOpened
+                        ? this.handleSeeFull : this.handleSeeOnlyMatched}
+                      label={searchedNodeNotOpened ? 'See All' : 'See Only Matched'}
+                      buttonType='secondary'
+                    />
+                  )
+                }
                 <span
                   className='overlay-property-table__close'
                   onClick={this.handleClose}
@@ -49,10 +100,10 @@ class OverlayPropertyTable extends React.Component {
               </div>
               <div className='overlay-property-table__node'>
                 <h3 className='overlay-property-table__node-title'>
-                  {this.props.node.title}
+                  {this.getTitle()}
                 </h3>
                 <div className='overlay-property-table__node-description introduction'>
-                  {this.props.node.description}
+                  {this.getDescription()}
                 </div>
               </div>
             </div>
@@ -61,6 +112,10 @@ class OverlayPropertyTable extends React.Component {
                 properties={this.props.node.properties}
                 requiredProperties={this.props.node.required}
                 hasBorder={false}
+                onlyShowMatchedProperties={searchedNodeNotOpened}
+                needHighlightSearchResult={needHighlightSearchResult}
+                hideIsRequired={searchedNodeNotOpened}
+                matchedResult={this.props.matchedResult}
               />
             </div>
           </div>
@@ -74,12 +129,22 @@ OverlayPropertyTable.propTypes = {
   hidden: PropTypes.bool,
   node: PropTypes.object,
   onCloseOverlayPropertyTable: PropTypes.func,
+  isSearchMode: PropTypes.bool,
+  matchedResult: SearchResultItemShape,
+  onOpenMatchedNode: PropTypes.func,
+  onCloseMatchedNode: PropTypes.func,
+  isSearchResultNodeOpened: PropTypes.bool,
 };
 
 OverlayPropertyTable.defaultProps = {
   hidden: true,
   node: null,
   onCloseOverlayPropertyTable: () => {},
+  isSearchMode: false,
+  matchedResult: {},
+  onOpenMatchedNode: () => {},
+  onCloseMatchedNode: () => {},
+  isSearchResultNodeOpened: false,
 };
 
 export default OverlayPropertyTable;

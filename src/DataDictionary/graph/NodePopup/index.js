@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import {
-  setHighlightingNode,
+  resetGraphHighlight,
   setOverlayPropertyTableHidden,
 } from '../../action.js';
 import NodePopup from './NodePopup';
@@ -8,12 +8,12 @@ import NodePopup from './NodePopup';
 const ReduxNodePopup = (() => {
   const mapStateToProps = state => ({
     highlightingNode: state.ddgraph.highlightingNode,
-    highlightingNodeSVGElement: state.ddgraph.highlightingNodeSVGElement,
     canvasBoundingRect: state.ddgraph.canvasBoundingRect,
+    graphNodesSVGElements: state.ddgraph.graphNodesSVGElements,
   });
 
   const mapDispatchToProps = dispatch => ({
-    onClosePopup: () => dispatch(setHighlightingNode(null, null)),
+    onClosePopup: () => dispatch(resetGraphHighlight()),
     onOpenOverlayPropertyTable: () => dispatch(setOverlayPropertyTableHidden(false)),
   });
 

@@ -10,7 +10,7 @@
   text-align: left;
   vertical-align: top;
 }
-
+/*
 .data-dictionary-property-table__data--property {
   width: 13%;
 }
@@ -29,7 +29,7 @@
 
 .data-dictionary-property-table__data--term {
   width: 8%;
-}
+}*/
 
 .data-dictionary-property-table--without-border tr:first-child th.data-dictionary-property-table__data {
   border-top: 0;
@@ -57,4 +57,17 @@
 
 .data-dictionary-property-table__required-icon {
   background-color: var(--g3-color__highlight-orange);
+}
+
+.data-dictionary-property-table__span {
+  display: inline;
+}
+
+.data-dictionary-property-table__span--highlight {
+  color: var(--g3-color__highlight-orange);
+  font-weight: 600;
+}
+
+.data-dictionary-property-table__span--new-line {
+  display: block;
 }

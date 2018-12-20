@@ -2,6 +2,8 @@
   position: absolute;
   top: 0;
   bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 3;
 }
 
@@ -99,4 +101,27 @@
 .overlay-property-table__download-button .g3-icon {
   position: relative;
   top: 1px;
+}
+
+.overlay-property-table__span {
+  display: inline;
+}
+
+.overlay-property-table__span--highlight {
+  color: var(--g3-color__highlight-orange);
+  font-weight: 600;
+}
+
+.overlay-property-table__span--new-line {
+  display: block;
+}
+
+.overlay-property-table__toggle-node {
+  min-width: unset; /* override .g3-button's 152px min-width */
+  height: 30px;
+  padding: 0 20px;
+  border: none;
+  margin-left: 10px;
+  position: relative;
+  top: -2px;
 }

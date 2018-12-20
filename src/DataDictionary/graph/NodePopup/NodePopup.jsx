@@ -9,14 +9,16 @@ class NodePopup extends React.Component {
   }
 
   render() {
-    if (!this.props.highlightingNode || !this.props.highlightingNodeSVGElement) {
+    if (!this.props.highlightingNode) {
       return (
         <React.Fragment />
       );
     }
-    const svgBoundingBox = this.props.highlightingNodeSVGElement
-      && this.props.highlightingNodeSVGElement.getBoundingClientRect
-      ? this.props.highlightingNodeSVGElement.getBoundingClientRect()
+    const highlightingNodeSVGElement = this.props
+      .graphNodesSVGElements[this.props.highlightingNode.id];
+    const svgBoundingBox = highlightingNodeSVGElement
+      && highlightingNodeSVGElement.getBoundingClientRect
+      ? highlightingNodeSVGElement.getBoundingClientRect()
       : { top: 0, left: 0, width: 0, bottom: 0 };
     const popupLeft = (svgBoundingBox.left - this.props.canvasBoundingRect.left)
       + (svgBoundingBox.width / 2);
@@ -60,7 +62,7 @@ class NodePopup extends React.Component {
 
 NodePopup.propTypes = {
   highlightingNode: PropTypes.object,
-  highlightingNodeSVGElement: PropTypes.object,
+  graphNodesSVGElements: PropTypes.object,
   onClosePopup: PropTypes.func,
   canvasBoundingRect: PropTypes.object,
   onOpenOverlayPropertyTable: PropTypes.func,
@@ -68,7 +70,7 @@ NodePopup.propTypes = {
 
 NodePopup.defaultProps = {
   highlightingNode: null,
-  highlightingNodeSVGElement: null,
+  graphNodesSVGElements: null,
   onClosePopup: () => {},
   canvasBoundingRect: { top: 0, left: 0 },
   onOpenOverlayPropertyTable: () => {},
