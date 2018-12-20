@@ -21,6 +21,10 @@
   stroke-width: 2px;
 }
 
+.graph-node--dashed .graph-node__rect {
+  stroke-dasharray: 5, 5;
+}
+
 .graph-node--half-faded .graph-node__rect {
   stroke-dasharray: 5, 5;
 }

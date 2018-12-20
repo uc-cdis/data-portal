@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   setOverlayPropertyTableHidden,
   setHighlightingMatchedNodeOpened,
-} from '../../action.js';
+} from '../../action';
 import OverlayPropertyTable from './OverlayPropertyTable';
 
 const getNode = (state) => {

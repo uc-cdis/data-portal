@@ -204,7 +204,7 @@ const ddgraph = (state = ddgraphInitialState, action) => {
         action.searchResultSummary.matchedNodeIDsInNameAndDescription,
       matchedNodeIDsInProperties: action.searchResultSummary.matchedNodeIDsInProperties,
       isGraphView: true,
-      isSearchMode: action.searchResult.length > 0,
+      isSearchMode: true,
       highlightingMatchedNodeID: null,
       highlightingMatchedNodeOpened: false,
       highlightingNode: null,

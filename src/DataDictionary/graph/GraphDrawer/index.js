@@ -21,6 +21,7 @@ const ReduxGraphDrawer = (() => {
     matchedNodeIDs: state.ddgraph.matchedNodeIDs,
     matchedNodeIDsInNameAndDescription: state.ddgraph.matchedNodeIDsInNameAndDescription,
     searchResult: state.ddgraph.searchResult,
+    isSearchMode: state.ddgraph.isSearchMode,
   });
 
   const mapDispatchToProps = dispatch => ({

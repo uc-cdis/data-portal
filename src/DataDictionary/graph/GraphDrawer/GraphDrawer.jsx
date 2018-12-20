@@ -75,7 +75,7 @@ class GraphDrawer extends React.Component {
             let isEdgeFaded = false;
             let isEdgeHalfFaded = false;
             let isEdgeHighlighted = false;
-            if (this.props.matchedNodeIDs && this.props.matchedNodeIDs.length > 0) {
+            if (this.props.isSearchMode) {
               isEdgeFaded = true;
             } else if (this.props.highlightingNode) {
               const isEdgeRelatedToHighlightedNode =
@@ -112,9 +112,10 @@ class GraphDrawer extends React.Component {
             let isNodeClickable = true;
             let isHighlightingNode = false;
             let isNodeHalfFaded = false;
-            if (this.props.matchedNodeIDs && this.props.matchedNodeIDs.length > 0) {
+            let isNodeDashed = false;
+            if (this.props.isSearchMode) {
               isNodeFaded = !this.props.matchedNodeIDs.includes(node.id);
-              isNodeHalfFaded = this.props.matchedNodeIDsInNameAndDescription.length > 0
+              isNodeDashed = this.props.matchedNodeIDsInNameAndDescription.length > 0
                 && !isNodeFaded && !this.props.matchedNodeIDsInNameAndDescription.includes(node.id);
               isNodeClickable = !isNodeFaded;
             } else if (this.props.highlightingNode) {
@@ -147,6 +148,7 @@ class GraphDrawer extends React.Component {
                 isHighlightingNode={isHighlightingNode}
                 isFaded={isNodeFaded}
                 isHalfFaded={isNodeHalfFaded}
+                isDashed={isNodeDashed}
                 isClickable={isNodeClickable}
                 onMouseOver={() => this.onMouseOverNode(node)}
                 onMouseOut={this.onMouseOutNode}
@@ -178,6 +180,7 @@ GraphDrawer.propTypes = {
   secondHighlightingNodeCandidateIDs: PropTypes.arrayOf(PropTypes.string),
   pathRelatedToSecondHighlightingNode: PropTypes.arrayOf(PropTypes.object),
   isGraphView: PropTypes.bool,
+  isSearchMode: PropTypes.bool,
   matchedNodeIDs: PropTypes.arrayOf(PropTypes.string),
   matchedNodeIDsInNameAndDescription: PropTypes.arrayOf(PropTypes.string),
   onGraphNodesSVGElementsUpdated: PropTypes.func,
@@ -200,6 +203,7 @@ GraphDrawer.defaultProps = {
   secondHighlightingNodeCandidateIDs: [],
   pathRelatedToSecondHighlightingNode: [],
   isGraphView: true,
+  isSearchMode: false,
   matchedNodeIDs: [],
   matchedNodeIDsInNameAndDescription: [],
   onGraphNodesSVGElementsUpdated: () => {},

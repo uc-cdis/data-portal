@@ -1,0 +1,10 @@
+.action-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.action-layer__clear-search {
+  margin-left: 60px;
+  margin-top: 15px;
+}

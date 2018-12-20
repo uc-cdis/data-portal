@@ -96,7 +96,10 @@ export const graphStyleConfig = {
 export const parseDictionaryNodes = dictionary => Object.keys(dictionary).filter(
   id => id.charAt(0) !== '_' && id === dictionary[id].id,
 ).map(
-  id => dictionary[id],
+  (id) => {
+    const originNode = dictionary[id];
+    return originNode;
+  },
 ).filter(
   node => node.category && node.id,
 );

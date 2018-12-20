@@ -29,6 +29,7 @@
   position: sticky;
   top: 0;
   z-index: 3;
+  border: 1px solid var(--g3-color__silver);
 }
 
 .overlay-property-table__close {

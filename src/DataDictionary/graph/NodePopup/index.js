@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   resetGraphHighlight,
   setOverlayPropertyTableHidden,
-} from '../../action.js';
+} from '../../action';
 import NodePopup from './NodePopup';
 
 const ReduxNodePopup = (() => {

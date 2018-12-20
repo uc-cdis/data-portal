@@ -28,6 +28,8 @@ class GraphNode extends React.Component {
       ? 'graph-node--faded' : '';
     const nodeHalfFadedClassModifier = this.props.isHalfFaded
       ? 'graph-node--half-faded' : '';
+    const nodeDashedClassModifier = this.props.isDashed
+      ? 'graph-node--dashed' : '';
     const nodeClickableClassModifier = this.props.isClickable
       ? 'graph-node--clickable' : 'graph-node--not-clickable';
     const nodeIsCurrentHighlightingClassModifier = this.props.isHighlightingNode
@@ -40,8 +42,9 @@ class GraphNode extends React.Component {
         transform={`translate(${this.props.node.topCenterX}, ${this.props.node.topCenterY}) `}
         className={`graph-node 
           ${nodeFadedClassModifier} 
-          ${nodeHalfFadedClassModifier}
-          ${nodeClickableClassModifier}
+          ${nodeHalfFadedClassModifier} 
+          ${nodeDashedClassModifier} 
+          ${nodeClickableClassModifier} 
           ${nodeIsCurrentHighlightingClassModifier}`}
         onMouseOver={this.props.onMouseOver}
         onMouseOut={this.props.onMouseOut}
@@ -108,6 +111,7 @@ GraphNode.propTypes = {
   isHighlightingNode: PropTypes.bool.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHalfFaded: PropTypes.bool.isRequired,
+  isDashed: PropTypes.bool.isRequired,
   isClickable: PropTypes.bool.isRequired,
   onMouseOver: PropTypes.func,
   onMouseOut: PropTypes.func,

@@ -7,7 +7,7 @@ import {
   setSecondHighlightingNodeCandidateIDs,
   setPathRelatedToSecondHighlightingNode,
   setDataModelStructure,
-} from '../../action.js';
+} from '../../action';
 
 const ReduxGraphCalculator = (() => {
   const mapStateToProps = state => ({
