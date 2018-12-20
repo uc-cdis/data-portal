@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { CheckBoxGroup } from '../components/CheckBox';
+import { CheckBoxGroup } from '../components/CheckBoxGroup';
 import './ExplorerSideBar.less';
 
 class ExplorerSideBar extends Component {

@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { apiPath, userapiPath, headers, basename, submissionApiOauthPath, submissionApiPath, graphqlPath, graphqlSchemaUrl } from './configs';
+import { apiPath, userapiPath, headers, basename, submissionApiOauthPath, submissionApiPath, graphqlPath, arrangerGraphqlPath, graphqlSchemaUrl } from './configs';
 
 export const updatePopup = state => ({
   type: 'UPDATE_POPUP',
@@ -159,6 +159,25 @@ export const fetchGraphQL = (graphQLParams) => {
     });
 };
 
+export const fetchArrangerGraphQL = (graphQLParams) => {
+  const request = {
+    credentials: 'include',
+    headers: { ...headers },
+    method: 'POST',
+    body: JSON.stringify(graphQLParams),
+  };
+
+  return fetch(arrangerGraphqlPath, request)
+    .then(response => response.text())
+    .then((responseBody) => {
+      try {
+        return JSON.parse(responseBody);
+      } catch (error) {
+        return responseBody;
+      }
+    });
+};
+
 export const handleResponse = type => ({ data, status }) => {
   switch (status) {
   case 200:
@@ -174,30 +193,33 @@ export const handleResponse = type => ({ data, status }) => {
   }
 };
 
+const handleFetchUser = ({ status, data }) => {
+  switch (status) {
+  case 200:
+    return {
+      type: 'RECEIVE_USER',
+      user: data,
+    };
+  case 401:
+    return {
+      type: 'UPDATE_POPUP',
+      data: { authPopup: true },
+    };
+  default:
+    return {
+      type: 'FETCH_ERROR',
+      error: data.error,
+    };
+  }
+};
+
 export const fetchUser = dispatch => fetchCreds({
   dispatch,
 }).then(
-  ({ status, data }) => {
-    switch (status) {
-    case 200:
-      return {
-        type: 'RECEIVE_USER',
-        user: data,
-      };
-    case 401:
-      return {
-        type: 'UPDATE_POPUP',
-        data: { authPopup: true },
-      };
-    default:
-      return {
-        type: 'FETCH_ERROR',
-        error: data.error,
-      };
-    }
-  },
-).then((msg) => { dispatch(msg); });
+  (status, data) => handleFetchUser(status, data),
+).then(msg => dispatch(msg));
 
+export const refreshUser = () => fetchUser;
 
 export const logoutAPI = () => dispatch => fetchWithCreds({
   path: `${submissionApiOauthPath}logout`,

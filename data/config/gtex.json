@@ -206,7 +206,7 @@
         {
           "enabled": true,
           "type": "export",
-          "title": "Export to Saturn",
+          "title": "Export to Terra",
           "rightIcon": "external-link",
           "leftIcon": "planet"
         }

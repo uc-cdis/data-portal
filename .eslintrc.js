@@ -52,8 +52,8 @@ module.exports = {
     {
       "files": [
         "src/Submission/SubmitTSV.test.jsx",
-        "src/DataModelGraph/utils.js",
-        "src/DataModelGraph/utils.test.js",
+        "src/GraphUtils/utils.js",
+        "src/GraphUtils/utils.test.js",
         "src/actions.js",
         "data/getSchema.js",
         "data/getTexts.js",
@@ -77,8 +77,8 @@ module.exports = {
     {
       "files": [
         "src/DataDictionary/GraphCreator.js",
-        "src/DataModelGraph/testData.js",
-        "src/DataModelGraph/utils.js",
+        "src/GraphUtils/testData.js",
+        "src/GraphUtils/utils.js",
       ],
       "rules": {
         "no-param-reassign": "off" // for D3 charts
@@ -86,14 +86,14 @@ module.exports = {
     },
     {
       "files": [
-        "src/DataModelGraph/testData.js",
+        "src/GraphUtils/testData.js",
       ],
       "rules": {
         "no-underscore-dangle": "off" // for previously named var
       }
     },
     {
-      "files": [ "src/DataModelGraph/utils.js" ],
+      "files": [ "src/GraphUtils/utils.js" ],
       "rules": {
         "no-loop-func": "off" // for D3 config
       }
@@ -123,5 +123,11 @@ module.exports = {
         "no-template-curly-in-string": "off",
       }
     },
+    {
+      "files": ["src/components/InputWithIcon.jsx"],
+      "rules": {
+        "react/no-unused-prop-types": "off"
+      }
+    }
   ],
 };

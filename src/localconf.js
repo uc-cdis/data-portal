@@ -1,4 +1,4 @@
-const { components, config } = require('./params');
+const { components, config, requiredCerts } = require('./params');
 
 /**
  * Setup configuration variables based on the "app" the data-portal is
@@ -37,10 +37,13 @@ function buildConfig(opts) {
   const apiPath = `${hostname}api/`;
   const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
+  const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
+  const arrangerGraphqlPath = `${hostname}api/v0/flat-search/search/graphql`;
   let userapiPath = `${hostname}user/`;
   const jobapiPath = `${hostname}/job/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
+  const indexdPath = `${hostname}index/`;
   let login = {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',
@@ -65,8 +68,6 @@ function buildConfig(opts) {
       '#e7e7e7',
     ],
   };
-
-  const requiredCerts = [];
 
   if (app === 'gdc') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
@@ -93,7 +94,10 @@ function buildConfig(opts) {
     submissionApiOauthPath,
     credentialCdisPath,
     coreMetadataPath,
+    indexdPath,
     graphqlPath,
+    dataDictionaryTemplatePath,
+    arrangerGraphqlPath,
     graphqlSchemaUrl,
     appname: components.appName,
     mockStore,
@@ -102,6 +106,7 @@ function buildConfig(opts) {
     loginPath,
     requiredCerts,
     lineLimit,
+    certs: components.certs,
   };
 }
 
