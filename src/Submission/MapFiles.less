@@ -1,0 +1,96 @@
+@keyframes notificationFadeOut {
+  0% {
+    opacity: 1;
+  }
+  33% {
+    opacity: 1;
+  }
+  66% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.map-files__notification-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-files__notification {
+  position: fixed;
+  top: 50px;
+  margin: auto;
+  z-index: 100;
+  height: 86px;
+  padding: 15px 30px;
+  background-color: var(--g3-color__highlight-orange);
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  animation-name: notificationFadeOut;
+  animation-duration: 8s;
+}
+
+.map-files__notification-text {
+  color: var(--g3-color__white);
+  text-align: center;
+}
+
+.map-files .h1-typo {
+  margin: 40px 0 20px 0;
+}
+
+.map-files__tables {
+  margin-top: 40px;
+}
+
+.map-files__tables--scrolling {
+  margin-top: 140px;
+}
+
+.map-files__table {
+  table-layout: fixed;
+  width: 100%;
+  text-align: left;
+  -webkit-border-horizontal-spacing: unset;
+  margin: 10px 0 40px 0;
+  border-collapse: collapse;
+}
+
+.map-files__table-header {
+  border-top: 2px solid var(--g3-color__black);
+  border-bottom: 1px solid var(--g3-color__silver);
+  height: 70px;
+}
+
+.map-files__table-row {
+  background-color: var(--g3-color__white);
+  border-bottom: 1px solid var(--g3-color__silver);
+  height: 70px;
+}
+
+.map-files__table-row > * {
+  word-break: break-all;
+  padding: 10px 20px 10px 0;
+}
+
+.map-files__table-checkbox {
+  width: 100px;
+  padding: 0 25px;
+}
+
+.map-files__status--ready {
+  color: var(--g3-color__base-blue);
+}
+
+.map-files__status--ready .h2-typo {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.map-files__status--generating {
+  color: var(--g3-color__gray);
+}

@@ -123,5 +123,11 @@ module.exports = {
         "no-template-curly-in-string": "off",
       }
     },
+    {
+      "files": ["src/components/InputWithIcon.jsx"],
+      "rules": {
+        "react/no-unused-prop-types": "off"
+      }
+    }
   ],
 };

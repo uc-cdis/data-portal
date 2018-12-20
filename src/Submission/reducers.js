@@ -45,6 +45,16 @@ const submission = (state = {}, action) => {
     };
   case 'CLEAR_COUNTS':
     return { ...state, counts_search: null, links_search: null };
+  case 'RECEIVE_UNMAPPED_FILES':
+    return { ...state, unmappedFiles: action.data };
+  case 'RECEIVE_UNMAPPED_FILE_STATISTICS':
+    return {
+      ...state,
+      unmappedFileCount: action.data.count,
+      unmappedFileSize: action.data.totalSize,
+    };
+  case 'RECEIVE_FILES_TO_MAP':
+    return { ...state, filesToMap: action.data };
   default:
     return state;
   }
