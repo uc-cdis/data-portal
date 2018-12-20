@@ -1,8 +1,11 @@
-
 .graph-node--faded {
   opacity: var(--opacity--faded);
   cursor: none;
   pointer-events: none;
+}
+
+.graph-node--half-faded {
+  opacity: var(--opacity--half-faded);
 }
 
 .graph-node--clickable {
@@ -16,6 +19,10 @@
 .graph-node__rect {
   fill: var(--g3-color__white);
   stroke-width: 2px;
+}
+
+.graph-node--half-faded .graph-node__rect {
+  stroke-dasharray: 5, 5;
 }
 
 .graph-node:hover .graph-node__rect {

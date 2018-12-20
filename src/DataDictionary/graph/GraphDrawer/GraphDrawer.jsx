@@ -8,7 +8,6 @@ import './GraphDrawer.css';
 class GraphDrawer extends React.Component {
   constructor(props) {
     super(props);
-    this.currentHighlightingNodeClassName = 'graph-drawer__node--current-highlighting';
     this.graphDomRef = React.createRef();
     this.graphNodeRefs = [];
     this.nodeSVGElementInitialized = false;
@@ -74,20 +73,23 @@ class GraphDrawer extends React.Component {
         {
           this.props.edges.map((edge, i) => {
             let isEdgeFaded = false;
+            let isEdgeHalfFaded = false;
             let isEdgeHighlighted = false;
             if (this.props.matchedNodeIDs && this.props.matchedNodeIDs.length > 0) {
               isEdgeFaded = true;
             } else if (this.props.highlightingNode) {
+              const isEdgeRelatedToHighlightedNode =
+                this.props.relatedNodeIDs.includes(edge.source)
+                && this.props.relatedNodeIDs.includes(edge.target);
               if (this.props.secondHighlightingNodeID) {
                 const isEdgeAlongPathRelatedToSecondHighlightNode =
                   !!this.props.pathRelatedToSecondHighlightingNode
                     .find(e => (e.source === edge.source && e.target === edge.target));
-                isEdgeFaded = !isEdgeAlongPathRelatedToSecondHighlightNode;
+                isEdgeHalfFaded = isEdgeRelatedToHighlightedNode
+                  && !isEdgeAlongPathRelatedToSecondHighlightNode;
+                isEdgeFaded = !isEdgeRelatedToHighlightedNode;
                 isEdgeHighlighted = isEdgeAlongPathRelatedToSecondHighlightNode;
               } else {
-                const isEdgeRelatedToHighlightedNode =
-                  this.props.relatedNodeIDs.includes(edge.source)
-                  && this.props.relatedNodeIDs.includes(edge.target);
                 isEdgeFaded = !isEdgeRelatedToHighlightedNode;
                 isEdgeHighlighted = isEdgeRelatedToHighlightedNode;
               }
@@ -98,6 +100,7 @@ class GraphDrawer extends React.Component {
                 edge={edge}
                 isRequired={edge.required}
                 isFaded={isEdgeFaded}
+                isHalfFaded={isEdgeHalfFaded}
                 isHighlighted={isEdgeHighlighted}
               />
             );
@@ -108,18 +111,21 @@ class GraphDrawer extends React.Component {
             let isNodeFaded = false;
             let isNodeClickable = true;
             let isHighlightingNode = false;
+            let isNodeHalfFaded = false;
             if (this.props.matchedNodeIDs && this.props.matchedNodeIDs.length > 0) {
               isNodeFaded = !this.props.matchedNodeIDs.includes(node.id);
               isNodeClickable = !isNodeFaded;
             } else if (this.props.highlightingNode) {
               isHighlightingNode = (this.props.highlightingNode.id === node.id);
               isNodeClickable =
-                this.props.secondHighlightingNodeCandidateIDs.includes(node.id);
+                this.props.highlightingNode.id === node.id
+                || (this.props.secondHighlightingNodeCandidateIDs.length > 1
+                  && this.props.secondHighlightingNodeCandidateIDs.includes(node.id));
+
+              isNodeFaded = !this.props.relatedNodeIDs.includes(node.id);
               if (this.props.secondHighlightingNodeID) {
-                isNodeFaded = !this.props.pathRelatedToSecondHighlightingNode
+                isNodeHalfFaded = !isNodeFaded && !this.props.pathRelatedToSecondHighlightingNode
                   .find(e => (e.source === node.id || e.target === node.id));
-              } else {
-                isNodeFaded = !this.props.relatedNodeIDs.includes(node.id);
               }
             }
             let matchedNodeNameIndices = [];
@@ -136,9 +142,9 @@ class GraphDrawer extends React.Component {
               <GraphNode
                 key={node.id}
                 node={node}
-                highlightingNodeClassName={this.currentHighlightingNodeClassName}
                 isHighlightingNode={isHighlightingNode}
                 isFaded={isNodeFaded}
+                isHalfFaded={isNodeHalfFaded}
                 isClickable={isNodeClickable}
                 onMouseOver={() => this.onMouseOverNode(node)}
                 onMouseOut={this.onMouseOutNode}

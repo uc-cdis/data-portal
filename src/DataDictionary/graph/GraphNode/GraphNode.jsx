@@ -26,10 +26,12 @@ class GraphNode extends React.Component {
     }
     const nodeFadedClassModifier = this.props.isFaded
       ? 'graph-node--faded' : '';
+    const nodeHalfFadedClassModifier = this.props.isHalfFaded
+      ? 'graph-node--half-faded' : '';
     const nodeClickableClassModifier = this.props.isClickable
       ? 'graph-node--clickable' : 'graph-node--not-clickable';
     const nodeIsCurrentHighlightingClassModifier = this.props.isHighlightingNode
-      ? this.props.highlightingNodeClassName : '';
+      ? 'graph-drawer__node--current-highlighting' : '';
     const IconSVG = getCategoryIconSVG(this.props.node.type);
     return (
       <g
@@ -38,6 +40,7 @@ class GraphNode extends React.Component {
         transform={`translate(${this.props.node.topCenterX}, ${this.props.node.topCenterY}) `}
         className={`graph-node 
           ${nodeFadedClassModifier} 
+          ${nodeHalfFadedClassModifier}
           ${nodeClickableClassModifier}
           ${nodeIsCurrentHighlightingClassModifier}`}
         onMouseOver={this.props.onMouseOver}
@@ -102,9 +105,9 @@ const GraphNodeShape = PropTypes.shape({
 
 GraphNode.propTypes = {
   node: GraphNodeShape.isRequired,
-  highlightingNodeClassName: PropTypes.string.isRequired,
   isHighlightingNode: PropTypes.bool.isRequired,
   isFaded: PropTypes.bool.isRequired,
+  isHalfFaded: PropTypes.bool.isRequired,
   isClickable: PropTypes.bool.isRequired,
   onMouseOver: PropTypes.func,
   onMouseOut: PropTypes.func,
