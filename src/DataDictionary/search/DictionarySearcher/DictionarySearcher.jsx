@@ -52,8 +52,6 @@ class DictionarySearcher extends React.Component {
         return copyResItem;
       })
       .filter(resItem => resItem.matches.length > 0);
-    this.props.setIsSearching(false);
-    this.props.onSearchResultUpdated(result);
     const summary = getSearchSummary(result);
     this.setState({
       isSearchFinished: true,
@@ -63,9 +61,11 @@ class DictionarySearcher extends React.Component {
       },
       suggestionList: [],
     });
+    this.props.setIsSearching(false);
+    this.props.onSearchResultUpdated(result, summary);
     this.props.onSearchHistoryItemCreated({
       keywordStr: str,
-      matchedCount: summary.matchedNodesCount,
+      matchedCount: summary.generalMatchedNodeIDs.length,
     });
     this.props.onSaveCurrentSearchKeyword(str);
   };
@@ -141,8 +141,8 @@ class DictionarySearcher extends React.Component {
               </div>
               <li className='dictionary-searcher__result-item body'>
                 <span className='dictionary-searcher__result-count'>
-                  {this.state.searchResult.summary.matchedNodesCount}
-                </span> matches in nodes
+                  {this.state.searchResult.summary.matchedNodeNameAndDescriptionsCount}
+                </span> matches in nodes (title and description)
               </li>
               <li className='dictionary-searcher__result-item body'>
                 <span className='dictionary-searcher__result-count'>

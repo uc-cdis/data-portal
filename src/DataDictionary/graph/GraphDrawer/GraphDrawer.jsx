@@ -114,6 +114,8 @@ class GraphDrawer extends React.Component {
             let isNodeHalfFaded = false;
             if (this.props.matchedNodeIDs && this.props.matchedNodeIDs.length > 0) {
               isNodeFaded = !this.props.matchedNodeIDs.includes(node.id);
+              isNodeHalfFaded = this.props.matchedNodeIDsInNameAndDescription.length > 0
+                && !isNodeFaded && !this.props.matchedNodeIDsInNameAndDescription.includes(node.id);
               isNodeClickable = !isNodeFaded;
             } else if (this.props.highlightingNode) {
               isHighlightingNode = (this.props.highlightingNode.id === node.id);
@@ -177,6 +179,7 @@ GraphDrawer.propTypes = {
   pathRelatedToSecondHighlightingNode: PropTypes.arrayOf(PropTypes.object),
   isGraphView: PropTypes.bool,
   matchedNodeIDs: PropTypes.arrayOf(PropTypes.string),
+  matchedNodeIDsInNameAndDescription: PropTypes.arrayOf(PropTypes.string),
   onGraphNodesSVGElementsUpdated: PropTypes.func,
   searchResult: PropTypes.arrayOf(SearchResultItemShape),
 };
@@ -198,6 +201,7 @@ GraphDrawer.defaultProps = {
   pathRelatedToSecondHighlightingNode: [],
   isGraphView: true,
   matchedNodeIDs: [],
+  matchedNodeIDsInNameAndDescription: [],
   onGraphNodesSVGElementsUpdated: () => {},
   searchResult: [],
 };

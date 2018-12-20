@@ -25,6 +25,8 @@ const ddgraphInitialState = {
   currentSearchKeyword: '',
   searchResult: [],
   matchedNodeIDs: [],
+  matchedNodeIDsInProperties: [],
+  matchedNodeIDsInNameAndDescription: [],
   isSearchMode: false,
   isSearching: false,
   highlightingMatchedNodeID: null,
@@ -197,12 +199,17 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     return {
       ...state,
       searchResult: action.searchResult,
-      matchedNodeIDs: action.searchResult
-        && action.searchResult.map(resItem => resItem.item.id),
+      matchedNodeIDs: action.searchResultSummary.generalMatchedNodeIDs,
+      matchedNodeIDsInNameAndDescription:
+        action.searchResultSummary.matchedNodeIDsInNameAndDescription,
+      matchedNodeIDsInProperties: action.searchResultSummary.matchedNodeIDsInProperties,
       isGraphView: true,
       isSearchMode: action.searchResult.length > 0,
       highlightingMatchedNodeID: null,
       highlightingMatchedNodeOpened: false,
+      highlightingNode: null,
+      secondHighlightingNodeID: null,
+      tableExpandNodeID: null,
     };
   }
   case 'SEARCH_CLEAR_HISTORY': {

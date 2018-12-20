@@ -54,22 +54,38 @@ export const prepareSearch = (dictionary) => {
  * Prepare search items for Fuse.io library, call Fuse constructor
  * and return a search instance handler.
  * @params [SearchResultItemShape[]] search result (SearchResultItemShape from '../../utils')
- * @returns [Object] summary: { matchedPropertiesCount: number, matchedNodesCount: number }
+ * @returns [Object] summary
  */
 export const getSearchSummary = (result) => {
+  const matchedNodeIDsInNameAndDescription = [];
+  const matchedNodeIDsInProperties = [];
+  const generalMatchedNodeIDs = [];
   let matchedPropertiesCount = 0;
-  let matchedNodesCount = 0;
+  let matchedNodeNameAndDescriptionsCount = 0;
   result.forEach((resItem) => {
+    const nodeID = resItem.item.id;
     resItem.matches.forEach((matchedItem) => {
       switch (matchedItem.key) {
       case 'properties.type':
       case 'properties.name':
       case 'properties.description':
         matchedPropertiesCount += 1;
+        if (!matchedNodeIDsInProperties.includes(nodeID)) {
+          matchedNodeIDsInProperties.push(nodeID);
+        }
+        if (!generalMatchedNodeIDs.includes(nodeID)) {
+          generalMatchedNodeIDs.push(nodeID);
+        }
         break;
       case 'title':
       case 'description':
-        matchedNodesCount += 1;
+        matchedNodeNameAndDescriptionsCount += 1;
+        if (!matchedNodeIDsInNameAndDescription.includes(nodeID)) {
+          matchedNodeIDsInNameAndDescription.push(nodeID);
+        }
+        if (!generalMatchedNodeIDs.includes(nodeID)) {
+          generalMatchedNodeIDs.push(nodeID);
+        }
         break;
       default:
         break;
@@ -78,6 +94,9 @@ export const getSearchSummary = (result) => {
   });
   return {
     matchedPropertiesCount,
-    matchedNodesCount,
+    matchedNodeNameAndDescriptionsCount,
+    matchedNodeIDsInNameAndDescription,
+    matchedNodeIDsInProperties,
+    generalMatchedNodeIDs,
   };
 };

@@ -17,7 +17,7 @@ const ReduxDictionarySearcher = (() => {
 
   const mapDispatchToProps = dispatch => ({
     setIsSearching: isSearching => dispatch(setIsSearching(isSearching)),
-    onSearchResultUpdated: result => dispatch(setSearchResult(result)),
+    onSearchResultUpdated: (result, summary) => dispatch(setSearchResult(result, summary)),
     onSearchHistoryItemCreated: searchHistoryItem =>
       dispatch(addSearchHistoryItem(searchHistoryItem)),
     onSearchResultCleared: () => dispatch(clearSearchResult()),

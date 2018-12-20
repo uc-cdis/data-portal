@@ -78,9 +78,10 @@ export const setIsSearching = isSearching => ({
   isSearching,
 });
 
-export const setSearchResult = searchResult => ({
+export const setSearchResult = (searchResult, searchResultSummary) => ({
   type: 'SEARCH_RESULT_UPDATED',
   searchResult,
+  searchResultSummary,
 });
 
 export const clearSearchHistoryItems = () => ({

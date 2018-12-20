@@ -19,6 +19,7 @@ const ReduxGraphDrawer = (() => {
     secondHighlightingNodeID: state.ddgraph.secondHighlightingNodeID,
     isGraphView: state.ddgraph.isGraphView,
     matchedNodeIDs: state.ddgraph.matchedNodeIDs,
+    matchedNodeIDsInNameAndDescription: state.ddgraph.matchedNodeIDsInNameAndDescription,
     searchResult: state.ddgraph.searchResult,
   });
 
