@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AutoComplete from '@gen3/ui-component/dist/components/AutoComplete';
-import { prepareSearch, getSearchSummary } from './searchHelper';
+import { prepareSearchData, searchKeyword, getSearchSummary } from './searchHelper';
 import './DictionarySearcher.css';
 
 class DictionarySearcher extends React.Component {
   constructor(props) {
     super(props);
-    this.searchHandler = prepareSearch(props.dictionary);
+    this.searchData = prepareSearchData(props.dictionary);
     this.autoCompleteRef = React.createRef();
     this.state = {
       suggestionList: [],
@@ -43,15 +43,7 @@ class DictionarySearcher extends React.Component {
 
   search = (str) => {
     this.props.setIsSearching(true);
-    const result = this.searchHandler.search(str)
-      .map((resItem) => {
-        const copyResItem = { item: resItem.item };
-        // A bug in Fuse sometimes returns wrong indices
-        copyResItem.matches = resItem.matches
-          .filter(matchItem => matchItem.indices[0][1] >= matchItem.indices[0][0]);
-        return copyResItem;
-      })
-      .filter(resItem => resItem.matches.length > 0);
+    const result = searchKeyword(this.searchData, str);
     const summary = getSearchSummary(result);
     this.setState({
       isSearchFinished: true,
@@ -84,7 +76,7 @@ class DictionarySearcher extends React.Component {
   inputChangeFunc = (inputText) => {
     this.props.onStartSearching();
     this.resetSearchResult();
-    const result = this.searchHandler.search(inputText);
+    const result = searchKeyword(this.searchData, inputText);
     const matchedStrings = {};
     result.forEach((resItem) => {
       resItem.matches.forEach((matchItem) => {

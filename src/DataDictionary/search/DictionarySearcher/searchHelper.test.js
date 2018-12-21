@@ -1,4 +1,8 @@
-import { prepareSearch, getSearchSummary } from './searchHelper';
+import {
+  prepareSearchData,
+  searchKeyword,
+  getSearchSummary,
+} from './searchHelper';
 
 describe('dictionary search helper', () => {
   it('can search', () => {
@@ -46,8 +50,8 @@ describe('dictionary search helper', () => {
         properties: [],
       },
     };
-    const searchHandnler = prepareSearch(dictionary);
-    const result = searchHandnler.search('test');
+    const searchData = prepareSearchData(dictionary);
+    const result = searchKeyword(searchData, 'test');
     expect(result).toBeDefined();
     const summary = getSearchSummary(result);
     expect(summary.matchedPropertiesCount).toBeDefined();

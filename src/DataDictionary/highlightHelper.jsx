@@ -157,16 +157,21 @@ export const getNodeDescriptionFragment = (allMatches, description, spanClassNam
   return nodeDescriptionFragment;
 };
 
-export const getMatchInsideProperty = (propertyIndex, property, allMatches) => {
+export const getMatchInsideProperty = (propertyIndex, propertyKey, property, allMatches) => {
   let nameMatch = null;
   let descriptionMatch = null;
   const typeMatchList = [];
   if (allMatches) {
     allMatches.forEach((item) => {
-      if (item.key === 'properties.name' && item.arrayIndex === propertyIndex) {
+      // if (item.key === 'properties.name' && item.arrayIndex === propertyIndex) {
+      if (item.key === 'properties.name' && item.value === propertyKey) {
         nameMatch = item;
-      } else if (item.key === 'properties.description' && item.arrayIndex === propertyIndex) {
-        descriptionMatch = item;
+      // } else if (item.key === 'properties.description' && item.arrayIndex === propertyIndex) {
+      } else if (item.key === 'properties.description') {
+        const descriptionStr = getPropertyDescription(property);
+        if (item.value === descriptionStr) {
+          descriptionMatch = item;
+        }
       } else if (item.key === 'properties.type') {
         const type = getType(property);
         if (typeof type === 'string') {
@@ -194,7 +199,7 @@ export const getMatchesSummaryForProperties = (allProperties, allMatches) => {
       nameMatch,
       descriptionMatch,
       typeMatchList,
-    } = getMatchInsideProperty(propertyIndex, property, allMatches);
+    } = getMatchInsideProperty(propertyIndex, propertyKey, property, allMatches);
     const summaryItem = {
       propertyKey,
       property,
