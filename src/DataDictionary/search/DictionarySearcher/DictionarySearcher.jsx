@@ -16,6 +16,8 @@ class DictionarySearcher extends React.Component {
         matchedNodes: [],
         summary: {},
       },
+      searchError: '',
+      hasError: false,
     };
     if (this.props.currentSearchKeyword) {
       this.search(this.props.currentSearchKeyword);
@@ -43,10 +45,21 @@ class DictionarySearcher extends React.Component {
 
   search = (str) => {
     this.props.setIsSearching(true);
-    const result = searchKeyword(this.searchData, str);
+    const { result, errorMsg } = searchKeyword(this.searchData, str);
+    if (!result || result.length === 0) {
+      this.props.setIsSearching(false);
+      this.props.onSearchResultUpdated([], []);
+      this.setState({
+        isSearchFinished: true,
+        hasError: true,
+        errorMsg,
+      });
+      return;
+    }
     const summary = getSearchSummary(result);
     this.setState({
       isSearchFinished: true,
+      hasError: false,
       searchResult: {
         matchedNodes: result,
         summary,
@@ -76,7 +89,7 @@ class DictionarySearcher extends React.Component {
   inputChangeFunc = (inputText) => {
     this.props.onStartSearching();
     this.resetSearchResult();
-    const result = searchKeyword(this.searchData, inputText);
+    const { result } = searchKeyword(this.searchData, inputText);
     const matchedStrings = {};
     result.forEach((resItem) => {
       resItem.matches.forEach((matchItem) => {
@@ -119,33 +132,44 @@ class DictionarySearcher extends React.Component {
           onSubmitInput={this.submitInputFunc}
         />
         {
-          this.state.isSearchFinished && this.state.searchResult.matchedNodes.length > 0 ? (
+          this.state.isSearchFinished && (
             <React.Fragment>
-              <div className='dictionary-searcher__result'>
-                <h4 className='dictionary-searcher__result-text'>Search Results</h4>
-                <span
-                  className='dictionary-searcher__result-clear body'
-                  onClick={this.onClearResult}
-                  role='button'
-                  tabIndex={0}
-                  onKeyPress={this.onClearResult}
-                >Clear Result</span>
-              </div>
-              <li className='dictionary-searcher__result-item body'>
-                <span className='dictionary-searcher__result-count'>
-                  {this.state.searchResult.summary.matchedNodeNameAndDescriptionsCount}
-                </span> matches in nodes (title and description)
-              </li>
-              <li className='dictionary-searcher__result-item body'>
-                <span className='dictionary-searcher__result-count'>
-                  {this.state.searchResult.summary.matchedPropertiesCount}
-                </span> matches in node properties
-              </li>
+              {
+                !this.state.hasError && (
+                  this.state.searchResult.matchedNodes.length > 0 ? (
+                    <React.Fragment>
+                      <div className='dictionary-searcher__result'>
+                        <h4 className='dictionary-searcher__result-text'>Search Results</h4>
+                        <span
+                          className='dictionary-searcher__result-clear body'
+                          onClick={this.onClearResult}
+                          role='button'
+                          tabIndex={0}
+                          onKeyPress={this.onClearResult}
+                        >Clear Result</span>
+                      </div>
+                      <li className='dictionary-searcher__result-item body'>
+                        <span className='dictionary-searcher__result-count'>
+                          {this.state.searchResult.summary.matchedNodeNameAndDescriptionsCount}
+                        </span> matches in nodes (title and description)
+                      </li>
+                      <li className='dictionary-searcher__result-item body'>
+                        <span className='dictionary-searcher__result-count'>
+                          {this.state.searchResult.summary.matchedPropertiesCount}
+                        </span> matches in node properties
+                      </li>
+                    </React.Fragment>
+                  ) : (
+                    <p>0 result found. Please try another keyword.</p>
+                  )
+                )
+              }
+              {
+                this.state.hasError && (
+                  <p>{this.state.errorMsg}</p>
+                )
+              }
             </React.Fragment>
-          ) : (
-            this.state.isSearchFinished && (
-              <p>0 result found. Please try another keyword.</p>
-            )
           )
         }
       </div>

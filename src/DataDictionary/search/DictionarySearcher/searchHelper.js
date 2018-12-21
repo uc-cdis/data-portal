@@ -33,6 +33,9 @@ export const prepareSearchData = (dictionary) => {
   return searchData;
 };
 
+export const ERR_KEYWORD_TOO_SHORT = 'Keyword too short, try longer keyword.';
+export const ERR_KEYWORD_TOO_LONG = 'Keyword too long (more than 32).';
+
 /**
  * Call Fuse search and returns search result
  * @params [Object] searchData - see prepareSearchData returns
@@ -40,7 +43,19 @@ export const prepareSearchData = (dictionary) => {
  * @returns [SearchResultItemShape[]] (see ../../utils).
  */
 export const searchKeyword = (searchData, keyword) => {
-  if (!keyword || keyword.length < 2) return [];
+  if (!keyword || keyword.length < 2) {
+    return {
+      result: [],
+      errorMsg: ERR_KEYWORD_TOO_SHORT,
+    };
+  }
+  // 32 is length limitation of Fuse search library
+  if (keyword.length > 32) {
+    return {
+      result: [],
+      errorMsg: ERR_KEYWORD_TOO_LONG,
+    };
+  }
   const halfLength = Math.round(keyword.length / 2);
   const minMatchCharLength = Math.min(Math.max(halfLength, 10), keyword.length);
   const options = {
@@ -68,8 +83,23 @@ export const searchKeyword = (searchData, keyword) => {
         matches,
       };
     })
+    .map((resItem) => {
+      // filter out matches that is too shorter than keyword
+      const matches = resItem.matches
+        .filter((matchItem) => {
+          const matchLen = (matchItem.indices[0][1] - matchItem.indices[0][0]) + 1;
+          return matchLen >= halfLength;
+        });
+      return {
+        ...resItem,
+        matches,
+      };
+    })
     .filter(resItem => resItem.matches.length > 0);
-  return result;
+  return {
+    result,
+    errorMsg: '',
+  };
 };
 
 /**
