@@ -7,7 +7,7 @@ import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
 import CheckBox from '../components/CheckBox';
 import StatusReadyIcon from '../img/icons/status_ready.svg';
-import calculateFileSize from './utils.js';
+import { calculateFileSize } from './utils.js';
 import './MapFiles.less';
 
 class MapFiles extends React.Component {

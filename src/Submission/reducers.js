@@ -1,4 +1,5 @@
 import { getFileNodes, getNodeTypes } from '../graphutils';
+import { getDictionaryWithExcludeSystemProperties } from './utils';
 
 const submission = (state = {}, action) => {
   switch (action.type) {
@@ -23,7 +24,7 @@ const submission = (state = {}, action) => {
     return { ...state, nodeTypes: action.data };
   case 'RECEIVE_DICTIONARY':
     return { ...state,
-      dictionary: action.data,
+      dictionary: getDictionaryWithExcludeSystemProperties(action.data),
       nodeTypes: getNodeTypes(action.data),
       file_nodes: getFileNodes(action.data),
     };
