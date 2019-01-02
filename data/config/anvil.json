@@ -8,9 +8,9 @@
         "plural": "Cases"
       },
       {
-        "graphql": "_study_count",
-        "name": "Study",
-        "plural": "Studies"
+        "graphql": "_experiment_count",
+        "name": "Experiment",
+        "plural": "Experiments"
       },
       {
         "graphql": "_aliquot_count",
@@ -24,25 +24,25 @@
         "name": "Case"
       },
       {
-        "graphql": "_study_count",
-        "name": "Study"
+        "graphql": "_experiment_count",
+        "name": "Experiment"
       }
     ],
     "projectDetails": "boardCounts"
   },
   "components": {
-    "appName": "NIH Data Commons Consortium Pilot Phase\nNHLBI Data STAGE\nGTEx & TOPMed Data Portal",
+    "appName": "NHGRI Genomic Data Science Analysis, Visualization, and Informatics Lab-Space (AnVIL)",
     "index": {
       "introduction": {
-        "heading": "Data STAGE",
-        "text": "Data STAGE supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.",
+        "heading": "The AnVIL",
+        "text": "The AnVIL supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.",
         "link": "/submission"
       },
       "buttons": [
         {
           "name": "Define Data Field",
           "icon": "data-field-define",
-          "body": "Data STAGE define the data in a general way. Please study the dictionary before you start browsing.",
+          "body": "The AnVIL defines the data in a general way. Please study the dictionary before you start browsing.",
           "link": "/DD",
           "label": "Learn more"
         },
@@ -70,6 +70,7 @@
       ]
     },
     "navigation": {
+      "title": "The AnVIL",
       "items": [
         {
           "icon": "dictionary",
@@ -104,7 +105,7 @@
       ]
     },
     "login": {
-      "title": "Data STAGE",
+      "title": "NHGRI Genomic Data Science Analysis, Visualization, and Informatics Lab-Space (AnVIL)",
       "subTitle": "search, compare, and download data",
       "text": "This website supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer.",
       "contact": "If you have any questions about access or the registration process, please contact ",

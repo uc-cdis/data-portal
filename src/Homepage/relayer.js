@@ -24,8 +24,13 @@ const getTransactionList = () => {
   const query = graphql`query relayerTransactionLogComponentQuery {
       transactionList: transaction_log (last:20) {
           id
+          submitter
           project_id
           created_datetime
+          documents {
+            doc_size
+            doc
+          }
           state
       }
   }`;

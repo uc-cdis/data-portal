@@ -1,4 +1,5 @@
 import { getFileNodes, getNodeTypes } from '../graphutils';
+import { getDictionaryWithExcludeSystemProperties } from './utils';
 
 const submission = (state = {}, action) => {
   switch (action.type) {
@@ -23,7 +24,7 @@ const submission = (state = {}, action) => {
     return { ...state, nodeTypes: action.data };
   case 'RECEIVE_DICTIONARY':
     return { ...state,
-      dictionary: action.data,
+      dictionary: getDictionaryWithExcludeSystemProperties(action.data),
       nodeTypes: getNodeTypes(action.data),
       file_nodes: getFileNodes(action.data),
     };
@@ -45,6 +46,16 @@ const submission = (state = {}, action) => {
     };
   case 'CLEAR_COUNTS':
     return { ...state, counts_search: null, links_search: null };
+  case 'RECEIVE_UNMAPPED_FILES':
+    return { ...state, unmappedFiles: action.data };
+  case 'RECEIVE_UNMAPPED_FILE_STATISTICS':
+    return {
+      ...state,
+      unmappedFileCount: action.data.count,
+      unmappedFileSize: action.data.totalSize,
+    };
+  case 'RECEIVE_FILES_TO_MAP':
+    return { ...state, filesToMap: action.data };
   default:
     return state;
   }

@@ -24,6 +24,8 @@ import { fetchCoreMetadata } from './CoreMetadata/reduxer';
 import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/.';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
+import ReduxMapFiles from './Submission/ReduxMapFiles';
+import ReduxMapDataModel from './Submission/ReduxMapDataModel';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
 import UserAgreementCert from './UserAgreement/ReduxCertPopup';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
@@ -119,6 +121,20 @@ async function init() {
                       path='/submission'
                       component={
                         props => <ProtectedContent component={HomePage} {...props} />
+                      }
+                    />
+                    <Route
+                      exact
+                      path='/submission/files'
+                      component={
+                        props => <ProtectedContent component={ReduxMapFiles} {...props} />
+                      }
+                    />
+                    <Route
+                      exact
+                      path='/submission/map'
+                      component={
+                        props => <ProtectedContent component={ReduxMapDataModel} {...props} />
                       }
                     />
                     <Route
