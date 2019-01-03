@@ -104,6 +104,7 @@ class DataExplorerVisualizations extends React.Component {
     if (buttonConfig.type === 'manifest' && this.props.selectedTableRows.length > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
+    
     return (<Button
       key={buttonConfig.type}
       onClick={clickFunc}
@@ -113,6 +114,8 @@ class DataExplorerVisualizations extends React.Component {
       className='data-explorer__download-button'
       buttonType='primary'
       enabled={this.isButtonEnabled(buttonConfig)}
+      tooltipEnabled={buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false}
+      tooltipText={buttonConfig.tooltipText}
     />);
   }
 

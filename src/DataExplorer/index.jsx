@@ -10,6 +10,7 @@ class DataExplorer extends React.Component {
   render() {
     const arrangerConfig = config.arrangerConfig || {};
     const explorerTableConfig = arrangerConfig.table || {};
+    
     return (
       <div className='data-explorer'>
         <ArrangerWrapper
