@@ -104,7 +104,7 @@ class DataExplorerVisualizations extends React.Component {
     if (buttonConfig.type === 'manifest' && this.props.selectedTableRows.length > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
-    
+
     return (<Button
       key={buttonConfig.type}
       onClick={clickFunc}
