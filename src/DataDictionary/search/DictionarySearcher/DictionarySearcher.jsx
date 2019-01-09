@@ -38,6 +38,10 @@ class DictionarySearcher extends React.Component {
     this.autoCompleteRef.current.clearInput();
   };
 
+  launchClearSearchFromOutside = () => {
+    this.onClearResult();
+  };
+
   launchSearchFromOutside = (keyword) => {
     this.autoCompleteRef.current.setInputText(keyword);
     this.search(keyword);

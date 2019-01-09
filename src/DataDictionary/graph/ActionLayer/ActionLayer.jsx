@@ -5,7 +5,7 @@ import './ActionLayer.css';
 
 class ActionLayer extends React.Component {
   handleClearSearch = () => {
-    this.props.onClearSearch();
+    this.props.onClearSearchResult();
   }
 
   render() {
@@ -27,12 +27,12 @@ class ActionLayer extends React.Component {
 
 ActionLayer.propTypes = {
   isSearchMode: PropTypes.bool,
-  onClearSearch: PropTypes.func,
+  onClearSearchResult: PropTypes.func,
 };
 
 ActionLayer.defaultProps = {
   isSearchMode: false,
-  onClearSearch: () => {},
+  onClearSearchResult: () => {},
 };
 
 export default ActionLayer;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReduxGraphCalculator from '../GraphCalculator/.';
 import ReduxLegend from '../Legend/.';
 import ReduxCanvas from '../Canvas/.';
@@ -9,10 +10,6 @@ import ReduxOverlayPropertyTable from '../OverlayPropertyTable/.';
 import ReduxActionLayer from '../ActionLayer/.';
 
 class DataDictionaryGraph extends React.Component {
-  handleClearSearch = () => {
-
-  };
-
   render() {
     return (
       <React.Fragment>
@@ -24,10 +21,18 @@ class DataDictionaryGraph extends React.Component {
         <ReduxNodeTooltip />
         <ReduxNodePopup />
         <ReduxOverlayPropertyTable />
-        <ReduxActionLayer />
+        <ReduxActionLayer onClearSearchResult={this.props.onClearSearchResult} />
       </React.Fragment>
     );
   }
 }
+
+DataDictionaryGraph.propTypes = {
+  onClearSearchResult: PropTypes.func,
+};
+
+DataDictionaryGraph.defaultProps = {
+  onClearSearchResult: () => {},
+};
 
 export default DataDictionaryGraph;

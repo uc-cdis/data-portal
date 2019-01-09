@@ -15,11 +15,15 @@ class DataDictionary extends React.Component {
 
   setGraphView = (isGraphView) => {
     this.props.onSetGraphView(isGraphView);
-  }
+  };
 
   handleClickSearchHistoryItem = (keyword) => {
     this.dictionarySearcherRef.current.getWrappedInstance().launchSearchFromOutside(keyword);
-  }
+  };
+
+  handleClearSearchResult = () => {
+    this.dictionarySearcherRef.current.getWrappedInstance().launchClearSearchFromOutside();
+  };
 
   render() {
     return (
@@ -57,7 +61,9 @@ class DataDictionary extends React.Component {
             <ReduxDataDictionaryTable />
           </div>
           <div className={`data-dictionary__graph ${this.props.isGraphView ? '' : 'data-dictionary__graph--hidden'}`}>
-            <DataDictionaryGraph />
+            <DataDictionaryGraph
+              onClearSearchResult={this.handleClearSearchResult}
+            />
           </div>
         </div>
       </div>

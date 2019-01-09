@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { clearSearchResult } from '../../action';
 import ActionLayer from './ActionLayer';
 
 const ReduxActionLayer = (() => {
@@ -7,11 +6,7 @@ const ReduxActionLayer = (() => {
     isSearchMode: state.ddgraph.isSearchMode,
   });
 
-  const mapDispatchToProps = dispatch => ({
-    onClearSearch: () => dispatch(clearSearchResult()),
-  });
-
-  return connect(mapStateToProps, mapDispatchToProps)(ActionLayer);
+  return connect(mapStateToProps)(ActionLayer);
 })();
 
 export default ReduxActionLayer;
