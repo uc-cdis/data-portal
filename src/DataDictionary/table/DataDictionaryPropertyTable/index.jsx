@@ -61,8 +61,12 @@ class DataDictionaryPropertyTable extends React.Component {
                   if ('description' in property) {
                     rawDescription = property.description;
                   }
+                  let termID = '';
+                  let termLink = '';
                   if ('term' in property) {
                     rawDescription = property.term.description;
+                    termID = property.term.termDef && property.term.termDef.cde_id;
+                    termLink = property.term.termDef && property.term.termDef.term_url;
                   }
                   const descriptionElements = (
                     <React.Fragment>
@@ -100,7 +104,9 @@ class DataDictionaryPropertyTable extends React.Component {
                         }
                       </td>
                       <td className='data-dictionary-property-table__data'>{descriptionElements}</td>
-                      <td className='data-dictionary-property-table__data' />
+                      <td className='data-dictionary-property-table__data'>
+                        <a href={termLink}>{termID}</a>
+                      </td>
                     </tr>
                   );
                 })
