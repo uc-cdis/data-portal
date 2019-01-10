@@ -36,21 +36,21 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
     return Promise.reject('No file to submit');
   } else if (submission.file_type !== 'text/tab-separated-values') {
     // remove line break in json file
-    file = file.replace(/\n/g, '');
+    file = file.replace(/\r\n?|\n/g, '');
   }
 
 
   if (submission.file_type === 'text/tab-separated-values') {
-    const fileSplited = file.split(/\n/g);
+    const fileSplited = file.split(/\r\n?|\n/g);
     if (fileSplited.length > lineLimit && lineLimit > 0) {
       let fileHeader = fileSplited[0];
-      fileHeader += '\r';
+      fileHeader += '\n';
       let count = lineLimit;
       let fileChunk = fileHeader;
 
       for (let i = 1; i < fileSplited.length; i += 1) {
         fileChunk += fileSplited[i];
-        fileChunk += '\r';
+        fileChunk += '\n';
         count -= 1;
         if (count === 0) {
           fileArray.push(fileChunk);
