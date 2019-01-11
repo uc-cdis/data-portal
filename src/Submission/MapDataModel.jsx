@@ -130,7 +130,7 @@ class MapDataModel extends React.Component {
         submitter_id: `${this.state.projectId}_${file.file_name.substring(0, file.file_name.lastIndexOf('.'))}_${file.did.substring(0, 4)}`,
         project_id: this.state.projectId,
         file_size: file.size,
-        md5sum: file.hashes ? file.hashes.md5sum : null,
+        md5sum: file.hashes ? file.hashes.md5 : null,
       };
 
       obj[this.state.parentTypesOfSelectedNode[this.state.parentNodeType].name] = {
