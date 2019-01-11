@@ -191,8 +191,7 @@
           "leftIcon": "user",
           "rightIcon": "download",
           "fileName": "clinical.json",
-          "dropdownId": "download",
-          "tooltipText": "You have not selected any cases to download. Please use the checkboxes on the left to select specific cases you would like to download."
+          "dropdownId": "download"
         },
         {
           "enabled": false,
@@ -208,8 +207,7 @@
           "type": "export",
           "title": "Export to Terra",
           "rightIcon": "external-link",
-          "leftIcon": "planet",
-          "tooltipText": "You have not selected any cases to export. Please use the checkboxes on the left to select specific cases you would like to export."
+          "leftIcon": "planet"
         }
       ]
     }
