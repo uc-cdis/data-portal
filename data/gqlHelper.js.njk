@@ -94,7 +94,7 @@ const helperSingleton = {
   `,
   allSubmitterIdsByTypeQuery: graphql`
     query gqlHelperAllSubmitterIdsByTypeQuery( $project_id: String, $type: [String] ) {
-      datanode(project_id:$project_id, of_type:$type) {
+      datanode(project_id:$project_id, of_type:$type, first:0) {
         submitter_id
       }
     }
