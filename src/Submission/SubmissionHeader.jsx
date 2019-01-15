@@ -20,6 +20,8 @@ class SubmissionHeader extends React.Component {
   }
 
   render() {
+    const totalFileSize = calculateFileSize(this.props.unmappedFileSize);
+
     return (
       <div className='submission-header'>
         <div className='submission-header__section'>
@@ -57,7 +59,7 @@ class SubmissionHeader extends React.Component {
           <div className='submission-header__section-info'>
             <div className='h3-typo'>Map My Files</div>
             <div className='h4-typo'>
-              {this.props.unmappedFileCount} files | {calculateFileSize(this.props.unmappedFileSize)} 
+              {this.props.unmappedFileCount} files | {totalFileSize}
             </div>
             <div className='body-typo'>
               Mapping files to metadata in order to create medical meaning.

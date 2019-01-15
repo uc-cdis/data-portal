@@ -103,20 +103,20 @@ class MapDataModel extends React.Component {
   }
 
   fetchAllSubmitterIds = () => {
-    this.setState({ validParentIds: [] }, () => {
-      if (this.state.parentNodeType && this.state.nodeType && this.state.projectId &&
-        this.state.parentTypesOfSelectedNode[this.state.parentNodeType]) {
-        fetchQuery(
-          environment,
-          gqlHelper.allSubmitterIdsByTypeQuery,
-          { project_id: this.state.projectId, type: this.state.parentNodeType },
-        ).then((data) => {
-          if (data && data.datanode) {
-            this.setState({ validParentIds: data.datanode });
-          }
-        });
-      }
-    })
+    if (this.state.parentNodeType && this.state.nodeType && this.state.projectId &&
+      this.state.parentTypesOfSelectedNode[this.state.parentNodeType]) {
+      fetchQuery(
+        environment,
+        gqlHelper.allSubmitterIdsByTypeQuery,
+        { project_id: this.state.projectId },
+      ).then((data) => {
+        if (data && data[this.state.parentNodeType]) {
+          this.setState({ validParentIds: data[this.state.parentNodeType] });
+        }
+      });
+    } else {
+      this.setState({ validParentIds: [] });
+    }
   }
 
   submit = () => {
