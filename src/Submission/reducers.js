@@ -33,7 +33,11 @@ const submission = (state = {}, action) => {
   case 'RECEIVE_SUBMISSION_LOGIN':
     return { ...state, login: state.result, error: state.error };
   case 'RECEIVE_SUBMISSION':
-    return { ...state, submit_result: action.data, submit_status: action.submit_status };
+    return { ...state,
+      submit_result: action.data,
+      submit_status: action.submit_status,
+      submit_chunk: action.chunk,
+      submit_total: action.total };
   case 'SUBMIT_SEARCH_FORM':
     return { ...state, search_form: action.data };
   case 'RECEIVE_SEARCH_ENTITIES':

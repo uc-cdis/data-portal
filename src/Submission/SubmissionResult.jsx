@@ -13,6 +13,8 @@ import './SubmissionResult.less';
  *
  * @param {number} status
  * @param {object} data
+ * @param {number} chunk
+ * @param {number} total
  */
 class SubmissionResult extends React.Component {
   constructor(props, context) {
@@ -21,7 +23,7 @@ class SubmissionResult extends React.Component {
   }
 
   render() {
-    const { status, data } = this.props;
+    const { status, data, chunk, total } = this.props;
     let summary = null;
     const fullResponse = (() => {
       if (this.state.showFullResponse) {
@@ -88,6 +90,7 @@ class SubmissionResult extends React.Component {
           status={status}
         >
           {status === 200 ? `succeeded: ${status}` : `failed: ${status}`}
+          <p>Chunk number {chunk} of {total} </p>
         </div>
         {summary}
         {fullResponse}
@@ -99,7 +102,12 @@ class SubmissionResult extends React.Component {
 SubmissionResult.propTypes = {
   status: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
+  chunk: PropTypes.number,
+  total: PropTypes.number,
 };
-
+SubmissionResult.defaultProps = {
+  chunk: 1,
+  total: 1,
+};
 
 export default SubmissionResult;

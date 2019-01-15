@@ -120,6 +120,8 @@ SubmitTSV.propTypes = {
     file_type: PropTypes.string,
     submit_result: PropTypes.any,
     submit_status: PropTypes.number,
+    submit_chunk: PropTypes.number,
+    submit_total: PropTypes.number,
     node_types: PropTypes.string,
     dictionary: PropTypes.object,
   }),
