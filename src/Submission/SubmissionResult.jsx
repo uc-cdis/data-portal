@@ -89,8 +89,8 @@ class SubmissionResult extends React.Component {
           className={`submission-result__status submission-result__status--${status === 200 ? 'succeeded' : 'failed'}`}
           status={status}
         >
-          {status === 200 ? `succeeded: ${status}` : `failed: ${status}`}
-          <p>Chunk number {chunk} of {total} </p>
+          {status === 200 ? `Succeeded: ${status}` : `Failed: ${status}`}
+          <p>Submitted chunk number {chunk} of {total} </p>
         </div>
         {summary}
         {fullResponse}
@@ -102,12 +102,8 @@ class SubmissionResult extends React.Component {
 SubmissionResult.propTypes = {
   status: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
-  chunk: PropTypes.number,
-  total: PropTypes.number,
-};
-SubmissionResult.defaultProps = {
-  chunk: 1,
-  total: 1,
+  chunk: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired,
 };
 
 export default SubmissionResult;

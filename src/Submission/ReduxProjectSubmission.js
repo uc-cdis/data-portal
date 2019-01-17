@@ -85,7 +85,7 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
           type: 'RECEIVE_SUBMISSION',
           submit_status: status,
           data,
-          chunk: i,
+          chunk: i + 1,
           total: fileArray.length,
         }),
     ).then(msg => dispatch(msg));
