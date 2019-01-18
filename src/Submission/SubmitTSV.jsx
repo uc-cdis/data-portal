@@ -107,12 +107,17 @@ const SubmitTSV = ({ project, submission, onUploadClick, onSubmitClick, onFileCh
       />
       }
       {submission.submit_result &&
-      <SubmissionResult
-        status={submission.submit_status}
-        data={submission.submit_result}
-        chunk={submission.submit_chunk}
-        total={submission.submit_total}
-      />
+      <div>
+        <p>
+          Submitting chunk {submission.submit_chunk} of {submission.submit_total}
+        </p>
+        <SubmissionResult
+          status={submission.submit_status}
+          data={submission.submit_result}
+          chunk={submission.submit_chunk}
+          total={submission.submit_total}
+        />
+      </div>
       }
     </form>
   );

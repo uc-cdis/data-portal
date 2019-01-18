@@ -90,7 +90,7 @@ class SubmissionResult extends React.Component {
           status={status}
         >
           {status === 200 ? `Succeeded: ${status}` : `Failed: ${status}`}
-          <p>Submitted chunk number {chunk} of {total} </p>
+          <p>Submitted chunk {chunk} of {total} </p>
         </div>
         {summary}
         {fullResponse}
