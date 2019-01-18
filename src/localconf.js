@@ -1,4 +1,4 @@
-const { components, config, requiredCerts } = require('./params');
+const { components, requiredCerts, config } = require('./params');
 
 /**
  * Setup configuration variables based on the "app" the data-portal is
