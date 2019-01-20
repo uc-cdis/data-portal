@@ -18,6 +18,7 @@ class MapFiles extends React.Component {
       allFilesByGroup: {},
       filesByDate: {},
       isScrolling: false,
+      sortedDates: [],
     };
   }
 
@@ -45,7 +46,7 @@ class MapFiles extends React.Component {
 
   onUpdate = () => {
     this.setState({
-      filesByDate: this.sortUnmappedFiles(),
+      filesByDate: this.groupUnmappedFiles(),
     }, () => this.createFileMapByGroup());
   }
 
@@ -115,17 +116,20 @@ class MapFiles extends React.Component {
     this.setState({ allFilesByGroup: unselectedMap, selectedFilesByGroup: selectedMap });
   }
 
-  sortUnmappedFiles = () => {
-    const sortedFiles = {};
+  groupUnmappedFiles = () => {
+    const groupedFiles = {};
     this.props.unmappedFiles.forEach((file) => {
       const fileDate = moment(file.created_date).format('MM/DD/YY');
-      if (sortedFiles[fileDate]) {
-        sortedFiles[fileDate].push(file);
+      if (groupedFiles[fileDate]) {
+        groupedFiles[fileDate].push(file);
       } else {
-        sortedFiles[fileDate] = [file];
+        groupedFiles[fileDate] = [file];
       }
     });
-    return sortedFiles;
+    const sortedDates = Object.keys(groupedFiles).sort((a, b) =>
+      moment(b, 'MM/DD/YY') - moment(a, 'MM/DD/YY'));
+    this.setState({ sortedDates });
+    return groupedFiles;
   }
 
   toggleCheckBox = (index, file) => {
@@ -196,8 +200,8 @@ class MapFiles extends React.Component {
         />
         <div className={'map-files__tables'.concat(this.state.isScrolling ? ' map-files__tables--scrolling' : '')}>
           {
-            Object.keys(this.state.filesByDate).map((key, i) => {
-              const files = this.state.filesByDate[key];
+            this.state.sortedDates.map((date, i) => {
+              const files = this.state.filesByDate[date];
               return (
                 <React.Fragment key={i}>
                   <div className='h2-typo'>{this.getTableHeaderText(files)}</div>
