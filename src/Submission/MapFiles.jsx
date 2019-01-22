@@ -7,7 +7,7 @@ import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
 import CheckBox from '../components/CheckBox';
 import StatusReadyIcon from '../img/icons/status_ready.svg';
-import { calculateFileSize } from './utils.js';
+import { humanFileSize } from '../utils.js';
 import './MapFiles.less';
 
 class MapFiles extends React.Component {
@@ -232,7 +232,7 @@ class MapFiles extends React.Component {
                                 />
                               </td>
                               <td>{file.file_name}</td>
-                              <td>{file.size ? calculateFileSize(file.size) : '0B'}</td>
+                              <td>{file.size ? humanFileSize(file.size) : '0 B'}</td>
                               <td>{moment(file.created_date).format('MM/DD/YY, hh:mm:ss a [UTC]Z')}</td>
                               <td className={`map-files__status--${status.toLowerCase()}`}>
                                 { status === 'Ready' ? <StatusReadyIcon /> : null }

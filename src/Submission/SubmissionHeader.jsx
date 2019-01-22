@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Gen3ClientSvg from '../img/gen3client.svg';
 import MapFilesSvg from '../img/mapfiles.svg';
-import { calculateFileSize } from './utils.js';
+import { humanFileSize } from '../utils.js';
 import './SubmissionHeader.less';
 
 class SubmissionHeader extends React.Component {
@@ -20,7 +20,7 @@ class SubmissionHeader extends React.Component {
   }
 
   render() {
-    const totalFileSize = calculateFileSize(this.props.unmappedFileSize);
+    const totalFileSize = humanFileSize(this.props.unmappedFileSize);
 
     return (
       <div className='submission-header'>
