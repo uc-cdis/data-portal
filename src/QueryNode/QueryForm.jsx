@@ -61,18 +61,16 @@ class QueryForm extends React.Component {
     const options = nodesForQuery.map(nodeType => ({ value: nodeType, label: nodeType }));
     const state = this.state || {};
     return (
-      <React.Fragment>
-        <form onSubmit={this.handleQuerySubmit}>
-          <Select className='query-form__select' name='node_type' options={options} value={state.selectValue} onChange={this.updateValue} />
-          <input className='query-form__input' placeholder='submitter_id' type='text' name='submitter_id' />
-          <input className='query-form__search-button' type='submit' onSubmit={this.handleQuerySubmit} value='search' />
-          <Button
-            onClick={this.handleDownloadAll}
-            label='Download All'
-            className='query-node__download-button'
-          />
-        </form>
-      </React.Fragment>
+      <form onSubmit={this.handleQuerySubmit}>
+        <Select className='query-form__select' name='node_type' options={options} value={state.selectValue} onChange={this.updateValue} />
+        <input className='query-form__input' placeholder='submitter_id' type='text' name='submitter_id' />
+        <input className='query-form__search-button' type='submit' onSubmit={this.handleQuerySubmit} value='search' />
+        <Button
+          onClick={this.handleDownloadAll}
+          label='Download All'
+          className='query-node__download-button'
+        />
+      </form>
     );
   }
 }
