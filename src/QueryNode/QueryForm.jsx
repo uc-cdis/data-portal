@@ -4,6 +4,7 @@ import querystring from 'querystring';
 import Select from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { submissionApiPath } from '../localconf';
+import { getSubmitPath } from '../utils';
 import './QueryForm.less';
 
 class QueryForm extends React.Component {
@@ -25,9 +26,8 @@ class QueryForm extends React.Component {
   }
 
   handleDownloadAll() {
-    const programProject = this.props.project.split('-');
     window.open(
-      `${submissionApiPath}${programProject[0]}/${programProject[1]}/export?node_label=${this.state.selectValue.value}&format=tsv`,
+      `${getSubmitPath(this.props.project)}/export?node_label=${this.state.selectValue.value}&format=tsv`,
       '_blank',
     );
   }
