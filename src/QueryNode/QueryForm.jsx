@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import querystring from 'querystring';
 import Select from 'react-select';
-import Button from '@gen3/ui-component/dist/components/Button';
-import { submissionApiPath } from '../localconf';
+import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { getSubmitPath } from '../utils';
 import './QueryForm.less';
 
@@ -25,9 +24,9 @@ class QueryForm extends React.Component {
     this.handleQuerySubmit = this.handleQuerySubmit.bind(this);
   }
 
-  handleDownloadAll() {
+  handleDownloadAll(fileType) {
     window.open(
-      `${getSubmitPath(this.props.project)}/export?node_label=${this.state.selectValue.value}&format=tsv`,
+      `${getSubmitPath(this.props.project)}/export?node_label=${this.state.selectValue.value}&format=${fileType}`,
       '_blank',
     );
   }
@@ -67,11 +66,25 @@ class QueryForm extends React.Component {
         <input className='query-form__search-button' type='submit' onSubmit={this.handleQuerySubmit} value='search' />
         {
           this.state.selectValue ? (
-            <Button
-              onClick={this.handleDownloadAll}
-              label='Download All'
+            <Dropdown
               className='query-node__download-button'
-            />
+            >
+              <Dropdown.Button>Download All</Dropdown.Button>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  rightIcon='download'
+                  onClick={() => this.handleDownloadAll('tsv')}
+                >
+                  TSV
+                </Dropdown.Item>
+                <Dropdown.Item
+                  rightIcon='download'
+                  onClick={() => this.handleDownloadAll('json')}
+                >
+                  JSON
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           ) : null
         }
       </form>
