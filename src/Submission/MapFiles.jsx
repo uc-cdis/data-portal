@@ -126,8 +126,7 @@ class MapFiles extends React.Component {
         groupedFiles[fileDate] = [file];
       }
     });
-    const sortedDates = Object.keys(groupedFiles).sort((a, b) =>
-      moment(b, 'MM/DD/YY') - moment(a, 'MM/DD/YY'));
+    const sortedDates = Object.keys(groupedFiles).sort((a, b) => moment(b, 'MM/DD/YY') - moment(a, 'MM/DD/YY'));
     this.setState({ sortedDates });
     return groupedFiles;
   }
@@ -176,6 +175,7 @@ class MapFiles extends React.Component {
 
     const params = queryString.parse(window.location.search);
     const message = params && params.message ? params.message : null;
+    const { sortedDates, filesByDate } = this.state;
 
     return (
       <div className='map-files'>
@@ -200,8 +200,8 @@ class MapFiles extends React.Component {
         />
         <div className={'map-files__tables'.concat(this.state.isScrolling ? ' map-files__tables--scrolling' : '')}>
           {
-            this.state.sortedDates.map((date, i) => {
-              const files = this.state.filesByDate[date];
+            sortedDates.map((date, i) => {
+              const files = filesByDate[date];
               return (
                 <React.Fragment key={i}>
                   <div className='h2-typo'>{this.getTableHeaderText(files)}</div>
