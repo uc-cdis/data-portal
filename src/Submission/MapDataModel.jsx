@@ -108,10 +108,10 @@ class MapDataModel extends React.Component {
       fetchQuery(
         environment,
         gqlHelper.allSubmitterIdsByTypeQuery,
-        { project_id: this.state.project, type: this.state.parentNodeType },
+        { project_id: this.state.projectId },
       ).then((data) => {
-        if (data && data.datanode) {
-          this.setState({ validParentIds: data.datanode });
+        if (data && data[this.state.parentNodeType]) {
+          this.setState({ validParentIds: data[this.state.parentNodeType] });
         }
       });
     } else {
