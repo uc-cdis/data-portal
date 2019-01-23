@@ -107,8 +107,8 @@ class MapFiles extends React.Component {
     const unselectedMap = {};
     const selectedMap = {};
     let index = 0;
-    Object.keys(this.state.filesByDate).forEach((key) => {
-      const filesToAdd = this.state.filesByDate[key].filter(file => this.isFileReady(file));
+    this.state.sortedDates.forEach((date) => {
+      const filesToAdd = this.state.filesByDate[date].filter(file => this.isFileReady(file));
       unselectedMap[index] = new Set(filesToAdd);
       selectedMap[index] = new Set();
       index += 1;
