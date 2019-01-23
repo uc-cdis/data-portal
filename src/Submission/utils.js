@@ -1,4 +1,4 @@
-const excludeSystemProperties = (node) => {
+export const excludeSystemProperties = (node) => {
   const properties = node.properties && Object.keys(node.properties)
     .filter(key => (node.systemProperties ? !node.systemProperties.includes(key) : true))
     .reduce((acc, key) => {
