@@ -56,6 +56,7 @@ class QueryForm extends React.Component {
   }
 
   render() {
+    console.log('this.props', this.props)
     const nodesForQuery = this.props.nodeTypes.filter(nt => !['program', 'project'].includes(nt));
     const options = nodesForQuery.map(nodeType => ({ value: nodeType, label: nodeType }));
     const state = this.state || {};
@@ -65,7 +66,7 @@ class QueryForm extends React.Component {
         <input className='query-form__input' placeholder='submitter_id' type='text' name='submitter_id' />
         <input className='query-form__search-button' type='submit' onSubmit={this.handleQuerySubmit} value='search' />
         {
-          this.state.selectValue ? (
+          this.state.selectValue && this.props.queryNodeCount > 0 ? (
             <Dropdown
               className='query-node__download-button'
             >
@@ -96,11 +97,13 @@ QueryForm.propTypes = {
   project: PropTypes.string.isRequired,
   nodeTypes: PropTypes.array,
   onSearchFormSubmit: PropTypes.func,
+  queryNodeCount: PropTypes.number,
 };
 
 QueryForm.defaultProps = {
   nodeTypes: [],
   onSearchFormSubmit: null,
+  queryNodeCount: 0,
 };
 
 export default QueryForm;

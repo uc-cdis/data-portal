@@ -189,6 +189,9 @@ class QueryNode extends React.Component {
   }
 
   render() {
+    const queryNodesList = this.props.queryNodes.search_status === 'succeed: 200' ?
+        Object.entries(this.props.queryNodes.search_result.data)
+        : [];
     const project = this.props.params.project;
 
     return (
@@ -219,9 +222,9 @@ class QueryNode extends React.Component {
           }
           project={project}
           nodeTypes={this.props.submission.nodeTypes}
+          queryNodeCount={queryNodesList.length}
         />
-        { this.props.queryNodes.search_status === 'succeed: 200' &&
-            Object.entries(this.props.queryNodes.search_result.data).map(
+        { queryNodesList.map(
               value => (<Entities
                 project={project}
                 onStoreNodeInfo={this.props.onStoreNodeInfo}
