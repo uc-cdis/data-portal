@@ -56,7 +56,6 @@ class QueryForm extends React.Component {
   }
 
   render() {
-    console.log('this.props', this.props)
     const nodesForQuery = this.props.nodeTypes.filter(nt => !['program', 'project'].includes(nt));
     const options = nodesForQuery.map(nodeType => ({ value: nodeType, label: nodeType }));
     const state = this.state || {};
