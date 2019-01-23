@@ -10,26 +10,6 @@
   text-align: left;
   vertical-align: top;
 }
-/*
-.data-dictionary-property-table__data--property {
-  width: 13%;
-}
-
-.data-dictionary-property-table__data--type {
-  width: 12%;
-}
-
-.data-dictionary-property-table__data--required {
-  width: 8%;
-}
-
-.data-dictionary-property-table__data--description {
-  width: 59%;
-}
-
-.data-dictionary-property-table__data--term {
-  width: 8%;
-}*/
 
 .data-dictionary-property-table--without-border tr:first-child th.data-dictionary-property-table__data {
   border-top: 0;

@@ -7,7 +7,11 @@ import OverlayPropertyTable from './OverlayPropertyTable';
 
 const getNode = (state) => {
   if (state.ddgraph.isSearchMode) {
-    return state.submission.dictionary[state.ddgraph.highlightingMatchedNodeID];
+    if (state.ddgraph.highlightingMatchedNodeID) {
+      return state.submission.dictionary[state.ddgraph.highlightingMatchedNodeID];
+    }
+
+    return null;
   }
   if (state.ddgraph.highlightingNode) {
     return state.submission.dictionary[state.ddgraph.highlightingNode.id];

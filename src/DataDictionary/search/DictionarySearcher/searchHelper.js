@@ -5,6 +5,8 @@ import {
   getType,
 } from '../../utils';
 
+export const ZERO_RESULT_FOUND_MSG = '0 results found. Please try another keyword.';
+
 /**
  * Prepare search items for Fuse.io library
  * @params [Object] dictionary
@@ -96,9 +98,10 @@ export const searchKeyword = (searchData, keyword) => {
       };
     })
     .filter(resItem => resItem.matches.length > 0);
+  const errorMsg = (result && result.length > 0) ? '' : ZERO_RESULT_FOUND_MSG;
   return {
     result,
-    errorMsg: '',
+    errorMsg,
   };
 };
 

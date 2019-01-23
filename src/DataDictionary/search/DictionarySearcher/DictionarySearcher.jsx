@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AutoComplete from '@gen3/ui-component/dist/components/AutoComplete';
-import { prepareSearchData, searchKeyword, getSearchSummary } from './searchHelper';
+import { prepareSearchData, searchKeyword, getSearchSummary, ZERO_RESULT_FOUND_MSG } from './searchHelper';
 import './DictionarySearcher.css';
 
 class DictionarySearcher extends React.Component {
@@ -19,9 +19,6 @@ class DictionarySearcher extends React.Component {
       searchError: '',
       hasError: false,
     };
-    if (this.props.currentSearchKeyword) {
-      this.search(this.props.currentSearchKeyword);
-    }
   }
 
   componentDidMount() {
@@ -29,7 +26,6 @@ class DictionarySearcher extends React.Component {
     if (this.props.currentSearchKeyword) {
       this.autoCompleteRef.current.setInputText(this.props.currentSearchKeyword);
       this.search(this.props.currentSearchKeyword);
-      this.forceUpdate();
     }
   }
 
@@ -57,6 +53,7 @@ class DictionarySearcher extends React.Component {
         isSearchFinished: true,
         hasError: true,
         errorMsg,
+        suggestionList: [],
       });
       return;
     }
@@ -164,7 +161,7 @@ class DictionarySearcher extends React.Component {
                       </li>
                     </React.Fragment>
                   ) : (
-                    <p>0 result found. Please try another keyword.</p>
+                    <p>{ZERO_RESULT_FOUND_MSG}</p>
                   )
                 )
               }

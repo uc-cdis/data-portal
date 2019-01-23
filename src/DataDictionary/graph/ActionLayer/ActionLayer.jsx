@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import './ActionLayer.css';
 
+/**
+* A layer over the graph.
+* Put action buttons here.
+*/
 class ActionLayer extends React.Component {
   handleClearSearch = () => {
     this.props.onClearSearchResult();

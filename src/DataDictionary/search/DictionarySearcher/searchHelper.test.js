@@ -61,13 +61,13 @@ describe('dictionary search helper', () => {
 
   it('can search', () => {
     const { result } = searchKeyword(searchData, 'test');
-    expect(result).toBeDefined();
+    expect(result.length).toBeGreaterThan(0);
     const summary = getSearchSummary(result);
-    expect(summary.matchedPropertiesCount).toBeDefined();
-    expect(summary.matchedNodeNameAndDescriptionsCount).toBeDefined();
-    expect(summary.matchedNodeIDsInNameAndDescription).toBeDefined();
-    expect(summary.matchedNodeIDsInProperties).toBeDefined();
-    expect(summary.generalMatchedNodeIDs).toBeDefined();
+    expect(summary.matchedPropertiesCount).toBeGreaterThan(0);
+    expect(summary.matchedNodeNameAndDescriptionsCount).toBeGreaterThan(0);
+    expect(summary.matchedNodeIDsInNameAndDescription.includes('a1')).toBe(true);
+    expect(summary.matchedNodeIDsInProperties.includes('a1')).toBe(true);
+    expect(summary.generalMatchedNodeIDs.includes('a1')).toBe(true);
   });
 
   it('can output error if keyword too short', () => {

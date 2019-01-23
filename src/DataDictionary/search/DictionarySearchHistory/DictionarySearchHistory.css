@@ -38,7 +38,7 @@
 
 .dictionary-search-history__item-badge {
   background-color: var(--g3-color__base-blue);
-  color: white;
+  color: var(--g3-color__white);
   padding: 0 8px;
   border-radius: 4px;
 }

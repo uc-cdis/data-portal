@@ -163,10 +163,8 @@ export const getMatchInsideProperty = (propertyIndex, propertyKey, property, all
   const typeMatchList = [];
   if (allMatches) {
     allMatches.forEach((item) => {
-      // if (item.key === 'properties.name' && item.arrayIndex === propertyIndex) {
       if (item.key === 'properties.name' && item.value === propertyKey) {
         nameMatch = item;
-      // } else if (item.key === 'properties.description' && item.arrayIndex === propertyIndex) {
       } else if (item.key === 'properties.description') {
         const descriptionStr = getPropertyDescription(property);
         if (item.value === descriptionStr) {

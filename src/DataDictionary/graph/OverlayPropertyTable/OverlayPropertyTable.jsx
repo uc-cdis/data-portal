@@ -41,11 +41,11 @@ class OverlayPropertyTable extends React.Component {
     this.props.onCloseOverlayPropertyTable();
   };
 
-  handleSeeFull = () => {
+  handleSeeAllProperties = () => {
     this.props.onOpenMatchedNode();
   };
 
-  handleSeeOnlyMatched = () => {
+  handleSeeOnlyMatchedProperties = () => {
     this.props.onCloseMatchedNode();
   };
 
@@ -68,7 +68,7 @@ class OverlayPropertyTable extends React.Component {
                     <Button
                       className='overlay-property-table__toggle-node'
                       onClick={searchedNodeNotOpened
-                        ? this.handleSeeFull : this.handleSeeOnlyMatched}
+                        ? this.handleSeeAllProperties : this.handleSeeOnlyMatchedProperties}
                       label={searchedNodeNotOpened ? 'See All' : 'See Only Matched'}
                       buttonType='secondary'
                     />
