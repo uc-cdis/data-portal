@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AutoComplete from '@gen3/ui-component/dist/components/AutoComplete';
+import { compareTwoStrings } from 'string-similarity';
 import { prepareSearchData, searchKeyword, getSearchSummary, ZERO_RESULT_FOUND_MSG } from './searchHelper';
 import './DictionarySearcher.css';
 
@@ -102,7 +103,7 @@ class DictionarySearcher extends React.Component {
       });
     });
     const suggestionList = Object.keys(matchedStrings)
-      .sort()
+      .sort((str1, str2) => compareTwoStrings(str2, inputText) - compareTwoStrings(str1, inputText))
       .map(str => ({
         fullString: str,
         matchedPieceIndices: matchedStrings[str].matchedPieceIndices,
