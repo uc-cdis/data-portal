@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Gen3ClientSvg from '../img/gen3client.svg';
 import MapFilesSvg from '../img/mapfiles.svg';
+import { humanFileSize } from '../utils.js';
 import './SubmissionHeader.less';
 
 class SubmissionHeader extends React.Component {
@@ -19,6 +20,8 @@ class SubmissionHeader extends React.Component {
   }
 
   render() {
+    const totalFileSize = humanFileSize(this.props.unmappedFileSize);
+
     return (
       <div className='submission-header'>
         <div className='submission-header__section'>
@@ -55,7 +58,9 @@ class SubmissionHeader extends React.Component {
           </div>
           <div className='submission-header__section-info'>
             <div className='h3-typo'>Map My Files</div>
-            <div className='h4-typo'>{this.props.unmappedFileCount} files | {this.props.unmappedFileSize} B</div>
+            <div className='h4-typo'>
+              {this.props.unmappedFileCount} files | {totalFileSize}
+            </div>
             <div className='body-typo'>
               Mapping files to metadata in order to create medical meaning.
             </div>
