@@ -38,7 +38,7 @@ class MapDataModel extends React.Component {
     const map = {};
     if (this.state.nodeType) {
       props = this.props.dictionary[this.state.nodeType].required.filter(prop => prop !== 'submitter_id' &&
-        prop !== 'file_size' && prop !== 'file_name' && prop !== 'md5sum' &&
+        prop !== 'file_size' && prop !== 'file_name' && prop !== 'md5sum' && prop !== 'type' &&
         !this.props.dictionary[this.state.nodeType].systemProperties.includes(prop) &&
         !Object.keys(this.state.parentTypesOfSelectedNode)
           .map(key => this.state.parentTypesOfSelectedNode[key].name).includes(prop));
