@@ -29,7 +29,7 @@ const fetchUnmappedFiles = (user, total, start) => dispatch => fetchWithCreds({
   },
   err => ({ type: 'FETCH_ERROR', error: err }),
 ).then((msg) => {
-  if (!!msg) {
+  if (msg) {
     dispatch(msg);
   }
 });

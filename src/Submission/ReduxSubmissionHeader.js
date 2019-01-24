@@ -33,7 +33,7 @@ const fetchUnmappedFileStats = (user, totalSize, start) => dispatch => fetchWith
   },
   err => ({ type: 'FETCH_ERROR', error: err }),
 ).then((msg) => {
-  if (!!msg) {
+  if (msg) {
     dispatch(msg);
   }
 });

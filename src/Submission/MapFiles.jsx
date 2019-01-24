@@ -35,7 +35,6 @@ class MapFiles extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.unmappedFiles !== this.props.unmappedFiles) {
       this.onUpdate();
-      this.setState({ loading: false });
     }
   }
 
@@ -52,6 +51,7 @@ class MapFiles extends React.Component {
 
   onUpdate = () => {
     this.setState({
+      loading: false,
       filesByDate: this.groupUnmappedFiles(),
     }, () => this.createFileMapByGroup());
   }
@@ -207,7 +207,7 @@ class MapFiles extends React.Component {
           onScroll={this.onScroll}
         />
         <div className={'map-files__tables'.concat(this.state.isScrolling ? ' map-files__tables--scrolling' : '')}>
-          { this.state.loading ? <Spinner />  : null }
+          { this.state.loading ? <Spinner /> : null }
           {
             sortedDates.map((date, i) => {
               const files = filesByDate[date];

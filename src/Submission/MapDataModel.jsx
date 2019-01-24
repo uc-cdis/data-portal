@@ -160,7 +160,6 @@ class MapDataModel extends React.Component {
               this.setState({ submissionText: `Submitting ${this.state.chunkCounter} of ${chunks.length} chunks...` });
             });
             if (!res.success) {
-              console.log('error', res);
               message.push(res.entities && res.entities.length > 0 && res.entities[0].errors ?
                 res.entities[0].errors.map(error => error.message).toString()
                 : res.message);
