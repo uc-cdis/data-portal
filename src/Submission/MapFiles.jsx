@@ -7,11 +7,14 @@ import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
 import CheckBox from '../components/CheckBox';
 import StatusReadyIcon from '../img/icons/status_ready.svg';
+import CloseIcon from '../img/icons/cross.svg';
 import { humanFileSize } from '../utils.js';
 import './MapFiles.less';
 
 class MapFiles extends React.Component {
   constructor(props) {
+    const params = queryString.parse(window.location.search);
+    const message = params && params.message ? params.message : null;
     super(props);
     this.state = {
       selectedFilesByGroup: {},
@@ -19,6 +22,7 @@ class MapFiles extends React.Component {
       filesByDate: {},
       isScrolling: false,
       sortedDates: [],
+      message,
     };
   }
 
@@ -160,6 +164,10 @@ class MapFiles extends React.Component {
 
   isFileReady = file => file.hashes && Object.keys(file.hashes).length > 0;
 
+  closeMessage = () => {
+    this.setState({ message: null });
+  }
+
 
   render() {
     const buttons = [
@@ -173,18 +181,17 @@ class MapFiles extends React.Component {
       />,
     ];
 
-    const params = queryString.parse(window.location.search);
-    const message = params && params.message ? params.message : null;
     const { sortedDates, filesByDate } = this.state;
 
     return (
       <div className='map-files'>
         {
-          message ? (
+          this.state.message ? (
             <div className='map-files__notification-wrapper'>
               <div className='map-files__notification'>
+                <CloseIcon className='map-files__notification-icon' onClick={this.closeMessage} />
                 <p className='map-files__notification-text'>
-                  {message}
+                  {this.state.message}
                 </p>
               </div>
             </div>
