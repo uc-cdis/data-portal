@@ -79,6 +79,8 @@ module.exports = {
         "src/DataDictionary/GraphCreator.js",
         "src/GraphUtils/testData.js",
         "src/GraphUtils/utils.js",
+        "src/Submission/ReduxMapFiles.js",
+        "src/Submission/ReduxSubmissionHeader.js",
       ],
       "rules": {
         "no-param-reassign": "off" // for D3 charts

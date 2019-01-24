@@ -24,6 +24,8 @@ class MapDataModel extends React.Component {
       validParentIds: [],
       parentTypesOfSelectedNode: {},
       submitting: false,
+      submissionText: `${this.props.filesToMap.length} files ready for mapping.`,
+      chunkCounter: 0,
     };
   }
 
@@ -121,7 +123,8 @@ class MapDataModel extends React.Component {
   }
 
   submit = () => {
-    const json = [];
+    const chunks = [];
+    let json = [];
     this.props.filesToMap.forEach((file) => {
       const obj = {
         type: this.state.nodeType,
@@ -138,21 +141,39 @@ class MapDataModel extends React.Component {
         submitter_id: this.state.parentNodeId,
       };
       json.push(obj);
+
+      if (json.length === 10) {
+        chunks.push(json);
+        json = [];
+      }
     });
+    chunks.push(json);
 
     const programProject = this.state.projectId.split(/-(.+)/);
-    let message = `${this.props.filesToMap.length} files mapped successfully!`;
+    let message = [];
     this.setState({ submitting: true }, () => {
-      this.props.submitFiles(programProject[0], programProject[1], json).then((res) => {
-        if (!res.success) {
-          message = res.entities && res.entities.length > 0 && res.entities[0].errors ?
-            res.entities[0].errors.map(error => error.message).toString()
-            : res.message;
-        }
+      const promises = [];
+      chunks.forEach((chunk) => {
+        const promise = this.props.submitFiles(programProject[0], programProject[1], chunk)
+          .then((res) => {
+            this.setState(prevState => ({ chunkCounter: prevState.chunkCounter + 1 }), () => {
+              this.setState({ submissionText: `Submitting ${this.state.chunkCounter} of ${chunks.length} chunks...` });
+            });
+            if (!res.success) {
+              console.log('error', res);
+              message.push(res.entities && res.entities.length > 0 && res.entities[0].errors ?
+                res.entities[0].errors.map(error => error.message).toString()
+                : res.message);
+            }
+          });
+        promises.push(promise);
+      });
+      Promise.all(promises).then(() => {
+        message = message.length > 0 ? message : `${this.props.filesToMap.length} files mapped successfully!`;
         this.props.history.push(`/submission/files?message=${message}`);
       });
     });
-  }
+  };
 
   isValidSubmission = () => !!this.state.projectId && !!this.state.nodeType &&
       !!this.state.parentNodeType && !!this.state.parentNodeId &&
@@ -291,7 +312,7 @@ class MapDataModel extends React.Component {
                 enabled={!this.state.submitting}
               />
               <p className='map-data-model__submission-footer-text introduction'>
-                {this.props.filesToMap.length} files ready for mapping.
+                {this.state.submissionText}
               </p>
             </div>
           ) : null
