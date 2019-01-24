@@ -6,7 +6,7 @@ import './FileTypePicture.less';
 function dataFormatToFileType(dictIcons, dataFormat) {
   const fileTypes = Object.keys(dictIcons); // list of available types
   const format = dataFormat.toLowerCase();
-  return format in fileTypes ? format : 'file';
+  return fileTypes.includes(format) ? format : 'file';
 }
 
 class FileTypePicture extends Component {
