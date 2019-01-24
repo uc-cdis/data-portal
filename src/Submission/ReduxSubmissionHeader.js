@@ -32,7 +32,11 @@ const fetchUnmappedFileStats = (user, totalSize, start) => dispatch => fetchWith
     }
   },
   err => ({ type: 'FETCH_ERROR', error: err }),
-).then((msg) => { dispatch(msg); });
+).then((msg) => {
+  if (!!msg) {
+    dispatch(msg);
+  }
+});
 
 const getStartingUUID = user => dispatch => fetchWithCreds({
   path: `${indexdPath}index?acl=null&uploader=${user}&limit=1`,

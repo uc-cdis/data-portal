@@ -6,6 +6,7 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
 import CheckBox from '../components/CheckBox';
+import Spinner from '../components/Spinner';
 import StatusReadyIcon from '../img/icons/status_ready.svg';
 import CloseIcon from '../img/icons/cross.svg';
 import { humanFileSize } from '../utils.js';
@@ -23,17 +24,18 @@ class MapFiles extends React.Component {
       isScrolling: false,
       sortedDates: [],
       message,
+      loading: true,
     };
   }
 
   componentDidMount() {
     this.props.fetchUnmappedFiles(this.props.user.username);
-    this.onUpdate();
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.unmappedFiles !== this.props.unmappedFiles) {
       this.onUpdate();
+      this.setState({ loading: false });
     }
   }
 
@@ -168,7 +170,6 @@ class MapFiles extends React.Component {
     this.setState({ message: null });
   }
 
-
   render() {
     const buttons = [
       <Button
@@ -206,6 +207,7 @@ class MapFiles extends React.Component {
           onScroll={this.onScroll}
         />
         <div className={'map-files__tables'.concat(this.state.isScrolling ? ' map-files__tables--scrolling' : '')}>
+          { this.state.loading ? <Spinner />  : null }
           {
             sortedDates.map((date, i) => {
               const files = filesByDate[date];

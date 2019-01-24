@@ -28,7 +28,11 @@ const fetchUnmappedFiles = (user, total, start) => dispatch => fetchWithCreds({
     }
   },
   err => ({ type: 'FETCH_ERROR', error: err }),
-).then((msg) => { dispatch(msg); });
+).then((msg) => {
+  if (!!msg) {
+    dispatch(msg);
+  }
+});
 
 const getStartingUUID = user => dispatch => fetchWithCreds({
   path: `${indexdPath}index?acl=null&uploader=${user}&limit=1`,
@@ -53,7 +57,6 @@ const ReduxMapFiles = (() => {
   const mapStateToProps = state => ({
     unmappedFiles: state.submission.unmappedFiles,
     user: state.user,
-    unmappedStartingDID: state.submission.unmappedStartingDID,
   });
 
   const mapDispatchToProps = dispatch => ({
