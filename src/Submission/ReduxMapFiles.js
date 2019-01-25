@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import MapFiles from './MapFiles';
 import { fetchWithCreds } from '../actions';
-import { getStartingUUID } from './utils';
+import { STARTING_DID, FETCH_LIMIT } from './utils';
 import { indexdPath } from '../localconf';
 
 const fetchUnmappedFiles = (user, total, start, fetchLimit) => dispatch => fetchWithCreds({
@@ -47,7 +47,9 @@ const ReduxMapFiles = (() => {
   });
 
   const mapDispatchToProps = dispatch => ({
-    fetchUnmappedFiles: user => dispatch(getStartingUUID(user, fetchUnmappedFiles)),
+    fetchUnmappedFiles: user => dispatch(
+      fetchUnmappedFiles(user, [], STARTING_DID, FETCH_LIMIT),
+    ),
     mapSelectedFiles: files => dispatch(mapSelectedFiles(files)),
   });
 

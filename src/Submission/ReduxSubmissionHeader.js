@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import SubmissionHeader from './SubmissionHeader';
 import { fetchWithCreds } from '../actions';
-import { getStartingUUID } from './utils';
+import { FETCH_LIMIT, STARTING_DID } from './utils';
 import { indexdPath } from '../localconf';
 
 const fetchUnmappedFileStats = (user, totalSize, start, fetchLimit) => dispatch => fetchWithCreds({
@@ -47,7 +47,9 @@ const ReduxSubmissionHeader = (() => {
   });
 
   const mapDispatchToProps = dispatch => ({
-    fetchUnmappedFileStats: user => dispatch(getStartingUUID(user, fetchUnmappedFileStats)),
+    fetchUnmappedFileStats: user => dispatch(
+      fetchUnmappedFileStats(user, [], STARTING_DID, FETCH_LIMIT),
+    ),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(SubmissionHeader);
