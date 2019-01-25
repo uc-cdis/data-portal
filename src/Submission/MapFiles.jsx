@@ -114,7 +114,8 @@ class MapFiles extends React.Component {
     const selectedMap = {};
     let index = 0;
     this.state.sortedDates.forEach((date) => {
-      const filesToAdd = this.state.filesByDate[date].filter(file => this.isFileReady(file));
+      const filesToAdd = this.state.filesByDate[date]
+        .filter(file => this.isFileReady(file));
       unselectedMap[index] = new Set(filesToAdd);
       selectedMap[index] = new Set();
       index += 1;
@@ -131,6 +132,20 @@ class MapFiles extends React.Component {
       } else {
         groupedFiles[fileDate] = [file];
       }
+    });
+    Object.keys(groupedFiles).forEach((fileDate) => {
+      const fileList = groupedFiles[fileDate];
+      groupedFiles[fileDate] = fileList.sort((file1, file2) => {
+        const time1 = (new Date(file1.created_date)).getTime();
+        const time2 = (new Date(file2.created_date)).getTime();
+        if ((this.isFileReady(file1) && this.isFileReady(file2))
+          || (!this.isFileReady(file1) && !this.isFileReady(file2))) {
+          return time1 - time2;
+        } else if (this.isFileReady(file1)) {
+          return -1;
+        }
+        return 1;
+      });
     });
     const sortedDates = Object.keys(groupedFiles).sort((a, b) => moment(b, 'MM/DD/YY') - moment(a, 'MM/DD/YY'));
     this.setState({ sortedDates });
