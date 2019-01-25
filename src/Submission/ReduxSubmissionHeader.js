@@ -1,20 +1,21 @@
 import { connect } from 'react-redux';
 import SubmissionHeader from './SubmissionHeader';
 import { fetchWithCreds } from '../actions';
+import { getStartingUUID } from './utils';
 import { indexdPath } from '../localconf';
 
-const FETCH_LIMIT = 1024;
-
-const fetchUnmappedFileStats = (user, totalSize, start) => dispatch => fetchWithCreds({
-  path: `${indexdPath}index?acl=null&uploader=${user}&start=${start}&limit=${FETCH_LIMIT}`,
+const fetchUnmappedFileStats = (user, totalSize, start, fetchLimit) => dispatch => fetchWithCreds({
+  path: `${indexdPath}index?acl=null&uploader=${user}&start=${start}&limit=${fetchLimit}`,
   method: 'GET',
 }).then(
   ({ status, data }) => {
     switch (status) {
     case 200:
       totalSize = totalSize.concat(data.records);
-      if (data.records.length === FETCH_LIMIT) {
-        return dispatch(fetchUnmappedFileStats(user, totalSize, data.records[FETCH_LIMIT - 1].did));
+      if (data.records.length === fetchLimit) {
+        return dispatch(
+          fetchUnmappedFileStats(user, totalSize, data.records[fetchLimit - 1].did, fetchLimit),
+        );
       }
       return {
         type: 'RECEIVE_UNMAPPED_FILE_STATISTICS',
@@ -38,20 +39,6 @@ const fetchUnmappedFileStats = (user, totalSize, start) => dispatch => fetchWith
   }
 });
 
-const getStartingUUID = user => dispatch => fetchWithCreds({
-  path: `${indexdPath}index?acl=null&uploader=${user}&limit=1`,
-  method: 'GET',
-}).then(
-  ({ status, data }) => {
-    switch (status) {
-    case 200:
-      return data.records[0].did;
-    default:
-      return null;
-    }
-  },
-).then(res => dispatch(fetchUnmappedFileStats(user, [], res)));
-
 const ReduxSubmissionHeader = (() => {
   const mapStateToProps = state => ({
     unmappedFileCount: state.submission.unmappedFileCount,
@@ -60,7 +47,7 @@ const ReduxSubmissionHeader = (() => {
   });
 
   const mapDispatchToProps = dispatch => ({
-    fetchUnmappedFileStats: user => dispatch(getStartingUUID(user)),
+    fetchUnmappedFileStats: user => dispatch(getStartingUUID(user, fetchUnmappedFileStats)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(SubmissionHeader);

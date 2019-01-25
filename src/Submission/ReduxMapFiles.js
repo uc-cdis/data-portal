@@ -1,20 +1,21 @@
 import { connect } from 'react-redux';
 import MapFiles from './MapFiles';
 import { fetchWithCreds } from '../actions';
+import { getStartingUUID } from './utils';
 import { indexdPath } from '../localconf';
 
-const FETCH_LIMIT = 1024;
-
-const fetchUnmappedFiles = (user, total, start) => dispatch => fetchWithCreds({
-  path: `${indexdPath}index?acl=null&uploader=${user}&start=${start}&limit=${FETCH_LIMIT}`,
+const fetchUnmappedFiles = (user, total, start, fetchLimit) => dispatch => fetchWithCreds({
+  path: `${indexdPath}index?acl=null&uploader=${user}&start=${start}&limit=${fetchLimit}`,
   method: 'GET',
 }).then(
   ({ status, data }) => {
     switch (status) {
     case 200:
       total = total.concat(data.records);
-      if (data.records.length === FETCH_LIMIT) {
-        return dispatch(fetchUnmappedFiles(user, total, data.records[FETCH_LIMIT - 1].did));
+      if (data.records.length === fetchLimit) {
+        return dispatch(
+          fetchUnmappedFiles(user, total, data.records[fetchLimit - 1].did, fetchLimit),
+        );
       }
       return {
         type: 'RECEIVE_UNMAPPED_FILES',
@@ -34,20 +35,6 @@ const fetchUnmappedFiles = (user, total, start) => dispatch => fetchWithCreds({
   }
 });
 
-const getStartingUUID = user => dispatch => fetchWithCreds({
-  path: `${indexdPath}index?acl=null&uploader=${user}&limit=1`,
-  method: 'GET',
-}).then(
-  ({ status, data }) => {
-    switch (status) {
-    case 200:
-      return data.records[0].did;
-    default:
-      return null;
-    }
-  },
-).then(res => dispatch(fetchUnmappedFiles(user, [], res)));
-
 const mapSelectedFiles = files => ({
   type: 'RECEIVE_FILES_TO_MAP',
   data: files,
@@ -60,8 +47,7 @@ const ReduxMapFiles = (() => {
   });
 
   const mapDispatchToProps = dispatch => ({
-    getStartingUUID: user => dispatch(getStartingUUID(user)),
-    fetchUnmappedFiles: user => dispatch(getStartingUUID(user)),
+    fetchUnmappedFiles: user => dispatch(getStartingUUID(user, fetchUnmappedFiles)),
     mapSelectedFiles: files => dispatch(mapSelectedFiles(files)),
   });
 

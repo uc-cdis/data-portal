@@ -11,6 +11,7 @@ import environment from '../environment';
 import './MapDataModel.less';
 
 const gqlHelper = GQLHelper.getGQLHelper();
+const CHUNK_SIZE = 10;
 
 class MapDataModel extends React.Component {
   constructor(props) {
@@ -142,7 +143,7 @@ class MapDataModel extends React.Component {
       };
       json.push(obj);
 
-      if (json.length === 10) {
+      if (json.length === CHUNK_SIZE) {
         chunks.push(json);
         json = [];
       }
@@ -160,8 +161,8 @@ class MapDataModel extends React.Component {
               this.setState({ submissionText: `Submitting ${this.state.chunkCounter} of ${chunks.length} chunks...` });
             });
             if (!res.success) {
-              message.push(res.entities && res.entities.length > 0 && res.entities[0].errors ?
-                res.entities[0].errors.map(error => error.message).toString()
+              message.push(res.entities && res.entities.length > 0 && res.entities[0].errors
+                ? res.entities[0].errors.map(error => error.message).toString()
                 : res.message);
             }
           });
