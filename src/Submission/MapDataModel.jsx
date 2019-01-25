@@ -151,7 +151,7 @@ class MapDataModel extends React.Component {
     chunks.push(json);
 
     const programProject = this.state.projectId.split(/-(.+)/);
-    let message = [];
+    let message = `${this.props.filesToMap.length} files mapped successfully!`;
     this.setState({ submitting: true }, () => {
       const promises = [];
       chunks.forEach((chunk) => {
@@ -161,15 +161,14 @@ class MapDataModel extends React.Component {
               this.setState({ submissionText: `Submitting ${this.state.chunkCounter} of ${chunks.length} chunks...` });
             });
             if (!res.success) {
-              message.push(res.entities && res.entities.length > 0 && res.entities[0].errors
+              message = `Error: ${res.entities && res.entities.length > 0 && res.entities[0].errors
                 ? res.entities[0].errors.map(error => error.message).toString()
-                : res.message);
+                : res.message} occurred during mapping.`;
             }
           });
         promises.push(promise);
       });
       Promise.all(promises).then(() => {
-        message = message.length > 0 ? message : `${this.props.filesToMap.length} files mapped successfully!`;
         this.props.history.push(`/submission/files?message=${message}`);
       });
     });
