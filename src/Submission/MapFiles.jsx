@@ -168,6 +168,7 @@ class MapFiles extends React.Component {
 
   closeMessage = () => {
     this.setState({ message: null });
+    window.history.replaceState(null, null, window.location.pathname);
   }
 
   render() {
