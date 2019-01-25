@@ -210,6 +210,11 @@ class MapFiles extends React.Component {
         <div className={'map-files__tables'.concat(this.state.isScrolling ? ' map-files__tables--scrolling' : '')}>
           { this.state.loading ? <Spinner /> : null }
           {
+            !this.state.loading && sortedDates.length === 0
+              ? <h2 className='map-files__empty-text'>No files have been uploaded.</h2>
+              : null
+          }
+          {
             sortedDates.map((date, i) => {
               const files = filesByDate[date];
               return (
