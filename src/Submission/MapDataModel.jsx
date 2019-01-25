@@ -132,7 +132,7 @@ class MapDataModel extends React.Component {
         ...this.state.requiredFields,
         file_name: file.file_name,
         object_id: file.did,
-        submitter_id: `${this.state.projectId}_${file.file_name.substring(0, file.file_name.lastIndexOf('.'))}_${file.did.substring(file.did.length-4, file.did.length)}`,
+        submitter_id: `${this.state.projectId}_${file.file_name.substring(0, file.file_name.lastIndexOf('.'))}_${file.did.substring(file.did.length - 4, file.did.length)}`,
         project_id: this.state.projectId,
         file_size: file.size,
         md5sum: file.hashes ? file.hashes.md5 : null,
