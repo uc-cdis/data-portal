@@ -23,6 +23,7 @@ class MapDataModel extends React.Component {
       parentNodeId: null,
       validParentIds: [],
       parentTypesOfSelectedNode: {},
+      submitting: false,
     };
   }
 
@@ -38,7 +39,7 @@ class MapDataModel extends React.Component {
     const map = {};
     if (this.state.nodeType) {
       props = this.props.dictionary[this.state.nodeType].required.filter(prop => prop !== 'submitter_id' &&
-        prop !== 'file_size' && prop !== 'file_name' && prop !== 'md5sum' &&
+        prop !== 'file_size' && prop !== 'file_name' && prop !== 'md5sum' && prop !== 'type' &&
         !this.props.dictionary[this.state.nodeType].systemProperties.includes(prop) &&
         !Object.keys(this.state.parentTypesOfSelectedNode)
           .map(key => this.state.parentTypesOfSelectedNode[key].name).includes(prop));
@@ -108,10 +109,10 @@ class MapDataModel extends React.Component {
       fetchQuery(
         environment,
         gqlHelper.allSubmitterIdsByTypeQuery,
-        { project_id: this.state.project, type: this.state.parentNodeType },
+        { project_id: this.state.projectId },
       ).then((data) => {
-        if (data && data.datanode) {
-          this.setState({ validParentIds: data.datanode });
+        if (data && data[this.state.parentNodeType]) {
+          this.setState({ validParentIds: data[this.state.parentNodeType] });
         }
       });
     } else {
@@ -141,13 +142,15 @@ class MapDataModel extends React.Component {
 
     const programProject = this.state.projectId.split(/-(.+)/);
     let message = `${this.props.filesToMap.length} files mapped successfully!`;
-    this.props.submitFiles(programProject[0], programProject[1], json).then((res) => {
-      if (!res.success) {
-        message = res.entities && res.entities.length > 0 && res.entities[0].errors ?
-          res.entities[0].errors.map(error => error.message).toString()
-          : res.message;
-      }
-      this.props.history.push(`/submission/files?message=${message}`);
+    this.setState({ submitting: true }, () => {
+      this.props.submitFiles(programProject[0], programProject[1], json).then((res) => {
+        if (!res.success) {
+          message = res.entities && res.entities.length > 0 && res.entities[0].errors ?
+            res.entities[0].errors.map(error => error.message).toString()
+            : res.message;
+        }
+        this.props.history.push(`/submission/files?message=${message}`);
+      });
     });
   }
 
@@ -285,6 +288,7 @@ class MapDataModel extends React.Component {
                 onClick={this.submit}
                 label='Submit'
                 buttonType='primary'
+                enabled={!this.state.submitting}
               />
               <p className='map-data-model__submission-footer-text introduction'>
                 {this.props.filesToMap.length} files ready for mapping.
