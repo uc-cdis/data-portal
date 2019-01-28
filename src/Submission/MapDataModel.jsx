@@ -148,7 +148,9 @@ class MapDataModel extends React.Component {
         json = [];
       }
     });
-    chunks.push(json);
+    if (json.length > 0) {
+      chunks.push(json);
+    }
 
     const programProject = this.state.projectId.split(/-(.+)/);
     let message = `${this.props.filesToMap.length} files mapped successfully!`;
