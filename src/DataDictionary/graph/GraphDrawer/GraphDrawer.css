@@ -1,4 +1,4 @@
 :root {
-  --opacity--faded: 0.1; /* for some non-hilighted nodes and edges */
+  --opacity--faded: 0.1; /* for some non-highlighted nodes and edges */
   --opacity--half-faded: 0.5; /* for some highlighted but non-selected nodes */
 }
