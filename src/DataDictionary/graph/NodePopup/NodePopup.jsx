@@ -15,6 +15,7 @@ class NodePopup extends React.Component {
       );
     }
     const highlightingNodeSVGElement = this.props
+      .graphNodesSVGElements && this.props
       .graphNodesSVGElements[this.props.highlightingNode.id];
     const svgBoundingBox = highlightingNodeSVGElement
       && highlightingNodeSVGElement.getBoundingClientRect

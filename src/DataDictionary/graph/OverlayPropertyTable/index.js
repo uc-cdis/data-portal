@@ -38,8 +38,8 @@ const ReduxOverlayPropertyTable = (() => {
 
   const mapDispatchToProps = dispatch => ({
     onCloseOverlayPropertyTable: () => dispatch(setOverlayPropertyTableHidden(true)),
-    onOpenMatchedNode: () => dispatch(setHighlightingMatchedNodeOpened(true)),
-    onCloseMatchedNode: () => dispatch(setHighlightingMatchedNodeOpened(false)),
+    onOpenMatchedProperties: () => dispatch(setHighlightingMatchedNodeOpened(true)),
+    onCloseMatchedProperties: () => dispatch(setHighlightingMatchedNodeOpened(false)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(OverlayPropertyTable);

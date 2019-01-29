@@ -37,16 +37,25 @@ class OverlayPropertyTable extends React.Component {
     return this.props.node.description;
   };
 
+  /**
+   * Close the whole overlay property table
+   */
   handleClose = () => {
     this.props.onCloseOverlayPropertyTable();
   };
 
-  handleSeeAllProperties = () => {
-    this.props.onOpenMatchedNode();
+  /**
+   * Toggle the property tabl to display all properties
+   */
+  handleOpenAllProperties = () => {
+    this.props.onOpenMatchedProperties();
   };
 
-  handleSeeOnlyMatchedProperties = () => {
-    this.props.onCloseMatchedNode();
+  /**
+   * Toggle the property table to display matched properties only
+   */
+  handleDisplayOnlyMatchedProperties = () => {
+    this.props.onCloseMatchedProperties();
   };
 
   render() {
@@ -68,7 +77,7 @@ class OverlayPropertyTable extends React.Component {
                     <Button
                       className='overlay-property-table__toggle-node'
                       onClick={searchedNodeNotOpened
-                        ? this.handleSeeAllProperties : this.handleSeeOnlyMatchedProperties}
+                        ? this.handleOpenAllProperties : this.handleDisplayOnlyMatchedProperties}
                       label={searchedNodeNotOpened ? 'See All' : 'See Only Matched'}
                       buttonType='secondary'
                     />
@@ -131,8 +140,8 @@ OverlayPropertyTable.propTypes = {
   onCloseOverlayPropertyTable: PropTypes.func,
   isSearchMode: PropTypes.bool,
   matchedResult: SearchResultItemShape,
-  onOpenMatchedNode: PropTypes.func,
-  onCloseMatchedNode: PropTypes.func,
+  onOpenMatchedProperties: PropTypes.func,
+  onCloseMatchedProperties: PropTypes.func,
   isSearchResultNodeOpened: PropTypes.bool,
 };
 
@@ -142,8 +151,8 @@ OverlayPropertyTable.defaultProps = {
   onCloseOverlayPropertyTable: () => {},
   isSearchMode: false,
   matchedResult: {},
-  onOpenMatchedNode: () => {},
-  onCloseMatchedNode: () => {},
+  onOpenMatchedProperties: () => {},
+  onCloseMatchedProperties: () => {},
   isSearchResultNodeOpened: false,
 };
 

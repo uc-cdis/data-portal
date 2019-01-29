@@ -13,48 +13,47 @@ describe('dictionary search helper', () => {
       id: 'a1',
       category: 'A',
       description: 'whatever',
-      properties: [
-        {
-          name: 'test',
+      properties: {
+        'test property': {
           description: 'test description',
           type: 'test type',
         },
-      ],
+      },
     },
     a2: {
       title: 'a2',
       id: 'a2',
       category: 'A',
       description: 'whatever',
-      properties: [],
+      properties: {},
     },
     b1: {
       title: 'b1',
       id: 'b1',
       category: 'B',
       description: 'whatever',
-      properties: [],
+      properties: {},
     },
     b2: {
       title: 'b2',
       id: 'b2',
       category: 'B',
       description: 'whatever',
-      properties: [],
+      properties: {},
     },
     b3: {
       title: 'b3',
       id: 'b3',
       category: 'B',
       description: 'whatever',
-      properties: [],
+      properties: {},
     },
     b4: {
       title: 'b4',
       id: 'b4',
       category: 'B',
       description: 'whatever',
-      properties: [],
+      properties: {},
     },
   };
   const searchData = prepareSearchData(dictionary);
@@ -63,11 +62,11 @@ describe('dictionary search helper', () => {
     const { result } = searchKeyword(searchData, 'test');
     expect(result.length).toBeGreaterThan(0);
     const summary = getSearchSummary(result);
-    expect(summary.matchedPropertiesCount).toBeGreaterThan(0);
-    expect(summary.matchedNodeNameAndDescriptionsCount).toBeGreaterThan(0);
-    expect(summary.matchedNodeIDsInNameAndDescription.includes('a1')).toBe(true);
-    expect(summary.matchedNodeIDsInProperties.includes('a1')).toBe(true);
-    expect(summary.generalMatchedNodeIDs.includes('a1')).toBe(true);
+    expect(summary.matchedPropertiesCount).toBe(3); // 3 matches: name, description, and type
+    expect(summary.matchedNodeNameAndDescriptionsCount).toBe(1);
+    expect(summary.matchedNodeIDsInNameAndDescription).toEqual(['a1']);
+    expect(summary.matchedNodeIDsInProperties).toEqual(['a1']);
+    expect(summary.generalMatchedNodeIDs).toEqual(['a1']);
   });
 
   it('can output error if keyword too short', () => {

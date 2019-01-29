@@ -17,8 +17,8 @@ class DictionarySearcher extends React.Component {
         matchedNodes: [],
         summary: {},
       },
-      searchError: '',
       hasError: false,
+      errorMsg: '',
     };
   }
 
