@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'react-select/dist/react-select.css';
 import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -45,10 +44,6 @@ import Workspace from './Workspace';
 
 // monitor user's session
 sessionMonitor.start();
-
-// Needed for onTouchTap
-// http://stackoverflow.com/a/34015469/988941
-injectTapEventPlugin();
 
 // render the app after the store is configured
 async function init() {
