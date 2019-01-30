@@ -4,8 +4,8 @@ import NodeTooltip from './NodeTooltip';
 const ReduxNodeTooltip = (() => {
   const mapStateToProps = state => ({
     hoveringNode: state.ddgraph.hoveringNode,
-    hoveringNodeSVGElement: state.ddgraph.hoveringNodeSVGElement,
     canvasBoundingRect: state.ddgraph.canvasBoundingRect,
+    graphNodesSVGElements: state.ddgraph.graphNodesSVGElements,
   });
 
   return connect(mapStateToProps)(NodeTooltip);

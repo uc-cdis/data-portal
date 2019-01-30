@@ -13,10 +13,11 @@ describe('NodePopup', () => {
     const closeFunc = jest.fn();
     const openFunc = jest.fn();
     const fakeSVGElem = mount(<g />);
+    const svgElems = { a: fakeSVGElem };
     const popup = mount(
       <NodePopup
         highlightingNode={highlightingNode}
-        highlightingNodeSVGElement={fakeSVGElem}
+        graphNodesSVGElements={svgElems}
         onClosePopup={closeFunc}
         onOpenOverlayPropertyTable={openFunc}
       />,

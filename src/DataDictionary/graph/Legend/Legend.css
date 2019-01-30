@@ -7,12 +7,14 @@
   max-width: 300px;
   min-width: 200px;
   z-index: 1;
+  border: 1px solid var(--g3-color__silver);
 }
 
 .data-dictionary-graph-legend--toggled {
   background-color: unset;
   min-width: unset;
   padding: 0;
+  border: none;
 }
 
 .data-dictionary-graph-legend__item {

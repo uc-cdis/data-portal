@@ -2,7 +2,10 @@ import Viz from 'viz.js';
 import { Module, render } from 'viz.js/full.render';
 import _ from 'underscore';
 import { createNodesAndEdges, createDotStrinByNodesEdges } from '../../../GraphUtils/utils';
-import { truncateLines, graphStyleConfig } from '../../utils';
+import {
+  truncateLines,
+  graphStyleConfig,
+} from '../../utils';
 import {
   getAllChildrenNodeIDs,
   getAllChildrenLinks,

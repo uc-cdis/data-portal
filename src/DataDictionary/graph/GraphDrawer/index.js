@@ -1,10 +1,9 @@
 import { connect } from 'react-redux';
 import {
-  setHoveringNode,
-  setHighlightingNode,
-  setSecondHighlightingNodeID,
-  setHighlightingNodeSVGElement,
-} from '../../action.js';
+  hoverNode,
+  clickNode,
+  setGraphNodesSVGElements,
+} from '../../action';
 import GraphDrawer from './GraphDrawer';
 
 const ReduxGraphDrawer = (() => {
@@ -14,23 +13,23 @@ const ReduxGraphDrawer = (() => {
     graphBoundingBox: state.ddgraph.graphBoundingBox,
     layoutInitialized: state.ddgraph.layoutInitialized,
     highlightingNode: state.ddgraph.highlightingNode,
-    highlightingNodeSVGElement: state.ddgraph.highlightingNodeSVGElement,
     relatedNodeIDs: state.ddgraph.relatedNodeIDs,
     secondHighlightingNodeCandidateIDs: state.ddgraph.secondHighlightingNodeCandidateIDs,
     pathRelatedToSecondHighlightingNode: state.ddgraph.pathRelatedToSecondHighlightingNode,
     secondHighlightingNodeID: state.ddgraph.secondHighlightingNodeID,
     isGraphView: state.ddgraph.isGraphView,
+    matchedNodeIDs: state.ddgraph.matchedNodeIDs,
+    matchedNodeIDsInNameAndDescription: state.ddgraph.matchedNodeIDsInNameAndDescription,
+    searchResult: state.ddgraph.searchResult,
+    isSearchMode: state.ddgraph.isSearchMode,
   });
 
   const mapDispatchToProps = dispatch => ({
-    onHoverNode: (node, hoveringNodeSVGElement) =>
-      dispatch(setHoveringNode(node, hoveringNodeSVGElement)),
-    onCancelHoverNode: () => dispatch(setHoveringNode(null)),
-    onClickNode: (node, highlightingNodeSVGElement) =>
-      dispatch(setHighlightingNode(node, highlightingNodeSVGElement)),
-    onClickNodeAsSecondHighlightingNode: nodeID => dispatch(setSecondHighlightingNodeID(nodeID)),
-    onHighlightingNodeSVGElementUpdated: highlightingNodeSVGElement =>
-      dispatch(setHighlightingNodeSVGElement(highlightingNodeSVGElement)),
+    onHoverNode: nodeID => dispatch(hoverNode(nodeID)),
+    onCancelHoverNode: () => dispatch(hoverNode(null)),
+    onClickNode: nodeID => dispatch(clickNode(nodeID)),
+    onGraphNodesSVGElementsUpdated: graphNodesSVGElements =>
+      dispatch(setGraphNodesSVGElements(graphNodesSVGElements)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(GraphDrawer);
