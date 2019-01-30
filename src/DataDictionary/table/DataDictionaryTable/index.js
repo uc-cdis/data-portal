@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { appname } from '../../../localconf';
-import { setExpandNode } from '../../action.js';
+import { setExpandNode } from '../../action';
 import DataDictionaryTable from './DataDictionaryTable';
 
 const ReduxDataDictionaryTable = (() => {

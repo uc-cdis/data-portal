@@ -39,21 +39,18 @@ export const setGraphLegend = legendItems => ({
   legendItems,
 });
 
-export const setHoveringNode = (node, hoveringNodeSVGElement) => ({
+export const hoverNode = nodeID => ({
   type: 'GRAPH_UPDATE_HOVERING_NODE',
-  node,
-  hoveringNodeSVGElement,
-});
-
-export const setHighlightingNode = (node, highlightingNodeSVGElement) => ({
-  type: 'GRAPH_UPDATE_HIGHLIGHTING_NODE',
-  node,
-  highlightingNodeSVGElement,
-});
-
-export const setSecondHighlightingNodeID = nodeID => ({
-  type: 'GRAPH_SECOND_HIGHLIGHTING_NODE',
   nodeID,
+});
+
+export const clickNode = nodeID => ({
+  type: 'GRAPH_CLICK_NODE',
+  nodeID,
+});
+
+export const resetGraphHighlight = () => ({
+  type: 'GRAPH_RESET_HIGHLIGHT',
 });
 
 export const setOverlayPropertyTableHidden = isHidden => ({
@@ -76,8 +73,41 @@ export const setNeedReset = needReset => ({
   needReset,
 });
 
-export const setHighlightingNodeSVGElement = highlightingNodeSVGElement => ({
-  type: 'GRAPH_HIGHLIGHTING_NODE_SVG_ELEMENT_UPDATED',
-  highlightingNodeSVGElement,
+export const setIsSearching = isSearching => ({
+  type: 'SEARCH_SET_IS_SEARCHING_STATUS',
+  isSearching,
 });
 
+export const setSearchResult = (searchResult, searchResultSummary) => ({
+  type: 'SEARCH_RESULT_UPDATED',
+  searchResult,
+  searchResultSummary,
+});
+
+export const clearSearchHistoryItems = () => ({
+  type: 'SEARCH_CLEAR_HISTORY',
+});
+
+export const addSearchHistoryItem = searchHistoryItem => ({
+  type: 'SEARCH_HISTORY_ITEM_CREATED',
+  searchHistoryItem,
+});
+
+export const setGraphNodesSVGElements = graphNodesSVGElements => ({
+  type: 'GRAPH_NODES_SVG_ELEMENTS_UPDATED',
+  graphNodesSVGElements,
+});
+
+export const clearSearchResult = () => ({
+  type: 'SEARCH_RESULT_CLEARED',
+});
+
+export const saveCurrentSearchKeyword = keyword => ({
+  type: 'SEARCH_SAVE_CURRENT_KEYWORD',
+  keyword,
+});
+
+export const setHighlightingMatchedNodeOpened = opened => ({
+  type: 'GRAPH_MATCHED_NODE_OPENED',
+  opened,
+});
