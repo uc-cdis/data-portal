@@ -2,6 +2,7 @@
   position: absolute;
   top: 15px;
   left: 15px;
+  z-index: 1;
 }
 
 .canvas__zoom-button {

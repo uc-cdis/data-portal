@@ -3,12 +3,27 @@ import PropTypes from 'prop-types';
 import ReduxDataDictionaryTable from './table/DataDictionaryTable';
 import ReduxDataModelStructure from './DataModelStructure';
 import DataDictionaryGraph from './graph/DataDictionaryGraph/.';
+import ReduxDictionarySearcher from './search/DictionarySearcher/.';
+import ReduxDictionarySearchHistory from './search/DictionarySearchHistory/.';
 import './DataDictionary.css';
 
 class DataDictionary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.dictionarySearcherRef = React.createRef();
+  }
+
   setGraphView = (isGraphView) => {
     this.props.onSetGraphView(isGraphView);
-  }
+  };
+
+  handleClickSearchHistoryItem = (keyword) => {
+    this.dictionarySearcherRef.current.getWrappedInstance().launchSearchFromOutside(keyword);
+  };
+
+  handleClearSearchResult = () => {
+    this.dictionarySearcherRef.current.getWrappedInstance().launchClearSearchFromOutside();
+  };
 
   render() {
     return (
@@ -32,10 +47,11 @@ class DataDictionary extends React.Component {
               Table View
             </span>
           </div>
-          <div className='data-dictionary__model-structure'>
-            <ReduxDataModelStructure />
-          </div>
-          <div className='data-dictionary__search' />
+          <ReduxDictionarySearcher ref={this.dictionarySearcherRef} />
+          <ReduxDataModelStructure />
+          <ReduxDictionarySearchHistory
+            onClickSearchHistoryItem={this.handleClickSearchHistoryItem}
+          />
           <div className='data-dictionary__search-history' />
         </div>
         <div
@@ -45,7 +61,9 @@ class DataDictionary extends React.Component {
             <ReduxDataDictionaryTable />
           </div>
           <div className={`data-dictionary__graph ${this.props.isGraphView ? '' : 'data-dictionary__graph--hidden'}`}>
-            <DataDictionaryGraph />
+            <DataDictionaryGraph
+              onClearSearchResult={this.handleClearSearchResult}
+            />
           </div>
         </div>
       </div>

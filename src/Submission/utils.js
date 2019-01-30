@@ -24,3 +24,6 @@ export const getDictionaryWithExcludeSystemProperties = (dictionary) => {
     }, {});
   return ret;
 };
+
+export const FETCH_LIMIT = 1024;
+export const STARTING_DID = '00000000-0000-0000-0000-000000000000';

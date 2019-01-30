@@ -79,7 +79,6 @@ class Canvas extends React.Component {
 
   handleCanvasUpdate = () => {
     const canvasBoundingRect = this.canvasElement.current.getBoundingClientRect();
-    window.canvasElem = this.canvasElement.current;
     this.props.onCanvasBoundingBoxUpdate(canvasBoundingRect);
   }
 
@@ -197,7 +196,7 @@ Canvas.propTypes = {
 
 Canvas.defaultProps = {
   minZoom: 0.1,
-  maxZoom: 5,
+  maxZoom: 10,
   topLeftTranslateLimit: [-Infinity, -Infinity],
   bottomRightTranslateLimit: [+Infinity, +Infinity],
   onClickBlankSpace: () => {},
