@@ -51,7 +51,7 @@ class CoreMetadataHeader extends Component {
       const canDownload = canUserDownload(user, projectAvail, projectId);
       let downloadButton = null;
       if (canDownload) {
-        const downloadLink = `/user/data/download/${this.props.metadata.object_id}?expires_in=10&redirect`;
+        const downloadLink = `/user/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
 
         downloadButton = (
           <a href={downloadLink}>
