@@ -1,0 +1,68 @@
+.dictionary-search-history {
+  padding: 15px;
+  border-top: 1px solid var(--g3-color__silver);
+}
+
+.dictionary-search-history__item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: var(--g3-color__silver) 1px solid;
+  border-left: var(--g3-color__silver) 1px solid;
+  border-right: var(--g3-color__silver) 1px solid;
+  cursor: pointer;
+  outline: none;
+}
+
+.dictionary-search-history__item:first-child {
+  border-top: var(--g3-color__silver) 1px solid;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.dictionary-search-history__item:last-child {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.dictionary-search-history__item:hover {
+  background-color: var(--g3-color__base-blue);
+  color: var(--g3-color__white);
+}
+
+.dictionary-search-history__item-keyword {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dictionary-search-history__item-badge {
+  background-color: var(--g3-color__base-blue);
+  color: var(--g3-color__white);
+  padding: 0 8px;
+  border-radius: 4px;
+}
+
+.dictionary-search-history__item-badge--zero {
+  background-color: var(--g3-color__gray);
+}
+
+.dictionary-search-history__item:hover .dictionary-search-history__item-badge {
+  background-color: var(--g3-color__white);
+  color: var(--g3-color__base-blue);
+}
+
+.dictionary-search-history__title-text {
+  display: inline;
+}
+
+.dictionary-search-history__clear {
+  color: var(--g3-color__base-blue);
+  cursor: pointer;
+  outline: none;
+  float: right;
+}
+
+.dictionary-search-history__clear:hover {
+  color: var(--g3-color__base-blue-light);
+}

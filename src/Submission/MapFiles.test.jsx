@@ -30,7 +30,6 @@ describe('MapFiles', () => {
   });
 
   it('groups files by date', () => {
-    instance.onUpdate();
     Object.keys(instance.state.filesByDate).forEach((date) => {
       const values = instance.state.filesByDate[date];
       expect(values.length).toEqual(testGroupedData[date].length);

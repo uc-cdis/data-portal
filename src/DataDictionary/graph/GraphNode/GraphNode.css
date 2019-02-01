@@ -1,8 +1,11 @@
-
 .graph-node--faded {
   opacity: var(--opacity--faded);
   cursor: none;
   pointer-events: none;
+}
+
+.graph-node--half-faded {
+  opacity: var(--opacity--half-faded);
 }
 
 .graph-node--clickable {
@@ -18,11 +21,20 @@
   stroke-width: 2px;
 }
 
+.graph-node--dashed .graph-node__rect {
+  stroke-dasharray: 5, 5;
+}
+
+.graph-node--half-faded .graph-node__rect {
+  stroke-dasharray: 5, 5;
+}
+
 .graph-node:hover .graph-node__rect {
   fill: var(--g3-color__highlight-orange);
 }
 
-.graph-node__text {
+.graph-node__text,
+.graph-node__tspan {
   font-weight: 600;
   fill: var(--g3-color__black);
   pointer-events: none;
@@ -32,6 +44,17 @@
   user-select: none;
 }
 
-.graph-node:hover .graph-node__text {
+.graph-node__text--highlight,
+.graph-node__tspan--highlight {
+  fill: var(--g3-color__highlight-orange);
+}
+
+.graph-node:hover .graph-node__text,
+.graph-node:hover .graph-node__tspan {
   fill: var(--g3-color__white);
+}
+
+.graph-node:hover .graph-node__text--highlight,
+.graph-node:hover .graph-node__tspan--highlight {
+  fill: var(--g3-color__black);
 }

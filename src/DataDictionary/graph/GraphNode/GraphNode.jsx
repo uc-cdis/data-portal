@@ -1,9 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getCategoryIconSVG } from '../../NodeCategories/helper';
+import { MatchedIndicesShape } from '../../utils';
+import { getNodeTitleSVGFragment } from '../../highlightHelper';
 import './GraphNode.css';
 
 class GraphNode extends React.Component {
+  constructor(props) {
+    super(props);
+    this.svgElement = React.createRef();
+  }
+
+  getSVGElement() {
+    return this.svgElement.current;
+  }
+
   render() {
     if (!(this.props.node.id !== undefined && this.props.node.type !== undefined
       && this.props.node.textPadding !== undefined && this.props.node.topCenterX !== undefined
@@ -15,19 +26,25 @@ class GraphNode extends React.Component {
     }
     const nodeFadedClassModifier = this.props.isFaded
       ? 'graph-node--faded' : '';
+    const nodeHalfFadedClassModifier = this.props.isHalfFaded
+      ? 'graph-node--half-faded' : '';
+    const nodeDashedClassModifier = this.props.isDashed
+      ? 'graph-node--dashed' : '';
     const nodeClickableClassModifier = this.props.isClickable
       ? 'graph-node--clickable' : 'graph-node--not-clickable';
     const nodeIsCurrentHighlightingClassModifier = this.props.isHighlightingNode
-      ? this.props.highlightingNodeClassName : '';
+      ? 'graph-drawer__node--current-highlighting' : '';
     const IconSVG = getCategoryIconSVG(this.props.node.type);
-    const textTopY = this.props.node.textPadding;
     return (
       <g
+        ref={this.svgElement}
         key={this.props.node.id}
         transform={`translate(${this.props.node.topCenterX}, ${this.props.node.topCenterY}) `}
         className={`graph-node 
           ${nodeFadedClassModifier} 
-          ${nodeClickableClassModifier}
+          ${nodeHalfFadedClassModifier} 
+          ${nodeDashedClassModifier} 
+          ${nodeClickableClassModifier} 
           ${nodeIsCurrentHighlightingClassModifier}`}
         onMouseOver={this.props.onMouseOver}
         onMouseOut={this.props.onMouseOut}
@@ -45,19 +62,13 @@ class GraphNode extends React.Component {
           stroke={this.props.node.color}
         />
         {
-          this.props.node.names.map((row, i) => (
-            <text
-              key={`${this.props.node.id}-${i}`}
-              className='graph-node__text'
-              x={0}
-              y={textTopY + (i * (this.props.node.fontSize + this.props.node.textLineGap))}
-              textAnchor='middle'
-              alignmentBaseline='hanging'
-              fontSize={this.props.node.fontSize}
-            >
-              {row}
-            </text>
-          ))
+          getNodeTitleSVGFragment(
+            this.props.node.names,
+            this.props.matchedNodeNameIndices,
+            this.props.node.fontSize,
+            this.props.node.textPadding,
+            this.props.node.textLineGap,
+          )
         }
         {
           <g
@@ -97,19 +108,22 @@ const GraphNodeShape = PropTypes.shape({
 
 GraphNode.propTypes = {
   node: GraphNodeShape.isRequired,
-  highlightingNodeClassName: PropTypes.string.isRequired,
   isHighlightingNode: PropTypes.bool.isRequired,
   isFaded: PropTypes.bool.isRequired,
+  isHalfFaded: PropTypes.bool.isRequired,
+  isDashed: PropTypes.bool.isRequired,
   isClickable: PropTypes.bool.isRequired,
   onMouseOver: PropTypes.func,
   onMouseOut: PropTypes.func,
   onClick: PropTypes.func,
+  matchedNodeNameIndices: MatchedIndicesShape,
 };
 
 GraphNode.defaultProps = {
   onMouseOver: () => {},
   onMouseOut: () => {},
   onClick: () => {},
+  matchedNodeNameIndices: [],
 };
 
 export default GraphNode;

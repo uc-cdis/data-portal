@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { clickBlankSpace, setCanvasBoundingRect, setNeedReset } from '../../action.js';
+import { clickBlankSpace, setCanvasBoundingRect, setNeedReset } from '../../action';
 import Canvas from './Canvas';
 
 const ReduxCanvas = (() => {

@@ -13,5 +13,11 @@
 }
 
 .graph-edge--faded {
-  opacity: var(--opacity--faded)
+  opacity: var(--opacity--faded);
+}
+
+.graph-edge--half-faded {
+  opacity: var(--opacity--half-faded);
+  stroke-dasharray: 5, 5;
+  stroke-width: 2px;
 }

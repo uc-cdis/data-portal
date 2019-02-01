@@ -46,7 +46,7 @@ module.exports = {
       "react/jsx-curly-brace-presence": ["off", "ignore"],
       "function-paren-newline": ["off", "ignore"],
       "react/no-array-index-key" : ["off, ignore"],
-
+      "react/destructuring-assignment" : ["off, ignore"],
   },
   "overrides": [
     {
@@ -79,6 +79,8 @@ module.exports = {
         "src/DataDictionary/GraphCreator.js",
         "src/GraphUtils/testData.js",
         "src/GraphUtils/utils.js",
+        "src/Submission/ReduxMapFiles.js",
+        "src/Submission/ReduxSubmissionHeader.js",
       ],
       "rules": {
         "no-param-reassign": "off" // for D3 charts
