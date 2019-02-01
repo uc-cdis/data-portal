@@ -1,4 +1,5 @@
 import React from 'react';
+import { workspaceUrl } from '../localconf';
 import './Workspace.less';
 
 class Workspace extends React.Component {
@@ -8,7 +9,7 @@ class Workspace extends React.Component {
         title='Workspace'
         frameBorder='0'
         className='workspace'
-        src='/lw-workspace/'
+        src={workspaceUrl}
       />
     );
   }
