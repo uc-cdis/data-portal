@@ -6,24 +6,30 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
 import CheckBox from '../components/CheckBox';
+import Spinner from '../components/Spinner';
 import StatusReadyIcon from '../img/icons/status_ready.svg';
-import calculateFileSize from './utils.js';
+import CloseIcon from '../img/icons/cross.svg';
+import { humanFileSize } from '../utils.js';
 import './MapFiles.less';
 
 class MapFiles extends React.Component {
   constructor(props) {
+    const params = queryString.parse(window.location.search);
+    const message = params && params.message ? params.message : null;
     super(props);
     this.state = {
       selectedFilesByGroup: {},
       allFilesByGroup: {},
       filesByDate: {},
       isScrolling: false,
+      sortedDates: [],
+      message,
+      loading: true,
     };
   }
 
   componentDidMount() {
     this.props.fetchUnmappedFiles(this.props.user.username);
-    this.onUpdate();
   }
 
   componentDidUpdate(prevProps) {
@@ -45,7 +51,8 @@ class MapFiles extends React.Component {
 
   onUpdate = () => {
     this.setState({
-      filesByDate: this.sortUnmappedFiles(),
+      loading: false,
+      filesByDate: this.groupUnmappedFiles(),
     }, () => this.createFileMapByGroup());
   }
 
@@ -106,8 +113,8 @@ class MapFiles extends React.Component {
     const unselectedMap = {};
     const selectedMap = {};
     let index = 0;
-    Object.keys(this.state.filesByDate).forEach((key) => {
-      const filesToAdd = this.state.filesByDate[key].filter(file => this.isFileReady(file));
+    this.state.sortedDates.forEach((date) => {
+      const filesToAdd = this.state.filesByDate[date].filter(file => this.isFileReady(file));
       unselectedMap[index] = new Set(filesToAdd);
       selectedMap[index] = new Set();
       index += 1;
@@ -115,17 +122,19 @@ class MapFiles extends React.Component {
     this.setState({ allFilesByGroup: unselectedMap, selectedFilesByGroup: selectedMap });
   }
 
-  sortUnmappedFiles = () => {
-    const sortedFiles = {};
+  groupUnmappedFiles = () => {
+    const groupedFiles = {};
     this.props.unmappedFiles.forEach((file) => {
       const fileDate = moment(file.created_date).format('MM/DD/YY');
-      if (sortedFiles[fileDate]) {
-        sortedFiles[fileDate].push(file);
+      if (groupedFiles[fileDate]) {
+        groupedFiles[fileDate].push(file);
       } else {
-        sortedFiles[fileDate] = [file];
+        groupedFiles[fileDate] = [file];
       }
     });
-    return sortedFiles;
+    const sortedDates = Object.keys(groupedFiles).sort((a, b) => moment(b, 'MM/DD/YY') - moment(a, 'MM/DD/YY'));
+    this.setState({ sortedDates });
+    return groupedFiles;
   }
 
   toggleCheckBox = (index, file) => {
@@ -157,6 +166,10 @@ class MapFiles extends React.Component {
 
   isFileReady = file => file.hashes && Object.keys(file.hashes).length > 0;
 
+  closeMessage = () => {
+    this.setState({ message: null });
+    window.history.replaceState(null, null, window.location.pathname);
+  }
 
   render() {
     const buttons = [
@@ -170,17 +183,17 @@ class MapFiles extends React.Component {
       />,
     ];
 
-    const params = queryString.parse(window.location.search);
-    const message = params && params.message ? params.message : null;
+    const { sortedDates, filesByDate } = this.state;
 
     return (
       <div className='map-files'>
         {
-          message ? (
+          this.state.message ? (
             <div className='map-files__notification-wrapper'>
               <div className='map-files__notification'>
+                <CloseIcon className='map-files__notification-icon' onClick={this.closeMessage} />
                 <p className='map-files__notification-text'>
-                  {message}
+                  {this.state.message}
                 </p>
               </div>
             </div>
@@ -195,9 +208,15 @@ class MapFiles extends React.Component {
           onScroll={this.onScroll}
         />
         <div className={'map-files__tables'.concat(this.state.isScrolling ? ' map-files__tables--scrolling' : '')}>
+          { this.state.loading ? <Spinner /> : null }
           {
-            Object.keys(this.state.filesByDate).map((key, i) => {
-              const files = this.state.filesByDate[key];
+            !this.state.loading && sortedDates.length === 0
+              ? <h2 className='map-files__empty-text'>No files have been uploaded.</h2>
+              : null
+          }
+          {
+            sortedDates.map((date, i) => {
+              const files = filesByDate[date];
               return (
                 <React.Fragment key={i}>
                   <div className='h2-typo'>{this.getTableHeaderText(files)}</div>
@@ -232,7 +251,7 @@ class MapFiles extends React.Component {
                                 />
                               </td>
                               <td>{file.file_name}</td>
-                              <td>{file.size ? calculateFileSize(file.size) : '0B'}</td>
+                              <td>{file.size ? humanFileSize(file.size) : '0 B'}</td>
                               <td>{moment(file.created_date).format('MM/DD/YY, hh:mm:ss a [UTC]Z')}</td>
                               <td className={`map-files__status--${status.toLowerCase()}`}>
                                 { status === 'Ready' ? <StatusReadyIcon /> : null }

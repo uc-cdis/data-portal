@@ -11,6 +11,7 @@ import environment from '../environment';
 import './MapDataModel.less';
 
 const gqlHelper = GQLHelper.getGQLHelper();
+const CHUNK_SIZE = 10;
 
 class MapDataModel extends React.Component {
   constructor(props) {
@@ -23,6 +24,9 @@ class MapDataModel extends React.Component {
       parentNodeId: null,
       validParentIds: [],
       parentTypesOfSelectedNode: {},
+      submitting: false,
+      submissionText: `${this.props.filesToMap.length} files ready for mapping.`,
+      chunkCounter: 0,
     };
   }
 
@@ -38,7 +42,7 @@ class MapDataModel extends React.Component {
     const map = {};
     if (this.state.nodeType) {
       props = this.props.dictionary[this.state.nodeType].required.filter(prop => prop !== 'submitter_id' &&
-        prop !== 'file_size' && prop !== 'file_name' && prop !== 'md5sum' &&
+        prop !== 'file_size' && prop !== 'file_name' && prop !== 'md5sum' && prop !== 'type' &&
         !this.props.dictionary[this.state.nodeType].systemProperties.includes(prop) &&
         !Object.keys(this.state.parentTypesOfSelectedNode)
           .map(key => this.state.parentTypesOfSelectedNode[key].name).includes(prop));
@@ -108,10 +112,10 @@ class MapDataModel extends React.Component {
       fetchQuery(
         environment,
         gqlHelper.allSubmitterIdsByTypeQuery,
-        { project_id: this.state.project, type: this.state.parentNodeType },
+        { project_id: this.state.projectId },
       ).then((data) => {
-        if (data && data.datanode) {
-          this.setState({ validParentIds: data.datanode });
+        if (data && data[this.state.parentNodeType]) {
+          this.setState({ validParentIds: data[this.state.parentNodeType] });
         }
       });
     } else {
@@ -120,36 +124,57 @@ class MapDataModel extends React.Component {
   }
 
   submit = () => {
-    const json = [];
+    const chunks = [];
+    let json = [];
     this.props.filesToMap.forEach((file) => {
       const obj = {
         type: this.state.nodeType,
         ...this.state.requiredFields,
         file_name: file.file_name,
         object_id: file.did,
-        submitter_id: `${this.state.projectId}_${file.file_name.substring(0, file.file_name.lastIndexOf('.'))}_${file.did.substring(0, 4)}`,
+        submitter_id: `${this.state.projectId}_${file.file_name.substring(0, file.file_name.lastIndexOf('.'))}_${file.did.substring(file.did.length - 4, file.did.length)}`,
         project_id: this.state.projectId,
         file_size: file.size,
-        md5sum: file.hashes ? file.hashes.md5sum : null,
+        md5sum: file.hashes ? file.hashes.md5 : null,
       };
 
       obj[this.state.parentTypesOfSelectedNode[this.state.parentNodeType].name] = {
         submitter_id: this.state.parentNodeId,
       };
       json.push(obj);
+
+      if (json.length === CHUNK_SIZE) {
+        chunks.push(json);
+        json = [];
+      }
     });
+    if (json.length > 0) {
+      chunks.push(json);
+    }
 
     const programProject = this.state.projectId.split(/-(.+)/);
     let message = `${this.props.filesToMap.length} files mapped successfully!`;
-    this.props.submitFiles(programProject[0], programProject[1], json).then((res) => {
-      if (!res.success) {
-        message = res.entities && res.entities.length > 0 && res.entities[0].errors ?
-          res.entities[0].errors.map(error => error.message).toString()
-          : res.message;
-      }
-      this.props.history.push(`/submission/files?message=${message}`);
+    this.setState({ submitting: true }, () => {
+      const promises = [];
+      chunks.forEach((chunk) => {
+        const promise = this.props.submitFiles(programProject[0], programProject[1], chunk)
+          .then((res) => {
+            this.setState(prevState => ({ chunkCounter: prevState.chunkCounter + 1 }), () => {
+              this.setState({ submissionText: `Submitting ${this.state.chunkCounter} of ${chunks.length} chunks...` });
+            });
+            if (!res.success) {
+              message = `Error: ${res.entities && res.entities.length > 0 && res.entities[0].errors
+                ? res.entities[0].errors.map(error => error.message).toString()
+                : res.message} occurred during mapping.`;
+            }
+          });
+        promises.push(promise);
+      });
+      Promise.all(promises).then(() => {
+        this.props.history.push(`/submission/files?message=${message}`);
+      });
     });
-  }
+  };
 
   isValidSubmission = () => !!this.state.projectId && !!this.state.nodeType &&
       !!this.state.parentNodeType && !!this.state.parentNodeId &&
@@ -285,9 +310,10 @@ class MapDataModel extends React.Component {
                 onClick={this.submit}
                 label='Submit'
                 buttonType='primary'
+                enabled={!this.state.submitting}
               />
               <p className='map-data-model__submission-footer-text introduction'>
-                {this.props.filesToMap.length} files ready for mapping.
+                {this.state.submissionText}
               </p>
             </div>
           ) : null

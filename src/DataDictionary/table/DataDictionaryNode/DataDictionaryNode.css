@@ -16,6 +16,10 @@
   width: 260px;
   flex-grow: 0;
   flex-shrink: 0;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .data-dictionary-node:hover .data-dictionary-node__title {

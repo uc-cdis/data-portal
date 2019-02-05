@@ -93,8 +93,8 @@ const helperSingleton = {
     }
   `,
   allSubmitterIdsByTypeQuery: graphql`
-    query gqlHelperAllSubmitterIdsByTypeQuery( $project_id: String, $type: [String] ) {
-      datanode(project_id:$project_id, of_type:$type) {
+    query gqlHelperAllSubmitterIdsByTypeQuery( $project_id: [String] ) {
+      core_metadata_collection(project_id:$project_id, first:0) {
         submitter_id
       }
     }

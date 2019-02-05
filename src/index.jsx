@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'react-select/dist/react-select.css';
 import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -34,7 +33,7 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import Footer from './components/layout/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
-import { basename, dev, gaDebug } from './localconf';
+import { basename, dev, gaDebug, workspaceUrl } from './localconf';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
@@ -42,13 +41,10 @@ import DataExplorer from './DataExplorer/.';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
+import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 
 // monitor user's session
 sessionMonitor.start();
-
-// Needed for onTouchTap
-// http://stackoverflow.com/a/34015469/988941
-injectTapEventPlugin();
 
 // render the app after the store is configured
 async function init() {
@@ -219,6 +215,10 @@ async function init() {
                       component={
                         props => <ProtectedContent component={Workspace} {...props} />
                       }
+                    />
+                    <Route
+                      path={workspaceUrl}
+                      component={ErrorWorkspacePlaceholder}
                     />
                     <Route
                       path='/:project/search'

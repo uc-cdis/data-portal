@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import getReduxStore from '../reduxStore';
 import SelectComponent from '../components/SelectComponent';
+import { humanFileSize } from '../utils';
 import './ExplorerTable.less';
 
 const makeDefaultState = (page, pageSize, originalPage) => ({
@@ -12,13 +13,6 @@ const makeDefaultState = (page, pageSize, originalPage) => ({
 });
 
 class ExplorerTableComponent extends Component {
-  static humanFileSize(size) {
-    const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
-    const sizeStr = (size / (1024 ** i)).toFixed(2) * 1;
-    const suffix = ['B', 'KB', 'MB', 'GB', 'TB'][i];
-    return `${sizeStr} ${suffix}`;
-  }
-
   constructor(props) {
     super(props);
     this.state = makeDefaultState(props.page, props.pageSize, props.originalPage);
@@ -64,7 +58,7 @@ class ExplorerTableComponent extends Component {
   }
 
   static renderRow(user, projectAvail, file, i) {
-    const filesize = ExplorerTableComponent.humanFileSize(file.size);
+    const filesize = humanFileSize(file.size);
     return (
       <tr key={i} className='explorer-table__table-row'>
         <td className='explorer-table__table-data explorer-table__table-data--column-0'>

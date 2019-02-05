@@ -1,0 +1,32 @@
+.data-dictionary-searcher {
+  padding: 15px;
+  border-top: 1px solid var(--g3-color__silver);
+}
+
+.dictionary-searcher__result {
+  margin: 10px 0;
+}
+
+.dictionary-searcher__result-text {
+  display: inline;
+}
+
+.dictionary-searcher__result-item {
+  margin-bottom: 8px;
+}
+
+.dictionary-searcher__result-count {
+  color: var(--g3-color__base-blue);
+}
+
+.dictionary-searcher__result-clear {
+  color: var(--g3-color__base-blue);
+  cursor: pointer;
+  float: right;
+  outline: none;
+
+}
+
+.dictionary-searcher__result-clear:hover {
+  color: var(--g3-color__base-blue-light);
+}

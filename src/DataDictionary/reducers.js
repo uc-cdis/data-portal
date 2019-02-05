@@ -1,3 +1,9 @@
+import {
+  getSearchHistoryItems,
+  clearSearchHistoryItems,
+  addSearchHistoryItems,
+} from './utils';
+
 const ddgraphInitialState = {
   isGraphView: true,
   layoutInitialized: false,
@@ -6,9 +12,7 @@ const ddgraphInitialState = {
   graphBoundingBox: [],
   legendItems: [],
   hoveringNode: null,
-  hoveringNodeSVGElement: null,
   highlightingNode: null,
-  highlightingNodeSVGElement: null,
   relatedNodeIDs: [],
   secondHighlightingNodeID: null,
   dataModelStructure: null,
@@ -16,6 +20,17 @@ const ddgraphInitialState = {
   canvasBoundingRect: { top: 0, left: 0 },
   needReset: false,
   tableExpandNodeID: null,
+  searchHistoryItems: getSearchHistoryItems(),
+  graphNodesSVGElements: null,
+  currentSearchKeyword: '',
+  searchResult: [],
+  matchedNodeIDs: [],
+  matchedNodeIDsInProperties: [],
+  matchedNodeIDsInNameAndDescription: [],
+  isSearchMode: false,
+  isSearching: false,
+  highlightingMatchedNodeID: null,
+  highlightingMatchedNodeOpened: false,
 };
 
 const ddgraph = (state = ddgraphInitialState, action) => {
@@ -43,10 +58,10 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     };
   }
   case 'GRAPH_UPDATE_HOVERING_NODE': {
+    const newHoveringNode = state.nodes.find(n => n.id === action.nodeID);
     return {
       ...state,
-      hoveringNode: action.node,
-      hoveringNodeSVGElement: action.hoveringNodeSVGElement,
+      hoveringNode: newHoveringNode,
     };
   }
   case 'GRAPH_UPDATE_CANVAS_BOUNDING_RECT': {
@@ -59,13 +74,6 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     return {
       ...state,
       relatedNodeIDs: action.relatedNodeIDs,
-    };
-  }
-  case 'GRAPH_SECOND_HIGHLIGHTING_NODE': {
-    const newSecondHighlightingNodeID = action.nodeID;
-    return {
-      ...state,
-      secondHighlightingNodeID: newSecondHighlightingNodeID,
     };
   }
   case 'GRAPH_UPDATE_SECOND_HIGHLIGHTING_NODE_CANDIDATES': {
@@ -98,25 +106,55 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       needReset: action.needReset,
     };
   }
-  case 'GRAPH_HIGHLIGHTING_NODE_SVG_ELEMENT_UPDATED': {
+  case 'GRAPH_RESET_HIGHLIGHT': {
     return {
       ...state,
-      highlightingNodeSVGElement: action.highlightingNodeSVGElement,
+      highlightingNode: null,
+      secondHighlightingNodeID: null,
+      tableExpandNodeID: null,
     };
   }
-  case 'GRAPH_UPDATE_HIGHLIGHTING_NODE': {
+  case 'GRAPH_CLICK_NODE': {
+    if (state.isSearchMode) {
+      // clicking node in search mode opens property table
+      return {
+        ...state,
+        highlightingMatchedNodeID: action.nodeID,
+        highlightingMatchedNodeOpened: false,
+        overlayPropertyHidden: false,
+      };
+    }
     let newHighlightingNode = null;
-    let newHighlightingNodeSVGElement = null;
-    if (action.node && (!state.highlightingNode || state.highlightingNode.id !== action.node.id)) {
-      newHighlightingNode = action.node;
-      newHighlightingNodeSVGElement = action.highlightingNodeSVGElement;
+    let newSecondHighlightingNodeID = null;
+    if (action.nodeID) {
+      // if no node is selected, select this node as highlight node
+      if (!state.highlightingNode) {
+        newHighlightingNode = state.nodes.find(n => n.id === action.nodeID);
+      } else if (state.highlightingNode) {
+        newHighlightingNode = state.highlightingNode;
+
+        // if is clicking the same node
+        if (state.highlightingNode.id === action.nodeID) {
+          // if no second node is selected, regard this as cancel selecting
+          if (!state.secondHighlightingNodeID) {
+            newHighlightingNode = null;
+          }
+        } else if (state.secondHighlightingNodeCandidateIDs.length > 1
+          && state.secondHighlightingNodeCandidateIDs.includes(action.nodeID)) {
+          // regard as canceling selecting second highlight node
+          if (state.secondHighlightingNodeID === action.nodeID) {
+            newSecondHighlightingNodeID = null;
+          } else { // select this as second highlight node
+            newSecondHighlightingNodeID = action.nodeID;
+          }
+        }
+      }
     }
     const newTableExpandNodeID = newHighlightingNode ? newHighlightingNode.id : null;
     return {
       ...state,
       highlightingNode: newHighlightingNode,
-      highlightingNodeSVGElement: newHighlightingNodeSVGElement,
-      secondHighlightingNodeID: null,
+      secondHighlightingNodeID: newSecondHighlightingNodeID,
       tableExpandNodeID: newTableExpandNodeID,
     };
   }
@@ -124,14 +162,12 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     let newHighlightingNode = state.highlightingNode;
     let newSecondHighlightingNodeID = state.secondHighlightingNodeID;
     let newTableExpandNodeID = state.tableExpandNodeID;
-    let newHighlightingNodeSVGElement = state.highlightingNodeSVGElement;
     if (state.highlightingNode) {
       if (state.secondHighlightingNodeID) {
         newSecondHighlightingNodeID = null;
       } else {
         newHighlightingNode = null;
         newTableExpandNodeID = null;
-        newHighlightingNodeSVGElement = null;
       }
     }
     return {
@@ -139,7 +175,6 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       highlightingNode: newHighlightingNode,
       secondHighlightingNodeID: newSecondHighlightingNodeID,
       tableExpandNodeID: newTableExpandNodeID,
-      highlightingNodeSVGElement: newHighlightingNodeSVGElement,
     };
   }
   case 'TABLE_EXPAND_NODE': {
@@ -152,7 +187,70 @@ const ddgraph = (state = ddgraphInitialState, action) => {
       tableExpandNodeID: action.nodeID,
       highlightingNode: newHighlightingNode,
       secondHighlightingNodeID: null,
-      highlightingNodeSVGElement: null,
+    };
+  }
+  case 'SEARCH_SET_IS_SEARCHING_STATUS': {
+    return {
+      ...state,
+      isSearching: action.isSearching,
+    };
+  }
+  case 'SEARCH_RESULT_UPDATED': {
+    return {
+      ...state,
+      searchResult: action.searchResult,
+      matchedNodeIDs: action.searchResultSummary.generalMatchedNodeIDs,
+      matchedNodeIDsInNameAndDescription:
+        action.searchResultSummary.matchedNodeIDsInNameAndDescription,
+      matchedNodeIDsInProperties: action.searchResultSummary.matchedNodeIDsInProperties,
+      isGraphView: true,
+      isSearchMode: true,
+      highlightingMatchedNodeID: null,
+      highlightingMatchedNodeOpened: false,
+      highlightingNode: null,
+      secondHighlightingNodeID: null,
+      tableExpandNodeID: null,
+    };
+  }
+  case 'SEARCH_CLEAR_HISTORY': {
+    return {
+      ...state,
+      searchHistoryItems: clearSearchHistoryItems(),
+    };
+  }
+  case 'SEARCH_HISTORY_ITEM_CREATED': {
+    return {
+      ...state,
+      searchHistoryItems: addSearchHistoryItems(action.searchHistoryItem),
+    };
+  }
+  case 'GRAPH_NODES_SVG_ELEMENTS_UPDATED': {
+    return {
+      ...state,
+      graphNodesSVGElements: action.graphNodesSVGElements,
+    };
+  }
+  case 'SEARCH_RESULT_CLEARED': {
+    return {
+      ...state,
+      searchResult: [],
+      matchedNodeIDs: [],
+      currentSearchKeyword: '',
+      isSearchMode: false,
+      highlightingMatchedNodeID: null,
+      highlightingMatchedNodeOpened: false,
+    };
+  }
+  case 'SEARCH_SAVE_CURRENT_KEYWORD': {
+    return {
+      ...state,
+      currentSearchKeyword: action.keyword,
+    };
+  }
+  case 'GRAPH_MATCHED_NODE_OPENED': {
+    return {
+      ...state,
+      highlightingMatchedNodeOpened: action.opened,
     };
   }
   default:
