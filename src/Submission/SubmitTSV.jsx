@@ -109,12 +109,12 @@ const SubmitTSV = ({ project, submission, onUploadClick, onSubmitClick, onFileCh
       {submission.submit_result &&
       <div>
         <p>
-          Submitting chunk {submission.submit_chunk} of {submission.submit_total}
+          Submitting chunk {submission.submit_counter} of {submission.submit_total}
         </p>
         <SubmissionResult
           status={submission.submit_status}
           data={submission.submit_result}
-          chunk={submission.submit_chunk}
+          counter={submission.submit_counter}
           total={submission.submit_total}
         />
       </div>
@@ -130,7 +130,7 @@ SubmitTSV.propTypes = {
     file_type: PropTypes.string,
     submit_result: PropTypes.any,
     submit_status: PropTypes.number,
-    submit_chunk: PropTypes.number,
+    submit_counter: PropTypes.number,
     submit_total: PropTypes.number,
     node_types: PropTypes.string,
     dictionary: PropTypes.object,
@@ -141,7 +141,9 @@ SubmitTSV.propTypes = {
 };
 
 SubmitTSV.defaultProps = {
-  submission: {},
+  submission: {
+    submit_counter: 0,
+  },
 };
 
 export default SubmitTSV;

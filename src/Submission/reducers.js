@@ -36,7 +36,7 @@ const submission = (state = {}, action) => {
     return { ...state,
       submit_result: action.data,
       submit_status: action.submit_status,
-      submit_chunk: action.chunk,
+      submit_counter: state.submit_counter + 1,
       submit_total: action.total };
   case 'SUBMIT_SEARCH_FORM':
     return { ...state, search_form: action.data };
@@ -60,6 +60,10 @@ const submission = (state = {}, action) => {
     };
   case 'RECEIVE_FILES_TO_MAP':
     return { ...state, filesToMap: action.data };
+  case 'RESET_CHUNK_COUNTER':
+    return { ...state,
+      submit_counter: 0,
+    };
   default:
     return state;
   }

@@ -32,13 +32,15 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
   const submission = getState().submission;
   const method = path === 'graphql' ? 'POST' : methodIn;
   let file = submission.file;
+
+  dispatch({ type: 'RESET_CHUNK_COUNTER' });
+
   if (!file) {
     return Promise.reject('No file to submit');
   } else if (submission.file_type !== 'text/tab-separated-values') {
     // remove line break in json file
     file = file.replace(/\r\n?|\n/g, '');
   }
-
 
   if (submission.file_type === 'text/tab-separated-values') {
     const fileSplited = file.split(/\r\n?|\n/g);
@@ -85,7 +87,6 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
           type: 'RECEIVE_SUBMISSION',
           submit_status: status,
           data,
-          chunk: i + 1,
           total: fileArray.length,
         }),
     ).then(msg => dispatch(msg));
