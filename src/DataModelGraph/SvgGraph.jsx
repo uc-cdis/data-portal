@@ -57,21 +57,36 @@ export function createSvgGraph(nodesIn, edgesIn) {
   addArrows(graph);
 
   // calculatePosition adds .fx, .fy to nodes as side effect
-  calculatePosition(nodes, width, height);
+  const calcPosObj = calculatePosition(nodes, width, height);
+  const numRows = calcPosObj.fyValsLength;
   const unclickableNodes = ['program', 'project'];
   const nodeTypes = nodes.map(node => node.id);
   const nodesForQuery = nodeTypes.filter(nt => !unclickableNodes.includes(nt));
 
   // Add links to graph
+  function positionLink(d) {
+    if (d.source.fy === d.target.fy) {
+      return `M${d.source.fx},${d.source.fy
+      }Q${d.source.fx},${d.source.fy + ((height / numRows) / 3)
+      } ${(d.source.fx + d.target.fx) / 2},${d.source.fy + ((height / numRows) / 3)
+      }T ${d.target.fx},${d.target.fy}`;
+    } else if (d.source.fx === d.target.fx && (d.target.fy - d.source.fy) > (radius * 2)) {
+      return `M${d.source.fx},${d.source.fy
+      }Q${d.source.fx + (radius * 1.25)},${d.source.fy
+      } ${d.source.fx + (radius * 1.25)},${(d.source.fy + d.target.fy) / 2
+      }T ${d.target.fx},${d.target.fy}`;
+    }
+    return `M${d.source.fx},${d.source.fy
+    }L${(d.source.fx + d.target.fx) / 2},${(d.source.fy + d.target.fy) / 2
+    }L${d.target.fx},${d.target.fy}`;
+  }
   graph.append('g')
     .selectAll('path')
     .data(edges)
     .enter()
     .append('path')
     .classed('gpath', true)
-    .attr('d', d => `M${d.source.fx},${d.source.fy
-    }L${(d.source.fx + d.target.fx) / 2},${(d.source.fy + d.target.fy) / 2
-    }L${d.target.fx},${d.target.fy}`)
+    .attr('d', d => positionLink(d))
     .attr('stroke-width', 2)
     .attr('marker-mid', 'url(#end-arrow)')
     .attr('stroke', 'darkgray')
