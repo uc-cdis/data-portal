@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { select, selectAll } from 'd3-selection';
-import { forceSimulation, forceLink } from 'd3-force';
 import { extent } from 'd3-array';
 
-import { getCategoryColor, legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
+import { getCategoryColor, legendCreator, addArrows, calculatePosition } from '../utils';
 import { assignNodePositions } from '../GraphUtils/utils';
 
 const d3 = {
-  select, selectAll, forceSimulation, forceLink, extent,
+  select, selectAll, extent,
 };
 
 /**
@@ -21,10 +20,15 @@ const d3 = {
  * @param nodesIn
  * @param edges
  */
-export function createSvgGraph(nodesIn, edges) {
-  assignNodePositions(nodesIn, edges);
+export function createSvgGraph(nodesIn, edgesIn) {
+  assignNodePositions(nodesIn, edgesIn);
   // some nodes may not be linked under the root, so filter them out ...
   const nodes = nodesIn.filter(nd => !!nd.position);
+
+  // filter out edges that shouldn't be rendered in this graph
+  const edges = edgesIn
+    .filter(e => nodes.find(n => n.id === e.source.id) || nodes.find(n => n.id === e.target.id));
+
   const minX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
   const minY = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
   const maxX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
@@ -50,22 +54,41 @@ export function createSvgGraph(nodesIn, edges) {
   const legend = svg.append('g')
     .attr('transform', `translate(${width - legendWidth},${padding})`);
 
-  const link = addLinks(graph, edges);
-
   addArrows(graph);
 
   // calculatePosition adds .fx, .fy to nodes as side effect
-  const calcPosObj = calculatePosition(nodes, width, height);
-  const numRows = calcPosObj.fyValsLength;
+  calculatePosition(nodes, width, height);
   const unclickableNodes = ['program', 'project'];
   const nodeTypes = nodes.map(node => node.id);
   const nodesForQuery = nodeTypes.filter(nt => !unclickableNodes.includes(nt));
+
+  // Add links to graph
+  graph.append('g')
+    .selectAll('path')
+    .data(edges)
+    .enter()
+    .append('path')
+    .classed('gpath', true)
+    .attr('d', d => `M${d.source.fx},${d.source.fy
+    }L${(d.source.fx + d.target.fx) / 2},${(d.source.fy + d.target.fy) / 2
+    }L${d.target.fx},${d.target.fy}`)
+    .attr('stroke-width', 2)
+    .attr('marker-mid', 'url(#end-arrow)')
+    .attr('stroke', 'darkgray')
+    .attr('fill', 'none')
+    .attr('stroke-dasharray', (d) => {
+      if (d.exists === 0) {
+        return '5, 5';
+      }
+      return '0';
+    });
 
   // Add search on clicking a node
   const node = graph.selectAll('g.gnode')
     .data(nodes)
     .enter().append('g')
     .classed('gnode', true)
+    .attr('transform', d => `translate(${[d.fx, d.fy]})`)
     .style('cursor', (d) => {
       if (unclickableNodes.indexOf(d.id) === -1) {
         return 'pointer';
@@ -131,52 +154,6 @@ export function createSvgGraph(nodesIn, edges) {
       }
       return '1em';
     });
-
-  // part of d3 simulation (below)
-  function positionLink(d) {
-    if (d.source.fy === d.target.fy) {
-      return `M${d.source.x},${d.source.y
-      }Q${d.source.x},${d.source.y + ((height / numRows) / 3)
-      } ${(d.source.x + d.target.x) / 2},${d.source.y + ((height / numRows) / 3)
-      }T ${d.target.x},${d.target.y}`;
-    } else if (d.source.fx === d.target.fx && (d.target.y - d.source.y) > (radius * 2)) {
-      return `M${d.source.x},${d.source.y
-      }Q${d.source.x + (radius * 1.25)},${d.source.y
-      } ${d.source.x + (radius * 1.25)},${(d.source.y + d.target.y) / 2
-      }T ${d.target.x},${d.target.y}`;
-    }
-    return `M${d.source.x},${d.source.y
-    }L${(d.source.x + d.target.x) / 2},${(d.source.y + d.target.y) / 2
-    }L${d.target.x},${d.target.y}`;
-  }
-
-  // part of d3 simulation
-  function ticked() {
-    link.attr('d', positionLink)
-      .attr('stroke-dasharray', (d) => {
-        if (d.exists === 0) {
-          return '5, 5';
-        }
-        return '0';
-      });
-
-    node
-      .attr('cx', (d) => { d.x = Math.max(radius, Math.min(width - radius, d.x)); return d.x; })
-      .attr('cy', (d) => { d.y = Math.max(radius, Math.min(height - radius, d.y)); return d.y; })
-      .attr('transform', d => `translate(${[d.x, d.y]})`);
-  }
-
-  // d3 "forces" layout - see http://d3indepth.com/force-layout/
-  const simulation = d3.forceSimulation()
-    .force('link', d3.forceLink().id(d => d.id));
-
-  // Put the nodes and edges in the correct spots
-  simulation
-    .nodes(nodes)
-    .on('tick', ticked);
-
-  simulation.force('link')
-    .links(edges);
 
   legendCreator(legend, nodes, legendWidth);
   return { minX, minY };
