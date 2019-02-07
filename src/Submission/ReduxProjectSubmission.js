@@ -25,7 +25,6 @@ export const updateFileContent = (value, fileType) => (dispatch) => {
 
 const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) => {
   const fileArray = [];
-  const resolvedPromisesArray = [];
   const path = fullProject.split('-');
   const program = path[0];
   const project = path.slice(1).join('-');
@@ -69,30 +68,37 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
   } else {
     fileArray.push(file);
   }
+
   let subUrl = submissionApiPath;
   if (program !== '_root') {
     subUrl = `${subUrl + program}/${project}/`;
   }
 
-  for (let i = 0; i < fileArray.length; i += 1) {
-    const lastPromise = fetchWithCreds({
+  const totalChunk = fileArray.length;
+
+  function recursiveFetch(chunkArray) {
+    if (chunkArray.length === 0) {
+      return null;
+    }
+
+    return fetchWithCreds({
       path: subUrl,
       method,
       customHeaders: { 'Content-Type': submission.file_type },
-      body: fileArray[i],
+      body: chunkArray.pop(),
       dispatch,
-    }).then(
+    }).then(recursiveFetch(chunkArray)).then(
       ({ status, data }) => (
         {
           type: 'RECEIVE_SUBMISSION',
           submit_status: status,
           data,
-          total: fileArray.length,
+          total: totalChunk,
         }),
     ).then(msg => dispatch(msg));
-    resolvedPromisesArray.push(lastPromise);
   }
-  return Promise.all(resolvedPromisesArray);
+
+  return recursiveFetch(fileArray);
 };
 
 const ReduxSubmitTSV = (() => {
