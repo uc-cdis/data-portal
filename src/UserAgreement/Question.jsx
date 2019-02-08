@@ -42,7 +42,12 @@ class Question extends Component {
   render() {
     return (
       <section id={this.props.sectionId} className='question'>
-        <h4 className='question__name h4'>{`${this.props.idx + 1}. ${this.props.content.name}`}</h4>
+        <h4 className='question__name h4'>
+          {
+            `${this.props.idx + 1}. ${this.props.content.name}`
+              ? this.props.content.name !== '' : ''
+          }
+        </h4>
         <div className='question__content'>{this.props.content.question}</div>
         {
           this.props.content.options.map(
