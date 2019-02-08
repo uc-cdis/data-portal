@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
+import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { getCategoryIconSVG } from '../NodeCategories/helper';
+import { downloadMultiTemplate } from '../utils';
 import './DataModelStructure.css';
 
 class DataModelStructure extends React.Component {
@@ -13,6 +15,32 @@ class DataModelStructure extends React.Component {
   handleClickOverlayPropertyButton = () => {
     this.props.onSetGraphView(true);
     this.props.onSetOverlayPropertyTableHidden(!this.props.overlayPropertyHidden);
+  };
+
+  handleDownloadAllTemplates = (format) => {
+    const nodesToDownload = {};
+    let counter = 1;
+    const excludedNodes = ['project', 'program'];
+    this.props.dataModelStructure.forEach((entry) => {
+      const { nodeID, nodeIDsBefore } = entry;
+      const nodeIDsBeforeForDownload = nodeIDsBefore.filter(nid => !excludedNodes.includes(nid));
+      if (nodeIDsBeforeForDownload.length > 0) {
+        let innerCount = 1;
+        nodeIDsBeforeForDownload.forEach((nid) => {
+          if (nid in nodesToDownload) return;
+          if (nodeIDsBeforeForDownload.length > 1) {
+            nodesToDownload[nid] = `${counter}-${innerCount}_${nid}_template.${format}`;
+            innerCount += 1;
+          } else nodesToDownload[nid] = `${counter}_${nid}_template.${format}`;
+        });
+        counter += 1;
+      }
+      if (!excludedNodes.includes(nodeID)) {
+        nodesToDownload[nodeID] = `${counter}_${nodeID}_template.${format}`;
+        counter += 1;
+      }
+    });
+    this.props.downloadMultiTemplate(format, nodesToDownload);
   };
 
   render() {
@@ -57,13 +85,34 @@ class DataModelStructure extends React.Component {
         </div>
         {
           this.props.isGraphView && (
-            <Button
-              onClick={this.handleClickOverlayPropertyButton}
-              label={this.props.overlayPropertyHidden ? 'Open properties' : 'Close properties'}
-              className='data-model-structure__table-button'
-              rightIcon='list'
-              buttonType='primary'
-            />
+            <React.Fragment>
+              <Button
+                onClick={this.handleClickOverlayPropertyButton}
+                label={this.props.overlayPropertyHidden ? 'Open properties' : 'Close properties'}
+                className='data-model-structure__table-button'
+                rightIcon='list'
+                buttonType='primary'
+              />
+              <Dropdown
+                className='data-model-structure__template-download-dropdown'
+              >
+                <Dropdown.Button>Download Templates</Dropdown.Button>
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    rightIcon='download'
+                    onClick={() => this.handleDownloadAllTemplates('tsv')}
+                  >
+                    TSV
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    rightIcon='download'
+                    onClick={() => this.handleDownloadAllTemplates('json')}
+                  >
+                    JSON
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </React.Fragment>
           )
         }
       </div>
@@ -78,6 +127,7 @@ DataModelStructure.propTypes = {
   onSetOverlayPropertyTableHidden: PropTypes.func,
   onResetGraphCanvas: PropTypes.func,
   overlayPropertyHidden: PropTypes.bool,
+  downloadMultiTemplate: PropTypes.func,
 };
 
 DataModelStructure.defaultProps = {
@@ -87,6 +137,7 @@ DataModelStructure.defaultProps = {
   onSetOverlayPropertyTableHidden: () => {},
   onResetGraphCanvas: () => {},
   overlayPropertyHidden: true,
+  downloadMultiTemplate,
 };
 
 export default DataModelStructure;

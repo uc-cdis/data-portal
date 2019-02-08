@@ -1,4 +1,6 @@
+import FileSaver from 'file-saver';
 import PropTypes from 'prop-types';
+import JSZip from 'jszip';
 import { dataDictionaryTemplatePath } from '../localconf';
 
 const concatTwoWords = (w1, w2) => {
@@ -84,6 +86,32 @@ export const downloadTemplate = (format, nodeId) => {
     const templatePath = `${dataDictionaryTemplatePath}${nodeId}?format=${format}`;
     window.open(templatePath);
   }
+};
+
+export const downloadMultiTemplate = (format, nodesToDownload) => {
+  if (format !== 'tsv' && format !== 'json') {
+    return;
+  }
+  const zip = new JSZip();
+  Promise.all(Object.keys(nodesToDownload).map((nodeID) => {
+    const fileUrl = `${dataDictionaryTemplatePath}${nodeID}?format=${format}`;
+    const saveAsFileName = nodesToDownload[nodeID];
+    return fetch(fileUrl).then((response) => {
+      if (response.ok) {
+        return response.text();
+      }
+      throw new Error(`cannot download template for node "${nodeID}"`);
+    }).then((responseText) => {
+      zip.file(saveAsFileName, responseText);
+    }).catch(() => {
+      throw new Error(`cannot download template for node "${nodeID}"`);
+    });
+  })).then(() => {
+    zip.generateAsync({ type: 'blob' })
+      .then((content) => {
+        FileSaver.saveAs(content, `templates-${format}.zip`);
+      });
+  });
 };
 
 export const graphStyleConfig = {
