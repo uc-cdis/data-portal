@@ -114,6 +114,7 @@ const SubmitTSV = ({ project, submission, onUploadClick, onSubmitClick, onFileCh
         <SubmissionResult
           status={submission.submit_status}
           data={submission.submit_result}
+          dataString={submission.submit_result_string}
           counter={submission.submit_counter}
           total={submission.submit_total}
         />
@@ -129,6 +130,7 @@ SubmitTSV.propTypes = {
     file: PropTypes.string,
     file_type: PropTypes.string,
     submit_result: PropTypes.any,
+    submit_result_string: PropTypes.string,
     submit_status: PropTypes.number,
     submit_counter: PropTypes.number,
     submit_total: PropTypes.number,

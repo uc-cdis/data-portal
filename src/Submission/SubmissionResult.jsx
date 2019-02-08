@@ -13,6 +13,7 @@ import './SubmissionResult.less';
  *
  * @param {number} status
  * @param {object} data
+ * @param {string} dataString
  * @param {number} counter
  * @param {number} total
  */
@@ -25,14 +26,14 @@ class SubmissionResult extends React.Component {
   }
 
   render() {
-    const { status, data, counter, total } = this.props;
+    const { status, data, dataString, counter, total } = this.props;
     let summary = null;
     const fullResponse = (() => {
       if (this.state.showFullResponse) {
         return (
           <div>
             <p>Details:</p>
-            <AceEditor width='100%' height='300px' style={{ marginBottom: '1em' }} mode='json' theme='kuroir' readOnly value={JSON.stringify(data, null, '    ')} />
+            <AceEditor width='100%' height='300px' style={{ marginBottom: '1em' }} mode='json' theme='kuroir' readOnly value={dataString} />
           </div>
         );
       }
@@ -104,6 +105,7 @@ class SubmissionResult extends React.Component {
 SubmissionResult.propTypes = {
   status: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
+  dataString: PropTypes.string.isRequired,
   counter: PropTypes.number.isRequired,
   total: PropTypes.number.isRequired,
 };

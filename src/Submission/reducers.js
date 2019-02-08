@@ -35,6 +35,7 @@ const submission = (state = {}, action) => {
   case 'RECEIVE_SUBMISSION':
     return { ...state,
       submit_result: action.data,
+      submit_result_string: state.submit_result_string.concat(JSON.stringify(action.data, null, '    ')).concat('\n\n'),
       submit_status: action.submit_status,
       submit_counter: state.submit_counter + 1,
       submit_total: action.total };
@@ -63,6 +64,7 @@ const submission = (state = {}, action) => {
   case 'RESET_CHUNK_COUNTER':
     return { ...state,
       submit_counter: 0,
+      submit_result_string: '',
     };
   default:
     return state;
