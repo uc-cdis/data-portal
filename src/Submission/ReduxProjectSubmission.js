@@ -85,7 +85,7 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
       path: subUrl,
       method,
       customHeaders: { 'Content-Type': submission.file_type },
-      body: chunkArray.pop(),
+      body: chunkArray.shift(),
       dispatch,
     }).then(recursiveFetch(chunkArray)).then(
       ({ status, data }) => (
