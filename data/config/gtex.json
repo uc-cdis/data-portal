@@ -111,6 +111,7 @@
       "email": "support@datacommons.io"
     }
   },
+  "requiredCerts": [],
   "featureFlags": {
     "explorer": true
   },
