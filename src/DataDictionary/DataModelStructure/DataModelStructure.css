@@ -52,3 +52,7 @@
   height: 35px;
   margin-bottom: 10px;
 }
+
+.data-model-structure__template-download-dropdown {
+  margin: 0 15px 15px 15px;
+}

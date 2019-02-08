@@ -17,13 +17,24 @@ class DataModelStructure extends React.Component {
     this.props.onSetOverlayPropertyTableHidden(!this.props.overlayPropertyHidden);
   };
 
+  downloadTemplatesEnabled = () => {
+    const nodeIDs = [];
+    this.props.dataModelStructure.forEach((entry) => {
+      const { nodeID, nodeIDsBefore } = entry;
+      nodeIDs.push(nodeID);
+      nodeIDs.concat(nodeIDsBefore);
+    });
+    return nodeIDs.filter(nid => !this.props.excludedNodesForTemplates.includes(nid)).length > 0;
+  };
+
   handleDownloadAllTemplates = (format) => {
     const nodesToDownload = {};
     let counter = 1;
-    const excludedNodes = ['project', 'program'];
+
     this.props.dataModelStructure.forEach((entry) => {
       const { nodeID, nodeIDsBefore } = entry;
-      const nodeIDsBeforeForDownload = nodeIDsBefore.filter(nid => !excludedNodes.includes(nid));
+      const nodeIDsBeforeForDownload = nodeIDsBefore
+        .filter(nid => !this.props.excludedNodesForTemplates.includes(nid));
       if (nodeIDsBeforeForDownload.length > 0) {
         let innerCount = 1;
         nodeIDsBeforeForDownload.forEach((nid) => {
@@ -35,7 +46,7 @@ class DataModelStructure extends React.Component {
         });
         counter += 1;
       }
-      if (!excludedNodes.includes(nodeID)) {
+      if (!this.props.excludedNodesForTemplates.includes(nodeID)) {
         nodesToDownload[nodeID] = `${counter}_${nodeID}_template.${format}`;
         counter += 1;
       }
@@ -93,25 +104,29 @@ class DataModelStructure extends React.Component {
                 rightIcon='list'
                 buttonType='primary'
               />
-              <Dropdown
-                className='data-model-structure__template-download-dropdown'
-              >
-                <Dropdown.Button>Download Templates</Dropdown.Button>
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    rightIcon='download'
-                    onClick={() => this.handleDownloadAllTemplates('tsv')}
+              {
+                this.downloadTemplatesEnabled() && (
+                  <Dropdown
+                    className='data-model-structure__template-download-dropdown'
                   >
-                    TSV
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    rightIcon='download'
-                    onClick={() => this.handleDownloadAllTemplates('json')}
-                  >
-                    JSON
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                    <Dropdown.Button>Download Templates</Dropdown.Button>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        rightIcon='download'
+                        onClick={() => this.handleDownloadAllTemplates('tsv')}
+                      >
+                        TSV
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        rightIcon='download'
+                        onClick={() => this.handleDownloadAllTemplates('json')}
+                      >
+                        JSON
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                )
+              }
             </React.Fragment>
           )
         }
@@ -128,6 +143,7 @@ DataModelStructure.propTypes = {
   onResetGraphCanvas: PropTypes.func,
   overlayPropertyHidden: PropTypes.bool,
   downloadMultiTemplate: PropTypes.func,
+  excludedNodesForTemplates: PropTypes.arrayOf(PropTypes.string),
 };
 
 DataModelStructure.defaultProps = {
@@ -138,6 +154,7 @@ DataModelStructure.defaultProps = {
   onResetGraphCanvas: () => {},
   overlayPropertyHidden: true,
   downloadMultiTemplate,
+  excludedNodesForTemplates: ['project', 'program'],
 };
 
 export default DataModelStructure;

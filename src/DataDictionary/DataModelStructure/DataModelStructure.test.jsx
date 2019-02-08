@@ -54,6 +54,7 @@ describe('DataModelStructure', () => {
       onSetOverlayPropertyTableHidden={overlayFunc}
       onResetGraphCanvas={resetFunc}
       downloadMultiTemplate={downloadMultiTemplateFunc}
+      excludedNodesForTemplates={['a']}
     />,
   );
 
@@ -90,13 +91,17 @@ describe('DataModelStructure', () => {
     expect(downloadMultiTemplateFunc.mock.calls.length).toBe(1);
     const expectedFormatArg = 'tsv';
     const expectedNodesToDownloadArg = {
-      a: '1_a_template.tsv',
-      b: '2_b_template.tsv',
-      c: '3-1_c_template.tsv',
-      d: '3-2_d_template.tsv',
-      e: '4_e_template.tsv',
+      b: '1_b_template.tsv',
+      c: '2-1_c_template.tsv',
+      d: '2-2_d_template.tsv',
+      e: '3_e_template.tsv',
     };
     expect(downloadMultiTemplateFunc.mock.calls[0][0]).toBe(expectedFormatArg);
     expect(downloadMultiTemplateFunc.mock.calls[0][1]).toEqual(expectedNodesToDownloadArg);
+  });
+
+  it('cannot download templates if selected nodes are all excluded', () => {
+    wrapper.setProps({ excludedNodesForTemplates: ['a', 'b', 'c', 'd', 'e'] });
+    expect(wrapper.find('div.data-model-structure__template-download-dropdown').length).toBe(0);
   });
 });
