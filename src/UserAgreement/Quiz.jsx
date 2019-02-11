@@ -174,9 +174,7 @@ class Quiz extends Component {
         </div>
         <div className='quiz__content' ref={(elem) => { this.quizContent = elem; }}>
           <h3 className='quiz__description h3'>{description}</h3>
-          <div
-            ref={(elem) => { this.qsList = elem; }}
-          >
+          <div>
             {
               questionList.map(
                 (item, i) =>
@@ -184,7 +182,9 @@ class Quiz extends Component {
                     <div ref={(elem) => { this.qsDom[getQuestionSectionId(i + 1)] = elem; }} key={`question${i}`}>
                       <Question
                         content={item}
-                        ref={(elem) => { this.qs[getQuestionSectionId(i + 1)] = elem; }}
+                        ref={(elem) => {
+                          this.qs[getQuestionSectionId(i + 1)] = elem;
+                        }}
                         idx={i}
                         sectionId={getQuestionSectionId(i + 1)}
                         onChange={isCorrect => this.answerQuestion(i, isCorrect)}

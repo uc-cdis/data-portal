@@ -117,8 +117,24 @@
       "text": "This website combines liquid biopsy data from academic, government, and industry partners and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for the treatment and prevention of cancer.",
       "contact": "If you have any questions about access or the registration process, please contact ",
       "email": "bpa-support@datacommons.io"
+    },
+    "certs": {
+      "security_quiz": {
+        "title": "BloodPAC User agreement",
+        "description": "",
+        "questions": [
+          {
+            "name": "",
+            "question": "WARNING: To protect the system from unauthorized use and to ensure that the system is functioning properly, activities on this system are monitored and recorded and subject to audit. Use of this system is expressed consent to such monitoring and recording. Any unauthorized access or use of this system is prohibited and could be subject to criminal and civil penalties. Users are prohibited from using the system in a way that is inconsistent with the Data Use Agreement, Acceptable Use Policy and related agreements that you have signed.  Please pay particular attention to the restrictions on controlled access data and transfer it in an approved secure manner.",
+            "options": ["I agree"],
+            "answer": 0,
+            "hint": "Click on I agree"
+          }
+        ]
+      }
     }
   },
+  "requiredCerts": ["security_quiz"],
   "featureFlags": {
     "explorer": false
   }
