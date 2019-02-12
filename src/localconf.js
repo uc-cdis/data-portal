@@ -51,6 +51,7 @@ function buildConfig(opts) {
   const loginPath = `${userapiPath}login/`;
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
   const workspaceUrl = '/lw-workspace/';
+  const workspaceErrorUrl = '/no-workspace-access/';
 
   const colorsForCharts = {
     categorical9Colors: [
@@ -105,6 +106,7 @@ function buildConfig(opts) {
     requiredCerts,
     certs: components.certs,
     workspaceUrl,
+    workspaceErrorUrl,
   };
 }
 
