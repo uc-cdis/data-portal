@@ -219,14 +219,22 @@ export const getArticulationNodesInSubgraph = (
 
 /**
  * Traverse a subgraph via breath Breadth-first search algorithm
+ * @param {boolean} alongLinkDirection - if want traverse from link direction
  * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
  * @param {Edge[]} subgraphEdges - array of edges in subgraph
  * @param {Object[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {string[]} array of node IDs in BFS traverse
+ * Note that this function only consider union of `subgraphNodeIDs` and `subgraphEdges`,
+ * if a node is in `subgraphEdges` but not in `subgraphNodeIDs`, it'll be ignored.
  */
-export const BFSTraverseSubgraph = (subgraphNodeIDs, subgraphEdges, wholeGraphNodes) => {
+export const BFSTraverseSubgraph = (
+  alongLinkDirection,
+  subgraphNodeIDs,
+  subgraphEdges,
+  wholeGraphNodes,
+) => {
   let currentLevelNodeIDs = getNodeIDsThatHaveNoInOrOutLinks(
-    true,
+    alongLinkDirection,
     subgraphNodeIDs,
     subgraphEdges,
     wholeGraphNodes,
@@ -238,15 +246,23 @@ export const BFSTraverseSubgraph = (subgraphNodeIDs, subgraphEdges, wholeGraphNo
       const nodeID = currentLevelNodeIDs[i];
       if (!resultNodeIDs.includes(nodeID)) resultNodeIDs.push(nodeID);
       const node = wholeGraphNodes.find(n => n.id === nodeID);
-      if (!node) break;
-      const outNeighbors = node.outLinks.filter(outNodeID =>
-        subgraphEdges.find(e => e.source === nodeID && outNodeID === e.target));
-      for (let j = 0; j < outNeighbors.length; j += 1) {
-        const outNodeID = outNeighbors[j];
-        if (currentLevelNodeIDs.includes(outNodeID) || nextLevelNodeIDs.includes(outNodeID)) {
-          break;
+      if (node) {
+        const links = alongLinkDirection ? node.outLinks : node.inLinks;
+        const linkNeighbors = links.filter((neighborNodeID) => {
+          if (!subgraphNodeIDs.includes(neighborNodeID)) return false;
+          if (alongLinkDirection) {
+            return subgraphEdges.find(e => e.source === nodeID && neighborNodeID === e.target);
+          }
+
+          return subgraphEdges.find(e => e.target === nodeID && neighborNodeID === e.source);
+        });
+        for (let j = 0; j < linkNeighbors.length; j += 1) {
+          const neighborNodeID = linkNeighbors[j];
+          if (!currentLevelNodeIDs.includes(neighborNodeID)
+            && !nextLevelNodeIDs.includes(neighborNodeID)) {
+            nextLevelNodeIDs.push(neighborNodeID);
+          }
         }
-        nextLevelNodeIDs.push(outNodeID);
       }
     }
     currentLevelNodeIDs = nextLevelNodeIDs;
@@ -269,7 +285,12 @@ export const sortNodesByTopology = (
   subgraphEdges,
   wholeGraphNodes,
 ) => {
-  const graphBFSTraverse = BFSTraverseSubgraph(subgraphNodeIDs, subgraphEdges, wholeGraphNodes);
+  const graphBFSTraverse = BFSTraverseSubgraph(
+    true,
+    subgraphNodeIDs,
+    subgraphEdges,
+    wholeGraphNodes,
+  );
   const sortedNodeIDs = graphBFSTraverse.filter(nodeID => nodeIDsToSort.includes(nodeID));
   return sortedNodeIDs;
 };
@@ -355,8 +376,14 @@ export const getNodesAndLinksSummaryBetweenNodesInSubgraph = (
     });
     currentLevelNodeIDs = nextLevelNodeIDs;
   }
+  const sortedBetweenNodeIDs = BFSTraverseSubgraph(
+    false,
+    betweenNodeIDs,
+    subgraphEdges,
+    wholeGraphNodes,
+  );
   return {
-    nodeIDs: betweenNodeIDs,
+    nodeIDs: sortedBetweenNodeIDs,
     links: betweenLinks,
   };
 };

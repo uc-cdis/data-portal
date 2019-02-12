@@ -17,24 +17,31 @@ class DataModelStructure extends React.Component {
     this.props.onSetOverlayPropertyTableHidden(!this.props.overlayPropertyHidden);
   };
 
+  excludeUnwantedNodes = nodes => nodes
+    .filter(nid => !this.props.excludedNodesForTemplates.includes(nid));
+
   downloadTemplatesEnabled = () => {
     const nodeIDs = this.props.dataModelStructure.reduce((acc, cur) => {
       const { nodeID, nodeIDsBefore } = cur;
       acc.push(nodeID);
-      cur.forEach(nid => acc.push(nid));
+      nodeIDsBefore.forEach(nid => acc.push(nid));
       return acc;
     }, []);
-    return nodeIDs.filter(nid => !this.props.excludedNodesForTemplates.includes(nid)).length > 0;
+    return this.excludeUnwantedNodes(nodeIDs).length > 0;
   };
 
   handleDownloadAllTemplates = (format) => {
     const nodesToDownload = {};
     let counter = 1;
 
+    // Iterate {nodeID, nodeIDsBefore} inside dataModelStructure to get required nodes to download.
+    // Note that entries in `dataModelStructure` are from root (program) to leaves (bottom),
+    // and nodes in `nodeIDsBefore` are also from top to bottom.
+    // For details about how to calculate dataModelStructure, please
+    // see GraphCalculator/graphStructureHelper.js/calculateDataModelStructure
     this.props.dataModelStructure.forEach((entry) => {
       const { nodeID, nodeIDsBefore } = entry;
-      const nodeIDsBeforeForDownload = nodeIDsBefore
-        .filter(nid => !this.props.excludedNodesForTemplates.includes(nid));
+      const nodeIDsBeforeForDownload = this.excludeUnwantedNodes(nodeIDsBefore);
       if (nodeIDsBeforeForDownload.length > 0) {
         let innerCount = 1;
         nodeIDsBeforeForDownload.forEach((nid) => {

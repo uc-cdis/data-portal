@@ -53,7 +53,7 @@ export const testGraph1 = {
   graphNodes: [
     {
       id: 'A',
-      inLinks: ['B'],
+      inLinks: ['B', 'C'],
       outLinks: [],
       type: 't1',
     },
@@ -144,13 +144,14 @@ export const testGraph1 = {
   ],
   expectedArticulationNodesInSubgraph: ['G', 'E'],
   expectedBFSTraverseSubgraph: ['I', 'G', 'E', 'B', 'C', 'A'],
+  expectedBFSTraverseSubgraphReverseDirection: ['A', 'B', 'C', 'E', 'G', 'I'],
   testNodeIDsForSort: ['B', 'G', 'A', 'C', 'E', 'I'],
   expectedSorteddNodeIDs: ['I', 'G', 'E', 'B', 'C', 'A'],
   expectedGraphNodesSortedByTopology: ['D', 'I', 'H', 'F', 'B', 'G', 'E', 'C', 'A'],
   testNode1: 'G',
   testNode2: 'A',
   expectedSummary: {
-    nodeIDs: ['E', 'B', 'C'],
+    nodeIDs: ['B', 'C', 'E'],
     links: [
       { source: 'G', target: 'E' },
       { source: 'E', target: 'B' },
