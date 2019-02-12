@@ -1,4 +1,4 @@
-const { components, requiredCerts } = require('./params');
+const { components, requiredCerts, config } = require('./params');
 
 /**
  * Setup configuration variables based on the "app" the data-portal is
@@ -78,6 +78,9 @@ function buildConfig(opts) {
     };
   }
 
+  const defaultLineLimit = 30;
+  const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;
+
   return {
     app,
     basename,
@@ -103,6 +106,7 @@ function buildConfig(opts) {
     login,
     loginPath,
     requiredCerts,
+    lineLimit,
     certs: components.certs,
     workspaceUrl,
   };
