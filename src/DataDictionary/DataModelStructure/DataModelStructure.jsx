@@ -18,12 +18,12 @@ class DataModelStructure extends React.Component {
   };
 
   downloadTemplatesEnabled = () => {
-    const nodeIDs = [];
-    this.props.dataModelStructure.forEach((entry) => {
-      const { nodeID, nodeIDsBefore } = entry;
-      nodeIDs.push(nodeID);
-      nodeIDs.concat(nodeIDsBefore);
-    });
+    const nodeIDs = this.props.dataModelStructure.reduce((acc, cur) => {
+      const { nodeID, nodeIDsBefore } = cur;
+      acc.push(nodeID);
+      cur.forEach(nid => acc.push(nid));
+      return acc;
+    }, []);
     return nodeIDs.filter(nid => !this.props.excludedNodesForTemplates.includes(nid)).length > 0;
   };
 
