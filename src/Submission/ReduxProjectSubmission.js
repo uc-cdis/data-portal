@@ -7,7 +7,7 @@ import ReduxDataModelGraph, { getCounts } from '../DataModelGraph/ReduxDataModel
 
 import { fetchWithCreds } from '../actions';
 import { predictFileType } from '../utils';
-import { submissionApiPath } from '../localconf';
+import { submissionApiPath, lineLimit } from '../localconf';
 
 export const uploadTSV = (value, type) => (dispatch) => {
   dispatch({ type: 'REQUEST_UPLOAD', file: value, file_type: type });
@@ -24,36 +24,81 @@ export const updateFileContent = (value, fileType) => (dispatch) => {
 
 
 const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) => {
+  const fileArray = [];
   const path = fullProject.split('-');
   const program = path[0];
   const project = path.slice(1).join('-');
   const submission = getState().submission;
   const method = path === 'graphql' ? 'POST' : methodIn;
   let file = submission.file;
+
+  dispatch({ type: 'RESET_CHUNK_COUNTER' });
+
   if (!file) {
     return Promise.reject('No file to submit');
   } else if (submission.file_type !== 'text/tab-separated-values') {
     // remove line break in json file
-    file = file.replace(/\n/g, '');
+    file = file.replace(/\r\n?|\n/g, '');
   }
+
+  if (submission.file_type === 'text/tab-separated-values') {
+    const fileSplited = file.split(/\r\n?|\n/g);
+    if (fileSplited.length > lineLimit && lineLimit > 0) {
+      let fileHeader = fileSplited[0];
+      fileHeader += '\n';
+      let count = lineLimit;
+      let fileChunk = fileHeader;
+
+      for (let i = 1; i < fileSplited.length; i += 1) {
+        fileChunk += fileSplited[i];
+        fileChunk += '\n';
+        count -= 1;
+        if (count === 0) {
+          fileArray.push(fileChunk);
+          fileChunk = fileHeader;
+          count = lineLimit;
+        }
+      }
+      if (fileChunk !== fileHeader) {
+        fileArray.push(fileChunk);
+      }
+    } else {
+      fileArray.push(file);
+    }
+  } else {
+    fileArray.push(file);
+  }
+
   let subUrl = submissionApiPath;
   if (program !== '_root') {
     subUrl = `${subUrl + program}/${project}/`;
   }
-  return fetchWithCreds({
-    path: subUrl,
-    method,
-    customHeaders: { 'Content-Type': submission.file_type },
-    body: file,
-    dispatch,
-  }).then(
-    ({ status, data }) => (
-      {
-        type: 'RECEIVE_SUBMISSION',
-        submit_status: status,
-        data,
-      }),
-  ).then(msg => dispatch(msg));
+
+  const totalChunk = fileArray.length;
+
+  function recursiveFetch(chunkArray) {
+    if (chunkArray.length === 0) {
+      return null;
+    }
+
+    return fetchWithCreds({
+      path: subUrl,
+      method,
+      customHeaders: { 'Content-Type': submission.file_type },
+      body: chunkArray.shift(),
+      dispatch,
+    }).then(recursiveFetch(chunkArray)).then(
+      ({ status, data }) => (
+        {
+          type: 'RECEIVE_SUBMISSION',
+          submit_status: status,
+          data,
+          total: totalChunk,
+        }),
+    ).then(msg => dispatch(msg));
+  }
+
+  return recursiveFetch(fileArray);
 };
 
 const ReduxSubmitTSV = (() => {

@@ -33,7 +33,12 @@ const submission = (state = {}, action) => {
   case 'RECEIVE_SUBMISSION_LOGIN':
     return { ...state, login: state.result, error: state.error };
   case 'RECEIVE_SUBMISSION':
-    return { ...state, submit_result: action.data, submit_status: action.submit_status };
+    return { ...state,
+      submit_result: action.data,
+      submit_result_string: state.submit_result_string.concat(JSON.stringify(action.data, null, '    ')).concat('\n\n'),
+      submit_status: action.submit_status,
+      submit_counter: state.submit_counter + 1,
+      submit_total: action.total };
   case 'SUBMIT_SEARCH_FORM':
     return { ...state, search_form: action.data };
   case 'RECEIVE_SEARCH_ENTITIES':
@@ -56,6 +61,11 @@ const submission = (state = {}, action) => {
     };
   case 'RECEIVE_FILES_TO_MAP':
     return { ...state, filesToMap: action.data };
+  case 'RESET_CHUNK_COUNTER':
+    return { ...state,
+      submit_counter: 0,
+      submit_result_string: '',
+    };
   default:
     return state;
   }
