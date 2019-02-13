@@ -1,4 +1,4 @@
-const { components, requiredCerts } = require('./params');
+const { components, requiredCerts, config } = require('./params');
 
 /**
  * Setup configuration variables based on the "app" the data-portal is
@@ -51,6 +51,7 @@ function buildConfig(opts) {
   const loginPath = `${userapiPath}login/`;
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
   const workspaceUrl = '/lw-workspace/';
+  const workspaceErrorUrl = '/no-workspace-access/';
 
   const colorsForCharts = {
     categorical9Colors: [
@@ -78,6 +79,9 @@ function buildConfig(opts) {
     };
   }
 
+  const defaultLineLimit = 30;
+  const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;
+
   return {
     app,
     basename,
@@ -103,8 +107,10 @@ function buildConfig(opts) {
     login,
     loginPath,
     requiredCerts,
+    lineLimit,
     certs: components.certs,
     workspaceUrl,
+    workspaceErrorUrl,
   };
 }
 

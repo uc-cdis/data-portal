@@ -107,7 +107,18 @@ const SubmitTSV = ({ project, submission, onUploadClick, onSubmitClick, onFileCh
       />
       }
       {submission.submit_result &&
-      <SubmissionResult status={submission.submit_status} data={submission.submit_result} />
+      <div>
+        <p>
+          Submitting chunk {submission.submit_counter} of {submission.submit_total}
+        </p>
+        <SubmissionResult
+          status={submission.submit_status}
+          data={submission.submit_result}
+          dataString={submission.submit_result_string}
+          counter={submission.submit_counter}
+          total={submission.submit_total}
+        />
+      </div>
       }
     </form>
   );
@@ -119,7 +130,10 @@ SubmitTSV.propTypes = {
     file: PropTypes.string,
     file_type: PropTypes.string,
     submit_result: PropTypes.any,
+    submit_result_string: PropTypes.string,
     submit_status: PropTypes.number,
+    submit_counter: PropTypes.number,
+    submit_total: PropTypes.number,
     node_types: PropTypes.string,
     dictionary: PropTypes.object,
   }),
@@ -129,7 +143,9 @@ SubmitTSV.propTypes = {
 };
 
 SubmitTSV.defaultProps = {
-  submission: {},
+  submission: {
+    submit_counter: 0,
+  },
 };
 
 export default SubmitTSV;
