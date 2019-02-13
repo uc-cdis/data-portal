@@ -29,7 +29,63 @@ export const buildTestData = () => {
   ).filter(({ source }) => !!source).forEach(({ source, edg }) => {
     dictionary[source.id].links.push({ name: edg.name, target_type: edg.target });
   });
-  return { dictionary, nodes, edges, counts_search: nodeCounts, links_search: linkCounts };
+
+  // add subgrouplinks for node a for test
+  dictionary.a.links.push({
+    subgroup: [
+      {
+        name: 'cProp',
+        target_type: 'c',
+      },
+    ],
+  });
+  dictionary.a.links.push({
+    subgroup: [
+      {
+        subgroup: [
+          {
+            name: 'xProp',
+            target_type: 'x',
+          },
+        ],
+      },
+    ],
+  });
+  dictionary.a.links.push({
+    subgroup: [
+      {
+        subgroup: [
+          {
+            subgroup: [
+              {
+                name: 'yProp',
+                target_type: 'y',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  });
+  const expectedSubgoupLinks = [
+    { source: 'a', target: 'c', name: 'cProp' },
+    { source: 'a', target: 'x', name: 'xProp' },
+    { source: 'a', target: 'y', name: 'yProp' },
+  ];
+  const expectedTree = [
+    ['project'],
+    ['b'],
+    ['c', 'x', 'y'],
+    ['d', 'a'],
+  ];
+  return {
+    dictionary,
+    nodes,
+    edges: edges.concat(expectedSubgoupLinks),
+    counts_search: nodeCounts,
+    links_search: linkCounts,
+    expectedTree,
+  };
 };
 
 /** test graph:

@@ -1,4 +1,10 @@
-import { assignNodePositions, createNodesAndEdges, findRoot, nodesBreadthFirst, getTreeHierarchy } from './utils';
+import {
+  assignNodePositions,
+  createNodesAndEdges,
+  findRoot,
+  nodesBreadthFirst,
+  getTreeHierarchy,
+} from './utils';
 import { buildTestData } from './testData';
 
 
@@ -48,14 +54,13 @@ describe('the DataModelGraph utils helper', () => {
   });
 
   it('knows how to order nodes breadth first', () => {
-    const { nodes, edges } = buildTestData();
+    const { nodes, edges, expectedTree } = buildTestData();
     const { bfOrder, treeLevel2Names, name2Level } = nodesBreadthFirst(nodes, edges);
-    console.log('tree info', treeLevel2Names);
     expect(bfOrder.length).toBe(nodes.length - 1); // node z is floating ...
-    expect(treeLevel2Names.length).toBe(4);
-    expect(treeLevel2Names[0].length).toBe(1); // project
-    expect(treeLevel2Names[1].length).toBe(1);
-    expect(treeLevel2Names[2].length).toBe(4); // a, c, x, y
+    expect(treeLevel2Names.length).toBe(expectedTree.length);
+    for (let i = 0; i < treeLevel2Names.length; i += 1) {
+      expect(treeLevel2Names[i].length).toBe(expectedTree[i].length);
+    }
     expect(name2Level.d).toBe(3); // d on level 3
     for (let level = 0; level < treeLevel2Names.length; level += 1) {
       treeLevel2Names[level].forEach(

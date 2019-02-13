@@ -1,4 +1,30 @@
 /**
+ * Get subgroup links from link
+ * @param {array} link - array of links
+ * @param {object} nameToNode - key (node name) value (node object) map
+ * @param {string} sourceId - source id for subgroup links
+ * This function traverse links recursively and return all nested subgroup lnks
+ */
+const getSubgroupLinks = (link, nameToNode, sourceId) => {
+  let subgroupLinks = [];
+  if (link.subgroup) {
+    link.subgroup.forEach((sgLink) => {
+      if (sgLink.subgroup) {
+        subgroupLinks = subgroupLinks.concat(getSubgroupLinks(sgLink, nameToNode, sourceId));
+      } else {
+        subgroupLinks.push({
+          source: nameToNode[sourceId],
+          target: nameToNode[sgLink.target_type],
+          exists: 1,
+          ...sgLink,
+        });
+      }
+    });
+  }
+  return subgroupLinks;
+};
+
+/**
  * Given a data dictionary that defines a set of nodes
  *    and edges, returns the nodes and edges in correct format
  *
@@ -55,14 +81,7 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
           result.push(link);
         }
         if (link.subgroup) {
-          const sgLinks = link.subgroup.map(
-            it => ({
-              source: nameToNode[link.source.id],
-              target: nameToNode[it.target_type],
-              exists: 1,
-              ...it,
-            }),
-          );
+          const sgLinks = getSubgroupLinks(link, nameToNode, link.source.id);
           result = result.concat(sgLinks);
         }
         return result;
