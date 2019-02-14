@@ -61,7 +61,21 @@ export const getType = (property) => {
     type = property.enum;
   } else if ('oneOf' in property) {
     // oneOf has nested type list - we want to flatten nested enums out here ...
-    type = property.oneOf
+    type = getNestedTypes(property, 'oneOf');
+  } else if ('anyOf' in property) {
+    // anyOf has nested type list
+    type = getNestedTypes(property, 'anyOf');
+  } else {
+    type = 'UNDEFINED';
+  }
+
+  return type;
+};
+
+const getNestedTypes = (property, nest) => {
+    // Helper to get types from nested types
+    let type = 'UNDEFINED'
+    type = property[nest]
       .map(item => getType(item))
       .reduce(
         (flatList, it) => {
@@ -72,12 +86,8 @@ export const getType = (property) => {
           return flatList;
         }, [],
       );
-  } else {
-    type = 'UNDEFINED';
-  }
-
-  return type;
-};
+    return type;
+}
 
 export const downloadTemplate = (format, nodeId) => {
   if (format === 'tsv' || format === 'json') {

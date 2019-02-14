@@ -30,6 +30,24 @@ describe('the DataDictionaryNode', () => {
       ],
     });
     expect(oneOf).toEqual(['A', 'B', 'C', 'D', 'E', 'F', 'G']);
+    const anyOf = getType({
+      anyOf: [
+        {
+          enum: ['A', 'B', 'C'],
+        },
+        {
+          anyOf: [
+            {
+              enum: ['D', 'E', 'F'],
+            },
+            {
+              enum: ['G'],
+            },
+          ],
+        },
+      ],
+    });
+    expect(anyOf).toEqual(['A', 'B', 'C', 'D', 'E', 'F', 'G']);
   });
 
   it('knows how to break sentences', () => {
