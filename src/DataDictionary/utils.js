@@ -41,6 +41,23 @@ export const truncateLines = (str, maxCharInRow = 10, breakwordMinLength = 12) =
   return res;
 };
 
+const getNestedTypes = (property, nest) => {
+    // Helper to get types from nested types
+    let type = 'UNDEFINED'
+    type = property[nest]
+      .map(item => getType(item))
+      .reduce(
+        (flatList, it) => {
+          if (Array.isArray(it)) {
+            return flatList.concat(it);
+          }
+          flatList.push(it);
+          return flatList;
+        }, [],
+      );
+    return type;
+}
+
 /**
  * Little helper to extract the type for some dictionary node property.
  * Export just for testing.
@@ -71,23 +88,6 @@ export const getType = (property) => {
 
   return type;
 };
-
-const getNestedTypes = (property, nest) => {
-    // Helper to get types from nested types
-    let type = 'UNDEFINED'
-    type = property[nest]
-      .map(item => getType(item))
-      .reduce(
-        (flatList, it) => {
-          if (Array.isArray(it)) {
-            return flatList.concat(it);
-          }
-          flatList.push(it);
-          return flatList;
-        }, [],
-      );
-    return type;
-}
 
 export const downloadTemplate = (format, nodeId) => {
   if (format === 'tsv' || format === 'json') {
