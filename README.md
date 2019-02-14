@@ -28,11 +28,11 @@ from `localhost`.  Test code under local development with this procedure:
 * `npm install`
 * launch the webpack dev server, and configure local code with the same configuration as the server to test against.  For example - if we intend to test against dev.planx-pla.net, then:
 ```
-HOSTNAME=dev.planx-pla.net APP=bhc NODE_ENV=dev bash ./runWebpack.sh
+HOSTNAME=dev.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 ```
 , or for qa-brain:
 ```
-HOSTNAME=qa-brain.planx-pla.net APP=bhc NODE_ENV=dev bash ./runWebpack.sh
+HOSTNAME=qa-brain.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 ```
 
 * Accept the self-signed certificate at https://localhost:9443/bundle.js
@@ -42,7 +42,15 @@ HOSTNAME=qa-brain.planx-pla.net APP=bhc NODE_ENV=dev bash ./runWebpack.sh
 
 ### Local development and gitops
 
-Most production commons currently load custom configuration via gitops.  The configuration for a production commons is available in that commons' gitops repository (mostly https://github.com/uc-cdis/cdis-manifest), and can be copied for local development.
+Most production commons currently load custom configuration via gitops.  The configuration for a production commons is available in that commons' gitops repository (mostly https://github.com/uc-cdis/cdis-manifest), and can be copied for local development.  The `runWebpack.sh` script automates this process when `NODE_ENV` is set to `auto` - ex:
+```
+HOSTNAME=qa-brain.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
+```
+
+Note: the legacy `dev` NODE_ENV is still available, but the `APP` environment must also be manually set to load the configuration that matches the dictionary from HOSTNAME - ex:
+```
+HOSTNAME=dev.planx-pla.net NODE_ENV=dev APP=dev bash ./runWebpack.sh
+```
 
 ### Component story books
 
