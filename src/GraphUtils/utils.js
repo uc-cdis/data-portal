@@ -1,6 +1,6 @@
 /**
  * Get subgroup links from link
- * @param {array} link - array of links
+ * @param {object} link - array of links
  * @param {object} nameToNode - key (node name) value (node object) map
  * @param {string} sourceId - source id for subgroup links
  * This function traverse links recursively and return all nested subgroup lnks
