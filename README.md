@@ -26,11 +26,11 @@ npm run-script schema -- https://dev.bionimbus.org/api/v0/submission/getschema
 The portal's `/dev.html` path loads javascript and most css
 from `localhost`.  Test code under local development with this procedure:
 * `npm install`
-* launch the webpack dev server, and configure local code with the same configuration as the server to test against.  For example - if we intend to test against qa-brian, then:
+* launch the webpack dev server, and configure local code with the same configuration as the server to test against.  For example - if we intend to test against dev.planx-pla.net, then:
 ```
 HOSTNAME=dev.planx-pla.net APP=bhc NODE_ENV=dev bash ./runWebpack.sh
 ```
-or
+, or for qa-brain:
 ```
 HOSTNAME=qa-brain.planx-pla.net APP=bhc NODE_ENV=dev bash ./runWebpack.sh
 ```
