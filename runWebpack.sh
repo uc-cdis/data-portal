@@ -91,6 +91,8 @@ gitops_config() {
         mkdir -p "$copyDest"
         echo "INFO: gitops_config - cp $copySource/*.* $copyDest/"
         cp $copySource/*.* $copyDest/
+      else
+        echo "INFO: gitops_config - no $copySource in gitops"
       fi
     done
   fi
