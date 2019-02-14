@@ -143,6 +143,11 @@
             "race",
             "ethnicity"
           ]
+        }, {
+          "title": "Projects",
+          "fields": [
+            "project_id"
+          ]
         }
       ]
     },
