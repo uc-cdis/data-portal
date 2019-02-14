@@ -40,6 +40,10 @@ HOSTNAME=qa-brain.planx-pla.net APP=bhc NODE_ENV=dev bash ./runWebpack.sh
 * Load the test environment's `/dev.html` - ex: https://qa-brian.planx-pla.net/dev.html
 
 
+### Local development and gitops
+
+Most production commons currently load custom configuration via gitops.  The configuration for a production commons is available in that commons' gitops repository (mostly https://github.com/uc-cdis/cdis-manifest), and can be copied for local development.
+
 ### Component story books
 
 To run Storybook:
