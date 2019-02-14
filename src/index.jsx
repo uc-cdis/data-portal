@@ -33,7 +33,7 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import Footer from './components/layout/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
-import { basename, dev, gaDebug, workspaceUrl } from './localconf';
+import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl } from './localconf';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
@@ -218,6 +218,10 @@ async function init() {
                     />
                     <Route
                       path={workspaceUrl}
+                      component={ErrorWorkspacePlaceholder}
+                    />
+                    <Route
+                      path={workspaceErrorUrl}
                       component={ErrorWorkspacePlaceholder}
                     />
                     <Route
