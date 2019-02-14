@@ -27,8 +27,8 @@ export REACT_APP_PROJECT_ID=search
 export REACT_APP_DISABLE_SOCKET=true
 
 if [[ "$NODE_ENV" == "dev" ]]; then
-  echo ./node_modules/.bin/webpack-dev-server --hot 
-  ./node_modules/.bin/webpack-dev-server --hot 
+  echo ./node_modules/.bin/webpack-dev-server 
+  ./node_modules/.bin/webpack-dev-server
 else
   export NODE_ENV="production"
   echo ./node_modules/.bin/webpack --bail
