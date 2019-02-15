@@ -41,23 +41,6 @@ export const truncateLines = (str, maxCharInRow = 10, breakwordMinLength = 12) =
   return res;
 };
 
-const getNestedTypes = (property, nest) => {
-    // Helper to get types from nested types
-    let type = 'UNDEFINED'
-    type = property[nest]
-      .map(item => getType(item))
-      .reduce(
-        (flatList, it) => {
-          if (Array.isArray(it)) {
-            return flatList.concat(it);
-          }
-          flatList.push(it);
-          return flatList;
-        }, [],
-      );
-    return type;
-}
-
 /**
  * Little helper to extract the type for some dictionary node property.
  * Export just for testing.
@@ -78,10 +61,30 @@ export const getType = (property) => {
     type = property.enum;
   } else if ('oneOf' in property) {
     // oneOf has nested type list - we want to flatten nested enums out here ...
-    type = getNestedTypes(property, 'oneOf');
+    type = property['oneOf']
+      .map(item => getType(item))
+      .reduce(
+        (flatList, it) => {
+          if (Array.isArray(it)) {
+            return flatList.concat(it);
+          }
+          flatList.push(it);
+          return flatList;
+        }, [],
+      );
   } else if ('anyOf' in property) {
     // anyOf has nested type list
-    type = getNestedTypes(property, 'anyOf');
+    type = property['anyOf']
+      .map(item => getType(item))
+      .reduce(
+        (flatList, it) => {
+          if (Array.isArray(it)) {
+            return flatList.concat(it);
+          }
+          flatList.push(it);
+          return flatList;
+        }, [],
+      );
   } else {
     type = 'UNDEFINED';
   }
