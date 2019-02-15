@@ -28,5 +28,77 @@
       }
     ],
     "projectDetails": "boardCounts"
+  },
+   "components": {
+    "appName": "IBDGC Portal",
+    "index": {
+      "introduction": {
+        "heading": "IBD Genetics Consortium Data Commons",
+        "text": "The Inflammatory Bowel Disease Genetics Consortium Data Commons supports the management, analysis, and sharing of genetic data to support the vision and mission of the IBD genetics consortium.",
+        "link": "/submission"
+      },
+      "buttons": [
+        {
+          "name": "Define Data Field",
+          "icon": "data-field-define",
+          "body": "The data are defined in a generic way by the dictionary. Please study the dictionary before you start browsing.",
+          "link": "/DD",
+          "label": "Learn more"
+        },
+        {
+          "name": "Explore Data",
+          "icon": "data-explore",
+          "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
+          "link": "#hostname#shiny/",
+          "label": "Explore data"
+        },
+        {
+          "name": "Access Data",
+          "icon": "data-access",
+          "body": "Use our selected tool to filter out the data you need.",
+          "link": "/query",
+          "label": "Query data"
+        },
+        {
+          "name": "Analyze Data",
+          "icon": "data-analyze",
+          "body": "Analyze your selected cases using Jupyter Notebooks in our secure cloud environment",
+          "link": "#hostname#workspace/",
+          "label": "Run analysis"
+        }
+      ]
+    },
+    "navigation": {
+      "title": "IBDGC Data Commons",
+      "items": [
+        {
+          "icon": "dictionary",
+          "link": "/DD",
+          "color": "#a2a2a2",
+          "name": "Dictionary"
+        },
+        {
+          "icon": "files",
+          "link": "/files",
+          "color": "#a2a2a2",
+          "name": "Files"
+        },
+        {
+          "icon": "query",
+          "link": "/query",
+          "color": "#a2a2a2",
+          "name": "query"
+        },
+        {
+          "icon": "profile",
+          "link": "/identity",
+          "color": "#a2a2a2",
+          "name": "Profile"
+        }
+      ]
+    }
+  },
+  "featureFlags": {
+    "explorer": false
   }
 }
