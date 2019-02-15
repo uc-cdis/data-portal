@@ -61,7 +61,7 @@ export const getType = (property) => {
     type = property.enum;
   } else if ('oneOf' in property) {
     // oneOf has nested type list - we want to flatten nested enums out here ...
-    type = property['oneOf']
+    type = property.oneOf
       .map(item => getType(item))
       .reduce(
         (flatList, it) => {
@@ -74,7 +74,7 @@ export const getType = (property) => {
       );
   } else if ('anyOf' in property) {
     // anyOf has nested type list
-    type = property['anyOf']
+    type = property.anyOf
       .map(item => getType(item))
       .reduce(
         (flatList, it) => {
