@@ -42,13 +42,21 @@ describe('graphCalculatorHelper', () => {
     expect(result).toEqual(testGraph1.expectedArticulationNodesInSubgraph);
   });
 
-  it('can averse subgraph in BFS order', () => {
+  it('can traverse subgraph in BFS order', () => {
     const bfsResult = BFSTraverseSubgraph(
+      true,
       testGraph1.testSubgraph,
       testGraph1.testSubgraphEdges,
       testGraph1.graphNodes,
     );
     expect(bfsResult).toEqual(testGraph1.expectedBFSTraverseSubgraph);
+    const bfsResult2 = BFSTraverseSubgraph(
+      false,
+      testGraph1.testSubgraph,
+      testGraph1.testSubgraphEdges,
+      testGraph1.graphNodes,
+    );
+    expect(bfsResult2).toEqual(testGraph1.expectedBFSTraverseSubgraphReverseDirection);
   });
 
   it('can sort nodes in subgraph in topology order', () => {

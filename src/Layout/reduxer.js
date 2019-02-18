@@ -57,6 +57,8 @@ export const ReduxTopBar = (() => {
 export const ReduxFooter = (() => {
   const mapStateToProps = state => ({
     portalVersion,
+    dictionaryVersion: state.versionInfo.dictionaryVersion,
+    apiVersion: state.versionInfo.apiVersion,
     hidden: isPageFullScreen(state.bar.active),
   });
 
