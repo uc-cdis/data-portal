@@ -44,7 +44,7 @@ const plugins = [
   new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
 ];
 
-if (process.env.NODE_ENV !== 'dev') {
+if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ) {
   // This slows things down a lot, so avoid when running local dev environment
   plugins.push(new webpack.optimize.UglifyJsPlugin({
     mangle: false,
@@ -65,6 +65,10 @@ module.exports = {
       index: 'dev.html',
     },
     disableHostCheck: true,
+    compress: true,
+    hot: true,
+    port: 9443,
+    https: true,
   },
   module: {
     target: 'node',
