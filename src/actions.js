@@ -350,5 +350,25 @@ export const fetchDictionary = dispatch =>
     .then(msg => dispatch(msg));
 
 
-export const fetchVersionInfo = () =>
-  fetchWithCreds({ path: `${apiPath}_version`, method: 'GET', useCache: true });
+export const fetchVersionInfo = dispatch =>
+  fetchWithCreds({
+    path: `${apiPath}_version`,
+    method: 'GET',
+    useCache: true,
+  })
+    .then(
+      ({ status, data }) => {
+        switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_VERSION_INFO',
+            data,
+          };
+        default:
+          return {
+            type: 'FETCH_ERROR',
+            error: data,
+          };
+        }
+      },
+    ).then(msg => dispatch(msg));

@@ -17,9 +17,15 @@ export const setPathRelatedToSecondHighlightingNode = pathRelatedToSecondHighlig
   pathRelatedToSecondHighlightingNode,
 });
 
-export const setDataModelStructure = dataModelStructure => ({
+export const setDataModelStructure = (
+  dataModelStructure,
+  dataModelStructureRelatedNodeIDs,
+  routesBetweenStartEndNodes,
+) => ({
   type: 'GRAPH_UPDATE_DATA_MODEL_STRUCTURE',
   dataModelStructure,
+  dataModelStructureRelatedNodeIDs,
+  routesBetweenStartEndNodes,
 });
 
 export const setRelatedNodeIDs = relatedNodeIDs => ({
