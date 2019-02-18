@@ -50,7 +50,7 @@
           "name": "Explore Data",
           "icon": "data-explore",
           "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
-          "link": "/files",
+          "link": "/explorer",
           "label": "Explore data"
         },
         {
@@ -80,7 +80,7 @@
         },
         {
           "icon": "exploration",
-          "link": "/files",
+          "link": "/explorer",
           "color": "#a2a2a2",
           "name": "Exploration"
         },
@@ -137,40 +137,16 @@
     "filters": {
       "tabs": [
         {
-          "title": "Family History",
-          "fields": [
-            "diabetes",
-            "hypertension",
-            "cerebrovascular_disease",
-            "chronic_respiratory_disease",
-            "coronary_artery_disease",
-            "asthma",
-            "cabg_presence",
-            "copd",
-            "emphysema",
-            "heart_failure",
-            "myocardial_infarction",
-            "stroke",
-            "hypertension_meds"
-          ]
-        },
-        {
-          "title": "Diagnosis",
-          "fields": [
-            "diastolic_blood_pressure",
-            "systolic_blood_pressure"
-          ]
-        },
-        {
           "title": "Case",
-          "fields": [
-            "project_id",
-            "consent_codes",
-            "race",
-            "ethnicity",
+          "fields":[
             "gender",
-            "bmi",
-            "age_at_index"
+            "race",
+            "ethnicity"
+          ]
+        }, {
+          "title": "Projects",
+          "fields": [
+            "project_id"
           ]
         }
       ]
@@ -179,14 +155,9 @@
     "graphqlField": "case",
     "index": "",
     "table": {
-      "dropdowns": {
-        "download": {
-          "title": "Download"
-        }
-      },
       "buttons": [
         {
-          "enabled": true,
+          "enabled": false,
           "type": "data",
           "title": "Download Clinical",
           "leftIcon": "user",
@@ -202,13 +173,6 @@
           "rightIcon": "download",
           "fileName": "manifest.json",
           "dropdownId": "download"
-        },
-        {
-          "enabled": true,
-          "type": "export",
-          "title": "Export to Terra",
-          "rightIcon": "external-link",
-          "leftIcon": "planet"
         }
       ]
     }
