@@ -114,9 +114,11 @@ export const downloadMultiTemplate = (
     });
   })).then(() => {
     const time = new Date();
-    const startingNodeName = 'project';
-    let readmeContent = `The following TSV templates were downloaded from ${appname} on ${time.toLocaleDateString()} ${time.toLocaleTimeString()}. The following are all possible paths from ${startingNodeName} node to ${clickingNodeName} using data dictionary version ${dictionaryVersion}. The downloaded ${format} files need to be submitted in the order shown in the chosen path(s) below.\n`;
-    readmeContent = readmeContent.concat(allRoutes.map(nodeIDsInRoute => nodeIDsInRoute.join(',')).join('\n'));
+    const startingNodeName = 'Project';
+    let readmeContent = `The following ${format.toUpperCase()} templates were downloaded from ${appname} on ${time.toLocaleDateString()} ${time.toLocaleTimeString()}. The following are all possible paths from "${startingNodeName}" node to "${clickingNodeName}" using data dictionary version ${dictionaryVersion}. The downloaded ${format.toUpperCase()} files need to be submitted in the order shown in the chosen path(s) below:\n`;
+    readmeContent = readmeContent.concat(
+      allRoutes.map((nodeIDsInRoute, routeIndex) => `${routeIndex + 1}. ${nodeIDsInRoute.join(',')}`).join('\n'),
+    );
     zip.file('README.txt', readmeContent);
     zip.generateAsync({ type: 'blob' })
       .then((content) => {

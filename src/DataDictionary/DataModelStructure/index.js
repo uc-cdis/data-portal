@@ -9,7 +9,7 @@ const ReduxDataModelStructure = (() => {
     overlayPropertyHidden: state.ddgraph.overlayPropertyHidden,
     relatedNodeIDs: state.ddgraph.dataModelStructureRelatedNodeIDs,
     allRoutes: state.ddgraph.dataModelStructureAllRoutesBetween,
-    clickingNodeName: state.ddgraph.highlightingNode ? state.ddgraph.highlightingNode.name : '',
+    clickingNodeName: state.ddgraph.highlightingNode ? state.ddgraph.highlightingNode.label : '',
     dictionaryVersion: state.versionInfo.dictionaryVersion,
   });
 
