@@ -30,8 +30,16 @@ const ReduxGraphCalculator = (() => {
       dispatch(setSecondHighlightingNodeCandidateIDs(secondHighlightingNodeCandidateIDs)),
     onPathRelatedToSecondHighlightingNodeCalculated: pathRelatedToSecondHighlightingNode =>
       dispatch(setPathRelatedToSecondHighlightingNode(pathRelatedToSecondHighlightingNode)),
-    onDataModelStructureCalculated: dataModelStructure =>
-      dispatch(setDataModelStructure(dataModelStructure)),
+    onDataModelStructureCalculated: (
+      dataModelStructure,
+      dataModelStructureRelatedNodeIDs,
+      routesBetweenStartEndNodes,
+    ) =>
+      dispatch(setDataModelStructure(
+        dataModelStructure,
+        dataModelStructureRelatedNodeIDs,
+        routesBetweenStartEndNodes,
+      )),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(GraphCalculator);

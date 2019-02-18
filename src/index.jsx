@@ -31,7 +31,6 @@ import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
 import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
-import Footer from './components/layout/Footer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl } from './localconf';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
@@ -57,16 +56,7 @@ async function init() {
     [
       store.dispatch(fetchSchema),
       store.dispatch(fetchDictionary),
-      fetchVersionInfo().then(({ status, data }) => {
-        if (status === 200) {
-          Object.assign(Footer.defaultProps,
-            {
-              dictionaryVersion: data.dictionary.version || 'unknown',
-              apiVersion: data.version || 'unknown',
-            },
-          );
-        }
-      }),
+      store.dispatch(fetchVersionInfo),
     ],
   );
   // FontAwesome icons
