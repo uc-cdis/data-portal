@@ -45,6 +45,12 @@ describe('DataModelStructure', () => {
   const overlayFunc = jest.fn();
   const resetFunc = jest.fn();
   const downloadMultiTemplateFunc = jest.fn();
+  const allRoutes = [
+    ['a', 'b', 'c', 'e'],
+    ['a', 'b', 'd', 'e'],
+  ];
+  const clickingNodeName = 'e';
+  const dictionaryVersion = '1';
   const wrapper = mount(
     <DataModelStructure
       dataModelStructure={dataModelStructure}
@@ -55,6 +61,10 @@ describe('DataModelStructure', () => {
       onResetGraphCanvas={resetFunc}
       downloadMultiTemplate={downloadMultiTemplateFunc}
       excludedNodesForTemplates={['a']}
+      relatedNodeIDs={['a', 'b', 'c', 'd', 'e']}
+      allRoutes={allRoutes}
+      clickingNodeName={clickingNodeName}
+      dictionaryVersion={dictionaryVersion}
     />,
   );
 
@@ -91,13 +101,20 @@ describe('DataModelStructure', () => {
     expect(downloadMultiTemplateFunc.mock.calls.length).toBe(1);
     const expectedFormatArg = 'tsv';
     const expectedNodesToDownloadArg = {
-      b: '1_b_template.tsv',
-      c: '2-1_c_template.tsv',
-      d: '2-2_d_template.tsv',
-      e: '3_e_template.tsv',
+      b: 'b-template.tsv',
+      c: 'c-template.tsv',
+      d: 'd-template.tsv',
+      e: 'e-template.tsv',
     };
+    const expectedRoutes = [
+      ['b', 'c', 'e'],
+      ['b', 'd', 'e'],
+    ];
     expect(downloadMultiTemplateFunc.mock.calls[0][0]).toBe(expectedFormatArg);
     expect(downloadMultiTemplateFunc.mock.calls[0][1]).toEqual(expectedNodesToDownloadArg);
+    expect(downloadMultiTemplateFunc.mock.calls[0][2]).toEqual(expectedRoutes);
+    expect(downloadMultiTemplateFunc.mock.calls[0][3]).toEqual(clickingNodeName);
+    expect(downloadMultiTemplateFunc.mock.calls[0][4]).toEqual(dictionaryVersion);
   });
 
   it('cannot download templates if selected nodes are all excluded', () => {

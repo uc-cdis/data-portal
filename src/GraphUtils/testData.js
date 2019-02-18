@@ -174,40 +174,46 @@ export const testGraph1 = {
     { source: 'B', target: 'A' },
     { source: 'E', target: 'B' },
   ],
-  expectedDataModelStructure: [
-    {
-      nodeID: 'A',
-      nodeIDsBefore: [],
-      linksBefore: [],
-      category: 't1',
-    },
-    {
-      nodeID: 'E',
-      nodeIDsBefore: ['B', 'C'],
-      linksBefore: [
-        { source: 'E', target: 'B' },
-        { source: 'E', target: 'C' },
-        { source: 'B', target: 'A' },
-        { source: 'C', target: 'A' },
-      ],
-      category: 't3',
-    },
-    {
-      nodeID: 'G',
-      nodeIDsBefore: [],
-      linksBefore: [
-        { source: 'G', target: 'E' },
-      ],
-      category: 't4',
-    },
-    {
-      nodeID: 'I',
-      nodeIDsBefore: [],
-      linksBefore: [
-        { source: 'I', target: 'G' },
-      ],
-      category: 't5',
-    },
-  ],
+  expectedDataModelStructure: {
+    routesBetweenStartEndNodes: [
+      ['A', 'B', 'E', 'G', 'I'],
+      ['A', 'C', 'E', 'G', 'I'],
+    ],
+    dataModelStructure: [
+      {
+        nodeID: 'A',
+        nodeIDsBefore: [],
+        linksBefore: [],
+        category: 't1',
+      },
+      {
+        nodeID: 'E',
+        nodeIDsBefore: ['B', 'C'],
+        linksBefore: [
+          { source: 'E', target: 'B' },
+          { source: 'E', target: 'C' },
+          { source: 'B', target: 'A' },
+          { source: 'C', target: 'A' },
+        ],
+        category: 't3',
+      },
+      {
+        nodeID: 'G',
+        nodeIDsBefore: [],
+        linksBefore: [
+          { source: 'G', target: 'E' },
+        ],
+        category: 't4',
+      },
+      {
+        nodeID: 'I',
+        nodeIDsBefore: [],
+        linksBefore: [
+          { source: 'I', target: 'G' },
+        ],
+        category: 't5',
+      },
+    ],
+  },
 };
 

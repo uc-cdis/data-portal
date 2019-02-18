@@ -13,6 +13,7 @@ import {
   sortNodesByTopology,
   getSingleEndDescendentNodeID,
   getNodesAndLinksSummaryBetweenNodesInSubgraph,
+  getAllRoutesBetweenTwoNodes,
 } from './graphStructureHelper.js';
 import { getCategoryColor } from '../../NodeCategories/helper';
 
@@ -222,7 +223,9 @@ export const calculatePathRelatedToSecondHighlightingNode = (
  *           of neighbor nodes (summary description means how many nodes and links between)
  *    step.4.1 (optional): if there isn't a single descendent node, get summary description
  *           for all of the rest nodes
- *    step.5: return final data model structure
+ *    step.5: if there is a single descendent node, get all routes between this node and
+ *           the starting Node
+ *    step.6: return final data model structure
  */
 export const calculateDataModelStructure = (
   startingNode,
@@ -282,14 +285,26 @@ export const calculateDataModelStructure = (
     });
   }
 
+  let routesBetweenStartEndNodes = [];
   if (singleDescendentNodeID) {
     resultStructure.push({
       nodeID: singleDescendentNodeID,
       nodeIDsBefore: [],
       linksBefore: [],
     });
-  } else { // step.4.1 (optional)
-    // summary for all rest descendent nodes after last critical node
+    // step.5 get all routes between the starting node and this single descendent node
+    routesBetweenStartEndNodes = getAllRoutesBetweenTwoNodes(
+      startingNodeID,
+      singleDescendentNodeID,
+      subgraphNodeIDs,
+      subgraphEdges,
+      wholeGraphNodes,
+    );
+  } else {
+    // step.4.1 (optional)
+    // Summary for all rest descendent nodes after last critical node
+    // (normally we won't need this step, because there should be only one single last
+    // descendent node (root note) "program", just in case that more than one appear in graph)
     const lastCriticalNodeID = resultCriticalNodeIDs[resultCriticalNodeIDs.length - 1];
     const nodeIDsBeforeNode = getAllChildrenNodeIDs(
       lastCriticalNodeID,
@@ -304,9 +319,23 @@ export const calculateDataModelStructure = (
       nodeIDsBefore: nodeIDsBeforeNode,
       linksBefore: linksBeforeNode,
     });
+
+    // step.5.1 (optional)
+    // Get all routes between the starting node and the all rest descendent nodes
+    // (normally we won't need this step, because there should be only one single last
+    // descendent node (root note) "program", just in case that more than one appear in graph)
+    nodeIDsBeforeNode.forEach((nid) => {
+      routesBetweenStartEndNodes = routesBetweenStartEndNodes.concat(getAllRoutesBetweenTwoNodes(
+        startingNodeID,
+        nid,
+        subgraphNodeIDs,
+        subgraphEdges,
+        wholeGraphNodes,
+      ));
+    });
   }
 
-  // step.5
+  // step.6
   resultStructure = resultStructure.map((entry) => {
     const { nodeID, nodeIDsBefore, linksBefore } = entry;
     const category = wholeGraphNodes.find(n => n.id === nodeID).type;
@@ -317,5 +346,8 @@ export const calculateDataModelStructure = (
       category,
     };
   }).reverse();
-  return resultStructure;
+  return {
+    dataModelStructure: resultStructure,
+    routesBetweenStartEndNodes,
+  };
 };

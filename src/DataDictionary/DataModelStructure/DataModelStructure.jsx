@@ -4,6 +4,7 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { getCategoryIconSVG } from '../NodeCategories/helper';
 import { downloadMultiTemplate } from '../utils';
+import { intersection } from '../../utils';
 import './DataModelStructure.css';
 
 class DataModelStructure extends React.Component {
@@ -17,48 +18,31 @@ class DataModelStructure extends React.Component {
     this.props.onSetOverlayPropertyTableHidden(!this.props.overlayPropertyHidden);
   };
 
-  excludeUnwantedNodes = nodes => nodes
-    .filter(nid => !this.props.excludedNodesForTemplates.includes(nid));
-
   downloadTemplatesEnabled = () => {
-    const nodeIDs = this.props.dataModelStructure.reduce((acc, cur) => {
-      const { nodeID, nodeIDsBefore } = cur;
-      acc.push(nodeID);
-      nodeIDsBefore.forEach(nid => acc.push(nid));
-      return acc;
-    }, []);
-    return this.excludeUnwantedNodes(nodeIDs).length > 0;
-  };
+    if (this.props.relatedNodeIDs.length > this.props.excludedNodesForTemplates) return true;
+    const intersectionNodeIDs = intersection(
+      this.props.relatedNodeIDs,
+      this.props.excludedNodesForTemplates,
+    );
+    return intersectionNodeIDs.length !== this.props.relatedNodeIDs.length;
+  }
 
   handleDownloadAllTemplates = (format) => {
     const nodesToDownload = {};
-    let counter = 1;
-
-    // Iterate {nodeID, nodeIDsBefore} inside dataModelStructure to get required nodes to download.
-    // Note that entries in `dataModelStructure` are from root (program) to leaves (bottom),
-    // and nodes in `nodeIDsBefore` are also from top to bottom.
-    // For details about how to calculate dataModelStructure, please
-    // see GraphCalculator/graphStructureHelper.js/calculateDataModelStructure
-    this.props.dataModelStructure.forEach((entry) => {
-      const { nodeID, nodeIDsBefore } = entry;
-      const nodeIDsBeforeForDownload = this.excludeUnwantedNodes(nodeIDsBefore);
-      if (nodeIDsBeforeForDownload.length > 0) {
-        let innerCount = 1;
-        nodeIDsBeforeForDownload.forEach((nid) => {
-          if (nid in nodesToDownload) return;
-          if (nodeIDsBeforeForDownload.length > 1) {
-            nodesToDownload[nid] = `${counter}-${innerCount}_${nid}_template.${format}`;
-            innerCount += 1;
-          } else nodesToDownload[nid] = `${counter}_${nid}_template.${format}`;
-        });
-        counter += 1;
-      }
-      if (!this.props.excludedNodesForTemplates.includes(nodeID)) {
-        nodesToDownload[nodeID] = `${counter}_${nodeID}_template.${format}`;
-        counter += 1;
-      }
-    });
-    this.props.downloadMultiTemplate(format, nodesToDownload);
+    this.props.relatedNodeIDs
+      .filter(nid => !this.props.excludedNodesForTemplates.includes(nid))
+      .forEach((nid) => {
+        nodesToDownload[nid] = `${nid}-template.${format}`;
+      }, []);
+    const allRoutes = this.props.allRoutes.map(nodeIDsInRoute =>
+      nodeIDsInRoute.filter(nid => !this.props.excludedNodesForTemplates.includes(nid)));
+    this.props.downloadMultiTemplate(
+      format,
+      nodesToDownload,
+      allRoutes,
+      this.props.clickingNodeName,
+      this.props.dictionaryVersion,
+    );
   };
 
   render() {
@@ -116,7 +100,7 @@ class DataModelStructure extends React.Component {
                   <Dropdown
                     className='data-model-structure__template-download-dropdown'
                   >
-                    <Dropdown.Button>Download Templates</Dropdown.Button>
+                    <Dropdown.Button>Download templates</Dropdown.Button>
                     <Dropdown.Menu>
                       <Dropdown.Item
                         rightIcon='download'
@@ -151,6 +135,10 @@ DataModelStructure.propTypes = {
   overlayPropertyHidden: PropTypes.bool,
   downloadMultiTemplate: PropTypes.func,
   excludedNodesForTemplates: PropTypes.arrayOf(PropTypes.string),
+  relatedNodeIDs: PropTypes.arrayOf(PropTypes.string),
+  allRoutes: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  clickingNodeName: PropTypes.string,
+  dictionaryVersion: PropTypes.string,
 };
 
 DataModelStructure.defaultProps = {
@@ -161,7 +149,11 @@ DataModelStructure.defaultProps = {
   onResetGraphCanvas: () => {},
   overlayPropertyHidden: true,
   downloadMultiTemplate,
-  excludedNodesForTemplates: ['project', 'program'],
+  excludedNodesForTemplates: ['program', 'project'],
+  relatedNodeIDs: [],
+  allRoutes: [],
+  clickingNodeName: '',
+  dictionaryVersion: 'Unknown',
 };
 
 export default DataModelStructure;

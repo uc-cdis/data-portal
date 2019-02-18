@@ -387,3 +387,29 @@ export const getNodesAndLinksSummaryBetweenNodesInSubgraph = (
     links: betweenLinks,
   };
 };
+
+export const getAllRoutesBetweenTwoNodes = (
+  startingNodeID,
+  endingNodeID,
+  subgraphNodeIDs,
+  subgraphEdges,
+  wholeGraphNodes,
+) => {
+  const resultRoutes = [];
+  const takeOneStep = (curID, curPath) => {
+    if (curID === endingNodeID) {
+      curPath.reverse(); // we actually want route from top to bottom
+      resultRoutes.push(curPath);
+      return;
+    }
+    const curNode = wholeGraphNodes.find(n => n.id === curID);
+    curNode.outLinks.forEach((oid) => {
+      if (!subgraphNodeIDs.includes(oid)) return;
+      if (!subgraphEdges.find(e => e.target === oid && e.source === curID)) return;
+      takeOneStep(oid, curPath.concat(oid));
+    });
+  };
+  takeOneStep(startingNodeID, [startingNodeID]);
+  return resultRoutes;
+};
+

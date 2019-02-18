@@ -92,6 +92,8 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     return {
       ...state,
       dataModelStructure: action.dataModelStructure,
+      dataModelStructureRelatedNodeIDs: action.dataModelStructureRelatedNodeIDs,
+      dataModelStructureAllRoutesBetween: action.routesBetweenStartEndNodes,
     };
   }
   case 'GRAPH_SET_OVERLAY_PROPERTY_TABLE_HIDDEN': {

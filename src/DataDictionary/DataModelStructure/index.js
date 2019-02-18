@@ -7,6 +7,10 @@ const ReduxDataModelStructure = (() => {
     dataModelStructure: state.ddgraph.dataModelStructure,
     isGraphView: state.ddgraph.isGraphView,
     overlayPropertyHidden: state.ddgraph.overlayPropertyHidden,
+    relatedNodeIDs: state.ddgraph.dataModelStructureRelatedNodeIDs,
+    allRoutes: state.ddgraph.dataModelStructureAllRoutesBetween,
+    clickingNodeName: state.ddgraph.highlightingNode ? state.ddgraph.highlightingNode.name : '',
+    dictionaryVersion: state.versionInfo.dictionaryVersion,
   });
 
   const mapDispatchToProps = dispatch => ({

@@ -1,7 +1,7 @@
 import FileSaver from 'file-saver';
 import PropTypes from 'prop-types';
 import JSZip from 'jszip';
-import { dataDictionaryTemplatePath } from '../localconf';
+import { dataDictionaryTemplatePath, appname } from '../localconf';
 
 const concatTwoWords = (w1, w2) => {
   if (w1.length === 0) return w2;
@@ -88,7 +88,13 @@ export const downloadTemplate = (format, nodeId) => {
   }
 };
 
-export const downloadMultiTemplate = (format, nodesToDownload) => {
+export const downloadMultiTemplate = (
+  format,
+  nodesToDownload,
+  allRoutes,
+  clickingNodeName,
+  dictionaryVersion,
+) => {
   if (format !== 'tsv' && format !== 'json') {
     return;
   }
@@ -107,6 +113,11 @@ export const downloadMultiTemplate = (format, nodesToDownload) => {
       throw new Error(`cannot download template for node "${nodeID}"`);
     });
   })).then(() => {
+    const time = new Date();
+    const startingNodeName = 'project';
+    let readmeContent = `The following TSV templates were downloaded from ${appname} on ${time.toLocaleDateString()} ${time.toLocaleTimeString()}. The following are all possible paths from ${startingNodeName} node to ${clickingNodeName} using data dictionary version ${dictionaryVersion}. The downloaded ${format} files need to be submitted in the order shown in the chosen path(s) below.\n`;
+    readmeContent = readmeContent.concat(allRoutes.map(nodeIDsInRoute => nodeIDsInRoute.join(',')).join('\n'));
+    zip.file('README.txt', readmeContent);
     zip.generateAsync({ type: 'blob' })
       .then((content) => {
         FileSaver.saveAs(content, `templates-${format}.zip`);
