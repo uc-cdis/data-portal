@@ -51,7 +51,7 @@
           "body": "Use our selected tool to filter out the data you need.",
           "link": "/query",
           "label": "Query data"
-        },
+        }
       ]
     },
     "navigation": {
