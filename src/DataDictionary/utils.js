@@ -74,6 +74,19 @@ export const getType = (property) => {
           return flatList;
         }, [],
       );
+  } else if ('anyOf' in property) {
+    // anyOf has nested type list
+    type = property.anyOf
+      .map(item => getType(item))
+      .reduce(
+        (flatList, it) => {
+          if (Array.isArray(it)) {
+            return flatList.concat(it);
+          }
+          flatList.push(it);
+          return flatList;
+        }, [],
+      );
   } else {
     type = 'UNDEFINED';
   }
