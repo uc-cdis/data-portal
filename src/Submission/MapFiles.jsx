@@ -12,6 +12,8 @@ import CloseIcon from '../img/icons/cross.svg';
 import { humanFileSize } from '../utils.js';
 import './MapFiles.less';
 
+const SET_KEY = "did";
+
 class MapFiles extends React.Component {
   constructor(props) {
     const params = queryString.parse(window.location.search);
@@ -43,7 +45,8 @@ class MapFiles extends React.Component {
   }
 
   onCompletion = () => {
-    const groupedFiles = Object.values(this.state.selectedFilesByGroup).map(set => Array.from(set));
+    const groupedFiles = Object.keys(this.state.selectedFilesByGroup).map(index =>
+      [...Object.values(this.state.selectedFilesByGroup[index])]);
     const flatFiles = groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr));
     this.props.mapSelectedFiles(flatFiles);
     this.props.history.push('/submission/map');
@@ -63,14 +66,15 @@ class MapFiles extends React.Component {
 
   setMapValue = (map, index, value) => {
     const tempMap = map;
-    tempMap[index] = new Set(value);
+    tempMap[index] = value;
     return tempMap;
   }
 
   addToMap = (map, index, file) => {
+    let setKey = file[SET_KEY];
     const tempMap = map;
     if (tempMap[index]) {
-      tempMap[index].add(file);
+      tempMap[index][setKey] = file;
     }
     return tempMap;
   }
@@ -78,22 +82,35 @@ class MapFiles extends React.Component {
   removeFromMap = (map, index, file) => {
     const tempMap = map;
     if (tempMap[index]) {
-      tempMap[index].delete(file);
+      delete tempMap[index][file[SET_KEY]];
     }
     return tempMap;
   }
 
+  createSet = (key, values) => {
+    let set = {};
+    values.forEach(value => {
+      let setKey = value[key];
+      set[setKey] = value;
+    });
+    return set;
+  }
+
+  getSetSize = (set) => {
+    return Object.keys(set).length;
+  }
+
   isSelectAll = (index) => {
     if (this.state.selectedFilesByGroup[index]) {
-      return this.state.allFilesByGroup[index].size === this.state.selectedFilesByGroup[index].size
-        && this.state.selectedFilesByGroup[index].size > 0;
+      return this.getSetSize(this.state.allFilesByGroup[index]) === this.getSetSize(this.state.selectedFilesByGroup[index])
+        && this.getSetSize(this.state.selectedFilesByGroup[index]) > 0;
     }
     return false;
   }
 
   isSelected = (index, file) => {
     if (this.state.selectedFilesByGroup[index]) {
-      return this.state.selectedFilesByGroup[index].has(file);
+      return !!this.state.selectedFilesByGroup[index][file[SET_KEY]];
     }
     return false;
   }
@@ -101,7 +118,7 @@ class MapFiles extends React.Component {
   isMapEmpty = (map) => {
     /* eslint-disable no-restricted-syntax */
     for (const key in map) {
-      if (map[key] && map[key].size > 0) {
+      if (map[key] && this.getSetSize(map[key]) > 0) {
         return false;
       }
     }
@@ -115,8 +132,8 @@ class MapFiles extends React.Component {
     let index = 0;
     this.state.sortedDates.forEach((date) => {
       const filesToAdd = this.state.filesByDate[date].filter(file => this.isFileReady(file));
-      unselectedMap[index] = new Set(filesToAdd);
-      selectedMap[index] = new Set();
+      unselectedMap[index] = this.createSet(SET_KEY, filesToAdd);
+      selectedMap[index] = {};
       index += 1;
     });
     this.setState({ allFilesByGroup: unselectedMap, selectedFilesByGroup: selectedMap });
@@ -151,9 +168,9 @@ class MapFiles extends React.Component {
 
   toggleSelectAll = (index) => {
     if (this.state.selectedFilesByGroup[index]) {
-      if (this.state.selectedFilesByGroup[index].size === this.state.allFilesByGroup[index].size) {
+      if (this.getSetSize(this.state.selectedFilesByGroup[index]) === this.getSetSize(this.state.allFilesByGroup[index])) {
         this.setState({
-          selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, new Set()),
+          selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, {}),
         });
       } else {
         const newFiles = this.state.allFilesByGroup[index];
