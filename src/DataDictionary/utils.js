@@ -1,5 +1,7 @@
+import FileSaver from 'file-saver';
 import PropTypes from 'prop-types';
-import { dataDictionaryTemplatePath } from '../localconf';
+import JSZip from 'jszip';
+import { dataDictionaryTemplatePath, appname } from '../localconf';
 
 const concatTwoWords = (w1, w2) => {
   if (w1.length === 0) return w2;
@@ -72,6 +74,19 @@ export const getType = (property) => {
           return flatList;
         }, [],
       );
+  } else if ('anyOf' in property) {
+    // anyOf has nested type list
+    type = property.anyOf
+      .map(item => getType(item))
+      .reduce(
+        (flatList, it) => {
+          if (Array.isArray(it)) {
+            return flatList.concat(it);
+          }
+          flatList.push(it);
+          return flatList;
+        }, [],
+      );
   } else {
     type = 'UNDEFINED';
   }
@@ -84,6 +99,45 @@ export const downloadTemplate = (format, nodeId) => {
     const templatePath = `${dataDictionaryTemplatePath}${nodeId}?format=${format}`;
     window.open(templatePath);
   }
+};
+
+export const downloadMultiTemplate = (
+  format,
+  nodesToDownload,
+  allRoutes,
+  clickingNodeName,
+  dictionaryVersion,
+) => {
+  if (format !== 'tsv' && format !== 'json') {
+    return;
+  }
+  const zip = new JSZip();
+  Promise.all(Object.keys(nodesToDownload).map((nodeID) => {
+    const fileUrl = `${dataDictionaryTemplatePath}${nodeID}?format=${format}`;
+    const saveAsFileName = nodesToDownload[nodeID];
+    return fetch(fileUrl).then((response) => {
+      if (response.ok) {
+        return response.text();
+      }
+      throw new Error(`cannot download template for node "${nodeID}"`);
+    }).then((responseText) => {
+      zip.file(saveAsFileName, responseText);
+    }).catch(() => {
+      throw new Error(`cannot download template for node "${nodeID}"`);
+    });
+  })).then(() => {
+    const time = new Date();
+    const startingNodeName = 'Project';
+    let readmeContent = `The following ${format.toUpperCase()} templates were downloaded from ${appname} on ${time.toLocaleDateString()} ${time.toLocaleTimeString()}. The following are all possible paths from "${startingNodeName}" node to "${clickingNodeName}" using data dictionary version ${dictionaryVersion}. The downloaded ${format.toUpperCase()} files need to be submitted in the order shown in the chosen path(s) below:\n`;
+    readmeContent = readmeContent.concat(
+      allRoutes.map((nodeIDsInRoute, routeIndex) => `${routeIndex + 1}. ${nodeIDsInRoute.join(',')}`).join('\n'),
+    );
+    zip.file('README.txt', readmeContent);
+    zip.generateAsync({ type: 'blob' })
+      .then((content) => {
+        FileSaver.saveAs(content, `templates-${format}.zip`);
+      });
+  });
 };
 
 export const graphStyleConfig = {
