@@ -8,6 +8,7 @@ import CheckmarkIcon from '../img/icons/status_confirm.svg';
 import InputWithIcon from '../components/InputWithIcon';
 import { GQLHelper } from '../gqlHelper';
 import environment from '../environment';
+import sessionMonitor from '../SessionMonitor';
 import './MapDataModel.less';
 
 const gqlHelper = GQLHelper.getGQLHelper();
@@ -157,6 +158,7 @@ class MapDataModel extends React.Component {
     this.setState({ submitting: true }, () => {
       const promises = [];
       chunks.forEach((chunk) => {
+        sessionMonitor.updateUserActivity();
         const promise = this.props.submitFiles(programProject[0], programProject[1], chunk)
           .then((res) => {
             this.setState(prevState => ({ chunkCounter: prevState.chunkCounter + 1 }), () => {
