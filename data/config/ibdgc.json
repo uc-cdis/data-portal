@@ -44,13 +44,6 @@
           "body": "The data are defined in a generic way by the dictionary. Please study the dictionary before you start browsing.",
           "link": "/DD",
           "label": "Learn more"
-        },
-        {
-          "name": "Access Data",
-          "icon": "data-access",
-          "body": "Use our selected tool to filter out the data you need.",
-          "link": "/query",
-          "label": "Query data"
         }
       ]
     },
@@ -68,12 +61,6 @@
           "link": "/files",
           "color": "#a2a2a2",
           "name": "Files"
-        },
-        {
-          "icon": "query",
-          "link": "/query",
-          "color": "#a2a2a2",
-          "name": "Query"
         },
         {
           "icon": "profile",
