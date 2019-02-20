@@ -28,5 +28,50 @@
       }
     ],
     "projectDetails": "boardCounts"
+  },
+   "components": {
+    "appName": "IBDGC Portal",
+    "index": {
+      "introduction": {
+        "heading": "IBD Genetics Consortium Data Commons",
+        "text": "The Inflammatory Bowel Disease Genetics Consortium Data Commons supports the management, analysis, and sharing of genetic data to support the vision and mission of the IBD genetics consortium.",
+        "link": "/submission"
+      },
+      "buttons": [
+        {
+          "name": "Define Data Field",
+          "icon": "data-field-define",
+          "body": "The data are defined in a generic way by the dictionary. Please study the dictionary before you start browsing.",
+          "link": "/DD",
+          "label": "Learn more"
+        }
+      ]
+    },
+    "navigation": {
+      "title": "IBDGC Data Commons",
+      "items": [
+        {
+          "icon": "dictionary",
+          "link": "/DD",
+          "color": "#a2a2a2",
+          "name": "Dictionary"
+        },
+        {
+          "icon": "files",
+          "link": "/files",
+          "color": "#a2a2a2",
+          "name": "Files"
+        },
+        {
+          "icon": "profile",
+          "link": "/identity",
+          "color": "#a2a2a2",
+          "name": "Profile"
+        }
+      ]
+    }
+  },
+  "featureFlags": {
+    "explorer": false
   }
 }
