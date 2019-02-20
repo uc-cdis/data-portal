@@ -41,10 +41,10 @@ describe('MapFiles', () => {
 
   it('updates a map value', () => {
     let map = {
-      field1: {'1': 'value1', '2': 'value2'},
-      field2: {'3': 'value3'},
+      field1: { 1: 'value1', 2: 'value2' },
+      field2: { 3: 'value3' },
     };
-    expect(map.field2).toEqual({'3': 'value3'});
+    expect(map.field2).toEqual({ 3: 'value3' });
     map = instance.setMapValue(map, 'field2', map.field1);
     expect(map.field2).toEqual(map.field1);
     map = instance.setMapValue(map, 'field3', map.field1);
@@ -53,24 +53,24 @@ describe('MapFiles', () => {
 
   it('adds to a map value', () => {
     let map = {
-      field1: {'1': 'value1', '2': 'value2'},
-      field2: {'3': 'value3'},
+      field1: { 1: 'value1', 2: 'value2' },
+      field2: { 3: 'value3' },
     };
-    expect(map.field1).toEqual({'1': 'value1', '2': 'value2'});
+    expect(map.field1).toEqual({ 1: 'value1', 2: 'value2' });
     map = instance.addToMap(map, 'field1', 'value4', '4');
-    expect(map.field1).toEqual({'1': 'value1', '2': 'value2', '4': 'value4'});
+    expect(map.field1).toEqual({ 1: 'value1', 2: 'value2', 4: 'value4' });
     map = instance.addToMap(map, 'field3', 'value3', '3');
     expect(map.field3).toBeUndefined();
   });
 
   it('removes from the map', () => {
     let map = {
-      field1: {'1': 'value1', '2': 'value2'},
-      field2: {'3': 'value3'},
+      field1: { 1: 'value1', 2: 'value2' },
+      field2: { 3: 'value3' },
     };
-    expect(map.field1).toEqual({'1': 'value1', '2': 'value2'});
+    expect(map.field1).toEqual({ 1: 'value1', 2: 'value2' });
     map = instance.removeFromMap(map, 'field1', '1');
-    expect(map.field1).toEqual({'2': 'value2'});
+    expect(map.field1).toEqual({ 2: 'value2' });
     map = instance.removeFromMap(map, 'field3', '2');
     expect(map.field3).toBeUndefined();
   });
@@ -78,11 +78,11 @@ describe('MapFiles', () => {
   it('returns if all files should be selected', () => {
     instance.setState({
       selectedFilesByGroup: {
-        1: {'1': 'value1', '2': 'value2'},
-        2: {'3': 'value3'},
+        1: { 1: 'value1', 2: 'value2' },
+        2: { 3: 'value3' },
       },
       allFilesByGroup: {
-        1: {'1': 'value1', '2': 'value2'},
+        1: { 1: 'value1', 2: 'value2' },
         2: { },
       },
     });
@@ -90,8 +90,8 @@ describe('MapFiles', () => {
 
     instance.setState({
       allFilesByGroup: {
-        1: {'1': 'value1', '2': 'value2'},
-        2: {'3': 'value3'},
+        1: { 1: 'value1', 2: 'value2' },
+        2: { 3: 'value3' },
       },
       selectedFilesByGroup: {
         1: { },
@@ -103,7 +103,7 @@ describe('MapFiles', () => {
     instance.setState({
       allFilesByGroup: {
         1: { },
-        2: {'1': 'value1'},
+        2: { 1: 'value1' },
       },
       selectedFilesByGroup: {
         1: { },
@@ -116,12 +116,12 @@ describe('MapFiles', () => {
   it('returns if a file should be selected', () => {
     instance.setState({
       selectedFilesByGroup: {
-        1: {'1': 'value1', '2': 'value2'},
-        2: {'3': 'value3'},
+        1: { 1: 'value1', 2: 'value2' },
+        2: { 3: 'value3' },
       },
       allFilesByGroup: {
-        1: {'1': 'value1', '2': 'value2'},
-        2: {'3': 'value3', '4': 'value4'},
+        1: { 1: 'value1', 2: 'value2' },
+        2: { 3: 'value3', 4: 'value4' },
       },
     });
 
@@ -133,8 +133,8 @@ describe('MapFiles', () => {
 
   it('returns if a map is empty', () => {
     const map = {
-      field1: {'1': 'value1', '2': 'value2'},
-      field2: {'3': 'value3'},
+      field1: { 1: 'value1', 2: 'value2' },
+      field2: { 3: 'value3' },
     };
     expect(instance.isMapEmpty(map)).toEqual(false);
     expect(instance.isMapEmpty({})).toEqual(true);
@@ -142,8 +142,8 @@ describe('MapFiles', () => {
 
 
   it('toggles a checkbox', () => {
-    let groupedData = {};
-    testGroupedData['09/11/18'].forEach(file => {
+    const groupedData = {};
+    testGroupedData['09/11/18'].forEach((file) => {
       groupedData[file.did] = file;
     });
 
@@ -173,33 +173,33 @@ describe('MapFiles', () => {
         0: { },
       },
       allFilesByGroup: {
-        0: {'1': 'value1', '2': 'value2', '3': 'value3', '4': 'value4'},
+        0: { 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' },
       },
     });
 
     instance.toggleSelectAll('0');
     expect(instance.state.selectedFilesByGroup['0'])
-      .toEqual({'1': 'value1', '2': 'value2', '3': 'value3', '4': 'value4'});
+      .toEqual({ 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' });
 
     instance.setState({
       selectedFilesByGroup: {
-        0: {'1': 'value1', '2': 'value2'},
+        0: { 1: 'value1', 2: 'value2' },
       },
       allFilesByGroup: {
-        0: {'1': 'value1', '2': 'value2', '3': 'value3', '4': 'value4'},
+        0: { 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' },
       },
     });
 
     instance.toggleSelectAll('0');
     expect(instance.state.selectedFilesByGroup['0'])
-      .toEqual({'1': 'value1', '2': 'value2', '3': 'value3', '4': 'value4'});
+      .toEqual({ 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' });
 
     instance.setState({
       selectedFilesByGroup: {
-        0: {'1': 'value1', '2': 'value2', '3': 'value3', '4': 'value4'},
+        0: { 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' },
       },
       unselectedFilesByGroup: {
-        0: {'1': 'value1', '2': 'value2', '3': 'value3', '4': 'value4'},
+        0: { 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' },
       },
     });
 

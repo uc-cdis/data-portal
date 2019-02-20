@@ -14,7 +14,7 @@ import CloseIcon from '../img/icons/cross.svg';
 import { humanFileSize } from '../utils.js';
 import './MapFiles.less';
 
-const SET_KEY = "did";
+const SET_KEY = 'did';
 
 class MapFiles extends React.Component {
   constructor(props) {
@@ -47,12 +47,6 @@ class MapFiles extends React.Component {
     this.setState({ isScrolling });
   }
 
-  flattenFiles = files => {
-    const groupedFiles = Object.keys(files).map(index =>
-      [...Object.values(files[index])]);
-    return groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr));
-  }
-
   onCompletion = () => {
     const flatFiles = this.flattenFiles(this.state.selectedFilesByGroup);
     this.props.mapSelectedFiles(flatFiles);
@@ -65,6 +59,8 @@ class MapFiles extends React.Component {
       filesByDate: this.groupUnmappedFiles(),
     }, () => this.createFileMapByGroup());
   }
+
+  getSetSize = set => Object.keys(set).length
 
   getTableHeaderText = (files) => {
     const date = moment(files[0].created_date).format('MM/DD/YY');
@@ -94,21 +90,24 @@ class MapFiles extends React.Component {
   }
 
   createSet = (key, values) => {
-    let set = {};
-    values.forEach(value => {
-      let setKey = value[key];
+    const set = {};
+    values.forEach((value) => {
+      const setKey = value[key];
       set[setKey] = value;
     });
     return set;
   }
 
-  getSetSize = (set) => {
-    return Object.keys(set).length;
+  flattenFiles = (files) => {
+    const groupedFiles = Object.keys(files).map(index =>
+      [...Object.values(files[index])]);
+    return groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr));
   }
 
   isSelectAll = (index) => {
     if (this.state.selectedFilesByGroup[index]) {
-      return this.getSetSize(this.state.allFilesByGroup[index]) === this.getSetSize(this.state.selectedFilesByGroup[index])
+      return this.getSetSize(this.state.allFilesByGroup[index])
+        === this.getSetSize(this.state.selectedFilesByGroup[index])
         && this.getSetSize(this.state.selectedFilesByGroup[index]) > 0;
     }
     return false;
@@ -156,8 +155,8 @@ class MapFiles extends React.Component {
       }
     });
     const sortedDates = Object.keys(groupedFiles).sort((a, b) => moment(b, 'MM/DD/YY') - moment(a, 'MM/DD/YY'));
-    let visibleGroups = {};
-    sortedDates.forEach((date, i) => visibleGroups[i] = false);
+    const visibleGroups = {};
+    sortedDates.forEach((date, i) => { visibleGroups[i] = false; });
     this.setState({ sortedDates, visibleGroups });
     return groupedFiles;
   }
@@ -176,12 +175,13 @@ class MapFiles extends React.Component {
 
   toggleSelectAll = (index) => {
     if (this.state.selectedFilesByGroup[index]) {
-      if (this.getSetSize(this.state.selectedFilesByGroup[index]) === this.getSetSize(this.state.allFilesByGroup[index])) {
+      if (this.getSetSize(this.state.selectedFilesByGroup[index])
+        === this.getSetSize(this.state.allFilesByGroup[index])) {
         this.setState({
           selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, {}),
         });
       } else {
-        const newFiles = {...this.state.allFilesByGroup[index]};
+        const newFiles = { ...this.state.allFilesByGroup[index] };
         this.setState({
           selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, newFiles),
         });
@@ -196,8 +196,8 @@ class MapFiles extends React.Component {
     window.history.replaceState(null, null, window.location.pathname);
   }
 
-  toggleGroupVisibility = index => {
-    let isVisible = this.state.visibleGroups[index];
+  toggleGroupVisibility = (index) => {
+    const isVisible = this.state.visibleGroups[index];
     this.setState({ visibleGroups: this.setMapValue(this.state.visibleGroups, index, !isVisible) });
   }
 
@@ -278,7 +278,7 @@ class MapFiles extends React.Component {
                           )}
                           cellRenderer={({ rowIndex }) => (
                             <CheckBox
-                              id={`${groupIndex-rowIndex}`}
+                              id={`${groupIndex - rowIndex}`}
                               item={files[rowIndex]}
                               isSelected={this.isSelected(groupIndex, files[rowIndex].did)}
                               onChange={() => this.toggleCheckBox(groupIndex, files[rowIndex])}
@@ -319,7 +319,7 @@ class MapFiles extends React.Component {
                                 { cellData === 'Ready' ? <StatusReadyIcon /> : null }
                                 <div className='h2-typo'>{ cellData === 'Ready' ? cellData : `${cellData}...`}</div>
                               </div>
-                            )
+                            );
                           }}
                         />
                       </Table>
