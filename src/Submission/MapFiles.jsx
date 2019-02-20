@@ -29,7 +29,6 @@ class MapFiles extends React.Component {
       sortedDates: [],
       message,
       loading: true,
-      visibleGroups: {},
     };
   }
 
@@ -155,9 +154,7 @@ class MapFiles extends React.Component {
       }
     });
     const sortedDates = Object.keys(groupedFiles).sort((a, b) => moment(b, 'MM/DD/YY') - moment(a, 'MM/DD/YY'));
-    const visibleGroups = {};
-    sortedDates.forEach((date, i) => { visibleGroups[i] = false; });
-    this.setState({ sortedDates, visibleGroups });
+    this.setState({ sortedDates });
     return groupedFiles;
   }
 
@@ -194,11 +191,6 @@ class MapFiles extends React.Component {
   closeMessage = () => {
     this.setState({ message: null });
     window.history.replaceState(null, null, window.location.pathname);
-  }
-
-  toggleGroupVisibility = (index) => {
-    const isVisible = this.state.visibleGroups[index];
-    this.setState({ visibleGroups: this.setMapValue(this.state.visibleGroups, index, !isVisible) });
   }
 
   render() {
