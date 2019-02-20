@@ -77,8 +77,7 @@ class MapFiles extends React.Component {
     return tempMap;
   }
 
-  addToMap = (map, index, file) => {
-    let setKey = file[SET_KEY];
+  addToMap = (map, index, file, setKey) => {
     const tempMap = map;
     if (tempMap[index]) {
       tempMap[index][setKey] = file;
@@ -86,10 +85,10 @@ class MapFiles extends React.Component {
     return tempMap;
   }
 
-  removeFromMap = (map, index, file) => {
+  removeFromMap = (map, index, setKey) => {
     const tempMap = map;
     if (tempMap[index]) {
-      delete tempMap[index][file[SET_KEY]];
+      delete tempMap[index][setKey];
     }
     return tempMap;
   }
@@ -115,9 +114,9 @@ class MapFiles extends React.Component {
     return false;
   }
 
-  isSelected = (index, file) => {
+  isSelected = (index, did) => {
     if (this.state.selectedFilesByGroup[index]) {
-      return !!this.state.selectedFilesByGroup[index][file[SET_KEY]];
+      return !!this.state.selectedFilesByGroup[index][did];
     }
     return false;
   }
@@ -164,13 +163,13 @@ class MapFiles extends React.Component {
   }
 
   toggleCheckBox = (index, file) => {
-    if (this.isSelected(index, file)) {
+    if (this.isSelected(index, file.did)) {
       this.setState({
-        selectedFilesByGroup: this.removeFromMap(this.state.selectedFilesByGroup, index, file),
+        selectedFilesByGroup: this.removeFromMap(this.state.selectedFilesByGroup, index, file.did),
       });
     } else if (this.isFileReady(file)) { // file status == ready, so it is selectable
       this.setState({
-        selectedFilesByGroup: this.addToMap(this.state.selectedFilesByGroup, index, file),
+        selectedFilesByGroup: this.addToMap(this.state.selectedFilesByGroup, index, file, file.did),
       });
     }
   }
@@ -281,7 +280,7 @@ class MapFiles extends React.Component {
                             <CheckBox
                               id={`${groupIndex-rowIndex}`}
                               item={files[rowIndex]}
-                              isSelected={this.isSelected(groupIndex, files[rowIndex])}
+                              isSelected={this.isSelected(groupIndex, files[rowIndex].did)}
                               onChange={() => this.toggleCheckBox(groupIndex, files[rowIndex])}
                               isEnabled={files[rowIndex].status === 'Ready'}
                               disabledText={'This file is not ready to be mapped yet.'}

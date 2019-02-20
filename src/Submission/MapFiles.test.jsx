@@ -57,57 +57,57 @@ describe('MapFiles', () => {
       field2: {'3': 'value3'},
     };
     expect(map.field1).toEqual({'1': 'value1', '2': 'value2'});
-    map = instance.addToMap(map, 'field1', 'value4');
-    expect(map.field1).toEqual({'1': 'value1', '2': 'value2', '4', });
-    map = instance.addToMap(map, 'field3', 'value3');
+    map = instance.addToMap(map, 'field1', 'value4', '4');
+    expect(map.field1).toEqual({'1': 'value1', '2': 'value2', '4': 'value4'});
+    map = instance.addToMap(map, 'field3', 'value3', '3');
     expect(map.field3).toBeUndefined();
   });
 
   it('removes from the map', () => {
     let map = {
-      field1: new Set(['value1', 'value2']),
-      field2: new Set(['value3']),
+      field1: {'1': 'value1', '2': 'value2'},
+      field2: {'3': 'value3'},
     };
-    expect(map.field1).toEqual(new Set(['value1', 'value2']));
-    map = instance.removeFromMap(map, 'field1', 'value1');
-    expect(map.field1).toEqual(new Set(['value2']));
-    map = instance.removeFromMap(map, 'field3', map.field1);
+    expect(map.field1).toEqual({'1': 'value1', '2': 'value2'});
+    map = instance.removeFromMap(map, 'field1', '1');
+    expect(map.field1).toEqual({'2': 'value2'});
+    map = instance.removeFromMap(map, 'field3', '2');
     expect(map.field3).toBeUndefined();
   });
 
   it('returns if all files should be selected', () => {
     instance.setState({
       selectedFilesByGroup: {
-        1: new Set('value1', 'value2'),
-        2: new Set('value3'),
+        1: {'1': 'value1', '2': 'value2'},
+        2: {'3': 'value3'},
       },
       allFilesByGroup: {
-        1: new Set('value1', 'value2'),
-        2: new Set(),
+        1: {'1': 'value1', '2': 'value2'},
+        2: { },
       },
     });
     expect(instance.isSelectAll('1')).toBe(true);
 
     instance.setState({
       allFilesByGroup: {
-        1: new Set('value1', 'value2'),
-        2: new Set('value3'),
+        1: {'1': 'value1', '2': 'value2'},
+        2: {'3': 'value3'},
       },
       selectedFilesByGroup: {
-        1: new Set(),
-        2: new Set(),
+        1: { },
+        2: { },
       },
     });
     expect(instance.isSelectAll('1')).toBe(false);
 
     instance.setState({
       allFilesByGroup: {
-        1: new Set(),
-        2: new Set('value1'),
+        1: { },
+        2: {'1': 'value1'},
       },
       selectedFilesByGroup: {
-        1: new Set(),
-        2: new Set(),
+        1: { },
+        2: { },
       },
     });
     expect(instance.isSelectAll('2')).toBe(false);
@@ -116,12 +116,12 @@ describe('MapFiles', () => {
   it('returns if a file should be selected', () => {
     instance.setState({
       selectedFilesByGroup: {
-        1: new Set('1', '2'),
-        2: new Set('3'),
+        1: {'1': 'value1', '2': 'value2'},
+        2: {'3': 'value3'},
       },
       allFilesByGroup: {
-        1: new Set('1', '2'),
-        2: new Set('3', '4'),
+        1: {'1': 'value1', '2': 'value2'},
+        2: {'3': 'value3', '4': 'value4'},
       },
     });
 
@@ -133,8 +133,8 @@ describe('MapFiles', () => {
 
   it('returns if a map is empty', () => {
     const map = {
-      field1: new Set(['value1', 'value2']),
-      field2: new Set(['value3']),
+      field1: {'1': 'value1', '2': 'value2'},
+      field2: {'3': 'value3'},
     };
     expect(instance.isMapEmpty(map)).toEqual(false);
     expect(instance.isMapEmpty({})).toEqual(true);
@@ -142,12 +142,17 @@ describe('MapFiles', () => {
 
 
   it('toggles a checkbox', () => {
+    let groupedData = {};
+    testGroupedData['09/11/18'].forEach(file => {
+      groupedData[file.did] = file;
+    });
+
     instance.setState({
       selectedFilesByGroup: {
-        '09/11/18': new Set(),
+        '09/11/18': { },
       },
       allFilesByGroup: {
-        '09/11/18': new Set([testGroupedData['09/11/18']]),
+        '09/11/18': groupedData,
       },
     });
 
@@ -156,51 +161,53 @@ describe('MapFiles', () => {
 
     expect(fileToToggle).toBeDefined();
     instance.toggleCheckBox(date, fileToToggle);
-    expect(instance.state.selectedFilesByGroup[date].has(fileToToggle));
+    expect(instance.state.selectedFilesByGroup[date][fileToToggle.did]);
 
     instance.toggleCheckBox(date, fileToToggle);
-    expect(!instance.state.selectedFilesByGroup[date].has(fileToToggle));
+    expect(!instance.state.selectedFilesByGroup[date][fileToToggle.did]);
   });
 
   it('toggles select all', () => {
     instance.setState({
       selectedFilesByGroup: {
-        0: new Set(),
+        0: { },
       },
       allFilesByGroup: {
-        0: new Set(['1', '2', '3', '4']),
+        0: {'1': 'value1', '2': 'value2', '3': 'value3', '4': 'value4'},
       },
     });
 
     instance.toggleSelectAll('0');
-    expect(instance.state.selectedFilesByGroup['0']).toEqual(new Set(['1', '2', '3', '4']));
+    expect(instance.state.selectedFilesByGroup['0'])
+      .toEqual({'1': 'value1', '2': 'value2', '3': 'value3', '4': 'value4'});
 
     instance.setState({
       selectedFilesByGroup: {
-        0: new Set(['1', '2']),
+        0: {'1': 'value1', '2': 'value2'},
       },
       allFilesByGroup: {
-        0: new Set(['1', '2', '3', '4']),
+        0: {'1': 'value1', '2': 'value2', '3': 'value3', '4': 'value4'},
       },
     });
 
     instance.toggleSelectAll('0');
-    expect(instance.state.selectedFilesByGroup['0']).toEqual(new Set(['1', '2', '3', '4']));
+    expect(instance.state.selectedFilesByGroup['0'])
+      .toEqual({'1': 'value1', '2': 'value2', '3': 'value3', '4': 'value4'});
 
     instance.setState({
       selectedFilesByGroup: {
-        0: new Set(['1', '2', '3', '4']),
+        0: {'1': 'value1', '2': 'value2', '3': 'value3', '4': 'value4'},
       },
       unselectedFilesByGroup: {
-        0: new Set(['1', '2', '3', '4']),
+        0: {'1': 'value1', '2': 'value2', '3': 'value3', '4': 'value4'},
       },
     });
 
     instance.toggleSelectAll('0');
-    expect(instance.state.selectedFilesByGroup['0']).toEqual(new Set());
+    expect(instance.state.selectedFilesByGroup['0']).toEqual({});
 
     instance.toggleSelectAll('3');
-    expect(instance.state.selectedFilesByGroup['0']).toEqual(new Set());
+    expect(instance.state.selectedFilesByGroup['0']).toEqual({});
   });
 
   it('returns if a file is ready to be mapped', () => {
