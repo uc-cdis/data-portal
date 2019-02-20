@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import moment from 'moment';
+import { AutoSizer, Column, Table } from 'react-virtualized';
+import 'react-virtualized/styles.css'; // only needs to be imported once
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
@@ -27,6 +29,7 @@ class MapFiles extends React.Component {
       sortedDates: [],
       message,
       loading: true,
+      visibleGroups: {},
     };
   }
 
@@ -44,10 +47,14 @@ class MapFiles extends React.Component {
     this.setState({ isScrolling });
   }
 
+  flattenFiles = files => {
+    const groupedFiles = Object.keys(files).map(index =>
+      [...Object.values(files[index])]);
+    return groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr));
+  }
+
   onCompletion = () => {
-    const groupedFiles = Object.keys(this.state.selectedFilesByGroup).map(index =>
-      [...Object.values(this.state.selectedFilesByGroup[index])]);
-    const flatFiles = groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr));
+    const flatFiles = this.flattenFiles(this.state.selectedFilesByGroup);
     this.props.mapSelectedFiles(flatFiles);
     this.props.history.push('/submission/map');
   }
@@ -150,7 +157,9 @@ class MapFiles extends React.Component {
       }
     });
     const sortedDates = Object.keys(groupedFiles).sort((a, b) => moment(b, 'MM/DD/YY') - moment(a, 'MM/DD/YY'));
-    this.setState({ sortedDates });
+    let visibleGroups = {};
+    sortedDates.forEach((date, i) => visibleGroups[i] = false);
+    this.setState({ sortedDates, visibleGroups });
     return groupedFiles;
   }
 
@@ -173,7 +182,7 @@ class MapFiles extends React.Component {
           selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, {}),
         });
       } else {
-        const newFiles = this.state.allFilesByGroup[index];
+        const newFiles = {...this.state.allFilesByGroup[index]};
         this.setState({
           selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, newFiles),
         });
@@ -188,11 +197,16 @@ class MapFiles extends React.Component {
     window.history.replaceState(null, null, window.location.pathname);
   }
 
+  toggleGroupVisibility = index => {
+    let isVisible = this.state.visibleGroups[index];
+    this.setState({ visibleGroups: this.setMapValue(this.state.visibleGroups, index, !isVisible) });
+  }
+
   render() {
     const buttons = [
       <Button
         onClick={this.onCompletion}
-        label='Map Files'
+        label={!this.isMapEmpty(this.state.selectedFilesByGroup) ? `Map Files (${this.flattenFiles(this.state.selectedFilesByGroup).length})` : 'Map Files'}
         rightIcon='graph'
         buttonType='primary'
         className='g3-icon g3-icon--lg'
@@ -232,54 +246,86 @@ class MapFiles extends React.Component {
               : null
           }
           {
-            sortedDates.map((date, i) => {
-              const files = filesByDate[date];
+            sortedDates.map((date, groupIndex) => {
+              const files = filesByDate[date].map(file => ({
+                ...file,
+                status: this.isFileReady(file) ? 'Ready' : 'generating',
+              }));
               return (
-                <React.Fragment key={i}>
+                <React.Fragment key={groupIndex}>
                   <div className='h2-typo'>{this.getTableHeaderText(files)}</div>
-                  <table className='map-files__table'>
-                    <tbody>
-                      <tr className='map-files__table-header'>
-                        <th className='map-files__table-checkbox'>
-                          <CheckBox
-                            id={`${i}`}
-                            isSelected={this.isSelectAll(i)}
-                            onChange={() => this.toggleSelectAll(i)}
-                          />
-                        </th>
-                        <th>File Name</th>
-                        <th style={{ width: '100px' }}>Size</th>
-                        <th>Uploaded Date</th>
-                        <th>Status</th>
-                      </tr>
-                      {
-                        files.map((file) => {
-                          const status = this.isFileReady(file) ? 'Ready' : 'generating';
-                          return (
-                            <tr key={file.did} className='map-files__table-row'>
-                              <td className='map-files__table-checkbox'>
-                                <CheckBox
-                                  id={file.did}
-                                  item={file}
-                                  isSelected={this.isSelected(i, file)}
-                                  onChange={() => this.toggleCheckBox(i, file)}
-                                  isEnabled={status === 'Ready'}
-                                  disabledText={'This file is not ready to be mapped yet.'}
-                                />
-                              </td>
-                              <td>{file.file_name}</td>
-                              <td>{file.size ? humanFileSize(file.size) : '0 B'}</td>
-                              <td>{moment(file.created_date).format('MM/DD/YY, hh:mm:ss a [UTC]Z')}</td>
-                              <td className={`map-files__status--${status.toLowerCase()}`}>
-                                { status === 'Ready' ? <StatusReadyIcon /> : null }
-                                <div className='h2-typo'>{ status === 'Ready' ? status : `${status}...`}</div>
-                              </td>
-                            </tr>
-                          );
-                        })
-                      }
-                    </tbody>
-                  </table>
+                  <AutoSizer disableHeight>
+                    {({ width }) => (
+                      <Table
+                        className='map-files__table'
+                        width={width}
+                        height={files.length * 70 < 500 ? files.length * 70 : 500}
+                        headerHeight={70}
+                        rowHeight={70}
+                        rowCount={files.length}
+                        rowGetter={({ index }) => files[index]}
+                        rowClassName='map-files__table-row'
+                      >
+                        <Column
+                          width={100}
+                          label='Select All'
+                          dataKey='selectAll'
+                          headerRenderer={() => (
+                            <CheckBox
+                              id={`${groupIndex}`}
+                              isSelected={this.isSelectAll(groupIndex)}
+                              onChange={() => this.toggleSelectAll(groupIndex)}
+                            />
+                          )}
+                          cellRenderer={({ rowIndex }) => (
+                            <CheckBox
+                              id={`${groupIndex-rowIndex}`}
+                              item={files[rowIndex]}
+                              isSelected={this.isSelected(groupIndex, files[rowIndex])}
+                              onChange={() => this.toggleCheckBox(groupIndex, files[rowIndex])}
+                              isEnabled={files[rowIndex].status === 'Ready'}
+                              disabledText={'This file is not ready to be mapped yet.'}
+                            />
+                          )}
+                        />
+                        <Column
+                          label='File Name'
+                          dataKey='file_name'
+                          width={400}
+                        />
+                        <Column
+                          label='Size'
+                          dataKey='size'
+                          width={100}
+                          cellRenderer={({ cellData }) =>
+                            <div>{cellData ? humanFileSize(cellData) : '0 B'}</div>
+                          }
+                        />
+                        <Column
+                          label='Uploaded Date'
+                          dataKey='created_date'
+                          width={300}
+                          cellRenderer={({ cellData }) =>
+                            <div>{ moment(cellData).format('MM/DD/YY, hh:mm:ss a [UTC]Z') }</div>
+                          }
+                        />
+                        <Column
+                          label='Status'
+                          dataKey='status'
+                          width={400}
+                          cellRenderer={({ cellData }) => {
+                            const className = `map-files__status--${cellData.toLowerCase()}`;
+                            return (
+                              <div className={className}>
+                                { cellData === 'Ready' ? <StatusReadyIcon /> : null }
+                                <div className='h2-typo'>{ cellData === 'Ready' ? cellData : `${cellData}...`}</div>
+                              </div>
+                            )
+                          }}
+                        />
+                      </Table>
+                    )}
+                  </AutoSizer>
                 </React.Fragment>
               );
             })

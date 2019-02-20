@@ -41,10 +41,10 @@ describe('MapFiles', () => {
 
   it('updates a map value', () => {
     let map = {
-      field1: new Set(['value1', 'value2']),
-      field2: new Set(['value3']),
+      field1: {'1': 'value1', '2': 'value2'},
+      field2: {'3': 'value3'},
     };
-    expect(map.field2).toEqual(new Set(['value3']));
+    expect(map.field2).toEqual({'3': 'value3'});
     map = instance.setMapValue(map, 'field2', map.field1);
     expect(map.field2).toEqual(map.field1);
     map = instance.setMapValue(map, 'field3', map.field1);
@@ -53,12 +53,12 @@ describe('MapFiles', () => {
 
   it('adds to a map value', () => {
     let map = {
-      field1: new Set(['value1', 'value2']),
-      field2: new Set(['value3']),
+      field1: {'1': 'value1', '2': 'value2'},
+      field2: {'3': 'value3'},
     };
-    expect(map.field1).toEqual(new Set(['value1', 'value2']));
+    expect(map.field1).toEqual({'1': 'value1', '2': 'value2'});
     map = instance.addToMap(map, 'field1', 'value4');
-    expect(map.field1).toEqual(new Set(['value1', 'value2', 'value4']));
+    expect(map.field1).toEqual({'1': 'value1', '2': 'value2', '4', });
     map = instance.addToMap(map, 'field3', 'value3');
     expect(map.field3).toBeUndefined();
   });
