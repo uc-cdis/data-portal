@@ -15,6 +15,7 @@ import { humanFileSize } from '../utils.js';
 import './MapFiles.less';
 
 const SET_KEY = 'did';
+const ROW_HEIGHT = 70;
 
 class MapFiles extends React.Component {
   constructor(props) {
@@ -250,9 +251,9 @@ class MapFiles extends React.Component {
                       <Table
                         className='map-files__table'
                         width={width}
-                        height={files.length * 70 < 500 ? files.length * 70 : 500}
-                        headerHeight={70}
-                        rowHeight={70}
+                        height={files.length * ROW_HEIGHT < 500 ? files.length * ROW_HEIGHT : 500}
+                        headerHeight={ROW_HEIGHT}
+                        rowHeight={ROW_HEIGHT}
                         rowCount={files.length}
                         rowGetter={({ index }) => files[index]}
                         rowClassName='map-files__table-row'
