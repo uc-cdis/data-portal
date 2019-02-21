@@ -164,6 +164,7 @@ export const getArrangerTableColumns = async (apiFunc, projectId, indexType) => 
 export const queryDataByIds = async (
   apiFunc,
   projectId,
+  graphqlIdField,
   idList,
   indexType,
   fields,
@@ -172,7 +173,7 @@ export const queryDataByIds = async (
   const responseData = await apiFunc({
     endpoint: getEndpoint(projectId),
     body: constructGraphQLQuery(
-      '_id', // Arranger always uses this for table index
+      graphqlIdField.toString(),
       idList,
       indexType,
       [...fields],

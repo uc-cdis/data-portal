@@ -19,26 +19,43 @@ class DataExplorerVisualizations extends React.Component {
     this.state = {
       showVisualization: true,
       manifestEntryCount: 0,
+      idField: null,
+      nodeIds: [],
     };
   }
 
+  componentWillUpdate(nextProps) {
+    if (nextProps.arrangerData !== this.props.arrangerData) {
+      const data = nextProps.arrangerData && nextProps.arrangerData[nextProps.arrangerConfig.graphqlField];
+      const aggregations = data && data.aggregations ? data.aggregations : null;
+      let idField = null;
+      if (aggregations && aggregations.node_id) {
+        idField = 'node_id';
+      } else if (aggregations && aggregations.submitter_id) {
+        idField = 'submitter_id';
+      }
+      const nodeIds = idField ? aggregations[idField].buckets.map(bucket => bucket.key) : [];
+      this.setState({ idField, nodeIds });
+    }
+  }
+
   onDownloadManifest = fileName => () => {
-    if (this.props.selectedTableRows.length === 0) return;
     downloadManifest(
       this.props.api,
       this.props.projectId,
-      this.props.selectedTableRows,
+      this.state.idField,
+      this.state.nodeIds,
       this.props.arrangerConfig,
       fileName,
     );
   }
 
   onDownloadData = fileName => () => {
-    if (this.props.selectedTableRows.length === 0) return;
     downloadData(
       this.props.api,
       this.props.projectId,
-      this.props.selectedTableRows,
+      this.state.idField,
+      this.state.nodeIds,
       this.props.arrangerConfig,
       fileName,
     );
@@ -48,13 +65,14 @@ class DataExplorerVisualizations extends React.Component {
     exportAllSelectedDataToCloud(
       this.props.api,
       this.props.projectId,
+      this.state.idField,
+      this.state.nodeIds,
       this.props.arrangerConfig,
-      this.props.selectedTableRows,
     );
   }
 
-  onSelectedRowsChange = (selectedTableRows) => {
-    this.refreshManifestEntryCount(selectedTableRows);
+  onSelectedRowsChange = () => {
+    this.refreshManifestEntryCount(this.state.nodeIds);
   }
 
   getOnClickFunction = (buttonConfig) => {
@@ -71,14 +89,15 @@ class DataExplorerVisualizations extends React.Component {
     return clickFunc;
   }
 
-  refreshManifestEntryCount = (selectedTableRows) => {
+  refreshManifestEntryCount = () => {
     if (this.props.explorerTableConfig
       && this.props.explorerTableConfig.buttons
       && this.props.explorerTableConfig.buttons.some(btnCfg => btnCfg.type === 'manifest' && btnCfg.enabled)) {
       getManifestEntryCount(
         this.props.api,
         this.props.projectId,
-        selectedTableRows,
+        this.state.idField,
+        this.state.nodeIds,
         this.props.arrangerConfig,
       ).then((r) => {
         this.setState({ manifestEntryCount: r });
@@ -92,16 +111,16 @@ class DataExplorerVisualizations extends React.Component {
 
   isButtonEnabled = (buttonConfig) => {
     if (buttonConfig.type === 'manifest') {
-      return this.props.selectedTableRows.length > 0 && this.state.manifestEntryCount > 0;
+      return this.state.nodeIds.length > 0 && this.state.manifestEntryCount > 0;
     }
 
-    return this.props.selectedTableRows.length > 0;
+    return this.state.nodeIds.length > 0;
   }
 
   renderButton = (buttonConfig) => {
     const clickFunc = this.getOnClickFunction(buttonConfig);
     let buttonTitle = buttonConfig.title;
-    if (buttonConfig.type === 'manifest' && this.props.selectedTableRows.length > 0) {
+    if (buttonConfig.type === 'manifest' && this.state.nodeIds.length > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
 
@@ -120,10 +139,10 @@ class DataExplorerVisualizations extends React.Component {
   }
 
   render() {
+    console.log(this.props.arrangerData)
     const charts = this.props.arrangerData ?
       getCharts(this.props.arrangerData, this.props.arrangerConfig, this.props.sqon)
       : null;
-    const selectedTableRowsCount = this.props.selectedTableRows.length;
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.explorerTableConfig);
     const tableToolbarActions = (
       <React.Fragment>
@@ -145,7 +164,7 @@ class DataExplorerVisualizations extends React.Component {
                 <Dropdown
                   key={dropdownId}
                   className='data-explorer__dropdown'
-                  disabled={selectedTableRowsCount === 0}
+                  disabled={this.state.nodeIds.length === 0}
                 >
                   <Dropdown.Button>{dropdownTitle}</Dropdown.Button>
                   <Dropdown.Menu>

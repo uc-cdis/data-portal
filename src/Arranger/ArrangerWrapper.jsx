@@ -33,7 +33,7 @@ class ArrangerWrapper extends React.Component {
       if (fields.length > 0) {
         return fields;
       } // else all the aggs were filtered, and things are screwed up
-      console.log('Bad props.charts data - ignoring in aggreagtions filters'); // eslint-disable-line no-console
+      console.log('Bad props.charts data - ignoring in aggregations filters'); // eslint-disable-line no-console
     }
     return aggs.filter(agg => agg.field !== 'name');
   };
