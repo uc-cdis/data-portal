@@ -158,7 +158,6 @@ class MapDataModel extends React.Component {
     this.setState({ submitting: true }, () => {
       const promises = [];
       chunks.forEach((chunk) => {
-        sessionMonitor.updateUserActivity();
         const promise = this.props.submitFiles(programProject[0], programProject[1], chunk)
           .then((res) => {
             this.setState(prevState => ({ chunkCounter: prevState.chunkCounter + 1 }), () => {
@@ -169,6 +168,7 @@ class MapDataModel extends React.Component {
                 ? res.entities[0].errors.map(error => error.message).toString()
                 : res.message} occurred during mapping.`;
             }
+            sessionMonitor.updateUserActivity();
           });
         promises.push(promise);
       });

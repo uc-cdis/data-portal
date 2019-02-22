@@ -77,7 +77,6 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
   const totalChunk = fileArray.length;
 
   function recursiveFetch(chunkArray) {
-    sessionMonitor.updateUserActivity();
     if (chunkArray.length === 0) {
       return null;
     }
@@ -96,7 +95,8 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
           data,
           total: totalChunk,
         }),
-    ).then(msg => dispatch(msg));
+    ).then(msg => dispatch(msg))
+      .then(sessionMonitor.updateUserActivity());
   }
 
   return recursiveFetch(fileArray);
