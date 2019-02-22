@@ -1,3 +1,5 @@
+import { components } from '../params';
+
 const homepage = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_PROJECT_LIST': {
@@ -15,7 +17,13 @@ const homepage = (state = {}, action) => {
     );
     const lastestListUpdating = Date.now();
     // const { error, ...state } = state;
-    return { ...state, projectsByName, summaryCounts, lastestListUpdating };
+    return { 
+      ...state, 
+      projectsByName, 
+      summaryCounts, 
+      lastestListUpdating, 
+      countNames: components.charts.indexChartNames
+    };
   }
   case 'RECEIVE_PROJECT_DETAIL': {
     const projectsByName = Object.assign({}, state.projectsByName || {});
@@ -28,6 +36,70 @@ const homepage = (state = {}, action) => {
   }
   case 'RECEIVE_RELAY_FAIL': {
     return { ...state, error: action.data };
+  }
+  case 'RECEIVE_PROJECT_NODE_DATASETS': {
+    const { projectNodeCounts, homepageChartNodes, fileNodes } = action;
+    const nodesForIndexChart = homepageChartNodes.map(item => item.node);
+
+    // adding counts by node
+    let summaryCounts = nodesForIndexChart.reduce((acc, curNode, index) => {
+      Object.keys(projectNodeCounts).forEach((proj) => {
+        if (typeof projectNodeCounts[proj][curNode] !== 'undefined') {
+          acc[index] += projectNodeCounts[proj][curNode];
+        }
+      });
+      return acc;
+    }, nodesForIndexChart.map(() => 0));
+
+    // keep previous design: if less than 4 nodes, calculate all files number
+    if (nodesForIndexChart.length < 4) { 
+      // add counts for all file type nodes, as the last count 
+      const fileCount = fileNodes.reduce((acc, fileNode) => {
+        Object.keys(projectNodeCounts).forEach((proj) => {
+          if (typeof projectNodeCounts[proj][fileNode] !== 'undefined') {
+            acc += projectNodeCounts[proj][fileNode];
+          }
+        });
+        return acc;
+      }, 0);
+      summaryCounts.push(fileCount);
+    }
+
+    // constructing projct counts for index bar chart 
+    const projectsByName = {};
+    Object.keys(projectNodeCounts).forEach((proj) => {
+      let code = proj;
+      const projCodeIndex = proj.indexOf('-');
+      if (projCodeIndex !== -1) {
+        code = proj.substring(projCodeIndex + 1);
+      }
+      let counts = 0;
+      if (typeof projectNodeCounts[proj] !== 'undefined') {
+        counts = nodesForIndexChart.map(node => projectNodeCounts[proj][node]);
+      }
+
+      if (nodesForIndexChart.length < 4) {
+        let fileCountsForProj = fileNodes.reduce((acc, fileNode) => {
+          if (typeof projectNodeCounts[proj][fileNode] !== 'undefined') {
+            acc += projectNodeCounts[proj][fileNode];
+          }
+          return acc;
+        }, 0);
+        counts.push(fileCountsForProj);  
+      }
+
+      projectsByName[proj] = {
+        code,
+        counts,
+        name: proj,
+      };
+    });
+
+    let countNames = homepageChartNodes.map(item => item.name);
+    if (countNames.length < 4) {
+      countNames.push('Files');
+    }
+    return { ...state, projectsByName, summaryCounts, countNames };
   }
   default:
     return state;

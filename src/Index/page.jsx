@@ -3,13 +3,13 @@ import Introduction from '../components/Introduction';
 import { ReduxIndexButtonBar, ReduxIndexBarChart } from './reduxer';
 import dictIcons from '../img/icons';
 import { components } from '../params';
-import getProjectsList from './relayer';
+import getProjectNodeCounts from './utils';
 import './page.less';
 
 class IndexPageComponent extends React.Component {
   constructor(props) {
     super(props);
-    getProjectsList();
+    getProjectNodeCounts();
   }
 
   render() {

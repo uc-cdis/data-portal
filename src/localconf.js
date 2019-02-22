@@ -52,6 +52,7 @@ function buildConfig(opts) {
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
   const workspaceUrl = '/lw-workspace/';
   const workspaceErrorUrl = '/no-workspace-access/';
+  const datasetUrl = `${hostname}api/search/datasets`;
 
   const colorsForCharts = {
     categorical9Colors: [
@@ -111,6 +112,8 @@ function buildConfig(opts) {
     certs: components.certs,
     workspaceUrl,
     workspaceErrorUrl,
+    homepageChartNodes: components.index.homepageChartNodes,
+    datasetUrl,
   };
 }
 
