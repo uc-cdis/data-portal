@@ -272,7 +272,7 @@ class MapFiles extends React.Component {
                           )}
                           cellRenderer={({ rowIndex }) => (
                             <CheckBox
-                              id={`${groupIndex - rowIndex}`}
+                              id={`${files[rowIndex].did}`}
                               item={files[rowIndex]}
                               isSelected={this.isSelected(groupIndex, files[rowIndex].did)}
                               onChange={() => this.toggleCheckBox(groupIndex, files[rowIndex])}
