@@ -16,6 +16,7 @@ import './MapFiles.less';
 
 const SET_KEY = 'did';
 const ROW_HEIGHT = 70;
+const HEADER_HEIGHT = 70;
 
 class MapFiles extends React.Component {
   constructor(props) {
@@ -243,6 +244,7 @@ class MapFiles extends React.Component {
                 ...file,
                 status: this.isFileReady(file) ? 'Ready' : 'generating',
               }));
+              const minTableHeight = (files.length * ROW_HEIGHT) + HEADER_HEIGHT;
               return (
                 <React.Fragment key={groupIndex}>
                   <div className='h2-typo'>{this.getTableHeaderText(files)}</div>
@@ -251,7 +253,7 @@ class MapFiles extends React.Component {
                       <Table
                         className='map-files__table'
                         width={width}
-                        height={files.length * ROW_HEIGHT < 500 ? files.length * ROW_HEIGHT : 500}
+                        height={minTableHeight < 500 ? minTableHeight : 500}
                         headerHeight={ROW_HEIGHT}
                         rowHeight={ROW_HEIGHT}
                         rowCount={files.length}
