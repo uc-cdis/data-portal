@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import { fetchWithCreds } from '../actions';
 import { homepageChartNodes, datasetUrl } from '../localconf';
 import getReduxStore from '../reduxStore';
@@ -35,9 +36,9 @@ const getProjectNodeCounts = async () => {
   }).then((res) => {
     updateRedux(res.data);
   })
-  .catch((err) => {
-    console.log(err);
-  });
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 export default getProjectNodeCounts;

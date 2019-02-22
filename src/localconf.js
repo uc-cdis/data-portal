@@ -54,6 +54,15 @@ function buildConfig(opts) {
   const workspaceErrorUrl = '/no-workspace-access/';
   const datasetUrl = `${hostname}api/search/datasets`;
 
+  // see index page without login
+  let indexPublic = typeof components.index.public === 'undefined' 
+    ? false : components.index.public;
+  // backward compatible: homepageChartNodes not set means using graphql query,
+  // which will return 401 UNAUTHORIZED, thus not making public
+  if (typeof components.index.homepageChartNodes === 'undefined') {
+    indexPublic = false;
+  }
+
   const colorsForCharts = {
     categorical9Colors: [
       '#3283c8',
@@ -114,6 +123,7 @@ function buildConfig(opts) {
     workspaceErrorUrl,
     homepageChartNodes: components.index.homepageChartNodes,
     datasetUrl,
+    indexPublic,
   };
 }
 

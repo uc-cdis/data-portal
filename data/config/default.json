@@ -85,7 +85,8 @@
           "node": "aliquot",
           "name": "Aliquots"
         }
-      ]
+      ],
+      "public": true
     },
     "navigation": {
       "title": "Generic Data Commons",

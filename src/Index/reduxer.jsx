@@ -13,7 +13,7 @@ export const ReduxIndexBarChart = (() => {
         state.homepage.projectsByName,
       ).sort(sortCompare);
       return {
-        projectList, 
+        projectList,
         countNames: state.homepage.countNames,
       };
     }
