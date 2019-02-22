@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import moment from 'moment';
+import { AutoSizer, Column, Table } from 'react-virtualized';
+import 'react-virtualized/styles.css'; // only needs to be imported once
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
@@ -11,6 +13,10 @@ import StatusReadyIcon from '../img/icons/status_ready.svg';
 import CloseIcon from '../img/icons/cross.svg';
 import { humanFileSize } from '../utils.js';
 import './MapFiles.less';
+
+const SET_KEY = 'did';
+const ROW_HEIGHT = 70;
+const HEADER_HEIGHT = 70;
 
 class MapFiles extends React.Component {
   constructor(props) {
@@ -43,8 +49,7 @@ class MapFiles extends React.Component {
   }
 
   onCompletion = () => {
-    const groupedFiles = Object.values(this.state.selectedFilesByGroup).map(set => Array.from(set));
-    const flatFiles = groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr));
+    const flatFiles = this.flattenFiles(this.state.selectedFilesByGroup);
     this.props.mapSelectedFiles(flatFiles);
     this.props.history.push('/submission/map');
   }
@@ -56,6 +61,8 @@ class MapFiles extends React.Component {
     }, () => this.createFileMapByGroup());
   }
 
+  getSetSize = set => Object.keys(set).length
+
   getTableHeaderText = (files) => {
     const date = moment(files[0].created_date).format('MM/DD/YY');
     return `uploaded on ${date}, ${files.length} ${files.length > 1 ? 'files' : 'file'}`;
@@ -63,37 +70,52 @@ class MapFiles extends React.Component {
 
   setMapValue = (map, index, value) => {
     const tempMap = map;
-    tempMap[index] = new Set(value);
+    tempMap[index] = value;
     return tempMap;
   }
 
-  addToMap = (map, index, file) => {
+  addToMap = (map, index, file, setKey) => {
     const tempMap = map;
     if (tempMap[index]) {
-      tempMap[index].add(file);
+      tempMap[index][setKey] = file;
     }
     return tempMap;
   }
 
-  removeFromMap = (map, index, file) => {
+  removeFromMap = (map, index, setKey) => {
     const tempMap = map;
     if (tempMap[index]) {
-      tempMap[index].delete(file);
+      delete tempMap[index][setKey];
     }
     return tempMap;
+  }
+
+  createSet = (key, values) => {
+    const set = {};
+    values.forEach((value) => {
+      const setKey = value[key];
+      set[setKey] = value;
+    });
+    return set;
+  }
+
+  flattenFiles = (files) => {
+    const groupedFiles = Object.keys(files).map(index => [...Object.values(files[index])]);
+    return groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr));
   }
 
   isSelectAll = (index) => {
     if (this.state.selectedFilesByGroup[index]) {
-      return this.state.allFilesByGroup[index].size === this.state.selectedFilesByGroup[index].size
-        && this.state.selectedFilesByGroup[index].size > 0;
+      return this.getSetSize(this.state.allFilesByGroup[index])
+        === this.getSetSize(this.state.selectedFilesByGroup[index])
+        && this.getSetSize(this.state.selectedFilesByGroup[index]) > 0;
     }
     return false;
   }
 
-  isSelected = (index, file) => {
+  isSelected = (index, did) => {
     if (this.state.selectedFilesByGroup[index]) {
-      return this.state.selectedFilesByGroup[index].has(file);
+      return !!this.state.selectedFilesByGroup[index][did];
     }
     return false;
   }
@@ -101,7 +123,7 @@ class MapFiles extends React.Component {
   isMapEmpty = (map) => {
     /* eslint-disable no-restricted-syntax */
     for (const key in map) {
-      if (map[key] && map[key].size > 0) {
+      if (map[key] && this.getSetSize(map[key]) > 0) {
         return false;
       }
     }
@@ -115,8 +137,8 @@ class MapFiles extends React.Component {
     let index = 0;
     this.state.sortedDates.forEach((date) => {
       const filesToAdd = this.state.filesByDate[date].filter(file => this.isFileReady(file));
-      unselectedMap[index] = new Set(filesToAdd);
-      selectedMap[index] = new Set();
+      unselectedMap[index] = this.createSet(SET_KEY, filesToAdd);
+      selectedMap[index] = {};
       index += 1;
     });
     this.setState({ allFilesByGroup: unselectedMap, selectedFilesByGroup: selectedMap });
@@ -138,28 +160,29 @@ class MapFiles extends React.Component {
   }
 
   toggleCheckBox = (index, file) => {
-    if (this.isSelected(index, file)) {
-      this.setState({
-        selectedFilesByGroup: this.removeFromMap(this.state.selectedFilesByGroup, index, file),
-      });
+    if (this.isSelected(index, file.did)) {
+      this.setState(prevState => ({
+        selectedFilesByGroup: this.removeFromMap(prevState.selectedFilesByGroup, index, file.did),
+      }));
     } else if (this.isFileReady(file)) { // file status == ready, so it is selectable
-      this.setState({
-        selectedFilesByGroup: this.addToMap(this.state.selectedFilesByGroup, index, file),
-      });
+      this.setState(prevState => ({
+        selectedFilesByGroup: this.addToMap(prevState.selectedFilesByGroup, index, file, file.did),
+      }));
     }
   }
 
   toggleSelectAll = (index) => {
     if (this.state.selectedFilesByGroup[index]) {
-      if (this.state.selectedFilesByGroup[index].size === this.state.allFilesByGroup[index].size) {
-        this.setState({
-          selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, new Set()),
-        });
+      if (this.getSetSize(this.state.selectedFilesByGroup[index])
+        === this.getSetSize(this.state.allFilesByGroup[index])) {
+        this.setState(prevState => ({
+          selectedFilesByGroup: this.setMapValue(prevState.selectedFilesByGroup, index, {}),
+        }));
       } else {
-        const newFiles = this.state.allFilesByGroup[index];
-        this.setState({
-          selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, newFiles),
-        });
+        const newFiles = { ...this.state.allFilesByGroup[index] };
+        this.setState(prevState => ({
+          selectedFilesByGroup: this.setMapValue(prevState.selectedFilesByGroup, index, newFiles),
+        }));
       }
     }
   }
@@ -175,7 +198,7 @@ class MapFiles extends React.Component {
     const buttons = [
       <Button
         onClick={this.onCompletion}
-        label='Map Files'
+        label={!this.isMapEmpty(this.state.selectedFilesByGroup) ? `Map Files (${this.flattenFiles(this.state.selectedFilesByGroup).length})` : 'Map Files'}
         rightIcon='graph'
         buttonType='primary'
         className='g3-icon g3-icon--lg'
@@ -215,54 +238,83 @@ class MapFiles extends React.Component {
               : null
           }
           {
-            sortedDates.map((date, i) => {
-              const files = filesByDate[date];
+            sortedDates.map((date, groupIndex) => {
+              const files = filesByDate[date].map(file => ({
+                ...file,
+                status: this.isFileReady(file) ? 'Ready' : 'generating',
+              }));
+              const minTableHeight = (files.length * ROW_HEIGHT) + HEADER_HEIGHT;
               return (
-                <React.Fragment key={i}>
+                <React.Fragment key={groupIndex}>
                   <div className='h2-typo'>{this.getTableHeaderText(files)}</div>
-                  <table className='map-files__table'>
-                    <tbody>
-                      <tr className='map-files__table-header'>
-                        <th className='map-files__table-checkbox'>
-                          <CheckBox
-                            id={`${i}`}
-                            isSelected={this.isSelectAll(i)}
-                            onChange={() => this.toggleSelectAll(i)}
-                          />
-                        </th>
-                        <th>File Name</th>
-                        <th style={{ width: '100px' }}>Size</th>
-                        <th>Uploaded Date</th>
-                        <th>Status</th>
-                      </tr>
-                      {
-                        files.map((file) => {
-                          const status = this.isFileReady(file) ? 'Ready' : 'generating';
-                          return (
-                            <tr key={file.did} className='map-files__table-row'>
-                              <td className='map-files__table-checkbox'>
-                                <CheckBox
-                                  id={file.did}
-                                  item={file}
-                                  isSelected={this.isSelected(i, file)}
-                                  onChange={() => this.toggleCheckBox(i, file)}
-                                  isEnabled={status === 'Ready'}
-                                  disabledText={'This file is not ready to be mapped yet.'}
-                                />
-                              </td>
-                              <td>{file.file_name}</td>
-                              <td>{file.size ? humanFileSize(file.size) : '0 B'}</td>
-                              <td>{moment(file.created_date).format('MM/DD/YY, hh:mm:ss a [UTC]Z')}</td>
-                              <td className={`map-files__status--${status.toLowerCase()}`}>
-                                { status === 'Ready' ? <StatusReadyIcon /> : null }
-                                <div className='h2-typo'>{ status === 'Ready' ? status : `${status}...`}</div>
-                              </td>
-                            </tr>
-                          );
-                        })
-                      }
-                    </tbody>
-                  </table>
+                  <AutoSizer disableHeight>
+                    {({ width }) => (
+                      <Table
+                        className='map-files__table'
+                        width={width}
+                        height={minTableHeight < 500 ? minTableHeight : 500}
+                        headerHeight={ROW_HEIGHT}
+                        rowHeight={ROW_HEIGHT}
+                        rowCount={files.length}
+                        rowGetter={({ index }) => files[index]}
+                        rowClassName='map-files__table-row'
+                      >
+                        <Column
+                          width={100}
+                          label='Select All'
+                          dataKey='selectAll'
+                          headerRenderer={() => (
+                            <CheckBox
+                              id={`${groupIndex}`}
+                              isSelected={this.isSelectAll(groupIndex)}
+                              onChange={() => this.toggleSelectAll(groupIndex)}
+                            />
+                          )}
+                          cellRenderer={({ rowIndex }) => (
+                            <CheckBox
+                              id={`${files[rowIndex].did}`}
+                              item={files[rowIndex]}
+                              isSelected={this.isSelected(groupIndex, files[rowIndex].did)}
+                              onChange={() => this.toggleCheckBox(groupIndex, files[rowIndex])}
+                              isEnabled={files[rowIndex].status === 'Ready'}
+                              disabledText={'This file is not ready to be mapped yet.'}
+                            />
+                          )}
+                        />
+                        <Column
+                          label='File Name'
+                          dataKey='file_name'
+                          width={400}
+                        />
+                        <Column
+                          label='Size'
+                          dataKey='size'
+                          width={100}
+                          cellRenderer={({ cellData }) => <div>{cellData ? humanFileSize(cellData) : '0 B'}</div>}
+                        />
+                        <Column
+                          label='Uploaded Date'
+                          dataKey='created_date'
+                          width={300}
+                          cellRenderer={({ cellData }) => <div>{ moment(cellData).format('MM/DD/YY, hh:mm:ss a [UTC]Z') }</div>}
+                        />
+                        <Column
+                          label='Status'
+                          dataKey='status'
+                          width={400}
+                          cellRenderer={({ cellData }) => {
+                            const className = `map-files__status--${cellData.toLowerCase()}`;
+                            return (
+                              <div className={className}>
+                                { cellData === 'Ready' ? <StatusReadyIcon /> : null }
+                                <div className='h2-typo'>{ cellData === 'Ready' ? cellData : `${cellData}...`}</div>
+                              </div>
+                            );
+                          }}
+                        />
+                      </Table>
+                    )}
+                  </AutoSizer>
                 </React.Fragment>
               );
             })
