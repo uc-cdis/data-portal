@@ -8,8 +8,6 @@
 * e.g.: obj={ a: { b: 1 } }, keyChainString='a.b.c', return false
 */
 export const hasKeyChain = (obj, keyChainString) => {
-  console.log('obj', obj)
-  console.log('keychain', keyChainString)
   if (!obj) return false;
   const keyList = keyChainString.split('.');
   if (keyList.length === 0) return false;

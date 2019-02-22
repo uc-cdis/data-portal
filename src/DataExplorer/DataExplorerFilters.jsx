@@ -8,7 +8,6 @@ class DataExplorerFilters extends React.Component {
     const filterConfig = this.props.dataExplorerConfig.filters;
     return (
       <div className='data-explorer__filters'>
-        <h4 className='data-explorer__filters-title'>Filters</h4>
         {
           filterConfig ?
             <AggregationTabs

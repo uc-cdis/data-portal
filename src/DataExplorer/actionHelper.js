@@ -31,7 +31,6 @@ export const downloadData = async (
   arrangerConfig,
   fileName,
 ) => {
-  console.log('arrangerConfig', arrangerConfig)
   checkArrangerGraphqlField(arrangerConfig);
   const columns = await getArrangerTableColumns(
     apiFunc,

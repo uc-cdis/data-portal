@@ -4,6 +4,7 @@ import { CurrentSQON } from '@arranger/components/dist/Arranger';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import Spinner from '../components/Spinner';
 import DataExplorerTable from '../components/tables/DataExplorerTable';
 import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart/.';
@@ -17,7 +18,6 @@ class DataExplorerVisualizations extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showVisualization: true,
       manifestEntryCount: 0,
       idField: null,
       nodeIds: [],
@@ -103,10 +103,6 @@ class DataExplorerVisualizations extends React.Component {
         this.setState({ manifestEntryCount: r });
       });
     }
-  }
-
-  toggleVisualization = () => {
-    this.setState({ showVisualization: !this.state.showVisualization });
   }
 
   isButtonEnabled = (buttonConfig) => {
@@ -209,21 +205,7 @@ class DataExplorerVisualizations extends React.Component {
         }
       </div>
         <CurrentSQON className='data-explorer__sqon' {...this.props} />
-        <div
-          className='data-explorer__visualizations-title'
-          onClick={this.toggleVisualization}
-          role='button'
-          onKeyDown={this.toggleVisualization}
-          tabIndex={0}
-        >
-          <h4>Data Summary</h4>
-          <FontAwesomeIcon
-            className='data-explorer__visualizations-title-icon'
-            icon={this.state.showVisualization ? 'angle-down' : 'angle-up'}
-            size='lg'
-          />
-        </div>
-        { charts && this.state.showVisualization ?
+        { charts ?
           <div className='data-explorer__charts'>
             <DataSummaryCardGroup summaryItems={charts.countItems} connected />
             <SummaryChartGroup summaries={charts.summaries} />
@@ -238,7 +220,7 @@ class DataExplorerVisualizations extends React.Component {
               )
             }
           </div>
-          : null
+          : <Spinner />
         }
         {
           this.props.dataExplorerConfig.table && this.props.dataExplorerConfig.table.enabled ?
