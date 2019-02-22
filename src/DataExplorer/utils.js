@@ -8,6 +8,8 @@
 * e.g.: obj={ a: { b: 1 } }, keyChainString='a.b.c', return false
 */
 export const hasKeyChain = (obj, keyChainString) => {
+  console.log('obj', obj)
+  console.log('keychain', keyChainString)
   if (!obj) return false;
   const keyList = keyChainString.split('.');
   if (keyList.length === 0) return false;
@@ -30,18 +32,18 @@ export const hasKeyChain = (obj, keyChainString) => {
 *   dropdownConfig: infos for this dropdown, e.g. "title"
 *   buttonConfigs: a list of button configs (includes buttion title, button type, etc.)
 */
-export const calculateDropdownButtonConfigs = (explorerTableConfig) => {
-  const dropdownConfig = explorerTableConfig
-    && explorerTableConfig.dropdowns
-    && Object.keys(explorerTableConfig.dropdowns).length > 0
-    && Object.keys(explorerTableConfig.dropdowns)
+export const calculateDropdownButtonConfigs = (config) => {
+  const dropdownConfig = config
+    && config.dropdowns
+    && Object.keys(config.dropdowns).length > 0
+    && Object.keys(config.dropdowns)
       .reduce((map, dropdownId) => {
-        const buttonCount = explorerTableConfig.buttons
+        const buttonCount = config.buttons
           .filter(btnCfg => btnCfg.enabled)
           .filter(btnCfg => btnCfg.dropdownId && btnCfg.dropdownId === dropdownId)
           .length;
-        const drpdnCfg = explorerTableConfig.dropdowns[dropdownId];
-        const buttonConfigs = explorerTableConfig.buttons
+        const drpdnCfg = config.dropdowns[dropdownId];
+        const buttonConfigs = config.buttons
           .filter(btnCfg => btnCfg.enabled)
           .filter(btnCfg => btnCfg.dropdownId && btnCfg.dropdownId === dropdownId);
         const ret = Object.assign({}, map);

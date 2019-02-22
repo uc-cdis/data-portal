@@ -5,7 +5,7 @@ import AggregationTabs from '../Arranger/AggregationTabs';
 
 class DataExplorerFilters extends React.Component {
   render() {
-    const filterConfig = this.props.arrangerConfig.filters;
+    const filterConfig = this.props.dataExplorerConfig.filters;
     return (
       <div className='data-explorer__filters'>
         <h4 className='data-explorer__filters-title'>Filters</h4>
@@ -24,12 +24,12 @@ class DataExplorerFilters extends React.Component {
 
 DataExplorerFilters.propTypes = {
   arrangerData: PropTypes.object,
-  arrangerConfig: PropTypes.object,
+  dataExplorerConfig: PropTypes.object,
 };
 
 DataExplorerFilters.defaultProps = {
   arrangerData: null,
-  arrangerConfig: {},
+  dataExplorerConfig: {},
 };
 
 export default DataExplorerFilters;

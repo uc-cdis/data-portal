@@ -70,7 +70,6 @@ export const getBDBagQuery = referenceIDList => `{
 const exportToSaturnByIDList = async (
   referenceIDList,
 ) => {
-  console.log('export to saturn...')
   const BDBAG_ENDPOINT = '/api/v0/submission/graphql/';
   const SATURN_ENDPOINT = 'https://bvdp-saturn-prod.appspot.com/#import-data';
   const MSG_EXPORT_SATURN_FAIL = 'Error while export data to Saturn';
@@ -82,19 +81,18 @@ const exportToSaturnByIDList = async (
     query: getBDBagQuery(referenceIDList),
     ...bdbagParams,
   };
-  console.log('body', body)
-  // fetchWithCreds({
-  //   path: BDBAG_ENDPOINT,
-  //   method: 'POST',
-  //   body: JSON.stringify(body),
-  // })
-  //   .then((r) => {
-  //     if (!r || r.status !== 200) {
-  //       throw MSG_EXPORT_SATURN_FAIL;
-  //     }
-  //     const url = encodeURIComponent(r.data);
-  //     window.location = `${SATURN_ENDPOINT}?url=${url}`;
-  //   });
+  fetchWithCreds({
+    path: BDBAG_ENDPOINT,
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+    .then((r) => {
+      if (!r || r.status !== 200) {
+        throw MSG_EXPORT_SATURN_FAIL;
+      }
+      const url = encodeURIComponent(r.data);
+      window.location = `${SATURN_ENDPOINT}?url=${url}`;
+    });
 };
 
 export const exportAllSelectedDataToCloud = async (

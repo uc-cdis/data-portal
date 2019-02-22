@@ -180,7 +180,7 @@
   "featureFlags": {
     "explorer": true
   },
-  "arrangerConfig": {
+  "dataExplorerConfig": {
     "charts": {
       "project": {
         "chartType": "count",
@@ -237,20 +237,23 @@
         }
       ]
     },
-    "projectId": "search",
-    "graphqlField": "subject",
-    "index": "",
+    "arrangerConfig": {
+      "projectId": "search",
+      "graphqlField": "subject",
+      "index": ""
+    },
+    "buttons": [
+      {
+        "enabled": true,
+        "type": "data",
+        "title": "Download Data",
+        "leftIcon": "user",
+        "rightIcon": "download",
+        "fileName": "data.json"
+      }
+    ],
     "table": {
-      "buttons": [
-        {
-          "enabled": true,
-          "type": "data",
-          "title": "Download Data",
-          "leftIcon": "user",
-          "rightIcon": "download",
-          "fileName": "data.json"
-        }
-      ]
+      "enabled": true
     }
   }
 }

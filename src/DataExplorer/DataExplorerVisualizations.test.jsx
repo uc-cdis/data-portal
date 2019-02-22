@@ -16,7 +16,7 @@ describe('DataExplorerVisualizations', () => {
     },
   };
 
-  const arrangerConfig = {
+  const dataExplorerConfig = {
     graphqlField: 'subject',
     charts: {
       gender: {
@@ -29,12 +29,12 @@ describe('DataExplorerVisualizations', () => {
   const component = mount(
     <DataExplorerVisualizations
       arrangerData={arrangerData}
-      arrangerConfig={arrangerConfig}
+      dataExplorerConfig={dataExplorerConfig}
     />,
   );
 
   const noDataComponent = mount(
-    <DataExplorerVisualizations arrangerConfig={arrangerConfig} />,
+    <DataExplorerVisualizations dataExplorerConfig={dataExplorerConfig} />,
   );
 
   it('renders', () => {
@@ -51,7 +51,7 @@ describe('DataExplorerVisualizations', () => {
   it('shows data when showVisualization is true', () => {
     component.find('.data-explorer__visualizations-title').simulate('click');
     expect(component.instance().props.arrangerData).toEqual(arrangerData);
-    expect(component.instance().props.arrangerConfig).toEqual(arrangerConfig);
+    expect(component.instance().props.dataExplorerConfig).toEqual(dataExplorerConfig);
     expect(component.instance().state.showVisualization).toBe(true);
     expect(component.find('.data-explorer__charts').length).toBe(1);
   });

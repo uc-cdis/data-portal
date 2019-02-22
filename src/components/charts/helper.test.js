@@ -124,7 +124,7 @@ describe('helper', () => {
     },
   };
 
-  const arrangerConfig = {
+  const dataExplorerConfig = {
     graphqlField: 'subject',
     charts: {
       ethnicity: {
@@ -159,7 +159,7 @@ describe('helper', () => {
   });
 
   it('gets charts', () => {
-    const charts = helper.getCharts(rawData, arrangerConfig);
+    const charts = helper.getCharts(rawData, dataExplorerConfig);
     expect(charts.countItems).toEqual([projectCountData]);
     expect(charts.summaries).toEqual([summaryData]);
     expect(charts.stackedBarCharts).toEqual([]);

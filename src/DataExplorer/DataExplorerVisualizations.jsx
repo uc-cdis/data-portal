@@ -26,7 +26,7 @@ class DataExplorerVisualizations extends React.Component {
 
   componentWillUpdate(nextProps) {
     if (nextProps.arrangerData !== this.props.arrangerData) {
-      const data = nextProps.arrangerData && nextProps.arrangerData[nextProps.arrangerConfig.graphqlField];
+      const data = nextProps.arrangerData && nextProps.arrangerData[nextProps.dataExplorerConfig.arrangerConfig.graphqlField];
       const aggregations = data && data.aggregations ? data.aggregations : null;
       let idField = null;
       if (aggregations && aggregations.node_id) {
@@ -45,7 +45,7 @@ class DataExplorerVisualizations extends React.Component {
       this.props.projectId,
       this.state.idField,
       this.state.nodeIds,
-      this.props.arrangerConfig,
+      this.props.dataExplorerConfig.arrangerConfig,
       fileName,
     );
   }
@@ -56,7 +56,7 @@ class DataExplorerVisualizations extends React.Component {
       this.props.projectId,
       this.state.idField,
       this.state.nodeIds,
-      this.props.arrangerConfig,
+      this.props.dataExplorerConfig.arrangerConfig,
       fileName,
     );
   }
@@ -67,7 +67,7 @@ class DataExplorerVisualizations extends React.Component {
       this.props.projectId,
       this.state.idField,
       this.state.nodeIds,
-      this.props.arrangerConfig,
+      this.props.dataExplorerConfig.arrangerConfig,
     );
   }
 
@@ -90,15 +90,15 @@ class DataExplorerVisualizations extends React.Component {
   }
 
   refreshManifestEntryCount = () => {
-    if (this.props.explorerTableConfig
-      && this.props.explorerTableConfig.buttons
-      && this.props.explorerTableConfig.buttons.some(btnCfg => btnCfg.type === 'manifest' && btnCfg.enabled)) {
+    if (this.props.dataExplorerConfig
+      && this.props.dataExplorerConfig.buttons
+      && this.props.dataExplorerConfig.buttons.some(btnCfg => btnCfg.type === 'manifest' && btnCfg.enabled)) {
       getManifestEntryCount(
         this.props.api,
         this.props.projectId,
         this.state.idField,
         this.state.nodeIds,
-        this.props.arrangerConfig,
+        this.props.dataExplorerConfig.arrangerConfig,
       ).then((r) => {
         this.setState({ manifestEntryCount: r });
       });
@@ -139,13 +139,14 @@ class DataExplorerVisualizations extends React.Component {
   }
 
   render() {
-    console.log(this.props.arrangerData)
     const charts = this.props.arrangerData ?
-      getCharts(this.props.arrangerData, this.props.arrangerConfig, this.props.sqon)
+      getCharts(this.props.arrangerData, this.props.dataExplorerConfig, this.props.sqon)
       : null;
-    const dropdownConfigs = calculateDropdownButtonConfigs(this.props.explorerTableConfig);
-    const tableToolbarActions = (
-      <React.Fragment>
+    const dropdownConfigs = calculateDropdownButtonConfigs(this.props.dataExplorerConfig);
+
+    return (
+      <div className='data-explorer__visualizations'>
+      <div className='data-explorer__button-section'>
         {
           /*
           * First, render dropdown buttons
@@ -194,9 +195,9 @@ class DataExplorerVisualizations extends React.Component {
           * Buttons without dropdownId are rendered as normal buttons
           * Buttons don't share same dropdownId with others are rendered as normal buttons
           */
-          this.props.explorerTableConfig
-          && this.props.explorerTableConfig.buttons
-          && this.props.explorerTableConfig.buttons
+          this.props.dataExplorerConfig
+          && this.props.dataExplorerConfig.buttons
+          && this.props.dataExplorerConfig.buttons
             .filter(buttonConfig =>
               !dropdownConfigs
               || !buttonConfig.dropdownId
@@ -206,10 +207,7 @@ class DataExplorerVisualizations extends React.Component {
             .map(buttonConfig =>
               this.renderButton(buttonConfig))
         }
-      </React.Fragment>
-    );
-    return (
-      <div className='data-explorer__visualizations'>
+      </div>
         <CurrentSQON className='data-explorer__sqon' {...this.props} />
         <div
           className='data-explorer__visualizations-title'
@@ -240,12 +238,16 @@ class DataExplorerVisualizations extends React.Component {
               )
             }
           </div>
-          : null}
-        <DataExplorerTable
-          customActions={tableToolbarActions}
-          onSelectedRowsChange={this.onSelectedRowsChange}
-          {...this.props}
-        />
+          : null
+        }
+        {
+          this.props.dataExplorerConfig.table && this.props.dataExplorerConfig.table.enabled ?
+            <DataExplorerTable
+              onSelectedRowsChange={this.onSelectedRowsChange}
+              {...this.props}
+            />
+          : null
+        }
       </div>
     );
   }
@@ -253,22 +255,22 @@ class DataExplorerVisualizations extends React.Component {
 
 DataExplorerVisualizations.propTypes = {
   arrangerData: PropTypes.object,
-  arrangerConfig: PropTypes.object,
+  dataExplorerConfig: PropTypes.object,
   sqon: PropTypes.object,
   selectedTableRows: PropTypes.array,
   projectId: PropTypes.string,
   api: PropTypes.func,
-  explorerTableConfig: PropTypes.object,
 };
 
 DataExplorerVisualizations.defaultProps = {
   arrangerData: null,
-  arrangerConfig: {},
+  dataExplorerConfig: {
+    arrangerConfig: {},
+  },
   sqon: null,
   selectedTableRows: [],
   projectId: 'search',
   api: () => {},
-  explorerTableConfig: {},
 };
 
 export default DataExplorerVisualizations;

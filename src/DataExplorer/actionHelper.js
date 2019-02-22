@@ -31,6 +31,7 @@ export const downloadData = async (
   arrangerConfig,
   fileName,
 ) => {
+  console.log('arrangerConfig', arrangerConfig)
   checkArrangerGraphqlField(arrangerConfig);
   const columns = await getArrangerTableColumns(
     apiFunc,
@@ -128,8 +129,6 @@ export const getManifestEntryCount = async (
   arrangerConfig,
 ) => {
   const MSG_GET_MANIFEST_COUNT_FAIL = 'Error getting manifest file count';
-  console.log('checking from get manifest')
-    console.log('props:', graphqlIdField, arrangerConfig)
   checkArrangerGraphqlField(arrangerConfig);
   if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
