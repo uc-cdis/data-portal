@@ -192,14 +192,29 @@ describe('MapFiles', () => {
 
     instance.toggleSelectAll('0');
     expect(instance.state.selectedFilesByGroup['0'])
-      .toEqual({ 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' });
+      .toEqual({
+        1: 'value1',
+        2: 'value2',
+        3: 'value3',
+        4: 'value4',
+      });
 
     instance.setState({
       selectedFilesByGroup: {
-        0: { 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' },
+        0: {
+          1: 'value1',
+          2: 'value2',
+          3: 'value3',
+          4: 'value4',
+        },
       },
       unselectedFilesByGroup: {
-        0: { 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' },
+        0: {
+          1: 'value1',
+          2: 'value2',
+          3: 'value3',
+          4: 'value4',
+        },
       },
     });
 

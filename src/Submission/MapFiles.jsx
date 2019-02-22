@@ -100,8 +100,7 @@ class MapFiles extends React.Component {
   }
 
   flattenFiles = (files) => {
-    const groupedFiles = Object.keys(files).map(index =>
-      [...Object.values(files[index])]);
+    const groupedFiles = Object.keys(files).map(index => [...Object.values(files[index])]);
     return groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr));
   }
 
@@ -162,13 +161,13 @@ class MapFiles extends React.Component {
 
   toggleCheckBox = (index, file) => {
     if (this.isSelected(index, file.did)) {
-      this.setState({
-        selectedFilesByGroup: this.removeFromMap(this.state.selectedFilesByGroup, index, file.did),
-      });
+      this.setState(prevState => ({
+        selectedFilesByGroup: this.removeFromMap(prevState.selectedFilesByGroup, index, file.did),
+      }));
     } else if (this.isFileReady(file)) { // file status == ready, so it is selectable
-      this.setState({
-        selectedFilesByGroup: this.addToMap(this.state.selectedFilesByGroup, index, file, file.did),
-      });
+      this.setState(prevState => ({
+        selectedFilesByGroup: this.addToMap(prevState.selectedFilesByGroup, index, file, file.did),
+      }));
     }
   }
 
@@ -176,14 +175,14 @@ class MapFiles extends React.Component {
     if (this.state.selectedFilesByGroup[index]) {
       if (this.getSetSize(this.state.selectedFilesByGroup[index])
         === this.getSetSize(this.state.allFilesByGroup[index])) {
-        this.setState({
-          selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, {}),
-        });
+        this.setState(prevState => ({
+          selectedFilesByGroup: this.setMapValue(prevState.selectedFilesByGroup, index, {}),
+        }));
       } else {
         const newFiles = { ...this.state.allFilesByGroup[index] };
-        this.setState({
-          selectedFilesByGroup: this.setMapValue(this.state.selectedFilesByGroup, index, newFiles),
-        });
+        this.setState(prevState => ({
+          selectedFilesByGroup: this.setMapValue(prevState.selectedFilesByGroup, index, newFiles),
+        }));
       }
     }
   }
@@ -291,17 +290,13 @@ class MapFiles extends React.Component {
                           label='Size'
                           dataKey='size'
                           width={100}
-                          cellRenderer={({ cellData }) =>
-                            <div>{cellData ? humanFileSize(cellData) : '0 B'}</div>
-                          }
+                          cellRenderer={({ cellData }) => <div>{cellData ? humanFileSize(cellData) : '0 B'}</div>}
                         />
                         <Column
                           label='Uploaded Date'
                           dataKey='created_date'
                           width={300}
-                          cellRenderer={({ cellData }) =>
-                            <div>{ moment(cellData).format('MM/DD/YY, hh:mm:ss a [UTC]Z') }</div>
-                          }
+                          cellRenderer={({ cellData }) => <div>{ moment(cellData).format('MM/DD/YY, hh:mm:ss a [UTC]Z') }</div>}
                         />
                         <Column
                           label='Status'
