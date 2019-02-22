@@ -100,9 +100,9 @@ async function init() {
                       path='/'
                       component={
                         props => (
-                          <ProtectedContent 
+                          <ProtectedContent
                             public={indexPublic}
-                            component={IndexPage} 
+                            component={IndexPage}
                             {...props}
                           />
                         )

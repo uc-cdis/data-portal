@@ -34,7 +34,12 @@ const getProjectNodeCounts = async () => {
   fetchWithCreds({
     path: url,
   }).then((res) => {
-    updateRedux(res.data);
+    if (res.status === 200) {
+      updateRedux(res.data);
+    } else if (res.status === 404) {
+      console.error(`REST endpoint ${datasetUrl} not enabled in Peregrine yet.`);
+      getProjectsList();
+    }
   })
     .catch((err) => {
       console.log(err);

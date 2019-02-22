@@ -55,7 +55,7 @@ function buildConfig(opts) {
   const datasetUrl = `${hostname}api/search/datasets`;
 
   // see index page without login
-  let indexPublic = typeof components.index.public === 'undefined' 
+  let indexPublic = typeof components.index.public === 'undefined'
     ? false : components.index.public;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED, thus not making public
