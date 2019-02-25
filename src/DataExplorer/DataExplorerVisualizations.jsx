@@ -36,7 +36,6 @@ class DataExplorerVisualizations extends React.Component {
       }
       const nodeIds = idField ? aggregations[idField].buckets.map(bucket => bucket.key) : [];
       this.setState({ idField, nodeIds }, () => {
-        console.log('state with', this.state.nodeIds)
         this.refreshManifestEntryCount(this.state.nodeIds);
       });
     }

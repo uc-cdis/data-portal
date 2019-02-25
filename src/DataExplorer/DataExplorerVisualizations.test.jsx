@@ -35,10 +35,6 @@ describe('DataExplorerVisualizations', () => {
     />,
   );
 
-  const noDataComponent = mount(
-    <DataExplorerVisualizations dataExplorerConfig={dataExplorerConfig} />,
-  );
-
   it('renders', () => {
     expect(component.find(DataExplorerVisualizations).length).toBe(1);
   });
