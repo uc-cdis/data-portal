@@ -125,7 +125,9 @@ describe('helper', () => {
   };
 
   const dataExplorerConfig = {
-    graphqlField: 'subject',
+    arrangerConfig: {
+      graphqlField: 'subject',
+    },
     charts: {
       ethnicity: {
         chartType: 'pie',

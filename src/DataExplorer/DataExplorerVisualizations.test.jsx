@@ -17,7 +17,9 @@ describe('DataExplorerVisualizations', () => {
   };
 
   const dataExplorerConfig = {
-    graphqlField: 'subject',
+    arrangerConfig: {
+      graphqlField: 'subject',
+    },
     charts: {
       gender: {
         chartType: 'bar',
@@ -39,30 +41,5 @@ describe('DataExplorerVisualizations', () => {
 
   it('renders', () => {
     expect(component.find(DataExplorerVisualizations).length).toBe(1);
-  });
-
-  it('toggles visualization', () => {
-    expect(component.find('.data-explorer__visualizations-title').length).toBe(1);
-    expect(component.instance().state.showVisualization).toBe(true);
-    component.find('.data-explorer__visualizations-title').simulate('click');
-    expect(component.instance().state.showVisualization).toBe(false);
-  });
-
-  it('shows data when showVisualization is true', () => {
-    component.find('.data-explorer__visualizations-title').simulate('click');
-    expect(component.instance().props.arrangerData).toEqual(arrangerData);
-    expect(component.instance().props.dataExplorerConfig).toEqual(dataExplorerConfig);
-    expect(component.instance().state.showVisualization).toBe(true);
-    expect(component.find('.data-explorer__charts').length).toBe(1);
-  });
-
-  it('shows doesnt data when showVisualization is false, or there is no data', () => {
-    component.find('.data-explorer__visualizations-title').simulate('click');
-    expect(component.instance().state.showVisualization).toBe(false);
-    expect(component.find('.data-explorer__charts').length).toBe(0);
-
-    expect(noDataComponent.instance().state.showVisualization).toBe(true);
-    expect(noDataComponent.instance().props.arrangerData).toBe(null);
-    expect(component.find('.data-explorer__charts').length).toBe(0);
   });
 });
