@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CurrentSQON } from '@arranger/components/dist/Arranger';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import Spinner from '../components/Spinner';
@@ -24,9 +23,10 @@ class DataExplorerVisualizations extends React.Component {
     };
   }
 
-  componentWillUpdate(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.arrangerData !== this.props.arrangerData) {
-      const data = nextProps.arrangerData && nextProps.arrangerData[nextProps.dataExplorerConfig.arrangerConfig.graphqlField];
+      const data = nextProps.arrangerData &&
+        nextProps.arrangerData[nextProps.dataExplorerConfig.arrangerConfig.graphqlField];
       const aggregations = data && data.aggregations ? data.aggregations : null;
       let idField = null;
       if (aggregations && aggregations.node_id) {
@@ -142,15 +142,15 @@ class DataExplorerVisualizations extends React.Component {
 
     return (
       <div className='data-explorer__visualizations'>
-      <div className='data-explorer__button-section'>
-        {
+        <div className='data-explorer__button-section'>
+          {
           /*
           * First, render dropdown buttons
           * Buttons are grouped under same dropdown if they have the same dropdownID
           * If only one button points to the same dropdownId, it won't be grouped into dropdown
           *   but will only be rendered as sinlge normal button instead.
           */
-          dropdownConfigs && Object.keys(dropdownConfigs).length > 0
+            dropdownConfigs && Object.keys(dropdownConfigs).length > 0
           && Object.keys(dropdownConfigs)
             .filter(dropdownId => (dropdownConfigs[dropdownId].cnt > 1))
             .map((dropdownId) => {
@@ -184,14 +184,14 @@ class DataExplorerVisualizations extends React.Component {
                 </Dropdown>
               );
             })
-        }
-        {
+          }
+          {
           /**
           * Second, render normal buttons.
           * Buttons without dropdownId are rendered as normal buttons
           * Buttons don't share same dropdownId with others are rendered as normal buttons
           */
-          this.props.dataExplorerConfig
+            this.props.dataExplorerConfig
           && this.props.dataExplorerConfig.buttons
           && this.props.dataExplorerConfig.buttons
             .filter(buttonConfig =>
@@ -202,8 +202,8 @@ class DataExplorerVisualizations extends React.Component {
             .filter(buttonConfig => buttonConfig.enabled)
             .map(buttonConfig =>
               this.renderButton(buttonConfig))
-        }
-      </div>
+          }
+        </div>
         <CurrentSQON className='data-explorer__sqon' {...this.props} />
         { charts ?
           <div className='data-explorer__charts'>
@@ -228,7 +228,7 @@ class DataExplorerVisualizations extends React.Component {
               onSelectedRowsChange={this.onSelectedRowsChange}
               {...this.props}
             />
-          : null
+            : null
         }
       </div>
     );

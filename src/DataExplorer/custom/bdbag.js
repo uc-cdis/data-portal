@@ -7,7 +7,7 @@
 */
 
 import { fetchWithCreds } from '../../actions';
-import { queryDataBySQON, queryDataByIds } from '../arrangerQueryHelper';
+import { queryDataByIds } from '../arrangerQueryHelper';
 
 export const getBDBagQuery = referenceIDList => `{
   participants:
