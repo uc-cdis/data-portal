@@ -161,7 +161,7 @@
       {
         "enabled": true,
         "type": "data",
-        "title": "Download Clinical",
+        "title": "Download All Clinical",
         "leftIcon": "user",
         "rightIcon": "download",
         "fileName": "clinical.json"

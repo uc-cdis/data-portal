@@ -175,12 +175,6 @@
         }
       ]
     },
-    "manifestMapping": {
-      "resourceIndexType": "file",
-      "resourceIdField": "object_id",
-      "referenceIdFieldInResourceIndex": "subject_id",
-      "referenceIdFieldInDataIndex": "node_id"
-    },
     "table": {
       "enabled": false
     },
@@ -188,7 +182,7 @@
       {
         "enabled": true,
         "type": "data",
-        "title": "Download Clinical",
+        "title": "Download All Clinical",
         "leftIcon": "user",
         "rightIcon": "download",
         "fileName": "clinical.json"
@@ -205,7 +199,13 @@
     "arrangerConfig": {
       "projectId": "search",
       "graphqlField": "subject",
-      "index": ""
+      "index": "",
+      "manifestMapping": {
+        "resourceIndexType": "file",
+        "resourceIdField": "object_id",
+        "referenceIdFieldInResourceIndex": "subject_id",
+        "referenceIdFieldInDataIndex": "node_id"
+      }
     }
   }
 }

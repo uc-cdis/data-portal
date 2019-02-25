@@ -35,7 +35,10 @@ class DataExplorerVisualizations extends React.Component {
         idField = 'submitter_id';
       }
       const nodeIds = idField ? aggregations[idField].buckets.map(bucket => bucket.key) : [];
-      this.setState({ idField, nodeIds });
+      this.setState({ idField, nodeIds }, () => {
+        console.log('state with', this.state.nodeIds)
+        this.refreshManifestEntryCount(this.state.nodeIds);
+      });
     }
   }
 
@@ -69,10 +72,6 @@ class DataExplorerVisualizations extends React.Component {
       this.state.nodeIds,
       this.props.dataExplorerConfig.arrangerConfig,
     );
-  }
-
-  onSelectedRowsChange = () => {
-    this.refreshManifestEntryCount(this.state.nodeIds);
   }
 
   getOnClickFunction = (buttonConfig) => {
