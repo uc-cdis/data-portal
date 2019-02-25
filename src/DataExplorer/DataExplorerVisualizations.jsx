@@ -221,12 +221,12 @@ class DataExplorerVisualizations extends React.Component {
           : <Spinner />
         }
         {
-          this.props.dataExplorerConfig.table && this.props.dataExplorerConfig.table.enabled ?
+          this.props.dataExplorerConfig.table && this.props.dataExplorerConfig.table.enabled ? (
             <DataExplorerTable
               onSelectedRowsChange={this.onSelectedRowsChange}
               {...this.props}
             />
-            : null
+          ) : null
         }
       </div>
     );

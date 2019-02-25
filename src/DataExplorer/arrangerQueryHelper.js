@@ -170,6 +170,9 @@ export const queryDataByIds = async (
   fields,
 ) => {
   const MSG_QUERY_BY_ID_FAIL = 'Error while querying Arranger data by ID';
+  if (idList === null) {
+    throw MSG_QUERY_BY_ID_FAIL;
+  }
   const responseData = await apiFunc({
     endpoint: getEndpoint(projectId),
     body: constructGraphQLQuery(
