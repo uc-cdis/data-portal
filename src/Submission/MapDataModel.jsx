@@ -8,6 +8,7 @@ import CheckmarkIcon from '../img/icons/status_confirm.svg';
 import InputWithIcon from '../components/InputWithIcon';
 import { GQLHelper } from '../gqlHelper';
 import environment from '../environment';
+import sessionMonitor from '../SessionMonitor';
 import './MapDataModel.less';
 
 const gqlHelper = GQLHelper.getGQLHelper();
@@ -167,6 +168,7 @@ class MapDataModel extends React.Component {
                 ? res.entities[0].errors.map(error => error.message).toString()
                 : res.message} occurred during mapping.`;
             }
+            sessionMonitor.updateUserActivity();
           });
         promises.push(promise);
       });
