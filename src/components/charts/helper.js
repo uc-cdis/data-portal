@@ -95,7 +95,7 @@ const getCharts = (data, dataExplorerConfig, sqon) => {
   const countItems = [];
   const summaries = [];
   const stackedBarCharts = [];
-  const arrangerConfig =  { dataExplorerConfig };
+  const { arrangerConfig } =  dataExplorerConfig;
 
   if (data && data[arrangerConfig.graphqlField].aggregations) {
     const fields = data[arrangerConfig.graphqlField].aggregations;
