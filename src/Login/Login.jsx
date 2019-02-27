@@ -78,7 +78,7 @@ class Login extends React.Component {
           <hr className='login-page__separator' />
           <div className='body-typo'>{this.props.data.text}</div>
           {
-            this.props.providers && this.props.providers.map(
+            this.props.providers.map(
               p => (
                 <div key={p.id} className='login-page__entries'>
                   <a href={`${p.url}?redirect=${window.location.origin}${next}`}>
