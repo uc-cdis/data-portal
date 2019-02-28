@@ -8,12 +8,11 @@ import getProjectNodeCounts from './utils';
 import './page.less';
 
 class IndexPageComponent extends React.Component {
-  constructor(props) {
-    super(props);
+  componentDidMount() {
     getProjectNodeCounts((res) => {
       // If Peregrine returns unauthorized, need to redirect to `/login` page
       if (res.needLogin) {
-        props.history.push('/login');
+        this.props.history.push('/login');
       }
     });
   }
