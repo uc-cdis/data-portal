@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Introduction from '../components/Introduction';
 import { ReduxIndexButtonBar, ReduxIndexBarChart } from './reduxer';
 import dictIcons from '../img/icons';
@@ -9,7 +10,12 @@ import './page.less';
 class IndexPageComponent extends React.Component {
   constructor(props) {
     super(props);
-    getProjectNodeCounts();
+    getProjectNodeCounts((res) => {
+      // If Peregrine returns unauthorized, need to redirect to `/login` page
+      if (res.needLogin) {
+        props.history.push('/login');
+      }
+    });
   }
 
   render() {
@@ -24,6 +30,10 @@ class IndexPageComponent extends React.Component {
     );
   }
 }
+
+IndexPageComponent.propTypes = {
+  history: PropTypes.object.isRequired,
+};
 
 const IndexPage = IndexPageComponent;
 

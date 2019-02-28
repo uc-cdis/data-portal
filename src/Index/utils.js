@@ -19,9 +19,11 @@ const updateRedux = async projectNodeCounts => getReduxStore().then(
   },
 );
 
-const getProjectNodeCounts = async () => {
+const getProjectNodeCounts = async (callback) => {
+  const resultStatus = { needLogin: false };
   if (typeof homepageChartNodes === 'undefined') {
     getProjectsList();
+    callback(resultStatus);
     return;
   }
 
@@ -34,11 +36,23 @@ const getProjectNodeCounts = async () => {
   fetchWithCreds({
     path: url,
   }).then((res) => {
-    if (res.status === 200) {
+    switch (res.status) {
+    case 200:
       updateRedux(res.data);
-    } else if (res.status === 404) {
+      callback(resultStatus);
+      break;
+    case 404:
+      // Shouldn't happen, this means peregrine datasets endpoint not enabled
       console.error(`REST endpoint ${datasetUrl} not enabled in Peregrine yet.`);
-      getProjectsList();
+      callback(resultStatus);
+      break;
+    case 401:
+    case 403:
+      resultStatus.needLogin = true;
+      callback(resultStatus);
+      break;
+    default:
+      break;
     }
   })
     .catch((err) => {
