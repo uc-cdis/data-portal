@@ -404,6 +404,7 @@ export const getAllRoutesBetweenTwoNodes = (
     }
     const curNode = wholeGraphNodes.find(n => n.id === curID);
     curNode.outLinks.forEach((oid) => {
+      if (curPath.includes(oid)) return; // avoid loop
       if (!subgraphNodeIDs.includes(oid)) return;
       if (!subgraphEdges.find(e => e.target === oid && e.source === curID)) return;
       takeOneStep(oid, curPath.concat(oid));
