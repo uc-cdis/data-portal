@@ -12,7 +12,10 @@ export const ReduxIndexBarChart = (() => {
       const projectList = Object.values(
         state.homepage.projectsByName,
       ).sort(sortCompare);
-      return { projectList, countNames: components.charts.indexChartNames };
+      return {
+        projectList,
+        countNames: state.homepage.countNames,
+      };
     }
     return {};
   };

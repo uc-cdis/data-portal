@@ -1,15 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Introduction from '../components/Introduction';
 import { ReduxIndexButtonBar, ReduxIndexBarChart } from './reduxer';
 import dictIcons from '../img/icons';
 import { components } from '../params';
-import getProjectsList from './relayer';
+import getProjectNodeCounts from './utils';
 import './page.less';
 
 class IndexPageComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    getProjectsList();
+  componentDidMount() {
+    getProjectNodeCounts((res) => {
+      // If Peregrine returns unauthorized, need to redirect to `/login` page
+      if (res.needLogin) {
+        this.props.history.push('/login');
+      }
+    });
   }
 
   render() {
@@ -24,6 +29,10 @@ class IndexPageComponent extends React.Component {
     );
   }
 }
+
+IndexPageComponent.propTypes = {
+  history: PropTypes.object.isRequired,
+};
 
 const IndexPage = IndexPageComponent;
 
