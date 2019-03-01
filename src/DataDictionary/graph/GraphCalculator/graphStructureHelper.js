@@ -398,18 +398,22 @@ export const getAllRoutesBetweenTwoNodes = (
   const resultRoutes = [];
   const takeOneStep = (curID, curPath) => {
     if (curID === endingNodeID) {
-      curPath.reverse(); // we actually want route from top to bottom
-      resultRoutes.push(curPath);
+      const resultPath = Array.from(curPath);
+      resultPath.reverse(); // we actually want route from top to bottom
+      resultRoutes.push(resultPath);
       return;
     }
     const curNode = wholeGraphNodes.find(n => n.id === curID);
     curNode.outLinks.forEach((oid) => {
+      if (curPath.has(oid)) return; // avoid loop
       if (!subgraphNodeIDs.includes(oid)) return;
       if (!subgraphEdges.find(e => e.target === oid && e.source === curID)) return;
-      takeOneStep(oid, curPath.concat(oid));
+      curPath.add(oid);
+      takeOneStep(oid, curPath);
+      curPath.delete(oid);
     });
   };
-  takeOneStep(startingNodeID, [startingNodeID]);
+  takeOneStep(startingNodeID, new Set([startingNodeID]));
   return resultRoutes;
 };
 
