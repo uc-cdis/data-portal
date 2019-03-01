@@ -2,7 +2,7 @@ import React from 'react';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 
-import { basename } from '../localconf';
+import { basename, loginPath } from '../localconf';
 import SlidingWindow from '../components/SlidingWindow';
 import './Login.less';
 
@@ -12,10 +12,20 @@ class Login extends React.Component {
   static propTypes = {
     providers: PropTypes.arrayOf(
       PropTypes.objectOf(PropTypes.any),
-    ).isRequired,
+    ),
     location: PropTypes.object.isRequired,
     dictIcons: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
+  };
+
+  static defaultProps = {
+    providers: [
+      {
+        id: 'google',
+        name: 'Google OAuth',
+        url: `${loginPath}google/`,
+      },
+    ],
   };
 
   constructor(props) {

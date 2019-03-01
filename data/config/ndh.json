@@ -121,7 +121,24 @@
       "text": "The website combines government datasets from 3 divisions of NIAID to create clean, easy to navigate visualizations for data-driven discovery within Allergy and Infectious Diseases.",
       "contact": "If you have any questions about access or the registration process, please contact ",
       "email": "support@datacommons.io"
-    }
+    },
+    "footerLogos": [
+      {
+        "src": "/src/img/gen3.png",
+        "href": "https://ctds.uchicago.edu/gen3",
+        "alt": "Gen3 Data Commons"
+      },
+      {
+        "src": "/src/img/createdby.png",
+        "href": "https://ctds.uchicago.edu/",
+        "alt": "Center for Translational Data Science at the University of Chicago"
+      },
+      {
+        "src": "/src/img/sponsors/niaid.png",
+        "href": "https://niaid.bionimbus.org",
+        "alt": "NIAID Data Hub"
+      }
+    ]
   },
   "featureFlags": {
     "explorer": true
