@@ -71,37 +71,36 @@ class ProtectedContent extends React.Component {
    * in the various ways we want it to be.
    */
   componentDidMount() {
-    if (!this.props.public) {
-      getReduxStore().then(
-        store =>
-          Promise.all(
-            [
-              store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
-              store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
-            ],
-          ).then(
-            () => this.checkLoginStatus(store, this.state)
-              .then(newState => this.checkQuizStatus(newState))
-              .then(newState => this.checkApiToken(store, newState)),
-          ).then(
-            (newState) => {
-              const filterPromise = (newState.authenticated
-                && typeof this.props.filter === 'function')
-                ? this.props.filter()
-                : Promise.resolve('ok');
-              // finally update the component state
-              const finish = () => {
-                const latestState = Object.assign({}, newState);
-                latestState.dataLoaded = true;
-                this.setState(latestState);
-              };
-              return filterPromise.then(
-                finish, finish,
-              );
-            },
-          ),
-      );
-    } else {
+    getReduxStore().then(
+      store =>
+        Promise.all(
+          [
+            store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
+            store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
+          ],
+        ).then(
+          () => this.checkLoginStatus(store, this.state)
+            .then(newState => this.props.public || this.checkQuizStatus(newState))
+            .then(newState => this.props.public || this.checkApiToken(store, newState)),
+        ).then(
+          (newState) => {
+            const filterPromise = (!this.props.public && newState.authenticated
+              && typeof this.props.filter === 'function')
+              ? this.props.filter()
+              : Promise.resolve('ok');
+            // finally update the component state
+            const finish = () => {
+              const latestState = Object.assign({}, newState);
+              latestState.dataLoaded = true;
+              this.setState(latestState);
+            };
+            return filterPromise.then(
+              finish, finish,
+            );
+          },
+        ),
+    );
+    if (this.props.public) {
       getReduxStore().then(
         (store) => {
           const filterPromise = (
