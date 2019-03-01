@@ -222,10 +222,7 @@ class DataExplorerVisualizations extends React.Component {
         }
         {
           this.props.dataExplorerConfig.table && this.props.dataExplorerConfig.table.enabled ? (
-            <DataExplorerTable
-              onSelectedRowsChange={this.onSelectedRowsChange}
-              {...this.props}
-            />
+            <DataExplorerTable {...this.props} />
           ) : null
         }
       </div>
@@ -237,7 +234,6 @@ DataExplorerVisualizations.propTypes = {
   arrangerData: PropTypes.object,
   dataExplorerConfig: PropTypes.object,
   sqon: PropTypes.object,
-  selectedTableRows: PropTypes.array,
   projectId: PropTypes.string,
   api: PropTypes.func,
 };
@@ -248,7 +244,6 @@ DataExplorerVisualizations.defaultProps = {
     arrangerConfig: {},
   },
   sqon: null,
-  selectedTableRows: [],
   projectId: 'search',
   api: () => {},
 };
