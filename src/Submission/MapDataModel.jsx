@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { fetchQuery } from 'relay-runtime';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
-import getProjectsList from '../Index/relayer';
+import getProjectNodeCounts from '../Index/utils';
 import CheckmarkIcon from '../img/icons/status_confirm.svg';
 import InputWithIcon from '../components/InputWithIcon';
 import { GQLHelper } from '../gqlHelper';
 import environment from '../environment';
+import sessionMonitor from '../SessionMonitor';
 import './MapDataModel.less';
 
 const gqlHelper = GQLHelper.getGQLHelper();
@@ -34,7 +35,7 @@ class MapDataModel extends React.Component {
     if (this.props.filesToMap.length === 0) { // redirect if no files
       this.props.history.push('/submission/files');
     }
-    getProjectsList();
+    getProjectNodeCounts();
   }
 
   setRequiredProperties = () => {
@@ -167,6 +168,7 @@ class MapDataModel extends React.Component {
                 ? res.entities[0].errors.map(error => error.message).toString()
                 : res.message} occurred during mapping.`;
             }
+            sessionMonitor.updateUserActivity();
           });
         promises.push(promise);
       });

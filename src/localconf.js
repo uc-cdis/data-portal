@@ -52,6 +52,14 @@ function buildConfig(opts) {
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
   const workspaceUrl = '/lw-workspace/';
   const workspaceErrorUrl = '/no-workspace-access/';
+  const datasetUrl = `${hostname}api/search/datasets`;
+
+  // backward compatible: homepageChartNodes not set means using graphql query,
+  // which will return 401 UNAUTHORIZED if not logged in, thus not making public
+  let indexPublic = true;
+  if (typeof components.index.homepageChartNodes === 'undefined') {
+    indexPublic = false;
+  }
 
   const colorsForCharts = {
     categorical9Colors: [
@@ -111,6 +119,9 @@ function buildConfig(opts) {
     certs: components.certs,
     workspaceUrl,
     workspaceErrorUrl,
+    homepageChartNodes: components.index.homepageChartNodes,
+    datasetUrl,
+    indexPublic,
   };
 }
 

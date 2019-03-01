@@ -1,7 +1,6 @@
 import { ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis } from 'recharts';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
-import { browserHistory } from 'react-router-dom';
 import Spinner from '../../Spinner';
 import TooltipCDIS from '../TooltipCDIS/.';
 import Tick from '../Tick';
@@ -116,7 +115,6 @@ class IndexBarChart extends React.Component {
       <div className='index-bar-chart'>
         <ResponsiveContainer width='100%' height='100%'>
           <BarChart
-            onClick={(e) => { browserHistory.push(`/${e.activeLabel}`); window.location.reload(false); }}
             data={indexChart}
             margin={barChartStyle.margins}
             layout={barChartStyle.layout}

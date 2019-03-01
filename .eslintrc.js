@@ -59,6 +59,7 @@ module.exports = {
         "data/getTexts.js",
         "data/gqlSetup.js",
         "src/SessionMonitor/index.js",
+        "src/Index/utils.js",
       ],
       "rules": {
         "no-console": "off" // for logging errors

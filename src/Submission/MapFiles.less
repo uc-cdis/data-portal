@@ -55,6 +55,7 @@
   -webkit-border-horizontal-spacing: unset;
   margin: 10px 0 40px 0;
   border-collapse: collapse;
+  outline: none;
 }
 
 .map-files__table-header {
@@ -90,4 +91,13 @@
 
 .map-files__status--generating {
   color: var(--g3-color__gray);
+}
+
+/* Overrides for React Virtualized Table */
+.ReactVirtualized__Table__Grid {
+  outline: 0;
+}
+
+.ReactVirtualized__Table__headerColumn {
+  text-transform: none;
 }
