@@ -9,9 +9,10 @@ import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart/.';
 import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup/.';
 import { getCharts } from '../components/charts/helper';
-import { downloadManifest, downloadData, getManifestEntryCount } from './actionHelper';
+import { downloadManifest, downloadData, getManifestEntryCount, exportToWorkspace } from './actionHelper';
 import { calculateDropdownButtonConfigs, humanizeNumber } from './utils';
 import { exportAllSelectedDataToCloud } from './custom/bdbag';
+import { workspaceUrl } from '../localconf';
 
 class DataExplorerVisualizations extends React.Component {
   constructor(props) {
@@ -19,6 +20,12 @@ class DataExplorerVisualizations extends React.Component {
     this.state = {
       showVisualization: true,
       manifestEntryCount: 0,
+      exportedToWorkspace: false,
+      toasterOpen: false,
+      exportErrorStatus: null,
+      exportErrorData: null,
+      toasterSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
+      toasterErrorText: 'There was an error exporting your cohort.',
     };
   }
 
@@ -53,6 +60,45 @@ class DataExplorerVisualizations extends React.Component {
     );
   }
 
+  exportToWorkspaceCallback = () => {
+    this.setState({toasterOpen: true});
+    this.setState({exportedToWorkspace: true});
+  }
+
+  exportToWorkspaceErrorCallback = (status, data) => {
+    this.setState({toasterOpen: true});
+    this.setState({exportErrorStatus: status});
+    this.setState({exportErrorData: data});
+  }
+
+  closeToaster = () => {
+    this.setState({toasterOpen: false})
+  }
+
+  setExportedToWorkspace = () =>  {
+    this.setState({exportedToWorkspace: true});
+  }
+
+  unsetExportedToWorkspace = () => {
+    this.setState({exportedToWorkspace: false});
+  }
+
+  goToWorkspace = () => {
+    window.location.href = workspaceUrl;
+  }
+
+  onExportToWorkspace = filename => () => {
+    exportToWorkspace(
+      this.props.api,
+      this.props.projectId,
+      this.props.selectedTableRows,
+      this.props.arrangerConfig,
+      filename,
+      this.exportToWorkspaceCallback,
+      this.exportToWorkspaceErrorCallback,
+    );
+  }
+
   onSelectedRowsChange = (selectedTableRows) => {
     this.refreshManifestEntryCount(selectedTableRows);
   }
@@ -67,6 +113,9 @@ class DataExplorerVisualizations extends React.Component {
     }
     if (buttonConfig.type === 'export') {
       clickFunc = this.onExportToCloud;
+    }
+    if (buttonConfig.type === `export-to-workspace`) {
+      clickFunc = this.onExportToWorkspace(buttonConfig.fileName);
     }
     return clickFunc;
   }
@@ -94,7 +143,9 @@ class DataExplorerVisualizations extends React.Component {
     if (buttonConfig.type === 'manifest') {
       return this.props.selectedTableRows.length > 0 && this.state.manifestEntryCount > 0;
     }
-
+    if (buttonConfig.type === 'export-to-workspace') {
+      return true;
+    }
     return this.props.selectedTableRows.length > 0;
   }
 
@@ -125,6 +176,27 @@ class DataExplorerVisualizations extends React.Component {
       : null;
     const selectedTableRowsCount = this.props.selectedTableRows.length;
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.explorerTableConfig);
+    const toaster =
+          this.state.toasterOpen && (
+          <div className='map-data-model__submission-footer'>
+            <Button
+              onClick={this.closeToaster}
+              label='Close'
+              buttonType='primary'
+              enabled={true}
+            />
+            <Button
+              label='Go To Workspace'
+              buttonType='primary'
+              enabled={true}
+              onClick={this.goToWorkspace}
+            />
+            <p className='map-data-model__submission-footer-text introduction'>
+              {this.state.exportedToWorkspace ? this.state.toasterSuccessText : this.state.toasterErrorText + ' Error: ' + this.state.exportErrorStatus}
+            </p>
+          </div>
+          )
+    console.log(toaster)
     const tableToolbarActions = (
       <React.Fragment>
         {
@@ -170,7 +242,7 @@ class DataExplorerVisualizations extends React.Component {
             })
         }
         {
-          /**
+          /*
           * Second, render normal buttons.
           * Buttons without dropdownId are rendered as normal buttons
           * Buttons don't share same dropdownId with others are rendered as normal buttons
@@ -227,6 +299,9 @@ class DataExplorerVisualizations extends React.Component {
           onSelectedRowsChange={this.onSelectedRowsChange}
           {...this.props}
         />
+        {
+          toaster
+        }
       </div>
     );
   }

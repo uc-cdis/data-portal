@@ -52,7 +52,8 @@ function buildConfig(opts) {
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
   const workspaceUrl = '/lw-workspace/';
   const workspaceErrorUrl = '/no-workspace-access/';
-
+  const manifestUrl = `${hostname}manifests/`
+  
   const colorsForCharts = {
     categorical9Colors: [
       '#3283c8',

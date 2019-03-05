@@ -198,6 +198,14 @@
           "leftIcon": "datafile",
           "rightIcon": "download",
           "fileName": "manifest.json"
+        },
+        {
+          "enabled": true,
+          "type": "export-to-workspace",
+          "title": "Export To Workspace",
+          "leftIcon": "datafile",
+          "rightIcon": "download",
+          "fileName": "manifest.json"
         }
       ]
     },
