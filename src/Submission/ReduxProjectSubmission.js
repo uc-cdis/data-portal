@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import ProjectSubmission from './ProjectSubmission';
 import SubmitTSV from './SubmitTSV';
 import SubmitForm from './SubmitForm';
-
+import sessionMonitor from '../SessionMonitor';
 import ReduxDataModelGraph, { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
 
 import { fetchWithCreds } from '../actions';
@@ -95,7 +95,8 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
           data,
           total: totalChunk,
         }),
-    ).then(msg => dispatch(msg));
+    ).then(msg => dispatch(msg))
+      .then(sessionMonitor.updateUserActivity());
   }
 
   return recursiveFetch(fileArray);
