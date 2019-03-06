@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CurrentSQON } from '@arranger/components/dist/Arranger';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import Spinner from '../components/Spinner';
 import DataExplorerTable from '../components/tables/DataExplorerTable';
 import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart/.';
@@ -17,29 +17,48 @@ class DataExplorerVisualizations extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showVisualization: true,
       manifestEntryCount: 0,
+      idField: null,
+      nodeIds: [],
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.arrangerData !== this.props.arrangerData) {
+      const data = nextProps.arrangerData &&
+        nextProps.arrangerData[nextProps.dataExplorerConfig.arrangerConfig.graphqlField];
+      const aggregations = data && data.aggregations ? data.aggregations : null;
+      let idField = null;
+      if (aggregations && aggregations.node_id) {
+        idField = 'node_id';
+      } else if (aggregations && aggregations.submitter_id) {
+        idField = 'submitter_id';
+      }
+      const nodeIds = idField ? aggregations[idField].buckets.map(bucket => bucket.key) : [];
+      this.setState({ idField, nodeIds }, () => {
+        this.refreshManifestEntryCount(this.state.nodeIds);
+      });
+    }
+  }
+
   onDownloadManifest = fileName => () => {
-    if (this.props.selectedTableRows.length === 0) return;
     downloadManifest(
       this.props.api,
       this.props.projectId,
-      this.props.selectedTableRows,
-      this.props.arrangerConfig,
+      this.state.idField,
+      this.state.nodeIds,
+      this.props.dataExplorerConfig.arrangerConfig,
       fileName,
     );
   }
 
   onDownloadData = fileName => () => {
-    if (this.props.selectedTableRows.length === 0) return;
     downloadData(
       this.props.api,
       this.props.projectId,
-      this.props.selectedTableRows,
-      this.props.arrangerConfig,
+      this.state.idField,
+      this.state.nodeIds,
+      this.props.dataExplorerConfig.arrangerConfig,
       fileName,
     );
   }
@@ -48,13 +67,10 @@ class DataExplorerVisualizations extends React.Component {
     exportAllSelectedDataToCloud(
       this.props.api,
       this.props.projectId,
-      this.props.arrangerConfig,
-      this.props.selectedTableRows,
+      this.state.idField,
+      this.state.nodeIds,
+      this.props.dataExplorerConfig.arrangerConfig,
     );
-  }
-
-  onSelectedRowsChange = (selectedTableRows) => {
-    this.refreshManifestEntryCount(selectedTableRows);
   }
 
   getOnClickFunction = (buttonConfig) => {
@@ -71,37 +87,34 @@ class DataExplorerVisualizations extends React.Component {
     return clickFunc;
   }
 
-  refreshManifestEntryCount = (selectedTableRows) => {
-    if (this.props.explorerTableConfig
-      && this.props.explorerTableConfig.buttons
-      && this.props.explorerTableConfig.buttons.some(btnCfg => btnCfg.type === 'manifest' && btnCfg.enabled)) {
+  refreshManifestEntryCount = () => {
+    if (this.props.dataExplorerConfig
+      && this.props.dataExplorerConfig.buttons
+      && this.props.dataExplorerConfig.buttons.some(btnCfg => btnCfg.type === 'manifest' && btnCfg.enabled)) {
       getManifestEntryCount(
         this.props.api,
         this.props.projectId,
-        selectedTableRows,
-        this.props.arrangerConfig,
+        this.state.idField,
+        this.state.nodeIds,
+        this.props.dataExplorerConfig.arrangerConfig,
       ).then((r) => {
         this.setState({ manifestEntryCount: r });
       });
     }
   }
 
-  toggleVisualization = () => {
-    this.setState({ showVisualization: !this.state.showVisualization });
-  }
-
   isButtonEnabled = (buttonConfig) => {
     if (buttonConfig.type === 'manifest') {
-      return this.props.selectedTableRows.length > 0 && this.state.manifestEntryCount > 0;
+      return this.state.nodeIds.length > 0 && this.state.manifestEntryCount > 0;
     }
 
-    return this.props.selectedTableRows.length > 0;
+    return this.state.nodeIds.length > 0;
   }
 
   renderButton = (buttonConfig) => {
     const clickFunc = this.getOnClickFunction(buttonConfig);
     let buttonTitle = buttonConfig.title;
-    if (buttonConfig.type === 'manifest' && this.props.selectedTableRows.length > 0) {
+    if (buttonConfig.type === 'manifest' && this.state.nodeIds.length > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
 
@@ -121,20 +134,21 @@ class DataExplorerVisualizations extends React.Component {
 
   render() {
     const charts = this.props.arrangerData ?
-      getCharts(this.props.arrangerData, this.props.arrangerConfig, this.props.sqon)
+      getCharts(this.props.arrangerData, this.props.dataExplorerConfig, this.props.sqon)
       : null;
-    const selectedTableRowsCount = this.props.selectedTableRows.length;
-    const dropdownConfigs = calculateDropdownButtonConfigs(this.props.explorerTableConfig);
-    const tableToolbarActions = (
-      <React.Fragment>
-        {
+    const dropdownConfigs = calculateDropdownButtonConfigs(this.props.dataExplorerConfig);
+
+    return (
+      <div className='data-explorer__visualizations'>
+        <div className='data-explorer__button-section'>
+          {
           /*
           * First, render dropdown buttons
           * Buttons are grouped under same dropdown if they have the same dropdownID
           * If only one button points to the same dropdownId, it won't be grouped into dropdown
           *   but will only be rendered as sinlge normal button instead.
           */
-          dropdownConfigs && Object.keys(dropdownConfigs).length > 0
+            dropdownConfigs && Object.keys(dropdownConfigs).length > 0
           && Object.keys(dropdownConfigs)
             .filter(dropdownId => (dropdownConfigs[dropdownId].cnt > 1))
             .map((dropdownId) => {
@@ -145,7 +159,7 @@ class DataExplorerVisualizations extends React.Component {
                 <Dropdown
                   key={dropdownId}
                   className='data-explorer__dropdown'
-                  disabled={selectedTableRowsCount === 0}
+                  disabled={this.state.nodeIds.length === 0}
                 >
                   <Dropdown.Button>{dropdownTitle}</Dropdown.Button>
                   <Dropdown.Menu>
@@ -168,16 +182,16 @@ class DataExplorerVisualizations extends React.Component {
                 </Dropdown>
               );
             })
-        }
-        {
+          }
+          {
           /**
           * Second, render normal buttons.
           * Buttons without dropdownId are rendered as normal buttons
           * Buttons don't share same dropdownId with others are rendered as normal buttons
           */
-          this.props.explorerTableConfig
-          && this.props.explorerTableConfig.buttons
-          && this.props.explorerTableConfig.buttons
+            this.props.dataExplorerConfig
+          && this.props.dataExplorerConfig.buttons
+          && this.props.dataExplorerConfig.buttons
             .filter(buttonConfig =>
               !dropdownConfigs
               || !buttonConfig.dropdownId
@@ -186,27 +200,10 @@ class DataExplorerVisualizations extends React.Component {
             .filter(buttonConfig => buttonConfig.enabled)
             .map(buttonConfig =>
               this.renderButton(buttonConfig))
-        }
-      </React.Fragment>
-    );
-    return (
-      <div className='data-explorer__visualizations'>
-        <CurrentSQON className='data-explorer__sqon' {...this.props} />
-        <div
-          className='data-explorer__visualizations-title'
-          onClick={this.toggleVisualization}
-          role='button'
-          onKeyDown={this.toggleVisualization}
-          tabIndex={0}
-        >
-          <h4>Data Summary</h4>
-          <FontAwesomeIcon
-            className='data-explorer__visualizations-title-icon'
-            icon={this.state.showVisualization ? 'angle-down' : 'angle-up'}
-            size='lg'
-          />
+          }
         </div>
-        { charts && this.state.showVisualization ?
+        <CurrentSQON className='data-explorer__sqon' {...this.props} />
+        { charts ?
           <div className='data-explorer__charts'>
             <DataSummaryCardGroup summaryItems={charts.countItems} connected />
             <SummaryChartGroup summaries={charts.summaries} />
@@ -221,12 +218,13 @@ class DataExplorerVisualizations extends React.Component {
               )
             }
           </div>
-          : null}
-        <DataExplorerTable
-          customActions={tableToolbarActions}
-          onSelectedRowsChange={this.onSelectedRowsChange}
-          {...this.props}
-        />
+          : <Spinner />
+        }
+        {
+          this.props.dataExplorerConfig.table && this.props.dataExplorerConfig.table.enabled ? (
+            <DataExplorerTable {...this.props} />
+          ) : null
+        }
       </div>
     );
   }
@@ -234,22 +232,20 @@ class DataExplorerVisualizations extends React.Component {
 
 DataExplorerVisualizations.propTypes = {
   arrangerData: PropTypes.object,
-  arrangerConfig: PropTypes.object,
+  dataExplorerConfig: PropTypes.object,
   sqon: PropTypes.object,
-  selectedTableRows: PropTypes.array,
   projectId: PropTypes.string,
   api: PropTypes.func,
-  explorerTableConfig: PropTypes.object,
 };
 
 DataExplorerVisualizations.defaultProps = {
   arrangerData: null,
-  arrangerConfig: {},
+  dataExplorerConfig: {
+    arrangerConfig: {},
+  },
   sqon: null,
-  selectedTableRows: [],
   projectId: 'search',
   api: () => {},
-  explorerTableConfig: {},
 };
 
 export default DataExplorerVisualizations;

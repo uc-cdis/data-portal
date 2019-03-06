@@ -115,7 +115,7 @@
   "featureFlags": {
     "explorer": true
   },
-  "arrangerConfig": {
+  "dataExplorerConfig": {
     "charts": {
       "project_id": {
         "chartType": "count",
@@ -151,30 +151,39 @@
         }
       ]
     },
-    "projectId": "search",
-    "graphqlField": "case",
-    "index": "",
+    "arrangerConfig": {
+      "projectId": "search",
+      "graphqlField": "case",
+      "index": ""
+    },
     "table": {
-      "buttons": [
-        {
-          "enabled": false,
-          "type": "data",
-          "title": "Download Clinical",
-          "leftIcon": "user",
-          "rightIcon": "download",
-          "fileName": "clinical.json",
-          "dropdownId": "download"
-        },
-        {
-          "enabled": false,
-          "type": "manifest",
-          "title": "Download Manifest",
-          "leftIcon": "datafile",
-          "rightIcon": "download",
-          "fileName": "manifest.json",
-          "dropdownId": "download"
-        }
-      ]
-    }
+      "enabled": true
+    },
+    "dropdowns": {
+      "download": {
+        "title": "Download All"
+      }
+    },
+    "buttons": [
+      {
+        "enabled": true,
+        "type": "data",
+        "title": "Download Clinical",
+        "leftIcon": "user",
+        "rightIcon": "download",
+        "fileName": "clinical.json",
+        "dropdownId": "download",
+        "tooltipText": "You have not selected any cases to download. Please use the checkboxes on the left to select specific cases you would like to download."
+      },
+      {
+        "enabled": true,
+        "type": "manifest",
+        "title": "Download Manifest",
+        "leftIcon": "datafile",
+        "rightIcon": "download",
+        "fileName": "manifest.json",
+        "dropdownId": "download"
+      }
+    ]
   }
 }

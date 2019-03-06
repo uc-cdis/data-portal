@@ -8,8 +8,8 @@ import './DataExplorer.less';
 
 class DataExplorer extends React.Component {
   render() {
-    const arrangerConfig = config.arrangerConfig || {};
-    const explorerTableConfig = arrangerConfig.table || {};
+    const dataExplorerConfig = config.dataExplorerConfig || {};
+    const arrangerConfig = dataExplorerConfig ? dataExplorerConfig.arrangerConfig : {};
 
     return (
       <div className='data-explorer'>
@@ -18,12 +18,11 @@ class DataExplorer extends React.Component {
           graphqlField={arrangerConfig.graphqlField}
           projectId={arrangerConfig.projectId}
           api={arrangerApi}
-          charts={arrangerConfig.charts}
+          charts={dataExplorerConfig.charts}
         >
-          <DataExplorerFilters arrangerConfig={arrangerConfig} api={arrangerApi} />
+          <DataExplorerFilters dataExplorerConfig={dataExplorerConfig} api={arrangerApi} />
           <DataExplorerVisualizations
-            arrangerConfig={arrangerConfig}
-            explorerTableConfig={explorerTableConfig}
+            dataExplorerConfig={dataExplorerConfig}
             api={arrangerApi}
           />
         </ArrangerWrapper>

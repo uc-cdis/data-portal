@@ -36,7 +36,7 @@ class DataExplorerTable extends React.Component {
 }
 
 DataExplorerTable.propTypes = {
-  arrangerConfig: PropTypes.object,
+  dataExplorerConfig: PropTypes.object,
   arrangerData: PropTypes.object,
   customActions: PropTypes.object,
   onSelectedRowsChange: PropTypes.func,
@@ -44,7 +44,7 @@ DataExplorerTable.propTypes = {
 };
 
 DataExplorerTable.defaultProps = {
-  arrangerConfig: {},
+  dataExplorerConfig: {},
   arrangerData: null,
   customActions: null,
   onSelectedRowsChange: () => {},
