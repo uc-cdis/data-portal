@@ -254,17 +254,39 @@
     "projectId": "search",
     "graphqlField": "subject",
     "index": "",
+    "manifestMapping": {
+      "resourceIndexType": "file",
+      "resourceIdField": "object_id",
+      "referenceIdFieldInResourceIndex": "subject_id",
+      "referenceIdFieldInDataIndex": "node_id"
+    },
     "table": {
       "buttons": [
         {
           "enabled": true,
           "type": "data",
-          "title": "Download Data",
+          "title": "Download Clinical",
           "leftIcon": "user",
           "rightIcon": "download",
-          "fileName": "data.json"
+          "fileName": "clinical.json"
+        },
+        {
+          "enabled": true,
+          "type": "manifest",
+          "title": "Download Manifest",
+          "leftIcon": "datafile",
+          "rightIcon": "download",
+          "fileName": "manifest.json"
+        },
+        {
+          "enabled": true,
+          "type": "export-to-workspace",
+          "title": "Export To Workspace",
+          "leftIcon": "datafile",
+          "rightIcon": "download",
+          "fileName": "manifest.json"
         }
       ]
-    }
+    },
   }
 }
