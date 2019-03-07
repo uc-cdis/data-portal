@@ -173,11 +173,6 @@
     "table": {
       "enabled": true
     },
-    "dropdowns": {
-      "download": {
-        "title": "Download All"
-      }
-    },
     "buttons": [
       {
         "enabled": true,
@@ -190,7 +185,7 @@
         "tooltipText": "You have not selected any cases to download. Please use the checkboxes on the left to select specific cases you would like to download."
       },
       {
-        "enabled": true,
+        "enabled": false,
         "type": "manifest",
         "title": "Download Manifest",
         "leftIcon": "datafile",
