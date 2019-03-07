@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
@@ -40,21 +41,19 @@ const plugins = [
     template: 'src/index.ejs',
     hash: true
   }),
-  new webpack.optimize.DedupePlugin(), //dedupe similar code
   new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
 ];
 
+
 if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ) {
   // This slows things down a lot, so avoid when running local dev environment
-  plugins.push(new webpack.optimize.UglifyJsPlugin({
-    mangle: false,
-  })); //minify everything
 }
 
 module.exports = {
   entry: ['babel-polyfill', './src/index.jsx'],
-  exclude: '/node_modules/',
-
+  target: 'node',
+  externals: [nodeExternals()],
+  mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
     path: __dirname,
     filename: 'bundle.js',
@@ -71,30 +70,24 @@ module.exports = {
     https: true,
   },
   module: {
-    target: 'node',
-    externals: [nodeExternals()],
-    loaders: [{
+    rules: [{
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loaders: [
-          'babel',
-        ],
-      },
-      {
-        test: /\.json$/,
-        loader: 'json'
+        use: {
+          loader: 'babel-loader',
+        },
       },
       {
         test: /\.less$/,
         loaders: [
-          'style',
-          'css',
-          'less',
+          'style-loader',
+          'css-loader',
+          'less-loader',
         ]
       },
       {
         test: /\.css$/,
-        loader: 'style!css',
+        loader: 'style-loader!css-loader',
       },
       {
         test: /\.svg$/,
@@ -102,9 +95,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpg)$/,
-        loaders: [
-          'url'
-        ],
+        loaders: 'url-loader',
         query: {
           limit: 8192
         }
@@ -120,7 +111,7 @@ module.exports = {
       graphql: path.resolve('./node_modules/graphql'),
       react: path.resolve('./node_modules/react') // Same issue.
     },
-    extensions: ['', '.js', '.jsx', '.json']
+    extensions: ['.js', '.jsx', '.json']
   },
   plugins,
   externals: [{
