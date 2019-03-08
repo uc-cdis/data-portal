@@ -164,15 +164,19 @@ export const getArrangerTableColumns = async (apiFunc, projectId, indexType) => 
 export const queryDataByIds = async (
   apiFunc,
   projectId,
+  graphqlIdField,
   idList,
   indexType,
   fields,
 ) => {
   const MSG_QUERY_BY_ID_FAIL = 'Error while querying Arranger data by ID';
+  if (idList === null) {
+    throw MSG_QUERY_BY_ID_FAIL;
+  }
   const responseData = await apiFunc({
     endpoint: getEndpoint(projectId),
     body: constructGraphQLQuery(
-      '_id', // Arranger always uses this for table index
+      graphqlIdField.toString(),
       idList,
       indexType,
       [...fields],

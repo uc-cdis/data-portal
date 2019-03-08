@@ -124,8 +124,10 @@ describe('helper', () => {
     },
   };
 
-  const arrangerConfig = {
-    graphqlField: 'subject',
+  const dataExplorerConfig = {
+    arrangerConfig: {
+      graphqlField: 'subject',
+    },
     charts: {
       ethnicity: {
         chartType: 'pie',
@@ -159,7 +161,7 @@ describe('helper', () => {
   });
 
   it('gets charts', () => {
-    const charts = helper.getCharts(rawData, arrangerConfig);
+    const charts = helper.getCharts(rawData, dataExplorerConfig);
     expect(charts.countItems).toEqual([projectCountData]);
     expect(charts.summaries).toEqual([summaryData]);
     expect(charts.stackedBarCharts).toEqual([]);

@@ -37,7 +37,7 @@ describe('DataExplorerFilters', () => {
 
   const componentWithFilters = mount(
     <DataExplorerFilters
-      arrangerConfig={{ filters: filterConfig }}
+      dataExplorerConfig={{ filters: filterConfig }}
       {...props}
     />,
   );

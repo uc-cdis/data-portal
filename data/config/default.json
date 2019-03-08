@@ -194,7 +194,7 @@
   "featureFlags": {
     "explorer": true
   },
-  "arrangerConfig": {
+  "dataExplorerConfig": {
     "charts": {
       "project": {
         "chartType": "count",
@@ -259,34 +259,32 @@
       "resourceIdField": "object_id",
       "referenceIdFieldInResourceIndex": "subject_id",
       "referenceIdFieldInDataIndex": "node_id"
+    }
+    "arrangerConfig": {
+      "projectId": "search",
+      "graphqlField": "subject",
+      "index": ""
     },
+    "buttons": [
+      {
+        "enabled": true,
+        "type": "data",
+        "title": "Download All Data",
+        "leftIcon": "user",
+        "rightIcon": "download",
+        "fileName": "data.json"
+      }
+      { 
+        "enabled": true,
+        "type": "export-to-workspace",
+        "title": "Export To Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "download",
+        "fileName": "manifest.json"
+      }
+    ],
     "table": {
-      "buttons": [
-        {
-          "enabled": true,
-          "type": "data",
-          "title": "Download Clinical",
-          "leftIcon": "user",
-          "rightIcon": "download",
-          "fileName": "clinical.json"
-        },
-        {
-          "enabled": true,
-          "type": "manifest",
-          "title": "Download Manifest",
-          "leftIcon": "datafile",
-          "rightIcon": "download",
-          "fileName": "manifest.json"
-        },
-        { 
-          "enabled": true,
-          "type": "export-to-workspace",
-          "title": "Export To Workspace",
-          "leftIcon": "datafile",
-          "rightIcon": "download",
-          "fileName": "manifest.json"
-        }
-      ]
-    },
+      "enabled": true
+    }
   }
 }

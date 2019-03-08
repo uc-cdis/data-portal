@@ -7,10 +7,10 @@
 */
 
 import { fetchWithCreds } from '../../actions';
-import { queryDataBySQON, queryDataByIds } from '../arrangerQueryHelper';
+import { queryDataByIds } from '../arrangerQueryHelper';
 
 export const getBDBagQuery = referenceIDList => `{
-  participants: 
+  participants:
     case(first:0${referenceIDList !== undefined ? `,submitter_id: ["${referenceIDList.join('","')}"]` : ''})
     {
        _participant_id:id
@@ -27,7 +27,7 @@ export const getBDBagQuery = referenceIDList => `{
           donor_id:id
           project:project_id
       }
-      
+
       aliquots(first:0){
           submitter_sample_id:submitter_id
           _sample_id:id
@@ -40,7 +40,7 @@ export const getBDBagQuery = referenceIDList => `{
                  file_dos_uri0:object_id
                  upload_file_id0:object_id
                  file_path0:file_name
-              }      
+              }
               submitted_aligned_reads_files{
                  file_type2:data_format
                  upload_file_id2:object_id
@@ -50,7 +50,7 @@ export const getBDBagQuery = referenceIDList => `{
                      file_type1:data_format
                      upload_file_id1:object_id
                      file_dos_uri1:object_id
-                     file_path1:file_name            
+                     file_path1:file_name
                  }
                  simple_germline_variations{
                      file_type3:data_format
@@ -58,7 +58,7 @@ export const getBDBagQuery = referenceIDList => `{
                      file_dos_uri3:object_id
                      file_path3:file_name
                 }
-              }                                                      
+              }
           }
       }
     }
@@ -95,38 +95,18 @@ const exportToSaturnByIDList = async (
     });
 };
 
-export const exportAllDataInTableToCloud = async (
-  apiFunc,
-  projectId,
-  arrangerConfig,
-  filteredSqon,
-) => {
-  if (filteredSqon == null) {
-    exportToSaturnByIDList();
-  } else {
-    const referenceID = 'submitter_id';
-    const responseData = await queryDataBySQON(
-      apiFunc,
-      projectId,
-      filteredSqon,
-      arrangerConfig.graphqlField,
-      [referenceID],
-    );
-    const idList = responseData.map(item => item[referenceID]);
-    exportToSaturnByIDList(idList);
-  }
-};
-
 export const exportAllSelectedDataToCloud = async (
   apiFunc,
   projectId,
-  arrangerConfig,
+  graphqlIdField,
   selectedTableRows,
+  arrangerConfig,
 ) => {
   const referenceID = 'submitter_id';
   const responseData = (await queryDataByIds(
     apiFunc,
     projectId,
+    graphqlIdField,
     selectedTableRows,
     arrangerConfig.graphqlField,
     [referenceID],

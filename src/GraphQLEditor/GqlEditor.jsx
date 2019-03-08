@@ -9,7 +9,7 @@ import { config } from '../params';
 import './GqlEditor.less';
 
 const parameters = {};
-const defaultValue = config.arrangerConfig ? 1 : 0;
+const defaultValue = config.dataExplorerConfig ? 1 : 0;
 
 class GqlEditor extends React.Component {
   constructor(props) {
@@ -52,7 +52,7 @@ class GqlEditor extends React.Component {
       },
     ];
 
-    if (config.arrangerConfig) {
+    if (config.dataExplorerConfig) {
       options.push({
         name: 'Flat Model',
         endpoint: fetchArrangerGraphQL,

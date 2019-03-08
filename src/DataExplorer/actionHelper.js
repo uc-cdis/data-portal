@@ -28,6 +28,7 @@ const checkArrangerGraphqlField = (arrangerConfig) => {
 export const downloadData = async (
   apiFunc,
   projectId,
+  graphqlIdField,
   selectedTableRows,
   arrangerConfig,
   fileName,
@@ -41,6 +42,7 @@ export const downloadData = async (
   const responseDataJSON = await queryDataByIds(
     apiFunc,
     projectId,
+    graphqlIdField,
     selectedTableRows,
     arrangerConfig.graphqlField,
     columns,
@@ -66,6 +68,7 @@ export const downloadData = async (
 export const downloadManifest = async (
   apiFunc,
   projectId,
+  graphqlIdField,
   selectedTableRows,
   arrangerConfig,
   fileName,
@@ -79,6 +82,7 @@ export const downloadManifest = async (
   const resourceIDList = (await queryDataByIds(
     apiFunc,
     projectId,
+    graphqlIdField,
     selectedTableRows,
     arrangerConfig.graphqlField,
     [arrangerConfig.manifestMapping.referenceIdFieldInDataIndex],
@@ -201,6 +205,7 @@ export const exportToWorkspace = async (
 export const getManifestEntryCount = async (
   apiFunc,
   projectId,
+  graphqlIdField,
   selectedTableRows,
   arrangerConfig,
 ) => {
@@ -213,6 +218,7 @@ export const getManifestEntryCount = async (
   const resourceIDList = (await queryDataByIds(
     apiFunc,
     projectId,
+    graphqlIdField,
     selectedTableRows,
     arrangerConfig.graphqlField,
     [arrangerConfig.manifestMapping.referenceIdFieldInDataIndex],
