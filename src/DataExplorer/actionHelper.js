@@ -159,7 +159,7 @@ export const exportToWorkspace = async (
 
   console.log("here")
   fetchWithCreds({
-    path: 'http://localhost:5000/',
+    path: '/manifests',
     body: manifestJSON,
     method: 'POST',
     customHeaders: { 'Content-Type': 'application/json' }
