@@ -7,7 +7,7 @@ import {
 } from './arrangerQueryHelper';
 import { hasKeyChain } from './utils';
 import { fetchWithCreds } from '../actions';
-import { manifestUrl } from '../localconf';
+import { manifestServiceApiPath } from '../localconf';
 
 const checkArrangerGraphqlField = (arrangerConfig) => {
   const MSG_GQLFIELD_FAIL = 'Couldn\'t find key "graphqlField" in Arranger configuration.';
@@ -74,6 +74,7 @@ export const downloadManifest = async (
   fileName,
 ) => {
   const MSG_DOWNLOAD_MANIFEST_FAIL = 'Error downloading manifest file';
+  console.log(arrangerConfig);
   checkArrangerGraphqlField(arrangerConfig);
   if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
@@ -124,21 +125,26 @@ export const downloadManifest = async (
 export const exportToWorkspace = async (
   apiFunc,
   projectId,
+  graphqlIdField,
   selectedTableRows,
   arrangerConfig,
   fileName,
   callback,
-  errorCallback,
+  errorCallback
 ) => {
+  console.log("exportToWorkspace - 132", arrangerConfig);
   const MSG_DOWNLOAD_MANIFEST_FAIL = 'Error downloading manifest file';
   checkArrangerGraphqlField(arrangerConfig);
+  console.log("exportToWorkspace - 135");
   if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
     throw MSG_DOWNLOAD_MANIFEST_FAIL;
   }
+  console.log("exportToWorkspace - 139");
   const resourceIDList = (await queryDataByIds(
     apiFunc,
     projectId,
+    graphqlIdField,
     selectedTableRows,
     arrangerConfig.graphqlField,
     [arrangerConfig.manifestMapping.referenceIdFieldInDataIndex],
@@ -148,6 +154,7 @@ export const exportToWorkspace = async (
     }
     return d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex];
   });
+  console.log("exportToWorkspace - 152");
   const manifestJSON = await queryDataByValues(
     apiFunc,
     projectId,
@@ -160,12 +167,12 @@ export const exportToWorkspace = async (
     ],
   );
 
-   console.log("here")
+  console.log("here")
   fetchWithCreds({
-    path: '/manifests',
+    path: `${manifestServiceApiPath}`,
     body: manifestJSON,
-    method: 'POST',
-    customHeaders: { 'Content-Type': 'application/json' }
+    method: 'POST'
+    // customHeaders: { 'Content-Type': 'application/json' }
   })
     .then(
       ({ status, data }) => {

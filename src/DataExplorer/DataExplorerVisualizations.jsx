@@ -111,8 +111,9 @@ class DataExplorerVisualizations extends React.Component {
     exportToWorkspace(
       this.props.api,
       this.props.projectId,
-      this.props.selectedTableRows,
-      this.props.arrangerConfig,
+      this.state.idField,
+      this.state.nodeIds,  // this.props.selectedTableRows,
+      this.props.dataExplorerConfig.arrangerConfig,
       filename,
       this.exportToWorkspaceCallback,
       this.exportToWorkspaceErrorCallback,
