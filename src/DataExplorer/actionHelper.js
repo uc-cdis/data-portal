@@ -167,10 +167,13 @@ export const exportToWorkspace = async (
     ],
   );
 
+  console.log("manifest:" , manifestJSON);
+  console.log("manifest string:" , JSON.stringify(manifestJSON));
+
   console.log("here")
   fetchWithCreds({
     path: `${manifestServiceApiPath}`,
-    body: manifestJSON,
+    body: JSON.stringify(manifestJSON),
     method: 'POST'
     // customHeaders: { 'Content-Type': 'application/json' }
   })
