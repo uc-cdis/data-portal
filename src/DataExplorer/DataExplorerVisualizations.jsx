@@ -19,6 +19,7 @@ class DataExplorerVisualizations extends React.Component {
     super(props);
     this.state = {
       manifestEntryCount: 0,
+      exportInProgress: false,
       exportedToWorkspace: false,
       toasterOpen: false,
       exportErrorStatus: null,
@@ -83,12 +84,14 @@ class DataExplorerVisualizations extends React.Component {
   exportToWorkspaceCallback = () => {
     this.setState({toasterOpen: true});
     this.setState({exportedToWorkspace: true});
+    this.setState({exportInProgress: false});
   }
 
-   exportToWorkspaceErrorCallback = (status, data) => {
+  exportToWorkspaceErrorCallback = (status, data) => {
     this.setState({toasterOpen: true});
     this.setState({exportErrorStatus: status});
     this.setState({exportErrorData: data});
+    this.setState({exportInProgress: false});
   }
 
    closeToaster = () => {
@@ -108,6 +111,7 @@ class DataExplorerVisualizations extends React.Component {
   }
 
    onExportToWorkspace = filename => () => {
+    this.setState({exportInProgress: true})
     exportToWorkspace(
       this.props.api,
       this.props.projectId,
@@ -163,7 +167,7 @@ class DataExplorerVisualizations extends React.Component {
     }
 
      if (buttonConfig.type === 'export-to-workspace') {
-      return this.state.nodeIds.length > 0; // && this.props.selectedTableRows.length > 0;
+      return !this.state.exportInProgress && this.state.nodeIds.length > 0; // && this.props.selectedTableRows.length > 0;
     }
 
     return this.state.nodeIds.length > 0;
@@ -174,6 +178,9 @@ class DataExplorerVisualizations extends React.Component {
     let buttonTitle = buttonConfig.title;
     if (buttonConfig.type === 'manifest' && this.state.nodeIds.length > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
+    }
+    if (buttonConfig.type === 'export-to-workspace' && this.state.exportInProgress) {
+      buttonTitle = `Export in progress ...`;
     }
 
     return (<Button
