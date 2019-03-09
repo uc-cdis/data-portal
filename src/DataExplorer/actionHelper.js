@@ -182,7 +182,7 @@ export const exportToWorkspace = async (
         switch (status) {
         case 200:
           console.log(status)
-          callback()
+          callback(data)
           return
         default:
           console.log(status)

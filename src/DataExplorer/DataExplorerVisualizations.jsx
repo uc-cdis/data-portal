@@ -21,6 +21,7 @@ class DataExplorerVisualizations extends React.Component {
       manifestEntryCount: 0,
       exportInProgress: false,
       exportedToWorkspace: false,
+      exportFileName: null,
       toasterOpen: false,
       exportErrorStatus: null,
       exportErrorData: null,
@@ -81,10 +82,11 @@ class DataExplorerVisualizations extends React.Component {
     );
   }
 
-  exportToWorkspaceCallback = () => {
+  exportToWorkspaceCallback = (data) => {
     this.setState({toasterOpen: true});
     this.setState({exportedToWorkspace: true});
     this.setState({exportInProgress: false});
+    this.setState({exportFileName: data.filename});
   }
 
   exportToWorkspaceErrorCallback = (status, data) => {
@@ -216,7 +218,7 @@ class DataExplorerVisualizations extends React.Component {
               onClick={this.goToWorkspace}
             />
             <p className='map-data-model__submission-footer-text introduction'>
-              {this.state.exportedToWorkspace ? this.state.toasterSuccessText : this.state.toasterErrorText + ' Error: ' + this.state.exportErrorStatus}
+              {this.state.exportedToWorkspace ? this.state.toasterSuccessText + ' File Name: ' + this.state.exportFileName : this.state.toasterErrorText + ' Error: ' + this.state.exportErrorStatus}
             </p>
           </div>
           )
