@@ -109,7 +109,7 @@ class DataExplorerVisualizations extends React.Component {
   }
 
    goToWorkspace = () => {
-    window.location.href = workspaceUrl;
+    window.location.href = '/workspace';
   }
 
    onExportToWorkspace = filename => () => {
