@@ -16,8 +16,8 @@ class Workspace extends React.Component {
           console.log("status was: " + status);
           if (status != 200) {
             console.log("connecting to WTS");
-            console.log(`${wtsPath}authorization_url`)
-            this.props.history.push('/wts/oauth2/authorization_url')
+            console.log(`${wtsPath}authorization_url`);
+            window.location.href=`${wtsPath}connected`;
           }
         }
       )
