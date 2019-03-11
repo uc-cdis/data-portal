@@ -123,6 +123,7 @@ function buildConfig(opts) {
     homepageChartNodes: components.index.homepageChartNodes,
     datasetUrl,
     indexPublic,
+    wtsPath,
   };
 }
 
