@@ -20,10 +20,9 @@ class DataExplorerVisualizations extends React.Component {
     this.state = {
       manifestEntryCount: 0,
       exportInProgress: false,
-      exportedToWorkspace: false,
       exportFileName: null,
       toasterOpen: false,
-      exportErrorStatus: null,
+      exportStatus: null,
       exportErrorMsg: '',
       toasterSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
       toasterErrorText: 'There was an error exporting your cohort.',
@@ -83,23 +82,15 @@ class DataExplorerVisualizations extends React.Component {
   }
 
   exportToWorkspaceCallback = (data) => {
-    this.setState({ toasterOpen: true, exportedToWorkspace: true, exportInProgress: false, exportFileName: data.filename });
+    this.setState({ toasterOpen: true, exportStatus: 200, exportInProgress: false, exportFileName: data.filename });
   }
 
   exportToWorkspaceErrorCallback = (status, msg) => {
-    this.setState({ toasterOpen: true, exportErrorStatus: status, exportErrorMsg: msg, exportInProgress: false });
+    this.setState({ toasterOpen: true, exportStatus: status, exportErrorMsg: msg, exportInProgress: false });
   }
 
    closeToaster = () => {
     this.setState({ toasterOpen: false })
-  }
-
-   setExportedToWorkspace = () =>  {
-    this.setState({ exportedToWorkspace: true });
-  }
-
-   unsetExportedToWorkspace = () => {
-    this.setState({ exportedToWorkspace: false });
   }
 
    goToWorkspace = () => {
@@ -107,21 +98,17 @@ class DataExplorerVisualizations extends React.Component {
   }
 
    onExportToWorkspace = filename => () => {
-    this.setState({exportInProgress: true})
+    this.setState({ exportInProgress: true })
     exportToWorkspace(
       this.props.api,
       this.props.projectId,
       this.state.idField,
-      this.state.nodeIds,  // this.props.selectedTableRows,
+      this.state.nodeIds,
       this.props.dataExplorerConfig.arrangerConfig,
       filename,
       this.exportToWorkspaceCallback,
       this.exportToWorkspaceErrorCallback,
     );
-  }
-
-   onSelectedRowsChange = (selectedTableRows) => {
-    this.refreshManifestEntryCount(selectedTableRows);
   }
 
   getOnClickFunction = (buttonConfig) => {
@@ -161,11 +148,9 @@ class DataExplorerVisualizations extends React.Component {
     if (buttonConfig.type === 'manifest') {
       return this.state.nodeIds.length > 0 && this.state.manifestEntryCount > 0;
     }
-
      if (buttonConfig.type === 'export-to-workspace') {
       return !this.state.exportInProgress && this.state.nodeIds.length > 0 && this.state.manifestEntryCount > 0; // && this.props.selectedTableRows.length > 0;
     }
-
     return this.state.nodeIds.length > 0;
   }
 
@@ -212,7 +197,7 @@ class DataExplorerVisualizations extends React.Component {
               onClick={this.goToWorkspace}
             />
             <p className='map-data-model__submission-footer-text introduction'>
-              { this.state.exportedToWorkspace ? this.state.toasterSuccessText + ' File Name: ' + this.state.exportFileName : this.state.toasterErrorText + ' Error: ' + this.state.exportErrorStatus + ' ' + this.state.exportErrorMsg }
+              { (this.state.exportStatus === 200) ? this.state.toasterSuccessText + ' File Name: ' + this.state.exportFileName : this.state.toasterErrorText + ' Error: ' + this.state.exportErrorStatus + ' ' + this.state.exportErrorMsg }
             </p>
           </div>
           )

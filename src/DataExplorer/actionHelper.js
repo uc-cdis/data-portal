@@ -74,7 +74,6 @@ export const downloadManifest = async (
   fileName,
 ) => {
   const MSG_DOWNLOAD_MANIFEST_FAIL = 'Error downloading manifest file';
-  console.log(arrangerConfig);
   checkArrangerGraphqlField(arrangerConfig);
   if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
@@ -132,15 +131,12 @@ export const exportToWorkspace = async (
   callback,
   errorCallback
 ) => {
-  console.log("exportToWorkspace - 132", arrangerConfig);
   const MSG_DOWNLOAD_MANIFEST_FAIL = 'Error downloading manifest file';
   checkArrangerGraphqlField(arrangerConfig);
-  console.log("exportToWorkspace - 135");
   if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
     errorCallback(500, MSG_DOWNLOAD_MANIFEST_FAIL);
   }
-  console.log("exportToWorkspace - 139");
   const resourceIDList = (await queryDataByIds(
     apiFunc,
     projectId,
@@ -154,7 +150,6 @@ export const exportToWorkspace = async (
     }
     return d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex];
   });
-  console.log("exportToWorkspace - 152");
   const manifestJSON = await queryDataByValues(
     apiFunc,
     projectId,
@@ -167,10 +162,6 @@ export const exportToWorkspace = async (
     ],
   );
 
-  console.log("manifest:" , manifestJSON);
-  console.log("manifest string:" , JSON.stringify(manifestJSON));
-
-  console.log("here")
   fetchWithCreds({
     path: `${manifestServiceApiPath}`,
     body: JSON.stringify(manifestJSON),
@@ -181,11 +172,9 @@ export const exportToWorkspace = async (
       ({ status, data }) => {
         switch (status) {
         case 200:
-          console.log(status)
           callback(data)
           return
         default:
-          console.log(status)
           errorCallback(status, "")
           return
         }
