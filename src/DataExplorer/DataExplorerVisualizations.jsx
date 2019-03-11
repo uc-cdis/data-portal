@@ -83,29 +83,23 @@ class DataExplorerVisualizations extends React.Component {
   }
 
   exportToWorkspaceCallback = (data) => {
-    this.setState({toasterOpen: true});
-    this.setState({exportedToWorkspace: true});
-    this.setState({exportInProgress: false});
-    this.setState({exportFileName: data.filename});
+    this.setState({ toasterOpen: true, exportedToWorkspace: true, exportInProgress: false, exportFileName: data.filename });
   }
 
   exportToWorkspaceErrorCallback = (status, data) => {
-    this.setState({toasterOpen: true});
-    this.setState({exportErrorStatus: status});
-    this.setState({exportErrorData: data});
-    this.setState({exportInProgress: false});
+    this.setState({ toasterOpen: true, exportErrorStatus: status, exportErrorData: data, exportInProgress: false });
   }
 
    closeToaster = () => {
-    this.setState({toasterOpen: false})
+    this.setState({ toasterOpen: false })
   }
 
    setExportedToWorkspace = () =>  {
-    this.setState({exportedToWorkspace: true});
+    this.setState({ exportedToWorkspace: true });
   }
 
    unsetExportedToWorkspace = () => {
-    this.setState({exportedToWorkspace: false});
+    this.setState({ exportedToWorkspace: false });
   }
 
    goToWorkspace = () => {
