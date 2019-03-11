@@ -8,7 +8,7 @@ class Workspace extends React.Component {
   componentDidMount() {
     console.log("checking")
     fetchWithCreds({
-      path: `${wtsPath}/check`,
+      path: `${wtsPath}/connected`,
       method: 'GET'
     })
       .then(
