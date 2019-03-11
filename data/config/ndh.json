@@ -222,7 +222,8 @@
         "resourceIdField": "object_id",
         "referenceIdFieldInResourceIndex": "subject_id",
         "referenceIdFieldInDataIndex": "node_id"
-      }
+      },
+      "nodeCountField": "submitter_id"
     }
   }
 }

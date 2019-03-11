@@ -254,7 +254,8 @@
     "arrangerConfig": {
       "projectId": "search",
       "graphqlField": "subject",
-      "index": ""
+      "index": "",
+      "nodeCountField": "node_id"
     },
     "buttons": [
       {
