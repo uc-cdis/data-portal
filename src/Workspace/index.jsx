@@ -17,7 +17,7 @@ class Workspace extends React.Component {
           if (status != 200) {
             console.log("connecting to WTS");
             console.log(`${wtsPath}authorization_url`);
-            window.location.href=`${wtsPath}connected`;
+            window.location.href=`${wtsPath}/authorization_url?redirect=/workspace`;
           }
         }
       )
