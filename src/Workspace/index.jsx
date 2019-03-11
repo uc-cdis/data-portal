@@ -8,7 +8,7 @@ class Workspace extends React.Component {
   componentDidMount() {
     console.log("checking")
     fetchWithCreds({
-      path: `${wtsPath}/connected`,
+      path: '/wts/oauth2/connected',
       method: 'GET'
     })
       .then(
@@ -16,7 +16,7 @@ class Workspace extends React.Component {
           console.log("status was: " + status);
           if (status != 200) {
             console.log("connecting to WTS");
-            this.props.history.push(`${wtsPath}/authorization_url`)
+            this.props.history.push('wts/oauth2/authorization_url')
           }
         }
       )
