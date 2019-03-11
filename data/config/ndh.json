@@ -117,7 +117,7 @@
     },
     "login": {
       "title": "NIAID Data Hub",
-      "subTitle": "search, compare, and download data",
+      "subTitle": "Explore, Analyze, and Share Data",
       "text": "The website combines government datasets from 3 divisions of NIAID to create clean, easy to navigate visualizations for data-driven discovery within Allergy and Infectious Diseases.",
       "contact": "If you have any questions about access or the registration process, please contact ",
       "email": "support@datacommons.io"
@@ -222,7 +222,8 @@
         "resourceIdField": "object_id",
         "referenceIdFieldInResourceIndex": "subject_id",
         "referenceIdFieldInDataIndex": "node_id"
-      }
+      },
+      "nodeCountField": "submitter_id"
     }
   }
 }

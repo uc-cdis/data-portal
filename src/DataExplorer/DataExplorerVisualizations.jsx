@@ -18,24 +18,18 @@ class DataExplorerVisualizations extends React.Component {
     super(props);
     this.state = {
       manifestEntryCount: 0,
-      idField: null,
       nodeIds: [],
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.arrangerData !== this.props.arrangerData) {
+      const arrangerConfig = nextProps.dataExplorerConfig.arrangerConfig;
       const data = nextProps.arrangerData &&
-        nextProps.arrangerData[nextProps.dataExplorerConfig.arrangerConfig.graphqlField];
+        nextProps.arrangerData[arrangerConfig.graphqlField];
       const aggregations = data && data.aggregations ? data.aggregations : null;
-      let idField = null;
-      if (aggregations && aggregations.node_id) {
-        idField = 'node_id';
-      } else if (aggregations && aggregations.submitter_id) {
-        idField = 'submitter_id';
-      }
-      const nodeIds = idField ? aggregations[idField].buckets.map(bucket => bucket.key) : [];
-      this.setState({ idField, nodeIds }, () => {
+      const nodeIds = aggregations[arrangerConfig.nodeCountField].buckets.map(bucket => bucket.key);
+      this.setState({ nodeIds }, () => {
         this.refreshManifestEntryCount(this.state.nodeIds);
       });
     }
@@ -45,7 +39,7 @@ class DataExplorerVisualizations extends React.Component {
     downloadManifest(
       this.props.api,
       this.props.projectId,
-      this.state.idField,
+      this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
       this.state.nodeIds,
       this.props.dataExplorerConfig.arrangerConfig,
       fileName,
@@ -56,7 +50,7 @@ class DataExplorerVisualizations extends React.Component {
     downloadData(
       this.props.api,
       this.props.projectId,
-      this.state.idField,
+      this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
       this.state.nodeIds,
       this.props.dataExplorerConfig.arrangerConfig,
       fileName,
@@ -67,7 +61,7 @@ class DataExplorerVisualizations extends React.Component {
     exportAllSelectedDataToCloud(
       this.props.api,
       this.props.projectId,
-      this.state.idField,
+      this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
       this.state.nodeIds,
       this.props.dataExplorerConfig.arrangerConfig,
     );
@@ -94,7 +88,7 @@ class DataExplorerVisualizations extends React.Component {
       getManifestEntryCount(
         this.props.api,
         this.props.projectId,
-        this.state.idField,
+        this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
         this.state.nodeIds,
         this.props.dataExplorerConfig.arrangerConfig,
       ).then((r) => {
