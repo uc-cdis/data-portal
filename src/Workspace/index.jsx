@@ -7,7 +7,7 @@ class Workspace extends React.Component {
 
   componentDidMount() {
     fetchWithCreds({
-      path: '/oauth2/check'
+      path: '/oauth2/connected'
       method: 'GET'
     })
       .then(
