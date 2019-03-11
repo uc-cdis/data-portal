@@ -212,7 +212,7 @@ class DataExplorerVisualizations extends React.Component {
               onClick={this.goToWorkspace}
             />
             <p className='map-data-model__submission-footer-text introduction'>
-              {this.state.exportedToWorkspace ? this.state.toasterSuccessText + ' File Name: ' + this.state.exportFileName : this.state.toasterErrorText + ' Error: ' + this.state.exportErrorStatus}
+              { this.state.exportedToWorkspace ? this.state.toasterSuccessText + ' File Name: ' + this.state.exportFileName : this.state.toasterErrorText + ' Error: ' + this.state.exportErrorStatus }
             </p>
           </div>
           )
