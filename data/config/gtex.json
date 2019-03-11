@@ -222,7 +222,13 @@
     "arrangerConfig": {
       "projectId": "search",
       "graphqlField": "case",
-      "index": ""
+      "index": "",
+      "manifestMapping": {
+        "resourceIndexType": "file",
+        "resourceIdField": "object_id",
+        "referenceIdFieldInResourceIndex": "case_id",
+        "referenceIdFieldInDataIndex": "node_id"
+      }
     }
   }
 }

@@ -138,7 +138,7 @@ export const exportToWorkspace = async (
   console.log("exportToWorkspace - 135");
   if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
-    throw MSG_DOWNLOAD_MANIFEST_FAIL;
+    errorCallback(500, MSG_DOWNLOAD_MANIFEST_FAIL);
   }
   console.log("exportToWorkspace - 139");
   const resourceIDList = (await queryDataByIds(
@@ -150,7 +150,7 @@ export const exportToWorkspace = async (
     [arrangerConfig.manifestMapping.referenceIdFieldInDataIndex],
   )).map((d) => {
     if (!d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex]) {
-      throw MSG_DOWNLOAD_MANIFEST_FAIL;
+      errorCallback(500, MSG_DOWNLOAD_MANIFEST_FAIL);
     }
     return d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex];
   });
@@ -186,7 +186,7 @@ export const exportToWorkspace = async (
           return
         default:
           console.log(status)
-          errorCallback(status, data)
+          errorCallback(status, "")
           return
         }
       }

@@ -24,7 +24,7 @@ class DataExplorerVisualizations extends React.Component {
       exportFileName: null,
       toasterOpen: false,
       exportErrorStatus: null,
-      exportErrorData: null,
+      exportErrorMsg: '',
       toasterSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
       toasterErrorText: 'There was an error exporting your cohort.',
       idField: null,
@@ -86,8 +86,8 @@ class DataExplorerVisualizations extends React.Component {
     this.setState({ toasterOpen: true, exportedToWorkspace: true, exportInProgress: false, exportFileName: data.filename });
   }
 
-  exportToWorkspaceErrorCallback = (status, data) => {
-    this.setState({ toasterOpen: true, exportErrorStatus: status, exportErrorData: data, exportInProgress: false });
+  exportToWorkspaceErrorCallback = (status, msg) => {
+    this.setState({ toasterOpen: true, exportErrorStatus: status, exportErrorMsg: msg, exportInProgress: false });
   }
 
    closeToaster = () => {
@@ -163,7 +163,7 @@ class DataExplorerVisualizations extends React.Component {
     }
 
      if (buttonConfig.type === 'export-to-workspace') {
-      return !this.state.exportInProgress && this.state.nodeIds.length > 0; // && this.props.selectedTableRows.length > 0;
+      return !this.state.exportInProgress && this.state.nodeIds.length > 0 && this.state.manifestEntryCount > 0; // && this.props.selectedTableRows.length > 0;
     }
 
     return this.state.nodeIds.length > 0;
@@ -212,7 +212,7 @@ class DataExplorerVisualizations extends React.Component {
               onClick={this.goToWorkspace}
             />
             <p className='map-data-model__submission-footer-text introduction'>
-              { this.state.exportedToWorkspace ? this.state.toasterSuccessText + ' File Name: ' + this.state.exportFileName : this.state.toasterErrorText + ' Error: ' + this.state.exportErrorStatus }
+              { this.state.exportedToWorkspace ? this.state.toasterSuccessText + ' File Name: ' + this.state.exportFileName : this.state.toasterErrorText + ' Error: ' + this.state.exportErrorStatus + ' ' + this.state.exportErrorMsg }
             </p>
           </div>
           )
