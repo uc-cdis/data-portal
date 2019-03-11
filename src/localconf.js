@@ -44,6 +44,7 @@ function buildConfig(opts) {
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = `${hostname}index/`;
+  const wtsPath = `${hostname}wts/oauth2/`;
   let login = {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',

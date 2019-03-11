@@ -1,19 +1,22 @@
 import React from 'react';
-import { workspaceUrl } from '../localconf';
+import { workspaceUrl, wtsPath } from '../localconf';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
 
 class Workspace extends React.Component {
 
   componentDidMount() {
+    console.log("checking")
     fetchWithCreds({
-      path: '/oauth2/check'
+      path: `${wtsPath}/check`,
       method: 'GET'
     })
       .then(
         ({ status, data }) => {
+          console.log("status was: " + status);
           if (status != 200) {
-            this.props.history.push('/oauth2/authorization_url')
+            console.log("connecting to WTS");
+            this.props.history.push(`${wtsPath}/authorization_url`)
           }
         }
       )
