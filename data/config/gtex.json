@@ -166,6 +166,8 @@
           "fields": [
             "project_id",
             "consent_codes",
+            "data_type",
+            "data_format",
             "race",
             "ethnicity",
             "gender",
