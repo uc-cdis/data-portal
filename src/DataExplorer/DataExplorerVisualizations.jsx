@@ -126,7 +126,7 @@ class DataExplorerVisualizations extends React.Component {
   refreshManifestEntryCount = () => {
     if (this.props.dataExplorerConfig
       && this.props.dataExplorerConfig.buttons
-      && this.props.dataExplorerConfig.buttons.some(btnCfg => btnCfg.type === 'manifest' && btnCfg.enabled)) {
+      && this.props.dataExplorerConfig.buttons.some(btnCfg => (btnCfg.type === 'manifest' || btnCfg.type === 'export-to-workspace') && btnCfg.enabled)) {
       getManifestEntryCount(
         this.props.api,
         this.props.projectId,
