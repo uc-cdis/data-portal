@@ -169,7 +169,6 @@ export const queryDataByIds = async (
   indexType,
   fields,
 ) => {
-  console.log("172")
   const MSG_QUERY_BY_ID_FAIL = 'Error while querying Arranger data by ID';
   if (idList === null) {
     throw MSG_QUERY_BY_ID_FAIL;
@@ -188,7 +187,6 @@ export const queryDataByIds = async (
   if (!responseData) {
     throw MSG_QUERY_BY_ID_FAIL;
   }
-  console.log("191")
   return parseDataFromResponseContent(responseData, indexType);
 };
 

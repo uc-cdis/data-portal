@@ -54,7 +54,7 @@ function buildConfig(opts) {
   const workspaceUrl = '/lw-workspace/';
   const workspaceErrorUrl = '/no-workspace-access/';
   const datasetUrl = `${hostname}api/search/datasets`;
-  const manifestServiceApiPath =  `${hostname}manifests/`;
+  const manifestServiceApiPath = `${hostname}manifests/`;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;

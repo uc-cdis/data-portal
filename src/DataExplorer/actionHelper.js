@@ -129,7 +129,7 @@ export const exportToWorkspace = async (
   arrangerConfig,
   fileName,
   callback,
-  errorCallback
+  errorCallback,
 ) => {
   const MSG_DOWNLOAD_MANIFEST_FAIL = 'Error downloading manifest file';
   checkArrangerGraphqlField(arrangerConfig);
@@ -165,25 +165,23 @@ export const exportToWorkspace = async (
   fetchWithCreds({
     path: `${manifestServiceApiPath}`,
     body: JSON.stringify(manifestJSON),
-    method: 'POST'
+    method: 'POST',
     // customHeaders: { 'Content-Type': 'application/json' }
   })
     .then(
       ({ status, data }) => {
         switch (status) {
         case 200:
-          callback(data)
-          return
+          callback(data);
+          return;
         default:
-          errorCallback(status, "")
-          return
+          errorCallback(status, '');
         }
-      }
-    )
+      },
+    );
 
-   //callback();
-
- };
+  // callback();
+};
 
 
 /**
