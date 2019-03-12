@@ -21,7 +21,7 @@ class DataExplorerVisualizations extends React.Component {
       exportInProgress: false,
       exportFileName: null,
       toasterOpen: false,
-      exportErrorMsg: null,
+      exportStatus: null,
       toasterSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
       toasterErrorText: 'There was an error exporting your cohort.',
       nodeIds: [],
@@ -111,17 +111,17 @@ class DataExplorerVisualizations extends React.Component {
     this.setState({ toasterOpen: false });
   }
 
-  exportToWorkspaceErrorCallback = (status, msg) => {
+  exportToWorkspaceErrorCallback = (status) => {
     this.setState({
       toasterOpen: true,
-      exportErrorMsg: msg,
+      exportStatus: status,
       exportInProgress: false });
   }
 
   exportToWorkspaceCallback = (data) => {
     this.setState({
       toasterOpen: true,
-      exportErrorMsg: null,
+      exportStatus: 200,
       exportInProgress: false,
       exportFileName: data.filename });
   }
@@ -200,7 +200,7 @@ class DataExplorerVisualizations extends React.Component {
           onClick={this.goToWorkspace}
         />
         <p className='map-data-model__submission-footer-text introduction'>
-          { (!this.state.exportErrorMsg) ? `${this.state.toasterSuccessText} File Name: ${this.state.exportFileName}` : `${this.state.toasterErrorText} Error: ${this.state.exportErrorStatus} ${this.state.exportErrorMsg}` }
+          { (this.state.exportStatus === 200) ? `${this.state.toasterSuccessText} File Name: ${this.state.exportFileName}` : `${this.state.toasterErrorText} Error: ${this.state.exportStatus}` }
         </p>
       </div>
     );

@@ -173,7 +173,7 @@ export const exportToWorkspace = async (
           callback(data);
           return;
         default:
-          errorCallback(status, '');
+          errorCallback(status);
         }
       },
     );
