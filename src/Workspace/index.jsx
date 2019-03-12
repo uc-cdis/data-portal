@@ -10,7 +10,7 @@ class Workspace extends React.Component {
       method: 'GET',
     })
       .then(
-        (status) => {
+        ({status}) => {
           if (status !== 200) {
             window.location.href = `${wtsPath}/authorization_url?redirect=/workspace`;
           }
