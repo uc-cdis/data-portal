@@ -217,8 +217,7 @@
         "type": "export-to-workspace",
         "title": "Export To Workspace",
         "leftIcon": "datafile",
-        "rightIcon": "download",
-        "fileName": "manifest.json"
+        "rightIcon": "download"
       }
     ],
     "arrangerConfig": {
