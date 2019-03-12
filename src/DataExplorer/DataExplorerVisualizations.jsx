@@ -97,7 +97,7 @@ class DataExplorerVisualizations extends React.Component {
     exportToWorkspace(
       this.props.api,
       this.props.projectId,
-      this.state.idField,
+      this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
       this.state.nodeIds,
       this.props.dataExplorerConfig.arrangerConfig,
       filename,
@@ -144,9 +144,16 @@ class DataExplorerVisualizations extends React.Component {
       return this.state.nodeIds.length > 0 && this.state.manifestEntryCount > 0;
     }
      if (buttonConfig.type === 'export-to-workspace') {
-      return !this.state.exportInProgress && this.state.nodeIds.length > 0 && this.state.manifestEntryCount > 0; // && this.props.selectedTableRows.length > 0;
+      return this.state.nodeIds.length > 0 && this.state.manifestEntryCount > 0;
     }
     return this.state.nodeIds.length > 0;
+  }
+
+  isButtonPending = (buttonConfig) => {
+    if (buttonConfig.type === 'export-to-workspace') {
+      return this.state.exportInProgress;
+    }
+    return false;
   }
 
   renderButton = (buttonConfig) => {
@@ -154,9 +161,6 @@ class DataExplorerVisualizations extends React.Component {
     let buttonTitle = buttonConfig.title;
     if (buttonConfig.type === 'manifest' && this.state.nodeIds.length > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
-    }
-    if (buttonConfig.type === 'export-to-workspace' && this.state.exportInProgress) {
-      buttonTitle = `Export in progress ...`;
     }
 
     return (<Button
@@ -170,6 +174,7 @@ class DataExplorerVisualizations extends React.Component {
       enabled={this.isButtonEnabled(buttonConfig)}
       tooltipEnabled={buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false}
       tooltipText={buttonConfig.tooltipText}
+      isPending={this.isButtonPending(buttonConfig)}
     />);
   }
 
