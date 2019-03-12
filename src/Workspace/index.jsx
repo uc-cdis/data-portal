@@ -14,7 +14,7 @@ class Workspace extends React.Component {
           if (status !== 200) {
             window.location.href = `${wtsPath}/authorization_url?redirect=/workspace`;
           }
-        },
+        }
       );
   }
 
