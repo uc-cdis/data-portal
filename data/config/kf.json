@@ -100,7 +100,7 @@
     },
     "login": {
       "title": "Kids First Data Catalog",
-      "subTitle": "search, compare, and download data",
+      "subTitle": "Explore, Analyze, and Share Data",
       "text": "The Kids First Data Catalog supports the Kids First Data Resource Center by providing a digital object services that allow interoperability between data commons, including authentication and authorization for controlled access data. For more information about the overall Kids First Data Resource Center see https://kidsfirstdrc.org.",
       "contact": "If you have any questions about access or the registration process, please contact ",
       "email": "support@kidsfirstdrc.org"

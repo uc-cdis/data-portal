@@ -178,7 +178,8 @@
     "arrangerConfig": {
       "projectId": "search",
       "graphqlField": "subject",
-      "index": ""
+      "index": "",
+      "nodeCountField": "submitter_id"
     }
   }
 }
