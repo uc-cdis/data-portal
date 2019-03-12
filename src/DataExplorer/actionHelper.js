@@ -127,15 +127,14 @@ export const exportToWorkspace = async (
   graphqlIdField,
   selectedTableRows,
   arrangerConfig,
-  fileName,
   callback,
   errorCallback,
 ) => {
-  const MSG_DOWNLOAD_MANIFEST_FAIL = 'Error downloading manifest file';
+  const MSG_EXPORT_MANIFEST_FAIL = 'Error exporting manifest file';
   checkArrangerGraphqlField(arrangerConfig);
   if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
-    errorCallback(500, MSG_DOWNLOAD_MANIFEST_FAIL);
+    errorCallback(500, MSG_EXPORT_MANIFEST_FAIL);
   }
   const resourceIDList = (await queryDataByIds(
     apiFunc,
@@ -146,7 +145,7 @@ export const exportToWorkspace = async (
     [arrangerConfig.manifestMapping.referenceIdFieldInDataIndex],
   )).map((d) => {
     if (!d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex]) {
-      errorCallback(500, MSG_DOWNLOAD_MANIFEST_FAIL);
+      errorCallback(500, MSG_EXPORT_MANIFEST_FAIL);
     }
     return d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex];
   });
@@ -166,7 +165,6 @@ export const exportToWorkspace = async (
     path: `${manifestServiceApiPath}`,
     body: JSON.stringify(manifestJSON),
     method: 'POST',
-    // customHeaders: { 'Content-Type': 'application/json' }
   })
     .then(
       ({ status, data }) => {
@@ -179,8 +177,6 @@ export const exportToWorkspace = async (
         }
       },
     );
-
-  // callback();
 };
 
 

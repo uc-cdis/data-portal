@@ -21,11 +21,9 @@ class DataExplorerVisualizations extends React.Component {
       exportInProgress: false,
       exportFileName: null,
       toasterOpen: false,
-      exportStatus: null,
-      exportErrorMsg: '',
+      exportErrorMsg: null,
       toasterSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
       toasterErrorText: 'There was an error exporting your cohort.',
-      idField: null,
       nodeIds: [],
     };
   }
@@ -75,7 +73,7 @@ class DataExplorerVisualizations extends React.Component {
     );
   }
 
-   onExportToWorkspace = filename => () => {
+   onExportToWorkspace = () => () => {
      this.setState({ exportInProgress: true });
      exportToWorkspace(
        this.props.api,
@@ -83,7 +81,6 @@ class DataExplorerVisualizations extends React.Component {
        this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
        this.state.nodeIds,
        this.props.dataExplorerConfig.arrangerConfig,
-       filename,
        this.exportToWorkspaceCallback,
        this.exportToWorkspaceErrorCallback,
      );
@@ -101,7 +98,7 @@ class DataExplorerVisualizations extends React.Component {
       clickFunc = this.onExportToCloud;
     }
     if (buttonConfig.type === 'export-to-workspace') {
-      clickFunc = this.onExportToWorkspace(buttonConfig.fileName);
+      clickFunc = this.onExportToWorkspace();
     }
     return clickFunc;
   }
@@ -115,15 +112,16 @@ class DataExplorerVisualizations extends React.Component {
   }
 
   exportToWorkspaceErrorCallback = (status, msg) => {
-    this.setState({ toasterOpen: true,
-      exportStatus: status,
+    this.setState({
+      toasterOpen: true,
       exportErrorMsg: msg,
       exportInProgress: false });
   }
 
   exportToWorkspaceCallback = (data) => {
-    this.setState({ toasterOpen: true,
-      exportStatus: 200,
+    this.setState({
+      toasterOpen: true,
+      exportErrorMsg: null,
       exportInProgress: false,
       exportFileName: data.filename });
   }
@@ -202,7 +200,7 @@ class DataExplorerVisualizations extends React.Component {
           onClick={this.goToWorkspace}
         />
         <p className='map-data-model__submission-footer-text introduction'>
-          { (this.state.exportStatus === 200) ? `${this.state.toasterSuccessText} File Name: ${this.state.exportFileName}` : `${this.state.toasterErrorText} Error: ${this.state.exportErrorStatus} ${this.state.exportErrorMsg}` }
+          { (!this.state.exportErrorMsg) ? `${this.state.toasterSuccessText} File Name: ${this.state.exportFileName}` : `${this.state.toasterErrorText} Error: ${this.state.exportErrorStatus} ${this.state.exportErrorMsg}` }
         </p>
       </div>
     );
