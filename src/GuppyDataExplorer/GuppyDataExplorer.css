@@ -1,0 +1,11 @@
+.guppy-data-explorer {
+  display: flex;
+}
+
+.guppy-data-explorer__filter {
+  width: 20%;
+}
+
+.guppy-data-explorer__visualization {
+  width: 80%;
+}
