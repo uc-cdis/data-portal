@@ -5,7 +5,7 @@ import Spinner from '../../Spinner';
 import TooltipCDIS from '../TooltipCDIS/.';
 import Tick from '../Tick';
 import './IndexBarChart.less';
-import helper from '../helper';
+import { getCategoryColor } from '../helper';
 
 const sortCount = (a, b) => {
   const countA = a.counts.reduce((res, item) => res + item);
@@ -146,7 +146,7 @@ class IndexBarChart extends React.Component {
                       name={projectNames[index]}
                       dataKey={barName}
                       stackId='a'
-                      fill={helper.getCategoryColor(index)}
+                      fill={getCategoryColor(index)}
                     />
                   );
                 },

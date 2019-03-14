@@ -51,7 +51,7 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ) {
 
 module.exports = {
   entry: ['babel-polyfill', './src/index.jsx'],
-  target: 'node',
+  target: 'web',
   externals: [nodeExternals()],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {

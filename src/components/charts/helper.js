@@ -1,10 +1,10 @@
 import { colorsForCharts } from '../../localconf';
 
-const percentageFormatter = showPercentage => v => (showPercentage ? `${v}%` : v);
+export const percentageFormatter = showPercentage => v => (showPercentage ? `${v}%` : v);
 
-const addPercentage = v => (percentageFormatter(true)(v));
+export const addPercentage = v => (percentageFormatter(true)(v));
 
-const calculateChartData = (data, showPercentage, percentageFixedPoint) => {
+export const calculateChartData = (data, showPercentage, percentageFixedPoint) => {
   if (showPercentage) {
     const sum = data.reduce((a, entry) => a + entry.value, 0);
     let percentRemaining = 100;
@@ -23,7 +23,7 @@ const calculateChartData = (data, showPercentage, percentageFixedPoint) => {
   return data;
 };
 
-const getPercentageData = (chartData, percentageFixedPoint) => {
+export const getPercentageData = (chartData, percentageFixedPoint) => {
   const result = {};
   const sum = chartData.reduce((a, entry) => a + entry.value, 0);
   let percentRemaining = 100;
@@ -41,21 +41,20 @@ const getPercentageData = (chartData, percentageFixedPoint) => {
   return [result];
 };
 
-const getCategoryColor = index => (colorsForCharts.categorical9Colors[index % 9]);
+export const getCategoryColor = index => (colorsForCharts.categorical9Colors[index % 9]);
 
-const getCategoryColorFrom2Colors = index => colorsForCharts.categorical2Colors[index % 2];
+export const getCategoryColorFrom2Colors = index => colorsForCharts.categorical2Colors[index % 2];
 
-const getDataKey = showPercentage => (showPercentage ? 'percentage' : 'value');
+export const getDataKey = showPercentage => (showPercentage ? 'percentage' : 'value');
 
-
-const prettifyValueName = (name) => {
+export const prettifyValueName = (name) => {
   if (name === '__missing__') {
     return 'No Data';
   }
   return name;
 };
 
-const transformArrangerDataToChart = (field, sqonValues) => {
+export const transformArrangerDataToChart = (field, sqonValues) => {
   const chartData = [];
   field.buckets
     .filter(bucket => (sqonValues === null || sqonValues.includes(bucket.key)))
@@ -68,13 +67,13 @@ const transformArrangerDataToChart = (field, sqonValues) => {
   return chartData;
 };
 
-const transformArrangerDataToSummary = (field, chartType, title, sqonValues) => ({
+export const transformArrangerDataToSummary = (field, chartType, title, sqonValues) => ({
   type: chartType,
   title,
   data: transformArrangerDataToChart(field, sqonValues),
 });
 
-const transformDataToCount = (field, label, sqonValues) => ({
+export const transformDataToCount = (field, label, sqonValues) => ({
   label,
   value: sqonValues ? Math.min(field.buckets.length, sqonValues.length) : field.buckets.length,
 });
@@ -83,7 +82,7 @@ const transformDataToCount = (field, label, sqonValues) => ({
  * Return an array of selected values in a given field
  * If no value selected, return null
  */
-const getSQONValues = (sqon, field) => {
+export const getSQONValues = (sqon, field) => {
   if (!sqon || !sqon.content) return null;
   const sqonItems = sqon.content.filter(item => item.content.field === field);
   if (!sqonItems || sqonItems.length !== 1) return null;
@@ -91,7 +90,7 @@ const getSQONValues = (sqon, field) => {
   return sqonValues;
 };
 
-const getCharts = (data, dataExplorerConfig, sqon) => {
+export const getCharts = (data, dataExplorerConfig, sqon) => {
   const countItems = [];
   const summaries = [];
   const stackedBarCharts = [];
@@ -133,19 +132,4 @@ const getCharts = (data, dataExplorerConfig, sqon) => {
     });
   }
   return { summaries, countItems, stackedBarCharts };
-};
-
-module.exports = {
-  percentageFormatter,
-  addPercentage,
-  calculateChartData,
-  getPercentageData,
-  getCategoryColor,
-  getCategoryColorFrom2Colors,
-  getDataKey,
-  transformDataToCount,
-  transformArrangerDataToChart,
-  transformArrangerDataToSummary,
-  getCharts,
-  getSQONValues,
 };

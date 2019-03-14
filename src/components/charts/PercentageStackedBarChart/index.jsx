@@ -5,7 +5,7 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'underscore';
-import helper from '../helper';
+import { getPercentageData, addPercentage, getCategoryColor } from '../helper';
 import './PercentageStackedBarChart.less';
 
 const getPercentageDataLabels = chartData => chartData.map(entry => entry.name);
@@ -13,7 +13,7 @@ const getPercentageDataLabels = chartData => chartData.map(entry => entry.name);
 // FIXME: add back in animation (https://github.com/recharts/recharts/issues/1083)
 class PercentageStackedBarChart extends React.Component {
   render() {
-    const percentageData = helper.getPercentageData(
+    const percentageData = getPercentageData(
       this.props.data,
       this.props.percentageFixedPoint,
     );
@@ -27,7 +27,7 @@ class PercentageStackedBarChart extends React.Component {
           <XAxis
             type='number'
             style={xAxisStyle}
-            tickFormatter={helper.addPercentage}
+            tickFormatter={addPercentage}
             {...xAxisStyle}
           />
           <YAxis axisLine={false} tickLine={false} dataKey='name' type='category' hide />
@@ -38,13 +38,13 @@ class PercentageStackedBarChart extends React.Component {
                 dataKey={name}
                 stackId='a'
                 isAnimationActive={false}
-                fill={helper.getCategoryColor(index)}
+                fill={getCategoryColor(index)}
               >
                 <LabelList
                   dataKey={name}
                   position={labelListStyle.position}
                   style={labelListStyle}
-                  formatter={helper.addPercentage}
+                  formatter={addPercentage}
                   className='percentage-bar-chart__label-list'
                 />
               </Bar>
@@ -59,7 +59,7 @@ class PercentageStackedBarChart extends React.Component {
                   <span
                     className='percentage-bar-chart__legend-color'
                     style={{
-                      background: helper.getCategoryColor(index),
+                      background: getCategoryColor(index),
                     }}
                   />
                   <span className='percentage-bar-chart__legend-name'>
