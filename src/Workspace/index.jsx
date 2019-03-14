@@ -4,20 +4,6 @@ import './Workspace.less';
 import { fetchWithCreds } from '../actions';
 
 class Workspace extends React.Component {
-  componentDidMount() {
-    fetchWithCreds({
-      path: `${wtsPath}connected`,
-      method: 'GET',
-    })
-      .then(
-        ({status}) => {
-          if (status !== 200) {
-            window.location.href = `${wtsPath}/authorization_url?redirect=/workspace`;
-          }
-        }
-      );
-  }
-
   render() {
     return (
       <iframe
