@@ -81,14 +81,16 @@ class DataExplorerVisualizations extends React.Component {
     return clickFunc;
   }
 
-  isFileButton = (buttonConfig) => buttonConfig.type === 'manifest' ||
+  isFileButton = buttonConfig => buttonConfig.type === 'manifest' ||
       buttonConfig.type === 'export' ||
       buttonConfig.type === 'export-to-workspace';
 
   refreshManifestEntryCount = () => {
     if (this.props.dataExplorerConfig
       && this.props.dataExplorerConfig.buttons
-      && this.props.dataExplorerConfig.buttons.some(btnCfg => this.isFileButton(btnCfg) && btnCfg.enabled)) {
+      && this.props.dataExplorerConfig.buttons.some(
+        btnCfg => this.isFileButton(btnCfg) && btnCfg.enabled)
+    ) {
       getManifestEntryCount(
         this.props.api,
         this.props.projectId,
@@ -137,7 +139,7 @@ class DataExplorerVisualizations extends React.Component {
       getCharts(this.props.arrangerData, this.props.dataExplorerConfig, this.props.sqon)
       : null;
     if (this.props.dataExplorerConfig.charts.fileCounts && charts) {
-      charts.countItems.push({ label: "Files", value: this.state.manifestEntryCount });
+      charts.countItems.push({ label: 'Files', value: this.state.manifestEntryCount });
     }
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.dataExplorerConfig);
 
