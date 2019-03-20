@@ -115,7 +115,8 @@ class DataExplorerVisualizations extends React.Component {
     this.setState({
       toasterOpen: true,
       exportStatus: status,
-      exportInProgress: false });
+      exportInProgress: false
+    });
   }
 
   exportToWorkspaceCallback = (data) => {
@@ -123,7 +124,8 @@ class DataExplorerVisualizations extends React.Component {
       toasterOpen: true,
       exportStatus: 200,
       exportInProgress: false,
-      exportFileName: data.filename });
+      exportFileName: data.filename
+    });
   }
   isFileButton = buttonConfig => buttonConfig.type === 'manifest' ||
       buttonConfig.type === 'export' ||
@@ -198,20 +200,30 @@ class DataExplorerVisualizations extends React.Component {
     const toaster = this.state.toasterOpen && (
       <div className='map-data-model__submission-footer'>
         <Button
+          className='data-explorer__toaster-button'
           onClick={this.closeToaster}
           label='Close'
           buttonType='primary'
           enabled
         />
         <Button
+          className='data-explorer__toaster-button'
           label='Go To Workspace'
           buttonType='primary'
           enabled
           onClick={this.goToWorkspace}
         />
-        <p className='map-data-model__submission-footer-text introduction'>
-          { (this.state.exportStatus === 200) ? `${this.state.toasterSuccessText} File Name: ${this.state.exportFileName}` : `${this.state.toasterErrorText} Error: ${this.state.exportStatus}` }
-        </p>
+        { (this.state.exportStatus === 200) ? 
+          <div className='map-data-model__submission-footer-text introduction'>
+            <div> {this.state.toasterSuccessText} </div>
+            <div> File Name: {this.state.exportFileName} </div>
+          </div>
+          :
+          <div className='map-data-model__submission-footer-text introduction'>
+            <div> {this.state.toasterErrorText} </div>
+            <div> Error: {this.state.exportStatus} </div>
+          </div>
+        }
       </div>
     );
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.dataExplorerConfig);

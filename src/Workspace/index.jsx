@@ -14,7 +14,6 @@ class Workspace extends React.Component {
   }
 
   connected() {
-    console.log("connected");
     this.setState({connectedStatus : true});
   }
 
