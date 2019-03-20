@@ -67,6 +67,20 @@
           "link": "#hostname#workspace/",
           "label": "Run analysis"
         }
+      ],
+      "homepageChartNodes": [
+        {
+          "node": "case",
+          "name": "Cases"
+        },
+        {
+          "node": "study",
+          "name": "Studies"
+        },
+        {
+          "node": "aliquot",
+          "name": "Aliquots"
+        }
       ]
     },
     "navigation": {
@@ -132,7 +146,8 @@
       "race": {
         "chartType": "bar",
         "title": "Race"
-      }
+      },
+      "fileCounts": true
     },
     "filters": {
       "tabs": [

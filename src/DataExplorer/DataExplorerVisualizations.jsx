@@ -125,11 +125,16 @@ class DataExplorerVisualizations extends React.Component {
       exportInProgress: false,
       exportFileName: data.filename });
   }
+  isFileButton = buttonConfig => buttonConfig.type === 'manifest' ||
+      buttonConfig.type === 'export' ||
+      buttonConfig.type === 'export-to-workspace';
 
   refreshManifestEntryCount = () => {
     if (this.props.dataExplorerConfig
       && this.props.dataExplorerConfig.buttons
-      && this.props.dataExplorerConfig.buttons.some(btnCfg => (btnCfg.type === 'manifest' || btnCfg.type === 'export-to-workspace') && btnCfg.enabled)) {
+      && this.props.dataExplorerConfig.buttons.some(
+        btnCfg => this.isFileButton(btnCfg) && btnCfg.enabled)
+    ) {
       getManifestEntryCount(
         this.props.api,
         this.props.projectId,
@@ -162,8 +167,10 @@ class DataExplorerVisualizations extends React.Component {
   renderButton = (buttonConfig) => {
     const clickFunc = this.getOnClickFunction(buttonConfig);
     let buttonTitle = buttonConfig.title;
-    if (buttonConfig.type === 'manifest' && this.state.nodeIds.length > 0) {
+    if (this.isFileButton(buttonConfig) && this.state.nodeIds.length > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
+    } else if (buttonConfig.type === 'data') {
+      buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.nodeIds.length)})`;
     }
 
     return (<Button
@@ -185,6 +192,9 @@ class DataExplorerVisualizations extends React.Component {
     const charts = this.props.arrangerData ?
       getCharts(this.props.arrangerData, this.props.dataExplorerConfig, this.props.sqon)
       : null;
+    if (this.props.dataExplorerConfig.charts.fileCounts && charts) {
+      charts.countItems.push({ label: 'Files', value: this.state.manifestEntryCount });
+    }
     const toaster = this.state.toasterOpen && (
       <div className='map-data-model__submission-footer'>
         <Button
