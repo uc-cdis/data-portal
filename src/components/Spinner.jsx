@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Spinner.less';
 
 class Spinner extends React.Component {
@@ -15,5 +16,13 @@ class Spinner extends React.Component {
     );
   }
 }
+
+Spinner.propTypes = {
+  text: PropTypes.string,
+};
+
+Spinner.defaultProps = {
+  text: '',
+};
 
 export default Spinner;

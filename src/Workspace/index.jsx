@@ -5,12 +5,11 @@ import { fetchWithCreds } from '../actions';
 import Spinner from '../components/Spinner';
 
 class Workspace extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      connectedStatus : false,
-    }
+      connectedStatus: false,
+    };
   }
 
   componentDidMount() {
@@ -18,35 +17,35 @@ class Workspace extends React.Component {
       path: `${wtsPath}connected`,
       method: 'GET',
     })
-    .then(
-      ({status}) => {
-        if (status !== 200) {
-          window.location.href = `${wtsPath}/authorization_url?redirect=${window.location.pathname}`;
-        } else {
-          this.connected();
-        }
-      }
-    );
+      .then(
+        ({ status }) => {
+          if (status !== 200) {
+            window.location.href = `${wtsPath}/authorization_url?redirect=${window.location.pathname}`;
+          } else {
+            this.connected();
+          }
+        },
+      );
   }
 
   connected = () => {
-    this.setState({ connectedStatus : true });
+    this.setState({ connectedStatus: true });
   }
 
   render() {
-    return ((this.state.connectedStatus) ? 
+    return ((this.state.connectedStatus) ?
       (
-      <iframe
-        title='Workspace'
-        frameBorder='0'
-        className='workspace'
-        src={workspaceUrl}
-      />
-    )
+        <iframe
+          title='Workspace'
+          frameBorder='0'
+          className='workspace'
+          src={workspaceUrl}
+        />
+      )
       :
-        <Spinner text="Connecting to Workspace"/>
+      <Spinner text='Connecting to Workspace' />
 
-    )
+    );
   }
 }
 

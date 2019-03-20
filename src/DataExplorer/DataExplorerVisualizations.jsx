@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { CurrentSQON } from '@arranger/components/dist/Arranger';
 import Button from '@gen3/ui-component/dist/components/Button';
@@ -116,7 +115,7 @@ class DataExplorerVisualizations extends React.Component {
     this.setState({
       toasterOpen: true,
       exportStatus: status,
-      exportInProgress: false
+      exportInProgress: false,
     });
   }
 
@@ -125,7 +124,7 @@ class DataExplorerVisualizations extends React.Component {
       toasterOpen: true,
       exportStatus: 200,
       exportInProgress: false,
-      exportFileName: data.filename
+      exportFileName: data.filename,
     });
   }
   isFileButton = buttonConfig => buttonConfig.type === 'manifest' ||
@@ -214,7 +213,7 @@ class DataExplorerVisualizations extends React.Component {
           enabled
           onClick={this.goToWorkspace}
         />
-        { (this.state.exportStatus === 200) ? 
+        { (this.state.exportStatus === 200) ?
           <div className='map-data-model__submission-footer-text introduction'>
             <div> {this.state.toasterSuccessText} </div>
             <div> File Name: {this.state.exportFileName} </div>
@@ -331,6 +330,7 @@ DataExplorerVisualizations.propTypes = {
   sqon: PropTypes.object,
   projectId: PropTypes.string,
   api: PropTypes.func,
+  history: PropTypes.object.isRequired,
 };
 
 DataExplorerVisualizations.defaultProps = {
@@ -343,4 +343,4 @@ DataExplorerVisualizations.defaultProps = {
   api: () => {},
 };
 
-export default withRouter(DataExplorerVisualizations);
+export default DataExplorerVisualizations;

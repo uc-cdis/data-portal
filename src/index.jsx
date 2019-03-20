@@ -12,7 +12,7 @@ import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 
 import '@gen3/ui-component/dist/css/base.less';
-import { fetchWithCreds, fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
+import { fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 import HomePage from './Homepage/page';
@@ -32,7 +32,7 @@ import theme from './theme';
 import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
-import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, indexPublic, wtsPath } from './localconf';
+import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, indexPublic } from './localconf';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
