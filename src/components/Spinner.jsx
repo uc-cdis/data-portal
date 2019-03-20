@@ -10,6 +10,7 @@ class Spinner extends React.Component {
           <circle cx='30' cy='15' r='4' />
           <circle cx='53' cy='15' r='4' />
         </svg>
+        <div className='spinner__text'> {this.props.text} </div>
       </div>
     );
   }

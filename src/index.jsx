@@ -209,20 +209,7 @@ async function init() {
                     <Route
                       path='/workspace'
                       component={
-                        (props) => {
-                          fetchWithCreds({
-                            path: `${wtsPath}connected`,
-                            method: 'GET',
-                          })
-                          .then(
-                            ({status}) => {
-                              if (status !== 200) {
-                                window.location.href = `${wtsPath}/authorization_url?redirect=/workspace`;
-                              }
-                            }
-                          );
-                         return (<ProtectedContent component={Workspace} {...props} />);
-                        }
+                        props => <ProtectedContent component={Workspace} {...props} />
                       }
                     />
                     <Route
