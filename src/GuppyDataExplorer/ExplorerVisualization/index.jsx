@@ -45,7 +45,7 @@ class ExplorerVisualization extends React.Component {
   render() {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
     return (
-      <div className={`${this.props.className} explorer-visualization`}>
+      <div className={this.props.className}>
         <DataSummaryCardGroup summaryItems={chartData.countItems} connected />
         <SummaryChartGroup summaries={chartData.summaries} />
         {
@@ -58,7 +58,13 @@ class ExplorerVisualization extends React.Component {
             />),
           )
         }
-        <ExplorerTable className='guppy-data-explorer__table'/>
+        <ExplorerTable
+          className='guppy-data-explorer__table'
+          tableConfig={this.props.tableConfig}
+          fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
+          rawData={this.props.rawData}
+          totalCount={this.props.totalCount}
+        />
       </div>
     );
   }
@@ -69,6 +75,10 @@ ExplorerVisualization.propTypes = {
   aggsData: PropTypes.object,
   filter: PropTypes.object,
   chartConfig: PropTypes.object,
+  tableConfig: PropTypes.arrayOf(PropTypes.shape({
+    field: PropTypes.string,
+    name: PropTypes.string,
+  })).isRequired,
 };
 
 ExplorerVisualization.defaultProps = {

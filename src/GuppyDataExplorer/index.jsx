@@ -23,7 +23,7 @@ class Explorer extends React.Component {
       <div className='guppy-data-explorer'>
         <GuppyWrapper
           filterConfig={this.props.filterConfig}
-          guppyServerPath={this.props.guppyServerPath}
+          guppyConfig={this.props.guppyConfig}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
         >
           <ConnectedFilter className='guppy-data-explorer__filter' />
@@ -32,6 +32,7 @@ class Explorer extends React.Component {
             aggsData={this.state.aggsData}
             filter={this.props.filter}
             chartConfig={this.props.chartConfig}
+            tableConfig={this.props.tableConfig}
           />
         </GuppyWrapper>
       </div>
@@ -40,7 +41,10 @@ class Explorer extends React.Component {
 }
 
 Explorer.propTypes = {
-  guppyServerPath: PropTypes.string.isRequired,
+  guppyConfig: PropTypes.shape({
+    path: PropTypes.string,
+    type: PropTypes.string,
+  }).isRequired,
   filterConfig: PropTypes.shape({
     tabs: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string,
@@ -50,6 +54,10 @@ Explorer.propTypes = {
       })),
     })),
   }).isRequired,
+  tableConfig: PropTypes.arrayOf(PropTypes.shape({
+    field: PropTypes.string,
+    name: PropTypes.string,
+  })).isRequired,
   chartConfig: PropTypes.object.isRequired,
 };
 

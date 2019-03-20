@@ -45,6 +45,19 @@ storiesOf('Data Explorer', module)
       }
     };
 
+    const tableConfig = [
+      { field: 'project', name: 'Project' },
+      { field: 'study', name: 'Study' },
+      { field: 'race', name: 'Race' },
+      { field: 'ethnicity', name: 'Ethnicity' },
+      { field: 'gender', name: 'Gender' },
+      { field: 'vital_status', name: 'Vital Status' },
+      { field: 'whatever_lab_result_value', name: 'Lab Result Value' },
+      { field: 'file_count', name: 'File Count' },
+      { field: 'file_type', name: 'File Type' },
+      { field: 'file_format', name: 'File Format' },
+    ];
+
     const filterConfig = {
       tabs: [{
         title: 'Project',
@@ -72,11 +85,14 @@ storiesOf('Data Explorer', module)
       }],
     };
 
+    const guppyServerPath = 'http://localhost:3000/graphql';
+    const esType = 'subject';
     return (
       <GuppyDataExplorer
         chartConfig={chartConfig}
         filterConfig={filterConfig}
-        guppyServerPath='http://localhost:3000/graphql'
+        tableConfig={tableConfig}
+        guppyConfig={{path: guppyServerPath, type: esType}}
       />
     );
   });

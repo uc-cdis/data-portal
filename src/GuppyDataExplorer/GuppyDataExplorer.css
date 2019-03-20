@@ -9,3 +9,8 @@
 .guppy-data-explorer__visualization {
   width: 80%;
 }
+
+.guppy-data-explorer__table {
+  margin-top: 20px;
+  width: 100%;
+}
