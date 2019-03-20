@@ -13,10 +13,6 @@ class Workspace extends React.Component {
     }
   }
 
-  connected() {
-    this.setState({connectedStatus : true});
-  }
-
   componentDidMount() {
     fetchWithCreds({
       path: `${wtsPath}connected`,
@@ -25,12 +21,16 @@ class Workspace extends React.Component {
     .then(
       ({status}) => {
         if (status !== 200) {
-          window.location.href = `${wtsPath}/authorization_url?redirect=/workspace`;
+          window.location.href = `${wtsPath}/authorization_url?redirect=${window.location.pathname}`;
         } else {
           this.connected();
         }
       }
     );
+  }
+
+  connected = () => {
+    this.setState({ connectedStatus : true });
   }
 
   render() {

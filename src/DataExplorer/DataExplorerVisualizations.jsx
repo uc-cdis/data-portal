@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { CurrentSQON } from '@arranger/components/dist/Arranger';
 import Button from '@gen3/ui-component/dist/components/Button';
@@ -104,7 +105,7 @@ class DataExplorerVisualizations extends React.Component {
   }
 
   goToWorkspace = () => {
-    window.location.href = '/workspace';
+    this.props.history.push('/workspace');
   }
 
   closeToaster = () => {
@@ -226,6 +227,7 @@ class DataExplorerVisualizations extends React.Component {
         }
       </div>
     );
+
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.dataExplorerConfig);
 
     return (
@@ -341,4 +343,4 @@ DataExplorerVisualizations.defaultProps = {
   api: () => {},
 };
 
-export default DataExplorerVisualizations;
+export default withRouter(DataExplorerVisualizations);
