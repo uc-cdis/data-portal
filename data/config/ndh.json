@@ -187,7 +187,11 @@
             "cd4nadir",
             "status",
             "virus_type",
-            "virus_subtype"
+            "virus_subtype",
+            "_maintain_viral_load_less_than",
+            "_min_viral_load",
+            "therapy",
+            "therapyv"
           ]
         }
       ]
