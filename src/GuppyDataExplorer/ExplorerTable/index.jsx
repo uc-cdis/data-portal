@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactTable from "react-table";
-import "react-table/react-table.css";
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
 
 class ExplorerTable extends React.Component {
   constructor(props) {
@@ -16,17 +16,15 @@ class ExplorerTable extends React.Component {
     this.setState({ loading: true });
     const offset = state.page * state.pageSize;
     console.log('sort: ', state.sorted);
-    const sort = state.sorted.map(i => {
-      return {
-        [i.id]: i.desc ? 'desc' : 'asc',
-      };
-    });
+    const sort = state.sorted.map(i => ({
+      [i.id]: i.desc ? 'desc' : 'asc',
+    }));
     const size = state.pageSize;
     this.props.fetchAndUpdateRawData({
       offset,
       size,
       sort,
-    }).then(res => {
+    }).then((res) => {
       this.setState({
         loading: false,
         pageSize: size,
@@ -36,7 +34,7 @@ class ExplorerTable extends React.Component {
 
   render() {
     console.log(this.props.rawData);
-    const columnsConfig = this.props.tableConfig.map(c => ({Header: c.name, accessor: c.field}));
+    const columnsConfig = this.props.tableConfig.map(c => ({ Header: c.name, accessor: c.field }));
     const totalCount = this.props.totalCount;
     const pageSize = this.state.pageSize;
     const totalPages = Math.floor(totalCount / pageSize) + ((totalCount % pageSize === 0) ? 0 : 1);

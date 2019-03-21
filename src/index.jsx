@@ -37,6 +37,7 @@ import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
+import GuppyDataExplorer from './GuppyDataExplorer/.';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
@@ -251,7 +252,7 @@ async function init() {
                       <Route
                         path='/explorer'
                         component={
-                          props => <ProtectedContent component={DataExplorer} {...props} />
+                          props => <ProtectedContent component={GuppyDataExplorer} {...props} />
                         }
                       />
                       : null

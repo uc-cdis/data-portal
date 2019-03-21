@@ -13,36 +13,35 @@ storiesOf('Data Explorer', module)
     );
   })
   .add('Guppy Data Explorer', () => {
-
     const chartConfig = {
-      'project': {
-        'chartType': 'count',
-        'title': 'Projects'
+      project: {
+        chartType: 'count',
+        title: 'Projects',
       },
-      'study': {
-        'chartType': 'count',
-        'title': 'Studies'
+      study: {
+        chartType: 'count',
+        title: 'Studies',
       },
-      'file_type': {
-        'chartType': 'count',
-        'title': 'File Types'
+      file_type: {
+        chartType: 'count',
+        title: 'File Types',
       },
-      'ethnicity': {
-        'chartType': 'stackedBar',
-        'title': 'Ethnicity'
+      ethnicity: {
+        chartType: 'stackedBar',
+        title: 'Ethnicity',
       },
-      'gender': {
-        'chartType': 'pie',
-        'title': 'Gender'
+      gender: {
+        chartType: 'pie',
+        title: 'Gender',
       },
-      'race': {
-        'chartType': 'pie',
-        'title': 'Race'
+      race: {
+        chartType: 'pie',
+        title: 'Race',
       },
-      'vital_status': {
-        'chartType': 'bar',
-        'title': 'Vital Status'
-      }
+      vital_status: {
+        chartType: 'bar',
+        title: 'Vital Status',
+      },
     };
 
     const tableConfig = [
@@ -92,7 +91,7 @@ storiesOf('Data Explorer', module)
         chartConfig={chartConfig}
         filterConfig={filterConfig}
         tableConfig={tableConfig}
-        guppyConfig={{path: guppyServerPath, type: esType}}
+        guppyConfig={{ path: guppyServerPath, type: esType }}
       />
     );
   });

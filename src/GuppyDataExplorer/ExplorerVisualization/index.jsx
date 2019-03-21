@@ -10,33 +10,32 @@ class ExplorerVisualization extends React.Component {
     const summaries = [];
     const countItems = [];
     const stackedBarCharts = [];
-    Object.keys(chartConfig).forEach(field => {
+    Object.keys(chartConfig).forEach((field) => {
       if (!aggsData || !aggsData[field] || !aggsData[field].histogram) return;
       const histogram = aggsData[field].histogram;
       switch (chartConfig[field].chartType) {
-        case 'count': 
-          countItems.push({
-            label: chartConfig[field].title,
-            value: filter[field] ? filter[field].selectedValues.length : aggsData[field].histogram.length,
-          });
+      case 'count':
+        countItems.push({
+          label: chartConfig[field].title,
+          value: filter[field] ? filter[field].selectedValues.length : aggsData[field].histogram.length,
+        });
         break;
-        case 'pie':
-        case 'bar': 
-        case 'stackedBar':
-          const dataItem = {
-            type: chartConfig[field].chartType,
-            title: chartConfig[field].title,
-            data: histogram.map(i => ({name: i.key, value: i.count})),
-          };
-          if ('stackedBar' === chartConfig[field].chartType) {
-            stackedBarCharts.push(dataItem);
-          }
-          else {
-            summaries.push(dataItem);
-          }
+      case 'pie':
+      case 'bar':
+      case 'stackedBar':
+        const dataItem = {
+          type: chartConfig[field].chartType,
+          title: chartConfig[field].title,
+          data: histogram.map(i => ({ name: i.key, value: i.count })),
+        };
+        if (chartConfig[field].chartType === 'stackedBar') {
+          stackedBarCharts.push(dataItem);
+        } else {
+          summaries.push(dataItem);
+        }
         break;
-        default: 
-          throw new Error(`Invalid chartType ${chartConfig[field].chartType}`);
+      default:
+        throw new Error(`Invalid chartType ${chartConfig[field].chartType}`);
       }
     });
     return { summaries, countItems, stackedBarCharts };

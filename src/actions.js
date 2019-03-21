@@ -1,5 +1,16 @@
 import 'isomorphic-fetch';
-import { apiPath, userapiPath, headers, basename, submissionApiOauthPath, submissionApiPath, graphqlPath, arrangerGraphqlPath, graphqlSchemaUrl } from './configs';
+import {
+  apiPath,
+  userapiPath,
+  headers,
+  basename,
+  submissionApiOauthPath,
+  submissionApiPath,
+  graphqlPath,
+  arrangerGraphqlPath,
+  guppyUrl,
+  graphqlSchemaUrl,
+} from './configs';
 
 export const updatePopup = state => ({
   type: 'UPDATE_POPUP',
@@ -159,7 +170,7 @@ export const fetchGraphQL = (graphQLParams) => {
     });
 };
 
-export const fetchArrangerGraphQL = (graphQLParams) => {
+export const fetchFlatGraphQL = (graphQLParams) => {
   const request = {
     credentials: 'include',
     headers: { ...headers },
@@ -167,7 +178,7 @@ export const fetchArrangerGraphQL = (graphQLParams) => {
     body: JSON.stringify(graphQLParams),
   };
 
-  return fetch(arrangerGraphqlPath, request)
+  return fetch(guppyUrl, request)
     .then(response => response.text())
     .then((responseBody) => {
       try {
