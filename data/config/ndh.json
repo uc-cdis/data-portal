@@ -191,7 +191,8 @@
             "_maintain_viral_load_less_than",
             "_min_viral_load",
             "therapy",
-            "therapyv"
+            "therapyv",
+            "hiv_status"
           ]
         }
       ]
