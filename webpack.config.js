@@ -111,7 +111,7 @@ module.exports = {
       graphql: path.resolve('./node_modules/graphql'),
       react: path.resolve('./node_modules/react') // Same issue.
     },
-    extensions: ['.js', '.jsx', '.json']
+    extensions: ['.mjs', '.js', '.jsx', '.json']
   },
   plugins,
   externals: [{
