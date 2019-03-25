@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
@@ -44,28 +43,11 @@ const plugins = [
   new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
 ];
 
-
-if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ) {
-  // This slows things down a lot, so avoid when running local dev environment
-}
-
 module.exports = {
   entry: ['babel-polyfill', './src/index.jsx'],
   target: 'web',
   externals: [nodeExternals()],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
-  optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        sourceMap: true,
-        uglifyOptions: {
-          compress: {
-            inline: false
-          }
-        }
-      })
-    ]
-  },
   output: {
     path: __dirname,
     filename: 'bundle.js',
