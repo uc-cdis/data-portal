@@ -206,13 +206,17 @@ class DataExplorerVisualizations extends React.Component {
           buttonType='primary'
           enabled
         />
-        <Button
-          className='data-explorer__toaster-button'
-          label='Go To Workspace'
-          buttonType='primary'
-          enabled
-          onClick={this.goToWorkspace}
-        />
+        { (this.state.exportStatus === 200) ?
+          <Button
+            className='data-explorer__toaster-button'
+            label='Go To Workspace'
+            buttonType='primary'
+            enabled
+            onClick={this.goToWorkspace}
+          />
+          :
+          null
+        }
         { (this.state.exportStatus === 200) ?
           <div className='map-data-model__submission-footer-text introduction'>
             <div> {this.state.toasterSuccessText} </div>
