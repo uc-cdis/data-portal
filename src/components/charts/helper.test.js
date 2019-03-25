@@ -10,7 +10,7 @@ import {
   transformDataToCount,
   transformArrangerDataToSummary,
   getCharts,
-  getSQONValues
+  getSQONValues,
 } from './helper';
 import { colorsForCharts } from '../../localconf';
 

@@ -7,9 +7,8 @@ import React from 'react';
 import {
   calculateChartData,
   getDataKey,
-  getPercentageData,
   getCategoryColor,
-  percentageFormatter
+  percentageFormatter,
 } from '../helper';
 import './SummaryHorizontalBarChart.less';
 

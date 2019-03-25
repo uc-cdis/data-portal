@@ -54,6 +54,18 @@ module.exports = {
   target: 'web',
   externals: [nodeExternals()],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        sourceMap: true,
+        uglifyOptions: {
+          compress: {
+            inline: false
+          }
+        }
+      })
+    ]
+  },
   output: {
     path: __dirname,
     filename: 'bundle.js',
@@ -66,6 +78,7 @@ module.exports = {
     disableHostCheck: true,
     compress: true,
     hot: true,
+    host: 'localhost',
     port: 9443,
     https: true,
   },

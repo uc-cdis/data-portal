@@ -8,7 +8,7 @@ import {
   getCategoryColorFrom2Colors,
   calculateChartData,
   getDataKey,
-  percentageFormatter
+  percentageFormatter,
 } from '../helper';
 import './SummaryPieChart.less';
 
