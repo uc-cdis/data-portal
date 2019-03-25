@@ -44,6 +44,7 @@ function buildConfig(opts) {
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = `${hostname}index/`;
+  const wtsPath = `${hostname}wts/oauth2/`;
   let login = {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',
@@ -53,7 +54,7 @@ function buildConfig(opts) {
   const workspaceUrl = '/lw-workspace/';
   const workspaceErrorUrl = '/no-workspace-access/';
   const datasetUrl = `${hostname}api/search/datasets`;
-
+  const manifestServiceApiPath = `${hostname}manifests/`;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -122,6 +123,8 @@ function buildConfig(opts) {
     homepageChartNodes: components.index.homepageChartNodes,
     datasetUrl,
     indexPublic,
+    manifestServiceApiPath,
+    wtsPath,
   };
 }
 

@@ -265,6 +265,14 @@
         "leftIcon": "user",
         "rightIcon": "download",
         "fileName": "data.json"
+      },
+      {
+        "enabled": true,
+        "type": "export-to-workspace",
+        "title": "Export To Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "download",
+        "fileName": "manifest.json"
       }
     ],
     "table": {

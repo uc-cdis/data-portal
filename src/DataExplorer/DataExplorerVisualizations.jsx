@@ -9,7 +9,7 @@ import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
 import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart/.';
 import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup/.';
 import { getCharts } from '../components/charts/helper';
-import { downloadManifest, downloadData, getManifestEntryCount } from './actionHelper';
+import { downloadManifest, downloadData, getManifestEntryCount, exportToWorkspace } from './actionHelper';
 import { calculateDropdownButtonConfigs, humanizeNumber } from './utils';
 import { exportAllSelectedDataToCloud } from './custom/bdbag';
 
@@ -18,6 +18,12 @@ class DataExplorerVisualizations extends React.Component {
     super(props);
     this.state = {
       manifestEntryCount: 0,
+      exportInProgress: false,
+      exportFileName: null,
+      toasterOpen: false,
+      exportStatus: null,
+      toasterSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
+      toasterErrorText: 'There was an error exporting your cohort.',
       nodeIds: [],
     };
   }
@@ -67,6 +73,19 @@ class DataExplorerVisualizations extends React.Component {
     );
   }
 
+   onExportToWorkspace = () => () => {
+     this.setState({ exportInProgress: true });
+     exportToWorkspace(
+       this.props.api,
+       this.props.projectId,
+       this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
+       this.state.nodeIds,
+       this.props.dataExplorerConfig.arrangerConfig,
+       this.exportToWorkspaceCallback,
+       this.exportToWorkspaceErrorCallback,
+     );
+   }
+
   getOnClickFunction = (buttonConfig) => {
     let clickFunc = () => {};
     if (buttonConfig.type === 'data') {
@@ -78,9 +97,36 @@ class DataExplorerVisualizations extends React.Component {
     if (buttonConfig.type === 'export') {
       clickFunc = this.onExportToCloud;
     }
+    if (buttonConfig.type === 'export-to-workspace') {
+      clickFunc = this.onExportToWorkspace();
+    }
     return clickFunc;
   }
 
+  goToWorkspace = () => {
+    this.props.history.push('/workspace');
+  }
+
+  closeToaster = () => {
+    this.setState({ toasterOpen: false });
+  }
+
+  exportToWorkspaceErrorCallback = (status) => {
+    this.setState({
+      toasterOpen: true,
+      exportStatus: status,
+      exportInProgress: false,
+    });
+  }
+
+  exportToWorkspaceCallback = (data) => {
+    this.setState({
+      toasterOpen: true,
+      exportStatus: 200,
+      exportInProgress: false,
+      exportFileName: data.filename,
+    });
+  }
   isFileButton = buttonConfig => buttonConfig.type === 'manifest' ||
       buttonConfig.type === 'export' ||
       buttonConfig.type === 'export-to-workspace';
@@ -107,8 +153,17 @@ class DataExplorerVisualizations extends React.Component {
     if (buttonConfig.type === 'manifest') {
       return this.state.nodeIds.length > 0 && this.state.manifestEntryCount > 0;
     }
-
+    if (buttonConfig.type === 'export-to-workspace') {
+      return this.state.nodeIds.length > 0 && this.state.manifestEntryCount > 0;
+    }
     return this.state.nodeIds.length > 0;
+  }
+
+  isButtonPending = (buttonConfig) => {
+    if (buttonConfig.type === 'export-to-workspace') {
+      return this.state.exportInProgress;
+    }
+    return false;
   }
 
   renderButton = (buttonConfig) => {
@@ -131,6 +186,7 @@ class DataExplorerVisualizations extends React.Component {
       enabled={this.isButtonEnabled(buttonConfig)}
       tooltipEnabled={buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false}
       tooltipText={buttonConfig.tooltipText}
+      isPending={this.isButtonPending(buttonConfig)}
     />);
   }
 
@@ -141,6 +197,40 @@ class DataExplorerVisualizations extends React.Component {
     if (this.props.dataExplorerConfig.charts.fileCounts && charts) {
       charts.countItems.push({ label: 'Files', value: this.state.manifestEntryCount });
     }
+    const toaster = this.state.toasterOpen && (
+      <div className='map-data-model__submission-footer'>
+        <Button
+          className='data-explorer__toaster-button'
+          onClick={this.closeToaster}
+          label='Close'
+          buttonType='primary'
+          enabled
+        />
+        { (this.state.exportStatus === 200) ?
+          <Button
+            className='data-explorer__toaster-button'
+            label='Go To Workspace'
+            buttonType='primary'
+            enabled
+            onClick={this.goToWorkspace}
+          />
+          :
+          null
+        }
+        { (this.state.exportStatus === 200) ?
+          <div className='map-data-model__submission-footer-text introduction'>
+            <div> {this.state.toasterSuccessText} </div>
+            <div> File Name: {this.state.exportFileName} </div>
+          </div>
+          :
+          <div className='map-data-model__submission-footer-text introduction'>
+            <div> {this.state.toasterErrorText} </div>
+            <div> Error: {this.state.exportStatus} </div>
+          </div>
+        }
+      </div>
+    );
+
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.dataExplorerConfig);
 
     return (
@@ -230,6 +320,9 @@ class DataExplorerVisualizations extends React.Component {
             <DataExplorerTable {...this.props} />
           ) : null
         }
+        {
+          toaster
+        }
       </div>
     );
   }
@@ -241,6 +334,7 @@ DataExplorerVisualizations.propTypes = {
   sqon: PropTypes.object,
   projectId: PropTypes.string,
   api: PropTypes.func,
+  history: PropTypes.object.isRequired,
 };
 
 DataExplorerVisualizations.defaultProps = {
