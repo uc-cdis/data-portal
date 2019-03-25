@@ -68,7 +68,8 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
             .filter(edge => edge.target.id === n.name)
             .map(edge => edge.source.id);
 
-          const nodeColor = getCategoryColor(n.type);
+          const nodeType = n.type.toLowerCase();
+          const nodeColor = getCategoryColor(nodeType);
           const textPadding = graphStyleConfig.nodeContentPadding;
           const fontSize = graphStyleConfig.nodeTextFontSize;
           const textLineGap = graphStyleConfig.nodeTextLineGap;
@@ -87,7 +88,7 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
           }
           return {
             id: n.name,
-            type: n.type,
+            type: nodeType,
             boundingBox,
             topCenterX,
             topCenterY,

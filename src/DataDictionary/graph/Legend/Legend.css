@@ -49,6 +49,7 @@
 .data-dictionary-graph-legend__required-icon {
   position: relative;
   top: 8px;
+  background-color: var(--g3-color__black);
 }
 
 .data-dictionary-graph-legend__required-icon--required {

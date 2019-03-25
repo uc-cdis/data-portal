@@ -7,7 +7,12 @@ import IconDataFile from './icons/icon_data_file.svg';
 import IconMetadata from './icons/icon_metadata.svg';
 import IconNotation from './icons/icon_notation.svg';
 import IconIndexFile from './icons/icon_index_file.svg';
+import IconDataObservations from './icons/icon_data_observations.svg';
 import IconDefault from './icons/icon_default.svg';
+import IconExperimentalMethods from './icons/icon_experimental_methods.svg';
+import IconSubjectCharacteristics from './icons/icon_subject_characteristics.svg';
+import IconImaging from './icons/icon_imaging.svg';
+import IconStudyAdministration from './icons/icon_study_administration.svg';
 
 const nodeCategoryList = {
   clinical: {
@@ -49,6 +54,26 @@ const nodeCategoryList = {
   medical_history: {
     icon: IconClinical,
     color: '#05B8EE',
+  },
+  data_observations: {
+    icon: IconDataObservations,
+    color: '#FF8585',
+  },
+  experimental_methods: {
+    icon: IconExperimentalMethods,
+    color: '#E74C3C',
+  },
+  subject_characteristics: {
+    icon: IconSubjectCharacteristics,
+    color: '#05B8EE',
+  },
+  imaging: {
+    icon: IconImaging,
+    color: '#7EC500',
+  },
+  study_administration: {
+    icon: IconStudyAdministration,
+    color: '#733EA3',
   },
 };
 
