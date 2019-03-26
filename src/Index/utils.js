@@ -23,7 +23,9 @@ const getProjectNodeCounts = async (callback) => {
   const resultStatus = { needLogin: false };
   if (typeof homepageChartNodes === 'undefined') {
     getProjectsList();
-    callback(resultStatus);
+    if (callback) {
+      callback(resultStatus);
+    }
     return;
   }
 
@@ -39,17 +41,23 @@ const getProjectNodeCounts = async (callback) => {
     switch (res.status) {
     case 200:
       updateRedux(res.data);
-      callback(resultStatus);
+      if (callback) {
+        callback(resultStatus);
+      }
       break;
     case 404:
       // Shouldn't happen, this means peregrine datasets endpoint not enabled
       console.error(`REST endpoint ${datasetUrl} not enabled in Peregrine yet.`);
-      callback(resultStatus);
+      if (callback) {
+        callback(resultStatus);
+      }
       break;
     case 401:
     case 403:
       resultStatus.needLogin = true;
-      callback(resultStatus);
+      if (callback) {
+        callback(resultStatus);
+      }
       break;
     default:
       break;
