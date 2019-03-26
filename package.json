@@ -76,7 +76,6 @@
     "style-loader": "^0.21.0",
     "styled-components": "^3.2.6",
     "svg-fill-loader": "^0.0.8",
-    "uglifyjs-webpack-plugin": "^2.1.2",
     "underscore": "^1.8.3",
     "url-join": "^4.0.0",
     "viz.js": "2.0.0"
