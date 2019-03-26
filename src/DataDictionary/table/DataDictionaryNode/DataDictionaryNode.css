@@ -66,6 +66,7 @@
   margin: 0 6px;
   padding: unset; /* override .g3-button's paddings */
   font-weight: normal;
+  display: inline;
 }
 
 .data-dictionary-node__download-button:hover, 
