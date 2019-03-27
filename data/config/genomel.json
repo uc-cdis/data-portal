@@ -47,13 +47,6 @@
           "label": "Learn more"
         },
         {
-          "name": "Explore Data",
-          "icon": "data-explore",
-          "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
-          "link": "#hostname#shiny/",
-          "label": "Explore data"
-        },
-        {
           "name": "Access Data",
           "icon": "data-access",
           "body": "Use our selected tool to filter out the data you need.",
