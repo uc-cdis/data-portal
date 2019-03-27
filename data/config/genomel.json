@@ -64,9 +64,6 @@
     },
     "navigation": {
       "title": "Genomel Data Commons",
-      "subTitle": "Explore, Analyze, and Share Data",
-      "text": "The GenoMEL data commons supports the management, analysis and sharing of next generation sequencing data for the GenoMEL research community and aims to accelerate opportunities for discovery of susceptibility genes for melanoma. The data commons supports cross-project analyses by harmonizing data from different projects through the development of a data dictionary and utilization of common workflows, providing an API for data queries, and providing a cloud-based analysis workspace with rich tools and resources.",
-      "contact": "If you have any questions about access or the registration process, please contact support@bionimbus.org.",
       "items": [
         {
           "icon": "dictionary",
@@ -101,6 +98,11 @@
       ]
     }
   },
+  "login": {
+    "title": "GenoMEL Data Commons",
+    "subTitle": "Explore, Analyze, and Share Data",
+    "text": "The GenoMEL data commons supports the management, analysis and sharing of next generation sequencing data for the GenoMEL research community and aims to accelerate opportunities for discovery of susceptibility genes for melanoma. The data commons supports cross-project analyses by harmonizing data from different projects through the development of a data dictionary and utilization of common workflows, providing an API for data queries, and providing a cloud-based analysis workspace with rich tools and resources.",
+    "contact": "If you have any questions about access or the registration process, please contact support@bionimbus.org.",
   "featureFlags": {
     "explorer": false
   }
