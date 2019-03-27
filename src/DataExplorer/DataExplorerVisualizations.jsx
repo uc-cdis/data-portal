@@ -211,40 +211,6 @@ class DataExplorerVisualizations extends React.Component {
           this.state.toasterSuccessText : this.state.toasterErrorText}
         otherText={this.state.exportStatus === 200 ? `File Name: ${this.state.exportFileName}` : `Error: ${this.state.exportStatus}`}
       />);
-    /*
-    const toaster = (this.state.toasterOpen && (
-          <div className='map-data-model__submission-footer'>
-            <Button
-              className='data-explorer__toaster-button'
-              onClick={this.closeToaster}
-              label='Close'
-              buttonType='primary'
-              enabled
-            />
-            { (this.state.exportStatus === 200) ?
-              <Button
-                className='data-explorer__toaster-button'
-                label='Go To Workspace'
-                buttonType='primary'
-                enabled
-                onClick={this.goToWorkspace}
-              />
-              :
-              null
-            }
-            { (this.state.exportStatus === 200) ?
-              <div className='map-data-model__submission-footer-text introduction'>
-                <div> {this.state.toasterSuccessText} </div>
-                <div> File Name: {this.state.exportFileName} </div>
-              </div>
-              :
-              <div className='map-data-model__submission-footer-text introduction'>
-                <div> {this.state.toasterErrorText} </div>
-                <div> Error: {this.state.exportStatus} </div>
-              </div>
-            }
-          </div>
-        );) */
 
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.dataExplorerConfig);
 
