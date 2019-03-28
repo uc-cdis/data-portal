@@ -25,6 +25,7 @@ class GuppyDataExplorer extends React.Component {
           filterConfig={this.props.filterConfig}
           guppyConfig={this.props.guppyConfig}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
+          tableConfig={this.props.tableConfig}
         >
           <ConnectedFilter className='guppy-data-explorer__filter' />
           <ExplorerVisualization
