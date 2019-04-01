@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { CurrentSQON } from '@arranger/components/dist/Arranger';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import Toaster from '@gen3/ui-component/dist/components/Toaster';
 import Spinner from '../components/Spinner';
 import DataExplorerTable from '../components/tables/DataExplorerTable';
 import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
@@ -12,7 +13,6 @@ import { getCharts } from '../components/charts/helper';
 import { downloadManifest, downloadData, getManifestEntryCount, exportToWorkspace } from './actionHelper';
 import { calculateDropdownButtonConfigs, humanizeNumber } from './utils';
 import { exportAllSelectedDataToCloud } from './custom/bdbag';
-import Toaster from '../components/Toaster';
 
 class DataExplorerVisualizations extends React.Component {
   constructor(props) {
@@ -112,6 +112,8 @@ class DataExplorerVisualizations extends React.Component {
     this.setState({ toasterOpen: false });
   }
 
+  isToasterOpen = () => this.state.toasterOpen
+
   exportToWorkspaceErrorCallback = (status) => {
     this.setState({
       toasterOpen: true,
@@ -199,18 +201,37 @@ class DataExplorerVisualizations extends React.Component {
       charts.countItems.push({ label: 'Files', value: this.state.manifestEntryCount });
     }
     const toaster = (
-      <Toaster
-        isEnabled={this.state.toasterOpen}
-        hasCloseButton
-        onCloseButton={this.closeToaster}
-        closeButtonText='Close'
-        hasActionButton
-        onActionButton={this.goToWorkspace}
-        actionButtonText='Go To Workspace'
-        primaryText={this.state.exportStatus === 200 ?
-          this.state.toasterSuccessText : this.state.toasterErrorText}
-        otherText={this.state.exportStatus === 200 ? `File Name: ${this.state.exportFileName}` : `Error: ${this.state.exportStatus}`}
-      />);
+      <Toaster isEnabled={this.isToasterOpen}>
+        <Button
+          className='data-explorer__toaster-button'
+          onClick={this.closeToaster}
+          label='Close'
+          buttonType='primary'
+          enabled
+        />
+        { (this.state.exportStatus === 200) ?
+          <Button
+            className='data-explorer__toaster-button'
+            label='Go To Workspace'
+            buttonType='primary'
+            enabled
+            onClick={this.goToWorkspace}
+          />
+          : null
+        }
+        { (this.state.exportStatus === 200) ?
+          <div className='data-explorer__toaster-text'>
+            <div> {this.state.toasterSuccessText} </div>
+            <div> File Name: {this.state.exportFileName} </div>
+          </div>
+          :
+          <div className='data-explorer__toaster-text'>
+            <div> {this.state.toasterErrorText} </div>
+            <div> Error: {this.state.exportStatus} </div>
+          </div>
+        }
+      </Toaster>
+    );
 
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.dataExplorerConfig);
 

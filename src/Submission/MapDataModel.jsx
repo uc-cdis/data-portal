@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fetchQuery } from 'relay-runtime';
+import Button from '@gen3/ui-component/dist/components/Button';
+import Toaster from '@gen3/ui-component/dist/components/Toaster';
 import BackLink from '../components/BackLink';
 import getProjectNodeCounts from '../Index/utils';
 import CheckmarkIcon from '../img/icons/status_confirm.svg';
@@ -8,7 +10,6 @@ import InputWithIcon from '../components/InputWithIcon';
 import { GQLHelper } from '../gqlHelper';
 import environment from '../environment';
 import sessionMonitor from '../SessionMonitor';
-import Toaster from '../components/Toaster';
 import './MapDataModel.less';
 
 const gqlHelper = GQLHelper.getGQLHelper();
@@ -305,14 +306,19 @@ class MapDataModel extends React.Component {
             </div>
           </div>
         </div>
-        <Toaster
-          isEnabled={this.isValidSubmission()}
-          hasActionButton
-          onActionButton={this.submit}
-          actionButtonIsPending={this.state.submitting}
-          actionButtonText='Submit'
-          primaryText={this.state.submissionText}
-        />
+        {
+          <Toaster isEnabled={this.isValidSubmission()}>
+            <Button
+              onClick={this.submit}
+              label='Submit'
+              buttonType='primary'
+              enabled={!this.state.submitting}
+            />
+            <p className='map-data-model__submission-footer-text introduction'>
+              {this.state.submissionText}
+            </p>
+          </Toaster>
+        }
       </div>
     );
   }
