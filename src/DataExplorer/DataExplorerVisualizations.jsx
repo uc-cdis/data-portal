@@ -200,9 +200,9 @@ class DataExplorerVisualizations extends React.Component {
     if (this.props.dataExplorerConfig.charts.fileCounts && charts) {
       charts.countItems.push({ label: 'Files', value: this.state.manifestEntryCount });
     }
-    
+
     const toaster = (
-      <Toaster isEnabled={this.isToasterOpen()}>
+      <Toaster isEnabled={this.isToasterOpen() className='data-explorer__toaster-div'}>
         <Button
           className='data-explorer__toaster-button'
           onClick={this.closeToaster}
