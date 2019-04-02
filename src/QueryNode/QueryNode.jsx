@@ -224,6 +224,7 @@ class QueryNode extends React.Component {
           nodeTypes={this.props.submission.nodeTypes}
           queryNodeCount={queryNodesList.length}
         />
+        <h4>most recent 20:</h4>
         { queryNodesList.map(
           value => (<Entities
             project={project}

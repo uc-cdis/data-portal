@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { CurrentSQON } from '@arranger/components/dist/Arranger';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import Toaster from '@gen3/ui-component/dist/components/Toaster';
 import Spinner from '../components/Spinner';
 import DataExplorerTable from '../components/tables/DataExplorerTable';
 import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
@@ -111,6 +112,8 @@ class DataExplorerVisualizations extends React.Component {
     this.setState({ toasterOpen: false });
   }
 
+  isToasterOpen = () => this.state.toasterOpen
+
   exportToWorkspaceErrorCallback = (status) => {
     this.setState({
       toasterOpen: true,
@@ -197,8 +200,9 @@ class DataExplorerVisualizations extends React.Component {
     if (this.props.dataExplorerConfig.charts.fileCounts && charts) {
       charts.countItems.push({ label: 'Files', value: this.state.manifestEntryCount });
     }
-    const toaster = this.state.toasterOpen && (
-      <div className='map-data-model__submission-footer'>
+
+    const toaster = (
+      <Toaster isEnabled={this.isToasterOpen()} className={'data-explorer__toaster-div'}>
         <Button
           className='data-explorer__toaster-button'
           onClick={this.closeToaster}
@@ -214,21 +218,20 @@ class DataExplorerVisualizations extends React.Component {
             enabled
             onClick={this.goToWorkspace}
           />
-          :
-          null
+          : null
         }
         { (this.state.exportStatus === 200) ?
-          <div className='map-data-model__submission-footer-text introduction'>
+          <div className='data-explorer__toaster-text'>
             <div> {this.state.toasterSuccessText} </div>
             <div> File Name: {this.state.exportFileName} </div>
           </div>
           :
-          <div className='map-data-model__submission-footer-text introduction'>
+          <div className='data-explorer__toaster-text'>
             <div> {this.state.toasterErrorText} </div>
             <div> Error: {this.state.exportStatus} </div>
           </div>
         }
-      </div>
+      </Toaster>
     );
 
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.dataExplorerConfig);
