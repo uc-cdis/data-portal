@@ -202,7 +202,7 @@ class DataExplorerVisualizations extends React.Component {
     }
 
     const toaster = (
-      <Toaster isEnabled={this.isToasterOpen() className='data-explorer__toaster-div'}>
+      <Toaster isEnabled={this.isToasterOpen()} className={'data-explorer__toaster-div'}>
         <Button
           className='data-explorer__toaster-button'
           onClick={this.closeToaster}

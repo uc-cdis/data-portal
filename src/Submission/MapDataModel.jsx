@@ -307,7 +307,7 @@ class MapDataModel extends React.Component {
           </div>
         </div>
         {
-          <Toaster isEnabled={this.isValidSubmission() className='map-data-model__submission-toaster-div'}>
+          <Toaster isEnabled={this.isValidSubmission()} className={'map-data-model__submission-toaster-div'}>
             <Button
               onClick={this.submit}
               label='Submit'
