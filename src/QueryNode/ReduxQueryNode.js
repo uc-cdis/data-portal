@@ -19,7 +19,7 @@ export const submitSearchForm = (opts, url, history) =>
     return fetchWithCreds({
       path: `${submissionApiPath}graphql`,
       body: JSON.stringify({
-        query: `query Test { ${nodeType} (first: 100000, project_id: "${project}", quick_search: "${submitterId}") {id, type, submitter_id}}`,
+        query: `query Test { ${nodeType} (first: 20, project_id: "${project}", quick_search: "${submitterId}", order_by_desc: "updated_datetime") {id, type, submitter_id}}`,
       }),
       method: 'POST',
       dispatch,
