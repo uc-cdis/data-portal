@@ -43,16 +43,26 @@ const plugins = [
   new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
 ];
 
+let optimization = {};
+
+if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
+  optimization = {
+    splitChunks: {
+      chunks: 'all'
+    }
+  }
+}
+
 module.exports = {
   entry: ['babel-polyfill', './src/index.jsx'],
   target: 'web',
   externals: [nodeExternals()],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
-    path: __dirname,
-    filename: 'bundle.js',
-    publicPath: basename
+    path: path.resolve(__dirname, 'bundle'),
+    filename: '[name].[hash].js',
   },
+  optimization: optimization,
   devServer: {
     historyApiFallback: {
       index: 'dev.html',
@@ -60,7 +70,6 @@ module.exports = {
     disableHostCheck: true,
     compress: true,
     hot: true,
-    host: 'localhost',
     port: 9443,
     https: true,
   },
