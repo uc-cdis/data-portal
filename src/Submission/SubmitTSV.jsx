@@ -14,7 +14,8 @@ import './SubmitTSV.less';
  * @param {string} project of form program-project
  * @param {Function} onFileChange triggered when user edits something in tsv/json AceEditor
  */
-const SubmitTSV = ({ project, submission, onUploadClick, onSubmitClick, onFileChange }) => {
+const SubmitTSV = ({ project, submission, onUploadClick,
+  onSubmitClick, onFileChange, onFinish }) => {
   //
   // Reads the bytes from the tsv/json file the user submits,
   // then notify onUploadClick listener which might stuff data
@@ -55,11 +56,15 @@ const SubmitTSV = ({ project, submission, onUploadClick, onSubmitClick, onFileCh
   };
 
   const onSubmitClickEvent = () => {
-    onSubmitClick(submission.nodeTypes, project, submission.dictionary);
+    onSubmitClick(project);
   };
 
   const onChange = (newValue) => {
     onFileChange(newValue, submission.file_type);
+  };
+
+  const onFinishSubmitEvent = () => {
+    onFinish(submission.nodeTypes, project, submission.dictionary);
   };
 
   return (
@@ -115,8 +120,10 @@ const SubmitTSV = ({ project, submission, onUploadClick, onSubmitClick, onFileCh
           status={submission.submit_status}
           data={submission.submit_result}
           dataString={submission.submit_result_string}
+          entityCounts={('submit_entity_counts' in submission) ? submission.submit_entity_counts : {}}
           counter={submission.submit_counter}
           total={submission.submit_total}
+          onFinish={onFinishSubmitEvent}
         />
       </div>
       }
@@ -140,6 +147,7 @@ SubmitTSV.propTypes = {
   onUploadClick: PropTypes.func.isRequired,
   onSubmitClick: PropTypes.func.isRequired,
   onFileChange: PropTypes.func.isRequired,
+  onFinish: PropTypes.func.isRequired,
 };
 
 SubmitTSV.defaultProps = {
