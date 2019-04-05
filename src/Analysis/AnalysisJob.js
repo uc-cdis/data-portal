@@ -103,7 +103,7 @@ export const checkJob = () => dispatch =>
 
 export const fetchJobResult = jobId => dispatch =>
   fetchWithCreds({
-    path: `${jobapiPath}status?UID=${jobId}`,
+    path: `${jobapiPath}output?UID=${jobId}`,
     method: 'GET',
     dispatch,
   }).then(data => data);

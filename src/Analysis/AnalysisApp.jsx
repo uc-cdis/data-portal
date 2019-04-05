@@ -4,7 +4,7 @@ import Select from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import Spinner from '../components/Spinner';
-import { fetchArrangerGraphQL } from '../actions';
+// import { fetchArrangerGraphQL } from '../actions';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 
@@ -15,8 +15,7 @@ class AnalysisApp extends React.Component {
       jobInput: null,
       loaded: false,
       app: null,
-      options: null,
-      result: null,
+      results: null,
     };
   }
 
@@ -25,8 +24,11 @@ class AnalysisApp extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.job.status === 'Complete') {
-      this.fetchJobResult().then(result => this.setState({ result }));
+    if (nextProps.job.status === 'Completed') {
+      this.fetchJobResult()
+        .then((res) => {
+          this.setState({ results: `${res.data.output}`.split('\n') });
+        });
     }
   }
 
@@ -36,21 +38,21 @@ class AnalysisApp extends React.Component {
 
   onSubmitJob = (e) => {
     e.preventDefault();
+    this.setState({ results: null });
     this.props.submitJob({ organ: this.state.jobInput });
     this.props.checkJobStatus();
   }
 
-  fetchGWASOrganOptions = async () => fetchArrangerGraphQL({
-    query: '{ patients{ aggregations { Oncology_Primary__ICDOSite { buckets { key } } } } }',
-  }).then(organs =>
-    organs.data.patients.aggregations.Oncology_Primary__ICDOSite.buckets
-      .map(bucket => ({ label: bucket.key, value: bucket.key })));
+  // fetchGWASOrganOptions = async () => fetchArrangerGraphQL({
+  //   query: '{ patients{ aggregations { Oncology_Primary__ICDOSite { buckets { key } } } } }',
+  // }).then(organs =>
+  //   organs.data.patients.aggregations.Oncology_Primary__ICDOSite.buckets
+  //     .map(bucket => ({ label: bucket.key, value: bucket.key })));
 
   updateApp = async () => {
     this.setState({
       app: analysisApps[this.props.params.app],
       loaded: true,
-      options: this.props.params.app === 'vaGWAS' ? await this.fetchGWASOrganOptions() : null,
     });
   }
 
@@ -60,11 +62,11 @@ class AnalysisApp extends React.Component {
     this.setState({ jobInput: option ? option.value : null });
   }
 
-  fetchJobResult = async () => this.props.fetchJobResult(this.props.job.uid)
+  fetchJobResult = async () => this.props.fetchJobResult(this.props.job.uid);
 
   render() {
     const { job, params } = this.props;
-    const { loaded, app, options, result } = this.state;
+    const { loaded, app, results } = this.state;
 
     return (
       <React.Fragment>
@@ -80,7 +82,7 @@ class AnalysisApp extends React.Component {
                     <Select
                       value={this.state.jobInput}
                       placeholder='Select your organ'
-                      options={options}
+                      options={app.options}
                       onChange={this.selectChange}
                     />
                     : <input className='text-input' type='text' placeholder='input data' name='input' />
@@ -91,7 +93,7 @@ class AnalysisApp extends React.Component {
                 { this.isJobRunning() ? <Spinner text='Job in progress...' /> : null }
                 { job && job.status === 'Completed' ? <h3>Job Completed</h3> : null }
                 { job && job.status === 'Failed' ? <h3>Job Failed</h3> : null }
-                { result }
+                { results ? results.map((line, i) => <p key={i}>{line}</p>) : null }
               </div>
             </div>
             : null

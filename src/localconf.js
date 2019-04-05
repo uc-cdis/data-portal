@@ -105,6 +105,56 @@ function buildConfig(opts) {
       title: 'GWAS',
       description: 'This is a GWAS thing',
       image: '/src/img/icons/analysis.svg',
+      options: [
+        {
+          label: 'Lung',
+          value: 'Lung',
+        },
+        {
+          label: 'Gastrointestina',
+          value: 'Gastrointestina',
+        },
+        {
+          label: 'Prostate',
+          value: 'Prostate',
+        },
+        {
+          label: 'Head and Neck',
+          value: 'Head and Neck',
+        },
+        {
+          label: 'Skin',
+          value: 'Skin',
+        },
+        {
+          label: 'NULL',
+          value: 'NULL',
+        },
+        {
+          label: 'Lymph Node',
+          value: 'Lymph Node',
+        },
+        {
+          label: 'Liver',
+          value: 'Liver',
+        },
+        {
+          label: 'Musculoskeleta',
+          value: 'Musculoskeleta',
+        },
+        {
+          label: 'Occipital Mass',
+          value: 'Occipital Mass',
+        },
+        {
+          label: 'Brain',
+          value: 'Brain',
+        },
+        {
+          label: 'BxType',
+          value: 'BxType',
+        },
+      ],
     },
   };
 
