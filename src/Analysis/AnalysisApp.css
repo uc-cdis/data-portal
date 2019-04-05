@@ -1,0 +1,23 @@
+.analysis-app__result-image {
+  border-radius: 10px;
+  margin-top: 2em;
+  box-shadow: 0 0 5px #dfdfdf;
+  padding: 20px 20px;
+  background: white;
+}
+
+.analysis-app__job-status {
+  margin-top: 1em;
+  font-style: italic;
+  animation: color-change 2s infinite;
+}
+
+.analysis-app__form {
+  display: flex;
+  align-items: center;
+}
+
+.analysis-app__form .Select {
+  flex-basis: 50%;
+  margin-right: 20px;
+}

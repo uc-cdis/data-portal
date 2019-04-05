@@ -1,58 +1,72 @@
 import React from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
+import { config } from '../params';
+import { fetchArrangerGraphQL } from '../actions';
+import { analysisApps } from '../configs';
+import AnalysisApp from './AnalysisApp';
+import AppCard from './AppCard';
 import './Analysis.less';
 
-const AnalysisApp = ({ app, submitJob, job }) => {
-  const onSubmitJob = (e) => {
-    e.preventDefault();
-    const inputId = e.target.input.value;
-    submitJob(inputId);
-  };
-  const isJobRunning = () => job && job.status !== 'Completed';
+class Analysis extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      options: null
+    }
+  }
 
-  return (
-    <div>
-      <h3>{app.name}</h3>
-      <p>{app.description}</p>
-      <form onSubmit={onSubmitJob}>
-        <input className='text-input' type='text' placeholder='input data' name='input' />
-        <button href='#' className='button button-primary-orange' onSubmit={onSubmitJob} >Run simulation</button>
-      </form>
-      {isJobRunning() &&
-        <p className='analysis__job-status'>Job running... </p>
-      }
-      {/* TODO: only render if result is a image */}
-      {(job && job.status === 'Completed') &&
-        <img className='analysis__result-image' src={job.resultURL} alt='analysis result' />
-      }
-    </div>
+  componentDidMount() {
+    this.fetchGWASOrganOptions();
+  }
 
-  );
-};
+  fetchGWASOrganOptions = async () => {
+    return fetchArrangerGraphQL({
+      query: '{ patients{ aggregations { Oncology_Primary__ICDOSite { buckets { key } } } } }'
+    }).then(organs => {
+      const result =  organs.data.patients.aggregations.Oncology_Primary__ICDOSite.buckets.map(bucket => ({ label: bucket.key, value: bucket.key }))
+      this.setState({ options: result });
+    });
+  }
 
-AnalysisApp.propTypes = {
-  app: PropTypes.object.isRequired,
-  job: PropTypes.object.isRequired,
-  submitJob: PropTypes.object.isRequired,
-};
+  openApp = app => {
+    console.log('opening', app)
+    this.props.history.push(`/analysis/${app}`)
+  }
 
-const Analysis = ({ job, submitJob }) => {
-  const virusSimApp = {
-    name: 'NDH Virulence Simulation',
-    description: `This simulation runs a docker version of the Hypothesis Testing
-        using Phylogenies (HyPhy) tool over data submitted in the NIAID Data Hub. \n
-        The simulation is focused on modeling a Bayesian Graph Model (BGM) based on a binary matrix input.
-        The implemented example predicts the virulence status of different influenza strains based on their mutations
-        (the mutation panel is represented as the input binary matrix).`,
-  };
-  return (
-    <AnalysisApp job={job} submitJob={submitJob} app={virusSimApp} />
-  );
+  render() {
+    const { job, submitJob } = this.props;
+    const { options } = this.state;
+    const apps = config.analysisTools;
+
+    return (
+      <div className='analysis'>
+        {
+          apps.map(elt => {
+            const app = analysisApps[elt];
+            console.log('app is', app);
+            return (
+              <div className='analysis__app-card' onClick={() => this.openApp(elt)}>
+                <AppCard key={elt} title={app.title} description={app.description} imageUrl={app.image} />
+              </div>
+            )
+          })
+        }
+      </div>
+
+    );
+  }
 };
 
 Analysis.propTypes = {
   job: PropTypes.object.isRequired,
-  submitJob: PropTypes.object.isRequired,
+  submitJob: PropTypes.func.isRequired,
 };
 
 export default Analysis;
+
+/*
+<React.Fragment>
+  { options && apps.includes('ndhVirus') ? <AnalysisApp job={job} submitJob={submitJob} app={virusSimApp} /> : null }
+  { options && apps.includes('vaGWAS') ? <AnalysisApp job={job} submitJob={submitJob} app={{...gwasApp, options}} /> : null }
+</React.Fragment>
+*/

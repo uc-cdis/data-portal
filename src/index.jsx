@@ -34,6 +34,7 @@ import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, indexPublic } from './localconf';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
+import AnalysisApp from './Analysis/AnalysisApp';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
@@ -140,6 +141,12 @@ async function init() {
                       path='/query'
                       component={
                         props => <ProtectedContent component={GraphQLQuery} {...props} />
+                      }
+                    />
+                    <Route
+                      path='/analysis/:app'
+                      component={
+                        props => <ProtectedContent component={AnalysisApp} {...props} />
                       }
                     />
                     <Route

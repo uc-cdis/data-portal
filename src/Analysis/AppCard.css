@@ -1,0 +1,32 @@
+.app-card {
+  border: 2px solid var(--g3-color__silver);
+  border-radius: 5px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  background-color: var(--g3-color__white);
+  width: 33%;
+  padding: 20px 20px;
+  cursor: pointer;
+  margin: 10px 10px;
+  text-align: center;
+  height: 250px;
+}
+
+.app-card:hover {
+  border: 2px solid var(--g3-color__white);
+}
+
+.app-card__description {
+  margin: 10px 0;
+  width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.app-card__image {
+  margin: 10px 0;
+  width: 100px;
+}
