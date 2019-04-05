@@ -1,11 +1,11 @@
-import { fetchJsonOrText } from '../actions';
+import { fetchWithCreds } from '../actions';
 import { asyncSetInterval } from '../utils';
 import { userapiPath, jobapiPath } from '../localconf';
 
 
 export const getPresignedUrl = (did, method) => {
   const urlPath = `${userapiPath}data/${method}/${did}`;
-  return fetchJsonOrText({ path: urlPath, method: 'GET' },
+  return fetchWithCreds({ path: urlPath, method: 'GET' },
   ).then(
     ({ data }) => data.url,
   );
@@ -24,12 +24,9 @@ const getResultDownloadUrl = () => {
 };
 
 
-const dispatchJob = (inputURL, outputURL) => dispatch => fetchJsonOrText({
+export const dispatchJob = (body) => dispatch => fetchWithCreds({
   path: `${jobapiPath}dispatch`,
-  body: JSON.stringify({
-    inputURL,
-    outputURL,
-  }),
+  body: JSON.stringify(body),
   method: 'POST',
   dispatch,
 })
@@ -52,14 +49,13 @@ const dispatchJob = (inputURL, outputURL) => dispatch => fetchJsonOrText({
   )
   .then((msg) => { dispatch(msg); });
 
-
 export const checkJobStatus = (dispatch, getState) => {
   const state = getState();
   let jobId = null;
   if (state.analysis.job) {
     jobId = state.analysis.job.uid;
   }
-  return fetchJsonOrText({
+  return fetchWithCreds({
     path: `${jobapiPath}status?UID=${jobId}`,
     method: 'GET',
     dispatch,
@@ -92,16 +88,24 @@ export const checkJobStatus = (dispatch, getState) => {
   ).then((msg) => { dispatch(msg); });
 };
 
+// dispatch the job with body
+// then start pulling job status
+// save the interval id in redux that can be used to clear the timer later
 
-export const submitJob = did =>
-  // first get the presigned url for input download and output upload
-  // then dispatch the job with those urls
-  // then start pulling job status
-  // save the interval id in redux that can be used to clear the timer later
+// TODO: need to get result urls from a Gen3 service
+export const submitJob = body => dispatch => dispatch(dispatchJob(body));
 
-  // TODO: need to get result urls from a Gen3 service
-  dispatch => Promise.all([getPresignedUrl(did, 'download'), getResultUploadUrl()])
-    .then(values => dispatch(dispatchJob(values[0], values[1])))
-    .then(() => asyncSetInterval(() => dispatch(checkJobStatus), 1000))
-    .then((intervalValue) => { dispatch({ type: 'JOB_STATUS_INTERVAL', value: intervalValue }); })
-;
+export const checkJob = () => dispatch =>
+  asyncSetInterval(() => dispatch(checkJobStatus), 1000)
+    .then((intervalValue) => {
+      dispatch({ type: 'JOB_STATUS_INTERVAL', value: intervalValue });
+    });
+
+export const fetchJobResult = (jobId) => dispatch =>
+  fetchWithCreds({
+    path: `${jobapiPath}status?UID=${jobId}`,
+    method: 'GET',
+    dispatch,
+  }).then(data => data);
+
+export const resetJobState = () => dispatch => dispatch({ type: 'RESET_JOB' });

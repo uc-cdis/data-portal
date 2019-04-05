@@ -1,13 +1,16 @@
 import { connect } from 'react-redux';
 import AnalysisApp from './AnalysisApp';
-import { submitJob } from './AnalysisJob';
+import { dispatchJob, checkJob, fetchJobResult, resetJobState } from './AnalysisJob';
 
 const mapStateToProps = state => ({
   job: state.analysis.job,
 });
 
 const mapDispatchToProps = dispatch => ({
-  submitJob: did => dispatch(submitJob(did)),
+  submitJob: body => dispatch(dispatchJob(body)),
+  checkJobStatus: () => dispatch(checkJob()),
+  fetchJobResult: () => dispatch(fetchJobResult()),
+  resetJobState: () => dispatch(resetJobState()),
 });
 const ReduxAnalysisApp = connect(mapStateToProps, mapDispatchToProps)(AnalysisApp);
 export default ReduxAnalysisApp;

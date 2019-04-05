@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { config } from '../params';
-import { fetchArrangerGraphQL } from '../actions';
 import { analysisApps } from '../configs';
 import AppCard from './AppCard';
 import './Analysis.less';
@@ -13,18 +12,6 @@ class Analysis extends React.Component {
       options: null,
     };
   }
-
-  componentDidMount() {
-    this.fetchGWASOrganOptions();
-  }
-
-  fetchGWASOrganOptions = async () => fetchArrangerGraphQL({
-    query: '{ patients{ aggregations { Oncology_Primary__ICDOSite { buckets { key } } } } }',
-  }).then((organs) => {
-    const result = organs.data.patients.aggregations.Oncology_Primary__ICDOSite.buckets
-      .map(bucket => ({ label: bucket.key, value: bucket.key }));
-    this.setState({ options: result });
-  })
 
   openApp = (app) => {
     this.props.history.push(`/analysis/${app}`);

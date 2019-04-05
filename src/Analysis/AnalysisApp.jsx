@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select from 'react-select';
+import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
-import { analysisApps } from '../localconf';
+import Spinner from '../components/Spinner';
+import { fetchArrangerGraphQL , fetchWithCreds } from '../actions';
+import { analysisApps, jobapiPath } from '../localconf';
 import './AnalysisApp.css';
 
 class AnalysisApp extends React.Component {
@@ -12,6 +15,8 @@ class AnalysisApp extends React.Component {
       jobInput: null,
       loaded: false,
       app: null,
+      options: null,
+      result: null,
     };
   }
 
@@ -19,58 +24,77 @@ class AnalysisApp extends React.Component {
     this.updateApp();
   }
 
-  onSubmitJob = (e) => {
-    e.preventDefault();
-    const inputId = this.state.jobInput ? this.state.jobInput : e.target.input.value;
-    this.props.submitJob(inputId);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.job.status === 'Complete') {
+      this.fetchJobResult().then(result => this.setState({ result }));
+    }
   }
 
-  updateApp = () => {
+  componentWillUnmount() {
+    this.props.resetJobState();
+  }
+
+  onSubmitJob = (e) => {
+    e.preventDefault();
+    this.props.submitJob({ organ: this.state.jobInput });
+    this.props.checkJobStatus();
+  }
+
+  fetchGWASOrganOptions = async () => fetchArrangerGraphQL({
+      query: '{ patients{ aggregations { Oncology_Primary__ICDOSite { buckets { key } } } } }',
+    }).then((organs) =>
+        organs.data.patients.aggregations.Oncology_Primary__ICDOSite.buckets
+        .map(bucket => ({ label: bucket.key, value: bucket.key })));
+
+  updateApp = async () => {
     this.setState({
       app: analysisApps[this.props.params.app],
       loaded: true,
+      options: this.props.params.app === 'vaGWAS' ? await this.fetchGWASOrganOptions() : null,
     });
   }
 
-  isJobRunning = () => this.props.job && this.props.job.status !== 'Completed';
+  isJobRunning = () => this.props.job && this.props.job.status === 'Running';
 
   selectChange = (option) => {
     this.setState({ jobInput: option ? option.value : null });
   }
 
+  fetchJobResult = async () => {
+    return await this.props.fetchJobResult(this.props.job.uid);
+  }
+
   render() {
-    const { job } = this.props;
-    const { loaded, app } = this.state;
+    const { job, params, fetchJobResult } = this.props;
+    const { loaded, app, options, result } = this.state;
+
     return (
       <React.Fragment>
         <BackLink url='/analysis' label='Back to Apps' />
         {
           loaded ?
-            <div>
+            <div className='analysis-app'>
               <h2 className='analysis-app__title'>{app.title}</h2>
               <p className='analysis-app__description'>{app.description}</p>
-              <form className='analysis-app__form' onSubmit={this.onSubmitJob}>
+              <div className='analysis-app__actions'>
                 {
-                  app.id === 'vaGWAS' ?
+                  params.app === 'vaGWAS' ?
                     <Select
                       value={this.state.jobInput}
                       placeholder='Select your organ'
-                      options={app.options}
+                      options={options}
                       onChange={this.selectChange}
                     />
                     : <input className='text-input' type='text' placeholder='input data' name='input' />
                 }
-                <button href='#' className='button button-primary-orange' onSubmit={this.onSubmitJob} >Run simulation</button>
-              </form>
-              {
-                this.isJobRunning() &&
-              <p className='analysis-app__job-status'>Job running... </p>
-              }
-              {/* TODO: only render if result is a image */}
-              {
-                (job && job.status === 'Completed') &&
-              <img className='analysis-app__result-image' src={job.resultURL} alt='analysis result' />
-              }
+                <Button label='Run Simulation' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+              </div>
+              <div className='analysis-app__job-status'>
+                { this.isJobRunning() ? <Spinner text='Job in progress...' /> : null }
+                { job && job.status === 'Completed' ? <h3>Job Completed</h3> : null }
+                { job && job.status === 'Failed' ? <h3>Job Failed</h3> : null }
+                { result }
+              </div>
             </div>
             : null
         }

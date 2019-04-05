@@ -40,7 +40,7 @@ function buildConfig(opts) {
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   const arrangerGraphqlPath = `${hostname}api/v0/flat-search/search/graphql`;
   let userapiPath = `${hostname}user/`;
-  const jobapiPath = `${hostname}/job/`;
+  const jobapiPath = `${hostname}job/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = `${hostname}index/`;

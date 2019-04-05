@@ -1,31 +1,27 @@
-.analysis-app__description {
-  margin: 10px 0;
+.analysis-app {
+  display: flex;
+  flex-flow: column;
 }
 
 .analysis-app__title {
   line-height: 80px;
 }
 
-.analysis-app__result-image {
-  border-radius: 10px;
-  margin-top: 2em;
-  box-shadow: 0 0 5px #dfdfdf;
-  padding: 20px 20px;
-  background: white;
+.analysis-app__description {
+  margin: 10px 0;
 }
 
-.analysis-app__job-status {
-  margin-top: 1em;
-  font-style: italic;
-  animation: color-change 2s infinite;
-}
-
-.analysis-app__form {
+.analysis-app__actions {
   display: flex;
   align-items: center;
 }
 
-.analysis-app__form .Select {
+.analysis-app__actions .Select {
   flex-basis: 50%;
   margin-right: 20px;
+}
+
+.analysis-app__job-status {
+  display: flex;
+  margin: 10px 0;
 }

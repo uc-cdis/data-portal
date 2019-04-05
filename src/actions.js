@@ -17,52 +17,6 @@ export const connectionError = () => {
 
 const fetchCache = {};
 
-/**
- * Little helper issues fetch, then resolves response
- * as text, and tries to JSON.parse the text before resolving, but
- * ignores JSON.parse failure and reponse.status, and returns {response, data} either way.
- * If dispatch is supplied, then dispatch(connectionError()) on fetch reject.
- * If useCache is supplied and method is GET, then text for 200 JSON responses are cached,
- * and re-used, and if useCache is supplied and method is GET,
- * then text for 200 JSON responses are cached, and re-used, and
- * the result promise only includes {data, status} - where JSON data is re-parsed
- * every time to avoid mutation by the client
- *
-* */
-export const fetchJsonOrText = (opts) => {
-  const { path, method = 'GET', body = null, customHeaders, dispatch, useCache } = opts;
-  if (useCache && (method === 'GET') && fetchCache[path]) {
-    return Promise.resolve({ status: 200, data: JSON.parse(fetchCache[path]) });
-  }
-  const request = {
-    credentials: 'same-origin',
-    headers: { ...headers, ...customHeaders },
-    method,
-    body,
-  };
-  return fetch(path, request).then(
-    response => response.text().then(
-      (textData) => {
-        let data = textData;
-        if (data) {
-          try {
-            data = JSON.parse(data);
-            if (useCache && method === 'GET' && response.status === 200) {
-              fetchCache[path] = textData;
-            }
-          } catch (e) {
-            // # do nothing
-          }
-        }
-        return { response, data, status: response.status, headers: response.headers };
-      }),
-    (error) => {
-      if (dispatch) { dispatch(connectionError()); }
-      return Promise.reject(error);
-    },
-  );
-};
-
 const getJsonOrText = (path, response, useCache, method = 'GET') => response.text().then(
   (textData) => {
     let data = textData;
@@ -118,7 +72,6 @@ export const fetchCreds = (opts) => {
  */
 export const fetchWithCreds = (opts) => {
   const { path, method = 'GET', body = null, customHeaders, dispatch, useCache } = opts;
-
   if (useCache && (method === 'GET') && fetchCache[path]) {
     return Promise.resolve({ status: 200, data: JSON.parse(fetchCache[path]) });
   }
