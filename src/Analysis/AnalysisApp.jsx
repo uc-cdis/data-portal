@@ -24,7 +24,7 @@ class AnalysisApp extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.job.status === 'Completed') {
+    if (nextProps.job && nextProps.job.status === 'Completed') {
       this.fetchJobResult()
         .then((res) => {
           this.setState({ results: `${res.data.output}`.split('\n') });
@@ -38,7 +38,7 @@ class AnalysisApp extends React.Component {
 
   onSubmitJob = (e) => {
     e.preventDefault();
-    this.setState({ results: null });
+    this.clearResult();
     this.props.submitJob({ organ: this.state.jobInput });
     this.props.checkJobStatus();
   }
@@ -59,10 +59,21 @@ class AnalysisApp extends React.Component {
   isJobRunning = () => this.props.job && this.props.job.status === 'Running';
 
   selectChange = (option) => {
-    this.setState({ jobInput: option ? option.value : null });
+    this.setState({
+      jobInput: option ? option.value : null,
+      results: null,
+    }, () => {
+      if (option === null || this.props.job) {
+        this.props.resetJobState();
+      }
+    });
   }
 
   fetchJobResult = async () => this.props.fetchJobResult(this.props.job.uid);
+
+  clearResult = () => {
+    this.setState({ results: null });
+  }
 
   render() {
     const { job, params } = this.props;
