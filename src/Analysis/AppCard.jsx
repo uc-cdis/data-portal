@@ -7,7 +7,9 @@ class AppCard extends React.Component {
     return (
       <div className='app-card'>
         <h2>{this.props.title}</h2>
-        <p className='app-card__description'>{this.props.description}</p>
+        <div className='app-card__description'>
+          <p>{this.props.description}</p>
+        </div>
         <img className='app-card__image' src={this.props.imageUrl} />
       </div>
     )

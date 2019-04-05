@@ -33,8 +33,8 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, indexPublic } from './localconf';
-import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
-import AnalysisApp from './Analysis/AnalysisApp';
+import Analysis from './Analysis/Analysis.js';
+import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
@@ -146,13 +146,13 @@ async function init() {
                     <Route
                       path='/analysis/:app'
                       component={
-                        props => <ProtectedContent component={AnalysisApp} {...props} />
+                        props => <ProtectedContent component={ReduxAnalysisApp} {...props} />
                       }
                     />
                     <Route
                       path='/analysis'
                       component={
-                        props => <ProtectedContent component={ReduxAnalysis} {...props} />
+                        props => <ProtectedContent component={Analysis} {...props} />
                       }
                     />
                     <Route

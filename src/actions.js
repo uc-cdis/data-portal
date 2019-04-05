@@ -31,7 +31,7 @@ const fetchCache = {};
 **/
 export const fetchJsonOrText = (opts) => {
 	  const { path, method = 'GET', body = null, customHeaders, dispatch, useCache } = opts;
-	
+
 	  if (useCache && (method === 'GET') && fetchCache[path]) {
 	    return Promise.resolve({status: 200, data: JSON.parse(fetchCache[path])});
 	    return Promise.resolve({ status: 200, data: JSON.parse(fetchCache[path]) });
@@ -68,7 +68,6 @@ export const fetchJsonOrText = (opts) => {
 
 const getJsonOrText = (path, response, useCache, method = 'GET') => response.text().then(
   (textData) => {
-    console.log('heyyy')
     let data = textData;
     if (data) {
       try {

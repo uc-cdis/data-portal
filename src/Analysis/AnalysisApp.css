@@ -1,3 +1,11 @@
+.analysis-app__description {
+  margin: 10px 0;
+}
+
+.analysis-app__title {
+  line-height: 80px;
+}
+
 .analysis-app__result-image {
   border-radius: 10px;
   margin-top: 2em;

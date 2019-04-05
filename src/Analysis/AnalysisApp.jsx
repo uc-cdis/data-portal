@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select from 'react-select';
+import BackLink from '../components/BackLink';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 
@@ -22,7 +23,6 @@ class AnalysisApp extends React.Component {
   }
 
   onSubmitJob = (e) => {
-    console.log('e', e.target)
     e.preventDefault();
     const inputId = this.state.jobInput ? this.state.jobInput : e.target.input.value;
     this.props.submitJob(inputId);
@@ -35,16 +35,16 @@ class AnalysisApp extends React.Component {
   }
 
   render() {
-    console.log('this.props', this.props)
-    const { job } = this.props;
+    const { job, submitJob } = this.props;
     const { loaded, app } = this.state;
     return (
       <React.Fragment>
+        <BackLink url='/analysis' label='Back to Apps' />
       {
         loaded ?
           <div>
-            <h3>{app.title}</h3>
-            <p>{app.description}</p>
+            <h2 className='analysis-app__title'>{app.title}</h2>
+            <p className='analysis-app__description'>{app.description}</p>
             <form className='analysis-app__form' onSubmit={this.onSubmitJob}>
               {
                 app.id === 'vaGWAS' ?
@@ -81,7 +81,7 @@ AnalysisApp.propTypes = {
 };
 
 AnalysisApp.defaultProps = {
-  job: {},
+  job: null,
   submitJob: () => {}
 }
 

@@ -29,37 +29,31 @@ class Analysis extends React.Component {
   }
 
   openApp = app => {
-    console.log('opening', app)
     this.props.history.push(`/analysis/${app}`)
   }
 
   render() {
-    const { job, submitJob } = this.props;
     const { options } = this.state;
     const apps = config.analysisTools;
 
     return (
-      <div className='analysis'>
-        {
-          apps.map(elt => {
-            const app = analysisApps[elt];
-            console.log('app is', app);
-            return (
-              <div className='analysis__app-card' onClick={() => this.openApp(elt)}>
-                <AppCard key={elt} title={app.title} description={app.description} imageUrl={app.image} />
-              </div>
-            )
-          })
-        }
-      </div>
-
+      <React.Fragment>
+        <h2 class='analysis__title'>Apps</h2>
+        <div className='analysis'>
+          {
+            apps.map(elt => {
+              const app = analysisApps[elt];
+              return (
+                <div key={elt} className='analysis__app-card' onClick={() => this.openApp(elt)}>
+                  <AppCard title={app.title} description={app.description} imageUrl={app.image} />
+                </div>
+              )
+            })
+          }
+        </div>
+      </React.Fragment>
     );
   }
-};
-
-Analysis.propTypes = {
-  job: PropTypes.object.isRequired,
-  submitJob: PropTypes.func.isRequired,
 };
 
 export default Analysis;

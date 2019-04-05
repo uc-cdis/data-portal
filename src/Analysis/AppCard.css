@@ -5,12 +5,11 @@
   flex-flow: column;
   align-items: center;
   background-color: var(--g3-color__white);
-  width: 33%;
   padding: 20px 20px;
   cursor: pointer;
   margin: 10px 10px;
   text-align: center;
-  height: 250px;
+  width: 100%;
 }
 
 .app-card:hover {
@@ -20,13 +19,16 @@
 .app-card__description {
   margin: 10px 0;
   width: 100%;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  height: 90px;
 }
 
 .app-card__image {
   margin: 10px 0;
   width: 100px;
+  margin-bottom: auto;
 }

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Analysis from './Analysis';
+import AnalysisApp from './AnalysisApp';
 import { submitJob } from './AnalysisJob';
 
 const mapStateToProps = state => ({
@@ -9,5 +9,5 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   submitJob: did => dispatch(submitJob(did)),
 });
-const ReduxAnalysis = connect(mapStateToProps, mapDispatchToProps)(Analysis);
-export default ReduxAnalysis;
+const ReduxAnalysisApp = connect(mapStateToProps, mapDispatchToProps)(AnalysisApp);
+export default ReduxAnalysisApp;
