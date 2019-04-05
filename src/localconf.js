@@ -92,20 +92,20 @@ function buildConfig(opts) {
   const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;
 
   const analysisApps = {
-    ndhVirus : {
+    ndhVirus: {
       title: 'NDH Virulence Simulation',
       description: `This simulation runs a docker version of the Hypothesis Testing
           using Phylogenies (HyPhy) tool over data submitted in the NIAID Data Hub. \n
           The simulation is focused on modeling a Bayesian Graph Model (BGM) based on a binary matrix input.
           The implemented example predicts the virulence status of different influenza strains based on their mutations
           (the mutation panel is represented as the input binary matrix).`,
-      image: '/src/img/icons/data-analyze.svg'
+      image: '/src/img/icons/data-analyze.svg',
     },
     vaGWAS: {
       title: 'GWAS',
-      description: `This is a GWAS thing`,
-      image: '/src/img/icons/analysis.svg'
-    }
+      description: 'This is a GWAS thing',
+      image: '/src/img/icons/analysis.svg',
+    },
   };
 
   return {

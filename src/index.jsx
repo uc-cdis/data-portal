@@ -33,7 +33,7 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, indexPublic } from './localconf';
-import Analysis from './Analysis/Analysis.js';
+import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';

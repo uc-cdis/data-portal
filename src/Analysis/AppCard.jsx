@@ -10,9 +10,9 @@ class AppCard extends React.Component {
         <div className='app-card__description'>
           <p>{this.props.description}</p>
         </div>
-        <img className='app-card__image' src={this.props.imageUrl} />
+        <img className='app-card__image' src={this.props.imageUrl} alt={`${this.props.title}`} />
       </div>
-    )
+    );
   }
 }
 
