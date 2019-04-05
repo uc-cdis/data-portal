@@ -11,11 +11,11 @@ export const getPresignedUrl = (did, method) => {
   );
 };
 
-const getResultUploadUrl = () => {
-  // hardcode result did
-  const result = '77bf9442-360d-4fcf-9c82-14103c3745a2';
-  return getPresignedUrl(result, 'upload');
-};
+// const getResultUploadUrl = () => {
+//   // hardcode result did
+//   const result = '77bf9442-360d-4fcf-9c82-14103c3745a2';
+//   return getPresignedUrl(result, 'upload');
+// };
 
 const getResultDownloadUrl = () => {
   // hardcode result did
@@ -24,7 +24,7 @@ const getResultDownloadUrl = () => {
 };
 
 
-export const dispatchJob = (body) => dispatch => fetchWithCreds({
+export const dispatchJob = body => dispatch => fetchWithCreds({
   path: `${jobapiPath}dispatch`,
   body: JSON.stringify(body),
   method: 'POST',
@@ -101,7 +101,7 @@ export const checkJob = () => dispatch =>
       dispatch({ type: 'JOB_STATUS_INTERVAL', value: intervalValue });
     });
 
-export const fetchJobResult = (jobId) => dispatch =>
+export const fetchJobResult = jobId => dispatch =>
   fetchWithCreds({
     path: `${jobapiPath}status?UID=${jobId}`,
     method: 'GET',

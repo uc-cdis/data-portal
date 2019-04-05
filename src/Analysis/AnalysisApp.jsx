@@ -4,8 +4,8 @@ import Select from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import Spinner from '../components/Spinner';
-import { fetchArrangerGraphQL , fetchWithCreds } from '../actions';
-import { analysisApps, jobapiPath } from '../localconf';
+import { fetchArrangerGraphQL } from '../actions';
+import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 
 class AnalysisApp extends React.Component {
@@ -41,10 +41,10 @@ class AnalysisApp extends React.Component {
   }
 
   fetchGWASOrganOptions = async () => fetchArrangerGraphQL({
-      query: '{ patients{ aggregations { Oncology_Primary__ICDOSite { buckets { key } } } } }',
-    }).then((organs) =>
-        organs.data.patients.aggregations.Oncology_Primary__ICDOSite.buckets
-        .map(bucket => ({ label: bucket.key, value: bucket.key })));
+    query: '{ patients{ aggregations { Oncology_Primary__ICDOSite { buckets { key } } } } }',
+  }).then(organs =>
+    organs.data.patients.aggregations.Oncology_Primary__ICDOSite.buckets
+      .map(bucket => ({ label: bucket.key, value: bucket.key })));
 
   updateApp = async () => {
     this.setState({
@@ -60,12 +60,10 @@ class AnalysisApp extends React.Component {
     this.setState({ jobInput: option ? option.value : null });
   }
 
-  fetchJobResult = async () => {
-    return await this.props.fetchJobResult(this.props.job.uid);
-  }
+  fetchJobResult = async () => this.props.fetchJobResult(this.props.job.uid)
 
   render() {
-    const { job, params, fetchJobResult } = this.props;
+    const { job, params } = this.props;
     const { loaded, app, options, result } = this.state;
 
     return (
@@ -105,7 +103,10 @@ class AnalysisApp extends React.Component {
 
 AnalysisApp.propTypes = {
   job: PropTypes.object,
-  submitJob: PropTypes.func,
+  submitJob: PropTypes.func.isRequired,
+  resetJobState: PropTypes.func.isRequired,
+  checkJobStatus: PropTypes.func.isRequired,
+  fetchJobResult: PropTypes.func.isRequired,
   params: PropTypes.shape({
     app: PropTypes.string.isRequired,
   }).isRequired,
@@ -113,7 +114,6 @@ AnalysisApp.propTypes = {
 
 AnalysisApp.defaultProps = {
   job: null,
-  submitJob: () => {},
 };
 
 export default AnalysisApp;
