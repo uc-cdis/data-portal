@@ -145,7 +145,6 @@ class HIVCohortFilter extends React.Component {
     let batchCounts = 0;
     const promiseList = [];
     let keyRange = [];
-    // for (const keyId in keyCountMap) {
     Object.keys(keyCountMap).forEach((keyId) => {
       const count = keyCountMap[keyId];
       if (batchCounts + count > 5000) {
@@ -260,7 +259,7 @@ class HIVCohortFilter extends React.Component {
           if (vloadCheck && therapyCheck) {
             // Found PTC!
             subjectPTC.push(subjectWithVisits);
-          } else { // vLoadCheck=false && therapyCheck=true
+          } else {
             // Found control!
             subjectControl.push(subjectWithVisits);
           }
