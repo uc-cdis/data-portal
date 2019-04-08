@@ -151,65 +151,75 @@ class HIVCohortFilter extends React.Component {
     return true;
   }
 
-  classifySubjectPTC(subjectId, visitArray, thisContext) { // eslint-disable-line
-    const subjectWithVisits = { subject_id: subjectId,
-      consecutive_haart_treatments_begin_at_followup: 'N/A',
-      follow_ups: visitArray };
+  classifyAllSubjectPTC(subjectToVisitMap) {
+    const subjectPTC = [];
+    const subjectControl = [];
+    const subjectNeither = [];
+    const slidingWindowSize = Math.ceil(this.state.numConsecutiveMonthsFromUser / 6);
 
-    const slidingWindowSize = Math.ceil(thisContext.state.numConsecutiveMonthsFromUser / 6);
-    if (visitArray.length < slidingWindowSize + 1) {
-      thisContext.setState({ subjectNeither:
-                [...thisContext.state.subjectNeither, subjectWithVisits] });
-      return;
-    }
-
-    // The sliding window step. window is of size this.state.numConsecutiveMonthsFromUser
-    for (let i = 0; i < visitArray.length - slidingWindowSize; i += 1) {
-      const windowMatch = thisContext.doTheseVisitsMatchSlidingWindowCriteria(
-        visitArray.slice(i, i + slidingWindowSize),
-      );
-      if (windowMatch) {
-        // Now that we know the first numConsecutiveMonthsFromUser visits in the array
-        // match the criteria, we should check the following visit
-        const theNextVisit = visitArray[i + slidingWindowSize];
-        const vloadCheck = (theNextVisit.viral_load < thisContext.state.viralLoadFromUser);
-        const therapyCheck = !thisContext.therapyValuesOfInterest.includes(
-          theNextVisit.thrpyv,
-        );
-        if (!therapyCheck) {
-          // Look for next instance of thrpyv == HAART for this subject
-          continue; // eslint-disable-line no-continue
-        }
-        if (vloadCheck && therapyCheck) {
-          // Found PTC!
-          thisContext.setState({ subjectPTC: [...thisContext.state.subjectPTC,
-            subjectWithVisits] });
-        } else {
-          // Found control!
-          thisContext.setState({ subjectControl: [...thisContext.state.subjectControl,
-            subjectWithVisits] });
-        }
-        subjectWithVisits.consecutive_haart_treatments_begin_at_followup
-                    = visitArray[i].submitter_id;
-
-        // Done with classification
+    // For each patient, try to find numConsecutiveMonthsFromUser consecutive
+    // visits that match the PTC criteria
+    Object.keys(subjectToVisitMap).forEach((subjectId) => {
+      const visitArray = subjectToVisitMap[subjectId];
+      const subjectWithVisits = {
+        subject_id: subjectId,
+        consecutive_haart_treatments_begin_at_followup: 'N/A',
+        follow_ups: visitArray,
+      };
+      if (visitArray.length < slidingWindowSize + 1) {
+        subjectNeither.push(subjectWithVisits);
         return;
       }
-    }
 
-    // If the window above didn't apply, the subject is neither
-    thisContext.setState({ subjectNeither: [...thisContext.state.subjectNeither, subjectId] });
+      // The sliding window step. window is of size this.state.numConsecutiveMonthsFromUser
+      for (let i = 0; i < visitArray.length - slidingWindowSize; i += 1) {
+        const windowMatch = this.doTheseVisitsMatchSlidingWindowCriteria(
+          visitArray.slice(i, i + slidingWindowSize),
+        );
+        if (windowMatch) {
+          // Now that we know the first numConsecutiveMonthsFromUser visits in the array
+          // match the criteria, we should check the following visit
+          const theNextVisit = visitArray[i + slidingWindowSize];
+          const vloadCheck = (theNextVisit.viral_load < this.state.viralLoadFromUser);
+          const therapyCheck = !this.therapyValuesOfInterest.includes(
+            theNextVisit.thrpyv,
+          );
+          if (!therapyCheck) {
+            // Look for next instance of thrpyv == HAART for this subject
+            continue; // eslint-disable-line no-continue
+          }
+          if (vloadCheck && therapyCheck) {
+            // Found PTC!
+            subjectPTC.push(subjectWithVisits);
+          } else {
+            // Found control!
+            subjectControl.push(subjectWithVisits);
+          }
+          subjectWithVisits.consecutive_haart_treatments_begin_at_followup
+                      = visitArray[i].submitter_id;
+
+          // Done with classification
+          return;
+        }
+      }
+
+      // If the window above didn't apply, the subject is neither
+      subjectNeither.push(subjectId);
+    });
+    return {
+      subjectPTC,
+      subjectControl,
+      subjectNeither,
+    };
   }
 
   async updateSubjectClassifications() {
     /* This function retrieves subjects with HIV status == 'positive' and
-        * maps their subject_id to the sorted array of their visits.
-        * Then we attempt to find a sliding window match for the subject corresponding to
-        * the user-inputted viral load and number of consective months
-        * (we assume visits are 6 months apart).
-        */
-
-    const thisContext = this;
+      * maps their subject_id to the sorted array of their visits.
+      * Then we attempt to find a sliding window match for the subject corresponding to
+      * the user-inputted viral load and number of consective months
+      * (we assume visits are 6 months apart).
+      */
     this.getSubjectsWithHIV()
       .then((result) => {
         const followUps = result.data.follow_up.hits.edges.map(x => x.node);
@@ -239,16 +249,17 @@ class HIVCohortFilter extends React.Component {
           }
         });
 
-        // For each patient, try to find numConsecutiveMonthsFromUser consecutive
-        // visits that match the PTC criteria
-        thisContext.setState({ subjectPTC: [] });
-        thisContext.setState({ subjectControl: [] });
-        thisContext.setState({ subjectNeither: [] });
-        Object.keys(subjectToVisitMap).forEach((subjectId) => {
-          thisContext.classifySubjectPTC(subjectId, subjectToVisitMap[subjectId], thisContext);
+        const {
+          subjectPTC,
+          subjectControl,
+          subjectNeither,
+        } = this.classifyAllSubjectPTC(subjectToVisitMap);
+        this.setState({
+          subjectPTC,
+          subjectControl,
+          subjectNeither,
+          inLoadingState: false,
         });
-
-        thisContext.setState({ inLoadingState: false });
       });
   }
 
@@ -303,9 +314,12 @@ class HIVCohortFilter extends React.Component {
               <input className='text-input' type='text' onBlur={this.setNumConsecutiveMonthsFromUser} defaultValue={this.state.numConsecutiveMonthsFromUser} /> <br />
             </div>
             <div className='hiv-cohort-filter__button-group'>
-              <button className='button-primary-orange' type='button' onClick={this.updateFilters} disabled={this.state.inLoadingState}>
-                { this.state.inLoadingState ? 'Loading...' : 'Confirm' }
-              </button>
+              <Button
+                onClick={this.updateFilters}
+                enabled={!this.state.inLoadingState}
+                isPending={this.state.inLoadingState}
+                label={this.state.inLoadingState ? 'Loading...' : 'Confirm'}
+              />
             </div>
           </form>
         </div>
@@ -334,6 +348,7 @@ class HIVCohortFilter extends React.Component {
                       id='download-PTC-button'
                       enabled={this.state.subjectPTC.length !== 0 && !this.state.inLoadingState}
                       buttonType='primary'
+                      isPending={this.state.inLoadingState}
                     />
                   </React.Fragment>
                 }
@@ -349,6 +364,7 @@ class HIVCohortFilter extends React.Component {
                       id='download-control-button'
                       enabled={this.state.subjectControl.length !== 0 && !this.state.inLoadingState}
                       onClick={this.downloadControl}
+                      isPending={this.state.inLoadingState}
                     />
                   </React.Fragment>
                 }
