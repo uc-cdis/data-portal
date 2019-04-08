@@ -102,9 +102,9 @@ function buildConfig(opts) {
       image: '/src/img/icons/data-analyze.svg',
     },
     vaGWAS: {
-      title: 'GWAS',
-      description: 'This is a GWAS thing',
-      image: '/src/img/icons/analysis.svg',
+      title: 'eGWAS',
+      description: 'Expression-based Genome-Wide Association Study',
+      image: '/src/img/icons/manhattan.svg',
       options: [
         {
           label: 'Lung',
