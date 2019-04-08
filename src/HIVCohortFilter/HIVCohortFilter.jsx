@@ -40,7 +40,7 @@ class HIVCohortFilter extends React.Component {
     super(props);
     this.state = {
       queryResults: ['...'],
-      viralLoadFromUser: 4000,
+      viralLoadFromUser: 3000,
       numConsecutiveMonthsFromUser: 18,
       subjectNeither: [],
       subjectPTC: [],
@@ -53,51 +53,120 @@ class HIVCohortFilter extends React.Component {
     this.downloadPTC = this.downloadPTC.bind(this);
     this.downloadControl = this.downloadControl.bind(this);
     this.makeCohortJSONFile = this.makeCohortJSONFile.bind(this);
-    this.therapyValuesOfInterest = ['HAART', 'HAART (HU/ddI defined)'];
+    this.therapyValuesOfInterest = ['HAART'];
     this.updateSubjectClassifications();
   }
 
-  getSubjectsWithHIV() {
+  getBucketByKeyWithHAARTVAR(bucketKey, isHAART) {
     const query = `
-            {
-              follow_up {
-                hits(filters: { op: "and",
-                  content: [
-                    { op: "=",
-                      content: { field: "hiv_status", value: "positive" }
-                    }
-                  ]
-                }, first:9999) {
-                  edges {
-                    node {
-                      subject_id
-                      submitter_id
-                      auth_resource_path
-                      viral_load
-                      thrpy
-                      thrpyv
-                      age_at_visit
-                      bmi
-                      days_to_follow_up
-                      pregnancy_status
-                      hiv_status
-                      drug_used
-                      visit_date
-                      visit_number
-                      visit_type
-                      visit_name
-                      weight
-                      weight_percentage
-                      follow_up_id
-                      tint
-                    }
-                  }
-                }
-              }
+    {
+      follow_up {
+        aggregations(filters: {first: 10000, op: "and", content: [
+          {op: "${isHAART ? '=' : '!='}", content: {field: "thrpyv", value: "HAART"}},
+          {op: "<", content: {field: "viral_load", value: "${this.state.viralLoadFromUser}"}},
+          {op: "=", content: {field: "hiv_status", value: "positive"}}]}) 
+        {
+          ${bucketKey} {
+            buckets {
+              key
+              doc_count
             }
-        `;
+          }
+        }
+      }
+    }
+    `;
+    return this.performQuery(query).then((res) => {
+      if (!res || !res.data) {
+        throw new Error('Error when query subjects with HIV');
+      }
+      return res.data.follow_up.aggregations[bucketKey].buckets;
+    });
+  }
 
-    return this.performQuery(query);
+  async getBucketByKey(bucketKey) {
+    const resList = await Promise.all([
+      this.getBucketByKeyWithHAARTVAR(bucketKey, true),
+      this.getBucketByKeyWithHAARTVAR(bucketKey, false),
+    ]);
+    const withoutHAARTMap = resList[1].reduce((acc, cur) => {
+      const { key, doc_count } = cur; // eslint-disable-line camelcase
+      acc[key] = doc_count; // eslint-disable-line camelcase
+      return acc;
+    }, {});
+    const resultBucketKeys = {};
+    resList[0].forEach(({ key, doc_count }) => { // eslint-disable-line camelcase
+      if (withoutHAARTMap[key]) {
+        resultBucketKeys[key] = doc_count + withoutHAARTMap[key]; // eslint-disable-line camelcase
+      }
+    });
+    return resultBucketKeys;
+  }
+
+  getFollowupsBuckets(key, keyRange) {
+    const query = `
+    {
+      follow_up {
+        hits(filters: { op: "and",
+          content: [
+            { op: "=",
+              content: { field: "hiv_status", value: "positive" }
+            },
+            {
+              op: "in",
+              content: { field: "${key}", value: ["${keyRange.join('","')}"] }
+            }
+          ]
+        }, first:10000) {
+          total
+          edges {
+            node {
+              subject_id
+              viral_load
+              visit_number
+              thrpyv
+            }
+          }
+
+        }
+      }
+    }`;
+    return this.performQuery(query).then((res) => {
+      if (!res || !res.data) {
+        throw new Error('Error when query subjects with HIV');
+      }
+      return res.data.follow_up.hits.edges.map(edge => edge.node);
+    });
+  }
+
+  async getFollowUpsWithHIV() {
+    const keyName = 'subject_id';
+    const keyCountMap = await this.getBucketByKey(keyName);
+    let batchCounts = 0;
+    const promiseList = [];
+    let keyRange = [];
+    // for (const keyId in keyCountMap) {
+    Object.keys(keyCountMap).forEach((keyId) => {
+      const count = keyCountMap[keyId];
+      if (batchCounts + count > 5000) {
+        // query this batch for follow ups
+        promiseList.push(this.getFollowupsBuckets(keyName, keyRange).then(res => res));
+
+        // reset batch
+        batchCounts = count;
+        keyRange = [];
+      }
+      batchCounts += count;
+      keyRange.push(keyId);
+    });
+    promiseList.push(this.getFollowupsBuckets(keyName, keyRange).then(res => res));
+
+    let mergedFollowUps = [];
+    const resultList = await Promise.all(promiseList);
+    resultList.forEach((res) => {
+      mergedFollowUps = mergedFollowUps.concat(res);
+    });
+    return mergedFollowUps;
   }
 
   setViralLoadFromUser(e) {
@@ -191,7 +260,7 @@ class HIVCohortFilter extends React.Component {
           if (vloadCheck && therapyCheck) {
             // Found PTC!
             subjectPTC.push(subjectWithVisits);
-          } else {
+          } else { // vLoadCheck=false && therapyCheck=true
             // Found control!
             subjectControl.push(subjectWithVisits);
           }
@@ -220,10 +289,9 @@ class HIVCohortFilter extends React.Component {
       * the user-inputted viral load and number of consective months
       * (we assume visits are 6 months apart).
       */
-    this.getSubjectsWithHIV()
-      .then((result) => {
-        const followUps = result.data.follow_up.hits.edges.map(x => x.node);
 
+    this.getFollowUpsWithHIV()
+      .then((followUps) => {
         // Convert to dictionary: { subject_id -> [ array of visits ] }
         const subjectToVisitMap = {};
         for (let i = 0; i < followUps.length; i += 1) {
