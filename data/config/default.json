@@ -71,20 +71,6 @@
           "link": "/submission",
           "label": "Submit data"
         }
-      ],
-      "homepageChartNodes": [
-        {
-          "node": "case",
-          "name": "Cases"
-        },
-        {
-          "node": "experiment",
-          "name": "Experiments"
-        },
-        {
-          "node": "aliquot",
-          "name": "Aliquots"
-        }
       ]
     },
     "navigation": {
@@ -265,6 +251,14 @@
         "leftIcon": "user",
         "rightIcon": "download",
         "fileName": "data.json"
+      },
+      {
+        "enabled": true,
+        "type": "export-to-workspace",
+        "title": "Export To Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "download",
+        "fileName": "manifest.json"
       }
     ],
     "table": {

@@ -32,13 +32,22 @@ const submission = (state = {}, action) => {
     return { ...state, oauth_url: action.url };
   case 'RECEIVE_SUBMISSION_LOGIN':
     return { ...state, login: state.result, error: state.error };
-  case 'RECEIVE_SUBMISSION':
+  case 'RECEIVE_SUBMISSION': {
+    const prevCounts = ('submit_entity_counts' in state) ? state.submit_entity_counts : {};
+    const newCounts = (action.data.entities || [])
+      .map(ent => ent.type || 'unknown')
+      .reduce((db, type) => {
+        const res = db; res[type] = (res[type] || 0) + 1;
+        return res;
+      }, prevCounts);
     return { ...state,
+      submit_entity_counts: newCounts,
       submit_result: action.data,
       submit_result_string: state.submit_result_string.concat(JSON.stringify(action.data, null, '    ')).concat('\n\n'),
       submit_status: action.submit_status,
       submit_counter: state.submit_counter + 1,
       submit_total: action.total };
+  }
   case 'SUBMIT_SEARCH_FORM':
     return { ...state, search_form: action.data };
   case 'RECEIVE_SEARCH_ENTITIES':

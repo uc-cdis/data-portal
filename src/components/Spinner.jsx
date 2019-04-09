@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Spinner.less';
 
 class Spinner extends React.Component {
@@ -10,9 +11,18 @@ class Spinner extends React.Component {
           <circle cx='30' cy='15' r='4' />
           <circle cx='53' cy='15' r='4' />
         </svg>
+        {this.props.text && <div className='spinner__text'> {this.props.text} </div>}
       </div>
     );
   }
 }
+
+Spinner.propTypes = {
+  text: PropTypes.string,
+};
+
+Spinner.defaultProps = {
+  text: '',
+};
 
 export default Spinner;

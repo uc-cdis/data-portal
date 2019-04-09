@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ArrangerWrapper from '../Arranger/ArrangerWrapper';
 import DataExplorerFilters from './DataExplorerFilters';
 import DataExplorerVisualizations from './DataExplorerVisualizations';
@@ -24,11 +25,16 @@ class DataExplorer extends React.Component {
           <DataExplorerVisualizations
             dataExplorerConfig={dataExplorerConfig}
             api={arrangerApi}
+            history={this.props.history}
           />
         </ArrangerWrapper>
       </div>
     );
   }
 }
+
+DataExplorer.propTypes = {
+  history: PropTypes.object.isRequired,
+};
 
 export default DataExplorer;
