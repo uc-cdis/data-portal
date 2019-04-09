@@ -194,7 +194,8 @@ class HIVCohortFilter extends React.Component {
     // == (this.state.numConsecutiveMonthsFromUser / 6)
     const upperBound = visitArray.length;
     for (let i = 0; i < upperBound; i += 1) {
-      const vloadCheck = visitArray[i].viral_load < this.state.viralLoadFromUser;
+      if (visitArray[i].viral_load === null) return false; // ignore all null records
+      const vloadCheck = (visitArray[i].viral_load < this.state.viralLoadFromUser);
       const therapyCheck = this.therapyValuesOfInterest.includes(visitArray[i].thrpyv);
       if (!vloadCheck || !therapyCheck) {
         return false;
@@ -233,6 +234,9 @@ class HIVCohortFilter extends React.Component {
           // Now that we know the first numConsecutiveMonthsFromUser visits in the array
           // match the criteria, we should check the following visit
           const theNextVisit = visitArray[i + slidingWindowSize];
+          if (theNextVisit.viral_load === null || theNextVisit.thrpyv === null) {
+            continue; // eslint-disable-line no-continue
+          }
           const vloadCheck = (theNextVisit.viral_load < this.state.viralLoadFromUser);
           const therapyCheck = !this.therapyValuesOfInterest.includes(
             theNextVisit.thrpyv,
