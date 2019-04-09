@@ -361,7 +361,7 @@ class HIVCohortFilter extends React.Component {
       if (isPTC) { return this.state.subjectPTC.length; }
       return this.state.subjectControl.length;
     }
-    return 'X';
+    return '--';
   }
 
   render() {
@@ -380,7 +380,7 @@ class HIVCohortFilter extends React.Component {
               <span
                 className='hiv-cohort-filter__value-highlight'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' } &nbsp;cp/mL
+                &nbsp; &lt; { this.state.viralLoadFromUser || '__' } &nbsp;cp/mL
               </span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
@@ -390,12 +390,13 @@ class HIVCohortFilter extends React.Component {
                 type='number'
                 onChange={this.checkReadyToCalculate}
                 defaultValue={this.state.viralLoadFromUser}
+                placeholder='enter integer'
               />
               <br />
             </div>
             <div className='hiv-cohort-filter__sidebar-input-label'>
               Received HAART for at least:<br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || 'X' } months</span>
+              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } months</span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
               <input
@@ -404,6 +405,7 @@ class HIVCohortFilter extends React.Component {
                 type='number'
                 onChange={this.checkReadyToCalculate}
                 defaultValue={this.state.numConsecutiveMonthsFromUser}
+                placeholder='enter integer'
               />
               <br />
             </div>
@@ -427,24 +429,24 @@ class HIVCohortFilter extends React.Component {
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-1'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' } &nbsp;cp/mL
+                &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-2'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' } &nbsp;cp/mL</div>
+                &nbsp; &lt; { this.state.viralLoadFromUser || '--' } &nbsp;cp/mL</div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-3'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' } &nbsp;cp/mL
+                &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='consecutive-months-overlay-1'
               >
-                { this.state.numConsecutiveMonthsFromUser || 'X' } &nbsp;months
+                { this.state.numConsecutiveMonthsFromUser || '--' } &nbsp;months
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
