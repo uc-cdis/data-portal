@@ -39,22 +39,24 @@ class HIVCohortFilter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      queryResults: ['...'],
-      viralLoadFromUser: 3000,
-      numConsecutiveMonthsFromUser: 18,
+      viralLoadFromUser: undefined,
+      numConsecutiveMonthsFromUser: undefined,
       subjectNeither: [],
       subjectPTC: [],
       subjectControl: [],
-      inLoadingState: true,
+      inLoadingState: false,
+      isReadyToCalculate: false,
+      resultAlreadyCalculated: false,
     };
-    this.setViralLoadFromUser = this.setViralLoadFromUser.bind(this);
-    this.setNumConsecutiveMonthsFromUser = this.setNumConsecutiveMonthsFromUser.bind(this);
     this.updateFilters = this.updateFilters.bind(this);
     this.downloadPTC = this.downloadPTC.bind(this);
     this.downloadControl = this.downloadControl.bind(this);
     this.makeCohortJSONFile = this.makeCohortJSONFile.bind(this);
+    this.checkReadyToCalculate = this.checkReadyToCalculate.bind(this);
     this.therapyValuesOfInterest = ['HAART'];
-    this.updateSubjectClassifications();
+    this.viralLoadInputRef = React.createRef();
+    this.numConsecutiveMonthsInputRef = React.createRef();
+    this.showCount = this.showCount.bind(this);
   }
 
   getBucketByKeyWithHAARTVAR(bucketKey, isHAART) {
@@ -166,23 +168,6 @@ class HIVCohortFilter extends React.Component {
       mergedFollowUps = mergedFollowUps.concat(res);
     });
     return mergedFollowUps;
-  }
-
-  setViralLoadFromUser(e) {
-    const viralLoadFromUser = e.target.value;
-    if (typeof viralLoadFromUser !== 'undefined'
-            && viralLoadFromUser !== '' && !isNaN(parseFloat(viralLoadFromUser))) {
-      this.setState({ viralLoadFromUser: parseFloat(viralLoadFromUser) });
-    }
-  }
-
-  setNumConsecutiveMonthsFromUser(e) {
-    const numConsecutiveMonthsFromUser = e.target.value;
-    if (typeof numConsecutiveMonthsFromUser !== 'undefined'
-            && numConsecutiveMonthsFromUser !== ''
-            && !isNaN(parseFloat(numConsecutiveMonthsFromUser))) {
-      this.setState({ numConsecutiveMonthsFromUser: parseFloat(numConsecutiveMonthsFromUser) });
-    }
   }
 
   performQuery(queryString) { // eslint-disable-line
@@ -326,6 +311,7 @@ class HIVCohortFilter extends React.Component {
           subjectControl,
           subjectNeither,
           inLoadingState: false,
+          resultAlreadyCalculated: true,
         });
       });
   }
@@ -357,33 +343,74 @@ class HIVCohortFilter extends React.Component {
     FileSaver.saveAs(blob, fileName);
   }
 
+  checkReadyToCalculate() {
+    const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
+    const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
+    this.setState({
+      viralLoadFromUser: viralLoadFromUser > 0 ? viralLoadFromUser : undefined,
+      numConsecutiveMonthsFromUser: numConsecutiveMonthsFromUser > 0
+        ? numConsecutiveMonthsFromUser : undefined,
+      isReadyToCalculate: (viralLoadFromUser > 0 && numConsecutiveMonthsFromUser > 0),
+      resultAlreadyCalculated: false,
+    });
+  }
+
+  showCount(isPTC) {
+    if (this.state.inLoadingState) { return (<Spinner />); }
+    if (this.state.resultAlreadyCalculated) {
+      if (isPTC) { return this.state.subjectPTC.length; }
+      return this.state.subjectControl.length;
+    }
+    return 'X';
+  }
+
   render() {
     return (
       <div className='hiv-cohort-filter'>
         <div className='hiv-cohort-filter__sidebar'>
           <form>
             <h2 className='hiv-cohort-filter__sidebar-title'>
-                            PTC Cohort Selection
+              PTC Cohort Selection
             </h2>
             <h4 className='hiv-cohort-filter__sidebar-subtitle'>
-                            Customized Filters
+              Customized Filters
             </h4>
             <div className='hiv-cohort-filter__sidebar-input-label'>
-                            Viral Load <span className='hiv-cohort-filter__value-highlight'> &lt; { this.state.viralLoadFromUser }</span>
+              Viral Load
+              <span
+                className='hiv-cohort-filter__value-highlight'
+              >
+                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' }
+              </span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
-              <input className='text-input' type='text' onBlur={this.setViralLoadFromUser} defaultValue={this.state.viralLoadFromUser} /> <br />
+              <input
+                ref={this.viralLoadInputRef}
+                className='hiv-cohort-filter__text-input'
+                type='number'
+                onChange={this.checkReadyToCalculate}
+                defaultValue={this.state.viralLoadFromUser || 'X'}
+              />
+              <br />
             </div>
             <div className='hiv-cohort-filter__sidebar-input-label'>
-                            Received HAART for at least:<br /> <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser } months</span>
+              Received HAART for at least:<br />
+              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || 'X' } months</span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
-              <input className='text-input' type='text' onBlur={this.setNumConsecutiveMonthsFromUser} defaultValue={this.state.numConsecutiveMonthsFromUser} /> <br />
+              <input
+                ref={this.numConsecutiveMonthsInputRef}
+                className='hiv-cohort-filter__text-input'
+                type='number'
+                onChange={this.checkReadyToCalculate}
+                defaultValue={this.state.numConsecutiveMonthsFromUser || 'X'}
+              />
+              <br />
             </div>
             <div className='hiv-cohort-filter__button-group'>
               <Button
                 onClick={this.updateFilters}
-                enabled={!this.state.inLoadingState}
+                enabled={!this.state.inLoadingState && this.state.isReadyToCalculate}
                 isPending={this.state.inLoadingState}
                 label={this.state.inLoadingState ? 'Loading...' : 'Confirm'}
               />
@@ -396,15 +423,46 @@ class HIVCohortFilter extends React.Component {
           <div className='hiv-cohort-filter__main-wrapper'>
             <div className='hiv-cohort-filter__svg-wrapper'>
               <HaartTreeSvg width='665px' />
-              <div className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay' id='vload-overlay-1'>&lt; { this.state.viralLoadFromUser }</div>
-              <div className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay' id='vload-overlay-2'>&lt; { this.state.viralLoadFromUser }</div>
-              <div className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay' id='vload-overlay-3'>&lt; { this.state.viralLoadFromUser }</div>
-              <div className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay' id='consecutive-months-overlay-1'>{ this.state.numConsecutiveMonthsFromUser } months</div>
+              <div
+                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                id='vload-overlay-1'
+              >
+                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' }
+              </div>
+              <div
+                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                id='vload-overlay-2'
+              >
+                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' }</div>
+              <div
+                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                id='vload-overlay-3'
+              >
+                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' }
+              </div>
+              <div
+                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                id='consecutive-months-overlay-1'
+              >
+                { this.state.numConsecutiveMonthsFromUser || 'X' } &nbsp;months
+              </div>
+              <div
+                className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
+                id='ptc-counts-overlay-1'
+              >
+                { this.showCount(true) }
+              </div>
+              <div
+                className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
+                id='control-counts-overlay-1'
+              >
+                { this.showCount(false) }
+              </div>
 
-              <div className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay' id='ptc-counts-overlay-1'>{ this.state.inLoadingState ? <Spinner /> : this.state.subjectPTC.length }</div>
-              <div className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay' id='control-counts-overlay-1'>{ this.state.inLoadingState ? <Spinner /> : this.state.subjectControl.length }</div>
-
-              <div id='download-PTC-cohort-overlay' className='hiv-cohort-filter__overlay'>
+              <div
+                id='download-PTC-cohort-overlay'
+                className='hiv-cohort-filter__overlay'
+              >
                 {
                   <React.Fragment>
                     <Button
@@ -413,7 +471,9 @@ class HIVCohortFilter extends React.Component {
                       className='btn-primary-blue'
                       rightIcon='download'
                       id='download-PTC-button'
-                      enabled={this.state.subjectPTC.length !== 0 && !this.state.inLoadingState}
+                      enabled={!this.state.inLoadingState
+                        && this.state.resultAlreadyCalculated
+                        && this.state.subjectPTC.length > 0}
                       buttonType='primary'
                       isPending={this.state.inLoadingState}
                     />
@@ -429,7 +489,9 @@ class HIVCohortFilter extends React.Component {
                       className='btn-primary-blue'
                       rightIcon='download'
                       id='download-control-button'
-                      enabled={this.state.subjectControl.length !== 0 && !this.state.inLoadingState}
+                      enabled={!this.state.inLoadingState
+                        && this.state.resultAlreadyCalculated
+                        && this.state.subjectControl.length > 0}
                       onClick={this.downloadControl}
                       isPending={this.state.inLoadingState}
                     />

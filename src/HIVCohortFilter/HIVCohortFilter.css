@@ -10,9 +10,21 @@
   padding: 0;
 }
 
-.hiv-cohort-filter .text-input {
+.hiv-cohort-filter__text-input {
   border: 1px solid var(--g3-color__lightgray);
   border-radius: 2px;
+  width: 152px;
+  height: 40px;
+  font-size: 14px;
+  box-shadow: none;
+  background: var(--g3-color__white);
+  padding: 0 10px;
+}
+
+.hiv-cohort-filter__text-input:focus,
+.hiv-cohort-filter__text-input:active {
+  box-shadow: none;
+  outline: none;
 }
 
 .hiv-cohort-filter__sidebar .hiv-cohort-filter__button-group {
