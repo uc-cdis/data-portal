@@ -59,8 +59,9 @@ module.exports = {
   externals: [nodeExternals()],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
-    path: path.resolve(__dirname, 'bundle'),
-    filename: '[name].[hash].js',
+    path: __dirname,
+	  filename: 'bundle.js',
+	  publicPath: basename
   },
   optimization: optimization,
   devServer: {
