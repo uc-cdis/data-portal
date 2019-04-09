@@ -380,7 +380,7 @@ class HIVCohortFilter extends React.Component {
               <span
                 className='hiv-cohort-filter__value-highlight'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' }
+                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' } &nbsp;cp/mL
               </span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
@@ -389,7 +389,7 @@ class HIVCohortFilter extends React.Component {
                 className='hiv-cohort-filter__text-input'
                 type='number'
                 onChange={this.checkReadyToCalculate}
-                defaultValue={this.state.viralLoadFromUser || 'X'}
+                defaultValue={this.state.viralLoadFromUser}
               />
               <br />
             </div>
@@ -403,7 +403,7 @@ class HIVCohortFilter extends React.Component {
                 className='hiv-cohort-filter__text-input'
                 type='number'
                 onChange={this.checkReadyToCalculate}
-                defaultValue={this.state.numConsecutiveMonthsFromUser || 'X'}
+                defaultValue={this.state.numConsecutiveMonthsFromUser}
               />
               <br />
             </div>
@@ -427,18 +427,18 @@ class HIVCohortFilter extends React.Component {
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-1'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' }
+                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' } &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-2'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' }</div>
+                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' } &nbsp;cp/mL</div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-3'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' }
+                &nbsp; &lt; { this.state.viralLoadFromUser || 'X' } &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
