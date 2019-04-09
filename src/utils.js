@@ -254,3 +254,8 @@ export const isPageFullScreen = pathname => (!!((pathname
   || pathname.toLowerCase() === '/cohort-tools'
   || pathname.toLowerCase().startsWith('/cohort-tools/')
   ))));
+
+export const isFooterHidden = pathname => (!!((pathname
+  && (pathname.toLowerCase() === '/dd'
+  || pathname.toLowerCase().startsWith('/dd/')
+  ))));
