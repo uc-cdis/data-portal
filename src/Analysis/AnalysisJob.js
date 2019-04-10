@@ -1,4 +1,3 @@
-import { fetchJsonOrText } from '../actions';
 import { asyncSetInterval } from '../utils';
 import { userapiPath, jobapiPath } from '../localconf';
 

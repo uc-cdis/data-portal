@@ -20,9 +20,9 @@ const title = {
 
 const plugins = [
   new webpack.EnvironmentPlugin(['NODE_ENV']),
-  new webpack.EnvironmentPlugin(['MOCK_STORE']),
+  new webpack.EnvironmentPlugin({'MOCK_STORE': null}),
   new webpack.EnvironmentPlugin(['APP']),
-  new webpack.EnvironmentPlugin(['BASENAME']),
+  new webpack.EnvironmentPlugin({'BASENAME': '/'}),
   new webpack.EnvironmentPlugin(['REACT_APP_PROJECT_ID']),
   new webpack.EnvironmentPlugin(['REACT_APP_ARRANGER_API']),
   new webpack.EnvironmentPlugin(['REACT_APP_DISABLE_SOCKET']),
