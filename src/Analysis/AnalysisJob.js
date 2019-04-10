@@ -1,10 +1,11 @@
+import { fetchWithCreds } from '../actions';
 import { asyncSetInterval } from '../utils';
 import { userapiPath, jobapiPath } from '../localconf';
 
 
 export const getPresignedUrl = (did, method) => {
   const urlPath = `${userapiPath}data/${method}/${did}`;
-  return fetchJsonOrText({ path: urlPath, method: 'GET' },
+  return fetchWithCreds({ path: urlPath, method: 'GET' },
   ).then(
     ({ data }) => data.url,
   );
@@ -23,7 +24,7 @@ const getResultDownloadUrl = () => {
 };
 
 
-const dispatchJob = (inputURL, outputURL) => dispatch => fetchJsonOrText({
+const dispatchJob = (inputURL, outputURL) => dispatch => fetchWithCreds({
   path: `${jobapiPath}dispatch`,
   body: JSON.stringify({
     inputURL,
@@ -58,7 +59,7 @@ export const checkJobStatus = (dispatch, getState) => {
   if (state.analysis.job) {
     jobId = state.analysis.job.uid;
   }
-  return fetchJsonOrText({
+  return fetchWithCreds({
     path: `${jobapiPath}status?UID=${jobId}`,
     method: 'GET',
     dispatch,
