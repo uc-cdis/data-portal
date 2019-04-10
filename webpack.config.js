@@ -61,9 +61,9 @@ module.exports = {
   output: {
     path: __dirname,
 	  filename: 'bundle.js',
-	  publicPath: basename
+	  publicPath: basename,
   },
-  optimization: optimization,
+  optimization,
   devServer: {
     historyApiFallback: {
       index: 'dev.html',
@@ -116,7 +116,7 @@ module.exports = {
       graphql: path.resolve('./node_modules/graphql'),
       react: path.resolve('./node_modules/react') // Same issue.
     },
-    extensions: ['.mjs', '.js', '.jsx', '.json']
+    extensions: ['.mjs', '.js', '.jsx', '.json',]
   },
   plugins,
   externals: [{
