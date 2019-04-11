@@ -7,8 +7,7 @@ import {
   submissionApiOauthPath,
   submissionApiPath,
   graphqlPath,
-  arrangerGraphqlPath,
-  guppyUrl,
+  guppyGraphQLUrl,
   graphqlSchemaUrl,
 } from './configs';
 
@@ -178,7 +177,7 @@ export const fetchFlatGraphQL = (graphQLParams) => {
     body: JSON.stringify(graphQLParams),
   };
 
-  return fetch(guppyUrl, request)
+  return fetch(guppyGraphQLUrl, request)
     .then(response => response.text())
     .then((responseBody) => {
       try {

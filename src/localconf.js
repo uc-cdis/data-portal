@@ -55,6 +55,7 @@ function buildConfig(opts) {
   const workspaceErrorUrl = '/no-workspace-access/';
   const datasetUrl = `${hostname}api/search/datasets`;
   const guppyUrl = `${hostname}guppy/`;
+  const guppyGraphQLUrl = `${guppyUrl}graphql/`;
   const manifestServiceApiPath = `${hostname}manifests/`;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
@@ -125,6 +126,7 @@ function buildConfig(opts) {
     datasetUrl,
     indexPublic,
     guppyUrl,
+    guppyGraphQLUrl,
     manifestServiceApiPath,
     wtsPath,
   };
