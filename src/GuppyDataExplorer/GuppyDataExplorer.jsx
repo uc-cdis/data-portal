@@ -1,8 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
 import ExplorerVisualization from './ExplorerVisualization';
+import {
+  GuppyConfigType,
+  FilterConfigType,
+  TableConfigType,
+  ButtonConfigType,
+  ChartConfigType,
+} from './configTypeDef';
 import './GuppyDataExplorer.css';
 
 class GuppyDataExplorer extends React.Component {
@@ -25,15 +31,16 @@ class GuppyDataExplorer extends React.Component {
           filterConfig={this.props.filterConfig}
           guppyConfig={this.props.guppyConfig}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
+          onFilterChange={this.handleFilterChange}
           tableConfig={this.props.tableConfig}
         >
           <ConnectedFilter className='guppy-data-explorer__filter' />
           <ExplorerVisualization
             className='guppy-data-explorer__visualization'
-            aggsData={this.state.aggsData}
-            filter={this.props.filter}
             chartConfig={this.props.chartConfig}
             tableConfig={this.props.tableConfig}
+            buttonConfig={this.props.buttonConfig}
+            guppyConfig={this.props.guppyConfig}
           />
         </GuppyWrapper>
       </div>
@@ -42,24 +49,11 @@ class GuppyDataExplorer extends React.Component {
 }
 
 GuppyDataExplorer.propTypes = {
-  guppyConfig: PropTypes.shape({
-    path: PropTypes.string,
-    type: PropTypes.string,
-  }).isRequired,
-  filterConfig: PropTypes.shape({
-    tabs: PropTypes.arrayOf(PropTypes.shape({
-      title: PropTypes.string,
-      filters: PropTypes.arrayOf(PropTypes.shape({
-        field: PropTypes.string,
-        label: PropTypes.string,
-      })),
-    })),
-  }).isRequired,
-  tableConfig: PropTypes.arrayOf(PropTypes.shape({
-    field: PropTypes.string,
-    name: PropTypes.string,
-  })).isRequired,
-  chartConfig: PropTypes.object.isRequired,
+  guppyConfig: GuppyConfigType.isRequired,
+  filterConfig: FilterConfigType.isRequired,
+  tableConfig: TableConfigType.isRequired,
+  chartConfig: ChartConfigType.isRequired,
+  buttonConfig: ButtonConfigType.isRequired,
 };
 
 GuppyDataExplorer.defaultProps = {

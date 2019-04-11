@@ -9,7 +9,10 @@ const guppyExplorerConfig = config.dataExplorerConfig || {
   tableConfig: [],
   guppyConfig: {
     caseType: 'subject',
+    fileType: 'file',
   },
+  buttons: [],
+  dropdowns: {},
 };
 
 console.log('guppyExplorerConfig', guppyExplorerConfig);
@@ -21,7 +24,8 @@ class Explorer extends React.Component {
         chartConfig={guppyExplorerConfig.charts}
         filterConfig={guppyExplorerConfig.filterConfig}
         tableConfig={guppyExplorerConfig.tableConfig}
-        guppyConfig={{ path: guppyUrl, type: guppyExplorerConfig.guppyConfig.caseType }}
+        guppyConfig={{ path: guppyUrl, type: guppyExplorerConfig.guppyConfig.caseType, fileType: guppyExplorerConfig.guppyConfig.fileType }}
+        buttonConfig={{ buttons: guppyExplorerConfig.buttons, dropdowns: guppyExplorerConfig.dropdowns }}
       />
     );
   }

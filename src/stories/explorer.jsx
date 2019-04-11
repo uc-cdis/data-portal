@@ -84,14 +84,41 @@ storiesOf('Data Explorer', module)
       }],
     };
 
-    const guppyServerPath = 'http://localhost:3000/graphql';
-    const esType = 'subject';
+    const buttonConfig = {
+      buttons: [
+        {
+          enabled: true,
+          type: 'data',
+          title: 'Download All Data',
+          leftIcon: 'user',
+          rightIcon: 'download',
+          fileName: 'data.json',
+        },
+        {
+          enabled: true,
+          type: 'manifest',
+          title: 'Download Manifest',
+          leftIcon: 'datafile',
+          rightIcon: 'download',
+          fileName: 'manifest.json',
+        },
+      ],
+    };
+
+    const guppyServerPath = 'http://localhost:3000';
+    const caseType = 'subject';
+    const fileType = 'file';
     return (
       <GuppyDataExplorer
         chartConfig={chartConfig}
         filterConfig={filterConfig}
         tableConfig={tableConfig}
-        guppyConfig={{ path: guppyServerPath, type: esType }}
+        guppyConfig={{
+          path: guppyServerPath,
+          type: caseType,
+          fileType,
+        }}
+        buttonConfig={buttonConfig}
       />
     );
   });

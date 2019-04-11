@@ -15,7 +15,6 @@ class ExplorerTable extends React.Component {
   fetchData(state, instance) {
     this.setState({ loading: true });
     const offset = state.page * state.pageSize;
-    console.log('sort: ', state.sorted);
     const sort = state.sorted.map(i => ({
       [i.id]: i.desc ? 'desc' : 'asc',
     }));
@@ -35,11 +34,11 @@ class ExplorerTable extends React.Component {
   render() {
     console.log(this.props.rawData);
     const columnsConfig = this.props.tableConfig.map(c => ({ Header: c.name, accessor: c.field }));
-    const totalCount = this.props.totalCount;
-    const pageSize = this.state.pageSize;
+    const { totalCount } = this.props;
+    const { pageSize } = this.state;
     const totalPages = Math.floor(totalCount / pageSize) + ((totalCount % pageSize === 0) ? 0 : 1);
-    console.log('totalPages', totalCount, pageSize, totalPages);
     return (
+
       <ReactTable
         columns={columnsConfig}
         manual // Forces table not to paginate or sort automatically, so we can handle it server-side
@@ -48,7 +47,8 @@ class ExplorerTable extends React.Component {
         loading={this.state.loading} // Display the loading overlay when we need it
         onFetchData={this.fetchData.bind(this)} // Request new data when things change
         defaultPageSize={this.props.defaultPageSize}
-        className={`-striped -highlight ${this.props.className}`}
+        // className={`-striped -highlight `}
+        minRows={0} // hide empty rows
       />
     );
   }

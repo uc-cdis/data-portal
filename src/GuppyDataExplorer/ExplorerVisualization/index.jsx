@@ -1,9 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SummaryChartGroup from '../../components/charts/SummaryChartGroup/.';
+import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
+import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
+import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerTable from '../ExplorerTable';
-import PercentageStackedBarChart from '../../components/charts/PercentageStackedBarChart/.';
-import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup/.';
+import ExplorerButtonGroup from './ExplorerButtonGroup';
+import {
+  TableConfigType,
+  ButtonConfigType,
+  ChartConfigType,
+  GuppyConfigType,
+} from '../configTypeDef';
 
 class ExplorerVisualization extends React.Component {
   getData = (aggsData, chartConfig, filter) => {
@@ -12,7 +19,7 @@ class ExplorerVisualization extends React.Component {
     const stackedBarCharts = [];
     Object.keys(chartConfig).forEach((field) => {
       if (!aggsData || !aggsData[field] || !aggsData[field].histogram) return;
-      const histogram = aggsData[field].histogram;
+      const { histogram } = aggsData[field];
       switch (chartConfig[field].chartType) {
       case 'count':
         countItems.push({
@@ -45,16 +52,27 @@ class ExplorerVisualization extends React.Component {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
     return (
       <div className={this.props.className}>
+        <ExplorerButtonGroup
+          buttonConfig={this.props.buttonConfig}
+          guppyConfig={this.props.guppyConfig}
+          totalCount={this.props.totalCount}
+          downloadRawData={this.props.downloadRawData}
+          downloadRawDataByFields={this.props.downloadRawDataByFields}
+          getTotalCountsByTypeAndFilter={this.props.getTotalCountsByTypeAndFilter}
+          downloadRawDataByTypeAndFilter={this.props.downloadRawDataByTypeAndFilter}
+          filter={this.props.filter}
+        />
         <DataSummaryCardGroup summaryItems={chartData.countItems} connected />
         <SummaryChartGroup summaries={chartData.summaries} />
         {
-          chartData.stackedBarCharts.map((chart, i) =>
-            (<PercentageStackedBarChart
+          chartData.stackedBarCharts.map((chart, i) => (
+            <PercentageStackedBarChart
               key={i}
               data={chart.data}
               title={chart.title}
               width='100%'
-            />),
+            />
+          ),
           )
         }
         <ExplorerTable
@@ -71,13 +89,18 @@ class ExplorerVisualization extends React.Component {
 
 ExplorerVisualization.propTypes = {
   className: PropTypes.string,
-  aggsData: PropTypes.object,
-  filter: PropTypes.object,
-  chartConfig: PropTypes.object,
-  tableConfig: PropTypes.arrayOf(PropTypes.shape({
-    field: PropTypes.string,
-    name: PropTypes.string,
-  })).isRequired,
+  totalCount: PropTypes.number, // inherited from GuppyWrapper
+  aggsData: PropTypes.object, // inherited from GuppyWrapper
+  filter: PropTypes.object, // inherited from GuppyWrapper
+  fetchAndUpdateRawData: PropTypes.func, // inherited from GuppyWrapper
+  downloadRawDataByFields: PropTypes.func, // inherited from GuppyWrapper
+  downloadRawData: PropTypes.func, // inherited from GuppyWrapper
+  getTotalCountsByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
+  downloadRawDataByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
+  chartConfig: ChartConfigType,
+  tableConfig: TableConfigType,
+  buttonConfig: ButtonConfigType,
+  guppyConfig: GuppyConfigType,
 };
 
 ExplorerVisualization.defaultProps = {
@@ -85,6 +108,9 @@ ExplorerVisualization.defaultProps = {
   aggsData: {},
   filter: {},
   chartConfig: {},
+  tableConfig: [],
+  buttonConfig: [],
+  guppyConfig: {},
 };
 
 export default ExplorerVisualization;
