@@ -4,6 +4,7 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import PropTypes from 'prop-types';
 import { calculateDropdownButtonConfigs, humanizeNumber } from '../../DataExplorer/utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
+import './ExplorerButtonGroup.css';
 
 class ExplorerButtonGroup extends React.Component {
   constructor(props) {
@@ -22,31 +23,18 @@ class ExplorerButtonGroup extends React.Component {
     }
   }
 
-  refreshManifestEntryCount = async () => {
-    const fileType = 'file'; // FIXME
-    this.setState(prevState => ({
-      pendingManifestEntryCountRequestNumber: prevState.pendingManifestEntryCountRequestNumber + 1,
-      manifestEntryCount: 0,
-    }));
-    if (this.props.buttonConfig
-      && this.props.buttonConfig.buttons
-      && this.props.buttonConfig.buttons.some(btnCfg => btnCfg.type === 'manifest' && btnCfg.enabled)) {
-      const nodeIDResult = await this.props.downloadRawDataByFields({ fields: [this.props.nodeIDField] });
-      if (nodeIDResult) {
-        const nodeIDList = nodeIDResult.map(i => i[this.props.nodeIDField]);
-        const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
-          [this.props.nodeIDField]: {
-            selectedValues: nodeIDList,
-          },
-        });
-        this.setState(prevState => ({
-          manifestEntryCount: countResult,
-          pendingManifestEntryCountRequestNumber: prevState.pendingManifestEntryCountRequestNumber - 1,
-        }));
-      } else {
-        throw Error('Error when downloading data');
-      }
+  getOnClickFunction = (buttonConfig) => {
+    let clickFunc = () => {};
+    if (buttonConfig.type === 'data') {
+      clickFunc = this.downloadData(buttonConfig.fileName);
     }
+    if (buttonConfig.type === 'manifest') {
+      clickFunc = this.downloadManifest(buttonConfig.fileName);
+    }
+    if (buttonConfig.type === 'export') {
+      clickFunc = this.exportToCloud;
+    }
+    return clickFunc;
   }
 
   downloadData = filename => () => {
@@ -89,18 +77,39 @@ class ExplorerButtonGroup extends React.Component {
     // );
   }
 
-  getOnClickFunction = (buttonConfig) => {
-    let clickFunc = () => {};
-    if (buttonConfig.type === 'data') {
-      clickFunc = this.downloadData(buttonConfig.fileName);
+  refreshManifestEntryCount = async () => {
+    const fileType = 'file'; // FIXME
+    this.setState(prevState => ({
+      pendingManifestEntryCountRequestNumber: prevState.pendingManifestEntryCountRequestNumber + 1,
+      manifestEntryCount: 0,
+    }));
+    if (this.props.buttonConfig
+      && this.props.buttonConfig.buttons
+      && this.props.buttonConfig.buttons.some(btnCfg => btnCfg.type === 'manifest' && btnCfg.enabled)) {
+      const nodeIDResult = await this.props.downloadRawDataByFields({ fields: [this.props.nodeIDField] });
+      if (nodeIDResult) {
+        const nodeIDList = nodeIDResult.map(i => i[this.props.nodeIDField]);
+        const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
+          [this.props.nodeIDField]: {
+            selectedValues: nodeIDList,
+          },
+        });
+        this.setState(prevState => ({
+          manifestEntryCount: countResult,
+          pendingManifestEntryCountRequestNumber: prevState.pendingManifestEntryCountRequestNumber - 1,
+        }));
+      } else {
+        throw Error('Error when downloading data');
+      }
     }
+  }
+
+  isButtonEnabled = (buttonConfig) => {
     if (buttonConfig.type === 'manifest') {
-      clickFunc = this.downloadManifest(buttonConfig.fileName);
+      return this.state.manifestEntryCount > 0;
     }
-    if (buttonConfig.type === 'export') {
-      clickFunc = this.exportToCloud;
-    }
-    return clickFunc;
+
+    return this.props.totalCount > 0;
   }
 
   renderButton = (buttonConfig) => {
@@ -113,7 +122,6 @@ class ExplorerButtonGroup extends React.Component {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
 
-
     return (
       <Button
         key={buttonConfig.type}
@@ -121,7 +129,7 @@ class ExplorerButtonGroup extends React.Component {
         label={buttonTitle}
         leftIcon={buttonConfig.leftIcon}
         rightIcon={buttonConfig.rightIcon}
-        className='data-explorer__download-button'
+        className='explorer-button-group__download-button'
         buttonType='primary'
         enabled={this.isButtonEnabled(buttonConfig)}
         tooltipEnabled={buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false}
@@ -129,14 +137,6 @@ class ExplorerButtonGroup extends React.Component {
         isPending={pendingState}
       />
     );
-  }
-
-  isButtonEnabled = (buttonConfig) => {
-    if (buttonConfig.type === 'manifest') {
-      return this.state.manifestEntryCount > 0;
-    }
-
-    return this.props.totalCount > 0;
   }
 
   render() {
@@ -160,7 +160,7 @@ class ExplorerButtonGroup extends React.Component {
               return (
                 <Dropdown
                   key={dropdownId}
-                  className='data-explorer__dropdown'
+                  className='explorer-button-group__dropdown'
                   disabled={this.props.totalCount === 0}
                 >
                   <Dropdown.Button>{dropdownTitle}</Dropdown.Button>

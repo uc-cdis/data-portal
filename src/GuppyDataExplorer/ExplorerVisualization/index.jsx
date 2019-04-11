@@ -4,7 +4,7 @@ import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/Summary
 import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerTable from '../ExplorerTable';
-import ExplorerButtonGroup from './ExplorerButtonGroup';
+import ExplorerButtonGroup from '../ExplorerButtonGroup';
 import {
   TableConfigType,
   ButtonConfigType,
@@ -81,6 +81,7 @@ class ExplorerVisualization extends React.Component {
           fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
           rawData={this.props.rawData}
           totalCount={this.props.totalCount}
+          guppyConfig={this.props.guppyConfig}
         />
       </div>
     );
