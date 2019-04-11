@@ -110,14 +110,10 @@ const ReduxSubmitTSV = (() => {
 
   const mapDispatchToProps = dispatch => ({
     onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-    onSubmitClick: (type, project, dictionary) =>
-      dispatch(submitToServer(project))
-        .then(
-          () => {
-            // Update node countItems in redux
-            dispatch(getCounts(type, project, dictionary));
-          }),
+    onSubmitClick: project => dispatch(submitToServer(project)),
     onFileChange: value => dispatch(updateFileContent(value)),
+    onFinish: (type, project, dictionary) =>
+      dispatch(getCounts(type, project, dictionary)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(SubmitTSV);

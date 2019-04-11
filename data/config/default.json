@@ -71,20 +71,6 @@
           "link": "/submission",
           "label": "Submit data"
         }
-      ],
-      "homepageChartNodes": [
-        {
-          "node": "case",
-          "name": "Cases"
-        },
-        {
-          "node": "experiment",
-          "name": "Experiments"
-        },
-        {
-          "node": "aliquot",
-          "name": "Aliquots"
-        }
       ]
     },
     "navigation": {

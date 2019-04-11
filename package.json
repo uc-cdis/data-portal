@@ -136,7 +136,6 @@
     "setupTestFrameworkScriptFile": "mock-local-storage"
   },
   "scripts": {
-    "start": "BROWSER=none jailbreak-react-scripts start",
     "test": "jest",
     "postinstall": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
     "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",

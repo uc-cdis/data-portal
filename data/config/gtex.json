@@ -67,6 +67,20 @@
           "link": "#hostname#workspace/",
           "label": "Run analysis"
         }
+      ],
+      "homepageChartNodes": [
+        {
+          "node": "case",
+          "name": "Cases"
+        },
+        {
+          "node": "study",
+          "name": "Studies"
+        },
+        {
+          "node": "aliquot",
+          "name": "Aliquots"
+        }
       ]
     },
     "navigation": {
@@ -132,7 +146,8 @@
       "race": {
         "chartType": "bar",
         "title": "Race"
-      }
+      },
+      "fileCounts": true
     },
     "filters": {
       "tabs": [
@@ -211,12 +226,25 @@
         "title": "Export All to Terra",
         "rightIcon": "external-link",
         "tooltipText": "You have not selected any cases to export. Please use the checkboxes on the left to select specific cases you would like to export."
+      },
+      {
+        "enabled": true,
+        "type": "export-to-workspace",
+        "title": "Export To Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "download"
       }
     ],
     "arrangerConfig": {
       "projectId": "search",
       "graphqlField": "case",
       "index": "",
+      "manifestMapping": {
+        "resourceIndexType": "file",
+        "resourceIdField": "object_id",
+        "referenceIdFieldInResourceIndex": "case_id",
+        "referenceIdFieldInDataIndex": "case_id"
+      },
       "nodeCountField": "case_id"
     }
   }

@@ -6,6 +6,8 @@ import {
   queryDataByValues,
 } from './arrangerQueryHelper';
 import { hasKeyChain } from './utils';
+import { fetchWithCreds } from '../actions';
+import { manifestServiceApiPath } from '../localconf';
 
 const checkArrangerGraphqlField = (arrangerConfig) => {
   const MSG_GQLFIELD_FAIL = 'Couldn\'t find key "graphqlField" in Arranger configuration.';
@@ -103,6 +105,78 @@ export const downloadManifest = async (
   );
   const blob = new Blob([JSON.stringify(manifestJSON, null, 2)], { type: 'text/json' });
   FileSaver.saveAs(blob, fileName);
+};
+
+/**
+ * Download manifest data for selected rows in arranger table.
+ * @param {function} apiFunc - function created by arranger for fetching data
+ * @param {string} projectId - arranger project ID
+ * @param {string[]} selectedTableRows - list of ids of selected rows
+ * @param {Object} arrangerConfig - arranger configuration object
+ * @param {string} arrangerConfig.graphqlField - the data type name for arranger
+ * @param {string} arrangerConfig.manifestMapping.resourceIndexType - type name of resource index
+ * @param {string} arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex - name of
+ *                                reference field in resource index
+ * @param {string} arrangerConfig.manifestMapping.referenceIdFieldInDataIndex - name of
+ *                                reference field in data index
+ * @param {string} fileName - file name for downloading
+ */
+export const exportToWorkspace = async (
+  apiFunc,
+  projectId,
+  graphqlIdField,
+  selectedTableRows,
+  arrangerConfig,
+  callback,
+  errorCallback,
+) => {
+  const MSG_EXPORT_MANIFEST_FAIL = 'Error exporting manifest file';
+  checkArrangerGraphqlField(arrangerConfig);
+  if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
+    || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
+    errorCallback(500, MSG_EXPORT_MANIFEST_FAIL);
+  }
+  const resourceIDList = (await queryDataByIds(
+    apiFunc,
+    projectId,
+    graphqlIdField,
+    selectedTableRows,
+    arrangerConfig.graphqlField,
+    [arrangerConfig.manifestMapping.referenceIdFieldInDataIndex],
+  )).map((d) => {
+    if (!d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex]) {
+      errorCallback(500, MSG_EXPORT_MANIFEST_FAIL);
+    }
+    return d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex];
+  });
+  const manifestJSON = await queryDataByValues(
+    apiFunc,
+    projectId,
+    arrangerConfig.manifestMapping.resourceIndexType,
+    arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
+    resourceIDList,
+    [
+      arrangerConfig.manifestMapping.resourceIdField,
+      arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
+    ],
+  );
+
+  fetchWithCreds({
+    path: `${manifestServiceApiPath}`,
+    body: JSON.stringify(manifestJSON),
+    method: 'POST',
+  })
+    .then(
+      ({ status, data }) => {
+        switch (status) {
+        case 200:
+          callback(data);
+          return;
+        default:
+          errorCallback(status);
+        }
+      },
+    );
 };
 
 
