@@ -11,6 +11,7 @@ import {
   ChartConfigType,
   GuppyConfigType,
 } from '../configTypeDef';
+import './ExplorerVisualization.css';
 
 class ExplorerVisualization extends React.Component {
   getData = (aggsData, chartConfig, filter) => {
@@ -52,18 +53,24 @@ class ExplorerVisualization extends React.Component {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
     return (
       <div className={this.props.className}>
-        <ExplorerButtonGroup
-          buttonConfig={this.props.buttonConfig}
-          guppyConfig={this.props.guppyConfig}
-          totalCount={this.props.totalCount}
-          downloadRawData={this.props.downloadRawData}
-          downloadRawDataByFields={this.props.downloadRawDataByFields}
-          getTotalCountsByTypeAndFilter={this.props.getTotalCountsByTypeAndFilter}
-          downloadRawDataByTypeAndFilter={this.props.downloadRawDataByTypeAndFilter}
-          filter={this.props.filter}
-        />
-        <DataSummaryCardGroup summaryItems={chartData.countItems} connected />
-        <SummaryChartGroup summaries={chartData.summaries} />
+        <div className='guppy-explorer-visualization__button-group'>
+          <ExplorerButtonGroup
+            buttonConfig={this.props.buttonConfig}
+            guppyConfig={this.props.guppyConfig}
+            totalCount={this.props.totalCount}
+            downloadRawData={this.props.downloadRawData}
+            downloadRawDataByFields={this.props.downloadRawDataByFields}
+            getTotalCountsByTypeAndFilter={this.props.getTotalCountsByTypeAndFilter}
+            downloadRawDataByTypeAndFilter={this.props.downloadRawDataByTypeAndFilter}
+            filter={this.props.filter}
+          />
+        </div>
+        <div className='guppy-explorer-visualization__summary-cards'>
+          <DataSummaryCardGroup summaryItems={chartData.countItems} connected />
+        </div>
+        <div className='guppy-explorer-visualization__charts'>
+          <SummaryChartGroup summaries={chartData.summaries} />
+        </div>
         {
           chartData.stackedBarCharts.map((chart, i) => (
             <PercentageStackedBarChart
@@ -76,7 +83,7 @@ class ExplorerVisualization extends React.Component {
           )
         }
         <ExplorerTable
-          className='guppy-data-explorer__table'
+          className='guppy-explorer-visualization__table'
           tableConfig={this.props.tableConfig}
           fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
           rawData={this.props.rawData}

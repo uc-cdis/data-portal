@@ -36,7 +36,12 @@ class ExplorerTable extends React.Component {
   }
 
   render() {
-    const columnsConfig = this.props.tableConfig.map(c => ({ Header: c.name, accessor: c.field }));
+    const columnsConfig = this.props.tableConfig.map(c => ({
+      Header: c.name,
+      accessor: c.field,
+      maxWidth: 200,
+      minWidth: 50,
+    }));
     const { totalCount } = this.props;
     const { pageSize } = this.state;
     const totalPages = Math.floor(totalCount / pageSize) + ((totalCount % pageSize === 0) ? 0 : 1);
@@ -53,8 +58,9 @@ class ExplorerTable extends React.Component {
           loading={this.state.loading} // Display the loading overlay when we need it
           onFetchData={this.fetchData.bind(this)} // Request new data when things change
           defaultPageSize={this.props.defaultPageSize}
-          // className={`-striped -highlight `}
+          className={'-striped -highlight '}
           minRows={0} // hide empty rows
+          resizable={false}
         />
       </div>
     );

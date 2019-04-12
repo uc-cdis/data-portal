@@ -4,13 +4,11 @@
 
 .guppy-data-explorer__filter {
   width: 20%;
+  margin-top: 20px;
 }
 
 .guppy-data-explorer__visualization {
   width: 80%;
-}
-
-.guppy-data-explorer__table {
   margin-top: 20px;
-  width: 100%;
+  padding: 0 0 20px 20px;
 }
