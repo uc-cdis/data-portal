@@ -29,7 +29,7 @@ class GuppyDataExplorer extends React.Component {
       <div className='guppy-data-explorer'>
         <GuppyWrapper
           filterConfig={this.props.filterConfig}
-          guppyConfig={this.props.guppyConfig}
+          guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
           onFilterChange={this.handleFilterChange}
           tableConfig={this.props.tableConfig}

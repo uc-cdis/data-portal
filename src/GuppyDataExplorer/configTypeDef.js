@@ -1,9 +1,14 @@
 import PropTypes from 'prop-types';
 
 export const GuppyConfigType = PropTypes.shape({
-  path: PropTypes.string,
-  type: PropTypes.string,
-  fileType: PropTypes.string, // optional
+  path: PropTypes.string.isRequired,
+  dataType: PropTypes.string.isRequired,
+  manifestMapping: PropTypes.shape({
+    resourceIndexType: 'file',
+    resourceIdField: 'file_id', // TODO: change to object_id
+    referenceIdFieldInResourceIndex: 'subject_id',
+    referenceIdFieldInDataIndex: 'subject_id', // TODO: change to node_id
+  }),
 });
 
 export const FilterConfigType = PropTypes.shape({

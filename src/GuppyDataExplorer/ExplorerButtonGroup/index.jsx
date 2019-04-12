@@ -49,15 +49,20 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   downloadManifest = filename => async () => {
-    const fileType = 'file'; // FIXME
-    const nodeIDList = await this.props.downloadRawDataByFields({ fields: [this.props.nodeIDField] }).then(res => res.map(i => i[this.props.nodeIDField]));
+    const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
+    const caseFieldInFileIndex =
+      this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
+    const fileFieldInFileIndex = this.props.guppyConfig.manifestMapping.resourceIdField;
+    const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
+    const caseIDList = await this.props.downloadRawDataByFields({ fields: [caseField] })
+      .then(res => res.map(i => i[caseField]));
     const resultManifest = await this.props.downloadRawDataByTypeAndFilter(
       fileType, {
-        [this.props.nodeIDField]: {
-          selectedValues: nodeIDList,
+        [caseFieldInFileIndex]: {
+          selectedValues: caseIDList,
         },
       },
-      ['file_id', 'subject_id'],
+      [caseFieldInFileIndex, fileFieldInFileIndex],
     );
     if (resultManifest) {
       const blob = new Blob([JSON.stringify(resultManifest, null, 2)], { type: 'text/json' });
@@ -78,7 +83,9 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   refreshManifestEntryCount = async () => {
-    const fileType = 'file'; // FIXME
+    const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
+    const caseFieldInFileIndex =
+      this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
     this.setState(prevState => ({
       pendingManifestEntryCountRequestNumber: prevState.pendingManifestEntryCountRequestNumber + 1,
       manifestEntryCount: 0,
@@ -86,12 +93,13 @@ class ExplorerButtonGroup extends React.Component {
     if (this.props.buttonConfig
       && this.props.buttonConfig.buttons
       && this.props.buttonConfig.buttons.some(btnCfg => btnCfg.type === 'manifest' && btnCfg.enabled)) {
-      const nodeIDResult = await this.props.downloadRawDataByFields({ fields: [this.props.nodeIDField] });
-      if (nodeIDResult) {
-        const nodeIDList = nodeIDResult.map(i => i[this.props.nodeIDField]);
+      const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
+      if (caseIDResult) {
+        const caseIDList = caseIDResult.map(i => i[caseField]);
+        const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
         const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
-          [this.props.nodeIDField]: {
-            selectedValues: nodeIDList,
+          [caseFieldInFileIndex]: {
+            selectedValues: caseIDList,
           },
         });
         this.setState(prevState => ({
@@ -215,11 +223,9 @@ ExplorerButtonGroup.propTypes = {
   buttonConfig: ButtonConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
   filter: PropTypes.object,
-  nodeIDField: PropTypes.string,
 };
 
 ExplorerButtonGroup.defaultProps = {
-  nodeIDField: 'subject_id',
 };
 
 export default ExplorerButtonGroup;

@@ -181,7 +181,7 @@
     "explorer": true
   },
   "dataExplorerConfig": {
-    "charts": {
+    "charts": { // used by guppy 
       "project": {
         "chartType": "count",
         "title": "Projects"
@@ -243,7 +243,7 @@
       "index": "",
       "nodeCountField": "node_id"
     },
-    "buttons": [
+    "buttons": [// used by guppy 
       {
         "enabled": true,
         "type": "data",
@@ -264,7 +264,7 @@
     "table": {
       "enabled": true
     },
-    "tableConfig": [
+    "tableConfig": [// used by guppy 
       { "field": "project", "name": "Project" },
       { "field": "study", "name": "Study" },
       { "field": "race", "name": "Race" },
@@ -276,7 +276,7 @@
       { "field": "file_type", "name": "File Type" },
       { "field": "file_format", "name": "File Format" }
     ],
-    "filterConfig": {
+    "filterConfig": {// used by guppy 
       "tabs": [{
         "title": "Project",
         "filters": [
@@ -303,8 +303,13 @@
       }]
     },
     "guppyConfig": {
-      "caseType": "subject",
-      "fileType": "file"
+      "dataType": "subject",
+      "manifestMapping": {
+        "resourceIndexType": "file",
+        "resourceIdField": "file_id",
+        "referenceIdFieldInResourceIndex": "subject_id",
+        "referenceIdFieldInDataIndex": "subject_id"
+      }
     }
   }
 }
