@@ -5,7 +5,7 @@ import Footer from '../components/layout/Footer';
 import dictIcons from '../img/icons/index';
 import { logoutAPI } from '../actions';
 import { components } from '../params';
-import { isPageFullScreen } from '../utils';
+import { isPageFullScreen, isFooterHidden } from '../utils';
 import { portalVersion } from '../versions';
 
 export const setActive = link => ({
@@ -59,7 +59,7 @@ export const ReduxFooter = (() => {
     portalVersion,
     dictionaryVersion: state.versionInfo.dictionaryVersion,
     apiVersion: state.versionInfo.apiVersion,
-    hidden: isPageFullScreen(state.bar.active),
+    hidden: isFooterHidden(state.bar.active),
   });
 
   return connect(mapStateToProps)(Footer);
