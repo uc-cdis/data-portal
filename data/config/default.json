@@ -181,7 +181,13 @@
     "explorer": true
   },
   "dataExplorerConfig": {
-    "charts": { // used by guppy 
+    "arrangerConfig": {
+      "projectId": "search",
+      "graphqlField": "subject",
+      "index": "",
+      "nodeCountField": "node_id"
+    },
+    "charts": {
       "project": {
         "chartType": "count",
         "title": "Projects"
@@ -237,13 +243,7 @@
         }
       ]
     },
-    "arrangerConfig": {
-      "projectId": "search",
-      "graphqlField": "subject",
-      "index": "",
-      "nodeCountField": "node_id"
-    },
-    "buttons": [// used by guppy 
+    "buttons": [
       {
         "enabled": true,
         "type": "data",
@@ -262,48 +262,34 @@
       }
     ],
     "table": {
-      "enabled": true
-    },
-    "tableConfig": [// used by guppy 
-      { "field": "project", "name": "Project" },
-      { "field": "study", "name": "Study" },
-      { "field": "race", "name": "Race" },
-      { "field": "ethnicity", "name": "Ethnicity" },
-      { "field": "gender", "name": "Gender" },
-      { "field": "vital_status", "name": "Vital Status" },
-      { "field": "whatever_lab_result_value", "name": "Lab Result Value" },
-      { "field": "file_count", "name": "File Count" },
-      { "field": "file_type", "name": "File Type" },
-      { "field": "file_format", "name": "File Format" }
-    ],
-    "filterConfig": {// used by guppy 
-      "tabs": [{
-        "title": "Project",
-        "filters": [
-          { "field": "project", "label": "Project" },
-          { "field": "study", "label": "Study" }
-        ]
-      },
-      {
-        "title": "Subject",
-        "filters": [
-          { "field": "race", "label": "Race" },
-          { "field": "ethnicity", "label": "Ethnicity" },
-          { "field": "gender", "label": "Gender" },
-          { "field": "vital_status", "label": "Vital_status" }
-        ]
-      },
-      {
-        "title": "File",
-        "filters": [
-          { "field": "file_count", "label": "File_count" },
-          { "field": "file_type", "label": "File_type" },
-          { "field": "file_format", "label": "File_format" }
-        ]
-      }]
+      "enabled": true,
+      "fields": [
+        "project",
+        "study",
+        "race",
+        "ethnicity",
+        "gender",
+        "vital_status",
+        "whatever_lab_result_value",
+        "file_count",
+        "file_type",
+        "file_format"
+      ]
     },
     "guppyConfig": {
       "dataType": "subject",
+      "fieldMapping": [
+        { "field": "project", "name": "Project" },
+        { "field": "study", "name": "Study" },
+        { "field": "race", "name": "Race" },
+        { "field": "ethnicity", "name": "Ethnicity" },
+        { "field": "gender", "name": "Gender" },
+        { "field": "vital_status", "name": "Vital Status" },
+        { "field": "whatever_lab_result_value", "name": "Lab Result Value" },
+        { "field": "file_count", "name": "File Count" },
+        { "field": "file_type", "name": "File Type" },
+        { "field": "file_format", "name": "File Format" }
+      ],
       "manifestMapping": {
         "resourceIndexType": "file",
         "resourceIdField": "file_id",

@@ -20,21 +20,45 @@ class GuppyDataExplorer extends React.Component {
     };
   }
 
-  handleReceiveNewAggsData = (newAggsData, filter) => {
+  getFilterConfigForGuppy = () => {
+    const filterConfig = this.props.filterConfig.tabs.map(entry => ({
+      title: entry.title,
+      filters: entry.fields.map((f) => {
+        const field = f;
+        const fieldMappingEntry = this.props.guppyConfig.fieldMapping.find(i => i.field === field);
+        if (!fieldMappingEntry) {
+          throw new Error('error parsing filter configuration');
+        }
+        const label = fieldMappingEntry.name;
+        return {
+          field,
+          label,
+        };
+      }),
+    }));
+    return { tabs: filterConfig };
+  };
+
+  handleReceiveNewAggsData = (newAggsData) => {
     this.setState({ aggsData: newAggsData });
-  }
+  };
 
   render() {
+    const filterConfigForGuppy = this.getFilterConfigForGuppy();
     return (
       <div className='guppy-data-explorer'>
         <GuppyWrapper
-          filterConfig={this.props.filterConfig}
+          filterConfig={filterConfigForGuppy}
           guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
           onFilterChange={this.handleFilterChange}
-          tableConfig={this.props.tableConfig}
+          rawDataFields={this.props.tableConfig.fields}
         >
-          <ConnectedFilter className='guppy-data-explorer__filter' />
+          <ConnectedFilter
+            className='guppy-data-explorer__filter'
+            filterConfig={filterConfigForGuppy}
+            guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
+          />
           <ExplorerVisualization
             className='guppy-data-explorer__visualization'
             chartConfig={this.props.chartConfig}

@@ -1,6 +1,7 @@
 import React from 'react';
 import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
+import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import PropTypes from 'prop-types';
 import { calculateDropdownButtonConfigs, humanizeNumber } from '../../DataExplorer/utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
@@ -73,13 +74,7 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   exportToCloud = () => {
-    // exportAllSelectedDataToCloud(
-    //   this.props.api,
-    //   this.props.projectId,
-    //   this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
-    //   this.state.nodeIds,
-    //   this.props.dataExplorerConfig.arrangerConfig,
-    // );
+    // TODO
   }
 
   refreshManifestEntryCount = async () => {
@@ -104,7 +99,8 @@ class ExplorerButtonGroup extends React.Component {
         });
         this.setState(prevState => ({
           manifestEntryCount: countResult,
-          pendingManifestEntryCountRequestNumber: prevState.pendingManifestEntryCountRequestNumber - 1,
+          pendingManifestEntryCountRequestNumber:
+            prevState.pendingManifestEntryCountRequestNumber - 1,
         }));
       } else {
         throw Error('Error when downloading data');
@@ -215,14 +211,14 @@ class ExplorerButtonGroup extends React.Component {
 }
 
 ExplorerButtonGroup.propTypes = {
-  downloadRawData: PropTypes.func,
-  downloadRawDataByFields: PropTypes.func,
-  getTotalCountsByTypeAndFilter: PropTypes.func,
-  downloadRawDataByTypeAndFilter: PropTypes.func,
-  totalCount: PropTypes.number,
+  downloadRawData: PropTypes.func.isRequired, // from GuppyWrapper
+  downloadRawDataByFields: PropTypes.func.isRequired, // from GuppyWrapper
+  getTotalCountsByTypeAndFilter: PropTypes.func.isRequired, // from GuppyWrapper
+  downloadRawDataByTypeAndFilter: PropTypes.func.isRequired, // from GuppyWrapper
+  totalCount: PropTypes.number.isRequired, // from GuppyWrapper
+  filter: PropTypes.object.isRequired, // from GuppyWrapper
   buttonConfig: ButtonConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
-  filter: PropTypes.object,
 };
 
 ExplorerButtonGroup.defaultProps = {

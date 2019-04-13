@@ -25,12 +25,13 @@ class ExplorerVisualization extends React.Component {
       case 'count':
         countItems.push({
           label: chartConfig[field].title,
-          value: filter[field] ? filter[field].selectedValues.length : aggsData[field].histogram.length,
+          value: filter[field] ? filter[field].selectedValues.length
+            : aggsData[field].histogram.length,
         });
         break;
       case 'pie':
       case 'bar':
-      case 'stackedBar':
+      case 'stackedBar': {
         const dataItem = {
           type: chartConfig[field].chartType,
           title: chartConfig[field].title,
@@ -42,6 +43,7 @@ class ExplorerVisualization extends React.Component {
           summaries.push(dataItem);
         }
         break;
+      }
       default:
         throw new Error(`Invalid chartType ${chartConfig[field].chartType}`);
       }
@@ -96,7 +98,6 @@ class ExplorerVisualization extends React.Component {
 }
 
 ExplorerVisualization.propTypes = {
-  className: PropTypes.string,
   totalCount: PropTypes.number, // inherited from GuppyWrapper
   aggsData: PropTypes.object, // inherited from GuppyWrapper
   filter: PropTypes.object, // inherited from GuppyWrapper
@@ -105,6 +106,8 @@ ExplorerVisualization.propTypes = {
   downloadRawData: PropTypes.func, // inherited from GuppyWrapper
   getTotalCountsByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   downloadRawDataByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
+  rawData: PropTypes.array, // inherited from GuppyWrapper
+  className: PropTypes.string,
   chartConfig: ChartConfigType,
   tableConfig: TableConfigType,
   buttonConfig: ButtonConfigType,
@@ -112,12 +115,19 @@ ExplorerVisualization.propTypes = {
 };
 
 ExplorerVisualization.defaultProps = {
-  className: '',
+  totalCount: 0,
   aggsData: {},
   filter: {},
+  fetchAndUpdateRawData: () => {},
+  downloadRawDataByFields: () => {},
+  downloadRawData: () => {},
+  getTotalCountsByTypeAndFilter: () => {},
+  downloadRawDataByTypeAndFilter: () => {},
+  rawData: [],
+  className: '',
   chartConfig: {},
-  tableConfig: [],
-  buttonConfig: [],
+  tableConfig: {},
+  buttonConfig: {},
   guppyConfig: {},
 };
 
