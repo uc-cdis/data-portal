@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
 import ExplorerVisualization from './ExplorerVisualization';
@@ -65,6 +66,7 @@ class GuppyDataExplorer extends React.Component {
             tableConfig={this.props.tableConfig}
             buttonConfig={this.props.buttonConfig}
             guppyConfig={this.props.guppyConfig}
+            history={this.props.history}
           />
         </GuppyWrapper>
       </div>
@@ -78,9 +80,7 @@ GuppyDataExplorer.propTypes = {
   tableConfig: TableConfigType.isRequired,
   chartConfig: ChartConfigType.isRequired,
   buttonConfig: ButtonConfigType.isRequired,
-};
-
-GuppyDataExplorer.defaultProps = {
+  history: PropTypes.object.isRequired,
 };
 
 export default GuppyDataExplorer;

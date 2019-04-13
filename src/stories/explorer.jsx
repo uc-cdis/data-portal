@@ -119,6 +119,7 @@ storiesOf('Data Explorer', module)
           fileType,
         }}
         buttonConfig={buttonConfig}
+        history={{}}
       />
     );
   });

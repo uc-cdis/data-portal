@@ -2,16 +2,27 @@ import React from 'react';
 import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import Toaster from '@gen3/ui-component/dist/components/Toaster';
 import PropTypes from 'prop-types';
 import { calculateDropdownButtonConfigs, humanizeNumber } from '../../DataExplorer/utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
+import { exportAllSelectedDataToCloud } from './bdbag';
+import { fetchWithCreds } from '../../actions';
+import { manifestServiceApiPath } from '../../localconf';
 import './ExplorerButtonGroup.css';
 
 class ExplorerButtonGroup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      // for manifest
       manifestEntryCount: 0,
+
+      // for export to workspace
+      exportInProgress: false,
+      exportFileName: null,
+      toasterOpen: false,
+      exportStatus: null,
 
       // a semaphore that could hold pending state by multiple queries
       pendingManifestEntryCountRequestNumber: 0,
@@ -35,21 +46,13 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export') {
       clickFunc = this.exportToCloud;
     }
+    if (buttonConfig.type === 'export-to-workspace') {
+      clickFunc = this.exportToWorkspace;
+    }
     return clickFunc;
   }
 
-  downloadData = filename => () => {
-    this.props.downloadRawData().then((res) => {
-      if (res) {
-        const blob = new Blob([JSON.stringify(res, null, 2)], { type: 'text/json' });
-        FileSaver.saveAs(blob, filename);
-      } else {
-        throw Error('Error when downloading data');
-      }
-    });
-  };
-
-  downloadManifest = filename => async () => {
+  getManifest = async () => {
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     const caseFieldInFileIndex =
       this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
@@ -65,6 +68,57 @@ class ExplorerButtonGroup extends React.Component {
       },
       [caseFieldInFileIndex, fileFieldInFileIndex],
     );
+    return resultManifest;
+  };
+
+  getToaster = () => ((
+    <Toaster isEnabled={this.state.toasterOpen} className={'explorer-button-group__toaster-div'}>
+      <Button
+        className='explorer-button-group__toaster-button'
+        onClick={() => this.setState({ toasterOpen: false })}
+        label='Close'
+        buttonType='primary'
+        enabled
+      />
+      { (this.state.exportStatus === 200) ?
+        <Button
+          className='explorer-button-group__toaster-button'
+          label='Go To Workspace'
+          buttonType='primary'
+          enabled
+          onClick={this.gotoWorkspace}
+        />
+        : null
+      }
+      { (this.state.exportStatus === 200) ?
+        <div className='explorer-button-group__toaster-text'>
+          <div> {this.state.toasterSuccessText} </div>
+          <div> File Name: {this.state.exportFileName} </div>
+        </div>
+        :
+        <div className='explorer-button-group__toaster-text'>
+          <div> {this.state.toasterErrorText} </div>
+          <div> Error: {this.state.exportStatus} </div>
+        </div>
+      }
+    </Toaster>
+  ));
+
+  gotoWorkspace = () => this.props.history.push('/workspace');
+
+  downloadData = filename => () => {
+    this.props.downloadRawData().then((res) => {
+      if (res) {
+        const blob = new Blob([JSON.stringify(res, null, 2)], { type: 'text/json' });
+        FileSaver.saveAs(blob, filename);
+      } else {
+        throw Error('Error when downloading data');
+      }
+    });
+  };
+
+  downloadManifest = filename => async () => {
+    const resultManifest = await this.getManifest();
     if (resultManifest) {
       const blob = new Blob([JSON.stringify(resultManifest, null, 2)], { type: 'text/json' });
       FileSaver.saveAs(blob, filename);
@@ -74,7 +128,49 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   exportToCloud = () => {
-    // TODO
+    exportAllSelectedDataToCloud(this.props.downloadRawDataByFields);
+  }
+
+  exportToWorkspace = async () => {
+    this.setState({ exportInProgress: true });
+    const resultManifest = await this.getManifest();
+    if (resultManifest) {
+      fetchWithCreds({
+        path: `${manifestServiceApiPath}`,
+        body: JSON.stringify(resultManifest),
+        method: 'POST',
+      })
+        .then(
+          ({ status, data }) => {
+            switch (status) {
+            case 200:
+              this.exportToWorkspaceSuccessHandler(data);
+              return;
+            default:
+              this.exportToWorkspaceErrorHandler(status);
+            }
+          },
+        );
+    } else {
+      throw new Error('error when export to workspace');
+    }
+  };
+
+  exportToWorkspaceSuccessHandler = (data) => {
+    this.setState({
+      toasterOpen: true,
+      exportStatus: 200,
+      exportInProgress: false,
+      exportFileName: data.filename,
+    });
+  }
+
+  exportToWorkspaceErrorHandler = (status) => {
+    this.setState({
+      toasterOpen: true,
+      exportStatus: status,
+      exportInProgress: false,
+    });
   }
 
   refreshManifestEntryCount = async () => {
@@ -205,6 +301,7 @@ class ExplorerButtonGroup extends React.Component {
             .filter(buttonConfig => buttonConfig.enabled)
             .map(buttonConfig => this.renderButton(buttonConfig))
         }
+        { this.getToaster() }
       </React.Fragment>
     );
   }
@@ -219,6 +316,7 @@ ExplorerButtonGroup.propTypes = {
   filter: PropTypes.object.isRequired, // from GuppyWrapper
   buttonConfig: ButtonConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {

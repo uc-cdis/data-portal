@@ -65,6 +65,7 @@ class ExplorerVisualization extends React.Component {
             getTotalCountsByTypeAndFilter={this.props.getTotalCountsByTypeAndFilter}
             downloadRawDataByTypeAndFilter={this.props.downloadRawDataByTypeAndFilter}
             filter={this.props.filter}
+            history={this.props.history}
           />
         </div>
         <div className='guppy-explorer-visualization__summary-cards'>
@@ -107,6 +108,7 @@ ExplorerVisualization.propTypes = {
   getTotalCountsByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   downloadRawDataByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
+  history: PropTypes.object.isRequired,
   className: PropTypes.string,
   chartConfig: ChartConfigType,
   tableConfig: TableConfigType,

@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import { config } from '../params';
 import { guppyUrl } from '../localconf';
@@ -38,9 +39,14 @@ class Explorer extends React.Component {
           buttons: guppyExplorerConfig.buttons,
           dropdowns: guppyExplorerConfig.dropdowns,
         }}
+        history={this.props.history}
       />
     );
   }
 }
+
+Explorer.propTypes = {
+  history: PropTypes.object.isRequired, // inherited from ProtectedContent
+};
 
 export default Explorer;
