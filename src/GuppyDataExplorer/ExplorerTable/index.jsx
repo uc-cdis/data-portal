@@ -53,6 +53,8 @@ class ExplorerTable extends React.Component {
     const { totalCount } = this.props;
     const { pageSize } = this.state;
     const totalPages = Math.floor(totalCount / pageSize) + ((totalCount % pageSize === 0) ? 0 : 1);
+    const SCROLL_SIZE = 10000;
+    const visiblePages = Math.min(totalPages, Math.round((SCROLL_SIZE / pageSize) + 0.49));
     const start = (this.state.currentPage * this.state.pageSize) + 1;
     const end = (this.state.currentPage + 1) * this.state.pageSize;
     return (
@@ -62,7 +64,7 @@ class ExplorerTable extends React.Component {
           columns={columnsConfig}
           manual
           data={this.props.rawData}
-          pages={totalPages} // Total number of pages
+          pages={visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}
           onFetchData={this.fetchData}
           defaultPageSize={this.props.defaultPageSize}
