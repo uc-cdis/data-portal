@@ -5,6 +5,7 @@ import 'brace/theme/kuroir';
 import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
+import ReduxDataModelGraph, { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
 import './SubmissionResult.less';
 
 /**
@@ -25,8 +26,15 @@ class SubmissionResult extends React.Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    const { status, data, dataString, entityCounts, counter, total, onFinish } = this.props;
+    if ((counter !== prevProps.counter) && (counter === total)) {
+      onFinish();
+    }
+  }
+
   render() {
-    const { status, data, dataString, counter, total } = this.props;
+    const { status, data, dataString, entityCounts, counter, total } = this.props;
     let summary = null;
     const fullResponse = (() => {
       if (this.state.showFullResponse) {
@@ -50,17 +58,11 @@ class SubmissionResult extends React.Component {
 
     if (status === 200) {
       // List number of entites of each type created
-      const entityType2Count = (data.entities || [])
-        .map(ent => ent.type || 'unknown')
-        .reduce((db, type) => {
-          const res = db; res[type] = (res[type] || 0) + 1;
-          return res;
-        }, {});
       summary = (<div id='cd-summary__result_200' className='submission-result__summary'>
         <p>Successfully created entities:</p>
         <ul className='submission-result__list'>
-          {Object.keys(entityType2Count).sort()
-            .map(type => <li key={type}>{entityType2Count[type]} of {type}</li>)}
+          { Object.keys(entityCounts).sort()
+            .map(type => <li key={type}>{entityCounts[type]} of {type}</li>)}
         </ul>
       </div>);
     } else if (status >= 400 && status < 500) {
@@ -106,8 +108,10 @@ SubmissionResult.propTypes = {
   status: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
   dataString: PropTypes.string.isRequired,
+  entityCounts: PropTypes.object.isRequired,
   counter: PropTypes.number.isRequired,
   total: PropTypes.number.isRequired,
+  onFinish: PropTypes.func.isRequired,
 };
 
 export default SubmissionResult;

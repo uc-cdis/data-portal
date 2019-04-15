@@ -1,6 +1,7 @@
 import React from 'react';
 import IcoAnalysis from './analysis.svg';
 import IcoBack from './back.svg';
+import IcoCohortTools from './cohort-tools.svg';
 import IcoCopy from './copy.svg';
 import IcoCross from './cross.svg';
 import IcoCrossKey from './cross-key.svg';
@@ -34,6 +35,9 @@ const dictIcons = {
     />),
   back: (height, customedStyles) => (
     <IcoBack height={height} style={{ ...customedStyles }} />
+  ),
+  'cohort-tools': (height, customedStyles) => (
+    <IcoCohortTools height={height} style={{ ...customedStyles }} />
   ),
   copy: (height, customedStyles) => (
     <IcoCopy height={height} style={{ ...customedStyles }} />
