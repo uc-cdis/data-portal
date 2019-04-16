@@ -10,8 +10,8 @@ import {
   guppyGraphQLUrl,
   arrangerGraphqlPath,
   graphqlSchemaUrl,
+  useGuppyForExplorer,
 } from './configs';
-import { config } from './params';
 
 export const updatePopup = state => ({
   type: 'UPDATE_POPUP',
@@ -179,7 +179,7 @@ export const fetchFlatGraphQL = (graphQLParams) => {
     body: JSON.stringify(graphQLParams),
   };
 
-  const graphqlUrl = config.dataExplorerConfig.guppyConfig ? guppyGraphQLUrl : arrangerGraphqlPath;
+  const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
   return fetch(graphqlUrl, request)
     .then(response => response.text())
     .then((responseBody) => {
