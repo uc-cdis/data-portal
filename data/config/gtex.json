@@ -124,7 +124,9 @@
       "contact": "If you have any questions about access or the registration process, please contact ",
       "email": "support@datacommons.io",
       "image": "stage-gene"
-    }
+    },
+    "categorical9Colors": ["#c02f42", "#175676", "#59CD90", "#F2DC5D", "#40476D", "#FFA630", "#AE8799", "#1A535C", "#462255"],
+    "categorical2Colors": ["#c02f42", "#6d6e70"]
   },
   "requiredCerts": [],
   "featureFlags": {

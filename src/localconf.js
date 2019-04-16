@@ -63,7 +63,7 @@ function buildConfig(opts) {
   }
 
   const colorsForCharts = {
-    categorical9Colors: [
+    categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
       '#3283c8',
       '#7ec500',
       '#ad91ff',
@@ -74,7 +74,7 @@ function buildConfig(opts) {
       '#ef8523',
       '#26d9b1',
     ],
-    categorical2Colors: [
+    categorical2Colors: components.categorical2Colors ? components.categorical2Colors : [
       '#3283c8',
       '#e7e7e7',
     ],

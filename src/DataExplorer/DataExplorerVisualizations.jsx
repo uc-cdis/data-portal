@@ -13,6 +13,7 @@ import { getCharts } from '../components/charts/helper';
 import { downloadManifest, downloadData, getManifestEntryCount, exportToWorkspace } from './actionHelper';
 import { calculateDropdownButtonConfigs, humanizeNumber } from './utils';
 import { exportAllSelectedDataToCloud } from './custom/bdbag';
+import { components } from '../params';
 
 class DataExplorerVisualizations extends React.Component {
   constructor(props) {
@@ -235,7 +236,7 @@ class DataExplorerVisualizations extends React.Component {
     );
 
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.dataExplorerConfig);
-
+    const barChartColor = components.categorical2Colors ? components.categorical2Colors [0] : null;
     return (
       <div className='data-explorer__visualizations'>
         <div className='data-explorer__button-section'>
@@ -304,7 +305,7 @@ class DataExplorerVisualizations extends React.Component {
         { charts ?
           <div className='data-explorer__charts'>
             <DataSummaryCardGroup summaryItems={charts.countItems} connected />
-            <SummaryChartGroup summaries={charts.summaries} />
+            <SummaryChartGroup summaries={charts.summaries} barChartColor={barChartColor} />
             {
               charts.stackedBarCharts.map((chart, i) =>
                 (<PercentageStackedBarChart
