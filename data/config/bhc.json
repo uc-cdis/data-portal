@@ -31,18 +31,18 @@
     "projectDetails": "boardCounts"
   },
   "components": {
-    "appName": "The Brain Commons Portal",
+    "appName": "The BRAIN Commons Portal",
     "index": {
       "introduction": {
-        "heading": "Brain Commons",
-        "text": "The Brain Commons supports the management, analysis and sharing of brain health data for the research community and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for treatment and prevention of diseases impacting the brain. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.",
+        "heading": "BRAIN Commons",
+        "text": "The BRAIN Commons supports the management, analysis and sharing of brain health data for the research community and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for treatment and prevention of diseases impacting the brain. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.",
         "link": "/submission"
       },
       "buttons": [
         {
           "name": "Define Data Field",
           "icon": "data-field-define",
-          "body": "The Brain Commons define the data in a general way. Please study the dictionary before you start browsing.",
+          "body": "The BRAIN Commons define the data in a general way. Please study the dictionary before you start browsing.",
           "link": "/DD",
           "label": "Learn more"
         },
@@ -70,7 +70,7 @@
       ]
     },
     "navigation": {
-      "title": "Brain Commons",
+      "title": "BRAIN Commons",
       "items": [
         {
           "icon": "dictionary",
@@ -111,12 +111,24 @@
       ]
     },
     "login": {
-      "title": "Brain Commons",
+      "title": "BRAIN Commons",
       "subTitle": "Explore, Analyze, and Share Data",
       "text": "This website provides a centralized, cloud-based discovery portal for the brain health research community and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for the treatment and prevention of diseases impacting the brain.",
       "contact": "If you have any questions about access or the registration process, please contact ",
-      "email": "support@datacommons.io"
-    }
+      "email": "support@braincommons.org"
+    },
+    "footerLogos": [
+      {
+        "src": "/src/img/gen3.png",
+        "href": "https://ctds.uchicago.edu/gen3",
+        "alt": "Gen3 Data Commons"
+      },
+      {
+        "src": "/src/img/createdby.png",
+        "href": "https://ctds.uchicago.edu/",
+        "alt": "Center for Translational Data Science at the University of Chicago"
+      }
+    ]
   },
   "featureFlags": {
     "explorer": true,
@@ -164,14 +176,45 @@
       "index": "",
       "nodeCountField": "node_id"
     },
+    "guppyConfig": {
+      "dataType": "case",
+      "fieldMapping": [
+        { "field": "project_id", "name": "Project ID" },
+        { "field": "submitter_id", "name": "Submitter ID" },
+        { "field": "gender", "name": "Gender" },
+        { "field": "ethnicity", "name": "Ethnicity" },
+        { "field": "race", "name": "Race" },
+        { "field": "experimental_group", "name": "Experimental Group" },
+        { "field": "_aliquots_count", "name": "Aliquots Count" },
+        { "field": "_read_group_count", "name": "Read Group Count" },
+        { "field": "_samples_count", "name": "Samples Count" },
+        { "field": "_submitted_expression_arrays_count", "name": "Submitted Expression Arrays Count" },
+        { "field": "_submitted_unaligned_reads_count", "name": "Submitted Unaligned Reads Count" },
+        { "field": "auth_resource_path", "name": "auth_resource_path" },
+        { "field": "node_id", "name": "Case ID" }
+      ]
+    },
     "table": {
-      "enabled": true
+      "enabled": true,
+      "fields": [
+        "project_id",
+        "submitter_id",
+        "gender",
+        "ethnicity",
+        "race",
+        "experimental_group",
+        "_aliquots_count",
+        "_read_group_count",
+        "_samples_count",
+        "_submitted_expression_arrays_count",
+        "_submitted_unaligned_reads_count"
+      ]
     },
     "buttons": [
       {
         "enabled": true,
         "type": "data",
-        "title": "Download All Data",
+        "title": "Download Data",
         "leftIcon": "user",
         "rightIcon": "download",
         "fileName": "data.json"
