@@ -58,7 +58,7 @@ describe('the UserProfile component', () => {
           onClearDeleteSession={noop}
         />
       </StaticRouter>);
-    const $createBtn = $vdom.find(`button[name="${CREATE_API_KEY_BTN}"]`);
+    const $createBtn = $vdom.find('.g3-button');
     expect($createBtn).toHaveLength(1);
     $createBtn.simulate('click');
     // should invoke onCreateKey callback (above - calls done()) ...
