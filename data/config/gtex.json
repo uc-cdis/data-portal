@@ -125,6 +125,23 @@
       "email": "support@datacommons.io",
       "image": "stage-gene"
     },
+    "footerLogos": [
+      {
+        "src": "/src/img/gen3.png",
+        "href": "https://ctds.uchicago.edu/gen3",
+        "alt": "Gen3 Data Commons"
+      },
+      {
+        "src": "/src/img/createdby.png",
+        "href": "https://ctds.uchicago.edu/",
+        "alt": "Center for Translational Data Science at the University of Chicago"
+      },
+      {
+        "src": "/src/img/sponsors/nhlbi.svg",
+        "href": "https://www.nhlbi.nih.gov",
+        "alt": "NHLBI"
+      }
+    ],
     "categorical9Colors": ["#c02f42", "#175676", "#59CD90", "#F2DC5D", "#40476D", "#FFA630", "#AE8799", "#1A535C", "#462255"],
     "categorical2Colors": ["#c02f42", "#6d6e70"]
   },
