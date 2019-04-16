@@ -2,6 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
+import UserProfile from './UserProfile';
 import { DELETE_BTN } from '../components/tables/KeyTable';
 
 describe('the UserProfile component', () => {
