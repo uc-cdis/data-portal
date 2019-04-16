@@ -236,7 +236,7 @@ class DataExplorerVisualizations extends React.Component {
     );
 
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.dataExplorerConfig);
-    const barChartColor = components.categorical2Colors ? components.categorical2Colors [0] : null;
+    const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
     return (
       <div className='data-explorer__visualizations'>
         <div className='data-explorer__button-section'>

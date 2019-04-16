@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import IconComponent from './Icon';
@@ -30,7 +29,7 @@ class IndexButtonBar extends Component {
                   className='index-button-bar__item'
                   onClick={() => {
                     this.props.onActiveTab(item.link);
-                    this.props.history.push(`${item.link}`)
+                    this.props.history.push(`${item.link}`);
                   }}
                   label={item.label}
                   buttonType='primary'

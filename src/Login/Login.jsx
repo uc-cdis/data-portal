@@ -3,7 +3,7 @@ import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Button from '@gen3/ui-component/dist/components/Button';
 import { basename, loginPath } from '../localconf';
-import { components} from '../params';
+import { components } from '../params';
 import SlidingWindow from '../components/SlidingWindow';
 import './Login.less';
 
@@ -62,8 +62,7 @@ class Login extends React.Component {
     const customImage = components.login && components.login.image ?
       components.login.image
       : 'gene';
-    console.log(components.login.image)
-    console.log(this.props.dictIcons)
+
     return (
       <div className='login-page'>
         <div className='login-page__side-box'>
@@ -89,9 +88,9 @@ class Login extends React.Component {
                 <Button
                   key={i}
                   className='login-page__entries'
-                  onClick={() =>
-                    window.location.href = `${p.url}?redirect=${window.location.origin}${next}`
-                  }
+                  onClick={() => {
+                    window.location.href = `${p.url}?redirect=${window.location.origin}${next}`;
+                  }}
                   label={p.name}
                   buttonType='primary'
                 />

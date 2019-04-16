@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import IconComponent from './Icon';
-import IconicButton from '../components/buttons/IconicButton';
 import dictIcons from '../img/icons/index';
 import './Popup.less';
 
@@ -73,7 +72,7 @@ const Popup = ({
                   label={btn.caption}
                   buttonType='default'
                   rightIcon={btn.icon}
-                />
+                />,
             ])
           }
         </div>

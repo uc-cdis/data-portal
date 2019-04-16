@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Table from './base/Table';
-import IconicLink from '../buttons/IconicLink';
-import dictIcons from '../../img/icons/index';
 
 function compare(a, b) {
   if (a.name < b.name) { return -1; }
@@ -31,7 +29,7 @@ class ProjectTable extends React.Component {
       label='Submit Data'
       buttonType='primary'
       rightIcon='upload'
-    />
+    />,
   ]);
 
   getFooter = (summaries) => {

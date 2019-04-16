@@ -8,8 +8,6 @@ import Popup from '../components/Popup';
 import { credentialCdisPath } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
 import AccessTable from '../components/tables/AccessTable';
-import IconicButton from '../components/buttons/IconicButton';
-import dictIcons from '../img/icons/index';
 import './UserProfile.less';
 
 const NO_ACCESS_MSG = 'You have no access to storage service. Please contact an admin to get it!';
