@@ -15,6 +15,28 @@ class ExplorerTable extends React.Component {
     };
   }
 
+  getWidthForColumn = (field, columnName) => {
+    // some magic numbers that work fine for table columns width
+    const minWidth = 100;
+    const maxWidth = 400;
+    const letterWidth = 8;
+    const spacing = 20;
+    if (!this.props.rawData || this.props.rawData.length === 0) {
+      return minWidth;
+    }
+    let maxLetterLen = columnName.length;
+    this.props.rawData.forEach((d) => {
+      if (d[field] === null || typeof d[field] === 'undefined') {
+        return;
+      }
+      const str = d[field].toString && d[field].toString();
+      const len = str ? str.length : 0;
+      maxLetterLen = len > maxLetterLen ? len : maxLetterLen;
+    });
+    const resWidth = Math.min((maxLetterLen * letterWidth) + spacing, maxWidth);
+    return resWidth;
+  }
+
   fetchData = (state) => {
     this.setState({ loading: true });
     const offset = state.page * state.pageSize;
@@ -46,8 +68,9 @@ class ExplorerTable extends React.Component {
       return {
         Header: name,
         accessor: field,
-        maxWidth: 200,
-        minWidth: 50,
+        maxWidth: 400,
+        width: this.getWidthForColumn(field, name),
+        Cell: row => <div><span title={row.value}>{row.value}</span></div>,
       };
     });
     const { totalCount } = this.props;

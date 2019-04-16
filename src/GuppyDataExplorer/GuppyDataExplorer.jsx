@@ -53,7 +53,6 @@ class GuppyDataExplorer extends React.Component {
           guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
           onFilterChange={this.handleFilterChange}
-          rawDataFields={this.props.tableConfig.fields}
         >
           <ConnectedFilter
             className='guppy-data-explorer__filter'

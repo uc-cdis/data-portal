@@ -8,7 +8,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.2",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.0",
-    "@gen3/guppy": "git+https://github.com/uc-cdis/guppy.git",
+    "@gen3/guppy": "git+https://github.com/uc-cdis/guppy.git#fix/filter-fields",
     "@gen3/ui-component": "0.2.0",
     "@storybook/addon-actions": "^3.4.8",
     "@storybook/react": "^3.4.8",

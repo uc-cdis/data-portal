@@ -64,6 +64,12 @@ function buildConfig(opts) {
     indexPublic = false;
   }
 
+  let useGuppyForExplorer = false;
+  console.log('guppyconfig: ', config.dataExplorerConfig.guppyConfig);
+  if (config.dataExplorerConfig.guppyConfig) {
+    useGuppyForExplorer = true;
+  }
+
   const colorsForCharts = {
     categorical9Colors: [
       '#3283c8',
@@ -129,6 +135,7 @@ function buildConfig(opts) {
     guppyGraphQLUrl,
     manifestServiceApiPath,
     wtsPath,
+    useGuppyForExplorer,
   };
 }
 
