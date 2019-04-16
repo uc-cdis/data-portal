@@ -4,7 +4,6 @@ import configureMockStore from 'redux-mock-store';
 import { mount } from 'enzyme';
 
 import ReduxUserProfile, { createKey, deleteKey } from './ReduxUserProfile';
-import { CREATE_API_KEY_BTN } from './UserProfile';
 
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);

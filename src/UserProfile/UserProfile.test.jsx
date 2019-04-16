@@ -2,7 +2,6 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
-import UserProfile, { CREATE_API_KEY_BTN } from './UserProfile';
 import { DELETE_BTN } from '../components/tables/KeyTable';
 
 describe('the UserProfile component', () => {
