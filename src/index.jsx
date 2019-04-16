@@ -33,7 +33,7 @@ import theme from './theme';
 import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
-import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, indexPublic, useGuppyForExplorer } from './localconf';
+import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, indexPublic } from './localconf';
 import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
@@ -264,7 +264,7 @@ async function init() {
                         component={
                           props => (
                             <ProtectedContent
-                              component={useGuppyForExplorer ? GuppyDataExplorer : DataExplorer}
+                              component={isEnabled('guppy') ? GuppyDataExplorer : DataExplorer}
                               {...props}
                             />
                           )
