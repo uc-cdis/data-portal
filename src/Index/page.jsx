@@ -24,7 +24,7 @@ class IndexPageComponent extends React.Component {
           <Introduction data={components.index.introduction} dictIcons={dictIcons} />
           <ReduxIndexBarChart />
         </div>
-        <ReduxIndexButtonBar />
+        <ReduxIndexButtonBar {...this.props} />
       </div>
     );
   }

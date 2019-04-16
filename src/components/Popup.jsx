@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from '@gen3/ui-component/dist/components/Button';
 import IconComponent from './Icon';
 import IconicButton from '../components/buttons/IconicButton';
 import dictIcons from '../img/icons/index';
@@ -60,20 +61,19 @@ const Popup = ({
           {
             leftButtons.map((btn, i) => [
               i > 0 && ' ',
-              !btn.icon ? <IconicButton
+              !btn.icon ? <Button
                 key={btn.caption}
                 onClick={btn.fn}
-                caption={btn.caption}
-                buttonClassName='button-primary-white'
+                label={btn.caption}
+                buttonType='default'
               /> :
-                <IconicButton
+                <Button
                   key={btn.caption}
                   onClick={btn.fn}
-                  caption={btn.caption}
-                  icon={btn.icon}
-                  dictIcons={dictIcons}
-                  buttonClassName='button-primary-white'
-                />,
+                  label={btn.caption}
+                  buttonType='default'
+                  rightIcon={btn.icon}
+                />
             ])
           }
         </div>
@@ -81,19 +81,18 @@ const Popup = ({
           {
             rightButtons.map((btn, i) => [
               i > 0 && ' ',
-              !btn.icon ? <IconicButton
+              !btn.icon ? <Button
                 key={btn.caption}
                 onClick={btn.fn}
-                caption={btn.caption}
-                buttonClassName='button-primary-orange'
+                label={btn.caption}
+                buttonType='primary'
               /> :
-                <IconicButton
+                <Button
                   key={btn.caption}
                   onClick={btn.fn}
-                  caption={btn.caption}
-                  icon={btn.icon}
-                  dictIcons={dictIcons}
-                  buttonClassName='button-primary-orange'
+                  label={btn.caption}
+                  buttonType='primary'
+                  rightIcon={btn.icon}
                 />,
             ])
           }

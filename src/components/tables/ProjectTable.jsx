@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from '@gen3/ui-component/dist/components/Button';
 import Table from './base/Table';
 import IconicLink from '../buttons/IconicLink';
 import dictIcons from '../../img/icons/index';
@@ -21,17 +22,16 @@ class ProjectTable extends React.Component {
     return ['Project', ...summaryFields, ''];
   };
 
-  getData = projectList => projectList.map(proj => [
+  getData = projectList => projectList.map((proj, i) => [
     proj.name,
     ...proj.counts,
-    <IconicLink
-      key={proj.name}
-      link={`/${proj.name}`}
-      dictIcons={dictIcons}
-      icon='upload'
-      caption='Submit Data'
-      buttonClassName='button-primary-orange'
-    />,
+    <Button
+      key={i}
+      onClick={() => this.props.history.push(`/${proj.name}`)}
+      label='Submit Data'
+      buttonType='primary'
+      rightIcon='upload'
+    />
   ]);
 
   getFooter = (summaries) => {
@@ -58,6 +58,7 @@ class ProjectTable extends React.Component {
 ProjectTable.propTypes = {
   projectList: PropTypes.array,
   summaries: PropTypes.array,
+  history: PropTypes.object.isRequired,
 };
 
 ProjectTable.defaultProps = {

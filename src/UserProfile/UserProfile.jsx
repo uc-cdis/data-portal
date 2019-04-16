@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FileSaver from 'file-saver';
 import copy from 'clipboard-plus';
+import Button from '@gen3/ui-component/dist/components/Button';
 import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
 import { credentialCdisPath } from '../localconf';
@@ -111,12 +112,11 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
               onClose={savePopupClose}
             />
           }
-          <IconicButton
+          <Button
             onClick={onCreate}
-            caption={CREATE_API_KEY_BTN}
-            dictIcons={dictIcons}
-            icon='key'
-            buttonClassName='button-primary-orange'
+            label={CREATE_API_KEY_BTN}
+            buttonType='primary'
+            rightIcon='key'
           />
           {
             userProfile.jtis.length === 0 &&
