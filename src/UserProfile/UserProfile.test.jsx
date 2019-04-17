@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
-import UserProfile, { CREATE_API_KEY_BTN } from './UserProfile';
+import UserProfile from './UserProfile';
 import { DELETE_BTN } from '../components/tables/KeyTable';
 
 describe('the UserProfile component', () => {
@@ -58,7 +58,7 @@ describe('the UserProfile component', () => {
           onClearDeleteSession={noop}
         />
       </StaticRouter>);
-    const $createBtn = $vdom.find(`button[name="${CREATE_API_KEY_BTN}"]`);
+    const $createBtn = $vdom.find('.g3-button');
     expect($createBtn).toHaveLength(1);
     $createBtn.simulate('click');
     // should invoke onCreateKey callback (above - calls done()) ...

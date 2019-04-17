@@ -41,7 +41,7 @@
   background: var(--g3-color__white);
   border: 1px solid #a9a9a9;
   border-radius: 2px;
-  margin: 15px 0px 0 15px;
+  margin: 15px 0 0 15px;
 }
 
 .hiv-cohort-filter__sidebar-title {
@@ -53,8 +53,8 @@
 }
 
 .hiv-cohort-filter__sidebar-subtitle {
-   font-weight: bold;
-   padding: 3px 0 0 15px;
+  font-weight: bold;
+  padding: 3px 0 0 15px;
 }
 
 .hiv-cohort-filter__main {
@@ -62,7 +62,7 @@
   overflow-y: scroll;
   text-align: center;
   position: relative;
-  padding: 15px 0px 15px 15px;
+  padding: 15px 0 15px 15px;
 }
 
 .hiv-cohort-filter__sidebar-input {
