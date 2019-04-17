@@ -26,6 +26,11 @@ import IcoSignature from './signature.svg';
 import IcoUpload from './upload.svg';
 import IcoUploadWhite from './upload-white.svg';
 import IcoWorkspace from './workspace.svg';
+import IcoStageAccess from './stage-icons/stage-access.svg';
+import IcoStageAnalyze from './stage-icons/stage-analyze.svg';
+import IcoStageExplore from './stage-icons/stage-explore.svg';
+import IcoStagePlanning from './stage-icons/stage-planning.svg';
+import IcoStageGene from './stage-icons/stage-gene.svg';
 
 const dictIcons = {
   analysis: (height, customedStyles) => (
@@ -102,6 +107,21 @@ const dictIcons = {
   ),
   query: (height, customedStyles) => (
     <IcoQuery height={height} style={{ ...customedStyles }} />
+  ),
+  'stage-access': (height, customedStyles) => (
+    <IcoStageAccess height={height} style={{ ...customedStyles }} />
+  ),
+  'stage-analyze': (height, customedStyles) => (
+    <IcoStageAnalyze height={height} style={{ ...customedStyles }} />
+  ),
+  'stage-explore': (height, customedStyles) => (
+    <IcoStageExplore height={height} style={{ ...customedStyles }} />
+  ),
+  'stage-gene': (height, customedStyles) => (
+    <IcoStageGene height={height} style={{ ...customedStyles }} />
+  ),
+  'stage-planning': (height, customedStyles) => (
+    <IcoStagePlanning height={height} style={{ ...customedStyles }} />
   ),
   upload: (height, customedStyles) => (
     <IcoUpload height={height} style={{ ...customedStyles }} />
