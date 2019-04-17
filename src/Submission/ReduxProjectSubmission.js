@@ -50,9 +50,11 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
       let fileChunk = fileHeader;
 
       for (let i = 1; i < fileSplited.length; i += 1) {
-        fileChunk += fileSplited[i];
-        fileChunk += '\n';
-        count -= 1;
+        if (fileSplited[i] !== '') {
+          fileChunk += fileSplited[i];
+          fileChunk += '\n';
+          count -= 1;
+        }
         if (count === 0) {
           fileArray.push(fileChunk);
           fileChunk = fileHeader;
