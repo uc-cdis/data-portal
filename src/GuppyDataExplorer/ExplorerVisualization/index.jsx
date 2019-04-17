@@ -18,6 +18,10 @@ class ExplorerVisualization extends React.Component {
     const summaries = [];
     const countItems = [];
     const stackedBarCharts = [];
+    countItems.push({
+      label: this.props.nodeCountTitle,
+      value: this.props.totalCount,
+    });
     Object.keys(chartConfig).forEach((field) => {
       if (!aggsData || !aggsData[field] || !aggsData[field].histogram) return;
       const { histogram } = aggsData[field];
@@ -114,6 +118,7 @@ ExplorerVisualization.propTypes = {
   tableConfig: TableConfigType,
   buttonConfig: ButtonConfigType,
   guppyConfig: GuppyConfigType,
+  nodeCountTitle: PropTypes.string.isRequired,
 };
 
 ExplorerVisualization.defaultProps = {

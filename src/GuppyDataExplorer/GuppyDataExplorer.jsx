@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
 import ExplorerVisualization from './ExplorerVisualization';
+import { capitalizeFirstLetter } from '../utils';
 import {
   GuppyConfigType,
   FilterConfigType,
@@ -53,6 +54,7 @@ class GuppyDataExplorer extends React.Component {
           guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
           onFilterChange={this.handleFilterChange}
+          rawDataFields={this.props.tableConfig.fields}
         >
           <ConnectedFilter
             className='guppy-data-explorer__filter'
@@ -66,6 +68,8 @@ class GuppyDataExplorer extends React.Component {
             buttonConfig={this.props.buttonConfig}
             guppyConfig={this.props.guppyConfig}
             history={this.props.history}
+            nodeCountTitle={this.props.nodeCountTitle || capitalizeFirstLetter(
+              this.props.guppyConfig.dataType)}
           />
         </GuppyWrapper>
       </div>
@@ -79,7 +83,12 @@ GuppyDataExplorer.propTypes = {
   tableConfig: TableConfigType.isRequired,
   chartConfig: ChartConfigType.isRequired,
   buttonConfig: ButtonConfigType.isRequired,
+  nodeCountTitle: PropTypes.string,
   history: PropTypes.object.isRequired,
+};
+
+GuppyDataExplorer.defaultProps = {
+  nodeCountTitle: undefined,
 };
 
 export default GuppyDataExplorer;

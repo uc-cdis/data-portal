@@ -65,7 +65,6 @@ function buildConfig(opts) {
   }
 
   let useGuppyForExplorer = false;
-  console.log('guppyconfig: ', config.dataExplorerConfig.guppyConfig);
   if (config.dataExplorerConfig.guppyConfig) {
     useGuppyForExplorer = true;
   }
