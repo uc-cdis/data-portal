@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ReduxProjectDashboard, ReduxTransaction } from './reduxer';
 import getProjectNodeCounts from '../Index/utils';
 import getTransactionList from './relayer';
@@ -13,11 +14,15 @@ class HomePage extends React.Component {
   render() {
     return (
       <div style={{ paddingTop: '40px' }}>
-        <ReduxProjectDashboard />
+        <ReduxProjectDashboard {...this.props} />
         <ReduxTransaction />
       </div>
     );
   }
 }
+
+HomePage.propTypes = {
+  history: PropTypes.object.isRequired,
+};
 
 export default HomePage;

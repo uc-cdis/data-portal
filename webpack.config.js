@@ -20,9 +20,9 @@ const title = {
 
 const plugins = [
   new webpack.EnvironmentPlugin(['NODE_ENV']),
-  new webpack.EnvironmentPlugin(['MOCK_STORE']),
+  new webpack.EnvironmentPlugin({'MOCK_STORE': null}),
   new webpack.EnvironmentPlugin(['APP']),
-  new webpack.EnvironmentPlugin(['BASENAME']),
+  new webpack.EnvironmentPlugin({'BASENAME': '/'}),
   new webpack.EnvironmentPlugin(['REACT_APP_PROJECT_ID']),
   new webpack.EnvironmentPlugin(['REACT_APP_ARRANGER_API']),
   new webpack.EnvironmentPlugin(['REACT_APP_DISABLE_SOCKET']),
@@ -40,26 +40,30 @@ const plugins = [
     template: 'src/index.ejs',
     hash: true
   }),
-  new webpack.optimize.DedupePlugin(), //dedupe similar code
   new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
 ];
 
-if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ) {
-  // This slows things down a lot, so avoid when running local dev environment
-  plugins.push(new webpack.optimize.UglifyJsPlugin({
-    mangle: false,
-  })); //minify everything
+let optimization = {};
+
+if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
+  optimization = {
+    splitChunks: {
+      chunks: 'all'
+    }
+  }
 }
 
 module.exports = {
   entry: ['babel-polyfill', './src/index.jsx'],
-  exclude: '/node_modules/',
-
+  target: 'web',
+  externals: [nodeExternals()],
+  mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
     path: __dirname,
-    filename: 'bundle.js',
-    publicPath: basename
+	  filename: 'bundle.js',
+	  publicPath: basename,
   },
+  optimization,
   devServer: {
     historyApiFallback: {
       index: 'dev.html',
@@ -71,30 +75,24 @@ module.exports = {
     https: true,
   },
   module: {
-    target: 'node',
-    externals: [nodeExternals()],
-    loaders: [{
+    rules: [{
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loaders: [
-          'babel',
-        ],
-      },
-      {
-        test: /\.json$/,
-        loader: 'json'
+        use: {
+          loader: 'babel-loader',
+        },
       },
       {
         test: /\.less$/,
         loaders: [
-          'style',
-          'css',
-          'less',
+          'style-loader',
+          'css-loader',
+          'less-loader',
         ]
       },
       {
         test: /\.css$/,
-        loader: 'style!css',
+        loader: 'style-loader!css-loader',
       },
       {
         test: /\.svg$/,
@@ -102,9 +100,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpg)$/,
-        loaders: [
-          'url'
-        ],
+        loaders: 'url-loader',
         query: {
           limit: 8192
         }
@@ -120,7 +116,7 @@ module.exports = {
       graphql: path.resolve('./node_modules/graphql'),
       react: path.resolve('./node_modules/react') // Same issue.
     },
-    extensions: ['', '.js', '.jsx', '.json']
+    extensions: ['.mjs', '.js', '.jsx', '.json',]
   },
   plugins,
   externals: [{
