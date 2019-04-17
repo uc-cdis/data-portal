@@ -75,9 +75,38 @@ class AnalysisApp extends React.Component {
     this.setState({ results: null });
   }
 
+  getAppContent = app => {
+    switch(app) {
+      case 'vaGWAS':
+      return (
+        <React.Fragment>
+          <Select
+            value={this.state.jobInput}
+            placeholder='Select your organ'
+            options={app.options}
+            onChange={this.selectChange}
+          />
+          <Button label='Run Simulation' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+        </React.Fragment>
+      );
+      case 'ndhHIV':
+      return (
+        <div>NDH app!</div>
+      );
+      default:
+      return (
+        <React.Fragment>
+          <input className='text-input' type='text' placeholder='input data' name='input' />
+          <Button label='Run Simulation' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+        </React.Fragment>
+      );
+    }
+  }
+
   render() {
     const { job, params } = this.props;
     const { loaded, app, results } = this.state;
+    const appContent = this.getAppContent(params.app);
 
     return (
       <React.Fragment>
@@ -88,17 +117,8 @@ class AnalysisApp extends React.Component {
               <h2 className='analysis-app__title'>{app.title}</h2>
               <p className='analysis-app__description'>{app.description}</p>
               <div className='analysis-app__actions'>
-                {
-                  params.app === 'vaGWAS' ?
-                    <Select
-                      value={this.state.jobInput}
-                      placeholder='Select your organ'
-                      options={app.options}
-                      onChange={this.selectChange}
-                    />
-                    : <input className='text-input' type='text' placeholder='input data' name='input' />
-                }
-                <Button label='Run Simulation' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+                { appContent }
+
               </div>
               <div className='analysis-app__job-status'>
                 { this.isJobRunning() ? <Spinner text='Job in progress...' /> : null }

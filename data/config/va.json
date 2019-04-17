@@ -149,7 +149,7 @@
     "explorer": true,
     "analysis": true
   },
-  "analysisTools": [ "vaGWAS", "ndhVirus" ],
+  "analysisTools": [ "vaGWAS", "ndhVirus", "ndhHIV" ],
   "arrangerConfig": {
     "charts": {
       "Chicago_ID": {

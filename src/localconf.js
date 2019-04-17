@@ -92,6 +92,12 @@ function buildConfig(opts) {
   const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;
 
   const analysisApps = {
+    ndhHIV: {
+      title: 'NDH HIV Classifier',
+      description: `This tool runs a series of analyses on all the NIAID data in
+      order to narrow it down to a cohort consisting of...`,
+      image: '/src/img/analysis-icons/manhattan.svg',
+    },
     ndhVirus: {
       title: 'NDH Virulence Simulation',
       description: `This simulation runs a docker version of the Hypothesis Testing
@@ -104,7 +110,7 @@ function buildConfig(opts) {
     vaGWAS: {
       title: 'eGWAS',
       description: 'Expression-based Genome-Wide Association Study',
-      image: '/src/img/icons/manhattan.svg',
+      image: '/src/img/analysis-icons/manhattan.svg',
       options: [
         {
           label: 'Lung',
