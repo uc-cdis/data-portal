@@ -10,6 +10,12 @@
   padding: 0;
 }
 
+.hiv-cohort-filter .g3-dropdown {
+  width: 280px;
+  position: absolute;
+  margin: 15px 0 0 15px;
+}
+
 .hiv-cohort-filter__text-input {
   border: 1px solid var(--g3-color__lightgray);
   border-radius: 2px;
@@ -41,7 +47,7 @@
   background: var(--g3-color__white);
   border: 1px solid #a9a9a9;
   border-radius: 2px;
-  margin: 15px 0 0 15px;
+  margin: 80px 0 0 15px;
 }
 
 .hiv-cohort-filter__sidebar-title {
@@ -168,14 +174,6 @@
   font-weight: 500;
 }
 
-.btn-primary-blue {
-  background-color: #3283C8;
-}
-
-.btn-primary-blue:not(.g3-button--disabled):hover {
-  background-color: #68a6dd;
-}
-
 .hiv-cohort-filter__main .spinner {
   transform: scale(0.5);
   -webkit-transform: scale(0.5);
@@ -189,4 +187,7 @@
   fill: #3283C8;
 }
 
+.hiv-cohort-filter .g3-dropdown-button__button {
+  text-align:left;
+}
 
