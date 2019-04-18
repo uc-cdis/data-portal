@@ -182,7 +182,8 @@
             "race",
             "ethnicity",
             "vital_status",
-            "frstdthd"
+            "frstdthd",
+            "species"
           ]
         }, {
           "title": "Diagnosis",
@@ -194,10 +195,7 @@
             "status",
             "virus_type",
             "virus_subtype",
-            "_maintain_viral_load_less_than",
             "_min_viral_load",
-            "therapy",
-            "therapyv",
             "hiv_status"
           ]
         }
@@ -206,6 +204,11 @@
     "table": {
       "enabled": false
     },
+    "dropdowns": {
+      "download": {
+        "title": "Download"
+      }
+    },
     "buttons": [
       {
         "enabled": true,
@@ -213,7 +216,8 @@
         "title": "Download All Clinical",
         "leftIcon": "user",
         "rightIcon": "download",
-        "fileName": "clinical.json"
+        "fileName": "clinical.json",
+        "dropdownId": "download"
       },
       {
         "enabled": true,
@@ -221,7 +225,15 @@
         "title": "Download Manifest",
         "leftIcon": "datafile",
         "rightIcon": "download",
-        "fileName": "manifest.json"
+        "fileName": "manifest.json",
+        "dropdownId": "download"
+      },
+      {
+        "enabled": true,
+        "type": "export-to-workspace",
+        "title": "Export To Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "download"
       }
     ],
     "arrangerConfig": {
