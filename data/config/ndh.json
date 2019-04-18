@@ -195,7 +195,6 @@
             "status",
             "virus_type",
             "virus_subtype",
-            "_min_viral_load",
             "hiv_status"
           ]
         }
