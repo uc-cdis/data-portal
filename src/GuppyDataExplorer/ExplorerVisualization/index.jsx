@@ -89,14 +89,18 @@ class ExplorerVisualization extends React.Component {
           ),
           )
         }
-        <ExplorerTable
-          className='guppy-explorer-visualization__table'
-          tableConfig={this.props.tableConfig}
-          fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
-          rawData={this.props.rawData}
-          totalCount={this.props.totalCount}
-          guppyConfig={this.props.guppyConfig}
-        />
+        {
+          this.props.tableConfig.enabled && (
+            <ExplorerTable
+              className='guppy-explorer-visualization__table'
+              tableConfig={this.props.tableConfig}
+              fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
+              rawData={this.props.rawData}
+              totalCount={this.props.totalCount}
+              guppyConfig={this.props.guppyConfig}
+            />
+          )
+        }
       </div>
     );
   }
