@@ -4,7 +4,12 @@ import {
 } from 'recharts';
 import PropTypes from 'prop-types';
 import React from 'react';
-import helper from '../helper';
+import {
+  calculateChartData,
+  getDataKey,
+  getCategoryColor,
+  percentageFormatter,
+} from '../helper';
 import './SummaryHorizontalBarChart.less';
 
 // FIXME: add back in animation (https://github.com/recharts/recharts/issues/1083)
@@ -17,12 +22,12 @@ class SummaryBarChart extends React.Component {
     } = this.props;
     const barChartHeight = (this.props.data.length * barChartStyle.barSize)
       + ((this.props.data.length + 1) * barChartStyle.barGap) + 2;
-    const barChartData = helper.calculateChartData(
+    const barChartData = calculateChartData(
       this.props.data,
       this.props.showPercentage,
       this.props.percentageFixedPoint,
     );
-    const dataKey = helper.getDataKey(this.props.showPercentage);
+    const dataKey = getDataKey(this.props.showPercentage);
     return (
       <div className='summary-horizontal-bar-chart'>
         <div className='summary-horizontal-bar-chart__title-box'>
@@ -53,7 +58,7 @@ class SummaryBarChart extends React.Component {
                 margin={barChartStyle.margins}
               >
                 <Tooltip
-                  formatter={helper.percentageFormatter(this.props.showPercentage)}
+                  formatter={percentageFormatter(this.props.showPercentage)}
                 />
                 <XAxis {...xAxisStyle} type='number' hide />
                 <YAxis
@@ -69,7 +74,7 @@ class SummaryBarChart extends React.Component {
                       <Cell
                         key={dataKey}
                         fill={this.props.color
-                          || helper.getCategoryColor(index)}
+                          || getCategoryColor(index)}
                       />
                     ))
                   }
@@ -78,7 +83,7 @@ class SummaryBarChart extends React.Component {
                     position={labelValueStyle.position}
                     offset={labelValueStyle.offset}
                     style={labelValueStyle}
-                    formatter={helper.percentageFormatter(this.props.showPercentage)}
+                    formatter={percentageFormatter(this.props.showPercentage)}
                   />
                 </Bar>
               </BarChart>

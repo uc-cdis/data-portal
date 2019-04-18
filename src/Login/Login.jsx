@@ -1,8 +1,9 @@
 import React from 'react';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
-
+import Button from '@gen3/ui-component/dist/components/Button';
 import { basename, loginPath } from '../localconf';
+import { components } from '../params';
 import SlidingWindow from '../components/SlidingWindow';
 import './Login.less';
 
@@ -58,11 +59,15 @@ class Login extends React.Component {
     if (queryParams.next) {
       next = basename === '/' ? queryParams.next : basename + queryParams.next;
     }
+    const customImage = components.login && components.login.image ?
+      components.login.image
+      : 'gene';
+
     return (
       <div className='login-page'>
         <div className='login-page__side-box'>
           <SlidingWindow
-            iconName={'gene'}
+            iconName={customImage}
             dictIcons={this.props.dictIcons}
             height={this.state.height}
             scrollY={window.scrollY}
@@ -79,14 +84,16 @@ class Login extends React.Component {
           <div className='body-typo'>{this.props.data.text}</div>
           {
             this.props.providers.map(
-              p => (
-                <div key={p.id} className='login-page__entries'>
-                  <a href={`${p.url}?redirect=${window.location.origin}${next}`}>
-                    <button className='button-primary-orange'>
-                      {p.name}
-                    </button>
-                  </a>
-                </div>
+              (p, i) => (
+                <Button
+                  key={i}
+                  className='login-page__entries'
+                  onClick={() => {
+                    window.location.href = `${p.url}?redirect=${window.location.origin}${next}`;
+                  }}
+                  label={p.name}
+                  buttonType='primary'
+                />
               ),
             )
           }
@@ -99,7 +106,7 @@ class Login extends React.Component {
         </div>
         <div className='login-page__side-box'>
           <SlidingWindow
-            iconName={'gene'}
+            iconName={customImage}
             dictIcons={this.props.dictIcons}
             height={this.state.height}
             scrollY={window.scrollY}

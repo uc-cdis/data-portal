@@ -1,11 +1,24 @@
-import helper from './helper';
+import {
+  percentageFormatter,
+  addPercentage,
+  calculateChartData,
+  getPercentageData,
+  getCategoryColor,
+  getCategoryColorFrom2Colors,
+  getDataKey,
+  transformArrangerDataToChart,
+  transformDataToCount,
+  transformArrangerDataToSummary,
+  getCharts,
+  getSQONValues,
+} from './helper';
 import { colorsForCharts } from '../../localconf';
 
 describe('helper', () => {
   it('percentage formatter', () => {
-    expect(helper.percentageFormatter(true)(20)).toBe('20%');
-    expect(helper.percentageFormatter(false)(20)).toBe(20);
-    expect(helper.addPercentage(20)).toBe('20%');
+    expect(percentageFormatter(true)(20)).toBe('20%');
+    expect(percentageFormatter(false)(20)).toBe(20);
+    expect(addPercentage(20)).toBe('20%');
   });
 
   const chartData = [
@@ -17,15 +30,15 @@ describe('helper', () => {
   ];
 
   it('calculate chart data', () => {
-    expect(helper.calculateChartData(chartData, true, 0)).toEqual([
+    expect(calculateChartData(chartData, true, 0)).toEqual([
       { percentage: 20, name: 'H1N1', value: 4000 },
       { percentage: 15, name: 'VN1203', value: 3000 },
       { percentage: 10, name: 'HIV', value: 2000 },
       { percentage: 5, name: 'HuCoV_EMC', value: 1000 },
       { percentage: 50, name: 'SARS_CoV', value: 10000 },
     ]);
-    expect(helper.calculateChartData(chartData, false, 0)).toEqual(chartData);
-    expect(helper.getPercentageData(chartData, 0)).toEqual([{
+    expect(calculateChartData(chartData, false, 0)).toEqual(chartData);
+    expect(getPercentageData(chartData, 0)).toEqual([{
       H1N1: 20,
       VN1203: 15,
       HIV: 10,
@@ -38,20 +51,20 @@ describe('helper', () => {
     const expectColors9 = colorsForCharts.categorical9Colors;
     const colors9 = [];
     for (let i = 0; i < 9; i += 1) {
-      colors9.push(helper.getCategoryColor(i));
+      colors9.push(getCategoryColor(i));
     }
     expect(colors9).toEqual(expectColors9);
 
     const expectColors2 = ['#3283c8', '#e7e7e7'];
     const colors2 = [];
-    colors2.push(helper.getCategoryColorFrom2Colors(0));
-    colors2.push(helper.getCategoryColorFrom2Colors(1));
+    colors2.push(getCategoryColorFrom2Colors(0));
+    colors2.push(getCategoryColorFrom2Colors(1));
     expect(colors2).toEqual(expectColors2);
   });
 
   it('get data key', () => {
-    expect(helper.getDataKey(true)).toBe('percentage');
-    expect(helper.getDataKey(false)).toBe('value');
+    expect(getDataKey(true)).toBe('percentage');
+    expect(getDataKey(false)).toBe('value');
   });
 
   const noSelectSqonValues = null;
@@ -141,34 +154,34 @@ describe('helper', () => {
   };
 
   it('returns chart data as expected', () => {
-    expect(helper.transformArrangerDataToChart(ethnicityFieldJSON, noSelectSqonValues))
+    expect(transformArrangerDataToChart(ethnicityFieldJSON, noSelectSqonValues))
       .toEqual(ethnicityChartData);
-    expect(helper.transformArrangerDataToChart(ethnicityFieldJSON, selectWhiteSqonValues))
+    expect(transformArrangerDataToChart(ethnicityFieldJSON, selectWhiteSqonValues))
       .toEqual(ethnicityChartDataWithOnlyWhiteSelected);
   });
 
   it('returns count data as expected', () => {
-    expect(helper.transformDataToCount(ethnicityFieldJSON, 'Ethnicity', noSelectSqonValues))
+    expect(transformDataToCount(ethnicityFieldJSON, 'Ethnicity', noSelectSqonValues))
       .toEqual(ethnicityCountData);
-    expect(helper.transformDataToCount(ethnicityFieldJSON, 'Ethnicity', selectWhiteSqonValues))
+    expect(transformDataToCount(ethnicityFieldJSON, 'Ethnicity', selectWhiteSqonValues))
       .toEqual(ethnicityCountDataWithOnlyWhiteSelected);
   });
 
   it('returns chart summaries as expected', () => {
-    expect(helper.transformArrangerDataToSummary(ethnicityFieldJSON, 'pie', 'Ethnicity', noSelectSqonValues)).toEqual(summaryData);
-    expect(helper.transformArrangerDataToSummary(ethnicityFieldJSON, 'pie', 'Ethnicity',
+    expect(transformArrangerDataToSummary(ethnicityFieldJSON, 'pie', 'Ethnicity', noSelectSqonValues)).toEqual(summaryData);
+    expect(transformArrangerDataToSummary(ethnicityFieldJSON, 'pie', 'Ethnicity',
       selectWhiteSqonValues)).toEqual(summaryDataWithOnlyWhiteSelected);
   });
 
   it('gets charts', () => {
-    const charts = helper.getCharts(rawData, dataExplorerConfig);
+    const charts = getCharts(rawData, dataExplorerConfig);
     expect(charts.countItems).toEqual([projectCountData]);
     expect(charts.summaries).toEqual([summaryData]);
     expect(charts.stackedBarCharts).toEqual([]);
   });
 
   it('return selecetd values from SQON as expected', () => {
-    expect(helper.getSQONValues(selectWhiteSqon, 'ethnicity')).toEqual(selectWhiteSqonValues);
-    expect(helper.getSQONValues(noSelectSqonValues, 'ethnicity')).toEqual(null);
+    expect(getSQONValues(selectWhiteSqon, 'ethnicity')).toEqual(selectWhiteSqonValues);
+    expect(getSQONValues(noSelectSqonValues, 'ethnicity')).toEqual(null);
   });
 });

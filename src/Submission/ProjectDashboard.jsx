@@ -13,7 +13,7 @@ class ProjectDashboard extends Component {
           Data Submission
         </div>
         <ReduxSubmissionHeader />
-        <ProjectTable projectList={projectList} summaries={this.props.details} />
+        <ProjectTable projectList={projectList} summaries={this.props.details} {...this.props} />
       </div>
     );
   }
@@ -22,6 +22,7 @@ class ProjectDashboard extends Component {
 ProjectDashboard.propTypes = {
   details: PropTypes.arrayOf(PropTypes.object).isRequired,
   projectList: PropTypes.array.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 export default ProjectDashboard;

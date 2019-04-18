@@ -1,10 +1,10 @@
 {
-  "presets": ["stage-0", "env", "react"],
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
   "plugins": [
     "dev-expression",
     "transform-class-properties",
     ["relay",
       {"compat": true, "schema": "data/schema.json"}],
-    ["transform-runtime", { "polyfill": false }]
+    ["@babel/plugin-transform-runtime"]
   ]
 }
