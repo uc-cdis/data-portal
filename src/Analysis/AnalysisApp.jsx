@@ -51,7 +51,7 @@ class AnalysisApp extends React.Component {
           <Select
             value={this.state.jobInput}
             placeholder='Select your organ'
-            options={app.options}
+            options={analysisApps[app].options}
             onChange={this.selectChange}
           />
           <Button label='Run Analysis' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
@@ -112,7 +112,6 @@ class AnalysisApp extends React.Component {
               <p className='analysis-app__description'>{app.description}</p>
               <div className='analysis-app__actions'>
                 { appContent }
-
               </div>
               <div className='analysis-app__job-status'>
                 { this.isJobRunning() ? <Spinner text='Job in progress...' /> : null }
