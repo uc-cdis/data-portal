@@ -96,7 +96,7 @@ function buildConfig(opts) {
       title: 'NDH HIV Classifier',
       description: `This tool runs a series of analyses on all the NIAID data in
       order to narrow it down to a cohort consisting of...`,
-      image: '/src/img/analysis-icons/manhattan.svg',
+      image: '/src/img/analysis-icons/hiv-classifier.svg',
     },
     ndhVirus: {
       title: 'NDH Virulence Simulation',
@@ -105,12 +105,12 @@ function buildConfig(opts) {
           The simulation is focused on modeling a Bayesian Graph Model (BGM) based on a binary matrix input.
           The implemented example predicts the virulence status of different influenza strains based on their mutations
           (the mutation panel is represented as the input binary matrix).`,
-      image: '/src/img/icons/data-analyze.svg',
+      image: '/src/img/analysis-icons/virulence.png',
     },
     vaGWAS: {
       title: 'eGWAS',
       description: 'Expression-based Genome-Wide Association Study',
-      image: '/src/img/analysis-icons/manhattan.svg',
+      image: '/src/img/analysis-icons/gwas.svg',
       options: [
         {
           label: 'Lung',

@@ -149,6 +149,7 @@
   "featureFlags": {
     "explorer": true
   },
+  "analysisTools": [ "ndhVirus", "ndhHIV" ],
   "dataExplorerConfig": {
     "charts": {
       "project_id": {
