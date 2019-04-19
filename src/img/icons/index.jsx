@@ -14,6 +14,7 @@ import IcoDataSubmit from './data-submit.svg';
 import IcoDelete from './delete.svg';
 import IcoDictionary from './dictionary.svg';
 import IcoDownload from './download.svg';
+import IcoDropdown from './dropdown.svg';
 import IcoExit from './exit.svg';
 import IcoExploration from './exploration.svg';
 import IcoFiles from './files.svg';
@@ -79,6 +80,9 @@ const dictIcons = {
   ),
   download: (height, customedStyles) => (
     <IcoDownload height={height} style={{ ...customedStyles }} />
+  ),
+  dropdown: (height, customedStyles) => (
+    <IcoDropdown height={height} style={{ ...customedStyles }} />
   ),
   exit: (height, customedStyles) => (
     <IcoExit height={height} style={{ ...customedStyles }} />

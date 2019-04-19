@@ -10,33 +10,33 @@ import CohortECSvg from '../img/cohort-EC.svg';
 import CohortLTNPSvg from '../img/cohort-LTNP.svg';
 import Spinner from '../components/Spinner';
 
-/*
-* Below is the full algorithm description, from https://ctds-planx.atlassian.net/browse/PXP-2771
-* - The UI displays a 'decision tree' (just hardcoded svg), and makes an es query based on
-* sliding window size and viral load number.
-* - thrpy is the treatment that patient used since the last visit (follow_up)
-* - thrpyv is the treatment that patient uses at the visit (follow_up )
-* Definitions:
-* - With HAART treatment: follow_up.thrpyv = HAART or HAART (HU/ddI defined)
-* - viral load< X: followup.viral_load < X
-* - consecutive Y month: (last_followup.visit_number - first_followup.visit_number)*6 = Y
-* (if there are missing visit number, eg: patient has visit_number 1, 3, 4, 5.
-* Just consider the missing one still maintain the same viral load)
-* The criteria is:
-* - Patients hiv_status are positive, have consecutive follow ups for Y months with
-* HAART treatment and viral load < X
-* - The consecutive window has an immediate next follow up WITHOUT HAART treatment
-* and viral_load < X
-* User will type in the time period Y and viral load threshold X, and the app will show the
-* count for PTC case and control subjects. And have buttons to download the
-* clinical manifest for them.
-* One known limitation of the algorithm is that when visits are missing between 2 follow ups,
-* we take them as adjacent even though they are not,
-* so that visits 10 and 14 will be treated as 6 months apart, even though the time
-* may be much greater.
-*/
-
 class PTCCase extends React.Component {
+  /*
+  * PTC Case:
+  * Below is the full algorithm description, from https://ctds-planx.atlassian.net/browse/PXP-2771
+  * - The UI displays a 'decision tree' (just hardcoded svg), and makes an es query based on
+  * sliding window size and viral load number.
+  * - thrpy is the treatment that patient used since the last visit (follow_up)
+  * - thrpyv is the treatment that patient uses at the visit (follow_up )
+  * Definitions:
+  * - With HAART treatment: follow_up.thrpyv = HAART or HAART (HU/ddI defined)
+  * - viral load< X: followup.viral_load < X
+  * - consecutive Y month: (last_followup.visit_number - first_followup.visit_number)*6 = Y
+  * (if there are missing visit number, eg: patient has visit_number 1, 3, 4, 5.
+  * Just consider the missing one still maintain the same viral load)
+  * The criteria is:
+  * - Patients hiv_status are positive, have consecutive follow ups for Y months with
+  * HAART treatment and viral load < X
+  * - The consecutive window has an immediate next follow up WITHOUT HAART treatment
+  * and viral_load < X
+  * User will type in the time period Y and viral load threshold X, and the app will show the
+  * count for PTC case and control subjects. And have buttons to download the
+  * clinical manifest for them.
+  * One known limitation of the algorithm is that when visits are missing between 2 follow ups,
+  * we take them as adjacent even though they are not,
+  * so that visits 10 and 14 will be treated as 6 months apart, even though the time
+  * may be much greater.
+  */
   constructor(props) {
     super(props);
     this.state = {
@@ -128,6 +128,7 @@ class PTCCase extends React.Component {
               viral_load
               visit_number
               thrpyv
+              submitter_id
             }
           }
 
@@ -262,7 +263,7 @@ class PTCCase extends React.Component {
       }
 
       // If the window above didn't apply, the subject is neither
-      subjectNeither.push(subjectId);
+      subjectNeither.push(subjectWithVisits);
     });
     return {
       subjectPTC,
@@ -428,7 +429,7 @@ class PTCCase extends React.Component {
 
         <div className='hiv-cohort-filter__main'>
           <div className='hiv-cohort-filter__main-wrapper'>
-            <div className='hiv-cohort-filter__svg-wrapper'>
+            <div className='hiv-cohort-filter__svg-wrapper' id='PTC-svg-wrapper'>
               <CohortPTCSvg width='665px' />
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
@@ -519,14 +520,480 @@ class ECCase extends React.Component {
       viralLoadFromUser: undefined,
       numConsecutiveMonthsFromUser: undefined,
       subjectNeither: [],
-      subjectPTC: [],
+      subjectEC: [],
       subjectControl: [],
       inLoadingState: false,
       isReadyToCalculate: false,
       resultAlreadyCalculated: false,
     };
     this.updateFilters = this.updateFilters.bind(this);
-    this.downloadPTC = this.downloadPTC.bind(this);
+    this.downloadEC = this.downloadEC.bind(this);
+    this.downloadControl = this.downloadControl.bind(this);
+    this.makeCohortJSONFile = this.makeCohortJSONFile.bind(this);
+    this.checkReadyToCalculate = this.checkReadyToCalculate.bind(this);
+    this.therapyValuesOfInterest = ['HAART'];
+    this.viralLoadInputRef = React.createRef();
+    this.numConsecutiveMonthsInputRef = React.createRef();
+    this.showCount = this.showCount.bind(this);
+  }
+
+  // unchanged
+  getBucketByKeyWithHAARTVAR(bucketKey, isHAART) {
+    const query = `
+    {
+      follow_up {
+        aggregations(filters: {first: 10000, op: "and", content: [
+          {op: "${isHAART ? '=' : '!='}", content: {field: "thrpyv", value: "HAART"}},
+          {op: "<", content: {field: "viral_load", value: "${this.state.viralLoadFromUser}"}},
+          {op: "=", content: {field: "hiv_status", value: "positive"}}]}) 
+        {
+          ${bucketKey} {
+            buckets {
+              key
+              doc_count
+            }
+          }
+        }
+      }
+    }
+    `;
+    return this.performQuery(query).then((res) => {
+      if (!res || !res.data) {
+        throw new Error('Error when query subjects with HIV');
+      }
+      return res.data.follow_up.aggregations[bucketKey].buckets;
+    });
+  }
+
+  // changed
+  async getBucketByKey(bucketKey) {
+    // This function returns keys & counts for HIV positive subjects who have never received a HAART treatment
+    const resList = await Promise.all([
+      this.getBucketByKeyWithHAARTVAR(bucketKey, true),
+      this.getBucketByKeyWithHAARTVAR(bucketKey, false),
+    ]);
+
+    let subjectsWithAtLeast1Haart = resList[0];
+    let subjectsWithAtLeast1NonHaart = resList[1];
+    let subjectsWithNoHaartTreatments = subjectsWithAtLeast1NonHaart.filter(x => !subjectsWithAtLeast1Haart.map(y => y['key']).includes(x['key']));
+
+    // Transform to map
+    let resultMap = {};
+    for (let i = 0; i < subjectsWithNoHaartTreatments.length; i += 1) {
+      resultMap[subjectsWithNoHaartTreatments[i]['key']] = subjectsWithNoHaartTreatments[i]['doc_count']
+    }
+    return resultMap;
+  }
+
+  // unchanged
+  getFollowupsBuckets(key, keyRange) {
+    const query = `
+    {
+      follow_up {
+        hits(filters: { op: "and",
+          content: [
+            { op: "=",
+              content: { field: "hiv_status", value: "positive" }
+            },
+            {
+              op: "in",
+              content: { field: "${key}", value: ["${keyRange.join('","')}"] }
+            }
+          ]
+        }, first:10000) {
+          total
+          edges {
+            node {
+              subject_id
+              viral_load
+              visit_number
+              thrpyv
+              submitter_id
+            }
+          }
+
+        }
+      }
+    }`;
+    return this.performQuery(query).then((res) => {
+      if (!res || !res.data) {
+        throw new Error('Error when query subjects with HIV');
+      }
+      return res.data.follow_up.hits.edges.map(edge => edge.node);
+    });
+  }
+
+  // unchanged i think
+  async getFollowUpsWithHIV() {
+    const keyName = 'subject_id';
+    const keyCountMap = await this.getBucketByKey(keyName);
+    
+    let batchCounts = 0;
+    const promiseList = [];
+    let keyRange = [];
+    Object.keys(keyCountMap).forEach((keyId) => {
+      const count = keyCountMap[keyId];
+      if (batchCounts + count > 5000) {
+        // query this batch for follow ups
+        promiseList.push(this.getFollowupsBuckets(keyName, keyRange).then(res => res));
+
+        // reset batch
+        batchCounts = count;
+        keyRange = [];
+      }
+      batchCounts += count;
+      keyRange.push(keyId);
+    });
+    promiseList.push(this.getFollowupsBuckets(keyName, keyRange).then(res => res));
+
+    let mergedFollowUps = [];
+    const resultList = await Promise.all(promiseList);
+    resultList.forEach((res) => {
+      mergedFollowUps = mergedFollowUps.concat(res);
+    });
+    return mergedFollowUps;
+  }
+
+  // unchanged
+  performQuery(queryString) { // eslint-disable-line
+    return fetchWithCreds({
+      path: `${arrangerGraphqlPath}`,
+      body: JSON.stringify({
+        query: queryString,
+      }),
+      method: 'POST',
+    })
+      .then(
+        ({ status, data }) => data, // eslint-disable-line no-unused-vars
+      );
+  }
+  
+  // unchanged
+  updateFilters(event) {
+    event.preventDefault();
+    this.setState({ inLoadingState: true });
+    this.updateSubjectClassifications();
+  }
+
+  // new function
+  doTheseVisitsMatchECSlidingWindowCriteria(visitArray) {
+    for (let i = 0; i < visitArray.length; i += 1) {
+      if (visitArray[i].viral_load === null) return false; // ignore all null records
+      if (visitArray[i].viral_load >= this.state.viralLoadFromUser) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // new function
+  classifyAllSubjectEC(subjectToVisitMap) {
+    const subjectEC = [];
+    const subjectControl = [];
+    const subjectNeither = [];
+    const slidingWindowSize = Math.ceil(this.state.numConsecutiveMonthsFromUser / 6);
+
+    // For each patient, try to find numConsecutiveMonthsFromUser consecutive
+    // visits that match the EC criteria
+    Object.keys(subjectToVisitMap).forEach((subjectId) => {
+      const visitArray = subjectToVisitMap[subjectId];
+
+      const subjectWithVisits = {
+        subject_id: subjectId,
+        consecutive_viral_loads_below_threshold_begin_at_followup: 'N/A',
+        follow_ups: visitArray,
+      };
+
+      // If the subject has ever received HAART therapy, they are not the EC Case nor its control
+      if(visitArray.map(x => x['thrpy']).includes('HAART') 
+          || visitArray.map(x => x['thrpyv']).includes('HAART') ) {
+        subjectNeither.push(subjectWithVisits);
+        return;
+      }
+      
+      if (visitArray.length < slidingWindowSize) {
+        subjectNeither.push(subjectWithVisits);
+        return;
+      }
+      
+      // The sliding window step. window is of size this.state.numConsecutiveMonthsFromUser
+      // Note that this loop differs slightly from the PTC case: 
+      // we use i<= instead of i<, because we dont need to check the followup immediately
+      // after the window, as we did in the PTC Case
+      for (let i = 0; i <= visitArray.length - slidingWindowSize; i += 1) {
+        const windowMatch = this.doTheseVisitsMatchECSlidingWindowCriteria(
+          visitArray.slice(i, i + slidingWindowSize),
+        );
+        if (windowMatch) {
+          // Found EC!
+          subjectEC.push(subjectWithVisits);
+          subjectWithVisits['consecutive_viral_loads_below_threshold_begin_at_followup']
+                      = visitArray[i].submitter_id;
+          return;
+        }
+      }
+
+      // If the window above didn't apply anywhere in this subject's followups, the subject is control
+      subjectControl.push(subjectWithVisits);
+    });
+
+    return {
+      subjectEC,
+      subjectControl,
+      subjectNeither,
+    };
+  }
+
+  // changed so slightly
+  async updateSubjectClassifications() {
+    /* This function retrieves subjects with HIV status == 'positive' and
+      * maps their subject_id to the sorted array of their visits.
+      * Then we attempt to find a sliding window match for the subject corresponding to
+      * the user-inputted viral load and number of consective months
+      * (we assume visits are 6 months apart).
+      */
+
+    this.getFollowUpsWithHIV()
+      .then((followUps) => {
+        // Convert to dictionary: { subject_id -> [ array of visits ] }
+        const subjectToVisitMap = {};
+        for (let i = 0; i < followUps.length; i += 1) {
+          const subjectId = followUps[i].subject_id;
+          if (subjectId in subjectToVisitMap) {
+            subjectToVisitMap[subjectId].push(followUps[i]);
+          } else {
+            subjectToVisitMap[subjectId] = [followUps[i]];
+          }
+        }
+
+        // Sort each patient's visits by visit_number
+        Object.keys(subjectToVisitMap).forEach((key) => {
+          const subjectVisits = subjectToVisitMap[key];
+          if (subjectVisits.length > 1) {
+            subjectVisits.sort((a, b) => {
+              if (a.visit_number > b.visit_number) {
+                return 1;
+              }
+              return ((b.visit_number > a.visit_number) ? -1 : 0);
+            });
+            subjectToVisitMap[key] = subjectVisits;
+          }
+        });
+
+        const {
+          subjectEC,
+          subjectControl,
+          subjectNeither,
+        } = this.classifyAllSubjectEC(subjectToVisitMap);
+        this.setState({
+          subjectEC,
+          subjectControl,
+          subjectNeither,
+          inLoadingState: false,
+          resultAlreadyCalculated: true,
+        });
+      });
+  }
+
+  // changed
+  makeCohortJSONFile(subjectsIn) {
+    const annotatedObj = {
+      viral_load_upper_bound: this.state.viralLoadFromUser.toString(),
+      maintained_for_at_least_this_many_months: this.state.numConsecutiveMonthsFromUser.toString(),
+      subjects: subjectsIn,
+    };
+
+    const blob = new Blob([JSON.stringify(annotatedObj, null, 2)], { type: 'text/json' });
+    return blob;
+  }
+
+  downloadEC() {
+    const fileName = `ec-cohort-vload-${this.state.viralLoadFromUser.toString()
+    }-months-${this.state.numConsecutiveMonthsFromUser.toString()}.json`;
+
+    const blob = this.makeCohortJSONFile(this.state.subjectEC);
+    FileSaver.saveAs(blob, fileName);
+  }
+
+  // unchanged
+  downloadControl() {
+    const fileName = `control-cohort-vload-${this.state.viralLoadFromUser.toString()
+    }-months-${this.state.numConsecutiveMonthsFromUser.toString()}.json`;
+
+    const blob = this.makeCohortJSONFile(this.state.subjectControl);
+    FileSaver.saveAs(blob, fileName);
+  }
+
+  // unchanged
+  checkReadyToCalculate() {
+    const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
+    const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
+    this.setState({
+      viralLoadFromUser: viralLoadFromUser > 0 ? viralLoadFromUser : undefined,
+      numConsecutiveMonthsFromUser: numConsecutiveMonthsFromUser > 0
+        ? numConsecutiveMonthsFromUser : undefined,
+      isReadyToCalculate: (viralLoadFromUser > 0 && numConsecutiveMonthsFromUser > 0),
+      resultAlreadyCalculated: false,
+    });
+  }
+
+  // slightly altered
+  showCount(isEC) {
+    if (this.state.inLoadingState) { return (<Spinner />); }
+    if (this.state.resultAlreadyCalculated) {
+      if (isEC) { return this.state.subjectEC.length; }
+      return this.state.subjectControl.length;
+    }
+    return '--';
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <div className='hiv-cohort-filter__sidebar'>
+          <form>
+            <h2 className='hiv-cohort-filter__sidebar-title'>
+              EC Cohort Selection
+            </h2>
+            <h4 className='hiv-cohort-filter__sidebar-subtitle'>
+              Customized Filters
+            </h4>
+            <div className='hiv-cohort-filter__sidebar-input-label'>
+              Viral Load
+              <span
+                className='hiv-cohort-filter__value-highlight'
+              >
+                &nbsp; &lt; { this.state.viralLoadFromUser || '__' } &nbsp;cp/mL
+              </span>
+            </div>
+            <div className='hiv-cohort-filter__sidebar-input'>
+              <input
+                ref={this.viralLoadInputRef}
+                className='hiv-cohort-filter__text-input'
+                type='number'
+                onChange={this.checkReadyToCalculate}
+                defaultValue={this.state.viralLoadFromUser}
+                placeholder='enter integer'
+              />
+              <br />
+            </div>
+            <div className='hiv-cohort-filter__sidebar-input-label'>
+              Maintained for at least:<br />
+              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } months</span>
+            </div>
+            <div className='hiv-cohort-filter__sidebar-input'>
+              <input
+                ref={this.numConsecutiveMonthsInputRef}
+                className='hiv-cohort-filter__text-input'
+                type='number'
+                onChange={this.checkReadyToCalculate}
+                defaultValue={this.state.numConsecutiveMonthsFromUser}
+                placeholder='enter integer'
+              />
+              <br />
+            </div>
+            <div className='hiv-cohort-filter__button-group'>
+              <Button
+                onClick={this.updateFilters}
+                enabled={!this.state.inLoadingState && this.state.isReadyToCalculate}
+                isPending={this.state.inLoadingState}
+                label={this.state.inLoadingState ? 'Loading...' : 'Confirm'}
+              />
+            </div>
+          </form>
+        </div>
+
+
+        <div className='hiv-cohort-filter__main'>
+          <div className='hiv-cohort-filter__main-wrapper'>
+            <div className='hiv-cohort-filter__svg-wrapper' id='EC-svg-wrapper'>
+              <CohortECSvg width='665px' />
+              <div
+                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                id='vload-overlay-4'
+              >
+                &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
+              </div>
+              <div
+                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                id='consecutive-months-overlay-2'
+              >
+                { this.state.numConsecutiveMonthsFromUser || '--' } &nbsp;months
+              </div>
+              <div
+                className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
+                id='ec-counts-overlay-1'
+              >
+                { this.showCount(true) }
+              </div>
+              <div
+                className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
+                id='control-counts-overlay-2'
+              >
+                { this.showCount(false) }
+              </div>
+
+              <div
+                id='download-EC-cohort-overlay'
+                className='hiv-cohort-filter__overlay'
+              >
+                {
+                  <React.Fragment>
+                    <Button
+                      onClick={this.downloadEC}
+                      label='Download Cohort'
+                      rightIcon='download'
+                      id='download-EC-button'
+                      enabled={!this.state.inLoadingState
+                        && this.state.resultAlreadyCalculated
+                        && this.state.subjectEC.length > 0}
+                      buttonType='secondary'
+                      isPending={this.state.inLoadingState}
+                    />
+                  </React.Fragment>
+                }
+              </div>
+
+              <div id='download-control-cohort-overlay-EC' className='hiv-cohort-filter__overlay'>
+                {
+                  <React.Fragment>
+                    <Button
+                      label='Download Cohort'
+                      rightIcon='download'
+                      id='download-control-button-EC'
+                      enabled={!this.state.inLoadingState
+                        && this.state.resultAlreadyCalculated
+                        && this.state.subjectControl.length > 0}
+                      onClick={this.downloadControl}
+                      buttonType='secondary'
+                      isPending={this.state.inLoadingState}
+                    />
+                  </React.Fragment>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </React.Fragment>
+    );
+  }
+}
+
+class LTNPCase extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      viralLoadFromUser: undefined,
+      numConsecutiveMonthsFromUser: undefined,
+      subjectNeither: [],
+      subjectLTNP: [],
+      subjectControl: [],
+      inLoadingState: false,
+      isReadyToCalculate: false,
+      resultAlreadyCalculated: false,
+    };
+    this.updateFilters = this.updateFilters.bind(this);
+    this.downloadLTNP = this.downloadLTNP.bind(this);
     this.downloadControl = this.downloadControl.bind(this);
     this.makeCohortJSONFile = this.makeCohortJSONFile.bind(this);
     this.checkReadyToCalculate = this.checkReadyToCalculate.bind(this);
@@ -682,14 +1149,14 @@ class ECCase extends React.Component {
     return true;
   }
 
-  classifyAllSubjectPTC(subjectToVisitMap) {
-    const subjectPTC = [];
+  classifyAllSubjectLTNP(subjectToVisitMap) {
+    const subjectLTNP = [];
     const subjectControl = [];
     const subjectNeither = [];
     const slidingWindowSize = Math.ceil(this.state.numConsecutiveMonthsFromUser / 6);
 
     // For each patient, try to find numConsecutiveMonthsFromUser consecutive
-    // visits that match the PTC criteria
+    // visits that match the LTNP criteria
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
       const visitArray = subjectToVisitMap[subjectId];
       const subjectWithVisits = {
@@ -723,8 +1190,8 @@ class ECCase extends React.Component {
             continue; // eslint-disable-line no-continue
           }
           if (vloadCheck && therapyCheck) {
-            // Found PTC!
-            subjectPTC.push(subjectWithVisits);
+            // Found LTNP!
+            subjectLTNP.push(subjectWithVisits);
           } else {
             // Found control!
             subjectControl.push(subjectWithVisits);
@@ -741,7 +1208,7 @@ class ECCase extends React.Component {
       subjectNeither.push(subjectId);
     });
     return {
-      subjectPTC,
+      subjectLTNP,
       subjectControl,
       subjectNeither,
     };
@@ -783,12 +1250,12 @@ class ECCase extends React.Component {
         });
 
         const {
-          subjectPTC,
+          subjectLTNP,
           subjectControl,
           subjectNeither,
-        } = this.classifyAllSubjectPTC(subjectToVisitMap);
+        } = this.classifyAllSubjectLTNP(subjectToVisitMap);
         this.setState({
-          subjectPTC,
+          subjectLTNP,
           subjectControl,
           subjectNeither,
           inLoadingState: false,
@@ -808,11 +1275,11 @@ class ECCase extends React.Component {
     return blob;
   }
 
-  downloadPTC() {
+  downloadLTNP() {
     const fileName = `ptc-cohort-vload-${this.state.viralLoadFromUser.toString()
     }-months-${this.state.numConsecutiveMonthsFromUser.toString()}.json`;
 
-    const blob = this.makeCohortJSONFile(this.state.subjectPTC);
+    const blob = this.makeCohortJSONFile(this.state.subjectLTNP);
     FileSaver.saveAs(blob, fileName);
   }
 
@@ -836,10 +1303,10 @@ class ECCase extends React.Component {
     });
   }
 
-  showCount(isPTC) {
+  showCount(isLTNP) {
     if (this.state.inLoadingState) { return (<Spinner />); }
     if (this.state.resultAlreadyCalculated) {
-      if (isPTC) { return this.state.subjectPTC.length; }
+      if (isLTNP) { return this.state.subjectLTNP.length; }
       return this.state.subjectControl.length;
     }
     return '--';
@@ -851,7 +1318,7 @@ class ECCase extends React.Component {
         <div className='hiv-cohort-filter__sidebar'>
           <form>
             <h2 className='hiv-cohort-filter__sidebar-title'>
-              EC Cohort Selection
+              LTNP Cohort Selection
             </h2>
             <h4 className='hiv-cohort-filter__sidebar-subtitle'>
               Customized Filters
@@ -905,7 +1372,7 @@ class ECCase extends React.Component {
         <div className='hiv-cohort-filter__main'>
           <div className='hiv-cohort-filter__main-wrapper'>
             <div className='hiv-cohort-filter__svg-wrapper'>
-              <CohortECSvg width='665px' />
+              <CohortLTNPSvg width='665px' />
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-1'
@@ -943,19 +1410,19 @@ class ECCase extends React.Component {
               </div>
 
               <div
-                id='download-PTC-cohort-overlay'
+                id='download-LTNP-cohort-overlay'
                 className='hiv-cohort-filter__overlay'
               >
                 {
                   <React.Fragment>
                     <Button
-                      onClick={this.downloadPTC}
+                      onClick={this.downloadLTNP}
                       label='Download Cohort'
                       rightIcon='download'
-                      id='download-PTC-button'
+                      id='download-LTNP-button'
                       enabled={!this.state.inLoadingState
                         && this.state.resultAlreadyCalculated
-                        && this.state.subjectPTC.length > 0}
+                        && this.state.subjectLTNP.length > 0}
                       buttonType='secondary'
                       isPending={this.state.inLoadingState}
                     />
@@ -992,15 +1459,15 @@ class HIVCohortFilter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          caseToRender: "PTC",
-          caseToRenderLabel: "PTC Cohort Selection",
+          caseToRender: "EC",
+          caseToRenderLabel: "EC Cohort Selection",
           inLoadingState: false,
           isReadyToCalculate: false,
           resultAlreadyCalculated: false,
         };
         this.selectedCase = this.selectedCase.bind(this);
         this.updateCase = this.updateCase.bind(this);
-      }
+    }
 
     selectedCase() {
         if(this.state.caseToRender == 'PTC') {
@@ -1032,18 +1499,15 @@ class HIVCohortFilter extends React.Component {
                       <Dropdown.Item onClick={() => this.updateCase('EC') }>
                         EC Cohort Selection
                       </Dropdown.Item>
+                       <Dropdown.Item onClick={() => this.updateCase('LTNP') }>
+                        LTNP Cohort Selection
+                      </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 {this.selectedCase()}
             </div>
         );
-        
     }
 }
 
 export default HIVCohortFilter;
-
-
-
-
-
