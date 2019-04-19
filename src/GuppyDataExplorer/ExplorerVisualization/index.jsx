@@ -57,6 +57,8 @@ class ExplorerVisualization extends React.Component {
 
   render() {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
+    const tableColumns = (this.props.tableConfig.fields && this.props.tableConfig.fields.length > 0)
+      ? this.props.tableConfig.fields : this.props.allFields;
     return (
       <div className={this.props.className}>
         <div className='guppy-explorer-visualization__button-group'>
@@ -93,7 +95,7 @@ class ExplorerVisualization extends React.Component {
           this.props.tableConfig.enabled && (
             <ExplorerTable
               className='guppy-explorer-visualization__table'
-              tableConfig={this.props.tableConfig}
+              tableConfig={{ fields: tableColumns }}
               fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
               rawData={this.props.rawData}
               totalCount={this.props.totalCount}
@@ -116,6 +118,7 @@ ExplorerVisualization.propTypes = {
   getTotalCountsByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   downloadRawDataByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
+  allFields: PropTypes.array, // inherited from GuppyWrapper
   history: PropTypes.object.isRequired,
   className: PropTypes.string,
   chartConfig: ChartConfigType,
@@ -135,6 +138,7 @@ ExplorerVisualization.defaultProps = {
   getTotalCountsByTypeAndFilter: () => {},
   downloadRawDataByTypeAndFilter: () => {},
   rawData: [],
+  allFields: [],
   className: '',
   chartConfig: {},
   tableConfig: {},

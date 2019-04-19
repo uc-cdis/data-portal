@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import { GuppyConfigType, TableConfigType } from '../configTypeDef';
+import { capitalizeFirstLetter } from '../../utils';
 import './ExplorerTable.css';
 
 class ExplorerTable extends React.Component {
@@ -59,12 +60,11 @@ class ExplorerTable extends React.Component {
   };
 
   render() {
+    if (!this.props.tableConfig.fields || this.props.tableConfig.fields.length === 0) return null;
     const columnsConfig = this.props.tableConfig.fields.map((field) => {
-      const fieldMappingEntry = this.props.guppyConfig.fieldMapping.find(i => i.field === field);
-      if (!fieldMappingEntry) {
-        throw new Error('error parsing filter configuration');
-      }
-      const name = fieldMappingEntry.name;
+      const fieldMappingEntry = this.props.guppyConfig.fieldMapping
+        && this.props.guppyConfig.fieldMapping.find(i => i.field === field);
+      const name = fieldMappingEntry ? fieldMappingEntry.name : capitalizeFirstLetter(field);
       return {
         Header: name,
         accessor: field,

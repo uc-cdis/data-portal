@@ -22,35 +22,15 @@ class GuppyDataExplorer extends React.Component {
     };
   }
 
-  getFilterConfigForGuppy = () => {
-    const filterConfig = this.props.filterConfig.tabs.map(entry => ({
-      title: entry.title,
-      filters: entry.fields.map((f) => {
-        const field = f;
-        const fieldMappingEntry = this.props.guppyConfig.fieldMapping.find(i => i.field === field);
-        if (!fieldMappingEntry) {
-          throw new Error('error parsing filter configuration');
-        }
-        const label = fieldMappingEntry.name;
-        return {
-          field,
-          label,
-        };
-      }),
-    }));
-    return { tabs: filterConfig };
-  };
-
   handleReceiveNewAggsData = (newAggsData) => {
     this.setState({ aggsData: newAggsData });
   };
 
   render() {
-    const filterConfigForGuppy = this.getFilterConfigForGuppy();
     return (
       <div className='guppy-data-explorer'>
         <GuppyWrapper
-          filterConfig={filterConfigForGuppy}
+          filterConfig={this.props.filterConfig}
           guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
           onFilterChange={this.handleFilterChange}
@@ -58,8 +38,9 @@ class GuppyDataExplorer extends React.Component {
         >
           <ConnectedFilter
             className='guppy-data-explorer__filter'
-            filterConfig={filterConfigForGuppy}
+            filterConfig={this.props.filterConfig}
             guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
+            fieldMapping={this.props.guppyConfig.fieldMapping}
           />
           <ExplorerVisualization
             className='guppy-data-explorer__visualization'

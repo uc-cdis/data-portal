@@ -92,16 +92,8 @@ const config = {
   guppyConfig: {
     dataType: 'subject',
     fieldMapping: [
-      { field: 'project', name: 'project' },
-      { field: 'study', name: 'study' },
-      { field: 'race', name: 'race' },
-      { field: 'ethnicity', name: 'ethnicity' },
-      { field: 'gender', name: 'gender' },
-      { field: 'vital_status', name: 'vital_status' },
-      { field: 'whatever_lab_result_value', name: 'whatever_lab_result_value' },
-      { field: 'file_count', name: 'file_count' },
-      { field: 'file_type', name: 'file_type' },
-      { field: 'file_format', name: 'file_format' },
+      { field: 'project', name: 'Project Name' },
+      { field: 'whatever_lab_result_value', name: 'Lab Result' },
     ],
     manifestMapping: {
       resourceIndexType: 'file',

@@ -167,7 +167,7 @@
         "chartType": "bar",
         "title": "Race"
       },
-      "fileCounts": true
+      "fileCounts": false
     },
     "filters": {
       "tabs": [
@@ -213,7 +213,33 @@
       ]
     },
     "table": {
-      "enabled": true
+      "enabled": true,
+      "fields": [
+        "project_id",
+        "consent_codes",
+        "data_type",
+        "data_format",
+        "race",
+        "ethnicity",
+        "gender",
+        "bmi",
+        "age_at_index",
+        "diastolic_blood_pressure",
+        "systolic_blood_pressure",
+        "diabetes",
+        "hypertension",
+        "cerebrovascular_disease",
+        "chronic_respiratory_disease",
+        "coronary_artery_disease",
+        "asthma",
+        "cabg_presence",
+        "copd",
+        "emphysema",
+        "heart_failure",
+        "myocardial_infarction",
+        "stroke",
+        "hypertension_meds"
+      ]
     },
     "dropdowns": {
       "download": {
@@ -248,7 +274,7 @@
         "tooltipText": "You have not selected any cases to export. Please use the checkboxes on the left to select specific cases you would like to export."
       },
       {
-        "enabled": true,
+        "enabled": false,
         "type": "export-to-workspace",
         "title": "Export To Workspace",
         "leftIcon": "datafile",
@@ -266,6 +292,21 @@
         "referenceIdFieldInDataIndex": "case_id"
       },
       "nodeCountField": "case_id"
+    },
+    "guppyConfig": {
+      "dataType": "case",
+      "fieldMapping": [
+        {
+          "field": "consent_codes",
+          "name": "Data Use Restriction"
+        }
+      ],
+      "manifestMapping": {
+        "resourceIndexType": "file",
+        "resourceIdField": "object_id",
+        "referenceIdFieldInResourceIndex": "case_id",
+        "referenceIdFieldInDataIndex": "case_id"
+      }
     }
   }
 }
