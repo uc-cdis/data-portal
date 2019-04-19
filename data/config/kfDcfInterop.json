@@ -35,7 +35,7 @@
     "index": {
       "introduction": {
         "heading": "Pediatric Cancer Commons Pilot",
-        "text": "The Pediatric Cancer Commons Pilot is a Trusted Partner of the NIH supported by Gen 3.Gen3 is an open source Data Commons platform (https://gen3.org/) supporting a number of large-scale NIH- and non-NIH Commons including the NCI's Genomic Data Commons, NHLBI's Data Stage, the NIH Data Commons Pilot, and the Bloodpac Data Commons. As such the Pediatric Cancer Commons Pilot also supports the Kids First Data Resource Center by providing digital object services that allow interoperability between existing and future Gen3 data commons, including authentication and authorization for controlled access data.For more information about the overall Kids First Data Resource Center and associated tools/portalssee https://kidsfirstdrc.org.",
+        "text": "The Pediatric Cancer Commons Pilot is a Trusted Partner of the NIH supported by Gen 3.Gen3 is an open source Data Commons platform (https://gen3.org/) supporting a number of large-scale NIH- and non-NIH Commons including the NCI's Genomic Data Commons, NHLBI's DataSTAGE, the NIH Data Commons Pilot, and the Bloodpac Data Commons. As such the Pediatric Cancer Commons Pilot also supports the Kids First Data Resource Center by providing digital object services that allow interoperability between existing and future Gen3 data commons, including authentication and authorization for controlled access data.For more information about the overall Kids First Data Resource Center and associated tools/portalssee https://kidsfirstdrc.org.",
         "link": "/submission"
       },
       "buttons": [
@@ -101,7 +101,7 @@
     "login": {
       "title": "Pediatric Cancer Commons Pilot",
       "subTitle": "Explore, Analyze, and Share Data",
-      "text": "The Pediatric Cancer Commons Pilot is a Trusted Partner of the NIH powered by Gen3. Gen3 is an open source Data Commons platform (https://gen3.org/) supporting a number of large-scale NIH- and non-NIH Commons including the NCI's Genomic Data Commons, NHLBI's Data Stage, the NIH Data Commons Pilot, and the Bloodpac Data Commons. As such the Gen3 Data Catalog supports the Kids First Data Resource Center by providing digital object services that allow interoperability between existing and future Gen3 data commons, including authentication and authorization for controlled access data. For more information about the overall Kids First Data Resource Center and associated tools/portals see https://kidsfirstdrc.org.",
+      "text": "The Pediatric Cancer Commons Pilot is a Trusted Partner of the NIH powered by Gen3. Gen3 is an open source Data Commons platform (https://gen3.org/) supporting a number of large-scale NIH- and non-NIH Commons including the NCI's Genomic Data Commons, NHLBI's DataSTAGE, the NIH Data Commons Pilot, and the Bloodpac Data Commons. As such the Gen3 Data Catalog supports the Kids First Data Resource Center by providing digital object services that allow interoperability between existing and future Gen3 data commons, including authentication and authorization for controlled access data. For more information about the overall Kids First Data Resource Center and associated tools/portals see https://kidsfirstdrc.org.",
       "contact": "If you have any questions about access or the registration process, please contact ",
       "email": "support@kidsfirstdrc.org"
     }
