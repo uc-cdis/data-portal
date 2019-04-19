@@ -122,7 +122,7 @@
     },
     "login": {
       "title": "Veterans Precision Oncology Data Commons",
-      "subTitle": "search, compare, and explore data",
+      "subTitle": "Explore, Analyze, and Share Data",
       "text": "The Veterans Data Commons supports the management, analysis and sharing of veteran oncologic data for the research community and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for precision oncology.",
       "contact": "If you have any questions about access or the registration process, please contact ",
       "email": "support@datacommons.io"
@@ -150,7 +150,7 @@
     "analysis": true
   },
   "analysisTools": [ "vaGWAS" ],
-  "arrangerConfig": {
+  "dataExplorerConfig": {
     "charts": {
       "Chicago_ID": {
         "chartType": "count",
@@ -185,20 +185,24 @@
         }
       ]
     },
+    "buttons": [
+      {
+        "enabled": false,
+        "type": "manifest",
+        "title": "Download Manifest",
+        "leftIcon": "datafile",
+        "rightIcon": "download",
+        "fileName": "manifest.json"
+      }
+    ],
     "table": {
-      "buttons": [
-        {
-          "enabled": false,
-          "type": "manifest",
-          "title": "Download Manifest",
-          "leftIcon": "datafile",
-          "rightIcon": "download",
-          "fileName": "manifest.json"
-        }
-      ]
+      "enabled": true
     },
-    "projectId": "search",
-    "graphqlField": "patients",
-    "index": ""
+    "arrangerConfig": {
+      "projectId": "search",
+      "graphqlField": "patients",
+      "index": "",
+      "nodeCountField": "Chicago_ID"
+    }
   }
 }
