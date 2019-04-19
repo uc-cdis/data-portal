@@ -11,11 +11,13 @@ export const getPresignedUrl = (did, method) => {
   );
 };
 
-// const getResultUploadUrl = () => {
-//   // hardcode result did
-//   const result = '77bf9442-360d-4fcf-9c82-14103c3745a2';
-//   return getPresignedUrl(result, 'upload');
-// };
+/* eslint-disable */
+const getResultUploadUrl = () => {
+  // hardcode result did
+  const result = '77bf9442-360d-4fcf-9c82-14103c3745a2';
+  return getPresignedUrl(result, 'upload');
+};
+/* eslint-enable */
 
 const getResultDownloadUrl = () => {
   // hardcode result did

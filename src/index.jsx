@@ -26,7 +26,6 @@ import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import ReduxMapFiles from './Submission/ReduxMapFiles';
 import ReduxMapDataModel from './Submission/ReduxMapDataModel';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
-import HIVCohortFilter from './HIVCohortFilter/HIVCohortFilter';
 import UserAgreementCert from './UserAgreement/ReduxCertPopup';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
@@ -145,18 +144,26 @@ async function init() {
                         props => <ProtectedContent component={GraphQLQuery} {...props} />
                       }
                     />
-                    <Route
-                      path='/analysis/:app'
-                      component={
-                        props => <ProtectedContent component={ReduxAnalysisApp} {...props} />
-                      }
-                    />
-                    <Route
-                      path='/analysis'
-                      component={
-                        props => <ProtectedContent component={Analysis} {...props} />
-                      }
-                    />
+                    {
+                      isEnabled('analysis') ?
+                        <Route
+                          path='/analysis/:app'
+                          component={
+                            props => <ProtectedContent component={ReduxAnalysisApp} {...props} />
+                          }
+                        />
+                        : null
+                    }
+                    {
+                      isEnabled('analysis') ?
+                        <Route
+                          path='/analysis'
+                          component={
+                            props => <ProtectedContent component={Analysis} {...props} />
+                          }
+                        />
+                        : null
+                    }
                     <Route
                       path='/identity'
                       component={
@@ -172,15 +179,6 @@ async function init() {
                       component={
                         props => (<ProtectedContent
                           component={UserAgreementCert}
-                          {...props}
-                        />)
-                      }
-                    />
-                    <Route
-                      path='/cohort-tools'
-                      component={
-                        props => (<ProtectedContent
-                          component={HIVCohortFilter}
                           {...props}
                         />)
                       }
@@ -265,14 +263,15 @@ async function init() {
                         }
                       }
                     />
-                    {isEnabled('explorer') ?
-                      <Route
-                        path='/explorer'
-                        component={
-                          props => <ProtectedContent component={DataExplorer} {...props} />
-                        }
-                      />
-                      : null
+                    {
+                      isEnabled('explorer') ?
+                        <Route
+                          path='/explorer'
+                          component={
+                            props => <ProtectedContent component={DataExplorer} {...props} />
+                          }
+                        />
+                        : null
                     }
                     <Route
                       path='/:project'

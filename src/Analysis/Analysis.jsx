@@ -6,13 +6,6 @@ import AppCard from './AppCard';
 import './Analysis.less';
 
 class Analysis extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      options: null,
-    };
-  }
-
   openApp = (app) => {
     this.props.history.push(`/analysis/${app}`);
   }

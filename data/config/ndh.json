@@ -90,16 +90,10 @@
           "name": "Files"
         },
         {
-          "icon": "cohort-tools",
-          "link": "/cohort-tools",
-          "color": "#a2a2a2",
-          "name": "Cohort Tools"
-        },
-        {
           "icon": "analysis",
           "link": "/analysis",
           "color": "#a2a2a2",
-          "name": "Simulation"
+          "name": "Apps"
         },
         {
           "icon": "query",
@@ -147,9 +141,10 @@
     ]
   },
   "featureFlags": {
-    "explorer": true
+    "explorer": true,
+    "analysis": true
   },
-  "analysisTools": [ "ndhVirus", "ndhHIV" ],
+  "analysisTools": [ "ndhHIV" ],
   "dataExplorerConfig": {
     "charts": {
       "project_id": {

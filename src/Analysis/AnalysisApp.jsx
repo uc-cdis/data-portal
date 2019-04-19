@@ -4,7 +4,7 @@ import Select from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import Spinner from '../components/Spinner';
-// import { fetchArrangerGraphQL } from '../actions';
+import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 
@@ -43,17 +43,32 @@ class AnalysisApp extends React.Component {
     this.props.checkJobStatus();
   }
 
-  // fetchGWASOrganOptions = async () => fetchArrangerGraphQL({
-  //   query: '{ patients{ aggregations { Oncology_Primary__ICDOSite { buckets { key } } } } }',
-  // }).then(organs =>
-  //   organs.data.patients.aggregations.Oncology_Primary__ICDOSite.buckets
-  //     .map(bucket => ({ label: bucket.key, value: bucket.key })));
-
-  updateApp = async () => {
-    this.setState({
-      app: analysisApps[this.props.params.app],
-      loaded: true,
-    });
+  getAppContent = (app) => {
+    switch (app) {
+    case 'vaGWAS':
+      return (
+        <React.Fragment>
+          <Select
+            value={this.state.jobInput}
+            placeholder='Select your organ'
+            options={app.options}
+            onChange={this.selectChange}
+          />
+          <Button label='Run Analysis' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+        </React.Fragment>
+      );
+    case 'ndhHIV':
+      return (
+        <HIVCohortFilter />
+      );
+    default:
+      return (
+        <React.Fragment>
+          <input className='text-input' type='text' placeholder='input data' name='input' />
+          <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+        </React.Fragment>
+      );
+    }
   }
 
   isJobRunning = () => this.props.job && this.props.job.status === 'Running';
@@ -75,32 +90,11 @@ class AnalysisApp extends React.Component {
     this.setState({ results: null });
   }
 
-  getAppContent = app => {
-    switch(app) {
-      case 'vaGWAS':
-      return (
-        <React.Fragment>
-          <Select
-            value={this.state.jobInput}
-            placeholder='Select your organ'
-            options={app.options}
-            onChange={this.selectChange}
-          />
-          <Button label='Run Simulation' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
-        </React.Fragment>
-      );
-      case 'ndhHIV':
-      return (
-        <div>NDH app!</div>
-      );
-      default:
-      return (
-        <React.Fragment>
-          <input className='text-input' type='text' placeholder='input data' name='input' />
-          <Button label='Run Simulation' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
-        </React.Fragment>
-      );
-    }
+  updateApp = async () => {
+    this.setState({
+      app: analysisApps[this.props.params.app],
+      loaded: true,
+    });
   }
 
   render() {
