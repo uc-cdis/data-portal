@@ -81,7 +81,7 @@ class PTCCase extends React.Component {
     `;
     return this.performQuery(query).then((res) => {
       if (!res || !res.data) {
-        throw new Error('Error when query subjects with HIV');
+        throw new Error('Error while querying subjects with HIV');
       }
       return res.data.follow_up.aggregations[bucketKey].buckets;
     });
@@ -137,7 +137,7 @@ class PTCCase extends React.Component {
     }`;
     return this.performQuery(query).then((res) => {
       if (!res || !res.data) {
-        throw new Error('Error when query subjects with HIV');
+        throw new Error('Error while querying subjects with HIV');
       }
       return res.data.follow_up.hits.edges.map(edge => edge.node);
     });
@@ -559,7 +559,7 @@ class ECCase extends React.Component {
     `;
     return this.performQuery(query).then((res) => {
       if (!res || !res.data) {
-        throw new Error('Error when query subjects with HIV');
+        throw new Error('Error while querying subjects with HIV');
       }
       return res.data.follow_up.aggregations[bucketKey].buckets;
     });
@@ -617,7 +617,7 @@ class ECCase extends React.Component {
     }`;
     return this.performQuery(query).then((res) => {
       if (!res || !res.data) {
-        throw new Error('Error when query subjects with HIV');
+        throw new Error('Error while querying subjects with HIV');
       }
       return res.data.follow_up.hits.edges.map(edge => edge.node);
     });
@@ -746,13 +746,6 @@ class ECCase extends React.Component {
 
   // changed so slightly
   async updateSubjectClassifications() {
-    /* This function retrieves subjects with HIV status == 'positive' and
-      * maps their subject_id to the sorted array of their visits.
-      * Then we attempt to find a sliding window match for the subject corresponding to
-      * the user-inputted viral load and number of consective months
-      * (we assume visits are 6 months apart).
-      */
-
     this.getFollowUpsWithHIV()
       .then((followUps) => {
         // Convert to dictionary: { subject_id -> [ array of visits ] }
@@ -983,9 +976,8 @@ class LTNPCase extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      viralLoadFromUser: undefined,
-      numConsecutiveMonthsFromUser: undefined,
-      subjectNeither: [],
+      CD4FromUser: undefined,
+      numConsecutiveYearsFromUser: undefined,
       subjectLTNP: [],
       subjectControl: [],
       inLoadingState: false,
@@ -998,18 +990,22 @@ class LTNPCase extends React.Component {
     this.makeCohortJSONFile = this.makeCohortJSONFile.bind(this);
     this.checkReadyToCalculate = this.checkReadyToCalculate.bind(this);
     this.therapyValuesOfInterest = ['HAART'];
-    this.viralLoadInputRef = React.createRef();
-    this.numConsecutiveMonthsInputRef = React.createRef();
+    this.CD4InputRef = React.createRef();
+    this.numConsecutiveYearsInputRef = React.createRef();
     this.showCount = this.showCount.bind(this);
   }
 
+  // changed
   getBucketByKeyWithHAARTVAR(bucketKey, isHAART) {
+    var d = new Date();
+    var currentYear = d.getFullYear();
     const query = `
     {
       follow_up {
         aggregations(filters: {first: 10000, op: "and", content: [
           {op: "${isHAART ? '=' : '!='}", content: {field: "thrpyv", value: "HAART"}},
-          {op: "<", content: {field: "viral_load", value: "${this.state.viralLoadFromUser}"}},
+          {op: ">", content: {field: "leu3n", value: "${this.state.CD4FromUser}"}},
+          {op: "<=", content: {field: "fposdate", value: "${currentYear - this.state.numConsecutiveYearsFromUser}"}},
           {op: "=", content: {field: "hiv_status", value: "positive"}}]}) 
         {
           ${bucketKey} {
@@ -1024,29 +1020,105 @@ class LTNPCase extends React.Component {
     `;
     return this.performQuery(query).then((res) => {
       if (!res || !res.data) {
-        throw new Error('Error when query subjects with HIV');
+        throw new Error('Error while querying subjects with HIV');
       }
       return res.data.follow_up.aggregations[bucketKey].buckets;
     });
   }
 
+  // new function
+  getBucketByKeyWithCD4VAR(bucketKey, inequalityOperator) {
+    // Checks if  ( CD4_count {>,<,>=,<=} CD4FromUser )  for visits with current_year - visit_date >= numConsecutiveYearsFromUser
+    var d = new Date();
+    var currentYear = d.getFullYear();
+    const query = `
+    {
+      follow_up {
+        aggregations(filters: {first: 10000, op: "and", content: [
+          {op: "${inequalityOperator}", content: {field: "leu3n", value: "${this.state.CD4FromUser}"}},
+          {op: ">=", content: {field: "visit_date", value: "${currentYear - this.state.numConsecutiveYearsFromUser}"}},
+          {op: "<=", content: {field: "fposdate", value: "${currentYear - this.state.numConsecutiveYearsFromUser}"}},
+          {op: "=", content: {field: "hiv_status", value: "positive"}}]}) 
+        {
+          ${bucketKey} {
+            buckets {
+              key
+              doc_count
+            }
+          }
+        }
+      }
+    }
+    `;
+    console.log(query);
+    return this.performQuery(query).then((res) => {
+      if (!res || !res.data) {
+        throw new Error('Error while querying subjects with HIV');
+      }
+      return res.data.follow_up.aggregations[bucketKey].buckets;
+    });
+  }
+
+  // changed
   async getBucketByKey(bucketKey) {
     const resList = await Promise.all([
       this.getBucketByKeyWithHAARTVAR(bucketKey, true),
       this.getBucketByKeyWithHAARTVAR(bucketKey, false),
+      this.getBucketByKeyWithCD4VAR(bucketKey, ">"),
+      this.getBucketByKeyWithCD4VAR(bucketKey, "<=")
     ]);
-    const withoutHAARTMap = resList[1].reduce((acc, cur) => {
-      const { key, doc_count } = cur; // eslint-disable-line camelcase
-      acc[key] = doc_count; // eslint-disable-line camelcase
-      return acc;
-    }, {});
-    const resultBucketKeys = {};
-    resList[0].forEach(({ key, doc_count }) => { // eslint-disable-line camelcase
-      if (withoutHAARTMap[key]) {
-        resultBucketKeys[key] = doc_count + withoutHAARTMap[key]; // eslint-disable-line camelcase
-      }
-    });
-    return resultBucketKeys;
+
+    // First set complement gets subjects who have never received HAART therapy
+    let subjectsWithAtLeast1Haart = resList[0];
+    let subjectsWithAtLeast1NonHaart = resList[1];
+    let subjectsWithNoHaartTreatments = subjectsWithAtLeast1NonHaart.filter(x => !subjectsWithAtLeast1Haart.map(y => y['key']).includes(x['key']));
+
+    // Second set complement gets subjects who have never had CD4 < threshold since fposdate
+    let subjectsWithAtLeast1CD4AboveThresholdSincePosDate = resList[2];
+    let subjectsWithAtLeast1CD4BelowThresholdSincePosDate = resList[3];
+    let subjectsWithAllCD4CountsAboveThresholdSincePosDate = 
+      subjectsWithAtLeast1CD4AboveThresholdSincePosDate.filter(
+        x => !subjectsWithAtLeast1CD4BelowThresholdSincePosDate.map(
+          y => y['key']).includes(x['key']
+        )
+      );
+
+    // Intersect the above two to find subjects matching LTNP criteria
+    let LTNPCase = subjectsWithNoHaartTreatments.filter(
+        x => subjectsWithAllCD4CountsAboveThresholdSincePosDate.map(
+          y => y['key']).includes(x['key']
+        )
+      );
+
+    // The subjects who never received HAART but have a CD4 count in that 
+    // timespan that's too small are in the control case
+    let controlCase = subjectsWithNoHaartTreatments.filter(
+        x => subjectsWithAtLeast1CD4BelowThresholdSincePosDate.map(
+          y => y['key']).includes(x['key']
+        )
+      );
+
+    console.log('no haart therapy: ', subjectsWithNoHaartTreatments);
+    console.log('1+ CD4 above: ', subjectsWithAtLeast1CD4AboveThresholdSincePosDate);
+    console.log('1+ CD4 below: ', subjectsWithAtLeast1CD4BelowThresholdSincePosDate);
+    console.log('All above: ', subjectsWithAllCD4CountsAboveThresholdSincePosDate);
+    console.log('LTNP case: ', LTNPCase);
+
+
+
+    // Transform to map
+    let LTNPCaseMap = {};
+    for (let i = 0; i < LTNPCase.length; i += 1) {
+      LTNPCaseMap[LTNPCase[i]['key']] = LTNPCase[i]['doc_count']
+    }
+
+    let controlCaseMap = {};
+    for (let i = 0; i < controlCase.length; i += 1) {
+      controlCaseMap[controlCase[i]['key']] = controlCase[i]['doc_count']
+    }
+
+
+    return { 'LTNP' : LTNPCaseMap , 'control' : controlCaseMap };
   }
 
   getFollowupsBuckets(key, keyRange) {
@@ -1068,9 +1140,10 @@ class LTNPCase extends React.Component {
           edges {
             node {
               subject_id
-              viral_load
+              leu3n
               visit_number
               thrpyv
+              visit_date
             }
           }
 
@@ -1079,18 +1152,17 @@ class LTNPCase extends React.Component {
     }`;
     return this.performQuery(query).then((res) => {
       if (!res || !res.data) {
-        throw new Error('Error when query subjects with HIV');
+        throw new Error('Error while querying subjects with HIV');
       }
       return res.data.follow_up.hits.edges.map(edge => edge.node);
     });
   }
 
-  async getFollowUpsWithHIV() {
-    const keyName = 'subject_id';
-    const keyCountMap = await this.getBucketByKey(keyName);
+  async getFollowUpForKeys(keyName, keyCountMap) {
     let batchCounts = 0;
     const promiseList = [];
     let keyRange = [];
+
     Object.keys(keyCountMap).forEach((keyId) => {
       const count = keyCountMap[keyId];
       if (batchCounts + count > 5000) {
@@ -1114,6 +1186,14 @@ class LTNPCase extends React.Component {
     return mergedFollowUps;
   }
 
+  async getFollowUpsForLTNPAndControl() {
+    const keyName = 'subject_id';
+    const keyCountMaps = await this.getBucketByKey(keyName);
+    let followsUpsForLTNP = this.getFollowUpForKeys(keyName, keyCountMaps['LTNP']);
+    let followsUpsForControl = this.getFollowUpForKeys(keyName, keyCountMaps['control']);
+    return {'LTNP' : followsUpsForLTNP , 'control' : followsUpsForControl};
+  }
+
   performQuery(queryString) { // eslint-disable-line
     return fetchWithCreds({
       path: `${arrangerGraphqlPath}`,
@@ -1135,11 +1215,11 @@ class LTNPCase extends React.Component {
 
   doTheseVisitsMatchSlidingWindowCriteria(visitArray) {
     // The length of the array input to this function should be
-    // == (this.state.numConsecutiveMonthsFromUser / 6)
+    // == (this.state.numConsecutiveYearsFromUser / 6)
     const upperBound = visitArray.length;
     for (let i = 0; i < upperBound; i += 1) {
-      if (visitArray[i].viral_load === null) return false; // ignore all null records
-      const vloadCheck = (visitArray[i].viral_load < this.state.viralLoadFromUser);
+      if (visitArray[i]["leu3n"] === null) return false; // ignore all null records
+      const vloadCheck = (visitArray[i]["leu3n"] < this.state.CD4FromUser);
       const therapyCheck = this.therapyValuesOfInterest.includes(visitArray[i].thrpyv);
       if (!vloadCheck || !therapyCheck) {
         return false;
@@ -1153,9 +1233,9 @@ class LTNPCase extends React.Component {
     const subjectLTNP = [];
     const subjectControl = [];
     const subjectNeither = [];
-    const slidingWindowSize = Math.ceil(this.state.numConsecutiveMonthsFromUser / 6);
+    const slidingWindowSize = Math.ceil(this.state.numConsecutiveYearsFromUser / 6);
 
-    // For each patient, try to find numConsecutiveMonthsFromUser consecutive
+    // For each patient, try to find numConsecutiveYearsFromUser consecutive
     // visits that match the LTNP criteria
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
       const visitArray = subjectToVisitMap[subjectId];
@@ -1169,19 +1249,19 @@ class LTNPCase extends React.Component {
         return;
       }
 
-      // The sliding window step. window is of size this.state.numConsecutiveMonthsFromUser
+      // The sliding window step. window is of size this.state.numConsecutiveYearsFromUser
       for (let i = 0; i < visitArray.length - slidingWindowSize; i += 1) {
         const windowMatch = this.doTheseVisitsMatchSlidingWindowCriteria(
           visitArray.slice(i, i + slidingWindowSize),
         );
         if (windowMatch) {
-          // Now that we know the first numConsecutiveMonthsFromUser visits in the array
+          // Now that we know the first numConsecutiveYearsFromUser visits in the array
           // match the criteria, we should check the following visit
           const theNextVisit = visitArray[i + slidingWindowSize];
-          if (theNextVisit.viral_load === null || theNextVisit.thrpyv === null) {
+          if (theNextVisit["leu3n"] === null || theNextVisit.thrpyv === null) {
             continue; // eslint-disable-line no-continue
           }
-          const vloadCheck = (theNextVisit.viral_load < this.state.viralLoadFromUser);
+          const vloadCheck = (theNextVisit["leu3n"] < this.state.CD4FromUser);
           const therapyCheck = !this.therapyValuesOfInterest.includes(
             theNextVisit.thrpyv,
           );
@@ -1214,50 +1294,48 @@ class LTNPCase extends React.Component {
     };
   }
 
-  async updateSubjectClassifications() {
-    /* This function retrieves subjects with HIV status == 'positive' and
-      * maps their subject_id to the sorted array of their visits.
-      * Then we attempt to find a sliding window match for the subject corresponding to
-      * the user-inputted viral load and number of consective months
-      * (we assume visits are 6 months apart).
-      */
+  makeSubjectToVisitMap(followUps) {
+    // Convert to dictionary: { subject_id -> [ array of visits ] }
+    const subjectToVisitMap = {};
+    for (let i = 0; i < followUps.length; i += 1) {
+      const subjectId = followUps[i].subject_id;
+      if (subjectId in subjectToVisitMap) {
+        subjectToVisitMap[subjectId].push(followUps[i]);
+      } else {
+        subjectToVisitMap[subjectId] = [followUps[i]];
+      }
+    }
 
-    this.getFollowUpsWithHIV()
-      .then((followUps) => {
-        // Convert to dictionary: { subject_id -> [ array of visits ] }
-        const subjectToVisitMap = {};
-        for (let i = 0; i < followUps.length; i += 1) {
-          const subjectId = followUps[i].subject_id;
-          if (subjectId in subjectToVisitMap) {
-            subjectToVisitMap[subjectId].push(followUps[i]);
-          } else {
-            subjectToVisitMap[subjectId] = [followUps[i]];
+    // Sort each patient's visits by visit_number
+    Object.keys(subjectToVisitMap).forEach((key) => {
+      const subjectVisits = subjectToVisitMap[key];
+      if (subjectVisits.length > 1) {
+        subjectVisits.sort((a, b) => {
+          if (a.visit_number > b.visit_number) {
+            return 1;
           }
-        }
-
-        // Sort each patient's visits by visit_number
-        Object.keys(subjectToVisitMap).forEach((key) => {
-          const subjectVisits = subjectToVisitMap[key];
-          if (subjectVisits.length > 1) {
-            subjectVisits.sort((a, b) => {
-              if (a.visit_number > b.visit_number) {
-                return 1;
-              }
-              return ((b.visit_number > a.visit_number) ? -1 : 0);
-            });
-            subjectToVisitMap[key] = subjectVisits;
-          }
+          return ((b.visit_number > a.visit_number) ? -1 : 0);
         });
+        subjectToVisitMap[key] = subjectVisits;
+      }
+    });
 
-        const {
-          subjectLTNP,
-          subjectControl,
-          subjectNeither,
-        } = this.classifyAllSubjectLTNP(subjectToVisitMap);
+    return subjectToVisitMap;
+  }
+
+  async updateSubjectClassifications() {
+    // This function is quite different from the other 2 cases because
+    // we perform the classification inside the query itself in advance.
+    this.getFollowUpsForLTNPAndControl()
+      .then((followUpsClassified) => {
+        let subjectLTNP = this.makeSubjectToVisitMap(followUpsClassified['LTNP']);
+        let subjectControl = this.makeSubjectToVisitMap(followUpsClassified['control']);
+        console.log('ltnp: ', subjectLTNP);
+        console.log('control', subjectControl);
+
         this.setState({
-          subjectLTNP,
-          subjectControl,
-          subjectNeither,
+          subjectLTNP : subjectLTNP,
+          subjectControl : subjectControl,
           inLoadingState: false,
           resultAlreadyCalculated: true,
         });
@@ -1266,9 +1344,9 @@ class LTNPCase extends React.Component {
 
   makeCohortJSONFile(subjectsIn) {
     const annotatedObj = {
-      viral_load_upper_bound: this.state.viralLoadFromUser.toString(),
-      num_consective_months_on_haart: this.state.numConsecutiveMonthsFromUser.toString(),
-      subjects: subjectsIn,
+      "CD4_upper_bound": this.state.CD4FromUser.toString(),
+      "num_consective_years_on_haart": this.state.numConsecutiveYearsFromUser.toString(),
+      "subjects": subjectsIn,
     };
 
     const blob = new Blob([JSON.stringify(annotatedObj, null, 2)], { type: 'text/json' });
@@ -1276,29 +1354,29 @@ class LTNPCase extends React.Component {
   }
 
   downloadLTNP() {
-    const fileName = `ptc-cohort-vload-${this.state.viralLoadFromUser.toString()
-    }-months-${this.state.numConsecutiveMonthsFromUser.toString()}.json`;
+    const fileName = `ptc-cohort-vload-${this.state.CD4FromUser.toString()
+    }-years-${this.state.numConsecutiveYearsFromUser.toString()}.json`;
 
     const blob = this.makeCohortJSONFile(this.state.subjectLTNP);
     FileSaver.saveAs(blob, fileName);
   }
 
   downloadControl() {
-    const fileName = `control-cohort-vload-${this.state.viralLoadFromUser.toString()
-    }-months-${this.state.numConsecutiveMonthsFromUser.toString()}.json`;
+    const fileName = `control-cohort-vload-${this.state.CD4FromUser.toString()
+    }-years-${this.state.numConsecutiveYearsFromUser.toString()}.json`;
 
     const blob = this.makeCohortJSONFile(this.state.subjectControl);
     FileSaver.saveAs(blob, fileName);
   }
 
   checkReadyToCalculate() {
-    const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
-    const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
+    const CD4FromUser = this.CD4InputRef.current.valueAsNumber;
+    const numConsecutiveYearsFromUser = this.numConsecutiveYearsInputRef.current.valueAsNumber;
     this.setState({
-      viralLoadFromUser: viralLoadFromUser > 0 ? viralLoadFromUser : undefined,
-      numConsecutiveMonthsFromUser: numConsecutiveMonthsFromUser > 0
-        ? numConsecutiveMonthsFromUser : undefined,
-      isReadyToCalculate: (viralLoadFromUser > 0 && numConsecutiveMonthsFromUser > 0),
+      CD4FromUser: CD4FromUser > 0 ? CD4FromUser : undefined,
+      numConsecutiveYearsFromUser: numConsecutiveYearsFromUser > 0
+        ? numConsecutiveYearsFromUser : undefined,
+      isReadyToCalculate: (CD4FromUser > 0 && numConsecutiveYearsFromUser > 0),
       resultAlreadyCalculated: false,
     });
   }
@@ -1324,35 +1402,35 @@ class LTNPCase extends React.Component {
               Customized Filters
             </h4>
             <div className='hiv-cohort-filter__sidebar-input-label'>
-              Viral Load
+              CD4 Counts remain: 
               <span
                 className='hiv-cohort-filter__value-highlight'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '__' } &nbsp;cp/mL
+                &nbsp; &lt; { this.state.CD4FromUser || '__' }
               </span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
               <input
-                ref={this.viralLoadInputRef}
+                ref={this.CD4InputRef}
                 className='hiv-cohort-filter__text-input'
                 type='number'
                 onChange={this.checkReadyToCalculate}
-                defaultValue={this.state.viralLoadFromUser}
+                defaultValue={this.state.CD4FromUser}
                 placeholder='enter integer'
               />
               <br />
             </div>
             <div className='hiv-cohort-filter__sidebar-input-label'>
-              Received HAART for at least:<br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } months</span>
+              Maintained for at least:<br />
+              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveYearsFromUser || '__' } years</span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
               <input
-                ref={this.numConsecutiveMonthsInputRef}
+                ref={this.numConsecutiveYearsInputRef}
                 className='hiv-cohort-filter__text-input'
                 type='number'
                 onChange={this.checkReadyToCalculate}
-                defaultValue={this.state.numConsecutiveMonthsFromUser}
+                defaultValue={this.state.numConsecutiveYearsFromUser}
                 placeholder='enter integer'
               />
               <br />
@@ -1377,24 +1455,24 @@ class LTNPCase extends React.Component {
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-1'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
+                &nbsp; &lt; { this.state.CD4FromUser || '--'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-2'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '--' } &nbsp;cp/mL</div>
+                &nbsp; &lt; { this.state.CD4FromUser || '--' } &nbsp;cp/mL</div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-3'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
+                &nbsp; &lt; { this.state.CD4FromUser || '--'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
-                id='consecutive-months-overlay-1'
+                id='consecutive-years-overlay-1'
               >
-                { this.state.numConsecutiveMonthsFromUser || '--' } &nbsp;months
+                { this.state.numConsecutiveYearsFromUser || '--' } &nbsp;years
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
