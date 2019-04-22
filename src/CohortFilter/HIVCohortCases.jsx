@@ -67,12 +67,13 @@ class CohortFilterCase extends React.Component {
           edges {
             node {
               subject_id
-              leu3n
               visit_number
               thrpyv
               visit_date
               fposdate
               frstdthd
+              leu3n
+              submitter_id
               viral_load
             }
           }
