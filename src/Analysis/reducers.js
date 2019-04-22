@@ -8,6 +8,8 @@ const analysis = (state = {}, action) => {
   }
   case 'JOB_STATUS_INTERVAL':
     return { ...state, jobStatusInterval: action.value };
+  case 'RESET_JOB':
+    return { ...state, job: null, jobStatusInterval: null, resultURL: null };
   default:
     return state;
   }

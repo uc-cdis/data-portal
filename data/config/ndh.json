@@ -90,16 +90,10 @@
           "name": "Files"
         },
         {
-          "icon": "cohort-tools",
-          "link": "/cohort-tools",
-          "color": "#a2a2a2",
-          "name": "Cohort Tools"
-        },
-        {
           "icon": "analysis",
           "link": "/analysis",
           "color": "#a2a2a2",
-          "name": "Simulation"
+          "name": "Apps"
         },
         {
           "icon": "query",
@@ -147,8 +141,10 @@
     ]
   },
   "featureFlags": {
-    "explorer": true
+    "explorer": true,
+    "analysis": true
   },
+  "analysisTools": [ "ndhHIV" ],
   "dataExplorerConfig": {
     "charts": {
       "project_id": {
@@ -182,7 +178,8 @@
             "race",
             "ethnicity",
             "vital_status",
-            "frstdthd"
+            "frstdthd",
+            "species"
           ]
         }, {
           "title": "Diagnosis",
@@ -194,17 +191,32 @@
             "status",
             "virus_type",
             "virus_subtype",
-            "_maintain_viral_load_less_than",
-            "_min_viral_load",
-            "therapy",
-            "therapyv",
             "hiv_status"
+          ]
+        },
+        {
+          "title": "Drug Resistance",
+          "fields": [
+            "amikacin_res_phenotype",
+            "capreomycin_res_phenotype",
+            "isoniazid_res_phenotype",
+            "kanamycin_res_phenotype",
+            "ofloxacin_res_phenotype",
+            "pyrazinamide_res_phenotype",
+            "rifampicin_res_phenotype",
+            "rifampin_res_phenotype",
+            "streptomycin_res_phenotype"
           ]
         }
       ]
     },
     "table": {
       "enabled": false
+    },
+    "dropdowns": {
+      "download": {
+        "title": "Download"
+      }
     },
     "buttons": [
       {
@@ -213,7 +225,8 @@
         "title": "Download All Clinical",
         "leftIcon": "user",
         "rightIcon": "download",
-        "fileName": "clinical.json"
+        "fileName": "clinical.json",
+        "dropdownId": "download"
       },
       {
         "enabled": true,
@@ -221,7 +234,15 @@
         "title": "Download Manifest",
         "leftIcon": "datafile",
         "rightIcon": "download",
-        "fileName": "manifest.json"
+        "fileName": "manifest.json",
+        "dropdownId": "download"
+      },
+      {
+        "enabled": true,
+        "type": "export-to-workspace",
+        "title": "Export To Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "download"
       }
     ],
     "arrangerConfig": {

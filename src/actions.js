@@ -72,7 +72,6 @@ export const fetchCreds = (opts) => {
  */
 export const fetchWithCreds = (opts) => {
   const { path, method = 'GET', body = null, customHeaders, dispatch, useCache } = opts;
-
   if (useCache && (method === 'GET') && fetchCache[path]) {
     return Promise.resolve({ status: 200, data: JSON.parse(fetchCache[path]) });
   }
