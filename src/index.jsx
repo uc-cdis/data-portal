@@ -185,7 +185,6 @@ async function init() {
                       }
                     />
                     <Route
-<<<<<<< HEAD
                       path='/cohort-tools'
                       component={
                         props => (<ProtectedContent
@@ -195,8 +194,6 @@ async function init() {
                       }
                     />
                     <Route
-=======
->>>>>>> 7ea5c284d0593342dae7b4821ea05368f4773b4e
                       path='/dd/:node'
                       component={
                         props => (<ProtectedContent
