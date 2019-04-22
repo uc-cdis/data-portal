@@ -281,7 +281,7 @@
         "rightIcon": "download",
       },
       {
-        "enabled": false,
+        "enabled": true,
         "type": "export-to-workspace",
         "title": "Export To Workspace",
         "leftIcon": "datafile",

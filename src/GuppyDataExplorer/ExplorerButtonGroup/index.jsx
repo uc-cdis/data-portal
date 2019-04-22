@@ -18,11 +18,15 @@ class ExplorerButtonGroup extends React.Component {
       // for manifest
       manifestEntryCount: 0,
 
-      // for export to workspace
-      exportInProgress: false,
-      exportFileName: null,
+      // for exports
       toasterOpen: false,
+
+      // for export to workspace
+      exportingToWorkspace: false,
+      exportFileName: null,
       exportStatus: null,
+      toasterSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
+      toasterErrorText: 'There was an error exporting your cohort.',
 
       // a semaphore that could hold pending state by multiple queries
       pendingManifestEntryCountRequestNumber: 0,
@@ -139,7 +143,7 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   exportToWorkspace = async () => {
-    this.setState({ exportInProgress: true });
+    this.setState({ exportingToWorkspace: true });
     const resultManifest = await this.getManifest();
     if (resultManifest) {
       fetchWithCreds({
@@ -167,7 +171,7 @@ class ExplorerButtonGroup extends React.Component {
     this.setState({
       toasterOpen: true,
       exportStatus: 200,
-      exportInProgress: false,
+      exportingToWorkspace: false,
       exportFileName: data.filename,
     });
   }
@@ -176,9 +180,13 @@ class ExplorerButtonGroup extends React.Component {
     this.setState({
       toasterOpen: true,
       exportStatus: status,
-      exportInProgress: false,
+      exportingToWorkspace: false,
     });
   }
+
+  isFileButton = buttonConfig => buttonConfig.type === 'manifest' ||
+    buttonConfig.type === 'export' ||
+    buttonConfig.type === 'export-to-workspace';
 
   refreshManifestEntryCount = async () => {
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
@@ -190,7 +198,8 @@ class ExplorerButtonGroup extends React.Component {
     }));
     if (this.props.buttonConfig
       && this.props.buttonConfig.buttons
-      && this.props.buttonConfig.buttons.some(btnCfg => btnCfg.type === 'manifest' && btnCfg.enabled)) {
+      && this.props.buttonConfig.buttons.some(
+        btnCfg => this.isFileButton(btnCfg) && btnCfg.enabled)) {
       const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
       if (caseIDResult) {
         const caseIDList = caseIDResult.map(i => i[caseField]);
@@ -215,11 +224,22 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'manifest') {
       return this.state.manifestEntryCount > 0;
     }
+<<<<<<< HEAD
     if (buttonConfig.type === 'export-to-pfb') {
+=======
+    if (buttonConfig.type === 'export-to-workspace') {
+>>>>>>> 3be14726865fa008979bdb9b9e1bd331d68b8228
       return this.state.manifestEntryCount > 0;
     }
 
     return this.props.totalCount > 0;
+  }
+
+  isButtonPending = (buttonConfig) => {
+    if (buttonConfig.type === 'export-to-workspace') {
+      return this.state.exportingToWorkspace;
+    }
+    return false;
   }
 
   renderButton = (buttonConfig) => {
@@ -244,7 +264,7 @@ class ExplorerButtonGroup extends React.Component {
         enabled={this.isButtonEnabled(buttonConfig)}
         tooltipEnabled={buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false}
         tooltipText={buttonConfig.tooltipText}
-        isPending={pendingState}
+        isPending={this.isButtonPending(buttonConfig)}
       />
     );
   }
