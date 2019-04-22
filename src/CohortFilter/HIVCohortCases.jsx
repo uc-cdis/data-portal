@@ -1,10 +1,9 @@
 import React from 'react';
 import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
-import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { arrangerGraphqlPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
-import './HIVCohortFilter.css';
+import './CohortFilter.css';
 import CohortPTCSvg from '../img/cohort-PTC.svg';
 import CohortECSvg from '../img/cohort-EC.svg';
 import CohortLTNPSvg from '../img/cohort-LTNP.svg';
@@ -102,7 +101,7 @@ class CohortFilterCase extends React.Component {
       );
   }
 
-  makeSubjectToVisitMap(followUps) {
+  makeSubjectToVisitMap(followUps) {  // eslint-disable-line class-methods-use-this
     // Convert to dictionary: { subject_id -> [ array of visits sorted by visit_date ] }
     const subjectToVisitMap = {};
     for (let i = 0; i < followUps.length; i += 1) {
@@ -160,7 +159,9 @@ class CohortFilterCase extends React.Component {
 
     let subjectsWithAtLeast1Haart = resList[0];
     let subjectsWithAtLeast1NonHaart = resList[1];
-    let subjectsWithNoHaartTreatments = subjectsWithAtLeast1NonHaart.filter(x => !subjectsWithAtLeast1Haart.map(y => y['key']).includes(x['key']));
+    let subjectsWithNoHaartTreatments = subjectsWithAtLeast1NonHaart.filter(
+      x => !subjectsWithAtLeast1Haart.map(y => y['key']).includes(x['key'])
+    );
 
     // Transform to map
     let resultMap = {};
@@ -413,26 +414,26 @@ class PTCCase extends CohortFilterCase {
   render() {
     return (
       <React.Fragment>
-        <div className='hiv-cohort-filter__sidebar'>
+        <div className='cohort-filter__sidebar'>
           <form>
-            <h2 className='hiv-cohort-filter__sidebar-title'>
+            <h2 className='cohort-filter__sidebar-title'>
               PTC Cohort Selection
             </h2>
-            <h4 className='hiv-cohort-filter__sidebar-subtitle'>
+            <h4 className='cohort-filter__sidebar-subtitle'>
               Customized Filters
             </h4>
-            <div className='hiv-cohort-filter__sidebar-input-label'>
+            <div className='cohort-filter__sidebar-input-label'>
               Viral Load
               <span
-                className='hiv-cohort-filter__value-highlight'
+                className='cohort-filter__value-highlight'
               >
                 &nbsp; &lt; { this.state.viralLoadFromUser || '__' } &nbsp;cp/mL
               </span>
             </div>
-            <div className='hiv-cohort-filter__sidebar-input'>
+            <div className='cohort-filter__sidebar-input'>
               <input
                 ref={this.viralLoadInputRef}
-                className='hiv-cohort-filter__text-input'
+                className='cohort-filter__text-input'
                 type='number'
                 onChange={this.checkReadyToCalculate}
                 defaultValue={this.state.viralLoadFromUser}
@@ -440,14 +441,14 @@ class PTCCase extends CohortFilterCase {
               />
               <br />
             </div>
-            <div className='hiv-cohort-filter__sidebar-input-label'>
+            <div className='cohort-filter__sidebar-input-label'>
               Received HAART for at least:<br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } months</span>
+              <span className='cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } months</span>
             </div>
-            <div className='hiv-cohort-filter__sidebar-input'>
+            <div className='cohort-filter__sidebar-input'>
               <input
                 ref={this.numConsecutiveMonthsInputRef}
-                className='hiv-cohort-filter__text-input'
+                className='cohort-filter__text-input'
                 type='number'
                 onChange={this.checkReadyToCalculate}
                 defaultValue={this.state.numConsecutiveMonthsFromUser}
@@ -455,7 +456,7 @@ class PTCCase extends CohortFilterCase {
               />
               <br />
             </div>
-            <div className='hiv-cohort-filter__button-group'>
+            <div className='cohort-filter__button-group'>
               <Button
                 onClick={this.updateFilters}
                 enabled={!this.state.inLoadingState && this.state.isReadyToCalculate}
@@ -467,41 +468,41 @@ class PTCCase extends CohortFilterCase {
         </div>
 
 
-        <div className='hiv-cohort-filter__main'>
-          <div className='hiv-cohort-filter__main-wrapper'>
-            <div className='hiv-cohort-filter__svg-wrapper' id='PTC-svg-wrapper'>
+        <div className='cohort-filter__main'>
+          <div className='cohort-filter__main-wrapper'>
+            <div className='cohort-filter__svg-wrapper' id='PTC-svg-wrapper'>
               <CohortPTCSvg width='665px' />
               <div
-                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight cohort-filter__overlay'
                 id='vload-overlay-1'
               >
                 &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
               </div>
               <div
-                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight cohort-filter__overlay'
                 id='vload-overlay-2'
               >
                 &nbsp; &lt; { this.state.viralLoadFromUser || '--' } &nbsp;cp/mL</div>
               <div
-                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight cohort-filter__overlay'
                 id='vload-overlay-3'
               >
                 &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
               </div>
               <div
-                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight cohort-filter__overlay'
                 id='consecutive-months-overlay-1'
               >
                 { this.state.numConsecutiveMonthsFromUser || '--' } &nbsp;months
               </div>
               <div
-                className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight-2 cohort-filter__overlay'
                 id='ptc-counts-overlay-1'
               >
                 { this.showCount(true) }
               </div>
               <div
-                className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight-2 cohort-filter__overlay'
                 id='control-counts-overlay-1'
               >
                 { this.showCount(false) }
@@ -509,7 +510,7 @@ class PTCCase extends CohortFilterCase {
 
               <div
                 id='download-PTC-cohort-overlay'
-                className='hiv-cohort-filter__overlay'
+                className='cohort-filter__overlay'
               >
                 {
                   <React.Fragment>
@@ -528,7 +529,7 @@ class PTCCase extends CohortFilterCase {
                 }
               </div>
 
-              <div id='download-control-cohort-overlay' className='hiv-cohort-filter__overlay'>
+              <div id='download-control-cohort-overlay' className='cohort-filter__overlay'>
                 {
                   <React.Fragment>
                     <Button
@@ -675,7 +676,8 @@ class ECCase extends CohortFilterCase {
         }
       }
 
-      // If the window above didn't apply anywhere in this subject's followups, the subject is control
+      // If the window above didn't apply anywhere in this subject's followups, 
+      // the subject is control
       subjectControl.push(subjectWithVisits);
     });
 
@@ -737,26 +739,26 @@ class ECCase extends CohortFilterCase {
   render() {
     return (
       <React.Fragment>
-        <div className='hiv-cohort-filter__sidebar'>
+        <div className='cohort-filter__sidebar'>
           <form>
-            <h2 className='hiv-cohort-filter__sidebar-title'>
+            <h2 className='cohort-filter__sidebar-title'>
               EC Cohort Selection
             </h2>
-            <h4 className='hiv-cohort-filter__sidebar-subtitle'>
+            <h4 className='cohort-filter__sidebar-subtitle'>
               Customized Filters
             </h4>
-            <div className='hiv-cohort-filter__sidebar-input-label'>
+            <div className='cohort-filter__sidebar-input-label'>
               Viral Load
               <span
-                className='hiv-cohort-filter__value-highlight'
+                className='cohort-filter__value-highlight'
               >
                 &nbsp; &lt; { this.state.viralLoadFromUser || '__' } &nbsp;cp/mL
               </span>
             </div>
-            <div className='hiv-cohort-filter__sidebar-input'>
+            <div className='cohort-filter__sidebar-input'>
               <input
                 ref={this.viralLoadInputRef}
-                className='hiv-cohort-filter__text-input'
+                className='cohort-filter__text-input'
                 type='number'
                 onChange={this.checkReadyToCalculate}
                 defaultValue={this.state.viralLoadFromUser}
@@ -764,14 +766,14 @@ class ECCase extends CohortFilterCase {
               />
               <br />
             </div>
-            <div className='hiv-cohort-filter__sidebar-input-label'>
+            <div className='cohort-filter__sidebar-input-label'>
               Maintained for at least:<br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } months</span>
+              <span className='cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } months</span>
             </div>
-            <div className='hiv-cohort-filter__sidebar-input'>
+            <div className='cohort-filter__sidebar-input'>
               <input
                 ref={this.numConsecutiveMonthsInputRef}
-                className='hiv-cohort-filter__text-input'
+                className='cohort-filter__text-input'
                 type='number'
                 onChange={this.checkReadyToCalculate}
                 defaultValue={this.state.numConsecutiveMonthsFromUser}
@@ -779,7 +781,7 @@ class ECCase extends CohortFilterCase {
               />
               <br />
             </div>
-            <div className='hiv-cohort-filter__button-group'>
+            <div className='cohort-filter__button-group'>
               <Button
                 onClick={this.updateFilters}
                 enabled={!this.state.inLoadingState && this.state.isReadyToCalculate}
@@ -791,30 +793,30 @@ class ECCase extends CohortFilterCase {
         </div>
 
 
-        <div className='hiv-cohort-filter__main'>
-          <div className='hiv-cohort-filter__main-wrapper'>
-            <div className='hiv-cohort-filter__svg-wrapper' id='EC-svg-wrapper'>
+        <div className='cohort-filter__main'>
+          <div className='cohort-filter__main-wrapper'>
+            <div className='cohort-filter__svg-wrapper' id='EC-svg-wrapper'>
               <CohortECSvg width='665px' />
               <div
-                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight cohort-filter__overlay'
                 id='vload-overlay-4'
               >
                 &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
               </div>
               <div
-                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight cohort-filter__overlay'
                 id='consecutive-months-overlay-2'
               >
                 { this.state.numConsecutiveMonthsFromUser || '--' } &nbsp;months
               </div>
               <div
-                className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight-2 cohort-filter__overlay'
                 id='ec-counts-overlay-1'
               >
                 { this.showCount(true) }
               </div>
               <div
-                className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight-2 cohort-filter__overlay'
                 id='control-counts-overlay-2'
               >
                 { this.showCount(false) }
@@ -822,7 +824,7 @@ class ECCase extends CohortFilterCase {
 
               <div
                 id='download-EC-cohort-overlay'
-                className='hiv-cohort-filter__overlay'
+                className='cohort-filter__overlay'
               >
                 {
                   <React.Fragment>
@@ -841,7 +843,7 @@ class ECCase extends CohortFilterCase {
                 }
               </div>
 
-              <div id='download-control-cohort-overlay-EC' className='hiv-cohort-filter__overlay'>
+              <div id='download-control-cohort-overlay-EC' className='cohort-filter__overlay'>
                 {
                   <React.Fragment>
                     <Button
@@ -952,7 +954,9 @@ class LTNPCase extends CohortFilterCase {
     // For each subject, extract the visits with visit_date > fposdate and check their CD4 counts
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
       const visitArray = subjectToVisitMap[subjectId];      
-      let numYearsHIVPositive = Math.min(currentYear, visitArray[0]['frstdthd']) - visitArray[0]['fposdate'];
+      let numYearsHIVPositive = Math.min(
+          currentYear, visitArray[0]['frstdthd']
+        ) - visitArray[0]['fposdate'];
       if (numYearsHIVPositive < this.state.numConsecutiveYearsFromUser) {
         // The subject is neither control nor LTNP
         return;
@@ -968,7 +972,8 @@ class LTNPCase extends CohortFilterCase {
         x => (x['leu3n'] <= this.state.CD4FromUser && x['leu3n'] != null)
       );
 
-      if (followUpsWithCD4CountsBelowThresholdAfterFposDate.length == 0 && followUpsAfterFposDate.length > 0) {
+      if (followUpsWithCD4CountsBelowThresholdAfterFposDate.length === 0 
+          && followUpsAfterFposDate.length > 0) {
         subjectLTNP.push(subjectWithVisits);
       } else {
         subjectControl.push(subjectWithVisits);
@@ -1049,26 +1054,26 @@ class LTNPCase extends CohortFilterCase {
   render() {
     return (
       <React.Fragment>
-        <div className='hiv-cohort-filter__sidebar'>
+        <div className='cohort-filter__sidebar'>
           <form>
-            <h2 className='hiv-cohort-filter__sidebar-title'>
+            <h2 className='cohort-filter__sidebar-title'>
               LTNP Cohort Selection
             </h2>
-            <h4 className='hiv-cohort-filter__sidebar-subtitle'>
+            <h4 className='cohort-filter__sidebar-subtitle'>
               Customized Filters
             </h4>
-            <div className='hiv-cohort-filter__sidebar-input-label'>
+            <div className='cohort-filter__sidebar-input-label'>
               CD4 Counts remain: 
               <span
-                className='hiv-cohort-filter__value-highlight'
+                className='cohort-filter__value-highlight'
               >
                 &nbsp; &gt; { this.state.CD4FromUser || '__' }
               </span>
             </div>
-            <div className='hiv-cohort-filter__sidebar-input'>
+            <div className='cohort-filter__sidebar-input'>
               <input
                 ref={this.CD4InputRef}
-                className='hiv-cohort-filter__text-input'
+                className='cohort-filter__text-input'
                 type='number'
                 onChange={this.checkReadyToCalculate}
                 defaultValue={this.state.CD4FromUser}
@@ -1076,14 +1081,14 @@ class LTNPCase extends CohortFilterCase {
               />
               <br />
             </div>
-            <div className='hiv-cohort-filter__sidebar-input-label'>
+            <div className='cohort-filter__sidebar-input-label'>
               Maintained for at least:<br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveYearsFromUser || '__' } years</span>
+              <span className='cohort-filter__value-highlight'>{ this.state.numConsecutiveYearsFromUser || '__' } years</span>
             </div>
-            <div className='hiv-cohort-filter__sidebar-input'>
+            <div className='cohort-filter__sidebar-input'>
               <input
                 ref={this.numConsecutiveYearsInputRef}
-                className='hiv-cohort-filter__text-input'
+                className='cohort-filter__text-input'
                 type='number'
                 onChange={this.checkReadyToCalculate}
                 defaultValue={this.state.numConsecutiveYearsFromUser}
@@ -1091,7 +1096,7 @@ class LTNPCase extends CohortFilterCase {
               />
               <br />
             </div>
-            <div className='hiv-cohort-filter__button-group'>
+            <div className='cohort-filter__button-group'>
               <Button
                 onClick={this.updateFilters}
                 enabled={!this.state.inLoadingState && this.state.isReadyToCalculate}
@@ -1103,42 +1108,42 @@ class LTNPCase extends CohortFilterCase {
         </div>
 
 
-        <div className='hiv-cohort-filter__main'>
-          <div className='hiv-cohort-filter__main-wrapper'>
-            <div className='hiv-cohort-filter__svg-wrapper'>
+        <div className='cohort-filter__main'>
+          <div className='cohort-filter__main-wrapper'>
+            <div className='cohort-filter__svg-wrapper'>
               <CohortLTNPSvg width='665px' />
               <div
-                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight cohort-filter__overlay'
                 id='cd4-overlay-1'
               >
                 &nbsp; &gt; { this.state.CD4FromUser || '--'}
               </div>
               <div
-                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight cohort-filter__overlay'
                 id='cd4-overlay-2'
               >
                 &nbsp; &gt; { this.state.CD4FromUser || '--' }
               </div>
               <div
-                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight cohort-filter__overlay'
                 id='consecutive-years-overlay-1'
               >
-                { this.state.numConsecutiveYearsFromUser || '--' } &nbsp;{this.state.numConsecutiveYearsFromUser == 1 ? 'year' : 'years'}
+                { this.state.numConsecutiveYearsFromUser || '--' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}
               </div>
               <div
-                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight cohort-filter__overlay'
                 id='consecutive-years-overlay-2'
               >
-                { this.state.numConsecutiveYearsFromUser || '--' } &nbsp;{this.state.numConsecutiveYearsFromUser == 1 ? 'year' : 'years'}
+                { this.state.numConsecutiveYearsFromUser || '--' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}
               </div>
               <div
-                className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight-2 cohort-filter__overlay'
                 id='ltnp-counts-overlay-1'
               >
                 { this.showCount(true) }
               </div>
               <div
-                className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
+                className='cohort-filter__value-highlight-2 cohort-filter__overlay'
                 id='control-counts-overlay-3'
               >
                 { this.showCount(false) }
@@ -1146,7 +1151,7 @@ class LTNPCase extends CohortFilterCase {
 
               <div
                 id='download-LTNP-cohort-overlay'
-                className='hiv-cohort-filter__overlay'
+                className='cohort-filter__overlay'
               >
                 {
                   <React.Fragment>
@@ -1165,7 +1170,7 @@ class LTNPCase extends CohortFilterCase {
                 }
               </div>
 
-              <div id='download-control-cohort-overlay-LTNP' className='hiv-cohort-filter__overlay'>
+              <div id='download-control-cohort-overlay-LTNP' className='cohort-filter__overlay'>
                 {
                   <React.Fragment>
                     <Button
@@ -1190,59 +1195,8 @@ class LTNPCase extends CohortFilterCase {
   }
 }
 
-class HIVCohortFilter extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          caseToRender: "PTC",
-          caseToRenderLabel: "PTC Cohort Selection",
-          inLoadingState: false,
-          isReadyToCalculate: false,
-          resultAlreadyCalculated: false,
-        };
-        this.selectedCase = this.selectedCase.bind(this);
-        this.updateCase = this.updateCase.bind(this);
-    }
-
-    selectedCase() {
-        if(this.state.caseToRender == 'PTC') {
-            return (<PTCCase />);
-        }
-        if(this.state.caseToRender == 'EC') {
-            return (<ECCase />);
-        }
-        if(this.state.caseToRender == 'LTNP') {
-            return (<LTNPCase />);
-        }
-    }
-
-    updateCase(caseToSwitchTo) {
-        this.setState({ caseToRender : caseToSwitchTo, caseToRenderLabel: caseToSwitchTo + ' Cohort Selection' });
-    }
-
-    render() {        
-        return (
-            <div className='hiv-cohort-filter'>
-                <Dropdown buttonType='secondary' id='hiv-cohort-filter__case-selection-dropdown' >
-                    <Dropdown.Button rightIcon='dropdown' buttonType='secondary' displaySelectedOption='true'>
-                        {this.state.caseToRenderLabel}
-                    </Dropdown.Button>
-                    <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => this.updateCase('PTC') }>
-                        PTC Cohort Selection
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={() => this.updateCase('EC') }>
-                        EC Cohort Selection
-                      </Dropdown.Item>
-                       <Dropdown.Item onClick={() => this.updateCase('LTNP') }>
-                        LTNP Cohort Selection
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                {this.selectedCase()}
-            </div>
-        );
-    }
+export { 
+  PTCCase, 
+  ECCase,
+  LTNPCase,
 }
-
-export default HIVCohortFilter;
