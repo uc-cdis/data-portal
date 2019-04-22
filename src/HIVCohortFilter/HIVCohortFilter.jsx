@@ -249,13 +249,13 @@ class PTCCase extends React.Component {
           }
           if (vloadCheck && therapyCheck) {
             // Found PTC!
+            subjectWithVisits.consecutive_haart_treatments_begin_at_followup
+                      = visitArray[i].submitter_id;
             subjectPTC.push(subjectWithVisits);
           } else {
             // Found control!
             subjectControl.push(subjectWithVisits);
           }
-          subjectWithVisits.consecutive_haart_treatments_begin_at_followup
-                      = visitArray[i].submitter_id;
 
           // Done with classification
           return;
@@ -726,9 +726,9 @@ class ECCase extends React.Component {
         );
         if (windowMatch) {
           // Found EC!
-          subjectEC.push(subjectWithVisits);
           subjectWithVisits['consecutive_viral_loads_below_threshold_begin_at_followup']
                       = visitArray[i].submitter_id;
+          subjectEC.push(subjectWithVisits);
           return;
         }
       }
@@ -1026,99 +1026,24 @@ class LTNPCase extends React.Component {
     });
   }
 
-  // new function
-  getBucketByKeyWithCD4VAR(bucketKey, inequalityOperator) {
-    // Checks if  ( CD4_count {>,<,>=,<=} CD4FromUser )  for visits with current_year - visit_date >= numConsecutiveYearsFromUser
-    var d = new Date();
-    var currentYear = d.getFullYear();
-    const query = `
-    {
-      follow_up {
-        aggregations(filters: {first: 10000, op: "and", content: [
-          {op: "${inequalityOperator}", content: {field: "leu3n", value: "${this.state.CD4FromUser}"}},
-          {op: ">=", content: {field: "visit_date", value: "${currentYear - this.state.numConsecutiveYearsFromUser}"}},
-          {op: "<=", content: {field: "fposdate", value: "${currentYear - this.state.numConsecutiveYearsFromUser}"}},
-          {op: "=", content: {field: "hiv_status", value: "positive"}}]}) 
-        {
-          ${bucketKey} {
-            buckets {
-              key
-              doc_count
-            }
-          }
-        }
-      }
-    }
-    `;
-    console.log(query);
-    return this.performQuery(query).then((res) => {
-      if (!res || !res.data) {
-        throw new Error('Error while querying subjects with HIV');
-      }
-      return res.data.follow_up.aggregations[bucketKey].buckets;
-    });
-  }
-
-  // changed
+  // barely changed? 
   async getBucketByKey(bucketKey) {
+    // Returns map of subjects with no HAART treatments and at least 1 CD4 count above the threshold
     const resList = await Promise.all([
       this.getBucketByKeyWithHAARTVAR(bucketKey, true),
       this.getBucketByKeyWithHAARTVAR(bucketKey, false),
-      this.getBucketByKeyWithCD4VAR(bucketKey, ">"),
-      this.getBucketByKeyWithCD4VAR(bucketKey, "<=")
     ]);
 
-    // First set complement gets subjects who have never received HAART therapy
     let subjectsWithAtLeast1Haart = resList[0];
     let subjectsWithAtLeast1NonHaart = resList[1];
     let subjectsWithNoHaartTreatments = subjectsWithAtLeast1NonHaart.filter(x => !subjectsWithAtLeast1Haart.map(y => y['key']).includes(x['key']));
 
-    // Second set complement gets subjects who have never had CD4 < threshold since fposdate
-    let subjectsWithAtLeast1CD4AboveThresholdSincePosDate = resList[2];
-    let subjectsWithAtLeast1CD4BelowThresholdSincePosDate = resList[3];
-    let subjectsWithAllCD4CountsAboveThresholdSincePosDate = 
-      subjectsWithAtLeast1CD4AboveThresholdSincePosDate.filter(
-        x => !subjectsWithAtLeast1CD4BelowThresholdSincePosDate.map(
-          y => y['key']).includes(x['key']
-        )
-      );
-
-    // Intersect the above two to find subjects matching LTNP criteria
-    let LTNPCase = subjectsWithNoHaartTreatments.filter(
-        x => subjectsWithAllCD4CountsAboveThresholdSincePosDate.map(
-          y => y['key']).includes(x['key']
-        )
-      );
-
-    // The subjects who never received HAART but have a CD4 count in that 
-    // timespan that's too small are in the control case
-    let controlCase = subjectsWithNoHaartTreatments.filter(
-        x => subjectsWithAtLeast1CD4BelowThresholdSincePosDate.map(
-          y => y['key']).includes(x['key']
-        )
-      );
-
-    console.log('no haart therapy: ', subjectsWithNoHaartTreatments);
-    console.log('1+ CD4 above: ', subjectsWithAtLeast1CD4AboveThresholdSincePosDate);
-    console.log('1+ CD4 below: ', subjectsWithAtLeast1CD4BelowThresholdSincePosDate);
-    console.log('All above: ', subjectsWithAllCD4CountsAboveThresholdSincePosDate);
-    console.log('LTNP case: ', LTNPCase);
-
-
-
     // Transform to map
-    let LTNPCaseMap = {};
-    for (let i = 0; i < LTNPCase.length; i += 1) {
-      LTNPCaseMap[LTNPCase[i]['key']] = LTNPCase[i]['doc_count']
+    let resultMap = {};
+    for (let i = 0; i < subjectsWithNoHaartTreatments.length; i += 1) {
+      resultMap[subjectsWithNoHaartTreatments[i]['key']] = subjectsWithNoHaartTreatments[i]['doc_count']
     }
-
-    let controlCaseMap = {};
-    for (let i = 0; i < controlCase.length; i += 1) {
-      controlCaseMap[controlCase[i]['key']] = controlCase[i]['doc_count']
-    }
-
-
-    return { 'LTNP' : LTNPCaseMap , 'control' : controlCaseMap };
+    return resultMap;
   }
 
   getFollowupsBuckets(key, keyRange) {
@@ -1144,6 +1069,8 @@ class LTNPCase extends React.Component {
               visit_number
               thrpyv
               visit_date
+              fposdate
+              frstdthd
             }
           }
 
@@ -1158,11 +1085,14 @@ class LTNPCase extends React.Component {
     });
   }
 
-  async getFollowUpForKeys(keyName, keyCountMap) {
+  // unchanged i think
+  async getFollowUpsWithHIV() {
+    const keyName = 'subject_id';
+    const keyCountMap = await this.getBucketByKey(keyName);
+    
     let batchCounts = 0;
     const promiseList = [];
     let keyRange = [];
-
     Object.keys(keyCountMap).forEach((keyId) => {
       const count = keyCountMap[keyId];
       if (batchCounts + count > 5000) {
@@ -1184,14 +1114,6 @@ class LTNPCase extends React.Component {
       mergedFollowUps = mergedFollowUps.concat(res);
     });
     return mergedFollowUps;
-  }
-
-  async getFollowUpsForLTNPAndControl() {
-    const keyName = 'subject_id';
-    const keyCountMaps = await this.getBucketByKey(keyName);
-    let followsUpsForLTNP = this.getFollowUpForKeys(keyName, keyCountMaps['LTNP']);
-    let followsUpsForControl = this.getFollowUpForKeys(keyName, keyCountMaps['control']);
-    return {'LTNP' : followsUpsForLTNP , 'control' : followsUpsForControl};
   }
 
   performQuery(queryString) { // eslint-disable-line
@@ -1232,65 +1154,38 @@ class LTNPCase extends React.Component {
   classifyAllSubjectLTNP(subjectToVisitMap) {
     const subjectLTNP = [];
     const subjectControl = [];
-    const subjectNeither = [];
-    const slidingWindowSize = Math.ceil(this.state.numConsecutiveYearsFromUser / 6);
 
-    // For each patient, try to find numConsecutiveYearsFromUser consecutive
-    // visits that match the LTNP criteria
+    var d = new Date();
+    var currentYear = d.getFullYear();
+
+    // For each subject, extract the visits with visit_date > fposdate and check their CD4 counts
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
-      const visitArray = subjectToVisitMap[subjectId];
-      const subjectWithVisits = {
-        subject_id: subjectId,
-        consecutive_haart_treatments_begin_at_followup: 'N/A',
-        follow_ups: visitArray,
-      };
-      if (visitArray.length < slidingWindowSize + 1) {
-        subjectNeither.push(subjectWithVisits);
+      const visitArray = subjectToVisitMap[subjectId];      
+      let numYearsHIVPositive = Math.min(currentYear, visitArray[0]['frstdthd']) - visitArray[0]['fposdate'];
+      if (numYearsHIVPositive < this.state.numConsecutiveYearsFromUser) {
+        // The subject is neither control nor LTNP
         return;
       }
+      const subjectWithVisits = {
+        subject_id: subjectId,
+        num_years_hiv_positive: numYearsHIVPositive,
+        follow_ups: visitArray,
+      };
 
-      // The sliding window step. window is of size this.state.numConsecutiveYearsFromUser
-      for (let i = 0; i < visitArray.length - slidingWindowSize; i += 1) {
-        const windowMatch = this.doTheseVisitsMatchSlidingWindowCriteria(
-          visitArray.slice(i, i + slidingWindowSize),
-        );
-        if (windowMatch) {
-          // Now that we know the first numConsecutiveYearsFromUser visits in the array
-          // match the criteria, we should check the following visit
-          const theNextVisit = visitArray[i + slidingWindowSize];
-          if (theNextVisit["leu3n"] === null || theNextVisit.thrpyv === null) {
-            continue; // eslint-disable-line no-continue
-          }
-          const vloadCheck = (theNextVisit["leu3n"] < this.state.CD4FromUser);
-          const therapyCheck = !this.therapyValuesOfInterest.includes(
-            theNextVisit.thrpyv,
-          );
-          if (!therapyCheck) {
-            // Look for next instance of thrpyv == HAART for this subject
-            continue; // eslint-disable-line no-continue
-          }
-          if (vloadCheck && therapyCheck) {
-            // Found LTNP!
-            subjectLTNP.push(subjectWithVisits);
-          } else {
-            // Found control!
-            subjectControl.push(subjectWithVisits);
-          }
-          subjectWithVisits.consecutive_haart_treatments_begin_at_followup
-                      = visitArray[i].submitter_id;
+      let followUpsAfterFposDate = visitArray.filter(x => (x['visit_date'] > x['fposdate']));
+      let followUpsWithCD4CountsBelowThresholdAfterFposDate = followUpsAfterFposDate.filter(
+        x => (x['leu3n'] <= this.state.CD4FromUser && x['leu3n'] != null)
+      );
 
-          // Done with classification
-          return;
-        }
+      if (followUpsWithCD4CountsBelowThresholdAfterFposDate.length == 0 && followUpsAfterFposDate.length > 0) {
+        subjectLTNP.push(subjectWithVisits);
+      } else {
+        subjectControl.push(subjectWithVisits);
       }
-
-      // If the window above didn't apply, the subject is neither
-      subjectNeither.push(subjectId);
     });
     return {
       subjectLTNP,
       subjectControl,
-      subjectNeither,
     };
   }
 
@@ -1323,19 +1218,42 @@ class LTNPCase extends React.Component {
     return subjectToVisitMap;
   }
 
+  // changed so slightly
   async updateSubjectClassifications() {
-    // This function is quite different from the other 2 cases because
-    // we perform the classification inside the query itself in advance.
-    this.getFollowUpsForLTNPAndControl()
-      .then((followUpsClassified) => {
-        let subjectLTNP = this.makeSubjectToVisitMap(followUpsClassified['LTNP']);
-        let subjectControl = this.makeSubjectToVisitMap(followUpsClassified['control']);
-        console.log('ltnp: ', subjectLTNP);
-        console.log('control', subjectControl);
+    this.getFollowUpsWithHIV()
+      .then((followUps) => {
+        // Convert to dictionary: { subject_id -> [ array of visits ] }
+        const subjectToVisitMap = {};
+        for (let i = 0; i < followUps.length; i += 1) {
+          const subjectId = followUps[i].subject_id;
+          if (subjectId in subjectToVisitMap) {
+            subjectToVisitMap[subjectId].push(followUps[i]);
+          } else {
+            subjectToVisitMap[subjectId] = [followUps[i]];
+          }
+        }
 
+        // Sort each patient's visits by visit_number
+        Object.keys(subjectToVisitMap).forEach((key) => {
+          const subjectVisits = subjectToVisitMap[key];
+          if (subjectVisits.length > 1) {
+            subjectVisits.sort((a, b) => {
+              if (a.visit_number > b.visit_number) {
+                return 1;
+              }
+              return ((b.visit_number > a.visit_number) ? -1 : 0);
+            });
+            subjectToVisitMap[key] = subjectVisits;
+          }
+        });
+
+        const {
+          subjectLTNP,
+          subjectControl,
+        } = this.classifyAllSubjectLTNP(subjectToVisitMap);
         this.setState({
-          subjectLTNP : subjectLTNP,
-          subjectControl : subjectControl,
+          subjectLTNP,
+          subjectControl,
           inLoadingState: false,
           resultAlreadyCalculated: true,
         });
@@ -1344,8 +1262,8 @@ class LTNPCase extends React.Component {
 
   makeCohortJSONFile(subjectsIn) {
     const annotatedObj = {
-      "CD4_upper_bound": this.state.CD4FromUser.toString(),
-      "num_consective_years_on_haart": this.state.numConsecutiveYearsFromUser.toString(),
+      "lower_bound_for_CD4_count": this.state.CD4FromUser.toString(),
+      "lower_bound_for_num_years_hiv_positive": this.state.numConsecutiveYearsFromUser.toString(),
       "subjects": subjectsIn,
     };
 
@@ -1354,7 +1272,7 @@ class LTNPCase extends React.Component {
   }
 
   downloadLTNP() {
-    const fileName = `ptc-cohort-vload-${this.state.CD4FromUser.toString()
+    const fileName = `ltnp-cohort-vload-${this.state.CD4FromUser.toString()
     }-years-${this.state.numConsecutiveYearsFromUser.toString()}.json`;
 
     const blob = this.makeCohortJSONFile(this.state.subjectLTNP);
@@ -1406,7 +1324,7 @@ class LTNPCase extends React.Component {
               <span
                 className='hiv-cohort-filter__value-highlight'
               >
-                &nbsp; &lt; { this.state.CD4FromUser || '__' }
+                &nbsp; &gt; { this.state.CD4FromUser || '__' }
               </span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
@@ -1453,36 +1371,37 @@ class LTNPCase extends React.Component {
               <CohortLTNPSvg width='665px' />
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
-                id='vload-overlay-1'
+                id='cd4-overlay-1'
               >
-                &nbsp; &lt; { this.state.CD4FromUser || '--'} &nbsp;cp/mL
+                &nbsp; &gt; { this.state.CD4FromUser || '--'}
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
-                id='vload-overlay-2'
+                id='cd4-overlay-2'
               >
-                &nbsp; &lt; { this.state.CD4FromUser || '--' } &nbsp;cp/mL</div>
-              <div
-                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
-                id='vload-overlay-3'
-              >
-                &nbsp; &lt; { this.state.CD4FromUser || '--'} &nbsp;cp/mL
+                &nbsp; &gt; { this.state.CD4FromUser || '--' }
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='consecutive-years-overlay-1'
               >
-                { this.state.numConsecutiveYearsFromUser || '--' } &nbsp;years
+                { this.state.numConsecutiveYearsFromUser || '--' } &nbsp;{this.state.numConsecutiveYearsFromUser == 1 ? 'year' : 'years'}
+              </div>
+              <div
+                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                id='consecutive-years-overlay-2'
+              >
+                { this.state.numConsecutiveYearsFromUser || '--' } &nbsp;{this.state.numConsecutiveYearsFromUser == 1 ? 'year' : 'years'}
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
-                id='ptc-counts-overlay-1'
+                id='ltnp-counts-overlay-1'
               >
                 { this.showCount(true) }
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
-                id='control-counts-overlay-1'
+                id='control-counts-overlay-3'
               >
                 { this.showCount(false) }
               </div>
@@ -1508,7 +1427,7 @@ class LTNPCase extends React.Component {
                 }
               </div>
 
-              <div id='download-control-cohort-overlay' className='hiv-cohort-filter__overlay'>
+              <div id='download-control-cohort-overlay-LTNP' className='hiv-cohort-filter__overlay'>
                 {
                   <React.Fragment>
                     <Button

@@ -230,4 +230,45 @@
   left: 366px;
 }
 
+/* LTNP Case */
+.hiv-cohort-filter #cd4-overlay-1 {
+  top: 447px;
+  left: 7px;
+}
+
+.hiv-cohort-filter #cd4-overlay-2 {
+  top: 447px;
+  left: 363px;
+}
+
+.hiv-cohort-filter #consecutive-years-overlay-1 {
+  top: 98px;
+  left: 185px;
+}
+
+.hiv-cohort-filter #consecutive-years-overlay-2 {
+  top: 493px;
+  left: 13px;
+}
+
+#ltnp-counts-overlay-1 {
+  top: 372px;
+  right: 410px;
+}
+
+#control-counts-overlay-3 {
+  top: 372px;
+  right: 55px;
+}
+
+#download-LTNP-cohort-overlay {
+  top: 525px;
+  left: 13px;
+}
+
+#download-control-cohort-overlay-LTNP {
+  top: 525px;
+  left: 366px;
+}
+
 
