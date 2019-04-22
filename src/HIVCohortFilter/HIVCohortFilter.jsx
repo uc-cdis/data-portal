@@ -138,6 +138,7 @@ class CohortFilterCase extends React.Component {
   }
 
   checkReadyToCalculate() {
+    // Overridden by LTNP case
     const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
     const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
     this.setState({
@@ -149,18 +150,9 @@ class CohortFilterCase extends React.Component {
     });
   }
 
-  downloadControl() {
-    // Overridden by LTNP
-    const fileName = `control-cohort-vload-${this.state.viralLoadFromUser.toString()
-    }-months-${this.state.numConsecutiveMonthsFromUser.toString()}.json`;
-
-    const blob = this.makeCohortJSONFile(this.state.subjectControl);
-    FileSaver.saveAs(blob, fileName);
-  }
-
   async getBucketByKey(bucketKey) {
-    // Returns map of subjects who have never received a HAART treatment
-    // Used in the EC and LTNP cases. Overridden by PTC case
+    // Overridden by PTC case
+    // Returns map of subjects who have never received HAART treatment
     const resList = await Promise.all([
       this.getBucketByKeyWithHAARTVAR(bucketKey, true),
       this.getBucketByKeyWithHAARTVAR(bucketKey, false),
@@ -176,6 +168,15 @@ class CohortFilterCase extends React.Component {
       resultMap[subjectsWithNoHaartTreatments[i]['key']] = subjectsWithNoHaartTreatments[i]['doc_count']
     }
     return resultMap;
+  }
+
+  downloadControl() {
+    // Overridden by LTNP
+    const fileName = `control-cohort-vload-${this.state.viralLoadFromUser.toString()
+    }-months-${this.state.numConsecutiveMonthsFromUser.toString()}.json`;
+
+    const blob = this.makeCohortJSONFile(this.state.subjectControl);
+    FileSaver.saveAs(blob, fileName);
   }
 }
 
@@ -227,6 +228,8 @@ class PTCCase extends CohortFilterCase {
   }
 
   getBucketByKeyWithHAARTVAR(bucketKey, isHAART) {
+    // The viral_load check in the below query ensures that 
+    // the subjects retrieved have *at least* one follow_up with viral_load < viralLoadFromUser
     const query = `
     {
       follow_up {
@@ -308,7 +311,7 @@ class PTCCase extends CohortFilterCase {
         return;
       }
 
-      // The sliding window step. window is of size this.state.numConsecutiveMonthsFromUser
+      // The sliding window step. Window is of size this.state.numConsecutiveMonthsFromUser / 6
       for (let i = 0; i < visitArray.length - slidingWindowSize; i += 1) {
         const windowMatch = this.doTheseVisitsMatchSlidingWindowCriteria(
           visitArray.slice(i, i + slidingWindowSize),
@@ -363,7 +366,6 @@ class PTCCase extends CohortFilterCase {
     this.getFollowUpsWithHIV()
       .then((followUps) => {
         let subjectToVisitMap = this.makeSubjectToVisitMap(followUps);
-        console.log('all data: ', subjectToVisitMap);
 
         const {
           subjectPTC,
@@ -594,6 +596,10 @@ class ECCase extends CohortFilterCase {
   }
 
   getBucketByKeyWithHAARTVAR(bucketKey, isHAART) {
+    // The below query differs from the PTC case in that there is no viral_load check.
+    // This is because the EC and LTNP cases uses this function to find people who have
+    // never received haart treatments; we need to look at *all* their followups.
+    // (Read the function getBucketByKey() defined in the CohortFilterCase class.)
     const query = `
     {
       follow_up {
@@ -651,7 +657,7 @@ class ECCase extends CohortFilterCase {
         return;
       }
       
-      // The sliding window step. window is of size this.state.numConsecutiveMonthsFromUser
+      // The sliding window step. Window is of size this.state.numConsecutiveMonthsFromUser / 6
       // Note that this loop differs slightly from the PTC case: 
       // we use i<= instead of i<, because we dont need to check the followup immediately
       // after the window, as we did in the PTC Case
@@ -867,7 +873,7 @@ class LTNPCase extends CohortFilterCase {
   * The UI displays a 'decision tree' (just hardcoded svg), and makes an es query based on
   * sliding window size and viral load number.
   * Definitions:
-  * - Never received HAART treatment: follow_up.thrpyv != HAART &&  follow_up.thrpy != HAART (HU/ddI defined)
+  * - Never received HAART treatment: follow_up.thrpyv != HAART
   * - X years: (get.current_year - followup.fposdate)
   * - CD4 > Y: followup.leu3n > Y
   * Definitions:
@@ -883,8 +889,8 @@ class LTNPCase extends CohortFilterCase {
   * app will show the count for LTNP case and control subjects and have buttons to
   * download the clinical manifest for them.
   * Known limitations:
-  * - this algorithm assumes that once a subject is HIV positive, they remain HIV positive
-  * - if followups are missing between fposdate and currentYear, they don't count against 
+  * - This algorithm assumes that once a subject is HIV positive, they remain HIV positive
+  * - If followups are missing between fposdate and currentYear, they don't count against 
   * the subject -- that is, the CD4 count is assumed to remain under the 
   * threshold for the missing visits.
   */
