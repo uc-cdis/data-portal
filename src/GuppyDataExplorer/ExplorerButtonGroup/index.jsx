@@ -191,7 +191,8 @@ class ExplorerButtonGroup extends React.Component {
     }));
     if (this.props.buttonConfig
       && this.props.buttonConfig.buttons
-      && this.props.buttonConfig.buttons.some(btnCfg => this.isFileButton(btnCfg) && btnCfg.enabled)) {
+      && this.props.buttonConfig.buttons.some(
+        btnCfg => this.isFileButton(btnCfg) && btnCfg.enabled)) {
       const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
       if (caseIDResult) {
         const caseIDList = caseIDResult.map(i => i[caseField]);
