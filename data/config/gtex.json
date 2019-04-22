@@ -275,6 +275,13 @@
       },
       {
         "enabled": false,
+        "type": "export-to-pfb",
+        "title": "Export to PFB",
+        "leftIcon": "datafile",
+        "rightIcon": "download",
+      },
+      {
+        "enabled": false,
         "type": "export-to-workspace",
         "title": "Export To Workspace",
         "leftIcon": "datafile",

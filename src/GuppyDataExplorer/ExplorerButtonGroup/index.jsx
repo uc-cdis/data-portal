@@ -46,6 +46,9 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export') {
       clickFunc = this.exportToCloud;
     }
+    if (buttonConfig.type === 'export-to-pfb') {
+      clickFunc = this.exportToPFB;
+    }
     if (buttonConfig.type === 'export-to-workspace') {
       clickFunc = this.exportToWorkspace;
     }
@@ -131,6 +134,10 @@ class ExplorerButtonGroup extends React.Component {
     exportAllSelectedDataToCloud(this.props.downloadRawDataByFields);
   }
 
+  exportToPFB = () => {
+
+  }
+
   exportToWorkspace = async () => {
     this.setState({ exportInProgress: true });
     const resultManifest = await this.getManifest();
@@ -206,6 +213,9 @@ class ExplorerButtonGroup extends React.Component {
 
   isButtonEnabled = (buttonConfig) => {
     if (buttonConfig.type === 'manifest') {
+      return this.state.manifestEntryCount > 0;
+    }
+    if (buttonConfig.type === 'export-to-pfb') {
       return this.state.manifestEntryCount > 0;
     }
 
