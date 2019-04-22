@@ -274,11 +274,11 @@
         "tooltipText": "You have not selected any cases to export. Please use the checkboxes on the left to select specific cases you would like to export."
       },
       {
-        "enabled": false,
+        "enabled": true,
         "type": "export-to-pfb",
         "title": "Export to PFB",
         "leftIcon": "datafile",
-        "rightIcon": "download",
+        "rightIcon": "download"
       },
       {
         "enabled": true,

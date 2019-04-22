@@ -20,13 +20,22 @@ class ExplorerButtonGroup extends React.Component {
 
       // for exports
       toasterOpen: false,
+      toasterHeadline: '',
+      toasterError: null,
+      toasterErrorText: 'There was an error exporting your cohort.',
+
+      // for export to PFB
+      exportingToPFB: false,
+      exportPFBStatus: null,
+      exportPFBURL: '',
+      pfbStartText: 'Your PFB export is in progress. It may take up to 15 minutes to complete.',
+      pfbWarning: 'Do not close your browser until your PFB export is finished.',
 
       // for export to workspace
       exportingToWorkspace: false,
-      exportFileName: null,
-      exportStatus: null,
-      toasterSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
-      toasterErrorText: 'There was an error exporting your cohort.',
+      exportWorkspaceFileName: null,
+      exportWorkspaceStatus: null,
+      workspaceSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
 
       // a semaphore that could hold pending state by multiple queries
       pendingManifestEntryCountRequestNumber: 0,
@@ -82,12 +91,12 @@ class ExplorerButtonGroup extends React.Component {
     <Toaster isEnabled={this.state.toasterOpen} className={'explorer-button-group__toaster-div'}>
       <Button
         className='explorer-button-group__toaster-button'
-        onClick={() => this.setState({ toasterOpen: false })}
+        onClick={() => this.closeToaster()}
         label='Close'
         buttonType='primary'
         enabled
       />
-      { (this.state.exportStatus === 200) ?
+      { (this.state.exportWorkspaceStatus === 200) ?
         <Button
           className='explorer-button-group__toaster-button'
           label='Go To Workspace'
@@ -97,21 +106,39 @@ class ExplorerButtonGroup extends React.Component {
         />
         : null
       }
-      { (this.state.exportStatus === 200) ?
+      {
         <div className='explorer-button-group__toaster-text'>
-          <div> {this.state.toasterSuccessText} </div>
-          <div> File Name: {this.state.exportFileName} </div>
-        </div>
-        :
-        <div className='explorer-button-group__toaster-text'>
-          <div> {this.state.toasterErrorText} </div>
-          <div> Error: {this.state.exportStatus} </div>
+          <div> {this.state.toasterHeadline} </div>
+          { (this.state.exportWorkspaceFileName) ?
+            <div> Most recent Workspace file name: { this.state.exportWorkspaceFileName } </div>
+            : null
+          }
+          { (this.state.exportPFBURL) ?
+            <div> Most recent PFB URL: { this.state.exportPFBURL } </div>
+            : null
+          }
+          { (this.state.toasterError) ?
+            <div> Error: { this.state.toasterError } </div>
+            : null
+          }
+          { (this.state.exportingToPFB) ?
+            <div> { this.state.pfbWarning } </div>
+            : null
+          }
         </div>
       }
     </Toaster>
   ));
 
   gotoWorkspace = () => this.props.history.push('/workspace');
+
+  closeToaster = () => {
+    this.setState({
+      toasterOpen: false,
+      toasterHeadline: '',
+      toasterError: null,
+    });
+  }
 
   downloadData = filename => () => {
     this.props.downloadRawData().then((res) => {
@@ -139,7 +166,11 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   exportToPFB = () => {
-
+    this.setState({
+      exportingToPFB: true,
+      toasterOpen: true,
+      toasterHeadline: this.state.pfbStartText,
+    });
   }
 
   exportToWorkspace = async () => {
@@ -170,23 +201,26 @@ class ExplorerButtonGroup extends React.Component {
   exportToWorkspaceSuccessHandler = (data) => {
     this.setState({
       toasterOpen: true,
-      exportStatus: 200,
+      toasterHeadline: this.state.workspaceSuccessText,
+      exportWorkspaceStatus: 200,
       exportingToWorkspace: false,
-      exportFileName: data.filename,
+      exportWorkspaceFileName: data.filename,
     });
   }
 
   exportToWorkspaceErrorHandler = (status) => {
     this.setState({
       toasterOpen: true,
-      exportStatus: status,
+      toasterHeadline: this.state.toasterErrorText,
+      exportWorkspaceStatus: status,
       exportingToWorkspace: false,
     });
   }
 
   isFileButton = buttonConfig => buttonConfig.type === 'manifest' ||
     buttonConfig.type === 'export' ||
-    buttonConfig.type === 'export-to-workspace';
+    buttonConfig.type === 'export-to-workspace' ||
+    buttonConfig.type === 'export-to-pfb';
 
   refreshManifestEntryCount = async () => {
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
@@ -224,11 +258,10 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'manifest') {
       return this.state.manifestEntryCount > 0;
     }
-<<<<<<< HEAD
     if (buttonConfig.type === 'export-to-pfb') {
-=======
+      return this.state.manifestEntryCount > 0;
+    }
     if (buttonConfig.type === 'export-to-workspace') {
->>>>>>> 3be14726865fa008979bdb9b9e1bd331d68b8228
       return this.state.manifestEntryCount > 0;
     }
 
@@ -238,6 +271,9 @@ class ExplorerButtonGroup extends React.Component {
   isButtonPending = (buttonConfig) => {
     if (buttonConfig.type === 'export-to-workspace') {
       return this.state.exportingToWorkspace;
+    }
+    if (buttonConfig.type === 'export-to-pfb') {
+      return this.state.exportingToPFB;
     }
     return false;
   }
