@@ -193,6 +193,20 @@
             "virus_subtype",
             "hiv_status"
           ]
+        },
+        {
+          "title": "Drug Resistance",
+          "fields": [
+            "amikacin_res_phenotype",
+            "capreomycin_res_phenotype",
+            "isoniazid_res_phenotype",
+            "kanamycin_res_phenotype",
+            "ofloxacin_res_phenotype",
+            "pyrazinamide_res_phenotype",
+            "rifampicin_res_phenotype",
+            "rifampin_res_phenotype",
+            "streptomycin_res_phenotype"
+          ]
         }
       ]
     },
