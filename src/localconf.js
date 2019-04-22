@@ -40,7 +40,7 @@ function buildConfig(opts) {
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   const arrangerGraphqlPath = `${hostname}api/v0/flat-search/search/graphql`;
   let userapiPath = `${hostname}user/`;
-  const jobapiPath = `${hostname}/job/`;
+  const jobapiPath = `${hostname}job/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = `${hostname}index/`;
@@ -91,6 +91,79 @@ function buildConfig(opts) {
   const defaultLineLimit = 30;
   const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;
 
+  const analysisApps = {
+    ndhHIV: {
+      title: 'NDH HIV Classifier',
+      description: `This tool runs a series of analyses on all the NIAID data in
+      order to narrow it down to a cohort consisting of...`,
+      image: '/src/img/analysis-icons/hiv-classifier.svg',
+    },
+    ndhVirus: {
+      title: 'NDH Virulence Simulation',
+      description: `This simulation runs a docker version of the Hypothesis Testing
+          using Phylogenies (HyPhy) tool over data submitted in the NIAID Data Hub. \n
+          The simulation is focused on modeling a Bayesian Graph Model (BGM) based on a binary matrix input.
+          The implemented example predicts the virulence status of different influenza strains based on their mutations
+          (the mutation panel is represented as the input binary matrix).`,
+      image: '/src/img/analysis-icons/virulence.png',
+    },
+    vaGWAS: {
+      title: 'eGWAS',
+      description: 'Expression-based Genome-Wide Association Study',
+      image: '/src/img/analysis-icons/gwas.svg',
+      options: [
+        {
+          label: 'Lung',
+          value: 'Lung',
+        },
+        {
+          label: 'Gastrointestina',
+          value: 'Gastrointestina',
+        },
+        {
+          label: 'Prostate',
+          value: 'Prostate',
+        },
+        {
+          label: 'Head and Neck',
+          value: 'Head and Neck',
+        },
+        {
+          label: 'Skin',
+          value: 'Skin',
+        },
+        {
+          label: 'NULL',
+          value: 'NULL',
+        },
+        {
+          label: 'Lymph Node',
+          value: 'Lymph Node',
+        },
+        {
+          label: 'Liver',
+          value: 'Liver',
+        },
+        {
+          label: 'Musculoskeleta',
+          value: 'Musculoskeleta',
+        },
+        {
+          label: 'Occipital Mass',
+          value: 'Occipital Mass',
+        },
+        {
+          label: 'Brain',
+          value: 'Brain',
+        },
+        {
+          label: 'BxType',
+          value: 'BxType',
+        },
+      ],
+    },
+  };
+
   return {
     app,
     basename,
@@ -125,6 +198,7 @@ function buildConfig(opts) {
     indexPublic,
     manifestServiceApiPath,
     wtsPath,
+    analysisApps,
   };
 }
 
