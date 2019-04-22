@@ -56,7 +56,7 @@ export const predictFileType = (dirtyData, fileType) => {
  * @param {int} timeoutMs passed through to setinterval
  * @return the setinterval id (can be passed to clearinterval)
  */
-export function asyncSetInterval(lambda, timeoutMs) {
+export async function asyncSetInterval(lambda, timeoutMs) {
   let isRunningGuard = false;
   return setInterval(
     () => {

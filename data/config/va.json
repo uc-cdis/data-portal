@@ -3,59 +3,50 @@
   "graphql": {
     "boardCounts": [
       {
-        "graphql": "_data_collection_count",
-        "name": "Data Collection",
-        "plural": "Data Collections"
-      },
-      {
         "graphql": "_clinical_supplement_count",
         "name": "Clinical Supplement",
         "plural": "Clinical Supplements"
       },
       {
-        "graphql": "_submitted_unaligned_reads_count",
+        "graphql": "_unaligned_reads_file_count",
         "name": "Submitted Unaligned Reads",
         "plural": "Submitted Unaligned Reads Files"
       },
       {
-        "graphql": "_image_exam_file_count",
-        "name": "Image Exam File",
-        "plural": "Image Exam Files"
+        "graphql": "_imaging_file_count",
+        "name": "Image File",
+        "plural": "Image Files"
       }
     ],
     "chartCounts": [
-      {
-        "graphql": "_data_collection_count",
-        "name": "Data Collection"
-      },
       {
         "graphql": "_clinical_supplement_count",
         "name": "Clinical Supplement"
       },
       {
-        "graphql": "_submitted_unaligned_reads_count",
+        "graphql": "_unaligned_reads_file_count",
         "name": "Submitted Unaligned Reads"
       },
       {
-        "graphql": "_image_exam_file_count",
+        "graphql": "_imaging_file_count",
         "name": "Image Exam File"
       }
     ],
     "projectDetails": "boardCounts"
   },
   "components": {
-    "appName": "The VA Precision Oncology Data Portal",
+    "appName": "The Veterans Precision Oncology Data Commons",
     "index": {
       "introduction": {
-        "heading": "VA Data Portal",
-        "text": "The VA Data Commons supports the management, analysis and sharing of US military veteran oncologic data for the research communityand aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for precision oncology. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.",
+        "heading": "Veterans Precision Oncology Data Commons",
+        "text": "The VPO Data Commons supports the management, and analysis of veteran oncologic data for the research community. The data commons aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for precision oncology. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries, and providing a cloud-based analysis workspace with rich tools and resources.",
         "link": "/submission"
       },
       "buttons": [
         {
           "name": "Define Data Field",
           "icon": "data-field-define",
-          "body": "The VA Data Portal defines the data in a general way. Please study the dictionary before you start browsing.",
+          "body": "The VPO Data Commons defines the data in a general way. Please study the dictionary before you start browsing.",
           "link": "/DD",
           "label": "Learn more"
         },
@@ -83,13 +74,19 @@
       ]
     },
     "navigation": {
-      "title": "VA Data Portal",
       "items": [
         {
           "icon": "dictionary",
           "link": "/DD",
           "color": "#a2a2a2",
           "name": "Dictionary"
+        },
+        {
+          "name": "Exploration",
+          "icon": "exploration",
+          "link": "/explorer",
+          "label": "Explorer",
+          "color": "#a2a2a2"
         },
         {
           "icon": "files",
@@ -110,15 +107,102 @@
           "name": "Workspace"
         },
         {
+          "icon": "analysis",
+          "link": "/analysis",
+          "color": "#a2a2a2",
+          "name": "Apps"
+        },
+        {
           "icon": "profile",
           "link": "/identity",
           "color": "#a2a2a2",
           "name": "Profile"
         }
       ]
-    }
+    },
+    "login": {
+      "title": "Veterans Precision Oncology Data Commons",
+      "subTitle": "Explore, Analyze, and Share Data",
+      "text": "The Veterans Data Commons supports the management, analysis and sharing of veteran oncologic data for the research community and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for precision oncology.",
+      "contact": "If you have any questions about access or the registration process, please contact ",
+      "email": "support@datacommons.io"
+    },
+    "footerLogos": [
+      {
+        "src": "/src/img/gen3.png",
+        "href": "https://ctds.uchicago.edu/gen3",
+        "alt": "Gen3 Data Commons"
+      },
+      {
+        "src": "/src/img/createdby.png",
+        "href": "https://ctds.uchicago.edu/",
+        "alt": "Center for Translational Data Science at the University of Chicago"
+      },
+      {
+        "src": "/src/img/sponsors/OCC.png",
+        "href": "http://occ-data.org/",
+        "alt": "Open Commons Consortium"
+      }
+    ]
   },
   "featureFlags": {
-    "explorer": true
+    "explorer": true,
+    "analysis": true
+  },
+  "analysisTools": [ "vaGWAS" ],
+  "dataExplorerConfig": {
+    "charts": {
+      "Chicago_ID": {
+        "chartType": "count",
+        "title": "Patients"
+      },
+      "Oncology_Primary__ICDOSite":{
+        "chartType": "bar",
+        "title": "Site (ICD-O)"
+      },
+      "Oncology_Primary__Radiation":{
+        "chartType": "pie",
+        "title": "Radiation"
+      },
+      "Oncology_Primary__Chemotherapy":{
+        "chartType": "pie",
+        "title": "Chemotherapy"
+      }
+    },
+    "filters": {
+      "tabs": [
+        {
+          "title": "Demographic",
+          "fields":[
+            "project_id",
+            "Gender",
+            "Race",
+            "Ethnicity",
+            "Oncology_Primary__ICDOSite",
+            "Oncology_Primary__Radiation",
+            "Oncology_Primary__Chemotherapy"
+          ]
+        }
+      ]
+    },
+    "buttons": [
+      {
+        "enabled": false,
+        "type": "manifest",
+        "title": "Download Manifest",
+        "leftIcon": "datafile",
+        "rightIcon": "download",
+        "fileName": "manifest.json"
+      }
+    ],
+    "table": {
+      "enabled": true
+    },
+    "arrangerConfig": {
+      "projectId": "search",
+      "graphqlField": "patients",
+      "index": "",
+      "nodeCountField": "Chicago_ID"
+    }
   }
 }

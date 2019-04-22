@@ -26,7 +26,6 @@ import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import ReduxMapFiles from './Submission/ReduxMapFiles';
 import ReduxMapDataModel from './Submission/ReduxMapDataModel';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
-import HIVCohortFilter from './HIVCohortFilter/HIVCohortFilter';
 import UserAgreementCert from './UserAgreement/ReduxCertPopup';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
@@ -34,7 +33,8 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, indexPublic } from './localconf';
-import ReduxAnalysis from './Analysis/ReduxAnalysis.js';
+import Analysis from './Analysis/Analysis';
+import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
@@ -144,12 +144,26 @@ async function init() {
                         props => <ProtectedContent component={GraphQLQuery} {...props} />
                       }
                     />
-                    <Route
-                      path='/analysis'
-                      component={
-                        props => <ProtectedContent component={ReduxAnalysis} {...props} />
-                      }
-                    />
+                    {
+                      isEnabled('analysis') ?
+                        <Route
+                          path='/analysis/:app'
+                          component={
+                            props => <ProtectedContent component={ReduxAnalysisApp} {...props} />
+                          }
+                        />
+                        : null
+                    }
+                    {
+                      isEnabled('analysis') ?
+                        <Route
+                          path='/analysis'
+                          component={
+                            props => <ProtectedContent component={Analysis} {...props} />
+                          }
+                        />
+                        : null
+                    }
                     <Route
                       path='/identity'
                       component={
@@ -165,15 +179,6 @@ async function init() {
                       component={
                         props => (<ProtectedContent
                           component={UserAgreementCert}
-                          {...props}
-                        />)
-                      }
-                    />
-                    <Route
-                      path='/cohort-tools'
-                      component={
-                        props => (<ProtectedContent
-                          component={HIVCohortFilter}
                           {...props}
                         />)
                       }
@@ -258,14 +263,15 @@ async function init() {
                         }
                       }
                     />
-                    {isEnabled('explorer') ?
-                      <Route
-                        path='/explorer'
-                        component={
-                          props => <ProtectedContent component={DataExplorer} {...props} />
-                        }
-                      />
-                      : null
+                    {
+                      isEnabled('explorer') ?
+                        <Route
+                          path='/explorer'
+                          component={
+                            props => <ProtectedContent component={DataExplorer} {...props} />
+                          }
+                        />
+                        : null
                     }
                     <Route
                       path='/:project'
