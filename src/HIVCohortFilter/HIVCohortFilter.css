@@ -1,22 +1,22 @@
 :root {
-  --cohort-filter__sidebar-width: 320px;
-  --cohort-filter__switch-border-radius: 4px;
-  --cohort-filter__switch-border-color: var(--g3-color__black);
+  --hiv-cohort-filter__sidebar-width: 320px;
+  --hiv-cohort-filter__switch-border-radius: 4px;
+  --hiv-cohort-filter__switch-border-color: var(--g3-color__black);
 }
 
-.cohort-filter {
+.hiv-cohort-filter {
   display: flex;
   height: calc(100vh - 121px);
   padding: 0;
 }
 
-.cohort-filter .g3-dropdown {
+.hiv-cohort-filter .g3-dropdown {
   width: 275px;
   position: absolute;
   margin: 15px 0 0 15px;
 }
 
-.cohort-filter__text-input {
+.hiv-cohort-filter__text-input {
   border: 1px solid var(--g3-color__lightgray);
   border-radius: 2px;
   width: 152px;
@@ -27,19 +27,19 @@
   padding: 0 10px;
 }
 
-.cohort-filter__text-input:focus,
-.cohort-filter__text-input:active {
+.hiv-cohort-filter__text-input:focus,
+.hiv-cohort-filter__text-input:active {
   box-shadow: none;
   outline: none;
 }
 
-.cohort-filter__sidebar .cohort-filter__button-group {
+.hiv-cohort-filter__sidebar .hiv-cohort-filter__button-group {
   text-align: center;
   border-top: 1px solid #a9a9a9;
   padding-top: 18px;
 }
 
-.cohort-filter__sidebar {
+.hiv-cohort-filter__sidebar {
   float: left;
   width: 360px;
   height: 380px;
@@ -50,7 +50,7 @@
   margin: 80px 0 0 15px;
 }
 
-.cohort-filter__sidebar-title {
+.hiv-cohort-filter__sidebar-title {
   font-weight: bold;
   margin: auto;
   text-align: center;
@@ -58,12 +58,12 @@
   border-bottom: 1px solid #a9a9a9;
 }
 
-.cohort-filter__sidebar-subtitle {
+.hiv-cohort-filter__sidebar-subtitle {
   font-weight: bold;
   padding: 3px 0 0 15px;
 }
 
-.cohort-filter__main {
+.hiv-cohort-filter__main {
   width: 100%;
   overflow-y: scroll;
   text-align: center;
@@ -71,57 +71,57 @@
   padding: 15px 0 15px 15px;
 }
 
-.cohort-filter__sidebar-input {
+.hiv-cohort-filter__sidebar-input {
   padding-left: 15px;
   padding-bottom: 15px;
   font-size: 14px;
 }
 
-.cohort-filter__sidebar-input-label {
+.hiv-cohort-filter__sidebar-input-label {
   padding-left: 15px;
   padding-bottom: 8px;
   font-size: 18px;
 }
 
-.cohort-filter__value-highlight {
+.hiv-cohort-filter__value-highlight {
   font-weight: bold;
   color: #ef8523;
   font-size: 18px;
 }
 
-.cohort-filter__value-highlight-2 {
+.hiv-cohort-filter__value-highlight-2 {
   font-weight: bold;
   color: #3283c8;
   font-size: 18px;
 }
 
-.cohort-filter__svg-wrapper div {
+.hiv-cohort-filter__svg-wrapper div {
   position: absolute;
   overflow: hidden;
 
 }
 
-.cohort-filter__svg-wrapper {
+.hiv-cohort-filter__svg-wrapper {
   padding: 0;
 }
 
-.cohort-filter__svg-wrapper#PTC-svg-wrapper {
+.hiv-cohort-filter__svg-wrapper#PTC-svg-wrapper {
   width: 665px;
   height: 924px;
 }
 
-.cohort-filter__svg-wrapper#EC-svg-wrapper {
+.hiv-cohort-filter__svg-wrapper#EC-svg-wrapper {
   width: 665px;
   height: 614px;
 }
 
-.cohort-filter__main-wrapper {
+.hiv-cohort-filter__main-wrapper {
   margin: auto;
   position: relative;
   display: inline-block;
 }
 
-.cohort-filter .button-primary-orange[disabled]:hover {
+.hiv-cohort-filter .button-primary-orange[disabled]:hover {
   border: 1px solid #9b9b9b;
   background-color: #ef8523;
   letter-spacing: .06rem;
@@ -130,7 +130,7 @@
   font-weight: 500;
 }
 
-.cohort-filter__main .spinner {
+.hiv-cohort-filter__main .spinner {
   transform: scale(0.5);
   -webkit-transform: scale(0.5);
   -moz-transform: scale(0.5);
@@ -139,42 +139,42 @@
   overflow: visible;
 }
 
-.cohort-filter__main .spinner .spinner__svg {
+.hiv-cohort-filter__main .spinner .spinner__svg {
   fill: #3283C8;
 }
 
-.cohort-filter .g3-dropdown-button__button {
+.hiv-cohort-filter .g3-dropdown-button__button {
   text-align: left;
 }
 
-.cohort-filter__svg-wrapper .cohort-filter__overlay {
+.hiv-cohort-filter__svg-wrapper .hiv-cohort-filter__overlay {
   display: block;
   position: absolute;
   z-index: 1;
   overflow: visible;
 }
 
-.cohort-filter button:disabled {
+.hiv-cohort-filter button:disabled {
   cursor: not-allowed;
 }
 
 /* PTC Case */
-.cohort-filter #vload-overlay-1 {
+.hiv-cohort-filter #vload-overlay-1 {
   top: 447px;
   left: 13px;
 }
 
-.cohort-filter #vload-overlay-2 {
+.hiv-cohort-filter #vload-overlay-2 {
   top: 840px;
   left: 15px;
 }
 
-.cohort-filter #vload-overlay-3 {
+.hiv-cohort-filter #vload-overlay-3 {
   top: 840px;
   left: 367px;
 }
 
-.cohort-filter #consecutive-months-overlay-1 {
+.hiv-cohort-filter #consecutive-months-overlay-1 {
   top: 398px;
   left: 13px;
 }
@@ -200,12 +200,12 @@
 }
 
 /* EC Case */
-.cohort-filter #vload-overlay-4 {
+.hiv-cohort-filter #vload-overlay-4 {
   top: 447px;
   left: 7px;
 }
 
-.cohort-filter #consecutive-months-overlay-2 {
+.hiv-cohort-filter #consecutive-months-overlay-2 {
   top: 493px;
   left: 13px;
 }
@@ -231,22 +231,22 @@
 }
 
 /* LTNP Case */
-.cohort-filter #cd4-overlay-1 {
+.hiv-cohort-filter #cd4-overlay-1 {
   top: 447px;
   left: 7px;
 }
 
-.cohort-filter #cd4-overlay-2 {
+.hiv-cohort-filter #cd4-overlay-2 {
   top: 447px;
   left: 363px;
 }
 
-.cohort-filter #consecutive-years-overlay-1 {
+.hiv-cohort-filter #consecutive-years-overlay-1 {
   top: 98px;
   left: 185px;
 }
 
-.cohort-filter #consecutive-years-overlay-2 {
+.hiv-cohort-filter #consecutive-years-overlay-2 {
   top: 493px;
   left: 13px;
 }

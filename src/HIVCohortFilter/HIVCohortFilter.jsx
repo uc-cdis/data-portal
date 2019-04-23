@@ -2,7 +2,7 @@ import React from 'react';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { PTCCase, ECCase, LTNPCase } from './HIVCohortCases';
 
-class CohortFilter extends React.Component {
+class HIVCohortFilter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,8 +28,8 @@ class CohortFilter extends React.Component {
 
   render() {
     return (
-      <div className='cohort-filter'>
-        <Dropdown buttonType='secondary' id='cohort-filter__case-selection-dropdown'>
+      <div className='hiv-cohort-filter'>
+        <Dropdown buttonType='secondary' id='hiv-cohort-filter__case-selection-dropdown'>
           <Dropdown.Button rightIcon='dropdown' buttonType='secondary' displaySelectedOption='true'>
             {this.state.caseToRender} Cohort Selection
           </Dropdown.Button>
@@ -51,4 +51,4 @@ class CohortFilter extends React.Component {
   }
 }
 
-export default CohortFilter;
+export default HIVCohortFilter;

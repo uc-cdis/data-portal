@@ -4,7 +4,7 @@ import Select from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import Spinner from '../components/Spinner';
-import CohortFilter from '../CohortFilter/CohortFilter';
+import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 
@@ -59,7 +59,7 @@ class AnalysisApp extends React.Component {
       );
     case 'ndhHIV':
       return (
-        <CohortFilter />
+        <HIVCohortFilter />
       );
     default:
       return (
