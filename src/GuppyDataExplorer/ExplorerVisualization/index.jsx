@@ -4,7 +4,7 @@ import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/Summary
 import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerTable from '../ExplorerTable';
-import ExplorerButtonGroup from '../ExplorerButtonGroup';
+import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import {
   TableConfigType,
   ButtonConfigType,
@@ -62,7 +62,7 @@ class ExplorerVisualization extends React.Component {
     return (
       <div className={this.props.className}>
         <div className='guppy-explorer-visualization__button-group'>
-          <ExplorerButtonGroup
+          <ReduxExplorerButtonGroup
             buttonConfig={this.props.buttonConfig}
             guppyConfig={this.props.guppyConfig}
             totalCount={this.props.totalCount}
