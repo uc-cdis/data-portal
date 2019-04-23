@@ -1,6 +1,8 @@
 import React from 'react';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
-import { PTCCase, ECCase, LTNPCase } from './HIVCohortCases';
+import PTCCase from './PTCCase';
+import ECCase from './ECCase';
+import LTNPCase from './LTNPCase';
 
 class HIVCohortFilter extends React.Component {
   constructor(props) {

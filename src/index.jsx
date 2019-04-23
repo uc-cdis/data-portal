@@ -26,7 +26,6 @@ import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import ReduxMapFiles from './Submission/ReduxMapFiles';
 import ReduxMapDataModel from './Submission/ReduxMapDataModel';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
-import HIVCohortFilter from './HIVCohortFilter/HIVCohortFilter';
 import UserAgreementCert from './UserAgreement/ReduxCertPopup';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
@@ -180,15 +179,6 @@ async function init() {
                       component={
                         props => (<ProtectedContent
                           component={UserAgreementCert}
-                          {...props}
-                        />)
-                      }
-                    />
-                    <Route
-                      path='/cohort-tools'
-                      component={
-                        props => (<ProtectedContent
-                          component={HIVCohortFilter}
                           {...props}
                         />)
                       }
