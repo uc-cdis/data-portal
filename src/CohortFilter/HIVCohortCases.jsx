@@ -158,16 +158,16 @@ class CohortFilterCase extends React.Component {
       this.getBucketByKeyWithHAARTVAR(bucketKey, false),
     ]);
 
-    let subjectsWithAtLeast1Haart = resList[0];
-    let subjectsWithAtLeast1NonHaart = resList[1];
-    let subjectsWithNoHaartTreatments = subjectsWithAtLeast1NonHaart.filter(
-      x => !subjectsWithAtLeast1Haart.map(y => y['key']).includes(x['key'])
+    const subjectsWithAtLeast1Haart = resList[0];
+    const subjectsWithAtLeast1NonHaart = resList[1];
+    const subjectsWithNoHaartTreatments = subjectsWithAtLeast1NonHaart.filter(
+      x => !subjectsWithAtLeast1Haart.map(y => y.key).includes(x.key)
     );
 
     // Transform to map
-    let resultMap = {};
+    const resultMap = {};
     for (let i = 0; i < subjectsWithNoHaartTreatments.length; i += 1) {
-      resultMap[subjectsWithNoHaartTreatments[i]['key']] = subjectsWithNoHaartTreatments[i]['doc_count']
+      resultMap[subjectsWithNoHaartTreatments[i].key] = subjectsWithNoHaartTreatments[i]['doc_count']
     }
     return resultMap;
   }
@@ -230,7 +230,7 @@ class PTCCase extends CohortFilterCase {
   }
 
   getBucketByKeyWithHAARTVAR(bucketKey, isHAART) {
-    // The viral_load check in the below query ensures that 
+    // The viral_load check in the below query ensures that
     // the subjects retrieved have *at least* one follow_up with viral_load < viralLoadFromUser
     const query = `
     {
