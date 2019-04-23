@@ -264,7 +264,6 @@ async function init() {
                         }
                       }
                     />
-<<<<<<< HEAD
                     {isEnabled('explorer') ?
                       <Route
                         path='/explorer'
@@ -278,17 +277,6 @@ async function init() {
                         }
                       />
                       : null
-=======
-                    {
-                      isEnabled('explorer') ?
-                        <Route
-                          path='/explorer'
-                          component={
-                            props => <ProtectedContent component={DataExplorer} {...props} />
-                          }
-                        />
-                        : null
->>>>>>> master
                     }
                     <Route
                       path='/:project'
