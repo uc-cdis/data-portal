@@ -102,7 +102,7 @@ class CohortFilterCase extends React.Component {
       );
   }
 
-  makeSubjectToVisitMap(followUps) {  // eslint-disable-line class-methods-use-this
+  makeSubjectToVisitMap(followUps) { // eslint-disable-line class-methods-use-this
     // Convert to dictionary: { subject_id -> [ array of visits sorted by visit_date ] }
     const subjectToVisitMap = {};
     for (let i = 0; i < followUps.length; i += 1) {
@@ -167,7 +167,7 @@ class CohortFilterCase extends React.Component {
     // Transform to map
     const resultMap = {};
     for (let i = 0; i < subjectsWithNoHaartTreatments.length; i += 1) {
-      resultMap[subjectsWithNoHaartTreatments[i].key] = subjectsWithNoHaartTreatments[i]['doc_count']
+      resultMap[subjectsWithNoHaartTreatments[i].key] = subjectsWithNoHaartTreatments[i].doc_count
     }
     return resultMap;
   }
@@ -443,7 +443,8 @@ class PTCCase extends CohortFilterCase {
               <br />
             </div>
             <div className='cohort-filter__sidebar-input-label'>
-              Received HAART for at least:<br />
+              Received HAART for at least:
+              <br />
               <span className='cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } months</span>
             </div>
             <div className='cohort-filter__sidebar-input'>
@@ -483,7 +484,8 @@ class PTCCase extends CohortFilterCase {
                 className='cohort-filter__value-highlight cohort-filter__overlay'
                 id='vload-overlay-2'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '--' } &nbsp;cp/mL</div>
+                &nbsp; &lt; { this.state.viralLoadFromUser || '--' } &nbsp;cp/mL
+              </div>
               <div
                 className='cohort-filter__value-highlight cohort-filter__overlay'
                 id='vload-overlay-3'
@@ -573,8 +575,8 @@ class ECCase extends CohortFilterCase {
   * The EC criteria are:
   * - Patients' hiv_status are positive, have never received HAART treatment and
   * have consecutive follow ups for Y months with viral load < X
-  * - User will type in the time period Y and viral load threshold X, and the app will 
-  * show the count for EC case and control subjects. And have buttons to download 
+  * - User will type in the time period Y and viral load threshold X, and the app will
+  * show the count for EC case and control subjects. And have buttons to download
   * the clinical manifest for them.
   */
   constructor(props) {
@@ -660,17 +662,16 @@ class ECCase extends CohortFilterCase {
       }
       
       // The sliding window step. Window is of size this.state.numConsecutiveMonthsFromUser / 6
-      // Note that this loop differs slightly from the PTC case: 
+      // Note that this loop differs slightly from the PTC case:
       // we use i<= instead of i<, because we dont need to check the followup immediately
       // after the window, as we did in the PTC Case
       for (let i = 0; i <= visitArray.length - slidingWindowSize; i += 1) {
         const windowMatch = this.doTheseVisitsMatchECSlidingWindowCriteria(
           visitArray.slice(i, i + slidingWindowSize),
         );
-        
         if (windowMatch) {
           // Found EC!
-          subjectWithVisits['consecutive_viral_loads_below_threshold_begin_at_followup']
+          subjectWithVisits.consecutive_viral_loads_below_threshold_begin_at_followup
                       = visitArray[i].submitter_id;
           subjectEC.push(subjectWithVisits);
           return;
@@ -883,18 +884,18 @@ class LTNPCase extends CohortFilterCase {
   * - Never received HAART treatment: follow_up.thrpyv != HAART
   * - viral load< X: followup.viral_load < X
   * - Consecutive Y month: (last_followup.visit_number - first_followup.visit_number)*6 = Y
-  * If there are missing visit number, eg: patient has visit_number 1, 3, 4, 5. 
+  * If there are missing visit number, eg: patient has visit_number 1, 3, 4, 5.
   * Just consider the missing one still maintain the same viral load)
   * The LTNP criteria are:
-  * Patients' hiv_status are positive for X years, have never received 
+  * Patients' hiv_status are positive for X years, have never received
   * HAART treatment and maintain  CD4 > Y for those X years.
   * User will type in the time period X and CD4 threshold Y, and the
   * app will show the count for LTNP case and control subjects and have buttons to
   * download the clinical manifest for them.
   * Known limitations:
   * - This algorithm assumes that once a subject is HIV positive, they remain HIV positive
-  * - If followups are missing between fposdate and currentYear, they don't count against 
-  * the subject -- that is, the CD4 count is assumed to remain under the 
+  * - If followups are missing between fposdate and currentYear, they don't count against
+  * the subject -- that is, the CD4 count is assumed to remain under the
   * threshold for the missing visits.
   */
   constructor(props) {
@@ -916,8 +917,8 @@ class LTNPCase extends CohortFilterCase {
   }
 
   getBucketByKeyWithHAARTVAR(bucketKey, isHAART) {
-    var d = new Date();
-    var currentYear = d.getFullYear();
+    const d = new Date();
+    const currentYear = d.getFullYear();
     const query = `
     {
       follow_up {
@@ -954,10 +955,10 @@ class LTNPCase extends CohortFilterCase {
 
     // For each subject, extract the visits with visit_date > fposdate and check their CD4 counts
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
-      const visitArray = subjectToVisitMap[subjectId];      
-      let numYearsHIVPositive = Math.min(
-          currentYear, visitArray[0]['frstdthd']
-        ) - visitArray[0]['fposdate'];
+      const visitArray = subjectToVisitMap[subjectId];
+      const numYearsHIVPositive = Math.min(
+        currentYear, visitArray[0].frstdthd
+      ) - visitArray[0].fposdate;
       if (numYearsHIVPositive < this.state.numConsecutiveYearsFromUser) {
         // The subject is neither control nor LTNP
         return;
@@ -968,9 +969,9 @@ class LTNPCase extends CohortFilterCase {
         follow_ups: visitArray,
       };
 
-      let followUpsAfterFposDate = visitArray.filter(x => (x['visit_date'] > x['fposdate']));
+      const followUpsAfterFposDate = visitArray.filter(x => (x.visit_date > x.fposdate));
       let followUpsWithCD4CountsBelowThresholdAfterFposDate = followUpsAfterFposDate.filter(
-        x => (x['leu3n'] <= this.state.CD4FromUser && x['leu3n'] != null)
+        x => (x.leu3n <= this.state.CD4FromUser && x.leu3n != null)
       );
 
       if (followUpsWithCD4CountsBelowThresholdAfterFposDate.length === 0 
@@ -1006,9 +1007,9 @@ class LTNPCase extends CohortFilterCase {
 
   makeCohortJSONFile(subjectsIn) {
     const annotatedObj = {
-      "lower_bound_for_CD4_count": this.state.CD4FromUser.toString(),
-      "lower_bound_for_num_years_hiv_positive": this.state.numConsecutiveYearsFromUser.toString(),
-      "subjects": subjectsIn,
+      lower_bound_for_CD4_count: this.state.CD4FromUser.toString(),
+      lower_bound_for_num_years_hiv_positive: this.state.numConsecutiveYearsFromUser.toString(),
+      subjects: subjectsIn,
     };
 
     const blob = new Blob([JSON.stringify(annotatedObj, null, 2)], { type: 'text/json' });
@@ -1064,7 +1065,7 @@ class LTNPCase extends CohortFilterCase {
               Customized Filters
             </h4>
             <div className='cohort-filter__sidebar-input-label'>
-              CD4 Counts remain: 
+              CD4 Counts remain:
               <span
                 className='cohort-filter__value-highlight'
               >
@@ -1083,7 +1084,8 @@ class LTNPCase extends CohortFilterCase {
               <br />
             </div>
             <div className='cohort-filter__sidebar-input-label'>
-              Maintained for at least:<br />
+              Maintained for at least:
+              <br />
               <span className='cohort-filter__value-highlight'>{ this.state.numConsecutiveYearsFromUser || '__' } years</span>
             </div>
             <div className='cohort-filter__sidebar-input'>
