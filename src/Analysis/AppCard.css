@@ -1,0 +1,34 @@
+.app-card {
+  border: 2px solid var(--g3-color__silver);
+  border-radius: 5px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  background-color: var(--g3-color__white);
+  padding: 20px 20px;
+  cursor: pointer;
+  margin: 10px 10px;
+  text-align: center;
+  width: 100%;
+}
+
+.app-card:hover {
+  border: 2px solid var(--g3-color__white);
+}
+
+.app-card__description {
+  margin: 10px 0;
+  width: 100%;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  height: 90px;
+}
+
+.app-card__image {
+  margin: 10px 0;
+  width: 100px;
+  margin-bottom: auto;
+}

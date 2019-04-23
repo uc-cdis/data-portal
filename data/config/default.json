@@ -178,7 +178,8 @@
   },
   "requiredCerts": [],
   "featureFlags": {
-    "explorer": true
+    "explorer": true,
+    "analysis": false
   },
   "dataExplorerConfig": {
     "arrangerConfig": {
