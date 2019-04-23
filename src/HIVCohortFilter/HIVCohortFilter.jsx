@@ -31,17 +31,17 @@ class HIVCohortFilter extends React.Component {
       <div className='hiv-cohort-filter'>
         <Dropdown buttonType='secondary' id='hiv-cohort-filter__case-selection-dropdown'>
           <Dropdown.Button rightIcon='dropdown' buttonType='secondary' displaySelectedOption='true'>
-            {this.state.caseToRender} Cohort Selection
+            {this.state.caseToRender} Classifier
           </Dropdown.Button>
           <Dropdown.Menu>
             <Dropdown.Item onClick={() => this.updateCase('PTC')}>
-              PTC Cohort Selection
+              PTC Classifier
             </Dropdown.Item>
             <Dropdown.Item onClick={() => this.updateCase('EC')}>
-              EC Cohort Selection
+              EC Classifier
             </Dropdown.Item>
             <Dropdown.Item onClick={() => this.updateCase('LTNP')}>
-              LTNP Cohort Selection
+              LTNP Classifier
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>

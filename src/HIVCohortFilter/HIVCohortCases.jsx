@@ -418,7 +418,7 @@ class PTCCase extends HIVCohortFilterCase {
         <div className='hiv-cohort-filter__sidebar'>
           <form>
             <h2 className='hiv-cohort-filter__sidebar-title'>
-              PTC Cohort Selection
+              PTC Classifier
             </h2>
             <h4 className='hiv-cohort-filter__sidebar-subtitle'>
               Customized Filters
@@ -744,7 +744,7 @@ class ECCase extends HIVCohortFilterCase {
         <div className='hiv-cohort-filter__sidebar'>
           <form>
             <h2 className='hiv-cohort-filter__sidebar-title'>
-              EC Cohort Selection
+              EC Classifier
             </h2>
             <h4 className='hiv-cohort-filter__sidebar-subtitle'>
               Customized Filters
@@ -1059,7 +1059,7 @@ class LTNPCase extends HIVCohortFilterCase {
         <div className='hiv-cohort-filter__sidebar'>
           <form>
             <h2 className='hiv-cohort-filter__sidebar-title'>
-              LTNP Cohort Selection
+              LTNP Classifier
             </h2>
             <h4 className='hiv-cohort-filter__sidebar-subtitle'>
               Customized Filters
