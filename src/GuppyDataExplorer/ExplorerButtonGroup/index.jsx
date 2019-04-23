@@ -43,7 +43,7 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.job && nextProps.job.status === 'Completed') {
+    if (nextProps.job && nextProps.job.status === 'Completed' && this.props.job.status !== 'Completed') {
       this.fetchJobResult()
         .then((res) => {
           this.setState({
