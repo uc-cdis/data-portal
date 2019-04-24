@@ -1,18 +1,59 @@
 import React from 'react';
 import FileSaver from 'file-saver';
-import Button from '@gen3/ui-component/dist/components/Button';
 import { arrangerGraphqlPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 
 class HIVCohortFilterCase extends React.Component {
   // Base class for the 3 NDH cohort filter apps. Meant to facilitate code reuse
+  static performQuery(queryString) {
+    return fetchWithCreds({
+      path: `${arrangerGraphqlPath}`,
+      body: JSON.stringify({
+        query: queryString,
+      }),
+      method: 'POST',
+    })
+      .then(
+        ({ status, data }) => data, // eslint-disable-line no-unused-vars
+      );
+  }
+
+  static makeSubjectToVisitMap(followUps) {
+    // Convert to dictionary: { subject_id -> [ array of visits sorted by visit_date ] }
+    const subjectToVisitMap = {};
+    for (let i = 0; i < followUps.length; i += 1) {
+      const subjectId = followUps[i].subject_id;
+      if (subjectId in subjectToVisitMap) {
+        subjectToVisitMap[subjectId].push(followUps[i]);
+      } else {
+        subjectToVisitMap[subjectId] = [followUps[i]];
+      }
+    }
+
+    // Sort each patient's visits by visit_number
+    Object.keys(subjectToVisitMap).forEach((key) => {
+      const subjectVisits = subjectToVisitMap[key];
+      if (subjectVisits.length > 1) {
+        subjectVisits.sort((a, b) => {
+          if (a.visit_number > b.visit_number) {
+            return 1;
+          }
+          return ((b.visit_number > a.visit_number) ? -1 : 0);
+        });
+        subjectToVisitMap[key] = subjectVisits;
+      }
+    });
+
+    return subjectToVisitMap;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
       inLoadingState: false,
       isReadyToCalculate: false,
       resultAlreadyCalculated: false,
-      therapyValuesOfInterest: ['HAART']
+      therapyValuesOfInterest: ['HAART'],
     };
   }
 
@@ -86,54 +127,6 @@ class HIVCohortFilterCase extends React.Component {
     });
   }
 
-  static performQuery(queryString) {
-    return fetchWithCreds({
-      path: `${arrangerGraphqlPath}`,
-      body: JSON.stringify({
-        query: queryString,
-      }),
-      method: 'POST',
-    })
-      .then(
-        ({ status, data }) => data, // eslint-disable-line no-unused-vars
-      );
-  }
-
-  static makeSubjectToVisitMap(followUps) {
-    // Convert to dictionary: { subject_id -> [ array of visits sorted by visit_date ] }
-    const subjectToVisitMap = {};
-    for (let i = 0; i < followUps.length; i += 1) {
-      const subjectId = followUps[i].subject_id;
-      if (subjectId in subjectToVisitMap) {
-        subjectToVisitMap[subjectId].push(followUps[i]);
-      } else {
-        subjectToVisitMap[subjectId] = [followUps[i]];
-      }
-    }
-
-    // Sort each patient's visits by visit_number
-    Object.keys(subjectToVisitMap).forEach((key) => {
-      const subjectVisits = subjectToVisitMap[key];
-      if (subjectVisits.length > 1) {
-        subjectVisits.sort((a, b) => {
-          if (a.visit_number > b.visit_number) {
-            return 1;
-          }
-          return ((b.visit_number > a.visit_number) ? -1 : 0);
-        });
-        subjectToVisitMap[key] = subjectVisits;
-      }
-    });
-
-    return subjectToVisitMap;
-  }
-
-  updateFilters = (event) => {
-    event.preventDefault();
-    this.setState({ inLoadingState: true });
-    this.updateSubjectClassifications();
-  }
-
   checkReadyToCalculate = () => {
     // Overridden by LTNP case
     const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
@@ -164,7 +157,7 @@ class HIVCohortFilterCase extends React.Component {
     // Transform to map
     const resultMap = {};
     for (let i = 0; i < subjectsWithNoHaartTreatments.length; i += 1) {
-      resultMap[subjectsWithNoHaartTreatments[i].key] = subjectsWithNoHaartTreatments[i].doc_count
+      resultMap[subjectsWithNoHaartTreatments[i].key] = subjectsWithNoHaartTreatments[i].doc_count;
     }
     return resultMap;
   }
@@ -176,6 +169,12 @@ class HIVCohortFilterCase extends React.Component {
 
     const blob = this.makeCohortJSONFile(this.state.subjectControl);
     FileSaver.saveAs(blob, fileName);
+  }
+  
+  updateFilters = (event) => {
+    event.preventDefault();
+    this.setState({ inLoadingState: true });
+    this.updateSubjectClassifications();
   }
 }
 

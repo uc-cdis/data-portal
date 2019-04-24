@@ -106,7 +106,7 @@ class LTNPCase extends HIVCohortFilterCase {
         x => (x.leu3n <= this.state.CD4FromUser && x.leu3n != null)
       );
 
-      if (followUpsWithCD4CountsBelowThresholdAfterFposDate.length === 0 
+      if (followUpsWithCD4CountsBelowThresholdAfterFposDate.length === 0
           && followUpsAfterFposDate.length > 0) {
         subjectLTNP.push(subjectWithVisits);
       } else {
@@ -122,7 +122,7 @@ class LTNPCase extends HIVCohortFilterCase {
   updateSubjectClassifications = async () => {
     this.getFollowUpsWithHIV()
       .then((followUps) => {
-        let subjectToVisitMap = HIVCohortFilterCase.makeSubjectToVisitMap(followUps);
+        const subjectToVisitMap = HIVCohortFilterCase.makeSubjectToVisitMap(followUps);
 
         const {
           subjectLTNP,
@@ -185,7 +185,7 @@ class LTNPCase extends HIVCohortFilterCase {
     return '--';
   }
 
-  render = () => {
+  render() {
     return (
       <React.Fragment>
         <div className='hiv-cohort-filter__sidebar'>

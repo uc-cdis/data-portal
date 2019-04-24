@@ -108,7 +108,6 @@ class PTCCase extends HIVCohortFilterCase {
         return false;
       }
     }
-
     return true;
   }
 
@@ -186,7 +185,7 @@ class PTCCase extends HIVCohortFilterCase {
     */
     this.getFollowUpsWithHIV()
       .then((followUps) => {
-        let subjectToVisitMap = HIVCohortFilterCase.makeSubjectToVisitMap(followUps);
+        const subjectToVisitMap = HIVCohortFilterCase.makeSubjectToVisitMap(followUps);
 
         const {
           subjectPTC,
@@ -231,7 +230,7 @@ class PTCCase extends HIVCohortFilterCase {
     return '--';
   }
 
-  render = () => {
+  render() {
     return (
       <React.Fragment>
         <div className='hiv-cohort-filter__sidebar'>

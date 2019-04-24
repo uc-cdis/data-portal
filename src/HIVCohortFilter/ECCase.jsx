@@ -2,8 +2,6 @@ import React from 'react';
 import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
 import './HIVCohortFilter.css';
-import { arrangerGraphqlPath } from '../localconf';
-import { fetchWithCreds } from '../actions';
 import CohortECSvg from '../img/cohort-EC.svg';
 import Spinner from '../components/Spinner';
 import HIVCohortFilterCase from './HIVCohortFilterCase';
@@ -21,7 +19,7 @@ class ECCase extends HIVCohortFilterCase {
   * - Never received HAART treatment: follow_up.thrpyv != HAART
   * - viral load< X: followup.viral_load < X
   * - Consecutive Y month: (last_followup.visit_number - first_followup.visit_number)*6 = Y
-  * If there are missing visit number, eg: patient has visit_number 1, 3, 4, 5. 
+  * If there are missing visit number, eg: patient has visit_number 1, 3, 4, 5.
   * Just consider the missing one still maintain the same viral load)
   * The EC criteria are:
   * - Patients' hiv_status are positive, have never received HAART treatment and
@@ -104,7 +102,6 @@ class ECCase extends HIVCohortFilterCase {
         subjectNeither.push(subjectWithVisits);
         return;
       }
-      
       // The sliding window step. Window is of size this.state.numConsecutiveMonthsFromUser / 6
       // Note that this loop differs slightly from the PTC case:
       // we use i<= instead of i<, because we dont need to check the followup immediately
@@ -122,7 +119,7 @@ class ECCase extends HIVCohortFilterCase {
         }
       }
 
-      // If the window above didn't apply anywhere in this subject's followups, 
+      // If the window above didn't apply anywhere in this subject's followups,
       // the subject is control
       subjectControl.push(subjectWithVisits);
     });
@@ -137,7 +134,7 @@ class ECCase extends HIVCohortFilterCase {
   updateSubjectClassifications = async () => {
     this.getFollowUpsWithHIV()
       .then((followUps) => {
-        let subjectToVisitMap = HIVCohortFilterCase.makeSubjectToVisitMap(followUps);
+        const subjectToVisitMap = HIVCohortFilterCase.makeSubjectToVisitMap(followUps);
 
         const {
           subjectEC,
@@ -182,7 +179,7 @@ class ECCase extends HIVCohortFilterCase {
     return '--';
   }
 
-  render = () => {
+  render() {
     return (
       <React.Fragment>
         <div className='hiv-cohort-filter__sidebar'>
@@ -213,7 +210,8 @@ class ECCase extends HIVCohortFilterCase {
               <br />
             </div>
             <div className='hiv-cohort-filter__sidebar-input-label'>
-              Maintained for at least:<br />
+              Maintained for at least:
+              <br />
               <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } months</span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
