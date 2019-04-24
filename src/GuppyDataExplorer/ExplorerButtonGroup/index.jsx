@@ -3,6 +3,7 @@ import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import Toaster from '@gen3/ui-component/dist/components/Toaster';
+import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
 import PropTypes from 'prop-types';
 import { calculateDropdownButtonConfigs, humanizeNumber } from '../../DataExplorer/utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
@@ -20,13 +21,21 @@ class ExplorerButtonGroup extends React.Component {
 
       // for exports
       toasterOpen: false,
+      toasterHeadline: '',
+      toasterError: null,
+      toasterErrorText: 'There was an error exporting your cohort.',
 
+      // for export to PFB
+      exportPFBStatus: null,
+      exportPFBURL: '',
+      pfbStartText: 'Your PFB export is in progress. It may take up to 15 minutes to complete.',
+      pfbWarning: 'Do not close your browser until your PFB export is finished.',
+      pfbSuccessText: 'Your cohort has been exported to PFB! The URL is displayed below.',
       // for export to workspace
       exportingToWorkspace: false,
-      exportFileName: null,
-      exportStatus: null,
-      toasterSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
-      toasterErrorText: 'There was an error exporting your cohort.',
+      exportWorkspaceFileName: null,
+      exportWorkspaceStatus: null,
+      workspaceSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
 
       // a semaphore that could hold pending state by multiple queries
       pendingManifestEntryCountRequestNumber: 0,
@@ -34,9 +43,22 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.job && nextProps.job.status === 'Completed' && this.props.job.status !== 'Completed') {
+      this.fetchJobResult()
+        .then((res) => {
+          this.setState({
+            exportPFBURL: `${res.data.output}`.split('\n'),
+            toasterOpen: true,
+            toasterHeadline: this.state.pfbSuccessText });
+        });
+    }
     if (nextProps.totalCount !== this.props.totalCount) {
       this.refreshManifestEntryCount();
     }
+  }
+
+  componentWillUnmount() {
+    this.props.resetJobState();
   }
 
   getOnClickFunction = (buttonConfig) => {
@@ -50,11 +72,14 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export') {
       clickFunc = this.exportToCloud;
     }
+    if (buttonConfig.type === 'export-to-pfb') {
+      clickFunc = this.exportToPFB;
+    }
     if (buttonConfig.type === 'export-to-workspace') {
       clickFunc = this.exportToWorkspace;
     }
     return clickFunc;
-  }
+  };
 
   getManifest = async () => {
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
@@ -79,12 +104,12 @@ class ExplorerButtonGroup extends React.Component {
     <Toaster isEnabled={this.state.toasterOpen} className={'explorer-button-group__toaster-div'}>
       <Button
         className='explorer-button-group__toaster-button'
-        onClick={() => this.setState({ toasterOpen: false })}
+        onClick={() => this.closeToaster()}
         label='Close'
         buttonType='primary'
         enabled
       />
-      { (this.state.exportStatus === 200) ?
+      { (this.state.exportWorkspaceStatus === 200) ?
         <Button
           className='explorer-button-group__toaster-button'
           label='Go To Workspace'
@@ -94,21 +119,43 @@ class ExplorerButtonGroup extends React.Component {
         />
         : null
       }
-      { (this.state.exportStatus === 200) ?
+      {
         <div className='explorer-button-group__toaster-text'>
-          <div> {this.state.toasterSuccessText} </div>
-          <div> File Name: {this.state.exportFileName} </div>
-        </div>
-        :
-        <div className='explorer-button-group__toaster-text'>
-          <div> {this.state.toasterErrorText} </div>
-          <div> Error: {this.state.exportStatus} </div>
+          <div> {this.state.toasterHeadline} </div>
+          { (this.state.exportWorkspaceFileName) ?
+            <div> Most recent Workspace file name: { this.state.exportWorkspaceFileName } </div>
+            : null
+          }
+          { (this.state.exportPFBURL) ?
+            <div> Most recent PFB URL: { this.state.exportPFBURL } </div>
+            : null
+          }
+          { (this.state.toasterError) ?
+            <div> Error: { this.state.toasterError } </div>
+            : null
+          }
+          { (this.isPFBRunning()) ?
+            <div> { this.state.pfbWarning } </div>
+            : null
+          }
         </div>
       }
     </Toaster>
   ));
 
+  fetchJobResult = async () => this.props.fetchJobResult(this.props.job.uid);
+
+  isPFBRunning = () => this.props.job && this.props.job.status === 'Running';
+
   gotoWorkspace = () => this.props.history.push('/workspace');
+
+  closeToaster = () => {
+    this.setState({
+      toasterOpen: false,
+      toasterHeadline: '',
+      toasterError: null,
+    });
+  };
 
   downloadData = filename => () => {
     this.props.downloadRawData().then((res) => {
@@ -129,11 +176,20 @@ class ExplorerButtonGroup extends React.Component {
     } else {
       throw Error('Error when downloading manifest');
     }
-  }
+  };
 
   exportToCloud = () => {
     exportAllSelectedDataToCloud(this.props.downloadRawDataByFields);
-  }
+  };
+
+  exportToPFB = () => {
+    this.props.submitJob({ filter: getGQLFilter(this.props.filter) });
+    this.props.checkJobStatus();
+    this.setState({
+      toasterOpen: true,
+      toasterHeadline: this.state.pfbStartText,
+    });
+  };
 
   exportToWorkspace = async () => {
     this.setState({ exportingToWorkspace: true });
@@ -163,23 +219,26 @@ class ExplorerButtonGroup extends React.Component {
   exportToWorkspaceSuccessHandler = (data) => {
     this.setState({
       toasterOpen: true,
-      exportStatus: 200,
+      toasterHeadline: this.state.workspaceSuccessText,
+      exportWorkspaceStatus: 200,
       exportingToWorkspace: false,
-      exportFileName: data.filename,
+      exportWorkspaceFileName: data.filename,
     });
-  }
+  };
 
   exportToWorkspaceErrorHandler = (status) => {
     this.setState({
       toasterOpen: true,
-      exportStatus: status,
+      toasterHeadline: this.state.toasterErrorText,
+      exportWorkspaceStatus: status,
       exportingToWorkspace: false,
     });
-  }
+  };
 
   isFileButton = buttonConfig => buttonConfig.type === 'manifest' ||
     buttonConfig.type === 'export' ||
-    buttonConfig.type === 'export-to-workspace';
+    buttonConfig.type === 'export-to-workspace' ||
+    buttonConfig.type === 'export-to-pfb';
 
   refreshManifestEntryCount = async () => {
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
@@ -211,10 +270,13 @@ class ExplorerButtonGroup extends React.Component {
         throw Error('Error when downloading data');
       }
     }
-  }
+  };
 
   isButtonEnabled = (buttonConfig) => {
     if (buttonConfig.type === 'manifest') {
+      return this.state.manifestEntryCount > 0;
+    }
+    if (buttonConfig.type === 'export-to-pfb') {
       return this.state.manifestEntryCount > 0;
     }
     if (buttonConfig.type === 'export-to-workspace') {
@@ -222,14 +284,17 @@ class ExplorerButtonGroup extends React.Component {
     }
 
     return this.props.totalCount > 0;
-  }
+  };
 
   isButtonPending = (buttonConfig) => {
     if (buttonConfig.type === 'export-to-workspace') {
       return this.state.exportingToWorkspace;
     }
+    if (buttonConfig.type === 'export-to-pfb') {
+      return this.isPFBRunning();
+    }
     return false;
-  }
+  };
 
   renderButton = (buttonConfig) => {
     const clickFunc = this.getOnClickFunction(buttonConfig);
@@ -256,7 +321,7 @@ class ExplorerButtonGroup extends React.Component {
         isPending={this.isButtonPending(buttonConfig)}
       />
     );
-  }
+  };
 
   render() {
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.buttonConfig);
@@ -327,6 +392,7 @@ class ExplorerButtonGroup extends React.Component {
 }
 
 ExplorerButtonGroup.propTypes = {
+  job: PropTypes.object,
   downloadRawData: PropTypes.func.isRequired, // from GuppyWrapper
   downloadRawDataByFields: PropTypes.func.isRequired, // from GuppyWrapper
   getTotalCountsByTypeAndFilter: PropTypes.func.isRequired, // from GuppyWrapper
@@ -336,9 +402,14 @@ ExplorerButtonGroup.propTypes = {
   buttonConfig: ButtonConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
   history: PropTypes.object.isRequired,
+  submitJob: PropTypes.func.isRequired,
+  resetJobState: PropTypes.func.isRequired,
+  checkJobStatus: PropTypes.func.isRequired,
+  fetchJobResult: PropTypes.func.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {
+  job: null,
 };
 
 export default ExplorerButtonGroup;
