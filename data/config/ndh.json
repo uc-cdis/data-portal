@@ -179,7 +179,9 @@
             "ethnicity",
             "vital_status",
             "frstdthd",
-            "species"
+            "species",
+            "data_type",
+            "data_format"
           ]
         }, {
           "title": "Diagnosis",
