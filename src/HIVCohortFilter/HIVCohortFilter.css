@@ -6,7 +6,6 @@
 
 .hiv-cohort-filter {
   display: flex;
-  height: calc(100vh - 121px);
   padding: 0;
 }
 
@@ -188,5 +187,3 @@
 .hiv-cohort-filter__main .spinner .spinner__svg {
   fill: #3283C8;
 }
-
-
