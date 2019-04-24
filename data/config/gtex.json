@@ -283,7 +283,7 @@
       {
         "enabled": true,
         "type": "export-to-workspace",
-        "title": "Export To Workspace",
+        "title": "Export to Workspace",
         "leftIcon": "datafile",
         "rightIcon": "download"
       }
