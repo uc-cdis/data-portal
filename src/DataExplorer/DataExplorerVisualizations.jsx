@@ -214,7 +214,7 @@ class DataExplorerVisualizations extends React.Component {
         { (this.state.exportStatus === 200) ?
           <Button
             className='data-explorer__toaster-button'
-            label='Go To Workspace'
+            label='Go to Workspace'
             buttonType='primary'
             enabled
             onClick={this.goToWorkspace}

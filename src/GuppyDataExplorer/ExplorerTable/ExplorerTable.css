@@ -1,0 +1,44 @@
+.explorer-table {
+  margin-top: 20px;
+}
+
+.explorer-table__description {
+  margin-bottom: 10px;
+}
+
+.explorer-table .ReactTable.-striped .rt-tr.-odd {
+  background-color: var(--g3-color__bg-cloud);
+}
+
+.explorer-table .ReactTable.-striped .rt-tr.-even {
+  background-color: var(--g3-color__white);
+}
+
+.explorer-table .ReactTable .rt-thead.-header {
+  background-color: var(--g3-color__white);
+  font-weight: 700;
+  border-bottom: solid 1px var(--g3-color__black);
+}
+
+.explorer-table .ReactTable .rt-th {
+  padding: 15px 5px;
+}
+
+.explorer-table .ReactTable .rt-th,
+.explorer-table .ReactTable .rt-td {
+  white-space: unset;
+}
+
+.explorer-table .ReactTable .rt-thead .rt-th.-sort-asc, .ReactTable .rt-thead .rt-td.-sort-asc,
+.explorer-table .ReactTable .rt-thead .rt-th.-sort-desc, .ReactTable .rt-thead .rt-td.-sort-desc {
+  box-shadow: inset 0 0 0 0 transparent;
+}
+
+.explorer-table .ReactTable .rt-thead .rt-tr {
+  text-align: left;
+}
+
+.explorer-table .ReactTable .rt-thead .rt-th:first-child, 
+.explorer-table .ReactTable .rt-tbody .rt-td:first-child {
+  padding-left: 20px;
+}

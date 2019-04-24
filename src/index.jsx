@@ -32,12 +32,13 @@ import theme from './theme';
 import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
-import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, indexPublic } from './localconf';
+import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, indexPublic, useGuppyForExplorer } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
+import GuppyDataExplorer from './GuppyDataExplorer/.';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
@@ -263,15 +264,19 @@ async function init() {
                         }
                       }
                     />
-                    {
-                      isEnabled('explorer') ?
-                        <Route
-                          path='/explorer'
-                          component={
-                            props => <ProtectedContent component={DataExplorer} {...props} />
-                          }
-                        />
-                        : null
+                    {isEnabled('explorer') ?
+                      <Route
+                        path='/explorer'
+                        component={
+                          props => (
+                            <ProtectedContent
+                              component={useGuppyForExplorer ? GuppyDataExplorer : DataExplorer}
+                              {...props}
+                            />
+                          )
+                        }
+                      />
+                      : null
                     }
                     <Route
                       path='/:project'

@@ -3,7 +3,7 @@ import { buildClientSchema } from 'graphql/utilities';
 import Button from '@gen3/ui-component/dist/components/Button';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { fetchGraphQL, fetchArrangerGraphQL } from '../actions';
+import { fetchGraphQL, fetchFlatGraphQL } from '../actions';
 import Spinner from '../components/Spinner';
 import { config } from '../params';
 import './GqlEditor.less';
@@ -55,7 +55,7 @@ class GqlEditor extends React.Component {
     if (config.dataExplorerConfig) {
       options.push({
         name: 'Flat Model',
-        endpoint: fetchArrangerGraphQL,
+        endpoint: fetchFlatGraphQL,
         schema: null,
       });
     }

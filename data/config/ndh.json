@@ -213,7 +213,24 @@
       ]
     },
     "table": {
-      "enabled": false
+      "enabled": false,
+      "fields": [
+        "project_id",
+        "race",
+        "ethnicity",
+        "gender",
+        "vital_status",
+        "frstdthd",
+        "arthxbase",
+        "bshbvstat",
+        "bshcvstat",
+        "cd4nadir",
+        "status",
+        "virus_type",
+        "virus_subtype",
+        "_min_viral_load",
+        "hiv_status"
+      ]
     },
     "dropdowns": {
       "download": {
@@ -247,6 +264,35 @@
         "rightIcon": "download"
       }
     ],
+    "guppyConfig": {
+      "dataType": "subject",
+      "fieldMapping": [
+        { "field": "project_id", "name": "Project ID" },
+        { "field": "race", "name": "Race" },
+        { "field": "ethnicity", "name": "Ethnicity" },
+        { "field": "gender", "name": "Gender" },
+        { "field": "vital_status", "name": "Vital Status" },
+        { "field": "frstdthd", "name": "frstdthd" },
+        { "field": "arthxbase", "name": "arthxbase" },
+        { "field": "bshbvstat", "name": "bshbvstat" },
+        { "field": "bshcvstat", "name": "bshcvstat" },
+        { "field": "cd4nadir", "name": "cd4nadir" },
+        { "field": "status", "name": "Status" },
+        { "field": "virus_type", "name": "Virus Type" },
+        { "field": "virus_subtype", "name": "Virus Subtype" },
+        { "field": "_maintain_viral_load_less_than", "name": "Maintain Viral Load Less Than" },
+        { "field": "_min_viral_load", "name": "Min Viral Load" },
+        { "field": "therapy", "name": "Therapy" },
+        { "field": "therapyv", "name": "Therapyv" },
+        { "field": "hiv_status", "name": "HIV Status" }
+      ],
+      "manifestMapping": {
+        "resourceIndexType": "file",
+        "resourceIdField": "object_id",
+        "referenceIdFieldInResourceIndex": "subject_id",
+        "referenceIdFieldInDataIndex": "node_id"
+      }
+    },
     "arrangerConfig": {
       "projectId": "search",
       "graphqlField": "subject",

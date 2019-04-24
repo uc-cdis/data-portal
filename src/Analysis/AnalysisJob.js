@@ -11,21 +11,6 @@ export const getPresignedUrl = (did, method) => {
   );
 };
 
-/* eslint-disable */
-const getResultUploadUrl = () => {
-  // hardcode result did
-  const result = '77bf9442-360d-4fcf-9c82-14103c3745a2';
-  return getPresignedUrl(result, 'upload');
-};
-/* eslint-enable */
-
-const getResultDownloadUrl = () => {
-  // hardcode result did
-  const result = '77bf9442-360d-4fcf-9c82-14103c3745a2';
-  return getPresignedUrl(result, 'download');
-};
-
-
 export const dispatchJob = body => dispatch => fetchWithCreds({
   path: `${jobapiPath}dispatch`,
   body: JSON.stringify(body),
@@ -66,12 +51,6 @@ export const checkJobStatus = (dispatch, getState) => {
       // stop fetching job status once it stops running
       if (data.status !== 'Running') {
         clearInterval(state.analysis.jobStatusInterval);
-      }
-      // get the presigned url for the result to let the webpage
-      // to render the result data
-      if (data.status === 'Completed') {
-        return getResultDownloadUrl()
-          .then(resultURL => ({ type: 'RECEIVE_JOB_STATUS', data, resultURL }));
       }
       switch (status) {
       case 200:

@@ -1,0 +1,24 @@
+.explorer-button-group__download-button {
+  margin-right: 10px;
+}
+
+.explorer-button-group__dropdown {
+  width: 200px;
+}
+
+.explorer-button-group__toaster-div {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+}
+
+.explorer-button-group__toaster-button {
+  margin-right: 10px;
+}
+
+.explorer-button-group__toaster-text {
+  color: var(--g3-color__white);
+  margin-right: 20px;
+  width: unset;
+  font-size: medium;
+}
