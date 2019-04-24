@@ -44,13 +44,18 @@ const plugins = [
 ];
 
 let optimization = {};
+let devtool = false;
 
 if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
+  // optimization for production mode
   optimization = {
     splitChunks: {
       chunks: 'all'
     }
   }
+} else {
+  // add sourcemap tools for development mode
+  devtool = 'eval-source-map';
 }
 
 module.exports = {
@@ -64,6 +69,7 @@ module.exports = {
 	  publicPath: basename,
   },
   optimization,
+  devtool,
   devServer: {
     historyApiFallback: {
       index: 'dev.html',
