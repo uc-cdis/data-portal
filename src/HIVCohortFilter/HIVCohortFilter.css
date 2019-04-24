@@ -6,12 +6,12 @@
 
 .hiv-cohort-filter {
   display: flex;
-  height: calc(100vh - 121px);
   padding: 0;
+  margin:auto;
 }
 
 .hiv-cohort-filter .g3-dropdown {
-  width: 275px;
+  width: 266px;
   position: absolute;
   margin: 15px 0 0 15px;
 }

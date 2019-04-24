@@ -13,7 +13,10 @@ class NavBar extends Component {
     this.props.onInitActive();
   }
 
-  isActive = id => this.props.activeTab === id;
+   isActive = id => {     
+    let toCompare = this.props.activeTab.split('/').filter(x => x != 'dev.html').join('/');
+    return toCompare.startsWith(id);
+  }
 
   render() {
     return (
