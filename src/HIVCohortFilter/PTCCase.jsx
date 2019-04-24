@@ -2,8 +2,6 @@ import React from 'react';
 import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
 import './HIVCohortFilter.css';
-import { arrangerGraphqlPath } from '../localconf';
-import { fetchWithCreds } from '../actions';
 import CohortPTCSvg from '../img/cohort-PTC.svg';
 import Spinner from '../components/Spinner';
 import HIVCohortFilterCase from './HIVCohortFilterCase';

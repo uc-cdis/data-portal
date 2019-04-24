@@ -127,19 +127,6 @@ class HIVCohortFilterCase extends React.Component {
     });
   }
 
-  checkReadyToCalculate = () => {
-    // Overridden by LTNP case
-    const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
-    const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
-    this.setState({
-      viralLoadFromUser: viralLoadFromUser > 0 ? viralLoadFromUser : undefined,
-      numConsecutiveMonthsFromUser: numConsecutiveMonthsFromUser > 0
-        ? numConsecutiveMonthsFromUser : undefined,
-      isReadyToCalculate: (viralLoadFromUser > 0 && numConsecutiveMonthsFromUser > 0),
-      resultAlreadyCalculated: false,
-    });
-  }
-
   async getBucketByKey(bucketKey) {
     // Overridden by PTC case
     // Returns map of subjects who have never received HAART treatment
@@ -162,6 +149,19 @@ class HIVCohortFilterCase extends React.Component {
     return resultMap;
   }
 
+  checkReadyToCalculate = () => {
+    // Overridden by LTNP case
+    const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
+    const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
+    this.setState({
+      viralLoadFromUser: viralLoadFromUser > 0 ? viralLoadFromUser : undefined,
+      numConsecutiveMonthsFromUser: numConsecutiveMonthsFromUser > 0
+        ? numConsecutiveMonthsFromUser : undefined,
+      isReadyToCalculate: (viralLoadFromUser > 0 && numConsecutiveMonthsFromUser > 0),
+      resultAlreadyCalculated: false,
+    });
+  }
+  
   downloadControl = () => {
     // Overridden by LTNP
     const fileName = `control-cohort-vload-${this.state.viralLoadFromUser.toString()
