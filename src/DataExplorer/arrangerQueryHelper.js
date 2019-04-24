@@ -1,5 +1,6 @@
 import { hasKeyChain } from './utils';
 
+const LIMIT_COUNT = 10000;
 const getEndpoint = projectId => `/${projectId}/graphql`;
 
 /**
@@ -68,7 +69,7 @@ export const constructGraphQLQueryWithSQON = (
               }`,
     variables: {
       sqon: sqonObj,
-      first: isGettingCount ? 0 : count,
+      first: isGettingCount ? 0 : Math.min(count, LIMIT_COUNT),
     },
   };
   return gqlQuery;
