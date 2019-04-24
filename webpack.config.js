@@ -46,11 +46,17 @@ const plugins = [
 let optimization = {};
 
 if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
+  // optimization for production mode
   optimization = {
     splitChunks: {
       chunks: 'all'
     }
   }
+} else {
+  // add sourcemap tools for development mode
+  optimization = {
+    devtool: 'eval-source-map',
+  };
 }
 
 module.exports = {
