@@ -224,6 +224,11 @@ class DataExplorerVisualizations extends React.Component {
         { (this.state.exportStatus === 200) ?
           <div className='data-explorer__toaster-text'>
             <div> {this.state.toasterSuccessText} </div>
+            {
+              (this.state.nodeIds.length > 10000) && (
+                <div> (Export/download functionality is limited to first 10,000 records) </div>
+              )
+            }
             <div> File Name: {this.state.exportFileName} </div>
           </div>
           :

@@ -101,8 +101,7 @@ function buildConfig(opts) {
   const analysisApps = {
     ndhHIV: {
       title: 'NDH HIV Classifier',
-      description: `This tool runs a series of analyses on all the NIAID data in
-      order to narrow it down to a cohort consisting of...`,
+      description: `Classify stored clinical data based on controller status.`,
       image: '/src/img/analysis-icons/hiv-classifier.svg',
     },
     ndhVirus: {
