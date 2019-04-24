@@ -14,7 +14,7 @@ class NavBar extends Component {
   }
 
    isActive = id => {     
-    let toCompare = this.props.activeTab.split('/').filter(x => x != 'dev.html').join('/');
+    let toCompare = this.props.activeTab.split('/').filter(x => x !== 'dev.html').join('/');
     return toCompare.startsWith(id);
   }
 
