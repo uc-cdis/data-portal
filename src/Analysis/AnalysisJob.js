@@ -17,14 +17,13 @@ const getResultUploadUrl = () => {
   const result = '77bf9442-360d-4fcf-9c82-14103c3745a2';
   return getPresignedUrl(result, 'upload');
 };
-/* eslint-enable */
 
 const getResultDownloadUrl = () => {
   // hardcode result did
   const result = '77bf9442-360d-4fcf-9c82-14103c3745a2';
   return getPresignedUrl(result, 'download');
 };
-
+/* eslint-enable */
 
 export const dispatchJob = body => dispatch => fetchWithCreds({
   path: `${jobapiPath}dispatch`,
@@ -69,10 +68,11 @@ export const checkJobStatus = (dispatch, getState) => {
       }
       // get the presigned url for the result to let the webpage
       // to render the result data
+      /*
       if (data.status === 'Completed') {
         return getResultDownloadUrl()
           .then(resultURL => ({ type: 'RECEIVE_JOB_STATUS', data, resultURL }));
-      }
+      } */
       switch (status) {
       case 200:
         return {
