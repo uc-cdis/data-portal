@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
+import _ from 'lodash';
 import 'react-table/react-table.css';
 import { GuppyConfigType, TableConfigType } from '../configTypeDef';
 import { capitalizeFirstLetter } from '../../utils';
 import './ExplorerTable.css';
+import LockIcon from '../../img/icons/lock.svg';
 
 class ExplorerTable extends React.Component {
   constructor(props) {
@@ -13,7 +15,29 @@ class ExplorerTable extends React.Component {
       loading: false,
       pageSize: props.defaultPageSize,
       currentPage: 0,
+      tableData: props.rawData,
+      tableLocking: false,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let aggsDataProjects;
+    if (nextProps.aggsData !== this.props.aggsData) {
+      if (nextProps.aggsData && nextProps.aggsData.project && nextProps.aggsData.project.histogram) {
+        aggsDataProjects = nextProps.aggsData.project.histogram.map(entry => entry.key);
+      }
+      const userProjectAccess = Object.keys(this.props.userProjectAccess);
+      if ((_.difference(aggsDataProjects, userProjectAccess)).length > 0) {
+        this.setState({ tableLocking: true });
+      } else {
+        this.setState({ tableLocking: false });
+      }
+    }
+    if (this.state.tableLocking) {
+      this.setState({ tableData: [] });
+    } else if (nextProps.rawData) {
+      this.setState({ tableData: nextProps.rawData });
+    }
   }
 
   getWidthForColumn = (field, columnName) => {
@@ -86,14 +110,22 @@ class ExplorerTable extends React.Component {
         <ReactTable
           columns={columnsConfig}
           manual
-          data={this.props.rawData}
+          data={this.state.tableData && []}
           pages={visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}
           onFetchData={this.fetchData}
           defaultPageSize={this.props.defaultPageSize}
           className={'-striped -highlight '}
-          minRows={0} // hide empty rows
+          minRows={3} // make room for no data component
           resizable={false}
+          NoDataComponent={() => (this.state.tableLocking ? (
+            <div className='rt-noData' style={{ textAlign: 'center', border: '3px' }}>
+              <LockIcon width={30} />
+              <p>You only have access to summary data</p>
+            </div>
+          ) : (
+            <div className='rt-noData' style={{ textAlign: 'center' }}>No data to display</div>
+          ))}
         />
       </div>
     );
@@ -104,10 +136,12 @@ ExplorerTable.propTypes = {
   rawData: PropTypes.array.isRequired, // from GuppyWrapper
   fetchAndUpdateRawData: PropTypes.func.isRequired, // from GuppyWrapper
   totalCount: PropTypes.number.isRequired, // from GuppyWrapper
+  aggsData: PropTypes.object.isRequired, // from GuppyWrapper
   className: PropTypes.string,
   defaultPageSize: PropTypes.number,
   tableConfig: TableConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
+  userProjectAccess: PropTypes.object.isRequired,
 };
 
 ExplorerTable.defaultProps = {

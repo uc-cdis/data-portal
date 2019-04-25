@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
-import ExplorerTable from '../ExplorerTable';
+import ReduxExplorerTable from '../ExplorerTable/ReduxExplorerTable';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import {
   TableConfigType,
@@ -93,13 +93,14 @@ class ExplorerVisualization extends React.Component {
         }
         {
           this.props.tableConfig.enabled && (
-            <ExplorerTable
+            <ReduxExplorerTable
               className='guppy-explorer-visualization__table'
               tableConfig={{ fields: tableColumns }}
               fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
               rawData={this.props.rawData}
               totalCount={this.props.totalCount}
               guppyConfig={this.props.guppyConfig}
+              aggsData={this.props.aggsData}
             />
           )
         }
