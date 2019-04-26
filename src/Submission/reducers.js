@@ -40,11 +40,17 @@ const submission = (state = {}, action) => {
         const res = db; res[type] = (res[type] || 0) + 1;
         return res;
       }, prevCounts);
+    const data = state.submit_result ?
+      state.submit_result.concat(action.data.entities || [])
+      : action.data.entities;
+    const status = state.submit_status ?
+      Math.max(state.submit_status, action.submit_status)
+      : action.submit_status;
     return { ...state,
       submit_entity_counts: newCounts,
-      submit_result: action.data,
+      submit_result: data,
       submit_result_string: state.submit_result_string.concat(JSON.stringify(action.data, null, '    ')).concat('\n\n'),
-      submit_status: action.submit_status,
+      submit_status: status,
       submit_counter: state.submit_counter + 1,
       submit_total: action.total };
   }
