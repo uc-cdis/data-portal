@@ -14,6 +14,8 @@ function buildConfig(opts) {
     basename: process.env.BASENAME || '/',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
+    tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
+    tierAccessLimit: process.env.TIER_ACCESS_LIMIT || '1000',
   };
 
   //
@@ -31,6 +33,8 @@ function buildConfig(opts) {
     basename,
     hostname,
     gaDebug,
+    tierAccessLevel,
+    tierAccessLimit,
   } = Object.assign({}, defaults, opts);
 
   const submissionApiPath = `${hostname}api/v0/submission/`;
@@ -208,6 +212,8 @@ function buildConfig(opts) {
     wtsPath,
     useGuppyForExplorer,
     analysisApps,
+    tierAccessLevel,
+    tierAccessLimit,
   };
 }
 

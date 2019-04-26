@@ -3,7 +3,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import { config } from '../params';
-import { guppyUrl } from '../localconf';
+import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../localconf';
 
 const defaultConfig = {
   charts: {},
@@ -24,6 +24,8 @@ const defaultConfig = {
   },
   buttons: [],
   dropdowns: {},
+  tierAccessLevel,
+  tierAccessLimit,
 };
 const guppyExplorerConfig = _.merge(defaultConfig, config.dataExplorerConfig);
 
