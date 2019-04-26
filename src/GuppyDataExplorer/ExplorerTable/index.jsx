@@ -23,7 +23,9 @@ class ExplorerTable extends React.Component {
   componentWillReceiveProps(nextProps) {
     let aggsDataProjects;
     if (nextProps.aggsData !== this.props.aggsData) {
-      if (nextProps.aggsData && nextProps.aggsData.project && nextProps.aggsData.project.histogram) {
+      if (nextProps.aggsData
+        && nextProps.aggsData.project
+        && nextProps.aggsData.project.histogram) {
         aggsDataProjects = nextProps.aggsData.project.histogram.map(entry => entry.key);
       }
       const userProjectAccess = Object.keys(this.props.userProjectAccess);
