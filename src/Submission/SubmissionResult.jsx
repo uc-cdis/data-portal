@@ -66,7 +66,7 @@ class SubmissionResult extends React.Component {
         </ul>
       </div>);
     } else if (status >= 400 && status < 500) {
-      const errorList = (data.entities || []).filter(ent => !!ent.errors);
+      const errorList = (data || []).filter(ent => ent.errors && ent.errors.length);
       if (errorList.length > 0) {
         summary = (<div id='cd-summary__result_400'><p>
             Errors:
@@ -106,7 +106,7 @@ class SubmissionResult extends React.Component {
 
 SubmissionResult.propTypes = {
   status: PropTypes.number.isRequired,
-  data: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
   dataString: PropTypes.string.isRequired,
   entityCounts: PropTypes.object.isRequired,
   counter: PropTypes.number.isRequired,
