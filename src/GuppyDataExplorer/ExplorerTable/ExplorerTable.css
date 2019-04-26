@@ -24,6 +24,11 @@
   padding: 15px 5px;
 }
 
+.explorer-table .ReactTable .rt-noData {
+  text-align: center; 
+  border: 3px;
+}
+
 .explorer-table .ReactTable .rt-th,
 .explorer-table .ReactTable .rt-td {
   white-space: unset;

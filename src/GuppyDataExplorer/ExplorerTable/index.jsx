@@ -119,12 +119,12 @@ class ExplorerTable extends React.Component {
           minRows={3} // make room for no data component
           resizable={false}
           NoDataComponent={() => (this.state.tableLocking ? (
-            <div className='rt-noData' style={{ textAlign: 'center', border: '3px' }}>
+            <div className='rt-noData'>
               <LockIcon width={30} />
               <p>You only have access to summary data</p>
             </div>
           ) : (
-            <div className='rt-noData' style={{ textAlign: 'center' }}>No data to display</div>
+            <div className='rt-noData'>No data to display</div>
           ))}
         />
       </div>
