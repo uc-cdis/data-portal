@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
-import ReduxExplorerTable from '../ExplorerTable/ReduxExplorerTable';
+import ExplorerTable from '../ExplorerTable';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import {
   TableConfigType,
@@ -93,7 +93,7 @@ class ExplorerVisualization extends React.Component {
         }
         {
           this.props.tableConfig.enabled && (
-            <ReduxExplorerTable
+            <ExplorerTable
               className='guppy-explorer-visualization__table'
               tableConfig={{ fields: tableColumns }}
               fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
@@ -101,6 +101,7 @@ class ExplorerVisualization extends React.Component {
               totalCount={this.props.totalCount}
               guppyConfig={this.props.guppyConfig}
               aggsData={this.props.aggsData}
+              accessableProjectList={this.props.accessableProjectList}
             />
           )
         }
@@ -120,6 +121,7 @@ ExplorerVisualization.propTypes = {
   downloadRawDataByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
   allFields: PropTypes.array, // inherited from GuppyWrapper
+  accessableProjectList: PropTypes.array, // inherited from GuppyWrapper
   history: PropTypes.object.isRequired,
   className: PropTypes.string,
   chartConfig: ChartConfigType,
@@ -140,6 +142,7 @@ ExplorerVisualization.defaultProps = {
   downloadRawDataByTypeAndFilter: () => {},
   rawData: [],
   allFields: [],
+  accessableProjectList: [],
   className: '',
   chartConfig: {},
   tableConfig: {},

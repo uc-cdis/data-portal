@@ -15,7 +15,7 @@ class ExplorerTable extends React.Component {
       loading: false,
       pageSize: props.defaultPageSize,
       currentPage: 0,
-      tableData: props.rawData,
+      tableData: [],
       tableLocking: false,
     };
   }
@@ -28,17 +28,15 @@ class ExplorerTable extends React.Component {
         && nextProps.aggsData.project.histogram) {
         aggsDataProjects = nextProps.aggsData.project.histogram.map(entry => entry.key);
       }
-      const userProjectAccess = Object.keys(this.props.userProjectAccess);
-      if ((_.difference(aggsDataProjects, userProjectAccess)).length > 0) {
+      if ((_.difference(aggsDataProjects, this.props.accessableProjectList)).length > 0) {
         this.setState({ tableLocking: true });
+        this.setState({ tableData: [] });
       } else {
         this.setState({ tableLocking: false });
+        if (nextProps.rawData) {
+          this.setState({ tableData: nextProps.rawData });
+        }
       }
-    }
-    if (this.state.tableLocking) {
-      this.setState({ tableData: [] });
-    } else if (nextProps.rawData) {
-      this.setState({ tableData: nextProps.rawData });
     }
   }
 
@@ -112,7 +110,7 @@ class ExplorerTable extends React.Component {
         <ReactTable
           columns={columnsConfig}
           manual
-          data={this.state.tableData && []}
+          data={this.state.tableData}
           pages={visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}
           onFetchData={this.fetchData}
@@ -139,11 +137,11 @@ ExplorerTable.propTypes = {
   fetchAndUpdateRawData: PropTypes.func.isRequired, // from GuppyWrapper
   totalCount: PropTypes.number.isRequired, // from GuppyWrapper
   aggsData: PropTypes.object.isRequired, // from GuppyWrapper
+  accessableProjectList: PropTypes.array.isRequired, // from GuppyWrapper
   className: PropTypes.string,
   defaultPageSize: PropTypes.number,
   tableConfig: TableConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
-  userProjectAccess: PropTypes.object.isRequired,
 };
 
 ExplorerTable.defaultProps = {
