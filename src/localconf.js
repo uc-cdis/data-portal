@@ -105,7 +105,7 @@ function buildConfig(opts) {
   const analysisApps = {
     ndhHIV: {
       title: 'NDH HIV Classifier',
-      description: `Classify stored clinical data based on controller status.`,
+      description: 'Classify stored clinical data based on controller status.',
       image: '/src/img/analysis-icons/hiv-classifier.svg',
     },
     ndhVirus: {
