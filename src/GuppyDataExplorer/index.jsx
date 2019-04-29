@@ -24,8 +24,6 @@ const defaultConfig = {
   },
   buttons: [],
   dropdowns: {},
-  tierAccessLevel,
-  tierAccessLimit,
 };
 const guppyExplorerConfig = _.merge(defaultConfig, config.dataExplorerConfig);
 
@@ -42,6 +40,8 @@ class Explorer extends React.Component {
           dropdowns: guppyExplorerConfig.dropdowns,
         }}
         history={this.props.history}
+        tierAccessLevel={tierAccessLevel}
+        tierAccessLimit={tierAccessLimit}
       />
     );
   }

@@ -15,7 +15,7 @@ function buildConfig(opts) {
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
-    tierAccessLimit: process.env.TIER_ACCESS_LIMIT || '1000',
+    tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
   };
 
   //
@@ -105,7 +105,7 @@ function buildConfig(opts) {
   const analysisApps = {
     ndhHIV: {
       title: 'NDH HIV Classifier',
-      description: `Classify stored clinical data based on controller status.`,
+      description: 'Classify stored clinical data based on controller status.',
       image: '/src/img/analysis-icons/hiv-classifier.svg',
     },
     ndhVirus: {

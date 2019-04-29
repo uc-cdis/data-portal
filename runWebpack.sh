@@ -11,12 +11,13 @@
 export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-dev}"
 export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
+export TIER_ACCESS_LEVEL="${TIER_ACCESS_LEVEL:-"private"}"
 
 
 # lib -----------------------------
 
 declare -a gitopsFiles=(
-  gitops.json data/config/gitops.json 
+  gitops.json data/config/gitops.json
   gitops-logo.png custom/logo/gitops-logo.png
   gitops-createdby.png custom/createdby/gitops.png
   gitops-favicon.ico custom/favicon/gitops-favicon.ico
@@ -36,7 +37,7 @@ gitops_config() {
   local gitRepo
   local manifestFile
   local portalApp
-  local portalGitopsFolder 
+  local portalGitopsFolder
 
   gitRepo="cdis-manifest"
   hostname="$1"
@@ -140,11 +141,11 @@ export REACT_APP_PROJECT_ID=search
 export REACT_APP_DISABLE_SOCKET=true
 
 #
-# finally either launch the webpack-dev-server or 
+# finally either launch the webpack-dev-server or
 # run webpack to generate a static bundle.js
 #
 if [[ "$NODE_ENV" == "dev" || "$NODE_ENV" == "auto" ]]; then
-  echo ./node_modules/.bin/webpack-dev-server 
+  echo ./node_modules/.bin/webpack-dev-server
   ./node_modules/.bin/webpack-dev-server
 else
   export NODE_ENV="production"
