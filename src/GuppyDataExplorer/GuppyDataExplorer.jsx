@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
-import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
 import ExplorerVisualization from './ExplorerVisualization';
 import { capitalizeFirstLetter } from '../utils';
 import {
@@ -12,6 +11,8 @@ import {
   ChartConfigType,
 } from './configTypeDef';
 import './GuppyDataExplorer.css';
+
+import ExplorerFilter from './ExplorerFilter';
 
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
@@ -36,11 +37,10 @@ class GuppyDataExplorer extends React.Component {
           onFilterChange={this.handleFilterChange}
           rawDataFields={this.props.tableConfig.fields}
         >
-          <ConnectedFilter
+          <ExplorerFilter
             className='guppy-data-explorer__filter'
-            filterConfig={this.props.filterConfig}
-            guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
-            fieldMapping={this.props.guppyConfig.fieldMapping}
+            tierAccessLevel={this.props.tierAccessLevel}
+            tierAccessLimit={this.props.tierAccessLimit}
           />
           <ExplorerVisualization
             className='guppy-data-explorer__visualization'
@@ -66,6 +66,8 @@ GuppyDataExplorer.propTypes = {
   buttonConfig: ButtonConfigType.isRequired,
   nodeCountTitle: PropTypes.string,
   history: PropTypes.object.isRequired,
+  tierAccessLevel: PropTypes.string.isRequired,
+  tierAccessLimit: PropTypes.number.isRequired,
 };
 
 GuppyDataExplorer.defaultProps = {
