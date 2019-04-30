@@ -28,7 +28,7 @@ class ExplorerTable extends React.Component {
         && nextProps.aggsData.project.histogram) {
         aggsDataProjects = nextProps.aggsData.project.histogram.map(entry => entry.key);
       }
-      if ((_.difference(aggsDataProjects, this.props.accessableProjectList)).length > 0) {
+      if ((_.difference(aggsDataProjects, this.props.accessibleProjectObject.project)).length > 0) {
         this.setState({ tableLocking: true });
         this.setState({ tableData: [] });
       } else {
@@ -137,7 +137,7 @@ ExplorerTable.propTypes = {
   fetchAndUpdateRawData: PropTypes.func.isRequired, // from GuppyWrapper
   totalCount: PropTypes.number.isRequired, // from GuppyWrapper
   aggsData: PropTypes.object.isRequired, // from GuppyWrapper
-  accessableProjectList: PropTypes.array.isRequired, // from GuppyWrapper
+  accessibleProjectObject: PropTypes.object.isRequired, // from GuppyWrapper
   className: PropTypes.string,
   defaultPageSize: PropTypes.number,
   tableConfig: TableConfigType.isRequired,
