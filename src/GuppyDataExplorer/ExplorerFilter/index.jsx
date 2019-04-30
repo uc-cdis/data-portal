@@ -14,44 +14,55 @@ class ExplorerFilter extends React.Component {
     };
   }
 
-  // should check/modify aggsData accordingly in here
-  // for each element in aggsData.field.histogram, besides of key and count we also want a bool val `accessible`
-  // accessible=false will display lock icon in filter
-  // in this func, for each element in aggsData, we need to check if its field exists in this.props.accessibleFieldObject
-  // and if yes, for each element in aggsData.field.histogram, add accessible prop accordingly
-  // and finally, remove unwanted elements in aggsData according to this.state.selectedAccessFilter
-  // for now for aggsData.field and this.props.accessibleFieldObject.field, we only cares about field = `project`
+  /**
+   * For "regular" tier access level commons, we use this function parse
+   * aggsData and returned parsed aggregation for Guppy's ConnectedFilter.
+   * We do following steps for tier access fields/values (currently, field="project")
+   * 1. According to selected access filter (with, without, or all data access),
+   *    we hide accessible or unaccessible items
+   * 2. We add "accessible" property to items so that filter component will show lock icon
+   */
   onProcessFilterAggsData = (aggsData) => {
     if (this.props.tierAccessLevel !== 'regular') {
       return aggsData;
     }
-    if (this.props.accessibleFieldObject) {
-      switch (this.state.selectedAccessFilter) {
-      case 'with-access':
-        for (key in Object.keys(this.props.accessibleFieldObject)) {
-          if (aggsData[key]) { // field also found in aggsData
-            let aggsDataValuesArray = aggsData.key.histogram;
-            for (let i = 0; i < aggsDataArray.length; i += 1) {
-              if (!this.props.accessibleFieldObject.key.includes(aggsDataArray[i])) {
-                aggsData[key].splice(i, 1);
-              } else {
-                aggsData[key]
-              }
-            }
-          }
-        }
-      case 'without-access':
-      case 'all-data':
-      default:
-        throw new Error('Unexpected case in accessibleFieldObject switch');
+    const newAggsData = Object.keys(aggsData).reduce((res, field) => {
+      // if the field is not in accessibleFieldObject, no need to process it
+      if (!Object.keys(this.props.accessibleFieldObject).includes(field)) {
+        res[field] = aggsData[field];
+        return res;
       }
-    }
+      // if the field is in accessibleFieldObject, add "accessible=false"
+      // to those items which are unaccessible
+      const accessibleValues = this.props.accessibleFieldObject[field];
+      const newHistogram = aggsData[field].histogram
+        .filter(({ key }) => {
+          const accessible = accessibleValues.includes(key);
+          switch (this.state.selectedAccessFilter) {
+          case 'all-data':
+            return true; // always show all items if 'all-data'
+          case 'with-access':
+            return accessible; // only show accessible items if 'with-access'
+          case 'without-access':
+            return !accessible; // only show unaccessible items if 'without-access'
+          default:
+            throw new Error('Invalid access filter option');
+          }
+        })
+        .map(({ key, count }) => ({
+          key,
+          count,
+          accessible: accessibleValues.includes(key),
+        }));
+      res[field] = { histogram: newHistogram };
+      return res;
+    }, {});
+    return newAggsData;
   }
 
   handleAccessSelectorChange = (selectedAccessFilter) => {
     // selectedAccessFilter will be one of: 'with-access', 'without-access', or 'all-data'
-    this.setState(selectedAccessFilter);
-    console.log(selectedAccessFilter);
+    this.setState({ selectedAccessFilter });
   }
 
   render() {

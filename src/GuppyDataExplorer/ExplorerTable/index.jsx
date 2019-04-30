@@ -16,31 +16,7 @@ class ExplorerTable extends React.Component {
       pageSize: props.defaultPageSize,
       currentPage: 0,
       tableData: [],
-      tableLocking: false,
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    let aggsDataProjects;
-    if (nextProps.aggsData !== this.props.aggsData) {
-      if (nextProps.aggsData
-        && nextProps.aggsData.project
-        && nextProps.aggsData.project.histogram) {
-        aggsDataProjects = nextProps.aggsData.project.histogram.map(entry => entry.key);
-      }
-      if ((_.difference(aggsDataProjects, this.props.accessibleProjectObject.project)).length > 0) {
-        this.setState({ tableLocking: true });
-        this.setState({ tableData: [] });
-      } else {
-        this.setState({ tableLocking: false });
-        if (this.props.rawData) {
-          this.setState({ tableData: this.props.rawData });
-        }
-        if (nextProps.rawData) {
-          this.setState({ tableData: nextProps.rawData });
-        }
-      }
-    }
   }
 
   getWidthForColumn = (field, columnName) => {
@@ -63,6 +39,27 @@ class ExplorerTable extends React.Component {
     });
     const resWidth = Math.min((maxLetterLen * letterWidth) + spacing, maxWidth);
     return resWidth;
+  }
+
+  getTableLockingStatus = () => {
+    const accessField = 'project';
+    let accessValuesInAggregationList = [];
+    if (!this.props.accessibleProjectObject || !this.props.accessibleProjectObject[accessField]) {
+      return false;
+    }
+    const accessibleValues = this.props.accessibleProjectObject[accessField];
+    if (this.props.aggsData
+      && this.props.aggsData[accessField]
+      && this.props.aggsData[accessField].histogram) {
+      accessValuesInAggregationList = this.props.aggsData.project.histogram.map(entry => entry.key);
+    } else {
+      return false;
+    }
+    const outOfScopeValues = _.difference(accessValuesInAggregationList, accessibleValues);
+    if (outOfScopeValues.length > 0) { // trying to get unaccessible data is forbidden
+      return true;
+    }
+    return false;
   }
 
   fetchData = (state) => {
@@ -107,13 +104,14 @@ class ExplorerTable extends React.Component {
     const visiblePages = Math.min(totalPages, Math.round((SCROLL_SIZE / pageSize) + 0.49));
     const start = (this.state.currentPage * this.state.pageSize) + 1;
     const end = (this.state.currentPage + 1) * this.state.pageSize;
+    const isTableLocked = this.getTableLockingStatus();
     return (
       <div className={`explorer-table ${this.props.className}`}>
         <p className='explorer-table__description'>{`Showing ${start} - ${end} of ${totalCount} ${this.props.guppyConfig.dataType}s`}</p>
         <ReactTable
           columns={columnsConfig}
           manual
-          data={this.state.tableData}
+          data={(isTableLocked || !this.props.rawData) ? [] : this.props.rawData}
           pages={visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}
           onFetchData={this.fetchData}
@@ -121,7 +119,7 @@ class ExplorerTable extends React.Component {
           className={'-striped -highlight '}
           minRows={3} // make room for no data component
           resizable={false}
-          NoDataComponent={() => (this.state.tableLocking ? (
+          NoDataComponent={() => (isTableLocked ? (
             <div className='rt-noData'>
               <LockIcon width={30} />
               <p>You only have access to summary data</p>
@@ -150,7 +148,6 @@ ExplorerTable.propTypes = {
 ExplorerTable.defaultProps = {
   className: '',
   defaultPageSize: 20,
-  accessibleProjectObject: undefined,
 };
 
 export default ExplorerTable;
