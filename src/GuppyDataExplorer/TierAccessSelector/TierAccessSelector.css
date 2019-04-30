@@ -51,4 +51,20 @@
   left: 2px;
 }
 
+.tier-access-selector__button-wrapper {
+  background-color: var(--g3-color__white);
+  border-top: 1px solid var(--g3-color__silver);
+  text-align: center;
+  padding: 5px;
+}
 
+.tier-access-selector__dropdown {
+  cursor: pointer;
+}
+
+.tier-access-selector__dropdown .g3-icon {
+  background-color: var(--g3-color__black);
+  top: 5px;
+  position: relative;
+  margin-left: 10px;
+}
