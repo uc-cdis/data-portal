@@ -9,6 +9,13 @@
   display: inline-flex;
 }
 
+@media screen and (max-width: 820px) {
+  .nav-bar__nav--left {
+    display: flex;
+    flex-flow: column;
+  }
+}
+
 .nav-bar__nav--right {
   float: right;
   color: var(--g3-color__white);
@@ -115,4 +122,8 @@
   height: 64px;
   margin: auto;
   border-left: 1px solid var(--g3-color__smoke);
+}
+
+@media screen and (max-width: 820px) {
+  border-left: none;
 }
