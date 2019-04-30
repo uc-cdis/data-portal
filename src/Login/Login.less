@@ -1,11 +1,16 @@
 .login-page {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+}
+
+@media screen and (max-width: 820px) {
+  .login-page {
+    justify-content: center;
+    height: 80vh;
+  }
 }
 
 .login-page__side-box {
-  width: 257px;
-  min-width: 257px;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -15,12 +20,16 @@
   display: block;
 }
 
+.login-page__side-box--right svg {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
 .login-page__central-content {
   text-align: center;
-  width: 756px;
-  margin: auto;
-  padding: 0 100px;
+  flex-basis: 50%;
   color: #000000;
+  align-self: center;
 }
 
 .login-page__title {

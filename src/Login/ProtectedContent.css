@@ -1,5 +1,5 @@
 .protected-content {
-  width: 1220px;
+  width: 100%;
   margin: auto;
   min-height: calc(100vh - 221px);
   background-color: var(--g3-color__bg-cloud);
@@ -7,6 +7,5 @@
 
 .protected-content--full-screen {
   width: 100%;
-  min-width: 1220px;
   height: calc(100vh - 121px);
 }

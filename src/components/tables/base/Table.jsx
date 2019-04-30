@@ -12,7 +12,7 @@ class Table extends React.Component {
    */
   render() {
     return (
-      <div>
+      <div className='base-table'>
         <h2>{this.props.title}</h2>
         <table className='base-table__body'>
           <TableHead
