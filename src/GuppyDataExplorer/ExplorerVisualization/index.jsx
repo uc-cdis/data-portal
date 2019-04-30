@@ -101,7 +101,7 @@ class ExplorerVisualization extends React.Component {
               totalCount={this.props.totalCount}
               guppyConfig={this.props.guppyConfig}
               aggsData={this.props.aggsData}
-              accessableProjectList={this.props.accessableProjectList}
+              accessibleFieldObject={this.props.accessibleFieldObject}
             />
           )
         }
@@ -121,7 +121,7 @@ ExplorerVisualization.propTypes = {
   downloadRawDataByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
   allFields: PropTypes.array, // inherited from GuppyWrapper
-  accessableProjectList: PropTypes.array, // inherited from GuppyWrapper
+  accessibleFieldObject: PropTypes.object, // inherited from GuppyWrapper
   history: PropTypes.object.isRequired,
   className: PropTypes.string,
   chartConfig: ChartConfigType,
@@ -142,7 +142,9 @@ ExplorerVisualization.defaultProps = {
   downloadRawDataByTypeAndFilter: () => {},
   rawData: [],
   allFields: [],
-  accessableProjectList: [],
+  accessibleFieldObject: {
+    project: ['DEV-test', 'jnkns-jenkins'],
+  },
   className: '',
   chartConfig: {},
   tableConfig: {},

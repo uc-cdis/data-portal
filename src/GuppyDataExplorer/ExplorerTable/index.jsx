@@ -33,6 +33,9 @@ class ExplorerTable extends React.Component {
         this.setState({ tableData: [] });
       } else {
         this.setState({ tableLocking: false });
+        if (this.props.rawData) {
+          this.setState({ tableData: this.props.rawData });
+        }
         if (nextProps.rawData) {
           this.setState({ tableData: nextProps.rawData });
         }
@@ -147,6 +150,7 @@ ExplorerTable.propTypes = {
 ExplorerTable.defaultProps = {
   className: '',
   defaultPageSize: 20,
+  accessibleProjectObject: undefined,
 };
 
 export default ExplorerTable;
