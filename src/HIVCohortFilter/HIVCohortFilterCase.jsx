@@ -138,7 +138,7 @@ class HIVCohortFilterCase extends React.Component {
     const subjectsWithAtLeast1Haart = resList[0];
     const subjectsWithAtLeast1NonHaart = resList[1];
     const subjectsWithNoHaartTreatments = subjectsWithAtLeast1NonHaart.filter(
-      x => !subjectsWithAtLeast1Haart.map(y => y.key).includes(x.key)
+      x => !subjectsWithAtLeast1Haart.map(y => y.key).includes(x.key),
     );
 
     // Transform to map
@@ -161,7 +161,7 @@ class HIVCohortFilterCase extends React.Component {
       resultAlreadyCalculated: false,
     });
   }
-  
+
   downloadControl = () => {
     // Overridden by LTNP
     const fileName = `control-cohort-vload-${this.state.viralLoadFromUser.toString()
@@ -170,7 +170,7 @@ class HIVCohortFilterCase extends React.Component {
     const blob = this.makeCohortJSONFile(this.state.subjectControl);
     FileSaver.saveAs(blob, fileName);
   }
-  
+
   updateFilters = (event) => {
     event.preventDefault();
     this.setState({ inLoadingState: true });

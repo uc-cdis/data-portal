@@ -13,76 +13,76 @@ class NavBar extends Component {
     this.props.onInitActive();
   }
 
-   isActive = id => {     
-    let toCompare = this.props.activeTab.split('/').filter(x => x !== 'dev.html').join('/');
-    return toCompare.startsWith(id);
-  }
+   isActive = (id) => {
+     const toCompare = this.props.activeTab.split('/').filter(x => x !== 'dev.html').join('/');
+     return toCompare.startsWith(id);
+   }
 
-  render() {
-    return (
-      <div className='nav-bar'>
-        <header className={`nav-bar__header ${this.props.isFullWidth ? 'nav-bar__header--full-width' : ''}`}>
-          <nav className='nav-bar__nav--left'>
-            <div className='nav-bar__logo'>
-              <Link
-                to=''
-                onClick={() => this.props.onActiveTab('')}
-                onKeyPress={() => this.props.onActiveTab('')}
-              >
-                <img
-                  className='nav-bar__logo-img'
-                  src='/src/img/logo.png'
-                  alt=''
-                />
-              </Link>
-            </div>
-            {
-              this.props.navTitle && (
-                <div
-                  role='button'
-                  tabIndex={0}
-                  className='nav-bar__home-button'
-                  onClick={() => this.props.onActiveTab('')}
-                  onKeyPress={() => this.props.onActiveTab('')}
-                >
-                  <Link className='h3-typo nav-bar__link nav-bar__link--home' to=''>
-                    {this.props.navTitle}
-                  </Link>
-                </div>
-              )
-            }
-          </nav>
-          <nav className='nav-bar__nav--right'>
-            {
-              this.props.navItems.map(
-                (item, index) => (
-                  (item.link.startsWith('http')) ?
-                    <a className='nav-bar__link nav-bar__link--right' key={item.link} href={item.link}>
-                      <NavButton
-                        item={item}
-                        dictIcons={this.props.dictIcons}
-                        isActive={this.isActive(item.link)}
-                        onActiveTab={() => this.props.onActiveTab(item.link)}
-                        tabIndex={index + 1}
-                      />
-                    </a> :
-                    <Link className='nav-bar__link nav-bar__link--right' key={item.link} to={item.link}>
-                      <NavButton
-                        item={item}
-                        dictIcons={this.props.dictIcons}
-                        isActive={this.isActive(item.link)}
-                        onActiveTab={() => this.props.onActiveTab(item.link)}
-                        tabIndex={index + 1}
-                      />
-                    </Link>
-                ),
-              )
-            }
-          </nav>
-        </header>
-      </div>
-    );
-  }
+   render() {
+     return (
+       <div className='nav-bar'>
+         <header className={`nav-bar__header ${this.props.isFullWidth ? 'nav-bar__header--full-width' : ''}`}>
+           <nav className='nav-bar__nav--left'>
+             <div className='nav-bar__logo'>
+               <Link
+                 to=''
+                 onClick={() => this.props.onActiveTab('')}
+                 onKeyPress={() => this.props.onActiveTab('')}
+               >
+                 <img
+                   className='nav-bar__logo-img'
+                   src='/src/img/logo.png'
+                   alt=''
+                 />
+               </Link>
+             </div>
+             {
+               this.props.navTitle && (
+                 <div
+                   role='button'
+                   tabIndex={0}
+                   className='nav-bar__home-button'
+                   onClick={() => this.props.onActiveTab('')}
+                   onKeyPress={() => this.props.onActiveTab('')}
+                 >
+                   <Link className='h3-typo nav-bar__link nav-bar__link--home' to=''>
+                     {this.props.navTitle}
+                   </Link>
+                 </div>
+               )
+             }
+           </nav>
+           <nav className='nav-bar__nav--right'>
+             {
+               this.props.navItems.map(
+                 (item, index) => (
+                   (item.link.startsWith('http')) ?
+                     <a className='nav-bar__link nav-bar__link--right' key={item.link} href={item.link}>
+                       <NavButton
+                         item={item}
+                         dictIcons={this.props.dictIcons}
+                         isActive={this.isActive(item.link)}
+                         onActiveTab={() => this.props.onActiveTab(item.link)}
+                         tabIndex={index + 1}
+                       />
+                     </a> :
+                     <Link className='nav-bar__link nav-bar__link--right' key={item.link} to={item.link}>
+                       <NavButton
+                         item={item}
+                         dictIcons={this.props.dictIcons}
+                         isActive={this.isActive(item.link)}
+                         onActiveTab={() => this.props.onActiveTab(item.link)}
+                         tabIndex={index + 1}
+                       />
+                     </Link>
+                 ),
+               )
+             }
+           </nav>
+         </header>
+       </div>
+     );
+   }
 }
 
 NavBar.propTypes = {

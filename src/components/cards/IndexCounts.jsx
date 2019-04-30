@@ -26,7 +26,7 @@ class IndexCounts extends React.Component {
             <CountBox key={i} label={card.name} value={card.sum} />)
         }
       </div>
-    )
+    );
   }
 }
 

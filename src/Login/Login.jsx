@@ -3,9 +3,9 @@ import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import MediaQuery from 'react-responsive';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { basename, loginPath } from '../localconf';
+import { basename, loginPath, breakpoints } from '../localconf';
 import { components } from '../params';
-import { breakpoints } from '../localconf';
+
 import SlidingWindow from '../components/SlidingWindow';
 import './Login.less';
 
