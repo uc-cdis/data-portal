@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
@@ -55,10 +56,32 @@ class ExplorerVisualization extends React.Component {
     return { summaries, countItems, stackedBarCharts };
   }
 
+  getComponentLockingStatus = () => {
+    const accessField = 'project';
+    let accessValuesInAggregationList = [];
+    if (!this.props.accessibleFieldObject || !this.props.accessibleFieldObject[accessField]) {
+      return false;
+    }
+    const accessibleValues = this.props.accessibleFieldObject[accessField];
+    if (this.props.aggsData
+      && this.props.aggsData[accessField]
+      && this.props.aggsData[accessField].histogram) {
+      accessValuesInAggregationList = this.props.aggsData.project.histogram.map(entry => entry.key);
+    } else {
+      return false;
+    }
+    const outOfScopeValues = _.difference(accessValuesInAggregationList, accessibleValues);
+    if (outOfScopeValues.length > 0) { // trying to get unaccessible data is forbidden
+      return true;
+    }
+    return false;
+  }
+
   render() {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
     const tableColumns = (this.props.tableConfig.fields && this.props.tableConfig.fields.length > 0)
       ? this.props.tableConfig.fields : this.props.allFields;
+    const isComponentLocked = this.getComponentLockingStatus();
     return (
       <div className={this.props.className}>
         <div className='guppy-explorer-visualization__button-group'>
@@ -72,6 +95,7 @@ class ExplorerVisualization extends React.Component {
             downloadRawDataByTypeAndFilter={this.props.downloadRawDataByTypeAndFilter}
             filter={this.props.filter}
             history={this.props.history}
+            isLocked={isComponentLocked}
           />
         </div>
         <div className='guppy-explorer-visualization__summary-cards'>
@@ -100,8 +124,7 @@ class ExplorerVisualization extends React.Component {
               rawData={this.props.rawData}
               totalCount={this.props.totalCount}
               guppyConfig={this.props.guppyConfig}
-              aggsData={this.props.aggsData}
-              accessibleFieldObject={this.props.accessibleFieldObject}
+              isLocked={isComponentLocked}
             />
           )
         }

@@ -283,7 +283,7 @@ class ExplorerButtonGroup extends React.Component {
       return this.state.manifestEntryCount > 0;
     }
 
-    return this.props.totalCount > 0;
+    return this.props.totalCount > 0 && !this.props.isLocked;
   };
 
   isButtonPending = (buttonConfig) => {
@@ -345,7 +345,7 @@ class ExplorerButtonGroup extends React.Component {
                 <Dropdown
                   key={dropdownId}
                   className='explorer-button-group__dropdown'
-                  disabled={this.props.totalCount === 0}
+                  disabled={this.props.totalCount === 0 || this.props.isLocked}
                 >
                   <Dropdown.Button>{dropdownTitle}</Dropdown.Button>
                   <Dropdown.Menu>
@@ -406,6 +406,7 @@ ExplorerButtonGroup.propTypes = {
   resetJobState: PropTypes.func.isRequired,
   checkJobStatus: PropTypes.func.isRequired,
   fetchJobResult: PropTypes.func.isRequired,
+  isLocked: PropTypes.object.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {

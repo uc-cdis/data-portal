@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
-import _ from 'lodash';
 import 'react-table/react-table.css';
 import { GuppyConfigType, TableConfigType } from '../configTypeDef';
 import { capitalizeFirstLetter } from '../../utils';
@@ -39,27 +38,6 @@ class ExplorerTable extends React.Component {
     });
     const resWidth = Math.min((maxLetterLen * letterWidth) + spacing, maxWidth);
     return resWidth;
-  }
-
-  getTableLockingStatus = () => {
-    const accessField = 'project';
-    let accessValuesInAggregationList = [];
-    if (!this.props.accessibleFieldObject || !this.props.accessibleFieldObject[accessField]) {
-      return false;
-    }
-    const accessibleValues = this.props.accessibleFieldObject[accessField];
-    if (this.props.aggsData
-      && this.props.aggsData[accessField]
-      && this.props.aggsData[accessField].histogram) {
-      accessValuesInAggregationList = this.props.aggsData.project.histogram.map(entry => entry.key);
-    } else {
-      return false;
-    }
-    const outOfScopeValues = _.difference(accessValuesInAggregationList, accessibleValues);
-    if (outOfScopeValues.length > 0) { // trying to get unaccessible data is forbidden
-      return true;
-    }
-    return false;
   }
 
   fetchData = (state) => {
@@ -104,14 +82,13 @@ class ExplorerTable extends React.Component {
     const visiblePages = Math.min(totalPages, Math.round((SCROLL_SIZE / pageSize) + 0.49));
     const start = (this.state.currentPage * this.state.pageSize) + 1;
     const end = (this.state.currentPage + 1) * this.state.pageSize;
-    const isTableLocked = this.getTableLockingStatus();
     return (
       <div className={`explorer-table ${this.props.className}`}>
         <p className='explorer-table__description'>{`Showing ${start} - ${end} of ${totalCount} ${this.props.guppyConfig.dataType}s`}</p>
         <ReactTable
           columns={columnsConfig}
           manual
-          data={(isTableLocked || !this.props.rawData) ? [] : this.props.rawData}
+          data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
           pages={visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}
           onFetchData={this.fetchData}
@@ -119,7 +96,7 @@ class ExplorerTable extends React.Component {
           className={'-striped -highlight '}
           minRows={3} // make room for no data component
           resizable={false}
-          NoDataComponent={() => (isTableLocked ? (
+          NoDataComponent={() => (this.props.isLocked ? (
             <div className='rt-noData'>
               <LockIcon width={30} />
               <p>You only have access to summary data</p>
@@ -137,8 +114,7 @@ ExplorerTable.propTypes = {
   rawData: PropTypes.array.isRequired, // from GuppyWrapper
   fetchAndUpdateRawData: PropTypes.func.isRequired, // from GuppyWrapper
   totalCount: PropTypes.number.isRequired, // from GuppyWrapper
-  aggsData: PropTypes.object.isRequired, // from GuppyWrapper
-  accessibleFieldObject: PropTypes.object.isRequired, // from GuppyWrapper
+  isLocked: PropTypes.object.isRequired,
   className: PropTypes.string,
   defaultPageSize: PropTypes.number,
   tableConfig: TableConfigType.isRequired,
