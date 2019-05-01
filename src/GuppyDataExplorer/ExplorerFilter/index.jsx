@@ -26,6 +26,9 @@ class ExplorerFilter extends React.Component {
     if (this.props.tierAccessLevel !== 'regular') {
       return aggsData;
     }
+    if (aggsData === null) {
+      return aggsData;
+    }
     const newAggsData = Object.keys(aggsData).reduce((res, field) => {
       // if the field is not in accessibleFieldObject, no need to process it
       if (!Object.keys(this.props.accessibleFieldObject).includes(field)) {
