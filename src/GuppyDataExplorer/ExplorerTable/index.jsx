@@ -44,10 +44,10 @@ class ExplorerTable extends React.Component {
   getTableLockingStatus = () => {
     const accessField = 'project';
     let accessValuesInAggregationList = [];
-    if (!this.props.accessibleProjectObject || !this.props.accessibleProjectObject[accessField]) {
+    if (!this.props.accessibleFieldObject || !this.props.accessibleFieldObject[accessField]) {
       return false;
     }
-    const accessibleValues = this.props.accessibleProjectObject[accessField];
+    const accessibleValues = this.props.accessibleFieldObject[accessField];
     if (this.props.aggsData
       && this.props.aggsData[accessField]
       && this.props.aggsData[accessField].histogram) {
@@ -138,7 +138,7 @@ ExplorerTable.propTypes = {
   fetchAndUpdateRawData: PropTypes.func.isRequired, // from GuppyWrapper
   totalCount: PropTypes.number.isRequired, // from GuppyWrapper
   aggsData: PropTypes.object.isRequired, // from GuppyWrapper
-  accessibleProjectObject: PropTypes.object.isRequired, // from GuppyWrapper
+  accessibleFieldObject: PropTypes.object.isRequired, // from GuppyWrapper
   className: PropTypes.string,
   defaultPageSize: PropTypes.number,
   tableConfig: TableConfigType.isRequired,
