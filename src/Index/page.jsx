@@ -25,12 +25,12 @@ class IndexPageComponent extends React.Component {
         <div className='index-page__top'>
           <div className='index-page__introduction'>
             <Introduction data={components.index.introduction} dictIcons={dictIcons} />
-            <MediaQuery query={`(max-width: ${breakpoints.tabletSml}px)`}>
+            <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
               <ReduxIndexCounts />
             </MediaQuery>
           </div>
           <div className='index-page__bar-chart'>
-            <MediaQuery query={`(min-width: ${breakpoints.tabletSml + 1}px)`}>
+            <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
               <ReduxIndexBarChart />
             </MediaQuery>
           </div>

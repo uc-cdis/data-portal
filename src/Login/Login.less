@@ -3,10 +3,9 @@
   justify-content: space-around;
 }
 
-@media screen and (max-width: 820px) {
+@media screen and (max-width: 768px) {
   .login-page {
     justify-content: center;
-    height: 80vh;
   }
 }
 
@@ -30,6 +29,15 @@
   flex-basis: 50%;
   color: #000000;
   align-self: center;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+  .login-page__central-content {
+    padding: 40px 10px;
+  }
 }
 
 .login-page__title {

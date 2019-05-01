@@ -171,11 +171,9 @@ function buildConfig(opts) {
   };
 
   const breakpoints = {
-    desktop: 1290,
-    tabletLrg: 1170,
-    tablet: 1090,
-    tabletSml: 820,
-    phoneLg: 680,
+    laptop: 1024,
+    tablet: 768,
+    mobile: 480,
   };
 
   return {

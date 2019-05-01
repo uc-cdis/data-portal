@@ -67,7 +67,7 @@ class Login extends React.Component {
 
     return (
       <div className='login-page'>
-        <MediaQuery query={`(min-width: ${breakpoints.tabletSml + 1}px)`}>
+        <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
           <div className='login-page__side-box'>
             <SlidingWindow
               iconName={customImage}
@@ -108,7 +108,7 @@ class Login extends React.Component {
             </a>{'.'}
           </div>
         </div>
-        <MediaQuery query={`(min-width: ${breakpoints.tabletSml + 1}px)`}>
+        <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
           <div className='login-page__side-box--right'>
             <SlidingWindow
               iconName={customImage}
