@@ -172,7 +172,7 @@ function buildConfig(opts) {
 
   const breakpoints = {
     laptop: 1024,
-    tablet: 768,
+    tablet: 820,
     mobile: 480,
   };
 
