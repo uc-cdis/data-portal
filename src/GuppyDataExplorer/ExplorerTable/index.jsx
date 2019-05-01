@@ -114,7 +114,7 @@ ExplorerTable.propTypes = {
   rawData: PropTypes.array.isRequired, // from GuppyWrapper
   fetchAndUpdateRawData: PropTypes.func.isRequired, // from GuppyWrapper
   totalCount: PropTypes.number.isRequired, // from GuppyWrapper
-  isLocked: PropTypes.object.isRequired,
+  isLocked: PropTypes.bool.isRequired,
   className: PropTypes.string,
   defaultPageSize: PropTypes.number,
   tableConfig: TableConfigType.isRequired,

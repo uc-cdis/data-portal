@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ExplorerVisualization from './ExplorerVisualization';
+import ExplorerFilter from './ExplorerFilter';
+import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
 import { capitalizeFirstLetter } from '../utils';
 import {
   GuppyConfigType,
@@ -11,8 +13,6 @@ import {
   ChartConfigType,
 } from './configTypeDef';
 import './GuppyDataExplorer.css';
-
-import ExplorerFilter from './ExplorerFilter';
 
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
@@ -37,6 +37,11 @@ class GuppyDataExplorer extends React.Component {
           onFilterChange={this.handleFilterChange}
           rawDataFields={this.props.tableConfig.fields}
         >
+          <ExplorerTopMessageBanner
+            className='guppy-data-explorer__top-banner'
+            tierAccessLevel={this.props.tierAccessLevel}
+            tierAccessLimit={this.props.tierAccessLimit}
+          />
           <ExplorerFilter
             className='guppy-data-explorer__filter'
             tierAccessLevel={this.props.tierAccessLevel}

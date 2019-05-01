@@ -5,6 +5,7 @@ import TierAccessSelector from '../TierAccessSelector';
 import {
   FilterConfigType,
 } from '../configTypeDef';
+import getComponentNoDisplayStatus from '../GuppyDataExplorerHelper';
 
 class ExplorerFilter extends React.Component {
   constructor(props) {
@@ -72,7 +73,7 @@ class ExplorerFilter extends React.Component {
     return (
       <div className={this.props.className}>
         {
-          this.props.tierAccessLevel === 'regular' ? (
+          (this.props.tierAccessLevel === 'regular' && !getComponentNoDisplayStatus(this.props.allFieldObject, this.props.accessibleFieldObject, 'project')) ? (
             <TierAccessSelector onSelectorChange={this.handleAccessSelectorChange} />
           ) : (<React.Fragment />)
         }
@@ -100,6 +101,7 @@ ExplorerFilter.propTypes = {
   onReceiveNewAggsData: PropTypes.func, // inherit from GuppyWrapper
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
+  allFieldObject: PropTypes.object, // inherit from GuppyWrapper
 };
 
 ExplorerFilter.defaultProps = {
@@ -110,9 +112,8 @@ ExplorerFilter.defaultProps = {
   onFilterChange: () => {},
   onReceiveNewAggsData: () => {},
   tierAccessLimit: undefined,
-  accessibleFieldObject: {
-    project: ['DEV-test', 'jnkns-jenkins'],
-  },
+  accessibleFieldObject: {},
+  allFieldObject: {},
 };
 
 export default ExplorerFilter;

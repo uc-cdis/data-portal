@@ -406,7 +406,7 @@ ExplorerButtonGroup.propTypes = {
   resetJobState: PropTypes.func.isRequired,
   checkJobStatus: PropTypes.func.isRequired,
   fetchJobResult: PropTypes.func.isRequired,
-  isLocked: PropTypes.object.isRequired,
+  isLocked: PropTypes.bool.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {
