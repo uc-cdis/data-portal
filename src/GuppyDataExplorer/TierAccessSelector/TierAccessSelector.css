@@ -21,7 +21,9 @@
 }
 
 .tier-access-selector__radio-input {
-  display: none;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .tier-access-selector__radio-input:checked ~ .tier-access-selector__label {
