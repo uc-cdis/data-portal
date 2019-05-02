@@ -111,7 +111,7 @@ class ExplorerTable extends React.Component {
 }
 
 ExplorerTable.propTypes = {
-  rawData: PropTypes.array.isRequired, // from GuppyWrapper
+  rawData: PropTypes.array, // from GuppyWrapper
   fetchAndUpdateRawData: PropTypes.func.isRequired, // from GuppyWrapper
   totalCount: PropTypes.number.isRequired, // from GuppyWrapper
   isLocked: PropTypes.bool.isRequired,
@@ -122,6 +122,7 @@ ExplorerTable.propTypes = {
 };
 
 ExplorerTable.defaultProps = {
+  rawData: [],
   className: '',
   defaultPageSize: 20,
 };
