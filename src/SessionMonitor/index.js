@@ -12,7 +12,6 @@ export class SessionMonitor {
     this.mostRecentLogoutTime = Date.now();
     this.allowedTimeBetweenLogoutCalls =  0.1 * 60 * 1000;
     this.interval = null;
-    this.protectedContentComponent = null;
   }
 
   start() {

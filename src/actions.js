@@ -153,7 +153,6 @@ export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders,
 
 export const fetchGraphQL = (graphQLParams) => {
   return sessionMonitor.updateSession().then(function(result) {
-    console.log('updateSession result: ', result);
     const request = {
       credentials: 'include',
       headers: { ...headers },
@@ -176,7 +175,6 @@ export const fetchGraphQL = (graphQLParams) => {
 
 export const fetchFlatGraphQL = (graphQLParams) => {
   return sessionMonitor.updateSession().then(function(result) {
-    console.log('updateSession result: ', result);
     const request = {
       credentials: 'include',
       headers: { ...headers },
