@@ -24,6 +24,8 @@
   position: absolute;
   opacity: 0;
   cursor: pointer;
+  width: 22px;
+  height: 22px;
 }
 
 .tier-access-selector__radio-input:checked ~ .tier-access-selector__label {

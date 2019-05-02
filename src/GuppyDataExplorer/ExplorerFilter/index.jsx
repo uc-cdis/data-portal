@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
+import AccessibleFilter from '@gen3/guppy/dist/components/ConnectedFilter/AccessibleFilter';
+import UnaccessibleFilter from '@gen3/guppy/dist/components/ConnectedFilter/UnaccessibleFilter';
 import TierAccessSelector from '../TierAccessSelector';
 import {
   FilterConfigType,
@@ -62,14 +64,37 @@ class ExplorerFilter extends React.Component {
       return res;
     }, {});
     return newAggsData;
-  }
+  };
 
   handleAccessSelectorChange = (selectedAccessFilter) => {
     // selectedAccessFilter will be one of: 'with-access', 'without-access', or 'all-data'
     this.setState({ selectedAccessFilter });
-  }
+  };
 
   render() {
+    const filterProps = {
+      filterConfig: this.props.filterConfig,
+      guppyConfig: { type: this.props.guppyConfig.dataType, ...this.props.guppyConfig },
+      fieldMapping: this.props.guppyConfig.fieldMapping,
+      onFilterChange: this.props.onFilterChange,
+      onReceiveNewAggsData: this.props.onReceiveNewAggsData,
+      tierAccessLimit: this.props.tierAccessLevel === 'regular' ? this.props.tierAccessLimit : undefined,
+      onProcessFilterAggsData: this.onProcessFilterAggsData,
+    };
+    let filterFragment;
+    switch (this.state.selectedAccessFilter) {
+    case 'all-data':
+      filterFragment = (<ConnectedFilter {...filterProps} />);
+      break;
+    case 'with-access':
+      filterFragment = (<AccessibleFilter {...filterProps} />);
+      break;
+    case 'without-access':
+      filterFragment = (<UnaccessibleFilter {...filterProps} />);
+      break;
+    default:
+      break;
+    }
     return (
       <div className={this.props.className}>
         {
@@ -78,15 +103,7 @@ class ExplorerFilter extends React.Component {
           ) : (<React.Fragment />)
         }
         <h4><span className='connected-filter__title'>Filters</span></h4>
-        <ConnectedFilter
-          filterConfig={this.props.filterConfig}
-          guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
-          fieldMapping={this.props.guppyConfig.fieldMapping}
-          onFilterChange={this.props.onFilterChange}
-          onReceiveNewAggsData={this.props.onReceiveNewAggsData}
-          tierAccessLimit={this.props.tierAccessLevel === 'regular' ? this.props.tierAccessLimit : undefined}
-          onProcessFilterAggsData={this.onProcessFilterAggsData}
-        />
+        {filterFragment}
       </div>
     );
   }
