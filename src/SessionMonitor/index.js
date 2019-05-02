@@ -6,8 +6,8 @@ import { logoutAPI, fetchUser } from '../actions';
 /* eslint-disable class-methods-use-this */
 export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
-    this.updateSessionTime = updateSessionTime || 5 * 60 * 1000;
-    this.inactiveTimeLimit = inactiveTimeLimit || 60 * 60 * 1000;
+    this.updateSessionTime = updateSessionTime || 0.05 * 60 * 1000;
+    this.inactiveTimeLimit = inactiveTimeLimit || 1 * 60 * 1000;
     this.mostRecentActivityTimestamp = Date.now();
     this.mostRecentLogoutTime = Date.now();
     this.allowedTimeBetweenLogoutCalls =  0.1 * 60 * 1000;
@@ -35,23 +35,26 @@ export class SessionMonitor {
   }
 
   updateUserActivity() {
+    console.log('updateUserActivity');
     this.mostRecentActivityTimestamp = Date.now();
   }
 
   updateSession() {
-    // If user has been inactive for Y min
-    if (Date.now() - this.mostRecentActivityTimestamp >= this.inactiveTimeLimit) {
+    const timeSinceLastActivity = Date.now() - this.mostRecentActivityTimestamp;
+    const paths = window.location.href.split('/').filter(x => x !== 'dev.html');
+    const userIsInWorkspace = paths[paths.length - 1] === 'workspace';
+    console.log('in workspace: ', userIsInWorkspace);
+
+    // If user has been inactive for Y min, and they are not in a workspace
+    if (timeSinceLastActivity >= this.inactiveTimeLimit && !userIsInWorkspace) {
       this.logoutUser();
       return Promise.resolve(0);
-    } else if (Date.now() - this.mostRecentActivityTimestamp < this.inactiveTimeLimit) {
-      return this.refreshSession();
-    } else {
-      console.log('Error calculating inactive time');
-      return Promise.resolve(0);
     }
+    return this.refreshSession();
   }
 
   refreshSession() {
+    console.log('sessionMonitor refreshSession');
     // hitting Fence endpoint refreshes token
     var _this = this;
     return fetch(`${userapiPath}user/`).then(function(response, data) {
@@ -65,12 +68,14 @@ export class SessionMonitor {
   notifyUserTheyAreNotLoggedIn() {
     // If the user is browsing a page with ProtectedContent, this code will
     // display the popup that informs them their session has expired.
+    console.log('sessionMonitor -- showing popup');
     getReduxStore().then((store) => {
       store.dispatch(fetchUser)
     });
   }
 
   logoutUser() {
+    console.log('sessionMonitor logoutUser');
     getReduxStore().then((store) => {
       store.dispatch(logoutAPI());
     });

@@ -150,6 +150,7 @@ class ProtectedContent extends React.Component {
           const { user } = store.getState();
           newState.user = user;
           if (!user.username) { // not authenticated
+            console.log('protectedContent logoutUser');
             newState.redirectTo = '/login';
             newState.authenticated = false;
           } else if (response.type !== 'UPDATE_POPUP') {
@@ -235,6 +236,7 @@ class ProtectedContent extends React.Component {
             },
             () => {
               // something went wrong - better just re-login
+              console.log('protectedContent logoutUser 2');
               newState.authenticated = false;
               newState.redirectTo = '/login';
               return newState;
