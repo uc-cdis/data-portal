@@ -20,8 +20,8 @@
     ],
     "chartCounts": [
       {
-        "graphql": "_clinical_supplement_count",
-        "name": "Clinical Supplement"
+        "graphql": "_case_count",
+        "name": "Patient"
       },
       {
         "graphql": "_unaligned_reads_file_count",
