@@ -11,7 +11,7 @@ import {
   ChartConfigType,
   GuppyConfigType,
 } from '../configTypeDef';
-import getComponentDisplayStatus from '../GuppyDataExplorerHelper';
+import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper';
 import './ExplorerVisualization.css';
 
 class ExplorerVisualization extends React.Component {
@@ -60,7 +60,7 @@ class ExplorerVisualization extends React.Component {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
     const tableColumns = (this.props.tableConfig.fields && this.props.tableConfig.fields.length > 0)
       ? this.props.tableConfig.fields : this.props.allFields;
-    const isComponentLocked = getComponentDisplayStatus(this.props.aggsData, this.props.accessibleFieldObject, 'project');
+    const isComponentLocked = checkForAnySelectedUnaccessibleField(this.props.aggsData, this.props.accessibleFieldObject, 'project');
     return (
       <div className={this.props.className}>
         <div className='guppy-explorer-visualization__button-group'>

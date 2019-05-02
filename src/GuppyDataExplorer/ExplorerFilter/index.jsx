@@ -7,7 +7,7 @@ import TierAccessSelector from '../TierAccessSelector';
 import {
   FilterConfigType,
 } from '../configTypeDef';
-import getComponentNoDisplayStatus from '../GuppyDataExplorerHelper';
+import { checkForNoAccessibleProject } from '../GuppyDataExplorerHelper';
 
 class ExplorerFilter extends React.Component {
   constructor(props) {
@@ -98,7 +98,7 @@ class ExplorerFilter extends React.Component {
     return (
       <div className={this.props.className}>
         {
-          (this.props.tierAccessLevel === 'regular' && !getComponentNoDisplayStatus(this.props.allFieldObject, this.props.accessibleFieldObject, 'project')) ? (
+          (this.props.tierAccessLevel === 'regular' && !checkForNoAccessibleProject(this.props.accessibleFieldObject)) ? (
             <TierAccessSelector onSelectorChange={this.handleAccessSelectorChange} />
           ) : (<React.Fragment />)
         }

@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import './ExplorerTopMessageBanner.css';
-import getComponentNoDisplayStatus from '../GuppyDataExplorerHelper';
+import { checkForNoAccessibleProject } from '../GuppyDataExplorerHelper';
 
 class ExplorerTopMessageBanner extends React.Component {
   render() {
     return (
       <div className={this.props.className}>
         {
-          (this.props.tierAccessLevel === 'regular' && getComponentNoDisplayStatus(this.props.allFieldObject, this.props.accessibleFieldObject, 'project')) ? (
+          (this.props.tierAccessLevel === 'regular' && checkForNoAccessibleProject(this.props.accessibleFieldObject)) ? (
             <div className='top-message-banner'>
               <div className='top-message-banner__button-wrapper'>
                 <Button
@@ -34,7 +34,6 @@ ExplorerTopMessageBanner.propTypes = {
   tierAccessLevel: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
-  allFieldObject: PropTypes.object, // inherit from GuppyWrapper
 };
 
 ExplorerTopMessageBanner.defaultProps = {

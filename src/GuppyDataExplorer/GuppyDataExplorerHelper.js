@@ -1,26 +1,19 @@
+/* eslint-disable max-len */
 import _ from 'lodash';
 
-function getComponentNoDisplayStatus(dataToCheck, accessibleFieldObject, accessField) {
+export function checkForAnySelectedUnaccessibleField(aggsData, accessibleFieldObject, fieldToCheck) { // if true, means user has unaccessible fields in aggsData
   let accessValuesInAggregationList = [];
-  if (!accessibleFieldObject || !accessibleFieldObject[accessField]) {
+  if (!accessibleFieldObject || !accessibleFieldObject[fieldToCheck]) {
     return false;
   }
 
-  const accessibleValues = accessibleFieldObject[accessField];
-  if (dataToCheck
-      && dataToCheck[accessField]) {
-    if (dataToCheck[accessField].histogram) {
-      accessValuesInAggregationList = dataToCheck.project.histogram.map(entry => entry.key);
-      const outOfScopeValues = _.difference(accessValuesInAggregationList, accessibleValues);
-      if (outOfScopeValues.length > 0) { // trying to get unaccessible data is forbidden
-        return true;
-      }
-      return false;
-    }
-    // eslint-disable-next-line max-len
-    accessValuesInAggregationList = dataToCheck[accessField]; // the input dataToCheck is the allFieldObject from GuppyWapper, to check for overall project access
+  const accessibleValues = accessibleFieldObject[fieldToCheck];
+  if (aggsData
+      && aggsData[fieldToCheck]
+      && aggsData[fieldToCheck].histogram) {
+    accessValuesInAggregationList = aggsData.project.histogram.map(entry => entry.key);
     const outOfScopeValues = _.difference(accessValuesInAggregationList, accessibleValues);
-    if (outOfScopeValues.length === accessValuesInAggregationList.length) {
+    if (outOfScopeValues.length > 0) { // trying to get unaccessible data is forbidden
       return true;
     }
     return false;
@@ -28,4 +21,10 @@ function getComponentNoDisplayStatus(dataToCheck, accessibleFieldObject, accessF
   return false;
 }
 
-export default getComponentNoDisplayStatus;
+export function checkForNoAccessibleProject(accessibleFieldObject) { // if true, means user don't have access to any project
+  const accessField = 'project'; // only check for project
+  if (!accessibleFieldObject || !accessibleFieldObject[accessField]) {
+    return false;
+  }
+  return (accessibleFieldObject[accessField].length === 0);
+}
