@@ -17,6 +17,7 @@ function getComponentNoDisplayStatus(dataToCheck, accessibleFieldObject, accessF
       }
       return false;
     }
+    // eslint-disable-next-line max-len
     accessValuesInAggregationList = dataToCheck[accessField]; // the input dataToCheck is the allFieldObject from GuppyWapper, to check for overall project access
     const outOfScopeValues = _.difference(accessValuesInAggregationList, accessibleValues);
     if (outOfScopeValues.length === accessValuesInAggregationList.length) {
