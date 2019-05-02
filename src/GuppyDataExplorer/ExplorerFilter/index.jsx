@@ -80,6 +80,7 @@ class ExplorerFilter extends React.Component {
       onReceiveNewAggsData: this.props.onReceiveNewAggsData,
       tierAccessLimit: this.props.tierAccessLevel === 'regular' ? this.props.tierAccessLimit : undefined,
       onProcessFilterAggsData: this.onProcessFilterAggsData,
+      onUpdateAccessLevel: this.props.onUpdateAccessLevel,
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
@@ -116,6 +117,7 @@ ExplorerFilter.propTypes = {
   guppyConfig: PropTypes.object, // inherit from GuppyWrapper
   fieldMapping: PropTypes.array, // inherit from GuppyWrapper
   onFilterChange: PropTypes.func, // inherit from GuppyWrapper
+  onUpdateAccessLevel: PropTypes.func, // inherit from GuppyWrapper
   onReceiveNewAggsData: PropTypes.func, // inherit from GuppyWrapper
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
@@ -127,6 +129,7 @@ ExplorerFilter.defaultProps = {
   guppyConfig: {},
   fieldMapping: [],
   onFilterChange: () => {},
+  onUpdateAccessLevel: () => {},
   onReceiveNewAggsData: () => {},
   tierAccessLimit: undefined,
   accessibleFieldObject: {},
