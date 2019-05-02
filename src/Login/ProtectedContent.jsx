@@ -58,98 +58,14 @@ class ProtectedContent extends React.Component {
   };
 
   constructor(props, context) {
-    console.log('constructing protectedContent');
     super(props, context);
     this.state = {
       authenticated: false,
       dataLoaded: false,
       redirectTo: null,
     };
-
-    this.updateSessionTime = 0.1 * 60 * 1000;
-    this.inactiveTimeLimit = 60 * 60 * 1000;
-    this.mostRecentActivityTimestamp = Date.now();
-    this.mostRecentLogoutTime = Date.now();
-    this.allowedTimeBetweenLogoutCalls =  1 * 60 * 1000;
-    this.interval = null;
-    this.numRefreshedCounter = 0;
-    this.stop();
-    this.start();
-  }
-
-  start = () => {
-    console.log('start protectedContent');
-    if (this.interval) { // interval already started
-      return;
-    }
-    window.addEventListener('mousedown', () => this.updateUserActivity(), false);
-    window.addEventListener('keypress', () => this.updateUserActivity(), false);
-    this.interval = setInterval(
-      () => this.updateSession(),
-      this.updateSessionTime,
-    ); // check session every X min
-  }
-
-  stop = () => {
-    if (this.interval) {
-      clearInterval(this.interval);
-      window.removeEventListener('mousedown', this.updateUserActivity(), false);
-      window.removeEventListener('keypress', this.updateUserActivity(), false);
-    }
-  }
-
-  updateUserActivity = () => {
-    this.mostRecentActivityTimestamp = Date.now();
-  }
-
-  updateSession = () => {
-    console.log('protectedContent: updateSession was called');
-    // If user has been inactive for Y min
-    if (Date.now() - this.mostRecentActivityTimestamp >= this.inactiveTimeLimit) {
-      console.log('SessionMonitor just logged u out ');
-      this.logoutUser();
-      return Promise.resolve(0);
-    } else if (Date.now() - this.mostRecentActivityTimestamp < this.inactiveTimeLimit) {
-      return this.refreshSession();
-    } else {
-      console.log('Error calculating inactive time');
-      return Promise.resolve(0);
-    }
-  }
-
-  refreshSession = () => {
-    // hitting Fence endpoint refreshes token
-    console.log('protected content: refreshSession was called');
-    getReduxStore().then(
-      store => {
-        this.checkLoginStatus(store, this.state).then(
-          newState => this.props.public || this.checkQuizStatus(newState)
-        ).then(
-          newState => this.props.public || this.checkApiToken(store, newState)
-        ).then(
-          (newState) => {
-                const filterPromise = (!this.props.public && newState.authenticated
-                  && typeof this.props.filter === 'function')
-                  ? this.props.filter()
-                  : Promise.resolve('ok');
-                // finally update the component state
-                const finish = () => {
-                  const latestState = Object.assign({}, newState);
-                  latestState.dataLoaded = true;
-                  this.setState(latestState);
-                };
-                return filterPromise.then(
-                  finish, finish,
-                );
-              },
-            );
-      });
-  }
-
-  logoutUserWithPopup() {
-    getReduxStore().then((store) => {
-      store.dispatch(logoutAPI());
-    });
+    // Give the Session Monitor singleton access to the ReduxAuthTimeoutPopup.
+    sessionMonitor.protectedContentComponent = this;
   }
 
   /**
@@ -241,13 +157,13 @@ class ProtectedContent extends React.Component {
         (response) => {
           console.log('fetchUser response: ', response);
           const { user } = store.getState();
+          console.log('user: ', user);
           newState.user = user;
           if (!user.username) { // not authenticated
-            console.log('not authenticated! protected content is gonna ask to log you out!');
             newState.redirectTo = '/login';
             newState.authenticated = false;
-          } else { // auth ok - cache it
-            console.log('protected content is not gonna ask to log you out.');
+          } else if (response.type !== 'UPDATE_POPUP') {
+            // auth ok - cache it
             lastAuthMs = Date.now();
           }
           return newState;

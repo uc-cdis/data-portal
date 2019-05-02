@@ -242,8 +242,6 @@ export const fetchUser = dispatch => fetchCreds({
 export const refreshUser = () => fetchUser;
 
 export const logoutAPI = () => dispatch => { 
-  console.log('logoutAPI was about to be hit!!!');
-  return;
   fetchWithCreds({
     path: `${submissionApiOauthPath}logout`,
     dispatch,
