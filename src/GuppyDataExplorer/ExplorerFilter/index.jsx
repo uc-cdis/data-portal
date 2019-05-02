@@ -77,6 +77,7 @@ class ExplorerFilter extends React.Component {
             <TierAccessSelector onSelectorChange={this.handleAccessSelectorChange} />
           ) : (<React.Fragment />)
         }
+        <h4><span className='connected-filter__title'>Filters</span></h4>
         <ConnectedFilter
           filterConfig={this.props.filterConfig}
           guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
