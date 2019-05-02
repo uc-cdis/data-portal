@@ -46,7 +46,7 @@ import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import './index.less';
 
 // monitor user's session
-sessionMonitor.start();
+// sessionMonitor.start();
 
 // render the app after the store is configured
 async function init() {

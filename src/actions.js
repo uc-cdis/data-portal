@@ -12,6 +12,7 @@ import {
   graphqlSchemaUrl,
   useGuppyForExplorer,
 } from './configs';
+import sessionMonitor from './SessionMonitor';
 
 export const updatePopup = state => ({
   type: 'UPDATE_POPUP',
@@ -99,8 +100,7 @@ export const fetchWithCreds = (opts) => {
       if (response.status !== 403 && response.status !== 401) {
         return Promise.resolve(getJsonOrText(path, response, useCache, method));
       }
-      return Promise.resolve(fetchCreds({ dispatch,
-      }).then(
+      return Promise.resolve(fetchCreds({ dispatch }).then(
         (resp) => {
           switch (resp.status) {
           case 200:
@@ -152,42 +152,50 @@ export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders,
   );
 
 export const fetchGraphQL = (graphQLParams) => {
-  const request = {
-    credentials: 'include',
-    headers: { ...headers },
-    method: 'POST',
-    body: JSON.stringify(graphQLParams),
-  };
+  return sessionMonitor.updateSession().then(function(result) {
+    console.log('updateSession result: ', result);
+    const request = {
+      credentials: 'include',
+      headers: { ...headers },
+      method: 'POST',
+      body: JSON.stringify(graphQLParams),
+    };
 
-  return fetch(graphqlPath, request)
-    .then(response => response.text())
-    .then((responseBody) => {
-      try {
-        return JSON.parse(responseBody);
-      } catch (error) {
-        return responseBody;
+    return fetch(graphqlPath, request)
+      .then(response => response.text())
+      .then((responseBody) => {
+        try {
+          return JSON.parse(responseBody);
+        } catch (error) {
+          return responseBody;
+        }
       }
-    });
+    );
+  });
 };
 
 export const fetchFlatGraphQL = (graphQLParams) => {
-  const request = {
-    credentials: 'include',
-    headers: { ...headers },
-    method: 'POST',
-    body: JSON.stringify(graphQLParams),
-  };
+  return sessionMonitor.updateSession().then(function(result) {
+    console.log('updateSession result: ', result);
+    const request = {
+      credentials: 'include',
+      headers: { ...headers },
+      method: 'POST',
+      body: JSON.stringify(graphQLParams),
+    };
 
-  const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
-  return fetch(graphqlUrl, request)
-    .then(response => response.text())
-    .then((responseBody) => {
-      try {
-        return JSON.parse(responseBody);
-      } catch (error) {
-        return responseBody;
-      }
-    });
+    const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
+    return fetch(graphqlUrl, request)
+      .then(response => response.text())
+      .then((responseBody) => {
+        try {
+          return JSON.parse(responseBody);
+        } catch (error) {
+          return responseBody;
+        }
+      });
+    }
+  );
 };
 
 export const handleResponse = type => ({ data, status }) => {
@@ -233,15 +241,19 @@ export const fetchUser = dispatch => fetchCreds({
 
 export const refreshUser = () => fetchUser;
 
-export const logoutAPI = () => dispatch => fetchWithCreds({
-  path: `${submissionApiOauthPath}logout`,
-  dispatch,
-})
-  .then(handleResponse('RECEIVE_API_LOGOUT'))
-  .then(msg => dispatch(msg))
-  .then(
-    () => document.location.replace(`${userapiPath}/logout?next=${basename}`),
-  );
+export const logoutAPI = () => dispatch => { 
+  console.log('logoutAPI was about to be hit!!!');
+  return;
+  fetchWithCreds({
+    path: `${submissionApiOauthPath}logout`,
+    dispatch,
+  })
+    .then(handleResponse('RECEIVE_API_LOGOUT'))
+    .then(msg => dispatch(msg))
+    .then(
+      () => document.location.replace(`${userapiPath}/logout?next=${basename}`),
+    );
+  }
 
 
 /**
