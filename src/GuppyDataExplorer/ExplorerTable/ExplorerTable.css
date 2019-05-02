@@ -25,6 +25,7 @@
 }
 
 .explorer-table .ReactTable .rt-noData {
+  width: 100%;
   text-align: center;
   border: 3px;
 }
