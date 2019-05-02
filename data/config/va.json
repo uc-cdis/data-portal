@@ -3,9 +3,9 @@
   "graphql": {
     "boardCounts": [
       {
-        "graphql": "_clinical_supplement_count",
-        "name": "Clinical Supplement",
-        "plural": "Clinical Supplements"
+        "graphql": "_case_count",
+        "name": "Patient",
+        "plural": "Patients"
       },
       {
         "graphql": "_unaligned_reads_file_count",
@@ -20,8 +20,8 @@
     ],
     "chartCounts": [
       {
-        "graphql": "_clinical_supplement_count",
-        "name": "Clinical Supplement"
+        "graphql": "_case_count",
+        "name": "Patient"
       },
       {
         "graphql": "_unaligned_reads_file_count",
