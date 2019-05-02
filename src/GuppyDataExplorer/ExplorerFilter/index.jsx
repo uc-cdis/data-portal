@@ -119,7 +119,6 @@ ExplorerFilter.propTypes = {
   onReceiveNewAggsData: PropTypes.func, // inherit from GuppyWrapper
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
-  allFieldObject: PropTypes.object, // inherit from GuppyWrapper
 };
 
 ExplorerFilter.defaultProps = {
@@ -131,7 +130,6 @@ ExplorerFilter.defaultProps = {
   onReceiveNewAggsData: () => {},
   tierAccessLimit: undefined,
   accessibleFieldObject: {},
-  allFieldObject: {},
 };
 
 export default ExplorerFilter;

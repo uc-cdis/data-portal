@@ -40,7 +40,6 @@ ExplorerTopMessageBanner.defaultProps = {
   className: '',
   tierAccessLimit: undefined,
   accessibleFieldObject: {},
-  allFieldObject: {},
 };
 
 export default ExplorerTopMessageBanner;

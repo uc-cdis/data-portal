@@ -273,6 +273,9 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   isButtonEnabled = (buttonConfig) => {
+    if (this.props.isLocked) {
+      return !this.props.isLocked
+    }
     if (buttonConfig.type === 'manifest') {
       return this.state.manifestEntryCount > 0;
     }
@@ -283,7 +286,7 @@ class ExplorerButtonGroup extends React.Component {
       return this.state.manifestEntryCount > 0;
     }
 
-    return this.props.totalCount > 0 && !this.props.isLocked;
+    return this.props.totalCount > 0;
   };
 
   isButtonPending = (buttonConfig) => {
