@@ -59,7 +59,7 @@ class ExplorerVisualization extends React.Component {
   render() {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
     const tableColumns = (this.props.tableConfig.fields && this.props.tableConfig.fields.length > 0)
-      ? this.props.tableConfig.fields : this.props.allFields;
+      ? this.props.tableConfig.fields : [];
     const isComponentLocked = checkForAnySelectedUnaccessibleField(this.props.aggsData, this.props.accessibleFieldObject, 'project');
     return (
       <div className={this.props.className}>
@@ -122,7 +122,6 @@ ExplorerVisualization.propTypes = {
   getTotalCountsByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   downloadRawDataByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
-  allFields: PropTypes.array, // inherited from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherited from GuppyWrapper
   history: PropTypes.object.isRequired,
   className: PropTypes.string,
@@ -143,10 +142,7 @@ ExplorerVisualization.defaultProps = {
   getTotalCountsByTypeAndFilter: () => {},
   downloadRawDataByTypeAndFilter: () => {},
   rawData: [],
-  allFields: [],
-  accessibleFieldObject: {
-    project: ['DEV-test', 'jnkns-jenkins'],
-  },
+  accessibleFieldObject: {},
   className: '',
   chartConfig: {},
   tableConfig: {},
