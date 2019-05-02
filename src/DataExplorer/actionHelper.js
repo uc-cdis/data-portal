@@ -136,25 +136,13 @@ export const exportToWorkspace = async (
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
     errorCallback(500, MSG_EXPORT_MANIFEST_FAIL);
   }
-  const resourceIDList = (await queryDataByIds(
-    apiFunc,
-    projectId,
-    graphqlIdField,
-    selectedTableRows,
-    arrangerConfig.graphqlField,
-    [arrangerConfig.manifestMapping.referenceIdFieldInDataIndex],
-  )).map((d) => {
-    if (!d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex]) {
-      errorCallback(500, MSG_EXPORT_MANIFEST_FAIL);
-    }
-    return d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex];
-  });
+
   const manifestJSON = await queryDataByValues(
     apiFunc,
     projectId,
     arrangerConfig.manifestMapping.resourceIndexType,
     arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-    resourceIDList,
+    selectedTableRows,
     [
       arrangerConfig.manifestMapping.resourceIdField,
       arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
@@ -207,25 +195,13 @@ export const getManifestEntryCount = async (
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
     throw MSG_GET_MANIFEST_COUNT_FAIL;
   }
-  const resourceIDList = (await queryDataByIds(
-    apiFunc,
-    projectId,
-    graphqlIdField,
-    selectedTableRows,
-    arrangerConfig.graphqlField,
-    [arrangerConfig.manifestMapping.referenceIdFieldInDataIndex],
-  )).map((d) => {
-    if (!d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex]) {
-      throw MSG_GET_MANIFEST_COUNT_FAIL;
-    }
-    return d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex];
-  });
+
   const manifestEntryCount = await queryCountByValues(
     apiFunc,
     projectId,
     arrangerConfig.manifestMapping.resourceIndexType,
     arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-    resourceIDList,
+    selectedTableRows,
   );
   return manifestEntryCount;
 };
