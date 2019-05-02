@@ -151,7 +151,7 @@
         "chartType": "count",
         "title": "Projects"
       },
-      "submitter_id": {
+      "subject_id": {
         "chartType": "count",
         "title": "Subjects"
       },
@@ -303,7 +303,7 @@
         "referenceIdFieldInResourceIndex": "subject_id",
         "referenceIdFieldInDataIndex": "node_id"
       },
-      "nodeCountField": "submitter_id"
+      "nodeCountField": "subject_id"
     }
   }
 }
