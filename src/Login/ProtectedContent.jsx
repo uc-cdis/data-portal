@@ -124,14 +124,6 @@ class ProtectedContent extends React.Component {
     }
   }
 
-  logoutUserWithPopup = () => {
-    console.log("logoutwithpopup");
-    const latestState = Object.assign({}, this.state);
-    latestState.redirectTo = '/login';
-    latestState.authenticated = false;
-    this.setState(latestState);
-  }
-
   /**
    * Start filter the 'newState' for the checkLoginStatus component.
    * Check if the user is logged in, and update state accordingly.
@@ -147,7 +139,7 @@ class ProtectedContent extends React.Component {
     newState.redirectTo = null;
     newState.user = store.getState().user;
 
-    if (nowMs - lastAuthMs < 6000) {
+    if (nowMs - lastAuthMs < 60000) {
       // assume we're still logged in after 1 minute ...
       return Promise.resolve(newState);
     }
@@ -155,9 +147,7 @@ class ProtectedContent extends React.Component {
     return store.dispatch(fetchUser) // make an API call to see if we're still logged in ...
       .then(
         (response) => {
-          console.log('fetchUser response: ', response);
           const { user } = store.getState();
-          console.log('user: ', user);
           newState.user = user;
           if (!user.username) { // not authenticated
             newState.redirectTo = '/login';

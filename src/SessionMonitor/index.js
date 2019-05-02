@@ -42,11 +42,9 @@ export class SessionMonitor {
   updateSession() {
     // If user has been inactive for Y min
     if (Date.now() - this.mostRecentActivityTimestamp >= this.inactiveTimeLimit) {
-      console.log('updateSession branch 1');
       this.logoutUser();
       return Promise.resolve(0);
     } else if (Date.now() - this.mostRecentActivityTimestamp < this.inactiveTimeLimit) {
-      console.log('updateSession branch 2');
       return this.refreshSession();
     } else {
       console.log('Error calculating inactive time');
@@ -56,30 +54,24 @@ export class SessionMonitor {
 
   refreshSession() {
     // hitting Fence endpoint refreshes token
-    console.log('refreshing session');
     var _this = this;
     return fetch(`${userapiPath}user/`).then(function(response, data) {
-      console.log('sessoion monitor got the result: ', response);
-      if ((response.status == 401 || response.status == 403) 
-        && Date.now() - _this.mostRecentLogoutTime > _this.allowedTimeBetweenLogoutCalls) {
-        console.log('logging out user');
-        _this.logoutUser();
+      if (response.status == 401 || response.status == 403) {
+        _this.notifyUserTheyAreNotLoggedIn();
       }
       return response;
     });
   }
 
-  logoutUser() {
-    if (this.protectedContentComponent !== null) {
-      getReduxStore().then((store) => {
-        store.dispatch(fetchUser).then( result => {
-          console.log('SM 71: ', result);
-        });
-      });
-      //this.protectedContentComponent.logoutUserWithPopup();
-      return;
-    }
+  notifyUserTheyAreNotLoggedIn() {
+    // If the user is browsing a page with ProtectedContent, this code will
+    // display the popup that informs them their session has expired.
+    getReduxStore().then((store) => {
+      store.dispatch(fetchUser)
+    });
+  }
 
+  logoutUser() {
     getReduxStore().then((store) => {
       store.dispatch(logoutAPI());
     });
