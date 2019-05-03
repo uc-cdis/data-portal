@@ -13,6 +13,7 @@ export const GuppyConfigType = PropTypes.shape({
     referenceIdFieldInResourceIndex: PropTypes.string,
     referenceIdFieldInDataIndex: PropTypes.string,
   }),
+  getAccessButtonLink: PropTypes.string,
 });
 
 export const FilterConfigType = PropTypes.shape({
@@ -37,8 +38,6 @@ export const ButtonConfigType = PropTypes.shape({
     fileName: PropTypes.string,
     dropdownId: PropTypes.string,
     tooltipText: PropTypes.string,
-    link: PropTypes.string,
-    content: PropTypes.string, // for toaster message maybe?
   })),
   dropdowns: PropTypes.object,
 });

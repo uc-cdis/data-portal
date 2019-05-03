@@ -6,6 +6,7 @@ import UnaccessibleFilter from '@gen3/guppy/dist/components/ConnectedFilter/Unac
 import TierAccessSelector from '../TierAccessSelector';
 import {
   FilterConfigType,
+  GuppyConfigType,
 } from '../configTypeDef';
 import { checkForNoAccessibleProject } from '../GuppyDataExplorerHelper';
 
@@ -102,7 +103,7 @@ class ExplorerFilter extends React.Component {
           (this.props.tierAccessLevel === 'regular' && !checkForNoAccessibleProject(this.props.accessibleFieldObject)) ? (
             <TierAccessSelector
               onSelectorChange={this.handleAccessSelectorChange}
-              renderGetAccessButton={this.props.renderGetAccessButton}
+              guppyConfig={this.props.guppyConfig}
             />
           ) : (<React.Fragment />)
         }
@@ -117,14 +118,13 @@ ExplorerFilter.propTypes = {
   className: PropTypes.string,
   tierAccessLevel: PropTypes.string.isRequired,
   filterConfig: FilterConfigType, // inherit from GuppyWrapper
-  guppyConfig: PropTypes.object, // inherit from GuppyWrapper
+  guppyConfig: GuppyConfigType, // inherit from GuppyWrapper
   fieldMapping: PropTypes.array, // inherit from GuppyWrapper
   onFilterChange: PropTypes.func, // inherit from GuppyWrapper
   onUpdateAccessLevel: PropTypes.func, // inherit from GuppyWrapper
   onReceiveNewAggsData: PropTypes.func, // inherit from GuppyWrapper
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
-  renderGetAccessButton: PropTypes.func,
 };
 
 ExplorerFilter.defaultProps = {
@@ -135,7 +135,6 @@ ExplorerFilter.defaultProps = {
   onFilterChange: () => {},
   onUpdateAccessLevel: () => {},
   onReceiveNewAggsData: () => {},
-  renderGetAccessButton: () => {},
   tierAccessLimit: undefined,
   accessibleFieldObject: {},
 };
