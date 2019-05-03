@@ -153,6 +153,7 @@ export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders,
 
 export const fetchGraphQL = (graphQLParams) => {
   return sessionMonitor.updateSession().then(function(result) {
+    console.log('fetchGraphQL result ', result);
     const request = {
       credentials: 'include',
       headers: { ...headers },
@@ -175,6 +176,7 @@ export const fetchGraphQL = (graphQLParams) => {
 
 export const fetchFlatGraphQL = (graphQLParams) => {
   return sessionMonitor.updateSession().then(function(result) {
+    console.log('fetchFlatGraphQL result ', result);
     const request = {
       credentials: 'include',
       headers: { ...headers },
@@ -239,6 +241,8 @@ export const fetchUser = dispatch => fetchCreds({
 
 export const refreshUser = () => fetchUser;
 
+// A more aggressive logout function that will turn all the user's windmill windows into
+// logout screens after their 30 minute bathroom break.
 export const logoutAPI = () => dispatch => { 
   fetchWithCreds({
     path: `${submissionApiOauthPath}logout`,
@@ -247,10 +251,50 @@ export const logoutAPI = () => dispatch => {
     .then(handleResponse('RECEIVE_API_LOGOUT'))
     .then(msg => dispatch(msg))
     .then(
-      () => document.location.replace(`${userapiPath}/logout?next=${basename}`),
+      () => { 
+        console.log('actions 251');
+        document.location.replace(`${userapiPath}/logout?next=${basename}`) 
+      }
     );
   }
 
+// A friendlier logout function that will display the "Session expired" popup
+export const logoutUserWithoutRedirect = () => dispatch => {
+  return fetchWithCreds({
+      path: `${userapiPath}logout/`,
+      dispatch,
+    })
+      .then(handleResponse('RECEIVE_API_LOGOUT'))
+      .then(msg => dispatch(msg))
+      .then((result) => {
+        console.log('269: ', result);
+        const path = `${userapiPath}logout/`;
+        const method = 'GET';
+        const request = {
+          credentials: 'include',
+          headers: { ...headers },
+          method,
+        };
+        let pendingRequest = fetch(path, request).then(
+          (response) => {
+            pendingRequest = null;
+            return Promise.resolve(getJsonOrText(path, response, false));
+          },
+          (error) => {
+            pendingRequest = null;
+            if (dispatch) { dispatch(connectionError()); }
+            return Promise.reject(error);
+          },
+        );
+      })
+  // //     .then(msg => dispatch(msg)).then(() => { 
+  // //       fetchWithCreds({
+  // //         path: `${userapiPath}logout`,
+  // //         dispatch,
+  // //     })
+  // // }
+  // );
+}
 
 /**
  * Retrieve the oath endpoint for the service under the given oathPath

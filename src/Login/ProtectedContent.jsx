@@ -64,8 +64,6 @@ class ProtectedContent extends React.Component {
       dataLoaded: false,
       redirectTo: null,
     };
-    // Give the Session Monitor singleton access to the ReduxAuthTimeoutPopup.
-    sessionMonitor.protectedContentComponent = this;
   }
 
   /**
