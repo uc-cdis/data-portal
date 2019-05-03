@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
@@ -84,12 +85,14 @@ class ExplorerTable extends React.Component {
     const end = (this.state.currentPage + 1) * this.state.pageSize;
     return (
       <div className={`explorer-table ${this.props.className}`}>
-        <p className='explorer-table__description'>{`Showing ${start} - ${end} of ${totalCount} ${this.props.guppyConfig.dataType}s`}</p>
+        {(this.props.isLocked) ? <React.Fragment /> :
+          <p className='explorer-table__description'>{`Showing ${start} - ${end} of ${totalCount} ${this.props.guppyConfig.dataType}s`}</p> }
         <ReactTable
           columns={columnsConfig}
           manual
           data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
-          pages={visiblePages} // Total number of pages, don't show 10000+ records in table
+          showPageSizeOptions={!this.props.isLocked}
+          pages={(this.props.isLocked) ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}
           onFetchData={this.fetchData}
           defaultPageSize={this.props.defaultPageSize}
