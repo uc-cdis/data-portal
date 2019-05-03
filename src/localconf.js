@@ -73,6 +73,12 @@ function buildConfig(opts) {
     useGuppyForExplorer = true;
   }
 
+  // for "libre" data commons, explorer page is public
+  let explorerPublic = false;
+  if (tierAccessLevel === 'libre') {
+    explorerPublic = true;
+  }
+
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
       '#3283c8',
@@ -214,6 +220,7 @@ function buildConfig(opts) {
     analysisApps,
     tierAccessLevel,
     tierAccessLimit,
+    explorerPublic,
   };
 }
 

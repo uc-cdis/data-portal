@@ -32,7 +32,9 @@ import theme from './theme';
 import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
-import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, indexPublic, useGuppyForExplorer } from './localconf';
+import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
+  indexPublic, useGuppyForExplorer, explorerPublic,
+} from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
@@ -270,6 +272,7 @@ async function init() {
                         component={
                           props => (
                             <ProtectedContent
+                              public={explorerPublic}
                               component={useGuppyForExplorer ? GuppyDataExplorer : DataExplorer}
                               {...props}
                             />
