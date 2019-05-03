@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@gen3/ui-component/dist/components/Button';
 import './ExplorerTopMessageBanner.css';
 import { checkForNoAccessibleProject } from '../GuppyDataExplorerHelper';
 
@@ -12,11 +11,7 @@ class ExplorerTopMessageBanner extends React.Component {
           (this.props.tierAccessLevel === 'regular' && checkForNoAccessibleProject(this.props.accessibleFieldObject)) ? (
             <div className='top-message-banner'>
               <div className='top-message-banner__button-wrapper'>
-                <Button
-                  label='Get Access'
-                  className='top-message-banner__button'
-                  buttonType='default'
-                />
+                { this.props.renderGetAccessButton() }
               </div>
               <span className='top-message-banner__normal-text'>To protect data security, you can only narrow the cohort down to </span>
               <span className='top-message-banner__bold-text'>{ this.props.tierAccessLimit }</span>
@@ -34,12 +29,14 @@ ExplorerTopMessageBanner.propTypes = {
   tierAccessLevel: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
+  renderGetAccessButton: PropTypes.func,
 };
 
 ExplorerTopMessageBanner.defaultProps = {
   className: '',
   tierAccessLimit: undefined,
   accessibleFieldObject: {},
+  renderGetAccessButton: () => {},
 };
 
 export default ExplorerTopMessageBanner;

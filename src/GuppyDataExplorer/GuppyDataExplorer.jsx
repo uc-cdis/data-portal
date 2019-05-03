@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from '@gen3/ui-component/dist/components/Button';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
@@ -27,6 +28,26 @@ class GuppyDataExplorer extends React.Component {
     this.setState({ aggsData: newAggsData });
   };
 
+  renderGetAccessButton = () => {
+    let getAccessButtonConfig;
+    if (this.props.buttonConfig
+          && this.props.buttonConfig.buttons) {
+      getAccessButtonConfig = this.props.buttonConfig.buttons
+        .find(buttonConfig => buttonConfig.type === 'get-access');
+    }
+    return (
+      <Button
+        label={(getAccessButtonConfig && getAccessButtonConfig.title) ? getAccessButtonConfig.title : 'Get Access'}
+        buttonType='default'
+        onClick={(getAccessButtonConfig && getAccessButtonConfig.link) ?
+          (() => {
+            window.open(getAccessButtonConfig.link);
+          }) : (() => {})// placeholder, if no link provided, maybe display a message toaster?)
+        }
+      />
+    );
+  };
+
   render() {
     return (
       <div className='guppy-data-explorer'>
@@ -41,11 +62,13 @@ class GuppyDataExplorer extends React.Component {
             className='guppy-data-explorer__top-banner'
             tierAccessLevel={this.props.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
+            renderGetAccessButton={this.renderGetAccessButton}
           />
           <ExplorerFilter
             className='guppy-data-explorer__filter'
             tierAccessLevel={this.props.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
+            renderGetAccessButton={this.renderGetAccessButton}
           />
           <ExplorerVisualization
             className='guppy-data-explorer__visualization'

@@ -37,6 +37,8 @@ export const ButtonConfigType = PropTypes.shape({
     fileName: PropTypes.string,
     dropdownId: PropTypes.string,
     tooltipText: PropTypes.string,
+    link: PropTypes.string,
+    content: PropTypes.string, // for toaster message maybe?
   })),
   dropdowns: PropTypes.object,
 });

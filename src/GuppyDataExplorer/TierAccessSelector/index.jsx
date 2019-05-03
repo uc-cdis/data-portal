@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@gen3/ui-component/dist/components/Button';
 import './TierAccessSelector.css';
 
 /**
@@ -80,15 +79,11 @@ class TierAccessSelector extends React.Component {
                 </div>
               </div>
               {
-                this.state.selected !== 'with-access' && (
+                this.state.selected !== 'with-access' ? (
                   <div className='tier-access-selector__button-wrapper'>
-                    <Button
-                      label='Get Access'
-                      className='tier-access-selector__button'
-                      buttonType='default'
-                    />
+                    { this.props.renderGetAccessButton() }
                   </div>
-                )
+                ) : <React.Fragment />
               }
             </div>
           )
@@ -102,10 +97,12 @@ TierAccessSelector.propTypes = {
   // callback function everytime selector changes
   // paramter will be one of: 'with-access', 'without-access', or 'all-data'
   onSelectorChange: PropTypes.func,
+  renderGetAccessButton: PropTypes.func,
 };
 
 TierAccessSelector.defaultProps = {
   onSelectorChange: () => {},
+  renderGetAccessButton: () => {},
 };
 
 export default TierAccessSelector;
