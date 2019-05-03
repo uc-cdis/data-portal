@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
@@ -53,7 +54,8 @@ class ExplorerButtonGroup extends React.Component {
         });
     }
     if (nextProps.totalCount !== this.props.totalCount) {
-      this.refreshManifestEntryCount();
+      this.refreshManifestEntryCount().catch(() => {
+      });
     }
   }
 
