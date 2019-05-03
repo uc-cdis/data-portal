@@ -15,7 +15,6 @@ class ExplorerTable extends React.Component {
       loading: false,
       pageSize: props.defaultPageSize,
       currentPage: 0,
-      tableData: [],
     };
   }
 
