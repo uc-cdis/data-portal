@@ -224,7 +224,14 @@
       "projectId": "search",
       "graphqlField": "patients",
       "index": "",
-      "nodeCountField": "Chicago_ID"
+      "nodeCountField": "Chicago_ID",
+      "manifestMapping": {
+        "resourceIndexType": "file",
+        "resourceIdField": "object_id",
+        "referenceIdFieldInResourceIndex": "case_id",
+        "referenceIdFieldInDataIndex": "object_id",
+        "divideKey": "data_type"
+      }
     }
   }
 }
