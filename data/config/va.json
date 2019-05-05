@@ -206,7 +206,8 @@
         "resourceIndexType": "file",
         "resourceIdField": "object_id",
         "referenceIdFieldInResourceIndex": "case_id",
-        "referenceIdFieldInDataIndex": "object_id"
+        "referenceIdFieldInDataIndex": "object_id",
+        "divideKey": "data_type"
       }
     }
   }

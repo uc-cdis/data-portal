@@ -6,8 +6,10 @@ describe('Arranger query helper', () => {
   const values = ['1', '2'];
   const targetFields = ['gender'];
   const queryForCount = constructGraphQLQuery(
-    fieldName,
-    values,
+    [{
+      name: fieldName,
+      values: values,
+    }],
     indexType,
     [...targetFields],
     true,
@@ -39,8 +41,10 @@ describe('Arranger query helper', () => {
   };
   const fakeReturnCount = 6;
   const queryForData = constructGraphQLQuery(
-    fieldName,
-    values,
+    [{
+      name: fieldName,
+      values: values,
+    }],
     indexType,
     [...targetFields],
     false,
