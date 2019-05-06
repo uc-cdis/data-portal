@@ -53,6 +53,7 @@ class Workspace extends React.Component {
   }
 
   getWorkspaceStatus = async () => {
+    console.log('fetching status...');
     return fetchWithCreds({
       path: `${workspaceStatusUrl}`,
       method: 'GET',
@@ -166,11 +167,10 @@ class Workspace extends React.Component {
                   const desc = option['cpu-limit'] ?
                     `${option['cpu-limit']}CPU, ${option['memory-limit']} memory`
                     : '';
-                  const icon = this.getIcon(option.name);
                   return (
                     <WorkspaceOption
                       key={i}
-                      icon={icon}
+                      icon={this.getIcon(option.name)}
                       title={option.name}
                       description={desc}
                       onClick={() => this.launchWorkspace(option)}
@@ -190,12 +190,3 @@ class Workspace extends React.Component {
 }
 
 export default Workspace;
-
-/*
-<iframe
-  title='Workspace'
-  frameBorder='0'
-  className='workspace'
-  src={workspaceUrl}
-/>
-*/

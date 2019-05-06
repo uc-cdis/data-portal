@@ -7,7 +7,7 @@ class WorkspaceOption extends React.Component {
   render() {
     return (
       <div className='workspace-option'>
-        <img src={this.props.icon} className='workspace-option__icon'/>
+        <this.props.icon className='workspace-option__icon'/>
         <div className='workspace-option__title'>{this.props.title}</div>
         <div className='workspace-option__description'>{this.props.description}</div>
         <Button
@@ -22,7 +22,7 @@ class WorkspaceOption extends React.Component {
 }
 
 WorkspaceOption.propTypes = {
-  icon: PropTypes.string.isRequired,
+  icon: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   onClick: PropTypes.func.isRequired,
