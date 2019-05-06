@@ -6,7 +6,7 @@ import { logoutAPI, logoutUserWithoutRedirect, fetchUser, fetchUserNoRefresh } f
 /* eslint-disable class-methods-use-this */
 export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
-    this.updateSessionTime = updateSessionTime || 0.05 * 60 * 1000;
+    this.updateSessionTime = updateSessionTime || 5 * 60 * 1000;
     this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
