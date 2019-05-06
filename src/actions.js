@@ -153,7 +153,6 @@ export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders,
 
 export const fetchGraphQL = (graphQLParams) => {
   return sessionMonitor.updateSession().then(function(result) {
-    console.log('fetchGraphQL result ', result);
     const request = {
       credentials: 'include',
       headers: { ...headers },
@@ -176,7 +175,6 @@ export const fetchGraphQL = (graphQLParams) => {
 
 export const fetchFlatGraphQL = (graphQLParams) => {
   return sessionMonitor.updateSession().then(function(result) {
-    console.log('fetchFlatGraphQL result ', result);
     const request = {
       credentials: 'include',
       headers: { ...headers },
@@ -241,6 +239,34 @@ export const fetchUser = dispatch => fetchCreds({
 
 export const refreshUser = () => fetchUser;
 
+export const fetchIsUserLoggedInNoRefresh = (opts) => {
+  const { path = `${submissionApiPath}`, method = 'GET', dispatch } = opts;
+  const request = {
+    credentials: 'include',
+    headers: { ...headers },
+    method,
+  };
+  let pendingRequest = fetch(path, request).then(
+    (response) => {
+      pendingRequest = null;
+      return Promise.resolve(getJsonOrText(path, response, false));
+    },
+    (error) => {
+      pendingRequest = null;
+      if (dispatch) { dispatch(connectionError()); }
+      return Promise.reject(error);
+    },
+  );
+  return pendingRequest;
+};
+
+export const fetchUserNoRefresh = dispatch => fetchIsUserLoggedInNoRefresh({
+  dispatch,
+}).then(
+  (status, data) => handleFetchUser(status, data),
+).then(msg => dispatch(msg));
+
+
 // A more aggressive logout function that will turn all the user's windmill windows into
 // logout screens after their 30 minute bathroom break.
 export const logoutAPI = () => dispatch => { 
@@ -252,7 +278,6 @@ export const logoutAPI = () => dispatch => {
     .then(msg => dispatch(msg))
     .then(
       () => { 
-        console.log('actions 251');
         document.location.replace(`${userapiPath}/logout?next=${basename}`) 
       }
     );
@@ -260,6 +285,7 @@ export const logoutAPI = () => dispatch => {
 
 // A friendlier logout function that will display the "Session expired" popup
 export const logoutUserWithoutRedirect = () => dispatch => {
+  console.log('log out user wo redirect');
   return fetchWithCreds({
       path: `${userapiPath}logout/`,
       dispatch,
@@ -267,7 +293,6 @@ export const logoutUserWithoutRedirect = () => dispatch => {
       .then(handleResponse('RECEIVE_API_LOGOUT'))
       .then(msg => dispatch(msg))
       .then((result) => {
-        console.log('269: ', result);
         const path = `${userapiPath}logout/`;
         const method = 'GET';
         const request = {
