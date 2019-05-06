@@ -6,37 +6,31 @@ import { logoutAPI, logoutUserWithoutRedirect, fetchUser, fetchUserNoRefresh } f
 /* eslint-disable class-methods-use-this */
 export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
-    this.updateSessionTime = updateSessionTime || 5 * 60 * 1000;
+    this.updateSessionTime = updateSessionTime || 0.05 * 60 * 1000;
     this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
     this.mostRecentActivityTimestamp = Date.now();
-    this.checkIfUserLoggedInInterval = 5 * 60 * 1000;
-    this.fenceInterval = null;
-    this.sheepdogInterval = null;
+    this.interval = null;
     this.popupShown = false;
   }
 
   start() {
-    if (this.fenceInterval) { // interval already started
+    if (this.interval) { // interval already started
       return;
     }
     window.addEventListener('mousedown', () => this.updateUserActivity(), false);
     window.addEventListener('keypress', () => this.updateUserActivity(), false);
-    this.fenceInterval = setInterval(
+    this.interval = setInterval(
       () => this.updateSession(),
       this.updateSessionTime,
     ); // check session every X min
-
-    this.startUserLoginCheck();
   }
 
   stop() {
-    if (this.fenceInterval) {
-      clearInterval(this.fenceInterval);
+    if (this.interval) {
+      clearInterval(this.interval);
       window.removeEventListener('mousedown', this.updateUserActivity(), false);
       window.removeEventListener('keypress', this.updateUserActivity(), false);
     }
-
-    this.stopUserLoginCheck();
   }
 
   updateUserActivity() {
@@ -87,27 +81,6 @@ export class SessionMonitor {
       }
       return response;
     });
-  }
-
-  startUserLoginCheck() {
-    /* Only start sheepdog check if we won't be logging out inactive users -- 
-     * in the case where the user has been inactive, we'll need the sheepdog
-     * check to see if they're logged out without refreshing their token
-     * (because hitting Fence refreshes their token) */
-    if(!this.sheepdogInterval && !logoutInactiveUsers) {
-      this.sheepdogInterval = setInterval(
-        () => this.checkIfUserLoggedIn(),
-        this.checkIfUserLoggedInInterval,
-      );
-    }
-  }
-
-  stopUserLoginCheck() {
-    if (this.sheepdogInterval) {
-      clearInterval(this.sheepdogInterval);
-      window.removeEventListener('mousedown', this.updateUserActivity(), false);
-      window.removeEventListener('keypress', this.updateUserActivity(), false);
-    }
   }
 
   notifyUserIfTheyAreNotLoggedIn() {

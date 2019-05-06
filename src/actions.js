@@ -247,9 +247,7 @@ export const logoutAPI = () => dispatch => {
     .then(handleResponse('RECEIVE_API_LOGOUT'))
     .then(msg => dispatch(msg))
     .then(
-      () => { 
-        document.location.replace(`${userapiPath}/logout?next=${basename}`),
-      }
+      () => document.location.replace(`${userapiPath}/logout?next=${basename}`),
     );
   }
 

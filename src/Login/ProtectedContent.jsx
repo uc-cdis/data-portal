@@ -64,12 +64,6 @@ class ProtectedContent extends React.Component {
       dataLoaded: false,
       redirectTo: null,
     };
-
-    if(this.public) {
-      sessionMonitor.stopUserLoginCheck();
-    } else {
-      sessionMonitor.startUserLoginCheck();
-    }
   }
 
   /**
