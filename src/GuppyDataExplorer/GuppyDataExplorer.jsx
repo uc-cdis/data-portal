@@ -36,6 +36,7 @@ class GuppyDataExplorer extends React.Component {
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
           onFilterChange={this.handleFilterChange}
           rawDataFields={this.props.tableConfig.fields}
+          accessibleFieldCheckList={this.props.guppyConfig.accessibleFieldCheckList}
         >
           <ExplorerTopMessageBanner
             className='guppy-data-explorer__top-banner'

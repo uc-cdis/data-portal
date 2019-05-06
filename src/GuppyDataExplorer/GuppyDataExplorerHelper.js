@@ -21,10 +21,9 @@ export function checkForAnySelectedUnaccessibleField(aggsData, accessibleFieldOb
   return false;
 }
 
-export function checkForNoAccessibleProject(accessibleFieldObject) { // if true, means user don't have access to any project
-  const accessField = 'project'; // only check for project
-  if (!accessibleFieldObject || !accessibleFieldObject[accessField]) {
+export function checkForNoAccessibleProject(accessibleFieldObject, fieldToCheck) { // if true, means user don't have access to any project
+  if (!accessibleFieldObject || !accessibleFieldObject[fieldToCheck]) {
     return false;
   }
-  return (accessibleFieldObject[accessField].length === 0);
+  return (accessibleFieldObject[fieldToCheck].length === 0);
 }

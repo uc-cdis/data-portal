@@ -10,7 +10,7 @@ class ExplorerTopMessageBanner extends React.Component {
     return (
       <div className={this.props.className}>
         {
-          (this.props.tierAccessLevel === 'regular' && checkForNoAccessibleProject(this.props.accessibleFieldObject)) ? (
+          (this.props.tierAccessLevel === 'regular' && checkForNoAccessibleProject(this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField)) ? (
             <div className='top-message-banner'>
               <div className='top-message-banner__button-wrapper'>
                 <Button

@@ -100,7 +100,7 @@ class ExplorerFilter extends React.Component {
     return (
       <div className={this.props.className}>
         {
-          (this.props.tierAccessLevel === 'regular' && !checkForNoAccessibleProject(this.props.accessibleFieldObject)) ? (
+          (this.props.tierAccessLevel === 'regular' && !checkForNoAccessibleProject(this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField)) ? (
             <TierAccessSelector
               onSelectorChange={this.handleAccessSelectorChange}
               guppyConfig={this.props.guppyConfig}

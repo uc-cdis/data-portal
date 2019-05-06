@@ -14,6 +14,8 @@ export const GuppyConfigType = PropTypes.shape({
     referenceIdFieldInDataIndex: PropTypes.string,
   }),
   getAccessButtonLink: PropTypes.string,
+  accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  accessibleValidationField: PropTypes.string.isRequired,
 });
 
 export const FilterConfigType = PropTypes.shape({
