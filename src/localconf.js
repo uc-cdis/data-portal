@@ -53,6 +53,10 @@ function buildConfig(opts) {
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
   const workspaceUrl = '/lw-workspace/';
   const workspaceErrorUrl = '/no-workspace-access/';
+  const workspaceOptionsUrl = `${workspaceUrl}options`;
+  const workspaceStatusUrl = `${workspaceUrl}status`;
+  const workspaceTerminateUrl = `${workspaceUrl}terminate`;
+  const workspaceLaunchUrl = `${workspaceUrl}launch`;
   const datasetUrl = `${hostname}api/search/datasets`;
   const guppyUrl = `${hostname}guppy/`;
   const guppyGraphQLUrl = `${guppyUrl}graphql/`;
@@ -101,7 +105,7 @@ function buildConfig(opts) {
   const analysisApps = {
     ndhHIV: {
       title: 'NDH HIV Classifier',
-      description: `Classify stored clinical data based on controller status.`,
+      description: 'Classify stored clinical data based on controller status.',
       image: '/src/img/analysis-icons/hiv-classifier.svg',
     },
     ndhVirus: {
@@ -199,6 +203,10 @@ function buildConfig(opts) {
     certs: components.certs,
     workspaceUrl,
     workspaceErrorUrl,
+    workspaceOptionsUrl,
+    workspaceStatusUrl,
+    workspaceLaunchUrl,
+    workspaceTerminateUrl,
     homepageChartNodes: components.index.homepageChartNodes,
     datasetUrl,
     indexPublic,
