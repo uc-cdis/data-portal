@@ -15,7 +15,7 @@ services:
     - docker
 
 install:
-    - npm install --force
+    - npm config set unsafe-perm=true && npm ci
 
 script:
     - npm run params
