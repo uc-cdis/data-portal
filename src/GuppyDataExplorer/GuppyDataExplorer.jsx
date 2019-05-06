@@ -12,6 +12,7 @@ import {
   ButtonConfigType,
   ChartConfigType,
 } from './configTypeDef';
+import { config } from '../params';
 import './GuppyDataExplorer.css';
 
 class GuppyDataExplorer extends React.Component {
@@ -40,13 +41,15 @@ class GuppyDataExplorer extends React.Component {
         >
           <ExplorerTopMessageBanner
             className='guppy-data-explorer__top-banner'
-            guppyConfig={this.props.guppyConfig}
             tierAccessLevel={this.props.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
+            guppyConfig={this.props.guppyConfig}
+            getAccessButtonLink={config.dataExplorerConfig.getAccessButtonLink}
           />
           <ExplorerFilter
             className='guppy-data-explorer__filter'
             guppyConfig={this.props.guppyConfig}
+            getAccessButtonLink={config.dataExplorerConfig.getAccessButtonLink}
             tierAccessLevel={this.props.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
           />

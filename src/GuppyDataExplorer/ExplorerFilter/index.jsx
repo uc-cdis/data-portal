@@ -103,7 +103,7 @@ class ExplorerFilter extends React.Component {
           (this.props.tierAccessLevel === 'regular' && !checkForNoAccessibleProject(this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField)) ? (
             <TierAccessSelector
               onSelectorChange={this.handleAccessSelectorChange}
-              guppyConfig={this.props.guppyConfig}
+              getAccessButtonLink={this.props.getAccessButtonLink}
             />
           ) : (<React.Fragment />)
         }
@@ -125,6 +125,7 @@ ExplorerFilter.propTypes = {
   onReceiveNewAggsData: PropTypes.func, // inherit from GuppyWrapper
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
+  getAccessButtonLink: PropTypes.string,
 };
 
 ExplorerFilter.defaultProps = {
@@ -137,6 +138,7 @@ ExplorerFilter.defaultProps = {
   onReceiveNewAggsData: () => {},
   tierAccessLimit: undefined,
   accessibleFieldObject: {},
+  getAccessButtonLink: undefined,
 };
 
 export default ExplorerFilter;

@@ -60,7 +60,8 @@ class ExplorerVisualization extends React.Component {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
     const tableColumns = (this.props.tableConfig.fields && this.props.tableConfig.fields.length > 0)
       ? this.props.tableConfig.fields : this.props.allFields;
-    const isComponentLocked = checkForAnySelectedUnaccessibleField(this.props.aggsData, this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
+    const isComponentLocked = checkForAnySelectedUnaccessibleField(this.props.aggsData,
+      this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
     return (
       <div className={this.props.className}>
         <div className='guppy-explorer-visualization__button-group'>

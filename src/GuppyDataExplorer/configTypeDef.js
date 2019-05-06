@@ -13,7 +13,6 @@ export const GuppyConfigType = PropTypes.shape({
     referenceIdFieldInResourceIndex: PropTypes.string,
     referenceIdFieldInDataIndex: PropTypes.string,
   }),
-  getAccessButtonLink: PropTypes.string,
   accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string).isRequired,
   accessibleValidationField: PropTypes.string.isRequired,
 });

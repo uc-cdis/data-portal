@@ -18,8 +18,8 @@ class ExplorerTopMessageBanner extends React.Component {
                   className='top-message-banner__button'
                   buttonType='default'
                   onClick={
-                    (this.props.guppyConfig && this.props.guppyConfig.getAccessButtonLink) ? (
-                      () => { window.open(this.props.guppyConfig.getAccessButtonLink); }
+                    (this.props.getAccessButtonLink) ? (
+                      () => { window.open(this.props.getAccessButtonLink); }
                     ) : (() => {})
                   }
                 />
@@ -37,6 +37,7 @@ class ExplorerTopMessageBanner extends React.Component {
 
 ExplorerTopMessageBanner.propTypes = {
   className: PropTypes.string,
+  getAccessButtonLink: PropTypes.string,
   tierAccessLevel: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
@@ -47,6 +48,7 @@ ExplorerTopMessageBanner.defaultProps = {
   className: '',
   tierAccessLimit: undefined,
   accessibleFieldObject: {},
+  getAccessButtonLink: undefined,
   guppyConfig: {},
 };
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { GuppyConfigType } from '../configTypeDef';
 import './TierAccessSelector.css';
 
 /**
@@ -88,8 +87,8 @@ class TierAccessSelector extends React.Component {
                       className='tier-access-selector__button'
                       buttonType='default'
                       onClick={
-                        (this.props.guppyConfig && this.props.guppyConfig.getAccessButtonLink) ? (
-                          () => { window.open(this.props.guppyConfig.getAccessButtonLink); }
+                        (this.props.getAccessButtonLink) ? (
+                          () => { window.open(this.props.getAccessButtonLink); }
                         ) : (() => {})
                       }
                     />
@@ -108,12 +107,12 @@ TierAccessSelector.propTypes = {
   // callback function everytime selector changes
   // paramter will be one of: 'with-access', 'without-access', or 'all-data'
   onSelectorChange: PropTypes.func,
-  guppyConfig: GuppyConfigType,
+  getAccessButtonLink: PropTypes.string,
 };
 
 TierAccessSelector.defaultProps = {
   onSelectorChange: () => {},
-  guppyConfig: {},
+  getAccessButtonLink: undefined,
 };
 
 export default TierAccessSelector;
