@@ -1,6 +1,6 @@
 import { userapiPath, logoutInactiveUsers, submissionApiPath } from '../localconf';
 import getReduxStore from '../reduxStore';
-import { logoutAPI, logoutUserWithoutRedirect, fetchUser, fetchUserNoRefresh } from '../actions';
+import { fetchUser, fetchUserNoRefresh } from '../actions';
 
 
 /* eslint-disable class-methods-use-this */
