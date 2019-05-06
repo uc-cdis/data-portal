@@ -6,12 +6,10 @@ import { logoutAPI, logoutUserWithoutRedirect, fetchUser, fetchUserNoRefresh } f
 /* eslint-disable class-methods-use-this */
 export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
-    this.updateSessionTime = updateSessionTime || 0.05 * 60 * 1000;
-    this.checkIfUserLoggedInInterval = 5 * 60 * 1000;
-    this.inactiveTimeLimit = inactiveTimeLimit || 0.2 * 60 * 1000;
+    this.updateSessionTime = updateSessionTime || 5 * 60 * 1000;
+    this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
     this.mostRecentActivityTimestamp = Date.now();
-    this.mostRecentLogoutTime = Date.now();
-    this.allowedTimeBetweenLogoutCalls =  1 * 60 * 1000;
+    this.checkIfUserLoggedInInterval = 5 * 60 * 1000;
     this.fenceInterval = null;
     this.sheepdogInterval = null;
     this.popupShown = false;
@@ -56,12 +54,9 @@ export class SessionMonitor {
     }
     
     const timeSinceLastActivity = Date.now() - this.mostRecentActivityTimestamp;
-    const timeSinceLastLogout = Date.now() - this.mostRecentLogoutTime;
-    const paths = window.location.href.split('/').filter(x => x !== 'dev.html');
-    const userIsInWorkspace = paths[paths.length - 1] === 'workspace';
     // If user has been inactive for Y min, and they are not in a workspace
-    if (timeSinceLastActivity >= this.inactiveTimeLimit && !userIsInWorkspace
-        && timeSinceLastLogout > this.allowedTimeBetweenLogoutCalls 
+    if (timeSinceLastActivity >= this.inactiveTimeLimit 
+        && !this.isUserOnPage('workspace')
         && logoutInactiveUsers) {
       // Allow Fence to log out the user. If we don't refresh, Fence will mark them as inactive.
       this.notifyUserIfTheyAreNotLoggedIn();
@@ -95,10 +90,10 @@ export class SessionMonitor {
   }
 
   startUserLoginCheck() {
-    // Only start sheepdog check if we won't be logging out inactive users -- 
-    // in the case where the user has been inactive, we'll need the sheepdog
-    // check to see if they're logged out without refreshing their token
-    // (because hitting Fence refreshes their token)
+    /* Only start sheepdog check if we won't be logging out inactive users -- 
+     * in the case where the user has been inactive, we'll need the sheepdog
+     * check to see if they're logged out without refreshing their token
+     * (because hitting Fence refreshes their token) */
     if(!this.sheepdogInterval && !logoutInactiveUsers) {
       this.sheepdogInterval = setInterval(
         () => this.checkIfUserLoggedIn(),
@@ -116,8 +111,8 @@ export class SessionMonitor {
   }
 
   notifyUserIfTheyAreNotLoggedIn() {
-    // If the user is browsing a page with ProtectedContent, this code will
-    // display the popup that informs them their session has expired.
+    /* If the user is browsing a page with ProtectedContent, this code will
+     * display the popup that informs them their session has expired. */
     if(this.popupShown) {
       return;
     }

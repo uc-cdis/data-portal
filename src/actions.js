@@ -239,6 +239,20 @@ export const fetchUser = dispatch => fetchCreds({
 
 export const refreshUser = () => fetchUser;
 
+export const logoutAPI = () => dispatch => { 
+  fetchWithCreds({
+    path: `${submissionApiOauthPath}logout`,
+    dispatch,
+  })
+    .then(handleResponse('RECEIVE_API_LOGOUT'))
+    .then(msg => dispatch(msg))
+    .then(
+      () => { 
+        document.location.replace(`${userapiPath}/logout?next=${basename}`) 
+      }
+    );
+  }
+
 export const fetchIsUserLoggedInNoRefresh = (opts) => {
   const { path = `${submissionApiPath}`, method = 'GET', dispatch } = opts;
   const request = {
@@ -265,25 +279,6 @@ export const fetchUserNoRefresh = dispatch => fetchIsUserLoggedInNoRefresh({
 }).then(
   (status, data) => handleFetchUser(status, data),
 ).then(msg => dispatch(msg));
-
-
-// A more aggressive logout function that will turn all the user's windmill windows into
-// logout screens after their 30 minute bathroom break.
-export const logoutAPI = () => dispatch => { 
-  fetchWithCreds({
-    path: `${submissionApiOauthPath}logout`,
-    dispatch,
-  })
-    .then(handleResponse('RECEIVE_API_LOGOUT'))
-    .then(msg => dispatch(msg))
-    .then(
-      () => { 
-        document.location.replace(`${userapiPath}/logout?next=${basename}`) 
-      }
-    );
-  }
-
-
 
 /**
  * Retrieve the oath endpoint for the service under the given oathPath
