@@ -4,6 +4,7 @@ import {
   queryDataByIds,
   queryCountByValues,
   queryDataByValues,
+  queryAggregations,
 } from './arrangerQueryHelper';
 import { hasKeyChain } from './utils';
 import { fetchWithCreds } from '../actions';
@@ -136,22 +137,37 @@ export const exportToWorkspace = async (
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
     errorCallback(500, MSG_EXPORT_MANIFEST_FAIL);
   }
-
-  const manifestJSON = await queryDataByValues(
+  // Fetch docs by bucket for this key
+  const key = arrangerConfig.manifestMapping.divideKey
+  const rowFilter = {
+    name: arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
+    values: selectedTableRows
+  }
+  let filtersByKey = [[rowFilter]]
+  if (key !== undefined ){
+    const keyBuckets = await queryAggregations(
+      apiFunc,
+      projectId,
+      arrangerConfig.manifestMapping.resourceIndexType,
+      key,
+    )
+    filtersByKey = keyBuckets.map(
+      bucket => [rowFilter, {name: key, values: [bucket.key]}])
+  }
+  const manifestJSON = await Promise.all(
+    filtersByKey.map(filters => queryDataByValues(
     apiFunc,
     projectId,
     arrangerConfig.manifestMapping.resourceIndexType,
-    arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-    selectedTableRows,
+    filters,
     [
       arrangerConfig.manifestMapping.resourceIdField,
       arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
     ],
-  );
-
+  )));
   fetchWithCreds({
     path: `${manifestServiceApiPath}`,
-    body: JSON.stringify(manifestJSON),
+    body: JSON.stringify(manifestJSON.flat()),
     method: 'POST',
   })
     .then(
@@ -200,8 +216,10 @@ export const getManifestEntryCount = async (
     apiFunc,
     projectId,
     arrangerConfig.manifestMapping.resourceIndexType,
-    arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-    selectedTableRows,
+    [{
+      name: arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
+      values:selectedTableRows
+    }],
   );
   return manifestEntryCount;
 };
