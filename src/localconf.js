@@ -65,8 +65,6 @@ function buildConfig(opts) {
     indexPublic = false;
   }
 
-  console.log(process.env);
-
   let useGuppyForExplorer = false;
   if (config.dataExplorerConfig.guppyConfig) {
     useGuppyForExplorer = true;

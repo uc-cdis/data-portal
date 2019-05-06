@@ -72,8 +72,6 @@ export class SessionMonitor {
   }
 
   refreshSession() {
-    console.log('refreshing...');
-
     if (this.isUserOnPage('login')) {
       return;
     }
@@ -127,7 +125,6 @@ export class SessionMonitor {
     var _this = this;
     getReduxStore().then((store) => {
       store.dispatch(fetchUserNoRefresh).then((response) => { 
-        console.log(response);
         if(response.type == "UPDATE_POPUP") {
           _this.popupShown = true;
         }

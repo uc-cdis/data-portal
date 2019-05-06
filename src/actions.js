@@ -283,43 +283,7 @@ export const logoutAPI = () => dispatch => {
     );
   }
 
-// A friendlier logout function that will display the "Session expired" popup
-export const logoutUserWithoutRedirect = () => dispatch => {
-  console.log('log out user wo redirect');
-  return fetchWithCreds({
-      path: `${userapiPath}logout/`,
-      dispatch,
-    })
-      .then(handleResponse('RECEIVE_API_LOGOUT'))
-      .then(msg => dispatch(msg))
-      .then((result) => {
-        const path = `${userapiPath}logout/`;
-        const method = 'GET';
-        const request = {
-          credentials: 'include',
-          headers: { ...headers },
-          method,
-        };
-        let pendingRequest = fetch(path, request).then(
-          (response) => {
-            pendingRequest = null;
-            return Promise.resolve(getJsonOrText(path, response, false));
-          },
-          (error) => {
-            pendingRequest = null;
-            if (dispatch) { dispatch(connectionError()); }
-            return Promise.reject(error);
-          },
-        );
-      })
-  // //     .then(msg => dispatch(msg)).then(() => { 
-  // //       fetchWithCreds({
-  // //         path: `${userapiPath}logout`,
-  // //         dispatch,
-  // //     })
-  // // }
-  // );
-}
+
 
 /**
  * Retrieve the oath endpoint for the service under the given oathPath
@@ -358,7 +322,6 @@ export const fetchOAuthURL = oauthPath => dispatch =>
         throw new Error('OAuth authorization failed');
       },
     );
-
 
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -
