@@ -9,14 +9,12 @@ describe('SessionMonitor', () => {
     jest.clearAllTimers();
   });
 
-  it('logs the user out after inactivity', () => {
+  it('does not refresh the users token the user after inactivity', () => {
     const sessionMonitor = new SessionMonitor(500, -1);
     const refreshSessionSpy = jest.spyOn(sessionMonitor, 'refreshSession');
-    const logoutUserSpy = jest.spyOn(sessionMonitor, 'logoutUser');
 
     sessionMonitor.updateSession();
     expect(refreshSessionSpy).not.toHaveBeenCalled();
-    expect(logoutUserSpy).toHaveBeenCalledTimes(1);
   });
 
   it('refreshes the users token if active', () => {
