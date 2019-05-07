@@ -124,7 +124,7 @@
         "chartType": "count",
         "title": "Projects"
       },
-      "submitter_id": {
+      "node_id": {
         "chartType": "count",
         "title": "Subjects"
       },
@@ -179,7 +179,7 @@
       "projectId": "search",
       "graphqlField": "subject",
       "index": "",
-      "nodeCountField": "submitter_id"
+      "nodeCountField": "node_id"
     }
   }
 }

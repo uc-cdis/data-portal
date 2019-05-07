@@ -3,9 +3,9 @@
   "graphql": {
     "boardCounts": [
       {
-        "graphql": "_clinical_supplement_count",
-        "name": "Clinical Supplement",
-        "plural": "Clinical Supplements"
+        "graphql": "_case_count",
+        "name": "Patient",
+        "plural": "Patients"
       },
       {
         "graphql": "_unaligned_reads_file_count",
@@ -20,8 +20,8 @@
     ],
     "chartCounts": [
       {
-        "graphql": "_clinical_supplement_count",
-        "name": "Clinical Supplement"
+        "graphql": "_case_count",
+        "name": "Patient"
       },
       {
         "graphql": "_unaligned_reads_file_count",
@@ -175,12 +175,34 @@
           "title": "Demographic",
           "fields":[
             "project_id",
+            "Days_To_Birth",
+            "Days_To_Death",
+            "DeceasedFlag",
+            "Ethnicity",
             "Gender",
             "Race",
-            "Ethnicity",
+            "ICDCode__ICD9Code",
+            "ICDCode__ICD9Description",
+            "ICDCode__ICD10Code",
+            "ICDCode__ICD10Description",
+            "ICDCode__DaysFromAnchorDateToStartDate",
             "Oncology_Primary__ICDOSite",
             "Oncology_Primary__Radiation",
-            "Oncology_Primary__Chemotherapy"
+            "Oncology_Primary__Chemotherapy",
+            "Oncology_Primary__DaysFromAnchorDateToDiagnosisDate",
+            "Oncology_Primary__Gradedifferentiation",
+            "Oncology_Primary__Laterality",
+            "Oncology_Primary__Stagegroupbest",
+            "Oncology_Primary__RadiationsurgerySequence",
+            "Oncology_Primary__Histologyicdo3X",
+            "Oncology_Primary__Lymphvascularinvasionl",
+            "Oncology_Primary__SeerSummaryStage2000",
+            "Oncology_Primary__PhysiciansStage",
+            "Oncology_Primary__DaysFromAnchorDateToMostdefinitivesurgDate",
+            "Oncology_Primary__ChemotherapyFac",
+            "Oncology_Primary__TumorSize",
+            "Oncology_Primary__SequenceNumber",
+            "ActionableMutations__Gene"
           ]
         }
       ]
@@ -202,7 +224,14 @@
       "projectId": "search",
       "graphqlField": "patients",
       "index": "",
-      "nodeCountField": "Chicago_ID"
+      "nodeCountField": "Chicago_ID",
+      "manifestMapping": {
+        "resourceIndexType": "file",
+        "resourceIdField": "object_id",
+        "referenceIdFieldInResourceIndex": "case_id",
+        "referenceIdFieldInDataIndex": "object_id",
+        "divideKey": "data_type"
+      }
     }
   }
 }
