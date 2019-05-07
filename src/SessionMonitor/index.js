@@ -6,7 +6,7 @@ import { fetchUser, fetchUserNoRefresh } from '../actions';
 /* eslint-disable class-methods-use-this */
 export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
-    this.updateSessionTime = updateSessionTime || 5 * 60 * 1000;
+    this.updateSessionTime = updateSessionTime || 0.05 * 60 * 1000;
     this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
@@ -65,14 +65,6 @@ export class SessionMonitor {
       return Promise.resolve(0);
     }
     // hitting Fence endpoint refreshes token
-    // var self = this;
-    // return fetch(`${userapiPath}user/`).then(function(response, data) {
-    //   if (response.status == 401 || response.status == 403) {
-    //     self.notifyUserIfTheyAreNotLoggedIn();
-    //   }
-    //   return response;
-    // });
-
     const self = this;
     return getReduxStore().then((store) => {
       store.dispatch(fetchUser).then((response) => { 
