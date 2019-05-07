@@ -1,4 +1,4 @@
-import { userapiPath, logoutInactiveUsers } from '../localconf';
+import { logoutInactiveUsers } from '../localconf';
 import getReduxStore from '../reduxStore';
 import { fetchUser, fetchUserNoRefresh } from '../actions';
 
@@ -76,7 +76,7 @@ export class SessionMonitor {
     const self = this;
     return getReduxStore().then((store) => {
       store.dispatch(fetchUser).then((response) => { 
-        if (response.type == 'UPDATE_POPUP') {
+        if (response.type === 'UPDATE_POPUP') {
           self.popupShown = true;
         }
       });
