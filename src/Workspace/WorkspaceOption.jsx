@@ -5,7 +5,7 @@ import './WorkspaceOption.css';
 
 class WorkspaceOption extends React.Component {
   render() {
-    console.log('props', this.props)
+    console.log(this.props.title, 'props', this.props);
     return (
       <div className='workspace-option'>
         <this.props.icon className='workspace-option__icon' />
@@ -16,6 +16,7 @@ class WorkspaceOption extends React.Component {
           onClick={this.props.onClick}
           label='Launch'
           buttonType='default'
+          isPending={this.props.isPending}
         />
       </div>
     );
@@ -27,6 +28,7 @@ WorkspaceOption.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   onClick: PropTypes.func.isRequired,
+  isPending: PropTypes.bool.isRequired,
 };
 
 WorkspaceOption.defaultProps = {

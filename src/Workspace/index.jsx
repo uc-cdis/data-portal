@@ -47,38 +47,40 @@ class Workspace extends React.Component {
       method: 'GET',
     }).then(
       ({ data }) => {
-        this.setState({ options: data });
+        const sortedResults = data.sort((a, b) => (a.name !== b.name ? a.name < b.name ? -1 : 1 : 0));
+        this.setState({ options: sortedResults });
       },
     );
   }
 
-  getWorkspaceStatus = async () => {
-    console.log('fetching status...');
-    return fetchWithCreds({
-      path: `${workspaceStatusUrl}`,
-      method: 'GET',
-    }).then(
-      ({ data }) => data.status,
-    );
-  }
+  getWorkspaceStatus = async () => fetchWithCreds({
+    path: `${workspaceStatusUrl}`,
+    method: 'GET',
+  }).then(
+    ({ data }) => data.status,
+  )
 
   launchWorkspace = (notebook) => {
-    fetchWithCreds({
-      path: `${workspaceLaunchUrl}?hash=${notebook.id}`,
-      method: 'GET',
-    }).then(
-      () => {
+    this.setState({ notebookType: notebook.name }, () => {
+      console.log('notebook type is', this.state.notebookType);
+      fetchWithCreds({
+        path: `${workspaceLaunchUrl}?hash=${notebook.id}`,
+        method: 'GET',
+      }).then(() => {
         this.checkWorkspaceStatus();
-      },
-    );
+      });
+    });
   }
 
   terminateWorkspace = () => {
-    fetchWithCreds({
-      path: `${workspaceTerminateUrl}`,
-      method: 'GET',
-    }).then(() => {
-      this.checkWorkspaceStatus();
+    this.setState({ notebookType: null }, () => {
+      fetchWithCreds({
+        path: `${workspaceTerminateUrl}`,
+        method: 'GET',
+      }).then(() => {
+        console.log('start check for terminate...')
+        this.checkWorkspaceStatus();
+      });
     });
   }
 
@@ -92,54 +94,60 @@ class Workspace extends React.Component {
   }
 
   checkWorkspaceStatus = async () => {
-    if (!this.state.interval) {
-      console.log('start polling...');
-      try {
-        const interval = setInterval(async () => {
-          const status = await this.getWorkspaceStatus();
-          this.setState({ notebookStatus: status }, () => {
-            if (this.state.notebookStatus !== 'Launching' &&
-              this.state.notebookStatus !== 'Terminating') {
-              console.log('clearing interval');
-              clearInterval(this.state.interval);
-            }
-          });
-        }, 2000);
-        console.log('setting interval...');
-        this.setState({ interval });
-      } catch (e) {
-        console.log(e);
-      }
+    console.log('start polling...');
+    if (this.state.interval) {
+      clearInterval(this.state.interval);
+    }
+    try {
+      const interval = setInterval(async () => {
+        const status = await this.getWorkspaceStatus();
+        this.setState({ notebookStatus: status }, () => {
+          if (this.state.notebookStatus !== 'Launching' &&
+            this.state.notebookStatus !== 'Terminating') {
+            console.log('clearing interval');
+            clearInterval(this.state.interval);
+          }
+        });
+      }, 2000);
+      this.setState({ interval });
+    } catch (e) {
+      console.log(e);
     }
   }
 
-  getIcon = notebook => {
+  getIcon = (notebook) => {
     switch (notebook) {
-      case 'R Studio':
+    case 'R Studio':
       return rStudioIcon;
-      case 'Jupyter Notebook Bio Python':
+    case 'Jupyter Notebook Bio Python':
       return jupyterIcon;
-      case 'Jupyter Notebook Bio R':
+    case 'Jupyter Notebook Bio R':
       return jupyterIcon;
-      case 'Galaxy':
+    case 'Galaxy':
       return galaxyIcon;
-      default:
+    default:
       return jupyterIcon;
     }
   }
 
   render() {
+    const { xmlnsFigma, otherProps } = this.props;
+    const terminateButton = (
+      <Button
+        className='workspace__terminate-button'
+        onClick={() => this.terminateWorkspace()}
+        label='Terminate Workspace'
+        buttonType='primary'
+        isPending={this.state.notebookType === null}
+      />
+    );
+
     return ((this.state.connectedStatus) ?
       <div className='workspace'>
         {
           this.state.notebookStatus === 'Running' ?
             <div className='workspace__iframe'>
-              <Button
-                className='workspace__iframe-button'
-                onClick={() => this.terminateWorkspace()}
-                label='Terminate Workspace'
-                buttonType='primary'
-              />
+              { terminateButton }
               <iframe
                 title='Workspace'
                 frameBorder='0'
@@ -151,7 +159,10 @@ class Workspace extends React.Component {
         }
         {
           this.state.notebookStatus === 'Launching' ?
-            <Spinner text='Launching workspace...' />
+            <React.Fragment>
+              { terminateButton }
+              <Spinner text='Launching workspace...' />
+            </React.Fragment>
             : null
         }
         {
@@ -169,11 +180,13 @@ class Workspace extends React.Component {
                     : '';
                   return (
                     <WorkspaceOption
+                      {...otherProps}
                       key={i}
                       icon={this.getIcon(option.name)}
                       title={option.name}
                       description={desc}
                       onClick={() => this.launchWorkspace(option)}
+                      isPending={this.state.notebookType === option.name}
                     />
                   );
                 })
