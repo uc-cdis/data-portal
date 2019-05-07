@@ -74,18 +74,13 @@ export class SessionMonitor {
     });
   }
 
-  checkIfUserLoggedIn() {
-    return fetch(`${submissionApiPath}`).then(function(response, data) {
-      if (response.status == 401 || response.status == 403) {
-        _this.notifyUserIfTheyAreNotLoggedIn();
-      }
-      return response;
-    });
-  }
-
   notifyUserIfTheyAreNotLoggedIn() {
-    /* If the user is browsing a page with ProtectedContent, this code will
-     * display the popup that informs them their session has expired. */
+    /* If a logged-out user is browsing a page with ProtectedContent, this code will
+     * display the popup that informs them their session has expired. 
+     * This function is similar to refreshSession() in that it checks user
+     * auth (401/403 vs 200) but the difference is it does not refresh
+     * the access token nor extend the session.
+     */
     if(this.popupShown) {
       return;
     }
