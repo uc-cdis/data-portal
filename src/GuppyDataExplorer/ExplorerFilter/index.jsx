@@ -86,15 +86,31 @@ class ExplorerFilter extends React.Component {
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
     case 'all-data':
-      filterFragment = (<ConnectedFilter {...filterProps} />);
+      filterFragment = (
+        <React.Fragment>
+          <h4><span className='connected-filter__title'>Filters</span></h4>
+          <ConnectedFilter {...filterProps} />
+        </React.Fragment>
+      );
       break;
     case 'with-access':
-      filterFragment = (<AccessibleFilter {...filterProps} />);
+      filterFragment = (
+        <React.Fragment>
+          <h4><span className='connected-filter__title'>Filters</span></h4>
+          <AccessibleFilter {...filterProps} />)
+        </React.Fragment>
+      );
       break;
     case 'without-access':
-      filterFragment = (<UnaccessibleFilter {...filterProps} />);
+      filterFragment = (
+        <React.Fragment>
+          <h4><span className='connected-filter__title'>Filters</span></h4>
+          <UnaccessibleFilter {...filterProps} />
+        </React.Fragment>
+      );
       break;
     default:
+      filterFragment = (<React.Fragment />);
       break;
     }
     return (
@@ -107,7 +123,6 @@ class ExplorerFilter extends React.Component {
             />
           ) : (<React.Fragment />)
         }
-        <h4><span className='connected-filter__title'>Filters</span></h4>
         {filterFragment}
       </div>
     );
