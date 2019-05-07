@@ -4,6 +4,7 @@
 #  NODE_ENV = auto|dev|production
 #  APP = commons specific
 #  HOSTNAME = where to download graphql schema from
+#  LOGOUT_INACTIVE_USERS = bool, should inactive users be logged out before session lifetime ends
 #
 # Script assumes npm install or npm ci has already run, and jq is installed.
 #
@@ -11,6 +12,7 @@
 export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-dev}"
 export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
+export LOGOUT_INACTIVE_USERS="${LOGOUT_INACTIVE_USERS:-"true"}"
 
 
 # lib -----------------------------
@@ -36,7 +38,8 @@ gitops_config() {
   local gitRepo
   local manifestFile
   local portalApp
-  local portalGitopsFolder 
+  local portalGitopsFolder
+  local logoutInactiveUsers
 
   gitRepo="cdis-manifest"
   hostname="$1"
@@ -67,8 +70,15 @@ gitops_config() {
     return 1
   fi
   echo "INFO: gitops_config - setting APP=$portalApp"
+  logoutInactiveUsers="$(jq -r .global.logout_inactive_users < $manifestFile)"
+  if [[ -z "$logoutInactiveUsers" ]]; then
+    echo "ERROR: unable to determine logout_inactive_users from manifest at $manifestFile"
+    return 1
+  fi
+  echo "INFO: gitops_config - setting LOGOUT_INACTIVE_USERS=$logoutInactiveUsers"
   export HOSTNAME="$hostname"
   export APP="$portalApp"
+  export LOGOUT_INACTIVE_USERS="$logoutInactiveUsers"
   if [[ "$portalApp" == "gitops" ]]; then
     portalGitopsFolder="../$gitRepo/$hostname/portal"
     local it=0

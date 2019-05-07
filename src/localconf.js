@@ -64,6 +64,7 @@ function buildConfig(opts) {
   if (typeof components.index.homepageChartNodes === 'undefined') {
     indexPublic = false;
   }
+  console.log(process.env);
 
   let useGuppyForExplorer = false;
   if (config.dataExplorerConfig.guppyConfig) {
