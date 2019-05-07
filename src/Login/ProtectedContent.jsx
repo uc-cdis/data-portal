@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { fetchUser, fetchOAuthURL, fetchWithCreds, fetchProjects } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
-import sessionMonitor from '../SessionMonitor';
 import { requiredCerts, submissionApiOauthPath } from '../configs';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 import { intersection, isPageFullScreen } from '../utils';
@@ -157,7 +156,7 @@ class ProtectedContent extends React.Component {
           return newState;
         },
       );
-  }
+  };
 
   /**
    * Filter refreshes the gdc-api token (acquired via oauth with user-api) if necessary.

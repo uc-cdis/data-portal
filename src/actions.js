@@ -154,7 +154,7 @@ export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders,
 export const fetchGraphQL = (graphQLParams) => {
   // We first update the session so that the user will be notified
   // if their auth is insufficient to perform the query.
-  return sessionMonitor.updateSession().then(function(result) {
+  return sessionMonitor.updateSession().then(() => {
     const request = {
       credentials: 'include',
       headers: { ...headers },
@@ -170,13 +170,12 @@ export const fetchGraphQL = (graphQLParams) => {
         } catch (error) {
           return responseBody;
         }
-      }
-    );
+      });
   });
 };
 
 export const fetchFlatGraphQL = (graphQLParams) => {
-  return sessionMonitor.updateSession().then(function(result) {
+  return sessionMonitor.updateSession().then(() => {
     const request = {
       credentials: 'include',
       headers: { ...headers },
@@ -241,7 +240,7 @@ export const fetchUser = dispatch => fetchCreds({
 
 export const refreshUser = () => fetchUser;
 
-export const logoutAPI = () => dispatch => { 
+export const logoutAPI = () => dispatch => {
   fetchWithCreds({
     path: `${submissionApiOauthPath}logout`,
     dispatch,
@@ -251,7 +250,7 @@ export const logoutAPI = () => dispatch => {
     .then(
       () => document.location.replace(`${userapiPath}/logout?next=${basename}`),
     );
-  }
+};
 
 export const fetchIsUserLoggedInNoRefresh = (opts) => {
   const { path = `${submissionApiPath}`, method = 'GET', dispatch } = opts;
@@ -260,18 +259,18 @@ export const fetchIsUserLoggedInNoRefresh = (opts) => {
     headers: { ...headers },
     method,
   };
-  let pendingRequest = fetch(path, request).then(
+  let requestPromise = fetch(path, request).then(
     (response) => {
-      pendingRequest = null;
+      requestPromise = null;
       return Promise.resolve(getJsonOrText(path, response, false));
     },
     (error) => {
-      pendingRequest = null;
+      requestPromise = null;
       if (dispatch) { dispatch(connectionError()); }
       return Promise.reject(error);
     },
   );
-  return pendingRequest;
+  return requestPromise;
 };
 
 export const fetchUserNoRefresh = dispatch => fetchIsUserLoggedInNoRefresh({
