@@ -47,7 +47,10 @@ class Workspace extends React.Component {
       method: 'GET',
     }).then(
       ({ data }) => {
-        const sortedResults = data.sort((a, b) => (a.name !== b.name ? a.name < b.name ? -1 : 1 : 0));
+        /* eslint-disable */
+        const sortedResults = data.sort((a, b) =>
+          (a.name !== b.name ? a.name < b.name ? -1 : 1 : 0));
+        /* eslint-enable */
         this.setState({ options: sortedResults });
       },
     );
@@ -58,62 +61,7 @@ class Workspace extends React.Component {
     method: 'GET',
   }).then(
     ({ data }) => data.status,
-  )
-
-  launchWorkspace = (notebook) => {
-    this.setState({ notebookType: notebook.name }, () => {
-      console.log('notebook type is', this.state.notebookType);
-      fetchWithCreds({
-        path: `${workspaceLaunchUrl}?hash=${notebook.id}`,
-        method: 'GET',
-      }).then(() => {
-        this.checkWorkspaceStatus();
-      });
-    });
-  }
-
-  terminateWorkspace = () => {
-    this.setState({ notebookType: null }, () => {
-      fetchWithCreds({
-        path: `${workspaceTerminateUrl}`,
-        method: 'GET',
-      }).then(() => {
-        console.log('start check for terminate...')
-        this.checkWorkspaceStatus();
-      });
-    });
-  }
-
-  connected = () => {
-    this.setState({ connectedStatus: true }, () => {
-      this.getWorkspaceOptions();
-      this.getWorkspaceStatus().then((status) => {
-        this.setState({ notebookStatus: status });
-      });
-    });
-  }
-
-  checkWorkspaceStatus = async () => {
-    console.log('start polling...');
-    if (this.state.interval) {
-      clearInterval(this.state.interval);
-    }
-    try {
-      const interval = setInterval(async () => {
-        const status = await this.getWorkspaceStatus();
-        this.setState({ notebookStatus: status }, () => {
-          if (this.state.notebookStatus !== 'Launching' &&
-            this.state.notebookStatus !== 'Terminating') {
-            console.log('clearing interval');
-            clearInterval(this.state.interval);
-          }
-        });
-      }, 2000);
-      this.setState({ interval });
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  );
 
   getIcon = (notebook) => {
     switch (notebook) {
@@ -130,8 +78,58 @@ class Workspace extends React.Component {
     }
   }
 
+  launchWorkspace = (notebook) => {
+    this.setState({ notebookType: notebook.name }, () => {
+      fetchWithCreds({
+        path: `${workspaceLaunchUrl}?hash=${notebook.id}`,
+        method: 'GET',
+      }).then(() => {
+        this.checkWorkspaceStatus();
+      });
+    });
+  }
+
+  terminateWorkspace = () => {
+    this.setState({ notebookType: null }, () => {
+      fetchWithCreds({
+        path: `${workspaceTerminateUrl}`,
+        method: 'GET',
+      }).then(() => {
+        this.checkWorkspaceStatus();
+      });
+    });
+  }
+
+  connected = () => {
+    this.setState({ connectedStatus: true }, () => {
+      this.getWorkspaceOptions();
+      this.getWorkspaceStatus().then((status) => {
+        this.setState({ notebookStatus: status });
+      });
+    });
+  }
+
+  checkWorkspaceStatus = async () => {
+    if (this.state.interval) {
+      clearInterval(this.state.interval);
+    }
+    try {
+      const interval = setInterval(async () => {
+        const status = await this.getWorkspaceStatus();
+        this.setState({ notebookStatus: status }, () => {
+          if (this.state.notebookStatus !== 'Launching' &&
+            this.state.notebookStatus !== 'Terminating') {
+            clearInterval(this.state.interval);
+          }
+        });
+      }, 2000);
+      this.setState({ interval });
+    } catch (e) {
+      console.log('Error checking workspace status:', e);
+    }
+  }
+
   render() {
-    const { xmlnsFigma, otherProps } = this.props;
     const terminateButton = (
       <Button
         className='workspace__terminate-button'
@@ -180,7 +178,6 @@ class Workspace extends React.Component {
                     : '';
                   return (
                     <WorkspaceOption
-                      {...otherProps}
                       key={i}
                       icon={this.getIcon(option.name)}
                       title={option.name}
