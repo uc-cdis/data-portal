@@ -2,15 +2,16 @@ import { logoutInactiveUsers } from '../localconf';
 import getReduxStore from '../reduxStore';
 import { fetchUser, fetchUserNoRefresh } from '../actions';
 
-
 /* eslint-disable class-methods-use-this */
 export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
-    this.updateSessionTime = updateSessionTime || 0.05 * 60 * 1000;
+    this.updateSessionTime = updateSessionTime || 5 * 60 * 1000;
     this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
     this.popupShown = false;
+    console.log("logout inactive: ", logoutInactiveUsers);
+    console.log("logout inactive type: ", typeof logoutInactiveUsers);
   }
 
   start() {
@@ -46,7 +47,7 @@ export class SessionMonitor {
     if (this.isUserOnPage('login')) {
       return Promise.resolve(0);
     }
-    
+
     const timeSinceLastActivity = Date.now() - this.mostRecentActivityTimestamp;
     // If user has been inactive for Y min, and they are not in a workspace
     if (timeSinceLastActivity >= this.inactiveTimeLimit

@@ -50,7 +50,7 @@ function buildConfig(opts) {
     title: 'Login from Google',
   };
   const loginPath = `${userapiPath}login/`;
-  const logoutInactiveUsers = !!(process.env.LOGOUT_INACTIVE_USERS) || true;
+  const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
   const workspaceUrl = '/lw-workspace/';
   const workspaceErrorUrl = '/no-workspace-access/';
@@ -64,7 +64,6 @@ function buildConfig(opts) {
   if (typeof components.index.homepageChartNodes === 'undefined') {
     indexPublic = false;
   }
-  console.log(process.env);
 
   let useGuppyForExplorer = false;
   if (config.dataExplorerConfig.guppyConfig) {

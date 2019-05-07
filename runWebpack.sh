@@ -12,6 +12,8 @@
 export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-dev}"
 export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
+echo "THIS"
+echo $LOGOUT_INACTIVE_USERS
 export LOGOUT_INACTIVE_USERS="${LOGOUT_INACTIVE_USERS:-"true"}"
 
 
