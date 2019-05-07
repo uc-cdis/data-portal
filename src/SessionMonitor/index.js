@@ -10,8 +10,6 @@ export class SessionMonitor {
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
     this.popupShown = false;
-    console.log("logout inactive: ", logoutInactiveUsers);
-    console.log("logout inactive type: ", typeof logoutInactiveUsers);
   }
 
   start() {
