@@ -20,10 +20,8 @@ describe('SessionMonitor', () => {
   it('refreshes the users token if active', () => {
     const sessionMonitor = new SessionMonitor(500, 10000000);
     const refreshSessionSpy = jest.spyOn(sessionMonitor, 'refreshSession');
-    const logoutUserSpy = jest.spyOn(sessionMonitor, 'logoutUser');
 
     sessionMonitor.updateSession();
     expect(refreshSessionSpy).toHaveBeenCalledTimes(1);
-    expect(logoutUserSpy).not.toHaveBeenCalled();
   });
 });
