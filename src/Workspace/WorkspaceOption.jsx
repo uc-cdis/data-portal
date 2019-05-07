@@ -5,10 +5,11 @@ import './WorkspaceOption.css';
 
 class WorkspaceOption extends React.Component {
   render() {
+    console.log('props', this.props)
     return (
       <div className='workspace-option'>
-        <this.props.icon className='workspace-option__icon'/>
-        <div className='workspace-option__title'>{this.props.title}</div>
+        <this.props.icon className='workspace-option__icon' />
+        <h3 className='workspace-option__title'>{this.props.title}</h3>
         <div className='workspace-option__description'>{this.props.description}</div>
         <Button
           className='workspace-option__button'
