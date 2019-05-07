@@ -62,6 +62,7 @@ class ExplorerVisualization extends React.Component {
       ? this.props.tableConfig.fields : this.props.allFields;
     const isComponentLocked = checkForAnySelectedUnaccessibleField(this.props.aggsData,
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
+    const lockMessage = `You cannot see this chart because it contains items under ${this.props.tierAccessLimit} ${this.props.nodeCountTitle.toLowerCase()}`;
     return (
       <div className={this.props.className}>
         <div className='guppy-explorer-visualization__button-group'>
@@ -82,7 +83,10 @@ class ExplorerVisualization extends React.Component {
           <DataSummaryCardGroup summaryItems={chartData.countItems} connected />
         </div>
         <div className='guppy-explorer-visualization__charts'>
-          <SummaryChartGroup summaries={chartData.summaries} />
+          <SummaryChartGroup
+            summaries={chartData.summaries}
+            lockMessage={lockMessage}
+          />
         </div>
         {
           chartData.stackedBarCharts.map((chart, i) => (
@@ -91,6 +95,7 @@ class ExplorerVisualization extends React.Component {
               data={chart.data}
               title={chart.title}
               width='100%'
+              lockMessage={lockMessage}
             />
           ),
           )
@@ -132,6 +137,7 @@ ExplorerVisualization.propTypes = {
   buttonConfig: ButtonConfigType,
   guppyConfig: GuppyConfigType,
   nodeCountTitle: PropTypes.string.isRequired,
+  tierAccessLimit: PropTypes.number.isRequired,
 };
 
 ExplorerVisualization.defaultProps = {
