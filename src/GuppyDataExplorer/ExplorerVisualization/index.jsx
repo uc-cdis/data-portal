@@ -13,6 +13,7 @@ import {
 } from '../configTypeDef';
 import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper';
 import './ExplorerVisualization.css';
+import { components } from '../../params';
 
 class ExplorerVisualization extends React.Component {
   getData = (aggsData, chartConfig, filter) => {
@@ -63,6 +64,7 @@ class ExplorerVisualization extends React.Component {
     const isComponentLocked = checkForAnySelectedUnaccessibleField(this.props.aggsData,
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
     const lockMessage = `You cannot see this chart because it contains items under ${this.props.tierAccessLimit} ${this.props.nodeCountTitle.toLowerCase()}`;
+    const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
     return (
       <div className={this.props.className}>
         <div className='guppy-explorer-visualization__button-group'>
@@ -86,6 +88,7 @@ class ExplorerVisualization extends React.Component {
           <SummaryChartGroup
             summaries={chartData.summaries}
             lockMessage={lockMessage}
+            barChartColor={barChartColor}
           />
         </div>
         {
