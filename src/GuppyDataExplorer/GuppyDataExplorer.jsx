@@ -12,7 +12,6 @@ import {
   ButtonConfigType,
   ChartConfigType,
 } from './configTypeDef';
-import { config } from '../params';
 import './GuppyDataExplorer.css';
 
 class GuppyDataExplorer extends React.Component {
@@ -44,12 +43,12 @@ class GuppyDataExplorer extends React.Component {
             tierAccessLevel={this.props.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
             guppyConfig={this.props.guppyConfig}
-            getAccessButtonLink={config.dataExplorerConfig.getAccessButtonLink}
+            getAccessButtonLink={this.props.getAccessButtonLink}
           />
           <ExplorerFilter
             className='guppy-data-explorer__filter'
             guppyConfig={this.props.guppyConfig}
-            getAccessButtonLink={config.dataExplorerConfig.getAccessButtonLink}
+            getAccessButtonLink={this.props.getAccessButtonLink}
             tierAccessLevel={this.props.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
           />
@@ -80,10 +79,12 @@ GuppyDataExplorer.propTypes = {
   history: PropTypes.object.isRequired,
   tierAccessLevel: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number.isRequired,
+  getAccessButtonLink: PropTypes.string,
 };
 
 GuppyDataExplorer.defaultProps = {
   nodeCountTitle: undefined,
+  getAccessButtonLink: undefined,
 };
 
 export default GuppyDataExplorer;

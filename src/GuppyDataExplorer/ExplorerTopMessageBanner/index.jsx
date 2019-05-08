@@ -39,7 +39,7 @@ ExplorerTopMessageBanner.propTypes = {
   className: PropTypes.string,
   getAccessButtonLink: PropTypes.string,
   tierAccessLevel: PropTypes.string.isRequired,
-  tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
+  tierAccessLimit: PropTypes.number,
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
   guppyConfig: GuppyConfigType,
 };

@@ -42,6 +42,7 @@ class Explorer extends React.Component {
         history={this.props.history}
         tierAccessLevel={tierAccessLevel}
         tierAccessLimit={tierAccessLimit}
+        getAccessButtonLink={config.dataExplorerConfig.getAccessButtonLink}
       />
     );
   }

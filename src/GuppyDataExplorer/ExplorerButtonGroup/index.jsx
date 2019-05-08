@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import React from 'react';
 import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
