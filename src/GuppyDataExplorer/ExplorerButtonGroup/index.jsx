@@ -306,7 +306,8 @@ class ExplorerButtonGroup extends React.Component {
     const pendingState = buttonConfig.type === 'manifest' ? (this.state.pendingManifestEntryCountRequestNumber > 0) : false;
     let buttonTitle = buttonConfig.title;
     if (buttonConfig.type === 'data') {
-      buttonTitle = `${buttonConfig.title} (${this.props.totalCount})`;
+      const buttonCount = (this.props.totalCount >= 0) ? this.props.totalCount : 0;
+      buttonTitle = `${buttonConfig.title} (${buttonCount})`;
     } else if (buttonConfig.type === 'manifest' && !pendingState && this.state.manifestEntryCount > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
