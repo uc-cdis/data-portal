@@ -66,7 +66,7 @@ export class SessionMonitor {
     // hitting Fence endpoint refreshes token
     const self = this;
     return getReduxStore().then((store) => {
-      store.dispatch(fetchUser).then((response) => { 
+      store.dispatch(fetchUser).then((response) => {
         if (response.type === 'UPDATE_POPUP') {
           self.popupShown = true;
         }
@@ -84,7 +84,7 @@ export class SessionMonitor {
     if (this.popupShown) {
       return;
     }
-    
+
     const self = this;
     getReduxStore().then((store) => {
       store.dispatch(fetchUserNoRefresh).then((response) => {

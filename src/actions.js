@@ -193,8 +193,7 @@ export const fetchFlatGraphQL = (graphQLParams) => {
           return responseBody;
         }
       });
-    }
-  );
+  });
 };
 
 export const handleResponse = type => ({ data, status }) => {
