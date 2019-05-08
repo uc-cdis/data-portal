@@ -8,7 +8,7 @@ import {
   FilterConfigType,
   GuppyConfigType,
 } from '../configTypeDef';
-import { checkForNoAccessibleProject } from '../GuppyDataExplorerHelper';
+import { checkForNoAccessibleProject, checkForFullAccessibleProject } from '../GuppyDataExplorerHelper';
 
 class ExplorerFilter extends React.Component {
   constructor(props) {
@@ -113,10 +113,24 @@ class ExplorerFilter extends React.Component {
       filterFragment = (<React.Fragment />);
       break;
     }
+    let showTierAccessSelector = false;
+    if (this.props.tierAccessLevel === 'regular') {
+      showTierAccessSelector = true;
+      if (checkForNoAccessibleProject(
+        this.props.accessibleFieldObject,
+        this.props.guppyConfig.accessibleValidationField,
+      ) || checkForFullAccessibleProject(
+        this.props.unaccessibleFieldObject,
+        this.props.guppyConfig.accessibleValidationField,
+      )) {
+        // don't show this selector if user have full access, or none access
+        showTierAccessSelector = false;
+      }
+    }
     return (
       <div className={this.props.className}>
         {
-          (this.props.tierAccessLevel === 'regular' && !checkForNoAccessibleProject(this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField)) ? (
+          showTierAccessSelector ? (
             <TierAccessSelector
               onSelectorChange={this.handleAccessSelectorChange}
               getAccessButtonLink={this.props.getAccessButtonLink}
@@ -140,6 +154,7 @@ ExplorerFilter.propTypes = {
   onReceiveNewAggsData: PropTypes.func, // inherit from GuppyWrapper
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
+  unaccessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
   getAccessButtonLink: PropTypes.string,
 };
 
@@ -153,6 +168,7 @@ ExplorerFilter.defaultProps = {
   onReceiveNewAggsData: () => {},
   tierAccessLimit: undefined,
   accessibleFieldObject: {},
+  unaccessibleFieldObject: {},
   getAccessButtonLink: undefined,
 };
 

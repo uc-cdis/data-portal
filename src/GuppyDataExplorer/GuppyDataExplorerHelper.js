@@ -27,3 +27,10 @@ export function checkForNoAccessibleProject(accessibleFieldObject, fieldToCheck)
   }
   return (accessibleFieldObject[fieldToCheck].length === 0);
 }
+
+export function checkForFullAccessibleProject(unaccessibleFieldObject, fieldToCheck) { // if true, means user have full access to all projects
+  if (!unaccessibleFieldObject || !unaccessibleFieldObject[fieldToCheck]) {
+    return false;
+  }
+  return (unaccessibleFieldObject[fieldToCheck].length === 0);
+}
