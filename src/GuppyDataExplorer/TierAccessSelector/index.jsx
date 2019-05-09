@@ -28,13 +28,17 @@ class TierAccessSelector extends React.Component {
   render() {
     return (
       <div className='tier-access-selector'>
-        <h4 // eslint-disable-line jsx-a11y/no-noninteractive-element-interactions
+        <div
           className='tier-access-selector__dropdown'
           onClick={this.handleToggle}
+          role='button'
+          tabIndex={0}
         >
-          <span className='tier-access-selector__title'>Data Access</span>
-          <i className={`tier-access-selector__dropdown-icon g3-icon g3-icon--chevron-${this.state.toggled ? 'down' : 'up'}`} />
-        </h4>
+          <h4>
+            <span className='tier-access-selector__title'>Data Access</span>
+            <i className={`tier-access-selector__dropdown-icon g3-icon g3-icon--chevron-${this.state.toggled ? 'down' : 'up'}`} />
+          </h4>
+        </div>
         {
           !this.state.toggled && (
             <div>
