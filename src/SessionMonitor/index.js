@@ -33,7 +33,6 @@ export class SessionMonitor {
   }
 
   updateUserActivity() {
-    console.log('updateUserActivity');
     this.mostRecentActivityTimestamp = Date.now();
   }
 
