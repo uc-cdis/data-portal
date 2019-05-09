@@ -312,7 +312,6 @@ class ExplorerButtonGroup extends React.Component {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
     const btnTooltipText = (this.props.isLocked) ? 'You only have access to summary data' : buttonConfig.tooltipText;
-    console.log(btnTooltipText);
 
     return (
       <Button
