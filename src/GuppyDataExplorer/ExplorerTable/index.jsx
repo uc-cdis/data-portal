@@ -83,8 +83,8 @@ class ExplorerTable extends React.Component {
     const end = (this.state.currentPage + 1) * this.state.pageSize;
     return (
       <div className={`explorer-table ${this.props.className}`}>
-        {(this.props.isLocked) ? <React.Fragment /> :
-          <p className='explorer-table__description'>{`Showing ${start} - ${end} of ${totalCount} ${this.props.guppyConfig.dataType}s`}</p> }
+        {(this.props.isLocked) ? <React.Fragment />
+          : <p className='explorer-table__description'>{`Showing ${start} - ${end} of ${totalCount} ${this.props.guppyConfig.dataType}s`}</p> }
         <ReactTable
           columns={columnsConfig}
           manual

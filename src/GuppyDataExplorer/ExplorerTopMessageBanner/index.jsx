@@ -24,9 +24,12 @@ class ExplorerTopMessageBanner extends React.Component {
                   }
                 />
               </div>
-              <span className='top-message-banner__normal-text'>To protect data security, you can only narrow the cohort down to </span>
+              <span className='top-message-banner__normal-text'>Due to lack of access, you are only able to narrow the cohort down to </span>
               <span className='top-message-banner__bold-text'>{ this.props.tierAccessLimit }</span>
-              <span className='top-message-banner__normal-text'> subjects. Please request access to work with data you need.</span>
+              <span className='top-message-banner__normal-text'>
+                {this.props.guppyConfig.nodeCountTitle || this.props.guppyConfig.dataType}.
+                Please request additional access if necessary.
+              </span>
             </div>
           ) : (<React.Fragment />)
         }

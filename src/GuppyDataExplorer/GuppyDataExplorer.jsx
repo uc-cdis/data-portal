@@ -59,7 +59,7 @@ class GuppyDataExplorer extends React.Component {
             buttonConfig={this.props.buttonConfig}
             guppyConfig={this.props.guppyConfig}
             history={this.props.history}
-            nodeCountTitle={this.props.nodeCountTitle || capitalizeFirstLetter(
+            nodeCountTitle={this.props.guppyConfig.nodeCountTitle || capitalizeFirstLetter(
               this.props.guppyConfig.dataType)}
             tierAccessLimit={this.props.tierAccessLimit}
           />
