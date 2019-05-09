@@ -311,6 +311,8 @@ class ExplorerButtonGroup extends React.Component {
     } else if (buttonConfig.type === 'manifest' && !pendingState && this.state.manifestEntryCount > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
+    const btnTooltipText = (this.props.isLocked) ? 'You only have access to summary data' : buttonConfig.tooltipText;
+    console.log(btnTooltipText);
 
     return (
       <Button
@@ -323,7 +325,7 @@ class ExplorerButtonGroup extends React.Component {
         buttonType='primary'
         enabled={this.isButtonEnabled(buttonConfig)}
         tooltipEnabled={buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false}
-        tooltipText={buttonConfig.tooltipText}
+        tooltipText={btnTooltipText}
         isPending={this.isButtonPending(buttonConfig)}
       />
     );
