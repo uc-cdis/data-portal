@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
@@ -91,6 +90,7 @@ class ExplorerTable extends React.Component {
           manual
           data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
           showPageSizeOptions={!this.props.isLocked}
+          // eslint-disable-next-line max-len
           pages={(this.props.isLocked) ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}
           onFetchData={this.fetchData}
