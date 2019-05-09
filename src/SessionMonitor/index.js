@@ -77,7 +77,7 @@ export class SessionMonitor {
     /* If a logged-out user is browsing a page with ProtectedContent, this code will
      * display the popup that informs them their session has expired.
      * This function is similar to refreshSession() in that it checks user
-     * auth (401/403 vs 200) but the difference is it does not refresh
+     * auth (401/403 vs 200), but it does not refresh
      * the access token nor extend the session.
      */
     if (this.popupShown) {
