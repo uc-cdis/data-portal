@@ -52,9 +52,10 @@ class ExplorerButtonGroup extends React.Component {
             toasterHeadline: this.state.pfbSuccessText });
         });
     }
-    if (nextProps.totalCount !== this.props.totalCount) {
-      this.refreshManifestEntryCount().catch(() => {
-      });
+    if (nextProps.totalCount !== this.props.totalCount
+      && nextProps.totalCount
+      && this.props.totalCount) {
+      this.refreshManifestEntryCount();
     }
   }
 
