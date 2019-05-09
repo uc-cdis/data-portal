@@ -63,7 +63,7 @@ class ExplorerVisualization extends React.Component {
       ? this.props.tableConfig.fields : this.props.allFields;
     const isComponentLocked = checkForAnySelectedUnaccessibleField(this.props.aggsData,
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
-    const lockMessage = `You cannot see this chart because it contains items under ${this.props.tierAccessLimit} ${this.props.nodeCountTitle.toLowerCase()}`;
+    const lockMessage = `This chart is hidden because it contains fewer than ${this.props.tierAccessLimit} ${this.props.nodeCountTitle.toLowerCase()}`;
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
     return (
       <div className={this.props.className}>
