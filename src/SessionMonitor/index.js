@@ -64,11 +64,10 @@ export class SessionMonitor {
       return Promise.resolve(0);
     }
     // hitting Fence endpoint refreshes token
-    const self = this;
     return getReduxStore().then((store) => {
       store.dispatch(fetchUser).then((response) => {
         if (response.type === 'UPDATE_POPUP') {
-          self.popupShown = true;
+          this.popupShown = true;
         }
       });
     });
@@ -85,11 +84,10 @@ export class SessionMonitor {
       return;
     }
 
-    const self = this;
     getReduxStore().then((store) => {
       store.dispatch(fetchUserNoRefresh).then((response) => {
         if (response.type === 'UPDATE_POPUP') {
-          self.popupShown = true;
+          this.popupShown = true;
         }
       });
     });

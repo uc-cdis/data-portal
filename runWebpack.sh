@@ -70,15 +70,8 @@ gitops_config() {
     return 1
   fi
   echo "INFO: gitops_config - setting APP=$portalApp"
-  logoutInactiveUsers="$(jq -r .global.logout_inactive_users < $manifestFile)"
-  if [[ -z "$logoutInactiveUsers" ]]; then
-    echo "ERROR: unable to determine logout_inactive_users from manifest at $manifestFile"
-    return 1
-  fi
-  echo "INFO: gitops_config - setting LOGOUT_INACTIVE_USERS=$logoutInactiveUsers"
   export HOSTNAME="$hostname"
   export APP="$portalApp"
-  export LOGOUT_INACTIVE_USERS="$logoutInactiveUsers"
   if [[ "$portalApp" == "gitops" ]]; then
     portalGitopsFolder="../$gitRepo/$hostname/portal"
     local it=0
