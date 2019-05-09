@@ -76,9 +76,63 @@ export const constructGraphQLQueryWithSQON = (
 };
 
 /**
+ * Constructs graphql aggregation string for arranger to get data.
+ * @param {string} indexType - type name of index for query
+ * @param {string} key - key name to get aggregation
+ * @returns {object} graphql query object
+ */
+export const constructAggregationQuery = (
+  indexType,
+  key,
+) => {
+  const gqlQuery = {
+    query: `query {
+                ${indexType} {
+                  aggregations {
+                    ${key} {
+                      buckets {
+                        doc_count
+                        key
+                      }
+                    }
+                  }
+                }
+              }`
+  };
+  return gqlQuery;
+};
+
+/**
+ * Query arranger for aggregation by aggregation key
+ * @param {function} apiFunc - function created by arranger for fetching data
+ * @param {stirng} projectId - arranger project ID
+ * @param {string} indexType - index type for query
+ * @param {string} key - key name to get aggregation
+ * @returns {Object[]} List of objects, each has the same keys as in "fields"
+ */
+export const queryAggregations = async (
+  apiFunc,
+  projectId,
+  indexType,
+  key,
+) => {
+  const MSG_QUERY_BY_AGG_FAIL = 'Error while querying Arranger aggregation';
+  const responseData = await apiFunc({
+    endpoint: getEndpoint(projectId),
+    body: constructAggregationQuery(
+      indexType,
+      key,
+    ),
+  });
+  if (!responseData) {
+    throw MSG_QUERY_BY_AGG_FAIL;
+  }
+  return responseData.data[indexType].aggregations[key].buckets
+};
+
+/**
  * Constructs graphql string for arranger to get data.
- * @param {stirng} filterFieldName - field name for filetering
- * @param {string[]} filterFieldValues - list of values for filtering
+ * @param {Object[]} filters - a list of {name, values}
  * @param {string} indexType - type name of index for query
  * @param {string[]} nodeList - list of node for respone
  * @param {boolean} isGettingCount - if set true, only get count of total hits;
@@ -87,8 +141,7 @@ export const constructGraphQLQueryWithSQON = (
  * @returns {object} graphql query object
  */
 export const constructGraphQLQuery = (
-  filterFieldName,
-  filterFieldValues,
+  filters,
   indexType,
   nodeList,
   isGettingCount,
@@ -96,15 +149,15 @@ export const constructGraphQLQuery = (
 ) => {
   const sqonObj = {
     op: 'and',
-    content: [
-      {
+    content: filters.map(filter => {
+      return {
         op: 'in',
         content: {
-          field: filterFieldName,
-          value: [...filterFieldValues],
+          field: filter.name,
+          value: [...filter.values],
         },
-      },
-    ],
+      }
+    }),
   };
   return constructGraphQLQueryWithSQON(indexType, sqonObj, nodeList, isGettingCount, count);
 };
@@ -177,8 +230,7 @@ export const queryDataByIds = async (
   const responseData = await apiFunc({
     endpoint: getEndpoint(projectId),
     body: constructGraphQLQuery(
-      graphqlIdField.toString(),
-      idList,
+      [{name: graphqlIdField.toString(), values: idList}],
       indexType,
       [...fields],
       false,
@@ -239,23 +291,20 @@ export const queryDataBySQON = async (
  * @param {function} apiFunc - function created by arranger for fetching data
  * @param {stirng} projectId - arranger project ID
  * @param {string} indexType - index type for query
- * @param {string} filterField - field name for query
- * @param {string[]} filterValues - list of value to match for query
+ * @param {Object[]} filters - a list of {name, values}
  * @returns {number} number of matched objects
  */
 export const queryCountByValues = async (
   apiFunc,
   projectId,
   indexType,
-  filterField,
-  filterValues,
+  filters
 ) => {
   const MSG_QUERY_COUNT_BY_VALUE_FAIL = 'Error while querying Arranger count by values';
   const countQueryResponse = await apiFunc({
     endpoint: getEndpoint(projectId),
     body: constructGraphQLQuery(
-      filterField,
-      filterValues,
+      filters,
       indexType,
       [],
       true),
@@ -273,8 +322,7 @@ export const queryCountByValues = async (
  * @param {function} apiFunc - function created by arranger for fetching data
  * @param {stirng} projectId - arranger project ID
  * @param {string} indexType - index type for query
- * @param {string} filterField - field name for query
- * @param {string[]} filterValues - list of value to match for query
+ * @param {Object[]} filters - a list of {name, values}
  * @param {string[]} returnFields - list of target fields for response
  * @returns {Object[]} List of objects, each has the same keys as in "returnFields"
  */
@@ -282,17 +330,15 @@ export const queryDataByValues = async (
   apiFunc,
   projectId,
   indexType,
-  filterField,
-  filterValues,
+  filters,
   returnFields,
 ) => {
   const MSG_QUERY_BY_VALUE_FAIL = 'Error while querying Arranger data by values';
-  const count = await queryCountByValues(apiFunc, projectId, indexType, filterField, filterValues);
+  const count = await queryCountByValues(apiFunc, projectId, indexType, filters);
   const responseData = await apiFunc({
     endpoint: getEndpoint(projectId),
     body: constructGraphQLQuery(
-      filterField,
-      filterValues,
+      filters,
       indexType,
       [...returnFields],
       false,
