@@ -5,8 +5,7 @@ import AceEditor from 'react-ace';
 import SubmissionResult from './SubmissionResult';
 
 describe('the submission result component', () => {
-  const testData = {
-    entities: [
+  const testData = [
       {
         type: 'type1',
       },
@@ -21,8 +20,7 @@ describe('the submission result component', () => {
         type: 'type2',
         errors: ['bla bla bla'],
       },
-    ],
-  };
+  ];
 
   it('presents a summary of a successful submission', () => {
     const $dom = shallow(
