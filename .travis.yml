@@ -7,15 +7,15 @@ git:
 node_js:
   - "10"
 
-cache:	
-  directories:	
-    - node_modules
+cache:
+  directories:
+    - node_modules # NPM packages
 
 services:
     - docker
 
 install:
-    - npm ci
+    - npm install --force
 
 script:
     - npm run params
