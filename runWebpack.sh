@@ -39,7 +39,6 @@ gitops_config() {
   local manifestFile
   local portalApp
   local portalGitopsFolder
-  local logoutInactiveUsers
 
   gitRepo="cdis-manifest"
   hostname="$1"
