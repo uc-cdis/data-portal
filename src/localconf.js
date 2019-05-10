@@ -54,6 +54,7 @@ function buildConfig(opts) {
     title: 'Login from Google',
   };
   const loginPath = `${userapiPath}login/`;
+  const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
   const workspaceUrl = '/lw-workspace/';
   const workspaceErrorUrl = '/no-workspace-access/';
@@ -204,6 +205,7 @@ function buildConfig(opts) {
     colorsForCharts,
     login,
     loginPath,
+    logoutInactiveUsers,
     requiredCerts,
     lineLimit,
     certs: components.certs,

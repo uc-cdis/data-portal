@@ -4,6 +4,7 @@
 #  NODE_ENV = auto|dev|production
 #  APP = commons specific
 #  HOSTNAME = where to download graphql schema from
+#  LOGOUT_INACTIVE_USERS = bool, should inactive users be logged out before session lifetime ends
 #
 # Script assumes npm install or npm ci has already run, and jq is installed.
 #
@@ -12,6 +13,8 @@ export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-dev}"
 export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
 export TIER_ACCESS_LEVEL="${TIER_ACCESS_LEVEL:-"private"}"
+export LOGOUT_INACTIVE_USERS="${LOGOUT_INACTIVE_USERS:-"true"}"
+
 
 
 # lib -----------------------------
