@@ -23,6 +23,13 @@ class Workspace extends React.Component {
       notebookStatus: 'Not Found',
       interval: null,
     };
+    this.notebookStates = [
+      'Not Found',
+      'Launching',
+      'Terminating',
+      'Running',
+      'Stopped',
+    ];
   }
 
   componentDidMount() {
@@ -61,7 +68,7 @@ class Workspace extends React.Component {
     method: 'GET',
   }).then(
     ({ data }) => data.status,
-  );
+  ).catch(() => "Error");
 
   getIcon = (notebook) => {
     switch (notebook) {
@@ -116,12 +123,14 @@ class Workspace extends React.Component {
     try {
       const interval = setInterval(async () => {
         const status = await this.getWorkspaceStatus();
-        this.setState({ notebookStatus: status }, () => {
-          if (this.state.notebookStatus !== 'Launching' &&
-            this.state.notebookStatus !== 'Terminating') {
-            clearInterval(this.state.interval);
-          }
-        });
+        if (this.notebookStates.includes(status)) {
+          this.setState({ notebookStatus: status }, () => {
+            if (this.state.notebookStatus !== 'Launching' &&
+              this.state.notebookStatus !== 'Terminating') {
+              clearInterval(this.state.interval);
+            }
+          });
+        }
       }, 2000);
       this.setState({ interval });
     } catch (e) {
@@ -143,7 +152,8 @@ class Workspace extends React.Component {
     return ((this.state.connectedStatus) ?
       <div className='workspace'>
         {
-          this.state.notebookStatus === 'Running' ?
+          this.state.notebookStatus === 'Running' ||
+            this.state.notebookStatus === 'Stopped' ?
             <div className='workspace__iframe'>
               { terminateButton }
               <iframe
@@ -169,7 +179,10 @@ class Workspace extends React.Component {
             : null
         }
         {
-          this.state.notebookStatus === 'Not Found' ?
+          this.state.notebookStatus !== 'Launching' &&
+          this.state.notebookStatus !== 'Terminating' &&
+          this.state.notebookStatus !== 'Running' &&
+          this.state.notebookStatus !== 'Stopped' ?
             <div className='workspace__options'>
               {
                 this.state.options.map((option, i) => {
