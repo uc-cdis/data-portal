@@ -68,7 +68,7 @@ class Workspace extends React.Component {
     method: 'GET',
   }).then(
     ({ data }) => data.status,
-  ).catch(() => "Error");
+  ).catch(() => 'Error');
 
   getIcon = (notebook) => {
     switch (notebook) {
