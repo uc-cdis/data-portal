@@ -143,13 +143,14 @@ class ProtectedContent extends React.Component {
 
     return store.dispatch(fetchUser) // make an API call to see if we're still logged in ...
       .then(
-        () => {
+        (response) => {
           const { user } = store.getState();
           newState.user = user;
           if (!user.username) { // not authenticated
             newState.redirectTo = '/login';
             newState.authenticated = false;
-          } else { // auth ok - cache it
+          } else if (response.type !== 'UPDATE_POPUP') {
+            // auth ok - cache it
             lastAuthMs = Date.now();
           }
           return newState;
@@ -299,4 +300,3 @@ class ProtectedContent extends React.Component {
 }
 
 export default ProtectedContent;
-
