@@ -46,5 +46,13 @@ describe('SessionMonitor', () => {
     expect(
       sessionMonitor.pageFromURL("data.braincommons.org//login//") 
     ).toEqual('login');
+
+    expect(
+      sessionMonitor.pageFromURL("https://niaid.bionimbus.org/analysis/ndhHIV//") 
+    ).toEqual('ndhHIV');
+
+    expect(
+      sessionMonitor.pageFromURL("https://niaid.bionimbus.org/dev.html/analysis/ndhHIV//") 
+    ).toEqual('ndhHIV');
   });
 });
