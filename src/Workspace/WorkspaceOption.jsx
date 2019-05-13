@@ -17,6 +17,7 @@ class WorkspaceOption extends React.Component {
           label='Launch'
           buttonType='default'
           isPending={this.props.isPending}
+          enabled={!this.props.isDisabled}
         />
       </div>
     );
@@ -29,10 +30,12 @@ WorkspaceOption.propTypes = {
   description: PropTypes.string,
   onClick: PropTypes.func.isRequired,
   isPending: PropTypes.bool.isRequired,
+  isDisabled: PropTypes.bool,
 };
 
 WorkspaceOption.defaultProps = {
   description: '',
+  isDisabled: false,
 };
 
 export default WorkspaceOption;

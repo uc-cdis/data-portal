@@ -20,8 +20,9 @@ class Workspace extends React.Component {
     this.state = {
       connectedStatus: false,
       options: [],
-      notebookStatus: 'Not Found',
+      notebookStatus: null,
       interval: null,
+      notebookType: null,
     };
     this.notebookStates = [
       'Not Found',
@@ -46,6 +47,12 @@ class Workspace extends React.Component {
           }
         },
       );
+  }
+
+  componentWillUnmount() {
+    if (this.state.interval) {
+      clearInterval(this.state.interval);
+    }
   }
 
   getWorkspaceOptions = () => {
@@ -97,7 +104,7 @@ class Workspace extends React.Component {
   }
 
   terminateWorkspace = () => {
-    this.setState({ notebookType: null }, () => {
+    this.setState({ notebookType: null, notebookStatus: 'Terminating' }, () => {
       fetchWithCreds({
         path: `${workspaceTerminateUrl}`,
         method: 'GET',
@@ -108,11 +115,14 @@ class Workspace extends React.Component {
   }
 
   connected = () => {
-    this.setState({ connectedStatus: true }, () => {
-      this.getWorkspaceOptions();
-      this.getWorkspaceStatus().then((status) => {
+    this.getWorkspaceOptions();
+    this.getWorkspaceStatus().then((status) => {
+      if (status === 'Launching' || status === 'Terminating' || status === 'Error') {
+        this.checkWorkspaceStatus();
+      } else {
         this.setState({ notebookStatus: status });
-      });
+      }
+      this.setState({ connectedStatus: true });
     });
   }
 
@@ -145,11 +155,11 @@ class Workspace extends React.Component {
         onClick={() => this.terminateWorkspace()}
         label='Terminate Workspace'
         buttonType='primary'
-        isPending={this.state.notebookType === null}
+        isPending={this.state.notebookStatus === 'Terminating'}
       />
     );
 
-    return ((this.state.connectedStatus) ?
+    return ((this.state.connectedStatus && this.state.notebookStatus) ?
       <div className='workspace'>
         {
           this.state.notebookStatus === 'Running' ||
@@ -197,6 +207,7 @@ class Workspace extends React.Component {
                       description={desc}
                       onClick={() => this.launchWorkspace(option)}
                       isPending={this.state.notebookType === option.name}
+                      isDisabled={!!this.state.notebookType && this.state.notebookType !== option.name}
                     />
                   );
                 })
@@ -206,7 +217,7 @@ class Workspace extends React.Component {
         }
       </div>
       :
-      <Spinner text='Loading options...' />
+      <Spinner />
 
     );
   }
