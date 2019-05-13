@@ -207,7 +207,10 @@ class Workspace extends React.Component {
                       description={desc}
                       onClick={() => this.launchWorkspace(option)}
                       isPending={this.state.notebookType === option.name}
-                      isDisabled={!!this.state.notebookType && this.state.notebookType !== option.name}
+                      isDisabled={
+                        !!this.state.notebookType &&
+                        this.state.notebookType !== option.name
+                      }
                     />
                   );
                 })
