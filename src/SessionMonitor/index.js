@@ -37,7 +37,8 @@ export class SessionMonitor {
   }
 
   isUserOnPage(pageName) {
-    const paths = window.location.href.split('/').filter(x => x !== 'dev.html');
+    let paths = window.location.href.split('/').filter(x => x !== 'dev.html');
+    paths = paths.filter(path => path != ""); // To account for trailing slashes
     return paths[paths.length - 1] === pageName;
   }
 
