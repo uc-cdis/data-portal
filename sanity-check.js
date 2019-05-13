@@ -24,7 +24,6 @@ function makeSureHomepageChartWorks() {
         process.exit(1);
       }
     }
-    return true;
   }
 
   checkNodesExistInDict(boardCountNodes);
