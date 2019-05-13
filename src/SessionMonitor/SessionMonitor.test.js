@@ -24,4 +24,27 @@ describe('SessionMonitor', () => {
     sessionMonitor.updateSession();
     expect(refreshSessionSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('detects the page correctly', () => {
+    const sessionMonitor = new SessionMonitor(500, 10000000);
+    expect(
+      sessionMonitor.pageFromURL("https://niaid.bionimbus.org/workspace/") 
+    ).toEqual('workspace');
+
+    expect(
+      sessionMonitor.pageFromURL("https://niaid.bionimbus.org/workspace") 
+    ).toEqual('workspace');
+
+    expect(
+      sessionMonitor.pageFromURL("https://niaid.bionimbus.org/dev.html/workspace/") 
+    ).toEqual('workspace');
+
+    expect(
+      sessionMonitor.pageFromURL("data.braincommons.org/login") 
+    ).toEqual('login');
+
+    expect(
+      sessionMonitor.pageFromURL("data.braincommons.org//login//") 
+    ).toEqual('login');
+  });
 });
