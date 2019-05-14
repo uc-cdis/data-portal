@@ -4,6 +4,7 @@
 #  NODE_ENV = auto|dev|production
 #  APP = commons specific
 #  HOSTNAME = where to download graphql schema from
+#  LOGOUT_INACTIVE_USERS = bool, should inactive users be logged out before session lifetime ends
 #
 # Script assumes npm install or npm ci has already run, and jq is installed.
 #
@@ -11,6 +12,7 @@
 export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-dev}"
 export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
+export LOGOUT_INACTIVE_USERS="${LOGOUT_INACTIVE_USERS:-"true"}"
 
 
 # lib -----------------------------
@@ -36,7 +38,7 @@ gitops_config() {
   local gitRepo
   local manifestFile
   local portalApp
-  local portalGitopsFolder 
+  local portalGitopsFolder
 
   gitRepo="cdis-manifest"
   hostname="$1"
@@ -131,6 +133,8 @@ npm run schema
 npm run relay
 # generate a parameters.json file by overlaying $APP.json on default.json
 npm run params
+# run a sanity check to make sure portal config works
+npm run sanity-check
 
 # try to keep the arranger components in line
 #export STORYBOOK_ARRANGER_API=localhost:3000
