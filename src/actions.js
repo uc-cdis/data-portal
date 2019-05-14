@@ -12,6 +12,7 @@ import {
   graphqlSchemaUrl,
   useGuppyForExplorer,
 } from './configs';
+import sessionMonitor from './SessionMonitor';
 
 export const updatePopup = state => ({
   type: 'UPDATE_POPUP',
@@ -99,8 +100,7 @@ export const fetchWithCreds = (opts) => {
       if (response.status !== 403 && response.status !== 401) {
         return Promise.resolve(getJsonOrText(path, response, useCache, method));
       }
-      return Promise.resolve(fetchCreds({ dispatch,
-      }).then(
+      return Promise.resolve(fetchCreds({ dispatch }).then(
         (resp) => {
           switch (resp.status) {
           case 200:
@@ -152,42 +152,48 @@ export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders,
   );
 
 export const fetchGraphQL = (graphQLParams) => {
-  const request = {
-    credentials: 'include',
-    headers: { ...headers },
-    method: 'POST',
-    body: JSON.stringify(graphQLParams),
-  };
+  // We first update the session so that the user will be notified
+  // if their auth is insufficient to perform the query.
+  return sessionMonitor.updateSession().then(() => {
+    const request = {
+      credentials: 'include',
+      headers: { ...headers },
+      method: 'POST',
+      body: JSON.stringify(graphQLParams),
+    };
 
-  return fetch(graphqlPath, request)
-    .then(response => response.text())
-    .then((responseBody) => {
-      try {
-        return JSON.parse(responseBody);
-      } catch (error) {
-        return responseBody;
-      }
-    });
+    return fetch(graphqlPath, request)
+      .then(response => response.text())
+      .then((responseBody) => {
+        try {
+          return JSON.parse(responseBody);
+        } catch (error) {
+          return responseBody;
+        }
+      });
+  });
 };
 
 export const fetchFlatGraphQL = (graphQLParams) => {
-  const request = {
-    credentials: 'include',
-    headers: { ...headers },
-    method: 'POST',
-    body: JSON.stringify(graphQLParams),
-  };
+  return sessionMonitor.updateSession().then(() => {
+    const request = {
+      credentials: 'include',
+      headers: { ...headers },
+      method: 'POST',
+      body: JSON.stringify(graphQLParams),
+    };
 
-  const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
-  return fetch(graphqlUrl, request)
-    .then(response => response.text())
-    .then((responseBody) => {
-      try {
-        return JSON.parse(responseBody);
-      } catch (error) {
-        return responseBody;
-      }
-    });
+    const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
+    return fetch(graphqlUrl, request)
+      .then(response => response.text())
+      .then((responseBody) => {
+        try {
+          return JSON.parse(responseBody);
+        } catch (error) {
+          return responseBody;
+        }
+      });
+  });
 };
 
 export const handleResponse = type => ({ data, status }) => {
@@ -233,16 +239,44 @@ export const fetchUser = dispatch => fetchCreds({
 
 export const refreshUser = () => fetchUser;
 
-export const logoutAPI = () => dispatch => fetchWithCreds({
-  path: `${submissionApiOauthPath}logout`,
-  dispatch,
-})
-  .then(handleResponse('RECEIVE_API_LOGOUT'))
-  .then(msg => dispatch(msg))
-  .then(
-    () => document.location.replace(`${userapiPath}/logout?next=${basename}`),
-  );
+export const logoutAPI = () => dispatch => {
+  fetchWithCreds({
+    path: `${submissionApiOauthPath}logout`,
+    dispatch,
+  })
+    .then(handleResponse('RECEIVE_API_LOGOUT'))
+    .then(msg => dispatch(msg))
+    .then(
+      () => document.location.replace(`${userapiPath}/logout?next=${basename}`),
+    );
+};
 
+export const fetchIsUserLoggedInNoRefresh = (opts) => {
+  const { path = `${submissionApiPath}`, method = 'GET', dispatch } = opts;
+  const request = {
+    credentials: 'include',
+    headers: { ...headers },
+    method,
+  };
+  let requestPromise = fetch(path, request).then(
+    (response) => {
+      requestPromise = null;
+      return Promise.resolve(getJsonOrText(path, response, false));
+    },
+    (error) => {
+      requestPromise = null;
+      if (dispatch) { dispatch(connectionError()); }
+      return Promise.reject(error);
+    },
+  );
+  return requestPromise;
+};
+
+export const fetchUserNoRefresh = dispatch => fetchIsUserLoggedInNoRefresh({
+  dispatch,
+}).then(
+  (status, data) => handleFetchUser(status, data),
+).then(msg => dispatch(msg));
 
 /**
  * Retrieve the oath endpoint for the service under the given oathPath
@@ -281,7 +315,6 @@ export const fetchOAuthURL = oauthPath => dispatch =>
         throw new Error('OAuth authorization failed');
       },
     );
-
 
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -

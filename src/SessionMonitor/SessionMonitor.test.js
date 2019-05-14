@@ -9,23 +9,50 @@ describe('SessionMonitor', () => {
     jest.clearAllTimers();
   });
 
-  it('logs the user out after inactivity', () => {
+  it('does not refresh the users token after inactivity', () => {
     const sessionMonitor = new SessionMonitor(500, -1);
     const refreshSessionSpy = jest.spyOn(sessionMonitor, 'refreshSession');
-    const logoutUserSpy = jest.spyOn(sessionMonitor, 'logoutUser');
 
     sessionMonitor.updateSession();
     expect(refreshSessionSpy).not.toHaveBeenCalled();
-    expect(logoutUserSpy).toHaveBeenCalledTimes(1);
   });
 
   it('refreshes the users token if active', () => {
     const sessionMonitor = new SessionMonitor(500, 10000000);
     const refreshSessionSpy = jest.spyOn(sessionMonitor, 'refreshSession');
-    const logoutUserSpy = jest.spyOn(sessionMonitor, 'logoutUser');
 
     sessionMonitor.updateSession();
     expect(refreshSessionSpy).toHaveBeenCalledTimes(1);
-    expect(logoutUserSpy).not.toHaveBeenCalled();
+  });
+
+  it('detects the page correctly', () => {
+    const sessionMonitor = new SessionMonitor(500, 10000000);
+    expect(
+      sessionMonitor.pageFromURL("https://example.subdomain.org/workspace/") 
+    ).toEqual('workspace');
+
+    expect(
+      sessionMonitor.pageFromURL("https://example.subdomain.org/workspace") 
+    ).toEqual('workspace');
+
+    expect(
+      sessionMonitor.pageFromURL("https://example.subdomain.org/dev.html/workspace/") 
+    ).toEqual('workspace');
+
+    expect(
+      sessionMonitor.pageFromURL("example-site.example-subdomain.org/login") 
+    ).toEqual('login');
+
+    expect(
+      sessionMonitor.pageFromURL("example-site.example-subdomain.org//login//") 
+    ).toEqual('login');
+
+    expect(
+      sessionMonitor.pageFromURL("https://example.subdomain.org/analysis/abc123//") 
+    ).toEqual('abc123');
+
+    expect(
+      sessionMonitor.pageFromURL("https://example.subdomain.org/dev.html/analysis/abc123//") 
+    ).toEqual('abc123');
   });
 });

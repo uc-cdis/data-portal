@@ -1,14 +1,15 @@
-import { userapiPath } from '../localconf';
+import { logoutInactiveUsers } from '../localconf';
 import getReduxStore from '../reduxStore';
-import { logoutAPI } from '../actions';
+import { fetchUser, fetchUserNoRefresh } from '../actions';
 
 /* eslint-disable class-methods-use-this */
 export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
-    this.updateSessionTime = updateSessionTime || 10 * 60 * 1000;
+    this.updateSessionTime = updateSessionTime || 5 * 60 * 1000;
     this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
+    this.popupShown = false;
   }
 
   start() {
@@ -35,25 +36,64 @@ export class SessionMonitor {
     this.mostRecentActivityTimestamp = Date.now();
   }
 
+  pageFromURL(currentURL) {
+    let paths = currentURL.split('/').filter(x => x !== 'dev.html' && x !== '');
+    return paths[paths.length - 1];
+  }
+
+  isUserOnPage(pageName) {
+    return this.pageFromURL(window.location.href) === pageName;
+  }
+
   updateSession() {
-    // If user has been inactive for Y min
-    if (Date.now() - this.mostRecentActivityTimestamp >= this.inactiveTimeLimit) {
-      this.logoutUser();
-    } else if (Date.now() - this.mostRecentActivityTimestamp < this.inactiveTimeLimit) {
-      this.refreshSession();
-    } else {
-      console.log('Error calculating inactive time');
+    if (this.isUserOnPage('login')) {
+      return Promise.resolve(0);
     }
+
+    const timeSinceLastActivity = Date.now() - this.mostRecentActivityTimestamp;
+    // If user has been inactive for Y min, and they are not in a workspace
+    if (timeSinceLastActivity >= this.inactiveTimeLimit
+        && !this.isUserOnPage('workspace')
+        && logoutInactiveUsers) {
+      // Allow Fence to log out the user. If we don't refresh, Fence will mark them as inactive.
+      this.notifyUserIfTheyAreNotLoggedIn();
+      return Promise.resolve(0);
+    }
+
+    return this.refreshSession();
   }
 
   refreshSession() {
+    if (this.isUserOnPage('login')) {
+      return Promise.resolve(0);
+    }
     // hitting Fence endpoint refreshes token
-    fetch(userapiPath);
+    return getReduxStore().then((store) => {
+      store.dispatch(fetchUser).then((response) => {
+        if (response.type === 'UPDATE_POPUP') {
+          this.popupShown = true;
+        }
+      });
+    });
   }
 
-  logoutUser() {
+  notifyUserIfTheyAreNotLoggedIn() {
+    /* If a logged-out user is browsing a page with ProtectedContent, this code will
+     * display the popup that informs them their session has expired.
+     * This function is similar to refreshSession() in that it checks user
+     * auth (401/403 vs 200), but it does not refresh
+     * the access token nor extend the session.
+     */
+    if (this.popupShown) {
+      return;
+    }
+
     getReduxStore().then((store) => {
-      store.dispatch(logoutAPI());
+      store.dispatch(fetchUserNoRefresh).then((response) => {
+        if (response.type === 'UPDATE_POPUP') {
+          this.popupShown = true;
+        }
+      });
     });
   }
 }
