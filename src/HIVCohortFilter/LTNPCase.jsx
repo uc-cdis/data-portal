@@ -69,7 +69,7 @@ class LTNPCase extends HIVCohortFilterCase {
     }
     `;
     return HIVCohortFilterCase.performQuery(query).then((res) => {
-      if (!res || !res.data) {
+      if (!res || !res.data || !res.data.follow_up || !res.data.follow_up.aggregations) {
         throw new Error('Error while querying subjects with HIV');
       }
       return res.data.follow_up.aggregations[bucketKey].buckets;
@@ -91,6 +91,13 @@ class LTNPCase extends HIVCohortFilterCase {
       ) - visitArray[0].fposdate;
       if (numYearsHIVPositive < this.state.numConsecutiveYearsFromUser) {
         // The subject is neither control nor LTNP
+        return;
+      }
+      const followUpsWithHAARTTherapy = visitArray.filter((x) => { 
+        return this.state.therapyValuesOfInterest.includes(x.thrpyv);
+      });
+      if (followUpsWithHAARTTherapy.length > 0) {
+        // This subject is neither LTNP nor control
         return;
       }
       const subjectWithVisits = {
