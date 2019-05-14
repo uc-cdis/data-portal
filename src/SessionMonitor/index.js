@@ -36,9 +36,13 @@ export class SessionMonitor {
     this.mostRecentActivityTimestamp = Date.now();
   }
 
+  pageFromURL(currentURL) {
+    let paths = currentURL.split('/').filter(x => x !== 'dev.html' && x !== '');
+    return paths[paths.length - 1];
+  }
+
   isUserOnPage(pageName) {
-    const paths = window.location.href.split('/').filter(x => x !== 'dev.html');
-    return paths[paths.length - 1] === pageName;
+    return this.pageFromURL(window.location.href) === pageName;
   }
 
   updateSession() {
