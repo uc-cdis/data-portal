@@ -91,9 +91,7 @@ class TierAccessSelector extends React.Component {
                       className='tier-access-selector__button'
                       buttonType='default'
                       onClick={
-                        (this.props.getAccessButtonLink) ? (
-                          () => { window.open(this.props.getAccessButtonLink); }
-                        ) : (() => {})
+                        () => { window.open(this.props.getAccessButtonLink); }
                       }
                     />
                   </div>
@@ -116,7 +114,7 @@ TierAccessSelector.propTypes = {
 
 TierAccessSelector.defaultProps = {
   onSelectorChange: () => {},
-  getAccessButtonLink: undefined,
+  getAccessButtonLink: 'https://gen3.org/',
 };
 
 export default TierAccessSelector;
