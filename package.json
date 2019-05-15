@@ -126,7 +126,6 @@
   },
   "scripts": {
     "test": "jest",
-    "postinstall": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
     "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
     "schema": "node ./data/getSchema",
     "params": "node ./data/getTexts > src/params.js",
