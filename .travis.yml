@@ -14,6 +14,7 @@ install:
     - npm install --force
 
 script:
+    - npm run relay
     - npm run params
     - npm test
     - bash ./testSchema.sh
