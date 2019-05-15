@@ -133,7 +133,8 @@
     "eslint": "./node_modules/.bin/eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --fix src data",
     "elint": "./node_modules/.bin/eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'",
     "storybook": "STORYBOOK_PROJECT_ID=search STORYBOOK_ARRANGER_API=http://localhost:3000 start-storybook -p 9001 -c .storybook",
-    "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --config .stylelintrc.js --fix"
+    "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --config .stylelintrc.js --fix",
+    "sanity-check": "node ./sanity-check"
   },
   "graphql": {
     "file": "./data/schema.json"
