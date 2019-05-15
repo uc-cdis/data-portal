@@ -89,6 +89,8 @@ class ExplorerVisualization extends React.Component {
             summaries={chartData.summaries}
             lockMessage={lockMessage}
             barChartColor={barChartColor}
+            useCustomizedColorMap={!!components.categorical9Colors}
+            customizedColorMap={components.categorical9Colors || []}
           />
         </div>
         {
@@ -99,6 +101,8 @@ class ExplorerVisualization extends React.Component {
               title={chart.title}
               width='100%'
               lockMessage={lockMessage}
+              useCustomizedColorMap={components.categorical9Colors || false}
+              customizedColorMap={components.categorical9Colors || []}
             />
           ),
           )
