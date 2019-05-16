@@ -5,6 +5,8 @@
 #  APP = commons specific
 #  HOSTNAME = where to download graphql schema from
 #  LOGOUT_INACTIVE_USERS = bool, should inactive users be logged out before session lifetime ends
+#  TIER_ACCESS_LEVEL = the access level of a common (libre, regular or private)
+#  TIER_ACCESS_LIMIT = the minimum visible count for aggregation results
 #
 # Script assumes npm install or npm ci has already run, and jq is installed.
 #
@@ -13,6 +15,7 @@ export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-dev}"
 export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
 export TIER_ACCESS_LEVEL="${TIER_ACCESS_LEVEL:-"private"}"
+export TIER_ACCESS_LIMIT="${TIER_ACCESS_LIMIT:-"1000"}"
 export LOGOUT_INACTIVE_USERS="${LOGOUT_INACTIVE_USERS:-"true"}"
 
 
