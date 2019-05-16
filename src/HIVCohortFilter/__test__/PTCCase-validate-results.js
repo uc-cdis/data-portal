@@ -1,19 +1,17 @@
 const fileName = process.argv[2];
 const ptcResults = require(fileName);
-const limit = ptcResults.viral_load_upper_bound;
-const month = ptcResults.num_consective_months_on_haart;
-const numOfVisitForMonth = Math.floor(month / 6);
-console.log(`Validating PTC results with argument ${limit}, ${month}`);
+const viral_load_upper_bound = ptcResults.viral_load_upper_bound;
+const num_consective_months_on_haart = ptcResults.num_consective_months_on_haart;
+const numConsecutiveVisits = Math.floor(num_consective_months_on_haart / 6);
+console.log(`Validating PTC results with argument ${viral_load_upper_bound}, ${num_consective_months_on_haart}`);
 
 function checkIfConsecutiveFollowUpsLessThanViralLoadLimit(subjectID, followUps) {
   followUps.forEach(fu => {
-    if (fu.viral_load >= limit) {
-      console.error(`error with subject ${subjectID}: the follow up ${fu.submitter_id}'s viral_load = ${fu.viral_load} >= ${limit}`);
-      process.exit(1);
+    if (fu.viral_load >= viral_load_upper_bound) {
+      console.error(`Error with subject ${subjectID}: the follow up ${fu.submitter_id}'s viral_load = ${fu.viral_load} >= ${viral_load_upper_bound}`);
     }
     if (fu.thrpyv !== 'HAART') {
-      console.error(`error with subject ${subjectID}: the follow up ${fu.submitter_id}'s thrpyv = ${fu.thrpyv} !== ${thrpyv}`);
-      process.exit(1);
+      console.error(`Error with subject ${subjectID}: the follow up ${fu.submitter_id}'s thrpyv = ${fu.thrpyv} !== ${thrpyv}`);
     }
   })
 }
@@ -25,21 +23,27 @@ function confirmPatientIsPTC(subjectObj) {
   for (let i = 0; i < followUps.length; i ++) {
     const followUp = followUps[i];
     if (followUp.submitter_id === startFollowUpID) {
-      checkIfConsecutiveFollowUpsLessThanViralLoadLimit(subjectID, followUps.slice(i, i + numOfVisitForMonth));
-      const nextFollowUp = followUps[i + numOfVisitForMonth];
+      let window = followUps.slice(i, i + numConsecutiveVisits);
+      checkIfConsecutiveFollowUpsLessThanViralLoadLimit(subjectID, window);
+
+      // The number of months elapsed inside this window
+      let window_size = (window[window.length - 1].visit_date - window[0].visit_date) * 12;
+      if(window_size > num_consective_months_on_haart * 2) {
+        // If the window_size is more than double, this indicates a large amount of missing data
+        console.log(`Warning: subject ${subjectID}'s sliding window is of size ${window_size} > ${num_consective_months_on_haart} months`);
+      }
+
+      const nextFollowUp = followUps[i + numConsecutiveVisits];
       if (nextFollowUp.thrpyv === 'HAART') {
-        console.error(`error with subject ${subjectID}: next follow up ${nextFollowUp.submitter_id}'s thrpyv = HAART`);
-        process.exit(1);
+        console.error(`Error with subject ${subjectID}: next follow up ${nextFollowUp.submitter_id}'s thrpyv = HAART`);
       }
-      if (nextFollowUp.viral_load >= limit) {
-        console.error(`error with subject ${subjectID}: next follow up ${nextFollowUp.submitter_id}'s viral_load = ${nextFollowUp.viral_load} >= ${limit}`);
-        process.exit(1);
+      if (nextFollowUp.viral_load >= viral_load_upper_bound) {
+        console.error(`Error with subject ${subjectID}: next follow up ${nextFollowUp.submitter_id}'s viral_load = ${nextFollowUp.viral_load} >= ${viral_load_upper_bound}`);
       }
-      return; // done validating this patient
+      return;
     }
   }
-  console.error(`cannot find submitter_id = ${startFollowUpID}`);
-  process.exit(1);
+  console.error(`Error with subject ${subjectID}: cannot find followup with submitter_id = ${startFollowUpID}`);
 }
 
 ptcResults.subjects.forEach(subjectObj => {
