@@ -54,9 +54,11 @@ class LTNPCase extends HIVCohortFilterCase {
       follow_up {
         aggregations(filters: {first: 10000, op: "and", content: [
           {op: "${isHAART ? '=' : '!='}", content: {field: "thrpyv", value: "HAART"}},
-          {op: ">", content: {field: "leu3n", value: "${this.state.CD4FromUser}"}},
           {op: "<=", content: {field: "fposdate", value: "${currentYear - this.state.numConsecutiveYearsFromUser}"}},
-          {op: "=", content: {field: "hiv_status", value: "positive"}}]}) 
+          {op: "=", content: {field: "hiv_status", value: "positive"}}
+        ]
+        }
+          ) 
         {
           ${bucketKey} {
             buckets {
@@ -98,7 +100,7 @@ class LTNPCase extends HIVCohortFilterCase {
       });
       if (followUpsWithHAARTTherapy.length > 0) {
         // This subject is neither LTNP nor control
-        return;
+        //return;
       }
       const subjectWithVisits = {
         subject_id: subjectId,
@@ -106,7 +108,7 @@ class LTNPCase extends HIVCohortFilterCase {
         follow_ups: visitArray,
       };
 
-      const followUpsAfterFposDate = visitArray.filter(x => (x.visit_date > x.fposdate));
+      const followUpsAfterFposDate = visitArray.filter(x => (x.visit_date >= x.fposdate));
       let followUpsWithCD4CountsBelowThresholdAfterFposDate = followUpsAfterFposDate.filter(
         x => (x.leu3n <= this.state.CD4FromUser && x.leu3n != null)
       );
@@ -154,7 +156,7 @@ class LTNPCase extends HIVCohortFilterCase {
   }
 
   downloadLTNP = () => {
-    const fileName = `ltnp-cohort-vload-${this.state.CD4FromUser.toString()
+    const fileName = `ltnp-cohort-CD4-${this.state.CD4FromUser.toString()
     }-years-${this.state.numConsecutiveYearsFromUser.toString()}.json`;
 
     const blob = this.makeCohortJSONFile(this.state.subjectLTNP);
