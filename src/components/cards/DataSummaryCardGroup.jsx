@@ -30,6 +30,7 @@ class DataSummaryCardGroup extends Component {
                     label={item.label}
                     value={item.value}
                     align={this.props.align}
+                    lockValue={this.props.lockValue}
                   />
                 ) : (
                   <div className='data-summary-card-group__sub-card-group'>
@@ -43,6 +44,7 @@ class DataSummaryCardGroup extends Component {
                             label={subItem.label}
                             value={subItem.value}
                             align={this.props.align}
+                            lockValue={this.props.lockValue}
                           />
                         </div>
                       ))
@@ -72,6 +74,7 @@ DataSummaryCardGroup.propTypes = {
   align: PropTypes.oneOf(['left', 'center']),
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   height: PropTypes.number,
+  lockValue: PropTypes.number,
 };
 
 DataSummaryCardGroup.defaultProps = {
@@ -79,6 +82,7 @@ DataSummaryCardGroup.defaultProps = {
   align: 'center',
   width: '100%',
   height: 97,
+  lockValue: -1,
 };
 
 export default DataSummaryCardGroup;

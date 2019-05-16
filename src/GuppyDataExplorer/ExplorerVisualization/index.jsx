@@ -11,7 +11,9 @@ import {
   ChartConfigType,
   GuppyConfigType,
 } from '../configTypeDef';
+import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper';
 import './ExplorerVisualization.css';
+import { components } from '../../params';
 
 class ExplorerVisualization extends React.Component {
   getData = (aggsData, chartConfig, filter) => {
@@ -59,6 +61,10 @@ class ExplorerVisualization extends React.Component {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
     const tableColumns = (this.props.tableConfig.fields && this.props.tableConfig.fields.length > 0)
       ? this.props.tableConfig.fields : this.props.allFields;
+    const isComponentLocked = checkForAnySelectedUnaccessibleField(this.props.aggsData,
+      this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
+    const lockMessage = `This chart is hidden because it contains fewer than ${this.props.tierAccessLimit} ${this.props.nodeCountTitle.toLowerCase()}`;
+    const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
     return (
       <div className={this.props.className}>
         <div className='guppy-explorer-visualization__button-group'>
@@ -72,13 +78,20 @@ class ExplorerVisualization extends React.Component {
             downloadRawDataByTypeAndFilter={this.props.downloadRawDataByTypeAndFilter}
             filter={this.props.filter}
             history={this.props.history}
+            isLocked={isComponentLocked}
           />
         </div>
         <div className='guppy-explorer-visualization__summary-cards'>
           <DataSummaryCardGroup summaryItems={chartData.countItems} connected />
         </div>
         <div className='guppy-explorer-visualization__charts'>
-          <SummaryChartGroup summaries={chartData.summaries} />
+          <SummaryChartGroup
+            summaries={chartData.summaries}
+            lockMessage={lockMessage}
+            barChartColor={barChartColor}
+            useCustomizedColorMap={!!components.categorical9Colors}
+            customizedColorMap={components.categorical9Colors || []}
+          />
         </div>
         {
           chartData.stackedBarCharts.map((chart, i) => (
@@ -87,6 +100,9 @@ class ExplorerVisualization extends React.Component {
               data={chart.data}
               title={chart.title}
               width='100%'
+              lockMessage={lockMessage}
+              useCustomizedColorMap={components.categorical9Colors || false}
+              customizedColorMap={components.categorical9Colors || []}
             />
           ),
           )
@@ -100,6 +116,7 @@ class ExplorerVisualization extends React.Component {
               rawData={this.props.rawData}
               totalCount={this.props.totalCount}
               guppyConfig={this.props.guppyConfig}
+              isLocked={isComponentLocked}
             />
           )
         }
@@ -119,6 +136,7 @@ ExplorerVisualization.propTypes = {
   downloadRawDataByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
   allFields: PropTypes.array, // inherited from GuppyWrapper
+  accessibleFieldObject: PropTypes.object, // inherited from GuppyWrapper
   history: PropTypes.object.isRequired,
   className: PropTypes.string,
   chartConfig: ChartConfigType,
@@ -126,6 +144,7 @@ ExplorerVisualization.propTypes = {
   buttonConfig: ButtonConfigType,
   guppyConfig: GuppyConfigType,
   nodeCountTitle: PropTypes.string.isRequired,
+  tierAccessLimit: PropTypes.number.isRequired,
 };
 
 ExplorerVisualization.defaultProps = {
@@ -139,6 +158,7 @@ ExplorerVisualization.defaultProps = {
   downloadRawDataByTypeAndFilter: () => {},
   rawData: [],
   allFields: [],
+  accessibleFieldObject: {},
   className: '',
   chartConfig: {},
   tableConfig: {},
