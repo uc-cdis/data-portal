@@ -1,0 +1,74 @@
+.tier-access-selector {
+  margin-bottom: 10px;
+}
+
+.tier-access-selector__items {
+  background-color: var(--g3-color__white);
+  padding: 14px;
+}
+
+.tier-access-selector__item {
+  margin-top: 14px;
+}
+
+.tier-access-selector__item:first-child {
+  margin-top: 0;
+}
+
+.tier-access-selector__label {
+  margin-left: 14px;
+  cursor: pointer;
+}
+
+.tier-access-selector__radio-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+}
+
+.tier-access-selector__radio-input:checked ~ .tier-access-selector__label {
+  font-weight: 700;
+}
+
+.tier-access-selector__customized-radio-input {
+  width: 18px;
+  height: 18px;
+  background-color: var(--g3-color__white);
+  display: inline-block;
+  border: var(--g3-color__lightgray) 1px solid;
+  border-radius: 50%;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.tier-access-selector__radio-input:checked + .tier-access-selector__customized-radio-input::after {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  content: '';
+  border-radius: 50%;
+  background-color: var(--g3-color__highlight-orange);
+  position: relative;
+  top: -2px;
+  left: 2px;
+}
+
+.tier-access-selector__button-wrapper {
+  background-color: var(--g3-color__white);
+  border-top: 1px solid var(--g3-color__silver);
+  text-align: center;
+  padding: 5px;
+}
+
+.tier-access-selector__dropdown {
+  cursor: pointer;
+}
+
+.tier-access-selector__dropdown .g3-icon {
+  background-color: var(--g3-color__black);
+  top: 5px;
+  position: relative;
+  margin-left: 10px;
+}

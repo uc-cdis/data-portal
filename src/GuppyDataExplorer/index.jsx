@@ -3,7 +3,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import { config } from '../params';
-import { guppyUrl } from '../localconf';
+import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../localconf';
 
 const defaultConfig = {
   charts: {},
@@ -40,6 +40,9 @@ class Explorer extends React.Component {
           dropdowns: guppyExplorerConfig.dropdowns,
         }}
         history={this.props.history}
+        tierAccessLevel={tierAccessLevel}
+        tierAccessLimit={tierAccessLimit}
+        getAccessButtonLink={config.dataExplorerConfig.getAccessButtonLink}
       />
     );
   }
