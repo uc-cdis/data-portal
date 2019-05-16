@@ -59,7 +59,7 @@ function buildConfig(opts) {
   const workspaceUrl = '/lw-workspace/';
   const workspaceErrorUrl = '/no-workspace-access/';
   const datasetUrl = `${hostname}api/search/datasets`;
-  const guppyUrl = `${hostname}guppy/`;
+  const guppyUrl = `${hostname}guppy`;
   const guppyGraphQLUrl = `${guppyUrl}graphql/`;
   const manifestServiceApiPath = `${hostname}manifests/`;
   // backward compatible: homepageChartNodes not set means using graphql query,
