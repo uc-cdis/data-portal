@@ -78,6 +78,26 @@ class LTNPCase extends HIVCohortFilterCase {
     });
   }
 
+  isALargeAmountOfFollowUpDataMissing(visitArray, currentYear) {
+    // If the subject does not have at least 1 visit every Z years, disqualify them
+    let Z = 10;
+    let fposdate = visitArray[0].fposdate;
+    let upperBound = Math.min(visitArray[0].frstdthd, currentYear);
+    if (upperBound - fposdate <= Z - 1 && visitArray.length >= 1) {
+      // If subject has been positive (Z-1) or less years, and there's 1 visit, that's ok
+      return false;
+    }
+
+    for(let yearX = fposdate; yearX <= upperBound - Z; yearX += 1) {
+      let yearFound = visitArray.findIndex(fu => (fu.visit_date >= yearX 
+        && fu.visit_date <= yearX + Z));
+      if (yearFound === -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   classifyAllSubjectLTNP = (subjectToVisitMap) => {
     const subjectLTNP = [];
     const subjectControl = [];
@@ -95,13 +115,12 @@ class LTNPCase extends HIVCohortFilterCase {
         // The subject is neither control nor LTNP
         return;
       }
-      const followUpsWithHAARTTherapy = visitArray.filter((x) => { 
-        return this.state.therapyValuesOfInterest.includes(x.thrpyv);
-      });
-      if (followUpsWithHAARTTherapy.length > 0) {
-        // This subject is neither LTNP nor control
-        //return;
+
+      if(this.isALargeAmountOfFollowUpDataMissing(visitArray, currentYear)) {
+        // Disqualify the subject because they're missing lots of data
+        return;
       }
+
       const subjectWithVisits = {
         subject_id: subjectId,
         num_years_hiv_positive: numYearsHIVPositive,

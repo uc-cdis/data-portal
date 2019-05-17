@@ -78,6 +78,12 @@ class ECCase extends HIVCohortFilterCase {
         return false;
       }
     }
+
+    if(this.isALargeAmountOfFollowUpDataMissing(visitArray, 
+      this.state.numConsecutiveMonthsFromUser)) {
+      return false;
+    }
+
     return true;
   }
 
@@ -90,7 +96,7 @@ class ECCase extends HIVCohortFilterCase {
     // For each patient, try to find numConsecutiveMonthsFromUser consecutive
     // visits that match the EC criteria
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
-      const visitArray = subjectToVisitMap[subjectId];
+      let visitArray = subjectToVisitMap[subjectId];
 
       const subjectWithVisits = {
         subject_id: subjectId,
@@ -98,6 +104,9 @@ class ECCase extends HIVCohortFilterCase {
         follow_ups: visitArray,
       };
 
+      // If a followup has no date-related attributes set, it is not helpful to the classifiers
+      visitArray = visitArray.filter(x => x.visit_date !== null && x.visit_number !== null);
+      
       if (visitArray.length < slidingWindowSize) {
         subjectNeither.push(subjectWithVisits);
         return;
