@@ -32,6 +32,10 @@ function confirmPatientIsLTNP(subjectObj) {
     console.log(`Error with subject ${subjectID}: fposdate = ${fposdate} is too recent relative to year of death ${frstdthd}`);
     return;
   }
+  if(subjectObj.num_years_hiv_positive < lower_limit_for_num_years_positive) {
+    console.log(`Error with subject ${subjectID}: num_years_hiv_positive = ${subjectObj.num_years_hiv_positive} < ${frstdthd}`);
+    return;
+  }
 
   for (let i = indexOfFirstFollowUpInFposYear; i < followUps.length; i ++) {
     const followUp = followUps[i];

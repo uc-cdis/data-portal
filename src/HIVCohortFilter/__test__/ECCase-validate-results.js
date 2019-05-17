@@ -3,7 +3,7 @@ const ecResults = require(fileName);
 const viral_load_upper_bound = ecResults.viral_load_upper_bound;
 const maintained_for_at_least_this_many_months = ecResults.maintained_for_at_least_this_many_months;
 const numOfVisitForMonth = Math.floor(maintained_for_at_least_this_many_months / 6);
-console.log(`Validating PTC results with argument ${viral_load_upper_bound}, ${maintained_for_at_least_this_many_months}`);
+console.log(`Validating EC results with argument ${viral_load_upper_bound}, ${maintained_for_at_least_this_many_months}`);
 
 function checkIfConsecutiveFollowUpsLessThanViralLoadLimit(subjectID, followUps) {
   followUps.forEach(fu => {
