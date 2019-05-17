@@ -138,7 +138,7 @@ class HIVCohortFilterCase extends React.Component {
     const subjectsWithAtLeast1Haart = resList[0];
     const subjectsWithAtLeast1NonHaart = resList[1];
     const subjectsWithNoHaartTreatments = subjectsWithAtLeast1NonHaart.filter(
-      x => !subjectsWithAtLeast1Haart.map(y => y.key).includes(x.key)
+      x => !subjectsWithAtLeast1Haart.map(y => y.key).includes(x.key),
     );
 
     // Transform to map
@@ -152,13 +152,13 @@ class HIVCohortFilterCase extends React.Component {
   isALargeAmountOfFollowUpDataMissing(visitArray) {
     // Note: This function is overridden by the LTNP case
     // If a large amount of data is missing, disqualify the subject
-    const monthSizeFromVisitDate = (visitArray[visitArray.length - 1].visit_date 
+    const monthSizeFromVisitDate = (visitArray[visitArray.length - 1].visit_date
       - visitArray[0].visit_date) * 12;
     // Visits are estimated to be 6 months apart, but this is not always the case
-    const monthSizeFromVisitNumber = (visitArray[visitArray.length - 1].visit_number 
+    const monthSizeFromVisitNumber = (visitArray[visitArray.length - 1].visit_number
       - visitArray[0].visit_number) * 6;
     const maxWindowSize = this.state.numConsecutiveMonthsFromUser * 2;
-    if(Math.min(monthSizeFromVisitDate, monthSizeFromVisitNumber) >= maxWindowSize) {
+    if (Math.min(monthSizeFromVisitDate, monthSizeFromVisitNumber) >= maxWindowSize) {
       // If the window_size is more than double, this indicates a large amount of missing data
       return true;
     }
@@ -177,7 +177,7 @@ class HIVCohortFilterCase extends React.Component {
       resultAlreadyCalculated: false,
     });
   }
-  
+
   downloadControl = () => {
     // Overridden by LTNP
     const fileName = `control-cohort-vload-${this.state.viralLoadFromUser.toString()
@@ -186,7 +186,7 @@ class HIVCohortFilterCase extends React.Component {
     const blob = this.makeCohortJSONFile(this.state.subjectControl);
     FileSaver.saveAs(blob, fileName);
   }
-  
+
   updateFilters = (event) => {
     event.preventDefault();
     this.setState({ inLoadingState: true });

@@ -75,18 +75,18 @@ class LTNPCase extends HIVCohortFilterCase {
     });
   }
 
-  isALargeAmountOfFollowUpDataMissing(visitArray, currentYear) {
+  isALargeAmountOfFollowUpDataMissing = (visitArray, currentYear) => {
     // If the subject does not have at least 1 visit every Z years, disqualify them
-    let Z = 10;
-    let fposdate = visitArray[0].fposdate;
-    let upperBound = Math.min(visitArray[0].frstdthd, currentYear);
+    const Z = 10;
+    const fposdate = visitArray[0].fposdate;
+    const upperBound = Math.min(visitArray[0].frstdthd, currentYear);
     if (upperBound - fposdate <= Z - 1 && visitArray.length >= 1) {
       // If subject has been positive (Z-1) or less years, and there's 1 visit, that's ok
       return false;
     }
 
-    for(let yearX = fposdate; yearX <= upperBound - Z; yearX += 1) {
-      let yearFound = visitArray.findIndex(fu => (fu.visit_date >= yearX 
+    for (let yearX = fposdate; yearX <= upperBound - Z; yearX += 1) {
+      const yearFound = visitArray.findIndex(fu => (fu.visit_date >= yearX
         && fu.visit_date <= yearX + Z));
       if (yearFound === -1) {
         return true;
@@ -99,21 +99,21 @@ class LTNPCase extends HIVCohortFilterCase {
     const subjectLTNP = [];
     const subjectControl = [];
 
-    var d = new Date();
-    var currentYear = d.getFullYear();
+    const d = new Date();
+    const currentYear = d.getFullYear();
 
     // For each subject, extract the visits with visit_date > fposdate and check their CD4 counts
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
       const visitArray = subjectToVisitMap[subjectId];
       const numYearsHIVPositive = Math.min(
-        currentYear, visitArray[0].frstdthd
+        currentYear, visitArray[0].frstdthd,
       ) - visitArray[0].fposdate;
       if (numYearsHIVPositive < this.state.numConsecutiveYearsFromUser) {
         // The subject is neither control nor LTNP
         return;
       }
 
-      if(this.isALargeAmountOfFollowUpDataMissing(visitArray, currentYear)) {
+      if (this.isALargeAmountOfFollowUpDataMissing(visitArray, currentYear)) {
         // Disqualify the subject because they're missing lots of data
         return;
       }
@@ -125,8 +125,8 @@ class LTNPCase extends HIVCohortFilterCase {
       };
 
       const followUpsAfterFposDate = visitArray.filter(x => (x.visit_date >= x.fposdate));
-      let followUpsWithCD4CountsBelowThresholdAfterFposDate = followUpsAfterFposDate.filter(
-        x => (x.leu3n <= this.state.CD4FromUser && x.leu3n != null)
+      const followUpsWithCD4CountsBelowThresholdAfterFposDate = followUpsAfterFposDate.filter(
+        x => (x.leu3n <= this.state.CD4FromUser && x.leu3n != null),
       );
 
       if (followUpsWithCD4CountsBelowThresholdAfterFposDate.length === 0

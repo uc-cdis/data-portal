@@ -79,7 +79,7 @@ class ECCase extends HIVCohortFilterCase {
       }
     }
 
-    if(this.isALargeAmountOfFollowUpDataMissing(visitArray)) {
+    if (this.isALargeAmountOfFollowUpDataMissing(visitArray)) {
       return false;
     }
 
@@ -105,12 +105,12 @@ class ECCase extends HIVCohortFilterCase {
 
       // If a followup has no date-related attributes set, it is not helpful to this classifier
       visitArray = visitArray.filter(x => x.visit_date !== null && x.visit_number !== null);
-      
+
       if (visitArray.length < slidingWindowSize) {
         subjectNeither.push(subjectWithVisits);
         return;
       }
-      
+
       // The sliding window step. Window is of size this.state.numConsecutiveMonthsFromUser / 6
       // Note that this loop differs slightly from the PTC case:
       // we use i<= instead of i<, because we dont need to check the followup immediately

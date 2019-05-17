@@ -107,7 +107,7 @@ class PTCCase extends HIVCohortFilterCase {
       }
     }
 
-    if(this.isALargeAmountOfFollowUpDataMissing(visitArray)) {
+    if (this.isALargeAmountOfFollowUpDataMissing(visitArray)) {
       return false;
     }
 
@@ -212,7 +212,7 @@ class PTCCase extends HIVCohortFilterCase {
   makeCohortJSONFile = (subjectsIn) => {
     const annotatedObj = {
       viral_load_upper_bound: this.state.viralLoadFromUser.toString(),
-      num_consective_months_on_haart: this.state.numConsecutiveMonthsFromUser.toString(),
+      num_consecutive_months_on_haart: this.state.numConsecutiveMonthsFromUser.toString(),
       subjects: subjectsIn,
     };
 
