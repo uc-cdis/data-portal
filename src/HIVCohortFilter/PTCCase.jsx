@@ -107,8 +107,7 @@ class PTCCase extends HIVCohortFilterCase {
       }
     }
 
-    if(this.isALargeAmountOfFollowUpDataMissing(visitArray, 
-      this.state.numConsecutiveMonthsFromUser)) {
+    if(this.isALargeAmountOfFollowUpDataMissing(visitArray)) {
       return false;
     }
 

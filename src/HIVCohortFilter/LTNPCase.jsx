@@ -55,10 +55,7 @@ class LTNPCase extends HIVCohortFilterCase {
         aggregations(filters: {first: 10000, op: "and", content: [
           {op: "${isHAART ? '=' : '!='}", content: {field: "thrpyv", value: "HAART"}},
           {op: "<=", content: {field: "fposdate", value: "${currentYear - this.state.numConsecutiveYearsFromUser}"}},
-          {op: "=", content: {field: "hiv_status", value: "positive"}}
-        ]
-        }
-          ) 
+          {op: "=", content: {field: "hiv_status", value: "positive"}}]})
         {
           ${bucketKey} {
             buckets {

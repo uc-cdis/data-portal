@@ -79,8 +79,7 @@ class ECCase extends HIVCohortFilterCase {
       }
     }
 
-    if(this.isALargeAmountOfFollowUpDataMissing(visitArray, 
-      this.state.numConsecutiveMonthsFromUser)) {
+    if(this.isALargeAmountOfFollowUpDataMissing(visitArray)) {
       return false;
     }
 
@@ -112,14 +111,6 @@ class ECCase extends HIVCohortFilterCase {
         return;
       }
       
-      const followUpsWithHAARTTherapy = visitArray.filter((x) => { 
-        return this.state.therapyValuesOfInterest.includes(x.thrpyv);
-      });
-      if (followUpsWithHAARTTherapy.length > 0) {
-        // This subject is neither LTNP nor control
-        subjectNeither.push(subjectWithVisits);
-        return;
-      }
       // The sliding window step. Window is of size this.state.numConsecutiveMonthsFromUser / 6
       // Note that this loop differs slightly from the PTC case:
       // we use i<= instead of i<, because we dont need to check the followup immediately

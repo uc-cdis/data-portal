@@ -149,14 +149,15 @@ class HIVCohortFilterCase extends React.Component {
     return resultMap;
   }
 
-  isALargeAmountOfFollowUpDataMissing(visitArray, numConsecutiveMonthsFromUser) {
+  isALargeAmountOfFollowUpDataMissing(visitArray) {
+    // Note: This function is overridden by the LTNP case
     // If a large amount of data is missing, disqualify the subject
     const monthSizeFromVisitDate = (visitArray[visitArray.length - 1].visit_date 
       - visitArray[0].visit_date) * 12;
     // Visits are estimated to be 6 months apart, but this is not always the case
     const monthSizeFromVisitNumber = (visitArray[visitArray.length - 1].visit_number 
       - visitArray[0].visit_number) * 6;
-    const maxWindowSize = numConsecutiveMonthsFromUser * 2;
+    const maxWindowSize = this.state.numConsecutiveMonthsFromUser * 2;
     if(Math.min(monthSizeFromVisitDate, monthSizeFromVisitNumber) >= maxWindowSize) {
       // If the window_size is more than double, this indicates a large amount of missing data
       return true;
