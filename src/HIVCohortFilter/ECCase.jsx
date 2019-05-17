@@ -103,7 +103,7 @@ class ECCase extends HIVCohortFilterCase {
         follow_ups: visitArray,
       };
 
-      // If a followup has no date-related attributes set, it is not helpful to the classifiers
+      // If a followup has no date-related attributes set, it is not helpful to this classifier
       visitArray = visitArray.filter(x => x.visit_date !== null && x.visit_number !== null);
       
       if (visitArray.length < slidingWindowSize) {
