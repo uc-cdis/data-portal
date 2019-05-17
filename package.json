@@ -10,8 +10,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.2",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.0",
-    "@gen3/guppy": "git+https://github.com/uc-cdis/guppy.git",
-    "@gen3/ui-component": "0.2.2",
+    "@gen3/guppy": "0.1.0",
+    "@gen3/ui-component": "0.3.1",
     "@storybook/addon-actions": "^5.0.0",
     "@storybook/react": "^5.0.0",
     "brace": "^0.10.0",
@@ -126,7 +126,6 @@
   },
   "scripts": {
     "test": "jest",
-    "postinstall": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
     "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
     "schema": "node ./data/getSchema",
     "params": "node ./data/getTexts > src/params.js",

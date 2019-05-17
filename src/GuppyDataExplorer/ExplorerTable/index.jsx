@@ -5,6 +5,7 @@ import 'react-table/react-table.css';
 import { GuppyConfigType, TableConfigType } from '../configTypeDef';
 import { capitalizeFirstLetter } from '../../utils';
 import './ExplorerTable.css';
+import LockIcon from '../../img/icons/lock.svg';
 
 class ExplorerTable extends React.Component {
   constructor(props) {
@@ -82,18 +83,29 @@ class ExplorerTable extends React.Component {
     const end = (this.state.currentPage + 1) * this.state.pageSize;
     return (
       <div className={`explorer-table ${this.props.className}`}>
-        <p className='explorer-table__description'>{`Showing ${start} - ${end} of ${totalCount} ${this.props.guppyConfig.dataType}s`}</p>
+        {(this.props.isLocked) ? <React.Fragment />
+          : <p className='explorer-table__description'>{`Showing ${start} - ${end} of ${totalCount} ${this.props.guppyConfig.dataType}s`}</p> }
         <ReactTable
           columns={columnsConfig}
           manual
-          data={this.props.rawData}
-          pages={visiblePages} // Total number of pages, don't show 10000+ records in table
+          data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
+          showPageSizeOptions={!this.props.isLocked}
+          // eslint-disable-next-line max-len
+          pages={(this.props.isLocked) ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}
           onFetchData={this.fetchData}
           defaultPageSize={this.props.defaultPageSize}
           className={'-striped -highlight '}
-          minRows={0} // hide empty rows
+          minRows={3} // make room for no data component
           resizable={false}
+          NoDataComponent={() => (this.props.isLocked ? (
+            <div className='rt-noData'>
+              <LockIcon width={30} />
+              <p>You only have access to summary data</p>
+            </div>
+          ) : (
+            <div className='rt-noData'>No data to display</div>
+          ))}
         />
       </div>
     );
@@ -101,9 +113,10 @@ class ExplorerTable extends React.Component {
 }
 
 ExplorerTable.propTypes = {
-  rawData: PropTypes.array.isRequired, // from GuppyWrapper
+  rawData: PropTypes.array, // from GuppyWrapper
   fetchAndUpdateRawData: PropTypes.func.isRequired, // from GuppyWrapper
   totalCount: PropTypes.number.isRequired, // from GuppyWrapper
+  isLocked: PropTypes.bool.isRequired,
   className: PropTypes.string,
   defaultPageSize: PropTypes.number,
   tableConfig: TableConfigType.isRequired,
@@ -111,6 +124,7 @@ ExplorerTable.propTypes = {
 };
 
 ExplorerTable.defaultProps = {
+  rawData: [],
   className: '',
   defaultPageSize: 20,
 };

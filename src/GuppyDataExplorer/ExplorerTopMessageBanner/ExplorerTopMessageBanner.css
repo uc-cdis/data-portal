@@ -1,0 +1,25 @@
+.top-message-banner {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  align-content: flex-end;
+  background-color: transparent;
+}
+
+.top-message-banner__button-wrapper {
+  background-color: var(--g3-color__white);
+  border-top: 1px solid var(--g3-color__silver);
+  text-align: center;
+  margin-right: 20px;
+  display: inline;
+}
+
+.top-message-banner__bold-text {
+  font-size: 14px;
+  font-weight: var(--g3-font__semi-bold-weight);
+  color: var(--g3-color__black);
+}
+
+.top-message-banner__normal-text {
+  font-size: 14px;
+  color: var(--g3-color__gray);
+}

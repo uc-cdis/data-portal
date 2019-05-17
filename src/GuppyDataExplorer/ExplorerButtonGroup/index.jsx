@@ -52,7 +52,9 @@ class ExplorerButtonGroup extends React.Component {
             toasterHeadline: this.state.pfbSuccessText });
         });
     }
-    if (nextProps.totalCount !== this.props.totalCount) {
+    if (nextProps.totalCount !== this.props.totalCount
+      && nextProps.totalCount
+      && this.props.totalCount) {
       this.refreshManifestEntryCount();
     }
   }
@@ -273,6 +275,9 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   isButtonEnabled = (buttonConfig) => {
+    if (this.props.isLocked) {
+      return !this.props.isLocked;
+    }
     if (buttonConfig.type === 'manifest') {
       return this.state.manifestEntryCount > 0;
     }
@@ -301,10 +306,12 @@ class ExplorerButtonGroup extends React.Component {
     const pendingState = buttonConfig.type === 'manifest' ? (this.state.pendingManifestEntryCountRequestNumber > 0) : false;
     let buttonTitle = buttonConfig.title;
     if (buttonConfig.type === 'data') {
-      buttonTitle = `${buttonConfig.title} (${this.props.totalCount})`;
+      const buttonCount = (this.props.totalCount >= 0) ? this.props.totalCount : 0;
+      buttonTitle = `${buttonConfig.title} (${buttonCount})`;
     } else if (buttonConfig.type === 'manifest' && !pendingState && this.state.manifestEntryCount > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
+    const btnTooltipText = (this.props.isLocked) ? 'You only have access to summary data' : buttonConfig.tooltipText;
 
     return (
       <Button
@@ -317,7 +324,7 @@ class ExplorerButtonGroup extends React.Component {
         buttonType='primary'
         enabled={this.isButtonEnabled(buttonConfig)}
         tooltipEnabled={buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false}
-        tooltipText={buttonConfig.tooltipText}
+        tooltipText={btnTooltipText}
         isPending={this.isButtonPending(buttonConfig)}
       />
     );
@@ -345,7 +352,7 @@ class ExplorerButtonGroup extends React.Component {
                 <Dropdown
                   key={dropdownId}
                   className='explorer-button-group__dropdown'
-                  disabled={this.props.totalCount === 0}
+                  disabled={this.props.totalCount === 0 || this.props.isLocked}
                 >
                   <Dropdown.Button>{dropdownTitle}</Dropdown.Button>
                   <Dropdown.Menu>
@@ -406,6 +413,7 @@ ExplorerButtonGroup.propTypes = {
   resetJobState: PropTypes.func.isRequired,
   checkJobStatus: PropTypes.func.isRequired,
   fetchJobResult: PropTypes.func.isRequired,
+  isLocked: PropTypes.bool.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {
