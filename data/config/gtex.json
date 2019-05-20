@@ -299,21 +299,6 @@
         "referenceIdFieldInDataIndex": "case_id"
       },
       "nodeCountField": "case_id"
-    },
-    "guppyConfig": {
-      "dataType": "case",
-      "fieldMapping": [
-        {
-          "field": "consent_codes",
-          "name": "Data Use Restriction"
-        }
-      ],
-      "manifestMapping": {
-        "resourceIndexType": "file",
-        "resourceIdField": "object_id",
-        "referenceIdFieldInResourceIndex": "case_id",
-        "referenceIdFieldInDataIndex": "case_id"
-      }
     }
   }
 }
