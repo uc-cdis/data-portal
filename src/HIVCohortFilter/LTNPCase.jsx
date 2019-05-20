@@ -9,13 +9,16 @@ import HIVCohortFilterCase from './HIVCohortFilterCase';
 class LTNPCase extends HIVCohortFilterCase {
   /*
   * LTNP Case:
-  * Below is the full algorithm description from https://ctds-planx.atlassian.net/browse/PXP-2892
+  * Below is the full algorithm description from https://ctds-planx.atlassian.net/browse/PXP-2909
   * The UI displays a 'decision tree' (just hardcoded svg), and makes an es query based on
   * sliding window size and viral load number.
   * Definitions:
   * - Never received HAART treatment: follow_up.thrpyv != HAART
   * - X years: (get.current_year - followup.fposdate)
   * - CD4 > Y: followup.leu3n > Y
+  * - leu3n is the number of CD4 cells (laboratory result summary node)
+  * - fposdate is the year the subject is first seen as hiv_positive (hiv_history node)
+  * - frstdthd is the subject's year of death
   * Definitions:
   * - Never received HAART treatment: follow_up.thrpyv != HAART
   * - viral load< X: followup.viral_load < X
