@@ -176,24 +176,6 @@
       "index": "",
       "nodeCountField": "node_id"
     },
-    "guppyConfig": {
-      "dataType": "case",
-      "fieldMapping": [
-        { "field": "project_id", "name": "Project ID" },
-        { "field": "submitter_id", "name": "Submitter ID" },
-        { "field": "gender", "name": "Gender" },
-        { "field": "ethnicity", "name": "Ethnicity" },
-        { "field": "race", "name": "Race" },
-        { "field": "experimental_group", "name": "Experimental Group" },
-        { "field": "_aliquots_count", "name": "Aliquots Count" },
-        { "field": "_read_group_count", "name": "Read Group Count" },
-        { "field": "_samples_count", "name": "Samples Count" },
-        { "field": "_submitted_expression_arrays_count", "name": "Submitted Expression Arrays Count" },
-        { "field": "_submitted_unaligned_reads_count", "name": "Submitted Unaligned Reads Count" },
-        { "field": "auth_resource_path", "name": "auth_resource_path" },
-        { "field": "node_id", "name": "Case ID" }
-      ]
-    },
     "table": {
       "enabled": true,
       "fields": [

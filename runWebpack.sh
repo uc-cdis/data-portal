@@ -5,6 +5,8 @@
 #  APP = commons specific
 #  HOSTNAME = where to download graphql schema from
 #  LOGOUT_INACTIVE_USERS = bool, should inactive users be logged out before session lifetime ends
+#  TIER_ACCESS_LEVEL = the access level of a common (libre, regular or private)
+#  TIER_ACCESS_LIMIT = the minimum visible count for aggregation results
 #
 # Script assumes npm install or npm ci has already run, and jq is installed.
 #
@@ -12,13 +14,16 @@
 export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-dev}"
 export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
+export TIER_ACCESS_LEVEL="${TIER_ACCESS_LEVEL:-"private"}"
+export TIER_ACCESS_LIMIT="${TIER_ACCESS_LIMIT:-"1000"}"
 export LOGOUT_INACTIVE_USERS="${LOGOUT_INACTIVE_USERS:-"true"}"
+
 
 
 # lib -----------------------------
 
 declare -a gitopsFiles=(
-  gitops.json data/config/gitops.json 
+  gitops.json data/config/gitops.json
   gitops-logo.png custom/logo/gitops-logo.png
   gitops-createdby.png custom/createdby/gitops.png
   gitops-favicon.ico custom/favicon/gitops-favicon.ico
@@ -144,11 +149,11 @@ export REACT_APP_PROJECT_ID=search
 export REACT_APP_DISABLE_SOCKET=true
 
 #
-# finally either launch the webpack-dev-server or 
+# finally either launch the webpack-dev-server or
 # run webpack to generate a static bundle.js
 #
 if [[ "$NODE_ENV" == "dev" || "$NODE_ENV" == "auto" ]]; then
-  echo ./node_modules/.bin/webpack-dev-server 
+  echo ./node_modules/.bin/webpack-dev-server
   ./node_modules/.bin/webpack-dev-server
 else
   export NODE_ENV="production"

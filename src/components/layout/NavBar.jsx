@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import MediaQuery from 'react-responsive';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NavButton from './NavButton';
+import { breakpoints } from '../../localconf';
 import './NavBar.less';
 
 /**
@@ -9,20 +12,54 @@ import './NavBar.less';
  * @param { dictIcons, navTitle, navItems } params
  */
 class NavBar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      menuOpen: false,
+    };
+  }
+
   componentDidMount() {
     this.props.onInitActive();
   }
 
-   isActive = id => {     
-    let toCompare = this.props.activeTab.split('/').filter(x => x !== 'dev.html').join('/');
+  isActive = (id) => {
+    const toCompare = this.props.activeTab.split('/').filter(x => x !== 'dev.html').join('/');
     return toCompare.startsWith(id);
   }
 
+  toggleMenu = () => {
+    this.setState(prevState => ({ menuOpen: !prevState.menuOpen }));
+  }
+
   render() {
+    const navItems = this.props.navItems.map(
+      (item, index) => (
+        (item.link.startsWith('http')) ?
+          <a className='nav-bar__link nav-bar__link--right' key={item.link} href={item.link}>
+            <NavButton
+              item={item}
+              dictIcons={this.props.dictIcons}
+              isActive={this.isActive(item.link)}
+              onActiveTab={() => this.props.onActiveTab(item.link)}
+              tabIndex={index + 1}
+            />
+          </a> :
+          <Link className='nav-bar__link nav-bar__link--right' key={item.link} to={item.link}>
+            <NavButton
+              item={item}
+              dictIcons={this.props.dictIcons}
+              isActive={this.isActive(item.link)}
+              onActiveTab={() => this.props.onActiveTab(item.link)}
+              tabIndex={index + 1}
+            />
+          </Link>
+      ));
+
     return (
       <div className='nav-bar'>
-        <header className={`nav-bar__header ${this.props.isFullWidth ? 'nav-bar__header--full-width' : ''}`}>
-          <nav className='nav-bar__nav--left'>
+        <header className='nav-bar__header'>
+          <nav className='nav-bar__nav--info'>
             <div className='nav-bar__logo'>
               <Link
                 to=''
@@ -52,33 +89,33 @@ class NavBar extends Component {
               )
             }
           </nav>
-          <nav className='nav-bar__nav--right'>
+          <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
+            <div
+              className='nav-bar__menu'
+              onClick={this.toggleMenu}
+              role='button'
+              tabIndex={0}
+            >
+              Menu
+              <FontAwesomeIcon
+                className='nav-bar__menu-icon'
+                icon={this.state.menuOpen ? 'angle-down' : 'angle-up'}
+                size='lg'
+              />
+            </div>
             {
-              this.props.navItems.map(
-                (item, index) => (
-                  (item.link.startsWith('http')) ?
-                    <a className='nav-bar__link nav-bar__link--right' key={item.link} href={item.link}>
-                      <NavButton
-                        item={item}
-                        dictIcons={this.props.dictIcons}
-                        isActive={this.isActive(item.link)}
-                        onActiveTab={() => this.props.onActiveTab(item.link)}
-                        tabIndex={index + 1}
-                      />
-                    </a> :
-                    <Link className='nav-bar__link nav-bar__link--right' key={item.link} to={item.link}>
-                      <NavButton
-                        item={item}
-                        dictIcons={this.props.dictIcons}
-                        isActive={this.isActive(item.link)}
-                        onActiveTab={() => this.props.onActiveTab(item.link)}
-                        tabIndex={index + 1}
-                      />
-                    </Link>
-                ),
-              )
+              this.state.menuOpen ? (
+                <nav className='nav-bar__nav--items'>
+                  { navItems }
+                </nav>
+              ) : null
             }
-          </nav>
+          </MediaQuery>
+          <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
+            <nav className='nav-bar__nav--items'>
+              { navItems }
+            </nav>
+          </MediaQuery>
         </header>
       </div>
     );
@@ -92,7 +129,6 @@ NavBar.propTypes = {
   activeTab: PropTypes.string,
   onActiveTab: PropTypes.func,
   onInitActive: PropTypes.func,
-  isFullWidth: PropTypes.bool,
 };
 
 NavBar.defaultProps = {
@@ -100,7 +136,6 @@ NavBar.defaultProps = {
   onActiveTab: () => {},
   onInitActive: () => {},
   navTitle: null,
-  isFullWidth: false,
 };
 
 export default NavBar;

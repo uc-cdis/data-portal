@@ -14,9 +14,9 @@ class Analysis extends React.Component {
     const apps = config.analysisTools;
 
     return (
-      <React.Fragment>
+      <div className='analysis'>
         <h2 className='analysis__title'>Apps</h2>
-        <div className='analysis'>
+        <div className='analysis-cards'>
           {
             apps.map((elt) => {
               const app = analysisApps[elt];
@@ -34,7 +34,7 @@ class Analysis extends React.Component {
             })
           }
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }

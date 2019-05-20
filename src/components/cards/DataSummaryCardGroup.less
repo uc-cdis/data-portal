@@ -1,12 +1,10 @@
-@import '~@gen3/ui-component/dist/css/base.less';
-
 .data-summary-card-group {
   display: flex;
 }
 
 .data-summary-card-group__connected-card,
 .data-summary-card-group__separated-card {
-  background-color: @white;
+  background-color: var(--g3-color__white);
   flex-grow: 1;
   flex-basis: 0;
   position: relative;
@@ -27,7 +25,7 @@
   position: absolute;
   top: 7px;
   bottom: 7px;
-  border-left: solid @silver 1px;
+  border-left: solid var(--g3-color__silver) 1px;
 }
 
 .data-summary-card-group__sub-card-group {
@@ -44,5 +42,5 @@
   position: absolute;
   top: 28px;
   bottom: 28px;
-  border-left: solid @silver 1px;
+  border-left: solid var(--g3-color__silver) 1px;
 }

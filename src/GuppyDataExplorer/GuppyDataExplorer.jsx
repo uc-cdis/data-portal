@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
-import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
 import ExplorerVisualization from './ExplorerVisualization';
+import ExplorerFilter from './ExplorerFilter';
+import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
 import { capitalizeFirstLetter } from '../utils';
 import {
   GuppyConfigType,
@@ -35,12 +36,21 @@ class GuppyDataExplorer extends React.Component {
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
           onFilterChange={this.handleFilterChange}
           rawDataFields={this.props.tableConfig.fields}
+          accessibleFieldCheckList={this.props.guppyConfig.accessibleFieldCheckList}
         >
-          <ConnectedFilter
+          <ExplorerTopMessageBanner
+            className='guppy-data-explorer__top-banner'
+            tierAccessLevel={this.props.tierAccessLevel}
+            tierAccessLimit={this.props.tierAccessLimit}
+            guppyConfig={this.props.guppyConfig}
+            getAccessButtonLink={this.props.getAccessButtonLink}
+          />
+          <ExplorerFilter
             className='guppy-data-explorer__filter'
-            filterConfig={this.props.filterConfig}
-            guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
-            fieldMapping={this.props.guppyConfig.fieldMapping}
+            guppyConfig={this.props.guppyConfig}
+            getAccessButtonLink={this.props.getAccessButtonLink}
+            tierAccessLevel={this.props.tierAccessLevel}
+            tierAccessLimit={this.props.tierAccessLimit}
           />
           <ExplorerVisualization
             className='guppy-data-explorer__visualization'
@@ -49,8 +59,9 @@ class GuppyDataExplorer extends React.Component {
             buttonConfig={this.props.buttonConfig}
             guppyConfig={this.props.guppyConfig}
             history={this.props.history}
-            nodeCountTitle={this.props.nodeCountTitle || capitalizeFirstLetter(
+            nodeCountTitle={this.props.guppyConfig.nodeCountTitle || capitalizeFirstLetter(
               this.props.guppyConfig.dataType)}
+            tierAccessLimit={this.props.tierAccessLimit}
           />
         </GuppyWrapper>
       </div>
@@ -66,10 +77,14 @@ GuppyDataExplorer.propTypes = {
   buttonConfig: ButtonConfigType.isRequired,
   nodeCountTitle: PropTypes.string,
   history: PropTypes.object.isRequired,
+  tierAccessLevel: PropTypes.string.isRequired,
+  tierAccessLimit: PropTypes.number.isRequired,
+  getAccessButtonLink: PropTypes.string,
 };
 
 GuppyDataExplorer.defaultProps = {
   nodeCountTitle: undefined,
+  getAccessButtonLink: undefined,
 };
 
 export default GuppyDataExplorer;

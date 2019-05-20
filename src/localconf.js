@@ -14,6 +14,8 @@ function buildConfig(opts) {
     basename: process.env.BASENAME || '/',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
+    tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
+    tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
   };
 
   //
@@ -31,6 +33,8 @@ function buildConfig(opts) {
     basename,
     hostname,
     gaDebug,
+    tierAccessLevel,
+    tierAccessLimit,
   } = Object.assign({}, defaults, opts);
 
   const submissionApiPath = `${hostname}api/v0/submission/`;
@@ -59,8 +63,8 @@ function buildConfig(opts) {
   const workspaceTerminateUrl = `${workspaceUrl}terminate`;
   const workspaceLaunchUrl = `${workspaceUrl}launch`;
   const datasetUrl = `${hostname}api/search/datasets`;
-  const guppyUrl = `${hostname}guppy/`;
-  const guppyGraphQLUrl = `${guppyUrl}graphql/`;
+  const guppyUrl = `${hostname}guppy`;
+  const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
   const manifestServiceApiPath = `${hostname}manifests/`;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
@@ -72,6 +76,12 @@ function buildConfig(opts) {
   let useGuppyForExplorer = false;
   if (config.dataExplorerConfig.guppyConfig) {
     useGuppyForExplorer = true;
+  }
+
+  // for "libre" data commons, explorer page is public
+  let explorerPublic = false;
+  if (tierAccessLevel === 'libre') {
+    explorerPublic = true;
   }
 
   const colorsForCharts = {
@@ -175,9 +185,16 @@ function buildConfig(opts) {
     },
   };
 
+  const breakpoints = {
+    laptop: 1024,
+    tablet: 820,
+    mobile: 480,
+  };
+
   return {
     app,
     basename,
+    breakpoints,
     buildConfig,
     dev,
     hostname,
@@ -218,6 +235,9 @@ function buildConfig(opts) {
     wtsPath,
     useGuppyForExplorer,
     analysisApps,
+    tierAccessLevel,
+    tierAccessLimit,
+    explorerPublic,
   };
 }
 

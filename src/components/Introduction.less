@@ -3,9 +3,24 @@
   position: relative;
 }
 
+@media screen and (max-width: 1290px) {
+  .introduction {
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
+}
+
 .introduction__title {
   margin-bottom: 25px;
   line-height: 1.0em;
+}
+
+@media screen and (max-width: 1290px) {
+  .introduction__title {
+    text-align: center;
+  }
 }
 
 .introduction__text {
@@ -14,8 +29,13 @@
   margin: 25px auto 25px auto;
 }
 
+@media screen and (max-width: 1290px) {
+  .introduction__text {
+    text-align: center;
+  }
+}
+
 .introduction__icon {
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 75px;
 }
