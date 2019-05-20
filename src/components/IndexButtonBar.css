@@ -3,6 +3,14 @@
 .index-button-bar {
   display: flex;
   padding: 40px 0 0 0;
+  flex-flow: wrap;
+  justify-content: center;
+}
+
+@media screen and (max-width: 1170px) {
+  .index-button-bar {
+    width: 80%;
+  }
 }
 
 .index-button-bar__thumbnail-button {
@@ -12,14 +20,10 @@
   padding: 20px 20px;
   text-align: center;
   width: 290px;
-  margin-left: 20px;
+  margin: 20px 20px;
   border: 1px solid var(--g3-color__silver);
   border-radius: 4px;
   position: relative;
-}
-
-.index-button-bar__thumbnail-button:first-child {
-  margin-left: 0;
 }
 
 .index-button-bar__thumbnail-title {

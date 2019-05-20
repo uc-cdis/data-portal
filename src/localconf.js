@@ -181,9 +181,16 @@ function buildConfig(opts) {
     },
   };
 
+  const breakpoints = {
+    laptop: 1024,
+    tablet: 820,
+    mobile: 480,
+  };
+
   return {
     app,
     basename,
+    breakpoints,
     buildConfig,
     dev,
     hostname,

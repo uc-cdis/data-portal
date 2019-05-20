@@ -80,14 +80,14 @@ class LTNPCase extends HIVCohortFilterCase {
     const subjectLTNP = [];
     const subjectControl = [];
 
-    var d = new Date();
-    var currentYear = d.getFullYear();
+    const d = new Date();
+    const currentYear = d.getFullYear();
 
     // For each subject, extract the visits with visit_date > fposdate and check their CD4 counts
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
       const visitArray = subjectToVisitMap[subjectId];
       const numYearsHIVPositive = Math.min(
-        currentYear, visitArray[0].frstdthd
+        currentYear, visitArray[0].frstdthd,
       ) - visitArray[0].fposdate;
       if (numYearsHIVPositive < this.state.numConsecutiveYearsFromUser) {
         // The subject is neither control nor LTNP
@@ -100,8 +100,8 @@ class LTNPCase extends HIVCohortFilterCase {
       };
 
       const followUpsAfterFposDate = visitArray.filter(x => (x.visit_date > x.fposdate));
-      let followUpsWithCD4CountsBelowThresholdAfterFposDate = followUpsAfterFposDate.filter(
-        x => (x.leu3n <= this.state.CD4FromUser && x.leu3n != null)
+      const followUpsWithCD4CountsBelowThresholdAfterFposDate = followUpsAfterFposDate.filter(
+        x => (x.leu3n <= this.state.CD4FromUser && x.leu3n != null),
       );
 
       if (followUpsWithCD4CountsBelowThresholdAfterFposDate.length === 0

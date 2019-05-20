@@ -6,20 +6,20 @@ import SubmissionResult from './SubmissionResult';
 
 describe('the submission result component', () => {
   const testData = [
-      {
-        type: 'type1',
-      },
-      {
-        type: 'type2',
-        errors: ['bla bla bla'],
-      },
-      {
-        type: 'type2',
-      },
-      {
-        type: 'type2',
-        errors: ['bla bla bla'],
-      },
+    {
+      type: 'type1',
+    },
+    {
+      type: 'type2',
+      errors: ['bla bla bla'],
+    },
+    {
+      type: 'type2',
+    },
+    {
+      type: 'type2',
+      errors: ['bla bla bla'],
+    },
   ];
 
   it('presents a summary of a successful submission', () => {
