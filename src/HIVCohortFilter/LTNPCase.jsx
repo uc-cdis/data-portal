@@ -77,7 +77,7 @@ class LTNPCase extends HIVCohortFilterCase {
 
   isALargeAmountOfFollowUpDataMissing = (visitArray, currentYear) => {
     // If the subject does not have at least 1 visit every Z years, disqualify them
-    const Z = 10;
+    const Z = 5;
     const fposdate = visitArray[0].fposdate;
     const upperBound = Math.min(visitArray[0].frstdthd, currentYear);
     if (upperBound - fposdate <= Z - 1 && visitArray.length >= 1) {
