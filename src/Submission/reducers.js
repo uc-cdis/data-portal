@@ -76,10 +76,14 @@ const submission = (state = {}, action) => {
     };
   case 'RECEIVE_FILES_TO_MAP':
     return { ...state, filesToMap: action.data };
-  case 'RESET_CHUNK_COUNTER':
+  case 'RESET_SUBMISSION_STATUS':
     return { ...state,
-      submit_counter: 0,
+      submit_entity_counts: [],
+      submit_result: null,
       submit_result_string: '',
+      submit_status: 0,
+      submit_counter: 0,
+      submmit_total: 0
     };
   default:
     return state;
