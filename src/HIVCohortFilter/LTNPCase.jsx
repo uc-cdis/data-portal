@@ -128,7 +128,6 @@ class LTNPCase extends HIVCohortFilterCase {
       };
 
       const followUpsAfterFposDate = visitArray.filter(x => (x.visit_date >= x.fposdate));
-
       const followUpsWithCD4CountsBelowThresholdAfterFposDate = followUpsAfterFposDate.filter(
         x => (x.leu3n <= this.state.CD4FromUser && x.leu3n != null),
       );
