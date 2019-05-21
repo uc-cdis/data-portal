@@ -1,3 +1,7 @@
+.analysis-app-wrapper {
+  padding: 20px 20px;
+}
+
 .analysis-app {
   display: flex;
   flex-flow: column;

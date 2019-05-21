@@ -103,7 +103,7 @@ class AnalysisApp extends React.Component {
     const appContent = this.getAppContent(params.app);
 
     return (
-      <React.Fragment>
+      <div className='analysis-app-wrapper'>
         <BackLink url='/analysis' label='Back to Apps' />
         {
           loaded ?
@@ -122,7 +122,7 @@ class AnalysisApp extends React.Component {
             </div>
             : null
         }
-      </React.Fragment>
+      </div>
     );
   }
 }

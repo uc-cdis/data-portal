@@ -1,9 +1,29 @@
 .index-page {
-  width: 1220px;
   padding: 75px 0 40px 0;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
 }
 
 .index-page__top {
-  width: 100%;
   display: inline-flex;
+}
+
+@media screen and (max-width: 1290px) {
+  .index-page__top {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 80%;
+  }
+}
+
+.index-page__bar-chart {
+  width: 770px;
+}
+
+@media screen and (max-width: 1290px) {
+  .index-page__bar-chart {
+    width: unset;
+  }
 }

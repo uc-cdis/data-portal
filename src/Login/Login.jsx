@@ -1,9 +1,11 @@
 import React from 'react';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
+import MediaQuery from 'react-responsive';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { basename, loginPath } from '../localconf';
+import { basename, loginPath, breakpoints } from '../localconf';
 import { components } from '../params';
+
 import SlidingWindow from '../components/SlidingWindow';
 import './Login.less';
 
@@ -65,14 +67,16 @@ class Login extends React.Component {
 
     return (
       <div className='login-page'>
-        <div className='login-page__side-box'>
-          <SlidingWindow
-            iconName={customImage}
-            dictIcons={this.props.dictIcons}
-            height={this.state.height}
-            scrollY={window.scrollY}
-          />
-        </div>
+        <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
+          <div className='login-page__side-box'>
+            <SlidingWindow
+              iconName={customImage}
+              dictIcons={this.props.dictIcons}
+              height={this.state.height}
+              scrollY={window.scrollY}
+            />
+          </div>
+        </MediaQuery>
         <div className='login-page__central-content'>
           <div className='h1-typo login-page__title'>
             {this.props.data.title}
@@ -104,14 +108,16 @@ class Login extends React.Component {
             </a>{'.'}
           </div>
         </div>
-        <div className='login-page__side-box'>
-          <SlidingWindow
-            iconName={customImage}
-            dictIcons={this.props.dictIcons}
-            height={this.state.height}
-            scrollY={window.scrollY}
-          />
-        </div>
+        <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
+          <div className='login-page__side-box--right'>
+            <SlidingWindow
+              iconName={customImage}
+              dictIcons={this.props.dictIcons}
+              height={this.state.height}
+              scrollY={window.scrollY}
+            />
+          </div>
+        </MediaQuery>
       </div>
     );
   }
