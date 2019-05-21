@@ -9,13 +9,16 @@ import HIVCohortFilterCase from './HIVCohortFilterCase';
 class LTNPCase extends HIVCohortFilterCase {
   /*
   * LTNP Case:
-  * Below is the full algorithm description from https://ctds-planx.atlassian.net/browse/PXP-2892
+  * Below is the full algorithm description from https://ctds-planx.atlassian.net/browse/PXP-2909
   * The UI displays a 'decision tree' (just hardcoded svg), and makes an es query based on
   * sliding window size and viral load number.
   * Definitions:
   * - Never received HAART treatment: follow_up.thrpyv != HAART
   * - X years: (get.current_year - followup.fposdate)
   * - CD4 > Y: followup.leu3n > Y
+  * - leu3n is the number of CD4 cells (laboratory result summary node)
+  * - fposdate is the year the subject is first seen as hiv_positive (hiv_history node)
+  * - frstdthd is the subject's year of death
   * Definitions:
   * - Never received HAART treatment: follow_up.thrpyv != HAART
   * - viral load< X: followup.viral_load < X
@@ -54,9 +57,8 @@ class LTNPCase extends HIVCohortFilterCase {
       follow_up {
         aggregations(filters: {first: 10000, op: "and", content: [
           {op: "${isHAART ? '=' : '!='}", content: {field: "thrpyv", value: "HAART"}},
-          {op: ">", content: {field: "leu3n", value: "${this.state.CD4FromUser}"}},
           {op: "<=", content: {field: "fposdate", value: "${currentYear - this.state.numConsecutiveYearsFromUser}"}},
-          {op: "=", content: {field: "hiv_status", value: "positive"}}]}) 
+          {op: "=", content: {field: "hiv_status", value: "positive"}}]})
         {
           ${bucketKey} {
             buckets {
@@ -69,11 +71,31 @@ class LTNPCase extends HIVCohortFilterCase {
     }
     `;
     return HIVCohortFilterCase.performQuery(query).then((res) => {
-      if (!res || !res.data) {
+      if (!res || !res.data || !res.data.follow_up || !res.data.follow_up.aggregations) {
         throw new Error('Error while querying subjects with HIV');
       }
       return res.data.follow_up.aggregations[bucketKey].buckets;
     });
+  }
+
+  isALargeAmountOfFollowUpDataMissing = (visitArray, currentYear) => {
+    // If the subject does not have at least 1 visit every Z years, disqualify them
+    const Z = 5;
+    const fposdate = visitArray[0].fposdate;
+    const upperBound = Math.min(visitArray[0].frstdthd, currentYear);
+    if (upperBound - fposdate <= Z - 1 && visitArray.length >= 1) {
+      // If subject has been positive (Z-1) or less years, and there's 1 visit, that's ok
+      return false;
+    }
+
+    for (let yearX = fposdate; yearX <= upperBound - Z; yearX += 1) {
+      const yearFound = visitArray.findIndex(fu => (fu.visit_date >= yearX
+        && fu.visit_date <= yearX + Z));
+      if (yearFound === -1) {
+        return true;
+      }
+    }
+    return false;
   }
 
   classifyAllSubjectLTNP = (subjectToVisitMap) => {
@@ -93,13 +115,19 @@ class LTNPCase extends HIVCohortFilterCase {
         // The subject is neither control nor LTNP
         return;
       }
+
+      if (this.isALargeAmountOfFollowUpDataMissing(visitArray, currentYear)) {
+        // Disqualify the subject because they're missing lots of data
+        return;
+      }
+
       const subjectWithVisits = {
         subject_id: subjectId,
         num_years_hiv_positive: numYearsHIVPositive,
         follow_ups: visitArray,
       };
 
-      const followUpsAfterFposDate = visitArray.filter(x => (x.visit_date > x.fposdate));
+      const followUpsAfterFposDate = visitArray.filter(x => (x.visit_date >= x.fposdate));
       const followUpsWithCD4CountsBelowThresholdAfterFposDate = followUpsAfterFposDate.filter(
         x => (x.leu3n <= this.state.CD4FromUser && x.leu3n != null),
       );
@@ -147,7 +175,7 @@ class LTNPCase extends HIVCohortFilterCase {
   }
 
   downloadLTNP = () => {
-    const fileName = `ltnp-cohort-vload-${this.state.CD4FromUser.toString()
+    const fileName = `ltnp-cohort-CD4-${this.state.CD4FromUser.toString()
     }-years-${this.state.numConsecutiveYearsFromUser.toString()}.json`;
 
     const blob = this.makeCohortJSONFile(this.state.subjectLTNP);

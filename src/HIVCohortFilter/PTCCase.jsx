@@ -106,6 +106,11 @@ class PTCCase extends HIVCohortFilterCase {
         return false;
       }
     }
+
+    if (this.isALargeAmountOfFollowUpDataMissing(visitArray)) {
+      return false;
+    }
+
     return true;
   }
 
@@ -118,12 +123,16 @@ class PTCCase extends HIVCohortFilterCase {
     // For each patient, try to find numConsecutiveMonthsFromUser consecutive
     // visits that match the PTC criteria
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
-      const visitArray = subjectToVisitMap[subjectId];
+      let visitArray = subjectToVisitMap[subjectId];
       const subjectWithVisits = {
         subject_id: subjectId,
         consecutive_haart_treatments_begin_at_followup: 'N/A',
         follow_ups: visitArray,
       };
+
+      // If a followup has no date-related attributes set, it is not helpful to this classifier
+      visitArray = visitArray.filter(x => x.visit_date !== null && x.visit_number !== null);
+
       if (visitArray.length < slidingWindowSize + 1) {
         subjectNeither.push(subjectWithVisits);
         return;
@@ -203,7 +212,7 @@ class PTCCase extends HIVCohortFilterCase {
   makeCohortJSONFile = (subjectsIn) => {
     const annotatedObj = {
       viral_load_upper_bound: this.state.viralLoadFromUser.toString(),
-      num_consective_months_on_haart: this.state.numConsecutiveMonthsFromUser.toString(),
+      num_consecutive_months_on_haart: this.state.numConsecutiveMonthsFromUser.toString(),
       subjects: subjectsIn,
     };
 
