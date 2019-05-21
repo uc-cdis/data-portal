@@ -78,6 +78,11 @@ class ECCase extends HIVCohortFilterCase {
         return false;
       }
     }
+
+    if (this.isALargeAmountOfFollowUpDataMissing(visitArray)) {
+      return false;
+    }
+
     return true;
   }
 
@@ -90,7 +95,7 @@ class ECCase extends HIVCohortFilterCase {
     // For each patient, try to find numConsecutiveMonthsFromUser consecutive
     // visits that match the EC criteria
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
-      const visitArray = subjectToVisitMap[subjectId];
+      let visitArray = subjectToVisitMap[subjectId];
 
       const subjectWithVisits = {
         subject_id: subjectId,
@@ -98,10 +103,14 @@ class ECCase extends HIVCohortFilterCase {
         follow_ups: visitArray,
       };
 
+      // If a followup has no date-related attributes set, it is not helpful to this classifier
+      visitArray = visitArray.filter(x => x.visit_date !== null && x.visit_number !== null);
+
       if (visitArray.length < slidingWindowSize) {
         subjectNeither.push(subjectWithVisits);
         return;
       }
+
       // The sliding window step. Window is of size this.state.numConsecutiveMonthsFromUser / 6
       // Note that this loop differs slightly from the PTC case:
       // we use i<= instead of i<, because we dont need to check the followup immediately
