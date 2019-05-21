@@ -37,7 +37,7 @@ export class SessionMonitor {
   }
 
   pageFromURL(currentURL) {
-    let paths = currentURL.split('/').filter(x => x !== 'dev.html' && x !== '');
+    const paths = currentURL.split('/').filter(x => x !== 'dev.html' && x !== '');
     return paths[paths.length - 1];
   }
 
