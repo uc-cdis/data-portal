@@ -23,6 +23,7 @@ class Workspace extends React.Component {
       notebookStatus: null,
       interval: null,
       notebookType: null,
+      defaultNotebook: false,
     };
     this.notebookStates = [
       'Not Found',
@@ -67,7 +68,7 @@ class Workspace extends React.Component {
         /* eslint-enable */
         this.setState({ options: sortedResults });
       },
-    );
+    ).catch(() => this.setState({ defaultNotebook: true }));
   }
 
   getWorkspaceStatus = async () => fetchWithCreds({
@@ -116,14 +117,16 @@ class Workspace extends React.Component {
 
   connected = () => {
     this.getWorkspaceOptions();
-    this.getWorkspaceStatus().then((status) => {
-      if (status === 'Launching' || status === 'Terminating' || status === 'Error') {
-        this.checkWorkspaceStatus();
-      } else {
-        this.setState({ notebookStatus: status });
-      }
-      this.setState({ connectedStatus: true });
-    });
+    if (!this.state.defaultNotebook) {
+      this.getWorkspaceStatus().then((status) => {
+        if (status === 'Launching' || status === 'Terminating' || status === 'Error') {
+          this.checkWorkspaceStatus();
+        } else {
+          this.setState({ notebookStatus: status });
+        }
+        this.setState({ connectedStatus: true });
+      });
+    }
   }
 
   checkWorkspaceStatus = async () => {
@@ -159,70 +162,79 @@ class Workspace extends React.Component {
       />
     );
 
-    return ((this.state.connectedStatus && this.state.notebookStatus) ?
-      <div className='workspace'>
-        {
-          this.state.notebookStatus === 'Running' ||
-            this.state.notebookStatus === 'Stopped' ?
-            <div className='workspace__iframe'>
-              { terminateButton }
-              <iframe
-                title='Workspace'
-                frameBorder='0'
-                className='workspace'
-                src={`${workspaceUrl}proxy/`}
-              />
-            </div>
-            : null
-        }
-        {
-          this.state.notebookStatus === 'Launching' ?
-            <React.Fragment>
-              { terminateButton }
-              <Spinner text='Launching workspace...' />
-            </React.Fragment>
-            : null
-        }
-        {
-          this.state.notebookStatus === 'Terminating' ?
-            <Spinner text='Terminating workspace...' />
-            : null
-        }
-        {
-          this.state.notebookStatus !== 'Launching' &&
-          this.state.notebookStatus !== 'Terminating' &&
-          this.state.notebookStatus !== 'Running' &&
-          this.state.notebookStatus !== 'Stopped' ?
-            <div className='workspace__options'>
-              {
-                this.state.options.map((option, i) => {
-                  const desc = option['cpu-limit'] ?
-                    `${option['cpu-limit']}CPU, ${option['memory-limit']} memory`
-                    : '';
-                  return (
-                    <WorkspaceOption
-                      key={i}
-                      icon={this.getIcon(option.name)}
-                      title={option.name}
-                      description={desc}
-                      onClick={() => this.launchWorkspace(option)}
-                      isPending={this.state.notebookType === option.name}
-                      isDisabled={
-                        !!this.state.notebookType &&
-                        this.state.notebookType !== option.name
-                      }
-                    />
-                  );
-                })
-              }
-            </div>
-            : null
-        }
-      </div>
-      :
-      <Spinner />
-
-    );
+    if (this.state.connectedStatus && this.state.notebookStatus && !this.state.defaultNotebook) {
+      return (
+        <div className='workspace'>
+          {
+            this.state.notebookStatus === 'Running' ||
+              this.state.notebookStatus === 'Stopped' ?
+              <div className='workspace__iframe'>
+                { terminateButton }
+                <iframe
+                  title='Workspace'
+                  frameBorder='0'
+                  className='workspace'
+                  src={`${workspaceUrl}proxy/`}
+                />
+              </div>
+              : null
+          }
+          {
+            this.state.notebookStatus === 'Launching' ?
+              <React.Fragment>
+                { terminateButton }
+                <Spinner text='Launching workspace...' />
+              </React.Fragment>
+              : null
+          }
+          {
+            this.state.notebookStatus === 'Terminating' ?
+              <Spinner text='Terminating workspace...' />
+              : null
+          }
+          {
+            this.state.notebookStatus !== 'Launching' &&
+            this.state.notebookStatus !== 'Terminating' &&
+            this.state.notebookStatus !== 'Running' &&
+            this.state.notebookStatus !== 'Stopped' ?
+              <div className='workspace__options'>
+                {
+                  this.state.options.map((option, i) => {
+                    const desc = option['cpu-limit'] ?
+                      `${option['cpu-limit']}CPU, ${option['memory-limit']} memory`
+                      : '';
+                    return (
+                      <WorkspaceOption
+                        key={i}
+                        icon={this.getIcon(option.name)}
+                        title={option.name}
+                        description={desc}
+                        onClick={() => this.launchWorkspace(option)}
+                        isPending={this.state.notebookType === option.name}
+                        isDisabled={
+                          !!this.state.notebookType &&
+                          this.state.notebookType !== option.name
+                        }
+                      />
+                    );
+                  })
+                }
+              </div>
+              : null
+          }
+        </div>
+      );
+    } else if (this.state.defaultNotebook && this.state.connectedStatus) {
+      return (
+        <iframe
+          title='Workspace'
+          frameBorder='0'
+          className='workspace'
+          src={workspaceUrl}
+        />
+      );
+    }
+    return <Spinner />;
   }
 }
 
