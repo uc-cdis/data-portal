@@ -53,8 +53,7 @@ class ExplorerButtonGroup extends React.Component {
         });
     }
     if (nextProps.totalCount !== this.props.totalCount
-      && nextProps.totalCount
-      && this.props.totalCount) {
+      && nextProps.totalCount) {
       this.refreshManifestEntryCount();
     }
   }
