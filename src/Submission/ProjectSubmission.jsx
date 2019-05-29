@@ -29,7 +29,7 @@ const ProjectSubmission = (props) => {
   };
 
   return (
-    <div>
+    <div className='project-submission'>
       <h2 className='project-submission__title'>{props.project}</h2>
       {
         <Link className='project-submission__link' to={`/${props.project}/search`}>browse nodes</Link>
