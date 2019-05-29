@@ -18,6 +18,53 @@ const checkArrangerGraphqlField = (arrangerConfig) => {
 };
 
 /**
+ * Create manifest JSON for selected rows in arranger table.
+ * @param {function} apiFunc - function created by arranger for fetching data
+ * @param {string} projectId - arranger project ID
+ * @param {string[]} selectedTableRows - list of ids of selected rows
+ * @param {Object} arrangerConfig - arranger configuration object
+ * @param {string} arrangerConfig.manifestMapping.resourceIndexType - type name of resource index
+ * @param {string} arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex - name of
+ *                                reference field in resource index
+ */
+const createManifestByFilter = async (
+  apiFunc,
+  projectId,
+  selectedTableRows,
+  arrangerConfig,
+) => {
+  // Fetch docs by bucket for this key
+  const key = arrangerConfig.manifestMapping.divideKey;
+  const rowFilter = {
+    name: arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
+    values: selectedTableRows,
+  };
+  let filtersByKey = [[rowFilter]];
+  if (key !== undefined) {
+    const keyBuckets = await queryAggregations(
+      apiFunc,
+      projectId,
+      arrangerConfig.manifestMapping.resourceIndexType,
+      key,
+    );
+    filtersByKey = keyBuckets.map(
+      bucket => [rowFilter, { name: key, values: [bucket.key] }]);
+  }
+  const manifestJSON = await Promise.all(
+    filtersByKey.map(filters => queryDataByValues(
+      apiFunc,
+      projectId,
+      arrangerConfig.manifestMapping.resourceIndexType,
+      filters,
+      [
+        arrangerConfig.manifestMapping.resourceIdField,
+        arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
+      ],
+    )));
+  return manifestJSON;
+};
+
+/**
  * Download selected data in arranger table.
  * @param {function} apiFunc - function created by arranger for fetching data
  * @param {string} projectId - arranger project ID
@@ -58,18 +105,11 @@ export const downloadData = async (
  * @param {string} projectId - arranger project ID
  * @param {string[]} selectedTableRows - list of ids of selected rows
  * @param {Object} arrangerConfig - arranger configuration object
- * @param {string} arrangerConfig.graphqlField - the data type name for arranger
- * @param {string} arrangerConfig.manifestMapping.resourceIndexType - type name of resource index
- * @param {string} arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex - name of
- *                                reference field in resource index
- * @param {string} arrangerConfig.manifestMapping.referenceIdFieldInDataIndex - name of
- *                                reference field in data index
  * @param {string} fileName - file name for downloading
  */
 export const downloadManifest = async (
   apiFunc,
   projectId,
-  graphqlIdField,
   selectedTableRows,
   arrangerConfig,
   fileName,
@@ -80,30 +120,11 @@ export const downloadManifest = async (
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
     throw MSG_DOWNLOAD_MANIFEST_FAIL;
   }
-  const resourceIDList = (await queryDataByIds(
+  const manifestJSON = await createManifestByFilter(
     apiFunc,
     projectId,
-    graphqlIdField,
     selectedTableRows,
-    arrangerConfig.graphqlField,
-    [arrangerConfig.manifestMapping.referenceIdFieldInDataIndex],
-  )).map((d) => {
-    if (!d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex]) {
-      throw MSG_DOWNLOAD_MANIFEST_FAIL;
-    }
-    return d[arrangerConfig.manifestMapping.referenceIdFieldInDataIndex];
-  });
-  const manifestJSON = await queryDataByValues(
-    apiFunc,
-    projectId,
-    arrangerConfig.manifestMapping.resourceIndexType,
-    arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-    resourceIDList,
-    [
-      arrangerConfig.manifestMapping.resourceIdField,
-      arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-    ],
-  );
+    arrangerConfig);
   const blob = new Blob([JSON.stringify(manifestJSON, null, 2)], { type: 'text/json' });
   FileSaver.saveAs(blob, fileName);
 };
@@ -114,18 +135,12 @@ export const downloadManifest = async (
  * @param {string} projectId - arranger project ID
  * @param {string[]} selectedTableRows - list of ids of selected rows
  * @param {Object} arrangerConfig - arranger configuration object
- * @param {string} arrangerConfig.graphqlField - the data type name for arranger
- * @param {string} arrangerConfig.manifestMapping.resourceIndexType - type name of resource index
- * @param {string} arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex - name of
- *                                reference field in resource index
- * @param {string} arrangerConfig.manifestMapping.referenceIdFieldInDataIndex - name of
- *                                reference field in data index
- * @param {string} fileName - file name for downloading
+ * @param {Function} callback - callback function on success
+ * @param {Function} errorCallback - callback function on error
  */
 export const exportToWorkspace = async (
   apiFunc,
   projectId,
-  graphqlIdField,
   selectedTableRows,
   arrangerConfig,
   callback,
@@ -137,34 +152,11 @@ export const exportToWorkspace = async (
     || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
     errorCallback(500, MSG_EXPORT_MANIFEST_FAIL);
   }
-  // Fetch docs by bucket for this key
-  const key = arrangerConfig.manifestMapping.divideKey
-  const rowFilter = {
-    name: arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-    values: selectedTableRows
-  }
-  let filtersByKey = [[rowFilter]]
-  if (key !== undefined ){
-    const keyBuckets = await queryAggregations(
-      apiFunc,
-      projectId,
-      arrangerConfig.manifestMapping.resourceIndexType,
-      key,
-    )
-    filtersByKey = keyBuckets.map(
-      bucket => [rowFilter, {name: key, values: [bucket.key]}])
-  }
-  const manifestJSON = await Promise.all(
-    filtersByKey.map(filters => queryDataByValues(
+  const manifestJSON = await createManifestByFilter(
     apiFunc,
     projectId,
-    arrangerConfig.manifestMapping.resourceIndexType,
-    filters,
-    [
-      arrangerConfig.manifestMapping.resourceIdField,
-      arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-    ],
-  )));
+    selectedTableRows,
+    arrangerConfig);
   fetchWithCreds({
     path: `${manifestServiceApiPath}`,
     body: JSON.stringify(manifestJSON.flat()),
@@ -194,8 +186,6 @@ export const exportToWorkspace = async (
  * @param {string} arrangerConfig.manifestMapping.resourceIndexType - type name of resource index
  * @param {string} arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex - name of
  *                                reference field in resource index
- * @param {string} arrangerConfig.manifestMapping.referenceIdFieldInDataIndex - name of
- *                                reference field in data index
  * @returns {number} number of manifest entries
  */
 export const getManifestEntryCount = async (
@@ -218,7 +208,7 @@ export const getManifestEntryCount = async (
     arrangerConfig.manifestMapping.resourceIndexType,
     [{
       name: arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-      values:selectedTableRows
+      values: selectedTableRows,
     }],
   );
   return manifestEntryCount;
