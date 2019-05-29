@@ -47,7 +47,6 @@ class DataExplorerVisualizations extends React.Component {
     downloadManifest(
       this.props.api,
       this.props.projectId,
-      this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
       this.state.nodeIds,
       this.props.dataExplorerConfig.arrangerConfig,
       fileName,
@@ -80,7 +79,6 @@ class DataExplorerVisualizations extends React.Component {
      exportToWorkspace(
        this.props.api,
        this.props.projectId,
-       this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
        this.state.nodeIds,
        this.props.dataExplorerConfig.arrangerConfig,
        this.exportToWorkspaceCallback,
