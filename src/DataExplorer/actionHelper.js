@@ -32,7 +32,18 @@ const createManifestByFilter = async (
   projectId,
   selectedTableRows,
   arrangerConfig,
+  errorCallback,
+  messageOnFail,
 ) => {
+  checkArrangerGraphqlField(arrangerConfig);
+  if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
+    || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
+    if (errorCallback === undefined) {
+      throw messageOnFail;
+    } else {
+      errorCallback(500, messageOnFail);
+    }
+  }
   // Fetch docs by bucket for this key
   const key = arrangerConfig.manifestMapping.divideKey;
   const rowFilter = {
@@ -115,16 +126,13 @@ export const downloadManifest = async (
   fileName,
 ) => {
   const MSG_DOWNLOAD_MANIFEST_FAIL = 'Error downloading manifest file';
-  checkArrangerGraphqlField(arrangerConfig);
-  if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
-    || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
-    throw MSG_DOWNLOAD_MANIFEST_FAIL;
-  }
   const manifestJSON = await createManifestByFilter(
     apiFunc,
     projectId,
     selectedTableRows,
-    arrangerConfig);
+    arrangerConfig,
+    undefined,
+    MSG_DOWNLOAD_MANIFEST_FAIL);
   const blob = new Blob([JSON.stringify(manifestJSON, null, 2)], { type: 'text/json' });
   FileSaver.saveAs(blob, fileName);
 };
@@ -146,17 +154,15 @@ export const exportToWorkspace = async (
   callback,
   errorCallback,
 ) => {
-  const MSG_EXPORT_MANIFEST_FAIL = 'Error exporting manifest file';
-  checkArrangerGraphqlField(arrangerConfig);
-  if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
-    || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
-    errorCallback(500, MSG_EXPORT_MANIFEST_FAIL);
-  }
+  const MSG_EXPORT_MANIFEST_FAIL = 'Error exporting manifest file.';
+  const MSG_EXPORT_FAIL = 'There was an error exporting your cohort.';
   const manifestJSON = await createManifestByFilter(
     apiFunc,
     projectId,
     selectedTableRows,
-    arrangerConfig);
+    arrangerConfig,
+    errorCallback,
+    MSG_EXPORT_MANIFEST_FAIL);
   fetchWithCreds({
     path: `${manifestServiceApiPath}`,
     body: JSON.stringify(manifestJSON.flat()),
@@ -169,7 +175,7 @@ export const exportToWorkspace = async (
           callback(data);
           return;
         default:
-          errorCallback(status);
+          errorCallback(status, MSG_EXPORT_FAIL);
         }
       },
     );
@@ -191,7 +197,6 @@ export const exportToWorkspace = async (
 export const getManifestEntryCount = async (
   apiFunc,
   projectId,
-  graphqlIdField,
   selectedTableRows,
   arrangerConfig,
 ) => {
