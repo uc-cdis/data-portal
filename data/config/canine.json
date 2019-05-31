@@ -156,9 +156,15 @@
             "project_id",
             "gender",
             "breed",
-            "disease_type",
             "data_format",
             "data_type"
+          ]
+        },
+        {
+          "title": "Diagnosis",
+          "fields":[
+            "disease_type",
+            "primary_site"
           ]
         }
       ]
@@ -168,6 +174,7 @@
       "fields": [
         "project_id",
         "disease_type",
+        "primary_site",
         "breed",
         "gender",
         "data_format",
@@ -191,12 +198,6 @@
         "rightIcon": "external-link"
       }
     ],
-    "arrangerConfig": {
-      "projectId": "search",
-      "graphqlField": "subject",
-      "index": "",
-      "nodeCountField": "node_id"
-    },
     "guppyConfig": {
       "dataType": "subject",
       "nodeCountTitle": "Subjects",
