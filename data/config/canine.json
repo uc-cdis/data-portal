@@ -1,0 +1,214 @@
+{
+  "gaTrackingId": "UA-119127212-9",
+  "graphql": {
+    "boardCounts": [
+      {
+        "graphql": "_subject_count",
+        "name": "Subject",
+        "plural": "Subjects"
+      },
+      {
+        "graphql": "_study_count",
+        "name": "Study",
+        "plural": "Studies"
+      },
+      {
+        "graphql": "_aliquot_count",
+        "name": "Aliquot",
+        "plural": "Aliquots"
+      }
+    ],
+    "chartCounts": [
+      {
+        "graphql": "_subject_count",
+        "name": "Subject"
+      },
+      {
+        "graphql": "_study_count",
+        "name": "Study"
+      },
+      {
+        "graphql": "_aliquot_count",
+        "name": "Aliquot"
+      }
+    ],
+    "projectDetails": "boardCounts"
+  },
+  "components": {
+    "appName": "Canine Data Commons",
+    "index": {
+      "introduction": {
+        "heading": "Canine Data Commons",
+        "text": "The Canine Data Commons supports the management, analysis and sharing of genomics data for the canine research community and aims to accelerate opportunities for discovery and development for the treatment and prevention of canine cancer. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.",
+        "link": "/submission"
+      },
+      "buttons": [
+        {
+          "name": "Define Data Field",
+          "icon": "data-field-define",
+          "body": "The Generic Data Commons define the data in a general way. Please study the dictionary before you start browsing.",
+          "link": "/DD",
+          "label": "Learn more"
+        },
+        {
+          "name": "Explore Data",
+          "icon": "data-explore",
+          "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
+          "link": "/explorer",
+          "label": "Explore data"
+        },
+        {
+          "name": "Access Data",
+          "icon": "data-access",
+          "body": "Use our selected tool to filter out the data you need.",
+          "link": "/query",
+          "label": "Query data"
+        },
+        {
+          "name": "Submit Data",
+          "icon": "data-submit",
+          "body": "Submit Data based on the dictionary.",
+          "link": "/submission",
+          "label": "Submit data"
+        }
+      ]
+    },
+    "navigation": {
+      "title": "Canine Data Commons",
+      "items": [
+        {
+          "icon": "dictionary",
+          "link": "/DD",
+          "color": "#a2a2a2",
+          "name": "Dictionary"
+        },
+        {
+          "icon": "exploration",
+          "link": "/explorer",
+          "color": "#a2a2a2",
+          "name": "Exploration"
+        },
+        {
+          "icon": "files",
+          "link": "/files",
+          "color": "#a2a2a2",
+          "name": "Files"
+        },
+        {
+          "icon": "query",
+          "link": "/query",
+          "color": "#a2a2a2",
+          "name": "Query"
+        },
+        {
+          "icon": "workspace",
+          "link": "#hostname#workspace/",
+          "color": "#a2a2a2",
+          "name": "Workspace"
+        },
+        {
+          "icon": "profile",
+          "link": "/identity",
+          "color": "#a2a2a2",
+          "name": "Profile"
+        }
+      ]
+    },
+    "login": {
+      "title": "Canine Data Commons",
+      "subTitle": "explore, analyze, and share research data",
+      "text": "This website analyzes and shares genomic architecture of modern dog breeds and runs analysis for canine cancer to create clean, easy to navigate visualizations for data-driven discovery for canine cancer.",
+      "contact": "If you have any questions about access or the registration process, please contact ",
+      "email": "support@datacommons.io"
+    }
+  },
+  "featureFlags": {
+    "explorer": true
+  },
+  "dataExplorerConfig": {
+    "charts": {
+      "project_id": {
+        "chartType": "count",
+        "title": "Projects"
+      },
+      "node_id": {
+        "chartType": "count",
+        "title": "Subjects"
+      },
+      "breed": {
+        "chartType": "bar",
+        "title": "Breed"
+      },
+      "disease_type": {
+        "chartType": "bar",
+        "title": "Disease Type"
+      },
+      "data_format": {
+        "chartType": "bar",
+        "title": "Data Format"
+      }
+    },
+    "filters": {
+      "tabs": [
+        {
+          "title": "Subject",
+          "fields":[
+            "project_id",
+            "gender",
+            "breed",
+            "data_format",
+            "data_type"
+          ]
+        },
+        {
+          "title": "Diagnosis",
+          "fields":[
+            "disease_type",
+            "primary_site"
+          ]
+        }
+      ]
+    },
+    "table": {
+      "enabled": true,
+      "fields": [
+        "project_id",
+        "disease_type",
+        "primary_site",
+        "breed",
+        "gender",
+        "data_format",
+        "data_type"
+      ]
+    },
+    "buttons": [
+      {
+        "enabled": true,
+        "type": "data",
+        "title": "Download All Clinical",
+        "leftIcon": "user",
+        "rightIcon": "download",
+        "fileName": "clinical.json"
+      },
+      {
+        "enabled": true,
+        "type": "export-to-workspace",
+        "title": "Export to Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "external-link"
+      }
+    ],
+    "guppyConfig": {
+      "dataType": "subject",
+      "nodeCountTitle": "Subjects",
+      "fieldMapping": [
+      ],
+      "manifestMapping": {
+        "resourceIndexType": "file",
+        "resourceIdField": "object_id",
+        "referenceIdFieldInResourceIndex": "subject_id",
+        "referenceIdFieldInDataIndex": "subject_id"
+      }
+    }
+  }
+}
