@@ -26,6 +26,9 @@ const checkArrangerGraphqlField = (arrangerConfig) => {
  * @param {string} arrangerConfig.manifestMapping.resourceIndexType - type name of resource index
  * @param {string} arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex - name of
  *                                reference field in resource index
+ * @param {string} messageOnFail - message for describing a failure
+ * @param {Function} errorCallback - callback function on error (Optional)
+ *                                If undefined, simply throw error message
  */
 const createManifestByFilter = async (
   apiFunc,
