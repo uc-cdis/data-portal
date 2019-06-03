@@ -136,7 +136,7 @@ export const downloadManifest = async (
     arrangerConfig,
     undefined,
     MSG_DOWNLOAD_MANIFEST_FAIL);
-  const blob = new Blob([JSON.stringify(manifestJSON, null, 2)], { type: 'text/json' });
+  const blob = new Blob([JSON.stringify(manifestJSON.flat(), null, 2)], { type: 'text/json' });
   FileSaver.saveAs(blob, fileName);
 };
 
