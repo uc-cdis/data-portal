@@ -53,8 +53,7 @@ class ExplorerButtonGroup extends React.Component {
         });
     }
     if (nextProps.totalCount !== this.props.totalCount
-      && nextProps.totalCount
-      && this.props.totalCount) {
+      && nextProps.totalCount) {
       this.refreshManifestEntryCount();
     }
   }
@@ -243,6 +242,7 @@ class ExplorerButtonGroup extends React.Component {
     buttonConfig.type === 'export-to-pfb';
 
   refreshManifestEntryCount = async () => {
+    if (this.props.isLocked) return;
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     const caseFieldInFileIndex =
       this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
