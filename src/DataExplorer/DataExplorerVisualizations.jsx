@@ -47,7 +47,6 @@ class DataExplorerVisualizations extends React.Component {
     downloadManifest(
       this.props.api,
       this.props.projectId,
-      this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
       this.state.nodeIds,
       this.props.dataExplorerConfig.arrangerConfig,
       fileName,
@@ -80,7 +79,6 @@ class DataExplorerVisualizations extends React.Component {
      exportToWorkspace(
        this.props.api,
        this.props.projectId,
-       this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
        this.state.nodeIds,
        this.props.dataExplorerConfig.arrangerConfig,
        this.exportToWorkspaceCallback,
@@ -115,11 +113,12 @@ class DataExplorerVisualizations extends React.Component {
 
   isToasterOpen = () => this.state.toasterOpen
 
-  exportToWorkspaceErrorCallback = (status) => {
+  exportToWorkspaceErrorCallback = (status, errorText) => {
     this.setState({
       toasterOpen: true,
       exportStatus: status,
       exportInProgress: false,
+      toasterErrorText: errorText,
     });
   }
 
@@ -144,7 +143,6 @@ class DataExplorerVisualizations extends React.Component {
       getManifestEntryCount(
         this.props.api,
         this.props.projectId,
-        this.props.dataExplorerConfig.arrangerConfig.nodeCountField,
         this.state.nodeIds,
         this.props.dataExplorerConfig.arrangerConfig,
       ).then((r) => {
