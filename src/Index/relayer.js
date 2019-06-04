@@ -2,6 +2,7 @@ import { fetchQuery } from 'relay-runtime';
 import environment from '../environment';
 import { GQLHelper } from '../gqlHelper';
 import getReduxStore from '../reduxStore';
+import { config } from '../params';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
@@ -35,16 +36,16 @@ const updateReduxError = async error => getReduxStore().then(
  */
 const transformRelayProps = (data) => {
   const { fileCount } = GQLHelper.extractFileInfo(data);
+  const nodeCount = Math.min(config.graphql.boardCounts.length + 1, 4);
   const projectList = (data.projectList || []).map(
     proj =>
       // fill in missing properties
       Object.assign({ name: 'unknown',
-        counts: [0, 0, 0, 0],
+        counts: (new Array(nodeCount)).fill(0),
         charts: [0, 0],
       }, proj),
 
   );
-  // console.log( "Got filecount: " + fileCount );
   let summaryCounts = Object.keys(data).filter(
     key => key.indexOf('count') === 0).map(key => key).sort()
     .map(key => data[key],
