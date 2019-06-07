@@ -13,6 +13,8 @@ function buildConfig(opts) {
     app: process.env.APP || 'generic',
     basename: process.env.BASENAME || '/',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
+    fenceURL: process.env.FENCE_URL,
+    indexdURL: process.env.INDEXD_URL,
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
@@ -32,10 +34,20 @@ function buildConfig(opts) {
     app,
     basename,
     hostname,
+    fenceURL,
+    indexdURL,
     gaDebug,
     tierAccessLevel,
     tierAccessLimit,
   } = Object.assign({}, defaults, opts);
+
+  function ensureTailingSlash(url) {
+    let u = new URL(url);
+    u.pathname += u.pathname.endsWith('/') ? '' : '/';
+    u.hash = '';
+    u.search = '';
+    return u.href;
+  }
 
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
@@ -43,11 +55,11 @@ function buildConfig(opts) {
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   const arrangerGraphqlPath = `${hostname}api/v0/flat-search/search/graphql`;
-  let userapiPath = `${hostname}user/`;
+  let userapiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTailingSlash(fenceURL);
   const jobapiPath = `${hostname}job/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
-  const indexdPath = `${hostname}index/`;
+  const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTailingSlash(indexdURL);
   const wtsPath = `${hostname}wts/oauth2/`;
   let login = {
     url: `${userapiPath}login/google?redirect=`,
@@ -98,7 +110,7 @@ function buildConfig(opts) {
     ],
   };
 
-  if (app === 'gdc') {
+  if (app === 'gdc' && typeof fenceURL === 'undefined') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
     login = {
       url: 'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',

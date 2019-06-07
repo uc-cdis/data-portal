@@ -29,6 +29,8 @@ const plugins = [
   new webpack.EnvironmentPlugin(['REACT_APP_DISABLE_SOCKET']),
   new webpack.EnvironmentPlugin(['TIER_ACCESS_LEVEL']),
   new webpack.EnvironmentPlugin(['TIER_ACCESS_LIMIT']),
+  new webpack.EnvironmentPlugin(['FENCE_URL']),
+  new webpack.EnvironmentPlugin(['INDEXD_URL']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev'),
@@ -42,6 +44,16 @@ const plugins = [
     title: title,
     basename: pathPrefix,
     template: 'src/index.ejs',
+    connect_src: (function () {
+      let rv = {};
+      if (typeof process.env.FENCE_URL !== 'undefined') {
+        rv[(new URL(process.env.FENCE_URL)).origin] = true;
+      }
+      if (typeof process.env.INDEXD_URL !== 'undefined') {
+        rv[(new URL(process.env.INDEXD_URL)).origin] = true;
+      }
+      return Object.keys(rv).join(' ');
+    })(),
     hash: true
   }),
   new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
