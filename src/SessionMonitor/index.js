@@ -1,4 +1,4 @@
-import { logoutInactiveUsers } from '../localconf';
+import { logoutInactiveUsers, workspaceTimeoutInMinutes } from '../localconf';
 import getReduxStore from '../reduxStore';
 import { fetchUser, fetchUserNoRefresh } from '../actions';
 
@@ -7,6 +7,7 @@ export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
     this.updateSessionTime = updateSessionTime || 5 * 60 * 1000;
     this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
+    this.inactiveWorkspaceTimeLimit = workspaceTimeoutInMinutes * 60 * 1000 || 30 * 60 * 1000;
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
     this.popupShown = false;
@@ -51,11 +52,21 @@ export class SessionMonitor {
     }
 
     const timeSinceLastActivity = Date.now() - this.mostRecentActivityTimestamp;
+
     // If user has been inactive for Y min, and they are not in a workspace
     if (timeSinceLastActivity >= this.inactiveTimeLimit
         && !this.isUserOnPage('workspace')
         && logoutInactiveUsers) {
       // Allow Fence to log out the user. If we don't refresh, Fence will mark them as inactive.
+      this.notifyUserIfTheyAreNotLoggedIn();
+      return Promise.resolve(0);
+    }
+
+    // If the user has been inactive for this.inactiveWorkspaceTimeLimit minutes
+    // and they *are* in a workspace
+    if (timeSinceLastActivity >= this.inactiveWorkspaceTimeLimit
+        && this.isUserOnPage('workspace')
+        && logoutInactiveUsers) {
       this.notifyUserIfTheyAreNotLoggedIn();
       return Promise.resolve(0);
     }
