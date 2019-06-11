@@ -5,6 +5,7 @@
 #  APP = commons specific
 #  HOSTNAME = where to download graphql schema from
 #  LOGOUT_INACTIVE_USERS = bool, should inactive users be logged out before session lifetime ends
+#  WORKSPACE_TIMEOUT_IN_MINUTES = minutes after which to logout workspace user if logout_inactive false
 #  TIER_ACCESS_LEVEL = the access level of a common (libre, regular or private)
 #  TIER_ACCESS_LIMIT = the minimum visible count for aggregation results
 #
@@ -17,7 +18,7 @@ export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
 export TIER_ACCESS_LEVEL="${TIER_ACCESS_LEVEL:-"private"}"
 export TIER_ACCESS_LIMIT="${TIER_ACCESS_LIMIT:-"1000"}"
 export LOGOUT_INACTIVE_USERS="${LOGOUT_INACTIVE_USERS:-"true"}"
-
+export WORKSPACE_TIMEOUT_IN_MINUTES="${WORKSPACE_TIMEOUT_IN_MINUTES:-"30"}"
 
 
 # lib -----------------------------
@@ -59,7 +60,7 @@ gitops_config() {
     gitRepo="gitops-dev"
   fi
   if [[ ! -d "../$gitRepo" ]]; then
-	  # git clone
+    # git clone
     echo "ERROR: ../$gitRepo does not exist - please clone https://github.com/uc-cdis/${gitRepo}.git"
     return 1
   fi
