@@ -103,11 +103,11 @@ class MapDataModel extends React.Component {
     const isInteger = this.isInteger(prop);
     let castOption = null;
     if (option && option.target) {
-      castOption = isInteger ? parseInt(option.target.value) : option.target.value;
+      castOption = isInteger ? parseInt(option.target.value, 10) : option.target.value;
     } else if (option && option.value) {
-      castOption = isInteger ? parseInt(option.value) : option.value;
+      castOption = isInteger ? parseInt(option.value, 10) : option.value;
     }
-    fields[prop] = castOption ? castOption : null;
+    fields[prop] = castOption || null;
     this.setState({ requiredFields: fields });
   }
 
