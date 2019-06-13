@@ -100,11 +100,14 @@ class MapDataModel extends React.Component {
   selectRequiredField = (option, prop) => {
     const fields = this.state.requiredFields;
     fields[prop] = null;
+    const isInteger = this.isInteger(prop);
+    let castOption = null;
     if (option && option.target) {
-      fields[prop] = this.isInteger(prop) ? parseInt(option.target.value, 10) : option.target.value;
+      castOption = isInteger ? parseInt(option.target.value) : option.target.value;
     } else if (option && option.value) {
-      fields[prop] = this.isInteger(prop) ? parseInt(option.value, 10) : option.value;
+      castOption = isInteger ? parseInt(option.value) : option.value;
     }
+    fields[prop] = castOption ? castOption : null;
     this.setState({ requiredFields: fields });
   }
 
