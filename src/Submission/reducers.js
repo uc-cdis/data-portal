@@ -83,7 +83,7 @@ const submission = (state = {}, action) => {
       submit_result_string: '',
       submit_status: 0,
       submit_counter: 0,
-      submit_total: 0
+      submit_total: 0,
     };
   default:
     return state;

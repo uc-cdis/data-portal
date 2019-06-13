@@ -101,11 +101,20 @@ class MapDataModel extends React.Component {
     const fields = this.state.requiredFields;
     fields[prop] = null;
     if (option && option.target) {
-      fields[prop] = option.target.value;
+      fields[prop] = this.isInteger(prop) ? parseInt(option.target.value, 10) : option.target.value;
     } else if (option && option.value) {
-      fields[prop] = option.value;
+      fields[prop] = this.isInteger(prop) ? parseInt(option.value, 10) : option.value;
     }
     this.setState({ requiredFields: fields });
+  }
+
+  isInteger = (prop) => {
+    if (this.state.nodeType && this.props.dictionary[this.state.nodeType] &&
+      this.props.dictionary[this.state.nodeType].properties[prop]) {
+      return this.props.dictionary[this.state.nodeType].properties[prop].type === 'integer' ||
+          this.props.dictionary[this.state.nodeType].properties[prop].type === 'number';
+    }
+    return false;
   }
 
   fetchAllSubmitterIds = () => {
@@ -241,7 +250,8 @@ class MapDataModel extends React.Component {
                   {
                     Object.keys(this.state.requiredFields).map((prop, i) => {
                       const type = this.props.dictionary[this.state.nodeType].properties[prop];
-                      const inputValue = this.state.requiredFields[prop];
+                      const inputValue = this.state.requiredFields[prop] ?
+                        this.state.requiredFields[prop].toString() : null;
 
                       return (
                         <div key={i} className='map-data-model__required-field'>
