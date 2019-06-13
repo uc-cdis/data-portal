@@ -97,15 +97,47 @@ class MapDataModel extends React.Component {
     });
   }
 
+  castOption = (value, prop) => {
+    const isNumber = this.isNumber(prop);
+    const isInteger = this.isInteger(prop);
+    let option = null;
+    if (isNumber) {
+      option = parseFloat(value);
+    } else if (isInteger) {
+      option = parseInt(value, 10);
+    } else {
+      option = value;
+    }
+    return option;
+  }
+
   selectRequiredField = (option, prop) => {
     const fields = this.state.requiredFields;
     fields[prop] = null;
+    let castedOption = null;
     if (option && option.target) {
-      fields[prop] = option.target.value;
+      castedOption = this.castOption(option.target.value, prop);
     } else if (option && option.value) {
-      fields[prop] = option.value;
+      castedOption = this.castOption(option.value, prop);
     }
+    fields[prop] = castedOption || null;
     this.setState({ requiredFields: fields });
+  }
+
+  isInteger = (prop) => {
+    if (this.state.nodeType && this.props.dictionary[this.state.nodeType] &&
+      this.props.dictionary[this.state.nodeType].properties[prop]) {
+      return this.props.dictionary[this.state.nodeType].properties[prop].type === 'integer';
+    }
+    return false;
+  }
+
+  isNumber = (prop) => {
+    if (this.state.nodeType && this.props.dictionary[this.state.nodeType] &&
+      this.props.dictionary[this.state.nodeType].properties[prop]) {
+      return this.props.dictionary[this.state.nodeType].properties[prop].type === 'number';
+    }
+    return false;
   }
 
   fetchAllSubmitterIds = () => {
@@ -241,7 +273,8 @@ class MapDataModel extends React.Component {
                   {
                     Object.keys(this.state.requiredFields).map((prop, i) => {
                       const type = this.props.dictionary[this.state.nodeType].properties[prop];
-                      const inputValue = this.state.requiredFields[prop];
+                      const inputValue = this.state.requiredFields[prop] ?
+                        this.state.requiredFields[prop].toString() : null;
 
                       return (
                         <div key={i} className='map-data-model__required-field'>
