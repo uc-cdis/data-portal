@@ -97,25 +97,45 @@ class MapDataModel extends React.Component {
     });
   }
 
+  castOption = (value, prop) => {
+    const isNumber = this.isNumber(prop);
+    const isInteger = this.isInteger(prop);
+    let option = null;
+    if (isNumber) {
+      option = parseFloat(value);
+    } else if (isInteger) {
+      option = parseInt(value, 10);
+    } else {
+      option = value;
+    }
+    return option;
+  }
+
   selectRequiredField = (option, prop) => {
     const fields = this.state.requiredFields;
     fields[prop] = null;
-    const isInteger = this.isInteger(prop);
-    let castOption = null;
+    let castedOption = null;
     if (option && option.target) {
-      castOption = isInteger ? parseInt(option.target.value, 10) : option.target.value;
+      castedOption = this.castOption(option.target.value, prop);
     } else if (option && option.value) {
-      castOption = isInteger ? parseInt(option.value, 10) : option.value;
+      castedOption = this.castOption(option.value, prop);
     }
-    fields[prop] = castOption || null;
+    fields[prop] = castedOption || null;
     this.setState({ requiredFields: fields });
   }
 
   isInteger = (prop) => {
     if (this.state.nodeType && this.props.dictionary[this.state.nodeType] &&
       this.props.dictionary[this.state.nodeType].properties[prop]) {
-      return this.props.dictionary[this.state.nodeType].properties[prop].type === 'integer' ||
-          this.props.dictionary[this.state.nodeType].properties[prop].type === 'number';
+      return this.props.dictionary[this.state.nodeType].properties[prop].type === 'integer';
+    }
+    return false;
+  }
+
+  isNumber = (prop) => {
+    if (this.state.nodeType && this.props.dictionary[this.state.nodeType] &&
+      this.props.dictionary[this.state.nodeType].properties[prop]) {
+      return this.props.dictionary[this.state.nodeType].properties[prop].type === 'number';
     }
     return false;
   }
