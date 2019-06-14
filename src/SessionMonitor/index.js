@@ -5,15 +5,12 @@ import { fetchUser, fetchUserNoRefresh } from '../actions';
 /* eslint-disable class-methods-use-this */
 export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
-    this.updateSessionTime = updateSessionTime || 0.5 * 60 * 1000;
-    this.inactiveTimeLimit = inactiveTimeLimit || 0.3 * 60 * 1000;
+    this.updateSessionTime = updateSessionTime || 5 * 60 * 1000;
+    this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
     this.inactiveWorkspaceTimeLimit = workspaceTimeoutInMinutes * 60 * 1000 || 30 * 60 * 1000;
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
     this.popupShown = false;
-
-    console.log('workspace timeout: ', workspaceTimeoutInMinutes);
-    console.log('logout inactive: ', logoutInactiveUsers);
   }
 
   start() {
@@ -67,15 +64,12 @@ export class SessionMonitor {
 
     // If the user has been inactive for this.inactiveWorkspaceTimeLimit minutes
     // and they *are* in a workspace
-    console.log('70');
     if (timeSinceLastActivity >= this.inactiveWorkspaceTimeLimit
         && this.isUserOnPage('workspace')
         && logoutInactiveUsers) {
-      console.log('74');
       this.notifyUserIfTheyAreNotLoggedIn();
       return Promise.resolve(0);
     }
-    console.log('78');
 
     return this.refreshSession();
   }
