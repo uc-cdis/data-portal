@@ -8,7 +8,7 @@ describe('Arranger query helper', () => {
   const queryForCount = constructGraphQLQuery(
     [{
       name: fieldName,
-      values: values,
+      values,
     }],
     indexType,
     [...targetFields],
@@ -43,7 +43,7 @@ describe('Arranger query helper', () => {
   const queryForData = constructGraphQLQuery(
     [{
       name: fieldName,
-      values: values,
+      values,
     }],
     indexType,
     [...targetFields],
