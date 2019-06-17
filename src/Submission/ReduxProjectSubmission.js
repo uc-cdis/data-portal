@@ -32,7 +32,7 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
   const method = path === 'graphql' ? 'POST' : methodIn;
   let file = submission.file;
 
-  dispatch({ type: 'RESET_CHUNK_COUNTER' });
+  dispatch({ type: 'RESET_SUBMISSION_STATUS' });
 
   if (!file) {
     return Promise.reject('No file to submit');

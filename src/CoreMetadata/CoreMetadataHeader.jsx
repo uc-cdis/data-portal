@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import {
+  userapiPath,
+} from '../configs';
 
 const DOWNLOAD_BTN_CAPTION = 'Download';
 
@@ -51,7 +54,7 @@ class CoreMetadataHeader extends Component {
       const canDownload = canUserDownload(user, projectAvail, projectId);
       let downloadButton = null;
       if (canDownload) {
-        const downloadLink = `/user/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
+        const downloadLink = `${userapiPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
 
         downloadButton = (
           <a href={downloadLink}>

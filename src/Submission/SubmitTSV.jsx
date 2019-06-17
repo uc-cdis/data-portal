@@ -55,6 +55,12 @@ const SubmitTSV = ({ project, submission, onUploadClick,
     reader.readAsBinaryString(f);
   };
 
+  const resetFileBeforeUpdate = (e) => {
+    // In chrome we need to reset the file input value so that
+    // onChange will be triggered when user upload same file again.
+    e.currentTarget.value = null;
+  };
+
   const onSubmitClickEvent = () => {
     onSubmitClick(project);
   };
@@ -77,6 +83,7 @@ const SubmitTSV = ({ project, submission, onUploadClick,
         >
           <input
             type='file'
+            onClick={resetFileBeforeUpdate}
             onChange={processUpload}
             name='file-upload'
             className='submit-tsv__file-upload'

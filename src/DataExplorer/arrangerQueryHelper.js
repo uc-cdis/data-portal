@@ -97,7 +97,7 @@ export const constructAggregationQuery = (
                     }
                   }
                 }
-              }`
+              }`,
   };
   return gqlQuery;
 };
@@ -127,7 +127,7 @@ export const queryAggregations = async (
   if (!responseData) {
     throw MSG_QUERY_BY_AGG_FAIL;
   }
-  return responseData.data[indexType].aggregations[key].buckets
+  return responseData.data[indexType].aggregations[key].buckets;
 };
 
 /**
@@ -149,15 +149,13 @@ export const constructGraphQLQuery = (
 ) => {
   const sqonObj = {
     op: 'and',
-    content: filters.map(filter => {
-      return {
-        op: 'in',
-        content: {
-          field: filter.name,
-          value: [...filter.values],
-        },
-      }
-    }),
+    content: filters.map(filter => ({
+      op: 'in',
+      content: {
+        field: filter.name,
+        value: [...filter.values],
+      },
+    })),
   };
   return constructGraphQLQueryWithSQON(indexType, sqonObj, nodeList, isGettingCount, count);
 };
@@ -209,7 +207,7 @@ export const getArrangerTableColumns = async (apiFunc, projectId, indexType) => 
  * Query arranger for data by a list of IDs
  * @param {function} apiFunc - function created by arranger for fetching data
  * @param {stirng} projectId - arranger project ID
- * @param {string} indexType - index type for query
+ * @param {string} graphqlIdField - index type for query
  * @param {string[]} idList - list of ids for query
  * @param {string} indexType - type of index for query
  * @param {string[]} fields - list of target fields for response
@@ -230,7 +228,7 @@ export const queryDataByIds = async (
   const responseData = await apiFunc({
     endpoint: getEndpoint(projectId),
     body: constructGraphQLQuery(
-      [{name: graphqlIdField.toString(), values: idList}],
+      [{ name: graphqlIdField.toString(), values: idList }],
       indexType,
       [...fields],
       false,
@@ -298,7 +296,7 @@ export const queryCountByValues = async (
   apiFunc,
   projectId,
   indexType,
-  filters
+  filters,
 ) => {
   const MSG_QUERY_COUNT_BY_VALUE_FAIL = 'Error while querying Arranger count by values';
   const countQueryResponse = await apiFunc({

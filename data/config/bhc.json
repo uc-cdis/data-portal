@@ -13,9 +13,9 @@
         "plural": "Studies"
       },
       {
-        "graphql": "_aliquot_count",
-        "name": "Aliquot",
-        "plural": "Aliquots"
+        "graphql": "_diagnosis_count",
+        "name": "Disease State",
+        "plural": "Disease States"
       }
     ],
     "chartCounts": [
@@ -70,7 +70,6 @@
       ]
     },
     "navigation": {
-      "title": "BRAIN Commons",
       "items": [
         {
           "icon": "dictionary",
