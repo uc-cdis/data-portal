@@ -52,7 +52,6 @@ export class SessionMonitor {
     }
 
     const timeSinceLastActivity = Date.now() - this.mostRecentActivityTimestamp;
-
     // If user has been inactive for Y min, and they are not in a workspace
     if (timeSinceLastActivity >= this.inactiveTimeLimit
         && !this.isUserOnPage('workspace')
