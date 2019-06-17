@@ -96,8 +96,8 @@ class Workspace extends React.Component {
   launchWorkspace = (notebook) => {
     this.setState({ notebookType: notebook.name }, () => {
       fetchWithCreds({
-        path: `${workspaceLaunchUrl}?hash=${notebook.id}`,
-        method: 'GET',
+        path: `${workspaceLaunchUrl}?id=${notebook.id}`,
+        method: 'POST',
       }).then(() => {
         this.checkWorkspaceStatus();
       });
@@ -108,7 +108,7 @@ class Workspace extends React.Component {
     this.setState({ notebookType: null, notebookStatus: 'Terminating' }, () => {
       fetchWithCreds({
         path: `${workspaceTerminateUrl}`,
-        method: 'GET',
+        method: 'POST',
       }).then(() => {
         this.checkWorkspaceStatus();
       });
