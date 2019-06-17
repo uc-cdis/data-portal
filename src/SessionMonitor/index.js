@@ -7,7 +7,7 @@ export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
     this.updateSessionTime = updateSessionTime || 5 * 60 * 1000;
     this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
-    this.inactiveWorkspaceTimeLimit = workspaceTimeoutInMinutes * 60 * 1000 || 30 * 60 * 1000;
+    this.inactiveWorkspaceTimeLimit = workspaceTimeoutInMinutes * 60 * 1000;
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
     this.popupShown = false;
