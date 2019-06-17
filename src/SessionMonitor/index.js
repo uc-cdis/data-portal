@@ -11,7 +11,6 @@ export class SessionMonitor {
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
     this.popupShown = false;
-    console.log('workspaceTimeoutInMinutes ', workspaceTimeoutInMinutes);
   }
 
   start() {
