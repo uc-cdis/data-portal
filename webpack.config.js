@@ -36,7 +36,7 @@ const plugins = [
     'process.env': {
       'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev'),
       LOGOUT_INACTIVE_USERS: !(process.env.LOGOUT_INACTIVE_USERS === 'false'),
-      WORKSPACE_TIMEOUT_IN_MINUTES: process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 30,
+      WORKSPACE_TIMEOUT_IN_MINUTES: process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480,
       REACT_APP_PROJECT_ID: JSON.stringify(process.env.REACT_APP_PROJECT_ID || 'search'),
       REACT_APP_ARRANGER_API: JSON.stringify(process.env.REACT_APP_ARRANGER_API || '/api/v0/flat-search'),
       REACT_APP_DISABLE_SOCKET: JSON.stringify(process.env.REACT_APP_DISABLE_SOCKET || 'true'),
