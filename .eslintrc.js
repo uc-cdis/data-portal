@@ -60,6 +60,7 @@ module.exports = {
         "data/gqlSetup.js",
         "src/SessionMonitor/index.js",
         "src/Index/utils.js",
+        "src/Workspace/index.jsx",
       ],
       "rules": {
         "no-console": "off" // for logging errors

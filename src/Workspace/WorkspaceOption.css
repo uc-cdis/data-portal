@@ -1,0 +1,30 @@
+.workspace-option {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  padding: 30px 20px;
+  background: var(--g3-color__white);
+  border-radius: 5px;
+  border: 1px solid var(--g3-color__silver);
+  margin: 10px 20px;
+  width: 300px;
+}
+
+.workspace-option__icon {
+  height: 50px;
+}
+
+.workspace-option__title {
+  margin: 20px 0;
+}
+
+.workspace-option__description {
+  border-bottom: 1px solid var(--g3-color__silver);
+  padding-bottom: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.workspace-option__button {
+  margin-top: 20px;
+}
