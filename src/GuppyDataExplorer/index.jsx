@@ -55,7 +55,7 @@ const guppyExplorerConfig = [
 
 const routes = [
   '/explorer',
-  '/files'
+  '/files',
 ];
 
 class Explorer extends React.Component {
@@ -115,6 +115,7 @@ class Explorer extends React.Component {
 
 Explorer.propTypes = {
   history: PropTypes.object.isRequired, // inherited from ProtectedContent
+  location: PropTypes.object.isRequired,
 };
 
 export default Explorer;
