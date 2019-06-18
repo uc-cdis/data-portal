@@ -71,7 +71,11 @@ class ExplorerTable extends React.Component {
         accessor: field,
         maxWidth: 400,
         width: this.getWidthForColumn(field, name),
-        Cell: row => <div><span title={row.value}>{row.value}</span></div>,
+        Cell: row => {
+          return this.props.guppyConfig.downloadAccessor === field ?
+            <div><span title={row.value}><a href={`/files/${row.value}`}>{row.value}</a></span></div>
+          : <div><span title={row.value}>{row.value}</span></div>
+        }
       };
     });
     const { totalCount } = this.props;
