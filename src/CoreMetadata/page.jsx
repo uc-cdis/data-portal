@@ -8,7 +8,7 @@ class CoreMetadataPage extends Component {
   render() {
     return (
       <div className='core-metadata-page'>
-        <BackLink url='/explorer' label='Back to Explorer' />
+        <BackLink url='/files' label='Back to File Explorer' />
         <div>
           <div className='core-metadata-page__column core-metadata-page__column--left'>
             <ReduxFileTypePicture dictIcons={dictIcons} />

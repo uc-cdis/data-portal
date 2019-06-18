@@ -29,37 +29,20 @@ const defaultConfig = {
 
 const defaultFileConfig = {
   charts: {},
-  filters: {
-    tabs: [
-      {
-        title: 'File',
-        fields: [
-          'project_id',
-          'data_type',
-          'data_format',
-        ],
-      },
-    ],
-  },
+  filters: { tabs: [] },
   table: {
     enabled: true,
-    fields: ['project_id', 'file_name', 'file_size', 'object_id'],
+    fields: [],
   },
   guppyConfig: {
     dataType: 'file',
-    fieldMapping: [
-      { field: 'object_id', name: 'GUID' },
-    ],
-    nodeCountTitle: 'Files',
+    fieldMapping: [],
     manifestMapping: {
-      resourceIndexType: 'case',
-      resourceIdField: 'case_id',
-      referenceIdFieldInResourceIndex: 'object_id',
-      referenceIdFieldInDataIndex: 'object_id',
+      resourceIndexType: 'subject',
+      resourceIdField: 'subject_id',
+      referenceIdFieldInResourceIndex: 'file_id', // TODO: change to object_id
+      referenceIdFieldInDataIndex: 'file_id', // TODO: change to object_id
     },
-    accessibleFieldCheckList: ['project_id'],
-    accessibleValidationField: 'project_id',
-    downloadAccessor: 'object_id',
   },
   buttons: [],
   dropdowns: {},
@@ -67,45 +50,50 @@ const defaultFileConfig = {
 
 const guppyExplorerConfig = [
   _.merge(defaultConfig, config.dataExplorerConfig),
-  defaultFileConfig,
+  _.merge(defaultFileConfig, config.fileExplorerConfig),
+];
+
+const routes = [
+  '/explorer',
+  '/files'
 ];
 
 class Explorer extends React.Component {
   constructor(props) {
     super(props);
+    const tabIndex = routes.indexOf(props.location.pathname);
     this.state = {
-      tab: 0,
+      tab: tabIndex > 0 ? tabIndex : 0,
     };
-  }
-
-  toggleTab = (tab) => {
-    this.setState({ tab });
   }
 
   render() {
     return (
       <div className='guppy-explorer'>
-        <div className='guppy-explorer__tabs'>
-          <div
-            className={'guppy-explorer__tab'.concat(this.state.tab === 0 ? ' guppy-explorer__tab--selected' : '')}
-            onClick={() => this.toggleTab(0)}
-            role='button'
-            tabIndex={0}
-          >
-            <h3>Data</h3>
-          </div>
-          <div
-            className={'guppy-explorer__tab'.concat(this.state.tab === 1 ? ' guppy-explorer__tab--selected' : '')}
-            onClick={() => this.toggleTab(1)}
-            role='button'
-            tabIndex={-1}
-          >
-            <h3>Files</h3>
-          </div>
-        </div>
-        <div className='guppy-explorer__main'>
+        {
+          config.fileExplorerConfig ? (
+            <div className='guppy-explorer__tabs'>
+              <div
+                className={'guppy-explorer__tab'.concat(this.state.tab === 0 ? ' guppy-explorer__tab--selected' : '')}
+                onClick={() => this.props.history.push('/explorer')}
+                role='button'
+                tabIndex={0}
+              >
+                <h3>Data</h3>
+              </div>
+              <div
+                className={'guppy-explorer__tab'.concat(this.state.tab === 1 ? ' guppy-explorer__tab--selected' : '')}
+                onClick={() => this.props.history.push('/files')}
+                role='button'
+                tabIndex={-1}
+              >
+                <h3>Files</h3>
+              </div>
+            </div>
+          ) : null
+        }
+        <div className={config.fileExplorerConfig ? 'guppy-explorer__main' : ''}>
           <GuppyDataExplorer
-            key={this.state.tab}
             chartConfig={guppyExplorerConfig[this.state.tab].charts}
             filterConfig={guppyExplorerConfig[this.state.tab].filters}
             tableConfig={guppyExplorerConfig[this.state.tab].table}

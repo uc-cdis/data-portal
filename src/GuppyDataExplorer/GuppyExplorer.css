@@ -15,6 +15,7 @@
   border-top: 2px solid var(--g3-color__silver);
   border-left: 2px solid var(--g3-color__silver);
   border-right: 2px solid var(--g3-color__silver);
+  outline: none;
 }
 
 .guppy-explorer__tab--selected {
