@@ -99,7 +99,7 @@ class ExplorerButtonGroup extends React.Component {
       [caseFieldInFileIndex, fileFieldInFileIndex],
     );
     resultManifest = resultManifest.filter(x => typeof x[fileFieldInFileIndex] !== 'undefined');
-    return resultManifest;
+    return resultManifest.flat();
   };
 
   getToaster = () => ((
@@ -199,7 +199,7 @@ class ExplorerButtonGroup extends React.Component {
     if (resultManifest) {
       fetchWithCreds({
         path: `${manifestServiceApiPath}`,
-        body: JSON.stringify(resultManifest.flat()),
+        body: JSON.stringify(resultManifest),
         method: 'POST',
       })
         .then(
