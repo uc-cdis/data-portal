@@ -194,11 +194,13 @@ class ExplorerButtonGroup extends React.Component {
 
   exportToWorkspace = async () => {
     this.setState({ exportingToWorkspace: true });
-    const resultManifest = await this.getManifest();
+    let resultManifest = await this.getManifest();
     if (resultManifest) {
+      const idField = this.props.guppyConfig.manifestMapping.resourceIdField;
+      resultManifest = resultManifest.filter(x => typeof x[idField] !== 'undefined');
       fetchWithCreds({
         path: `${manifestServiceApiPath}`,
-        body: JSON.stringify(resultManifest),
+        body: JSON.stringify(resultManifest.flat()),
         method: 'POST',
       })
         .then(
