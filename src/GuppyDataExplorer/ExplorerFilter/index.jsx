@@ -115,7 +115,6 @@ class ExplorerFilter extends React.Component {
     }
     let showTierAccessSelector = false;
     if (this.props.tierAccessLevel === 'regular') {
-      showTierAccessSelector = true;
       if (checkForNoAccessibleProject(
         this.props.accessibleFieldObject,
         this.props.guppyConfig.accessibleValidationField,
@@ -125,6 +124,8 @@ class ExplorerFilter extends React.Component {
       )) {
         // don't show this selector if user have full access, or none access
         showTierAccessSelector = false;
+      } else {
+        showTierAccessSelector = true;
       }
     }
     return (
