@@ -90,7 +90,7 @@ class ExplorerButtonGroup extends React.Component {
     const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
     const caseIDList = await this.props.downloadRawDataByFields({ fields: [caseField] })
       .then(res => res.map(i => i[caseField]));
-    const resultManifest = await this.props.downloadRawDataByTypeAndFilter(
+    let resultManifest = await this.props.downloadRawDataByTypeAndFilter(
       fileType, {
         [caseFieldInFileIndex]: {
           selectedValues: caseIDList,
@@ -98,6 +98,7 @@ class ExplorerButtonGroup extends React.Component {
       },
       [caseFieldInFileIndex, fileFieldInFileIndex],
     );
+    resultManifest = resultManifest.filter(x => typeof x[fileFieldInFileIndex] !== 'undefined');
     return resultManifest;
   };
 
@@ -196,8 +197,6 @@ class ExplorerButtonGroup extends React.Component {
     this.setState({ exportingToWorkspace: true });
     let resultManifest = await this.getManifest();
     if (resultManifest) {
-      const idField = this.props.guppyConfig.manifestMapping.resourceIdField;
-      resultManifest = resultManifest.filter(x => typeof x[idField] !== 'undefined');
       fetchWithCreds({
         path: `${manifestServiceApiPath}`,
         body: JSON.stringify(resultManifest.flat()),
