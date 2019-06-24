@@ -90,7 +90,7 @@ class ExplorerButtonGroup extends React.Component {
     const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
     const caseIDList = await this.props.downloadRawDataByFields({ fields: [caseField] })
       .then(res => res.map(i => i[caseField]));
-    const resultManifest = await this.props.downloadRawDataByTypeAndFilter(
+    let resultManifest = await this.props.downloadRawDataByTypeAndFilter(
       fileType, {
         [caseFieldInFileIndex]: {
           selectedValues: caseIDList,
@@ -98,7 +98,8 @@ class ExplorerButtonGroup extends React.Component {
       },
       [caseFieldInFileIndex, fileFieldInFileIndex],
     );
-    return resultManifest;
+    resultManifest = resultManifest.filter(x => typeof x[fileFieldInFileIndex] !== 'undefined');
+    return resultManifest.flat();
   };
 
   getToaster = () => ((
