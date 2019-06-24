@@ -195,7 +195,7 @@ class ExplorerButtonGroup extends React.Component {
 
   exportToWorkspace = async () => {
     this.setState({ exportingToWorkspace: true });
-    let resultManifest = await this.getManifest();
+    const resultManifest = await this.getManifest();
     if (resultManifest) {
       fetchWithCreds({
         path: `${manifestServiceApiPath}`,
