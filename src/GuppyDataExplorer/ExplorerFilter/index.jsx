@@ -20,11 +20,10 @@ class ExplorerFilter extends React.Component {
   }
 
   getSnapshotBeforeUpdate(prevProps, prevState) {
-    if (prevProps.tierAccessLevel !== this.props.tierAccessLevel ||
-      prevProps.accessibleFieldObject !== this.props.accessibleFieldObject ||
-      prevProps.guppyConfig !== this.props.guppyConfig
+    if (prevProps.accessibleFieldObject !== this.props.accessibleFieldObject ||
+      prevProps.unaccessibleFieldObject !== this.props.unaccessibleFieldObject
     ) {
-      console.log('props changing', prevProps, this.props);
+      console.log('props changing', prevProps.accessibleFieldObject, this.props.accessibleFieldObject, prevProps.unaccessibleFieldObject, this.props.unaccessibleFieldObject);
       if (this.props.tierAccessLevel === 'regular') {
         if (checkForNoAccessibleProject(
           this.props.accessibleFieldObject,
