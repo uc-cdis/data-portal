@@ -101,7 +101,7 @@ class ExplorerButtonGroup extends React.Component {
     resultManifest = resultManifest.filter(
       x => typeof x[fileFieldInFileIndex] !== 'undefined'
     );
-    for(let i = 0; i < resultManifest.length; i++) {
+    for(let i = 0; i < resultManifest.length; i += 1) {
       resultManifest[i][caseField] = [ resultManifest[i][caseField] ];
     }
     return resultManifest.flat();
