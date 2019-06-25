@@ -19,11 +19,10 @@ class ExplorerFilter extends React.Component {
     };
   }
 
-  getSnapshotBeforeUpdate(prevProps, prevState) {
+  getSnapshotBeforeUpdate(prevProps) {
     if (prevProps.accessibleFieldObject !== this.props.accessibleFieldObject ||
       prevProps.unaccessibleFieldObject !== this.props.unaccessibleFieldObject
     ) {
-      console.log('props changing', prevProps.accessibleFieldObject, this.props.accessibleFieldObject, prevProps.unaccessibleFieldObject, this.props.unaccessibleFieldObject);
       if (this.props.tierAccessLevel === 'regular') {
         if (checkForNoAccessibleProject(
           this.props.accessibleFieldObject,
@@ -136,8 +135,6 @@ class ExplorerFilter extends React.Component {
       filterFragment = (<React.Fragment />);
       break;
     }
-    console.log('current props', this.props);
-    console.log('tiered access selector', this.state.showTierAccessSelector);
     return (
       <div className={this.props.className}>
         {
