@@ -24,6 +24,7 @@ class ExplorerFilter extends React.Component {
       prevProps.accessibleFieldObject !== this.props.accessibleFieldObject ||
       prevProps.guppyConfig !== this.props.guppyConfig
     ) {
+      console.log('props changing', prevProps, this.props);
       if (this.props.tierAccessLevel === 'regular') {
         if (checkForNoAccessibleProject(
           this.props.accessibleFieldObject,
@@ -136,11 +137,12 @@ class ExplorerFilter extends React.Component {
       filterFragment = (<React.Fragment />);
       break;
     }
-    console.log('tiered access selector', showTierAccessSelector)
+    console.log('current props', this.props);
+    console.log('tiered access selector', this.state.showTierAccessSelector);
     return (
       <div className={this.props.className}>
         {
-          showTierAccessSelector ? (
+          this.state.showTierAccessSelector ? (
             <TierAccessSelector
               onSelectorChange={this.handleAccessSelectorChange}
               getAccessButtonLink={this.props.getAccessButtonLink}
