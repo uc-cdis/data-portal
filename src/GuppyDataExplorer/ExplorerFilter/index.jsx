@@ -128,6 +128,7 @@ class ExplorerFilter extends React.Component {
         showTierAccessSelector = true;
       }
     }
+    console.log('tiered access selector', showTierAccessSelector)
     return (
       <div className={this.props.className}>
         {
