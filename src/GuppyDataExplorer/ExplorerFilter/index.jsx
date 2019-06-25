@@ -15,7 +15,30 @@ class ExplorerFilter extends React.Component {
     super(props);
     this.state = {
       selectedAccessFilter: 'all-data', // default value of selectedAccessFilter
+      showTierAccessSelector: false,
     };
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    if (prevProps.tierAccessLevel !== this.props.tierAccessLevel ||
+      prevProps.accessibleFieldObject !== this.props.accessibleFieldObject ||
+      prevProps.guppyConfig !== this.props.guppyConfig
+    ) {
+      if (this.props.tierAccessLevel === 'regular') {
+        if (checkForNoAccessibleProject(
+          this.props.accessibleFieldObject,
+          this.props.guppyConfig.accessibleValidationField,
+        ) || checkForFullAccessibleProject(
+          this.props.unaccessibleFieldObject,
+          this.props.guppyConfig.accessibleValidationField,
+        )) {
+          // don't show this selector if user have full access, or none access
+          this.setState({ showTierAccessSelector: false });
+        } else {
+          this.setState({ showTierAccessSelector: true });
+        }
+      }
+    }
   }
 
   /**
@@ -112,21 +135,6 @@ class ExplorerFilter extends React.Component {
     default:
       filterFragment = (<React.Fragment />);
       break;
-    }
-    let showTierAccessSelector = false;
-    if (this.props.tierAccessLevel === 'regular') {
-      if (checkForNoAccessibleProject(
-        this.props.accessibleFieldObject,
-        this.props.guppyConfig.accessibleValidationField,
-      ) || checkForFullAccessibleProject(
-        this.props.unaccessibleFieldObject,
-        this.props.guppyConfig.accessibleValidationField,
-      )) {
-        // don't show this selector if user have full access, or none access
-        showTierAccessSelector = false;
-      } else {
-        showTierAccessSelector = true;
-      }
     }
     console.log('tiered access selector', showTierAccessSelector)
     return (
