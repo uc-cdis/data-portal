@@ -99,11 +99,11 @@ class ExplorerButtonGroup extends React.Component {
       [caseFieldInFileIndex, fileFieldInFileIndex],
     );
     resultManifest = resultManifest.filter(
-      x => typeof x[fileFieldInFileIndex] !== 'undefined'
+      x => !!x[fileFieldInFileIndex]
     );
-    for(let i = 0; i < resultManifest.length; i += 1) {
-      resultManifest[i][caseFieldInFileIndex] = [ resultManifest[i][caseFieldInFileIndex] ];
-    } 
+    resultManifest.forEach(function(x) {
+      x[caseFieldInFileIndex] = [ x[caseFieldInFileIndex] ];
+    });
     return resultManifest.flat();
   };
 
@@ -201,7 +201,7 @@ class ExplorerButtonGroup extends React.Component {
   exportToWorkspace = async () => {
     this.setState({ exportingToWorkspace: true });
     const resultManifest = await this.getManifest();
-    if (resultManifest) {
+    if (!!resultManifest && resultManifest.length > 0) {
       fetchWithCreds({
         path: `${manifestServiceApiPath}`,
         body: JSON.stringify(resultManifest),
@@ -219,7 +219,7 @@ class ExplorerButtonGroup extends React.Component {
           },
         );
     } else {
-      throw new Error('error when export to workspace');
+      this.exportToWorkspaceMessageHandler(400, "There were no data files found matching the cohort you created.");
     }
   };
 
@@ -237,6 +237,15 @@ class ExplorerButtonGroup extends React.Component {
     this.setState({
       toasterOpen: true,
       toasterHeadline: this.state.toasterErrorText,
+      exportWorkspaceStatus: status,
+      exportingToWorkspace: false,
+    });
+  };
+
+  exportToWorkspaceMessageHandler = (status, message) => {
+    this.setState({
+      toasterOpen: true,
+      toasterHeadline: message,
       exportWorkspaceStatus: status,
       exportingToWorkspace: false,
     });
@@ -269,6 +278,7 @@ class ExplorerButtonGroup extends React.Component {
             selectedValues: caseIDList,
           },
         });
+        
         this.setState(prevState => ({
           manifestEntryCount: countResult,
           pendingManifestEntryCountRequestNumber:
