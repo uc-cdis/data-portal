@@ -81,18 +81,26 @@ class ExplorerVisualization extends React.Component {
             isLocked={isComponentLocked}
           />
         </div>
-        <div className='guppy-explorer-visualization__summary-cards'>
-          <DataSummaryCardGroup summaryItems={chartData.countItems} connected />
-        </div>
-        <div className='guppy-explorer-visualization__charts'>
-          <SummaryChartGroup
-            summaries={chartData.summaries}
-            lockMessage={lockMessage}
-            barChartColor={barChartColor}
-            useCustomizedColorMap={!!components.categorical9Colors}
-            customizedColorMap={components.categorical9Colors || []}
-          />
-        </div>
+        {
+          chartData.countItems.length > 0 && (
+            <div className='guppy-explorer-visualization__summary-cards'>
+              <DataSummaryCardGroup summaryItems={chartData.countItems} connected />
+            </div>
+          )
+        }
+        {
+          chartData.summaries.length > 0 && (
+            <div className='guppy-explorer-visualization__charts'>
+              <SummaryChartGroup
+                summaries={chartData.summaries}
+                lockMessage={lockMessage}
+                barChartColor={barChartColor}
+                useCustomizedColorMap={!!components.categorical9Colors}
+                customizedColorMap={components.categorical9Colors || []}
+              />
+            </div>
+          )
+        }
         {
           chartData.stackedBarCharts.map((chart, i) => (
             <PercentageStackedBarChart
@@ -101,7 +109,7 @@ class ExplorerVisualization extends React.Component {
               title={chart.title}
               width='100%'
               lockMessage={lockMessage}
-              useCustomizedColorMap={components.categorical9Colors || false}
+              useCustomizedColorMap={!!components.categorical9Colors}
               customizedColorMap={components.categorical9Colors || []}
             />
           ),

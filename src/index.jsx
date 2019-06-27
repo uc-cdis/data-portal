@@ -222,7 +222,13 @@ async function init() {
                     <Route
                       path='/files'
                       component={
-                        props => <ProtectedContent component={ExplorerPage} {...props} />
+                        props => (
+                          <ProtectedContent
+                            public={explorerPublic}
+                            component={useGuppyForExplorer ? GuppyDataExplorer : ExplorerPage}
+                            {...props}
+                          />
+                        )
                       }
                     />
                     <Route

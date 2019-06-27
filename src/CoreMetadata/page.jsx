@@ -7,8 +7,8 @@ import './page.less';
 class CoreMetadataPage extends Component {
   render() {
     return (
-      <div>
-        <BackLink url='/files' label='Back to data overview' />
+      <div className='core-metadata-page'>
+        <BackLink url='/files' label='Back to File Explorer' />
         <div>
           <div className='core-metadata-page__column core-metadata-page__column--left'>
             <ReduxFileTypePicture dictIcons={dictIcons} />

@@ -15,7 +15,29 @@ class ExplorerFilter extends React.Component {
     super(props);
     this.state = {
       selectedAccessFilter: 'all-data', // default value of selectedAccessFilter
+      showTierAccessSelector: false,
     };
+  }
+
+  getSnapshotBeforeUpdate(prevProps) {
+    if (prevProps.accessibleFieldObject !== this.props.accessibleFieldObject ||
+      prevProps.unaccessibleFieldObject !== this.props.unaccessibleFieldObject
+    ) {
+      if (this.props.tierAccessLevel === 'regular') {
+        if (checkForNoAccessibleProject(
+          this.props.accessibleFieldObject,
+          this.props.guppyConfig.accessibleValidationField,
+        ) || checkForFullAccessibleProject(
+          this.props.unaccessibleFieldObject,
+          this.props.guppyConfig.accessibleValidationField,
+        )) {
+          // don't show this selector if user have full access, or none access
+          this.setState({ showTierAccessSelector: false });
+        } else {
+          this.setState({ showTierAccessSelector: true });
+        }
+      }
+    }
   }
 
   /**
@@ -113,24 +135,10 @@ class ExplorerFilter extends React.Component {
       filterFragment = (<React.Fragment />);
       break;
     }
-    let showTierAccessSelector = false;
-    if (this.props.tierAccessLevel === 'regular') {
-      showTierAccessSelector = true;
-      if (checkForNoAccessibleProject(
-        this.props.accessibleFieldObject,
-        this.props.guppyConfig.accessibleValidationField,
-      ) || checkForFullAccessibleProject(
-        this.props.unaccessibleFieldObject,
-        this.props.guppyConfig.accessibleValidationField,
-      )) {
-        // don't show this selector if user have full access, or none access
-        showTierAccessSelector = false;
-      }
-    }
     return (
       <div className={this.props.className}>
         {
-          showTierAccessSelector ? (
+          this.state.showTierAccessSelector ? (
             <TierAccessSelector
               onSelectorChange={this.handleAccessSelectorChange}
               getAccessButtonLink={this.props.getAccessButtonLink}
