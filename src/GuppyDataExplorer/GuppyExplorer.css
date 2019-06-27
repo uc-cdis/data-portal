@@ -1,0 +1,31 @@
+.guppy-explorer {
+  padding: 20px 20px;
+}
+
+.guppy-explorer__tabs {
+  display: flex;
+}
+
+.guppy-explorer__tab {
+  background-color: var(--g3-color__white);
+  padding: 5px 20px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  cursor: pointer;
+  border-top: 2px solid var(--g3-color__silver);
+  border-left: 2px solid var(--g3-color__silver);
+  border-right: 2px solid var(--g3-color__silver);
+  outline: none;
+}
+
+.guppy-explorer__tab--selected {
+  background-color: var(--g3-color__silver);
+}
+
+.guppy-explorer__tab:hover {
+  background-color: var(--g3-color__silver);
+}
+
+.guppy-explorer__main {
+  border: 2px solid var(--g3-color__silver);
+}
