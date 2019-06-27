@@ -101,6 +101,7 @@ class ExplorerButtonGroup extends React.Component {
     resultManifest = resultManifest.filter(
       x => !!x[fileFieldInFileIndex]
     );
+    /* eslint-disable no-param-reassign */
     resultManifest.forEach(function(x) {
       x[caseFieldInFileIndex] = [ x[caseFieldInFileIndex] ];
     });
