@@ -103,7 +103,7 @@ class ExplorerButtonGroup extends React.Component {
     );
     /* eslint-disable no-param-reassign */
     resultManifest.forEach(function(x) {
-      if(typeof x[caseFieldInFileIndex] == "string") {
+      if(typeof x[caseFieldInFileIndex] === "string") {
         x[caseFieldInFileIndex] = [ x[caseFieldInFileIndex] ];  
       }
     });
