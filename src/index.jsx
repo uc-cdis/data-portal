@@ -22,6 +22,7 @@ import CoreMetadataPage from './CoreMetadata/page';
 import { fetchCoreMetadata } from './CoreMetadata/reduxer';
 import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/.';
+import ReduxPrivacyPolicy from './PrivacyPolicy/ReduxPrivacyPolicy';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import ReduxMapFiles from './Submission/ReduxMapFiles';
 import ReduxMapDataModel from './Submission/ReduxMapDataModel';
@@ -288,6 +289,19 @@ async function init() {
                       : null
                     }
                     <Route
+                      path='/privacy-policy'
+                      component={ReduxPrivacyPolicy}
+                      component={
+                        props => (
+                          <ProtectedContent
+                            public
+                            component={ReduxPrivacyPolicy}
+                            {...props}
+                          />
+                        )
+                      }
+                    />
+                    <Route
                       path='/:project'
                       component={
                         props => <ProtectedContent component={ProjectSubmission} {...props} />
@@ -295,7 +309,7 @@ async function init() {
                     />
                   </Switch>
                 </div>
-                <ReduxFooter logos={components.footerLogos} />
+                <ReduxFooter logos={components.footerLogos} privacyPolicy={components.privacyPolicy} />
               </div>
             </BrowserRouter>
           </MuiThemeProvider>

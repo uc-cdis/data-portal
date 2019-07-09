@@ -174,7 +174,11 @@
         "href": "https://ctds.uchicago.edu/",
         "alt": "Center for Translational Data Science at the University of Chicago"
       }
-    ]
+    ],
+    "privacyPolicy": {
+      "text": "Privacy Policy",
+      "href": "/user/privacy-policy"
+    }
   },
   "requiredCerts": [],
   "featureFlags": {
@@ -277,5 +281,6 @@
         "file_format"
       ]
     }
-  }
+  },
+  "privacyPolicyFile": ""
 }

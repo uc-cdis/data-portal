@@ -24,6 +24,19 @@ class Footer extends Component {
               )
             }
           </div>
+          {this.props.privacyPolicy ?
+            <div className='footer__privacy-policy-area'>
+              <a
+                className='h4-typo footer__privacy-policy'
+                href={this.props.privacyPolicy.href}
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                {this.props.privacyPolicy.text}
+              </a>
+            </div>
+            : null
+          }
           <div className='footer__logo-area'>
             {
               this.props.logos.map((logoObj, i) => (

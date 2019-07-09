@@ -5,6 +5,7 @@
   vertical-align: middle;
   min-height: 100px;
   padding: 0 20px;
+  align-content: space-around;
 }
 
 
@@ -47,6 +48,46 @@
 @media screen and (max-width: 820px) {
   .footer__version-area {
     width: 100%;
+    justify-content: center;
+    flex-flow: wrap;
+    text-align: center;
+  }
+}
+
+.footer__privacy-policy-area {
+  display: flex;
+  flex-basis: 20%;
+}
+
+.footer__privacy-policy {
+  vertical-align: middle;
+  display: inline-flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-basis: 20%;
+  justify-content: center;
+  height: 100%;
+  color: white;
+  text-decoration: none;
+  &:hover {
+    color: white;
+    text-decoration: underline;
+  }
+}
+
+@media screen and (max-width: 1090px) {
+  .footer__privacy-policy-area {
+    width: 100%;
+    padding: 20px 0;
+    justify-content: stretch;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 820px) {
+  .footer__privacy-policy-area {
+    width: 100%;
+    padding: 20px 0;
     justify-content: center;
     flex-flow: wrap;
     text-align: center;
