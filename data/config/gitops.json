@@ -67,20 +67,6 @@
           "link": "#hostname#workspace/",
           "label": "Run analysis"
         }
-      ],
-      "homepageChartNodes": [
-        {
-          "node": "case",
-          "name": "Cases"
-        },
-        {
-          "node": "study",
-          "name": "Studies"
-        },
-        {
-          "node": "diagnosis",
-          "name": "Disease States"
-        }
       ]
     },
     "navigation": {
@@ -223,8 +209,7 @@
       "nodeCountTitle": "Cases",
       "fieldMapping": [
         { "field": "snp_id", "name": "SNP Id" },
-        { "field": "snp_genotype", "name": "SNP Genotype" },
-        { "field": "pd_primary_diagnosis", "name": "PD Primary Diagnosis" }
+        { "field": "snp_genotype", "name": "SNP Genotype" }
       ],
       "manifestMapping": {
         "resourceIndexType": "file",
@@ -249,5 +234,56 @@
         "fileName": "data.json"
       }
     ]
+  },
+  "fileExplorerConfig": {
+    "charts": {
+      "data_type": {
+        "chartType": "stackedBar",
+        "title": "File Type"
+      },
+      "data_format": {
+        "chartType": "stackedBar",
+        "title": "File Format"
+      }
+    },
+    "filters": {
+      "tabs": [
+        {
+          "title": "File",
+          "fields": [
+            "project_id",
+            "data_type",
+            "data_format"
+          ]
+        }
+      ]
+    },
+    "table": {
+      "enabled": true,
+      "fields": [
+        "project_id",
+        "file_name",
+        "file_size",
+        "object_id"
+      ]
+    },
+    "guppyConfig": {
+      "dataType": "file",
+      "fieldMapping": [
+        { "field": "object_id", "name": "GUID" }
+      ],
+      "nodeCountTitle": "Files",
+      "manifestMapping": {
+        "resourceIndexType": "case",
+        "resourceIdField": "case_id",
+        "referenceIdFieldInResourceIndex": "object_id",
+        "referenceIdFieldInDataIndex": "object_id"
+      },
+      "accessibleFieldCheckList": ["project_id"],
+      "accessibleValidationField": "project_id",
+      "downloadAccessor": "object_id"
+    },
+    "buttons": [],
+    "dropdowns": {}
   }
 }

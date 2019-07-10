@@ -42,7 +42,7 @@ function buildConfig(opts) {
   } = Object.assign({}, defaults, opts);
 
   function ensureTailingSlash(url) {
-    let u = new URL(url);
+    const u = new URL(url);
     u.pathname += u.pathname.endsWith('/') ? '' : '/';
     u.hash = '';
     u.search = '';

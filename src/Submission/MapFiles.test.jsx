@@ -86,7 +86,8 @@ describe('MapFiles', () => {
         2: { },
       },
     });
-    expect(instance.isSelectAll('1')).toBe(true);
+    console.log(instance.state.allFilesByGroup['1'])
+    expect(instance.isSelectAll(instance.state.allFilesByGroup['1'], '1')).toBe(true);
 
     instance.setState({
       allFilesByGroup: {
@@ -98,7 +99,7 @@ describe('MapFiles', () => {
         2: { },
       },
     });
-    expect(instance.isSelectAll('1')).toBe(false);
+    expect(instance.isSelectAll(instance.state.allFilesByGroup[1], '1')).toBe(false);
 
     instance.setState({
       allFilesByGroup: {
@@ -110,7 +111,7 @@ describe('MapFiles', () => {
         2: { },
       },
     });
-    expect(instance.isSelectAll('2')).toBe(false);
+    expect(instance.isSelectAll(instance.state.allFilesByGroup[2], '2')).toBe(false);
   });
 
   it('returns if a file should be selected', () => {

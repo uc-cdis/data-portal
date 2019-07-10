@@ -31,6 +31,9 @@ class MapFiles extends React.Component {
       sortedDates: [],
       message,
       loading: true,
+      filters: [],
+      filterText: [],
+      tableHeaderText: [],
     };
   }
 
@@ -65,7 +68,13 @@ class MapFiles extends React.Component {
 
   getTableHeaderText = (files) => {
     const date = moment(files[0].created_date).format('MM/DD/YY');
-    return `uploaded on ${date}, ${files.length} ${files.length > 1 ? 'files' : 'file'}`;
+    return `uploaded on ${date}, `;
+  }
+
+  setFilterText = (index, term) => {
+    const newFilterText = this.state.filterText;
+    newFilterText[index] = term;
+    this.setState({ filterText: newFilterText });
   }
 
   setMapValue = (map, index, value) => {
@@ -104,9 +113,9 @@ class MapFiles extends React.Component {
     return groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr));
   }
 
-  isSelectAll = (index) => {
+  isSelectAll = (files, index) => {
     if (this.state.selectedFilesByGroup[index]) {
-      return this.getSetSize(this.state.allFilesByGroup[index])
+      return files.length
         === this.getSetSize(this.state.selectedFilesByGroup[index])
         && this.getSetSize(this.state.selectedFilesByGroup[index]) > 0;
     }
@@ -135,13 +144,23 @@ class MapFiles extends React.Component {
     const unselectedMap = {};
     const selectedMap = {};
     let index = 0;
+    const tableHeaderText = [];
     this.state.sortedDates.forEach((date) => {
       const filesToAdd = this.state.filesByDate[date].filter(file => this.isFileReady(file));
       unselectedMap[index] = this.createSet(SET_KEY, filesToAdd);
       selectedMap[index] = {};
       index += 1;
+      tableHeaderText.push(this.getTableHeaderText(this.state.filesByDate[date]));
     });
-    this.setState({ allFilesByGroup: unselectedMap, selectedFilesByGroup: selectedMap });
+    const filters = Array(this.state.sortedDates.length).fill('');
+    const filterText = Array(this.state.sortedDates.length).fill('');
+    this.setState({
+      allFilesByGroup: unselectedMap,
+      selectedFilesByGroup: selectedMap,
+      filters,
+      filterText,
+      tableHeaderText,
+    });
   }
 
   groupUnmappedFiles = () => {
@@ -171,17 +190,19 @@ class MapFiles extends React.Component {
     }
   }
 
-  toggleSelectAll = (index) => {
+  toggleSelectAll = (files, index) => {
     if (this.state.selectedFilesByGroup[index]) {
       if (this.getSetSize(this.state.selectedFilesByGroup[index])
-        === this.getSetSize(this.state.allFilesByGroup[index])) {
+        === files.length) {
         this.setState(prevState => ({
           selectedFilesByGroup: this.setMapValue(prevState.selectedFilesByGroup, index, {}),
         }));
       } else {
-        const newFiles = { ...this.state.allFilesByGroup[index] };
+        const newFiles = {};
+        files.forEach((file) => { newFiles[file.did] = { ...file }; });
         this.setState(prevState => ({
-          selectedFilesByGroup: this.setMapValue(prevState.selectedFilesByGroup, index, newFiles),
+          selectedFilesByGroup:
+            this.setMapValue(prevState.selectedFilesByGroup, index, { ...newFiles }),
         }));
       }
     }
@@ -192,6 +213,15 @@ class MapFiles extends React.Component {
   closeMessage = () => {
     this.setState({ message: null });
     window.history.replaceState(null, null, window.location.pathname);
+  }
+
+  filterFiles = (index) => {
+    const newFilters = this.state.filters;
+    newFilters[index] = this.state.filterText[index];
+    this.setState(prevState => ({
+      filters: newFilters,
+      selectedFilesByGroup: this.setMapValue(prevState.selectedFilesByGroup, index, {}),
+    }));
   }
 
   render() {
@@ -242,11 +272,37 @@ class MapFiles extends React.Component {
               const files = filesByDate[date].map(file => ({
                 ...file,
                 status: this.isFileReady(file) ? 'Ready' : 'generating',
-              }));
+              })).filter((file) => {
+                if (this.state.filters &&
+                    !!this.state.filters[groupIndex] &&
+                    !file.file_name.includes(this.state.filters[groupIndex])) {
+                  if (this.state.selectedFilesByGroup[groupIndex][file.did]) {
+                    this.toggleCheckBox(groupIndex, file);
+                  }
+                  return false;
+                }
+                return true;
+              });
               const minTableHeight = (files.length * ROW_HEIGHT) + HEADER_HEIGHT;
               return (
                 <React.Fragment key={groupIndex}>
-                  <div className='h2-typo'>{this.getTableHeaderText(files)}</div>
+                  <div className='map-files__header'>
+                    <div className='map-files__header-text h2-typo'>
+                      {`${this.state.tableHeaderText[groupIndex]} ${files.length} ${files.length !== 1 ? 'files' : 'file'}`}
+                    </div>
+                    <input
+                      className='map-files__filter'
+                      type='text'
+                      placeholder='Filter by file name'
+                      value={this.state.filterText[groupIndex]}
+                      onChange={e => this.setFilterText(groupIndex, e.target.value)}
+                    />
+                    <Button
+                      onClick={() => this.filterFiles(groupIndex)}
+                      label='Search'
+                      buttonType='primary'
+                    />
+                  </div>
                   <AutoSizer disableHeight>
                     {({ width }) => (
                       <Table
@@ -266,8 +322,8 @@ class MapFiles extends React.Component {
                           headerRenderer={() => (
                             <CheckBox
                               id={`${groupIndex}`}
-                              isSelected={this.isSelectAll(groupIndex)}
-                              onChange={() => this.toggleSelectAll(groupIndex)}
+                              isSelected={this.isSelectAll(files, groupIndex)}
+                              onChange={() => this.toggleSelectAll(files, groupIndex)}
                             />
                           )}
                           cellRenderer={({ rowIndex }) => (
