@@ -119,14 +119,6 @@ class ExplorerButtonGroup extends React.Component {
     return resultManifest.flat();
   };
 
-  getFileManifest = async () => {
-    const fileIDField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
-    const dataIDField = this.props.guppyConfig.manifestMapping.resourceIdField;
-    const resultManifest = await this.props.downloadRawDataByFields({ fields: [fileIDField] })
-      .then(res => res.map(i => ({ [fileIDField]: i[fileIDField] })));
-    return resultManifest;
-  };
-
   getToaster = () => ((
     <Toaster isEnabled={this.state.toasterOpen} className={'explorer-button-group__toaster-div'}>
       <Button
