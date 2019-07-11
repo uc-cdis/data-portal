@@ -1,15 +1,15 @@
 import { connect } from 'react-redux';
 import PrivacyPolicy from './PrivacyPolicy';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return ({
-    asdf: state.asdf,
-    loaded: true,
+    text: state.privacyPolicy,
+    loaded: !!state.privacyPolicy,
   })
 };
 
-const mapDispatchToProps = dispatch => ({
-  loadPolicy: () => dispatch({ type: 'LOAD_PRIVACY_POLICY' }),
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
 });
 
 const ReduxPrivacyPolicy = connect(mapStateToProps, mapDispatchToProps)(PrivacyPolicy);

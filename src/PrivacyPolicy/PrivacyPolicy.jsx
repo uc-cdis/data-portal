@@ -1,23 +1,43 @@
 import React from 'react';
 import Spinner from '../components/Spinner';
+import showdown from 'showdown';
 
 class PrivacyPolicy extends React.Component {
   constructor(props) {
     super(props);
   }
 
+  componentDidMount() {
+    this.props.dispatch((dispatch) => {
+      return fetch('/src/privacy_policy.md').then(
+        response => response.text().then(
+          text => {
+            const converter = new showdown.Converter();
+            const html = converter.makeHtml(text);
+            dispatch({
+              type: 'LOAD_PRIVACY_POLICY',
+              value: html,
+            })
+          }),
+        error => {
+          ''
+        },
+      );
+    });
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return (!this.props.loaded && nextProps.loaded)
+  }
+
   render() {
-    this.props.loadPolicy();
-    console.log('render');
-    console.log(this.props.loaded)
     if (!this.props.loaded) {
-      console.log('not loaded')
       return <Spinner />;
-    } else if (this.props.asdf) {
-      console.log('loaded')
+    } else if (this.props.text) {
       return (
         <div className='privacy-policy'>
-          {this.props.asdf}
+          <p dangerouslySetInnerHTML={{__html: this.props.text}}>
+          </p>
         </div>
       )
     } else {
@@ -27,7 +47,7 @@ class PrivacyPolicy extends React.Component {
         // redirect to given URL
         this.props.history.push(url);
       } else {
-        return null
+        return ''
       }
     }
   }
