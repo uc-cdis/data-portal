@@ -1,6 +1,7 @@
 import React from 'react';
 import Spinner from '../components/Spinner';
 import showdown from 'showdown';
+import './PrivacyPolicy.less';
 
 class PrivacyPolicy extends React.Component {
   constructor(props) {
