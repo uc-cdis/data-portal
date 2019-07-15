@@ -1,23 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import showdown from 'showdown';
 import Spinner from '../components/Spinner';
 import './PrivacyPolicy.less';
 
 class PrivacyPolicy extends React.Component {
   componentDidMount() {
-    this.props.dispatch(dispatch => fetch('/src/privacy_policy.md').then(
-      response => response.text().then(
-        (text) => {
-          const converter = new showdown.Converter();
-          const html = converter.makeHtml(text);
-          dispatch({
-            type: 'LOAD_PRIVACY_POLICY',
-            value: html,
-          });
-        }),
-      _ => '', // eslint-disable-line no-unused-vars
-    ));
+    this.props.loadPrivacyPolicy();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -41,12 +29,12 @@ class PrivacyPolicy extends React.Component {
       // redirect to given URL
       this.props.history.push(url);
     }
-    return '';
+    return null;
   }
 }
 
 PrivacyPolicy.propTypes = {
-  dispatch: PropTypes.function.isRequired,
+  loadPrivacyPolicy: PropTypes.function.isRequired,
   history: PropTypes.object.isRequired,
   text: PropTypes.string.isRequired,
   loaded: PropTypes.bool.isRequired,
