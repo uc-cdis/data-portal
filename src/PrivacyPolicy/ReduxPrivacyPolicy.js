@@ -1,14 +1,12 @@
 import { connect } from 'react-redux';
 import PrivacyPolicy from './PrivacyPolicy';
 
-const mapStateToProps = (state) => {
-  return ({
-    text: state.privacyPolicy,
-    loaded: !!state.privacyPolicy,
-  })
-};
+const mapStateToProps = state => ({
+  text: state.privacyPolicy,
+  loaded: !!state.privacyPolicy,
+});
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   dispatch,
 });
 

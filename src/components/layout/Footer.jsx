@@ -76,6 +76,10 @@ Footer.propTypes = {
   hidden: PropTypes.bool,
   portalVersion: PropTypes.string,
   logos: PropTypes.arrayOf(LogoObject).isRequired,
+  privacyPolicy: PropTypes.shape({
+    href: PropTypes.string,
+    text: PropTypes.string,
+  }),
 };
 
 Footer.defaultProps = {
@@ -83,6 +87,10 @@ Footer.defaultProps = {
   apiVersion: 'Unknown',
   hidden: false,
   portalVersion: 'Unknown',
+  privacyPolicy: {
+    text: '',
+    href: '/',
+  },
 };
 
 export default Footer;

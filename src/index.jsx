@@ -291,15 +291,6 @@ async function init() {
                     <Route
                       path='/privacy-policy'
                       component={ReduxPrivacyPolicy}
-                      component={
-                        props => (
-                          <ProtectedContent
-                            public
-                            component={ReduxPrivacyPolicy}
-                            {...props}
-                          />
-                        )
-                      }
                     />
                     <Route
                       path='/:project'
@@ -309,7 +300,10 @@ async function init() {
                     />
                   </Switch>
                 </div>
-                <ReduxFooter logos={components.footerLogos} privacyPolicy={components.privacyPolicy} />
+                <ReduxFooter
+                  logos={components.footerLogos}
+                  privacyPolicy={components.privacyPolicy}
+                />
               </div>
             </BrowserRouter>
           </MuiThemeProvider>
