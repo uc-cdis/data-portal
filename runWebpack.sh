@@ -78,7 +78,6 @@ gitops_config() {
   export HOSTNAME="$hostname"
   export APP="$portalApp"
   if [[ "$portalApp" == "gitops" ]]; then
-    gitopsFolder="../$gitRepo/$hostname"
     portalGitopsFolder="../$gitRepo/$hostname/portal"
     local it=0
     local copySource
