@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
+import ExplorerHeatMap from '../ExplorerHeatMap';
 import ExplorerTable from '../ExplorerTable';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import {
@@ -20,6 +21,8 @@ class ExplorerVisualization extends React.Component {
     const summaries = [];
     const countItems = [];
     const stackedBarCharts = [];
+    const heatMapData = [];
+    const heatMapXAxisVar = 'data_type'; // TODO: visit_number and configurable
     countItems.push({
       label: this.props.nodeCountTitle,
       value: this.props.totalCount,
@@ -54,7 +57,42 @@ class ExplorerVisualization extends React.Component {
         throw new Error(`Invalid chartType ${chartConfig[field].chartType}`);
       }
     });
-    return { summaries, countItems, stackedBarCharts };
+    // if (!aggsData[heatMapXAxisVar]) {
+    //   console.log(`No guppy data for heatmap x axis variable ${heatMapXAxisVar}`);
+    // }
+    if (aggsData && aggsData[heatMapXAxisVar] && aggsData[heatMapXAxisVar].histogram) {
+      // TODO remove when we have real data results:
+      let index_in_list = 1;
+      aggsData[heatMapXAxisVar].histogram.forEach((e) => {
+        for (var i=0; i<5; i++){
+          let fakeData = {
+            key: index_in_list, // simulate visit_number
+            count: e.count * 1.5, // simulate no big percentage
+            subject_id: {
+              count: Math.floor(Math.random() * i)
+            },
+            age_at_visit: {
+              count: Math.floor(Math.random() * e.count)
+            },
+            Abacavir_since_last_visit: {
+              count: Math.floor(Math.random() * e.count)
+            },
+            Abacavir_at_visit: {
+              count: Math.floor(Math.random() * e.count)
+            },
+            drug_taken_frequency_6mons: {
+              count: Math.floor(Math.random() * e.count)
+            },
+            therapy_type_since_last_visit: {
+              count: Math.floor(Math.random() * e.count)
+            }
+          }
+          heatMapData.push(fakeData)
+          index_in_list++;
+        }
+      })
+    }
+    return { summaries, countItems, stackedBarCharts, heatMapData };
   }
 
   render() {
@@ -115,6 +153,9 @@ class ExplorerVisualization extends React.Component {
           ),
           )
         }
+        <ExplorerHeatMap
+          data={chartData.heatMapData}
+        />
         {
           this.props.tableConfig.enabled && (
             <ExplorerTable
