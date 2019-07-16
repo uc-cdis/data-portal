@@ -34,7 +34,7 @@ class PrivacyPolicy extends React.Component {
 }
 
 PrivacyPolicy.propTypes = {
-  loadPrivacyPolicy: PropTypes.function.isRequired,
+  loadPrivacyPolicy: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   text: PropTypes.string.isRequired,
   loaded: PropTypes.bool.isRequired,
