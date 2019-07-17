@@ -69,7 +69,7 @@ class ExplorerVisualization extends React.Component {
             key: index_in_list, // simulate visit_number
             count: e.count * 1.5, // simulate no big percentage
             subject_id: {
-              count: Math.floor(Math.random() * i)
+              count: Math.floor(Math.random() * this.props.totalCount)
             },
             age_at_visit: {
               count: Math.floor(Math.random() * e.count)
@@ -155,6 +155,7 @@ class ExplorerVisualization extends React.Component {
         }
         <ExplorerHeatMap
           data={chartData.heatMapData}
+          nodeTotalCount={this.props.totalCount} // TODO: find a better way - this prop might not always be what we need (total number of subject_ids)
         />
         {
           this.props.tableConfig.enabled && (

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactEcharts from 'echarts-for-react';
-import echarts from 'echarts';  // TODO remove?
+// import echarts from 'echarts';  // TODO remove?
 import { EditorBorderRight } from 'material-ui/svg-icons';
 import './ExplorerHeatMap.less';
 
@@ -908,30 +908,25 @@ class ExplorerHeatMap extends React.Component {
       let xIndex = details.key;
 
       yAxisVars.map(varName => {
-        if (varName == "subject_id") {
-          // ?
+        let rate;
+        if (varName == "subject_id") { // TODO: configurable
+          rate = details[varName].count / this.props.nodeTotalCount;
         }
         else {
-          let rate = details[varName].count / details.count;
-          rate = round(rate, 2); // || '-'; // 2 decimals / zero -> empty // Note: if '-' for zeros, there is no tooltip to know which x/y is zero
-          transformed_data.push([
-            xIndex,
-            yAxisVars.indexOf(varName),
-            rate // round with 2 decimals in cells
-          ]);
-          if (rate > this.maxCellValue) {
-            // round UP with 1 decimal in legend
-            this.maxCellValue = Math.ceil(rate * precision) / precision;
-          }
+          rate = details[varName].count / details.count;
+        }
+        // Note: if '-' for zeros, there is no tooltip about which x/y is zero
+        rate = round(rate, 2); // || '-'; // 2 decimals / zero -> empty
+        transformed_data.push([
+          xIndex,
+          yAxisVars.indexOf(varName),
+          rate // round with 2 decimals in cells
+        ]);
+        if (rate > this.maxCellValue) {
+          // round UP with 1 decimal in legend
+          this.maxCellValue = Math.ceil(rate * precision) / precision;
         }
       });
-
-      let varName = "subject_id"
-      transformed_data.push([
-        xIndex,
-        yAxisVars.indexOf(varName),
-        details[varName].count
-      ]);
     });
     return transformed_data;
   };
@@ -1018,34 +1013,46 @@ class ExplorerHeatMap extends React.Component {
   render() {
     let data = this.getData()
     return (
-      // <div className={'checkbox'}>
-      //   <input
-      //     // TODO remove this checkbox (or use CheckBox component if we keep this)
-      //     type='checkbox'
-      //     // id={this.props.id}
-      //     value={this.state.showCellLabel}
-      //     checked={this.state.showCellLabel}
-      //     onChange={
-      //       () => this.setState({showCellLabel: !this.state.showCellLabel})
-      //     }
-      //   /> show cell labels
-      // </div>
-      !data || !data.length ? null :
-        <div className='explorer-heat-map'>
-          <ReactEcharts
-            option={this.getOptions(data)}
-          />
-        </div>
+      <React.Fragment>
+       {/* <div className={'checkbox'}>
+         <input
+          // TODO remove this checkbox (or use CheckBox component if we keep this)
+          type='checkbox'
+          // id={this.props.id}
+          value={this.state.showCellLabel}
+          checked={this.state.showCellLabel}
+          onChange={
+            () => this.setState({showCellLabel: !this.state.showCellLabel})
+          }
+        /> show cell labels
+      </div> */}
+      {
+        data && data.length && (
+          <div className={`explorer-heat-map`}>
+            <div className={`explorer-heat-map__title--align-center h4-typo`}>
+              Data availability
+            </div>
+            <div className='explorer-heat-map__chart'>
+              <ReactEcharts
+                option={this.getOptions(data)}
+              />
+            </div>
+          </div>
+        )
+      }
+      </React.Fragment>
     );
   }
 }
 
 ExplorerHeatMap.propTypes = {
   data: PropTypes.array,
+  nodeTotalCount: PropTypes.number, // Note: total number of subject_ids
 };
 
 ExplorerHeatMap.defaultProps = {
   data: {},
+  nodeTotalCount: null,
 };
 
 export default ExplorerHeatMap;
