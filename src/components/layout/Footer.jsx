@@ -24,7 +24,7 @@ class Footer extends Component {
               )
             }
           </div>
-          {!!this.props.privacyPolicy.text ?
+          {this.props.privacyPolicy.text ?
             <div className='footer__privacy-policy-area'>
               <a
                 className='h4-typo footer__privacy-policy'
@@ -77,7 +77,7 @@ Footer.propTypes = {
   portalVersion: PropTypes.string,
   logos: PropTypes.arrayOf(LogoObject).isRequired,
   privacyPolicy: PropTypes.shape({
-    href: PropTypes.string,
+    footerHref: PropTypes.string,
     text: PropTypes.string,
   }),
 };

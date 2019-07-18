@@ -11,7 +11,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   loadPrivacyPolicy: () => {
     fetch(components.privacyPolicy.file).then(
-      response => {
+      (response) => {
         if (response.ok) {
           response.text().then(
             (text) => {
@@ -20,15 +20,13 @@ const mapDispatchToProps = dispatch => ({
               dispatch({
                 type: 'LOAD_PRIVACY_POLICY',
                 value: html,
-              })
-            })
-        } else {
-          ''
+              });
+            });
         }
       },
       _ => '', // eslint-disable-line no-unused-vars
-    )
-  }
+    );
+  },
 });
 
 const ReduxPrivacyPolicy = connect(mapStateToProps, mapDispatchToProps)(PrivacyPolicy);
