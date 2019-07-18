@@ -11,18 +11,24 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   loadPrivacyPolicy: () => {
     fetch(components.privacyPolicy.file).then(
-      response => response.text().then(
-        (text) => {
-          const converter = new showdown.Converter();
-          const html = converter.makeHtml(text);
-          dispatch({
-            type: 'LOAD_PRIVACY_POLICY',
-            value: html,
-          });
-        }),
+      response => {
+        if (response.ok) {
+          response.text().then(
+            (text) => {
+              const converter = new showdown.Converter();
+              const html = converter.makeHtml(text);
+              dispatch({
+                type: 'LOAD_PRIVACY_POLICY',
+                value: html,
+              })
+            })
+        } else {
+          ''
+        }
+      },
       _ => '', // eslint-disable-line no-unused-vars
-    );
-  },
+    )
+  }
 });
 
 const ReduxPrivacyPolicy = connect(mapStateToProps, mapDispatchToProps)(PrivacyPolicy);
