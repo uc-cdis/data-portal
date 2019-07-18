@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import showdown from 'showdown';
+import { components } from '../params';
 import PrivacyPolicy from './PrivacyPolicy';
 
 const mapStateToProps = state => ({
@@ -9,7 +10,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadPrivacyPolicy: () => {
-    fetch('/src/privacy_policy.md').then(
+    fetch(components.privacyPolicy.file).then(
       response => response.text().then(
         (text) => {
           const converter = new showdown.Converter();

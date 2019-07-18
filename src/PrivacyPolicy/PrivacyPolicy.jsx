@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Spinner from '../components/Spinner';
+import { components } from '../params';
 import './PrivacyPolicy.less';
 
 class PrivacyPolicy extends React.Component {
@@ -24,7 +25,7 @@ class PrivacyPolicy extends React.Component {
       );
     }
     // otherwise we'll try to redirect to the url according to the environment variable
-    const url = process.env.PRIVACY_POLICY_URL;
+    const url = components.privacyPolicy.routeHref;
     if (url) {
       // redirect to given URL
       this.props.history.push(url);

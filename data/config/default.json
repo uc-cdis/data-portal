@@ -176,8 +176,10 @@
       }
     ],
     "privacyPolicy": {
-      "text": "Privacy Policy",
-      "href": "/privacy-policy"
+      "text": "",
+      "routeHref": "",
+      "footerHref": "",
+      "file": ""
     }
   },
   "requiredCerts": [],
@@ -281,6 +283,5 @@
         "file_format"
       ]
     }
-  },
-  "privacyPolicyFile": null
+  }
 }

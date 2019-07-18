@@ -38,7 +38,7 @@ import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
-import { gaTracking, components, config } from './params';
+import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
 import GuppyDataExplorer from './GuppyDataExplorer/.';
@@ -288,7 +288,7 @@ async function init() {
                       />
                       : null
                     }
-                    {!!config.privacyPolicyFile || !!process.env.PRIVACY_POLICY_URL ?
+                    {!!components.privacyPolicy.file || !!components.privacyPolicy.routeHref ?
                       <Route
                         path='/privacy-policy'
                         component={ReduxPrivacyPolicy}

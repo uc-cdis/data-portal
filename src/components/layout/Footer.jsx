@@ -24,11 +24,11 @@ class Footer extends Component {
               )
             }
           </div>
-          {!!this.props.privacyPolicy ?
+          {!!this.props.privacyPolicy.text ?
             <div className='footer__privacy-policy-area'>
               <a
                 className='h4-typo footer__privacy-policy'
-                href={this.props.privacyPolicy.href}
+                href={this.props.privacyPolicy.footerHref}
                 target='_blank'
                 rel='noopener noreferrer'
               >
