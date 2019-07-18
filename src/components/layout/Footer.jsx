@@ -87,10 +87,7 @@ Footer.defaultProps = {
   apiVersion: 'Unknown',
   hidden: false,
   portalVersion: 'Unknown',
-  privacyPolicy: {
-    text: '',
-    href: '/',
-  },
+  privacyPolicy: null,
 };
 
 export default Footer;
