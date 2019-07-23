@@ -288,7 +288,8 @@ async function init() {
                       />
                       : null
                     }
-                    {!!components.privacyPolicy.file || !!components.privacyPolicy.routeHref ?
+                    {components.privacyPolicy &&
+                    (!!components.privacyPolicy.file || !!components.privacyPolicy.routeHref) ?
                       <Route
                         path='/privacy-policy'
                         component={ReduxPrivacyPolicy}
