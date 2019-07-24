@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { config } from '../../params';
+import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../../localconf';
+import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
@@ -103,6 +106,7 @@ class ExplorerVisualization extends React.Component {
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
     const lockMessage = `This chart is hidden because it contains fewer than ${this.props.tierAccessLimit} ${this.props.nodeCountTitle.toLowerCase()}`;
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
+    const heatMapGuppyConfig = config.dataAvailabilityToolConfig.guppyConfig;
     return (
       <div className={this.props.className}>
         <div className='guppy-explorer-visualization__button-group'>
@@ -126,7 +130,7 @@ class ExplorerVisualization extends React.Component {
             </div>
           )
         }
-        {
+        {/* {
           chartData.summaries.length > 0 && (
             <div className='guppy-explorer-visualization__charts'>
               <SummaryChartGroup
@@ -152,11 +156,19 @@ class ExplorerVisualization extends React.Component {
             />
           ),
           )
-        }
-        <ExplorerHeatMap
-          data={chartData.heatMapData}
-          nodeTotalCount={this.props.totalCount} // TODO: find a better way - this prop might not always be what we need (total number of subject_ids)
-        />
+        } */}
+        <GuppyWrapper
+          filterConfig={{}} // TODO
+          guppyConfig={{ path: guppyUrl, type: heatMapGuppyConfig.dataType, ...heatMapGuppyConfig }}
+          tierAccessLevel={tierAccessLevel}
+          tierAccessLimit={tierAccessLimit}
+          rawDataFields={[]} // not needed here but required by GuppyWrapper
+        >
+          <ExplorerHeatMap
+            data={chartData.heatMapData}
+            nodeTotalCount={this.props.totalCount} // TODO: find a better way - this prop might not always be what we need (total number of subject_ids)
+          />
+        </GuppyWrapper>
         {
           this.props.tableConfig.enabled && (
             <ExplorerTable
