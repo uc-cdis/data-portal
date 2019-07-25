@@ -69,7 +69,7 @@ function buildConfig(opts) {
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
-  const workspaceUrl = '/lw-workspace/';
+  const workspaceUrl = process.env.WORKSPACE_URL || '/lw-workspace/';
   const workspaceErrorUrl = '/no-workspace-access/';
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
@@ -78,7 +78,7 @@ function buildConfig(opts) {
   const datasetUrl = `${hostname}api/search/datasets`;
   const guppyUrl = `${hostname}guppy`;
   const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
-  const manifestServiceApiPath = `${hostname}manifests/`;
+  const manifestServiceApiPath = process.env.MANIFEST_SERVICE_URL || `${hostname}manifests/`;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;

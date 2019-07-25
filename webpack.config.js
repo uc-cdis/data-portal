@@ -32,6 +32,8 @@ const plugins = [
   new webpack.EnvironmentPlugin(['TIER_ACCESS_LIMIT']),
   new webpack.EnvironmentPlugin(['FENCE_URL']),
   new webpack.EnvironmentPlugin(['INDEXD_URL']),
+  new webpack.EnvironmentPlugin(['WORKSPACE_URL']),
+  new webpack.EnvironmentPlugin(['MANIFEST_SERVICE_URL']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev'),
@@ -53,6 +55,12 @@ const plugins = [
       }
       if (typeof process.env.INDEXD_URL !== 'undefined') {
         rv[(new URL(process.env.INDEXD_URL)).origin] = true;
+      }
+      if (typeof process.env.WORKSPACE_URL !== 'undefined') {
+        rv[(new URL(process.env.WORKSPACE_URL)).origin] = true;
+      }
+      if (typeof process.env.MANIFEST_SERVICE_URL !== 'undefined') {
+        rv[(new URL(process.env.MANIFEST_SERVICE_URL)).origin] = true;
       }
       return Object.keys(rv).join(' ');
     })(),
