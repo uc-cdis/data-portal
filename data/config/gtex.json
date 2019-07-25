@@ -254,11 +254,10 @@
         "leftIcon": "user",
         "rightIcon": "download",
         "fileName": "clinical.json",
-        "dropdownId": "download",
-        "tooltipText": "You have not selected any cases to download. Please use the checkboxes on the left to select specific cases you would like to download."
+        "dropdownId": "download"
       },
       {
-        "enabled": false,
+        "enabled": true,
         "type": "manifest",
         "title": "Download Manifest",
         "leftIcon": "datafile",
@@ -270,8 +269,7 @@
         "enabled": true,
         "type": "export",
         "title": "Export All to Terra",
-        "rightIcon": "external-link",
-        "tooltipText": "You have not selected any cases to export. Please use the checkboxes on the left to select specific cases you would like to export."
+        "rightIcon": "external-link"
       },
       {
         "enabled": true,
@@ -350,6 +348,25 @@
         "object_id"
       ]
     },
+    "dropdowns": {},
+    "buttons": [
+      {
+        "enabled": true,
+        "type": "file-manifest",
+        "title": "Download Manifest",
+        "leftIcon": "datafile",
+        "rightIcon": "download",
+        "fileName": "file-manifest.json",
+        "dropdownId": "download"
+      },
+      {
+        "enabled": true,
+        "type": "export-files-to-workspace",
+        "title": "Export to Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "download"
+      }
+    ],
     "guppyConfig": {
       "dataType": "file",
       "fieldMapping": [
@@ -365,8 +382,6 @@
       "accessibleFieldCheckList": ["project_id"],
       "accessibleValidationField": "project_id",
       "downloadAccessor": "object_id"
-    },
-    "buttons": [],
-    "dropdowns": {}
+    }
   }
 }
