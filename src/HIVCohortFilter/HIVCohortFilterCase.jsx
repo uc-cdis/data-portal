@@ -1,15 +1,21 @@
 import React from 'react';
 import FileSaver from 'file-saver';
-import { arrangerGraphqlPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
+import {
+  guppyGraphQLUrl,
+  arrangerGraphqlPath,
+  useGuppyForExplorer,
+} from '../configs';
 
 class HIVCohortFilterCase extends React.Component {
   // Base class for the 3 NDH cohort filter apps. Meant to facilitate code reuse
-  static performQuery(queryString) {
+  static performQuery(queryString, variableString) {
+    const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
     return fetchWithCreds({
-      path: `${arrangerGraphqlPath}`,
+      path: `${graphqlUrl}`,
       body: JSON.stringify({
         query: queryString,
+        variables: JSON.parse(variableString),
       }),
       method: 'POST',
     })
@@ -87,6 +93,54 @@ class HIVCohortFilterCase extends React.Component {
   }
 
   getFollowupsBuckets = (key, keyRange) => {
+    if (useGuppyForExplorer) {
+      const queryString = `
+      query ($filter: JSON) {
+        follow_up (filter: $filter, accessibility: all, first: 10000) {
+          subject_id
+            visit_number
+            thrpyv
+            visit_date
+            fposdate
+            frstdthd
+            leu3n
+            submitter_id
+            viral_load
+        }
+        _aggregation {
+          follow_up (filter: $filter, accessibility: all) {
+            _totalCount
+          }
+        }
+      }
+    `;
+      const variableString = `
+      {
+        "filter": {
+          "AND": [
+            {
+              "in": {
+                "${key}": ["${keyRange.join('","')}"]
+              }
+            },
+            {
+              "=": {
+                "hiv_status": "positive"
+              }
+            }
+          ]
+        }
+      }`;
+      return HIVCohortFilterCase.performQuery(queryString, variableString).then((res) => {
+        if (!res
+          || !res.data
+          || !res.data.follow_up) {
+          throw new Error('Error while querying subjects with HIV');
+        }
+        return res.data.follow_up;
+      });
+    }
+
     const query = `
     {
       follow_up {
@@ -115,7 +169,6 @@ class HIVCohortFilterCase extends React.Component {
               viral_load
             }
           }
-
         }
       }
     }`;
