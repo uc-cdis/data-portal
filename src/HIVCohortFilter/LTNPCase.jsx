@@ -110,7 +110,7 @@ class LTNPCase extends HIVCohortFilterCase {
     }
 
     // below are for arranger only
-    const query = `
+    const queryString = `
     {
       follow_up {
         aggregations(filters: {first: 10000, op: "and", content: [
@@ -128,7 +128,7 @@ class LTNPCase extends HIVCohortFilterCase {
       }
     }
     `;
-    return HIVCohortFilterCase.performQuery(query).then((res) => {
+    return HIVCohortFilterCase.performQuery(queryString).then((res) => {
       if (!res || !res.data || !res.data.follow_up || !res.data.follow_up.aggregations) {
         throw new Error('Error while querying subjects with HIV');
       }
