@@ -91,7 +91,7 @@ class LTNPCase extends HIVCohortFilterCase {
         }
       }`;
       return HIVCohortFilterCase.performQuery(queryString, variableString).then((res) => {
-        // eslint-disable no-underscore-dangle
+        /* eslint-disable no-underscore-dangle */
         if (!res
           || !res.data
           || !res.data._aggregation
