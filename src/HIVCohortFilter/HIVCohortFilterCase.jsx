@@ -141,6 +141,7 @@ class HIVCohortFilterCase extends React.Component {
       });
     }
 
+    // below are for arranger
     const query = `
     {
       follow_up {

@@ -106,6 +106,7 @@ class PTCCase extends HIVCohortFilterCase {
       });
     }
 
+    // below are for arranger
     const queryString = `
     {
       follow_up {
@@ -137,7 +138,6 @@ class PTCCase extends HIVCohortFilterCase {
       this.getBucketByKeyWithHAARTVAR(bucketKey, true),
       this.getBucketByKeyWithHAARTVAR(bucketKey, false),
     ]);
-    console.log(resList);
     const withoutHAARTMap = resList[1].reduce((acc, cur) => {
       const { key, doc_count } = cur; // eslint-disable-line camelcase
       acc[key] = doc_count; // eslint-disable-line camelcase
