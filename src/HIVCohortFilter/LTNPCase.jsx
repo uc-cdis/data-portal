@@ -109,6 +109,7 @@ class LTNPCase extends HIVCohortFilterCase {
       });
     }
 
+    // below are for arranger only
     const query = `
     {
       follow_up {
