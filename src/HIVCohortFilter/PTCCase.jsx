@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
@@ -5,6 +6,7 @@ import './HIVCohortFilter.css';
 import CohortPTCSvg from '../img/cohort-PTC.svg';
 import Spinner from '../components/Spinner';
 import HIVCohortFilterCase from './HIVCohortFilterCase';
+import { useGuppyForExplorer } from '../configs';
 
 class PTCCase extends HIVCohortFilterCase {
   /*
@@ -49,7 +51,63 @@ class PTCCase extends HIVCohortFilterCase {
   getBucketByKeyWithHAARTVAR = (bucketKey, isHAART) => {
     // The viral_load check in the below query ensures that
     // the subjects retrieved have *at least* one follow_up with viral_load < viralLoadFromUser
-    const query = `
+    if (useGuppyForExplorer) {
+      const queryString = `
+      query ($filter: JSON) {
+        _aggregation {
+          follow_up (filter: $filter) {
+            ${bucketKey} {
+              histogram {
+                key
+                count
+              } 
+            }
+          }
+        }
+      }
+    `;
+      const variableString = ` {
+        "filter": {
+          "AND": [
+            {
+              "${isHAART ? '=' : '!='}": {
+                "thrpyv": "HAART"
+              }
+            },
+            {
+              "<": {
+                "viral_load": ${this.state.viralLoadFromUser}
+              }
+            },
+            {
+              "=": {
+                "hiv_status": "positive"
+              }
+            }
+          ]
+        }
+      }`;
+      return HIVCohortFilterCase.performQuery(queryString, variableString).then((res) => {
+        // eslint-disable no-underscore-dangle
+        if (!res
+          || !res.data
+          || !res.data._aggregation
+          || !res.data._aggregation.follow_up) {
+          throw new Error('Error when query subjects with HIV');
+        }
+        const result = res.data._aggregation.follow_up[bucketKey].histogram;
+        const resultList = [];
+        result.forEach(item => (resultList.push({
+          key: item.key,
+          doc_count: item.count,
+        })));
+        return resultList;
+        // eslint-enable no-underscore-dangle
+      });
+    }
+
+    // below are for arranger
+    const queryString = `
     {
       follow_up {
         aggregations(filters: {first: 10000, op: "and", content: [
@@ -67,7 +125,7 @@ class PTCCase extends HIVCohortFilterCase {
       }
     }
     `;
-    return HIVCohortFilterCase.performQuery(query).then((res) => {
+    return HIVCohortFilterCase.performQuery(queryString).then((res) => {
       if (!res || !res.data) {
         throw new Error('Error when query subjects with HIV');
       }
