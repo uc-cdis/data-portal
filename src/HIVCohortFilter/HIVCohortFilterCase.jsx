@@ -13,9 +13,11 @@ class HIVCohortFilterCase extends React.Component {
     const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
     return fetchWithCreds({
       path: `${graphqlUrl}`,
-      body: JSON.stringify({
+      body: variableString ? JSON.stringify({
         query: queryString,
         variables: JSON.parse(variableString),
+      }) : JSON.stringify({
+        query: queryString,
       }),
       method: 'POST',
     })
