@@ -60,7 +60,7 @@ function buildConfig(opts) {
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTailingSlash(indexdURL);
-  const wtsPath = `${hostname}wts/oauth2/`;
+  const wtsPath = ensureTailingSlash(process.env.WTS_URL) || `${hostname}wts/oauth2/`;
   let login = {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',

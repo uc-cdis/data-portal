@@ -33,6 +33,7 @@ const plugins = [
   new webpack.EnvironmentPlugin(['FENCE_URL']),
   new webpack.EnvironmentPlugin(['INDEXD_URL']),
   new webpack.EnvironmentPlugin(['WORKSPACE_URL']),
+  new webpack.EnvironmentPlugin(['WTS_URL']),
   new webpack.EnvironmentPlugin(['MANIFEST_SERVICE_URL']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
@@ -58,6 +59,9 @@ const plugins = [
       }
       if (typeof process.env.WORKSPACE_URL !== 'undefined') {
         rv[(new URL(process.env.WORKSPACE_URL)).origin] = true;
+      }
+      if (typeof process.env.WTS_URL !== 'undefined') {
+        rv[(new URL(process.env.WTS_URL)).origin] = true;
       }
       if (typeof process.env.MANIFEST_SERVICE_URL !== 'undefined') {
         rv[(new URL(process.env.MANIFEST_SERVICE_URL)).origin] = true;
