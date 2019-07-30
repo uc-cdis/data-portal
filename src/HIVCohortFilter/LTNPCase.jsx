@@ -5,6 +5,7 @@ import './HIVCohortFilter.css';
 import CohortLTNPSvg from '../img/cohort-LTNP.svg';
 import Spinner from '../components/Spinner';
 import HIVCohortFilterCase from './HIVCohortFilterCase';
+import { useGuppyForExplorer } from '../configs';
 
 class LTNPCase extends HIVCohortFilterCase {
   /*
@@ -52,7 +53,64 @@ class LTNPCase extends HIVCohortFilterCase {
   getBucketByKeyWithHAARTVAR = (bucketKey, isHAART) => {
     const d = new Date();
     const currentYear = d.getFullYear();
-    const query = `
+
+    if (useGuppyForExplorer) {
+      const queryString = `
+      query ($filter: JSON) {
+        _aggregation {
+          follow_up (filter: $filter) {
+            ${bucketKey} {
+              histogram {
+                key
+                count
+              } 
+            }
+          }
+        }
+      }
+    `;
+      const variableString = ` {
+        "filter": {
+          "AND": [
+            {
+              "${isHAART ? '=' : '!='}": {
+                "thrpyv": "HAART"
+              }
+            },
+            {
+              "<=": {
+                "fposdate": ${currentYear - this.state.numConsecutiveYearsFromUser}
+              }
+            },
+            {
+              "=": {
+                "hiv_status": "positive"
+              }
+            }
+          ]
+        }
+      }`;
+      return HIVCohortFilterCase.performQuery(queryString, variableString).then((res) => {
+        /* eslint-disable no-underscore-dangle */
+        if (!res
+          || !res.data
+          || !res.data._aggregation
+          || !res.data._aggregation.follow_up) {
+          throw new Error('Error when query subjects with HIV');
+        }
+        const result = res.data._aggregation.follow_up[bucketKey].histogram;
+        const resultList = [];
+        result.forEach(item => (resultList.push({
+          key: item.key,
+          doc_count: item.count,
+        })));
+        return resultList;
+        // eslint-enable no-underscore-dangle
+      });
+    }
+
+    // below are for arranger only
+    const queryString = `
     {
       follow_up {
         aggregations(filters: {first: 10000, op: "and", content: [
@@ -70,7 +128,7 @@ class LTNPCase extends HIVCohortFilterCase {
       }
     }
     `;
-    return HIVCohortFilterCase.performQuery(query).then((res) => {
+    return HIVCohortFilterCase.performQuery(queryString).then((res) => {
       if (!res || !res.data || !res.data.follow_up || !res.data.follow_up.aggregations) {
         throw new Error('Error while querying subjects with HIV');
       }
