@@ -151,18 +151,20 @@ class ExplorerVisualization extends React.Component {
         {
           heatMapGuppyConfig && (
             <GuppyWrapper
-              filterConfig = {heatMapFilterConfig}
               guppyConfig={{ path: guppyUrl, type: heatMapGuppyConfig.dataType, ...heatMapGuppyConfig }}
+              filterConfig = {heatMapFilterConfig}
               tierAccessLevel={tierAccessLevel}
               tierAccessLimit={tierAccessLimit}
             >
               <ConnectedFilter
                 className='guppy-explorer-visualization__connected-filter--hide'
                 ref={this.connectedFilter}
+                guppyConfig={{ path: guppyUrl, type: heatMapGuppyConfig.dataType, ...heatMapGuppyConfig }}
                 filterConfig = {heatMapFilterConfig}
               />
               <ExplorerHeatMap
                 guppyConfig={{ path: guppyUrl, type: heatMapGuppyConfig.dataType, ...heatMapGuppyConfig }}
+                mainYAxisVar={this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex}
               />
             </GuppyWrapper>
           )

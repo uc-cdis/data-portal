@@ -11,11 +11,7 @@ function round(value, decimals) {
 class ExplorerHeatMap extends React.Component {
   constructor(props) {
     super(props);
-    this.maxCellValue = 0, // updated when data is received
-    this.state = {
-      xAxisVar: 'visit_number', // TODO: configurable
-      fakeData: true // TODO remove
-    };
+    this.maxCellValue = 0; // updated when data is received
   }
 
   /**
@@ -48,34 +44,24 @@ class ExplorerHeatMap extends React.Component {
         }, {});
 
         yAxisVars.map(fieldName => {
-          if (typeof fieldToMissingCount[fieldName] === 'undefined') {
-            if (fieldName !== "subject_id") { // TODO remove
-              // TODO remove this if not needed anymore
-              console.warn(`Heatmap field "${fieldName}" is not in nested aggregation data: ignoring`)
-              yAxisVars.pop(fieldName);
-            }
+          let rate;
+          if (fieldName == this.props.mainYAxisVar) {
+            const totalCount = this.props.filter[this.props.mainYAxisVar].selectedValues.length;
+            rate = details.count / totalCount;
           }
           else {
-            let rate;
-          //   if (fieldName == "subject_id") { // TODO: configurable
-          //     rate = details[fieldName].count / this.props.nodeTotalCount;
-          //   }
-          //   else {
-              rate = 1 - fieldToMissingCount[fieldName] / details.count;
-              if (this.state.fakeData)
-                rate = Math.random() * 0.7; // TODO remove!
-          //   }
-            // Note: if '-' for zeros, there is no tooltip about which x/y is zero
-            rate = round(rate, 2); // || '-'; // 2 decimals / zero -> empty
-            transformed_data.push([
-              xIndex,
-              yAxisVars.indexOf(fieldName),
-              rate // round with 2 decimals in cells
-            ]);
-            if (rate > this.maxCellValue) {
-              // round UP with 1 decimal in legend
-              this.maxCellValue = Math.ceil(rate * precision) / precision;
-            }
+            rate = 1 - fieldToMissingCount[fieldName] / details.count;
+          }
+          // Note: if '-' for zeros, there is no tooltip about which x/y is zero
+          rate = round(rate, 2); // 2 decimals / zero -> empty
+          transformed_data.push([
+            xIndex,
+            yAxisVars.indexOf(fieldName),
+            rate // round with 2 decimals in cells
+          ]);
+          if (rate > this.maxCellValue) {
+            // round UP with 1 decimal in legend
+            this.maxCellValue = Math.ceil(rate * precision) / precision;
           }
         });
       });
@@ -86,8 +72,7 @@ class ExplorerHeatMap extends React.Component {
   /**
    * See echarts docs at https://echarts.apache.org/en/option.html
    */
-  getHeatMapOptions = (data, yAxisVars, yAxisVarsMapping) => {
-    const xAxisVar = this.state.xAxisVar;
+  getHeatMapOptions = (data, xAxisVarTitle, yAxisVars, yAxisVarsMapping) => {
     return {
       tooltip: {
         position: 'top',
@@ -98,7 +83,7 @@ class ExplorerHeatMap extends React.Component {
             i => i.field === yField
           );
           const yAxisVar = mappingEntry && mappingEntry.name || yField;
-          return `Variable: ${capitalizeFirstLetter(yAxisVar)}<br/>${xAxisVar}: ${params.data[0]}<br/>Data availability: ${params.data[2]}`;
+          return `Variable: ${capitalizeFirstLetter(yAxisVar)}<br/>${xAxisVarTitle}: ${params.data[0]}<br/>Data availability: ${params.data[2]}`;
         }
       },
       // toolbox: {
@@ -121,7 +106,7 @@ class ExplorerHeatMap extends React.Component {
         axisTick: {
           show: false
         },
-        name: xAxisVar,
+        name: xAxisVarTitle,
         nameLocation: 'middle'
       },
       yAxis: {
@@ -155,13 +140,13 @@ class ExplorerHeatMap extends React.Component {
   };
   
   render() {
-    // y axis items in alphabetical order. "subject_id" on top
-    // TODO: subject_id configurable?
-    const yAxisVars = ["subject_id"].concat(
+    // y axis items in alpha order. mainYAxisVar (i.e. "subject_id") on top
+    const xAxisVarTitle = this.props.guppyConfig.mainFieldTitle;
+    const yAxisVars = [this.props.mainYAxisVar].concat(
       this.props.guppyConfig.aggFields.sort()
     );
     const yAxisVarsMapping = this.props.guppyConfig.fieldMapping;
-    const data = this.getTransformedData(yAxisVars, yAxisVarsMapping);
+    const data = this.getTransformedData(yAxisVars);
     const height = "450px"; // TODO need to display all yaxis vars https://github.com/hustcc/echarts-for-react/issues/208
   
     return (
@@ -169,24 +154,12 @@ class ExplorerHeatMap extends React.Component {
       {
         data && data.length && (
           <div className={`explorer-heat-map`}>
-            <div className={'checkbox'}>
-              <input
-                // TODO remove
-                type='checkbox'
-                value={this.state.fakeData}
-                checked={this.state.fakeData}
-                onChange={
-                  () => this.setState({fakeData: !this.state.fakeData})
-                }
-              /> use fake data
-            </div>
-
             <div className={`explorer-heat-map__title--align-center h4-typo`}>
               Data availability
             </div>
             <div className='explorer-heat-map__chart'>
               <ReactEcharts
-                option={this.getHeatMapOptions(data, yAxisVars, yAxisVarsMapping)}
+                option={this.getHeatMapOptions(data, xAxisVarTitle, yAxisVars, yAxisVarsMapping)}
                 style={{height}}
               />
             </div>
@@ -200,11 +173,12 @@ class ExplorerHeatMap extends React.Component {
 
 ExplorerHeatMap.propTypes = {
   rawData: PropTypes.array, // inherited from GuppyWrapper
-  // nodeTotalCount: PropTypes.number, // Note: total number of subject_ids
+  filter: PropTypes.object, // inherited from GuppyWrapper
+  mainYAxisVar: PropTypes.string.isRequired,
 };
 
 ExplorerHeatMap.defaultProps = {
-  // nodeTotalCount: null,
-};
+  rawData: [],
+}
 
 export default ExplorerHeatMap;
