@@ -75,7 +75,7 @@ class ExplorerHeatMap extends React.Component {
    * See echarts docs at https://echarts.apache.org/en/option.html
    */
   getHeatMapOptions = (data, xAxisVarTitle, yAxisVars, yAxisVarsMapping) => ({
-    tooltip: {
+    tooltip: { // displayed when hover on cell
       position: 'top',
       formatter(params) {
         // Note: params.data = [x, y, value]
@@ -87,10 +87,6 @@ class ExplorerHeatMap extends React.Component {
         return `Variable: ${capitalizeFirstLetter(yAxisVar)}<br/>${xAxisVarTitle}: ${params.data[0]}<br/>Data availability: ${params.data[2]}`;
       },
     },
-    // toolbox: {
-    //   dataZoom: {
-    //   }
-    // },
     grid: {
       containLabel: true, // axis labels are cut off if not grid.containLabel
       // distance to edges of the box:
@@ -121,7 +117,7 @@ class ExplorerHeatMap extends React.Component {
       },
       inverse: true,
     },
-    visualMap: {
+    visualMap: { // legend
       min: 0,
       max: this.maxCellValue, // round up (1 decimal) of max value
       precision: 2, // 2 decimals in label
@@ -141,7 +137,7 @@ class ExplorerHeatMap extends React.Component {
 
   render() {
     // y axis items in alpha order. mainYAxisVar (i.e. "subject_id") on top
-    const xAxisVarTitle = this.props.guppyConfig.mainFieldTitle;
+    const xAxisVarTitle = capitalizeFirstLetter(this.props.guppyConfig.mainFieldTitle);
     const yAxisVars = [this.props.mainYAxisVar].concat(
       this.props.guppyConfig.aggFields.sort(),
     );
@@ -152,7 +148,7 @@ class ExplorerHeatMap extends React.Component {
     return (
       <React.Fragment>
         {
-          data && data.length && (
+          data && data.length ? (
             <div className={'explorer-heat-map'}>
               <div className={'explorer-heat-map__title--align-center h4-typo'}>
               Data availability
@@ -164,7 +160,7 @@ class ExplorerHeatMap extends React.Component {
                 />
               </div>
             </div>
-          )
+          ) : null
         }
       </React.Fragment>
     );
