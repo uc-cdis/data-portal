@@ -77,7 +77,6 @@ GuppyDataExplorer.propTypes = {
   tableConfig: TableConfigType.isRequired,
   chartConfig: ChartConfigType.isRequired,
   buttonConfig: ButtonConfigType.isRequired,
-  heatMapConfig: PropTypes.object,
   nodeCountTitle: PropTypes.string,
   history: PropTypes.object.isRequired,
   tierAccessLevel: PropTypes.string.isRequired,
@@ -88,7 +87,6 @@ GuppyDataExplorer.propTypes = {
 GuppyDataExplorer.defaultProps = {
   nodeCountTitle: undefined,
   getAccessButtonLink: undefined,
-  heatMapConfig: undefined,
 };
 
 export default GuppyDataExplorer;

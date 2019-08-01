@@ -102,7 +102,6 @@ class Explorer extends React.Component {
               buttons: guppyExplorerConfig[this.state.tab].buttons,
               dropdowns: guppyExplorerConfig[this.state.tab].dropdowns,
             }}
-            heatMapConfig={config.dataAvailabilityToolConfig}
             history={this.props.history}
             tierAccessLevel={tierAccessLevel}
             tierAccessLimit={tierAccessLimit}

@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { config } from '../../params';
-import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../../localconf';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
 import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
+import { config, components } from '../../params';
+import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../../localconf';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerHeatMap from '../ExplorerHeatMap';
 import ExplorerTable from '../ExplorerTable';
@@ -18,7 +18,7 @@ import {
 } from '../configTypeDef';
 import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper';
 import './ExplorerVisualization.css';
-import { components } from '../../params';
+
 
 class ExplorerVisualization extends React.Component {
   constructor(props) {
@@ -83,20 +83,21 @@ class ExplorerVisualization extends React.Component {
     const lockMessage = `This chart is hidden because it contains fewer than ${this.props.tierAccessLimit} ${this.props.nodeCountTitle.toLowerCase()}`;
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
 
-    const heatMapGuppyConfig = config.dataAvailabilityToolConfig ? config.dataAvailabilityToolConfig.guppyConfig : null;
+    const heatMapGuppyConfig = config.dataAvailabilityToolConfig ?
+      config.dataAvailabilityToolConfig.guppyConfig : null;
     if (heatMapGuppyConfig) {
       this.updateConnectedFilter();
     }
     const heatMapFilterConfig = {
-      "tabs": [
+      tabs: [
         {
-          "title": "Subject",
-          "fields": [
-            "subject_id"
-          ]
-        }
-      ]
-    }
+          title: 'Subject',
+          fields: [
+            'subject_id',
+          ],
+        },
+      ],
+    };
 
     return (
       <div className={this.props.className}>
@@ -151,20 +152,33 @@ class ExplorerVisualization extends React.Component {
         {
           heatMapGuppyConfig && (
             <GuppyWrapper
-              guppyConfig={{ path: guppyUrl, type: heatMapGuppyConfig.dataType, ...heatMapGuppyConfig }}
-              filterConfig = {heatMapFilterConfig}
+              guppyConfig={{
+                path: guppyUrl,
+                type: heatMapGuppyConfig.dataType,
+                ...heatMapGuppyConfig,
+              }}
+              filterConfig={heatMapFilterConfig}
               tierAccessLevel={tierAccessLevel}
               tierAccessLimit={tierAccessLimit}
             >
               <ConnectedFilter
                 className='guppy-explorer-visualization__connected-filter--hide'
                 ref={this.connectedFilter}
-                guppyConfig={{ path: guppyUrl, type: heatMapGuppyConfig.dataType, ...heatMapGuppyConfig }}
-                filterConfig = {heatMapFilterConfig}
+                guppyConfig={{
+                  path: guppyUrl,
+                  type: heatMapGuppyConfig.dataType,
+                  ...heatMapGuppyConfig,
+                }}
+                filterConfig={heatMapFilterConfig}
               />
               <ExplorerHeatMap
-                guppyConfig={{ path: guppyUrl, type: heatMapGuppyConfig.dataType, ...heatMapGuppyConfig }}
-                mainYAxisVar={this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex}
+                guppyConfig={{
+                  path: guppyUrl,
+                  type: heatMapGuppyConfig.dataType,
+                  ...heatMapGuppyConfig,
+                }}
+                mainYAxisVar={this.props.guppyConfig.manifestMapping
+                  .referenceIdFieldInResourceIndex}
               />
             </GuppyWrapper>
           )

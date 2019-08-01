@@ -99,12 +99,12 @@ class ExplorerButtonGroup extends React.Component {
       [caseFieldInFileIndex, fileFieldInFileIndex],
     );
     resultManifest = resultManifest.filter(
-      x => !!x[fileFieldInFileIndex]
+      x => !!x[fileFieldInFileIndex],
     );
     /* eslint-disable no-param-reassign */
-    resultManifest.forEach(function(x) {
-      if(typeof x[caseFieldInFileIndex] === "string") {
-        x[caseFieldInFileIndex] = [ x[caseFieldInFileIndex] ];  
+    resultManifest.forEach((x) => {
+      if (typeof x[caseFieldInFileIndex] === 'string') {
+        x[caseFieldInFileIndex] = [x[caseFieldInFileIndex]];
       }
     });
     return resultManifest.flat();
@@ -222,7 +222,7 @@ class ExplorerButtonGroup extends React.Component {
           },
         );
     } else {
-      this.exportToWorkspaceMessageHandler(400, "There were no data files found matching the cohort you created.");
+      this.exportToWorkspaceMessageHandler(400, 'There were no data files found matching the cohort you created.');
     }
   };
 
