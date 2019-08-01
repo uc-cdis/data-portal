@@ -67,11 +67,11 @@ class ExplorerVisualization extends React.Component {
     return { summaries, countItems, stackedBarCharts };
   }
 
-  updateConnectedFilter = async () => {
+  updateConnectedFilter = async (heatMapMainYAxisVar) => {
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     const res = await this.props.downloadRawDataByFields({ fields: [caseField] });
     const caseIDList = res.map(e => e.node_id);
-    this.connectedFilter.current.setFilter({ subject_id: { selectedValues: caseIDList } });
+    this.connectedFilter.current.setFilter({ [heatMapMainYAxisVar]: { selectedValues: caseIDList } });
   };
 
   render() {
@@ -83,21 +83,23 @@ class ExplorerVisualization extends React.Component {
     const lockMessage = `This chart is hidden because it contains fewer than ${this.props.tierAccessLimit} ${this.props.nodeCountTitle.toLowerCase()}`;
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
 
+    // heatmap config
     const heatMapGuppyConfig = config.dataAvailabilityToolConfig ?
       config.dataAvailabilityToolConfig.guppyConfig : null;
-    if (heatMapGuppyConfig) {
-      this.updateConnectedFilter();
-    }
+    const heatMapMainYAxisVar = this.props.guppyConfig.manifestMapping
+      .referenceIdFieldInResourceIndex;
     const heatMapFilterConfig = {
       tabs: [
         {
-          title: 'Subject',
           fields: [
-            'subject_id',
+            heatMapMainYAxisVar,
           ],
         },
       ],
     };
+    if (heatMapGuppyConfig) {
+      this.updateConnectedFilter(heatMapMainYAxisVar);
+    }
 
     return (
       <div className={this.props.className}>
@@ -177,8 +179,7 @@ class ExplorerVisualization extends React.Component {
                   type: heatMapGuppyConfig.dataType,
                   ...heatMapGuppyConfig,
                 }}
-                mainYAxisVar={this.props.guppyConfig.manifestMapping
-                  .referenceIdFieldInResourceIndex}
+                mainYAxisVar={heatMapMainYAxisVar}
               />
             </GuppyWrapper>
           )

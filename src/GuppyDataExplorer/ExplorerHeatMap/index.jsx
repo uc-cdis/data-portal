@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactEcharts from 'echarts-for-react';
 import { capitalizeFirstLetter } from '../../utils';
-import './ExplorerHeatMap.less';
 import { GuppyConfigType } from '../configTypeDef';
+import './ExplorerHeatMap.less';
 
 function round(value, decimals) {
   return Number(`${Math.round(`${value}e${decimals}`)}e-${decimals}`);
@@ -153,7 +153,7 @@ class ExplorerHeatMap extends React.Component {
               <div className={'explorer-heat-map__title--align-center h4-typo'}>
               Data availability
               </div>
-              <div className='explorer-heat-map__chart'>
+              <div>
                 <ReactEcharts
                   option={this.getHeatMapOptions(data, xAxisVarTitle, yAxisVars, yAxisVarsMapping)}
                   style={{ height }}
