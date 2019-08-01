@@ -28,17 +28,6 @@ class GuppyDataExplorer extends React.Component {
     this.setState({ aggsData: newAggsData });
   };
 
-  // handleFilterChange = (filters) => {
-  //   const subjectIds = [
-  //     "7201e9f9-715d-4853-9346-f7d73708c2c7",
-  //     "5012188e-8b8d-4b6b-ba41-9a46f4e00f13",
-  //     "07cdda15-27df-4d3f-aa1f-d9252b62c98f","815eb083-0928-40c5-b052-4de8d0cf9458","645962da-52ba-4cc4-879e-10a2fd4ee67f"
-  //   ]
-  
-  //   console.log('heatMapConfig', this.props.heatMapConfig);
-  //   console.log('guppyConfig', { type: this.props.guppyConfig.dataType, ...this.props.guppyConfig });
-  // };
-
   render() {
     return (
       <div className='guppy-data-explorer'>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { config } from '../../params';
 import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../../localconf';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
+import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
 import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
@@ -20,12 +21,15 @@ import './ExplorerVisualization.css';
 import { components } from '../../params';
 
 class ExplorerVisualization extends React.Component {
+  constructor(props) {
+    super(props);
+    this.connectedFilter = React.createRef();
+  }
+
   getData = (aggsData, chartConfig, filter) => {
     const summaries = [];
     const countItems = [];
     const stackedBarCharts = [];
-    const heatMapData = [];
-    const heatMapXAxisVar = 'data_type'; // TODO: visit_number and configurable
     countItems.push({
       label: this.props.nodeCountTitle,
       value: this.props.totalCount,
@@ -60,43 +64,15 @@ class ExplorerVisualization extends React.Component {
         throw new Error(`Invalid chartType ${chartConfig[field].chartType}`);
       }
     });
-    // if (!aggsData[heatMapXAxisVar]) {
-    //   console.log(`No guppy data for heatmap x axis variable ${heatMapXAxisVar}`);
-    // }
-    if (aggsData && aggsData[heatMapXAxisVar] && aggsData[heatMapXAxisVar].histogram) {
-      // TODO remove when we have real data results:
-      let index_in_list = 1;
-      aggsData[heatMapXAxisVar].histogram.forEach((e) => {
-        for (var i=0; i<5; i++){
-          let fakeData = {
-            key: index_in_list, // simulate visit_number
-            count: e.count * 1.5, // simulate no big percentage
-            subject_id: {
-              count: Math.floor(Math.random() * this.props.totalCount)
-            },
-            age_at_visit: {
-              count: Math.floor(Math.random() * e.count)
-            },
-            Abacavir_since_last_visit: {
-              count: Math.floor(Math.random() * e.count)
-            },
-            Abacavir_at_visit: {
-              count: Math.floor(Math.random() * e.count)
-            },
-            drug_taken_frequency_6mons: {
-              count: Math.floor(Math.random() * e.count)
-            },
-            therapy_type_since_last_visit: {
-              count: Math.floor(Math.random() * e.count)
-            }
-          }
-          heatMapData.push(fakeData)
-          index_in_list++;
-        }
-      })
-    }
-    return { summaries, countItems, stackedBarCharts, heatMapData };
+    return { summaries, countItems, stackedBarCharts };
   }
+
+  updateConnectedFilter = async () => {
+    const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
+    const res = await this.props.downloadRawDataByFields({ fields: [caseField] });
+    const caseIDList = res.map(e => e.node_id);
+    this.connectedFilter.current.setFilter({ subject_id: { selectedValues: caseIDList } });
+  };
 
   render() {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
@@ -106,7 +82,22 @@ class ExplorerVisualization extends React.Component {
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
     const lockMessage = `This chart is hidden because it contains fewer than ${this.props.tierAccessLimit} ${this.props.nodeCountTitle.toLowerCase()}`;
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
-    const heatMapGuppyConfig = config.dataAvailabilityToolConfig.guppyConfig;
+
+    const heatMapGuppyConfig = config.dataAvailabilityToolConfig ? config.dataAvailabilityToolConfig.guppyConfig : null;
+    if (heatMapGuppyConfig) {
+      this.updateConnectedFilter();
+    }
+    const heatMapFilterConfig = {
+      "tabs": [
+        {
+          "title": "Subject",
+          "fields": [
+            "subject_id"
+          ]
+        }
+      ]
+    }
+
     return (
       <div className={this.props.className}>
         <div className='guppy-explorer-visualization__button-group'>
@@ -130,7 +121,7 @@ class ExplorerVisualization extends React.Component {
             </div>
           )
         }
-        {/* {
+        {
           chartData.summaries.length > 0 && (
             <div className='guppy-explorer-visualization__charts'>
               <SummaryChartGroup
@@ -156,19 +147,26 @@ class ExplorerVisualization extends React.Component {
             />
           ),
           )
-        } */}
-        <GuppyWrapper
-          filterConfig={{}} // TODO
-          guppyConfig={{ path: guppyUrl, type: heatMapGuppyConfig.dataType, ...heatMapGuppyConfig }}
-          tierAccessLevel={tierAccessLevel}
-          tierAccessLimit={tierAccessLimit}
-          rawDataFields={[]} // not needed here but required by GuppyWrapper
-        >
-          <ExplorerHeatMap
-            data={chartData.heatMapData}
-            nodeTotalCount={this.props.totalCount} // TODO: find a better way - this prop might not always be what we need (total number of subject_ids)
-          />
-        </GuppyWrapper>
+        }
+        {
+          heatMapGuppyConfig && (
+            <GuppyWrapper
+              filterConfig = {heatMapFilterConfig}
+              guppyConfig={{ path: guppyUrl, type: heatMapGuppyConfig.dataType, ...heatMapGuppyConfig }}
+              tierAccessLevel={tierAccessLevel}
+              tierAccessLimit={tierAccessLimit}
+            >
+              <ConnectedFilter
+                className='guppy-explorer-visualization__connected-filter--hide'
+                ref={this.connectedFilter}
+                filterConfig = {heatMapFilterConfig}
+              />
+              <ExplorerHeatMap
+                guppyConfig={{ path: guppyUrl, type: heatMapGuppyConfig.dataType, ...heatMapGuppyConfig }}
+              />
+            </GuppyWrapper>
+          )
+        }
         {
           this.props.tableConfig.enabled && (
             <ExplorerTable

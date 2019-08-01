@@ -1,32 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactEcharts from 'echarts-for-react';
-import { EditorBorderRight } from 'material-ui/svg-icons';
+import { capitalizeFirstLetter } from '../../utils';
 import './ExplorerHeatMap.less';
-
-let yAxisVars = ["subject_id"].concat([ // TODO get from config
-  "status",
-  "age_at_visit",
-  "abc",
-  "abcv",
-  "drug_used",
-  "thrpy",
-  "thrpyv",
-  "trz",
-  "trzv",
-  "cd4dt",
-  "chol",
-  "leu2n",
-  "viral_load",
-  "cocuse",
-  "drinkcat",
-  "eductn",
-  "emotl",
-  "employ",
-  "income",
-  "insurance",
-  "paidsex"
-].sort()); // alphabetical order. "subject_id" on top
 
 function round(value, decimals) {
   return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
@@ -45,10 +21,9 @@ class ExplorerHeatMap extends React.Component {
   /**
    * @returns transformed data in format [[x index, y index, value], ...]
    */
-  getTransformedData = () => {
+  getTransformedData = (yAxisVars) => {
     let transformed_data = [];
-    // rawData is either [] (no data) or {...} (data)
-    if (this.props.rawData && this.props.rawData.length !== 0) {
+    if (this.props.rawData && this.props.rawData.length) {
       const number_of_decimals = 1;
       const precision = Math.pow(10, number_of_decimals);
       this.maxCellValue = 0;
@@ -111,15 +86,19 @@ class ExplorerHeatMap extends React.Component {
   /**
    * See echarts docs at https://echarts.apache.org/en/option.html
    */
-  getHeatMapOptions = (data) => {
-    let xAxisVar = this.state.xAxisVar;
+  getHeatMapOptions = (data, yAxisVars, yAxisVarsMapping) => {
+    const xAxisVar = this.state.xAxisVar;
     return {
       tooltip: {
         position: 'top',
         formatter: function (params) {
-          // params = [x, y, value]
-          let yAxisVar = yAxisVars[params.data[1]];
-          return `variable: ${yAxisVar}<br/>${xAxisVar}: ${params.data[0]}<br/>data percentage: ${params.data[2]}`;
+          // Note: params.data = [x, y, value]
+          const yField = yAxisVars[params.data[1]];
+          const mappingEntry = yAxisVarsMapping && yAxisVarsMapping.find(
+            i => i.field === yField
+          );
+          const yAxisVar = mappingEntry && mappingEntry.name || yField;
+          return `Variable: ${capitalizeFirstLetter(yAxisVar)}<br/>${xAxisVar}: ${params.data[0]}<br/>Data availability: ${params.data[2]}`;
         }
       },
       // toolbox: {
@@ -147,7 +126,10 @@ class ExplorerHeatMap extends React.Component {
       },
       yAxis: {
         type: 'category',
-        data: yAxisVars,
+        data: yAxisVars.map(field => {
+          const fieldMappingEntry = yAxisVarsMapping.find(i => i.field === field);
+          return capitalizeFirstLetter(fieldMappingEntry && fieldMappingEntry.name || field);
+        }),
         axisTick: {
           show: false
         },
@@ -173,8 +155,15 @@ class ExplorerHeatMap extends React.Component {
   };
   
   render() {
-    let data = this.getTransformedData();
+    // y axis items in alphabetical order. "subject_id" on top
+    // TODO: subject_id configurable?
+    const yAxisVars = ["subject_id"].concat(
+      this.props.guppyConfig.aggFields.sort()
+    );
+    const yAxisVarsMapping = this.props.guppyConfig.fieldMapping;
+    const data = this.getTransformedData(yAxisVars, yAxisVarsMapping);
     const height = "450px"; // TODO need to display all yaxis vars https://github.com/hustcc/echarts-for-react/issues/208
+  
     return (
       <React.Fragment>
       {
@@ -197,7 +186,7 @@ class ExplorerHeatMap extends React.Component {
             </div>
             <div className='explorer-heat-map__chart'>
               <ReactEcharts
-                option={this.getHeatMapOptions(data)}
+                option={this.getHeatMapOptions(data, yAxisVars, yAxisVarsMapping)}
                 style={{height}}
               />
             </div>
@@ -211,11 +200,11 @@ class ExplorerHeatMap extends React.Component {
 
 ExplorerHeatMap.propTypes = {
   rawData: PropTypes.array, // inherited from GuppyWrapper
-  nodeTotalCount: PropTypes.number, // Note: total number of subject_ids
+  // nodeTotalCount: PropTypes.number, // Note: total number of subject_ids
 };
 
 ExplorerHeatMap.defaultProps = {
-  nodeTotalCount: null,
+  // nodeTotalCount: null,
 };
 
 export default ExplorerHeatMap;
