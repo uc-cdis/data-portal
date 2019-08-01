@@ -68,7 +68,10 @@ class ExplorerButtonGroup extends React.Component {
       clickFunc = this.downloadData(buttonConfig.fileName);
     }
     if (buttonConfig.type === 'manifest') {
-      clickFunc = this.downloadManifest(buttonConfig.fileName);
+      clickFunc = this.downloadManifest(buttonConfig.fileName, null);
+    }
+    if (buttonConfig.type === 'file-manifest') {
+      clickFunc = this.downloadManifest(buttonConfig.fileName, 'file');
     }
     if (buttonConfig.type === 'export') {
       clickFunc = this.exportToCloud;
@@ -79,32 +82,41 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export-to-workspace') {
       clickFunc = this.exportToWorkspace;
     }
+    if (buttonConfig.type === 'export-files-to-workspace') {
+      clickFunc = () => this.exportToWorkspace('file');
+    }
     return clickFunc;
   };
 
-  getManifest = async () => {
-    const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
-    const caseFieldInFileIndex =
+  getManifest = async (indexType) => {
+    const refField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
+    const refFieldInResourceIndex =
       this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
-    const fileFieldInFileIndex = this.props.guppyConfig.manifestMapping.resourceIdField;
-    const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
-    const caseIDList = await this.props.downloadRawDataByFields({ fields: [caseField] })
-      .then(res => res.map(i => i[caseField]));
-    let resultManifest = await this.props.downloadRawDataByTypeAndFilter(
-      fileType, {
-        [caseFieldInFileIndex]: {
-          selectedValues: caseIDList,
-        },
+    const resourceFieldInResourceIndex = this.props.guppyConfig.manifestMapping.resourceIdField;
+    const resourceType = this.props.guppyConfig.manifestMapping.resourceIndexType;
+    const refIDList = await this.props.downloadRawDataByFields({ fields: [refField] })
+      .then(res => res.map(i => i[refField]));
+    if (indexType === 'file') {
+      return refIDList.map(id => ({ [refField]: id }));
+    }
+    const filter = {
+      [refFieldInResourceIndex]: {
+        selectedValues: refIDList,
       },
-      [caseFieldInFileIndex, fileFieldInFileIndex],
+    };
+    if (this.props.filter.data_format) {
+      filter.data_format = this.props.filter.data_format;
+    }
+    let resultManifest = await this.props.downloadRawDataByTypeAndFilter(
+      resourceType, filter, [refFieldInResourceIndex, resourceFieldInResourceIndex],
     );
     resultManifest = resultManifest.filter(
-      x => !!x[fileFieldInFileIndex],
+      x => !!x[resourceFieldInResourceIndex],
     );
     /* eslint-disable no-param-reassign */
     resultManifest.forEach((x) => {
-      if (typeof x[caseFieldInFileIndex] === 'string') {
-        x[caseFieldInFileIndex] = [x[caseFieldInFileIndex]];
+      if (typeof x[refFieldInResourceIndex] === 'string') {
+        x[refFieldInResourceIndex] = [x[refFieldInResourceIndex]];
       }
     });
     return resultManifest.flat();
@@ -178,8 +190,8 @@ class ExplorerButtonGroup extends React.Component {
     });
   };
 
-  downloadManifest = filename => async () => {
-    const resultManifest = await this.getManifest();
+  downloadManifest = (filename, indexType) => async () => {
+    const resultManifest = await this.getManifest(indexType);
     if (resultManifest) {
       const blob = new Blob([JSON.stringify(resultManifest, null, 2)], { type: 'text/json' });
       FileSaver.saveAs(blob, filename);
@@ -201,9 +213,9 @@ class ExplorerButtonGroup extends React.Component {
     });
   };
 
-  exportToWorkspace = async () => {
+  exportToWorkspace = async (indexType) => {
     this.setState({ exportingToWorkspace: true });
-    const resultManifest = await this.getManifest();
+    const resultManifest = await this.getManifest(indexType);
     if (!!resultManifest && resultManifest.length > 0) {
       fetchWithCreds({
         path: `${manifestServiceApiPath}`,
@@ -310,7 +322,7 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   isButtonPending = (buttonConfig) => {
-    if (buttonConfig.type === 'export-to-workspace') {
+    if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
       return this.state.exportingToWorkspace;
     }
     if (buttonConfig.type === 'export-to-pfb') {

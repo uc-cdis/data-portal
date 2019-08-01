@@ -38,6 +38,10 @@ class ExplorerFilter extends React.Component {
         }
       }
     }
+    return null;
+  }
+
+  componentDidUpdate() {
   }
 
   /**
