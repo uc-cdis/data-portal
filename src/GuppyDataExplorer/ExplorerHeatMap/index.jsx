@@ -30,7 +30,7 @@ class ExplorerHeatMap extends React.Component {
       // convert string keys to ints if needed (avoid 2 < 10 when sorting)
       if (this.props.guppyConfig.mainFieldIsNumeric) {
         for (let i = 0; i < data.length; i += 1) {
-          data[i].key = parseInt(data[i].key, 10);
+          data[i].key = parseFloat(data[i].key, 10);
         }
       }
 
