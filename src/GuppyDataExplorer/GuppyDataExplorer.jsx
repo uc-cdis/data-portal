@@ -17,7 +17,6 @@ import './GuppyDataExplorer.css';
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
-    this.nestedAggsData = {};
     this.state = {
       aggsData: {},
       filter: {},
@@ -63,7 +62,6 @@ class GuppyDataExplorer extends React.Component {
             nodeCountTitle={this.props.guppyConfig.nodeCountTitle || capitalizeFirstLetter(
               this.props.guppyConfig.dataType)}
             tierAccessLimit={this.props.tierAccessLimit}
-            nestedAggsData={this.nestedAggsData}
           />
         </GuppyWrapper>
       </div>

@@ -27,9 +27,11 @@ class ExplorerHeatMap extends React.Component {
 
       let data = this.props.rawData;
 
-      // convert string keys to ints
-      for (let i = 0; i < data.length; i += 1) {
-        data[i].key = parseInt(data[i].key, 10);
+      // convert string keys to ints if needed (avoid 2 < 10 when sorting)
+      if (this.props.guppyConfig.mainFieldIsNumeric) {
+        for (let i = 0; i < data.length; i += 1) {
+          data[i].key = parseInt(data[i].key, 10);
+        }
       }
 
       // sort the data by key (x axis values on the graph must be sorted)
@@ -149,8 +151,8 @@ class ExplorerHeatMap extends React.Component {
       <React.Fragment>
         {
           data && data.length ? (
-            <div className={'explorer-heat-map'}>
-              <div className={'explorer-heat-map__title--align-center h4-typo'}>
+            <div className='explorer-heat-map'>
+              <div className='explorer-heat-map__title--align-center h4-typo'>
               Data availability
               </div>
               <div>
