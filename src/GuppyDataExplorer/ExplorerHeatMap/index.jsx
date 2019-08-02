@@ -76,7 +76,7 @@ class ExplorerHeatMap extends React.Component {
   /**
    * See echarts docs at https://echarts.apache.org/en/option.html
    */
-  getHeatMapOptions = (data, xAxisVarTitle, yAxisVars, yAxisVarsMapping) => ({
+  getHeatMapOptions = (data, xAxisVarTitle, yAxisVars, yAxisVarsMapping, colorRange) => ({
     tooltip: { // displayed when hover on cell
       position: 'top',
       formatter(params) {
@@ -128,7 +128,8 @@ class ExplorerHeatMap extends React.Component {
       left: 'center', // horizontal alignment
       align: 'right', // position of bar relatively to handles and label
       inRange: {
-        color: ['#EBF7FB', '#3188C6'], // [smallest value, greatest value]
+        // [min value color, max value color]:
+        color: colorRange || ['#EBF7FB', '#3188C6'],
       },
     },
     series: [{
@@ -157,7 +158,10 @@ class ExplorerHeatMap extends React.Component {
               </div>
               <div>
                 <ReactEcharts
-                  option={this.getHeatMapOptions(data, xAxisVarTitle, yAxisVars, yAxisVarsMapping)}
+                  option={this.getHeatMapOptions(
+                    data, xAxisVarTitle, yAxisVars, yAxisVarsMapping,
+                    this.props.guppyConfig.colorRange,
+                  )}
                   style={{ height }}
                 />
               </div>
