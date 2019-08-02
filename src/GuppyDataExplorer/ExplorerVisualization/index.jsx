@@ -71,7 +71,9 @@ class ExplorerVisualization extends React.Component {
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     const res = await this.props.downloadRawDataByFields({ fields: [caseField] });
     const caseIDList = res.map(e => e.node_id);
-    this.connectedFilter.current.setFilter({ [heatMapMainYAxisVar]: { selectedValues: caseIDList } });
+    this.connectedFilter.current.setFilter(
+      { [heatMapMainYAxisVar]: { selectedValues: caseIDList } },
+    );
   };
 
   render() {
