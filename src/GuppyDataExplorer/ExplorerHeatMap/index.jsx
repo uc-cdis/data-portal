@@ -20,14 +20,14 @@ class ExplorerHeatMap extends React.Component {
    */
   getTransformedData = (yAxisVars) => {
     const transformedData = [];
-    if (this.props.rawData && this.props.rawData.length) {
+    let data = this.props.rawData;
+    if (data && data.length) {
       const numberOfDecimals = 1;
       const precision = 10 ** numberOfDecimals;
       this.maxCellValue = 0;
+      const totalCount = this.props.filter[this.props.mainYAxisVar].selectedValues.length;
 
-      let data = this.props.rawData;
-
-      // convert string keys to ints if needed (avoid 2 < 10 when sorting)
+      // convert string keys to numbers if needed (avoids 10 < 2 when sorting)
       if (this.props.guppyConfig.mainFieldIsNumeric) {
         for (let i = 0; i < data.length; i += 1) {
           data[i].key = parseFloat(data[i].key, 10);
@@ -51,13 +51,13 @@ class ExplorerHeatMap extends React.Component {
         yAxisVars.forEach((fieldName) => {
           let rate;
           if (fieldName === this.props.mainYAxisVar) {
-            const totalCount = this.props.filter[this.props.mainYAxisVar].selectedValues.length;
             rate = details.count / totalCount;
           } else {
             rate = 1 - (fieldToMissingCount[fieldName] / details.count);
           }
-          // Note: if '-' for zeros, there is no tooltip about which x/y is zero
-          rate = round(rate, 2); // 2 decimals / zero -> empty
+          // Note: if we use rate='-' for zeros, it looks clean but there
+          // is no tooltip about which x/y is zero
+          rate = round(rate, 2);
           transformedData.push([
             xIndex,
             yAxisVars.indexOf(fieldName),
@@ -140,13 +140,13 @@ class ExplorerHeatMap extends React.Component {
 
   render() {
     // y axis items in alpha order. mainYAxisVar (i.e. "subject_id") on top
-    const xAxisVarTitle = capitalizeFirstLetter(this.props.guppyConfig.mainFieldTitle);
     const yAxisVars = [this.props.mainYAxisVar].concat(
       this.props.guppyConfig.aggFields.sort(),
     );
     const yAxisVarsMapping = this.props.guppyConfig.fieldMapping;
+    const xAxisVarTitle = capitalizeFirstLetter(this.props.guppyConfig.mainFieldTitle);
     const data = this.getTransformedData(yAxisVars);
-    const height = '450px'; // TODO need to display all yaxis vars https://github.com/hustcc/echarts-for-react/issues/208
+    const height = `${(yAxisVars.length * 17) + 80}px`; // default is 300px
 
     return (
       <React.Fragment>
@@ -154,7 +154,7 @@ class ExplorerHeatMap extends React.Component {
           data && data.length ? (
             <div className='explorer-heat-map'>
               <div className='explorer-heat-map__title--align-center h4-typo'>
-              Data availability
+                Data availability
               </div>
               <div>
                 <ReactEcharts
