@@ -99,7 +99,7 @@ class ExplorerVisualization extends React.Component {
         },
       ],
     };
-    if (heatMapGuppyConfig) {
+    if (heatMapGuppyConfig && this.connectedFilter.current) {
       this.updateConnectedFilter(heatMapMainYAxisVar);
     }
 
