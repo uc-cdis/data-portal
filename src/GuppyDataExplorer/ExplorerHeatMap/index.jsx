@@ -25,7 +25,8 @@ class ExplorerHeatMap extends React.Component {
       const numberOfDecimals = 1;
       const precision = 10 ** numberOfDecimals;
       this.maxCellValue = 0;
-      const totalCount = this.props.filter[this.props.mainYAxisVar].selectedValues.length;
+      const totalCount = this.props.filter[this.props.mainYAxisVar] ?
+        this.props.filter[this.props.mainYAxisVar].selectedValues.length : 0;
 
       // convert string keys to numbers if needed (avoids 10 < 2 when sorting)
       if (this.props.guppyConfig.mainFieldIsNumeric) {
