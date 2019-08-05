@@ -4,7 +4,7 @@ import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
 import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
-import { config, components } from '../../params';
+import { components } from '../../params';
 import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../../localconf';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerHeatMap from '../ExplorerHeatMap';
@@ -86,8 +86,8 @@ class ExplorerVisualization extends React.Component {
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
 
     // heatmap config
-    const heatMapGuppyConfig = config.dataAvailabilityToolConfig ?
-      config.dataAvailabilityToolConfig.guppyConfig : null;
+    const heatMapGuppyConfig = this.props.heatMapConfig ?
+      this.props.heatMapConfig.guppyConfig : null;
     const heatMapMainYAxisVar = this.props.guppyConfig.manifestMapping
       .referenceIdFieldInResourceIndex;
     const heatMapFilterConfig = {
@@ -221,6 +221,7 @@ ExplorerVisualization.propTypes = {
   chartConfig: ChartConfigType,
   tableConfig: TableConfigType,
   buttonConfig: ButtonConfigType,
+  heatMapConfig: PropTypes.object,
   guppyConfig: GuppyConfigType,
   nodeCountTitle: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number.isRequired,
@@ -242,6 +243,7 @@ ExplorerVisualization.defaultProps = {
   chartConfig: {},
   tableConfig: {},
   buttonConfig: {},
+  heatMapConfig: {},
   guppyConfig: {},
 };
 
