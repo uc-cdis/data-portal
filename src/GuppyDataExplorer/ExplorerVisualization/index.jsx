@@ -69,8 +69,16 @@ class ExplorerVisualization extends React.Component {
 
   updateConnectedFilter = async (heatMapMainYAxisVar) => {
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
-    const res = await this.props.downloadRawDataByFields({ fields: [caseField] });
-    const caseIDList = res.map(e => e.node_id);
+    let caseIDList;
+    try {
+      const res = await this.props.downloadRawDataByFields({ fields: [caseField] });
+      caseIDList = res.map(e => e.node_id);
+    } catch (e) {
+      // when tiered access is enabled, we cannot get the list of IDs because
+      // the user does not have access to all projects. In that case, the
+      // heatmap is not displayed.
+      caseIDList = [];
+    }
     this.connectedFilter.current.setFilter(
       { [heatMapMainYAxisVar]: { selectedValues: caseIDList } },
     );
