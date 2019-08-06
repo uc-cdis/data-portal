@@ -73,11 +73,13 @@ class ExplorerVisualization extends React.Component {
     try {
       const res = await this.props.downloadRawDataByFields({ fields: [caseField] });
       caseIDList = res.map(e => e.node_id);
+      this.heatMapIsLocked = false;
     } catch (e) {
       // when tiered access is enabled, we cannot get the list of IDs because
       // the user does not have access to all projects. In that case, the
       // heatmap is not displayed.
       caseIDList = [];
+      this.heatMapIsLocked = true;
     }
     this.connectedFilter.current.setFilter(
       { [heatMapMainYAxisVar]: { selectedValues: caseIDList } },
@@ -190,6 +192,8 @@ class ExplorerVisualization extends React.Component {
                   ...heatMapGuppyConfig,
                 }}
                 mainYAxisVar={heatMapMainYAxisVar}
+                isLocked={this.heatMapIsLocked}
+                lockMessage={'This chart is hidden because it contains data you do not have access to'}
               />
             </GuppyWrapper>
           )

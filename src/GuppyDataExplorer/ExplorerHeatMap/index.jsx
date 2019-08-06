@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactEcharts from 'echarts-for-react';
+import LockedContent from '@gen3/ui-component/dist/components/charts/LockedContent';
 import { capitalizeFirstLetter } from '../../utils';
 import { GuppyConfigType } from '../configTypeDef';
 import './ExplorerHeatMap.less';
@@ -152,20 +153,28 @@ class ExplorerHeatMap extends React.Component {
     return (
       <React.Fragment>
         {
-          data && data.length ? (
+          (data && data.length) || this.props.isLocked ? (
             <div className='explorer-heat-map'>
               <div className='explorer-heat-map__title--align-center h4-typo'>
                 Data availability
               </div>
-              <div>
-                <ReactEcharts
-                  option={this.getHeatMapOptions(
-                    data, xAxisVarTitle, yAxisVars, yAxisVarsMapping,
-                    this.props.guppyConfig.colorRange,
-                  )}
-                  style={{ height }}
-                />
-              </div>
+              {
+                this.props.isLocked ? (
+                  <div>
+                    <LockedContent lockMessage={this.props.lockMessage} />
+                  </div>
+                ) : (
+                  <div>
+                    <ReactEcharts
+                      option={this.getHeatMapOptions(
+                        data, xAxisVarTitle, yAxisVars, yAxisVarsMapping,
+                        this.props.guppyConfig.colorRange,
+                      )}
+                      style={{ height }}
+                    />
+                  </div>
+                )
+              }
             </div>
           ) : null
         }
@@ -179,12 +188,15 @@ ExplorerHeatMap.propTypes = {
   filter: PropTypes.object, // inherited from GuppyWrapper
   guppyConfig: GuppyConfigType,
   mainYAxisVar: PropTypes.string.isRequired,
+  isLocked: PropTypes.bool,
+  lockMessage: PropTypes.string.isRequired,
 };
 
 ExplorerHeatMap.defaultProps = {
   rawData: [],
   filter: {},
   guppyConfig: {},
+  isLocked: false,
 };
 
 export default ExplorerHeatMap;
