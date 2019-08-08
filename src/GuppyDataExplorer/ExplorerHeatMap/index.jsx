@@ -45,8 +45,8 @@ class ExplorerHeatMap extends React.Component {
 
       data.forEach((details) => {
         const xIndex = details.key;
-        const fieldToMissingCount = details.missingFields.reduce((res, x) => {
-          res[x.field] = x.count;
+        const fieldNameToCount = details.termsFields.reduce((res, x) => {
+          res[x.field] = x.terms.reduce((total, e) => total + e.count, 0);
           return res;
         }, {});
 
@@ -55,11 +55,11 @@ class ExplorerHeatMap extends React.Component {
           if (fieldName === this.props.mainYAxisVar) {
             rate = details.count / totalCount;
           } else {
-            rate = 1 - (fieldToMissingCount[fieldName] / details.count);
+            rate = fieldNameToCount[fieldName] / totalCount;
           }
           // Note: if we use rate='-' for zeros, it looks clean but there
           // is no tooltip about which x/y is zero
-          rate = round(rate, 2);
+          rate = round(rate, 3);
           transformedData.push([
             xIndex,
             yAxisVars.indexOf(fieldName),
@@ -124,7 +124,7 @@ class ExplorerHeatMap extends React.Component {
       align: 'right', // position of bar relatively to handles and label
       inRange: {
         // [min value color, max value color]:
-        color: colorRange || ['#EBF7FB', '#3188C6'],
+        color: colorRange || ['#EBF7FB', '#1769a3'],
       },
     },
     series: [{
@@ -135,12 +135,12 @@ class ExplorerHeatMap extends React.Component {
 
   render() {
     // y axis items name mapping
-    let yAxisVarsMapping = this.props.guppyConfig.aggFields.reduce((res, field) => {
+    const yAxisVarsMapping = this.props.guppyConfig.aggFields.reduce((res, field) => {
       const mappingEntry = this.props.guppyConfig.fieldMapping.find(
         i => i.field === field,
       );
       res[field] = capitalizeFirstLetter(
-        (mappingEntry && mappingEntry.name) || field
+        (mappingEntry && mappingEntry.name) || field,
       );
       return res;
     }, {});
@@ -148,9 +148,9 @@ class ExplorerHeatMap extends React.Component {
 
     // y axis items in alpha order. mainYAxisVar (i.e. "subject_id") on top
     const yAxisVars = [this.props.mainYAxisVar].concat(
-      this.props.guppyConfig.aggFields.sort((a, b) => {
-        return yAxisVarsMapping[a].localeCompare(yAxisVarsMapping[b]);
-      }),
+      this.props.guppyConfig.aggFields.sort((a, b) =>
+        yAxisVarsMapping[a].localeCompare(yAxisVarsMapping[b]),
+      ),
     );
 
     const xAxisVarTitle = capitalizeFirstLetter(this.props.guppyConfig.mainFieldTitle);
