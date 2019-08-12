@@ -45,8 +45,8 @@ class ExplorerHeatMap extends React.Component {
 
       data.forEach((details) => {
         const xIndex = details.key;
-        const fieldToMissingCount = details.missingFields.reduce((res, x) => {
-          res[x.field] = x.count;
+        const fieldNameToCount = details.termsFields.reduce((res, x) => {
+          res[x.field] = x.terms.reduce((total, e) => total + e.count, 0);
           return res;
         }, {});
 
@@ -55,11 +55,11 @@ class ExplorerHeatMap extends React.Component {
           if (fieldName === this.props.mainYAxisVar) {
             rate = details.count / totalCount;
           } else {
-            rate = 1 - (fieldToMissingCount[fieldName] / details.count);
+            rate = fieldNameToCount[fieldName] / totalCount;
           }
           // Note: if we use rate='-' for zeros, it looks clean but there
           // is no tooltip about which x/y is zero
-          rate = round(rate, 2);
+          rate = round(rate, 3);
           transformedData.push([
             xIndex,
             yAxisVars.indexOf(fieldName),
@@ -84,11 +84,7 @@ class ExplorerHeatMap extends React.Component {
       formatter(params) {
         // Note: params.data = [x, y, value]
         const yField = yAxisVars[params.data[1]];
-        const mappingEntry = yAxisVarsMapping && yAxisVarsMapping.find(
-          i => i.field === yField,
-        );
-        const yAxisVar = (mappingEntry && mappingEntry.name) || yField;
-        return `Variable: ${capitalizeFirstLetter(yAxisVar)}<br/>${xAxisVarTitle}: ${params.data[0]}<br/>Data availability: ${params.data[2]}`;
+        return `Variable: ${yAxisVarsMapping[yField]}<br/>${xAxisVarTitle}: ${params.data[0]}<br/>Data availability: ${params.data[2]}`;
       },
     },
     grid: {
@@ -112,10 +108,7 @@ class ExplorerHeatMap extends React.Component {
     },
     yAxis: {
       type: 'category',
-      data: yAxisVars.map((field) => {
-        const fieldMappingEntry = yAxisVarsMapping.find(i => i.field === field);
-        return capitalizeFirstLetter((fieldMappingEntry && fieldMappingEntry.name) || field);
-      }),
+      data: yAxisVars.map(field => yAxisVarsMapping[field]),
       axisTick: {
         show: false,
       },
@@ -131,7 +124,7 @@ class ExplorerHeatMap extends React.Component {
       align: 'right', // position of bar relatively to handles and label
       inRange: {
         // [min value color, max value color]:
-        color: colorRange || ['#EBF7FB', '#3188C6'],
+        color: colorRange || ['#EBF7FB', '#1769a3'],
       },
     },
     series: [{
@@ -141,11 +134,25 @@ class ExplorerHeatMap extends React.Component {
   });
 
   render() {
+    // y axis items name mapping
+    const yAxisVarsMapping = this.props.guppyConfig.aggFields.reduce((res, field) => {
+      const mappingEntry = this.props.guppyConfig.fieldMapping.find(
+        i => i.field === field,
+      );
+      res[field] = capitalizeFirstLetter(
+        (mappingEntry && mappingEntry.name) || field,
+      );
+      return res;
+    }, {});
+    yAxisVarsMapping[this.props.mainYAxisVar] = capitalizeFirstLetter(this.props.mainYAxisVar);
+
     // y axis items in alpha order. mainYAxisVar (i.e. "subject_id") on top
     const yAxisVars = [this.props.mainYAxisVar].concat(
-      this.props.guppyConfig.aggFields.sort(),
+      this.props.guppyConfig.aggFields.sort((a, b) =>
+        yAxisVarsMapping[a].localeCompare(yAxisVarsMapping[b]),
+      ),
     );
-    const yAxisVarsMapping = this.props.guppyConfig.fieldMapping;
+
     const xAxisVarTitle = capitalizeFirstLetter(this.props.guppyConfig.mainFieldTitle);
     const data = this.getTransformedData(yAxisVars);
     const height = `${(yAxisVars.length * 17) + 80}px`; // default is 300px
