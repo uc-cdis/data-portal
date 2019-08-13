@@ -5,6 +5,7 @@ import MediaQuery from 'react-responsive';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NavButton from './NavButton';
 import { breakpoints } from '../../localconf';
+import { fetchAuthorization } from '../../actions';
 import './NavBar.less';
 
 /**
@@ -16,11 +17,25 @@ class NavBar extends Component {
     super(props);
     this.state = {
       menuOpen: false,
+      buttonAccess: this.props.navItems.reduce((res, item) => {
+        res[item.name] = false;
+        return res;
+      }, {}),
     };
   }
 
   componentDidMount() {
     this.props.onInitActive();
+    this.updateAuth();
+  }
+
+  async updateAuth() {
+    const newAccess = await this.props.navItems.reduce(async (res, item) => {
+      const dict = await res;
+      dict[item.name] = await fetchAuthorization(item.name);
+      return dict;
+    }, Promise.resolve({}));
+    this.setState({ buttonAccess: newAccess });
   }
 
   isActive = (id) => {
@@ -34,9 +49,9 @@ class NavBar extends Component {
 
   render() {
     const navItems = this.props.navItems.map(
-      (item, index) => (
-        (item.link.startsWith('http')) ?
-          <a className='nav-bar__link nav-bar__link--right' key={item.link} href={item.link}>
+      (item, index) => {
+        const navButton = (item.link.startsWith('http') ?
+          (<a className='nav-bar__link nav-bar__link--right' key={item.link} href={item.link}>
             <NavButton
               item={item}
               dictIcons={this.props.dictIcons}
@@ -44,8 +59,8 @@ class NavBar extends Component {
               onActiveTab={() => this.props.onActiveTab(item.link)}
               tabIndex={index + 1}
             />
-          </a> :
-          <Link className='nav-bar__link nav-bar__link--right' key={item.link} to={item.link}>
+          </a>) :
+          (<Link className='nav-bar__link nav-bar__link--right' key={item.link} to={item.link}>
             <NavButton
               item={item}
               dictIcons={this.props.dictIcons}
@@ -53,8 +68,10 @@ class NavBar extends Component {
               onActiveTab={() => this.props.onActiveTab(item.link)}
               tabIndex={index + 1}
             />
-          </Link>
-      ));
+          </Link>)
+        );
+        return this.state.buttonAccess[item.name] ? navButton : null;
+      });
 
     return (
       <div className='nav-bar'>

@@ -11,6 +11,7 @@ import {
   arrangerGraphqlPath,
   graphqlSchemaUrl,
   useGuppyForExplorer,
+  authzPath,
 } from './configs';
 import sessionMonitor from './SessionMonitor';
 
@@ -417,3 +418,37 @@ export const fetchVersionInfo = dispatch =>
         }
       },
     ).then(msg => dispatch(msg));
+
+
+export const fetchAuthorization = async (componentName) => {
+  const name = componentName.toLowerCase();
+  const mapping = {
+    workspace: {
+      resource: '/workspace',
+      method: 'access',
+      service: 'jupyterhub',
+    },
+  };
+
+  if (name !== 'workspace') { return true; }
+
+  const r = mapping[name].resource;
+  const m = mapping[name].method;
+  const s = mapping[name].service;
+
+  return fetch(
+    `${authzPath}?resource=${r}&method=${m}&service=${s}`,
+  )
+    .then((res) => {
+      switch (res.status) {
+      case 401: // user is not logged in
+      case 403: // user is not allowed to access the resource
+        return false;
+      case 200: // valid input -> check "ok" field for authorization
+        return res.ok;
+      default:
+        console.error(`Unknown status "${res.status}" returned by arborist call`);
+        return false;
+      }
+    });
+};
