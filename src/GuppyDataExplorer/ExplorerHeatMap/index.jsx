@@ -98,7 +98,8 @@ class ExplorerHeatMap extends React.Component {
     xAxis: {
       type: 'category',
       axisLabel: {
-        show: false,
+        // if the values are numeric, do not show them on the axis
+        show: !this.props.guppyConfig.mainFieldIsNumeric,
       },
       axisTick: {
         show: false,
@@ -135,16 +136,15 @@ class ExplorerHeatMap extends React.Component {
 
   render() {
     // y axis items name mapping
-    const yAxisVarsMapping = this.props.guppyConfig.aggFields.reduce((res, field) => {
+    const yAxisVarsMapping = [this.props.mainYAxisVar].concat(
+      this.props.guppyConfig.aggFields,
+    ).reduce((res, field) => {
       const mappingEntry = this.props.guppyConfig.fieldMapping.find(
         i => i.field === field,
       );
-      res[field] = capitalizeFirstLetter(
-        (mappingEntry && mappingEntry.name) || field,
-      );
+      res[field] = (mappingEntry && mappingEntry.name) || capitalizeFirstLetter(field);
       return res;
     }, {});
-    yAxisVarsMapping[this.props.mainYAxisVar] = capitalizeFirstLetter(this.props.mainYAxisVar);
 
     // y axis items in alpha order. mainYAxisVar (i.e. "subject_id") on top
     const yAxisVars = [this.props.mainYAxisVar].concat(
