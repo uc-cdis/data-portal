@@ -98,7 +98,8 @@ class ExplorerHeatMap extends React.Component {
     xAxis: {
       type: 'category',
       axisLabel: {
-        show: false,
+        // if the values are numeric, do not show them on the axis
+        show: !this.props.guppyConfig.mainFieldIsNumeric,
       },
       axisTick: {
         show: false,
