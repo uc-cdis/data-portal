@@ -99,13 +99,16 @@ class ExplorerButtonGroup extends React.Component {
     if (indexType === 'file') {
       return refIDList.map(id => ({ [refField]: id }));
     }
-    let resultManifest = await this.props.downloadRawDataByTypeAndFilter(
-      resourceType, {
-        [refFieldInResourceIndex]: {
-          selectedValues: refIDList,
-        },
+    const filter = {
+      [refFieldInResourceIndex]: {
+        selectedValues: refIDList,
       },
-      [refFieldInResourceIndex, resourceFieldInResourceIndex],
+    };
+    if (this.props.filter.data_format) {
+      filter.data_format = this.props.filter.data_format;
+    }
+    let resultManifest = await this.props.downloadRawDataByTypeAndFilter(
+      resourceType, filter, [refFieldInResourceIndex, resourceFieldInResourceIndex],
     );
     resultManifest = resultManifest.filter(
       x => !!x[resourceFieldInResourceIndex],
@@ -202,7 +205,7 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   exportToPFB = () => {
-    this.props.submitJob({ filter: getGQLFilter(this.props.filter) });
+    this.props.submitJob({ action: 'export', input: {filter: getGQLFilter(this.props.filter) }});
     this.props.checkJobStatus();
     this.setState({
       toasterOpen: true,
