@@ -5,7 +5,6 @@ import MediaQuery from 'react-responsive';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NavButton from './NavButton';
 import { breakpoints } from '../../localconf';
-import { fetchAuthorization } from '../../actions';
 import './NavBar.less';
 
 /**
@@ -17,26 +16,18 @@ class NavBar extends Component {
     super(props);
     this.state = {
       menuOpen: false,
-      buttonAccess: this.props.navItems.reduce((res, item) => {
-        res[item.name] = false;
-        return res;
-      }, {}),
     };
   }
 
   componentDidMount() {
     this.props.onInitActive();
-    this.updateAuth();
   }
 
-  async updateAuth() {
-    const newAccess = await this.props.navItems.reduce(async (res, item) => {
-      const dict = await res;
-      dict[item.name] = await fetchAuthorization(item.name);
-      return dict;
-    }, Promise.resolve({}));
-    this.setState({ buttonAccess: newAccess });
-  }
+  getUserAccess = () => this.props.navItems.reduce((res, item) => {
+    const authResult = this.props.userAccess[item.name];
+    res[item.name] = typeof authResult !== 'undefined' ? authResult : true;
+    return res;
+  }, {})
 
   isActive = (id) => {
     const toCompare = this.props.activeTab.split('/').filter(x => x !== 'dev.html').join('/');
@@ -48,6 +39,7 @@ class NavBar extends Component {
   }
 
   render() {
+    const userAccess = this.getUserAccess();
     const navItems = this.props.navItems.map(
       (item, index) => {
         const navButton = (item.link.startsWith('http') ?
@@ -70,7 +62,7 @@ class NavBar extends Component {
             />
           </Link>)
         );
-        return this.state.buttonAccess[item.name] ? navButton : null;
+        return userAccess[item.name] ? navButton : null;
       });
 
     return (
@@ -141,6 +133,7 @@ class NavBar extends Component {
 
 NavBar.propTypes = {
   navItems: PropTypes.array.isRequired,
+  userAccess: PropTypes.object.isRequired,
   dictIcons: PropTypes.object.isRequired,
   navTitle: PropTypes.string,
   activeTab: PropTypes.string,

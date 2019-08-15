@@ -13,6 +13,7 @@ import {
   useGuppyForExplorer,
   authzPath,
 } from './configs';
+import { config } from './params';
 import sessionMonitor from './SessionMonitor';
 
 export const updatePopup = state => ({
@@ -420,35 +421,35 @@ export const fetchVersionInfo = dispatch =>
     ).then(msg => dispatch(msg));
 
 
-export const fetchAuthorization = async (componentName) => {
-  const name = componentName.toLowerCase();
-  const mapping = {
-    workspace: {
-      resource: '/workspace',
-      method: 'access',
-      service: 'jupyterhub',
-    },
-  };
+export const fetchUserAccess = async (dispatch) => {
+  // restricted access components and their associated arborist resources:
+  const mapping = config.componentToResourceMapping || {};
 
-  if (name !== 'workspace') { return true; }
+  // TODO: when the auth/resources endpoint is exposed, we can reduce this to
+  // a single call to arborist instead of using the auth/request endpoint
+  const userAccess = await Object.keys(mapping).reduce(async (res, name) => {
+    const dict = await res;
+    const e = mapping[name];
+    dict[name] = await fetch(
+      `${authzPath}?resource=${e.resource}&method=${e.method}&service=${e.service}`,
+    )
+      .then((fetchRes) => {
+        switch (fetchRes.status) {
+        case 401: // user is not logged in
+        case 403: // user is not allowed to access the resource
+          return false;
+        case 200: // valid input -> check "ok" field for authorization
+          return fetchRes.ok;
+        default:
+          console.error(`Unknown status "${fetchRes.status}" returned by arborist call`);
+          return false;
+        }
+      });
+    return dict;
+  }, {});
 
-  const r = mapping[name].resource;
-  const m = mapping[name].method;
-  const s = mapping[name].service;
-
-  return fetch(
-    `${authzPath}?resource=${r}&method=${m}&service=${s}`,
-  )
-    .then((res) => {
-      switch (res.status) {
-      case 401: // user is not logged in
-      case 403: // user is not allowed to access the resource
-        return false;
-      case 200: // valid input -> check "ok" field for authorization
-        return res.ok;
-      default:
-        console.error(`Unknown status "${res.status}" returned by arborist call`);
-        return false;
-      }
-    });
+  dispatch({
+    type: 'RECEIVE_USER_ACCESS',
+    data: userAccess,
+  });
 };

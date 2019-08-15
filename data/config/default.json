@@ -283,5 +283,12 @@
         "file_format"
       ]
     }
+  },
+  "componentToResourceMapping": {
+    "Workspace" : {
+      "resource": "/workspace",
+      "method": "access",
+      "service": "jupyterhub"
+    }
   }
 }

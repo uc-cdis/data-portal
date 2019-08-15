@@ -15,6 +15,9 @@ import bar from './Layout/reducers';
 import ddgraph from './DataDictionary/reducers';
 import privacyPolicy from './PrivacyPolicy/reducers';
 import { logoutListener } from './Login/ProtectedContent';
+import { fetchUserAccess } from './actions';
+import { config } from './params';
+import getReduxStore from './reduxStore';
 
 const status = (state = {}, action) => {
   switch (action.type) {
@@ -40,6 +43,7 @@ const versionInfo = (state = {}, action) => {
 const user = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_USER':
+    getReduxStore().then(store => store.dispatch(fetchUserAccess));
     return { ...state, ...action.user, fetched_user: true };
   case 'REGISTER_ROLE':
     return {
@@ -52,6 +56,26 @@ const user = (state = {}, action) => {
     return { ...state, oauth_url: action.url };
   case 'FETCH_ERROR':
     return { ...state, fetched_user: true, fetch_error: action.error };
+  default:
+    return state;
+  }
+};
+
+
+// TODO: try making actual requests to arborist instead. maybe during
+// initialization? because resources can be open to anonymous users
+const initialUserAccess = {
+  // assume anonymous users do not have access to the restricted resources
+  access: Object.keys(config.componentToResourceMapping || {})
+    .reduce((res, e) => {
+      res[e] = false;
+      return res;
+    }, {}),
+};
+const userAccess = (state = initialUserAccess, action) => {
+  switch (action.type) {
+  case 'RECEIVE_USER_ACCESS':
+    return { ...state, access: action.data };
   default:
     return state;
   }
@@ -84,6 +108,7 @@ const reducers = combineReducers({ explorer,
   form: formReducer,
   auth: logoutListener,
   ddgraph,
+  userAccess,
 });
 
 export default reducers;
