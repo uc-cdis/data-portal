@@ -426,13 +426,11 @@ export const fetchUserAccess = async (dispatch) => {
   // restricted access components and their associated arborist resources:
   const mapping = config.componentToResourceMapping || {};
 
-  // TODO: when the auth/resources endpoint is exposed, we can reduce this to
-  // a single call instead of multiple calls to the auth/request endpoint
   const userAccess = await Object.keys(mapping).reduce(async (res, name) => {
     const dict = await res;
     const e = mapping[name];
 
-    // makes a call to arborist's auth/request endpoint
+    // makes a call to arborist's auth/proxy endpoint
     // returns true if the user has access to the resource, false otherwise
     dict[name] = await fetch(
       `${authzPath}?resource=${e.resource}&method=${e.method}&service=${e.service}`,

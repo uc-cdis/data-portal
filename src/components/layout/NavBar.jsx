@@ -23,11 +23,10 @@ class NavBar extends Component {
     this.props.onInitActive();
   }
 
-  getUserAccess = () => this.props.navItems.reduce((res, item) => {
-    const authResult = this.props.userAccess[item.name];
-    res[item.name] = typeof authResult !== 'undefined' ? authResult : true;
-    return res;
-  }, {})
+  canUserSeeComponent = (componentName) => {
+    const authResult = this.props.userAccess[componentName];
+    return typeof authResult !== 'undefined' ? authResult : true;
+  }
 
   isActive = (id) => {
     const toCompare = this.props.activeTab.split('/').filter(x => x !== 'dev.html').join('/');
@@ -39,7 +38,6 @@ class NavBar extends Component {
   }
 
   render() {
-    const userAccess = this.getUserAccess();
     const navItems = this.props.navItems.map(
       (item, index) => {
         const navButton = (item.link.startsWith('http') ?
@@ -62,7 +60,7 @@ class NavBar extends Component {
             />
           </Link>)
         );
-        return userAccess[item.name] ? navButton : null;
+        return this.canUserSeeComponent(item.name) ? navButton : null;
       });
 
     return (
