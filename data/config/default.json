@@ -284,11 +284,5 @@
       ]
     }
   },
-  "componentToResourceMapping": {
-    "Workspace" : {
-      "resource": "/workspace",
-      "method": "access",
-      "service": "jupyterhub"
-    }
-  }
+  "componentToResourceMapping": {}
 }

@@ -16,7 +16,6 @@ import ddgraph from './DataDictionary/reducers';
 import privacyPolicy from './PrivacyPolicy/reducers';
 import { logoutListener } from './Login/ProtectedContent';
 import { fetchUserAccess } from './actions';
-import { config } from './params';
 import getReduxStore from './reduxStore';
 
 const status = (state = {}, action) => {
@@ -62,17 +61,7 @@ const user = (state = {}, action) => {
 };
 
 
-// TODO: try making actual requests to arborist instead. maybe during
-// initialization? because resources can be open to anonymous users
-const initialUserAccess = {
-  // assume anonymous users do not have access to the restricted resources
-  access: Object.keys(config.componentToResourceMapping || {})
-    .reduce((res, e) => {
-      res[e] = false;
-      return res;
-    }, {}),
-};
-const userAccess = (state = initialUserAccess, action) => {
+const userAccess = (state = { access: {} }, action) => {
   switch (action.type) {
   case 'RECEIVE_USER_ACCESS':
     return { ...state, access: action.data };
