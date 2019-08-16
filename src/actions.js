@@ -11,7 +11,9 @@ import {
   arrangerGraphqlPath,
   graphqlSchemaUrl,
   useGuppyForExplorer,
+  authzPath,
 } from './configs';
+import { config } from './params';
 import sessionMonitor from './SessionMonitor';
 
 export const updatePopup = state => ({
@@ -417,3 +419,39 @@ export const fetchVersionInfo = dispatch =>
         }
       },
     ).then(msg => dispatch(msg));
+
+
+// asks arborist which restricted access components the user has access to
+export const fetchUserAccess = async (dispatch) => {
+  // restricted access components and their associated arborist resources:
+  const mapping = config.componentToResourceMapping || {};
+
+  const userAccess = await Object.keys(mapping).reduce(async (res, name) => {
+    const dict = await res;
+    const e = mapping[name];
+
+    // makes a call to arborist's auth/proxy endpoint
+    // returns true if the user has access to the resource, false otherwise
+    dict[name] = await fetch(
+      `${authzPath}?resource=${e.resource}&method=${e.method}&service=${e.service}`,
+    )
+      .then((fetchRes) => {
+        switch (fetchRes.status) {
+        case 401: // user is not logged in
+        case 403: // user is not allowed to access the resource
+          return false;
+        case 200: // valid input -> check "ok" field for authorization
+          return fetchRes.ok;
+        default:
+          console.error(`Unknown status "${fetchRes.status}" returned by arborist call`);
+          return false;
+        }
+      });
+    return dict;
+  }, {});
+
+  dispatch({
+    type: 'RECEIVE_USER_ACCESS',
+    data: userAccess,
+  });
+};

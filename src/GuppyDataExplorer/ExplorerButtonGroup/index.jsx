@@ -205,7 +205,7 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   exportToPFB = () => {
-    this.props.submitJob({ action: 'export', input: {filter: getGQLFilter(this.props.filter) }});
+    this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
     this.props.checkJobStatus();
     this.setState({
       toasterOpen: true,
@@ -304,6 +304,16 @@ class ExplorerButtonGroup extends React.Component {
     }
   };
 
+  // check if the user has access to this resource
+  isButtonDisplayed = (buttonConfig) => {
+    if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
+      const authResult = this.props.userAccess.Workspace;
+      return typeof authResult !== 'undefined' ? authResult : true;
+    }
+
+    return true;
+  };
+
   isButtonEnabled = (buttonConfig) => {
     if (this.props.isLocked) {
       return !this.props.isLocked;
@@ -332,6 +342,10 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   renderButton = (buttonConfig) => {
+    if (!this.isButtonDisplayed(buttonConfig)) {
+      return null;
+    }
+
     const clickFunc = this.getOnClickFunction(buttonConfig);
     const pendingState = buttonConfig.type === 'manifest' ? (this.state.pendingManifestEntryCountRequestNumber > 0) : false;
     let buttonTitle = buttonConfig.title;
@@ -444,6 +458,7 @@ ExplorerButtonGroup.propTypes = {
   checkJobStatus: PropTypes.func.isRequired,
   fetchJobResult: PropTypes.func.isRequired,
   isLocked: PropTypes.bool.isRequired,
+  userAccess: PropTypes.object.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {
