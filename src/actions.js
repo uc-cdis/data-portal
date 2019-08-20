@@ -153,10 +153,10 @@ export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders,
     },
   );
 
-export const fetchGraphQL = graphQLParams =>
+export const fetchGraphQL = (graphQLParams) => {
   // We first update the session so that the user will be notified
   // if their auth is insufficient to perform the query.
-  sessionMonitor.updateSession().then(() => {
+  return sessionMonitor.updateSession().then(() => {
     const request = {
       credentials: 'include',
       headers: { ...headers },
@@ -173,28 +173,30 @@ export const fetchGraphQL = graphQLParams =>
           return responseBody;
         }
       });
-  })
-;
+  });
+};
 
-export const fetchFlatGraphQL = graphQLParams => sessionMonitor.updateSession().then(() => {
-  const request = {
-    credentials: 'include',
-    headers: { ...headers },
-    method: 'POST',
-    body: JSON.stringify(graphQLParams),
-  };
+export const fetchFlatGraphQL = (graphQLParams) => {
+  return sessionMonitor.updateSession().then(() => {
+    const request = {
+      credentials: 'include',
+      headers: { ...headers },
+      method: 'POST',
+      body: JSON.stringify(graphQLParams),
+    };
 
-  const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
-  return fetch(graphqlUrl, request)
-    .then(response => response.text())
-    .then((responseBody) => {
-      try {
-        return JSON.parse(responseBody);
-      } catch (error) {
-        return responseBody;
-      }
-    });
-});
+    const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
+    return fetch(graphqlUrl, request)
+      .then(response => response.text())
+      .then((responseBody) => {
+        try {
+          return JSON.parse(responseBody);
+        } catch (error) {
+          return responseBody;
+        }
+      });
+  });
+};
 
 export const handleResponse = type => ({ data, status }) => {
   switch (status) {
@@ -239,7 +241,7 @@ export const fetchUser = dispatch => fetchCreds({
 
 export const refreshUser = () => fetchUser;
 
-export const logoutAPI = () => (dispatch) => {
+export const logoutAPI = () => dispatch => {
   fetchWithCreds({
     path: `${submissionApiOauthPath}logout`,
     dispatch,
