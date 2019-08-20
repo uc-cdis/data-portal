@@ -283,6 +283,7 @@ class MapFiles extends React.Component {
                 }
                 return true;
               });
+              const readyFiles = files.filter(file => this.isFileReady(file));
               const minTableHeight = (files.length * ROW_HEIGHT) + HEADER_HEIGHT;
               return (
                 <React.Fragment key={groupIndex}>
@@ -322,8 +323,8 @@ class MapFiles extends React.Component {
                           headerRenderer={() => (
                             <CheckBox
                               id={`${groupIndex}`}
-                              isSelected={this.isSelectAll(files, groupIndex)}
-                              onChange={() => this.toggleSelectAll(files, groupIndex)}
+                              isSelected={this.isSelectAll(readyFiles, groupIndex)}
+                              onChange={() => this.toggleSelectAll(readyFiles, groupIndex)}
                             />
                           )}
                           cellRenderer={({ rowIndex }) => (

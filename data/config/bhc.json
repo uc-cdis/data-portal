@@ -67,20 +67,6 @@
           "link": "#hostname#workspace/",
           "label": "Run analysis"
         }
-      ],
-      "homepageChartNodes": [
-        {
-          "node": "case",
-          "name": "Cases"
-        },
-        {
-          "node": "study",
-          "name": "Studies"
-        },
-        {
-          "node": "diagnosis",
-          "name": "Disease States"
-        }
       ]
     },
     "navigation": {
@@ -175,39 +161,10 @@
         {
           "title": "Case",
           "fields": [
-            "project_id",
-            "snp_id",
-            "snp_genotype",
-            "adverse_event",
-            "test_type",
-            "analyte_name",
-            "_visits_count"
-          ]
-        },
-        {
-          "title": "Demographics",
-          "fields": [
             "race",
             "ethnicity",
             "gender",
-            "age_at_enrollment",
-            "age_at_enrollment_gt89",
-            "age_at_onset",
-            "age_from_crf",
-            "age_of_immigration",
-            "age_pd_diagnosis",
-            "age_to_subject_full_time_disability",
-            "age_to_subject_full_time_work",
-            "age_to_subject_partial_disability",
-            "education_level",
-            "education_years"
-          ]
-        },
-        {
-          "title": "Diagnoses",
-          "fields": [
-            "primary_diagnosis",
-            "pd_primary_diagnosis"
+            "project_id"
           ]
         }
       ]
@@ -218,32 +175,27 @@
       "index": "",
       "nodeCountField": "node_id"
     },
-    "guppyConfig": {
-      "dataType": "case",
-      "nodeCountTitle": "Cases",
-      "fieldMapping": [
-        { "field": "snp_id", "name": "SNP Id" },
-        { "field": "snp_genotype", "name": "SNP Genotype" },
-        { "field": "pd_primary_diagnosis", "name": "PD Primary Diagnosis" }
-      ],
-      "manifestMapping": {
-        "resourceIndexType": "file",
-        "resourceIdField": "object_id",
-        "referenceIdFieldInResourceIndex": "node_id",
-        "referenceIdFieldInDataIndex": "node_id"
-      },
-      "accessibleFieldCheckList": ["project_id"],
-      "accessibleValidationField": "project_id"
-    },
-    "getAccessButtonLink": "https://www.braincommons.org/",
     "table": {
-      "enabled": true
+      "enabled": true,
+      "fields": [
+        "project_id",
+        "submitter_id",
+        "gender",
+        "ethnicity",
+        "race",
+        "experimental_group",
+        "_aliquots_count",
+        "_read_group_count",
+        "_samples_count",
+        "_submitted_expression_arrays_count",
+        "_submitted_unaligned_reads_count"
+      ]
     },
     "buttons": [
       {
         "enabled": true,
         "type": "data",
-        "title": "Download All Data",
+        "title": "Download Data",
         "leftIcon": "user",
         "rightIcon": "download",
         "fileName": "data.json"
