@@ -22,6 +22,11 @@ if [ -f custom/createdby/$APP.png ]; then
   cp custom/createdby/$APP.png src/img/cdis.png
 fi
 
+if [ -f custom/privacy_policy.md ]; then
+  echo 'got privacy policy'
+  cp custom/privacy_policy.md src/privacy_policy.md
+fi
+
 if [ -f custom/css/$APP.css ]; then
   cp custom/css/$APP.css src/css/themeoverrides.css
 else

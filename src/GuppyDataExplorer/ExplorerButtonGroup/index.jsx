@@ -68,7 +68,10 @@ class ExplorerButtonGroup extends React.Component {
       clickFunc = this.downloadData(buttonConfig.fileName);
     }
     if (buttonConfig.type === 'manifest') {
-      clickFunc = this.downloadManifest(buttonConfig.fileName);
+      clickFunc = this.downloadManifest(buttonConfig.fileName, null);
+    }
+    if (buttonConfig.type === 'file-manifest') {
+      clickFunc = this.downloadManifest(buttonConfig.fileName, 'file');
     }
     if (buttonConfig.type === 'export') {
       clickFunc = this.exportToCloud;
@@ -79,31 +82,43 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export-to-workspace') {
       clickFunc = this.exportToWorkspace;
     }
+    if (buttonConfig.type === 'export-files-to-workspace') {
+      clickFunc = () => this.exportToWorkspace('file');
+    }
     return clickFunc;
   };
 
-  getManifest = async () => {
-    const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
-    const caseFieldInFileIndex =
+  getManifest = async (indexType) => {
+    const refField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
+    const refFieldInResourceIndex =
       this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
-    const fileFieldInFileIndex = this.props.guppyConfig.manifestMapping.resourceIdField;
-    const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
-    const caseIDList = await this.props.downloadRawDataByFields({ fields: [caseField] })
-      .then(res => res.map(i => i[caseField]));
-    let resultManifest = await this.props.downloadRawDataByTypeAndFilter(
-      fileType, {
-        [caseFieldInFileIndex]: {
-          selectedValues: caseIDList,
-        },
+    const resourceFieldInResourceIndex = this.props.guppyConfig.manifestMapping.resourceIdField;
+    const resourceType = this.props.guppyConfig.manifestMapping.resourceIndexType;
+    const refIDList = await this.props.downloadRawDataByFields({ fields: [refField] })
+      .then(res => res.map(i => i[refField]));
+    if (indexType === 'file') {
+      return refIDList.map(id => ({ [refField]: id }));
+    }
+    const filter = {
+      [refFieldInResourceIndex]: {
+        selectedValues: refIDList,
       },
-      [caseFieldInFileIndex, fileFieldInFileIndex],
+    };
+    if (this.props.filter.data_format) {
+      filter.data_format = this.props.filter.data_format;
+    }
+    let resultManifest = await this.props.downloadRawDataByTypeAndFilter(
+      resourceType, filter, [refFieldInResourceIndex, resourceFieldInResourceIndex],
     );
     resultManifest = resultManifest.filter(
-      x => typeof x[fileFieldInFileIndex] !== 'undefined',
+      x => !!x[resourceFieldInResourceIndex],
     );
-    for (let i = 0; i < resultManifest.length; i += 1) {
-      resultManifest[i][caseFieldInFileIndex] = [resultManifest[i][caseFieldInFileIndex]];
-    }
+    /* eslint-disable no-param-reassign */
+    resultManifest.forEach((x) => {
+      if (typeof x[refFieldInResourceIndex] === 'string') {
+        x[refFieldInResourceIndex] = [x[refFieldInResourceIndex]];
+      }
+    });
     return resultManifest.flat();
   };
 
@@ -175,8 +190,8 @@ class ExplorerButtonGroup extends React.Component {
     });
   };
 
-  downloadManifest = filename => async () => {
-    const resultManifest = await this.getManifest();
+  downloadManifest = (filename, indexType) => async () => {
+    const resultManifest = await this.getManifest(indexType);
     if (resultManifest) {
       const blob = new Blob([JSON.stringify(resultManifest, null, 2)], { type: 'text/json' });
       FileSaver.saveAs(blob, filename);
@@ -190,7 +205,7 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   exportToPFB = () => {
-    this.props.submitJob({ filter: getGQLFilter(this.props.filter) });
+    this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
     this.props.checkJobStatus();
     this.setState({
       toasterOpen: true,
@@ -198,10 +213,10 @@ class ExplorerButtonGroup extends React.Component {
     });
   };
 
-  exportToWorkspace = async () => {
+  exportToWorkspace = async (indexType) => {
     this.setState({ exportingToWorkspace: true });
-    const resultManifest = await this.getManifest();
-    if (resultManifest) {
+    const resultManifest = await this.getManifest(indexType);
+    if (!!resultManifest && resultManifest.length > 0) {
       fetchWithCreds({
         path: `${manifestServiceApiPath}`,
         body: JSON.stringify(resultManifest),
@@ -219,7 +234,7 @@ class ExplorerButtonGroup extends React.Component {
           },
         );
     } else {
-      throw new Error('error when export to workspace');
+      this.exportToWorkspaceMessageHandler(400, 'There were no data files found matching the cohort you created.');
     }
   };
 
@@ -237,6 +252,15 @@ class ExplorerButtonGroup extends React.Component {
     this.setState({
       toasterOpen: true,
       toasterHeadline: this.state.toasterErrorText,
+      exportWorkspaceStatus: status,
+      exportingToWorkspace: false,
+    });
+  };
+
+  exportToWorkspaceMessageHandler = (status, message) => {
+    this.setState({
+      toasterOpen: true,
+      toasterHeadline: message,
       exportWorkspaceStatus: status,
       exportingToWorkspace: false,
     });
@@ -280,6 +304,16 @@ class ExplorerButtonGroup extends React.Component {
     }
   };
 
+  // check if the user has access to this resource
+  isButtonDisplayed = (buttonConfig) => {
+    if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
+      const authResult = this.props.userAccess.Workspace;
+      return typeof authResult !== 'undefined' ? authResult : true;
+    }
+
+    return true;
+  };
+
   isButtonEnabled = (buttonConfig) => {
     if (this.props.isLocked) {
       return !this.props.isLocked;
@@ -298,7 +332,7 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   isButtonPending = (buttonConfig) => {
-    if (buttonConfig.type === 'export-to-workspace') {
+    if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
       return this.state.exportingToWorkspace;
     }
     if (buttonConfig.type === 'export-to-pfb') {
@@ -308,6 +342,10 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   renderButton = (buttonConfig) => {
+    if (!this.isButtonDisplayed(buttonConfig)) {
+      return null;
+    }
+
     const clickFunc = this.getOnClickFunction(buttonConfig);
     const pendingState = buttonConfig.type === 'manifest' ? (this.state.pendingManifestEntryCountRequestNumber > 0) : false;
     let buttonTitle = buttonConfig.title;
@@ -420,6 +458,7 @@ ExplorerButtonGroup.propTypes = {
   checkJobStatus: PropTypes.func.isRequired,
   fetchJobResult: PropTypes.func.isRequired,
   isLocked: PropTypes.bool.isRequired,
+  userAccess: PropTypes.object.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {

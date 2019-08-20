@@ -24,6 +24,19 @@ class Footer extends Component {
               )
             }
           </div>
+          {this.props.privacyPolicy && this.props.privacyPolicy.text ?
+            <div className='footer__privacy-policy-area'>
+              <a
+                className='h4-typo footer__privacy-policy'
+                href={this.props.privacyPolicy.footerHref}
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                {this.props.privacyPolicy.text}
+              </a>
+            </div>
+            : null
+          }
           <div className='footer__logo-area'>
             {
               this.props.logos.map((logoObj, i) => (
@@ -63,6 +76,10 @@ Footer.propTypes = {
   hidden: PropTypes.bool,
   portalVersion: PropTypes.string,
   logos: PropTypes.arrayOf(LogoObject).isRequired,
+  privacyPolicy: PropTypes.shape({
+    footerHref: PropTypes.string,
+    text: PropTypes.string,
+  }),
 };
 
 Footer.defaultProps = {
@@ -70,6 +87,7 @@ Footer.defaultProps = {
   apiVersion: 'Unknown',
   hidden: false,
   portalVersion: 'Unknown',
+  privacyPolicy: null,
 };
 
 export default Footer;

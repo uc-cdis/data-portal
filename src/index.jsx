@@ -12,7 +12,7 @@ import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 
 import '@gen3/ui-component/dist/css/base.less';
-import { fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
+import { fetchDictionary, fetchSchema, fetchVersionInfo, fetchUserAccess } from './actions';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 import HomePage from './Homepage/page';
@@ -22,6 +22,7 @@ import CoreMetadataPage from './CoreMetadata/page';
 import { fetchCoreMetadata } from './CoreMetadata/reduxer';
 import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/.';
+import ReduxPrivacyPolicy from './PrivacyPolicy/ReduxPrivacyPolicy';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import ReduxMapFiles from './Submission/ReduxMapFiles';
 import ReduxMapDataModel from './Submission/ReduxMapDataModel';
@@ -62,6 +63,8 @@ async function init() {
       store.dispatch(fetchSchema),
       store.dispatch(fetchDictionary),
       store.dispatch(fetchVersionInfo),
+      // resources can be open to anonymous users, so fetch access:
+      store.dispatch(fetchUserAccess),
     ],
   );
   // FontAwesome icons
@@ -287,6 +290,14 @@ async function init() {
                       />
                       : null
                     }
+                    {components.privacyPolicy &&
+                    (!!components.privacyPolicy.file || !!components.privacyPolicy.routeHref) ?
+                      <Route
+                        path='/privacy-policy'
+                        component={ReduxPrivacyPolicy}
+                      />
+                      : null
+                    }
                     <Route
                       path='/:project'
                       component={
@@ -295,7 +306,10 @@ async function init() {
                     />
                   </Switch>
                 </div>
-                <ReduxFooter logos={components.footerLogos} />
+                <ReduxFooter
+                  logos={components.footerLogos}
+                  privacyPolicy={components.privacyPolicy}
+                />
               </div>
             </BrowserRouter>
           </MuiThemeProvider>

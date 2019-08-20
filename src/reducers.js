@@ -13,7 +13,10 @@ import explorer from './Explorer/reducers';
 import login from './Login/reducers';
 import bar from './Layout/reducers';
 import ddgraph from './DataDictionary/reducers';
+import privacyPolicy from './PrivacyPolicy/reducers';
 import { logoutListener } from './Login/ProtectedContent';
+import { fetchUserAccess } from './actions';
+import getReduxStore from './reduxStore';
 
 const status = (state = {}, action) => {
   switch (action.type) {
@@ -39,6 +42,7 @@ const versionInfo = (state = {}, action) => {
 const user = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_USER':
+    getReduxStore().then(store => store.dispatch(fetchUserAccess));
     return { ...state, ...action.user, fetched_user: true };
   case 'REGISTER_ROLE':
     return {
@@ -56,6 +60,16 @@ const user = (state = {}, action) => {
   }
 };
 
+
+const userAccess = (state = { access: {} }, action) => {
+  switch (action.type) {
+  case 'RECEIVE_USER_ACCESS':
+    return { ...state, access: action.data };
+  default:
+    return state;
+  }
+};
+
 export const removeDeletedNode = (state, id) => {
   const searchResult = state.search_result;
   const nodeType = Object.keys(searchResult.data)[0];
@@ -65,6 +79,7 @@ export const removeDeletedNode = (state, id) => {
 };
 
 const reducers = combineReducers({ explorer,
+  privacyPolicy,
   bar,
   homepage,
   popups,
@@ -82,6 +97,7 @@ const reducers = combineReducers({ explorer,
   form: formReducer,
   auth: logoutListener,
   ddgraph,
+  userAccess,
 });
 
 export default reducers;

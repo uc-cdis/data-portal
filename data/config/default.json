@@ -174,7 +174,13 @@
         "href": "https://ctds.uchicago.edu/",
         "alt": "Center for Translational Data Science at the University of Chicago"
       }
-    ]
+    ],
+    "privacyPolicy": {
+      "text": "",
+      "routeHref": "",
+      "footerHref": "",
+      "file": ""
+    }
   },
   "requiredCerts": [],
   "featureFlags": {
@@ -277,5 +283,6 @@
         "file_format"
       ]
     }
-  }
+  },
+  "componentToResourceMapping": {}
 }

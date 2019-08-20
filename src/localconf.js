@@ -15,6 +15,10 @@ function buildConfig(opts) {
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
     fenceURL: process.env.FENCE_URL,
     indexdURL: process.env.INDEXD_URL,
+    arboristURL: process.env.ARBORIST_URL,
+    wtsURL: process.env.WTS_URL,
+    workspaceURL: process.env.WORKSPACE_URL,
+    manifestServiceURL: process.env.MANIFEST_SERVICE_URL,
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
@@ -36,12 +40,16 @@ function buildConfig(opts) {
     hostname,
     fenceURL,
     indexdURL,
+    arboristURL,
+    wtsURL,
+    workspaceURL,
+    manifestServiceURL,
     gaDebug,
     tierAccessLevel,
     tierAccessLimit,
   } = Object.assign({}, defaults, opts);
 
-  function ensureTailingSlash(url) {
+  function ensureTrailingSlash(url) {
     const u = new URL(url);
     u.pathname += u.pathname.endsWith('/') ? '' : '/';
     u.hash = '';
@@ -55,21 +63,22 @@ function buildConfig(opts) {
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   const arrangerGraphqlPath = `${hostname}api/v0/flat-search/search/graphql`;
-  let userapiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTailingSlash(fenceURL);
+  let userapiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
   const jobapiPath = `${hostname}job/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
-  const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTailingSlash(indexdURL);
-  const wtsPath = `${hostname}wts/oauth2/`;
+  const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
+  const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
   let login = {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',
   };
+  const authzPath = typeof arboristURL === 'undefined' ? `${hostname}authz` : arboristURL;
   const loginPath = `${userapiPath}login/`;
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
-  const workspaceUrl = '/lw-workspace/';
+  const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);
   const workspaceErrorUrl = '/no-workspace-access/';
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
@@ -78,7 +87,7 @@ function buildConfig(opts) {
   const datasetUrl = `${hostname}api/search/datasets`;
   const guppyUrl = `${hostname}guppy`;
   const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
-  const manifestServiceApiPath = `${hostname}manifests/`;
+  const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -252,6 +261,7 @@ function buildConfig(opts) {
     tierAccessLevel,
     tierAccessLimit,
     explorerPublic,
+    authzPath,
   };
 }
 
