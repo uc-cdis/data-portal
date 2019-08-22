@@ -86,8 +86,8 @@ describe('MapFiles', () => {
         2: { },
       },
     });
-    console.log(instance.state.allFilesByGroup['1'])
-    expect(instance.isSelectAll(instance.state.allFilesByGroup['1'], '1')).toBe(true);
+    let files = Object.keys(instance.state.allFilesByGroup['1']);
+    expect(instance.isSelectAll(files, '1')).toBe(true);
 
     instance.setState({
       allFilesByGroup: {
@@ -99,7 +99,8 @@ describe('MapFiles', () => {
         2: { },
       },
     });
-    expect(instance.isSelectAll(instance.state.allFilesByGroup[1], '1')).toBe(false);
+    files = Object.keys(instance.state.allFilesByGroup['1']);
+    expect(instance.isSelectAll(files, '1')).toBe(false);
 
     instance.setState({
       allFilesByGroup: {
@@ -111,7 +112,8 @@ describe('MapFiles', () => {
         2: { },
       },
     });
-    expect(instance.isSelectAll(instance.state.allFilesByGroup[2], '2')).toBe(false);
+    files = Object.keys(instance.state.allFilesByGroup['2']);
+    expect(instance.isSelectAll(files, '2')).toBe(false);
   });
 
   it('returns if a file should be selected', () => {
@@ -174,30 +176,47 @@ describe('MapFiles', () => {
         0: { },
       },
       allFilesByGroup: {
-        0: { 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' },
+        0: {
+          1: { name: 'value1' },
+          2: { name: 'value2' },
+          3: { name: 'value3' },
+          4: { name: 'value4' },
+        },
       },
     });
 
-    instance.toggleSelectAll('0');
+    let files = Object.keys(instance.state.allFilesByGroup['0']).map(key => ({ did: key, ...instance.state.allFilesByGroup['0'][key] }));
+    instance.toggleSelectAll(files, '0');
     expect(instance.state.selectedFilesByGroup['0'])
-      .toEqual({ 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' });
+      .toEqual({
+        1: { did: '1', name: 'value1' },
+        2: { did: '2', name: 'value2' },
+        3: { did: '3', name: 'value3' },
+        4: { did: '4', name: 'value4' },
+      });
 
     instance.setState({
       selectedFilesByGroup: {
         0: { 1: 'value1', 2: 'value2' },
       },
       allFilesByGroup: {
-        0: { 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' },
+        0: {
+          1: { name: 'value1' },
+          2: { name: 'value2' },
+          3: { name: 'value3' },
+          4: { name: 'value4' },
+        },
       },
     });
 
-    instance.toggleSelectAll('0');
+    files = Object.keys(instance.state.allFilesByGroup['0']).map(key => ({ did: key, ...instance.state.allFilesByGroup['0'][key] }));
+    instance.toggleSelectAll(files, '0');
     expect(instance.state.selectedFilesByGroup['0'])
       .toEqual({
-        1: 'value1',
-        2: 'value2',
-        3: 'value3',
-        4: 'value4',
+        1: { did: '1', name: 'value1' },
+        2: { did: '2', name: 'value2' },
+        3: { did: '3', name: 'value3' },
+        4: { did: '4', name: 'value4' },
       });
 
     instance.setState({
@@ -219,10 +238,10 @@ describe('MapFiles', () => {
       },
     });
 
-    instance.toggleSelectAll('0');
+    instance.toggleSelectAll(files, '0');
     expect(instance.state.selectedFilesByGroup['0']).toEqual({});
 
-    instance.toggleSelectAll('3');
+    instance.toggleSelectAll(files, '3');
     expect(instance.state.selectedFilesByGroup['0']).toEqual({});
   });
 
