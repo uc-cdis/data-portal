@@ -187,10 +187,10 @@ class LTNPCase extends HIVCohortFilterCase {
           // The subject is neither control nor LTNP
         return
       }
+      var leu3nhy = 0;
+      var firstyh = item[0].visit_date;
+      var firsthigh = false;
       for (let i = 0; i < item.length; i+=1 ){
-        var leu3nhy = 0;
-        var firsthigh = false;
-        var firstyh;
         if (item[i].leu3n > 500 && firsthigh == false){
           leu3nhy = item[i].visit_date
           firsthigh = true
@@ -200,11 +200,12 @@ class LTNPCase extends HIVCohortFilterCase {
         }else if (item[i].leu3n == null){
           continue
         }else{
-          item = item.splice(i,(item.length -i +1))
+          item = item.splice(0,i)
           break
         }
       }
-      const leu3nhdu = leu3nhy - item[0].visit_date;
+      const leu3nhdu = leu3nhy - firstyh;
+
       if (leu3nhdu > this.state.numConsecutiveYearsFromUser){
         subjectLTNP.push(item)
       }else{
