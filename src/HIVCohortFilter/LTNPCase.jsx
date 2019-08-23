@@ -111,6 +111,7 @@ class LTNPCase extends HIVCohortFilterCase {
     }
   }
 
+// query guppy to get all the follow up for charlie project that has hiv-positive.
   getFollowupsBuckets = () => {
     const useGuppyForExplorer = true;
     if (useGuppyForExplorer) {
@@ -145,6 +146,7 @@ class LTNPCase extends HIVCohortFilterCase {
     }
   }
 
+// filter visits that does not qualify hiv positive, harrt negative and art negative
   filterFollowup =(subjectList,followupList) =>{
     var subject;
     const filtFollowup = {};
@@ -175,7 +177,7 @@ class LTNPCase extends HIVCohortFilterCase {
     return this.filterFollowup(subjectList[0],followupList[0])
   }
 
-
+// classify ltnp. Doesn not allow leu3n==null at the beginning or between eligible visits
   classifyAllSubjectLTNP = (filtFollowups) => {
     const subjectLTNP = [];
     const subjectControl = [];
@@ -189,16 +191,9 @@ class LTNPCase extends HIVCohortFilterCase {
       }
       var leu3nhy = 0;
       var firstyh = item[0].visit_date;
-      var firsthigh = false;
       for (let i = 0; i < item.length; i+=1 ){
-        if (item[i].leu3n > 500 && firsthigh == false){
+       if (item[i].leu3n > 500){
           leu3nhy = item[i].visit_date
-          firsthigh = true
-          firstyh = item[i].visit_date
-        }else if (item[i].leu3n > 500){
-          leu3nhy = item[i].visit_date
-        }else if (item[i].leu3n == null){
-          continue
         }else{
           item = item.splice(0,i)
           break
