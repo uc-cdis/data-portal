@@ -5,20 +5,16 @@ import {
   guppyGraphQLUrl,
   arrangerGraphqlPath,
   useGuppyForExplorer,
+  guppyDownloadUrl
 } from '../configs';
 
 class HIVCohortFilterCase extends React.Component {
   // Base class for the 3 NDH cohort filter apps. Meant to facilitate code reuse
-  static performQuery(queryString, variableString) {
-    const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
+  static performQuery(queryObject,useGuppyForExplorer) {
+    const graphqlUrl = useGuppyForExplorer ? guppyDownloadUrl : arrangerGraphqlPath;
     return fetchWithCreds({
       path: `${graphqlUrl}`,
-      body: variableString ? JSON.stringify({
-        query: queryString,
-        variables: JSON.parse(variableString),
-      }) : JSON.stringify({
-        query: queryString,
-      }),
+      body: JSON.stringify(queryObject),
       method: 'POST',
     })
       .then(
@@ -27,7 +23,7 @@ class HIVCohortFilterCase extends React.Component {
   }
 
   static makeSubjectToVisitMap(followUps) {
-    // Convert to dictionary: { subject_id -> [ array of visits sorted by visit_date ] }
+    // Convert to dictionary: { subject_id -> [ array of visits sorted by visit_harmonized_number ] }
     const subjectToVisitMap = {};
     for (let i = 0; i < followUps.length; i += 1) {
       const subjectId = followUps[i].subject_id;
@@ -38,15 +34,15 @@ class HIVCohortFilterCase extends React.Component {
       }
     }
 
-    // Sort each patient's visits by visit_number
+    // Sort each patient's visits by visit_harmonized_number
     Object.keys(subjectToVisitMap).forEach((key) => {
       const subjectVisits = subjectToVisitMap[key];
       if (subjectVisits.length > 1) {
         subjectVisits.sort((a, b) => {
-          if (a.visit_number > b.visit_number) {
+          if (a.harmonized_visit_number > b.harmonized_visit_number) {
             return 1;
           }
-          return ((b.visit_number > a.visit_number) ? -1 : 0);
+          return ((b.harmonized_visit_number > a.harmonized_visit_number) ? -1 : 0);
         });
         subjectToVisitMap[key] = subjectVisits;
       }
@@ -181,28 +177,6 @@ class HIVCohortFilterCase extends React.Component {
       }
       return res.data.follow_up.hits.edges.map(edge => edge.node);
     });
-  }
-
-  async getBucketByKey(bucketKey) {
-    // Overridden by PTC case
-    // Returns map of subjects who have never received HAART treatment
-    const resList = await Promise.all([
-      this.getBucketByKeyWithHAARTVAR(bucketKey, true),
-      this.getBucketByKeyWithHAARTVAR(bucketKey, false),
-    ]);
-
-    const subjectsWithAtLeast1Haart = resList[0];
-    const subjectsWithAtLeast1NonHaart = resList[1];
-    const subjectsWithNoHaartTreatments = subjectsWithAtLeast1NonHaart.filter(
-      x => !subjectsWithAtLeast1Haart.map(y => y.key).includes(x.key),
-    );
-
-    // Transform to map
-    const resultMap = {};
-    for (let i = 0; i < subjectsWithNoHaartTreatments.length; i += 1) {
-      resultMap[subjectsWithNoHaartTreatments[i].key] = subjectsWithNoHaartTreatments[i].doc_count;
-    }
-    return resultMap;
   }
 
   isALargeAmountOfFollowUpDataMissing(visitArray) {

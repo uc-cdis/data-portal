@@ -50,153 +50,159 @@ class LTNPCase extends HIVCohortFilterCase {
     this.numConsecutiveYearsInputRef = React.createRef();
   }
 
-  getBucketByKeyWithHAARTVAR = (bucketKey, isHAART) => {
-    const d = new Date();
-    const currentYear = d.getFullYear();
-
+/*query Guppy and returns map of subjects with critical date for hiv positive subjects*/
+  getSubjectWithTime = () => {
+    const useGuppyForExplorer = true;
     if (useGuppyForExplorer) {
-      const queryString = `
-      query ($filter: JSON) {
-        _aggregation {
-          follow_up (filter: $filter) {
-            ${bucketKey} {
-              histogram {
-                key
-                count
-              } 
+      const queryObject = {
+        type: "subject",
+        fields: [
+          "subject_id",
+          "fposdate",
+          "frstaidd",
+          "lnegdate",
+          "frsthaad",
+          "lastnohd",
+          "frstartd",
+          "lastnoad"
+        ],
+        filter:{
+          AND:[
+          {"=":{
+            hiv_status:"positive"
             }
-          }
-        }
-      }
-    `;
-      const variableString = ` {
-        "filter": {
-          "AND": [
-            {
-              "${isHAART ? '=' : '!='}": {
-                "thrpyv": "HAART"
-              }
-            },
-            {
-              "<=": {
-                "fposdate": ${currentYear - this.state.numConsecutiveYearsFromUser}
-              }
-            },
-            {
-              "=": {
-                "hiv_status": "positive"
-              }
+          },
+          {"=":{
+            project_id:"ndh-CHARLIE"
             }
-          ]
-        }
-      }`;
-      return HIVCohortFilterCase.performQuery(queryString, variableString).then((res) => {
+          }]}
+        };
+      return HIVCohortFilterCase.performQuery(queryObject,useGuppyForExplorer).then((data) => {
         /* eslint-disable no-underscore-dangle */
-        if (!res
-          || !res.data
-          || !res.data._aggregation
-          || !res.data._aggregation.follow_up) {
+        if (!data
+          || data.length == 0) {
           throw new Error('Error when query subjects with HIV');
         }
-        const result = res.data._aggregation.follow_up[bucketKey].histogram;
-        const resultList = [];
-        result.forEach(item => (resultList.push({
-          key: item.key,
-          doc_count: item.count,
-        })));
-        return resultList;
+
+        const subjectList = [];
+        var convy,haarty,arty;
+        data.forEach((item) => {
+          if (item.frstaidd <9000 && item.lnegdate>1978){
+            convy = (item.frstaidd + item.lnegdate)/2
+          }else{
+            convy= item.fposdate
+          }
+          if (item.frsthaad<9000){
+            haarty=(item.lastnohd + item.frsthaad)/2
+          }
+          if (item.frstartd<9000){
+            arty=(item.lastnoad + item.frstartd)/2
+          }
+          subjectList.push({
+            subject_id: item.subject_id,
+            convy:convy,
+            haarty:haarty,
+            arty:arty
+            })
+        });
+        return subjectList;
         // eslint-enable no-underscore-dangle
       });
     }
+  }
 
-    // below are for arranger only
-    const queryString = `
-    {
-      follow_up {
-        aggregations(filters: {first: 10000, op: "and", content: [
-          {op: "${isHAART ? '=' : '!='}", content: {field: "thrpyv", value: "HAART"}},
-          {op: "<=", content: {field: "fposdate", value: "${currentYear - this.state.numConsecutiveYearsFromUser}"}},
-          {op: "=", content: {field: "hiv_status", value: "positive"}}]})
-        {
-          ${bucketKey} {
-            buckets {
-              key
-              doc_count
+  getFollowupsBuckets = () => {
+    const useGuppyForExplorer = true;
+    if (useGuppyForExplorer) {
+      const queryString = {
+        type: "follow_up",
+        fields:[
+          "subject_id",
+          "harmonized_visit_number",
+          "visit_date",
+          "leu3n",
+          "viral_load",
+          "submitter_id"
+        ],
+        filter:{
+          AND:[
+          {"=":{
+            hiv_status:"positive"
             }
-          }
+          },
+          {"=":{
+            project_id:"ndh-CHARLIE"
+            }
+          }]}
+        };
+      return HIVCohortFilterCase.performQuery(queryString, useGuppyForExplorer).then((data) => {
+        if (!data
+          || data.length == 0) {
+          throw new Error('Error while querying subjects with HIV');
+        }
+        return HIVCohortFilterCase.makeSubjectToVisitMap(data)
+      });
+    }
+  }
+
+  filterFollowup =(subjectList,followupList) =>{
+    var subject;
+    const filtFollowup = {};
+    subjectList.forEach((item) =>{
+      subject = item.subject_id
+      filtFollowup[subject] = []
+      for (let i =0; i < followupList[subject].length; i++){
+        if (followupList[subject][i].visit_date <= item.convy){
+          continue ;
+        }else if(followupList[subject][i].visit_date < item.haarty && followupList[subject][i].visit_date < item.arty){
+          filtFollowup[subject].push(followupList[subject][i])
+        }else{
+          break;
         }
       }
-    }
-    `;
-    return HIVCohortFilterCase.performQuery(queryString).then((res) => {
-      if (!res || !res.data || !res.data.follow_up || !res.data.follow_up.aggregations) {
-        throw new Error('Error while querying subjects with HIV');
-      }
-      return res.data.follow_up.aggregations[bucketKey].buckets;
-    });
+    })
+    const filtFollowups = Object.values(filtFollowup).filter(x =>(x.length!=0))
+    return filtFollowups
   }
 
-  isALargeAmountOfFollowUpDataMissing = (visitArray, currentYear) => {
-    // If the subject does not have at least 1 visit every Z years, disqualify them
-    const Z = 5;
-    const fposdate = visitArray[0].fposdate;
-    const upperBound = Math.min(visitArray[0].frstdthd, currentYear);
-    if (upperBound - fposdate <= Z - 1 && visitArray.length >= 1) {
-      // If subject has been positive (Z-1) or less years, and there's 1 visit, that's ok
-      return false;
-    }
-
-    for (let yearX = fposdate; yearX <= upperBound - Z; yearX += 1) {
-      const yearFound = visitArray.findIndex(fu => (fu.visit_date >= yearX
-        && fu.visit_date <= yearX + Z));
-      if (yearFound === -1) {
-        return true;
-      }
-    }
-    return false;
+  async getBucketByKey() {
+    const subjectList = await Promise.all([
+      this.getSubjectWithTime()
+    ]);
+    const followupList = await Promise.all([
+      this.getFollowupsBuckets()
+    ]);
+    return this.filterFollowup(subjectList[0],followupList[0])
   }
 
-  classifyAllSubjectLTNP = (subjectToVisitMap) => {
+
+  classifyAllSubjectLTNP = (filtFollowups) => {
     const subjectLTNP = [];
     const subjectControl = [];
 
-    const d = new Date();
-    const currentYear = d.getFullYear();
-
-    // For each subject, extract the visits with visit_date > fposdate and check their CD4 counts
-    Object.keys(subjectToVisitMap).forEach((subjectId) => {
-      const visitArray = subjectToVisitMap[subjectId];
-      const numYearsHIVPositive = Math.min(
-        currentYear, visitArray[0].frstdthd,
-      ) - visitArray[0].fposdate;
-      if (numYearsHIVPositive < this.state.numConsecutiveYearsFromUser) {
-        // The subject is neither control nor LTNP
-        return;
+    // For each subject, check their CD4 counts
+    filtFollowups.forEach((item) => {
+      const duration = item.slice(-1)[0].visit_date - item[0].visit_date
+      if (duration < this.state.numConsecutiveYearsFromUser){
+          // The subject is neither control nor LTNP
+        return
       }
-
-      if (this.isALargeAmountOfFollowUpDataMissing(visitArray, currentYear)) {
-        // Disqualify the subject because they're missing lots of data
-        return;
+      for (let i = 0; i < item.length; i+=1 ){
+        var leu3nhy = 0;
+        if (item[i].leu3n > 500){
+          leu3nhy = item[i].visit_date
+        }else{
+          item.slice(i,(item.length -i +1))
+          break
+        }
       }
-
-      const subjectWithVisits = {
-        subject_id: subjectId,
-        num_years_hiv_positive: numYearsHIVPositive,
-        follow_ups: visitArray,
-      };
-
-      const followUpsAfterFposDate = visitArray.filter(x => (x.visit_date >= x.fposdate));
-      const followUpsWithCD4CountsBelowThresholdAfterFposDate = followUpsAfterFposDate.filter(
-        x => (x.leu3n <= this.state.CD4FromUser && x.leu3n != null),
-      );
-
-      if (followUpsWithCD4CountsBelowThresholdAfterFposDate.length === 0
-          && followUpsAfterFposDate.length > 0) {
-        subjectLTNP.push(subjectWithVisits);
-      } else {
-        subjectControl.push(subjectWithVisits);
+      const leu3nhdu = leu3nhy - item[0].visit_date;
+      if (leu3nhdu > this.state.numConsecutiveYearsFromUser){
+        subjectLTNP.push(item)
+      }else{
+        subjectControl.push(item)
       }
-    });
+    })
     return {
       subjectLTNP,
       subjectControl,
@@ -204,14 +210,12 @@ class LTNPCase extends HIVCohortFilterCase {
   }
 
   updateSubjectClassifications = async () => {
-    this.getFollowUpsWithHIV()
-      .then((followUps) => {
-        const subjectToVisitMap = HIVCohortFilterCase.makeSubjectToVisitMap(followUps);
-
+    this.getBucketByKey()
+      .then((filtFollowups) => {
         const {
           subjectLTNP,
           subjectControl,
-        } = this.classifyAllSubjectLTNP(subjectToVisitMap);
+        } = this.classifyAllSubjectLTNP(filtFollowups);
         this.setState({
           subjectLTNP,
           subjectControl,
