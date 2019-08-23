@@ -189,8 +189,16 @@ class LTNPCase extends HIVCohortFilterCase {
       }
       for (let i = 0; i < item.length; i+=1 ){
         var leu3nhy = 0;
-        if (item[i].leu3n > 500){
+        var firsthigh = false;
+        var firstyh;
+        if (item[i].leu3n > 500 && firsthigh == false){
           leu3nhy = item[i].visit_date
+          firsthigh = true
+          firstyh = item[i].visit_date
+        }else if (item[i].leu3n > 500){
+          leu3nhy = item[i].visit_date
+        }else if (item[i].leu3n == null){
+          continue
         }else{
           item = item.splice(i,(item.length -i +1))
           break
