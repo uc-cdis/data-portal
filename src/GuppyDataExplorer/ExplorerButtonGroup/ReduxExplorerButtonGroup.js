@@ -4,6 +4,7 @@ import { dispatchJob, checkJob, fetchJobResult, resetJobState } from '../../Anal
 
 const mapStateToProps = state => ({
   job: state.analysis.job,
+  userAccess: state.userAccess.access,
 });
 
 const mapDispatchToProps = dispatch => ({
