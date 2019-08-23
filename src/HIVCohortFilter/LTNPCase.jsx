@@ -192,7 +192,7 @@ class LTNPCase extends HIVCohortFilterCase {
         if (item[i].leu3n > 500){
           leu3nhy = item[i].visit_date
         }else{
-          item.slice(i,(item.length -i +1))
+          item = item.splice(i,(item.length -i +1))
           break
         }
       }
