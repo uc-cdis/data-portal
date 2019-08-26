@@ -1,6 +1,6 @@
 # Windmill data portal
 
-A generic data portal that supports some basic interaction with [peregrine](https://github.com/uc-cdis/peregrine) and [fence](https://github.com/uc-cdis/fence).
+A generic data portal that supports some basic interaction with Gen3 services like [peregrine](https://github.com/uc-cdis/peregrine), [sheepdog](https://github.com/uc-cdis/sheepdog) and [fence](https://github.com/uc-cdis/fence).
 
 ## Get Started
 
