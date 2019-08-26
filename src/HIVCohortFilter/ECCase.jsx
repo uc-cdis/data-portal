@@ -42,170 +42,210 @@ class ECCase extends HIVCohortFilterCase {
     this.numConsecutiveMonthsInputRef = React.createRef();
   }
 
-  getBucketByKeyWithHAARTVAR = (bucketKey, isHAART) => {
-    // The below query differs from the PTC case in that there is no viral_load check.
-    // This is because the EC and LTNP cases uses this function to find people who have
-    // never received haart treatments; we need to look at *all* their followups.
-    // (Read the function getBucketByKey() defined in the HIVCohortFilterCase class.)
+  /*query Guppy and returns map of subjects with critical date for hiv positive subjects*/
+  getSubjectWithTime = () => {
+    const useGuppyForExplorer = true;
     if (useGuppyForExplorer) {
-      const queryString = `
-      query ($filter: JSON) {
-        _aggregation {
-          follow_up (filter: $filter) {
-            ${bucketKey} {
-              histogram {
-                key
-                count
-              } 
+      const queryObject = {
+        type: "subject",
+        fields: [
+          "subject_id",
+          "fposdate",
+          "frstaidd",
+          "lnegdate",
+          "frsthaad",
+          "lastnohd",
+          "frstartd",
+          "lastnoad"
+        ],
+        filter:{
+          AND:[
+          {"=":{
+            hiv_status:"positive"
             }
-          }
-        }
-      }
-    `;
-      const variableString = ` {
-        "filter": {
-          "AND": [
-            {
-              "${isHAART ? '=' : '!='}": {
-                "thrpyv": "HAART"
-              }
-            },
-            {
-              "=": {
-                "hiv_status": "positive"
-              }
+          },
+          {"=":{
+            project_id:"ndh-CHARLIE"
             }
-          ]
-        }
-      }`;
-      return HIVCohortFilterCase.performQuery(queryString, variableString).then((res) => {
+          }]}
+        };
+      return HIVCohortFilterCase.performQuery(queryObject,useGuppyForExplorer).then((data) => {
         /* eslint-disable no-underscore-dangle */
-        if (!res
-          || !res.data
-          || !res.data._aggregation
-          || !res.data._aggregation.follow_up) {
+        if (!data
+          || data.length == 0) {
           throw new Error('Error when query subjects with HIV');
         }
-        const result = res.data._aggregation.follow_up[bucketKey].histogram;
-        const resultList = [];
-        result.forEach(item => (resultList.push({
-          key: item.key,
-          doc_count: item.count,
-        })));
-        return resultList;
-      });
-      // eslint-enable no-underscore-dangle
-    }
 
-    // below are for arranger only
-    const queryString = `
-    {
-      follow_up {
-        aggregations(filters: {first: 10000, op: "and", content: [
-          {op: "${isHAART ? '=' : '!='}", content: {field: "thrpyv", value: "HAART"}},
-          {op: "=", content: {field: "hiv_status", value: "positive"}}]}) 
-        {
-          ${bucketKey} {
-            buckets {
-              key
-              doc_count
-            }
+        const subjectList = [];
+        var convy,haarty,arty;
+        data.forEach((item) => {
+          if (item.frstaidd <9000 && item.lnegdate>1978){
+            convy = (item.frstaidd + item.lnegdate)/2
+          }else{
+            convy= item.fposdate
           }
+          if (item.frsthaad<9000){
+            haarty=(item.lastnohd + item.frsthaad)/2
+          }
+          if (item.frstartd<9000){
+            arty=(item.lastnoad + item.frstartd)/2
+          }
+          subjectList.push({
+            subject_id: item.subject_id,
+            convy:convy,
+            haarty:haarty,
+            arty:arty
+            })
+        });
+        return subjectList;
+        // eslint-enable no-underscore-dangle
+      });
+    }
+  }
+
+// query guppy to get all the follow up for charlie project that has hiv-positive.
+  getFollowupsBuckets = () => {
+    const useGuppyForExplorer = true;
+    if (useGuppyForExplorer) {
+      const queryString = {
+        type: "follow_up",
+        fields:[
+          "subject_id",
+          "harmonized_visit_number",
+          "visit_date",
+          "leu3n",
+          "viral_load",
+          "submitter_id"
+        ],
+        filter:{
+          AND:[
+          {"=":{
+            hiv_status:"positive"
+            }
+          },
+          {"=":{
+            project_id:"ndh-CHARLIE"
+            }
+          }]}
+        };
+      return HIVCohortFilterCase.performQuery(queryString, useGuppyForExplorer).then((data) => {
+        if (!data
+          || data.length == 0) {
+          throw new Error('Error while querying subjects with HIV');
+        }
+        return HIVCohortFilterCase.makeSubjectToVisitMap(data)
+      });
+    }
+  }
+
+// filter visits that does not qualify hiv positive, harrt negative and art negative
+  filterFollowup =(subjectList,followupList) =>{
+    var subject;
+    const filtFollowup = {};
+    subjectList.forEach((item) =>{
+      subject = item.subject_id
+      filtFollowup[subject] = []
+      for (let i =0; i < followupList[subject].length; i++){
+        if (followupList[subject][i].visit_date <= item.convy){
+          continue ;
+        }else if(followupList[subject][i].visit_date < item.haarty && followupList[subject][i].visit_date < item.arty){
+          filtFollowup[subject].push(followupList[subject][i])
+        }else{
+          break;
+        }
+      }
+    })
+    const filtFollowups = Object.values(filtFollowup).filter(x =>(x.length!=0))
+    return filtFollowups
+  }
+
+  async getBucketByKey() {
+    const subjectList = await Promise.all([
+      this.getSubjectWithTime()
+    ]);
+    const followupList = await Promise.all([
+      this.getFollowupsBuckets()
+    ]);
+    return this.filterFollowup(subjectList[0],followupList[0])
+  }
+
+  visitsMatchECWindowCriteria = (visitArray) => {
+    var nsuper = 0, nspike = 0, nEC = 0, lasttimepoint = 0, ec_visits = [], ec_period = {}, n_nonsuper = 0;
+    for (let i = 0; i < visitArray.length; i += 1) {
+      if (visitArray[i].viral_load <  this.state.supLoadFromUser){
+        ec_visits.push(visitArray[i])
+        nsuper += 1
+        lasttimepoint = visitArray[i].visit_date
+        n_nonsuper = 0
+      }else if (visitArray[i].viral_load < this.state.spikeLoadFromUser){
+        nspike += 1
+        if (nspike > 1){
+          if (nsuper >=this.state.supVisitFromUser){
+            nEC += 1
+            ec_period_key = "ec_perid_" + str(nEC)
+            var number_visits = ec_visits.length - n_nonsuper
+            ec_period[ec_period_key] = ec_visits.splice(0,number_visits)
+          }
+          nspike = 0
+          nsuper = 0
+          ec_visits = []
+          lasttimepoint = 0
+        }else{
+          lasttimepoint = visitArray[i].visit_date
+          ec_visits.push(visitArray[i])
+          n_nonsuper += 1
+        }
+      }else if (visitArray[i].viral_load === null){
+        if (visitArray[i].visit_date > lasttimepoint + 1){
+          if (nsuper >=this.state.supVisitFromUser){
+            nEC += 1
+            ec_period_key = "ec_perid_" + str(nEC)
+            var number_visits = ec_visits.length - n_nonsuper
+            ec_period[ec_period_key] = ec_visits.splice(0,number_visits)
+          }
+          nsuper = 0
+          nspike = 0
+          ec_visits = []
+          lasttimepoint = 0
+        }else{
+          ec_visits.push(visitArray[i])
+          n_nonsuper += 1
         }
       }
     }
-    `;
-    return HIVCohortFilterCase.performQuery(queryString).then((res) => {
-      if (!res || !res.data) {
-        throw new Error('Error while querying subjects with HIV');
-      }
-      return res.data.follow_up.aggregations[bucketKey].buckets;
-    });
+    return ec_period;
   }
 
-  doTheseVisitsMatchECSlidingWindowCriteria = (visitArray) => {
-    for (let i = 0; i < visitArray.length; i += 1) {
-      if (visitArray[i].viral_load === null) return false; // ignore all null records
-      if (visitArray[i].viral_load >= this.state.viralLoadFromUser) {
-        return false;
-      }
-    }
-
-    if (this.isALargeAmountOfFollowUpDataMissing(visitArray)) {
-      return false;
-    }
-
-    return true;
-  }
-
-  classifyAllSubjectEC = (subjectToVisitMap) => {
+  classifyAllSubjectEC = (filtFollowups) => {
     const subjectEC = [];
     const subjectControl = [];
-    const subjectNeither = [];
-    const slidingWindowSize = Math.ceil(this.state.numConsecutiveMonthsFromUser / 6);
 
     // For each patient, try to find numConsecutiveMonthsFromUser consecutive
     // visits that match the EC criteria
-    Object.keys(subjectToVisitMap).forEach((subjectId) => {
-      let visitArray = subjectToVisitMap[subjectId];
-
-      const subjectWithVisits = {
-        subject_id: subjectId,
-        consecutive_viral_loads_below_threshold_begin_at_followup: 'N/A',
-        follow_ups: visitArray,
-      };
-
-      // If a followup has no date-related attributes set, it is not helpful to this classifier
-      visitArray = visitArray.filter(x => x.visit_date !== null && x.visit_number !== null);
-
-      if (visitArray.length < slidingWindowSize) {
-        subjectNeither.push(subjectWithVisits);
-        return;
+    filtFollowups.forEach((item) => {
+      ec_period = this.visitsMatchECWindowCriteria(item)
+      if (ec_period){
+        subjectEC.push(ec_period);
+      }else{
+        subjectControl.push(item)
       }
-
-      // The sliding window step. Window is of size this.state.numConsecutiveMonthsFromUser / 6
-      // Note that this loop differs slightly from the PTC case:
-      // we use i<= instead of i<, because we dont need to check the followup immediately
-      // after the window, as we did in the PTC Case
-      for (let i = 0; i <= visitArray.length - slidingWindowSize; i += 1) {
-        const windowMatch = this.doTheseVisitsMatchECSlidingWindowCriteria(
-          visitArray.slice(i, i + slidingWindowSize),
-        );
-        if (windowMatch) {
-          // Found EC!
-          subjectWithVisits.consecutive_viral_loads_below_threshold_begin_at_followup
-                      = visitArray[i].submitter_id;
-          subjectEC.push(subjectWithVisits);
-          return;
-        }
-      }
-
-      // If the window above didn't apply anywhere in this subject's followups,
-      // the subject is control
-      subjectControl.push(subjectWithVisits);
-    });
-
+    })
     return {
       subjectEC,
       subjectControl,
-      subjectNeither,
     };
   }
 
   updateSubjectClassifications = async () => {
-    this.getFollowUpsWithHIV()
-      .then((followUps) => {
-        const subjectToVisitMap = HIVCohortFilterCase.makeSubjectToVisitMap(followUps);
-
+    this.getBucketByKey()
+      .then((filtFollowups) => {
         const {
           subjectEC,
           subjectControl,
-          subjectNeither,
-        } = this.classifyAllSubjectEC(subjectToVisitMap);
+        } = this.classifyAllSubjectEC(filtFollowups);
         this.setState({
           subjectEC,
           subjectControl,
-          subjectNeither,
           inLoadingState: false,
           resultAlreadyCalculated: true,
         });
@@ -214,8 +254,9 @@ class ECCase extends HIVCohortFilterCase {
 
   makeCohortJSONFile = (subjectsIn) => {
     const annotatedObj = {
-      viral_load_upper_bound: this.state.viralLoadFromUser.toString(),
-      maintained_for_at_least_this_many_months: this.state.numConsecutiveMonthsFromUser.toString(),
+      viral_load_sup_upper_bound: this.state.supLoadFromUser.toString(),
+      viral_load_spike_upper_bound: this.state.spikeLoadFromUser.toString(),
+      maintained_for_at_least_this_many_visits: this.state.supVisitFromUser.toString(),
       subjects: subjectsIn,
     };
 
