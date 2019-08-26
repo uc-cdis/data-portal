@@ -26,6 +26,10 @@
   overflow: hidden;
 }
 
+.graphiql-container .historyPaneWrap {
+  overflow: scroll;
+}
+
 .graphiql-container .editorWrap {
   display: -webkit-box;
   display: -ms-flexbox;
