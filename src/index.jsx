@@ -12,7 +12,7 @@ import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 
 import '@gen3/ui-component/dist/css/base.less';
-import { fetchDictionary, fetchSchema, fetchVersionInfo } from './actions';
+import { fetchDictionary, fetchSchema, fetchVersionInfo, fetchUserAccess } from './actions';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 import HomePage from './Homepage/page';
@@ -63,6 +63,8 @@ async function init() {
       store.dispatch(fetchSchema),
       store.dispatch(fetchDictionary),
       store.dispatch(fetchVersionInfo),
+      // resources can be open to anonymous users, so fetch access:
+      store.dispatch(fetchUserAccess),
     ],
   );
   // FontAwesome icons

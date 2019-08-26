@@ -12,6 +12,10 @@
   margin-bottom: 6px;
 }
 
+.guppy-explorer-visualization__connected-filter--hide {
+  display: none;
+}
+
 /* Overrides */
 .recharts-tooltip-wrapper {
   z-index: 1000;

@@ -97,6 +97,7 @@ class Explorer extends React.Component {
             chartConfig={guppyExplorerConfig[this.state.tab].charts}
             filterConfig={guppyExplorerConfig[this.state.tab].filters}
             tableConfig={guppyExplorerConfig[this.state.tab].table}
+            heatMapConfig={this.state.tab === 0 ? config.dataAvailabilityToolConfig : null}
             guppyConfig={{ path: guppyUrl, ...guppyExplorerConfig[this.state.tab].guppyConfig }}
             buttonConfig={{
               buttons: guppyExplorerConfig[this.state.tab].buttons,

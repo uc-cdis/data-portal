@@ -23,6 +23,11 @@ class NavBar extends Component {
     this.props.onInitActive();
   }
 
+  canUserSeeComponent = (componentName) => {
+    const authResult = this.props.userAccess[componentName];
+    return typeof authResult !== 'undefined' ? authResult : true;
+  }
+
   isActive = (id) => {
     const toCompare = this.props.activeTab.split('/').filter(x => x !== 'dev.html').join('/');
     return toCompare.startsWith(id);
@@ -34,9 +39,9 @@ class NavBar extends Component {
 
   render() {
     const navItems = this.props.navItems.map(
-      (item, index) => (
-        (item.link.startsWith('http')) ?
-          <a className='nav-bar__link nav-bar__link--right' key={item.link} href={item.link}>
+      (item, index) => {
+        const navButton = (item.link.startsWith('http') ?
+          (<a className='nav-bar__link nav-bar__link--right' key={item.link} href={item.link}>
             <NavButton
               item={item}
               dictIcons={this.props.dictIcons}
@@ -44,8 +49,8 @@ class NavBar extends Component {
               onActiveTab={() => this.props.onActiveTab(item.link)}
               tabIndex={index + 1}
             />
-          </a> :
-          <Link className='nav-bar__link nav-bar__link--right' key={item.link} to={item.link}>
+          </a>) :
+          (<Link className='nav-bar__link nav-bar__link--right' key={item.link} to={item.link}>
             <NavButton
               item={item}
               dictIcons={this.props.dictIcons}
@@ -53,8 +58,10 @@ class NavBar extends Component {
               onActiveTab={() => this.props.onActiveTab(item.link)}
               tabIndex={index + 1}
             />
-          </Link>
-      ));
+          </Link>)
+        );
+        return this.canUserSeeComponent(item.name) ? navButton : null;
+      });
 
     return (
       <div className='nav-bar'>
@@ -124,6 +131,7 @@ class NavBar extends Component {
 
 NavBar.propTypes = {
   navItems: PropTypes.array.isRequired,
+  userAccess: PropTypes.object.isRequired,
   dictIcons: PropTypes.object.isRequired,
   navTitle: PropTypes.string,
   activeTab: PropTypes.string,
