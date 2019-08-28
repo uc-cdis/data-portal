@@ -6,7 +6,24 @@ import './HIVCohortFilter.css';
 import CohortPTCSvg from '../img/cohort-PTC.svg';
 import Spinner from '../components/Spinner';
 import HIVCohortFilterCase from './HIVCohortFilterCase';
-import { useGuppyForExplorer } from '../configs';
+import { useGuppyForExplorer,guppyGraphQLUrl} from '../configs';
+import { fetchWithCreds } from '../actions';
+
+function performQuery(queryString, variableString) {
+    return fetchWithCreds({
+      path: guppyGraphQLUrl,
+      body: variableString ? JSON.stringify({
+        query: queryString,
+        variables: JSON.parse(variableString),
+      }) : JSON.stringify({
+        query: queryString,
+      }),
+      method: 'POST',
+    })
+      .then(
+        ({ status, data }) => data, // eslint-disable-line no-unused-vars
+      );
+  }
 
 class PTCCase extends HIVCohortFilterCase {
   /*
@@ -60,7 +77,7 @@ class PTCCase extends HIVCohortFilterCase {
               histogram {
                 key
                 count
-              } 
+              }
             }
           }
         }
@@ -110,10 +127,10 @@ class PTCCase extends HIVCohortFilterCase {
     const queryString = `
     {
       follow_up {
-        aggregations(filters: {first: 10000, op: "and", content: [
+        _aggregation(filters: {first: 10000, op: "and", content: [
           {op: "${isHAART ? '=' : '!='}", content: {field: "thrpyv", value: "HAART"}},
           {op: "<", content: {field: "viral_load", value: "${this.state.viralLoadFromUser}"}},
-          {op: "=", content: {field: "hiv_status", value: "positive"}}]}) 
+          {op: "=", content: {field: "hiv_status", value: "positive"}}]})
         {
           ${bucketKey} {
             buckets {
@@ -125,11 +142,11 @@ class PTCCase extends HIVCohortFilterCase {
       }
     }
     `;
-    return HIVCohortFilterCase.performQuery(queryString).then((res) => {
+    return performQuery(queryString).then((res) => {
       if (!res || !res.data) {
         throw new Error('Error when query subjects with HIV');
       }
-      return res.data.follow_up.aggregations[bucketKey].buckets;
+      return res.data.follow_up.aggregation[bucketKey].buckets;
     });
   }
 
