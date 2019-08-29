@@ -7,6 +7,7 @@ import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
 import PropTypes from 'prop-types';
 import { calculateDropdownButtonConfigs, humanizeNumber } from '../../DataExplorer/utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
+import { exportAllSelectedDataToCloud } from './bdbag';
 import { fetchWithCreds } from '../../actions';
 import { manifestServiceApiPath } from '../../localconf';
 import './ExplorerButtonGroup.css';
@@ -23,12 +24,12 @@ class ExplorerButtonGroup extends React.Component {
       toasterHeadline: '',
       toasterError: null,
       toasterErrorText: 'There was an error exporting your cohort.',
-      exportingToCloud: false,
+
       // for export to PFB
       exportPFBStatus: null,
       exportPFBURL: '',
-      pfbStartText: 'Your export is in progress. It may take up to 15 minutes to complete.',
-      pfbWarning: 'Do not close your browser until your export is finished.',
+      pfbStartText: 'Your PFB export is in progress. It may take up to 15 minutes to complete.',
+      pfbWarning: 'Do not close your browser until your PFB export is finished.',
       pfbSuccessText: 'Your cohort has been exported to PFB! The URL is displayed below.',
       // for export to workspace
       exportingToWorkspace: false,
@@ -45,21 +46,10 @@ class ExplorerButtonGroup extends React.Component {
     if (nextProps.job && nextProps.job.status === 'Completed' && this.props.job.status !== 'Completed') {
       this.fetchJobResult()
         .then((res) => {
-          if (this.state.exportingToCloud) {
-            this.setState({
-              exportPFBURL: `${res.data.output}`.split('\n'),
-              toasterOpen: false,
-              exportingToCloud: false,
-            }, () => {
-              this.sendPFBToCloud();
-            });
-          } else {
-            this.setState({
-              exportPFBURL: `${res.data.output}`.split('\n'),
-              toasterOpen: true,
-              toasterHeadline: this.state.pfbSuccessText,
-            });
-          }
+          this.setState({
+            exportPFBURL: `${res.data.output}`.split('\n'),
+            toasterOpen: true,
+            toasterHeadline: this.state.pfbSuccessText });
         });
     }
     if (nextProps.totalCount !== this.props.totalCount
@@ -211,15 +201,8 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   exportToCloud = () => {
-    this.setState({ exportingToCloud: true }, () => {
-      this.exportToPFB();
-    });
+    exportAllSelectedDataToCloud(this.props.downloadRawDataByFields);
   };
-
-  sendPFBToCloud = () => {
-    const url = encodeURIComponent(this.state.exportPFBURL);
-    window.location = `${this.props.buttonConfig.terraExportURL}?url=${url}`;
-  }
 
   exportToPFB = () => {
     this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
@@ -339,12 +322,6 @@ class ExplorerButtonGroup extends React.Component {
       return this.state.manifestEntryCount > 0;
     }
     if (buttonConfig.type === 'export-to-pfb') {
-      return this.state.manifestEntryCount > 0 && !this.state.exportingToCloud;
-    }
-    if (buttonConfig.type === 'export') {
-      if (!this.state.exportingToCloud) {
-        return this.state.manifestEntryCount > 0 && !this.isPFBRunning();
-      }
       return this.state.manifestEntryCount > 0;
     }
     if (buttonConfig.type === 'export-to-workspace') {
@@ -359,10 +336,7 @@ class ExplorerButtonGroup extends React.Component {
       return this.state.exportingToWorkspace;
     }
     if (buttonConfig.type === 'export-to-pfb') {
-      return this.isPFBRunning() && !this.state.exportingToCloud;
-    }
-    if (buttonConfig.type === 'export') {
-      return this.state.exportingToCloud && this.isPFBRunning();
+      return this.isPFBRunning();
     }
     return false;
   };

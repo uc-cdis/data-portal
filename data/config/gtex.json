@@ -137,7 +137,7 @@
         "alt": "Center for Translational Data Science at the University of Chicago"
       },
       {
-        "src": "/src/img/sponsors/nhlbi.png",
+        "src": "/src/img/sponsors/nhlbi.svg",
         "href": "https://www.nhlbi.nih.gov",
         "alt": "NHLBI"
       }
@@ -172,6 +172,20 @@
     "filters": {
       "tabs": [
         {
+          "title": "Case",
+          "fields": [
+            "project_id",
+            "consent_codes",
+            "data_type",
+            "data_format",
+            "race",
+            "ethnicity",
+            "gender",
+            "bmi",
+            "age_at_index"
+          ]
+        },
+        {
           "title": "Family History",
           "fields": [
             "diabetes",
@@ -194,20 +208,6 @@
           "fields": [
             "diastolic_blood_pressure",
             "systolic_blood_pressure"
-          ]
-        },
-        {
-          "title": "Case",
-          "fields": [
-            "project_id",
-            "consent_codes",
-            "data_type",
-            "data_format",
-            "race",
-            "ethnicity",
-            "gender",
-            "bmi",
-            "age_at_index"
           ]
         }
       ]
@@ -314,8 +314,7 @@
       "accessibleFieldCheckList": ["project_id"],
       "accessibleValidationField": "project_id"
     },
-    "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/",
-    "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data"
+    "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/"
   },
   "fileExplorerConfig": {
     "charts": {
@@ -349,6 +348,25 @@
         "object_id"
       ]
     },
+    "dropdowns": {},
+    "buttons": [
+      {
+        "enabled": true,
+        "type": "file-manifest",
+        "title": "Download Manifest",
+        "leftIcon": "datafile",
+        "rightIcon": "download",
+        "fileName": "file-manifest.json",
+        "dropdownId": "download"
+      },
+      {
+        "enabled": true,
+        "type": "export-files-to-workspace",
+        "title": "Export to Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "download"
+      }
+    ],
     "guppyConfig": {
       "dataType": "file",
       "fieldMapping": [
@@ -364,8 +382,6 @@
       "accessibleFieldCheckList": ["project_id"],
       "accessibleValidationField": "project_id",
       "downloadAccessor": "object_id"
-    },
-    "buttons": [],
-    "dropdowns": {}
+    }
   }
 }
