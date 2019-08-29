@@ -186,6 +186,8 @@ class ExplorerButtonGroup extends React.Component {
       toasterOpen: false,
       toasterHeadline: '',
       toasterError: null,
+      exportPFBStatus: null,
+      exportPFBURL: '',
     });
   };
 
