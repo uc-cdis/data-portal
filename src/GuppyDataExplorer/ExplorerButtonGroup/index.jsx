@@ -27,8 +27,8 @@ class ExplorerButtonGroup extends React.Component {
       // for export to PFB
       exportPFBStatus: null,
       exportPFBURL: '',
-      pfbStartText: 'Your export is in progress. It may take up to 15 minutes to complete.',
-      pfbWarning: 'Do not close your browser until your export is finished.',
+      pfbStartText: 'Your export is in progress.',
+      pfbWarning: 'Please do not navigate away from this page until your export is finished.',
       pfbSuccessText: 'Your cohort has been exported to PFB! The URL is displayed below.',
       // for export to workspace
       exportingToWorkspace: false,
