@@ -314,7 +314,8 @@
       "accessibleFieldCheckList": ["project_id"],
       "accessibleValidationField": "project_id"
     },
-    "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/"
+    "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/",
+    "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data"
   },
   "fileExplorerConfig": {
     "charts": {
