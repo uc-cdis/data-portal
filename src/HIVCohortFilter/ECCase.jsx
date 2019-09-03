@@ -44,7 +44,6 @@ class ECCase extends HIVCohortFilterCase {
 
   /*query Guppy and returns map of subjects with critical date for hiv positive subjects*/
   getSubjectWithTime = () => {
-    const useGuppyForExplorer = true;
     if (useGuppyForExplorer) {
       const queryObject = {
         type: "subject",
@@ -69,7 +68,7 @@ class ECCase extends HIVCohortFilterCase {
             }
           }]}
         };
-      return HIVCohortFilterCase.performQuery(queryObject,useGuppyForExplorer).then((data) => {
+      return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
         /* eslint-disable no-underscore-dangle */
         if (!data
           || data.length == 0) {
@@ -105,9 +104,8 @@ class ECCase extends HIVCohortFilterCase {
 
 // query guppy to get all the follow up for charlie project that has hiv-positive.
   getFollowupsBuckets = () => {
-    const useGuppyForExplorer = true;
     if (useGuppyForExplorer) {
-      const queryString = {
+      const queryObject = {
         type: "follow_up",
         fields:[
           "subject_id",
@@ -128,7 +126,7 @@ class ECCase extends HIVCohortFilterCase {
             }
           }]}
         };
-      return HIVCohortFilterCase.performQuery(queryString, useGuppyForExplorer).then((data) => {
+      return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
         if (!data
           || data.length == 0) {
           throw new Error('Error while querying subjects with HIV');

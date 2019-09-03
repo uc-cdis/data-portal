@@ -84,12 +84,6 @@
           "name": "Exploration"
         },
         {
-          "icon": "files",
-          "link": "/files",
-          "color": "#a2a2a2",
-          "name": "Files"
-        },
-        {
           "icon": "analysis",
           "link": "/analysis",
           "color": "#a2a2a2",
@@ -163,9 +157,9 @@
         "chartType": "bar",
         "title": "Race"
       },
-      "ethnicity": {
+      "species": {
         "chartType": "bar",
-        "title": "Ethnicity"
+        "title": "Species"
       }
     },
     "filters": {
@@ -213,24 +207,7 @@
       ]
     },
     "table": {
-      "enabled": false,
-      "fields": [
-        "project_id",
-        "race",
-        "ethnicity",
-        "gender",
-        "vital_status",
-        "frstdthd",
-        "arthxbase",
-        "bshbvstat",
-        "bshcvstat",
-        "cd4nadir",
-        "status",
-        "virus_type",
-        "virus_subtype",
-        "_min_viral_load",
-        "hiv_status"
-      ]
+      "enabled": false
     },
     "dropdowns": {
       "download": {
@@ -264,17 +241,140 @@
         "rightIcon": "download"
       }
     ],
-    "arrangerConfig": {
-      "projectId": "search",
-      "graphqlField": "subject",
-      "index": "",
+    "guppyConfig": {
+      "dataType": "subject",
+      "nodeCountTitle": "Subjects",
+      "fieldMapping": [
+        { "field": "frstdthd", "name": "Year of Death" },
+        { "field": "arthxbase", "name": "ART Use Prior to Baseline"},
+        { "field": "bshbvstat", "name": "Baseline HBV Sero-status"},
+        { "field": "bshcvstat", "name": "Baseline HCV Sero-status"},
+        { "field": "cd4nadir", "name": "CD4 Nadir Prior to HAART"},
+        { "field": "status", "name": "Summarized HIV Sero-status"},
+        { "field": "hiv_status", "name": "HIV Status"},
+        { "field": "amikacin_res_phenotype", "name": "Amikacin Phenotype"},
+        { "field": "capreomycin_res_phenotype", "name": "Capreomycin Phenotype"},
+        { "field": "isoniazid_res_phenotype", "name": "Isoniazid Phenotype"},
+        { "field": "kanamycin_res_phenotype", "name": "Kanamycin Phenotype"},
+        { "field": "ofloxacin_res_phenotype", "name": "Ofloxacin Phenotype"},
+        { "field": "pyrazinamide_res_phenotype", "name": "Pyrazinamide Phenotype"},
+        { "field": "rifampicin_res_phenotype", "name": "Rifampicin Phenotype"},
+        { "field": "rifampin_res_phenotype", "name": "Rifampin Phenotype"},
+        { "field": "streptomycin_res_phenotype", "name": "Streptomycin Phenotype"}
+      ],
       "manifestMapping": {
         "resourceIndexType": "file",
         "resourceIdField": "object_id",
         "referenceIdFieldInResourceIndex": "subject_id",
         "referenceIdFieldInDataIndex": "node_id"
       },
-      "nodeCountField": "subject_id"
+      "accessibleFieldCheckList": ["subject_id"],
+      "accessibleValidationField": "subject_id"
+    }
+  },
+  "fileExplorerConfig": {
+    "charts": {
+      "data_type": {
+        "chartType": "stackedBar",
+        "title": "File Type"
+      },
+      "data_format": {
+        "chartType": "stackedBar",
+        "title": "File Format"
+      }
+    },
+    "filters": {
+      "tabs": [
+        {
+          "title": "File",
+          "fields": [
+            "project_id",
+            "data_type",
+            "data_format"
+          ]
+        }
+      ]
+    },
+    "table": {
+      "enabled": true,
+      "fields": [
+        "project_id",
+        "file_name",
+        "file_size",
+        "object_id"
+      ]
+    },
+    "dropdowns": {},
+    "buttons": [
+      {
+        "enabled": true,
+        "type": "file-manifest",
+        "title": "Download Manifest",
+        "leftIcon": "datafile",
+        "rightIcon": "download",
+        "fileName": "file-manifest.json",
+        "dropdownId": "download"
+      },
+      {
+        "enabled": true,
+        "type": "export-files-to-workspace",
+        "title": "Export to Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "download"
+      }
+    ],
+    "guppyConfig": {
+      "dataType": "file",
+      "fieldMapping": [
+        { "field": "object_id", "name": "GUID" }
+      ],
+      "nodeCountTitle": "Files",
+      "manifestMapping": {
+        "resourceIndexType": "subject",
+        "resourceIdField": "subject_id",
+        "referenceIdFieldInResourceIndex": "object_id",
+        "referenceIdFieldInDataIndex": "object_id"
+      },
+      "accessibleFieldCheckList": ["subject_id"],
+      "accessibleValidationField": "subject_id",
+      "downloadAccessor": "object_id"
+    }
+  },
+  "dataAvailabilityToolConfig": {
+    "guppyConfig": {
+      "dataType": "follow_up",
+      "mainField": "harmonized_visit_number",
+      "mainFieldTitle": "Visit number",
+      "mainFieldIsNumeric": true,
+      "aggFields": [
+        "age_at_visit",
+        "abcv",
+        "thrpyv",
+        "trzv",
+        "chol",
+        "leu2n",
+        "leu3n",
+        "viral_load",
+        "cocuse",
+        "drinkcat",
+        "emotl",
+        "employ",
+        "income",
+        "insurance"
+      ],
+      "fieldMapping": [
+        {"field": "abcv", "name": "Abcavir Use"},
+        {"field": "age_at_visit", "name": "Age"},
+        {"field": "leu2n", "name": "CD8 Counts"},
+        {"field": "cocuse", "name": "Cocaine Use"},
+        {"field": "employ", "name": "Employment Status"},
+        { "field": "thrpyv", "name": "Therapy Type" },
+        { "field": "trzv", "name": "Terazol Use" },
+        { "field": "chol", "name": "Cholesterol" },
+        {"field": "leu3n", "name": "CD4 Counts"},
+        { "field": "drinkcat", "name": "Alcohol Use" },
+        { "field": "emotl", "name": "Emotional Wellness" }
+      ]
     }
   }
 }

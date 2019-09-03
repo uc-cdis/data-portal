@@ -9,22 +9,6 @@ import HIVCohortFilterCase from './HIVCohortFilterCase';
 import { useGuppyForExplorer,guppyGraphQLUrl} from '../configs';
 import { fetchWithCreds } from '../actions';
 
-function performQuery(queryString, variableString) {
-    return fetchWithCreds({
-      path: guppyGraphQLUrl,
-      body: variableString ? JSON.stringify({
-        query: queryString,
-        variables: JSON.parse(variableString),
-      }) : JSON.stringify({
-        query: queryString,
-      }),
-      method: 'POST',
-    })
-      .then(
-        ({ status, data }) => data, // eslint-disable-line no-unused-vars
-      );
-  }
-
 class PTCCase extends HIVCohortFilterCase {
   /*
   * PTC Case:
@@ -67,9 +51,8 @@ class PTCCase extends HIVCohortFilterCase {
 
   getBucketByKeyWithHAARTVAR = (bucketKey, isHAART) => {
     // The viral_load check in the below query ensures that
-    // the subjects retrieved have *at least* one follow_up with viral_load < viralLoadFromUser
-    if (useGuppyForExplorer) {
-      const queryString = `
+    // the subjects retrieved have *at least* one follow_up with viral_load < viralLoadFromUser  
+    const queryString = `
       query ($filter: JSON) {
         _aggregation {
           follow_up (filter: $filter) {
@@ -83,70 +66,44 @@ class PTCCase extends HIVCohortFilterCase {
         }
       }
     `;
-      const variableString = ` {
-        "filter": {
-          "AND": [
-            {
-              "${isHAART ? '=' : '!='}": {
-                "thrpyv": "HAART"
-              }
-            },
-            {
-              "<": {
-                "viral_load": ${this.state.viralLoadFromUser}
-              }
-            },
-            {
-              "=": {
-                "hiv_status": "positive"
-              }
+    const variableString = ` {
+      "filter": {
+        "AND": [
+          {
+            "${isHAART ? '=' : '!='}": {
+              "thrpyv": "HAART"
             }
-          ]
-        }
-      }`;
-      return HIVCohortFilterCase.performQuery(queryString, variableString).then((res) => {
-        // eslint-disable no-underscore-dangle
-        if (!res
-          || !res.data
-          || !res.data._aggregation
-          || !res.data._aggregation.follow_up) {
-          throw new Error('Error when query subjects with HIV');
-        }
-        const result = res.data._aggregation.follow_up[bucketKey].histogram;
-        const resultList = [];
-        result.forEach(item => (resultList.push({
-          key: item.key,
-          doc_count: item.count,
-        })));
-        return resultList;
-        // eslint-enable no-underscore-dangle
-      });
-    }
-
-    // below are for arranger
-    const queryString = `
-    {
-      follow_up {
-        _aggregation(filters: {first: 10000, op: "and", content: [
-          {op: "${isHAART ? '=' : '!='}", content: {field: "thrpyv", value: "HAART"}},
-          {op: "<", content: {field: "viral_load", value: "${this.state.viralLoadFromUser}"}},
-          {op: "=", content: {field: "hiv_status", value: "positive"}}]})
-        {
-          ${bucketKey} {
-            buckets {
-              key
-              doc_count
+          },
+          {
+            "<": {
+              "viral_load": ${this.state.viralLoadFromUser}
+            }
+          },
+          {
+            "=": {
+              "hiv_status": "positive"
             }
           }
-        }
+        ]
       }
-    }
-    `;
-    return performQuery(queryString).then((res) => {
-      if (!res || !res.data) {
+    }`;
+
+    return HIVCohortFilterCase.performQuery(queryString, variableString, true).then((res) => {
+      // eslint-disable no-underscore-dangle
+      if (!res
+        || !res.data
+        || !res.data._aggregation
+        || !res.data._aggregation.follow_up) {
         throw new Error('Error when query subjects with HIV');
       }
-      return res.data.follow_up.aggregation[bucketKey].buckets;
+      const result = res.data._aggregation.follow_up[bucketKey].histogram;
+      const resultList = [];
+      result.forEach(item => (resultList.push({
+        key: item.key,
+        doc_count: item.count,
+      })));
+      return resultList;
+      // eslint-enable no-underscore-dangle
     });
   }
 

@@ -10,11 +10,28 @@ import {
 
 class HIVCohortFilterCase extends React.Component {
   // Base class for the 3 NDH cohort filter apps. Meant to facilitate code reuse
-  static performQuery(queryObject,useGuppyForExplorer) {
-    const graphqlUrl = useGuppyForExplorer ? guppyDownloadUrl : arrangerGraphqlPath;
+  static performQuery(query, variableString, useGraphQLEndpoint ) {
+    if ( useGraphQLEndpoint || !useGuppyForExplorer ) {
+      const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
+      return fetchWithCreds({
+        path: `${graphqlUrl}`,
+        body: variableString ? JSON.stringify({
+          query: query,
+          variables: JSON.parse(variableString),
+        }) : JSON.stringify({
+          query: query,
+        }),
+        method: 'POST',
+      })
+      .then(
+        ({ status, data }) => data, // eslint-disable-line no-unused-vars
+      );
+      return;
+    }
+
     return fetchWithCreds({
-      path: `${graphqlUrl}`,
-      body: JSON.stringify(queryObject),
+      path: `${guppyDownloadUrl}`,
+      body: JSON.stringify(query),
       method: 'POST',
     })
       .then(
@@ -129,7 +146,7 @@ class HIVCohortFilterCase extends React.Component {
           ]
         }
       }`;
-      return HIVCohortFilterCase.performQuery(queryString, variableString).then((res) => {
+      return HIVCohortFilterCase.performQuery(queryString, variableString, true).then((res) => {
         if (!res
           || !res.data
           || !res.data.follow_up) {
@@ -171,7 +188,7 @@ class HIVCohortFilterCase extends React.Component {
         }
       }
     }`;
-    return HIVCohortFilterCase.performQuery(query).then((res) => {
+    return HIVCohortFilterCase.performQuery(query, null, true).then((res) => {
       if (!res || !res.data) {
         throw new Error('Error while querying subjects with HIV');
       }
