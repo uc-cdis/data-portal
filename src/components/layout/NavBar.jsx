@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NavButton from './NavButton';
-import { breakpoints } from '../../localconf';
+import { breakpoints, logoType } from '../../localconf';
 import './NavBar.less';
 
 /**
@@ -75,7 +75,7 @@ class NavBar extends Component {
               >
                 <img
                   className='nav-bar__logo-img'
-                  src='/src/img/logo.png'
+                  src={ '/src/img/logo.' + logoType }
                   alt=''
                 />
               </Link>
