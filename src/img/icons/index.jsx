@@ -31,6 +31,10 @@ import IcoStageAnalyze from './stage-icons/stage-analyze.svg';
 import IcoStageExplore from './stage-icons/stage-explore.svg';
 import IcoStagePlanning from './stage-icons/stage-planning.svg';
 import IcoStageGene from './stage-icons/stage-gene.svg';
+import IcoAnvilAccess from './anvil-icons/anvil-access.svg';
+import IcoAnvilAnalyze from './anvil-icons/anvil-analyze.svg';
+import IcoAnvilExplore from './anvil-icons/anvil-explore.svg';
+import IcoAnvilPlanning from './anvil-icons/anvil-planning.svg';
 
 const dictIcons = {
   analysis: (height, customedStyles) => (
@@ -122,6 +126,18 @@ const dictIcons = {
   ),
   'stage-planning': (height, customedStyles) => (
     <IcoStagePlanning height={height} style={{ ...customedStyles }} />
+  ),
+  'anvil-access': (height, customedStyles) => (
+    <IcoAnvilAccess height={height} style={{ ...customedStyles }} />
+  ),
+  'anvil-analyze': (height, customedStyles) => (
+    <IcoAnvilAnalyze height={height} style={{ ...customedStyles }} />
+  ),
+  'anvil-explore': (height, customedStyles) => (
+    <IcoAnvilExplore height={height} style={{ ...customedStyles }} />
+  ),
+  'anvil-planning': (height, customedStyles) => (
+    <IcoAnvilPlanning height={height} style={{ ...customedStyles }} />
   ),
   upload: (height, customedStyles) => (
     <IcoUpload height={height} style={{ ...customedStyles }} />
