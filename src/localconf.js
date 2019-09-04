@@ -95,11 +95,6 @@ function buildConfig(opts) {
     indexPublic = false;
   }
 
-  let logoType = 'png';
-  if (components.logoType) {
-    logoType = components.logoType;
-  }
-
   let useGuppyForExplorer = false;
   if (config.dataExplorerConfig.guppyConfig) {
     useGuppyForExplorer = true;
@@ -244,7 +239,6 @@ function buildConfig(opts) {
     login,
     loginPath,
     logoutInactiveUsers,
-    logoType,
     workspaceTimeoutInMinutes,
     requiredCerts,
     lineLimit,

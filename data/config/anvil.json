@@ -8,11 +8,6 @@
         "plural": "Cases"
       },
       {
-        "graphql": "_experiment_count",
-        "name": "Experiment",
-        "plural": "Experiments"
-      },
-      {
         "graphql": "_aliquot_count",
         "name": "Aliquot",
         "plural": "Aliquots"
@@ -22,17 +17,12 @@
       {
         "graphql": "_case_count",
         "name": "Case"
-      },
-      {
-        "graphql": "_experiment_count",
-        "name": "Experiment"
       }
     ],
     "projectDetails": "boardCounts"
   },
   "components": {
     "appName": "NHGRI Genomic Data Science Analysis, Visualization, and Informatics Lab-Space (AnVIL)",
-    "logoType": "svg",
     "index": {
       "introduction": {
         "heading": "The AnVIL",
@@ -57,14 +47,6 @@
           "color": "#035C94"
         },
         {
-          "name": "Access Data",
-          "icon": "anvil-access",
-          "body": "Use our selected tool to filter out the data you need.",
-          "link": "/query",
-          "label": "Query data",
-          "color": "#035C94"
-        },
-        {
           "name": "Analyze Data",
           "icon": "anvil-analyze",
           "body": "Analyze your selected cases using Jupyter Notebooks in our secure cloud environment",
@@ -79,10 +61,6 @@
           "name": "Cases"
         },
         {
-          "node": "experiment",
-          "name": "Experiments"
-        },
-        {
           "node": "aliquot",
           "name": "Aliquots"
         }
@@ -94,31 +72,25 @@
         {
           "icon": "dictionary",
           "link": "/DD",
-          "color": "#a2a2a2",
+          "color": "#035C94",
           "name": "Dictionary"
         },
         {
           "icon": "exploration",
           "link": "/explorer",
-          "color": "#a2a2a2",
+          "color": "#035C94",
           "name": "Exploration"
-        },
-        {
-          "icon": "query",
-          "link": "/query",
-          "color": "#a2a2a2",
-          "name": "Query"
         },
         {
           "icon": "workspace",
           "link": "#hostname#workspace/",
-          "color": "#a2a2a2",
+          "color": "#035C94",
           "name": "Workspace"
         },
         {
           "icon": "profile",
           "link": "/identity",
-          "color": "#a2a2a2",
+          "color": "#035C94",
           "name": "Profile"
         }
       ]
