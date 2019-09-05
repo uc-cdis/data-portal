@@ -32,14 +32,16 @@ class ECCase extends HIVCohortFilterCase {
   constructor(props) {
     super(props);
     this.state = Object.assign(this.state, {
-      viralLoadFromUser: undefined,
-      numConsecutiveMonthsFromUser: undefined,
+      suppressViralLoadFromUser: undefined,
+      spikeViralLoadFromUser: undefined,
+      numConsecutiveVisitsFromUser: undefined,
       subjectNeither: [],
       subjectEC: [],
       subjectControl: [],
     });
-    this.viralLoadInputRef = React.createRef();
-    this.numConsecutiveMonthsInputRef = React.createRef();
+    this.suppressViralLoadInputRef = React.createRef();
+    this.spikeViralLoadInputRef = React.createRef();
+    this.numConsecutiveVisitsInputRef = React.createRef();
   }
 
   /* query Guppy and returns map of subjects with critical date for hiv positive subjects */
@@ -229,7 +231,7 @@ class ECCase extends HIVCohortFilterCase {
     const subjectEC = [];
     const subjectControl = [];
 
-    // For each patient, try to find numConsecutiveMonthsFromUser consecutive
+    // For each patient, try to find numConsecutiveVisitsFromUser consecutive
     // visits that match the EC criteria
     filtFollowups.forEach((item) => {
       const ecPeriod = this.visitsMatchECWindowCriteria(item);
@@ -274,8 +276,9 @@ class ECCase extends HIVCohortFilterCase {
   }
 
   downloadEC = () => {
-    const fileName = `ec-cohort-vload-${this.state.viralLoadFromUser.toString()
-    }-months-${this.state.numConsecutiveMonthsFromUser.toString()}.json`;
+    const fileName = `ec-cohort-suppressvload-${this.state.suppressViralLoadFromUser.toString()
+    }-spikevload-${this.state.spikeViralLoadFromUser.toString()
+    }-visits-${this.state.numConsecutiveVisitsFromUser.toString()}.json`;
 
     const blob = this.makeCohortJSONFile(this.state.subjectEC);
     FileSaver.saveAs(blob, fileName);
@@ -293,7 +296,7 @@ class ECCase extends HIVCohortFilterCase {
   render() {
     return (
       <React.Fragment>
-        <div className='hiv-cohort-filter__sidebar'>
+        <div className='hiv-cohort-filter__ec-sidebar'>
           <form>
             <h2 className='hiv-cohort-filter__sidebar-title'>
               EC Classifier
@@ -302,20 +305,39 @@ class ECCase extends HIVCohortFilterCase {
               Customized Filters
             </h4>
             <div className='hiv-cohort-filter__sidebar-input-label'>
-              Viral Load
+              Suppress Viral Load
               <span
                 className='hiv-cohort-filter__value-highlight'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '__' } &nbsp;cp/mL
+                &nbsp; &lt; { this.state.suppressViralLoadFromUser || '__' } &nbsp;cp/mL
               </span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
               <input
-                ref={this.viralLoadInputRef}
+                ref={this.suppressViralLoadInputRef}
                 className='hiv-cohort-filter__text-input'
                 type='number'
                 onChange={this.checkReadyToCalculate}
-                defaultValue={this.state.viralLoadFromUser}
+                defaultValue={this.state.suppressViralLoadFromUser}
+                placeholder='enter integer'
+              />
+              <br />
+            </div>
+            <div className='hiv-cohort-filter__sidebar-input-label'>
+              Spike Viral Load
+              <span
+                className='hiv-cohort-filter__value-highlight'
+              >
+                &nbsp; &lt; { this.state.spikeViralLoadFromUser || '__' } &nbsp;cp/mL
+              </span>
+            </div>
+            <div className='hiv-cohort-filter__sidebar-input'>
+              <input
+                ref={this.spikeViralLoadInputRef}
+                className='hiv-cohort-filter__text-input'
+                type='number'
+                onChange={this.checkReadyToCalculate}
+                defaultValue={this.state.spikeViralLoadFromUser}
                 placeholder='enter integer'
               />
               <br />
@@ -323,15 +345,15 @@ class ECCase extends HIVCohortFilterCase {
             <div className='hiv-cohort-filter__sidebar-input-label'>
               Maintained for at least:
               <br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } months</span>
+              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveVisitsFromUser || '__' } visits</span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
               <input
-                ref={this.numConsecutiveMonthsInputRef}
+                ref={this.numConsecutiveVisitsInputRef}
                 className='hiv-cohort-filter__text-input'
                 type='number'
                 onChange={this.checkReadyToCalculate}
-                defaultValue={this.state.numConsecutiveMonthsFromUser}
+                defaultValue={this.state.numConsecutiveVisitsFromUser}
                 placeholder='enter integer'
               />
               <br />
@@ -362,7 +384,7 @@ class ECCase extends HIVCohortFilterCase {
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='consecutive-months-overlay-2'
               >
-                { this.state.numConsecutiveMonthsFromUser || '--' } &nbsp;months
+                { this.state.numConsecutiveVisitsFromUser || '--' } &nbsp;months
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
