@@ -5,28 +5,27 @@ import {
   guppyGraphQLUrl,
   arrangerGraphqlPath,
   useGuppyForExplorer,
-  guppyDownloadUrl
+  guppyDownloadUrl,
 } from '../configs';
 
 class HIVCohortFilterCase extends React.Component {
   // Base class for the 3 NDH cohort filter apps. Meant to facilitate code reuse
-  static performQuery(query, variableString, useGraphQLEndpoint ) {
-    if ( useGraphQLEndpoint || !useGuppyForExplorer ) {
+  static performQuery(query, variableString, useGraphQLEndpoint) {
+    if (useGraphQLEndpoint || !useGuppyForExplorer) {
       const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
       return fetchWithCreds({
         path: `${graphqlUrl}`,
         body: variableString ? JSON.stringify({
-          query: query,
+          query,
           variables: JSON.parse(variableString),
         }) : JSON.stringify({
-          query: query,
+          query,
         }),
         method: 'POST',
       })
-      .then(
-        ({ status, data }) => data, // eslint-disable-line no-unused-vars
-      );
-      return;
+        .then(
+          ({ status, data }) => data, // eslint-disable-line no-unused-vars
+        );
     }
 
     return fetchWithCreds({

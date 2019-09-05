@@ -6,8 +6,6 @@ import './HIVCohortFilter.css';
 import CohortPTCSvg from '../img/cohort-PTC.svg';
 import Spinner from '../components/Spinner';
 import HIVCohortFilterCase from './HIVCohortFilterCase';
-import { useGuppyForExplorer,guppyGraphQLUrl} from '../configs';
-import { fetchWithCreds } from '../actions';
 
 class PTCCase extends HIVCohortFilterCase {
   /*
@@ -51,7 +49,7 @@ class PTCCase extends HIVCohortFilterCase {
 
   getBucketByKeyWithHAARTVAR = (bucketKey, isHAART) => {
     // The viral_load check in the below query ensures that
-    // the subjects retrieved have *at least* one follow_up with viral_load < viralLoadFromUser  
+    // the subjects retrieved have *at least* one follow_up with viral_load < viralLoadFromUser
     const queryString = `
       query ($filter: JSON) {
         _aggregation {
