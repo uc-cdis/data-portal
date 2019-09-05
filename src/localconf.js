@@ -88,7 +88,7 @@ function buildConfig(opts) {
   const guppyUrl = `${hostname}guppy`;
   const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
   const guppyDownloadUrl = `${guppyUrl}/download`;
-  const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTailingSlash(manifestServiceURL);
+  const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;

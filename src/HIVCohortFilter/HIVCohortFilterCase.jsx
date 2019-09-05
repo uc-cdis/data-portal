@@ -39,7 +39,8 @@ class HIVCohortFilterCase extends React.Component {
   }
 
   static makeSubjectToVisitMap(followUps) {
-    // Convert to dictionary: { subject_id -> [ array of visits sorted by visit_harmonized_number ] }
+    // Convert to dictionary:
+    // { subject_id -> [ array of visits sorted by visit_harmonized_number ] }
     const subjectToVisitMap = {};
     for (let i = 0; i < followUps.length; i += 1) {
       const subjectId = followUps[i].subject_id;
