@@ -184,14 +184,14 @@ class ECCase extends HIVCohortFilterCase {
     const ecPeriod = {};
     let nNonsuper = 0;
     for (let i = 0; i < visitArray.length; i += 1) {
-      if (visitArray[i].viral_load < this.state.supLoadFromUser) {
+      if (visitArray[i].viral_load < this.state.suppressViralLoadFromUser) {
         ecVisits.push(visitArray[i]);
         nSuper += 1;
         lastTimePoint = visitArray[i].visit_date;
-      } else if (visitArray[i].viral_load < this.state.spikeLoadFromUser) {
+      } else if (visitArray[i].viral_load < this.state.spikeViralLoadFromUser) {
         nSpike += 1;
         if (nSpike > 1) {
-          if (nSuper >= this.state.supVisitFromUser) {
+          if (nSuper >= this.state.numConsecutiveVisitsFromUser) {
             nEC += 1;
             const ecPeriodKey = `ec_perid_${nEC}`;
             const numberVisits = ecVisits.length - nNonsuper;
@@ -208,7 +208,7 @@ class ECCase extends HIVCohortFilterCase {
         }
       } else if (visitArray[i].viral_load === null) {
         if (visitArray[i].visit_date > lastTimePoint + 1) {
-          if (nSuper >= this.state.supVisitFromUser) {
+          if (nSuper >= this.state.numConsecutiveVisitsFromUser) {
             nEC += 1;
             const ecPeriodKey = `ec_perid_${nEC}`;
             const numberVisits = ecVisits.length - nNonsuper;
@@ -265,9 +265,9 @@ class ECCase extends HIVCohortFilterCase {
 
   makeCohortJSONFile = (subjectsIn) => {
     const annotatedObj = {
-      viral_load_sup_upper_bound: this.state.supLoadFromUser.toString(),
-      viral_load_spike_upper_bound: this.state.spikeLoadFromUser.toString(),
-      maintained_for_at_least_this_many_visits: this.state.supVisitFromUser.toString(),
+      viral_load_sup_upper_bound: this.state.suppressViralLoadFromUser.toString(),
+      viral_load_spike_upper_bound: this.state.spikeViralLoadFromUser.toString(),
+      maintained_for_at_least_this_many_visits: this.state.numConsecutiveVisitsFromUser.toString(),
       subjects: subjectsIn,
     };
 
@@ -282,6 +282,24 @@ class ECCase extends HIVCohortFilterCase {
 
     const blob = this.makeCohortJSONFile(this.state.subjectEC);
     FileSaver.saveAs(blob, fileName);
+  }
+
+  checkReadyToCalculate = () => {
+    const suppressViralLoadFromUser = this.suppressViralLoadInputRef.current.valueAsNumber;
+    const spikeViralLoadFromUser = this.spikeViralLoadInputRef.current.valueAsNumber;
+    const numConsecutiveVisitsFromUser = this.numConsecutiveVisitsInputRef.current.valueAsNumber;
+    this.setState({
+      suppressViralLoadFromUser: suppressViralLoadFromUser > 0 ?
+        suppressViralLoadFromUser : undefined,
+      spikeViralLoadFromUser: spikeViralLoadFromUser > 0 ?
+        spikeViralLoadFromUser : undefined,
+      numConsecutiveVisitsFromUser: numConsecutiveVisitsFromUser > 0
+        ? numConsecutiveVisitsFromUser : undefined,
+      isReadyToCalculate: (suppressViralLoadFromUser > 0
+        && spikeViralLoadFromUser > 0
+        && numConsecutiveVisitsFromUser > 0),
+      resultAlreadyCalculated: false,
+    });
   }
 
   showCount = (isEC) => {
@@ -345,7 +363,7 @@ class ECCase extends HIVCohortFilterCase {
             <div className='hiv-cohort-filter__sidebar-input-label'>
               Maintained for at least:
               <br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveVisitsFromUser || '__' } visits</span>
+              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveVisitsFromUser || '__' } &nbsp;{this.state.numConsecutiveVisitsFromUser === 1 ? 'visit' : 'visits'}</span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
               <input
@@ -378,13 +396,13 @@ class ECCase extends HIVCohortFilterCase {
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-4'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
+                &nbsp; &lt; { this.state.spikeViralLoadFromUser || '__'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='consecutive-months-overlay-2'
               >
-                { this.state.numConsecutiveVisitsFromUser || '--' } &nbsp;months
+                { this.state.numConsecutiveVisitsFromUser || '__' } &nbsp;{this.state.numConsecutiveVisitsFromUser === 1 ? 'visit' : 'visits'}
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'

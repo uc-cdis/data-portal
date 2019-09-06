@@ -300,7 +300,7 @@ class PTCCase extends HIVCohortFilterCase {
             <div className='hiv-cohort-filter__sidebar-input-label'>
               Received HAART for at least:
               <br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } months</span>
+              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } &nbsp;{this.state.numConsecutiveMonthsFromUser === 1 ? 'month' : 'months'}</span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
               <input
@@ -351,7 +351,7 @@ class PTCCase extends HIVCohortFilterCase {
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='consecutive-months-overlay-1'
               >
-                { this.state.numConsecutiveMonthsFromUser || '__' } &nbsp;months
+                { this.state.numConsecutiveMonthsFromUser || '__' } &nbsp;{this.state.numConsecutiveMonthsFromUser === 1 ? 'month' : 'months'}
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'

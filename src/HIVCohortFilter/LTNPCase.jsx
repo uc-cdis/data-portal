@@ -313,7 +313,7 @@ class LTNPCase extends HIVCohortFilterCase {
             <div className='hiv-cohort-filter__sidebar-input-label'>
               Maintained for at least:
               <br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveYearsFromUser || '__' } {this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}</span>
+              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveYearsFromUser || '__' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}</span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
               <input

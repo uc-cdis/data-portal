@@ -213,7 +213,7 @@ class HIVCohortFilterCase extends React.Component {
   }
 
   checkReadyToCalculate = () => {
-    // Overridden by LTNP case
+    // Overridden by LTNP and EC case
     const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
     const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
     this.setState({
