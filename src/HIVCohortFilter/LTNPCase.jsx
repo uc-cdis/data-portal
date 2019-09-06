@@ -313,7 +313,7 @@ class LTNPCase extends HIVCohortFilterCase {
             <div className='hiv-cohort-filter__sidebar-input-label'>
               Maintained for at least:
               <br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveYearsFromUser || '__' } years</span>
+              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveYearsFromUser || '__' } {this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}</span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
               <input
@@ -346,25 +346,49 @@ class LTNPCase extends HIVCohortFilterCase {
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='cd4-overlay-1'
               >
-                &nbsp; &gt; { this.state.CD4FromUser || '--'}
+                &nbsp; &gt; { this.state.CD4FromUser || '__'}
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='cd4-overlay-2'
               >
-                &nbsp; &gt; { this.state.CD4FromUser || '--' }
+                &nbsp; &gt; { this.state.CD4FromUser || '__' }
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='consecutive-years-overlay-1'
               >
-                { this.state.numConsecutiveYearsFromUser || '--' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}
+                { this.state.numConsecutiveYearsFromUser || '__' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='consecutive-years-overlay-2'
               >
-                { this.state.numConsecutiveYearsFromUser || '--' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}
+                { this.state.numConsecutiveYearsFromUser || '__' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}
+              </div>
+              <div
+                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                id='consecutive-years-overlay-3'
+              >
+                { this.state.numConsecutiveYearsFromUser || '__' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}
+              </div>
+              <div
+                className='hiv-cohort-filter__value hiv-cohort-filter__overlay'
+                id='consecutive-years-small-overlay-1'
+              >
+                { this.state.numConsecutiveYearsFromUser || '__' }
+              </div>
+              <div
+                className='hiv-cohort-filter__value hiv-cohort-filter__overlay'
+                id='consecutive-years-small-overlay-2'
+              >
+                { this.state.numConsecutiveYearsFromUser || '__' }
+              </div>
+              <div
+                className='hiv-cohort-filter__value hiv-cohort-filter__overlay'
+                id='consecutive-years-small-overlay-3'
+              >
+                { this.state.numConsecutiveYearsFromUser || '__' }
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
