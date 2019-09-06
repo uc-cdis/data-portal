@@ -333,25 +333,25 @@ class PTCCase extends HIVCohortFilterCase {
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-1'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
+                &nbsp; &lt; { this.state.viralLoadFromUser || '__'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-2'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '--' } &nbsp;cp/mL
+                &nbsp; &lt; { this.state.viralLoadFromUser || '__' } &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-3'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
+                &nbsp; &lt; { this.state.viralLoadFromUser || '__'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='consecutive-months-overlay-1'
               >
-                { this.state.numConsecutiveMonthsFromUser || '--' } &nbsp;months
+                { this.state.numConsecutiveMonthsFromUser || '__' } &nbsp;months
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
