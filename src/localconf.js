@@ -22,7 +22,6 @@ function buildConfig(opts) {
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
-    useIndexdAuthz: process.env.USE_INDEXD_AUTHZ || false,
   };
 
   //
@@ -48,7 +47,6 @@ function buildConfig(opts) {
     gaDebug,
     tierAccessLevel,
     tierAccessLimit,
-    useIndexdAuthz,
   } = Object.assign({}, defaults, opts);
 
   function ensureTrailingSlash(url) {
@@ -78,6 +76,7 @@ function buildConfig(opts) {
   const authzPath = typeof arboristURL === 'undefined' ? `${hostname}authz` : arboristURL;
   const loginPath = `${userapiPath}login/`;
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
+  const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
   const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
   const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);

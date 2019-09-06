@@ -5,6 +5,7 @@
 #  APP = commons specific
 #  HOSTNAME = where to download graphql schema from
 #  LOGOUT_INACTIVE_USERS = bool, should inactive users be logged out before session lifetime ends
+#  USE_INDEXD_AUTHZ = bool, should we use authz or acl field to check for unmapped files in indexd
 #  WORKSPACE_TIMEOUT_IN_MINUTES = minutes after which to logout workspace user if logout_inactive false
 #  TIER_ACCESS_LEVEL = the access level of a common (libre, regular or private)
 #  TIER_ACCESS_LIMIT = the minimum visible count for aggregation results

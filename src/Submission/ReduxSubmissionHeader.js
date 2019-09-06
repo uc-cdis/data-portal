@@ -5,9 +5,10 @@ import { FETCH_LIMIT, STARTING_DID } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
 
 const fetchUnmappedFileStats = (user, totalSize, start, fetchLimit) => dispatch => { 
+  console.log('8: ', typeof useIndexdAuthz);
   let unmappedFilesCheck = useIndexdAuthz ? 'authz=null' : 'acl=null';
-  console.log('ReduxMapFiles.js -- useIndexdAuthz =  ', useIndexdAuthz);
-  console.log('ReduxMapFiles.js -- unmappedFilesCheck =  ', unmappedFilesCheck);
+  console.log('ReduxSubmissionHeader.js -- useIndexdAuthz =  ', useIndexdAuthz);
+  console.log('ReduxSubmissionHeader.js -- unmappedFilesCheck =  ', unmappedFilesCheck);
   return fetchWithCreds({
     path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${user}&start=${start}&limit=${fetchLimit}`,
     method: 'GET',
