@@ -181,6 +181,17 @@ Then, specify all the required certificates that need to be completed before usi
 ```
 Default is an empty list.
 
+### File mapping configuration
+Windmill lists unmapped files by checking Indexd. Before centralized auth's deployment, a file was determined to be
+unmapped by checking if the acl field was null. After centralized auth, we use the authz field instead. The manifest
+configuration setting `use_indexd_authz` specifies which of the two fields should be used. This field defaults to false.
+```
+"global": {
+    ...
+    "use_indexd_authz": "true"
+  },
+```
+
 ### Style Guide
 When styling components, we adhere to a few rules. We style using class selectors (`.class-name` instead of `#class-name`), and separate class names with hypens instead of camel case (`.class-name` instead of `.className`). The CSS file should be named {component}.css, and be in the same folder as the component. It is then imported into the component's .jsx file.
 

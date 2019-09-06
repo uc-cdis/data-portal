@@ -22,6 +22,7 @@ function buildConfig(opts) {
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
+    useIndexdAuthz: process.env.USE_INDEXD_AUTHZ || false,
   };
 
   //
@@ -47,6 +48,7 @@ function buildConfig(opts) {
     gaDebug,
     tierAccessLevel,
     tierAccessLimit,
+    useIndexdAuthz,
   } = Object.assign({}, defaults, opts);
 
   function ensureTrailingSlash(url) {
@@ -260,6 +262,7 @@ function buildConfig(opts) {
     analysisApps,
     tierAccessLevel,
     tierAccessLimit,
+    useIndexdAuthz,
     explorerPublic,
     authzPath,
   };

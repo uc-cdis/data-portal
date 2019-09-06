@@ -2,42 +2,45 @@ import { connect } from 'react-redux';
 import SubmissionHeader from './SubmissionHeader';
 import { fetchWithCreds } from '../actions';
 import { FETCH_LIMIT, STARTING_DID } from './utils';
-import { indexdPath } from '../localconf';
+import { indexdPath, useIndexdAuthz } from '../localconf';
 
-const fetchUnmappedFileStats = (user, totalSize, start, fetchLimit) => dispatch => fetchWithCreds({
-  path: `${indexdPath}index?acl=null&uploader=${user}&start=${start}&limit=${fetchLimit}`,
-  method: 'GET',
-}).then(
-  ({ status, data }) => {
-    switch (status) {
-    case 200:
-      totalSize = totalSize.concat(data.records);
-      if (data.records.length === fetchLimit) {
-        return dispatch(
-          fetchUnmappedFileStats(user, totalSize, data.records[fetchLimit - 1].did, fetchLimit),
-        );
+const fetchUnmappedFileStats = (user, totalSize, start, fetchLimit) => dispatch => { 
+  let unmappedFilesCheck = useIndexdAuthz ? 'authz=null' : 'acl=null';
+  return fetchWithCreds({
+    path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${user}&start=${start}&limit=${fetchLimit}`,
+    method: 'GET',
+  }).then(
+    ({ status, data }) => {
+      switch (status) {
+      case 200:
+        totalSize = totalSize.concat(data.records);
+        if (data.records.length === fetchLimit) {
+          return dispatch(
+            fetchUnmappedFileStats(user, totalSize, data.records[fetchLimit - 1].did, fetchLimit),
+          );
+        }
+        return {
+          type: 'RECEIVE_UNMAPPED_FILE_STATISTICS',
+          data: {
+            count: totalSize.length,
+            totalSize: totalSize.reduce((total, current) => total + current.size, 0),
+          },
+        };
+
+      default:
+        return {
+          type: 'FETCH_ERROR',
+          error: data.records,
+        };
       }
-      return {
-        type: 'RECEIVE_UNMAPPED_FILE_STATISTICS',
-        data: {
-          count: totalSize.length,
-          totalSize: totalSize.reduce((total, current) => total + current.size, 0),
-        },
-      };
-
-    default:
-      return {
-        type: 'FETCH_ERROR',
-        error: data.records,
-      };
+    },
+    err => ({ type: 'FETCH_ERROR', error: err }),
+  ).then((msg) => {
+    if (msg) {
+      dispatch(msg);
     }
-  },
-  err => ({ type: 'FETCH_ERROR', error: err }),
-).then((msg) => {
-  if (msg) {
-    dispatch(msg);
-  }
-});
+  });
+}
 
 const ReduxSubmissionHeader = (() => {
   const mapStateToProps = state => ({
