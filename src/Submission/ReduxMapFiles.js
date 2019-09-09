@@ -6,8 +6,6 @@ import { indexdPath, useIndexdAuthz } from '../localconf';
 
 const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
   let unmappedFilesCheck = useIndexdAuthz ? 'authz=null' : 'acl=null';
-  console.log('ReduxMapFiles.js -- useIndexdAuthz =  ', useIndexdAuthz);
-  console.log('ReduxMapFiles.js -- unmappedFilesCheck =  ', unmappedFilesCheck);
   return fetchWithCreds({
     path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${user}&start=${start}&limit=${fetchLimit}`,
     method: 'GET',
