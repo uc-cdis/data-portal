@@ -32,6 +32,7 @@ const plugins = [
   new webpack.EnvironmentPlugin(['TIER_ACCESS_LIMIT']),
   new webpack.EnvironmentPlugin(['FENCE_URL']),
   new webpack.EnvironmentPlugin(['INDEXD_URL']),
+  new webpack.EnvironmentPlugin(['USE_INDEXD_AUTHZ']),
   new webpack.EnvironmentPlugin(['WORKSPACE_URL']),
   new webpack.EnvironmentPlugin(['WTS_URL']),
   new webpack.EnvironmentPlugin(['MANIFEST_SERVICE_URL']),
