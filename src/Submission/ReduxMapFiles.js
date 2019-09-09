@@ -5,7 +5,7 @@ import { STARTING_DID, FETCH_LIMIT } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
 
 const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
-  let unmappedFilesCheck = useIndexdAuthz ? 'authz=null' : 'acl=null';
+  const unmappedFilesCheck = useIndexdAuthz ? 'authz=null' : 'acl=null';
   return fetchWithCreds({
     path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${user}&start=${start}&limit=${fetchLimit}`,
     method: 'GET',
@@ -36,7 +36,7 @@ const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
       dispatch(msg);
     }
   });
-}
+};
 
 const mapSelectedFiles = files => ({
   type: 'RECEIVE_FILES_TO_MAP',
