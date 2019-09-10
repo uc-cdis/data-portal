@@ -34,15 +34,15 @@ class Option extends Component {
         onKeyDown={this.handleKeyDown}
         tabIndex={-10}
       >
-       {
-         this.props.hasCorrectAnswers ?
-          <div
-            className={`option__bullet body ${bulletClassModifier}`}
-            key={this.props.option}
-          >
-            {getCharFromA(this.props.idx)}
-          </div>
-          : null
+        {
+          this.props.hasCorrectAnswers ?
+            <div
+              className={`option__bullet body ${bulletClassModifier}`}
+              key={this.props.option}
+            >
+              {getCharFromA(this.props.idx)}
+            </div>
+            : null
         }
         <div className='option__content body'>{this.props.option}</div>
       </div>

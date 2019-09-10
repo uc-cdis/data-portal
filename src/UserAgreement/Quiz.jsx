@@ -152,11 +152,11 @@ class Quiz extends Component {
     const canSubmit = this.state.notDone.length === 0;
     return (
       <div className='quiz__form'>
-        <div className={ subtitle ? 'quiz__title tall' : 'quiz__title'}>
+        <div className={subtitle ? 'quiz__title tall' : 'quiz__title'}>
           <h2 className='quiz__title-text h2'>{title}</h2>
           { subtitle ? <h3 className='quiz__subtitle-text h3'>{subtitle}</h3> : null }
         </div>
-        <div ref={(elem) => { this.menu = elem; }} className={ hasCorrectAnswers ? 'quiz__menu' : 'quiz__menu top'}>
+        <div ref={(elem) => { this.menu = elem; }} className={hasCorrectAnswers ? 'quiz__menu' : 'quiz__menu top'}>
           {
             questionList.map(
               (item, i) => {
@@ -184,10 +184,10 @@ class Quiz extends Component {
                 enabled={canSubmit}
                 onClick={() => this.handleSubmit()}
               />
-            : null
+              : null
           }
         </div>
-        <div className={ hasCorrectAnswers ? 'quiz__content' : 'quiz__content full'} ref={(elem) => { this.quizContent = elem; }}>
+        <div className={hasCorrectAnswers ? 'quiz__content' : 'quiz__content full'} ref={(elem) => { this.quizContent = elem; }}>
           { description ? <h3 className='quiz__description h3'>{description}</h3> : null }
           <div>
             {
@@ -218,7 +218,7 @@ class Quiz extends Component {
               wrongs={this.state.wrongs}
               onSubmit={() => this.handleSubmit()}
             />
-          : null
+            : null
         }
       </div>
     );
