@@ -76,6 +76,7 @@ function buildConfig(opts) {
   const authzPath = typeof arboristURL === 'undefined' ? `${hostname}authz` : arboristURL;
   const loginPath = `${userapiPath}login/`;
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
+  const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
   const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
   const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);
@@ -260,6 +261,7 @@ function buildConfig(opts) {
     analysisApps,
     tierAccessLevel,
     tierAccessLimit,
+    useIndexdAuthz,
     explorerPublic,
     authzPath,
   };
