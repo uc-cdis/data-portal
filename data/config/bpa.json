@@ -120,6 +120,7 @@
     },
     "certs": {
       "security_quiz": {
+        "hasCorrectAnswers": true,
         "title": "BloodPAC User agreement",
         "description": "",
         "questions": [

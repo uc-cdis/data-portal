@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Button from '@gen3/ui-component/dist/components/Button';
 import Question from './Question';
 import QuizSummary from './QuizSummary';
 import './Quiz.less';
@@ -38,12 +39,15 @@ class Quiz extends Component {
       ),
     ),
     title: PropTypes.string.isRequired,
+    subtitle: PropTypes.string,
     description: PropTypes.string.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    hasCorrectAnswers: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
     questionList: [],
+    subtitle: null,
   };
 
   constructor(props) {
@@ -144,36 +148,47 @@ class Quiz extends Component {
   }
 
   render() {
-    const { questionList, title, description } = this.props;
+    const { questionList, title, subtitle, description, hasCorrectAnswers } = this.props;
+    const canSubmit = this.state.notDone.length === 0;
     return (
       <div className='quiz__form'>
-        <div className='quiz__title'>
-          <i className='quiz__icon g3-icon g3-icon--key' />
+        <div className={ subtitle ? 'quiz__title tall' : 'quiz__title'}>
           <h2 className='quiz__title-text h2'>{title}</h2>
-          <div ref={(elem) => { this.menu = elem; }} className='quiz__menu'>
-            {
-              questionList.map(
-                (item, i) => {
-                  const section = getQuestionSectionId(i + 1);
-                  let styleModifier = '';
-                  if (this.state.currentSection === section) { styleModifier += ' quiz__menu-bullet--active'; }
-                  return (
-                    <a
-                      className={`quiz__menu-bullet body${styleModifier}`}
-                      onClick={e => this.handleClick(e, i)}
-                      href={`#${getQuestionSectionId(i + 1)}`}
-                      key={`menuItem${i}`}
-                    >
-                      {i + 1}
-                    </a>
-                  );
-                }, this,
-              )
-            }
-          </div>
+          { subtitle ? <h3 className='quiz__subtitle-text h3'>{subtitle}</h3> : null }
         </div>
-        <div className='quiz__content' ref={(elem) => { this.quizContent = elem; }}>
-          <h3 className='quiz__description h3'>{description}</h3>
+        <div ref={(elem) => { this.menu = elem; }} className={ hasCorrectAnswers ? 'quiz__menu' : 'quiz__menu top'}>
+          {
+            questionList.map(
+              (item, i) => {
+                const section = getQuestionSectionId(i + 1);
+                let styleModifier = '';
+                if (this.state.currentSection === section) { styleModifier += ' quiz__menu-bullet--active'; }
+                return (
+                  <a
+                    className={`quiz__menu-bullet body${styleModifier}`}
+                    onClick={e => this.handleClick(e, i)}
+                    href={`#${getQuestionSectionId(i + 1)}`}
+                    key={`menuItem${i}`}
+                  >
+                    {i + 1}
+                  </a>
+                );
+              }, this,
+            )
+          }
+          {
+            !hasCorrectAnswers ?
+              <Button
+                class='quiz__submit'
+                label='Submit'
+                enabled={canSubmit}
+                onClick={() => this.handleSubmit()}
+              />
+            : null
+          }
+        </div>
+        <div className={ hasCorrectAnswers ? 'quiz__content' : 'quiz__content full'} ref={(elem) => { this.quizContent = elem; }}>
+          { description ? <h3 className='quiz__description h3'>{description}</h3> : null }
           <div>
             {
               questionList.map(
@@ -188,6 +203,7 @@ class Quiz extends Component {
                         idx={i}
                         sectionId={getQuestionSectionId(i + 1)}
                         onChange={isCorrect => this.answerQuestion(i, isCorrect)}
+                        hasCorrectAnswers={hasCorrectAnswers}
                       />
                     </div>
                   ),
@@ -195,11 +211,15 @@ class Quiz extends Component {
             }
           </div>
         </div>
-        <QuizSummary
-          notDone={this.state.notDone}
-          wrongs={this.state.wrongs}
-          onSubmit={() => this.handleSubmit()}
-        />
+        {
+          hasCorrectAnswers ?
+            <QuizSummary
+              notDone={this.state.notDone}
+              wrongs={this.state.wrongs}
+              onSubmit={() => this.handleSubmit()}
+            />
+          : null
+        }
       </div>
     );
   }
