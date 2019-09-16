@@ -76,6 +76,7 @@ function buildConfig(opts) {
   const authzPath = typeof arboristURL === 'undefined' ? `${hostname}authz` : arboristURL;
   const loginPath = `${userapiPath}login/`;
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
+  const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
   const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
   const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);
@@ -88,7 +89,7 @@ function buildConfig(opts) {
   const guppyUrl = `${hostname}guppy`;
   const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
   const guppyDownloadUrl = `${guppyUrl}/download`;
-  const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTailingSlash(manifestServiceURL);
+  const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -262,6 +263,7 @@ function buildConfig(opts) {
     analysisApps,
     tierAccessLevel,
     tierAccessLimit,
+    useIndexdAuthz,
     explorerPublic,
     authzPath,
   };

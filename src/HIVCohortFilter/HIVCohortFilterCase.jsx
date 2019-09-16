@@ -5,16 +5,32 @@ import {
   guppyGraphQLUrl,
   arrangerGraphqlPath,
   useGuppyForExplorer,
-  guppyDownloadUrl
+  guppyDownloadUrl,
 } from '../configs';
 
 class HIVCohortFilterCase extends React.Component {
   // Base class for the 3 NDH cohort filter apps. Meant to facilitate code reuse
-  static performQuery(queryObject,useGuppyForExplorer) {
-    const graphqlUrl = useGuppyForExplorer ? guppyDownloadUrl : arrangerGraphqlPath;
+  static performQuery(query, variableString, useGraphQLEndpoint) {
+    if (useGraphQLEndpoint || !useGuppyForExplorer) {
+      const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
+      return fetchWithCreds({
+        path: `${graphqlUrl}`,
+        body: variableString ? JSON.stringify({
+          query,
+          variables: JSON.parse(variableString),
+        }) : JSON.stringify({
+          query,
+        }),
+        method: 'POST',
+      })
+        .then(
+          ({ status, data }) => data, // eslint-disable-line no-unused-vars
+        );
+    }
+
     return fetchWithCreds({
-      path: `${graphqlUrl}`,
-      body: JSON.stringify(queryObject),
+      path: `${guppyDownloadUrl}`,
+      body: JSON.stringify(query),
       method: 'POST',
     })
       .then(
@@ -23,7 +39,8 @@ class HIVCohortFilterCase extends React.Component {
   }
 
   static makeSubjectToVisitMap(followUps) {
-    // Convert to dictionary: { subject_id -> [ array of visits sorted by visit_harmonized_number ] }
+    // Convert to dictionary:
+    // { subject_id -> [ array of visits sorted by visit_harmonized_number ] }
     const subjectToVisitMap = {};
     for (let i = 0; i < followUps.length; i += 1) {
       const subjectId = followUps[i].subject_id;
@@ -129,7 +146,7 @@ class HIVCohortFilterCase extends React.Component {
           ]
         }
       }`;
-      return HIVCohortFilterCase.performQuery(queryString, variableString).then((res) => {
+      return HIVCohortFilterCase.performQuery(queryString, variableString, true).then((res) => {
         if (!res
           || !res.data
           || !res.data.follow_up) {
@@ -171,7 +188,7 @@ class HIVCohortFilterCase extends React.Component {
         }
       }
     }`;
-    return HIVCohortFilterCase.performQuery(query).then((res) => {
+    return HIVCohortFilterCase.performQuery(query, null, true).then((res) => {
       if (!res || !res.data) {
         throw new Error('Error while querying subjects with HIV');
       }
@@ -196,7 +213,7 @@ class HIVCohortFilterCase extends React.Component {
   }
 
   checkReadyToCalculate = () => {
-    // Overridden by LTNP case
+    // Overridden by LTNP and EC case
     const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
     const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
     this.setState({

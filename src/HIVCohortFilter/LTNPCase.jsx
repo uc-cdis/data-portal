@@ -50,163 +50,166 @@ class LTNPCase extends HIVCohortFilterCase {
     this.numConsecutiveYearsInputRef = React.createRef();
   }
 
-/*query Guppy and returns map of subjects with critical date for hiv positive subjects*/
+  /* query Guppy and returns map of subjects with critical date for hiv positive subjects */
+  // eslint-disable-next-line consistent-return
   getSubjectWithTime = () => {
-    const useGuppyForExplorer = true;
     if (useGuppyForExplorer) {
       const queryObject = {
-        type: "subject",
+        type: 'subject',
         fields: [
-          "subject_id",
-          "fposdate",
-          "frstaidd",
-          "lnegdate",
-          "frsthaad",
-          "lastnohd",
-          "frstartd",
-          "lastnoad"
+          'subject_id',
+          'fposdate',
+          'frstaidd',
+          'lnegdate',
+          'frsthaad',
+          'lastnohd',
+          'frstartd',
+          'lastnoad',
         ],
-        filter:{
-          AND:[
-          {"=":{
-            hiv_status:"positive"
-            }
-          },
-          {"=":{
-            project_id:"ndh-CHARLIE"
-            }
-          }]}
-        };
-      return HIVCohortFilterCase.performQuery(queryObject,useGuppyForExplorer).then((data) => {
-        /* eslint-disable no-underscore-dangle */
+        filter: {
+          AND: [
+            { '=': {
+              hiv_status: 'positive',
+            },
+            },
+            { '=': {
+              project_id: 'ndh-CHARLIE',
+            },
+            }] },
+      };
+      return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
         if (!data
-          || data.length == 0) {
+          || data.length === 0) {
           throw new Error('Error when query subjects with HIV');
         }
 
         const subjectList = [];
-        var convy,haarty,arty;
+        let convy;
+        let haarty;
+        let arty;
         data.forEach((item) => {
-          if (item.frstaidd <9000 && item.lnegdate>1978){
-            convy = (item.frstaidd + item.lnegdate)/2
-          }else{
-            convy= item.fposdate
+          if (item.frstaidd < 9000 && item.lnegdate > 1978) {
+            convy = (item.frstaidd + item.lnegdate) / 2;
+          } else {
+            convy = item.fposdate;
           }
-          if (item.frsthaad<9000){
-            haarty=(item.lastnohd + item.frsthaad)/2
+          if (item.frsthaad < 9000) {
+            haarty = (item.lastnohd + item.frsthaad) / 2;
           }
-          if (item.frstartd<9000){
-            arty=(item.lastnoad + item.frstartd)/2
+          if (item.frstartd < 9000) {
+            arty = (item.lastnoad + item.frstartd) / 2;
           }
           subjectList.push({
             subject_id: item.subject_id,
-            convy:convy,
-            haarty:haarty,
-            arty:arty
-            })
+            convy,
+            haarty,
+            arty,
+          });
         });
         return subjectList;
-        // eslint-enable no-underscore-dangle
       });
     }
   }
 
-// query guppy to get all the follow up for charlie project that has hiv-positive.
+  // query guppy to get all the follow up for charlie project that has hiv-positive.
+  // eslint-disable-next-line consistent-return
   getFollowupsBuckets = () => {
-    const useGuppyForExplorer = true;
     if (useGuppyForExplorer) {
-      const queryString = {
-        type: "follow_up",
-        fields:[
-          "subject_id",
-          "harmonized_visit_number",
-          "visit_date",
-          "leu3n",
-          "viral_load",
-          "submitter_id"
+      const queryObject = {
+        type: 'follow_up',
+        fields: [
+          'subject_id',
+          'harmonized_visit_number',
+          'visit_date',
+          'leu3n',
+          'viral_load',
+          'submitter_id',
         ],
-        filter:{
-          AND:[
-          {"=":{
-            hiv_status:"positive"
-            }
-          },
-          {"=":{
-            project_id:"ndh-CHARLIE"
-            }
-          }]}
-        };
-      return HIVCohortFilterCase.performQuery(queryString, useGuppyForExplorer).then((data) => {
+        filter: {
+          AND: [
+            { '=': {
+              hiv_status: 'positive',
+            },
+            },
+            { '=': {
+              project_id: 'ndh-CHARLIE',
+            },
+            }] },
+      };
+      return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
         if (!data
-          || data.length == 0) {
+          || data.length === 0) {
           throw new Error('Error while querying subjects with HIV');
         }
-        return HIVCohortFilterCase.makeSubjectToVisitMap(data)
+        return HIVCohortFilterCase.makeSubjectToVisitMap(data);
       });
     }
   }
 
-// filter visits that does not qualify hiv positive, harrt negative and art negative
-  filterFollowup =(subjectList,followupList) =>{
-    var subject;
+  // filter visits that does not qualify hiv positive, harrt negative and art negative
+  filterFollowup =(subjectList, followupList) => {
+    let subject;
     const filtFollowup = {};
-    subjectList.forEach((item) =>{
-      subject = item.subject_id
-      filtFollowup[subject] = []
-      for (let i =0; i < followupList[subject].length; i++){
-        if (followupList[subject][i].visit_date <= item.convy){
-          continue ;
-        }else if(followupList[subject][i].visit_date < item.haarty && followupList[subject][i].visit_date < item.arty){
-          filtFollowup[subject].push(followupList[subject][i])
-        }else{
+    subjectList.forEach((item) => {
+      subject = item.subject_id;
+      filtFollowup[subject] = [];
+      for (let i = 0; i < followupList[subject].length; i += 1) {
+        if (followupList[subject][i].visit_date <= item.convy) {
+          // eslint-disable-next-line no-continue
+          continue;
+        } else if (followupList[subject][i].visit_date < item.haarty
+          && followupList[subject][i].visit_date < item.arty) {
+          filtFollowup[subject].push(followupList[subject][i]);
+        } else {
           break;
         }
       }
-    })
-    const filtFollowups = Object.values(filtFollowup).filter(x =>(x.length!=0))
-    return filtFollowups
+    });
+    const filtFollowups = Object.values(filtFollowup).filter(x => (x.length !== 0));
+    return filtFollowups;
   }
 
   async getBucketByKey() {
     const subjectList = await Promise.all([
-      this.getSubjectWithTime()
+      this.getSubjectWithTime(),
     ]);
     const followupList = await Promise.all([
-      this.getFollowupsBuckets()
+      this.getFollowupsBuckets(),
     ]);
-    return this.filterFollowup(subjectList[0],followupList[0])
+    return this.filterFollowup(subjectList[0], followupList[0]);
   }
 
-// classify ltnp. Doesn not allow leu3n==null at the beginning or between eligible visits
+  // classify LTNP. Does not allow leu3n==null at the beginning or between eligible visits
   classifyAllSubjectLTNP = (filtFollowups) => {
     const subjectLTNP = [];
     const subjectControl = [];
 
     // For each subject, check their CD4 counts
     filtFollowups.forEach((item) => {
-      const duration = item.slice(-1)[0].visit_date - item[0].visit_date
-      if (duration < this.state.numConsecutiveYearsFromUser){
-          // The subject is neither control nor LTNP
-        return
+      const duration = item.slice(-1)[0].visit_date - item[0].visit_date;
+      if (duration < this.state.numConsecutiveYearsFromUser) {
+        // The subject is neither control nor LTNP
+        return;
       }
-      var leu3nhy = 0;
-      var firstyh = item[0].visit_date;
-      for (let i = 0; i < item.length; i+=1 ){
-       if (item[i].leu3n > 500){
-          leu3nhy = item[i].visit_date
-        }else{
-          item = item.splice(0,i)
-          break
+      let leu3nhy = 0;
+      const firstyh = item[0].visit_date;
+      for (let i = 0; i < item.length; i += 1) {
+        if (item[i].leu3n > 500) {
+          leu3nhy = item[i].visit_date;
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          item = item.splice(0, i);
+          break;
         }
       }
       const leu3nhdu = leu3nhy - firstyh;
 
-      if (leu3nhdu > this.state.numConsecutiveYearsFromUser){
-        subjectLTNP.push(item)
-      }else{
-        subjectControl.push(item)
+      if (leu3nhdu > this.state.numConsecutiveYearsFromUser) {
+        subjectLTNP.push(item);
+      } else {
+        subjectControl.push(item);
       }
-    })
+    });
     return {
       subjectLTNP,
       subjectControl,
@@ -310,7 +313,7 @@ class LTNPCase extends HIVCohortFilterCase {
             <div className='hiv-cohort-filter__sidebar-input-label'>
               Maintained for at least:
               <br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveYearsFromUser || '__' } years</span>
+              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveYearsFromUser || '__' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}</span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
               <input
@@ -343,25 +346,49 @@ class LTNPCase extends HIVCohortFilterCase {
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='cd4-overlay-1'
               >
-                &nbsp; &gt; { this.state.CD4FromUser || '--'}
+                &nbsp; &gt; { this.state.CD4FromUser || '__'}
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='cd4-overlay-2'
               >
-                &nbsp; &gt; { this.state.CD4FromUser || '--' }
+                &nbsp; &gt; { this.state.CD4FromUser || '__' }
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='consecutive-years-overlay-1'
               >
-                { this.state.numConsecutiveYearsFromUser || '--' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}
+                { this.state.numConsecutiveYearsFromUser || '__' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='consecutive-years-overlay-2'
               >
-                { this.state.numConsecutiveYearsFromUser || '--' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}
+                { this.state.numConsecutiveYearsFromUser || '__' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}
+              </div>
+              <div
+                className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
+                id='consecutive-years-overlay-3'
+              >
+                { this.state.numConsecutiveYearsFromUser || '__' } &nbsp;{this.state.numConsecutiveYearsFromUser === 1 ? 'year' : 'years'}
+              </div>
+              <div
+                className='hiv-cohort-filter__value hiv-cohort-filter__overlay'
+                id='consecutive-years-small-overlay-1'
+              >
+                { this.state.numConsecutiveYearsFromUser || '__' }
+              </div>
+              <div
+                className='hiv-cohort-filter__value hiv-cohort-filter__overlay'
+                id='consecutive-years-small-overlay-2'
+              >
+                { this.state.numConsecutiveYearsFromUser || '__' }
+              </div>
+              <div
+                className='hiv-cohort-filter__value hiv-cohort-filter__overlay'
+                id='consecutive-years-small-overlay-3'
+              >
+                { this.state.numConsecutiveYearsFromUser || '__' }
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
