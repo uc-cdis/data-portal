@@ -66,6 +66,7 @@ class PTCCase extends HIVCohortFilterCase {
   }
 
   getBucketByKeyWithHAARTVAR = (bucketKey, isHAART) => {
+    const useGuppyForExplorer = true;
     // The viral_load check in the below query ensures that
     // the subjects retrieved have *at least* one follow_up with viral_load < viralLoadFromUser
     if (useGuppyForExplorer) {
@@ -104,7 +105,7 @@ class PTCCase extends HIVCohortFilterCase {
           ]
         }
       }`;
-      return HIVCohortFilterCase.performQuery(queryString, variableString).then((res) => {
+      return performQuery(queryString, variableString).then((res) => {
         // eslint-disable no-underscore-dangle
         if (!res
           || !res.data
