@@ -10,7 +10,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.2",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.0",
-    "@gen3/guppy": "git://github.com/uc-cdis/guppy.git#fix/guppy-right-slider",
+    "@gen3/guppy": "git://github.com/uc-cdis/guppy.git#fix/guppy-right-slider", 
     "@gen3/ui-component": "git://github.com/uc-cdis/gen3-ui-component.git#fix/guppy-right-slider",
     "@storybook/addon-actions": "^5.0.0",
     "@storybook/react": "^5.0.0",
