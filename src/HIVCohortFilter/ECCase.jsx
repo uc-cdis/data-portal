@@ -396,7 +396,7 @@ class ECCase extends HIVCohortFilterCase {
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-4'
               >
-                &nbsp; &lt; { this.state.spikeViralLoadFromUser || '__'} &nbsp;cp/mL
+                &nbsp; &lt; { this.state.suppressViralLoadFromUser || '__'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
