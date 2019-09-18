@@ -78,6 +78,7 @@ class LTNPCase extends HIVCohortFilterCase {
             }] },
       };
       return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
+        /* eslint-disable no-underscore-dangle */
         if (!data
           || data.length === 0) {
           throw new Error('Error when query subjects with HIV');
@@ -95,21 +96,27 @@ class LTNPCase extends HIVCohortFilterCase {
           }
           if (item.frsthaad < 9000) {
             haarty = (item.lastnohd + item.frsthaad) / 2;
+          }else{
+            haarty = null
           }
           if (item.frstartd < 9000) {
             arty = (item.lastnoad + item.frstartd) / 2;
+          }else{
+            arty = null
           }
           subjectList.push({
-            subject_id: item.subject_id,
-            convy,
-            haarty,
-            arty,
+            "subject_id": item.subject_id,
+            "convy":convy,
+            "haarty":haarty,
+            "arty":arty
           });
         });
         return subjectList;
+        // eslint-enable no-underscore-dangle
       });
     }
   }
+
 
   // query guppy to get all the follow up for charlie project that has hiv-positive.
   // eslint-disable-next-line consistent-return
@@ -154,11 +161,10 @@ class LTNPCase extends HIVCohortFilterCase {
       subject = item.subject_id;
       filtFollowup[subject] = [];
       for (let i = 0; i < followupList[subject].length; i += 1) {
-        if (followupList[subject][i].visit_date <= item.convy) {
+        if (followupList[subject][i].visit_date <= item.convy||followupList[subject][i].visit_date == null ) {
           // eslint-disable-next-line no-continue
           continue;
-        } else if (followupList[subject][i].visit_date < item.haarty
-          && followupList[subject][i].visit_date < item.arty) {
+        } else if ((item.haarty === null && item.arty === null) || (item.haarty === null && followupList[subject][i].visit_date < item.arty)|| (item.arty === null && followupList[subject][i].visit_date < item.haarty)||(followupList[subject][i].visit_date < item.arty && followupList[subject][i].visit_date < item.haarty)){
           filtFollowup[subject].push(followupList[subject][i]);
         } else {
           break;
@@ -168,6 +174,7 @@ class LTNPCase extends HIVCohortFilterCase {
     const filtFollowups = Object.values(filtFollowup).filter(x => (x.length !== 0));
     return filtFollowups;
   }
+
 
   async getBucketByKey() {
     const subjectList = await Promise.all([

@@ -227,8 +227,8 @@ class HIVCohortFilterCase extends React.Component {
 
   downloadControl = () => {
     // Overridden by LTNP
-    const fileName = `control-cohort-vload-${this.state.viralLoadFromUser.toString()
-    }-months-${this.state.numConsecutiveMonthsFromUser.toString()}.json`;
+    const fileName = `control-cohort-vload-${this.state.suppressViralLoadFromUser.toString()
+    }-months-${this.state.numConsecutiveVisitsFromUser.toString()}.json`;
 
     const blob = this.makeCohortJSONFile(this.state.subjectControl);
     FileSaver.saveAs(blob, fileName);
