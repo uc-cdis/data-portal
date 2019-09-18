@@ -90,19 +90,19 @@ class ECCase extends HIVCohortFilterCase {
           }
           if (item.frsthaad < 9000) {
             haarty = (item.lastnohd + item.frsthaad) / 2;
-          }else{
-            haarty = null
+          } else {
+            haarty = null;
           }
           if (item.frstartd < 9000) {
             arty = (item.lastnoad + item.frstartd) / 2;
-          }else{
-            arty = null
+          } else {
+            arty = null;
           }
           subjectList.push({
-            "subject_id": item.subject_id,
-            "convy":convy,
-            "haarty":haarty,
-            "arty":arty
+            subject_id: item.subject_id,
+            convy,
+            haarty,
+            arty,
           });
         });
         return subjectList;
@@ -154,10 +154,15 @@ class ECCase extends HIVCohortFilterCase {
       subject = item.subject_id;
       filtFollowup[subject] = [];
       for (let i = 0; i < followupList[subject].length; i += 1) {
-        if (followupList[subject][i].visit_date <= item.convy||followupList[subject][i].visit_date == null ) {
+        if (followupList[subject][i].visit_date <= item.convy
+          || followupList[subject][i].visit_date == null) {
           // eslint-disable-next-line no-continue
           continue;
-        } else if ((item.haarty === null && item.arty === null) || (item.haarty === null && followupList[subject][i].visit_date < item.arty)|| (item.arty === null && followupList[subject][i].visit_date < item.haarty)||(followupList[subject][i].visit_date < item.arty && followupList[subject][i].visit_date < item.haarty)){
+        } else if ((item.haarty === null && item.arty === null)
+        || (item.haarty === null && followupList[subject][i].visit_date < item.arty)
+        || (item.arty === null && followupList[subject][i].visit_date < item.haarty)
+        || (followupList[subject][i].visit_date < item.arty
+          && followupList[subject][i].visit_date < item.haarty)) {
           filtFollowup[subject].push(followupList[subject][i]);
         } else {
           break;
@@ -178,28 +183,30 @@ class ECCase extends HIVCohortFilterCase {
     return this.filterFollowup(subjectList[0], followupList[0]);
   }
 
-// Identify EC period for each subject. In each EC period, 1 spike viral load period is allowed. Missing viral load measurement period should be less than 2 years.
+  // Identify EC period for each subject. In each EC period, 1 spike viral load period is allowed.
+  // Missing viral load measurement period should be less than 2 years.
   visitsMatchECWindowCriteria = (visitArray) => {
     let nSuper = 0;
     let nSpike = 0;
     let nEC = 0;
     let lastTimePoint = 0;
     let ecVisits = [];
-    let ecPeriod = {};
+    const ecPeriod = {};
     let nNonsuper = 0;
     for (let i = 0; i < visitArray.length; i += 1) {
-      if (visitArray[i].viral_load !=null && visitArray[i].viral_load < this.state.suppressViralLoadFromUser) {
+      if (visitArray[i].viral_load != null
+        && visitArray[i].viral_load < this.state.suppressViralLoadFromUser) {
         ecVisits.push(visitArray[i]);
         nSuper += 1;
         nNonsuper = 0;
         lastTimePoint = visitArray[i].visit_date;
-        if (i == visitArray.length -1  && nSuper >= this.state.numConsecutiveVisitsFromUser){
+        if (i === visitArray.length - 1 && nSuper >= this.state.numConsecutiveVisitsFromUser) {
           nEC += 1;
           const ecPeriodKey = `ec_perid_${nEC}`;
           const numberVisits = ecVisits.length - nNonsuper;
           ecPeriod[ecPeriodKey] = ecVisits.splice(0, numberVisits);
         }
-      } else if (visitArray[i].viral_load < this.state.spikeViralLoadFromUser && nSuper >0) {
+      } else if (visitArray[i].viral_load < this.state.spikeViralLoadFromUser && nSuper > 0) {
         nSpike += 1;
         if (nSpike > 1) {
           if (nSuper >= this.state.numConsecutiveVisitsFromUser) {
@@ -246,7 +253,7 @@ class ECCase extends HIVCohortFilterCase {
     // visits that match the EC criteria
     filtFollowups.forEach((item) => {
       const ecPeriod = this.visitsMatchECWindowCriteria(item);
-      if (Object.keys(ecPeriod).length===0) {
+      if (Object.keys(ecPeriod).length === 0) {
         subjectControl.push(item);
       } else {
         subjectEC.push(ecPeriod);
