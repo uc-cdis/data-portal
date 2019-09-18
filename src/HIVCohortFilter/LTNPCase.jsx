@@ -78,7 +78,6 @@ class LTNPCase extends HIVCohortFilterCase {
             }] },
       };
       return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
-        /* eslint-disable no-underscore-dangle */
         if (!data
           || data.length === 0) {
           throw new Error('Error when query subjects with HIV');
@@ -112,7 +111,6 @@ class LTNPCase extends HIVCohortFilterCase {
           });
         });
         return subjectList;
-        // eslint-enable no-underscore-dangle
       });
     }
   }
