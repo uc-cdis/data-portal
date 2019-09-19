@@ -53,7 +53,6 @@ class ExplorerFilter extends React.Component {
    * 2. We add "accessible" property to items so that filter component will show lock icon
    */
   onProcessFilterAggsData = (aggsData) => {
-    console.log('ExplorerFilter/index.jsx onProcessFilterAggsData ', aggsData);
     if (this.props.tierAccessLevel !== 'regular') {
       return aggsData;
     }
