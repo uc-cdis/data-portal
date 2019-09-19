@@ -31,6 +31,7 @@ class GuppyDataExplorer extends React.Component {
     return (
       <div className='guppy-data-explorer'>
         <GuppyWrapper
+          adminAppliedPreFilters={this.props.adminAppliedPreFilters}
           filterConfig={this.props.filterConfig}
           guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
