@@ -37,12 +37,14 @@
   text-align: center;
   border-top: 1px solid #a9a9a9;
   padding-top: 18px;
+  padding-bottom: 18px;
 }
 
 .hiv-cohort-filter__sidebar {
   float: left;
   width: 370px;
-  height: 380px;
+  height: fit-content;
+  min-height: 380px;
   font-size: 14px;
   background: var(--g3-color__white);
   border: 1px solid #a9a9a9;
