@@ -37,12 +37,33 @@
   text-align: center;
   border-top: 1px solid #a9a9a9;
   padding-top: 18px;
+  padding-bottom: 18px;
 }
 
 .hiv-cohort-filter__sidebar {
   float: left;
-  width: 360px;
-  height: 380px;
+  width: 370px;
+  height: fit-content;
+  min-height: 380px;
+  font-size: 14px;
+  background: var(--g3-color__white);
+  border: 1px solid #a9a9a9;
+  border-radius: 2px;
+  margin: 80px 0 0 15px;
+}
+
+.hiv-cohort-filter__ec-sidebar .hiv-cohort-filter__button-group {
+  text-align: center;
+  border-top: 1px solid #a9a9a9;
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+.hiv-cohort-filter__ec-sidebar {
+  float: left;
+  width: 370px;
+  height: fit-content;
+  min-height: 470px;
   font-size: 14px;
   background: var(--g3-color__white);
   border: 1px solid #a9a9a9;
@@ -81,6 +102,12 @@
   padding-left: 15px;
   padding-bottom: 8px;
   font-size: 18px;
+}
+
+.hiv-cohort-filter__value {
+  font-weight: normal;
+  color: #606060;
+  font-size: 14px;
 }
 
 .hiv-cohort-filter__value-highlight {
@@ -232,33 +259,53 @@
 
 /* LTNP Case */
 .hiv-cohort-filter #cd4-overlay-1 {
-  top: 447px;
+  top: 450px;
   left: 7px;
 }
 
 .hiv-cohort-filter #cd4-overlay-2 {
-  top: 447px;
+  top: 450px;
   left: 363px;
 }
 
 .hiv-cohort-filter #consecutive-years-overlay-1 {
-  top: 98px;
+  top: 85px;
   left: 185px;
 }
 
 .hiv-cohort-filter #consecutive-years-overlay-2 {
-  top: 493px;
+  top: 255px;
+  left: 185px;
+}
+
+.hiv-cohort-filter #consecutive-years-overlay-3 {
+  top: 500px;
   left: 13px;
+}
+
+.hiv-cohort-filter #consecutive-years-small-overlay-1 {
+  top: 182px;
+  left: 320px;
+}
+
+.hiv-cohort-filter #consecutive-years-small-overlay-2 {
+  top: 395px;
+  left: 160px;
+}
+
+.hiv-cohort-filter #consecutive-years-small-overlay-3 {
+  top: 395px;
+  left: 520px;
 }
 
 #ltnp-counts-overlay-1 {
   top: 372px;
-  right: 410px;
+  right: 390px;
 }
 
 #control-counts-overlay-3 {
   top: 372px;
-  right: 55px;
+  right: 35px;
 }
 
 #download-LTNP-cohort-overlay {
