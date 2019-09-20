@@ -141,7 +141,8 @@ class ExplorerHeatMap extends React.Component {
     const yAxisVarsMapping = [this.props.mainYAxisVar].concat(
       this.props.guppyConfig.aggFields,
     ).reduce((res, field) => {
-      const mappingEntry = this.props.guppyConfig.fieldMapping && this.props.guppyConfig.fieldMapping.find(
+      const mappingEntry = this.props.guppyConfig.fieldMapping &&
+      this.props.guppyConfig.fieldMapping.find(
         i => i.field === field,
       );
       res[field] = (mappingEntry && mappingEntry.name) || capitalizeFirstLetter(field);
