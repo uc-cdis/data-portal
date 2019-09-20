@@ -157,7 +157,7 @@ class ExplorerHeatMap extends React.Component {
 
     const xAxisVarTitle = capitalizeFirstLetter(this.props.guppyConfig.mainFieldTitle);
     const data = this.getTransformedData(yAxisVars);
-    const height = `${(yAxisVars.length * 18) + 80}px`; // default is 300px
+    const height = `${(yAxisVars.length * 20) + 80}px`; // default is 300px
 
     return (
       <React.Fragment>
