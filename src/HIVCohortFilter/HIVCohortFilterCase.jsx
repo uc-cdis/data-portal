@@ -5,20 +5,32 @@ import {
   guppyGraphQLUrl,
   arrangerGraphqlPath,
   useGuppyForExplorer,
+  guppyDownloadUrl,
 } from '../configs';
 
 class HIVCohortFilterCase extends React.Component {
   // Base class for the 3 NDH cohort filter apps. Meant to facilitate code reuse
-  static performQuery(queryString, variableString) {
-    const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
+  static performQuery(query, variableString, useGraphQLEndpoint) {
+    if (useGraphQLEndpoint || !useGuppyForExplorer) {
+      const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
+      return fetchWithCreds({
+        path: `${graphqlUrl}`,
+        body: variableString ? JSON.stringify({
+          query,
+          variables: JSON.parse(variableString),
+        }) : JSON.stringify({
+          query,
+        }),
+        method: 'POST',
+      })
+        .then(
+          ({ status, data }) => data, // eslint-disable-line no-unused-vars
+        );
+    }
+
     return fetchWithCreds({
-      path: `${graphqlUrl}`,
-      body: variableString ? JSON.stringify({
-        query: queryString,
-        variables: JSON.parse(variableString),
-      }) : JSON.stringify({
-        query: queryString,
-      }),
+      path: `${guppyDownloadUrl}`,
+      body: JSON.stringify(query),
       method: 'POST',
     })
       .then(
@@ -27,7 +39,8 @@ class HIVCohortFilterCase extends React.Component {
   }
 
   static makeSubjectToVisitMap(followUps) {
-    // Convert to dictionary: { subject_id -> [ array of visits sorted by visit_date ] }
+    // Convert to dictionary:
+    // { subject_id -> [ array of visits sorted by visit_harmonized_number ] }
     const subjectToVisitMap = {};
     for (let i = 0; i < followUps.length; i += 1) {
       const subjectId = followUps[i].subject_id;
@@ -38,15 +51,15 @@ class HIVCohortFilterCase extends React.Component {
       }
     }
 
-    // Sort each patient's visits by visit_number
+    // Sort each patient's visits by visit_harmonized_number
     Object.keys(subjectToVisitMap).forEach((key) => {
       const subjectVisits = subjectToVisitMap[key];
       if (subjectVisits.length > 1) {
         subjectVisits.sort((a, b) => {
-          if (a.visit_number > b.visit_number) {
+          if (a.harmonized_visit_number > b.harmonized_visit_number) {
             return 1;
           }
-          return ((b.visit_number > a.visit_number) ? -1 : 0);
+          return ((b.harmonized_visit_number > a.harmonized_visit_number) ? -1 : 0);
         });
         subjectToVisitMap[key] = subjectVisits;
       }
@@ -133,7 +146,7 @@ class HIVCohortFilterCase extends React.Component {
           ]
         }
       }`;
-      return HIVCohortFilterCase.performQuery(queryString, variableString).then((res) => {
+      return HIVCohortFilterCase.performQuery(queryString, variableString, true).then((res) => {
         if (!res
           || !res.data
           || !res.data.follow_up) {
@@ -175,34 +188,12 @@ class HIVCohortFilterCase extends React.Component {
         }
       }
     }`;
-    return HIVCohortFilterCase.performQuery(query).then((res) => {
+    return HIVCohortFilterCase.performQuery(query, null, true).then((res) => {
       if (!res || !res.data) {
         throw new Error('Error while querying subjects with HIV');
       }
       return res.data.follow_up.hits.edges.map(edge => edge.node);
     });
-  }
-
-  async getBucketByKey(bucketKey) {
-    // Overridden by PTC case
-    // Returns map of subjects who have never received HAART treatment
-    const resList = await Promise.all([
-      this.getBucketByKeyWithHAARTVAR(bucketKey, true),
-      this.getBucketByKeyWithHAARTVAR(bucketKey, false),
-    ]);
-
-    const subjectsWithAtLeast1Haart = resList[0];
-    const subjectsWithAtLeast1NonHaart = resList[1];
-    const subjectsWithNoHaartTreatments = subjectsWithAtLeast1NonHaart.filter(
-      x => !subjectsWithAtLeast1Haart.map(y => y.key).includes(x.key),
-    );
-
-    // Transform to map
-    const resultMap = {};
-    for (let i = 0; i < subjectsWithNoHaartTreatments.length; i += 1) {
-      resultMap[subjectsWithNoHaartTreatments[i].key] = subjectsWithNoHaartTreatments[i].doc_count;
-    }
-    return resultMap;
   }
 
   isALargeAmountOfFollowUpDataMissing(visitArray) {
@@ -222,7 +213,7 @@ class HIVCohortFilterCase extends React.Component {
   }
 
   checkReadyToCalculate = () => {
-    // Overridden by LTNP case
+    // Overridden by LTNP and EC case
     const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
     const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
     this.setState({
@@ -236,8 +227,8 @@ class HIVCohortFilterCase extends React.Component {
 
   downloadControl = () => {
     // Overridden by LTNP
-    const fileName = `control-cohort-vload-${this.state.viralLoadFromUser.toString()
-    }-months-${this.state.numConsecutiveMonthsFromUser.toString()}.json`;
+    const fileName = `control-cohort-vload-${this.state.suppressViralLoadFromUser.toString()
+    }-months-${this.state.numConsecutiveVisitsFromUser.toString()}.json`;
 
     const blob = this.makeCohortJSONFile(this.state.subjectControl);
     FileSaver.saveAs(blob, fileName);

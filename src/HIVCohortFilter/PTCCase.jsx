@@ -6,7 +6,6 @@ import './HIVCohortFilter.css';
 import CohortPTCSvg from '../img/cohort-PTC.svg';
 import Spinner from '../components/Spinner';
 import HIVCohortFilterCase from './HIVCohortFilterCase';
-import { useGuppyForExplorer } from '../configs';
 
 class PTCCase extends HIVCohortFilterCase {
   /*
@@ -51,8 +50,7 @@ class PTCCase extends HIVCohortFilterCase {
   getBucketByKeyWithHAARTVAR = (bucketKey, isHAART) => {
     // The viral_load check in the below query ensures that
     // the subjects retrieved have *at least* one follow_up with viral_load < viralLoadFromUser
-    if (useGuppyForExplorer) {
-      const queryString = `
+    const queryString = `
       query ($filter: JSON) {
         _aggregation {
           follow_up (filter: $filter) {
@@ -60,76 +58,50 @@ class PTCCase extends HIVCohortFilterCase {
               histogram {
                 key
                 count
-              } 
+              }
             }
           }
         }
       }
     `;
-      const variableString = ` {
-        "filter": {
-          "AND": [
-            {
-              "${isHAART ? '=' : '!='}": {
-                "thrpyv": "HAART"
-              }
-            },
-            {
-              "<": {
-                "viral_load": ${this.state.viralLoadFromUser}
-              }
-            },
-            {
-              "=": {
-                "hiv_status": "positive"
-              }
+    const variableString = ` {
+      "filter": {
+        "AND": [
+          {
+            "${isHAART ? '=' : '!='}": {
+              "thrpyv": "HAART"
             }
-          ]
-        }
-      }`;
-      return HIVCohortFilterCase.performQuery(queryString, variableString).then((res) => {
-        // eslint-disable no-underscore-dangle
-        if (!res
-          || !res.data
-          || !res.data._aggregation
-          || !res.data._aggregation.follow_up) {
-          throw new Error('Error when query subjects with HIV');
-        }
-        const result = res.data._aggregation.follow_up[bucketKey].histogram;
-        const resultList = [];
-        result.forEach(item => (resultList.push({
-          key: item.key,
-          doc_count: item.count,
-        })));
-        return resultList;
-        // eslint-enable no-underscore-dangle
-      });
-    }
+          },
+          {
+            "<": {
+              "viral_load": ${this.state.viralLoadFromUser}
+            }
+          },
+          {
+            "=": {
+              "hiv_status": "positive"
+            }
+          }
+        ]
+      }
+    }`;
 
-    // below are for arranger
-    const queryString = `
-    {
-      follow_up {
-        aggregations(filters: {first: 10000, op: "and", content: [
-          {op: "${isHAART ? '=' : '!='}", content: {field: "thrpyv", value: "HAART"}},
-          {op: "<", content: {field: "viral_load", value: "${this.state.viralLoadFromUser}"}},
-          {op: "=", content: {field: "hiv_status", value: "positive"}}]}) 
-        {
-          ${bucketKey} {
-            buckets {
-              key
-              doc_count
-            }
-          }
-        }
-      }
-    }
-    `;
-    return HIVCohortFilterCase.performQuery(queryString).then((res) => {
-      if (!res || !res.data) {
+    return HIVCohortFilterCase.performQuery(queryString, variableString, true).then((res) => {
+      // eslint-disable no-underscore-dangle
+      if (!res
+        || !res.data
+        || !res.data._aggregation
+        || !res.data._aggregation.follow_up) {
         throw new Error('Error when query subjects with HIV');
       }
-      return res.data.follow_up.aggregations[bucketKey].buckets;
+      const result = res.data._aggregation.follow_up[bucketKey].histogram;
+      const resultList = [];
+      result.forEach(item => (resultList.push({
+        key: item.key,
+        doc_count: item.count,
+      })));
+      return resultList;
+      // eslint-enable no-underscore-dangle
     });
   }
 
@@ -328,7 +300,7 @@ class PTCCase extends HIVCohortFilterCase {
             <div className='hiv-cohort-filter__sidebar-input-label'>
               Received HAART for at least:
               <br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } months</span>
+              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } &nbsp;{this.state.numConsecutiveMonthsFromUser === 1 ? 'month' : 'months'}</span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
               <input
@@ -361,25 +333,25 @@ class PTCCase extends HIVCohortFilterCase {
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-1'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
+                &nbsp; &lt; { this.state.viralLoadFromUser || '__'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-2'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '--' } &nbsp;cp/mL
+                &nbsp; &lt; { this.state.viralLoadFromUser || '__' } &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-3'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '--'} &nbsp;cp/mL
+                &nbsp; &lt; { this.state.viralLoadFromUser || '__'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='consecutive-months-overlay-1'
               >
-                { this.state.numConsecutiveMonthsFromUser || '--' } &nbsp;months
+                { this.state.numConsecutiveMonthsFromUser || '__' } &nbsp;{this.state.numConsecutiveMonthsFromUser === 1 ? 'month' : 'months'}
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
