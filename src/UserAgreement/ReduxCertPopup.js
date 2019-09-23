@@ -3,7 +3,7 @@ import CertPopup from './CertPopup';
 import { requiredCerts, userapiPath } from '../configs';
 import { fetchWithCreds, refreshUser } from '../actions';
 import { minus } from '../utils';
-import { certs } from '../localconf';
+import { certs, hostname } from '../localconf';
 
 /**
  * Redux action triggered by quiz submit
@@ -25,7 +25,7 @@ export const submitForm = (data, questionList, quiz, history) => dispatch => fet
     ({ status }) => {
       switch (status) {
       case 201:
-        history.push('/');
+        window.location = `${hostname}`;
         return dispatch(refreshUser());
       default:
         return dispatch({
