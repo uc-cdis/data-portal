@@ -8,7 +8,7 @@ describe('the User Agreement component', () => {
   const quiz = {
     title: 'BloodPAC User agreement',
     hasCorrectAnswers: true,
-    description: "",
+    description: '',
     questions: [
       {
         name: 'The first question',

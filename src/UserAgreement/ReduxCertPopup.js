@@ -12,7 +12,7 @@ import { certs, hostname } from '../localconf';
  * @param {*} quiz
  * @param {*} history
  */
-export const submitForm = (data, questionList, quiz, history) => dispatch => fetchWithCreds({
+export const submitForm = (data, questionList, quiz) => dispatch => fetchWithCreds({
   path: `${userapiPath}/user/cert/${quiz}?extension=txt`,
   method: 'PUT',
   body: JSON.stringify({
@@ -40,9 +40,9 @@ const mapStateToProps = state => ({
   pendingCerts: minus(requiredCerts, state.user.certificates_uploaded),
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   onSubmit: (data, questionList, quiz) => dispatch(
-    submitForm(data, questionList, quiz, ownProps.history),
+    submitForm(data, questionList, quiz),
   ),
 });
 
