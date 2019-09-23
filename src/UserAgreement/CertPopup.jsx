@@ -28,6 +28,8 @@ class CertPopup extends Component {
         <div className='cert_popup__mask'>
           <Quiz
             title={certsList[firstPending].title}
+            subtitle={certsList[firstPending].subtitle}
+            hasCorrectAnswers={certsList[firstPending].hasCorrectAnswers}
             description={certsList[firstPending].description}
             questionList={certsList[firstPending].questions}
             onSubmit={(data, questionList) => this.props.onSubmit(data, questionList, firstPending)}
