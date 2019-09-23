@@ -106,6 +106,8 @@ class ExplorerHeatMap extends React.Component {
       },
       name: xAxisVarTitle,
       nameLocation: 'middle',
+      // space between axis line and axis name
+      nameGap: this.props.guppyConfig.mainFieldIsNumeric ? 15 : 25,
     },
     yAxis: {
       type: 'category',
@@ -125,7 +127,7 @@ class ExplorerHeatMap extends React.Component {
       align: 'right', // position of bar relatively to handles and label
       inRange: {
         // [min value color, max value color]:
-        color: colorRange || ['#EBF7FB', '#1769a3'],
+        color: colorRange || ['#EBF7FB', '#1769A3'],
       },
     },
     series: [{
@@ -139,7 +141,8 @@ class ExplorerHeatMap extends React.Component {
     const yAxisVarsMapping = [this.props.mainYAxisVar].concat(
       this.props.guppyConfig.aggFields,
     ).reduce((res, field) => {
-      const mappingEntry = this.props.guppyConfig.fieldMapping.find(
+      const mappingEntry = this.props.guppyConfig.fieldMapping &&
+      this.props.guppyConfig.fieldMapping.find(
         i => i.field === field,
       );
       res[field] = (mappingEntry && mappingEntry.name) || capitalizeFirstLetter(field);
@@ -155,7 +158,7 @@ class ExplorerHeatMap extends React.Component {
 
     const xAxisVarTitle = capitalizeFirstLetter(this.props.guppyConfig.mainFieldTitle);
     const data = this.getTransformedData(yAxisVars);
-    const height = `${(yAxisVars.length * 17) + 80}px`; // default is 300px
+    const height = `${(yAxisVars.length * 20) + 80}px`; // default is 300px
 
     return (
       <React.Fragment>
