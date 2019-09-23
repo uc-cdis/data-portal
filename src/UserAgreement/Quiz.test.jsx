@@ -7,6 +7,8 @@ import Quiz from './Quiz';
 describe('the User Agreement component', () => {
   const quiz = {
     title: 'BloodPAC User agreement',
+    hasCorrectAnswers: true,
+    description: "",
     questions: [
       {
         name: 'The first question',
@@ -52,7 +54,13 @@ describe('the User Agreement component', () => {
   it('lists question quiz', () => {
     const $vdom = mount(
       <StaticRouter location={{ pathname: '/quiz' }} context={{}}>
-        <Quiz title={quiz.title} questionList={quiz.questions} onSubmit={noop} />
+        <Quiz
+          description={quiz.description}
+          hasCorrectAnswers={quiz.hasCorrectAnswers}
+          title={quiz.title}
+          questionList={quiz.questions}
+          onSubmit={noop}
+        />
       </StaticRouter>,
     );
     const optionLength = quiz.questions.reduce(
