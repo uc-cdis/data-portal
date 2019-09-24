@@ -22,6 +22,7 @@ class Question extends Component {
     onChange: PropTypes.func.isRequired,
     idx: PropTypes.number.isRequired,
     sectionId: PropTypes.string.isRequired,
+    hasCorrectAnswers: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -53,6 +54,7 @@ class Question extends Component {
           this.props.content.options.map(
             (option, i) => (
               <Option
+                hasCorrectAnswers={this.props.hasCorrectAnswers}
                 option={option}
                 onChange={idx => this.onAnswerChanged(idx)}
                 idx={i}
