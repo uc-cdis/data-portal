@@ -21,6 +21,8 @@ class GuppyDataExplorer extends React.Component {
       aggsData: {},
       filter: {},
     };
+    this.adminObjectReadOnly = Object.assign({}, this.props.adminAppliedPreFilters)
+    Object.freeze(this.adminObjectReadOnly);
   }
 
   handleReceiveNewAggsData = (newAggsData) => {
@@ -83,6 +85,7 @@ GuppyDataExplorer.propTypes = {
   tierAccessLevel: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number.isRequired,
   getAccessButtonLink: PropTypes.string,
+  adminAppliedPreFilters: PropTypes.object,
 };
 
 GuppyDataExplorer.defaultProps = {
