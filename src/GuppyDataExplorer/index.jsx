@@ -53,10 +53,6 @@ const guppyExplorerConfig = [
   _.merge(defaultFileConfig, config.fileExplorerConfig),
 ];
 
-Object.freeze(guppyExplorerConfig[0].adminAppliedPreFilters);
-Object.freeze(guppyExplorerConfig[1].adminAppliedPreFilters);
-
-
 const routes = [
   '/explorer',
   '/files',
@@ -69,10 +65,6 @@ class Explorer extends React.Component {
     this.state = {
       tab: tabIndex > 0 ? tabIndex : 0,
     };
-    this.adminObjectReadOnly = Object.assign(
-      {}, guppyExplorerConfig[this.state.tab].adminAppliedPreFilters,
-    );
-    Object.freeze(this.adminObjectReadOnly);
   }
 
   render() {
