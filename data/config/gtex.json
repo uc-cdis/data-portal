@@ -288,7 +288,7 @@
     ],
     "arrangerConfig": {
       "projectId": "search",
-      "graphqlField": "case",
+      "graphqlField": "case", 
       "index": "",
       "manifestMapping": {
         "resourceIndexType": "file",
@@ -315,12 +315,7 @@
       "accessibleValidationField": "project_id"
     },
     "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/",
-    "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data",
-    "adminAppliedPreFilters": {
-      "study_id": { 
-        "selectedValues": ["study_666eae0a9f", "bjr1", "bjr7"]
-      }
-    }
+    "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data"
   },
   "fileExplorerConfig": {
     "charts": {
