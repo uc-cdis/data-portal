@@ -69,9 +69,10 @@ class Explorer extends React.Component {
     this.state = {
       tab: tabIndex > 0 ? tabIndex : 0,
     };
-    this.adminObjectReadOnly = Object.assign({}, guppyExplorerConfig[this.state.tab].adminAppliedPreFilters);
+    this.adminObjectReadOnly = Object.assign(
+      {}, guppyExplorerConfig[this.state.tab].adminAppliedPreFilters,
+    );
     Object.freeze(this.adminObjectReadOnly);
-
   }
 
   render() {

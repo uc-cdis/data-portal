@@ -21,7 +21,7 @@ class GuppyDataExplorer extends React.Component {
       aggsData: {},
       filter: {},
     };
-    this.adminObjectReadOnly = Object.assign({}, this.props.adminAppliedPreFilters)
+    this.adminObjectReadOnly = Object.assign({}, this.props.adminAppliedPreFilters);
     Object.freeze(this.adminObjectReadOnly);
   }
 
@@ -92,6 +92,7 @@ GuppyDataExplorer.defaultProps = {
   heatMapConfig: {},
   nodeCountTitle: undefined,
   getAccessButtonLink: undefined,
+  adminAppliedPreFilters: {},
 };
 
 export default GuppyDataExplorer;
