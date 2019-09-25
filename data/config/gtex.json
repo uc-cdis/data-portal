@@ -288,7 +288,7 @@
     ],
     "arrangerConfig": {
       "projectId": "search",
-      "graphqlField": "case", 
+      "graphqlField": "case",
       "index": "",
       "manifestMapping": {
         "resourceIndexType": "file",
