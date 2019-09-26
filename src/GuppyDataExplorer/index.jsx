@@ -108,7 +108,7 @@ class Explorer extends React.Component {
               </div>
             ) : null
           }
-          <div className={Object.keys(config.explorerConfigs).length === 1 ? 'guppy-explorer__main' : ''}>
+          <div className={Object.keys(config.explorerConfigs).length > 1 ? 'guppy-explorer__main' : ''}>
             <GuppyDataExplorer
               key={this.state.tab}
               chartConfig={guppyExplorerConfigs[this.state.tab].charts}
