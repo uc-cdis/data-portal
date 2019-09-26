@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NavButton from './NavButton';
 import { breakpoints } from '../../localconf';
 import './NavBar.less';
+import { config } from '../../params';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
@@ -68,17 +69,28 @@ class NavBar extends Component {
         <header className='nav-bar__header'>
           <nav className='nav-bar__nav--info'>
             <div className='nav-bar__logo'>
-              <Link
-                to=''
-                onClick={() => this.props.onActiveTab('')}
-                onKeyPress={() => this.props.onActiveTab('')}
-              >
-                <img
-                  className='nav-bar__logo-img'
-                  src='/src/img/logo.png'
-                  alt=''
-                />
-              </Link>
+              {config.homepageHref ? (
+                <a href={config.homepageHref}>
+                  <img
+                    className='nav-bar__logo-img'
+                    src='/src/img/logo.png'
+                    alt=''
+                  />
+                </a>
+              ) : (
+                <Link
+                  to=''
+                  onClick={() => this.props.onActiveTab('')}
+                  onKeyPress={() => this.props.onActiveTab('')}
+                >
+                  <img
+                    className='nav-bar__logo-img'
+                    src='/src/img/logo.png'
+                    alt=''
+                  />
+                </Link>
+              )
+              }
             </div>
             {
               this.props.navTitle && (
