@@ -48,15 +48,24 @@ const defaultFileConfig = {
   dropdowns: {},
 };
 
-const guppyExplorerConfig = [
+let guppyExplorerConfigs = [
   _.merge(defaultConfig, config.dataExplorerConfig),
   _.merge(defaultFileConfig, config.fileExplorerConfig),
 ];
-
-const routes = [
+let routes = [
   '/explorer',
   '/files',
 ];
+
+const converNameToLink = (name) => {
+  const linkName = name.replace(' ', '_').toLowerCase();
+  return `/explorer/${linkName}`;
+};
+if (config.explorerConfigs) { // using new multi-tab configuration
+  guppyExplorerConfigs = Object.keys(config.explorerConfigs)
+    .map(tabName => config.explorerConfigs[tabName]);
+  routes = Object.keys(config.explorerConfigs).map(tabName => converNameToLink(tabName));
+}
 
 class Explorer extends React.Component {
   constructor(props) {
@@ -67,8 +76,61 @@ class Explorer extends React.Component {
     };
   }
 
+  changeTab(tabName, tabIndex) {
+    const link = converNameToLink(tabName);
+    this.props.history.push(link);
+    this.setState({
+      tab: tabIndex,
+    });
+  }
+
+
   render() {
-    return (
+    if (config.explorerConfigs) { // using new multi-tab configuration
+      return (
+        <div className='guppy-explorer'>
+          {
+            Object.keys(config.explorerConfigs).length > 1 ? (
+              <div className='guppy-explorer__tabs'>
+                {
+                  Object.keys(config.explorerConfigs).map((tabName, tabIndex) => (
+                    <div
+                      key={tabIndex}
+                      className={'guppy-explorer__tab'.concat(this.state.tab === tabIndex ? ' guppy-explorer__tab--selected' : '')}
+                      onClick={() => this.changeTab(tabName, tabIndex)}
+                      role='button'
+                      tabIndex={0}
+                    >
+                      <h3>{tabName}</h3>
+                    </div>
+                  ))
+                }
+              </div>
+            ) : null
+          }
+          <div className={Object.keys(config.explorerConfigs).length === 1 ? 'guppy-explorer__main' : ''}>
+            <GuppyDataExplorer
+              key={this.state.tab}
+              chartConfig={guppyExplorerConfigs[this.state.tab].charts}
+              filterConfig={guppyExplorerConfigs[this.state.tab].filters}
+              tableConfig={guppyExplorerConfigs[this.state.tab].table}
+              heatMapConfig={this.state.tab === 0 ? config.dataAvailabilityToolConfig : null}
+              guppyConfig={{ path: guppyUrl, ...guppyExplorerConfigs[this.state.tab].guppyConfig }}
+              buttonConfig={{
+                buttons: guppyExplorerConfigs[this.state.tab].buttons,
+                dropdowns: guppyExplorerConfigs[this.state.tab].dropdowns,
+                terraExportURL: config.dataExplorerConfig.terraExportURL,
+              }}
+              history={this.props.history}
+              tierAccessLevel={tierAccessLevel}
+              tierAccessLimit={tierAccessLimit}
+              getAccessButtonLink={config.dataExplorerConfig.getAccessButtonLink}
+            />
+          </div>
+        </div>
+      );
+    }
+    return ( // for backward compatibable
       <div className='guppy-explorer'>
         {
           config.fileExplorerConfig ? (
@@ -94,14 +156,14 @@ class Explorer extends React.Component {
         }
         <div className={config.fileExplorerConfig ? 'guppy-explorer__main' : ''}>
           <GuppyDataExplorer
-            chartConfig={guppyExplorerConfig[this.state.tab].charts}
-            filterConfig={guppyExplorerConfig[this.state.tab].filters}
-            tableConfig={guppyExplorerConfig[this.state.tab].table}
+            chartConfig={guppyExplorerConfigs[this.state.tab].charts}
+            filterConfig={guppyExplorerConfigs[this.state.tab].filters}
+            tableConfig={guppyExplorerConfigs[this.state.tab].table}
             heatMapConfig={this.state.tab === 0 ? config.dataAvailabilityToolConfig : null}
-            guppyConfig={{ path: guppyUrl, ...guppyExplorerConfig[this.state.tab].guppyConfig }}
+            guppyConfig={{ path: guppyUrl, ...guppyExplorerConfigs[this.state.tab].guppyConfig }}
             buttonConfig={{
-              buttons: guppyExplorerConfig[this.state.tab].buttons,
-              dropdowns: guppyExplorerConfig[this.state.tab].dropdowns,
+              buttons: guppyExplorerConfigs[this.state.tab].buttons,
+              dropdowns: guppyExplorerConfigs[this.state.tab].dropdowns,
               terraExportURL: config.dataExplorerConfig.terraExportURL,
             }}
             history={this.props.history}
