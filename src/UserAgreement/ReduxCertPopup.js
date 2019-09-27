@@ -3,7 +3,7 @@ import CertPopup from './CertPopup';
 import { requiredCerts, userapiPath } from '../configs';
 import { fetchWithCreds, refreshUser } from '../actions';
 import { minus } from '../utils';
-import { certs } from '../localconf';
+import { certs, hostname } from '../localconf';
 
 /**
  * Redux action triggered by quiz submit
@@ -12,7 +12,7 @@ import { certs } from '../localconf';
  * @param {*} quiz
  * @param {*} history
  */
-export const submitForm = (data, questionList, quiz, history) => dispatch => fetchWithCreds({
+export const submitForm = (data, questionList, quiz) => dispatch => fetchWithCreds({
   path: `${userapiPath}/user/cert/${quiz}?extension=txt`,
   method: 'PUT',
   body: JSON.stringify({
@@ -25,7 +25,7 @@ export const submitForm = (data, questionList, quiz, history) => dispatch => fet
     ({ status }) => {
       switch (status) {
       case 201:
-        history.push('/');
+        window.location = `${hostname}`;
         return dispatch(refreshUser());
       default:
         return dispatch({
@@ -40,9 +40,9 @@ const mapStateToProps = state => ({
   pendingCerts: minus(requiredCerts, state.user.certificates_uploaded),
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   onSubmit: (data, questionList, quiz) => dispatch(
-    submitForm(data, questionList, quiz, ownProps.history),
+    submitForm(data, questionList, quiz),
   ),
 });
 
