@@ -89,15 +89,18 @@ class Login extends React.Component {
           {
             this.props.providers.map(
               (p, i) => (
-                <Button
-                  key={i}
-                  className='login-page__entries'
-                  onClick={() => {
-                    window.location.href = `${p.url}?redirect=${window.location.origin}${next}`;
-                  }}
-                  label={p.name}
-                  buttonType='primary'
-                />
+                <div>
+                  {p.desc}
+                  <Button
+                    key={i}
+                    className='login-page__entries'
+                    onClick={() => {
+                      window.location.href = `${p.url}?redirect=${window.location.origin}${next}`;
+                    }}
+                    label={p.name}
+                    buttonType={p.secondary ? '' : 'primary'}
+                  />
+                </div>
               ),
             )
           }
