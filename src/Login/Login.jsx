@@ -87,12 +87,11 @@ class Login extends React.Component {
           <hr className='login-page__separator' />
           <div className='body-typo'>{this.props.data.text}</div>
           {
-            this.props.providers.map(
+            this.props.providers.filter(p => !p.hidden).map(
               (p, i) => (
-                <div key={i}>
-                  {p.desc}
+                <div key={i} className='login-page__entries'>
+                  <p style={{fontWeight: p.secondary ? 'normal' : 'bold'}}>{p.desc}</p>
                   <Button
-                    className='login-page__entries'
                     onClick={() => {
                       window.location.href = `${p.url}?redirect=${window.location.origin}${next}`;
                     }}
