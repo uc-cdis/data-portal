@@ -31,6 +31,7 @@ class GuppyDataExplorer extends React.Component {
     return (
       <div className='guppy-data-explorer'>
         <GuppyWrapper
+          adminAppliedPreFilters={this.props.adminAppliedPreFilters}
           filterConfig={this.props.filterConfig}
           guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
@@ -82,12 +83,14 @@ GuppyDataExplorer.propTypes = {
   tierAccessLevel: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number.isRequired,
   getAccessButtonLink: PropTypes.string,
+  adminAppliedPreFilters: PropTypes.object,
 };
 
 GuppyDataExplorer.defaultProps = {
   heatMapConfig: {},
   nodeCountTitle: undefined,
   getAccessButtonLink: undefined,
+  adminAppliedPreFilters: {},
 };
 
 export default GuppyDataExplorer;

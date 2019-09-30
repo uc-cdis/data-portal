@@ -108,6 +108,7 @@ class ExplorerFilter extends React.Component {
       tierAccessLimit: this.props.tierAccessLevel === 'regular' ? this.props.tierAccessLimit : undefined,
       onProcessFilterAggsData: this.onProcessFilterAggsData,
       onUpdateAccessLevel: this.props.onUpdateAccessLevel,
+      adminAppliedPreFilters: this.props.adminAppliedPreFilters,
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
@@ -167,6 +168,7 @@ ExplorerFilter.propTypes = {
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
   unaccessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
+  adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
   getAccessButtonLink: PropTypes.string,
 };
 
@@ -181,6 +183,7 @@ ExplorerFilter.defaultProps = {
   tierAccessLimit: undefined,
   accessibleFieldObject: {},
   unaccessibleFieldObject: {},
+  adminAppliedPreFilters: {},
   getAccessButtonLink: undefined,
 };
 

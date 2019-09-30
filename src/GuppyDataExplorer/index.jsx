@@ -94,6 +94,7 @@ class Explorer extends React.Component {
         }
         <div className={config.fileExplorerConfig ? 'guppy-explorer__main' : ''}>
           <GuppyDataExplorer
+            adminAppliedPreFilters={guppyExplorerConfig[this.state.tab].adminAppliedPreFilters}
             chartConfig={guppyExplorerConfig[this.state.tab].charts}
             filterConfig={guppyExplorerConfig[this.state.tab].filters}
             tableConfig={guppyExplorerConfig[this.state.tab].table}
