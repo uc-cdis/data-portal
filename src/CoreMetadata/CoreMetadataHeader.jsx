@@ -64,7 +64,7 @@ class CoreMetadataHeader extends Component {
           </a>);
       }
 
-      const properties = `${this.props.metadata.data_format ? this.props.metadata.data_format : 'Unknown File Type'} | ${fileSizeTransform(this.props.metadata.file_size)} | ${this.props.metadata.object_id} | ${this.dateTransform(this.props.metadata.updated_datetime)}`;
+      const properties = `${this.props.metadata.data_format} | ${fileSizeTransform(this.props.metadata.file_size)} | ${this.props.metadata.object_id} | ${this.dateTransform(this.props.metadata.updated_datetime)}`;
 
       return (
         <div className='body-typo'>
