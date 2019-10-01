@@ -9,35 +9,42 @@ import './IndexButtonBar.css';
  * @param {dictIcons, buttons} params
  */
 class IndexButtonBar extends Component {
+  canUserSeeComponent = (componentName) => {
+    const authResult = this.props.userAccess[componentName];
+    return typeof authResult !== 'undefined' ? authResult : true;
+  }
+
   render() {
+    const indexButtonItems = this.props.buttons.map(
+      item => {
+	const indexButton = (
+          <div className='index-button-bar__thumbnail-button' key={item.name}>
+            <div className='h3-typo index-button-bar__thumbnail-title'>{item.name}</div>
+            <div className='index-button-bar__icon'>
+              <IconComponent
+                dictIcons={this.props.dictIcons}
+                iconName={item.icon}
+                height='90px'
+              />
+            </div>
+            <div className='body-typo index-button-bar__thumbnail-text'>{item.body}</div>
+            <Button
+              className='index-button-bar__item'
+              onClick={() => {
+                this.props.onActiveTab(item.link);
+                this.props.history.push(`${item.link}`);
+              }}
+              label={item.label}
+              buttonType='primary'
+            />
+          </div>
+	);
+	return this.canUserSeeComponent(item.name) ? indexButton : null;
+      }
+    );
     return (
       <div className='index-button-bar'>
-        {
-          this.props.buttons.map(
-            item => (
-              <div className='index-button-bar__thumbnail-button' key={item.name}>
-                <div className='h3-typo index-button-bar__thumbnail-title'>{item.name}</div>
-                <div className='index-button-bar__icon'>
-                  <IconComponent
-                    dictIcons={this.props.dictIcons}
-                    iconName={item.icon}
-                    height='90px'
-                  />
-                </div>
-                <div className='body-typo index-button-bar__thumbnail-text'>{item.body}</div>
-                <Button
-                  className='index-button-bar__item'
-                  onClick={() => {
-                    this.props.onActiveTab(item.link);
-                    this.props.history.push(`${item.link}`);
-                  }}
-                  label={item.label}
-                  buttonType='primary'
-                />
-              </div>
-            ),
-          )
-        }
+        { indexButtonItems }
       </div>
     );
   }
@@ -48,6 +55,7 @@ IndexButtonBar.propTypes = {
   buttons: PropTypes.array.isRequired,
   onActiveTab: PropTypes.func,
   history: PropTypes.object.isRequired,
+  userAccess: PropTypes.object.isRequired,
 };
 
 IndexButtonBar.defaultProps = {
