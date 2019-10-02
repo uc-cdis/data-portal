@@ -6,6 +6,9 @@ import CohortLTNPSvg from '../img/cohort-LTNP.svg';
 import Spinner from '../components/Spinner';
 import HIVCohortFilterCase from './HIVCohortFilterCase';
 import { useGuppyForExplorer } from '../configs';
+import { config } from '../params';
+
+const hivAppProjects = config.hivAppProjects || ['HIV-CHARLIE'];
 
 class LTNPCase extends HIVCohortFilterCase {
   /*
@@ -72,8 +75,8 @@ class LTNPCase extends HIVCohortFilterCase {
               hiv_status: 'positive',
             },
             },
-            { '=': {
-              project_id: 'ndh-CHARLIE',
+            { in: {
+              project_id: hivAppProjects,
             },
             }] },
       };
@@ -136,8 +139,8 @@ class LTNPCase extends HIVCohortFilterCase {
               hiv_status: 'positive',
             },
             },
-            { '=': {
-              project_id: 'ndh-CHARLIE',
+            { in: {
+              project_id: hivAppProjects,
             },
             }] },
       };
