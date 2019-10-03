@@ -2,8 +2,37 @@ import { connect } from 'react-redux';
 import CoreMetadataHeader from './CoreMetadataHeader';
 import FileTypePicture from '../components/FileTypePicture';
 import CoreMetadataTable from './CoreMetadataTable';
-import { coreMetadataPath } from '../localconf';
-import { fetchWithCreds } from '../actions';
+import { coreMetadataPath, userapiPath } from '../localconf';
+import { fetchWithCreds, updatePopup } from '../actions';
+
+export const generateSignedURL = objectId =>
+  dispatch =>
+    fetchWithCreds({
+      path: `${userapiPath}/data/download/${objectId}?expires_in=3600`,
+      dispatch,
+    })
+      .then(
+        ({ status, data }) => {
+          switch (status) {
+          case 200:
+            dispatch({
+              type: 'RECEIVE_SIGNED_URL',
+              url: data.url,
+            });
+            return dispatch(updatePopup({ signedURLPopup: true }));
+          default:
+            dispatch({
+              type: 'SIGNED_URL_ERROR',
+              error: data,
+            });
+            return dispatch(updatePopup({ signedURLPopup: true }));
+          }
+        },
+      );
+
+const clearSignedURL = () => ({
+  type: 'CLEAR_SIGNED_URL',
+});
 
 export const fetchCoreMetadata = objectId =>
   dispatch =>
@@ -31,12 +60,17 @@ export const fetchCoreMetadata = objectId =>
 export const ReduxCoreMetadataHeader = (() => {
   const mapStateToProps = state => ({
     metadata: state.coreMetadata.metadata,
+    signedURL: state.coreMetadata.url,
+    signedURLPopup: state.popups.signedURLPopup,
     error: state.coreMetadata.error,
     user: state.user,
     projectAvail: state.submission.projectAvail,
   });
 
   const mapDispatchToProps = dispatch => ({
+    onGenerateSignedURL: objectId => dispatch(generateSignedURL(objectId)),
+    onUpdatePopup: state => dispatch(updatePopup(state)),
+    onClearSignedURL: () => dispatch(clearSignedURL()),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(CoreMetadataHeader);
