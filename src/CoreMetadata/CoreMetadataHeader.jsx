@@ -83,6 +83,10 @@ class CoreMetadataHeader extends Component {
         />);
       }
 
+      if (!this.props.metadata.data_format) {
+        /* eslint no-console: ["error", { allow: ["error"] }] */
+        console.error('WARNING: null value found for mandatory field \'data_format\', please verify the correctness of metadata');
+      }
       const properties = `${this.props.metadata.data_format} | ${fileSizeTransform(this.props.metadata.file_size)} | ${this.props.metadata.object_id} | ${this.dateTransform(this.props.metadata.updated_datetime)}`;
 
       return (
