@@ -6,7 +6,7 @@ const coreMetadata = (state = {}, action) => {
     return { ...state, error: action.error };
   case 'RECEIVE_SIGNED_URL':
     return { ...state, url: action.url };
-  case 'signed_URL_ERROR':
+  case 'SIGNED_URL_ERROR':
     return { ...state, error: action.error };
   case 'CLEAR_SIGNED_URL':
     return { ...state, url: null, error: null };

@@ -23,7 +23,7 @@ export const generateSignedURL = objectId =>
           default:
             dispatch({
               type: 'SIGNED_URL_ERROR',
-              error: data,
+              error: `Error occurred during generating signed URL. Error code: ${status}`,
             });
             return dispatch(updatePopup({ signedURLPopup: true }));
           }

@@ -8,6 +8,7 @@ import { userapiPath } from '../configs';
 const DOWNLOAD_BTN_CAPTION = 'Download';
 const SIGNED_URL_BTN_CAPTION = 'Generate Signed URL';
 const SIGNED_URL_MSG = 'Please copy your signed URL below (this generated signed URL will expires after 3600 seconds):';
+const SIGNED_URL_ERROR_MSG = 'A error has occurred when generating signed URL:';
 
 function fileTypeTransform(type) {
   let t = type.replace(/_/g, ' '); // '-' to ' '
@@ -102,11 +103,11 @@ class CoreMetadataHeader extends Component {
           {
             this.props.signedURLPopup === true &&
             <Popup
-              message={SIGNED_URL_MSG}
+              message={(!this.props.error) ? SIGNED_URL_MSG : SIGNED_URL_ERROR_MSG}
               error={this.props.error}
-              lines={[
+              lines={(!this.props.error) ? [
                 { code: this.props.signedURL },
-              ]}
+              ] : []}
               title='Generated Signed URL'
               leftButtons={[
                 {
@@ -119,6 +120,7 @@ class CoreMetadataHeader extends Component {
                   caption: 'Copy',
                   fn: () => copy(this.props.signedURL),
                   icon: 'copy',
+                  enabled: (!this.props.error),
                 },
               ]}
               onClose={() => this.onSignedURLPopupClose()}
