@@ -51,6 +51,7 @@ export const ReduxIndexButtonBar = (() => {
     buttons: components.index.buttons,
     dictIcons,
     activeTab: state.bar.active,
+    userAccess: state.userAccess.access,
   });
 
   // Bar chart does not dispatch anything
