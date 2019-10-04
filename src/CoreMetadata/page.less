@@ -1,16 +1,29 @@
 .core-metadata-page {
   padding: 20px 20px;
+  box-sizing: content-box;
+  overflow: auto;
+  height: auto;
+}
+
+.core-metadata-page__box {
+  height: auto;
+  box-sizing: border-box;
 }
 
 .core-metadata-page__column {
   float: left;
   width: 50%;
+  height: auto;
 }
 
 .core-metadata-page__column--left {
   padding: 20px 25px 20px 0;
 }
 
-.core-metadata-page__column--right {
-  padding: 20px 0 20px 25px;
+.core-metadata-page__column--upper_right {
+  padding: 20px 0 10px 25px;
+}
+
+.core-metadata-page__column--lower_right {
+  padding: 10px 0 20px 25px;
 }
