@@ -7,7 +7,7 @@ import { userapiPath } from '../configs';
 
 const DOWNLOAD_BTN_CAPTION = 'Download';
 const SIGNED_URL_BTN_CAPTION = 'Generate Signed URL';
-const SIGNED_URL_MSG = 'Please copy your signed URL below (this generated signed URL will expires after 3600 seconds):';
+const SIGNED_URL_MSG = 'Please copy your signed URL below (this generated signed URL will expire in an hour):';
 const SIGNED_URL_ERROR_MSG = 'An error has occurred when generating signed URL:';
 
 function fileTypeTransform(type) {
