@@ -190,7 +190,7 @@ class Workspace extends React.Component {
       <Button
         className='workspace__button'
         onClick={this.handleFullpageButtonClick}
-        label={this.state.notebookIsfullpage ? 'Exit fullscreen' : 'Make fullscreen'}
+        label={this.state.notebookIsfullpage ? 'Exit Fullscreen' : 'Make Fullscreen'}
         buttonType='secondary'
         rightIcon={this.state.notebookIsfullpage ? 'back' : 'external-link'}
       />
