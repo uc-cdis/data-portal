@@ -199,14 +199,14 @@ class Workspace extends React.Component {
     if (this.state.connectedStatus && this.state.notebookStatus && !this.state.defaultNotebook) {
       return (
         <div
-          className={`workspace ${this.state.notebookIsfullpage ? 'workspace--fullpage' : ''}`}
+          className={`workspace__container ${this.state.notebookIsfullpage ? 'workspace__container--fullpage' : ''}`}
         >
           {
             this.state.notebookStatus === 'Running' ||
               this.state.notebookStatus === 'Stopped' ?
               <React.Fragment>
                 <iframe
-                  className='workspace__iframe'
+                  className='workspace'
                   title='Workspace'
                   frameBorder='0'
                   src={`${workspaceUrl}proxy/`}
@@ -221,7 +221,7 @@ class Workspace extends React.Component {
           {
             this.state.notebookStatus === 'Launching' ?
               <React.Fragment>
-                <div className='workspace__iframe'>
+                <div className='workspace'>
                   <Spinner text='Launching workspace...' />
                 </div>
                 <div className='workspace__buttongroup'>
