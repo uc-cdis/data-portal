@@ -1,21 +1,53 @@
-.workspace {
+.workspace__container {
   width: 100%;
   min-height: inherit;
-  padding: 40px 20px;
-}
-
-.workspace__iframe {
   display: flex;
   flex-flow: column;
+  background: inherit;
 }
 
-.workspace__terminate-button {
+// Add a left/right margin to workspace on large screens,
+// unless the workspace is full-paged.
+@media screen and (min-width: 1291px) {
+  .workspace__container:not(.workspace__container--fullpage) {
+    padding: 0 20px;
+  }
+}
+
+.workspace__container--fullpage {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.workspace {
+  flex: 1 0 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.workspace__button {
   width: max-content;
-  margin: 20px 20px;
+  margin: 20px auto;
+}
+
+.workspace__buttongroup {
+  height: 60px;
+  flex: 0 0 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .workspace__iframe iframe {
-  height: 100vh;
+  height: 100%;
   width: 100%;
 }
 

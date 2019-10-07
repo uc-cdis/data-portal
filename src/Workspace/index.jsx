@@ -24,6 +24,7 @@ class Workspace extends React.Component {
       interval: null,
       notebookType: null,
       defaultNotebook: false,
+      notebookIsfullpage: false,
     };
     this.notebookStates = [
       'Not Found',
@@ -151,39 +152,81 @@ class Workspace extends React.Component {
     }
   }
 
+  handleTerminateButtonClick = () => {
+    // exit full page
+    this.setState({ notebookIsfullpage: false });
+    // terminate workspace
+    this.terminateWorkspace();
+  }
+
+  handleFullpageButtonClick = () => {
+    this.setState({
+      notebookIsfullpage: !this.state.notebookIsfullpage,
+    });
+  }
+
   render() {
     const terminateButton = (
       <Button
-        className='workspace__terminate-button'
-        onClick={() => this.terminateWorkspace()}
+        className='workspace__button'
+        onClick={this.handleTerminateButtonClick}
         label='Terminate Workspace'
         buttonType='primary'
         isPending={this.state.notebookStatus === 'Terminating'}
       />
     );
 
+    const cancelButton = (
+      <Button
+        className='workspace__button'
+        onClick={() => this.terminateWorkspace()}
+        label='Cancel'
+        buttonType='primary'
+        isPending={this.state.notebookStatus === 'Terminating'}
+      />
+    );
+
+    const fullpageButton = (
+      <Button
+        className='workspace__button'
+        onClick={this.handleFullpageButtonClick}
+        label={this.state.notebookIsfullpage ? 'Exit Fullscreen' : 'Make Fullscreen'}
+        buttonType='secondary'
+        rightIcon={this.state.notebookIsfullpage ? 'back' : 'external-link'}
+      />
+    );
+
     if (this.state.connectedStatus && this.state.notebookStatus && !this.state.defaultNotebook) {
       return (
-        <div className='workspace'>
+        <div
+          className={`workspace__container ${this.state.notebookIsfullpage ? 'workspace__container--fullpage' : ''}`}
+        >
           {
             this.state.notebookStatus === 'Running' ||
               this.state.notebookStatus === 'Stopped' ?
-              <div className='workspace__iframe'>
-                { terminateButton }
+              <React.Fragment>
                 <iframe
+                  className='workspace'
                   title='Workspace'
                   frameBorder='0'
-                  className='workspace'
                   src={`${workspaceUrl}proxy/`}
                 />
-              </div>
+                <div className='workspace__buttongroup'>
+                  { terminateButton }
+                  { fullpageButton }
+                </div>
+              </React.Fragment>
               : null
           }
           {
             this.state.notebookStatus === 'Launching' ?
               <React.Fragment>
-                { terminateButton }
-                <Spinner text='Launching workspace...' />
+                <div className='workspace'>
+                  <Spinner text='Launching workspace...' />
+                </div>
+                <div className='workspace__buttongroup'>
+                  { cancelButton }
+                </div>
               </React.Fragment>
               : null
           }
