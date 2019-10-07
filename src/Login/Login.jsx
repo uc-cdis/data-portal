@@ -3,6 +3,7 @@ import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import MediaQuery from 'react-responsive';
 import Button from '@gen3/ui-component/dist/components/Button';
+import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { basename, loginPath, breakpoints } from '../localconf';
 import { components } from '../params';
 
@@ -10,6 +11,11 @@ import SlidingWindow from '../components/SlidingWindow';
 import './Login.less';
 
 const getInitialState = height => ({ height });
+
+const getLoginUrl = (providerLoginUrl, next) => {
+  const queryChar = providerLoginUrl.includes('?') ? '&' : '?';
+  return `${providerLoginUrl}${queryChar}redirect=${window.location.origin}${next}`;
+};
 
 class Login extends React.Component {
   static propTypes = {
@@ -65,6 +71,17 @@ class Login extends React.Component {
       components.login.image
       : 'gene';
 
+    this.props.providers.forEach((provider) => {
+      // for backwards compatibility, if "urls" does not exist,
+      // generate it from the deprecated "url" field
+      if (typeof provider.urls === 'undefined') {
+        provider.urls = [{ // eslint-disable-line no-param-reassign
+          name: provider.name,
+          url: provider.url,
+        }];
+      }
+    });
+
     return (
       <div className='login-page'>
         <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
@@ -89,17 +106,39 @@ class Login extends React.Component {
           {
             this.props.providers.map(
               (p, i) => (
-                <div key={i}>
+                <React.Fragment key={i}>
                   {p.desc}
-                  <Button
-                    className='login-page__entries'
-                    onClick={() => {
-                      window.location.href = `${p.url}?redirect=${window.location.origin}${next}`;
-                    }}
-                    label={p.name}
-                    buttonType={p.secondary ? 'default' : 'primary'}
-                  />
-                </div>
+                  {
+                    p.urls.length > 1 ? (
+                      <Dropdown>
+                        <Dropdown.Button>{p.name}</Dropdown.Button>
+                        <Dropdown.Menu>
+                          {
+                            p.urls.map((urlConfig, j) => (
+                              <Dropdown.Item
+                                key={j}
+                                onClick={() => {
+                                  window.location.href = getLoginUrl(urlConfig.url, next);
+                                }}
+                              >
+                                {urlConfig.name}
+                              </Dropdown.Item>
+                            ))
+                          }
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    ) : (
+                      <Button
+                        className='login-page__entries'
+                        onClick={() => {
+                          window.location.href = getLoginUrl(p.urls[0].url, next);
+                        }}
+                        label={p.name}
+                        buttonType={p.secondary ? 'default' : 'primary'}
+                      />
+                    )
+                  }
+                </React.Fragment>
               ),
             )
           }
