@@ -4,6 +4,7 @@ import copy from 'clipboard-plus';
 import React, { Component } from 'react';
 import Popup from '../components/Popup';
 import { userapiPath } from '../configs';
+import isEnabled from '../helpers/featureFlags';
 
 const DOWNLOAD_BTN_CAPTION = 'Download';
 const SIGNED_URL_BTN_CAPTION = 'Generate Signed URL';
@@ -76,12 +77,15 @@ class CoreMetadataHeader extends Component {
               {DOWNLOAD_BTN_CAPTION}
             </button>
           </a>);
-        signedURLButton = (<Button
-          onClick={() => this.onGenerateSignedURL()}
-          label={SIGNED_URL_BTN_CAPTION}
-          className='core-metadata-page__column--right--signed-url-button'
-          buttonType='primary'
-        />);
+
+        if (isEnabled('signedURLButton')) {
+          signedURLButton = (<Button
+            onClick={() => this.onGenerateSignedURL()}
+            label={SIGNED_URL_BTN_CAPTION}
+            className='core-metadata-page__column--right--signed-url-button'
+            buttonType='primary'
+          />);
+        }
       }
 
       if (!this.props.metadata.data_format) {
