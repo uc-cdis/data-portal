@@ -456,13 +456,14 @@ export const fetchUserAccess = async (dispatch) => {
 };
 
 // asks arborist for the user's auth mapping if Arborist UI enabled
-export const fetchUserAuthMapping = async (dispatch, getState) => {
+export const fetchUserAuthMapping = async (dispatch) => {
   if (!config.useArboristUI) {
     return;
   }
 
+  // Arborist will get the username from the jwt
   const authMapping = await fetch(
-    `${authzMappingPath}?username=${getState().user.username}`,
+    `${authzMappingPath}`,
   ).then((fetchRes) => {
     switch (fetchRes.status) {
     case 200:
