@@ -284,5 +284,6 @@
       ]
     }
   },
+  "useArboristUI": false,
   "componentToResourceMapping": {}
 }

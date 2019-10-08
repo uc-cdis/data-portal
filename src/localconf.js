@@ -73,7 +73,8 @@ function buildConfig(opts) {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',
   };
-  const authzPath = typeof arboristURL === 'undefined' ? `${hostname}authz` : arboristURL;
+  const authzPath = typeof arboristURL === 'undefined' ? `${hostname}authz` : `${arboristURL}authz`;
+  const authzMappingPath = typeof arboristURL === 'undefined' ? `${hostname}authz/mapping` : `${arboristURL}authz/mapping`;
   const loginPath = `${userapiPath}login/`;
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
@@ -266,6 +267,7 @@ function buildConfig(opts) {
     useIndexdAuthz,
     explorerPublic,
     authzPath,
+    authzMappingPath,
   };
 }
 

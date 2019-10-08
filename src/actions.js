@@ -12,6 +12,7 @@ import {
   graphqlSchemaUrl,
   useGuppyForExplorer,
   authzPath,
+  authzMappingPath,
 } from './configs';
 import { config } from './params';
 import sessionMonitor from './SessionMonitor';
@@ -451,5 +452,32 @@ export const fetchUserAccess = async (dispatch) => {
   dispatch({
     type: 'RECEIVE_USER_ACCESS',
     data: userAccess,
+  });
+};
+
+// asks arborist for the user's auth mapping if Arborist UI enabled
+export const fetchUserAuthMapping = async (dispatch, getState) => {
+  if (!config.useArboristUI) {
+    return;
+  }
+
+  const authMapping = await fetch(
+    `${authzMappingPath}?username=${getState().user.username}`,
+  ).then((fetchRes) => {
+    switch (fetchRes.status) {
+    case 200:
+      return fetchRes.json();
+    default:
+      // This is dispatched on app init and on user login.
+      // Could be not logged in -> no username -> 404; this is ok
+      // There may be plans to update Arborist to return anonymous access when username not found
+      console.log(`Arborist returned "${fetchRes.status}" in mapping call`);
+      return {};
+    }
+  });
+
+  dispatch({
+    type: 'RECEIVE_USER_AUTH_MAPPING',
+    data: authMapping,
   });
 };
