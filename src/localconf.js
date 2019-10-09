@@ -103,6 +103,11 @@ function buildConfig(opts) {
     useGuppyForExplorer = true;
   }
 
+  let useArboristUI = false;
+  if (config.useArboristUI) {
+    useArboristUI = config.useArboristUI;
+  }
+
   // for "libre" data commons, explorer page is public
   let explorerPublic = false;
   if (tierAccessLevel === 'libre') {
@@ -261,6 +266,7 @@ function buildConfig(opts) {
     manifestServiceApiPath,
     wtsPath,
     useGuppyForExplorer,
+    useArboristUI,
     analysisApps,
     tierAccessLevel,
     tierAccessLimit,
