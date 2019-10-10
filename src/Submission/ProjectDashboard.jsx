@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ProjectTable from '../components/tables/ProjectTable';
+import ReduxProjectTable from '../components/tables/reduxer';
 import ReduxSubmissionHeader from './ReduxSubmissionHeader';
 import './ProjectDashboard.less';
 
@@ -13,7 +13,11 @@ class ProjectDashboard extends Component {
           Data Submission
         </div>
         <ReduxSubmissionHeader />
-        <ProjectTable projectList={projectList} summaries={this.props.details} {...this.props} />
+        <ReduxProjectTable
+          projectList={projectList}
+          summaries={this.props.details}
+          {...this.props}
+        />
       </div>
     );
   }
