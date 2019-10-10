@@ -34,10 +34,10 @@ export const ReduxProjectDashboard = (() => {
 export const ReduxTransaction = (() => {
   const mapStateToProps = (state) => {
     if (state.homepage && state.homepage.transactions) {
-      return { log: state.homepage.transactions };
+      return { log: state.homepage.transactions, userAuthMapping: state.userAuthMapping };
     }
 
-    return { log: [] };
+    return { log: [], userAuthMapping: state.userAuthMapping };
   };
 
   // Table does not dispatch anything

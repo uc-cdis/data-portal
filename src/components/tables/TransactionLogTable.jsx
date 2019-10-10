@@ -4,10 +4,12 @@ import Table from './base/Table';
 import Spinner from '../Spinner';
 import { humanFileSize } from '../../utils.js';
 import './TransactionLogTable.less';
+import { useArboristUI } from '../../configs';
 
 const formatText = text => text[0] + text.slice(1).toLowerCase();
 
 class TransactionLogTable extends Component {
+
   getLocalTime = (gmtTimeString) => {
     const date = new Date(gmtTimeString);
     const offsetMins = date.getTimezoneOffset();
@@ -25,6 +27,16 @@ class TransactionLogTable extends Component {
     return totalSize;
   };
 
+  userHasCreateOrUpdateForAnyProject = () => {
+    const actionHasCreateOrUpdate = x => {
+      return (x["method"] === "create" || x["method"] === "update")
+    }
+    //array of arrays of { service: x, method: y }
+    var actionArrays = Object.values(this.props.userAuthMapping)
+    var hasCreateOrUpdate = actionArrays.some(x => { return x.some(actionHasCreateOrUpdate) })
+    return hasCreateOrUpdate
+  }
+
   stateToColor = state => (state === 'SUCCEEDED' &&
       <div className='form-special-number transaction-log-table__status-bar'>{formatText(state)}</div>)
     || ((state === 'FAILED' || state === 'ERRORED') &&
@@ -40,6 +52,7 @@ class TransactionLogTable extends Component {
   ]);
 
   render() {
+    if (useArboristUI && !this.userHasCreateOrUpdateForAnyProject()) { return null; }
     if (!this.props.log || this.props.log === []) { return <Spinner />; }
     return (<Table
       title='Recent Submissions'
@@ -51,6 +64,7 @@ class TransactionLogTable extends Component {
 
 TransactionLogTable.propTypes = {
   log: PropTypes.array.isRequired,
+  userAuthMapping: PropTypes.object.isRequired,
 };
 
 export default TransactionLogTable;
