@@ -47,6 +47,7 @@ const ReduxSubmissionHeader = (() => {
     unmappedFileCount: state.submission.unmappedFileCount,
     unmappedFileSize: state.submission.unmappedFileSize,
     user: state.user,
+    userAuthMapping: state.userAuthMapping,
   });
 
   const mapDispatchToProps = dispatch => ({
