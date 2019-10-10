@@ -145,6 +145,7 @@ const ReduxProjectSubmission = (() => {
     submitTSV: ReduxSubmitTSV,
     dataModelGraph: ReduxDataModelGraph,
     project: ownProps.params.project,
+    userAuthMapping: state.userAuthMapping,
   });
 
   const mapDispatchToProps = dispatch => ({
