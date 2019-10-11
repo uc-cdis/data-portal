@@ -10,11 +10,11 @@ class CoreMetadataPage extends Component {
       <div className='core-metadata-page'>
         <BackLink url='/files' label='Back to File Explorer' />
         <div className='core-metadata-page__grid'>
-          <div className='core-metadata-page__box1'>
+          <div className='core-metadata-page__picture'>
             <ReduxFileTypePicture dictIcons={dictIcons} />
           </div>
-          <div className='core-metadata-page__box2'><ReduxCoreMetadataHeader /></div>
-          <div className='core-metadata-page__box3'><ReduxCoreMetadataTable /></div>
+          <div className='core-metadata-page__header'><ReduxCoreMetadataHeader /></div>
+          <div className='core-metadata-page__table'><ReduxCoreMetadataTable /></div>
         </div>
       </div>
     );
