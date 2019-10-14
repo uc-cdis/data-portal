@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Table from './base/Table';
 import { useArboristUI } from '../../configs';
+import './ProjectTable.less';
 
 function compare(a, b) {
   if (a.name < b.name) { return -1; }
@@ -30,6 +31,7 @@ class ProjectTable extends React.Component {
     proj.name,
     ...proj.counts,
     <Button
+      className='project-table__submit-button'
       key={i}
       onClick={() => this.props.history.push(`/${proj.name}`)}
       label={buttonText}
