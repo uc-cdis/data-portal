@@ -11,6 +11,7 @@ const resourcePathFromProjectID = (projectID) => {
     return resourcePath
 }
 
+
 export const userHasDataUpload = (userAuthMapping) => {
     //data_upload policy is resource data_file, method file_upload, service fence
     const actionIsFileUpload = x => { return x['method'] === 'file_upload' && x['service'] === 'fence' }
@@ -19,47 +20,20 @@ export const userHasDataUpload = (userAuthMapping) => {
 }
 
 
-export const userHasDeleteOnProject = (projectID, userAuthMapping) => {
+export const userHasMethodOnProject = (method, projectID, userAuthMapping) => {
+    // method should be a string e.g. 'create'
     var resourcePath = resourcePathFromProjectID(projectID)
     var actions = userAuthMapping[resourcePath]
 
-    return actions !== undefined && actions.some(x => x["method"] === "delete")
+    return actions !== undefined && actions.some(x => x['method'] === method)
 }
 
 
-export const userHasCreateOnProject = (projectID, userAuthMapping) => {
-    var resourcePath = resourcePathFromProjectID(projectID)
-    var actions = userAuthMapping[resourcePath]
-
-    return actions !== undefined && actions.some(x => x["method"] === "create")
-}
-
-
-export const userHasCreateOrUpdateOnProject = (projectID, userAuthMapping) => {
-    const actionHasCreateOrUpdate = x => { return x['method'] === 'create' || x['method'] === 'update' }
-
-    var resourcePath = resourcePathFromProjectID(projectID)
-    var resource = userAuthMapping[resourcePath]
-
-    return resource !== undefined && resource.some(actionHasCreateOrUpdate)
-}
-
-
-export const userHasCreateOnAnyProject = (userAuthMapping) => {
-    const actionHasCreate = x => { return (x["method"] === "create") }
-    //array of arrays of { service: x, method: y }
+export const userHasMethodOnAnyProject = (method, userAuthMapping) => {
+    // method should be a string e.g. 'create'
+    const actionHasMethod = x => { return (x['method'] === method) }
+    //actionArrays is array of arrays of { service: x, method: y }
     var actionArrays = Object.values(userAuthMapping)
-    var hasCreate = actionArrays.some(x => { return x.some(actionHasCreate) })
-    return hasCreate
-}
-
-
-export const userHasCreateOrUpdateOnAnyProject = (userAuthMapping) => {
-    const actionHasCreateOrUpdate = x => {
-      return (x["method"] === "create" || x["method"] === "update")
-    }
-    //array of arrays of { service: x, method: y }
-    var actionArrays = Object.values(userAuthMapping)
-    var hasCreateOrUpdate = actionArrays.some(x => { return x.some(actionHasCreateOrUpdate) })
-    return hasCreateOrUpdate
+    var hasMethod = actionArrays.some(x => { return x.some(actionHasMethod) })
+    return hasMethod
 }

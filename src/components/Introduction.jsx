@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import IconicLink from './buttons/IconicLink';
 import './Introduction.less';
 import { useArboristUI } from '../configs';
-import { userHasCreateOnAnyProject } from '../utilsAuth';
+import { userHasMethodOnAnyProject } from '../utilsAuth';
 
 class Introduction extends Component {
   static propTypes = {
@@ -14,7 +14,7 @@ class Introduction extends Component {
   render() {
     var buttonText = 'Submit Data'
     if (useArboristUI) {
-      if (userHasCreateOnAnyProject(this.props.userAuthMapping)) {
+      if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
         buttonText = 'Submit/Browse Data'
       } else {
         buttonText = 'Browse Data'

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
 import { useArboristUI } from '../../configs';
-import { userHasCreateOnAnyProject } from '../../utilsAuth';
+import { userHasMethodOnAnyProject } from '../../utilsAuth';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
@@ -22,7 +22,7 @@ class TopBar extends Component {
                 item => {
                   var buttonText = item.name
                   if (item.name === 'Submit Data' && useArboristUI) {
-                    if (userHasCreateOnAnyProject(this.props.userAuthMapping)) {
+                    if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
                       buttonText = 'Submit/Browse Data'
                     } else {
                       buttonText = 'Browse Data'
