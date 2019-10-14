@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
-import Introduction from '../components/Introduction';
-import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts } from './reduxer';
+import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntroduction } from './reduxer';
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import getProjectNodeCounts from './utils';
@@ -24,7 +23,7 @@ class IndexPageComponent extends React.Component {
       <div className='index-page'>
         <div className='index-page__top'>
           <div className='index-page__introduction'>
-            <Introduction data={components.index.introduction} dictIcons={dictIcons} />
+            <ReduxIntroduction data={components.index.introduction} dictIcons={dictIcons} />
             <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
               <ReduxIndexCounts />
             </MediaQuery>

@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Table from './base/Table';
+import { useArboristUI } from '../../configs';
+import './ProjectTable.less';
 
 function compare(a, b) {
   if (a.name < b.name) { return -1; }
@@ -20,22 +22,38 @@ class ProjectTable extends React.Component {
     return ['Project', ...summaryFields, ''];
   };
 
-  getData = projectList => projectList.map((proj, i) => [
+  getData = projectList => projectList.map((proj, i) => {
+    var buttonText = "Submit Data"
+    if (useArboristUI) {
+      buttonText = this.userHasCreateOnProject(proj.name) ? "Submit/Browse Data" : "Browse Data";
+    }
+    return [
     proj.name,
     ...proj.counts,
     <Button
+      className='project-table__submit-button'
       key={i}
       onClick={() => this.props.history.push(`/${proj.name}`)}
-      label='Submit Data'
+      label={buttonText}
       buttonType='primary'
       rightIcon='upload'
     />,
-  ]);
+  ]});
 
   getFooter = (summaries) => {
     const totalCounts = summaries.map(entry => entry.value);
     return ['Totals', ...totalCounts, ''];
   };
+
+  userHasCreateOnProject = (projectName) => {
+    var split = projectName.split('-');
+    var program = split[0]
+    var project = split.slice(1).join('-')
+    var resource = ["/programs", program, "projects", project].join('/')
+    var actions = this.props.userAuthMapping[resource]
+
+    return actions !== undefined && actions.some(x => x["method"] === "create")
+  }
 
   render() {
     const projectList = (this.props.projectList || []).sort(
@@ -57,6 +75,7 @@ ProjectTable.propTypes = {
   projectList: PropTypes.array,
   summaries: PropTypes.array,
   history: PropTypes.object.isRequired,
+  userAuthMapping: PropTypes.object.isRequired,
 };
 
 ProjectTable.defaultProps = {
