@@ -1,4 +1,4 @@
-.workspace__container {
+.workspace {
   width: 100%;
   min-height: inherit;
   display: flex;
@@ -9,12 +9,12 @@
 // Add a left/right margin to workspace on large screens,
 // unless the workspace is full-paged.
 @media screen and (min-width: 1291px) {
-  .workspace__container:not(.workspace__container--fullpage) {
+  .workspace:not(.workspace--fullpage) {
     padding: 0 20px;
   }
 }
 
-.workspace__container--fullpage {
+.workspace--fullpage {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -25,7 +25,7 @@
   overflow: hidden;
 }
 
-.workspace {
+.workspace__iframe {
   flex: 1 0 60vh;
   display: flex;
   flex-direction: column;
@@ -44,11 +44,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.workspace__iframe iframe {
-  height: 100%;
-  width: 100%;
 }
 
 .workspace__options {
