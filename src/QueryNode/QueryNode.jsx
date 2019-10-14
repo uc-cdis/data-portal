@@ -6,6 +6,7 @@ import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
 import './QueryNode.less';
 import { useArboristUI } from '../configs';
+import { userHasDeleteOnProject } from '../utilsAuth';
 
 const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo, tabindexStart, showDelete }) => {
   const onDelete = () => {
@@ -194,16 +195,6 @@ class QueryNode extends React.Component {
     return popup;
   }
 
-  userHasDeleteOnProject = () => {
-    var split = this.props.params.project.split('-');
-    var program = split[0]
-    var project = split.slice(1).join('-')
-    var resourcePath = ["/programs", program, "projects", project].join('/')
-    var actions = this.props.userAuthMapping[resourcePath]
-
-    return actions !== undefined && actions.some(x => x["method"] === "delete")
-  }
-
   render() {
     const queryNodesList = this.props.queryNodes.search_status === 'succeed: 200' ?
       Object.entries(this.props.queryNodes.search_result.data)
@@ -245,7 +236,7 @@ class QueryNode extends React.Component {
           value => {
             var showDelete = true
             if (useArboristUI) {
-              showDelete = this.userHasDeleteOnProject()
+              showDelete = userHasDeleteOnProject(this.props.params.project, this.props.userAuthMapping)
             }
             return (
               <Entities

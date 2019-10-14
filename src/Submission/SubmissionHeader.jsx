@@ -6,6 +6,7 @@ import MapFilesSvg from '../img/mapfiles.svg';
 import { humanFileSize } from '../utils.js';
 import './SubmissionHeader.less';
 import { useArboristUI } from '../configs';
+import { userHasDataUpload } from '../utilsAuth';
 
 class SubmissionHeader extends React.Component {
   componentDidMount = () => {
@@ -18,13 +19,6 @@ class SubmissionHeader extends React.Component {
 
   openGen3Tutorials = () => {
     window.open('https://gen3.org/resources/user/gen3-client/', '_blank');
-  }
-
-  userHasDataUpload = () => {
-    //data_upload policy is resource data_file, method file_upload, service fence
-    const actionIsFileUpload = x => { return x['method'] === 'file_upload' && x['service'] === 'fence' }
-    var resource = this.props.userAuthMapping['/data_file']
-    return resource !== undefined && resource.some(actionIsFileUpload)
   }
 
   render() {
@@ -61,7 +55,7 @@ class SubmissionHeader extends React.Component {
           </div>
         </div>
         {
-          (useArboristUI && !this.userHasDataUpload()) ? null :
+          (useArboristUI && !userHasDataUpload(this.props.userAuthMapping)) ? null :
           <div className='submission-header__section'>
             <div className='submission-header__section-image'>
               <MapFilesSvg />

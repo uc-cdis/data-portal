@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Table from './base/Table';
 import { useArboristUI } from '../../configs';
+import { userHasCreateOnProject } from '../../utilsAuth';
 import './ProjectTable.less';
 
 function compare(a, b) {
@@ -25,7 +26,7 @@ class ProjectTable extends React.Component {
   getData = projectList => projectList.map((proj, i) => {
     var buttonText = "Submit Data"
     if (useArboristUI) {
-      buttonText = this.userHasCreateOnProject(proj.name) ? "Submit/Browse Data" : "Browse Data";
+      buttonText = userHasCreateOnProject(proj.name, this.props.userAuthMapping) ? "Submit/Browse Data" : "Browse Data";
     }
     return [
     proj.name,
@@ -44,16 +45,6 @@ class ProjectTable extends React.Component {
     const totalCounts = summaries.map(entry => entry.value);
     return ['Totals', ...totalCounts, ''];
   };
-
-  userHasCreateOnProject = (projectName) => {
-    var split = projectName.split('-');
-    var program = split[0]
-    var project = split.slice(1).join('-')
-    var resource = ["/programs", program, "projects", project].join('/')
-    var actions = this.props.userAuthMapping[resource]
-
-    return actions !== undefined && actions.some(x => x["method"] === "create")
-  }
 
   render() {
     const projectList = (this.props.projectList || []).sort(
