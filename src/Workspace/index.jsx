@@ -197,9 +197,13 @@ class Workspace extends React.Component {
     );
 
     if (this.state.connectedStatus && this.state.notebookStatus && !this.state.defaultNotebook) {
+      // NOTE -- both the containing element have class '.workspace',
+      // although no styles should be shared between them. The reason
+      // for this is for backwards compatibility with Jenkins integration
+      // ests.
       return (
         <div
-          className={`workspace__container ${this.state.notebookIsfullpage ? 'workspace__container--fullpage' : ''}`}
+          className={`workspace ${this.state.notebookIsfullpage ? 'workspace--fullpage' : ''}`}
         >
           {
             this.state.notebookStatus === 'Running' ||
@@ -221,7 +225,7 @@ class Workspace extends React.Component {
           {
             this.state.notebookStatus === 'Launching' ?
               <React.Fragment>
-                <div className='workspace'>
+                <div className='workspace__spinner-container'>
                   <Spinner text='Launching workspace...' />
                 </div>
                 <div className='workspace__buttongroup'>
@@ -232,7 +236,9 @@ class Workspace extends React.Component {
           }
           {
             this.state.notebookStatus === 'Terminating' ?
-              <Spinner text='Terminating workspace...' />
+              <div className='workspace__spinner-container'>
+                <Spinner text='Terminating workspace...' />
+              </div>
               : null
           }
           {
@@ -272,7 +278,7 @@ class Workspace extends React.Component {
         <iframe
           title='Workspace'
           frameBorder='0'
-          className='workspace__container'
+          className='workspace'
           src={workspaceUrl}
         />
       );
