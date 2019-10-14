@@ -209,12 +209,14 @@ class Workspace extends React.Component {
             this.state.notebookStatus === 'Running' ||
               this.state.notebookStatus === 'Stopped' ?
               <React.Fragment>
-                <iframe
-                  className='workspace'
-                  title='Workspace'
-                  frameBorder='0'
-                  src={`${workspaceUrl}proxy/`}
-                />
+                <div className='workspace__iframe'>
+                  <iframe
+                    className='workspace'
+                    title='Workspace'
+                    frameBorder='0'
+                    src={`${workspaceUrl}proxy/`}
+                  />
+                </div>
                 <div className='workspace__buttongroup'>
                   { terminateButton }
                   { fullpageButton }
