@@ -64,12 +64,14 @@ const Popup = ({
                 key={btn.caption}
                 onClick={btn.fn}
                 label={btn.caption}
+                enabled={(btn.enabled !== undefined) ? btn.enabled : true}
                 buttonType='default'
               /> :
                 <Button
                   key={btn.caption}
                   onClick={btn.fn}
                   label={btn.caption}
+                  enabled={(btn.enabled !== undefined) ? btn.enabled : true}
                   buttonType='default'
                   rightIcon={btn.icon}
                 />,
@@ -84,12 +86,14 @@ const Popup = ({
                 key={btn.caption}
                 onClick={btn.fn}
                 label={btn.caption}
+                enabled={(btn.enabled !== undefined) ? btn.enabled : true}
                 buttonType='primary'
               /> :
                 <Button
                   key={btn.caption}
                   onClick={btn.fn}
                   label={btn.caption}
+                  enabled={(btn.enabled !== undefined) ? btn.enabled : true}
                   buttonType='primary'
                   rightIcon={btn.icon}
                 />,
