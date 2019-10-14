@@ -472,7 +472,6 @@ export const fetchUserAuthMapping = async (dispatch) => {
       // This is dispatched on app init and on user login.
       // Could be not logged in -> no username -> 404; this is ok
       // There may be plans to update Arborist to return anonymous access when username not found
-      console.log(`Arborist returned "${fetchRes.status}" in mapping call`);
       return {};
     }
   });
