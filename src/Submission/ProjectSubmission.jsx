@@ -7,7 +7,7 @@ import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 import { useArboristUI } from '../configs';
-import { userHasMethodOnProject } from '../utilsAuth';
+import { userHasMethodOnProject } from '../authMappingUtils';
 
 const ProjectSubmission = (props) => {
   // hack to detect if dictionary data is available, and to trigger fetch if not

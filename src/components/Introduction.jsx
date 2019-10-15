@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import IconicLink from './buttons/IconicLink';
 import './Introduction.less';
 import { useArboristUI } from '../configs';
-import { userHasMethodOnAnyProject } from '../utilsAuth';
+import { userHasMethodOnAnyProject } from '../authMappingUtils';
 
 class Introduction extends Component {
   static propTypes = {

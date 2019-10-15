@@ -6,7 +6,7 @@ import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
 import './QueryNode.less';
 import { useArboristUI } from '../configs';
-import { userHasMethodOnProject } from '../utilsAuth';
+import { userHasMethodOnProject } from '../authMappingUtils';
 
 const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo, tabindexStart, showDelete }) => {
   const onDelete = () => {

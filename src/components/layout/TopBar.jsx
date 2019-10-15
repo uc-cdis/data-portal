@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
 import { useArboristUI } from '../../configs';
-import { userHasMethodOnAnyProject } from '../../utilsAuth';
+import { userHasMethodOnAnyProject } from '../../authMappingUtils';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }

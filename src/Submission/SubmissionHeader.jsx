@@ -6,7 +6,7 @@ import MapFilesSvg from '../img/mapfiles.svg';
 import { humanFileSize } from '../utils.js';
 import './SubmissionHeader.less';
 import { useArboristUI } from '../configs';
-import { userHasDataUpload } from '../utilsAuth';
+import { userHasDataUpload } from '../authMappingUtils';
 
 class SubmissionHeader extends React.Component {
   componentDidMount = () => {
