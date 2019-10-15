@@ -4,20 +4,13 @@ import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
 import { useArboristUI } from '../../configs';
+import { userHasMethodOnAnyProject } from '../../authMappingUtils';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
  */
 class TopBar extends Component {
   isActive = id => this.props.activeTab === id;
-
-  userHasCreateForAnyProject = () => {
-    const actionHasCreate = x => { return (x["method"] === "create") }
-    //array of arrays of { service: x, method: y }
-    var actionArrays = Object.values(this.props.userAuthMapping)
-    var hasCreate = actionArrays.some(x => { return x.some(actionHasCreate) })
-    return hasCreate
-  }
 
   render() {
     return (
@@ -29,7 +22,7 @@ class TopBar extends Component {
                 item => {
                   var buttonText = item.name
                   if (item.name === 'Submit Data' && useArboristUI) {
-                    if (this.userHasCreateForAnyProject()) {
+                    if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
                       buttonText = 'Submit/Browse Data'
                     } else {
                       buttonText = 'Browse Data'

@@ -5,6 +5,7 @@ import Spinner from '../Spinner';
 import { humanFileSize } from '../../utils.js';
 import './TransactionLogTable.less';
 import { useArboristUI } from '../../configs';
+import { userHasMethodOnAnyProject } from '../../authMappingUtils';
 
 const formatText = text => text[0] + text.slice(1).toLowerCase();
 
@@ -27,16 +28,6 @@ class TransactionLogTable extends Component {
     return totalSize;
   };
 
-  userHasCreateOrUpdateForAnyProject = () => {
-    const actionHasCreateOrUpdate = x => {
-      return (x["method"] === "create" || x["method"] === "update")
-    }
-    //array of arrays of { service: x, method: y }
-    var actionArrays = Object.values(this.props.userAuthMapping)
-    var hasCreateOrUpdate = actionArrays.some(x => { return x.some(actionHasCreateOrUpdate) })
-    return hasCreateOrUpdate
-  }
-
   stateToColor = state => (state === 'SUCCEEDED' &&
       <div className='form-special-number transaction-log-table__status-bar'>{formatText(state)}</div>)
     || ((state === 'FAILED' || state === 'ERRORED') &&
@@ -51,8 +42,15 @@ class TransactionLogTable extends Component {
     this.stateToColor(entry.state),
   ]);
 
+  userHasCreateOrUpdateOnAnyProject = (userAuthMapping) => {
+    return (userHasMethodOnAnyProject('create', userAuthMapping)
+      || userHasMethodOnAnyProject('update', userAuthMapping))
+  }
+
   render() {
-    if (useArboristUI && !this.userHasCreateOrUpdateForAnyProject()) { return null; }
+    if (useArboristUI && !this.userHasCreateOrUpdateOnAnyProject(this.props.userAuthMapping)) {
+      return null;
+    }
     if (!this.props.log || this.props.log === []) { return <Spinner />; }
     return (<Table
       title='Recent Submissions'

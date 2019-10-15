@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import IconicLink from './buttons/IconicLink';
 import './Introduction.less';
 import { useArboristUI } from '../configs';
+import { userHasMethodOnAnyProject } from '../authMappingUtils';
 
 class Introduction extends Component {
   static propTypes = {
@@ -10,18 +11,10 @@ class Introduction extends Component {
     dictIcons: PropTypes.object.isRequired,
   };
 
-  userHasCreateForAnyProject = () => {
-    const actionHasCreate = x => { return (x["method"] === "create") }
-    //array of arrays of { service: x, method: y }
-    var actionArrays = Object.values(this.props.userAuthMapping)
-    var hasCreate = actionArrays.some(x => { return x.some(actionHasCreate) })
-    return hasCreate
-  }
-
   render() {
     var buttonText = 'Submit Data'
     if (useArboristUI) {
-      if (this.userHasCreateForAnyProject()) {
+      if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
         buttonText = 'Submit/Browse Data'
       } else {
         buttonText = 'Browse Data'

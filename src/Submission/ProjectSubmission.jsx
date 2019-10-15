@@ -7,6 +7,7 @@ import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 import { useArboristUI } from '../configs';
+import { userHasMethodOnProject } from '../authMappingUtils';
 
 const ProjectSubmission = (props) => {
   // hack to detect if dictionary data is available, and to trigger fetch if not
@@ -29,16 +30,9 @@ const ProjectSubmission = (props) => {
     return <MyDataModelGraph project={props.project} />;
   };
 
-  const userHasCreateOrUpdateForThisProject = () => {
-    const actionHasCreateOrUpdate = x => { return x['method'] === 'create' || x['method'] === 'update' }
-
-    var split = props.project.split('-');
-    var program = split[0]
-    var project = split.slice(1).join('-')
-    var resourcePath = ["/programs", program, "projects", project].join('/')
-
-    var resource = props.userAuthMapping[resourcePath]
-    return resource !== undefined && resource.some(actionHasCreateOrUpdate)
+  const userHasCreateOrUpdateOnProject = (projectID, userAuthMapping) => {
+    return (userHasMethodOnProject('create', projectID, userAuthMapping)
+      || userHasMethodOnProject('update', projectID, userAuthMapping))
   }
 
   return (
@@ -48,12 +42,14 @@ const ProjectSubmission = (props) => {
         <Link className='project-submission__link' to={`/${props.project}/search`}>browse nodes</Link>
       }
       {
-        (useArboristUI && !userHasCreateOrUpdateForThisProject()) ? null :
-          <MySubmitForm />
+        ( useArboristUI && !userHasCreateOrUpdateOnProject(props.project, props.userAuthMapping)) ?
+        null :
+        <MySubmitForm />
       }
       {
-        (useArboristUI && !userHasCreateOrUpdateForThisProject()) ? null :
-          <MySubmitTSV project={props.project} />
+        ( useArboristUI && !userHasCreateOrUpdateOnProject(props.project, props.userAuthMapping)) ?
+        null :
+        <MySubmitTSV project={props.project} />
       }
       { displayData() }
     </div>
