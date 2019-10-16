@@ -2,7 +2,7 @@ import React from 'react';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import MediaQuery from 'react-responsive';
-import Select from 'react-select';
+import Select /*,{ createFilter }*/ from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { basename, loginPath, breakpoints } from '../localconf';
 import { components } from '../params';
@@ -56,13 +56,6 @@ class Login extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateDimensions);
-  }
-
-  getSelectedOptionLabel = (index) => {
-    if (this.state.selectedLoginOption) {
-      return this.state.selectedLoginOption[index];
-    }
-    return undefined;
   }
 
   updateDimensions() {
@@ -148,7 +141,7 @@ class Login extends React.Component {
                 <React.Fragment key={i}>
                   <div className='login-page__entries'>
                     { p.desc }
-                    <div className='login-page__entry-button'>
+                    <div className='login-page__entry-login'>
                       {
                         // if there are multiple URLs, display a dropdown next
                         // to the login button
@@ -157,12 +150,15 @@ class Login extends React.Component {
                             isClearable
                             isSearchable
                             options={loginOptions[i]}
+                            // filterOption={createFilter({ ignoreAccents: false })}
                             onChange={option => this.selectChange(option, i)}
-                            value={this.getSelectedOptionLabel(i)}
+                            value={this.state.selectedLoginOption &&
+                              this.state.selectedLoginOption[i]}
                           />
                         )
                       }
                       <Button
+                        className='login-page__entry-button'
                         onClick={() => {
                           window.location.href = getLoginUrl(
                             loginOptions[i].length > 1 ?
