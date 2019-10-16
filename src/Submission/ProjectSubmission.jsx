@@ -6,6 +6,8 @@ import DataModelGraph from '../DataModelGraph/DataModelGraph';
 import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
+import { useArboristUI } from '../configs';
+import { userHasMethodOnProject } from '../authMappingUtils';
 
 const ProjectSubmission = (props) => {
   // hack to detect if dictionary data is available, and to trigger fetch if not
@@ -28,14 +30,27 @@ const ProjectSubmission = (props) => {
     return <MyDataModelGraph project={props.project} />;
   };
 
+  const userHasCreateOrUpdateOnProject = (projectID, userAuthMapping) => {
+    return (userHasMethodOnProject('create', projectID, userAuthMapping)
+      || userHasMethodOnProject('update', projectID, userAuthMapping))
+  }
+
   return (
     <div className='project-submission'>
       <h2 className='project-submission__title'>{props.project}</h2>
       {
         <Link className='project-submission__link' to={`/${props.project}/search`}>browse nodes</Link>
       }
-      <MySubmitForm />
-      <MySubmitTSV project={props.project} />
+      {
+        ( useArboristUI && !userHasCreateOrUpdateOnProject(props.project, props.userAuthMapping)) ?
+        null :
+        <MySubmitForm />
+      }
+      {
+        ( useArboristUI && !userHasCreateOrUpdateOnProject(props.project, props.userAuthMapping)) ?
+        null :
+        <MySubmitTSV project={props.project} />
+      }
       { displayData() }
     </div>
   );
@@ -50,6 +65,7 @@ ProjectSubmission.propTypes = {
   dataModelGraph: PropTypes.func,
   onGetCounts: PropTypes.func.isRequired,
   typeList: PropTypes.array,
+  userAuthMapping: PropTypes.object.isRequired,
 };
 
 ProjectSubmission.defaultProps = {

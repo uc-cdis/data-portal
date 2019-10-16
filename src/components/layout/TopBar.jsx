@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
+import { useArboristUI } from '../../configs';
+import { userHasMethodOnAnyProject } from '../../authMappingUtils';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
@@ -17,8 +19,16 @@ class TopBar extends Component {
           <nav className='top-bar__nav'>
             {
               this.props.topItems.map(
-                item => (
-                  (item.link.startsWith('http')) ?
+                item => {
+                  var buttonText = item.name
+                  if (item.name === 'Submit Data' && useArboristUI) {
+                    if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
+                      buttonText = 'Submit/Browse Data'
+                    } else {
+                      buttonText = 'Browse Data'
+                    }
+                  }
+                  return (item.link.startsWith('http')) ?
                     <a
                       className='top-bar__link'
                       key={item.link}
@@ -27,7 +37,7 @@ class TopBar extends Component {
                       rel='noopener noreferrer'
                     >
                       <TopIconButton
-                        name={item.name}
+                        name={buttonText}
                         icon={item.icon}
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
@@ -39,13 +49,13 @@ class TopBar extends Component {
                       to={item.link}
                     >
                       <TopIconButton
-                        name={item.name}
+                        name={buttonText}
                         icon={item.icon}
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
                       />
                     </Link>
-                ),
+                }
               )
             }
             {
@@ -80,6 +90,7 @@ class TopBar extends Component {
 TopBar.propTypes = {
   topItems: PropTypes.array.isRequired,
   user: PropTypes.shape({ username: PropTypes.string }).isRequired,
+  userAuthMapping: PropTypes.object.isRequired,
   activeTab: PropTypes.string,
   onActiveTab: PropTypes.func,
   onLogoutClick: PropTypes.func.isRequired,

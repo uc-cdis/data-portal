@@ -5,6 +5,7 @@ import { setActive } from '../Layout/reduxer';
 import IndexBarChart from '../components/charts/IndexBarChart/.';
 import IndexCounts from '../components/cards/IndexCounts/.';
 import IndexButtonBar from '../components/IndexButtonBar';
+import Introduction from '../components/Introduction';
 import { components } from '../params';
 
 export const ReduxIndexBarChart = (() => {
@@ -60,4 +61,12 @@ export const ReduxIndexButtonBar = (() => {
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(IndexButtonBar);
+})();
+
+export const ReduxIntroduction = (() => {
+  const mapStateToProps = state => ({
+    userAuthMapping: state.userAuthMapping,
+  });
+
+  return connect(mapStateToProps)(Introduction);
 })();

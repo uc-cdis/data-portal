@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import IconicLink from './buttons/IconicLink';
 import './Introduction.less';
+import { useArboristUI } from '../configs';
+import { userHasMethodOnAnyProject } from '../authMappingUtils';
 
 class Introduction extends Component {
   static propTypes = {
@@ -10,6 +12,15 @@ class Introduction extends Component {
   };
 
   render() {
+    var buttonText = 'Submit Data'
+    if (useArboristUI) {
+      if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
+        buttonText = 'Submit/Browse Data'
+      } else {
+        buttonText = 'Browse Data'
+      }
+    }
+
     return (
       <div className='introduction'>
         <div className='h1-typo introduction__title'>{this.props.data.heading}</div>
@@ -20,11 +31,15 @@ class Introduction extends Component {
           className='introduction__icon'
           icon='upload'
           iconColor='#'
-          caption='Submit Data'
+          caption={buttonText}
         />
       </div>
     );
   }
 }
+
+Introduction.propTypes = {
+  userAuthMapping: PropTypes.object.isRequired,
+};
 
 export default Introduction;

@@ -5,8 +5,10 @@ import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
 import './QueryNode.less';
+import { useArboristUI } from '../configs';
+import { userHasMethodOnProject } from '../authMappingUtils';
 
-const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo, tabindexStart }) => {
+const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo, tabindexStart, showDelete }) => {
   const onDelete = () => {
     onStoreNodeInfo({ project, id: value.id }).then(
       () => onUpdatePopup({ nodedelete_popup: true }),
@@ -20,7 +22,9 @@ const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo, tabindexStart 
       <span>{value.submitter_id}</span>
       <a role='button' tabIndex={tabindexStart} className='query-node__button query-node__button--download' href={`${getSubmitPath(project)}/export?format=json&ids=${value.id}`}>Download</a>
       <a role='button' tabIndex={tabindexStart + 1} className='query-node__button query-node__button--view' onClick={onView}>View</a>
-      <a role='button' tabIndex={tabindexStart + 2} className='query-node__button query-node__button--delete' onClick={onDelete}>Delete</a>
+      {
+        showDelete ? <a role='button' tabIndex={tabindexStart + 2} className='query-node__button query-node__button--delete' onClick={onDelete}>Delete</a> : null
+      }
     </li>
   );
 };
@@ -31,6 +35,7 @@ Entity.propTypes = {
   tabindexStart: PropTypes.number.isRequired,
   onUpdatePopup: PropTypes.func,
   onStoreNodeInfo: PropTypes.func,
+  showDelete: PropTypes.bool.isRequired,
 };
 
 Entity.defaultProps = {
@@ -40,7 +45,7 @@ Entity.defaultProps = {
   onSearchFormSubmit: null,
 };
 
-const Entities = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => (
+const Entities = ({ value, project, onUpdatePopup, onStoreNodeInfo, showDelete }) => (
   <ul>
     {
       value.map(
@@ -51,6 +56,7 @@ const Entities = ({ value, project, onUpdatePopup, onStoreNodeInfo }) => (
           key={v.submitter_id}
           value={v}
           tabindexStart={i * 3}
+          showDelete={showDelete}
         />),
       )
     }
@@ -62,6 +68,7 @@ Entities.propTypes = {
   project: PropTypes.string.isRequired,
   onUpdatePopup: PropTypes.func,
   onStoreNodeInfo: PropTypes.func,
+  showDelete: PropTypes.bool.isRequired,
 };
 
 Entities.defaultProps = {
@@ -226,15 +233,23 @@ class QueryNode extends React.Component {
         />
         <h4>most recent 20:</h4>
         { queryNodesList.map(
-          value => (<Entities
-            project={project}
-            onStoreNodeInfo={this.props.onStoreNodeInfo}
-            onUpdatePopup={this.props.onUpdatePopup}
-            node_type={value[0]}
-            key={value[0]}
-            value={value[1]}
-          />
-          ),
+          value => {
+            var showDelete = true
+            if (useArboristUI) {
+              showDelete = userHasMethodOnProject('delete', this.props.params.project, this.props.userAuthMapping)
+            }
+            return (
+              <Entities
+                project={project}
+                onStoreNodeInfo={this.props.onStoreNodeInfo}
+                onUpdatePopup={this.props.onUpdatePopup}
+                node_type={value[0]}
+                key={value[0]}
+                value={value[1]}
+                showDelete={showDelete}
+              />
+            )
+          }
         )
         }
       </div>
@@ -253,6 +268,7 @@ QueryNode.propTypes = {
   onClearDeleteSession: PropTypes.func.isRequired,
   onDeleteNode: PropTypes.func.isRequired,
   onStoreNodeInfo: PropTypes.func.isRequired,
+  userAuthMapping: PropTypes.object.isRequired,
 };
 
 QueryNode.defaultProps = {

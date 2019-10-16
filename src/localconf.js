@@ -73,7 +73,8 @@ function buildConfig(opts) {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',
   };
-  const authzPath = typeof arboristURL === 'undefined' ? `${hostname}authz` : arboristURL;
+  const authzPath = typeof arboristURL === 'undefined' ? `${hostname}authz` : `${arboristURL}authz`;
+  const authzMappingPath = typeof arboristURL === 'undefined' ? `${hostname}authz/mapping` : `${arboristURL}authz/mapping`;
   const loginPath = `${userapiPath}login/`;
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
@@ -100,6 +101,11 @@ function buildConfig(opts) {
   let useGuppyForExplorer = false;
   if (config.dataExplorerConfig.guppyConfig) {
     useGuppyForExplorer = true;
+  }
+
+  let useArboristUI = false;
+  if (config.useArboristUI) {
+    useArboristUI = config.useArboristUI;
   }
 
   // for "libre" data commons, explorer page is public
@@ -260,12 +266,14 @@ function buildConfig(opts) {
     manifestServiceApiPath,
     wtsPath,
     useGuppyForExplorer,
+    useArboristUI,
     analysisApps,
     tierAccessLevel,
     tierAccessLimit,
     useIndexdAuthz,
     explorerPublic,
     authzPath,
+    authzMappingPath,
   };
 }
 
