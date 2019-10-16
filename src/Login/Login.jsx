@@ -2,7 +2,7 @@ import React from 'react';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import MediaQuery from 'react-responsive';
-import AutoComplete from '@gen3/ui-component/dist/components/AutoComplete';
+import Select from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { basename, loginPath, breakpoints } from '../localconf';
 import { components } from '../params';
@@ -42,16 +42,11 @@ class Login extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = getInitialState(window.innerHeight - 221);
     this.resetState = this.resetState.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
-
-    // using objects for autoCompleteRefs, suggestionLists and
-    // currentLoginUrl because we need one for each login dropdown
-    this.autoCompleteRefs = {};
     this.state = {
-      suggestionLists: {},
-      currentLoginUrl: {},
+      height: window.innerHeight - 221,
+      selectedLoginOption: {}, // one for each login dropdown
     };
   }
 
@@ -63,6 +58,13 @@ class Login extends React.Component {
     window.removeEventListener('resize', this.updateDimensions);
   }
 
+  getSelectedOptionLabel = (index) => {
+    if (this.state.selectedLoginOption) {
+      return this.state.selectedLoginOption[index];
+    }
+    return undefined;
+  }
+
   updateDimensions() {
     this.setState({ height: window.innerHeight - 221 });
   }
@@ -71,74 +73,13 @@ class Login extends React.Component {
     this.setState(getInitialState());
   }
 
-  /**
-   * When the contents of the input field are updated, filter the list
-   * of suggestions
-   */
-  inputChangeFunc = (inputText, index) => {
-    const text = inputText.toLowerCase();
-    if (!text) {
-      return;
-    }
-
-    const urls = this.props.providers[index].urls;
-    const matches = [];
-    urls.forEach((e) => {
-      const start = e.name.toLowerCase().indexOf(text.toLowerCase());
-      if (start >= 0) {
-        const end = start + text.length;
-        matches.push({
-          fullString: e.name, // matched string
-          loginUrl: e.url,
-          // we could highlight multiple matches - for now, only first match
-          matchedPieceIndices: [[start, end]], // match location
-        });
-      }
-    });
-
-    const suggestionListsCopy = { ...this.state.suggestionLists };
-    suggestionListsCopy[index] = matches;
-
+  selectChange = (selectedOption, index) => {
+    const selectedLoginOptionCopy = { ...this.state.selectedLoginOption };
+    selectedLoginOptionCopy[index] = selectedOption;
     this.setState({
-      suggestionLists: suggestionListsCopy,
+      selectedLoginOption: selectedLoginOptionCopy,
     });
-  };
-
-  /**
-   * When an item from the dropdown is selected, update the contents of
-   * the input field and update the current login URL
-   */
-  suggestionItemClickFunc = (suggestionItem, index) => {
-    this.autoCompleteRefs[index].current.setInputText(suggestionItem.fullString);
-
-    const currentLoginUrlCopy = { ...this.state.currentLoginUrl };
-    currentLoginUrlCopy[index] = suggestionItem.loginUrl;
-    this.setState({
-      currentLoginUrl: currentLoginUrlCopy,
-    });
-  };
-
-  listAllOptions = (index) => {
-    const allOptions = this.props.providers[index].urls.map(e => ({
-      fullString: e.name,
-      loginUrl: e.url,
-      matchedPieceIndices: [],
-    }));
-
-    const suggestionListsCopy = { ...this.state.suggestionLists };
-    suggestionListsCopy[index] = allOptions;
-    this.setState({
-      suggestionLists: suggestionListsCopy,
-    });
-  };
-
-  clearAllOptions = (index) => {
-    const suggestionListsCopy = { ...this.state.suggestionLists };
-    suggestionListsCopy[index] = [];
-    this.setState({
-      suggestionLists: suggestionListsCopy,
-    });
-  };
+  }
 
   render() {
     let next = basename;
@@ -151,18 +92,33 @@ class Login extends React.Component {
       components.login.image
       : 'gene';
 
+    const loginOptions = {}; // one for each login provider
     this.props.providers.forEach((provider, i) => {
-      // for backwards compatibility, if "urls" does not exist,
-      // generate it from the deprecated "url" field
-      if (typeof provider.urls === 'undefined') {
-        provider.urls = [{ // eslint-disable-line no-param-reassign
+      // for backwards compatibility, if "urls" does not exist
+      // (fence < 4.8.0), generate it from the deprecated "url" field
+      let loginUrls = provider.urls;
+      if (typeof loginUrls === 'undefined') {
+        loginUrls = [{
           name: provider.name,
           url: provider.url,
         }];
       }
-      if (provider.urls.length > 1) {
-        this.autoCompleteRefs[i] = React.createRef();
-      }
+      // sort login options by name
+      loginUrls = loginUrls.sort(
+        (a, b) => {
+          if (a.name.trim() > b.name.trim()) {
+            return 1;
+          }
+          if (b.name.trim() > a.name.trim()) {
+            return -1;
+          }
+          return 0;
+        });
+      // URLs in format expected by Select component
+      loginOptions[i] = loginUrls.map(e => ({
+        value: e.url,
+        label: e.name,
+      }));
     });
 
     return (
@@ -192,36 +148,26 @@ class Login extends React.Component {
                 <React.Fragment key={i}>
                   <div className='login-page__entries'>
                     { p.desc }
-                    <div>
+                    <div className='login-page__entry-button'>
                       {
                         // if there are multiple URLs, display a dropdown next
                         // to the login button
-                        p.urls.length > 1 && (
-                          <AutoComplete
-                            ref={this.autoCompleteRefs[i]}
-                            suggestionList={this.state.suggestionLists[i]}
-                            inputPlaceHolderText='Search login options'
-                            onSuggestionItemClick={
-                              suggestionItem => this.suggestionItemClickFunc(suggestionItem, i)
-                            }
-                            onInputChange={inputText => this.inputChangeFunc(inputText, i)}
-                            // note: not using "onSubmitInput" as a "submit
-                            // search" button but as a "list all options"
-                            // button. if all options are already displayed,
-                            // close the dropdown instead
-                            inputIcon='chevron-down'
-                            onSubmitInput={() => (
-                              this.state.suggestionLists[i] &&
-                              this.state.suggestionLists[i].length === p.urls.length ?
-                                this.clearAllOptions(i) : this.listAllOptions(i)
-                            )}
+                        loginOptions[i].length > 1 && (
+                          <Select
+                            isClearable
+                            isSearchable
+                            options={loginOptions[i]}
+                            onChange={option => this.selectChange(option, i)}
+                            value={this.getSelectedOptionLabel(i)}
                           />
                         )
                       }
                       <Button
                         onClick={() => {
                           window.location.href = getLoginUrl(
-                            p.urls.length > 1 ? this.state.currentLoginUrl[i] : p.urls[0],
+                            loginOptions[i].length > 1 ?
+                              this.state.selectedLoginOption[i].value :
+                              loginOptions[i][0].value,
                             next,
                           );
                         }}
