@@ -279,14 +279,12 @@ class Workspace extends React.Component {
       // default workspace is shown.
       return (
         <div className='workspace__default'>
-          <div className='workspace__iframe'>
-            <iframe
-              title='Workspace'
-              frameBorder='0'
-              className='workspace'
-              src={workspaceUrl}
-            />
-          </div>
+          <iframe
+            title='Workspace'
+            frameBorder='0'
+            className='workspace'
+            src={workspaceUrl}
+          />
         </div>
       );
     }
