@@ -14,7 +14,7 @@ class ExplorerFilter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedAccessFilter: 'all-data', // default value of selectedAccessFilter
+      selectedAccessFilter: 'with-access', // default value of selectedAccessFilter
       showTierAccessSelector: false,
     };
   }
