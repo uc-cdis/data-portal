@@ -11,7 +11,7 @@ class TierAccessSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: 'all-data',
+      selected: 'with-access',
       toggled: false,
     };
   }
