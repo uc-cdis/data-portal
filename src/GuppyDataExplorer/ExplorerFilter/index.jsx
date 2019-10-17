@@ -15,7 +15,7 @@ class ExplorerFilter extends React.Component {
     super(props);
     this.state = {
       selectedAccessFilter: 'with-access', // default value of selectedAccessFilter
-      showTierAccessSelector: true,
+      showTierAccessSelector: false,
     };
   }
 
