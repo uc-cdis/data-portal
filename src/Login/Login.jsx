@@ -1,14 +1,12 @@
 import React from 'react';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
-import MediaQuery from 'react-responsive';
 import Select from 'react-select';
 import createFilterOptions from 'react-select-fast-filter-options';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { basename, loginPath, breakpoints } from '../localconf';
+import { basename, loginPath } from '../localconf';
 import { components } from '../params';
 
-import SlidingWindow from '../components/SlidingWindow';
 import './Login.less';
 
 const getInitialState = height => ({ height });
@@ -24,7 +22,6 @@ class Login extends React.Component {
       PropTypes.objectOf(PropTypes.any),
     ),
     location: PropTypes.object.isRequired,
-    dictIcons: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
   };
 
@@ -85,6 +82,7 @@ class Login extends React.Component {
     const customImage = components.login && components.login.image ?
       components.login.image
       : 'gene';
+    const customImageStyle = { backgroundImage: `url(/src/img/icons/${customImage}.svg)` };
 
     const loginOptions = {}; // one for each login provider
     const filterOptions = {};
@@ -123,16 +121,7 @@ class Login extends React.Component {
 
     return (
       <div className='login-page'>
-        <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-          <div className='login-page__side-box'>
-            <SlidingWindow
-              iconName={customImage}
-              dictIcons={this.props.dictIcons}
-              height={this.state.height}
-              scrollY={window.scrollY}
-            />
-          </div>
-        </MediaQuery>
+        <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
         <div className='login-page__central-content'>
           <div className='h1-typo login-page__title'>
             {this.props.data.title}
@@ -190,16 +179,7 @@ class Login extends React.Component {
             </a>{'.'}
           </div>
         </div>
-        <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-          <div className='login-page__side-box--right'>
-            <SlidingWindow
-              iconName={customImage}
-              dictIcons={this.props.dictIcons}
-              height={this.state.height}
-              scrollY={window.scrollY}
-            />
-          </div>
-        </MediaQuery>
+        <div className='login-page__side-box login-page__side-box--right' style={customImageStyle} />
       </div>
     );
   }
