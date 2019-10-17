@@ -26,9 +26,12 @@ export const fetchLogin = () =>
               type: 'RECEIVE_LOGIN_ENDPOINT',
               providers: [
                 {
-                  id: 'google',
+                  idp: 'google',
                   name: 'Google OAuth',
-                  url: `${loginPath}google/`,
+                  urls: [{
+                    name: 'Google OAuth',
+                    url: `${loginPath}google/`,
+                  }],
                 },
               ],
             };

@@ -10,14 +10,20 @@ describe('the Login component', () => {
   const testProps = {
     providers: [
       {
-        id: 'shibboleth',
+        idp: 'shibboleth',
         name: 'NIH Login',
-        url: 'https://localhost/user/login/shib',
+        urls: [{
+          name: 'NIH Login',
+          url: 'https://localhost/user/login/shib',
+        }],
       },
       {
-        id: 'google',
+        idp: 'google',
         name: 'Google OAuth',
-        url: 'https://localhost/user/login/google',
+        urls: [{
+          name: 'Google OAuth',
+          url: 'https://localhost/user/login/google',
+        }],
       },
     ],
     location: window.location,

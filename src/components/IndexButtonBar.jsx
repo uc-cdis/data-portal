@@ -19,7 +19,7 @@ class IndexButtonBar extends Component {
       <div className='index-button-bar'>
         {
           this.props.buttons.map(
-            item => {
+            (item) => {
               const indexButton = (
                 <div className='index-button-bar__thumbnail-button' key={item.name}>
                   <div className='h3-typo index-button-bar__thumbnail-title'>{item.name}</div>
@@ -43,7 +43,7 @@ class IndexButtonBar extends Component {
                 </div>
               );
               return this.canUserSeeComponent(item.name) ? indexButton : null;
-            }
+            },
           )
         }
       </div>
