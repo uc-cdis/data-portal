@@ -28,7 +28,7 @@ class ExplorerVisualization extends React.Component {
 
   getData = (aggsData, chartConfig, filter) => {
     const summaries = [];
-    const countItems = [];
+    let countItems = [];
     const stackedBarCharts = [];
     countItems.push({
       label: this.props.nodeCountTitle,
@@ -63,6 +63,15 @@ class ExplorerVisualization extends React.Component {
       default:
         throw new Error(`Invalid chartType ${chartConfig[field].chartType}`);
       }
+    });
+    // sort cout items according to appearence in chart config
+    countItems = countItems.sort((a, b) => {
+      const aIndex = Object.values(chartConfig).findIndex(v => v.title === a.label);
+      const bIndex = Object.values(chartConfig).findIndex(v => v.title === b.label);
+      // if one doesn't exist in chart config, put it to front
+      if (aIndex === -1) return -1;
+      if (bIndex === -1) return 1;
+      return aIndex - bIndex;
     });
     return { summaries, countItems, stackedBarCharts };
   }
