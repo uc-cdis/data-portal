@@ -103,6 +103,11 @@ function buildConfig(opts) {
     useGuppyForExplorer = true;
   }
 
+  let useArboristAuthz = false;
+  if (config.useArboristAuthz) {
+    useArboristAuthz = config.useArboristAuthz;
+  }
+
   let useArboristUI = false;
   if (config.useArboristUI) {
     useArboristUI = config.useArboristUI;
@@ -267,6 +272,7 @@ function buildConfig(opts) {
     manifestServiceApiPath,
     wtsPath,
     useGuppyForExplorer,
+    useArboristAuthz,
     useArboristUI,
     analysisApps,
     tierAccessLevel,
