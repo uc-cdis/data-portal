@@ -24,22 +24,23 @@ class ProjectTable extends React.Component {
   };
 
   getData = projectList => projectList.map((proj, i) => {
-    var buttonText = 'Submit Data'
+    let buttonText = 'Submit Data';
     if (useArboristUI) {
       buttonText = userHasMethodOnProject('create', proj.name, this.props.userAuthMapping) ? 'Submit/Browse Data' : 'Browse Data';
     }
     return [
-    proj.name,
-    ...proj.counts,
-    <Button
-      className='project-table__submit-button'
-      key={i}
-      onClick={() => this.props.history.push(`/${proj.name}`)}
-      label={buttonText}
-      buttonType='primary'
-      rightIcon='upload'
-    />,
-  ]});
+      proj.name,
+      ...proj.counts,
+      <Button
+        className='project-table__submit-button'
+        key={i}
+        onClick={() => this.props.history.push(`/${proj.name}`)}
+        label={buttonText}
+        buttonType='primary'
+        rightIcon='upload'
+      />,
+    ];
+  });
 
   getFooter = (summaries) => {
     const totalCounts = summaries.map(entry => entry.value);

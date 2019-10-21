@@ -72,7 +72,7 @@ const userAccess = (state = { access: {} }, action) => {
 };
 
 const userAuthMapping = (state = {}, action) => {
-  switch(action.type) {
+  switch (action.type) {
   case 'RECEIVE_USER_AUTH_MAPPING':
     return { ...state, ...action.data };
   default:

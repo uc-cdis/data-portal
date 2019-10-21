@@ -12,12 +12,12 @@ class Introduction extends Component {
   };
 
   render() {
-    var buttonText = 'Submit Data'
+    let buttonText = 'Submit Data';
     if (useArboristUI) {
       if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
-        buttonText = 'Submit/Browse Data'
+        buttonText = 'Submit/Browse Data';
       } else {
-        buttonText = 'Browse Data'
+        buttonText = 'Browse Data';
       }
     }
 
