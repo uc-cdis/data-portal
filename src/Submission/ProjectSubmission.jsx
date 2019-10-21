@@ -30,10 +30,8 @@ const ProjectSubmission = (props) => {
     return <MyDataModelGraph project={props.project} />;
   };
 
-  const userHasCreateOrUpdateOnProject = (projectID, userAuthMapping) => {
-    return (userHasMethodOnProject('create', projectID, userAuthMapping)
-      || userHasMethodOnProject('update', projectID, userAuthMapping))
-  }
+  const userHasCreateOrUpdateOnProject = (projectID, userAuthMapping) => (userHasMethodOnProject('create', projectID, userAuthMapping)
+      || userHasMethodOnProject('update', projectID, userAuthMapping));
 
   return (
     <div className='project-submission'>
@@ -42,14 +40,14 @@ const ProjectSubmission = (props) => {
         <Link className='project-submission__link' to={`/${props.project}/search`}>browse nodes</Link>
       }
       {
-        ( useArboristUI && !userHasCreateOrUpdateOnProject(props.project, props.userAuthMapping)) ?
-        null :
-        <MySubmitForm />
+        (useArboristUI && !userHasCreateOrUpdateOnProject(props.project, props.userAuthMapping)) ?
+          null :
+          <MySubmitForm />
       }
       {
-        ( useArboristUI && !userHasCreateOrUpdateOnProject(props.project, props.userAuthMapping)) ?
-        null :
-        <MySubmitTSV project={props.project} />
+        (useArboristUI && !userHasCreateOrUpdateOnProject(props.project, props.userAuthMapping)) ?
+          null :
+          <MySubmitTSV project={props.project} />
       }
       { displayData() }
     </div>

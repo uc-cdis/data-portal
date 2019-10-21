@@ -233,10 +233,10 @@ class QueryNode extends React.Component {
         />
         <h4>most recent 20:</h4>
         { queryNodesList.map(
-          value => {
-            var showDelete = true
+          (value) => {
+            let showDelete = true;
             if (useArboristUI) {
-              showDelete = userHasMethodOnProject('delete', this.props.params.project, this.props.userAuthMapping)
+              showDelete = userHasMethodOnProject('delete', this.props.params.project, this.props.userAuthMapping);
             }
             return (
               <Entities
@@ -248,8 +248,8 @@ class QueryNode extends React.Component {
                 value={value[1]}
                 showDelete={showDelete}
               />
-            )
-          }
+            );
+          },
         )
         }
       </div>

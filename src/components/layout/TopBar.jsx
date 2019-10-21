@@ -19,13 +19,13 @@ class TopBar extends Component {
           <nav className='top-bar__nav'>
             {
               this.props.topItems.map(
-                item => {
-                  var buttonText = item.name
+                (item) => {
+                  let buttonText = item.name;
                   if (item.name === 'Submit Data' && useArboristUI) {
                     if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
-                      buttonText = 'Submit/Browse Data'
+                      buttonText = 'Submit/Browse Data';
                     } else {
-                      buttonText = 'Browse Data'
+                      buttonText = 'Browse Data';
                     }
                   }
                   return (item.link.startsWith('http')) ?
@@ -54,8 +54,8 @@ class TopBar extends Component {
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
                       />
-                    </Link>
-                }
+                    </Link>;
+                },
               )
             }
             {
