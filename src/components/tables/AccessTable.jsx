@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Table from './base/Table';
 import './AccessTable.less';
+import { projectCodeFromResourcePath, listifyMethodsFromMapping } from '../../authMappingUtils';
 
 const LIST_PROJECT_MSG = 'You have access to the following project(s)';
+const LIST_RESOURCE_MSG = 'You have access to the following resource(s)';
 const PROJECT_COLUMN = 'Project(s)';
-const RIGHT_COLUMN = 'Right(s)';
+const RESOURCE_COLUMN = 'Resource(s)';
+const METHOD_COLUMN = 'Method(s)';
 
 class AccessTable extends React.Component {
   /* eslint class-methods-use-this: ["error", { "exceptMethods": ["rowRender"] }] */
@@ -14,25 +17,51 @@ class AccessTable extends React.Component {
    * default row renderer - just delegates to ProjectTR - can be overriden by subtypes, whatever
    */
 
-  getData = (projectKeys, projectsAccesses, projects) => projectKeys.map(p => [
-    p in projects ?
-      <Link className='access-table__project-cell' to={`/${projects[p]}`}>
-        {p}
-      </Link> :
-      <div className='access-table__project-cell'>
-        {p}
-      </div>,
-    projectsAccesses[p].join(', '),
-  ]);
+  getDataFenceProjectAccess = (projectsAccesses, projects) =>
+    Object.keys(projectsAccesses).map(p => [
+      p in projects ?
+        <Link className='access-table__project-cell' to={`/${projects[p]}`}>
+          {p}
+        </Link> :
+        <div className='access-table__project-cell'>
+          {p}
+        </div>,
+      projectsAccesses[p].join(', '),
+    ]);
+
+  getDataArboristAuthMapping = (userAuthMapping, projects) =>
+    Object.keys(userAuthMapping).map((r) => {
+      const projCode = projectCodeFromResourcePath(r); // will be project code or ''
+      return [
+        projCode in projects ?
+          <Link className='access-table__project-cell' to={`/${projects[projCode]}`}>
+            {r}
+          </Link> :
+          <div className='access-table__project-cell'>
+            {r}
+          </div>,
+        listifyMethodsFromMapping(userAuthMapping[r]).join(', '),
+      ];
+    });
 
   render() {
-    const projectKeys = Object.keys(this.props.projectsAccesses);
+    if (this.props.userAuthMapping === undefined) {
+      return (
+        <div className='access-table'>
+          <Table
+            title={LIST_PROJECT_MSG}
+            header={[PROJECT_COLUMN, METHOD_COLUMN]}
+            data={this.getDataFenceProjectAccess(this.props.projectsAccesses, this.props.projects)}
+          />
+        </div>
+      );
+    }
     return (
       <div className='access-table'>
         <Table
-          title={LIST_PROJECT_MSG}
-          header={[PROJECT_COLUMN, RIGHT_COLUMN]}
-          data={this.getData(projectKeys, this.props.projectsAccesses, this.props.projects)}
+          title={LIST_RESOURCE_MSG}
+          header={[RESOURCE_COLUMN, METHOD_COLUMN]}
+          data={this.getDataArboristAuthMapping(this.props.userAuthMapping, this.props.projects)}
         />
       </div>
     );
@@ -42,7 +71,7 @@ class AccessTable extends React.Component {
 AccessTable.propTypes = {
   projects: PropTypes.object,
   projectsAccesses: PropTypes.object,
-
+  userAuthMapping: PropTypes.object.isRequired,
 };
 
 AccessTable.defaultProps = {
