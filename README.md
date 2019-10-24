@@ -35,6 +35,11 @@ HOSTNAME=dev.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 HOSTNAME=qa-brain.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 ```
 
+>**NOTE:** To locally test Tiered Access features, you must include the additional environment variables `TIER_ACCESS_LEVEL` and `TIER_ACCESS_LIMIT`, with should have the same values as the server's "global.tier_access_level" and "global.tier_access_limit" properties in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest).
+>
+> **Example**:`HOSTNAME=qa-brain.planx-pla.net TIER_ACCESS_LEVEL=regular TIER_ACCESS_LIMIT=50 NODE_ENV=auto bash ./runWebpack.sh`
+
+
 * Accept the self-signed certificate at https://localhost:9443/bundle.js
 
 * Load the test environment's `/dev.html` - ex: https://qa-brian.planx-pla.net/dev.html
