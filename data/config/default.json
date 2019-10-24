@@ -285,7 +285,6 @@
     }
   },
   "useArboristUI": false,
-  "useArboristAuthz": false,
   "showArboristAuthzOnProfile": false,
   "showFenceAuthzOnProfile": true,
   "componentToResourceMapping": {}

@@ -8,7 +8,7 @@ import Popup from '../components/Popup';
 import { credentialCdisPath } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
 import AccessTable from '../components/tables/AccessTable';
-import { useArboristAuthz, showArboristAuthzOnProfile, showFenceAuthzOnProfile } from '../configs';
+import { showArboristAuthzOnProfile, showFenceAuthzOnProfile } from '../configs';
 import './UserProfile.less';
 
 const NO_ACCESS_MSG = 'You have no access to storage service. Please contact an admin to get it!';
@@ -142,7 +142,7 @@ const UserProfile = ({ user, userProfile, userAuthMapping, popups, submission, o
         <AccessTable projects={submission.projects} projectsAccesses={user.project_access} />
       }
       {
-        useArboristAuthz && showArboristAuthzOnProfile &&
+        showArboristAuthzOnProfile &&
         <AccessTable projects={submission.projects} userAuthMapping={userAuthMapping} />
       }
     </div>

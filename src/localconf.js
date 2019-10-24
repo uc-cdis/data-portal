@@ -103,11 +103,6 @@ function buildConfig(opts) {
     useGuppyForExplorer = true;
   }
 
-  let useArboristAuthz = false;
-  if (config.useArboristAuthz) {
-    useArboristAuthz = config.useArboristAuthz;
-  }
-
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
     showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
@@ -282,7 +277,6 @@ function buildConfig(opts) {
     manifestServiceApiPath,
     wtsPath,
     useGuppyForExplorer,
-    useArboristAuthz,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
     useArboristUI,
