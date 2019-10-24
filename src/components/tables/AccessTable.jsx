@@ -20,10 +20,10 @@ class AccessTable extends React.Component {
   getDataFenceProjectAccess = (projectsAccesses, projects) =>
     Object.keys(projectsAccesses).map(p => [
       p in projects ?
-        <Link className='access-table__project-cell' to={`/${projects[p]}`}>
+        <Link to={`/${projects[p]}`}>
           {p}
         </Link> :
-        <div className='access-table__project-cell'>
+        <div>
           {p}
         </div>,
       projectsAccesses[p].join(', '),
@@ -34,10 +34,10 @@ class AccessTable extends React.Component {
       const projCode = projectCodeFromResourcePath(r); // will be project code or ''
       return [
         projCode in projects ?
-          <Link className='access-table__project-cell' to={`/${projects[projCode]}`}>
+          <Link to={`/${projects[projCode]}`}>
             {r}
           </Link> :
-          <div className='access-table__project-cell'>
+          <div>
             {r}
           </div>,
         listifyMethodsFromMapping(userAuthMapping[r]).join(', '),
