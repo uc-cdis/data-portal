@@ -115,14 +115,14 @@ class HIVCohortFilterCase extends React.Component {
       query ($filter: JSON) {
         ${this.state.visitIndexTypeName} (filter: $filter, accessibility: all, first: 10000) {
           subject_id
-            visit_number
-            thrpyv
-            visit_date
-            fposdate
-            frstdthd
-            leu3n
-            submitter_id
-            viral_load
+          visit_number
+          thrpyv
+          visit_date
+          fposdate
+          frstdthd
+          leu3n
+          submitter_id
+          viral_load
         }
         _aggregation {
           ${this.state.visitIndexTypeName} (filter: $filter, accessibility: all) {
