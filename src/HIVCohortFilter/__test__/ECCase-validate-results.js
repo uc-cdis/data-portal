@@ -20,7 +20,7 @@ function checkIfConsecutiveFollowUpsLessThanViralLoadLimit(subjectID, followUps)
 function confirmPatientIsEC(subjectObj) {
   const subjectID = subjectObj.subject_id;
   const startFollowUpID = subjectObj.consecutive_viral_loads_below_threshold_begin_at_followup;
-  const followUps = subjectObj.follow_ups;
+  const followUps = subjectObj.visits;
   for (let i = 0; i < followUps.length; i += 1) {
     const followUp = followUps[i];
     if (followUp.submitter_id === startFollowUpID) {
