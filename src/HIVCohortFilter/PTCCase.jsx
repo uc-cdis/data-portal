@@ -13,10 +13,10 @@ class PTCCase extends HIVCohortFilterCase {
   * Below is the full algorithm description, from https://ctds-planx.atlassian.net/browse/PXP-2771
   * - The UI displays a 'decision tree' (just hardcoded svg), and makes an es query based on
   * sliding window size and viral load number.
-  * - thrpy is the treatment that patient used since the last visit (follow_up)
-  * - thrpyv is the treatment that patient uses at the visit (follow_up )
+  * - thrpy is the treatment that patient used since the last visit
+  * - thrpyv is the treatment that patient uses at the visit
   * Definitions:
-  * - With HAART treatment: follow_up.thrpyv = HAART
+  * - With HAART treatment: visit.thrpyv = HAART
   * - viral load< X: followup.viral_load < X
   * - consecutive Y month: (last_followup.visit_number - first_followup.visit_number)*6 = Y
   * (if there are missing visit number, eg: patient has visit_number 1, 3, 4, 5.
@@ -49,11 +49,11 @@ class PTCCase extends HIVCohortFilterCase {
 
   getBucketByKeyWithHAARTVAR = (bucketKey, isHAART) => {
     // The viral_load check in the below query ensures that
-    // the subjects retrieved have *at least* one follow_up with viral_load < viralLoadFromUser
+    // the subjects retrieved have *at least* one visit with viral_load < viralLoadFromUser
     const queryString = `
       query ($filter: JSON) {
         _aggregation {
-          follow_up (filter: $filter) {
+          visit (filter: $filter) {
             ${bucketKey} {
               histogram {
                 key
@@ -91,10 +91,10 @@ class PTCCase extends HIVCohortFilterCase {
       if (!res
         || !res.data
         || !res.data._aggregation
-        || !res.data._aggregation.follow_up) {
+        || !res.data._aggregation.visit) {
         throw new Error('Error when query subjects with HIV');
       }
-      const result = res.data._aggregation.follow_up[bucketKey].histogram;
+      const result = res.data._aggregation.visit[bucketKey].histogram;
       const resultList = [];
       result.forEach(item => (resultList.push({
         key: item.key,
@@ -116,9 +116,12 @@ class PTCCase extends HIVCohortFilterCase {
       return acc;
     }, {});
     const resultBucketKeys = {};
+    const rest = [];
     resList[0].forEach(({ key, doc_count }) => { // eslint-disable-line camelcase
-      if (withoutHAARTMap[key]) {
+      if (typeof withoutHAARTMap[key] !== 'undefined') {
         resultBucketKeys[key] = doc_count + withoutHAARTMap[key]; // eslint-disable-line camelcase
+      } else {
+        rest.push(key);
       }
     });
     return resultBucketKeys;
@@ -150,6 +153,7 @@ class PTCCase extends HIVCohortFilterCase {
     const subjectNeither = [];
     const slidingWindowSize = Math.ceil(this.state.numConsecutiveMonthsFromUser / 6);
 
+
     // For each patient, try to find numConsecutiveMonthsFromUser consecutive
     // visits that match the PTC criteria
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
@@ -157,7 +161,7 @@ class PTCCase extends HIVCohortFilterCase {
       const subjectWithVisits = {
         subject_id: subjectId,
         consecutive_haart_treatments_begin_at_followup: 'N/A',
-        follow_ups: visitArray,
+        visits: visitArray,
       };
 
       // If a followup has no date-related attributes set, it is not helpful to this classifier
@@ -223,7 +227,6 @@ class PTCCase extends HIVCohortFilterCase {
     this.getFollowUpsWithHIV()
       .then((followUps) => {
         const subjectToVisitMap = HIVCohortFilterCase.makeSubjectToVisitMap(followUps);
-
         const {
           subjectPTC,
           subjectControl,

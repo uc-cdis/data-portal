@@ -111,7 +111,7 @@ class HIVCohortFilterCase extends React.Component {
     if (useGuppyForExplorer) {
       const queryString = `
       query ($filter: JSON) {
-        follow_up (filter: $filter, accessibility: all, first: 10000) {
+        visit (filter: $filter, accessibility: all, first: 10000) {
           subject_id
             visit_number
             thrpyv
@@ -123,7 +123,7 @@ class HIVCohortFilterCase extends React.Component {
             viral_load
         }
         _aggregation {
-          follow_up (filter: $filter, accessibility: all) {
+          visit (filter: $filter, accessibility: all) {
             _totalCount
           }
         }
@@ -149,17 +149,17 @@ class HIVCohortFilterCase extends React.Component {
       return HIVCohortFilterCase.performQuery(queryString, variableString, true).then((res) => {
         if (!res
           || !res.data
-          || !res.data.follow_up) {
+          || !res.data.visit) {
           throw new Error('Error while querying subjects with HIV');
         }
-        return res.data.follow_up;
+        return res.data.visit;
       });
     }
 
     // below are for arranger
     const query = `
     {
-      follow_up {
+      visit {
         hits(filters: { op: "and",
           content: [
             { op: "=",
@@ -192,7 +192,7 @@ class HIVCohortFilterCase extends React.Component {
       if (!res || !res.data) {
         throw new Error('Error while querying subjects with HIV');
       }
-      return res.data.follow_up.hits.edges.map(edge => edge.node);
+      return res.data.visit.hits.edges.map(edge => edge.node);
     });
   }
 

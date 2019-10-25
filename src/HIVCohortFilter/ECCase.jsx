@@ -16,10 +16,10 @@ class ECCase extends HIVCohortFilterCase {
   * The UI displays a 'decision tree' (just hardcoded svg), and makes an es query based on
   * sliding window size and viral load number.
   * Definitions:
-  * - thrpy is the treatment that patient used since the last visit ( follow_up)
-  * - thrpyv is the treatment that patient uses at the visit ( follow_up )
+  * - thrpy is the treatment that patient used since the last visit
+  * - thrpyv is the treatment that patient uses at the visit
   * Definitions:
-  * - Never received HAART treatment: follow_up.thrpyv != HAART
+  * - Never received HAART treatment: visit.thrpyv != HAART
   * - viral load< X: followup.viral_load < X
   * - Consecutive Y month: (last_followup.visit_number - first_followup.visit_number)*6 = Y
   * If there are missing visit number, eg: patient has visit_number 1, 3, 4, 5.
@@ -116,7 +116,7 @@ class ECCase extends HIVCohortFilterCase {
   getFollowupsBuckets = () => {
     if (useGuppyForExplorer) {
       const queryObject = {
-        type: 'follow_up',
+        type: 'visit',
         fields: [
           'subject_id',
           'harmonized_visit_number',

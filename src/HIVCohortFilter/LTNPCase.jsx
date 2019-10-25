@@ -17,14 +17,14 @@ class LTNPCase extends HIVCohortFilterCase {
   * The UI displays a 'decision tree' (just hardcoded svg), and makes an es query based on
   * sliding window size and viral load number.
   * Definitions:
-  * - Never received HAART treatment: follow_up.thrpyv != HAART
+  * - Never received HAART treatment: visit.thrpyv != HAART
   * - X years: (get.current_year - followup.fposdate)
   * - CD4 > Y: followup.leu3n > Y
   * - leu3n is the number of CD4 cells (laboratory result summary node)
   * - fposdate is the year the subject is first seen as hiv_positive (hiv_history node)
   * - frstdthd is the subject's year of death
   * Definitions:
-  * - Never received HAART treatment: follow_up.thrpyv != HAART
+  * - Never received HAART treatment: visit.thrpyv != HAART
   * - viral load< X: followup.viral_load < X
   * - Consecutive Y month: (last_followup.visit_number - first_followup.visit_number)*6 = Y
   * If there are missing visit number, eg: patient has visit_number 1, 3, 4, 5.
@@ -124,7 +124,7 @@ class LTNPCase extends HIVCohortFilterCase {
   getFollowupsBuckets = () => {
     if (useGuppyForExplorer) {
       const queryObject = {
-        type: 'follow_up',
+        type: 'visit',
         fields: [
           'subject_id',
           'harmonized_visit_number',
