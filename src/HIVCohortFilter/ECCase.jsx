@@ -116,7 +116,7 @@ class ECCase extends HIVCohortFilterCase {
   getFollowupsBuckets = () => {
     if (useGuppyForExplorer) {
       const queryObject = {
-        type: 'visit',
+        type: this.state.visitIndexTypeName,
         fields: [
           'subject_id',
           'harmonized_visit_number',

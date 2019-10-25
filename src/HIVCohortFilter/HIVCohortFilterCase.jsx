@@ -6,6 +6,7 @@ import {
   arrangerGraphqlPath,
   useGuppyForExplorer,
   guppyDownloadUrl,
+  analysisApps,
 } from '../configs';
 
 class HIVCohortFilterCase extends React.Component {
@@ -75,6 +76,7 @@ class HIVCohortFilterCase extends React.Component {
       isReadyToCalculate: false,
       resultAlreadyCalculated: false,
       therapyValuesOfInterest: ['HAART'],
+      visitIndexTypeName: analysisApps.visitIndexTypeName || 'follow_up',
     };
   }
 
@@ -111,7 +113,7 @@ class HIVCohortFilterCase extends React.Component {
     if (useGuppyForExplorer) {
       const queryString = `
       query ($filter: JSON) {
-        visit (filter: $filter, accessibility: all, first: 10000) {
+        ${this.state.visitIndexTypeName} (filter: $filter, accessibility: all, first: 10000) {
           subject_id
             visit_number
             thrpyv
@@ -123,7 +125,7 @@ class HIVCohortFilterCase extends React.Component {
             viral_load
         }
         _aggregation {
-          visit (filter: $filter, accessibility: all) {
+          ${this.state.visitIndexTypeName} (filter: $filter, accessibility: all) {
             _totalCount
           }
         }
@@ -149,17 +151,17 @@ class HIVCohortFilterCase extends React.Component {
       return HIVCohortFilterCase.performQuery(queryString, variableString, true).then((res) => {
         if (!res
           || !res.data
-          || !res.data.visit) {
+          || !res.data[this.state.visitIndexTypeName]) {
           throw new Error('Error while querying subjects with HIV');
         }
-        return res.data.visit;
+        return res.data[this.state.visitIndexTypeName];
       });
     }
 
     // below are for arranger
     const query = `
     {
-      visit {
+      ${this.state.visitIndexTypeName} {
         hits(filters: { op: "and",
           content: [
             { op: "=",
@@ -192,7 +194,7 @@ class HIVCohortFilterCase extends React.Component {
       if (!res || !res.data) {
         throw new Error('Error while querying subjects with HIV');
       }
-      return res.data.visit.hits.edges.map(edge => edge.node);
+      return res.data[this.state.visitIndexTypeName].hits.edges.map(edge => edge.node);
     });
   }
 

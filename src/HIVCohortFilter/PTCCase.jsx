@@ -53,7 +53,7 @@ class PTCCase extends HIVCohortFilterCase {
     const queryString = `
       query ($filter: JSON) {
         _aggregation {
-          visit (filter: $filter) {
+          ${this.state.visitIndexTypeName} (filter: $filter) {
             ${bucketKey} {
               histogram {
                 key
@@ -91,10 +91,10 @@ class PTCCase extends HIVCohortFilterCase {
       if (!res
         || !res.data
         || !res.data._aggregation
-        || !res.data._aggregation.visit) {
+        || !res.data._aggregation[this.state.visitIndexTypeName]) {
         throw new Error('Error when query subjects with HIV');
       }
-      const result = res.data._aggregation.visit[bucketKey].histogram;
+      const result = res.data._aggregation[this.state.visitIndexTypeName][bucketKey].histogram;
       const resultList = [];
       result.forEach(item => (resultList.push({
         key: item.key,
