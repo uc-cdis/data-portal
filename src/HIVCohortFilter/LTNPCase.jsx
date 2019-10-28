@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
@@ -197,18 +198,29 @@ class LTNPCase extends HIVCohortFilterCase {
     const subjectLTNP = [];
     const subjectControl = [];
 
-    // For each subject, check their CD4 counts
+    // For each subject, extract first year of hiv positive (fhv) and check their
+    // CD4 counts to extract first visit that the case qualifies LTNP
     filtFollowups.forEach((item) => {
+      const fhv = item[0].submitter_id;
+      const subject_id = item[0].subject_id;
       const duration = item.slice(-1)[0].visit_date - item[0].visit_date;
       if (duration < this.state.numConsecutiveYearsFromUser) {
         // The subject is neither control nor LTNP
         return;
       }
       let leu3nhy = 0;
+      let ltnp_fv = '';
+      let ltnp_fy = '';
       const firstyh = item[0].visit_date;
+      let ltnp_visit = false;
       for (let i = 0; i < item.length; i += 1) {
         if (item[i].leu3n > 500) {
           leu3nhy = item[i].visit_date;
+          if (!ltnp_visit && (leu3nhy - firstyh) > 5) {
+            ltnp_visit = true;
+            ltnp_fv = item[i].submitter_id;
+            ltnp_fy = item[i].visit_date;
+          }
         } else {
           // eslint-disable-next-line no-param-reassign
           item = item.splice(0, i);
@@ -216,11 +228,18 @@ class LTNPCase extends HIVCohortFilterCase {
         }
       }
       const leu3nhdu = leu3nhy - firstyh;
+      const update_content = {
+        subject_id,
+        first_hiv_positive_visit: fhv,
+        first_visit_qualify_ltnp: ltnp_fv,
+        first_year_qualify_ltnp: ltnp_fy,
+        follow_ups: item,
+      };
 
       if (leu3nhdu > this.state.numConsecutiveYearsFromUser) {
-        subjectLTNP.push(item);
+        subjectLTNP.push(update_content);
       } else {
-        subjectControl.push(item);
+        subjectControl.push(update_content);
       }
     });
     return {
