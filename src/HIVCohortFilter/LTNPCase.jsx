@@ -210,6 +210,7 @@ class LTNPCase extends HIVCohortFilterCase {
       }
       let leu3nhy = 0;
       let ltnp_fv = '';
+      const ltnp_v = [];
       let ltnp_fy = '';
       const firstyh = item[0].visit_date;
       let ltnp_visit = false;
@@ -218,8 +219,11 @@ class LTNPCase extends HIVCohortFilterCase {
           leu3nhy = item[i].visit_date;
           if (!ltnp_visit && (leu3nhy - firstyh) > 5) {
             ltnp_visit = true;
+            ltnp_v.push(item[i].submitter_id);
             ltnp_fv = item[i].submitter_id;
             ltnp_fy = item[i].visit_date;
+          } else if (ltnp_visit && (leu3nhy - firstyh) > 5) {
+            ltnp_v.push(item[i].submitter_id);
           }
         } else {
           // eslint-disable-next-line no-param-reassign
@@ -233,6 +237,7 @@ class LTNPCase extends HIVCohortFilterCase {
         first_hiv_positive_visit: fhv,
         first_visit_qualify_ltnp: ltnp_fv,
         first_year_qualify_ltnp: ltnp_fy,
+        all_visit_qualify_ltnp: ltnp_v,
         follow_ups: item,
       };
 

@@ -157,15 +157,18 @@ class PTCCase extends HIVCohortFilterCase {
     // For each patient, try to find numConsecutiveMonthsFromUser consecutive
     // visits that match the PTC criteria
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
-      let visitArray = subjectToVisitMap[subjectId];
+      let visitArray = subjectToVisitMap[subjectId]
+        .sort((a, b) => (a.visit_number - b.visit_number));
       const subjectWithVisits = {
         subject_id: subjectId,
         stop_treatments_maintain_viral_load_at_followup: 'N/A',
+        all_maintain_viral_load_at_followup: [],
         visits: visitArray,
       };
 
       // If a followup has no date-related attributes set, it is not helpful to this classifier
-      visitArray = visitArray.filter(x => x.visit_date !== null && x.visit_number !== null);
+      visitArray = visitArray
+        .filter(x => x.visit_date !== null && x.visit_number !== null);
 
       if (visitArray.length < slidingWindowSize + 1) {
         subjectNeither.push(subjectWithVisits);
@@ -198,6 +201,17 @@ class PTCCase extends HIVCohortFilterCase {
                       = visitArray[(i + slidingWindowSize) - 1].submitter_id;
             subjectWithVisits.stop_treatments_maintain_viral_load_at_followup
                       = theNextVisit.submitter_id;
+            for (let j = i + slidingWindowSize; j < visitArray.length; j += 1) {
+              const nvloadCheck = (visitArray[j].viral_load > this.state.viralLoadFromUser);
+              const ntherapyCheck = this.state.therapyValuesOfInterest
+                .includes(visitArray[j].thrpyv);
+              if (nvloadCheck || ntherapyCheck) {
+                break;
+              } else {
+                subjectWithVisits.all_maintain_viral_load_at_followup
+                  .push(visitArray[j].submitter_id);
+              }
+            }
             subjectPTC.push(subjectWithVisits);
           } else {
             // Found control!
