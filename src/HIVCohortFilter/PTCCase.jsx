@@ -160,7 +160,7 @@ class PTCCase extends HIVCohortFilterCase {
       let visitArray = subjectToVisitMap[subjectId];
       const subjectWithVisits = {
         subject_id: subjectId,
-        consecutive_haart_treatments_begin_at_followup: 'N/A',
+        stop_treatments_maintain_viral_load_at_followup: 'N/A',
         visits: visitArray,
       };
 
@@ -194,8 +194,10 @@ class PTCCase extends HIVCohortFilterCase {
           }
           if (vloadCheck && therapyCheck) {
             // Found PTC!
-            subjectWithVisits.consecutive_haart_treatments_begin_at_followup
-                      = visitArray[i].submitter_id;
+            subjectWithVisits.consecutive_haart_treatments_end_at_followup
+                      = visitArray[(i + slidingWindowSize) - 1].submitter_id;
+            subjectWithVisits.stop_treatments_maintain_viral_load_at_followup
+                      = theNextVisit.submitter_id;
             subjectPTC.push(subjectWithVisits);
           } else {
             // Found control!
