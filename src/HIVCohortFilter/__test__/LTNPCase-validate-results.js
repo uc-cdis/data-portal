@@ -15,7 +15,7 @@ function sortByKey(array, key) {
 
 function confirmPatientIsLTNP(subjectObj) {
   const subjectID = subjectObj.subject_id;
-  const followUps = sortByKey(subjectObj.follow_ups, 'visit_date');
+  const followUps = sortByKey(subjectObj.visits, 'visit_date');
   const fposdate = followUps[0].fposdate;
   const frstdthd = followUps[0].frstdthd;
   const indexOfFirstFollowUpInFposYear = followUps.findIndex(visit => visit.visit_date >= fposdate);
