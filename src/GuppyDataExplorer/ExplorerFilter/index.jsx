@@ -33,6 +33,14 @@ class ExplorerFilter extends React.Component {
         )) {
           // don't show this selector if user have full access, or none access
           this.setState({ showTierAccessSelector: false });
+          // if user don't have access to any projects
+          // apply 'all-data' filter so agg data is available
+          if (checkForNoAccessibleProject(
+            this.props.accessibleFieldObject,
+            this.props.guppyConfig.accessibleValidationField,
+          )) {
+            this.setState({ selectedAccessFilter: 'all-data' });
+          }
         } else {
           this.setState({ showTierAccessSelector: true });
         }
