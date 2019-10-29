@@ -44,12 +44,12 @@ class CoreMetadataHeader extends Component {
 
   render() {
     if (this.props.metadata) {
-      // display the download button if the user can download this file
       const { projectAvail } = this.props;
       const projectId = this.props.metadata.project_id;
       let downloadButton = null;
       let signedURLButton = null;
 
+      // downloadButton should always render if useArboristUI false. Otherwise according to authz.
       if (
         !useArboristUI
         || userHasMethodOnProject('read-storage', projectId, this.props.userAuthMapping)
