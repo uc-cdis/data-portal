@@ -75,7 +75,7 @@ class HIVCohortFilterCase extends React.Component {
       inLoadingState: false,
       isReadyToCalculate: false,
       resultAlreadyCalculated: false,
-      therapyValuesOfInterest: ['HAART'],
+      therapyValuesOfInterest: ['HAART', 'Potent ART'],
       visitIndexTypeName: analysisApps.ndhHIV.visitIndexTypeName || 'follow_up',
     };
   }
