@@ -68,9 +68,14 @@ class PTCCase extends HIVCohortFilterCase {
       "filter": {
         "AND": [
           {
-            "${isHAART ? '=' : '!='}": {
-              "thrpyv": "HAART"
-            }
+            "${isHAART ? 'OR' : 'AND'}": [
+              {
+                "${isHAART ? '=' : '!='}": {"thrpyv": "HAART"}
+              },
+              {
+                "${isHAART ? '=' : '!='}": {"thrpyv": "Potent ART"}
+              }
+            ]
           },
           {
             "<": {
@@ -153,7 +158,6 @@ class PTCCase extends HIVCohortFilterCase {
     const subjectNeither = [];
     const slidingWindowSize = Math.ceil(this.state.numConsecutiveMonthsFromUser / 6);
 
-
     // For each patient, try to find numConsecutiveMonthsFromUser consecutive
     // visits that match the PTC criteria
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
@@ -174,6 +178,7 @@ class PTCCase extends HIVCohortFilterCase {
         subjectNeither.push(subjectWithVisits);
         return;
       }
+
 
       // The sliding window step. Window is of size this.state.numConsecutiveMonthsFromUser / 6
       for (let i = 0; i < visitArray.length - slidingWindowSize; i += 1) {
