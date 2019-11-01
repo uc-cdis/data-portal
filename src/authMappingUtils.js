@@ -13,6 +13,24 @@ const resourcePathFromProjectID = (projectID) => {
 };
 
 
+export const projectCodeFromResourcePath = (resourcePath) => {
+  // If resourcePath is anything other than /programs/foo/projects/bar[/morestuff],
+  // e.g. /gen3/programs/foo/projects/bar or /workspace or /programs/foo/bar/projects/baz,
+  // this will just return ''
+  // because concept of projectID/project code for peregrine/sheepdog incompatible with those cases.
+  // Otherwise, returns project code (not project ID i.e. name-code!).
+  const split = resourcePath.split('/');
+  return (split.length < 5 || split[1] !== 'programs' || split[3] !== 'projects') ? '' : split[4];
+};
+
+
+export const listifyMethodsFromMapping = (actions) => {
+  // actions is an array of objects { 'service': x, 'method': y }
+  const reducer = (accumulator, currval) => accumulator.concat([currval.method]);
+  return actions.reduce(reducer, []);
+};
+
+
 export const userHasDataUpload = (userAuthMapping = {}) => {
   // data_upload policy is resource data_file, method file_upload, service fence
   const actionIsFileUpload = x => x.method === 'file_upload' && x.service === 'fence';

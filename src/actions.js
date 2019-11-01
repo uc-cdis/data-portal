@@ -457,7 +457,7 @@ export const fetchUserAccess = async (dispatch) => {
 
 // asks arborist for the user's auth mapping if Arborist UI enabled
 export const fetchUserAuthMapping = async (dispatch) => {
-  if (!config.useArboristUI) {
+  if (!config.showArboristAuthzOnProfile && !config.useArboristUI) {
     return;
   }
 
