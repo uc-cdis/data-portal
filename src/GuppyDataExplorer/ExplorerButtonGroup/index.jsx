@@ -312,6 +312,7 @@ class ExplorerButtonGroup extends React.Component {
             selectedValues: caseIDList,
           },
         });
+        console.log(countResult);
         this.setState(prevState => ({
           manifestEntryCount: countResult,
           pendingManifestEntryCountRequestNumber:
