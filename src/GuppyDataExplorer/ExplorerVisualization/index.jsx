@@ -101,7 +101,7 @@ class ExplorerVisualization extends React.Component {
       ? this.props.tableConfig.fields : this.props.allFields;
     const isComponentLocked = checkForAnySelectedUnaccessibleField(this.props.aggsData,
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
-    const lockMessage = `This chart is hidden because it has one or more fields which have less than ${this.props.tierAccessLimit} ${this.props.nodeCountTitle.toLowerCase()}`;
+    const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${this.props.tierAccessLimit} ${this.props.guppyConfig.nodeCountTitle.toLowerCase() || this.props.guppyConfig.dataType}`;
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
 
     // heatmap config
