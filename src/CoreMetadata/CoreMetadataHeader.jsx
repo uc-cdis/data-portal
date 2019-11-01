@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import copy from 'clipboard-plus';
 import React, { Component } from 'react';
 import Popup from '../components/Popup';
-import { userapiPath } from '../configs';
+import { userapiPath, useArboristUI } from '../configs';
 import isEnabled from '../helpers/featureFlags';
+
+import { userHasMethodOnProject } from '../authMappingUtils';
 
 const DOWNLOAD_BTN_CAPTION = 'Download';
 const SIGNED_URL_BTN_CAPTION = 'Generate Signed URL';
@@ -24,28 +26,8 @@ function fileSizeTransform(size) {
   return `${sizeStr} ${suffix}`;
 }
 
-function canUserDownload(user, projectAvail, projectID) {
-  const parts = projectID.split('-');
-  const program = parts[0];
-  parts.shift();
-  const project = parts.join('-');
-  let hasAccess = false;
-  if (projectID in projectAvail) {
-    if (projectAvail[projectID] === 'Open') {
-      hasAccess = true;
-    }
-  }
-  if ('project_access' in user && program in user.project_access) {
-    if (user.project_access[program].includes('read-storage')) {
-      hasAccess = true;
-    }
-  }
-  if ('project_access' in user && project in user.project_access) {
-    if (user.project_access[project].includes('read-storage')) {
-      hasAccess = true;
-    }
-  }
-  return hasAccess;
+function projectIsOpenData(projectAvail, projectID) {
+  return (projectID in projectAvail && projectAvail[projectID] === 'Open');
 }
 
 class CoreMetadataHeader extends Component {
@@ -62,13 +44,17 @@ class CoreMetadataHeader extends Component {
 
   render() {
     if (this.props.metadata) {
-      // display the download button if the user can download this file
-      const { user, projectAvail } = this.props;
+      const { projectAvail } = this.props;
       const projectId = this.props.metadata.project_id;
-      const canDownload = canUserDownload(user, projectAvail, projectId);
       let downloadButton = null;
       let signedURLButton = null;
-      if (canDownload) {
+
+      // downloadButton should always render if useArboristUI false. Otherwise according to authz.
+      if (
+        !useArboristUI
+        || userHasMethodOnProject('read-storage', projectId, this.props.userAuthMapping)
+        || projectIsOpenData(projectAvail, projectId)
+      ) {
         const downloadLink = `${userapiPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
 
         downloadButton = (
@@ -150,8 +136,8 @@ CoreMetadataHeader.propTypes = {
   signedURL: PropTypes.string,
   signedURLPopup: PropTypes.bool,
   error: PropTypes.string,
-  user: PropTypes.object.isRequired,
   projectAvail: PropTypes.object.isRequired,
+  userAuthMapping: PropTypes.object.isRequired,
   onGenerateSignedURL: PropTypes.func.isRequired,
   onUpdatePopup: PropTypes.func.isRequired,
   onClearSignedURL: PropTypes.func.isRequired,

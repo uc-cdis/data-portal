@@ -103,6 +103,16 @@ function buildConfig(opts) {
     useGuppyForExplorer = true;
   }
 
+  let showArboristAuthzOnProfile = false;
+  if (config.showArboristAuthzOnProfile) {
+    showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
+  }
+
+  let showFenceAuthzOnProfile = false;
+  if (config.showFenceAuthzOnProfile) {
+    showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
+  }
+
   let useArboristUI = false;
   if (config.useArboristUI) {
     useArboristUI = config.useArboristUI;
@@ -267,6 +277,8 @@ function buildConfig(opts) {
     manifestServiceApiPath,
     wtsPath,
     useGuppyForExplorer,
+    showArboristAuthzOnProfile,
+    showFenceAuthzOnProfile,
     useArboristUI,
     analysisApps,
     tierAccessLevel,
