@@ -108,7 +108,7 @@ function buildConfig(opts) {
     showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
   }
 
-  let showFenceAuthzOnProfile = false;
+  let showFenceAuthzOnProfile = true;
   if (config.showFenceAuthzOnProfile) {
     showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
   }
