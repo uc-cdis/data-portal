@@ -8,6 +8,7 @@ import Popup from '../components/Popup';
 import { credentialCdisPath } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
 import AccessTable from '../components/tables/AccessTable';
+import { showArboristAuthzOnProfile, showFenceAuthzOnProfile } from '../configs';
 import './UserProfile.less';
 
 const NO_ACCESS_MSG = 'You have no access to storage service. Please contact an admin to get it!';
@@ -21,7 +22,7 @@ export const saveToFile = (savingStr, filename) => {
   FileSaver.saveAs(blob, filename);
 };
 
-const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
+const UserProfile = ({ user, userProfile, userAuthMapping, popups, submission, onCreateKey,
   onClearCreationSession, onUpdatePopup, onDeleteKey,
   onRequestDeleteKey, onClearDeleteSession }) => {
   const onCreate = () => {
@@ -136,7 +137,14 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
           }
         </ul>
       }
-      <AccessTable projects={submission.projects} projectsAccesses={user.project_access} />
+      {
+        showFenceAuthzOnProfile &&
+        <AccessTable projects={submission.projects} projectsAccesses={user.project_access} />
+      }
+      {
+        showArboristAuthzOnProfile &&
+        <AccessTable projects={submission.projects} userAuthMapping={userAuthMapping} />
+      }
     </div>
   );
 };
@@ -144,6 +152,7 @@ const UserProfile = ({ user, userProfile, popups, submission, onCreateKey,
 UserProfile.propTypes = {
   user: PropTypes.object.isRequired,
   userProfile: PropTypes.object.isRequired,
+  userAuthMapping: PropTypes.object.isRequired,
   popups: PropTypes.object.isRequired,
   submission: PropTypes.object,
   onClearCreationSession: PropTypes.func.isRequired,
