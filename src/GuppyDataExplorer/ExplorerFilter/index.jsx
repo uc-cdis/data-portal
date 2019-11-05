@@ -117,6 +117,7 @@ class ExplorerFilter extends React.Component {
       onProcessFilterAggsData: this.onProcessFilterAggsData,
       onUpdateAccessLevel: this.props.onUpdateAccessLevel,
       adminAppliedPreFilters: this.props.adminAppliedPreFilters,
+      accessibleFieldCheckList: this.props.accessibleFieldCheckList,
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
@@ -177,6 +178,7 @@ ExplorerFilter.propTypes = {
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
   unaccessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
   adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
+  accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
   getAccessButtonLink: PropTypes.string,
 };
 
@@ -192,6 +194,7 @@ ExplorerFilter.defaultProps = {
   accessibleFieldObject: {},
   unaccessibleFieldObject: {},
   adminAppliedPreFilters: {},
+  accessibleFieldCheckList: [],
   getAccessButtonLink: undefined,
 };
 
