@@ -31,7 +31,7 @@ RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}
     && VERSION=`git describe --always --tags` && echo "export const portalVersion =\"${VERSION}\";" >>src/versions.js \
     && /bin/rm -rf .git \
     && /bin/rm -rf node_modules \
-    && npm config set unsafe-perm=true && npm i --force \
+    && npm config set unsafe-perm=true && npm ci \
     && npm run relay \
     && npm run params \
     && NODE_OPTIONS=--max-old-space-size=4096 NODE_ENV=production ./node_modules/.bin/webpack --bail \
