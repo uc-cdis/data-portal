@@ -109,7 +109,7 @@ function buildConfig(opts) {
   }
 
   let showFenceAuthzOnProfile = true;
-  if (config.showFenceAuthzOnProfile) {
+  if (config.showFenceAuthzOnProfile === false) {
     showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
   }
 
