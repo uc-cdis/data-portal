@@ -18,7 +18,7 @@ describe('the TSV submission component', () => {
    *
    * @param {file, submit_result, submit_status} submission property passed through to <SubmitTSV>
    * @param {function} submitCallback invoked by onSubmitClick property on <SubmitTSV>
-   * @param {function} onFileChangeCallback invoked by onFileChange property on <SubmitTSV>
+   * @param {function} uploadCallback invoked by onUploadClick property on <SubmitTSV>
    * @return enzymejs wrapper of <SubmitTSV> with properties from params
    */
   function buildTest(submission = { file: '', submit_result: '', submit_status: 200 }, submitCallback = () => { }, uploadCallback = () => { }) {
