@@ -295,14 +295,14 @@ class ExplorerButtonGroup extends React.Component {
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     const caseFieldInFileIndex =
       this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
-    this.setState(prevState => ({
-      pendingManifestEntryCountRequestNumber: prevState.pendingManifestEntryCountRequestNumber + 1,
-      manifestEntryCount: 0,
-    }));
     if (this.props.buttonConfig
       && this.props.buttonConfig.buttons
       && this.props.buttonConfig.buttons.some(
         btnCfg => this.isFileButton(btnCfg) && btnCfg.enabled)) {
+      this.setState(prevState => ({
+        pendingManifestEntryCountRequestNumber: prevState.pendingManifestEntryCountRequestNumber + 1,
+        manifestEntryCount: 0,
+      }));
       const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
       if (caseIDResult) {
         const caseIDList = caseIDResult.map(i => i[caseField]);
