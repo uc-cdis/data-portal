@@ -357,6 +357,16 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   isButtonPending = (buttonConfig) => {
+    if (this.props.isPending) {
+      return true;
+    }
+    // If the semaphore for manifestEntryCount request is not 0,
+    // then there is a pending request for a new manifestEntryCount.
+    // All buttons should be pending.
+    const manifestEntryCountIsPending = this.state.pendingManifestEntryCountRequestNumber > 0;
+    if (manifestEntryCountIsPending) {
+      return true;
+    }
     if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
       return this.state.exportingToWorkspace;
     }
@@ -478,6 +488,7 @@ ExplorerButtonGroup.propTypes = {
   downloadRawDataByTypeAndFilter: PropTypes.func.isRequired, // from GuppyWrapper
   totalCount: PropTypes.number.isRequired, // from GuppyWrapper
   filter: PropTypes.object.isRequired, // from GuppyWrapper
+  isPending: PropTypes.bool,
   buttonConfig: ButtonConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
   history: PropTypes.object.isRequired,
@@ -491,6 +502,7 @@ ExplorerButtonGroup.propTypes = {
 
 ExplorerButtonGroup.defaultProps = {
   job: null,
+  isPending: false,
 };
 
 export default ExplorerButtonGroup;
