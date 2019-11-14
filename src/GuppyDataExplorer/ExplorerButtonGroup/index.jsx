@@ -37,7 +37,7 @@ class ExplorerButtonGroup extends React.Component {
       workspaceSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
 
       // a semaphore that could hold pending state by multiple queries
-      pendingManifestEntryCountRequestNumber: 0,
+      manifestEntryCountSemaphore: 0,
     };
   }
 
@@ -300,7 +300,7 @@ class ExplorerButtonGroup extends React.Component {
       && this.props.buttonConfig.buttons.some(
         btnCfg => this.isFileButton(btnCfg) && btnCfg.enabled)) {
       this.setState(prevState => ({
-        pendingManifestEntryCountRequestNumber: prevState.pendingManifestEntryCountRequestNumber + 1,
+        manifestEntryCountSemaphore: prevState.manifestEntryCountSemaphore + 1,
         manifestEntryCount: 0,
       }));
       const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
@@ -314,8 +314,8 @@ class ExplorerButtonGroup extends React.Component {
         });
         this.setState(prevState => ({
           manifestEntryCount: countResult,
-          pendingManifestEntryCountRequestNumber:
-            prevState.pendingManifestEntryCountRequestNumber - 1,
+          manifestEntryCountSemaphore:
+            prevState.manifestEntryCountSemaphore - 1,
         }));
       } else {
         throw Error('Error when downloading data');
@@ -363,7 +363,7 @@ class ExplorerButtonGroup extends React.Component {
     // If the semaphore for manifestEntryCount request is not 0,
     // then there is a pending request for a new manifestEntryCount.
     // All buttons should be pending.
-    const manifestEntryCountIsPending = this.state.pendingManifestEntryCountRequestNumber > 0;
+    const manifestEntryCountIsPending = this.state.manifestEntryCountSemaphore > 0;
     if (manifestEntryCountIsPending) {
       return true;
     }
@@ -385,7 +385,7 @@ class ExplorerButtonGroup extends React.Component {
     }
 
     const clickFunc = this.getOnClickFunction(buttonConfig);
-    const pendingState = buttonConfig.type === 'manifest' ? (this.state.pendingManifestEntryCountRequestNumber > 0) : false;
+    const pendingState = buttonConfig.type === 'manifest' ? (this.state.manifestEntryCountSemaphore > 0) : false;
     let buttonTitle = buttonConfig.title;
     if (buttonConfig.type === 'data') {
       const buttonCount = (this.props.totalCount >= 0) ? this.props.totalCount : 0;
