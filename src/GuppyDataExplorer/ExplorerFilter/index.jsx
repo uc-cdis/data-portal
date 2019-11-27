@@ -14,9 +14,21 @@ class ExplorerFilter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedAccessFilter: 'all-data', // default value of selectedAccessFilter
+      selectedAccessFilter: 'with-access',
       showTierAccessSelector: false,
     };
+  }
+
+  static getDerivedStateFromProps(props) {
+    if (checkForNoAccessibleProject(
+      props.accessibleFieldObject,
+      props.guppyConfig.accessibleValidationField,
+    )) {
+      return {
+        selectedAccessFilter: 'all-data',
+      };
+    }
+    return null;
   }
 
   getSnapshotBeforeUpdate(prevProps) {
@@ -113,14 +125,6 @@ class ExplorerFilter extends React.Component {
       disabledTooltipMessage: this.props.tierAccessLevel === 'regular' ? `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${this.props.tierAccessLimit} ${this.props.guppyConfig.nodeCountTitle.toLowerCase() || this.props.guppyConfig.dataType} or more.` : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
     };
-    // if user don't have access to any projects
-    // apply 'all-data' filter so agg data is available
-    if (checkForNoAccessibleProject(
-      this.props.accessibleFieldObject,
-      this.props.guppyConfig.accessibleValidationField,
-    ) && this.state.selectedAccessFilter !== 'all-data') {
-      this.setState({ selectedAccessFilter: 'all-data' });
-    }
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
     case 'all-data':
