@@ -15,25 +15,14 @@ class ExplorerTopMessageBanner extends React.Component {
             <div className='top-message-banner'>
               <div className='top-message-banner__button-column'>
                 <div className='top-message-banner__button-wrapper'>
-                  { (hideGetAccessButton) ? (
-                    <Button
-                      label='Get Access'
-                      className='top-message-banner__button'
-                      buttonType='default'
-                      onClick={
-                        (this.props.getAccessButtonLink) ? (
-                          () => { window.open(this.props.getAccessButtonLink); }
-                        ) : (() => {})
-                      }
-                    />
-                  ) :
+                  { (hideGetAccessButton) ? (<React.Fragment />) :
                     (
                       <Button
                         label='Get Access'
                         className='top-message-banner__button'
                         buttonType='default'
-                        enabled={false}
-                        tooltipEnabled
+                        enabled={!!(this.props.getAccessButtonLink)}
+                        tooltipEnabled={!(this.props.getAccessButtonLink)}
                         tooltipText='Coming soon'
                         onClick={
                           (this.props.getAccessButtonLink) ? (

@@ -90,8 +90,13 @@ class TierAccessSelector extends React.Component {
                       label='Get Access'
                       className='tier-access-selector__button'
                       buttonType='default'
+                      enabled={!!(this.props.getAccessButtonLink)}
+                      tooltipEnabled={!(this.props.getAccessButtonLink)}
+                      tooltipText='Coming soon'
                       onClick={
-                        () => { window.open(this.props.getAccessButtonLink); }
+                        (this.props.getAccessButtonLink) ? (
+                          () => { window.open(this.props.getAccessButtonLink); }
+                        ) : (() => {})
                       }
                     />
                   </div>
