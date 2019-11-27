@@ -84,7 +84,7 @@ class TierAccessSelector extends React.Component {
                 </div>
               </div>
               {
-                this.state.selected !== 'with-access' && (
+                this.state.selected !== 'with-access' && !this.props.hideGetAccessButton && (
                   <div className='tier-access-selector__button-wrapper'>
                     <Button
                       label='Get Access'
@@ -110,11 +110,13 @@ TierAccessSelector.propTypes = {
   // paramter will be one of: 'with-access', 'without-access', or 'all-data'
   onSelectorChange: PropTypes.func,
   getAccessButtonLink: PropTypes.string,
+  hideGetAccessButton: PropTypes.bool,
 };
 
 TierAccessSelector.defaultProps = {
   onSelectorChange: () => {},
-  getAccessButtonLink: 'https://gen3.org/',
+  getAccessButtonLink: undefined,
+  hideGetAccessButton: false,
 };
 
 export default TierAccessSelector;

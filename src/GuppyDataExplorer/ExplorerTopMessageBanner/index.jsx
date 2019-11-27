@@ -7,30 +7,53 @@ import { GuppyConfigType } from '../configTypeDef';
 
 class ExplorerTopMessageBanner extends React.Component {
   render() {
+    const hideGetAccessButton = this.props.hideGetAccessButton;
     return (
       <div className={this.props.className}>
         {
           (this.props.tierAccessLevel === 'regular' && checkForNoAccessibleProject(this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField)) ? (
             <div className='top-message-banner'>
-              <div className='top-message-banner__button-wrapper'>
-                <Button
-                  label='Get Access'
-                  className='top-message-banner__button'
-                  buttonType='default'
-                  onClick={
-                    (this.props.getAccessButtonLink) ? (
-                      () => { window.open(this.props.getAccessButtonLink); }
-                    ) : (() => {})
+              <div className='top-message-banner__button-column'>
+                <div className='top-message-banner__button-wrapper'>
+                  { (hideGetAccessButton) ? (
+                    <Button
+                      label='Get Access'
+                      className='top-message-banner__button'
+                      buttonType='default'
+                      onClick={
+                        (this.props.getAccessButtonLink) ? (
+                          () => { window.open(this.props.getAccessButtonLink); }
+                        ) : (() => {})
+                      }
+                    />
+                  ) :
+                    (
+                      <Button
+                        label='Get Access'
+                        className='top-message-banner__button'
+                        buttonType='default'
+                        enabled={false}
+                        tooltipEnabled
+                        tooltipText='Coming soon'
+                        onClick={
+                          (this.props.getAccessButtonLink) ? (
+                            () => { window.open(this.props.getAccessButtonLink); }
+                          ) : (() => {})
+                        }
+                      />
+                    )
                   }
-                />
+                </div>
               </div>
-              <span className='top-message-banner__normal-text'>Due to lack of access, you are only able to narrow the cohort down to </span>
-              <span className='top-message-banner__bold-text'>{ this.props.tierAccessLimit } </span>
-              <span className='top-message-banner__normal-text'>
-                {this.props.guppyConfig.nodeCountTitle.toLowerCase()
+              <div className='top-message-banner__text-column'>
+                <span className='top-message-banner__normal-text'>Due to lack of access, you are only able to narrow the cohort down to </span>
+                <span className='top-message-banner__bold-text'>{ this.props.tierAccessLimit } </span>
+                <span className='top-message-banner__normal-text'>
+                  {this.props.guppyConfig.nodeCountTitle.toLowerCase()
                   || this.props.guppyConfig.dataType}.
                   Please request additional access if necessary.
-              </span>
+                </span>
+              </div>
             </div>
           ) : (<React.Fragment />)
         }
@@ -42,6 +65,7 @@ class ExplorerTopMessageBanner extends React.Component {
 ExplorerTopMessageBanner.propTypes = {
   className: PropTypes.string,
   getAccessButtonLink: PropTypes.string,
+  hideGetAccessButton: PropTypes.bool,
   tierAccessLevel: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number,
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
@@ -53,6 +77,7 @@ ExplorerTopMessageBanner.defaultProps = {
   tierAccessLimit: undefined,
   accessibleFieldObject: {},
   getAccessButtonLink: undefined,
+  hideGetAccessButton: false,
   guppyConfig: {},
 };
 
