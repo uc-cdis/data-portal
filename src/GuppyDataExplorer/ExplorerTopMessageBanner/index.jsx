@@ -13,7 +13,8 @@ class ExplorerTopMessageBanner extends React.Component {
         {
           (this.props.tierAccessLevel === 'regular' && checkForNoAccessibleProject(this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField)) ? (
             <div className='top-message-banner'>
-              <div className='top-message-banner__button-column'>
+              <div className='top-message-banner__space-column' />
+              <div className='top-message-banner__text-column'>
                 <div className='top-message-banner__button-wrapper'>
                   { (hideGetAccessButton) ? (<React.Fragment />) :
                     (
@@ -33,15 +34,15 @@ class ExplorerTopMessageBanner extends React.Component {
                     )
                   }
                 </div>
-              </div>
-              <div className='top-message-banner__text-column'>
-                <span className='top-message-banner__normal-text'>Due to lack of access, you are only able to narrow the cohort down to </span>
-                <span className='top-message-banner__bold-text'>{ this.props.tierAccessLimit } </span>
-                <span className='top-message-banner__normal-text'>
-                  {this.props.guppyConfig.nodeCountTitle.toLowerCase()
+                <div className='top-message-banner__text-wrapper'>
+                  <span className='top-message-banner__normal-text'>Due to lack of access, you are only able to narrow the cohort down to </span>
+                  <span className='top-message-banner__bold-text'>{ this.props.tierAccessLimit } </span>
+                  <span className='top-message-banner__normal-text'>
+                    {this.props.guppyConfig.nodeCountTitle.toLowerCase()
                   || this.props.guppyConfig.dataType}.
                   Please request additional access if necessary.
-                </span>
+                  </span>
+                </div>
               </div>
             </div>
           ) : (<React.Fragment />)
