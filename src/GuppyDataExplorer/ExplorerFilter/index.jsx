@@ -14,7 +14,7 @@ class ExplorerFilter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedAccessFilter: 'with-access', // default value of selectedAccessFilter
+      selectedAccessFilter: 'all-data', // default value of selectedAccessFilter
       showTierAccessSelector: false,
     };
   }
@@ -33,14 +33,6 @@ class ExplorerFilter extends React.Component {
         )) {
           // don't show this selector if user have full access, or none access
           this.setState({ showTierAccessSelector: false });
-          // if user don't have access to any projects
-          // apply 'all-data' filter so agg data is available
-          if (checkForNoAccessibleProject(
-            this.props.accessibleFieldObject,
-            this.props.guppyConfig.accessibleValidationField,
-          )) {
-            this.setState({ selectedAccessFilter: 'all-data' });
-          }
         } else {
           this.setState({ showTierAccessSelector: true });
         }
@@ -121,6 +113,14 @@ class ExplorerFilter extends React.Component {
       disabledTooltipMessage: this.props.tierAccessLevel === 'regular' ? `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${this.props.tierAccessLimit} ${this.props.guppyConfig.nodeCountTitle.toLowerCase() || this.props.guppyConfig.dataType} or more.` : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
     };
+    // if user don't have access to any projects
+    // apply 'all-data' filter so agg data is available
+    if (checkForNoAccessibleProject(
+      this.props.accessibleFieldObject,
+      this.props.guppyConfig.accessibleValidationField,
+    ) && this.state.selectedAccessFilter !== 'all-data') {
+      this.setState({ selectedAccessFilter: 'all-data' });
+    }
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
     case 'all-data':
@@ -158,6 +158,7 @@ class ExplorerFilter extends React.Component {
             <TierAccessSelector
               onSelectorChange={this.handleAccessSelectorChange}
               getAccessButtonLink={this.props.getAccessButtonLink}
+              hideGetAccessButton={this.props.hideGetAccessButton}
             />
           ) : (<React.Fragment />)
         }
@@ -182,6 +183,7 @@ ExplorerFilter.propTypes = {
   adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
   accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
   getAccessButtonLink: PropTypes.string,
+  hideGetAccessButton: PropTypes.bool,
 };
 
 ExplorerFilter.defaultProps = {
@@ -198,6 +200,7 @@ ExplorerFilter.defaultProps = {
   adminAppliedPreFilters: {},
   accessibleFieldCheckList: [],
   getAccessButtonLink: undefined,
+  hideGetAccessButton: false,
 };
 
 export default ExplorerFilter;
