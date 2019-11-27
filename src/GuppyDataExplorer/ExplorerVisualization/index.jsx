@@ -136,6 +136,7 @@ class ExplorerVisualization extends React.Component {
             filter={this.props.filter}
             history={this.props.history}
             isLocked={isComponentLocked}
+            isPending={this.props.aggsDataIsLoading}
           />
         </div>
         {
@@ -228,6 +229,7 @@ class ExplorerVisualization extends React.Component {
 ExplorerVisualization.propTypes = {
   totalCount: PropTypes.number, // inherited from GuppyWrapper
   aggsData: PropTypes.object, // inherited from GuppyWrapper
+  aggsDataIsLoading: PropTypes.bool, // inherited from GuppyWrapper
   filter: PropTypes.object, // inherited from GuppyWrapper
   fetchAndUpdateRawData: PropTypes.func, // inherited from GuppyWrapper
   downloadRawDataByFields: PropTypes.func, // inherited from GuppyWrapper
@@ -251,6 +253,7 @@ ExplorerVisualization.propTypes = {
 ExplorerVisualization.defaultProps = {
   totalCount: 0,
   aggsData: {},
+  aggsDataIsLoading: false,
   filter: {},
   fetchAndUpdateRawData: () => {},
   downloadRawDataByFields: () => {},

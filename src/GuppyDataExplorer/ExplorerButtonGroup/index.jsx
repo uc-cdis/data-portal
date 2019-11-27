@@ -37,7 +37,7 @@ class ExplorerButtonGroup extends React.Component {
       workspaceSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
 
       // a semaphore that could hold pending state by multiple queries
-      pendingManifestEntryCountRequestNumber: 0,
+      manifestEntryCountSemaphore: 0,
     };
   }
 
@@ -295,14 +295,14 @@ class ExplorerButtonGroup extends React.Component {
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     const caseFieldInFileIndex =
       this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
-    this.setState(prevState => ({
-      pendingManifestEntryCountRequestNumber: prevState.pendingManifestEntryCountRequestNumber + 1,
-      manifestEntryCount: 0,
-    }));
     if (this.props.buttonConfig
       && this.props.buttonConfig.buttons
       && this.props.buttonConfig.buttons.some(
         btnCfg => this.isFileButton(btnCfg) && btnCfg.enabled)) {
+      this.setState(prevState => ({
+        manifestEntryCountSemaphore: prevState.manifestEntryCountSemaphore + 1,
+        manifestEntryCount: 0,
+      }));
       const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
       if (caseIDResult) {
         const caseIDList = caseIDResult.map(i => i[caseField]);
@@ -314,8 +314,8 @@ class ExplorerButtonGroup extends React.Component {
         });
         this.setState(prevState => ({
           manifestEntryCount: countResult,
-          pendingManifestEntryCountRequestNumber:
-            prevState.pendingManifestEntryCountRequestNumber - 1,
+          manifestEntryCountSemaphore:
+            prevState.manifestEntryCountSemaphore - 1,
         }));
       } else {
         throw Error('Error when downloading data');
@@ -357,6 +357,16 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   isButtonPending = (buttonConfig) => {
+    if (this.props.isPending) {
+      return true;
+    }
+    // If the semaphore for manifestEntryCount request is not 0,
+    // then there is a pending request for a new manifestEntryCount.
+    // All buttons should be pending.
+    const manifestEntryCountIsPending = this.state.manifestEntryCountSemaphore > 0;
+    if (manifestEntryCountIsPending) {
+      return true;
+    }
     if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
       return this.state.exportingToWorkspace;
     }
@@ -375,7 +385,7 @@ class ExplorerButtonGroup extends React.Component {
     }
 
     const clickFunc = this.getOnClickFunction(buttonConfig);
-    const pendingState = buttonConfig.type === 'manifest' ? (this.state.pendingManifestEntryCountRequestNumber > 0) : false;
+    const pendingState = buttonConfig.type === 'manifest' ? (this.state.manifestEntryCountSemaphore > 0) : false;
     let buttonTitle = buttonConfig.title;
     if (buttonConfig.type === 'data') {
       const buttonCount = (this.props.totalCount >= 0) ? this.props.totalCount : 0;
@@ -478,6 +488,7 @@ ExplorerButtonGroup.propTypes = {
   downloadRawDataByTypeAndFilter: PropTypes.func.isRequired, // from GuppyWrapper
   totalCount: PropTypes.number.isRequired, // from GuppyWrapper
   filter: PropTypes.object.isRequired, // from GuppyWrapper
+  isPending: PropTypes.bool,
   buttonConfig: ButtonConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
   history: PropTypes.object.isRequired,
@@ -491,6 +502,7 @@ ExplorerButtonGroup.propTypes = {
 
 ExplorerButtonGroup.defaultProps = {
   job: null,
+  isPending: false,
 };
 
 export default ExplorerButtonGroup;
