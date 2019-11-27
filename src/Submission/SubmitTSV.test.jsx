@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import * as testData from "./__test__/data.json"
+import * as testData from './__test__/data.json';
 
 import SubmitTSV from './SubmitTSV';
 

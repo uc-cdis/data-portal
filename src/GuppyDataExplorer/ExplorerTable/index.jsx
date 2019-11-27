@@ -91,13 +91,12 @@ class ExplorerTable extends React.Component {
     const start = (this.state.currentPage * this.state.pageSize) + 1;
     const end = (this.state.currentPage + 1) * this.state.pageSize;
     let explorerTableCaption = `Showing ${start} - ${end} of ${totalCount} ${this.props.guppyConfig.dataType}s`;
-    if ( totalCount < end && totalCount < 2 ) {
+    if (totalCount < end && totalCount < 2) {
       explorerTableCaption = `Showing ${totalCount} of ${totalCount} ${this.props.guppyConfig.dataType}s`;
-    }
-    else if ( totalCount < end && totalCount >= 2) {
+    } else if (totalCount < end && totalCount >= 2) {
       explorerTableCaption = `Showing ${start} - ${totalCount} of ${totalCount} ${this.props.guppyConfig.dataType}s`;
     }
-    
+
     return (
       <div className={`explorer-table ${this.props.className}`}>
         {(this.props.isLocked) ? <React.Fragment />
