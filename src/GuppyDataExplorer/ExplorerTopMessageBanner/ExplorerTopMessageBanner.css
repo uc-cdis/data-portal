@@ -17,7 +17,7 @@
   white-space: pre-wrap;
 }
 
-.top-message-banner__button-wrapper {
+.top-message-banner__button{
   margin-right: 20px;
   background-color: var(--g3-color__white);
   border-top: 1px solid var(--g3-color__silver);
