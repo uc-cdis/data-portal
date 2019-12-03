@@ -1,6 +1,7 @@
 .top-message-banner {
-  margin-top: 10px;
+  padding-bottom: 10px;
   display: flex;
+  border-bottom: 2px solid var(--g3-color__silver);
 }
 
 .top-message-banner__space-column {
@@ -20,7 +21,6 @@
 .top-message-banner__button{
   margin-right: 20px;
   background-color: var(--g3-color__white);
-  border-top: 1px solid var(--g3-color__silver);
   text-align: center;
   display: inline;
 }
