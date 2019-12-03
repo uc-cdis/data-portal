@@ -80,18 +80,18 @@ class Workspace extends React.Component {
   ).catch(() => 'Error');
 
   getIcon = (notebook) => {
-    switch (notebook) {
-    case 'R Studio':
+    if (this.wildcardRule(notebook, 'R*')) {
       return rStudioIcon;
-    case 'Jupyter Notebook Bio Python':
+    } else if (this.wildcardRule(notebook, 'Jupyter*')) {
       return jupyterIcon;
-    case 'Jupyter Notebook Bio R':
-      return jupyterIcon;
-    case 'Galaxy':
+    } else if (this.wildcardRule(notebook, 'Galaxy*')) {
       return galaxyIcon;
-    default:
-      return jupyterIcon;
     }
+  }
+
+  wildcardRule = (str, rule) => {
+    const escapeRegex = str => str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
+    return new RegExp(`^${rule.split('*').map(escapeRegex).join('.*')}$`).test(str);
   }
 
   launchWorkspace = (notebook) => {
