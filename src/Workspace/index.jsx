@@ -87,10 +87,11 @@ class Workspace extends React.Component {
     } else if (this.wildcardRule(notebook, 'Galaxy*')) {
       return galaxyIcon;
     }
+    return jupyterIcon;
   }
 
   wildcardRule = (str, rule) => {
-    const escapeRegex = str => str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
+    const escapeRegex = inputStr => inputStr.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1');
     return new RegExp(`^${rule.split('*').map(escapeRegex).join('.*')}$`).test(str);
   }
 
