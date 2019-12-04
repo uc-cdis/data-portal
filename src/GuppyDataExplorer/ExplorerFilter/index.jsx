@@ -158,6 +158,7 @@ class ExplorerFilter extends React.Component {
             <TierAccessSelector
               onSelectorChange={this.handleAccessSelectorChange}
               getAccessButtonLink={this.props.getAccessButtonLink}
+              hideGetAccessButton={this.props.hideGetAccessButton}
             />
           ) : (<React.Fragment />)
         }
@@ -182,6 +183,7 @@ ExplorerFilter.propTypes = {
   adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
   accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
   getAccessButtonLink: PropTypes.string,
+  hideGetAccessButton: PropTypes.bool,
 };
 
 ExplorerFilter.defaultProps = {
@@ -198,6 +200,7 @@ ExplorerFilter.defaultProps = {
   adminAppliedPreFilters: {},
   accessibleFieldCheckList: [],
   getAccessButtonLink: undefined,
+  hideGetAccessButton: false,
 };
 
 export default ExplorerFilter;

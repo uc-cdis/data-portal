@@ -45,11 +45,13 @@ class GuppyDataExplorer extends React.Component {
             tierAccessLimit={this.props.tierAccessLimit}
             guppyConfig={this.props.guppyConfig}
             getAccessButtonLink={this.props.getAccessButtonLink}
+            hideGetAccessButton={this.props.hideGetAccessButton}
           />
           <ExplorerFilter
             className='guppy-data-explorer__filter'
             guppyConfig={this.props.guppyConfig}
             getAccessButtonLink={this.props.getAccessButtonLink}
+            hideGetAccessButton={this.props.hideGetAccessButton}
             tierAccessLevel={this.props.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
           />
@@ -83,6 +85,7 @@ GuppyDataExplorer.propTypes = {
   tierAccessLevel: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number.isRequired,
   getAccessButtonLink: PropTypes.string,
+  hideGetAccessButton: PropTypes.bool,
   adminAppliedPreFilters: PropTypes.object,
 };
 
@@ -90,6 +93,7 @@ GuppyDataExplorer.defaultProps = {
   heatMapConfig: {},
   nodeCountTitle: undefined,
   getAccessButtonLink: undefined,
+  hideGetAccessButton: false,
   adminAppliedPreFilters: {},
 };
 
