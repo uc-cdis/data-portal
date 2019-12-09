@@ -91,6 +91,8 @@ class Workspace extends React.Component {
   }
 
   wildcardRule = (str, rule) => {
+    // This function is to use "*" as a wildcard when doing string comparison.
+    // https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
     const escapeRegex = inputStr => inputStr.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1');
     return new RegExp(`^${rule.split('*').map(escapeRegex).join('.*')}$`).test(str);
   }
