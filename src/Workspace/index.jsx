@@ -80,22 +80,17 @@ class Workspace extends React.Component {
   ).catch(() => 'Error');
 
   getIcon = (notebook) => {
-    if (this.wildcardRule(notebook, 'R*')) {
+    if (this.regIcon(notebook, 'R Studio')) {
       return rStudioIcon;
-    } else if (this.wildcardRule(notebook, 'Jupyter*')) {
+    } else if (this.regIcon(notebook, 'Jupyter')) {
       return jupyterIcon;
-    } else if (this.wildcardRule(notebook, 'Galaxy*')) {
+    } else if (this.regIcon(notebook, 'Galaxy')) {
       return galaxyIcon;
     }
     return jupyterIcon;
   }
 
-  wildcardRule = (str, rule) => {
-    // This function is to use "*" as a wildcard when doing string comparison.
-    // https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
-    const escapeRegex = inputStr => inputStr.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1');
-    return new RegExp(`^${rule.split('*').map(escapeRegex).join('.*')}$`).test(str);
-  }
+  regIcon = (str, pattn) => new RegExp(pattn).test(str)
 
   launchWorkspace = (notebook) => {
     this.setState({ notebookType: notebook.name }, () => {
