@@ -341,7 +341,7 @@ DataExplorerVisualizations.propTypes = {
   sqon: PropTypes.object,
   projectId: PropTypes.string,
   api: PropTypes.func,
-  history: PropTypes.object.isRequired,
+  history: PropTypes.object,
 };
 
 DataExplorerVisualizations.defaultProps = {
@@ -352,6 +352,7 @@ DataExplorerVisualizations.defaultProps = {
   sqon: null,
   projectId: 'search',
   api: () => {},
+  history: {},
 };
 
 export default DataExplorerVisualizations;
