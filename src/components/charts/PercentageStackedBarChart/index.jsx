@@ -94,8 +94,6 @@ PercentageStackedBarChart.propTypes = {
 PercentageStackedBarChart.defaultProps = {
   percentageFixedPoint: 2,
   barChartStyle: {
-    width: 510,
-    height: 155,
     layout: 'vertical',
     margins: {
       top: 28,

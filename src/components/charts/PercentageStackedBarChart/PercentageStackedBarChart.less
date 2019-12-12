@@ -1,23 +1,50 @@
 .percentage-bar-chart {
-  display: flex;
-  background-color: white;
+  box-sizing: border-box;
+  background-color: var(--g3-color__white);
   padding: 12px 12px;
   font-size: 14px;
   line-height: 1em;
   letter-spacing: .03rem;
-  color: #606060;
+  color: var(--g3-color__gray);
 }
 
-.percentage-bar-chart__legend {
+.percentage-bar-chart__title-box {
+  text-align: center;
+  border-bottom: solid var(--g3-color__black) 1px;
+}
+
+.percentage-bar-chart__title {
+  line-height: 10px;
+  margin-bottom: 12px;
+}
+
+.percentage-bar-chart__content {
+  display: flex;
+  padding-top: 8px;
+  flex-direction: row;
+}
+
+ul {
   -webkit-column-count: 2; /* Chrome, Safari, Opera */
   -moz-column-count: 2; /* Firefox */
   column-count: 2;
-  width: 40%;
+  margin: 0;
+  list-style-type: none;
+}
+
+.percentage-bar-chart__legend {
+  display: inline-flex;
+  flex-wrap: wrap;
   margin-left: 25px;
+  flex: 1 1 50%;
 }
 
 .percentage-bar-chart__legend-item {
-  margin-top: 8px;
+  padding-top: 8px;
+  flex: 1 1 10px;
+  box-sizing: border-box;
+  min-width: 50%;
+  max-width: 95%;
 }
 
 .percentage-bar-chart__legend-color {
@@ -27,13 +54,34 @@
 }
 
 .percentage-bar-chart__legend-name {
+  display: inline-block;
+  vertical-align: text-top;
   margin-left: 6px;
+  flex: 1 1 80%;
+  overflow-wrap: break-word;
 }
 
 .percentage-bar-chart__legend-value {
+  display: inline-block;
+  vertical-align: text-top;
   margin-left: 6px;
+  overflow-wrap: break-word;
 }
 
 .recharts-wrapper {
   width: 60%;
+}
+
+.percentage-bar-chart__chart{
+  width: 50%;
+  display: flex;
+  flex: 1 1 50%;
+  min-width: 0;
+  max-width: 50%;
+  height: 155px;
+}
+
+.percentage-bar-chart__locked {
+  background-color: var(--g3-color__white);
+  padding: 20px;
 }

@@ -165,7 +165,6 @@ class ExplorerVisualization extends React.Component {
               key={i}
               data={chart.data}
               title={chart.title}
-              width='100%'
               lockMessage={lockMessage}
               useCustomizedColorMap={!!components.categorical9Colors}
               customizedColorMap={components.categorical9Colors || []}
