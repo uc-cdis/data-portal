@@ -52,7 +52,7 @@ class PercentageStackedBarChart extends React.Component {
           }
         </BarChart>
         <div className='percentage-bar-chart__legend'>
-          <ul>
+          <div className='percentage-bar-chart__ul'>
             {
               percentageDataLabels.map((name, index) => (
                 <li className='percentage-bar-chart__legend-item' key={`label-${name}`}>
@@ -71,7 +71,7 @@ class PercentageStackedBarChart extends React.Component {
                 </li>
               ))
             }
-          </ul>
+          </div>
         </div>
       </div>
     );
