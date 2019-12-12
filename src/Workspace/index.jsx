@@ -80,19 +80,17 @@ class Workspace extends React.Component {
   ).catch(() => 'Error');
 
   getIcon = (notebook) => {
-    switch (notebook) {
-    case 'R Studio':
+    if (this.regIcon(notebook, 'R Studio')) {
       return rStudioIcon;
-    case 'Jupyter Notebook Bio Python':
+    } else if (this.regIcon(notebook, 'Jupyter')) {
       return jupyterIcon;
-    case 'Jupyter Notebook Bio R':
-      return jupyterIcon;
-    case 'Galaxy':
+    } else if (this.regIcon(notebook, 'Galaxy')) {
       return galaxyIcon;
-    default:
-      return jupyterIcon;
     }
+    return jupyterIcon;
   }
+
+  regIcon = (str, pattn) => new RegExp(pattn).test(str)
 
   launchWorkspace = (notebook) => {
     this.setState({ notebookType: notebook.name }, () => {
