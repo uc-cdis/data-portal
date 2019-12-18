@@ -50,7 +50,7 @@ const SubmitTSV = ({ project, submission, onUploadClick,
   };
 
   const onFinishSubmitEvent = () => {
-    onFinish(submission.node_types, project, submission.dictionary);
+    onFinish(submission.nodeTypes, project, submission.dictionary);
   };
 
   return (
@@ -129,7 +129,7 @@ SubmitTSV.propTypes = {
     submit_counter: PropTypes.number,
     submit_total: PropTypes.number,
     submit_entity_counts: PropTypes.number,
-    node_types: PropTypes.string,
+    nodeTypes: PropTypes.string,
     dictionary: PropTypes.object,
   }),
   onUploadClick: PropTypes.func.isRequired,
