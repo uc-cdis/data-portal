@@ -44,6 +44,6 @@ describe('AggregationTabs', () => {
   });
 
   it('divides into tabs based on config', () => {
-    expect(component.find('.filter-group__tab').length).toBe(filterConfig.tabs.length);
+    expect(component.find('.g3-filter-group__tab').length).toBe(filterConfig.tabs.length);
   });
 });

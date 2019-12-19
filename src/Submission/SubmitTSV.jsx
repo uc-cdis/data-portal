@@ -23,26 +23,6 @@ const SubmitTSV = ({ project, submission, onUploadClick,
   //
   const processUpload = (event) => {
     const f = event.target.files[0];
-    if (FileReader.prototype.readAsBinaryString === undefined) {
-      FileReader.prototype.readAsBinaryString = (fileData) => {
-        let binary = '';
-        const pt = this;
-        const reader = new FileReader();
-        // listener for when all the bytes have been read
-        //  https://developer.mozilla.org/en-US/docs/Web/API/FileReader
-        reader.onload = () => {
-          const bytes = new Uint8Array(reader.result);
-          const length = bytes.byteLength;
-          for (let i = 0; i < length; i += 1) {
-            binary += String.fromCharCode(bytes[i]);
-          }
-          // pt.result  - readonly so assign content to another property
-          pt.content = binary;
-          pt.onload();
-        };
-        reader.readAsArrayBuffer(fileData);
-      };
-    }
     const reader = new FileReader();
     let fileType = f.type;
     if (f.name.endsWith('.tsv')) {
@@ -52,7 +32,7 @@ const SubmitTSV = ({ project, submission, onUploadClick,
       const data = e ? e.target.result : reader.content;
       onUploadClick(data, predictFileType(data, fileType));
     };
-    reader.readAsBinaryString(f);
+    reader.readAsText(f);
   };
 
   const resetFileBeforeUpdate = (e) => {
@@ -70,7 +50,7 @@ const SubmitTSV = ({ project, submission, onUploadClick,
   };
 
   const onFinishSubmitEvent = () => {
-    onFinish(submission.nodeTypes, project, submission.dictionary);
+    onFinish(submission.node_types, project, submission.dictionary);
   };
 
   return (
@@ -105,34 +85,34 @@ const SubmitTSV = ({ project, submission, onUploadClick,
         }
 
       </div>
-      { (submission.file) &&
-      <AceEditor
-        width='100%'
-        height='200px'
-        className='submit-tsv__ace-editor'
-        mode={submission.file_type === 'text/tab-separated-values' ? '' : 'json'}
-        theme='kuroir'
-        value={submission.file}
-        editorProps={{ $blockScrolling: Infinity }} // mutes console warning
-        onChange={onChange}
-        id='uploaded'
-      />
+      {(submission.file) &&
+        <AceEditor
+          width='100%'
+          height='200px'
+          className='submit-tsv__ace-editor'
+          mode={submission.file_type === 'text/tab-separated-values' ? '' : 'json'}
+          theme='kuroir'
+          value={submission.file}
+          editorProps={{ $blockScrolling: Infinity }} // mutes console warning
+          onChange={onChange}
+          id='uploaded'
+        />
       }
       {submission.submit_result &&
-      <div>
-        <p>
-          Submitting chunk {submission.submit_counter} of {submission.submit_total}
-        </p>
-        <SubmissionResult
-          status={submission.submit_status}
-          data={submission.submit_result}
-          dataString={submission.submit_result_string}
-          entityCounts={('submit_entity_counts' in submission) ? submission.submit_entity_counts : {}}
-          counter={submission.submit_counter}
-          total={submission.submit_total}
-          onFinish={onFinishSubmitEvent}
-        />
-      </div>
+        <div>
+          <p>
+            Submitting chunk {submission.submit_counter} of {submission.submit_total}
+          </p>
+          <SubmissionResult
+            status={submission.submit_status}
+            data={submission.submit_result}
+            dataString={submission.submit_result_string}
+            entityCounts={('submit_entity_counts' in submission) ? submission.submit_entity_counts : {}}
+            counter={submission.submit_counter}
+            total={submission.submit_total}
+            onFinish={onFinishSubmitEvent}
+          />
+        </div>
       }
     </form>
   );
@@ -148,6 +128,7 @@ SubmitTSV.propTypes = {
     submit_status: PropTypes.number,
     submit_counter: PropTypes.number,
     submit_total: PropTypes.number,
+    submit_entity_counts: PropTypes.number,
     node_types: PropTypes.string,
     dictionary: PropTypes.object,
   }),

@@ -109,6 +109,7 @@ class Explorer extends React.Component {
             tierAccessLevel={tierAccessLevel}
             tierAccessLimit={tierAccessLimit}
             getAccessButtonLink={config.dataExplorerConfig.getAccessButtonLink}
+            hideGetAccessButton={config.dataExplorerConfig.hideGetAccessButton}
           />
         </div>
       </div>

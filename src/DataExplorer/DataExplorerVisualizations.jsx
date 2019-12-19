@@ -4,10 +4,10 @@ import { CurrentSQON } from '@arranger/components/dist/Arranger';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import Toaster from '@gen3/ui-component/dist/components/Toaster';
+import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
+import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
 import Spinner from '../components/Spinner';
 import DataExplorerTable from '../components/tables/DataExplorerTable';
-import SummaryChartGroup from '../components/charts/SummaryChartGroup/.';
-import PercentageStackedBarChart from '../components/charts/PercentageStackedBarChart/.';
 import DataSummaryCardGroup from '../components/cards/DataSummaryCardGroup/.';
 import { getCharts } from '../components/charts/helper';
 import { downloadManifest, downloadData, getManifestEntryCount, exportToWorkspace } from './actionHelper';
@@ -341,7 +341,7 @@ DataExplorerVisualizations.propTypes = {
   sqon: PropTypes.object,
   projectId: PropTypes.string,
   api: PropTypes.func,
-  history: PropTypes.object.isRequired,
+  history: PropTypes.object,
 };
 
 DataExplorerVisualizations.defaultProps = {
@@ -352,6 +352,7 @@ DataExplorerVisualizations.defaultProps = {
   sqon: null,
   projectId: 'search',
   api: () => {},
+  history: {},
 };
 
 export default DataExplorerVisualizations;

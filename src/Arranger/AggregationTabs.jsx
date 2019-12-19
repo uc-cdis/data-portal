@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AggsState, AggsQuery } from '@arranger/components/dist/Aggs';
 import aggComponents from '@arranger/components/dist/Aggs/aggComponentsMap.js';
-import FilterGroup from '../components/filters/FilterGroup/.';
+import FilterGroup from '@gen3/ui-component/dist/components/filters/FilterGroup/.';
 
 /*
 * The AggregationTabs component divides the Arranger aggregations components into

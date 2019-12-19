@@ -101,7 +101,7 @@ class ExplorerVisualization extends React.Component {
       ? this.props.tableConfig.fields : this.props.allFields;
     const isComponentLocked = checkForAnySelectedUnaccessibleField(this.props.aggsData,
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
-    const lockMessage = `This chart is hidden because it contains fewer than ${this.props.tierAccessLimit} ${this.props.nodeCountTitle.toLowerCase()}`;
+    const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${this.props.tierAccessLimit} ${this.props.guppyConfig.nodeCountTitle.toLowerCase() || this.props.guppyConfig.dataType}.`;
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
 
     // heatmap config
@@ -136,6 +136,7 @@ class ExplorerVisualization extends React.Component {
             filter={this.props.filter}
             history={this.props.history}
             isLocked={isComponentLocked}
+            isPending={this.props.aggsDataIsLoading}
           />
         </div>
         {
@@ -159,17 +160,29 @@ class ExplorerVisualization extends React.Component {
           )
         }
         {
-          chartData.stackedBarCharts.map((chart, i) => (
-            <PercentageStackedBarChart
-              key={i}
-              data={chart.data}
-              title={chart.title}
-              width='100%'
-              lockMessage={lockMessage}
-              useCustomizedColorMap={!!components.categorical9Colors}
-              customizedColorMap={components.categorical9Colors || []}
-            />
-          ),
+          chartData.stackedBarCharts.length > 0 && (
+            <div className='guppy-explorer-visualization__charts' >
+              {
+                chartData.stackedBarCharts.map((chart, i) => (
+                  <div className='guppy-explorer-visualization__charts-row'>
+                    {
+                      i > 0 && <div className='percentage-bar-chart__row-upper-border' />
+                    }
+                    {
+                      <PercentageStackedBarChart
+                        key={i}
+                        data={chart.data}
+                        title={chart.title}
+                        lockMessage={lockMessage}
+                        useCustomizedColorMap={!!components.categorical9Colors}
+                        customizedColorMap={components.categorical9Colors || []}
+                      />
+                    }
+                  </div>
+                ),
+                )
+              }
+            </div>
           )
         }
         {
@@ -228,6 +241,7 @@ class ExplorerVisualization extends React.Component {
 ExplorerVisualization.propTypes = {
   totalCount: PropTypes.number, // inherited from GuppyWrapper
   aggsData: PropTypes.object, // inherited from GuppyWrapper
+  aggsDataIsLoading: PropTypes.bool, // inherited from GuppyWrapper
   filter: PropTypes.object, // inherited from GuppyWrapper
   fetchAndUpdateRawData: PropTypes.func, // inherited from GuppyWrapper
   downloadRawDataByFields: PropTypes.func, // inherited from GuppyWrapper
@@ -251,6 +265,7 @@ ExplorerVisualization.propTypes = {
 ExplorerVisualization.defaultProps = {
   totalCount: 0,
   aggsData: {},
+  aggsDataIsLoading: false,
   filter: {},
   fetchAndUpdateRawData: () => {},
   downloadRawDataByFields: () => {},

@@ -6,6 +6,7 @@ import {
   arrangerGraphqlPath,
   useGuppyForExplorer,
   guppyDownloadUrl,
+  analysisApps,
 } from '../configs';
 
 class HIVCohortFilterCase extends React.Component {
@@ -74,7 +75,8 @@ class HIVCohortFilterCase extends React.Component {
       inLoadingState: false,
       isReadyToCalculate: false,
       resultAlreadyCalculated: false,
-      therapyValuesOfInterest: ['HAART'],
+      therapyValuesOfInterest: ['HAART', 'Potent ART'],
+      visitIndexTypeName: analysisApps.ndhHIV.visitIndexTypeName || 'follow_up',
     };
   }
 
@@ -111,19 +113,19 @@ class HIVCohortFilterCase extends React.Component {
     if (useGuppyForExplorer) {
       const queryString = `
       query ($filter: JSON) {
-        follow_up (filter: $filter, accessibility: all, first: 10000) {
+        ${this.state.visitIndexTypeName} (filter: $filter, accessibility: all, first: 10000) {
           subject_id
-            visit_number
-            thrpyv
-            visit_date
-            fposdate
-            frstdthd
-            leu3n
-            submitter_id
-            viral_load
+          visit_number
+          thrpyv
+          visit_date
+          fposdate
+          frstdthd
+          leu3n
+          submitter_id
+          viral_load
         }
         _aggregation {
-          follow_up (filter: $filter, accessibility: all) {
+          ${this.state.visitIndexTypeName} (filter: $filter, accessibility: all) {
             _totalCount
           }
         }
@@ -149,17 +151,17 @@ class HIVCohortFilterCase extends React.Component {
       return HIVCohortFilterCase.performQuery(queryString, variableString, true).then((res) => {
         if (!res
           || !res.data
-          || !res.data.follow_up) {
+          || !res.data[this.state.visitIndexTypeName]) {
           throw new Error('Error while querying subjects with HIV');
         }
-        return res.data.follow_up;
+        return res.data[this.state.visitIndexTypeName];
       });
     }
 
     // below are for arranger
     const query = `
     {
-      follow_up {
+      ${this.state.visitIndexTypeName} {
         hits(filters: { op: "and",
           content: [
             { op: "=",
@@ -192,7 +194,7 @@ class HIVCohortFilterCase extends React.Component {
       if (!res || !res.data) {
         throw new Error('Error while querying subjects with HIV');
       }
-      return res.data.follow_up.hits.edges.map(edge => edge.node);
+      return res.data[this.state.visitIndexTypeName].hits.edges.map(edge => edge.node);
     });
   }
 

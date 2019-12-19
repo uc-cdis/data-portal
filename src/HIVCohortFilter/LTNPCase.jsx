@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
@@ -17,14 +18,14 @@ class LTNPCase extends HIVCohortFilterCase {
   * The UI displays a 'decision tree' (just hardcoded svg), and makes an es query based on
   * sliding window size and viral load number.
   * Definitions:
-  * - Never received HAART treatment: follow_up.thrpyv != HAART
+  * - Never received HAART treatment: visit.thrpyv != HAART
   * - X years: (get.current_year - followup.fposdate)
   * - CD4 > Y: followup.leu3n > Y
   * - leu3n is the number of CD4 cells (laboratory result summary node)
   * - fposdate is the year the subject is first seen as hiv_positive (hiv_history node)
   * - frstdthd is the subject's year of death
   * Definitions:
-  * - Never received HAART treatment: follow_up.thrpyv != HAART
+  * - Never received HAART treatment: visit.thrpyv != HAART
   * - viral load< X: followup.viral_load < X
   * - Consecutive Y month: (last_followup.visit_number - first_followup.visit_number)*6 = Y
   * If there are missing visit number, eg: patient has visit_number 1, 3, 4, 5.
@@ -124,7 +125,7 @@ class LTNPCase extends HIVCohortFilterCase {
   getFollowupsBuckets = () => {
     if (useGuppyForExplorer) {
       const queryObject = {
-        type: 'follow_up',
+        type: this.state.visitIndexTypeName,
         fields: [
           'subject_id',
           'harmonized_visit_number',
@@ -197,18 +198,33 @@ class LTNPCase extends HIVCohortFilterCase {
     const subjectLTNP = [];
     const subjectControl = [];
 
-    // For each subject, check their CD4 counts
+    // For each subject, extract first year of hiv positive (fhv) and check their
+    // CD4 counts to extract first visit that the case qualifies LTNP
     filtFollowups.forEach((item) => {
+      const fhv = item[0].submitter_id;
+      const subject_id = item[0].subject_id;
       const duration = item.slice(-1)[0].visit_date - item[0].visit_date;
       if (duration < this.state.numConsecutiveYearsFromUser) {
         // The subject is neither control nor LTNP
         return;
       }
       let leu3nhy = 0;
+      let ltnp_fv = '';
+      const ltnp_v = [];
+      let ltnp_fy = '';
       const firstyh = item[0].visit_date;
+      let ltnp_visit = false;
       for (let i = 0; i < item.length; i += 1) {
         if (item[i].leu3n > 500) {
           leu3nhy = item[i].visit_date;
+          if (!ltnp_visit && (leu3nhy - firstyh) > 5) {
+            ltnp_visit = true;
+            ltnp_v.push(item[i].submitter_id);
+            ltnp_fv = item[i].submitter_id;
+            ltnp_fy = item[i].visit_date;
+          } else if (ltnp_visit && (leu3nhy - firstyh) > 5) {
+            ltnp_v.push(item[i].submitter_id);
+          }
         } else {
           // eslint-disable-next-line no-param-reassign
           item = item.splice(0, i);
@@ -216,11 +232,19 @@ class LTNPCase extends HIVCohortFilterCase {
         }
       }
       const leu3nhdu = leu3nhy - firstyh;
+      const update_content = {
+        subject_id,
+        first_hiv_positive_visit: fhv,
+        first_visit_qualify_ltnp: ltnp_fv,
+        first_year_qualify_ltnp: ltnp_fy,
+        all_visit_qualify_ltnp: ltnp_v,
+        follow_ups: item,
+      };
 
       if (leu3nhdu > this.state.numConsecutiveYearsFromUser) {
-        subjectLTNP.push(item);
+        subjectLTNP.push(update_content);
       } else {
-        subjectControl.push(item);
+        subjectControl.push(update_content);
       }
     });
     return {

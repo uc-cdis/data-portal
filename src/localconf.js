@@ -103,6 +103,16 @@ function buildConfig(opts) {
     useGuppyForExplorer = true;
   }
 
+  let showArboristAuthzOnProfile = false;
+  if (config.showArboristAuthzOnProfile) {
+    showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
+  }
+
+  let showFenceAuthzOnProfile = true;
+  if (config.showFenceAuthzOnProfile === false) {
+    showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
+  }
+
   let useArboristUI = false;
   if (config.useArboristUI) {
     useArboristUI = config.useArboristUI;
@@ -148,6 +158,7 @@ function buildConfig(opts) {
       title: 'NDH HIV Classifier',
       description: 'Classify stored clinical data based on controller status.',
       image: '/src/img/analysis-icons/hiv-classifier.svg',
+      visitIndexTypeName: config.HIVAppIndexTypeName || 'follow_up',
     },
     ndhVirus: {
       title: 'NDH Virulence Simulation',
@@ -266,6 +277,8 @@ function buildConfig(opts) {
     manifestServiceApiPath,
     wtsPath,
     useGuppyForExplorer,
+    showArboristAuthzOnProfile,
+    showFenceAuthzOnProfile,
     useArboristUI,
     analysisApps,
     tierAccessLevel,

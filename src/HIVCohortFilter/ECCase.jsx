@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
@@ -16,10 +17,10 @@ class ECCase extends HIVCohortFilterCase {
   * The UI displays a 'decision tree' (just hardcoded svg), and makes an es query based on
   * sliding window size and viral load number.
   * Definitions:
-  * - thrpy is the treatment that patient used since the last visit ( follow_up)
-  * - thrpyv is the treatment that patient uses at the visit ( follow_up )
+  * - thrpy is the treatment that patient used since the last visit
+  * - thrpyv is the treatment that patient uses at the visit
   * Definitions:
-  * - Never received HAART treatment: follow_up.thrpyv != HAART
+  * - Never received HAART treatment: visit.thrpyv != HAART
   * - viral load< X: followup.viral_load < X
   * - Consecutive Y month: (last_followup.visit_number - first_followup.visit_number)*6 = Y
   * If there are missing visit number, eg: patient has visit_number 1, 3, 4, 5.
@@ -116,7 +117,7 @@ class ECCase extends HIVCohortFilterCase {
   getFollowupsBuckets = () => {
     if (useGuppyForExplorer) {
       const queryObject = {
-        type: 'follow_up',
+        type: this.state.visitIndexTypeName,
         fields: [
           'subject_id',
           'harmonized_visit_number',
@@ -185,6 +186,7 @@ class ECCase extends HIVCohortFilterCase {
 
   // Identify EC period for each subject. In each EC period, 1 spike viral load period is allowed.
   // Missing viral load measurement period should be less than 2 years.
+  // Extract subject_id and first hiv positive visit.
   visitsMatchECWindowCriteria = (visitArray) => {
     let nSuper = 0;
     let nSpike = 0;
@@ -193,6 +195,8 @@ class ECCase extends HIVCohortFilterCase {
     let ecVisits = [];
     const ecPeriod = {};
     let nNonsuper = 0;
+    const fhv = visitArray[0].submitter_id;
+    const subject_id = visitArray[0].subject_id;
     for (let i = 0; i < visitArray.length; i += 1) {
       if (visitArray[i].viral_load != null
         && visitArray[i].viral_load < this.state.suppressViralLoadFromUser) {
@@ -202,7 +206,7 @@ class ECCase extends HIVCohortFilterCase {
         lastTimePoint = visitArray[i].visit_date;
         if (i === visitArray.length - 1 && nSuper >= this.state.numConsecutiveVisitsFromUser) {
           nEC += 1;
-          const ecPeriodKey = `ec_perid_${nEC}`;
+          const ecPeriodKey = `ec_period_${nEC}`;
           const numberVisits = ecVisits.length - nNonsuper;
           ecPeriod[ecPeriodKey] = ecVisits.splice(0, numberVisits);
         }
@@ -211,7 +215,7 @@ class ECCase extends HIVCohortFilterCase {
         if (nSpike > 1) {
           if (nSuper >= this.state.numConsecutiveVisitsFromUser) {
             nEC += 1;
-            const ecPeriodKey = `ec_perid_${nEC}`;
+            const ecPeriodKey = `ec_period_${nEC}`;
             const numberVisits = ecVisits.length - nNonsuper;
             ecPeriod[ecPeriodKey] = ecVisits.splice(0, numberVisits);
           }
@@ -242,7 +246,12 @@ class ECCase extends HIVCohortFilterCase {
         }
       }
     }
-    return ecPeriod;
+    const updateContent = {
+      subject_id,
+      first_hiv_positive_visit: fhv,
+      ecPeriod,
+    };
+    return updateContent;
   }
 
   classifyAllSubjectEC = (filtFollowups) => {
@@ -252,11 +261,12 @@ class ECCase extends HIVCohortFilterCase {
     // For each patient, try to find numConsecutiveVisitsFromUser consecutive
     // visits that match the EC criteria
     filtFollowups.forEach((item) => {
-      const ecPeriod = this.visitsMatchECWindowCriteria(item);
+      const updateContent = this.visitsMatchECWindowCriteria(item);
+      const ecPeriod = updateContent.ecPeriod;
       if (Object.keys(ecPeriod).length === 0) {
         subjectControl.push(item);
       } else {
-        subjectEC.push(ecPeriod);
+        subjectEC.push(updateContent);
       }
     });
     return {
