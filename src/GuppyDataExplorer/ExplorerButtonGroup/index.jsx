@@ -104,7 +104,14 @@ class ExplorerButtonGroup extends React.Component {
       const md5Field = 'md5sum';
       const fileNameField = 'file_name';
       const fileSizeField = 'file_size';
-      const rawData = await this.props.downloadRawDataByFields({ fields: [refField, fileNameField, md5Field, fileSizeField] });
+      const rawData = await this.props.downloadRawDataByFields({
+        fields: [
+          refField,
+          fileNameField,
+          md5Field,
+          fileSizeField,
+        ],
+      });
       return rawData;
     }
     const refIDList = await this.props.downloadRawDataByFields({ fields: [refField] })
