@@ -100,10 +100,10 @@ class ExplorerButtonGroup extends React.Component {
 
   getManifest = async (indexType) => {
     const refField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
+    const md5Field = 'md5sum';
+    const fileNameField = 'file_name';
+    const fileSizeField = 'file_size';
     if (indexType === 'file') {
-      const md5Field = 'md5sum';
-      const fileNameField = 'file_name';
-      const fileSizeField = 'file_size';
       const rawData = await this.props.downloadRawDataByFields({
         fields: [
           refField,
@@ -129,7 +129,15 @@ class ExplorerButtonGroup extends React.Component {
       filter.data_format = this.props.filter.data_format;
     }
     let resultManifest = await this.props.downloadRawDataByTypeAndFilter(
-      resourceType, filter, [refFieldInResourceIndex, resourceFieldInResourceIndex],
+      resourceType,
+      filter,
+      [
+        refFieldInResourceIndex,
+        resourceFieldInResourceIndex,
+        fileNameField,
+        md5Field,
+        fileSizeField,
+      ],
     );
     resultManifest = resultManifest.filter(
       x => !!x[resourceFieldInResourceIndex],
