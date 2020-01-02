@@ -12,7 +12,7 @@
     "@fortawesome/react-fontawesome": "^0.1.0",
     "@gen3/guppy": "git://github.com/uc-cdis/guppy.git#fix/filters-disappearing-bug",
     "@gen3/ui-component": "git://github.com/uc-cdis/gen3-ui-component.git#fix/filter-state-bug",
-    "@storybook/addon-actions": "^5.0.0", 
+    "@storybook/addon-actions": "^5.0.0",
     "@storybook/react": "^5.0.0",
     "brace": "^0.10.0",
     "clipboard-plus": "^1.0.0",
