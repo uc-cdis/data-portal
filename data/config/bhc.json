@@ -156,7 +156,8 @@
   "requiredCerts": ["privacy_policy"],
   "featureFlags": {
     "explorer": true,
-    "noIndex": true
+    "noIndex": true,
+    "hideZeroCountFilterOptions": true
   },
   "dataExplorerConfig": {
     "charts": {
