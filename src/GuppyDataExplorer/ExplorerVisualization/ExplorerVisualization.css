@@ -10,6 +10,7 @@
 
 .guppy-explorer-visualization__charts {
   margin-bottom: 6px;
+  background-color: var(--g3-color__white);
 }
 
 .guppy-explorer-visualization__connected-filter--hide {

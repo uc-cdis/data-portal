@@ -56,12 +56,12 @@ describe('DataExplorerFilters', () => {
   it('shows tabs when config is provided', () => {
     expect(componentWithFilters.find('AggregationTabs').length).toBe(1);
     expect(componentWithFilters.find('Aggregations').length).toBe(0);
-    expect(componentWithFilters.find('.filter-group__tab').length).toBe(filterConfig.tabs.length);
+    expect(componentWithFilters.find('.g3-filter-group__tab').length).toBe(filterConfig.tabs.length);
   });
 
   it('doesnt show tabs when config is not provided', () => {
     expect(componentWithoutFilters.find('Aggregations').length).toBe(1);
     expect(componentWithoutFilters.find('AggregationTabs').length).toBe(0);
-    expect(componentWithoutFilters.find('.filter-group__tab').length).toBe(0);
+    expect(componentWithoutFilters.find('.g3-filter-group__tab').length).toBe(0);
   });
 });

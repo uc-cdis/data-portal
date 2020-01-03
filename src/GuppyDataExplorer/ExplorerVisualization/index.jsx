@@ -160,17 +160,29 @@ class ExplorerVisualization extends React.Component {
           )
         }
         {
-          chartData.stackedBarCharts.map((chart, i) => (
-            <PercentageStackedBarChart
-              key={i}
-              data={chart.data}
-              title={chart.title}
-              width='100%'
-              lockMessage={lockMessage}
-              useCustomizedColorMap={!!components.categorical9Colors}
-              customizedColorMap={components.categorical9Colors || []}
-            />
-          ),
+          chartData.stackedBarCharts.length > 0 && (
+            <div className='guppy-explorer-visualization__charts' >
+              {
+                chartData.stackedBarCharts.map((chart, i) => (
+                  <div className='guppy-explorer-visualization__charts-row'>
+                    {
+                      i > 0 && <div className='percentage-bar-chart__row-upper-border' />
+                    }
+                    {
+                      <PercentageStackedBarChart
+                        key={i}
+                        data={chart.data}
+                        title={chart.title}
+                        lockMessage={lockMessage}
+                        useCustomizedColorMap={!!components.categorical9Colors}
+                        customizedColorMap={components.categorical9Colors || []}
+                      />
+                    }
+                  </div>
+                ),
+                )
+              }
+            </div>
           )
         }
         {
