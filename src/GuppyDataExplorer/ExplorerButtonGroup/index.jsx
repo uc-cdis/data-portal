@@ -103,15 +103,26 @@ class ExplorerButtonGroup extends React.Component {
     const md5Field = 'md5sum';
     const fileNameField = 'file_name';
     const fileSizeField = 'file_size';
+    const additionalFields = [md5Field, fileNameField, fileSizeField];
     if (indexType === 'file') {
-      const rawData = await this.props.downloadRawDataByFields({
-        fields: [
-          refField,
-          fileNameField,
-          md5Field,
-          fileSizeField,
-        ],
-      });
+      let rawData;
+      try {
+        // the additionalFields are hardcoded, so it's possible they may
+        // not be available in Guppy's index. Try to download the additional fields
+        // first, and if the download fails, download only the referenceIDField.
+        rawData = await this.props.downloadRawDataByFields({
+          fields: [
+            refField,
+            ...additionalFields,
+          ],
+        });
+      } catch (err) {
+        rawData = await this.props.downloadRawDataByFields({
+          fields: [
+            refField,
+          ],
+        });
+      }
       return rawData;
     }
     const refIDList = await this.props.downloadRawDataByFields({ fields: [refField] })
@@ -128,17 +139,27 @@ class ExplorerButtonGroup extends React.Component {
     if (this.props.filter.data_format) {
       filter.data_format = this.props.filter.data_format;
     }
-    let resultManifest = await this.props.downloadRawDataByTypeAndFilter(
-      resourceType,
-      filter,
-      [
-        refFieldInResourceIndex,
-        resourceFieldInResourceIndex,
-        fileNameField,
-        md5Field,
-        fileSizeField,
-      ],
-    );
+    let resultManifest;
+    try {
+      resultManifest = await this.props.downloadRawDataByTypeAndFilter(
+        resourceType,
+        filter,
+        [
+          refFieldInResourceIndex,
+          resourceFieldInResourceIndex,
+          ...additionalFields,
+        ],
+      );
+    } catch (err) {
+      resultManifest = await this.props.downloadRawDataByTypeAndFilter(
+        resourceType,
+        filter,
+        [
+          refFieldInResourceIndex,
+          resourceFieldInResourceIndex,
+        ],
+      );
+    }
     resultManifest = resultManifest.filter(
       x => !!x[resourceFieldInResourceIndex],
     );
