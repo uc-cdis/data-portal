@@ -159,9 +159,9 @@
         "chartType": "count",
         "title": "Subjects"
       },
-      "gender": {
+      "annotated_sex": {
         "chartType": "pie",
-        "title": "Gender"
+        "title": "Annotated Sex"
       },
       "race": {
         "chartType": "bar",
@@ -219,7 +219,7 @@
             "data_type",
             "data_format",
             "race",
-            "gender",
+            "annotated_sex",
             "hispanic_subgroup",
             "ethnicity",
             "subcohort",
@@ -234,7 +234,7 @@
         "project_id",
         "data_format",
         "race",
-        "gender",
+        "annotated_sex",
         "ethnicity",
         "bp_diastolic",
         "hdl",
