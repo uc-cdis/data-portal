@@ -15,7 +15,6 @@ if [ -f custom/favicon/$APP-favicon.ico ]; then
 fi
 
 if [ -f custom/logo/$APP-logo.png ]; then
-  echo "got custom/logo/$APP-logo.png"
   cp custom/logo/$APP-logo.png src/img/logo.png
 fi
 
