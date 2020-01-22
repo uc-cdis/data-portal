@@ -43,6 +43,7 @@ class IndexPageComponent extends React.Component {
               xAxisProp={conf.xAxisProp}
               constrains={conf.constrains}
               chartTitle={conf.chartTitle}
+              logBase={conf.logBase}
             />
           </div>
         );
