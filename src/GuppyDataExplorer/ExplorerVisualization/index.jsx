@@ -26,7 +26,7 @@ class ExplorerVisualization extends React.Component {
     this.connectedFilter = React.createRef();
   }
 
-  getData = (aggsData, chartConfig, filter) => {
+  getData = (chartData, chartConfig, filter) => {
     const summaries = [];
     let countItems = [];
     const stackedBarCharts = [];
@@ -35,25 +35,36 @@ class ExplorerVisualization extends React.Component {
       value: this.props.totalCount,
     });
     Object.keys(chartConfig).forEach((field) => {
-      if (!aggsData || !aggsData[field] || !aggsData[field].histogram) return;
-      const { histogram } = aggsData[field];
-      switch (chartConfig[field].chartType) {
+      if (!chartData || !chartData[field] || !chartData[field].histogram) return;
+      const { histogram } = chartData[field];
+      const { chartType, title } = chartConfig[field];
+      switch (chartType) {
       case 'count':
         countItems.push({
-          label: chartConfig[field].title,
+          label: title,
           value: filter[field] ? filter[field].selectedValues.length
-            : aggsData[field].histogram.length,
+            : histogram.length,
         });
         break;
       case 'pie':
       case 'bar':
-      case 'stackedBar': {
+      case 'stackedBar':
+      case 'bar-vertical':
+      case 'line': {
         const dataItem = {
-          type: chartConfig[field].chartType,
-          title: chartConfig[field].title,
-          data: histogram.map(i => ({ name: i.key, value: i.count })),
+          type: chartType,
+          title,
+          data: histogram.map((i) => {
+            if (chartType === 'line' || chartType === 'bar-vertical') {
+              return {
+                name: `${i.key[0]}-${i.key[1]}`,
+                value: i.count,
+              };
+            }
+            return { name: i.key, value: i.count };
+          }),
         };
-        if (chartConfig[field].chartType === 'stackedBar') {
+        if (chartType === 'stackedBar') {
           stackedBarCharts.push(dataItem);
         } else {
           summaries.push(dataItem);
@@ -61,7 +72,7 @@ class ExplorerVisualization extends React.Component {
         break;
       }
       default:
-        throw new Error(`Invalid chartType ${chartConfig[field].chartType}`);
+        throw new Error(`Invalid chartType ${chartType}`);
       }
     });
     // sort cout items according to appearence in chart config
@@ -96,13 +107,14 @@ class ExplorerVisualization extends React.Component {
   };
 
   render() {
-    const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
+    const chartData = this.getData(this.props.chartData, this.props.chartConfig, this.props.filter);
     const tableColumns = (this.props.tableConfig.fields && this.props.tableConfig.fields.length > 0)
       ? this.props.tableConfig.fields : this.props.allFields;
     const isComponentLocked = checkForAnySelectedUnaccessibleField(this.props.aggsData,
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
     const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${this.props.tierAccessLimit} ${this.props.guppyConfig.nodeCountTitle.toLowerCase() || this.props.guppyConfig.dataType}.`;
-    const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
+    const barChartColor = components.categorical2Colors
+      ? components.categorical2Colors[0] : undefined;
 
     // heatmap config
     const heatMapGuppyConfig = this.props.heatMapConfig ?
@@ -155,6 +167,7 @@ class ExplorerVisualization extends React.Component {
                 barChartColor={barChartColor}
                 useCustomizedColorMap={!!components.categorical9Colors}
                 customizedColorMap={components.categorical9Colors || []}
+                maximumDisplayItem={7}
               />
             </div>
           )
@@ -251,6 +264,7 @@ ExplorerVisualization.propTypes = {
   rawData: PropTypes.array, // inherited from GuppyWrapper
   allFields: PropTypes.array, // inherited from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherited from GuppyWrapper
+  chartData: PropTypes.object, // inherited from GuppyWrapper
   history: PropTypes.object.isRequired,
   className: PropTypes.string,
   chartConfig: ChartConfigType,
@@ -275,6 +289,7 @@ ExplorerVisualization.defaultProps = {
   rawData: [],
   allFields: [],
   accessibleFieldObject: {},
+  chartData: {},
   className: '',
   chartConfig: {},
   tableConfig: {},

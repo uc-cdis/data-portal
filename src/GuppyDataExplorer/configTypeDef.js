@@ -43,4 +43,13 @@ export const ButtonConfigType = PropTypes.shape({
   dropdowns: PropTypes.object,
 });
 
-export const ChartConfigType = PropTypes.object;
+const myValidator = (configs) => {
+  // check each config item has 'title', 'chartType' keys
+  const invalid = Object.values(configs).find(c => (!c.title || !c.chartType));
+  if (typeof invalid !== 'undefined') {
+    return new Error('Invalid chart type prop ', invalid);
+  }
+  return true;
+};
+export const ChartConfigType = PropTypes.objectOf(myValidator);
+
