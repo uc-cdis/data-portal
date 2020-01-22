@@ -97,7 +97,6 @@ class StackedBarChart extends React.Component {
       const datasets = Object.keys(tempDatasets).map((xAxisValue) => {
         const dataset = Array(yAxisValueSet.size);
         dataset.fill(0);
-        // for (yAxisValue in yAxisValueToIndex) {
         Object.keys(yAxisValueToIndex).forEach((yAxisValue) => {
           const index = yAxisValueToIndex[yAxisValue];
           dataset[index] = tempDatasets[xAxisValue][yAxisValue];
