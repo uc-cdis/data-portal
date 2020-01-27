@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ReduxProjectDashboard, ReduxTransaction } from './reduxer';
-import getProjectNodeCounts from '../Index/utils';
+import { loadProjectNodeCountsIntoRedux } from '../Index/utils';
 import getTransactionList from './relayer';
 
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
-    getProjectNodeCounts();
+    loadProjectNodeCountsIntoRedux();
     getTransactionList();
   }
 

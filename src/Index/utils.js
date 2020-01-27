@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import { fetchWithCreds } from '../actions';
 import { homepageChartNodes, datasetUrl } from '../localconf';
 import getReduxStore from '../reduxStore';
@@ -19,20 +18,23 @@ const updateRedux = async projectNodeCounts => getReduxStore().then(
   },
 );
 
-const getProjectNodeCounts = async (callback) => {
+export const loadProjectNodeCountsIntoRedux = async (callback) => {
   const resultStatus = { needLogin: false };
-  if (typeof homepageChartNodes === 'undefined') {
-    getProjectsList();
-    if (callback) {
-      callback(resultStatus);
-    }
-    return;
+  getProjectsList();
+  if (callback) {
+    callback(resultStatus);
   }
+};
 
-  const store = await getReduxStore();
-  const fileNodes = store.getState().submission.file_nodes;
-  const nodesForIndexChart = homepageChartNodes.map(item => item.node);
-  const nodesToRequest = _.union(fileNodes, nodesForIndexChart);
+// getPeregrinePublicDatasets queries Peregrine for the summary
+// counts of the nodes in nodesToRequest and loads this data into Redux.
+// NOTE this function requires `public_datasets: true` in the Peregrine config
+// in order to display summary counts for all data in the homepage charts for
+// users who are not logged in.
+// (See https://github.com/uc-cdis/cdis-wiki/blob/0d828c73dcec7f37eba63ac453e56f1d4ce46d47/dev/gen3/guides/ui_etl_configuration.md)
+export const getPeregrinePublicDatasets = (nodesToRequest, callback) => {
+  const resultStatus = { needLogin: false };
+
   const url = `${datasetUrl}?nodes=${nodesToRequest.join(',')}`;
 
   fetchWithCreds({
@@ -67,5 +69,3 @@ const getProjectNodeCounts = async (callback) => {
       console.log(err);
     });
 };
-
-export default getProjectNodeCounts;
