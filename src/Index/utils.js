@@ -18,12 +18,8 @@ const updateRedux = async projectNodeCounts => getReduxStore().then(
   },
 );
 
-export const loadProjectNodeCountsIntoRedux = async (callback) => {
-  const resultStatus = { needLogin: false };
+export const loadProjectNodeCountsIntoRedux = async () => {
   getProjectsList();
-  if (callback) {
-    callback(resultStatus);
-  }
 };
 
 // loadPeregrinePublicDatasetsIntoRedux queries Peregrine for the summary
