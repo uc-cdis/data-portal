@@ -4,7 +4,7 @@ import ReactEcharts from 'echarts-for-react';
 import { fetchWithCreds } from '../../../../actions';
 import { colorsForCharts, guppyGraphQLUrl } from '../../../../localconf';
 
-class StackedBarChart extends React.Component {
+class GroupedBarChart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -72,7 +72,7 @@ class StackedBarChart extends React.Component {
       // eslint-disable-next-line no-underscore-dangle
       res.data.data._aggregation[typeName][xAxisProp].histogram.forEach(({ key, termsFields }) => {
         const xAxisValue = key;
-  
+
         // validate the response result format is correct
         if (!(termsFields.length === 1 && termsFields[0].field === yAxisProp)) {
           throw Error('Error when parsing chart data');
@@ -80,7 +80,7 @@ class StackedBarChart extends React.Component {
         if (typeof tempDatasets[xAxisValue] === 'undefined') {
           tempDatasets[xAxisValue] = {};
         }
-  
+
         // assign value to tempDatasets, also add y value to yAxisValueSet
         termsFields[0].terms.forEach((d) => {
           const yAxisValue = d.key;
@@ -88,14 +88,18 @@ class StackedBarChart extends React.Component {
           tempDatasets[xAxisValue][yAxisValue] = d.count;
         });
       });
-  
+
+      // sort in alphabetical order
+      // (reverse because charts show items from bottom to top)
+      const sortedYAxisValues = Array.from(yAxisValueSet).sort().reverse();
+
       // need a map to remember y value => index
-      const yAxisValueToIndex = Array.from(yAxisValueSet)
+      const yAxisValueToIndex = sortedYAxisValues
         .reduce((acc, cur, i) => { acc[cur] = i; return acc; }, {});
-  
+
       // assign counts to datasets, datasets[xAxis] is an array of counts
       const datasets = Object.keys(tempDatasets).map((xAxisValue) => {
-        const dataset = Array(yAxisValueSet.size);
+        const dataset = Array(sortedYAxisValues.size);
         dataset.fill(0);
         Object.keys(yAxisValueToIndex).forEach((yAxisValue) => {
           const index = yAxisValueToIndex[yAxisValue];
@@ -108,7 +112,7 @@ class StackedBarChart extends React.Component {
       });
       return {
         datasets,
-        valuesSet: yAxisValueSet,
+        valuesSet: sortedYAxisValues,
       };
     } catch (err) {
       throw Error('Error when getting chart data', err);
@@ -117,6 +121,10 @@ class StackedBarChart extends React.Component {
 
   render() {
     if (!this.state.datasets) return null;
+    const legendSelectedObj = this.props.initialUnselectedKeys.reduce((acc, cur) => {
+      acc[cur] = false;
+      return acc;
+    }, {});
     const option = {
       title: {
         text: this.props.chartTitle,
@@ -140,18 +148,19 @@ class StackedBarChart extends React.Component {
       },
       tooltip: {
         axisPointer: {
-          axis: 'y',
-          type: 'line',
+          type: 'shadow',
         },
+        trigger: 'axis',
       },
       legend: {
         data: this.state.datasets.map(d => d.key),
         bottom: 0,
+        selected: legendSelectedObj,
       },
       grid: {
         top: 20,
         bottom: 50,
-        right: 10,
+        right: 25,
         left: 100,
       },
       backgroundColor: '#f5f5f5',
@@ -159,7 +168,8 @@ class StackedBarChart extends React.Component {
         name: d.key,
         type: 'bar',
         data: d.dataset,
-        stack: 'a',
+        stack: d.key,
+        barGap: 0,
         color: colorsForCharts.categorical9Colors[i % colorsForCharts.categorical9Colors.length],
       })),
     };
@@ -175,18 +185,20 @@ class StackedBarChart extends React.Component {
   }
 }
 
-StackedBarChart.propTypes = {
+GroupedBarChart.propTypes = {
   chartTitle: PropTypes.string.isRequired,
   dataType: PropTypes.string.isRequired,
   yAxisProp: PropTypes.string.isRequired,
   xAxisProp: PropTypes.string.isRequired,
   constrains: PropTypes.object,
   logBase: PropTypes.number,
+  initialUnselectedKeys: PropTypes.arrayOf(PropTypes.string),
 };
 
-StackedBarChart.defaultProps = {
+GroupedBarChart.defaultProps = {
   constrains: {},
   logBase: null,
+  initialUnselectedKeys: [],
 };
 
-export default StackedBarChart;
+export default GroupedBarChart;

@@ -146,12 +146,12 @@ The configurations of Homepage charts are specified data/config/<common-name>.js
 - `projectDetails` are the counts that you want to display in the list of projects. It could be same as `boardCounts`, in this case, you only need to point to `boardCounts`.
 
 Except the default case/file count charts, you could add more to the homepage, and those customized charts will be added to a carousel. 
-We support categorical horizontal stacked bar charts, and the chart will be using data from Guppy, so make sure you correctly ETL them to your Elasticsearch database. The new added charts are configured in portal config's components.index.customHomepageChartConfig config, make sure configurations are correct. Example config (notice the comments won't work for JSON): 
+We support categorical horizontal grouped bar charts, and the chart will be using data from Guppy, so make sure you correctly ETL them to your Elasticsearch database. The new added charts are configured in portal config's components.index.customHomepageChartConfig config, make sure configurations are correct. Example config (notice the comments won't work for JSON): 
 
 ```
 "customHomepageChartConfig": [
   {
-    "chartType": "horizontalStackedBar", // we currently only support this type
+    "chartType": "horizontalGroupedBar", // we currently only support this type
     "dataType": "participant", // type name in your Elasticsearch db
     "yAxisProp": "country", // field name for y axis
     "xAxisProp": "ibd_affection_status", // field name for x axis
@@ -159,7 +159,8 @@ We support categorical horizontal stacked bar charts, and the chart will be usin
       "project_id": "jnkns-jenkins" // only support one constrains, could used to render charts for specific project or program
     },
     "chartTitle": "jnkns-jenkins project", // chart title
-    "logBase": 1 // log base, default is 1
+    "logBase": 1 // log base, optional, default is 1,
+    "initialUnselectedKeys": ["no data", "Unknown"] // optional, an array of string, means the values those will be initially unselected
   }
 ]
 ```

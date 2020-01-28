@@ -33,21 +33,20 @@ class IndexPageComponent extends React.Component {
     };
     let customCharts = null;
     if (customHomepageChartConfig) {
-      customCharts = customHomepageChartConfig.map((conf, i) => {
-        return (
-          <div key={i} className='index-page__slider-chart'>
-            <HomepageCustomCharts
-              chartType={conf.chartType}
-              dataType={conf.dataType}
-              yAxisProp={conf.yAxisProp}
-              xAxisProp={conf.xAxisProp}
-              constrains={conf.constrains}
-              chartTitle={conf.chartTitle}
-              logBase={conf.logBase}
-            />
-          </div>
-        );
-      });
+      customCharts = customHomepageChartConfig.map((conf, i) => (
+        <div key={i} className='index-page__slider-chart'>
+          <HomepageCustomCharts
+            chartType={conf.chartType}
+            dataType={conf.dataType}
+            yAxisProp={conf.yAxisProp}
+            xAxisProp={conf.xAxisProp}
+            constrains={conf.constrains}
+            chartTitle={conf.chartTitle}
+            logBase={conf.logBase}
+            initialUnselectedKeys={conf.initialUnselectedKeys}
+          />
+        </div>
+      ));
     }
     return (
       <div className='index-page'>

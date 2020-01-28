@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StackedBarChart from './StackedBarChart';
+import GroupedBarChart from './GroupedBarChart';
 
 const CUSTOM_CHART_TYPE = {
-  HORIZONTAL_STACKED_BAR: 'horizontalStackedBar',
+  HORIZONTAL_GROUPED_BAR: 'horizontalGroupedBar',
 };
 
 class HomepageCustomCharts extends React.Component {
   render() {
-    if (this.props.chartType === CUSTOM_CHART_TYPE.HORIZONTAL_STACKED_BAR) {
-      return (<StackedBarChart {...this.props} />);
+    if (this.props.chartType === CUSTOM_CHART_TYPE.HORIZONTAL_GROUPED_BAR) {
+      return (<GroupedBarChart {...this.props} />);
     }
     return null;
   }
