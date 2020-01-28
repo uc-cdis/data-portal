@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { calculateDropdownButtonConfigs, humanizeNumber } from '../../DataExplorer/utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
 import { fetchWithCreds } from '../../actions';
-import { manifestServiceApiPath } from '../../localconf';
+import { manifestServiceApiPath, guppyGraphQLUrl } from '../../localconf';
 import './ExplorerButtonGroup.css';
 
 class ExplorerButtonGroup extends React.Component {
@@ -35,9 +35,6 @@ class ExplorerButtonGroup extends React.Component {
       exportWorkspaceFileName: null,
       exportWorkspaceStatus: null,
       workspaceSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
-
-      // a semaphore that could hold pending state by multiple queries
-      manifestEntryCountSemaphore: 0,
     };
   }
 
@@ -215,6 +212,35 @@ class ExplorerButtonGroup extends React.Component {
     </Toaster>
   ));
 
+  getFileCountSum = async () => {
+    try {
+      const dataType = this.props.guppyConfig.dataType;
+      const fileCountField = this.props.guppyConfig.fileCountField;
+      const query = `query ($filter: JSON) {
+        _aggregation {
+          ${dataType} (filter: $filter) {
+            ${fileCountField} {
+              histogram {
+                sum
+              }
+            }
+          }
+        }
+      }`;
+      const body = { query, variables: { filter: getGQLFilter(this.props.filter) } };
+      const res = await fetchWithCreds({
+        path: guppyGraphQLUrl,
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      // eslint-disable-next-line no-underscore-dangle
+      const totalFileCount = res.data.data._aggregation[dataType][fileCountField].histogram[0].sum;
+      return totalFileCount;
+    } catch (err) {
+      throw Error('Error when getting total file count');
+    }
+  };
+
   fetchJobResult = async () => this.props.fetchJobResult(this.props.job.uid);
 
   isPFBRunning = () => this.props.job && this.props.job.status === 'Running';
@@ -339,26 +365,33 @@ class ExplorerButtonGroup extends React.Component {
       && this.props.buttonConfig.buttons
       && this.props.buttonConfig.buttons.some(
         btnCfg => this.isFileButton(btnCfg) && btnCfg.enabled)) {
-      this.setState(prevState => ({
-        manifestEntryCountSemaphore: prevState.manifestEntryCountSemaphore + 1,
-        manifestEntryCount: 0,
-      }));
-      const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
-      if (caseIDResult) {
-        const caseIDList = caseIDResult.map(i => i[caseField]);
-        const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
-        const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
-          [caseFieldInFileIndex]: {
-            selectedValues: caseIDList,
-          },
-        });
-        this.setState(prevState => ({
-          manifestEntryCount: countResult,
-          manifestEntryCountSemaphore:
-            prevState.manifestEntryCountSemaphore - 1,
+      if (this.props.guppyConfig.fileCountField) {
+        // if "fileCountField" is set, just ask for sum of file_count field
+        const totalFileCount = await this.getFileCountSum();
+        this.setState(() => ({
+          manifestEntryCount: totalFileCount,
         }));
       } else {
-        throw Error('Error when downloading data');
+        // otherwise, just query subject index for subjet_id list,
+        // and query file index for manifest info.
+        this.setState({
+          manifestEntryCount: 0,
+        });
+        const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
+        if (caseIDResult) {
+          const caseIDList = caseIDResult.map(i => i[caseField]);
+          const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
+          const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
+            [caseFieldInFileIndex]: {
+              selectedValues: caseIDList,
+            },
+          });
+          this.setState({
+            manifestEntryCount: countResult,
+          });
+        } else {
+          throw Error('Error when downloading data');
+        }
       }
     }
   };
@@ -400,13 +433,6 @@ class ExplorerButtonGroup extends React.Component {
     if (this.props.isPending) {
       return true;
     }
-    // If the semaphore for manifestEntryCount request is not 0,
-    // then there is a pending request for a new manifestEntryCount.
-    // All buttons should be pending.
-    const manifestEntryCountIsPending = this.state.manifestEntryCountSemaphore > 0;
-    if (manifestEntryCountIsPending) {
-      return true;
-    }
     if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
       return this.state.exportingToWorkspace;
     }
@@ -425,12 +451,11 @@ class ExplorerButtonGroup extends React.Component {
     }
 
     const clickFunc = this.getOnClickFunction(buttonConfig);
-    const pendingState = buttonConfig.type === 'manifest' ? (this.state.manifestEntryCountSemaphore > 0) : false;
     let buttonTitle = buttonConfig.title;
     if (buttonConfig.type === 'data') {
       const buttonCount = (this.props.totalCount >= 0) ? this.props.totalCount : 0;
       buttonTitle = `${buttonConfig.title} (${buttonCount})`;
-    } else if (buttonConfig.type === 'manifest' && !pendingState && this.state.manifestEntryCount > 0) {
+    } else if (buttonConfig.type === 'manifest' && this.state.manifestEntryCount > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
     const btnTooltipText = (this.props.isLocked) ? 'You only have access to summary data' : buttonConfig.tooltipText;
