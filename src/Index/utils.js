@@ -26,13 +26,13 @@ export const loadProjectNodeCountsIntoRedux = async (callback) => {
   }
 };
 
-// getPeregrinePublicDatasets queries Peregrine for the summary
+// loadPeregrinePublicDatasetsIntoRedux queries Peregrine for the summary
 // counts of the nodes in nodesToRequest and loads this data into Redux.
 // NOTE this function requires `public_datasets: true` in the Peregrine config
 // in order to display summary counts for all data in the homepage charts for
 // users who are not logged in.
 // (See https://github.com/uc-cdis/cdis-wiki/blob/0d828c73dcec7f37eba63ac453e56f1d4ce46d47/dev/gen3/guides/ui_etl_configuration.md)
-export const getPeregrinePublicDatasets = (nodesToRequest, callback) => {
+export const loadPeregrinePublicDatasetsIntoRedux = async (nodesToRequest, callback) => {
   const resultStatus = { needLogin: false };
 
   const url = `${datasetUrl}?nodes=${nodesToRequest.join(',')}`;
