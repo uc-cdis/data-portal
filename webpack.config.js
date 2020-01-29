@@ -67,6 +67,9 @@ const plugins = [
       if (typeof process.env.MANIFEST_SERVICE_URL !== 'undefined') {
         rv[(new URL(process.env.MANIFEST_SERVICE_URL)).origin] = true;
       }
+      if (typeof process.env.WIKI_URL !== 'undefined') {
+        rv[(new URL(process.env.WIKI_URL)).origin] = true;
+      }
       return Object.keys(rv).join(' ');
     })(),
     hash: true
