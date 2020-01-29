@@ -159,8 +159,10 @@ We support categorical horizontal grouped bar charts, and the chart will be usin
       "project_id": "jnkns-jenkins" // only support one constrains, could used to render charts for specific project or program
     },
     "chartTitle": "jnkns-jenkins project", // chart title
-    "logBase": 1 // log base, optional, default is 1,
-    "initialUnselectedKeys": ["no data", "Unknown"] // optional, an array of string, means the values those will be initially unselected
+    "logBase": 1, // optional, log base, default is 1,
+    "initialUnselectedKeys": ["no data", "Unknown"], // optional, an array of string, means the values those will be initially unselected
+    "subTitle": "number of cases by countries", // optional, by default it will be "number of ${dataTypePlural} by ${yAxisProp}"
+    "dataTypePlural": "cases" // optional, string, by default it will be `${xAxisProp}s`
   }
 ]
 ```

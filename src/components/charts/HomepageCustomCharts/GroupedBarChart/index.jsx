@@ -125,9 +125,12 @@ class GroupedBarChart extends React.Component {
       acc[cur] = false;
       return acc;
     }, {});
+    const dataTypePlural = this.props.dataTypePlural || `${this.props.dataType}s`;
+    const defaultSubTitle = `Number of ${dataTypePlural} by ${this.props.yAxisProp}`;
     const option = {
       title: {
         text: this.props.chartTitle,
+        subtext: this.props.subTitle ? this.props.subTitle : defaultSubTitle,
         textStyle: {
           fontSize: 12,
           color: '#999',
@@ -145,6 +148,7 @@ class GroupedBarChart extends React.Component {
         },
       },
       xAxis: {
+        name: this.props.xAxisProp,
         nameLocation: 'center',
       },
       tooltip: {
@@ -159,7 +163,7 @@ class GroupedBarChart extends React.Component {
         selected: legendSelectedObj,
       },
       grid: {
-        top: 20,
+        top: 40,
         bottom: 50,
         right: 25,
         left: 100,
@@ -178,9 +182,6 @@ class GroupedBarChart extends React.Component {
       option.xAxis.type = 'log';
       option.xAxis.logBase = this.props.logBase;
     }
-    if (this.props.xAxisName) {
-      option.xAxis.name = this.props.xAxisName;
-    }
     return (
       <ReactEcharts
         option={option}
@@ -197,14 +198,16 @@ GroupedBarChart.propTypes = {
   constrains: PropTypes.object,
   logBase: PropTypes.number,
   initialUnselectedKeys: PropTypes.arrayOf(PropTypes.string),
-  xAxisName: PropTypes.string,
+  dataTypePlural: PropTypes.string,
+  subTitle: PropTypes.string,
 };
 
 GroupedBarChart.defaultProps = {
   constrains: {},
   logBase: null,
   initialUnselectedKeys: [],
-  xAxisName: null,
+  dataTypePlural: null,
+  subTitle: null,
 };
 
 export default GroupedBarChart;
