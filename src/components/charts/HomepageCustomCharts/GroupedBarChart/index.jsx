@@ -145,6 +145,7 @@ class GroupedBarChart extends React.Component {
         },
       },
       xAxis: {
+        nameLocation: 'center',
       },
       tooltip: {
         axisPointer: {
@@ -173,9 +174,12 @@ class GroupedBarChart extends React.Component {
         color: colorsForCharts.categorical9Colors[i % colorsForCharts.categorical9Colors.length],
       })),
     };
-    if (this.props.logBase) {
+    if (this.props.logBase && this.props.logBase !== 1) {
       option.xAxis.type = 'log';
       option.xAxis.logBase = this.props.logBase;
+    }
+    if (this.props.xAxisName) {
+      option.xAxis.name = this.props.xAxisName;
     }
     return (
       <ReactEcharts
@@ -193,12 +197,14 @@ GroupedBarChart.propTypes = {
   constrains: PropTypes.object,
   logBase: PropTypes.number,
   initialUnselectedKeys: PropTypes.arrayOf(PropTypes.string),
+  xAxisName: PropTypes.string,
 };
 
 GroupedBarChart.defaultProps = {
   constrains: {},
   logBase: null,
   initialUnselectedKeys: [],
+  xAxisName: null,
 };
 
 export default GroupedBarChart;

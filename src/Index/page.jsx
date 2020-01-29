@@ -44,6 +44,7 @@ class IndexPageComponent extends React.Component {
             chartTitle={conf.chartTitle}
             logBase={conf.logBase}
             initialUnselectedKeys={conf.initialUnselectedKeys}
+            xAxisName={conf.xAxisName}
           />
         </div>
       ));
