@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import { fetchWithCreds } from '../actions';
 import { homepageChartNodes, datasetUrl } from '../localconf';
 import getReduxStore from '../reduxStore';
@@ -28,9 +29,13 @@ export const loadProjectNodeCountsIntoRedux = async () => {
 // in order to display summary counts for all data in the homepage charts for
 // users who are not logged in.
 // (See https://github.com/uc-cdis/cdis-wiki/blob/0d828c73dcec7f37eba63ac453e56f1d4ce46d47/dev/gen3/guides/ui_etl_configuration.md)
-export const loadPeregrinePublicDatasetsIntoRedux = async (nodesToRequest, callback) => {
+export const loadPeregrinePublicDatasetsIntoRedux = async (callback) => {
   const resultStatus = { needLogin: false };
 
+  const store = await getReduxStore();
+  const fileNodes = store.getState().submission.file_nodes;
+  const nodesForIndexChart = homepageChartNodes.map(item => item.node);
+  const nodesToRequest = _.union(fileNodes, nodesForIndexChart);
   const url = `${datasetUrl}?nodes=${nodesToRequest.join(',')}`;
 
   fetchWithCreds({
