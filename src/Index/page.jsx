@@ -2,12 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import _ from 'underscore';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntroduction } from './reduxer';
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { loadPeregrinePublicDatasetsIntoRedux, loadProjectNodeCountsIntoRedux } from './utils';
 import getReduxStore from '../reduxStore';
-import { breakpoints, homepageChartNodes } from '../localconf';
+import { breakpoints, customHomepageChartConfig, homepageChartNodes } from '../localconf';
+import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
 import './page.less';
 
 class IndexPageComponent extends React.Component {
@@ -40,6 +44,32 @@ class IndexPageComponent extends React.Component {
   }
 
   render() {
+    const sliderSettings = {
+      dots: true,
+      infinite: false,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: true,
+    };
+    let customCharts = null;
+    if (customHomepageChartConfig) {
+      customCharts = customHomepageChartConfig.map((conf, i) => (
+        <div key={i} className='index-page__slider-chart'>
+          <HomepageCustomCharts
+            chartType={conf.chartType}
+            dataType={conf.dataType}
+            yAxisProp={conf.yAxisProp}
+            xAxisProp={conf.xAxisProp}
+            constrains={conf.constrains}
+            chartTitle={conf.chartTitle}
+            logBase={conf.logBase}
+            initialUnselectedKeys={conf.initialUnselectedKeys}
+            dataTypePlural={conf.dataTypePlural}
+          />
+        </div>
+      ));
+    }
     return (
       <div className='index-page'>
         <div className='index-page__top'>
@@ -51,7 +81,10 @@ class IndexPageComponent extends React.Component {
           </div>
           <div className='index-page__bar-chart'>
             <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-              <ReduxIndexBarChart />
+              <Slider {...sliderSettings}>
+                <div className='index-page__slider-chart'><ReduxIndexBarChart /></div>
+                {customCharts}
+              </Slider>
             </MediaQuery>
           </div>
         </div>

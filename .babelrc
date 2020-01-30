@@ -5,6 +5,7 @@
     "transform-class-properties",
     ["relay",
       {"compat": true, "schema": "data/schema.json"}],
-    ["@babel/plugin-transform-runtime"]
+    "@babel/plugin-transform-runtime",
+    ["@babel/plugin-proposal-object-rest-spread", { "loose": true, "useBuiltIns": true }]
   ]
 }
