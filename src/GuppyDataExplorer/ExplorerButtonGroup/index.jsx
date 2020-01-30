@@ -97,15 +97,37 @@ class ExplorerButtonGroup extends React.Component {
 
   getManifest = async (indexType) => {
     const refField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
+    const md5Field = 'md5sum';
+    const fileNameField = 'file_name';
+    const fileSizeField = 'file_size';
+    const additionalFields = [md5Field, fileNameField, fileSizeField];
+    if (indexType === 'file') {
+      let rawData;
+      try {
+        // the additionalFields are hardcoded, so it's possible they may
+        // not be available in Guppy's index. Try to download the additional fields
+        // first, and if the download fails, download only the referenceIDField.
+        rawData = await this.props.downloadRawDataByFields({
+          fields: [
+            refField,
+            ...additionalFields,
+          ],
+        });
+      } catch (err) {
+        rawData = await this.props.downloadRawDataByFields({
+          fields: [
+            refField,
+          ],
+        });
+      }
+      return rawData;
+    }
+    const refIDList = await this.props.downloadRawDataByFields({ fields: [refField] })
+      .then(res => res.map(i => i[refField]));
     const refFieldInResourceIndex =
       this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
     const resourceFieldInResourceIndex = this.props.guppyConfig.manifestMapping.resourceIdField;
     const resourceType = this.props.guppyConfig.manifestMapping.resourceIndexType;
-    const refIDList = await this.props.downloadRawDataByFields({ fields: [refField] })
-      .then(res => res.map(i => i[refField]));
-    if (indexType === 'file') {
-      return refIDList.map(id => ({ [refField]: id }));
-    }
     const filter = {
       [refFieldInResourceIndex]: {
         selectedValues: refIDList,
@@ -114,12 +136,27 @@ class ExplorerButtonGroup extends React.Component {
     if (this.props.filter.data_format) {
       filter.data_format = this.props.filter.data_format;
     }
-    let resultManifest = await this.props.downloadRawDataByTypeAndFilter(
-      resourceType, filter, [
-        refFieldInResourceIndex,
-        resourceFieldInResourceIndex,
-      ],
-    );
+    let resultManifest;
+    try {
+      resultManifest = await this.props.downloadRawDataByTypeAndFilter(
+        resourceType,
+        filter,
+        [
+          refFieldInResourceIndex,
+          resourceFieldInResourceIndex,
+          ...additionalFields,
+        ],
+      );
+    } catch (err) {
+      resultManifest = await this.props.downloadRawDataByTypeAndFilter(
+        resourceType,
+        filter,
+        [
+          refFieldInResourceIndex,
+          resourceFieldInResourceIndex,
+        ],
+      );
+    }
     resultManifest = resultManifest.filter(
       x => !!x[resourceFieldInResourceIndex],
     );
