@@ -10,7 +10,7 @@ Example of HIV Cohort Selection App:
 ## Background
 The human immunodeficiency virus (HIV) infection is a dynamic process and has a variable rate of progression in infected people. Despite the varying disease progression rates, the majority of HIV-infected individuals eventually progress to AIDS. Interestingly, a small group of people who are HIV positive remain healthy for long periods of time without medications. These people, known as Long-Term Non-Progressors, Post-Treatment Controllers and Elite Controllers, have properties within their immune systems that control the virus. They can help researchers determine how their immune systems control HIV disease. This knowledge is critical for developing new treatments and vaccines. 
 
-Currently, different studies have used different creteria to define controller groups which makes comparison difficult. In addition, conventional cohort selection requires deep technology knowledge and a particular data source. We propose an effective tool which allows biomedical experts to define the cohort selection expressing the characteristics of the desired population using textual filters. 
+Currently, different studies have used different criteria to define controller groups which makes comparison difficult. In addition, conventional cohort selection requires deep technology knowledge and a particular data source. We propose an effective tool which allows biomedical experts to define the cohort selection expressing the characteristics of the desired population using textual filters. 
 
 ----------------------------------------
 
