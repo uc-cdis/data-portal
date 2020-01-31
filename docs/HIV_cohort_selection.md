@@ -33,7 +33,7 @@ Decision tree of Post-Treatment Controller:
 **Known limitations:**
 
 
-when visits are missing between 2 follow ups, we take them as adjacent even though they are not, so that visits 10 and 14 will be treated as 6 months apart, even though the time may be much greater.
+When visits are missing between 2 follow ups, we take them as adjacent even though they are not, so that visits 10 and 14 will be treated as 6 months apart, even though the time may be much greater.
 
 
 
