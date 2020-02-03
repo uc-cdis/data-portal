@@ -8,8 +8,8 @@ const gqlHelper = GQLHelper.getGQLHelper();
 
 const updateRedux = async ({ projectList, summaryCounts }) => getReduxStore().then(
   (store) => {
-    const homeState = store.getState().homepage || {};
-    if (!homeState.projectsByName) {
+    const indexState = store.getState().index || {};
+    if (!indexState.projectsByName) {
       store.dispatch({ type: 'RECEIVE_HOMEPAGE_CHART_PROJECT_LIST', data: { projectList, summaryCounts } });
       return 'dispatch';
     }
@@ -106,13 +106,13 @@ const getProjectDetail = (projectList) => {
   });
 };
 
-const checkHomepageState = stateName => getReduxStore().then(
+const checkIndexState = stateName => getReduxStore().then(
   (store) => {
-    const homeState = store.getState().homepage || {};
+    const indexState = store.getState().index || {};
     const nowMs = Date.now();
-    if (!Object.prototype.hasOwnProperty.call(homeState, stateName) ||
-        (Object.prototype.hasOwnProperty.call(homeState, stateName)
-          && nowMs - homeState[stateName] > 300000)
+    if (!Object.prototype.hasOwnProperty.call(indexState, stateName) ||
+        (Object.prototype.hasOwnProperty.call(indexState, stateName)
+          && nowMs - indexState[stateName] > 300000)
     ) {
       return 'OLD';
     }
@@ -126,7 +126,7 @@ const checkHomepageState = stateName => getReduxStore().then(
 );
 
 const getHomepageChartProjectsList = () => {
-  checkHomepageState('lastestListUpdating').then(
+  checkIndexState('lastestListUpdating').then(
     (res) => {
       if (res === 'OLD') {
         fetchQuery(environment, gqlHelper.homepageQuery, {})
