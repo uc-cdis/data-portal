@@ -4,7 +4,7 @@ import { fetchQuery } from 'relay-runtime';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Toaster from '@gen3/ui-component/dist/components/Toaster';
 import BackLink from '../components/BackLink';
-import { loadProjectNodeCountsIntoRedux } from '../Index/utils';
+import { getProjectsList } from '../Homepage/relayer';
 import CheckmarkIcon from '../img/icons/status_confirm.svg';
 import InputWithIcon from '../components/InputWithIcon';
 import { GQLHelper } from '../gqlHelper';
@@ -36,7 +36,7 @@ class MapDataModel extends React.Component {
     if (this.props.filesToMap.length === 0) { // redirect if no files
       this.props.history.push('/submission/files');
     }
-    loadProjectNodeCountsIntoRedux();
+    getProjectsList();
   }
 
   setRequiredProperties = () => {

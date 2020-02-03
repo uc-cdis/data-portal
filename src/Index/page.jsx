@@ -7,18 +7,20 @@ import 'slick-carousel/slick/slick-theme.css';
 import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntroduction } from './reduxer';
 import dictIcons from '../img/icons';
 import { components } from '../params';
-import { loadPeregrinePublicDatasetsIntoRedux, loadProjectNodeCountsIntoRedux } from './utils';
-import { breakpoints, customHomepageChartConfig, homepageChartNodes } from '../localconf';
+import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
+import { breakpoints, customHomepageChartConfig, indexPublic } from '../localconf';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
 import './page.less';
 
 class IndexPageComponent extends React.Component {
   componentDidMount() {
-    // If homepageChartNodes is enabled in the config, we will attempt to show
-    // the homepage charts on the landing page to logged-out users as well as logged-in users.
-    const showHomepageChartsToLoggedOutUsers = homepageChartNodes !== undefined;
-    if (showHomepageChartsToLoggedOutUsers) {
-      loadPeregrinePublicDatasetsIntoRedux((res) => {
+    // If the index page is publicly available, we will attempt to show the
+    // homepage charts on the landing page to logged-out users as well as logged-in users.
+    // To do this we will need to load data from Peregrine's datasets endpoint, which
+    // can be configured to be publicly accessible to logged-out users
+    // (with global.public_datasets: true in manifest.json)
+    if (indexPublic) {
+      loadHomepageChartDataFromDatasets((res) => {
         // If Peregrine returns unauthorized, need to redirect to `/login` page.
         if (res.needLogin) {
           this.props.history.push('/login');
@@ -29,7 +31,7 @@ class IndexPageComponent extends React.Component {
       // the summary data for projects users have access to. We will still show
       // charts on the homepage, but the charts will only contain data from projects
       // the user has access to.
-      loadProjectNodeCountsIntoRedux();
+      loadHomepageChartDataFromGraphQL();
     }
   }
 

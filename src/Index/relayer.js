@@ -10,7 +10,7 @@ const updateRedux = async ({ projectList, summaryCounts }) => getReduxStore().th
   (store) => {
     const homeState = store.getState().homepage || {};
     if (!homeState.projectsByName) {
-      store.dispatch({ type: 'RECEIVE_PROJECT_LIST', data: { projectList, summaryCounts } });
+      store.dispatch({ type: 'RECEIVE_HOMEPAGE_CHART_PROJECT_LIST', data: { projectList, summaryCounts } });
       return 'dispatch';
     }
     return 'NOOP';
@@ -82,18 +82,7 @@ const extractCharts = data => Object.keys(data).filter(
 const updateProjectDetailToRedux = (projInfo) => {
   getReduxStore().then(
     (store) => {
-      const homeState = store.getState().homepage || {};
-      // old data already in redux - only dispatch update
-      // if we have newer data
-      let old = {};
-      if (homeState.projectsByName) {
-        old = homeState.projectsByName[projInfo.name] || old;
-      }
-      const changed = projInfo.counts.find(
-        (it, index) => index > old.counts.length - 1
-          || old.counts[index] !== it,
-      );
-      if (changed) { store.dispatch({ type: 'RECEIVE_PROJECT_DETAIL', data: projInfo }); }
+      store.dispatch({ type: 'RECEIVE_HOMEPAGE_CHART_PROJECT_DETAIL', data: projInfo });
     },
   ).catch(
     (err) => {
@@ -136,7 +125,7 @@ const checkHomepageState = stateName => getReduxStore().then(
   },
 );
 
-const getProjectsList = () => {
+const getHomepageChartProjectsList = () => {
   checkHomepageState('lastestListUpdating').then(
     (res) => {
       if (res === 'OLD') {
@@ -159,5 +148,5 @@ const getProjectsList = () => {
   );
 };
 
-export default getProjectsList;
+export default getHomepageChartProjectsList;
 
