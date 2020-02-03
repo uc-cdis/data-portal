@@ -4,10 +4,10 @@ import { createMemoryHistory } from 'history';
 import { StaticRouter } from 'react-router-dom';
 import MapDataModel from './MapDataModel';
 import * as testData from './__test__/data.json';
-import { loadProjectNodeCountsIntoRedux } from '../Index/utils';
+import { getProjectsList } from '../Homepage/relayer';
 
-jest.mock('../Index/utils');
-loadProjectNodeCountsIntoRedux.mockImplementation(() => jest.fn());
+jest.mock('../Homepage/relayer');
+getProjectsList.mockImplementation(() => jest.fn());
 
 describe('MapDataModel', () => {
   const history = createMemoryHistory('/submission/map');
