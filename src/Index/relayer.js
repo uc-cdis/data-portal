@@ -134,7 +134,7 @@ const getHomepageChartProjectsList = () => {
             (data) => {
               const { projectList, summaryCounts } = transformRelayProps(data);
               updateRedux({ projectList, summaryCounts })
-                .then(getProjectDetail(projectList));
+                .then(() => getProjectDetail(projectList));
             },
             (error) => {
               updateReduxError(error);

@@ -173,7 +173,7 @@ export const getProjectsList = () => {
             (data) => {
               const { projectList, summaryCounts } = transformRelayProps(data);
               updateReduxProjectList({ projectList, summaryCounts })
-                .then(getProjectDetail(projectList));
+                .then(() => getProjectDetail(projectList));
             },
             (error) => {
               updateReduxError(error);
