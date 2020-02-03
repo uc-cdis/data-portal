@@ -4,8 +4,8 @@ import FileSaver from 'file-saver';
 import copy from 'clipboard-plus';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { jsonToString } from '../utils';
-import Popup from '../components/Popup';
-import { credentialCdisPath } from '../localconf';
+import { indexdPath, userapiPath } from '../localconf';
+import { fetchWithCreds } from '../actions';
 import KeyTable from '../components/tables/KeyTable';
 import { showArboristAuthzOnProfile, showFenceAuthzOnProfile } from '../configs';
 import './Indexing.less';
@@ -20,16 +20,17 @@ class Indexing extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      file: null
+      uploadedFile: null,
+      indexFilesButtonEnabled: false,
     };
   }
   
   onFormSubmit = (e) => {
       e.preventDefault() // Stop form submit
-      this.fileUpload(this.state.file).then((response)=>{
+      this.fileUpload(this.state.uploadedFile).then((response)=>{
         console.log(response.data);
       })
-    }
+  }
 
   savePopupClose = () => {
     onUpdatePopup({ saveTokenPopup: false });
@@ -42,13 +43,31 @@ class Indexing extends React.Component {
   };
 
   onChange = (e) => {
-    this.setState({file:e.target.files[0]})
+    this.setState({uploadedFile:e.target.files[0], indexFilesButtonEnabled: true});
+  };
+
+  submitToServer = () => {
+    console.log('posting to ', userapiPath + 'data/upload');
+    var _this = this;
+    return fetchWithCreds({
+      path: userapiPath + 'data/upload',
+      method: 'POST',
+      // customHeaders: { 'Content-Type': submission.file_type },
+      body: JSON.stringify({
+        "file_name": this.state.uploadedFile.name,
+        "expires_in": 1200
+      }),
+      // dispatch,
+    }).then(function(response) {
+      console.log(response);
+      _this.setState({indexFilesButtonEnabled: true});
+    });
   };
 
   fileUpload = (file) => {
     const url = 'http://example.com/file-upload';
     const formData = new FormData();
-    formData.append('file',file)
+    formData.append('file', file)
     const config = {
         headers: {
             'content-type': 'multipart/form-data'
@@ -57,8 +76,11 @@ class Indexing extends React.Component {
     // return post(url, formData,config)
   }
 
-  upload = () => {
+  indexFiles = () => {
+    this.setState({indexFilesButtonEnabled: false});
+    console.log(this.state.uploadedFile);
     console.log('zoopt up');
+    this.submitToServer();
   };
 
   download = () => {
@@ -86,13 +108,13 @@ class Indexing extends React.Component {
               <div className='action-panel-footer'>
                   <Button
                     // key={buttonConfig.type}
-                    onClick={this.upload}
+                    onClick={this.indexFiles}
                     label='Index Files'
                     // leftIcon={buttonConfig.leftIcon}
                     rightIcon="upload"
                     className='g3-button'
                     buttonType='primary'
-                    enabled={ typeof this.state.file !== 'undefined' }
+                    enabled={ this.state.indexFilesButtonEnabled }
                     // tooltipEnabled={buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false}
                     // tooltipText={btnTooltipText}
                     // isPending={this.isButtonPending(buttonConfig)}
