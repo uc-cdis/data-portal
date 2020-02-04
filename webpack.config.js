@@ -92,7 +92,9 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
 module.exports = {
   entry: ['babel-polyfill', './src/index.jsx'],
   target: 'web',
-  externals: [nodeExternals()],
+  externals: [nodeExternals({
+    whitelist: ['graphiql', 'graphql-language-service-parser']
+  })],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
     path: __dirname,
@@ -114,7 +116,7 @@ module.exports = {
   module: {
     rules: [{
         test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
         use: {
           loader: 'babel-loader',
         },
@@ -136,7 +138,7 @@ module.exports = {
         loaders: ['babel-loader', 'react-svg-loader'],
       },
       {
-        test: /\.(png|jpg)$/,
+        test: /\.(png|jpg|gif|woff|ttf|eot)$/,
         loaders: 'url-loader',
         query: {
           limit: 8192
@@ -151,7 +153,9 @@ module.exports = {
   resolve: {
     alias: {
       graphql: path.resolve('./node_modules/graphql'),
-      react: path.resolve('./node_modules/react') // Same issue.
+      react: path.resolve('./node_modules/react'), // Same issue.
+      graphiql: path.resolve('./node_modules/graphiql'), 
+      'graphql-language-service-parser': path.resolve('./node_modules/graphql-language-service-parser')
     },
     extensions: ['.mjs', '.js', '.jsx', '.json',]
   },

@@ -104,6 +104,7 @@ class Explorer extends React.Component {
               buttons: guppyExplorerConfig[this.state.tab].buttons,
               dropdowns: guppyExplorerConfig[this.state.tab].dropdowns,
               terraExportURL: config.dataExplorerConfig.terraExportURL,
+              terraTemplate: config.dataExplorerConfig.terraTemplate,
             }}
             history={this.props.history}
             tierAccessLevel={tierAccessLevel}

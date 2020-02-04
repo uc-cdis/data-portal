@@ -12,6 +12,7 @@ import Spinner from '../components/Spinner';
 import jupyterIcon from '../img/icons/jupyter.svg';
 import rStudioIcon from '../img/icons/rstudio.svg';
 import galaxyIcon from '../img/icons/galaxy.svg';
+import ohifIcon from '../img/icons/ohif-viewer.svg';
 import WorkspaceOption from './WorkspaceOption';
 
 class Workspace extends React.Component {
@@ -86,6 +87,8 @@ class Workspace extends React.Component {
       return jupyterIcon;
     } else if (this.regIcon(notebook, 'Galaxy')) {
       return galaxyIcon;
+    } else if (this.regIcon(notebook, 'DICOM')) {
+      return ohifIcon;
     }
     return jupyterIcon;
   }
