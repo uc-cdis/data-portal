@@ -22,6 +22,8 @@ class Indexing extends React.Component {
     this.state = {
       uploadedFile: null,
       indexFilesButtonEnabled: false,
+      guidOfIndexedFile: null,
+      urlToIndexedFile: null
     };
   }
   
@@ -49,18 +51,19 @@ class Indexing extends React.Component {
   submitToServer = () => {
     console.log('posting to ', userapiPath + 'data/upload');
     var _this = this;
+    let JSONbody = JSON.stringify({
+      file_name: this.state.uploadedFile.name
+    });
+    console.log('JSONbody:', JSONbody);
     return fetchWithCreds({
       path: userapiPath + 'data/upload',
       method: 'POST',
-      // customHeaders: { 'Content-Type': submission.file_type },
-      body: JSON.stringify({
-        "file_name": this.state.uploadedFile.name,
-        "expires_in": 1200
-      }),
+      customHeaders: { 'Content-Type': 'application/json' },
+      body: JSONbody,
       // dispatch,
     }).then(function(response) {
       console.log(response);
-      _this.setState({indexFilesButtonEnabled: true});
+      _this.setState({indexFilesButtonEnabled: true, guidOfIndexedFile: response.guid, urlToIndexedFile: response.url});
     });
   };
 
