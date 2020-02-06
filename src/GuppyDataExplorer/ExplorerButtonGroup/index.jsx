@@ -312,7 +312,12 @@ class ExplorerButtonGroup extends React.Component {
 
   sendPFBToCloud = () => {
     const url = encodeURIComponent(this.state.exportPFBURL);
-    window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB&url=${url}`;
+    let templateParam = '';
+    if (typeof this.props.buttonConfig.terraTemplate !== 'undefined'
+      && this.props.buttonConfig.terraTemplate != null) {
+      templateParam = `&template=${this.props.buttonConfig.terraTemplate}`;
+    }
+    window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
   }
 
   exportToPFB = () => {
