@@ -6,6 +6,7 @@ import certificate from './UserAgreement/reducers';
 import submission from './Submission/reducers';
 import analysis from './Analysis/reducers';
 import homepage from './Homepage/reducers';
+import index from './Index/reducers';
 import queryNodes from './QueryNode/reducers';
 import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
@@ -92,6 +93,7 @@ const reducers = combineReducers({ explorer,
   privacyPolicy,
   bar,
   homepage,
+  index,
   popups,
   user,
   status,
