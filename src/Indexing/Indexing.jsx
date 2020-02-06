@@ -48,7 +48,7 @@ class Indexing extends React.Component {
     this.setState({uploadedFile:e.target.files[0], indexFilesButtonEnabled: true});
   };
 
-  submitToServer = () => {
+  createBlankIndexdRecord = () => {
     console.log('posting to ', userapiPath + 'data/upload');
     var _this = this;
     let JSONbody = JSON.stringify({
@@ -61,16 +61,17 @@ class Indexing extends React.Component {
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSONbody,
       // dispatch,
-    }).then(function(response) {
-      console.log(response);
-      _this.setState({indexFilesButtonEnabled: true, guidOfIndexedFile: response.guid, urlToIndexedFile: response.url});
+    }).then((response) => {
+      console.log('RESPONSE: ', response);
+      _this.setState({indexFilesButtonEnabled: true, guidOfIndexedFile: response.data.guid, urlToIndexedFile: response.data.url});
+      
     });
   };
 
   fileUpload = (file) => {
     const url = 'http://example.com/file-upload';
     const formData = new FormData();
-    formData.append('file', file)
+    formData.append('file', file);
     const config = {
         headers: {
             'content-type': 'multipart/form-data'
@@ -83,8 +84,33 @@ class Indexing extends React.Component {
     this.setState({indexFilesButtonEnabled: false});
     console.log(this.state.uploadedFile);
     console.log('zoopt up');
-    this.submitToServer();
+    this.createBlankIndexdRecord().then(() => {
+      return this.putIndexFileToSignedURL();
+    });
   };
+
+  putIndexFileToSignedURL = () => {
+    console.log('file: ', this.state.uploadedFile);
+    console.log('type: ', this.state.uploadedFile.type);
+    console.log('url: ', this.state.urlToIndexedFile);
+    
+    var _this = this;
+    let JSONbody = JSON.stringify(this.state.uploadedFile);
+
+    console.log('JSONbody:', JSONbody);
+    
+    return fetchWithCreds({
+      path: this.state.urlToIndexedFile,
+      method: 'PUT',
+      customHeaders: { 'Content-Type': 'application/json' },
+      body: JSONbody,
+      // dispatch,
+    }).then((response) => {
+      console.log(response);
+      
+    });
+    
+  }
 
   download = () => {
     console.log('woosah');
