@@ -517,8 +517,10 @@ class ExplorerButtonGroup extends React.Component {
           // ===========================================
           this.state.enableTerraWarningPopup &&
             (<Popup
-              message={terraExportWarning.message ? terraExportWarning.message : `Cohorts with more than ${terraExportWarning.subjectThreshold.toLocaleString()} subjects are not currently supported by Terra. (Your cohort contains ${this.props.totalCount.toLocaleString()} subjects.)\n
-              Your export may fail. Would you like to proceed?`}
+              message={terraExportWarning.message
+                ? terraExportWarning.message
+                : `Warning: You have selected more subjects than are currently supported. The import may not succeed. Terra recommends slicing your data into segments of no more than ${terraExportWarning.subjectThreshold.toLocaleString()} subjects and exporting each separately. Would you like to continue anyway?"`
+              }
               title='Warning: Export May Fail'
               rightButtons={[
                 {
