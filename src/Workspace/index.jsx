@@ -279,18 +279,13 @@ class Workspace extends React.Component {
       // If this commons does not use Hatchery to spawn workspaces, then this
       // default workspace is shown.
       return (
-        <div
-          className={`workspace ${this.state.notebookIsfullpage ? 'workspace--fullpage' : ''}`}
-        >
+        <div className='workspace__default'>
           <iframe
             title='Workspace'
             frameBorder='0'
             className='workspace__iframe'
             src={workspaceUrl}
           />
-          <div className='workspace__buttongroup'>
-            { fullpageButton }
-          </div>
         </div>
       );
     }
