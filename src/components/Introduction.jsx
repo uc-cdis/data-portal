@@ -25,14 +25,14 @@ class Introduction extends Component {
       <div className='introduction'>
         <div className='h1-typo introduction__title'>{this.props.data.heading}</div>
         <div className='high-light introduction__text'>{this.props.data.text}</div>
-        <IconicLink
+        { /*<IconicLink
           link={this.props.data.link}
           dictIcons={this.props.dictIcons}
           className='introduction__icon'
           icon='upload'
           iconColor='#'
           caption={buttonText}
-        />
+        /> */ }
       </div>
     );
   }
