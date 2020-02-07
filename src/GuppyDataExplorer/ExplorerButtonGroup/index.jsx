@@ -525,7 +525,10 @@ class ExplorerButtonGroup extends React.Component {
               rightButtons={[
                 {
                   caption: 'Yes, Export Anyway',
-                  fn: () => this.exportToCloud(),
+                  fn: () => {
+                    this.setState({ enableTerraWarningPopup: false });
+                    this.exportToCloud();
+                  },
                   icon: 'external-link',
                 },
               ]}
