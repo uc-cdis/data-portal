@@ -4,7 +4,7 @@ import FileSaver from 'file-saver';
 import copy from 'clipboard-plus';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { jsonToString } from '../utils';
-import { indexdPath, userapiPath } from '../localconf';
+import { indexdPath, userapiPath, fenceDownloadPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import KeyTable from '../components/tables/KeyTable';
 import { showArboristAuthzOnProfile, showFenceAuthzOnProfile } from '../configs';
@@ -104,12 +104,24 @@ class Indexing extends React.Component {
       method: 'PUT',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSONbody,
-      // dispatch,
     }).then((response) => {
       console.log(response);
       
     });
     
+  }
+
+  retrievePresignedURLForDownload = () => {
+    var _this = this;
+    return fetchWithCreds({
+      path: fenceDownloadPath + '/' + this.state.guidOfIndexedFile,
+      method: 'GET',
+      customHeaders: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    }).then((response) => {
+      console.log(response);
+      
+    });
   }
 
   download = () => {
