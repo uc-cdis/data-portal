@@ -100,10 +100,10 @@ class Indexing extends React.Component {
     console.log('JSONbody:', JSONbody);
     
     return fetchWithCreds({
-      path: this.state.urlToIndexedFile,
-      method: 'PUT',
-      customHeaders: { 'Content-Type': 'application/json' },
-      body: JSONbody,
+      path: '/aws-s3-put?url=' + _this.state.urlToIndexedFile,
+      method: 'GET', // 'PUT',
+      customHeaders: { 'Content-Type': 'application/json' } //,
+      // body: JSONbody,
     }).then((response) => {
       console.log(response);
       
