@@ -339,7 +339,8 @@
       "accessibleValidationField": "project_id"
     },
     "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/",
-    "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data"
+    "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data",
+    "terraTemplate": "bdc"
   },
   "fileExplorerConfig": {
     "charts": {

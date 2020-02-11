@@ -118,6 +118,11 @@ function buildConfig(opts) {
     useArboristUI = config.useArboristUI;
   }
 
+  let terraExportWarning;
+  if (config.terraExportWarning) {
+    terraExportWarning = config.terraExportWarning;
+  }
+
   // for "libre" data commons, explorer page is public
   let explorerPublic = false;
   if (tierAccessLevel === 'libre') {
@@ -283,6 +288,7 @@ function buildConfig(opts) {
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
     useArboristUI,
+    terraExportWarning,
     analysisApps,
     tierAccessLevel,
     tierAccessLimit,

@@ -8,8 +8,9 @@ import PropTypes from 'prop-types';
 import { calculateDropdownButtonConfigs, humanizeNumber } from '../../DataExplorer/utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
 import { fetchWithCreds } from '../../actions';
-import { manifestServiceApiPath, guppyGraphQLUrl } from '../../localconf';
+import { manifestServiceApiPath, guppyGraphQLUrl, terraExportWarning } from '../../localconf';
 import './ExplorerButtonGroup.css';
+import Popup from '../../components/Popup';
 
 class ExplorerButtonGroup extends React.Component {
   constructor(props) {
@@ -81,7 +82,14 @@ class ExplorerButtonGroup extends React.Component {
       clickFunc = this.downloadManifest(buttonConfig.fileName, 'file');
     }
     if (buttonConfig.type === 'export') {
-      clickFunc = this.exportToCloud;
+      // REMOVE THIS CODE WHEN TERRA EXPORT WORKS
+      // =======================================
+      if (terraExportWarning) {
+        clickFunc = this.exportToCloudWithTerraWarning;
+      } else {
+      // =======================================
+        clickFunc = this.exportToCloud;
+      }
     }
     if (buttonConfig.type === 'export-to-pfb') {
       clickFunc = this.exportToPFB;
@@ -278,6 +286,24 @@ class ExplorerButtonGroup extends React.Component {
     }
   };
 
+  // REMOVE THIS CODE ONCE TERRA EXPORT WORKS
+  // =========================================
+  // The below code is a temporary feature for for https://ctds-planx.atlassian.net/browse/PXP-5186
+  // (Warn user about Terra entitiy threshold). This code should be removed when
+  // Terra is no longer limited to importing <165,000 entities. (~14k subjects).
+  // This file is the only file that contains code for this feature.
+  exportToCloudWithTerraWarning = () => {
+    // If the number of subjects is over the threshold, warn the user that their
+    // export to Terra job might fail.
+    if (this.props.totalCount >= terraExportWarning.subjectThreshold) {
+      this.setState({ enableTerraWarningPopup: true });
+    } else {
+      // If the number is below the threshold, proceed as normal
+      this.exportToCloud();
+    }
+  }
+  // ==========================================
+
   exportToCloud = () => {
     this.setState({ exportingToCloud: true }, () => {
       this.exportToPFB();
@@ -286,7 +312,12 @@ class ExplorerButtonGroup extends React.Component {
 
   sendPFBToCloud = () => {
     const url = encodeURIComponent(this.state.exportPFBURL);
-    window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB&url=${url}`;
+    let templateParam = '';
+    if (typeof this.props.buttonConfig.terraTemplate !== 'undefined'
+      && this.props.buttonConfig.terraTemplate != null) {
+      templateParam = `&template=${this.props.buttonConfig.terraTemplate}`;
+    }
+    window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
   }
 
   exportToPFB = () => {
@@ -481,6 +512,37 @@ class ExplorerButtonGroup extends React.Component {
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.buttonConfig);
     return (
       <React.Fragment>
+        {
+          // REMOVE THIS CODE WHEN EXPORT TO TERRA WORKS
+          // ===========================================
+          this.state.enableTerraWarningPopup &&
+            (<Popup
+              message={terraExportWarning.message
+                ? terraExportWarning.message
+                : `Warning: You have selected more subjects than are currently supported. The import may not succeed. Terra recommends slicing your data into segments of no more than ${terraExportWarning.subjectThreshold.toLocaleString()} subjects and exporting each separately. Would you like to continue anyway?`
+              }
+              title='Warning: Export May Fail'
+              rightButtons={[
+                {
+                  caption: 'Yes, Export Anyway',
+                  fn: () => {
+                    this.setState({ enableTerraWarningPopup: false });
+                    this.exportToCloud();
+                  },
+                  icon: 'external-link',
+                },
+              ]}
+              leftButtons={[
+                {
+                  caption: 'Cancel',
+                  fn: () => this.setState({ enableTerraWarningPopup: false }),
+                  icon: 'cross',
+                },
+              ]}
+              onClose={() => this.setState({ enableTerraWarningPopup: false })}
+            />)
+          // ===========================================
+        }
         {
           /*
           * First, render dropdown buttons
