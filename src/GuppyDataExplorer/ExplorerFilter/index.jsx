@@ -28,6 +28,10 @@ class ExplorerFilter extends React.Component {
     if (prevProps.accessibleFieldObject !== this.props.accessibleFieldObject ||
       prevProps.unaccessibleFieldObject !== this.props.unaccessibleFieldObject
     ) {
+      if (this.props.tierAccessLevel === 'libre') {
+        this.setState({ selectedAccessFilter: 'all-data' });
+        return null;
+      }
       if (this.props.tierAccessLevel === 'regular') {
         if (checkForNoAccessibleProject(
           this.props.accessibleFieldObject,
