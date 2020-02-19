@@ -164,7 +164,7 @@ class ExplorerVisualization extends React.Component {
             <div className='guppy-explorer-visualization__charts' >
               {
                 chartData.stackedBarCharts.map((chart, i) => (
-                  <div className='guppy-explorer-visualization__charts-row'>
+                  <div key={i} className='guppy-explorer-visualization__charts-row'>
                     {
                       i > 0 && <div className='percentage-bar-chart__row-upper-border' />
                     }
