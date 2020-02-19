@@ -100,7 +100,7 @@ class ExplorerVisualization extends React.Component {
     const tableColumns = (this.props.tableConfig.fields && this.props.tableConfig.fields.length > 0)
       ? this.props.tableConfig.fields : this.props.allFields;
     // don't lock components for libre commons
-    const isComponentLocked = (tierAccessLevel === 'libre') ? false : checkForAnySelectedUnaccessibleField(this.props.aggsData,
+    const isComponentLocked = (tierAccessLevel !== 'regular') ? false : checkForAnySelectedUnaccessibleField(this.props.aggsData,
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
     const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${this.props.tierAccessLimit} ${this.props.guppyConfig.nodeCountTitle.toLowerCase() || this.props.guppyConfig.dataType}.`;
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;

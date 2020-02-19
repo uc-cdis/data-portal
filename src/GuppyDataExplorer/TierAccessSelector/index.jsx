@@ -1,19 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { tierAccessLevel } from '../../localconf';
 import './TierAccessSelector.css';
 
 /**
  * Tier access selector has 3 options: 'Data with Access', 'Data without Access', and 'All Data'
- * By default 'Data with Access' is selected if TIER_ACCESS_LEVEL is 'regular'
- * Otherwise 'All Data' is selected
+ * By default "Data with Access'" is selected
  */
 class TierAccessSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: (tierAccessLevel === 'regular') ? 'with-access' : 'all-data',
+      selected: 'with-access',
       toggled: false,
     };
   }
