@@ -80,6 +80,7 @@ class ExplorerVisualization extends React.Component {
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     let caseIDList;
     try {
+      // FIXME: need to move this network request out of this rendering function
       const res = await this.props.downloadRawDataByFields({ fields: [caseField] });
       caseIDList = res.map(e => e.node_id);
       this.heatMapIsLocked = false;
@@ -206,6 +207,7 @@ class ExplorerVisualization extends React.Component {
                   ...heatMapGuppyConfig,
                 }}
                 filterConfig={heatMapFilterConfig}
+                hidden
               />
               <ExplorerHeatMap
                 guppyConfig={{
