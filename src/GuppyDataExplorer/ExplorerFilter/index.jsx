@@ -10,11 +10,16 @@ import {
 } from '../configTypeDef';
 import { checkForNoAccessibleProject, checkForFullAccessibleProject } from '../GuppyDataExplorerHelper';
 
+/**
+ * For selectedAccessFilter the default value is 'Data with Access'
+ * if TIER_ACCESS_LEVEL is 'regular'
+ * Otherwise 'All Data' is selected
+ */
 class ExplorerFilter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedAccessFilter: 'with-access', // default value of selectedAccessFilter
+      selectedAccessFilter: (this.props.tierAccessLevel === 'regular') ? 'with-access' : 'all-data', // default value of selectedAccessFilter
       showTierAccessSelector: false,
     };
   }
