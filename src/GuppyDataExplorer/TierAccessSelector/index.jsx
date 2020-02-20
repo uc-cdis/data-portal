@@ -5,7 +5,7 @@ import './TierAccessSelector.css';
 
 /**
  * Tier access selector has 3 options: 'Data with Access', 'Data without Access', and 'All Data'
- * By default "All Data" is selected
+ * By default "Data with Access'" is selected
  */
 class TierAccessSelector extends React.Component {
   constructor(props) {
