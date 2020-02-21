@@ -1,7 +1,10 @@
-/* eslint-disable max-len */
 import _ from 'lodash';
 
-export function checkForAnySelectedUnaccessibleField(aggsData, accessibleFieldObject, fieldToCheck) { // if true, means user has unaccessible fields in aggsData
+// if true, means user has unaccessible fields in aggsData
+export function checkForAnySelectedUnaccessibleField(
+  aggsData,
+  accessibleFieldObject,
+  fieldToCheck) {
   let accessValuesInAggregationList = [];
   if (!accessibleFieldObject || !accessibleFieldObject[fieldToCheck]) {
     return false;
@@ -21,14 +24,20 @@ export function checkForAnySelectedUnaccessibleField(aggsData, accessibleFieldOb
   return false;
 }
 
-export function checkForNoAccessibleProject(accessibleFieldObject, fieldToCheck) { // if true, means user don't have access to any project
+// if true, means user don't have access to any project
+export function checkForNoAccessibleProject(
+  accessibleFieldObject,
+  fieldToCheck) {
   if (!accessibleFieldObject || !accessibleFieldObject[fieldToCheck]) {
     return false;
   }
   return (accessibleFieldObject[fieldToCheck].length === 0);
 }
 
-export function checkForFullAccessibleProject(unaccessibleFieldObject, fieldToCheck) { // if true, means user have full access to all projects
+// if true, means user have full access to all projects
+export function checkForFullAccessibleProject(
+  unaccessibleFieldObject,
+  fieldToCheck) {
   if (!unaccessibleFieldObject || !unaccessibleFieldObject[fieldToCheck]) {
     return false;
   }
