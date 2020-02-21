@@ -283,7 +283,7 @@ class Workspace extends React.Component {
           <iframe
             title='Workspace'
             frameBorder='0'
-            className='workspace'
+            className='workspace__iframe'
             src={workspaceUrl}
           />
         </div>
