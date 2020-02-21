@@ -521,7 +521,10 @@ class ExplorerButtonGroup extends React.Component {
                 ? terraExportWarning.message
                 : `Warning: You have selected more subjects than are currently supported. The import may not succeed. Terra recommends slicing your data into segments of no more than ${terraExportWarning.subjectThreshold.toLocaleString()} subjects and exporting each separately. Would you like to continue anyway?`
               }
-              title='Warning: Export May Fail'
+              title={terraExportWarning.title
+                ? terraExportWarning.title
+                : 'Warning: Export May Fail'
+              }
               rightButtons={[
                 {
                   caption: 'Yes, Export Anyway',
