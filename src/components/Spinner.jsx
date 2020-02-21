@@ -4,6 +4,18 @@ import './Spinner.less';
 
 class Spinner extends React.Component {
   render() {
+    if(this.props.type == 'spinning') {
+      // spinning spinner
+      return (
+        <div className='spinning-spinner-cell'>
+          <div className='wrapper'>
+            <div className='spinning-spinner'></div>
+          </div>
+        </div>
+      );
+    }
+
+    // dots
     return (
       <div className='spinner'>
         <svg className='spinner__svg' width='60' height='20' viewBox='0 0 60 20'>
@@ -19,10 +31,12 @@ class Spinner extends React.Component {
 
 Spinner.propTypes = {
   text: PropTypes.string,
+  type: PropTypes.string,
 };
 
 Spinner.defaultProps = {
   text: '',
+  type: 'dots'
 };
 
 export default Spinner;

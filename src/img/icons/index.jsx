@@ -23,6 +23,8 @@ import IcoKey from './key.svg';
 import IcoProfile from './profile.svg';
 import IcoQuery from './query.svg';
 import IcoSignature from './signature.svg';
+import IcoStatusError from './status_wrong.svg';
+import IcoStatusReady from './status_ready.svg';
 import IcoUpload from './upload.svg';
 import IcoUploadWhite from './upload-white.svg';
 import IcoWorkspace from './workspace.svg';
@@ -111,6 +113,12 @@ const dictIcons = {
   ),
   query: (height, customedStyles) => (
     <IcoQuery height={height} style={{ ...customedStyles }} />
+  ),
+  status_error: (height, customedStyles) => (
+    <IcoStatusError height={height} style={{ ...customedStyles }} />
+  ),
+  status_ready: (height, customedStyles) => (
+    <IcoStatusReady height={height} style={{ ...customedStyles }} />
   ),
   'stage-access': (height, customedStyles) => (
     <IcoStageAccess height={height} style={{ ...customedStyles }} />

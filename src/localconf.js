@@ -91,6 +91,7 @@ function buildConfig(opts) {
   const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
   const guppyDownloadUrl = `${guppyUrl}/download`;
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
+  const sowerPath = `${hostname}sower/`;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -154,7 +155,7 @@ function buildConfig(opts) {
       title: 'Login from NIH',
     };
   }
-  const fenceDownloadPath = userapiPath + '/data/download';
+  const fenceDownloadPath = userapiPath + 'data/download';
 
   const defaultLineLimit = 30;
   const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;
@@ -290,6 +291,7 @@ function buildConfig(opts) {
     useArboristUI,
     terraExportWarning,
     analysisApps,
+    sowerPath,
     tierAccessLevel,
     tierAccessLimit,
     useIndexdAuthz,
