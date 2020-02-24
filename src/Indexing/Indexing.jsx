@@ -136,7 +136,7 @@ class Indexing extends React.Component {
       if (response.status.toString()[0] != '2' && retrievePresignedURLRetries >= maxRetries) {
         _this.setState({ 
           indexingFilesStatus: 'error',
-          indexingFilesPopupMessage: 'There was a problem uploading the indexing file to s3. (' + response.status + ')',
+          indexingFilesPopupMessage: 'There was a problem uploading the indexing file to s3 (' + response.status + ')',
           indexFilesButtonEnabled: false
         });
         return;
@@ -167,8 +167,9 @@ class Indexing extends React.Component {
         this.pollForIndexJobStatus();
       } else {
         // report error
+        let optionalPermissionsMessage = response.status == 403 ? '. Ensure your profile has the sower policy to allow job dispatching.' : '';
         this.setState({ 
-          indexingFilesPopupMessage: 'Failed to dispatch indexing job. (' + response.status + ')',
+          indexingFilesPopupMessage: 'Failed to dispatch indexing job. (' + response.status + ')' + optionalPermissionsMessage,
           indexingFilesStatus: 'error',
         });
       }
@@ -192,8 +193,9 @@ class Indexing extends React.Component {
         this.pollForIndexJobStatus();
       } else {
         // report error
+        let optionalPermissionsMessage = response.status == 403 ? '. Ensure your profile has the sower policy to allow job dispatching.' : '';
         this.setState({ 
-          downloadManifestPopupMessage: 'Failed to dispatch download manifest job. (' + response.status + ')',
+          downloadManifestPopupMessage: 'Failed to dispatch download manifest job (' + response.status + ')' + optionalPermissionsMessage,
           downloadManifestStatus: 'error',
         });
       }
