@@ -16,14 +16,14 @@ const resourcePathFromProjectID = (projectID) => {
 // Used by ProjectSubmission to determine whether the user is creating a program.
 // To create a program the user needs access to the resource
 // /services/sheepdog/submission/program, usually granted via Sheepdog admin policy.
-export const isRootUrl = (urlFragment) => urlFragment === '_root';
+export const isRootUrl = urlFragment => urlFragment === '_root';
 
 
 // Used by ProjectSubmission to determine whether the user is creating a project.
 // To create a project the user needs access to the resource
 // /services/sheepdog/submission/project, usually granted via Sheepdog admin policy.
 // A dash delimits the project code if there is one
-export const isProgramUrl = (urlFragment) => urlFragment !== '_root' && !urlFragment.includes('-');
+export const isProgramUrl = urlFragment => urlFragment !== '_root' && !urlFragment.includes('-');
 
 
 export const userHasSheepdogProgramAdmin = (userAuthMapping = {}) =>

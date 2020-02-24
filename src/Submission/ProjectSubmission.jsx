@@ -29,15 +29,20 @@ const ProjectSubmission = (props) => {
     }
     return <MyDataModelGraph project={props.project} />;
   };
-  const displaySubmissionUIComponents = () => {
+  const displaySubmissionUIComponents = (project, userAuthMapping) => {
     if (
       !useArboristUI
-      || (isRootUrl(props.project) && userHasSheepdogProgramAdmin(props.userAuthMapping))
-      || (isProgramUrl(props.project) && userHasSheepdogProjectAdmin(props.userAuthMapping))
-      || userHasMethodOnProject('create', props.project, props.userAuthMapping)
-      || userHasMethodOnProject('update', props.project, props.userAuthMapping)
+      || (isRootUrl(project) && userHasSheepdogProgramAdmin(userAuthMapping))
+      || (isProgramUrl(project) && userHasSheepdogProjectAdmin(userAuthMapping))
+      || userHasMethodOnProject('create', project, userAuthMapping)
+      || userHasMethodOnProject('update', project, userAuthMapping)
     ) {
-      return <><MySubmitForm /><MySubmitTSV project={props.project} /></>;
+      return (
+        <React.Fragment>
+          <MySubmitForm />
+          <MySubmitTSV project={project} />
+        </React.Fragment>
+      );
     }
     return null;
   };
@@ -48,7 +53,7 @@ const ProjectSubmission = (props) => {
       {
         <Link className='project-submission__link' to={`/${props.project}/search`}>browse nodes</Link>
       }
-      { displaySubmissionUIComponents() }
+      { displaySubmissionUIComponents(props.project, props.userAuthMapping) }
       { displayData() }
     </div>
   );
