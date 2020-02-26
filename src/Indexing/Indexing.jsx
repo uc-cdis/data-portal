@@ -1,13 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import FileSaver from 'file-saver';
-import copy from 'clipboard-plus';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { jsonToString } from '../utils';
-import { indexdPath, userapiPath, fenceDownloadPath, sowerPath } from '../localconf';
+import { userapiPath, fenceDownloadPath, sowerPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
-import KeyTable from '../components/tables/KeyTable';
-import { showArboristAuthzOnProfile, showFenceAuthzOnProfile } from '../configs';
 import './Indexing.less';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
@@ -30,7 +25,7 @@ class Indexing extends React.Component {
       urlToIndexedFile: null,
       showIndexFilesPopup: false,
       showDownloadManifestPopup: false,
-      indexingFilesStatus: null,
+      indexingFilesStatus: 'running',
       presignedURLForDownload: null,
       indexingFilesPopupMessage: '',
       indexingFilesJobStatus: null,
@@ -39,243 +34,219 @@ class Indexing extends React.Component {
       downloadManifestFileEnabled: true,
       uidOfManifestGenerationSowerJob: null,
       downloadManifestStatus: null,
-      downloadManifestJobStatus: null
+      downloadManifestJobStatus: null,
     };
     this.state = Object.assign({}, this.initialStateConfiguration);
   }
 
-  resetAllPageForms = () => {
-    this.setState(this.initialStateConfiguration);
-    let forms = Array.from(document.getElementsByClassName('index-flow-form'));
-    forms.map(x => x.reset());
-  }
-  
   onFormSubmit = (e) => {
-      e.preventDefault();
-      this.fileUpload(this.state.uploadedFile);
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', this.state.uploadedFile);
   }
 
   onChange = (e) => {
-    this.setState({uploadedFile:e.target.files[0], indexFilesButtonEnabled: true});
+    this.setState({ uploadedFile: e.target.files[0], indexFilesButtonEnabled: true });
   };
 
   onHidePopup = () => {
     this.resetAllPageForms();
   }
 
+  resetAllPageForms = () => {
+    this.setState(this.initialStateConfiguration);
+    const forms = Array.from(document.getElementsByClassName('index-flow-form'));
+    forms.map(x => x.reset());
+  }
+
   createBlankIndexdRecord = () => {
-    var _this = this;
-    let JSONbody = JSON.stringify({
-      file_name: this.state.uploadedFile.name
+    const thisPointer = this;
+    const JSONbody = JSON.stringify({
+      file_name: this.state.uploadedFile.name,
     });
     return fetchWithCreds({
-      path: userapiPath + 'data/upload',
+      path: `${userapiPath}data/upload`,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSONbody,
     }).then((response) => {
-      _this.setState({ 
-        guidOfIndexedFile: response.data.guid, 
+      thisPointer.setState({
+        guidOfIndexedFile: response.data.guid,
         urlToIndexedFile: response.data.url,
-        indexingFilesPopupMessage: 'Uploading index file to s3...'
+        indexingFilesPopupMessage: 'Uploading index file to s3...',
       });
-      
     });
   };
-
-  fileUpload = (file) => {
-    const url = 'http://example.com/file-upload';
-    const formData = new FormData();
-    formData.append('file', file);
-    const config = {
-        headers: {
-            'content-type': 'multipart/form-data'
-        }
-    }
-  }
 
   indexFiles = async () => {
     this.setState({
-      indexFilesButtonEnabled: false, 
+      indexFilesButtonEnabled: false,
       showIndexFilesPopup: true,
-      indexingFilesPopupMessage: 'Preparing indexd...'
+      indexingFilesPopupMessage: 'Preparing indexd...',
     });
-    this.createBlankIndexdRecord().then(() => {
-      return this.putIndexFileToSignedURL();
-    });
+    this.createBlankIndexdRecord().then(() => this.putIndexFileToSignedURL());
   };
 
   putIndexFileToSignedURL = () => {
-    var _this = this;
+    const thisPointer = this;
     return fetchWithCreds({
-      path: _this.state.urlToIndexedFile,
+      path: thisPointer.state.urlToIndexedFile,
       method: 'PUT',
       customHeaders: { 'Content-Type': 'application/json' },
-      body: _this.state.uploadedFile,
-    }).then((response) => {
-      _this.setState({ 
-        indexingFilesPopupMessage: 'Preparing indexing job...'
+      body: thisPointer.state.uploadedFile,
+    }).then(() => {
+      thisPointer.setState({
+        indexingFilesPopupMessage: 'Preparing indexing job...',
       });
-      return _this.retrievePresignedURLForDownload(0, 5);
+      return thisPointer.retrievePresignedURLForDownload(0, 5);
     });
   }
 
   retrievePresignedURLForDownload = (retrievePresignedURLRetries, maxRetries) => {
-    var _this = this;
+    const thisPointer = this;
     return fetchWithCreds({
-      path: fenceDownloadPath + '/' + this.state.guidOfIndexedFile,
+      path: `${fenceDownloadPath}/${this.state.guidOfIndexedFile}`,
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
-      if (response.status.toString()[0] != '2' && retrievePresignedURLRetries < maxRetries) {
-        setTimeout(function() {
-          _this.retrievePresignedURLForDownload(retrievePresignedURLRetries + 1, maxRetries);
-        } , 5000);
+      if (response.status.toString()[0] !== '2' && retrievePresignedURLRetries < maxRetries) {
+        setTimeout(() => {
+          thisPointer.retrievePresignedURLForDownload(retrievePresignedURLRetries + 1, maxRetries);
+        }, 5000);
         return;
       }
-      if (response.status.toString()[0] != '2' && retrievePresignedURLRetries >= maxRetries) {
-        _this.setState({ 
+      if (response.status.toString()[0] !== '2' && retrievePresignedURLRetries >= maxRetries) {
+        thisPointer.setState({
           indexingFilesStatus: 'error',
-          indexingFilesPopupMessage: 'There was a problem uploading the indexing file to s3 (' + response.status + ')',
-          indexFilesButtonEnabled: false
+          indexingFilesPopupMessage: `There was a problem uploading the indexing file to s3 (${response.status})`,
+          indexFilesButtonEnabled: false,
         });
         return;
       }
-      _this.setState({
-        presignedURLForDownload : response.data.url,
-        indexingFilesStatus: '',
-        indexingFilesPopupMessage: 'Dispatching indexing job...'
+      thisPointer.setState({
+        presignedURLForDownload: response.data.url,
+        indexingFilesPopupMessage: 'Dispatching indexing job...',
       });
-      _this.dispatchSowerIndexingJob();
+      thisPointer.dispatchSowerIndexingJob();
     });
   }
 
   dispatchSowerIndexingJob = () => {
-    var _this = this;
-    let JSONbody = { 
-      'action': 'indexing',
-      'input': { 'URL': this.state.presignedURLForDownload } 
+    const JSONbody = {
+      action: 'indexing',
+      input: { URL: this.state.presignedURLForDownload },
     };
     return fetchWithCreds({
-      path: sowerPath + 'dispatch',
+      path: `${sowerPath}dispatch`,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(JSONbody)
+      body: JSON.stringify(JSONbody),
     }).then((response) => {
-      if(response.status === 200 && response.data && response.data.uid) {
-        this.setState({ 
-          uidOfIndexingSowerJob : response.data.uid,
-          indexingFilesPopupMessage: 'Indexing job is in progress. UID: ' + response.data.uid,
-          indexingFilesStatus: ''
+      if (response.status === 200 && response.data && response.data.uid) {
+        this.setState({
+          uidOfIndexingSowerJob: response.data.uid,
+          indexingFilesPopupMessage: `Indexing job is in progress. UID: ${response.data.uid}`,
         });
         this.pollForIndexJobStatus();
       } else {
-        let optionalPermissionsMessage = response.status == 403 ? '. Ensure your profile has the sower policy to allow job dispatching.' : '';
-        this.setState({ 
-          indexingFilesPopupMessage: 'Failed to dispatch indexing job. (' + response.status + ')' + optionalPermissionsMessage,
+        const optionalPermissionsMessage = response.status === 403 ? '. Ensure your profile has the sower policy to allow job dispatching.' : '';
+        this.setState({
+          indexingFilesPopupMessage: `Failed to dispatch indexing job. (${response.status})${optionalPermissionsMessage}`,
           indexingFilesStatus: 'error',
         });
       }
     });
   }
 
-  dispatchSowerGenerateManifestJob = () => {
-    var _this = this;
-    return fetchWithCreds({
-      path: sowerPath + 'dispatch',
-      method: 'POST',
-      customHeaders: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 'action': 'download_manifest' })
-    }).then((response) => {
-      if(response.status === 200 && response.data && response.data.uid) {
-        this.setState({ 
-          uidOfManifestGenerationSowerJob: response.data.uid,
-          downloadManifestPopupMessage: 'Manifest generation job is in progress. UID: ' + response.data.uid,
-          downloadManifestStatus: ''
-        });
-        this.pollForIndexJobStatus();
-      } else {
-        let optionalPermissionsMessage = response.status == 403 ? '. Ensure your profile has the sower policy to allow job dispatching.' : '';
-        this.setState({ 
-          downloadManifestPopupMessage: 'Failed to dispatch download manifest job (' + response.status + ')' + optionalPermissionsMessage,
-          downloadManifestStatus: 'error'
-        });
-      }
-    });
-  }
+  dispatchSowerGenerateManifestJob = () => fetchWithCreds({
+    path: `${sowerPath}dispatch`,
+    method: 'POST',
+    customHeaders: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'download_manifest' }),
+  }).then((response) => {
+    if (response.status === 200 && response.data && response.data.uid) {
+      this.setState({
+        uidOfManifestGenerationSowerJob: response.data.uid,
+        downloadManifestPopupMessage: `Manifest generation job is in progress. UID: ${response.data.uid}`,
+        downloadManifestStatus: '',
+      });
+      this.pollForIndexJobStatus();
+    } else {
+      const optionalPermissionsMessage = response.status === 403 ? '. Ensure your profile has the sower policy to allow job dispatching.' : '';
+      this.setState({
+        downloadManifestPopupMessage: `Failed to dispatch download manifest job (${response.status})${optionalPermissionsMessage}`,
+        downloadManifestStatus: 'error',
+      });
+    }
+  })
 
-  retrieveJobOutput = (uid) => {
-    var _this = this;
-    return fetchWithCreds({
-      path: sowerPath + 'output?UID=' + uid,
-      method: 'GET',
-      customHeaders: { 'Content-Type': 'application/json' }
-    });
-  }
+
+  retrieveJobOutput = uid => fetchWithCreds({
+    path: `${sowerPath}output?UID=${uid}`,
+    method: 'GET',
+    customHeaders: { 'Content-Type': 'application/json' },
+  })
 
   pollForIndexJobStatus = () => {
-    var _this = this;
+    const thisPointer = this;
     return fetchWithCreds({
-      path: sowerPath + 'status?UID=' + _this.state.uidOfIndexingSowerJob,
+      path: `${sowerPath}status?UID=${thisPointer.state.uidOfIndexingSowerJob}`,
       method: 'GET',
-      customHeaders: { 'Content-Type': 'application/json' }
+      customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
-      if (response.data && response.data.status == 'Completed') {
-        _this.retrieveJobOutput(_this.state.uidOfIndexingSowerJob).then(function(response) {
-          console.log(response);
-          if(response.data && response.data.output) {
-            let logsLink = response.data.output.split(" ")[0];
-            _this.setState({ 
+      if (response.data && response.data.status === 'Completed') {
+        thisPointer.retrieveJobOutput(thisPointer.state.uidOfIndexingSowerJob).then((resp) => {
+          if (resp.data && resp.data.output) {
+            const logsLink = resp.data.output.split(' ')[0];
+            thisPointer.setState({
               indexingFilesStatus: 'success',
               indexingFilesPopupMessage: 'Done',
-              indexingFilesLogsLink: logsLink
+              indexingFilesLogsLink: logsLink,
             });
-          }
-          else {
-            _this.setState({ 
+          } else {
+            thisPointer.setState({
               indexingFilesStatus: 'error',
-              indexingFilesPopupMessage: 'The indexing job failed to process the input file.'
+              indexingFilesPopupMessage: 'The indexing job failed to process the input file.',
             });
           }
         });
         return;
-      } else if (response.data && response.data.status == 'Failed') {
-        _this.setState({ 
+      } else if (response.data && response.data.status === 'Failed') {
+        thisPointer.setState({
           indexingFilesStatus: 'error',
-          indexingFilesPopupMessage: 'The indexing job failed to process the input file.'
+          indexingFilesPopupMessage: 'The indexing job failed to process the input file.',
         });
         return;
       }
-      setTimeout(function() { _this.pollForIndexJobStatus(); }, 5000);
+      setTimeout(() => { thisPointer.pollForIndexJobStatus(); }, 5000);
     });
   }
 
   pollForGenerateManifestJobStatus = () => {
-    var _this = this;
+    const thisPointer = this;
     return fetchWithCreds({
-      path: sowerPath + 'status?UID=' + _this.uidOfManifestGenerationSowerJob,
+      path: `${sowerPath}status?UID=${thisPointer.uidOfManifestGenerationSowerJob}`,
       method: 'GET',
-      customHeaders: { 'Content-Type': 'application/json' }
+      customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
-      if (response.data && response.data.status == 'Completed') {
-        _this.retrieveJobOutput(_this.state.uidOfManifestGenerationSowerJob).then(function(response) {
-          console.log(response);
-          if(response.data && response.data.output) {
-            _this.setState({ 
-              downloadManifestStatus: 'success',
-              downloadManifestPopupMessage: 'Indexing job completed successfully.'
-            });
-          }
-          else {
-            _this.setState({ 
-              downloadManifestStatus: 'error',
-              downloadManifestPopupMessage: 'The indexing job failed to process the input file.'
-            });
-          }
-        });
-        return;  
+      if (response.data && response.data.status === 'Completed') {
+        thisPointer.retrieveJobOutput(thisPointer.state.uidOfManifestGenerationSowerJob).then(
+          (resp) => {
+            if (resp.data && resp.data.output) {
+              thisPointer.setState({
+                downloadManifestStatus: 'success',
+                downloadManifestPopupMessage: 'Indexing job completed successfully.',
+              });
+            } else {
+              thisPointer.setState({
+                downloadManifestStatus: 'error',
+                downloadManifestPopupMessage: 'The indexing job failed to process the input file.',
+              });
+            }
+          });
+        return;
       }
-      setTimeout(function() { _this.pollForGenerateManifestJobStatus(); }, 5000);
+      setTimeout(() => { thisPointer.pollForGenerateManifestJobStatus(); }, 5000);
     });
   }
 
@@ -290,178 +261,183 @@ class Indexing extends React.Component {
     this.setState({
       showDownloadManifestPopup: true,
       downloadManifestButtonEnabled: false,
-      downloadManifestPopupMessage: 'Dispatching manifest generation job...'
+      downloadManifestPopupMessage: 'Dispatching manifest generation job...',
     });
     this.dispatchSowerGenerateManifestJob();
   };
 
   render = () => {
+    const successPopupBlock = (
+      <React.Fragment>
+        <div className='index-files-popup-big-icon'>
+          <div className='index-files-circle-border'>
+            <IconComponent iconName='checkbox' dictIcons={dictIcons} />
+          </div>
+        </div>
+        <div className='index-files-popup-text'>
+          <br />
+          <p>
+            <b>Status</b>:
+            <span className='index-files-green-label'>{ this.state.indexingFilesPopupMessage }</span>
+          </p>
+        </div>
+      </React.Fragment>
+    );
+
+    const errorPopupBlock = (
+      <div className='index-files-popup-text'>
+        <br />
+        <div className='index-files-popup-big-icon'>
+          <IconComponent iconName='status_error' dictIcons={dictIcons} />
+        </div>
+        <p>{ this.state.indexingFilesPopupMessage }</p>
+        <p>If the problem persists, please contact your commons administrator.</p>
+      </div>
+    );
+
+    const runningPopupBlock = (
+      <React.Fragment>
+        <Spinner caption='' type='spinning' />
+        <div className='index-files-popup-text'>
+          <br />
+          <p><b>Status</b>: { this.state.indexingFilesPopupMessage } </p>
+          <br />
+          <p>It may take several minutes to complete the indexing flow.</p>
+          <p>Please do not navigate away from this page until
+          the operation is complete.</p>
+        </div>
+      </React.Fragment>
+    );
+
+    const popupBlocks = {
+      success: successPopupBlock,
+      error: errorPopupBlock,
+      running: runningPopupBlock,
+    };
+
     return (
       <div className='indexing-page'>
-          <div>
-            <div className='action-panel'>
-              <div className='action-panel-title'>
-                Index Data Files
-              </div>
-              <div className='action-panel-body'>
-                <p>An indexing file, or file manifest, is a TSV containing information about
-                files that exist in cloud storage. Rows of importance include the MD5 sum of the file,
-                a link to the file, the filename, and its size.</p>
-
-                <p>Upload an indexing file below to create records in indexd for new object files.</p>
-                <br/>
-                <form className='index-flow-form'>
-                  <input type="file" onChange={this.onChange} />
-                </form>
-              </div>
-              <div className='action-panel-footer'>
-                  <Button
-                    onClick={this.indexFiles}
-                    label='Index Files'
-                    rightIcon="upload"
-                    className='g3-button'
-                    buttonType='primary'
-                    enabled={ this.state.indexFilesButtonEnabled }
-                  />
-              </div>
+        <div>
+          <div className='action-panel'>
+            <div className='action-panel-title'>
+                  Index Data Files
             </div>
-            {
-              this.state.showIndexFilesPopup &&
-                (<Popup
-                  message={''}
-                  title='Indexing Files'
-                  rightButtons={this.state.indexingFilesStatus != 'success' ? [
-                    {
-                      caption: 'Cancel',
-                      fn: () => this.onHidePopup()
-                    },
-                  ] : [
-                    {
-                      caption: 'Download Logs',
-                      icon: 'download',
-                      fn: () => this.downloadIndexingFileOutput()
-                    }
-                  ]}
-                  onClose={() => this.onHidePopup()}
-                >
-                { this.state.indexingFilesStatus == 'error' ? 
-                  <div className='index-files-popup-text'>
-                    <br/>
-                    <div className='index-files-popup-big-icon'>
-                      <IconComponent iconName='status_error' dictIcons={dictIcons} />
-                    </div>
-                    <p>{ this.state.indexingFilesPopupMessage }</p>
-                    <p>If the problem persists, please contact your commons administrator.</p>
-                  </div>
-                : ( this.state.indexingFilesStatus == 'success' ?
-                    <React.Fragment>
-                      <div className='index-files-popup-big-icon'>
-                        <div className='index-files-circle-border'>
-                          <IconComponent iconName='checkbox' dictIcons={dictIcons} />
-                        </div>
-                      </div>
-                      <div className='index-files-popup-text'>
-                        <br/>
-                        <p>
-                          <b>Status</b>: 
-                          <span className='index-files-green-label'>{ this.state.indexingFilesPopupMessage }</span>
-                        </p>
-                      </div>
-                    </React.Fragment>
-                  :
-                    <React.Fragment>
-                      <Spinner caption='' type='spinning' />
-                      <div className='index-files-popup-text'>
-                        <br/>
-                        <p><b>Status</b>: { this.state.indexingFilesPopupMessage } </p>
-                        <br/>
-                        <p>It may take several minutes to complete the indexing flow.</p>
-                        <p>Please do not navigate away from this page until the operation is complete.</p>
-                      </div>
-                    </React.Fragment> )
-                }
-                </Popup>)
-            }
+            <div className='action-panel-body'>
+              <p>An indexing file, or file manifest, is a TSV containing information about
+                  files that exist in cloud storage.
+                  Rows of importance include the MD5 sum of the file,
+                  a link to the file, the filename, and its size.</p>
 
-            {
-              this.state.showDownloadManifestPopup &&
-                (<Popup
-                  message={''}
-                  title='Downloading Indexing File'
-                  rightButtons={[
-                    {
-                      caption: 'Cancel',
-                      fn: () => this.onHidePopup()
-                    },
-                  ]}
-                  onClose={() => this.onHidePopup()}
-                >
-                { this.state.downloadManifestStatus == 'error' ? 
-                  <div className='index-files-popup-text'>
-                    <br/>
-                    <div className='index-files-popup-big-icon'>
-                      <IconComponent iconName='status_error' dictIcons={dictIcons} />
-                    </div>
-                    <p>{ this.state.downloadManifestPopupMessage }</p>
-                    <p>If the problem persists, please contact your commons administrator.</p>
-                  </div>
-                :
-                  <React.Fragment>
-                    <Spinner caption='' type='spinning' />
-                    <div className='index-files-popup-text'>
-                      <br/>
-                      <p><b>Status</b>: { this.state.downloadManifestPopupMessage} </p>
-                      <br/>
-                      <p>It may take several minutes to generate the file manifest.</p>
-                      <p>Please do not navigate away from this page until the operation is complete.</p>
-                    </div>
-                  </React.Fragment> }
-                </Popup>)
-            }
-            <div className='action-panel'>
-              <div className='action-panel-title'>
-                Download Indexing File
-              </div>
-              <div className='action-panel-body'>
-                Clicking the download button below will generate and return a TSV containing
-                the information related to all file records in indexd. Columns returned include 
-                GUID, cloud storage URLs, filename, file size, and MD5 hash.
-              </div>
-              <div className='action-panel-footer'>
-                  <Button
-                    // key={buttonConfig.type}
-                    onClick={this.download}
-                    label='Download'
-                    // leftIcon={buttonConfig.leftIcon}
-                    rightIcon="download"
-                    className='g3-button'
-                    buttonType='primary'
-                    enabled={ this.state.downloadManifestFileEnabled }
-                  />
-              </div>
+              <p>Upload an indexing file below to create records in indexd for new object files.</p>
+              <br />
+              <form className='index-flow-form'>
+                <input type='file' onChange={this.onChange} />
+              </form>
+            </div>
+            <div className='action-panel-footer'>
+              <Button
+                onClick={this.indexFiles}
+                label='Index Files'
+                rightIcon='upload'
+                className='g3-button'
+                buttonType='primary'
+                enabled={this.state.indexFilesButtonEnabled}
+              />
             </div>
           </div>
+          {
+            this.state.showIndexFilesPopup &&
+                  (<Popup
+                    message={''}
+                    title='Indexing Files'
+                    rightButtons={this.state.indexingFilesStatus !== 'success' ? [
+                      {
+                        caption: 'Cancel',
+                        fn: () => this.onHidePopup(),
+                      },
+                    ] : [
+                      {
+                        caption: 'Download Logs',
+                        icon: 'download',
+                        fn: () => this.downloadIndexingFileOutput(),
+                      },
+                    ]}
+                    onClose={() => this.onHidePopup()}
+                  >
+                    { popupBlocks[this.state.indexingFilesStatus] }
+                  </Popup>)
+          }
+
+          {
+            this.state.showDownloadManifestPopup &&
+                  (<Popup
+                    message={''}
+                    title='Downloading Indexing File'
+                    rightButtons={[
+                      {
+                        caption: 'Cancel',
+                        fn: () => this.onHidePopup(),
+                      },
+                    ]}
+                    onClose={() => this.onHidePopup()}
+                  >
+                    { this.state.downloadManifestStatus === 'error' ?
+                      <div className='index-files-popup-text'>
+                        <br />
+                        <div className='index-files-popup-big-icon'>
+                          <IconComponent iconName='status_error' dictIcons={dictIcons} />
+                        </div>
+                        <p>{ this.state.downloadManifestPopupMessage }</p>
+                        <p>If the problem persists, please contact your commons administrator.</p>
+                      </div>
+                      :
+                      <React.Fragment>
+                        <Spinner caption='' type='spinning' />
+                        <div className='index-files-popup-text'>
+                          <br />
+                          <p><b>Status</b>: { this.state.downloadManifestPopupMessage} </p>
+                          <br />
+                          <p>It may take several minutes to generate the file manifest.</p>
+                          <p>Please do not navigate away from this page until
+                          the operation is complete.</p>
+                        </div>
+                      </React.Fragment> }
+                  </Popup>)
+          }
+          <div className='action-panel'>
+            <div className='action-panel-title'>
+                  Download Indexing File
+            </div>
+            <div className='action-panel-body'>
+                  Clicking the download button below will generate and return a TSV containing
+                  the information related to all file records in indexd. Columns returned include
+                  GUID, cloud storage URLs, filename, file size, and MD5 hash.
+            </div>
+            <div className='action-panel-footer'>
+              <Button
+                // key={buttonConfig.type}
+                onClick={this.download}
+                label='Download'
+                // leftIcon={buttonConfig.leftIcon}
+                rightIcon='download'
+                className='g3-button'
+                buttonType='primary'
+                enabled={this.state.downloadManifestFileEnabled}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
-};
+}
 
 Indexing.propTypes = {
-  user: PropTypes.object.isRequired,
-  userProfile: PropTypes.object.isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
-  popups: PropTypes.object.isRequired,
-  submission: PropTypes.object,
-  onClearCreationSession: PropTypes.func.isRequired,
-  onCreateKey: PropTypes.func.isRequired,
-  onUpdatePopup: PropTypes.func.isRequired,
-  onDeleteKey: PropTypes.func.isRequired,
-  onRequestDeleteKey: PropTypes.func.isRequired,
-  onClearDeleteSession: PropTypes.func.isRequired,
+
 };
 
 Indexing.defaultProps = {
-  submission: {},
+
 };
 
 export default Indexing;

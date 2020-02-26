@@ -155,7 +155,7 @@ function buildConfig(opts) {
       title: 'Login from NIH',
     };
   }
-  const fenceDownloadPath = userapiPath + 'data/download';
+  const fenceDownloadPath = `${userapiPath}data/download`;
 
   const defaultLineLimit = 30;
   const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;

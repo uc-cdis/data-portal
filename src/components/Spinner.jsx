@@ -4,12 +4,12 @@ import './Spinner.less';
 
 class Spinner extends React.Component {
   render() {
-    if(this.props.type == 'spinning') {
+    if (this.props.type === 'spinning') {
       // spinning spinner
       return (
         <div className='spinning-spinner-cell'>
           <div className='wrapper'>
-            <div className='spinning-spinner'></div>
+            <div className='spinning-spinner' />
           </div>
         </div>
       );
@@ -36,7 +36,7 @@ Spinner.propTypes = {
 
 Spinner.defaultProps = {
   text: '',
-  type: 'dots'
+  type: 'dots',
 };
 
 export default Spinner;
