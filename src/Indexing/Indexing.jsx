@@ -51,10 +51,8 @@ class Indexing extends React.Component {
   }
   
   onFormSubmit = (e) => {
-      e.preventDefault() // Stop form submit
-      this.fileUpload(this.state.uploadedFile).then((response)=>{
-        console.log(response.data);
-      })
+      e.preventDefault();
+      this.fileUpload(this.state.uploadedFile);
   }
 
   onChange = (e) => {
@@ -70,15 +68,12 @@ class Indexing extends React.Component {
     let JSONbody = JSON.stringify({
       file_name: this.state.uploadedFile.name
     });
-    console.log('POSTing to ', userapiPath + 'data/upload', ' with ', JSONbody);
     return fetchWithCreds({
       path: userapiPath + 'data/upload',
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSONbody,
-      // dispatch,
     }).then((response) => {
-      console.log('RESPONSE: ', response);
       _this.setState({ 
         guidOfIndexedFile: response.data.guid, 
         urlToIndexedFile: response.data.url,
@@ -112,15 +107,12 @@ class Indexing extends React.Component {
 
   putIndexFileToSignedURL = () => {
     var _this = this;
-    console.log('PUTing to ', this.state.urlToIndexedFile  , ' with ', this.state.uploadedFile);
-    
     return fetchWithCreds({
       path: _this.state.urlToIndexedFile,
       method: 'PUT',
       customHeaders: { 'Content-Type': 'application/json' },
       body: _this.state.uploadedFile,
     }).then((response) => {
-      console.log(response);
       _this.setState({ 
         indexingFilesPopupMessage: 'Preparing indexing job...'
       });
@@ -135,7 +127,6 @@ class Indexing extends React.Component {
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
-      console.log('GET URL: ', response);
       if (response.status.toString()[0] != '2' && retrievePresignedURLRetries < maxRetries) {
         setTimeout(function() {
           _this.retrievePresignedURLForDownload(retrievePresignedURLRetries + 1, maxRetries);
@@ -151,7 +142,7 @@ class Indexing extends React.Component {
         return;
       }
       _this.setState({
-        presignedURLForDownload : response.url,
+        presignedURLForDownload : response.data.url,
         indexingFilesStatus: '',
         indexingFilesPopupMessage: 'Dispatching indexing job...'
       });
@@ -161,16 +152,16 @@ class Indexing extends React.Component {
 
   dispatchSowerIndexingJob = () => {
     var _this = this;
+    let JSONbody = { 
+      'action': 'indexing',
+      'input': { 'URL': this.state.presignedURLForDownload } 
+    };
     return fetchWithCreds({
       path: sowerPath + 'dispatch',
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 'action': 'indexing' , 'input': { "URL": this.state.presignedURLForDownload } })
+      body: JSON.stringify(JSONbody)
     }).then((response) => {
-      console.log('-----');
-      console.log(response);
-      console.log(response.status);
-      console.log(response.data);
       if(response.status === 200 && response.data && response.data.uid) {
         this.setState({ 
           uidOfIndexingSowerJob : response.data.uid,
@@ -196,10 +187,6 @@ class Indexing extends React.Component {
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 'action': 'download_manifest' })
     }).then((response) => {
-      console.log('--2---');
-      console.log(response);
-      console.log(response.status);
-      console.log(response.data);
       if(response.status === 200 && response.data && response.data.uid) {
         this.setState({ 
           uidOfManifestGenerationSowerJob: response.data.uid,
@@ -233,14 +220,15 @@ class Indexing extends React.Component {
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' }
     }).then((response) => {
-      console.log('poll status:', response);
       if (response.data && response.data.status == 'Completed') {
         _this.retrieveJobOutput(_this.state.uidOfIndexingSowerJob).then(function(response) {
           console.log(response);
           if(response.data && response.data.output) {
+            let logsLink = response.data.output.split(" ")[0];
             _this.setState({ 
               indexingFilesStatus: 'success',
-              indexingFilesPopupMessage: 'Indexing job completed successfully.'
+              indexingFilesPopupMessage: 'Done',
+              indexingFilesLogsLink: logsLink
             });
           }
           else {
@@ -249,6 +237,12 @@ class Indexing extends React.Component {
               indexingFilesPopupMessage: 'The indexing job failed to process the input file.'
             });
           }
+        });
+        return;
+      } else if (response.data && response.data.status == 'Failed') {
+        _this.setState({ 
+          indexingFilesStatus: 'error',
+          indexingFilesPopupMessage: 'The indexing job failed to process the input file.'
         });
         return;
       }
@@ -263,7 +257,6 @@ class Indexing extends React.Component {
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' }
     }).then((response) => {
-      console.log('poll status:', response);
       if (response.data && response.data.status == 'Completed') {
         _this.retrieveJobOutput(_this.state.uidOfManifestGenerationSowerJob).then(function(response) {
           console.log(response);
@@ -284,6 +277,13 @@ class Indexing extends React.Component {
       }
       setTimeout(function() { _this.pollForGenerateManifestJobStatus(); }, 5000);
     });
+  }
+
+  downloadIndexingFileOutput = () => {
+    const link = document.createElement('a');
+    link.href = this.state.indexingFilesLogsLink;
+    document.body.appendChild(link);
+    link.click();
   }
 
   download = async () => {
@@ -330,11 +330,17 @@ class Indexing extends React.Component {
                 (<Popup
                   message={''}
                   title='Indexing Files'
-                  rightButtons={[
+                  rightButtons={this.state.indexingFilesStatus != 'success' ? [
                     {
                       caption: 'Cancel',
                       fn: () => this.onHidePopup()
                     },
+                  ] : [
+                    {
+                      caption: 'Download Logs',
+                      icon: 'download',
+                      fn: () => this.downloadIndexingFileOutput()
+                    }
                   ]}
                   onClose={() => this.onHidePopup()}
                 >
@@ -350,13 +356,16 @@ class Indexing extends React.Component {
                 : ( this.state.indexingFilesStatus == 'success' ?
                     <React.Fragment>
                       <div className='index-files-popup-big-icon'>
-                        <IconComponent iconName='status_error' dictIcons={dictIcons} />
+                        <div className='index-files-circle-border'>
+                          <IconComponent iconName='checkbox' dictIcons={dictIcons} />
+                        </div>
                       </div>
                       <div className='index-files-popup-text'>
                         <br/>
-                        <p> Status: { this.state.indexingFilesPopupMessage } </p>
-                        <p>It may take several minutes to complete the indexing flow.</p>
-                        <p>Please do not navigate away from this page until the operation is complete.</p>
+                        <p>
+                          <b>Status</b>: 
+                          <span className='index-files-green-label'>{ this.state.indexingFilesPopupMessage }</span>
+                        </p>
                       </div>
                     </React.Fragment>
                   :
@@ -364,7 +373,8 @@ class Indexing extends React.Component {
                       <Spinner caption='' type='spinning' />
                       <div className='index-files-popup-text'>
                         <br/>
-                        <p> Status: { this.state.indexingFilesPopupMessage } </p>
+                        <p><b>Status</b>: { this.state.indexingFilesPopupMessage } </p>
+                        <br/>
                         <p>It may take several minutes to complete the indexing flow.</p>
                         <p>Please do not navigate away from this page until the operation is complete.</p>
                       </div>
@@ -400,7 +410,8 @@ class Indexing extends React.Component {
                     <Spinner caption='' type='spinning' />
                     <div className='index-files-popup-text'>
                       <br/>
-                      <p> Status: { this.state.downloadManifestPopupMessage} </p>
+                      <p><b>Status</b>: { this.state.downloadManifestPopupMessage} </p>
+                      <br/>
                       <p>It may take several minutes to generate the file manifest.</p>
                       <p>Please do not navigate away from this page until the operation is complete.</p>
                     </div>
