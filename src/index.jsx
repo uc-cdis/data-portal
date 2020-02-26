@@ -20,7 +20,7 @@ import DocumentPage from './Document/page';
 import ExplorerPage from './Explorer/ExplorerPage';
 import CoreMetadataPage from './CoreMetadata/page';
 import { fetchCoreMetadata } from './CoreMetadata/reduxer';
-import Indexing from './Indexing/ReduxIndexing';
+import Indexing from './Indexing/Indexing';
 import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/.';
 import ReduxPrivacyPolicy from './PrivacyPolicy/ReduxPrivacyPolicy';
