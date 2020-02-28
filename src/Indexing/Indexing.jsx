@@ -46,6 +46,7 @@ class Indexing extends React.Component {
     var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var dateTime = date + ' ' + time;
+    console.log('inside getCurrentTime w ' + dateTime);
     return dateTime;
   }
 
@@ -128,7 +129,7 @@ class Indexing extends React.Component {
       if (response.status.toString()[0] !== '2' && retrievePresignedURLRetries >= maxRetries) {
         thisPointer.setState({
           indexingFilesStatus: 'error',
-          indexingFilesStatusLastUpdated: this.getCurrentTime(),
+          indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
           indexingFilesPopupMessage: `There was a problem uploading the indexing file to s3 (${response.status})`,
           indexFilesButtonEnabled: false,
         });
@@ -164,7 +165,7 @@ class Indexing extends React.Component {
         this.setState({
           indexingFilesPopupMessage: `Failed to dispatch indexing job. (${response.status})${optionalPermissionsMessage}`,
           indexingFilesStatus: 'error',
-          indexingFilesStatusLastUpdated: this.getCurrentTime(),
+          indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
         });
       }
     });
@@ -181,7 +182,7 @@ class Indexing extends React.Component {
         uidOfManifestGenerationSowerJob: response.data.uid,
         downloadManifestPopupMessage: `Manifest generation job is in progress. UID: ${response.data.uid}`,
         downloadManifestStatus: '',
-        downloadManifestStatusLastUpdated: this.getCurrentTime(),
+        downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
       });
       this.pollForIndexJobStatus();
     } else {
@@ -189,7 +190,7 @@ class Indexing extends React.Component {
       this.setState({
         downloadManifestPopupMessage: `Failed to dispatch download manifest job (${response.status})${optionalPermissionsMessage}`,
         downloadManifestStatus: 'error',
-        downloadManifestStatusLastUpdated: this.getCurrentTime(),
+        downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
       });
     }
   })
@@ -214,14 +215,14 @@ class Indexing extends React.Component {
             const logsLink = resp.data.output.split(' ')[0];
             thisPointer.setState({
               indexingFilesStatus: 'success',
-              indexingFilesStatusLastUpdated: this.getCurrentTime(),
+              indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
               indexingFilesPopupMessage: 'Done',
               indexingFilesLogsLink: logsLink,
             });
           } else {
             thisPointer.setState({
               indexingFilesStatus: 'error',
-              indexingFilesStatusLastUpdated: this.getCurrentTime(),
+              indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
               indexingFilesPopupMessage: 'The indexing job failed to process the input file.',
             });
           }
@@ -230,7 +231,7 @@ class Indexing extends React.Component {
       } else if (response.data && response.data.status === 'Failed') {
         thisPointer.setState({
           indexingFilesStatus: 'error',
-          indexingFilesStatusLastUpdated: this.getCurrentTime(),
+          indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
           indexingFilesPopupMessage: 'The indexing job failed to process the input file.',
         });
         return;
@@ -253,13 +254,13 @@ class Indexing extends React.Component {
               thisPointer.setState({
                 downloadManifestStatus: 'success',
                 downloadManifestPopupMessage: 'Indexing job completed successfully.',
-                downloadManifestStatusLastUpdated: this.getCurrentTime(),
+                downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
               });
             } else {
               thisPointer.setState({
                 downloadManifestStatus: 'error',
                 downloadManifestPopupMessage: 'The indexing job failed to process the input file.',
-                downloadManifestStatusLastUpdated: this.getCurrentTime(),
+                downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
               });
             }
           });
@@ -298,9 +299,9 @@ class Indexing extends React.Component {
           <p>
             <b>Status</b>:
             <span className='index-files-green-label'>{ this.state.indexingFilesPopupMessage }</span>
-            <p className='index-files-page-last-updated'>
-              Last updated: { this.state.downloadManifestStatusLastUpdated }
-            </p>
+          </p>
+          <p className='index-files-page-last-updated'>
+            Last updated: { this.state.downloadManifestStatusLastUpdated }
           </p>
         </div>
       </React.Fragment>
