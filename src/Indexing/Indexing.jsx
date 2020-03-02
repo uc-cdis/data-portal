@@ -46,7 +46,6 @@ class Indexing extends React.Component {
     var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var dateTime = date + ' ' + time;
-    console.log('inside getCurrentTime w ' + dateTime);
     return dateTime;
   }
 
@@ -190,7 +189,7 @@ class Indexing extends React.Component {
       this.setState({
         downloadManifestPopupMessage: `Failed to dispatch download manifest job (${response.status})${optionalPermissionsMessage}`,
         downloadManifestStatus: 'error',
-        downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
+        downloadManifestStatusLastUpdated: this.getCurrentTime(),
       });
     }
   })
