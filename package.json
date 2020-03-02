@@ -16,7 +16,7 @@
     "@storybook/react": "^5.0.0",
     "brace": "^0.10.0",
     "clipboard-plus": "^1.0.0",
-    "css-loader": "^0.23.1",
+    "css-loader": "^3.4.2",
     "d3-array": "^1.2.0",
     "d3-ease": "^1.0.5",
     "d3-force": "^1.1.0",
