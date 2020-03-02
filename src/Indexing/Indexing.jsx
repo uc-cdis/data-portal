@@ -17,7 +17,7 @@ export const saveToFile = (savingStr, filename) => {
 class Indexing extends React.Component {
   constructor(props) {
     super(props);
-    
+
 
     this.initialStateConfiguration = {
       // Index Files flow
@@ -41,14 +41,6 @@ class Indexing extends React.Component {
     this.state = Object.assign({}, this.initialStateConfiguration);
   }
 
-  getCurrentTime = () => {
-    var today = new Date();
-    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    var dateTime = date + ' ' + time;
-    return dateTime;
-  }
-
   onFormSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -61,6 +53,14 @@ class Indexing extends React.Component {
 
   onHidePopup = () => {
     this.resetAllPageForms();
+  }
+
+  getCurrentTime = () => {
+    const today = new Date();
+    const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+    const dateTime = `${date} ${time}`;
+    return dateTime;
   }
 
   resetAllPageForms = () => {
@@ -164,7 +164,7 @@ class Indexing extends React.Component {
         this.setState({
           indexingFilesPopupMessage: `Failed to dispatch indexing job. (${response.status})${optionalPermissionsMessage}`,
           indexingFilesStatus: 'error',
-          indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
+          indexingFilesStatusLastUpdated: this.getCurrentTime(),
         });
       }
     });
@@ -181,7 +181,7 @@ class Indexing extends React.Component {
         uidOfManifestGenerationSowerJob: response.data.uid,
         downloadManifestPopupMessage: `Manifest generation job is in progress. UID: ${response.data.uid}`,
         downloadManifestStatus: '',
-        downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
+        downloadManifestStatusLastUpdated: this.getCurrentTime(),
       });
       this.pollForIndexJobStatus();
     } else {
