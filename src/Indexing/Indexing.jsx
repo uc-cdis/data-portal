@@ -35,7 +35,7 @@ class Indexing extends React.Component {
       // Download Manifest flow
       downloadManifestFileEnabled: true,
       uidOfManifestGenerationSowerJob: null,
-      downloadManifestStatus: null,
+      downloadManifestStatus: 'running',
       downloadManifestStatusLastUpdated: this.getCurrentTime(),
     };
     this.state = Object.assign({}, this.initialStateConfiguration);
@@ -80,11 +80,21 @@ class Indexing extends React.Component {
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSONbody,
     }).then((response) => {
-      thisPointer.setState({
-        guidOfIndexedFile: response.data.guid,
-        urlToIndexedFile: response.data.url,
-        indexingFilesPopupMessage: 'Uploading index file to s3...',
-      });
+      console.log(response);
+      if(response.data && response.data.guid && response.data.url) {
+        thisPointer.setState({
+          guidOfIndexedFile: response.data.guid,
+          urlToIndexedFile: response.data.url,
+          indexingFilesPopupMessage: 'Uploading index file to s3...',
+        });
+      } else {
+        thisPointer.setState({
+          indexingFilesStatus: 'error',
+          indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
+          indexingFilesPopupMessage: `There was a problem creating a placeholder record an indexd (${response.status})`,
+          indexFilesButtonEnabled: false
+        });
+      }
     });
   };
 
@@ -108,14 +118,14 @@ class Indexing extends React.Component {
       thisPointer.setState({
         indexingFilesPopupMessage: 'Preparing indexing job...',
       });
-      return thisPointer.retrievePresignedURLForDownload(0, 5);
+      return thisPointer.retrievePresignedURLForDownload(0, 10);
     });
   }
 
   retrievePresignedURLForDownload = (retrievePresignedURLRetries, maxRetries) => {
     const thisPointer = this;
     return fetchWithCreds({
-      path: `${fenceDownloadPath}/${this.state.guidOfIndexedFile}`,
+      path: `${fenceDownloadPath}/${thisPointer.state.guidOfIndexedFile}`,
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
@@ -144,7 +154,7 @@ class Indexing extends React.Component {
 
   dispatchSowerIndexingJob = () => {
     const JSONbody = {
-      action: 'indexing',
+      action: 'index-object-manifest',
       input: { URL: this.state.presignedURLForDownload },
     };
     return fetchWithCreds({
@@ -158,7 +168,7 @@ class Indexing extends React.Component {
           uidOfIndexingSowerJob: response.data.uid,
           indexingFilesPopupMessage: `Indexing job is in progress. UID: ${response.data.uid}`,
         });
-        this.pollForIndexJobStatus();
+        this.pollForIndexJobStatus(response.data.uid);
       } else {
         const optionalPermissionsMessage = response.status === 403 ? '. Ensure your profile has the sower policy to allow job dispatching.' : '';
         this.setState({
@@ -170,29 +180,41 @@ class Indexing extends React.Component {
     });
   }
 
-  dispatchSowerGenerateManifestJob = () => fetchWithCreds({
-    path: `${sowerPath}dispatch`,
-    method: 'POST',
-    customHeaders: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'download_manifest' }),
-  }).then((response) => {
-    if (response.status === 200 && response.data && response.data.uid) {
-      this.setState({
-        uidOfManifestGenerationSowerJob: response.data.uid,
-        downloadManifestPopupMessage: `Manifest generation job is in progress. UID: ${response.data.uid}`,
-        downloadManifestStatus: '',
-        downloadManifestStatusLastUpdated: this.getCurrentTime(),
-      });
-      this.pollForIndexJobStatus();
-    } else {
-      const optionalPermissionsMessage = response.status === 403 ? '. Ensure your profile has the sower policy to allow job dispatching.' : '';
-      this.setState({
-        downloadManifestPopupMessage: `Failed to dispatch download manifest job (${response.status})${optionalPermissionsMessage}`,
-        downloadManifestStatus: 'error',
-        downloadManifestStatusLastUpdated: this.getCurrentTime(),
-      });
-    }
-  })
+  dispatchSowerGenerateManifestJob = () => {
+    const JSONbody = {
+      "action": "download-indexd-manifest", 
+      "input": {
+        "host": "https://zakir.planx-pla.net",
+        "max_concurrent_requests": 20,
+        "num_processes": 4
+      }
+    };
+    fetchWithCreds({
+      path: `${sowerPath}dispatch`,
+      method: 'POST',
+      customHeaders: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(JSONbody),
+    }).then((response) => {
+      console.log('193: ', response);
+      if (response.status === 200 && response.data && response.data.uid) {
+        console.log('195 with ', response.data);
+        this.setState({
+          uidOfManifestGenerationSowerJob: response.data.uid,
+          downloadManifestPopupMessage: `Manifest generation job is in progress. UID: ${response.data.uid}`,
+          downloadManifestStatus: 'running',
+          downloadManifestStatusLastUpdated: this.getCurrentTime(),
+        });
+        this.pollForGenerateManifestJobStatus(response.data.uid);
+      } else {
+        const optionalPermissionsMessage = response.status === 403 ? '. Ensure your profile has the sower policy to allow job dispatching.' : '';
+        this.setState({
+          downloadManifestPopupMessage: `Failed to dispatch download manifest job (${response.status})${optionalPermissionsMessage}`,
+          downloadManifestStatus: 'error',
+          downloadManifestStatusLastUpdated: this.getCurrentTime(),
+        });
+      }
+    })
+  }
 
 
   retrieveJobOutput = uid => fetchWithCreds({
@@ -201,15 +223,16 @@ class Indexing extends React.Component {
     customHeaders: { 'Content-Type': 'application/json' },
   })
 
-  pollForIndexJobStatus = () => {
+  pollForIndexJobStatus = (uid) => {
     const thisPointer = this;
     return fetchWithCreds({
-      path: `${sowerPath}status?UID=${thisPointer.state.uidOfIndexingSowerJob}`,
+      path: `${sowerPath}status?UID=${uid}`,
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
       if (response.data && response.data.status === 'Completed') {
-        thisPointer.retrieveJobOutput(thisPointer.state.uidOfIndexingSowerJob).then((resp) => {
+        thisPointer.retrieveJobOutput(uid).then((resp) => {
+          console.log(resp);
           if (resp.data && resp.data.output) {
             const logsLink = resp.data.output.split(' ')[0];
             thisPointer.setState({
@@ -222,56 +245,77 @@ class Indexing extends React.Component {
             thisPointer.setState({
               indexingFilesStatus: 'error',
               indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
-              indexingFilesPopupMessage: 'The indexing job failed to process the input file.',
+              indexingFilesPopupMessage: 'The indexing job was dispatched, but failed to process the input file.',
             });
           }
         });
         return;
       } else if (response.data && response.data.status === 'Failed') {
+        console.log(response)
         thisPointer.setState({
           indexingFilesStatus: 'error',
           indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
-          indexingFilesPopupMessage: 'The indexing job failed to process the input file.',
+          indexingFilesPopupMessage: 'The indexing job was dispatched, but failed to process the input file.',
         });
         return;
       }
-      setTimeout(() => { thisPointer.pollForIndexJobStatus(); }, 5000);
+      setTimeout(() => { thisPointer.pollForIndexJobStatus(uid); }, 5000);
     });
   }
 
-  pollForGenerateManifestJobStatus = () => {
+  pollForGenerateManifestJobStatus = (uid) => {
+    console.log('download polling');
     const thisPointer = this;
     return fetchWithCreds({
-      path: `${sowerPath}status?UID=${thisPointer.uidOfManifestGenerationSowerJob}`,
+      path: `${sowerPath}status?UID=${uid}`,
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
+      console.log('268 yee', response);
       if (response.data && response.data.status === 'Completed') {
-        thisPointer.retrieveJobOutput(thisPointer.state.uidOfManifestGenerationSowerJob).then(
+        thisPointer.retrieveJobOutput(uid).then(
           (resp) => {
+            console.log(resp);
             if (resp.data && resp.data.output) {
+              const logsLink = resp.data.output.split(' ')[0];
               thisPointer.setState({
+                downloadManifestLink: logsLink,
                 downloadManifestStatus: 'success',
-                downloadManifestPopupMessage: 'Indexing job completed successfully.',
+                downloadManifestPopupMessage: 'Done',
                 downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
               });
             } else {
               thisPointer.setState({
                 downloadManifestStatus: 'error',
-                downloadManifestPopupMessage: 'The indexing job failed to process the input file.',
                 downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
+                downloadManifestPopupMessage: 'The indexing job was dispatched, but failed to process the input file.',
               });
             }
           });
-        return;
-      }
-      setTimeout(() => { thisPointer.pollForGenerateManifestJobStatus(); }, 5000);
-    });
+          return;
+        } else if (response.data && response.data.status === 'Failed') {
+          console.log(response)
+          thisPointer.setState({
+              downloadManifestStatus: 'error',
+              downloadManifestPopupMessage: 'The manifest generation job was dispatched, but failed to process the input file.',
+              downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
+            });
+          return;
+        }
+        setTimeout(() => { thisPointer.pollForGenerateManifestJobStatus(uid); }, 5000);
+      });    
   }
 
   downloadIndexingFileOutput = () => {
     const link = document.createElement('a');
     link.href = this.state.indexingFilesLogsLink;
+    document.body.appendChild(link);
+    link.click();
+  }
+
+  downloadGenerateManifestOutput = () => {
+    const link = document.createElement('a');
+    link.href = this.state.downloadManifestLink;
     document.body.appendChild(link);
     link.click();
   }
@@ -286,7 +330,7 @@ class Indexing extends React.Component {
   };
 
   render = () => {
-    const successPopupBlock = (
+    const indexFilesSuccessPopupBlock = (
       <React.Fragment>
         <div className='index-files-popup-big-icon'>
           <div className='index-files-circle-border'>
@@ -300,13 +344,13 @@ class Indexing extends React.Component {
             <span className='index-files-green-label'>{ this.state.indexingFilesPopupMessage }</span>
           </p>
           <p className='index-files-page-last-updated'>
-            Last updated: { this.state.downloadManifestStatusLastUpdated }
+            Last updated: { this.state.indexingFilesStatusLastUpdated }
           </p>
         </div>
       </React.Fragment>
     );
 
-    const errorPopupBlock = (
+    const indexFilesErrorPopupBlock = (
       <div className='index-files-popup-text'>
         <br />
         <div className='index-files-popup-big-icon'>
@@ -320,7 +364,7 @@ class Indexing extends React.Component {
       </div>
     );
 
-    const runningPopupBlock = (
+    const indexFilesRunningPopupBlock = (
       <React.Fragment>
         <Spinner caption='' type='spinning' />
         <div className='index-files-popup-text'>
@@ -337,10 +381,65 @@ class Indexing extends React.Component {
       </React.Fragment>
     );
 
-    const popupBlocks = {
-      success: successPopupBlock,
-      error: errorPopupBlock,
-      running: runningPopupBlock,
+    const indexFilesPopupBlocks = {
+      success: indexFilesSuccessPopupBlock,
+      error: indexFilesErrorPopupBlock,
+      running: indexFilesRunningPopupBlock,
+    };
+
+
+    const downloadManifestSuccessPopupBlock = (
+      <React.Fragment>
+        <div className='index-files-popup-big-icon'>
+          <div className='index-files-circle-border'>
+            <IconComponent iconName='checkbox' dictIcons={dictIcons} />
+          </div>
+        </div>
+        <div className='index-files-popup-text'>
+          <br />
+          <p>
+            <b>Status</b>:
+            <span className='index-files-green-label'>{ this.state.downloadManifestPopupMessage  }</span>
+          </p>
+          <p className='index-files-page-last-updated'>
+            Last updated: { this.state.downloadManifestStatusLastUpdated }
+          </p>
+        </div>
+      </React.Fragment>
+    );
+
+    const downloadManifestErrorPopupBlock = (
+      <div className='index-files-popup-text'>
+        <br />
+        <div className='index-files-popup-big-icon'>
+          <IconComponent iconName='status_error' dictIcons={dictIcons} />
+        </div>
+        <p>{ this.state.downloadManifestPopupMessage }</p>
+        <p>If the problem persists, please contact your commons administrator.</p>
+      </div>
+    );
+
+    const downloadManifestRunningPopupBlock = (
+      <React.Fragment>
+        <Spinner caption='' type='spinning' />
+        <div className='index-files-popup-text'>
+          <br />
+          <p><b>Status</b>: { this.state.downloadManifestPopupMessage} </p>
+          <p className='index-files-page-last-updated'>
+            Last updated: { this.state.downloadManifestStatusLastUpdated }
+          </p>
+          <br />
+          <p>It may take several minutes to generate the file manifest.</p>
+          <p>Please do not navigate away from this page until
+          the operation is complete.</p>
+        </div>
+      </React.Fragment>
+    );
+
+    const downloadManifestPopupBlocks = {
+      success: downloadManifestSuccessPopupBlock,
+      error: downloadManifestErrorPopupBlock,
+      running: downloadManifestRunningPopupBlock,
     };
 
     return (
@@ -392,7 +491,7 @@ class Indexing extends React.Component {
                     ]}
                     onClose={() => this.onHidePopup()}
                   >
-                    { popupBlocks[this.state.indexingFilesStatus] }
+                    { indexFilesPopupBlocks[this.state.indexingFilesStatus] }
                   </Popup>)
           }
 
@@ -401,38 +500,21 @@ class Indexing extends React.Component {
                   (<Popup
                     message={''}
                     title='Downloading Indexing File'
-                    rightButtons={[
+                    rightButtons={this.state.downloadManifestStatus !== 'success' ? [
                       {
                         caption: 'Cancel',
                         fn: () => this.onHidePopup(),
                       },
+                    ] : [
+                      {
+                        caption: 'Download Manifest',
+                        icon: 'download',
+                        fn: () => this.downloadGenerateManifestOutput(),
+                      },
                     ]}
                     onClose={() => this.onHidePopup()}
                   >
-                    { this.state.downloadManifestStatus === 'error' ?
-                      <div className='index-files-popup-text'>
-                        <br />
-                        <div className='index-files-popup-big-icon'>
-                          <IconComponent iconName='status_error' dictIcons={dictIcons} />
-                        </div>
-                        <p>{ this.state.downloadManifestPopupMessage }</p>
-                        <p>If the problem persists, please contact your commons administrator.</p>
-                      </div>
-                      :
-                      <React.Fragment>
-                        <Spinner caption='' type='spinning' />
-                        <div className='index-files-popup-text'>
-                          <br />
-                          <p><b>Status</b>: { this.state.downloadManifestPopupMessage} </p>
-                          <p className='index-files-page-last-updated'>
-                            Last updated: { this.state.downloadManifestStatusLastUpdated }
-                          </p>
-                          <br />
-                          <p>It may take several minutes to generate the file manifest.</p>
-                          <p>Please do not navigate away from this page until
-                          the operation is complete.</p>
-                        </div>
-                      </React.Fragment> }
+                    { downloadManifestPopupBlocks[this.state.downloadManifestStatus] }
                   </Popup>)
           }
           <div className='action-panel'>
