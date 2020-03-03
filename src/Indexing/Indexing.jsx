@@ -80,8 +80,7 @@ class Indexing extends React.Component {
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSONbody,
     }).then((response) => {
-      console.log(response);
-      if(response.data && response.data.guid && response.data.url) {
+      if (response.data && response.data.guid && response.data.url) {
         thisPointer.setState({
           guidOfIndexedFile: response.data.guid,
           urlToIndexedFile: response.data.url,
@@ -92,7 +91,7 @@ class Indexing extends React.Component {
           indexingFilesStatus: 'error',
           indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
           indexingFilesPopupMessage: `There was a problem creating a placeholder record an indexd (${response.status})`,
-          indexFilesButtonEnabled: false
+          indexFilesButtonEnabled: false,
         });
       }
     });
@@ -182,12 +181,12 @@ class Indexing extends React.Component {
 
   dispatchSowerGenerateManifestJob = () => {
     const JSONbody = {
-      "action": "download-indexd-manifest", 
-      "input": {
-        "host": "https://zakir.planx-pla.net",
-        "max_concurrent_requests": 20,
-        "num_processes": 4
-      }
+      action: 'download-indexd-manifest',
+      input: {
+        host: 'https://zakir.planx-pla.net',
+        max_concurrent_requests: 20,
+        num_processes: 4,
+      },
     };
     fetchWithCreds({
       path: `${sowerPath}dispatch`,
@@ -195,9 +194,7 @@ class Indexing extends React.Component {
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSON.stringify(JSONbody),
     }).then((response) => {
-      console.log('193: ', response);
       if (response.status === 200 && response.data && response.data.uid) {
-        console.log('195 with ', response.data);
         this.setState({
           uidOfManifestGenerationSowerJob: response.data.uid,
           downloadManifestPopupMessage: `Manifest generation job is in progress. UID: ${response.data.uid}`,
@@ -213,7 +210,7 @@ class Indexing extends React.Component {
           downloadManifestStatusLastUpdated: this.getCurrentTime(),
         });
       }
-    })
+    });
   }
 
 
@@ -232,7 +229,6 @@ class Indexing extends React.Component {
     }).then((response) => {
       if (response.data && response.data.status === 'Completed') {
         thisPointer.retrieveJobOutput(uid).then((resp) => {
-          console.log(resp);
           if (resp.data && resp.data.output) {
             const logsLink = resp.data.output.split(' ')[0];
             thisPointer.setState({
@@ -251,7 +247,6 @@ class Indexing extends React.Component {
         });
         return;
       } else if (response.data && response.data.status === 'Failed') {
-        console.log(response)
         thisPointer.setState({
           indexingFilesStatus: 'error',
           indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
@@ -264,18 +259,15 @@ class Indexing extends React.Component {
   }
 
   pollForGenerateManifestJobStatus = (uid) => {
-    console.log('download polling');
     const thisPointer = this;
     return fetchWithCreds({
       path: `${sowerPath}status?UID=${uid}`,
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
-      console.log('268 yee', response);
       if (response.data && response.data.status === 'Completed') {
         thisPointer.retrieveJobOutput(uid).then(
           (resp) => {
-            console.log(resp);
             if (resp.data && resp.data.output) {
               const logsLink = resp.data.output.split(' ')[0];
               thisPointer.setState({
@@ -292,18 +284,17 @@ class Indexing extends React.Component {
               });
             }
           });
-          return;
-        } else if (response.data && response.data.status === 'Failed') {
-          console.log(response)
-          thisPointer.setState({
-              downloadManifestStatus: 'error',
-              downloadManifestPopupMessage: 'The manifest generation job was dispatched, but failed to process the input file.',
-              downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
-            });
-          return;
-        }
-        setTimeout(() => { thisPointer.pollForGenerateManifestJobStatus(uid); }, 5000);
-      });    
+        return;
+      } else if (response.data && response.data.status === 'Failed') {
+        thisPointer.setState({
+          downloadManifestStatus: 'error',
+          downloadManifestPopupMessage: 'The manifest generation job was dispatched, but failed to process the input file.',
+          downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
+        });
+        return;
+      }
+      setTimeout(() => { thisPointer.pollForGenerateManifestJobStatus(uid); }, 5000);
+    });
   }
 
   downloadIndexingFileOutput = () => {
@@ -399,7 +390,7 @@ class Indexing extends React.Component {
           <br />
           <p>
             <b>Status</b>:
-            <span className='index-files-green-label'>{ this.state.downloadManifestPopupMessage  }</span>
+            <span className='index-files-green-label'>{ this.state.downloadManifestPopupMessage }</span>
           </p>
           <p className='index-files-page-last-updated'>
             Last updated: { this.state.downloadManifestStatusLastUpdated }
