@@ -1,6 +1,9 @@
 import React from 'react';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { workspaceUrl, wtsPath,
+import {
+  workspaceUrl,
+  wtsPath,
+  externalLoginOptionsUrl,
   workspaceOptionsUrl,
   workspaceLaunchUrl,
   workspaceTerminateUrl,
@@ -14,6 +17,7 @@ import rStudioIcon from '../img/icons/rstudio.svg';
 import galaxyIcon from '../img/icons/galaxy.svg';
 import ohifIcon from '../img/icons/ohif-viewer.svg';
 import WorkspaceOption from './WorkspaceOption';
+import WorkspaceLogin from './WorkspaceLogin';
 
 class Workspace extends React.Component {
   constructor(props) {
@@ -26,6 +30,7 @@ class Workspace extends React.Component {
       notebookType: null,
       defaultNotebook: false,
       notebookIsfullpage: false,
+      externalLoginOptions: [],
     };
     this.notebookStates = [
       'Not Found',
@@ -71,6 +76,17 @@ class Workspace extends React.Component {
         this.setState({ options: sortedResults });
       },
     ).catch(() => this.setState({ defaultNotebook: true }));
+  }
+
+  getExternalLoginOptions = () => {
+    fetchWithCreds({
+      path: `${externalLoginOptionsUrl}`,
+      method: 'GET',
+    }).then(
+      ({ data }) => {
+        this.setState({ externalLoginOptions: data.providers });
+      },
+    );
   }
 
   getWorkspaceStatus = async () => fetchWithCreds({
@@ -119,6 +135,7 @@ class Workspace extends React.Component {
 
   connected = () => {
     this.getWorkspaceOptions();
+    this.getExternalLoginOptions();
     if (!this.state.defaultNotebook) {
       this.getWorkspaceStatus().then((status) => {
         if (status === 'Launching' || status === 'Terminating' || status === 'Error') {
@@ -248,28 +265,33 @@ class Workspace extends React.Component {
             this.state.notebookStatus !== 'Terminating' &&
             this.state.notebookStatus !== 'Running' &&
             this.state.notebookStatus !== 'Stopped' ?
-              <div className='workspace__options'>
-                {
-                  this.state.options.map((option, i) => {
-                    const desc = option['cpu-limit'] ?
-                      `${option['cpu-limit']}CPU, ${option['memory-limit']} memory`
-                      : '';
-                    return (
-                      <WorkspaceOption
-                        key={i}
-                        icon={this.getIcon(option.name)}
-                        title={option.name}
-                        description={desc}
-                        onClick={() => this.launchWorkspace(option)}
-                        isPending={this.state.notebookType === option.name}
-                        isDisabled={
-                          !!this.state.notebookType &&
-                          this.state.notebookType !== option.name
-                        }
-                      />
-                    );
-                  })
-                }
+              <div>
+                <div className='workspace__options'>
+                  {
+                    this.state.options.map((option, i) => {
+                      const desc = option['cpu-limit'] ?
+                        `${option['cpu-limit']}CPU, ${option['memory-limit']} memory`
+                        : '';
+                      return (
+                        <WorkspaceOption
+                          key={i}
+                          icon={this.getIcon(option.name)}
+                          title={option.name}
+                          description={desc}
+                          onClick={() => this.launchWorkspace(option)}
+                          isPending={this.state.notebookType === option.name}
+                          isDisabled={
+                            !!this.state.notebookType &&
+                            this.state.notebookType !== option.name
+                          }
+                        />
+                      );
+                    })
+                  }
+                </div>
+                <WorkspaceLogin
+                  providers={this.state.externalLoginOptions}
+                />
               </div>
               : null
           }
