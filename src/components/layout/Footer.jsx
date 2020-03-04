@@ -8,7 +8,7 @@ class Footer extends Component {
       return (<React.Fragment />);
     }
     return (
-      <footer className='footer'>
+      <footer className='footer-container'>
         <nav className='footer__nav'>
           <div className='footer__version-area'>
             {
@@ -57,6 +57,24 @@ class Footer extends Component {
               ))
             }
           </div>
+          <div className='footer__link-area'>
+            {
+              this.props.links.map((link, i) => (
+                <React.Fragment>
+                  <a
+                    key={link.text}
+                    href={link.link}
+                    className='footer__link'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    {link.text}
+                  </a>
+                  { i !== this.props.links.length - 1 && <span> | </span> }
+                </React.Fragment>
+              ))
+            }
+          </div>
         </nav>
       </footer>
     );
@@ -70,11 +88,17 @@ const LogoObject = PropTypes.shape({
   height: PropTypes.number,
 });
 
+const FooterLink = PropTypes.shape({
+  text: PropTypes.string,
+  link: PropTypes.string,
+});
+
 Footer.propTypes = {
   dictionaryVersion: PropTypes.string,
   apiVersion: PropTypes.string,
   hidden: PropTypes.bool,
   portalVersion: PropTypes.string,
+  links: PropTypes.arrayOf(FooterLink),
   logos: PropTypes.arrayOf(LogoObject).isRequired,
   privacyPolicy: PropTypes.shape({
     footerHref: PropTypes.string,
@@ -87,6 +111,7 @@ Footer.defaultProps = {
   apiVersion: 'Unknown',
   hidden: false,
   portalVersion: 'Unknown',
+  links: [],
   privacyPolicy: null,
 };
 
