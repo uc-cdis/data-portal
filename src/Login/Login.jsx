@@ -161,7 +161,9 @@ class Login extends React.Component {
             {
               this.props.data.contact_link &&
               <a href={this.props.data.contact_link.href}>
-                {this.props.data.contact_link.text}
+                {this.props.data.contact_link.text
+                  ? this.props.data.contact_link.text
+                  : this.props.data.contact_link.href}
               </a>
             }
             {'.'}
@@ -185,7 +187,7 @@ Login.propTypes = {
     contact: PropTypes.shape.isRequired,
     email: PropTypes.string, // deprecated; use contact_link instead
     contact_link: PropTypes.shape({
-      text: PropTypes.string.isRequired,
+      text: PropTypes.string,
       href: PropTypes.string.isRequired,
     }),
   }).isRequired,
