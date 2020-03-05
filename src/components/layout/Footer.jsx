@@ -60,15 +60,14 @@ class Footer extends Component {
           <div className='footer__link-area'>
             {
               this.props.links.map((link, i) => (
-                <React.Fragment>
+                <React.Fragment key={link.href}>
                   <a
-                    key={link.text}
-                    href={link.link}
+                    href={link.href}
                     className='footer__link'
                     target='_blank'
                     rel='noopener noreferrer'
                   >
-                    {link.text}
+                    {link.text ? link.text : link.href}
                   </a>
                   { i !== this.props.links.length - 1 && <span> | </span> }
                 </React.Fragment>
@@ -89,8 +88,8 @@ const LogoObject = PropTypes.shape({
 });
 
 const FooterLink = PropTypes.shape({
-  text: PropTypes.string,
-  link: PropTypes.string,
+  text: PropTypes.string.isRequired,
+  href: PropTypes.string.isRequired,
 });
 
 Footer.propTypes = {
