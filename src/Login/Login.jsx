@@ -17,27 +17,6 @@ const getLoginUrl = (providerLoginUrl, next) => {
 };
 
 class Login extends React.Component {
-  static propTypes = {
-    providers: PropTypes.arrayOf(
-      PropTypes.objectOf(PropTypes.any),
-    ),
-    location: PropTypes.object.isRequired,
-    data: PropTypes.object.isRequired,
-  };
-
-  static defaultProps = {
-    providers: [
-      {
-        idp: 'google',
-        name: 'Google OAuth',
-        urls: [{
-          name: 'Google OAuth',
-          url: `${loginPath}google/`,
-        }],
-      },
-    ],
-  };
-
   constructor(props) {
     super(props);
     this.resetState = this.resetState.bind(this);
@@ -174,9 +153,18 @@ class Login extends React.Component {
           }
           <div>
             {this.props.data.contact}
-            <a href={`mailto:${this.props.data.email}`}>
-              {this.props.data.email}
-            </a>{'.'}
+            { (this.props.data.email && !this.props.data.contact_link) &&
+              <a href={`mailto:${this.props.data.email}`}>
+                {this.props.data.email}
+              </a>
+            }
+            {
+              this.props.data.contact_link &&
+              <a href={this.props.data.contact_link.href}>
+                {this.props.data.contact_link.text}
+              </a>
+            }
+            {'.'}
           </div>
         </div>
         <div className='login-page__side-box login-page__side-box--right' style={customImageStyle} />
@@ -184,5 +172,36 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  providers: PropTypes.arrayOf(
+    PropTypes.objectOf(PropTypes.any),
+  ),
+  location: PropTypes.object.isRequired,
+  data: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    subTitle: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+    contact: PropTypes.shape.isRequired,
+    email: PropTypes.string, // deprecated; use contact_link instead
+    contact_link: PropTypes.shape({
+      text: PropTypes.string.isRequired,
+      href: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
+};
+
+Login.defaultProps = {
+  providers: [
+    {
+      idp: 'google',
+      name: 'Google OAuth',
+      urls: [{
+        name: 'Google OAuth',
+        url: `${loginPath}google/`,
+      }],
+    },
+  ],
+};
 
 export default Login;
