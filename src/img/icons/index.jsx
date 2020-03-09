@@ -3,7 +3,7 @@ import IcoAnalysis from './analysis.svg';
 import IcoBack from './back.svg';
 import IcoCohortTools from './cohort-tools.svg';
 import IcoCopy from './copy.svg';
-import IcoCheckbox from './check_24px.svg';
+import IcoCheckbox from './check.svg';
 import IcoCross from './cross.svg';
 import IcoCrossKey from './cross-key.svg';
 import IcoDataAccess from './data-access.svg';
