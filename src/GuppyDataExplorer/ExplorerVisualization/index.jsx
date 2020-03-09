@@ -81,7 +81,7 @@ class ExplorerVisualization extends React.Component {
     let caseIDList;
     try {
       const res = await this.props.downloadRawDataByFields({ fields: [caseField] });
-      caseIDList = res.map(e => e.node_id);
+      caseIDList = res.map(e => e[caseField]);
       this.heatMapIsLocked = false;
     } catch (e) {
       // when tiered access is enabled, we cannot get the list of IDs because
