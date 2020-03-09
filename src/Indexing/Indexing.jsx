@@ -482,7 +482,7 @@ class Indexing extends React.Component {
                     ]}
                     onClose={() => this.onHidePopup()}
                   >
-                    { indexFilesPopupBlocks['error'] }
+                    { indexFilesPopupBlocks[this.state.indexingFilesStatus] }
                   </Popup>)
           }
 
