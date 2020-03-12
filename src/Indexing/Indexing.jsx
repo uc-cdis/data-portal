@@ -1,18 +1,13 @@
 import React from 'react';
 import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { userapiPath, fenceDownloadPath, sowerPath } from '../localconf';
+import { userapiPath, fenceDownloadPath, jobapiPath, hostname } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './Indexing.less';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
 import IconComponent from '../components/Icon';
 import dictIcons from '../img/icons/index';
-
-export const saveToFile = (savingStr, filename) => {
-  const blob = new Blob([savingStr], { type: 'text/json' });
-  FileSaver.saveAs(blob, filename);
-};
 
 class Indexing extends React.Component {
   constructor(props) {
@@ -39,12 +34,6 @@ class Indexing extends React.Component {
       downloadManifestStatusLastUpdated: this.getCurrentTime(),
     };
     this.state = Object.assign({}, this.initialStateConfiguration);
-  }
-
-  onFormSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('file', this.state.uploadedFile);
   }
 
   onChange = (e) => {
@@ -134,7 +123,8 @@ class Indexing extends React.Component {
         }, 5000);
         return;
       }
-      if (response.status.toString()[0] !== '2' && retrievePresignedURLRetries >= maxRetries) {
+      if ((response.status.toString()[0] !== '2' || !(response.data && response.data.url)) 
+        && retrievePresignedURLRetries >= maxRetries) {
         thisPointer.setState({
           indexingFilesStatus: 'error',
           indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
@@ -146,6 +136,7 @@ class Indexing extends React.Component {
       thisPointer.setState({
         presignedURLForDownload: response.data.url,
         indexingFilesPopupMessage: 'Dispatching indexing job...',
+        indexingFilesStatusLastUpdated: this.getCurrentTime(),
       });
       thisPointer.dispatchSowerIndexingJob();
     });
@@ -157,7 +148,7 @@ class Indexing extends React.Component {
       input: { URL: this.state.presignedURLForDownload },
     };
     return fetchWithCreds({
-      path: `${sowerPath}dispatch`,
+      path: `${jobapiPath}dispatch`,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSON.stringify(JSONbody),
@@ -183,13 +174,13 @@ class Indexing extends React.Component {
     const JSONbody = {
       action: 'download-indexd-manifest',
       input: {
-        host: 'https://zakir.planx-pla.net',
+        host: hostname,
         max_concurrent_requests: 20,
         num_processes: 4,
       },
     };
     fetchWithCreds({
-      path: `${sowerPath}dispatch`,
+      path: `${jobapiPath}dispatch`,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSON.stringify(JSONbody),
@@ -215,7 +206,7 @@ class Indexing extends React.Component {
 
 
   retrieveJobOutput = uid => fetchWithCreds({
-    path: `${sowerPath}output?UID=${uid}`,
+    path: `${jobapiPath}output?UID=${uid}`,
     method: 'GET',
     customHeaders: { 'Content-Type': 'application/json' },
   })
@@ -223,7 +214,7 @@ class Indexing extends React.Component {
   pollForIndexJobStatus = (uid) => {
     const thisPointer = this;
     return fetchWithCreds({
-      path: `${sowerPath}status?UID=${uid}`,
+      path: `${jobapiPath}status?UID=${uid}`,
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
@@ -261,7 +252,7 @@ class Indexing extends React.Component {
   pollForGenerateManifestJobStatus = (uid) => {
     const thisPointer = this;
     return fetchWithCreds({
-      path: `${sowerPath}status?UID=${uid}`,
+      path: `${jobapiPath}status?UID=${uid}`,
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
@@ -297,16 +288,9 @@ class Indexing extends React.Component {
     });
   }
 
-  downloadIndexingFileOutput = () => {
+  downloadJobOutput = (linkToFile) => {
     const link = document.createElement('a');
-    link.href = this.state.indexingFilesLogsLink;
-    document.body.appendChild(link);
-    link.click();
-  }
-
-  downloadGenerateManifestOutput = () => {
-    const link = document.createElement('a');
-    link.href = this.state.downloadManifestLink;
+    link.href = linkToFile;
     document.body.appendChild(link);
     link.click();
   }
@@ -477,7 +461,7 @@ class Indexing extends React.Component {
                       {
                         caption: 'Download Logs',
                         icon: 'download',
-                        fn: () => this.downloadIndexingFileOutput(),
+                        fn: () => this.downloadJobOutput(this.state.indexingFilesLogsLink),
                       },
                     ]}
                     onClose={() => this.onHidePopup()}
@@ -500,7 +484,7 @@ class Indexing extends React.Component {
                       {
                         caption: 'Download Manifest',
                         icon: 'download',
-                        fn: () => this.downloadGenerateManifestOutput(),
+                        fn: () => this.downloadJobOutput(this.state.downloadManifestLink),
                       },
                     ]}
                     onClose={() => this.onHidePopup()}
