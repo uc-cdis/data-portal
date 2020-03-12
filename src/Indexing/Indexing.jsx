@@ -1,5 +1,4 @@
 import React from 'react';
-import FileSaver from 'file-saver';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { userapiPath, fenceDownloadPath, jobapiPath, hostname } from '../localconf';
 import { fetchWithCreds } from '../actions';
@@ -123,7 +122,7 @@ class Indexing extends React.Component {
         }, 5000);
         return;
       }
-      if ((response.status.toString()[0] !== '2' || !(response.data && response.data.url)) 
+      if ((response.status.toString()[0] !== '2' || !(response.data && response.data.url))
         && retrievePresignedURLRetries >= maxRetries) {
         thisPointer.setState({
           indexingFilesStatus: 'error',
