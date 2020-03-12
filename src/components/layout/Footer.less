@@ -1,4 +1,4 @@
-.footer {
+.footer-container {
   width: 100%;
   background-color: var(--g3-color__bg-coal);
   text-align: center;
@@ -8,21 +8,13 @@
   align-content: space-around;
 }
 
-
-/* stylelint-disable */
-@media screen and (max-width: 1090px) {
-  .footer {
-    height: unset !important; // last resort override
-  }
-}
-/* stylelint-enable */
-
 .footer__nav {
   background-color: var(--g3-color__bg-coal);
   color: white;
   text-align: left;
   display: flex;
   justify-content: space-between;
+  flex-flow: wrap;
 }
 
 @media screen and (max-width: 1090px) {
@@ -139,4 +131,17 @@
   height: 60px;
   display: inline;
   vertical-align: middle;
+}
+
+.footer__link-area {
+  width: 100%;
+  margin: 10px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.footer__link {
+  display: inline-block;
+  word-wrap: none;
+  color: white;
 }

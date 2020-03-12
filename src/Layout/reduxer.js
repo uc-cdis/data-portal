@@ -59,6 +59,7 @@ export const ReduxTopBar = (() => {
 export const ReduxFooter = (() => {
   const mapStateToProps = state => ({
     portalVersion,
+    links: components.footer ? components.footer.links : [],
     dictionaryVersion: state.versionInfo.dictionaryVersion,
     apiVersion: state.versionInfo.apiVersion,
     hidden: isFooterHidden(state.bar.active),
