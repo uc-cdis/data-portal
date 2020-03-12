@@ -116,14 +116,14 @@ class Indexing extends React.Component {
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
-      if (response.status.toString()[0] !== '2' && retrievePresignedURLRetries < maxRetries) {
+      const wasSuccessful = (response.status.toString()[0] === '2' && (response.data && response.data.url));
+      if (!wasSuccessful && retrievePresignedURLRetries < maxRetries) {
         setTimeout(() => {
           thisPointer.retrievePresignedURLForDownload(retrievePresignedURLRetries + 1, maxRetries);
         }, 5000);
         return;
       }
-      if ((response.status.toString()[0] !== '2' || !(response.data && response.data.url))
-        && retrievePresignedURLRetries >= maxRetries) {
+      if (!wasSuccessful && retrievePresignedURLRetries >= maxRetries) {
         thisPointer.setState({
           indexingFilesStatus: 'error',
           indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
