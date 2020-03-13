@@ -432,7 +432,7 @@ class Indexing extends React.Component {
               <p>Upload an indexing file below to create records in indexd for new object files.</p>
               <br />
               <form className='index-flow-form'>
-                <input type='file' onChange={this.onChange} />
+                <input type='file' accept='.tsv' onChange={this.onChange} />
               </form>
             </div>
             <div className='action-panel-footer'>
