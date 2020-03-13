@@ -3,6 +3,7 @@ import IcoAnalysis from './analysis.svg';
 import IcoBack from './back.svg';
 import IcoCohortTools from './cohort-tools.svg';
 import IcoCopy from './copy.svg';
+import IcoCheckbox from './check.svg';
 import IcoCross from './cross.svg';
 import IcoCrossKey from './cross-key.svg';
 import IcoDataAccess from './data-access.svg';
@@ -23,6 +24,8 @@ import IcoKey from './key.svg';
 import IcoProfile from './profile.svg';
 import IcoQuery from './query.svg';
 import IcoSignature from './signature.svg';
+import IcoStatusError from './status_wrong.svg';
+import IcoStatusReady from './status_ready.svg';
 import IcoUpload from './upload.svg';
 import IcoUploadWhite from './upload-white.svg';
 import IcoWorkspace from './workspace.svg';
@@ -50,6 +53,9 @@ const dictIcons = {
   ),
   copy: (height, customedStyles) => (
     <IcoCopy height={height} style={{ ...customedStyles }} />
+  ),
+  checkbox: (height, customedStyles) => (
+    <IcoCheckbox height={height} style={{ ...customedStyles }} />
   ),
   cross: (height, customedStyles) => (
     <IcoCross height={height} style={{ ...customedStyles }} />
@@ -111,6 +117,12 @@ const dictIcons = {
   ),
   query: (height, customedStyles) => (
     <IcoQuery height={height} style={{ ...customedStyles }} />
+  ),
+  status_error: (height, customedStyles) => (
+    <IcoStatusError height={height} style={{ ...customedStyles }} />
+  ),
+  status_ready: (height, customedStyles) => (
+    <IcoStatusReady height={height} style={{ ...customedStyles }} />
   ),
   'stage-access': (height, customedStyles) => (
     <IcoStageAccess height={height} style={{ ...customedStyles }} />

@@ -20,6 +20,7 @@ import DocumentPage from './Document/page';
 import ExplorerPage from './Explorer/ExplorerPage';
 import CoreMetadataPage from './CoreMetadata/page';
 import { fetchCoreMetadata } from './CoreMetadata/reduxer';
+import Indexing from './Indexing/Indexing';
 import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/.';
 import ReduxPrivacyPolicy from './PrivacyPolicy/ReduxPrivacyPolicy';
@@ -177,6 +178,15 @@ async function init() {
                         props => (<ProtectedContent
                           filter={() => store.dispatch(fetchAccess())}
                           component={UserProfile}
+                          {...props}
+                        />)
+                      }
+                    />
+                    <Route
+                      path='/indexing'
+                      component={
+                        props => (<ProtectedContent
+                          component={Indexing}
                           {...props}
                         />)
                       }
