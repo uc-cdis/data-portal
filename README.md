@@ -13,14 +13,6 @@ A generic data portal that supports some basic interaction with Gen3 services li
 npm install
 ```
 
-Then, update schema from gdcapi by running `npm run-script schema`.
-This command will update the latest schema that is used by Relay and GraphiQL.
-Without parameter, it will point to the endpoint at local API (http://localhost:5000/v0/submission/getschema).
-Use the parameter to point to remote url (e.g. https://dev.bionimbus.org/api/v0/submission/getschema) as follow:
-```
-npm run-script schema -- https://dev.bionimbus.org/api/v0/submission/getschema
-```
-
 ### Local development and dev.html
 
 The portal's `/dev.html` path loads javascript and most css
@@ -62,7 +54,8 @@ HOSTNAME=dev.planx-pla.net NODE_ENV=dev APP=dev bash ./runWebpack.sh
 To run Storybook:
 `npm run storybook`
 
-To run with Arranger components:
+
+To run with Arranger components *(DEPRECATED: we use Guppy powered explorer page and stop maintaining arranger powered version.)*:
 1. Set local environment variables:
   - $STORYBOOK_ARRANGER_API: localhost:3000
   - $STORYBOOK_PROJECT_ID: search
@@ -85,7 +78,7 @@ es_gen_data 0 20
 7. Go back to Versions and hit the lightning bolt. The endpoint should go from a red arrow to a green arrow.
 8. At this point, running the Data Portal from our Storybook should work.
 
-### Docker Build for Local Development
+### Run Windmill using Docker
 Build the container image first
 ```
 docker build -t windmill .
@@ -93,7 +86,7 @@ docker build -t windmill .
 
 Then run the container
 ```
-docker run --rm -e HOSTNAME=dev.example.net -e APP=dev -p 443:443 -ti windmill
+docker run --rm -e HOSTNAME=dev.planx-pla.net -p 443:443 -ti windmill
 ```
 
 You will then need to visit `https://localhost` and accept the self-signed certificate warnings

@@ -142,8 +142,8 @@
         "alt": "NHLBI"
       }
     ],
-    "categorical9Colors": ["#c02f42", "#175676", "#59CD90", "#F2DC5D", "#40476D", "#FFA630", "#AE8799", "#1A535C", "#462255"],
-    "categorical2Colors": ["#6d6e70", "#c02f42"]
+    "categorical9Colors": ["#c0143c", "#616265", "#59CD90", "#F2DC5D", "#40476D", "#FFA630", "#AE8799", "#1A535C", "#462255"],
+    "categorical2Colors": ["#616265", "#c0143c"]
   },
   "requiredCerts": [],
   "featureFlags": {

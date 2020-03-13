@@ -119,4 +119,3 @@ Note that if `mainFieldIsNumeric` is `False`, `asTextHistogram` becomes `histogr
   * For numerical fields: use `asTextHistogram` unless the config specifies a `binCount`, in which case we should use `histogram (binCount: N)`.
 
 * Percentages can be slightly off because [aggregated counts from ElasticSearch are approximate](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html#search-aggregations-bucket-terms-aggregation-approximate-counts).
-
