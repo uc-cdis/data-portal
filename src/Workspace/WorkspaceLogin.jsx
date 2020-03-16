@@ -95,7 +95,7 @@ class WorkspaceLogin extends React.Component {
                         );
                       }}
                       label={p.refresh_token_expiration ?
-                        `${p.name} - expires at ${p.refresh_token_expiration}`
+                        `${p.name} (expires in ${p.refresh_token_expiration})`
                         : p.name}
                       buttonType={p.secondary ? 'default' : 'primary'}
                       enabled={!p.refresh_token_expiration}
