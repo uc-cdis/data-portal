@@ -7,7 +7,7 @@ import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 import { useArboristUI } from '../configs';
-import { userHasMethodOnProject } from '../authMappingUtils';
+import { userHasMethodOnProject, isRootUrl, isProgramUrl, userHasSheepdogProgramAdmin, userHasSheepdogProjectAdmin } from '../authMappingUtils';
 
 const ProjectSubmission = (props) => {
   // hack to detect if dictionary data is available, and to trigger fetch if not
@@ -29,9 +29,23 @@ const ProjectSubmission = (props) => {
     }
     return <MyDataModelGraph project={props.project} />;
   };
-
-  const userHasCreateOrUpdateOnProject = (projectID, userAuthMapping) => (userHasMethodOnProject('create', projectID, userAuthMapping)
-      || userHasMethodOnProject('update', projectID, userAuthMapping));
+  const displaySubmissionUIComponents = (project, userAuthMapping) => {
+    if (
+      !useArboristUI
+      || (isRootUrl(project) && userHasSheepdogProgramAdmin(userAuthMapping))
+      || (isProgramUrl(project) && userHasSheepdogProjectAdmin(userAuthMapping))
+      || userHasMethodOnProject('create', project, userAuthMapping)
+      || userHasMethodOnProject('update', project, userAuthMapping)
+    ) {
+      return (
+        <React.Fragment>
+          <MySubmitForm />
+          <MySubmitTSV project={project} />
+        </React.Fragment>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className='project-submission'>
@@ -39,16 +53,7 @@ const ProjectSubmission = (props) => {
       {
         <Link className='project-submission__link' to={`/${props.project}/search`}>browse nodes</Link>
       }
-      {
-        (useArboristUI && !userHasCreateOrUpdateOnProject(props.project, props.userAuthMapping)) ?
-          null :
-          <MySubmitForm />
-      }
-      {
-        (useArboristUI && !userHasCreateOrUpdateOnProject(props.project, props.userAuthMapping)) ?
-          null :
-          <MySubmitTSV project={props.project} />
-      }
+      { displaySubmissionUIComponents(props.project, props.userAuthMapping) }
       { displayData() }
     </div>
   );
