@@ -8,8 +8,10 @@ import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntrodu
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
-import { breakpoints, customHomepageChartConfig, indexPublic } from '../localconf';
+import { guppyUrl, breakpoints, customHomepageChartConfig, indexPublic } from '../localconf';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
+import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
+import Covid19Dashboard from '../Covid19Dashboard';
 import './page.less';
 
 class IndexPageComponent extends React.Component {
@@ -62,9 +64,24 @@ class IndexPageComponent extends React.Component {
         </div>
       ));
     }
+
+    const mapChartDataType = 'location';
+    let mapChartGuppyConfig = {
+      size: 10000  // TODO need to get all the data. guppy doesn't allow more than 10000. use download endpoint?
+    };
+    const mapChartFilterConfig = {
+      tabs: [
+        {
+          fields: [
+            'confirmed',
+          ],
+        },
+      ],
+    };
+
     return (
       <div className='index-page'>
-        <div className='index-page__top'>
+        {/* <div className='index-page__top'>
           <div className='index-page__introduction'>
             <ReduxIntroduction data={components.index.introduction} dictIcons={dictIcons} />
             <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
@@ -79,8 +96,20 @@ class IndexPageComponent extends React.Component {
               </Slider>
             </MediaQuery>
           </div>
-        </div>
-        <ReduxIndexButtonBar {...this.props} />
+        </div> */}
+        <GuppyWrapper
+          guppyConfig={{
+            path: guppyUrl,
+            type: mapChartDataType,
+            ...mapChartGuppyConfig,
+          }}
+          filterConfig={mapChartFilterConfig}
+          // tierAccessLevel={tierAccessLevel}
+          // tierAccessLimit={tierAccessLimit}
+        >
+          <Covid19Dashboard {...this.props} />
+          {/* <ReduxIndexButtonBar {...this.props} /> */}
+        </GuppyWrapper>
       </div>
     );
   }
