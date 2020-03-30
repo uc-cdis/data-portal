@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import moment from 'moment';
 import { AutoSizer, Column, Table } from 'react-virtualized';
+import { Toggle } from 'material-ui';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
@@ -31,6 +32,7 @@ class MapFiles extends React.Component {
       sortedDates: [],
       message,
       loading: true,
+      deleteFeature: false,
     };
   }
 
@@ -60,6 +62,12 @@ class MapFiles extends React.Component {
       filesByDate: this.groupUnmappedFiles(),
     }, () => this.createFileMapByGroup());
   }
+
+  onFeatureToggle = () => {
+    this.setState({
+      deleteFeature: !(this.state.deleteFeature),
+    });
+  };
 
   getSetSize = set => Object.keys(set).length
 
@@ -195,7 +203,16 @@ class MapFiles extends React.Component {
   }
 
   render() {
-    const buttons = [
+    const buttons = this.state.deleteFeature ? [
+      <Button
+        onClick={this.onCompletion} // FIXME
+        label={!this.isMapEmpty(this.state.selectedFilesByGroup) ? `Delete File Records (${this.flattenFiles(this.state.selectedFilesByGroup).length})` : 'Delete File Records'}
+        rightIcon='delete'
+        buttonType='secondary'
+        className='g3-icon g3-icon--lg'
+        enabled={!this.isMapEmpty(this.state.selectedFilesByGroup)}
+      />,
+    ] : [
       <Button
         onClick={this.onCompletion}
         label={!this.isMapEmpty(this.state.selectedFilesByGroup) ? `Map Files (${this.flattenFiles(this.state.selectedFilesByGroup).length})` : 'Map Files'}
@@ -224,6 +241,7 @@ class MapFiles extends React.Component {
         }
         <BackLink url='/submission' label='Back to Data Submission' />
         <div className='h1-typo'>My Files</div>
+        <Toggle label='Delete' labelStyle={{ width: '' }} onToggle={this.onFeatureToggle} />
         <StickyToolbar
           title='Unmapped Files'
           toolbarElts={buttons}
