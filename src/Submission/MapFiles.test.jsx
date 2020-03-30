@@ -2,6 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import { StaticRouter } from 'react-router-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import MapFiles from './MapFiles';
 import * as testData from './__test__/data.json';
 import * as testGroupedData from './__test__/expectedGroupFiles.json';
@@ -13,15 +14,17 @@ describe('MapFiles', () => {
   const user = { username: 'testuser' };
 
   const component = mount(
-    <StaticRouter location={{ pathname: '/submission/files' }} context={{}}>
-      <MapFiles
-        fetchUnmappedFiles={fetchUnmappedFiles}
-        mapSelectedFiles={mapSelectedFiles}
-        history={history}
-        unmappedFiles={testData.records}
-        user={user}
-      />
-    </StaticRouter>,
+    <MuiThemeProvider>
+      <StaticRouter location={{ pathname: '/submission/files' }} context={{}}>
+        <MapFiles
+          fetchUnmappedFiles={fetchUnmappedFiles}
+          mapSelectedFiles={mapSelectedFiles}
+          history={history}
+          unmappedFiles={testData.records}
+          user={user}
+        />
+      </StaticRouter>,
+    </MuiThemeProvider>,
   );
   const instance = component.find(MapFiles).instance();
 
