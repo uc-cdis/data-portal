@@ -20,10 +20,11 @@ import './MapChart.less';
 class MapChart extends React.Component {
   constructor(props) {
     super(props);
+    this.updateDimensions = this.updateDimensions.bind(this);
     this.state = {
       mapSize: {
         width: '100%',
-        height: 400,
+        height: window.innerHeight - 221,
       },
       viewport: {
         latitude: 0,
@@ -64,6 +65,15 @@ class MapChart extends React.Component {
     //     }
     //   }
     // );
+    window.addEventListener('resize', this.updateDimensions);
+  }
+
+  // componentWillUnmount() {
+  //   window.removeEventListener('resize', this.updateDimensions);
+  // }
+
+  updateDimensions() {
+    this.setState({ mapSize: { height: window.innerHeight - 221 }});
   }
 
   // onAfterDateSliderChange(e) {
@@ -72,6 +82,9 @@ class MapChart extends React.Component {
 
   _onHover = event => {
     let hoverInfo = null;
+
+    if (!event.features)
+      return
 
     event.features.forEach(feature => {
       if (feature.layer.id == 'confirmed') {
@@ -106,7 +119,6 @@ class MapChart extends React.Component {
   }
 
   render() {
-
     let rawData = this.props.rawData;
     // TODO remove hardcoded data
     rawData = [
@@ -3638,15 +3650,15 @@ class MapChart extends React.Component {
 
     const maxValue = Math.max.apply(Math, rawData.map(function(o) { return (o.confirmed ? o.confirmed : 0); }));
     const minDotSize = 2;
-    const maxDotSize = 20;
+    const maxDotSize = 30;
 
     return (
       <div className='map-chart'>
         <ReactMapGL.InteractiveMap
           className='map'
           // {...this.props.globalStore!.mapViewport}
-          {...this.state.mapSize}
           {...this.state.viewport}
+          {...this.state.mapSize} // must be after viewport so that size is not overwriten
           mapStyle='mapbox://styles/mapbox/light-v10'
           // zoom={this.state.zoom}
           // onViewportChange={(viewport) => this.props.globalStore!.mapViewport = viewport}
@@ -3712,7 +3724,8 @@ class MapChart extends React.Component {
             </div>
           </div> */}
         </ReactMapGL.InteractiveMap>
-        <div className='console'>
+        {
+        false && <div className='console'>
           <h1>COVID-19</h1>
           <div className='session'>
             <h2>Confirmed cases</h2>
@@ -3740,6 +3753,7 @@ class MapChart extends React.Component {
             /> */}
           </div>
         </div>
+        }
             {/* <Range
               className='g3-range-filter__slider'
               min={1}

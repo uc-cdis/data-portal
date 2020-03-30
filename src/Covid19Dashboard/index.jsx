@@ -31,9 +31,11 @@ class Covid19Dashboard extends React.Component {
 }
 
 Covid19Dashboard.propTypes = {
+  // downloadRawData: PropTypes.func, // inherited from GuppyWrapper
 };
 
 Covid19Dashboard.defaultProps = {
+  // downloadRawData: () => {},
 };
 
 export default Covid19Dashboard;
