@@ -21,6 +21,10 @@ class MapChart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      mapSize: {
+        width: '100%',
+        height: 400,
+      },
       viewport: {
         latitude: 0,
         longitude: 0,
@@ -28,10 +32,7 @@ class MapChart extends React.Component {
         bearing: 0,
         pitch: 0
       },
-      mapSize: {
-        width: '100%',
-        height: 400,
-      },
+      hoverInfo: null
     };
   }
 
@@ -65,8 +66,43 @@ class MapChart extends React.Component {
     // );
   }
 
-  onAfterDateSliderChange(e) {
-    console.log(e)
+  // onAfterDateSliderChange(e) {
+  //   console.log(e)
+  // }
+
+  _onHover = event => {
+    let hoverInfo = null;
+
+    event.features.forEach(feature => {
+      if (feature.layer.id == 'confirmed') {
+        const state = feature.properties.province_state;
+        const cases = feature.properties.confirmed
+        const locationStr = (state && state != "null" ? state + ", " : "") + feature.properties.country_region
+        hoverInfo = {
+          lngLat: event.lngLat,
+          locationName: locationStr,
+          confirmed: cases && cases != "null" ? cases : 0
+        };
+      }
+    });
+
+    this.setState({
+      hoverInfo
+    });
+  };
+
+  _renderPopup() {
+    const {hoverInfo} = this.state;
+    if (hoverInfo) {
+      return (
+        <ReactMapGL.Popup longitude={hoverInfo.lngLat[0]} latitude={hoverInfo.lngLat[1]} closeButton={false}>
+          <div className="location-info">
+            {hoverInfo.locationName}: {hoverInfo.confirmed} cases
+            </div>
+        </ReactMapGL.Popup>
+      );
+    }
+    return null;
   }
 
   render() {
@@ -3583,8 +3619,9 @@ class MapChart extends React.Component {
           'coordinates': [item.longitude, item.latitude]
         },
         'properties': {
-            'title': item.submitter_id,
-            'confirmed': item.confirmed,
+            'country_region': item.country_region,
+            'province_state': item.province_state,
+            'confirmed': item.confirmed != null ? item.confirmed : 0,
             'deaths': item.deaths,
             'date': item.date,
             'marker-symbol': 'monument'
@@ -3600,7 +3637,6 @@ class MapChart extends React.Component {
     };
 
     const maxValue = Math.max.apply(Math, rawData.map(function(o) { return (o.confirmed ? o.confirmed : 0); }));
-    console.log('maxValue', maxValue)
     const minDotSize = 2;
     const maxDotSize = 20;
 
@@ -3626,7 +3662,9 @@ class MapChart extends React.Component {
           }}
           // dragPan={!this.state.onOverlayLeft}
           // ref={this.props.globalStore!.mapRef}
+          onHover={this._onHover}
         >
+          {this._renderPopup()}
           <ReactMapGL.Source type='geojson' data={my_geojson}>
             {rawData &&
               <ReactMapGL.Layer
@@ -3637,7 +3675,8 @@ class MapChart extends React.Component {
                     'interpolate',
                     ['linear'],
                     ['number', ['get', 'confirmed']],
-                    0, minDotSize,
+                    0, 0,
+                    1, minDotSize,
                     maxValue, maxDotSize
                   ],
                   'circle-color': [
