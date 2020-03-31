@@ -43,6 +43,11 @@ const mapSelectedFiles = files => ({
   data: files,
 });
 
+const deleteSelectedFiles = files => ({
+  type: 'RECEIVE_FILES_TO_DELETE',
+  data: files,
+});
+
 const ReduxMapFiles = (() => {
   const mapStateToProps = state => ({
     unmappedFiles: state.submission.unmappedFiles,
@@ -54,6 +59,7 @@ const ReduxMapFiles = (() => {
       fetchUnmappedFiles(user, [], STARTING_DID, FETCH_LIMIT),
     ),
     mapSelectedFiles: files => dispatch(mapSelectedFiles(files)),
+    deleteSelectedFiles: files => dispatch(deleteSelectedFiles(files)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(MapFiles);

@@ -56,6 +56,12 @@ class MapFiles extends React.Component {
     this.props.history.push('/submission/map');
   }
 
+  onDeletion = () => {
+    const flatFiles = this.flattenFiles(this.state.selectedFilesByGroup);
+    this.props.deleteSelectedFiles(flatFiles);
+    this.props.history.push('/submission/map');
+  }
+
   onUpdate = () => {
     this.setState({
       loading: false,
@@ -205,7 +211,7 @@ class MapFiles extends React.Component {
   render() {
     const buttons = this.state.deleteFeature ? [
       <Button
-        onClick={this.onCompletion} // FIXME
+        onClick={this.onDeletion}
         label={!this.isMapEmpty(this.state.selectedFilesByGroup) ? `Delete File Records (${this.flattenFiles(this.state.selectedFilesByGroup).length})` : 'Delete File Records'}
         rightIcon='delete'
         buttonType='secondary'
@@ -294,7 +300,7 @@ class MapFiles extends React.Component {
                               item={files[rowIndex]}
                               isSelected={this.isSelected(groupIndex, files[rowIndex].did)}
                               onChange={() => this.toggleCheckBox(groupIndex, files[rowIndex])}
-                              isEnabled={files[rowIndex].status === 'Ready'}
+                              isEnabled={this.state.deleteFeature || files[rowIndex].status === 'Ready'}
                               disabledText={'This file is not ready to be mapped yet.'}
                             />
                           )}
@@ -347,6 +353,7 @@ MapFiles.propTypes = {
   unmappedFiles: PropTypes.array,
   fetchUnmappedFiles: PropTypes.func.isRequired,
   mapSelectedFiles: PropTypes.func.isRequired,
+  deleteSelectedFiles: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
