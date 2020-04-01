@@ -54,8 +54,11 @@ class IllinoisMapChart extends React.Component {
     event.features.forEach((feature) => {
       if (feature.layer.id == 'confirmed') {
         const state = feature.properties.province_state;
+        const county = feature.properties.county;
         const cases = feature.properties.confirmed;
-        const locationStr = (state && state != 'null' ? `${state}, ` : '') + feature.properties.country_region;
+        let locationStr = feature.properties.country_region;
+        locationStr = (state && state != 'null' ? `${state}, ` : '') + locationStr
+        locationStr = (county && county != 'null' ? `${county}, ` : '') + locationStr
         hoverInfo = {
           lngLat: event.lngLat,
           locationName: locationStr,
@@ -111,6 +114,7 @@ class IllinoisMapChart extends React.Component {
           properties: {
             country_region: location.country_region,
             province_state: location.province_state,
+            county: location.county,
             date,
             'marker-symbol': 'monument',
             confirmed: confirmed != null ? (+confirmed) : 0,
