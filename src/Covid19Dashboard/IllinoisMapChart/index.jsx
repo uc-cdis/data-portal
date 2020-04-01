@@ -153,12 +153,13 @@ class IllinoisMapChart extends React.Component {
     }
 
     const colors = {
-      0: '#2DC4B2',
-      10: '#3BB3C3',
-      100: '#669EC4',
-      1000: '#8B88B6',
-      10000: '#A2719B',
-      50000: '#aa5e79',
+      0: '#fff',
+      1: '#aa5e79',
+      // 10: '#3BB3C3',
+      // 100: '#669EC4',
+      // 1000: '#8B88B6',
+      // 10000: '#A2719B',
+      // 50000: '#aa5e79',
     };
     const colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
 
