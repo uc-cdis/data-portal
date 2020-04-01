@@ -70,6 +70,7 @@ class IndexPageComponent extends React.Component {
       size: 10000, // TODO we need to get all the data. guppy doesn't allow
       // more than 10,000. if we have more than 10,000 locations (all projects
       // combined): use download endpoint instead of GuppyWrapper?
+      // There's the offset param but the GuppyWrapper only makes 1 query...
     };
     // const covid19DashboardFilterConfig = {
       // tabs: [

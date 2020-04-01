@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Range } from 'rc-slider';
 import * as ReactMapGL from 'react-map-gl';
 
+import ControlPanel from '../ControlPanel';
+
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './IllinoisMapChart.less';
 
@@ -20,7 +22,7 @@ class IllinoisMapChart extends React.Component {
         // start centered on Chicago
         longitude: -90,
         latitude: 40,
-        zoom: 5,
+        zoom: 6,
         bearing: 0,
         pitch: 0,
       },
@@ -225,6 +227,11 @@ class IllinoisMapChart extends React.Component {
             /> */}
           </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
+        <ControlPanel
+          containerComponent={this.props.containerComponent}
+          settings={this.state}
+          // onChange={this._updateSettings}
+        />
         {
         // TODO fix or remove
           false && <div className='console'>

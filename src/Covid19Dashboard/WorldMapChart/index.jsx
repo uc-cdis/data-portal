@@ -110,6 +110,7 @@ class WorldMapChart extends React.Component {
           properties: {
             country_region: location.country_region,
             province_state: location.province_state,
+            county: location.county,
             date,
             'marker-symbol': 'monument',
             confirmed: confirmed != null ? (+confirmed) : 0,
