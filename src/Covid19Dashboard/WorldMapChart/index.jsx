@@ -174,6 +174,8 @@ class WorldMapChart extends React.Component {
             this.setState({ viewport });
           }}
           onHover={this._onHover}
+          dragRotate={false}
+          touchRotate={false}
         >
           {this._renderPopup()}
           <ReactMapGL.Source type='geojson' data={this.geoJson}>
