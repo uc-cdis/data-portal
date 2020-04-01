@@ -12,6 +12,7 @@
 #
 # Script assumes npm install or npm ci has already run, and jq is installed.
 #
+set -e
 
 export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-dev}"
