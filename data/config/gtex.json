@@ -340,7 +340,10 @@
     },
     "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/",
     "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data",
-    "terraTemplate": "bdc"
+    "terraTemplate": [ 
+      "bdc",
+      "gen3"
+    ]
   },
   "fileExplorerConfig": {
     "charts": {
