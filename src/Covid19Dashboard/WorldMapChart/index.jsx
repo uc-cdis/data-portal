@@ -22,9 +22,9 @@ class WorldMapChart extends React.Component {
         latitude: 0,
         zoom: 0,
         bearing: 0,
-        pitch: 0
+        pitch: 0,
       },
-      hoverInfo: null
+      hoverInfo: null,
     };
   }
 
@@ -37,45 +37,44 @@ class WorldMapChart extends React.Component {
   // }
 
   updateDimensions() {
-    this.setState({ mapSize: { height: window.innerHeight - 221 }});
+    this.setState({ mapSize: { height: window.innerHeight - 221 } });
   }
 
   // onAfterDateSliderChange(e) {
   //   console.log(e)
   // }
 
-  _onHover = event => {
+  _onHover = (event) => {
     let hoverInfo = null;
 
-    if (!event.features)
-      return
+    if (!event.features) { return; }
 
-    event.features.forEach(feature => {
+    event.features.forEach((feature) => {
       if (feature.layer.id == 'confirmed') {
         const state = feature.properties.province_state;
-        const cases = feature.properties.confirmed
-        const locationStr = (state && state != "null" ? state + ", " : "") + feature.properties.country_region
+        const cases = feature.properties.confirmed;
+        const locationStr = (state && state != 'null' ? `${state}, ` : '') + feature.properties.country_region;
         hoverInfo = {
           lngLat: event.lngLat,
           locationName: locationStr,
-          confirmed: cases && cases != "null" ? cases : 0
+          confirmed: cases && cases != 'null' ? cases : 0,
         };
       }
     });
 
     this.setState({
-      hoverInfo
+      hoverInfo,
     });
   };
 
   _renderPopup() {
-    const {hoverInfo} = this.state;
+    const { hoverInfo } = this.state;
     if (hoverInfo) {
       return (
         <ReactMapGL.Popup longitude={hoverInfo.lngLat[0]} latitude={hoverInfo.lngLat[1]} closeButton={false}>
-          <div className="location-info">
+          <div className='location-info'>
             {hoverInfo.locationName}: {hoverInfo.confirmed} cases
-            </div>
+          </div>
         </ReactMapGL.Popup>
       );
     }
@@ -84,63 +83,67 @@ class WorldMapChart extends React.Component {
 
   convertDataToGeoJson(rawData, selectedDate) {
     const features = rawData.reduce((res, location) => {
-      let new_features = [];
-      location['date'].forEach((date, i) => {
+      const new_features = [];
+      if (location.project_id != 'open-JHU') {
+        // we are getting _all_ the location data from Guppy because there
+        // is no way to filter by project using the GuppyWrapper. So have
+        // to filter on client side
+        return res;
+      }
+      location.date.forEach((date, i) => {
         if (new Date(date).getTime() != selectedDate.getTime()) {
           return;
         }
-  
+
         const confirmed = location.confirmed[i];
         const deaths = location.deaths[i];
-        let feature = {
+        const feature = {
           type: 'Feature',
           geometry: {
             type: 'Point',
-            coordinates: [location.longitude, location.latitude]
+            coordinates: [location.longitude, location.latitude],
           },
           properties: {
-              country_region: location.country_region,
-              province_state: location.province_state,
-              date: date,
-              'marker-symbol': 'monument',
-              confirmed: confirmed != null ? (+confirmed) : 0,
-              deaths: deaths != null ? (+deaths) : 0,
-          }
+            country_region: location.country_region,
+            province_state: location.province_state,
+            date,
+            'marker-symbol': 'monument',
+            confirmed: confirmed != null ? (+confirmed) : 0,
+            deaths: deaths != null ? (+deaths) : 0,
+          },
         };
         new_features.push(feature);
       });
-      return res.concat(new_features)
+      return res.concat(new_features);
     }, []);
     // console.log('features', features[0])
 
     const geoJson = {
       type: 'FeatureCollection',
-      features: features
+      features,
     };
     return geoJson;
   }
 
   render() {
-    let rawData = this.props.rawData;
+    const rawData = this.props.rawData;
     // console.log('rawData', rawData);
 
     // find latest date we have in the data
     let selectedDate = new Date();
     if (rawData.length > 0) {
-      selectedDate = new Date(Math.max.apply(null, rawData[0]['date'].map(function(date) {
-        return new Date(date);
-      })));
+      selectedDate = new Date(Math.max.apply(null, rawData[0].date.map(date => new Date(date))));
     }
 
-    const geoJson = this.convertDataToGeoJson(rawData, selectedDate)
+    const geoJson = this.convertDataToGeoJson(rawData, selectedDate);
 
-    let maxValue = Math.max.apply(Math, geoJson.features.map(function(e) { return e.properties.confirmed; }));
+    let maxValue = Math.max(...geoJson.features.map(e => e.properties.confirmed));
     const minDotSize = 2;
     const maxDotSize = 30;
 
-    if (!rawData || rawData.length == 0) {
-      geoJson.features = []
-      maxValue = 2
+    if (!rawData || rawData.length == 0 || geoJson.features.length == 0) {
+      geoJson.features = [];
+      maxValue = 2;
     }
 
     const colors = {
@@ -151,7 +154,7 @@ class WorldMapChart extends React.Component {
       10000: '#A2719B',
       50000: '#aa5e79',
     };
-    const colorsAsList = Object.entries(colors).map(item=>[+item[0], item[1]]).flat();
+    const colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
 
     return (
       <div className='map-chart'>
@@ -162,7 +165,7 @@ class WorldMapChart extends React.Component {
           {...this.state.viewport}
           {...this.state.mapSize} // after viewport to avoid size overwrite
           onViewportChange={(viewport) => {
-            this.setState({viewport})
+            this.setState({ viewport });
           }}
           onHover={this._onHover}
         >
@@ -178,15 +181,15 @@ class WorldMapChart extends React.Component {
                   ['number', ['get', 'confirmed']],
                   0, 0,
                   1, minDotSize,
-                  maxValue, maxDotSize
+                  maxValue, maxDotSize,
                 ],
                 'circle-color': [
                   'interpolate',
                   ['linear'],
                   ['number', ['get', 'confirmed']],
-                  ...colorsAsList
+                  ...colorsAsList,
                 ],
-                'circle-opacity': 0.8
+                'circle-opacity': 0.8,
               }}
               // filter={['==', ['number', ['get', 'date']], 12]}
             />
@@ -225,24 +228,23 @@ class WorldMapChart extends React.Component {
         />
         {
         // TODO fix or remove
-        false && <div className='console'> 
-          <h1>COVID-19</h1>
-          <div className='session'>
-            <h2>Confirmed cases</h2>
-            <div className='row colors'>
+          false && <div className='console'>
+            <h1>COVID-19</h1>
+            <div className='session'>
+              <h2>Confirmed cases</h2>
+              <div className='row colors' />
+              <div className='row labels'>
+                <div className='label'>0</div>
+                <div className='label'>10</div>
+                <div className='label'>100</div>
+                <div className='label'>1000</div>
+                <div className='label'>10000</div>
+                <div className='label'>50000</div>
+              </div>
             </div>
-            <div className='row labels'>
-              <div className='label'>0</div>
-              <div className='label'>10</div>
-              <div className='label'>100</div>
-              <div className='label'>1000</div>
-              <div className='label'>10000</div>
-              <div className='label'>50000</div>
-            </div>
-          </div>
-          <div className='session' id='sliderbar'>
-            <h2>Date: <label id='active-hour'>12PM</label></h2>
-            {/* <Range
+            <div className='session' id='sliderbar'>
+              <h2>Date: <label id='active-hour'>12PM</label></h2>
+              {/* <Range
               className='g3-range-filter__slider'
               min={1}
               max={4}
@@ -251,10 +253,10 @@ class WorldMapChart extends React.Component {
               onAfterChange={() => this.onAfterDateSliderChange()}
               step={0.5}
             /> */}
+            </div>
           </div>
-        </div>
         }
-            {/* <Range
+        {/* <Range
               className='g3-range-filter__slider'
               min={1}
               max={4}

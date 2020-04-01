@@ -1,16 +1,16 @@
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 
 import './ControlPanel.less';
 
 export default class ControlPanel extends PureComponent {
   render() {
-    const {settings} = this.props;
+    const { settings } = this.props;
 
     return (
-      <div className="control-panel">
+      <div className='control-panel'>
         <h3>Confirmed cases of Coronavirus</h3>
         <p>
-          Data source: <a href="https://systems.jhu.edu">Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE)</a>
+          Data source: <a href='https://systems.jhu.edu'>Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE)</a>
         </p>
 
         {/* TODO: fix or remove */}

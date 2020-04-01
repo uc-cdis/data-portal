@@ -65,19 +65,22 @@ class IndexPageComponent extends React.Component {
       ));
     }
 
-    const mapChartDataType = 'location';
-    let mapChartGuppyConfig = {
-      size: 10000  // TODO need to get all the data. guppy doesn't allow more than 10000. use download endpoint?
+    const covid19DashboardDataType = 'summary_location';
+    const covid19DashboardGuppyConfig = {
+      size: 10000, // TODO we need to get all the data. guppy doesn't allow
+      // more than 10,000. if we have more than 10,000 locations (all projects
+      // combined): use download endpoint instead of GuppyWrapper?
     };
-    const mapChartFilterConfig = {
-      tabs: [
-        {
-          fields: [
-            'confirmed',
-          ],
-        },
-      ],
-    };
+    // const covid19DashboardFilterConfig = {
+      // tabs: [
+      //   {
+      //     fields: [
+      //       'confirmed',
+      //       { project_id: { selectedValues: 'open-JHU' } }
+      //     ],
+      //   },
+      // ],
+    // };
 
     return (
       <div className='index-page'>
@@ -100,10 +103,10 @@ class IndexPageComponent extends React.Component {
         <GuppyWrapper
           guppyConfig={{
             path: guppyUrl,
-            type: mapChartDataType,
-            ...mapChartGuppyConfig,
+            type: covid19DashboardDataType,
+            ...covid19DashboardGuppyConfig,
           }}
-          filterConfig={mapChartFilterConfig}
+          filterConfig={{}} // {covid19DashboardFilterConfig}
           // tierAccessLevel={tierAccessLevel}
           // tierAccessLimit={tierAccessLimit}
         >
