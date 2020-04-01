@@ -65,7 +65,7 @@ class IndexPageComponent extends React.Component {
       ));
     }
 
-    const covid19DashboardDataType = 'summary_location';
+    const covid19DashboardDataType = 'location';
     const covid19DashboardGuppyConfig = {
       size: 10000, // TODO we need to get all the data. guppy doesn't allow
       // more than 10,000. if we have more than 10,000 locations (all projects

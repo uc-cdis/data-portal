@@ -12,6 +12,7 @@ class WorldMapChart extends React.Component {
   constructor(props) {
     super(props);
     this.updateDimensions = this.updateDimensions.bind(this);
+    this.geoJson = null;
     this.state = {
       mapSize: {
         width: '100%',
@@ -52,8 +53,11 @@ class WorldMapChart extends React.Component {
     event.features.forEach((feature) => {
       if (feature.layer.id == 'confirmed') {
         const state = feature.properties.province_state;
+        const county = feature.properties.county;
         const cases = feature.properties.confirmed;
-        const locationStr = (state && state != 'null' ? `${state}, ` : '') + feature.properties.country_region;
+        let locationStr = feature.properties.country_region;
+        locationStr = (state && state != 'null' ? `${state}, ` : '') + locationStr
+        locationStr = (county && county != 'null' ? `${county}, ` : '') + locationStr
         hoverInfo = {
           lngLat: event.lngLat,
           locationName: locationStr,
@@ -129,20 +133,21 @@ class WorldMapChart extends React.Component {
     const rawData = this.props.rawData;
     // console.log('rawData', rawData);
 
-    // find latest date we have in the data
-    let selectedDate = new Date();
-    if (rawData.length > 0) {
-      selectedDate = new Date(Math.max.apply(null, rawData[0].date.map(date => new Date(date))));
+    if (!this.geoJson || this.geoJson.features.length == 0) {
+      // find latest date we have in the data
+      let selectedDate = new Date();
+      if (rawData.length > 0) {
+        selectedDate = new Date(Math.max.apply(null, rawData[0].date.map(date => new Date(date))));
+      }
+      this.geoJson =this.convertDataToGeoJson(rawData, selectedDate);
     }
 
-    const geoJson = this.convertDataToGeoJson(rawData, selectedDate);
-
-    let maxValue = Math.max(...geoJson.features.map(e => e.properties.confirmed));
-    const minDotSize = 2;
+    let maxValue = Math.max(...this.geoJson.features.map(e => e.properties.confirmed));
+    const minDotSize = 3;
     const maxDotSize = 30;
 
-    if (!rawData || rawData.length == 0 || geoJson.features.length == 0) {
-      geoJson.features = [];
+    if (!rawData || rawData.length == 0 || this.geoJson.features.length == 0) {
+      this.geoJson.features = [];
       maxValue = 2;
     }
 
@@ -170,7 +175,7 @@ class WorldMapChart extends React.Component {
           onHover={this._onHover}
         >
           {this._renderPopup()}
-          <ReactMapGL.Source type='geojson' data={geoJson}>
+          <ReactMapGL.Source type='geojson' data={this.geoJson}>
             <ReactMapGL.Layer
               id='confirmed'
               type='circle'
