@@ -8,6 +8,10 @@ import ControlPanel from '../ControlPanel';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './IllinoisMapChart.less';
 
+const numberWithCommas = x => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 class IllinoisMapChart extends React.Component {
   constructor(props) {
     super(props);
@@ -78,7 +82,7 @@ class IllinoisMapChart extends React.Component {
       return (
         <ReactMapGL.Popup longitude={hoverInfo.lngLat[0]} latitude={hoverInfo.lngLat[1]} closeButton={false}>
           <div className='location-info'>
-            {hoverInfo.locationName}: {hoverInfo.confirmed} cases
+            {hoverInfo.locationName}: {numberWithCommas(hoverInfo.confirmed)} cases
           </div>
         </ReactMapGL.Popup>
       );
