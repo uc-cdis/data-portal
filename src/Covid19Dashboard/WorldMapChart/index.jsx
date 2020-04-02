@@ -9,7 +9,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import './WorldMapChart.less';
 
 const numberWithCommas = x => {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return x ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0;
 }
 
 class WorldMapChart extends React.Component {
@@ -56,17 +56,25 @@ class WorldMapChart extends React.Component {
 
     event.features.forEach((feature) => {
       if (feature.layer.id == 'confirmed') {
-        const state = feature.properties.province_state;
-        const county = feature.properties.county;
-        const cases = feature.properties.confirmed;
-        let locationStr = feature.properties.country_region;
-        locationStr = (state && state != 'null' ? `${state}, ` : '') + locationStr
-        locationStr = (county && county != 'null' ? `${county}, ` : '') + locationStr
-        hoverInfo = {
-          lngLat: event.lngLat,
-          locationName: locationStr,
-          confirmed: cases && cases != 'null' ? cases : 0,
-        };
+        let cases = feature.properties.confirmed;
+        cases = cases && cases != 'null' ? cases : 0;
+        if (feature.properties.cluster) {
+          hoverInfo = {
+            lngLat: event.lngLat,
+            hoverText: `${numberWithCommas(cases)} cases`
+          };
+        }
+        else {
+          const state = feature.properties.province_state;
+          const county = feature.properties.county;
+          let locationName = feature.properties.country_region;
+          locationName = (state && state != 'null' ? `${state}, ` : '') + locationName
+          locationName = (county && county != 'null' ? `${county}, ` : '') + locationName
+          hoverInfo = {
+            lngLat: event.lngLat,
+            hoverText: `${locationName}: ${numberWithCommas(cases)} cases`
+          };
+        }
       }
     });
 
@@ -75,13 +83,13 @@ class WorldMapChart extends React.Component {
     });
   };
 
-  _renderPopup() {
+  _renderHoverPopup() {
     const { hoverInfo } = this.state;
     if (hoverInfo) {
       return (
         <ReactMapGL.Popup longitude={hoverInfo.lngLat[0]} latitude={hoverInfo.lngLat[1]} closeButton={false}>
           <div className='location-info'>
-            {hoverInfo.locationName}: {numberWithCommas(hoverInfo.confirmed)} cases
+            {hoverInfo.hoverText}
           </div>
         </ReactMapGL.Popup>
       );
@@ -148,8 +156,8 @@ class WorldMapChart extends React.Component {
     }
 
     let maxValue = Math.max(...this.geoJson.features.map(e => e.properties.confirmed));
-    const minDotSize = 3;
-    const maxDotSize = 30;
+    const minDotSize = 5;
+    const maxDotSize = 40;
 
     if (!rawData || rawData.length == 0 || this.geoJson.features.length == 0) {
       this.geoJson.features = [];
@@ -181,8 +189,16 @@ class WorldMapChart extends React.Component {
           dragRotate={false}
           touchRotate={false}
         >
-          {this._renderPopup()}
-          <ReactMapGL.Source type='geojson' data={this.geoJson}>
+          {this._renderHoverPopup()}
+          <ReactMapGL.Source
+            type='geojson'
+            data={this.geoJson}
+            cluster={true}
+            clusterMaxZoom={8}
+            clusterProperties={{
+              "confirmed": ["+", ["get", "confirmed"]],
+            }}
+          >
             <ReactMapGL.Layer
               id='confirmed'
               type='circle'
