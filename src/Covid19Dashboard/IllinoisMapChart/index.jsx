@@ -8,6 +8,8 @@ import ControlPanel from '../ControlPanel';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './IllinoisMapChart.less';
 
+import countyData from '../c_03mr20'
+
 const numberWithCommas = x => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
@@ -17,6 +19,10 @@ class IllinoisMapChart extends React.Component {
     super(props);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.geoJson = null;
+    this.counties = {
+      ...countyData,
+      features: countyData.features.filter(f => f.properties.STATE == 'IL')
+    };
     this.state = {
       mapSize: {
         width: '100%',
@@ -191,27 +197,14 @@ class IllinoisMapChart extends React.Component {
           // ]}
         >
           {this._renderPopup()}
-          <ReactMapGL.Source type='geojson' data={this.geoJson}>
+          <ReactMapGL.Source type='geojson' data={this.counties}>
             <ReactMapGL.Layer
               id='confirmed'
-              type='circle'
+              type='fill'
               paint={{
-                'circle-radius': [
-                  'interpolate',
-                  ['linear'],
-                  ['number', ['get', 'confirmed']],
-                  0, 0,
-                  1, minDotSize,
-                  maxValue, maxDotSize,
-                ],
-                'circle-color': [
-                  'interpolate',
-                  ['linear'],
-                  ['number', ['get', 'confirmed']],
-                  ...colorsAsList,
-                ],
-                'circle-opacity': 0.8,
-              }}
+                    'fill-color': '#555',
+                    'fill-opacity': 0.5
+                 }}
               // filter={['==', ['number', ['get', 'date']], 12]}
             />
             {/* <ReactMapGL.Layer
