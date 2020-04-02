@@ -57,6 +57,7 @@ class WorldMapChart extends React.Component {
     event.features.forEach((feature) => {
       if (feature.layer.id == 'confirmed') {
         let cases = feature.properties.confirmed;
+        // console.log(feature.properties)
         cases = cases && cases != 'null' ? cases : 0;
         if (feature.properties.cluster) {
           hoverInfo = {
@@ -113,6 +114,8 @@ class WorldMapChart extends React.Component {
 
         const confirmed = location.confirmed[i];
         const deaths = location.deaths[i];
+        const recovered = location.recovered[i];
+        const testing = location.testing[i];
         const feature = {
           type: 'Feature',
           geometry: {
@@ -127,6 +130,8 @@ class WorldMapChart extends React.Component {
             'marker-symbol': 'monument',
             confirmed: confirmed != null ? (+confirmed) : 0,
             deaths: deaths != null ? (+deaths) : 0,
+            recovered: recovered != null ? (+recovered) : 0,
+            testing: testing != null ? (+testing) : 0,
           },
         };
         new_features.push(feature);
@@ -156,7 +161,7 @@ class WorldMapChart extends React.Component {
     }
 
     let maxValue = Math.max(...this.geoJson.features.map(e => e.properties.confirmed));
-    const minDotSize = 5;
+    const minDotSize = 2;
     const maxDotSize = 40;
 
     if (!rawData || rawData.length == 0 || this.geoJson.features.length == 0) {
@@ -193,11 +198,11 @@ class WorldMapChart extends React.Component {
           <ReactMapGL.Source
             type='geojson'
             data={this.geoJson}
-            cluster={true}
-            clusterMaxZoom={8}
-            clusterProperties={{
-              "confirmed": ["+", ["get", "confirmed"]],
-            }}
+            // cluster={true}
+            // clusterMaxZoom={8}
+            // clusterProperties={{
+            //   "confirmed": ["+", ["get", "confirmed"]],
+            // }}
           >
             <ReactMapGL.Layer
               id='confirmed'
@@ -208,8 +213,12 @@ class WorldMapChart extends React.Component {
                   ['linear'],
                   ['number', ['get', 'confirmed']],
                   0, 0,
-                  1, minDotSize,
-                  maxValue, maxDotSize,
+                  1, 2,
+                  10, 5,
+                  100, 10,
+                  1000, 15,
+                  5000, 20,
+                  maxValue, 25,
                 ],
                 'circle-color': [
                   'interpolate',
