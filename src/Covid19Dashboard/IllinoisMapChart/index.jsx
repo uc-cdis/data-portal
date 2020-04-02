@@ -21,7 +21,7 @@ class IllinoisMapChart extends React.Component {
     this.geoJson = null;
     this.counties = {
       ...countyData,
-      features: countyData.features.filter(f => f.properties.STATE == 'IL')
+      features: countyData.features.filter(f => f.properties.STATE == 'IL' && f.properties.FIPS != '17999')
     };
     this.state = {
       mapSize: {
@@ -63,10 +63,10 @@ class IllinoisMapChart extends React.Component {
 
     event.features.forEach((feature) => {
       if (feature.layer.id == 'confirmed') {
-        const state = feature.properties.province_state;
-        const county = feature.properties.county;
+        const state = feature.properties.STATE;
+        const county = feature.properties.COUNTYNAME;
         const cases = feature.properties.confirmed;
-        let locationStr = feature.properties.country_region;
+        let locationStr = 'USA'; //feature.properties.country_region;
         locationStr = (state && state != 'null' ? `${state}, ` : '') + locationStr
         locationStr = (county && county != 'null' ? `${county}, ` : '') + locationStr
         hoverInfo = {
@@ -96,9 +96,9 @@ class IllinoisMapChart extends React.Component {
     return null;
   }
 
-  convertDataToGeoJson(rawData, selectedDate) {
-    const features = rawData.reduce((res, location) => {
-      const new_features = [];
+  convertDataToDict(rawData, selectedDate) {
+    var filteredFeatures = {};
+    rawData.reduce((res, location) => {
       if (location.project_id != 'open-JHU') {
         // we are getting _all_ the location data from Guppy because there
         // is no way to filter by project using the GuppyWrapper. So have
@@ -112,35 +112,27 @@ class IllinoisMapChart extends React.Component {
         if (new Date(date).getTime() != selectedDate.getTime()) {
           return;
         }
-
-        const confirmed = location.confirmed[i];
-        const deaths = location.deaths[i];
-        const feature = {
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [location.longitude, location.latitude],
-          },
-          properties: {
-            country_region: location.country_region,
-            province_state: location.province_state,
-            county: location.county,
-            date,
-            'marker-symbol': 'monument',
-            confirmed: confirmed != null ? (+confirmed) : 0,
-            deaths: deaths != null ? (+deaths) : 0,
-          },
-        };
-        new_features.push(feature);
+        res[location.FIPS] = {
+        'confirmed': location.confirmed[i],
+        'deaths': location.deaths[i],
+        }
       });
-      return res.concat(new_features);
-    }, []);
-    // console.log('features', features[0])
+      return res;
+    }, filteredFeatures);
+    return filteredFeatures;
+  }
 
+  convertDataToGeoJson(fipsData) {
     const geoJson = {
-      type: 'FeatureCollection',
-      features,
+      ...this.counties,
+      features: this.counties.features.map((location) => {
+        if (location.properties.FIPS in fipsData) {
+          location.properties.confirmed = fipsData[location.properties.FIPS].confirmed;
+        }
+        return location;
+      }),
     };
+    
     return geoJson;
   }
 
@@ -154,7 +146,8 @@ class IllinoisMapChart extends React.Component {
       if (rawData.length > 0) {
         selectedDate = new Date(Math.max.apply(null, rawData[0].date.map(date => new Date(date))));
       }
-      this.geoJson =this.convertDataToGeoJson(rawData, selectedDate);
+      const fipsData = this.convertDataToDict(rawData, selectedDate);
+      this.geoJson =this.convertDataToGeoJson(fipsData);
     }
 
     let maxValue = Math.max(...this.geoJson.features.map(e => e.properties.confirmed));
@@ -197,7 +190,7 @@ class IllinoisMapChart extends React.Component {
           // ]}
         >
           {this._renderPopup()}
-          <ReactMapGL.Source type='geojson' data={this.counties}>
+          <ReactMapGL.Source type='geojson' data={this.geoJson}>
             <ReactMapGL.Layer
               id='confirmed'
               type='fill'
