@@ -127,7 +127,9 @@ class IllinoisMapChart extends React.Component {
       ...this.counties,
       features: this.counties.features.map((location) => {
         if (location.properties.FIPS in fipsData) {
-          location.properties.confirmed = fipsData[location.properties.FIPS].confirmed;
+          location.properties.confirmed = Number(fipsData[location.properties.FIPS].confirmed);
+        } else {
+          location.properties.confirmed = 0;
         }
         return location;
       }),
@@ -198,7 +200,7 @@ class IllinoisMapChart extends React.Component {
                   'fill-color': [
                     'interpolate',
                     ['linear'],
-                    ['get', 'confirmed'],
+                    ['number', ['get', 'confirmed']],
                     0,
                     '#F2F12D',
                     50,
