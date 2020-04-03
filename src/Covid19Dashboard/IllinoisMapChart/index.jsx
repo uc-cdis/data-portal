@@ -52,10 +52,6 @@ class IllinoisMapChart extends React.Component {
     this.setState({ mapSize: { height: window.innerHeight - 221 } });
   }
 
-  // onAfterDateSliderChange(e) {
-  //   console.log(e)
-  // }
-
   _onHover = (event) => {
     let hoverInfo = null;
 
@@ -66,7 +62,7 @@ class IllinoisMapChart extends React.Component {
         const state = feature.properties.STATE;
         const county = feature.properties.COUNTYNAME;
         const cases = feature.properties.confirmed;
-        let locationStr = 'USA'; //feature.properties.country_region;
+        let locationStr = 'US';
         locationStr = (state && state != 'null' ? `${state}, ` : '') + locationStr
         locationStr = (county && county != 'null' ? `${county}, ` : '') + locationStr
         hoverInfo = {
@@ -152,23 +148,17 @@ class IllinoisMapChart extends React.Component {
       this.geoJson =this.convertDataToGeoJson(fipsData);
     }
 
-    let maxValue = Math.max(...this.geoJson.features.map(e => e.properties.confirmed));
-    const minDotSize = 5;
-    const maxDotSize = 30;
-
-    if (!rawData || rawData.length == 0 || this.geoJson.features.length == 0) {
-      this.geoJson.features = [];
-      maxValue = 2;
-    }
-
     const colors = {
       0: '#fff',
-      1: '#aa5e79',
-      // 10: '#3BB3C3',
-      // 100: '#669EC4',
-      // 1000: '#8B88B6',
-      // 10000: '#A2719B',
-      // 50000: '#aa5e79',
+      1: '#f7f787',
+      20: '#EED322',
+      50: '#E6B71E',
+      100: '#DA9C20',
+      250: '#CA8323',
+      500: '#B86B25',
+      750: '#A25626',
+      1000: '#8B4225',
+      2500: '#aa5e79'
     };
     const colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
 
@@ -201,101 +191,17 @@ class IllinoisMapChart extends React.Component {
                     'interpolate',
                     ['linear'],
                     ['number', ['get', 'confirmed']],
-                    0,
-                    '#F2F12D',
-                    50,
-                    '#EED322',
-                    75,
-                    '#E6B71E',
-                    100,
-                    '#DA9C20',
-                    250,
-                    '#CA8323',
-                    500,
-                    '#B86B25',
-                    750,
-                    '#A25626',
-                    1000,
-                    '#8B4225',
-                    2500,
-                    '#723122'
+                    ...colorsAsList
                     ],
-                    'fill-opacity': 0.5
+                    'fill-opacity': 0.6
                  }}
-              // filter={['==', ['number', ['get', 'date']], 12]}
             />
-            {/* <ReactMapGL.Layer
-              id='confirmed_fill'
-              type='fill'
-              paint={{
-                'fill-color': {
-                  property: 'percentile',
-                  stops: [
-                    [0, '#3288bd'],
-                    [1, '#66c2a5'],
-                    [2, '#abdda4'],
-                    [3, '#e6f598'],
-                    [4, '#ffffbf'],
-                    [5, '#fee08b'],
-                    [6, '#fdae61'],
-                    [7, '#f46d43'],
-                    [8, '#d53e4f']
-                  ]
-                },
-                // 'fill-color': [
-                //   'interpolate',
-                //   ['linear'],
-                //   ['number', ['get', 'confirmed']],
-                //   ...colorsAsList
-                // ],
-              }}
-            /> */}
           </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
         <ControlPanel
           containerComponent={this.props.containerComponent}
           settings={this.state}
-          // onChange={this._updateSettings}
         />
-        {
-        // TODO fix or remove
-          false && <div className='console'>
-            <h1>COVID-19</h1>
-            <div className='session'>
-              <h2>Confirmed cases</h2>
-              <div className='row colors' />
-              <div className='row labels'>
-                <div className='label'>0</div>
-                <div className='label'>10</div>
-                <div className='label'>100</div>
-                <div className='label'>1000</div>
-                <div className='label'>10000</div>
-                <div className='label'>50000</div>
-              </div>
-            </div>
-            <div className='session' id='sliderbar'>
-              <h2>Date: <label id='active-hour'>12PM</label></h2>
-              {/* <Range
-              className='g3-range-filter__slider'
-              min={1}
-              max={4}
-              value={[3, 3.5]}
-              // onChange={e => this.onSliderChange(e)}
-              onAfterChange={() => this.onAfterDateSliderChange()}
-              step={0.5}
-            /> */}
-            </div>
-          </div>
-        }
-        {/* <Range
-              className='g3-range-filter__slider'
-              min={1}
-              max={4}
-              value={[3, 3.5]}
-              // onChange={e => this.onSliderChange(e)}
-              onAfterChange={() => this.onAfterDateSliderChange()}
-              step={0.5}
-            /> */}
       </div>
     );
   }
