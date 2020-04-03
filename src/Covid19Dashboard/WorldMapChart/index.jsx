@@ -24,8 +24,8 @@ class WorldMapChart extends React.Component {
       },
       viewport: {
         longitude: 0,
-        latitude: 0,
-        zoom: 0,
+        latitude: 10,
+        zoom: 1,
         bearing: 0,
         pitch: 0,
       },
@@ -161,12 +161,14 @@ class WorldMapChart extends React.Component {
     }
 
     let maxValue = Math.max(...this.geoJson.features.map(e => e.properties.confirmed));
-    const minDotSize = 2;
-    const maxDotSize = 40;
+    // const minDotSize = 2;
+    // const maxDotSize = 40;
 
     if (!rawData || rawData.length == 0 || this.geoJson.features.length == 0) {
       this.geoJson.features = [];
-      maxValue = 2;
+      // we need maxValue to be more than the max value in
+      // ReactMapGL.Layer.paint.interpolate keys to avoid mapbox errors
+      maxValue = 9999999;
     }
 
     const colors = {
