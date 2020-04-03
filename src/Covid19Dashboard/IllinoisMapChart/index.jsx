@@ -195,7 +195,29 @@ class IllinoisMapChart extends React.Component {
               id='confirmed'
               type='fill'
               paint={{
-                    'fill-color': '#555',
+                  'fill-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', 'confirmed'],
+                    0,
+                    '#F2F12D',
+                    50,
+                    '#EED322',
+                    75,
+                    '#E6B71E',
+                    100,
+                    '#DA9C20',
+                    250,
+                    '#CA8323',
+                    500,
+                    '#B86B25',
+                    750,
+                    '#A25626',
+                    1000,
+                    '#8B4225',
+                    2500,
+                    '#723122'
+                    ],
                     'fill-opacity': 0.5
                  }}
               // filter={['==', ['number', ['get', 'date']], 12]}
