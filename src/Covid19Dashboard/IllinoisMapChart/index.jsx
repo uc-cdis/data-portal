@@ -194,9 +194,8 @@ class IllinoisMapChart extends React.Component {
   }
 
   formatLocationData = data => {
-    let sortedData = data.date.sort((a, b) => new Date(a) - new Date(b));
     let max = 0;
-    sortedData = sortedData.map((date, i) => {
+    let sortedData = data.date.map((date, i) => {
       max = Math.max(max, data.confirmed[i], data.deaths[i]);
       return {
         date,
@@ -204,6 +203,7 @@ class IllinoisMapChart extends React.Component {
         deaths: data.deaths[i],
       }
     });
+    sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
     return { data: sortedData, max };
   }
 
