@@ -131,7 +131,7 @@ class IllinoisMapChart extends React.Component {
         return location;
       }),
     };
-    
+
     return geoJson;
   }
 
@@ -203,6 +203,7 @@ class IllinoisMapChart extends React.Component {
         <ControlPanel
           containerComponent={this.props.containerComponent}
           settings={this.state}
+          colors={colors}
         />
       </div>
     );

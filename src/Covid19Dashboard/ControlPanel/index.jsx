@@ -4,7 +4,7 @@ import './ControlPanel.less';
 
 export default class ControlPanel extends PureComponent {
   render() {
-    const { settings } = this.props;
+    const { settings, colors } = this.props;
 
     return (
       <div className='control-panel'>
@@ -12,7 +12,7 @@ export default class ControlPanel extends PureComponent {
         <p>
           Data source: <a href='https://systems.jhu.edu'>Johns Hopkins University CSSE</a>
         </p>
-        {settings.showLegend ? <LegendPanel /> : null }
+        {settings.showLegend ? <LegendPanel colors={colors}/> : null }
 
         {/* TODO: fix or remove */}
         {/* <hr />
