@@ -37,6 +37,7 @@ class IllinoisMapChart extends React.Component {
         pitch: 0,
       },
       hoverInfo: null,
+      showLegend: true,
     };
   }
 

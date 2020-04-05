@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-
+import LegendPanel from '../LegendPanel';
 import './ControlPanel.less';
 
 export default class ControlPanel extends PureComponent {
@@ -12,6 +12,7 @@ export default class ControlPanel extends PureComponent {
         <p>
           Data source: <a href='https://systems.jhu.edu'>Johns Hopkins University CSSE</a>
         </p>
+        {settings.showLegend ? <LegendPanel /> : null }
 
         {/* TODO: fix or remove */}
         {/* <hr />
