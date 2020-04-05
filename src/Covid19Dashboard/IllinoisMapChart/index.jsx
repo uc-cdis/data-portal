@@ -187,6 +187,7 @@ class IllinoisMapChart extends React.Component {
             <ReactMapGL.Layer
               id='confirmed'
               type='fill'
+              beforeId='waterway-label'
               paint={{
                   'fill-color': [
                     'interpolate',
