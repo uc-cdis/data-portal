@@ -309,8 +309,8 @@ class IllinoisMapChart extends React.Component {
                     <YAxis type="number" domain={[0, selectedLocationData.max || 'auto']} />
                     <Tooltip content={this.renderTooltip} />
                     <Legend />
+                    <Line type="monotone" dataKey="deaths" stroke="#aa5e79" />
                     <Line type="monotone" dataKey="confirmed" stroke="#8884d8" activeDot={{ r: 8 }} />
-                    <Line type="monotone" dataKey="deaths" stroke="#82ca9d" />
                   </LineChart>
                 </ResponsiveContainer>
             </Popup>
