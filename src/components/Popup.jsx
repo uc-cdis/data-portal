@@ -8,7 +8,7 @@ import './Popup.less';
 const Popup = ({
   title, message, lines, error,
   iconName, leftButtons, rightButtons,
-  onClose,
+  onClose, children,
 }) => (
   <div className='popup__mask'>
     <div className='popup__box'>
@@ -52,6 +52,7 @@ const Popup = ({
             }
           </pre>
         }
+        { children }
         { error && <h6 className='popup__error'>Error</h6> }
         { error && <code>{error}</code> }
       </div>
@@ -123,6 +124,7 @@ Popup.propTypes = {
   rightButtons: PropTypes.arrayOf(buttonType),
   title: PropTypes.string,
   onClose: PropTypes.func,
+  children: PropTypes.node,
 };
 
 Popup.defaultProps = {
@@ -134,6 +136,7 @@ Popup.defaultProps = {
   rightButtons: [],
   title: '',
   onClose: null,
+  children: null,
 };
 
 export default Popup;
