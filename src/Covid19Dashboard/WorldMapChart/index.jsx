@@ -69,6 +69,8 @@ class WorldMapChart extends React.Component {
       }
       let confirmed = feature.properties.confirmed;
       confirmed = confirmed && confirmed != 'null' ? confirmed : 0;
+      let deaths = feature.properties.deaths;
+      deaths = deaths && deaths != 'null' ? deaths : 0;
 
       const state = feature.properties.province_state;
       const county = feature.properties.county;
@@ -81,7 +83,11 @@ class WorldMapChart extends React.Component {
       }
       hoverInfo = {
         lngLat: event.lngLat,
-        hoverText: `${locationName}: ${numberWithCommas(confirmed)} cases`
+        locationName: locationName,
+        values: {
+          "confirmed cases": numberWithCommas(confirmed),
+          "deaths": numberWithCommas(deaths),
+        }
       };
     });
 
@@ -96,7 +102,14 @@ class WorldMapChart extends React.Component {
       return (
         <ReactMapGL.Popup longitude={hoverInfo.lngLat[0]} latitude={hoverInfo.lngLat[1]} closeButton={false}>
           <div className='location-info'>
-            {hoverInfo.hoverText}
+            <h4>
+              {hoverInfo.locationName}
+            </h4>
+            {
+              Object.entries(hoverInfo.values).map(
+                (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>
+              )
+            }
           </div>
         </ReactMapGL.Popup>
       );

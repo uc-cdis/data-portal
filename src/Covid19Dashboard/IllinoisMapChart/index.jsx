@@ -78,7 +78,9 @@ class IllinoisMapChart extends React.Component {
   // }
 
   updateDimensions() {
-    this.setState({ mapSize: { height: window.innerHeight - 221 } });
+    this.setState({
+      mapSize: { width: '100%', height: window.innerHeight - 221 }
+    });
   }
 
   _onHover = (event) => {
@@ -87,19 +89,27 @@ class IllinoisMapChart extends React.Component {
     if (!event.features) { return; }
 
     event.features.forEach((feature) => {
-      if (feature.layer.id == 'confirmed-choropleth') {
-        const state = feature.properties.STATE;
-        const county = feature.properties.COUNTYNAME;
-        const cases = feature.properties.confirmed;
-        let locationStr = 'US';
-        locationStr = (state && state != 'null' ? `${state}, ` : '') + locationStr
-        locationStr = (county && county != 'null' ? `${county}, ` : '') + locationStr
-        hoverInfo = {
-          lngLat: event.lngLat,
-          locationName: locationStr,
-          confirmed: cases && cases != 'null' ? cases : 0,
-        };
+      if (feature.layer.id != 'confirmed-choropleth') {
+        return;
       }
+      let confirmed = feature.properties.confirmed;
+      confirmed = confirmed && confirmed != 'null' ? confirmed : 0;
+      let deaths = feature.properties.deaths;
+      deaths = deaths && deaths != 'null' ? deaths : 0;
+
+      const state = feature.properties.STATE;
+      const county = feature.properties.COUNTYNAME;
+      let locationName = 'US';
+      locationName = (state && state != 'null' ? `${state}, ` : '') + locationName
+      locationName = (county && county != 'null' ? `${county}, ` : '') + locationName
+      hoverInfo = {
+        lngLat: event.lngLat,
+        locationName: locationName,
+        values: {
+          "confirmed cases": numberWithCommas(confirmed),
+          "deaths": numberWithCommas(deaths),
+        }
+      };
     });
 
     this.setState({
@@ -113,7 +123,14 @@ class IllinoisMapChart extends React.Component {
       return (
         <ReactMapGL.Popup longitude={hoverInfo.lngLat[0]} latitude={hoverInfo.lngLat[1]} closeButton={false}>
           <div className='location-info'>
-            {hoverInfo.locationName}: {numberWithCommas(hoverInfo.confirmed)} cases
+            <h4>
+              {hoverInfo.locationName}
+            </h4>
+            {
+              Object.entries(hoverInfo.values).map(
+                (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>
+              )
+            }
           </div>
         </ReactMapGL.Popup>
       );
@@ -151,6 +168,7 @@ class IllinoisMapChart extends React.Component {
       features: this.counties.features.map((location) => {
         if (location.properties.FIPS in fipsData) {
           location.properties.confirmed = Number(fipsData[location.properties.FIPS].confirmed);
+          location.properties.deaths = Number(fipsData[location.properties.FIPS].deaths);
           const allData = fipsData[location.properties.FIPS].allData;
           location.properties.allData = {
             confirmed: allData.confirmed,
@@ -161,6 +179,7 @@ class IllinoisMapChart extends React.Component {
           }
         } else {
           location.properties.confirmed = 0;
+          location.properties.deaths = 0;
           location.properties.allData = {};
         }
         return location;
