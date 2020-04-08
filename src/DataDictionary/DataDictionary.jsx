@@ -59,14 +59,20 @@ class DataDictionary extends React.Component {
         <div
           className='data-dictionary__main'
         >
-          <div className={`data-dictionary__table ${!this.props.isGraphView ? '' : 'data-dictionary__table--hidden'}`}>
-            <ReduxDataDictionaryTable />
-          </div>
-          <div className={`data-dictionary__graph ${this.props.isGraphView ? '' : 'data-dictionary__graph--hidden'}`}>
-            <DataDictionaryGraph
-              onClearSearchResult={this.handleClearSearchResult}
-            />
-          </div>
+          { this.props.isGraphView
+            ? (
+              <div className={`data-dictionary__graph ${this.props.isGraphView ? '' : 'data-dictionary__graph--hidden'}`}>
+                <DataDictionaryGraph
+                  onClearSearchResult={this.handleClearSearchResult}
+                />
+              </div>
+            )
+            : (
+              <div className={`data-dictionary__table ${!this.props.isGraphView ? '' : 'data-dictionary__table--hidden'}`}>
+                <ReduxDataDictionaryTable />
+              </div>
+            )
+          }
         </div>
       </div>
     );
