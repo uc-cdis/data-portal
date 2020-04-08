@@ -33,6 +33,7 @@ class DataDictionary extends React.Component {
             <span
               className={`data-dictionary__switch-button ${!this.props.isGraphView ? '' : 'data-dictionary__switch-button--active'}`}
               onClick={() => { this.setGraphView(true); }}
+              onKeyPress={() => { this.setGraphView(true); }}
               role='button'
               tabIndex={0}
             >
@@ -41,6 +42,7 @@ class DataDictionary extends React.Component {
             <span
               className={`data-dictionary__switch-button ${this.props.isGraphView ? '' : 'data-dictionary__switch-button--active'}`}
               onClick={() => { this.setGraphView(false); }}
+              onKeyPress={() => { this.setGraphView(true); }}
               role='button'
               tabIndex={0}
             >
