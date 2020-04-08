@@ -1,16 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import ReactEcharts from 'echarts-for-react';
-// import Slider from 'react-slick';
-import { Range } from 'rc-slider';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-
-// import { fetchWithCreds } from '../actions';
-// import { colorsForCharts, guppyGraphQLUrl } from '../localconf';
 
 import WorldMapChart from './WorldMapChart';
 import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
+import PlotChart from './PlotChart';
 
 import 'react-tabs/style/react-tabs.less';
 import './Covid19Dashboard.less';
@@ -128,9 +123,8 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 <WorldMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
-                  {/* <ChartPlaceholder /> */}
-                  {/* <ChartPlaceholder /> */}
-                  {/* <ChartPlaceholder /> */}
+                  {/* <PlotChart />
+                  <PlotChart /> */}
                 </div>
               </div>
             </TabPanel>
@@ -149,7 +143,9 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 <IllinoisMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
-                  {/* <ChartPlaceholder /> */}
+                  {/* <PlotChart />
+                  <PlotChart />
+                  <PlotChart /> */}
                 </div>
               </div>
             </TabPanel>

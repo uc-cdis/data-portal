@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import LegendPanel from './LegendPanel';
 import MapStylePanel from './MapStylePanel';
+
 import './ControlPanel.less';
 
 class ControlPanel extends PureComponent {

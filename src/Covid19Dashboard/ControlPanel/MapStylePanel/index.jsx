@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+
 import './MapStylePanel.less';
 
 class MapStylePanel extends PureComponent {

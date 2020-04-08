@@ -247,10 +247,16 @@ class IllinoisMapChart extends React.Component {
     };
     const colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
     const selectedLocationData = selectedLocation ? this.formatLocationData(selectedLocation.data) : null;
+
     return (
       <div className='map-chart'>
+        <ControlPanel
+          showMapStyle={false}
+          showLegend={this.state.selectedLayer != 'confirmed-choropleth'}
+          colors={colors}
+        />
         <ReactMapGL.InteractiveMap
-          className='map'
+          className='.map-chart__mapgl-map'
           mapboxApiAccessToken='pk.eyJ1IjoicmliZXlyZSIsImEiOiJjazhkbmNqMGcwdnphM2RuczBsZzVwYXFhIn0.dB-xnlG7S7WEeMuatMBQkQ' // TODO https://uber.github.io/react-map-gl/docs/get-started/mapbox-tokens
           mapStyle='mapbox://styles/mapbox/streets-v11'
           {...this.state.viewport}
@@ -285,11 +291,6 @@ class IllinoisMapChart extends React.Component {
             />
           </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
-        <ControlPanel
-          showMapStyle={false}
-          showLegend={this.state.selectedLayer != 'confirmed-choropleth'}
-          colors={colors}
-        />
         {
           this.state.selectedLocation ?
             <Popup

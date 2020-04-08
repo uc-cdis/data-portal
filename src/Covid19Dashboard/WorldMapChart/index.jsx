@@ -53,7 +53,9 @@ class WorldMapChart extends React.Component {
   // }
 
   updateDimensions() {
-    this.setState({ mapSize: { height: window.innerHeight - 221 } });
+    this.setState({
+      mapSize: { width: '100%', height: window.innerHeight - 221 }
+    });
   }
 
   _onHover = (event) => {
@@ -233,14 +235,13 @@ class WorldMapChart extends React.Component {
       }
     }
 
-    let colors = {}, colorsAsList = [], dotSizes = {}, dotSizesAsList = [];
+    let colors = {0: '#FFF'}, dotSizes = {0: 0, 1: 2};
     // config for dot distribution map
     if (this.state.selectedLayer == 'confirmed-dots') {
       colors = {
         0: '#FFF',
         1: '#AA5E79',
       };
-      colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
       dotSizes = {
         0: 0,
         1: 2,
@@ -252,7 +253,6 @@ class WorldMapChart extends React.Component {
         50000: 23,
         100000: 27,
       };
-      dotSizesAsList = Object.entries(dotSizes).map(item => [+item[0], item[1]]).flat();
     }
     // config for choropleth map
     else {
@@ -268,13 +268,21 @@ class WorldMapChart extends React.Component {
         50000: '#8B4225',
         100000: '#850001',
       };
-      colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
     }
+    const colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
+    const dotSizesAsList = Object.entries(dotSizes).map(item => [+item[0], item[1]]).flat();
 
     return (
       <div className='map-chart'>
+        <ControlPanel
+          showMapStyle={true}
+          defaultMapStyle={this.state.selectedLayer}
+          onMapStyleChange={layerId => {this.setState({selectedLayer: layerId})}}
+          showLegend={this.state.selectedLayer != 'confirmed-dots'}
+          colors={colors}
+        />
         <ReactMapGL.InteractiveMap
-          className='map'
+          className='map-chart__mapgl-map'
           mapboxApiAccessToken='pk.eyJ1IjoicmliZXlyZSIsImEiOiJjazhkbmNqMGcwdnphM2RuczBsZzVwYXFhIn0.dB-xnlG7S7WEeMuatMBQkQ' // TODO https://uber.github.io/react-map-gl/docs/get-started/mapbox-tokens
           mapStyle='mapbox://styles/mapbox/streets-v11'
           {...this.state.viewport}
@@ -331,13 +339,6 @@ class WorldMapChart extends React.Component {
             />
           </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
-        <ControlPanel
-          showMapStyle={true}
-          defaultMapStyle={this.state.selectedLayer}
-          onMapStyleChange={layerId => {this.setState({selectedLayer: layerId})}}
-          showLegend={this.state.selectedLayer != 'confirmed-dots'}
-          colors={colors}
-        />
       </div>
     );
   }
