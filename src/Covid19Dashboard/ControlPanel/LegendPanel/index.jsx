@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import './LegendPanel.less';
 
-export default class LegendPanel extends PureComponent {
+class LegendPanel extends PureComponent {
 	render() {
 		const { colors } = this.props;
 		return (
@@ -10,7 +10,7 @@ export default class LegendPanel extends PureComponent {
 				<h3>Legend</h3>
 				<div>
 				{
-					Object.keys(colors).map((value, i)=> <p key={value}><span className="legend-panel__item" style={{backgroundColor: colors[value]}}/> {i === Object.keys(colors).length - 1 ? `${value}+` : value}</p>)
+					Object.keys(colors).map((value, i)=> <p key={value}><span className='legend-panel__item' style={{backgroundColor: colors[value]}}/> {i === Object.keys(colors).length - 1 ? `${value}+` : value}</p>)
 				}
 				</div>
 			</div>
@@ -25,3 +25,5 @@ LegendPanel.propTypes = {
 LegendPanel.defaultProps = {
 	colors: {},
 }
+
+export default LegendPanel;

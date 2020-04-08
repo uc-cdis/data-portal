@@ -1,23 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Range } from 'rc-slider';
 import * as ReactMapGL from 'react-map-gl';
 
 import ControlPanel from '../ControlPanel';
+
+// downloaded from https://geojson-maps.ash.ms
+import worldData from '../data/world';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './WorldMapChart.less';
 
 const numberWithCommas = x => {
-  return x ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0;
+  return x ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0;
 }
 
 class WorldMapChart extends React.Component {
   constructor(props) {
     super(props);
     this.updateDimensions = this.updateDimensions.bind(this);
-    this.geoJson = null;
+    this.dotsGeoJson = null;
+    this.choropGeoJson = null;
     this.state = {
+      selectedLayer: 'confirmed-dots',
       mapSize: {
         width: '100%',
         height: window.innerHeight - 221,
@@ -30,11 +34,18 @@ class WorldMapChart extends React.Component {
         pitch: 0,
       },
       hoverInfo: null,
+      selectedDate: props.rawData && props.rawData[0] ? new Date(Math.max.apply(null, props.rawData[0].date.map(date => new Date(date)))) : null,
     };
   }
 
   componentDidMount() {
     window.addEventListener('resize', this.updateDimensions);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.rawData.length !== this.props.rawData.length) {
+      this.setState({ selectedDate: nextProps.rawData && nextProps.rawData[0] ? new Date(Math.max.apply(null, nextProps.rawData[0].date.map(date => new Date(date)))) : null });
+    }
   }
 
   // componentWillUnmount() {
@@ -45,38 +56,31 @@ class WorldMapChart extends React.Component {
     this.setState({ mapSize: { height: window.innerHeight - 221 } });
   }
 
-  // onAfterDateSliderChange(e) {
-  //   console.log(e)
-  // }
-
   _onHover = (event) => {
     let hoverInfo = null;
 
     if (!event.features) { return; }
 
     event.features.forEach((feature) => {
-      if (feature.layer.id == 'confirmed') {
-        let cases = feature.properties.confirmed;
-        // console.log(feature.properties)
-        cases = cases && cases != 'null' ? cases : 0;
-        if (feature.properties.cluster) {
-          hoverInfo = {
-            lngLat: event.lngLat,
-            hoverText: `${numberWithCommas(cases)} cases`
-          };
-        }
-        else {
-          const state = feature.properties.province_state;
-          const county = feature.properties.county;
-          let locationName = feature.properties.country_region;
-          locationName = (state && state != 'null' ? `${state}, ` : '') + locationName
-          locationName = (county && county != 'null' ? `${county}, ` : '') + locationName
-          hoverInfo = {
-            lngLat: event.lngLat,
-            hoverText: `${locationName}: ${numberWithCommas(cases)} cases`
-          };
-        }
+      if (!['confirmed-dots', 'confirmed-choropleth'].includes(feature.layer.id)) {
+        return;
       }
+      let confirmed = feature.properties.confirmed;
+      confirmed = confirmed && confirmed != 'null' ? confirmed : 0;
+
+      const state = feature.properties.province_state;
+      const county = feature.properties.county;
+      let locationName = feature.properties.country_region;
+      locationName = (state && state != 'null' ? `${state}, ` : '') + locationName
+      locationName = (county && county != 'null' ? `${county}, ` : '') + locationName
+      if (!locationName || locationName == 'undefined') {
+        // we don't have data for this location
+        return;
+      }
+      hoverInfo = {
+        lngLat: event.lngLat,
+        hoverText: `${locationName}: ${numberWithCommas(confirmed)} cases`
+      };
     });
 
     this.setState({
@@ -98,7 +102,68 @@ class WorldMapChart extends React.Component {
     return null;
   }
 
-  convertDataToGeoJson(rawData, selectedDate) {
+  convertRawDataToDict(rawData) {
+    var filteredFeatures = {};
+    rawData.reduce((res, location) => {
+      if (location.project_id != 'open-JHU') {
+        // we are getting _all_ the location data from Guppy because there
+        // is no way to filter by project using the GuppyWrapper. So have
+        // to filter on client side
+        return res;
+      }
+      const selectedDateIndex = location.date.findIndex(x => new Date(x).getTime() === this.state.selectedDate.getTime());
+
+      let confirmed = Number(location.confirmed[selectedDateIndex]);
+      let deaths = Number(location.confirmed[selectedDateIndex]);
+      if (!confirmed) {
+        confirmed = 0;
+      }
+      if (!deaths) {
+        deaths = 0;
+      }
+      if (location.iso3 in res) {
+        // aggregation
+        res[location.iso3].province_state = '';
+        res[location.iso3].county = '';
+        res[location.iso3].confirmed += confirmed;
+        res[location.iso3].deaths += deaths;
+      }
+      else {
+        res[location.iso3] = {
+          country_region: location.country_region,
+          province_state: location.province_state,
+          county: location.county,
+          confirmed: confirmed,
+          deaths: deaths,
+          allData: { ...location },
+        }
+      }
+      return res;
+    }, filteredFeatures);
+    return filteredFeatures;
+  }
+
+  addDataToGeoJsonBase(data) {
+    const geoJson = {
+      ...worldData,
+      features: worldData.features.map((location) => {
+        if (location.properties.iso_a3 in data) {
+          location.properties = Object.assign(
+            location.properties,
+            data[location.properties.iso_a3]
+          )
+        } else {
+          location.properties.confirmed = 0;
+          location.properties.allData = {};
+        }
+        return location;
+      }),
+    };
+
+    return geoJson;
+  }
+
+  convertRawDataToGeoJson(rawData) {
     const features = rawData.reduce((res, location) => {
       const new_features = [];
       if (location.project_id != 'open-JHU') {
@@ -108,7 +173,7 @@ class WorldMapChart extends React.Component {
         return res;
       }
       location.date.forEach((date, i) => {
-        if (new Date(date).getTime() != selectedDate.getTime()) {
+        if (new Date(date).getTime() != this.state.selectedDate.getTime()) {
           return;
         }
 
@@ -138,7 +203,6 @@ class WorldMapChart extends React.Component {
       });
       return res.concat(new_features);
     }, []);
-    // console.log('features', features[0])
 
     const geoJson = {
       type: 'FeatureCollection',
@@ -147,39 +211,65 @@ class WorldMapChart extends React.Component {
     return geoJson;
   }
 
+  _is_visible(layer_id){
+    if (this.state.selectedLayer == layer_id) {
+      return 'visible'
+    }
+    return 'none'
+  }
+
   render() {
     const rawData = this.props.rawData;
-    // console.log('rawData', rawData);
 
-    if (!this.geoJson || this.geoJson.features.length == 0) {
-      // find latest date we have in the data
-      let selectedDate = new Date();
-      if (rawData.length > 0) {
-        selectedDate = new Date(Math.max.apply(null, rawData[0].date.map(date => new Date(date))));
+    if (this.state.selectedLayer == 'confirmed-dots') {
+      if (!this.dotsGeoJson || this.dotsGeoJson.features.length == 0) {
+        this.dotsGeoJson = this.convertRawDataToGeoJson(rawData);
       }
-      this.geoJson =this.convertDataToGeoJson(rawData, selectedDate);
+    }
+    else {
+      if (!this.choropGeoJson || this.choropGeoJson.features.length == 0) {
+        const geoJson = this.convertRawDataToDict(rawData);
+        this.choropGeoJson = this.addDataToGeoJsonBase(geoJson);
+      }
     }
 
-    let maxValue = Math.max(...this.geoJson.features.map(e => e.properties.confirmed));
-    // const minDotSize = 2;
-    // const maxDotSize = 40;
-
-    if (!rawData || rawData.length == 0 || this.geoJson.features.length == 0) {
-      this.geoJson.features = [];
-      // we need maxValue to be more than the max value in
-      // ReactMapGL.Layer.paint.interpolate keys to avoid mapbox errors
-      maxValue = 9999999;
+    let colors = {}, colorsAsList = [], dotSizes = {}, dotSizesAsList = [];
+    // config for dot distribution map
+    if (this.state.selectedLayer == 'confirmed-dots') {
+      colors = {
+        0: '#FFF',
+        1: '#AA5E79',
+      };
+      colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
+      dotSizes = {
+        0: 0,
+        1: 2,
+        10: 5,
+        100: 8,
+        1000: 11,
+        5000: 15,
+        10000: 19,
+        50000: 23,
+        100000: 27,
+      };
+      dotSizesAsList = Object.entries(dotSizes).map(item => [+item[0], item[1]]).flat();
     }
-
-    const colors = {
-      0: '#fff',
-      1: '#aa5e79',
-      // 100: '#669EC4',
-      // 1000: '#8B88B6',
-      // 10000: '#A2719B',
-      // 50000: '#aa5e79',
-    };
-    const colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
+    // config for choropleth map
+    else {
+      colors = {
+        0: '#FFF',
+        1: '#F7F787',
+        100: '#EED322',
+        500: '#E6B71E',
+        1000: '#DA9C20',
+        2000: '#CA8323',
+        5000: '#B86B25',
+        10000: '#A25626',
+        20000: '#8B4225',
+        50000: '#850001',
+      };
+      colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
+    }
 
     return (
       <div className='map-chart'>
@@ -189,6 +279,7 @@ class WorldMapChart extends React.Component {
           mapStyle='mapbox://styles/mapbox/streets-v11'
           {...this.state.viewport}
           {...this.state.mapSize} // after viewport to avoid size overwrite
+          minZoom={1}
           onViewportChange={(viewport) => {
             this.setState({ viewport });
           }}
@@ -199,28 +290,18 @@ class WorldMapChart extends React.Component {
           {this._renderHoverPopup()}
           <ReactMapGL.Source
             type='geojson'
-            data={this.geoJson}
-            // cluster={true}
-            // clusterMaxZoom={8}
-            // clusterProperties={{
-            //   "confirmed": ["+", ["get", "confirmed"]],
-            // }}
+            data={this.dotsGeoJson}
           >
             <ReactMapGL.Layer
-              id='confirmed'
+              id='confirmed-dots'
+              layout={{visibility: this._is_visible('confirmed-dots')}}
               type='circle'
               paint={{
                 'circle-radius': [
                   'interpolate',
                   ['linear'],
                   ['number', ['get', 'confirmed']],
-                  0, 0,
-                  1, 2,
-                  10, 5,
-                  100, 10,
-                  1000, 15,
-                  5000, 20,
-                  maxValue, 25,
+                  ...dotSizesAsList
                 ],
                 'circle-color': [
                   'interpolate',
@@ -230,80 +311,33 @@ class WorldMapChart extends React.Component {
                 ],
                 'circle-opacity': 0.8,
               }}
-              // filter={['==', ['number', ['get', 'date']], 12]}
             />
-            {/* <ReactMapGL.Layer
-              id='confirmed_fill'
+          </ReactMapGL.Source>
+          <ReactMapGL.Source type='geojson' data={this.choropGeoJson}>
+            <ReactMapGL.Layer
+              id='confirmed-choropleth'
+              layout={{visibility: this._is_visible('confirmed-choropleth')}}
               type='fill'
+              beforeId='waterway-label'
               paint={{
-                'fill-color': {
-                  property: 'percentile',
-                  stops: [
-                    [0, '#3288bd'],
-                    [1, '#66c2a5'],
-                    [2, '#abdda4'],
-                    [3, '#e6f598'],
-                    [4, '#ffffbf'],
-                    [5, '#fee08b'],
-                    [6, '#fdae61'],
-                    [7, '#f46d43'],
-                    [8, '#d53e4f']
-                  ]
-                },
-                // 'fill-color': [
-                //   'interpolate',
-                //   ['linear'],
-                //   ['number', ['get', 'confirmed']],
-                //   ...colorsAsList
-                // ],
+                'fill-color': [
+                  'interpolate',
+                  ['linear'],
+                  ['number', ['get', 'confirmed']],
+                  ...colorsAsList
+                  ],
+                'fill-opacity': 0.6
               }}
-            /> */}
+            />
           </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
         <ControlPanel
-          containerComponent={this.props.containerComponent}
-          settings={this.state}
-          // onChange={this._updateSettings}
+          showMapStyle={true}
+          defaultMapStyle={this.state.selectedLayer}
+          onMapStyleChange={layerId => {this.setState({selectedLayer: layerId})}}
+          showLegend={this.state.selectedLayer != 'confirmed-dots'}
+          colors={colors}
         />
-        {
-        // TODO fix or remove
-          false && <div className='console'>
-            <h1>COVID-19</h1>
-            <div className='session'>
-              <h2>Confirmed cases</h2>
-              <div className='row colors' />
-              <div className='row labels'>
-                <div className='label'>0</div>
-                <div className='label'>10</div>
-                <div className='label'>100</div>
-                <div className='label'>1000</div>
-                <div className='label'>10000</div>
-                <div className='label'>50000</div>
-              </div>
-            </div>
-            <div className='session' id='sliderbar'>
-              <h2>Date: <label id='active-hour'>12PM</label></h2>
-              {/* <Range
-              className='g3-range-filter__slider'
-              min={1}
-              max={4}
-              value={[3, 3.5]}
-              // onChange={e => this.onSliderChange(e)}
-              onAfterChange={() => this.onAfterDateSliderChange()}
-              step={0.5}
-            /> */}
-            </div>
-          </div>
-        }
-        {/* <Range
-              className='g3-range-filter__slider'
-              min={1}
-              max={4}
-              value={[3, 3.5]}
-              // onChange={e => this.onSliderChange(e)}
-              onAfterChange={() => this.onAfterDateSliderChange()}
-              step={0.5}
-            /> */}
       </div>
     );
   }

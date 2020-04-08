@@ -9,17 +9,17 @@ import {
 import ControlPanel from '../ControlPanel';
 import Popup from '../../components/Popup';
 
+import countyData from '../data/us_counties';
+
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './IllinoisMapChart.less';
 
 
-import countyData from '../c_03mr20'
-
 const numberWithCommas = x => {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-const monthNames = ["Jan", "Feb", "Mar", "April", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov","Dec"];
+const monthNames = ['Jan', 'Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov','Dec'];
 
 class CustomizedAxisTick extends React.Component {
   render() {
@@ -29,7 +29,7 @@ class CustomizedAxisTick extends React.Component {
     const formattedDate = `${monthNames[new Date(payload.value).getMonth()]} ${new Date(payload.value).getDate()}`;
     return (
       <g transform={`translate(${x},${y})`}>
-        <text x={0} y={0} dy={16} textAnchor="end" fill="#666" transform="rotate(-60)">{formattedDate}</text>
+        <text x={0} y={0} dy={16} textAnchor='end' fill='#666' transform='rotate(-60)'>{formattedDate}</text>
       </g>
     );
   }
@@ -58,7 +58,6 @@ class IllinoisMapChart extends React.Component {
         pitch: 0,
       },
       hoverInfo: null,
-      showLegend: true,
       selectedDate: props.rawData && props.rawData[0] ? new Date(Math.max.apply(null, props.rawData[0].date.map(date => new Date(date)))) : null,
       selectedLocation: null,
     };
@@ -88,7 +87,7 @@ class IllinoisMapChart extends React.Component {
     if (!event.features) { return; }
 
     event.features.forEach((feature) => {
-      if (feature.layer.id == 'confirmed') {
+      if (feature.layer.id == 'confirmed-choropleth') {
         const state = feature.properties.STATE;
         const county = feature.properties.COUNTYNAME;
         const cases = feature.properties.confirmed;
@@ -131,7 +130,7 @@ class IllinoisMapChart extends React.Component {
         // to filter on client side
         return res;
       }
-      if (location.province_state != "Illinois") {
+      if (location.province_state != 'Illinois') {
         return res;
       }
       const selectedDateIndex = location.date.findIndex(x => new Date(x).getTime() === this.state.selectedDate.getTime());
@@ -176,7 +175,7 @@ class IllinoisMapChart extends React.Component {
 
     let selectedLocation = null;
     event.features.forEach((feature) => {
-      if (feature.layer.id == 'confirmed') {
+      if (feature.layer.id == 'confirmed-choropleth') {
         const state = feature.properties.STATE;
         const county = feature.properties.COUNTYNAME;
         const fips = feature.properties.FIPS;
@@ -231,12 +230,12 @@ class IllinoisMapChart extends React.Component {
 
     if (!this.geoJson || this.geoJson.features.length == 0) {
       const fipsData = this.convertDataToDict(rawData);
-      this.geoJson =this.convertDataToGeoJson(fipsData);
+      this.geoJson = this.convertDataToGeoJson(fipsData);
     }
 
     const colors = {
-      0: '#fff',
-      1: '#f7f787',
+      0: '#FFF',
+      1: '#F7F787',
       20: '#EED322',
       50: '#E6B71E',
       100: '#DA9C20',
@@ -244,7 +243,7 @@ class IllinoisMapChart extends React.Component {
       500: '#B86B25',
       750: '#A25626',
       1000: '#8B4225',
-      2500: '#aa5e79'
+      2500: '#850001'
     };
     const colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
     const selectedLocationData = selectedLocation ? this.formatLocationData(selectedLocation.data) : null;
@@ -271,7 +270,7 @@ class IllinoisMapChart extends React.Component {
           {this._renderPopup()}
           <ReactMapGL.Source type='geojson' data={this.geoJson}>
             <ReactMapGL.Layer
-              id='confirmed'
+              id='confirmed-choropleth'
               type='fill'
               beforeId='waterway-label'
               paint={{
@@ -287,8 +286,8 @@ class IllinoisMapChart extends React.Component {
           </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
         <ControlPanel
-          containerComponent={this.props.containerComponent}
-          settings={this.state}
+          showMapStyle={false}
+          showLegend={this.state.selectedLayer != 'confirmed-choropleth'}
           colors={colors}
         />
         {
@@ -304,13 +303,13 @@ class IllinoisMapChart extends React.Component {
                       top: 5, right: 30, left: 20, bottom: 5,
                     }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" tick={<CustomizedAxisTick />} interval={1} />
-                    <YAxis type="number" domain={[0, selectedLocationData.max || 'auto']} />
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis dataKey='date' tick={<CustomizedAxisTick />} interval={1} />
+                    <YAxis type='number' domain={[0, selectedLocationData.max || 'auto']} />
                     <Tooltip content={this.renderTooltip} />
                     <Legend />
-                    <Line type="monotone" dataKey="deaths" stroke="#aa5e79" />
-                    <Line type="monotone" dataKey="confirmed" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    <Line type='monotone' dataKey='deaths' stroke='#aa5e79' />
+                    <Line type='monotone' dataKey='confirmed' stroke='#8884d8' activeDot={{ r: 8 }} />
                   </LineChart>
                 </ResponsiveContainer>
             </Popup>
