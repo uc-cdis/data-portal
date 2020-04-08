@@ -265,8 +265,8 @@ class WorldMapChart extends React.Component {
         2000: '#CA8323',
         5000: '#B86B25',
         10000: '#A25626',
-        20000: '#8B4225',
-        50000: '#850001',
+        50000: '#8B4225',
+        100000: '#850001',
       };
       colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
     }

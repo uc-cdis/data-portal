@@ -38,7 +38,7 @@ class Covid19Dashboard extends React.Component {
     };
   }
 
-  render() {
+  get_total_counts(){
     // find latest date we have in the data
     let selectedDate = new Date();
     if (this.props.rawData.length > 0) {
@@ -91,6 +91,11 @@ class Covid19Dashboard extends React.Component {
         }
       });
     });
+    return { confirmed_count, deaths_count, recovered_count };
+  }
+
+  render() {
+    const { confirmed_count, deaths_count, recovered_count } = this.get_total_counts();
 
     return (
       <div className='covid19-dashboard'>
