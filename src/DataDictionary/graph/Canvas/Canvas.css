@@ -12,7 +12,6 @@
   margin-bottom: 10px;
   text-align: center;
   cursor: pointer;
-  outline: none;
 }
 
 .canvas__zoom-button:hover,
