@@ -78,7 +78,7 @@ DataDictionary.propTypes = {
 
 DataDictionary.defaultProps = {
   onSetGraphView: () => {},
-  isGraphView: true,
+  isGraphView: false,
 };
 
 
