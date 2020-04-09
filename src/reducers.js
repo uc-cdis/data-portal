@@ -2,6 +2,7 @@ import { reducer as formReducer } from 'redux-form';
 import { combineReducers } from 'redux';
 import userProfile from './UserProfile/reducers';
 import coreMetadata from './CoreMetadata/reducers';
+import covid19Dashboard from './Covid19Dashboard/reducers';
 import certificate from './UserAgreement/reducers';
 import submission from './Submission/reducers';
 import analysis from './Analysis/reducers';
@@ -103,6 +104,7 @@ const reducers = combineReducers({ explorer,
   queryNodes,
   userProfile,
   coreMetadata,
+  covid19Dashboard,
   certificate,
   graphiql,
   login,

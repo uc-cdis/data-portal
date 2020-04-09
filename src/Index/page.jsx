@@ -11,7 +11,7 @@ import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } f
 import { guppyUrl, breakpoints, customHomepageChartConfig, indexPublic } from '../localconf';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
-import Covid19Dashboard from '../Covid19Dashboard';
+import ReduxCovid19Dashboard from '../Covid19Dashboard/ReduxCovid19Dashboard';
 import './page.less';
 
 class IndexPageComponent extends React.Component {
@@ -111,7 +111,7 @@ class IndexPageComponent extends React.Component {
           // tierAccessLevel={tierAccessLevel}
           // tierAccessLimit={tierAccessLimit}
         >
-          <Covid19Dashboard {...this.props} />
+          <ReduxCovid19Dashboard {...this.props} />
           {/* <ReduxIndexButtonBar {...this.props} /> */}
         </GuppyWrapper>
       </div>

@@ -6,6 +6,7 @@ import WorldMapChart from './WorldMapChart';
 import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
 import PlotChart from './PlotChart';
+import { formatSeirData } from './dataUtils.js';
 
 import 'react-tabs/style/react-tabs.less';
 import './Covid19Dashboard.less';
@@ -26,11 +27,22 @@ import './Covid19Dashboard.less';
 // |-----------------------------------|
 
 
+const chartDataLocations = {
+  seirObserved: 'observed_cases.txt',
+  seirSimulated: 'simulated_cases.txt',
+}
+
 class Covid19Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
     };
+  }
+
+  componentDidMount() {
+    Object.entries(chartDataLocations).forEach(
+      (e) => this.props.fetchChartData(e[0], e[1])
+    );
   }
 
   get_total_counts(){
@@ -123,8 +135,8 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 <WorldMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
-                  {/* <PlotChart />
-                  <PlotChart /> */}
+                  <PlotChart />
+                  <PlotChart />
                 </div>
               </div>
             </TabPanel>
@@ -143,9 +155,9 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 <IllinoisMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
-                  {/* <PlotChart />
                   <PlotChart />
-                  <PlotChart /> */}
+                  <PlotChart />
+                  <PlotChart />
                 </div>
               </div>
             </TabPanel>
@@ -158,12 +170,20 @@ class Covid19Dashboard extends React.Component {
 
 Covid19Dashboard.propTypes = {
   rawData: PropTypes.array, // inherited from GuppyWrapper
-  // downloadRawData: PropTypes.func, // inherited from GuppyWrapper
+  /* To fetch new data:
+  - add the prop name and location to `chartDataLocations`;
+  - add the prop to ReduxCovid19Dashboard.mapStateToProps;
+  - add the prop below.
+  */
+  fetchChartData: PropTypes.func.isRequired,
+  seirObserved: PropTypes.object,
+  seirSimulated: PropTypes.object,
 };
 
 Covid19Dashboard.defaultProps = {
   rawData: [],
-  // downloadRawData: () => {},
+  seirObserved: {},
+  seirSimulated: {},
 };
 
 export default Covid19Dashboard;
