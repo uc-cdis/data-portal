@@ -28,6 +28,11 @@ import './Covid19Dashboard.less';
 
 
 // TODO handle both fetch from URL and local files
+/* To fetch new data:
+- add the prop name and location to `chartDataLocations`;
+- add the prop to Covid19Dashboard.propTypes;
+- add it to ReduxCovid19Dashboard._handleChartData().
+*/
 const chartDataLocations = {
   seirObserved: 'observed_cases.txt',
   seirSimulated: 'simulated_cases.txt',
@@ -154,7 +159,7 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 <WorldMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
-                  {seirChart}
+                  {/* {seirChart} */}
                   <div></div> {/* TODO remove. just need to take some space */}
                 </div>
               </div>
@@ -174,7 +179,7 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 <IllinoisMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
-                  {seirChart}
+                  {/* {seirChart} */}
                   <div></div> {/* TODO remove. just need to take some space */}
                 </div>
               </div>
@@ -188,11 +193,6 @@ class Covid19Dashboard extends React.Component {
 
 Covid19Dashboard.propTypes = {
   rawData: PropTypes.array, // inherited from GuppyWrapper
-  /* To fetch new data:
-  - add the prop name and location to `chartDataLocations`;
-  - add the prop to ReduxCovid19Dashboard.mapStateToProps;
-  - add the prop below.
-  */
   fetchChartData: PropTypes.func.isRequired,
   seirObserved: PropTypes.object,
   seirSimulated: PropTypes.object,

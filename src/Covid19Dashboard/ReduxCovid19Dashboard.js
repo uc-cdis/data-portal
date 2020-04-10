@@ -11,7 +11,7 @@ async function _handleChartData(propName, data) {
   case 'seirSimulated':
     return formatSeirData(data);
   default:
-    console.warn('I don\'t know how to fetch data for "' + id +'"');
+    console.warn('I don\'t know how to handle chart data for "' + id +'"');
   }
 }
 
@@ -51,8 +51,7 @@ const fetchChartData = (propName, filePath) => (
 );
 
 const mapStateToProps = state => ({
-  seirObserved: state.covid19Dashboard.seirObserved,
-  seirSimulated: state.covid19Dashboard.seirSimulated,
+  ...state.covid19Dashboard,
 });
 
 const mapDispatchToProps = dispatch => ({
