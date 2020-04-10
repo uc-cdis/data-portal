@@ -40,6 +40,9 @@ class IllinoisMapChart extends React.Component {
     super(props);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.geoJson = null;
+    // Only select Illinois data.
+    // Chicago (17999) is separate from Cook county in `countyData`,
+    // not in our data
     this.counties = {
       ...countyData,
       features: countyData.features.filter(f => f.properties.STATE == 'IL' && f.properties.FIPS != '17999')
