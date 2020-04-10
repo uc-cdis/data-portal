@@ -12,8 +12,8 @@ export async function formatSeirData (tsvData) {
         valueIndex = headers.findIndex(x => x !== 'date');
       }
       else {
-        contents[row.data[dateIndex]] = {
-          'simulated': row.data[valueIndex]
+        if (row.data.length >= 2) { // skip empty line at end of file
+          contents[row.data[dateIndex]] = row.data[valueIndex];
         }
       }
     }

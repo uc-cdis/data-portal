@@ -1,17 +1,18 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 
 import './PlotChart.less';
 
+
 class CustomizedAxisTick extends React.Component {
   render() {
-    const monthNames = ['Jan', 'Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov','Dec'];
     const {
       x, y, stroke, payload,
     } = this.props;
-    const formattedDate = `${monthNames[new Date(payload.value).getMonth()]} ${new Date(payload.value).getDate()}`;
+    const formattedDate = `${new Date(payload.value).getMonth()}/${new Date(payload.value).getDate()}`;
     return (
       <g transform={`translate(${x},${y})`}>
         <text x={0} y={0} dy={16} textAnchor='end' fill='#666' transform='rotate(-60)'>{formattedDate}</text>
@@ -21,37 +22,53 @@ class CustomizedAxisTick extends React.Component {
 }
 
 class PlotChart extends PureComponent {
-  formatChartData = data => {
-    let sortedData = [
-      {
-        date: '03/08/2020',
-        observed: 0.0000,
-        simulated: 0.0000,
-      },
-      {
-        date: '03/20/2020',
-        observed: 0.0050,
-        simulated: 0.0050,
-      },
-      {
-        date: '04/17/2020',
-        // observed: 0.0000,
-        simulated: 0.0125,
-      },
-      {
-        date: '04/01/2020',
-        simulated: 0.0150,
-      },
-    ];
-    let max = 0.0150;
-    return { data: sortedData, max };
+  formatChartData (plots) {
+    let dateToData = {};
+    if (!plots || !plots.length) {
+      return dateToData;
+    }
+
+    // let max = 0;
+    plots.forEach(plot => {
+      Object.entries(plot.data).forEach(e => {
+        const dateVal = e[0];
+        const value = Number(e[1]);
+        // max = Math.max(max, value);
+        if (!(dateVal in dateToData)) {
+          dateToData[dateVal] = { date: dateVal };
+        }
+        dateToData[dateVal][plot.name] = value;
+      });
+    });
+    let sortedData = Object.values(dateToData);
+    sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    // console.log(sortedData);
+    return { data: sortedData }; //, max };
+  }
+
+  renderTooltip = props => {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov','Dec'];
+    const date = new Date(props.label);
+    return (
+      <div className='map-chart__tooltip'>
+        <p>{monthNames[date.getMonth()]} {date.getDate()}, {date.getFullYear()}</p>
+        {
+          props.payload.map((data, i) => (
+            <p style={{color: data.stroke}} key={i}>{data.name}: {data.value.toExponential()}</p>
+          ))
+        }
+      </div>
+    )
   }
 
   render() {
-    const chartData = this.formatChartData({});
+    const chartData = this.formatChartData(this.props.plots);
 
     return (
       <div className='plot-chart'>
+        <p className='plot-chart__title'>
+          {this.props.title}
+        </p>
         <ResponsiveContainer>
           <LineChart
             data={chartData.data}
@@ -62,14 +79,24 @@ class PlotChart extends PureComponent {
             <CartesianGrid strokeDasharray='3 3' />
             <XAxis
               dataKey='date'
-              // tick={<CustomizedAxisTick />}
+              // label={this.props.xTitle}
+              tick={<CustomizedAxisTick />}
               interval={1}
             />
-            <YAxis type='number' domain={[0, chartData.max || 'auto']} />
-            {/* <Tooltip content={this.renderTooltip} /> */}
+            <YAxis
+              label={{
+                className: 'plot-chart__y-title',
+                value: this.props.yTitle,
+                angle: -90,
+                position: 'insideLeft',
+              }}
+              type='number'
+              domain={[0, 'auto']}
+            />
+            <Tooltip content={this.renderTooltip} />
             <Legend />
-            <Line type='monotone' dataKey='observed' stroke='#aa5e79' />
-            <Line type='monotone' dataKey='simulated' stroke='#8884d8' activeDot={{ r: 8 }} />
+            <Line type='monotone' dataKey={this.props.plots[0].name} stroke='#8884d8' dot={false} />
+            <Line type='monotone' dataKey={this.props.plots[1].name} stroke='#aa5e79' dot={false} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -78,19 +105,11 @@ class PlotChart extends PureComponent {
 }
 
 PlotChart.propTypes = {
-  // onMapStyleChange: PropTypes.func,
-  // showLegend: PropTypes.bool,
-  // colors: PropTypes.object,
-  // showMapStyle: PropTypes.bool,
-  // defaultMapStyle: PropTypes.string,
+  plots: PropTypes.array,
 };
 
 PlotChart.defaultProps = {
-  // onMapStyleChange: () => {},
-  // showLegend: false,
-  // colors: {},
-  // showMapStyle: false,
-  // defaultMapStyle: '',
+  plots: [],
 };
 
 export default PlotChart;

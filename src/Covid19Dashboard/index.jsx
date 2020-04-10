@@ -27,6 +27,7 @@ import './Covid19Dashboard.less';
 // |-----------------------------------|
 
 
+// TODO handle both fetch from URL and local files
 const chartDataLocations = {
   seirObserved: 'observed_cases.txt',
   seirSimulated: 'simulated_cases.txt',
@@ -104,6 +105,24 @@ class Covid19Dashboard extends React.Component {
   render() {
     const { confirmed_count, deaths_count, recovered_count } = this.get_total_counts();
 
+    // console.log(this.props.seirObserved)
+    const displaySeirPlot = Object.keys(this.props.seirObserved).length > 0 && Object.keys(this.props.seirSimulated).length;
+    const seirChart = displaySeirPlot ? <PlotChart
+      title='SEIR Model'
+      xTitle = 'Date'
+      yTitle = 'Population Fraction'
+      plots={[
+        {
+          data: this.props.seirObserved,
+          name: 'Observed Cases',
+        },
+        {
+          data: this.props.seirSimulated,
+          name: 'Simulated Cases',
+        },
+      ]}
+    /> : null;
+
     return (
       <div className='covid19-dashboard'>
         {/* <ReactEcharts
@@ -135,8 +154,8 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 <WorldMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
-                  <PlotChart />
-                  <PlotChart />
+                  {seirChart}
+                  <div></div> {/* TODO remove. just need to take some space */}
                 </div>
               </div>
             </TabPanel>
@@ -155,9 +174,8 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 <IllinoisMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
-                  <PlotChart />
-                  <PlotChart />
-                  <PlotChart />
+                  {seirChart}
+                  <div></div> {/* TODO remove. just need to take some space */}
                 </div>
               </div>
             </TabPanel>

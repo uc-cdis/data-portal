@@ -3,8 +3,6 @@ import Covid19Dashboard from '../Covid19Dashboard';
 
 import { formatSeirData } from './dataUtils.js';
 
-const papaparse = require('papaparse');
-
 const dataUrl = 'https://opendata.datacommons.io/';
 
 async function _handleChartData(propName, data) {
@@ -26,10 +24,13 @@ const fetchChartData = (propName, filePath) => (
       case 200:
         return r.text()
       default:
-        console.err('Error fetching chart data:', r.status);
+        console.error(`Got code ${code} when fetching chart data at "${dataUrl + filePath}"`);
         // return 'ERROR_FETCH_CHART_DATA';
       }
     })
+    .catch(
+      error => console.error(`Unable to fetch chart data at "${dataUrl + filePath}":`, error)
+    )
     .then(data => _handleChartData(propName, data))
     .then(obj => {
       // switch (obj) {
