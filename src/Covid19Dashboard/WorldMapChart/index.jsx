@@ -288,7 +288,7 @@ class WorldMapChart extends React.Component {
     return (
       <div className='map-chart'>
         <ControlPanel
-          showMapStyle={true}
+          // showMapStyle={true} // TODO enable when choropleth is fixed
           defaultMapStyle={this.state.selectedLayer}
           onMapStyleChange={layerId => {this.setState({selectedLayer: layerId})}}
           showLegend={this.state.selectedLayer != 'confirmed-dots'}
