@@ -1,5 +1,7 @@
 # Windmill data portal
 
+Revert this
+
 A generic data portal that supports some basic interaction with Gen3 services like [peregrine](https://github.com/uc-cdis/peregrine), [sheepdog](https://github.com/uc-cdis/sheepdog) and [fence](https://github.com/uc-cdis/fence).
 
 ## Get Started
@@ -138,8 +140,8 @@ The configurations of Homepage charts are specified data/config/<common-name>.js
 - `chartCounts` are the counts that you want to display in the bar chart of dashboard's
 - `projectDetails` are the counts that you want to display in the list of projects. It could be same as `boardCounts`, in this case, you only need to point to `boardCounts`.
 
-Except the default case/file count charts, you could add more to the homepage, and those customized charts will be added to a carousel. 
-We support categorical horizontal grouped bar charts, and the chart will be using data from Guppy, so make sure you correctly ETL them to your Elasticsearch database. The new added charts are configured in portal config's components.index.customHomepageChartConfig config, make sure configurations are correct. Example config (notice the comments won't work for JSON): 
+Except the default case/file count charts, you could add more to the homepage, and those customized charts will be added to a carousel.
+We support categorical horizontal grouped bar charts, and the chart will be using data from Guppy, so make sure you correctly ETL them to your Elasticsearch database. The new added charts are configured in portal config's components.index.customHomepageChartConfig config, make sure configurations are correct. Example config (notice the comments won't work for JSON):
 
 ```
 "customHomepageChartConfig": [
