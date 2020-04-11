@@ -8,16 +8,12 @@ import {
 
 import ControlPanel from '../ControlPanel';
 import Popup from '../../components/Popup';
+import { numberWithCommas } from '../dataUtils.js';
 
 import countyData from '../data/us_counties';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './IllinoisMapChart.less';
-
-
-const numberWithCommas = x => {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov','Dec'];
 

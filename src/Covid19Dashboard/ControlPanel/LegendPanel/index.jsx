@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
+import { numberWithCommas } from '../../dataUtils.js';
+
 import './LegendPanel.less';
 
 class LegendPanel extends PureComponent {
@@ -9,17 +11,17 @@ class LegendPanel extends PureComponent {
 		// output: [[ '0-9', '#FFF' ], [ '10-99', '#888' ], [ '100+', '#000' ]]
 		return Object.entries(colors).map((value, i) => {
 			const color = value[1];
-			let label = value[0];
+			let label = Number(value[0]);
 			if (i === Object.keys(colors).length - 1) {
 				label = `${label}+`;
 			}
 			else {
 				const nextLabel = Number(Object.keys(colors)[i + 1]);
-				if (nextLabel - 1 !== Number(label)) {
+				if (nextLabel - 1 !== label) {
 					label = `${label} - ${nextLabel - 1}`;
 				}
 			}
-			return [label, color]
+			return [numberWithCommas(label), color]
 		});
 	}
 

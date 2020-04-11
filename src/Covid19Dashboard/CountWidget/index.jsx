@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './CountWidget.less';
+import { numberWithCommas } from '../dataUtils.js';
 
-const numberWithCommas = x => {
-  return x ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0;
-}
+import './CountWidget.less';
 
 class CountWidget extends React.Component {
   // constructor(props) {

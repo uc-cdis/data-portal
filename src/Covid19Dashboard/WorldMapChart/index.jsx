@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
 
 import ControlPanel from '../ControlPanel';
+import { numberWithCommas } from '../dataUtils.js';
 
 import worldData from '../data/world_50m'; // from https://geojson-maps.ash.ms
 import stateData from '../data/us_states_20m.json'; // from https://eric.clst.org/tech/usgeojson/
@@ -10,10 +11,6 @@ import countyData from '../data/us_counties';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './WorldMapChart.less';
-
-const numberWithCommas = x => {
-  return x ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0;
-}
 
 class WorldMapChart extends React.Component {
   constructor(props) {

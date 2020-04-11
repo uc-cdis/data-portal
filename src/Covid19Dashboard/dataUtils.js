@@ -1,5 +1,9 @@
 const papaparse = require('papaparse');
 
+export function numberWithCommas (x) {
+  return x ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0;
+}
+
 export async function formatSeirData (tsvData) {
   let headers = null, dateIndex, valueIndex;
   let contents = {};
