@@ -11,7 +11,7 @@ class CustomizedAxisTick extends React.Component {
   render() {
     const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
     const val = payload.value; // eslint-disable-line react/prop-types
-    const formattedDate = `${new Date(val).getMonth()}/${new Date(val).getDate()}`;
+    const formattedDate = `${new Date(val).getUTCMonth() + 1}/${new Date(val).getUTCDate()}`;
     return (
       <g transform={`translate(${x},${y})`}>
         <text x={0} y={0} dy={16} textAnchor='end' fill='#666' transform='rotate(-60)'>{formattedDate}</text>
@@ -20,28 +20,74 @@ class CustomizedAxisTick extends React.Component {
   }
 }
 
-function formatChartData(plots) {
-  const dateToData = {};
-  if (!plots || !plots.length) {
-    return dateToData;
+class PlotChart extends PureComponent {
+  state = {
+    width: {
+      [this.props.plots[0].name]: 1,
+      [this.props.plots[1].name]: 1,
+    },
+  };
+  
+  handleMouseEnter = (o) => {
+    const { dataKey } = o;
+    const { width } = this.state;
+
+    this.setState({
+      width: { ...width, [dataKey]: 2 },
+    });
   }
 
-  // let max = 0;
-  plots.forEach((plot) => {
-    Object.entries(plot.data).forEach((e) => {
-      const dateVal = e[0];
-      const value = Number(e[1]);
-      // max = Math.max(max, value);
-      if (!(dateVal in dateToData)) {
-        dateToData[dateVal] = { date: dateVal };
-      }
-      dateToData[dateVal][plot.name] = value;
+  handleMouseLeave = (o) => {
+    const { dataKey } = o;
+    const { width } = this.state;
+
+    this.setState({
+      width: { ...width, [dataKey]: 1 },
     });
-  });
-  let sortedData = Object.values(dateToData);
-  sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-  // console.log(sortedData);
-  return { data: sortedData }; // , max };
+  }
+
+  getDates(startDate, endDate, days) {
+    var dates = [],
+        currentDate = new Date(startDate),
+        endDate = new Date(endDate),
+        addDays = function(days) {
+          var date = new Date(this.valueOf());
+          date.setDate(date.getDate() + days);
+          return date;
+        };
+    while (currentDate <= endDate) {
+      const year = currentDate.getUTCFullYear()
+      const month = `${currentDate.getUTCMonth() + 1}`.padStart(2, 0);
+      const day = `${currentDate.getUTCDate()}`.padStart(2, 0);
+      const stringDate = [year, month, day].join("-");
+      var fmtDate = `${stringDate} 00:00:00+00:00`;
+      dates.push(fmtDate);
+      currentDate = addDays.call(currentDate, days);
+    }
+    return dates;
+  };
+
+  formatChartData (plots) {
+    let dateToData = {};
+    if (!plots || !plots.length) {
+      return dateToData;
+    }
+    // let max = 0;
+    plots.forEach((plot) => {
+      Object.entries(plot.data).forEach((e) => {
+        const dateVal = e[0];
+        const value = Number(e[1]);
+        // max = Math.max(max, value);
+        if (!(dateVal in dateToData)) {
+          dateToData[dateVal] = { date: dateVal };
+        }
+        dateToData[dateVal][plot.name] = value;
+      });
+    });
+    let sortedData = Object.values(dateToData);
+    sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    return { data: sortedData, ticks: this.getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7) }; //, max };
+  }
 }
 
 class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
@@ -50,10 +96,10 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
     const date = new Date(props.label);
     return (
       <div className='map-chart__tooltip'>
-        <p>{monthNames[date.getMonth()]} {date.getDate()}, {date.getFullYear()}</p>
+        <p>{monthNames[date.getUTCMonth() - 1]} {date.getUTCDate()}, {date.getUTCFullYear()}</p>
         {
           props.payload.map((data, i) => (
-            <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value.toExponential()}</p>
+            <p style={{color: data.stroke}} key={i}>{data.name}: {data.value}</p>
           ))
         }
       </div>
@@ -62,13 +108,14 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
 
   render() {
     const chartData = formatChartData(this.props.plots);
+    const { width } = this.state;
 
     return (
       <div className='plot-chart'>
         <p className='plot-chart__title'>
           {this.props.title}
         </p>
-        <ResponsiveContainer>
+        <ResponsiveContainer height={250}>
           <LineChart
             data={chartData.data}
             margin={{
@@ -80,7 +127,9 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
               dataKey='date'
               // label={this.props.xTitle}
               tick={<CustomizedAxisTick />}
-              interval={1}
+              ticks={chartData.ticks}
+              // interval='preserveStartEnd'
+              interval={0}
             />
             <YAxis
               label={{
@@ -93,11 +142,12 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
               domain={[0, 'auto']}
             />
             <Tooltip content={this.renderTooltip} />
-            <Legend />
-            <Line type='monotone' dataKey={this.props.plots[0].name} stroke='#8884d8' dot={false} />
-            <Line type='monotone' dataKey={this.props.plots[1].name} stroke='#aa5e79' dot={false} />
+            <Legend onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} />
+            <Line type='monotone' dataKey={this.props.plots[0].name} strokeWidth={width[this.props.plots[0].name]} stroke='#8884d8' dot={false} />
+            <Line type='monotone' dataKey={this.props.plots[1].name} strokeWidth={width[this.props.plots[1].name]} stroke='#aa5e79' dot={false} />
           </LineChart>
         </ResponsiveContainer>
+        <div style={{marginTop: 2 + 'em'}}><p>{this.props.description}</p></div>
       </div>
     );
   }
