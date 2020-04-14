@@ -9,7 +9,7 @@ class ResourceBrowser extends React.Component {
   render() {
     const settings = config.resourceBrowser;
     if (!settings) {
-      return;
+      return <div />;
     }
 
     // TODO use categories
@@ -21,7 +21,7 @@ class ResourceBrowser extends React.Component {
         </h2>
         {settings.description ?
           settings.description
-        : null}
+          : null}
         <div className='resource-browser__resources'>
           {resources.map((resource, i) =>
             (<Resource
