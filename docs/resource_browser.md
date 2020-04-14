@@ -18,6 +18,7 @@ Example configuration:
     },
     "resourceBrowser": {
         "title": "My Data Commons' Jupyter Notebooks",
+        "description": "Here's a collection of notebooks I'm proud of",
         "public": true,
         "resources": [
             {
@@ -37,9 +38,14 @@ Example configuration:
 }
 ```
 
-- `public` is false by default. If true, users can visit the page without being logged in. If false, they will need to log in _but_ the access to individual notebooks will not be controlled.
-- `link` and `imageUrl` can be absolute or relative URLs
-- `category`, `description` and `imageUrl` are optional
+- `resourceBrowser`:
+  - `title` is required
+  - `description` and `public` are optional. `resources` too, but why would you not include it?
+  - `public` is false by default. If true, users can visit the page without being logged in. If false, they will need to log in _but_ the access to individual notebooks will not be controlled.
+- `resourceBrowser.resources`:
+  - `title` and `link` are required
+  - `category`, `description` and `imageUrl` are optional
+  - `link` and `imageUrl` can be absolute or relative URLs
 
 ## Possible improvements
 

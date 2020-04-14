@@ -7,14 +7,21 @@ import './ResourceBrowser.css';
 
 class ResourceBrowser extends React.Component {
   render() {
+    const settings = config.resourceBrowser;
+    if (!settings) {
+      return;
+    }
+
     // TODO use categories
-    const title = config.resourceBrowser.title;
-    const resources = (config.resourceBrowser && config.resourceBrowser.resources) || [];
+    const resources = settings.resources || [];
     return (
       <div className='resource-browser'>
         <h2 className='resource-browser__title'>
-          {title}
+          {settings.title}
         </h2>
+        {settings.description ?
+          settings.description
+        : null}
         <div className='resource-browser__resources'>
           {resources.map((resource, i) =>
             (<Resource
