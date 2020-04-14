@@ -316,7 +316,7 @@ class ExplorerButtonGroup extends React.Component {
     if (typeof this.props.buttonConfig.terraTemplate !== 'undefined'
       && this.props.buttonConfig.terraTemplate != null) {
       templateParam = this.props.buttonConfig.terraTemplate.map(
-        x => '&template=' + x
+        x => `&template=${x}`,
       ).join('');
     }
     window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
