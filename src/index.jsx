@@ -314,11 +314,11 @@ async function init() {
                       <Route
                         path='/resource-browser'
                         component={
-                          props => <ProtectedContent
+                          props => (<ProtectedContent
                             public={resourceBrowserPublic}
                             component={ResourceBrowser}
                             {...props}
-                          />
+                          />)
                         }
                       />
                       : null
