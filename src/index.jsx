@@ -35,7 +35,7 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
-  indexPublic, useGuppyForExplorer, explorerPublic, resourceBrowserPublic,
+  indexPublic, useGuppyForExplorer, explorerPublic, enableResourceBrowser, resourceBrowserPublic,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
@@ -310,7 +310,7 @@ async function init() {
                       />
                       : null
                     }
-                    {config.resourceBrowser ?
+                    {enableResourceBrowser ?
                       <Route
                         path='/resource-browser'
                         component={

@@ -129,6 +129,7 @@ function buildConfig(opts) {
     explorerPublic = true;
   }
 
+  const enableResourceBrowser = !!config.resourceBrowser;
   let resourceBrowserPublic = false;
   if (config.resourceBrowser && config.resourceBrowser.public) {
     resourceBrowserPublic = true;
@@ -301,6 +302,7 @@ function buildConfig(opts) {
     explorerPublic,
     authzPath,
     authzMappingPath,
+    enableResourceBrowser,
     resourceBrowserPublic,
   };
 }
