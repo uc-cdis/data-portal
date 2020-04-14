@@ -1,0 +1,45 @@
+.resource-browser {
+  width: 100%;
+  min-height: inherit;
+  background: inherit;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.resource-browser__resources {
+  padding: 20px;
+  display: flex;
+  flex-flow: wrap;
+}
+
+.resource {
+  color: black;
+}
+
+.resource__link {
+  background: var(--g3-color__white);
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  width: 350px;
+  padding: 20px;
+  padding-bottom: 0;
+  margin: 10px 20px;
+  border: 1px solid var(--g3-color__silver);
+  border-radius: 5px;
+}
+
+.resource__description {
+  padding-bottom: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.resource__image {
+  max-width: 350px;
+  max-height: 350px;
+  border: 1px solid var(--g3-color__silver);
+  border-top: 0;
+  border-radius: 5px;
+}
