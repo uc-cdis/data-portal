@@ -24,12 +24,12 @@ Example configuration:
                 "title": "Custom Notebook",
                 "category": "Notebooks",
                 "description": "This is a custom notebook that generates a bunch of charts",
-                "link": "https://pauline.planx-pla.net/dashboard/Public/notebooks/nb.html",
+                "link": "https://blah.net/notebooks/nb.html",
                 "imageUrl": "https://link-to-image.png"
             },
             {
                 "title": "Custom Notebook 2",
-                "link": "https://pauline.planx-pla.net/dashboard/Public/notebooks/nb.html",
+                "link": "/notebooks/nb.html",
                 "imageUrl": "/relative-link-to-image.png"
             }
         ]
@@ -37,7 +37,7 @@ Example configuration:
 }
 ```
 
-- `public` is false by default
+- `public` is false by default. If true, users can visit the page without being logged in. If false, they will need to log in _but_ the access to individual notebooks will not be controlled.
 - `link` and `imageUrl` can be absolute or relative URLs
 - `category`, `description` and `imageUrl` are optional
 
