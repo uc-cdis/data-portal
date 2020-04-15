@@ -39,7 +39,7 @@ import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
-import { gaTracking, components, config } from './params';
+import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import DataExplorer from './DataExplorer/.';
 import GuppyDataExplorer from './GuppyDataExplorer/.';

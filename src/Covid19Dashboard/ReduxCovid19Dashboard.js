@@ -5,49 +5,49 @@ import { formatSeirData } from './dataUtils.js';
 
 const dataUrl = 'https://opendata.datacommons.io/';
 
-async function _handleChartData(propName, data) {
+async function handleChartData(propName, data) {
   switch (propName) {
   case 'seirObserved':
   case 'seirSimulated':
     return formatSeirData(data);
   default:
-    console.warn('I don\'t know how to handle chart data for "' + id +'"');
+    console.warn(`I don't know how to handle chart data for "${propName}"`); // eslint-disable-line no-console
+    // return 'ERROR_FETCH_CHART_DATA';
   }
+  return {};
 }
 
 const fetchChartData = (propName, filePath) => (
   // TODO refactor this probably. to handle errors better
-  dispatch => {
-    return fetch(dataUrl + filePath, dispatch)
-    .then(r => {
+  dispatch => fetch(dataUrl + filePath, dispatch)
+    .then((r) => {
       switch (r.status) {
       case 200:
-        return r.text()
+        return r.text();
       default:
-        console.error(`Got code ${code} when fetching chart data at "${dataUrl + filePath}"`);
-        // return 'ERROR_FETCH_CHART_DATA';
+        console.error(`Got code ${r.status} when fetching chart data at "${dataUrl + filePath}"`); // eslint-disable-line no-console
       }
+      return '';
     })
     .catch(
-      error => console.error(`Unable to fetch chart data at "${dataUrl + filePath}":`, error)
+      error => console.error(`Unable to fetch chart data at "${dataUrl + filePath}":`, error), // eslint-disable-line no-console
     )
-    .then(data => _handleChartData(propName, data))
-    .then(obj => {
+    .then(data => handleChartData(propName, data))
+    .then(obj =>
       // switch (obj) {
       // case 'ERROR_FETCH_CHART_DATA':
       //   return {
       //     type: 'ERROR_FETCH_CHART_DATA',
       //   };
       // default:
-        return {
-          type: 'RECEIVE_CHART_DATA',
-          name: propName,
-          contents: obj,
-        };
+      ({
+        type: 'RECEIVE_CHART_DATA',
+        name: propName,
+        contents: obj,
+      }),
       // }
-    })
-    .then(msg => dispatch(msg));
-  }
+    )
+    .then(msg => dispatch(msg))
 );
 
 const mapStateToProps = state => ({

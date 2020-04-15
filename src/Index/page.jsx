@@ -2,15 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import Slider from 'react-slick';
+import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+
 import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntroduction } from './reduxer';
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
-import { guppyUrl, breakpoints, customHomepageChartConfig, indexPublic } from '../localconf';
+import { guppyUrl, breakpoints, customHomepageChartConfig, indexPublic, enableCovid19Dashboard } from '../localconf';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
-import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ReduxCovid19Dashboard from '../Covid19Dashboard/ReduxCovid19Dashboard';
 import './page.less';
 
@@ -71,49 +72,41 @@ class IndexPageComponent extends React.Component {
       // more than 10,000. if we have more than 10,000 locations (all projects
       // combined): use download endpoint instead of GuppyWrapper?
       // There's the offset param but the GuppyWrapper only makes 1 query...
+      // TODO replace with new data ingestion
     };
-    // const covid19DashboardFilterConfig = {
-      // tabs: [
-      //   {
-      //     fields: [
-      //       'confirmed',
-      //       { project_id: { selectedValues: 'open-JHU' } }
-      //     ],
-      //   },
-      // ],
-    // };
 
     return (
       <div className='index-page'>
-        {/* <div className='index-page__top'>
-          <div className='index-page__introduction'>
-            <ReduxIntroduction data={components.index.introduction} dictIcons={dictIcons} />
-            <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
-              <ReduxIndexCounts />
-            </MediaQuery>
+        {!enableCovid19Dashboard ?
+          <div className='index-page__top'>
+            <div className='index-page__introduction'>
+              <ReduxIntroduction data={components.index.introduction} dictIcons={dictIcons} />
+              <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
+                <ReduxIndexCounts />
+              </MediaQuery>
+            </div>
+            <div className='index-page__bar-chart'>
+              <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
+                <Slider {...sliderSettings}>
+                  <div className='index-page__slider-chart'><ReduxIndexBarChart /></div>
+                  {customCharts}
+                </Slider>
+              </MediaQuery>
+            </div>
           </div>
-          <div className='index-page__bar-chart'>
-            <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-              <Slider {...sliderSettings}>
-                <div className='index-page__slider-chart'><ReduxIndexBarChart /></div>
-                {customCharts}
-              </Slider>
-            </MediaQuery>
-          </div>
-        </div> */}
-        <GuppyWrapper
-          guppyConfig={{
-            path: guppyUrl,
-            type: covid19DashboardDataType,
-            ...covid19DashboardGuppyConfig,
-          }}
-          filterConfig={{}} // {covid19DashboardFilterConfig}
-          // tierAccessLevel={tierAccessLevel}
-          // tierAccessLimit={tierAccessLimit}
-        >
-          <ReduxCovid19Dashboard {...this.props} />
-          {/* <ReduxIndexButtonBar {...this.props} /> */}
-        </GuppyWrapper>
+          :
+          <GuppyWrapper
+            guppyConfig={{
+              path: guppyUrl,
+              type: covid19DashboardDataType,
+              ...covid19DashboardGuppyConfig,
+            }}
+            filterConfig={{}}
+          >
+            <ReduxCovid19Dashboard {...this.props} />
+          </GuppyWrapper>
+        }
+        <ReduxIndexButtonBar {...this.props} />
       </div>
     );
   }

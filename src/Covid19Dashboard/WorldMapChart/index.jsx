@@ -1,16 +1,79 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 import ControlPanel from '../ControlPanel';
 import { numberWithCommas } from '../dataUtils.js';
-
 import worldData from '../data/world_50m'; // from https://geojson-maps.ash.ms
 import stateData from '../data/us_states_20m.json'; // from https://eric.clst.org/tech/usgeojson/
 import countyData from '../data/us_counties';
-
-import 'mapbox-gl/dist/mapbox-gl.css';
 import './WorldMapChart.less';
+
+function addDataToGeoJsonBase(data, dataLevel) {
+  let base = worldData;
+  if (dataLevel === 'state') {
+    base = stateData;
+  } else if (dataLevel === 'county') {
+    // Chicago (FIPS 17999) is separate from Cook
+    // county in `countyData`, but not in JHU data
+    base = {
+      ...countyData,
+      features: countyData.features.filter(f => f.properties.FIPS !== '17999'),
+    };
+  }
+
+  const geoJson = {
+    ...base,
+    features: base.features.map((loc) => {
+      const location = loc;
+      if (
+        dataLevel === 'country'
+        && location.properties.iso_a3
+        && location.properties.iso_a3 in data
+      ) {
+        location.properties = Object.assign(
+          data[location.properties.iso_a3],
+          location.properties,
+        );
+        return location;
+      }
+
+      if (
+        dataLevel === 'state'
+        && location.properties.NAME
+        && location.properties.NAME in data
+      ) {
+        location.properties = Object.assign(
+          data[location.properties.NAME],
+          location.properties,
+        );
+        return location;
+      }
+
+      if (dataLevel === 'county') {
+        if (location.properties.FIPS && !(location.properties.FIPS in data)) {
+          // `countyData` stores FIPS with trailing zeros, JHU data doesn't
+          location.properties.FIPS = Number(location.properties.FIPS).toString();
+        }
+        if (location.properties.FIPS && location.properties.FIPS in data) {
+          location.properties = Object.assign(
+            data[location.properties.FIPS],
+            location.properties,
+          );
+          return location;
+        }
+      }
+
+      // no data for this location
+      location.properties.confirmed = 0;
+      location.properties.allData = {};
+      return location;
+    }),
+  };
+
+  return geoJson;
+}
 
 class WorldMapChart extends React.Component {
   constructor(props) {
@@ -34,7 +97,9 @@ class WorldMapChart extends React.Component {
         pitch: 0,
       },
       hoverInfo: null,
-      selectedDate: props.rawData && props.rawData[0] ? new Date(Math.max.apply(null, props.rawData[0].date.map(date => new Date(date)))) : null,
+      selectedDate: props.rawData && props.rawData[0] ?
+        new Date(Math.max.apply(null, props.rawData[0].date.map(date => new Date(date))))
+        : null,
     };
   }
 
@@ -44,21 +109,17 @@ class WorldMapChart extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.rawData.length !== this.props.rawData.length) {
-      this.setState({ selectedDate: nextProps.rawData && nextProps.rawData[0] ? new Date(Math.max.apply(null, nextProps.rawData[0].date.map(date => new Date(date)))) : null });
+      this.setState({
+        selectedDate: nextProps.rawData && nextProps.rawData[0] ?
+          new Date(Math.max.apply(
+            null, nextProps.rawData[0].date.map(date => new Date(date)),
+          ))
+          : null,
+      });
     }
   }
 
-  // componentWillUnmount() {
-  //   window.removeEventListener('resize', this.updateDimensions);
-  // }
-
-  updateDimensions() {
-    this.setState({
-      mapSize: { width: '100%', height: window.innerHeight - 221 }
-    });
-  }
-
-  _onHover = (event) => {
+  onHover = (event) => {
     let hoverInfo = null;
 
     if (!event.features) { return; }
@@ -68,26 +129,26 @@ class WorldMapChart extends React.Component {
         return;
       }
       let confirmed = feature.properties.confirmed;
-      confirmed = confirmed && confirmed != 'null' ? confirmed : 0;
+      confirmed = confirmed && confirmed !== 'null' ? confirmed : 0;
       let deaths = feature.properties.deaths;
-      deaths = deaths && deaths != 'null' ? deaths : 0;
+      deaths = deaths && deaths !== 'null' ? deaths : 0;
 
       const state = feature.properties.province_state;
       const county = feature.properties.county;
       let locationName = feature.properties.country_region;
-      locationName = (state && state != 'null' ? `${state}, ` : '') + locationName
-      locationName = (county && county != 'null' ? `${county}, ` : '') + locationName
-      if (!locationName || locationName == 'undefined') {
+      locationName = (state && state !== 'null' ? `${state}, ` : '') + locationName;
+      locationName = (county && county !== 'null' ? `${county}, ` : '') + locationName;
+      if (!locationName || locationName === 'undefined') {
         // we don't have data for this location
         return;
       }
       hoverInfo = {
         lngLat: event.lngLat,
-        locationName: locationName,
+        locationName,
         values: {
-          "confirmed cases": numberWithCommas(confirmed),
-          "deaths": numberWithCommas(deaths),
-        }
+          'confirmed cases': numberWithCommas(confirmed),
+          deaths: numberWithCommas(deaths),
+        },
       };
     });
 
@@ -96,37 +157,18 @@ class WorldMapChart extends React.Component {
     });
   };
 
-  _renderHoverPopup() {
-    const { hoverInfo } = this.state;
-    if (hoverInfo) {
-      return (
-        <ReactMapGL.Popup longitude={hoverInfo.lngLat[0]} latitude={hoverInfo.lngLat[1]} closeButton={false}>
-          <div className='location-info'>
-            <h4>
-              {hoverInfo.locationName}
-            </h4>
-            {
-              Object.entries(hoverInfo.values).map(
-                (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>
-              )
-            }
-          </div>
-        </ReactMapGL.Popup>
-      );
-    }
-    return null;
-  }
-
   convertRawDataToDict(rawData, dataLevel) {
-    var filteredFeatures = {};
+    const filteredFeatures = {};
     rawData.reduce((res, location) => {
-      if (location.project_id != 'open-JHU') {
+      if (location.project_id !== 'open-JHU') {
         // we are getting _all_ the location data from Guppy because there
         // is no way to filter by project using the GuppyWrapper. So have
         // to filter on client side
         return res;
       }
-      const selectedDateIndex = location.date.findIndex(x => new Date(x).getTime() === this.state.selectedDate.getTime());
+      const selectedDateIndex = location.date.findIndex(
+        x => new Date(x).getTime() === this.state.selectedDate.getTime(),
+      );
 
       let confirmed = Number(location.confirmed[selectedDateIndex]);
       let deaths = Number(location.deaths[selectedDateIndex]);
@@ -138,136 +180,67 @@ class WorldMapChart extends React.Component {
       }
 
       // aggregation by country (ISO code)
-      if (dataLevel == 'country') {
+      if (dataLevel === 'country') {
         if (location.iso3 in res) {
           res[location.iso3].province_state = '';
           res[location.iso3].county = '';
           res[location.iso3].confirmed += confirmed;
           res[location.iso3].deaths += deaths;
-        }
-        else {
+        } else {
           res[location.iso3] = {
             country_region: location.country_region,
             province_state: location.province_state,
             county: location.county,
-            confirmed: confirmed,
-            deaths: deaths,
+            confirmed,
+            deaths,
             allData: { ...location },
-          }
+          };
         }
       }
 
       // aggregation by state (ISO code)
-      if (dataLevel == 'state') {
+      if (dataLevel === 'state') {
         if (location.province_state in res) {
           res[location.province_state].county = '';
           res[location.province_state].confirmed += confirmed;
           res[location.province_state].deaths += deaths;
-        }
-        else {
+        } else {
           res[location.province_state] = {
             country_region: location.country_region,
             province_state: location.province_state,
             county: location.county,
-            confirmed: confirmed,
-            deaths: deaths,
+            confirmed,
+            deaths,
             allData: { ...location },
-          }
+          };
         }
-      }
-
-      // by county (FIPS code)
-      else {
+      } else {
+        // by county (FIPS code)
         res[location.FIPS] = {
           country_region: location.country_region,
           province_state: location.province_state,
           county: location.county,
-          confirmed: confirmed,
-          deaths: deaths,
+          confirmed,
+          deaths,
           allData: { ...location },
-        }
+        };
       }
       return res;
     }, filteredFeatures);
     return filteredFeatures;
   }
 
-  addDataToGeoJsonBase(data, dataLevel) {
-    let base = worldData;
-    if (dataLevel === 'state') {
-      base = stateData;
-    }
-    else if (dataLevel === 'county') {
-      // Chicago (FIPS 17999) is separate from Cook
-      // county in `countyData`, but not in JHU data
-      base = {
-        ...countyData,
-        features: countyData.features.filter(f => f.properties.FIPS != '17999')
-      };
-    }
-
-    const geoJson = {
-      ...base,
-      features: base.features.map((location) => {
-        if (
-          dataLevel === 'country'
-          && location.properties.iso_a3
-          && location.properties.iso_a3 in data
-        ) {
-          location.properties = Object.assign(
-            data[location.properties.iso_a3],
-            location.properties,
-          )
-          return location;
-        }
-
-        if (
-          dataLevel === 'state'
-          && location.properties.NAME
-          && location.properties.NAME in data
-        ) {
-          location.properties = Object.assign(
-            data[location.properties.NAME],
-            location.properties,
-          )
-          return location;
-        }
-
-        if (dataLevel === 'county') {
-          if (location.properties.FIPS && !(location.properties.FIPS in data)) {
-            // `countyData` stores FIPS with trailing zeros, JHU data doesn't
-            location.properties.FIPS = Number(location.properties.FIPS).toString();
-          }
-          if (location.properties.FIPS && location.properties.FIPS in data) {
-            location.properties = Object.assign(
-              data[location.properties.FIPS],
-              location.properties,
-            )
-            return location;
-          }
-        }
-
-        // no data for this location
-        location.properties.confirmed = 0;
-        location.properties.allData = {};
-        return location;
-      }),
-    };
-
-    return geoJson;
-  }
-
   convertRawDataToGeoJson(rawData) {
     const features = rawData.reduce((res, location) => {
-      const new_features = [];
-      if (location.project_id != 'open-JHU') {
+      const newFeatures = [];
+      if (location.project_id !== 'open-JHU') {
         // we are getting _all_ the location data from Guppy because there
         // is no way to filter by project using the GuppyWrapper. So have
         // to filter on client side
         return res;
       }
       location.date.forEach((date, i) => {
-        if (new Date(date).getTime() != this.state.selectedDate.getTime()) {
+        if (new Date(date).getTime() !== this.state.selectedDate.getTime()) {
           return;
         }
 
@@ -287,15 +260,15 @@ class WorldMapChart extends React.Component {
             county: location.county,
             date,
             'marker-symbol': 'monument',
-            confirmed: confirmed != null ? (+confirmed) : 0,
-            deaths: deaths != null ? (+deaths) : 0,
-            recovered: recovered != null ? (+recovered) : 0,
-            testing: testing != null ? (+testing) : 0,
+            confirmed: confirmed !== null ? (+confirmed) : 0,
+            deaths: deaths !== null ? (+deaths) : 0,
+            recovered: recovered !== null ? (+recovered) : 0,
+            testing: testing !== null ? (+testing) : 0,
           },
         };
-        new_features.push(feature);
+        newFeatures.push(feature);
       });
-      return res.concat(new_features);
+      return res.concat(newFeatures);
     }, []);
 
     const geoJson = {
@@ -305,37 +278,66 @@ class WorldMapChart extends React.Component {
     return geoJson;
   }
 
-  _is_visible(layer_id){
-    if (this.state.selectedLayer == layer_id) {
-      return 'visible'
+  isVisible(layerId) {
+    if (this.state.selectedLayer === layerId) {
+      return 'visible';
     }
-    return 'none'
+    return 'none';
+  }
+
+  updateDimensions() {
+    this.setState({
+      mapSize: { width: '100%', height: window.innerHeight - 221 },
+    });
+  }
+
+  renderHoverPopup() {
+    const { hoverInfo } = this.state;
+    if (hoverInfo) {
+      return (
+        <ReactMapGL.Popup
+          longitude={hoverInfo.lngLat[0]}
+          latitude={hoverInfo.lngLat[1]}
+          closeButton={false}
+        >
+          <div className='location-info'>
+            <h4>
+              {hoverInfo.locationName}
+            </h4>
+            {
+              Object.entries(hoverInfo.values).map(
+                (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>,
+              )
+            }
+          </div>
+        </ReactMapGL.Popup>
+      );
+    }
+    return null;
   }
 
   render() {
     const rawData = this.props.rawData;
 
-    if (this.state.selectedLayer == 'confirmed-dots') {
-      if (!this.dotsGeoJson || this.dotsGeoJson.features.length == 0) {
+    if (this.state.selectedLayer === 'confirmed-dots') {
+      if (!this.dotsGeoJson || this.dotsGeoJson.features.length === 0) {
         this.dotsGeoJson = this.convertRawDataToGeoJson(rawData);
       }
-    }
-    else {
-      if (!this.choroCountyGeoJson || this.choroCountyGeoJson.features.length == 0) {
-        let geoJson = this.convertRawDataToDict(rawData, 'country');
-        this.choroCountryGeoJson = this.addDataToGeoJsonBase(geoJson, 'country');
+    } else if (!this.choroCountyGeoJson || this.choroCountyGeoJson.features.length === 0) {
+      let geoJson = this.convertRawDataToDict(rawData, 'country');
+      this.choroCountryGeoJson = addDataToGeoJsonBase(geoJson, 'country');
 
-        geoJson = this.convertRawDataToDict(rawData, 'state');
-        this.choroStateGeoJson = this.addDataToGeoJsonBase(geoJson, 'state');
+      geoJson = this.convertRawDataToDict(rawData, 'state');
+      this.choroStateGeoJson = addDataToGeoJsonBase(geoJson, 'state');
 
-        geoJson = this.convertRawDataToDict(rawData, 'county');
-        this.choroCountyGeoJson = this.addDataToGeoJsonBase(geoJson, 'county');
-      }
+      geoJson = this.convertRawDataToDict(rawData, 'county');
+      this.choroCountyGeoJson = addDataToGeoJsonBase(geoJson, 'county');
     }
 
-    let colors = {0: '#FFF'}, dotSizes = {0: 0, 1: 2};
-    // config for dot distribution map
-    if (this.state.selectedLayer == 'confirmed-dots') {
+    let colors = { 0: '#FFF' };
+    let dotSizes = { 0: 0, 1: 2 };
+    if (this.state.selectedLayer === 'confirmed-dots') {
+      // config for dot distribution map
       colors = {
         0: '#FFF',
         1: '#AA5E79',
@@ -351,9 +353,8 @@ class WorldMapChart extends React.Component {
         50000: 23,
         100000: 27,
       };
-    }
-    // config for choropleth map
-    else {
+    } else {
+      // config for choropleth map
       colors = {
         0: '#FFF',
         1: '#F7F787',
@@ -376,10 +377,10 @@ class WorldMapChart extends React.Component {
     return (
       <div className='map-chart'>
         <ControlPanel
-          showMapStyle={true}
+          showMapStyle
           defaultMapStyle={this.state.selectedLayer}
-          onMapStyleChange={layerId => {this.setState({selectedLayer: layerId})}}
-          showLegend={this.state.selectedLayer != 'confirmed-dots'}
+          onMapStyleChange={(layerId) => { this.setState({ selectedLayer: layerId }); }}
+          showLegend={this.state.selectedLayer !== 'confirmed-dots'}
           colors={colors}
         />
         <ReactMapGL.InteractiveMap
@@ -392,11 +393,11 @@ class WorldMapChart extends React.Component {
           onViewportChange={(viewport) => {
             this.setState({ viewport });
           }}
-          onHover={this._onHover}
+          onHover={this.onHover}
           dragRotate={false}
           touchRotate={false}
         >
-          {this._renderHoverPopup()}
+          {this.renderHoverPopup()}
 
           {/* Dot distribution map */}
           <ReactMapGL.Source
@@ -405,14 +406,14 @@ class WorldMapChart extends React.Component {
           >
             <ReactMapGL.Layer
               id='confirmed-dots'
-              layout={{visibility: this._is_visible('confirmed-dots')}}
+              layout={{ visibility: this.isVisible('confirmed-dots') }}
               type='circle'
               paint={{
                 'circle-radius': [
                   'interpolate',
                   ['linear'],
                   ['number', ['get', 'confirmed']],
-                  ...dotSizesAsList
+                  ...dotSizesAsList,
                 ],
                 'circle-color': [
                   'interpolate',
@@ -429,7 +430,7 @@ class WorldMapChart extends React.Component {
             {/* Choropleth map when zoomed out: country-level data only */}
             <ReactMapGL.Layer
               id='confirmed-choro-country'
-              layout={{visibility: this._is_visible('confirmed-choropleth')}}
+              layout={{ visibility: this.isVisible('confirmed-choropleth') }}
               type='fill'
               beforeId='waterway-label'
               paint={{
@@ -437,17 +438,18 @@ class WorldMapChart extends React.Component {
                   'interpolate',
                   ['linear'],
                   ['number', ['get', 'confirmed']],
-                  ...colorsAsList
-                  ],
-                'fill-opacity': 0.6
+                  ...colorsAsList,
+                ],
+                'fill-opacity': 0.6,
               }}
               maxzoom={stateZoomThreshold}
             />
 
-            {/* Choropleth map when zoomed in (state or county zoom): country-level data for all countries except US */}
+            {/* Choropleth map when zoomed in (state or county zoom):
+            country-level data for all countries except US */}
             <ReactMapGL.Layer
               id='confirmed-choro-country-no-us'
-              layout={{visibility: this._is_visible('confirmed-choropleth')}}
+              layout={{ visibility: this.isVisible('confirmed-choropleth') }}
               type='fill'
               beforeId='waterway-label'
               paint={{
@@ -455,9 +457,9 @@ class WorldMapChart extends React.Component {
                   'interpolate',
                   ['linear'],
                   ['number', ['get', 'confirmed']],
-                  ...colorsAsList
-                  ],
-                'fill-opacity': 0.6
+                  ...colorsAsList,
+                ],
+                'fill-opacity': 0.6,
               }}
               minzoom={stateZoomThreshold}
               filter={['!=', 'country_region', 'US']}
@@ -468,7 +470,7 @@ class WorldMapChart extends React.Component {
             {/* Choropleth map when zoomed in (state zoom): display state-level US data */}
             <ReactMapGL.Layer
               id='confirmed-choro-state'
-              layout={{visibility: this._is_visible('confirmed-choropleth')}}
+              layout={{ visibility: this.isVisible('confirmed-choropleth') }}
               type='fill'
               beforeId='waterway-label'
               paint={{
@@ -476,9 +478,9 @@ class WorldMapChart extends React.Component {
                   'interpolate',
                   ['linear'],
                   ['number', ['get', 'confirmed']],
-                  ...colorsAsList
-                  ],
-                'fill-opacity': 0.6
+                  ...colorsAsList,
+                ],
+                'fill-opacity': 0.6,
               }}
               minzoom={stateZoomThreshold}
               maxzoom={countyZoomThreshold}
@@ -489,7 +491,7 @@ class WorldMapChart extends React.Component {
             {/* Choropleth map when zoomed in (county zoom): display county-level US data */}
             <ReactMapGL.Layer
               id='confirmed-choro-county'
-              layout={{visibility: this._is_visible('confirmed-choropleth')}}
+              layout={{ visibility: this.isVisible('confirmed-choropleth') }}
               type='fill'
               beforeId='waterway-label'
               paint={{
@@ -497,9 +499,9 @@ class WorldMapChart extends React.Component {
                   'interpolate',
                   ['linear'],
                   ['number', ['get', 'confirmed']],
-                  ...colorsAsList
-                  ],
-                'fill-opacity': 0.6
+                  ...colorsAsList,
+                ],
+                'fill-opacity': 0.6,
               }}
               minzoom={countyZoomThreshold}
             />

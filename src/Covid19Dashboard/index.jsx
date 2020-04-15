@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.less';
 
 import WorldMapChart from './WorldMapChart';
 import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
-import PlotChart from './PlotChart';
-import { formatSeirData } from './dataUtils.js';
-
-import 'react-tabs/style/react-tabs.less';
+// import PlotChart from './PlotChart';
 import './Covid19Dashboard.less';
 
 
@@ -31,12 +29,12 @@ import './Covid19Dashboard.less';
 /* To fetch new data:
 - add the prop name and location to `chartDataLocations`;
 - add the prop to Covid19Dashboard.propTypes;
-- add it to ReduxCovid19Dashboard._handleChartData().
+- add it to ReduxCovid19Dashboard.handleChartData().
 */
 const chartDataLocations = {
   seirObserved: 'observed_cases.txt',
   seirSimulated: 'simulated_cases.txt',
-}
+};
 
 class Covid19Dashboard extends React.Component {
   constructor(props) {
@@ -47,86 +45,88 @@ class Covid19Dashboard extends React.Component {
 
   componentDidMount() {
     Object.entries(chartDataLocations).forEach(
-      (e) => this.props.fetchChartData(e[0], e[1])
+      e => this.props.fetchChartData(e[0], e[1]),
     );
   }
 
-  get_total_counts(){
+  getTotalCounts() {
     // find latest date we have in the data
     let selectedDate = new Date();
     if (this.props.rawData.length > 0) {
-      selectedDate = new Date(Math.max.apply(null, this.props.rawData[0].date.map(date => new Date(date))));
+      selectedDate = new Date(Math.max.apply(
+        null, this.props.rawData[0].date.map(date => new Date(date)),
+      ));
     }
-    let confirmed_count = {
+    const confirmedCount = {
       global: 0,
-      illinois: 0
+      illinois: 0,
     };
-    let deaths_count = {
+    const deathsCount = {
       global: 0,
-      illinois: 0
+      illinois: 0,
     };
-    let recovered_count = {
+    const recoveredCount = {
       global: 0,
-      illinois: 0
+      illinois: 0,
     };
-    this.props.rawData.forEach(location => {
-      if (location.project_id != 'open-JHU') {
+    this.props.rawData.forEach((location) => {
+      if (location.project_id !== 'open-JHU') {
         // we are getting _all_ the location data from Guppy because there
         // is no way to filter by project using the GuppyWrapper. So have
         // to filter on client side
         return;
       }
       location.date.forEach((date, i) => {
-        if (new Date(date).getTime() != selectedDate.getTime()) {
+        if (new Date(date).getTime() !== selectedDate.getTime()) {
           return;
         }
         const confirmed = +location.confirmed[i];
         const deaths = +location.deaths[i];
         const recovered = +location.recovered[i];
-        const testing = +location.testing[i];
+        // const testing = +location.testing[i];
         if (confirmed) {
-          confirmed_count['global'] += confirmed;
-          if (location.province_state == "Illinois"){
-            confirmed_count['illinois'] += confirmed;
+          confirmedCount.global += confirmed;
+          if (location.province_state === 'Illinois') {
+            confirmedCount.illinois += confirmed;
           }
         }
         if (deaths) {
-          deaths_count['global'] += deaths;
-          if (location.province_state == "Illinois"){
-            deaths_count['illinois'] += deaths;
+          deathsCount.global += deaths;
+          if (location.province_state === 'Illinois') {
+            deathsCount.illinois += deaths;
           }
         }
         if (recovered) {
-          recovered_count['global'] += recovered;
-          if (location.province_state == "Illinois"){
-            recovered_count['illinois'] += recovered;
+          recoveredCount.global += recovered;
+          if (location.province_state === 'Illinois') {
+            recoveredCount.illinois += recovered;
           }
         }
       });
     });
-    return { confirmed_count, deaths_count, recovered_count };
+    return { confirmedCount, deathsCount, recoveredCount };
   }
 
   render() {
-    const { confirmed_count, deaths_count, recovered_count } = this.get_total_counts();
+    const { confirmedCount, deathsCount, recoveredCount } = this.getTotalCounts();
 
-    // console.log(this.props.seirObserved)
-    const displaySeirPlot = Object.keys(this.props.seirObserved).length > 0 && Object.keys(this.props.seirSimulated).length;
-    const seirChart = displaySeirPlot ? <PlotChart
-      title='SEIR Model'
-      xTitle = 'Date'
-      yTitle = 'Population Fraction'
-      plots={[
-        {
-          data: this.props.seirObserved,
-          name: 'Observed Cases',
-        },
-        {
-          data: this.props.seirSimulated,
-          name: 'Simulated Cases',
-        },
-      ]}
-    /> : null;
+    // const displaySeirPlot = Object.keys(this.props.seirObserved).length > 0
+    //   && Object.keys(this.props.seirSimulated).length;
+    // const seirChart = displaySeirPlot ? (<PlotChart
+    //   title='SEIR Model'
+    //   xTitle='Date'
+    //   yTitle='Population Fraction'
+    //   plots={[
+    //     {
+    //       data: this.props.seirObserved,
+    //       name: 'Observed Cases',
+    //     },
+    //     {
+    //       data: this.props.seirSimulated,
+    //       name: 'Simulated Cases',
+    //     },
+    //   ]}
+    // />) : null;
 
     return (
       <div className='covid19-dashboard'>
@@ -145,22 +145,22 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_counts'>
                 <CountWidget
                   label='Total Confirmed'
-                  value={confirmed_count['global']}
+                  value={confirmedCount.global}
                 />
                 <CountWidget
                   label='Total Deaths'
-                  value={deaths_count['global']}
+                  value={deathsCount.global}
                 />
                 <CountWidget
                   label='Total Recovered'
-                  value={recovered_count['global']}
+                  value={recoveredCount.global}
                 />
               </div>
               <div className='covid19-dashboard_visualizations'>
                 <WorldMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
                   {/* {seirChart} */}
-                  <div></div> {/* TODO remove. just need to take some space */}
+                  <div /> {/* TODO remove. just need to take some space */}
                 </div>
               </div>
             </TabPanel>
@@ -169,18 +169,18 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_counts'>
                 <CountWidget
                   label='Total Confirmed'
-                  value={confirmed_count['illinois']}
+                  value={confirmedCount.illinois}
                 />
                 <CountWidget
                   label='Total Deaths'
-                  value={deaths_count['illinois']}
+                  value={deathsCount.illinois}
                 />
               </div>
               <div className='covid19-dashboard_visualizations'>
                 <IllinoisMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
                   {/* {seirChart} */}
-                  <div></div> {/* TODO remove. just need to take some space */}
+                  <div /> {/* TODO remove. just need to take some space */}
                 </div>
               </div>
             </TabPanel>

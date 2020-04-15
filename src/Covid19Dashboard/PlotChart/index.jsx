@@ -9,10 +9,9 @@ import './PlotChart.less';
 
 class CustomizedAxisTick extends React.Component {
   render() {
-    const {
-      x, y, stroke, payload,
-    } = this.props;
-    const formattedDate = `${new Date(payload.value).getMonth()}/${new Date(payload.value).getDate()}`;
+    const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
+    const val = payload.value; // eslint-disable-line react/prop-types
+    const formattedDate = `${new Date(val).getMonth()}/${new Date(val).getDate()}`;
     return (
       <g transform={`translate(${x},${y})`}>
         <text x={0} y={0} dy={16} textAnchor='end' fill='#666' transform='rotate(-60)'>{formattedDate}</text>
@@ -21,48 +20,48 @@ class CustomizedAxisTick extends React.Component {
   }
 }
 
-class PlotChart extends PureComponent {
-  formatChartData (plots) {
-    let dateToData = {};
-    if (!plots || !plots.length) {
-      return dateToData;
-    }
-
-    // let max = 0;
-    plots.forEach(plot => {
-      Object.entries(plot.data).forEach(e => {
-        const dateVal = e[0];
-        const value = Number(e[1]);
-        // max = Math.max(max, value);
-        if (!(dateVal in dateToData)) {
-          dateToData[dateVal] = { date: dateVal };
-        }
-        dateToData[dateVal][plot.name] = value;
-      });
-    });
-    let sortedData = Object.values(dateToData);
-    sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-    // console.log(sortedData);
-    return { data: sortedData }; //, max };
+function formatChartData(plots) {
+  const dateToData = {};
+  if (!plots || !plots.length) {
+    return dateToData;
   }
 
-  renderTooltip = props => {
-    const monthNames = ['Jan', 'Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov','Dec'];
+  // let max = 0;
+  plots.forEach((plot) => {
+    Object.entries(plot.data).forEach((e) => {
+      const dateVal = e[0];
+      const value = Number(e[1]);
+      // max = Math.max(max, value);
+      if (!(dateVal in dateToData)) {
+        dateToData[dateVal] = { date: dateVal };
+      }
+      dateToData[dateVal][plot.name] = value;
+    });
+  });
+  let sortedData = Object.values(dateToData);
+  sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+  // console.log(sortedData);
+  return { data: sortedData }; // , max };
+}
+
+class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
+  renderTooltip = (props) => {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     const date = new Date(props.label);
     return (
       <div className='map-chart__tooltip'>
         <p>{monthNames[date.getMonth()]} {date.getDate()}, {date.getFullYear()}</p>
         {
           props.payload.map((data, i) => (
-            <p style={{color: data.stroke}} key={i}>{data.name}: {data.value.toExponential()}</p>
+            <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value.toExponential()}</p>
           ))
         }
       </div>
-    )
+    );
   }
 
   render() {
-    const chartData = this.formatChartData(this.props.plots);
+    const chartData = formatChartData(this.props.plots);
 
     return (
       <div className='plot-chart'>
@@ -106,6 +105,8 @@ class PlotChart extends PureComponent {
 
 PlotChart.propTypes = {
   plots: PropTypes.array,
+  title: PropTypes.string.isRequired,
+  yTitle: PropTypes.string.isRequired,
 };
 
 PlotChart.defaultProps = {

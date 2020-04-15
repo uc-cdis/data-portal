@@ -135,6 +135,8 @@ function buildConfig(opts) {
     resourceBrowserPublic = true;
   }
 
+  const enableCovid19Dashboard = !!config.enableCovid19Dashboard; // TODO read from config
+
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
       '#3283c8',
@@ -304,6 +306,7 @@ function buildConfig(opts) {
     authzMappingPath,
     enableResourceBrowser,
     resourceBrowserPublic,
+    enableCovid19Dashboard,
   };
 }
 
