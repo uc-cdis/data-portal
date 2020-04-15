@@ -135,7 +135,7 @@ function buildConfig(opts) {
     resourceBrowserPublic = true;
   }
 
-  const enableCovid19Dashboard = !!config.enableCovid19Dashboard; // TODO read from config
+  const enableCovid19Dashboard = !!config.enableCovid19Dashboard;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
