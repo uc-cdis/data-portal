@@ -15,11 +15,25 @@ function addDataToGeoJsonBase(data, dataLevel) {
   if (dataLevel === 'state') {
     base = stateData;
   } else if (dataLevel === 'county') {
-    // Chicago (FIPS 17999) is separate from Cook
-    // county in `countyData`, but not in JHU data
+    const newYorkFips = '36061';
+    const emptyNewYorkFips = ['36081', '36047', '36005', '36085'];
     base = {
       ...countyData,
-      features: countyData.features.filter(f => f.properties.FIPS !== '17999'),
+      features: countyData.features.filter((f) => {
+        if (f.properties.FIPS === '17999') {
+          // Chicago (FIPS 17999) is separate from Cook county in
+          // `countyData`, but not in JHU data. So don't display
+          // Chicago separately:
+          return false;
+        }
+        if (emptyNewYorkFips.includes(f.properties.FIPS)) {
+          // JHU data contains all NY counts in county "New York". Counties
+          // "Queens", "Kings", "Richmond" and "Bronx" contain empty counts.
+          // So display the whole NY area with "New York" counts:
+          f.properties.FIPS = newYorkFips; // eslint-disable-line no-param-reassign
+        }
+        return true;
+      }),
     };
   }
 
