@@ -246,13 +246,17 @@ class WorldMapChart extends React.Component {
 
   convertRawDataToGeoJson(rawData) {
     const features = rawData.reduce((res, location) => {
-      const newFeatures = [];
       if (location.project_id !== 'open-JHU') {
         // we are getting _all_ the location data from Guppy because there
         // is no way to filter by project using the GuppyWrapper. So have
         // to filter on client side
         return res;
       }
+      if (!location.confirmed.length && !location.deaths.length) {
+        // no data for this location
+        return res;
+      }
+      const newFeatures = [];
       location.date.forEach((date, i) => {
         if (new Date(date).getTime() !== this.state.selectedDate.getTime()) {
           return;
