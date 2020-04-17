@@ -6,7 +6,7 @@ import 'react-tabs/style/react-tabs.less';
 import WorldMapChart from './WorldMapChart';
 import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
-// import PlotChart from './PlotChart';
+import PlotChart from './PlotChart';
 import './Covid19Dashboard.less';
 
 
@@ -108,7 +108,7 @@ class Covid19Dashboard extends React.Component {
   }
 
   render() {
-    const { confirmed_count, deaths_count, recovered_count } = this.get_total_counts();
+    const { confirmedCount, deathsCount, recoveredCount } = this.getTotalCounts();
 
     // console.log(this.props.seirObserved)
     const displaySeirPlot = Object.keys(this.props.seirObserved).length > 0 && Object.keys(this.props.seirSimulated).length;

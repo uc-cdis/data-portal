@@ -20,7 +20,50 @@ class CustomizedAxisTick extends React.Component {
   }
 }
 
-class PlotChart extends PureComponent {
+getDates(startDate, endDate, days) {
+  var dates = [],
+      currentDate = new Date(startDate),
+      endDate = new Date(endDate),
+      addDays = function(days) {
+        var date = new Date(this.valueOf());
+        date.setDate(date.getDate() + days);
+        return date;
+      };
+  while (currentDate <= endDate) {
+    const year = currentDate.getUTCFullYear()
+    const month = `${currentDate.getUTCMonth() + 1}`.padStart(2, 0);
+    const day = `${currentDate.getUTCDate()}`.padStart(2, 0);
+    const stringDate = [year, month, day].join("-");
+    var fmtDate = `${stringDate} 00:00:00+00:00`;
+    dates.push(fmtDate);
+    currentDate = addDays.call(currentDate, days);
+  }
+  return dates;
+};
+
+formatChartData (plots) {
+  let dateToData = {};
+  if (!plots || !plots.length) {
+    return dateToData;
+  }
+  // let max = 0;
+  plots.forEach((plot) => {
+    Object.entries(plot.data).forEach((e) => {
+      const dateVal = e[0];
+      const value = Number(e[1]);
+      // max = Math.max(max, value);
+      if (!(dateVal in dateToData)) {
+        dateToData[dateVal] = { date: dateVal };
+      }
+      dateToData[dateVal][plot.name] = value;
+    });
+  });
+  let sortedData = Object.values(dateToData);
+  sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+  return { data: sortedData, ticks: this.getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7) }; //, max };
+};
+
+class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
   state = {
     width: {
       [this.props.plots[0].name]: 1,
@@ -46,51 +89,6 @@ class PlotChart extends PureComponent {
     });
   }
 
-  getDates(startDate, endDate, days) {
-    var dates = [],
-        currentDate = new Date(startDate),
-        endDate = new Date(endDate),
-        addDays = function(days) {
-          var date = new Date(this.valueOf());
-          date.setDate(date.getDate() + days);
-          return date;
-        };
-    while (currentDate <= endDate) {
-      const year = currentDate.getUTCFullYear()
-      const month = `${currentDate.getUTCMonth() + 1}`.padStart(2, 0);
-      const day = `${currentDate.getUTCDate()}`.padStart(2, 0);
-      const stringDate = [year, month, day].join("-");
-      var fmtDate = `${stringDate} 00:00:00+00:00`;
-      dates.push(fmtDate);
-      currentDate = addDays.call(currentDate, days);
-    }
-    return dates;
-  };
-
-  formatChartData (plots) {
-    let dateToData = {};
-    if (!plots || !plots.length) {
-      return dateToData;
-    }
-    // let max = 0;
-    plots.forEach((plot) => {
-      Object.entries(plot.data).forEach((e) => {
-        const dateVal = e[0];
-        const value = Number(e[1]);
-        // max = Math.max(max, value);
-        if (!(dateVal in dateToData)) {
-          dateToData[dateVal] = { date: dateVal };
-        }
-        dateToData[dateVal][plot.name] = value;
-      });
-    });
-    let sortedData = Object.values(dateToData);
-    sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-    return { data: sortedData, ticks: this.getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7) }; //, max };
-  }
-}
-
-class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
   renderTooltip = (props) => {
     const monthNames = ['Jan', 'Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     const date = new Date(props.label);
