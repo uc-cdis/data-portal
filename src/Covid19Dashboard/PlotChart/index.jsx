@@ -20,7 +20,7 @@ class CustomizedAxisTick extends React.Component {
   }
 }
 
-getDates(startDate, endDate, days) {
+function getDates(startDate, endDate, days) {
   var dates = [],
       currentDate = new Date(startDate),
       endDate = new Date(endDate),
@@ -41,7 +41,7 @@ getDates(startDate, endDate, days) {
   return dates;
 };
 
-formatChartData (plots) {
+function formatChartData (plots) {
   let dateToData = {};
   if (!plots || !plots.length) {
     return dateToData;
@@ -60,7 +60,7 @@ formatChartData (plots) {
   });
   let sortedData = Object.values(dateToData);
   sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-  return { data: sortedData, ticks: this.getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7) }; //, max };
+  return { data: sortedData, ticks: getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7) }; //, max };
 };
 
 class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
