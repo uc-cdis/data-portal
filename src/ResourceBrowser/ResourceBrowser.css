@@ -1,5 +1,6 @@
 .resource-browser {
   width: 100%;
+  padding: 20px;
   min-height: inherit;
   background: inherit;
   display: flex;
@@ -7,8 +8,16 @@
   align-items: center;
 }
 
+.resource-browser__title {
+  padding: 10px 20px;
+}
+
+.resource-browser__description {
+  padding: 10px 20px;
+}
+
 .resource-browser__resources {
-  padding: 20px;
+  padding: 10px 0 20px 0;
   display: flex;
   flex-flow: wrap;
 }
