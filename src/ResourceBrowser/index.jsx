@@ -20,7 +20,9 @@ class ResourceBrowser extends React.Component {
           {settings.title}
         </h2>
         {settings.description ?
-          settings.description
+          <p className='resource-browser__description'>
+            {settings.description}
+          </p>
           : null}
         <div className='resource-browser__resources'>
           {resources.map((resource, i) =>
