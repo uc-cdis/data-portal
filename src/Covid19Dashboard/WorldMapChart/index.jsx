@@ -403,7 +403,7 @@ class WorldMapChart extends React.Component {
         />
         <ReactMapGL.InteractiveMap
           className='map-chart__mapgl-map'
-          mapboxApiAccessToken='pk.eyJ1IjoicmliZXlyZSIsImEiOiJjazhkbmNqMGcwdnphM2RuczBsZzVwYXFhIn0.dB-xnlG7S7WEeMuatMBQkQ' // TODO https://uber.github.io/react-map-gl/docs/get-started/mapbox-tokens
+          // mapboxApiAccessToken='pk.eyJ1IjoicmliZXlyZSIsImEiOiJjazhkbmNqMGcwdnphM2RuczBsZzVwYXFhIn0.dB-xnlG7S7WEeMuatMBQkQ' // TODO https://uber.github.io/react-map-gl/docs/get-started/mapbox-tokens
           mapStyle='mapbox://styles/mapbox/streets-v11'
           {...this.state.viewport}
           {...this.state.mapSize} // after viewport to avoid size overwrite
