@@ -22,7 +22,6 @@ function buildConfig(opts) {
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
-    mapboxApiAccessToken: process.env.MAPBOX_API_TOKEN,
   };
 
   //
@@ -48,7 +47,6 @@ function buildConfig(opts) {
     gaDebug,
     tierAccessLevel,
     tierAccessLimit,
-    mapboxApiAccessToken,
   } = Object.assign({}, defaults, opts);
 
   function ensureTrailingSlash(url) {
@@ -309,7 +307,6 @@ function buildConfig(opts) {
     enableResourceBrowser,
     resourceBrowserPublic,
     enableCovid19Dashboard,
-    mapboxApiAccessToken,
   };
 }
 
