@@ -17,7 +17,7 @@ const AuthPopup = withRouter(
       message={'Your session has expired or you are logged out. Please log in to continue.'}
       rightButtons={[
         {
-          caption: 'Go to login',
+          caption: 'Go to Login',
           fn: () => { goToLogin(history); },
         },
       ]}
