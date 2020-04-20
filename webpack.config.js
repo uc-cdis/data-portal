@@ -36,6 +36,7 @@ const plugins = [
   new webpack.EnvironmentPlugin(['WORKSPACE_URL']),
   new webpack.EnvironmentPlugin(['WTS_URL']),
   new webpack.EnvironmentPlugin(['MANIFEST_SERVICE_URL']),
+  new webpack.EnvironmentPlugin(['MapboxAccessToken']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev'),
