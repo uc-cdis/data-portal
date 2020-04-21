@@ -21,28 +21,28 @@ class CustomizedAxisTick extends React.Component {
 }
 
 function getDates(startDate, endDate, days) {
-  var dates = [],
-      currentDate = new Date(startDate),
-      endDate = new Date(endDate),
-      addDays = function(days) {
-        var date = new Date(this.valueOf());
-        date.setDate(date.getDate() + days);
-        return date;
-      };
-  while (currentDate <= endDate) {
-    const year = currentDate.getUTCFullYear()
+  const dates = [];
+  let currentDate = new Date(startDate);
+  const endingDate = new Date(endDate);
+  const addDays = function (days) {
+    const date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+  };
+  while (currentDate <= endingDate) {
+    const year = currentDate.getUTCFullYear();
     const month = `${currentDate.getUTCMonth() + 1}`.padStart(2, 0);
     const day = `${currentDate.getUTCDate()}`.padStart(2, 0);
-    const stringDate = [year, month, day].join("-");
-    var fmtDate = `${stringDate} 00:00:00+00:00`;
+    const stringDate = [year, month, day].join('-');
+    const fmtDate = `${stringDate} 00:00:00+00:00`;
     dates.push(fmtDate);
     currentDate = addDays.call(currentDate, days);
   }
   return dates;
-};
+}
 
-function formatChartData (plots) {
-  let dateToData = {};
+function formatChartData(plots) {
+  const dateToData = {};
   if (!plots || !plots.length) {
     return dateToData;
   }
@@ -60,21 +60,21 @@ function formatChartData (plots) {
   });
   let sortedData = Object.values(dateToData);
   sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-  return { data: sortedData, ticks: getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7) }; //, max };
-};
+  return { data: sortedData, ticks: getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7) }; // , max };
+}
 
 // 10 colors generated with
 // https://medialab.github.io/iwanthue/
 // Intense + colorblind option
-const COLORS = ["#ae5d47", "#d46c2e", "#88b33a", "#6c894d", "#4c9e8e", "#7384b4", "#6b52ad", "#9d4cd9", "#cd4a98", "#9f566f"];
+const COLORS = ['#ae5d47', '#d46c2e', '#88b33a', '#6c894d', '#4c9e8e', '#7384b4', '#6b52ad', '#9d4cd9', '#cd4a98', '#9f566f'];
 
 class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
   state = {
     width: Object.fromEntries(
-      Object.entries(this.props.plots).map(([k, v], i) => [v.name, 1])
+      Object.entries(this.props.plots).map(([k, v], i) => [v.name, 1]),
     ),
   };
-  
+
   handleMouseEnter = (o) => {
     const { dataKey } = o;
     const { width } = this.state;
@@ -101,7 +101,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
         <p>{monthNames[date.getUTCMonth() - 1]} {date.getUTCDate()}, {date.getUTCFullYear()}</p>
         {
           props.payload.map((data, i) => (
-            <p style={{color: data.stroke}} key={i}>{data.name}: {data.value}</p>
+            <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value}</p>
           ))
         }
       </div>
@@ -110,7 +110,6 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
 
   render() {
     const chartData = formatChartData(this.props.plots);
-    console.log(chartData);
     const { width } = this.state;
 
     return (
@@ -154,7 +153,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
             }
           </LineChart>
         </ResponsiveContainer>
-        <div style={{marginTop: 2 + 'em'}}><p>{this.props.description}</p></div>
+        <div style={{ marginTop: `${2}em` }}><p>{this.props.description}</p></div>
       </div>
     );
   }
@@ -164,6 +163,7 @@ PlotChart.propTypes = {
   plots: PropTypes.array,
   title: PropTypes.string.isRequired,
   yTitle: PropTypes.string.isRequired,
+  description: PropTypes.string,
 };
 
 PlotChart.defaultProps = {
