@@ -71,7 +71,7 @@ const COLORS = ["#ae5d47", "#d46c2e", "#88b33a", "#6c894d", "#4c9e8e", "#7384b4"
 class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
   state = {
     width: Object.fromEntries(
-      Object.entries(this.props.plots).map(([k, v], i) => [k, 1])
+      Object.entries(this.props.plots).map(([k, v], i) => [v.name, 1])
     ),
   };
   
@@ -110,6 +110,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
 
   render() {
     const chartData = formatChartData(this.props.plots);
+    console.log(chartData);
     const { width } = this.state;
 
     return (
@@ -148,7 +149,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
             {
               this.props.plots.map((entry, index) => {
                 const color = COLORS[index];
-                return <Line type='monotone' dataKey={entry.name} strokeWidth={width[entry.name]} stroke={color} dot={false} />;
+                return <Line key={entry.name} type='monotone' dataKey={entry.name} strokeWidth={width[entry.name]} stroke={color} dot={false} />;
               })
             }
           </LineChart>
