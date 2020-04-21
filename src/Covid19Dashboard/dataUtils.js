@@ -23,3 +23,35 @@ export async function formatSeirData(tsvData) {
   });
   return contents;
 }
+
+export async function formatTop10Data(tsvData) {
+  let headers = null;
+  let dateIndex;
+  const contents = {};
+  papaparse.parse(tsvData, {
+    worker: true,
+    skipEmptyLines: true,
+    step(row) {
+      if (!headers) {
+        headers = row.data;
+        dateIndex = headers.findIndex(x => x === 'date');
+        for (let index = 0; index < headers.length; index++) {
+          const col = headers[index];
+          if (col === 'date') {
+            continue;
+          }
+          contents[col] = {};
+        }
+      } else {
+        for (let index = 0; index < headers.length; index++) {
+          const col = headers[index];
+          if (col === 'date') {
+            continue;
+          }
+          contents[col][row.data[dateIndex]] = row.data[index];
+        }
+      }
+    },
+  });
+  return contents;
+}

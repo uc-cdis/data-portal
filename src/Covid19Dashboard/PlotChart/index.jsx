@@ -63,12 +63,16 @@ function formatChartData (plots) {
   return { data: sortedData, ticks: getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7) }; //, max };
 };
 
+// 10 colors generated with
+// https://medialab.github.io/iwanthue/
+// Intense + colorblind option
+const COLORS = ["#ae5d47", "#d46c2e", "#88b33a", "#6c894d", "#4c9e8e", "#7384b4", "#6b52ad", "#9d4cd9", "#cd4a98", "#9f566f"];
+
 class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
   state = {
-    width: {
-      [this.props.plots[0].name]: 1,
-      [this.props.plots[1].name]: 1,
-    },
+    width: Object.fromEntries(
+      Object.entries(this.props.plots).map(([k, v], i) => [k, 1])
+    ),
   };
   
   handleMouseEnter = (o) => {
@@ -141,8 +145,12 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
             />
             <Tooltip content={this.renderTooltip} />
             <Legend onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} />
-            <Line type='monotone' dataKey={this.props.plots[0].name} strokeWidth={width[this.props.plots[0].name]} stroke='#8884d8' dot={false} />
-            <Line type='monotone' dataKey={this.props.plots[1].name} strokeWidth={width[this.props.plots[1].name]} stroke='#aa5e79' dot={false} />
+            {
+              this.props.plots.map((entry, index) => {
+                const color = COLORS[index];
+                return <Line type='monotone' dataKey={entry.name} strokeWidth={width[entry.name]} stroke={color} dot={false} />;
+              })
+            }
           </LineChart>
         </ResponsiveContainer>
         <div style={{marginTop: 2 + 'em'}}><p>{this.props.description}</p></div>

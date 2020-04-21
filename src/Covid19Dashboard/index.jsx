@@ -34,6 +34,8 @@ import './Covid19Dashboard.less';
 const chartDataLocations = {
   seirObserved: 'observed_cases.txt',
   seirSimulated: 'simulated_cases.txt',
+  top10: 'top10.txt',
+  idphDaily: 'idph_daily.txt'
 };
 
 class Covid19Dashboard extends React.Component {
@@ -129,6 +131,34 @@ class Covid19Dashboard extends React.Component {
       ]}
     /> : null;
 
+    const displayTop10Plot = Object.keys(this.props.top10).length > 0;
+    const top10ChartPlots = Object.entries(this.props.top10).map(([key, value]) => ({
+        data: value,
+        name: key,
+      })
+    );
+    const top10Chart = displayTop10Plot ? <PlotChart
+      title='Daily Confirmed Cases (5-day Moving Average)'
+      xTitle = 'Date'
+      yTitle = 'Confirmed New Cases'
+      description = ''
+      plots={top10ChartPlots}
+    /> : null;
+
+    const displayIdphDailyChart = Object.keys(this.props.idphDaily).length > 0;
+    const idphDailyChartPlots = Object.entries(this.props.idphDaily).map(([key, value]) => ({
+        data: value,
+        name: key,
+      })
+    );
+    const idphDailyChart = displayIdphDailyChart ? <PlotChart
+      title='Breakdown of Tests, Cases and Deaths in Illinois Over Time'
+      xTitle = 'Date'
+      yTitle = '# of Tests/Cases/Deaths'
+      description = ''
+      plots={idphDailyChartPlots}
+    /> : null;
+
     return (
       <div className='covid19-dashboard'>
         {/* <ReactEcharts
@@ -161,6 +191,7 @@ class Covid19Dashboard extends React.Component {
                 <WorldMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
                   {seirChart}
+                  {top10Chart}
                 </div>
               </div>
             </TabPanel>
@@ -179,8 +210,7 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 <IllinoisMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
-                  {seirChart}
-                  <div></div> {/* TODO remove. just need to take some space */}
+                  {idphDailyChart}
                 </div>
               </div>
             </TabPanel>
@@ -196,12 +226,16 @@ Covid19Dashboard.propTypes = {
   fetchChartData: PropTypes.func.isRequired,
   seirObserved: PropTypes.object,
   seirSimulated: PropTypes.object,
+  top10: PropTypes.object,
+  idphDaily: PropTypes.object,
 };
 
 Covid19Dashboard.defaultProps = {
   rawData: [],
   seirObserved: {},
   seirSimulated: {},
+  top10: {},
+  idphDaily: {},
 };
 
 export default Covid19Dashboard;
