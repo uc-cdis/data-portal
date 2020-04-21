@@ -9,8 +9,8 @@ import worldData from '../data/world_50m'; // from https://geojson-maps.ash.ms
 import stateData from '../data/us_states_20m.json'; // from https://eric.clst.org/tech/usgeojson/
 import countyData from '../data/us_counties';
 import './WorldMapChart.less';
-import { mapboxAccessToken,
-} from '../../localconf';
+import { mapboxAPIToken } from '../../localconf';
+
 function addDataToGeoJsonBase(data, dataLevel) {
   let base = worldData;
   if (dataLevel === 'state') {
@@ -404,7 +404,7 @@ class WorldMapChart extends React.Component {
         />
         <ReactMapGL.InteractiveMap
           className='map-chart__mapgl-map'
-          mapboxApiAccessToken={mapboxAccessToken} // TODO https://uber.github.io/react-map-gl/docs/get-started/mapbox-tokens
+          mapboxApiAccessToken={mapboxAPIToken}
           mapStyle='mapbox://styles/mapbox/streets-v11'
           {...this.state.viewport}
           {...this.state.mapSize} // after viewport to avoid size overwrite
