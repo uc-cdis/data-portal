@@ -86,6 +86,7 @@ class OverlayPropertyTable extends React.Component {
                 <span
                   className='overlay-property-table__close'
                   onClick={this.handleClose}
+                  onKeyPress={this.handleClose}
                   role='button'
                   tabIndex={0}
                 >

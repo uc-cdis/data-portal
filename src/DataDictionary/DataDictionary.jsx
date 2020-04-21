@@ -33,6 +33,7 @@ class DataDictionary extends React.Component {
             <span
               className={`data-dictionary__switch-button ${!this.props.isGraphView ? '' : 'data-dictionary__switch-button--active'}`}
               onClick={() => { this.setGraphView(true); }}
+              onKeyPress={() => { this.setGraphView(true); }}
               role='button'
               tabIndex={0}
             >
@@ -41,6 +42,7 @@ class DataDictionary extends React.Component {
             <span
               className={`data-dictionary__switch-button ${this.props.isGraphView ? '' : 'data-dictionary__switch-button--active'}`}
               onClick={() => { this.setGraphView(false); }}
+              onKeyPress={() => { this.setGraphView(true); }}
               role='button'
               tabIndex={0}
             >
@@ -57,14 +59,20 @@ class DataDictionary extends React.Component {
         <div
           className='data-dictionary__main'
         >
-          <div className={`data-dictionary__table ${!this.props.isGraphView ? '' : 'data-dictionary__table--hidden'}`}>
-            <ReduxDataDictionaryTable />
-          </div>
-          <div className={`data-dictionary__graph ${this.props.isGraphView ? '' : 'data-dictionary__graph--hidden'}`}>
-            <DataDictionaryGraph
-              onClearSearchResult={this.handleClearSearchResult}
-            />
-          </div>
+          { this.props.isGraphView
+            ? (
+              <div className={`data-dictionary__graph ${this.props.isGraphView ? '' : 'data-dictionary__graph--hidden'}`}>
+                <DataDictionaryGraph
+                  onClearSearchResult={this.handleClearSearchResult}
+                />
+              </div>
+            )
+            : (
+              <div className={`data-dictionary__table ${!this.props.isGraphView ? '' : 'data-dictionary__table--hidden'}`}>
+                <ReduxDataDictionaryTable />
+              </div>
+            )
+          }
         </div>
       </div>
     );
@@ -78,7 +86,7 @@ DataDictionary.propTypes = {
 
 DataDictionary.defaultProps = {
   onSetGraphView: () => {},
-  isGraphView: true,
+  isGraphView: false,
 };
 
 

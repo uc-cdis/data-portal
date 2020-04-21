@@ -62,7 +62,6 @@
   height: 12px;
   background-color: var(--g3-color__gray);
   cursor: pointer;
-  outline: none;
 }
 
 .node-popup__close:hover {
