@@ -130,6 +130,12 @@ function buildConfig(opts) {
     explorerPublic = true;
   }
 
+  const enableResourceBrowser = !!config.resourceBrowser;
+  let resourceBrowserPublic = false;
+  if (config.resourceBrowser && config.resourceBrowser.public) {
+    resourceBrowserPublic = true;
+  }
+
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
       '#3283c8',
@@ -298,6 +304,8 @@ function buildConfig(opts) {
     explorerPublic,
     authzPath,
     authzMappingPath,
+    enableResourceBrowser,
+    resourceBrowserPublic,
   };
 }
 

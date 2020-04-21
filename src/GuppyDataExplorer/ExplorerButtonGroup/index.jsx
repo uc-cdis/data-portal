@@ -316,7 +316,7 @@ class ExplorerButtonGroup extends React.Component {
     if (typeof this.props.buttonConfig.terraTemplate !== 'undefined'
       && this.props.buttonConfig.terraTemplate != null) {
       templateParam = this.props.buttonConfig.terraTemplate.map(
-        x => '&template=' + x
+        x => `&template=${x}`,
       ).join('');
     }
     window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
@@ -447,13 +447,11 @@ class ExplorerButtonGroup extends React.Component {
       return this.state.manifestEntryCount > 0;
     }
     if (buttonConfig.type === 'export-to-pfb') {
-      return this.state.manifestEntryCount > 0 && !this.state.exportingToCloud;
+      return !this.state.exportingToCloud;
     }
     if (buttonConfig.type === 'export') {
-      if (!this.state.exportingToCloud) {
-        return this.state.manifestEntryCount > 0 && !this.isPFBRunning();
-      }
-      return this.state.manifestEntryCount > 0;
+      // if exportingToCloud is true or the PFB job is running, the button is not enabled.
+      return !(this.state.exportingToCloud || this.isPFBRunning());
     }
     if (buttonConfig.type === 'export-to-workspace') {
       return this.state.manifestEntryCount > 0;

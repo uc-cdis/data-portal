@@ -35,7 +35,7 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
-  indexPublic, useGuppyForExplorer, explorerPublic,
+  indexPublic, useGuppyForExplorer, explorerPublic, enableResourceBrowser, resourceBrowserPublic,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
@@ -46,6 +46,7 @@ import GuppyDataExplorer from './GuppyDataExplorer/.';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
+import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import './index.less';
 
@@ -306,6 +307,19 @@ async function init() {
                       <Route
                         path='/privacy-policy'
                         component={ReduxPrivacyPolicy}
+                      />
+                      : null
+                    }
+                    {enableResourceBrowser ?
+                      <Route
+                        path='/resource-browser'
+                        component={
+                          props => (<ProtectedContent
+                            public={resourceBrowserPublic}
+                            component={ResourceBrowser}
+                            {...props}
+                          />)
+                        }
                       />
                       : null
                     }
