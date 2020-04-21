@@ -1,116 +1,136 @@
 import React from 'react';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import GuppyDataExplorer from './GuppyDataExplorer';
-import { config } from '../params';
-import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../localconf';
+import { guppyUrl, tierAccessLevel, tierAccessLimit, explorerConfig, dataAvailabilityToolConfig } from '../localconf';
+import { capitalizeFirstLetter } from '../utils';
 import './GuppyExplorer.css';
 
-const defaultConfig = {
-  charts: {},
-  filters: { tabs: [] },
-  table: {
-    enabled: true,
-    fields: [],
-  },
-  guppyConfig: {
-    dataType: 'subject',
-    fieldMapping: [],
-    manifestMapping: {
-      resourceIndexType: 'file',
-      resourceIdField: 'file_id', // TODO: change to object_id
-      referenceIdFieldInResourceIndex: 'subject_id',
-      referenceIdFieldInDataIndex: 'subject_id', // TODO: change to node_id
-    },
-  },
-  buttons: [],
-  dropdowns: {},
-};
+// const defaultConfig = {
+//   charts: {},
+//   filters: { tabs: [] },
+//   table: {
+//     enabled: true,
+//     fields: [],
+//   },
+//   guppyConfig: {
+//     dataType: 'subject',
+//     fieldMapping: [],
+//     manifestMapping: {
+//       resourceIndexType: 'file',
+//       resourceIdField: 'file_id', // TODO: change to object_id
+//       referenceIdFieldInResourceIndex: 'subject_id',
+//       referenceIdFieldInDataIndex: 'subject_id', // TODO: change to node_id
+//     },
+//   },
+//   buttons: [],
+//   dropdowns: {},
+// };
 
-const defaultFileConfig = {
-  charts: {},
-  filters: { tabs: [] },
-  table: {
-    enabled: true,
-    fields: [],
-  },
-  guppyConfig: {
-    dataType: 'file',
-    fieldMapping: [],
-    manifestMapping: {
-      resourceIndexType: 'subject',
-      resourceIdField: 'subject_id',
-      referenceIdFieldInResourceIndex: 'file_id', // TODO: change to object_id
-      referenceIdFieldInDataIndex: 'file_id', // TODO: change to object_id
-    },
-  },
-  buttons: [],
-  dropdowns: {},
-};
+// const defaultFileConfig = {
+//   charts: {},
+//   filters: { tabs: [] },
+//   table: {
+//     enabled: true,
+//     fields: [],
+//   },
+//   guppyConfig: {
+//     dataType: 'file',
+//     fieldMapping: [],
+//     manifestMapping: {
+//       resourceIndexType: 'subject',
+//       resourceIdField: 'subject_id',
+//       referenceIdFieldInResourceIndex: 'file_id', // TODO: change to object_id
+//       referenceIdFieldInDataIndex: 'file_id', // TODO: change to object_id
+//     },
+//   },
+//   buttons: [],
+//   dropdowns: {},
+// };
 
-const guppyExplorerConfig = [
-  _.merge(defaultConfig, config.dataExplorerConfig),
-  _.merge(defaultFileConfig, config.fileExplorerConfig),
-];
+// const guppyExplorerConfig = [
+//   _.merge(defaultConfig, config.dataExplorerConfig),
+//   _.merge(defaultFileConfig, config.fileExplorerConfig),
+// ];
 
-const routes = [
-  '/explorer',
-  '/files',
-];
+// const routes = [
+//   '/explorer',
+//   '/files',
+// ];
 
 class Explorer extends React.Component {
   constructor(props) {
     super(props);
-    const tabIndex = routes.indexOf(props.location.pathname);
     this.state = {
-      tab: tabIndex > 0 ? tabIndex : 0,
+      tab: 0,
     };
+    this.onTabClick = this.onTabClick.bind(this);
+  }
+
+  onTabClick(tabIndex) {
+    this.setState({ tab: tabIndex });
   }
 
   render() {
+    if (explorerConfig.length === 0) {
+      return <React.Fragment />;
+    }
+
+    const tabFragment = (
+      <React.Fragment>
+        <div className='guppy-explorer__tabs'>
+          {explorerConfig.map((element, index) => {
+            let tabTitle = '';
+            if (element.tabTitle) {
+              tabTitle = element.tabTitle;
+            } else if (element.guppyConfig && element.guppyConfig.dataType) {
+              tabTitle = capitalizeFirstLetter(element.guppyConfig.dataType);
+            }
+
+            return (
+              <React.Fragment key={index}>
+                <div
+                  className={'guppy-explorer__tab'.concat(this.state.tab === index ? ' guppy-explorer__tab--selected' : '')}
+                  onClick={() => this.onTabClick(index)}
+                  role='button'
+                  tabIndex={index}
+                >
+                  <h3>{tabTitle}</h3>
+                </div>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </React.Fragment>
+    );
+
     return (
       <div className='guppy-explorer'>
         {
-          config.fileExplorerConfig ? (
-            <div className='guppy-explorer__tabs'>
-              <div
-                className={'guppy-explorer__tab'.concat(this.state.tab === 0 ? ' guppy-explorer__tab--selected' : '')}
-                onClick={() => this.props.history.push('/explorer')}
-                role='button'
-                tabIndex={0}
-              >
-                <h3>Data</h3>
-              </div>
-              <div
-                className={'guppy-explorer__tab'.concat(this.state.tab === 1 ? ' guppy-explorer__tab--selected' : '')}
-                onClick={() => this.props.history.push('/files')}
-                role='button'
-                tabIndex={-1}
-              >
-                <h3>Files</h3>
-              </div>
-            </div>
-          ) : null
+          (explorerConfig.length > 1) ?
+            tabFragment
+            : null
         }
-        <div className={config.fileExplorerConfig ? 'guppy-explorer__main' : ''}>
+        <div className={'guppy-explorer__main'}>
           <GuppyDataExplorer
-            adminAppliedPreFilters={guppyExplorerConfig[this.state.tab].adminAppliedPreFilters}
-            chartConfig={guppyExplorerConfig[this.state.tab].charts}
-            filterConfig={guppyExplorerConfig[this.state.tab].filters}
-            tableConfig={guppyExplorerConfig[this.state.tab].table}
-            heatMapConfig={this.state.tab === 0 ? config.dataAvailabilityToolConfig : null}
-            guppyConfig={{ path: guppyUrl, ...guppyExplorerConfig[this.state.tab].guppyConfig }}
+            adminAppliedPreFilters={explorerConfig[this.state.tab].adminAppliedPreFilters}
+            chartConfig={explorerConfig[this.state.tab].charts}
+            filterConfig={explorerConfig[this.state.tab].filters}
+            tableConfig={explorerConfig[this.state.tab].table}
+            heatMapConfig={this.state.tab === 0 ? dataAvailabilityToolConfig : null}
+            guppyConfig={{ path: guppyUrl, ...explorerConfig[this.state.tab].guppyConfig }}
             buttonConfig={{
-              buttons: guppyExplorerConfig[this.state.tab].buttons,
-              dropdowns: guppyExplorerConfig[this.state.tab].dropdowns,
-              terraExportURL: config.dataExplorerConfig.terraExportURL,
-              terraTemplate: config.dataExplorerConfig.terraTemplate,
+              buttons: explorerConfig[this.state.tab].buttons,
+              dropdowns: explorerConfig[this.state.tab].dropdowns,
+              terraExportURL: explorerConfig[this.state.tab].terraExportURL,
+              terraTemplate: explorerConfig[this.state.tab].terraTemplate,
             }}
             history={this.props.history}
             tierAccessLevel={tierAccessLevel}
             tierAccessLimit={tierAccessLimit}
-            getAccessButtonLink={config.dataExplorerConfig.getAccessButtonLink}
-            hideGetAccessButton={config.dataExplorerConfig.hideGetAccessButton}
+            getAccessButtonLink={explorerConfig[this.state.tab].getAccessButtonLink}
+            hideGetAccessButton={explorerConfig[this.state.tab].hideGetAccessButton}
+            // the "fully uncontrolled component with a key" trick
+            key={this.state.tab}
           />
         </div>
       </div>
@@ -120,7 +140,6 @@ class Explorer extends React.Component {
 
 Explorer.propTypes = {
   history: PropTypes.object.isRequired, // inherited from ProtectedContent
-  location: PropTypes.object.isRequired,
 };
 
 export default Explorer;

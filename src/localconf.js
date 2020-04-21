@@ -104,6 +104,33 @@ function buildConfig(opts) {
     useGuppyForExplorer = true;
   }
 
+  let explorerConfig = [];
+  // for backward compatibilities
+  if (config.dataExplorerConfig) {
+    explorerConfig.push(
+      {
+        tabTitle: 'Data',
+        ...config.dataExplorerConfig,
+      },
+    );
+  }
+  if (config.fileExplorerConfig) {
+    explorerConfig.push(
+      {
+        tabTitle: 'File',
+        ...config.fileExplorerConfig,
+      },
+    );
+  }
+
+  // new explorer config format
+  if (config.explorerConfig) {
+    useGuppyForExplorer = true;
+    explorerConfig = config.explorerConfig;
+  }
+
+  const dataAvailabilityToolConfig = config.dataAvailabilityToolConfig;
+
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
     showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
@@ -306,6 +333,8 @@ function buildConfig(opts) {
     authzMappingPath,
     enableResourceBrowser,
     resourceBrowserPublic,
+    explorerConfig,
+    dataAvailabilityToolConfig,
   };
 }
 
