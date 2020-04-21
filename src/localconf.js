@@ -22,7 +22,7 @@ function buildConfig(opts) {
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
-    mapboxAPIToken: process.env.MapboxAccessToken,
+    mapboxAPIToken: process.env.MAPBOX_API_TOKEN,
   };
 
   //
