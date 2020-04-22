@@ -65,8 +65,8 @@ function formatChartData(plots) {
 
 // 10 colors generated with
 // https://medialab.github.io/iwanthue/
-// Intense + colorblind option
-const COLORS = ['#ae5d47', '#d46c2e', '#88b33a', '#6c894d', '#4c9e8e', '#7384b4', '#6b52ad', '#9d4cd9', '#cd4a98', '#9f566f'];
+// Intense + colorblind option + hard (force vector)
+const COLORS = ["#46151f", "#0078b8", "#00beb5", "#f5bc6e", "#006ad0", "#ff50a2", "#009b2b", "#91c600", "#6266ff", "#ff3cca",];
 
 class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
   state = {
@@ -124,7 +124,11 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
               top: 5, right: 30, left: 20, bottom: 5,
             }}
           >
-            <CartesianGrid strokeDasharray='3 3' />
+            <CartesianGrid
+              horizontal={true}
+              vertical={false}
+              strokeDasharray='3 3'
+            />
             <XAxis
               dataKey='date'
               // label={this.props.xTitle}
