@@ -36,7 +36,6 @@
   color: var(--g3-color__white);
   cursor: pointer;
   margin-left: 15px;
-  outline: none;
 }
 
 .overlay-property-table__close-icon {

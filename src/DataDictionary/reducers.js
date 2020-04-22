@@ -5,7 +5,7 @@ import {
 } from './utils';
 
 const ddgraphInitialState = {
-  isGraphView: true,
+  isGraphView: false,
   layoutInitialized: false,
   nodes: [],
   edges: [],

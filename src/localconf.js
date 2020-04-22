@@ -69,6 +69,7 @@ function buildConfig(opts) {
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
   const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
+  const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
   let login = {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',
@@ -292,6 +293,7 @@ function buildConfig(opts) {
     guppyDownloadUrl,
     manifestServiceApiPath,
     wtsPath,
+    externalLoginOptionsUrl,
     useGuppyForExplorer,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,

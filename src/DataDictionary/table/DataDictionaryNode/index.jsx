@@ -31,6 +31,7 @@ class DataDictionaryNode extends React.Component {
           className='data-dictionary-node'
           style={{ borderLeftColor: getCategoryColor(this.props.node.category) }}
           onClick={() => this.handleClickNode(this.props.node.id)}
+          onKeyPress={() => this.handleClickNode(this.props.node.id)}
           role='button'
           tabIndex={0}
         >
@@ -73,6 +74,7 @@ class DataDictionaryNode extends React.Component {
               <span
                 className='data-dictionary-node__property-close'
                 onClick={this.handleCloseNode}
+                onKeyPress={this.handleCloseNode}
                 role='button'
                 tabIndex={0}
               >
