@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import { guppyUrl, tierAccessLevel, tierAccessLimit, explorerConfig, dataAvailabilityToolConfig } from '../localconf';
@@ -8,8 +9,15 @@ import './GuppyExplorer.css';
 class Explorer extends React.Component {
   constructor(props) {
     super(props);
+    const tabIndex = (props.location.pathname === '/files') ? _.findIndex(explorerConfig, (config) => {
+      // find file tab index from config array using guppyConfig.dataType
+      if (config.guppyConfig && config.guppyConfig.dataType) {
+        return config.guppyConfig.dataType === 'file';
+      }
+      return false;
+    }) : 0;
     this.state = {
-      tab: 0,
+      tab: tabIndex,
     };
     this.onTabClick = this.onTabClick.bind(this);
   }
@@ -19,7 +27,8 @@ class Explorer extends React.Component {
   }
 
   render() {
-    if (explorerConfig.length === 0) {
+    // if no configs or comes from '/files' but there is no file tab
+    if (explorerConfig.length === 0 || this.state.tab === -1) {
       return <React.Fragment />;
     }
 
@@ -88,6 +97,7 @@ class Explorer extends React.Component {
 
 Explorer.propTypes = {
   history: PropTypes.object.isRequired, // inherited from ProtectedContent
+  location: PropTypes.object.isRequired,
 };
 
 export default Explorer;
