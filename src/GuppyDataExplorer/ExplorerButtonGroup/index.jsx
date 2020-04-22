@@ -100,6 +100,10 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export-files-to-workspace') {
       clickFunc = () => this.exportToWorkspace('file');
     }
+    if (buttonConfig.type === 'export-pfb-to-workspace') {
+      console.log('104');
+      clickFunc = this.exportPFBToWorkspace;
+    }
     return clickFunc;
   };
 
@@ -331,6 +335,12 @@ class ExplorerButtonGroup extends React.Component {
     });
   };
 
+  exportPFBToWorkspace = () => {
+    this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
+    let status = this.props.checkJobStatus();
+    console.log('okay', status);
+  }
+
   exportToWorkspace = async (indexType) => {
     this.setState({ exportingToWorkspace: true });
     const resultManifest = await this.getManifest(indexType);
@@ -387,7 +397,8 @@ class ExplorerButtonGroup extends React.Component {
   isFileButton = buttonConfig => buttonConfig.type === 'manifest' ||
     buttonConfig.type === 'export' ||
     buttonConfig.type === 'export-to-workspace' ||
-    buttonConfig.type === 'export-to-pfb';
+    buttonConfig.type === 'export-to-pfb' ||
+    buttonConfig.type === 'export-pfb-to-workspace';
 
   refreshManifestEntryCount = async () => {
     if (this.props.isLocked) return;
@@ -449,6 +460,9 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export-to-pfb') {
       return !this.state.exportingToCloud;
     }
+    if (buttonConfig.type === 'export-pfb-to-workspace') {
+      return !this.state.exportingToCloud;
+    }
     if (buttonConfig.type === 'export') {
       // if exportingToCloud is true or the PFB job is running, the button is not enabled.
       return !(this.state.exportingToCloud || this.isPFBRunning());
@@ -469,6 +483,10 @@ class ExplorerButtonGroup extends React.Component {
     }
     if (buttonConfig.type === 'export-to-pfb') {
       return this.isPFBRunning() && !this.state.exportingToCloud;
+    }
+    if (buttonConfig.type === 'export-pfb-to-workspace') {
+      console.log('483');
+      return this.isPFBToWorkspaceRunning() && !this.state.exportingToCloud;
     }
     if (buttonConfig.type === 'export') {
       return this.state.exportingToCloud && this.isPFBRunning();

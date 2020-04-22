@@ -244,6 +244,9 @@
     "dropdowns": {
       "download": {
         "title": "Download"
+      },
+      "export": {
+        "title": "Export"
       }
     },
     "buttons": [
@@ -269,21 +272,32 @@
         "enabled": true,
         "type": "export",
         "title": "Export All to Terra",
-        "rightIcon": "external-link"
+        "rightIcon": "external-link",
+        "dropdownId": "export"
       },
       {
         "enabled": true,
         "type": "export-to-pfb",
         "title": "Export to PFB",
         "leftIcon": "datafile",
-        "rightIcon": "download"
+        "rightIcon": "download",
+        "dropdownId": "export"
       },
       {
         "enabled": true,
         "type": "export-to-workspace",
         "title": "Export to Workspace",
         "leftIcon": "datafile",
-        "rightIcon": "download"
+        "rightIcon": "download",
+        "dropdownId": "export"
+      },
+      {
+        "enabled": true,
+        "type": "export-pfb-to-workspace",
+        "title": "Export PFB to Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "download",
+        "dropdownId": "export"
       }
     ],
     "arrangerConfig": {
