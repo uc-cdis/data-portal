@@ -100,6 +100,7 @@ class Explorer extends React.Component {
             );
           })}
         </div>
+        <div className={'guppy-explorer__main'} />
       </React.Fragment>
     );
 
@@ -110,29 +111,27 @@ class Explorer extends React.Component {
             tabFragment
             : null
         }
-        <div className={'guppy-explorer__main'}>
-          <GuppyDataExplorer
-            adminAppliedPreFilters={explorerConfig[this.state.tab].adminAppliedPreFilters}
-            chartConfig={explorerConfig[this.state.tab].charts}
-            filterConfig={explorerConfig[this.state.tab].filters}
-            tableConfig={explorerConfig[this.state.tab].table}
-            heatMapConfig={this.state.tab === 0 ? dataAvailabilityToolConfig : null}
-            guppyConfig={{ path: guppyUrl, ...explorerConfig[this.state.tab].guppyConfig }}
-            buttonConfig={{
-              buttons: explorerConfig[this.state.tab].buttons,
-              dropdowns: explorerConfig[this.state.tab].dropdowns,
-              terraExportURL: explorerConfig[this.state.tab].terraExportURL,
-              terraTemplate: explorerConfig[this.state.tab].terraTemplate,
-            }}
-            history={this.props.history}
-            tierAccessLevel={tierAccessLevel}
-            tierAccessLimit={tierAccessLimit}
-            getAccessButtonLink={explorerConfig[this.state.tab].getAccessButtonLink}
-            hideGetAccessButton={explorerConfig[this.state.tab].hideGetAccessButton}
-            // the "fully uncontrolled component with a key" trick
-            key={this.state.tab}
-          />
-        </div>
+        <GuppyDataExplorer
+          adminAppliedPreFilters={explorerConfig[this.state.tab].adminAppliedPreFilters}
+          chartConfig={explorerConfig[this.state.tab].charts}
+          filterConfig={explorerConfig[this.state.tab].filters}
+          tableConfig={explorerConfig[this.state.tab].table}
+          heatMapConfig={this.state.tab === 0 ? dataAvailabilityToolConfig : null}
+          guppyConfig={{ path: guppyUrl, ...explorerConfig[this.state.tab].guppyConfig }}
+          buttonConfig={{
+            buttons: explorerConfig[this.state.tab].buttons,
+            dropdowns: explorerConfig[this.state.tab].dropdowns,
+            terraExportURL: explorerConfig[this.state.tab].terraExportURL,
+            terraTemplate: explorerConfig[this.state.tab].terraTemplate,
+          }}
+          history={this.props.history}
+          tierAccessLevel={tierAccessLevel}
+          tierAccessLimit={tierAccessLimit}
+          getAccessButtonLink={explorerConfig[this.state.tab].getAccessButtonLink}
+          hideGetAccessButton={explorerConfig[this.state.tab].hideGetAccessButton}
+          // the "fully uncontrolled component with a key" trick
+          key={this.state.tab}
+        />
       </div>
     );
   }
