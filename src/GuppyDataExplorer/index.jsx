@@ -5,58 +5,6 @@ import { guppyUrl, tierAccessLevel, tierAccessLimit, explorerConfig, dataAvailab
 import { capitalizeFirstLetter } from '../utils';
 import './GuppyExplorer.css';
 
-// const defaultConfig = {
-//   charts: {},
-//   filters: { tabs: [] },
-//   table: {
-//     enabled: true,
-//     fields: [],
-//   },
-//   guppyConfig: {
-//     dataType: 'subject',
-//     fieldMapping: [],
-//     manifestMapping: {
-//       resourceIndexType: 'file',
-//       resourceIdField: 'file_id', // TODO: change to object_id
-//       referenceIdFieldInResourceIndex: 'subject_id',
-//       referenceIdFieldInDataIndex: 'subject_id', // TODO: change to node_id
-//     },
-//   },
-//   buttons: [],
-//   dropdowns: {},
-// };
-
-// const defaultFileConfig = {
-//   charts: {},
-//   filters: { tabs: [] },
-//   table: {
-//     enabled: true,
-//     fields: [],
-//   },
-//   guppyConfig: {
-//     dataType: 'file',
-//     fieldMapping: [],
-//     manifestMapping: {
-//       resourceIndexType: 'subject',
-//       resourceIdField: 'subject_id',
-//       referenceIdFieldInResourceIndex: 'file_id', // TODO: change to object_id
-//       referenceIdFieldInDataIndex: 'file_id', // TODO: change to object_id
-//     },
-//   },
-//   buttons: [],
-//   dropdowns: {},
-// };
-
-// const guppyExplorerConfig = [
-//   _.merge(defaultConfig, config.dataExplorerConfig),
-//   _.merge(defaultFileConfig, config.fileExplorerConfig),
-// ];
-
-// const routes = [
-//   '/explorer',
-//   '/files',
-// ];
-
 class Explorer extends React.Component {
   constructor(props) {
     super(props);
