@@ -126,6 +126,7 @@ class Canvas extends React.Component {
           <div
             className='canvas__zoom-button canvas__zoom-button--reset'
             onClick={this.handleReset}
+            onKeyPress={this.handleReset}
             role='button'
             tabIndex={-1}
           >
@@ -134,6 +135,7 @@ class Canvas extends React.Component {
           <div
             className='canvas__zoom-button canvas__zoom-button--zoom-in'
             onClick={this.handleZoomIn}
+            onKeyPress={this.handleZoomIn}
             role='button'
             tabIndex={-1}
           >
@@ -142,6 +144,7 @@ class Canvas extends React.Component {
           <div
             className='canvas__zoom-button canvas__zoom-button--zoom-out'
             onClick={this.handleZoomOut}
+            onKeyPress={this.handleZoomOut}
             role='button'
             tabIndex={-1}
           >
