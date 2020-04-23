@@ -143,6 +143,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
                 value: this.props.yTitle,
                 angle: -90,
                 position: 'insideLeft',
+                offset: -10
               }}
               type='number'
               domain={[0, 'auto']}
