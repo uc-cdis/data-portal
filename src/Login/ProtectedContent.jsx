@@ -236,6 +236,7 @@ class ProtectedContent extends React.Component {
               // something went wrong - better just re-login
               newState.authenticated = false;
               newState.redirectTo = '/login';
+              newState.from = this.props.location;
               return newState;
             },
           );
@@ -260,9 +261,11 @@ class ProtectedContent extends React.Component {
     // take quiz if this user doesn't have required certificate
     if (this.props.match.path !== '/quiz' && isMissingCerts) {
       newState.redirectTo = '/quiz';
+      newState.from = this.props.location;
       // do not update lastAuthMs (indicates time of last successful auth)
     } else if (this.props.match.path === '/quiz' && !isMissingCerts) {
       newState.redirectTo = '/';
+      newState.from = this.props.location;
     }
     return newState;
   };
@@ -278,7 +281,7 @@ class ProtectedContent extends React.Component {
     if (this.state.redirectTo) {
       return (<Redirect to={{
         pathname: this.state.redirectTo,
-        from: this.state.from.pathname }} // send previous location to redirect
+        from: (this.state.from && this.state.from.pathname) ? this.state.from.pathname : '/' }} // send previous location to redirect
       />);
     } else if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
