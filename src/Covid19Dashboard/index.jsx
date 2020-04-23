@@ -47,7 +47,7 @@ class Covid19Dashboard extends React.Component {
 
   componentDidMount() {
     Object.entries(chartDataLocations).forEach(
-      e => { console.log("fetching data..."); console.log(e); this.props.fetchChartData(e[0], e[1]) },
+      e => this.props.fetchChartData(e[0], e[1]),
     );
   }
 
@@ -112,7 +112,6 @@ class Covid19Dashboard extends React.Component {
   render() {
     const { confirmedCount, deathsCount, recoveredCount } = this.getTotalCounts();
 
-    // console.log(this.props.seirObserved)
     const displaySeirPlot = Object.keys(this.props.seirObserved).length > 0 && Object.keys(this.props.seirSimulated).length;
     const seirPlotChart = [
       {
@@ -160,9 +159,7 @@ class Covid19Dashboard extends React.Component {
       plots={idphDailyChartPlots}
     />) : null;
 
-    console.log(seirPlotChart);
-    console.log(top10ChartPlots);
-    console.log(idphDailyChartPlots);
+    console.log(this.props);
     
     return (
       <div className='covid19-dashboard'>
