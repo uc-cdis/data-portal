@@ -75,6 +75,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
     ),
   };
 
+  // change the width of line based on the mouse over the legend
   handleMouseEnter = (o) => {
     const { dataKey } = o;
     const { width } = this.state;
