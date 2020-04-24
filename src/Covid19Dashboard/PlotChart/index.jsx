@@ -24,7 +24,7 @@ function getDates(startDate, endDate, days) {
   const dates = [];
   let currentDate = new Date(startDate);
   const endingDate = new Date(endDate);
-  const addDays = function (days) {
+  const addDays = (days) => {
     const date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
     return date;
