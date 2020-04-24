@@ -66,7 +66,7 @@ function formatChartData(plots) {
 // 10 colors generated with
 // https://medialab.github.io/iwanthue/
 // Intense + colorblind option + hard (force vector)
-const COLORS = ["#46151f", "#0078b8", "#00beb5", "#f5bc6e", "#006ad0", "#ff50a2", "#009b2b", "#91c600", "#6266ff", "#ff3cca",];
+const COLORS = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf",];
 
 class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
   state = {
@@ -154,7 +154,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
             <Legend onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} />
             {
               this.props.plots.map((entry, index) => {
-                const color = COLORS[index];
+                const color = COLORS[index % COLORS.length];
                 return <Line key={entry.name} type='monotone' dataKey={entry.name} strokeWidth={width[entry.name]} stroke={color} dot={false} />;
               })
             }
