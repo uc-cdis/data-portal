@@ -105,7 +105,6 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
             <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value}</p>
           ))
         }
-        <div style={{ marginTop: `${2}em` }}><p>{this.props.description}</p></div>
       </div>
     );
   }
@@ -160,6 +159,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
             }
           </LineChart>
         </ResponsiveContainer>
+        <div style={{ marginTop: `${2}em` }}><p>{this.props.description}</p></div>
       </div>
     );
   }
