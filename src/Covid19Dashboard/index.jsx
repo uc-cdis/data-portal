@@ -112,7 +112,7 @@ class Covid19Dashboard extends React.Component {
   render() {
     const { confirmedCount, deathsCount, recoveredCount } = this.getTotalCounts();
 
-    const displaySeirPlot = Object.keys(this.props.seirObserved).length > 0 && Object.keys(this.props.seirSimulated).length;
+    const displaySeirPlot = Object.keys(this.props.seirObserved).length > 0 && Object.keys(this.props.seirSimulated).length > 0;
     const seirPlotChart = [
       {
         data: this.props.seirObserved,
