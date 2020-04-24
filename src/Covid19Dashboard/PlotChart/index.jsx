@@ -98,12 +98,13 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
     const date = new Date(props.label);
     return (
       <div className='map-chart__tooltip'>
-        <p>{monthNames[date.getUTCMonth() - 1]} {date.getUTCDate()}, {date.getUTCFullYear()}</p>
+        <p>{monthNames[date.getUTCMonth()]} {date.getUTCDate()}, {date.getUTCFullYear()}</p>
         {
           props.payload.map((data, i) => (
             <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value}</p>
           ))
         }
+        <div style={{ marginTop: `${2}em` }}><p>{this.props.description}</p></div>
       </div>
     );
   }
@@ -158,7 +159,6 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
             }
           </LineChart>
         </ResponsiveContainer>
-        <div style={{ marginTop: `${2}em` }}><p>{this.props.description}</p></div>
       </div>
     );
   }

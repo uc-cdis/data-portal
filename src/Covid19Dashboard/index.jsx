@@ -190,7 +190,6 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 <WorldMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
-                  {seirChart}
                   {top10Chart}
                 </div>
               </div>
@@ -210,6 +209,7 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 <IllinoisMapChart {...this.props} />
                 <div className='covid19-dashboard_charts'>
+                  {seirChart}
                   {idphDailyChart}
                 </div>
               </div>

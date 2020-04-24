@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Covid19Dashboard from '../Covid19Dashboard';
 
-import { formatSeirData, formatTop10Data } from './dataUtils.js';
+import { readSingleColumnTSV, readMultiColumnTSV } from './dataUtils.js';
 
 const dataUrl = 'https://opendata.datacommons.io/';
 
@@ -9,11 +9,11 @@ async function handleChartData(propName, data) {
   switch (propName) {
   case 'seirObserved':
   case 'seirSimulated':
-    return formatSeirData(data);
+    return readSingleColumnTSV(data);
   case 'top10':
-    return formatTop10Data(data);
+    return readMultiColumnTSV(data);
   case 'idphDaily':
-    return formatTop10Data(data); // change the name
+    return readMultiColumnTSV(data); // change the name
   default:
     console.warn(`I don't know how to handle chart data for "${propName}"`); // eslint-disable-line no-console
     // return 'ERROR_FETCH_CHART_DATA';
