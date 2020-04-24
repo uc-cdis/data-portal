@@ -174,6 +174,7 @@ PlotChart.propTypes = {
 
 PlotChart.defaultProps = {
   plots: [],
+  description: "",
 };
 
 export default PlotChart;
