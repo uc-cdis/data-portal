@@ -24,8 +24,8 @@ function getDates(startDate, endDate, days) {
   const dates = [];
   let currentDate = new Date(startDate);
   const endingDate = new Date(endDate);
-  const addDays = (days) => {
-    const date = new Date(this.valueOf());
+  const addDays = (startDate, days) => {
+    const date = new Date(startDate.valueOf());
     date.setDate(date.getDate() + days);
     return date;
   };
@@ -36,7 +36,7 @@ function getDates(startDate, endDate, days) {
     const stringDate = [year, month, day].join('-');
     const fmtDate = `${stringDate} 00:00:00+00:00`;
     dates.push(fmtDate);
-    currentDate = addDays.call(currentDate, days);
+    currentDate = addDays(currentDate, days);
   }
   return dates;
 }
