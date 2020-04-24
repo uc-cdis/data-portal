@@ -95,7 +95,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
   }
 
   renderTooltip = (props) => {
-    const monthNames = ['Jan', 'Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const date = new Date(props.label);
     return (
       <div className='map-chart__tooltip'>
