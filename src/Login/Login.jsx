@@ -52,8 +52,11 @@ class Login extends React.Component {
   }
 
   render() {
-    let next = basename;
     const location = this.props.location; // this is the react-router "location"
+    // compose next according to location.from
+    let next = (location.from) ? `${basename}${location.from}` : basename;
+    // clean up url: no double slashes
+    next = next.replace(/\/+/g, '/');
     const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/, '') : '');
     if (queryParams.next) {
       next = basename === '/' ? queryParams.next : basename + queryParams.next;

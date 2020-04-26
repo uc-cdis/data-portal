@@ -1,13 +1,13 @@
-.node-popup {
+.navbar-tooltip {
   position: absolute;
+  z-index: 1000;
 }
 
-.node-popup__wrapper {
+.navbar-tooltip__wrapper {
   position: relative;
   background-color: var(--g3-color__white);
   vertical-align: middle;
-  text-align: center;
-  padding: 10px 0;
+  padding: 10px;
   left: -120px; /* tooltipWidth / 2 */
   width: 240px; /* tooltipWidth = 240 */
   top: 5px;
@@ -15,7 +15,7 @@
   border-radius: 4px;
 }
 
-.node-popup__arrow {
+.navbar-tooltip__arrow {
   width: 0;
   height: 0;
   position: absolute;
@@ -26,44 +26,16 @@
   border-bottom: 10px solid var(--g3-color__gray); /* gap = 10px */
 }
 
-.node-popup__arrow--inner {
+.navbar-tooltip__arrow--inner {
   top: -9px;
   border-bottom: 10px solid var(--g3-color__white);
 }
 
-.node-popup__content {
+.navbar-tooltip__content {
   position: relative;
   font-size: 14px;
   font-weight: normal;
   line-height: 1.6em;
   letter-spacing: .02rem;
   text-align: unset;
-}
-
-.node-popup__list-item {
-  text-align: left;
-  margin-left: 35px;
-}
-
-.node-popup__button {
-  width: 120px;
-  font-size: 12px;
-  height: 30px;
-  background-color: var(--g3-color__base-blue);
-  color: var(--g3-color__white);
-  margin: 10px auto auto auto;
-}
-
-.node-popup__close {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 12px;
-  height: 12px;
-  background-color: var(--g3-color__gray);
-  cursor: pointer;
-}
-
-.node-popup__close:hover {
-  background-color: var(--g3-color__lightgray);
 }

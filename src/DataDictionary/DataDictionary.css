@@ -54,7 +54,6 @@
   width: 50%;
   text-align: center;
   padding: 10px;
-  outline: none;
   border-left: 1px solid var(--data-dictionary__switch-border-color);
 }
 

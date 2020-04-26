@@ -9,7 +9,6 @@
   border-left-style: solid;
   border-left-color: var(--dictionary-border-color);
   cursor: pointer;
-  outline: none;
 }
 
 .data-dictionary-node__title {
@@ -69,7 +68,7 @@
   display: inline;
 }
 
-.data-dictionary-node__download-button:hover, 
+.data-dictionary-node__download-button:hover,
 .data-dictionary-node__download-button:active {
   color: white;
 }
@@ -93,7 +92,6 @@
   position: absolute;
   right: 0;
   cursor: pointer;
-  outline: none;
 }
 
 .data-dictionary-node__property-close:hover {

@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import NavButton from './NavButton';
+import NavBarTooltip from './NavBarTooltip';
 import { breakpoints } from '../../localconf';
-import './NavBar.less';
 import { config } from '../../params';
+import './NavBar.less';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
@@ -15,13 +17,22 @@ import { config } from '../../params';
 class NavBar extends Component {
   constructor(props) {
     super(props);
+    this.navButtonRefs = {};
     this.state = {
       menuOpen: false,
+      tooltipDetails: { content: '' },
     };
   }
 
   componentDidMount() {
     this.props.onInitActive();
+  }
+
+  getNavButtonRef = (itemUniqueId) => {
+    if (!this.navButtonRefs[itemUniqueId]) {
+      this.navButtonRefs[itemUniqueId] = React.createRef();
+    }
+    return this.navButtonRefs[itemUniqueId];
   }
 
   canUserSeeComponent = (componentName) => {
@@ -38,29 +49,61 @@ class NavBar extends Component {
     this.setState(prevState => ({ menuOpen: !prevState.menuOpen }));
   }
 
+  updateTooltip(item) {
+    /*
+    - `item.tooltip` is a string: display it on mouse hover
+    - `item.tooltip` is null/empty string: no tooltip text for this button
+    - `item` is null: mouse is not over a button
+    */
+    let tooltipDetails = { content: '' };
+    if (item && item.tooltip) {
+      const boundsRect = this.navButtonRefs[item.link].current.getBoundingClientRect();
+      const bottomY = boundsRect.bottom;
+      const centerX = boundsRect.x + (boundsRect.width / 2);
+      tooltipDetails = {
+        content: item.tooltip,
+        x: centerX,
+        y: bottomY + 5,
+      };
+    }
+    if (tooltipDetails.content === this.state.tooltipDetails.content) {
+      return;
+    }
+    this.setState({ tooltipDetails });
+  }
+
   render() {
     const navItems = this.props.navItems.map(
       (item, index) => {
-        const navButton = (item.link.startsWith('http') ?
-          (<a className='nav-bar__link nav-bar__link--right' key={item.link} href={item.link}>
-            <NavButton
-              item={item}
-              dictIcons={this.props.dictIcons}
-              isActive={this.isActive(item.link)}
-              onActiveTab={() => this.props.onActiveTab(item.link)}
-              tabIndex={index + 1}
-            />
-          </a>) :
-          (<Link className='nav-bar__link nav-bar__link--right' key={item.link} to={item.link}>
-            <NavButton
-              item={item}
-              dictIcons={this.props.dictIcons}
-              isActive={this.isActive(item.link)}
-              onActiveTab={() => this.props.onActiveTab(item.link)}
-              tabIndex={index + 1}
-            />
-          </Link>)
-        );
+        const navButton = (<div
+          key={item.link}
+          ref={this.getNavButtonRef(item.link)}
+          className='nav-bar__link nav-bar__link--right'
+          onMouseOver={() => this.updateTooltip(item)}
+          onMouseLeave={() => this.updateTooltip(null)}
+        >
+          { item.link.startsWith('http') ?
+            (<a href={item.link}>
+              <NavButton
+                item={item}
+                dictIcons={this.props.dictIcons}
+                isActive={this.isActive(item.link)}
+                onActiveTab={() => this.props.onActiveTab(item.link)}
+                tabIndex={index + 1}
+              />
+            </a>)
+            :
+            (<Link to={item.link}>
+              <NavButton
+                item={item}
+                dictIcons={this.props.dictIcons}
+                isActive={this.isActive(item.link)}
+                onActiveTab={() => this.props.onActiveTab(item.link)}
+                tabIndex={index + 1}
+              />
+            </Link>)
+          }
+        </div>);
         return this.canUserSeeComponent(item.name) ? navButton : null;
       });
 
@@ -134,6 +177,9 @@ class NavBar extends Component {
             <nav className='nav-bar__nav--items'>
               { navItems }
             </nav>
+            { this.state.tooltipDetails.content !== '' ?
+              <NavBarTooltip {...this.state.tooltipDetails} />
+              : null }
           </MediaQuery>
         </header>
       </div>
