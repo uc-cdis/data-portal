@@ -10,7 +10,7 @@ import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntrodu
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
-import { guppyUrl, breakpoints, customHomepageChartConfig, indexPublic, enableCovid19Dashboard } from '../localconf';
+import { guppyUrl, breakpoints, customHomepageChartConfig, indexPublic, enableCovid19Dashboard, covid19DashboardConfig } from '../localconf';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
 import ReduxCovid19Dashboard from '../Covid19Dashboard/ReduxCovid19Dashboard';
 import './page.less';
@@ -103,7 +103,10 @@ class IndexPageComponent extends React.Component {
             }}
             filterConfig={{}}
           >
-            <ReduxCovid19Dashboard {...this.props} />
+            <ReduxCovid19Dashboard
+              config={covid19DashboardConfig}
+              {...this.props}
+            />
           </GuppyWrapper>
         }
         <ReduxIndexButtonBar {...this.props} />

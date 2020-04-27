@@ -62,11 +62,12 @@ class ProtectedContent extends React.Component {
       authenticated: false,
       dataLoaded: false,
       redirectTo: null,
+      from: null,
     };
   }
 
   /**
-   * We start out in an unauthenticatd state - after mount do
+   * We start out in an unauthenticated state - after mount do
    * the checks to see if the current session is authenticated
    * in the various ways we want it to be.
    */
@@ -149,6 +150,7 @@ class ProtectedContent extends React.Component {
           if (!user.username) { // not authenticated
             newState.redirectTo = '/login';
             newState.authenticated = false;
+            newState.from = this.props.location; // save previous location
           } else if (response.type !== 'UPDATE_POPUP') {
             // auth ok - cache it
             lastAuthMs = Date.now();
@@ -191,7 +193,7 @@ class ProtectedContent extends React.Component {
           // error code for all cases
           // there may be no tables at startup time,
           // or some other weirdness ...
-          // The oauth dance below is only relevent for legacy commons - pre jwt
+          // The oauth dance below is only relevant for legacy commons - pre jwt
           return Promise.resolve(newState);
         }
         // else do the oauth dance
@@ -234,6 +236,7 @@ class ProtectedContent extends React.Component {
               // something went wrong - better just re-login
               newState.authenticated = false;
               newState.redirectTo = '/login';
+              newState.from = this.props.location;
               return newState;
             },
           );
@@ -258,9 +261,11 @@ class ProtectedContent extends React.Component {
     // take quiz if this user doesn't have required certificate
     if (this.props.match.path !== '/quiz' && isMissingCerts) {
       newState.redirectTo = '/quiz';
+      newState.from = this.props.location;
       // do not update lastAuthMs (indicates time of last successful auth)
     } else if (this.props.match.path === '/quiz' && !isMissingCerts) {
       newState.redirectTo = '/';
+      newState.from = this.props.location;
     }
     return newState;
   };
@@ -274,7 +279,10 @@ class ProtectedContent extends React.Component {
     window.scrollTo(0, 0);
     const pageFullWidthClassModifier = isPageFullScreen(this.props.location.pathname) ? 'protected-content--full-screen' : '';
     if (this.state.redirectTo) {
-      return (<Redirect to={this.state.redirectTo} />);
+      return (<Redirect to={{
+        pathname: this.state.redirectTo,
+        from: (this.state.from && this.state.from.pathname) ? this.state.from.pathname : '/' }} // send previous location to redirect
+      />);
     } else if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
         <div className={`protected-content ${pageFullWidthClassModifier}`}>

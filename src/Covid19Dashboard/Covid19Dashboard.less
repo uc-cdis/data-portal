@@ -1,6 +1,5 @@
 .covid19-dashboard {
   width: 100%;
-  padding: 0 0 40px 0;
 }
 
 .covid19-dashboard_tablist {
@@ -34,15 +33,17 @@
   padding: 10px;
   padding-top: 0; // counts above visualizations already padded
   display: grid;
-  // grid-template-columns: 70% 30%; // enable when add charts
+  grid-auto-columns: 1fr 30%;
 }
 
 .covid19-dashboard_charts {
+  grid-column: 2;
   display: grid;
   grid-template-rows: 1fr 1fr;
 }
 
 .map-chart {
+  grid-column: 1;
   width: 100%;
 }
 

@@ -128,6 +128,31 @@ export const fetchWithCreds = (opts) => {
   );
 };
 
+export const fetchWithCredsAndTimeout = (opts, timeoutInMS) => {
+  let didTimeOut = false;
+
+  return new Promise(((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      didTimeOut = true;
+      reject(new Error('Request timed out'));
+    }, timeoutInMS);
+
+    fetchWithCreds(opts).then((response) => {
+      // Clear the timeout as cleanup
+      clearTimeout(timeout);
+      if (!didTimeOut) {
+        resolve(response);
+      }
+    })
+      .catch((err) => {
+        // Rejection already happened with setTimeout
+        if (didTimeOut) return;
+        // Reject with error
+        reject(err);
+      });
+  }));
+};
+
 /**
  * Redux 'thunk' wrapper around fetchWithCreds
  * invokes dispatch(handler( { status, data, headers} ) and callback()
