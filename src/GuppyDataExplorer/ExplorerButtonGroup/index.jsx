@@ -40,9 +40,11 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log('43');
     if (nextProps.job && nextProps.job.status === 'Completed' && this.props.job.status !== 'Completed') {
       this.fetchJobResult()
         .then((res) => {
+          console.log(47);
           if (this.state.exportingToCloud) {
             this.setState({
               exportPFBURL: `${res.data.output}`.split('\n'),
@@ -51,7 +53,17 @@ class ExplorerButtonGroup extends React.Component {
             }, () => {
               this.sendPFBToCloud();
             });
-          } else {
+          } else if (this.state.exportingPFBToWorkspace) {
+            console.log('yay 56');
+            this.setState({
+              exportPFBURL: `${res.data.output}`.split('\n'),
+              toasterOpen: false,
+              exportingPFBToWorkspace: false,
+            }, () => {
+              this.sendPFBToCloud();
+            });
+          }
+           else {
             this.setState({
               exportPFBURL: `${res.data.output}`.split('\n'),
               toasterOpen: true,
@@ -64,6 +76,7 @@ class ExplorerButtonGroup extends React.Component {
       && nextProps.totalCount) {
       this.refreshManifestEntryCount();
     }
+    console.log(79);
   }
 
   componentWillUnmount() {
@@ -338,6 +351,11 @@ class ExplorerButtonGroup extends React.Component {
   exportPFBToWorkspace = () => {
     this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
     let status = this.props.checkJobStatus();
+    this.setState({
+      toasterOpen: true,
+      toasterHeadline: this.state.pfbStartText,
+      exportingPFBToWorkspace: true,
+    });
     console.log('okay', status);
   }
 
