@@ -53,7 +53,7 @@ class Covid19Dashboard extends React.Component {
 
   componentDidMount() {
     if (!mapboxAPIToken) {
-      console.warn('MAPBOX_API_TOKEN environment variable not set, will be unable to load maps.');
+      console.warn('MAPBOX_API_TOKEN environment variable not set, will be unable to load maps.'); // eslint-disable-line no-console
     }
 
     if (this.enableCharts) {
