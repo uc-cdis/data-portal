@@ -110,6 +110,8 @@ class Covid19Dashboard extends React.Component {
   }
 
   render() {
+    const showGraphs = true;
+
     const { confirmedCount, deathsCount, recoveredCount } = this.getTotalCounts();
 
     const displaySeirPlot = Object.keys(this.props.seirObserved).length > 0 && Object.keys(this.props.seirSimulated).length > 0;
@@ -189,9 +191,11 @@ class Covid19Dashboard extends React.Component {
               </div>
               <div className='covid19-dashboard_visualizations'>
                 <WorldMapChart {...this.props} />
-                <div className='covid19-dashboard_charts'>
-                  {top10Chart}
-                </div>
+                {showGraphs &&
+                  <div className='covid19-dashboard_charts'>
+                    {top10Chart}
+                  </div>
+                }
               </div>
             </TabPanel>
 
@@ -208,10 +212,12 @@ class Covid19Dashboard extends React.Component {
               </div>
               <div className='covid19-dashboard_visualizations'>
                 <IllinoisMapChart {...this.props} />
-                <div className='covid19-dashboard_charts'>
-                  {seirChart}
-                  {idphDailyChart}
-                </div>
+                {showGraphs &&
+                  <div className='covid19-dashboard_charts'>
+                    {seirChart}
+                    {idphDailyChart}
+                  </div>
+                }
               </div>
             </TabPanel>
           </Tabs>
