@@ -40,7 +40,6 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('43');
     if (nextProps.job && nextProps.job.status === 'Completed' && this.props.job.status !== 'Completed') {
       this.fetchJobResult()
         .then((res) => {
@@ -57,10 +56,10 @@ class ExplorerButtonGroup extends React.Component {
             console.log('yay 56');
             this.setState({
               exportPFBURL: `${res.data.output}`.split('\n'),
-              toasterOpen: false,
-              exportingPFBToWorkspace: false,
+              toasterOpen: true,
+              toasterHeadline: this.state.pfbSuccessText,
             }, () => {
-              this.sendPFBToCloud();
+              this.sendPFBToWorkspace();
             });
           }
            else {
@@ -76,7 +75,6 @@ class ExplorerButtonGroup extends React.Component {
       && nextProps.totalCount) {
       this.refreshManifestEntryCount();
     }
-    console.log(79);
   }
 
   componentWillUnmount() {
@@ -114,7 +112,6 @@ class ExplorerButtonGroup extends React.Component {
       clickFunc = () => this.exportToWorkspace('file');
     }
     if (buttonConfig.type === 'export-pfb-to-workspace') {
-      console.log('104');
       clickFunc = this.exportPFBToWorkspace;
     }
     return clickFunc;
@@ -337,6 +334,12 @@ class ExplorerButtonGroup extends React.Component {
       ).join('');
     }
     window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
+  }
+
+  sendPFBToWorkspace = () => {
+    const url = encodeURIComponent(this.state.exportPFBURL);
+    console.log('look ma i got the url!!! ', url);
+    console.log('now what?');
   }
 
   exportToPFB = () => {
