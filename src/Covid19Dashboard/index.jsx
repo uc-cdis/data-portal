@@ -23,6 +23,12 @@ import './Covid19Dashboard.less';
 // |                         |  Chart  |
 // |                         |         |
 // |-----------------------------------|
+//
+// Config:
+// "covid19DashboardConfig": {
+//   "dataUrl": "",
+//   "enableCharts": true
+// },
 
 
 // TODO handle both fetch from URL and local files
@@ -41,14 +47,15 @@ const chartDataLocations = {
 class Covid19Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.enableCharts = props.config.enableCharts;
   }
 
   componentDidMount() {
-    Object.entries(chartDataLocations).forEach(
-      e => this.props.fetchChartData(e[0], e[1]),
-    );
+    if (this.enableCharts) {
+      Object.entries(chartDataLocations).forEach(
+        e => this.props.fetchChartData(e[0], e[1]),
+      );
+    }
   }
 
   getTotalCounts() {
@@ -109,11 +116,7 @@ class Covid19Dashboard extends React.Component {
     return { confirmedCount, deathsCount, recoveredCount };
   }
 
-  render() {
-    const showGraphs = true;
-
-    const { confirmedCount, deathsCount, recoveredCount } = this.getTotalCounts();
-
+  getPlotChartsData() {
     const displaySeirPlot = Object.keys(this.props.seirObserved).length > 0 && Object.keys(this.props.seirSimulated).length > 0;
     const seirPlotChart = [
       {
@@ -161,6 +164,13 @@ class Covid19Dashboard extends React.Component {
       plots={idphDailyChartPlots}
     />) : null;
 
+    return { seirChart, top10Chart, idphDailyChart };
+  }
+
+  render() {
+    const { confirmedCount, deathsCount, recoveredCount } = this.getTotalCounts();
+    const { seirChart, top10Chart, idphDailyChart } = this.enableCharts ? this.getPlotChartsData() : {};
+
     return (
       <div className='covid19-dashboard'>
         {/* <ReactEcharts
@@ -191,7 +201,7 @@ class Covid19Dashboard extends React.Component {
               </div>
               <div className='covid19-dashboard_visualizations'>
                 <WorldMapChart {...this.props} />
-                {showGraphs &&
+                {this.enableCharts &&
                   <div className='covid19-dashboard_charts'>
                     {top10Chart}
                   </div>
@@ -212,7 +222,7 @@ class Covid19Dashboard extends React.Component {
               </div>
               <div className='covid19-dashboard_visualizations'>
                 <IllinoisMapChart {...this.props} />
-                {showGraphs &&
+                {this.enableCharts &&
                   <div className='covid19-dashboard_charts'>
                     {seirChart}
                     {idphDailyChart}
@@ -229,6 +239,7 @@ class Covid19Dashboard extends React.Component {
 
 Covid19Dashboard.propTypes = {
   rawData: PropTypes.array, // inherited from GuppyWrapper
+  config: PropTypes.object.isRequired,
   fetchChartData: PropTypes.func.isRequired,
   seirObserved: PropTypes.object,
   seirSimulated: PropTypes.object,

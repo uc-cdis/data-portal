@@ -1,9 +1,11 @@
 import { connect } from 'react-redux';
 import Covid19Dashboard from '../Covid19Dashboard';
 
+import { covid19DashboardConfig } from '../localconf';
 import { readSingleColumnTSV, readMultiColumnTSV } from './dataUtils.js';
 
-const dataUrl = 'https://opendata.datacommons.io/';
+let dataUrl = covid19DashboardConfig.dataUrl;
+dataUrl = !dataUrl.endsWith('/') ? dataUrl + '/' : dataUrl;
 
 async function handleChartData(propName, data) {
   switch (propName) {
