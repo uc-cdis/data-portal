@@ -24,10 +24,10 @@ function getDates(startDate, endDate, days) {
   const dates = [];
   let currentDate = new Date(startDate);
   const endingDate = new Date(endDate);
-  const addDays = (startDate, days) => {
-    const date = new Date(startDate.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
+  const addDaysToDate = (date) => {
+    const newDate = new Date(date.valueOf());
+    newDate.setDate(newDate.getDate() + days);
+    return newDate;
   };
   while (currentDate <= endingDate) {
     const year = currentDate.getUTCFullYear();
@@ -36,7 +36,7 @@ function getDates(startDate, endDate, days) {
     const stringDate = [year, month, day].join('-');
     const fmtDate = `${stringDate} 00:00:00+00:00`;
     dates.push(fmtDate);
-    currentDate = addDays(currentDate, days);
+    currentDate = addDaysToDate(currentDate);
   }
   return dates;
 }
@@ -46,12 +46,10 @@ function formatChartData(plots) {
   if (!plots || !plots.length) {
     return dateToData;
   }
-  // let max = 0;
   plots.forEach((plot) => {
     Object.entries(plot.data).forEach((e) => {
       const dateVal = e[0];
       const value = Number(e[1]);
-      // max = Math.max(max, value);
       if (!(dateVal in dateToData)) {
         dateToData[dateVal] = { date: dateVal };
       }
@@ -60,18 +58,24 @@ function formatChartData(plots) {
   });
   let sortedData = Object.values(dateToData);
   sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-  return { data: sortedData, ticks: getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7) }; // , max };
+  return {
+    data: sortedData,
+    ticks: getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7),
+  };
 }
 
 // 10 colors generated with
 // https://medialab.github.io/iwanthue/
 // Intense + colorblind option + hard (force vector)
-const COLORS = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf",];
+const COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
 
 class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
   state = {
     width: Object.fromEntries(
-      Object.entries(this.props.plots).map(([k, v], i) => [v.name, 1]),
+      Object.entries(this.props.plots).map((e) => {
+        const value = e[1];
+        return [value.name, 1];
+      }),
     ),
   };
 
@@ -126,7 +130,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
             }}
           >
             <CartesianGrid
-              horizontal={true}
+              horizontal
               vertical={false}
               strokeDasharray='3 3'
             />
@@ -144,7 +148,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
                 value: this.props.yTitle,
                 angle: -90,
                 position: 'insideLeft',
-                offset: -10
+                offset: -10,
               }}
               type='number'
               domain={[0, 'auto']}
@@ -174,7 +178,7 @@ PlotChart.propTypes = {
 
 PlotChart.defaultProps = {
   plots: [],
-  description: "",
+  description: '',
 };
 
 export default PlotChart;

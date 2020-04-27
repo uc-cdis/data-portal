@@ -36,21 +36,18 @@ export async function readMultiColumnTSV(tsvData) {
       if (!headers) {
         headers = row.data;
         dateIndex = headers.findIndex(x => x === 'date');
-        for (let index = 0; index < headers.length; index++) {
-          if (index === dateIndex) {
-            continue;
+        for (let index = 0; index < headers.length; index += 1) {
+          if (index !== dateIndex) {
+            const col = headers[index];
+            contents[col] = {};
           }
-          const col = headers[index];
-          contents[col] = {};
         }
       } else {
-        for (let index = 0; index < headers.length; index++) {
-          if (index === dateIndex) {
-            continue;
+        for (let index = 0; index < headers.length; index += 1) {
+          if (index !== dateIndex) {
+            const col = headers[index];
+            contents[col][row.data[dateIndex]] = row.data[index];
           }
-          
-          const col = headers[index];
-          contents[col][row.data[dateIndex]] = row.data[index];
         }
       }
     },

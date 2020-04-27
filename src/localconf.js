@@ -137,7 +137,8 @@ function buildConfig(opts) {
   }
 
   const covid19DashboardConfig = config.covid19DashboardConfig;
-  const enableCovid19Dashboard = !!(covid19DashboardConfig && Object.keys(covid19DashboardConfig).length > 0);
+  const enableCovid19Dashboard = !!(covid19DashboardConfig
+    && Object.keys(covid19DashboardConfig).length > 0);
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [

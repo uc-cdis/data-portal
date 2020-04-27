@@ -5,7 +5,7 @@ import { covid19DashboardConfig } from '../localconf';
 import { readSingleColumnTSV, readMultiColumnTSV } from './dataUtils.js';
 
 let dataUrl = covid19DashboardConfig.dataUrl;
-dataUrl = !dataUrl.endsWith('/') ? dataUrl + '/' : dataUrl;
+dataUrl = !dataUrl.endsWith('/') ? `${dataUrl}/` : dataUrl;
 
 async function handleChartData(propName, data) {
   switch (propName) {
