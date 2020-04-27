@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.less';
 
+import { mapboxAPIToken } from '../localconf';
 import WorldMapChart from './WorldMapChart';
 import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
@@ -44,6 +45,10 @@ class Covid19Dashboard extends React.Component {
   }
 
   componentDidMount() {
+    if (!mapboxAPIToken) {
+      console.warn('MAPBOX_API_TOKEN environment variable not set, will be unable to load maps.');
+    }
+
     Object.entries(chartDataLocations).forEach(
       e => this.props.fetchChartData(e[0], e[1]),
     );

@@ -5,8 +5,8 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { mapboxAPIToken } from '../../localconf';
 
+import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
 import Popup from '../../components/Popup';
 import { numberWithCommas } from '../dataUtils.js';
