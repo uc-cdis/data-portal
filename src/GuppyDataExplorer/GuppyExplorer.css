@@ -4,6 +4,7 @@
 
 .guppy-explorer__tabs {
   display: flex;
+  flex-wrap: wrap-reverse;
 }
 
 .guppy-explorer__tab {
