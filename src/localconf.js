@@ -100,11 +100,9 @@ function buildConfig(opts) {
   }
 
   let useGuppyForExplorer = false;
-  if (config.dataExplorerConfig.guppyConfig) {
-    useGuppyForExplorer = true;
-  }
 
   let explorerConfig = [];
+  let useNewExplorerConfigFormat = false;
   // for backward compatibilities
   if (config.dataExplorerConfig) {
     explorerConfig.push(
@@ -113,6 +111,9 @@ function buildConfig(opts) {
         ...config.dataExplorerConfig,
       },
     );
+    if (config.dataExplorerConfig.guppyConfig) {
+      useGuppyForExplorer = true;
+    }
   }
   if (config.fileExplorerConfig) {
     explorerConfig.push(
@@ -121,11 +122,13 @@ function buildConfig(opts) {
         ...config.fileExplorerConfig,
       },
     );
+    useGuppyForExplorer = true;
   }
 
   // new explorer config format
   if (config.explorerConfig) {
     useGuppyForExplorer = true;
+    useNewExplorerConfigFormat = true;
     explorerConfig = config.explorerConfig;
   }
 
@@ -334,6 +337,7 @@ function buildConfig(opts) {
     enableResourceBrowser,
     resourceBrowserPublic,
     explorerConfig,
+    useNewExplorerConfigFormat,
     dataAvailabilityToolConfig,
   };
 }
