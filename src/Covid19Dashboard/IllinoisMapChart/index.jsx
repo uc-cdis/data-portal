@@ -6,6 +6,7 @@ import {
 } from 'recharts';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
+import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
 import Popup from '../../components/Popup';
 import { numberWithCommas } from '../dataUtils.js';
@@ -287,7 +288,7 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
         />
         <ReactMapGL.InteractiveMap
           className='.map-chart__mapgl-map'
-          mapboxApiAccessToken='pk.eyJ1IjoicmliZXlyZSIsImEiOiJjazhkbmNqMGcwdnphM2RuczBsZzVwYXFhIn0.dB-xnlG7S7WEeMuatMBQkQ' // TODO https://uber.github.io/react-map-gl/docs/get-started/mapbox-tokens
+          mapboxApiAccessToken={mapboxAPIToken}
           mapStyle='mapbox://styles/mapbox/streets-v11'
           {...this.state.viewport}
           {...this.state.mapSize} // after viewport to avoid size overwrite

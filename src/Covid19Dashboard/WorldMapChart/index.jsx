@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
+import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
 import { numberWithCommas } from '../dataUtils.js';
 import worldData from '../data/world_50m'; // from https://geojson-maps.ash.ms
@@ -403,7 +404,7 @@ class WorldMapChart extends React.Component {
         />
         <ReactMapGL.InteractiveMap
           className='map-chart__mapgl-map'
-          mapboxApiAccessToken='pk.eyJ1IjoicmliZXlyZSIsImEiOiJjazhkbmNqMGcwdnphM2RuczBsZzVwYXFhIn0.dB-xnlG7S7WEeMuatMBQkQ' // TODO https://uber.github.io/react-map-gl/docs/get-started/mapbox-tokens
+          mapboxApiAccessToken={mapboxAPIToken}
           mapStyle='mapbox://styles/mapbox/streets-v11'
           {...this.state.viewport}
           {...this.state.mapSize} // after viewport to avoid size overwrite
