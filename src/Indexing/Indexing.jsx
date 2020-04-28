@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { userapiPath, fenceDownloadPath, jobapiPath, hostname } from '../localconf';
-import { fetchWithCreds } from '../actions';
+import { fetchWithCreds, fetchWithCredsAndTimeout } from '../actions';
 import './Indexing.less';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
@@ -96,16 +96,23 @@ class Indexing extends React.Component {
 
   putIndexFileToSignedURL = () => {
     const thisPointer = this;
-    return fetchWithCreds({
+    return fetchWithCredsAndTimeout({
       path: thisPointer.state.urlToIndexedFile,
       method: 'PUT',
       customHeaders: { 'Content-Type': 'application/json' },
       body: thisPointer.state.uploadedFile,
-    }).then(() => {
+    }, 7000).then(() => {
       thisPointer.setState({
         indexingFilesPopupMessage: 'Preparing indexing job...',
       });
       return thisPointer.retrievePresignedURLForDownload(0, 10);
+    }).catch(() => {
+      thisPointer.setState({
+        indexingFilesStatus: 'error',
+        indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
+        indexingFilesPopupMessage: 'There was a problem uploading the indexing file to s3. Check the AWS configuration.',
+        indexFilesButtonEnabled: false,
+      });
     });
   }
 
@@ -460,6 +467,7 @@ class Indexing extends React.Component {
                       {
                         caption: 'Download Logs',
                         icon: 'download',
+                        value: this.state.indexingFilesLogsLink,
                         fn: () => this.downloadJobOutput(this.state.indexingFilesLogsLink),
                       },
                     ]}
@@ -483,6 +491,7 @@ class Indexing extends React.Component {
                       {
                         caption: 'Download Manifest',
                         icon: 'download',
+                        value: this.state.downloadManifestLink,
                         fn: () => this.downloadJobOutput(this.state.downloadManifestLink),
                       },
                     ]}
