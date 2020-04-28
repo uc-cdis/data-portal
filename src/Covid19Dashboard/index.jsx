@@ -48,7 +48,7 @@ const chartDataLocations = {
 class Covid19Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.enableCharts = props.config.enableCharts;
+    this.enableCharts = !!props.config.enableCharts;
   }
 
   componentDidMount() {
