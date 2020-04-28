@@ -2,7 +2,7 @@
 
 The DAT is a heatmap in the exploration page.
 
-It can be used to show data availability accross projects. It works well both for categorical data and for longitudinal data.
+It can be used to show data availability across projects. It works well both for categorical data and for longitudinal data.
 
 Example of a DAT for longitudinal data:
 ![DAT example](data_availability_tool_example.png)
