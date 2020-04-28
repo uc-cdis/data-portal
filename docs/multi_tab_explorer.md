@@ -6,7 +6,7 @@ This feature is available from Portal 2.26.0, and is backward compatible with ex
 
 ## Configuration
 
-The multi-tab explorer requires a new configuration field, called `explorerConfig`, to be placed in the config file of Portal. The `explorerConfig` is an array with can hold multiple configuration objects, one for each tab. Each individual configuration object has a similar format as the old `dataExplorerConfig` and/or `fileExplorerConfig`, which means it should contains a set of fields like `charts`, `filters`, `table`, `buttons`, `guppyConfig` and other optional fields. Each tab serves the information from one single ES index, as have been defined in `guppyConfig.dataType`.
+The multi-tab explorer requires a new configuration field, called `explorerConfig`, to be placed in the config file of Portal. The `explorerConfig` is an array which can hold multiple configuration objects, one for each tab. Each individual configuration object has a similar format as the old `dataExplorerConfig` and/or `fileExplorerConfig`, which means it should contains a set of fields like `charts`, `filters`, `table`, `buttons`, `guppyConfig` and other optional fields. Each tab serves the information from one single ES index, as have been defined in `guppyConfig.dataType`.
 
 An example of this new `explorerConfig` is (some contents are omitted for conciseness):
 
