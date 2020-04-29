@@ -28,9 +28,11 @@ class ExplorerButtonGroup extends React.Component {
       // for export to PFB
       exportPFBStatus: null,
       exportPFBURL: '',
+      exportPFBToWorkspaceGUID: '',
       pfbStartText: 'Your export is in progress.',
       pfbWarning: 'Please do not navigate away from this page until your export is finished.',
-      pfbSuccessText: 'Your cohort has been exported to PFB! The URL is displayed below.',
+      pfbSuccessText: 'Your cohort has been exported to PFB. The URL is displayed below.',
+      pfbToWorkspaceSuccessText: 'A PFB for this cohort will be saved to your workspace. The GUID for your PFB is displayed below.',
       // for export to workspace
       exportingToWorkspace: false,
       exportWorkspaceFileName: null,
@@ -43,7 +45,6 @@ class ExplorerButtonGroup extends React.Component {
     if (nextProps.job && nextProps.job.status === 'Completed' && this.props.job.status !== 'Completed') {
       this.fetchJobResult()
         .then((res) => {
-          console.log(47);
           if (this.state.exportingToCloud) {
             this.setState({
               exportPFBURL: `${res.data.output}`.split('\n'),
@@ -53,13 +54,14 @@ class ExplorerButtonGroup extends React.Component {
               this.sendPFBToCloud();
             });
           } else if (this.state.exportingPFBToWorkspace) {
-            console.log('yay 56');
+            console.log('yay 56', res.data.output);
+            const pfbGUID = `${res.data.output}`.split('\n');
             this.setState({
-              exportPFBURL: `${res.data.output}`.split('\n'),
+              exportPFBToWorkspaceGUID: pfbGUID,
               toasterOpen: true,
-              toasterHeadline: this.state.pfbSuccessText,
+              toasterHeadline: this.state.pfbToWorkspaceSuccessText,
             }, () => {
-              this.sendPFBToWorkspace();
+              this.sendPFBToWorkspace(pfbGUID);
             });
           }
            else {
@@ -221,6 +223,10 @@ class ExplorerButtonGroup extends React.Component {
             <div> Most recent PFB URL: { this.state.exportPFBURL } </div>
             : null
           }
+          { (this.state.exportPFBToWorkspaceGUID) ?
+            <div>{ this.state.exportPFBToWorkspaceGUID } </div>
+            : null
+          }
           { (this.state.toasterError) ?
             <div> Error: { this.state.toasterError } </div>
             : null
@@ -336,10 +342,11 @@ class ExplorerButtonGroup extends React.Component {
     window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
   }
 
-  sendPFBToWorkspace = () => {
-    const url = encodeURIComponent(this.state.exportPFBURL);
-    console.log('look ma i got the url!!! ', url);
-    console.log('now what?');
+  sendPFBToWorkspace = (pfbGUID) => {
+    console.log('got the GUID ', pfbGUID);
+    // post that guid to the manifest service endpoint /manifests/cohorts
+    // with this POST body { 'cohort_guid' : pfbGUID }
+    
   }
 
   exportToPFB = () => {
@@ -352,14 +359,13 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   exportPFBToWorkspace = () => {
-    this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
+    this.props.submitJob({ action: 'export', access_format: 'GUID', input: { filter: getGQLFilter(this.props.filter) } });
     let status = this.props.checkJobStatus();
     this.setState({
       toasterOpen: true,
       toasterHeadline: this.state.pfbStartText,
       exportingPFBToWorkspace: true,
     });
-    console.log('okay', status);
   }
 
   exportToWorkspace = async (indexType) => {
