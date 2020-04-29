@@ -25,6 +25,7 @@ class ExplorerButtonGroup extends React.Component {
       toasterError: null,
       toasterErrorText: 'There was an error exporting your cohort.',
       exportingToCloud: false,
+      exportingToSevenBridges: false,
       // for export to PFB
       exportPFBStatus: null,
       exportPFBURL: '',
@@ -50,6 +51,14 @@ class ExplorerButtonGroup extends React.Component {
               exportingToCloud: false,
             }, () => {
               this.sendPFBToCloud();
+            });
+          } else if (this.state.exportingToSevenBridges) {
+            this.setState({
+              exportPFBURL: `${res.data.output}`.split('\n'),
+              toasterOpen: false,
+              exportingToCloud: false,
+            }, () => {
+              this.sendPFBToSevenBridges();
             });
           } else {
             this.setState({
@@ -90,6 +99,9 @@ class ExplorerButtonGroup extends React.Component {
       // =======================================
         clickFunc = this.exportToCloud;
       }
+    }
+    if (buttonConfig.type === 'export-to-seven-bridges') {
+      clickFunc = this.exportToSevenBridges;
     }
     if (buttonConfig.type === 'export-to-pfb') {
       clickFunc = this.exportToPFB;
@@ -304,11 +316,18 @@ class ExplorerButtonGroup extends React.Component {
   }
   // ==========================================
 
+  // NOTE(@mpingram) -- rename to `exportToTerra`
   exportToCloud = () => {
     this.setState({ exportingToCloud: true }, () => {
       this.exportToPFB();
     });
   };
+
+  exportToSevenBridges = () => {
+    this.setState({ exportingToSevenBridges: true }, () => {
+      this.exportToPFB();
+    });
+  }
 
   sendPFBToCloud = () => {
     const url = encodeURIComponent(this.state.exportPFBURL);
@@ -320,6 +339,11 @@ class ExplorerButtonGroup extends React.Component {
       ).join('');
     }
     window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
+  }
+
+  sendPFBToSevenBridges = () => {
+    const url = encodeURIComponent(this.state.exportPFBURL);
+    window.location = `${this.props.buttonConfig.sevenBridgesExportURL}?format=PFB&url=${url}`;
   }
 
   exportToPFB = () => {
@@ -386,6 +410,7 @@ class ExplorerButtonGroup extends React.Component {
 
   isFileButton = buttonConfig => buttonConfig.type === 'manifest' ||
     buttonConfig.type === 'export' ||
+    buttonConfig.type === 'export-to-seven-bridges' ||
     buttonConfig.type === 'export-to-workspace' ||
     buttonConfig.type === 'export-to-pfb';
 
@@ -449,7 +474,7 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export-to-pfb') {
       return !this.state.exportingToCloud;
     }
-    if (buttonConfig.type === 'export') {
+    if (buttonConfig.type === 'export' || buttonConfig.type === 'export-to-seven-bridges') {
       // if exportingToCloud is true or the PFB job is running, the button is not enabled.
       return !(this.state.exportingToCloud || this.isPFBRunning());
     }
@@ -470,8 +495,9 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export-to-pfb') {
       return this.isPFBRunning() && !this.state.exportingToCloud;
     }
-    if (buttonConfig.type === 'export') {
-      return this.state.exportingToCloud && this.isPFBRunning();
+    if (buttonConfig.type === 'export' || buttonConfig.type === 'export-to-seven-bridges') {
+      return (this.state.exportingToCloud || this.state.exportingToSevenBridges)
+        && this.isPFBRunning();
     }
     return false;
   };
