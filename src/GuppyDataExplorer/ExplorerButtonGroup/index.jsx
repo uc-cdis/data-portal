@@ -50,7 +50,7 @@ class ExplorerButtonGroup extends React.Component {
               toasterOpen: false,
               exportingToCloud: false,
             }, () => {
-              this.sendPFBToCloud();
+              this.sendPFBToTerra();
             });
           } else if (this.state.exportingToSevenBridges) {
             this.setState({
@@ -94,10 +94,10 @@ class ExplorerButtonGroup extends React.Component {
       // REMOVE THIS CODE WHEN TERRA EXPORT WORKS
       // =======================================
       if (terraExportWarning) {
-        clickFunc = this.exportToCloudWithTerraWarning;
+        clickFunc = this.exportToTerraWithWarning;
       } else {
       // =======================================
-        clickFunc = this.exportToCloud;
+        clickFunc = this.exportToTerra;
       }
     }
     if (buttonConfig.type === 'export-to-seven-bridges') {
@@ -304,20 +304,19 @@ class ExplorerButtonGroup extends React.Component {
   // (Warn user about Terra entitiy threshold). This code should be removed when
   // Terra is no longer limited to importing <165,000 entities. (~14k subjects).
   // This file is the only file that contains code for this feature.
-  exportToCloudWithTerraWarning = () => {
+  exportToTerraWithWarning = () => {
     // If the number of subjects is over the threshold, warn the user that their
     // export to Terra job might fail.
     if (this.props.totalCount >= terraExportWarning.subjectThreshold) {
       this.setState({ enableTerraWarningPopup: true });
     } else {
       // If the number is below the threshold, proceed as normal
-      this.exportToCloud();
+      this.exportToTerra();
     }
   }
   // ==========================================
 
-  // NOTE(@mpingram) -- rename to `exportToTerra`
-  exportToCloud = () => {
+  exportToTerra = () => {
     this.setState({ exportingToCloud: true }, () => {
       this.exportToPFB();
     });
@@ -329,7 +328,7 @@ class ExplorerButtonGroup extends React.Component {
     });
   }
 
-  sendPFBToCloud = () => {
+  sendPFBToTerra = () => {
     const url = encodeURIComponent(this.state.exportPFBURL);
     let templateParam = '';
     if (typeof this.props.buttonConfig.terraTemplate !== 'undefined'
@@ -556,7 +555,7 @@ class ExplorerButtonGroup extends React.Component {
                   caption: 'Yes, Export Anyway',
                   fn: () => {
                     this.setState({ enableTerraWarningPopup: false });
-                    this.exportToCloud();
+                    this.exportToTerra();
                   },
                   icon: 'external-link',
                 },
