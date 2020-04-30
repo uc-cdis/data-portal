@@ -102,9 +102,39 @@ function buildConfig(opts) {
   }
 
   let useGuppyForExplorer = false;
-  if (config.dataExplorerConfig.guppyConfig) {
+
+  let explorerConfig = [];
+  let useNewExplorerConfigFormat = false;
+  // for backward compatibilities
+  if (config.dataExplorerConfig) {
+    explorerConfig.push(
+      {
+        tabTitle: 'Data',
+        ...config.dataExplorerConfig,
+      },
+    );
+    if (config.dataExplorerConfig.guppyConfig) {
+      useGuppyForExplorer = true;
+    }
+  }
+  if (config.fileExplorerConfig) {
+    explorerConfig.push(
+      {
+        tabTitle: 'File',
+        ...config.fileExplorerConfig,
+      },
+    );
     useGuppyForExplorer = true;
   }
+
+  // new explorer config format
+  if (config.explorerConfig) {
+    useGuppyForExplorer = true;
+    useNewExplorerConfigFormat = true;
+    explorerConfig = config.explorerConfig;
+  }
+
+  const dataAvailabilityToolConfig = config.dataAvailabilityToolConfig;
 
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
@@ -312,6 +342,9 @@ function buildConfig(opts) {
     authzMappingPath,
     enableResourceBrowser,
     resourceBrowserPublic,
+    explorerConfig,
+    useNewExplorerConfigFormat,
+    dataAvailabilityToolConfig,
     enableCovid19Dashboard,
     covid19DashboardConfig,
     mapboxAPIToken,

@@ -67,6 +67,7 @@ const Popup = ({
                 label={btn.caption}
                 enabled={(btn.enabled !== undefined) ? btn.enabled : true}
                 buttonType='default'
+                value={btn.value}
               /> :
                 <Button
                   key={btn.caption}
@@ -75,6 +76,7 @@ const Popup = ({
                   enabled={(btn.enabled !== undefined) ? btn.enabled : true}
                   buttonType='default'
                   rightIcon={btn.icon}
+                  value={btn.value}
                 />,
             ])
           }
@@ -89,6 +91,7 @@ const Popup = ({
                 label={btn.caption}
                 enabled={(btn.enabled !== undefined) ? btn.enabled : true}
                 buttonType='primary'
+                value={btn.value}
               /> :
                 <Button
                   key={btn.caption}
@@ -97,6 +100,7 @@ const Popup = ({
                   enabled={(btn.enabled !== undefined) ? btn.enabled : true}
                   buttonType='primary'
                   rightIcon={btn.icon}
+                  value={btn.value}
                 />,
             ])
           }
