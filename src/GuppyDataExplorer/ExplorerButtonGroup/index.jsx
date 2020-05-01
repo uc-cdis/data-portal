@@ -56,13 +56,7 @@ class ExplorerButtonGroup extends React.Component {
           } else if (this.state.exportingPFBToWorkspace) {
             console.log('yay 56', res.data.output);
             const pfbGUID = `${res.data.output}`.split('\n');
-            this.setState({
-              exportPFBToWorkspaceGUID: pfbGUID,
-              toasterOpen: true,
-              toasterHeadline: this.state.pfbToWorkspaceSuccessText,
-            }, () => {
-              this.sendPFBToWorkspace(pfbGUID);
-            });
+            this.sendPFBToWorkspace(pfbGUID);
           }
            else {
             this.setState({
@@ -342,11 +336,47 @@ class ExplorerButtonGroup extends React.Component {
     window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
   }
 
+  pfbToWorkspaceCallback = (data, pfbGUID) => {
+    console.log('340 ', data);
+    
+  }
+
   sendPFBToWorkspace = (pfbGUID) => {
     console.log('got the GUID ', pfbGUID);
     // post that guid to the manifest service endpoint /manifests/cohorts
     // with this POST body { 'cohort_guid' : pfbGUID }
-    
+    let JSONBody = { 'cohort_guid' : pfbGUID };
+    var _this = this;
+    fetchWithCreds({
+      path: `${manifestServiceApiPath}cohorts`,
+      body: JSON.stringify(JSONBody),
+      method: 'POST',
+    })
+      .then(
+        ({ status, data }) => {
+          console.log(status);
+          console.log(data);
+          switch (status) {
+          case 200:
+            this.setState({
+              exportingPFBToWorkspace: false,
+              exportPFBToWorkspaceGUID: pfbGUID,
+              toasterOpen: true,
+              toasterHeadline: this.state.pfbToWorkspaceSuccessText,
+            });
+            return;
+          default:
+            let errorMsg = ( data.error ? data.error : '' );
+            this.setState({
+              exportingPFBToWorkspace: false,
+              exportPFBToWorkspaceGUID: '',
+              toasterOpen: true,
+              toasterHeadline: 'There was an error exporting your cohort (' + status + '). ' + errorMsg,
+            });
+          }
+        },
+      );
+
   }
 
   exportToPFB = () => {
