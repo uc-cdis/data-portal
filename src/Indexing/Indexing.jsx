@@ -467,6 +467,7 @@ class Indexing extends React.Component {
                       {
                         caption: 'Download Logs',
                         icon: 'download',
+                        value: this.state.indexingFilesLogsLink,
                         fn: () => this.downloadJobOutput(this.state.indexingFilesLogsLink),
                       },
                     ]}
@@ -490,6 +491,7 @@ class Indexing extends React.Component {
                       {
                         caption: 'Download Manifest',
                         icon: 'download',
+                        value: this.state.downloadManifestLink,
                         fn: () => this.downloadJobOutput(this.state.downloadManifestLink),
                       },
                     ]}
