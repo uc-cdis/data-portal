@@ -55,11 +55,9 @@ class ExplorerButtonGroup extends React.Component {
               this.sendPFBToCloud();
             });
           } else if (this.state.exportingPFBToWorkspace) {
-            console.log('yay 56', res.data.output);
             const pfbGUID = `${res.data.output}`.split('\n');
             this.sendPFBToWorkspace(pfbGUID);
-          }
-           else {
+          } else {
             this.setState({
               exportPFBURL: `${res.data.output}`.split('\n'),
               toasterOpen: true,
@@ -197,7 +195,8 @@ class ExplorerButtonGroup extends React.Component {
         buttonType='primary'
         enabled
       />
-      { (this.state.exportWorkspaceStatus === 200 || this.state.exportPFBToWorkspaceStatus === 200) ?
+      { (this.state.exportWorkspaceStatus === 200
+        || this.state.exportPFBToWorkspaceStatus === 200) ?
         <Button
           className='explorer-button-group__toaster-button'
           label='Go To Workspace'
@@ -337,17 +336,8 @@ class ExplorerButtonGroup extends React.Component {
     window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
   }
 
-  pfbToWorkspaceCallback = (data, pfbGUID) => {
-    console.log('340 ', data);
-    
-  }
-
   sendPFBToWorkspace = (pfbGUID) => {
-    console.log('got the GUID ', pfbGUID);
-    // post that guid to the manifest service endpoint /manifests/cohorts
-    // with this POST body { 'cohort_guid' : pfbGUID }
-    let JSONBody = { 'cohort_guid' : pfbGUID };
-    var _this = this;
+    const JSONBody = { cohort_guid: pfbGUID };
     fetchWithCreds({
       path: `${manifestServiceApiPath}cohorts`,
       body: JSON.stringify(JSONBody),
@@ -355,8 +345,7 @@ class ExplorerButtonGroup extends React.Component {
     })
       .then(
         ({ status, data }) => {
-          console.log(status);
-          console.log(data);
+          const errorMsg = (data.error ? data.error : '');
           switch (status) {
           case 200:
             this.setState({
@@ -368,18 +357,16 @@ class ExplorerButtonGroup extends React.Component {
             });
             return;
           default:
-            let errorMsg = ( data.error ? data.error : '' );
             this.setState({
               exportingPFBToWorkspace: false,
               exportPFBToWorkspaceGUID: '',
               toasterOpen: true,
-              toasterHeadline: 'There was an error exporting your cohort (' + status + '). ' + errorMsg,
+              toasterHeadline: `There was an error exporting your cohort (${status}). ${errorMsg}`,
               exportPFBToWorkspaceStatus: status,
             });
           }
         },
       );
-
   }
 
   exportToPFB = () => {
@@ -393,7 +380,7 @@ class ExplorerButtonGroup extends React.Component {
 
   exportPFBToWorkspace = () => {
     this.props.submitJob({ action: 'export', access_format: 'GUID', input: { filter: getGQLFilter(this.props.filter) } });
-    let status = this.props.checkJobStatus();
+    this.props.checkJobStatus();
     this.setState({
       toasterOpen: true,
       toasterHeadline: this.state.pfbStartText,
@@ -545,7 +532,6 @@ class ExplorerButtonGroup extends React.Component {
       return this.isPFBRunning() && !this.state.exportingToCloud;
     }
     if (buttonConfig.type === 'export-pfb-to-workspace') {
-      console.log('483');
       return this.isPFBToWorkspaceRunning() && !this.state.exportingToCloud;
     }
     if (buttonConfig.type === 'export') {
