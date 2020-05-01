@@ -33,6 +33,7 @@ class ExplorerButtonGroup extends React.Component {
       pfbWarning: 'Please do not navigate away from this page until your export is finished.',
       pfbSuccessText: 'Your cohort has been exported to PFB. The URL is displayed below.',
       pfbToWorkspaceSuccessText: 'A PFB for this cohort will be saved to your workspace. The GUID for your PFB is displayed below.',
+      exportPFBToWorkspaceStatus: null,
       // for export to workspace
       exportingToWorkspace: false,
       exportWorkspaceFileName: null,
@@ -196,7 +197,7 @@ class ExplorerButtonGroup extends React.Component {
         buttonType='primary'
         enabled
       />
-      { (this.state.exportWorkspaceStatus === 200) ?
+      { (this.state.exportWorkspaceStatus === 200 || this.state.exportPFBToWorkspaceStatus === 200) ?
         <Button
           className='explorer-button-group__toaster-button'
           label='Go To Workspace'
@@ -363,6 +364,7 @@ class ExplorerButtonGroup extends React.Component {
               exportPFBToWorkspaceGUID: pfbGUID,
               toasterOpen: true,
               toasterHeadline: this.state.pfbToWorkspaceSuccessText,
+              exportPFBToWorkspaceStatus: status,
             });
             return;
           default:
@@ -372,6 +374,7 @@ class ExplorerButtonGroup extends React.Component {
               exportPFBToWorkspaceGUID: '',
               toasterOpen: true,
               toasterHeadline: 'There was an error exporting your cohort (' + status + '). ' + errorMsg,
+              exportPFBToWorkspaceStatus: status,
             });
           }
         },
