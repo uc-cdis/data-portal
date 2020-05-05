@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import moment from 'moment';
 import pLimit from 'p-limit';
+import _ from 'lodash';
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import { Toggle } from 'material-ui';
 import 'react-virtualized/styles.css'; // only needs to be imported once
@@ -105,7 +106,7 @@ class MapFiles extends React.Component {
   onFeatureToggle = () => {
     this.setState({
       deleteFeature: !(this.state.deleteFeature),
-    });
+    }, () => this.createFileMapByGroup());
   };
 
   getSetSize = set => Object.keys(set).length
@@ -341,8 +342,11 @@ class MapFiles extends React.Component {
                           headerRenderer={() => (
                             <CheckBox
                               id={`${groupIndex}`}
-                              isEnabled={this.state.allFilesByGroup.length > 0
-                                || this.state.selectedFilesByGroup.length > 0}
+                              // crazy logic to enable select all checkbox
+                              isEnabled={(!_.isEmpty(this.state.allFilesByGroup)
+                                && !_.isEmpty(this.state.allFilesByGroup[0]))
+                                || (!_.isEmpty(this.state.selectedFilesByGroup)
+                                && !_.isEmpty(this.state.selectedFilesByGroup[0]))}
                               isSelected={this.isSelectAll(groupIndex)}
                               onChange={() => this.toggleSelectAll(groupIndex)}
                             />
