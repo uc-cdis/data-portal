@@ -183,7 +183,8 @@ class MapFiles extends React.Component {
     const selectedMap = {};
     let index = 0;
     this.state.sortedDates.forEach((date) => {
-      const filesToAdd = this.state.filesByDate[date].filter(file => this.isFileReady(file));
+      const filesToAdd = this.state.filesByDate[date].filter(file => this.isFileReady(file)
+      || this.state.deleteFeature);
       unselectedMap[index] = this.createSet(SET_KEY, filesToAdd);
       selectedMap[index] = {};
       index += 1;
@@ -340,6 +341,8 @@ class MapFiles extends React.Component {
                           headerRenderer={() => (
                             <CheckBox
                               id={`${groupIndex}`}
+                              isEnabled={this.state.allFilesByGroup.length > 0
+                                || this.state.selectedFilesByGroup.length > 0}
                               isSelected={this.isSelectAll(groupIndex)}
                               onChange={() => this.toggleSelectAll(groupIndex)}
                             />
