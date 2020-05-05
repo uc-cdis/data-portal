@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import moment from 'moment';
+import pLimit from 'p-limit';
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import { Toggle } from 'material-ui';
 import 'react-virtualized/styles.css'; // only needs to be imported once
@@ -9,15 +10,18 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
 import CheckBox from '../components/CheckBox';
+import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
 import StatusReadyIcon from '../img/icons/status_ready.svg';
 import CloseIcon from '../img/icons/cross.svg';
+import sessionMonitor from '../SessionMonitor';
 import { humanFileSize } from '../utils.js';
 import './MapFiles.less';
 
 const SET_KEY = 'did';
 const ROW_HEIGHT = 70;
 const HEADER_HEIGHT = 70;
+const CONCURRENCY_LIMIT = 10;
 
 class MapFiles extends React.Component {
   constructor(props) {
@@ -33,6 +37,9 @@ class MapFiles extends React.Component {
       message,
       loading: true,
       deleteFeature: false,
+      deleting: false,
+      deletionCounter: 0,
+      showDeletePopup: false,
     };
   }
 
@@ -58,8 +65,34 @@ class MapFiles extends React.Component {
 
   onDeletion = () => {
     const flatFiles = this.flattenFiles(this.state.selectedFilesByGroup);
-    this.props.deleteSelectedFiles(flatFiles);
-    this.props.history.push('/submission/map');
+    const limit = pLimit(CONCURRENCY_LIMIT);
+    const promises = [];
+    this.setState({ deleting: true, showDeletePopup: true, deletionCounter: 0 }, () => {
+      flatFiles.forEach((file) => {
+        limit(() => {
+          const promise = this.props.deleteFile(file);
+          this.setState(prevState => ({
+            deletionCounter: prevState.deletionCounter + 1,
+          }), () => {
+            this.setState({ deletionText: `Deleting ${this.state.deletionCounter} of ${flatFiles.length} files...` });
+          });
+          sessionMonitor.updateUserActivity();
+          promises.push(promise);
+        });
+      });
+    });
+    Promise.all(promises).then(() => {
+      this.setState({
+        deleting: false,
+        deletionText: (this.state.deletionText) ?
+          this.state.deletionText.concat('\nDone!') : 'Done!',
+      });
+    });
+  }
+
+  onClosePopup = () => {
+    this.props.fetchUnmappedFiles(this.props.user.username);
+    this.setState({ showDeletePopup: false });
   }
 
   onUpdate = () => {
@@ -178,7 +211,8 @@ class MapFiles extends React.Component {
       this.setState(prevState => ({
         selectedFilesByGroup: this.removeFromMap(prevState.selectedFilesByGroup, index, file.did),
       }));
-    } else if (this.isFileReady(file)) { // file status == ready, so it is selectable
+    } else if (this.isFileReady(file)
+    || this.state.deleteFeature) { // file status == ready or in delete mode, so it is selectable
       this.setState(prevState => ({
         selectedFilesByGroup: this.addToMap(prevState.selectedFilesByGroup, index, file, file.did),
       }));
@@ -247,13 +281,29 @@ class MapFiles extends React.Component {
         }
         <BackLink url='/submission' label='Back to Data Submission' />
         <div className='h1-typo'>My Files</div>
-        <Toggle label='Delete' labelStyle={{ width: '' }} onToggle={this.onFeatureToggle} />
+        <div style={{ width: 'fit-content' }}>
+          <Toggle label='Delete' labelStyle={{ width: '' }} onToggle={this.onFeatureToggle} />
+        </div>
         <StickyToolbar
           title='Unmapped Files'
           toolbarElts={buttons}
           scrollPosition={248}
           onScroll={this.onScroll}
         />
+        {
+          this.state.showDeletePopup &&
+                  (<Popup
+                    message={this.state.deletionText}
+                    title='Deleting File Records'
+                    rightButtons={[
+                      {
+                        caption: 'Close',
+                        fn: () => this.onClosePopup(),
+                      },
+                    ]}
+                    onClose={() => this.onClosePopup()}
+                  />)
+        }
         <div className={'map-files__tables'.concat(this.state.isScrolling ? ' map-files__tables--scrolling' : '')}>
           { this.state.loading ? <Spinner /> : null }
           {
@@ -353,7 +403,7 @@ MapFiles.propTypes = {
   unmappedFiles: PropTypes.array,
   fetchUnmappedFiles: PropTypes.func.isRequired,
   mapSelectedFiles: PropTypes.func.isRequired,
-  deleteSelectedFiles: PropTypes.func.isRequired,
+  deleteFile: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };

@@ -43,6 +43,7 @@
     "npm": "^6.1.0",
     "nunjucks": "^3.0.1",
     "prop-types": "^15.6.0",
+    "p-limit": "2.3.0",
     "query-string": "^6.3.0",
     "rc-slider": "^8.6.1",
     "react": "16.8.6",

@@ -191,7 +191,9 @@ function buildConfig(opts) {
       title: 'Login from NIH',
     };
   }
-  const fenceDownloadPath = `${userapiPath}data/download`;
+
+  const fenceDataPath = `${userapiPath}data/`;
+  const fenceDownloadPath = `${fenceDataPath}download`;
 
   const defaultLineLimit = 30;
   const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;
@@ -315,6 +317,7 @@ function buildConfig(opts) {
     customHomepageChartConfig: components.index.customHomepageChartConfig,
     datasetUrl,
     indexPublic,
+    fenceDataPath,
     fenceDownloadPath,
     guppyUrl,
     guppyGraphQLUrl,

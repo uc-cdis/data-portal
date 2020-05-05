@@ -2,7 +2,24 @@ import { connect } from 'react-redux';
 import MapFiles from './MapFiles';
 import { fetchWithCreds } from '../actions';
 import { STARTING_DID, FETCH_LIMIT } from './utils';
-import { indexdPath, useIndexdAuthz } from '../localconf';
+import { indexdPath, useIndexdAuthz, fenceDataPath } from '../localconf';
+import { headers } from '../configs';
+
+export const deleteFile = (file) => {
+  const request = {
+    credentials: 'include',
+    headers: { ...headers },
+    method: 'DELETE',
+  };
+
+  return fetch(`${fenceDataPath}${file.did}`, request)
+    .then((response) => {
+      if (response.status === 204) {
+        return response.text();
+      }
+      return response;
+    }).catch(error => error);
+};
 
 const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
   const unmappedFilesCheck = useIndexdAuthz ? 'authz=null' : 'acl=null';
@@ -43,11 +60,6 @@ const mapSelectedFiles = files => ({
   data: files,
 });
 
-const deleteSelectedFiles = files => ({
-  type: 'RECEIVE_FILES_TO_DELETE',
-  data: files,
-});
-
 const ReduxMapFiles = (() => {
   const mapStateToProps = state => ({
     unmappedFiles: state.submission.unmappedFiles,
@@ -59,7 +71,7 @@ const ReduxMapFiles = (() => {
       fetchUnmappedFiles(user, [], STARTING_DID, FETCH_LIMIT),
     ),
     mapSelectedFiles: files => dispatch(mapSelectedFiles(files)),
-    deleteSelectedFiles: files => dispatch(deleteSelectedFiles(files)),
+    deleteFile: files => deleteFile(files),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(MapFiles);
