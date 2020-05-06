@@ -17,8 +17,8 @@ export const deleteFile = (file) => {
       if (response.status === 204) {
         return response.text();
       }
-      return response;
-    }).catch(error => error);
+      throw Error(`Unable to delete record for GUID ${file.did}, response code: ${response.status}, message: ${response.statusText}`);
+    });
 };
 
 const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {

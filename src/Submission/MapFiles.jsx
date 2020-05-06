@@ -40,6 +40,8 @@ class MapFiles extends React.Component {
       deleteFeature: false,
       deleting: false,
       deletionCounter: 0,
+      deletionText: '',
+      deletionErrorText: '',
       showDeletePopup: false,
     };
   }
@@ -71,7 +73,10 @@ class MapFiles extends React.Component {
     this.setState({ deleting: true, showDeletePopup: true, deletionCounter: 0 }, () => {
       flatFiles.forEach((file) => {
         limit(() => {
-          const promise = this.props.deleteFile(file);
+          const promise = this.props.deleteFile(file).catch((error) => {
+            this.setState({ deletionErrorText: (this.state.deletionErrorText) ?
+              this.state.deletionErrorText.concat('\n').concat(error.message) : error.message });
+          });
           this.setState(prevState => ({
             deletionCounter: prevState.deletionCounter + 1,
           }), () => {
@@ -93,7 +98,12 @@ class MapFiles extends React.Component {
 
   onClosePopup = () => {
     this.props.fetchUnmappedFiles(this.props.user.username);
-    this.setState({ showDeletePopup: false });
+    this.setState({
+      showDeletePopup: false,
+      deletionCounter: 0,
+      deletionText: '',
+      deletionErrorText: '',
+    });
   }
 
   onUpdate = () => {
@@ -296,6 +306,7 @@ class MapFiles extends React.Component {
           this.state.showDeletePopup &&
                   (<Popup
                     message={this.state.deletionText}
+                    error={this.state.deletionErrorText}
                     title='Deleting File Records'
                     rightButtons={[
                       {
