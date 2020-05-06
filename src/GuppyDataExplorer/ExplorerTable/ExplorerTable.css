@@ -48,3 +48,35 @@
 .explorer-table .ReactTable .rt-tbody .rt-td:first-child {
   padding-left: 20px;
 }
+
+.explorer-table-link-button svg {
+  width: 15px;
+  height: 15px;
+  top: -7px;
+  position: relative;
+}
+
+.explorer-table-link-button svg, .explorer-table-link-button svg path {
+  color: #606060;
+  fill: #606060;
+  transition: color .2s, fill.2s;
+  --webkit-transition: color .2s, fill.2s;
+  display: block;
+  margin: auto;
+}
+
+.explorer-table-link-button {
+  border: solid #606060 1px;
+  transition: border-color .2s;
+  --webkit-transition: border-color .2s;
+  width: 40px;
+}
+
+.explorer-table-link-button:hover {
+  border-color: #3283c8;
+}
+
+.explorer-table-link-button:hover svg path, .explorer-table-link-button:hover svg {
+  color: #3283c8;
+  fill: #3283c8;
+}

@@ -2,10 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
+import IconicLink from '../../components/buttons/IconicLink';
 import { GuppyConfigType, TableConfigType } from '../configTypeDef';
 import { capitalizeFirstLetter, humanFileSize } from '../../utils';
 import './ExplorerTable.css';
 import LockIcon from '../../img/icons/lock.svg';
+import dictIcons from '../../img/icons/index';
 
 class ExplorerTable extends React.Component {
   constructor(props) {
@@ -18,6 +20,10 @@ class ExplorerTable extends React.Component {
   }
 
   getWidthForColumn = (field, columnName) => {
+    if (this.props.tableConfig.linkFields.includes(field)) {
+      return 80;
+    }
+
     // some magic numbers that work fine for table columns width
     const minWidth = 100;
     const maxWidth = 400;
@@ -61,7 +67,10 @@ class ExplorerTable extends React.Component {
   };
 
   render() {
-    if (!this.props.tableConfig.fields || this.props.tableConfig.fields.length === 0) return null;
+    if (!this.props.tableConfig.fields || this.props.tableConfig.fields.length === 0) {
+      return null;
+    }
+
     const columnsConfig = this.props.tableConfig.fields.map((field) => {
       const fieldMappingEntry = this.props.guppyConfig.fieldMapping
         && this.props.guppyConfig.fieldMapping.find(i => i.field === field);
@@ -77,6 +86,19 @@ class ExplorerTable extends React.Component {
             return (<div><span title={row.value}><a href={`/files/${row.value}`}>{row.value}</a></span></div>);
           case 'file_size':
             return (<div><span title={row.value}>{humanFileSize(row.value)}</span></div>);
+          case this.props.tableConfig.linkFields.includes(field) && field:
+            return row.value ?
+              <IconicLink
+                link={row.value}
+                className='explorer-table-link'
+                buttonClassName='explorer-table-link-button'
+                icon='exit'
+                dictIcons={dictIcons}
+                iconColor='#606060'
+                target='_blank'
+                isExternal
+              />
+              : null;
           default:
             return (<div><span title={row.value}>{row.value}</span></div>);
           }
