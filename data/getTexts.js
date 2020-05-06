@@ -110,7 +110,11 @@ function buildConfig(appIn, data) {
       if (typeof result[k] === 'object') {
         const defaultVal = defaultConfig[k];
         const appVal = appConfig[k];
-        if (defaultVal && appVal && typeof defaultVal === 'object' && typeof appVal === 'object') {
+        if (defaultVal && appVal && defaultVal instanceof Array && appVal instanceof Array) {
+          // JS Arrays are objects, but we don't want to keep the
+          // default array values when new ones are configured.
+          result[k] = appVal;
+        } else if (defaultVal && appVal && typeof defaultVal === 'object' && typeof appVal === 'object') {
           result[k] = { ...defaultVal, ...appVal };
         }
       }
