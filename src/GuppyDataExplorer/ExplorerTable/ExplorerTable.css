@@ -50,8 +50,6 @@
 }
 
 .explorer-table-link-button svg {
-  width: 15px;
-  height: 15px;
   top: -7px;
   position: relative;
 }
@@ -70,6 +68,7 @@
   transition: border-color .2s;
   --webkit-transition: border-color .2s;
   width: 40px;
+  height: auto;
 }
 
 .explorer-table-link-button:hover {
