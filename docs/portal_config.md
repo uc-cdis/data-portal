@@ -207,6 +207,10 @@ Below is an example, with inline comments describing what each JSON block config
         "age_at_index",
         "diastolic_blood_pressure",
         "systolic_blood_pressure",
+        "url"
+      ],
+      "linkFields": [ // optional; fields (must exist in "field" list above) to display as clickable buttons
+        "url"
       ]
     },
     "dropdowns": { // optional; lists dropdowns if you want to combine multiple buttons into one dropdown (ie. Download dropdown has Download Manifest and Download Clinical Data as options)
