@@ -274,6 +274,16 @@ class MapFiles extends React.Component {
         enabled={!this.isMapEmpty(this.state.selectedFilesByGroup)}
       />,
     ];
+    // add a toggle before buttons
+    buttons.unshift(<Toggle
+      className='map-files__toggle'
+      label='Deletion Mode'
+      labelStyle={{
+        width: '',
+        fontWeight: '600',
+      }}
+      onToggle={this.onFeatureToggle}
+    />);
 
     const { sortedDates, filesByDate } = this.state;
 
@@ -293,9 +303,6 @@ class MapFiles extends React.Component {
         }
         <BackLink url='/submission' label='Back to Data Submission' />
         <div className='h1-typo'>My Files</div>
-        <div style={{ width: 'fit-content' }}>
-          <Toggle label='Delete' labelStyle={{ width: '' }} onToggle={this.onFeatureToggle} />
-        </div>
         <StickyToolbar
           title='Unmapped Files'
           toolbarElts={buttons}
