@@ -13,10 +13,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     git \
     nginx \
-    python \
+    python3 \
+    time \
     vim \
     && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
@@ -34,7 +36,8 @@ RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}
     && npm config set unsafe-perm=true && npm ci \
     && npm run relay \
     && npm run params \
-    && NODE_OPTIONS=--max-old-space-size=4096 NODE_ENV=production ./node_modules/.bin/webpack --bail \
+    # see https://stackoverflow.com/questions/48387040/nodejs-recommended-max-old-space-size
+    && NODE_OPTIONS=--max-old-space-size=2048 NODE_ENV=production time ./node_modules/.bin/webpack --bail \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
 
