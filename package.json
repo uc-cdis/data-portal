@@ -1,7 +1,7 @@
 {
   "name": "cloud_portal",
   "version": "0.1.0",
-  "description": "Bionimbus Data Portal",
+  "description": "Gen3 Data Portal",
   "main": "index.js",
   "dependencies": {
     "@arranger/components": "^0.4.15",
@@ -37,7 +37,7 @@
     "jszip": "^3.1.5",
     "less": "^3.11.1",
     "less-loader": "^4.1.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.12",
     "mapbox-gl": "^1.9.1",
     "material-ui": "^0.19.2",
     "moment": "^2.22.2",
