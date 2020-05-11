@@ -68,7 +68,12 @@ class Covid19Dashboard extends React.Component {
     let selectedDate = new Date();
     if (this.props.rawData.length > 0) {
       selectedDate = new Date(Math.max.apply(
-        null, this.props.rawData[0].date.map(date => new Date(date)),
+        null, this.props.rawData[0].date.map((date) => {
+          if (date.includes('T')) {
+            return new Date(date);
+          }
+          return new Date(date.concat('T00:00:00'));
+        }),
       ));
     }
     const confirmedCount = {
