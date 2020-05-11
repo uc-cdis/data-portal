@@ -113,7 +113,12 @@ class WorldMapChart extends React.Component {
       },
       hoverInfo: null,
       selectedDate: props.rawData && props.rawData[0] ?
-        new Date(Math.max.apply(null, props.rawData[0].date.map(date => new Date(date))))
+        new Date(Math.max.apply(null, props.rawData[0].date.map((date) => {
+          if (date.includes('T')) {
+            return new Date(date);
+          }
+          return new Date(date.concat('T00:00:00'));
+        })))
         : null,
     };
   }
@@ -127,7 +132,12 @@ class WorldMapChart extends React.Component {
       this.setState({
         selectedDate: nextProps.rawData && nextProps.rawData[0] ?
           new Date(Math.max.apply(
-            null, nextProps.rawData[0].date.map(date => new Date(date)),
+            null, nextProps.rawData[0].date.map((date) => {
+              if (date.includes('T')) {
+                return new Date(date);
+              }
+              return new Date(date.concat('T00:00:00'));
+            }),
           ))
           : null,
       });

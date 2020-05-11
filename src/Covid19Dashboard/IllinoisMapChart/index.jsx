@@ -84,7 +84,12 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
       hoverInfo: null,
       selectedDate: props.rawData && props.rawData[0] ?
         new Date(Math.max.apply(
-          null, props.rawData[0].date.map(date => new Date(date)),
+          null, props.rawData[0].date.map((date) => {
+            if (date.includes('T')) {
+              return new Date(date);
+            }
+            return new Date(date.concat('T00:00:00'));
+          }),
         ))
         : null,
       selectedLocation: null,
@@ -101,7 +106,12 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
         {
           selectedDate: nextProps.rawData && nextProps.rawData[0] ?
             new Date(Math.max.apply(
-              null, nextProps.rawData[0].date.map(date => new Date(date)),
+              null, nextProps.rawData[0].date.map((date) => {
+                if (date.includes('T')) {
+                  return new Date(date);
+                }
+                return new Date(date.concat('T00:00:00'));
+              }),
             ))
             : null,
         },
