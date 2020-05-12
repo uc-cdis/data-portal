@@ -112,13 +112,8 @@ class WorldMapChart extends React.Component {
         pitch: 0,
       },
       hoverInfo: null,
-      selectedDate: props.rawData && props.rawData[0] ?
-        new Date(Math.max.apply(null, props.rawData[0].date.map((date) => {
-          if (date.includes('T')) {
-            return new Date(date);
-          }
-          return new Date(date.concat('T00:00:00'));
-        })))
+      selectedDate: props.rawMapData && props.rawMapData.length ?
+        new Date(Math.max.apply(null, props.rawMapData[0].date.map(date => new Date(date))))
         : null,
     };
   }
@@ -128,16 +123,11 @@ class WorldMapChart extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.rawData.length !== this.props.rawData.length) {
+    if (nextProps.rawMapData && (nextProps.rawMapData.length !== this.props.rawMapData.length)) {
       this.setState({
-        selectedDate: nextProps.rawData && nextProps.rawData[0] ?
+        selectedDate: nextProps.rawMapData.length ?
           new Date(Math.max.apply(
-            null, nextProps.rawData[0].date.map((date) => {
-              if (date.includes('T')) {
-                return new Date(date);
-              }
-              return new Date(date.concat('T00:00:00'));
-            }),
+            null, nextProps.rawMapData[0].date.map(date => new Date(date)),
           ))
           : null,
       });
@@ -182,15 +172,9 @@ class WorldMapChart extends React.Component {
     });
   };
 
-  convertRawDataToDict(rawData, dataLevel) {
+  convertRawDataToDict(rawMapData, dataLevel) {
     const filteredFeatures = {};
-    rawData.reduce((res, location) => {
-      if (location.project_id !== 'open-JHU') {
-        // we are getting _all_ the location data from Guppy because there
-        // is no way to filter by project using the GuppyWrapper. So have
-        // to filter on client side
-        return res;
-      }
+    rawMapData.reduce((res, location) => {
       const selectedDateIndex = location.date.findIndex(
         x => new Date(x).getTime() === this.state.selectedDate.getTime(),
       );
@@ -255,18 +239,8 @@ class WorldMapChart extends React.Component {
     return filteredFeatures;
   }
 
-  convertRawDataToGeoJson(rawData) {
-    const features = rawData.reduce((res, location) => {
-      if (location.project_id !== 'open-JHU') {
-        // we are getting _all_ the location data from Guppy because there
-        // is no way to filter by project using the GuppyWrapper. So have
-        // to filter on client side
-        return res;
-      }
-      if (!location.confirmed.length && !location.deaths.length) {
-        // no data for this location
-        return res;
-      }
+  convertRawDataToGeoJson(rawMapData) {
+    const features = rawMapData.reduce((res, location) => {
       const newFeatures = [];
       location.date.forEach((date, i) => {
         if (new Date(date).getTime() !== this.state.selectedDate.getTime()) {
@@ -346,20 +320,20 @@ class WorldMapChart extends React.Component {
   }
 
   render() {
-    const rawData = this.props.rawData;
+    const rawMapData = this.props.rawMapData;
 
     if (this.state.selectedLayer === 'confirmed-dots') {
       if (!this.dotsGeoJson || this.dotsGeoJson.features.length === 0) {
-        this.dotsGeoJson = this.convertRawDataToGeoJson(rawData);
+        this.dotsGeoJson = this.convertRawDataToGeoJson(rawMapData);
       }
     } else if (!this.choroCountyGeoJson || this.choroCountyGeoJson.features.length === 0) {
-      let geoJson = this.convertRawDataToDict(rawData, 'country');
+      let geoJson = this.convertRawDataToDict(rawMapData, 'country');
       this.choroCountryGeoJson = addDataToGeoJsonBase(geoJson, 'country');
 
-      geoJson = this.convertRawDataToDict(rawData, 'state');
+      geoJson = this.convertRawDataToDict(rawMapData, 'state');
       this.choroStateGeoJson = addDataToGeoJsonBase(geoJson, 'state');
 
-      geoJson = this.convertRawDataToDict(rawData, 'county');
+      geoJson = this.convertRawDataToDict(rawMapData, 'county');
       this.choroCountyGeoJson = addDataToGeoJsonBase(geoJson, 'county');
     }
 
@@ -542,11 +516,11 @@ class WorldMapChart extends React.Component {
 }
 
 WorldMapChart.propTypes = {
-  rawData: PropTypes.array, // inherited from GuppyWrapper
+  rawMapData: PropTypes.array,
 };
 
 WorldMapChart.defaultProps = {
-  rawData: [],
+  rawMapData: [],
 };
 
 export default WorldMapChart;

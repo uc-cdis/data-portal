@@ -82,14 +82,9 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
         pitch: 0,
       },
       hoverInfo: null,
-      selectedDate: props.rawData && props.rawData[0] ?
+      selectedDate: props.rawMapData && props.rawMapData.length ?
         new Date(Math.max.apply(
-          null, props.rawData[0].date.map((date) => {
-            if (date.includes('T')) {
-              return new Date(date);
-            }
-            return new Date(date.concat('T00:00:00'));
-          }),
+          null, props.rawMapData[0].date.map(date => new Date(date)),
         ))
         : null,
       selectedLocation: null,
@@ -101,17 +96,12 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.rawData.length !== this.props.rawData.length) {
+    if (nextProps.rawMapData && (nextProps.rawMapData.length !== this.props.rawMapData.length)) {
       this.setState(
         {
-          selectedDate: nextProps.rawData && nextProps.rawData[0] ?
+          selectedDate: nextProps.rawMapData.length ?
             new Date(Math.max.apply(
-              null, nextProps.rawData[0].date.map((date) => {
-                if (date.includes('T')) {
-                  return new Date(date);
-                }
-                return new Date(date.concat('T00:00:00'));
-              }),
+              null, nextProps.rawMapData[0].date.map(date => new Date(date)),
             ))
             : null,
         },
@@ -175,18 +165,9 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
     this.setState({ selectedLocation });
   }
 
-  convertRawDataToDict(rawData) {
+  convertRawDataToDict(rawMapData) {
     const filteredFeatures = {};
-    rawData.reduce((res, location) => {
-      if (location.project_id !== 'open-JHU') {
-        // we are getting _all_ the location data from Guppy because there
-        // is no way to filter by project using the GuppyWrapper. So have
-        // to filter on client side
-        return res;
-      }
-      if (location.province_state !== 'Illinois') {
-        return res;
-      }
+    rawMapData.reduce((res, location) => {
       const selectedDateIndex = location.date.findIndex(
         x => new Date(x).getTime() === this.state.selectedDate.getTime(),
       );
@@ -265,11 +246,11 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
   }
 
   render() {
-    const rawData = this.props.rawData;
+    const rawMapData = this.props.rawMapData;
     const { selectedLocation } = this.state;
 
     if (!this.geoJson || this.geoJson.features.length === 0) {
-      const fipsData = this.convertRawDataToDict(rawData);
+      const fipsData = this.convertRawDataToDict(rawMapData);
       this.geoJson = addDataToGeoJsonBase(fipsData);
     }
 
@@ -363,11 +344,11 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
 }
 
 IllinoisMapChart.propTypes = {
-  rawData: PropTypes.array, // inherited from GuppyWrapper
+  rawMapData: PropTypes.array,
 };
 
 IllinoisMapChart.defaultProps = {
-  rawData: [],
+  rawMapData: [],
 };
 
 export default IllinoisMapChart;

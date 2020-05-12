@@ -66,16 +66,7 @@ class Covid19Dashboard extends React.Component {
   getTotalCounts() {
     // find latest date we have in the data
     let selectedDate = new Date();
-    if (this.props.rawData.length > 0) {
-      selectedDate = new Date(Math.max.apply(
-        null, this.props.rawData[0].date.map((date) => {
-          if (date.includes('T')) {
-            return new Date(date);
-          }
-          return new Date(date.concat('T00:00:00'));
-        }),
-      ));
-    }
+    let rawDataJHU = [];
     const confirmedCount = {
       global: 0,
       illinois: 0,
@@ -88,41 +79,44 @@ class Covid19Dashboard extends React.Component {
       global: 0,
       illinois: 0,
     };
-    this.props.rawData.forEach((location) => {
-      if (location.project_id !== 'open-JHU') {
-        // we are getting _all_ the location data from Guppy because there
-        // is no way to filter by project using the GuppyWrapper. So have
-        // to filter on client side
-        return;
-      }
-      location.date.forEach((date, i) => {
-        if (new Date(date).getTime() !== selectedDate.getTime()) {
-          return;
-        }
-        const confirmed = +location.confirmed[i];
-        const deaths = +location.deaths[i];
-        const recovered = +location.recovered[i];
-        // const testing = +location.testing[i];
-        if (confirmed) {
-          confirmedCount.global += confirmed;
-          if (location.province_state === 'Illinois') {
-            confirmedCount.illinois += confirmed;
+    if (this.props.rawData.length) {
+      rawDataJHU = this.props.rawData.filter(location => location.project_id === 'open-JHU');
+    }
+    if (rawDataJHU.length) {
+      // JHU data all have data/time pairs
+      selectedDate = new Date(Math.max.apply(
+        null, rawDataJHU[0].date.map(date => new Date(date)),
+      ));
+      rawDataJHU.forEach((location) => {
+        location.date.forEach((date, i) => {
+          if (new Date(date).getTime() !== selectedDate.getTime()) {
+            return;
           }
-        }
-        if (deaths) {
-          deathsCount.global += deaths;
-          if (location.province_state === 'Illinois') {
-            deathsCount.illinois += deaths;
+          const confirmed = +location.confirmed[i];
+          const deaths = +location.deaths[i];
+          const recovered = +location.recovered[i];
+          // const testing = +location.testing[i];
+          if (confirmed) {
+            confirmedCount.global += confirmed;
+            if (location.province_state === 'Illinois') {
+              confirmedCount.illinois += confirmed;
+            }
           }
-        }
-        if (recovered) {
-          recoveredCount.global += recovered;
-          if (location.province_state === 'Illinois') {
-            recoveredCount.illinois += recovered;
+          if (deaths) {
+            deathsCount.global += deaths;
+            if (location.province_state === 'Illinois') {
+              deathsCount.illinois += deaths;
+            }
           }
-        }
+          if (recovered) {
+            recoveredCount.global += recovered;
+            if (location.province_state === 'Illinois') {
+              recoveredCount.illinois += recovered;
+            }
+          }
+        });
       });
-    });
+    }
     return { confirmedCount, deathsCount, recoveredCount };
   }
 
@@ -215,7 +209,7 @@ class Covid19Dashboard extends React.Component {
                 />
               </div>
               <div className='covid19-dashboard_visualizations'>
-                <WorldMapChart {...this.props} />
+                <WorldMapChart rawMapData={this.props.rawData.filter(location => (location.project_id === 'open-JHU' && (location.confirmed.length || location.deaths.length)))} />
                 {this.enableCharts &&
                   <div className='covid19-dashboard_charts'>
                     {top10Chart}
@@ -236,7 +230,7 @@ class Covid19Dashboard extends React.Component {
                 />
               </div>
               <div className='covid19-dashboard_visualizations'>
-                <IllinoisMapChart {...this.props} />
+                <IllinoisMapChart rawMapData={this.props.rawData.filter(location => (location.project_id === 'open-JHU' && location.province_state === 'Illinois'))} />
                 {this.enableCharts &&
                   <div className='covid19-dashboard_charts'>
                     {seirChart}
