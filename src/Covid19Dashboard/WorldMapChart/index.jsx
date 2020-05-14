@@ -12,9 +12,17 @@ import countyData from '../data/us_counties';
 import './WorldMapChart.less';
 
 function addDataToGeoJsonBase(data, dataLevel) {
-  let base = worldData;
-  if (dataLevel === 'state') {
-    base = stateData;
+  // the base GeoJson describes the country/state/county borders.
+  let base = stateData;
+  if (dataLevel === 'country') {
+    base = worldData;
+    worldData.features.forEach((f) => {
+      if (f.properties.name === 'Greenland') {
+        // Greenland is part of Denmark in JHU data, but not in `worldData`.
+        // Override Greenland's ISO code to be the same as Denmark.
+        f.properties.iso_a3 = 'DNK'; // eslint-disable-line no-param-reassign
+      }
+    });
   } else if (dataLevel === 'county') {
     const newYorkFips = '36061';
     const emptyNewYorkFips = ['36081', '36047', '36005', '36085'];
@@ -38,6 +46,7 @@ function addDataToGeoJsonBase(data, dataLevel) {
     };
   }
 
+  // add the JHU data to the base GeoJson.
   const geoJson = {
     ...base,
     features: base.features.map((loc) => {
@@ -82,7 +91,7 @@ function addDataToGeoJsonBase(data, dataLevel) {
 
       // no data for this location
       location.properties.confirmed = 0;
-      location.properties.allData = {};
+      location.properties.deaths = 0;
       return location;
     }),
   };
@@ -94,7 +103,6 @@ class WorldMapChart extends React.Component {
   constructor(props) {
     super(props);
     this.updateDimensions = this.updateDimensions.bind(this);
-    this.dotsGeoJson = null;
     this.choroCountryGeoJson = null;
     this.choroStateGeoJson = null;
     this.choroCountyGeoJson = null;
@@ -112,26 +120,11 @@ class WorldMapChart extends React.Component {
         pitch: 0,
       },
       hoverInfo: null,
-      selectedDate: props.rawMapData && props.rawMapData.length ?
-        new Date(Math.max.apply(null, props.rawMapData[0].date.map(date => new Date(date))))
-        : null,
     };
   }
 
   componentDidMount() {
     window.addEventListener('resize', this.updateDimensions);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.rawMapData && (nextProps.rawMapData.length !== this.props.rawMapData.length)) {
-      this.setState({
-        selectedDate: nextProps.rawMapData.length ?
-          new Date(Math.max.apply(
-            null, nextProps.rawMapData[0].date.map(date => new Date(date)),
-          ))
-          : null,
-      });
-    }
   }
 
   onHover = (event) => {
@@ -172,115 +165,6 @@ class WorldMapChart extends React.Component {
     });
   };
 
-  convertRawDataToDict(rawMapData, dataLevel) {
-    const filteredFeatures = {};
-    rawMapData.reduce((res, location) => {
-      const selectedDateIndex = location.date.findIndex(
-        x => new Date(x).getTime() === this.state.selectedDate.getTime(),
-      );
-
-      let confirmed = Number(location.confirmed[selectedDateIndex]);
-      let deaths = Number(location.deaths[selectedDateIndex]);
-      if (!confirmed) {
-        confirmed = 0;
-      }
-      if (!deaths) {
-        deaths = 0;
-      }
-
-      // aggregation by country (ISO code)
-      if (dataLevel === 'country') {
-        if (location.iso3 in res) {
-          res[location.iso3].province_state = '';
-          res[location.iso3].county = '';
-          res[location.iso3].confirmed += confirmed;
-          res[location.iso3].deaths += deaths;
-        } else {
-          res[location.iso3] = {
-            country_region: location.country_region,
-            province_state: location.province_state,
-            county: location.county,
-            confirmed,
-            deaths,
-            allData: { ...location },
-          };
-        }
-      }
-
-      // aggregation by state (ISO code)
-      if (dataLevel === 'state') {
-        if (location.province_state in res) {
-          res[location.province_state].county = '';
-          res[location.province_state].confirmed += confirmed;
-          res[location.province_state].deaths += deaths;
-        } else {
-          res[location.province_state] = {
-            country_region: location.country_region,
-            province_state: location.province_state,
-            county: location.county,
-            confirmed,
-            deaths,
-            allData: { ...location },
-          };
-        }
-      } else {
-        // by county (FIPS code)
-        res[location.FIPS] = {
-          country_region: location.country_region,
-          province_state: location.province_state,
-          county: location.county,
-          confirmed,
-          deaths,
-          allData: { ...location },
-        };
-      }
-      return res;
-    }, filteredFeatures);
-    return filteredFeatures;
-  }
-
-  convertRawDataToGeoJson(rawMapData) {
-    const features = rawMapData.reduce((res, location) => {
-      const newFeatures = [];
-      location.date.forEach((date, i) => {
-        if (new Date(date).getTime() !== this.state.selectedDate.getTime()) {
-          return;
-        }
-
-        const confirmed = location.confirmed[i];
-        const deaths = location.deaths[i];
-        const recovered = location.recovered[i];
-        const testing = location.testing[i];
-        const feature = {
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [location.longitude, location.latitude],
-          },
-          properties: {
-            country_region: location.country_region,
-            province_state: location.province_state,
-            county: location.county,
-            date,
-            'marker-symbol': 'monument',
-            confirmed: confirmed !== null ? (+confirmed) : 0,
-            deaths: deaths !== null ? (+deaths) : 0,
-            recovered: recovered !== null ? (+recovered) : 0,
-            testing: testing !== null ? (+testing) : 0,
-          },
-        };
-        newFeatures.push(feature);
-      });
-      return res.concat(newFeatures);
-    }, []);
-
-    const geoJson = {
-      type: 'FeatureCollection',
-      features,
-    };
-    return geoJson;
-  }
-
   isVisible(layerId) {
     if (this.state.selectedLayer === layerId) {
       return 'visible';
@@ -320,21 +204,20 @@ class WorldMapChart extends React.Component {
   }
 
   render() {
-    const rawMapData = this.props.rawMapData;
-
-    if (this.state.selectedLayer === 'confirmed-dots') {
-      if (!this.dotsGeoJson || this.dotsGeoJson.features.length === 0) {
-        this.dotsGeoJson = this.convertRawDataToGeoJson(rawMapData);
-      }
-    } else if (!this.choroCountyGeoJson || this.choroCountyGeoJson.features.length === 0) {
-      let geoJson = this.convertRawDataToDict(rawMapData, 'country');
-      this.choroCountryGeoJson = addDataToGeoJsonBase(geoJson, 'country');
-
-      geoJson = this.convertRawDataToDict(rawMapData, 'state');
-      this.choroStateGeoJson = addDataToGeoJsonBase(geoJson, 'state');
-
-      geoJson = this.convertRawDataToDict(rawMapData, 'county');
-      this.choroCountyGeoJson = addDataToGeoJsonBase(geoJson, 'county');
+    const densityGeoJson = this.props.geoJson;
+    if (Object.keys(this.props.jsonByLevel.country).length && !this.choroCountryGeoJson) {
+      this.choroCountryGeoJson = addDataToGeoJsonBase(
+        this.props.jsonByLevel.country,
+        'country',
+      );
+      this.choroStateGeoJson = addDataToGeoJsonBase(
+        this.props.jsonByLevel.state,
+        'state',
+      );
+      this.choroCountyGeoJson = addDataToGeoJsonBase(
+        this.props.jsonByLevel.county,
+        'county',
+      );
     }
 
     let colors = { 0: '#FFF' };
@@ -405,7 +288,7 @@ class WorldMapChart extends React.Component {
           {/* Dot distribution map */}
           <ReactMapGL.Source
             type='geojson'
-            data={this.dotsGeoJson}
+            data={densityGeoJson}
           >
             <ReactMapGL.Layer
               id='confirmed-dots'
@@ -516,11 +399,8 @@ class WorldMapChart extends React.Component {
 }
 
 WorldMapChart.propTypes = {
-  rawMapData: PropTypes.array,
-};
-
-WorldMapChart.defaultProps = {
-  rawMapData: [],
+  geoJson: PropTypes.object.isRequired,
+  jsonByLevel: PropTypes.object.isRequired,
 };
 
 export default WorldMapChart;

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import Slider from 'react-slick';
-import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
@@ -10,7 +9,7 @@ import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntrodu
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
-import { guppyUrl, breakpoints, customHomepageChartConfig, indexPublic, enableCovid19Dashboard, covid19DashboardConfig } from '../localconf';
+import { breakpoints, customHomepageChartConfig, indexPublic, enableCovid19Dashboard, covid19DashboardConfig } from '../localconf';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
 import ReduxCovid19Dashboard from '../Covid19Dashboard/ReduxCovid19Dashboard';
 import './page.less';
@@ -66,15 +65,6 @@ class IndexPageComponent extends React.Component {
       ));
     }
 
-    const covid19DashboardDataType = 'location';
-    const covid19DashboardGuppyConfig = {
-      size: 10000, // TODO we need to get all the data. guppy doesn't allow
-      // more than 10,000. if we have more than 10,000 locations (all projects
-      // combined): use download endpoint instead of GuppyWrapper?
-      // There's the offset param but the GuppyWrapper only makes 1 query...
-      // TODO replace with new data ingestion
-    };
-
     return (
       <div className='index-page'>
         {!enableCovid19Dashboard ?
@@ -95,19 +85,10 @@ class IndexPageComponent extends React.Component {
             </div>
           </div>
           :
-          <GuppyWrapper
-            guppyConfig={{
-              path: guppyUrl,
-              type: covid19DashboardDataType,
-              ...covid19DashboardGuppyConfig,
-            }}
-            filterConfig={{}}
-          >
-            <ReduxCovid19Dashboard
-              config={covid19DashboardConfig}
-              {...this.props}
-            />
-          </GuppyWrapper>
+          <ReduxCovid19Dashboard
+            config={covid19DashboardConfig}
+            {...this.props}
+          />
         }
         <ReduxIndexButtonBar {...this.props} />
       </div>

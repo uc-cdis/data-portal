@@ -1,37 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-} from 'recharts';
+// import {
+//   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+// } from 'recharts';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
-import Popup from '../../components/Popup';
+// import Popup from '../../components/Popup';
 import { numberWithCommas } from '../dataUtils.js';
 import countyData from '../data/us_counties';
 import './IllinoisMapChart.less';
 
-const monthNames = ['Jan', 'Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+// const monthNames = [
+//   'Jan', 'Feb', 'Mar',
+//   'April', 'May', 'Jun',
+//   'Jul', 'Aug', 'Sept',
+//   'Oct', 'Nov', 'Dec'
+// ];
 
-class CustomizedAxisTick extends React.Component {
-  render() {
-    const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
-    const val = payload.value; // eslint-disable-line react/prop-types
-    const formattedDate = `${monthNames[new Date(val).getMonth()]} ${new Date(val).getDate()}`;
-    return (
-      <g transform={`translate(${x},${y})`}>
-        <text x={0} y={0} dy={16} textAnchor='end' fill='#666' transform='rotate(-60)'>{formattedDate}</text>
-      </g>
-    );
-  }
-}
+// class CustomizedAxisTick extends React.Component {
+//   render() {
+//     const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
+//     const val = payload.value; // eslint-disable-line react/prop-types
+//     const formattedDate = `${monthNames[new Date(val).getMonth()]} ${new Date(val).getDate()}`;
+//     return (
+//       <g transform={`translate(${x},${y})`}>
+//         <text
+//           x={0}
+//           y={0}
+//           dy={16}
+//           textAnchor='end'
+//           fill='#666'
+//           transform='rotate(-60)'
+//         >
+//           {formattedDate}
+//         </text>
+//       </g>
+//     );
+//   }
+// }
 
-function addDataToGeoJsonBase(fipsData) {
+function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
-  // Chicago (17999) is separate from Cook county in `countyData`,
-  // not in our data
+  // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
+  // but not in JHU data. So don't display Chicago separately.
   const base = {
     ...countyData,
     features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
@@ -40,22 +54,21 @@ function addDataToGeoJsonBase(fipsData) {
     ...base,
     features: base.features.map((loc) => {
       const location = loc;
-      if (location.properties.FIPS in fipsData) {
-        location.properties.confirmed = Number(fipsData[location.properties.FIPS].confirmed);
-        location.properties.deaths = Number(fipsData[location.properties.FIPS].deaths);
-        const allData = fipsData[location.properties.FIPS].allData;
-        location.properties.allData = {
-          confirmed: allData.confirmed,
-          deaths: allData.deaths,
-          date: allData.date,
-          testing: allData.testing,
-          recovered: allData.recovered,
-        };
-      } else {
-        location.properties.confirmed = 0;
-        location.properties.deaths = 0;
-        location.properties.allData = {};
+      if (location.properties.FIPS && !(location.properties.FIPS in data)) {
+        // `countyData` stores FIPS with trailing zeros, JHU data doesn't
+        location.properties.FIPS = Number(location.properties.FIPS).toString();
       }
+      if (location.properties.FIPS && location.properties.FIPS in data) {
+        location.properties = Object.assign(
+          data[location.properties.FIPS],
+          location.properties,
+        );
+        return location;
+      }
+
+      // no data for this location
+      location.properties.confirmed = 0;
+      location.properties.deaths = 0;
       return location;
     }),
   };
@@ -67,7 +80,7 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
   constructor(props) {
     super(props);
     this.updateDimensions = this.updateDimensions.bind(this);
-    this.geoJson = null;
+    this.choroCountyGeoJson = null;
     this.state = {
       mapSize: {
         width: '100%',
@@ -82,31 +95,12 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
         pitch: 0,
       },
       hoverInfo: null,
-      selectedDate: props.rawMapData && props.rawMapData.length ?
-        new Date(Math.max.apply(
-          null, props.rawMapData[0].date.map(date => new Date(date)),
-        ))
-        : null,
-      selectedLocation: null,
+      // selectedLocation: null,
     };
   }
 
   componentDidMount() {
     window.addEventListener('resize', this.updateDimensions);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.rawMapData && (nextProps.rawMapData.length !== this.props.rawMapData.length)) {
-      this.setState(
-        {
-          selectedDate: nextProps.rawMapData.length ?
-            new Date(Math.max.apply(
-              null, nextProps.rawMapData[0].date.map(date => new Date(date)),
-            ))
-            : null,
-        },
-      );
-    }
   }
 
   onHover = (event) => {
@@ -143,62 +137,46 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
     });
   };
 
-  onClick = (event) => {
-    if (!event.features) { return; }
+  // onClick = (event) => {
+  //   if (!event.features) { return; }
 
-    let selectedLocation = null;
-    event.features.forEach((feature) => {
-      if (feature.layer.id === 'confirmed-choropleth') {
-        const state = feature.properties.STATE;
-        const county = feature.properties.COUNTYNAME;
-        const fips = feature.properties.FIPS;
-        const data = JSON.parse(feature.properties.allData);
-        selectedLocation = {
-          state,
-          county,
-          fips,
-          data,
-        };
-      }
-    });
+  //   let selectedLocation = null;
+  //   event.features.forEach((feature) => {
+  //     if (feature.layer.id === 'confirmed-choropleth') {
+  //       const state = feature.properties.STATE;
+  //       const county = feature.properties.COUNTYNAME;
+  //       const fips = feature.properties.FIPS;
+  //       console.log(feature);
+  //       // const data = JSON.parse(feature.properties.allData);
+  //       selectedLocation = {
+  //         state,
+  //         county,
+  //         fips,
+  //         data: {},
+  //       };
+  //     }
+  //   });
 
-    this.setState({ selectedLocation });
-  }
+  //   this.setState({ selectedLocation });
+  // }
 
-  convertRawDataToDict(rawMapData) {
-    const filteredFeatures = {};
-    rawMapData.reduce((res, location) => {
-      const selectedDateIndex = location.date.findIndex(
-        x => new Date(x).getTime() === this.state.selectedDate.getTime(),
-      );
+  // formatLocationData = (data) => {
+  //   let max = 0;
+  //   let sortedData = data.date.map((date, i) => {
+  //     max = Math.max(max, data.confirmed[i], data.deaths[i]);
+  //     return {
+  //       date,
+  //       confirmed: data.confirmed[i],
+  //       deaths: data.deaths[i],
+  //     };
+  //   });
+  //   sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+  //   return { data: sortedData, max };
+  // }
 
-      res[location.FIPS] = {
-        confirmed: location.confirmed[selectedDateIndex],
-        deaths: location.deaths[selectedDateIndex],
-        allData: { ...location },
-      };
-      return res;
-    }, filteredFeatures);
-    return filteredFeatures;
-  }
-
-  formatLocationData = (data) => {
-    let max = 0;
-    let sortedData = data.date.map((date, i) => {
-      max = Math.max(max, data.confirmed[i], data.deaths[i]);
-      return {
-        date,
-        confirmed: data.confirmed[i],
-        deaths: data.deaths[i],
-      };
-    });
-    sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-    return { data: sortedData, max };
-  }
-
-  closePopup = () => {
-    this.setState({ selectedLocation: null });
-  }
+  // closePopup = () => {
+  //   this.setState({ selectedLocation: null });
+  // }
 
   updateDimensions() {
     this.setState({
@@ -231,27 +209,27 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
     return null;
   }
 
-  renderTooltip = (props) => {
-    const date = new Date(props.label);
-    return (
-      <div className='map-chart__tooltip'>
-        <p>{monthNames[date.getMonth()]} {date.getDate()}, {date.getFullYear()}</p>
-        {
-          props.payload.map((data, i) => (
-            <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value}</p>
-          ))
-        }
-      </div>
-    );
-  }
+  // renderTooltip = (props) => {
+  //   const date = new Date(props.label);
+  //   return (
+  //     <div className='map-chart__tooltip'>
+  //       <p>{monthNames[date.getMonth()]} {date.getDate()}, {date.getFullYear()}</p>
+  //       {
+  //         props.payload.map((data, i) => (
+  //           <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value}</p>
+  //         ))
+  //       }
+  //     </div>
+  //   );
+  // }
 
   render() {
-    const rawMapData = this.props.rawMapData;
-    const { selectedLocation } = this.state;
+    // const { selectedLocation } = this.state;
 
-    if (!this.geoJson || this.geoJson.features.length === 0) {
-      const fipsData = this.convertRawDataToDict(rawMapData);
-      this.geoJson = addDataToGeoJsonBase(fipsData);
+    if (Object.keys(this.props.jsonByLevel.country).length && !this.choroCountyGeoJson) {
+      this.choroCountyGeoJson = addDataToGeoJsonBase(
+        this.props.jsonByLevel.county,
+      );
     }
 
     const colors = {
@@ -267,8 +245,8 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
       2500: '#850001',
     };
     const colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
-    const selectedLocationData = selectedLocation ?
-      this.formatLocationData(selectedLocation.data) : null;
+    // const selectedLocationData = selectedLocation ?
+    //   this.formatLocationData(selectedLocation.data) : null;
 
     return (
       <div className='map-chart'>
@@ -287,7 +265,7 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
             this.setState({ viewport });
           }}
           onHover={this.onHover}
-          onClick={this.onClick}
+          // onClick={this.onClick} // TODO the time series data is not available yet
           dragRotate={false}
           touchRotate={false}
           // maxBounds={[ // doesn't work
@@ -296,7 +274,7 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
           // ]}
         >
           {this.renderPopup()}
-          <ReactMapGL.Source type='geojson' data={this.geoJson}>
+          <ReactMapGL.Source type='geojson' data={this.choroCountyGeoJson}>
             <ReactMapGL.Layer
               id='confirmed-choropleth'
               type='fill'
@@ -313,7 +291,7 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
             />
           </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
-        {
+        {/* {
           this.state.selectedLocation ?
             <Popup
               title={`${selectedLocation.county} County, ${selectedLocation.state}`}
@@ -337,18 +315,14 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
               </ResponsiveContainer>
             </Popup>
             : null
-        }
+        } */}
       </div>
     );
   }
 }
 
 IllinoisMapChart.propTypes = {
-  rawMapData: PropTypes.array,
-};
-
-IllinoisMapChart.defaultProps = {
-  rawMapData: [],
+  jsonByLevel: PropTypes.object.isRequired,
 };
 
 export default IllinoisMapChart;

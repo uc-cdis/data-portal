@@ -28,17 +28,18 @@ import './Covid19Dashboard.less';
 // Config:
 // "covid19DashboardConfig": {
 //   "dataUrl": "",
-//   "enableCharts": true
+//   "enableCharts": true/false
 // },
 
 
-// TODO handle both fetch from URL and local files
 /* To fetch new data:
-- add the prop name and location to `chartDataLocations`;
+- add the prop name and location to `dashboardDataLocations`;
 - add the prop to Covid19Dashboard.propTypes;
-- add it to ReduxCovid19Dashboard.handleChartData().
+- add it to ReduxCovid19Dashboard.handleDashboardData().
 */
-const chartDataLocations = {
+const dashboardDataLocations = {
+  jhuGeojsonLatest: 'map_data/jhu_geojson_latest.json',
+  jhuJsonByLevelLatest: 'map_data/jhu_json_by_level_latest.json',
   seirObserved: 'observed_cases.txt',
   seirSimulated: 'simulated_cases.txt',
   top10: 'top10.txt',
@@ -56,17 +57,13 @@ class Covid19Dashboard extends React.Component {
       console.warn('MAPBOX_API_TOKEN environment variable not set, will be unable to load maps.'); // eslint-disable-line no-console
     }
 
-    if (this.enableCharts) {
-      Object.entries(chartDataLocations).forEach(
-        e => this.props.fetchChartData(e[0], e[1]),
-      );
-    }
+    Object.entries(dashboardDataLocations).forEach(
+      e => this.props.fetchDashboardData(e[0], e[1]),
+    );
   }
 
   getTotalCounts() {
     // find latest date we have in the data
-    let selectedDate = new Date();
-    let rawDataJHU = [];
     const confirmedCount = {
       global: 0,
       illinois: 0,
@@ -79,48 +76,35 @@ class Covid19Dashboard extends React.Component {
       global: 0,
       illinois: 0,
     };
-    if (this.props.rawData.length) {
-      rawDataJHU = this.props.rawData.filter(location => location.project_id === 'open-JHU');
-    }
-    if (rawDataJHU.length) {
-      // JHU data all have data/time pairs
-      selectedDate = new Date(Math.max.apply(
-        null, rawDataJHU[0].date.map(date => new Date(date)),
-      ));
-      rawDataJHU.forEach((location) => {
-        location.date.forEach((date, i) => {
-          if (new Date(date).getTime() !== selectedDate.getTime()) {
-            return;
-          }
-          const confirmed = +location.confirmed[i];
-          const deaths = +location.deaths[i];
-          const recovered = +location.recovered[i];
-          // const testing = +location.testing[i];
-          if (confirmed) {
-            confirmedCount.global += confirmed;
-            if (location.province_state === 'Illinois') {
-              confirmedCount.illinois += confirmed;
-            }
-          }
-          if (deaths) {
-            deathsCount.global += deaths;
-            if (location.province_state === 'Illinois') {
-              deathsCount.illinois += deaths;
-            }
-          }
-          if (recovered) {
-            recoveredCount.global += recovered;
-            if (location.province_state === 'Illinois') {
-              recoveredCount.illinois += recovered;
-            }
-          }
-        });
-      });
-    }
+
+    this.props.jhuGeojsonLatest.features.forEach((feat) => {
+      const confirmed = +feat.properties.confirmed;
+      const deaths = +feat.properties.deaths;
+      const recovered = +feat.properties.recovered;
+      if (confirmed) {
+        confirmedCount.global += confirmed;
+        if (feat.properties.province_state === 'Illinois') {
+          confirmedCount.illinois += confirmed;
+        }
+      }
+      if (deaths) {
+        deathsCount.global += deaths;
+        if (feat.properties.province_state === 'Illinois') {
+          deathsCount.illinois += deaths;
+        }
+      }
+      if (recovered) {
+        recoveredCount.global += recovered;
+        if (feat.properties.province_state === 'Illinois') {
+          recoveredCount.illinois += recovered;
+        }
+      }
+    });
+
     return { confirmedCount, deathsCount, recoveredCount };
   }
 
-  getPlotChartsData() {
+  getPlotChartsConfig() {
     const displaySeirPlot = Object.keys(this.props.seirObserved).length > 0
       && Object.keys(this.props.seirSimulated).length > 0;
     const seirPlotChart = [
@@ -178,7 +162,7 @@ class Covid19Dashboard extends React.Component {
     } = this.getTotalCounts();
     const {
       seirChart, top10Chart, idphDailyChart,
-    } = this.enableCharts ? this.getPlotChartsData() : {};
+    } = this.enableCharts ? this.getPlotChartsConfig() : {};
 
     return (
       <div className='covid19-dashboard'>
@@ -209,7 +193,10 @@ class Covid19Dashboard extends React.Component {
                 />
               </div>
               <div className='covid19-dashboard_visualizations'>
-                <WorldMapChart rawMapData={this.props.rawData.filter(location => (location.project_id === 'open-JHU' && (location.confirmed.length || location.deaths.length)))} />
+                <WorldMapChart
+                  geoJson={this.props.jhuGeojsonLatest}
+                  jsonByLevel={this.props.jhuJsonByLevelLatest}
+                />
                 {this.enableCharts &&
                   <div className='covid19-dashboard_charts'>
                     {top10Chart}
@@ -230,7 +217,9 @@ class Covid19Dashboard extends React.Component {
                 />
               </div>
               <div className='covid19-dashboard_visualizations'>
-                <IllinoisMapChart rawMapData={this.props.rawData.filter(location => (location.project_id === 'open-JHU' && location.province_state === 'Illinois'))} />
+                <IllinoisMapChart
+                  jsonByLevel={this.props.jhuJsonByLevelLatest}
+                />
                 {this.enableCharts &&
                   <div className='covid19-dashboard_charts'>
                     {seirChart}
@@ -247,9 +236,10 @@ class Covid19Dashboard extends React.Component {
 }
 
 Covid19Dashboard.propTypes = {
-  rawData: PropTypes.array, // inherited from GuppyWrapper
   config: PropTypes.object.isRequired,
-  fetchChartData: PropTypes.func.isRequired,
+  fetchDashboardData: PropTypes.func.isRequired,
+  jhuGeojsonLatest: PropTypes.object,
+  jhuJsonByLevelLatest: PropTypes.object,
   seirObserved: PropTypes.object,
   seirSimulated: PropTypes.object,
   top10: PropTypes.object,
@@ -257,7 +247,8 @@ Covid19Dashboard.propTypes = {
 };
 
 Covid19Dashboard.defaultProps = {
-  rawData: [],
+  jhuGeojsonLatest: { type: 'FeatureCollection', features: [] },
+  jhuJsonByLevelLatest: { country: {}, state: {}, county: {} },
   seirObserved: {},
   seirSimulated: {},
   top10: {},

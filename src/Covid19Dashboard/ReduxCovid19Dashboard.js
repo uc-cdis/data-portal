@@ -7,8 +7,11 @@ import { readSingleColumnTSV, readMultiColumnTSV } from './dataUtils.js';
 let dataUrl = covid19DashboardConfig.dataUrl;
 dataUrl = !dataUrl.endsWith('/') ? `${dataUrl}/` : dataUrl;
 
-async function handleChartData(propName, data) {
+async function handleDashboardData(propName, data) {
   switch (propName) {
+  case 'jhuGeojsonLatest':
+  case 'jhuJsonByLevelLatest':
+    return JSON.parse(data);
   case 'seirObserved':
   case 'seirSimulated':
     return readSingleColumnTSV(data);
@@ -17,13 +20,13 @@ async function handleChartData(propName, data) {
   case 'idphDaily':
     return readMultiColumnTSV(data); // change the name
   default:
-    console.warn(`I don't know how to handle chart data for "${propName}"`); // eslint-disable-line no-console
-    // return 'ERROR_FETCH_CHART_DATA';
+    console.warn(`I don't know how to handle dashboard data for "${propName}"`); // eslint-disable-line no-console
+    // return 'ERROR_FETCH_DASHBOARD_DATA';
   }
-  return {};
+  return null;
 }
 
-const fetchChartData = (propName, filePath) => (
+const fetchDashboardData = (propName, filePath) => (
   // TODO refactor this probably. to handle errors better
   dispatch => fetch(dataUrl + filePath, dispatch)
     .then((r) => {
@@ -31,23 +34,23 @@ const fetchChartData = (propName, filePath) => (
       case 200:
         return r.text();
       default:
-        console.error(`Got code ${r.status} when fetching chart data at "${dataUrl + filePath}"`); // eslint-disable-line no-console
+        console.error(`Got code ${r.status} when fetching dashboard data at "${dataUrl + filePath}"`); // eslint-disable-line no-console
       }
       return '';
     })
     .catch(
-      error => console.error(`Unable to fetch chart data at "${dataUrl + filePath}":`, error), // eslint-disable-line no-console
+      error => console.error(`Unable to fetch dashboard data at "${dataUrl + filePath}":`, error), // eslint-disable-line no-console
     )
-    .then(data => handleChartData(propName, data))
+    .then(data => handleDashboardData(propName, data))
     .then(obj =>
       // switch (obj) {
-      // case 'ERROR_FETCH_CHART_DATA':
+      // case 'ERROR_FETCH_DASHBOARD_DATA':
       //   return {
-      //     type: 'ERROR_FETCH_CHART_DATA',
+      //     type: 'ERROR_FETCH_DASHBOARD_DATA',
       //   };
       // default:
       ({
-        type: 'RECEIVE_CHART_DATA',
+        type: 'RECEIVE_DASHBOARD_DATA',
         name: propName,
         contents: obj,
       }),
@@ -61,7 +64,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchChartData: (propName, filePath) => dispatch(fetchChartData(propName, filePath)),
+  fetchDashboardData: (propName, filePath) => dispatch(fetchDashboardData(propName, filePath)),
 });
 
 const ReduxCovid19Dashboard = connect(mapStateToProps, mapDispatchToProps)(Covid19Dashboard);
