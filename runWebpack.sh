@@ -157,6 +157,7 @@ export REACT_APP_DISABLE_SOCKET=true
 # run webpack to generate a static bundle.js
 #
 if [[ "$NODE_ENV" == "dev" || "$NODE_ENV" == "auto" ]]; then
+  export NODE_OPTIONS="--max-old-space-size=4096"
   echo ./node_modules/.bin/webpack-dev-server
   ./node_modules/.bin/webpack-dev-server
 else
