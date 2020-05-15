@@ -411,7 +411,7 @@ class ExplorerButtonGroup extends React.Component {
           manifestEntryCount: totalFileCount,
         }));
       } else {
-        // otherwise, just query subject index for subjet_id list,
+        // otherwise, just query subject index for subject_id list,
         // and query file index for manifest info.
         this.setState({
           manifestEntryCount: 0,
