@@ -226,7 +226,10 @@ class ExplorerVisualization extends React.Component {
           this.props.tableConfig.enabled && (
             <ExplorerTable
               className='guppy-explorer-visualization__table'
-              tableConfig={{ fields: tableColumns }}
+              tableConfig={{
+                fields: tableColumns,
+                linkFields: this.props.tableConfig.linkFields || [],
+              }}
               fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
               rawData={this.props.rawData}
               totalCount={this.props.totalCount}
