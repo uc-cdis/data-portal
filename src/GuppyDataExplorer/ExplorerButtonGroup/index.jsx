@@ -104,6 +104,10 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   getManifest = async (indexType) => {
+    if (!this.props.guppyConfig.manifestMapping
+      || !this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex) {
+      return Promise.reject('No "guppyConfig.manifestMapping" or "guppyConfig.manifestMapping.referenceIdFieldInDataIndexguppyConfig.manifestMapping.referenceIdFieldInDataIndex" defined in config');
+    }
     const refField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     const md5Field = 'md5sum';
     const fileNameField = 'file_name';
@@ -390,7 +394,9 @@ class ExplorerButtonGroup extends React.Component {
     buttonConfig.type === 'export-to-pfb';
 
   refreshManifestEntryCount = async () => {
-    if (this.props.isLocked) return;
+    if (this.props.isLocked || !this.props.guppyConfig.manifestMapping
+      || !this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex
+      || !this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex) return;
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     const caseFieldInFileIndex =
       this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
