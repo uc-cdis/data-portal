@@ -35,25 +35,25 @@ class ExplorerVisualization extends React.Component {
       value: this.props.totalCount,
     });
     Object.keys(chartConfig).forEach((field) => {
-      if (!aggsData || !aggsData[field] || !aggsData[field].histogram) return;
-      const { histogram } = aggsData[field];
-      switch (chartConfig[field].chartType) {
+      if (!aggsData || !aggsData[`${field}`] || !aggsData[`${field}`].histogram) return;
+      const { histogram } = aggsData[`${field}`];
+      switch (chartConfig[`${field}`].chartType) {
       case 'count':
         countItems.push({
-          label: chartConfig[field].title,
-          value: filter[field] ? filter[field].selectedValues.length
-            : aggsData[field].histogram.length,
+          label: chartConfig[`${field}`].title,
+          value: filter[`${field}`] ? filter[`${field}`].selectedValues.length
+            : aggsData[`${field}`].histogram.length,
         });
         break;
       case 'pie':
       case 'bar':
       case 'stackedBar': {
         const dataItem = {
-          type: chartConfig[field].chartType,
-          title: chartConfig[field].title,
+          type: chartConfig[`${field}`].chartType,
+          title: chartConfig[`${field}`].title,
           data: histogram.map(i => ({ name: i.key, value: i.count })),
         };
-        if (chartConfig[field].chartType === 'stackedBar') {
+        if (chartConfig[`${field}`].chartType === 'stackedBar') {
           stackedBarCharts.push(dataItem);
         } else {
           summaries.push(dataItem);
@@ -61,7 +61,7 @@ class ExplorerVisualization extends React.Component {
         break;
       }
       default:
-        throw new Error(`Invalid chartType ${chartConfig[field].chartType}`);
+        throw new Error(`Invalid chartType ${chartConfig[`${field}`].chartType}`);
       }
     });
     // sort cout items according to appearence in chart config
