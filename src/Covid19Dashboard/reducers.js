@@ -5,6 +5,15 @@ const covid19Dashboard = (state = {}, action) => {
     res[action.name] = action.contents;
     return { ...state, ...res };
   }
+  case 'RECEIVE_TIME_SERIES_DATA': {
+    return {
+      ...state,
+      selectedLocationData: { data: action.contents, title: action.title },
+    };
+  }
+  case 'CLOSE_TIME_SERIES_POPUP': {
+    return { ...state, selectedLocationData: null };
+  }
   default:
     return state;
   }

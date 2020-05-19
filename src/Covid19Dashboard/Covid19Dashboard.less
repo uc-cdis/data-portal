@@ -42,6 +42,40 @@
   grid-template-rows: 1fr 1fr;
 }
 
+.covid19-dashboard__location-info__details {
+  font-style: italic;
+}
+
+
+// location popup
+.covid19-dashboard .popup__mask {
+  padding-top: 10vh;
+}
+
+.covid19-dashboard .popup__box {
+  width: 80%;
+  height: 80vh;
+}
+
+.covid19-dashboard .popup__message {
+  height: calc(100% - 100px);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.covid19-dashboard__tooltip {
+  padding: 10px 10px;
+  background-color: #fff;
+  box-shadow: 8px 8px 8px grey;
+}
+
+.covid19-dashboard .recharts-legend-wrapper {
+  bottom: unset !important; // stylelint-disable-line declaration-no-important
+}
+// end location popup
+
 .map-chart {
   grid-column: 1;
   width: 100%;

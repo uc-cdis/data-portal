@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import 'react-tabs/style/react-tabs.less';
 
 import { mapboxAPIToken } from '../localconf';
+import Popup from '../components/Popup';
 import WorldMapChart from './WorldMapChart';
 import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
@@ -45,6 +47,13 @@ const dashboardDataLocations = {
   top10: 'top10.txt',
   idphDaily: 'idph_daily.txt',
 };
+
+const monthNames = [
+  'Jan', 'Feb', 'Mar',
+  'April', 'May', 'Jun',
+  'Jul', 'Aug', 'Sept',
+  'Oct', 'Nov', 'Dec',
+];
 
 class Covid19Dashboard extends React.Component {
   constructor(props) {
@@ -156,7 +165,38 @@ class Covid19Dashboard extends React.Component {
     return { seirChart, top10Chart, idphDailyChart };
   }
 
+  formatSelectedLocationData = () => {
+    const title = this.props.selectedLocationData.title;
+    let max = 0;
+    let sortedData = Object.keys(this.props.selectedLocationData.data).map((date) => {
+      const confirmed = this.props.selectedLocationData.data[date].confirmed;
+      const deaths = this.props.selectedLocationData.data[date].deaths;
+      const recovered = this.props.selectedLocationData.data[date].recovered;
+      max = Math.max(max, confirmed, deaths, recovered);
+      return { date, confirmed, deaths, recovered };
+    });
+    sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    return { data: sortedData, max, title };
+  }
+
+  renderLocationPopupTooltip = (props) => {
+    const date = new Date(props.label);
+    return (
+      <div className='covid19-dashboard__tooltip'>
+        <p>{monthNames[date.getMonth()]} {date.getDate()}, {date.getFullYear()}</p>
+        {
+          props.payload.map((data, i) => (
+            <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value}</p>
+          ))
+        }
+      </div>
+    );
+  }
+
   render() {
+    const locationPopupData = this.props.selectedLocationData ?
+      this.formatSelectedLocationData() : null;
+
     const {
       confirmedCount, deathsCount, recoveredCount,
     } = this.getTotalCounts();
@@ -166,10 +206,6 @@ class Covid19Dashboard extends React.Component {
 
     return (
       <div className='covid19-dashboard'>
-        {/* <ReactEcharts
-          option={this.getOption()}
-          style={{height: '500px', width: '100%'}}
-        /> */}
         <div>
           <Tabs>
             <TabList className='covid19-dashboard_tablist'>
@@ -196,6 +232,7 @@ class Covid19Dashboard extends React.Component {
                 <WorldMapChart
                   geoJson={this.props.jhuGeojsonLatest}
                   jsonByLevel={this.props.jhuJsonByLevelLatest}
+                  fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                 />
                 {this.enableCharts &&
                   <div className='covid19-dashboard_charts'>
@@ -219,6 +256,7 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 <IllinoisMapChart
                   jsonByLevel={this.props.jhuJsonByLevelLatest}
+                  fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                 />
                 {this.enableCharts &&
                   <div className='covid19-dashboard_charts'>
@@ -230,7 +268,55 @@ class Covid19Dashboard extends React.Component {
             </TabPanel>
           </Tabs>
         </div>
+        {
+          locationPopupData ?
+            <Popup
+              title={locationPopupData.title}
+              onClose={() => this.props.closeLocationPopup()}
+            >
+              <ResponsiveContainer>
+                <LineChart
+                  data={locationPopupData.data}
+                  margin={{
+                    top: 5, right: 30, left: 20, bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray='3 3' />
+                  <XAxis dataKey='date' tick={<CustomizedAxisTick />} interval={1} />
+                  <YAxis type='number' domain={[0, locationPopupData.max || 'auto']} />
+                  <Tooltip content={this.renderLocationPopupTooltip} />
+                  <Legend />
+                  <Line type='monotone' dataKey='confirmed' stroke='#8884d8' activeDot={{ r: 8 }} />
+                  <Line type='monotone' dataKey='recovered' stroke='#00B957' />
+                  <Line type='monotone' dataKey='deaths' stroke='#aa5e79' />
+                </LineChart>
+              </ResponsiveContainer>
+            </Popup>
+            : null
+        }
       </div>
+    );
+  }
+}
+
+class CustomizedAxisTick extends React.Component { // eslint-disable-line react/no-multi-comp
+  render() {
+    const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
+    const val = payload.value; // eslint-disable-line react/prop-types
+    const formattedDate = `${monthNames[new Date(val).getMonth()]} ${new Date(val).getDate()}`;
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text
+          x={0}
+          y={0}
+          dy={16}
+          textAnchor='end'
+          fill='#666'
+          transform='rotate(-60)'
+        >
+          {formattedDate}
+        </text>
+      </g>
     );
   }
 }
@@ -238,8 +324,11 @@ class Covid19Dashboard extends React.Component {
 Covid19Dashboard.propTypes = {
   config: PropTypes.object.isRequired,
   fetchDashboardData: PropTypes.func.isRequired,
+  fetchTimeSeriesData: PropTypes.func.isRequired,
   jhuGeojsonLatest: PropTypes.object,
   jhuJsonByLevelLatest: PropTypes.object,
+  selectedLocationData: PropTypes.object,
+  closeLocationPopup: PropTypes.func.isRequired,
   seirObserved: PropTypes.object,
   seirSimulated: PropTypes.object,
   top10: PropTypes.object,
@@ -249,6 +338,7 @@ Covid19Dashboard.propTypes = {
 Covid19Dashboard.defaultProps = {
   jhuGeojsonLatest: { type: 'FeatureCollection', features: [] },
   jhuJsonByLevelLatest: { country: {}, state: {}, county: {} },
+  selectedLocationData: null,
   seirObserved: {},
   seirSimulated: {},
   top10: {},

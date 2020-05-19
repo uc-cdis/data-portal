@@ -16,9 +16,8 @@ async function handleDashboardData(propName, data) {
   case 'seirSimulated':
     return readSingleColumnTSV(data);
   case 'top10':
-    return readMultiColumnTSV(data);
   case 'idphDaily':
-    return readMultiColumnTSV(data); // change the name
+    return readMultiColumnTSV(data);
   default:
     console.warn(`I don't know how to handle dashboard data for "${propName}"`); // eslint-disable-line no-console
     // return 'ERROR_FETCH_DASHBOARD_DATA';
@@ -26,20 +25,21 @@ async function handleDashboardData(propName, data) {
   return null;
 }
 
-const fetchDashboardData = (propName, filePath) => (
+const fetchDashboardData = (propName, filePath) => {
+  const url = dataUrl + filePath;
   // TODO refactor this probably. to handle errors better
-  dispatch => fetch(dataUrl + filePath, dispatch)
+  return dispatch => fetch(url, dispatch)
     .then((r) => {
       switch (r.status) {
       case 200:
         return r.text();
       default:
-        console.error(`Got code ${r.status} when fetching dashboard data at "${dataUrl + filePath}"`); // eslint-disable-line no-console
+        console.error(`Got code ${r.status} when fetching dashboard data at "${url}"`); // eslint-disable-line no-console
       }
       return '';
     })
     .catch(
-      error => console.error(`Unable to fetch dashboard data at "${dataUrl + filePath}":`, error), // eslint-disable-line no-console
+      error => console.error(`Unable to fetch dashboard data at "${url}":`, error), // eslint-disable-line no-console
     )
     .then(data => handleDashboardData(propName, data))
     .then(obj =>
@@ -56,7 +56,35 @@ const fetchDashboardData = (propName, filePath) => (
       }),
       // }
     )
-    .then(msg => dispatch(msg))
+    .then(msg => dispatch(msg));
+};
+
+const fetchTimeSeriesData = (dataLevel, locationId, title) => {
+  const url = `${dataUrl}time_series/${dataLevel}/${locationId}.json`;
+  return dispatch => fetch(url, dispatch)
+    .then((r) => {
+      switch (r.status) {
+      case 200:
+        return r.text();
+      default:
+        console.error(`Got code ${r.status} when fetching time series data at "${url}"`); // eslint-disable-line no-console
+      }
+      return '';
+    })
+    .catch(
+      error => console.error(`Unable to fetch time series data at "${url}":`, error), // eslint-disable-line no-console
+    )
+    .then(data => ({
+      type: 'RECEIVE_TIME_SERIES_DATA',
+      contents: JSON.parse(data),
+      title,
+    }),
+    )
+    .then(msg => dispatch(msg));
+};
+
+const closeLocationPopup = () => dispatch => dispatch(
+  { type: 'CLOSE_TIME_SERIES_POPUP' },
 );
 
 const mapStateToProps = state => ({
@@ -64,7 +92,15 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchDashboardData: (propName, filePath) => dispatch(fetchDashboardData(propName, filePath)),
+  fetchDashboardData: (propName, filePath) => dispatch(
+    fetchDashboardData(propName, filePath),
+  ),
+  fetchTimeSeriesData: (dataLevel, locationId, title) => dispatch(
+    fetchTimeSeriesData(dataLevel, locationId, title),
+  ),
+  closeLocationPopup: () => dispatch(
+    closeLocationPopup(),
+  ),
 });
 
 const ReduxCovid19Dashboard = connect(mapStateToProps, mapDispatchToProps)(Covid19Dashboard);

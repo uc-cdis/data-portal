@@ -9,7 +9,6 @@ import { numberWithCommas } from '../dataUtils.js';
 import worldData from '../data/world_50m'; // from https://geojson-maps.ash.ms
 import stateData from '../data/us_states_20m.json'; // from https://eric.clst.org/tech/usgeojson/
 import countyData from '../data/us_counties';
-import './WorldMapChart.less';
 
 function addDataToGeoJsonBase(data, dataLevel) {
   // the base GeoJson describes the country/state/county borders.
@@ -140,6 +139,8 @@ class WorldMapChart extends React.Component {
       confirmed = confirmed && confirmed !== 'null' ? confirmed : 0;
       let deaths = feature.properties.deaths;
       deaths = deaths && deaths !== 'null' ? deaths : 0;
+      let recovered = feature.properties.recovered;
+      recovered = recovered && recovered !== 'null' ? recovered : 0;
 
       const state = feature.properties.province_state;
       const county = feature.properties.county;
@@ -158,12 +159,55 @@ class WorldMapChart extends React.Component {
           deaths: numberWithCommas(deaths),
         },
       };
+      if (recovered) {
+        hoverInfo.values.recovered = numberWithCommas(recovered);
+      }
     });
 
     this.setState({
       hoverInfo,
     });
   };
+
+  onClick = (event) => {
+    if (!event.features) { return; }
+
+    let dataLevel = null;
+    let locationId = '';
+    let title = '';
+    event.features.forEach((feature) => {
+      const layerId = feature.layer.id;
+      if (!layerId.startsWith('confirmed-')) {
+        return;
+      }
+
+      // density map data contains fips and iso3;
+      // choropleth map data contains FIPS and iso_a3.
+      const fips = feature.properties.FIPS || feature.properties.fips;
+      const state = feature.properties.province_state;
+      const iso3 = feature.properties.iso_a3 || feature.properties.iso3;
+
+      // for US: only get the most granular data
+      // for other countries: always get the country-level data
+      if (fips && iso3 === 'USA') {
+        dataLevel = 'county';
+        locationId = fips;
+        title = `${feature.properties.county}, ${state}, ${feature.properties.country_region}`;
+      } else if (state && iso3 === 'USA' && dataLevel !== 'county') {
+        dataLevel = 'state';
+        locationId = state;
+        title = `${state}, ${feature.properties.country_region}`;
+      } else if (iso3 && !dataLevel) {
+        dataLevel = 'country';
+        locationId = iso3;
+        title = `${feature.properties.country_region}`;
+      }
+    });
+
+    if (dataLevel) {
+      this.props.fetchTimeSeriesData(dataLevel, locationId, title);
+    }
+  }
 
   isVisible(layerId) {
     if (this.state.selectedLayer === layerId) {
@@ -196,6 +240,7 @@ class WorldMapChart extends React.Component {
                 (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>,
               )
             }
+            <p className='covid19-dashboard__location-info__details'>Click for more details</p>
           </div>
         </ReactMapGL.Popup>
       );
@@ -280,6 +325,7 @@ class WorldMapChart extends React.Component {
             this.setState({ viewport });
           }}
           onHover={this.onHover}
+          onClick={this.onClick}
           dragRotate={false}
           touchRotate={false}
         >
@@ -330,11 +376,15 @@ class WorldMapChart extends React.Component {
               }}
               maxzoom={stateZoomThreshold}
             />
+          </ReactMapGL.Source>
 
+          {/* Same source as the previous one, but masking 1 layer out of 2
+          layers in the same source depending on zoom is causing issues */}
+          <ReactMapGL.Source type='geojson' data={this.choroCountryGeoJson}>
             {/* Choropleth map when zoomed in (state or county zoom):
             country-level data for all countries except US */}
             <ReactMapGL.Layer
-              id='confirmed-choro-country-no-us'
+              id='confirmed-choro-country-except-us'
               layout={{ visibility: this.isVisible('confirmed-choropleth') }}
               type='fill'
               beforeId='waterway-label'
@@ -401,6 +451,7 @@ class WorldMapChart extends React.Component {
 WorldMapChart.propTypes = {
   geoJson: PropTypes.object.isRequired,
   jsonByLevel: PropTypes.object.isRequired,
+  fetchTimeSeriesData: PropTypes.func.isRequired,
 };
 
 export default WorldMapChart;

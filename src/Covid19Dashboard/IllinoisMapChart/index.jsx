@@ -1,46 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
-// import {
-//   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-// } from 'recharts';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
-// import Popup from '../../components/Popup';
 import { numberWithCommas } from '../dataUtils.js';
 import countyData from '../data/us_counties';
-import './IllinoisMapChart.less';
-
-// const monthNames = [
-//   'Jan', 'Feb', 'Mar',
-//   'April', 'May', 'Jun',
-//   'Jul', 'Aug', 'Sept',
-//   'Oct', 'Nov', 'Dec'
-// ];
-
-// class CustomizedAxisTick extends React.Component {
-//   render() {
-//     const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
-//     const val = payload.value; // eslint-disable-line react/prop-types
-//     const formattedDate = `${monthNames[new Date(val).getMonth()]} ${new Date(val).getDate()}`;
-//     return (
-//       <g transform={`translate(${x},${y})`}>
-//         <text
-//           x={0}
-//           y={0}
-//           dy={16}
-//           textAnchor='end'
-//           fill='#666'
-//           transform='rotate(-60)'
-//         >
-//           {formattedDate}
-//         </text>
-//       </g>
-//     );
-//   }
-// }
 
 function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
@@ -76,7 +42,7 @@ function addDataToGeoJsonBase(data) {
   return geoJson;
 }
 
-class IllinoisMapChart extends React.Component { // eslint-disable-line react/no-multi-comp
+class IllinoisMapChart extends React.Component {
   constructor(props) {
     super(props);
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -95,7 +61,6 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
         pitch: 0,
       },
       hoverInfo: null,
-      // selectedLocation: null,
     };
   }
 
@@ -137,46 +102,16 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
     });
   };
 
-  // onClick = (event) => {
-  //   if (!event.features) { return; }
+  onClick = (event) => {
+    if (!event.features) { return; }
 
-  //   let selectedLocation = null;
-  //   event.features.forEach((feature) => {
-  //     if (feature.layer.id === 'confirmed-choropleth') {
-  //       const state = feature.properties.STATE;
-  //       const county = feature.properties.COUNTYNAME;
-  //       const fips = feature.properties.FIPS;
-  //       console.log(feature);
-  //       // const data = JSON.parse(feature.properties.allData);
-  //       selectedLocation = {
-  //         state,
-  //         county,
-  //         fips,
-  //         data: {},
-  //       };
-  //     }
-  //   });
-
-  //   this.setState({ selectedLocation });
-  // }
-
-  // formatLocationData = (data) => {
-  //   let max = 0;
-  //   let sortedData = data.date.map((date, i) => {
-  //     max = Math.max(max, data.confirmed[i], data.deaths[i]);
-  //     return {
-  //       date,
-  //       confirmed: data.confirmed[i],
-  //       deaths: data.deaths[i],
-  //     };
-  //   });
-  //   sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-  //   return { data: sortedData, max };
-  // }
-
-  // closePopup = () => {
-  //   this.setState({ selectedLocation: null });
-  // }
+    event.features.forEach((feature) => {
+      if (feature.layer.id === 'confirmed-choropleth') {
+        const title = `${feature.properties.county}, ${feature.properties.province_state}`;
+        this.props.fetchTimeSeriesData('county', feature.properties.FIPS, title);
+      }
+    });
+  }
 
   updateDimensions() {
     this.setState({
@@ -202,6 +137,7 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
                 (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>,
               )
             }
+            <p className='covid19-dashboard__location-info__details'>Click for more details</p>
           </div>
         </ReactMapGL.Popup>
       );
@@ -209,23 +145,7 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
     return null;
   }
 
-  // renderTooltip = (props) => {
-  //   const date = new Date(props.label);
-  //   return (
-  //     <div className='map-chart__tooltip'>
-  //       <p>{monthNames[date.getMonth()]} {date.getDate()}, {date.getFullYear()}</p>
-  //       {
-  //         props.payload.map((data, i) => (
-  //           <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value}</p>
-  //         ))
-  //       }
-  //     </div>
-  //   );
-  // }
-
   render() {
-    // const { selectedLocation } = this.state;
-
     if (Object.keys(this.props.jsonByLevel.country).length && !this.choroCountyGeoJson) {
       this.choroCountyGeoJson = addDataToGeoJsonBase(
         this.props.jsonByLevel.county,
@@ -238,15 +158,13 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
       20: '#EED322',
       50: '#E6B71E',
       100: '#DA9C20',
-      250: '#CA8323',
-      500: '#B86B25',
-      750: '#A25626',
-      1000: '#8B4225',
-      2500: '#850001',
+      500: '#CA8323',
+      1000: '#B86B25',
+      2500: '#A25626',
+      5000: '#8B4225',
+      10000: '#850001',
     };
     const colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
-    // const selectedLocationData = selectedLocation ?
-    //   this.formatLocationData(selectedLocation.data) : null;
 
     return (
       <div className='map-chart'>
@@ -265,7 +183,7 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
             this.setState({ viewport });
           }}
           onHover={this.onHover}
-          // onClick={this.onClick} // TODO the time series data is not available yet
+          onClick={this.onClick}
           dragRotate={false}
           touchRotate={false}
           // maxBounds={[ // doesn't work
@@ -291,31 +209,6 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
             />
           </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
-        {/* {
-          this.state.selectedLocation ?
-            <Popup
-              title={`${selectedLocation.county} County, ${selectedLocation.state}`}
-              onClose={() => this.closePopup()}
-            >
-              <ResponsiveContainer>
-                <LineChart
-                  data={selectedLocationData.data}
-                  margin={{
-                    top: 5, right: 30, left: 20, bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray='3 3' />
-                  <XAxis dataKey='date' tick={<CustomizedAxisTick />} interval={1} />
-                  <YAxis type='number' domain={[0, selectedLocationData.max || 'auto']} />
-                  <Tooltip content={this.renderTooltip} />
-                  <Legend />
-                  <Line type='monotone' dataKey='deaths' stroke='#aa5e79' />
-                  <Line type='monotone' dataKey='confirmed' stroke='#8884d8' activeDot={{ r: 8 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            </Popup>
-            : null
-        } */}
       </div>
     );
   }
@@ -323,6 +216,7 @@ class IllinoisMapChart extends React.Component { // eslint-disable-line react/no
 
 IllinoisMapChart.propTypes = {
   jsonByLevel: PropTypes.object.isRequired,
+  fetchTimeSeriesData: PropTypes.func.isRequired,
 };
 
 export default IllinoisMapChart;
