@@ -106,7 +106,7 @@ class ExplorerButtonGroup extends React.Component {
   getManifest = async (indexType) => {
     if (!this.props.guppyConfig.manifestMapping
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex) {
-      return Promise.reject('No "guppyConfig.manifestMapping" or "guppyConfig.manifestMapping.referenceIdFieldInDataIndexguppyConfig.manifestMapping.referenceIdFieldInDataIndex" defined in config');
+      return Promise.reject('No "guppyConfig.manifestMapping" or "guppyConfig.manifestMapping.referenceIdFieldInDataIndex" defined in config');
     }
     const refField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     const md5Field = 'md5sum';
