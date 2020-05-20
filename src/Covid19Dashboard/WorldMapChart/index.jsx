@@ -186,14 +186,15 @@ class WorldMapChart extends React.Component {
       const fips = feature.properties.FIPS || feature.properties.fips;
       const state = feature.properties.province_state;
       const iso3 = feature.properties.iso_a3 || feature.properties.iso3;
+      const isUS = iso3 === 'USA' || feature.properties.country_region === 'US';
 
       // for US: only get the most granular data
       // for other countries: always get the country-level data
-      if (fips && iso3 === 'USA') {
+      if (fips && isUS) {
         dataLevel = 'county';
         locationId = fips;
         title = `${feature.properties.county}, ${state}, ${feature.properties.country_region}`;
-      } else if (state && iso3 === 'USA' && dataLevel !== 'county') {
+      } else if (state && isUS && dataLevel !== 'county') {
         dataLevel = 'state';
         locationId = state;
         title = `${state}, ${feature.properties.country_region}`;

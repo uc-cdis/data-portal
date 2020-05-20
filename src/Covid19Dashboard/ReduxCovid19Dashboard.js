@@ -61,8 +61,14 @@ const fetchDashboardData = (propName, filePath) => {
 
 const fetchTimeSeriesData = (dataLevel, locationId, title) => {
   const url = `${dataUrl}time_series/${dataLevel}/${locationId}.json`;
-  return dispatch => fetch(url, dispatch)
-    .then((r) => {
+  return (dispatch) => {
+    dispatch(
+      {
+        type: 'OPEN_TIME_SERIES_POPUP',
+        title,
+      },
+    );
+    return fetch(url, dispatch).then((r) => {
       switch (r.status) {
       case 200:
         return r.text();
@@ -71,16 +77,17 @@ const fetchTimeSeriesData = (dataLevel, locationId, title) => {
       }
       return '';
     })
-    .catch(
-      error => console.error(`Unable to fetch time series data at "${url}":`, error), // eslint-disable-line no-console
-    )
-    .then(data => ({
-      type: 'RECEIVE_TIME_SERIES_DATA',
-      contents: JSON.parse(data),
-      title,
-    }),
-    )
-    .then(msg => dispatch(msg));
+      .catch(
+        error => console.error(`Unable to fetch time series data at "${url}":`, error), // eslint-disable-line no-console
+      )
+      .then(data => ({
+        type: 'RECEIVE_TIME_SERIES_DATA',
+        title,
+        contents: JSON.parse(data),
+      }),
+      )
+      .then(msg => dispatch(msg));
+  };
 };
 
 const closeLocationPopup = () => dispatch => dispatch(

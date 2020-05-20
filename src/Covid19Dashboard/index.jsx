@@ -6,6 +6,7 @@ import 'react-tabs/style/react-tabs.less';
 
 import { mapboxAPIToken } from '../localconf';
 import Popup from '../components/Popup';
+import Spinner from '../components/Spinner';
 import WorldMapChart from './WorldMapChart';
 import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
@@ -166,7 +167,6 @@ class Covid19Dashboard extends React.Component {
   }
 
   formatSelectedLocationData = () => {
-    const title = this.props.selectedLocationData.title;
     let max = 0;
     let sortedData = Object.keys(this.props.selectedLocationData.data).map((date) => {
       const confirmed = this.props.selectedLocationData.data[date].confirmed;
@@ -176,7 +176,7 @@ class Covid19Dashboard extends React.Component {
       return { date, confirmed, deaths, recovered };
     });
     sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-    return { data: sortedData, max, title };
+    return { data: sortedData, max };
   }
 
   renderLocationPopupTooltip = (props) => {
@@ -194,8 +194,27 @@ class Covid19Dashboard extends React.Component {
   }
 
   render() {
-    const locationPopupData = this.props.selectedLocationData ?
-      this.formatSelectedLocationData() : null;
+    const locationPopupData = (this.props.selectedLocationData &&
+      !this.props.selectedLocationData.loading) ? this.formatSelectedLocationData() : null;
+    const locationPopupContents = locationPopupData ?
+      (<ResponsiveContainer>
+        <LineChart
+          data={locationPopupData.data}
+          margin={{
+            top: 5, right: 30, left: 20, bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray='3 3' />
+          <XAxis dataKey='date' tick={<CustomizedAxisTick />} interval={1} />
+          <YAxis type='number' domain={[0, locationPopupData.max || 'auto']} />
+          <Tooltip content={this.renderLocationPopupTooltip} />
+          <Legend />
+          <Line type='monotone' dataKey='confirmed' stroke='#8884d8' activeDot={{ r: 8 }} />
+          <Line type='monotone' dataKey='recovered' stroke='#00B957' />
+          <Line type='monotone' dataKey='deaths' stroke='#aa5e79' />
+        </LineChart>
+      </ResponsiveContainer>)
+      : <Spinner />;
 
     const {
       confirmedCount, deathsCount, recoveredCount,
@@ -269,28 +288,12 @@ class Covid19Dashboard extends React.Component {
           </Tabs>
         </div>
         {
-          locationPopupData ?
+          this.props.selectedLocationData ?
             <Popup
-              title={locationPopupData.title}
+              title={this.props.selectedLocationData.title}
               onClose={() => this.props.closeLocationPopup()}
             >
-              <ResponsiveContainer>
-                <LineChart
-                  data={locationPopupData.data}
-                  margin={{
-                    top: 5, right: 30, left: 20, bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray='3 3' />
-                  <XAxis dataKey='date' tick={<CustomizedAxisTick />} interval={1} />
-                  <YAxis type='number' domain={[0, locationPopupData.max || 'auto']} />
-                  <Tooltip content={this.renderLocationPopupTooltip} />
-                  <Legend />
-                  <Line type='monotone' dataKey='confirmed' stroke='#8884d8' activeDot={{ r: 8 }} />
-                  <Line type='monotone' dataKey='recovered' stroke='#00B957' />
-                  <Line type='monotone' dataKey='deaths' stroke='#aa5e79' />
-                </LineChart>
-              </ResponsiveContainer>
+              {locationPopupContents}
             </Popup>
             : null
         }
