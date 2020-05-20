@@ -24,7 +24,8 @@ class ExplorerButtonGroup extends React.Component {
       toasterHeadline: '',
       toasterError: null,
       toasterErrorText: 'There was an error exporting your cohort.',
-      exportingToCloud: false,
+      exportingToTerra: false,
+      exportingToSevenBridges: false,
       // for export to PFB
       exportPFBStatus: null,
       exportPFBURL: '',
@@ -43,13 +44,21 @@ class ExplorerButtonGroup extends React.Component {
     if (nextProps.job && nextProps.job.status === 'Completed' && this.props.job.status !== 'Completed') {
       this.fetchJobResult()
         .then((res) => {
-          if (this.state.exportingToCloud) {
+          if (this.state.exportingToTerra) {
             this.setState({
               exportPFBURL: `${res.data.output}`.split('\n'),
               toasterOpen: false,
-              exportingToCloud: false,
+              exportingToTerra: false,
             }, () => {
-              this.sendPFBToCloud();
+              this.sendPFBToTerra();
+            });
+          } else if (this.state.exportingToSevenBridges) {
+            this.setState({
+              exportPFBURL: `${res.data.output}`.split('\n'),
+              toasterOpen: false,
+              exportingToSevenBridges: false,
+            }, () => {
+              this.sendPFBToSevenBridges();
             });
           } else {
             this.setState({
@@ -85,11 +94,14 @@ class ExplorerButtonGroup extends React.Component {
       // REMOVE THIS CODE WHEN TERRA EXPORT WORKS
       // =======================================
       if (terraExportWarning) {
-        clickFunc = this.exportToCloudWithTerraWarning;
+        clickFunc = this.exportToTerraWithWarning;
       } else {
       // =======================================
-        clickFunc = this.exportToCloud;
+        clickFunc = this.exportToTerra;
       }
+    }
+    if (buttonConfig.type === 'export-to-seven-bridges') {
+      clickFunc = this.exportToSevenBridges;
     }
     if (buttonConfig.type === 'export-to-pfb') {
       clickFunc = this.exportToPFB;
@@ -296,25 +308,31 @@ class ExplorerButtonGroup extends React.Component {
   // (Warn user about Terra entitiy threshold). This code should be removed when
   // Terra is no longer limited to importing <165,000 entities. (~14k subjects).
   // This file is the only file that contains code for this feature.
-  exportToCloudWithTerraWarning = () => {
+  exportToTerraWithWarning = () => {
     // If the number of subjects is over the threshold, warn the user that their
     // export to Terra job might fail.
     if (this.props.totalCount >= terraExportWarning.subjectThreshold) {
       this.setState({ enableTerraWarningPopup: true });
     } else {
       // If the number is below the threshold, proceed as normal
-      this.exportToCloud();
+      this.exportToTerra();
     }
   }
   // ==========================================
 
-  exportToCloud = () => {
-    this.setState({ exportingToCloud: true }, () => {
+  exportToTerra = () => {
+    this.setState({ exportingToTerra: true }, () => {
       this.exportToPFB();
     });
   };
 
-  sendPFBToCloud = () => {
+  exportToSevenBridges = () => {
+    this.setState({ exportingToSevenBridges: true }, () => {
+      this.exportToPFB();
+    });
+  }
+
+  sendPFBToTerra = () => {
     const url = encodeURIComponent(this.state.exportPFBURL);
     let templateParam = '';
     if (typeof this.props.buttonConfig.terraTemplate !== 'undefined'
@@ -324,6 +342,11 @@ class ExplorerButtonGroup extends React.Component {
       ).join('');
     }
     window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
+  }
+
+  sendPFBToSevenBridges = () => {
+    const url = encodeURIComponent(this.state.exportPFBURL);
+    window.location = `${this.props.buttonConfig.sevenBridgesExportURL}?format=PFB&url=${url}`;
   }
 
   exportToPFB = () => {
@@ -390,6 +413,7 @@ class ExplorerButtonGroup extends React.Component {
 
   isFileButton = buttonConfig => buttonConfig.type === 'manifest' ||
     buttonConfig.type === 'export' ||
+    buttonConfig.type === 'export-to-seven-bridges' ||
     buttonConfig.type === 'export-to-workspace' ||
     buttonConfig.type === 'export-to-pfb';
 
@@ -453,11 +477,30 @@ class ExplorerButtonGroup extends React.Component {
       return this.state.manifestEntryCount > 0;
     }
     if (buttonConfig.type === 'export-to-pfb') {
-      return !this.state.exportingToCloud;
+      // disable the pfb export button if any other pfb export jobs are running
+      return !(this.state.exportingToTerra || this.state.exportingToSevenBridges);
     }
     if (buttonConfig.type === 'export') {
-      // if exportingToCloud is true or the PFB job is running, the button is not enabled.
-      return !(this.state.exportingToCloud || this.isPFBRunning());
+      if (!this.props.buttonConfig.terraExportURL) {
+        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.');
+        return false;
+      }
+      // disable the terra export button if any of the
+      // pfb export operations are running.
+      return !(this.state.exportingToTerra
+        || this.state.exportingToSevenBridges
+        || this.isPFBRunning());
+    }
+    if (buttonConfig.type === 'export-to-seven-bridges') {
+      if (!this.props.buttonConfig.sevenBridgesExportURL) {
+        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.');
+        return false;
+      }
+      // disable the seven bridges export buttons if any of the
+      // pfb export operations are running.
+      return !(this.state.exportingToTerra
+        || this.state.exportingToSevenBridges
+        || this.isPFBRunning());
     }
     if (buttonConfig.type === 'export-to-workspace') {
       return this.state.manifestEntryCount > 0;
@@ -474,10 +517,22 @@ class ExplorerButtonGroup extends React.Component {
       return this.state.exportingToWorkspace;
     }
     if (buttonConfig.type === 'export-to-pfb') {
-      return this.isPFBRunning() && !this.state.exportingToCloud;
+      // export to pfb button is pending if a pfb export job is running and it's
+      // neither an export to terra job or an export to seven bridges job.
+      return this.isPFBRunning()
+        && !(this.state.exportingToTerra || this.state.exportingToSevenBridges);
     }
     if (buttonConfig.type === 'export') {
-      return this.state.exportingToCloud && this.isPFBRunning();
+      // export to terra button is pending if a pfb export job is running and
+      // it's an exporting to terra job.
+      return this.isPFBRunning()
+        && this.state.exportingToTerra;
+    }
+    if (buttonConfig.type === 'export-to-seven-bridges') {
+      // export to seven bridges button is pending if a pfb export job is running
+      // and it's an export to seven bridges job.
+      return this.isPFBRunning()
+        && this.state.exportingToSevenBridges;
     }
     return false;
   };
@@ -536,7 +591,7 @@ class ExplorerButtonGroup extends React.Component {
                   caption: 'Yes, Export Anyway',
                   fn: () => {
                     this.setState({ enableTerraWarningPopup: false });
-                    this.exportToCloud();
+                    this.exportToTerra();
                   },
                   icon: 'external-link',
                 },
