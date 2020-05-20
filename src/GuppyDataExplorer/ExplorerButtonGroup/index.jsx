@@ -474,8 +474,23 @@ class ExplorerButtonGroup extends React.Component {
       // disable the pfb export button if any other pfb export jobs are running
       return !(this.state.exportingToTerra || this.state.exportingToSevenBridges);
     }
-    if (buttonConfig.type === 'export' || buttonConfig.type === 'export-to-seven-bridges') {
-      // disable the terra export and seven bridges export buttons if any of the
+    if (buttonConfig.type === 'export') {
+      if (!this.props.buttonConfig.terraExportURL) {
+        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.');
+        return false;
+      }
+      // disable the terra export button if any of the
+      // pfb export operations are running.
+      return !(this.state.exportingToTerra
+        || this.state.exportingToSevenBridges
+        || this.isPFBRunning());
+    }
+    if (buttonConfig.type === 'export-to-seven-bridges') {
+      if (!this.props.buttonConfig.sevenBridgesExportURL) {
+        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.');
+        return false;
+      }
+      // disable the seven bridges export buttons if any of the
       // pfb export operations are running.
       return !(this.state.exportingToTerra
         || this.state.exportingToSevenBridges
