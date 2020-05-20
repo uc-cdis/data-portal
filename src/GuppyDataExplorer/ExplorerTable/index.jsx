@@ -81,15 +81,16 @@ class ExplorerTable extends React.Component {
         maxWidth: 400,
         width: this.getWidthForColumn(field, name),
         Cell: (row) => {
+          const val = Array.isArray(row.value) ? row.value[0] : row.value;
           switch (field) {
           case this.props.guppyConfig.downloadAccessor:
-            return (<div><span title={row.value}><a href={`/files/${row.value}`}>{row.value}</a></span></div>);
+            return (<div><span title={val}><a href={`/files/${val}`}>{val}</a></span></div>);
           case 'file_size':
-            return (<div><span title={row.value}>{humanFileSize(row.value)}</span></div>);
+            return (<div><span title={val}>{humanFileSize(val)}</span></div>);
           case this.props.tableConfig.linkFields.includes(field) && field:
-            return row.value ?
+            return val ?
               <IconicLink
-                link={row.value}
+                link={val}
                 className='explorer-table-link'
                 buttonClassName='explorer-table-link-button'
                 icon='exit'
@@ -100,7 +101,7 @@ class ExplorerTable extends React.Component {
               />
               : null;
           default:
-            return (<div><span title={row.value}>{row.value}</span></div>);
+            return (<div><span title={val}>{val}</span></div>);
           }
         },
       };

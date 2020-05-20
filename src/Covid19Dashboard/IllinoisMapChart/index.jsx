@@ -81,6 +81,8 @@ class IllinoisMapChart extends React.Component {
       confirmed = confirmed && confirmed !== 'null' ? confirmed : 0;
       let deaths = feature.properties.deaths;
       deaths = deaths && deaths !== 'null' ? deaths : 0;
+      let recovered = feature.properties.recovered;
+      recovered = recovered && recovered !== 'null' ? recovered : 0;
 
       const state = feature.properties.STATE;
       const county = feature.properties.COUNTYNAME;
@@ -95,6 +97,9 @@ class IllinoisMapChart extends React.Component {
           deaths: numberWithCommas(deaths),
         },
       };
+      if (recovered) {
+        hoverInfo.values.recovered = numberWithCommas(recovered);
+      }
     });
 
     this.setState({
