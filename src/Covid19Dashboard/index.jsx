@@ -64,7 +64,7 @@ class Covid19Dashboard extends React.Component {
 
   componentDidMount() {
     if (!mapboxAPIToken) {
-      console.warn('MAPBOX_API_TOKEN environment variable not set, will be unable to load maps.'); // eslint-disable-line no-console
+      console.warn('MAPBOX_API_TOKEN environment variable not set, will not display maps.'); // eslint-disable-line no-console
     }
 
     Object.entries(dashboardDataLocations).forEach(
@@ -248,11 +248,13 @@ class Covid19Dashboard extends React.Component {
                 />
               </div>
               <div className='covid19-dashboard_visualizations'>
-                <WorldMapChart
-                  geoJson={this.props.jhuGeojsonLatest}
-                  jsonByLevel={this.props.jhuJsonByLevelLatest}
-                  fetchTimeSeriesData={this.props.fetchTimeSeriesData}
-                />
+                { mapboxAPIToken &&
+                  <WorldMapChart
+                    geoJson={this.props.jhuGeojsonLatest}
+                    jsonByLevel={this.props.jhuJsonByLevelLatest}
+                    fetchTimeSeriesData={this.props.fetchTimeSeriesData}
+                  />
+                }
                 {this.enableCharts &&
                   <div className='covid19-dashboard_charts'>
                     {top10Chart}
@@ -273,10 +275,12 @@ class Covid19Dashboard extends React.Component {
                 />
               </div>
               <div className='covid19-dashboard_visualizations'>
-                <IllinoisMapChart
-                  jsonByLevel={this.props.jhuJsonByLevelLatest}
-                  fetchTimeSeriesData={this.props.fetchTimeSeriesData}
-                />
+                { mapboxAPIToken &&
+                  <IllinoisMapChart
+                    jsonByLevel={this.props.jhuJsonByLevelLatest}
+                    fetchTimeSeriesData={this.props.fetchTimeSeriesData}
+                  />
+                }
                 {this.enableCharts &&
                   <div className='covid19-dashboard_charts'>
                     {seirChart}
