@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import IconicLink from '../../components/buttons/IconicLink';
@@ -16,6 +17,7 @@ class ExplorerTable extends React.Component {
       loading: false,
       pageSize: props.defaultPageSize,
       currentPage: 0,
+      columnsConfig: [],
     };
   }
 
@@ -26,7 +28,7 @@ class ExplorerTable extends React.Component {
 
     // some magic numbers that work fine for table columns width
     const minWidth = 100;
-    const maxWidth = 400;
+    const maxWidth = 600;
     const letterWidth = 8;
     const spacing = 20;
     if (!this.props.rawData || this.props.rawData.length === 0) {
@@ -43,6 +45,111 @@ class ExplorerTable extends React.Component {
     });
     const resWidth = Math.min((maxLetterLen * letterWidth) + spacing, maxWidth);
     return resWidth;
+  }
+
+  buildColumnConfig = (field, isNestedTableColumn, isDetailedColumn) => {
+    const fieldMappingEntry = this.props.guppyConfig.fieldMapping
+    && this.props.guppyConfig.fieldMapping.find(i => i.field === field);
+    const overrideName = fieldMappingEntry ? fieldMappingEntry.name : undefined;
+    const fieldStringsArray = field.split('.');
+    const fieldName = isNestedTableColumn ? capitalizeFirstLetter(fieldStringsArray.slice(1, fieldStringsArray.length).join('.')) : capitalizeFirstLetter(field);
+
+    const columnConfig = {
+      Header: overrideName || fieldName,
+      id: fieldStringsArray[0],
+      maxWidth: 600,
+      width: isNestedTableColumn ? '70vw' : this.getWidthForColumn(field, overrideName || fieldName),
+      accessor: d => d[fieldStringsArray[0]],
+      Cell: (row) => {
+        let valueStr = '';
+        if (fieldStringsArray.length === 1) {
+          valueStr = row.value;
+        } else {
+          const nestedChildFieldName = fieldStringsArray.slice(1, fieldStringsArray.length).join('.');
+          if (_.isArray(row.value)) {
+            valueStr = row.value.map(x => _.get(x, nestedChildFieldName)).join(', ');
+          } else {
+            valueStr = _.get(row.value, nestedChildFieldName);
+          }
+          if (isDetailedColumn) {
+            const rowComp = (
+              <div className='rt-tbody'>
+                <div className='rt-tr-group'>
+                  {row.value.map((element, i) => (i % 2 !== 0 ? (
+                    <div className='rt-tr -odd'>
+                      <div className='rt-td'>
+                        <span>
+                          {_.get(element, nestedChildFieldName)}
+                          <br />
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className='rt-tr -even'>
+                      <div className='rt-td'>
+                        <span>
+                          {_.get(element, nestedChildFieldName)}
+                          <br />
+                        </span>
+                      </div>
+                    </div>
+                  )))}
+                </div>
+              </div>
+            );
+            return rowComp;
+          }
+        }
+        switch (field) {
+        case this.props.guppyConfig.downloadAccessor:
+          return (<div><span title={valueStr}><a href={`/files/${valueStr}`}>{valueStr}</a></span></div>);
+        case 'file_size':
+          return (<div><span title={valueStr}>{humanFileSize(valueStr)}</span></div>);
+        case this.props.tableConfig.linkFields.includes(field) && field:
+          return valueStr ?
+            <IconicLink
+              link={valueStr}
+              className='explorer-table-link'
+              buttonClassName='explorer-table-link-button'
+              icon='exit'
+              dictIcons={dictIcons}
+              iconColor='#606060'
+              target='_blank'
+              isExternal
+            />
+            : null;
+        default:
+          return (<div><span title={valueStr}>{valueStr}</span></div>);
+        }
+      },
+    };
+    return columnConfig;
+  };
+
+  buildNestedArrayFieldColumnConfigs = (nestedArrayFieldNames) => {
+    const nestedArrayFieldColumnConfigs = {};
+    Object.keys(nestedArrayFieldNames).forEach((key) => {
+      if (!nestedArrayFieldColumnConfigs[key]) {
+        nestedArrayFieldColumnConfigs[key] = [];
+      }
+      const firstLevelColumns = nestedArrayFieldNames[key].map(field =>
+        this.buildColumnConfig(`${key}.${field}`, true, false));
+      const firstLevelColumnsConfig = [];
+      firstLevelColumnsConfig.push({
+        Header: key,
+        columns: firstLevelColumns,
+      });
+      const secondLevelColumns = nestedArrayFieldNames[key].map(field =>
+        this.buildColumnConfig(`${key}.${field}`, true, true));
+      const secondLevelColumnsConfig = [];
+      secondLevelColumnsConfig.push({
+        Header: key,
+        columns: secondLevelColumns,
+      });
+      nestedArrayFieldColumnConfigs[key].push(firstLevelColumnsConfig);
+      nestedArrayFieldColumnConfigs[key].push(secondLevelColumnsConfig);
+    });
+    return nestedArrayFieldColumnConfigs;
   }
 
   fetchData = (state) => {
@@ -71,40 +178,49 @@ class ExplorerTable extends React.Component {
       return null;
     }
 
-    const columnsConfig = this.props.tableConfig.fields.map((field) => {
-      const fieldMappingEntry = this.props.guppyConfig.fieldMapping
-        && this.props.guppyConfig.fieldMapping.find(i => i.field === field);
-      const name = fieldMappingEntry ? fieldMappingEntry.name : capitalizeFirstLetter(field);
-      return {
-        Header: name,
-        accessor: field,
-        maxWidth: 400,
-        width: this.getWidthForColumn(field, name),
-        Cell: (row) => {
-          switch (field) {
-          case this.props.guppyConfig.downloadAccessor:
-            return (<div><span title={row.value}><a href={`/files/${row.value}`}>{row.value}</a></span></div>);
-          case 'file_size':
-            return (<div><span title={row.value}>{humanFileSize(row.value)}</span></div>);
-          case this.props.tableConfig.linkFields.includes(field) && field:
-            return row.value ?
-              <IconicLink
-                link={row.value}
-                className='explorer-table-link'
-                buttonClassName='explorer-table-link-button'
-                icon='exit'
-                dictIcons={dictIcons}
-                iconColor='#606060'
-                target='_blank'
-                isExternal
-              />
-              : null;
-          default:
-            return (<div><span title={row.value}>{row.value}</span></div>);
+    const rootColumnsConfig = this.props.tableConfig.fields.map(field =>
+      this.buildColumnConfig(field, false, false));
+
+    const nestedArrayFieldNames = {};
+    this.props.tableConfig.fields.forEach((field) => {
+      if (field.includes('.')) {
+        const fieldStringsArray = field.split('.');
+        if (this.props.rawData.length > 0
+          && _.isArray(this.props.rawData[0][fieldStringsArray[0]])) {
+          if (!nestedArrayFieldNames[fieldStringsArray[0]]) {
+            nestedArrayFieldNames[fieldStringsArray[0]] = [];
           }
-        },
-      };
+          nestedArrayFieldNames[fieldStringsArray[0]].push(fieldStringsArray.slice(1, fieldStringsArray.length).join('.'));
+        }
+      }
     });
+    let nestedArrayFieldColumnConfigs = {};
+    let subComponent = null;
+    if (Object.keys(nestedArrayFieldNames).length > 0) {
+      // eslint-disable-next-line max-len
+      nestedArrayFieldColumnConfigs = this.buildNestedArrayFieldColumnConfigs(nestedArrayFieldNames);
+      subComponent = () => Object.keys(nestedArrayFieldColumnConfigs).map(key =>
+        (<div className='explorer-nested-table'>
+          <ReactTable
+            data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
+            columns={nestedArrayFieldColumnConfigs[key][0]}
+            defaultPageSize={2}
+            SubComponent={() => (
+              <div>
+                <ReactTable
+                  data={(this.props.isLocked || !this.props.rawData) ?
+                    [] : this.props.rawData}
+                  columns={nestedArrayFieldColumnConfigs[key][1]}
+                  defaultPageSize={2}
+                />
+              </div>
+            )}
+          />
+        </div>),
+      );
+    }
+    // console.log(subComponent);
+
     const { totalCount } = this.props;
     const { pageSize } = this.state;
     const totalPages = Math.floor(totalCount / pageSize) + ((totalCount % pageSize === 0) ? 0 : 1);
@@ -124,7 +240,7 @@ class ExplorerTable extends React.Component {
         {(this.props.isLocked) ? <React.Fragment />
           : <p className='explorer-table__description'>{explorerTableCaption}</p> }
         <ReactTable
-          columns={columnsConfig}
+          columns={rootColumnsConfig}
           manual
           data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
           showPageSizeOptions={!this.props.isLocked}
@@ -144,6 +260,7 @@ class ExplorerTable extends React.Component {
           ) : (
             <div className='rt-noData'>No data to display</div>
           ))}
+          SubComponent={(this.props.isLocked) ? null : subComponent}
         />
       </div>
     );

@@ -45,7 +45,7 @@
 }
 
 .explorer-table .ReactTable .rt-thead .rt-th:first-child, 
-.explorer-table .ReactTable .rt-tbody .rt-td:first-child {
+.explorer-table .ReactTable .rt-tbody .rt-td:first-child :not(.rt-expandable) {
   padding-left: 20px;
 }
 
@@ -78,4 +78,9 @@
 .explorer-table-link-button:hover svg path, .explorer-table-link-button:hover svg {
   color: #3283c8;
   fill: #3283c8;
+}
+
+.explorer-nested-table {
+  padding: 10px;
+  width: 75vw;
 }
