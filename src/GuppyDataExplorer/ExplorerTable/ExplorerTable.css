@@ -82,9 +82,4 @@
 
 .explorer-nested-table .ReactTable .pagination-bottom .-pagination .-center {
   display: none;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  position: absolute;
-  border: solid red 1px;
 }
