@@ -58,7 +58,7 @@ class ExplorerTable extends React.Component {
 
     const columnConfig = {
       Header: overrideName || fieldName,
-      id: fieldStringsArray[0],
+      id: field,
       maxWidth: 600,
       width: isNestedTableColumn ? '70vw' : this.getWidthForColumn(field, overrideName || fieldName),
       accessor: d => d[fieldStringsArray[0]],
@@ -208,7 +208,6 @@ class ExplorerTable extends React.Component {
             data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
             columns={nestedArrayFieldColumnConfigs[key][0]}
             defaultPageSize={3}
-            onFetchData={this.fetchData}
             previousText={'<'}
             nextText={'>'}
             SubComponent={() => (
@@ -218,7 +217,6 @@ class ExplorerTable extends React.Component {
                     [] : this.props.rawData}
                   columns={nestedArrayFieldColumnConfigs[key][1]}
                   defaultPageSize={3}
-                  onFetchData={this.fetchData}
                   previousText={'<'}
                   nextText={'>'}
                 />
