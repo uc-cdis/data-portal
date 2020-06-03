@@ -41,7 +41,7 @@ class ExplorerTable extends React.Component {
         return;
       }
       // the calculation logic here is a bit wild if it is a nested array field
-      // it would convert the would array to string and calculate
+      // it would convert the whole array to string and calculate
       // which in most cases would exceed the maxWidth so just use maxWidth
       const str = d[fieldStringsArray[0]].toString && d[fieldStringsArray[0]].toString();
       const len = str ? str.length : 0;
