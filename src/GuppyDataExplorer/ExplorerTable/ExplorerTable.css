@@ -44,11 +44,6 @@
   text-align: left;
 }
 
-.explorer-table .ReactTable .rt-thead .rt-th:first-child, 
-.explorer-table .ReactTable .rt-tbody .rt-td:first-child :not(.rt-expandable) {
-  padding-left: 20px;
-}
-
 .explorer-table-link-button svg {
   top: -7px;
   position: relative;
@@ -83,4 +78,13 @@
 .explorer-nested-table {
   padding: 10px;
   width: 75vw;
+}
+
+.explorer-nested-table .ReactTable .pagination-bottom .-pagination .-center {
+  display: none;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+  border: solid red 1px;
 }

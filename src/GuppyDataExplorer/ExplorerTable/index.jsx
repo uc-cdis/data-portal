@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import pluralize from 'pluralize';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import IconicLink from '../../components/buttons/IconicLink';
@@ -28,18 +29,19 @@ class ExplorerTable extends React.Component {
 
     // some magic numbers that work fine for table columns width
     const minWidth = 100;
-    const maxWidth = 600;
+    const maxWidth = 400;
     const letterWidth = 8;
     const spacing = 20;
     if (!this.props.rawData || this.props.rawData.length === 0) {
       return minWidth;
     }
     let maxLetterLen = columnName.length;
+    const fieldStringsArray = field.split('.');
     this.props.rawData.forEach((d) => {
-      if (d[field] === null || typeof d[field] === 'undefined') {
+      if (d[fieldStringsArray[0]] === null || typeof d[fieldStringsArray[0]] === 'undefined') {
         return;
       }
-      const str = d[field].toString && d[field].toString();
+      const str = d[fieldStringsArray[0]].toString && d[fieldStringsArray[0]].toString();
       const len = str ? str.length : 0;
       maxLetterLen = len > maxLetterLen ? len : maxLetterLen;
     });
@@ -76,7 +78,7 @@ class ExplorerTable extends React.Component {
               <div className='rt-tbody'>
                 <div className='rt-tr-group'>
                   {row.value.map((element, i) => (i % 2 !== 0 ? (
-                    <div className='rt-tr -odd'>
+                    <div className='rt-tr -odd' key={i}>
                       <div className='rt-td'>
                         <span>
                           {_.get(element, nestedChildFieldName)}
@@ -85,7 +87,7 @@ class ExplorerTable extends React.Component {
                       </div>
                     </div>
                   ) : (
-                    <div className='rt-tr -even'>
+                    <div className='rt-tr -even' key={i}>
                       <div className='rt-td'>
                         <span>
                           {_.get(element, nestedChildFieldName)}
@@ -181,11 +183,12 @@ class ExplorerTable extends React.Component {
     const rootColumnsConfig = this.props.tableConfig.fields.map(field =>
       this.buildColumnConfig(field, false, false));
 
+
     const nestedArrayFieldNames = {};
     this.props.tableConfig.fields.forEach((field) => {
       if (field.includes('.')) {
         const fieldStringsArray = field.split('.');
-        if (this.props.rawData.length > 0
+        if (this.props.rawData && this.props.rawData.length > 0
           && _.isArray(this.props.rawData[0][fieldStringsArray[0]])) {
           if (!nestedArrayFieldNames[fieldStringsArray[0]]) {
             nestedArrayFieldNames[fieldStringsArray[0]] = [];
@@ -200,18 +203,24 @@ class ExplorerTable extends React.Component {
       // eslint-disable-next-line max-len
       nestedArrayFieldColumnConfigs = this.buildNestedArrayFieldColumnConfigs(nestedArrayFieldNames);
       subComponent = () => Object.keys(nestedArrayFieldColumnConfigs).map(key =>
-        (<div className='explorer-nested-table'>
+        (<div className='explorer-nested-table' key={key}>
           <ReactTable
             data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
             columns={nestedArrayFieldColumnConfigs[key][0]}
-            defaultPageSize={2}
+            defaultPageSize={3}
+            onFetchData={this.fetchData}
+            previousText={'<'}
+            nextText={'>'}
             SubComponent={() => (
-              <div>
+              <div className='explorer-nested-table'>
                 <ReactTable
                   data={(this.props.isLocked || !this.props.rawData) ?
                     [] : this.props.rawData}
                   columns={nestedArrayFieldColumnConfigs[key][1]}
-                  defaultPageSize={2}
+                  defaultPageSize={3}
+                  onFetchData={this.fetchData}
+                  previousText={'<'}
+                  nextText={'>'}
                 />
               </div>
             )}
@@ -219,7 +228,6 @@ class ExplorerTable extends React.Component {
         </div>),
       );
     }
-    // console.log(subComponent);
 
     const { totalCount } = this.props;
     const { pageSize } = this.state;
@@ -228,11 +236,11 @@ class ExplorerTable extends React.Component {
     const visiblePages = Math.min(totalPages, Math.round((SCROLL_SIZE / pageSize) + 0.49));
     const start = (this.state.currentPage * this.state.pageSize) + 1;
     const end = (this.state.currentPage + 1) * this.state.pageSize;
-    let explorerTableCaption = `Showing ${start} - ${end} of ${totalCount} ${this.props.guppyConfig.dataType}s`;
+    let explorerTableCaption = `Showing ${start} - ${end} of ${totalCount} ${pluralize(this.props.guppyConfig.dataType)}`;
     if (totalCount < end && totalCount < 2) {
-      explorerTableCaption = `Showing ${totalCount} of ${totalCount} ${this.props.guppyConfig.dataType}s`;
+      explorerTableCaption = `Showing ${totalCount} of ${totalCount} ${pluralize(this.props.guppyConfig.dataType)}`;
     } else if (totalCount < end && totalCount >= 2) {
-      explorerTableCaption = `Showing ${start} - ${totalCount} of ${totalCount} ${this.props.guppyConfig.dataType}s`;
+      explorerTableCaption = `Showing ${start} - ${totalCount} of ${totalCount} ${pluralize(this.props.guppyConfig.dataType)}`;
     }
 
     return (
