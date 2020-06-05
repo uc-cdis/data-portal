@@ -159,6 +159,9 @@ function buildConfig(opts) {
   if (tierAccessLevel === 'libre') {
     explorerPublic = true;
   }
+  if (config.featureFlags && config.featureFlags.explorerPublic) {
+    explorerPublic = true;
+  }
 
   const enableResourceBrowser = !!config.resourceBrowser;
   let resourceBrowserPublic = false;
