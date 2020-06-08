@@ -189,7 +189,8 @@ class Covid19Dashboard extends React.Component {
           props.payload.map((data, i) => (
             <p
               style={{ color: data.stroke }}
-              key={i}>{data.name}: {numberWithCommas(data.value)}
+              key={i}
+            >{data.name}: {numberWithCommas(data.value)}
             </p>
           ))
         }
@@ -217,7 +218,7 @@ class Covid19Dashboard extends React.Component {
           <YAxis
             type='number'
             domain={[0, locationPopupData.max || 'auto']}
-            tickFormatter={(val) => numberWithCommas(val)}
+            tickFormatter={val => numberWithCommas(val)}
           />
           <Tooltip content={this.renderLocationPopupTooltip} />
           <Legend />
