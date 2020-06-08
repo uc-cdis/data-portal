@@ -3,7 +3,10 @@ const covid19Dashboard = (state = {}, action) => {
   case 'RECEIVE_DASHBOARD_DATA': {
     const res = {};
     res[action.name] = action.contents;
-    return { ...state, ...res };
+    return {
+      ...state,
+      ...res,
+    };
   }
   case 'OPEN_TIME_SERIES_POPUP': {
     return {

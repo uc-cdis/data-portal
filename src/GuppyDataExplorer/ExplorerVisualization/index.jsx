@@ -35,7 +35,10 @@ class ExplorerVisualization extends React.Component {
       value: this.props.totalCount,
     });
     Object.keys(chartConfig).forEach((field) => {
-      if (!aggsData || !aggsData[`${field}`] || !aggsData[`${field}`].histogram) return;
+      if (!aggsData || !aggsData[`${field}`] || !aggsData[`${field}`].histogram) {
+        console.log(`No data for "${field}" chart`); // eslint-disable-line no-console
+        return;
+      }
       const { histogram } = aggsData[`${field}`];
       switch (chartConfig[`${field}`].chartType) {
       case 'count':

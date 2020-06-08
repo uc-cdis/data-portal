@@ -7,6 +7,7 @@ import 'react-tabs/style/react-tabs.less';
 import { mapboxAPIToken } from '../localconf';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
+import { numberWithCommas } from './dataUtils.js';
 import WorldMapChart from './WorldMapChart';
 import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
@@ -186,7 +187,10 @@ class Covid19Dashboard extends React.Component {
         <p>{monthNames[date.getMonth()]} {date.getDate()}, {date.getFullYear()}</p>
         {
           props.payload.map((data, i) => (
-            <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value}</p>
+            <p
+              style={{ color: data.stroke }}
+              key={i}>{data.name}: {numberWithCommas(data.value)}
+            </p>
           ))
         }
       </div>
@@ -205,8 +209,16 @@ class Covid19Dashboard extends React.Component {
           }}
         >
           <CartesianGrid strokeDasharray='3 3' />
-          <XAxis dataKey='date' tick={<CustomizedAxisTick />} interval={1} />
-          <YAxis type='number' domain={[0, locationPopupData.max || 'auto']} />
+          <XAxis
+            dataKey='date'
+            tick={<CustomizedXAxisTick />}
+            interval={1}
+          />
+          <YAxis
+            type='number'
+            domain={[0, locationPopupData.max || 'auto']}
+            tickFormatter={(val) => numberWithCommas(val)}
+          />
           <Tooltip content={this.renderLocationPopupTooltip} />
           <Legend />
           <Line type='monotone' dataKey='confirmed' stroke='#8884d8' activeDot={{ r: 8 }} />
@@ -306,7 +318,7 @@ class Covid19Dashboard extends React.Component {
   }
 }
 
-class CustomizedAxisTick extends React.Component { // eslint-disable-line react/no-multi-comp
+class CustomizedXAxisTick extends React.Component { // eslint-disable-line react/no-multi-comp
   render() {
     const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
     const val = payload.value; // eslint-disable-line react/prop-types
