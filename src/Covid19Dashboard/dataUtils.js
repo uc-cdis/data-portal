@@ -60,5 +60,9 @@ export async function readMultiColumnTSV(tsvData) {
     });
   });
   const parsedData = await parseFile(tsvData);
-  return parsedData;
+
+  return Object.entries(parsedData).map(([key, value]) => ({
+    data: value,
+    name: key,
+  }));
 }

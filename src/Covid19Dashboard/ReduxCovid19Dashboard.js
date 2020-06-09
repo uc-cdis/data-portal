@@ -4,19 +4,21 @@ import Covid19Dashboard from '../Covid19Dashboard';
 import { covid19DashboardConfig } from '../localconf';
 import { readSingleColumnTSV, readMultiColumnTSV } from './dataUtils.js';
 
+
 let dataUrl = covid19DashboardConfig.dataUrl;
 dataUrl = !dataUrl.endsWith('/') ? `${dataUrl}/` : dataUrl;
+
 
 async function handleDashboardData(propName, data) {
   switch (propName) {
   case 'jhuGeojsonLatest':
   case 'jhuJsonByLevelLatest':
     return JSON.parse(data);
-  case 'seirObserved':
-  case 'seirSimulated':
+  case 'seirObservedChartData':
+  case 'seirSimulatedChartData':
     return readSingleColumnTSV(data);
-  case 'top10':
-  case 'idphDaily':
+  case 'top10ChartData':
+  case 'idphDailyChartData':
     return readMultiColumnTSV(data);
   default:
     console.warn(`I don't know how to handle dashboard data for "${propName}"`); // eslint-disable-line no-console
