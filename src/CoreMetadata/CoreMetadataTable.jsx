@@ -22,6 +22,7 @@ class CoreMetadataTable extends Component {
     Object.keys(metadata)
       .sort() // alphabetical order
       .filter(key => fieldInTable(key))
+      .filter(key => metadata[key]) // do not display row if empty
       .map(key => [
         <div className='core-metadata-table__title-cell'>{firstCharToUppercase(key)}</div>,
         metadata[key],
@@ -29,13 +30,16 @@ class CoreMetadataTable extends Component {
     : []);
 
   render() {
+    const tableData = this.dataTransform(this.props.metadata);
     return (
-      <div className='core-metadata-table'>
-        <Table
-          header={[TABLE_TITLE, '']}
-          data={this.dataTransform(this.props.metadata)}
-        />
-      </div>
+      tableData.length > 0 ?
+        <div className='core-metadata-table'>
+          <Table
+            header={[TABLE_TITLE, '']}
+            data={tableData}
+          />
+        </div>
+        : null
     );
   }
 }
