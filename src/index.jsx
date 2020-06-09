@@ -49,6 +49,9 @@ import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import './index.less';
+import { shouldDisplaySubmissionUIComponents } from './authMappingUtils';
+import NotFound from './components/NotFound';
+
 
 // monitor user's session
 sessionMonitor.start();
@@ -326,8 +329,17 @@ async function init() {
                     <Route
                       path='/:project'
                       component={
-                        props => <ProtectedContent component={ProjectSubmission} {...props} />
+                        props =>
+                          (shouldDisplaySubmissionUIComponents(
+                            props.match.params.project, store.getState().userAuthMapping,
+                          ) ? <ProtectedContent component={ProjectSubmission} {...props} />
+                            : <NotFound />)
+
                       }
+                    />
+                    <Route
+                      path='*'
+                      component={NotFound}
                     />
                   </Switch>
                 </div>
