@@ -246,29 +246,28 @@ class ExplorerTable extends React.Component {
       // eslint-disable-next-line max-len
       nestedArrayFieldColumnConfigs = this.buildNestedArrayFieldColumnConfigs(nestedArrayFieldNames);
       // this is the subComponent of the two-level nested tables
-      subComponent = () => Object.keys(nestedArrayFieldColumnConfigs).map(key =>
-        (<div className='explorer-nested-table' key={key}>
+      subComponent = row => Object.keys(nestedArrayFieldColumnConfigs).map((key) => {
+        const rowData = (this.props.isLocked || !this.props.rawData) ?
+          [] : _.slice(this.props.rawData, row.index, row.index + 1);
+        return (<div className='explorer-nested-table' key={key}>
           <ReactTable
-            data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
+            data={(this.props.isLocked || !rowData) ? [] : rowData}
             columns={nestedArrayFieldColumnConfigs[key][0]}
-            defaultPageSize={3}
-            previousText={'<'}
-            nextText={'>'}
+            defaultPageSize={1}
+            showPagination={false}
             SubComponent={() => (
               <div className='explorer-nested-table'>
                 <ReactTable
-                  data={(this.props.isLocked || !this.props.rawData) ?
-                    [] : this.props.rawData}
+                  data={(this.props.isLocked || !rowData) ? [] : rowData}
                   columns={nestedArrayFieldColumnConfigs[key][1]}
-                  defaultPageSize={3}
-                  previousText={'<'}
-                  nextText={'>'}
+                  defaultPageSize={1}
+                  showPagination={false}
                 />
               </div>
             )}
           />
-        </div>),
-      );
+        </div>);
+      });
     }
 
     const { totalCount } = this.props;
