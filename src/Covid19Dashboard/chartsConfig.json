@@ -19,7 +19,7 @@
         [
             {
                 "title": "Cook County Daily Cases",
-                "description": "Description to be provided by Matt",
+                "description": "Here we plot daily case counts over time, where the gray bars are reported cases and the blue curve traces the estimated number of true (i.e., reported and not-reported) cases. The darker and lighter shaded regions correspond to 50% and 95% posterior credible intervals, respectively. The sharp decrease in estimated true cases in the third week of March results from a similarly sharp decrease in estimated Rt at that same time due to the Illinois statewide lockdown intervention being put in place on March 21st.",
                 "type": "image",
                 "prop": "imgCases"
             },
@@ -44,7 +44,7 @@
                 "title": "Cook County Estimated Rt",
                 "type": "image",
                 "prop": "imgRt",
-                "description": "Description to be provided by Matt\nMultiple lines,\nit's a long description"
+                "description": "Description to be provided by Matt"
             },
             {
                 "title": "Rt as of June 1st",
