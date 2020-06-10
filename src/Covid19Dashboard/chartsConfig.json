@@ -5,7 +5,7 @@
         "- Each carousel configuration:",
         "   [ <chart 1 config>, <chart 2 config> ]",
         "- Each chart configuration: {",
-        "   title (str, optional)",
+        "   title (str)",
         "   description (str, optional)",
         "   xTitle (str, optional)",
         "   yTitle (str, optional)",
@@ -18,28 +18,36 @@
     "illinois": [
         [
             {
+                "title": "Cook County Daily Cases",
+                "description": "Description to be provided by Matt",
                 "type": "image",
                 "prop": "imgCases"
             },
             {
+                "title": "Cook County Daily Cases Forecast",
                 "type": "image",
                 "prop": "imgCasesForecast"
             },
             {
+                "title": "Cook County Daily Deaths",
                 "type": "image",
                 "prop": "imgDeaths"
             },
             {
+                "title": "Cook County Daily Deaths Forecast",
                 "type": "image",
                 "prop": "imgDeathsForecast"
             }
         ],
         [
             {
+                "title": "Cook County Estimated Rt",
                 "type": "image",
-                "prop": "imgRt"
+                "prop": "imgRt",
+                "description": "Description to be provided by Matt\nMultiple lines,\nit's a long description"
             },
             {
+                "title": "Rt as of June 1st",
                 "type": "image",
                 "prop": "imgRtJune1"
             }

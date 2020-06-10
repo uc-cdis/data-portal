@@ -102,7 +102,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const date = new Date(props.label);
     return (
-      <div className='map-chart__tooltip'>
+      <div className='plot-chart__tooltip'>
         <p>{monthNames[date.getUTCMonth()]} {date.getUTCDate()}, {date.getUTCFullYear()}</p>
         {
           props.payload.map((data, i) => (
@@ -163,7 +163,6 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
             }
           </LineChart>
         </ResponsiveContainer>
-        <div style={{ marginTop: `${2}em` }}><p>{this.props.description}</p></div>
       </div>
     );
   }
@@ -173,12 +172,10 @@ PlotChart.propTypes = {
   plots: PropTypes.array,
   title: PropTypes.string.isRequired,
   yTitle: PropTypes.string.isRequired,
-  description: PropTypes.string,
 };
 
 PlotChart.defaultProps = {
   plots: [],
-  description: '',
 };
 
 export default PlotChart;
