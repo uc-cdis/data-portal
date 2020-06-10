@@ -51,7 +51,12 @@ const dashboardDataLocations = {
   idphDailyChartData: 'idph_daily.txt',
 };
 const imageLocations = {
-  testImage: 'charts_data/test_plot.png',
+  imgCases: 'charts_data/cases.png',
+  imgCasesForecast: 'charts_data/casesForecast.png',
+  imgDeaths: 'charts_data/deaths.png',
+  imgDeathsForecast: 'charts_data/deathsForecast.png',
+  imgRt: 'charts_data/Rt.png',
+  imgRtJune1: 'charts_data/Rt_June_1.png',
 };
 
 const monthNames = [
@@ -231,7 +236,7 @@ class Covid19Dashboard extends React.Component {
                     fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                   />
                 }
-                {this.enableCharts &&
+                {this.enableCharts && chartsConfig.world.length > 0 &&
                   <div className='covid19-dashboard_charts'>
                     {chartsConfig.world.map((carouselConfig, i) =>
                       (<ChartCarousel
@@ -264,7 +269,7 @@ class Covid19Dashboard extends React.Component {
                     fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                   />
                 }
-                {this.enableCharts &&
+                {this.enableCharts && chartsConfig.illinois.length > 0 &&
                   <div className='covid19-dashboard_charts'>
                     {chartsConfig.illinois.map((carouselConfig, i) =>
                       (<ChartCarousel
@@ -329,7 +334,6 @@ Covid19Dashboard.propTypes = {
   seirSimulatedChartData: PropTypes.object,
   top10ChartData: PropTypes.array,
   idphDailyChartData: PropTypes.array,
-  // testImage // TODO
 };
 
 Covid19Dashboard.defaultProps = {

@@ -24,8 +24,9 @@ class ChartCarousel extends PureComponent {
 
     if (chartConfig.type === 'image') {
       return (<img
+        className='chart-carousel__image'
         src={dataUrl + this.props[chartConfig.prop]}
-        alt={`Chart for ${chartConfig.title}`}
+        alt={`Chart${chartConfig.title ? ` for ${chartConfig.title}` : ''}`}
       />);
     }
 

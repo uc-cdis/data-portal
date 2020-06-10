@@ -5,26 +5,44 @@
         "- Each carousel configuration:",
         "   [ <chart 1 config>, <chart 2 config> ]",
         "- Each chart configuration: {",
-        "   title (str)",
+        "   title (str, optional)",
         "   description (str, optional)",
-        "   xTitle (str)",
-        "   yTitle (str)",
+        "   xTitle (str, optional)",
+        "   yTitle (str, optional)",
         "   type (str): one of [lineChart, image]",
         "   prop (str): property name for the chart data,",
         "       as hardcoded in the Covid19Dashboard component.",
         "}"
     ],
-    "world": [
+    "world": [],
+    "illinois": [
         [
             {
-                "title": "blah",
-                "description": "blah blah blah",
-                "xTitle": "x title",
-                "yTitle": "y title",
                 "type": "image",
-                "prop": "testImage"
+                "prop": "imgCases"
+            },
+            {
+                "type": "image",
+                "prop": "imgCasesForecast"
+            },
+            {
+                "type": "image",
+                "prop": "imgDeaths"
+            },
+            {
+                "type": "image",
+                "prop": "imgDeathsForecast"
+            }
+        ],
+        [
+            {
+                "type": "image",
+                "prop": "imgRt"
+            },
+            {
+                "type": "image",
+                "prop": "imgRtJune1"
             }
         ]
-    ],
-    "illinois": []
+    ]
 }
