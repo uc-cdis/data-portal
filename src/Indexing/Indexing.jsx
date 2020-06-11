@@ -225,13 +225,10 @@ class Indexing extends React.Component {
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
       if (response.data && response.data.status === 'Completed') {
-        console.log('228: ', response.data);
         thisPointer.retrieveJobOutput(uid).then((resp) => {
-          console.log('230: ', resp);
           if (resp.data && resp.data.output) {
             const logsLink = resp.data.output.split(' ')[0];
             const manifestLink = resp.data.output.split(' ')[1];
-            console.log('234: ', manifestLink);
             thisPointer.setState({
               indexingFilesStatus: 'success',
               indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
