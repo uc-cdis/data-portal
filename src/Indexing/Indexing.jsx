@@ -268,7 +268,7 @@ class Indexing extends React.Component {
         thisPointer.retrieveJobOutput(uid).then(
           (resp) => {
             if (resp.data && resp.data.output) {
-              const manifestLink  = resp.data.output.split(' ')[0];
+              const manifestLink = resp.data.output.split(' ')[0];
               const logsLink = resp.data.output.split(' ')[1];
               thisPointer.setState({
                 downloadManifestLogsLink: logsLink,
@@ -496,7 +496,7 @@ class Indexing extends React.Component {
                         icon: 'download',
                         value: this.state.indexingFilesManifestLink,
                         fn: () => this.downloadJobOutput(this.state.indexingFilesManifestLink),
-                      }
+                      },
                     ]}
                     onClose={() => this.onHidePopup()}
                   >
