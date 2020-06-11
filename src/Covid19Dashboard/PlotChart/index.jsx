@@ -101,14 +101,17 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
   renderTooltip = (props) => {
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const date = new Date(props.label);
+    const nColumns = Math.ceil(props.payload.length / 5); // up to 5 items per column
     return (
       <div className='plot-chart__tooltip'>
         <p>{monthNames[date.getUTCMonth()]} {date.getUTCDate()}, {date.getUTCFullYear()}</p>
-        {
-          props.payload.map((data, i) => (
-            <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value}</p>
-          ))
-        }
+        <div style={{ columnCount: nColumns }}>
+          {
+            props.payload.map((data, i) => (
+              <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value}</p>
+            ))
+          }
+        </div>
       </div>
     );
   }

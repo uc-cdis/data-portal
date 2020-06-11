@@ -14,7 +14,18 @@
         "       as hardcoded in the Covid19Dashboard component.",
         "}"
     ],
-    "world": [],
+    "world": [
+        [
+            {
+                "title": "Daily Confirmed Cases (5-day Moving Average)",
+                "description": "Daily Confirmed Cases (5-day Moving Average)",
+                "xTitle": "Date",
+                "yTitle": "Confirmed New Cases",
+                "type": "lineChart",
+                "prop": "top10ChartData"
+            }
+        ]
+    ],
     "illinois": [
         [
             {

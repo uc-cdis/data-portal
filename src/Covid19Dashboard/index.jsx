@@ -59,13 +59,6 @@ const imageLocations = {
   imgRtJune1: 'charts_data/Rt_June_1.png',
 };
 
-const monthNames = [
-  'Jan', 'Feb', 'Mar',
-  'April', 'May', 'Jun',
-  'Jul', 'Aug', 'Sept',
-  'Oct', 'Nov', 'Dec',
-];
-
 class Covid19Dashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -140,6 +133,12 @@ class Covid19Dashboard extends React.Component {
 
   renderLocationPopupTooltip = (props) => {
     const date = new Date(props.label);
+    const monthNames = [
+      'Jan', 'Feb', 'Mar',
+      'April', 'May', 'Jun',
+      'Jul', 'Aug', 'Sept',
+      'Oct', 'Nov', 'Dec',
+    ];
     return (
       <div className='covid19-dashboard__tooltip'>
         <p>{monthNames[date.getMonth()]} {date.getDate()}, {date.getFullYear()}</p>
@@ -275,7 +274,7 @@ class Covid19Dashboard extends React.Component {
                       (<ChartCarousel
                         key={i}
                         chartsConfig={carouselConfig}
-                        seirChartData={seirChartData}
+                        seirChartData={seirChartData} // not used for now
                         {...imageLocations}
                         {...this.props}
                       />),
@@ -305,7 +304,7 @@ class CustomizedXAxisTick extends React.Component { // eslint-disable-line react
   render() {
     const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
     const val = payload.value; // eslint-disable-line react/prop-types
-    const formattedDate = `${monthNames[new Date(val).getMonth()]} ${new Date(val).getDate()}`;
+    const formattedDate = `${new Date(val).getMonth()}/${new Date(val).getDate()}`;
     return (
       <g transform={`translate(${x},${y})`}>
         <text
