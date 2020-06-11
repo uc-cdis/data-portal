@@ -269,9 +269,9 @@ class Indexing extends React.Component {
           (resp) => {
             if (resp.data && resp.data.output) {
               const manifestLink  = resp.data.output.split(' ')[0];
-              // const logsLink = resp.data.output.split(' ')[1];
+              const logsLink = resp.data.output.split(' ')[1];
               thisPointer.setState({
-              //  downloadManifestLogsLink: logsLink,
+                downloadManifestLogsLink: logsLink,
                 downloadManifestManifestLink: manifestLink,
                 downloadManifestStatus: 'success',
                 downloadManifestPopupMessage: 'Done',
@@ -281,7 +281,7 @@ class Indexing extends React.Component {
               thisPointer.setState({
                 downloadManifestStatus: 'error',
                 downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
-                downloadManifestPopupMessage: 'The indexing job was dispatched, but failed to produce output.',
+                downloadManifestPopupMessage: 'The manifest generation job was dispatched, but failed to produce output.',
               });
             }
           });
