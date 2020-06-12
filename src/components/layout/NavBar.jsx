@@ -58,7 +58,7 @@ class NavBar extends Component {
     let tooltipDetails = { content: '' };
     if (item && item.tooltip) {
       const boundsRect = this.navButtonRefs[item.link].current.getBoundingClientRect();
-      const bottomY = boundsRect.bottom;
+      const bottomY = boundsRect.bottom + window.scrollY;
       const centerX = boundsRect.x + (boundsRect.width / 2);
       tooltipDetails = {
         content: item.tooltip,
