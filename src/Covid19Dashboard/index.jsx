@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import 'react-tabs/style/react-tabs.less';
 
-import { mapboxAPIToken } from '../localconf';
+import { covid19DashboardConfig, mapboxAPIToken } from '../localconf';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
 import { numberWithCommas } from './dataUtils.js';
@@ -12,7 +12,6 @@ import WorldMapChart from './WorldMapChart';
 import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
 import ChartCarousel from './ChartCarousel';
-import chartsConfig from './chartsConfig';
 import './Covid19Dashboard.less';
 
 
@@ -32,7 +31,17 @@ import './Covid19Dashboard.less';
 //
 // Config:
 // "covid19DashboardConfig": {
-//   "dataUrl": ""
+//   "dataUrl": "",
+//   "chartsConfig": { <tab ID>: [ <carousel 1 config>, <carousel 2 config> ] }
+//       where each carousel config = [ <chart 1 config>, <chart 2 config> ]
+//       and each chart configuration = {
+//         title (str),
+//         description (str, optional),
+//         xTitle (str, optional),
+//         yTitle (str, optional),
+//         type (str): one of [lineChart, image],
+//         prop (str): property name for the chart data, as hardcoded below
+//       }
 // },
 
 
@@ -40,7 +49,7 @@ import './Covid19Dashboard.less';
 - add the prop name and location to `dashboardDataLocations` or `imageLocations`;
 - add the prop to Covid19Dashboard.propTypes;
 - add it to ReduxCovid19Dashboard.handleDashboardData();
-- add it to chartsConfig.json in the relevant chart's configuration.
+- add it to covid19DashboardConfig.chartsConfig in the relevant chart's config.
 */
 const dashboardDataLocations = {
   jhuGeojsonLatest: 'map_data/jhu_geojson_latest.json',
@@ -62,7 +71,6 @@ const imageLocations = {
 class Covid19Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.enableCharts = true; // we can remove this later if never used
   }
 
   componentDidMount() {
@@ -156,6 +164,8 @@ class Covid19Dashboard extends React.Component {
   }
 
   render() {
+    const chartsConfig = covid19DashboardConfig.chartsConfig || {};
+
     const locationPopupData = (this.props.selectedLocationData &&
       !this.props.selectedLocationData.loading) ? this.formatSelectedLocationData() : null;
     const locationPopupContents = locationPopupData ?
@@ -231,7 +241,7 @@ class Covid19Dashboard extends React.Component {
                     fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                   />
                 }
-                {this.enableCharts && chartsConfig.illinois.length > 0 &&
+                {chartsConfig.illinois && chartsConfig.illinois.length > 0 &&
                   <div className='covid19-dashboard_charts'>
                     {chartsConfig.illinois.map((carouselConfig, i) =>
                       (<ChartCarousel
@@ -271,7 +281,7 @@ class Covid19Dashboard extends React.Component {
                     fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                   />
                 }
-                {this.enableCharts && chartsConfig.world.length > 0 &&
+                {chartsConfig.world && chartsConfig.world.length > 0 &&
                   <div className='covid19-dashboard_charts'>
                     {chartsConfig.world.map((carouselConfig, i) =>
                       (<ChartCarousel
