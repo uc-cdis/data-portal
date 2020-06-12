@@ -208,10 +208,46 @@ class Covid19Dashboard extends React.Component {
         <div>
           <Tabs>
             <TabList className='covid19-dashboard_tablist'>
-              <Tab>COVID-19 in the world</Tab>
               <Tab>COVID-19 in Illinois</Tab>
+              <Tab>COVID-19 in the world</Tab>
             </TabList>
 
+            {/* illinois tab */}
+            <TabPanel className='covid19-dashboard_panel'>
+              <div className='covid19-dashboard_counts'>
+                <CountWidget
+                  label='Total Confirmed'
+                  value={confirmedCount.illinois}
+                />
+                <CountWidget
+                  label='Total Deaths'
+                  value={deathsCount.illinois}
+                />
+              </div>
+              <div className='covid19-dashboard_visualizations'>
+                { mapboxAPIToken &&
+                  <IllinoisMapChart
+                    jsonByLevel={this.props.jhuJsonByLevelLatest}
+                    fetchTimeSeriesData={this.props.fetchTimeSeriesData}
+                  />
+                }
+                {this.enableCharts && chartsConfig.illinois.length > 0 &&
+                  <div className='covid19-dashboard_charts'>
+                    {chartsConfig.illinois.map((carouselConfig, i) =>
+                      (<ChartCarousel
+                        key={i}
+                        chartsConfig={carouselConfig}
+                        seirChartData={seirChartData} // not used for now
+                        {...imageLocations}
+                        {...this.props}
+                      />),
+                    )}
+                  </div>
+                }
+              </div>
+            </TabPanel>
+
+            {/* world tab */}
             <TabPanel className='covid19-dashboard_panel'>
               <div className='covid19-dashboard_counts'>
                 <CountWidget
@@ -241,40 +277,6 @@ class Covid19Dashboard extends React.Component {
                       (<ChartCarousel
                         key={i}
                         chartsConfig={carouselConfig}
-                        {...imageLocations}
-                        {...this.props}
-                      />),
-                    )}
-                  </div>
-                }
-              </div>
-            </TabPanel>
-
-            <TabPanel className='covid19-dashboard_panel'>
-              <div className='covid19-dashboard_counts'>
-                <CountWidget
-                  label='Total Confirmed'
-                  value={confirmedCount.illinois}
-                />
-                <CountWidget
-                  label='Total Deaths'
-                  value={deathsCount.illinois}
-                />
-              </div>
-              <div className='covid19-dashboard_visualizations'>
-                { mapboxAPIToken &&
-                  <IllinoisMapChart
-                    jsonByLevel={this.props.jhuJsonByLevelLatest}
-                    fetchTimeSeriesData={this.props.fetchTimeSeriesData}
-                  />
-                }
-                {this.enableCharts && chartsConfig.illinois.length > 0 &&
-                  <div className='covid19-dashboard_charts'>
-                    {chartsConfig.illinois.map((carouselConfig, i) =>
-                      (<ChartCarousel
-                        key={i}
-                        chartsConfig={carouselConfig}
-                        seirChartData={seirChartData} // not used for now
                         {...imageLocations}
                         {...this.props}
                       />),

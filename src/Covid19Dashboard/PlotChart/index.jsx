@@ -4,6 +4,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 
+import { numberWithCommas } from '../dataUtils.js';
 import './PlotChart.less';
 
 
@@ -108,7 +109,12 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
         <div style={{ columnCount: nColumns }}>
           {
             props.payload.map((data, i) => (
-              <p style={{ color: data.stroke }} key={i}>{data.name}: {data.value}</p>
+              <p
+                style={{ color: data.stroke }}
+                key={i}
+              >
+                {data.name}: {numberWithCommas(data.value)}
+              </p>
             ))
           }
         </div>

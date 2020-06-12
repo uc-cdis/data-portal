@@ -63,11 +63,13 @@ class ChartCarousel extends PureComponent {
           src={dataUrl + this.props[chartConfig.prop]}
           alt={`Chart${chartConfig.title ? ` for ${chartConfig.title}` : ''}`}
         />);
-      } else {
+      } else if (chartConfig.type === 'lineChart') {
         const config = { ...chartConfig, plots: this.props[chartConfig.prop] };
         chart = Object.keys(config.plots).length > 0 ?
           <PlotChart {...config} />
           : null;
+      } else {
+        console.error(`ChartCarousel cannot handle '${chartConfig.type}' chart type configured in chartsConfig`); // eslint-disable-line no-console
       }
 
       // if the chart data is not loaded yet, do not display an empty chart
