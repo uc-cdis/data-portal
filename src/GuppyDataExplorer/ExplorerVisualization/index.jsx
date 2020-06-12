@@ -112,8 +112,9 @@ class ExplorerVisualization extends React.Component {
     const heatMapGuppyConfig = this.props.heatMapConfig ?
       this.props.heatMapConfig.guppyConfig : null;
     const heatMapMainYAxisVar = (this.props.heatMapConfig
-      && this.props.guppyConfig.manifestMapping) ?
-      this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex : null;
+      && this.props.guppyConfig.manifestMapping
+      && this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex)
+      ? this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex : null;
     const heatMapFilterConfig = {
       tabs: [
         {
