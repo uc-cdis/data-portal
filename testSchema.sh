@@ -8,7 +8,7 @@ testCases=(
 bpa "data.bloodpac.org"
 bhc "data.braincommons.org"
 gtex "dcp.bionimbus.org"
-dev "dev.planx-pla.net"
+dev "qa.planx-pla.net"
 edc "portal.occ-data.org"
 genomel "genomel.bionimbus.org"
 kfDcfInterop "dcf-interop.kidsfirstdrc.org"

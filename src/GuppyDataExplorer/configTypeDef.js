@@ -41,6 +41,9 @@ export const ButtonConfigType = PropTypes.shape({
     tooltipText: PropTypes.string,
   })),
   dropdowns: PropTypes.object,
+  terraExportURL: PropTypes.string,
+  terraTemplate: PropTypes.arrayOf(PropTypes.string),
+  sevenBridgesExportURL: PropTypes.string,
 });
 
 export const ChartConfigType = PropTypes.object;

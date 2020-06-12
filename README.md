@@ -18,9 +18,9 @@ npm install
 The portal's `/dev.html` path loads javascript and most css
 from `localhost`.  Test code under local development with this procedure:
 * `npm install`
-* launch the webpack dev server, and configure local code with the same configuration as the server to test against.  For example - if we intend to test against dev.planx-pla.net, then:
+* launch the webpack dev server, and configure local code with the same configuration as the server to test against.  For example - if we intend to test against qa.planx-pla.net, then:
 ```
-HOSTNAME=dev.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
+HOSTNAME=qa.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 ```
 , or for qa-brain:
 ```
@@ -46,7 +46,7 @@ HOSTNAME=qa-brain.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 
 Note: the legacy `dev` NODE_ENV is still available, but the `APP` environment must also be manually set to load the configuration that matches the dictionary from HOSTNAME - ex:
 ```
-HOSTNAME=dev.planx-pla.net NODE_ENV=dev APP=dev bash ./runWebpack.sh
+HOSTNAME=qa.planx-pla.net NODE_ENV=dev APP=dev bash ./runWebpack.sh
 ```
 
 ### Component story books
@@ -86,7 +86,7 @@ docker build -t windmill .
 
 Then run the container
 ```
-docker run --rm -e HOSTNAME=dev.planx-pla.net -p 443:443 -ti windmill
+docker run --rm -e HOSTNAME=qa.planx-pla.net -p 443:443 -ti windmill
 ```
 
 You will then need to visit `https://localhost` and accept the self-signed certificate warnings
