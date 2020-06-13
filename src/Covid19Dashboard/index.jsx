@@ -69,10 +69,6 @@ const imageLocations = {
 };
 
 class Covid19Dashboard extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     if (!mapboxAPIToken) {
       console.warn('MAPBOX_API_TOKEN environment variable not set, will not display maps.'); // eslint-disable-line no-console
@@ -149,7 +145,7 @@ class Covid19Dashboard extends React.Component {
     ];
     return (
       <div className='covid19-dashboard__tooltip'>
-        <p>{monthNames[date.getMonth()]} {date.getDate()}, {date.getFullYear()}</p>
+        <p>{monthNames[date.getUTCMonth()]} {date.getUTCDate()}, {date.getUTCFullYear()}</p>
         {
           props.payload.map((data, i) => (
             <p
@@ -316,7 +312,7 @@ class CustomizedXAxisTick extends React.Component { // eslint-disable-line react
   render() {
     const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
     const val = payload.value; // eslint-disable-line react/prop-types
-    const formattedDate = `${new Date(val).getMonth()}/${new Date(val).getDate()}`;
+    const formattedDate = `${new Date(val).getUTCMonth() + 1}/${new Date(val).getUTCDate()}`;
     return (
       <g transform={`translate(${x},${y})`}>
         <text
