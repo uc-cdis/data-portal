@@ -7,7 +7,7 @@ import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 import { useArboristUI } from '../configs';
-import { shouldDisplaySubmissionUIComponents } from '../authMappingUtils';
+import { shouldDisplayProjectUIComponents, userHasCreateOrUpdateMethodOnProject } from '../authMappingUtils';
 import NotFound from '../components/NotFound';
 
 const ProjectSubmission = (props) => {
@@ -31,8 +31,20 @@ const ProjectSubmission = (props) => {
     return <MyDataModelGraph project={props.project} />;
   };
 
+  const displaySubmissionForms = (project, userAuthMapping) => {
+    if (userHasCreateOrUpdateMethodOnProject(project, userAuthMapping)) {
+      return (
+        <React.Fragment>
+          <MySubmitForm />
+          <MySubmitTSV project={props.project} />
+        </React.Fragment>
+      );
+    }
+    return null;
+  };
+
   return (
-    shouldDisplaySubmissionUIComponents(
+    shouldDisplayProjectUIComponents(
       props.project,
       props.userAuthMapping,
       useArboristUI,
@@ -40,14 +52,12 @@ const ProjectSubmission = (props) => {
       <div className='project-submission'>
         <h2 className='project-submission__title'>{props.project}</h2>
         {
-          <Link className='project-submission__link' to={`/${props.project}/search`}>browse nodes</Link>
+          <Link
+            className='project-submission__link'
+            to={`/${props.project}/search`}
+          >browse nodes</Link>
         }
-        {
-          <React.Fragment>
-            <MySubmitForm />
-            <MySubmitTSV project={props.project} />
-          </React.Fragment>
-        }
+        { displaySubmissionForms(props.project, props.userAuthMapping) }
         { displayData() }
       </div>
       :

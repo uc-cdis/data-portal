@@ -77,16 +77,15 @@ export const userHasMethodOnAnyProject = (method, userAuthMapping = {}) => {
   return hasMethod;
 };
 
-export const shouldDisplaySubmissionUIComponents = (project, userAuthMapping, useArboristUI) => {
-  if (
-    !useArboristUI
+export const userHasCreateOrUpdateMethodOnProject = (project, userAuthMapping) => (
+  userHasMethodOnProject('create', project, userAuthMapping)
+    || userHasMethodOnProject('update', project, userAuthMapping)
+);
+
+export const shouldDisplayProjectUIComponents = (project, userAuthMapping, useArboristUI) => (
+  !useArboristUI
     || (isRootUrl(project) && userHasSheepdogProgramAdmin(userAuthMapping))
     || (isProgramUrl(project) && userHasSheepdogProjectAdmin(userAuthMapping))
-    || userHasMethodOnProject('create', project, userAuthMapping)
-    || userHasMethodOnProject('update', project, userAuthMapping)
-  ) {
-    return true;
-  }
-
-  return false;
-};
+    || userHasCreateOrUpdateMethodOnProject(project, userAuthMapping)
+    || userHasMethodOnProject('read', project, userAuthMapping)
+);
