@@ -53,7 +53,6 @@ ProjectSubmission.propTypes = {
   dataModelGraph: PropTypes.func,
   onGetCounts: PropTypes.func.isRequired,
   typeList: PropTypes.array,
-  userAuthMapping: PropTypes.object.isRequired,
 };
 
 ProjectSubmission.defaultProps = {
