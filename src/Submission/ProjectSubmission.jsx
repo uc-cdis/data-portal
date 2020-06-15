@@ -6,6 +6,9 @@ import DataModelGraph from '../DataModelGraph/DataModelGraph';
 import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
+import { useArboristUI } from '../configs';
+import { shouldDisplaySubmissionUIComponents } from '../authMappingUtils';
+import NotFound from '../components/NotFound';
 
 const ProjectSubmission = (props) => {
   // hack to detect if dictionary data is available, and to trigger fetch if not
@@ -29,18 +32,26 @@ const ProjectSubmission = (props) => {
   };
 
   return (
-    <div className='project-submission'>
-      <h2 className='project-submission__title'>{props.project}</h2>
-      {
-        <Link className='project-submission__link' to={`/${props.project}/search`}>browse nodes</Link>
-      }
-      { <React.Fragment>
-        <MySubmitForm />
-        <MySubmitTSV project={props.project} />
-      </React.Fragment>
-      }
-      { displayData() }
-    </div>
+    shouldDisplaySubmissionUIComponents(
+      props.project,
+      props.userAuthMapping,
+      useArboristUI,
+    ) ?
+      <div className='project-submission'>
+        <h2 className='project-submission__title'>{props.project}</h2>
+        {
+          <Link className='project-submission__link' to={`/${props.project}/search`}>browse nodes</Link>
+        }
+        {
+          <React.Fragment>
+            <MySubmitForm />
+            <MySubmitTSV project={props.project} />
+          </React.Fragment>
+        }
+        { displayData() }
+      </div>
+      :
+      <NotFound />
   );
 };
 
@@ -53,6 +64,7 @@ ProjectSubmission.propTypes = {
   dataModelGraph: PropTypes.func,
   onGetCounts: PropTypes.func.isRequired,
   typeList: PropTypes.array,
+  userAuthMapping: PropTypes.object.isRequired,
 };
 
 ProjectSubmission.defaultProps = {

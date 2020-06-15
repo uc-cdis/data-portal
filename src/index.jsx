@@ -36,7 +36,6 @@ import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
   indexPublic, useGuppyForExplorer, explorerPublic, enableResourceBrowser, resourceBrowserPublic,
-  useArboristUI,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
@@ -50,7 +49,6 @@ import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import './index.less';
-import { shouldDisplaySubmissionUIComponents } from './authMappingUtils';
 import NotFound from './components/NotFound';
 
 
@@ -331,13 +329,12 @@ async function init() {
                       path='/:project'
                       component={
                         props =>
-                          (shouldDisplaySubmissionUIComponents(
-                            props.match.params.project,
-                            store.getState().userAuthMapping,
-                            useArboristUI,
-                          ) ? <ProtectedContent component={ProjectSubmission} {...props} />
-                            : <NotFound />)
-
+                          (
+                            <ProtectedContent
+                              component={ProjectSubmission}
+                              {...props}
+                            />
+                          )
                       }
                     />
                     <Route
