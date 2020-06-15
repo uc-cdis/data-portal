@@ -36,7 +36,7 @@ const ProjectSubmission = (props) => {
       return (
         <React.Fragment>
           <MySubmitForm />
-          <MySubmitTSV project={props.project} />
+          <MySubmitTSV project={project} />
         </React.Fragment>
       );
     }
