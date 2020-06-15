@@ -36,6 +36,7 @@ import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
   indexPublic, useGuppyForExplorer, explorerPublic, enableResourceBrowser, resourceBrowserPublic,
+  useArboristUI,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
@@ -331,7 +332,9 @@ async function init() {
                       component={
                         props =>
                           (shouldDisplaySubmissionUIComponents(
-                            props.match.params.project, store.getState().userAuthMapping,
+                            props.match.params.project,
+                            store.getState().userAuthMapping,
+                            useArboristUI,
                           ) ? <ProtectedContent component={ProjectSubmission} {...props} />
                             : <NotFound />)
 

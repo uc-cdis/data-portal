@@ -1,4 +1,3 @@
-import { config } from './params';
 // Functions for checking user's auth mapping.
 // These should only be called if config useArboristUI is true (-> userAuthMapping is defined).
 
@@ -78,9 +77,9 @@ export const userHasMethodOnAnyProject = (method, userAuthMapping = {}) => {
   return hasMethod;
 };
 
-export const shouldDisplaySubmissionUIComponents = (project, userAuthMapping) => {
+export const shouldDisplaySubmissionUIComponents = (project, userAuthMapping, useArboristUI) => {
   if (
-    !config.useArboristUI
+    !useArboristUI
     || (isRootUrl(project) && userHasSheepdogProgramAdmin(userAuthMapping))
     || (isProgramUrl(project) && userHasSheepdogProjectAdmin(userAuthMapping))
     || userHasMethodOnProject('create', project, userAuthMapping)
