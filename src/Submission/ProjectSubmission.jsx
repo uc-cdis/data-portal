@@ -10,60 +10,73 @@ import { useArboristUI } from '../configs';
 import { shouldDisplayProjectUIComponents, userHasCreateOrUpdateMethodOnProject } from '../authMappingUtils';
 import NotFound from '../components/NotFound';
 
-const ProjectSubmission = (props) => {
-  // hack to detect if dictionary data is available, and to trigger fetch if not
-  if (!props.dataIsReady) {
-    props.onGetCounts(props.typeList, props.project, props.dictionary);
+class ProjectSubmission extends React.Component {
+  componentDidMount() {
+    this.props.fetchPrograms();
   }
 
-  // Passing children in as props allows us to swap in different containers -
-  // dumb, redux, ...
-  const MySubmitForm = props.submitForm;
-  const MySubmitTSV = props.submitTSV;
-  const MyDataModelGraph = props.dataModelGraph;
-  const displayData = () => {
-    if (!props.dataIsReady) {
-      if (props.project !== '_root') {
-        return <Spinner />;
+  render() {
+  // hack to detect if dictionary data is available, and to trigger fetch if not
+    if (!this.props.dataIsReady) {
+      this.props.onGetCounts(this.props.typeList, this.props.project, this.props.dictionary);
+    }
+
+    // if the fetchPrograms call has not finished, just wait with a spinner
+    if (!this.props.programList) {
+      return <Spinner />;
+    }
+
+    // Passing children in as props allows us to swap in different containers -
+    // dumb, redux, ...
+    const MySubmitForm = this.props.submitForm;
+    const MySubmitTSV = this.props.submitTSV;
+    const MyDataModelGraph = this.props.dataModelGraph;
+    const displayData = () => {
+      if (!this.props.dataIsReady) {
+        if (this.props.project !== '_root') {
+          return <Spinner />;
+        }
+        return null;
+      }
+      return <MyDataModelGraph project={this.props.project} />;
+    };
+
+    const displaySubmissionForms = (project, userAuthMapping) => {
+      if (userHasCreateOrUpdateMethodOnProject(project, userAuthMapping)) {
+        return (
+          <React.Fragment>
+            <MySubmitForm />
+            <MySubmitTSV project={project} />
+          </React.Fragment>
+        );
       }
       return null;
-    }
-    return <MyDataModelGraph project={props.project} />;
-  };
+    };
 
-  const displaySubmissionForms = (project, userAuthMapping) => {
-    if (userHasCreateOrUpdateMethodOnProject(project, userAuthMapping)) {
-      return (
-        <React.Fragment>
-          <MySubmitForm />
-          <MySubmitTSV project={project} />
-        </React.Fragment>
-      );
-    }
-    return null;
-  };
-
-  return (
-    shouldDisplayProjectUIComponents(
-      props.project,
-      props.userAuthMapping,
-      useArboristUI,
-    ) ?
-      <div className='project-submission'>
-        <h2 className='project-submission__title'>{props.project}</h2>
-        {
-          <Link
-            className='project-submission__link'
-            to={`/${props.project}/search`}
-          >browse nodes</Link>
-        }
-        { displaySubmissionForms(props.project, props.userAuthMapping) }
-        { displayData() }
-      </div>
-      :
-      <NotFound />
-  );
-};
+    return (
+      shouldDisplayProjectUIComponents(
+        this.props.project,
+        this.props.projectList,
+        this.props.programList,
+        this.props.userAuthMapping,
+        useArboristUI,
+      ) ?
+        <div className='project-submission'>
+          <h2 className='project-submission__title'>{this.props.project}</h2>
+          {
+            <Link
+              className='project-submission__link'
+              to={`/${this.props.project}/search`}
+            >browse nodes</Link>
+          }
+          { displaySubmissionForms(this.props.project, this.props.userAuthMapping) }
+          { displayData() }
+        </div>
+        :
+        <NotFound />
+    );
+  }
+}
 
 ProjectSubmission.propTypes = {
   project: PropTypes.string.isRequired,
@@ -75,6 +88,9 @@ ProjectSubmission.propTypes = {
   onGetCounts: PropTypes.func.isRequired,
   typeList: PropTypes.array,
   userAuthMapping: PropTypes.object.isRequired,
+  projectList: PropTypes.object,
+  programList: PropTypes.array,
+  fetchPrograms: PropTypes.func.isRequired,
 };
 
 ProjectSubmission.defaultProps = {
@@ -83,6 +99,8 @@ ProjectSubmission.defaultProps = {
   submitTSV: SubmitTSV,
   dataModelGraph: DataModelGraph,
   typeList: [],
+  projectList: {},
+  programList: undefined,
 };
 
 export default ProjectSubmission;
