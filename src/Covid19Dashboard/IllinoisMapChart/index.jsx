@@ -8,6 +8,9 @@ import ControlPanel from '../ControlPanel';
 import { numberWithCommas } from '../dataUtils.js';
 import countyData from '../data/us_counties';
 
+// TODO get this data from the bucket instead
+const modeledCountiesFIPS = ['17031', '17043', '17089', '17097', '17197'];
+
 function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
   // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
@@ -92,6 +95,7 @@ class IllinoisMapChart extends React.Component {
       hoverInfo = {
         lngLat: event.lngLat,
         locationName,
+        FIPS: feature.properties.FIPS,
         values: {
           'confirmed cases': numberWithCommas(confirmed),
           deaths: numberWithCommas(deaths),
@@ -142,7 +146,15 @@ class IllinoisMapChart extends React.Component {
                 (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>,
               )
             }
-            <p className='covid19-dashboard__location-info__details'>Click for more details</p>
+            {
+              modeledCountiesFIPS.includes(hoverInfo.FIPS) &&
+              <p className='covid19-dashboard__location-info__details'>
+                {'Simulation available in\nright panel'}
+              </p>
+            }
+            <p className='covid19-dashboard__location-info__details'>
+              Click for real time plotting
+            </p>
           </div>
         </ReactMapGL.Popup>
       );
