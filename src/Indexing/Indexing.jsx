@@ -129,7 +129,7 @@ class Indexing extends React.Component {
       if (!wasSuccessful && retrievePresignedURLRetries < maxRetries) {
         setTimeout(() => {
           thisPointer.retrievePresignedURLForDownload(retrievePresignedURLRetries + 1, maxRetries);
-        }, 5000);
+        }, 10000);
         return;
       }
       if (!wasSuccessful && retrievePresignedURLRetries >= maxRetries) {
