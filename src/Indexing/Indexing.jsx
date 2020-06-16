@@ -105,8 +105,9 @@ class Indexing extends React.Component {
       thisPointer.setState({
         indexingFilesPopupMessage: 'Preparing indexing job...',
       });
-      return thisPointer.retrievePresignedURLForDownload(0, 10);
-    }).catch(() => {
+      return thisPointer.retrievePresignedURLForDownload(0, 50);
+    }).catch((err) => {
+      console.log(err);
       thisPointer.setState({
         indexingFilesStatus: 'error',
         indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
@@ -127,14 +128,14 @@ class Indexing extends React.Component {
       if (!wasSuccessful && retrievePresignedURLRetries < maxRetries) {
         setTimeout(() => {
           thisPointer.retrievePresignedURLForDownload(retrievePresignedURLRetries + 1, maxRetries);
-        }, 5000);
+        }, 10000);
         return;
       }
       if (!wasSuccessful && retrievePresignedURLRetries >= maxRetries) {
         thisPointer.setState({
           indexingFilesStatus: 'error',
           indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
-          indexingFilesPopupMessage: `There was a problem uploading the indexing file to s3 (${response.status})`,
+          indexingFilesPopupMessage: `There was a problem uploading the indexing file to s3 (${response.status}). The upload timed out.`,
           indexFilesButtonEnabled: false,
         });
         return;
