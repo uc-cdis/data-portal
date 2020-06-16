@@ -105,7 +105,7 @@ class Indexing extends React.Component {
       thisPointer.setState({
         indexingFilesPopupMessage: 'Preparing indexing job...',
       });
-      return thisPointer.retrievePresignedURLForDownload(0, 50);
+      return thisPointer.retrievePresignedURLForDownload(0, 100);
     }).catch((err) => {
       console.log(err);
       thisPointer.setState({
@@ -128,7 +128,7 @@ class Indexing extends React.Component {
       if (!wasSuccessful && retrievePresignedURLRetries < maxRetries) {
         setTimeout(() => {
           thisPointer.retrievePresignedURLForDownload(retrievePresignedURLRetries + 1, maxRetries);
-        }, 10000);
+        }, 5000);
         return;
       }
       if (!wasSuccessful && retrievePresignedURLRetries >= maxRetries) {
