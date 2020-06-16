@@ -9,7 +9,7 @@ import { numberWithCommas } from '../dataUtils.js';
 import countyData from '../data/us_counties';
 
 // TODO get this data from the bucket instead
-const modeledCountiesFIPS = ['17031', '17043', '17089', '17097', '17197'];
+const modeledCountiesFIPS = ['17031'];
 
 function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
@@ -43,6 +43,13 @@ function addDataToGeoJsonBase(data) {
   };
 
   return geoJson;
+}
+
+function filterCountyGeoJson(selectedFips) {
+  return {
+    ...countyData,
+    features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
+  };
 }
 
 class IllinoisMapChart extends React.Component {
@@ -148,11 +155,11 @@ class IllinoisMapChart extends React.Component {
             }
             {
               modeledCountiesFIPS.includes(hoverInfo.FIPS) &&
-              <p className='covid19-dashboard__location-info__details'>
+              <p className='covid19-dashboard__location-info__simulation'>
                 {'Simulation available in\nright panel'}
               </p>
             }
-            <p className='covid19-dashboard__location-info__details'>
+            <p className='covid19-dashboard__location-info__click'>
               Click for real time plotting
             </p>
           </div>
@@ -168,6 +175,7 @@ class IllinoisMapChart extends React.Component {
         this.props.jsonByLevel.county,
       );
     }
+    const modeledCountyGeoJson = filterCountyGeoJson(modeledCountiesFIPS);
 
     const colors = {
       0: '#FFF',
@@ -209,6 +217,7 @@ class IllinoisMapChart extends React.Component {
           // ]}
         >
           {this.renderPopup()}
+
           <ReactMapGL.Source type='geojson' data={this.choroCountyGeoJson}>
             <ReactMapGL.Layer
               id='confirmed-choropleth'
@@ -222,6 +231,19 @@ class IllinoisMapChart extends React.Component {
                   ...colorsAsList,
                 ],
                 'fill-opacity': 0.6,
+              }}
+            />
+          </ReactMapGL.Source>
+
+          {/* Outline a set of counties */}
+          <ReactMapGL.Source type='geojson' data={modeledCountyGeoJson}>
+            <ReactMapGL.Layer
+              id='county-outline'
+              type='line'
+              beforeId='waterway-label'
+              paint={{
+                'line-color': '#421C52',
+                'line-width': 1.5,
               }}
             />
           </ReactMapGL.Source>
