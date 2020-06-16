@@ -125,9 +125,12 @@ class Covid19Dashboard extends React.Component {
   formatSelectedLocationData = () => {
     let max = 0;
     let sortedData = Object.keys(this.props.selectedLocationData.data).map((date) => {
-      const confirmed = this.props.selectedLocationData.data[date].confirmed;
-      const deaths = this.props.selectedLocationData.data[date].deaths;
-      const recovered = this.props.selectedLocationData.data[date].recovered;
+      let confirmed = this.props.selectedLocationData.data[date].confirmed;
+      if (typeof (confirmed) !== 'number') confirmed = 0; // "<5" -> 0
+      let deaths = this.props.selectedLocationData.data[date].deaths;
+      if (typeof (deaths) !== 'number') deaths = 0;
+      let recovered = this.props.selectedLocationData.data[date].recovered;
+      if (typeof (recovered) !== 'number') recovered = 0;
       max = Math.max(max, confirmed, deaths, recovered);
       return { date, confirmed, deaths, recovered };
     });
@@ -136,7 +139,13 @@ class Covid19Dashboard extends React.Component {
   }
 
   renderLocationPopupTooltip = (props) => {
-    const date = new Date(props.label);
+    // we use the raw `selectedLocationData` values instead of the values in
+    // `props`, because the data is tranformed in `formatSelectedLocationData`
+    // to replace strings with zeros, but we want the tooltip to show the
+    // original string value.
+    const rawDate = props.label;
+    const rawData = this.props.selectedLocationData.data[rawDate];
+    const date = new Date(rawDate);
     const monthNames = [
       'Jan', 'Feb', 'Mar',
       'April', 'May', 'Jun',
@@ -147,13 +156,17 @@ class Covid19Dashboard extends React.Component {
       <div className='covid19-dashboard__tooltip'>
         <p>{monthNames[date.getUTCMonth()]} {date.getUTCDate()}, {date.getUTCFullYear()}</p>
         {
-          props.payload.map((data, i) => (
-            <p
-              style={{ color: data.stroke }}
-              key={i}
-            >{data.name}: {numberWithCommas(data.value)}
-            </p>
-          ))
+          props.payload.map((data, i) => {
+            const val = typeof (rawData[data.name]) === 'number' ? numberWithCommas(rawData[data.name]) : rawData[data.name];
+            return (
+              <p
+                style={{ color: data.stroke }}
+                key={i}
+              >
+                {data.name}: {val}
+              </p>
+            );
+          })
         }
       </div>
     );
@@ -185,9 +198,9 @@ class Covid19Dashboard extends React.Component {
           />
           <Tooltip content={this.renderLocationPopupTooltip} />
           <Legend />
-          <Line type='monotone' dataKey='confirmed' stroke='#8884d8' activeDot={{ r: 8 }} />
-          <Line type='monotone' dataKey='recovered' stroke='#00B957' />
-          <Line type='monotone' dataKey='deaths' stroke='#aa5e79' />
+          <Line type='monotone' dataKey='confirmed' stroke='#8884d8' dot={false} />
+          <Line type='monotone' dataKey='recovered' stroke='#00B957' dot={false} />
+          <Line type='monotone' dataKey='deaths' stroke='#aa5e79' dot={false} />
         </LineChart>
       </ResponsiveContainer>)
       : <Spinner />;

@@ -159,7 +159,7 @@ class IllinoisMapChart extends React.Component {
 
     const colors = {
       0: '#FFF',
-      1: '#F7F787',
+      5: '#F7F787',
       20: '#EED322',
       50: '#E6B71E',
       100: '#DA9C20',
@@ -206,7 +206,7 @@ class IllinoisMapChart extends React.Component {
                 'fill-color': [
                   'interpolate',
                   ['linear'],
-                  ['number', ['get', 'confirmed']],
+                  ['number', ['get', 'confirmed'], 0],
                   ...colorsAsList,
                 ],
                 'fill-opacity': 0.6,

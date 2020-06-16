@@ -22,14 +22,12 @@ async function handleDashboardData(propName, data) {
     return readMultiColumnTSV(data);
   default:
     console.warn(`I don't know how to handle dashboard data for "${propName}"`); // eslint-disable-line no-console
-    // return 'ERROR_FETCH_DASHBOARD_DATA';
   }
   return null;
 }
 
 const fetchDashboardData = (propName, filePath) => {
   const url = dataUrl + filePath;
-  // TODO refactor this probably. to handle errors better
   return dispatch => fetch(url, dispatch)
     .then((r) => {
       switch (r.status) {
@@ -45,18 +43,11 @@ const fetchDashboardData = (propName, filePath) => {
     )
     .then(data => handleDashboardData(propName, data))
     .then(obj =>
-      // switch (obj) {
-      // case 'ERROR_FETCH_DASHBOARD_DATA':
-      //   return {
-      //     type: 'ERROR_FETCH_DASHBOARD_DATA',
-      //   };
-      // default:
       ({
         type: 'RECEIVE_DASHBOARD_DATA',
         name: propName,
         contents: obj,
       }),
-      // }
     )
     .then(msg => dispatch(msg));
 };

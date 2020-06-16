@@ -271,13 +271,11 @@ class WorldMapChart extends React.Component {
     if (this.state.selectedLayer === 'confirmed-dots') {
       // config for dot distribution map
       colors = {
-        0: '#FFF',
-        1: '#AA5E79',
+        0: '#AA5E79',
       };
       dotSizes = {
-        0: 0,
-        1: 2,
-        10: 5,
+        0: 2,
+        5: 5,
         100: 8,
         1000: 11,
         5000: 15,
@@ -289,7 +287,7 @@ class WorldMapChart extends React.Component {
       // config for choropleth map
       colors = {
         0: '#FFF',
-        1: '#F7F787',
+        5: '#F7F787',
         100: '#EED322',
         500: '#E6B71E',
         1000: '#DA9C20',
@@ -345,13 +343,13 @@ class WorldMapChart extends React.Component {
                 'circle-radius': [
                   'interpolate',
                   ['linear'],
-                  ['number', ['get', 'confirmed']],
+                  ['number', ['get', 'confirmed'], 0],
                   ...dotSizesAsList,
                 ],
                 'circle-color': [
                   'interpolate',
                   ['linear'],
-                  ['number', ['get', 'confirmed']],
+                  ['number', ['get', 'confirmed'], 0],
                   ...colorsAsList,
                 ],
                 'circle-opacity': 0.8,
@@ -370,7 +368,7 @@ class WorldMapChart extends React.Component {
                 'fill-color': [
                   'interpolate',
                   ['linear'],
-                  ['number', ['get', 'confirmed']],
+                  ['number', ['get', 'confirmed'], 0],
                   ...colorsAsList,
                 ],
                 'fill-opacity': 0.6,
@@ -393,7 +391,7 @@ class WorldMapChart extends React.Component {
                 'fill-color': [
                   'interpolate',
                   ['linear'],
-                  ['number', ['get', 'confirmed']],
+                  ['number', ['get', 'confirmed'], 0],
                   ...colorsAsList,
                 ],
                 'fill-opacity': 0.6,
@@ -414,7 +412,7 @@ class WorldMapChart extends React.Component {
                 'fill-color': [
                   'interpolate',
                   ['linear'],
-                  ['number', ['get', 'confirmed']],
+                  ['number', ['get', 'confirmed'], 0],
                   ...colorsAsList,
                 ],
                 'fill-opacity': 0.6,
@@ -435,7 +433,7 @@ class WorldMapChart extends React.Component {
                 'fill-color': [
                   'interpolate',
                   ['linear'],
-                  ['number', ['get', 'confirmed']],
+                  ['number', ['get', 'confirmed'], 0],
                   ...colorsAsList,
                 ],
                 'fill-opacity': 0.6,

@@ -145,10 +145,8 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
             />
             <XAxis
               dataKey='date'
-              // label={this.props.xTitle}
               tick={<CustomizedAxisTick />}
               ticks={chartData.ticks}
-              // interval='preserveStartEnd'
               interval={0}
             />
             <YAxis
