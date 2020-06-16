@@ -123,19 +123,19 @@ class Covid19Dashboard extends React.Component {
   }
 
   formatSelectedLocationData = () => {
-    let max = 0;
+    const maxes = { confirmed: 0, deaths: 0, recovered: 0 };
     let sortedData = Object.keys(this.props.selectedLocationData.data).map((date) => {
-      let confirmed = this.props.selectedLocationData.data[date].confirmed;
-      if (typeof (confirmed) !== 'number') confirmed = 0; // "<5" -> 0
-      let deaths = this.props.selectedLocationData.data[date].deaths;
-      if (typeof (deaths) !== 'number') deaths = 0;
-      let recovered = this.props.selectedLocationData.data[date].recovered;
-      if (typeof (recovered) !== 'number') recovered = 0;
-      max = Math.max(max, confirmed, deaths, recovered);
-      return { date, confirmed, deaths, recovered };
+      const values = {};
+      ['confirmed', 'deaths', 'recovered'].forEach((field) => {
+        let val = this.props.selectedLocationData.data[date][field];
+        if (typeof val !== 'number') val = 0; // "<5" -> 0
+        maxes[field] = Math.max(maxes[field], val);
+        values[field] = val;
+      });
+      return { date, ...values };
     });
     sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-    return { data: sortedData, max };
+    return { data: sortedData, maxes };
   }
 
   renderLocationPopupTooltip = (props) => {
@@ -193,13 +193,16 @@ class Covid19Dashboard extends React.Component {
           />
           <YAxis
             type='number'
-            domain={[0, locationPopupData.max || 'auto']}
+            domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
             tickFormatter={val => numberWithCommas(val)}
           />
           <Tooltip content={this.renderLocationPopupTooltip} />
           <Legend />
+
           <Line type='monotone' dataKey='confirmed' stroke='#8884d8' dot={false} />
-          <Line type='monotone' dataKey='recovered' stroke='#00B957' dot={false} />
+          { locationPopupData.maxes.recovered &&
+            <Line type='monotone' dataKey='recovered' stroke='#00B957' dot={false} />
+          }
           <Line type='monotone' dataKey='deaths' stroke='#aa5e79' dot={false} />
         </LineChart>
       </ResponsiveContainer>)
