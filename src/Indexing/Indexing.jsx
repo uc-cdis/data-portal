@@ -107,6 +107,7 @@ class Indexing extends React.Component {
       });
       return thisPointer.retrievePresignedURLForDownload(0, 100);
     }).catch((err) => {
+      // eslint-disable-next-line no-console
       console.log(err);
       thisPointer.setState({
         indexingFilesStatus: 'error',
