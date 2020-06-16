@@ -104,7 +104,8 @@ export const shouldDisplayProjectUIComponents = (
   }
   // if not, fall back on simple check against returned values from peregrine
   return (
-    Object.values(projectList).includes(project)
+    isRootUrl(project)
+    || Object.values(projectList).includes(project)
     || programList.includes(project)
   );
 };
