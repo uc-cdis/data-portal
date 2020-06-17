@@ -42,7 +42,7 @@ class ProjectSubmission extends React.Component {
     };
 
     const displaySubmissionForms = (project, userAuthMapping) => {
-      if (userHasCreateOrUpdateMethodOnProject(project, userAuthMapping)) {
+      if (!useArboristUI || userHasCreateOrUpdateMethodOnProject(project, userAuthMapping)) {
         return (
           <React.Fragment>
             <MySubmitForm />
