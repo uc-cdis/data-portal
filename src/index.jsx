@@ -326,6 +326,10 @@ async function init() {
                       : null
                     }
                     <Route
+                      path='/not-found'
+                      component={NotFound}
+                    />
+                    <Route
                       path='/:project'
                       component={
                         props =>

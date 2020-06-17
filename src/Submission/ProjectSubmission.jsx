@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SubmitTSV from './SubmitTSV';
 import DataModelGraph from '../DataModelGraph/DataModelGraph';
@@ -8,11 +8,21 @@ import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 import { useArboristUI } from '../configs';
 import { userHasMethodOnProject, isRootUrl, isProgramUrl, userHasSheepdogProgramAdmin, userHasSheepdogProjectAdmin } from '../authMappingUtils';
-import NotFound from '../components/NotFound';
 
 class ProjectSubmission extends React.Component {
   componentDidMount() {
     this.props.fetchPrograms();
+  }
+
+  componentDidUpdate() {
+    if (this.props.programList && !this.shouldDisplayProjectUIComponents(
+      this.props.project,
+      this.props.projectList,
+      this.props.programList,
+      this.props.userAuthMapping,
+    )) {
+      this.props.history.push('/not-found');
+    }
   }
 
   shouldDisplayProjectUIComponents = (
@@ -84,25 +94,17 @@ class ProjectSubmission extends React.Component {
     };
 
     return (
-      this.shouldDisplayProjectUIComponents(
-        this.props.project,
-        this.props.projectList,
-        this.props.programList,
-        this.props.userAuthMapping,
-      ) ?
-        <div className='project-submission'>
-          <h2 className='project-submission__title'>{this.props.project}</h2>
-          {
-            <Link
-              className='project-submission__link'
-              to={`/${this.props.project}/search`}
-            >browse nodes</Link>
-          }
-          { displaySubmissionUIComponents(this.props.project, this.props.userAuthMapping) }
-          { displayData() }
-        </div>
-        :
-        <NotFound />
+      <div className='project-submission'>
+        <h2 className='project-submission__title'>{this.props.project}</h2>
+        {
+          <Link
+            className='project-submission__link'
+            to={`/${this.props.project}/search`}
+          >browse nodes</Link>
+        }
+        { displaySubmissionUIComponents(this.props.project, this.props.userAuthMapping) }
+        { displayData() }
+      </div>
     );
   }
 }
@@ -120,6 +122,7 @@ ProjectSubmission.propTypes = {
   projectList: PropTypes.object,
   programList: PropTypes.array,
   fetchPrograms: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 ProjectSubmission.defaultProps = {
@@ -132,4 +135,4 @@ ProjectSubmission.defaultProps = {
   programList: undefined,
 };
 
-export default ProjectSubmission;
+export default withRouter(ProjectSubmission);
