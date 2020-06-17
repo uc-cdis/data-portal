@@ -96,12 +96,12 @@ class Indexing extends React.Component {
 
   putIndexFileToSignedURL = () => {
     const thisPointer = this;
-    return fetchWithCreds({
+    return fetchWithCredsAndTimeout({
       path: thisPointer.state.urlToIndexedFile,
       method: 'PUT',
       customHeaders: { 'Content-Type': 'application/json' },
       body: thisPointer.state.uploadedFile,
-    }).then(() => {
+    }, 700000).then(() => {
       thisPointer.setState({
         indexingFilesPopupMessage: 'Preparing indexing job...',
       });
