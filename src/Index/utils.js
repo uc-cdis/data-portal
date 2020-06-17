@@ -19,6 +19,25 @@ const updateRedux = async projectNodeCounts => getReduxStore().then(
   },
 );
 
+// Chunk into groups of 15
+// Chunking is necessary to avoid hitting Postgres limits
+export const getChunkedPeregrineRequestURLs = (nodesToRequest) => {
+  let requestURLs = [];
+
+  let k = 0;
+  let chunkSize = 15;
+  let n = nodesToRequest.length;
+  
+  while(k < n) {
+    let nodeChunk = nodesToRequest.slice(k, k + chunkSize);
+    let chunkRequestURL = `${datasetUrl}?nodes=${nodeChunk.join(',')}`;
+    requestURLs.push(chunkRequestURL);
+    k = k + chunkSize;
+  }
+
+  return requestURLs;
+}
+
 // loadHomepageChartdataFromDatasets queries Peregrine's /datasets endpoint for
 // summary data (counts of projects, counts of subjects, etc).
 // If `public_datasets` is enabled in Peregrine's config, the /datasets endpoint
@@ -32,7 +51,7 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
   const fileNodes = store.getState().submission.file_nodes;
   const nodesForIndexChart = homepageChartNodes.map(item => item.node);
   const nodesToRequest = _.union(fileNodes, nodesForIndexChart);
-  const url = `${datasetUrl}?nodes=${nodesToRequest.join(',')}`;
+  const requestURLs = getChunkedPeregrineRequestURLs();
 
   fetchWithCreds({
     path: url,
