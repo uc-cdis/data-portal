@@ -76,36 +76,3 @@ export const userHasMethodOnAnyProject = (method, userAuthMapping = {}) => {
   const hasMethod = actionArrays.some(x => x.some(actionHasMethod));
   return hasMethod;
 };
-
-export const userHasCreateOrUpdateMethodOnProject = (project, userAuthMapping) => (
-  userHasMethodOnProject('create', project, userAuthMapping)
-    || userHasMethodOnProject('update', project, userAuthMapping)
-);
-
-export const shouldDisplayProjectUIComponents = (
-  project,
-  projectList,
-  programList,
-  userAuthMapping,
-  useArboristUI) => {
-  // if useArboristUI is set, do the logic based on arborist
-  if (useArboristUI) {
-    return (
-      (isRootUrl(project) && userHasSheepdogProgramAdmin(userAuthMapping))
-    || (
-      isProgramUrl(project)
-      && programList.includes(project)
-      && userHasSheepdogProjectAdmin(userAuthMapping)
-    )
-    || userHasCreateOrUpdateMethodOnProject(project, userAuthMapping)
-    || userHasMethodOnProject('read', project, userAuthMapping)
-    || Object.values(projectList).includes(project)
-    );
-  }
-  // if not, fall back on simple check against returned values from peregrine
-  return (
-    isRootUrl(project)
-    || Object.values(projectList).includes(project)
-    || programList.includes(project)
-  );
-};

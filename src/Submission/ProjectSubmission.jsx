@@ -7,13 +7,37 @@ import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 import { useArboristUI } from '../configs';
-import { shouldDisplayProjectUIComponents, userHasCreateOrUpdateMethodOnProject } from '../authMappingUtils';
+import { userHasMethodOnProject, isRootUrl, isProgramUrl, userHasSheepdogProgramAdmin, userHasSheepdogProjectAdmin } from '../authMappingUtils';
 import NotFound from '../components/NotFound';
 
 class ProjectSubmission extends React.Component {
   componentDidMount() {
     this.props.fetchPrograms();
   }
+
+  shouldDisplayProjectUIComponents = (
+    project,
+    projectList,
+    programList,
+    userAuthMapping,
+  ) => {
+    if (useArboristUI) {
+      // check against arborist policies
+      return ((isRootUrl(project) && userHasSheepdogProgramAdmin(userAuthMapping))
+        || (isProgramUrl(project)
+        && programList.includes(project)
+        && userHasSheepdogProjectAdmin(userAuthMapping))
+        || Object.values(projectList).includes(project));
+    }
+    return (
+      // if arborist UI is disabled, fallback to simple checks
+      // 1. if url is root
+      // 2. if program exists
+      // 3. if project exists and user has access
+      isRootUrl(project)
+      || programList.includes(project)
+      || Object.values(projectList).includes(project));
+  };
 
   render() {
   // hack to detect if dictionary data is available, and to trigger fetch if not
@@ -41,8 +65,14 @@ class ProjectSubmission extends React.Component {
       return <MyDataModelGraph project={this.props.project} />;
     };
 
-    const displaySubmissionForms = (project, userAuthMapping) => {
-      if (!useArboristUI || userHasCreateOrUpdateMethodOnProject(project, userAuthMapping)) {
+    const displaySubmissionUIComponents = (project, userAuthMapping) => {
+      if (
+        !useArboristUI
+        || (isRootUrl(project) && userHasSheepdogProgramAdmin(userAuthMapping))
+        || (isProgramUrl(project) && userHasSheepdogProjectAdmin(userAuthMapping))
+        || userHasMethodOnProject('create', project, userAuthMapping)
+        || userHasMethodOnProject('update', project, userAuthMapping)
+      ) {
         return (
           <React.Fragment>
             <MySubmitForm />
@@ -54,12 +84,11 @@ class ProjectSubmission extends React.Component {
     };
 
     return (
-      shouldDisplayProjectUIComponents(
+      this.shouldDisplayProjectUIComponents(
         this.props.project,
         this.props.projectList,
         this.props.programList,
         this.props.userAuthMapping,
-        useArboristUI,
       ) ?
         <div className='project-submission'>
           <h2 className='project-submission__title'>{this.props.project}</h2>
@@ -69,7 +98,7 @@ class ProjectSubmission extends React.Component {
               to={`/${this.props.project}/search`}
             >browse nodes</Link>
           }
-          { displaySubmissionForms(this.props.project, this.props.userAuthMapping) }
+          { displaySubmissionUIComponents(this.props.project, this.props.userAuthMapping) }
           { displayData() }
         </div>
         :
