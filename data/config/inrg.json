@@ -35,18 +35,18 @@
     "projectDetails": "boardCounts"
   },
   "components": {
-    "appName": "Generic Data Commons Portal",
+    "appName": "Pediatric Cancer Data Commons",
     "index": {
       "introduction": {
-        "heading": "Data Commons",
-        "text": "The Generic Data Commons supports the management, analysis and sharing of data for the research community.",
+        "heading": "Pediatric Cancer Data Commons",
+        "text": "The Pediatric Cancer Data Commons supports the management, analysis and sharing of data for the research community.",
         "link": "/submission"
       },
       "buttons": [
         {
           "name": "Define Data Field",
           "icon": "data-field-define",
-          "body": "The Generic Data Commons define the data in a general way. Please study the dictionary before you start browsing.",
+          "body": "The Pediatric Cancer Data Commons define the data in a general way. Please study the dictionary before you start browsing.",
           "link": "/DD",
           "label": "Learn more"
         },
@@ -74,7 +74,7 @@
       ]
     },
     "navigation": {
-      "title": "Generic Data Commons",
+      "title": "Pediatric Cancer Data Commons",
       "items": [
         {
           "icon": "dictionary",
@@ -128,7 +128,7 @@
       ]
     },
     "login": {
-      "title": "Generic Data Commons",
+      "title": "Pediatric Cancer Data Commons",
       "subTitle": "search, compare, and download data",
       "text": "This website supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer.",
       "contact": "If you have any questions about access or the registration process, please contact ",
