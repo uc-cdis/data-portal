@@ -21,21 +21,72 @@ const updateRedux = async projectNodeCounts => getReduxStore().then(
 
 // Chunk into groups of 15
 // Chunking is necessary to avoid hitting Postgres limits
-export const getChunkedPeregrineRequestURLs = (nodesToRequest) => {
-  let requestURLs = [];
+export const getChunkedPeregrineRequestUrls = (nodesToRequest) => {
+  let requestUrls = [];
 
   let k = 0;
   let chunkSize = 15;
   let n = nodesToRequest.length;
+
+  if(n == 0) {
+    return [`${datasetUrl}?nodes=`];
+  }
   
   while(k < n) {
-    let nodeChunk = nodesToRequest.slice(k, k + chunkSize);
-    let chunkRequestURL = `${datasetUrl}?nodes=${nodeChunk.join(',')}`;
-    requestURLs.push(chunkRequestURL);
+    let listRightBound = Math.min(k + chunkSize, n)
+    let nodeChunk = nodesToRequest.slice(k, listRightBound);
+    let chunkRequestUrl = `${datasetUrl}?nodes=${nodeChunk.join(',')}`;
+    requestUrls.push(chunkRequestUrl);
     k = k + chunkSize;
+
   }
 
-  return requestURLs;
+  return requestUrls;
+}
+
+const makePeregrineRequestForNode = async (url) => {
+  return fetchWithCreds({
+    path: url,
+  }).then((res) => {
+    if(res.status == 200) {
+      return [res.data, 200];
+    }
+    return [null, res.status];
+    // switch (res.status) {
+
+    // case 200:
+    //   // updateRedux(res.data);
+    //   // if (callback) {
+    //   //   callback(resultStatus);
+    //   // }
+    //   return [res.data, 200];
+    //   break;
+    // case 404:
+    //   // Shouldn't happen, this means peregrine datasets endpoint not enabled
+    //   // console.error(`REST endpoint ${datasetUrl} not enabled in Peregrine yet.`);
+    //   // resultStatus.needLogin = true;
+    //   // if (callback) {
+    //   //   callback(resultStatus);
+    //   // }
+    //   return [null, 404];
+    //   break;
+    // case 401:
+    //   return [null, 401];
+    //   break;
+    // case 403:
+    //   // resultStatus.needLogin = true;
+    //   // if (callback) {
+    //   //   callback(resultStatus);
+    //   // }
+    //   return [null, 403];
+    //   break;
+    // default:
+    //   break;
+    // }
+  })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 // loadHomepageChartdataFromDatasets queries Peregrine's /datasets endpoint for
@@ -51,40 +102,16 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
   const fileNodes = store.getState().submission.file_nodes;
   const nodesForIndexChart = homepageChartNodes.map(item => item.node);
   const nodesToRequest = _.union(fileNodes, nodesForIndexChart);
-  const requestURLs = getChunkedPeregrineRequestURLs();
+  const requestUrls = getChunkedPeregrineRequestUrls(nodesToRequest);
 
-  fetchWithCreds({
-    path: url,
-  }).then((res) => {
-    switch (res.status) {
-    case 200:
-      updateRedux(res.data);
-      if (callback) {
-        callback(resultStatus);
-      }
-      break;
-    case 404:
-      // Shouldn't happen, this means peregrine datasets endpoint not enabled
-      console.error(`REST endpoint ${datasetUrl} not enabled in Peregrine yet.`);
-      resultStatus.needLogin = true;
-      if (callback) {
-        callback(resultStatus);
-      }
-      break;
-    case 401:
-    case 403:
-      resultStatus.needLogin = true;
-      if (callback) {
-        callback(resultStatus);
-      }
-      break;
-    default:
-      break;
-    }
-  })
-    .catch((err) => {
-      console.log(err);
-    });
+  let fullResult = [];
+  for (let k = 0; k < requestUrls.length; k+=1) {
+    let chunkResult = await makePeregrineRequestForNode(requestUrls[k]);
+    fullResult.append(chunkResult);
+    console.log(chunkResult);
+  }
+
+  console.log('fullResult: ', fullResult);
 };
 
 // loadHomepageChartDataFromGraphQL will load the same data as the
