@@ -71,8 +71,8 @@ class Login extends React.Component {
         <div className='login-page__entries'>
           <div className='login-page__entry-login'>
             <Button
+              className='login-page__entry-button'
               onClick={() => {}}
-              label='Loading login options'
               buttonType='primary'
               isPending
               enabled={false}
