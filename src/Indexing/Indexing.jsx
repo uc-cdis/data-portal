@@ -101,7 +101,7 @@ class Indexing extends React.Component {
       method: 'PUT',
       customHeaders: { 'Content-Type': 'application/json' },
       body: thisPointer.state.uploadedFile,
-    }, 7000).then(() => {
+    }, 700000).then(() => {
       thisPointer.setState({
         indexingFilesPopupMessage: 'Preparing indexing job...',
       });
