@@ -1,4 +1,8 @@
-import { loadHomepageChartDataFromDatasets, getChunkedPeregrineRequestUrls } from './utils';
+import { 
+  loadHomepageChartDataFromDatasets, 
+  getChunkedPeregrineRequestUrls, 
+  mergeChunkedChartData 
+} from './utils';
 import { homepageChartNodes, datasetUrl } from '../localconf';
 
 var urlPrefix = datasetUrl + '?nodes=';
@@ -30,5 +34,15 @@ describe('the load homepage chart data flow', () => {
       urlPrefix + '16,17,18,19,20,21,22,23,24,25,26,27,28,29,30',
       urlPrefix + '31,32,33,34,35'
     ]);
+  })
+
+  it('correctly merges chunked chart data results', () => {
+    let chunk1 = [{'project-a': {'node-1': 17, 'node-2': 9}, 'project-b': {'node-1': 2, 'node-2': 0}}];
+    let chunk2 = [{'project-a': {'node-3': 3, 'node-4': 13}, 'project-b': {'node-3': 6, 'node-4': 2}}];
+    
+    expect(mergeChunkedChartData([chunk1, chunk2])).toEqual({
+      'project-a': {'node-1': 17, 'node-2': 9, 'node-3': 3, 'node-4': 13}, 
+      'project-b': {'node-1': 2, 'node-2': 0, 'node-3': 6, 'node-4': 2}
+    });
   })
 });

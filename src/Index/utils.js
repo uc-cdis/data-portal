@@ -52,41 +52,34 @@ const makePeregrineRequestForNode = async (url) => {
       return [res.data, 200];
     }
     return [null, res.status];
-    // switch (res.status) {
-
-    // case 200:
-    //   // updateRedux(res.data);
-    //   // if (callback) {
-    //   //   callback(resultStatus);
-    //   // }
-    //   return [res.data, 200];
-    //   break;
-    // case 404:
-    //   // Shouldn't happen, this means peregrine datasets endpoint not enabled
-    //   // console.error(`REST endpoint ${datasetUrl} not enabled in Peregrine yet.`);
-    //   // resultStatus.needLogin = true;
-    //   // if (callback) {
-    //   //   callback(resultStatus);
-    //   // }
-    //   return [null, 404];
-    //   break;
-    // case 401:
-    //   return [null, 401];
-    //   break;
-    // case 403:
-    //   // resultStatus.needLogin = true;
-    //   // if (callback) {
-    //   //   callback(resultStatus);
-    //   // }
-    //   return [null, 403];
-    //   break;
-    // default:
-    //   break;
-    // }
   })
     .catch((err) => {
       console.log(err);
     });
+}
+
+export const mergeChunkedChartData = (chartDataArray) => {
+  let mergedChartData = {};
+  var projects;
+  var projectKeys;
+  for (let y = 0; y < chartDataArray.length; y += 1) {
+    projects = chartDataArray[y][0];
+    projectKeys = Object.keys(projects);
+
+    for (let z = 0; z < projectKeys.length; z += 1) {
+      if (mergedChartData[projectKeys[z]]) {
+        let nodes = projects[projectKeys[z]];
+        let nodeNames = Object.keys(nodes);
+        for (let w = 0; w < nodeNames.length; w += 1) {
+          mergedChartData[projectKeys[z]][nodeNames[w]] = nodes[nodeNames[w]];
+        }
+      } else {
+        mergedChartData[projectKeys[z]] = projects[projectKeys[z]];
+      }
+    }
+  }
+
+  return mergedChartData;
 }
 
 // loadHomepageChartdataFromDatasets queries Peregrine's /datasets endpoint for
@@ -105,13 +98,40 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
   const requestUrls = getChunkedPeregrineRequestUrls(nodesToRequest);
 
   let fullResult = [];
-  for (let k = 0; k < requestUrls.length; k+=1) {
+  for (let k = 0; k < requestUrls.length; k += 1) {
     let chunkResult = await makePeregrineRequestForNode(requestUrls[k]);
-    fullResult.append(chunkResult);
-    console.log(chunkResult);
+    fullResult.push(chunkResult);
   }
 
-  console.log('fullResult: ', fullResult);
+  const queryFailure = fullResult.some((element) => element[1] !== 200);
+  const query401 =  fullResult.some((element) => element[1] === 401);
+  const query403 =  fullResult.some((element) => element[1] === 403);
+  const query404 =  fullResult.some((element) => element[1] === 404);
+  
+  if(queryFailure) {
+    if(query404) {
+      // Shouldn't happen, this means peregrine datasets endpoint not enabled
+      console.error(`REST endpoint ${datasetUrl} not enabled in Peregrine yet.`);
+    }
+    if(query401 || query403 || query404) {
+      resultStatus.needLogin = true;
+      if (callback) {
+        return callback(resultStatus);
+      }
+    }
+  }
+  if(query401) {
+    return;
+  }
+
+  let mergedChartData = mergeChunkedChartData(fullResult);
+  console.log(fullResult);
+  console.log(mergedChartData);
+
+  updateRedux(mergedChartData);
+  if (callback) {
+    callback(resultStatus);
+  }
 };
 
 // loadHomepageChartDataFromGraphQL will load the same data as the
