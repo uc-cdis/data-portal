@@ -118,6 +118,7 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
         callback(resultStatus);
       }
     }
+    return;
   }
   if (query401) {
     return;
