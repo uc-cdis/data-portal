@@ -94,11 +94,13 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
   const nodesToRequest = _.union(fileNodes, nodesForIndexChart);
   const requestUrls = getChunkedPeregrineRequestUrls(nodesToRequest);
 
-  const fullResult = [];
+  const fullResultPromise = [];
   for (let k = 0; k < requestUrls.length; k += 1) {
-    const chunkResult = await makePeregrineRequestForNode(requestUrls[k]);
-    fullResult.push(chunkResult);
+    const chunkResult = makePeregrineRequestForNode(requestUrls[k]);
+    fullResultPromise.push(chunkResult);
   }
+
+  const fullResult = await Promise.all(fullResultPromise);
 
   const queryFailure = fullResult.some(element => element[1] !== 200);
   const query401 = fullResult.some(element => element[1] === 401);
@@ -113,7 +115,7 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
     if (query401 || query403 || query404) {
       resultStatus.needLogin = true;
       if (callback) {
-        return callback(resultStatus);
+        callback(resultStatus);
       }
     }
   }
@@ -125,7 +127,7 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
 
   updateRedux(mergedChartData);
   if (callback) {
-    return callback(resultStatus);
+    callback(resultStatus);
   }
 };
 
