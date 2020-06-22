@@ -120,9 +120,6 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
     }
     return;
   }
-  if (query401) {
-    return;
-  }
 
   const mergedChartData = mergeChunkedChartData(fullResult);
 
