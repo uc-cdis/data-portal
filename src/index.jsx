@@ -98,11 +98,7 @@ async function init() {
                           props => (
                             <ProtectedContent
                               public
-                              filter={() => {
-                                setTimeout(() => {
-                                  store.dispatch(fetchLogin());
-                                }, 10000);
-                              }}
+                              filter={() => store.dispatch(fetchLogin())}
                               component={ReduxLogin}
                               {...props}
                             />
