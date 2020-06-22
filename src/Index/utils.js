@@ -52,7 +52,7 @@ const makePeregrineRequestForNode = async url => fetchWithCreds({
   return [null, res.status];
 })
   .catch((err) => {
-    console.log(err);
+    console.error(err);
   });
 
 export const mergeChunkedChartData = (chartDataArray) => {
