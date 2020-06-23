@@ -60,12 +60,25 @@ const dashboardDataLocations = {
   idphDailyChartData: 'idph_daily.txt',
 };
 const imageLocations = {
-  imgCases: 'charts_data/cases.png',
-  imgCasesForecast: 'charts_data/casesForecast.png',
-  imgDeaths: 'charts_data/deaths.png',
-  imgDeathsForecast: 'charts_data/deathsForecast.png',
-  imgRt: 'charts_data/Rt.png',
-  imgRtJune1: 'charts_data/Rt_June_1.png',
+  imgRtAll: 'bayes-by-county/Rt_All.png',
+  // Cook county
+  imgCookCases: 'bayes-by-county/17031/cases.png',
+  imgCookCasesForecast: 'bayes-by-county/17031/casesForecast.png',
+  imgCookDeaths: 'bayes-by-county/17031/deaths.png',
+  imgCookDeathsForecast: 'bayes-by-county/17031/deathsForecast.png',
+  imgCookRt: 'bayes-by-county/17031/Rt.png',
+  // Lake county
+  imgLakeCases: 'bayes-by-county/17097/cases.png',
+  imgLakeCasesForecast: 'bayes-by-county/17097/casesForecast.png',
+  imgLakeDeaths: 'bayes-by-county/17097/deaths.png',
+  imgLakeDeathsForecast: 'bayes-by-county/17097/deathsForecast.png',
+  imgLakeRt: 'bayes-by-county/17097/Rt.png',
+  // DuPage county
+  imgDuPageCases: 'bayes-by-county/17043/cases.png',
+  imgDuPageCasesForecast: 'bayes-by-county/17043/casesForecast.png',
+  imgDuPageDeaths: 'bayes-by-county/17043/deaths.png',
+  imgDuPageDeathsForecast: 'bayes-by-county/17043/deathsForecast.png',
+  imgDuPageRt: 'bayes-by-county/17043/Rt.png',
 };
 
 class Covid19Dashboard extends React.Component {

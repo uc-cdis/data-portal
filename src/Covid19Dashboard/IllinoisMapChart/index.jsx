@@ -9,7 +9,7 @@ import { numberWithCommas } from '../dataUtils.js';
 import countyData from '../data/us_counties';
 
 // TODO get this data from the bucket instead
-const modeledCountiesFIPS = ['17031'];
+const modeledCountiesFIPS = ['17031', '17097', '17043'];
 
 function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
