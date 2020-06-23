@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import { fetchWithCreds } from '../actions';
-import { homepageChartNodes, datasetUrl } from '../localconf';
+import { homepageChartNodes, homepageChartNodesChunkSize, datasetUrl } from '../localconf';
 import getReduxStore from '../reduxStore';
 import getHomepageChartProjectsList from './relayer';
 
@@ -19,13 +19,12 @@ const updateRedux = async projectNodeCounts => getReduxStore().then(
   },
 );
 
-// Chunk into groups of 15
+// Chunk into groups of homepageChartNodesChunkSize
 // Chunking is necessary to avoid hitting Postgres limits
 export const getChunkedPeregrineRequestUrls = (nodesToRequest) => {
   const requestUrls = [];
 
   let k = 0;
-  const chunkSize = 15;
   const n = nodesToRequest.length;
 
   if (n === 0) {
@@ -33,11 +32,11 @@ export const getChunkedPeregrineRequestUrls = (nodesToRequest) => {
   }
 
   while (k < n) {
-    const listRightBound = Math.min(k + chunkSize, n);
+    const listRightBound = Math.min(k + homepageChartNodesChunkSize, n);
     const nodeChunk = nodesToRequest.slice(k, listRightBound);
     const chunkRequestUrl = `${datasetUrl}?nodes=${nodeChunk.join(',')}`;
     requestUrls.push(chunkRequestUrl);
-    k += chunkSize;
+    k += homepageChartNodesChunkSize;
   }
 
   return requestUrls;
