@@ -19,9 +19,9 @@ const updateRedux = async projectNodeCounts => getReduxStore().then(
   },
 );
 
-// Chunk into groups of homepageChartNodesChunkSize
+// Chunk into groups of chunkSize
 // Chunking is necessary to avoid hitting Postgres limits
-export const getChunkedPeregrineRequestUrls = (nodesToRequest) => {
+export const getChunkedPeregrineRequestUrls = (nodesToRequest, chunkSize) => {
   const requestUrls = [];
 
   let k = 0;
@@ -32,11 +32,11 @@ export const getChunkedPeregrineRequestUrls = (nodesToRequest) => {
   }
 
   while (k < n) {
-    const listRightBound = Math.min(k + homepageChartNodesChunkSize, n);
+    const listRightBound = Math.min(k + chunkSize, n);
     const nodeChunk = nodesToRequest.slice(k, listRightBound);
     const chunkRequestUrl = `${datasetUrl}?nodes=${nodeChunk.join(',')}`;
     requestUrls.push(chunkRequestUrl);
-    k += homepageChartNodesChunkSize;
+    k += chunkSize;
   }
 
   return requestUrls;
@@ -91,7 +91,7 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
   const fileNodes = store.getState().submission.file_nodes;
   const nodesForIndexChart = homepageChartNodes.map(item => item.node);
   const nodesToRequest = _.union(fileNodes, nodesForIndexChart);
-  const requestUrls = getChunkedPeregrineRequestUrls(nodesToRequest);
+  const requestUrls = getChunkedPeregrineRequestUrls(nodesToRequest, homepageChartNodesChunkSize);
 
   const fullResultPromise = [];
   for (let k = 0; k < requestUrls.length; k += 1) {
