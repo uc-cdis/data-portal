@@ -365,6 +365,7 @@ async function init() {
                       component={NotFound}
                     />
                     <Route
+                      exact
                       path='/:project'
                       component={
                         props =>
