@@ -124,9 +124,7 @@ class CoreMetadataHeader extends Component {
     // if there is no core metadata to display
 
     return (
-      <p className='body-typo'>
-        Error: {this.props.error}
-      </p>
+      <React.Fragment />
     );
   }
 }

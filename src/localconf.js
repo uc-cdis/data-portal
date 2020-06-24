@@ -156,6 +156,11 @@ function buildConfig(opts) {
     terraExportWarning = config.terraExportWarning;
   }
 
+  let homepageChartNodesChunkSize = 15;
+  if (components.index.homepageChartNodesChunkSize) {
+    homepageChartNodesChunkSize = components.index.homepageChartNodesChunkSize;
+  }
+
   // for "libre" data commons, explorer page is public
   let explorerPublic = false;
   if (tierAccessLevel === 'libre') {
@@ -321,6 +326,7 @@ function buildConfig(opts) {
     workspaceLaunchUrl,
     workspaceTerminateUrl,
     homepageChartNodes: components.index.homepageChartNodes,
+    homepageChartNodesChunkSize,
     customHomepageChartConfig: components.index.customHomepageChartConfig,
     datasetUrl,
     indexPublic,

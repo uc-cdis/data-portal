@@ -6,7 +6,6 @@ import { loginPath } from '../localconf';
 import dictIcons from '../img/icons/sliding';
 import { components } from '../params';
 
-
 export const fetchLogin = () =>
   dispatch =>
     fetchWithCreds({
@@ -24,16 +23,7 @@ export const fetchLogin = () =>
           case 404:
             return {
               type: 'RECEIVE_LOGIN_ENDPOINT',
-              providers: [
-                {
-                  idp: 'google',
-                  name: 'Google OAuth',
-                  urls: [{
-                    name: 'Google OAuth',
-                    url: `${loginPath}google/`,
-                  }],
-                },
-              ],
+              providers: [],
             };
           default:
             return {
