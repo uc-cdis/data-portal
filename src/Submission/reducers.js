@@ -20,6 +20,10 @@ const submission = (state = {}, action) => {
         res[p.project_id] = p.availability_type; return res;
       }, {}),
     };
+  case 'RECEIVE_PROGRAMS':
+    return { ...state,
+      programs: action.data.map(p => p.name),
+    };
   case 'RECEIVE_NODE_TYPES':
     return { ...state, nodeTypes: action.data };
   case 'RECEIVE_DICTIONARY':

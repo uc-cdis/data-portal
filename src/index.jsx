@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import 'react-select/dist/react-select.css';
@@ -18,8 +18,7 @@ import ProtectedContent from './Login/ProtectedContent';
 import HomePage from './Homepage/page';
 import DocumentPage from './Document/page';
 import ExplorerPage from './Explorer/ExplorerPage';
-import CoreMetadataPage from './CoreMetadata/page';
-import { fetchCoreMetadata } from './CoreMetadata/reduxer';
+import { fetchCoreMetadata, ReduxCoreMetadataPage } from './CoreMetadata/reduxer';
 import Indexing from './Indexing/Indexing';
 import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/.';
@@ -49,6 +48,8 @@ import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import './index.less';
+import NotFound from './components/NotFound';
+
 
 // monitor user's session
 sessionMonitor.start();
@@ -91,7 +92,28 @@ async function init() {
                 <ReduxNavBar />
                 <div className='main-content'>
                   <Switch>
+                    {/* process with trailing and duplicate slashes first */}
+                    {/* see https://github.com/ReactTraining/react-router/issues/4841#issuecomment-523625186 */}
+                    {/* Removes trailing slashes */}
                     <Route
+                      path='/:url*(/+)'
+                      exact
+                      strict
+                      render={({ location }) => (
+                        <Redirect to={location.pathname.replace(/\/+$/, '')} />
+                      )}
+                    />
+                    {/* Removes duplicate slashes in the middle of the URL */}
+                    <Route
+                      path='/:url(.*//+.*)'
+                      exact
+                      strict
+                      render={({ match }) => (
+                        <Redirect to={`/${match.params.url.replace(/\/\/+/, '/')}`} />
+                      )}
+                    />
+                    <Route
+                      exact
                       path='/login'
                       component={
                         (
@@ -148,6 +170,7 @@ async function init() {
                       }
                     />
                     <Route
+                      exact
                       path='/query'
                       component={
                         props => <ProtectedContent component={GraphQLQuery} {...props} />
@@ -156,6 +179,7 @@ async function init() {
                     {
                       isEnabled('analysis') ?
                         <Route
+                          exact
                           path='/analysis/:app'
                           component={
                             props => <ProtectedContent component={ReduxAnalysisApp} {...props} />
@@ -166,6 +190,7 @@ async function init() {
                     {
                       isEnabled('analysis') ?
                         <Route
+                          exact
                           path='/analysis'
                           component={
                             props => <ProtectedContent component={Analysis} {...props} />
@@ -174,6 +199,7 @@ async function init() {
                         : null
                     }
                     <Route
+                      exact
                       path='/identity'
                       component={
                         props => (<ProtectedContent
@@ -184,6 +210,7 @@ async function init() {
                       }
                     />
                     <Route
+                      exact
                       path='/indexing'
                       component={
                         props => (<ProtectedContent
@@ -193,6 +220,7 @@ async function init() {
                       }
                     />
                     <Route
+                      exact
                       path='/quiz'
                       component={
                         props => (<ProtectedContent
@@ -202,6 +230,7 @@ async function init() {
                       }
                     />
                     <Route
+                      exact
                       path='/dd/:node'
                       component={
                         props => (<ProtectedContent
@@ -212,6 +241,7 @@ async function init() {
                       }
                     />
                     <Route
+                      exact
                       path='/dd'
                       component={
                         props => (<ProtectedContent
@@ -229,12 +259,13 @@ async function init() {
                           filter={() =>
                             store.dispatch(fetchCoreMetadata(props.match.params[0]))
                           }
-                          component={CoreMetadataPage}
+                          component={ReduxCoreMetadataPage}
                           {...props}
                         />)
                       }
                     />
                     <Route
+                      exact
                       path='/files'
                       component={
                         props => (
@@ -247,16 +278,19 @@ async function init() {
                       }
                     />
                     <Route
+                      exact
                       path='/workspace'
                       component={
                         props => <ProtectedContent component={Workspace} {...props} />
                       }
                     />
                     <Route
+                      exact
                       path={workspaceUrl}
                       component={ErrorWorkspacePlaceholder}
                     />
                     <Route
+                      exact
                       path={workspaceErrorUrl}
                       component={ErrorWorkspacePlaceholder}
                     />
@@ -289,6 +323,7 @@ async function init() {
                     />
                     {isEnabled('explorer') ?
                       <Route
+                        exact
                         path='/explorer'
                         component={
                           props => (
@@ -305,6 +340,7 @@ async function init() {
                     {components.privacyPolicy &&
                     (!!components.privacyPolicy.file || !!components.privacyPolicy.routeHref) ?
                       <Route
+                        exact
                         path='/privacy-policy'
                         component={ReduxPrivacyPolicy}
                       />
@@ -312,6 +348,7 @@ async function init() {
                     }
                     {enableResourceBrowser ?
                       <Route
+                        exact
                         path='/resource-browser'
                         component={
                           props => (<ProtectedContent
@@ -324,10 +361,25 @@ async function init() {
                       : null
                     }
                     <Route
+                      path='/not-found'
+                      component={NotFound}
+                    />
+                    <Route
+                      exact
                       path='/:project'
                       component={
-                        props => <ProtectedContent component={ProjectSubmission} {...props} />
+                        props =>
+                          (
+                            <ProtectedContent
+                              component={ProjectSubmission}
+                              {...props}
+                            />
+                          )
                       }
+                    />
+                    <Route
+                      path='*'
+                      component={NotFound}
                     />
                   </Switch>
                 </div>

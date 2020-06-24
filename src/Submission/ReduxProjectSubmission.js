@@ -10,7 +10,11 @@ import { predictFileType } from '../utils';
 import { submissionApiPath, lineLimit } from '../localconf';
 
 export const uploadTSV = (value, type) => (dispatch) => {
-  dispatch({ type: 'REQUEST_UPLOAD', file: value, file_type: type });
+  dispatch({
+    type: 'REQUEST_UPLOAD',
+    file: value,
+    file_type: type,
+  });
 };
 
 export const updateFormSchema = formSchema => ({
@@ -19,9 +23,43 @@ export const updateFormSchema = formSchema => ({
 });
 
 export const updateFileContent = (value, fileType) => (dispatch) => {
-  dispatch({ type: 'UPDATE_FILE', file: value, file_type: predictFileType(value, fileType) });
+  dispatch({
+    type: 'UPDATE_FILE',
+    file: value,
+    file_type: predictFileType(value, fileType),
+  });
 };
 
+// fetch all program names from peregrine
+const fetchPrograms = () => dispatch =>
+  fetchWithCreds({
+    path: `${submissionApiPath}graphql`,
+    body: JSON.stringify({
+      query: 'query { program(first:0) {name, id}}',
+    }),
+    method: 'POST',
+  })
+    .then(
+      ({
+        status,
+        data,
+      }) => {
+        switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_PROGRAMS',
+            data: data.data.program,
+            status,
+          };
+        default:
+          return {
+            type: 'FETCH_ERROR',
+            error: data,
+            status,
+          };
+        }
+      })
+    .then(msg => dispatch(msg));
 
 const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) => {
   const fileArray = [];
@@ -32,7 +70,9 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
   const method = path === 'graphql' ? 'POST' : methodIn;
   let file = submission.file;
 
-  dispatch({ type: 'RESET_SUBMISSION_STATUS' });
+  dispatch({
+    type: 'RESET_SUBMISSION_STATUS',
+  });
 
   if (!file) {
     return Promise.reject('No file to submit');
@@ -82,21 +122,24 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
     if (chunkArray.length === 0) {
       return null;
     }
-
     return fetchWithCreds({
       path: subUrl,
       method,
-      customHeaders: { 'Content-Type': submission.file_type },
+      customHeaders: {
+        'Content-Type': submission.file_type,
+      },
       body: chunkArray.shift(),
       dispatch,
     }).then(recursiveFetch(chunkArray)).then(
-      ({ status, data }) => (
-        {
-          type: 'RECEIVE_SUBMISSION',
-          submit_status: status,
-          data,
-          total: totalChunk,
-        }),
+      ({
+        status,
+        data,
+      }) => ({
+        type: 'RECEIVE_SUBMISSION',
+        submit_status: status,
+        data,
+        total: totalChunk,
+      }),
     ).then(msg => dispatch(msg))
       .then(sessionMonitor.updateUserActivity());
   }
@@ -146,11 +189,14 @@ const ReduxProjectSubmission = (() => {
     dataModelGraph: ReduxDataModelGraph,
     project: ownProps.params.project,
     userAuthMapping: state.userAuthMapping,
+    projectList: state.submission.projects,
+    programList: state.submission.programs,
   });
 
   const mapDispatchToProps = dispatch => ({
     onGetCounts: (typeList, project, dictionary) =>
       dispatch(getCounts(typeList, project, dictionary)),
+    fetchPrograms: () => dispatch(fetchPrograms()),
   });
   return connect(mapStateToProps, mapDispatchToProps)(ProjectSubmission);
 })();
