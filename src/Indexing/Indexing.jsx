@@ -101,12 +101,14 @@ class Indexing extends React.Component {
       method: 'PUT',
       customHeaders: { 'Content-Type': 'application/json' },
       body: thisPointer.state.uploadedFile,
-    }, 7000).then(() => {
+    }, 700000).then(() => {
       thisPointer.setState({
         indexingFilesPopupMessage: 'Preparing indexing job...',
       });
-      return thisPointer.retrievePresignedURLForDownload(0, 10);
-    }).catch(() => {
+      return thisPointer.retrievePresignedURLForDownload(0, 150);
+    }).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.log(err);
       thisPointer.setState({
         indexingFilesStatus: 'error',
         indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
@@ -134,7 +136,7 @@ class Indexing extends React.Component {
         thisPointer.setState({
           indexingFilesStatus: 'error',
           indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
-          indexingFilesPopupMessage: `There was a problem uploading the indexing file to s3 (${response.status})`,
+          indexingFilesPopupMessage: `There was a problem uploading the indexing file to s3 (${response.status}). The upload timed out.`,
           indexFilesButtonEnabled: false,
         });
         return;
@@ -228,11 +230,13 @@ class Indexing extends React.Component {
         thisPointer.retrieveJobOutput(uid).then((resp) => {
           if (resp.data && resp.data.output) {
             const logsLink = resp.data.output.split(' ')[0];
+            const manifestLink = resp.data.output.split(' ')[1];
             thisPointer.setState({
               indexingFilesStatus: 'success',
               indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
               indexingFilesPopupMessage: 'Done',
               indexingFilesLogsLink: logsLink,
+              indexingFilesManifestLink: manifestLink,
             });
           } else {
             thisPointer.setState({
@@ -266,9 +270,11 @@ class Indexing extends React.Component {
         thisPointer.retrieveJobOutput(uid).then(
           (resp) => {
             if (resp.data && resp.data.output) {
-              const logsLink = resp.data.output.split(' ')[0];
+              const manifestLink = resp.data.output.split(' ')[0];
+              const logsLink = resp.data.output.split(' ')[1];
               thisPointer.setState({
-                downloadManifestLink: logsLink,
+                downloadManifestLogsLink: logsLink,
+                downloadManifestManifestLink: manifestLink,
                 downloadManifestStatus: 'success',
                 downloadManifestPopupMessage: 'Done',
                 downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
@@ -277,7 +283,7 @@ class Indexing extends React.Component {
               thisPointer.setState({
                 downloadManifestStatus: 'error',
                 downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
-                downloadManifestPopupMessage: 'The indexing job was dispatched, but failed to process the input file.',
+                downloadManifestPopupMessage: 'The manifest generation job was dispatched, but failed to produce output.',
               });
             }
           });
@@ -285,7 +291,7 @@ class Indexing extends React.Component {
       } else if (response.data && response.data.status === 'Failed') {
         thisPointer.setState({
           downloadManifestStatus: 'error',
-          downloadManifestPopupMessage: 'The manifest generation job was dispatched, but failed to process the input file.',
+          downloadManifestPopupMessage: 'The manifest generation job was dispatched, but failed to produce output.',
           downloadManifestStatusLastUpdated: thisPointer.getCurrentTime(),
         });
         return;
@@ -423,6 +429,23 @@ class Indexing extends React.Component {
       running: downloadManifestRunningPopupBlock,
     };
 
+    const downloadManifestSuccessButtons = [];
+    if (this.state.downloadManifestLogsLink) {
+      downloadManifestSuccessButtons.push({
+        caption: 'Download Logs',
+        icon: 'download',
+        value: this.state.downloadManifestLogsLink,
+        fn: () => this.downloadJobOutput(this.state.downloadManifestLogsLink),
+      });
+    }
+    downloadManifestSuccessButtons.push({
+      caption: 'Download Manifest',
+      icon: 'download',
+      value: this.state.downloadManifestManifestLink,
+      fn: () => this.downloadJobOutput(this.state.downloadManifestManifestLink),
+    });
+
+
     return (
       <div className='indexing-page'>
         <div>
@@ -470,6 +493,12 @@ class Indexing extends React.Component {
                         value: this.state.indexingFilesLogsLink,
                         fn: () => this.downloadJobOutput(this.state.indexingFilesLogsLink),
                       },
+                      {
+                        caption: 'Download Manifest',
+                        icon: 'download',
+                        value: this.state.indexingFilesManifestLink,
+                        fn: () => this.downloadJobOutput(this.state.indexingFilesManifestLink),
+                      },
                     ]}
                     onClose={() => this.onHidePopup()}
                   >
@@ -487,14 +516,7 @@ class Indexing extends React.Component {
                         caption: 'Cancel',
                         fn: () => this.onHidePopup(),
                       },
-                    ] : [
-                      {
-                        caption: 'Download Manifest',
-                        icon: 'download',
-                        value: this.state.downloadManifestLink,
-                        fn: () => this.downloadJobOutput(this.state.downloadManifestLink),
-                      },
-                    ]}
+                    ] : downloadManifestSuccessButtons}
                     onClose={() => this.onHidePopup()}
                   >
                     { downloadManifestPopupBlocks[this.state.downloadManifestStatus] }

@@ -68,6 +68,7 @@
           "label": "Run analysis"
         }
       ],
+      "homepageChartNodesChunkSize": 14,
       "homepageChartNodes": [
         {
           "node": "subject",
