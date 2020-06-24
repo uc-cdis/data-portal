@@ -124,7 +124,12 @@ class IllinoisMapChart extends React.Component {
     event.features.forEach((feature) => {
       if (feature.layer.id === 'confirmed-choropleth') {
         const title = `${feature.properties.county}, ${feature.properties.province_state}`;
-        this.props.fetchTimeSeriesData('county', feature.properties.FIPS, title);
+        this.props.fetchTimeSeriesData(
+          'county',
+          feature.properties.FIPS,
+          title,
+          modeledCountiesFIPS.includes(feature.properties.FIPS),
+        );
       }
     });
   }

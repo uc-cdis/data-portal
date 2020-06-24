@@ -51,25 +51,31 @@ class ChartCarousel extends PureComponent {
     this.props.chartsConfig.forEach((chartConfig, i) => {
       // make sure the chart data is available as prop
       if (!(chartConfig.prop in this.props)) {
-        console.error(`ChartCarousel is missing '${chartConfig.prop}' prop configured in chartsConfig`); // eslint-disable-line no-console
+        console.error(`ChartCarousel is missing '${chartConfig.prop}' prop found in configuration`); // eslint-disable-line no-console
         return;
       }
 
       // generate the chart
       let chart = null;
-      if (chartConfig.type === 'image') {
+      const plotChartConfig = { ...chartConfig, plots: this.props[chartConfig.prop] };
+      switch (chartConfig.type) {
+      case 'component':
+        chart = this.props[chartConfig.prop];
+        break;
+      case 'image':
         chart = (<img
           className='chart-carousel__image'
           src={dataUrl + this.props[chartConfig.prop]}
           alt={`Chart${chartConfig.title ? ` for ${chartConfig.title}` : ''}`}
         />);
-      } else if (chartConfig.type === 'lineChart') {
-        const config = { ...chartConfig, plots: this.props[chartConfig.prop] };
-        chart = Object.keys(config.plots).length > 0 ?
-          <PlotChart {...config} />
+        break;
+      case 'lineChart':
+        chart = Object.keys(plotChartConfig.plots).length > 0 ?
+          <PlotChart {...plotChartConfig} />
           : null;
-      } else {
-        console.error(`ChartCarousel cannot handle '${chartConfig.type}' chart type configured in chartsConfig`); // eslint-disable-line no-console
+        break;
+      default:
+        console.error(`ChartCarousel cannot handle '${chartConfig.type}' chart type found in configuration`); // eslint-disable-line no-console
       }
 
       // if the chart data is not loaded yet, do not display an empty chart
@@ -77,33 +83,62 @@ class ChartCarousel extends PureComponent {
         return;
       }
 
+      // TODO: description scrollbar
+      const showDescriptionColumn = this.props.isInPopup && (
+        chartConfig.title || chartConfig.description
+      );
       const chartContainer = (<div
         key={0}
         onMouseOver={() => this.onChartHover(i)}
         onMouseOut={() => this.onChartHover(null)}
       >
-        {chart}
+        <div className={showDescriptionColumn ? 'chart-carousel__left-column' : ''}>
+          {chart}
+        </div>
+        { showDescriptionColumn &&
+          <div className='chart-carousel__description'>
+            <h3>
+              {chartConfig.title}
+            </h3>
+            <p>
+              {chartConfig.description}
+            </p>
+          </div>
+        }
       </div>);
       charts.push(chartContainer);
     });
+
+    const showDescriptionHover = !this.props.isInPopup &&
+      this.state.hoveredChartId !== null &&
+      (
+        this.props.chartsConfig[this.state.hoveredChartId].title
+        || this.props.chartsConfig[this.state.hoveredChartId].description
+      );
 
     return (
       charts.length > 0 ?
         <div>
           <div
-            className='chart-carousel__container'
+            className={`chart-carousel__container ${this.props.isInPopup ? '' : 'chart-carousel__container-border'}`}
             ref={this.containerRef}
+            // match the popup width...
+            style={this.props.isInPopup ? { width: '70vw' } : {}}
           >
             <Slider {...sliderSettings}>
               {charts}
             </Slider>
           </div>
 
-          { this.state.hoveredChartId !== null &&
-          <div className='chart-carousel__hover' style={{ top: this.state.hoverYPosition }} >
-            <h3>{this.props.chartsConfig[this.state.hoveredChartId].title}</h3>
-            <p>{this.props.chartsConfig[this.state.hoveredChartId].description}</p>
-          </div>
+          { showDescriptionHover &&
+            <div className='chart-carousel__hover' style={{ top: this.state.hoverYPosition }} >
+              <h3>
+                {this.props.chartsConfig[this.state.hoveredChartId].title}
+              </h3>
+              <p>
+                {this.props.chartsConfig[this.state.hoveredChartId].description}
+              </p>
+            </div>
           }
         </div>
         : <Spinner />
@@ -113,6 +148,11 @@ class ChartCarousel extends PureComponent {
 
 ChartCarousel.propTypes = {
   chartsConfig: PropTypes.array.isRequired,
+  isInPopup: PropTypes.bool,
+};
+
+ChartCarousel.defaultProps = {
+  isInPopup: false,
 };
 
 export default ChartCarousel;

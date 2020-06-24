@@ -20,7 +20,10 @@ const covid19Dashboard = (state = {}, action) => {
     return {
       ...state,
       selectedLocationData: {
-        loading: false, title: action.title, data: action.contents,
+        loading: false,
+        title: action.title,
+        modeledCountyFips: action.modeledCountyFips,
+        data: action.contents,
       },
     };
   }

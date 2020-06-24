@@ -30,9 +30,9 @@ import './Covid19Dashboard.less';
 // |-----------------------------------|
 //
 // Config:
-// "covid19DashboardConfig": {
-//   "dataUrl": "",
-//   "chartsConfig": { <tab ID>: [ <carousel 1 config>, <carousel 2 config> ] }
+// 'covid19DashboardConfig': {
+//   'dataUrl': '',
+//   'chartsConfig': { <tab ID>: [ <carousel 1 config>, <carousel 2 config> ] }
 //       where each carousel config = [ <chart 1 config>, <chart 2 config> ]
 //       and each chart configuration = {
 //         title (str),
@@ -135,13 +135,13 @@ class Covid19Dashboard extends React.Component {
     return { confirmedCount, deathsCount, recoveredCount };
   }
 
-  formatSelectedLocationData = () => {
+  formatLocationTimeSeriesData = () => {
     const maxes = { confirmed: 0, deaths: 0, recovered: 0 };
     let sortedData = Object.keys(this.props.selectedLocationData.data).map((date) => {
       const values = {};
       ['confirmed', 'deaths', 'recovered'].forEach((field) => {
         let val = this.props.selectedLocationData.data[date][field];
-        if (typeof val !== 'number') val = 0; // "<5" -> 0
+        if (typeof val !== 'number') val = 0; // '<5' -> 0
         maxes[field] = Math.max(maxes[field], val);
         values[field] = val;
       });
@@ -151,9 +151,84 @@ class Covid19Dashboard extends React.Component {
     return { data: sortedData, maxes };
   }
 
+  renderLocationPopupContents = () => {
+    const locationPopupData = (this.props.selectedLocationData &&
+      !this.props.selectedLocationData.loading) ? this.formatLocationTimeSeriesData() : null;
+    const timeSeriesChart = locationPopupData ?
+      (<ResponsiveContainer>
+        <LineChart
+          data={locationPopupData.data}
+          margin={{
+            top: 5, right: 30, left: 20, bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray='3 3' />
+          <XAxis
+            dataKey='date'
+            tick={<CustomizedXAxisTick />}
+            interval={1}
+          />
+          <YAxis
+            type='number'
+            domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
+            tickFormatter={val => numberWithCommas(val)}
+          />
+          <Tooltip content={this.renderLocationPopupTooltip} />
+          <Legend />
+
+          <Line type='monotone' dataKey='confirmed' stroke='#8884d8' dot={false} />
+          { locationPopupData.maxes.recovered &&
+            <Line type='monotone' dataKey='recovered' stroke='#00B957' dot={false} />
+          }
+          <Line type='monotone' dataKey='deaths' stroke='#aa5e79' dot={false} />
+        </LineChart>
+      </ResponsiveContainer>)
+      : <Spinner />;
+
+    const modeledCountyFips = this.props.selectedLocationData ?
+      this.props.selectedLocationData.modeledCountyFips : null;
+
+    // no additional charts for this location: do not render a carousel
+    if (!modeledCountyFips) {
+      return timeSeriesChart;
+    }
+
+    const imgProps = {
+      imgCases: `bayes-by-county/${modeledCountyFips}/cases.png`,
+      imgCasesForecast: `bayes-by-county/${modeledCountyFips}/casesForecast.png`,
+      imgDeaths: `bayes-by-county/${modeledCountyFips}/deaths.png`,
+      imgDeathsForecast: `bayes-by-county/${modeledCountyFips}/deathsForecast.png`,
+      imgRt: `bayes-by-county/${modeledCountyFips}/Rt.png`,
+    };
+    const imgMetadata = covid19DashboardConfig.chartsConfig.simulations || {};
+
+    let carouselChartsConfig = [
+      {
+        type: 'component',
+        prop: 'timeSeriesChart',
+      },
+    ];
+    carouselChartsConfig = carouselChartsConfig.concat(
+      Object.keys(imgProps).map(propName => ({
+        type: 'image',
+        prop: propName,
+        title: (imgMetadata[propName] && imgMetadata[propName].title) || null,
+        description: (imgMetadata[propName] && imgMetadata[propName].description) || null,
+      })),
+    );
+
+    const popupCarousel = (<ChartCarousel
+      chartsConfig={carouselChartsConfig}
+      isInPopup
+      timeSeriesChart={timeSeriesChart}
+      {...imgProps}
+    />);
+    return popupCarousel;
+  }
+
   renderLocationPopupTooltip = (props) => {
     // we use the raw `selectedLocationData` values instead of the values in
-    // `props`, because the data is tranformed in `formatSelectedLocationData`
+    // `props` because the data is tranformed in `formatLocationTimeSeriesData`
     // to replace strings with zeros, but we want the tooltip to show the
     // original string value.
     const rawDate = props.label;
@@ -188,58 +263,27 @@ class Covid19Dashboard extends React.Component {
   render() {
     const chartsConfig = covid19DashboardConfig.chartsConfig || {};
 
-    const locationPopupData = (this.props.selectedLocationData &&
-      !this.props.selectedLocationData.loading) ? this.formatSelectedLocationData() : null;
-    const locationPopupContents = locationPopupData ?
-      (<ResponsiveContainer>
-        <LineChart
-          data={locationPopupData.data}
-          margin={{
-            top: 5, right: 30, left: 20, bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray='3 3' />
-          <XAxis
-            dataKey='date'
-            tick={<CustomizedXAxisTick />}
-            interval={1}
-          />
-          <YAxis
-            type='number'
-            domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
-            tickFormatter={val => numberWithCommas(val)}
-          />
-          <Tooltip content={this.renderLocationPopupTooltip} />
-          <Legend />
-
-          <Line type='monotone' dataKey='confirmed' stroke='#8884d8' dot={false} />
-          { locationPopupData.maxes.recovered &&
-            <Line type='monotone' dataKey='recovered' stroke='#00B957' dot={false} />
-          }
-          <Line type='monotone' dataKey='deaths' stroke='#aa5e79' dot={false} />
-        </LineChart>
-      </ResponsiveContainer>)
-      : <Spinner />;
-
     const {
       confirmedCount, deathsCount, recoveredCount,
     } = this.getTotalCounts();
 
-    const displaySeirPlot = Object.keys(this.props.seirObservedChartData).length > 0
-      && Object.keys(this.props.seirSimulatedChartData).length > 0;
-    const seirChartData = displaySeirPlot ? [
-      {
-        data: this.props.seirObservedChartData,
-        name: 'Observed Cases',
-      },
-      {
-        data: this.props.seirSimulatedChartData,
-        name: 'Simulated Cases',
-      },
-    ] : [];
+    // SEIR chart not used for now
+    // const displaySeirPlot = Object.keys(this.props.seirObservedChartData).length > 0
+    //   && Object.keys(this.props.seirSimulatedChartData).length > 0;
+    // const seirChartData = displaySeirPlot ? [
+    //   {
+    //     data: this.props.seirObservedChartData,
+    //     name: 'Observed Cases',
+    //   },
+    //   {
+    //     data: this.props.seirSimulatedChartData,
+    //     name: 'Simulated Cases',
+    //   },
+    // ] : [];
 
     return (
       <div className='covid19-dashboard'>
+        {/* dashboard tabs */}
         <div>
           <Tabs>
             <TabList className='covid19-dashboard_tablist'>
@@ -272,7 +316,7 @@ class Covid19Dashboard extends React.Component {
                       (<ChartCarousel
                         key={i}
                         chartsConfig={carouselConfig}
-                        seirChartData={seirChartData} // not used for now
+                        // seirChartData={seirChartData} // not used for now
                         {...imageLocations}
                         {...this.props}
                       />),
@@ -322,13 +366,15 @@ class Covid19Dashboard extends React.Component {
             </TabPanel>
           </Tabs>
         </div>
+
+        {/* popup when click on a location */}
         {
           this.props.selectedLocationData ?
             <Popup
               title={this.props.selectedLocationData.title}
               onClose={() => this.props.closeLocationPopup()}
             >
-              {locationPopupContents}
+              {this.renderLocationPopupContents()}
             </Popup>
             : null
         }

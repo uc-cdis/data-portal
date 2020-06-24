@@ -52,7 +52,7 @@ const fetchDashboardData = (propName, filePath) => {
     .then(msg => dispatch(msg));
 };
 
-const fetchTimeSeriesData = (dataLevel, locationId, title) => {
+const fetchTimeSeriesData = (dataLevel, locationId, title, withSimulation) => {
   const url = `${dataUrl}time_series/${dataLevel}/${locationId}.json`;
   return (dispatch) => {
     dispatch(
@@ -76,6 +76,7 @@ const fetchTimeSeriesData = (dataLevel, locationId, title) => {
       .then(data => ({
         type: 'RECEIVE_TIME_SERIES_DATA',
         title,
+        modeledCountyFips: withSimulation ? locationId : null,
         contents: JSON.parse(data),
       }),
       )
@@ -95,9 +96,10 @@ const mapDispatchToProps = dispatch => ({
   fetchDashboardData: (propName, filePath) => dispatch(
     fetchDashboardData(propName, filePath),
   ),
-  fetchTimeSeriesData: (dataLevel, locationId, title) => dispatch(
-    fetchTimeSeriesData(dataLevel, locationId, title),
-  ),
+  fetchTimeSeriesData: (dataLevel, locationId, title, withSimulation = false) =>
+    dispatch(
+      fetchTimeSeriesData(dataLevel, locationId, title, withSimulation),
+    ),
   closeLocationPopup: () => dispatch(
     closeLocationPopup(),
   ),
