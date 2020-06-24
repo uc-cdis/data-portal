@@ -155,7 +155,7 @@ function buildConfig(opts) {
   }
 
   let homepageChartNodesChunkSize = 15;
-  if(components.index.homepageChartNodesChunkSize) {
+  if (components.index.homepageChartNodesChunkSize) {
     homepageChartNodesChunkSize = components.index.homepageChartNodesChunkSize;
   }
 
