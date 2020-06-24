@@ -46,12 +46,13 @@ import './Covid19Dashboard.less';
 
 
 /* To fetch new data:
-- add the prop name and location to `dashboardDataLocations` or `imageLocations`;
+- add the prop name and location to `dashboardDataLocations` or `dashboardImageLocations`;
 - add the prop to Covid19Dashboard.propTypes;
 - add it to ReduxCovid19Dashboard.handleDashboardData();
 - add it to covid19DashboardConfig.chartsConfig in the relevant chart's config.
 */
 const dashboardDataLocations = {
+  modeledFipsList: 'bayes-by-county/CountyCodeList.txt',
   jhuGeojsonLatest: 'map_data/jhu_geojson_latest.json',
   jhuJsonByLevelLatest: 'map_data/jhu_json_by_level_latest.json',
   top10ChartData: 'top10.txt',
@@ -59,26 +60,8 @@ const dashboardDataLocations = {
   seirSimulatedChartData: 'simulated_cases.txt',
   idphDailyChartData: 'idph_daily.txt',
 };
-const imageLocations = {
+const dashboardImageLocations = {
   imgRtAll: 'bayes-by-county/Rt_All.png',
-  // Cook county
-  imgCookCases: 'bayes-by-county/17031/cases.png',
-  imgCookCasesForecast: 'bayes-by-county/17031/casesForecast.png',
-  imgCookDeaths: 'bayes-by-county/17031/deaths.png',
-  imgCookDeathsForecast: 'bayes-by-county/17031/deathsForecast.png',
-  imgCookRt: 'bayes-by-county/17031/Rt.png',
-  // Lake county
-  imgLakeCases: 'bayes-by-county/17097/cases.png',
-  imgLakeCasesForecast: 'bayes-by-county/17097/casesForecast.png',
-  imgLakeDeaths: 'bayes-by-county/17097/deaths.png',
-  imgLakeDeathsForecast: 'bayes-by-county/17097/deathsForecast.png',
-  imgLakeRt: 'bayes-by-county/17097/Rt.png',
-  // DuPage county
-  imgDuPageCases: 'bayes-by-county/17043/cases.png',
-  imgDuPageCasesForecast: 'bayes-by-county/17043/casesForecast.png',
-  imgDuPageDeaths: 'bayes-by-county/17043/deaths.png',
-  imgDuPageDeathsForecast: 'bayes-by-county/17043/deathsForecast.png',
-  imgDuPageRt: 'bayes-by-county/17043/Rt.png',
 };
 
 class Covid19Dashboard extends React.Component {
@@ -307,6 +290,7 @@ class Covid19Dashboard extends React.Component {
                 { mapboxAPIToken &&
                   <IllinoisMapChart
                     jsonByLevel={this.props.jhuJsonByLevelLatest}
+                    modeledFipsList={this.props.modeledFipsList}
                     fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                   />
                 }
@@ -317,7 +301,7 @@ class Covid19Dashboard extends React.Component {
                         key={i}
                         chartsConfig={carouselConfig}
                         // seirChartData={seirChartData} // not used for now
-                        {...imageLocations}
+                        {...dashboardImageLocations}
                         {...this.props}
                       />),
                     )}
@@ -356,7 +340,7 @@ class Covid19Dashboard extends React.Component {
                       (<ChartCarousel
                         key={i}
                         chartsConfig={carouselConfig}
-                        {...imageLocations}
+                        {...dashboardImageLocations}
                         {...this.props}
                       />),
                     )}
@@ -408,6 +392,7 @@ class CustomizedXAxisTick extends React.Component { // eslint-disable-line react
 Covid19Dashboard.propTypes = {
   fetchDashboardData: PropTypes.func.isRequired,
   fetchTimeSeriesData: PropTypes.func.isRequired,
+  modeledFipsList: PropTypes.array,
   jhuGeojsonLatest: PropTypes.object,
   jhuJsonByLevelLatest: PropTypes.object,
   selectedLocationData: PropTypes.object,
@@ -419,6 +404,7 @@ Covid19Dashboard.propTypes = {
 };
 
 Covid19Dashboard.defaultProps = {
+  modeledFipsList: [],
   jhuGeojsonLatest: { type: 'FeatureCollection', features: [] },
   jhuJsonByLevelLatest: { country: {}, state: {}, county: {} },
   selectedLocationData: null,

@@ -66,3 +66,15 @@ export async function readMultiColumnTSV(tsvData) {
     name: key,
   }));
 }
+
+export function readQuotedList(data) {
+  // The data is a list of county FIPS surrounded by double quotes, such as:
+  //   "17031"
+  //   "17043"
+  //   "17097"
+  // This function takes this input and return a list of FIPS as strings:
+  //   ['17031', '17043', '17097']
+  return data.split('\n')
+    .map(s => s.replace(/"/g, ''))
+    .filter(s => !!s);
+}

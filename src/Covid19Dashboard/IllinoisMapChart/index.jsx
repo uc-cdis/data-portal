@@ -8,9 +8,6 @@ import ControlPanel from '../ControlPanel';
 import { numberWithCommas } from '../dataUtils.js';
 import countyData from '../data/us_counties';
 
-// TODO get this data from the bucket instead
-const modeledCountiesFIPS = ['17031', '17097', '17043'];
-
 function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
   // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
@@ -128,7 +125,7 @@ class IllinoisMapChart extends React.Component {
           'county',
           feature.properties.FIPS,
           title,
-          modeledCountiesFIPS.includes(feature.properties.FIPS),
+          this.props.modeledFipsList.includes(feature.properties.FIPS),
         );
       }
     });
@@ -159,7 +156,7 @@ class IllinoisMapChart extends React.Component {
               )
             }
             {
-              modeledCountiesFIPS.includes(hoverInfo.FIPS) &&
+              this.props.modeledFipsList.includes(hoverInfo.FIPS) &&
               <p className='covid19-dashboard__location-info__simulation'>
                 {'Simulation available in\nright panel'}
               </p>
@@ -180,7 +177,7 @@ class IllinoisMapChart extends React.Component {
         this.props.jsonByLevel.county,
       );
     }
-    const modeledCountyGeoJson = filterCountyGeoJson(modeledCountiesFIPS);
+    const modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
 
     const colors = {
       0: '#FFF',
@@ -260,6 +257,7 @@ class IllinoisMapChart extends React.Component {
 
 IllinoisMapChart.propTypes = {
   jsonByLevel: PropTypes.object.isRequired,
+  modeledFipsList: PropTypes.array.isRequired,
   fetchTimeSeriesData: PropTypes.func.isRequired,
 };
 

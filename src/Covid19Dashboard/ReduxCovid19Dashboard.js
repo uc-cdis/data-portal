@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import Covid19Dashboard from '../Covid19Dashboard';
 
 import { covid19DashboardConfig } from '../localconf';
-import { readSingleColumnTSV, readMultiColumnTSV } from './dataUtils.js';
+import { readSingleColumnTSV, readMultiColumnTSV, readQuotedList } from './dataUtils.js';
 
 
 let dataUrl = covid19DashboardConfig.dataUrl;
@@ -11,6 +11,8 @@ dataUrl = !dataUrl.endsWith('/') ? `${dataUrl}/` : dataUrl;
 
 async function handleDashboardData(propName, data) {
   switch (propName) {
+  case 'modeledFipsList':
+    return readQuotedList(data);
   case 'jhuGeojsonLatest':
   case 'jhuJsonByLevelLatest':
     return JSON.parse(data);
