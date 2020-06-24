@@ -32,16 +32,21 @@ import './Covid19Dashboard.less';
 // Config:
 // 'covid19DashboardConfig': {
 //   'dataUrl': '',
-//   'chartsConfig': { <tab ID>: [ <carousel 1 config>, <carousel 2 config> ] }
-//       where each carousel config = [ <chart 1 config>, <chart 2 config> ]
-//       and each chart configuration = {
-//         title (str),
-//         description (str, optional),
-//         xTitle (str, optional),
-//         yTitle (str, optional),
-//         type (str): one of [lineChart, image],
-//         prop (str): property name for the chart data, as hardcoded below
-//       }
+//   'chartsConfig': {
+//     <tab ID>: [ <carousel 1 config>, <carousel 2 config> ],
+//     'simulations': {
+//       <prop name>: { title (str, optional), description (str, optional) }
+//     }
+//   }
+//   where each carousel config = [ <chart 1 config>, <chart 2 config> ]
+//   and each chart configuration = {
+//     title (str),
+//     description (str, optional),
+//     xTitle (str, optional),
+//     yTitle (str, optional),
+//     type (str): one of [lineChart, image],
+//     prop (str): property name for the chart data, as hardcoded below
+//   }
 // },
 
 

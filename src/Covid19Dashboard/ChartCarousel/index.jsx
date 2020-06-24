@@ -92,7 +92,9 @@ class ChartCarousel extends PureComponent {
         onMouseOver={() => this.onChartHover(i)}
         onMouseOut={() => this.onChartHover(null)}
       >
-        <div className={showDescriptionColumn ? 'chart-carousel__left-column' : ''}>
+        <div
+          className={`${this.props.isInPopup ? 'chart-carousel__popup-chart' : null} ${showDescriptionColumn ? 'chart-carousel__left-column' : ''}`}
+        >
           {chart}
         </div>
         { showDescriptionColumn &&
