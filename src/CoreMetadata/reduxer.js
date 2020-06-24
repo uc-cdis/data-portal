@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import CoreMetadataHeader from './CoreMetadataHeader';
 import FileTypePicture from '../components/FileTypePicture';
 import CoreMetadataTable from './CoreMetadataTable';
+import CoreMetadataPage from './page';
 import { coreMetadataPath, userapiPath } from '../localconf';
 import { fetchWithCreds, updatePopup } from '../actions';
 
@@ -96,4 +97,12 @@ export const ReduxCoreMetadataTable = (() => {
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(CoreMetadataTable);
+})();
+
+export const ReduxCoreMetadataPage = (() => {
+  const mapStateToProps = state => ({
+    error: state.coreMetadata.error,
+  });
+
+  return connect(mapStateToProps)(CoreMetadataPage);
 })();
