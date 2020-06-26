@@ -155,14 +155,8 @@ class IllinoisMapChart extends React.Component {
                 (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>,
               )
             }
-            {
-              this.props.modeledFipsList.includes(hoverInfo.FIPS) &&
-              <p className='covid19-dashboard__location-info__simulation'>
-                {'Simulation available in\nright panel'}
-              </p>
-            }
             <p className='covid19-dashboard__location-info__click'>
-              Click for real time plotting
+              Click for real time plotting {this.props.modeledFipsList.includes(hoverInfo.FIPS) ? '\nand simulations' : ''}
             </p>
           </div>
         </ReactMapGL.Popup>
