@@ -49,8 +49,10 @@ class ChartCarousel extends PureComponent {
 
     const charts = [];
     this.props.chartsConfig.forEach((chartConfig, i) => {
+      const hasImagePath = chartConfig.type === 'image' && chartConfig.path;
+
       // make sure the chart data is available as prop
-      if (!(chartConfig.prop in this.props)) {
+      if (!(chartConfig.prop in this.props) && !hasImagePath) {
         console.error(`ChartCarousel is missing '${chartConfig.prop}' prop found in configuration`); // eslint-disable-line no-console
         return;
       }
@@ -65,7 +67,7 @@ class ChartCarousel extends PureComponent {
       case 'image':
         chart = (<img
           className='chart-carousel__image'
-          src={dataUrl + this.props[chartConfig.prop]}
+          src={dataUrl + (hasImagePath ? chartConfig.path : this.props[chartConfig.prop])}
           alt={`Chart${chartConfig.title ? ` for ${chartConfig.title}` : ''}`}
         />);
         break;

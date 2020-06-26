@@ -46,12 +46,13 @@ import './Covid19Dashboard.less';
 //     yTitle (str, optional),
 //     type (str): one of [lineChart, image],
 //     prop (str): property name for the chart data, as hardcoded below
+//     path (str, optional): if type==image, path can specified instead of prop
 //   }
 // },
 
 
 /* To fetch new data:
-- add the prop name and location to `dashboardDataLocations` or `dashboardImageLocations`;
+- add the prop name and location to `dashboardDataLocations`;
 - add the prop to Covid19Dashboard.propTypes;
 - add it to ReduxCovid19Dashboard.handleDashboardData();
 - add it to covid19DashboardConfig.chartsConfig in the relevant chart's config.
@@ -64,9 +65,6 @@ const dashboardDataLocations = {
   seirObservedChartData: 'observed_cases.txt',
   seirSimulatedChartData: 'simulated_cases.txt',
   idphDailyChartData: 'idph_daily.txt',
-};
-const dashboardImageLocations = {
-  imgRtAll: 'bayes-by-county/Rt_All.png',
 };
 
 class Covid19Dashboard extends React.Component {
@@ -305,8 +303,7 @@ class Covid19Dashboard extends React.Component {
                       (<ChartCarousel
                         key={i}
                         chartsConfig={carouselConfig}
-                        // seirChartData={seirChartData} // not used for now
-                        {...dashboardImageLocations}
+                        // seirChartData={seirChartData} // not used for no
                         {...this.props}
                       />),
                     )}
@@ -345,7 +342,6 @@ class Covid19Dashboard extends React.Component {
                       (<ChartCarousel
                         key={i}
                         chartsConfig={carouselConfig}
-                        {...dashboardImageLocations}
                         {...this.props}
                       />),
                     )}
