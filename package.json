@@ -11,7 +11,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.0",
     "@gen3/guppy": "git+https://github.com/uc-cdis/guppy.git#feat/new-ui-lib",
-    "@gen3/ui-component": "^0.5.2",
+    "@gen3/ui-component": "git+https://github.com/uc-cdis/gen3-ui-component.git#fix/dd-css",
     "@storybook/addon-actions": "^5.0.0",
     "@storybook/react": "^5.0.0",
     "brace": "^0.10.0",
