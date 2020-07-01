@@ -16,6 +16,10 @@ const escapeReturnChar = (str, newlineClassName) => {
 };
 
 const addHighlightingSpans = (str, indices, spanClassName) => {
+  if (typeof str !== 'string') {
+    str = String(str);
+  }
+
   let cursor = 0;
   let currentIndices = 0;
   const resultFragments = [];
