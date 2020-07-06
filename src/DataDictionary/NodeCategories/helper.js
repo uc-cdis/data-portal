@@ -108,7 +108,7 @@ export const getCategoryIconSVG = (category) => {
   // look for a category name that's a suffix of
   // the category we're looking for
   const suffixCategory = Object.keys(nodeCategoryDict).find(
-    key => category.endsWith(key),
+    key => category && category.endsWith(key),
   );
   if (suffixCategory) {
     return nodeCategoryDict[suffixCategory].icon;
@@ -125,7 +125,7 @@ export const getCategoryColor = (category) => {
   // look for a category name that's a suffix of
   // the category we're looking for
   const suffixCategory = Object.keys(nodeCategoryDict).find(
-    key => category.endsWith(key),
+    key => category && category.endsWith(key),
   );
   if (suffixCategory) {
     return nodeCategoryDict[suffixCategory].color;
