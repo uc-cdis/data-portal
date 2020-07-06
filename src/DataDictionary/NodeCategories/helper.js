@@ -1,3 +1,5 @@
+import * as d3 from 'd3-scale';
+
 import IconAdministrative from './icons/icon_administrative.svg';
 import IconAnalysis from './icons/icon_analysis.svg';
 import IconBiospecimen from './icons/icon_biospecimen.svg';
@@ -74,6 +76,22 @@ const nodeCategoryDict = {
   study_administration: {
     icon: IconStudyAdministration,
     color: '#733EA3',
+  },
+  satellite: {
+    icon: IconDefault,
+    color: d3.schemeCategory20[11],
+  },
+  radar: {
+    icon: IconDefault,
+    color: d3.schemeCategory20[16],
+  },
+  stream_gauge: {
+    icon: IconDefault,
+    color: d3.schemeCategory20[19],
+  },
+  weather_station: {
+    icon: IconDefault,
+    color: d3.schemeCategory20[10],
   },
 };
 
