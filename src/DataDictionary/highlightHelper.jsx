@@ -16,6 +16,11 @@ const escapeReturnChar = (str, newlineClassName) => {
 };
 
 const addHighlightingSpans = (str, indices, spanClassName) => {
+  if (typeof str !== 'string') {
+    // non-string `str` should not happen, but don't crash if it does
+    str = String(str); // eslint-disable-line no-param-reassign
+  }
+
   let cursor = 0;
   let currentIndices = 0;
   const resultFragments = [];
