@@ -1,3 +1,5 @@
+import { schemeCategory20 } from 'd3-scale';
+
 import IconAdministrative from './icons/icon_administrative.svg';
 import IconAnalysis from './icons/icon_analysis.svg';
 import IconBiospecimen from './icons/icon_biospecimen.svg';
@@ -14,7 +16,7 @@ import IconSubjectCharacteristics from './icons/icon_subject_characteristics.svg
 import IconImaging from './icons/icon_imaging.svg';
 import IconStudyAdministration from './icons/icon_study_administration.svg';
 
-const nodeCategoryList = {
+const nodeCategoryDict = {
   clinical: {
     icon: IconClinical,
     color: '#05B8EE',
@@ -75,6 +77,22 @@ const nodeCategoryList = {
     icon: IconStudyAdministration,
     color: '#733EA3',
   },
+  satellite: {
+    icon: IconDefault,
+    color: schemeCategory20[11],
+  },
+  radar: {
+    icon: IconDefault,
+    color: schemeCategory20[16],
+  },
+  stream_gauge: {
+    icon: IconDefault,
+    color: schemeCategory20[19],
+  },
+  weather_station: {
+    icon: IconDefault,
+    color: schemeCategory20[10],
+  },
 };
 
 const defaultCategory = {
@@ -83,16 +101,34 @@ const defaultCategory = {
 };
 
 export const getCategoryIconSVG = (category) => {
-  if (nodeCategoryList[category]) {
-    return nodeCategoryList[category].icon;
+  if (nodeCategoryDict[category]) {
+    return nodeCategoryDict[category].icon;
+  }
+
+  // look for a category name that's a suffix of
+  // the category we're looking for
+  const suffixCategory = Object.keys(nodeCategoryDict).find(
+    key => category && category.endsWith(key),
+  );
+  if (suffixCategory) {
+    return nodeCategoryDict[suffixCategory].icon;
   }
 
   return defaultCategory.icon;
 };
 
 export const getCategoryColor = (category) => {
-  if (nodeCategoryList[category]) {
-    return nodeCategoryList[category].color;
+  if (nodeCategoryDict[category]) {
+    return nodeCategoryDict[category].color;
+  }
+
+  // look for a category name that's a suffix of
+  // the category we're looking for
+  const suffixCategory = Object.keys(nodeCategoryDict).find(
+    key => category && category.endsWith(key),
+  );
+  if (suffixCategory) {
+    return nodeCategoryDict[suffixCategory].color;
   }
 
   return defaultCategory.color;

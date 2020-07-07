@@ -1,6 +1,8 @@
 {
   "explorer": {
     "filesMap": {
+      "aligned_reads_index": [],
+      "experimental_metadata": [],
       "slide_image": [],
       "submitted_aligned_reads": [
         {
@@ -389,6 +391,8 @@
       "submitted_unaligned_reads": []
     },
     "lastPageSizes": {
+      "aligned_reads_index": 0,
+      "experimental_metadata": 0,
       "slide_image": 0,
       "submitted_aligned_reads": 1,
       "submitted_copy_number": 0,
@@ -397,6 +401,8 @@
       "submitted_unaligned_reads": 0
     },
     "currentPages": {
+      "aligned_reads_index": 0,
+      "experimental_metadata": 0,
       "slide_image": 0,
       "submitted_aligned_reads": 0,
       "submitted_copy_number": 0,
@@ -405,6 +411,8 @@
       "submitted_unaligned_reads": 0
     },
     "cursors": {
+      "aligned_reads_index": 0,
+      "experimental_metadata": 0,
       "slide_image": 0,
       "submitted_aligned_reads": 21,
       "submitted_copy_number": 0,
@@ -413,6 +421,8 @@
       "submitted_unaligned_reads": 0
     },
     "queriedCursors": {
+      "aligned_reads_index": 0,
+      "experimental_metadata": 0,
       "slide_image": 0,
       "submitted_aligned_reads": 0,
       "submitted_copy_number": 0,
