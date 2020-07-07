@@ -53,8 +53,8 @@ export const listifyMethodsFromMapping = (actions) => {
 
 
 export const userHasDataUpload = (userAuthMapping = {}) => {
-  // data_upload policy is resource data_file, method file_upload, service fence
-  const actionIsFileUpload = x => x.method === 'file_upload' && x.service === 'fence';
+  // data_upload policy is resource data_file, method file_upload
+  const actionIsFileUpload = x => x.method === 'file_upload';
   const resource = userAuthMapping['/data_file'];
   return resource !== undefined && resource.some(actionIsFileUpload);
 };
