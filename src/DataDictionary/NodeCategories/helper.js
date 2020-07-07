@@ -1,4 +1,4 @@
-import * as d3 from 'd3-scale';
+import { schemeCategory20 } from 'd3-scale';
 
 import IconAdministrative from './icons/icon_administrative.svg';
 import IconAnalysis from './icons/icon_analysis.svg';
@@ -79,19 +79,19 @@ const nodeCategoryDict = {
   },
   satellite: {
     icon: IconDefault,
-    color: d3.schemeCategory20[11],
+    color: schemeCategory20[11],
   },
   radar: {
     icon: IconDefault,
-    color: d3.schemeCategory20[16],
+    color: schemeCategory20[16],
   },
   stream_gauge: {
     icon: IconDefault,
-    color: d3.schemeCategory20[19],
+    color: schemeCategory20[19],
   },
   weather_station: {
     icon: IconDefault,
-    color: d3.schemeCategory20[10],
+    color: schemeCategory20[10],
   },
 };
 
