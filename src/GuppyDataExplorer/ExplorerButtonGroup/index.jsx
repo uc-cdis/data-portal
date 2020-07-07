@@ -482,7 +482,7 @@ class ExplorerButtonGroup extends React.Component {
     }
     if (buttonConfig.type === 'export') {
       if (!this.props.buttonConfig.terraExportURL) {
-        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.');
+        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.'); // eslint-disable-line no-console
         return false;
       }
       // disable the terra export button if any of the
@@ -493,7 +493,7 @@ class ExplorerButtonGroup extends React.Component {
     }
     if (buttonConfig.type === 'export-to-seven-bridges') {
       if (!this.props.buttonConfig.sevenBridgesExportURL) {
-        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.');
+        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.'); // eslint-disable-line no-console
         return false;
       }
       // disable the seven bridges export buttons if any of the
