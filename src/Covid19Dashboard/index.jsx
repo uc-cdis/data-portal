@@ -181,9 +181,7 @@ class Covid19Dashboard extends React.Component {
 
     const imgProps = {
       imgCases: `bayes-by-county/${modeledCountyFips}/cases.png`,
-      imgCasesForecast: `bayes-by-county/${modeledCountyFips}/casesForecast.png`,
       imgDeaths: `bayes-by-county/${modeledCountyFips}/deaths.png`,
-      imgDeathsForecast: `bayes-by-county/${modeledCountyFips}/deathsForecast.png`,
       imgRt: `bayes-by-county/${modeledCountyFips}/Rt.png`,
     };
     const imgMetadata = covid19DashboardConfig.chartsConfig.simulations || {};
