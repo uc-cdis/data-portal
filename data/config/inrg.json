@@ -4,8 +4,8 @@
     "boardCounts": [
       {
         "graphql": "_inrg_count",
-        "name": "INRGs",
-        "plural": "INRGs"
+        "name": "Cases",
+        "plural": "Cases"
       },
       {
         "graphql": "_init_trials_count",
@@ -21,7 +21,7 @@
     "chartCounts": [
       {
         "graphql": "_inrg_count",
-        "name": "INRG"
+        "name": "Case"
       },
       {
         "graphql": "_init_trials_count",
@@ -132,7 +132,7 @@
       "subTitle": "search, compare, and download data",
       "text": "This website supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer.",
       "contact": "If you have any questions about access or the registration process, please contact ",
-      "email": "support@datacommons.io"
+      "email": "pcdc_root@lists.uchicago.edu"
     }
   },
   "featureFlags": {
@@ -140,33 +140,17 @@
   },
   "arrangerConfig": {
     "charts": {
-      "project": {
-        "chartType": "count",
-        "title": "Projects"
-      },
-      "study": {
-        "chartType": "count",
-        "title": "Studies"
-      },
-      "file_type": {
-        "chartType": "count",
-        "title": "File Types"
-      },
-      "ethnicity": {
+      "ETHNICITY": {
         "chartType": "stackedBar",
         "title": "Ethnicity"
       },
-      "gender": {
+      "SEX": {
         "chartType": "pie",
         "title": "Gender"
       },
-      "race": {
+      "RACE": {
         "chartType": "pie",
         "title": "Race"
-      },
-      "vital_status": {
-        "chartType": "bar",
-        "title": "Vital Status"
       }
     },
     "filters": {
@@ -174,23 +158,77 @@
         {
           "title": "Project",
           "fields": [
-            "project",
-            "study"
+            "AGE",
+            "SEX",
+            "ETHNICITY",
+            "project_id",
+            "region_name",
+            "YEAR",
+            "INIT_TREAT",
+            "INSS_STAGE",
+            "INRG_STG",
+            "EVANS_STAGE",
+            "MYCN",
+            "PLOIDY",
+            "DNA_INDEX",
+            "_11Q_UBAB",
+            "_1P_LOAB",
+            "_17Q_GAIN",
+            "ALK",
+            "FERRITIN",
+            "LDH",
+            "PRI_ADRE",
+            "PRI_ABDRET",
+            "PRI_NECK",
+            "PRI_THOR",
+            "PRI_PELV",
+            "PRI_OTH",
+            "MET_BM",
+            "MET_BONE",
+            "MET_DLN",
+            "MET_LIV",
+            "MET_SKIN",
+            "MET_LUNG",
+            "MET_CNS",
+            "MET_OTH",
+            "HIST",
+            "DIAG",
+            "GRADE",
+            "MKI",
+            "EFSCENS",
+            "EFSTIME",
+            "SCENS",
+            "STIME",
+            "CAUSE_OF_DEATH",
+            "RACE",
+            "REL_SITE_GEN",
+            "OTH_REL_SITE",
+            "SECOND_MALIG_CENS",
+            "SECOND_MALIG_TIME",
+            "SMN_MORPH_SNO",
+            "SMN_MORPH_ICD0",
+            "SMN_MORPH_TXT",
+            "SMN_TOP_SNO",
+            "SMN_TOP_ICD0",
+            "SMN_TOP_TXT"
           ]
         },
         {
-          "title": "Subject",
+          "title": "Age",
           "fields": [
-            "race",
-            "ethnicity",
-            "gender",
-            "vital_status"
+            "AGE"
           ]
         },
         {
-          "title": "File",
+          "title": "Sex",
           "fields": [
-            "file_type"
+            "SEX"
+          ]
+        },
+        {
+          "title": "Ethnicity",
+          "fields": [
+            "ETHNICITY"
           ]
         }
       ]
