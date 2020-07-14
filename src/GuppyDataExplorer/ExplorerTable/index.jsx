@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import get from 'lodash/get';
 import pluralize from 'pluralize';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
@@ -85,9 +85,9 @@ class ExplorerTable extends React.Component {
           const nestedChildFieldName = fieldStringsArray.slice(1, fieldStringsArray.length).join('.');
           // some logic to handle depends on wether the child field in raw data is an array or not
           if (Array.isArray(row.value)) {
-            valueStr = row.value.map(x => _.get(x, nestedChildFieldName)).join(', ');
+            valueStr = row.value.map(x => get(x, nestedChildFieldName)).join(', ');
           } else {
-            valueStr = _.get(row.value, nestedChildFieldName);
+            valueStr = get(row.value, nestedChildFieldName);
           }
           // for inner most detailed table, 1 value per row
           if (isDetailedColumn) {
@@ -98,7 +98,7 @@ class ExplorerTable extends React.Component {
                     <div className='rt-tr -odd' key={i}>
                       <div className='rt-td'>
                         <span>
-                          {_.get(element, nestedChildFieldName)}
+                          {get(element, nestedChildFieldName)}
                           <br />
                         </span>
                       </div>
@@ -107,7 +107,7 @@ class ExplorerTable extends React.Component {
                     <div className='rt-tr -even' key={i}>
                       <div className='rt-td'>
                         <span>
-                          {_.get(element, nestedChildFieldName)}
+                          {get(element, nestedChildFieldName)}
                           <br />
                         </span>
                       </div>
