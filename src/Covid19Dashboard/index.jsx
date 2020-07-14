@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import 'react-tabs/style/react-tabs.less';
 
-import { covid19DashboardConfig, mapboxAPIToken } from '../localconf';
+import {covid19DashboardConfig, mapboxAPIToken, auspiceUrl} from '../localconf';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
 import { numberWithCommas } from './dataUtils.js';
@@ -273,6 +273,7 @@ class Covid19Dashboard extends React.Component {
             <TabList className='covid19-dashboard_tablist'>
               <Tab>COVID-19 in Illinois</Tab>
               <Tab>COVID-19 in the world</Tab>
+              <Tab>COVID-19 in the tree relationship</Tab>
             </TabList>
 
             {/* illinois tab */}
@@ -345,6 +346,16 @@ class Covid19Dashboard extends React.Component {
                     )}
                   </div>
                 }
+              </div>
+            </TabPanel>
+            <TabPanel className='covid19-dashboard_panel'>
+              <div className='covid19-dashboard_visualizations'>
+                <iframe
+                  title='Auspice'
+                  frameBorder='0'
+                  className='covid19-dashboard__iframe'
+                  src={auspiceUrl}
+                />
               </div>
             </TabPanel>
           </Tabs>

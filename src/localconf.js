@@ -94,6 +94,7 @@ function buildConfig(opts) {
   const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
   const guppyDownloadUrl = `${guppyUrl}/download`;
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
+  const auspiceUrl = `${hostname}auspice`;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -177,8 +178,8 @@ function buildConfig(opts) {
   }
 
   const covid19DashboardConfig = config.covid19DashboardConfig;
-  const enableCovid19Dashboard = !!(covid19DashboardConfig
-    && Object.keys(covid19DashboardConfig).length > 0);
+  const enableCovid19Dashboard = !!(covid19DashboardConfig &&
+    Object.keys(covid19DashboardConfig).length > 0);
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -357,6 +358,7 @@ function buildConfig(opts) {
     enableCovid19Dashboard,
     covid19DashboardConfig,
     mapboxAPIToken,
+    auspiceUrl,
   };
 }
 
