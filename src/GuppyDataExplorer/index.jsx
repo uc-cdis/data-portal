@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import { guppyUrl, tierAccessLevel, tierAccessLimit, explorerConfig, dataAvailabilityToolConfig, useNewExplorerConfigFormat } from '../localconf';
@@ -9,7 +8,7 @@ import './GuppyExplorer.css';
 class Explorer extends React.Component {
   constructor(props) {
     super(props);
-    const tabIndex = (props.location.pathname === '/files') ? _.findIndex(explorerConfig, (config) => {
+    const tabIndex = (props.location.pathname === '/files') ? explorerConfig.findIndex((config) => {
       // find file tab index from config array using guppyConfig.dataType
       if (config.guppyConfig && config.guppyConfig.dataType) {
         return config.guppyConfig.dataType === 'file';

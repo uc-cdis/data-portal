@@ -84,7 +84,7 @@ class ExplorerTable extends React.Component {
         } else {
           const nestedChildFieldName = fieldStringsArray.slice(1, fieldStringsArray.length).join('.');
           // some logic to handle depends on wether the child field in raw data is an array or not
-          if (_.isArray(row.value)) {
+          if (Array.isArray(row.value)) {
             valueStr = row.value.map(x => _.get(x, nestedChildFieldName)).join(', ');
           } else {
             valueStr = _.get(row.value, nestedChildFieldName);
@@ -232,7 +232,7 @@ class ExplorerTable extends React.Component {
       if (field.includes('.')) {
         const fieldStringsArray = field.split('.');
         if (this.props.rawData && this.props.rawData.length > 0
-          && _.isArray(this.props.rawData[0][fieldStringsArray[0]])) {
+          && Array.isArray(this.props.rawData[0][fieldStringsArray[0]])) {
           if (!nestedArrayFieldNames[fieldStringsArray[0]]) {
             nestedArrayFieldNames[fieldStringsArray[0]] = [];
           }
@@ -248,7 +248,7 @@ class ExplorerTable extends React.Component {
       // this is the subComponent of the two-level nested tables
       subComponent = row => Object.keys(nestedArrayFieldColumnConfigs).map((key) => {
         const rowData = (this.props.isLocked || !this.props.rawData) ?
-          [] : _.slice(this.props.rawData, row.index, row.index + 1);
+          [] : this.props.rawData.slice(row.index, row.index + 1);
         return (<div className='explorer-nested-table' key={key}>
           <ReactTable
             data={(this.props.isLocked || !rowData) ? [] : rowData}
