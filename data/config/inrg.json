@@ -247,6 +247,12 @@
           "fileName": "data.json"
         }
       ]
+    },
+    "guppyConfig": {
+      "dataType": "inrg",
+      "nodeCountTitle": "Subjects",
+      "fieldMapping": [
+      ]
     }
   }
 }
