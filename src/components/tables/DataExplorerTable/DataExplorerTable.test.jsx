@@ -6,7 +6,7 @@ describe('DataExplorerTable', () => {
   const selectedTableRows = [];
 
   const component = mount(
-    <DataExplorerTable selectedTableRows={selectedTableRows} />,
+    <DataExplorerTable selectedTableRows={selectedTableRows} />
   ).find(DataExplorerTable);
 
   it('renders', () => {

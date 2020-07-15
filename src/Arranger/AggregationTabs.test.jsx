@@ -4,30 +4,21 @@ import AggregationTabs from './AggregationTabs';
 
 describe('AggregationTabs', () => {
   const filterConfig = {
-    tabs: [{
-      title: 'Project',
-      fields: [
-        'project',
-        'study',
-      ],
-    },
-    {
-      title: 'Subject',
-      fields: [
-        'race',
-        'ethnicity',
-        'gender',
-        'vital_status',
-      ],
-    },
-    {
-      title: 'File',
-      fields: [
-        'file_type',
-      ],
-    }],
+    tabs: [
+      {
+        title: 'Project',
+        fields: ['project', 'study'],
+      },
+      {
+        title: 'Subject',
+        fields: ['race', 'ethnicity', 'gender', 'vital_status'],
+      },
+      {
+        title: 'File',
+        fields: ['file_type'],
+      },
+    ],
   };
-
 
   const component = mount(
     <AggregationTabs
@@ -36,7 +27,7 @@ describe('AggregationTabs', () => {
       projectId={''}
       graphqlField={''}
       api={''}
-    />,
+    />
   );
 
   it('renders', () => {
@@ -44,6 +35,8 @@ describe('AggregationTabs', () => {
   });
 
   it('divides into tabs based on config', () => {
-    expect(component.find('.g3-filter-group__tab').length).toBe(filterConfig.tabs.length);
+    expect(component.find('.g3-filter-group__tab').length).toBe(
+      filterConfig.tabs.length
+    );
   });
 });

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './Question.less';
 import Option from './Option';
 
-const makeDefaultState = answer => ({
+const makeDefaultState = (answer) => ({
   answer,
 });
 
@@ -44,27 +44,22 @@ class Question extends Component {
     return (
       <section id={this.props.sectionId} className='question'>
         <h4 className='question__name h4'>
-          {
-            this.props.content.name !== ''
-              ? `${this.props.idx + 1}. ${this.props.content.name}` : ''
-          }
+          {this.props.content.name !== ''
+            ? `${this.props.idx + 1}. ${this.props.content.name}`
+            : ''}
         </h4>
         <div className='question__content'>{this.props.content.question}</div>
-        {
-          this.props.content.options.map(
-            (option, i) => (
-              <Option
-                hasCorrectAnswers={this.props.hasCorrectAnswers}
-                option={option}
-                onChange={idx => this.onAnswerChanged(idx)}
-                idx={i}
-                isCorrectAnswer={i === this.props.content.answer}
-                selected={i === this.state.answer}
-                key={`option${i}`}
-              />
-            ),
-          )
-        }
+        {this.props.content.options.map((option, i) => (
+          <Option
+            hasCorrectAnswers={this.props.hasCorrectAnswers}
+            option={option}
+            onChange={(idx) => this.onAnswerChanged(idx)}
+            idx={i}
+            isCorrectAnswer={i === this.props.content.answer}
+            selected={i === this.state.answer}
+            key={`option${i}`}
+          />
+        ))}
       </section>
     );
   }

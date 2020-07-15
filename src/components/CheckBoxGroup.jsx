@@ -14,7 +14,7 @@ export class CheckBoxGroup extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collapsed: (props.listItems.length > 5) ? 1 : 0,
+      collapsed: props.listItems.length > 5 ? 1 : 0,
     };
   }
 
@@ -25,8 +25,10 @@ export class CheckBoxGroup extends Component {
     if (pos === -1) {
       selectedItems = [...this.props.selectedItems, item];
     } else {
-      selectedItems = [...this.props.selectedItems.slice(0, pos),
-        ...this.props.selectedItems.slice(pos + 1)];
+      selectedItems = [
+        ...this.props.selectedItems.slice(0, pos),
+        ...this.props.selectedItems.slice(pos + 1),
+      ];
     }
     const state = { [this.props.groupName]: selectedItems };
     this.props.onChange(state);
@@ -52,14 +54,15 @@ export class CheckBoxGroup extends Component {
   render() {
     const selectedItems = this.props.selectedItems;
     // console.log(selectedItems);
-    const listItems = (this.state.collapsed === 1)
-      ? this.props.listItems.slice(0, 3)
-      : this.props.listItems;
+    const listItems =
+      this.state.collapsed === 1
+        ? this.props.listItems.slice(0, 3)
+        : this.props.listItems;
 
     return (
       <div className='checkbox-group'>
         {this.props.title}
-        {listItems.map(item => (
+        {listItems.map((item) => (
           <div key={item}>
             <input
               type='checkbox'
@@ -69,7 +72,9 @@ export class CheckBoxGroup extends Component {
               checked={selectedItems.includes(item)}
               onChange={() => this.onChangeBox(item)}
             />
-            <label className='checkbox-group__label' htmlFor={item}>{item}</label>
+            <label className='checkbox-group__label' htmlFor={item}>
+              {item}
+            </label>
           </div>
         ))}
         {this.displayOptions()}

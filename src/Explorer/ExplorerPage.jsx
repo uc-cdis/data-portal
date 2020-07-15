@@ -7,7 +7,6 @@ import Spinner from '../components/Spinner';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
-
 class ExplorerPage extends Component {
   render() {
     return (
@@ -26,9 +25,9 @@ class ExplorerPage extends Component {
             return <RelayExplorerComponent viewer={props.viewer} />;
           }
           return <Spinner />;
-        }
-        }
-      />);
+        }}
+      />
+    );
   }
 }
 

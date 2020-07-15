@@ -7,12 +7,14 @@ class GoogleAnalytics extends Component {
   componentDidMount() {
     this.logPageChange(
       this.props.location.pathname,
-      this.props.location.search,
+      this.props.location.search
     );
   }
 
   componentDidUpdate({ location: prevLocation }) {
-    const { location: { pathname, search } } = this.props;
+    const {
+      location: { pathname, search },
+    } = this.props;
     const isDifferentPathname = pathname !== prevLocation.pathname;
     const isDifferentSearch = search !== prevLocation.search;
 
@@ -49,8 +51,7 @@ GoogleAnalytics.defaultProps = {
   options: {},
 };
 
-export const RouteTracker = () =>
-  <Route component={GoogleAnalytics} />;
+export const RouteTracker = () => <Route component={GoogleAnalytics} />;
 
 const init = (trackingId, dev, gaDebug, options = {}) => {
   const isGAEnabled = trackingId !== 'undefined';

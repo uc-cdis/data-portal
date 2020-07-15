@@ -17,10 +17,11 @@ class GroupedBarChart extends React.Component {
     const typeName = this.props.dataType;
     const xAxisProp = this.props.xAxisProp;
     const yAxisProp = this.props.yAxisProp;
-    this.downloadData(typeName, xAxisProp, yAxisProp)
-      .then(({ datasets, valuesSet }) => {
+    this.downloadData(typeName, xAxisProp, yAxisProp).then(
+      ({ datasets, valuesSet }) => {
         this.setState({ datasets, valuesSet });
-      });
+      }
+    );
   }
 
   async downloadData(typeName, xAxisProp, yAxisProp) {
@@ -47,9 +48,7 @@ class GroupedBarChart extends React.Component {
         }`;
       const variables = {
         nestedAggFields: {
-          termsFields: [
-            yAxisProp,
-          ],
+          termsFields: [yAxisProp],
         },
         filter: {},
       };
@@ -70,32 +69,38 @@ class GroupedBarChart extends React.Component {
       const yAxisValueSet = new Set(); // a set of y axis prop values
       const tempDatasets = {}; // a temp dataset, tempDatasets[xAxis][yAxis] = count
       // eslint-disable-next-line no-underscore-dangle
-      res.data.data._aggregation[typeName][xAxisProp].histogram.forEach(({ key, termsFields }) => {
-        const xAxisValue = key;
+      res.data.data._aggregation[typeName][xAxisProp].histogram.forEach(
+        ({ key, termsFields }) => {
+          const xAxisValue = key;
 
-        // validate the response result format is correct
-        if (!(termsFields.length === 1 && termsFields[0].field === yAxisProp)) {
-          throw Error('Error when parsing chart data');
-        }
-        if (typeof tempDatasets[xAxisValue] === 'undefined') {
-          tempDatasets[xAxisValue] = {};
-        }
+          // validate the response result format is correct
+          if (
+            !(termsFields.length === 1 && termsFields[0].field === yAxisProp)
+          ) {
+            throw Error('Error when parsing chart data');
+          }
+          if (typeof tempDatasets[xAxisValue] === 'undefined') {
+            tempDatasets[xAxisValue] = {};
+          }
 
-        // assign value to tempDatasets, also add y value to yAxisValueSet
-        termsFields[0].terms.forEach((d) => {
-          const yAxisValue = d.key;
-          yAxisValueSet.add(yAxisValue);
-          tempDatasets[xAxisValue][yAxisValue] = d.count;
-        });
-      });
+          // assign value to tempDatasets, also add y value to yAxisValueSet
+          termsFields[0].terms.forEach((d) => {
+            const yAxisValue = d.key;
+            yAxisValueSet.add(yAxisValue);
+            tempDatasets[xAxisValue][yAxisValue] = d.count;
+          });
+        }
+      );
 
       // sort in alphabetical order
       // (reverse because charts show items from bottom to top)
       const sortedYAxisValues = Array.from(yAxisValueSet).sort().reverse();
 
       // need a map to remember y value => index
-      const yAxisValueToIndex = sortedYAxisValues
-        .reduce((acc, cur, i) => { acc[cur] = i; return acc; }, {});
+      const yAxisValueToIndex = sortedYAxisValues.reduce((acc, cur, i) => {
+        acc[cur] = i;
+        return acc;
+      }, {});
 
       // assign counts to datasets, datasets[xAxis] is an array of counts
       const datasets = Object.keys(tempDatasets).map((xAxisValue) => {
@@ -121,11 +126,15 @@ class GroupedBarChart extends React.Component {
 
   render() {
     if (!this.state.datasets) return null;
-    const legendSelectedObj = this.props.initialUnselectedKeys.reduce((acc, cur) => {
-      acc[cur] = false;
-      return acc;
-    }, {});
-    const dataTypePlural = this.props.dataTypePlural || `${this.props.dataType}s`;
+    const legendSelectedObj = this.props.initialUnselectedKeys.reduce(
+      (acc, cur) => {
+        acc[cur] = false;
+        return acc;
+      },
+      {}
+    );
+    const dataTypePlural =
+      this.props.dataTypePlural || `${this.props.dataType}s`;
     const defaultSubTitle = `Number of ${dataTypePlural} by ${this.props.yAxisProp}`;
     const option = {
       title: {
@@ -143,7 +152,9 @@ class GroupedBarChart extends React.Component {
         axisLabel: {
           formatter: (value) => {
             const len = 15;
-            return value.length > len ? `${value.substring(0, len - 3)}...` : value;
+            return value.length > len
+              ? `${value.substring(0, len - 3)}...`
+              : value;
           },
         },
       },
@@ -158,7 +169,7 @@ class GroupedBarChart extends React.Component {
         trigger: 'axis',
       },
       legend: {
-        data: this.state.datasets.map(d => d.key),
+        data: this.state.datasets.map((d) => d.key),
         bottom: 0,
         selected: legendSelectedObj,
       },
@@ -175,18 +186,17 @@ class GroupedBarChart extends React.Component {
         data: d.dataset,
         stack: d.key,
         barGap: 0,
-        color: colorsForCharts.categorical9Colors[i % colorsForCharts.categorical9Colors.length],
+        color:
+          colorsForCharts.categorical9Colors[
+            i % colorsForCharts.categorical9Colors.length
+          ],
       })),
     };
     if (this.props.logBase && this.props.logBase !== 1) {
       option.xAxis.type = 'log';
       option.xAxis.logBase = this.props.logBase;
     }
-    return (
-      <ReactEcharts
-        option={option}
-      />
-    );
+    return <ReactEcharts option={option} />;
   }
 }
 

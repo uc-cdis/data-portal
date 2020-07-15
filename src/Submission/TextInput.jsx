@@ -20,14 +20,23 @@ class TextInput extends Component {
 
   componentWillMount() {
     if (this.props.onUpdateFormSchema !== undefined) {
-      this.props.onUpdateFormSchema({ [this.props.name]: this.props.propertyType });
+      this.props.onUpdateFormSchema({
+        [this.props.name]: this.props.propertyType,
+      });
     }
   }
   render() {
     return (
       <div>
-        <label className='text-input__label' htmlFor={this.props.name}> {this.props.name}: </label>
-        {this.props.description !== '' && <span className='text-input__input-description'>{this.props.description}</span>}
+        <label className='text-input__label' htmlFor={this.props.name}>
+          {' '}
+          {this.props.name}:{' '}
+        </label>
+        {this.props.description !== '' && (
+          <span className='text-input__input-description'>
+            {this.props.description}
+          </span>
+        )}
         <br />
         <input
           className='text-input__input'
@@ -37,7 +46,9 @@ class TextInput extends Component {
           required={this.props.required}
           onChange={this.props.onChange}
         />
-        {this.props.required && <span className='text-input__required-notification'> {'*'} </span>}
+        {this.props.required && (
+          <span className='text-input__required-notification'> {'*'} </span>
+        )}
       </div>
     );
   }

@@ -145,12 +145,7 @@
       "tabs": [
         {
           "title": "Subject",
-          "fields":[
-            "project_id",
-            "gender",
-            "race",
-            "ethnicity"
-          ]
+          "fields": ["project_id", "gender", "race", "ethnicity"]
         }
       ]
     },

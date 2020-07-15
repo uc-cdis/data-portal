@@ -1,10 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import GraphCalculator from './GraphCalculator';
-import {
-  buildTestData,
-  testGraph1,
-} from '../../../GraphUtils/testData';
+import { buildTestData, testGraph1 } from '../../../GraphUtils/testData';
 
 describe('GraphCalculator', () => {
   const data = buildTestData();
@@ -22,10 +19,12 @@ describe('GraphCalculator', () => {
       onGraphLayoutCalculated={layoutCallback}
       onGraphLegendCalculated={legendCallback}
       onHighlightRelatedNodesCalculated={highlightCallback}
-      onSecondHighlightingNodeCandidateIDsCalculated={candidateCalculatedCallback}
+      onSecondHighlightingNodeCandidateIDsCalculated={
+        candidateCalculatedCallback
+      }
       onPathRelatedToSecondHighlightingNodeCalculated={pathCallback}
       onDataModelStructureCalculated={dataModelCallback}
-    />,
+    />
   );
 
   it('can calculate layout and legend', () => {

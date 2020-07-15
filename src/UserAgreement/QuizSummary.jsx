@@ -14,15 +14,18 @@ class QuizSummary extends Component {
     onSubmit: PropTypes.func.isRequired,
   };
 
-  static defaultProps = {
-  };
+  static defaultProps = {};
 
   render() {
-    const finishedAnswer = (this.props.notDone.length + this.props.wrongs.length === 0);
+    const finishedAnswer =
+      this.props.notDone.length + this.props.wrongs.length === 0;
     return (
       <div className='quiz__right'>
         <div className='quiz__right--box'>
-          <QuizStatus title='Not Answered Yet:' questions={this.props.notDone} />
+          <QuizStatus
+            title='Not Answered Yet:'
+            questions={this.props.notDone}
+          />
           <QuizStatus title='Incorrect:' questions={this.props.wrongs} />
           <Button
             label='Submit'

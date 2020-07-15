@@ -4,11 +4,23 @@ import MediaQuery from 'react-responsive';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntroduction } from './reduxer';
+import {
+  ReduxIndexButtonBar,
+  ReduxIndexBarChart,
+  ReduxIndexCounts,
+  ReduxIntroduction,
+} from './reduxer';
 import dictIcons from '../img/icons';
 import { components } from '../params';
-import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
-import { breakpoints, customHomepageChartConfig, indexPublic } from '../localconf';
+import {
+  loadHomepageChartDataFromDatasets,
+  loadHomepageChartDataFromGraphQL,
+} from './utils';
+import {
+  breakpoints,
+  customHomepageChartConfig,
+  indexPublic,
+} from '../localconf';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
 import './page.less';
 
@@ -66,7 +78,10 @@ class IndexPageComponent extends React.Component {
       <div className='index-page'>
         <div className='index-page__top'>
           <div className='index-page__introduction'>
-            <ReduxIntroduction data={components.index.introduction} dictIcons={dictIcons} />
+            <ReduxIntroduction
+              data={components.index.introduction}
+              dictIcons={dictIcons}
+            />
             <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
               <ReduxIndexCounts />
             </MediaQuery>
@@ -74,7 +89,9 @@ class IndexPageComponent extends React.Component {
           <div className='index-page__bar-chart'>
             <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
               <Slider {...sliderSettings}>
-                <div className='index-page__slider-chart'><ReduxIndexBarChart /></div>
+                <div className='index-page__slider-chart'>
+                  <ReduxIndexBarChart />
+                </div>
                 {customCharts}
               </Slider>
             </MediaQuery>

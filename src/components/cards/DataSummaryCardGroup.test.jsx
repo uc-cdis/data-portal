@@ -32,20 +32,23 @@ describe('<DataSummaryCardGroup />', () => {
     },
   ];
 
-  const cards = mount(<DataSummaryCardGroup
-    summaryItems={countItems}
-    connected
-  />).find(DataSummaryCardGroup);
+  const cards = mount(
+    <DataSummaryCardGroup summaryItems={countItems} connected />
+  ).find(DataSummaryCardGroup);
 
   it('renders', () => {
     expect(cards.length).toBe(1);
   });
 
   it('should display all cards correctly', () => {
-    expect(cards.find('.data-summary-card-group__connected-card').length).toBe(countItems.length);
+    expect(cards.find('.data-summary-card-group__connected-card').length).toBe(
+      countItems.length
+    );
   });
 
   it('should display all sub cards correctly', () => {
-    expect(cards.find('.data-summary-card-group__sub-card-item').length).toBe(countItems[0].length);
+    expect(cards.find('.data-summary-card-group__sub-card-item').length).toBe(
+      countItems[0].length
+    );
   });
 });

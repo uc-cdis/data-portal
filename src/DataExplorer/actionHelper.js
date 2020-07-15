@@ -11,7 +11,8 @@ import { fetchWithCreds } from '../actions';
 import { manifestServiceApiPath } from '../localconf';
 
 const checkArrangerGraphqlField = (arrangerConfig) => {
-  const MSG_GQLFIELD_FAIL = 'Couldn\'t find key "graphqlField" in Arranger configuration.';
+  const MSG_GQLFIELD_FAIL =
+    'Couldn\'t find key "graphqlField" in Arranger configuration.';
   if (!hasKeyChain(arrangerConfig, 'graphqlField')) {
     throw MSG_GQLFIELD_FAIL;
   }
@@ -36,11 +37,16 @@ const createManifestByFilter = async (
   selectedTableRows,
   arrangerConfig,
   errorCallback,
-  messageOnFail,
+  messageOnFail
 ) => {
   checkArrangerGraphqlField(arrangerConfig);
-  if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
-    || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
+  if (
+    !hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType') ||
+    !hasKeyChain(
+      arrangerConfig,
+      'manifestMapping.referenceIdFieldInResourceIndex'
+    )
+  ) {
     if (errorCallback === undefined) {
       throw messageOnFail;
     } else {
@@ -59,22 +65,27 @@ const createManifestByFilter = async (
       apiFunc,
       projectId,
       arrangerConfig.manifestMapping.resourceIndexType,
-      key,
+      key
     );
-    filtersByKey = keyBuckets.map(
-      bucket => [rowFilter, { name: key, values: [bucket.key] }]);
+    filtersByKey = keyBuckets.map((bucket) => [
+      rowFilter,
+      { name: key, values: [bucket.key] },
+    ]);
   }
   const manifestJSON = await Promise.all(
-    filtersByKey.map(filters => queryDataByValues(
-      apiFunc,
-      projectId,
-      arrangerConfig.manifestMapping.resourceIndexType,
-      filters,
-      [
-        arrangerConfig.manifestMapping.resourceIdField,
-        arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-      ],
-    )));
+    filtersByKey.map((filters) =>
+      queryDataByValues(
+        apiFunc,
+        projectId,
+        arrangerConfig.manifestMapping.resourceIndexType,
+        filters,
+        [
+          arrangerConfig.manifestMapping.resourceIdField,
+          arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
+        ]
+      )
+    )
+  );
   return manifestJSON;
 };
 
@@ -93,13 +104,13 @@ export const downloadData = async (
   graphqlIdField,
   selectedTableRows,
   arrangerConfig,
-  fileName,
+  fileName
 ) => {
   checkArrangerGraphqlField(arrangerConfig);
   const columns = await getArrangerTableColumns(
     apiFunc,
     projectId,
-    arrangerConfig.graphqlField,
+    arrangerConfig.graphqlField
   );
   const responseDataJSON = await queryDataByIds(
     apiFunc,
@@ -107,9 +118,11 @@ export const downloadData = async (
     graphqlIdField,
     selectedTableRows,
     arrangerConfig.graphqlField,
-    columns,
+    columns
   );
-  const blob = new Blob([JSON.stringify(responseDataJSON, null, 2)], { type: 'text/json' });
+  const blob = new Blob([JSON.stringify(responseDataJSON, null, 2)], {
+    type: 'text/json',
+  });
   FileSaver.saveAs(blob, fileName);
 };
 
@@ -126,7 +139,7 @@ export const downloadManifest = async (
   projectId,
   selectedTableRows,
   arrangerConfig,
-  fileName,
+  fileName
 ) => {
   const MSG_DOWNLOAD_MANIFEST_FAIL = 'Error downloading manifest file';
   const manifestJSON = await createManifestByFilter(
@@ -135,8 +148,11 @@ export const downloadManifest = async (
     selectedTableRows,
     arrangerConfig,
     undefined,
-    MSG_DOWNLOAD_MANIFEST_FAIL);
-  const blob = new Blob([JSON.stringify(manifestJSON.flat(), null, 2)], { type: 'text/json' });
+    MSG_DOWNLOAD_MANIFEST_FAIL
+  );
+  const blob = new Blob([JSON.stringify(manifestJSON.flat(), null, 2)], {
+    type: 'text/json',
+  });
   FileSaver.saveAs(blob, fileName);
 };
 
@@ -155,7 +171,7 @@ export const exportToWorkspace = async (
   selectedTableRows,
   arrangerConfig,
   callback,
-  errorCallback,
+  errorCallback
 ) => {
   const MSG_EXPORT_MANIFEST_FAIL = 'Error exporting manifest file.';
   const MSG_EXPORT_FAIL = 'There was an error exporting your cohort.';
@@ -165,25 +181,22 @@ export const exportToWorkspace = async (
     selectedTableRows,
     arrangerConfig,
     errorCallback,
-    MSG_EXPORT_MANIFEST_FAIL);
+    MSG_EXPORT_MANIFEST_FAIL
+  );
   fetchWithCreds({
     path: `${manifestServiceApiPath}`,
     body: JSON.stringify(manifestJSON.flat()),
     method: 'POST',
-  })
-    .then(
-      ({ status, data }) => {
-        switch (status) {
-        case 200:
-          callback(data);
-          return;
-        default:
-          errorCallback(status, MSG_EXPORT_FAIL);
-        }
-      },
-    );
+  }).then(({ status, data }) => {
+    switch (status) {
+      case 200:
+        callback(data);
+        return;
+      default:
+        errorCallback(status, MSG_EXPORT_FAIL);
+    }
+  });
 };
-
 
 /**
  * Get number of manifest entries for selected rows in arranger table.
@@ -201,12 +214,17 @@ export const getManifestEntryCount = async (
   apiFunc,
   projectId,
   selectedTableRows,
-  arrangerConfig,
+  arrangerConfig
 ) => {
   const MSG_GET_MANIFEST_COUNT_FAIL = 'Error getting manifest file count';
   checkArrangerGraphqlField(arrangerConfig);
-  if (!hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType')
-    || !hasKeyChain(arrangerConfig, 'manifestMapping.referenceIdFieldInResourceIndex')) {
+  if (
+    !hasKeyChain(arrangerConfig, 'manifestMapping.resourceIndexType') ||
+    !hasKeyChain(
+      arrangerConfig,
+      'manifestMapping.referenceIdFieldInResourceIndex'
+    )
+  ) {
     throw MSG_GET_MANIFEST_COUNT_FAIL;
   }
 
@@ -214,10 +232,12 @@ export const getManifestEntryCount = async (
     apiFunc,
     projectId,
     arrangerConfig.manifestMapping.resourceIndexType,
-    [{
-      name: arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
-      values: selectedTableRows,
-    }],
+    [
+      {
+        name: arrangerConfig.manifestMapping.referenceIdFieldInResourceIndex,
+        values: selectedTableRows,
+      },
+    ]
   );
   return manifestEntryCount;
 };

@@ -32,7 +32,7 @@ describe('DataExplorerVisualizations', () => {
     <DataExplorerVisualizations
       arrangerData={arrangerData}
       dataExplorerConfig={dataExplorerConfig}
-    />,
+    />
   );
 
   it('renders', () => {

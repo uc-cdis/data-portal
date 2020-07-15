@@ -11,9 +11,10 @@ import Footer from './Footer';
 
 describe('The Footer component', () => {
   it('Supports static defaults', () => {
-    Object.assign(Footer.defaultProps,
-      { dictionaryVersion: 'test.test.test', apiVersion: 'api.api.api' },
-    );
+    Object.assign(Footer.defaultProps, {
+      dictionaryVersion: 'test.test.test',
+      apiVersion: 'api.api.api',
+    });
     // const footer = mount(
     //   <StaticRouter location={{ pathname: '/dd' }}>
     //     <Footer dictIcons={dictIcons} />

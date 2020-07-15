@@ -24,7 +24,12 @@ describe('the submission result component', () => {
 
   it('presents a summary of a successful submission', () => {
     const $dom = shallow(
-      <SubmissionResult status={200} data={testData} entityCounts={{ type1: 1, type2: 3 }} />);
+      <SubmissionResult
+        status={200}
+        data={testData}
+        entityCounts={{ type1: 1, type2: 3 }}
+      />
+    );
     const $summary = $dom.find('#cd-summary__result_200');
     expect($summary).toHaveLength(1);
     const $li = $summary.find('li');

@@ -1,7 +1,7 @@
 {
   "jasmine": true,
   "mocha": true,
-  "esversion":6,
+  "esversion": 6,
   "globals": {
     "esversion": 6,
     "angular": false,

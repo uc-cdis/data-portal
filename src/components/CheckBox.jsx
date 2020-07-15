@@ -5,11 +5,15 @@ import './CheckBox.less';
 class CheckBox extends React.Component {
   onChange = () => {
     this.props.onChange(this.props.id);
-  }
+  };
 
   render() {
     return (
-      <div className={'checkbox '.concat(!this.props.isEnabled ? 'checkbox--disabled' : '')}>
+      <div
+        className={'checkbox '.concat(
+          !this.props.isEnabled ? 'checkbox--disabled' : ''
+        )}
+      >
         <input
           type='checkbox'
           id={this.props.id}

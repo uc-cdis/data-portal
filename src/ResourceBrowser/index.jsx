@@ -16,21 +16,16 @@ class ResourceBrowser extends React.Component {
     const resources = settings.resources || [];
     return (
       <div className='resource-browser'>
-        <h2 className='resource-browser__title'>
-          {settings.title}
-        </h2>
-        {settings.description ?
+        <h2 className='resource-browser__title'>{settings.title}</h2>
+        {settings.description ? (
           <p className='resource-browser__description'>
             {settings.description}
           </p>
-          : null}
+        ) : null}
         <div className='resource-browser__resources'>
-          {resources.map((resource, i) =>
-            (<Resource
-              key={i}
-              {...resource}
-            />),
-          )}
+          {resources.map((resource, i) => (
+            <Resource key={i} {...resource} />
+          ))}
         </div>
       </div>
     );

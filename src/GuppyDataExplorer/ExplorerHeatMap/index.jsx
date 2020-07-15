@@ -26,8 +26,9 @@ class ExplorerHeatMap extends React.Component {
       const numberOfDecimals = 1;
       const precision = 10 ** numberOfDecimals;
       this.maxCellValue = 0;
-      const totalCount = this.props.filter[this.props.mainYAxisVar] ?
-        this.props.filter[this.props.mainYAxisVar].selectedValues.length : 0;
+      const totalCount = this.props.filter[this.props.mainYAxisVar]
+        ? this.props.filter[this.props.mainYAxisVar].selectedValues.length
+        : 0;
 
       // convert string keys to numbers if needed (avoids 10 < 2 when sorting)
       if (this.props.guppyConfig.mainFieldIsNumeric) {
@@ -78,8 +79,15 @@ class ExplorerHeatMap extends React.Component {
   /**
    * See echarts docs at https://echarts.apache.org/en/option.html
    */
-  getHeatMapOptions = (data, xAxisVarTitle, yAxisVars, yAxisVarsMapping, colorRange) => ({
-    tooltip: { // displayed when hover on cell
+  getHeatMapOptions = (
+    data,
+    xAxisVarTitle,
+    yAxisVars,
+    yAxisVarsMapping,
+    colorRange
+  ) => ({
+    tooltip: {
+      // displayed when hover on cell
       position: 'top',
       formatter(params) {
         // Note: params.data = [x, y, value]
@@ -111,13 +119,14 @@ class ExplorerHeatMap extends React.Component {
     },
     yAxis: {
       type: 'category',
-      data: yAxisVars.map(field => yAxisVarsMapping[field]),
+      data: yAxisVars.map((field) => yAxisVarsMapping[field]),
       axisTick: {
         show: false,
       },
       inverse: true,
     },
-    visualMap: { // legend
+    visualMap: {
+      // legend
       min: 0,
       max: this.maxCellValue, // round up (1 decimal) of max value
       precision: 2, // 2 decimals in label
@@ -130,64 +139,67 @@ class ExplorerHeatMap extends React.Component {
         color: colorRange || ['#EBF7FB', '#1769A3'],
       },
     },
-    series: [{
-      type: 'heatmap',
-      data,
-    }],
+    series: [
+      {
+        type: 'heatmap',
+        data,
+      },
+    ],
   });
 
   render() {
     // y axis items name mapping
-    const yAxisVarsMapping = [this.props.mainYAxisVar].concat(
-      this.props.guppyConfig.aggFields,
-    ).reduce((res, field) => {
-      const mappingEntry = this.props.guppyConfig.fieldMapping &&
-      this.props.guppyConfig.fieldMapping.find(
-        i => i.field === field,
-      );
-      res[field] = (mappingEntry && mappingEntry.name) || capitalizeFirstLetter(field);
-      return res;
-    }, {});
+    const yAxisVarsMapping = [this.props.mainYAxisVar]
+      .concat(this.props.guppyConfig.aggFields)
+      .reduce((res, field) => {
+        const mappingEntry =
+          this.props.guppyConfig.fieldMapping &&
+          this.props.guppyConfig.fieldMapping.find((i) => i.field === field);
+        res[field] =
+          (mappingEntry && mappingEntry.name) || capitalizeFirstLetter(field);
+        return res;
+      }, {});
 
     // y axis items in alpha order. mainYAxisVar (i.e. "subject_id") on top
     const yAxisVars = [this.props.mainYAxisVar].concat(
       this.props.guppyConfig.aggFields.sort((a, b) =>
-        yAxisVarsMapping[a].localeCompare(yAxisVarsMapping[b]),
-      ),
+        yAxisVarsMapping[a].localeCompare(yAxisVarsMapping[b])
+      )
     );
 
-    const xAxisVarTitle = capitalizeFirstLetter(this.props.guppyConfig.mainFieldTitle);
+    const xAxisVarTitle = capitalizeFirstLetter(
+      this.props.guppyConfig.mainFieldTitle
+    );
     const data = this.getTransformedData(yAxisVars);
-    const height = `${(yAxisVars.length * 20) + 80}px`; // default is 300px
+    const height = `${yAxisVars.length * 20 + 80}px`; // default is 300px
 
     return (
       <React.Fragment>
-        {
-          (data && data.length) || this.props.isLocked ? (
-            <div className='explorer-heat-map'>
-              <div className='explorer-heat-map__title--align-center h4-typo'>
-                Data availability
-              </div>
-              {
-                this.props.isLocked ? (
-                  <div>
-                    <LockedContent lockMessage={this.props.lockMessage} />
-                  </div>
-                ) : (
-                  <div>
-                    <ReactEcharts
-                      option={this.getHeatMapOptions(
-                        data, xAxisVarTitle, yAxisVars, yAxisVarsMapping,
-                        this.props.guppyConfig.colorRange,
-                      )}
-                      style={{ height }}
-                    />
-                  </div>
-                )
-              }
+        {(data && data.length) || this.props.isLocked ? (
+          <div className='explorer-heat-map'>
+            <div className='explorer-heat-map__title--align-center h4-typo'>
+              Data availability
             </div>
-          ) : null
-        }
+            {this.props.isLocked ? (
+              <div>
+                <LockedContent lockMessage={this.props.lockMessage} />
+              </div>
+            ) : (
+              <div>
+                <ReactEcharts
+                  option={this.getHeatMapOptions(
+                    data,
+                    xAxisVarTitle,
+                    yAxisVars,
+                    yAxisVarsMapping,
+                    this.props.guppyConfig.colorRange
+                  )}
+                  style={{ height }}
+                />
+              </div>
+            )}
+          </div>
+        ) : null}
       </React.Fragment>
     );
   }

@@ -11,18 +11,30 @@
   vertical-align: top;
 }
 
-.data-dictionary-property-table--without-border tr:first-child th.data-dictionary-property-table__data {
+.data-dictionary-property-table--without-border
+  tr:first-child
+  th.data-dictionary-property-table__data {
   border-top: 0;
 }
-.data-dictionary-property-table--without-border tr:last-child td.data-dictionary-property-table__data {
+.data-dictionary-property-table--without-border
+  tr:last-child
+  td.data-dictionary-property-table__data {
   border-bottom: 0;
 }
-.data-dictionary-property-table--without-border tr td.data-dictionary-property-table__data:first-child,
-.data-dictionary-property-table--without-border tr th.data-dictionary-property-table__data:first-child {
+.data-dictionary-property-table--without-border
+  tr
+  td.data-dictionary-property-table__data:first-child,
+.data-dictionary-property-table--without-border
+  tr
+  th.data-dictionary-property-table__data:first-child {
   border-left: 0;
 }
-.data-dictionary-property-table--without-border tr td.data-dictionary-property-table__data:last-child,
-.data-dictionary-property-table--without-border tr th.data-dictionary-property-table__data:last-child {
+.data-dictionary-property-table--without-border
+  tr
+  td.data-dictionary-property-table__data:last-child,
+.data-dictionary-property-table--without-border
+  tr
+  th.data-dictionary-property-table__data:last-child {
   border-right: 0;
 }
 

@@ -18,11 +18,15 @@ class DataDictionary extends React.Component {
   };
 
   handleClickSearchHistoryItem = (keyword) => {
-    this.dictionarySearcherRef.current.getWrappedInstance().launchSearchFromOutside(keyword);
+    this.dictionarySearcherRef.current
+      .getWrappedInstance()
+      .launchSearchFromOutside(keyword);
   };
 
   handleClearSearchResult = () => {
-    this.dictionarySearcherRef.current.getWrappedInstance().launchClearSearchFromOutside();
+    this.dictionarySearcherRef.current
+      .getWrappedInstance()
+      .launchClearSearchFromOutside();
   };
 
   render() {
@@ -31,18 +35,34 @@ class DataDictionary extends React.Component {
         <div className='data-dictionary__sidebar'>
           <div className='data-dictionary__switch'>
             <span
-              className={`data-dictionary__switch-button ${!this.props.isGraphView ? '' : 'data-dictionary__switch-button--active'}`}
-              onClick={() => { this.setGraphView(true); }}
-              onKeyPress={() => { this.setGraphView(true); }}
+              className={`data-dictionary__switch-button ${
+                !this.props.isGraphView
+                  ? ''
+                  : 'data-dictionary__switch-button--active'
+              }`}
+              onClick={() => {
+                this.setGraphView(true);
+              }}
+              onKeyPress={() => {
+                this.setGraphView(true);
+              }}
               role='button'
               tabIndex={0}
             >
               Graph View
             </span>
             <span
-              className={`data-dictionary__switch-button ${this.props.isGraphView ? '' : 'data-dictionary__switch-button--active'}`}
-              onClick={() => { this.setGraphView(false); }}
-              onKeyPress={() => { this.setGraphView(true); }}
+              className={`data-dictionary__switch-button ${
+                this.props.isGraphView
+                  ? ''
+                  : 'data-dictionary__switch-button--active'
+              }`}
+              onClick={() => {
+                this.setGraphView(false);
+              }}
+              onKeyPress={() => {
+                this.setGraphView(true);
+              }}
               role='button'
               tabIndex={0}
             >
@@ -56,23 +76,26 @@ class DataDictionary extends React.Component {
           />
           <div className='data-dictionary__search-history' />
         </div>
-        <div
-          className='data-dictionary__main'
-        >
-          { this.props.isGraphView
-            ? (
-              <div className={`data-dictionary__graph ${this.props.isGraphView ? '' : 'data-dictionary__graph--hidden'}`}>
-                <DataDictionaryGraph
-                  onClearSearchResult={this.handleClearSearchResult}
-                />
-              </div>
-            )
-            : (
-              <div className={`data-dictionary__table ${!this.props.isGraphView ? '' : 'data-dictionary__table--hidden'}`}>
-                <ReduxDataDictionaryTable />
-              </div>
-            )
-          }
+        <div className='data-dictionary__main'>
+          {this.props.isGraphView ? (
+            <div
+              className={`data-dictionary__graph ${
+                this.props.isGraphView ? '' : 'data-dictionary__graph--hidden'
+              }`}
+            >
+              <DataDictionaryGraph
+                onClearSearchResult={this.handleClearSearchResult}
+              />
+            </div>
+          ) : (
+            <div
+              className={`data-dictionary__table ${
+                !this.props.isGraphView ? '' : 'data-dictionary__table--hidden'
+              }`}
+            >
+              <ReduxDataDictionaryTable />
+            </div>
+          )}
         </div>
       </div>
     );
@@ -88,6 +111,5 @@ DataDictionary.defaultProps = {
   onSetGraphView: () => {},
   isGraphView: false,
 };
-
 
 export default DataDictionary;

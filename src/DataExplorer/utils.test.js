@@ -1,4 +1,8 @@
-import { hasKeyChain, calculateDropdownButtonConfigs, humanizeNumber } from './utils';
+import {
+  hasKeyChain,
+  calculateDropdownButtonConfigs,
+  humanizeNumber,
+} from './utils';
 
 describe('utils for data visualization explorer', () => {
   it('returns correctly from hasKeyChain function', () => {
@@ -51,8 +55,8 @@ describe('utils for data visualization explorer', () => {
       },
       buttons: buttonConfigs,
     };
-    const buttonsList1 = buttonConfigs.filter(b => b.dropdownId === '1');
-    const buttonsList2 = buttonConfigs.filter(b => b.dropdownId === '2');
+    const buttonsList1 = buttonConfigs.filter((b) => b.dropdownId === '1');
+    const buttonsList2 = buttonConfigs.filter((b) => b.dropdownId === '2');
     const expectOutput = {
       1: {
         dropdownConfig: {
@@ -81,4 +85,3 @@ describe('utils for data visualization explorer', () => {
     expect(humanizeNumber(1200000000000000, 1)).toBe('1.2Qa');
   });
 });
-

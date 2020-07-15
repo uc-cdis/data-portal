@@ -5,12 +5,13 @@ import { StaticRouter } from 'react-router-dom';
 
 import ProjectTable from './ProjectTable';
 
-
 test('Project tables renders', () => {
-  const projectList = [{
-    name: 'frickjack',
-    counts: [5, 20, 30, 200],
-  }];
+  const projectList = [
+    {
+      name: 'frickjack',
+      counts: [5, 20, 30, 200],
+    },
+  ];
   const summaryCounts = [5, 20, 30, 200];
 
   // Material-UI components require the Mui theme ...
@@ -19,7 +20,7 @@ test('Project tables renders', () => {
       <StaticRouter location={{ pathname: '/identity' }} context={{}}>
         <ProjectTable projectList={projectList} summaryCounts={summaryCounts} />
       </StaticRouter>
-    </MuiThemeProvider>,
+    </MuiThemeProvider>
   );
   // 2 == 1 data row + 1 summary totals row
   expect(table.find('tbody tr').length).toBe(1);

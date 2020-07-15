@@ -21,7 +21,9 @@ class DataDictionaryGraph extends React.Component {
         <ReduxNodeTooltip />
         <ReduxNodePopup />
         <ReduxOverlayPropertyTable />
-        <ReduxActionLayer onClearSearchResult={this.props.onClearSearchResult} />
+        <ReduxActionLayer
+          onClearSearchResult={this.props.onClearSearchResult}
+        />
       </React.Fragment>
     );
   }

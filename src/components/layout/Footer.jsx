@@ -5,26 +5,26 @@ import './Footer.less';
 class Footer extends Component {
   render() {
     if (this.props.hidden) {
-      return (<React.Fragment />);
+      return <React.Fragment />;
     }
     return (
       <footer className='footer-container'>
         <nav className='footer__nav'>
           <div className='footer__version-area'>
-            {
-              [{ name: 'Dictionary', version: this.props.dictionaryVersion },
-                { name: 'Submission', version: this.props.apiVersion },
-                { name: 'Portal', version: this.props.portalVersion }].map(
-                item => (
-                  <div className='footer__version' key={item.name}>
-                    <div className='h4-typo footer__version-name'>{item.name}</div>
-                    <div className='body-typo footer__version-value'>v{item.version}</div>
-                  </div>
-                ),
-              )
-            }
+            {[
+              { name: 'Dictionary', version: this.props.dictionaryVersion },
+              { name: 'Submission', version: this.props.apiVersion },
+              { name: 'Portal', version: this.props.portalVersion },
+            ].map((item) => (
+              <div className='footer__version' key={item.name}>
+                <div className='h4-typo footer__version-name'>{item.name}</div>
+                <div className='body-typo footer__version-value'>
+                  v{item.version}
+                </div>
+              </div>
+            ))}
           </div>
-          {this.props.privacyPolicy && this.props.privacyPolicy.text ?
+          {this.props.privacyPolicy && this.props.privacyPolicy.text ? (
             <div className='footer__privacy-policy-area'>
               <a
                 className='h4-typo footer__privacy-policy'
@@ -35,44 +35,39 @@ class Footer extends Component {
                 {this.props.privacyPolicy.text}
               </a>
             </div>
-            : null
-          }
+          ) : null}
           <div className='footer__logo-area'>
-            {
-              this.props.logos.map((logoObj, i) => (
-                <a
-                  key={i}
-                  target='_blank'
-                  href={logoObj.href}
-                  className='footer__icon'
-                  rel='noopener noreferrer'
-                >
-                  <img
-                    className='footer__img'
-                    src={logoObj.src}
-                    alt={logoObj.alt}
-                    style={{ height: logoObj.height ? logoObj.height : 60 }}
-                  />
-                </a>
-              ))
-            }
+            {this.props.logos.map((logoObj, i) => (
+              <a
+                key={i}
+                target='_blank'
+                href={logoObj.href}
+                className='footer__icon'
+                rel='noopener noreferrer'
+              >
+                <img
+                  className='footer__img'
+                  src={logoObj.src}
+                  alt={logoObj.alt}
+                  style={{ height: logoObj.height ? logoObj.height : 60 }}
+                />
+              </a>
+            ))}
           </div>
           <div className='footer__link-area'>
-            {
-              this.props.links.map((link, i) => (
-                <React.Fragment key={link.href}>
-                  <a
-                    href={link.href}
-                    className='footer__link'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    {link.text ? link.text : link.href}
-                  </a>
-                  { i !== this.props.links.length - 1 && <span> | </span> }
-                </React.Fragment>
-              ))
-            }
+            {this.props.links.map((link, i) => (
+              <React.Fragment key={link.href}>
+                <a
+                  href={link.href}
+                  className='footer__link'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {link.text ? link.text : link.href}
+                </a>
+                {i !== this.props.links.length - 1 && <span> | </span>}
+              </React.Fragment>
+            ))}
           </div>
         </nav>
       </footer>

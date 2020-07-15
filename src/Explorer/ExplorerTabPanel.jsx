@@ -44,14 +44,14 @@ class ExplorerTabPanel extends Component {
   }
 
   updateOriginalPage() {
-    return Object.keys(this.props.cursors).reduce(
-      (d, it) => {
-        const res = d;
-        res[it] = ((this.props.cursors[it] - 1) / this.props.pageSize)
-          - (((this.props.cursors[it] - 1) / this.props.pageSize) % this.props.pagesPerTab);
-        return res;
-      }, {},
-    );
+    return Object.keys(this.props.cursors).reduce((d, it) => {
+      const res = d;
+      res[it] =
+        (this.props.cursors[it] - 1) / this.props.pageSize -
+        (((this.props.cursors[it] - 1) / this.props.pageSize) %
+          this.props.pagesPerTab);
+      return res;
+    }, {});
   }
 
   render() {
@@ -59,35 +59,36 @@ class ExplorerTabPanel extends Component {
     return (
       <div className='explorer-tab-panel'>
         <div className='explorer-tab-panel__tab-group'>
-          {
-            Object.keys(this.props.filesMap).map(
-              item => (this.props.filesMap[item].length > 0) &&
-              <div
-                role='button'
-                tabIndex={-1}
-                className={item === this.props.activeTab
-                  ? 'explorer-tab-panel__tab-item explorer-tab-panel__tab-item--active'
-                  : 'explorer-tab-panel__tab-item'}
-                key={item}
-                active={item === this.props.activeTab ? 'true' : 'false'}
-                onClick={
-                  () => this.props.onTabChange({ activeTab: item })
-                }
-              >
-                {capitalizeFirstLetter(item)}
-              </div>)
-          }
+          {Object.keys(this.props.filesMap).map(
+            (item) =>
+              this.props.filesMap[item].length > 0 && (
+                <div
+                  role='button'
+                  tabIndex={-1}
+                  className={
+                    item === this.props.activeTab
+                      ? 'explorer-tab-panel__tab-item explorer-tab-panel__tab-item--active'
+                      : 'explorer-tab-panel__tab-item'
+                  }
+                  key={item}
+                  active={item === this.props.activeTab ? 'true' : 'false'}
+                  onClick={() => this.props.onTabChange({ activeTab: item })}
+                >
+                  {capitalizeFirstLetter(item)}
+                </div>
+              )
+          )}
         </div>
         <div className='explorer-tab-panel__frame'>
-          {
-            Object.keys(this.props.filesMap).map(
-              item =>
-                (this.props.filesMap[item].length > 0)
-                &&
+          {Object.keys(this.props.filesMap).map(
+            (item) =>
+              this.props.filesMap[item].length > 0 && (
                 <div
-                  className={item === this.props.activeTab
-                    ? 'explorer-tab-panel__tab-box--active'
-                    : 'explorer-tab-panel__tab-box--inactive'}
+                  className={
+                    item === this.props.activeTab
+                      ? 'explorer-tab-panel__tab-box--active'
+                      : 'explorer-tab-panel__tab-box--inactive'
+                  }
                   key={`${item}-tab-box`}
                   active={item === this.props.activeTab ? 'true' : 'false'}
                 >
@@ -101,52 +102,54 @@ class ExplorerTabPanel extends Component {
                     pageSize={this.props.pageSize}
                     pageCount={this.props.pagesPerTab}
                     originalPage={originalPages[item]}
-                    onPageLoadNextMore={
-                      () => {
-                        this.props.onPageLoadMore(item,
-                          this.props.pageSize * this.props.pagesPerTab,
-                          {
-                            pageSize: this.props.pageSize,
-                            pagesPerTab: this.props.pagesPerTab,
-                            cursors: this.props.cursors,
-                            queriedCursors: this.props.queriedCursors,
-                          });
-                      }
-                    }
-                    page={(item in this.props.currentPages)
-                      ? this.props.currentPages[item] : 0}
-                    onPageChange={
-                      (page) => {
-                        this.props.onPageChange(item, page, this.props.currentPages);
-                      }
-                    }
-                    onPageLoadPrevMore={
-                      () => {
-                        this.props.onPageLoadMore(item,
-                          -this.props.pageSize * this.props.pagesPerTab,
-                          {
-                            pageSize: this.props.pageSize,
-                            pagesPerTab: this.props.pagesPerTab,
-                            cursors: this.props.cursors,
-                            queriedCursors: this.props.queriedCursors,
-                          });
-                      }
-                    }
-                    onPageSizeChange={
-                      value => this.props.onPageSizeChange(
-                        value,
+                    onPageLoadNextMore={() => {
+                      this.props.onPageLoadMore(
+                        item,
+                        this.props.pageSize * this.props.pagesPerTab,
                         {
-                          oldPageSize: this.props.pageSize,
+                          pageSize: this.props.pageSize,
                           pagesPerTab: this.props.pagesPerTab,
                           cursors: this.props.cursors,
                           queriedCursors: this.props.queriedCursors,
-                        },
-                      )
+                        }
+                      );
+                    }}
+                    page={
+                      item in this.props.currentPages
+                        ? this.props.currentPages[item]
+                        : 0
+                    }
+                    onPageChange={(page) => {
+                      this.props.onPageChange(
+                        item,
+                        page,
+                        this.props.currentPages
+                      );
+                    }}
+                    onPageLoadPrevMore={() => {
+                      this.props.onPageLoadMore(
+                        item,
+                        -this.props.pageSize * this.props.pagesPerTab,
+                        {
+                          pageSize: this.props.pageSize,
+                          pagesPerTab: this.props.pagesPerTab,
+                          cursors: this.props.cursors,
+                          queriedCursors: this.props.queriedCursors,
+                        }
+                      );
+                    }}
+                    onPageSizeChange={(value) =>
+                      this.props.onPageSizeChange(value, {
+                        oldPageSize: this.props.pageSize,
+                        pagesPerTab: this.props.pagesPerTab,
+                        cursors: this.props.cursors,
+                        queriedCursors: this.props.queriedCursors,
+                      })
                     }
                   />
-                </div>,
-            )
-          }
+                </div>
+              )
+          )}
         </div>
       </div>
     );

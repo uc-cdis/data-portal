@@ -18,7 +18,8 @@ const featureFlags = config.featureFlags;
 */
 function isEnabled(featureName) {
   const compileTimeFlags = featureFlags;
-  const runTimeFlags = JSON.parse(window.sessionStorage.getItem('gen3Features')) || {};
+  const runTimeFlags =
+    JSON.parse(window.sessionStorage.getItem('gen3Features')) || {};
   return !!compileTimeFlags[featureName] || !!runTimeFlags[featureName];
 }
 

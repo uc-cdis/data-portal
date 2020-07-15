@@ -12,7 +12,7 @@ describe('ArrangerWrapper', () => {
         projectId={'id'}
       >
         <div className='test' />
-      </ArrangerWrapper>,
+      </ArrangerWrapper>
     );
     expect(component.find(ArrangerWrapper).length).toBe(1);
   });
@@ -26,7 +26,7 @@ describe('ArrangerWrapper', () => {
         projectId={'id'}
       >
         <div className='test' />
-      </ArrangerWrapper>,
+      </ArrangerWrapper>
     );
     const { children } = component.instance().props;
     const { renderComponent } = component.instance();

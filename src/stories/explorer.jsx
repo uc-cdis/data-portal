@@ -9,9 +9,7 @@ import config from './explorerConfig';
 storiesOf('Data Explorer', module)
   .add('Data Explorer', () => {
     library.add(faAngleDown, faAngleUp);
-    return (
-      <DataExplorer />
-    );
+    return <DataExplorer />;
   })
   .add('Guppy Data Explorer', () => {
     const guppyServerPath = 'http://localhost:3000';

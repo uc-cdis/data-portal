@@ -10,43 +10,54 @@ class ExplorerTopMessageBanner extends React.Component {
     const hideGetAccessButton = this.props.hideGetAccessButton;
     return (
       <div className={this.props.className}>
-        {
-          (this.props.tierAccessLevel === 'regular' && checkForNoAccessibleProject(this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField)) ? (
-            <div className='top-message-banner'>
-              <div className='top-message-banner__space-column' />
-              <div className='top-message-banner__text-column'>
-                <div className='top-message-banner__button-wrapper'>
-                  { (hideGetAccessButton) ? (<React.Fragment />) :
-                    (
-                      <Button
-                        label='Get Access'
-                        className='top-message-banner__button'
-                        buttonType='default'
-                        enabled={!!(this.props.getAccessButtonLink)}
-                        tooltipEnabled={!(this.props.getAccessButtonLink)}
-                        tooltipText='Coming soon'
-                        onClick={
-                          (this.props.getAccessButtonLink) ? (
-                            () => { window.open(this.props.getAccessButtonLink); }
-                          ) : (() => {})
-                        }
-                      />
-                    )
-                  }
-                </div>
-                <div className='top-message-banner__text-wrapper'>
-                  <span className='top-message-banner__normal-text'>Due to lack of access, you are only able to narrow the cohort down to </span>
-                  <span className='top-message-banner__bold-text'>{ this.props.tierAccessLimit } </span>
-                  <span className='top-message-banner__normal-text'>
-                    {this.props.guppyConfig.nodeCountTitle.toLowerCase()
-                  || this.props.guppyConfig.dataType}.
-                  Please request additional access if necessary.
-                  </span>
-                </div>
+        {this.props.tierAccessLevel === 'regular' &&
+        checkForNoAccessibleProject(
+          this.props.accessibleFieldObject,
+          this.props.guppyConfig.accessibleValidationField
+        ) ? (
+          <div className='top-message-banner'>
+            <div className='top-message-banner__space-column' />
+            <div className='top-message-banner__text-column'>
+              <div className='top-message-banner__button-wrapper'>
+                {hideGetAccessButton ? (
+                  <React.Fragment />
+                ) : (
+                  <Button
+                    label='Get Access'
+                    className='top-message-banner__button'
+                    buttonType='default'
+                    enabled={!!this.props.getAccessButtonLink}
+                    tooltipEnabled={!this.props.getAccessButtonLink}
+                    tooltipText='Coming soon'
+                    onClick={
+                      this.props.getAccessButtonLink
+                        ? () => {
+                            window.open(this.props.getAccessButtonLink);
+                          }
+                        : () => {}
+                    }
+                  />
+                )}
+              </div>
+              <div className='top-message-banner__text-wrapper'>
+                <span className='top-message-banner__normal-text'>
+                  Due to lack of access, you are only able to narrow the cohort
+                  down to{' '}
+                </span>
+                <span className='top-message-banner__bold-text'>
+                  {this.props.tierAccessLimit}{' '}
+                </span>
+                <span className='top-message-banner__normal-text'>
+                  {this.props.guppyConfig.nodeCountTitle.toLowerCase() ||
+                    this.props.guppyConfig.dataType}
+                  . Please request additional access if necessary.
+                </span>
               </div>
             </div>
-          ) : (<React.Fragment />)
-        }
+          </div>
+        ) : (
+          <React.Fragment />
+        )}
       </div>
     );
   }

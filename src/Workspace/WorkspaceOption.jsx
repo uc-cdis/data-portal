@@ -10,7 +10,9 @@ class WorkspaceOption extends React.Component {
       <div className='workspace-option'>
         <Icon className='workspace-option__icon' />
         <h3 className='workspace-option__title'>{this.props.title}</h3>
-        <div className='workspace-option__description'>{this.props.description}</div>
+        <div className='workspace-option__description'>
+          {this.props.description}
+        </div>
         <Button
           className='workspace-option__button'
           onClick={this.props.onClick}

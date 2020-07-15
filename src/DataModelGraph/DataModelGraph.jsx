@@ -18,7 +18,10 @@ class DataModelGraph extends React.Component {
   constructor(props) {
     super(props);
     this.handleToggleClick = this.handleToggleClick.bind(this);
-    this.state = { fullToggle: false, ...DataModelGraph.buildGraphState(props) };
+    this.state = {
+      fullToggle: false,
+      ...DataModelGraph.buildGraphState(props),
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -26,20 +29,24 @@ class DataModelGraph extends React.Component {
   }
 
   handleToggleClick() {
-    this.setState(prevState => ({ fullToggle: !prevState.fullToggle }));
+    this.setState((prevState) => ({ fullToggle: !prevState.fullToggle }));
   }
 
   render() {
     const graph = this.state.fullToggle ? this.state.full : this.state.compact;
 
-    if (graph.nodes.length !== 0 && 'count' in graph.nodes[graph.nodes.length - 1]) {
+    if (
+      graph.nodes.length !== 0 &&
+      'count' in graph.nodes[graph.nodes.length - 1]
+    ) {
       return (
         <div className='data-model-graph'>
           <button
             id='cd-dmg__toggle'
             className='button-primary-white'
             onClick={this.handleToggleClick}
-          >Toggle view
+          >
+            Toggle view
           </button>
           <SvgGraph nodes={graph.nodes} edges={graph.edges} />
         </div>
@@ -48,6 +55,5 @@ class DataModelGraph extends React.Component {
     return null;
   }
 }
-
 
 export default DataModelGraph;

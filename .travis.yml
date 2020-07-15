@@ -1,26 +1,26 @@
 env:
   - REACT_APP_DISABLE_SOCKET=true
-  
+
 language: node_js
 git:
   depth: 1
 node_js:
-  - "12"
+  - '12'
 
 cache:
   directories:
     - node_modules # NPM packages
 
 services:
-    - docker
+  - docker
 
 install:
-    - npm install --force
+  - npm install --force
 
 script:
-    - npm run relay
-    - npm run params
-    - npm test
-    - bash ./testSchema.sh
-    - npm run eslint
-    - npm run stylelint
+  - npm run relay
+  - npm run params
+  - npm test
+  - bash ./testSchema.sh
+  - npm run eslint
+  - npm run stylelint

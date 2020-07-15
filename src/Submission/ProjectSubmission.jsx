@@ -7,7 +7,13 @@ import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 import { useArboristUI } from '../configs';
-import { userHasMethodOnProject, isRootUrl, isProgramUrl, userHasSheepdogProgramAdmin, userHasSheepdogProjectAdmin } from '../authMappingUtils';
+import {
+  userHasMethodOnProject,
+  isRootUrl,
+  isProgramUrl,
+  userHasSheepdogProgramAdmin,
+  userHasSheepdogProjectAdmin,
+} from '../authMappingUtils';
 
 const ProjectSubmission = (props) => {
   // hack to detect if dictionary data is available, and to trigger fetch if not
@@ -31,11 +37,11 @@ const ProjectSubmission = (props) => {
   };
   const displaySubmissionUIComponents = (project, userAuthMapping) => {
     if (
-      !useArboristUI
-      || (isRootUrl(project) && userHasSheepdogProgramAdmin(userAuthMapping))
-      || (isProgramUrl(project) && userHasSheepdogProjectAdmin(userAuthMapping))
-      || userHasMethodOnProject('create', project, userAuthMapping)
-      || userHasMethodOnProject('update', project, userAuthMapping)
+      !useArboristUI ||
+      (isRootUrl(project) && userHasSheepdogProgramAdmin(userAuthMapping)) ||
+      (isProgramUrl(project) && userHasSheepdogProjectAdmin(userAuthMapping)) ||
+      userHasMethodOnProject('create', project, userAuthMapping) ||
+      userHasMethodOnProject('update', project, userAuthMapping)
     ) {
       return (
         <React.Fragment>
@@ -51,10 +57,15 @@ const ProjectSubmission = (props) => {
     <div className='project-submission'>
       <h2 className='project-submission__title'>{props.project}</h2>
       {
-        <Link className='project-submission__link' to={`/${props.project}/search`}>browse nodes</Link>
+        <Link
+          className='project-submission__link'
+          to={`/${props.project}/search`}
+        >
+          browse nodes
+        </Link>
       }
-      { displaySubmissionUIComponents(props.project, props.userAuthMapping) }
-      { displayData() }
+      {displaySubmissionUIComponents(props.project, props.userAuthMapping)}
+      {displayData()}
     </div>
   );
 };

@@ -3,11 +3,11 @@ import { clearSearchHistoryItems } from '../../action';
 import DictionarySearchHistory from './DictionarySearchHistory';
 
 const ReduxDictionarySearchHistory = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     searchHistoryItems: state.ddgraph.searchHistoryItems,
   });
 
-  const mapDispatchToProps = dispatch => ({
+  const mapDispatchToProps = (dispatch) => ({
     onClearSearchHistoryItems: () => dispatch(clearSearchHistoryItems()),
   });
 

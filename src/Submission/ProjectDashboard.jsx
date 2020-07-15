@@ -9,9 +9,7 @@ class ProjectDashboard extends Component {
     const projectList = this.props.projectList || [];
     return (
       <div className='project-dashboard'>
-        <div className='h2-typo project-dashboard__title'>
-          Data Submission
-        </div>
+        <div className='h2-typo project-dashboard__title'>Data Submission</div>
         <ReduxSubmissionHeader />
         <ReduxProjectTable
           projectList={projectList}

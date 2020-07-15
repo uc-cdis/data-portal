@@ -173,25 +173,15 @@
       "tabs": [
         {
           "title": "Project",
-          "fields": [
-            "project",
-            "study"
-          ]
+          "fields": ["project", "study"]
         },
         {
           "title": "Subject",
-          "fields": [
-            "race",
-            "ethnicity",
-            "gender",
-            "vital_status"
-          ]
+          "fields": ["race", "ethnicity", "gender", "vital_status"]
         },
         {
           "title": "File",
-          "fields": [
-            "file_type"
-          ]
+          "fields": ["file_type"]
         }
       ]
     },

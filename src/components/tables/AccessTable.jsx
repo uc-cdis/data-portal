@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Table from './base/Table';
 import './AccessTable.less';
-import { projectCodeFromResourcePath, listifyMethodsFromMapping } from '../../authMappingUtils';
+import {
+  projectCodeFromResourcePath,
+  listifyMethodsFromMapping,
+} from '../../authMappingUtils';
 
 const LIST_PROJECT_MSG = 'You have access to the following project(s)';
 const LIST_RESOURCE_MSG = 'You have access to the following resource(s)';
@@ -18,14 +21,8 @@ class AccessTable extends React.Component {
    */
 
   getDataFenceProjectAccess = (projectsAccesses, projects) =>
-    Object.keys(projectsAccesses).map(p => [
-      p in projects ?
-        <Link to={`/${projects[p]}`}>
-          {p}
-        </Link> :
-        <div>
-          {p}
-        </div>,
+    Object.keys(projectsAccesses).map((p) => [
+      p in projects ? <Link to={`/${projects[p]}`}>{p}</Link> : <div>{p}</div>,
       projectsAccesses[p].join(', '),
     ]);
 
@@ -33,13 +30,11 @@ class AccessTable extends React.Component {
     Object.keys(userAuthMapping).map((r) => {
       const projCode = projectCodeFromResourcePath(r); // will be project code or ''
       return [
-        projCode in projects ?
-          <Link to={`/${projects[projCode]}`}>
-            {r}
-          </Link> :
-          <div>
-            {r}
-          </div>,
+        projCode in projects ? (
+          <Link to={`/${projects[projCode]}`}>{r}</Link>
+        ) : (
+          <div>{r}</div>
+        ),
         listifyMethodsFromMapping(userAuthMapping[r]).join(', '),
       ];
     });
@@ -51,7 +46,10 @@ class AccessTable extends React.Component {
           <Table
             title={LIST_PROJECT_MSG}
             header={[PROJECT_COLUMN, METHOD_COLUMN]}
-            data={this.getDataFenceProjectAccess(this.props.projectsAccesses, this.props.projects)}
+            data={this.getDataFenceProjectAccess(
+              this.props.projectsAccesses,
+              this.props.projects
+            )}
           />
         </div>
       );
@@ -61,7 +59,10 @@ class AccessTable extends React.Component {
         <Table
           title={LIST_RESOURCE_MSG}
           header={[RESOURCE_COLUMN, METHOD_COLUMN]}
-          data={this.getDataArboristAuthMapping(this.props.userAuthMapping, this.props.projects)}
+          data={this.getDataArboristAuthMapping(
+            this.props.userAuthMapping,
+            this.props.projects
+          )}
         />
       </div>
     );

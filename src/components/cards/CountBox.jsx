@@ -9,10 +9,14 @@ class CountBox extends Component {
         <div className={`count-box__title--align-${this.props.align} h4-typo`}>
           {this.props.label}
         </div>
-        <div className={`count-box__number--align-${this.props.align} special-number`}>
+        <div
+          className={`count-box__number--align-${this.props.align} special-number`}
+        >
           {this.props.value === this.props.lockValue ? (
             <i className='count-box__lock g3-icon g3-icon--lock' />
-          ) : Number(this.props.value).toLocaleString()}
+          ) : (
+            Number(this.props.value).toLocaleString()
+          )}
         </div>
       </div>
     );

@@ -12,12 +12,15 @@ class QueryForm extends React.Component {
   };
 
   constructor(props) {
-    const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/, '') : '');
+    const queryParams = querystring.parse(
+      location.search ? location.search.replace(/^\?+/, '') : ''
+    );
     super(props);
     this.state = {
-      selectValue: Object.keys(queryParams).length > 0 && queryParams.node_type ?
-        { value: queryParams.node_type, label: queryParams.node_type }
-        : null,
+      selectValue:
+        Object.keys(queryParams).length > 0 && queryParams.node_type
+          ? { value: queryParams.node_type, label: queryParams.node_type }
+          : null,
     };
     this.updateValue = this.updateValue.bind(this);
     this.handleDownloadAll = this.handleDownloadAll.bind(this);
@@ -26,8 +29,10 @@ class QueryForm extends React.Component {
 
   handleDownloadAll(fileType) {
     window.open(
-      `${getSubmitPath(this.props.project)}/export?node_label=${this.state.selectValue.value}&format=${fileType}`,
-      '_blank',
+      `${getSubmitPath(this.props.project)}/export?node_label=${
+        this.state.selectValue.value
+      }&format=${fileType}`,
+      '_blank'
     );
   }
 
@@ -48,7 +53,6 @@ class QueryForm extends React.Component {
     this.props.onSearchFormSubmit(data, url);
   }
 
-
   updateValue(newValue) {
     this.setState({
       selectValue: newValue,
@@ -56,37 +60,54 @@ class QueryForm extends React.Component {
   }
 
   render() {
-    const nodesForQuery = this.props.nodeTypes.filter(nt => !['program', 'project'].includes(nt));
-    const options = nodesForQuery.map(nodeType => ({ value: nodeType, label: nodeType }));
+    const nodesForQuery = this.props.nodeTypes.filter(
+      (nt) => !['program', 'project'].includes(nt)
+    );
+    const options = nodesForQuery.map((nodeType) => ({
+      value: nodeType,
+      label: nodeType,
+    }));
     const state = this.state || {};
     return (
       <form onSubmit={this.handleQuerySubmit}>
-        <Select className='query-form__select' name='node_type' options={options} value={state.selectValue} onChange={this.updateValue} />
-        <input className='query-form__input' placeholder='submitter_id' type='text' name='submitter_id' />
-        <input className='query-form__search-button' type='submit' onSubmit={this.handleQuerySubmit} value='search' />
-        {
-          this.state.selectValue && this.props.queryNodeCount > 0 ? (
-            <Dropdown
-              className='query-node__download-button'
-            >
-              <Dropdown.Button>Download All</Dropdown.Button>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  rightIcon='download'
-                  onClick={() => this.handleDownloadAll('tsv')}
-                >
-                  TSV
-                </Dropdown.Item>
-                <Dropdown.Item
-                  rightIcon='download'
-                  onClick={() => this.handleDownloadAll('json')}
-                >
-                  JSON
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          ) : null
-        }
+        <Select
+          className='query-form__select'
+          name='node_type'
+          options={options}
+          value={state.selectValue}
+          onChange={this.updateValue}
+        />
+        <input
+          className='query-form__input'
+          placeholder='submitter_id'
+          type='text'
+          name='submitter_id'
+        />
+        <input
+          className='query-form__search-button'
+          type='submit'
+          onSubmit={this.handleQuerySubmit}
+          value='search'
+        />
+        {this.state.selectValue && this.props.queryNodeCount > 0 ? (
+          <Dropdown className='query-node__download-button'>
+            <Dropdown.Button>Download All</Dropdown.Button>
+            <Dropdown.Menu>
+              <Dropdown.Item
+                rightIcon='download'
+                onClick={() => this.handleDownloadAll('tsv')}
+              >
+                TSV
+              </Dropdown.Item>
+              <Dropdown.Item
+                rightIcon='download'
+                onClick={() => this.handleDownloadAll('json')}
+              >
+                JSON
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        ) : null}
       </form>
     );
   }

@@ -31,22 +31,21 @@
 .spinner__svg circle {
   animation-name: jumping;
   animation-duration: 2s;
-  animation-timing-function: cubic-bezier(.05, .2, .35, 1);
+  animation-timing-function: cubic-bezier(0.05, 0.2, 0.35, 1);
   animation-iteration-count: infinite;
 }
 
 .spinner__svg circle:nth-child(2) {
-  animation-delay: .18s;
+  animation-delay: 0.18s;
 }
 
 .spinner__svg circle:nth-child(3) {
-  animation-delay: .36s;
+  animation-delay: 0.36s;
 }
 
 .spinner__text {
   text-align: center;
 }
-
 
 .spinning-spinner-cell {
   width: 100%;
@@ -72,10 +71,10 @@
   width: 4rem;
   height: 4rem;
   border: 3px solid transparent;
-  border-top-color: rgba(0, 0, 0, .5);
-  border-bottom-color: rgba(0, 0, 0, .5);
+  border-top-color: rgba(0, 0, 0, 0.5);
+  border-bottom-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
-  animation: rotation .8s ease infinite;
+  animation: rotation 0.8s ease infinite;
 }
 
 @keyframes rotation {

@@ -16,12 +16,12 @@ class HIVCohortFilter extends React.Component {
 
   selectedCase() {
     if (this.state.caseToRender === 'PTC') {
-      return (<PTCCase />);
+      return <PTCCase />;
     }
     if (this.state.caseToRender === 'EC') {
-      return (<ECCase />);
+      return <ECCase />;
     }
-    return (<LTNPCase />);
+    return <LTNPCase />;
   }
 
   updateCase(caseToSwitchTo) {
@@ -31,8 +31,15 @@ class HIVCohortFilter extends React.Component {
   render() {
     return (
       <div className='hiv-cohort-filter'>
-        <Dropdown buttonType='secondary' id='hiv-cohort-filter__case-selection-dropdown'>
-          <Dropdown.Button rightIcon='dropdown' buttonType='secondary' displaySelectedOption='true'>
+        <Dropdown
+          buttonType='secondary'
+          id='hiv-cohort-filter__case-selection-dropdown'
+        >
+          <Dropdown.Button
+            rightIcon='dropdown'
+            buttonType='secondary'
+            displaySelectedOption='true'
+          >
             {this.state.caseToRender} Classifier
           </Dropdown.Button>
           <Dropdown.Menu>

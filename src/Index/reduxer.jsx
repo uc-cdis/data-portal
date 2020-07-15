@@ -11,9 +11,9 @@ import { components } from '../params';
 export const ReduxIndexBarChart = (() => {
   const mapStateToProps = (state) => {
     if (state.index && state.index.projectsByName) {
-      const projectList = Object.values(
-        state.index.projectsByName,
-      ).sort(sortCompare);
+      const projectList = Object.values(state.index.projectsByName).sort(
+        sortCompare
+      );
       return {
         projectList,
         countNames: state.index.countNames,
@@ -23,7 +23,9 @@ export const ReduxIndexBarChart = (() => {
   };
 
   // Bar chart does not dispatch anything
-  const mapDispatchToProps = function mapDispatch() { return {}; };
+  const mapDispatchToProps = function mapDispatch() {
+    return {};
+  };
 
   return connect(mapStateToProps, mapDispatchToProps)(IndexBarChart);
 })();
@@ -31,9 +33,9 @@ export const ReduxIndexBarChart = (() => {
 export const ReduxIndexCounts = (() => {
   const mapStateToProps = (state) => {
     if (state.index && state.index.projectsByName) {
-      const projectList = Object.values(
-        state.index.projectsByName,
-      ).sort(sortCompare);
+      const projectList = Object.values(state.index.projectsByName).sort(
+        sortCompare
+      );
       return {
         projectList,
         countNames: state.index.countNames,
@@ -43,12 +45,14 @@ export const ReduxIndexCounts = (() => {
   };
 
   // Bar chart does not dispatch anything
-  const mapDispatchToProps = function mapDispatch() { return {}; };
+  const mapDispatchToProps = function mapDispatch() {
+    return {};
+  };
   return connect(mapStateToProps, mapDispatchToProps)(IndexCounts);
 })();
 
 export const ReduxIndexButtonBar = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     buttons: components.index.buttons,
     dictIcons,
     activeTab: state.bar.active,
@@ -56,15 +60,15 @@ export const ReduxIndexButtonBar = (() => {
   });
 
   // Bar chart does not dispatch anything
-  const mapDispatchToProps = dispatch => ({
-    onActiveTab: link => dispatch(setActive(link)),
+  const mapDispatchToProps = (dispatch) => ({
+    onActiveTab: (link) => dispatch(setActive(link)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(IndexButtonBar);
 })();
 
 export const ReduxIntroduction = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     userAuthMapping: state.userAuthMapping,
   });
 

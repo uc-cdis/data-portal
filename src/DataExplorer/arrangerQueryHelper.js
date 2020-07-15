@@ -1,7 +1,7 @@
 import { hasKeyChain } from './utils';
 
 const LIMIT_COUNT = 10000;
-const getEndpoint = projectId => `/${projectId}/graphql`;
+const getEndpoint = (projectId) => `/${projectId}/graphql`;
 
 /**
  * Parse data object from elasticsearch result
@@ -9,15 +9,12 @@ const getEndpoint = projectId => `/${projectId}/graphql`;
  * @param {string} indexType - the index type name for query
  * @returns {Object[]} list of matched results
  */
-const parseDataFromResponseContent = (
-  responseData,
-  indexType,
-) => {
+const parseDataFromResponseContent = (responseData, indexType) => {
   const MSG_PARSE_DATA_FAIL = 'Error while parsing reponse data';
   if (!hasKeyChain(responseData, `data.${indexType}.hits.edges`)) {
     throw MSG_PARSE_DATA_FAIL;
   }
-  return responseData.data[indexType].hits.edges.map(item => item.node);
+  return responseData.data[indexType].hits.edges.map((item) => item.node);
 };
 
 /**
@@ -26,10 +23,7 @@ const parseDataFromResponseContent = (
  * @param {string} indexType - the index type name for query
  * @returns {number} the count number
  */
-const parseCountFromResponseContent = (
-  responseData,
-  indexType,
-) => {
+const parseCountFromResponseContent = (responseData, indexType) => {
   const MSG_PARSE_COUNT_FAIL = 'Error while parsing reponse data';
   if (!hasKeyChain(responseData, `data.${indexType}.hits.total`)) {
     throw MSG_PARSE_COUNT_FAIL;
@@ -52,7 +46,7 @@ export const constructGraphQLQueryWithSQON = (
   sqonObj,
   nodeList,
   isGettingCount,
-  count,
+  count
 ) => {
   const getContentQuery = `edges {
                           node {
@@ -81,10 +75,7 @@ export const constructGraphQLQueryWithSQON = (
  * @param {string} key - key name to get aggregation
  * @returns {object} graphql query object
  */
-export const constructAggregationQuery = (
-  indexType,
-  key,
-) => {
+export const constructAggregationQuery = (indexType, key) => {
   const gqlQuery = {
     query: `query {
                 ${indexType} {
@@ -110,19 +101,11 @@ export const constructAggregationQuery = (
  * @param {string} key - key name to get aggregation
  * @returns {Object[]} List of objects, each has the same keys as in "fields"
  */
-export const queryAggregations = async (
-  apiFunc,
-  projectId,
-  indexType,
-  key,
-) => {
+export const queryAggregations = async (apiFunc, projectId, indexType, key) => {
   const MSG_QUERY_BY_AGG_FAIL = 'Error while querying Arranger aggregation';
   const responseData = await apiFunc({
     endpoint: getEndpoint(projectId),
-    body: constructAggregationQuery(
-      indexType,
-      key,
-    ),
+    body: constructAggregationQuery(indexType, key),
   });
   if (!responseData) {
     throw MSG_QUERY_BY_AGG_FAIL;
@@ -145,11 +128,11 @@ export const constructGraphQLQuery = (
   indexType,
   nodeList,
   isGettingCount,
-  count,
+  count
 ) => {
   const sqonObj = {
     op: 'and',
-    content: filters.map(filter => ({
+    content: filters.map((filter) => ({
       op: 'in',
       content: {
         field: filter.name,
@@ -157,7 +140,13 @@ export const constructGraphQLQuery = (
       },
     })),
   };
-  return constructGraphQLQueryWithSQON(indexType, sqonObj, nodeList, isGettingCount, count);
+  return constructGraphQLQueryWithSQON(
+    indexType,
+    sqonObj,
+    nodeList,
+    isGettingCount,
+    count
+  );
 };
 
 /**
@@ -167,7 +156,11 @@ export const constructGraphQLQuery = (
  * @param {string} indexType - index type for query
  * @returns {string[]} list of column id strings
  */
-export const getArrangerTableColumns = async (apiFunc, projectId, indexType) => {
+export const getArrangerTableColumns = async (
+  apiFunc,
+  projectId,
+  indexType
+) => {
   const MSG_GET_COLUMN_FAIL = 'Get Arranger table columns fail';
   const body = {
     query: `query columnsStateQuery
@@ -198,8 +191,8 @@ export const getArrangerTableColumns = async (apiFunc, projectId, indexType) => 
     throw MSG_GET_COLUMN_FAIL;
   }
   const columns = response.data[indexType].columnsState.state.columns
-    .filter(col => col.show)
-    .map(col => col.field);
+    .filter((col) => col.show)
+    .map((col) => col.field);
   return columns;
 };
 
@@ -219,7 +212,7 @@ export const queryDataByIds = async (
   graphqlIdField,
   idList,
   indexType,
-  fields,
+  fields
 ) => {
   const MSG_QUERY_BY_ID_FAIL = 'Error while querying Arranger data by ID';
   if (idList === null) {
@@ -232,7 +225,7 @@ export const queryDataByIds = async (
       indexType,
       [...fields],
       false,
-      idList.length,
+      idList.length
     ),
   });
   if (!responseData) {
@@ -255,17 +248,12 @@ export const queryDataBySQON = async (
   projectId,
   sqonObj,
   indexType,
-  fields,
+  fields
 ) => {
   const MSG_QUERY_BY_SQON_FAIL = 'Error while querying Arranger data by sqon';
   const countQuery = await apiFunc({
     endpoint: getEndpoint(projectId),
-    body: constructGraphQLQueryWithSQON(
-      indexType,
-      sqonObj,
-      [...fields],
-      true,
-    ),
+    body: constructGraphQLQueryWithSQON(indexType, sqonObj, [...fields], true),
   });
   if (!countQuery) {
     throw MSG_QUERY_BY_SQON_FAIL;
@@ -278,7 +266,7 @@ export const queryDataBySQON = async (
       sqonObj,
       [...fields],
       false,
-      count,
+      count
     ),
   });
   return parseDataFromResponseContent(responseData, indexType);
@@ -296,16 +284,13 @@ export const queryCountByValues = async (
   apiFunc,
   projectId,
   indexType,
-  filters,
+  filters
 ) => {
-  const MSG_QUERY_COUNT_BY_VALUE_FAIL = 'Error while querying Arranger count by values';
+  const MSG_QUERY_COUNT_BY_VALUE_FAIL =
+    'Error while querying Arranger count by values';
   const countQueryResponse = await apiFunc({
     endpoint: getEndpoint(projectId),
-    body: constructGraphQLQuery(
-      filters,
-      indexType,
-      [],
-      true),
+    body: constructGraphQLQuery(filters, indexType, [], true),
   });
   if (!countQueryResponse) {
     throw MSG_QUERY_COUNT_BY_VALUE_FAIL;
@@ -313,7 +298,6 @@ export const queryCountByValues = async (
   const count = parseCountFromResponseContent(countQueryResponse, indexType);
   return count;
 };
-
 
 /**
  * Query arranger for data records that match any "filterValues" for "filterField"
@@ -329,10 +313,16 @@ export const queryDataByValues = async (
   projectId,
   indexType,
   filters,
-  returnFields,
+  returnFields
 ) => {
-  const MSG_QUERY_BY_VALUE_FAIL = 'Error while querying Arranger data by values';
-  const count = await queryCountByValues(apiFunc, projectId, indexType, filters);
+  const MSG_QUERY_BY_VALUE_FAIL =
+    'Error while querying Arranger data by values';
+  const count = await queryCountByValues(
+    apiFunc,
+    projectId,
+    indexType,
+    filters
+  );
   const responseData = await apiFunc({
     endpoint: getEndpoint(projectId),
     body: constructGraphQLQuery(
@@ -340,7 +330,7 @@ export const queryDataByValues = async (
       indexType,
       [...returnFields],
       false,
-      count,
+      count
     ),
   });
   if (!responseData) {

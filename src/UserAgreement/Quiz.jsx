@@ -5,15 +5,13 @@ import Question from './Question';
 import QuizSummary from './QuizSummary';
 import './Quiz.less';
 
-const getQuestionSectionId = idx => `Q${idx}`;
+const getQuestionSectionId = (idx) => `Q${idx}`;
 
 const makeDefaultState = (questions) => {
   const notDone = [];
-  questions.forEach(
-    (item, i) => {
-      notDone.push(i);
-    },
-  );
+  questions.forEach((item, i) => {
+    notDone.push(i);
+  });
   return {
     notDone,
     rights: [],
@@ -28,15 +26,13 @@ const makeDefaultState = (questions) => {
 class Quiz extends Component {
   static propTypes = {
     questionList: PropTypes.arrayOf(
-      PropTypes.shape(
-        {
-          name: PropTypes.string,
-          question: PropTypes.string,
-          options: PropTypes.arrayOf(PropTypes.string),
-          answer: PropTypes.number,
-          hint: PropTypes.string,
-        },
-      ),
+      PropTypes.shape({
+        name: PropTypes.string,
+        question: PropTypes.string,
+        options: PropTypes.arrayOf(PropTypes.string),
+        answer: PropTypes.number,
+        hint: PropTypes.string,
+      })
     ),
     title: PropTypes.string.isRequired,
     subtitle: PropTypes.string,
@@ -59,15 +55,19 @@ class Quiz extends Component {
   }
 
   componentDidMount() {
-    this.quizContent.addEventListener('scroll',
-      () => this.handleScroll(this.quizContent));
-    const currentQ = this.qsDom[getQuestionSectionId(Object.values(this.qsDom).length)];
+    this.quizContent.addEventListener('scroll', () =>
+      this.handleScroll(this.quizContent)
+    );
+    const currentQ = this.qsDom[
+      getQuestionSectionId(Object.values(this.qsDom).length)
+    ];
     this.lastOffsetTop = currentQ.offsetTop;
   }
 
   componentWillUnmount() {
-    this.quizContent.removeEventListener('scroll',
-      () => this.handleScroll(this.quizContent));
+    this.quizContent.removeEventListener('scroll', () =>
+      this.handleScroll(this.quizContent)
+    );
   }
 
   setCurrentSection(sectionIdx) {
@@ -79,7 +79,7 @@ class Quiz extends Component {
   };
 
   answerQuestion(questionId, isCorrect) {
-    const notDone = this.state.notDone.filter(item => item !== questionId);
+    const notDone = this.state.notDone.filter((item) => item !== questionId);
     let { rights } = this.state;
     let { wrongs } = this.state;
     if (isCorrect) {
@@ -87,13 +87,13 @@ class Quiz extends Component {
         rights.push(questionId);
         rights.sort();
       }
-      wrongs = wrongs.filter(item => item !== questionId);
+      wrongs = wrongs.filter((item) => item !== questionId);
     } else {
       if (!wrongs.includes(questionId)) {
         wrongs.push(questionId);
         wrongs.sort();
       }
-      rights = rights.filter(item => item !== questionId);
+      rights = rights.filter((item) => item !== questionId);
     }
     this.setState({ notDone, rights, wrongs });
   }
@@ -119,7 +119,10 @@ class Quiz extends Component {
         // if the first line of item < the last selected element
         // and check if the last position of item has already displayed
         // in the subscreen
-        if (curPos + ctrl.offsetHeight >= dom.offsetTop + (dom.offsetHeight * 0.9)) {
+        if (
+          curPos + ctrl.offsetHeight >=
+          dom.offsetTop + dom.offsetHeight * 0.9
+        ) {
           // => if two above tests is correct, set the current section to this item
           // => also set the last element for this item,
           // by this way, we can select the lowest item
@@ -136,90 +139,107 @@ class Quiz extends Component {
 
   handleClick(e, idx) {
     this.setCurrentSection(idx);
-    this.quizContent.scrollTop = this.qsDom[getQuestionSectionId(idx + 1)].offsetTop
-      - this.quizContent.offsetTop;
+    this.quizContent.scrollTop =
+      this.qsDom[getQuestionSectionId(idx + 1)].offsetTop -
+      this.quizContent.offsetTop;
     e.preventDefault();
     this.scrolledByClick = true;
   }
 
   handleSubmit() {
-    const data = this.props.questionList.map(item => item.options[item.answer]);
+    const data = this.props.questionList.map(
+      (item) => item.options[item.answer]
+    );
     this.props.onSubmit(data, this.props.questionList);
   }
 
   render() {
-    const { questionList, title, subtitle, description, hasCorrectAnswers } = this.props;
+    const {
+      questionList,
+      title,
+      subtitle,
+      description,
+      hasCorrectAnswers,
+    } = this.props;
     const canSubmit = this.state.notDone.length === 0;
     return (
       <div className='quiz__form'>
         <div className={subtitle ? 'quiz__title tall' : 'quiz__title'}>
           <h2 className='quiz__title-text h2'>{title}</h2>
-          { subtitle ? <h3 className='quiz__subtitle-text h3'>{subtitle}</h3> : null }
+          {subtitle ? (
+            <h3 className='quiz__subtitle-text h3'>{subtitle}</h3>
+          ) : null}
         </div>
-        <div ref={(elem) => { this.menu = elem; }} className={hasCorrectAnswers ? 'quiz__menu' : 'quiz__menu top'}>
-          {
-            questionList.map(
-              (item, i) => {
-                const section = getQuestionSectionId(i + 1);
-                let styleModifier = '';
-                if (this.state.currentSection === section) { styleModifier += ' quiz__menu-bullet--active'; }
-                return (
-                  <a
-                    className={`quiz__menu-bullet body${styleModifier}`}
-                    onClick={e => this.handleClick(e, i)}
-                    href={`#${getQuestionSectionId(i + 1)}`}
-                    key={`menuItem${i}`}
-                  >
-                    {i + 1}
-                  </a>
-                );
-              }, this,
-            )
-          }
-          {
-            !hasCorrectAnswers ?
-              <Button
-                class='quiz__submit'
-                label='Submit'
-                enabled={canSubmit}
-                onClick={() => this.handleSubmit()}
-              />
-              : null
-          }
-        </div>
-        <div className={hasCorrectAnswers ? 'quiz__content' : 'quiz__content full'} ref={(elem) => { this.quizContent = elem; }}>
-          { description ? <h3 className='quiz__description h3'>{description}</h3> : null }
-          <div>
-            {
-              questionList.map(
-                (item, i) =>
-                  (
-                    <div ref={(elem) => { this.qsDom[getQuestionSectionId(i + 1)] = elem; }} key={`question${i}`}>
-                      <Question
-                        content={item}
-                        ref={(elem) => {
-                          this.qs[getQuestionSectionId(i + 1)] = elem;
-                        }}
-                        idx={i}
-                        sectionId={getQuestionSectionId(i + 1)}
-                        onChange={isCorrect => this.answerQuestion(i, isCorrect)}
-                        hasCorrectAnswers={hasCorrectAnswers}
-                      />
-                    </div>
-                  ),
-              )
+        <div
+          ref={(elem) => {
+            this.menu = elem;
+          }}
+          className={hasCorrectAnswers ? 'quiz__menu' : 'quiz__menu top'}
+        >
+          {questionList.map((item, i) => {
+            const section = getQuestionSectionId(i + 1);
+            let styleModifier = '';
+            if (this.state.currentSection === section) {
+              styleModifier += ' quiz__menu-bullet--active';
             }
+            return (
+              <a
+                className={`quiz__menu-bullet body${styleModifier}`}
+                onClick={(e) => this.handleClick(e, i)}
+                href={`#${getQuestionSectionId(i + 1)}`}
+                key={`menuItem${i}`}
+              >
+                {i + 1}
+              </a>
+            );
+          }, this)}
+          {!hasCorrectAnswers ? (
+            <Button
+              class='quiz__submit'
+              label='Submit'
+              enabled={canSubmit}
+              onClick={() => this.handleSubmit()}
+            />
+          ) : null}
+        </div>
+        <div
+          className={hasCorrectAnswers ? 'quiz__content' : 'quiz__content full'}
+          ref={(elem) => {
+            this.quizContent = elem;
+          }}
+        >
+          {description ? (
+            <h3 className='quiz__description h3'>{description}</h3>
+          ) : null}
+          <div>
+            {questionList.map((item, i) => (
+              <div
+                ref={(elem) => {
+                  this.qsDom[getQuestionSectionId(i + 1)] = elem;
+                }}
+                key={`question${i}`}
+              >
+                <Question
+                  content={item}
+                  ref={(elem) => {
+                    this.qs[getQuestionSectionId(i + 1)] = elem;
+                  }}
+                  idx={i}
+                  sectionId={getQuestionSectionId(i + 1)}
+                  onChange={(isCorrect) => this.answerQuestion(i, isCorrect)}
+                  hasCorrectAnswers={hasCorrectAnswers}
+                />
+              </div>
+            ))}
           </div>
         </div>
-        {
-          hasCorrectAnswers ?
-            <QuizSummary
-              notDone={this.state.notDone}
-              wrongs={this.state.wrongs}
-              onSubmit={() => this.handleSubmit()}
-            />
-            : null
-        }
+        {hasCorrectAnswers ? (
+          <QuizSummary
+            notDone={this.state.notDone}
+            wrongs={this.state.wrongs}
+            onSubmit={() => this.handleSubmit()}
+          />
+        ) : null}
       </div>
     );
   }
