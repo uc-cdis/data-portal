@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import IconicLink from './buttons/IconicLink';
 import './Introduction.less';
-import { useArboristUI } from '../configs';
+import { useArboristUI } from '../localconf';
 import { userHasMethodOnAnyProject } from '../authMappingUtils';
 
 class Introduction extends Component {

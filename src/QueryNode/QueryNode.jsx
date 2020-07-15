@@ -5,7 +5,7 @@ import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
 import './QueryNode.less';
-import { useArboristUI } from '../configs';
+import { useArboristUI } from '../localconf';
 import { userHasMethodOnProject } from '../authMappingUtils';
 
 const Entity = ({

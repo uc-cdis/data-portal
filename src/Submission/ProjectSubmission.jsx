@@ -6,7 +6,7 @@ import DataModelGraph from '../DataModelGraph/DataModelGraph';
 import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
-import { useArboristUI } from '../configs';
+import { useArboristUI } from '../localconf';
 import {
   userHasMethodOnProject,
   isRootUrl,

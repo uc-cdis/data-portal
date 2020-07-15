@@ -305,6 +305,15 @@ function buildConfig(opts) {
     mobile: 480,
   };
 
+  const headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    'x-csrf-token': document.cookie.replace(
+      /(?:(?:^|.*;\s*)csrftoken\s*=\s*([^;]*).*$)|^.*$/,
+      '$1'
+    ),
+  };
+
   return {
     app,
     basename,
@@ -369,6 +378,7 @@ function buildConfig(opts) {
     explorerConfig,
     useNewExplorerConfigFormat,
     dataAvailabilityToolConfig,
+    headers,
   };
 }
 

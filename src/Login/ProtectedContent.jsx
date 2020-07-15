@@ -9,7 +9,7 @@ import {
 } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
-import { requiredCerts, submissionApiOauthPath } from '../configs';
+import { requiredCerts, submissionApiOauthPath } from '../localconf';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 import { intersection, isPageFullScreen } from '../utils';
 import './ProtectedContent.css';

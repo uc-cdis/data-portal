@@ -1,6 +1,6 @@
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 
-import { headers, graphqlPath } from './configs';
+import { headers, graphqlPath } from './localconf';
 
 const store = new Store(new RecordSource());
 

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import MapDataModel from './MapDataModel';
-import { headers, submissionApiPath } from '../configs';
+import { headers, submissionApiPath } from '../localconf';
 
 export const submitFiles = (program, project, params) => {
   const request = {
