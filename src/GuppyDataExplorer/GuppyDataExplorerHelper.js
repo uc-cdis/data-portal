@@ -1,4 +1,8 @@
-import _ from 'lodash';
+function difference(a, b) {
+  const setA = new Set(a);
+  const setB = new Set(b);
+  return [...new Set([...setA].filter(x => !setB.has(x)))];
+}
 
 // if true, means user has unaccessible fields in aggsData
 export function checkForAnySelectedUnaccessibleField(
@@ -15,7 +19,7 @@ export function checkForAnySelectedUnaccessibleField(
       && aggsData[fieldToCheck]
       && aggsData[fieldToCheck].histogram) {
     accessValuesInAggregationList = aggsData[fieldToCheck].histogram.map(entry => entry.key);
-    const outOfScopeValues = _.difference(accessValuesInAggregationList, accessibleValues);
+    const outOfScopeValues = difference(accessValuesInAggregationList, accessibleValues);
     if (outOfScopeValues.length > 0) { // trying to get unaccessible data is forbidden
       return true;
     }

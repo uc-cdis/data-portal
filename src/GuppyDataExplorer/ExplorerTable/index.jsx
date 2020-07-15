@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import pluralize from 'pluralize';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
@@ -10,6 +9,17 @@ import { capitalizeFirstLetter, humanFileSize } from '../../utils';
 import './ExplorerTable.css';
 import LockIcon from '../../img/icons/lock.svg';
 import dictIcons from '../../img/icons/index';
+
+/**
+ * A simplified alternative to lodash/get using string path of property names only.
+ * @param {object} object The object to query.
+ * @param {string} path Path to the property to get, e.g. 'a.b.c'
+ * @param {any} defaultValue The value returned if the resolved value is undefined.
+ * @return Returns the resolved value.
+ */
+const get = (object, path, defaultValue) =>
+  path.split('.').reduce((obj, key) => obj && obj[key], object) ||
+  defaultValue;
 
 class ExplorerTable extends React.Component {
   constructor(props) {
@@ -84,10 +94,10 @@ class ExplorerTable extends React.Component {
         } else {
           const nestedChildFieldName = fieldStringsArray.slice(1, fieldStringsArray.length).join('.');
           // some logic to handle depends on wether the child field in raw data is an array or not
-          if (_.isArray(row.value)) {
-            valueStr = row.value.map(x => _.get(x, nestedChildFieldName)).join(', ');
+          if (Array.isArray(row.value)) {
+            valueStr = row.value.map(x => get(x, nestedChildFieldName)).join(', ');
           } else {
-            valueStr = _.get(row.value, nestedChildFieldName);
+            valueStr = get(row.value, nestedChildFieldName);
           }
           // for inner most detailed table, 1 value per row
           if (isDetailedColumn) {
@@ -98,7 +108,7 @@ class ExplorerTable extends React.Component {
                     <div className='rt-tr -odd' key={i}>
                       <div className='rt-td'>
                         <span>
-                          {_.get(element, nestedChildFieldName)}
+                          {get(element, nestedChildFieldName)}
                           <br />
                         </span>
                       </div>
@@ -107,7 +117,7 @@ class ExplorerTable extends React.Component {
                     <div className='rt-tr -even' key={i}>
                       <div className='rt-td'>
                         <span>
-                          {_.get(element, nestedChildFieldName)}
+                          {get(element, nestedChildFieldName)}
                           <br />
                         </span>
                       </div>
@@ -232,7 +242,7 @@ class ExplorerTable extends React.Component {
       if (field.includes('.')) {
         const fieldStringsArray = field.split('.');
         if (this.props.rawData && this.props.rawData.length > 0
-          && _.isArray(this.props.rawData[0][fieldStringsArray[0]])) {
+          && Array.isArray(this.props.rawData[0][fieldStringsArray[0]])) {
           if (!nestedArrayFieldNames[fieldStringsArray[0]]) {
             nestedArrayFieldNames[fieldStringsArray[0]] = [];
           }
@@ -248,7 +258,7 @@ class ExplorerTable extends React.Component {
       // this is the subComponent of the two-level nested tables
       subComponent = row => Object.keys(nestedArrayFieldColumnConfigs).map((key) => {
         const rowData = (this.props.isLocked || !this.props.rawData) ?
-          [] : _.slice(this.props.rawData, row.index, row.index + 1);
+          [] : this.props.rawData.slice(row.index, row.index + 1);
         return (<div className='explorer-nested-table' key={key}>
           <ReactTable
             data={(this.props.isLocked || !rowData) ? [] : rowData}
