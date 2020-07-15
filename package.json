@@ -141,7 +141,8 @@
     "storybook": "STORYBOOK_PROJECT_ID=search STORYBOOK_ARRANGER_API=http://localhost:3000 start-storybook -p 9001 -c .storybook",
     "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --config .stylelintrc.js --fix",
     "sanity-check": "node ./sanity-check",
-    "develop:inrg": "HOSTNAME=portal.pedscommons.org NODE_ENV=dev APP=inrg bash ./runWebpack.sh"
+    "develop:inrg": "HOSTNAME=portal.pedscommons.org NODE_ENV=dev APP=inrg bash ./runWebpack.sh",
+    "format": "prettier --write ."
   },
   "graphql": {
     "file": "./data/schema.json"
