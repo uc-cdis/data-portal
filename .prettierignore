@@ -1,0 +1,4 @@
+**/__generated__/**
+**/*.min.js
+**/setupJest.js
+**/gqlHelper.js
