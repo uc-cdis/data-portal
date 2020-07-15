@@ -5,44 +5,39 @@ import CoreMetadataTable from './CoreMetadataTable';
 import { coreMetadataPath, userapiPath } from '../localconf';
 import { fetchWithCreds, updatePopup } from '../actions';
 
-export const generateSignedURL = objectId =>
-  dispatch =>
-    fetchWithCreds({
-      path: `${userapiPath}/data/download/${objectId}?expires_in=3600`,
-      dispatch,
-    })
-      .then(
-        ({ status, data }) => {
-          switch (status) {
-          case 200:
-            dispatch({
-              type: 'RECEIVE_SIGNED_URL',
-              url: data.url,
-            });
-            return dispatch(updatePopup({ signedURLPopup: true }));
-          default:
-            dispatch({
-              type: 'SIGNED_URL_ERROR',
-              error: `Error occurred during generating signed URL. Error code: ${status}`,
-            });
-            return dispatch(updatePopup({ signedURLPopup: true }));
-          }
-        },
-      );
+export const generateSignedURL = (objectId) => (dispatch) =>
+  fetchWithCreds({
+    path: `${userapiPath}/data/download/${objectId}?expires_in=3600`,
+    dispatch,
+  }).then(({ status, data }) => {
+    switch (status) {
+      case 200:
+        dispatch({
+          type: 'RECEIVE_SIGNED_URL',
+          url: data.url,
+        });
+        return dispatch(updatePopup({ signedURLPopup: true }));
+      default:
+        dispatch({
+          type: 'SIGNED_URL_ERROR',
+          error: `Error occurred during generating signed URL. Error code: ${status}`,
+        });
+        return dispatch(updatePopup({ signedURLPopup: true }));
+    }
+  });
 
 const clearSignedURL = () => ({
   type: 'CLEAR_SIGNED_URL',
 });
 
-export const fetchCoreMetadata = objectId =>
-  dispatch =>
-    fetchWithCreds({
-      path: coreMetadataPath + objectId,
-      customHeaders: { Accept: 'application/json' },
-      dispatch,
-    })
-      .then(({ status, data }) => {
-        switch (status) {
+export const fetchCoreMetadata = (objectId) => (dispatch) =>
+  fetchWithCreds({
+    path: coreMetadataPath + objectId,
+    customHeaders: { Accept: 'application/json' },
+    dispatch,
+  })
+    .then(({ status, data }) => {
+      switch (status) {
         case 200:
           return {
             type: 'RECEIVE_CORE_METADATA',
@@ -53,12 +48,12 @@ export const fetchCoreMetadata = objectId =>
             type: 'CORE_METADATA_ERROR',
             error: data,
           };
-        }
-      })
-      .then(msg => dispatch(msg));
+      }
+    })
+    .then((msg) => dispatch(msg));
 
 export const ReduxCoreMetadataHeader = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     metadata: state.coreMetadata.metadata,
     signedURL: state.coreMetadata.url,
     signedURLPopup: state.popups.signedURLPopup,
@@ -67,9 +62,9 @@ export const ReduxCoreMetadataHeader = (() => {
     projectAvail: state.submission.projectAvail,
   });
 
-  const mapDispatchToProps = dispatch => ({
-    onGenerateSignedURL: objectId => dispatch(generateSignedURL(objectId)),
-    onUpdatePopup: state => dispatch(updatePopup(state)),
+  const mapDispatchToProps = (dispatch) => ({
+    onGenerateSignedURL: (objectId) => dispatch(generateSignedURL(objectId)),
+    onUpdatePopup: (state) => dispatch(updatePopup(state)),
     onClearSignedURL: () => dispatch(clearSignedURL()),
   });
 
@@ -77,23 +72,21 @@ export const ReduxCoreMetadataHeader = (() => {
 })();
 
 export const ReduxFileTypePicture = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     metadata: state.coreMetadata.metadata,
   });
 
-  const mapDispatchToProps = dispatch => ({
-  });
+  const mapDispatchToProps = (dispatch) => ({});
 
   return connect(mapStateToProps, mapDispatchToProps)(FileTypePicture);
 })();
 
 export const ReduxCoreMetadataTable = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     metadata: state.coreMetadata.metadata,
   });
 
-  const mapDispatchToProps = dispatch => ({
-  });
+  const mapDispatchToProps = (dispatch) => ({});
 
   return connect(mapStateToProps, mapDispatchToProps)(CoreMetadataTable);
 })();

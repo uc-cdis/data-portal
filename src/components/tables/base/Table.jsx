@@ -15,24 +15,14 @@ class Table extends React.Component {
       <div className='base-table'>
         <h2>{this.props.title}</h2>
         <table className='base-table__body'>
-          <TableHead
-            cols={this.props.header}
-          />
-          {
-            this.props.footer.length > 0 &&
-            <TableFoot
-              cols={this.props.footer}
-            />
-          }
+          <TableHead cols={this.props.header} />
+          {this.props.footer.length > 0 && (
+            <TableFoot cols={this.props.footer} />
+          )}
           <tbody>
-            {
-              this.props.data.map((datum, i) => (
-                <TableRow
-                  key={`${this.props.title}_${i}`}
-                  cols={datum}
-                />
-              ))
-            }
+            {this.props.data.map((datum, i) => (
+              <TableRow key={`${this.props.title}_${i}`} cols={datum} />
+            ))}
           </tbody>
         </table>
       </div>

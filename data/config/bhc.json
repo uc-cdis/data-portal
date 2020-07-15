@@ -185,12 +185,7 @@
       "tabs": [
         {
           "title": "Case",
-          "fields": [
-            "race",
-            "ethnicity",
-            "gender",
-            "project_id"
-          ]
+          "fields": ["race", "ethnicity", "gender", "project_id"]
         }
       ]
     },
@@ -211,7 +206,7 @@
       "index": "",
       "nodeCountField": "node_id"
     },
-  "guppyConfig": {
+    "guppyConfig": {
       "dataType": "case",
       "nodeCountTitle": "Cases",
       "fieldMapping": [],
@@ -253,28 +248,17 @@
       "tabs": [
         {
           "title": "File",
-          "fields": [
-            "project_id",
-            "data_type",
-            "data_format"
-          ]
+          "fields": ["project_id", "data_type", "data_format"]
         }
       ]
     },
     "table": {
       "enabled": true,
-      "fields": [
-        "project_id",
-        "file_name",
-        "file_size",
-        "object_id"
-      ]
+      "fields": ["project_id", "file_name", "file_size", "object_id"]
     },
     "guppyConfig": {
       "dataType": "file",
-      "fieldMapping": [
-        { "field": "object_id", "name": "GUID" }
-      ],
+      "fieldMapping": [{ "field": "object_id", "name": "GUID" }],
       "nodeCountTitle": "Files",
       "manifestMapping": {
         "resourceIndexType": "case",

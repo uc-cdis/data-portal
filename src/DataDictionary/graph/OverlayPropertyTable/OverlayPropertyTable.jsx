@@ -16,7 +16,7 @@ class OverlayPropertyTable extends React.Component {
       const nodeTitleFragment = getNodeTitleFragment(
         this.props.matchedResult.matches,
         this.props.node.title,
-        'overlay-property-table__span',
+        'overlay-property-table__span'
       );
       return nodeTitleFragment;
     }
@@ -29,7 +29,7 @@ class OverlayPropertyTable extends React.Component {
       const nodeDescriptionFragment = getNodeDescriptionFragment(
         this.props.matchedResult.matches,
         this.props.node.description,
-        'overlay-property-table__span',
+        'overlay-property-table__span'
       );
       return nodeDescriptionFragment;
     }
@@ -59,9 +59,10 @@ class OverlayPropertyTable extends React.Component {
   };
 
   render() {
-    if (!this.props.node || this.props.hidden) return (<React.Fragment />);
+    if (!this.props.node || this.props.hidden) return <React.Fragment />;
     const IconSVG = getCategoryIconSVG(this.props.node.category);
-    const searchedNodeNotOpened = this.props.isSearchMode && !this.props.isSearchResultNodeOpened;
+    const searchedNodeNotOpened =
+      this.props.isSearchMode && !this.props.isSearchResultNodeOpened;
     const needHighlightSearchResult = this.props.isSearchMode;
     return (
       <div className='overlay-property-table'>
@@ -71,18 +72,23 @@ class OverlayPropertyTable extends React.Component {
             <div className='overlay-property-table__header'>
               <div className='overlay-property-table__category'>
                 <IconSVG className='overlay-property-table__category-icon' />
-                <h4 className='overlay-property-table__category-text'>{this.props.node.category}</h4>
-                {
-                  this.props.isSearchMode && (
-                    <Button
-                      className='overlay-property-table__toggle-node'
-                      onClick={searchedNodeNotOpened
-                        ? this.handleOpenAllProperties : this.handleDisplayOnlyMatchedProperties}
-                      label={searchedNodeNotOpened ? 'See All' : 'See Only Matched'}
-                      buttonType='secondary'
-                    />
-                  )
-                }
+                <h4 className='overlay-property-table__category-text'>
+                  {this.props.node.category}
+                </h4>
+                {this.props.isSearchMode && (
+                  <Button
+                    className='overlay-property-table__toggle-node'
+                    onClick={
+                      searchedNodeNotOpened
+                        ? this.handleOpenAllProperties
+                        : this.handleDisplayOnlyMatchedProperties
+                    }
+                    label={
+                      searchedNodeNotOpened ? 'See All' : 'See Only Matched'
+                    }
+                    buttonType='secondary'
+                  />
+                )}
                 <span
                   className='overlay-property-table__close'
                   onClick={this.handleClose}
@@ -95,14 +101,18 @@ class OverlayPropertyTable extends React.Component {
                 </span>
                 <Button
                   className='overlay-property-table__download-button'
-                  onClick={() => { downloadTemplate('tsv', this.props.node.id); }}
+                  onClick={() => {
+                    downloadTemplate('tsv', this.props.node.id);
+                  }}
                   label='TSV'
                   buttonType='secondary'
                   rightIcon='download'
                 />
                 <Button
                   className='overlay-property-table__download-button'
-                  onClick={() => { downloadTemplate('json', this.props.node.id); }}
+                  onClick={() => {
+                    downloadTemplate('json', this.props.node.id);
+                  }}
                   label='JSON'
                   buttonType='secondary'
                   rightIcon='download'

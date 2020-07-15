@@ -152,7 +152,7 @@
       "tabs": [
         {
           "title": "Subject",
-          "fields":[
+          "fields": [
             "project_id",
             "gender",
             "breed",
@@ -162,10 +162,7 @@
         },
         {
           "title": "Diagnosis",
-          "fields":[
-            "disease_type",
-            "primary_site"
-          ]
+          "fields": ["disease_type", "primary_site"]
         }
       ]
     },
@@ -201,8 +198,7 @@
     "guppyConfig": {
       "dataType": "subject",
       "nodeCountTitle": "Subjects",
-      "fieldMapping": [
-      ],
+      "fieldMapping": [],
       "manifestMapping": {
         "resourceIndexType": "file",
         "resourceIdField": "object_id",

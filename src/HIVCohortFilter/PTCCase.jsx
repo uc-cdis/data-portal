@@ -9,31 +9,31 @@ import HIVCohortFilterCase from './HIVCohortFilterCase';
 
 class PTCCase extends HIVCohortFilterCase {
   /*
-  * PTC Case:
-  * Below is the full algorithm description, from https://ctds-planx.atlassian.net/browse/PXP-2771
-  * - The UI displays a 'decision tree' (just hardcoded svg), and makes an es query based on
-  * sliding window size and viral load number.
-  * - thrpy is the treatment that patient used since the last visit
-  * - thrpyv is the treatment that patient uses at the visit
-  * Definitions:
-  * - With HAART treatment: visit.thrpyv = HAART
-  * - viral load< X: followup.viral_load < X
-  * - consecutive Y month: (last_followup.visit_number - first_followup.visit_number)*6 = Y
-  * (if there are missing visit number, eg: patient has visit_number 1, 3, 4, 5.
-  * Just consider the missing one still maintain the same viral load)
-  * The criteria is:
-  * - Patients hiv_status are positive, have consecutive follow ups for Y months with
-  * HAART treatment and viral load < X
-  * - The consecutive window has an immediate next follow up WITHOUT HAART treatment
-  * and viral_load < X
-  * User will type in the time period Y and viral load threshold X, and the app will show the
-  * count for PTC case and control subjects. And have buttons to download the
-  * clinical manifest for them.
-  * One known limitation of the algorithm is that when visits are missing between 2 follow ups,
-  * we take them as adjacent even though they are not,
-  * so that visits 10 and 14 will be treated as 6 months apart, even though the time
-  * may be much greater.
-  */
+   * PTC Case:
+   * Below is the full algorithm description, from https://ctds-planx.atlassian.net/browse/PXP-2771
+   * - The UI displays a 'decision tree' (just hardcoded svg), and makes an es query based on
+   * sliding window size and viral load number.
+   * - thrpy is the treatment that patient used since the last visit
+   * - thrpyv is the treatment that patient uses at the visit
+   * Definitions:
+   * - With HAART treatment: visit.thrpyv = HAART
+   * - viral load< X: followup.viral_load < X
+   * - consecutive Y month: (last_followup.visit_number - first_followup.visit_number)*6 = Y
+   * (if there are missing visit number, eg: patient has visit_number 1, 3, 4, 5.
+   * Just consider the missing one still maintain the same viral load)
+   * The criteria is:
+   * - Patients hiv_status are positive, have consecutive follow ups for Y months with
+   * HAART treatment and viral load < X
+   * - The consecutive window has an immediate next follow up WITHOUT HAART treatment
+   * and viral_load < X
+   * User will type in the time period Y and viral load threshold X, and the app will show the
+   * count for PTC case and control subjects. And have buttons to download the
+   * clinical manifest for them.
+   * One known limitation of the algorithm is that when visits are missing between 2 follow ups,
+   * we take them as adjacent even though they are not,
+   * so that visits 10 and 14 will be treated as 6 months apart, even though the time
+   * may be much greater.
+   */
   constructor(props) {
     super(props);
     this.state = Object.assign(this.state, {
@@ -91,24 +91,34 @@ class PTCCase extends HIVCohortFilterCase {
       }
     }`;
 
-    return HIVCohortFilterCase.performQuery(queryString, variableString, true).then((res) => {
+    return HIVCohortFilterCase.performQuery(
+      queryString,
+      variableString,
+      true
+    ).then((res) => {
       // eslint-disable no-underscore-dangle
-      if (!res
-        || !res.data
-        || !res.data._aggregation
-        || !res.data._aggregation[this.state.visitIndexTypeName]) {
+      if (
+        !res ||
+        !res.data ||
+        !res.data._aggregation ||
+        !res.data._aggregation[this.state.visitIndexTypeName]
+      ) {
         throw new Error('Error when query subjects with HIV');
       }
-      const result = res.data._aggregation[this.state.visitIndexTypeName][bucketKey].histogram;
+      const result =
+        res.data._aggregation[this.state.visitIndexTypeName][bucketKey]
+          .histogram;
       const resultList = [];
-      result.forEach(item => (resultList.push({
-        key: item.key,
-        doc_count: item.count,
-      })));
+      result.forEach((item) =>
+        resultList.push({
+          key: item.key,
+          doc_count: item.count,
+        })
+      );
       return resultList;
       // eslint-enable no-underscore-dangle
     });
-  }
+  };
 
   getBucketByKey = async (bucketKey) => {
     const resList = await Promise.all([
@@ -122,7 +132,8 @@ class PTCCase extends HIVCohortFilterCase {
     }, {});
     const resultBucketKeys = {};
     const rest = [];
-    resList[0].forEach(({ key, doc_count }) => { // eslint-disable-line camelcase
+    resList[0].forEach(({ key, doc_count }) => {
+      // eslint-disable-line camelcase
       if (typeof withoutHAARTMap[key] !== 'undefined') {
         resultBucketKeys[key] = doc_count + withoutHAARTMap[key]; // eslint-disable-line camelcase
       } else {
@@ -130,7 +141,7 @@ class PTCCase extends HIVCohortFilterCase {
       }
     });
     return resultBucketKeys;
-  }
+  };
 
   doTheseVisitsMatchSlidingWindowCriteria = (visitArray) => {
     // The length of the array input to this function should be
@@ -138,8 +149,11 @@ class PTCCase extends HIVCohortFilterCase {
     const upperBound = visitArray.length;
     for (let i = 0; i < upperBound; i += 1) {
       if (visitArray[i].viral_load === null) return false; // ignore all null records
-      const vloadCheck = (visitArray[i].viral_load < this.state.viralLoadFromUser);
-      const therapyCheck = this.state.therapyValuesOfInterest.includes(visitArray[i].thrpyv);
+      const vloadCheck =
+        visitArray[i].viral_load < this.state.viralLoadFromUser;
+      const therapyCheck = this.state.therapyValuesOfInterest.includes(
+        visitArray[i].thrpyv
+      );
       if (!vloadCheck || !therapyCheck) {
         return false;
       }
@@ -150,19 +164,22 @@ class PTCCase extends HIVCohortFilterCase {
     }
 
     return true;
-  }
+  };
 
   classifyAllSubjectPTC = (subjectToVisitMap) => {
     const subjectPTC = [];
     const subjectControl = [];
     const subjectNeither = [];
-    const slidingWindowSize = Math.ceil(this.state.numConsecutiveMonthsFromUser / 6);
+    const slidingWindowSize = Math.ceil(
+      this.state.numConsecutiveMonthsFromUser / 6
+    );
 
     // For each patient, try to find numConsecutiveMonthsFromUser consecutive
     // visits that match the PTC criteria
     Object.keys(subjectToVisitMap).forEach((subjectId) => {
-      let visitArray = subjectToVisitMap[subjectId]
-        .sort((a, b) => (a.visit_number - b.visit_number));
+      let visitArray = subjectToVisitMap[subjectId].sort(
+        (a, b) => a.visit_number - b.visit_number
+      );
       const subjectWithVisits = {
         subject_id: subjectId,
         stop_treatments_maintain_viral_load_at_followup: 'N/A',
@@ -171,30 +188,34 @@ class PTCCase extends HIVCohortFilterCase {
       };
 
       // If a followup has no date-related attributes set, it is not helpful to this classifier
-      visitArray = visitArray
-        .filter(x => x.visit_date !== null && x.visit_number !== null);
+      visitArray = visitArray.filter(
+        (x) => x.visit_date !== null && x.visit_number !== null
+      );
 
       if (visitArray.length < slidingWindowSize + 1) {
         subjectNeither.push(subjectWithVisits);
         return;
       }
 
-
       // The sliding window step. Window is of size this.state.numConsecutiveMonthsFromUser / 6
       for (let i = 0; i < visitArray.length - slidingWindowSize; i += 1) {
         const windowMatch = this.doTheseVisitsMatchSlidingWindowCriteria(
-          visitArray.slice(i, i + slidingWindowSize),
+          visitArray.slice(i, i + slidingWindowSize)
         );
         if (windowMatch) {
           // Now that we know the first numConsecutiveMonthsFromUser visits in the array
           // match the criteria, we should check the following visit
           const theNextVisit = visitArray[i + slidingWindowSize];
-          if (theNextVisit.viral_load === null || theNextVisit.thrpyv === null) {
+          if (
+            theNextVisit.viral_load === null ||
+            theNextVisit.thrpyv === null
+          ) {
             continue; // eslint-disable-line no-continue
           }
-          const vloadCheck = (theNextVisit.viral_load < this.state.viralLoadFromUser);
+          const vloadCheck =
+            theNextVisit.viral_load < this.state.viralLoadFromUser;
           const therapyCheck = !this.state.therapyValuesOfInterest.includes(
-            theNextVisit.thrpyv,
+            theNextVisit.thrpyv
           );
           if (!therapyCheck) {
             // Look for next instance of thrpyv == HAART for this subject
@@ -202,19 +223,22 @@ class PTCCase extends HIVCohortFilterCase {
           }
           if (vloadCheck && therapyCheck) {
             // Found PTC!
-            subjectWithVisits.consecutive_haart_treatments_end_at_followup
-                      = visitArray[(i + slidingWindowSize) - 1].submitter_id;
-            subjectWithVisits.stop_treatments_maintain_viral_load_at_followup
-                      = theNextVisit.submitter_id;
+            subjectWithVisits.consecutive_haart_treatments_end_at_followup =
+              visitArray[i + slidingWindowSize - 1].submitter_id;
+            subjectWithVisits.stop_treatments_maintain_viral_load_at_followup =
+              theNextVisit.submitter_id;
             for (let j = i + slidingWindowSize; j < visitArray.length; j += 1) {
-              const nvloadCheck = (visitArray[j].viral_load > this.state.viralLoadFromUser);
-              const ntherapyCheck = this.state.therapyValuesOfInterest
-                .includes(visitArray[j].thrpyv);
+              const nvloadCheck =
+                visitArray[j].viral_load > this.state.viralLoadFromUser;
+              const ntherapyCheck = this.state.therapyValuesOfInterest.includes(
+                visitArray[j].thrpyv
+              );
               if (nvloadCheck || ntherapyCheck) {
                 break;
               } else {
-                subjectWithVisits.all_maintain_viral_load_at_followup
-                  .push(visitArray[j].submitter_id);
+                subjectWithVisits.all_maintain_viral_load_at_followup.push(
+                  visitArray[j].submitter_id
+                );
               }
             }
             subjectPTC.push(subjectWithVisits);
@@ -236,32 +260,33 @@ class PTCCase extends HIVCohortFilterCase {
       subjectControl,
       subjectNeither,
     };
-  }
+  };
 
   updateSubjectClassifications = async () => {
     /* This function retrieves subjects with HIV status == 'positive' and
-    * maps their subject_id to the sorted array of their visits.
-    * Then we attempt to find a sliding window match for the subject corresponding to
-    * the user-inputted viral load and number of consective months
-    * (we assume visits are 6 months apart).
-    */
-    this.getFollowUpsWithHIV()
-      .then((followUps) => {
-        const subjectToVisitMap = HIVCohortFilterCase.makeSubjectToVisitMap(followUps);
-        const {
-          subjectPTC,
-          subjectControl,
-          subjectNeither,
-        } = this.classifyAllSubjectPTC(subjectToVisitMap);
-        this.setState({
-          subjectPTC,
-          subjectControl,
-          subjectNeither,
-          inLoadingState: false,
-          resultAlreadyCalculated: true,
-        });
+     * maps their subject_id to the sorted array of their visits.
+     * Then we attempt to find a sliding window match for the subject corresponding to
+     * the user-inputted viral load and number of consective months
+     * (we assume visits are 6 months apart).
+     */
+    this.getFollowUpsWithHIV().then((followUps) => {
+      const subjectToVisitMap = HIVCohortFilterCase.makeSubjectToVisitMap(
+        followUps
+      );
+      const {
+        subjectPTC,
+        subjectControl,
+        subjectNeither,
+      } = this.classifyAllSubjectPTC(subjectToVisitMap);
+      this.setState({
+        subjectPTC,
+        subjectControl,
+        subjectNeither,
+        inLoadingState: false,
+        resultAlreadyCalculated: true,
       });
-  }
+    });
+  };
 
   makeCohortJSONFile = (subjectsIn) => {
     const annotatedObj = {
@@ -270,44 +295,45 @@ class PTCCase extends HIVCohortFilterCase {
       subjects: subjectsIn,
     };
 
-    const blob = new Blob([JSON.stringify(annotatedObj, null, 2)], { type: 'text/json' });
+    const blob = new Blob([JSON.stringify(annotatedObj, null, 2)], {
+      type: 'text/json',
+    });
     return blob;
-  }
+  };
 
   downloadPTC = () => {
-    const fileName = `ptc-cohort-vload-${this.state.viralLoadFromUser.toString()
-    }-months-${this.state.numConsecutiveMonthsFromUser.toString()}.json`;
+    const fileName = `ptc-cohort-vload-${this.state.viralLoadFromUser.toString()}-months-${this.state.numConsecutiveMonthsFromUser.toString()}.json`;
 
     const blob = this.makeCohortJSONFile(this.state.subjectPTC);
     FileSaver.saveAs(blob, fileName);
-  }
+  };
 
   showCount = (isPTC) => {
-    if (this.state.inLoadingState) { return (<Spinner />); }
+    if (this.state.inLoadingState) {
+      return <Spinner />;
+    }
     if (this.state.resultAlreadyCalculated) {
-      if (isPTC) { return this.state.subjectPTC.length; }
+      if (isPTC) {
+        return this.state.subjectPTC.length;
+      }
       return this.state.subjectControl.length;
     }
     return '--';
-  }
+  };
 
   render() {
     return (
       <React.Fragment>
         <div className='hiv-cohort-filter__sidebar'>
           <form>
-            <h2 className='hiv-cohort-filter__sidebar-title'>
-              PTC Classifier
-            </h2>
+            <h2 className='hiv-cohort-filter__sidebar-title'>PTC Classifier</h2>
             <h4 className='hiv-cohort-filter__sidebar-subtitle'>
               Customized Filters
             </h4>
             <div className='hiv-cohort-filter__sidebar-input-label'>
               Viral Load
-              <span
-                className='hiv-cohort-filter__value-highlight'
-              >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '__' } &nbsp;cp/mL
+              <span className='hiv-cohort-filter__value-highlight'>
+                &nbsp; &lt; {this.state.viralLoadFromUser || '__'} &nbsp;cp/mL
               </span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
@@ -324,7 +350,12 @@ class PTCCase extends HIVCohortFilterCase {
             <div className='hiv-cohort-filter__sidebar-input-label'>
               Received HAART for at least:
               <br />
-              <span className='hiv-cohort-filter__value-highlight'>{ this.state.numConsecutiveMonthsFromUser || '__' } &nbsp;{this.state.numConsecutiveMonthsFromUser === 1 ? 'month' : 'months'}</span>
+              <span className='hiv-cohort-filter__value-highlight'>
+                {this.state.numConsecutiveMonthsFromUser || '__'} &nbsp;
+                {this.state.numConsecutiveMonthsFromUser === 1
+                  ? 'month'
+                  : 'months'}
+              </span>
             </div>
             <div className='hiv-cohort-filter__sidebar-input'>
               <input
@@ -340,7 +371,9 @@ class PTCCase extends HIVCohortFilterCase {
             <div className='hiv-cohort-filter__button-group'>
               <Button
                 onClick={this.updateFilters}
-                enabled={!this.state.inLoadingState && this.state.isReadyToCalculate}
+                enabled={
+                  !this.state.inLoadingState && this.state.isReadyToCalculate
+                }
                 isPending={this.state.inLoadingState}
                 label={this.state.inLoadingState ? 'Loading...' : 'Confirm'}
               />
@@ -348,46 +381,51 @@ class PTCCase extends HIVCohortFilterCase {
           </form>
         </div>
 
-
         <div className='hiv-cohort-filter__main'>
           <div className='hiv-cohort-filter__main-wrapper'>
-            <div className='hiv-cohort-filter__svg-wrapper' id='PTC-svg-wrapper'>
+            <div
+              className='hiv-cohort-filter__svg-wrapper'
+              id='PTC-svg-wrapper'
+            >
               <CohortPTCSvg width='665px' />
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-1'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '__'} &nbsp;cp/mL
+                &nbsp; &lt; {this.state.viralLoadFromUser || '__'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-2'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '__' } &nbsp;cp/mL
+                &nbsp; &lt; {this.state.viralLoadFromUser || '__'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='vload-overlay-3'
               >
-                &nbsp; &lt; { this.state.viralLoadFromUser || '__'} &nbsp;cp/mL
+                &nbsp; &lt; {this.state.viralLoadFromUser || '__'} &nbsp;cp/mL
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight hiv-cohort-filter__overlay'
                 id='consecutive-months-overlay-1'
               >
-                { this.state.numConsecutiveMonthsFromUser || '__' } &nbsp;{this.state.numConsecutiveMonthsFromUser === 1 ? 'month' : 'months'}
+                {this.state.numConsecutiveMonthsFromUser || '__'} &nbsp;
+                {this.state.numConsecutiveMonthsFromUser === 1
+                  ? 'month'
+                  : 'months'}
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
                 id='ptc-counts-overlay-1'
               >
-                { this.showCount(true) }
+                {this.showCount(true)}
               </div>
               <div
                 className='hiv-cohort-filter__value-highlight-2 hiv-cohort-filter__overlay'
                 id='control-counts-overlay-1'
               >
-                { this.showCount(false) }
+                {this.showCount(false)}
               </div>
 
               <div
@@ -401,9 +439,11 @@ class PTCCase extends HIVCohortFilterCase {
                       label='Download Cohort'
                       rightIcon='download'
                       id='download-PTC-button'
-                      enabled={!this.state.inLoadingState
-                        && this.state.resultAlreadyCalculated
-                        && this.state.subjectPTC.length > 0}
+                      enabled={
+                        !this.state.inLoadingState &&
+                        this.state.resultAlreadyCalculated &&
+                        this.state.subjectPTC.length > 0
+                      }
                       buttonType='secondary'
                       isPending={this.state.inLoadingState}
                     />
@@ -411,16 +451,21 @@ class PTCCase extends HIVCohortFilterCase {
                 }
               </div>
 
-              <div id='download-control-cohort-overlay' className='hiv-cohort-filter__overlay'>
+              <div
+                id='download-control-cohort-overlay'
+                className='hiv-cohort-filter__overlay'
+              >
                 {
                   <React.Fragment>
                     <Button
                       label='Download Cohort'
                       rightIcon='download'
                       id='download-control-button'
-                      enabled={!this.state.inLoadingState
-                        && this.state.resultAlreadyCalculated
-                        && this.state.subjectControl.length > 0}
+                      enabled={
+                        !this.state.inLoadingState &&
+                        this.state.resultAlreadyCalculated &&
+                        this.state.subjectControl.length > 0
+                      }
                       onClick={this.downloadControl}
                       buttonType='secondary'
                       isPending={this.state.inLoadingState}

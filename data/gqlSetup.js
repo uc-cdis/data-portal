@@ -12,14 +12,17 @@ const dataFolder = __dirname;
 const dictPath = `${dataFolder}/dictionary.json`;
 const templateName = 'gqlHelper.js.njk';
 
-
 if (!fs.existsSync(`${dataFolder}/${templateName}`)) {
-  console.error(`ERR: ${dataFolder}/${templateName} does not exist - bailing out`);
+  console.error(
+    `ERR: ${dataFolder}/${templateName} does not exist - bailing out`
+  );
   process.exit(1);
 }
 
 if (!fs.existsSync(dictPath)) {
-  console.error(`ERR: ${dictPath} does not exists - npm run schema - bailing out`);
+  console.error(
+    `ERR: ${dictPath} does not exists - npm run schema - bailing out`
+  );
   process.exit(2);
 }
 

@@ -138,7 +138,7 @@
     "explorer": true,
     "analysis": true
   },
-  "analysisTools": [ "ndhHIV" ],
+  "analysisTools": ["ndhHIV"],
   "dataExplorerConfig": {
     "charts": {
       "project_id": {
@@ -166,7 +166,7 @@
       "tabs": [
         {
           "title": "Subject",
-          "fields":[
+          "fields": [
             "project_id",
             "gender",
             "race",
@@ -177,7 +177,8 @@
             "data_type",
             "data_format"
           ]
-        }, {
+        },
+        {
           "title": "Diagnosis",
           "fields": [
             "arthxbase",
@@ -246,21 +247,30 @@
       "nodeCountTitle": "Subjects",
       "fieldMapping": [
         { "field": "frstdthd", "name": "Year of Death" },
-        { "field": "arthxbase", "name": "ART Use Prior to Baseline"},
-        { "field": "bshbvstat", "name": "Baseline HBV Sero-status"},
-        { "field": "bshcvstat", "name": "Baseline HCV Sero-status"},
-        { "field": "cd4nadir", "name": "CD4 Nadir Prior to HAART"},
-        { "field": "status", "name": "Summarized HIV Sero-status"},
-        { "field": "hiv_status", "name": "HIV Status"},
-        { "field": "amikacin_res_phenotype", "name": "Amikacin Phenotype"},
-        { "field": "capreomycin_res_phenotype", "name": "Capreomycin Phenotype"},
-        { "field": "isoniazid_res_phenotype", "name": "Isoniazid Phenotype"},
-        { "field": "kanamycin_res_phenotype", "name": "Kanamycin Phenotype"},
-        { "field": "ofloxacin_res_phenotype", "name": "Ofloxacin Phenotype"},
-        { "field": "pyrazinamide_res_phenotype", "name": "Pyrazinamide Phenotype"},
-        { "field": "rifampicin_res_phenotype", "name": "Rifampicin Phenotype"},
-        { "field": "rifampin_res_phenotype", "name": "Rifampin Phenotype"},
-        { "field": "streptomycin_res_phenotype", "name": "Streptomycin Phenotype"}
+        { "field": "arthxbase", "name": "ART Use Prior to Baseline" },
+        { "field": "bshbvstat", "name": "Baseline HBV Sero-status" },
+        { "field": "bshcvstat", "name": "Baseline HCV Sero-status" },
+        { "field": "cd4nadir", "name": "CD4 Nadir Prior to HAART" },
+        { "field": "status", "name": "Summarized HIV Sero-status" },
+        { "field": "hiv_status", "name": "HIV Status" },
+        { "field": "amikacin_res_phenotype", "name": "Amikacin Phenotype" },
+        {
+          "field": "capreomycin_res_phenotype",
+          "name": "Capreomycin Phenotype"
+        },
+        { "field": "isoniazid_res_phenotype", "name": "Isoniazid Phenotype" },
+        { "field": "kanamycin_res_phenotype", "name": "Kanamycin Phenotype" },
+        { "field": "ofloxacin_res_phenotype", "name": "Ofloxacin Phenotype" },
+        {
+          "field": "pyrazinamide_res_phenotype",
+          "name": "Pyrazinamide Phenotype"
+        },
+        { "field": "rifampicin_res_phenotype", "name": "Rifampicin Phenotype" },
+        { "field": "rifampin_res_phenotype", "name": "Rifampin Phenotype" },
+        {
+          "field": "streptomycin_res_phenotype",
+          "name": "Streptomycin Phenotype"
+        }
       ],
       "manifestMapping": {
         "resourceIndexType": "file",
@@ -287,22 +297,13 @@
       "tabs": [
         {
           "title": "File",
-          "fields": [
-            "project_id",
-            "data_type",
-            "data_format"
-          ]
+          "fields": ["project_id", "data_type", "data_format"]
         }
       ]
     },
     "table": {
       "enabled": true,
-      "fields": [
-        "project_id",
-        "file_name",
-        "file_size",
-        "object_id"
-      ]
+      "fields": ["project_id", "file_name", "file_size", "object_id"]
     },
     "dropdowns": {},
     "buttons": [
@@ -325,9 +326,7 @@
     ],
     "guppyConfig": {
       "dataType": "file",
-      "fieldMapping": [
-        { "field": "object_id", "name": "GUID" }
-      ],
+      "fieldMapping": [{ "field": "object_id", "name": "GUID" }],
       "nodeCountTitle": "Files",
       "manifestMapping": {
         "resourceIndexType": "subject",
@@ -363,15 +362,15 @@
         "insurance"
       ],
       "fieldMapping": [
-        {"field": "abcv", "name": "Abcavir Use"},
-        {"field": "age_at_visit", "name": "Age"},
-        {"field": "leu2n", "name": "CD8 Counts"},
-        {"field": "cocuse", "name": "Cocaine Use"},
-        {"field": "employ", "name": "Employment Status"},
+        { "field": "abcv", "name": "Abcavir Use" },
+        { "field": "age_at_visit", "name": "Age" },
+        { "field": "leu2n", "name": "CD8 Counts" },
+        { "field": "cocuse", "name": "Cocaine Use" },
+        { "field": "employ", "name": "Employment Status" },
         { "field": "thrpyv", "name": "Therapy Type" },
         { "field": "trzv", "name": "Terazol Use" },
         { "field": "chol", "name": "Cholesterol" },
-        {"field": "leu3n", "name": "CD4 Counts"},
+        { "field": "leu3n", "name": "CD4 Counts" },
         { "field": "drinkcat", "name": "Alcohol Use" },
         { "field": "emotl", "name": "Emotional Wellness" }
       ]

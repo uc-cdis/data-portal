@@ -5,7 +5,8 @@ import {
   getType,
 } from '../../utils';
 
-export const ZERO_RESULT_FOUND_MSG = '0 results found. Please try another keyword.';
+export const ZERO_RESULT_FOUND_MSG =
+  '0 results found. Please try another keyword.';
 
 /**
  * Prepare search items for Fuse.io library
@@ -13,25 +14,26 @@ export const ZERO_RESULT_FOUND_MSG = '0 results found. Please try another keywor
  * @returns [Object] search data
  */
 export const prepareSearchData = (dictionary) => {
-  const searchData = parseDictionaryNodes(dictionary)
-    .map((node) => {
-      const properties = Object.keys(node.properties).map((propertyKey) => {
-        let type = getType(node.properties[propertyKey]);
-        if (type === 'UNDEFINED') type = undefined;
-        const propertyDescription = getPropertyDescription(node.properties[propertyKey]);
-        return {
-          name: propertyKey,
-          description: propertyDescription,
-          type,
-        };
-      });
+  const searchData = parseDictionaryNodes(dictionary).map((node) => {
+    const properties = Object.keys(node.properties).map((propertyKey) => {
+      let type = getType(node.properties[propertyKey]);
+      if (type === 'UNDEFINED') type = undefined;
+      const propertyDescription = getPropertyDescription(
+        node.properties[propertyKey]
+      );
       return {
-        id: node.id,
-        title: node.title,
-        description: node.description,
-        properties,
+        name: propertyKey,
+        description: propertyDescription,
+        type,
       };
     });
+    return {
+      id: node.id,
+      title: node.title,
+      description: node.description,
+      properties,
+    };
+  });
   return searchData;
 };
 
@@ -75,11 +77,13 @@ export const searchKeyword = (searchData, keyword) => {
     minMatchCharLength,
   };
   const handler = new Fuse(searchData, options);
-  const result = handler.search(keyword)
+  const result = handler
+    .search(keyword)
     .map((resItem) => {
       // A bug in Fuse sometimes returns wrong indices that end < start
-      const matches = resItem.matches
-        .filter(matchItem => matchItem.indices[0][1] >= matchItem.indices[0][0]);
+      const matches = resItem.matches.filter(
+        (matchItem) => matchItem.indices[0][1] >= matchItem.indices[0][0]
+      );
       return {
         ...resItem,
         matches,
@@ -87,18 +91,17 @@ export const searchKeyword = (searchData, keyword) => {
     })
     .map((resItem) => {
       // filter out matches that is too shorter than keyword
-      const matches = resItem.matches
-        .filter((matchItem) => {
-          const matchLen = (matchItem.indices[0][1] - matchItem.indices[0][0]) + 1;
-          return matchLen >= halfLength;
-        });
+      const matches = resItem.matches.filter((matchItem) => {
+        const matchLen = matchItem.indices[0][1] - matchItem.indices[0][0] + 1;
+        return matchLen >= halfLength;
+      });
       return {
         ...resItem,
         matches,
       };
     })
-    .filter(resItem => resItem.matches.length > 0);
-  const errorMsg = (result && result.length > 0) ? '' : ZERO_RESULT_FOUND_MSG;
+    .filter((resItem) => resItem.matches.length > 0);
+  const errorMsg = result && result.length > 0 ? '' : ZERO_RESULT_FOUND_MSG;
   return {
     result,
     errorMsg,
@@ -121,29 +124,29 @@ export const getSearchSummary = (result) => {
     const nodeID = resItem.item.id;
     resItem.matches.forEach((matchedItem) => {
       switch (matchedItem.key) {
-      case 'properties.type':
-      case 'properties.name':
-      case 'properties.description':
-        matchedPropertiesCount += 1;
-        if (!matchedNodeIDsInProperties.includes(nodeID)) {
-          matchedNodeIDsInProperties.push(nodeID);
-        }
-        if (!generalMatchedNodeIDs.includes(nodeID)) {
-          generalMatchedNodeIDs.push(nodeID);
-        }
-        break;
-      case 'title':
-      case 'description':
-        matchedNodeNameAndDescriptionsCount += 1;
-        if (!matchedNodeIDsInNameAndDescription.includes(nodeID)) {
-          matchedNodeIDsInNameAndDescription.push(nodeID);
-        }
-        if (!generalMatchedNodeIDs.includes(nodeID)) {
-          generalMatchedNodeIDs.push(nodeID);
-        }
-        break;
-      default:
-        break;
+        case 'properties.type':
+        case 'properties.name':
+        case 'properties.description':
+          matchedPropertiesCount += 1;
+          if (!matchedNodeIDsInProperties.includes(nodeID)) {
+            matchedNodeIDsInProperties.push(nodeID);
+          }
+          if (!generalMatchedNodeIDs.includes(nodeID)) {
+            generalMatchedNodeIDs.push(nodeID);
+          }
+          break;
+        case 'title':
+        case 'description':
+          matchedNodeNameAndDescriptionsCount += 1;
+          if (!matchedNodeIDsInNameAndDescription.includes(nodeID)) {
+            matchedNodeIDsInNameAndDescription.push(nodeID);
+          }
+          if (!generalMatchedNodeIDs.includes(nodeID)) {
+            generalMatchedNodeIDs.push(nodeID);
+          }
+          break;
+        default:
+          break;
       }
     });
   });

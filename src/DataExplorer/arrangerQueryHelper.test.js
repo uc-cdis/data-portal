@@ -1,4 +1,7 @@
-import { constructGraphQLQuery, constructGraphQLQueryWithSQON } from './arrangerQueryHelper';
+import {
+  constructGraphQLQuery,
+  constructGraphQLQueryWithSQON,
+} from './arrangerQueryHelper';
 
 describe('Arranger query helper', () => {
   const indexType = 'kid';
@@ -6,13 +9,15 @@ describe('Arranger query helper', () => {
   const values = ['1', '2'];
   const targetFields = ['gender'];
   const queryForCount = constructGraphQLQuery(
-    [{
-      name: fieldName,
-      values,
-    }],
+    [
+      {
+        name: fieldName,
+        values,
+      },
+    ],
     indexType,
     [...targetFields],
-    true,
+    true
   );
   const sqonObj = {
     content: [
@@ -41,14 +46,17 @@ describe('Arranger query helper', () => {
   };
   const fakeReturnCount = 6;
   const queryForData = constructGraphQLQuery(
-    [{
-      name: fieldName,
-      values,
-    }],
+    [
+      {
+        name: fieldName,
+        values,
+      },
+    ],
     indexType,
     [...targetFields],
     false,
-    fakeReturnCount);
+    fakeReturnCount
+  );
   const expectedQueryForData = {
     query: `query ($first: Int, $sqon: JSON){
                 ${indexType} {
@@ -71,7 +79,7 @@ describe('Arranger query helper', () => {
     indexType,
     sqonObj,
     [...targetFields],
-    true,
+    true
   );
 
   it('build graphql query string', () => {
@@ -80,4 +88,3 @@ describe('Arranger query helper', () => {
     expect(queryWithSQON).toEqual(expectedQueryForCount);
   });
 });
-

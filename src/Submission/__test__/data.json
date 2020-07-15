@@ -1,10 +1,7 @@
 {
   "records": [
     {
-      "acl": [
-        "QA",
-        "test"
-      ],
+      "acl": ["QA", "test"],
       "baseid": "a388afc5-47e3",
       "created_date": "2018-09-11T20:01:20.055349",
       "did": "00041e7a",
@@ -20,10 +17,7 @@
       "version": null
     },
     {
-      "acl": [
-        "DEV",
-        "test"
-      ],
+      "acl": ["DEV", "test"],
       "baseid": "821163158b11",
       "created_date": "2018-09-11T20:01:20.055349",
       "did": "0015f105-3292-8d74",
@@ -41,10 +35,7 @@
       "version": null
     },
     {
-      "acl": [
-        "DEV",
-        "test"
-      ],
+      "acl": ["DEV", "test"],
       "baseid": "183f568a-7ab9",
       "created_date": "2018-08-16T20:11:38.322176",
       "did": "0156d02a",
@@ -60,10 +51,7 @@
       "version": null
     },
     {
-      "acl": [
-        "DEV",
-        "test"
-      ],
+      "acl": ["DEV", "test"],
       "baseid": "18368a-79-4ffa",
       "created_date": "2018-08-16T20:11:38.322176",
       "did": "a-2a58-4479567",
@@ -81,10 +69,7 @@
       "version": null
     },
     {
-      "acl": [
-        "DEV",
-        "test"
-      ],
+      "acl": ["DEV", "test"],
       "baseid": "183f568a000",
       "created_date": "2018-08-16T20:11:38.322176",
       "did": "0156d02a-2a5-44798",
@@ -100,10 +85,7 @@
       "version": null
     },
     {
-      "acl": [
-        "QA",
-        "test"
-      ],
+      "acl": ["QA", "test"],
       "baseid": "a388a5-eb87-e3",
       "created_date": "2018-09-11T22:50:20.055349",
       "did": "00041a-3114-4d9f00344",

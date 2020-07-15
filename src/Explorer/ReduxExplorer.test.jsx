@@ -13,20 +13,19 @@ import * as testExpected from './__test__/expected.json';
 import ExplorerPage from './ExplorerPage';
 
 function renderComponent(ComponentClass, props) {
-  return getReduxStore().then(
-    (store) => {
-      mount(
-        <Provider store={store}>
-          <ThemeProvider theme={theme}>
-            <MuiThemeProvider>
-              <StaticRouter location={{ pathname: '/files' }} context={{}}>
-                <ComponentClass {...props} />
-              </StaticRouter>
-            </MuiThemeProvider>
-          </ThemeProvider>
-        </Provider>,
-      );
-    });
+  return getReduxStore().then((store) => {
+    mount(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <MuiThemeProvider>
+            <StaticRouter location={{ pathname: '/files' }} context={{}}>
+              <ComponentClass {...props} />
+            </StaticRouter>
+          </MuiThemeProvider>
+        </ThemeProvider>
+      </Provider>
+    );
+  });
 }
 
 describe('the Explorer component', () => {
@@ -37,42 +36,38 @@ describe('the Explorer component', () => {
   });
 
   it('Update redux store when loading', () =>
-    getReduxStore().then(
-      (store) => {
-        expect(store.getState().explorer).toEqual(initializedExplorer);
-      },
-    ),
-  );
+    getReduxStore().then((store) => {
+      expect(store.getState().explorer).toEqual(initializedExplorer);
+    }));
 
   it('Update redux store when page.jsx size changed', () =>
-    getReduxStore().then(
-      (store) => {
-        fetch.mockResponse(JSON.stringify(testData), { status: 200 });
-        return store.dispatch(changePageSize(3, {
-          oldPageSize: initializedExplorer.pageSize,
-          pagesPerTab: initializedExplorer.pagesPerTab,
-          cursors: initializedExplorer.cursors,
-          queriedCursors: initializedExplorer.queriedCursors,
-        })).then(
-          () => {
-            expect(store.getState().explorer.pageSize).toEqual(3);
-          },
-        );
-      },
-    ),
-  );
+    getReduxStore().then((store) => {
+      fetch.mockResponse(JSON.stringify(testData), { status: 200 });
+      return store
+        .dispatch(
+          changePageSize(3, {
+            oldPageSize: initializedExplorer.pageSize,
+            pagesPerTab: initializedExplorer.pagesPerTab,
+            cursors: initializedExplorer.cursors,
+            queriedCursors: initializedExplorer.queriedCursors,
+          })
+        )
+        .then(() => {
+          expect(store.getState().explorer.pageSize).toEqual(3);
+        });
+    }));
 
   it('Update redux store when current page.jsx changed', () =>
-    getReduxStore().then(
-      (store) => {
-        fetch.mockResponse(JSON.stringify(testData), { status: 200 });
-        return store.dispatch(changePage('aligned_reads', 2,
-          initializedExplorer.currentPages)).then(
-          () => {
-            expect(store.getState().explorer.currentPages.aligned_reads).toEqual(2);
-          },
-        );
-      },
-    ),
-  );
+    getReduxStore().then((store) => {
+      fetch.mockResponse(JSON.stringify(testData), { status: 200 });
+      return store
+        .dispatch(
+          changePage('aligned_reads', 2, initializedExplorer.currentPages)
+        )
+        .then(() => {
+          expect(store.getState().explorer.currentPages.aligned_reads).toEqual(
+            2
+          );
+        });
+    }));
 });

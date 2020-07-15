@@ -8,9 +8,7 @@ import './CertPopup.less';
  */
 class CertPopup extends Component {
   static propTypes = {
-    certsList: PropTypes.objectOf(
-      PropTypes.any,
-    ),
+    certsList: PropTypes.objectOf(PropTypes.any),
     pendingCerts: PropTypes.arrayOf(PropTypes.string),
     onSubmit: PropTypes.func.isRequired,
   };
@@ -32,7 +30,9 @@ class CertPopup extends Component {
             hasCorrectAnswers={certsList[firstPending].hasCorrectAnswers}
             description={certsList[firstPending].description}
             questionList={certsList[firstPending].questions}
-            onSubmit={(data, questionList) => this.props.onSubmit(data, questionList, firstPending)}
+            onSubmit={(data, questionList) =>
+              this.props.onSubmit(data, questionList, firstPending)
+            }
           />
         </div>
       );

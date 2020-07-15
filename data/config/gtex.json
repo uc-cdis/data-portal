@@ -142,7 +142,17 @@
         "alt": "NHLBI"
       }
     ],
-    "categorical9Colors": ["#c0143c", "#616265", "#59CD90", "#F2DC5D", "#40476D", "#FFA630", "#AE8799", "#1A535C", "#462255"],
+    "categorical9Colors": [
+      "#c0143c",
+      "#616265",
+      "#59CD90",
+      "#F2DC5D",
+      "#40476D",
+      "#FFA630",
+      "#AE8799",
+      "#1A535C",
+      "#462255"
+    ],
     "categorical2Colors": ["#616265", "#c0143c"]
   },
   "requiredCerts": [],
@@ -311,23 +321,56 @@
         { "field": "vte_followup_start_age", "name": "VTE Followup Start Age" },
         { "field": "vte_prior_history", "name": "VTE Prior History" },
         { "field": "bp_diastolic", "name": "BP Diastolic" },
-        { "field": "basophil_ncnc_bld", "name": "Basophils Number Concentration Bld" },
-        { "field": "eosinophil_ncnc_bld", "name": "Eosinophils Number Concentration Bld" },
+        {
+          "field": "basophil_ncnc_bld",
+          "name": "Basophils Number Concentration Bld"
+        },
+        {
+          "field": "eosinophil_ncnc_bld",
+          "name": "Eosinophils Number Concentration Bld"
+        },
         { "field": "hdl", "name": "HDL" },
-        { "field": "hematocrit_vfr_bld", "name": "Hematocrit Fraction of Volume Bld" },
-        { "field": "hemoglobin_mcnc_bld", "name": "Hemoglobin Mass Concentration Bld" },
+        {
+          "field": "hematocrit_vfr_bld",
+          "name": "Hematocrit Fraction of Volume Bld"
+        },
+        {
+          "field": "hemoglobin_mcnc_bld",
+          "name": "Hemoglobin Mass Concentration Bld"
+        },
         { "field": "ldl", "name": "LDL" },
-        { "field": "lymphocyte_ncnc_bld", "name": "Lymphocytes Number Concentration Bld" },
+        {
+          "field": "lymphocyte_ncnc_bld",
+          "name": "Lymphocytes Number Concentration Bld"
+        },
         { "field": "mch_entmass_rbc", "name": "MCH Average Mass Rbc" },
         { "field": "mchc_mcnc_rbc", "name": "MCHC Mass Concentration Rbc" },
         { "field": "mcv_entvol_rbc", "name": "MCV Average Volume Rbc" },
-        { "field": "monocyte_ncnc_bld", "name": "Monocytes Number Concentration Bld" },
-        { "field": "neutrophil_ncnc_bld", "name": "Neutrophils Number Concentration Bld" },
-        { "field": "platelet_ncnc_bld", "name": "Platelets Number Concentration Bld" },
+        {
+          "field": "monocyte_ncnc_bld",
+          "name": "Monocytes Number Concentration Bld"
+        },
+        {
+          "field": "neutrophil_ncnc_bld",
+          "name": "Neutrophils Number Concentration Bld"
+        },
+        {
+          "field": "platelet_ncnc_bld",
+          "name": "Platelets Number Concentration Bld"
+        },
         { "field": "pmv_entvol_bld", "name": "PMV Mean Volume Bld" },
-        { "field": "rbc_ncnc_bld", "name": "Red Blood Cells Number Concentration Bld" },
-        { "field": "rdw_ratio_rbc", "name": "Red Cell Distribution Width Ratio Rbc" },
-        { "field": "wbc_ncnc_bld", "name": "White Blood Cells Number Concentration Bld" }
+        {
+          "field": "rbc_ncnc_bld",
+          "name": "Red Blood Cells Number Concentration Bld"
+        },
+        {
+          "field": "rdw_ratio_rbc",
+          "name": "Red Cell Distribution Width Ratio Rbc"
+        },
+        {
+          "field": "wbc_ncnc_bld",
+          "name": "White Blood Cells Number Concentration Bld"
+        }
       ],
       "manifestMapping": {
         "resourceIndexType": "file",
@@ -340,10 +383,7 @@
     },
     "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/",
     "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data",
-    "terraTemplate": [ 
-      "bdc",
-      "gen3"
-    ]
+    "terraTemplate": ["bdc", "gen3"]
   },
   "fileExplorerConfig": {
     "charts": {
@@ -360,28 +400,17 @@
       "tabs": [
         {
           "title": "File",
-          "fields": [
-            "project_id",
-            "data_type",
-            "data_format"
-          ]
+          "fields": ["project_id", "data_type", "data_format"]
         }
       ]
     },
     "table": {
       "enabled": true,
-      "fields": [
-        "project_id",
-        "file_name",
-        "file_size",
-        "object_id"
-      ]
+      "fields": ["project_id", "file_name", "file_size", "object_id"]
     },
     "guppyConfig": {
       "dataType": "file",
-      "fieldMapping": [
-        { "field": "object_id", "name": "GUID" }
-      ],
+      "fieldMapping": [{ "field": "object_id", "name": "GUID" }],
       "nodeCountTitle": "Files",
       "manifestMapping": {
         "resourceIndexType": "subject",

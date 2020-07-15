@@ -4,10 +4,18 @@ import './GraphEdge.css';
 
 class GraphEdge extends React.Component {
   render() {
-    const edgeRequiredClassModifier = this.props.edge.required ? 'graph-edge--required' : '';
-    const edgeFadedClassModifier = this.props.isFaded ? 'graph-edge--faded' : '';
-    const edgeHalfFadedClassModifier = this.props.isHalfFaded ? 'graph-edge--half-faded' : '';
-    const edgeHighlightedClassModifier = this.props.isHighlighted ? 'graph-edge--highlighted' : '';
+    const edgeRequiredClassModifier = this.props.edge.required
+      ? 'graph-edge--required'
+      : '';
+    const edgeFadedClassModifier = this.props.isFaded
+      ? 'graph-edge--faded'
+      : '';
+    const edgeHalfFadedClassModifier = this.props.isHalfFaded
+      ? 'graph-edge--half-faded'
+      : '';
+    const edgeHighlightedClassModifier = this.props.isHighlighted
+      ? 'graph-edge--highlighted'
+      : '';
     return (
       <path
         className={`graph-edge 

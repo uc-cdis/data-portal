@@ -8,7 +8,7 @@ import './Analysis.less';
 class Analysis extends React.Component {
   openApp = (app) => {
     this.props.history.push(`/analysis/${app}`);
-  }
+  };
 
   render() {
     const apps = config.analysisTools;
@@ -17,22 +17,24 @@ class Analysis extends React.Component {
       <div className='analysis'>
         <h2 className='analysis__title'>Apps</h2>
         <div className='analysis-cards'>
-          {
-            apps.map((elt) => {
-              const app = analysisApps[elt];
-              return (
-                <div
-                  key={elt}
-                  className='analysis__app-card'
-                  onClick={() => this.openApp(elt)}
-                  role='button'
-                  tabIndex={0}
-                >
-                  <AppCard title={app.title} description={app.description} imageUrl={app.image} />
-                </div>
-              );
-            })
-          }
+          {apps.map((elt) => {
+            const app = analysisApps[elt];
+            return (
+              <div
+                key={elt}
+                className='analysis__app-card'
+                onClick={() => this.openApp(elt)}
+                role='button'
+                tabIndex={0}
+              >
+                <AppCard
+                  title={app.title}
+                  description={app.description}
+                  imageUrl={app.image}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     );

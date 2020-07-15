@@ -11,36 +11,44 @@ function firstCharToUppercase(str) {
 
 function fieldInTable(fieldName) {
   // only add in the table fields that are not in the header
-  const headerFields = ['file_name', 'type', 'description', 'data_format', 'file_size', 'object_id', 'updated_datetime'];
+  const headerFields = [
+    'file_name',
+    'type',
+    'description',
+    'data_format',
+    'file_size',
+    'object_id',
+    'updated_datetime',
+  ];
   const doNotDisplay = ['project_id'];
-  return (headerFields.indexOf(fieldName) === -1
-    && doNotDisplay.indexOf(fieldName) === -1);
+  return (
+    headerFields.indexOf(fieldName) === -1 &&
+    doNotDisplay.indexOf(fieldName) === -1
+  );
 }
 
 class CoreMetadataTable extends Component {
-  dataTransform = metadata => (metadata ?
-    Object.keys(metadata)
-      .sort() // alphabetical order
-      .filter(key => fieldInTable(key))
-      .filter(key => metadata[key]) // do not display row if empty
-      .map(key => [
-        <div className='core-metadata-table__title-cell'>{firstCharToUppercase(key)}</div>,
-        metadata[key],
-      ])
-    : []);
+  dataTransform = (metadata) =>
+    metadata
+      ? Object.keys(metadata)
+          .sort() // alphabetical order
+          .filter((key) => fieldInTable(key))
+          .filter((key) => metadata[key]) // do not display row if empty
+          .map((key) => [
+            <div className='core-metadata-table__title-cell'>
+              {firstCharToUppercase(key)}
+            </div>,
+            metadata[key],
+          ])
+      : [];
 
   render() {
     const tableData = this.dataTransform(this.props.metadata);
-    return (
-      tableData.length > 0 ?
-        <div className='core-metadata-table'>
-          <Table
-            header={[TABLE_TITLE, '']}
-            data={tableData}
-          />
-        </div>
-        : null
-    );
+    return tableData.length > 0 ? (
+      <div className='core-metadata-table'>
+        <Table header={[TABLE_TITLE, '']} data={tableData} />
+      </div>
+    ) : null;
   }
 }
 

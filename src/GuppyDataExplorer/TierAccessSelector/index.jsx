@@ -22,8 +22,8 @@ class TierAccessSelector extends React.Component {
   };
 
   handleToggle = () => {
-    this.setState(prevState => ({ toggled: !prevState.toggled }));
-  }
+    this.setState((prevState) => ({ toggled: !prevState.toggled }));
+  };
 
   render() {
     return (
@@ -36,75 +36,93 @@ class TierAccessSelector extends React.Component {
         >
           <h4>
             <span className='tier-access-selector__title'>Data Access</span>
-            <i className={`tier-access-selector__dropdown-icon g3-icon g3-icon--chevron-${this.state.toggled ? 'down' : 'up'}`} />
+            <i
+              className={`tier-access-selector__dropdown-icon g3-icon g3-icon--chevron-${
+                this.state.toggled ? 'down' : 'up'
+              }`}
+            />
           </h4>
         </div>
-        {
-          !this.state.toggled && (
-            <div>
-              <div className='tier-access-selector__items'>
-                <div className='tier-access-selector__item'>
-                  <input
-                    onChange={this.handleSelectorChange}
-                    name='access-level'
-                    id='with-access'
-                    value='with-access'
-                    className='tier-access-selector__radio-input'
-                    type='radio'
-                    checked={this.state.selected === 'with-access'}
-                  />
-                  <i className='tier-access-selector__customized-radio-input' />
-                  <label htmlFor='with-access' className='tier-access-selector__label'>Data with Access</label>
-                </div>
-                <div className='tier-access-selector__item'>
-                  <input
-                    onChange={this.handleSelectorChange}
-                    name='access-level'
-                    id='without-access'
-                    value='without-access'
-                    className='tier-access-selector__radio-input'
-                    type='radio'
-                    checked={this.state.selected === 'without-access'}
-                  />
-                  <i className='tier-access-selector__customized-radio-input' />
-                  <label htmlFor='without-access' className='tier-access-selector__label'>Data without Access</label>
-                </div>
-                <div className='tier-access-selector__item'>
-                  <input
-                    onChange={this.handleSelectorChange}
-                    name='access-level'
-                    id='all-data'
-                    value='all-data'
-                    className='tier-access-selector__radio-input'
-                    type='radio'
-                    checked={this.state.selected === 'all-data'}
-                  />
-                  <i className='tier-access-selector__customized-radio-input' />
-                  <label htmlFor='all-data' className='tier-access-selector__label'>All Data</label>
-                </div>
+        {!this.state.toggled && (
+          <div>
+            <div className='tier-access-selector__items'>
+              <div className='tier-access-selector__item'>
+                <input
+                  onChange={this.handleSelectorChange}
+                  name='access-level'
+                  id='with-access'
+                  value='with-access'
+                  className='tier-access-selector__radio-input'
+                  type='radio'
+                  checked={this.state.selected === 'with-access'}
+                />
+                <i className='tier-access-selector__customized-radio-input' />
+                <label
+                  htmlFor='with-access'
+                  className='tier-access-selector__label'
+                >
+                  Data with Access
+                </label>
               </div>
-              {
-                this.state.selected !== 'with-access' && !this.props.hideGetAccessButton && (
-                  <div className='tier-access-selector__button-wrapper'>
-                    <Button
-                      label='Get Access'
-                      className='tier-access-selector__button'
-                      buttonType='default'
-                      enabled={!!(this.props.getAccessButtonLink)}
-                      tooltipEnabled={!(this.props.getAccessButtonLink)}
-                      tooltipText='Coming soon'
-                      onClick={
-                        (this.props.getAccessButtonLink) ? (
-                          () => { window.open(this.props.getAccessButtonLink); }
-                        ) : (() => {})
-                      }
-                    />
-                  </div>
-                )
-              }
+              <div className='tier-access-selector__item'>
+                <input
+                  onChange={this.handleSelectorChange}
+                  name='access-level'
+                  id='without-access'
+                  value='without-access'
+                  className='tier-access-selector__radio-input'
+                  type='radio'
+                  checked={this.state.selected === 'without-access'}
+                />
+                <i className='tier-access-selector__customized-radio-input' />
+                <label
+                  htmlFor='without-access'
+                  className='tier-access-selector__label'
+                >
+                  Data without Access
+                </label>
+              </div>
+              <div className='tier-access-selector__item'>
+                <input
+                  onChange={this.handleSelectorChange}
+                  name='access-level'
+                  id='all-data'
+                  value='all-data'
+                  className='tier-access-selector__radio-input'
+                  type='radio'
+                  checked={this.state.selected === 'all-data'}
+                />
+                <i className='tier-access-selector__customized-radio-input' />
+                <label
+                  htmlFor='all-data'
+                  className='tier-access-selector__label'
+                >
+                  All Data
+                </label>
+              </div>
             </div>
-          )
-        }
+            {this.state.selected !== 'with-access' &&
+              !this.props.hideGetAccessButton && (
+                <div className='tier-access-selector__button-wrapper'>
+                  <Button
+                    label='Get Access'
+                    className='tier-access-selector__button'
+                    buttonType='default'
+                    enabled={!!this.props.getAccessButtonLink}
+                    tooltipEnabled={!this.props.getAccessButtonLink}
+                    tooltipText='Coming soon'
+                    onClick={
+                      this.props.getAccessButtonLink
+                        ? () => {
+                            window.open(this.props.getAccessButtonLink);
+                          }
+                        : () => {}
+                    }
+                  />
+                </div>
+              )}
+          </div>
+        )}
       </div>
     );
   }

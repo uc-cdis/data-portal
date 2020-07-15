@@ -14,36 +14,33 @@ import DataDictionaryCategory from '../DataDictionaryCategory/.';
  */
 /* eslint-disable no-param-reassign */
 export function category2NodeList(dictionary) {
-  const res = Object.keys(dictionary).filter(
-    id => id.charAt(0) !== '_' && id === dictionary[id].id,
-  ).map(
-    id => dictionary[id],
-  ).filter(
-    node => node.category && node.id,
-  )
-    .reduce(
-      (lookup, node) => {
-        if (!lookup[node.category]) {
-          lookup[node.category] = [];
-        }
-        lookup[node.category].push(node);
-        return lookup;
-      }, {},
-    );
+  const res = Object.keys(dictionary)
+    .filter((id) => id.charAt(0) !== '_' && id === dictionary[id].id)
+    .map((id) => dictionary[id])
+    .filter((node) => node.category && node.id)
+    .reduce((lookup, node) => {
+      if (!lookup[node.category]) {
+        lookup[node.category] = [];
+      }
+      lookup[node.category].push(node);
+      return lookup;
+    }, {});
   return res;
 }
 /* eslint-enable no-param-reassign */
 
 const getNodePropertyCount = (dictionary) => {
-  const res = parseDictionaryNodes(dictionary)
-    .reduce((acc, node) => {
+  const res = parseDictionaryNodes(dictionary).reduce(
+    (acc, node) => {
       acc.nodesCount += 1;
       acc.propertiesCount += Object.keys(node.properties).length;
       return acc;
-    }, {
+    },
+    {
       nodesCount: 0,
       propertiesCount: 0,
-    });
+    }
+  );
   return {
     nodesCount: res.nodesCount,
     propertiesCount: res.propertiesCount,
@@ -55,7 +52,12 @@ const getNodePropertyCount = (dictionary) => {
  *
  * @param {dictionary} params
  */
-const DataDictionaryTable = ({ dictionary, highlightingNodeID, onExpandNode, dictionaryName }) => {
+const DataDictionaryTable = ({
+  dictionary,
+  highlightingNodeID,
+  onExpandNode,
+  dictionaryName,
+}) => {
   const c2nl = category2NodeList(dictionary);
   const { nodesCount, propertiesCount } = getNodePropertyCount(dictionary);
   return (
@@ -68,14 +70,15 @@ const DataDictionaryTable = ({ dictionary, highlightingNodeID, onExpandNode, dic
         <span>{propertiesCount}</span>
         <span> properties </span>
       </p>
-      {Object.keys(c2nl).map(category =>
-        (<DataDictionaryCategory
+      {Object.keys(c2nl).map((category) => (
+        <DataDictionaryCategory
           key={category}
           nodes={c2nl[category]}
           category={category}
           highlightingNodeID={highlightingNodeID}
           onExpandNode={onExpandNode}
-        />))}
+        />
+      ))}
     </React.Fragment>
   );
 };

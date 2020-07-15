@@ -5,13 +5,13 @@ import aggComponents from '@arranger/components/dist/Aggs/aggComponentsMap.js';
 import FilterGroup from '@gen3/ui-component/dist/components/filters/FilterGroup/.';
 
 /*
-* The AggregationTabs component divides the Arranger aggregations components into
-* tabs - Arranger divides the data into fields, and allows the user
-* to filter on those fields. We are using it to divide the aggregations into
-* the different tabs we need on our filters.
-* Tabs and the fields in each tab are specified in params.js, and this component
-* will use that configuration to divide the aggregations into tabs.
-*/
+ * The AggregationTabs component divides the Arranger aggregations components into
+ * tabs - Arranger divides the data into fields, and allows the user
+ * to filter on those fields. We are using it to divide the aggregations into
+ * the different tabs we need on our filters.
+ * Tabs and the fields in each tab are specified in params.js, and this component
+ * will use that configuration to divide the aggregations into tabs.
+ */
 
 class AggregationTabs extends React.Component {
   render() {
@@ -35,13 +35,13 @@ class AggregationTabs extends React.Component {
           projectId={projectId}
           graphqlField={graphqlField}
           render={(aggsState) => {
-            const aggs = aggsState.aggs.filter(agg => agg.show);
+            const aggs = aggsState.aggs.filter((agg) => agg.show);
             // Dividing data into tabs
             const tabs = [];
             filterConfig.tabs.forEach((tab, i) => {
               const sections = [];
               tab.fields.forEach((field) => {
-                const section = aggs.find(agg => agg.field === field);
+                const section = aggs.find((agg) => agg.field === field);
                 if (section) {
                   sections.push(section);
                 }
@@ -59,11 +59,11 @@ class AggregationTabs extends React.Component {
                   render={({ data }) =>
                     data &&
                     aggs
-                      .map(agg => ({
+                      .map((agg) => ({
                         ...agg,
                         ...data[graphqlField].aggregations[agg.field],
                         ...data[graphqlField].extended.find(
-                          elt => elt.field.replace(/\./g, '__') === agg.field,
+                          (elt) => elt.field.replace(/\./g, '__') === agg.field
                         ),
                         key: agg.field,
                         containerRef,
@@ -75,20 +75,20 @@ class AggregationTabs extends React.Component {
                       }))
                       .map((agg) => {
                         if (aggComponents[agg.type]) {
-                          return (aggComponents[agg.type]({ ...agg, ...componentProps }));
+                          return aggComponents[agg.type]({
+                            ...agg,
+                            ...componentProps,
+                          });
                         }
                         return null;
                       })
                   }
-                />,
+                />
                 /* eslint-enable */
               );
             });
-            return (
-              <FilterGroup tabs={tabs} filterConfig={filterConfig} />
-            );
-          }
-          }
+            return <FilterGroup tabs={tabs} filterConfig={filterConfig} />;
+          }}
         />
       </div>
     );

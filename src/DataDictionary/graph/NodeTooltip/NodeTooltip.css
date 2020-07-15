@@ -29,7 +29,7 @@
   font-size: 14px;
   font-weight: normal;
   line-height: 1.6em;
-  letter-spacing: .02rem;
+  letter-spacing: 0.02rem;
 }
 
 .node-tooltip__canvas-ctm-placeholder {

@@ -1,9 +1,4 @@
-import {
-  Environment,
-  Network,
-  RecordSource,
-  Store,
-} from 'relay-runtime';
+import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 
 import { headers, graphqlPath } from './configs';
 
@@ -14,17 +9,18 @@ const fetchQuery = (operation, variables) => {
     credentials: 'same-origin',
     headers: { ...headers },
     method: 'POST',
-    body: JSON.stringify({ query: operation.text,
-      variables }),
+    body: JSON.stringify({ query: operation.text, variables }),
   };
 
-  return fetch(graphqlPath, request).then(response => response.text()).then((responseBody) => {
-    try {
-      return JSON.parse(responseBody);
-    } catch (error) {
-      return responseBody;
-    }
-  });
+  return fetch(graphqlPath, request)
+    .then((response) => response.text())
+    .then((responseBody) => {
+      try {
+        return JSON.parse(responseBody);
+      } catch (error) {
+        return responseBody;
+      }
+    });
 };
 
 const network = Network.create(fetchQuery);

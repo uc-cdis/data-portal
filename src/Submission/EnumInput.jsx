@@ -23,11 +23,16 @@ class EnumInput extends Component {
 
   componentWillMount() {
     if (this.props.onUpdateFormSchema !== undefined) {
-      this.props.onUpdateFormSchema({ [this.props.name]: this.props.propertyType });
+      this.props.onUpdateFormSchema({
+        [this.props.name]: this.props.propertyType,
+      });
     }
   }
   render() {
-    const options = this.props.options.map(option => ({ label: option, value: option }));
+    const options = this.props.options.map((option) => ({
+      label: option,
+      value: option,
+    }));
 
     const onChangeEnumWrapper = (newValue) => {
       this.setState({
@@ -37,8 +42,15 @@ class EnumInput extends Component {
     };
     return (
       <div>
-        <label className='enum-input__label' htmlFor={this.props.name}> {this.props.name}: </label>
-        {this.props.description !== '' && <span className='enum-input__input-description'>{this.props.description}</span>}
+        <label className='enum-input__label' htmlFor={this.props.name}>
+          {' '}
+          {this.props.name}:{' '}
+        </label>
+        {this.props.description !== '' && (
+          <span className='enum-input__input-description'>
+            {this.props.description}
+          </span>
+        )}
         <br />
         <Select
           name={this.props.name}
@@ -48,7 +60,9 @@ class EnumInput extends Component {
           onChange={onChangeEnumWrapper}
           className='enum-input__select'
         />
-        {this.props.required && <span className='enum-input__required-notification'> {'*'} </span>}
+        {this.props.required && (
+          <span className='enum-input__required-notification'> {'*'} </span>
+        )}
         <br />
       </div>
     );

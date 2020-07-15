@@ -1,6 +1,4 @@
-import {
-  testGraph1,
-} from '../../../GraphUtils/testData';
+import { testGraph1 } from '../../../GraphUtils/testData';
 import {
   getAllChildrenNodeIDs,
   getAllChildrenLinks,
@@ -14,12 +12,18 @@ import {
 
 describe('graphCalculatorHelper', () => {
   it('can get all children node IDs', () => {
-    const resultNodeIDs = getAllChildrenNodeIDs(testGraph1.startingNode.id, testGraph1.graphNodes);
+    const resultNodeIDs = getAllChildrenNodeIDs(
+      testGraph1.startingNode.id,
+      testGraph1.graphNodes
+    );
     expect(resultNodeIDs).toEqual(testGraph1.expectedChildrenNodeIDs);
   });
 
   it('can get all children links', () => {
-    const resultLinks = getAllChildrenLinks(testGraph1.startingNode.id, testGraph1.graphNodes);
+    const resultLinks = getAllChildrenLinks(
+      testGraph1.startingNode.id,
+      testGraph1.graphNodes
+    );
     expect(resultLinks).toEqual(testGraph1.expectedChildrenLinks);
   });
 
@@ -28,7 +32,7 @@ describe('graphCalculatorHelper', () => {
       testGraph1.expectedArticulationNodesInSubgraph[0],
       testGraph1.testSubgraph,
       testGraph1.testSubgraphEdges,
-      testGraph1.graphNodes,
+      testGraph1.graphNodes
     );
     expect(result).toBe(true);
   });
@@ -37,7 +41,7 @@ describe('graphCalculatorHelper', () => {
     const result = getArticulationNodesInSubgraph(
       testGraph1.testSubgraph,
       testGraph1.testSubgraphEdges,
-      testGraph1.graphNodes,
+      testGraph1.graphNodes
     );
     expect(result).toEqual(testGraph1.expectedArticulationNodesInSubgraph);
   });
@@ -47,16 +51,18 @@ describe('graphCalculatorHelper', () => {
       true,
       testGraph1.testSubgraph,
       testGraph1.testSubgraphEdges,
-      testGraph1.graphNodes,
+      testGraph1.graphNodes
     );
     expect(bfsResult).toEqual(testGraph1.expectedBFSTraverseSubgraph);
     const bfsResult2 = BFSTraverseSubgraph(
       false,
       testGraph1.testSubgraph,
       testGraph1.testSubgraphEdges,
-      testGraph1.graphNodes,
+      testGraph1.graphNodes
     );
-    expect(bfsResult2).toEqual(testGraph1.expectedBFSTraverseSubgraphReverseDirection);
+    expect(bfsResult2).toEqual(
+      testGraph1.expectedBFSTraverseSubgraphReverseDirection
+    );
   });
 
   it('can sort nodes in subgraph in topology order', () => {
@@ -64,7 +70,7 @@ describe('graphCalculatorHelper', () => {
       testGraph1.testNodeIDsForSort,
       testGraph1.testSubgraph,
       testGraph1.testSubgraphEdges,
-      testGraph1.graphNodes,
+      testGraph1.graphNodes
     );
     expect(sorted).toEqual(testGraph1.expectedSorteddNodeIDs);
   });
@@ -75,7 +81,7 @@ describe('graphCalculatorHelper', () => {
       testGraph1.testNode2,
       testGraph1.testSubgraph,
       testGraph1.testSubgraphEdges,
-      testGraph1.graphNodes,
+      testGraph1.graphNodes
     );
     expect(result).toEqual(testGraph1.expectedSummary);
   });
@@ -85,15 +91,19 @@ describe('graphCalculatorHelper', () => {
       true,
       testGraph1.testSubgraph,
       testGraph1.testSubgraphEdges,
-      testGraph1.graphNodes,
+      testGraph1.graphNodes
     );
     const resultNodeIDsWithoutOutLinks = getNodeIDsThatHaveNoInOrOutLinks(
       false,
       testGraph1.testSubgraph,
       testGraph1.testSubgraphEdges,
-      testGraph1.graphNodes,
+      testGraph1.graphNodes
     );
-    expect(resultNodeIDsWithoutInLinks).toEqual(testGraph1.expectedNodeIDsWithNoInLinks);
-    expect(resultNodeIDsWithoutOutLinks).toEqual(testGraph1.expectedNodeIDsWithNoOutLinks);
+    expect(resultNodeIDsWithoutInLinks).toEqual(
+      testGraph1.expectedNodeIDsWithNoInLinks
+    );
+    expect(resultNodeIDsWithoutOutLinks).toEqual(
+      testGraph1.expectedNodeIDsWithNoOutLinks
+    );
   });
 });

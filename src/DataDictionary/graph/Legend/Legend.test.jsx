@@ -5,9 +5,7 @@ import Legend from './Legend';
 describe('Legend', () => {
   const items = ['c1', 'c2', 'c3'];
   it('can render and toggle', () => {
-    const legend = mount(
-      <Legend items={items} />,
-    );
+    const legend = mount(<Legend items={items} />);
     expect(legend.find(Legend).length).toBe(1);
     expect(legend.state('show')).toBe(true);
     expect(legend.find('.data-dictionary-graph-legend__info').length).toBe(0);

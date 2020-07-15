@@ -12,18 +12,22 @@ describe('the Login component', () => {
       {
         idp: 'shibboleth',
         name: 'NIH Login',
-        urls: [{
-          name: 'NIH Login',
-          url: 'https://localhost/user/login/shib',
-        }],
+        urls: [
+          {
+            name: 'NIH Login',
+            url: 'https://localhost/user/login/shib',
+          },
+        ],
       },
       {
         idp: 'google',
         name: 'Google OAuth',
-        urls: [{
-          name: 'Google OAuth',
-          url: 'https://localhost/user/login/google',
-        }],
+        urls: [
+          {
+            name: 'Google OAuth',
+            url: 'https://localhost/user/login/google',
+          },
+        ],
       },
     ],
     location: window.location,
@@ -34,10 +38,8 @@ describe('the Login component', () => {
   it('lists login providers', () => {
     const $vdom = mount(
       <StaticRouter location={{ pathname: '/login' }} context={{}}>
-        <Login
-          {...testProps}
-        />
-      </StaticRouter>,
+        <Login {...testProps} />
+      </StaticRouter>
     );
     expect($vdom.find('.g3-button')).toHaveLength(testProps.providers.length);
   });

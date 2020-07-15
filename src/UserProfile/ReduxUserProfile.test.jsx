@@ -8,7 +8,6 @@ import ReduxUserProfile, { createKey, deleteKey } from './ReduxUserProfile';
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
 
-
 describe('the userProfile component', () => {
   it('can create, fetch, and list user access keys', () => {
     const expectedData = {
@@ -19,13 +18,9 @@ describe('the userProfile component', () => {
         iat: 1459458458,
         exp: 1459487258,
         jti: 'f8733984-8164-4689-9c25-56707962d7e0',
-        aud: [
-          'refresh',
-        ],
+        aud: ['refresh'],
         azp: 'nIBmveVwqw0GNImXkIUwYD4uBg1Rnc98QlWLMm06',
-        access_aud: [
-          'user',
-        ],
+        access_aud: ['user'],
         context: {
           user: {
             name: 'NIH_USERNAME',
@@ -40,9 +35,7 @@ describe('the userProfile component', () => {
     };
     const expectedPopup = { saveTokenPopup: true };
     const expectedListKey = {
-      jtis: [
-        { jti: 'f8733984-8164-4689-9c25-56707962d7e0', exp: 1459487258 },
-      ],
+      jtis: [{ jti: 'f8733984-8164-4689-9c25-56707962d7e0', exp: 1459487258 }],
     };
     const state = {
       user: { project_access: [] },
@@ -81,7 +74,9 @@ describe('the userProfile component', () => {
         try {
           expect(store.getActions()).toEqual(expectedActions);
           resolve('ok');
-        } catch (ex) { reject(ex); }
+        } catch (ex) {
+          reject(ex);
+        }
       }, 100);
     });
   });
@@ -95,13 +90,9 @@ describe('the userProfile component', () => {
         iat: 1459458458,
         exp: 1459487258,
         jti: 'f8733984-8164-4689-9c25-56707962d7e0',
-        aud: [
-          'refresh',
-        ],
+        aud: ['refresh'],
         azp: 'nIBmveVwqw0GNImXkIUwYD4uBg1Rnc98QlWLMm06',
-        access_aud: [
-          'user',
-        ],
+        access_aud: ['user'],
         context: {
           user: {
             name: 'NIH_USERNAME',
@@ -116,9 +107,7 @@ describe('the userProfile component', () => {
     };
     const expectedPopup = { saveTokenPopup: true };
     const expectedListKey = {
-      jtis: [
-        { jti: 'f8733984-8164-4689-9c25-56707962d7e0', exp: 1459487258 },
-      ],
+      jtis: [{ jti: 'f8733984-8164-4689-9c25-56707962d7e0', exp: 1459487258 }],
     };
     const state = {
       user: { project_access: [] },
@@ -145,12 +134,10 @@ describe('the userProfile component', () => {
 
     fetch.mockResponseOnce(JSON.stringify(expectedData), { status: 200 });
     fetch.mockResponseOnce(JSON.stringify(expectedListKey), { status: 200 });
-    return store.dispatch(createKey('http://anything.com'))
-      .then(() => {
-        expect(store.getActions()).toEqual(expectedActions);
-      });
+    return store.dispatch(createKey('http://anything.com')).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
-
 
   it('can can delete key', () => {
     const jti = 'f8733984-8164-4689-9c25-56707962d7e0';
@@ -188,10 +175,8 @@ describe('the userProfile component', () => {
     fetch.mockResponseOnce(JSON.stringify(body), { status: 204 });
     fetch.mockResponseOnce(JSON.stringify({ jtis: [] }), { status: 200 });
 
-
-    return store.dispatch(deleteKey(jti, exp, keypairsApi))
-      .then(() => {
-        expect(store.getActions()).toEqual(expectedActions);
-      });
+    return store.dispatch(deleteKey(jti, exp, keypairsApi)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
 });

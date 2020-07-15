@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import './SelectComponent.less';
 
-const makeDefaultSelectedState = value => ({
+const makeDefaultSelectedState = (value) => ({
   selectedValue: value,
 });
 
@@ -46,7 +46,7 @@ export default class SelectComponent extends Component {
   }
 
   render() {
-    const options = this.props.values.map(value => ({ value, label: value }));
+    const options = this.props.values.map((value) => ({ value, label: value }));
 
     return (
       <div className='selection'>
@@ -57,7 +57,7 @@ export default class SelectComponent extends Component {
           options={options}
           value={this.state.selectedValue}
           placeholder={this.props.placeholder}
-          onChange={event => this.doChangeSelectedValue(event.value)}
+          onChange={(event) => this.doChangeSelectedValue(event.value)}
           clearable={false}
         />
       </div>

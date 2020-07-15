@@ -125,7 +125,6 @@
 .hiv-cohort-filter__svg-wrapper div {
   position: absolute;
   overflow: hidden;
-
 }
 
 .hiv-cohort-filter__svg-wrapper {
@@ -151,7 +150,7 @@
 .hiv-cohort-filter .button-primary-orange[disabled]:hover {
   border: 1px solid #9b9b9b;
   background-color: #ef8523;
-  letter-spacing: .06rem;
+  letter-spacing: 0.06rem;
   color: #ffffff;
   fill: #ffffff;
   font-weight: 500;
@@ -167,7 +166,7 @@
 }
 
 .hiv-cohort-filter__main .spinner .spinner__svg {
-  fill: #3283C8;
+  fill: #3283c8;
 }
 
 .hiv-cohort-filter .g3-dropdown-button__button {

@@ -7,28 +7,22 @@ module.exports = {
   output: {
     path: __dirname,
     filename: 'bundle.js',
-    publicPath: basename
+    publicPath: basename,
   },
   module: {
     rules: [
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loaders: [
-          'babel-loader',
-        ],
+        loaders: ['babel-loader'],
       },
       {
         test: /\.json$/,
-        loader: 'json'
+        loader: 'json',
       },
       {
         test: /\.less$/,
-        loaders: [
-          'style-loader',
-          'css-loader',
-          'less-loader',
-        ]
+        loaders: ['style-loader', 'css-loader', 'less-loader'],
       },
       {
         test: /\.css$/,
@@ -43,13 +37,13 @@ module.exports = {
         loader: 'url-loader',
       },
       { test: /\.flow$/, loader: 'ignore-loader' },
-    ]
+    ],
   },
   resolve: {
     alias: {
-      graphql:  path.resolve('./node_modules/graphql'),
-      react:    path.resolve('./node_modules/react')                // Same issue.
+      graphql: path.resolve('./node_modules/graphql'),
+      react: path.resolve('./node_modules/react'), // Same issue.
     },
-    extensions: [ '.js', '.jsx', '.json' ]
-  }
+    extensions: ['.js', '.jsx', '.json'],
+  },
 };

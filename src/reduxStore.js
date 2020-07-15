@@ -7,10 +7,8 @@ import { mockStore, dev } from './localconf';
 import reducers from './reducers';
 import { requiredCerts } from './configs';
 
-
 let store;
 let storePromise;
-
 
 /* eslint-disable no-underscore-dangle */
 /**
@@ -22,10 +20,12 @@ let storePromise;
  * @return Promise<Store>
  */
 const getReduxStore = () => {
-  if (store) { // singleton
+  if (store) {
+    // singleton
     return Promise.resolve(store);
   }
-  if (storePromise) { // store setup is in process
+  if (storePromise) {
+    // store setup is in process
     return storePromise;
   }
   storePromise = new Promise((resolve, reject) => {
@@ -33,31 +33,34 @@ const getReduxStore = () => {
       if (dev === true) {
         let data = {};
         if (mockStore) {
-          data = { user: { username: 'test', certificates_uploaded: requiredCerts }, submission: { dictionary: dict, nodeTypes: Object.keys(dict).slice(2) }, status: {} };
+          data = {
+            user: { username: 'test', certificates_uploaded: requiredCerts },
+            submission: {
+              dictionary: dict,
+              nodeTypes: Object.keys(dict).slice(2),
+            },
+            status: {},
+          };
         }
         store = compose(
           applyMiddleware(thunk), // routerMiddleware(browserHistory)),
-          autoRehydrate(),
+          autoRehydrate()
         )(createStore)(
           reducers,
           data,
-          window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+          window.__REDUX_DEVTOOLS_EXTENSION__ &&
+            window.__REDUX_DEVTOOLS_EXTENSION__()
         );
       } else {
         store = compose(
           applyMiddleware(thunk), // routerMiddleware(browserHistory)),
-          autoRehydrate(),
-        )(createStore)(
-          reducers,
-          { user: {}, status: {} },
-          autoRehydrate(),
-        );
+          autoRehydrate()
+        )(createStore)(reducers, { user: {}, status: {} }, autoRehydrate());
       }
 
-      persistStore(store,
-        { whitelist: ['certificate'] },
-        () => { resolve(store); },
-      );
+      persistStore(store, { whitelist: ['certificate'] }, () => {
+        resolve(store);
+      });
     } catch (e) {
       reject(e);
     }

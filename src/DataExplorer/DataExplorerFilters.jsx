@@ -8,14 +8,11 @@ class DataExplorerFilters extends React.Component {
     const filterConfig = this.props.dataExplorerConfig.filters;
     return (
       <div className='data-explorer__filters'>
-        {
-          filterConfig ?
-            <AggregationTabs
-              filterConfig={filterConfig}
-              {...this.props}
-            />
-            : <Aggregations {...this.props} />
-        }
+        {filterConfig ? (
+          <AggregationTabs filterConfig={filterConfig} {...this.props} />
+        ) : (
+          <Aggregations {...this.props} />
+        )}
       </div>
     );
   }

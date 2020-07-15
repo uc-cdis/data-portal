@@ -20,7 +20,7 @@ describe('Canvas', () => {
       onResetCanvasFinished={resetFunc}
     >
       <GraphDrawer className='text-drawer' />
-    </Canvas>,
+    </Canvas>
   );
 
   it('can render content inside canvas', () => {

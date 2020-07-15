@@ -2,9 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import GraphDrawer from '../GraphDrawer/GraphDrawer';
 import { calculateGraphLayout } from '../GraphCalculator/graphCalculatorHelper';
-import {
-  buildTestData,
-} from '../../../GraphUtils/testData';
+import { buildTestData } from '../../../GraphUtils/testData';
 
 describe('GraphDrawer', () => {
   const hoverFunc = jest.fn();
@@ -19,7 +17,7 @@ describe('GraphDrawer', () => {
         nodes={layout.nodes}
         edges={layout.edges}
         layoutInitialized
-      />,
+      />
     );
     expect(graphDrawer.find(GraphDrawer).length).toBe(1);
     expect(graphDrawer.find('.graph-node').length).toBe(layout.nodes.length);
@@ -37,7 +35,7 @@ describe('GraphDrawer', () => {
         onHoverNode={hoverFunc}
         onCancelHoverNode={cancelHoverFunc}
         onClickNode={clickFunc}
-      />,
+      />
     );
     const firstNodeElem = graphDrawer.find('.graph-node').first();
     firstNodeElem.simulate('mouseover');

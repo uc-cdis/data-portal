@@ -26,17 +26,18 @@ class KeyTable extends React.Component {
    * default row renderer - just delegates to ProjectTR - can be overriden by subtypes, whatever
    */
 
-  getData = jtis => jtis.map(jti => [
-    jti.jti,
-    TimestampToDateTime(jti.exp),
-    <IconicButton
-      onClick={() => this.props.onDelete(jti)}
-      caption={DELETE_BTN}
-      dictIcons={dictIcons}
-      icon='delete'
-      buttonClassName='button-primary-white'
-    />,
-  ]);
+  getData = (jtis) =>
+    jtis.map((jti) => [
+      jti.jti,
+      TimestampToDateTime(jti.exp),
+      <IconicButton
+        onClick={() => this.props.onDelete(jti)}
+        caption={DELETE_BTN}
+        dictIcons={dictIcons}
+        icon='delete'
+        buttonClassName='button-primary-white'
+      />,
+    ]);
 
   render() {
     return (

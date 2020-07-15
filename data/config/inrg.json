@@ -215,21 +215,15 @@
         },
         {
           "title": "Age",
-          "fields": [
-            "AGE"
-          ]
+          "fields": ["AGE"]
         },
         {
           "title": "Sex",
-          "fields": [
-            "SEX"
-          ]
+          "fields": ["SEX"]
         },
         {
           "title": "Ethnicity",
-          "fields": [
-            "ETHNICITY"
-          ]
+          "fields": ["ETHNICITY"]
         }
       ]
     },
@@ -252,8 +246,7 @@
     "guppyConfig": {
       "dataType": "inrg",
       "nodeCountTitle": "Subjects",
-      "fieldMapping": [
-      ]
+      "fieldMapping": []
     }
   }
 }

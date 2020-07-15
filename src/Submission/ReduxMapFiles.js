@@ -9,51 +9,57 @@ const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
   return fetchWithCreds({
     path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${user}&start=${start}&limit=${fetchLimit}`,
     method: 'GET',
-  }).then(
-    ({ status, data }) => {
-      switch (status) {
-      case 200:
-        total = total.concat(data.records);
-        if (data.records.length === fetchLimit) {
-          return dispatch(
-            fetchUnmappedFiles(user, total, data.records[fetchLimit - 1].did, fetchLimit),
-          );
+  })
+    .then(
+      ({ status, data }) => {
+        switch (status) {
+          case 200:
+            total = total.concat(data.records);
+            if (data.records.length === fetchLimit) {
+              return dispatch(
+                fetchUnmappedFiles(
+                  user,
+                  total,
+                  data.records[fetchLimit - 1].did,
+                  fetchLimit
+                )
+              );
+            }
+            return {
+              type: 'RECEIVE_UNMAPPED_FILES',
+              data: total,
+            };
+          default:
+            return {
+              type: 'FETCH_ERROR',
+              error: data.records,
+            };
         }
-        return {
-          type: 'RECEIVE_UNMAPPED_FILES',
-          data: total,
-        };
-      default:
-        return {
-          type: 'FETCH_ERROR',
-          error: data.records,
-        };
+      },
+      (err) => ({ type: 'FETCH_ERROR', error: err })
+    )
+    .then((msg) => {
+      if (msg) {
+        dispatch(msg);
       }
-    },
-    err => ({ type: 'FETCH_ERROR', error: err }),
-  ).then((msg) => {
-    if (msg) {
-      dispatch(msg);
-    }
-  });
+    });
 };
 
-const mapSelectedFiles = files => ({
+const mapSelectedFiles = (files) => ({
   type: 'RECEIVE_FILES_TO_MAP',
   data: files,
 });
 
 const ReduxMapFiles = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     unmappedFiles: state.submission.unmappedFiles,
     user: state.user,
   });
 
-  const mapDispatchToProps = dispatch => ({
-    fetchUnmappedFiles: user => dispatch(
-      fetchUnmappedFiles(user, [], STARTING_DID, FETCH_LIMIT),
-    ),
-    mapSelectedFiles: files => dispatch(mapSelectedFiles(files)),
+  const mapDispatchToProps = (dispatch) => ({
+    fetchUnmappedFiles: (user) =>
+      dispatch(fetchUnmappedFiles(user, [], STARTING_DID, FETCH_LIMIT)),
+    mapSelectedFiles: (files) => dispatch(mapSelectedFiles(files)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(MapFiles);

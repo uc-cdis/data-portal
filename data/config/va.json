@@ -149,22 +149,22 @@
     "explorer": true,
     "analysis": true
   },
-  "analysisTools": [ "vaGWAS" ],
+  "analysisTools": ["vaGWAS"],
   "dataExplorerConfig": {
     "charts": {
       "Chicago_ID": {
         "chartType": "count",
         "title": "Patients"
       },
-      "Oncology_Primary__ICDOSite":{
+      "Oncology_Primary__ICDOSite": {
         "chartType": "bar",
         "title": "Site (ICD-O)"
       },
-      "Oncology_Primary__Radiation":{
+      "Oncology_Primary__Radiation": {
         "chartType": "pie",
         "title": "Radiation"
       },
-      "Oncology_Primary__Chemotherapy":{
+      "Oncology_Primary__Chemotherapy": {
         "chartType": "pie",
         "title": "Chemotherapy"
       }
@@ -173,7 +173,7 @@
       "tabs": [
         {
           "title": "Demographic",
-          "fields":[
+          "fields": [
             "project_id",
             "Days_To_Birth",
             "Days_To_Death",

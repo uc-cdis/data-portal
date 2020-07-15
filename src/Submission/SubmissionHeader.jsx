@@ -11,15 +11,18 @@ import { userHasDataUpload } from '../authMappingUtils';
 class SubmissionHeader extends React.Component {
   componentDidMount = () => {
     this.props.fetchUnmappedFileStats(this.props.user.username);
-  }
+  };
 
   openGen3DataClient = () => {
-    window.open('https://github.com/uc-cdis/cdis-data-client/releases', '_blank');
-  }
+    window.open(
+      'https://github.com/uc-cdis/cdis-data-client/releases',
+      '_blank'
+    );
+  };
 
   openGen3Tutorials = () => {
     window.open('https://gen3.org/resources/user/gen3-client/', '_blank');
-  }
+  };
 
   render() {
     const totalFileSize = humanFileSize(this.props.unmappedFileSize);
@@ -54,30 +57,32 @@ class SubmissionHeader extends React.Component {
             />
           </div>
         </div>
-        {
-          (useArboristUI && !userHasDataUpload(this.props.userAuthMapping)) ? null :
-            <div className='submission-header__section'>
-              <div className='submission-header__section-image'>
-                <MapFilesSvg />
-              </div>
-              <div className='submission-header__section-info'>
-                <div className='h3-typo'>Map My Files</div>
-                <div className='h4-typo'>
-                  {this.props.unmappedFileCount} files | {totalFileSize}
-                </div>
-                <div className='body-typo'>
-                Mapping files to metadata in order to create medical meaning.
-                </div>
-                <Button
-                  onClick={() => { window.location.href = `${window.location.href}/files`; }}
-                  className='submission-header__section-button'
-                  label='Map My Files'
-                  buttonType='primary'
-                  enabled
-                />
-              </div>
+        {useArboristUI &&
+        !userHasDataUpload(this.props.userAuthMapping) ? null : (
+          <div className='submission-header__section'>
+            <div className='submission-header__section-image'>
+              <MapFilesSvg />
             </div>
-        }
+            <div className='submission-header__section-info'>
+              <div className='h3-typo'>Map My Files</div>
+              <div className='h4-typo'>
+                {this.props.unmappedFileCount} files | {totalFileSize}
+              </div>
+              <div className='body-typo'>
+                Mapping files to metadata in order to create medical meaning.
+              </div>
+              <Button
+                onClick={() => {
+                  window.location.href = `${window.location.href}/files`;
+                }}
+                className='submission-header__section-button'
+                label='Map My Files'
+                buttonType='primary'
+                enabled
+              />
+            </div>
+          </div>
+        )}
       </div>
     );
   }

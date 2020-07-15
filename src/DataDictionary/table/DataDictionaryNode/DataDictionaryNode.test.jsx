@@ -17,7 +17,7 @@ describe('DataDictionaryNode', () => {
       description='test description'
       expanded={false}
       onExpandNode={expandFunc}
-    />,
+    />
   );
 
   it('can render and toggle properties', () => {
@@ -32,7 +32,9 @@ describe('DataDictionaryNode', () => {
     expect(wrapper.find('.data-dictionary-node__property').length).toBe(1);
 
     // unexpand node
-    const closeElem = wrapper.find('.data-dictionary-node__property-close').first();
+    const closeElem = wrapper
+      .find('.data-dictionary-node__property-close')
+      .first();
     closeElem.simulate('click');
     expect(expandFunc.mock.calls.length).toBe(2);
   });

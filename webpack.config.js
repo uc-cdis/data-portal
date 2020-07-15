@@ -3,7 +3,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 const basename = process.env.BASENAME || '/';
-const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
+const pathPrefix = basename.endsWith('/')
+  ? basename.slice(0, basename.length - 1)
+  : basename;
 const app = process.env.APP || 'dev';
 const title = {
   acct: 'ACCOuNT Data Commons',
@@ -16,13 +18,13 @@ const title = {
   gdc: 'Jamboree Data Access',
   kf: 'Kids First Data Coordinating Center Portal',
   ndh: 'NIAID Data Hub',
-} [app];
+}[app];
 
 const plugins = [
   new webpack.EnvironmentPlugin(['NODE_ENV']),
-  new webpack.EnvironmentPlugin({'MOCK_STORE': null}),
+  new webpack.EnvironmentPlugin({ MOCK_STORE: null }),
   new webpack.EnvironmentPlugin(['APP']),
-  new webpack.EnvironmentPlugin({'BASENAME': '/'}),
+  new webpack.EnvironmentPlugin({ BASENAME: '/' }),
   new webpack.EnvironmentPlugin(['LOGOUT_INACTIVE_USERS']),
   new webpack.EnvironmentPlugin(['WORKSPACE_TIMEOUT_IN_MINUTES']),
   new webpack.EnvironmentPlugin(['REACT_APP_PROJECT_ID']),
@@ -36,15 +38,23 @@ const plugins = [
   new webpack.EnvironmentPlugin(['WORKSPACE_URL']),
   new webpack.EnvironmentPlugin(['WTS_URL']),
   new webpack.EnvironmentPlugin(['MANIFEST_SERVICE_URL']),
-  new webpack.DefinePlugin({ // <-- key to reducing React's size
+  new webpack.DefinePlugin({
+    // <-- key to reducing React's size
     'process.env': {
-      'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev'),
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),
       LOGOUT_INACTIVE_USERS: !(process.env.LOGOUT_INACTIVE_USERS === 'false'),
-      WORKSPACE_TIMEOUT_IN_MINUTES: process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480,
-      REACT_APP_PROJECT_ID: JSON.stringify(process.env.REACT_APP_PROJECT_ID || 'search'),
-      REACT_APP_ARRANGER_API: JSON.stringify(process.env.REACT_APP_ARRANGER_API || '/api/v0/flat-search'),
-      REACT_APP_DISABLE_SOCKET: JSON.stringify(process.env.REACT_APP_DISABLE_SOCKET || 'true'),
-    }
+      WORKSPACE_TIMEOUT_IN_MINUTES:
+        process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480,
+      REACT_APP_PROJECT_ID: JSON.stringify(
+        process.env.REACT_APP_PROJECT_ID || 'search'
+      ),
+      REACT_APP_ARRANGER_API: JSON.stringify(
+        process.env.REACT_APP_ARRANGER_API || '/api/v0/flat-search'
+      ),
+      REACT_APP_DISABLE_SOCKET: JSON.stringify(
+        process.env.REACT_APP_DISABLE_SOCKET || 'true'
+      ),
+    },
   }),
   new HtmlWebpackPlugin({
     title: title,
@@ -53,23 +63,23 @@ const plugins = [
     connect_src: (function () {
       let rv = {};
       if (typeof process.env.FENCE_URL !== 'undefined') {
-        rv[(new URL(process.env.FENCE_URL)).origin] = true;
+        rv[new URL(process.env.FENCE_URL).origin] = true;
       }
       if (typeof process.env.INDEXD_URL !== 'undefined') {
-        rv[(new URL(process.env.INDEXD_URL)).origin] = true;
+        rv[new URL(process.env.INDEXD_URL).origin] = true;
       }
       if (typeof process.env.WORKSPACE_URL !== 'undefined') {
-        rv[(new URL(process.env.WORKSPACE_URL)).origin] = true;
+        rv[new URL(process.env.WORKSPACE_URL).origin] = true;
       }
       if (typeof process.env.WTS_URL !== 'undefined') {
-        rv[(new URL(process.env.WTS_URL)).origin] = true;
+        rv[new URL(process.env.WTS_URL).origin] = true;
       }
       if (typeof process.env.MANIFEST_SERVICE_URL !== 'undefined') {
-        rv[(new URL(process.env.MANIFEST_SERVICE_URL)).origin] = true;
+        rv[new URL(process.env.MANIFEST_SERVICE_URL).origin] = true;
       }
       return Object.keys(rv).join(' ');
     })(),
-    hash: true
+    hash: true,
   }),
   new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
 ];
@@ -81,9 +91,9 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
   // optimization for production mode
   optimization = {
     splitChunks: {
-      chunks: 'all'
-    }
-  }
+      chunks: 'all',
+    },
+  };
 } else {
   // add sourcemap tools for development mode
   devtool = 'eval-source-map';
@@ -92,14 +102,19 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
 module.exports = {
   entry: ['babel-polyfill', './src/index.jsx'],
   target: 'web',
-  externals: [nodeExternals({
-    whitelist: ['graphiql', 'graphql-language-service-parser']
-  })],
-  mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
+  externals: [
+    nodeExternals({
+      whitelist: ['graphiql', 'graphql-language-service-parser'],
+    }),
+  ],
+  mode:
+    process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto'
+      ? 'production'
+      : 'development',
   output: {
     path: __dirname,
-	  filename: 'bundle.js',
-	  publicPath: basename,
+    filename: 'bundle.js',
+    publicPath: basename,
   },
   optimization,
   devtool,
@@ -114,7 +129,8 @@ module.exports = {
     https: true,
   },
   module: {
-    rules: [{
+    rules: [
+      {
         test: /\.jsx?$/,
         exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
         use: {
@@ -123,11 +139,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        loaders: [
-          'style-loader',
-          'css-loader',
-          'less-loader',
-        ]
+        loaders: ['style-loader', 'css-loader', 'less-loader'],
       },
       {
         test: /\.css$/,
@@ -141,26 +153,30 @@ module.exports = {
         test: /\.(png|jpg|gif|woff|ttf|eot)$/,
         loaders: 'url-loader',
         query: {
-          limit: 8192
-        }
+          limit: 8192,
+        },
       },
       {
         test: /\.flow$/,
-        loader: 'ignore-loader'
-      }
-    ]
+        loader: 'ignore-loader',
+      },
+    ],
   },
   resolve: {
     alias: {
       graphql: path.resolve('./node_modules/graphql'),
       react: path.resolve('./node_modules/react'), // Same issue.
-      graphiql: path.resolve('./node_modules/graphiql'), 
-      'graphql-language-service-parser': path.resolve('./node_modules/graphql-language-service-parser')
+      graphiql: path.resolve('./node_modules/graphiql'),
+      'graphql-language-service-parser': path.resolve(
+        './node_modules/graphql-language-service-parser'
+      ),
     },
-    extensions: ['.mjs', '.js', '.jsx', '.json',]
+    extensions: ['.mjs', '.js', '.jsx', '.json'],
   },
   plugins,
-  externals: [{
-    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'
-  }]
+  externals: [
+    {
+      xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}',
+    },
+  ],
 };

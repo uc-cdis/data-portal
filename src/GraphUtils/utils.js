@@ -10,7 +10,9 @@ const getSubgroupLinks = (link, nameToNode, sourceId) => {
   if (link.subgroup) {
     link.subgroup.forEach((sgLink) => {
       if (sgLink.subgroup) {
-        subgroupLinks = subgroupLinks.concat(getSubgroupLinks(sgLink, nameToNode, sourceId));
+        subgroupLinks = subgroupLinks.concat(
+          getSubgroupLinks(sgLink, nameToNode, sourceId)
+        );
       } else {
         subgroupLinks.push({
           source: nameToNode[sourceId],
@@ -40,13 +42,21 @@ const getSubgroupLinks = (link, nameToNode, sourceId) => {
  * @param nodesToHide: Array of nodes to hide from graph
  * @returns { nodes, edges } Object containing nodes and edges
  */
-export function createNodesAndEdges(props, createAll, nodesToHide = ['program']) {
+export function createNodesAndEdges(
+  props,
+  createAll,
+  nodesToHide = ['program']
+) {
   const dictionary = props.dictionary;
-  const nodes = Object.keys(dictionary).filter(
-    key => !key.startsWith('_') && dictionary[key].type === 'object'
-      && dictionary[key].category !== 'internal' && !nodesToHide.includes(key),
-  ).map(
-    (key) => {
+  const nodes = Object.keys(dictionary)
+    .filter(
+      (key) =>
+        !key.startsWith('_') &&
+        dictionary[key].type === 'object' &&
+        dictionary[key].category !== 'internal' &&
+        !nodesToHide.includes(key)
+    )
+    .map((key) => {
       let count = 0;
       if (props.counts_search) {
         count = props.counts_search[`_${key}_count`];
@@ -56,28 +66,39 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
         count,
         ...dictionary[key],
       };
-    },
-  ).filter(
-    node => createAll || node.count !== 0,
-  );
+    })
+    .filter((node) => createAll || node.count !== 0);
 
-  const nameToNode = nodes.reduce((db, node) => { db[node.id] = node; return db; }, {});
-  const hideDb = nodesToHide.reduce((db, name) => { db[name] = true; return db; }, {});
+  const nameToNode = nodes.reduce((db, node) => {
+    db[node.id] = node;
+    return db;
+  }, {});
+  const hideDb = nodesToHide.reduce((db, name) => {
+    db[name] = true;
+    return db;
+  }, {});
 
-  const edges = nodes.filter(
-    node => node.links && node.links.length > 0,
-  )
-    .reduce( // add each node's links to the edge list
+  const edges = nodes
+    .filter((node) => node.links && node.links.length > 0)
+    .reduce(
+      // add each node's links to the edge list
       (list, node) => {
-        const newLinks = node.links.map(
-          link => ({ source: node, target: nameToNode[link.target_type], exists: 1, ...link }),
-        );
+        const newLinks = node.links.map((link) => ({
+          source: node,
+          target: nameToNode[link.target_type],
+          exists: 1,
+          ...link,
+        }));
         return list.concat(newLinks);
-      }, [])
-    .reduce( // add link subgroups to the edge list
+      },
+      []
+    )
+    .reduce(
+      // add link subgroups to the edge list
       (list, link) => {
         let result = list;
-        if (link.target) { // "subgroup" link entries in dictionary are not links themselves ...
+        if (link.target) {
+          // "subgroup" link entries in dictionary are not links themselves ...
           result.push(link);
         }
         if (link.subgroup) {
@@ -85,23 +106,30 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
           result = result.concat(sgLinks);
         }
         return result;
-      }, [])
+      },
+      []
+    )
     .filter(
-    // target type exist and is not in hide list
-      link => (link.target && link.target.id in nameToNode && !(link.target.id in hideDb)))
-    .map(
-      (link) => {
+      // target type exist and is not in hide list
+      (link) =>
+        link.target &&
+        link.target.id in nameToNode &&
+        !(link.target.id in hideDb)
+    )
+    .map((link) => {
       // decorate each link with its "exists" count if available
       //  (number of instances of link between source and target types in the data)
-        const res = link;
-        res.exists = props.links_search
-          ? props.links_search[`${res.source.id}_${res.name}_to_${res.target.id}_link`] :
-          undefined;
-        return res;
-      })
+      const res = link;
+      res.exists = props.links_search
+        ? props.links_search[
+            `${res.source.id}_${res.name}_to_${res.target.id}_link`
+          ]
+        : undefined;
+      return res;
+    })
     .filter(
-    // filter out if no instances of this link exists and createAll is not specified
-      link => createAll || link.exists || link.exists === undefined,
+      // filter out if no instances of this link exists and createAll is not specified
+      (link) => createAll || link.exists || link.exists === undefined
     );
   return {
     nodes,
@@ -121,16 +149,21 @@ export function findRoot(nodes, edges) {
     (db, edge) => {
       // At some point the d3 force layout converts
       //   edge.source and edge.target into node references ...
-      const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
+      const sourceName =
+        typeof edge.source === 'object' ? edge.source.id : edge.source;
       if (db[sourceName]) {
         db[sourceName] = false;
       }
       return db;
     },
     // initialize emptyDb - any node could be the root
-    nodes.reduce((emptyDb, node) => { const res = emptyDb; res[node.id] = true; return res; }, {}),
+    nodes.reduce((emptyDb, node) => {
+      const res = emptyDb;
+      res[node.id] = true;
+      return res;
+    }, {})
   );
-  const rootNode = nodes.find(n => couldBeRoot[n.id]);
+  const rootNode = nodes.find((n) => couldBeRoot[n.id]);
   return rootNode ? rootNode.id : null;
 }
 
@@ -149,8 +182,10 @@ function getTreeHierarchyHelper(node, name2EdgesIn, hierarchy) {
   descendants.add(node);
   hierarchy.set(node, descendants);
   name2EdgesIn[node].forEach((edge) => {
-    const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
-    if (!hierarchy.get(sourceName)) { // don't want to visit node again
+    const sourceName =
+      typeof edge.source === 'object' ? edge.source.id : edge.source;
+    if (!hierarchy.get(sourceName)) {
+      // don't want to visit node again
       hierarchy = getTreeHierarchyHelper(sourceName, name2EdgesIn, hierarchy);
       descendants.add(sourceName);
       hierarchy.get(sourceName).forEach((n) => {
@@ -198,7 +233,8 @@ export function nodesBreadthFirst(nodes, edges) {
     (db, edge) => {
       // At some point the d3 force layout converts edge.source
       //   and edge.target into node references ...
-      const targetName = typeof edge.target === 'object' ? edge.target.id : edge.target;
+      const targetName =
+        typeof edge.target === 'object' ? edge.target.id : edge.target;
       if (db[targetName]) {
         db[targetName].push(edge);
       } else {
@@ -207,7 +243,11 @@ export function nodesBreadthFirst(nodes, edges) {
       return db;
     },
     // initialize emptyDb - include nodes that have no incoming edges (leaves)
-    nodes.reduce((emptyDb, node) => { const res = emptyDb; res[node.id] = []; return res; }, {}),
+    nodes.reduce((emptyDb, node) => {
+      const res = emptyDb;
+      res[node.id] = [];
+      return res;
+    }, {})
   );
 
   // root node has no edges coming out of it, just edges coming in
@@ -235,7 +275,8 @@ export function nodesBreadthFirst(nodes, edges) {
     name2EdgesIn[query].forEach((edge) => {
       // At some point the d3 force layout converts edge.source
       //   and edge.target into node references ...
-      const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
+      const sourceName =
+        typeof edge.source === 'object' ? edge.source.id : edge.source;
       if (name2EdgesIn[sourceName]) {
         const isAncestor = hierarchy.get(sourceName).has(query);
         // only push node if it is not an ancestor of the current node, or else --> cycle
@@ -245,8 +286,7 @@ export function nodesBreadthFirst(nodes, edges) {
       } else {
         console.log(`Edge comes from unknown node ${sourceName}`);
       }
-    },
-    );
+    });
   }
 
   // Reset and run for real
@@ -263,29 +303,30 @@ export function nodesBreadthFirst(nodes, edges) {
     }
     result.treeLevel2Names[level].push(query);
     result.name2Level[query] = level;
-    name2EdgesIn[query].forEach(
-      (edge) => {
-        // At some point the d3 force layout converts edge.source
-        //   and edge.target into node references ...
-        const sourceName = typeof edge.source === 'object' ? edge.source.id : edge.source;
-        if (name2EdgesIn[sourceName]) {
-          if (!processedNodes.has(sourceName) && name2ActualLvl[sourceName] === (level + 1)) {
-            //
-            // edge source has not yet been processed via another link from the source
-            // to a node higher in the graph
-            //
-            processedNodes.add(sourceName); // don't double-queue a node
-            queue.push({ query: sourceName, level: level + 1 });
-          }
-        } else {
-          console.log(`Edge comes from unknown node ${sourceName}`);
+    name2EdgesIn[query].forEach((edge) => {
+      // At some point the d3 force layout converts edge.source
+      //   and edge.target into node references ...
+      const sourceName =
+        typeof edge.source === 'object' ? edge.source.id : edge.source;
+      if (name2EdgesIn[sourceName]) {
+        if (
+          !processedNodes.has(sourceName) &&
+          name2ActualLvl[sourceName] === level + 1
+        ) {
+          //
+          // edge source has not yet been processed via another link from the source
+          // to a node higher in the graph
+          //
+          processedNodes.add(sourceName); // don't double-queue a node
+          queue.push({ query: sourceName, level: level + 1 });
         }
-      },
-    );
+      } else {
+        console.log(`Edge comes from unknown node ${sourceName}`);
+      }
+    });
   }
   return result;
 }
-
 
 /**
  * Decorate the nodes of a graph with a position based on the node's position in the graph
@@ -300,10 +341,14 @@ export function nodesBreadthFirst(nodes, edges) {
  *          grid under the root rather than the tree structure
  */
 export function assignNodePositions(nodes, edges, opts) {
-  const breadthFirstInfo = (opts && opts.breadthFirstInfo) ?
-    opts.breadthFirstInfo : nodesBreadthFirst(nodes, edges);
+  const breadthFirstInfo =
+    opts && opts.breadthFirstInfo
+      ? opts.breadthFirstInfo
+      : nodesBreadthFirst(nodes, edges);
   const name2Node = nodes.reduce((db, node) => {
-    const res = db; res[node.id] = node; return res;
+    const res = db;
+    res[node.id] = node;
+    return res;
   }, {});
 
   // the tree has some number of levels with some number of nodes each,
@@ -316,41 +361,36 @@ export function assignNodePositions(nodes, edges, opts) {
     const { numPerRow } = opts;
     const { bfOrder } = breadthFirstInfo;
     // put the root on its own level
-    return bfOrder.reduce(
-      (db, node) => {
-        if (db.length < 2) { // put root node on its own level
-          db.push([node]);
+    return bfOrder.reduce((db, node) => {
+      if (db.length < 2) {
+        // put root node on its own level
+        db.push([node]);
+      } else {
+        const lastRow = db[db.length - 1];
+        if (lastRow.length < numPerRow) {
+          lastRow.push(node);
         } else {
-          const lastRow = db[db.length - 1];
-          if (lastRow.length < numPerRow) {
-            lastRow.push(node);
-          } else {
-            db.push([node]);
-          }
+          db.push([node]);
         }
-        return db;
-      }, [],
-    );
+      }
+      return db;
+    }, []);
   })();
 
   // Assign a (x,y) position in [0,1) space to each node based on its level in the tree
   const numLevels = row2Names.length;
-  row2Names.forEach(
-    (nodesAtLevel, level) => {
-      const numNodesAtLevel = nodesAtLevel.length;
-      nodesAtLevel.forEach(
-        (nodeName, posAtLevel) => {
-          const node = name2Node[nodeName];
-          node.position = [ // (x,y) in [0,1) coordinates
-            (posAtLevel + 1) / (numNodesAtLevel + 1),
-            (level + 1) / (numLevels + 1),
-          ];
-          node.positionIndex = [
-            posAtLevel, level,
-          ];
-        });
-    },
-  );
+  row2Names.forEach((nodesAtLevel, level) => {
+    const numNodesAtLevel = nodesAtLevel.length;
+    nodesAtLevel.forEach((nodeName, posAtLevel) => {
+      const node = name2Node[nodeName];
+      node.position = [
+        // (x,y) in [0,1) coordinates
+        (posAtLevel + 1) / (numNodesAtLevel + 1),
+        (level + 1) / (numLevels + 1),
+      ];
+      node.positionIndex = [posAtLevel, level];
+    });
+  });
   return breadthFirstInfo;
 }
 
@@ -391,6 +431,10 @@ shape=rectangle
 
 export function createDotStrinByNodesEdges(nodes, edges) {
   const posInfo = assignNodePositions(nodes, edges);
-  const dotString = buildGraphVizDOTString(nodes, edges, posInfo.treeLevel2Names);
+  const dotString = buildGraphVizDOTString(
+    nodes,
+    edges,
+    posInfo.treeLevel2Names
+  );
   return dotString;
 }

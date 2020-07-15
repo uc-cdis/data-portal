@@ -5,20 +5,21 @@ import getHomepageChartProjectsList from './relayer';
 
 const union = (a, b) => [...new Set([...a, ...b])];
 
-const updateRedux = async projectNodeCounts => getReduxStore().then(
-  (store) => {
-    store.dispatch({
-      type: 'RECEIVE_HOMEPAGE_CHART_DATASETS',
-      projectNodeCounts,
-      homepageChartNodes,
-      fileNodes: store.getState().submission.file_nodes,
-    });
-  },
-  (err) => {
-    console.error('WARNING: failed to load redux store', err);
-    return 'ERR';
-  },
-);
+const updateRedux = async (projectNodeCounts) =>
+  getReduxStore().then(
+    (store) => {
+      store.dispatch({
+        type: 'RECEIVE_HOMEPAGE_CHART_DATASETS',
+        projectNodeCounts,
+        homepageChartNodes,
+        fileNodes: store.getState().submission.file_nodes,
+      });
+    },
+    (err) => {
+      console.error('WARNING: failed to load redux store', err);
+      return 'ERR';
+    }
+  );
 
 // loadHomepageChartdataFromDatasets queries Peregrine's /datasets endpoint for
 // summary data (counts of projects, counts of subjects, etc).
@@ -31,39 +32,42 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
 
   const store = await getReduxStore();
   const fileNodes = store.getState().submission.file_nodes;
-  const nodesForIndexChart = homepageChartNodes.map(item => item.node);
+  const nodesForIndexChart = homepageChartNodes.map((item) => item.node);
   const nodesToRequest = union(fileNodes, nodesForIndexChart);
   const url = `${datasetUrl}?nodes=${nodesToRequest.join(',')}`;
 
   fetchWithCreds({
     path: url,
-  }).then((res) => {
-    switch (res.status) {
-    case 200:
-      updateRedux(res.data);
-      if (callback) {
-        callback(resultStatus);
-      }
-      break;
-    case 404:
-      // Shouldn't happen, this means peregrine datasets endpoint not enabled
-      console.error(`REST endpoint ${datasetUrl} not enabled in Peregrine yet.`);
-      resultStatus.needLogin = true;
-      if (callback) {
-        callback(resultStatus);
-      }
-      break;
-    case 401:
-    case 403:
-      resultStatus.needLogin = true;
-      if (callback) {
-        callback(resultStatus);
-      }
-      break;
-    default:
-      break;
-    }
   })
+    .then((res) => {
+      switch (res.status) {
+        case 200:
+          updateRedux(res.data);
+          if (callback) {
+            callback(resultStatus);
+          }
+          break;
+        case 404:
+          // Shouldn't happen, this means peregrine datasets endpoint not enabled
+          console.error(
+            `REST endpoint ${datasetUrl} not enabled in Peregrine yet.`
+          );
+          resultStatus.needLogin = true;
+          if (callback) {
+            callback(resultStatus);
+          }
+          break;
+        case 401:
+        case 403:
+          resultStatus.needLogin = true;
+          if (callback) {
+            callback(resultStatus);
+          }
+          break;
+        default:
+          break;
+      }
+    })
     .catch((err) => {
       console.log(err);
     });

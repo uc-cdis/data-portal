@@ -1,7 +1,7 @@
 {
   "presets": [
     [
-      "@babel/preset-env", 
+      "@babel/preset-env",
       {
         "targets": "> 0.25%, not dead"
       }
@@ -11,9 +11,11 @@
   "plugins": [
     "dev-expression",
     "transform-class-properties",
-    ["relay",
-      {"compat": true, "schema": "data/schema.json"}],
+    ["relay", { "compat": true, "schema": "data/schema.json" }],
     "@babel/plugin-transform-runtime",
-    ["@babel/plugin-proposal-object-rest-spread", { "loose": true, "useBuiltIns": true }]
+    [
+      "@babel/plugin-proposal-object-rest-spread",
+      { "loose": true, "useBuiltIns": true }
+    ]
   ]
 }

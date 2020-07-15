@@ -11,10 +11,18 @@ getProjectsList.mockImplementation(() => jest.fn());
 
 describe('MapDataModel', () => {
   const history = createMemoryHistory('/submission/map');
-  const projects = { test: { name: 'test', counts: [], charts: [], code: 'test' } };
+  const projects = {
+    test: { name: 'test', counts: [], charts: [], code: 'test' },
+  };
   const dictionary = {
     aligned_reads_index: {
-      links: [{ backref: 'node1', name: 'core_metadata_collections', target_type: 'core_metadata_collection' }],
+      links: [
+        {
+          backref: 'node1',
+          name: 'core_metadata_collections',
+          target_type: 'core_metadata_collection',
+        },
+      ],
       properties: {
         core_metadata_collection: { anyOf: {} },
         data_format: { enum: ['BAI'] },
@@ -38,7 +46,7 @@ describe('MapDataModel', () => {
         history={history}
         submitFiles={submitFiles}
       />
-    </StaticRouter>,
+    </StaticRouter>
   );
 
   const instance = component.find(MapDataModel).instance();
@@ -75,11 +83,18 @@ describe('MapDataModel', () => {
   });
 
   it('selects the node type and resets other state fields if necessary', () => {
-    instance.setState({ nodeType: null, requiredFields: {}, parentNodeId: '1' });
+    instance.setState({
+      nodeType: null,
+      requiredFields: {},
+      parentNodeId: '1',
+    });
     expect(instance.state.nodeType).toEqual(null);
     expect(instance.state.requiredFields).toEqual({});
     expect(instance.state.parentNodeId).toEqual('1');
-    instance.selectNodeType({ value: 'aligned_reads_index', label: 'aligned_reads_index' });
+    instance.selectNodeType({
+      value: 'aligned_reads_index',
+      label: 'aligned_reads_index',
+    });
     expect(instance.state.nodeType).toEqual('aligned_reads_index');
     expect(instance.state.requiredFields).toEqual({
       data_format: null,
@@ -93,7 +108,10 @@ describe('MapDataModel', () => {
     instance.setState({ parentNodeType: null, parentNodeId: '1' });
     expect(instance.state.parentNodeType).toEqual(null);
     expect(instance.state.parentNodeId).toEqual('1');
-    instance.selectParentNodeType({ value: 'core_metadata_collection', label: 'core_metadata_collection' });
+    instance.selectParentNodeType({
+      value: 'core_metadata_collection',
+      label: 'core_metadata_collection',
+    });
     expect(instance.state.parentNodeType).toEqual('core_metadata_collection');
     expect(instance.state.parentNodeId).toEqual(null);
     expect(fetchSpy).toHaveBeenCalled();
@@ -107,7 +125,10 @@ describe('MapDataModel', () => {
   });
 
   it('selects a required field', () => {
-    instance.selectNodeType({ value: 'aligned_reads_index', label: 'aligned_reads_index' });
+    instance.selectNodeType({
+      value: 'aligned_reads_index',
+      label: 'aligned_reads_index',
+    });
     expect(instance.state.nodeType).toEqual('aligned_reads_index');
     expect(instance.state.requiredFields).toEqual({
       data_format: null,
@@ -181,15 +202,19 @@ describe('MapDataModel', () => {
       level1Parents2: { name: 'level1Parent2', target_type: 'level1Parents2' },
     };
 
-    expect(instance.getParentNodes(level1Node.links, {})).toEqual(level1NodeExpected);
+    expect(instance.getParentNodes(level1Node.links, {})).toEqual(
+      level1NodeExpected
+    );
 
     const level2Node = {
-      links: [{
-        subgroup: [
-          { name: 'level2Parent', target_type: 'level2Parents' },
-          { name: 'level2Parent2', target_type: 'level2Parents2' },
-        ],
-      }],
+      links: [
+        {
+          subgroup: [
+            { name: 'level2Parent', target_type: 'level2Parents' },
+            { name: 'level2Parent2', target_type: 'level2Parents2' },
+          ],
+        },
+      ],
     };
 
     const level2NodeExpected = {
@@ -197,19 +222,27 @@ describe('MapDataModel', () => {
       level2Parents2: { name: 'level2Parent2', target_type: 'level2Parents2' },
     };
 
-    expect(instance.getParentNodes(level2Node.links, {})).toEqual(level2NodeExpected);
+    expect(instance.getParentNodes(level2Node.links, {})).toEqual(
+      level2NodeExpected
+    );
 
     const level3Node = {
-      links: [{
-        subgroup: [{
-          subgroup: [{
-            subgroup: [
-              { name: 'level3Parent', target_type: 'level3Parents' },
-              { name: 'level3Parent2', target_type: 'level3Parents2' },
-            ],
-          }],
-        }],
-      }],
+      links: [
+        {
+          subgroup: [
+            {
+              subgroup: [
+                {
+                  subgroup: [
+                    { name: 'level3Parent', target_type: 'level3Parents' },
+                    { name: 'level3Parent2', target_type: 'level3Parents2' },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     };
 
     const level3NodeExpected = {
@@ -217,6 +250,8 @@ describe('MapDataModel', () => {
       level3Parents2: { name: 'level3Parent2', target_type: 'level3Parents2' },
     };
 
-    expect(instance.getParentNodes(level3Node.links, {})).toEqual(level3NodeExpected);
+    expect(instance.getParentNodes(level3Node.links, {})).toEqual(
+      level3NodeExpected
+    );
   });
 });

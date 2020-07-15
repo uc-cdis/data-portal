@@ -17,9 +17,7 @@ class NavBarTooltip extends React.Component {
       >
         {
           <div className='navbar-tooltip__wrapper'>
-            <div className='navbar-tooltip__content'>
-              {this.props.content}
-            </div>
+            <div className='navbar-tooltip__content'>{this.props.content}</div>
             <span className='navbar-tooltip__arrow navbar-tooltip__arrow--outer' />
             <span className='navbar-tooltip__arrow navbar-tooltip__arrow--inner' />
           </div>

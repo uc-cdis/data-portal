@@ -1,10 +1,10 @@
 import Viz from 'viz.js';
 import { Module, render } from 'viz.js/full.render';
-import { createNodesAndEdges, createDotStrinByNodesEdges } from '../../../GraphUtils/utils';
 import {
-  truncateLines,
-  graphStyleConfig,
-} from '../../utils';
+  createNodesAndEdges,
+  createDotStrinByNodesEdges,
+} from '../../../GraphUtils/utils';
+import { truncateLines, graphStyleConfig } from '../../utils';
 import {
   getAllChildrenNodeIDs,
   getAllChildrenLinks,
@@ -22,50 +22,58 @@ import { getCategoryColor } from '../../NodeCategories/helper';
  * @returns {string[]} array of type names(duplicating names removed) of given nodes
  */
 export const getAllTypes = (nodes) => {
-  const types = nodes.map(node => node.type);
+  const types = nodes.map((node) => node.type);
   const uniqueTypes = [...new Set(types)];
   return uniqueTypes;
 };
 
 /* eslint-disable no-underscore-dangle */
 export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
-  const { nodes, edges } = createNodesAndEdges({
-    dictionary,
-    counts_search: countsSearch,
-    links_search: linksSearch,
-  }, true, []);
+  const { nodes, edges } = createNodesAndEdges(
+    {
+      dictionary,
+      counts_search: countsSearch,
+      links_search: linksSearch,
+    },
+    true,
+    []
+  );
   const dotString = createDotStrinByNodesEdges(nodes, edges);
   const viz = new Viz({ Module, render });
-  return viz.renderJSONObject(dotString)
+  return viz
+    .renderJSONObject(dotString)
     .then((renderedJSON) => {
       // draw nodes
       const renderedNodes = renderedJSON.objects
-        .filter(n => !n.rank)
+        .filter((n) => !n.rank)
         .map((n) => {
-          const boundingBox = n._draw_[1].points.reduce((acc, cur) => {
-            if (acc.x1 > cur[0]) acc.x1 = cur[0];
-            if (acc.y1 > cur[1]) acc.y1 = cur[1];
-            if (acc.x2 < cur[0]) acc.x2 = cur[0];
-            if (acc.y2 < cur[1]) acc.y2 = cur[1];
-            return acc;
-          }, {
-            x1: Infinity,
-            y1: Infinity,
-            x2: -Infinity,
-            y2: -Infinity,
-          });
+          const boundingBox = n._draw_[1].points.reduce(
+            (acc, cur) => {
+              if (acc.x1 > cur[0]) acc.x1 = cur[0];
+              if (acc.y1 > cur[1]) acc.y1 = cur[1];
+              if (acc.x2 < cur[0]) acc.x2 = cur[0];
+              if (acc.y2 < cur[1]) acc.y2 = cur[1];
+              return acc;
+            },
+            {
+              x1: Infinity,
+              y1: Infinity,
+              x2: -Infinity,
+              y2: -Infinity,
+            }
+          );
           const iconRadius = graphStyleConfig.nodeIconRadius;
           const topCenterX = (boundingBox.x1 + boundingBox.x2) / 2;
           const topCenterY = boundingBox.y1;
           const width = boundingBox.x2 - boundingBox.x1;
           const height = boundingBox.y2 - boundingBox.y1;
-          const originNode = nodes.find(node => node.id === n.name);
+          const originNode = nodes.find((node) => node.id === n.name);
           const outLinks = edges
-            .filter(edge => edge.source.id === n.name)
-            .map(edge => edge.target.id);
+            .filter((edge) => edge.source.id === n.name)
+            .map((edge) => edge.target.id);
           const inLinks = edges
-            .filter(edge => edge.target.id === n.name)
-            .map(edge => edge.source.id);
+            .filter((edge) => edge.target.id === n.name)
+            .map((edge) => edge.source.id);
 
           const nodeType = n.type.toLowerCase();
           const nodeColor = getCategoryColor(nodeType);
@@ -76,13 +84,21 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
           const rectMinHeight = height;
           const rectHeight = Math.max(
             rectMinHeight,
-            (textPadding * 2) + (nodeNames.length * (fontSize + textLineGap)),
+            textPadding * 2 + nodeNames.length * (fontSize + textLineGap)
           );
-          const requiredPropertiesCount = originNode.required ? originNode.required.length : 0;
-          const optionalPropertiesCount = originNode.properties ?
-            Object.keys(originNode.properties).length - requiredPropertiesCount : 0;
+          const requiredPropertiesCount = originNode.required
+            ? originNode.required.length
+            : 0;
+          const optionalPropertiesCount = originNode.properties
+            ? Object.keys(originNode.properties).length -
+              requiredPropertiesCount
+            : 0;
           let nodeLevel = 0;
-          if (originNode && originNode.positionIndex && originNode.positionIndex.length >= 2) {
+          if (
+            originNode &&
+            originNode.positionIndex &&
+            originNode.positionIndex.length >= 2
+          ) {
             nodeLevel = originNode.positionIndex[1];
           }
           return {
@@ -110,39 +126,46 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
         });
 
       // draw edges
-      const renderedEdges = renderedJSON.edges
-        .map((edge) => {
-          const controlPoints = edge._draw_[1].points;
-          let pathString = `M${controlPoints[0].join(',')}C${controlPoints.slice(1)
-            .map(pair => `${pair[0]},${pair[1]}`).join(' ')}`;
-          const sourceNode = renderedNodes.find(node => node._gvid === edge.tail);
-          const targetNode = renderedNodes.find(node => node._gvid === edge.head);
-          if (sourceNode.level === targetNode.level + 1) {
-            const sourePosition = [
-              (sourceNode.boundingBox.x1 + sourceNode.boundingBox.x2) / 2,
-              sourceNode.boundingBox.y1,
-            ];
-            const targetPosition = [
-              (targetNode.boundingBox.x1 + targetNode.boundingBox.x2) / 2,
-              targetNode.boundingBox.y2,
-            ];
-            pathString = `M${sourePosition[0]} ${sourePosition[1]} 
+      const renderedEdges = renderedJSON.edges.map((edge) => {
+        const controlPoints = edge._draw_[1].points;
+        let pathString = `M${controlPoints[0].join(',')}C${controlPoints
+          .slice(1)
+          .map((pair) => `${pair[0]},${pair[1]}`)
+          .join(' ')}`;
+        const sourceNode = renderedNodes.find(
+          (node) => node._gvid === edge.tail
+        );
+        const targetNode = renderedNodes.find(
+          (node) => node._gvid === edge.head
+        );
+        if (sourceNode.level === targetNode.level + 1) {
+          const sourePosition = [
+            (sourceNode.boundingBox.x1 + sourceNode.boundingBox.x2) / 2,
+            sourceNode.boundingBox.y1,
+          ];
+          const targetPosition = [
+            (targetNode.boundingBox.x1 + targetNode.boundingBox.x2) / 2,
+            targetNode.boundingBox.y2,
+          ];
+          pathString = `M${sourePosition[0]} ${sourePosition[1]} 
               L ${targetPosition[0]} ${targetPosition[1]}`;
-          }
-          const required = edges
-            .find(e => (e.source.id === sourceNode.id && e.target.id === targetNode.id))
-            .required;
-          return {
-            source: sourceNode.id,
-            target: targetNode.id,
-            controlPoints,
-            pathString,
-            required,
-          };
-        });
+        }
+        const required = edges.find(
+          (e) => e.source.id === sourceNode.id && e.target.id === targetNode.id
+        ).required;
+        return {
+          source: sourceNode.id,
+          target: targetNode.id,
+          controlPoints,
+          pathString,
+          required,
+        };
+      });
 
       // get bounding box for whole graph
-      const graphBoundingBox = renderedJSON._draw_.find(entry => entry.op === 'P').points;
+      const graphBoundingBox = renderedJSON._draw_.find(
+        (entry) => entry.op === 'P'
+      ).points;
 
       const layoutResult = {
         nodes: renderedNodes,
@@ -165,12 +188,15 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
  */
 export const calculateHighlightRelatedNodeIDs = (
   highlightingNode,
-  wholeGraphNodes,
+  wholeGraphNodes
 ) => {
   if (!highlightingNode) {
     return [];
   }
-  const relatedNodeIDs = getAllChildrenNodeIDs(highlightingNode.id, wholeGraphNodes);
+  const relatedNodeIDs = getAllChildrenNodeIDs(
+    highlightingNode.id,
+    wholeGraphNodes
+  );
   if (!relatedNodeIDs.includes(highlightingNode.id)) {
     return [highlightingNode.id, ...relatedNodeIDs];
   }
@@ -188,14 +214,14 @@ export const calculateHighlightRelatedNodeIDs = (
 export const calculatePathRelatedToSecondHighlightingNode = (
   highlightingNode,
   secondHighlightingNodeID,
-  wholeGraphNodes,
+  wholeGraphNodes
 ) => {
   if (!highlightingNode || !secondHighlightingNodeID) {
     return [];
   }
   const pathRelatedToSecondHighlightingNode = getAllChildrenLinks(
     secondHighlightingNodeID,
-    wholeGraphNodes,
+    wholeGraphNodes
   );
   pathRelatedToSecondHighlightingNode.push({
     source: highlightingNode.id,
@@ -231,7 +257,7 @@ export const calculateDataModelStructure = (
   startingNode,
   subgraphNodeIDs,
   subgraphEdges,
-  wholeGraphNodes,
+  wholeGraphNodes
 ) => {
   if (!startingNode) return null;
   const startingNodeID = startingNode.id;
@@ -239,20 +265,23 @@ export const calculateDataModelStructure = (
   const articulationNodeIDs = getArticulationNodesInSubgraph(
     subgraphNodeIDs,
     subgraphEdges,
-    wholeGraphNodes,
+    wholeGraphNodes
   );
   const unsortedCriticalNodeIDs = articulationNodeIDs.includes(startingNodeID)
-    ? articulationNodeIDs : [...articulationNodeIDs, startingNodeID];
-  if (!unsortedCriticalNodeIDs || unsortedCriticalNodeIDs.length === 0) return null;
+    ? articulationNodeIDs
+    : [...articulationNodeIDs, startingNodeID];
+  if (!unsortedCriticalNodeIDs || unsortedCriticalNodeIDs.length === 0)
+    return null;
 
   // step.2
   const sortedCriticalNodeIDs = sortNodesByTopology(
     unsortedCriticalNodeIDs,
     subgraphNodeIDs,
     subgraphEdges,
-    wholeGraphNodes,
+    wholeGraphNodes
   );
-  if (!sortedCriticalNodeIDs || sortedCriticalNodeIDs.length === 0) { // loop in graph
+  if (!sortedCriticalNodeIDs || sortedCriticalNodeIDs.length === 0) {
+    // loop in graph
     return null;
   }
   const resultCriticalNodeIDs = sortedCriticalNodeIDs;
@@ -261,10 +290,13 @@ export const calculateDataModelStructure = (
   const singleDescendentNodeID = getSingleEndDescendentNodeID(
     subgraphNodeIDs,
     subgraphEdges,
-    wholeGraphNodes,
+    wholeGraphNodes
   );
   // add single descendent node if not counted in critical nodes list
-  if (singleDescendentNodeID && !resultCriticalNodeIDs.includes(singleDescendentNodeID)) {
+  if (
+    singleDescendentNodeID &&
+    !resultCriticalNodeIDs.includes(singleDescendentNodeID)
+  ) {
     resultCriticalNodeIDs.push(singleDescendentNodeID);
   }
 
@@ -276,7 +308,7 @@ export const calculateDataModelStructure = (
       resultCriticalNodeIDs[i],
       subgraphNodeIDs,
       subgraphEdges,
-      wholeGraphNodes,
+      wholeGraphNodes
     );
     resultStructure.push({
       nodeID: resultCriticalNodeIDs[i - 1],
@@ -298,21 +330,22 @@ export const calculateDataModelStructure = (
       singleDescendentNodeID,
       subgraphNodeIDs,
       subgraphEdges,
-      wholeGraphNodes,
+      wholeGraphNodes
     );
   } else {
     // step.4.1 (optional)
     // Summary for all rest descendent nodes after last critical node
     // (normally we won't need this step, because there should be only one single last
     // descendent node (root note) "program", just in case that more than one appear in graph)
-    const lastCriticalNodeID = resultCriticalNodeIDs[resultCriticalNodeIDs.length - 1];
+    const lastCriticalNodeID =
+      resultCriticalNodeIDs[resultCriticalNodeIDs.length - 1];
     const nodeIDsBeforeNode = getAllChildrenNodeIDs(
       lastCriticalNodeID,
-      wholeGraphNodes,
+      wholeGraphNodes
     );
     const linksBeforeNode = getAllChildrenLinks(
       lastCriticalNodeID,
-      wholeGraphNodes,
+      wholeGraphNodes
     );
     resultStructure.push({
       nodeID: lastCriticalNodeID,
@@ -325,27 +358,31 @@ export const calculateDataModelStructure = (
     // (normally we won't need this step, because there should be only one single last
     // descendent node (root note) "program", just in case that more than one appear in graph)
     nodeIDsBeforeNode.forEach((nid) => {
-      routesBetweenStartEndNodes = routesBetweenStartEndNodes.concat(getAllRoutesBetweenTwoNodes(
-        startingNodeID,
-        nid,
-        subgraphNodeIDs,
-        subgraphEdges,
-        wholeGraphNodes,
-      ));
+      routesBetweenStartEndNodes = routesBetweenStartEndNodes.concat(
+        getAllRoutesBetweenTwoNodes(
+          startingNodeID,
+          nid,
+          subgraphNodeIDs,
+          subgraphEdges,
+          wholeGraphNodes
+        )
+      );
     });
   }
 
   // step.6
-  resultStructure = resultStructure.map((entry) => {
-    const { nodeID, nodeIDsBefore, linksBefore } = entry;
-    const category = wholeGraphNodes.find(n => n.id === nodeID).type;
-    return {
-      nodeID,
-      nodeIDsBefore,
-      linksBefore,
-      category,
-    };
-  }).reverse();
+  resultStructure = resultStructure
+    .map((entry) => {
+      const { nodeID, nodeIDsBefore, linksBefore } = entry;
+      const category = wholeGraphNodes.find((n) => n.id === nodeID).type;
+      return {
+        nodeID,
+        nodeIDsBefore,
+        linksBefore,
+        category,
+      };
+    })
+    .reverse();
   return {
     dataModelStructure: resultStructure,
     routesBetweenStartEndNodes,

@@ -7,6 +7,6 @@ const arrangerApi = ({ endpoint, headers, body }) =>
     headers: { 'Content-Type': 'application/json', ...headers },
     body: JSON.stringify(body),
     credentials: 'include',
-  }).then(res => res.json());
+  }).then((res) => res.json());
 
 export default arrangerApi;

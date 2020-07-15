@@ -11,11 +11,7 @@ class BackLink extends Component {
       <Link to={this.props.url}>
         <br />
         <div className='back-link'>
-          <IconComponent
-            dictIcons={dictIcons}
-            iconName='back'
-            height='12px'
-          />
+          <IconComponent dictIcons={dictIcons} iconName='back' height='12px' />
         </div>
         <div className='back-link'>{this.props.label}</div>
       </Link>

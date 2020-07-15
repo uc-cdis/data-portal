@@ -4,11 +4,11 @@ import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
 import AccessibleFilter from '@gen3/guppy/dist/components/ConnectedFilter/AccessibleFilter';
 import UnaccessibleFilter from '@gen3/guppy/dist/components/ConnectedFilter/UnaccessibleFilter';
 import TierAccessSelector from '../TierAccessSelector';
+import { FilterConfigType, GuppyConfigType } from '../configTypeDef';
 import {
-  FilterConfigType,
-  GuppyConfigType,
-} from '../configTypeDef';
-import { checkForNoAccessibleProject, checkForFullAccessibleProject } from '../GuppyDataExplorerHelper';
+  checkForNoAccessibleProject,
+  checkForFullAccessibleProject,
+} from '../GuppyDataExplorerHelper';
 
 /**
  * For selectedAccessFilter the default value is 'Data with Access'
@@ -19,13 +19,15 @@ class ExplorerFilter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedAccessFilter: (this.props.tierAccessLevel === 'regular') ? 'with-access' : 'all-data', // default value of selectedAccessFilter
+      selectedAccessFilter:
+        this.props.tierAccessLevel === 'regular' ? 'with-access' : 'all-data', // default value of selectedAccessFilter
       showTierAccessSelector: false,
     };
   }
 
   getSnapshotBeforeUpdate(prevProps) {
-    if (prevProps.accessibleFieldObject !== this.props.accessibleFieldObject ||
+    if (
+      prevProps.accessibleFieldObject !== this.props.accessibleFieldObject ||
       prevProps.unaccessibleFieldObject !== this.props.unaccessibleFieldObject
     ) {
       if (this.props.tierAccessLevel === 'libre') {
@@ -33,21 +35,26 @@ class ExplorerFilter extends React.Component {
         return null;
       }
       if (this.props.tierAccessLevel === 'regular') {
-        if (checkForNoAccessibleProject(
-          this.props.accessibleFieldObject,
-          this.props.guppyConfig.accessibleValidationField,
-        ) || checkForFullAccessibleProject(
-          this.props.unaccessibleFieldObject,
-          this.props.guppyConfig.accessibleValidationField,
-        )) {
+        if (
+          checkForNoAccessibleProject(
+            this.props.accessibleFieldObject,
+            this.props.guppyConfig.accessibleValidationField
+          ) ||
+          checkForFullAccessibleProject(
+            this.props.unaccessibleFieldObject,
+            this.props.guppyConfig.accessibleValidationField
+          )
+        ) {
           // don't show this selector if user have full access, or none access
           this.setState({ showTierAccessSelector: false });
           // if user don't have access to any projects
           // apply 'all-data' filter so agg data is available
-          if (checkForNoAccessibleProject(
-            this.props.accessibleFieldObject,
-            this.props.guppyConfig.accessibleValidationField,
-          )) {
+          if (
+            checkForNoAccessibleProject(
+              this.props.accessibleFieldObject,
+              this.props.guppyConfig.accessibleValidationField
+            )
+          ) {
             this.setState({ selectedAccessFilter: 'all-data' });
           }
         } else {
@@ -58,8 +65,7 @@ class ExplorerFilter extends React.Component {
     return null;
   }
 
-  componentDidUpdate() {
-  }
+  componentDidUpdate() {}
 
   /**
    * For "regular" tier access level commons, we use this function parse
@@ -89,14 +95,14 @@ class ExplorerFilter extends React.Component {
         .filter(({ key }) => {
           const accessible = accessibleValues.includes(key);
           switch (this.state.selectedAccessFilter) {
-          case 'all-data':
-            return true; // always show all items if 'all-data'
-          case 'with-access':
-            return accessible; // only show accessible items if 'with-access'
-          case 'without-access':
-            return !accessible; // only show unaccessible items if 'without-access'
-          default:
-            throw new Error('Invalid access filter option');
+            case 'all-data':
+              return true; // always show all items if 'all-data'
+            case 'with-access':
+              return accessible; // only show accessible items if 'with-access'
+            case 'without-access':
+              return !accessible; // only show unaccessible items if 'without-access'
+            default:
+              throw new Error('Invalid access filter option');
           }
         })
         .map(({ key, count }) => ({
@@ -118,59 +124,76 @@ class ExplorerFilter extends React.Component {
   render() {
     const filterProps = {
       filterConfig: this.props.filterConfig,
-      guppyConfig: { type: this.props.guppyConfig.dataType, ...this.props.guppyConfig },
+      guppyConfig: {
+        type: this.props.guppyConfig.dataType,
+        ...this.props.guppyConfig,
+      },
       fieldMapping: this.props.guppyConfig.fieldMapping,
       onFilterChange: this.props.onFilterChange,
       onReceiveNewAggsData: this.props.onReceiveNewAggsData,
-      tierAccessLimit: this.props.tierAccessLevel === 'regular' ? this.props.tierAccessLimit : undefined,
+      tierAccessLimit:
+        this.props.tierAccessLevel === 'regular'
+          ? this.props.tierAccessLimit
+          : undefined,
       onProcessFilterAggsData: this.onProcessFilterAggsData,
       onUpdateAccessLevel: this.props.onUpdateAccessLevel,
       adminAppliedPreFilters: this.props.adminAppliedPreFilters,
-      lockedTooltipMessage: this.props.tierAccessLevel === 'regular' ? `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.` : '',
-      disabledTooltipMessage: this.props.tierAccessLevel === 'regular' ? `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${this.props.tierAccessLimit} ${this.props.guppyConfig.nodeCountTitle.toLowerCase() || this.props.guppyConfig.dataType} or more.` : '',
+      lockedTooltipMessage:
+        this.props.tierAccessLevel === 'regular'
+          ? `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.`
+          : '',
+      disabledTooltipMessage:
+        this.props.tierAccessLevel === 'regular'
+          ? `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${
+              this.props.tierAccessLimit
+            } ${
+              this.props.guppyConfig.nodeCountTitle.toLowerCase() ||
+              this.props.guppyConfig.dataType
+            } or more.`
+          : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
-    case 'all-data':
-      filterFragment = (
-        <React.Fragment>
-          <h4>Filters</h4>
-          <ConnectedFilter {...filterProps} />
-        </React.Fragment>
-      );
-      break;
-    case 'with-access':
-      filterFragment = (
-        <React.Fragment>
-          <h4>Filters</h4>
-          <AccessibleFilter {...filterProps} />
-        </React.Fragment>
-      );
-      break;
-    case 'without-access':
-      filterFragment = (
-        <React.Fragment>
-          <h4>Filters</h4>
-          <UnaccessibleFilter {...filterProps} />
-        </React.Fragment>
-      );
-      break;
-    default:
-      filterFragment = (<React.Fragment />);
-      break;
+      case 'all-data':
+        filterFragment = (
+          <React.Fragment>
+            <h4>Filters</h4>
+            <ConnectedFilter {...filterProps} />
+          </React.Fragment>
+        );
+        break;
+      case 'with-access':
+        filterFragment = (
+          <React.Fragment>
+            <h4>Filters</h4>
+            <AccessibleFilter {...filterProps} />
+          </React.Fragment>
+        );
+        break;
+      case 'without-access':
+        filterFragment = (
+          <React.Fragment>
+            <h4>Filters</h4>
+            <UnaccessibleFilter {...filterProps} />
+          </React.Fragment>
+        );
+        break;
+      default:
+        filterFragment = <React.Fragment />;
+        break;
     }
     return (
       <div className={this.props.className}>
-        {
-          this.state.showTierAccessSelector ? (
-            <TierAccessSelector
-              onSelectorChange={this.handleAccessSelectorChange}
-              getAccessButtonLink={this.props.getAccessButtonLink}
-              hideGetAccessButton={this.props.hideGetAccessButton}
-            />
-          ) : (<React.Fragment />)
-        }
+        {this.state.showTierAccessSelector ? (
+          <TierAccessSelector
+            onSelectorChange={this.handleAccessSelectorChange}
+            getAccessButtonLink={this.props.getAccessButtonLink}
+            hideGetAccessButton={this.props.hideGetAccessButton}
+          />
+        ) : (
+          <React.Fragment />
+        )}
         {filterFragment}
       </div>
     );
