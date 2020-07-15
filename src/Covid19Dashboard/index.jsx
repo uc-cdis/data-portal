@@ -349,11 +349,11 @@ class Covid19Dashboard extends React.Component {
               </div>
             </TabPanel>
             <TabPanel className='covid19-dashboard_panel'>
-              <div className='covid19-dashboard_visualizations'>
+              <div className='covid19-dashboard_auspice'>
                 <iframe
                   title='Auspice'
                   frameBorder='0'
-                  className='covid19-dashboard__iframe'
+                  className='covid19-dashboard_auspice__iframe'
                   src={auspiceUrl}
                 />
               </div>

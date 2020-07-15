@@ -85,8 +85,17 @@
   height: 100%;
 }
 
-.covid19-dashboard__iframe {
-  flex: 1 0 60vh;
+.covid19-dashboard_auspice {
+  padding: 10px;
+  padding-top: 0; // counts above visualizations already padded
+  display: grid;
+}
+
+.covid19-dashboard_auspice__iframe {
+  min-height: 600vh;
+  max-height: 1080vh;
+  min-width: 800vh;
+  max-width: 1920vh;
   display: flex;
   flex-direction: column;
   justify-content: center;

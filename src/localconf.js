@@ -12,6 +12,8 @@ function buildConfig(opts) {
     mockStore: !!(process.env.MOCK_STORE && process.env.MOCK_STORE === 'true'),
     app: process.env.APP || 'generic',
     basename: process.env.BASENAME || '/',
+    protocol: typeof window !== 'undefined' ? `${window.location.protocol}` : 'http:',
+    hostnameOnly: typeof window !== 'undefined' ? window.location.hostname : 'localhost',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
     fenceURL: process.env.FENCE_URL,
     indexdURL: process.env.INDEXD_URL,
@@ -38,6 +40,8 @@ function buildConfig(opts) {
     mockStore,
     app,
     basename,
+    protocol,
+    hostnameOnly,
     hostname,
     fenceURL,
     indexdURL,
@@ -94,7 +98,7 @@ function buildConfig(opts) {
   const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
   const guppyDownloadUrl = `${guppyUrl}/download`;
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
-  const auspiceUrl = `${hostname}auspice/`;
+  const auspiceUrl = `${protocol}//auspice.${hostnameOnly}/covid19`;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
