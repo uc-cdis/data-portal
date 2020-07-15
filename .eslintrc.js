@@ -1,52 +1,53 @@
 module.exports = {
   //"extends": "eslint:recommended",
-  "extends": "airbnb",
-  "root":true,
+  "plugins": ["react"],
+  "extends": ["airbnb", "plugin:react/recommended"],
+  "root": true,
   "env": {
-      "browser": true,
-      "es6": true,
-      "jest": true
+    "browser": true,
+    "es6": true,
+    "jest": true
   },
   "parser": "babel-eslint",
   "parserOptions": {
-      "sourceType": "module",
-      "ecmaVersion": 6,
-      "ecmaFeatures": {
-        "jsx": true,
-        "spread": true
-      },
+    "sourceType": "module",
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "jsx": true,
+      "spread": true
+    },
   },
   "rules": {
-      "indent": [
-          "error",
-          2
-      ],
-      "linebreak-style": [
-          "error",
-          "unix"
-      ],
-      "quotes": [
-          "error",
-          "single"
-      ],
-      "jsx-quotes": [
-        "error",
-        "prefer-single",
-      ],
-      "semi": [
-          "error",
-          "always"
-      ],
-      // see https://github.com/clayne11/eslint-import-resolver-meteor/issues/17
-      // - seems to affect Codacy :-(
-      "import/extensions": ["off", "never"],
-      "react/jsx-indent": "off",
-      "react/forbid-prop-types": "off",
-      "react/prefer-stateless-function": "off",
-      "react/jsx-curly-brace-presence": ["off", "ignore"],
-      "function-paren-newline": ["off", "ignore"],
-      "react/no-array-index-key" : ["off, ignore"],
-      "react/destructuring-assignment" : ["off, ignore"],
+    "indent": [
+      "error",
+      2
+    ],
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "jsx-quotes": [
+      "error",
+      "prefer-single",
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    // see https://github.com/clayne11/eslint-import-resolver-meteor/issues/17
+    // - seems to affect Codacy :-(
+    "import/extensions": ["off", "never"],
+    "react/jsx-indent": "off",
+    "react/forbid-prop-types": "off",
+    "react/prefer-stateless-function": "off",
+    "react/jsx-curly-brace-presence": ["off", "ignore"],
+    "function-paren-newline": ["off", "ignore"],
+    "react/no-array-index-key": ["off, ignore"],
+    "react/destructuring-assignment": ["off, ignore"],
   },
   "overrides": [
     {
@@ -97,31 +98,31 @@ module.exports = {
       }
     },
     {
-      "files": [ "src/GraphUtils/utils.js" ],
+      "files": ["src/GraphUtils/utils.js"],
       "rules": {
         "no-loop-func": "off" // for D3 config
       }
     },
     {
-      "files": [ "src/Explorer/ExplorerTable.jsx" ],
+      "files": ["src/Explorer/ExplorerTable.jsx"],
       "rules": {
         "jsx-a11y/anchor-is-valid": "off" // for relative links
       }
     },
     {
-      "files": [ "src/QueryNode/QueryForm.jsx" ],
+      "files": ["src/QueryNode/QueryForm.jsx"],
       "rules": {
         "react/no-unused-state": "off" // state gets passed
       }
     },
     {
-      "files": [ "data/getSchema.js" ],
+      "files": ["data/getSchema.js"],
       "rules": {
         "func-names": "off" // for schema
       }
     },
     {
-      "files": [ "data/getTexts.js" ],
+      "files": ["data/getTexts.js"],
       "rules": {
         "no-useless-escape": "off",
         "no-template-curly-in-string": "off",
