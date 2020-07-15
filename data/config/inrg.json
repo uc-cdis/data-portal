@@ -236,17 +236,18 @@
     "projectId": "search",
     "graphqlField": "subject",
     "index": "",
+    "buttons": [
+      {
+        "enabled": true,
+        "type": "data",
+        "title": "Download Data",
+        "leftIcon": "user",
+        "rightIcon": "download",
+        "fileName": "data.json"
+      }
+    ],
     "table": {
-      "buttons": [
-        {
-          "enabled": true,
-          "type": "data",
-          "title": "Download Data",
-          "leftIcon": "user",
-          "rightIcon": "download",
-          "fileName": "data.json"
-        }
-      ]
+      "enabled": true
     },
     "guppyConfig": {
       "dataType": "inrg",
