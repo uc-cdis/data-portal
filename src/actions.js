@@ -13,7 +13,7 @@ import {
   useGuppyForExplorer,
   authzPath,
   authzMappingPath,
-} from './configs';
+} from './localconf';
 import { config } from './params';
 import sessionMonitor from './SessionMonitor';
 

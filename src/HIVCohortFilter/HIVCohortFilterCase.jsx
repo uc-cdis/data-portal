@@ -7,7 +7,7 @@ import {
   useGuppyForExplorer,
   guppyDownloadUrl,
   analysisApps,
-} from '../configs';
+} from '../localconf';
 
 class HIVCohortFilterCase extends React.Component {
   // Base class for the 3 NDH cohort filter apps. Meant to facilitate code reuse

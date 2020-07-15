@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import copy from 'clipboard-plus';
 import React, { Component } from 'react';
 import Popup from '../components/Popup';
-import { userapiPath, useArboristUI } from '../configs';
+import { userapiPath, useArboristUI } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
 
 import { userHasMethodOnProject } from '../authMappingUtils';

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { config } from '../params';
-import { analysisApps } from '../configs';
+import { analysisApps } from '../localconf';
 import AppCard from './AppCard';
 import './Analysis.less';
 

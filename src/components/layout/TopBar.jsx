@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
-import { useArboristUI } from '../../configs';
+import { useArboristUI } from '../../localconf';
 import { userHasMethodOnAnyProject } from '../../authMappingUtils';
 
 /**

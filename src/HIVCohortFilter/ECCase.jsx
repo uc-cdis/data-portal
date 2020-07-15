@@ -6,7 +6,7 @@ import './HIVCohortFilter.css';
 import CohortECSvg from '../img/cohort-EC.svg';
 import Spinner from '../components/Spinner';
 import HIVCohortFilterCase from './HIVCohortFilterCase';
-import { useGuppyForExplorer } from '../configs';
+import { useGuppyForExplorer } from '../localconf';
 import { config } from '../params';
 
 const hivAppProjects = config.hivAppProjects || ['HIV-CHARLIE'];

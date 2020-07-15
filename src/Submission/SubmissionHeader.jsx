@@ -5,7 +5,7 @@ import Gen3ClientSvg from '../img/gen3client.svg';
 import MapFilesSvg from '../img/mapfiles.svg';
 import { humanFileSize } from '../utils.js';
 import './SubmissionHeader.less';
-import { useArboristUI } from '../configs';
+import { useArboristUI } from '../localconf';
 import { userHasDataUpload } from '../authMappingUtils';
 
 class SubmissionHeader extends React.Component {

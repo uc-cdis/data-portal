@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Table from './base/Table';
-import { useArboristUI } from '../../configs';
+import { useArboristUI } from '../../localconf';
 import { userHasMethodOnProject } from '../../authMappingUtils';
 import './ProjectTable.less';
 

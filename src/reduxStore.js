@@ -3,9 +3,8 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 
 import dict from './dictionary';
-import { mockStore, dev } from './localconf';
+import { mockStore, dev, requiredCerts } from './localconf';
 import reducers from './reducers';
-import { requiredCerts } from './configs';
 
 let store;
 let storePromise;

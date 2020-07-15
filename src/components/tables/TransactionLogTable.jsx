@@ -4,7 +4,7 @@ import Table from './base/Table';
 import Spinner from '../Spinner';
 import { humanFileSize } from '../../utils.js';
 import './TransactionLogTable.less';
-import { useArboristUI } from '../../configs';
+import { useArboristUI } from '../../localconf';
 import { userHasMethodOnAnyProject } from '../../authMappingUtils';
 
 const formatText = (text) => text[0] + text.slice(1).toLowerCase();

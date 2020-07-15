@@ -1,9 +1,8 @@
 import { connect } from 'react-redux';
 import CertPopup from './CertPopup';
-import { requiredCerts, userapiPath } from '../configs';
+import { requiredCerts, userapiPath, certs, hostname } from '../localconf';
 import { fetchWithCreds, refreshUser } from '../actions';
 import { minus } from '../utils';
-import { certs, hostname } from '../localconf';
 
 /**
  * Redux action triggered by quiz submit
