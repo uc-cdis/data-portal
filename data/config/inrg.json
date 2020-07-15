@@ -35,7 +35,7 @@
     "projectDetails": "boardCounts"
   },
   "components": {
-    "appName": "Pediatric Cancer Data Commons",
+    "appName": "Pediatric Cancer Data Commons Portal",
     "index": {
       "introduction": {
         "heading": "Pediatric Cancer Data Commons",
@@ -46,7 +46,7 @@
         {
           "name": "Define Data Field",
           "icon": "data-field-define",
-          "body": "The Pediatric Cancer Data Commons define the data in a general way. Please study the dictionary before you start browsing.",
+          "body": "The Pediatric Cancer Data Commons defines the data. Please study the dictionary before you start browsing.",
           "link": "/DD",
           "label": "Learn more"
         },
