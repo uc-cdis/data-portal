@@ -9,7 +9,7 @@ import Spinner from '../../components/Spinner';
 import PlotChart from '../PlotChart';
 import './ChartCarousel.less';
 
-let dataUrl = covid19DashboardConfig.dataUrl;
+let dataUrl = covid19DashboardConfig ? covid19DashboardConfig.dataUrl : '';
 dataUrl = !dataUrl.endsWith('/') ? `${dataUrl}/` : dataUrl;
 
 

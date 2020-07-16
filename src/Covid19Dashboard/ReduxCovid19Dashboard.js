@@ -5,7 +5,7 @@ import { covid19DashboardConfig } from '../localconf';
 import { readSingleColumnTSV, readMultiColumnTSV, readQuotedList } from './dataUtils.js';
 
 
-let dataUrl = covid19DashboardConfig.dataUrl;
+let dataUrl = covid19DashboardConfig ? covid19DashboardConfig.dataUrl : '';
 dataUrl = !dataUrl.endsWith('/') ? `${dataUrl}/` : dataUrl;
 
 
