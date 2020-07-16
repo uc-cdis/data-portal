@@ -273,7 +273,7 @@ class Covid19Dashboard extends React.Component {
             <TabList className='covid19-dashboard_tablist'>
               <Tab>COVID-19 in Illinois</Tab>
               <Tab>COVID-19 in the world</Tab>
-              <Tab>COVID-19 in the tree relationship</Tab>
+              <Tab>SARS-CoV-2 Genomics</Tab>
             </TabList>
 
             {/* illinois tab */}
