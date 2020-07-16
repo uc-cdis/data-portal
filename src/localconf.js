@@ -7,11 +7,18 @@ const { components, requiredCerts, config } = require('./params');
  * @param {app, dev, basename, mockStore, hostname} opts overrides for defaults
  */
 function buildConfig(opts) {
+  const hostnameValue = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+  const hostnameParts = hostnameValue.split('.');
+  const hLen = hostnameParts.length;
+  const hostnameNoSubdomain = (hLen > 2) ? hostnameParts.splice(hLen - 2).join('.') : hostnameValue;
+
   const defaults = {
     dev: !!(process.env.NODE_ENV && process.env.NODE_ENV === 'dev'),
     mockStore: !!(process.env.MOCK_STORE && process.env.MOCK_STORE === 'true'),
     app: process.env.APP || 'generic',
     basename: process.env.BASENAME || '/',
+    protocol: typeof window !== 'undefined' ? `${window.location.protocol}` : 'http:',
+    hostnameOnly: typeof window !== 'undefined' ? hostnameNoSubdomain : 'localhost',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
     fenceURL: process.env.FENCE_URL,
     indexdURL: process.env.INDEXD_URL,
@@ -38,6 +45,8 @@ function buildConfig(opts) {
     mockStore,
     app,
     basename,
+    protocol,
+    hostnameOnly,
     hostname,
     fenceURL,
     indexdURL,
@@ -94,6 +103,7 @@ function buildConfig(opts) {
   const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
   const guppyDownloadUrl = `${guppyUrl}/download`;
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
+  const auspiceUrl = `${protocol}//auspice.${hostnameOnly}/covid19`;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -177,8 +187,8 @@ function buildConfig(opts) {
   }
 
   const covid19DashboardConfig = config.covid19DashboardConfig;
-  const enableCovid19Dashboard = !!(covid19DashboardConfig
-    && Object.keys(covid19DashboardConfig).length > 0);
+  const enableCovid19Dashboard = !!(covid19DashboardConfig &&
+    Object.keys(covid19DashboardConfig).length > 0);
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -357,6 +367,7 @@ function buildConfig(opts) {
     enableCovid19Dashboard,
     covid19DashboardConfig,
     mapboxAPIToken,
+    auspiceUrl,
   };
 }
 
