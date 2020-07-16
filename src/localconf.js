@@ -7,8 +7,10 @@ const { components, requiredCerts, config } = require('./params');
  * @param {app, dev, basename, mockStore, hostname} opts overrides for defaults
  */
 function buildConfig(opts) {
-  const hostnameParts = window.location.hostname.split('.');
-  const hostnameNoSubdomain = (hostnameParts.length > 2) ? hostnameParts.splice(hostnameParts.length - 2).join('.') : window.location.hostname;
+  const hostnameValue = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+  const hostnameParts = hostnameValue.split('.');
+  const hLen = hostnameParts.length;
+  const hostnameNoSubdomain = (hLen > 2) ? hostnameParts.splice(hLen - 2).join('.') : hostnameValue;
 
   const defaults = {
     dev: !!(process.env.NODE_ENV && process.env.NODE_ENV === 'dev'),
