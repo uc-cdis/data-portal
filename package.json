@@ -33,7 +33,6 @@
     "pluralize": "^8.0.0",
     "prop-types": "^15.6.0",
     "query-string": "^6.3.0",
-    "rc-slider": "^8.6.1",
     "react": "16.8.6",
     "react-ace": "^6.1.0",
     "react-dom": "16.8.6",
