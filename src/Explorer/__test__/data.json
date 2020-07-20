@@ -1,6 +1,8 @@
 {
   "data": {
     "viewer": {
+      "fileData_aligned_reads_index": [],
+      "fileData_experimental_metadata": [],
       "fileData_slide_image": [],
       "fileData_cell_image": [],
       "fileData_mass_cytometry_assay": [],
