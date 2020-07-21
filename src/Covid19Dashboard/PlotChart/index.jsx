@@ -6,12 +6,13 @@ import {
 
 import { numberWithCommas } from '../dataUtils.js';
 import './PlotChart.less';
+import moment from "moment";
 
 
 class CustomizedAxisTick extends React.Component {
   render() {
     const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
-    const val = payload.value; // eslint-disable-line react/prop-types
+    const val = payload.value.replace(/-/g, '/'); // eslint-disable-line react/prop-types
     const formattedDate = `${new Date(val).getUTCMonth() + 1}/${new Date(val).getUTCDate()}`;
     return (
       <g transform={`translate(${x},${y})`}>
@@ -23,8 +24,8 @@ class CustomizedAxisTick extends React.Component {
 
 function getDates(startDate, endDate, days) {
   const dates = [];
-  let currentDate = new Date(startDate);
-  const endingDate = new Date(endDate);
+  let currentDate = new Date(startDate).replace(/-/g, '/');
+  const endingDate = new Date(endDate).replace(/-/g, '/');
   const addDaysToDate = (date) => {
     const newDate = new Date(date.valueOf());
     newDate.setDate(newDate.getUTCDate() + days);
@@ -101,11 +102,11 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
 
   renderTooltip = (props) => {
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const date = new Date(props.label);
+    const date = moment(props.label);
     const nColumns = Math.ceil(props.payload.length / 5); // up to 5 items per column
     return (
       <div className='plot-chart__tooltip'>
-        <p>{monthNames[date.getUTCMonth()]} {date.getUTCDate()}, {date.getUTCFullYear()}</p>
+        <p>{monthNames[date.month()]} {date.date()}, {date.year()}</p>
         <div style={{ columnCount: nColumns }}>
           {
             props.payload.map((data, i) => (
