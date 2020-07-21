@@ -78,6 +78,7 @@ class Login extends React.Component {
               enabled={false}
               tooltipEnabled
               tooltipText='Getting available login options... If this button has been loading for a while, please try to refresh this page or contact support'
+              label=''
             />
           </div>
         </div>
