@@ -12,7 +12,7 @@ class CustomizedAxisTick extends React.Component {
   render() {
     const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
     const val = payload.value.replace(/-/g, '/'); // eslint-disable-line react/prop-types
-    const formattedDate = `${new Date(val).getUTCMonth() + 1}/${new Date(val).getUTCDate()}`;
+    const formattedDate = `${moment(val).month() + 1}/${moment(val).date()}`;
     return (
       <g transform={`translate(${x},${y})`}>
         <text x={0} y={0} dy={16} textAnchor='end' fill='#666' transform='rotate(-60)'>{formattedDate}</text>
@@ -23,17 +23,17 @@ class CustomizedAxisTick extends React.Component {
 
 function getDates(startDate, endDate, days) {
   const dates = [];
-  let currentDate = new Date(startDate).replace(/-/g, '/');
-  const endingDate = new Date(endDate).replace(/-/g, '/');
+  let currentDate = moment(startDate).replace(/-/g, '/');
+  const endingDate = moment(endDate).replace(/-/g, '/');
   const addDaysToDate = (date) => {
-    const newDate = new Date(date.valueOf());
-    newDate.setDate(newDate.getUTCDate() + days);
+    const newDate = moment(date).valueOf();
+    newDate.set(newDate.date() + days);
     return newDate;
   };
   while (currentDate <= endingDate) {
-    const year = currentDate.getUTCFullYear();
-    const month = `${currentDate.getUTCMonth() + 1}`.padStart(2, 0);
-    const day = `${currentDate.getUTCDate()}`.padStart(2, 0);
+    const year = currentDate.year();
+    const month = `${currentDate.month() + 1}`.padStart(2, 0);
+    const day = `${currentDate.date()}`.padStart(2, 0);
     const stringDate = [year, month, day].join('-');
     const fmtDate = `${stringDate} 00:00:00+00:00`;
     dates.push(fmtDate);
@@ -58,7 +58,7 @@ function formatChartData(plots) {
     });
   });
   let sortedData = Object.values(dateToData);
-  sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+  sortedData = sortedData.sort((a, b) => moment(a.date) - moment(b.date));
   return {
     data: sortedData,
     ticks: getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7),
