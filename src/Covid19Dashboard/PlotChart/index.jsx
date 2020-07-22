@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -6,8 +7,6 @@ import {
 
 import { numberWithCommas } from '../dataUtils.js';
 import './PlotChart.less';
-import moment from "moment";
-
 
 class CustomizedAxisTick extends React.Component {
   render() {
@@ -24,8 +23,8 @@ class CustomizedAxisTick extends React.Component {
 
 function getDates(startDate, endDate, days) {
   const dates = [];
-  let currentDate = new Date((startDate).replace(/-/g, '/'));
-  const endingDate = new Date((endDate).replace(/-/g, '/'));
+  let currentDate = new Date(startDate).replace(/-/g, '/');
+  const endingDate = new Date(endDate).replace(/-/g, '/');
   const addDaysToDate = (date) => {
     const newDate = new Date(date.valueOf());
     newDate.setDate(newDate.getUTCDate() + days);
