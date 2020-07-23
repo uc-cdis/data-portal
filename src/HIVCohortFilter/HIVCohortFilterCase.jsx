@@ -155,47 +155,6 @@ class HIVCohortFilterCase extends React.Component {
       }
       return res.data[this.state.visitIndexTypeName];
     });
-
-    // below are for arranger
-    const query = `
-    {
-      ${this.state.visitIndexTypeName} {
-        hits(filters: { op: "and",
-          content: [
-            { op: "=",
-              content: { field: "hiv_status", value: "positive" }
-            },
-            {
-              op: "in",
-              content: { field: "${key}", value: ["${keyRange.join('","')}"] }
-            }
-          ]
-        }, first:10000) {
-          total
-          edges {
-            node {
-              subject_id
-              visit_number
-              thrpyv
-              visit_date
-              fposdate
-              frstdthd
-              leu3n
-              submitter_id
-              viral_load
-            }
-          }
-        }
-      }
-    }`;
-    return HIVCohortFilterCase.performQuery(query, null, true).then((res) => {
-      if (!res || !res.data) {
-        throw new Error('Error while querying subjects with HIV');
-      }
-      return res.data[this.state.visitIndexTypeName].hits.edges.map(
-        (edge) => edge.node
-      );
-    });
   };
 
   isALargeAmountOfFollowUpDataMissing(visitArray) {
