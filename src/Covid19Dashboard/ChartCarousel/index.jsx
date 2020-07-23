@@ -52,7 +52,7 @@ class ChartCarousel extends PureComponent {
       const hasImagePath = chartConfig.type === 'image' && chartConfig.path;
 
       // make sure the chart data is available as prop
-      if (!(chartConfig.prop in this.props) && !hasImagePath) {
+      if (!(chartConfig.prop in this.props) && !hasImagePath && !chartConfig.guppyConfig) {
         console.error(`ChartCarousel is missing '${chartConfig.prop}' prop found in configuration`); // eslint-disable-line no-console
         return;
       }
@@ -72,9 +72,8 @@ class ChartCarousel extends PureComponent {
         />);
         break;
       case 'lineChart':
-        chart = Object.keys(plotChartConfig.plots).length > 0 ?
-          <PlotChart {...plotChartConfig} />
-          : null;
+      case 'barChart':
+        chart = <PlotChart {...plotChartConfig} />;
         break;
       default:
         console.error(`ChartCarousel cannot handle '${chartConfig.type}' chart type found in configuration`); // eslint-disable-line no-console
@@ -115,10 +114,9 @@ class ChartCarousel extends PureComponent {
 
     const showDescriptionHover = !this.props.isInPopup &&
       this.state.hoveredChartId !== null &&
-      (
-        this.props.chartsConfig[this.state.hoveredChartId].title
-        || this.props.chartsConfig[this.state.hoveredChartId].description
-      );
+      // do not show the hover if there is a title without
+      // description - the title is already displayed
+      this.props.chartsConfig[this.state.hoveredChartId].description;
 
     return (
       charts.length > 0 ?

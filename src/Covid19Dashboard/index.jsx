@@ -15,42 +15,6 @@ import ChartCarousel from './ChartCarousel';
 import './Covid19Dashboard.less';
 
 
-// |-----------------------------------|
-// | Data Commons logo, title, buttons |
-// |-----------------------------------|
-// | World Tab | IL Tab |              |
-// |-----------------------------------|
-// |   # of cases   |   # of deaths    |
-// |-----------------------------------|
-// |                         |  Chart  |
-// |                         | Carousel|
-// |           Map           |---------|
-// |                         |  Chart  |
-// |                         | Carousel|
-// |-----------------------------------|
-//
-// Config:
-// 'covid19DashboardConfig': {
-//   'dataUrl': '',
-//   'chartsConfig': {
-//     <tab ID>: [ <carousel 1 config>, <carousel 2 config> ],
-//     'simulations': {
-//       <prop name>: { title (str, optional), description (str, optional) }
-//     }
-//   }
-//   where each carousel config = [ <chart 1 config>, <chart 2 config> ]
-//   and each chart configuration = {
-//     title (str),
-//     description (str, optional),
-//     xTitle (str, optional),
-//     yTitle (str, optional),
-//     type (str): one of [lineChart, image],
-//     prop (str): property name for the chart data, as hardcoded below
-//     path (str, optional): if type==image, path can specified instead of prop
-//   }
-// },
-
-
 /* To fetch new data:
 - add the prop name and location to `dashboardDataLocations`;
 - add the prop to Covid19Dashboard.propTypes;
@@ -302,7 +266,7 @@ class Covid19Dashboard extends React.Component {
                       (<ChartCarousel
                         key={i}
                         chartsConfig={carouselConfig}
-                        // seirChartData={seirChartData} // not used for no
+                        // seirChartData={seirChartData} // not used for now
                         {...this.props}
                       />),
                     )}

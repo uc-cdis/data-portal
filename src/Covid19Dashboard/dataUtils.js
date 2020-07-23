@@ -1,3 +1,6 @@
+import { fetchWithCreds } from '../actions';
+import { guppyGraphQLUrl, guppyDownloadUrl } from '../configs';
+
 const papaparse = require('papaparse');
 
 export function numberWithCommas(x) {
@@ -77,4 +80,24 @@ export function readQuotedList(data) {
   return data.split('\n')
     .map(s => s.replace(/"/g, ''))
     .filter(s => !!s);
+}
+
+export async function queryGuppy(query, variables) {
+  const body = { query, variables };
+  const res = fetchWithCreds({
+    path: guppyGraphQLUrl,
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+  return res;
+}
+
+export async function downloadFromGuppy(type, filter, fields) {
+  const body = { type, filter, fields };
+  const res = fetchWithCreds({
+    path: guppyDownloadUrl,
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+  return res;
 }
