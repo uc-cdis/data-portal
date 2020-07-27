@@ -9,22 +9,37 @@ import { numberWithCommas, downloadFromGuppy } from '../dataUtils.js';
 import './PlotChart.less';
 
 
-class PlotChartXAxisTick extends React.Component {
+class PlotChartAxisTick extends React.Component {
   /* eslint-disable react/prop-types */
   render() {
-    const { x, y, payload, isDates } = this.props;
+    // type is one of ['date', 'string', 'number']
+    const { x, y, payload, axis, type } = this.props;
 
     let formattedValue = payload.value;
-    if (isDates) {
+    if (type === 'date') {
       formattedValue = `${new Date(formattedValue).getUTCMonth() + 1}/${new Date(formattedValue).getUTCDate()}`;
-    } else {
-      const maxLength = 4;
-      formattedValue = formattedValue.slice(0, maxLength) + (formattedValue.length > maxLength ? '.' : '');
+    } else if (type === 'number') {
+      formattedValue = numberWithCommas(formattedValue);
     }
+    // else { // type === 'string'
+    //   const maxLength = 4;
+    //   formattedValue = formattedValue.slice(0, maxLength)
+    //     + (formattedValue.length > maxLength ? '.' : '');
+    // }
 
     return (
       <g transform={`translate(${x},${y})`}>
-        <text x={0} y={0} dy={16} textAnchor='end' fill='#666' transform='rotate(-60)'>{formattedValue}</text>
+        <text
+          x={0}
+          y={0}
+          dy={5}
+          textAnchor='end'
+          fill='#666'
+          fontSize={10}
+          transform={axis === 'x' && 'rotate(-35)'}
+        >
+          {formattedValue}
+        </text>
       </g>
     );
   }
@@ -109,6 +124,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
   }
 
   getGuppyBarChartComponent = (data) => {
+    const { xTitle, yTitle, layout, barColor, guppyConfig } = this.props;
     if (!data.length) {
       return null;
     }
@@ -117,44 +133,46 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
       margin={{
         top: 5, right: 30, left: 20, bottom: 5,
       }}
-      barGap={0}
+      layout={layout}
     >
       <CartesianGrid
-        vertical={false}
+        vertical={layout === 'vertical'}
+        horizontal={layout === 'horizontal'}
         strokeDasharray='3 3'
       />
       <XAxis
-        dataKey={this.props.guppyConfig.xAxisProp}
         height={50} // default is 30 - labels don't fit
         label={{
-          value: this.props.xTitle,
+          value: xTitle,
           position: 'bottom',
           offset: -10,
         }}
-        tickLine={false}
-        tickMargin={-5}
-        tick={<PlotChartXAxisTick isDates={false} />}
+        dataKey={layout === 'horizontal' && guppyConfig.xAxisProp}
+        type={layout === 'horizontal' ? 'category' : 'number'}
+        tickLine={layout === 'horizontal' && false}
+        tick={<PlotChartAxisTick axis='x' type={layout === 'vertical' ? 'number' : 'string'} />}
       />
       <YAxis
         label={{
           className: 'plot-chart__y-title',
-          value: this.props.yTitle,
+          value: yTitle,
           angle: -90,
           position: 'left',
           offset: 15,
         }}
-        type='number'
-        domain={[0, 'auto']}
-        tickFormatter={value => numberWithCommas(value)}
+        dataKey={layout === 'vertical' && guppyConfig.xAxisProp}
+        type={layout === 'horizontal' ? 'number' : 'category'}
+        tickLine={layout === 'vertical' && false}
+        tick={<PlotChartAxisTick axis='y' type={layout === 'horizontal' ? 'number' : 'string'} />}
       />
       <Tooltip
         formatter={
-          value => [numberWithCommas(value), this.props.yTitle]
+          value => [numberWithCommas(value), yTitle]
         }
       />
       <Bar
-        dataKey={this.props.guppyConfig.yAxisProp}
-        fill={this.props.barColor || COLORS[0]}
+        dataKey={guppyConfig.yAxisProp}
+        fill={barColor || COLORS[0]}
       />
     </BarChart>);
   }
@@ -175,7 +193,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
       />
       <XAxis
         dataKey='date'
-        tick={<PlotChartXAxisTick isDates />}
+        tick={<PlotChartAxisTick axis='x' type='date' />}
         ticks={chartData.ticks}
         interval={0}
       />
@@ -188,7 +206,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
           offset: -10,
         }}
         type='number'
-        domain={[0, 'auto']}
+        tick={<PlotChartAxisTick axis='y' type='number' />}
       />
       <Tooltip
         content={this.renderTooltip}
@@ -214,8 +232,8 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
         a[this.props.guppyConfig.yAxisProp] > b[this.props.guppyConfig.yAxisProp] ? -1 : 1
       ),
     );
-    if (this.props.guppyConfig.maxItems) {
-      data = data.slice(0, this.props.guppyConfig.maxItems);
+    if (this.props.maxItems) {
+      data = data.slice(0, this.props.maxItems);
     }
     return data;
   }
@@ -296,6 +314,8 @@ PlotChart.propTypes = {
   title: PropTypes.string.isRequired,
   xTitle: PropTypes.string,
   yTitle: PropTypes.string,
+  layout: PropTypes.string,
+  maxItems: PropTypes.number,
   barColor: PropTypes.string,
   guppyConfig: PropTypes.object,
 };
@@ -304,6 +324,8 @@ PlotChart.defaultProps = {
   plots: [],
   xTitle: null,
   yTitle: null,
+  layout: 'horizontal',
+  maxItems: null,
   barColor: null,
   guppyConfig: {},
 };

@@ -45,12 +45,14 @@ And each chart configuration is:
     type (str): one of [lineChart, barChart, image],
     prop (str, optional): name of a Covid19Dashboard property
     path (str, optional): if type==image, path can specified instead of prop
+    layout (str, optional): one of [vertical, horizontal] for bar charts,
+    maxItems (int, optional): for bar charts,
+    barColor (str, optional): for bar charts,
     guppyConfig (optional): {
         dataType (str),
         xAxisProp (str),
         yAxisProp (str),
-        filters (guppy filter object, optional),
-        maxItems: (int, optional)
+        filters (guppy filter object, optional)
     }
 }
 ```

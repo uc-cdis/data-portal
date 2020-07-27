@@ -122,6 +122,7 @@ class Covid19Dashboard extends React.Component {
             type='number'
             domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
             tickFormatter={val => numberWithCommas(val)}
+            fontSize={10}
           />
           <Tooltip content={this.renderLocationPopupTooltip} />
           <Legend />
@@ -358,6 +359,7 @@ class CustomizedXAxisTick extends React.Component { // eslint-disable-line react
           dy={16}
           textAnchor='end'
           fill='#666'
+          fontSize={10}
           transform='rotate(-60)'
         >
           {formattedDate}
