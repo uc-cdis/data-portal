@@ -1,21 +1,13 @@
 import React from 'react';
 import FileSaver from 'file-saver';
 import { fetchWithCreds } from '../actions';
-import {
-  guppyGraphQLUrl,
-  arrangerGraphqlPath,
-  useGuppyForExplorer,
-  guppyDownloadUrl,
-  analysisApps,
-} from '../localconf';
+import { guppyGraphQLUrl, guppyDownloadUrl, analysisApps } from '../localconf';
 
 class HIVCohortFilterCase extends React.Component {
   // Base class for the 3 NDH cohort filter apps. Meant to facilitate code reuse
   static performQuery(query, variableString, useGraphQLEndpoint) {
-    if (useGraphQLEndpoint || !useGuppyForExplorer) {
-      const graphqlUrl = useGuppyForExplorer
-        ? guppyGraphQLUrl
-        : arrangerGraphqlPath;
+    if (useGraphQLEndpoint) {
+      const graphqlUrl = guppyGraphQLUrl;
       return fetchWithCreds({
         path: `${graphqlUrl}`,
         body: variableString
@@ -116,8 +108,7 @@ class HIVCohortFilterCase extends React.Component {
   };
 
   getFollowupsBuckets = (key, keyRange) => {
-    if (useGuppyForExplorer) {
-      const queryString = `
+    const queryString = `
       query ($filter: JSON) {
         ${this.state.visitIndexTypeName} (filter: $filter, accessibility: all, first: 10000) {
           subject_id
@@ -137,7 +128,7 @@ class HIVCohortFilterCase extends React.Component {
         }
       }
     `;
-      const variableString = `
+    const variableString = `
       {
         "filter": {
           "AND": [
@@ -154,57 +145,15 @@ class HIVCohortFilterCase extends React.Component {
           ]
         }
       }`;
-      return HIVCohortFilterCase.performQuery(
-        queryString,
-        variableString,
-        true
-      ).then((res) => {
-        if (!res || !res.data || !res.data[this.state.visitIndexTypeName]) {
-          throw new Error('Error while querying subjects with HIV');
-        }
-        return res.data[this.state.visitIndexTypeName];
-      });
-    }
-
-    // below are for arranger
-    const query = `
-    {
-      ${this.state.visitIndexTypeName} {
-        hits(filters: { op: "and",
-          content: [
-            { op: "=",
-              content: { field: "hiv_status", value: "positive" }
-            },
-            {
-              op: "in",
-              content: { field: "${key}", value: ["${keyRange.join('","')}"] }
-            }
-          ]
-        }, first:10000) {
-          total
-          edges {
-            node {
-              subject_id
-              visit_number
-              thrpyv
-              visit_date
-              fposdate
-              frstdthd
-              leu3n
-              submitter_id
-              viral_load
-            }
-          }
-        }
-      }
-    }`;
-    return HIVCohortFilterCase.performQuery(query, null, true).then((res) => {
-      if (!res || !res.data) {
+    return HIVCohortFilterCase.performQuery(
+      queryString,
+      variableString,
+      true
+    ).then((res) => {
+      if (!res || !res.data || !res.data[this.state.visitIndexTypeName]) {
         throw new Error('Error while querying subjects with HIV');
       }
-      return res.data[this.state.visitIndexTypeName].hits.edges.map(
-        (edge) => edge.node
-      );
+      return res.data[this.state.visitIndexTypeName];
     });
   };
 

@@ -6,7 +6,6 @@ import './HIVCohortFilter.css';
 import CohortECSvg from '../img/cohort-EC.svg';
 import Spinner from '../components/Spinner';
 import HIVCohortFilterCase from './HIVCohortFilterCase';
-import { useGuppyForExplorer } from '../localconf';
 import { config } from '../params';
 
 const hivAppProjects = config.hivAppProjects || ['HIV-CHARLIE'];
@@ -50,111 +49,107 @@ class ECCase extends HIVCohortFilterCase {
   /* query Guppy and returns map of subjects with critical date for hiv positive subjects */
   // eslint-disable-next-line consistent-return
   getSubjectWithTime = () => {
-    if (useGuppyForExplorer) {
-      const queryObject = {
-        type: 'subject',
-        fields: [
-          'subject_id',
-          'fposdate',
-          'frstaidd',
-          'lnegdate',
-          'frsthaad',
-          'lastnohd',
-          'frstartd',
-          'lastnoad',
+    const queryObject = {
+      type: 'subject',
+      fields: [
+        'subject_id',
+        'fposdate',
+        'frstaidd',
+        'lnegdate',
+        'frsthaad',
+        'lastnohd',
+        'frstartd',
+        'lastnoad',
+      ],
+      filter: {
+        AND: [
+          {
+            '=': {
+              hiv_status: 'positive',
+            },
+          },
+          {
+            in: {
+              project_id: hivAppProjects,
+            },
+          },
         ],
-        filter: {
-          AND: [
-            {
-              '=': {
-                hiv_status: 'positive',
-              },
-            },
-            {
-              in: {
-                project_id: hivAppProjects,
-              },
-            },
-          ],
-        },
-      };
-      return HIVCohortFilterCase.performQuery(queryObject, null, false).then(
-        (data) => {
-          if (!data || data.length === 0) {
-            throw new Error('Error when query subjects with HIV');
-          }
-
-          const subjectList = [];
-          let convy;
-          let haarty;
-          let arty;
-          data.forEach((item) => {
-            if (item.frstaidd < 9000 && item.lnegdate > 1978) {
-              convy = (item.frstaidd + item.lnegdate) / 2;
-            } else {
-              convy = item.fposdate;
-            }
-            if (item.frsthaad < 9000) {
-              haarty = (item.lastnohd + item.frsthaad) / 2;
-            } else {
-              haarty = null;
-            }
-            if (item.frstartd < 9000) {
-              arty = (item.lastnoad + item.frstartd) / 2;
-            } else {
-              arty = null;
-            }
-            subjectList.push({
-              subject_id: item.subject_id,
-              convy,
-              haarty,
-              arty,
-            });
-          });
-          return subjectList;
+      },
+    };
+    return HIVCohortFilterCase.performQuery(queryObject, null, false).then(
+      (data) => {
+        if (!data || data.length === 0) {
+          throw new Error('Error when query subjects with HIV');
         }
-      );
-    }
+
+        const subjectList = [];
+        let convy;
+        let haarty;
+        let arty;
+        data.forEach((item) => {
+          if (item.frstaidd < 9000 && item.lnegdate > 1978) {
+            convy = (item.frstaidd + item.lnegdate) / 2;
+          } else {
+            convy = item.fposdate;
+          }
+          if (item.frsthaad < 9000) {
+            haarty = (item.lastnohd + item.frsthaad) / 2;
+          } else {
+            haarty = null;
+          }
+          if (item.frstartd < 9000) {
+            arty = (item.lastnoad + item.frstartd) / 2;
+          } else {
+            arty = null;
+          }
+          subjectList.push({
+            subject_id: item.subject_id,
+            convy,
+            haarty,
+            arty,
+          });
+        });
+        return subjectList;
+      }
+    );
   };
 
   // query guppy to get all the follow up for charlie project that has hiv-positive.
   // eslint-disable-next-line consistent-return
   getFollowupsBuckets = () => {
-    if (useGuppyForExplorer) {
-      const queryObject = {
-        type: this.state.visitIndexTypeName,
-        fields: [
-          'subject_id',
-          'harmonized_visit_number',
-          'visit_date',
-          'leu3n',
-          'viral_load',
-          'submitter_id',
+    const queryObject = {
+      type: this.state.visitIndexTypeName,
+      fields: [
+        'subject_id',
+        'harmonized_visit_number',
+        'visit_date',
+        'leu3n',
+        'viral_load',
+        'submitter_id',
+      ],
+      filter: {
+        AND: [
+          {
+            '=': {
+              hiv_status: 'positive',
+            },
+          },
+          {
+            in: {
+              project_id: hivAppProjects,
+            },
+          },
         ],
-        filter: {
-          AND: [
-            {
-              '=': {
-                hiv_status: 'positive',
-              },
-            },
-            {
-              in: {
-                project_id: hivAppProjects,
-              },
-            },
-          ],
-        },
-      };
-      return HIVCohortFilterCase.performQuery(queryObject, null, false).then(
-        (data) => {
-          if (!data || data.length === 0) {
-            throw new Error('Error while querying subjects with HIV');
-          }
-          return HIVCohortFilterCase.makeSubjectToVisitMap(data);
+      },
+    };
+    return HIVCohortFilterCase.performQuery(queryObject, null, false).then(
+      (data) => {
+        if (!data || data.length === 0) {
+          throw new Error('Error while querying subjects with HIV');
         }
-      );
-    }
+        return HIVCohortFilterCase.makeSubjectToVisitMap(data);
+      }
+    );
   };
 
   // filter visits that does not qualify hiv positive, harrt negative and art negative

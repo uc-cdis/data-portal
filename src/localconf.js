@@ -68,7 +68,6 @@ function buildConfig(opts) {
   const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
-  const arrangerGraphqlPath = `${hostname}api/v0/flat-search/search/graphql`;
   let userapiPath =
     typeof fenceURL === 'undefined'
       ? `${hostname}user/`
@@ -127,8 +126,6 @@ function buildConfig(opts) {
     indexPublic = false;
   }
 
-  let useGuppyForExplorer = false;
-
   let explorerConfig = [];
   let useNewExplorerConfigFormat = false;
   // for backward compatibilities
@@ -137,21 +134,16 @@ function buildConfig(opts) {
       tabTitle: 'Data',
       ...config.dataExplorerConfig,
     });
-    if (config.dataExplorerConfig.guppyConfig) {
-      useGuppyForExplorer = true;
-    }
   }
   if (config.fileExplorerConfig) {
     explorerConfig.push({
       tabTitle: 'File',
       ...config.fileExplorerConfig,
     });
-    useGuppyForExplorer = true;
   }
 
   // new explorer config format
   if (config.explorerConfig) {
-    useGuppyForExplorer = true;
     useNewExplorerConfigFormat = true;
     explorerConfig = config.explorerConfig;
   }
@@ -332,7 +324,6 @@ function buildConfig(opts) {
     indexdPath,
     graphqlPath,
     dataDictionaryTemplatePath,
-    arrangerGraphqlPath,
     graphqlSchemaUrl,
     appname: components.appName,
     mockStore,
@@ -361,7 +352,6 @@ function buildConfig(opts) {
     manifestServiceApiPath,
     wtsPath,
     externalLoginOptionsUrl,
-    useGuppyForExplorer,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
     useArboristUI,

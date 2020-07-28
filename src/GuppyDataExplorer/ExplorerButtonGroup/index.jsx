@@ -5,10 +5,7 @@ import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import Toaster from '@gen3/ui-component/dist/components/Toaster';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
 import PropTypes from 'prop-types';
-import {
-  calculateDropdownButtonConfigs,
-  humanizeNumber,
-} from '../../DataExplorer/utils';
+import { calculateDropdownButtonConfigs, humanizeNumber } from '../utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
 import { fetchWithCreds } from '../../actions';
 import {
