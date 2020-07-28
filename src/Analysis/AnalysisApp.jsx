@@ -4,7 +4,6 @@ import Select from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import Spinner from '../components/Spinner';
-import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 
@@ -61,8 +60,6 @@ class AnalysisApp extends React.Component {
             />
           </React.Fragment>
         );
-      case 'ndhHIV':
-        return <HIVCohortFilter />;
       default:
         return (
           <React.Fragment>
