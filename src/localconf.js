@@ -219,12 +219,6 @@ function buildConfig(opts) {
     config.lineLimit == null ? defaultLineLimit : config.lineLimit;
 
   const analysisApps = {
-    ndhHIV: {
-      title: 'NDH HIV Classifier',
-      description: 'Classify stored clinical data based on controller status.',
-      image: '/src/img/analysis-icons/hiv-classifier.svg',
-      visitIndexTypeName: config.HIVAppIndexTypeName || 'follow_up',
-    },
     ndhVirus: {
       title: 'NDH Virulence Simulation',
       description: `This simulation runs a docker version of the Hypothesis Testing
