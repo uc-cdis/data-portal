@@ -36,7 +36,7 @@ class PlotChartAxisTick extends React.Component {
           textAnchor='end'
           fill='#666'
           fontSize={10}
-          transform={axis === 'x' && 'rotate(-35)'}
+          transform={axis === 'x' ? 'rotate(-35)' : null}
         >
           {formattedValue}
         </text>
@@ -119,7 +119,11 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
     const fields = [this.props.guppyConfig.xAxisProp, this.props.guppyConfig.yAxisProp];
     downloadFromGuppy(this.props.guppyConfig.dataType, filter, fields)
       .then((res) => {
-        this.setState({ guppyData: res.data });
+        if (res.data && res.data.error) {
+          console.error(`Guppy error while fetching chart data: ${res.data.error}`); // eslint-disable-line no-console
+        } else {
+          this.setState({ guppyData: res.data });
+        }
       });
   }
 
@@ -147,7 +151,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
           position: 'bottom',
           offset: -10,
         }}
-        dataKey={layout === 'horizontal' && guppyConfig.xAxisProp}
+        dataKey={layout === 'horizontal' ? guppyConfig.xAxisProp : null}
         type={layout === 'horizontal' ? 'category' : 'number'}
         tickLine={layout === 'horizontal' && false}
         tick={<PlotChartAxisTick axis='x' type={layout === 'vertical' ? 'number' : 'string'} />}
@@ -160,7 +164,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
           position: 'left',
           offset: 15,
         }}
-        dataKey={layout === 'vertical' && guppyConfig.xAxisProp}
+        dataKey={layout === 'vertical' ? guppyConfig.xAxisProp : null}
         type={layout === 'horizontal' ? 'number' : 'category'}
         tickLine={layout === 'vertical' && false}
         tick={<PlotChartAxisTick axis='y' type={layout === 'horizontal' ? 'number' : 'string'} />}
