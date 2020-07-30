@@ -127,7 +127,6 @@ function buildConfig(opts) {
   }
 
   let explorerConfig = [];
-  let useNewExplorerConfigFormat = false;
   // for backward compatibilities
   if (config.dataExplorerConfig) {
     explorerConfig.push({
@@ -144,11 +143,8 @@ function buildConfig(opts) {
 
   // new explorer config format
   if (config.explorerConfig) {
-    useNewExplorerConfigFormat = true;
     explorerConfig = config.explorerConfig;
   }
-
-  const dataAvailabilityToolConfig = config.dataAvailabilityToolConfig;
 
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
@@ -291,8 +287,6 @@ function buildConfig(opts) {
     enableResourceBrowser,
     resourceBrowserPublic,
     explorerConfig,
-    useNewExplorerConfigFormat,
-    dataAvailabilityToolConfig,
     headers,
   };
 }
