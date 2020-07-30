@@ -65,7 +65,6 @@ class GuppyDataExplorer extends React.Component {
             chartConfig={this.props.chartConfig}
             tableConfig={this.props.tableConfig}
             buttonConfig={this.props.buttonConfig}
-            heatMapConfig={this.props.heatMapConfig}
             guppyConfig={this.props.guppyConfig}
             history={this.props.history}
             nodeCountTitle={
@@ -86,7 +85,6 @@ GuppyDataExplorer.propTypes = {
   tableConfig: TableConfigType.isRequired,
   chartConfig: ChartConfigType.isRequired,
   buttonConfig: ButtonConfigType.isRequired,
-  heatMapConfig: PropTypes.object,
   nodeCountTitle: PropTypes.string,
   history: PropTypes.object.isRequired,
   tierAccessLevel: PropTypes.string.isRequired,
@@ -97,7 +95,6 @@ GuppyDataExplorer.propTypes = {
 };
 
 GuppyDataExplorer.defaultProps = {
-  heatMapConfig: {},
   nodeCountTitle: undefined,
   getAccessButtonLink: undefined,
   hideGetAccessButton: false,

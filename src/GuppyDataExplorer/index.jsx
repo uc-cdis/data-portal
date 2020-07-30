@@ -6,8 +6,6 @@ import {
   tierAccessLevel,
   tierAccessLimit,
   explorerConfig,
-  dataAvailabilityToolConfig,
-  useNewExplorerConfigFormat,
 } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 import './GuppyExplorer.css';
@@ -73,19 +71,6 @@ class Explorer extends React.Component {
       </React.Fragment>
     );
 
-    let heatMapConfig = null;
-    // new explorer config format, DAT config should ships with each tab
-    if (
-      useNewExplorerConfigFormat &&
-      explorerConfig[this.state.tab].dataAvailabilityToolConfig
-    ) {
-      heatMapConfig = explorerConfig[this.state.tab].dataAvailabilityToolConfig;
-    }
-    // old explorer config format, standalone DAT config
-    if (!useNewExplorerConfigFormat && dataAvailabilityToolConfig) {
-      heatMapConfig = this.state.tab === 0 ? dataAvailabilityToolConfig : null;
-    }
-
     return (
       <div className='guppy-explorer'>
         {explorerConfig.length > 1 ? tabFragment : null}
@@ -99,7 +84,6 @@ class Explorer extends React.Component {
             chartConfig={explorerConfig[this.state.tab].charts}
             filterConfig={explorerConfig[this.state.tab].filters}
             tableConfig={explorerConfig[this.state.tab].table}
-            heatMapConfig={heatMapConfig}
             guppyConfig={{
               path: guppyUrl,
               ...explorerConfig[this.state.tab].guppyConfig,
