@@ -127,7 +127,6 @@ function buildConfig(opts) {
   }
 
   let explorerConfig = [];
-  let useNewExplorerConfigFormat = false;
   // for backward compatibilities
   if (config.dataExplorerConfig) {
     explorerConfig.push({
@@ -144,11 +143,8 @@ function buildConfig(opts) {
 
   // new explorer config format
   if (config.explorerConfig) {
-    useNewExplorerConfigFormat = true;
     explorerConfig = config.explorerConfig;
   }
-
-  const dataAvailabilityToolConfig = config.dataAvailabilityToolConfig;
 
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
@@ -218,73 +214,6 @@ function buildConfig(opts) {
   const lineLimit =
     config.lineLimit == null ? defaultLineLimit : config.lineLimit;
 
-  const analysisApps = {
-    ndhVirus: {
-      title: 'NDH Virulence Simulation',
-      description: `This simulation runs a docker version of the Hypothesis Testing
-          using Phylogenies (HyPhy) tool over data submitted in the NIAID Data Hub. \n
-          The simulation is focused on modeling a Bayesian Graph Model (BGM) based on a binary matrix input.
-          The implemented example predicts the virulence status of different influenza strains based on their mutations
-          (the mutation panel is represented as the input binary matrix).`,
-      image: '/src/img/analysis-icons/virulence.png',
-    },
-    vaGWAS: {
-      title: 'eGWAS',
-      description: 'Expression-based Genome-Wide Association Study',
-      image: '/src/img/analysis-icons/gwas.svg',
-      options: [
-        {
-          label: 'Lung',
-          value: 'Lung',
-        },
-        {
-          label: 'Gastrointestina',
-          value: 'Gastrointestina',
-        },
-        {
-          label: 'Prostate',
-          value: 'Prostate',
-        },
-        {
-          label: 'Head and Neck',
-          value: 'Head and Neck',
-        },
-        {
-          label: 'Skin',
-          value: 'Skin',
-        },
-        {
-          label: 'NULL',
-          value: 'NULL',
-        },
-        {
-          label: 'Lymph Node',
-          value: 'Lymph Node',
-        },
-        {
-          label: 'Liver',
-          value: 'Liver',
-        },
-        {
-          label: 'Musculoskeleta',
-          value: 'Musculoskeleta',
-        },
-        {
-          label: 'Occipital Mass',
-          value: 'Occipital Mass',
-        },
-        {
-          label: 'Brain',
-          value: 'Brain',
-        },
-        {
-          label: 'BxType',
-          value: 'BxType',
-        },
-      ],
-    },
-  };
-
   const breakpoints = {
     laptop: 1024,
     tablet: 820,
@@ -336,7 +265,6 @@ function buildConfig(opts) {
     workspaceLaunchUrl,
     workspaceTerminateUrl,
     homepageChartNodes: components.index.homepageChartNodes,
-    customHomepageChartConfig: components.index.customHomepageChartConfig,
     datasetUrl,
     indexPublic,
     fenceDownloadPath,
@@ -350,7 +278,6 @@ function buildConfig(opts) {
     showFenceAuthzOnProfile,
     useArboristUI,
     terraExportWarning,
-    analysisApps,
     tierAccessLevel,
     tierAccessLimit,
     useIndexdAuthz,
@@ -360,8 +287,6 @@ function buildConfig(opts) {
     enableResourceBrowser,
     resourceBrowserPublic,
     explorerConfig,
-    useNewExplorerConfigFormat,
-    dataAvailabilityToolConfig,
     headers,
   };
 }

@@ -1,13 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
-import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
 import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
 import { components } from '../../params';
-import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../../localconf';
+import { tierAccessLevel } from '../../localconf';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
-import ExplorerHeatMap from '../ExplorerHeatMap';
 import ExplorerTable from '../ExplorerTable';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import {
@@ -83,28 +80,6 @@ class ExplorerVisualization extends React.Component {
     return { summaries, countItems, stackedBarCharts };
   };
 
-  updateConnectedFilter = async (heatMapMainYAxisVar) => {
-    const caseField = this.props.guppyConfig.manifestMapping
-      .referenceIdFieldInDataIndex;
-    let caseIDList;
-    try {
-      const res = await this.props.downloadRawDataByFields({
-        fields: [caseField],
-      });
-      caseIDList = res.map((e) => e[caseField]);
-      this.heatMapIsLocked = false;
-    } catch (e) {
-      // when tiered access is enabled, we cannot get the list of IDs because
-      // the user does not have access to all projects. In that case, the
-      // heatmap is not displayed.
-      caseIDList = [];
-      this.heatMapIsLocked = true;
-    }
-    this.connectedFilter.current.setFilter({
-      [heatMapMainYAxisVar]: { selectedValues: caseIDList },
-    });
-  };
-
   render() {
     const chartData = this.getData(
       this.props.aggsData,
@@ -133,27 +108,6 @@ class ExplorerVisualization extends React.Component {
     const barChartColor = components.categorical2Colors
       ? components.categorical2Colors[0]
       : null;
-
-    // heatmap config
-    const heatMapGuppyConfig = this.props.heatMapConfig
-      ? this.props.heatMapConfig.guppyConfig
-      : null;
-    const heatMapMainYAxisVar =
-      this.props.heatMapConfig &&
-      this.props.guppyConfig.manifestMapping &&
-      this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex
-        ? this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex
-        : null;
-    const heatMapFilterConfig = {
-      tabs: [
-        {
-          fields: [heatMapMainYAxisVar],
-        },
-      ],
-    };
-    if (heatMapGuppyConfig && this.connectedFilter.current) {
-      this.updateConnectedFilter(heatMapMainYAxisVar);
-    }
 
     return (
       <div className={this.props.className}>
@@ -216,41 +170,6 @@ class ExplorerVisualization extends React.Component {
             ))}
           </div>
         )}
-        {heatMapGuppyConfig && (
-          <GuppyWrapper
-            guppyConfig={{
-              path: guppyUrl,
-              type: heatMapGuppyConfig.dataType,
-              ...heatMapGuppyConfig,
-            }}
-            filterConfig={heatMapFilterConfig}
-            tierAccessLevel={tierAccessLevel}
-            tierAccessLimit={tierAccessLimit}
-          >
-            <ConnectedFilter
-              className='guppy-explorer-visualization__connected-filter--hide'
-              ref={this.connectedFilter}
-              guppyConfig={{
-                path: guppyUrl,
-                type: heatMapGuppyConfig.dataType,
-                ...heatMapGuppyConfig,
-              }}
-              filterConfig={heatMapFilterConfig}
-            />
-            <ExplorerHeatMap
-              guppyConfig={{
-                path: guppyUrl,
-                type: heatMapGuppyConfig.dataType,
-                ...heatMapGuppyConfig,
-              }}
-              mainYAxisVar={heatMapMainYAxisVar}
-              isLocked={this.heatMapIsLocked}
-              lockMessage={
-                'This chart is hidden because it contains data you do not have access to'
-              }
-            />
-          </GuppyWrapper>
-        )}
         {this.props.tableConfig.enabled && (
           <ExplorerTable
             className='guppy-explorer-visualization__table'
@@ -288,7 +207,6 @@ ExplorerVisualization.propTypes = {
   chartConfig: ChartConfigType,
   tableConfig: TableConfigType,
   buttonConfig: ButtonConfigType,
-  heatMapConfig: PropTypes.object,
   guppyConfig: GuppyConfigType,
   nodeCountTitle: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number.isRequired,
@@ -311,7 +229,6 @@ ExplorerVisualization.defaultProps = {
   chartConfig: {},
   tableConfig: {},
   buttonConfig: {},
-  heatMapConfig: {},
   guppyConfig: {},
 };
 
