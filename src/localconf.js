@@ -269,7 +269,6 @@ function buildConfig(opts) {
     workspaceLaunchUrl,
     workspaceTerminateUrl,
     homepageChartNodes: components.index.homepageChartNodes,
-    customHomepageChartConfig: components.index.customHomepageChartConfig,
     datasetUrl,
     indexPublic,
     fenceDownloadPath,
