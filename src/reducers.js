@@ -4,7 +4,6 @@ import userProfile from './UserProfile/reducers';
 import coreMetadata from './CoreMetadata/reducers';
 import certificate from './UserAgreement/reducers';
 import submission from './Submission/reducers';
-import analysis from './Analysis/reducers';
 import homepage from './Homepage/reducers';
 import index from './Index/reducers';
 import queryNodes from './QueryNode/reducers';
@@ -101,7 +100,6 @@ const reducers = combineReducers({
   status,
   versionInfo,
   submission,
-  analysis,
   queryNodes,
   userProfile,
   coreMetadata,
