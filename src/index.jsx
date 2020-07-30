@@ -50,8 +50,6 @@ import {
   enableResourceBrowser,
   resourceBrowserPublic,
 } from './localconf';
-import Analysis from './Analysis/Analysis';
-import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import GuppyDataExplorer from './GuppyDataExplorer/.';
@@ -162,25 +160,6 @@ async function init() {
                         <ProtectedContent component={GraphQLQuery} {...props} />
                       )}
                     />
-                    {isEnabled('analysis') ? (
-                      <Route
-                        path='/analysis/:app'
-                        component={(props) => (
-                          <ProtectedContent
-                            component={ReduxAnalysisApp}
-                            {...props}
-                          />
-                        )}
-                      />
-                    ) : null}
-                    {isEnabled('analysis') ? (
-                      <Route
-                        path='/analysis'
-                        component={(props) => (
-                          <ProtectedContent component={Analysis} {...props} />
-                        )}
-                      />
-                    ) : null}
                     <Route
                       path='/identity'
                       component={(props) => (
