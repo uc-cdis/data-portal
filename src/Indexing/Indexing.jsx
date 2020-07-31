@@ -98,7 +98,7 @@ class Indexing extends React.Component {
         thisPointer.putIndexFileToSignedURL();
       } else {
         // eslint-disable-next-line no-console
-        console.err('Aborting indexing due to error response from /data/upload.');
+        console.error('Aborting indexing due to error response from /data/upload.');
       }
     });
   };
