@@ -90,6 +90,7 @@ const createBarNames = (indexChart) => {
  */
 class IndexBarChart extends React.Component {
   static propTypes = {
+    loadingData: PropTypes.bool,
     projectList: PropTypes.arrayOf(
       PropTypes.objectOf(PropTypes.any),
     ),
@@ -102,7 +103,18 @@ class IndexBarChart extends React.Component {
 
   render() {
     if (this.props.projectList.length === 0) {
-      return <Spinner />;
+      if (this.props.loadingData) {
+        return <Spinner />;
+      }
+      return (
+        <div className='index-bar-chart'>
+          <div className='no-data-component'>
+            <b>No Available Chart Data</b>
+            <p>Either we have an error when fetching data</p>
+            <p>Or you don&#39;t have access to them</p>
+          </div>
+        </div>
+      );
     }
     const projectList = [...this.props.projectList.sort(sortCount)];
     const topList = (projectList.length <= 5) ? projectList : getTopList(projectList);
@@ -162,6 +174,7 @@ class IndexBarChart extends React.Component {
 }
 
 IndexBarChart.defaultProps = {
+  loadingData: false,
   projectList: [],
   countNames: [],
   xAxisStyle: {

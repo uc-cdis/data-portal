@@ -78,7 +78,7 @@ export const mergeChunkedChartData = (chartDataArray) => {
   return mergedChartData;
 };
 
-// loadHomepageChartdataFromDatasets queries Peregrine's /datasets endpoint for
+// loadHomepageChartDataFromDatasets queries Peregrine's /datasets endpoint for
 // summary data (counts of projects, counts of subjects, etc).
 // If `public_datasets` is enabled in Peregrine's config, the /datasets endpoint
 // is publicly available, and can be accessed by logged-out users. Otherwise, the
@@ -88,6 +88,10 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
   const resultStatus = { needLogin: false };
 
   const store = await getReduxStore();
+  store.dispatch({
+    type: 'START_LOADING_HOMEPAGE_CHART_DATA',
+  });
+
   const fileNodes = store.getState().submission.file_nodes;
   const nodesForIndexChart = homepageChartNodes.map(item => item.node);
   const nodesToRequest = _.union(fileNodes, nodesForIndexChart);
@@ -117,6 +121,9 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
         callback(resultStatus);
       }
     }
+    store.dispatch({
+      type: 'FINISH_LOADING_HOMEPAGE_CHART_DATA',
+    });
     return;
   }
 
@@ -126,11 +133,21 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
   if (callback) {
     callback(resultStatus);
   }
+  store.dispatch({
+    type: 'FINISH_LOADING_HOMEPAGE_CHART_DATA',
+  });
 };
 
 // loadHomepageChartDataFromGraphQL will load the same data as the
 // loadHomepageChartsFromDatasets function above, but will do it through
 // multiple queries to Peregrine's GraphQL endpoint instead.
-export const loadHomepageChartDataFromGraphQL = () => {
+export const loadHomepageChartDataFromGraphQL = async () => {
+  const store = await getReduxStore();
+  store.dispatch({
+    type: 'START_LOADING_HOMEPAGE_CHART_DATA',
+  });
   getHomepageChartProjectsList();
+  store.dispatch({
+    type: 'FINISH_LOADING_HOMEPAGE_CHART_DATA',
+  });
 };

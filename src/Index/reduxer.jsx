@@ -17,9 +17,10 @@ export const ReduxIndexBarChart = (() => {
       return {
         projectList,
         countNames: state.index.countNames,
+        loadingData: state.index.loadingData,
       };
     }
-    return {};
+    return { loadingData: state.index.loadingData };
   };
 
   // Bar chart does not dispatch anything

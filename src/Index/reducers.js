@@ -2,6 +2,12 @@ import { components } from '../params';
 
 const index = (state = {}, action) => {
   switch (action.type) {
+  case 'START_LOADING_HOMEPAGE_CHART_DATA' : {
+    return { ...state, loadingData: true };
+  }
+  case 'FINISH_LOADING_HOMEPAGE_CHART_DATA' : {
+    return { ...state, loadingData: false };
+  }
   case 'RECEIVE_HOMEPAGE_CHART_DATASETS': {
     const { projectNodeCounts, homepageChartNodes, fileNodes } = action;
     const nodesForIndexChart = homepageChartNodes.map(item => item.node);
