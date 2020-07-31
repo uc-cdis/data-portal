@@ -74,11 +74,12 @@ class Indexing extends React.Component {
           urlToIndexedFile: response.data.url,
           indexingFilesPopupMessage: 'Uploading index file to s3...',
         });
+        return response;
       } else {
         thisPointer.setState({
           indexingFilesStatus: 'error',
           indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
-          indexingFilesPopupMessage: `There was a problem creating a placeholder record an indexd (${response.status})`,
+          indexingFilesPopupMessage: `There was a problem creating a placeholder record in Indexd via Fence (${response.status}).`,
           indexFilesButtonEnabled: false,
         });
       }
@@ -86,22 +87,31 @@ class Indexing extends React.Component {
   };
 
   indexFiles = async () => {
+    var thisPointer = this;
     this.setState({
       indexFilesButtonEnabled: false,
       showIndexFilesPopup: true,
       indexingFilesPopupMessage: 'Preparing indexd...',
     });
-    this.createBlankIndexdRecord().then(() => this.putIndexFileToSignedURL());
+    this.createBlankIndexdRecord().then(function(response) {
+        if(response) {
+          thisPointer.putIndexFileToSignedURL();
+        }
+        else {
+          // eslint-disable-next-line no-console
+          console.err('Aborting indexing due to error response from /data/upload.');
+        }
+    });
   };
 
   putIndexFileToSignedURL = () => {
     const thisPointer = this;
-    return fetchWithCredsAndTimeout({
+    return fetchWithCreds({
       path: thisPointer.state.urlToIndexedFile,
       method: 'PUT',
       customHeaders: { 'Content-Type': 'application/json' },
       body: thisPointer.state.uploadedFile,
-    }, 700000).then(() => {
+    }).then(() => {
       thisPointer.setState({
         indexingFilesPopupMessage: 'Preparing indexing job...',
       });
