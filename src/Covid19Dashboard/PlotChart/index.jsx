@@ -11,7 +11,8 @@ import './PlotChart.less';
 class CustomizedAxisTick extends React.Component {
   render() {
     const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
-    const val = payload.value.replace(/-/g, '/'); // eslint-disable-line react/prop-types
+    console.log(x);
+    const val = payload.value; // eslint-disable-line react/prop-types
     const formattedDate = `${moment(val).month() + 1}/${moment(val).date()}`;
     return (
       <g transform={`translate(${x},${y})`}>
@@ -23,17 +24,17 @@ class CustomizedAxisTick extends React.Component {
 
 function getDates(startDate, endDate, days) {
   const dates = [];
-  let currentDate = moment(startDate).replace(/-/g, '/');
-  const endingDate = moment(endDate).replace(/-/g, '/');
+  let currentDate = moment(startDate);
+  const endingDate = moment(endDate);
   const addDaysToDate = (date) => {
-    const newDate = moment(date).valueOf();
-    newDate.set(newDate.date() + days);
+    const newDate = moment(date);
+    newDate.add(days, 'days');
     return newDate;
   };
   while (currentDate <= endingDate) {
     const year = currentDate.year();
-    const month = `${currentDate.month() + 1}`.padStart(2, 0);
-    const day = `${currentDate.date()}`.padStart(2, 0);
+    const month = `${currentDate.month() + 1}`.padStart(2, '0');
+    const day = `${currentDate.date()}`.padStart(2, '0');
     const stringDate = [year, month, day].join('-');
     const fmtDate = `${stringDate} 00:00:00+00:00`;
     dates.push(fmtDate);
@@ -145,7 +146,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
             />
             <XAxis
               dataKey='date'
-              tick={<CustomizedAxisTick />}
+              tick={<CustomizedAxisTick/>}
               ticks={chartData.ticks}
               interval={0}
             />
