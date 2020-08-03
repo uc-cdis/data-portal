@@ -2,10 +2,11 @@ import moment from 'moment';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 
-import { numberWithCommas } from '../dataUtils.js';
+import Spinner from '../../components/Spinner';
+import { numberWithCommas, downloadFromGuppy } from '../dataUtils.js';
 import './PlotChart.less';
 
 class CustomizedAxisTick extends React.Component {
@@ -20,6 +21,7 @@ class CustomizedAxisTick extends React.Component {
       </g>
     );
   }
+  /* eslint-enable */
 }
 
 function getDates(startDate, endDate, days) {
@@ -43,7 +45,7 @@ function getDates(startDate, endDate, days) {
   return dates;
 }
 
-function formatChartData(plots) {
+function formatChartDataFromProps(plots) {
   const dateToData = {};
   if (!plots || !plots.length) {
     return dateToData;
@@ -79,7 +81,144 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
         return [value.name, 1];
       }),
     ),
+    guppyData: [],
   };
+
+  componentDidMount() {
+    if (!this.props.guppyConfig) {
+      return;
+    }
+
+    // fetch data from Guppy if the component has a guppyConfig
+    let filter = {};
+    if (typeof this.props.guppyConfig.filters !== 'undefined') {
+      filter = this.props.guppyConfig.filters;
+    }
+    const fields = [this.props.guppyConfig.xAxisProp, this.props.guppyConfig.yAxisProp];
+    downloadFromGuppy(this.props.guppyConfig.dataType, filter, fields)
+      .then((res) => {
+        if (res.data && res.data.error) {
+          console.error(`Guppy error while fetching chart data: ${res.data.error}`); // eslint-disable-line no-console
+        } else {
+          this.setState({ guppyData: res.data });
+        }
+      });
+  }
+
+  getGuppyBarChartComponent = (data) => {
+    const { xTitle, yTitle, layout, barColor, guppyConfig } = this.props;
+    if (!data.length) {
+      return null;
+    }
+    return (<BarChart
+      data={data}
+      margin={{
+        top: 5, right: 30, left: 20, bottom: 5,
+      }}
+      layout={layout}
+    >
+      <CartesianGrid
+        vertical={layout === 'vertical'}
+        horizontal={layout === 'horizontal'}
+        strokeDasharray='3 3'
+      />
+      <XAxis
+        height={50} // default is 30 - labels don't fit
+        label={{
+          value: xTitle,
+          position: 'bottom',
+          offset: -10,
+        }}
+        dataKey={layout === 'horizontal' ? guppyConfig.xAxisProp : null}
+        type={layout === 'horizontal' ? 'category' : 'number'}
+        tickLine={layout === 'horizontal' && false}
+        tick={<PlotChartAxisTick axis='x' type={layout === 'vertical' ? 'number' : 'string'} />}
+      />
+      <YAxis
+        label={{
+          className: 'plot-chart__y-title',
+          value: yTitle,
+          angle: -90,
+          position: 'left',
+          offset: 15,
+        }}
+        dataKey={layout === 'vertical' ? guppyConfig.xAxisProp : null}
+        type={layout === 'horizontal' ? 'number' : 'category'}
+        tickLine={layout === 'vertical' && false}
+        tick={<PlotChartAxisTick axis='y' type={layout === 'horizontal' ? 'number' : 'string'} />}
+      />
+      <Tooltip
+        formatter={
+          value => [numberWithCommas(value), yTitle]
+        }
+      />
+      <Bar
+        dataKey={guppyConfig.yAxisProp}
+        fill={barColor || COLORS[0]}
+      />
+    </BarChart>);
+  }
+
+  getLineChartComponent = (chartData, width) => {
+    if (!Object.keys(this.props.plots).length) {
+      return null;
+    }
+    return (<LineChart
+      data={chartData.data}
+      margin={{
+        top: 5, right: 30, left: 20, bottom: 5,
+      }}
+    >
+      <CartesianGrid
+        vertical={false}
+        strokeDasharray='3 3'
+      />
+      <XAxis
+        dataKey='date'
+        tick={<PlotChartAxisTick axis='x' type='date' />}
+        ticks={chartData.ticks}
+        interval={0}
+      />
+      <YAxis
+        label={{
+          className: 'plot-chart__y-title',
+          value: this.props.yTitle,
+          angle: -90,
+          position: 'insideLeft',
+          offset: -10,
+        }}
+        type='number'
+        tick={<PlotChartAxisTick axis='y' type='number' />}
+      />
+      <Tooltip
+        content={this.renderTooltip}
+      />
+      <Legend
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}
+      />
+      {
+        this.props.plots.map((entry, index) => {
+          const color = COLORS[index % COLORS.length];
+          return <Line key={entry.name} type='monotone' dataKey={entry.name} strokeWidth={width[entry.name]} stroke={color} dot={false} />;
+        })
+      }
+    </LineChart>);
+  }
+
+  formatChartDataFromGuppy = (guppyData) => {
+    let data = guppyData.filter(
+      e => (!!e[this.props.guppyConfig.xAxisProp] && !!e[this.props.guppyConfig.yAxisProp]),
+    ).sort( // sort in descending order
+      (a, b) => (
+        a[this.props.guppyConfig.yAxisProp] > b[this.props.guppyConfig.yAxisProp] ? -1 : 1
+      ),
+    );
+    if (this.props.maxItems) {
+      data = data.slice(0, this.props.maxItems);
+    }
+    return data;
+  }
 
   // change the width of line based on the mouse over the legend
   handleMouseEnter = (o) => {
@@ -124,8 +263,16 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
   }
 
   render() {
-    const chartData = formatChartData(this.props.plots);
-    const { width } = this.state;
+    let component = null;
+    // for now, only lineChart with plots or barChart with guppyConfig
+    if (this.props.type === 'lineChart') {
+      const chartData = formatChartDataFromProps(this.props.plots);
+      const { width } = this.state;
+      component = this.getLineChartComponent(chartData, width);
+    } else if (this.props.type === 'barChart' && this.props.guppyConfig && this.state.guppyData) {
+      const chartData = this.formatChartDataFromGuppy(this.state.guppyData);
+      component = this.getGuppyBarChartComponent(chartData);
+    }
 
     return (
       <div className='plot-chart'>
@@ -177,13 +324,25 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
 }
 
 PlotChart.propTypes = {
+  type: PropTypes.string.isRequired,
   plots: PropTypes.array,
   title: PropTypes.string.isRequired,
-  yTitle: PropTypes.string.isRequired,
+  xTitle: PropTypes.string,
+  yTitle: PropTypes.string,
+  layout: PropTypes.string,
+  maxItems: PropTypes.number,
+  barColor: PropTypes.string,
+  guppyConfig: PropTypes.object,
 };
 
 PlotChart.defaultProps = {
   plots: [],
+  xTitle: null,
+  yTitle: null,
+  layout: 'horizontal',
+  maxItems: null,
+  barColor: null,
+  guppyConfig: {},
 };
 
 export default PlotChart;

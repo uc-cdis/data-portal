@@ -79,8 +79,13 @@ class ExplorerTable extends React.Component {
       accessor: d => d[fieldStringsArray[0]],
       Cell: (row) => {
         let valueStr = '';
+        // not a nested field name
         if (fieldStringsArray.length === 1) {
-          valueStr = row.value;
+          if (_.isArray(row.value)) {
+            valueStr = row.value.join(', ');
+          } else {
+            valueStr = row.value;
+          }
         } else {
           const nestedChildFieldName = fieldStringsArray.slice(1, fieldStringsArray.length).join('.');
           // some logic to handle depends on wether the child field in raw data is an array or not
