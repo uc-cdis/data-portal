@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -17,7 +18,7 @@ class PlotChartAxisTick extends React.Component {
 
     let formattedValue = payload.value;
     if (type === 'date') {
-      formattedValue = `${new Date(formattedValue).getUTCMonth() + 1}/${new Date(formattedValue).getUTCDate()}`;
+      formattedValue = `${moment(formattedValue).month() + 1}/${moment(formattedValue).date()}`;
     } else if (type === 'number') {
       formattedValue = numberWithCommas(formattedValue);
     }
@@ -48,17 +49,17 @@ class PlotChartAxisTick extends React.Component {
 
 function getDates(startDate, endDate, days) {
   const dates = [];
-  let currentDate = new Date(startDate);
-  const endingDate = new Date(endDate);
+  let currentDate = moment(startDate);
+  const endingDate = moment(endDate);
   const addDaysToDate = (date) => {
-    const newDate = new Date(date.valueOf());
-    newDate.setDate(newDate.getUTCDate() + days);
+    const newDate = moment(date);
+    newDate.add(days, 'days');
     return newDate;
   };
-  while (currentDate <= endingDate) {
-    const year = currentDate.getUTCFullYear();
-    const month = `${currentDate.getUTCMonth() + 1}`.padStart(2, 0);
-    const day = `${currentDate.getUTCDate()}`.padStart(2, 0);
+  while (moment(currentDate).isSameOrBefore(endingDate)) {
+    const year = currentDate.year();
+    const month = `${currentDate.month() + 1}`.padStart(2, 0);
+    const day = `${currentDate.date()}`.padStart(2, 0);
     const stringDate = [year, month, day].join('-');
     const fmtDate = `${stringDate} 00:00:00+00:00`;
     dates.push(fmtDate);
@@ -83,7 +84,7 @@ function formatChartDataFromProps(plots) {
     });
   });
   let sortedData = Object.values(dateToData);
-  sortedData = sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+  sortedData = sortedData.sort((a, b) => moment(a.date) - moment(b.date));
   return {
     data: sortedData,
     ticks: getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7),
@@ -263,11 +264,11 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
 
   renderTooltip = (props) => {
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const date = new Date(props.label);
+    const date = moment(props.label);
     const nColumns = Math.ceil(props.payload.length / 5); // up to 5 items per column
     return (
       <div className='plot-chart__tooltip'>
-        <p>{monthNames[date.getUTCMonth()]} {date.getUTCDate()}, {date.getUTCFullYear()}</p>
+        <p>{monthNames[date.month()]} {date.date()}, {date.year()}</p>
         <div style={{ columnCount: nColumns }}>
           {
             props.payload.map((data, i) => (
