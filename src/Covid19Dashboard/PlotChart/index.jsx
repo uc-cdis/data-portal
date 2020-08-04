@@ -56,13 +56,8 @@ function getDates(startDate, endDate, days) {
     newDate.add(days, 'days');
     return newDate;
   };
-  while (moment(currentDate).isSameOrBefore(endingDate)) {
-    const year = currentDate.year();
-    const month = `${currentDate.month() + 1}`.padStart(2, 0);
-    const day = `${currentDate.date()}`.padStart(2, 0);
-    const stringDate = [year, month, day].join('-');
-    const fmtDate = `${stringDate} 00:00:00+00:00`;
-    dates.push(fmtDate);
+  while (currentDate.isSameOrBefore(endingDate)) {
+    dates.push(currentDate.utc().format('YYYY-MM-DD HH:mm:ssZ'));
     currentDate = addDaysToDate(currentDate);
   }
   return dates;
