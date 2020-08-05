@@ -1,8 +1,17 @@
 .study-viewer {
-    padding: 40px 20px;
-  }
+  padding: 40px 20px;
+}
 
 .study-viewer__title {
-    padding-top: 10px;
-    flex-basis: 460px;
-  }
+  padding-top: 10px;
+  flex-basis: 460px;
+}
+
+.study-viewer__space {
+  width: 100%;
+}
+
+.study-viewer__card {
+  width: 100%;
+  border: 1px solid black;
+}

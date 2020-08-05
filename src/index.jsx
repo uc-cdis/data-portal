@@ -10,6 +10,7 @@ import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 
+import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
 import { fetchDictionary, fetchSchema, fetchVersionInfo, fetchUserAccess, fetchUserAuthMapping } from './actions';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
