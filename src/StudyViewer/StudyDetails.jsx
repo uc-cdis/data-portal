@@ -34,6 +34,7 @@ class StudyDetails extends React.Component {
           </Paragraph>
           {(this.props.data.meta) ?
             <Descriptions
+              className='study-details__descriptions'
               bordered
               column={1}
             >
@@ -52,6 +53,7 @@ StudyDetails.propTypes = {
   data: PropTypes.shape({
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
     meta: PropTypes.object,
     hasAccess: PropTypes.bool.isRequired,
   }).isRequired,

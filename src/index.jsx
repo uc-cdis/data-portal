@@ -49,7 +49,8 @@ import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import './index.less';
 import NotFound from './components/NotFound';
-import StudyViewer from './StudyViewer';
+import StudyViewer from './StudyViewer/StudyViewer';
+import SingleStudyViewer from './StudyViewer/SingleStudyViewer';
 
 
 // monitor user's session
@@ -146,6 +147,16 @@ async function init() {
                     path='/study-viewer'
                     component={
                       props => <ProtectedContent component={StudyViewer} {...props} />
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/study-viewer/*'
+                    component={
+                      props => (<ProtectedContent
+                        component={SingleStudyViewer}
+                        {...props}
+                      />)
                     }
                   />
                   <Route

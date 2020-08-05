@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { Card, Collapse } from 'antd';
-import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, MinusCircleOutlined, ExportOutlined } from '@ant-design/icons';
 
 import StudyDetails from './StudyDetails';
 import './StudyViewer.css';
@@ -24,7 +25,11 @@ class StudyCard extends React.Component {
 
     render() {
       return (
-        <Card className='study-viewer__card' title={this.props.data.title}>
+        <Card
+          className='study-viewer__card'
+          title={this.props.data.title}
+          extra={<Link to={`/study-viewer${this.props.data.url}`}><ExportOutlined /></Link>}
+        >
           <Collapse
             expandIcon={({ isActive }) =>
               ((isActive) ? <MinusCircleOutlined /> : <PlusCircleOutlined />)}
@@ -47,6 +52,7 @@ StudyCard.propTypes = {
   data: PropTypes.shape({
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
     meta: PropTypes.object,
     hasAccess: PropTypes.bool.isRequired,
   }).isRequired,
