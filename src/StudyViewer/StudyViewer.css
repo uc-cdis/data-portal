@@ -1,0 +1,8 @@
+.study-viewer {
+    padding: 40px 20px;
+  }
+
+.study-viewer__title {
+    padding-top: 10px;
+    flex-basis: 460px;
+  }
