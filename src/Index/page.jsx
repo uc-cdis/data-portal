@@ -46,21 +46,37 @@ class IndexPageComponent extends React.Component {
     };
     let customCharts = null;
     if (customHomepageChartConfig) {
-      customCharts = customHomepageChartConfig.map((conf, i) => (
-        <div key={i} className='index-page__slider-chart'>
-          <HomepageCustomCharts
-            chartType={conf.chartType}
-            dataType={conf.dataType}
-            yAxisProp={conf.yAxisProp}
-            xAxisProp={conf.xAxisProp}
-            constrains={conf.constrains}
-            chartTitle={conf.chartTitle}
-            logBase={conf.logBase}
-            initialUnselectedKeys={conf.initialUnselectedKeys}
-            dataTypePlural={conf.dataTypePlural}
-          />
-        </div>
-      ));
+      customCharts = customHomepageChartConfig.map((conf, i) => {
+        switch (conf.chartType) {
+        case 'horizontalGroupedBar':
+          return (
+            <div key={i} className='index-page__slider-chart'>
+              <HomepageCustomCharts
+                chartType={conf.chartType}
+                dataType={conf.dataType}
+                yAxisProp={conf.yAxisProp}
+                xAxisProp={conf.xAxisProp}
+                constrains={conf.constrains}
+                chartTitle={conf.chartTitle}
+                logBase={conf.logBase}
+                initialUnselectedKeys={conf.initialUnselectedKeys}
+                dataTypePlural={conf.dataTypePlural}
+              />
+            </div>
+          );
+        case 'image':
+          return (
+            <div key={i} className='index-page__slider-chart'>
+              <img
+                src={conf.imageLink}
+                alt=''
+              />
+            </div>
+          );
+        default:
+          return null;
+        }
+      });
     }
     return (
       <div className='index-page'>
@@ -74,8 +90,8 @@ class IndexPageComponent extends React.Component {
           <div className='index-page__bar-chart'>
             <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
               <Slider {...sliderSettings}>
-                <div className='index-page__slider-chart'><ReduxIndexBarChart /></div>
                 {customCharts}
+                <div className='index-page__slider-chart'><ReduxIndexBarChart /></div>
               </Slider>
             </MediaQuery>
           </div>
