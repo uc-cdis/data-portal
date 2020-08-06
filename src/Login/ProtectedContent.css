@@ -2,6 +2,7 @@
   width: 100%;
   margin: auto;
   min-height: calc(100vh - 221px);
+  height: 100%;
   background-color: var(--g3-color__bg-cloud);
 }
 

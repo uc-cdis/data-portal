@@ -47,7 +47,7 @@ import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
-import './index.less';
+import './index.css';
 import NotFound from './components/NotFound';
 import StudyViewer from './StudyViewer/StudyViewer';
 import SingleStudyViewer from './StudyViewer/SingleStudyViewer';
@@ -81,7 +81,7 @@ async function init() {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <BrowserRouter basename={basename}>
-            <div>
+            <div className='main-page'>
               {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
               {isEnabled('noIndex') ?
                 <Helmet>
