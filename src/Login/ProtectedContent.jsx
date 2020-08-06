@@ -279,9 +279,16 @@ class ProtectedContent extends React.Component {
     window.scrollTo(0, 0);
     const pageFullWidthClassModifier = isPageFullScreen(this.props.location.pathname) ? 'protected-content--full-screen' : '';
     if (this.state.redirectTo) {
+      let fromURL = '/';
+      if (this.state.from && this.state.from.pathname) {
+        fromURL = this.state.from.pathname;
+        if (this.state.from.search && this.state.from.search !== '') {
+          fromURL = fromURL.concat(this.state.from.search);
+        }
+      }
       return (<Redirect to={{
         pathname: this.state.redirectTo,
-        from: (this.state.from && this.state.from.pathname) ? this.state.from.pathname : '/' }} // send previous location to redirect
+        from: fromURL }} // send previous location to redirect
       />);
     } else if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
