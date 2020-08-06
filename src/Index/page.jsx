@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { Carousel } from 'antd';
 import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntroduction } from './reduxer';
 import dictIcons from '../img/icons';
 import { components } from '../params';
@@ -36,14 +34,6 @@ class IndexPageComponent extends React.Component {
   }
 
   render() {
-    const sliderSettings = {
-      dots: true,
-      infinite: false,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      arrows: true,
-    };
     let customCharts = null;
     if (customHomepageChartConfig) {
       customCharts = customHomepageChartConfig.map((conf, i) => {
@@ -68,6 +58,7 @@ class IndexPageComponent extends React.Component {
           return (
             <div key={i} className='index-page__slider-chart'>
               <img
+                className='index-page__slider-chart-image'
                 src={conf.imageLink}
                 alt=''
               />
@@ -89,10 +80,10 @@ class IndexPageComponent extends React.Component {
           </div>
           <div className='index-page__bar-chart'>
             <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-              <Slider {...sliderSettings}>
+              <Carousel>
                 {customCharts}
                 <div className='index-page__slider-chart'><ReduxIndexBarChart /></div>
-              </Slider>
+              </Carousel>
             </MediaQuery>
           </div>
         </div>

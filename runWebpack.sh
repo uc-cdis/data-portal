@@ -33,7 +33,6 @@ declare -a gitopsFiles=(
   gitops-favicon.ico custom/favicon/gitops-favicon.ico
   gitops.css custom/css/gitops.css
   gitops-sponsors custom/sponsors/gitops-sponsors
-  gitops-misc-images custom/images/gitops-misc-images
 )
 
 #
