@@ -6,7 +6,8 @@ import { ThemeProvider } from 'styled-components';
 import 'react-select/dist/react-select.css';
 import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { faAngleUp, faAngleDown, faEnvelopeSquare, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faFacebookSquare, faTwitterSquare, faLinkedin, faYoutubeSquare, faFlickr, faInstagramSquare, faPinterestSquare } from '@fortawesome/free-brands-svg-icons';
 import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 
@@ -31,7 +32,7 @@ import UserAgreementCert from './UserAgreement/ReduxCertPopup';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
 import getReduxStore from './reduxStore';
-import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
+import { ReduxNavBar, ReduxTopBar } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
   indexPublic, useGuppyForExplorer, explorerPublic, enableResourceBrowser, resourceBrowserPublic,
@@ -51,6 +52,7 @@ import './index.css';
 import NotFound from './components/NotFound';
 import StudyViewer from './StudyViewer/StudyViewer';
 import SingleStudyViewer from './StudyViewer/SingleStudyViewer';
+import FooterNIAID from './components/layout/FooterNIAID';
 
 
 // monitor user's session
@@ -74,7 +76,17 @@ async function init() {
     ],
   );
   // FontAwesome icons
-  library.add(faAngleUp, faAngleDown);
+  library.add(faAngleUp,
+    faAngleDown,
+    faEnvelopeSquare,
+    faFacebookSquare,
+    faTwitterSquare,
+    faLinkedin,
+    faYoutubeSquare,
+    faFlickr,
+    faInstagramSquare,
+    faPinterestSquare,
+    faExternalLinkAlt);
 
   render(
     <div>
@@ -396,14 +408,30 @@ async function init() {
                     }
                   />
                   <Route
+                    path='/not-found'
+                    component={NotFound}
+                  />
+                  <Route
+                    exact
+                    path='/:project'
+                    component={
+                      props =>
+                        (
+                          <ProtectedContent
+                            component={ProjectSubmission}
+                            {...props}
+                          />
+                        )
+                    }
+                  />
+                  <Route
                     path='*'
                     component={NotFound}
                   />
                 </Switch>
               </div>
-              <ReduxFooter
+              <FooterNIAID
                 logos={components.footerLogos}
-                privacyPolicy={components.privacyPolicy}
               />
             </div>
           </BrowserRouter>
