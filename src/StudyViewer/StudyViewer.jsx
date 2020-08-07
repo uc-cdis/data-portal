@@ -25,7 +25,9 @@ const data = [
       condition: 'COVID-19',
       study_design: 'Interventional (Clinical Trial), Randomized Allocation',
       sponsor: 'National Institute of Allergy and Infectious Diseases (NIAID)',
-      study_dates: 'February 21, 2020 - April 1, 2023',
+      study_dates: 'February 21, 2020 - May 21, 2020',
+      data_available: 'Patient-level data',
+      trial_website: 'https://clinicaltrials.gov/ct2/show/NCT04280705'
     },
     hasAccess: false,
   },
