@@ -24,3 +24,21 @@
 .study-details__descriptions {
   border: 1px solid black;
 }
+
+.study-viewer__details {
+  display: flex;
+  width: 100%;
+}
+
+.study-viewer__details-doc {
+  width: 30%;
+  height: fit-content;
+  margin-left: 10px;
+  border: 1px solid black;
+  align-self: center;
+}
+
+.study-viewer__details-doc-space {
+  width: 100%;
+  padding: 10px;
+}

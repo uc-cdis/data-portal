@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Space, Typography } from 'antd';
+import { FileOutlined, FilePdfOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
+import { humanFileSize } from '../utils.js';
 
 import ReduxStudyDetails from './ReduxStudyDetails';
 import './StudyViewer.css';
@@ -25,7 +27,23 @@ class SingleStudyViewer extends React.Component {
             <div className='study-viewer__title'>
               <Title level={4}>{studyData.title}</Title>
             </div>
-            <ReduxStudyDetails data={studyData} />
+            <div className='study-viewer__details'>
+              <ReduxStudyDetails data={studyData} />
+              <div className='study-viewer__details-doc'>
+                <Space className='study-viewer__details-doc-space' direction='vertical'>
+                  <div className='h3-typo'>Study Documents</div>
+                  {studyData.document.map((doc) => {
+                    const iconComponent = (doc.format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
+                    const linkText = `${doc.name} (${doc.format} - ${humanFileSize(doc.size)})`;
+                    const linkComponent = <a href={doc.link}>{linkText}</a>;
+                    return (<div>
+                      {iconComponent}
+                      {linkComponent}
+                    </div>);
+                  })}
+                </Space>
+              </div>
+            </div>
           </Space>
           : null}
       </div>

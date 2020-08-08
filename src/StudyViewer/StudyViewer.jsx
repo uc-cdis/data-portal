@@ -20,6 +20,32 @@ export const data = [
       data_available: 'Patient-level data',
       trial_website: '',
     },
+    document: [
+      {
+        name: 'Data Dictionary',
+        format: 'PDF',
+        link: '/',
+        size: 763843,
+      },
+      {
+        name: 'Database Documentation and Forms',
+        format: 'PDF',
+        link: '/',
+        size: 3421325,
+      },
+      {
+        name: 'Manual of Procedures',
+        format: 'PDF',
+        link: '/',
+        size: 6538352,
+      },
+      {
+        name: 'Protocol',
+        format: 'PDF',
+        link: '/',
+        size: 7638643,
+      },
+    ],
     hasAccess: true,
   },
   {
@@ -34,6 +60,20 @@ export const data = [
       data_available: 'Patient-level data',
       trial_website: <a href="'https://clinicaltrials.gov/ct2/show/NCT04280705'">Visit NIH.gov</a>,
     },
+    document: [
+      {
+        name: 'Data Dictionary',
+        format: 'PDF',
+        link: '/',
+        size: 763843,
+      },
+      {
+        name: 'Protocol',
+        format: 'PDF',
+        link: '/',
+        size: 7638643,
+      },
+    ],
     hasAccess: false,
   },
   {
@@ -48,6 +88,26 @@ export const data = [
       data_available: 'Patient-level data',
       trial_website: '',
     },
+    document: [
+      {
+        name: 'Data Dictionary',
+        format: 'PDF',
+        link: '/',
+        size: 763843,
+      },
+      {
+        name: 'Manual of Procedures',
+        format: 'PDF',
+        link: '/',
+        size: 6538352,
+      },
+      {
+        name: 'Protocol',
+        format: 'PDF',
+        link: '/',
+        size: 7638643,
+      },
+    ],
     hasAccess: false,
   },
 ];
