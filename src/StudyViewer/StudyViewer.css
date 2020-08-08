@@ -1,10 +1,15 @@
 .study-viewer {
+  width: 100%;
   padding: 40px 20px;
 }
 
 .study-viewer__title {
   padding-top: 10px;
   flex-basis: 460px;
+}
+
+.study-viewer__login-banner {
+  padding-top: 10px;
 }
 
 .study-viewer__space {

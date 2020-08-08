@@ -4,51 +4,11 @@ import { withRouter } from 'react-router-dom';
 import { Space, Typography } from 'antd';
 import BackLink from '../components/BackLink';
 
-import StudyDetails from './StudyDetails';
+import ReduxStudyDetails from './ReduxStudyDetails';
 import './StudyViewer.css';
+import { data } from './StudyViewer.jsx';
 
 const { Title } = Typography;
-
-const data = [
-  {
-    title: 'COVID-19-associated Lymphopenia Pathogenesis Study in Blood (CALYPSO)',
-    description: 'This study is an adaptive, randomized, double-blind, placebo-controlled trial to evaluate the safety and efficacy of novel therapeutic agents in hospitalized adults diagnosed with COVID-19. The study is a multicenter trial that will be conducted in up to approximately 100 sites globally. The study will compare different investigational therapeutic agents to a control arm. There will be interim monitoring to introduce new arms and allow early stopping for futility, efficacy, or safety.',
-    url: '/CALYPSO',
-    meta: {
-      condition: 'COVID-19',
-      study_design: 'Interventional (Clinical Trial), Randomized Allocation',
-      sponsor: 'National Institute of Allergy and Infectious Diseases (NIAID)',
-      study_dates: 'February 21, 2020 - April 1, 2023',
-    },
-    hasAccess: true,
-  },
-  {
-    title: 'The Adaptive COVID-19 Treatment Trial (ATCC)',
-    description: 'This study is an adaptive, randomized, double-blind, placebo-controlled trial to evaluate the safety and efficacy of novel therapeutic agents in hospitalized adults diagnosed with COVID-19. The study is a multicenter trial that will be conducted in up to approximately 100 sites globally. The study will compare different investigational therapeutic agents to a control arm. There will be interim monitoring to introduce new arms and allow early stopping for futility, efficacy, or safety.',
-    url: '/ATCC',
-    meta: {
-      condition: 'COVID-19',
-      study_design: 'Interventional (Clinical Trial), Randomized Allocation',
-      sponsor: 'National Institute of Allergy and Infectious Diseases (NIAID)',
-      study_dates: 'February 21, 2020 - May 21, 2020',
-      data_available: 'Patient-level data',
-      trial_website: 'https://clinicaltrials.gov/ct2/show/NCT04280705',
-    },
-    hasAccess: false,
-  },
-  {
-    title: 'Longitudinal Study of COVID-19 Sequelae and Immunity (RECON_19)',
-    description: 'This study is an adaptive, randomized, double-blind, placebo-controlled trial to evaluate the safety and efficacy of novel therapeutic agents in hospitalized adults diagnosed with COVID-19. The study is a multicenter trial that will be conducted in up to approximately 100 sites globally. The study will compare different investigational therapeutic agents to a control arm. There will be interim monitoring to introduce new arms and allow early stopping for futility, efficacy, or safety.',
-    url: '/RECON_19',
-    meta: {
-      condition: 'COVID-19',
-      study_design: 'Interventional (Clinical Trial), Randomized Allocation',
-      sponsor: 'National Institute of Allergy and Infectious Diseases (NIAID)',
-      study_dates: 'February 21, 2020 - April 1, 2023',
-    },
-    hasAccess: false,
-  },
-];
 
 class SingleStudyViewer extends React.Component {
   render() {
@@ -65,7 +25,7 @@ class SingleStudyViewer extends React.Component {
             <div className='study-viewer__title'>
               <Title level={4}>{studyData.title}</Title>
             </div>
-            <StudyDetails data={studyData} />
+            <ReduxStudyDetails data={studyData} />
           </Space>
           : null}
       </div>

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { Space, Typography, Descriptions, message } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { capitalizeFirstLetter } from '../utils';
-
 import './StudyViewer.css';
 
 const { Paragraph } = Typography;
@@ -20,13 +20,23 @@ const onRequestAccess = () => {
 
 class StudyDetails extends React.Component {
   render() {
+    const onNotLoggedInRequestAccess = () => this.props.history.push('/login', { from: this.props.location.pathname });
+    const userHasLoggedIn = !!this.props.user.username;
+
+    let requestAccessButtonFunc = onDownload;
+    if (!userHasLoggedIn) {
+      requestAccessButtonFunc = onNotLoggedInRequestAccess;
+    } else if (!this.props.data.hasAccess) {
+      requestAccessButtonFunc = onRequestAccess;
+    }
+
     return (
       <div className='study-details'>
         <Space className='study-viewer__space' direction='vertical'>
           <Button
-            label={(this.props.data.hasAccess) ? 'Download' : 'Request Access'}
+            label={(userHasLoggedIn && this.props.data.hasAccess) ? 'Download' : 'Request Access'}
             buttonType='primary'
-            onClick={(this.props.data.hasAccess) ? onDownload : onRequestAccess}
+            onClick={requestAccessButtonFunc}
           />
           <div className='h3-typo'>Study Description</div>
           <Paragraph>
@@ -57,6 +67,9 @@ StudyDetails.propTypes = {
     meta: PropTypes.object,
     hasAccess: PropTypes.bool.isRequired,
   }).isRequired,
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
-export default StudyDetails;
+export default withRouter(StudyDetails);

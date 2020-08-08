@@ -85,6 +85,9 @@ export const mergeChunkedChartData = (chartDataArray) => {
 // request will fail for logged-out users. If the request fails because the user
 // is logged out, this function will return {needsLogin: true}.
 export const loadHomepageChartDataFromDatasets = async (callback) => {
+  if (homepageChartNodes.length === 0) {
+    return;
+  }
   const resultStatus = { needLogin: false };
 
   const store = await getReduxStore();

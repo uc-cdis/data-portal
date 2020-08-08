@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Card, Collapse } from 'antd';
 import { PlusCircleOutlined, MinusCircleOutlined, ExportOutlined } from '@ant-design/icons';
 
-import StudyDetails from './StudyDetails';
+import ReduxStudyDetails from './ReduxStudyDetails';
 import './StudyViewer.css';
 
 const { Panel } = Collapse;
@@ -40,7 +40,7 @@ class StudyCard extends React.Component {
               header={(this.state.panelExpanded) ? 'Hide details' : 'Show details'}
               key='1'
             >
-              <StudyDetails data={this.props.data} />
+              <ReduxStudyDetails data={this.props.data} />
             </Panel>
           </Collapse>
         </Card>

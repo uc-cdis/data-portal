@@ -1,10 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
+import Button from '@gen3/ui-component/dist/components/Button';
 
 import './StudyViewer.css';
 import StudyCard from './StudyCard';
 
-const data = [
+export const data = [
   {
     title: 'COVID-19-associated Lymphopenia Pathogenesis Study in Blood (CALYPSO)',
     description: 'This study is an adaptive, randomized, double-blind, placebo-controlled trial to evaluate the safety and efficacy of novel therapeutic agents in hospitalized adults diagnosed with COVID-19. The study is a multicenter trial that will be conducted in up to approximately 100 sites globally. The study will compare different investigational therapeutic agents to a control arm. There will be interim monitoring to introduce new arms and allow early stopping for futility, efficacy, or safety.',
@@ -27,7 +30,7 @@ const data = [
       sponsor: 'National Institute of Allergy and Infectious Diseases (NIAID)',
       study_dates: 'February 21, 2020 - May 21, 2020',
       data_available: 'Patient-level data',
-      trial_website: 'https://clinicaltrials.gov/ct2/show/NCT04280705'
+      trial_website: 'https://clinicaltrials.gov/ct2/show/NCT04280705',
     },
     hasAccess: false,
   },
@@ -47,11 +50,25 @@ const data = [
 
 class StudyViewer extends React.Component {
   render() {
+    const onRedirectToLoginClicked = () => this.props.history.push('/login', { from: this.props.location.pathname });
+    const userHasLoggedIn = !!this.props.user.username;
     return (
       <div className='study-viewer'>
         <div className='h2-typo study-viewer__title'>
               Studies
         </div>
+        {(!userHasLoggedIn) ?
+          <div className='study-viewer__login-banner'>
+            <Space>
+              <Button
+                label={'Login'}
+                buttonType='primary'
+                onClick={onRedirectToLoginClicked}
+              />
+              <div className='h3-typo'>to see approved trials or requested trials</div>
+            </Space>
+          </div>
+          : null}
         <Space className='study-viewer__space' direction='vertical'>
           {(data.map((d, i) => <StudyCard key={i} data={d} />))}
         </Space>
@@ -60,4 +77,10 @@ class StudyViewer extends React.Component {
   }
 }
 
-export default StudyViewer;
+StudyViewer.propTypes = {
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+};
+
+export default withRouter(StudyViewer);

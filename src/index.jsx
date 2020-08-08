@@ -50,7 +50,7 @@ import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import './index.css';
 import NotFound from './components/NotFound';
-import StudyViewer from './StudyViewer/StudyViewer';
+import ReduxStudyViewer from './StudyViewer/ReduxStudyViewer';
 import SingleStudyViewer from './StudyViewer/SingleStudyViewer';
 import FooterNIAID from './components/layout/FooterNIAID';
 
@@ -158,7 +158,7 @@ async function init() {
                     exact
                     path='/study-viewer'
                     component={
-                      props => <ProtectedContent component={StudyViewer} {...props} />
+                      props => <ProtectedContent public component={ReduxStudyViewer} {...props} />
                     }
                   />
                   <Route
@@ -166,6 +166,7 @@ async function init() {
                     path='/study-viewer/*'
                     component={
                       props => (<ProtectedContent
+                        public
                         component={SingleStudyViewer}
                         {...props}
                       />)
