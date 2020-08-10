@@ -42,31 +42,31 @@ const footerSocialIconLinks = [
     icon: ['fab', 'facebook-square'],
   },
   {
-    href: 'https://nih-niaidportal.dynamics365portals.us/en-US/publication-order-form/',
+    href: 'https://twitter.com/NIAIDNews',
     icon: ['fab', 'twitter-square'],
   },
   {
-    href: 'https://www.niaid.nih.gov/node/5239',
+    href: 'https://www.linkedin.com/company/2360731',
     icon: ['fab', 'linkedin'],
   },
   {
-    href: 'https://archive-it.org/organizations/1031',
+    href: 'https://www.youtube.com/user/niaid',
     icon: ['fab', 'youtube-square'],
   },
   {
-    href: 'https://www.niaid.nih.gov/Site-Map',
+    href: 'https://www.flickr.com/photos/niaid/',
     icon: ['fab', 'flickr'],
   },
   {
-    href: 'https://www.niaid.nih.gov/node/6476',
+    href: 'https://www.instagram.com/niaid/',
     icon: ['fab', 'instagram-square'],
   },
   {
-    href: 'https://www.niaid.nih.gov/global/employee-information',
+    href: 'https://www.pinterest.com/niaid/',
     icon: ['fab', 'pinterest-square'],
   },
   {
-    href: 'https://www.niaid.nih.gov/global/employee-information',
+    href: 'https://www.niaid.nih.gov/global/email-updates',
     icon: ['fas', 'envelope-square'],
   },
 ];
