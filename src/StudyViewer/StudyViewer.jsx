@@ -58,7 +58,7 @@ export const data = [
       sponsor: 'National Institute of Allergy and Infectious Diseases (NIAID)',
       study_dates: 'February 21, 2020 - May 21, 2020',
       data_available: 'Patient-level data',
-      trial_website: <a href="'https://clinicaltrials.gov/ct2/show/NCT04280705'">Visit NIH.gov</a>,
+      trial_website: <a href='https://clinicaltrials.gov/ct2/show/NCT04280705'>Visit NIH.gov</a>,
     },
     document: [
       {
