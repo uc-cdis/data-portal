@@ -9,9 +9,9 @@ import StudyCard from './StudyCard';
 
 export const data = [
   {
-    title: 'The Adaptive COVID-19 Treatment Trial (ATCC)',
+    title: 'The Adaptive COVID-19 Treatment Trial (ACTT)',
     description: 'This study is an adaptive, randomized, double-blind, placebo-controlled trial to evaluate the safety and efficacy of novel therapeutic agents in hospitalized adults diagnosed with COVID-19. The study is a multicenter trial that will be conducted in up to approximately 100 sites globally. The study will compare different investigational therapeutic agents to a control arm. There will be interim monitoring to introduce new arms and allow early stopping for futility, efficacy, or safety.',
-    url: '/ATCC',
+    url: '/ACTT',
     meta: {
       condition: 'COVID-19',
       study_design: 'Interventional (Clinical Trial), Randomized Allocation',
@@ -24,14 +24,23 @@ export const data = [
       {
         name: 'Data Dictionary',
         format: 'PDF',
+        type: 'file',
         link: '/',
         size: 763843,
       },
       {
         name: 'Protocol',
         format: 'PDF',
+        type: 'file',
         link: '/',
         size: 7638643,
+      },
+    ],
+    publication: [
+      {
+        name: 'Remdesivir for the Treatment of Covid-19 - Preliminary Report',
+        type: 'link',
+        link: 'https://pubmed.ncbi.nlm.nih.gov/32445440/',
       },
     ],
     hasAccess: false,

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Space, Typography } from 'antd';
-import { FileOutlined, FilePdfOutlined } from '@ant-design/icons';
+import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
 import { humanFileSize } from '../utils.js';
 
@@ -44,20 +44,48 @@ class SingleStudyViewer extends React.Component {
                       </div>
                     </Space>
                   </div>
-                  <div className='study-viewer__details-sidebar-box'>
-                    <Space className='study-viewer__details-sidebar-space' direction='vertical'>
-                      <div className='h3-typo'>Study Documents</div>
-                      {studyData.document.map((doc) => {
-                        const iconComponent = (doc.format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
-                        const linkText = `${doc.name} (${doc.format} - ${humanFileSize(doc.size)})`;
-                        const linkComponent = <a href={doc.link}>{linkText}</a>;
-                        return (<div key={doc.name}>
-                          {iconComponent}
-                          {linkComponent}
-                        </div>);
-                      })}
-                    </Space>
-                  </div>
+                  {(studyData.document) ?
+                    <div className='study-viewer__details-sidebar-box'>
+                      <Space className='study-viewer__details-sidebar-space' direction='vertical'>
+                        <div className='h3-typo'>Study Documents</div>
+                        {studyData.document.map((doc) => {
+                          const iconComponent = (doc.format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
+                          const linkText = `${doc.name} (${doc.format} - ${humanFileSize(doc.size)})`;
+                          const linkComponent = <a href={doc.link}>{linkText}</a>;
+                          return (<div key={doc.name}>
+                            {iconComponent}
+                            {linkComponent}
+                          </div>);
+                        })}
+                      </Space>
+                    </div>
+                    : null
+                  }
+                  {(studyData.publication) ?
+                    <div className='study-viewer__details-sidebar-box'>
+                      <Space className='study-viewer__details-sidebar-space' direction='vertical'>
+                        <div className='h3-typo'>Study Publications</div>
+                        {studyData.publication.map((pub) => {
+                          if (pub.type === 'file') {
+                            const iconComponent = (pub.format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
+                            const linkText = `${pub.name} (${pub.format} - ${humanFileSize(pub.size)})`;
+                            const linkComponent = <a href={pub.link}>{linkText}</a>;
+                            return (<div key={pub.name}>
+                              {iconComponent}
+                              {linkComponent}
+                            </div>);
+                          } else if (pub.type === 'link') {
+                            return (<div key={pub.name}>
+                              <LinkOutlined />
+                              <a key={pub.name} href={pub.link}>{pub.name}</a>
+                            </div>);
+                          }
+                          return null;
+                        })}
+                      </Space>
+                    </div>
+                    : null
+                  }
                 </Space>
               </div>
             </div>
