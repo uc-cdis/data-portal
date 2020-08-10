@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Card, Collapse } from 'antd';
-import { PlusCircleOutlined, MinusCircleOutlined, ExportOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 import ReduxStudyDetails from './ReduxStudyDetails';
 import './StudyViewer.css';
@@ -27,8 +27,7 @@ class StudyCard extends React.Component {
       return (
         <Card
           className='study-viewer__card'
-          title={this.props.data.title}
-          extra={<Link to={`/study-viewer${this.props.data.url}`}><ExportOutlined /></Link>}
+          title={<Link to={`/study-viewer${this.props.data.url}`}>{this.props.data.title}</Link>}
         >
           <Collapse
             expandIcon={({ isActive }) =>
