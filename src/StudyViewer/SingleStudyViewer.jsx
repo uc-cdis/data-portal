@@ -29,18 +29,35 @@ class SingleStudyViewer extends React.Component {
             </div>
             <div className='study-viewer__details'>
               <ReduxStudyDetails data={studyData} />
-              <div className='study-viewer__details-doc'>
-                <Space className='study-viewer__details-doc-space' direction='vertical'>
-                  <div className='h3-typo'>Study Documents</div>
-                  {studyData.document.map((doc) => {
-                    const iconComponent = (doc.format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
-                    const linkText = `${doc.name} (${doc.format} - ${humanFileSize(doc.size)})`;
-                    const linkComponent = <a href={doc.link}>{linkText}</a>;
-                    return (<div>
-                      {iconComponent}
-                      {linkComponent}
-                    </div>);
-                  })}
+              <div className='study-viewer__details-sidebar'>
+                <Space direction='vertical'>
+                  <div className='study-viewer__details-sidebar-box'>
+                    <Space className='study-viewer__details-sidebar-space' direction='vertical'>
+                      <div className='h3-typo'>Data Access Agreements</div>
+                      <div>
+                        <FilePdfOutlined />
+                        <a href=''>Data Use Agreement (DUA)</a>
+                      </div>
+                      <div>
+                        <FilePdfOutlined />
+                        <a href=''>Data Access Request (DAR)</a>
+                      </div>
+                    </Space>
+                  </div>
+                  <div className='study-viewer__details-sidebar-box'>
+                    <Space className='study-viewer__details-sidebar-space' direction='vertical'>
+                      <div className='h3-typo'>Study Documents</div>
+                      {studyData.document.map((doc) => {
+                        const iconComponent = (doc.format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
+                        const linkText = `${doc.name} (${doc.format} - ${humanFileSize(doc.size)})`;
+                        const linkComponent = <a href={doc.link}>{linkText}</a>;
+                        return (<div key={doc.name}>
+                          {iconComponent}
+                          {linkComponent}
+                        </div>);
+                      })}
+                    </Space>
+                  </div>
                 </Space>
               </div>
             </div>

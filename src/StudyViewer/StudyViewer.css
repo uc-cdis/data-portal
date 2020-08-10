@@ -30,15 +30,19 @@
   width: 100%;
 }
 
-.study-viewer__details-doc {
+.study-viewer__details-sidebar {
   width: 30%;
-  height: fit-content;
   margin-left: 10px;
-  border: 1px solid black;
-  align-self: center;
+  display: flex;
+  align-items: center;
 }
 
-.study-viewer__details-doc-space {
+.study-viewer__details-sidebar-box {
+  height: fit-content;
+  border: 1px solid black;
+}
+
+.study-viewer__details-sidebar-space {
   width: 100%;
   padding: 10px;
 }
