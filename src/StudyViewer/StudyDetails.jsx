@@ -34,11 +34,20 @@ class StudyDetails extends React.Component {
     return (
       <div className='study-details'>
         <Space className='study-viewer__space' direction='vertical'>
-          <Button
-            label={(userHasLoggedIn && this.props.data.hasAccess) ? 'Download' : 'Request Access'}
-            buttonType='primary'
-            onClick={requestAccessButtonFunc}
-          />
+          <Space>
+            {(this.props.displayLearnMoreBtn) ?
+              <Button
+                label={'Learn More'}
+                buttonType='primary'
+                onClick={() => this.props.history.push(`/study-viewer/${this.props.data.name}`)}
+              />
+              : null}
+            <Button
+              label={(userHasLoggedIn && this.props.data.hasAccess) ? 'Download' : 'Request Access'}
+              buttonType='primary'
+              onClick={requestAccessButtonFunc}
+            />
+          </Space>
           <div className='h3-typo'>Short Study Description</div>
           <Paragraph>
             {this.props.data.description}
@@ -103,6 +112,11 @@ StudyDetails.propTypes = {
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
+  displayLearnMoreBtn: PropTypes.bool,
+};
+
+StudyDetails.defaultProps = {
+  displayLearnMoreBtn: false,
 };
 
 export default withRouter(StudyDetails);
