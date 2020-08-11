@@ -16,10 +16,22 @@ import {
 import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper';
 import './ExplorerVisualization.css';
 
+function ViewContainer({ showIf, children }) {
+  return <div style={showIf ? null : { display: 'none' }}>{children}</div>;
+}
+
 class ExplorerVisualization extends React.Component {
   constructor(props) {
     super(props);
     this.connectedFilter = React.createRef();
+
+    const explorerViews = ['summary view'];
+    if (props.tableConfig.enabled) explorerViews.push('table view');
+
+    this.state = {
+      explorerView: explorerViews[0],
+      explorerViews,
+    };
   }
 
   getData = (aggsData, chartConfig, filter) => {
@@ -111,78 +123,98 @@ class ExplorerVisualization extends React.Component {
 
     return (
       <div className={this.props.className}>
-        <div className='guppy-explorer-visualization__button-group'>
-          <ReduxExplorerButtonGroup
-            buttonConfig={this.props.buttonConfig}
-            guppyConfig={this.props.guppyConfig}
-            totalCount={this.props.totalCount}
-            downloadRawData={this.props.downloadRawData}
-            downloadRawDataByFields={this.props.downloadRawDataByFields}
-            getTotalCountsByTypeAndFilter={
-              this.props.getTotalCountsByTypeAndFilter
-            }
-            downloadRawDataByTypeAndFilter={
-              this.props.downloadRawDataByTypeAndFilter
-            }
-            filter={this.props.filter}
-            history={this.props.history}
-            isLocked={isComponentLocked}
-            isPending={this.props.aggsDataIsLoading}
-          />
-        </div>
-        {chartData.countItems.length > 0 && (
-          <div className='guppy-explorer-visualization__summary-cards'>
-            <DataSummaryCardGroup
-              summaryItems={chartData.countItems}
-              connected
-            />
-          </div>
-        )}
-        {chartData.summaries.length > 0 && (
-          <div className='guppy-explorer-visualization__charts'>
-            <SummaryChartGroup
-              summaries={chartData.summaries}
-              lockMessage={lockMessage}
-              barChartColor={barChartColor}
-              useCustomizedColorMap={!!components.categorical9Colors}
-              customizedColorMap={components.categorical9Colors || []}
-            />
-          </div>
-        )}
-        {chartData.stackedBarCharts.length > 0 && (
-          <div className='guppy-explorer-visualization__charts'>
-            {chartData.stackedBarCharts.map((chart, i) => (
-              <div key={i} className='guppy-explorer-visualization__charts-row'>
-                {i > 0 && (
-                  <div className='percentage-bar-chart__row-upper-border' />
-                )}
-                {
-                  <PercentageStackedBarChart
-                    key={i}
-                    data={chart.data}
-                    title={chart.title}
-                    lockMessage={lockMessage}
-                    useCustomizedColorMap={!!components.categorical9Colors}
-                    customizedColorMap={components.categorical9Colors || []}
-                  />
-                }
-              </div>
+        <div className='guppy-explorer-visualization__top'>
+          <div className='guppy-explorer-visualization__view-group'>
+            {this.state.explorerViews.map((view) => (
+              <button
+                key={view}
+                className={this.state.explorerView === view ? 'active' : ''}
+                onClick={() => this.setState({ explorerView: view })}
+              >
+                {view}
+              </button>
             ))}
           </div>
-        )}
+          <div className='guppy-explorer-visualization__button-group'>
+            <ReduxExplorerButtonGroup
+              buttonConfig={this.props.buttonConfig}
+              guppyConfig={this.props.guppyConfig}
+              totalCount={this.props.totalCount}
+              downloadRawData={this.props.downloadRawData}
+              downloadRawDataByFields={this.props.downloadRawDataByFields}
+              getTotalCountsByTypeAndFilter={
+                this.props.getTotalCountsByTypeAndFilter
+              }
+              downloadRawDataByTypeAndFilter={
+                this.props.downloadRawDataByTypeAndFilter
+              }
+              filter={this.props.filter}
+              history={this.props.history}
+              isLocked={isComponentLocked}
+              isPending={this.props.aggsDataIsLoading}
+            />
+          </div>
+        </div>
+        <ViewContainer showIf={this.state.explorerView === 'summary view'}>
+          {chartData.countItems.length > 0 && (
+            <div className='guppy-explorer-visualization__summary-cards'>
+              <DataSummaryCardGroup
+                summaryItems={chartData.countItems}
+                connected
+              />
+            </div>
+          )}
+          {chartData.summaries.length > 0 && (
+            <div className='guppy-explorer-visualization__charts'>
+              <SummaryChartGroup
+                summaries={chartData.summaries}
+                lockMessage={lockMessage}
+                barChartColor={barChartColor}
+                useCustomizedColorMap={!!components.categorical9Colors}
+                customizedColorMap={components.categorical9Colors || []}
+              />
+            </div>
+          )}
+          {chartData.stackedBarCharts.length > 0 && (
+            <div className='guppy-explorer-visualization__charts'>
+              {chartData.stackedBarCharts.map((chart, i) => (
+                <div
+                  key={i}
+                  className='guppy-explorer-visualization__charts-row'
+                >
+                  {i > 0 && (
+                    <div className='percentage-bar-chart__row-upper-border' />
+                  )}
+                  {
+                    <PercentageStackedBarChart
+                      key={i}
+                      data={chart.data}
+                      title={chart.title}
+                      lockMessage={lockMessage}
+                      useCustomizedColorMap={!!components.categorical9Colors}
+                      customizedColorMap={components.categorical9Colors || []}
+                    />
+                  }
+                </div>
+              ))}
+            </div>
+          )}
+        </ViewContainer>
         {this.props.tableConfig.enabled && (
-          <ExplorerTable
-            className='guppy-explorer-visualization__table'
-            tableConfig={{
-              fields: tableColumns,
-              linkFields: this.props.tableConfig.linkFields || [],
-            }}
-            fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
-            rawData={this.props.rawData}
-            totalCount={this.props.totalCount}
-            guppyConfig={this.props.guppyConfig}
-            isLocked={isComponentLocked}
-          />
+          <ViewContainer showIf={this.state.explorerView === 'table view'}>
+            <ExplorerTable
+              className='guppy-explorer-visualization__table'
+              tableConfig={{
+                fields: tableColumns,
+                linkFields: this.props.tableConfig.linkFields || [],
+              }}
+              fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
+              rawData={this.props.rawData}
+              totalCount={this.props.totalCount}
+              guppyConfig={this.props.guppyConfig}
+              isLocked={isComponentLocked}
+            />
+          </ViewContainer>
         )}
       </div>
     );
