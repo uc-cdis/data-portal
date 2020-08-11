@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Space, Typography } from 'antd';
-import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
+import { FileOutlined, FilePdfOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
 import { humanFileSize } from '../utils.js';
 
 import ReduxStudyDetails from './ReduxStudyDetails';
 import './StudyViewer.css';
-import { data } from './StudyViewer.jsx';
+import { studyViewerConfig } from '../localconf';
 
 const { Title } = Typography;
 
@@ -16,8 +16,8 @@ class SingleStudyViewer extends React.Component {
   render() {
     // some hacky way to load mock data in here
     // of course this will be replaced by passing in a prop or read from redux later
-    const dataUrl = this.props.location.pathname.replace('/study-viewer', '');
-    const studyData = data.find(element => element.url === dataUrl);
+    const dataName = this.props.location.pathname.replace('/study-viewer/', '');
+    const studyData = studyViewerConfig.data.find(element => element.name === dataName);
 
     return (
       <div className='study-viewer'>
@@ -56,31 +56,6 @@ class SingleStudyViewer extends React.Component {
                             {iconComponent}
                             {linkComponent}
                           </div>);
-                        })}
-                      </Space>
-                    </div>
-                    : null
-                  }
-                  {(studyData.publication) ?
-                    <div className='study-viewer__details-sidebar-box'>
-                      <Space className='study-viewer__details-sidebar-space' direction='vertical'>
-                        <div className='h3-typo'>Study Publications</div>
-                        {studyData.publication.map((pub) => {
-                          if (pub.type === 'file') {
-                            const iconComponent = (pub.format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
-                            const linkText = `${pub.name} (${pub.format} - ${humanFileSize(pub.size)})`;
-                            const linkComponent = <a href={pub.link}>{linkText}</a>;
-                            return (<div key={pub.name}>
-                              {iconComponent}
-                              {linkComponent}
-                            </div>);
-                          } else if (pub.type === 'link') {
-                            return (<div key={pub.name}>
-                              <LinkOutlined />
-                              <a key={pub.name} href={pub.link}>{pub.name}</a>
-                            </div>);
-                          }
-                          return null;
                         })}
                       </Space>
                     </div>

@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { Card, Collapse } from 'antd';
+import { withRouter } from 'react-router-dom';
+import { Card, Collapse, Space } from 'antd';
 import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import Button from '@gen3/ui-component/dist/components/Button';
 
 import ReduxStudyDetails from './ReduxStudyDetails';
 import './StudyViewer.css';
@@ -13,7 +14,7 @@ class StudyCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      panelExpanded: false,
+      panelExpanded: props.initialPanelExpandStatus,
     };
   }
 
@@ -27,9 +28,19 @@ class StudyCard extends React.Component {
       return (
         <Card
           className='study-viewer__card'
-          title={<Link to={`/study-viewer${this.props.data.url}`}>{this.props.data.title}</Link>}
+          title={
+            <Space>
+              {this.props.data.title}
+              <Button
+                label={'Learn More'}
+                buttonType='primary'
+                onClick={() => this.props.history.push(`/study-viewer/${this.props.data.name}`)}
+              />
+            </Space>
+          }
         >
           <Collapse
+            defaultActiveKey={(this.state.panelExpanded) ? ['1'] : []}
             expandIcon={({ isActive }) =>
               ((isActive) ? <MinusCircleOutlined /> : <PlusCircleOutlined />)}
             onChange={this.onCollapseChange}
@@ -49,12 +60,14 @@ class StudyCard extends React.Component {
 
 StudyCard.propTypes = {
   data: PropTypes.shape({
+    name: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
     meta: PropTypes.object,
     hasAccess: PropTypes.bool.isRequired,
   }).isRequired,
+  history: PropTypes.object.isRequired,
+  initialPanelExpandStatus: PropTypes.bool.isRequired,
 };
 
-export default StudyCard;
+export default withRouter(StudyCard);

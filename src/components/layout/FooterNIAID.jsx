@@ -1,40 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Divider, Space, Row, Col } from 'antd';
+import { Space, Row, Col } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './FooterNIAID.css';
-
-const footerNavLinks = [
-  {
-    href: 'https://www.niaid.nih.gov/global/contact-us',
-    text: 'CONTACT US',
-  },
-  {
-    href: 'https://nih-niaidportal.dynamics365portals.us/en-US/publication-order-form/',
-    text: 'PUBLICATIONS',
-  },
-  {
-    href: 'https://www.niaid.nih.gov/node/5239',
-    text: 'HELP',
-  },
-  {
-    href: 'https://archive-it.org/organizations/1031',
-    text: 'ARCHIVE',
-  },
-  {
-    href: 'https://www.niaid.nih.gov/Site-Map',
-    text: 'SITE MAP',
-  },
-  {
-    href: 'https://www.niaid.nih.gov/node/6476',
-    text: 'INFORMACIÓN EN ESPAÑOL',
-  },
-  {
-    href: 'https://www.niaid.nih.gov/global/employee-information',
-    text: 'EMPLOYEE INFORMATION',
-  },
-];
 
 const footerSocialIconLinks = [
   {
@@ -105,17 +74,6 @@ class FooterNIAID extends Component {
   render() {
     return (
       <footer className='footer-container'>
-        <nav className='footer__nav'>
-          <Space>
-            {footerNavLinks.map((item, i) =>
-              ((i === footerNavLinks.length - 1) ? <a key={`nav_link_${i}`} href={item.href}>{item.text}</a> :
-                <div key={`nav_link_${i}`}>
-                  <a href={item.href}>{item.text}</a>
-                  <Divider type='vertical' />
-                </div>))}
-          </Space>
-        </nav>
-        <Divider className='footer__divider' />
         <div className='footer__bottom-area'>
           <Row gutter={8}>
             <Col className='gutter-row' span={6}>
