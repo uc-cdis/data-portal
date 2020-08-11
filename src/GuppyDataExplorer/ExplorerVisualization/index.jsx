@@ -26,6 +26,8 @@ class ExplorerVisualization extends React.Component {
     this.connectedFilter = React.createRef();
 
     const explorerViews = ['summary view'];
+    if (props.tableConfig.enabled) explorerViews.push('table view');
+
     this.state = {
       explorerView: explorerViews[0],
       explorerViews,
@@ -197,7 +199,9 @@ class ExplorerVisualization extends React.Component {
               ))}
             </div>
           )}
-          {this.props.tableConfig.enabled && (
+        </ViewContainer>
+        {this.props.tableConfig.enabled && (
+          <ViewContainer showIf={this.state.explorerView === 'table view'}>
             <ExplorerTable
               className='guppy-explorer-visualization__table'
               tableConfig={{
@@ -210,8 +214,8 @@ class ExplorerVisualization extends React.Component {
               guppyConfig={this.props.guppyConfig}
               isLocked={isComponentLocked}
             />
-          )}
-        </ViewContainer>
+          </ViewContainer>
+        )}
       </div>
     );
   }
