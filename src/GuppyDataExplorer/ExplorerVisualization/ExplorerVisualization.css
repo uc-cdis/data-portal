@@ -27,8 +27,8 @@
   border: none;
   color: var(--g3-color__base-blue);
   font-weight: bold;
-  margin-left: 20px;
-  margin-right: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
   text-transform: capitalize;
   width: auto;
 }
