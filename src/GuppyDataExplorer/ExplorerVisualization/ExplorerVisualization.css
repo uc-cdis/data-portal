@@ -17,6 +17,27 @@
   display: none;
 }
 
+.guppy-explorer-visualization__top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.guppy-explorer-visualization__view-group > button {
+  background-color: transparent;
+  border: none;
+  color: var(--g3-color__base-blue);
+  font-weight: bold;
+  margin-left: 20px;
+  margin-right: 20px;
+  text-transform: capitalize;
+  width: auto;
+}
+
+.guppy-explorer-visualization__view-group > button.active,
+.guppy-explorer-visualization__view-group > button:hover {
+  color: var(--g3-color__highlight-orange);
+}
+
 /* Overrides */
 .recharts-tooltip-wrapper {
   z-index: 1000;
