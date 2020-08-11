@@ -6,7 +6,7 @@ import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntrodu
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
-import { breakpoints, customHomepageChartConfig, indexPublic } from '../localconf';
+import { breakpoints, customHomepageChartConfig, indexPublic, homepageChartNodes } from '../localconf';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
 import './page.less';
 
@@ -34,9 +34,9 @@ class IndexPageComponent extends React.Component {
   }
 
   render() {
-    let customCharts = null;
+    let homepageCharts = [];
     if (customHomepageChartConfig) {
-      customCharts = customHomepageChartConfig.map((conf, i) => {
+      homepageCharts = customHomepageChartConfig.map((conf, i) => {
         switch (conf.chartType) {
         case 'horizontalGroupedBar':
           return (
@@ -69,6 +69,13 @@ class IndexPageComponent extends React.Component {
         }
       });
     }
+
+    if (indexPublic && homepageChartNodes.length > 0) {
+      homepageCharts.push(<div className='index-page__slider-chart'><ReduxIndexBarChart /></div>);
+    } else if (!indexPublic) {
+      homepageCharts.push(<div className='index-page__slider-chart'><ReduxIndexBarChart /></div>);
+    }
+
     return (
       <div className='index-page'>
         <div className='index-page__top'>
@@ -81,8 +88,7 @@ class IndexPageComponent extends React.Component {
           <div className='index-page__bar-chart'>
             <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
               <Carousel>
-                {customCharts}
-                <div className='index-page__slider-chart'><ReduxIndexBarChart /></div>
+                {homepageCharts}
               </Carousel>
             </MediaQuery>
           </div>
