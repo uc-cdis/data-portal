@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import _ from 'lodash';
 import { Space, Typography, Descriptions, message } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
@@ -59,40 +60,38 @@ class StudyDetails extends React.Component {
               column={1}
             >
               {(Object.entries(this.props.data.meta).map(([k, v]) => {
-                if (k === 'website') {
-                  return (
-                    <Descriptions.Item key={k} label={capitalizeFirstLetter(k)}>
-                      <a href={v.link}>{(v.text) ? v.text : v.link}</a>
-                    </Descriptions.Item>);
-                }
-                if (k === 'study_publications') {
-                  return (
-                    <Descriptions.Item key={k} label={capitalizeFirstLetter(k)}>
-                      {v.map((pub) => {
-                        if (pub.type === 'file') {
-                          const iconComponent = (pub.format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
-                          const linkText = `${pub.name} (${pub.format} - ${humanFileSize(pub.size)})`;
-                          const linkComponent = <a href={pub.link}>{linkText}</a>;
-                          return (<div key={pub.name}>
-                            {iconComponent}
-                            {linkComponent}
-                          </div>);
-                        } else if (pub.type === 'link') {
-                          return (<div key={pub.name}>
-                            <LinkOutlined />
-                            <a key={pub.name} href={pub.link}>{pub.name}</a>
-                          </div>);
-                        }
-                        return null;
-                      })}
-                    </Descriptions.Item>);
+                let value = [];
+                if (_.isArray(v)) {
+                  value = v;
+                } else {
+                  value.push(v);
                 }
                 return (
                   <Descriptions.Item key={k} label={capitalizeFirstLetter(k)}>
-                    {v}
+                    {value.map((item) => {
+                      if (_.isString(item)) {
+                        return item;
+                      }
+                      if (item.link) {
+                        let iconComponent = <LinkOutlined />;
+                        let linkComponent = (<a href={item.link}>
+                          {(item.name) ? item.name : item.link}
+                        </a>);
+                        if (item.type && item.type === 'file') {
+                          iconComponent = (item.format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
+                          const linkText = `${item.name} (${item.format} - ${humanFileSize(item.size)})`;
+                          linkComponent = <a href={item.link}>{linkText}</a>;
+                        }
+                        return (<div key={item.name}>
+                          {iconComponent}
+                          {linkComponent}
+                        </div>);
+                      }
+                      console.warn('Unknown object found in meta data: ', item);
+                      return null;
+                    })}
                   </Descriptions.Item>);
-              },
-              ))}
+              }))}
             </Descriptions>
             : null}
         </Space>
