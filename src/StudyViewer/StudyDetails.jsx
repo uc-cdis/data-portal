@@ -47,6 +47,8 @@ class StudyDetails extends React.Component {
               label={(userHasLoggedIn && this.props.data.hasAccess) ? 'Download' : 'Request Access'}
               buttonType='primary'
               onClick={requestAccessButtonFunc}
+              tooltipEnabled={!userHasLoggedIn}
+              tooltipText={'Note that you will be prompted to log in'}
             />
           </Space>
           <div className='h3-typo'>Short Study Description</div>
