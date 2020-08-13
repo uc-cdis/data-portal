@@ -52,7 +52,7 @@ class StudyDetails extends React.Component {
             />
           </Space>
           <Alert
-            message='Please note that researchers are required to log in before submitting a request for access, and you will be prompted to log in if you haven&apos;t already'
+            message='Please note that researchers are required to log in upon clicking the Request Access button and you will be prompted to login if you have not already done so.'
             type='info'
             showIcon
           />

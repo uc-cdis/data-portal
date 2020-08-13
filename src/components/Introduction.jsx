@@ -26,11 +26,6 @@ class Introduction extends Component {
               buttonType='primary'
               onClick={() => this.props.history.push('/study-viewer')}
             />
-            <Button
-              label={'Login'}
-              buttonType='primary'
-              onClick={() => this.props.history.push('/login')}
-            />
           </Space>
         </div>
       </div>
