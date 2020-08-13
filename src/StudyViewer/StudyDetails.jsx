@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
-import { Space, Typography, Descriptions, message } from 'antd';
+import { Space, Typography, Descriptions, message, Divider, Alert } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
@@ -51,6 +51,12 @@ class StudyDetails extends React.Component {
               tooltipText={'Note that you will be prompted to log in'}
             />
           </Space>
+          <Alert
+            message='Please note that researchers are required to log in before submitting a request for access, and you will be prompted to log in if you haven&apos;t already'
+            type='info'
+            showIcon
+          />
+          <Divider />
           <div className='h3-typo'>Short Study Description</div>
           <Paragraph>
             {this.props.data.description}
