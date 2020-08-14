@@ -147,8 +147,10 @@ fi
 
 # generate a parameters.json file by overlaying $APP.json on default.json
 npm run params
-# run a sanity check to make sure portal config works
-npm run sanity-check
+if [[ "$GEN3_BUNDLE" != "workspace" ]]; then
+  # run a sanity check to make sure portal config works
+  npm run sanity-check
+fi
 
 # try to keep the arranger components in line
 #export STORYBOOK_ARRANGER_API=localhost:3000
