@@ -1,0 +1,40 @@
+.explorer-survival-analysis {
+  background-color: var(--g3-color__white);
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  padding: 12px;
+}
+
+.explorer-survival-analysis__column-left {
+  display: flex;
+  min-width: 33%;
+}
+
+.explorer-survival-analysis__column-right {
+  display: flex;
+  flex-direction: column;
+  min-width: 50%;
+}
+
+.explorer-survival-analysis__control-form {
+  border: 1px solid lightgray;
+  margin: 12px;
+  min-height: 300px;
+  text-align: center;
+  width: 100%;
+}
+
+.explorer-survival-analysis__survival-plot {
+  border: 1px solid lightgray;
+  margin: 12px;
+  min-height: 300px;
+  text-align: center;
+}
+
+.explorer-survival-analysis__risk-table {
+  border: 1px solid lightgray;
+  margin: 12px;
+  min-height: 150px;
+  text-align: center;
+}
