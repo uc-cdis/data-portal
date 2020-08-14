@@ -59,7 +59,7 @@ at build time:
 
 We can use the https://remote/dev.html trick to test a local workspace build by setting the `GEN3_BUNDLE` variable to `workspace`:
 ```
-HOSTNAME=qa.planx-pla.net DEV_BUNDLE=workspace bash ./runWebpack.sh
+HOSTNAME=qa.planx-pla.net GEN3_BUNDLE=workspace bash ./runWebpack.sh
 ```
 
 That just changes the webpack config to serve the workspace bundle as `bundle.js` - which is what `dev.html` expects.
