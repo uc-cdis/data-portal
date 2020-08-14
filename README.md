@@ -27,6 +27,12 @@ HOSTNAME=qa.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 HOSTNAME=qa-brain.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 ```
 
+You can also use the `autoprod` value for `NODE_ENV` to do the `auto` setup, then run `webpack` in production mode, so it generates `.js` and `.html` files instead of launching the dev server - ex:
+```
+HOSTNAME=qa-brain.planx-pla.net NODE_ENV=autoprod GEN3_BUNDLE=all bash ./runWebpack.sh
+```
+
+
 >**NOTE:** To locally test Tiered Access features, you must include the additional environment variables `TIER_ACCESS_LEVEL` and `TIER_ACCESS_LIMIT`, with should have the same values as the server's "global.tier_access_level" and "global.tier_access_limit" properties in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest).
 >
 > **Example**:`HOSTNAME=qa-brain.planx-pla.net TIER_ACCESS_LEVEL=regular TIER_ACCESS_LIMIT=50 NODE_ENV=auto bash ./runWebpack.sh`
