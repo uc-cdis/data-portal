@@ -128,7 +128,7 @@ async function init() {
                       path='*'
                       render={
                         () => (
-                          <Redirect to="/workspace" />
+                          <Redirect to='/workspace' />
                         )
                       }
                     />
