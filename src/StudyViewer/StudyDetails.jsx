@@ -17,7 +17,7 @@ const onDownload = () => {
 };
 
 const onRequestAccess = () => {
-  message.info('Access requested', 3);
+  window.open('https://niaiddevportal.dynamics365portals.us/data-use-request?request_id=123');
 };
 
 class StudyDetails extends React.Component {
