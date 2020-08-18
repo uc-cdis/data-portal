@@ -19,9 +19,6 @@ class EnumInput extends Component {
     onUpdateFormSchema: () => {},
     propertyType: null,
   };
-  state = {
-    chosenEnum: '',
-  };
 
   componentWillMount() {
     if (this.props.onUpdateFormSchema !== undefined) {
@@ -32,9 +29,6 @@ class EnumInput extends Component {
     const options = this.props.options.map(option => ({ label: option, value: option }));
 
     const onChangeEnumWrapper = (newValue) => {
-      this.setState({
-        chosenEnum: newValue,
-      });
       this.props.onChange(this.props.name, newValue);
     };
     return (
