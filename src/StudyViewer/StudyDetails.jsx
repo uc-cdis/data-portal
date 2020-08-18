@@ -57,7 +57,7 @@ class StudyDetails extends React.Component {
             showIcon
           />
           <Divider />
-          <div className='h3-typo'>Short Study Description</div>
+          <div className='h3-typo'>Brief Study Description</div>
           <Paragraph>
             {this.props.data.description}
           </Paragraph>
