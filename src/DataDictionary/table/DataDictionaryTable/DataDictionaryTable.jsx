@@ -14,12 +14,17 @@ import DataDictionaryCategory from '../DataDictionaryCategory/.';
  */
 /* eslint-disable no-param-reassign */
 export function category2NodeList(dictionary) {
+  /* helpers for the helper */
+  const idFilter = id => id.charAt(0) !== '_' && id === dictionary[id].id;
+
+  const categoryFilter = node => node.category && node.id && node.category.toLowerCase() !== 'internal';
+
   const res = Object.keys(dictionary).filter(
-    id => id.charAt(0) !== '_' && id === dictionary[id].id,
+    id => idFilter(id),
   ).map(
     id => dictionary[id],
   ).filter(
-    node => node.category && node.id,
+    node => categoryFilter(node),
   )
     .reduce(
       (lookup, node) => {
