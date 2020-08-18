@@ -7,7 +7,6 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import 'react-select/dist/react-select.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
@@ -28,7 +27,7 @@ import GA, { RouteTracker } from './components/GoogleAnalytics';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
-import './index.less';
+import './index.css';
 
 
 // monitor user's session
@@ -56,91 +55,89 @@ async function init() {
     <div>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <MuiThemeProvider>
-            <BrowserRouter basename={basename}>
-              <div>
-                {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
-                {isEnabled('noIndex') ?
-                  <Helmet>
-                    <meta name='robots' content='noindex,nofollow' />
-                  </Helmet>
-                  : null
-                }
-                <ReduxTopBar />
-                <ReduxNavBar />
-                <div className='main-content'>
-                  <Switch>
-                    {/* process with trailing and duplicate slashes first */}
-                    {/* see https://github.com/ReactTraining/react-router/issues/4841#issuecomment-523625186 */}
-                    {/* Removes trailing slashes */}
-                    <Route
-                      path='/:url*(/+)'
-                      exact
-                      strict
-                      render={({ location }) => (
-                        <Redirect to={location.pathname.replace(/\/+$/, '')} />
-                      )}
-                    />
-                    {/* Removes duplicate slashes in the middle of the URL */}
-                    <Route
-                      path='/:url(.*//+.*)'
-                      exact
-                      strict
-                      render={({ match }) => (
-                        <Redirect to={`/${match.params.url.replace(/\/\/+/, '/')}`} />
-                      )}
-                    />
-                    <Route
-                      exact
-                      path='/login'
-                      component={
-                        (
-                          props => (
-                            <ProtectedContent
-                              public
-                              filter={() => store.dispatch(fetchLogin())}
-                              component={ReduxLogin}
-                              {...props}
-                            />
-                          )
+          <BrowserRouter basename={basename}>
+            <div>
+              {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+              {isEnabled('noIndex') ?
+                <Helmet>
+                  <meta name='robots' content='noindex,nofollow' />
+                </Helmet>
+                : null
+              }
+              <ReduxTopBar />
+              <ReduxNavBar />
+              <div className='main-content'>
+                <Switch>
+                  {/* process with trailing and duplicate slashes first */}
+                  {/* see https://github.com/ReactTraining/react-router/issues/4841#issuecomment-523625186 */}
+                  {/* Removes trailing slashes */}
+                  <Route
+                    path='/:url*(/+)'
+                    exact
+                    strict
+                    render={({ location }) => (
+                      <Redirect to={location.pathname.replace(/\/+$/, '')} />
+                    )}
+                  />
+                  {/* Removes duplicate slashes in the middle of the URL */}
+                  <Route
+                    path='/:url(.*//+.*)'
+                    exact
+                    strict
+                    render={({ match }) => (
+                      <Redirect to={`/${match.params.url.replace(/\/\/+/, '/')}`} />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path='/login'
+                    component={
+                      (
+                        props => (
+                          <ProtectedContent
+                            public
+                            filter={() => store.dispatch(fetchLogin())}
+                            component={ReduxLogin}
+                            {...props}
+                          />
                         )
-                      }
-                    />
-                    <Route
-                      exact
-                      path='/identity'
-                      component={
-                        props => (<ProtectedContent
-                          filter={() => store.dispatch(fetchAccess())}
-                          component={UserProfile}
-                          {...props}
-                        />)
-                      }
-                    />
-                    <Route
-                      exact
-                      path='/workspace'
-                      component={
-                        props => <ProtectedContent component={Workspace} {...props} />
-                      }
-                    />
-                    <Route
-                      path='*'
-                      render={
-                        () => (
-                          <Redirect to='/workspace' />
-                        )
-                      }
-                    />
-                  </Switch>
-                </div>
-                <ReduxFooter
-                  logos={components.footerLogos}
-                  privacyPolicy={components.privacyPolicy}
-                />
+                      )
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/identity'
+                    component={
+                      props => (<ProtectedContent
+                        filter={() => store.dispatch(fetchAccess())}
+                        component={UserProfile}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/workspace'
+                    component={
+                      props => <ProtectedContent component={Workspace} {...props} />
+                    }
+                  />
+                  <Route
+                    path='*'
+                    render={
+                      () => (
+                        <Redirect to='/workspace' />
+                      )
+                    }
+                  />
+                </Switch>
               </div>
-            </BrowserRouter>
-          </MuiThemeProvider>
+              <ReduxFooter
+                logos={components.footerLogos}
+                privacyPolicy={components.privacyPolicy}
+              />
+            </div>
+          </BrowserRouter>
         </ThemeProvider>
       </Provider>
     </div>,
