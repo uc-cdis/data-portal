@@ -24,8 +24,8 @@ const AnyOfInput = ({
 
   return (
     <div>
-      <Text className='any-of-input__name'>{name}:</Text>
       {required && <span className='any-of-input__required-notification'> {'*'} </span>}
+      <Text className='any-of-input__name'>{name}:</Text>
       <div className='any-of-input__sub-props'>
         <Space direction='vertical' style={{ width: '100%' }}>
           {properties.map((property) => {
