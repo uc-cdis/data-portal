@@ -12,7 +12,6 @@ test('Project tables renders', () => {
   }];
   const summaryCounts = [5, 20, 30, 200];
 
-  // Material-UI components require the Mui theme ...
   const table = mount(
     <StaticRouter location={{ pathname: '/identity' }} context={{}}>
       <ProjectTable projectList={projectList} summaryCounts={summaryCounts} />
