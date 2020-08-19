@@ -13,6 +13,8 @@ import { manifestServiceApiPath, guppyGraphQLUrl, terraExportWarning } from '../
 import './ExplorerButtonGroup.css';
 import Popup from '../../components/Popup';
 
+const enableFilePFBExport = true;
+
 class ExplorerButtonGroup extends React.Component {
   constructor(props) {
     super(props);
@@ -33,6 +35,8 @@ class ExplorerButtonGroup extends React.Component {
       pfbStartText: 'Your export is in progress.',
       pfbWarning: 'Please do not navigate away from this page until your export is finished.',
       pfbSuccessText: 'Your cohort has been exported to PFB! The URL is displayed below.',
+      // for export to PFB in Files tab
+      sourceNodesInCohort: [],
       // for export to workspace
       exportingToWorkspace: false,
       exportWorkspaceFileName: null,
@@ -70,9 +74,17 @@ class ExplorerButtonGroup extends React.Component {
           }
         });
     }
-    if (nextProps.totalCount !== this.props.totalCount
-      && nextProps.totalCount) {
-      this.refreshManifestEntryCount();
+    // FIXME @mpingram we do not need to run this unless in the Data tab
+    // Disabling for development
+    // if (nextProps.totalCount !== this.props.totalCount
+    //   && nextProps.totalCount) {
+    //   this.refreshManifestEntryCount();
+    // }
+    // NOTE (mpingram) if PFB export is enabled in the Files tab, we need to
+    // only allow the user to export a PFB when
+    // nextProps.filter is an object my dude
+    if (enableFilePFBExport && nextProps.filter !== this.props.filter) {
+      this.refreshSourceNodes(nextProps.filter);
     }
   }
 
@@ -238,6 +250,7 @@ class ExplorerButtonGroup extends React.Component {
     </Toaster>
   ));
 
+
   getFileCountSum = async () => {
     try {
       const dataType = this.props.guppyConfig.dataType;
@@ -352,7 +365,84 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   exportToPFB = () => {
-    this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
+    if (enableFilePFBExport) {
+      // FIXME @mpingram how can we get the root_node for this filter....
+      // This is rough but it could be something like this.props.getRootNodes(this.props.filter)
+      // Or is there a way to access the raw data?
+      // In which case getRootNodes(this.props.rawData)
+      // And if it returns more than one root node, then disable the explorer button,
+      // otherwise use that root node as the input to the export-files
+      // NOTE @mpingram -- potential issue here -- if we grey out the button based on root node,
+      // then if someone DOES manage to stick a file where it doesn't belong
+      // then no one can export a file of that type at all. Hemm.\
+      //
+      // Ok, realistically what we might want is this behavior:
+      // - I've selected a cohort of all file types on multiple random nodes. Export button is greyed out.
+      // - I've selected a cohort of CRAM files, one of which happens to be on reference_file, but all others are on
+      //    submitted_aligned_reads where they belong. I want to be able to export my normal CRAM files and be warned
+      //    that there's this rogue CRAM file that I'll need to export separately.
+      //    - in other words, if cohort is on 2 nodes and one of them is reference_file? But then a selection of
+      //    msVCFs and CRAM files is ok ... facepalm
+      //    - ok, if cohort is all of the same data type, is on 2 nodes, and one of the nodes is reference_file, then
+      //    warn the user but allow export.
+      // - I've seleced a cohort of CRAM files and they're all on submitted_aligned_reads. Everything is good.
+      // - We could also have a configurable mapping of data types to root nodes. Now that's an awful idea that could work...
+      //    except now there's no way to export a CRAM file that happens to be on reference_file.
+      //
+      // ===========================================
+      // That's a good 'patch job  solution though.
+      //   - Disable button if multiple data types are selected.
+      //   - Have a configurable mapping from data types to a single root node.
+      //   - Dispatch the 'export-file' job with the root node from the mapping.
+      // UPSIDE: No ETL changes required to deploy
+      // DOWNSIDE: If someone does manage to upload a file to the wrong node (eg CRAM file to reference_file), it's
+      // no longer possible to export that file.
+      // DOWNSIDE: Requires us to maintain the mapping from data types to root nodes.
+      // This is something that could easily break without us noticing...
+      // -- ooh, if we do a slight modification to this but ETL the root node and restrict export button to only
+      // single root node, no warnings, then... it's possible to download the files on reference_file now if you
+      // exclude them from the search... hm hm hm ok again we would need to say "if your cohort has one data type and
+      // two root_nodes and one of the root_nodes is 'reference_file' then use just the other root_node"
+      // If pelican can't find an entity ID on the root node what happens? Does it fail silently? I think it does.ß
+      // ===========================================
+      //
+      // If a file is on one or more root_nodes, we just can't do it. It's not friggin possible.
+      // The user needs to export files from each root_node at a time. BUT, if someone does
+      // stick a CRAM on reference_file in a stduy, then we CAN'T actually export ALL cram files
+      // from that study
+      // OK ANOTHER OPTION has just opened up -- we can in fact include a source node filter and
+      // rewrite the values, eg 'reference_file', to make more sense, eg 'miscellaneous'.
+      // Does this help us? Well, yes because now at least if someone sticks a CRAM file on reference_node
+      // it will show up under 'miscellaneous' in the filters.
+      // The downside is that this involves essentially removing the 'Data Type' filter from the
+      // filters and replacing it with a similar but slightly different filter -- will this confuse anyone?
+      // Yes, it absolutely will -- now there's no way to select msVCFs vs Unharmonized Clinical data that's on
+      // reference file, that's like removing half the functionality of the file filters.
+      // Ok,
+      // so we might need both filters? But ugh, that's gross, having a second data type filter essentially that's
+      // just there so that the user can export files ............. uhhhhhhhhhhhhhhhhggghhghghhgghghghghhghghhhhg
+      if (!this.state.sourceNodesInCohort || this.state.sourceNodesInCohort.length !== 1) {
+        console.error(`User tried to export a File PFB, but there are ${this.state.sourceNodesInCohort.length} data types in the cohort! (Expected 1 data type)`);
+        return;
+      }
+      const rootNode = this.state.sourceNodesInCohort[0];
+      console.log('submitting job w/ payload:', {
+        action: 'export-files',
+        input: {
+          filter: getGQLFilter(this.props.filter),
+          root_node: rootNode,
+        },
+      });
+      this.props.submitJob({
+        action: 'export-files',
+        input: {
+          filter: getGQLFilter(this.props.filter),
+          root_node: rootNode,
+        },
+      });
+    } else {
+      this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
+    }
     this.props.checkJobStatus();
     this.setState({
       toasterOpen: true,
@@ -431,12 +521,14 @@ class ExplorerButtonGroup extends React.Component {
       && this.props.buttonConfig.buttons.some(
         btnCfg => this.isFileButton(btnCfg) && btnCfg.enabled)) {
       if (this.props.guppyConfig.fileCountField) {
+        console.log('file count field is set');
         // if "fileCountField" is set, just ask for sum of file_count field
         const totalFileCount = await this.getFileCountSum();
         this.setState(() => ({
           manifestEntryCount: totalFileCount,
         }));
       } else {
+        console.log('file count field is not set. GuppyConfig:', this.props.guppyConfig);
         // otherwise, just query subject index for subject_id list,
         // and query file index for manifest info.
         this.setState({
@@ -462,6 +554,48 @@ class ExplorerButtonGroup extends React.Component {
     }
   };
 
+  refreshSourceNodes = async (filter) => {
+    try {
+      const SOURCE_NODE_FIELD = 'source_node';
+      const indexType = this.props.guppyConfig.dataType;
+      const sourceNodeField = SOURCE_NODE_FIELD;
+      const query = `query ($filter: JSON) {
+        _aggregation {
+          ${indexType} (filter: $filter) {
+            ${sourceNodeField} {
+              histogram {
+                key
+                count
+              }
+            }
+          }
+        }
+      }`;
+      const body = { query, variables: { filter: getGQLFilter(filter) } };
+      const res = await fetchWithCreds({
+        path: guppyGraphQLUrl,
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      // eslint-disable-next-line no-underscore-dangle
+      const sourceNodesHistogram = res.data.data._aggregation[indexType][sourceNodeField].histogram;
+      // console.log('dataTypesResponse', res);
+      // console.log('dataTypesHistogram', dataTypesHistogram);
+      const sourceNodes = [];
+      sourceNodesHistogram.forEach(({ key, count }) => {
+        if (count > 0) {
+          sourceNodes.push(key);
+        }
+      });
+      console.log('sourceNodes', sourceNodes);
+      this.setState({
+        sourceNodesInCohort: sourceNodes,
+      });
+    } catch (err) {
+      throw Error(`Error when getting data types: ${err}`);
+    }
+  };
+
   // check if the user has access to this resource
   isButtonDisplayed = (buttonConfig) => {
     if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
@@ -476,6 +610,21 @@ class ExplorerButtonGroup extends React.Component {
     if (this.props.isLocked) {
       return !this.props.isLocked;
     }
+    // Disable PFB export buttons if user is trying to export files that are on different nodes
+    // in the graph.
+    // NOTE @mpingram this is a hack put in place due to the pelican-export job only supporting
+    // creating PFBs where all entities are on the same node. If the pelican-export job is changed
+    // to support creating PFBs where entities can be from multiple nodes, this code should be removed.
+    // -------
+    if (enableFilePFBExport) {
+      if (buttonConfig.type === 'export'
+      || buttonConfig.type === 'export-to-pfb'
+      || buttonConfig.type === 'export-to-seven-bridges') {
+        // enable the button only if the cohort is all of the same data type
+        return this.state.sourceNodesInCohort.length === 1;
+      }
+    }
+    // -------
     if (buttonConfig.type === 'manifest') {
       return this.state.manifestEntryCount > 0;
     }
@@ -692,11 +841,22 @@ ExplorerButtonGroup.propTypes = {
   fetchJobResult: PropTypes.func.isRequired,
   isLocked: PropTypes.bool.isRequired,
   userAccess: PropTypes.object.isRequired,
+  dataTypeToRootNodeMapping: PropTypes.objectOf(PropTypes.string),
 };
 
 ExplorerButtonGroup.defaultProps = {
   job: null,
   isPending: false,
+  // FIXME DEVELOPMENT ONLY
+  dataTypeToRootNodeMapping: {
+    'Aligned Reads': 'submitted_aligned_reads',
+    'Simple Germline Variation': 'simple_germline_variation',
+    'Unharmonized Clinical Data': 'reference_file',
+    'Variant Calls': 'reference_file',
+    'Other': 'reference_file',
+    'Script': 'reference_file',
+  }
+  // END FIXME
 };
 
 export default ExplorerButtonGroup;
