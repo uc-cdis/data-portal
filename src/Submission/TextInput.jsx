@@ -29,6 +29,7 @@ class TextInput extends Component {
     return (
       <div>
         <Form.Item
+          className='text-input__form-item'
           id={this.props.id}
           label={this.props.name}
           name={this.props.name}
