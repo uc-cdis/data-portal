@@ -409,23 +409,6 @@ async function init() {
                     }
                   />
                   <Route
-                    path='/not-found'
-                    component={NotFound}
-                  />
-                  <Route
-                    exact
-                    path='/:project'
-                    component={
-                      props =>
-                        (
-                          <ProtectedContent
-                            component={ProjectSubmission}
-                            {...props}
-                          />
-                        )
-                    }
-                  />
-                  <Route
                     path='*'
                     component={NotFound}
                   />
