@@ -59,6 +59,7 @@ class OneOfInput extends Component {
     } else if (this.props.property[0].type === 'string' && this.props.property[1].type === 'null') {
       return (
         <TextInput
+          id={this.props.name}
           name={this.props.name}
           value={this.props.value}
           required={this.props.required}
@@ -94,6 +95,7 @@ class OneOfInput extends Component {
         </label>
         {this.state.selectedOption === 'Number' &&
         <TextInput
+          id={this.props.name}
           name={this.props.name}
           value={this.props.value}
           description={this.props.description}

@@ -108,7 +108,7 @@ SubmissionResult.propTypes = {
   status: PropTypes.number.isRequired,
   data: PropTypes.array.isRequired,
   dataString: PropTypes.string.isRequired,
-  entityCounts: PropTypes.object.isRequired,
+  entityCounts: PropTypes.array.isRequired,
   counter: PropTypes.number.isRequired,
   total: PropTypes.number.isRequired,
   onFinish: PropTypes.func.isRequired,

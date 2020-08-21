@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Space } from 'antd';
 import SubmitTSV from './SubmitTSV';
 import DataModelGraph from '../DataModelGraph/DataModelGraph';
 import SubmitForm from './SubmitForm';
@@ -85,8 +86,10 @@ class ProjectSubmission extends React.Component {
       ) {
         return (
           <React.Fragment>
-            <MySubmitForm />
-            <MySubmitTSV project={project} />
+            <Space direction='vertical' style={{ width: '100%' }}>
+              <MySubmitForm />
+              <MySubmitTSV project={project} />
+            </Space>
           </React.Fragment>
         );
       }

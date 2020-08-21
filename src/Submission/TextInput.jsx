@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Form, Input } from 'antd';
 import './TextInput.less';
 
 class TextInput extends Component {
   static propTypes = {
+    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     value: PropTypes.string,
     required: PropTypes.bool.isRequired,
@@ -26,18 +28,20 @@ class TextInput extends Component {
   render() {
     return (
       <div>
-        <label className='text-input__label' htmlFor={this.props.name}> {this.props.name}: </label>
-        {this.props.description !== '' && <span className='text-input__input-description'>{this.props.description}</span>}
-        <br />
-        <input
-          className='text-input__input'
-          type='text'
+        <Form.Item
+          className='text-input__form-item'
+          id={this.props.id}
+          label={this.props.name}
           name={this.props.name}
-          value={this.props.value || ''}
-          required={this.props.required}
-          onChange={this.props.onChange}
-        />
-        {this.props.required && <span className='text-input__required-notification'> {'*'} </span>}
+          help={(this.props.description !== '') ? this.props.description : undefined}
+          rules={[
+            {
+              required: this.props.required,
+            },
+          ]}
+        >
+          <Input onChange={this.props.onChange} name={this.props.name} value={this.props.value || ''} />
+        </Form.Item>
       </div>
     );
   }

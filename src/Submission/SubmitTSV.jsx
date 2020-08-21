@@ -107,7 +107,7 @@ const SubmitTSV = ({ project, submission, onUploadClick,
             status={submission.submit_status}
             data={submission.submit_result}
             dataString={submission.submit_result_string}
-            entityCounts={('submit_entity_counts' in submission) ? submission.submit_entity_counts : {}}
+            entityCounts={('submit_entity_counts' in submission) ? submission.submit_entity_counts : []}
             counter={submission.submit_counter}
             total={submission.submit_total}
             onFinish={onFinishSubmitEvent}
@@ -128,7 +128,7 @@ SubmitTSV.propTypes = {
     submit_status: PropTypes.number,
     submit_counter: PropTypes.number,
     submit_total: PropTypes.number,
-    submit_entity_counts: PropTypes.number,
+    submit_entity_counts: PropTypes.array,
     nodeTypes: PropTypes.array,
     dictionary: PropTypes.object,
   }),
