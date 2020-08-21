@@ -47,6 +47,8 @@ import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
+import StudyViewer from './StudyViewer/StudyViewer';
+import SingleStudyViewer from './StudyViewer/SingleStudyViewer';
 import './index.less';
 import NotFound from './components/NotFound';
 
@@ -359,6 +361,24 @@ async function init() {
                     />
                     : null
                   }
+                  <Route
+                    exact
+                    path='/study-viewer'
+                    component={
+                      props => <ProtectedContent public component={StudyViewer} {...props} />
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/study-viewer/*'
+                    component={
+                      props => (<ProtectedContent
+                        public
+                        component={SingleStudyViewer}
+                        {...props}
+                      />)
+                    }
+                  />
                   <Route
                     path='/not-found'
                     component={NotFound}

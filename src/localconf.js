@@ -99,6 +99,25 @@ function buildConfig(opts) {
     indexPublic = false;
   }
 
+  const studyViewerConfig = {
+    openMode: 'open-all',
+    defaultOpenStudyName: '',
+    data: [],
+  };
+  if (config.studyViewerConfig) {
+    const validOpenOptions = ['open-first', 'open-all', 'close-all'];
+    if (config.studyViewerConfig.openMode
+      && validOpenOptions.includes(config.studyViewerConfig.openMode)) {
+      studyViewerConfig.openMode = config.studyViewerConfig.openMode;
+    }
+    if (config.studyViewerConfig.defaultOpenStudyName) {
+      studyViewerConfig.defaultOpenStudyName = config.studyViewerConfig.defaultOpenStudyName;
+    }
+    if (config.studyViewerConfig.data) {
+      studyViewerConfig.data = config.studyViewerConfig.data;
+    }
+  }
+
   let useGuppyForExplorer = false;
 
   let explorerConfig = [];
@@ -348,6 +367,7 @@ function buildConfig(opts) {
     explorerConfig,
     useNewExplorerConfigFormat,
     dataAvailabilityToolConfig,
+    studyViewerConfig,
   };
 }
 
