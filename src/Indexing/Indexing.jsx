@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { userapiPath, fenceDownloadPath, jobapiPath, hostname } from '../localconf';
-import { fetchWithCreds, fetchWithCredsAndTimeout } from '../actions';
+import { fetchWithCreds } from '../actions';
 import './Indexing.less';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
@@ -74,34 +74,43 @@ class Indexing extends React.Component {
           urlToIndexedFile: response.data.url,
           indexingFilesPopupMessage: 'Uploading index file to s3...',
         });
-      } else {
-        thisPointer.setState({
-          indexingFilesStatus: 'error',
-          indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
-          indexingFilesPopupMessage: `There was a problem creating a placeholder record an indexd (${response.status})`,
-          indexFilesButtonEnabled: false,
-        });
+        return response;
       }
+      thisPointer.setState({
+        indexingFilesStatus: 'error',
+        indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
+        indexingFilesPopupMessage: `There was a problem creating a placeholder record in Indexd via Fence (${response.status}).`,
+        indexFilesButtonEnabled: false,
+      });
+      return null;
     });
   };
 
   indexFiles = async () => {
+    const thisPointer = this;
     this.setState({
       indexFilesButtonEnabled: false,
       showIndexFilesPopup: true,
       indexingFilesPopupMessage: 'Preparing indexd...',
     });
-    this.createBlankIndexdRecord().then(() => this.putIndexFileToSignedURL());
+    this.createBlankIndexdRecord().then((response) => {
+      if (response) {
+        thisPointer.putIndexFileToSignedURL();
+      } else {
+        // eslint-disable-next-line no-console
+        console.error('Aborting indexing due to error response from /data/upload.');
+      }
+    });
   };
 
   putIndexFileToSignedURL = () => {
     const thisPointer = this;
-    return fetchWithCredsAndTimeout({
+    return fetchWithCreds({
       path: thisPointer.state.urlToIndexedFile,
       method: 'PUT',
       customHeaders: { 'Content-Type': 'application/json' },
       body: thisPointer.state.uploadedFile,
-    }, 700000).then(() => {
+    }).then(() => {
       thisPointer.setState({
         indexingFilesPopupMessage: 'Preparing indexing job...',
       });
