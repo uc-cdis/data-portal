@@ -4,6 +4,7 @@
   "description": "Gen3 Data Portal",
   "main": "index.js",
   "dependencies": {
+    "@ant-design/icons": "^4.2.2",
     "@arranger/components": "^0.4.15",
     "@babel/core": "^7.8.3",
     "@babel/polyfill": "^7.8.3",
@@ -14,6 +15,7 @@
     "@gen3/ui-component": "^0.5.4",
     "@storybook/addon-actions": "^5.0.0",
     "@storybook/react": "^5.0.0",
+    "antd": "^4.5.4",
     "brace": "^0.10.0",
     "clipboard-plus": "^1.0.0",
     "css-loader": "^3.4.2",
@@ -37,7 +39,6 @@
     "less": "^3.11.1",
     "less-loader": "^4.1.0",
     "lodash": "^4.17.11",
-    "material-ui": "^0.19.2",
     "moment": "^2.22.2",
     "node-fetch": "^1.7.3",
     "npm": "^6.14.7",
