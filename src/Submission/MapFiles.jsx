@@ -5,7 +5,7 @@ import moment from 'moment';
 import pLimit from 'p-limit';
 import _ from 'lodash';
 import { AutoSizer, Column, Table } from 'react-virtualized';
-import { Toggle } from 'material-ui';
+import { Switch } from 'antd';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
@@ -275,15 +275,17 @@ class MapFiles extends React.Component {
       />,
     ];
     // add a toggle before buttons
-    buttons.unshift(<Toggle
-      className='map-files__toggle'
-      label='Deletion Mode'
-      labelStyle={{
-        width: '',
-        fontWeight: '600',
-      }}
-      onToggle={this.onFeatureToggle}
-    />);
+    buttons.unshift(
+      <div className='map-files__mode-switch'>
+        Deletion Mode
+        <Switch
+          className='map-files__switch'
+          checkedChildren='on'
+          unCheckedChildren='off'
+          onChange={this.onFeatureToggle}
+        />
+      </div>,
+    );
 
     const { sortedDates, filesByDate } = this.state;
 
