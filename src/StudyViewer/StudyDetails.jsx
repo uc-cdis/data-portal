@@ -21,7 +21,6 @@ const onDownload = () => {
 class StudyDetails extends React.Component {
   onRequestAccess = () => {
     const body = {
-      username: 'TODO remove',
       resource_path: '/programs/TODO',
       resource_name: this.props.data.name,
     };
