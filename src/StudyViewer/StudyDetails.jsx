@@ -5,7 +5,9 @@ import _ from 'lodash';
 import { Space, Typography, Descriptions, message, Divider, Alert } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
+import { requestorPath } from '../localconf';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
+import { fetchWithCreds } from '../actions';
 import './StudyViewer.css';
 
 const { Paragraph } = Typography;
@@ -16,11 +18,27 @@ const onDownload = () => {
     .then(() => message.success('Download has finished', 3));
 };
 
-const onRequestAccess = () => {
-  window.open('https://niaiddevportal.dynamics365portals.us/data-use-request?request_id=123');
-};
-
 class StudyDetails extends React.Component {
+  onRequestAccess = () => {
+    const body = {
+      username: 'TODO remove',
+      resource_path: '/programs/TODO',
+      resource_name: this.props.data.name,
+    };
+    fetchWithCreds({
+      path: `${requestorPath}request`,
+      method: 'POST',
+      body: JSON.stringify(body),
+    }).then(
+      ({ data }) => {
+        if (data && data.redirect_url) {
+          // if a redirect is configured, Requestor returns a redirect URL
+          window.open(data.redirect_url);
+        }
+      },
+    );
+  };
+
   render() {
     const onNotLoggedInRequestAccess = () => this.props.history.push('/login', { from: this.props.location.pathname });
     const userHasLoggedIn = !!this.props.user.username;
@@ -29,7 +47,7 @@ class StudyDetails extends React.Component {
     if (!userHasLoggedIn) {
       requestAccessButtonFunc = onNotLoggedInRequestAccess;
     } else if (!this.props.data.hasAccess) {
-      requestAccessButtonFunc = onRequestAccess;
+      requestAccessButtonFunc = this.onRequestAccess;
     }
 
     return (
@@ -95,7 +113,7 @@ class StudyDetails extends React.Component {
                           {linkComponent}
                         </div>);
                       }
-                      console.warn('Unknown object found in meta data: ', item);
+                      console.warn('Unknown object found in meta data: ', item); // eslint-disable-line no-console
                       return null;
                     })}
                   </Descriptions.Item>);
