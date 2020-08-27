@@ -19,6 +19,7 @@ function buildConfig(opts) {
     wtsURL: process.env.WTS_URL,
     workspaceURL: process.env.WORKSPACE_URL,
     manifestServiceURL: process.env.MANIFEST_SERVICE_URL,
+    requestorURL: process.env.REQUESTOR_URL,
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
@@ -44,6 +45,7 @@ function buildConfig(opts) {
     wtsURL,
     workspaceURL,
     manifestServiceURL,
+    requestorURL,
     gaDebug,
     tierAccessLevel,
     tierAccessLimit,
@@ -92,6 +94,7 @@ function buildConfig(opts) {
   const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
   const guppyDownloadUrl = `${guppyUrl}/download`;
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
+  const requestorPath = typeof requestorURL === 'undefined' ? `${hostname}requestor/` : ensureTrailingSlash(requestorURL);
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -99,22 +102,17 @@ function buildConfig(opts) {
     indexPublic = false;
   }
 
-  const studyViewerConfig = {
+  let studyViewerConfig = {
     openMode: 'open-all',
     defaultOpenStudyName: '',
-    data: [],
+    dataType: undefined,
   };
   if (config.studyViewerConfig) {
+    studyViewerConfig = { ...studyViewerConfig, ...config.studyViewerConfig };
     const validOpenOptions = ['open-first', 'open-all', 'close-all'];
     if (config.studyViewerConfig.openMode
-      && validOpenOptions.includes(config.studyViewerConfig.openMode)) {
-      studyViewerConfig.openMode = config.studyViewerConfig.openMode;
-    }
-    if (config.studyViewerConfig.defaultOpenStudyName) {
-      studyViewerConfig.defaultOpenStudyName = config.studyViewerConfig.defaultOpenStudyName;
-    }
-    if (config.studyViewerConfig.data) {
-      studyViewerConfig.data = config.studyViewerConfig.data;
+      && !validOpenOptions.includes(config.studyViewerConfig.openMode)) {
+      studyViewerConfig.openMode = 'open-all';
     }
   }
 
@@ -367,6 +365,7 @@ function buildConfig(opts) {
     explorerConfig,
     useNewExplorerConfigFormat,
     dataAvailabilityToolConfig,
+    requestorPath,
     studyViewerConfig,
   };
 }

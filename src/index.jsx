@@ -47,8 +47,7 @@ import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
-import StudyViewer from './StudyViewer/StudyViewer';
-import SingleStudyViewer from './StudyViewer/SingleStudyViewer';
+import { ReduxStudyViewer, ReduxSingleStudyViewer, fetchDataset } from './StudyViewer/reduxer';
 import './index.less';
 import NotFound from './components/NotFound';
 
@@ -365,7 +364,14 @@ async function init() {
                     exact
                     path='/study-viewer'
                     component={
-                      props => <ProtectedContent public component={StudyViewer} {...props} />
+                      props => (<ProtectedContent
+                        public
+                        filter={() =>
+                          store.dispatch(fetchDataset())
+                        }
+                        component={ReduxStudyViewer}
+                        {...props}
+                      />)
                     }
                   />
                   <Route
@@ -374,7 +380,10 @@ async function init() {
                     component={
                       props => (<ProtectedContent
                         public
-                        component={SingleStudyViewer}
+                        filter={() =>
+                          store.dispatch(fetchDataset(props.match.params[0]))
+                        }
+                        component={ReduxSingleStudyViewer}
                         {...props}
                       />)
                     }

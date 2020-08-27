@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Card, Collapse } from 'antd';
 import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
-import ReduxStudyDetails from './ReduxStudyDetails';
+import { ReduxStudyDetails } from './reduxer';
 import './StudyViewer.css';
 
 const { Panel } = Collapse;
@@ -26,7 +26,7 @@ class StudyCard extends React.Component {
       return (
         <Card
           className='study-viewer__card'
-          title={this.props.data.title}
+          title={(this.props.data.briefTitle) ? `${this.props.data.title} (${this.props.data.briefTitle})` : this.props.data.title}
         >
           <Collapse
             defaultActiveKey={(this.state.panelExpanded) ? ['1'] : []}
@@ -49,11 +49,10 @@ class StudyCard extends React.Component {
 
 StudyCard.propTypes = {
   data: PropTypes.shape({
-    name: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    meta: PropTypes.object,
-    hasAccess: PropTypes.bool.isRequired,
+    briefTitle: PropTypes.string,
+    blockData: PropTypes.object,
+    tableData: PropTypes.object,
   }).isRequired,
   initialPanelExpandStatus: PropTypes.bool.isRequired,
 };

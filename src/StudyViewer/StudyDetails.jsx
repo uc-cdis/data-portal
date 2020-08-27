@@ -6,6 +6,7 @@ import { Space, Typography, Descriptions, message, Divider, Alert } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
+import { studyViewerConfig } from '../localconf';
 import './StudyViewer.css';
 
 const { Paragraph } = Typography;
@@ -20,6 +21,17 @@ const onRequestAccess = () => {
   window.open('https://niaiddevportal.dynamics365portals.us/data-use-request?request_id=123');
 };
 
+const getLabel = (label) => {
+  if (!studyViewerConfig.fieldMapping || studyViewerConfig.fieldMapping.length === 0) {
+    return capitalizeFirstLetter(label);
+  }
+  const fieldMappingEntry = studyViewerConfig.fieldMapping.find(i => i.field === label);
+  if (fieldMappingEntry) {
+    return fieldMappingEntry.name;
+  }
+  return capitalizeFirstLetter(label);
+};
+
 class StudyDetails extends React.Component {
   render() {
     const onNotLoggedInRequestAccess = () => this.props.history.push('/login', { from: this.props.location.pathname });
@@ -28,9 +40,10 @@ class StudyDetails extends React.Component {
     let requestAccessButtonFunc = onDownload;
     if (!userHasLoggedIn) {
       requestAccessButtonFunc = onNotLoggedInRequestAccess;
-    } else if (!this.props.data.hasAccess) {
-      requestAccessButtonFunc = onRequestAccess;
     }
+    // else if (!this.props.data.hasAccess) {
+    //   requestAccessButtonFunc = onRequestAccess;
+    // }
 
     return (
       <div className='study-details'>
@@ -40,11 +53,13 @@ class StudyDetails extends React.Component {
               <Button
                 label={'Learn More'}
                 buttonType='primary'
-                onClick={() => this.props.history.push(`/study-viewer/${this.props.data.name}`)}
+                onClick={() => this.props.history.push(`/study-viewer/${this.props.data.title}`)}
               />
               : null}
             <Button
-              label={(userHasLoggedIn && this.props.data.hasAccess) ? 'Download' : 'Request Access'}
+              label={(userHasLoggedIn
+              // && this.props.data.hasAccess
+              ) ? 'Download' : 'Request Access'}
               buttonType='primary'
               onClick={requestAccessButtonFunc}
               tooltipEnabled={!userHasLoggedIn}
@@ -57,17 +72,23 @@ class StudyDetails extends React.Component {
             showIcon
           />
           <Divider />
-          <div className='h3-typo'>Brief Study Description</div>
-          <Paragraph>
-            {this.props.data.description}
-          </Paragraph>
-          {(this.props.data.meta) ?
+          {(this.props.data.blockData) ?
+            <div>
+              {(Object.entries(this.props.data.blockData).map(([k, v]) => (
+                <div key={k}>
+                  <div className='h3-typo'>{getLabel(k)}</div>
+                  <Paragraph>
+                    {v}
+                  </Paragraph>
+                </div>)))}
+            </div> : null }
+          {(this.props.data.tableData) ?
             <Descriptions
               className='study-details__descriptions'
               bordered
               column={1}
             >
-              {(Object.entries(this.props.data.meta).map(([k, v]) => {
+              {(Object.entries(this.props.data.tableData).map(([k, v]) => {
                 let value = [];
                 if (_.isArray(v)) {
                   value = v;
@@ -75,7 +96,7 @@ class StudyDetails extends React.Component {
                   value.push(v);
                 }
                 return (
-                  <Descriptions.Item key={k} label={capitalizeFirstLetter(k)}>
+                  <Descriptions.Item key={k} label={getLabel(k)}>
                     {value.map((item) => {
                       if (_.isString(item)) {
                         return item;
@@ -110,11 +131,10 @@ class StudyDetails extends React.Component {
 
 StudyDetails.propTypes = {
   data: PropTypes.shape({
-    name: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    meta: PropTypes.object,
-    hasAccess: PropTypes.bool.isRequired,
+    briefTitle: PropTypes.string,
+    blockData: PropTypes.object,
+    tableData: PropTypes.object,
   }).isRequired,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
