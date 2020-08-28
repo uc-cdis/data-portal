@@ -105,6 +105,7 @@ function buildConfig(opts) {
   let studyViewerConfig = {
     openMode: 'open-all',
     defaultOpenStudyName: '',
+    accessibleValidationField: undefined,
     dataType: undefined,
   };
   if (config.studyViewerConfig) {

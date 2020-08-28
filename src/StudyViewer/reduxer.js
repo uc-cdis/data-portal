@@ -23,6 +23,10 @@ const processDataset = (data, itemConfig, fileConfig) => {
         processedItem.fileData.fileFields = _.pick(dataElement, fileConfig.fileFields);
       }
     }
+    if (studyViewerConfig.accessibleValidationField) {
+      // eslint-disable-next-line max-len
+      processedItem.accessibleValidationValue = dataElement[studyViewerConfig.accessibleValidationField];
+    }
     processedDataset.push(processedItem);
   });
   return processedDataset;
@@ -43,6 +47,9 @@ export const fetchDataset = (titleOfDataset) => {
 
   let fieldsToFetch = [];
   fieldsToFetch.push(itemConfig.officialTitleField);
+  if (studyViewerConfig.accessibleValidationField) {
+    fieldsToFetch.push(studyViewerConfig.accessibleValidationField);
+  }
   if (itemConfig.briefTitleField) {
     fieldsToFetch.push(itemConfig.briefTitleField);
   }
@@ -59,6 +66,7 @@ export const fetchDataset = (titleOfDataset) => {
       fileConfig.fileFields = studyViewerConfig.fileFields;
     }
   }
+  fieldsToFetch = _.uniq(fieldsToFetch);
 
   const query = `query ($filter: JSON) {
         ${studyViewerConfig.dataType} (filter: $filter, first: 10000, accessibility: accessible) {
@@ -114,6 +122,8 @@ export const fetchDataset = (titleOfDataset) => {
 export const ReduxStudyDetails = (() => {
   const mapStateToProps = state => ({
     user: state.user,
+    userAuthMapping: state.userAuthMapping,
+    projectAvail: state.submission.projectAvail,
   });
 
   return connect(mapStateToProps)(StudyDetails);

@@ -67,7 +67,6 @@ export const userHasMethodOnProject = (method, projectID, userAuthMapping = {}) 
   return actions !== undefined && actions.some(x => x.method === method);
 };
 
-
 export const userHasMethodOnAnyProject = (method, userAuthMapping = {}) => {
   // method should be a string e.g. 'create'
   const actionHasMethod = x => (x.method === method);
@@ -76,3 +75,5 @@ export const userHasMethodOnAnyProject = (method, userAuthMapping = {}) => {
   const hasMethod = actionArrays.some(x => x.some(actionHasMethod));
   return hasMethod;
 };
+
+export const projectIsOpenData = (projectAvail, projectID) => (projectID in projectAvail && projectAvail[projectID] === 'Open');
