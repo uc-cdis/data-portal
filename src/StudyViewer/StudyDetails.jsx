@@ -7,7 +7,8 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
 import { userHasMethodOnProject, projectIsOpenData } from '../authMappingUtils';
-import { studyViewerConfig, useArboristUI } from '../localconf';
+import { studyViewerConfig, useArboristUI, requestorPath } from '../localconf';
+import { fetchWithCreds } from '../actions';
 import './StudyViewer.css';
 
 const { Paragraph } = Typography;
@@ -16,10 +17,6 @@ const onDownload = () => {
   message
     .loading('Downloading in progress..', 3)
     .then(() => message.success('Download has finished', 3));
-};
-
-const onRequestAccess = () => {
-  window.open('https://niaiddevportal.dynamics365portals.us/data-use-request?request_id=123');
 };
 
 const getLabel = (label) => {
@@ -34,6 +31,29 @@ const getLabel = (label) => {
 };
 
 class StudyDetails extends React.Component {
+   onRequestAccess = (projectId) => {
+     const body = {
+       username: this.props.user.username,
+       resource_path: '/programs/TODO', // FIXME: fill this
+       resource_name: projectId,
+     };
+     fetchWithCreds({
+       path: `${requestorPath}request`,
+       method: 'POST',
+       body: JSON.stringify(body),
+     }).then(
+       ({ data }) => {
+         if (data && data.redirect_url) {
+           // if a redirect is configured, Requestor returns a redirect URL
+           window.open(data.redirect_url);
+         } else {
+           message
+             .error('Something went wrong when talking to Requestor service', 3);
+         }
+       },
+     );
+   };
+
    isDataAccessible = (projectId) => {
      if (!useArboristUI) {
        return true;
@@ -42,8 +62,8 @@ class StudyDetails extends React.Component {
        return false;
      }
      return (userHasMethodOnProject('read-storage', projectId, this.props.userAuthMapping)
-    || userHasMethodOnProject('read', projectId, this.props.userAuthMapping)
-    || projectIsOpenData(this.props.projectAvail, projectId));
+   || userHasMethodOnProject('read', projectId, this.props.userAuthMapping)
+   || projectIsOpenData(this.props.projectAvail, projectId));
    };
 
    render() {
@@ -54,7 +74,7 @@ class StudyDetails extends React.Component {
      if (!userHasLoggedIn) {
        requestAccessButtonFunc = onNotLoggedInRequestAccess;
      } else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-       requestAccessButtonFunc = onRequestAccess;
+       requestAccessButtonFunc = this.onRequestAccess(this.props.data.accessibleValidationValue);
      }
 
      return (
@@ -70,7 +90,7 @@ class StudyDetails extends React.Component {
                : null}
              <Button
                label={(userHasLoggedIn
-               // && this.props.data.hasAccess
+               && this.isDataAccessible(this.props.data.accessibleValidationValue)
                ) ? 'Download' : 'Request Access'}
                buttonType='primary'
                onClick={requestAccessButtonFunc}
@@ -153,12 +173,13 @@ StudyDetails.propTypes = {
   location: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   displayLearnMoreBtn: PropTypes.bool,
-  projectAvail: PropTypes.object.isRequired,
+  projectAvail: PropTypes.object,
   userAuthMapping: PropTypes.object.isRequired,
 };
 
 StudyDetails.defaultProps = {
   displayLearnMoreBtn: false,
+  projectAvail: {},
 };
 
 export default withRouter(StudyDetails);
