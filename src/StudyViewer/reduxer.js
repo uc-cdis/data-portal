@@ -10,9 +10,9 @@ const processDataset = (data, itemConfig, fileConfig) => {
   const processedDataset = [];
   data.forEach((dataElement) => {
     const processedItem = {};
-    processedItem.title = dataElement[itemConfig.officialTitleField];
-    if (itemConfig.briefTitleField) {
-      processedItem.briefTitle = dataElement[itemConfig.briefTitleField];
+    processedItem.title = dataElement[studyViewerConfig.titleField];
+    if (studyViewerConfig.briefTitleField) {
+      processedItem.briefTitle = dataElement[studyViewerConfig.briefTitleField];
     }
     processedItem.blockData = _.pick(dataElement, itemConfig.blockFields);
     processedItem.tableData = _.pick(dataElement, itemConfig.tableFields);
@@ -46,12 +46,12 @@ export const fetchDataset = (titleOfDataset) => {
   }
 
   let fieldsToFetch = [];
-  fieldsToFetch.push(itemConfig.officialTitleField);
+  fieldsToFetch.push(studyViewerConfig.titleField);
   if (studyViewerConfig.accessibleValidationField) {
     fieldsToFetch.push(studyViewerConfig.accessibleValidationField);
   }
-  if (itemConfig.briefTitleField) {
-    fieldsToFetch.push(itemConfig.briefTitleField);
+  if (studyViewerConfig.briefTitleField) {
+    fieldsToFetch.push(studyViewerConfig.briefTitleField);
   }
   fieldsToFetch = [...fieldsToFetch,
     ...itemConfig.blockFields,
@@ -81,7 +81,7 @@ export const fetchDataset = (titleOfDataset) => {
   if (titleOfDataset) {
     variables.filter.AND.push({
       in: {
-        [itemConfig.officialTitleField]: [titleOfDataset],
+        [studyViewerConfig.titleField]: [titleOfDataset],
       },
     });
   }
