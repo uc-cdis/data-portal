@@ -53,8 +53,7 @@ class StudyDetails extends React.Component {
      let requestAccessButtonFunc = onDownload;
      if (!userHasLoggedIn) {
        requestAccessButtonFunc = onNotLoggedInRequestAccess;
-     }
-     if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
+     } else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
        requestAccessButtonFunc = onRequestAccess;
      }
 
