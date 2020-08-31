@@ -637,7 +637,24 @@ class ExplorerButtonGroup extends React.Component {
     } else if (buttonConfig.type === 'manifest' && this.state.manifestEntryCount > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
-    const btnTooltipText = (this.props.isLocked) ? 'You only have access to summary data' : buttonConfig.tooltipText;
+
+    let tooltipEnabled = false;
+    let btnTooltipText = '';
+
+    // if limited file PFB export is enabled, PFB export buttons will be disabled
+    // if the user selects multiple files of different types. If this happens,
+    // display a tooltip explaining that the user can only export files of the same type.
+    const isPFBButton = buttonConfig.type === 'export' || buttonConfig.type === 'export-to-pfb' || buttonConfig.type === 'export-to-seven-bridges';
+    const multipleSourceNodesSelected = this.state.sourceNodesInCohort.length > 1;
+    if (isPFBButton
+      && this.props.buttonConfig.enableLimitedFilePFBExport
+      && multipleSourceNodesSelected) {
+      tooltipEnabled = true;
+      btnTooltipText = `Currently, you can only export data files of the same type. You have selected ${this.state.sourceNodesInCohort.length} different types of data files.`;
+    } else {
+      tooltipEnabled = buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false;
+      btnTooltipText = (this.props.isLocked) ? 'You only have access to summary data' : buttonConfig.tooltipText;
+    }
 
     return (
       <Button
@@ -649,7 +666,7 @@ class ExplorerButtonGroup extends React.Component {
         className='explorer-button-group__download-button'
         buttonType='primary'
         enabled={this.isButtonEnabled(buttonConfig)}
-        tooltipEnabled={buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false}
+        tooltipEnabled={tooltipEnabled}
         tooltipText={btnTooltipText}
         isPending={this.isButtonPending(buttonConfig)}
       />
