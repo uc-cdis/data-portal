@@ -50,21 +50,28 @@ const Plot = ({ data, timeInterval }) => (
   </ResponsiveContainer>
 );
 
-const SurvivalPlot = ({ data, timeInterval }) => (
+const SurvivalPlot = ({ data, stratificationVariable, timeInterval }) => (
   <div className='explorer-survival-analysis__survival-plot'>
-    {Array.isArray(data) ? (
-      data.length === 0 ? (
-        <div className='explorer-survival-analysis__figure-placeholder'>
-          Survival plot here
-        </div>
-      ) : (
-        <Plot data={data} timeInterval={timeInterval} />
-      )
+    {data.length === 0 ? (
+      <div className='explorer-survival-analysis__figure-placeholder'>
+        Survival plot here
+      </div>
+    ) : stratificationVariable === '' ? (
+      <Plot data={data} timeInterval={timeInterval} />
     ) : (
-      Object.keys(data).map((key) => (
+      Object.entries(
+        data.reduce((acc, { name, data }) => {
+          const [factorKey, stratificationKey] = name.split(',');
+          const stratificationValue = acc.hasOwnProperty(stratificationKey)
+            ? [...acc[stratificationKey], { name: factorKey, data }]
+            : [{ name: factorKey, data }];
+
+          return { ...acc, [stratificationKey]: stratificationValue };
+        }, {})
+      ).map(([key, data]) => (
         <Fragment key={key}>
           <div className='explorer-survival-analysis__figure-title'>{key}</div>
-          <Plot data={data[key]} timeInterval={timeInterval} />
+          <Plot data={data} timeInterval={timeInterval} />
         </Fragment>
       ))
     )}
@@ -72,7 +79,7 @@ const SurvivalPlot = ({ data, timeInterval }) => (
 );
 
 SurvivalPlot.propTypes = {
-  data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+  data: PropTypes.array.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
