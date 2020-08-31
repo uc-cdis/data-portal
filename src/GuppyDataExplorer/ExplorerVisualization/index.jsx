@@ -6,6 +6,7 @@ import { components } from '../../params';
 import { tierAccessLevel } from '../../localconf';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerTable from '../ExplorerTable';
+import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import {
   TableConfigType,
@@ -27,6 +28,7 @@ class ExplorerVisualization extends React.Component {
 
     const explorerViews = ['summary view'];
     if (props.tableConfig.enabled) explorerViews.push('table view');
+    if (true) explorerViews.push('survival analysis');
 
     this.state = {
       explorerView: explorerViews[0],
@@ -213,6 +215,16 @@ class ExplorerVisualization extends React.Component {
               totalCount={this.props.totalCount}
               guppyConfig={this.props.guppyConfig}
               isLocked={isComponentLocked}
+            />
+          </ViewContainer>
+        )}
+        {this.state.explorerViews.includes('survival analysis') && (
+          <ViewContainer
+            showIf={this.state.explorerView === 'survival analysis'}
+          >
+            <ExplorerSurvivalAnalysis
+              aggsData={this.props.aggsData}
+              filter={this.props.filter}
             />
           </ViewContainer>
         )}
