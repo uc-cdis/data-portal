@@ -72,7 +72,7 @@ const SurvivalPlot = ({ data, timeInterval }) => (
 );
 
 SurvivalPlot.propTypes = {
-  data: PropTypes.oneOfType(PropTypes.array, PropTypes.object).isRequired,
+  data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
