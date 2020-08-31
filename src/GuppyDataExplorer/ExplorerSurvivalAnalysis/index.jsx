@@ -27,6 +27,10 @@ function ExplorerSurvivalAnalysis({ aggsData, filters }) {
 
   return (
     <div className='explorer-survival-analysis'>
+      <div className='explorer-survival-analysis__warning'>
+        WARNING: This component is currently using mocked survival result and
+        does not fully implement the intended functionality.
+      </div>
       <div className='explorer-survival-analysis__column-left'>
         <ControlForm
           factors={mockFactors}

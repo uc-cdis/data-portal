@@ -95,6 +95,9 @@ const ControlForm = ({ factors, onSubmit, timeInterval }) => {
         onChange={(e) => setLocalTimeInterval(Number.parseInt(e.target.value))}
         value={localTimeInterval}
       />
+      <div className='explorer-survival-analysis__warning'>
+        WARNING: The inputs below are disabled while using mocked result.
+      </div>
       <ControlFormInput
         disabled
         label='Start time (year)'

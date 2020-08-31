@@ -7,6 +7,14 @@
   padding: 12px;
 }
 
+.explorer-survival-analysis__warning {
+  color: #e74c3c;
+  font-style: italic;
+  padding: 0.5rem 0;
+  text-align: center;
+  width: 100%;
+}
+
 .explorer-survival-analysis__column-left {
   display: flex;
   min-width: 40%;
