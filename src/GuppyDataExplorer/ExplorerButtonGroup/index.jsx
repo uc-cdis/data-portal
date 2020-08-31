@@ -13,10 +13,6 @@ import { manifestServiceApiPath, guppyGraphQLUrl, terraExportWarning } from '../
 import './ExplorerButtonGroup.css';
 import Popup from '../../components/Popup';
 
-// FIXME @mpingram figure out best way to configure these variables in portal
-const enableFilePFBExport = true;
-const SOURCE_NODE_FIELD = 'source_node';
-
 class ExplorerButtonGroup extends React.Component {
   constructor(props) {
     super(props);
@@ -85,8 +81,13 @@ class ExplorerButtonGroup extends React.Component {
     // NOTE (mpingram) if PFB export is enabled in the Files tab, we need to
     // only allow the user to export a PFB when
     // nextProps.filter is an object my dude
-    if (enableFilePFBExport && nextProps.filter !== this.props.filter) {
-      this.refreshSourceNodes(nextProps.filter);
+    if (this.props.buttonConfig.enableLimitedFilePFBExport
+      && nextProps.filter !== this.props.filter) {
+      const sourceNodeField = this.props.buttonConfig.enableLimitedFilePFBExport.sourceNodeField;
+      if (!sourceNodeField) {
+        throw new Error('Limited File PFB Export is enabled, but \'sourceNodeField\' has not been specified. Check the portal config.');
+      }
+      this.refreshSourceNodes(nextProps.filter, sourceNodeField);
     }
   }
 
@@ -367,7 +368,7 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   exportToPFB = () => {
-    if (enableFilePFBExport) {
+    if (this.props.buttonConfig.enableLimitedFilePFBExport) {
       if (!this.state.sourceNodesInCohort || this.state.sourceNodesInCohort.length !== 1) {
         return;
       }
@@ -493,10 +494,9 @@ class ExplorerButtonGroup extends React.Component {
     }
   };
 
-  refreshSourceNodes = async (filter) => {
+  refreshSourceNodes = async (filter, sourceNodeField) => {
     try {
       const indexType = this.props.guppyConfig.dataType;
-      const sourceNodeField = SOURCE_NODE_FIELD;
       const query = `query ($filter: JSON) {
         _aggregation {
           ${indexType} (filter: $filter) {
@@ -551,7 +551,7 @@ class ExplorerButtonGroup extends React.Component {
     // creating PFBs where all entities are on the same node. If the pelican-export job is changed
     // to support creating PFBs where entities can be from multiple nodes, this code should be removed.
     // -------
-    if (enableFilePFBExport) {
+    if (this.props.buttonConfig.enableLimitedFilePFBExport) {
       if (buttonConfig.type === 'export'
       || buttonConfig.type === 'export-to-pfb'
       || buttonConfig.type === 'export-to-seven-bridges') {
