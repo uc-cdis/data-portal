@@ -22,7 +22,8 @@ class StudyDetails extends React.Component {
   onRequestAccess = () => {
     const body = {
       resource_path: '/programs/TODO',
-      resource_name: this.props.data.name,
+      resource_id: this.props.data.name,  // TODO replace by rowAccessor
+      resource_display_name: this.props.data.title,
     };
     fetchWithCreds({
       path: `${requestorPath}request`,
