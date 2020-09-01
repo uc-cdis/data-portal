@@ -6,6 +6,9 @@ const analysis = (state = {}, action) => {
     const job = { ...action.data, resultURL: action.resultURL };
     return { ...state, job };
   }
+  case 'JOB_FETCH_ERROR': {
+    return { ...state, jobFetchError: action.error };
+  }
   case 'JOB_STATUS_INTERVAL':
     return { ...state, jobStatusInterval: action.value };
   case 'RESET_JOB':

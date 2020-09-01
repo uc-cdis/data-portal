@@ -44,6 +44,13 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.job && nextProps.job.errorMsg) {
+      this.setState({
+        toasterOpen: true,
+        toasterHeadline: this.state.toasterErrorText,
+        toasterError: nextProps.job.errorMsg,
+      });
+    }
     if (nextProps.job && nextProps.job.status === 'Completed' && this.props.job.status !== 'Completed') {
       this.fetchJobResult()
         .then((res) => {
