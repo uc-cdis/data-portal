@@ -43,7 +43,7 @@ class SingleStudyViewer extends React.Component {
             <Title level={4}>{dataset.title}</Title>
           </div>
           <div className='study-viewer__details'>
-            <ReduxStudyDetails data={dataset} />
+            <ReduxStudyDetails data={dataset} fileData={this.props.fileData} />
             <div className='study-viewer__details-sidebar'>
               <Space direction='vertical' style={{ width: '100%' }}>
                 <div className='study-viewer__details-sidebar-box'>
@@ -88,12 +88,14 @@ class SingleStudyViewer extends React.Component {
 SingleStudyViewer.propTypes = {
   dataset: PropTypes.array,
   docData: PropTypes.array,
+  fileData: PropTypes.array,
   match: PropTypes.object.isRequired,
 };
 
 SingleStudyViewer.defaultProps = {
   dataset: [],
   docData: [],
+  fileData: [],
 };
 
 export default withRouter(SingleStudyViewer);

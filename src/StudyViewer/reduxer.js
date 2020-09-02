@@ -8,7 +8,7 @@ import { fetchWithCreds } from '../actions';
 
 export const fetchFiles = (typeOfFileIndex, rowAccessorValue) => {
   let nameOfIndex;
-  const fieldsToFetch = ['file_name', 'file_size', 'data_format', 'data_type'];
+  const fieldsToFetch = ['file_name', 'file_size', 'data_format', 'data_type', studyViewerConfig.rowAccessor];
   switch (typeOfFileIndex) {
   case 'object':
     nameOfIndex = studyViewerConfig.fileDataType;
@@ -31,15 +31,16 @@ export const fetchFiles = (typeOfFileIndex, rowAccessorValue) => {
   }`;
   const variables = {
     filter: {
-      AND: [
-        {
-          in: {
-            [studyViewerConfig.rowAccessor]: [rowAccessorValue],
-          },
-        },
-      ],
+      AND: [],
     },
   };
+  if (rowAccessorValue) {
+    variables.filter.AND.push({
+      in: {
+        [studyViewerConfig.rowAccessor]: [rowAccessorValue],
+      },
+    });
+  }
   const body = { query, variables };
   return dispatch => fetchWithCreds({
     path: guppyGraphQLUrl,
@@ -50,9 +51,11 @@ export const fetchFiles = (typeOfFileIndex, rowAccessorValue) => {
     switch (status) {
     case 200:
       if (data.data && data.data[nameOfIndex]) {
+        const receivedFileData = data.data[nameOfIndex]
+          .map(d => ({ ...d, rowAccessorValue: d[studyViewerConfig.rowAccessor] }));
         return {
           type: (typeOfFileIndex === 'object') ? 'RECEIVE_OBJECT_FILE_DATA' : 'RECEIVE_OPEN_DOC_DATA',
-          fileData: data.data[nameOfIndex],
+          fileData: receivedFileData,
         };
       }
       return {
@@ -170,6 +173,8 @@ export const ReduxStudyDetails = (() => {
 export const ReduxStudyViewer = (() => {
   const mapStateToProps = state => ({
     dataset: state.study.dataset,
+    docData: state.study.docData,
+    fileData: state.study.fileData,
   });
 
   return connect(mapStateToProps)(StudyViewer);
@@ -179,6 +184,7 @@ export const ReduxSingleStudyViewer = (() => {
   const mapStateToProps = state => ({
     dataset: state.study.dataset,
     docData: state.study.docData,
+    fileData: state.study.fileData,
   });
 
   return connect(mapStateToProps)(SingleStudyViewer);

@@ -47,7 +47,7 @@ import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
-import { ReduxStudyViewer, ReduxSingleStudyViewer, fetchDataset } from './StudyViewer/reduxer';
+import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import './index.less';
 import NotFound from './components/NotFound';
 
@@ -366,9 +366,6 @@ async function init() {
                     component={
                       props => (<ProtectedContent
                         public
-                        filter={() =>
-                          store.dispatch(fetchDataset())
-                        }
                         component={ReduxStudyViewer}
                         {...props}
                       />)

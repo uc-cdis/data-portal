@@ -1,12 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Space, Spin } from 'antd';
+import getReduxStore from '../reduxStore';
 import { studyViewerConfig } from '../localconf';
-
+import { fetchDataset, fetchFiles } from './reduxer';
 import './StudyViewer.css';
 import StudyCard from './StudyCard';
 
 class StudyViewer extends React.Component {
+  componentDidMount() {
+    getReduxStore().then(
+      store =>
+        Promise.all(
+          [
+            store.dispatch(fetchDataset()),
+            store.dispatch(fetchFiles('object')),
+          ],
+        ));
+  }
+
   getPanelExpandStatus = (openMode, index) => {
     if (openMode === 'open-all') {
       return true;
@@ -20,7 +32,9 @@ class StudyViewer extends React.Component {
     if (!this.props.dataset) {
       return (
         <div className='study-viewer'>
-          <Spin size='large' tip='Loading data...' />
+          <div className='study-viewer_loading'>
+            <Spin size='large' tip='Loading data...' />
+          </div>
         </div>
       );
     }
@@ -48,6 +62,8 @@ class StudyViewer extends React.Component {
               (<StudyCard
                 key={i}
                 data={d}
+                fileData={this.props.fileData
+                  .filter(fd => fd.rowAccessorValue === d.rowAccessorValue)}
                 initialPanelExpandStatus={this.getPanelExpandStatus(studyViewerConfig.openMode, i)}
               />)))}
           </Space>
@@ -59,10 +75,12 @@ class StudyViewer extends React.Component {
 
 StudyViewer.propTypes = {
   dataset: PropTypes.array,
+  fileData: PropTypes.array,
 };
 
 StudyViewer.defaultProps = {
   dataset: [],
+  fileData: [],
 };
 
 export default StudyViewer;

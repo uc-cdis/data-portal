@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Collapse } from 'antd';
 import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
-
 import { ReduxStudyDetails } from './reduxer';
 import './StudyViewer.css';
 
@@ -39,7 +38,11 @@ class StudyCard extends React.Component {
               header={(this.state.panelExpanded) ? 'Hide details' : 'Show details'}
               key='1'
             >
-              <ReduxStudyDetails data={this.props.data} displayLearnMoreBtn />
+              <ReduxStudyDetails
+                data={this.props.data}
+                fileData={this.props.fileData}
+                displayLearnMoreBtn
+              />
             </Panel>
           </Collapse>
         </Card>
@@ -57,7 +60,12 @@ StudyCard.propTypes = {
     fileData: PropTypes.array,
     docData: PropTypes.array,
   }).isRequired,
+  fileData: PropTypes.array,
   initialPanelExpandStatus: PropTypes.bool.isRequired,
+};
+
+StudyCard.defaultProps = {
+  fileData: [],
 };
 
 export default StudyCard;

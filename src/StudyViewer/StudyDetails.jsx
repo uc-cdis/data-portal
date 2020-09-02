@@ -2,22 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
-import { Space, Typography, Descriptions, message, Divider, Alert } from 'antd';
+import { Space, Typography, Descriptions, message, Divider, Alert, Modal, List } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
 import { userHasMethodOnProject } from '../authMappingUtils';
-import { studyViewerConfig, useArboristUI, requestorPath } from '../localconf';
+import { studyViewerConfig, useArboristUI, requestorPath, userapiPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './StudyViewer.css';
 
 const { Paragraph } = Typography;
-
-const onDownload = () => {
-  message
-    .loading('Downloading in progress..', 3)
-    .then(() => message.success('Download has finished', 3));
-};
 
 const getLabel = (label) => {
   if (!studyViewerConfig.fieldMapping || studyViewerConfig.fieldMapping.length === 0) {
@@ -31,6 +25,8 @@ const getLabel = (label) => {
 };
 
 class StudyDetails extends React.Component {
+  state = { downloadModalVisible: false };
+
   onRequestAccess = () => {
     const body = {
       username: this.props.user.username,
@@ -55,6 +51,24 @@ class StudyDetails extends React.Component {
     );
   };
 
+  showDownloadModal = () => {
+    this.setState({
+      downloadModalVisible: true,
+    });
+  };
+
+  handleOk = () => {
+    this.setState({
+      downloadModalVisible: false,
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      downloadModalVisible: false,
+    });
+  };
+
    isDataAccessible = (accessibleValidationValue) => {
      if (!useArboristUI) {
        return true;
@@ -70,12 +84,13 @@ class StudyDetails extends React.Component {
      const onNotLoggedInRequestAccess = () => this.props.history.push('/login', { from: this.props.location.pathname });
      const userHasLoggedIn = !!this.props.user.username;
 
-     let requestAccessButtonFunc = onDownload;
+     let requestAccessButtonFunc = this.showDownloadModal;
      if (!userHasLoggedIn) {
        requestAccessButtonFunc = onNotLoggedInRequestAccess;
-     } else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-       requestAccessButtonFunc = this.onRequestAccess;
      }
+     //  else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
+     //    requestAccessButtonFunc = this.onRequestAccess;
+     //  }
 
      return (
        <div className='study-details'>
@@ -98,6 +113,35 @@ class StudyDetails extends React.Component {
                tooltipText={'Note that you will be prompted to log in'}
              />
            </Space>
+           <Modal
+             title='Download Files'
+             visible={this.state.downloadModalVisible}
+             closable={false}
+             onCancel={this.handleCancel}
+             footer={[
+               <Button
+                 key='modal-close-button'
+                 label={'Close'}
+                 buttonType='primary'
+                 onClick={this.handleCancel}
+               />,
+             ]}
+           >
+             <List
+               size='small'
+               bordered
+               dataSource={this.props.fileData}
+               renderItem={(item) => {
+                 const downloadLink = (item.object_id) ? `${userapiPath}data/download/${item.object_id}?expires_in=900&redirect` : '';
+                 return (<List.Item
+                   key={item.file_name}
+                   actions={[<a key='modal-list-download-link' href={downloadLink}>download</a>]}
+                 >
+                   {`${item.file_name} (${item.data_format} - ${humanFileSize(item.file_size)})`}
+                 </List.Item>);
+               }}
+             />
+           </Modal>
            <Alert
              message='Please note that researchers are required to log in upon clicking the Request Access button and you will be prompted to login if you have not already done so.'
              type='info'
@@ -148,6 +192,7 @@ class StudyDetails extends React.Component {
                            {linkComponent}
                          </div>);
                        }
+                       // eslint-disable-next-line no-console
                        console.warn('Unknown object found in meta data: ', item);
                        return null;
                      })}
@@ -168,9 +213,14 @@ StudyDetails.propTypes = {
     blockData: PropTypes.object,
     tableData: PropTypes.object,
     accessibleValidationValue: PropTypes.string,
-    fileData: PropTypes.array,
-    docData: PropTypes.array,
   }).isRequired,
+  fileData: PropTypes.arrayOf(
+    PropTypes.shape({
+      object_id: PropTypes.string.isRequired,
+      file_name: PropTypes.string.isRequired,
+      file_size: PropTypes.number,
+      data_format: PropTypes.string,
+    })),
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
@@ -180,6 +230,7 @@ StudyDetails.propTypes = {
 
 StudyDetails.defaultProps = {
   displayLearnMoreBtn: false,
+  fileData: [],
 };
 
 export default withRouter(StudyDetails);
