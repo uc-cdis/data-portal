@@ -79,15 +79,10 @@ class ExplorerButtonGroup extends React.Component {
           }
         });
     }
-    // FIXME @mpingram we do not need to run this unless in the Data tab
-    // Disabling for development
-    // if (nextProps.totalCount !== this.props.totalCount
-    //   && nextProps.totalCount) {
-    //   this.refreshManifestEntryCount();
-    // }
-    // NOTE (mpingram) if PFB export is enabled in the Files tab, we need to
-    // only allow the user to export a PFB when
-    // nextProps.filter is an object my dude
+    if (nextProps.totalCount !== this.props.totalCount
+      && nextProps.totalCount) {
+      this.refreshManifestEntryCount();
+    }
     if (this.props.buttonConfig.enableLimitedFilePFBExport
       && nextProps.filter !== this.props.filter) {
       const sourceNodeField = this.props.buttonConfig.enableLimitedFilePFBExport.sourceNodeField;
