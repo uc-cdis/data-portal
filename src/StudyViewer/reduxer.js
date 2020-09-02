@@ -141,8 +141,7 @@ export const fetchDataset = (rowAccessorValue) => {
               type: 'RECEIVE_STUDY_DATASET',
               dataset: processDataset(
                 data.data[studyViewerConfig.dataType],
-                itemConfig,
-                rowAccessorValue),
+                itemConfig),
             };
           }
           return {
