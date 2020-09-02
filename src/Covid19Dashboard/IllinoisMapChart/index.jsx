@@ -191,7 +191,7 @@ class IllinoisMapChart extends React.Component {
       <div className='map-chart'>
         <ControlPanel
           showMapStyle={false}
-          showLegend={true}
+          showLegend
           colors={colors}
         />
         <ReactMapGL.InteractiveMap

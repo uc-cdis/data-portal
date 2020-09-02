@@ -33,9 +33,11 @@ class LegendPanel extends PureComponent {
           {
             legendData.map(
               value =>
-                (<p key={value[1]}>
+                (<p
+                  key={value[1]}
+                  className='legend-panel__item'
+                >
                   <span
-                    className='legend-panel__item'
                     style={{ backgroundColor: value[1] }}
                   />
                   {value[0]}
