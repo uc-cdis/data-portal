@@ -6,7 +6,7 @@ import { Space, Typography, Descriptions, message, Divider, Alert, Modal, List }
 import Button from '@gen3/ui-component/dist/components/Button';
 import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
-import { userHasMethodOnProject } from '../authMappingUtils';
+import { userHasMethodOnResource } from '../authMappingUtils';
 import { studyViewerConfig, useArboristUI, requestorPath, userapiPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './StudyViewer.css';
@@ -76,8 +76,8 @@ class StudyDetails extends React.Component {
      if (!accessibleValidationValue) {
        return false;
      }
-     return (userHasMethodOnProject('read-storage', accessibleValidationValue, this.props.userAuthMapping)
-   || userHasMethodOnProject('read', accessibleValidationValue, this.props.userAuthMapping));
+     return (userHasMethodOnResource('read-storage', accessibleValidationValue, this.props.userAuthMapping)
+   || userHasMethodOnResource('read', accessibleValidationValue, this.props.userAuthMapping));
    };
 
    render() {
@@ -87,10 +87,9 @@ class StudyDetails extends React.Component {
      let requestAccessButtonFunc = this.showDownloadModal;
      if (!userHasLoggedIn) {
        requestAccessButtonFunc = onNotLoggedInRequestAccess;
+     } else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
+       requestAccessButtonFunc = this.onRequestAccess;
      }
-     //  else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-     //    requestAccessButtonFunc = this.onRequestAccess;
-     //  }
 
      return (
        <div className='study-details'>
