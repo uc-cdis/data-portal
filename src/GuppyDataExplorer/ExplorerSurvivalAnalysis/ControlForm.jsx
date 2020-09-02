@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
+import './typedef';
 
+/**
+ * @param {Object} prop
+ * @param {string} prop.label
+ * @param {JSX.Element} prop.input
+ */
 const ControlFormField = ({ label, input }) => (
   <div className='explorer-survival-analysis__field-container'>
     <label className='explorer-survival-analysis__field-label'>{label}</label>
@@ -29,6 +35,12 @@ const ControlFormInput = ({ label, ...inputAttrs }) => (
   />
 );
 
+/**
+ * @param {Object} prop
+ * @param {string[]} prop.factors
+ * @param {UserInputSubmitHandler} prop.onSubmit
+ * @param {number} prop.timeInterval
+ */
 const ControlForm = ({ factors, onSubmit, timeInterval }) => {
   const [factorVariable, setFactorVariable] = useState('');
   const [stratificationVariable, setStratificationVariable] = useState('');
@@ -37,6 +49,9 @@ const ControlForm = ({ factors, onSubmit, timeInterval }) => {
   const [endTime, setEndTime] = useState(20);
   const [survivalType, setSurvivalType] = useState('all');
 
+  /**
+   * @param {{ target: { value: string, min: string, max: string }}} e
+   */
   const validateNumberInput = (e) => {
     const value = Number.parseInt(e.target.value);
     const min = Number.parseInt(e.target.min);
@@ -45,6 +60,9 @@ const ControlForm = ({ factors, onSubmit, timeInterval }) => {
     else if (max && max < value) setLocalTimeInterval(max);
   };
 
+  /**
+   * @param {{ label: string, value: string }[]} options
+   */
   const withEmptyOption = (options) => [
     { label: 'Select...', value: '' },
     ...options,
@@ -154,7 +172,8 @@ ControlForm.propTypes = {
       value: PropTypes.string,
     })
   ).isRequired,
-  onSubmit: PropTypes.func,
+  onSubmit: PropTypes.func.isRequired,
+  timeInterval: PropTypes.number.isRequired,
 };
 
 export default ControlForm;

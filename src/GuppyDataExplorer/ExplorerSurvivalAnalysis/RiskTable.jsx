@@ -9,9 +9,17 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { getXAxisTicks } from './utils';
+import './typedef';
 
+/**
+ * @param {RisktableData[]} data
+ */
 const isStratified = (data) => data[0].name.split(',').length > 1;
 
+/**
+ * @param {RisktableData[]} data
+ * @param {number} timeInterval
+ */
 const parseRisktable = (data, timeInterval) => {
   const minTime = data[0].data[0].time;
   return data
@@ -19,6 +27,11 @@ const parseRisktable = (data, timeInterval) => {
     .filter(({ time }) => (time - minTime) % timeInterval === 0);
 };
 
+/**
+ * @param {Object} prop
+ * @param {RisktableData[]} prop.data
+ * @param {number} prop.timeInterval
+ */
 const RiskTable = ({ data, timeInterval }) => (
   <div className='explorer-survival-analysis__risk-table'>
     {data.length === 0 ? (

@@ -8,7 +8,13 @@ import {
   fetchResult as fetchMockSurvivalResult,
 } from './mockData';
 import './ExplorerSurvivalAnalysis.css';
+import './typedef';
 
+/**
+ * @param {Object} prop
+ * @param {Object} prop.aggsData
+ * @param {Array} prop.filters
+ */
 function ExplorerSurvivalAnalysis({ aggsData, filters }) {
   const [pval, setPval] = useState();
   const [risktable, setRisktable] = useState([]);
@@ -16,11 +22,14 @@ function ExplorerSurvivalAnalysis({ aggsData, filters }) {
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
 
-  const handleSubmit = (userInput) => {
-    setStratificationVariable(userInput.stratificationVariable);
-    setTimeInterval(userInput.timeInterval);
+  /**
+   * @type {UserInputSubmitHandler}
+   */
+  const handleSubmit = ({ timeInterval, ...requestBody }) => {
+    setStratificationVariable(requestBody.stratificationVariable);
+    setTimeInterval(timeInterval);
 
-    fetchMockSurvivalResult(userInput).then((result) => {
+    fetchMockSurvivalResult(requestBody).then((result) => {
       setPval(result.pval && +parseFloat(result.pval).toFixed(4));
       setRisktable(result.risktable);
       setSurvival(result.survival);

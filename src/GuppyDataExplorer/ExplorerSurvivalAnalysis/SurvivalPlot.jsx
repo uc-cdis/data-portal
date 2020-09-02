@@ -11,7 +11,13 @@ import {
 } from 'recharts';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { getXAxisTicks } from './utils';
+import './typedef';
 
+/**
+ * @param {Object} prop
+ * @param {SurvivalData[]} prop.data
+ * @param {number} prop.timeInterval
+ */
 const Plot = ({ data, timeInterval }) => (
   <ResponsiveContainer height={300}>
     <LineChart data={data} margin={{ left: 20, bottom: 10, right: 20 }}>
@@ -50,6 +56,12 @@ const Plot = ({ data, timeInterval }) => (
   </ResponsiveContainer>
 );
 
+/**
+ * @param {Object} prop
+ * @param {SurvivalData[]} prop.data
+ * @param {string} prop.stratificationVariable
+ * @param {number} prop.timeInterval
+ */
 const SurvivalPlot = ({ data, stratificationVariable, timeInterval }) => (
   <div className='explorer-survival-analysis__survival-plot'>
     {data.length === 0 ? (

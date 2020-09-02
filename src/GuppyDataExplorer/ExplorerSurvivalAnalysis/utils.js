@@ -1,3 +1,10 @@
+import './typedef';
+
+/**
+ * Builds x-axis ticks array to use in plots
+ * @param {SurvivalData[]|RisktableData[]} data
+ * @param {number} step
+ */
 export const getXAxisTicks = (data, step = 2) => {
   const times = data.flatMap(({ data }) => data).map(({ time }) => time);
   const minTime = Math.floor(Math.min(...times));
