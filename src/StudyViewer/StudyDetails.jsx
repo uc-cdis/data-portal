@@ -30,30 +30,31 @@ const getLabel = (label) => {
   return capitalizeFirstLetter(label);
 };
 
-const onRequestAccess = (username, resourcePath, resourceID, resourceDisplayName) => {
-  const body = {
-    username,
-    resource_path: resourcePath,
-    resource_id: resourceID,
-    resource_display_name: resourceDisplayName,
-  };
-  fetchWithCreds({
-    path: `${requestorPath}request`,
-    method: 'POST',
-    body: JSON.stringify(body),
-  }).then(
-    ({ data }) => {
-      if (data && data.redirect_url) {
-        // if a redirect is configured, Requestor returns a redirect URL
-        window.open(data.redirect_url);
-      } else {
-        message
-          .error('Something went wrong when talking to Requestor service', 3);
-      }
-    },
-  );
-};
 class StudyDetails extends React.Component {
+  onRequestAccess = () => {
+    const body = {
+      username: this.props.user.username,
+      resource_path: '/programs/TODO', // FIXME: fill this
+      resource_id: this.props.data.rowAccessorValue,
+      resource_display_name: this.props.data.title,
+    };
+    fetchWithCreds({
+      path: `${requestorPath}request`,
+      method: 'POST',
+      body: JSON.stringify(body),
+    }).then(
+      ({ data }) => {
+        if (data && data.redirect_url) {
+          // if a redirect is configured, Requestor returns a redirect URL
+          window.open(data.redirect_url);
+        } else {
+          message
+            .error('Something went wrong when talking to Requestor service', 3);
+        }
+      },
+    );
+  };
+
    isDataAccessible = (accessibleValidationValue) => {
      if (!useArboristUI) {
        return true;
@@ -73,12 +74,7 @@ class StudyDetails extends React.Component {
      if (!userHasLoggedIn) {
        requestAccessButtonFunc = onNotLoggedInRequestAccess;
      } else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-       requestAccessButtonFunc = onRequestAccess(
-         this.props.user.username,
-         '/programs/TODO', // FIXME: fill this
-         this.props.data.rowAccessorValue,
-         this.props.data.title,
-       );
+       requestAccessButtonFunc = this.onRequestAccess;
      }
 
      return (
