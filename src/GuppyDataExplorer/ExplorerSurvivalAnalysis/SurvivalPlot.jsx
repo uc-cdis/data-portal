@@ -90,6 +90,7 @@ SurvivalPlot.propTypes = {
       name: PropTypes.string,
     })
   ).isRequired,
+  stratificationVariable: PropTypes.string.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
