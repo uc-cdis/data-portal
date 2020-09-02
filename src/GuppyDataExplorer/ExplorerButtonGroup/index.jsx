@@ -1,5 +1,6 @@
 import React from 'react';
 import FileSaver from 'file-saver';
+import _ from 'lodash';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import Toaster from '@gen3/ui-component/dist/components/Toaster';
@@ -146,8 +147,9 @@ class ExplorerButtonGroup extends React.Component {
       }
       return rawData;
     }
-    const refIDList = await this.props.downloadRawDataByFields({ fields: [refField] })
+    let refIDList = await this.props.downloadRawDataByFields({ fields: [refField] })
       .then(res => res.map(i => i[refField]));
+    refIDList = _.uniq(refIDList);
     const refFieldInResourceIndex =
       this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
     const resourceFieldInResourceIndex = this.props.guppyConfig.manifestMapping.resourceIdField;
@@ -442,7 +444,8 @@ class ExplorerButtonGroup extends React.Component {
         });
         const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
         if (caseIDResult) {
-          const caseIDList = caseIDResult.map(i => i[caseField]);
+          let caseIDList = caseIDResult.map(i => i[caseField]);
+          caseIDList = _.uniq(caseIDList);
           const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
           const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
             [caseFieldInFileIndex]: {

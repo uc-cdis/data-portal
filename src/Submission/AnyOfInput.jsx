@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Space, Typography } from 'antd';
 import TextInput from './TextInput';
 import './AnyOfInput.less';
+
+const { Text } = Typography;
 
 const AnyOfInput = ({
   name,
@@ -21,27 +24,31 @@ const AnyOfInput = ({
 
   return (
     <div>
-      <h6 className='any-of-input__name'>{name}:</h6>
       {required && <span className='any-of-input__required-notification'> {'*'} </span>}
+      <Text className='any-of-input__name'>{name}:</Text>
       <div className='any-of-input__sub-props'>
-        {properties.map((property) => {
-          let description = ('description' in node.properties[property]) ? node.properties[property].description : '';
-          if (description === '') {
-            description = ('term' in node.properties[property]) ? node.properties[property].term.description : '';
-          }
-          const requiredSubprop = (requireds.indexOf(property) > -1);
-          // we use index 0 of values because AnyOfInput is hardcoded
-          // to be an array of length 1, an upcoming feature should be to add to this array
-          return (
-            <TextInput
-              key={property}
-              name={property}
-              value={values ? values[0][property] : ''}
-              required={required && requiredSubprop}
-              description={description}
-              onChange={onChangeAnyOfWrapper}
-            />);
-        })}
+        <Space direction='vertical' style={{ width: '100%' }}>
+          {properties.map((property) => {
+            let description = ('description' in node.properties[property]) ? node.properties[property].description : '';
+            if (description === '') {
+              description = ('term' in node.properties[property]) ? node.properties[property].term.description : '';
+            }
+            const requiredSubprop = (requireds.indexOf(property) > -1);
+            // we use index 0 of values because AnyOfInput is hardcoded
+            // to be an array of length 1, an upcoming feature should be to add to this array
+            return (
+              <TextInput
+                // each text input needs a unique id and name now
+                id={`${name}_${property}`}
+                key={`${name}_${property}`}
+                name={`${name}_${property}`}
+                value={values ? values[0][property] : ''}
+                required={required && requiredSubprop}
+                description={description}
+                onChange={onChangeAnyOfWrapper}
+              />);
+          })}
+        </Space>
       </div>
     </div>
   );
@@ -49,7 +56,7 @@ const AnyOfInput = ({
 
 AnyOfInput.propTypes = {
   name: PropTypes.string.isRequired,
-  values: PropTypes.object.isRequired,
+  values: PropTypes.array,
   node: PropTypes.any.isRequired,
   properties: PropTypes.array.isRequired,
   required: PropTypes.bool.isRequired,
@@ -59,6 +66,7 @@ AnyOfInput.propTypes = {
 
 AnyOfInput.defaultProps = {
   requireds: [],
+  values: undefined,
 };
 
 export default AnyOfInput;
