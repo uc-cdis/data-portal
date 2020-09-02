@@ -118,11 +118,27 @@ class ExplorerButtonGroup extends React.Component {
         clickFunc = this.exportToTerra;
       }
     }
+    if (buttonConfig.type === 'export-files') {
+      // REMOVE THIS CODE WHEN TERRA EXPORT WORKS
+      // =======================================
+      if (terraExportWarning) {
+        clickFunc = this.exportFilesToTerraWithWarning;
+      } else {
+      // =======================================
+        clickFunc = this.exportFilesToTerra;
+      }
+    }
     if (buttonConfig.type === 'export-to-seven-bridges') {
       clickFunc = this.exportToSevenBridges;
     }
+    if (buttonConfig.type === 'export-files-to-seven-bridges') {
+      clickFunc = this.exportFilesToSevenBridges;
+    }
     if (buttonConfig.type === 'export-to-pfb') {
       clickFunc = this.exportToPFB;
+    }
+    if (buttonConfig.type === 'export-files-to-pfb') {
+      clickFunc = this.exportFilesToPFB;
     }
     if (buttonConfig.type === 'export-to-workspace') {
       clickFunc = this.exportToWorkspace;
@@ -132,7 +148,6 @@ class ExplorerButtonGroup extends React.Component {
     }
     return clickFunc;
   };
-
   getManifest = async (indexType) => {
     if (!this.props.guppyConfig.manifestMapping
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex) {
@@ -338,6 +353,16 @@ class ExplorerButtonGroup extends React.Component {
       this.exportToTerra();
     }
   }
+  exportFilesToTerraWithWarning = () => {
+    // If the number of subjects is over the threshold, warn the user that their
+    // export to Terra job might fail.
+    if (this.props.totalCount >= terraExportWarning.subjectThreshold) {
+      this.setState({ enableTerraWarningPopup: true });
+    } else {
+      // If the number is below the threshold, proceed as normal
+      this.exportFilesToTerra();
+    }
+  }
   // ==========================================
 
   exportToTerra = () => {
@@ -346,9 +371,21 @@ class ExplorerButtonGroup extends React.Component {
     });
   };
 
+  exportFilesToTerra = () => {
+    this.setState({ exportingToTerra: true }, () => {
+      this.exportFilesToPFB();
+    });
+  };
+
   exportToSevenBridges = () => {
     this.setState({ exportingToSevenBridges: true }, () => {
       this.exportToPFB();
+    });
+  }
+
+  exportFilesToSevenBridges = () => {
+    this.setState({ exportingToSevenBridges: true }, () => {
+      this.exportFilesToPFB();
     });
   }
 
@@ -370,6 +407,15 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   exportToPFB = () => {
+    this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
+    this.props.checkJobStatus();
+    this.setState({
+      toasterOpen: true,
+      toasterHeadline: this.state.pfbStartText,
+    });
+  };
+
+  exportFilesToPFB = () => {
     if (this.props.buttonConfig.enableLimitedFilePFBExport) {
       if (!this.state.sourceNodesInCohort || this.state.sourceNodesInCohort.length !== 1) {
         return;
@@ -382,14 +428,15 @@ class ExplorerButtonGroup extends React.Component {
           root_node: rootNode,
         },
       });
+      this.props.checkJobStatus();
+      this.setState({
+        toasterOpen: true,
+        toasterHeadline: this.state.pfbStartText,
+      });
     } else {
-      this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
+      console.error(`Error: Missing \`enableLimitedFilePFBExport\` in the portal config.
+Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be set in the portal config.`);
     }
-    this.props.checkJobStatus();
-    this.setState({
-      toasterOpen: true,
-      toasterHeadline: this.state.pfbStartText,
-    });
   };
 
   exportToWorkspace = async (indexType) => {
@@ -554,9 +601,9 @@ class ExplorerButtonGroup extends React.Component {
     // to support creating PFBs where entities can be from multiple nodes, this code should be removed.
     // -------
     if (this.props.buttonConfig.enableLimitedFilePFBExport) {
-      if (buttonConfig.type === 'export'
-      || buttonConfig.type === 'export-to-pfb'
-      || buttonConfig.type === 'export-to-seven-bridges') {
+      if (buttonConfig.type === 'export-files'
+      || buttonConfig.type === 'export-files-to-pfb'
+      || buttonConfig.type === 'export-files-to-seven-bridges') {
         // enable the button only if the cohort is all of the same data type
         return this.state.sourceNodesInCohort.length === 1;
       }
@@ -565,11 +612,11 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'manifest') {
       return this.state.manifestEntryCount > 0;
     }
-    if (buttonConfig.type === 'export-to-pfb') {
+    if (buttonConfig.type === 'export-to-pfb' || buttonConfig.type === 'export-files-to-pfb') {
       // disable the pfb export button if any other pfb export jobs are running
       return !(this.state.exportingToTerra || this.state.exportingToSevenBridges);
     }
-    if (buttonConfig.type === 'export') {
+    if (buttonConfig.type === 'export' || buttonConfig.type === 'export-files') {
       if (!this.props.buttonConfig.terraExportURL) {
         console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.'); // eslint-disable-line no-console
         return false;
@@ -580,9 +627,9 @@ class ExplorerButtonGroup extends React.Component {
         || this.state.exportingToSevenBridges
         || this.isPFBRunning());
     }
-    if (buttonConfig.type === 'export-to-seven-bridges') {
+    if (buttonConfig.type === 'export-to-seven-bridges' || buttonConfig.type === 'export-files-to-seven-bridges') {
       if (!this.props.buttonConfig.sevenBridgesExportURL) {
-        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.'); // eslint-disable-line no-console
+        console.error('Export to Seven Bridges button is present, but there is no `sevenBridgesExportURL` specified in the portal config. Disabling the export to Seven Bridges button.'); // eslint-disable-line no-console
         return false;
       }
       // disable the seven bridges export buttons if any of the
@@ -605,19 +652,19 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
       return this.state.exportingToWorkspace;
     }
-    if (buttonConfig.type === 'export-to-pfb') {
+    if (buttonConfig.type === 'export-to-pfb' || buttonConfig.type === 'export-files-to-pfb') {
       // export to pfb button is pending if a pfb export job is running and it's
       // neither an export to terra job or an export to seven bridges job.
       return this.isPFBRunning()
         && !(this.state.exportingToTerra || this.state.exportingToSevenBridges);
     }
-    if (buttonConfig.type === 'export') {
+    if (buttonConfig.type === 'export' || buttonConfig.type === 'export-files') {
       // export to terra button is pending if a pfb export job is running and
       // it's an exporting to terra job.
       return this.isPFBRunning()
         && this.state.exportingToTerra;
     }
-    if (buttonConfig.type === 'export-to-seven-bridges') {
+    if (buttonConfig.type === 'export-to-seven-bridges' || buttonConfig.type === 'export-files-to-seven-bridges') {
       // export to seven bridges button is pending if a pfb export job is running
       // and it's an export to seven bridges job.
       return this.isPFBRunning()
@@ -646,10 +693,10 @@ class ExplorerButtonGroup extends React.Component {
     // if limited file PFB export is enabled, PFB export buttons will be disabled
     // if the user selects multiple files of different types. If this happens,
     // display a tooltip explaining that the user can only export files of the same type.
-    const isPFBButton = buttonConfig.type === 'export' || buttonConfig.type === 'export-to-pfb' || buttonConfig.type === 'export-to-seven-bridges';
+    const isFilePFBButton = buttonConfig.type === 'export-files' || buttonConfig.type === 'export-files-to-pfb' || buttonConfig.type === 'export-files-to-seven-bridges';
     const multipleSourceNodesSelected = this.state.sourceNodesInCohort.length > 1;
-    if (isPFBButton
-      && this.props.buttonConfig.enableLimitedFilePFBExport
+    if (this.props.buttonConfig.enableLimitedFilePFBExport
+      && isFilePFBButton
       && multipleSourceNodesSelected) {
       tooltipEnabled = true;
       btnTooltipText = `Currently, you can only export data files of the same type. You have selected ${this.state.sourceNodesInCohort.length} different types of data files.`;
