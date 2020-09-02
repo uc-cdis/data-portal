@@ -266,8 +266,8 @@ class WorldMapChart extends React.Component {
       );
     }
 
-    let colors = { 0: '#FFF' };
-    let dotSizes = { 0: 0, 1: 2 };
+    let colors;
+    let dotSizes;
     if (this.state.selectedLayer === 'confirmed-dots') {
       // config for dot distribution map
       colors = {
@@ -297,6 +297,7 @@ class WorldMapChart extends React.Component {
         50000: '#8B4225',
         100000: '#850001',
       };
+      dotSizes = { 0: 0, 1: 2 };
     }
     const colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
     const dotSizesAsList = Object.entries(dotSizes).map(item => [+item[0], item[1]]).flat();

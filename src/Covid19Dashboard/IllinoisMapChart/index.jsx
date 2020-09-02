@@ -191,7 +191,7 @@ class IllinoisMapChart extends React.Component {
       <div className='map-chart'>
         <ControlPanel
           showMapStyle={false}
-          showLegend={this.state.selectedLayer !== 'confirmed-choropleth'}
+          showLegend={true}
           colors={colors}
         />
         <ReactMapGL.InteractiveMap
