@@ -72,7 +72,17 @@ const RiskTable = ({ data, timeInterval }) => (
 );
 
 RiskTable.propTypes = {
-  data: PropTypes.array.isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.exact({
+      data: PropTypes.arrayOf(
+        PropTypes.exact({
+          nrisk: PropTypes.number,
+          time: PropTypes.number,
+        })
+      ),
+      name: PropTypes.string,
+    })
+  ).isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 

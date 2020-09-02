@@ -79,7 +79,17 @@ const SurvivalPlot = ({ data, stratificationVariable, timeInterval }) => (
 );
 
 SurvivalPlot.propTypes = {
-  data: PropTypes.array.isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.exact({
+      data: PropTypes.arrayOf(
+        PropTypes.exact({
+          prob: PropTypes.number,
+          time: PropTypes.number,
+        })
+      ),
+      name: PropTypes.string,
+    })
+  ).isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
