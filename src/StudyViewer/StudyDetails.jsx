@@ -39,13 +39,16 @@ class StudyDetails extends React.Component {
       method: 'POST',
       body: JSON.stringify(body),
     }).then(
-      ({ data }) => {
+      ({ data, status }) => {
         if (data && data.redirect_url) {
           // if a redirect is configured, Requestor returns a redirect URL
           window.open(data.redirect_url);
+        } else if (status !== 201) {
+          message
+            .error(`Something went wrong when talking to Requestor service, status ${status}`, 3);
         } else {
           message
-            .error('Something went wrong when talking to Requestor service', 3);
+            .info('Request has sent successfully but Requestor has not been configured to redirect', 3);
         }
       },
     );
