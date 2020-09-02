@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
@@ -53,5 +54,10 @@ function ExplorerSurvivalAnalysis({ aggsData, filters }) {
     </div>
   );
 }
+
+ExplorerSurvivalAnalysis.propTypes = {
+  aggsData: PropTypes.object,
+  filters: PropTypes.array,
+};
 
 export default ExplorerSurvivalAnalysis;
