@@ -6,35 +6,86 @@ import SingleStudyViewer from './SingleStudyViewer';
 import { guppyGraphQLUrl, studyViewerConfig } from '../localconf';
 import { fetchWithCreds } from '../actions';
 
-const processDataset = (data, itemConfig, fileConfig) => {
+export const fetchFiles = (typeOfFileIndex, rowAccessorValue) => {
+  let nameOfIndex;
+  const fieldsToFetch = ['file_name', 'file_size', 'data_format', 'data_type'];
+  switch (typeOfFileIndex) {
+  case 'object':
+    nameOfIndex = studyViewerConfig.fileDataType;
+    fieldsToFetch.push('object_id');
+    break;
+  case 'open-access':
+    nameOfIndex = studyViewerConfig.docDataType;
+    fieldsToFetch.push('doc_url');
+    break;
+  default:
+    return dispatch => dispatch({
+      type: 'FILE_DATA_ERROR',
+      error: 'typeOfFileIndex error',
+    });
+  }
+  const query = `query ($filter: JSON) {
+    ${nameOfIndex} (filter: $filter, first: 10000, accessibility: accessible) {
+        ${fieldsToFetch.join(',')}
+    }
+  }`;
+  const variables = {
+    filter: {
+      AND: [
+        {
+          in: {
+            [studyViewerConfig.rowAccessor]: [rowAccessorValue],
+          },
+        },
+      ],
+    },
+  };
+  const body = { query, variables };
+  return dispatch => fetchWithCreds({
+    path: guppyGraphQLUrl,
+    method: 'POST',
+    body: JSON.stringify(body),
+    dispatch,
+  }).then(({ status, data }) => {
+    switch (status) {
+    case 200:
+      if (data.data && data.data[nameOfIndex]) {
+        return {
+          type: (typeOfFileIndex === 'object') ? 'RECEIVE_OBJECT_FILE_DATA' : 'RECEIVE_OPEN_DOC_DATA',
+          fileData: data.data[nameOfIndex],
+        };
+      }
+      return {
+        type: 'FILE_DATA_ERROR',
+        error: 'Did not get correct data from Guppy',
+      };
+    default:
+      return {
+        type: 'FILE_DATA_ERROR',
+        error: data,
+      };
+    }
+  })
+    .then(msg => dispatch(msg));
+};
+
+const processDataset = (data, itemConfig) => {
   const processedDataset = [];
   data.forEach((dataElement) => {
     const processedItem = {};
     processedItem.title = dataElement[studyViewerConfig.titleField];
-    if (studyViewerConfig.briefTitleField) {
-      processedItem.briefTitle = dataElement[studyViewerConfig.briefTitleField];
-    }
+    processedItem.rowAccessorValue = dataElement[studyViewerConfig.rowAccessor];
     processedItem.blockData = _.pick(dataElement, itemConfig.blockFields);
     processedItem.tableData = _.pick(dataElement, itemConfig.tableFields);
-    if (fileConfig) {
-      processedItem.fileData = {};
-      processedItem.fileData.guid = dataElement[fileConfig.downloadField];
-      if (fileConfig.fileFields) {
-        processedItem.fileData.fileFields = _.pick(dataElement, fileConfig.fileFields);
-      }
-    }
-    if (studyViewerConfig.accessibleValidationField) {
-      // eslint-disable-next-line max-len
-      processedItem.accessibleValidationValue = dataElement[studyViewerConfig.accessibleValidationField];
-    }
+    processedItem.accessibleValidationValue = dataElement.auth_resource_path;
     processedDataset.push(processedItem);
   });
   return processedDataset;
 };
 
-export const fetchDataset = (titleOfDataset) => {
+export const fetchDataset = (rowAccessorValue) => {
   let itemConfig = studyViewerConfig.listItemConfig;
-  if (titleOfDataset && studyViewerConfig.singleItemConfig) {
+  if (rowAccessorValue && studyViewerConfig.singleItemConfig) {
     itemConfig = studyViewerConfig.singleItemConfig;
   }
 
@@ -46,26 +97,12 @@ export const fetchDataset = (titleOfDataset) => {
   }
 
   let fieldsToFetch = [];
+  fieldsToFetch.push('auth_resource_path');
   fieldsToFetch.push(studyViewerConfig.titleField);
-  if (studyViewerConfig.accessibleValidationField) {
-    fieldsToFetch.push(studyViewerConfig.accessibleValidationField);
-  }
-  if (studyViewerConfig.briefTitleField) {
-    fieldsToFetch.push(studyViewerConfig.briefTitleField);
-  }
+  fieldsToFetch.push(studyViewerConfig.rowAccessor);
   fieldsToFetch = [...fieldsToFetch,
     ...itemConfig.blockFields,
     ...itemConfig.tableFields];
-  let fileConfig;
-  if (titleOfDataset) {
-    fileConfig = {};
-    fieldsToFetch.push(studyViewerConfig.downloadField);
-    fileConfig.downloadField = studyViewerConfig.downloadField;
-    if (studyViewerConfig.fileFields) {
-      fieldsToFetch = [...fieldsToFetch, ...studyViewerConfig.fileFields];
-      fileConfig.fileFields = studyViewerConfig.fileFields;
-    }
-  }
   fieldsToFetch = _.uniq(fieldsToFetch);
 
   const query = `query ($filter: JSON) {
@@ -78,10 +115,10 @@ export const fetchDataset = (titleOfDataset) => {
       AND: [],
     },
   };
-  if (titleOfDataset) {
+  if (rowAccessorValue) {
     variables.filter.AND.push({
       in: {
-        [studyViewerConfig.titleField]: [titleOfDataset],
+        [studyViewerConfig.rowAccessor]: [rowAccessorValue],
       },
     });
   }
@@ -102,7 +139,7 @@ export const fetchDataset = (titleOfDataset) => {
               dataset: processDataset(
                 data.data[studyViewerConfig.dataType],
                 itemConfig,
-                fileConfig),
+                rowAccessorValue),
             };
           }
           return {
@@ -141,6 +178,7 @@ export const ReduxStudyViewer = (() => {
 export const ReduxSingleStudyViewer = (() => {
   const mapStateToProps = state => ({
     dataset: state.study.dataset,
+    docData: state.study.docData,
   });
 
   return connect(mapStateToProps)(SingleStudyViewer);

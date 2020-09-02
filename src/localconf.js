@@ -117,7 +117,7 @@ function buildConfig(opts) {
     }
   }
 
-  let useGuppyForExplorer = false;
+  let useGuppyForExplorer = true;
 
   let explorerConfig = [];
   let useNewExplorerConfigFormat = false;

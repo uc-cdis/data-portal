@@ -5,19 +5,32 @@ import { Space, Typography, Spin } from 'antd';
 import { FileOutlined, FilePdfOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
 import { humanFileSize } from '../utils.js';
-
-import { ReduxStudyDetails } from './reduxer';
+import { ReduxStudyDetails, fetchDataset, fetchFiles } from './reduxer';
+import getReduxStore from '../reduxStore';
 import './StudyViewer.css';
-import { studyViewerConfig } from '../localconf';
 
 const { Title } = Typography;
 
 class SingleStudyViewer extends React.Component {
+  componentDidMount() {
+    getReduxStore().then(
+      store =>
+        Promise.all(
+          [
+            store.dispatch(fetchDataset(decodeURIComponent(this.props.match.params[0]))),
+            store.dispatch(fetchFiles('object', decodeURIComponent(this.props.match.params[0]))),
+            store.dispatch(fetchFiles('open-access', decodeURIComponent(this.props.match.params[0]))),
+          ],
+        ));
+  }
+
   render() {
-    if (!this.props.dataset) {
+    if (!this.props.dataset || this.props.dataset.length === 0) {
       return (
         <div className='study-viewer'>
-          <Spin size='large' tip='Loading data...' />
+          <div className='study-viewer_loading'>
+            <Spin size='large' tip='Loading data...' />
+          </div>
         </div>
       );
     }
@@ -25,50 +38,48 @@ class SingleStudyViewer extends React.Component {
     return (
       <div className='study-viewer'>
         <BackLink url='/study-viewer' label='Back' />
-        {(this.props.dataset && this.props.dataset.length > 0) ?
-          <Space className='study-viewer__space' direction='vertical'>
-            <div className='study-viewer__title'>
-              <Title level={4}>{(dataset.briefTitle) ? `${dataset.title} (${dataset.briefTitle})` : dataset.title}</Title>
-            </div>
-            <div className='study-viewer__details'>
-              <ReduxStudyDetails data={dataset} />
-              <div className='study-viewer__details-sidebar'>
-                <Space direction='vertical' style={{ width: '100%' }}>
+        <Space className='study-viewer__space' direction='vertical'>
+          <div className='study-viewer__title'>
+            <Title level={4}>{dataset.title}</Title>
+          </div>
+          <div className='study-viewer__details'>
+            <ReduxStudyDetails data={dataset} />
+            <div className='study-viewer__details-sidebar'>
+              <Space direction='vertical' style={{ width: '100%' }}>
+                <div className='study-viewer__details-sidebar-box'>
+                  <Space className='study-viewer__details-sidebar-space' direction='vertical'>
+                    <div className='h3-typo'>Data Access Agreements</div>
+                    <div>
+                      <FilePdfOutlined />
+                      <a href=''>Data Use Agreement (DUA)</a>
+                    </div>
+                    <div>
+                      <FilePdfOutlined />
+                      <a href=''>Data Access Request (DAR)</a>
+                    </div>
+                  </Space>
+                </div>
+                {(this.props.docData.length > 0) ?
                   <div className='study-viewer__details-sidebar-box'>
                     <Space className='study-viewer__details-sidebar-space' direction='vertical'>
-                      <div className='h3-typo'>Data Access Agreements</div>
-                      <div>
-                        <FilePdfOutlined />
-                        <a href=''>Data Use Agreement (DUA)</a>
-                      </div>
-                      <div>
-                        <FilePdfOutlined />
-                        <a href=''>Data Access Request (DAR)</a>
-                      </div>
+                      <div className='h3-typo'>Study Documents</div>
+                      {this.props.docData.map((doc) => {
+                        const iconComponent = (doc.data_format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
+                        const linkText = `${doc.file_name} (${doc.data_format} - ${humanFileSize(doc.file_size)})`;
+                        const linkComponent = <a href={doc.doc_url}>{linkText}</a>;
+                        return (<div key={doc.file_name}>
+                          {iconComponent}
+                          {linkComponent}
+                        </div>);
+                      })}
                     </Space>
                   </div>
-                  {(dataset.fileData) ?
-                    <div className='study-viewer__details-sidebar-box'>
-                      <Space className='study-viewer__details-sidebar-space' direction='vertical'>
-                        <div className='h3-typo'>Study Documents</div>
-                        {/* {dataset.fileData.map((doc) => {
-                          const iconComponent = (doc.format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
-                          const linkText = `${doc.name} (${doc.format} - ${humanFileSize(doc.size)})`;
-                          const linkComponent = <a href={doc.link}>{linkText}</a>;
-                          return (<div key={doc.name}>
-                            {iconComponent}
-                            {linkComponent}
-                          </div>);
-                        })} */}
-                      </Space>
-                    </div>
-                    : null
-                  }
-                </Space>
-              </div>
+                  : null
+                }
+              </Space>
             </div>
-          </Space>
-          : null}
+          </div>
+        </Space>
       </div>
     );
   }
@@ -76,10 +87,13 @@ class SingleStudyViewer extends React.Component {
 
 SingleStudyViewer.propTypes = {
   dataset: PropTypes.array,
+  docData: PropTypes.array,
+  match: PropTypes.object.isRequired,
 };
 
 SingleStudyViewer.defaultProps = {
   dataset: [],
+  docData: [],
 };
 
 export default withRouter(SingleStudyViewer);

@@ -380,9 +380,6 @@ async function init() {
                     component={
                       props => (<ProtectedContent
                         public
-                        filter={() =>
-                          store.dispatch(fetchDataset(props.match.params[0]))
-                        }
                         component={ReduxSingleStudyViewer}
                         {...props}
                       />)

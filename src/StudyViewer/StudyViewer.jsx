@@ -37,7 +37,6 @@ class StudyViewer extends React.Component {
       });
     }
 
-    console.log(dataset);
     return (
       <div className='study-viewer'>
         <div className='h2-typo study-viewer__title'>

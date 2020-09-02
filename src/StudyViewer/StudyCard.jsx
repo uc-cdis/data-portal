@@ -26,7 +26,7 @@ class StudyCard extends React.Component {
       return (
         <Card
           className='study-viewer__card'
-          title={(this.props.data.briefTitle) ? `${this.props.data.title} (${this.props.data.briefTitle})` : this.props.data.title}
+          title={this.props.data.title}
         >
           <Collapse
             defaultActiveKey={(this.state.panelExpanded) ? ['1'] : []}
@@ -50,9 +50,12 @@ class StudyCard extends React.Component {
 StudyCard.propTypes = {
   data: PropTypes.shape({
     title: PropTypes.string.isRequired,
-    briefTitle: PropTypes.string,
+    rowAccessorValue: PropTypes.string.isRequired,
     blockData: PropTypes.object,
     tableData: PropTypes.object,
+    accessibleValidationValue: PropTypes.string,
+    fileData: PropTypes.array,
+    docData: PropTypes.array,
   }).isRequired,
   initialPanelExpandStatus: PropTypes.bool.isRequired,
 };

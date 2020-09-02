@@ -6,7 +6,7 @@ import { Space, Typography, Descriptions, message, Divider, Alert } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
-import { userHasMethodOnProject, projectIsOpenData } from '../authMappingUtils';
+import { userHasMethodOnProject } from '../authMappingUtils';
 import { studyViewerConfig, useArboristUI, requestorPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './StudyViewer.css';
@@ -30,40 +30,39 @@ const getLabel = (label) => {
   return capitalizeFirstLetter(label);
 };
 
+const onRequestAccess = (username, resourcePath, resourceID, resourceDisplayName) => {
+  const body = {
+    username,
+    resource_path: resourcePath,
+    resource_id: resourceID,
+    resource_display_name: resourceDisplayName,
+  };
+  fetchWithCreds({
+    path: `${requestorPath}request`,
+    method: 'POST',
+    body: JSON.stringify(body),
+  }).then(
+    ({ data }) => {
+      if (data && data.redirect_url) {
+        // if a redirect is configured, Requestor returns a redirect URL
+        window.open(data.redirect_url);
+      } else {
+        message
+          .error('Something went wrong when talking to Requestor service', 3);
+      }
+    },
+  );
+};
 class StudyDetails extends React.Component {
-   onRequestAccess = (projectId) => {
-     const body = {
-       username: this.props.user.username,
-       resource_path: '/programs/TODO', // FIXME: fill this
-       resource_name: projectId,
-     };
-     fetchWithCreds({
-       path: `${requestorPath}request`,
-       method: 'POST',
-       body: JSON.stringify(body),
-     }).then(
-       ({ data }) => {
-         if (data && data.redirect_url) {
-           // if a redirect is configured, Requestor returns a redirect URL
-           window.open(data.redirect_url);
-         } else {
-           message
-             .error('Something went wrong when talking to Requestor service', 3);
-         }
-       },
-     );
-   };
-
-   isDataAccessible = (projectId) => {
+   isDataAccessible = (accessibleValidationValue) => {
      if (!useArboristUI) {
        return true;
      }
-     if (!studyViewerConfig.accessibleValidationField || !projectId) {
+     if (!accessibleValidationValue) {
        return false;
      }
-     return (userHasMethodOnProject('read-storage', projectId, this.props.userAuthMapping)
-   || userHasMethodOnProject('read', projectId, this.props.userAuthMapping)
-   || projectIsOpenData(this.props.projectAvail, projectId));
+     return (userHasMethodOnProject('read-storage', accessibleValidationValue, this.props.userAuthMapping)
+   || userHasMethodOnProject('read', accessibleValidationValue, this.props.userAuthMapping));
    };
 
    render() {
@@ -74,7 +73,12 @@ class StudyDetails extends React.Component {
      if (!userHasLoggedIn) {
        requestAccessButtonFunc = onNotLoggedInRequestAccess;
      } else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-       requestAccessButtonFunc = this.onRequestAccess(this.props.data.accessibleValidationValue);
+       requestAccessButtonFunc = onRequestAccess(
+         this.props.user.username,
+         '/programs/TODO', // FIXME: fill this
+         this.props.data.rowAccessorValue,
+         this.props.data.title,
+       );
      }
 
      return (
@@ -85,7 +89,7 @@ class StudyDetails extends React.Component {
                <Button
                  label={'Learn More'}
                  buttonType='primary'
-                 onClick={() => this.props.history.push(`/study-viewer/${this.props.data.title}`)}
+                 onClick={() => this.props.history.push(`/study-viewer/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
                />
                : null}
              <Button
@@ -164,22 +168,22 @@ class StudyDetails extends React.Component {
 StudyDetails.propTypes = {
   data: PropTypes.shape({
     title: PropTypes.string.isRequired,
-    briefTitle: PropTypes.string,
+    rowAccessorValue: PropTypes.string.isRequired,
     blockData: PropTypes.object,
     tableData: PropTypes.object,
     accessibleValidationValue: PropTypes.string,
+    fileData: PropTypes.array,
+    docData: PropTypes.array,
   }).isRequired,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   displayLearnMoreBtn: PropTypes.bool,
-  projectAvail: PropTypes.object,
   userAuthMapping: PropTypes.object.isRequired,
 };
 
 StudyDetails.defaultProps = {
   displayLearnMoreBtn: false,
-  projectAvail: {},
 };
 
 export default withRouter(StudyDetails);

@@ -4,6 +4,9 @@ const study = (state = {}, action) => {
     return { ...state, dataset: action.dataset };
   case 'STUDY_DATASET_ERROR':
     return { ...state, error: action.error };
+  case 'RECEIVE_OPEN_DOC_DATA': {
+    return { ...state, docData: action.fileData };
+  }
   default:
     return state;
   }
