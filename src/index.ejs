@@ -2,7 +2,13 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://login.bionimbus.org https://wayf.incommonfederation.org; img-src 'self' data: https://*.s3.amazonaws.com https://www.google-analytics.com; script-src 'self' 'unsafe-eval' https://www.google-analytics.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; object-src 'none'; font-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://login.bionimbus.org  https://*.s3.amazonaws.com https://wayf.incommonfederation.org <%= htmlWebpackPlugin.options.connect_src %>; frame-src <%= htmlWebpackPlugin.options.connect_src %> 'self';;">
+    <!-- Content-Security-Policy connect-src:
+      - https://*.mapbox.com for COVID-19 Dashboard maps
+      - https://opendata.datacommons.io (Prod) and https://static.planx-pla.net (QA) to fetch COVID-19 Dashboard data
+    frame-src:
+      - https://auspice.planx-pla.net and https://auspice.pandemicresponsecommons.org for COVID-19 Auspice app in iframe
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://login.bionimbus.org https://wayf.incommonfederation.org; child-src blob:; img-src 'self' https://opendata.datacommons.io https://static.planx-pla.net data: https://*.s3.amazonaws.com https://www.google-analytics.com; script-src 'self' 'unsafe-eval' https://www.google-analytics.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; object-src 'none'; font-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://login.bionimbus.org https://*.s3.amazonaws.com https://wayf.incommonfederation.org https://*.mapbox.com https://opendata.datacommons.io https://static.planx-pla.net <%= htmlWebpackPlugin.options.connect_src %>; frame-src <%= htmlWebpackPlugin.options.connect_src %> 'self' https://auspice.planx-pla.net https://auspice.pandemicresponsecommons.org;;">
     <meta name="viewport" content="width=device-width" />
     <link href="https://fonts.googleapis.com/icon?family=Source+Sans+Pro" rel="stylesheet">
     <link rel="stylesheet/less" type="text/css" media="all" href="<%= htmlWebpackPlugin.options.basename %>/node_modules/@gen3/ui-component/dist/css/base.less">

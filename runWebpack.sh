@@ -167,6 +167,7 @@ if [[ "$NODE_ENV" == "dev" || "$NODE_ENV" == "auto" ]]; then
   echo ./node_modules/.bin/webpack-dev-server
   ./node_modules/.bin/webpack-dev-server
 else
+  export NODE_OPTIONS='--max-old-space-size=4096'
   export NODE_ENV="production"
   echo ./node_modules/.bin/webpack --bail
   ./node_modules/.bin/webpack --bail
