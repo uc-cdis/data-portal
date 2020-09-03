@@ -2,11 +2,7 @@ import { connect } from 'react-redux';
 import Covid19Dashboard from '../Covid19Dashboard';
 
 import { covid19DashboardConfig } from '../localconf';
-import { readSingleColumnTSV, readMultiColumnTSV, readQuotedList } from './dataUtils.js';
-
-
-let dataUrl = covid19DashboardConfig ? covid19DashboardConfig.dataUrl : '';
-dataUrl = !dataUrl.endsWith('/') ? `${dataUrl}/` : dataUrl;
+import { readMultiColumnTSV, readQuotedList } from './dataUtils.js';
 
 
 async function handleDashboardData(propName, data) {
@@ -16,9 +12,6 @@ async function handleDashboardData(propName, data) {
   case 'jhuGeojsonLatest':
   case 'jhuJsonByLevelLatest':
     return JSON.parse(data);
-  case 'seirObservedChartData':
-  case 'seirSimulatedChartData':
-    return readSingleColumnTSV(data);
   case 'top10ChartData':
   case 'idphDailyChartData':
     return readMultiColumnTSV(data);
@@ -29,7 +22,7 @@ async function handleDashboardData(propName, data) {
 }
 
 const fetchDashboardData = (propName, filePath) => {
-  const url = dataUrl + filePath;
+  const url = covid19DashboardConfig.dataUrl + filePath;
   return dispatch => fetch(url, dispatch)
     .then((r) => {
       switch (r.status) {
@@ -55,7 +48,7 @@ const fetchDashboardData = (propName, filePath) => {
 };
 
 const fetchTimeSeriesData = (dataLevel, locationId, title, withSimulation) => {
-  const url = `${dataUrl}time_series/${dataLevel}/${locationId}.json`;
+  const url = `${covid19DashboardConfig.dataUrl}time_series/${dataLevel}/${locationId}.json`;
   return (dispatch) => {
     dispatch(
       {

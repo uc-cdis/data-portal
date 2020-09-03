@@ -23,7 +23,8 @@ class PlotChartAxisTick extends React.Component {
       formattedValue = numberWithCommas(formattedValue);
     }
     // else { // type === 'string'
-    //   const maxLength = 4;
+    //   // TODO: make maxLength configurable per chart to allow truncating labels
+    //   const maxLength = ?;
     //   formattedValue = formattedValue.slice(0, maxLength)
     //     + (formattedValue.length > maxLength ? '.' : '');
     // }

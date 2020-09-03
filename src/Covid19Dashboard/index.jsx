@@ -26,8 +26,6 @@ const dashboardDataLocations = {
   jhuGeojsonLatest: 'map_data/jhu_geojson_latest.json',
   jhuJsonByLevelLatest: 'map_data/jhu_json_by_level_latest.json',
   top10ChartData: 'top10.txt',
-  seirObservedChartData: 'observed_cases.txt',
-  seirSimulatedChartData: 'simulated_cases.txt',
   idphDailyChartData: 'idph_daily.txt',
 };
 
@@ -216,20 +214,6 @@ class Covid19Dashboard extends React.Component {
       confirmedCount, deathsCount, recoveredCount,
     } = this.getTotalCounts();
 
-    // SEIR chart not used for now
-    // const displaySeirPlot = Object.keys(this.props.seirObservedChartData).length > 0
-    //   && Object.keys(this.props.seirSimulatedChartData).length > 0;
-    // const seirChartData = displaySeirPlot ? [
-    //   {
-    //     data: this.props.seirObservedChartData,
-    //     name: 'Observed Cases',
-    //   },
-    //   {
-    //     data: this.props.seirSimulatedChartData,
-    //     name: 'Simulated Cases',
-    //   },
-    // ] : [];
-
     return (
       <div className='covid19-dashboard'>
         {/* dashboard tabs */}
@@ -267,7 +251,6 @@ class Covid19Dashboard extends React.Component {
                       (<ChartCarousel
                         key={i}
                         chartsConfig={carouselConfig}
-                        // seirChartData={seirChartData} // not used for now
                         {...this.props}
                       />),
                     )}
@@ -377,8 +360,6 @@ Covid19Dashboard.propTypes = {
   jhuJsonByLevelLatest: PropTypes.object,
   selectedLocationData: PropTypes.object,
   closeLocationPopup: PropTypes.func.isRequired,
-  seirObservedChartData: PropTypes.object,
-  seirSimulatedChartData: PropTypes.object,
   top10ChartData: PropTypes.array,
   idphDailyChartData: PropTypes.array,
 };
@@ -388,8 +369,6 @@ Covid19Dashboard.defaultProps = {
   jhuGeojsonLatest: { type: 'FeatureCollection', features: [] },
   jhuJsonByLevelLatest: { country: {}, state: {}, county: {} },
   selectedLocationData: null,
-  seirObservedChartData: {},
-  seirSimulatedChartData: {},
   top10ChartData: [],
   idphDailyChartData: [],
 };

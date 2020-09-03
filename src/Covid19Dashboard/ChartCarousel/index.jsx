@@ -9,9 +9,6 @@ import Spinner from '../../components/Spinner';
 import PlotChart from '../PlotChart';
 import './ChartCarousel.less';
 
-let dataUrl = covid19DashboardConfig ? covid19DashboardConfig.dataUrl : '';
-dataUrl = !dataUrl.endsWith('/') ? `${dataUrl}/` : dataUrl;
-
 
 class ChartCarousel extends PureComponent {
   constructor(props) {
@@ -67,7 +64,8 @@ class ChartCarousel extends PureComponent {
       case 'image':
         chart = (<img
           className='chart-carousel__image'
-          src={dataUrl + (hasImagePath ? chartConfig.path : this.props[chartConfig.prop])}
+          src={covid19DashboardConfig.dataUrl +
+            (hasImagePath ? chartConfig.path : this.props[chartConfig.prop])}
           alt={`Chart${chartConfig.title ? ` for ${chartConfig.title}` : ''}`}
         />);
         break;
