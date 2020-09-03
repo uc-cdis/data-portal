@@ -27,12 +27,12 @@ export const dispatchJob = body => dispatch => fetchWithCreds({
         };
       default:
         return {
-          type: 'JOB_FETCH_ERROR',
+          type: 'FETCH_ERROR',
           error: data,
         };
       }
     },
-    err => ({ type: 'JOB_FETCH_ERROR', error: err }),
+    err => ({ type: 'FETCH_ERROR', error: err }),
   )
   .then((msg) => { dispatch(msg); });
 
@@ -60,12 +60,12 @@ export const checkJobStatus = (dispatch, getState) => {
         };
       default:
         return {
-          type: 'JOB_FETCH_ERROR',
+          type: 'FETCH_ERROR',
           error: data,
         };
       }
     },
-    err => ({ type: 'JOB_FETCH_ERROR', error: err }),
+    err => ({ type: 'FETCH_ERROR', error: err }),
   ).then((msg) => { dispatch(msg); });
 };
 

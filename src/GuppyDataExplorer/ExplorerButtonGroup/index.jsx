@@ -44,11 +44,10 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.job && nextProps.job.errorMsg) {
+    if (nextProps.job && nextProps.job.status === 'Failed' && this.props.job.status !== 'Failed') {
       this.setState({
         toasterOpen: true,
         toasterHeadline: this.state.toasterErrorText,
-        toasterError: nextProps.job.errorMsg,
       });
     }
     if (nextProps.job && nextProps.job.status === 'Completed' && this.props.job.status !== 'Completed') {
@@ -424,7 +423,7 @@ class ExplorerButtonGroup extends React.Component {
         action: 'export-files',
         input: {
           filter: getGQLFilter(this.props.filter),
-          root_node: rootNode,
+          root_node: 'fake-root-node-for-testing',
         },
       });
       this.props.checkJobStatus();

@@ -3,7 +3,7 @@ import ExplorerButtonGroup from '../ExplorerButtonGroup';
 import { dispatchJob, checkJob, fetchJobResult, resetJobState } from '../../Analysis/AnalysisJob';
 
 const mapStateToProps = state => ({
-  job: { ...state.analysis.job, errorMsg: state.analysis.jobFetchError },
+  job: state.analysis.job,
   userAccess: state.userAccess.access,
 });
 
