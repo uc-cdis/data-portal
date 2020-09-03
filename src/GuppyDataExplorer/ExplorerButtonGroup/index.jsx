@@ -723,16 +723,17 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     let tooltipEnabled = false;
     let btnTooltipText = '';
 
-    // if limited file PFB export is enabled, PFB export buttons will be disabled
-    // if the user selects multiple files of different types. If this happens,
-    // display a tooltip explaining that the user can only export files of the same type.
+    // If limited file PFB export is enabled, PFB export buttons will be disabled
+    // if the user selects multiple files that are on different nodes in the graph.
+    // (See https://github.com/uc-cdis/data-portal/pull/729).
+    // If the user has selected multiple files on different nodes, display a
+    // tooltip explaining that the user can only export files of the same type.
     const isFilePFBButton = buttonConfig.type === 'export-files' || buttonConfig.type === 'export-files-to-pfb' || buttonConfig.type === 'export-files-to-seven-bridges';
-    const multipleSourceNodesSelected = this.state.sourceNodesInCohort.length > 1;
     if (this.props.buttonConfig.enableLimitedFilePFBExport
       && isFilePFBButton
-      && multipleSourceNodesSelected) {
+      && this.state.sourceNodesInCohort.length > 1) {
       tooltipEnabled = true;
-      btnTooltipText = `Currently, you can only export data files of the same type. You have selected ${this.state.sourceNodesInCohort.length} different types of data files.`;
+      btnTooltipText = 'Currently you cannot export files with different Data Types. Please choose a single Data Type from the Data Type filter on the left.';
     } else {
       tooltipEnabled = buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false;
       btnTooltipText = (this.props.isLocked) ? 'You only have access to summary data' : buttonConfig.tooltipText;
