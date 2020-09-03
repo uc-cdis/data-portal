@@ -423,7 +423,7 @@ class ExplorerButtonGroup extends React.Component {
         action: 'export-files',
         input: {
           filter: getGQLFilter(this.props.filter),
-          root_node: 'fake-root-node-for-testing',
+          root_node: rootNode,
         },
       });
       this.props.checkJobStatus();
