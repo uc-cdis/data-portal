@@ -2,7 +2,7 @@
 
 Example configuration:
 
-```json
+```
 {
     "dataType": "dataset",
     "title": "Datasets",           // page title
