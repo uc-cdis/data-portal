@@ -168,7 +168,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
       />
       <Tooltip
         formatter={
-          value => [numberWithCommas(value), yTitle]
+          value => [numberWithCommas(value), yTitle || 'Value']
         }
       />
       <Bar
