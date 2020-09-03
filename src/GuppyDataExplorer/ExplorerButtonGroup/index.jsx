@@ -270,7 +270,6 @@ class ExplorerButtonGroup extends React.Component {
     </Toaster>
   ));
 
-
   getFileCountSum = async () => {
     try {
       const dataType = this.props.guppyConfig.dataType;
@@ -434,6 +433,7 @@ class ExplorerButtonGroup extends React.Component {
         toasterHeadline: this.state.pfbStartText,
       });
     } else {
+      /* eslint-disable no-console */
       console.error(`Error: Missing \`enableLimitedFilePFBExport\` in the portal config.
 Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be set in the portal config.`);
     }
@@ -510,14 +510,12 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       && this.props.buttonConfig.buttons.some(
         btnCfg => this.isFileButton(btnCfg) && btnCfg.enabled)) {
       if (this.props.guppyConfig.fileCountField) {
-        console.log('file count field is set');
         // if "fileCountField" is set, just ask for sum of file_count field
         const totalFileCount = await this.getFileCountSum();
         this.setState(() => ({
           manifestEntryCount: totalFileCount,
         }));
       } else {
-        console.log('file count field is not set. GuppyConfig:', this.props.guppyConfig);
         // otherwise, just query subject index for subject_id list,
         // and query file index for manifest info.
         this.setState({
@@ -598,7 +596,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     // in the graph.
     // NOTE @mpingram this is a hack put in place due to the pelican-export job only supporting
     // creating PFBs where all entities are on the same node. If the pelican-export job is changed
-    // to support creating PFBs where entities can be from multiple nodes, this code should be removed.
+    // to support creating PFBs where entities can be from multiple nodes,
+    // this code should be removed.
     // -------
     if (this.props.buttonConfig.enableLimitedFilePFBExport) {
       if (buttonConfig.type === 'export-files'
