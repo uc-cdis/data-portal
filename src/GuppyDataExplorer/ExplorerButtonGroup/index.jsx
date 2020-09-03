@@ -591,30 +591,27 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     if (this.props.isLocked) {
       return !this.props.isLocked;
     }
-    // Disable PFB export buttons if user is trying to export files that are on different nodes
-    // in the graph.
-    // NOTE @mpingram this is a hack put in place due to the pelican-export job only supporting
-    // creating PFBs where all entities are on the same node. If the pelican-export job is changed
-    // to support creating PFBs where entities can be from multiple nodes,
-    // this code should be removed.
-    // -------
-    if (this.props.buttonConfig.enableLimitedFilePFBExport) {
-      if (buttonConfig.type === 'export-files'
-      || buttonConfig.type === 'export-files-to-pfb'
-      || buttonConfig.type === 'export-files-to-seven-bridges') {
-        // enable the button only if the cohort is all of the same data type
-        return this.state.sourceNodesInCohort.length === 1;
-      }
-    }
-    // -------
     if (buttonConfig.type === 'manifest') {
       return this.state.manifestEntryCount > 0;
     }
-    if (buttonConfig.type === 'export-to-pfb' || buttonConfig.type === 'export-files-to-pfb') {
+    if (buttonConfig.type === 'export-to-pfb') {
       // disable the pfb export button if any other pfb export jobs are running
       return !(this.state.exportingToTerra || this.state.exportingToSevenBridges);
     }
-    if (buttonConfig.type === 'export' || buttonConfig.type === 'export-files') {
+    if (buttonConfig.type === 'export-files-to-pfb') {
+      // disable the pfb export button if any other pfb export jobs are running
+      const otherPFBJobsRunning = this.state.exportingToTerra
+        || this.state.exportingToSevenBridges;
+      if (otherPFBJobsRunning) {
+        return false;
+      }
+      // If limited file PFB export is enabled, disable the button if the selected
+      // data files are on more than one source node. (See https://github.com/uc-cdis/data-portal/pull/729)
+      if (this.props.buttonConfig.enableLimitedFilePFBExport) {
+        return this.state.sourceNodesInCohort.length === 1;
+      }
+    }
+    if (buttonConfig.type === 'export') {
       if (!this.props.buttonConfig.terraExportURL) {
         console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.'); // eslint-disable-line no-console
         return false;
@@ -625,7 +622,26 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
         || this.state.exportingToSevenBridges
         || this.isPFBRunning());
     }
-    if (buttonConfig.type === 'export-to-seven-bridges' || buttonConfig.type === 'export-files-to-seven-bridges') {
+    if (buttonConfig.type === 'export-files') {
+      if (!this.props.buttonConfig.terraExportURL) {
+        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.'); // eslint-disable-line no-console
+        return false;
+      }
+      // disable the terra export button if any of the
+      // pfb export operations are running.
+      const otherPFBJobsRunning = this.state.exportingToTerra
+        || this.state.exportingToSevenBridges
+        || this.isPFBRunning();
+      if (otherPFBJobsRunning) {
+        return false;
+      }
+      // If limited file PFB export is enabled, disable the button if the selected
+      // data files are on more than one source node. (See https://github.com/uc-cdis/data-portal/pull/729)
+      if (this.props.buttonConfig.enableLimitedFilePFBExport) {
+        return this.state.sourceNodesInCohort.length === 1;
+      }
+    }
+    if (buttonConfig.type === 'export-to-seven-bridges') {
       if (!this.props.buttonConfig.sevenBridgesExportURL) {
         console.error('Export to Seven Bridges button is present, but there is no `sevenBridgesExportURL` specified in the portal config. Disabling the export to Seven Bridges button.'); // eslint-disable-line no-console
         return false;
@@ -635,6 +651,25 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       return !(this.state.exportingToTerra
         || this.state.exportingToSevenBridges
         || this.isPFBRunning());
+    }
+    if (buttonConfig.type === 'export-files-to-seven-bridges') {
+      if (!this.props.buttonConfig.sevenBridgesExportURL) {
+        console.error('Export to Seven Bridges button is present, but there is no `sevenBridgesExportURL` specified in the portal config. Disabling the export to Seven Bridges button.'); // eslint-disable-line no-console
+        return false;
+      }
+      // disable the seven bridges export buttons if any of the
+      // pfb export operations are running.
+      const otherPFBJobsRunning = this.state.exportingToTerra
+        || this.state.exportingToSevenBridges
+        || this.isPFBRunning();
+      if (otherPFBJobsRunning) {
+        return false;
+      }
+      // If limited file PFB export is enabled, disable the button if the selected
+      // data files are on more than one source node. (See https://github.com/uc-cdis/data-portal/pull/729)
+      if (this.props.buttonConfig.enableLimitedFilePFBExport) {
+        return this.state.sourceNodesInCohort.length === 1;
+      }
     }
     if (buttonConfig.type === 'export-to-workspace') {
       return this.state.manifestEntryCount > 0;
