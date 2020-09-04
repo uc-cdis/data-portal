@@ -181,7 +181,6 @@ export const ReduxStudyDetails = (() => {
   const mapStateToProps = state => ({
     user: state.user,
     userAuthMapping: state.userAuthMapping,
-    projectAvail: state.submission.projectAvail,
   });
 
   return connect(mapStateToProps)(StudyDetails);
