@@ -51,7 +51,6 @@ export class CheckBoxGroup extends Component {
 
   render() {
     const selectedItems = this.props.selectedItems;
-    // console.log(selectedItems);
     const listItems = (this.state.collapsed === 1)
       ? this.props.listItems.slice(0, 3)
       : this.props.listItems;
