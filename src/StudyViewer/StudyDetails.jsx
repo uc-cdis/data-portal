@@ -30,7 +30,7 @@ class StudyDetails extends React.Component {
   onRequestAccess = () => {
     const body = {
       username: this.props.user.username,
-      resource_path: '/programs/TODO', // FIXME: fill this
+      resource_path: this.props.data.accessibleValidationValue,
       resource_id: this.props.data.rowAccessorValue,
       resource_display_name: this.props.data.title,
     };
