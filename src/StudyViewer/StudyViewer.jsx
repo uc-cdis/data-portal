@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Space, Spin } from 'antd';
 import getReduxStore from '../reduxStore';
-import { studyViewerConfig } from '../localconf';
-import { fetchDataset, fetchFiles, resetSingleStudyData } from './reduxer';
+import { fetchDataset, fetchFiles, resetSingleStudyData, fetchStudyViewerConfig } from './reduxer';
 import './StudyViewer.css';
 import StudyCard from './StudyCard';
 
@@ -58,12 +57,13 @@ class StudyViewer extends React.Component {
       );
     }
 
+    const studyViewerConfig = fetchStudyViewerConfig(this.state.dataType);
     const datasets = this.props.datasets;
     if (datasets.length > 0
       && studyViewerConfig.openMode === 'open-first'
-      && studyViewerConfig.defaultOpenTitle !== '') {
+      && studyViewerConfig.openFirstRowAccessor !== '') {
       datasets.forEach((item, i) => {
-        if (item.title === studyViewerConfig.defaultOpenTitle) {
+        if (item.rowAccessorValue === studyViewerConfig.openFirstRowAccessor) {
           datasets.splice(i, 1);
           datasets.unshift(item);
         }
@@ -83,6 +83,7 @@ class StudyViewer extends React.Component {
                 data={d}
                 fileData={this.props.fileData
                   .filter(fd => fd.rowAccessorValue === d.rowAccessorValue)}
+                studyViewerConfig={studyViewerConfig}
                 initialPanelExpandStatus={this.getPanelExpandStatus(studyViewerConfig.openMode, i)}
               />)))}
           </Space>

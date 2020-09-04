@@ -7,22 +7,11 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
 import { userHasMethodOnResource } from '../authMappingUtils';
-import { studyViewerConfig, useArboristUI, requestorPath, userapiPath } from '../localconf';
+import { useArboristUI, requestorPath, userapiPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './StudyViewer.css';
 
 const { Paragraph } = Typography;
-
-const getLabel = (label) => {
-  if (!studyViewerConfig.fieldMapping || studyViewerConfig.fieldMapping.length === 0) {
-    return capitalizeFirstLetter(label);
-  }
-  const fieldMappingEntry = studyViewerConfig.fieldMapping.find(i => i.field === label);
-  if (fieldMappingEntry) {
-    return fieldMappingEntry.name;
-  }
-  return capitalizeFirstLetter(label);
-};
 
 class StudyDetails extends React.Component {
   constructor(props) {
@@ -56,6 +45,19 @@ class StudyDetails extends React.Component {
         }
       },
     );
+  };
+
+  getLabel = (label) => {
+    if (!this.props.studyViewerConfig.fieldMapping
+     || this.props.studyViewerConfig.fieldMapping.length === 0) {
+      return capitalizeFirstLetter(label);
+    }
+    const fieldMappingEntry = this.props.studyViewerConfig.fieldMapping
+      .find(i => i.field === label);
+    if (fieldMappingEntry) {
+      return fieldMappingEntry.name;
+    }
+    return capitalizeFirstLetter(label);
   };
 
   showDownloadModal = () => {
@@ -157,7 +159,7 @@ class StudyDetails extends React.Component {
              <div>
                {(Object.entries(this.props.data.blockData).map(([k, v]) => (
                  <div key={k}>
-                   <div className='h3-typo'>{getLabel(k)}</div>
+                   <div className='h3-typo'>{this.getLabel(k)}</div>
                    <Paragraph>
                      {v}
                    </Paragraph>
@@ -177,7 +179,7 @@ class StudyDetails extends React.Component {
                    value.push(v);
                  }
                  return (
-                   <Descriptions.Item key={k} label={getLabel(k)}>
+                   <Descriptions.Item key={k} label={this.getLabel(k)}>
                      {value.map((item) => {
                        if (_.isString(item)) {
                          return item;
@@ -231,11 +233,13 @@ StudyDetails.propTypes = {
   user: PropTypes.object.isRequired,
   displayLearnMoreBtn: PropTypes.bool,
   userAuthMapping: PropTypes.object.isRequired,
+  studyViewerConfig: PropTypes.object,
 };
 
 StudyDetails.defaultProps = {
   displayLearnMoreBtn: false,
   fileData: [],
+  studyViewerConfig: {},
 };
 
 export default withRouter(StudyDetails);
