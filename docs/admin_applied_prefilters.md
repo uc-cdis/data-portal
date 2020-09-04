@@ -18,7 +18,7 @@ Syntax:
 ```
 
 
-In the below example, an admin filter is applied that only reveals data from the project name `jnkns-jenkins`.
+In the below example, an admin filter is applied that only reveals data from the project named `jnkns-jenkins`.
 
 ```
 "explorerConfig":[
