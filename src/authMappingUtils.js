@@ -78,5 +78,3 @@ export const userHasMethodOnAnyProject = (method, userAuthMapping = {}) => {
   const hasMethod = actionArrays.some(x => x.some(actionHasMethod));
   return hasMethod;
 };
-
-export const projectIsOpenData = (projectAvail, projectID) => (projectID in projectAvail && projectAvail[projectID] === 'Open');

@@ -6,7 +6,7 @@ import Popup from '../components/Popup';
 import { userapiPath, useArboristUI } from '../configs';
 import isEnabled from '../helpers/featureFlags';
 
-import { userHasMethodOnProject, projectIsOpenData } from '../authMappingUtils';
+import { userHasMethodOnProject } from '../authMappingUtils';
 
 const DOWNLOAD_BTN_CAPTION = 'Download';
 const SIGNED_URL_BTN_CAPTION = 'Generate Signed URL';
@@ -24,6 +24,10 @@ function fileSizeTransform(size) {
   const sizeStr = (size / (1024 ** i)).toFixed(2) * 1;
   const suffix = ['B', 'KB', 'MB', 'GB', 'TB'][i];
   return `${sizeStr} ${suffix}`;
+}
+
+function projectIsOpenData(projectAvail, projectID) {
+  return (projectID in projectAvail && projectAvail[projectID] === 'Open');
 }
 
 class CoreMetadataHeader extends Component {
