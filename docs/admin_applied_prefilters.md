@@ -1,10 +1,10 @@
-# Admin Applied Prefilters
+# Admin-applied Prefilters
 
-Commons administrators have the option to add hidden filters that are unalterable by users to each Data Explorer tab. These admin-applied pre-filters are applied before any user-applied filters. Use this functionality to hide particular commons data from users, like extraneous administrative data.
+Commons administrators have the option to add hidden filters that are unalterable by users to each Data Explorer tab. These admin-applied prefilters are applied before any user-applied filters. Use this functionality to hide particular commons data from users, like extraneous administrative data.
 
 ## Configuration
 
-To apply an admin pre-filter, use the portal config field called `adminAppliedPreFilters`. This setting goes in data/config/*.json, or in the gitops.json file, inside a given tab within the commons' `explorerConfig`.
+To apply an admin prefilter, use the portal config field called `adminAppliedPreFilters`. This setting goes in data/config/*.json, or in the gitops.json file, inside a given tab within the commons' `explorerConfig`.
 
 The setting follows the syntax of a Guppy filter. Specify a selectedValues filter. The filter is applied to to the records displayed before any user-applied filters, and can be specified independently in the dataExplorerConfig and fileExplorerConfig blocks.
 
