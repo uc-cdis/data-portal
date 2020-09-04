@@ -177,6 +177,14 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
       .then(msg => dispatch(msg));
 };
 
+export const resetSingleStudyData = () => dispatch => dispatch({
+  type: 'RESET_SINGLE_STUDY_DATA',
+});
+
+export const resetMultipleStudyData = () => dispatch => dispatch({
+  type: 'RESET_MULTIPLE_STUDY_DATA',
+});
+
 export const ReduxStudyDetails = (() => {
   const mapStateToProps = state => ({
     user: state.user,

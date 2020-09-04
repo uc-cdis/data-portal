@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { Space, Spin } from 'antd';
 import getReduxStore from '../reduxStore';
 import { studyViewerConfig } from '../localconf';
-import { fetchDataset, fetchFiles } from './reduxer';
+import { fetchDataset, fetchFiles, resetSingleStudyData } from './reduxer';
 import './StudyViewer.css';
 import StudyCard from './StudyCard';
 
@@ -45,6 +45,7 @@ class StudyViewer extends React.Component {
               [
                 store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType))),
                 store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object')),
+                store.dispatch(resetSingleStudyData()),
               ],
             ));
       }

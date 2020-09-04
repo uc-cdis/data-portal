@@ -12,6 +12,10 @@ const study = (state = {}, action) => {
     return { ...state, fileData: action.fileData };
   case 'NO_CONFIG_ERROR':
     return { ...state, noConfigError: action.error };
+  case 'RESET_SINGLE_STUDY_DATA':
+    return { ...state, dataset: undefined };
+  case 'RESET_MULTIPLE_STUDY_DATA':
+    return { ...state, datasets: undefined };
   default:
     return state;
   }
