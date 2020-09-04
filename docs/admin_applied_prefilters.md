@@ -4,7 +4,7 @@ Commons administrators have the option to add hidden filters that are unalterabl
 
 ## Configuration
 
-To apply an admin prefilter, use the portal config field called `adminAppliedPreFilters`. This setting goes in data/config/*.json, or in the gitops.json file, inside a given tab within the commons' `explorerConfig`.
+To apply an admin prefilter, use the portal config field called `adminAppliedPreFilters`. This setting goes in data/config/*.json, or in the gitops.json file. Place it inside a given tab entry within the `explorerConfig` block.
 
 The setting follows the syntax of a Guppy selectedValues filter.
 
