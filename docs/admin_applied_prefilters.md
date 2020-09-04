@@ -1,6 +1,6 @@
 # Admin-applied Prefilters
 
-Commons administrators have the option to add hidden filters that are unalterable by users to each Data Explorer tab. These admin-applied prefilters are applied before any user-applied filters. Use this functionality to hide particular commons data from users, like extraneous administrative data. Note that this filter only applies to the Data Explorer UI -- any hidden data may still be accessible from the Query page and the Guppy API.
+Commons administrators have the option to add hidden filters that are unalterable by users to each Data Explorer tab. These admin-applied prefilters are applied before any user-applied filters. Use this functionality to hide particular commons data from users, like extraneous administrative data. Note that this filter is applied to the Data Explorer UI -- any hidden data may still be accessible to users from the Query page and the Guppy API.
 
 ## Configuration
 
