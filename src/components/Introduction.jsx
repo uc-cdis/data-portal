@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
+import { studyViewerConfig } from '../localconf';
 import './Introduction.less';
 
 class Introduction extends Component {
@@ -11,6 +12,7 @@ class Introduction extends Component {
   };
 
   render() {
+    const buttonURL = `/study-viewer${studyViewerConfig[0].dataType}`;
     return (
       <div className='introduction'>
         <div className='h1-typo introduction__title'>{this.props.data.heading}</div>
@@ -24,7 +26,7 @@ class Introduction extends Component {
             <Button
               label={'View Clinical Trials'}
               buttonType='primary'
-              onClick={() => this.props.history.push('/study-viewer')}
+              onClick={() => this.props.history.push(buttonURL)}
             />
           </Space>
         </div>
