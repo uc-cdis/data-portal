@@ -25,7 +25,12 @@ const getLabel = (label) => {
 };
 
 class StudyDetails extends React.Component {
-  state = { downloadModalVisible: false };
+  constructor(props) {
+    super(props);
+    this.state = {
+      downloadModalVisible: false,
+    };
+  }
 
   onRequestAccess = () => {
     const body = {
@@ -101,7 +106,7 @@ class StudyDetails extends React.Component {
                <Button
                  label={'Learn More'}
                  buttonType='primary'
-                 onClick={() => this.props.history.push(`/study-viewer/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
+                 onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
                />
                : null}
              <Button

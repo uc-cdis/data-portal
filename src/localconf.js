@@ -116,20 +116,17 @@ function buildConfig(opts) {
 
   let useGuppyForExplorer = false;
 
-  let studyViewerConfig = {
-    openMode: 'open-all',
-    defaultOpenStudyName: '',
-    accessibleValidationField: undefined,
-    dataType: undefined,
-  };
+  let studyViewerConfig = [];
   if (config.studyViewerConfig) {
     useGuppyForExplorer = true;
-    studyViewerConfig = { ...studyViewerConfig, ...config.studyViewerConfig };
+    studyViewerConfig = [...config.studyViewerConfig];
     const validOpenOptions = ['open-first', 'open-all', 'close-all'];
-    if (config.studyViewerConfig.openMode
-      && !validOpenOptions.includes(config.studyViewerConfig.openMode)) {
-      studyViewerConfig.openMode = 'open-all';
-    }
+    studyViewerConfig.forEach((cfg, i) => {
+      if (cfg.openMode
+      && !validOpenOptions.includes(cfg.openMode)) {
+        studyViewerConfig[i].openMode = 'open-all';
+      }
+    });
   }
 
   let explorerConfig = [];

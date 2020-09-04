@@ -12,20 +12,44 @@ import './StudyViewer.css';
 const { Title } = Typography;
 
 class SingleStudyViewer extends React.Component {
-  componentDidMount() {
-    getReduxStore().then(
-      store =>
-        Promise.all(
-          [
-            store.dispatch(fetchDataset(decodeURIComponent(this.props.match.params[0]))),
-            store.dispatch(fetchFiles('object', decodeURIComponent(this.props.match.params[0]))),
-            store.dispatch(fetchFiles('open-access', decodeURIComponent(this.props.match.params[0]))),
-          ],
-        ));
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataType: undefined,
+      rowAccessor: undefined,
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const newState = {};
+    if (nextProps.match.params.dataType
+      && nextProps.match.params.dataType !== prevState.dataType) {
+      newState.dataType = nextProps.match.params.dataType;
+    }
+    if (nextProps.match.params.rowAccessor
+      && nextProps.match.params.rowAccessor !== prevState.rowAccessor) {
+      newState.rowAccessor = nextProps.match.params.rowAccessor;
+    }
+    return Object.keys(newState).length ? newState : null;
   }
 
   render() {
-    if (!this.props.dataset || this.props.dataset.length === 0) {
+    if (this.props.noConfigError) {
+      this.props.history.push('/not-found');
+    }
+    if (!this.props.dataset) {
+      if (this.state.dataType && this.state.rowAccessor) {
+        getReduxStore().then(
+          store =>
+            Promise.all(
+              [
+                store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType),
+                  decodeURIComponent(this.state.rowAccessor))),
+                store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object', decodeURIComponent(this.state.rowAccessor))),
+                store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'open-access', decodeURIComponent(this.state.rowAccessor))),
+              ],
+            ));
+      }
       return (
         <div className='study-viewer'>
           <div className='study-viewer_loading'>
@@ -34,10 +58,12 @@ class SingleStudyViewer extends React.Component {
         </div>
       );
     }
-    const dataset = this.props.dataset[0];
+
+    const dataset = this.props.dataset;
+    const backURL = this.props.location.pathname.substring(0, this.props.location.pathname.lastIndexOf('/'));
     return (
       <div className='study-viewer'>
-        <BackLink url='/study-viewer' label='Back' />
+        <BackLink url={backURL} label='Back' />
         <Space className='study-viewer__space' direction='vertical'>
           <div className='study-viewer__title'>
             <Title level={4}>{dataset.title}</Title>
@@ -73,16 +99,19 @@ class SingleStudyViewer extends React.Component {
 }
 
 SingleStudyViewer.propTypes = {
-  dataset: PropTypes.array,
+  dataset: PropTypes.object,
   docData: PropTypes.array,
   fileData: PropTypes.array,
-  match: PropTypes.object.isRequired,
+  noConfigError: PropTypes.string,
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 SingleStudyViewer.defaultProps = {
-  dataset: [],
+  dataset: undefined,
   docData: [],
   fileData: [],
+  noConfigError: undefined,
 };
 
 export default withRouter(SingleStudyViewer);

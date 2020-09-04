@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { Space, Spin } from 'antd';
 import getReduxStore from '../reduxStore';
 import { studyViewerConfig } from '../localconf';
@@ -8,15 +9,18 @@ import './StudyViewer.css';
 import StudyCard from './StudyCard';
 
 class StudyViewer extends React.Component {
-  componentDidMount() {
-    getReduxStore().then(
-      store =>
-        Promise.all(
-          [
-            store.dispatch(fetchDataset()),
-            store.dispatch(fetchFiles('object')),
-          ],
-        ));
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataType: undefined,
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.match.params.dataType && nextProps.match.params.dataType !== prevState.dataType) {
+      return { dataType: nextProps.match.params.dataType };
+    }
+    return null;
   }
 
   getPanelExpandStatus = (openMode, index) => {
@@ -29,7 +33,21 @@ class StudyViewer extends React.Component {
   }
 
   render() {
+    if (this.props.noConfigError) {
+      this.props.history.push('/not-found');
+    }
+
     if (!this.props.datasets) {
+      if (this.state.dataType) {
+        getReduxStore().then(
+          store =>
+            Promise.all(
+              [
+                store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType))),
+                store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object')),
+              ],
+            ));
+      }
       return (
         <div className='study-viewer'>
           <div className='study-viewer_loading'>
@@ -76,11 +94,14 @@ class StudyViewer extends React.Component {
 StudyViewer.propTypes = {
   datasets: PropTypes.array,
   fileData: PropTypes.array,
+  noConfigError: PropTypes.string,
+  history: PropTypes.object.isRequired,
 };
 
 StudyViewer.defaultProps = {
-  datasets: [],
+  datasets: undefined,
   fileData: [],
+  noConfigError: undefined,
 };
 
-export default StudyViewer;
+export default withRouter(StudyViewer);

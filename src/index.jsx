@@ -362,7 +362,7 @@ async function init() {
                   }
                   <Route
                     exact
-                    path='/study-viewer'
+                    path='/study-viewer/:dataType'
                     component={
                       props => (<ProtectedContent
                         public
@@ -373,7 +373,7 @@ async function init() {
                   />
                   <Route
                     exact
-                    path='/study-viewer/*'
+                    path='/study-viewer/:dataType/:rowAccessor'
                     component={
                       props => (<ProtectedContent
                         public
