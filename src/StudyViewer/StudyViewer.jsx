@@ -29,7 +29,7 @@ class StudyViewer extends React.Component {
   }
 
   render() {
-    if (!this.props.dataset) {
+    if (!this.props.datasets) {
       return (
         <div className='study-viewer'>
           <div className='study-viewer_loading'>
@@ -39,14 +39,14 @@ class StudyViewer extends React.Component {
       );
     }
 
-    const dataset = this.props.dataset;
-    if (dataset.length > 0
+    const datasets = this.props.datasets;
+    if (datasets.length > 0
       && studyViewerConfig.openMode === 'open-first'
       && studyViewerConfig.defaultOpenStudyName !== '') {
-      dataset.forEach((item, i) => {
+      datasets.forEach((item, i) => {
         if (item.title === studyViewerConfig.defaultOpenStudyName) {
-          dataset.splice(i, 1);
-          dataset.unshift(item);
+          datasets.splice(i, 1);
+          datasets.unshift(item);
         }
       });
     }
@@ -56,9 +56,9 @@ class StudyViewer extends React.Component {
         <div className='h2-typo study-viewer__title'>
           {(studyViewerConfig.title) || 'Datasets' }
         </div>
-        {(dataset.length > 0) ?
+        {(datasets.length > 0) ?
           <Space className='study-viewer__space' direction='vertical'>
-            {(dataset.map((d, i) =>
+            {(datasets.map((d, i) =>
               (<StudyCard
                 key={i}
                 data={d}
@@ -74,12 +74,12 @@ class StudyViewer extends React.Component {
 }
 
 StudyViewer.propTypes = {
-  dataset: PropTypes.array,
+  datasets: PropTypes.array,
   fileData: PropTypes.array,
 };
 
 StudyViewer.defaultProps = {
-  dataset: [],
+  datasets: [],
   fileData: [],
 };
 
