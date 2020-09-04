@@ -41,6 +41,19 @@ class ExplorerButtonGroup extends React.Component {
       exportWorkspaceStatus: null,
       workspaceSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
     };
+
+    // Display misconfiguration warnings if Export PFB to Terra/SBG buttons are present
+    // but no URL was configured to send the PFBs to.
+    const exportToTerraButtonPresent = props.buttonConfig.any(btn => btn.type === 'export' || btn.type === 'export-files');
+    if (exportToTerraButtonPresent && !this.props.buttonConfig.terraExportURL) {
+      console.error('Misconfiguration error: Export to Terra button is present, but there is no `terraExportURL` specified in the portal config.'); // eslint-disable-line no-console
+      return false;
+    }
+    const exportToSevenBridgesButtonPresent = props.buttonConfig.any(btn => btn.type === 'export-to-seven-bridges' || btn.type === 'export-files-to-seven-bridges');
+    if (exportToSevenBridgesButtonPresent && !this.props.buttonConfig.sevenBridgesExportURL) {
+      console.error('Misconfiguration error: Export to Seven Bridges button is present, but there is no `sevenBridgesExportURL` specified in the portal config.'); // eslint-disable-line no-console
+      return false;
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -613,19 +626,11 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       }
     }
     if (buttonConfig.type === 'export') {
-      if (!this.props.buttonConfig.terraExportURL) {
-        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.'); // eslint-disable-line no-console
-        return false;
-      }
       // disable the terra export button if any of the
       // pfb export operations are running.
       return !pfbJobIsRunning;
     }
     if (buttonConfig.type === 'export-files') {
-      if (!this.props.buttonConfig.terraExportURL) {
-        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.'); // eslint-disable-line no-console
-        return false;
-      }
       // disable the terra export button if any of the
       // pfb export operations are running.
       if (pfbJobIsRunning) {
@@ -638,19 +643,11 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       }
     }
     if (buttonConfig.type === 'export-to-seven-bridges') {
-      if (!this.props.buttonConfig.sevenBridgesExportURL) {
-        console.error('Export to Seven Bridges button is present, but there is no `sevenBridgesExportURL` specified in the portal config. Disabling the export to Seven Bridges button.'); // eslint-disable-line no-console
-        return false;
-      }
       // disable the seven bridges export buttons if any of the
       // pfb export operations are running.
       return !pfbJobIsRunning;
     }
     if (buttonConfig.type === 'export-files-to-seven-bridges') {
-      if (!this.props.buttonConfig.sevenBridgesExportURL) {
-        console.error('Export to Seven Bridges button is present, but there is no `sevenBridgesExportURL` specified in the portal config. Disabling the export to Seven Bridges button.'); // eslint-disable-line no-console
-        return false;
-      }
       // disable the seven bridges export buttons if any of the
       // pfb export operations are running.
       if (pfbJobIsRunning) {
