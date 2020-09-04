@@ -12,13 +12,15 @@ Syntax:
 ```
 "adminAppliedPreFilters": {
       "<name-of-field-of-interest>": { 
-        "selectedValues": ["<selected-value-1>", ...]
+        "selectedValues": ["<selected-value-1>", "<selected-value-2>"]
       }
     }
 ```
 
+In a commons with the above config block, data will only be shown in the explorer tab if the field `<name-of-field-of-interest>` is set to either `<selected-value-1>` or `<selected-value-2>`. Furthermore, because the data explorer calculates filters to display based on the data available, the filter setting for `<name-of-field-of-interest>` will only display `<selected-value-1>` and `<selected-value-2>` as applicable options.
 
-In the below example, an admin filter is applied that only reveals data from the project named `jnkns-jenkins`.
+
+In the below example, an admin filter is applied that only reveals data from the project named `jnkns-jenkins`. In the UI, the "Project" filter in this example will no longer display any other project name as a filter option.
 
 ```
 "explorerConfig":[
