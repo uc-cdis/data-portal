@@ -54,7 +54,7 @@ class StudyViewer extends React.Component {
     return (
       <div className='study-viewer'>
         <div className='h2-typo study-viewer__title'>
-          {(studyViewerConfig.title) || 'Datasets' }
+          {studyViewerConfig.title}
         </div>
         {(datasets.length > 0) ?
           <Space className='study-viewer__space' direction='vertical'>
