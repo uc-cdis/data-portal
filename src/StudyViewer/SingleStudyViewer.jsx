@@ -1,78 +1,117 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { Space, Typography } from 'antd';
+import { Space, Typography, Spin } from 'antd';
 import { FileOutlined, FilePdfOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
 import { humanFileSize } from '../utils.js';
-
-import ReduxStudyDetails from './ReduxStudyDetails';
+import { ReduxStudyDetails, fetchDataset, fetchFiles } from './reduxer';
+import getReduxStore from '../reduxStore';
 import './StudyViewer.css';
-import { studyViewerConfig } from '../localconf';
 
 const { Title } = Typography;
 
 class SingleStudyViewer extends React.Component {
-  render() {
-    // some hacky way to load mock data in here
-    // of course this will be replaced by passing in a prop or read from redux later
-    const dataName = this.props.location.pathname.replace('/study-viewer/', '');
-    const studyData = studyViewerConfig.data.find(element => element.name === dataName);
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataType: undefined,
+      rowAccessor: undefined,
+    };
+  }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const newState = {};
+    if (nextProps.match.params.dataType
+      && nextProps.match.params.dataType !== prevState.dataType) {
+      newState.dataType = nextProps.match.params.dataType;
+    }
+    if (nextProps.match.params.rowAccessor
+      && nextProps.match.params.rowAccessor !== prevState.rowAccessor) {
+      newState.rowAccessor = nextProps.match.params.rowAccessor;
+    }
+    return Object.keys(newState).length ? newState : null;
+  }
+
+  render() {
+    if (this.props.noConfigError) {
+      this.props.history.push('/not-found');
+    }
+    if (!this.props.dataset) {
+      if (this.state.dataType && this.state.rowAccessor) {
+        getReduxStore().then(
+          store =>
+            Promise.all(
+              [
+                store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType),
+                  decodeURIComponent(this.state.rowAccessor))),
+                store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object', decodeURIComponent(this.state.rowAccessor))),
+                store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'open-access', decodeURIComponent(this.state.rowAccessor))),
+              ],
+            ));
+      }
+      return (
+        <div className='study-viewer'>
+          <div className='study-viewer_loading'>
+            <Spin size='large' tip='Loading data...' />
+          </div>
+        </div>
+      );
+    }
+
+    const dataset = this.props.dataset;
+    const backURL = this.props.location.pathname.substring(0, this.props.location.pathname.lastIndexOf('/'));
     return (
       <div className='study-viewer'>
-        <BackLink url='/study-viewer' label='Back' />
-        {(studyData) ?
-          <Space className='study-viewer__space' direction='vertical'>
-            <div className='study-viewer__title'>
-              <Title level={4}>{studyData.title}</Title>
-            </div>
-            <div className='study-viewer__details'>
-              <ReduxStudyDetails data={studyData} />
-              <div className='study-viewer__details-sidebar'>
-                <Space direction='vertical'>
+        <BackLink url={backURL} label='Back' />
+        <Space className='study-viewer__space' direction='vertical'>
+          <div className='study-viewer__title'>
+            <Title level={4}>{dataset.title}</Title>
+          </div>
+          <div className='study-viewer__details'>
+            <ReduxStudyDetails data={dataset} fileData={this.props.fileData} />
+            <div className='study-viewer__details-sidebar'>
+              <Space direction='vertical' style={{ width: '100%' }}>
+                {(this.props.docData.length > 0) ?
                   <div className='study-viewer__details-sidebar-box'>
                     <Space className='study-viewer__details-sidebar-space' direction='vertical'>
-                      <div className='h3-typo'>Data Access Agreements</div>
-                      <div>
-                        <FilePdfOutlined />
-                        <a href=''>Data Use Agreement (DUA)</a>
-                      </div>
-                      <div>
-                        <FilePdfOutlined />
-                        <a href=''>Data Access Request (DAR)</a>
-                      </div>
+                      <div className='h3-typo'>Study Documents</div>
+                      {this.props.docData.map((doc) => {
+                        const iconComponent = (doc.data_format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
+                        const linkText = `${doc.file_name} (${doc.data_format} - ${humanFileSize(doc.file_size)})`;
+                        const linkComponent = <a href={doc.doc_url}>{linkText}</a>;
+                        return (<div key={doc.file_name}>
+                          {iconComponent}
+                          {linkComponent}
+                        </div>);
+                      })}
                     </Space>
                   </div>
-                  {(studyData.document) ?
-                    <div className='study-viewer__details-sidebar-box'>
-                      <Space className='study-viewer__details-sidebar-space' direction='vertical'>
-                        <div className='h3-typo'>Study Documents</div>
-                        {studyData.document.map((doc) => {
-                          const iconComponent = (doc.format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
-                          const linkText = `${doc.name} (${doc.format} - ${humanFileSize(doc.size)})`;
-                          const linkComponent = <a href={doc.link}>{linkText}</a>;
-                          return (<div key={doc.name}>
-                            {iconComponent}
-                            {linkComponent}
-                          </div>);
-                        })}
-                      </Space>
-                    </div>
-                    : null
-                  }
-                </Space>
-              </div>
+                  : null
+                }
+              </Space>
             </div>
-          </Space>
-          : null}
+          </div>
+        </Space>
       </div>
     );
   }
 }
 
 SingleStudyViewer.propTypes = {
+  dataset: PropTypes.object,
+  docData: PropTypes.array,
+  fileData: PropTypes.array,
+  noConfigError: PropTypes.string,
+  history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
+};
+
+SingleStudyViewer.defaultProps = {
+  dataset: undefined,
+  docData: [],
+  fileData: [],
+  noConfigError: undefined,
 };
 
 export default withRouter(SingleStudyViewer);

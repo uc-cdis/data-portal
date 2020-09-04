@@ -1,11 +1,28 @@
 import React from 'react';
-import { Space } from 'antd';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
+import { Space, Spin } from 'antd';
+import getReduxStore from '../reduxStore';
 import { studyViewerConfig } from '../localconf';
-
+import { fetchDataset, fetchFiles } from './reduxer';
 import './StudyViewer.css';
 import StudyCard from './StudyCard';
 
 class StudyViewer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataType: undefined,
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.match.params.dataType && nextProps.match.params.dataType !== prevState.dataType) {
+      return { dataType: nextProps.match.params.dataType };
+    }
+    return null;
+  }
+
   getPanelExpandStatus = (openMode, index) => {
     if (openMode === 'open-all') {
       return true;
@@ -16,14 +33,38 @@ class StudyViewer extends React.Component {
   }
 
   render() {
-    if (studyViewerConfig.data
-      && studyViewerConfig.data.length > 0
+    if (this.props.noConfigError) {
+      this.props.history.push('/not-found');
+    }
+
+    if (!this.props.datasets) {
+      if (this.state.dataType) {
+        getReduxStore().then(
+          store =>
+            Promise.all(
+              [
+                store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType))),
+                store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object')),
+              ],
+            ));
+      }
+      return (
+        <div className='study-viewer'>
+          <div className='study-viewer_loading'>
+            <Spin size='large' tip='Loading data...' />
+          </div>
+        </div>
+      );
+    }
+
+    const datasets = this.props.datasets;
+    if (datasets.length > 0
       && studyViewerConfig.openMode === 'open-first'
-      && studyViewerConfig.defaultOpenStudyName !== '') {
-      studyViewerConfig.data.forEach((item, i) => {
-        if (item.name === studyViewerConfig.defaultOpenStudyName) {
-          studyViewerConfig.data.splice(i, 1);
-          studyViewerConfig.data.unshift(item);
+      && studyViewerConfig.defaultOpenTitle !== '') {
+      datasets.forEach((item, i) => {
+        if (item.title === studyViewerConfig.defaultOpenTitle) {
+          datasets.splice(i, 1);
+          datasets.unshift(item);
         }
       });
     }
@@ -31,14 +72,16 @@ class StudyViewer extends React.Component {
     return (
       <div className='study-viewer'>
         <div className='h2-typo study-viewer__title'>
-              Studies
+          {studyViewerConfig.title}
         </div>
-        {(studyViewerConfig.data && studyViewerConfig.data.length > 0) ?
+        {(datasets.length > 0) ?
           <Space className='study-viewer__space' direction='vertical'>
-            {(studyViewerConfig.data.map((d, i) =>
+            {(datasets.map((d, i) =>
               (<StudyCard
                 key={i}
                 data={d}
+                fileData={this.props.fileData
+                  .filter(fd => fd.rowAccessorValue === d.rowAccessorValue)}
                 initialPanelExpandStatus={this.getPanelExpandStatus(studyViewerConfig.openMode, i)}
               />)))}
           </Space>
@@ -48,4 +91,17 @@ class StudyViewer extends React.Component {
   }
 }
 
-export default StudyViewer;
+StudyViewer.propTypes = {
+  datasets: PropTypes.array,
+  fileData: PropTypes.array,
+  noConfigError: PropTypes.string,
+  history: PropTypes.object.isRequired,
+};
+
+StudyViewer.defaultProps = {
+  datasets: undefined,
+  fileData: [],
+  noConfigError: undefined,
+};
+
+export default withRouter(StudyViewer);

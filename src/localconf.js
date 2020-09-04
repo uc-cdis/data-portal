@@ -135,6 +135,19 @@ function buildConfig(opts) {
 
   let useGuppyForExplorer = false;
 
+  let studyViewerConfig = [];
+  if (config.studyViewerConfig) {
+    useGuppyForExplorer = true;
+    studyViewerConfig = [...config.studyViewerConfig];
+    const validOpenOptions = ['open-first', 'open-all', 'close-all'];
+    studyViewerConfig.forEach((cfg, i) => {
+      if (cfg.openMode
+      && !validOpenOptions.includes(cfg.openMode)) {
+        studyViewerConfig[i].openMode = 'open-all';
+      }
+    });
+  }
+
   let explorerConfig = [];
   let useNewExplorerConfigFormat = false;
   // for backward compatibilities

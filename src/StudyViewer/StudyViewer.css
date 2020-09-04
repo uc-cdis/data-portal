@@ -3,6 +3,11 @@
   padding: 40px 20px;
 }
 
+.study-viewer_loading {
+  display: flex;
+  justify-content: center;
+}
+
 .study-viewer__title {
   padding-top: 10px;
   flex-basis: 460px;
@@ -41,4 +46,8 @@
 .study-viewer__details-sidebar-space {
   width: 100%;
   padding: 10px;
+}
+
+.study-details {
+  width: 100%;
 }
