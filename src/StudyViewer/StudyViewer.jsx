@@ -42,9 +42,9 @@ class StudyViewer extends React.Component {
     const datasets = this.props.datasets;
     if (datasets.length > 0
       && studyViewerConfig.openMode === 'open-first'
-      && studyViewerConfig.defaultOpenStudyName !== '') {
+      && studyViewerConfig.defaultOpenTitle !== '') {
       datasets.forEach((item, i) => {
-        if (item.title === studyViewerConfig.defaultOpenStudyName) {
+        if (item.title === studyViewerConfig.defaultOpenTitle) {
           datasets.splice(i, 1);
           datasets.unshift(item);
         }
