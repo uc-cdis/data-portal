@@ -6,6 +6,23 @@ import SingleStudyViewer from './SingleStudyViewer';
 import { guppyGraphQLUrl, studyViewerConfig } from '../localconf';
 import { fetchWithCreds } from '../actions';
 
+const generateGQLQuery = (nameOfIndex, fieldsToFetch, rowAccessorValue) => {
+  const query = `query ($filter: JSON) {
+    ${nameOfIndex} (filter: $filter, first: 10000, accessibility: accessible) {
+        ${fieldsToFetch.join(',')}
+    }
+  }`;
+  const variables = {
+    filter: {},
+  };
+  if (rowAccessorValue) {
+    variables.filter.in = {
+      [studyViewerConfig.rowAccessor]: [rowAccessorValue],
+    };
+  }
+  return { query, variables };
+};
+
 export const fetchFiles = (typeOfFileIndex, rowAccessorValue) => {
   let nameOfIndex;
   const fieldsToFetch = ['file_name', 'file_size', 'data_format', 'data_type', studyViewerConfig.rowAccessor];
@@ -24,24 +41,8 @@ export const fetchFiles = (typeOfFileIndex, rowAccessorValue) => {
       error: 'typeOfFileIndex error',
     });
   }
-  const query = `query ($filter: JSON) {
-    ${nameOfIndex} (filter: $filter, first: 10000, accessibility: accessible) {
-        ${fieldsToFetch.join(',')}
-    }
-  }`;
-  const variables = {
-    filter: {
-      AND: [],
-    },
-  };
-  if (rowAccessorValue) {
-    variables.filter.AND.push({
-      in: {
-        [studyViewerConfig.rowAccessor]: [rowAccessorValue],
-      },
-    });
-  }
-  const body = { query, variables };
+
+  const body = generateGQLQuery(nameOfIndex, fieldsToFetch, rowAccessorValue);
   return dispatch => fetchWithCreds({
     path: guppyGraphQLUrl,
     method: 'POST',
@@ -108,24 +109,7 @@ export const fetchDataset = (rowAccessorValue) => {
     ...itemConfig.tableFields];
   fieldsToFetch = _.uniq(fieldsToFetch);
 
-  const query = `query ($filter: JSON) {
-        ${studyViewerConfig.dataType} (filter: $filter, first: 10000, accessibility: accessible) {
-            ${fieldsToFetch.join(',')}
-        }
-      }`;
-  const variables = {
-    filter: {
-      AND: [],
-    },
-  };
-  if (rowAccessorValue) {
-    variables.filter.AND.push({
-      in: {
-        [studyViewerConfig.rowAccessor]: [rowAccessorValue],
-      },
-    });
-  }
-  const body = { query, variables };
+  const body = generateGQLQuery(studyViewerConfig.dataType, fieldsToFetch, rowAccessorValue);
   return dispatch =>
     fetchWithCreds({
       path: guppyGraphQLUrl,
@@ -171,7 +155,7 @@ export const ReduxStudyDetails = (() => {
 
 export const ReduxStudyViewer = (() => {
   const mapStateToProps = state => ({
-    dataset: state.study.dataset,
+    datasets: state.study.dataset,
     docData: state.study.docData,
     fileData: state.study.fileData,
   });
