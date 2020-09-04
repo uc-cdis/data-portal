@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import parse from 'html-react-parser';
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
@@ -17,9 +18,9 @@ class Introduction extends Component {
       <div className='introduction'>
         <div className='h1-typo introduction__title'>{this.props.data.heading}</div>
         <div className='high-light introduction__text'>
-          {(this.props.data.text) ? this.props.data.text : null}
+          {(this.props.data.text) ? parse(this.props.data.text) : null}
           {(this.props.data.multiLineTexts) ?
-            (this.props.data.multiLineTexts.map((text, i) => <p key={i}>{text}</p>)) : null}
+            (this.props.data.multiLineTexts.map((text, i) => <p key={i}>{parse(text)}</p>)) : null}
         </div>
         <div className='introduction__button-area'>
           <Space>
