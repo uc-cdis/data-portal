@@ -72,6 +72,19 @@ class SingleStudyViewer extends React.Component {
             <ReduxStudyDetails data={dataset} fileData={this.props.fileData} />
             <div className='study-viewer__details-sidebar'>
               <Space direction='vertical' style={{ width: '100%' }}>
+                <div className='study-viewer__details-sidebar-box'>
+                  <Space className='study-viewer__details-sidebar-space' direction='vertical'>
+                    <div className='h3-typo'>Data Access Agreements</div>
+                    <div>
+                      <FilePdfOutlined />
+                      <a href=''>Data Use Agreement (DUA)</a>
+                    </div>
+                    <div>
+                      <FilePdfOutlined />
+                      <a href=''>Data Access Request (DAR)</a>
+                    </div>
+                  </Space>
+                </div>
                 {(this.props.docData.length > 0) ?
                   <div className='study-viewer__details-sidebar-box'>
                     <Space className='study-viewer__details-sidebar-space' direction='vertical'>
