@@ -44,15 +44,17 @@ class ExplorerButtonGroup extends React.Component {
 
     // Display misconfiguration warnings if Export PFB to Terra/SBG buttons are present
     // but no URL was configured to send the PFBs to.
-    const exportToTerraButtonPresent = props.buttonConfig.any(btn => btn.type === 'export' || btn.type === 'export-files');
+    const exportToTerraButtonPresent =
+      props.buttonConfig && props.buttonConfig.buttons &&
+      props.buttonConfig.buttons.some(btn => btn.type === 'export' || btn.type === 'export-files');
     if (exportToTerraButtonPresent && !this.props.buttonConfig.terraExportURL) {
       console.error('Misconfiguration error: Export to Terra button is present, but there is no `terraExportURL` specified in the portal config.'); // eslint-disable-line no-console
-      return false;
     }
-    const exportToSevenBridgesButtonPresent = props.buttonConfig.any(btn => btn.type === 'export-to-seven-bridges' || btn.type === 'export-files-to-seven-bridges');
+    const exportToSevenBridgesButtonPresent =
+      props.buttonConfig && props.buttonConfig.buttons &&
+      props.buttonConfig.buttons.some(btn => btn.type === 'export-to-seven-bridges' || btn.type === 'export-files-to-seven-bridges');
     if (exportToSevenBridgesButtonPresent && !this.props.buttonConfig.sevenBridgesExportURL) {
       console.error('Misconfiguration error: Export to Seven Bridges button is present, but there is no `sevenBridgesExportURL` specified in the portal config.'); // eslint-disable-line no-console
-      return false;
     }
   }
 
