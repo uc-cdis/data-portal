@@ -3,30 +3,35 @@
 Example configuration:
 
 ```
-{
-    "dataType": "dataset",
-    "title": "Datasets",           // page title
-    "titleField": "name",         // row title
-    "listItemConfig": {  // required
-        // displayed outside of table:
-        "blockFields": ["short_description"],
-        // displayed in table:
-        "tableFields": ["condition", ...],
+[
+    {
+        "dataType": "dataset",
+        "title": "Datasets",           // page title
+        "titleField": "name",         // row title
+        "listItemConfig": {  // required
+            // displayed outside of table:
+            "blockFields": ["short_description"],
+            // displayed in table:
+            "tableFields": ["condition", ...],
+        },
+        "singleItemConfig": { //optional, if omitted, "listItemConfig" block will be used for both pages
+            // displayed outside of table:
+            "blockFields": ["long_description"],
+            // displayed in table:
+            "tableFields": ["condition", ...],
+        },
+        "fieldMapping": [...],
+        "rowAccessor": "project_id", // rows unique ID
+        "downloadField": "object_id", // GUID
+        "fileDataType": "clinicalTrialFile", // ES index of the clinical trial object files, required
+        "docDataType": "openAccessFile", // ES index of the open access documents, optional
+        "openMode": "open-first", // optional, configure how the study viewer list do with each collapsible card on initial loading, see details in notes
+        "defaultOpenTitle": "", // optional, only works if `openMode` is `open-first`
     },
-    "singleItemConfig": { //optional, if omitted, "listItemConfig" block will be used for both pages
-        // displayed outside of table:
-        "blockFields": ["long_description"],
-        // displayed in table:
-        "tableFields": ["condition", ...],
-    },
-    "fieldMapping": [...],
-    "rowAccessor": "project_id", // rows unique ID
-    "downloadField": "object_id", // GUID
-    "fileDataType": "clinicalTrialFile", // ES index of the clinical trial object files, required
-    "docDataType": "openAccessFile", // ES index of the open access documents, optional
-    "openMode": "open-first", // optional, configure how the study viewer list do with each collapsible card on initial loading, see details in notes
-    "defaultOpenTitle": "", // optional, only works if `openMode` is `open-first`
-}
+    {
+        ....another study viewer config
+    }
+]
 ```
 
 ## Notes
