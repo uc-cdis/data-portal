@@ -5,7 +5,7 @@ import { Space, Typography, Spin } from 'antd';
 import { FileOutlined, FilePdfOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
 import { humanFileSize } from '../utils.js';
-import { ReduxStudyDetails, fetchDataset, fetchFiles } from './reduxer';
+import { ReduxStudyDetails, fetchDataset, fetchFiles, resetMultipleStudyData } from './reduxer';
 import getReduxStore from '../reduxStore';
 import './StudyViewer.css';
 
@@ -47,6 +47,7 @@ class SingleStudyViewer extends React.Component {
                   decodeURIComponent(this.state.rowAccessor))),
                 store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object', decodeURIComponent(this.state.rowAccessor))),
                 store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'open-access', decodeURIComponent(this.state.rowAccessor))),
+                store.dispatch(resetMultipleStudyData()),
               ],
             ));
       }
