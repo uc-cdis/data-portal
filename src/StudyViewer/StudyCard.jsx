@@ -41,6 +41,7 @@ class StudyCard extends React.Component {
               <ReduxStudyDetails
                 data={this.props.data}
                 fileData={this.props.fileData}
+                studyViewerConfig={this.props.studyViewerConfig}
                 displayLearnMoreBtn
               />
             </Panel>
@@ -61,11 +62,13 @@ StudyCard.propTypes = {
     docData: PropTypes.array,
   }).isRequired,
   fileData: PropTypes.array,
+  studyViewerConfig: PropTypes.object,
   initialPanelExpandStatus: PropTypes.bool.isRequired,
 };
 
 StudyCard.defaultProps = {
   fileData: [],
+  studyViewerConfig: {},
 };
 
 export default StudyCard;

@@ -23,8 +23,11 @@ const generateGQLQuery = (nameOfIndex, fieldsToFetch, rowAccessorField, rowAcces
   return { query, variables };
 };
 
+export const fetchStudyViewerConfig =
+  dataType => studyViewerConfig.find(svc => svc.dataType === dataType);
+
 export const fetchFiles = (dataType, typeOfFileIndex, rowAccessorValue) => {
-  const targetStudyViewerConfig = studyViewerConfig.find(svc => svc.dataType === dataType);
+  const targetStudyViewerConfig = fetchStudyViewerConfig(dataType);
   if (!targetStudyViewerConfig) {
     return dispatch => dispatch({
       type: 'NO_CONFIG_ERROR',
@@ -85,7 +88,7 @@ export const fetchFiles = (dataType, typeOfFileIndex, rowAccessorValue) => {
 };
 
 const processDataset = (nameOfIndex, data, itemConfig) => {
-  const targetStudyViewerConfig = studyViewerConfig.find(svc => svc.dataType === nameOfIndex);
+  const targetStudyViewerConfig = fetchStudyViewerConfig(nameOfIndex);
   const processedDataset = [];
   if (data) {
     data.forEach((dataElement) => {
@@ -102,7 +105,7 @@ const processDataset = (nameOfIndex, data, itemConfig) => {
 };
 
 export const fetchDataset = (dataType, rowAccessorValue) => {
-  const targetStudyViewerConfig = studyViewerConfig.find(svc => svc.dataType === dataType);
+  const targetStudyViewerConfig = fetchStudyViewerConfig(dataType);
   if (!targetStudyViewerConfig) {
     return dispatch => dispatch({
       type: 'NO_CONFIG_ERROR',
