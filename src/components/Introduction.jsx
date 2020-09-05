@@ -13,7 +13,7 @@ class Introduction extends Component {
   };
 
   render() {
-    const buttonURL = `/study-viewer${studyViewerConfig[0].dataType}`;
+    const buttonURL = `/study-viewer/${studyViewerConfig[0].dataType}`;
     return (
       <div className='introduction'>
         <div className='h1-typo introduction__title'>{this.props.data.heading}</div>
