@@ -422,10 +422,10 @@ class ExplorerButtonGroup extends React.Component {
   exportToPFB = () => {
     this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
     this.props.checkJobStatus();
-    this.setState({
+    this.setState(prevState => ({
       toasterOpen: true,
-      toasterHeadline: this.state.pfbStartText,
-    });
+      toasterHeadline: prevState.pfbStartText,
+    }));
   };
 
   exportFilesToPFB = () => {
