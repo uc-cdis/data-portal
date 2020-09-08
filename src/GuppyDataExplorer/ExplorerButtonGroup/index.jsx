@@ -32,7 +32,7 @@ class ExplorerButtonGroup extends React.Component {
       exportPFBURL: '',
       pfbStartText: 'Your export is in progress.',
       pfbWarning: 'Please do not navigate away from this page until your export is finished.',
-      pfbSuccessText: 'Your cohort has been exported to PFB! The URL is displayed below.',
+      pfbSuccessText: 'Your cohort has been exported to PFB.',
       // for export to PFB in Files tab
       sourceNodesInCohort: [],
       // for export to workspace
@@ -268,7 +268,7 @@ class ExplorerButtonGroup extends React.Component {
             : null
           }
           { (this.state.exportPFBURL) ?
-            <div> Most recent PFB URL: { this.state.exportPFBURL } </div>
+            <a className='explorer-button-group__toaster-dl-link' href={this.state.exportPFBURL} download>Click here to download your PFB.</a>
             : null
           }
           { (this.state.toasterError) ?
