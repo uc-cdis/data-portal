@@ -710,8 +710,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
 
-    let tooltipEnabled = false;
-    let btnTooltipText = '';
+    let tooltipEnabled = buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false;
+    let btnTooltipText = (this.props.isLocked) ? 'You only have access to summary data' : buttonConfig.tooltipText;
 
     // If limited file PFB export is enabled, PFB export buttons will be disabled
     // if the user selects multiple files that are on different nodes in the graph.
@@ -724,9 +724,6 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       && this.state.sourceNodesInCohort.length > 1) {
       tooltipEnabled = true;
       btnTooltipText = 'Currently you cannot export files with different Data Types. Please choose a single Data Type from the Data Type filter on the left.';
-    } else {
-      tooltipEnabled = buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false;
-      btnTooltipText = (this.props.isLocked) ? 'You only have access to summary data' : buttonConfig.tooltipText;
     }
 
     return (
