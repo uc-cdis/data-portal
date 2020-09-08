@@ -60,10 +60,10 @@ class ExplorerButtonGroup extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.job && nextProps.job.status === 'Failed' && this.props.job.status !== 'Failed') {
-      this.setState({
+      this.setState(prevState => ({
         toasterOpen: true,
-        toasterHeadline: this.state.toasterErrorText,
-      });
+        toasterHeadline: prevState.toasterErrorText,
+      }));
     }
     if (nextProps.job && nextProps.job.status === 'Completed' && this.props.job.status !== 'Completed') {
       this.fetchJobResult()
@@ -489,12 +489,12 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
   };
 
   exportToWorkspaceErrorHandler = (status) => {
-    this.setState({
+    this.setState(prevState => ({
       toasterOpen: true,
-      toasterHeadline: this.state.toasterErrorText,
+      toasterHeadline: prevState.toasterErrorText,
       exportWorkspaceStatus: status,
       exportingToWorkspace: false,
-    });
+    }));
   };
 
   exportToWorkspaceMessageHandler = (status, message) => {
