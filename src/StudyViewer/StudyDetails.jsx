@@ -92,11 +92,18 @@ class StudyDetails extends React.Component {
      const onNotLoggedInRequestAccess = () => this.props.history.push('/login', { from: this.props.location.pathname });
      const userHasLoggedIn = !!this.props.user.username;
 
-     let requestAccessButtonFunc = this.showDownloadModal;
+     const displayDownloadButton = userHasLoggedIn
+     && this.isDataAccessible(this.props.data.accessibleValidationValue)
+     && this.props.fileData.length > 0;
+     const downloadButtonFunc = this.showDownloadModal;
+
+     const displayRequestAccessButton = !userHasLoggedIn
+     || !this.isDataAccessible(this.props.data.accessibleValidationValue);
+     let requestAccessButton;
      if (!userHasLoggedIn) {
-       requestAccessButtonFunc = onNotLoggedInRequestAccess;
+       requestAccessButton = onNotLoggedInRequestAccess;
      } else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-       requestAccessButtonFunc = this.onRequestAccess;
+       requestAccessButton = this.onRequestAccess;
      }
 
      return (
@@ -110,15 +117,20 @@ class StudyDetails extends React.Component {
                  onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
                />
                : null}
-             <Button
-               label={(userHasLoggedIn
-               && this.isDataAccessible(this.props.data.accessibleValidationValue)
-               ) ? 'Download' : 'Request Access'}
-               buttonType='primary'
-               onClick={requestAccessButtonFunc}
-               tooltipEnabled={!userHasLoggedIn}
-               tooltipText={'Note that you will be prompted to log in'}
-             />
+             {(displayDownloadButton) ?
+               <Button
+                 label={'Download'}
+                 buttonType='primary'
+                 onClick={downloadButtonFunc}
+               /> : null}
+             {(displayRequestAccessButton) ?
+               <Button
+                 label={'Request Access'}
+                 buttonType='primary'
+                 onClick={requestAccessButton}
+                 tooltipEnabled={!userHasLoggedIn}
+                 tooltipText={'Note that you will be prompted to log in'}
+               /> : null}
            </Space>
            <Modal
              title='Download Files'
@@ -184,7 +196,7 @@ class StudyDetails extends React.Component {
                        if (_.isString(item)) {
                          return item;
                        }
-                       if (item.link) {
+                       if (item && item.link) {
                          let iconComponent = <LinkOutlined />;
                          let linkComponent = (<a href={item.link}>
                            {(item.name) ? item.name : item.link}
