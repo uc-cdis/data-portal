@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Space, Row, Col } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './FooterNIAID.css';
+import './FooterNIAID.less';
 
 const footerSocialIconLinks = [
   {
@@ -75,8 +75,8 @@ class FooterNIAID extends Component {
     return (
       <footer className='footer-container'>
         <div className='footer__bottom-area'>
-          <Row gutter={8}>
-            <Col className='gutter-row' span={6}>
+          <Row gutter={[8, { xs: 16, sm: 16, md: 16, lg: 8 }]}>
+            <Col className='gutter-row' xs={24} sm={12} md={12} lg={6} xl={6}>
               <div className='footer__logo'>
                 {
                   this.props.logos.map((logoObj, i) => (
@@ -98,7 +98,7 @@ class FooterNIAID extends Component {
                 }
               </div>
             </Col>
-            <Col className='gutter-row' span={6}>
+            <Col className='gutter-row' xs={24} sm={12} md={12} lg={6} xl={6}>
               <div className='footer__social'>
                 <a href='https://www.niaid.nih.gov/node/5232'>
                   <div className='footer__title'>Connect with NIAID</div>
@@ -121,7 +121,7 @@ class FooterNIAID extends Component {
                 </div>
               </div>
             </Col>
-            <Col className='gutter-row' span={6}>
+            <Col className='gutter-row' xs={24} sm={12} md={12} lg={6} xl={6}>
               <Space direction='vertical'>
                 <a href='https://www.niaid.nih.gov/global/website-policies-and-notices'>
                   <div className='footer__title'>Website Policies &amp; Notices</div>
@@ -129,7 +129,7 @@ class FooterNIAID extends Component {
                 {footerWebsiteLinks.map((item, i) => (<a key={`web_link_${i}`} href={item.href}>{item.text}</a>))}
               </Space>
             </Col>
-            <Col className='gutter-row' span={6}>
+            <Col className='gutter-row' xs={24} sm={12} md={12} lg={6} xl={6}>
               <Space direction='vertical'>
                 <div className='footer__title'>Related Government Websites</div>
                 {footerGovLinks.map((item, i) => (
