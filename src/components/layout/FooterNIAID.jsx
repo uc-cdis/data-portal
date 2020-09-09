@@ -57,16 +57,16 @@ const footerWebsiteLinks = [
 
 const footerGovLinks = [
   {
-    href: 'National Institutes of Health',
-    text: 'National Institutes of Health',
+    href: 'https://www.nih.gov/',
+    text: 'National Institutes of Health ',
   },
   {
     href: 'http://www.hhs.gov/',
-    text: 'Health and Human Services',
+    text: 'Health and Human Services ',
   },
   {
     href: 'http://www.usa.gov/',
-    text: 'USA.gov',
+    text: 'USA.gov ',
   },
 ];
 
@@ -100,30 +100,32 @@ class FooterNIAID extends Component {
             </Col>
             <Col className='gutter-row' xs={24} sm={12} md={12} lg={6} xl={6}>
               <div className='footer__social'>
-                <a href='https://www.niaid.nih.gov/node/5232'>
-                  <div className='footer__title'>Connect with NIAID</div>
-                </a>
-                <div className='footer__social-links'>
-                  <Row>
-                    {
-                      footerSocialIconLinks.map((item, i) => (
-                        <Col className='gutter-row' span={4} key={`icon_${i}`}>
-                          <a href={item.href}>
-                            <FontAwesomeIcon
-                              icon={item.icon}
-                              size='2x'
-                            />
-                          </a>
-                        </Col>
-                      ))
-                    }
-                  </Row>
-                </div>
+                <Space direction='vertical'>
+                  <a className='footer__title' href='https://www.niaid.nih.gov/node/5232'>
+                    <div className='footer__title'>Connect with NIAID</div>
+                  </a>
+                  <div className='footer__social-links'>
+                    <Row>
+                      {
+                        footerSocialIconLinks.map((item, i) => (
+                          <Col className='gutter-row' span={4} key={`icon_${i}`}>
+                            <a href={item.href}>
+                              <FontAwesomeIcon
+                                icon={item.icon}
+                                size='2x'
+                              />
+                            </a>
+                          </Col>
+                        ))
+                      }
+                    </Row>
+                  </div>
+                </Space>
               </div>
             </Col>
             <Col className='gutter-row' xs={24} sm={12} md={12} lg={6} xl={6}>
               <Space direction='vertical'>
-                <a href='https://www.niaid.nih.gov/global/website-policies-and-notices'>
+                <a className='footer__title' href='https://www.niaid.nih.gov/global/website-policies-and-notices'>
                   <div className='footer__title'>Website Policies &amp; Notices</div>
                 </a>
                 {footerWebsiteLinks.map((item, i) => (<a key={`web_link_${i}`} href={item.href}>{item.text}</a>))}
