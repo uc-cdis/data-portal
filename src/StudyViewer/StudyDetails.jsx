@@ -196,7 +196,7 @@ class StudyDetails extends React.Component {
                        if (_.isString(item)) {
                          return item;
                        }
-                       if (item.link) {
+                       if (item && item.link) {
                          let iconComponent = <LinkOutlined />;
                          let linkComponent = (<a href={item.link}>
                            {(item.name) ? item.name : item.link}
