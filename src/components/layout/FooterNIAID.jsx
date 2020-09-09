@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Space, Row, Col } from 'antd';
+import { Space, Row, Col, Tooltip } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './FooterNIAID.less';
 
@@ -137,9 +137,11 @@ class FooterNIAID extends Component {
                 {footerGovLinks.map((item, i) => (
                   <a key={`gov_link_${i}`} href={item.href}>
                     {item.text}
-                    <FontAwesomeIcon
-                      icon={'external-link-alt'}
-                    />
+                    <Tooltip title='This link is external'>
+                      <FontAwesomeIcon
+                        icon={'external-link-alt'}
+                      />
+                    </Tooltip>
                   </a>))}
               </Space>
             </Col>
