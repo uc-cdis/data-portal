@@ -80,8 +80,8 @@ class TopBar extends Component {
                   </Link>
                 );
               })}
-              {this.props.user.username !== undefined && (
-                <React.Fragment>
+              {this.props.user.username !== undefined ? (
+                <>
                   <Link className='top-bar__link' to='/identity'>
                     <TopIconButton
                       icon='user-circle'
@@ -97,14 +97,11 @@ class TopBar extends Component {
                   >
                     <TopIconButton icon='exit' name='Logout' />
                   </Link>
-                </React.Fragment>
-              )}
-              {typeof this.props.user.username === 'undefined' && (
-                <React.Fragment>
-                  <Link className='top-bar__link' to='/login'>
-                    <TopIconButton icon='exit' name='Login' />
-                  </Link>
-                </React.Fragment>
+                </>
+              ) : (
+                <Link className='top-bar__link' to='/login'>
+                  <TopIconButton icon='exit' name='Login' />
+                </Link>
               )}
             </div>
           </nav>
