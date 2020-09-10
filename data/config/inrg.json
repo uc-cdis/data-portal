@@ -3,33 +3,24 @@
   "graphql": {
     "boardCounts": [
       {
-        "graphql": "_inrg_count",
-        "name": "Cases",
-        "plural": "Cases"
+        "graphql": "_person_count",
+        "name": "Person",
+        "plural": "Persons"
       },
       {
-        "graphql": "_init_trials_count",
-        "name": "Init Trial",
-        "plural": "Init Trials"
-      },
-      {
-        "graphql": "_relapse_sites_specific_count",
-        "name": "Relapse Site Specific",
-        "plural": "Relapse Sites Specific"
+        "graphql": "_subject_count",
+        "name": "Subject",
+        "plural": "Subjects"
       }
     ],
     "chartCounts": [
       {
-        "graphql": "_inrg_count",
-        "name": "Case"
+        "graphql": "_person_count",
+        "name": "Person"
       },
       {
-        "graphql": "_init_trials_count",
-        "name": "Init Trial"
-      },
-      {
-        "graphql": "_relapse_sites_specific_count",
-        "name": "Relapse Site Specific"
+        "graphql": "_subject_count",
+        "name": "Subject"
       }
     ],
     "projectDetails": "boardCounts"
@@ -124,7 +115,7 @@
         {
           "link": "https://uc-cdis.github.io/gen3-user-doc/user-guide/guide-overview",
           "name": "Documentation"
-        }
+        } 
       ]
     },
     "login": {
@@ -140,90 +131,31 @@
   },
   "dataExplorerConfig": {
     "charts": {
-      "ETHNICITY": {
+      "study_phase": {
         "chartType": "stackedBar",
-        "title": "Ethnicity"
+        "title": "study_phase"
       },
-      "SEX": {
+      "study_type": {
         "chartType": "pie",
-        "title": "Gender"
+        "title": "study_type"
       },
-      "RACE": {
+      "enrolled_status": {
         "chartType": "pie",
-        "title": "Race"
+        "title": "enrolled_status"
       }
     },
     "filters": {
       "tabs": [
         {
-          "title": "Project",
+          "title": "Subject",
           "fields": [
-            "AGE",
-            "SEX",
-            "ETHNICITY",
-            "project_id",
-            "region_name",
-            "YEAR",
-            "INIT_TREAT",
-            "INSS_STAGE",
-            "INRG_STG",
-            "EVANS_STAGE",
-            "MYCN",
-            "PLOIDY",
-            "DNA_INDEX",
-            "_11Q_UBAB",
-            "_1P_LOAB",
-            "_17Q_GAIN",
-            "ALK",
-            "FERRITIN",
-            "LDH",
-            "PRI_ADRE",
-            "PRI_ABDRET",
-            "PRI_NECK",
-            "PRI_THOR",
-            "PRI_PELV",
-            "PRI_OTH",
-            "MET_BM",
-            "MET_BONE",
-            "MET_DLN",
-            "MET_LIV",
-            "MET_SKIN",
-            "MET_LUNG",
-            "MET_CNS",
-            "MET_OTH",
-            "HIST",
-            "DIAG",
-            "GRADE",
-            "MKI",
-            "EFSCENS",
-            "EFSTIME",
-            "SCENS",
-            "STIME",
-            "CAUSE_OF_DEATH",
-            "RACE",
-            "REL_SITE_GEN",
-            "OTH_REL_SITE",
-            "SECOND_MALIG_CENS",
-            "SECOND_MALIG_TIME",
-            "SMN_MORPH_SNO",
-            "SMN_MORPH_ICD0",
-            "SMN_MORPH_TXT",
-            "SMN_TOP_SNO",
-            "SMN_TOP_ICD0",
-            "SMN_TOP_TXT"
+            "age_at_enrolment",
+            "enrolled_status",
+            "study_phase",
+            "study_type",
+            "year_at_enrolment",
+            "project_id"
           ]
-        },
-        {
-          "title": "Age",
-          "fields": ["AGE"]
-        },
-        {
-          "title": "Sex",
-          "fields": ["SEX"]
-        },
-        {
-          "title": "Ethnicity",
-          "fields": ["ETHNICITY"]
         }
       ]
     },
@@ -244,9 +176,12 @@
       "enabled": true
     },
     "guppyConfig": {
-      "dataType": "inrg",
-      "nodeCountTitle": "Subjects",
-      "fieldMapping": []
+      "dataType": "subject",
+      "nodeCountTitle": "Persons",
+      "fieldMapping": [
+      ],
+      "accessibleFieldCheckList": ["project_id"], 
+      "accessibleValidationField": "project_id"
     }
   }
 }
