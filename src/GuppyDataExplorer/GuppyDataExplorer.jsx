@@ -24,6 +24,7 @@ class GuppyDataExplorer extends React.Component {
   }
 
   handleReceiveNewAggsData = (newAggsData) => {
+    console.log('handleReceiveNewAggsData got: ', newAggsData);
     this.setState({ aggsData: newAggsData });
   };
 
