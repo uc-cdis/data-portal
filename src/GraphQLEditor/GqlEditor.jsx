@@ -7,6 +7,7 @@ import { fetchGraphQL, fetchFlatGraphQL } from '../actions';
 import Spinner from '../components/Spinner';
 import { config } from '../params';
 import './GqlEditor.less';
+import 'graphiql/graphiql.css';
 
 const parameters = {};
 const defaultValue = config.dataExplorerConfig ? 1 : 0;
