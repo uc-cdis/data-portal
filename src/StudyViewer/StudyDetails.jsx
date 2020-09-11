@@ -13,6 +13,18 @@ import './StudyViewer.css';
 
 const { Paragraph } = Typography;
 
+const URL = require('url').URL;
+
+const stringIsAValidUrl = (s) => {
+  try {
+    // eslint-disable-next-line no-new
+    new URL(s);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 class StudyDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -194,6 +206,14 @@ class StudyDetails extends React.Component {
                    <Descriptions.Item key={k} label={this.getLabel(k)}>
                      {value.map((item) => {
                        if (_.isString(item)) {
+                         if (stringIsAValidUrl(item)) {
+                           return (<div key={item}>
+                             <LinkOutlined />
+                             <a href={item}>
+                               {item}
+                             </a>
+                           </div>);
+                         }
                          return item;
                        }
                        if (item && item.link) {
