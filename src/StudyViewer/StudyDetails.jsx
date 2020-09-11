@@ -1,10 +1,15 @@
+/* eslint-disable max-len */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import { Space, Typography, Descriptions, message, Divider, Alert, Modal, List } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
+import {
+  // for nested docs maybe
+  // FileOutlined,
+  // FilePdfOutlined,
+  LinkOutlined } from '@ant-design/icons';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
 import { userHasMethodOnResource } from '../authMappingUtils';
 import { useArboristUI, requestorPath, userapiPath } from '../localconf';
@@ -13,8 +18,7 @@ import './StudyViewer.css';
 
 const { Paragraph } = Typography;
 
-const URL = require('url').URL;
-
+// small helper to check if a given string is a valid URL by using URL()
 const stringIsAValidUrl = (s) => {
   try {
     // eslint-disable-next-line no-new
@@ -208,14 +212,18 @@ class StudyDetails extends React.Component {
                        if (_.isString(item)) {
                          if (stringIsAValidUrl(item)) {
                            return (<div key={item}>
-                             <LinkOutlined />
-                             <a href={item}>
-                               {item}
-                             </a>
+                             <Space>
+                               <LinkOutlined />
+                               <a href={item}>
+                                 {item}
+                               </a>
+                             </Space>
                            </div>);
                          }
                          return item;
                        }
+                       // codes below are from the mockup, keeping them here since we might need then if we have the nested docs later
+                       /*
                        if (item && item.link) {
                          let iconComponent = <LinkOutlined />;
                          let linkComponent = (<a href={item.link}>
@@ -231,6 +239,7 @@ class StudyDetails extends React.Component {
                            {linkComponent}
                          </div>);
                        }
+                       */
                        // eslint-disable-next-line no-console
                        console.warn('Unknown object found in meta data: ', item);
                        return null;
