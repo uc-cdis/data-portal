@@ -58,15 +58,15 @@ const footerWebsiteLinks = [
 const footerGovLinks = [
   {
     href: 'https://www.nih.gov/',
-    text: 'National Institutes of Health ',
+    text: 'National Institutes of Health',
   },
   {
     href: 'http://www.hhs.gov/',
-    text: 'Health and Human Services ',
+    text: 'Health and Human Services',
   },
   {
     href: 'http://www.usa.gov/',
-    text: 'USA.gov ',
+    text: 'USA.gov',
   },
 ];
 
@@ -136,12 +136,14 @@ class FooterNIAID extends Component {
                 <div className='footer__title'>Related Government Websites</div>
                 {footerGovLinks.map((item, i) => (
                   <a key={`gov_link_${i}`} href={item.href}>
-                    {item.text}
-                    <Tooltip title='This link is external'>
-                      <FontAwesomeIcon
-                        icon={'external-link-alt'}
-                      />
-                    </Tooltip>
+                    <Space>
+                      {item.text}
+                      <Tooltip title='This link is external'>
+                        <FontAwesomeIcon
+                          icon={'external-link-alt'}
+                        />
+                      </Tooltip>
+                    </Space>
                   </a>))}
               </Space>
             </Col>
