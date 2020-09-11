@@ -133,7 +133,27 @@
       "text": "This website supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer.",
       "contact": "If you have any questions about access or the registration process, please contact ",
       "email": "pcdc_root@lists.uchicago.edu"
-    }
+    },
+    "footerLogos": [
+      {
+        "src": "/src/img/gen3.png",
+        "href": "https://ctds.uchicago.edu/gen3",
+        "alt": "Gen3 Data Commons",
+        "height": 40
+      },
+      {
+        "src": "/src/img/createdby.png",
+        "href": "https://ctds.uchicago.edu/",
+        "alt": "Center for Translational Data Science at the University of Chicago",
+        "height": 40
+      },
+      {
+        "src": "/src/img/uchicago.png",
+        "href": "https://www.uchicago.edu/",
+        "alt": "The University of Chicago",
+        "height": 40
+      }
+    ]
   },
   "featureFlags": {
     "explorer": true
