@@ -109,7 +109,7 @@ class NavBar extends Component {
 
     // added for backward compatibility
     // should always add homepageHref to components in portal config in the future
-    const homepageHref = config.homepageHref || components.homepageHref;
+    const homepageHref = components.homepageHref || config.homepageHref;
 
     return (
       <div className='nav-bar'>
