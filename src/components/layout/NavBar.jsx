@@ -107,17 +107,21 @@ class NavBar extends Component {
         return this.canUserSeeComponent(item.name) ? navButton : null;
       });
 
+    // added for backward compatibility
+    // should always add homepageHref to components in portal config in the future
+    const homepageHref = components.homepageHref || config.homepageHref;
+
     return (
       <div className='nav-bar'>
         <header className='nav-bar__header'>
           <nav className='nav-bar__nav--info'>
             <div className='nav-bar__logo'>
-              {config.homepageHref ? (
-                <a href={config.homepageHref}>
+              {homepageHref ? (
+                <a href={homepageHref}>
                   <img
                     className='nav-bar__logo-img'
                     src='/src/img/logo.png'
-                    alt={components.homepageAltText || ''}
+                    alt={components.homepageAltText || 'Gen3 portal logo'}
                   />
                 </a>
               ) : (
@@ -129,7 +133,7 @@ class NavBar extends Component {
                   <img
                     className='nav-bar__logo-img'
                     src='/src/img/logo.png'
-                    alt={components.homepageAltText || ''}
+                    alt={components.homepageAltText || 'Gen3 portal logo'}
                   />
                 </Link>
               )
