@@ -121,7 +121,7 @@ class NavBar extends Component {
                   <img
                     className='nav-bar__logo-img'
                     src='/src/img/logo.png'
-                    alt={components.homepageAltText || ''}
+                    alt={components.homepageAltText || 'Gen3 portal logo'}
                   />
                 </a>
               ) : (
@@ -133,7 +133,7 @@ class NavBar extends Component {
                   <img
                     className='nav-bar__logo-img'
                     src='/src/img/logo.png'
-                    alt={components.homepageAltText || ''}
+                    alt={components.homepageAltText || 'Gen3 portal logo'}
                   />
                 </Link>
               )
