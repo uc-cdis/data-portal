@@ -60,7 +60,7 @@ class IndexPageComponent extends React.Component {
               <img
                 className='index-page__slider-chart-image'
                 src={conf.imageLink}
-                alt=''
+                alt='homepage carousel item'
               />
             </div>
           );

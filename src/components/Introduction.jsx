@@ -16,7 +16,11 @@ class Introduction extends Component {
     const buttonURL = `/study-viewer/${studyViewerConfig[0].dataType}`;
     return (
       <div className='introduction'>
-        <div className='h1-typo introduction__title'>{this.props.data.heading}</div>
+        <h1>
+          <div className='h1-typo introduction__title'>
+            {this.props.data.heading}
+          </div>
+        </h1>
         <div className='high-light introduction__text'>
           {(this.props.data.text) ? parse(this.props.data.text) : null}
           {(this.props.data.multiLineTexts) ?

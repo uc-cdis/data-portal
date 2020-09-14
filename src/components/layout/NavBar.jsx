@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NavButton from './NavButton';
 import NavBarTooltip from './NavBarTooltip';
 import { breakpoints } from '../../localconf';
-import { config } from '../../params';
+import { config, components } from '../../params';
 import './NavBar.less';
 
 /**
@@ -117,7 +117,7 @@ class NavBar extends Component {
                   <img
                     className='nav-bar__logo-img'
                     src='/src/img/logo.png'
-                    alt=''
+                    alt={components.homepageAltText || ''}
                   />
                 </a>
               ) : (
@@ -129,7 +129,7 @@ class NavBar extends Component {
                   <img
                     className='nav-bar__logo-img'
                     src='/src/img/logo.png'
-                    alt=''
+                    alt={components.homepageAltText || ''}
                   />
                 </Link>
               )

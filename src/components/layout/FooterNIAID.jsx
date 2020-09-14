@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Space, Row, Col } from 'antd';
+import { Space, Row, Col, Tooltip } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './FooterNIAID.css';
+import './FooterNIAID.less';
 
 const footerSocialIconLinks = [
   {
@@ -57,7 +57,7 @@ const footerWebsiteLinks = [
 
 const footerGovLinks = [
   {
-    href: 'National Institutes of Health',
+    href: 'https://www.nih.gov/',
     text: 'National Institutes of Health',
   },
   {
@@ -75,8 +75,8 @@ class FooterNIAID extends Component {
     return (
       <footer className='footer-container'>
         <div className='footer__bottom-area'>
-          <Row gutter={8}>
-            <Col className='gutter-row' span={6}>
+          <Row gutter={[8, { xs: 16, sm: 16, md: 16, lg: 8 }]}>
+            <Col className='gutter-row' xs={24} sm={12} md={12} lg={6} xl={6}>
               <div className='footer__logo'>
                 {
                   this.props.logos.map((logoObj, i) => (
@@ -98,46 +98,52 @@ class FooterNIAID extends Component {
                 }
               </div>
             </Col>
-            <Col className='gutter-row' span={6}>
+            <Col className='gutter-row' xs={24} sm={12} md={12} lg={6} xl={6}>
               <div className='footer__social'>
-                <a href='https://www.niaid.nih.gov/node/5232'>
-                  <div className='footer__title'>Connect with NIAID</div>
-                </a>
-                <div className='footer__social-links'>
-                  <Row>
-                    {
-                      footerSocialIconLinks.map((item, i) => (
-                        <Col className='gutter-row' span={4} key={`icon_${i}`}>
-                          <a href={item.href}>
-                            <FontAwesomeIcon
-                              icon={item.icon}
-                              size='2x'
-                            />
-                          </a>
-                        </Col>
-                      ))
-                    }
-                  </Row>
-                </div>
+                <Space direction='vertical'>
+                  <a className='footer__title' href='https://www.niaid.nih.gov/node/5232'>
+                    <div className='footer__title'>Connect with NIAID</div>
+                  </a>
+                  <div className='footer__social-links'>
+                    <Row>
+                      {
+                        footerSocialIconLinks.map((item, i) => (
+                          <Col className='gutter-row' span={4} key={`icon_${i}`}>
+                            <a href={item.href}>
+                              <FontAwesomeIcon
+                                icon={item.icon}
+                                size='2x'
+                              />
+                            </a>
+                          </Col>
+                        ))
+                      }
+                    </Row>
+                  </div>
+                </Space>
               </div>
             </Col>
-            <Col className='gutter-row' span={6}>
+            <Col className='gutter-row' xs={24} sm={12} md={12} lg={6} xl={6}>
               <Space direction='vertical'>
-                <a href='https://www.niaid.nih.gov/global/website-policies-and-notices'>
+                <a className='footer__title' href='https://www.niaid.nih.gov/global/website-policies-and-notices'>
                   <div className='footer__title'>Website Policies &amp; Notices</div>
                 </a>
                 {footerWebsiteLinks.map((item, i) => (<a key={`web_link_${i}`} href={item.href}>{item.text}</a>))}
               </Space>
             </Col>
-            <Col className='gutter-row' span={6}>
+            <Col className='gutter-row' xs={24} sm={12} md={12} lg={6} xl={6}>
               <Space direction='vertical'>
                 <div className='footer__title'>Related Government Websites</div>
                 {footerGovLinks.map((item, i) => (
                   <a key={`gov_link_${i}`} href={item.href}>
-                    {item.text}
-                    <FontAwesomeIcon
-                      icon={'external-link-alt'}
-                    />
+                    <Space>
+                      {item.text}
+                      <Tooltip title='This link is external'>
+                        <FontAwesomeIcon
+                          icon={'external-link-alt'}
+                        />
+                      </Tooltip>
+                    </Space>
                   </a>))}
               </Space>
             </Col>
