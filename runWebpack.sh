@@ -17,6 +17,7 @@ set -e
 export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-dev}"
 export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
+export GEN3_BUNDLE="${GEN3_BUNDLE:-commons}"
 export TIER_ACCESS_LEVEL="${TIER_ACCESS_LEVEL:-"private"}"
 export TIER_ACCESS_LIMIT="${TIER_ACCESS_LIMIT:-"1000"}"
 export USE_INDEXD_AUTHZ="${USE_INDEXD_AUTHZ:-"false"}"
@@ -114,7 +115,7 @@ gitops_config() {
 # make sure we're in the right directory
 cd "$(dirname "${BASH_SOURCE}")"
 
-if [[ "$NODE_ENV" == "auto" ]]; then
+if [[ "$NODE_ENV" == "auto" || "$NODE_ENV" == "autoprod" ]]; then
   if ! which jq > /dev/null; then
     echo "ERROR: NODE_ENV=auto requires the jq tool"
     echo "Install jq on ubuntu: sudo apt install jq"
@@ -136,14 +137,20 @@ fi
 #
 bash custom/customize.sh
 
-# download the graphql schema for the commons from HOSTNAME
-npm run schema
-# run the relay compiler against the graphql schema
-npm run relay
+# workspace bundle does not currently deploy sheepdog
+if [[ "$GEN3_BUNDLE" != "workspace" ]]; then
+  # download the graphql schema for the commons from HOSTNAME
+  npm run schema
+  # run the relay compiler against the graphql schema
+  npm run relay
+fi
+
 # generate a parameters.json file by overlaying $APP.json on default.json
 npm run params
-# run a sanity check to make sure portal config works
-npm run sanity-check
+if [[ "$GEN3_BUNDLE" != "workspace" ]]; then
+  # run a sanity check to make sure portal config works
+  npm run sanity-check
+fi
 
 # try to keep the arranger components in line
 #export STORYBOOK_ARRANGER_API=localhost:3000
@@ -160,6 +167,7 @@ if [[ "$NODE_ENV" == "dev" || "$NODE_ENV" == "auto" ]]; then
   echo ./node_modules/.bin/webpack-dev-server
   ./node_modules/.bin/webpack-dev-server
 else
+  export NODE_OPTIONS='--max-old-space-size=4096'
   export NODE_ENV="production"
   echo ./node_modules/.bin/webpack --bail
   ./node_modules/.bin/webpack --bail

@@ -36,6 +36,7 @@ const plugins = [
   new webpack.EnvironmentPlugin(['WORKSPACE_URL']),
   new webpack.EnvironmentPlugin(['WTS_URL']),
   new webpack.EnvironmentPlugin(['MANIFEST_SERVICE_URL']),
+  new webpack.EnvironmentPlugin(['MAPBOX_API_TOKEN']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev'),
@@ -69,8 +70,20 @@ const plugins = [
       }
       return Object.keys(rv).join(' ');
     })(),
-    hash: true
+    hash: true,
+    chunks: ['vendors~bundle', 'bundle']
   }),
+  /*
+  Can do this kind of thing to deploy multi-page apps in the future ...
+
+  new HtmlWebpackPlugin({
+    title: "Gen3 Workspaces",
+    filename: "workspaces.html",
+    template: 'src/index.ejs',
+    hash: true,
+    chunks: ['vendors~bundle~workspaceBundle', 'workspaceBundle']
+  }),
+  */
   new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
 ];
 
@@ -89,8 +102,25 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
   devtool = 'eval-source-map';
 }
 
+const entry = {
+  "bundle": ['babel-polyfill', './src/index.jsx'],
+  "workspaceBundle": ['babel-polyfill', './src/workspaceIndex.jsx']
+};
+
+if (process.env.GEN3_BUNDLE === 'workspace') {
+  // Just build the workspace bundle as bundle.js
+  entry.bundle = entry.workspaceBundle;
+  delete entry.workspaceBundle;
+} else if (process.env.GEN3_BUNDLE === 'commons') {
+  // optimize webpack build
+  delete entry.workspaceBundle;
+}
+// else - by default build all entry points
+//    note that runWebpack ensures GEN3_BUNDLE is set,
+//    and the Dockerfile leaves it unset ...
+
 module.exports = {
-  entry: ['babel-polyfill', './src/index.jsx'],
+  entry,
   target: 'web',
   externals: [nodeExternals({
     whitelist: ['graphiql', 'graphql-language-service-parser']
@@ -98,7 +128,7 @@ module.exports = {
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
     path: __dirname,
-	  filename: 'bundle.js',
+	  filename: '[name].js',
 	  publicPath: basename,
   },
   optimization,
@@ -154,7 +184,7 @@ module.exports = {
     alias: {
       graphql: path.resolve('./node_modules/graphql'),
       react: path.resolve('./node_modules/react'), // Same issue.
-      graphiql: path.resolve('./node_modules/graphiql'), 
+      graphiql: path.resolve('./node_modules/graphiql'),
       'graphql-language-service-parser': path.resolve('./node_modules/graphql-language-service-parser')
     },
     extensions: ['.mjs', '.js', '.jsx', '.json',]

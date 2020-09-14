@@ -8,11 +8,10 @@ testCases=(
 bpa "data.bloodpac.org"
 bhc "data.braincommons.org"
 gtex "dcp.bionimbus.org"
-dev "dev.planx-pla.net"
+dev "qa.planx-pla.net"
 edc "portal.occ-data.org"
 genomel "genomel.bionimbus.org"
 kfDcfInterop "dcf-interop.kidsfirstdrc.org"
-ndh "niaid.bionimbus.org"
 )
 index=0
 while [[ $index -lt ${#testCases[@]} ]]; do
@@ -26,4 +25,3 @@ while [[ $index -lt ${#testCases[@]} ]]; do
   npm run schema
   npm run relay
 done
-

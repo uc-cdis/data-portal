@@ -36,8 +36,10 @@ An example of this new `explorerConfig` is (some contents are omitted for concis
         "enabled": true,
         "fields": [
           "project_id",
+          "url",
           ...
-        ]
+        ],
+        "linkFields": [ "url" ]
       },
       "guppyConfig": {
         "dataType": "case",

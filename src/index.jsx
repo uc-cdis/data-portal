@@ -1,9 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import 'react-select/dist/react-select.css';
 import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -11,6 +10,7 @@ import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 
+import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
 import { fetchDictionary, fetchSchema, fetchVersionInfo, fetchUserAccess, fetchUserAuthMapping } from './actions';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
@@ -18,8 +18,7 @@ import ProtectedContent from './Login/ProtectedContent';
 import HomePage from './Homepage/page';
 import DocumentPage from './Document/page';
 import ExplorerPage from './Explorer/ExplorerPage';
-import CoreMetadataPage from './CoreMetadata/page';
-import { fetchCoreMetadata } from './CoreMetadata/reduxer';
+import { fetchCoreMetadata, ReduxCoreMetadataPage } from './CoreMetadata/reduxer';
 import Indexing from './Indexing/Indexing';
 import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/.';
@@ -49,6 +48,8 @@ import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import './index.less';
+import NotFound from './components/NotFound';
+
 
 // monitor user's session
 sessionMonitor.start();
@@ -77,267 +78,316 @@ async function init() {
     <div>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <MuiThemeProvider>
-            <BrowserRouter basename={basename}>
-              <div>
-                {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
-                {isEnabled('noIndex') ?
-                  <Helmet>
-                    <meta name='robots' content='noindex,nofollow' />
-                  </Helmet>
-                  : null
-                }
-                <ReduxTopBar />
-                <ReduxNavBar />
-                <div className='main-content'>
-                  <Switch>
-                    <Route
-                      path='/login'
-                      component={
-                        (
-                          props => (
-                            <ProtectedContent
-                              public
-                              filter={() => store.dispatch(fetchLogin())}
-                              component={ReduxLogin}
-                              {...props}
-                            />
-                          )
-                        )
-                      }
-                    />
-                    <Route
-                      exact
-                      path='/'
-                      component={
+          <BrowserRouter basename={basename}>
+            <div>
+              {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+              {isEnabled('noIndex') ?
+                <Helmet>
+                  <meta name='robots' content='noindex,nofollow' />
+                </Helmet>
+                : null
+              }
+              <ReduxTopBar />
+              <ReduxNavBar />
+              <div className='main-content'>
+                <Switch>
+                  {/* process with trailing and duplicate slashes first */}
+                  {/* see https://github.com/ReactTraining/react-router/issues/4841#issuecomment-523625186 */}
+                  {/* Removes trailing slashes */}
+                  <Route
+                    path='/:url*(/+)'
+                    exact
+                    strict
+                    render={({ location }) => (
+                      <Redirect to={location.pathname.replace(/\/+$/, '')} />
+                    )}
+                  />
+                  {/* Removes duplicate slashes in the middle of the URL */}
+                  <Route
+                    path='/:url(.*//+.*)'
+                    exact
+                    strict
+                    render={({ match }) => (
+                      <Redirect to={`/${match.params.url.replace(/\/\/+/, '/')}`} />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path='/login'
+                    component={
+                      (
                         props => (
                           <ProtectedContent
-                            public={indexPublic}
-                            component={IndexPage}
+                            public
+                            filter={() => store.dispatch(fetchLogin())}
+                            component={ReduxLogin}
                             {...props}
                           />
                         )
-                      }
-                    />
-                    <Route
-                      exact
-                      path='/submission'
-                      component={
-                        props => <ProtectedContent component={HomePage} {...props} />
-                      }
-                    />
-                    <Route
-                      exact
-                      path='/submission/files'
-                      component={
-                        props => <ProtectedContent component={ReduxMapFiles} {...props} />
-                      }
-                    />
-                    <Route
-                      exact
-                      path='/submission/map'
-                      component={
-                        props => <ProtectedContent component={ReduxMapDataModel} {...props} />
-                      }
-                    />
-                    <Route
-                      exact
-                      path='/document'
-                      component={
-                        props => <ProtectedContent component={DocumentPage} {...props} />
-                      }
-                    />
-                    <Route
-                      path='/query'
-                      component={
-                        props => <ProtectedContent component={GraphQLQuery} {...props} />
-                      }
-                    />
-                    {
-                      isEnabled('analysis') ?
-                        <Route
-                          path='/analysis/:app'
-                          component={
-                            props => <ProtectedContent component={ReduxAnalysisApp} {...props} />
-                          }
-                        />
-                        : null
+                      )
                     }
-                    {
-                      isEnabled('analysis') ?
-                        <Route
-                          path='/analysis'
-                          component={
-                            props => <ProtectedContent component={Analysis} {...props} />
-                          }
+                  />
+                  <Route
+                    exact
+                    path='/'
+                    component={
+                      props => (
+                        <ProtectedContent
+                          public={indexPublic}
+                          component={IndexPage}
+                          {...props}
                         />
-                        : null
+                      )
                     }
-                    <Route
-                      path='/identity'
-                      component={
-                        props => (<ProtectedContent
-                          filter={() => store.dispatch(fetchAccess())}
-                          component={UserProfile}
+                  />
+                  <Route
+                    exact
+                    path='/submission'
+                    component={
+                      props => <ProtectedContent component={HomePage} {...props} />
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/submission/files'
+                    component={
+                      props => <ProtectedContent component={ReduxMapFiles} {...props} />
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/submission/map'
+                    component={
+                      props => <ProtectedContent component={ReduxMapDataModel} {...props} />
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/document'
+                    component={
+                      props => <ProtectedContent component={DocumentPage} {...props} />
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/query'
+                    component={
+                      props => <ProtectedContent component={GraphQLQuery} {...props} />
+                    }
+                  />
+                  {
+                    isEnabled('analysis') ?
+                      <Route
+                        exact
+                        path='/analysis/:app'
+                        component={
+                          props => <ProtectedContent component={ReduxAnalysisApp} {...props} />
+                        }
+                      />
+                      : null
+                  }
+                  {
+                    isEnabled('analysis') ?
+                      <Route
+                        exact
+                        path='/analysis'
+                        component={
+                          props => <ProtectedContent component={Analysis} {...props} />
+                        }
+                      />
+                      : null
+                  }
+                  <Route
+                    exact
+                    path='/identity'
+                    component={
+                      props => (<ProtectedContent
+                        filter={() => store.dispatch(fetchAccess())}
+                        component={UserProfile}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/indexing'
+                    component={
+                      props => (<ProtectedContent
+                        component={Indexing}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/quiz'
+                    component={
+                      props => (<ProtectedContent
+                        component={UserAgreementCert}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/dd/:node'
+                    component={
+                      props => (<ProtectedContent
+                        public
+                        component={DataDictionary}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/dd'
+                    component={
+                      props => (<ProtectedContent
+                        public
+                        component={DataDictionary}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/files/*'
+                    component={
+                      props => (<ProtectedContent
+                        filter={() =>
+                          store.dispatch(fetchCoreMetadata(props.match.params[0]))
+                        }
+                        component={ReduxCoreMetadataPage}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/files'
+                    component={
+                      props => (
+                        <ProtectedContent
+                          public={explorerPublic}
+                          component={useGuppyForExplorer ? GuppyDataExplorer : ExplorerPage}
                           {...props}
-                        />)
+                        />
+                      )
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/workspace'
+                    component={
+                      props => <ProtectedContent component={Workspace} {...props} />
+                    }
+                  />
+                  <Route
+                    exact
+                    path={workspaceUrl}
+                    component={ErrorWorkspacePlaceholder}
+                  />
+                  <Route
+                    exact
+                    path={workspaceErrorUrl}
+                    component={ErrorWorkspacePlaceholder}
+                  />
+                  <Route
+                    path='/:project/search'
+                    component={
+                      (props) => {
+                        const queryFilter = () => {
+                          const location = props.location;
+                          const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/, '') : '');
+                          if (Object.keys(queryParams).length > 0) {
+                            // Linking directly to a search result,
+                            // so kick-off search here (rather than on button click)
+                            return store.dispatch(
+                              submitSearchForm({
+                                project: props.match.params.project, ...queryParams,
+                              }),
+                            );
+                          }
+                          return Promise.resolve('ok');
+                        };
+                        return (
+                          <ProtectedContent
+                            filter={queryFilter}
+                            component={ReduxQueryNode}
+                            {...props}
+                          />);
                       }
-                    />
-                    <Route
-                      path='/indexing'
-                      component={
-                        props => (<ProtectedContent
-                          component={Indexing}
-                          {...props}
-                        />)
-                      }
-                    />
-                    <Route
-                      path='/quiz'
-                      component={
-                        props => (<ProtectedContent
-                          component={UserAgreementCert}
-                          {...props}
-                        />)
-                      }
-                    />
-                    <Route
-                      path='/dd/:node'
-                      component={
-                        props => (<ProtectedContent
-                          public
-                          component={DataDictionary}
-                          {...props}
-                        />)
-                      }
-                    />
-                    <Route
-                      path='/dd'
-                      component={
-                        props => (<ProtectedContent
-                          public
-                          component={DataDictionary}
-                          {...props}
-                        />)
-                      }
-                    />
+                    }
+                  />
+                  {isEnabled('explorer') ?
                     <Route
                       exact
-                      path='/files/*'
-                      component={
-                        props => (<ProtectedContent
-                          filter={() =>
-                            store.dispatch(fetchCoreMetadata(props.match.params[0]))
-                          }
-                          component={CoreMetadataPage}
-                          {...props}
-                        />)
-                      }
-                    />
-                    <Route
-                      path='/files'
+                      path='/explorer'
                       component={
                         props => (
                           <ProtectedContent
                             public={explorerPublic}
-                            component={useGuppyForExplorer ? GuppyDataExplorer : ExplorerPage}
+                            component={useGuppyForExplorer ? GuppyDataExplorer : DataExplorer}
                             {...props}
                           />
                         )
                       }
                     />
-                    <Route
-                      path='/workspace'
-                      component={
-                        props => <ProtectedContent component={Workspace} {...props} />
-                      }
-                    />
-                    <Route
-                      path={workspaceUrl}
-                      component={ErrorWorkspacePlaceholder}
-                    />
-                    <Route
-                      path={workspaceErrorUrl}
-                      component={ErrorWorkspacePlaceholder}
-                    />
-                    <Route
-                      path='/:project/search'
-                      component={
-                        (props) => {
-                          const queryFilter = () => {
-                            const location = props.location;
-                            const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/, '') : '');
-                            if (Object.keys(queryParams).length > 0) {
-                              // Linking directly to a search result,
-                              // so kick-off search here (rather than on button click)
-                              return store.dispatch(
-                                submitSearchForm({
-                                  project: props.match.params.project, ...queryParams,
-                                }),
-                              );
-                            }
-                            return Promise.resolve('ok');
-                          };
-                          return (
-                            <ProtectedContent
-                              filter={queryFilter}
-                              component={ReduxQueryNode}
-                              {...props}
-                            />);
-                        }
-                      }
-                    />
-                    {isEnabled('explorer') ?
-                      <Route
-                        path='/explorer'
-                        component={
-                          props => (
-                            <ProtectedContent
-                              public={explorerPublic}
-                              component={useGuppyForExplorer ? GuppyDataExplorer : DataExplorer}
-                              {...props}
-                            />
-                          )
-                        }
-                      />
-                      : null
-                    }
-                    {components.privacyPolicy &&
+                    : null
+                  }
+                  {components.privacyPolicy &&
                     (!!components.privacyPolicy.file || !!components.privacyPolicy.routeHref) ?
-                      <Route
-                        path='/privacy-policy'
-                        component={ReduxPrivacyPolicy}
-                      />
-                      : null
-                    }
-                    {enableResourceBrowser ?
-                      <Route
-                        path='/resource-browser'
-                        component={
-                          props => (<ProtectedContent
-                            public={resourceBrowserPublic}
-                            component={ResourceBrowser}
-                            {...props}
-                          />)
-                        }
-                      />
-                      : null
-                    }
                     <Route
-                      path='/:project'
+                      exact
+                      path='/privacy-policy'
+                      component={ReduxPrivacyPolicy}
+                    />
+                    : null
+                  }
+                  {enableResourceBrowser ?
+                    <Route
+                      exact
+                      path='/resource-browser'
                       component={
-                        props => <ProtectedContent component={ProjectSubmission} {...props} />
+                        props => (<ProtectedContent
+                          public={resourceBrowserPublic}
+                          component={ResourceBrowser}
+                          {...props}
+                        />)
                       }
                     />
-                  </Switch>
-                </div>
-                <ReduxFooter
-                  logos={components.footerLogos}
-                  privacyPolicy={components.privacyPolicy}
-                />
+                    : null
+                  }
+                  <Route
+                    path='/not-found'
+                    component={NotFound}
+                  />
+                  <Route
+                    exact
+                    path='/:project'
+                    component={
+                      props =>
+                        (
+                          <ProtectedContent
+                            component={ProjectSubmission}
+                            {...props}
+                          />
+                        )
+                    }
+                  />
+                  <Route
+                    path='*'
+                    component={NotFound}
+                  />
+                </Switch>
               </div>
-            </BrowserRouter>
-          </MuiThemeProvider>
+              <ReduxFooter
+                logos={components.footerLogos}
+                privacyPolicy={components.privacyPolicy}
+              />
+            </div>
+          </BrowserRouter>
         </ThemeProvider>
       </Provider>
     </div>,

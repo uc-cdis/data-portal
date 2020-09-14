@@ -53,7 +53,7 @@ const createChartData = (projectList, countNames, sumList) => {
         (count, j) => {
           if (typeof indexChart[j] === 'undefined') return;
           indexChart[j][`count${i}`] = (sumList[j] > 0) ?
-            ((count * 100) / sumList[j]).toFixed(2) : 0;
+            (count * 100) / sumList[j] : 0;
         },
       );
     },

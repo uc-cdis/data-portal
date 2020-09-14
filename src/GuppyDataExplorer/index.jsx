@@ -91,6 +91,8 @@ class Explorer extends React.Component {
               dropdowns: explorerConfig[this.state.tab].dropdowns,
               terraExportURL: explorerConfig[this.state.tab].terraExportURL,
               terraTemplate: explorerConfig[this.state.tab].terraTemplate,
+              sevenBridgesExportURL: explorerConfig[this.state.tab].sevenBridgesExportURL,
+              enableLimitedFilePFBExport: explorerConfig[this.state.tab].enableLimitedFilePFBExport,
             }}
             history={this.props.history}
             tierAccessLevel={tierAccessLevel}

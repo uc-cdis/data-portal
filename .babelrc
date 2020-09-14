@@ -1,5 +1,13 @@
 {
-  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": "> 2%, not dead"
+      }
+    ],
+    "@babel/preset-react"
+  ],
   "plugins": [
     "dev-expression",
     "transform-class-properties",

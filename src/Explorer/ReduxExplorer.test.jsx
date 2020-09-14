@@ -1,7 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { ThemeProvider } from 'styled-components';
 import { StaticRouter } from 'react-router-dom';
 
@@ -18,11 +17,9 @@ function renderComponent(ComponentClass, props) {
       mount(
         <Provider store={store}>
           <ThemeProvider theme={theme}>
-            <MuiThemeProvider>
-              <StaticRouter location={{ pathname: '/files' }} context={{}}>
-                <ComponentClass {...props} />
-              </StaticRouter>
-            </MuiThemeProvider>
+            <StaticRouter location={{ pathname: '/files' }} context={{}}>
+              <ComponentClass {...props} />
+            </StaticRouter>
           </ThemeProvider>
         </Provider>,
       );

@@ -4,7 +4,8 @@ import { select, selectAll } from 'd3-selection';
 import { forceSimulation, forceLink } from 'd3-force';
 import { extent } from 'd3-array';
 
-import { getCategoryColor, legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
+import { getCategoryColor } from '../DataDictionary/NodeCategories/helper';
+import { legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
 import { assignNodePositions } from '../GraphUtils/utils';
 
 const d3 = {

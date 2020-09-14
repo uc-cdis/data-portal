@@ -2,7 +2,6 @@
 
 .index-button-bar {
   display: flex;
-  padding: 40px 0 0 0;
   flex-flow: wrap;
   justify-content: center;
 }
@@ -15,8 +14,8 @@
 
 .index-button-bar__thumbnail-button {
   background-color: white;
-  display: inline-block;
-  height: 360px;
+  display: flex;
+  flex-direction: column;
   padding: 20px 20px;
   text-align: center;
   width: 290px;
@@ -35,6 +34,7 @@
   border-top: 1px solid #e7e7e7;
   padding: 10px 10px;
   text-align: left;
+  flex-grow: 1;
 }
 
 .index-button-bar__icon {
@@ -43,7 +43,6 @@
 }
 
 .index-button-bar__item {
-  position: absolute;
   left: 0;
   right: 0;
   margin-left: auto;

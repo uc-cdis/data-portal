@@ -1,6 +1,5 @@
-import * as d3 from 'd3-scale';
-
 import { submissionApiPath } from './localconf';
+import { getCategoryColor } from './DataDictionary/NodeCategories/helper';
 
 export const humanFileSize = (size) => {
   if (typeof size !== 'number') {
@@ -73,33 +72,6 @@ export async function asyncSetInterval(lambda, timeoutMs) {
     }, timeoutMs,
   );
 }
-
-
-export const getCategoryColor = (category) => {
-  const colorMap = {
-    clinical: '#05B8EE',
-    biospecimen: '#27AE60',
-    data_file: '#7EC500',
-    metadata_file: '#F4B940',
-    analysis: '#FF7ABC',
-    administrative: '#AD91FF',
-    notation: '#E74C3C',
-    index_file: '#26D9B1',
-    clinical_assessment: '#3283C8',
-    medical_history: '#05B8EE',
-    satellite: d3.schemeCategory20[11],
-    radar: d3.schemeCategory20[16],
-    stream_gauge: d3.schemeCategory20[19],
-    weather_station: d3.schemeCategory20[10],
-    data_observations: d3.schemeCategory20[3],
-    experimental_methods: d3.schemeCategory20[4],
-    Imaging: d3.schemeCategory20[5],
-    study_administration: d3.schemeCategory20[6],
-    subject_characteristics: d3.schemeCategory20[7],
-  };
-  const defaultColor = '#9B9B9B';
-  return colorMap[category] ? colorMap[category] : defaultColor;
-};
 
 export function legendCreator(legendGroup, nodes, legendWidth) {
   // Find all unique categories
@@ -212,7 +184,7 @@ export function computeLastPageSizes(filesMap, pageSize) {
 }
 
 export function capitalizeFirstLetter(str) {
-  const res = str.replace(/_/gi, ' ');
+  const res = str.replace(/_|\./gi, ' ');
   return res.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 }
 

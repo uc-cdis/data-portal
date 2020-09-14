@@ -18,14 +18,20 @@ npm install
 The portal's `/dev.html` path loads javascript and most css
 from `localhost`.  Test code under local development with this procedure:
 * `npm install`
-* launch the webpack dev server, and configure local code with the same configuration as the server to test against.  For example - if we intend to test against dev.planx-pla.net, then:
+* launch the webpack dev server, and configure local code with the same configuration as the server to test against.  For example - if we intend to test against qa.planx-pla.net, then:
 ```
-HOSTNAME=dev.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
+HOSTNAME=qa.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 ```
 , or for qa-brain:
 ```
 HOSTNAME=qa-brain.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 ```
+
+You can also use the `autoprod` value for `NODE_ENV` to do the `auto` setup, then run `webpack` in production mode, so it generates `.js` and `.html` files instead of launching the dev server - ex:
+```
+HOSTNAME=qa-brain.planx-pla.net NODE_ENV=autoprod GEN3_BUNDLE=all bash ./runWebpack.sh
+```
+
 
 >**NOTE:** To locally test Tiered Access features, you must include the additional environment variables `TIER_ACCESS_LEVEL` and `TIER_ACCESS_LIMIT`, with should have the same values as the server's "global.tier_access_level" and "global.tier_access_limit" properties in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest).
 >
@@ -46,8 +52,26 @@ HOSTNAME=qa-brain.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 
 Note: the legacy `dev` NODE_ENV is still available, but the `APP` environment must also be manually set to load the configuration that matches the dictionary from HOSTNAME - ex:
 ```
-HOSTNAME=dev.planx-pla.net NODE_ENV=dev APP=dev bash ./runWebpack.sh
+HOSTNAME=qa.planx-pla.net NODE_ENV=dev APP=dev bash ./runWebpack.sh
 ```
+
+### Portal Bundles
+
+The portal webpack configurations selects between two application entry points
+at build time:
+
+* `commons` - the default data commons portal
+* `workspace` - a scaled down port for workspace accounts
+
+We can use the https://remote/dev.html trick to test a local workspace build by setting the `GEN3_BUNDLE` variable to `workspace`:
+```
+HOSTNAME=qa.planx-pla.net GEN3_BUNDLE=workspace bash ./runWebpack.sh
+```
+
+That just changes the webpack config to serve the workspace bundle as `bundle.js` - which is what `dev.html` expects.
+
+The protal `Dockerfile` runs a deploy time webpack build to incorporate
+deploy-time configuration.  The `GEN3_BUNDLE` environment variable determines which application gets built at run time.
 
 ### Component story books
 
@@ -86,7 +110,7 @@ docker build -t windmill .
 
 Then run the container
 ```
-docker run --rm -e HOSTNAME=dev.planx-pla.net -p 443:443 -ti windmill
+docker run --rm -e HOSTNAME=qa.planx-pla.net -p 443:443 -ti windmill
 ```
 
 You will then need to visit `https://localhost` and accept the self-signed certificate warnings
@@ -138,8 +162,8 @@ The configurations of Homepage charts are specified data/config/<common-name>.js
 - `chartCounts` are the counts that you want to display in the bar chart of dashboard's
 - `projectDetails` are the counts that you want to display in the list of projects. It could be same as `boardCounts`, in this case, you only need to point to `boardCounts`.
 
-Except the default case/file count charts, you could add more to the homepage, and those customized charts will be added to a carousel. 
-We support categorical horizontal grouped bar charts, and the chart will be using data from Guppy, so make sure you correctly ETL them to your Elasticsearch database. The new added charts are configured in portal config's components.index.customHomepageChartConfig config, make sure configurations are correct. Example config (notice the comments won't work for JSON): 
+Except the default case/file count charts, you could add more to the homepage, and those customized charts will be added to a carousel.
+We support categorical horizontal grouped bar charts, and the chart will be using data from Guppy, so make sure you correctly ETL them to your Elasticsearch database. The new added charts are configured in portal config's components.index.customHomepageChartConfig config, make sure configurations are correct. Example config (notice the comments won't work for JSON):
 
 ```
 "customHomepageChartConfig": [

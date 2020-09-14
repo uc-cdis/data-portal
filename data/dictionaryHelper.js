@@ -4,7 +4,11 @@
  * @return {experimentType, fileTypeList} gqlSetup object used by data/gqlSetup.js
  */
 function dictToGQLSetup(dict) {
-  const fileTypeList = Object.keys(dict).filter(key => typeof dict[key] === 'object' && dict[key].category === 'data_file');
+  const fileTypeList = Object.keys(dict).filter(key =>
+    typeof dict[key] === 'object' &&
+    dict[key].category &&
+    dict[key].category.endsWith('_file'),
+  );
   // admin types that link to the 'project' level and are not project or program
   const adminTypeList = Object.keys(dict).filter(
     (key) => {

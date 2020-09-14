@@ -153,7 +153,8 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "requiredCerts": [], // optional; do users need to take a quiz or agree to something before they can access the site?
   "featureFlags": { // optional; will hide certain parts of the site if needed
-    "explorer": true // required; indicates the flag and whether to hide it or not
+    "explorer": true, // required; indicates the flag and whether to hide it or not
+    "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. Data explorer page would be public accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
   },
   "dataExplorerConfig": { // required; configuration for the Data Explorer (/explorer)
     "charts": { // optional; indicates which charts to display in the Data Explorer
@@ -207,6 +208,10 @@ Below is an example, with inline comments describing what each JSON block config
         "age_at_index",
         "diastolic_blood_pressure",
         "systolic_blood_pressure",
+        "url"
+      ],
+      "linkFields": [ // optional; fields (must exist in "field" list above) to display as clickable buttons
+        "url"
       ]
     },
     "dropdowns": { // optional; lists dropdowns if you want to combine multiple buttons into one dropdown (ie. Download dropdown has Download Manifest and Download Clinical Data as options)
