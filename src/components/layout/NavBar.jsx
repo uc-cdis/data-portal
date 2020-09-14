@@ -107,6 +107,8 @@ class NavBar extends Component {
         return this.canUserSeeComponent(item.name) ? navButton : null;
       });
 
+    // added for backward compatibility
+    // should always add homepageHref to components in portal config in the future
     const homepageHref = config.homepageHref || components.homepageHref;
 
     return (
