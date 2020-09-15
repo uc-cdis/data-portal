@@ -173,7 +173,7 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
         default:
           return {
             type: 'STUDY_DATASET_ERROR',
-            error: data,
+            error: (data && data.errors && data.errors[0] && data.errors[0].message) ? data.errors[0].message : 'Did not get correct data from Guppy',
           };
         }
       })
