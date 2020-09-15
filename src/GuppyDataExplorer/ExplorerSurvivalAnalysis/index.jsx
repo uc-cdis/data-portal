@@ -16,7 +16,7 @@ import './typedef';
  * @param {Array} prop.filters
  */
 function ExplorerSurvivalAnalysis({ aggsData, filters }) {
-  const [pval, setPval] = useState();
+  const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
   const [stratificationVariable, setStratificationVariable] = useState('');
@@ -30,7 +30,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filters }) {
     setTimeInterval(timeInterval);
 
     fetchMockSurvivalResult(requestBody).then((result) => {
-      setPval(result.pval && +parseFloat(result.pval).toFixed(4));
+      setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
       setRisktable(result.risktable);
       setSurvival(result.survival);
     });
@@ -51,7 +51,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filters }) {
       </div>
       <div className='explorer-survival-analysis__column-right'>
         <div className='explorer-survival-analysis__pval'>
-          {pval && `Log-rank test p-value: ${pval}`}
+          {pval >= 0 && `Log-rank test p-value: ${pval}`}
         </div>
         <SurvivalPlot
           data={survival}
