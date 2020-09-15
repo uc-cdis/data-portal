@@ -2,7 +2,7 @@ import './typedef';
 
 /**
  * Builds x-axis ticks array to use in plots
- * @param {SurvivalData[]|RisktableData[]} data
+ * @param {{ data: { time: number; }[]}[]} data
  * @param {number} step
  */
 export const getXAxisTicks = (data, step = 2) => {
