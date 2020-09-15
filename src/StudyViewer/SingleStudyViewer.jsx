@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
-import { Space, Typography, Spin } from 'antd';
+import { Space, Typography, Spin, Result } from 'antd';
 import { FileOutlined, FilePdfOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
 import { humanFileSize } from '../utils.js';
@@ -62,6 +63,16 @@ class SingleStudyViewer extends React.Component {
 
     const dataset = this.props.dataset;
     const backURL = this.props.location.pathname.substring(0, this.props.location.pathname.lastIndexOf('/'));
+    if (_.isEmpty(dataset)) {
+      return (
+        <div className='study-viewer'>
+          <BackLink url={backURL} label='Back' />
+          <Result
+            title='No data available'
+          />
+        </div>
+      );
+    }
     return (
       <div className='study-viewer'>
         <BackLink url={backURL} label='Back' />

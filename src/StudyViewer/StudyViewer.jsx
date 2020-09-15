@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { Space, Spin } from 'antd';
+import { Space, Spin, Result } from 'antd';
 import getReduxStore from '../reduxStore';
 import { fetchDataset, fetchFiles, resetSingleStudyData, fetchStudyViewerConfig } from './reduxer';
 import './StudyViewer.css';
 import StudyCard from './StudyCard';
+
 
 class StudyViewer extends React.Component {
   constructor(props) {
@@ -59,6 +60,15 @@ class StudyViewer extends React.Component {
 
     const studyViewerConfig = fetchStudyViewerConfig(this.state.dataType);
     const datasets = this.props.datasets;
+    if (datasets.length === 0) {
+      return (
+        <div className='study-viewer'>
+          <Result
+            title='No data available'
+          />
+        </div>
+      );
+    }
     if (datasets.length > 0
       && studyViewerConfig.openMode === 'open-first'
       && studyViewerConfig.openFirstRowAccessor !== '') {
