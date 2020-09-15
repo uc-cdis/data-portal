@@ -49,6 +49,18 @@ const ControlForm = ({ factors, onSubmit, timeInterval }) => {
   const [endTime, setEndTime] = useState(20);
   const [survivalType, setSurvivalType] = useState('all');
 
+  const [isInputChanged, setIsInputChanged] = useState(false);
+  useEffect(() => {
+    setIsInputChanged(true);
+  }, [
+    factorVariable,
+    stratificationVariable,
+    localTimeInterval,
+    startTime,
+    endTime,
+    survivalType,
+  ]);
+
   /**
    * @param {{ target: { value: string, min: string, max: string }}} e
    */
@@ -68,7 +80,7 @@ const ControlForm = ({ factors, onSubmit, timeInterval }) => {
     ...options,
   ];
 
-  const submitUserInput = () =>
+  const submitUserInput = () => {
     onSubmit({
       factorVariable,
       stratificationVariable,
@@ -77,6 +89,8 @@ const ControlForm = ({ factors, onSubmit, timeInterval }) => {
       endTime,
       efsFlag: survivalType === 'efs',
     });
+    setIsInputChanged(false);
+  };
   useEffect(() => {
     submitUserInput();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -159,7 +173,12 @@ const ControlForm = ({ factors, onSubmit, timeInterval }) => {
       />
       <div className='explorer-survival-analysis__button-group'>
         <Button label='Reset' buttonType='default' onClick={resetUserInput} />
-        <Button label='Apply' buttonType='primary' onClick={submitUserInput} />
+        <Button
+          label='Apply'
+          buttonType='primary'
+          onClick={submitUserInput}
+          enabled={isInputChanged}
+        />
       </div>
     </form>
   );
