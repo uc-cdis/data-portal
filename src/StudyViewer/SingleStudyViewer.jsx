@@ -6,7 +6,7 @@ import { Space, Typography, Spin, Result } from 'antd';
 import { FileOutlined, FilePdfOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
 import { humanFileSize } from '../utils.js';
-import { ReduxStudyDetails, fetchDataset, fetchFiles, resetMultipleStudyData } from './reduxer';
+import { ReduxStudyDetails, fetchDataset, fetchFiles, resetMultipleStudyData, fetchStudyViewerConfig } from './reduxer';
 import getReduxStore from '../reduxStore';
 import './StudyViewer.css';
 
@@ -61,6 +61,7 @@ class SingleStudyViewer extends React.Component {
       );
     }
 
+    const studyViewerConfig = fetchStudyViewerConfig(this.state.dataType);
     const dataset = this.props.dataset;
     const backURL = this.props.location.pathname.substring(0, this.props.location.pathname.lastIndexOf('/'));
     if (_.isEmpty(dataset)) {
@@ -81,7 +82,11 @@ class SingleStudyViewer extends React.Component {
             <Title level={4}>{dataset.title}</Title>
           </div>
           <div className='study-viewer__details'>
-            <ReduxStudyDetails data={dataset} fileData={this.props.fileData} />
+            <ReduxStudyDetails
+              data={dataset}
+              fileData={this.props.fileData}
+              studyViewerConfig={studyViewerConfig}
+            />
             <div className='study-viewer__details-sidebar'>
               <Space direction='vertical' style={{ width: '100%' }}>
                 <div className='study-viewer__details-sidebar-box'>
