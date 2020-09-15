@@ -37,3 +37,9 @@
  * @param {UserInput} userInput
  * @returns {void}
  */
+
+/**
+ * @typedef {Object} FactorItem
+ * @property {string} label
+ * @property {string} value
+ */

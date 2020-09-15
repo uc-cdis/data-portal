@@ -37,7 +37,7 @@ const ControlFormInput = ({ label, ...inputAttrs }) => (
 
 /**
  * @param {Object} prop
- * @param {string[]} prop.factors
+ * @param {FactorItem[]} prop.factors
  * @param {UserInputSubmitHandler} prop.onSubmit
  * @param {number} prop.timeInterval
  */
