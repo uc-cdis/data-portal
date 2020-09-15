@@ -6,7 +6,7 @@
 
 /**
  * @typedef {Object} RisktableData
- * @property {RiskDataPoint[]} data
+ * @property {RisktableDataPoint[]} data
  * @property {string} name
  */
 
