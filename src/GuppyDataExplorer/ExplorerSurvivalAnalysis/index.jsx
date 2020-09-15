@@ -13,9 +13,9 @@ import './typedef';
 /**
  * @param {Object} prop
  * @param {Object} prop.aggsData
- * @param {Array} prop.filters
+ * @param {Array} prop.filter
  */
-function ExplorerSurvivalAnalysis({ aggsData, filters }) {
+function ExplorerSurvivalAnalysis({ aggsData, filter }) {
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
@@ -66,7 +66,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filters }) {
 
 ExplorerSurvivalAnalysis.propTypes = {
   aggsData: PropTypes.object,
-  filters: PropTypes.array,
+  filter: PropTypes.array,
 };
 
 export default ExplorerSurvivalAnalysis;
