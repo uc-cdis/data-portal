@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
@@ -21,6 +22,11 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
   const [survival, setSurvival] = useState([]);
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
+
+  const [transformedFilter, setTransformedFilter] = useState({});
+  useEffect(() => {
+    setTransformedFilter(getGQLFilter(filter));
+  }, [filter]);
 
   /**
    * @type {UserInputSubmitHandler}
