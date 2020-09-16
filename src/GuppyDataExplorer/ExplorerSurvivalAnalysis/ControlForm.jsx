@@ -40,8 +40,16 @@ const ControlFormInput = ({ label, ...inputAttrs }) => (
  * @param {FactorItem[]} prop.factors
  * @param {UserInputSubmitHandler} prop.onSubmit
  * @param {number} prop.timeInterval
+ * @param {boolean} prop.isFilterChanged
+ * @param {Function} prop.setIsFilterChanged
  */
-const ControlForm = ({ factors, onSubmit, timeInterval }) => {
+const ControlForm = ({
+  factors,
+  onSubmit,
+  timeInterval,
+  isFilterChanged,
+  setIsFilterChanged,
+}) => {
   const [factorVariable, setFactorVariable] = useState('');
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
@@ -90,6 +98,7 @@ const ControlForm = ({ factors, onSubmit, timeInterval }) => {
       efsFlag: survivalType === 'efs',
     });
     setIsInputChanged(false);
+    setIsFilterChanged(false);
   };
   useEffect(() => {
     submitUserInput();
@@ -177,7 +186,7 @@ const ControlForm = ({ factors, onSubmit, timeInterval }) => {
           label='Apply'
           buttonType='primary'
           onClick={submitUserInput}
-          enabled={isInputChanged}
+          enabled={isInputChanged || isFilterChanged}
         />
       </div>
     </form>

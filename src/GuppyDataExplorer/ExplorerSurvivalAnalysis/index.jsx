@@ -24,8 +24,10 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
   const [timeInterval, setTimeInterval] = useState(2);
 
   const [transformedFilter, setTransformedFilter] = useState({});
+  const [isFilterChanged, setIsFilterChanged] = useState(false);
   useEffect(() => {
     setTransformedFilter(getGQLFilter(filter));
+    setIsFilterChanged(true);
   }, [filter]);
 
   /**
@@ -53,6 +55,8 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
           factors={mockFactors}
           onSubmit={handleSubmit}
           timeInterval={timeInterval}
+          isFilterChanged={isFilterChanged}
+          setIsFilterChanged={setIsFilterChanged}
         />
       </div>
       <div className='explorer-survival-analysis__column-right'>
