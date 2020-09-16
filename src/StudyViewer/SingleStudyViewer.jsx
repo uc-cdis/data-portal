@@ -98,7 +98,7 @@ class SingleStudyViewer extends React.Component {
                     </div>
                     <div>
                       <FilePdfOutlined />
-                      <a href=''>Data Access Request (DAR)</a>
+                      <a href='https://qa-niaid.planx-pla.net/dashboard/Public/files/NIAID%20Data%20Access%20Request%20FormSept2020.pdf'>Data Access Request (DAR)</a>
                     </div>
                   </Space>
                 </div>
