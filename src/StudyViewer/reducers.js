@@ -10,6 +10,9 @@ const study = (state = {}, action) => {
     return { ...state, docData: action.fileData };
   case 'RECEIVE_OBJECT_FILE_DATA':
     return { ...state, fileData: action.fileData };
+  case 'FILE_DATA_ERROR':
+    console.log(action.error);
+    return { ...state, fileError: action.error };
   case 'NO_CONFIG_ERROR':
     return { ...state, noConfigError: action.error };
   case 'RESET_SINGLE_STUDY_DATA':

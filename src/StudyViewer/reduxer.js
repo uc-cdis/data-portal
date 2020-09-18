@@ -52,6 +52,13 @@ export const fetchFiles = (dataType, typeOfFileIndex, rowAccessorValue) => {
     });
   }
 
+  if (!nameOfIndex) {
+    return dispatch => dispatch({
+      type: 'FILE_DATA_ERROR',
+      error: `No index specified for file type: ${typeOfFileIndex}`,
+    });
+  }
+
   const body = generateGQLQuery(
     nameOfIndex,
     fieldsToFetch,

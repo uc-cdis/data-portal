@@ -41,7 +41,7 @@ class StudyViewer extends React.Component {
       if (this.state.dataType) {
         getReduxStore().then(
           store =>
-            Promise.all(
+            Promise.allSettled(
               [
                 store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType))),
                 store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object')),
