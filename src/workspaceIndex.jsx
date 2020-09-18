@@ -28,6 +28,7 @@ import GA, { RouteTracker } from './components/GoogleAnalytics';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
+import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import './index.less';
 
 
@@ -122,6 +123,16 @@ async function init() {
                     component={
                       props => <ProtectedContent component={Workspace} {...props} />
                     }
+                  />
+                  <Route
+                    exact
+                    path='/lw-workspace/'
+                    component={ErrorWorkspacePlaceholder}
+                  />
+                  <Route
+                    exact
+                    path='/no-workspace-access'
+                    component={ErrorWorkspacePlaceholder}
                   />
                   <Route
                     path='*'
