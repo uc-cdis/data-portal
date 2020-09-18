@@ -22,7 +22,7 @@ import theme from './theme';
 import getReduxStore from './reduxStore';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
-import { basename, dev, gaDebug } from './localconf';
+import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl } from './localconf';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import isEnabled from './helpers/featureFlags';
@@ -126,12 +126,12 @@ async function init() {
                   />
                   <Route
                     exact
-                    path='/lw-workspace/'
+                    path={workspaceUrl}
                     component={ErrorWorkspacePlaceholder}
                   />
                   <Route
                     exact
-                    path='/no-workspace-access'
+                    path={workspaceErrorUrl}
                     component={ErrorWorkspacePlaceholder}
                   />
                   <Route
