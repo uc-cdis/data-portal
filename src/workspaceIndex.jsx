@@ -22,12 +22,13 @@ import theme from './theme';
 import getReduxStore from './reduxStore';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
-import { basename, dev, gaDebug } from './localconf';
+import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl } from './localconf';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
+import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import './index.less';
 
 
@@ -122,6 +123,16 @@ async function init() {
                     component={
                       props => <ProtectedContent component={Workspace} {...props} />
                     }
+                  />
+                  <Route
+                    exact
+                    path={workspaceUrl}
+                    component={ErrorWorkspacePlaceholder}
+                  />
+                  <Route
+                    exact
+                    path={workspaceErrorUrl}
+                    component={ErrorWorkspacePlaceholder}
                   />
                   <Route
                     path='*'
