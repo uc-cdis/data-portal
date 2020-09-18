@@ -125,29 +125,33 @@ class StudyDetails extends React.Component {
      return (
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
-           <Space>
-             {(this.props.displayLearnMoreBtn) ?
-               <Button
-                 label={'Learn More'}
-                 buttonType='primary'
-                 onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
-               />
-               : null}
-             {(displayDownloadButton) ?
-               <Button
-                 label={'Download'}
-                 buttonType='primary'
-                 onClick={downloadButtonFunc}
-               /> : null}
-             {(displayRequestAccessButton) ?
-               <Button
-                 label={'Request Access'}
-                 buttonType='primary'
-                 onClick={requestAccessButton}
-                 tooltipEnabled={!userHasLoggedIn}
-                 tooltipText={'Note that you will be prompted to log in'}
-               /> : null}
-           </Space>
+           { (this.props.displayLearnMoreBtn
+           || displayDownloadButton
+           || displayRequestAccessButton) ?
+             (<Space>
+               {(this.props.displayLearnMoreBtn) ?
+                 <Button
+                   label={'Learn More'}
+                   buttonType='primary'
+                   onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
+                 />
+                 : null}
+               {(displayDownloadButton) ?
+                 <Button
+                   label={'Download'}
+                   buttonType='primary'
+                   onClick={downloadButtonFunc}
+                 /> : null}
+               {(displayRequestAccessButton) ?
+                 <Button
+                   label={'Request Access'}
+                   buttonType='primary'
+                   onClick={requestAccessButton}
+                   tooltipEnabled={!userHasLoggedIn}
+                   tooltipText={'Note that you will be prompted to log in'}
+                 /> : null}
+             </Space>) : null
+           }
            <Modal
              title='Download Files'
              visible={this.state.downloadModalVisible}
@@ -177,11 +181,12 @@ class StudyDetails extends React.Component {
                }}
              />
            </Modal>
-           <Alert
-             message='Please note that researchers are required to log in upon clicking the Request Access button and you will be prompted to login if you have not already done so.'
-             type='info'
-             showIcon
-           />
+           {(displayRequestAccessButton) ?
+             <Alert
+               message='Please note that researchers are required to log in upon clicking the Request Access button and you will be prompted to login if you have not already done so.'
+               type='info'
+               showIcon
+             /> : null}
            <Divider />
            {(this.props.data.blockData) ?
              <div>
