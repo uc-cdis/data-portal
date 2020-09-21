@@ -104,16 +104,23 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
 
 const entry = {
   "bundle": ['babel-polyfill', './src/index.jsx'],
-  "workspaceBundle": ['babel-polyfill', './src/workspaceIndex.jsx']
+  "workspaceBundle": ['babel-polyfill', './src/workspaceIndex.jsx'],
+  "covid19Bundle": ['babel-polyfill', './src/covid19Index.jsx']
 };
 
 if (process.env.GEN3_BUNDLE === 'workspace') {
   // Just build the workspace bundle as bundle.js
   entry.bundle = entry.workspaceBundle;
   delete entry.workspaceBundle;
+  delete entry.covid19Bundle;
+} else if (process.env.GEN3_BUNDLE === 'covid19') {
+  entry.bundle = entry.covid19Bundle;
+  delete entry.workspaceBundle;
+  delete entry.covid19Bundle;
 } else if (process.env.GEN3_BUNDLE === 'commons') {
   // optimize webpack build
   delete entry.workspaceBundle;
+  delete entry.covid19Bundle;
 }
 // else - by default build all entry points
 //    note that runWebpack ensures GEN3_BUNDLE is set,
