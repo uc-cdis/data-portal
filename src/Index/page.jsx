@@ -9,9 +9,8 @@ import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntrodu
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
-import { breakpoints, customHomepageChartConfig, indexPublic, enableCovid19Dashboard } from '../localconf';
+import { breakpoints, customHomepageChartConfig, indexPublic } from '../localconf';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
-import ReduxCovid19Dashboard from '../Covid19Dashboard/ReduxCovid19Dashboard';
 import './page.less';
 
 class IndexPageComponent extends React.Component {
@@ -67,28 +66,22 @@ class IndexPageComponent extends React.Component {
 
     return (
       <div className='index-page'>
-        {!enableCovid19Dashboard ?
-          <div className='index-page__top'>
-            <div className='index-page__introduction'>
-              <ReduxIntroduction data={components.index.introduction} dictIcons={dictIcons} />
-              <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
-                <ReduxIndexCounts />
-              </MediaQuery>
-            </div>
-            <div className='index-page__bar-chart'>
-              <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-                <Slider {...sliderSettings}>
-                  <div className='index-page__slider-chart'><ReduxIndexBarChart /></div>
-                  {customCharts}
-                </Slider>
-              </MediaQuery>
-            </div>
+        <div className='index-page__top'>
+          <div className='index-page__introduction'>
+            <ReduxIntroduction data={components.index.introduction} dictIcons={dictIcons} />
+            <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
+              <ReduxIndexCounts />
+            </MediaQuery>
           </div>
-          :
-          <ReduxCovid19Dashboard
-            {...this.props}
-          />
-        }
+          <div className='index-page__bar-chart'>
+            <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
+              <Slider {...sliderSettings}>
+                <div className='index-page__slider-chart'><ReduxIndexBarChart /></div>
+                {customCharts}
+              </Slider>
+            </MediaQuery>
+          </div>
+        </div>
         <ReduxIndexButtonBar {...this.props} />
       </div>
     );
