@@ -23,7 +23,11 @@ class Introduction extends Component {
 
     return (
       <div className='introduction'>
-        <div className='h1-typo introduction__title'>{this.props.data.heading}</div>
+        <h1>
+          <div className='h1-typo introduction__title'>
+            {this.props.data.heading}
+          </div>
+        </h1>
         <div className='high-light introduction__text'>{this.props.data.text}</div>
         <IconicLink
           link={this.props.data.link}
