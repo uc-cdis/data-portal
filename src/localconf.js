@@ -187,8 +187,6 @@ function buildConfig(opts) {
   }
 
   const covid19DashboardConfig = config.covid19DashboardConfig;
-  const enableCovid19Dashboard = !!(covid19DashboardConfig &&
-    Object.keys(covid19DashboardConfig).length > 0);
   if (covid19DashboardConfig) {
     covid19DashboardConfig.dataUrl = ensureTrailingSlash(covid19DashboardConfig.dataUrl || '');
   }
@@ -367,7 +365,6 @@ function buildConfig(opts) {
     explorerConfig,
     useNewExplorerConfigFormat,
     dataAvailabilityToolConfig,
-    enableCovid19Dashboard,
     covid19DashboardConfig,
     mapboxAPIToken,
     auspiceUrl,
