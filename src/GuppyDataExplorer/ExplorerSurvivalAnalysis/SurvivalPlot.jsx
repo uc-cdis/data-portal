@@ -106,4 +106,4 @@ SurvivalPlot.propTypes = {
   timeInterval: PropTypes.number.isRequired,
 };
 
-export default SurvivalPlot;
+export default React.memo(SurvivalPlot);

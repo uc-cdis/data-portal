@@ -99,4 +99,4 @@ RiskTable.propTypes = {
   timeInterval: PropTypes.number.isRequired,
 };
 
-export default RiskTable;
+export default React.memo(RiskTable);

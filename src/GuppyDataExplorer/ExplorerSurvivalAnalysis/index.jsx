@@ -79,4 +79,4 @@ ExplorerSurvivalAnalysis.propTypes = {
   filter: PropTypes.object,
 };
 
-export default ExplorerSurvivalAnalysis;
+export default React.memo(ExplorerSurvivalAnalysis);
