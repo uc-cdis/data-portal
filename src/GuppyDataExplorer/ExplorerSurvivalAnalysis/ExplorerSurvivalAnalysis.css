@@ -2,7 +2,7 @@
   background-color: var(--g3-color__white);
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
   margin-top: 10px;
   padding: 12px;
 }
@@ -17,13 +17,14 @@
 
 .explorer-survival-analysis__column-left {
   display: flex;
-  min-width: 40%;
+  max-width: 600px;
 }
 
 .explorer-survival-analysis__column-right {
   display: flex;
   flex-direction: column;
-  min-width: 60%;
+  min-width: 50%;
+  max-width: 600px;
 }
 
 .explorer-survival-analysis__control-form {
@@ -83,12 +84,12 @@
 
 .explorer-survival-analysis__survival-plot {
   margin: 12px;
-  min-width: 300px;
+  min-height: 300px;
 }
 
 .explorer-survival-analysis__risk-table {
   margin: 12px;
-  min-width: 150px;
+  min-height: 150px;
 }
 
 .explorer-survival-analysis__risk-table .yAxis tspan {
