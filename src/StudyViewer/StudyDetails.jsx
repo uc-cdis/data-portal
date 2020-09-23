@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import { Space, Typography, Descriptions, message, Divider, Alert, Modal, List } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
@@ -37,31 +36,43 @@ class StudyDetails extends React.Component {
     };
   }
 
-  onRequestAccess = () => {
-    const body = {
-      username: this.props.user.username,
-      resource_path: this.props.data.accessibleValidationValue,
-      resource_id: this.props.data.rowAccessorValue,
-      resource_display_name: this.props.data.title,
-    };
-    fetchWithCreds({
-      path: `${requestorPath}request`,
-      method: 'POST',
-      body: JSON.stringify(body),
-    }).then(
-      ({ data, status }) => {
-        if (status === 201) {
-          // if a redirect is configured, Requestor returns a redirect URL
-          if (data && data.redirect_url) {
-            window.open(data.redirect_url);
-          }
-        } else {
-          message
-            .error(`Something went wrong when talking to Requestor service, status ${status}`, 3);
-        }
-      },
-    );
-  };
+  componentDidUpdate() {
+    if ((!this.props.user || !this.props.user.username)
+    && this.props.location.search
+    && this.props.location.search === '?request_access') {
+      this.props.history.push('/login', { from: `${this.props.location.pathname}?request_access` });
+    } else if (this.props.user
+      && this.props.user.username
+      && this.props.location.search
+      && this.props.location.search.includes('?request_access')) {
+      if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
+        const body = {
+          username: this.props.user.username,
+          resource_path: this.props.data.accessibleValidationValue,
+          resource_id: this.props.data.rowAccessorValue,
+          resource_display_name: this.props.data.title,
+        };
+        fetchWithCreds({
+          path: `${requestorPath}request`,
+          method: 'POST',
+          body: JSON.stringify(body),
+        }).then(
+          ({ data, status }) => {
+            if (status === 201) {
+            // if a redirect is configured, Requestor returns a redirect URL
+              if (data && data.redirect_url) {
+                window.open(data.redirect_url);
+              }
+            } else {
+              message
+                .error(`Something went wrong when talking to Requestor service, status ${status}`, 3);
+            }
+          },
+        );
+      }
+      this.props.history.push(`${this.props.location.pathname}`, { from: this.props.location.pathname });
+    }
+  }
 
   getLabel = (label) => {
     if (!this.props.studyViewerConfig.fieldMapping
@@ -105,7 +116,7 @@ class StudyDetails extends React.Component {
    };
 
    render() {
-     const onNotLoggedInRequestAccess = () => this.props.history.push('/login', { from: this.props.location.pathname });
+     const onRequestAccess = () => this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
      const userHasLoggedIn = !!this.props.user.username;
 
      const displayDownloadButton = userHasLoggedIn
@@ -115,12 +126,6 @@ class StudyDetails extends React.Component {
 
      const displayRequestAccessButton = !userHasLoggedIn
      || !this.isDataAccessible(this.props.data.accessibleValidationValue);
-     let requestAccessButton;
-     if (!userHasLoggedIn) {
-       requestAccessButton = onNotLoggedInRequestAccess;
-     } else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-       requestAccessButton = this.onRequestAccess;
-     }
 
      return (
        <div className='study-details'>
@@ -146,7 +151,7 @@ class StudyDetails extends React.Component {
                  <Button
                    label={'Request Access'}
                    buttonType='primary'
-                   onClick={requestAccessButton}
+                   onClick={onRequestAccess}
                    tooltipEnabled={!userHasLoggedIn}
                    tooltipText={'Note that you will be prompted to log in'}
                  /> : null}
@@ -288,4 +293,4 @@ StudyDetails.defaultProps = {
   studyViewerConfig: {},
 };
 
-export default withRouter(StudyDetails);
+export default StudyDetails;

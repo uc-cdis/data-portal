@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { withRouter } from 'react-router-dom';
 import StudyDetails from './StudyDetails';
 import StudyViewer from './StudyViewer';
 import SingleStudyViewer from './SingleStudyViewer';
@@ -201,7 +202,7 @@ export const ReduxStudyDetails = (() => {
     userAuthMapping: state.userAuthMapping,
   });
 
-  return connect(mapStateToProps)(StudyDetails);
+  return withRouter(connect(mapStateToProps)(StudyDetails));
 })();
 
 
@@ -213,7 +214,7 @@ export const ReduxStudyViewer = (() => {
     noConfigError: state.study.noConfigError,
   });
 
-  return connect(mapStateToProps)(StudyViewer);
+  return withRouter(connect(mapStateToProps)(StudyViewer));
 })();
 
 export const ReduxSingleStudyViewer = (() => {
@@ -224,5 +225,5 @@ export const ReduxSingleStudyViewer = (() => {
     noConfigError: state.study.noConfigError,
   });
 
-  return connect(mapStateToProps)(SingleStudyViewer);
+  return withRouter(connect(mapStateToProps)(SingleStudyViewer));
 })();

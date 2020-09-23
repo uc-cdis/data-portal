@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { withRouter } from 'react-router-dom';
 import { Space, Typography, Spin, Result } from 'antd';
 import { FileOutlined, FilePdfOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
@@ -131,4 +130,4 @@ SingleStudyViewer.defaultProps = {
   noConfigError: undefined,
 };
 
-export default withRouter(SingleStudyViewer);
+export default SingleStudyViewer;

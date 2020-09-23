@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { Space, Spin, Result } from 'antd';
 import getReduxStore from '../reduxStore';
 import { fetchDataset, fetchFiles, resetSingleStudyData, fetchStudyViewerConfig } from './reduxer';
@@ -116,4 +115,4 @@ StudyViewer.defaultProps = {
   noConfigError: undefined,
 };
 
-export default withRouter(StudyViewer);
+export default StudyViewer;
