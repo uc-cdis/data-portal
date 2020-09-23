@@ -1,8 +1,7 @@
 import React from 'react';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
-import Select from 'react-select';
-import createFilterOptions from 'react-select-fast-filter-options';
+import Select, { createFilter } from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { basename } from '../localconf';
 import { components } from '../params';
@@ -87,7 +86,6 @@ class Login extends React.Component {
 
     if (this.props.providers.length > 0) {
       const loginOptions = {}; // one for each login provider
-      const filterOptions = {};
       this.props.providers.forEach((provider, i) => {
       // for backwards compatibility, if "urls" does not exist
       // (fence < 4.8.0), generate it from the deprecated "url" field
@@ -114,11 +112,6 @@ class Login extends React.Component {
           value: e.url,
           label: e.name,
         }));
-        // this is needed when the list of options is very long,
-        // to avoid too much lag time when users type
-        filterOptions[i] = createFilterOptions({
-          options: loginOptions[i],
-        });
       });
 
       loginComponent = this.props.providers.map(
@@ -135,7 +128,7 @@ class Login extends React.Component {
                       isClearable
                       isSearchable
                       options={loginOptions[i]}
-                      filterOptions={filterOptions[i]}
+                      filterOption={createFilter({ ignoreAccents: true, ignoreCase: true })}
                       onChange={option => this.selectChange(option, i)}
                       value={this.state.selectedLoginOption &&
                         this.state.selectedLoginOption[i]}
