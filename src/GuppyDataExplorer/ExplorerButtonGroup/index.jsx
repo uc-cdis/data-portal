@@ -468,7 +468,7 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   exportToPFB = () => {
-    this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
+    this.props.submitJob({ action: 'export', access_format: 'presigned_url', input: { filter: getGQLFilter(this.props.filter) } });
     this.props.checkJobStatus();
     this.setState(prevState => ({
       toasterOpen: true,
@@ -502,7 +502,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
   };
 
   exportPFBToWorkspace = () => {
-    this.props.submitJob({ action: 'export', access_format: 'GUID', input: { filter: getGQLFilter(this.props.filter) } });
+    this.props.submitJob({ action: 'export', access_format: 'guid', input: { filter: getGQLFilter(this.props.filter) } });
     this.props.checkJobStatus();
     this.setState({
       toasterOpen: true,
