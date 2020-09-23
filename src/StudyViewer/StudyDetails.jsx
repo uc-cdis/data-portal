@@ -33,10 +33,35 @@ class StudyDetails extends React.Component {
     super(props);
     this.state = {
       downloadModalVisible: false,
+      accessRequested: false,
     };
   }
 
   componentDidUpdate() {
+    // first, check if user already has a request in `SUBMITTED` state for this resource
+    if (this.props.data.accessibleValidationValue && !this.state.accessRequested) {
+      const body = {
+        resource_paths: [this.props.data.accessibleValidationValue],
+      };
+      fetchWithCreds({
+        path: `${requestorPath}request/user_resource_paths`,
+        method: 'POST',
+        body: JSON.stringify(body),
+      }).then(
+        ({ data, status }) => {
+          if (status === 200 && data
+            && data[this.props.data.accessibleValidationValue]) {
+            this.setState({ accessRequested: true });
+          }
+        },
+      );
+    }
+
+    // check if user is not logged in by looking at the user props
+    // note that we only need to redirect user to /login if the search param is `?request_access`
+    // `?request_access` means user got here by clicking the `Request Access` button
+    // and `?request_access_logged_in` means user got here by redirecting from the login page
+    // in that case, don't redirect user again, just wait for user props to update
     if ((!this.props.user || !this.props.user.username)
     && this.props.location.search
     && this.props.location.search === '?request_access') {
@@ -45,31 +70,38 @@ class StudyDetails extends React.Component {
       && this.props.user.username
       && this.props.location.search
       && this.props.location.search.includes('?request_access')) {
+      // if we still have either `?request_access` or `?request_access_logged_in`
+      // it means we haven't finished check yet
+      // next is to check if user has access to the resource
       if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-        const body = {
-          username: this.props.user.username,
-          resource_path: this.props.data.accessibleValidationValue,
-          resource_id: this.props.data.rowAccessorValue,
-          resource_display_name: this.props.data.title,
-        };
-        fetchWithCreds({
-          path: `${requestorPath}request`,
-          method: 'POST',
-          body: JSON.stringify(body),
-        }).then(
-          ({ data, status }) => {
-            if (status === 201) {
-            // if a redirect is configured, Requestor returns a redirect URL
-              if (data && data.redirect_url) {
-                window.open(data.redirect_url);
+        // if the user haven't have a request in `SUBMITTED` state for this resource yet
+        if (!this.state.accessRequested) {
+          const body = {
+            username: this.props.user.username,
+            resource_path: this.props.data.accessibleValidationValue,
+            resource_id: this.props.data.rowAccessorValue,
+            resource_display_name: this.props.data.title,
+          };
+          fetchWithCreds({
+            path: `${requestorPath}request`,
+            method: 'POST',
+            body: JSON.stringify(body),
+          }).then(
+            ({ data, status }) => {
+              if (status === 201) {
+                // if a redirect is configured, Requestor returns a redirect URL
+                if (data && data.redirect_url) {
+                  window.open(data.redirect_url);
+                }
+              } else {
+                message
+                  .error(`Something went wrong when talking to Requestor service, status ${status}`, 3);
               }
-            } else {
-              message
-                .error(`Something went wrong when talking to Requestor service, status ${status}`, 3);
-            }
-          },
-        );
+            },
+          );
+        }
       }
+      // we are done here, remove the query string from URL
       this.props.history.push(`${this.props.location.pathname}`, { from: this.props.location.pathname });
     }
   }
@@ -149,7 +181,8 @@ class StudyDetails extends React.Component {
                  /> : null}
                {(displayRequestAccessButton) ?
                  <Button
-                   label={'Request Access'}
+                   enabled={!this.state.accessRequested}
+                   label={(this.state.accessRequested) ? 'Access Requested' : 'Request Access'}
                    buttonType='primary'
                    onClick={onRequestAccess}
                    tooltipEnabled={!userHasLoggedIn}
