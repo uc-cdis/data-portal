@@ -13,7 +13,7 @@ class Introduction extends Component {
   };
 
   render() {
-    const buttonURL = `/study-viewer/${studyViewerConfig[0].dataType}`;
+    const buttonURL = `/study-viewer/${studyViewerConfig && studyViewerConfig[0] && studyViewerConfig[0].dataType}`;
     return (
       <div className='introduction'>
         <h1>
