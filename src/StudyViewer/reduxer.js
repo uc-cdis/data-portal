@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import StudyDetails from './StudyDetails';
 import StudyViewer from './StudyViewer';
 import SingleStudyViewer from './SingleStudyViewer';
-import { guppyGraphQLUrl, studyViewerConfig } from '../localconf';
+import { guppyGraphQLUrl, studyViewerConfig, requestorPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 
 const generateGQLQuery = (nameOfIndex, fieldsToFetch, rowAccessorField, rowAccessorValue) => {
@@ -95,19 +95,39 @@ export const fetchFiles = (dataType, typeOfFileIndex, rowAccessorValue) => {
     .then(msg => dispatch(msg));
 };
 
-const processDataset = (nameOfIndex, data, itemConfig) => {
+const fetchRequestedAccess = (receivedData) => {
+  const accessibleValidationValueArray = receivedData.map(d => d.auth_resource_path);
+  const body = {
+    resource_paths: accessibleValidationValueArray,
+  };
+  return fetchWithCreds({
+    path: `${requestorPath}request/user_resource_paths`,
+    method: 'POST',
+    body: JSON.stringify(body),
+  }).then(
+    ({ data }) => data,
+  );
+};
+
+const processDataset = (nameOfIndex, receivedData, itemConfig) => {
   const targetStudyViewerConfig = fetchStudyViewerConfig(nameOfIndex);
   const processedDataset = [];
-  if (data) {
-    data.forEach((dataElement) => {
-      const processedItem = {};
-      processedItem.title = dataElement[targetStudyViewerConfig.titleField];
-      processedItem.rowAccessorValue = dataElement[targetStudyViewerConfig.rowAccessor];
-      processedItem.blockData = _.pick(dataElement, itemConfig.blockFields);
-      processedItem.tableData = _.pick(dataElement, itemConfig.tableFields);
-      processedItem.accessibleValidationValue = dataElement.auth_resource_path;
-      processedDataset.push(processedItem);
-    });
+  if (receivedData) {
+    return fetchRequestedAccess(receivedData).then(
+      (requestedAccess) => {
+        receivedData.forEach((dataElement) => {
+          const processedItem = {};
+          processedItem.title = dataElement[targetStudyViewerConfig.titleField];
+          processedItem.rowAccessorValue = dataElement[targetStudyViewerConfig.rowAccessor];
+          processedItem.blockData = _.pick(dataElement, itemConfig.blockFields);
+          processedItem.tableData = _.pick(dataElement, itemConfig.tableFields);
+          processedItem.accessibleValidationValue = dataElement.auth_resource_path;
+          processedItem.accessRequested = !!(requestedAccess
+          && requestedAccess[dataElement.auth_resource_path]);
+          processedDataset.push(processedItem);
+        });
+      },
+    ).then(() => processedDataset);
   }
   return processedDataset;
 };
@@ -158,21 +178,28 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
         case 200:
           if (data.data && data.data[dataType]) {
             if (rowAccessorValue) {
-              return {
-                type: 'RECEIVE_SINGLE_STUDY_DATASET',
-                dataset: processDataset(
-                  dataType,
-                  data.data[dataType],
-                  itemConfig),
-              };
-            }
-            return {
-              type: 'RECEIVE_STUDY_DATASET_LIST',
-              datasets: processDataset(
+              return processDataset(
                 dataType,
                 data.data[dataType],
-                itemConfig),
-            };
+                itemConfig).then(pd => ({
+                type: 'RECEIVE_SINGLE_STUDY_DATASET',
+                datasets: pd,
+              })).then(msg => msg);
+              // return {
+              //   type: 'RECEIVE_SINGLE_STUDY_DATASET',
+              //   dataset: processDataset(
+              //     dataType,
+              //     data.data[dataType],
+              //     itemConfig).then(pd => pd),
+              // };
+            }
+            return processDataset(
+              dataType,
+              data.data[dataType],
+              itemConfig).then(pd => ({
+              type: 'RECEIVE_STUDY_DATASET_LIST',
+              datasets: pd,
+            })).then(msg => msg);
           }
           return {
             type: 'STUDY_DATASET_ERROR',
@@ -185,7 +212,9 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
           };
         }
       })
-      .then(msg => dispatch(msg));
+      .then((msg) => {
+        dispatch(msg);
+      });
 };
 
 export const resetSingleStudyData = () => dispatch => dispatch({

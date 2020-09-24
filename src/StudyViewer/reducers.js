@@ -3,7 +3,7 @@ const study = (state = {}, action) => {
   case 'RECEIVE_STUDY_DATASET_LIST':
     return { ...state, datasets: action.datasets };
   case 'RECEIVE_SINGLE_STUDY_DATASET':
-    return { ...state, dataset: action.dataset[0] };
+    return { ...state, dataset: action.datasets[0] };
   case 'STUDY_DATASET_ERROR':
     return { ...state, error: action.error, dataset: {}, datasets: [] };
   case 'RECEIVE_OPEN_DOC_DATA':

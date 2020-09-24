@@ -53,6 +53,7 @@ class StudyCard extends React.Component {
 
 StudyCard.propTypes = {
   data: PropTypes.shape({
+    accessRequested: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,
     rowAccessorValue: PropTypes.string.isRequired,
     blockData: PropTypes.object,

@@ -33,37 +33,10 @@ class StudyDetails extends React.Component {
     super(props);
     this.state = {
       downloadModalVisible: false,
-      accessRequested: false,
     };
   }
 
   componentDidUpdate() {
-    // first, check if user already has a request in `SUBMITTED` state for this resource
-    let accessChecked = false;
-    if (this.props.user
-      && this.props.user.username
-      && (this.props.data.accessibleValidationValue && !this.state.accessRequested)) {
-      const body = {
-        resource_paths: [this.props.data.accessibleValidationValue],
-      };
-      fetchWithCreds({
-        path: `${requestorPath}request/user_resource_paths`,
-        method: 'POST',
-        body: JSON.stringify(body),
-      }).then(
-        ({ data, status }) => {
-          if (status === 200 && data
-            && data[this.props.data.accessibleValidationValue]) {
-            console.log('in3');
-            accessChecked = true;
-            this.setState({ accessRequested: true });
-          } else {
-            // this.setState({ accessRequested: false, accessChecked: true }, () => { console.log('cbc1'); });
-          }
-        },
-      );
-    }
-
     // check if user is not logged in by looking at the user props
     // note that we only need to redirect user to /login if the search param is `?request_access`
     // `?request_access` means user got here by clicking the `Request Access` button
@@ -81,10 +54,8 @@ class StudyDetails extends React.Component {
       // it means we haven't finished check yet
       // next is to check if user has access to the resource
       if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-        console.log('in1');
         // if the user haven't have a request in `SUBMITTED` state for this resource yet
-        if (!this.state.accessRequested && !accessChecked) {
-          console.log('in2');
+        if (!this.props.data.accessRequested) {
           const body = {
             username: this.props.user.username,
             resource_path: this.props.data.accessibleValidationValue,
@@ -99,6 +70,8 @@ class StudyDetails extends React.Component {
             ({ data, status }) => {
               if (status === 201) {
                 // if a redirect is configured, Requestor returns a redirect URL
+                message
+                  .success('A request has been sent', 3);
                 if (data && data.redirect_url) {
                   window.open(data.redirect_url);
                 }
@@ -190,8 +163,8 @@ class StudyDetails extends React.Component {
                  /> : null}
                {(displayRequestAccessButton) ?
                  <Button
-                   enabled={!this.state.accessRequested}
-                   label={(this.state.accessRequested) ? 'Access Requested' : 'Request Access'}
+                   enabled={!this.props.data.accessRequested}
+                   label={(this.props.data.accessRequested) ? 'Access Requested' : 'Request Access'}
                    buttonType='primary'
                    onClick={onRequestAccess}
                    tooltipEnabled={!userHasLoggedIn}
@@ -228,7 +201,7 @@ class StudyDetails extends React.Component {
                }}
              />
            </Modal>
-           {(displayRequestAccessButton) ?
+           {(displayRequestAccessButton && !this.props.data.accessRequested) ?
              <Alert
                message='Please note that researchers are required to log in upon clicking the Request Access button and you will be prompted to login if you have not already done so.'
                type='info'
@@ -308,6 +281,7 @@ class StudyDetails extends React.Component {
 
 StudyDetails.propTypes = {
   data: PropTypes.shape({
+    accessRequested: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,
     rowAccessorValue: PropTypes.string.isRequired,
     blockData: PropTypes.object,
