@@ -65,6 +65,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
           factors={mockFactors}
           onSubmit={handleSubmit}
           timeInterval={timeInterval}
+          isError={isError}
           isFilterChanged={isFilterChanged}
           setIsFilterChanged={setIsFilterChanged}
         />

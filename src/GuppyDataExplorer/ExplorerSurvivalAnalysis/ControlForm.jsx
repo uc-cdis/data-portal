@@ -40,6 +40,7 @@ const ControlFormInput = ({ label, ...inputAttrs }) => (
  * @param {FactorItem[]} prop.factors
  * @param {UserInputSubmitHandler} prop.onSubmit
  * @param {number} prop.timeInterval
+ * @param {boolean} prop.isError
  * @param {boolean} prop.isFilterChanged
  * @param {Function} prop.setIsFilterChanged
  */
@@ -47,6 +48,7 @@ const ControlForm = ({
   factors,
   onSubmit,
   timeInterval,
+  isError,
   isFilterChanged,
   setIsFilterChanged,
 }) => {
@@ -68,6 +70,9 @@ const ControlForm = ({
     endTime,
     survivalType,
   ]);
+  useEffect(() => {
+    if (!isInputChanged && isError) setIsInputChanged(true);
+  }, [isInputChanged, isError]);
 
   /**
    * @param {{ target: { value: string, min: string, max: string }}} e
