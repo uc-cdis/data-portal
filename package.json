@@ -35,7 +35,7 @@
     "graphql": "^14.1.1",
     "history": "^4.7.2",
     "ignore-loader": "^0.1.2",
-    "isomorphic-fetch": "^2.2.1",
+    "isomorphic-fetch": "^3.0.0",
     "jszip": "^3.1.5",
     "less": "^3.11.1",
     "less-loader": "^4.1.0",
@@ -79,7 +79,7 @@
     "slick-carousel": "^1.8.1",
     "string-similarity": "^3.0.0",
     "style-loader": "^0.21.0",
-    "styled-components": "^3.2.6",
+    "styled-components": "^4.0.0",
     "underscore": "^1.8.3",
     "url-join": "^4.0.0",
     "viz.js": "2.0.0"
