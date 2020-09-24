@@ -36,18 +36,22 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
     setFactors(getFactors(aggsData));
   }, [aggsData]);
 
+  const [isError, setIsError] = useState(true);
   /**
    * @type {UserInputSubmitHandler}
    */
   const handleSubmit = ({ timeInterval, ...requestBody }) => {
+    if (isError) setIsError(false);
     setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
 
-    fetchMockSurvivalResult(requestBody).then((result) => {
-      setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-      setRisktable(result.risktable);
-      setSurvival(result.survival);
-    });
+    fetchMockSurvivalResult(requestBody)
+      .then((result) => {
+        setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
+        setRisktable(result.risktable);
+        setSurvival(result.survival);
+      })
+      .catch(() => setIsError(true));
   };
 
   return (
@@ -66,15 +70,28 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
         />
       </div>
       <div className='explorer-survival-analysis__column-right'>
-        <div className='explorer-survival-analysis__pval'>
-          {pval >= 0 && `Log-rank test p-value: ${pval}`}
-        </div>
-        <SurvivalPlot
-          data={survival}
-          stratificationVariable={stratificationVariable}
-          timeInterval={timeInterval}
-        />
-        <RiskTable data={risktable} timeInterval={timeInterval} />
+        {isError ? (
+          <div className='explorer-survival-analysis__error'>
+            <h1>Error obtaining survival analysis result...</h1>
+            <p>
+              Please retry by clicking "Apply" button or refreshing the page. If
+              the problem persists, please contact administrator for more
+              information.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className='explorer-survival-analysis__pval'>
+              {pval >= 0 && `Log-rank test p-value: ${pval}`}
+            </div>
+            <SurvivalPlot
+              data={survival}
+              stratificationVariable={stratificationVariable}
+              timeInterval={timeInterval}
+            />
+            <RiskTable data={risktable} timeInterval={timeInterval} />
+          </>
+        )}
       </div>
     </div>
   );

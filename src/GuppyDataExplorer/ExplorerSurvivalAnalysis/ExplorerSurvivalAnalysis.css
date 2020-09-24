@@ -27,6 +27,11 @@
   max-width: 600px;
 }
 
+.explorer-survival-analysis__error {
+  text-align: center;
+  margin: 1rem auto;
+}
+
 .explorer-survival-analysis__control-form {
   margin: 12px;
   min-height: 300px;
