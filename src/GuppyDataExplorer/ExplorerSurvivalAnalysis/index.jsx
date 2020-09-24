@@ -4,6 +4,7 @@ import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
+import { getFactors } from './utils';
 import {
   factors as mockFactors,
   fetchResult as fetchMockSurvivalResult,
@@ -29,6 +30,11 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
     setTransformedFilter(getGQLFilter(filter));
     setIsFilterChanged(true);
   }, [filter]);
+
+  const [factors, setFactors] = useState(getFactors(aggsData));
+  useEffect(() => {
+    setFactors(getFactors(aggsData));
+  }, [aggsData]);
 
   /**
    * @type {UserInputSubmitHandler}
