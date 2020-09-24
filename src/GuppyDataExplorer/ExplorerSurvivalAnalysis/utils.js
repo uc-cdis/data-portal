@@ -1,5 +1,28 @@
 import './typedef';
 
+const isString = (x) => Object.prototype.toString.call(x) === '[object String]';
+
+/**
+ * Get factor variables to use for survival analysis
+ * @param {{ histogram: { key: any }[] }[]} aggsData
+ */
+export const getFactors = (aggsData) => {
+  const factors = [];
+
+  for (const [key, value] of Object.entries(aggsData))
+    if (value.histogram.length > 0 && isString(value.histogram[0].key))
+      factors.push({
+        label: key
+          .toLowerCase()
+          .replace(/_|\./gi, ' ')
+          .replace(/\b\w/g, (c) => c.toUpperCase())
+          .trim(),
+        value: key,
+      });
+
+  return factors;
+};
+
 /**
  * Builds x-axis ticks array to use in plots
  * @param {{ data: { time: number; }[]}[]} data
