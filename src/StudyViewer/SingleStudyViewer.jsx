@@ -94,11 +94,11 @@ class SingleStudyViewer extends React.Component {
                     <div className='h3-typo'>Data Access Agreements</div>
                     <div>
                       <FilePdfOutlined />
-                      <a href='https://qa-niaid.planx-pla.net/dashboard/Public/files/2020-1138%20v200917FINALDUA.pdf'>Data Use Agreement (DUA)</a>
+                      <a href='https://accessclinicaldata.niaid.nih.gov/dashboard/Public/files/2020-1138%20v200917FINALDUA.pdf'>Data Use Agreement (DUA)</a>
                     </div>
                     <div>
                       <FilePdfOutlined />
-                      <a href='https://qa-niaid.planx-pla.net/dashboard/Public/files/NIAID%20Data%20Access%20Request%20FormSept2020.pdf'>Data Access Request (DAR)</a>
+                      <a href='https://accessclinicaldata.niaid.nih.gov/dashboard/Public/files/NIAID%20Data%20Access%20Request%20FormSept2020.pdf'>Data Access Request (DAR)</a>
                     </div>
                   </Space>
                 </div>
