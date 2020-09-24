@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   ResponsiveContainer,
@@ -18,43 +18,69 @@ import './typedef';
  * @param {SurvivalData[]} prop.data
  * @param {number} prop.timeInterval
  */
-const Plot = ({ data, timeInterval }) => (
-  <ResponsiveContainer height={300}>
-    <LineChart data={data} margin={{ left: 20, bottom: 10, right: 20 }}>
-      <XAxis
-        dataKey='time'
-        type='number'
-        label={{
-          value: 'Time (in year)',
-          position: 'insideBottom',
-          offset: -5,
-        }}
-        ticks={getXAxisTicks(data, timeInterval)}
-        domain={['dataMin', 'auto']}
-      />
-      <YAxis
-        label={{
-          value: 'Survival rate',
-          angle: -90,
-          position: 'insideLeft',
-        }}
-      />
-      <CartesianGrid strokeDasharray='3 3' />
-      <Legend verticalAlign='top' />
-      {data.map((series, i) => (
-        <Line
-          key={series.name}
-          data={series.data}
-          dataKey='prob'
-          dot={false}
-          name={series.name}
-          type='stepAfter'
-          stroke={schemeCategory10[i]}
+const Plot = ({ data, timeInterval }) => {
+  const [opacity, setOpacity] = useState({});
+  useEffect(() => {
+    const initOpacity = {};
+    for (const { name } of data) initOpacity[name] = 1;
+    setOpacity(initOpacity);
+  }, [data]);
+
+  function handleLegendMouseEnter({ value: lineName }) {
+    const newOpacity = { ...opacity };
+    for (const name in newOpacity) if (name != lineName) newOpacity[name] = 0.1;
+    setOpacity(newOpacity);
+  }
+
+  function handleLegendMouseLeave({ value: lineName }) {
+    const newOpacity = { ...opacity };
+    for (const name in newOpacity) if (name != lineName) newOpacity[name] = 1;
+    setOpacity(newOpacity);
+  }
+
+  return (
+    <ResponsiveContainer height={300}>
+      <LineChart data={data} margin={{ left: 20, bottom: 10, right: 20 }}>
+        <XAxis
+          dataKey='time'
+          type='number'
+          label={{
+            value: 'Time (in year)',
+            position: 'insideBottom',
+            offset: -5,
+          }}
+          ticks={getXAxisTicks(data, timeInterval)}
+          domain={['dataMin', 'auto']}
         />
-      ))}
-    </LineChart>
-  </ResponsiveContainer>
-);
+        <YAxis
+          label={{
+            value: 'Survival rate',
+            angle: -90,
+            position: 'insideLeft',
+          }}
+        />
+        <CartesianGrid strokeDasharray='3 3' />
+        <Legend
+          verticalAlign='top'
+          onMouseEnter={handleLegendMouseEnter}
+          onMouseLeave={handleLegendMouseLeave}
+        />
+        {data.map((series, i) => (
+          <Line
+            key={series.name}
+            data={series.data}
+            dataKey='prob'
+            dot={false}
+            name={series.name}
+            type='stepAfter'
+            stroke={schemeCategory10[i]}
+            strokeOpacity={opacity[series.name]}
+          />
+        ))}
+      </LineChart>
+    </ResponsiveContainer>
+  );
+};
 
 /**
  * @param {Object} prop
