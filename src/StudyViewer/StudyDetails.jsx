@@ -39,7 +39,10 @@ class StudyDetails extends React.Component {
 
   componentDidUpdate() {
     // first, check if user already has a request in `SUBMITTED` state for this resource
-    if (this.props.data.accessibleValidationValue && !this.state.accessRequested) {
+    let accessChecked = false;
+    if (this.props.user
+      && this.props.user.username
+      && (this.props.data.accessibleValidationValue && !this.state.accessRequested)) {
       const body = {
         resource_paths: [this.props.data.accessibleValidationValue],
       };
@@ -51,7 +54,11 @@ class StudyDetails extends React.Component {
         ({ data, status }) => {
           if (status === 200 && data
             && data[this.props.data.accessibleValidationValue]) {
+            console.log('in3');
+            accessChecked = true;
             this.setState({ accessRequested: true });
+          } else {
+            // this.setState({ accessRequested: false, accessChecked: true }, () => { console.log('cbc1'); });
           }
         },
       );
@@ -74,8 +81,10 @@ class StudyDetails extends React.Component {
       // it means we haven't finished check yet
       // next is to check if user has access to the resource
       if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
+        console.log('in1');
         // if the user haven't have a request in `SUBMITTED` state for this resource yet
-        if (!this.state.accessRequested) {
+        if (!this.state.accessRequested && !accessChecked) {
+          console.log('in2');
           const body = {
             username: this.props.user.username,
             resource_path: this.props.data.accessibleValidationValue,
