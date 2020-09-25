@@ -51,3 +51,8 @@
 .study-details {
   width: 100%;
 }
+
+/* temp fix, there is an official fix coming up soon https://github.com/ant-design/ant-design/pull/26721 */
+.ant-space-item:empty {
+  display: none;
+}

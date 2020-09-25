@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { withRouter } from 'react-router-dom';
 import { Space, Typography, Spin, Result } from 'antd';
 import { FileOutlined, FilePdfOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
@@ -42,7 +41,7 @@ class SingleStudyViewer extends React.Component {
       if (this.state.dataType && this.state.rowAccessor) {
         getReduxStore().then(
           store =>
-            Promise.all(
+            Promise.allSettled(
               [
                 store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType),
                   decodeURIComponent(this.state.rowAccessor))),
@@ -144,4 +143,4 @@ SingleStudyViewer.defaultProps = {
   noConfigError: undefined,
 };
 
-export default withRouter(SingleStudyViewer);
+export default SingleStudyViewer;

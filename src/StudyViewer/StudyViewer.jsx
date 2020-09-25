@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { Space, Spin, Result } from 'antd';
 import getReduxStore from '../reduxStore';
 import { fetchDataset, fetchFiles, resetSingleStudyData, fetchStudyViewerConfig } from './reduxer';
@@ -41,7 +40,7 @@ class StudyViewer extends React.Component {
       if (this.state.dataType) {
         getReduxStore().then(
           store =>
-            Promise.all(
+            Promise.allSettled(
               [
                 store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType))),
                 store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object')),
@@ -116,4 +115,4 @@ StudyViewer.defaultProps = {
   noConfigError: undefined,
 };
 
-export default withRouter(StudyViewer);
+export default StudyViewer;
