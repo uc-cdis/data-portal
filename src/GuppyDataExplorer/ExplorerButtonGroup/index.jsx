@@ -88,7 +88,7 @@ class ExplorerButtonGroup extends React.Component {
               this.sendPFBToSevenBridges();
             });
           } else if (this.state.exportingPFBToWorkspace) {
-            const pfbGUID = `${res.data.output}`.split('\n');
+            const pfbGUID = `${res.data.output}`.split('\n')[0];
             this.sendPFBToWorkspace(pfbGUID);
           } else {
             this.setState({
@@ -430,6 +430,8 @@ class ExplorerButtonGroup extends React.Component {
 
 
   sendPFBToWorkspace = (pfbGUID) => {
+    console.log('433 pfbGUID: ', pfbGUID);
+
     const JSONBody = { cohort_guid: pfbGUID };
     fetchWithCreds({
       path: `${manifestServiceApiPath}cohorts`,
