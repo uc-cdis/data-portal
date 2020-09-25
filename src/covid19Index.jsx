@@ -17,7 +17,6 @@ import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 import HomePage from './Homepage/page';
 import DocumentPage from './Document/page';
-import ExplorerPage from './Explorer/ExplorerPage';
 import { fetchCoreMetadata, ReduxCoreMetadataPage } from './CoreMetadata/reduxer';
 import Indexing from './Indexing/Indexing';
 import Covid19IndexPage from './Index/covid19Page';
@@ -34,11 +33,10 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
-  indexPublic, useGuppyForExplorer, explorerPublic, enableResourceBrowser, resourceBrowserPublic,
+  indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic,
 } from './localconf';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
-import DataExplorer from './DataExplorer';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
@@ -246,7 +244,7 @@ async function init() {
                       props => (
                         <ProtectedContent
                           public={explorerPublic}
-                          component={useGuppyForExplorer ? GuppyDataExplorer : ExplorerPage}
+                          component={GuppyDataExplorer}
                           {...props}
                         />
                       )
@@ -304,7 +302,7 @@ async function init() {
                         props => (
                           <ProtectedContent
                             public={explorerPublic}
-                            component={useGuppyForExplorer ? GuppyDataExplorer : DataExplorer}
+                            component={GuppyDataExplorer}
                             {...props}
                           />
                         )

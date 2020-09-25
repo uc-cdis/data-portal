@@ -205,12 +205,6 @@
         "experimental_group"
       ]
     },
-    "arrangerConfig": {
-      "projectId": "search",
-      "graphqlField": "case",
-      "index": "",
-      "nodeCountField": "node_id"
-    },
   "guppyConfig": {
       "dataType": "case",
       "nodeCountTitle": "Cases",

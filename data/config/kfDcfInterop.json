@@ -155,12 +155,6 @@
         }
       ]
     },
-    "arrangerConfig": {
-      "projectId": "search",
-      "graphqlField": "case",
-      "index": "",
-      "nodeCountField": "node_id"
-    },
     "table": {
       "enabled": true
     },

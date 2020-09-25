@@ -1,27 +1,3 @@
-
-/*
-* Check if an object as chain of keys
-* obj - object
-* keyChainString - keys separated by dotf
-* return: boolean, whether object as keys
-* e.g.: obj={ a: { b: {c: 1 } } }, keyChainString='a.b.c', return true
-* e.g.: obj={ a: { b: 1 } }, keyChainString='a.b.c', return false
-*/
-export const hasKeyChain = (obj, keyChainString) => {
-  if (!obj) return false;
-  const keyList = keyChainString.split('.');
-  if (keyList.length === 0) return false;
-  let o = obj;
-  for (let i = 0; i < keyList.length; i += 1) {
-    const key = keyList[i];
-    if (o[key] === undefined) {
-      return false;
-    }
-    o = o[key];
-  }
-  return true;
-};
-
 /*
 * Buttons are grouped by their dropdownId value.
 * This function calculates and groups buttons under the same dropdown,
