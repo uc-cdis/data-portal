@@ -25,14 +25,17 @@
   margin-top: 10px;
 }
 
-.gql-editor .graphiql-container .toolbar-button {
+.graphiql-container button.docExplorerShow,
+.graphiql-container .docExplorerWrap button,
+.graphiql-container .historyPaneWrap button,
+.graphiql-container .toolbar button {
   width: auto;
-  height: auto;
+  height: inherit;
+  font-weight: normal;
 }
 
-.gql-editor .graphiql-container .historyPaneWrap button {
-  width: auto;
-  height: auto;
-  background: none;
-  border: none;
+.graphiql-container .topBar,
+.graphiql-container .doc-explorer-title-bar,
+.graphiql-container .history-title-bar {
+  box-sizing: content-box;
 }
