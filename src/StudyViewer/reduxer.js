@@ -185,13 +185,6 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
                 type: 'RECEIVE_SINGLE_STUDY_DATASET',
                 datasets: pd,
               })).then(msg => msg);
-              // return {
-              //   type: 'RECEIVE_SINGLE_STUDY_DATASET',
-              //   dataset: processDataset(
-              //     dataType,
-              //     data.data[dataType],
-              //     itemConfig).then(pd => pd),
-              // };
             }
             return processDataset(
               dataType,
