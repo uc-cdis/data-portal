@@ -47,6 +47,7 @@ import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
+import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import './index.less';
 import NotFound from './components/NotFound';
 
@@ -359,6 +360,28 @@ async function init() {
                     />
                     : null
                   }
+                  <Route
+                    exact
+                    path='/study-viewer/:dataType'
+                    component={
+                      props => (<ProtectedContent
+                        public
+                        component={ReduxStudyViewer}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/study-viewer/:dataType/:rowAccessor'
+                    component={
+                      props => (<ProtectedContent
+                        public
+                        component={ReduxSingleStudyViewer}
+                        {...props}
+                      />)
+                    }
+                  />
                   <Route
                     path='/not-found'
                     component={NotFound}
