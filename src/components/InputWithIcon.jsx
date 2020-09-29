@@ -9,10 +9,12 @@ class InputWithIcon extends React.Component {
       <React.Fragment>
         <div className={'input-with-icon'.concat(this.props.className ? ` ${this.props.className}` : '')}>
           {
+            // Include the `.Select-arrow` class here due to integration tests expecting a clickable
+            // element with this class to be present here.
             this.props.inputOptions ? (
               <Select
                 styles={{ control: provided => ({ ...provided, width: '100%' }) }}
-                className={this.props.inputClassName}
+                className={`${this.props.inputClassName} .Select-arrow`}
                 value={{ value: this.props.inputValue, label: this.props.inputValue }}
                 placeholder={this.props.inputPlaceholderText}
                 options={this.props.inputOptions}
