@@ -1,0 +1,58 @@
+.study-viewer {
+  width: 100%;
+  padding: 40px 20px;
+}
+
+.study-viewer_loading {
+  display: flex;
+  justify-content: center;
+}
+
+.study-viewer__title {
+  padding-top: 10px;
+  flex-basis: 460px;
+}
+
+.study-viewer__space {
+  width: 100%;
+}
+
+.study-viewer__card {
+  width: 100%;
+  border: 1px solid black;
+}
+
+.study-details__descriptions {
+  border: 1px solid black;
+}
+
+.study-viewer__details {
+  display: flex;
+  width: 100%;
+}
+
+.study-viewer__details-sidebar {
+  width: 30%;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.study-viewer__details-sidebar-box {
+  height: fit-content;
+  border: 1px solid black;
+}
+
+.study-viewer__details-sidebar-space {
+  width: 100%;
+  padding: 10px;
+}
+
+.study-details {
+  width: 100%;
+}
+
+/* temp fix, there is an official fix coming up soon https://github.com/ant-design/ant-design/pull/26721 */
+.ant-space-item:empty {
+  display: none;
+}
