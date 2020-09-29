@@ -50,7 +50,7 @@ const Plot = ({ data, timeInterval }) => {
             offset: -5,
           }}
           ticks={getXAxisTicks(data, timeInterval)}
-          domain={['dataMin', 'auto']}
+          domain={['dataMin', (dataMax) => Math.ceil(dataMax)]}
         />
         <YAxis
           label={{

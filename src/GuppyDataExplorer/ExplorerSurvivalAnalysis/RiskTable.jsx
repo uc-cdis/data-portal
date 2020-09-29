@@ -28,6 +28,12 @@ const parseRisktable = (data, timeInterval) => {
 };
 
 /**
+ * @param {RisktableData[]} data
+ */
+const getMaxTime = (data) =>
+  Math.max(...data.flatMap(({ data }) => data.map(({ time }) => time)));
+
+/**
  * @param {Object} prop
  * @param {RisktableData[]} prop.data
  * @param {number} prop.timeInterval
@@ -60,7 +66,7 @@ const RiskTable = ({ data, timeInterval }) => (
                 offset: -5,
               }}
               ticks={getXAxisTicks(data, timeInterval)}
-              domain={['dataMin', 'dataMax']}
+              domain={['dataMin', getMaxTime(data)]}
             />
             <YAxis
               dataKey='name'
