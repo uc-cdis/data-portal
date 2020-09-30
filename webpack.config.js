@@ -71,10 +71,12 @@ const plugins = [
       }
       if (typeof process.env.IFRAME_APPLICATION_URLS !== 'undefined') {
         const iFrameApplicationURLs = process.env.IFRAME_APPLICATION_URLS.split(',');
+        // console.log(iFrameApplicationURLs);
         iFrameApplicationURLs.forEach(url => {
           rv[(new URL(url)).origin] = true;
         })
       }
+      console.log(Object.keys(rv).join(' '));
       return Object.keys(rv).join(' ');
     })(),
     hash: true,

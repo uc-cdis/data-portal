@@ -6,7 +6,7 @@ import './Analysis.less';
 
 class Analysis extends React.Component {
   openApp = (app) => {
-    this.props.history.push(`/analysis/${app}`);
+    this.props.history.push(`/analysis/${encodeURIComponent(app)}`);
   }
 
   render() {
@@ -15,7 +15,7 @@ class Analysis extends React.Component {
         <h2 className='analysis__title'>Apps</h2>
         <div className='analysis-cards'>
           {
-            Object.keys(analysisApps).forEach(appKey => (
+            Object.keys(analysisApps).map(appKey => (
               <div
                 key={appKey}
                 className='analysis__app-card'
