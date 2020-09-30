@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CalculatorOutlined } from '@ant-design/icons';
 import './AppCard.css';
 
 class AppCard extends React.Component {
@@ -14,13 +13,11 @@ class AppCard extends React.Component {
             : null
           }
         </div>
-        {(this.props.imageUrl) ?
-          <img className='app-card__image' src={this.props.imageUrl} alt={`${this.props.title}`} />
-          :
-          <div className='app-card__image'>
-            <CalculatorOutlined />
-          </div>
-        }
+        <img
+          className='app-card__image'
+          src={(this.props.imageUrl) ? this.props.imageUrl : '/src/img/analysis-icons/default-app.png'}
+          alt={`${this.props.title}`}
+        />
       </div>
     );
   }
