@@ -121,6 +121,8 @@ class StudyDetails extends React.Component {
      } else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
        requestAccessButton = this.onRequestAccess;
      }
+     let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
+     requestAccessText = this.props.data.accessRequested ? 'Access Requested' : requestAccessText;
 
      return (
        <div className='study-details'>
@@ -145,11 +147,9 @@ class StudyDetails extends React.Component {
                {(displayRequestAccessButton) ?
                  <Button
                    enabled={!this.props.data.accessRequested}
-                   label={(this.props.data.accessRequested) ? 'Access Requested' : 'Request Access'}
+                   label={requestAccessText}
                    buttonType='primary'
                    onClick={requestAccessButton}
-                   tooltipEnabled={!userHasLoggedIn}
-                   tooltipText={'Note that you will be prompted to log in'}
                  /> : null}
              </Space>) : null
            }
@@ -182,9 +182,9 @@ class StudyDetails extends React.Component {
                }}
              />
            </Modal>
-           {(displayRequestAccessButton && !this.props.data.accessRequested) ?
+           {(displayRequestAccessButton && !userHasLoggedIn && !this.props.data.accessRequested) ?
              <Alert
-               message='Please note that researchers are required to log in upon clicking the Request Access button and you will be prompted to login if you have not already done so.'
+               message='Please note that researchers are required to log in before requesting access.'
                type='info'
                showIcon
              /> : null}
