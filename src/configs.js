@@ -6,7 +6,7 @@ const csrftoken = document.cookie.replace(/(?:(?:^|.*;\s*)csrftoken\s*=\s*([^;]*
 export const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
-  'x-csrf-token': csrftoken
+  'x-csrf-token': csrftoken,
 };
 
 
@@ -23,7 +23,7 @@ export async function fetchAndSetCsrfToken() {
         throw new Error('Failed to retrieve CSRF token');
       }
       return res.json();
-    }
+    },
   ).then(
     (info) => {
       if (!info.csrf) {
@@ -31,6 +31,6 @@ export async function fetchAndSetCsrfToken() {
       }
       headers['x-csrf-token'] = info.csrf;
       return info.csrf;
-    }
+    },
   );
 }
