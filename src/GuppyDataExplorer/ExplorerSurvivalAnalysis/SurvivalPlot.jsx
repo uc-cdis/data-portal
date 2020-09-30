@@ -28,7 +28,8 @@ const Plot = ({ data, timeInterval }) => {
 
   function handleLegendMouseEnter({ value: lineName }) {
     const newOpacity = { ...opacity };
-    for (const name in newOpacity) if (name != lineName) newOpacity[name] = 0.1;
+    for (const name in newOpacity)
+      newOpacity[name] = name === lineName ? 1 : 0.1;
     setOpacity(newOpacity);
   }
 
