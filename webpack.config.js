@@ -76,7 +76,6 @@ const plugins = [
           rv[(new URL(url)).origin] = true;
         })
       }
-      console.log(Object.keys(rv).join(' '));
       return Object.keys(rv).join(' ');
     })(),
     hash: true,
