@@ -4,6 +4,7 @@ src/gqlHelper.js
 bundle.js
 vendors*.js
 workspaceBundle.js
+covid19Bundle.js
 index.html
 workspaces.html
 custom/sponsors/
