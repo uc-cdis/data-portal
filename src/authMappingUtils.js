@@ -59,14 +59,16 @@ export const userHasDataUpload = (userAuthMapping = {}) => {
   return resource !== undefined && resource.some(actionIsFileUpload);
 };
 
-
-export const userHasMethodOnProject = (method, projectID, userAuthMapping = {}) => {
-  // method should be a string e.g. 'create'
-  const resourcePath = resourcePathFromProjectID(projectID);
+export const userHasMethodOnResource = (method, resourcePath, userAuthMapping = {}) => {
   const actions = userAuthMapping[resourcePath];
   return actions !== undefined && actions.some(x => x.method === method);
 };
 
+export const userHasMethodOnProject = (method, projectID, userAuthMapping = {}) => {
+  // method should be a string e.g. 'create'
+  const resourcePath = resourcePathFromProjectID(projectID);
+  return userHasMethodOnResource(method, resourcePath, userAuthMapping);
+};
 
 export const userHasMethodOnAnyProject = (method, userAuthMapping = {}) => {
   // method should be a string e.g. 'create'

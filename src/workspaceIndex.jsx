@@ -15,6 +15,7 @@ import { Helmet } from 'react-helmet';
 
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
+import { fetchAndSetCsrfToken } from './configs';
 import { fetchUserAccess, fetchUserAuthMapping } from './actions';
 import ProtectedContent from './Login/ProtectedContent';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
@@ -50,6 +51,8 @@ async function init() {
       // resources can be open to anonymous users, so fetch access:
       store.dispatch(fetchUserAccess),
       store.dispatch(fetchUserAuthMapping),
+      // eslint-disable-next-line no-console
+      fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); }),
     ],
   );
 

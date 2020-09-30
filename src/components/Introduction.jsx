@@ -29,14 +29,16 @@ class Introduction extends Component {
           </div>
         </h1>
         <div className='high-light introduction__text'>{this.props.data.text}</div>
-        <IconicLink
-          link={this.props.data.link}
-          dictIcons={this.props.dictIcons}
-          className='introduction__icon'
-          icon='upload'
-          iconColor='#'
-          caption={buttonText}
-        />
+        {(this.props.data.link) ?
+          (<IconicLink
+            link={this.props.data.link}
+            dictIcons={this.props.dictIcons}
+            className='introduction__icon'
+            icon='upload'
+            iconColor='#'
+            caption={buttonText}
+          />)
+          : null}
       </div>
     );
   }
