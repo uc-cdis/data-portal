@@ -30,3 +30,11 @@
   flex-flow: column;
   margin: 10px 0;
 }
+
+.analysis-app__iframe {
+  flex: 1 0 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

@@ -37,6 +37,7 @@ const plugins = [
   new webpack.EnvironmentPlugin(['WTS_URL']),
   new webpack.EnvironmentPlugin(['MANIFEST_SERVICE_URL']),
   new webpack.EnvironmentPlugin(['MAPBOX_API_TOKEN']),
+  new webpack.EnvironmentPlugin(['IFRAME_APPLICATION_URLS']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev'),
@@ -67,6 +68,12 @@ const plugins = [
       }
       if (typeof process.env.MANIFEST_SERVICE_URL !== 'undefined') {
         rv[(new URL(process.env.MANIFEST_SERVICE_URL)).origin] = true;
+      }
+      if (typeof process.env.IFRAME_APPLICATION_URLS !== 'undefined') {
+        const iFrameApplicationURLs = process.env.IFRAME_APPLICATION_URLS.split(',');
+        iFrameApplicationURLs.forEach(url => {
+          rv[(new URL(url)).origin] = true;
+        })
       }
       return Object.keys(rv).join(' ');
     })(),
