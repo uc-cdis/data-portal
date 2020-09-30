@@ -16,6 +16,7 @@ import login from './Login/reducers';
 import bar from './Layout/reducers';
 import ddgraph from './DataDictionary/reducers';
 import privacyPolicy from './PrivacyPolicy/reducers';
+import study from './StudyViewer/reducers';
 import { logoutListener } from './Login/ProtectedContent';
 import { fetchUserAccess, fetchUserAuthMapping } from './actions';
 import getReduxStore from './reduxStore';
@@ -90,7 +91,9 @@ export const removeDeletedNode = (state, id) => {
   return searchResult;
 };
 
-const reducers = combineReducers({ explorer,
+const reducers = combineReducers({
+  explorer,
+  study,
   privacyPolicy,
   bar,
   homepage,
