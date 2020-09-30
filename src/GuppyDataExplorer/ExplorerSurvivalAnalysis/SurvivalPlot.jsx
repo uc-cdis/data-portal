@@ -35,7 +35,7 @@ const Plot = ({ data, timeInterval }) => {
 
   function handleLegendMouseLeave({ value: lineName }) {
     const newOpacity = { ...opacity };
-    for (const name in newOpacity) if (name != lineName) newOpacity[name] = 1;
+    for (const name in newOpacity) if (name !== lineName) newOpacity[name] = 1;
     setOpacity(newOpacity);
   }
 
