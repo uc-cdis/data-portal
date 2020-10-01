@@ -85,6 +85,7 @@ class SingleStudyViewer extends React.Component {
               data={dataset}
               fileData={this.props.fileData}
               studyViewerConfig={studyViewerConfig}
+              isSingleItemView={false}
             />
             <div className='study-viewer__details-sidebar'>
               <Space direction='vertical' style={{ width: '100%' }}>

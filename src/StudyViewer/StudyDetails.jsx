@@ -31,6 +31,8 @@ const stringIsAValidUrl = (s) => {
 class StudyDetails extends React.Component {
   constructor(props) {
     super(props);
+    // track if there is at least 1 displayed request_access button:
+    this.requestAccessButtonVisible = false;
     this.state = {
       downloadModalVisible: false,
       redirectModalVisible: false,
@@ -56,13 +58,18 @@ class StudyDetails extends React.Component {
       // it means we haven't finished check yet
       // next is to check if user has access to the resource
       if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-        // if the user haven't have a request in `SUBMITTED` state for this resource yet
+        // if the user has not requested access to this resource yet
+
+        // this defaults to the config of the 1st configured request_access
+        // button. if there are more than 1 with different configs, TODO fix
+        const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find(e => e.type === 'request_access');
+
         if (!this.props.data.accessRequested) {
           const body = {
             username: this.props.user.username,
             resource_path: this.props.data.accessibleValidationValue,
             resource_id: this.props.data.rowAccessorValue,
-            resource_display_name: this.props.data.title,
+            resource_display_name: this.props.data[requestAccessConfig.resourceDisplayNameField],
           };
           fetchWithCreds({
             path: `${requestorPath}request`,
@@ -72,8 +79,6 @@ class StudyDetails extends React.Component {
             ({ data, status }) => {
               if (status === 201) {
                 // if a redirect is configured, Requestor returns a redirect URL
-                message
-                  .success('A request has been sent', 3);
                 if (data && data.redirect_url) {
                   this.setState({
                     redirectUrl: data.redirect_url,
@@ -91,6 +96,54 @@ class StudyDetails extends React.Component {
       // we are done here, remove the query string from URL
       this.props.history.push(`${this.props.location.pathname}`, { from: this.props.location.pathname });
     }
+  }
+
+  getButton = (key, buttonConfig, userHasLoggedIn) => {
+    // if this button is explicitly disabled in this view, return nothing
+    if (this.props.isSingleItemView && buttonConfig.singleItemView === false) {
+      return null;
+    }
+    if (!this.props.isSingleItemView && buttonConfig.listView === false) {
+      return null;
+    }
+
+    let button;
+
+    if (buttonConfig.type === 'download') {
+      // 'Download' button
+      const displayDownloadButton = userHasLoggedIn
+      && this.isDataAccessible(this.props.data.accessibleValidationValue)
+      && this.props.fileData.length > 0;
+
+      button = displayDownloadButton ? (<Button
+        key={key}
+        label={'Download'}
+        buttonType='primary'
+        onClick={this.showDownloadModal}
+      />) : null;
+    } else if (buttonConfig.type === 'request_access') {
+      // 'Request Access' and 'Login to Request Access' buttons
+      const onRequestAccess = () => {
+        this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
+      };
+      let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
+      requestAccessText = this.props.data.accessRequested ? 'Access Requested' : requestAccessText;
+      const displayRequestAccessButton = !userHasLoggedIn
+      || !this.isDataAccessible(this.props.data.accessibleValidationValue);
+      this.requestAccessButtonVisible = displayRequestAccessButton;
+
+      button = displayRequestAccessButton ? (<Button
+        key={key}
+        label={requestAccessText}
+        buttonType='primary'
+        onClick={onRequestAccess}
+        enabled={!this.props.data.accessRequested}
+      />) : null;
+    } else {
+      console.warn(`Study viewer button type '${buttonConfig.type}' unknown`); // eslint-disable-line no-console
+    }
+
+    return button;
   }
 
   getLabel = (label) => {
@@ -146,69 +199,51 @@ class StudyDetails extends React.Component {
    };
 
    render() {
-     const onRequestAccess = () => this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
      const userHasLoggedIn = !!this.props.user.username;
 
-     const displayDownloadButton = userHasLoggedIn
-     && this.isDataAccessible(this.props.data.accessibleValidationValue)
-     && this.props.fileData.length > 0;
-     const downloadButtonFunc = this.showDownloadModal;
-
-     const displayRequestAccessButton = !userHasLoggedIn
-     || !this.isDataAccessible(this.props.data.accessibleValidationValue);
-     let requestAccessButtonText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
-     requestAccessButtonText = this.props.data.accessRequested ? 'Access Requested' : requestAccessButtonText;
+     // this defaults to the config of the 1st configured request_access
+     // button. if there are more than 1 with different configs, TODO fix
+     const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find(e => e.type === 'request_access');
 
      return (
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
-           { (this.props.displayLearnMoreBtn
-           || displayDownloadButton
-           || displayRequestAccessButton) ?
-             (<Space>
-               {(this.props.displayLearnMoreBtn) ?
-                 <Button
-                   label={'Learn More'}
-                   buttonType='primary'
-                   onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
-                 />
-                 : null}
-               {(displayDownloadButton) ?
-                 <Button
-                   label={'Download'}
-                   buttonType='primary'
-                   onClick={downloadButtonFunc}
-                 /> : null}
-               {(displayRequestAccessButton) ?
-                 <Button
-                   enabled={!this.props.data.accessRequested}
-                   label={requestAccessButtonText}
-                   buttonType='primary'
-                   onClick={onRequestAccess}
-                 /> : null}
-             </Space>) : null
-           }
+           <Space>
+             {this.props.isSingleItemView ?
+               <Button
+                 label={'Learn More'}
+                 buttonType='primary'
+                 onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
+               />
+               : null
+             }
+             {
+               this.props.studyViewerConfig.buttons.map(
+                 (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
+               )
+             }
+           </Space>
            <Modal
-             title='Redirection'
+             title='Request Access'
              visible={this.state.redirectModalVisible}
              closable={false}
              onCancel={this.handleRedirectModalCancel}
              footer={[
                <Button
-                 key='modal-refuse-button'
-                 label={'Refuse'}
-                 buttonType='default'
-                 onClick={this.handleRedirectModalCancel}
-               />,
-               <Button
                  key='modal-accept-button'
-                 label={'Accept'}
+                 label={'Confirm'}
                  buttonType='primary'
                  onClick={this.handleRedirectModalOk}
                />,
+               <Button
+                 key='modal-refuse-button'
+                 label={'Cancel'}
+                 buttonType='default'
+                 onClick={this.handleRedirectModalCancel}
+               />,
              ]}
            >
-             <p>You will now be redirected to <a href={this.state.redirectUrl}>{this.state.redirectUrl}</a> for the next step</p>
+             <p>You will now be sent to <a href={this.state.redirectUrl}>{requestAccessConfig.redirectModalText || this.state.redirectUrl}.</a></p>
            </Modal>
            <Modal
              title='Download Files'
@@ -239,7 +274,7 @@ class StudyDetails extends React.Component {
                }}
              />
            </Modal>
-           {(!userHasLoggedIn && !this.props.data.accessRequested) ?
+           {this.requestAccessButtonVisible && !userHasLoggedIn && !this.props.data.accessRequested ?
              <Alert
                message='Please note that researchers are required to log in before requesting access.'
                type='info'
@@ -336,13 +371,12 @@ StudyDetails.propTypes = {
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  displayLearnMoreBtn: PropTypes.bool,
+  isSingleItemView: PropTypes.bool.isRequired,
   userAuthMapping: PropTypes.object.isRequired,
   studyViewerConfig: PropTypes.object,
 };
 
 StudyDetails.defaultProps = {
-  displayLearnMoreBtn: false,
   fileData: [],
   studyViewerConfig: {},
 };
