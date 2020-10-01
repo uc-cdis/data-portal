@@ -150,11 +150,7 @@ const ControlForm = ({
         onChange={(e) => setLocalTimeInterval(Number.parseInt(e.target.value))}
         value={localTimeInterval}
       />
-      <div className='explorer-survival-analysis__warning'>
-        WARNING: The inputs below are disabled while using mocked result.
-      </div>
       <ControlFormInput
-        disabled
         label='Start time (year)'
         type='number'
         min={0}
@@ -165,7 +161,6 @@ const ControlForm = ({
         value={startTime}
       />
       <ControlFormInput
-        disabled
         label='End time (year)'
         type='number'
         min={startTime + 1}
@@ -176,7 +171,6 @@ const ControlForm = ({
         value={endTime}
       />
       <ControlFormSelect
-        disabled
         label='Survival type'
         options={[
           { label: 'All Survival', value: 'all' },

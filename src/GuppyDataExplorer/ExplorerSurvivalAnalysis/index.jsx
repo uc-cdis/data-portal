@@ -5,12 +5,19 @@ import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
 import { getFactors } from './utils';
-import {
-  factors as mockFactors,
-  fetchResult as fetchMockSurvivalResult,
-} from './mockData';
+import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
+
+const fetchResult = (body) =>
+  fetchWithCreds({
+    path: '/analysis/tools/survival',
+    method: 'POST',
+    body: JSON.stringify(body),
+  }).then(({ response, data, status }) => {
+    if (status !== 200) throw response.statusText;
+    return data;
+  });
 
 /**
  * @param {Object} prop
@@ -45,24 +52,20 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
     setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
 
-    fetchMockSurvivalResult(requestBody)
+    fetchResult({ filter: transformedFilter, ...requestBody })
       .then((result) => {
         setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
         setRisktable(result.risktable);
         setSurvival(result.survival);
       })
-      .catch(() => setIsError(true));
+      .catch((e) => setIsError(true));
   };
 
   return (
     <div className='explorer-survival-analysis'>
-      <div className='explorer-survival-analysis__warning'>
-        WARNING: This component is currently using mocked survival result and
-        does not fully implement the intended functionality.
-      </div>
       <div className='explorer-survival-analysis__column-left'>
         <ControlForm
-          factors={mockFactors}
+          factors={factors}
           onSubmit={handleSubmit}
           timeInterval={timeInterval}
           isError={isError}
