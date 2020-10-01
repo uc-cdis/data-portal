@@ -36,57 +36,32 @@ class StudyDetails extends React.Component {
     };
   }
 
-  componentDidUpdate() {
-    // check if user is not logged in by looking at the user props
-    // note that we only need to redirect user to /login if the search param is `?request_access`
-    // `?request_access` means user got here by clicking the `Request Access` button
-    // and `?request_access_logged_in` means user got here by redirecting from the login page
-    // in that case, don't redirect user again, just wait for user props to update
-    if ((!this.props.user || !this.props.user.username)
-    && this.props.location.search
-    && this.props.location.search === '?request_access') {
-      this.props.history.push('/login', { from: `${this.props.location.pathname}?request_access` });
-    } else if (this.props.user
-      && this.props.user.username
-      && this.props.location.search
-      && this.props.location.search.includes('?request_access')) {
-      // if we still have either `?request_access` or `?request_access_logged_in`
-      // it means we haven't finished check yet
-      // next is to check if user has access to the resource
-      if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-        // if the user haven't have a request in `SUBMITTED` state for this resource yet
-        if (!this.props.data.accessRequested) {
-          const body = {
-            username: this.props.user.username,
-            resource_path: this.props.data.accessibleValidationValue,
-            resource_id: this.props.data.rowAccessorValue,
-            resource_display_name: this.props.data.title,
-          };
-          fetchWithCreds({
-            path: `${requestorPath}request`,
-            method: 'POST',
-            body: JSON.stringify(body),
-          }).then(
-            ({ data, status }) => {
-              if (status === 201) {
-                // if a redirect is configured, Requestor returns a redirect URL
-                message
-                  .success('A request has been sent', 3);
-                if (data && data.redirect_url) {
-                  window.open(data.redirect_url);
-                }
-              } else {
-                message
-                  .error(`Something went wrong when talking to Requestor service, status ${status}`, 3);
-              }
-            },
-          );
+  onRequestAccess = () => {
+    const body = {
+      username: this.props.user.username,
+      resource_path: this.props.data.accessibleValidationValue,
+      resource_id: this.props.data.rowAccessorValue,
+      resource_display_name: this.props.data.title,
+    };
+    fetchWithCreds({
+      path: `${requestorPath}request`,
+      method: 'POST',
+      body: JSON.stringify(body),
+    }).then(
+      ({ data, status }) => {
+        if (status === 201) {
+          // if a redirect is configured, Requestor returns a redirect URL
+          message.success('An access request has been created', 3);
+          if (data && data.redirect_url) {
+            window.open(data.redirect_url);
+          }
+        } else {
+          message
+            .error(`Something went wrong while creating an access request, status: ${status}`, 3);
         }
-      }
-      // we are done here, remove the query string from URL
-      this.props.history.push(`${this.props.location.pathname}`, { from: this.props.location.pathname });
-    }
-  }
+      },
+    );
+  };
 
   getLabel = (label) => {
     if (!this.props.studyViewerConfig.fieldMapping
@@ -130,7 +105,7 @@ class StudyDetails extends React.Component {
    };
 
    render() {
-     const onRequestAccess = () => this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
+     const onNotLoggedInRequestAccess = () => this.props.history.push('/login', { from: this.props.location.pathname });
      const userHasLoggedIn = !!this.props.user.username;
 
      const displayDownloadButton = userHasLoggedIn
@@ -140,6 +115,14 @@ class StudyDetails extends React.Component {
 
      const displayRequestAccessButton = !userHasLoggedIn
      || !this.isDataAccessible(this.props.data.accessibleValidationValue);
+     let requestAccessButton;
+     if (!userHasLoggedIn) {
+       requestAccessButton = onNotLoggedInRequestAccess;
+     } else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
+       requestAccessButton = this.onRequestAccess;
+     }
+     let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
+     requestAccessText = this.props.data.accessRequested ? 'Access Requested' : requestAccessText;
 
      return (
        <div className='study-details'>
@@ -164,11 +147,9 @@ class StudyDetails extends React.Component {
                {(displayRequestAccessButton) ?
                  <Button
                    enabled={!this.props.data.accessRequested}
-                   label={(this.props.data.accessRequested) ? 'Access Requested' : 'Request Access'}
+                   label={requestAccessText}
                    buttonType='primary'
-                   onClick={onRequestAccess}
-                   tooltipEnabled={!userHasLoggedIn}
-                   tooltipText={'Note that you will be prompted to log in'}
+                   onClick={requestAccessButton}
                  /> : null}
              </Space>) : null
            }
@@ -201,9 +182,9 @@ class StudyDetails extends React.Component {
                }}
              />
            </Modal>
-           {(displayRequestAccessButton && !this.props.data.accessRequested) ?
+           {(!userHasLoggedIn && !this.props.data.accessRequested) ?
              <Alert
-               message='Please note that researchers are required to log in upon clicking the Request Access button and you will be prompted to login if you have not already done so.'
+               message='Please note that researchers are required to log in before requesting access.'
                type='info'
                showIcon
              /> : null}
