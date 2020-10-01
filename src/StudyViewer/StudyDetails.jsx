@@ -31,6 +31,7 @@ const stringIsAValidUrl = (s) => {
 class StudyDetails extends React.Component {
   constructor(props) {
     super(props);
+    this.requestAccessButtonVisible = false;
     this.state = {
       downloadModalVisible: false,
       redirectModalVisible: false,
@@ -128,6 +129,7 @@ class StudyDetails extends React.Component {
       requestAccessText = this.props.data.accessRequested ? 'Access Requested' : requestAccessText;
       const displayRequestAccessButton = !userHasLoggedIn
       || !this.isDataAccessible(this.props.data.accessibleValidationValue);
+      this.requestAccessButtonVisible = displayRequestAccessButton;
 
       button = displayRequestAccessButton ? (<Button
         key={key}
@@ -271,7 +273,7 @@ class StudyDetails extends React.Component {
                }}
              />
            </Modal>
-           {(!userHasLoggedIn && !this.props.data.accessRequested) ?
+           {this.requestAccessButtonVisible ?
              <Alert
                message='Please note that researchers are required to log in before requesting access.'
                type='info'
