@@ -241,7 +241,7 @@ class StudyDetails extends React.Component {
            </Modal>
            {(!userHasLoggedIn && !this.props.data.accessRequested) ?
              <Alert
-               message='Please note that researchers are required to log in upon clicking the Request Access button and you will be prompted to login if you have not already done so.'
+               message='Please note that researchers are required to log in before requesting access.'
                type='info'
                showIcon
              /> : null}
