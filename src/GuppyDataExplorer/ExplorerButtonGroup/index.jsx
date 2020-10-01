@@ -436,30 +436,30 @@ class ExplorerButtonGroup extends React.Component {
       body: JSON.stringify(JSONBody),
       method: 'POST',
     })
-    .then(
-      ({ status, data }) => {
-        const errorMsg = (data.error ? data.error : '');
-        switch (status) {
-        case 200:
-          this.setState({
-            exportingPFBToWorkspace: false,
-            exportPFBToWorkspaceGUID: pfbGUID,
-            toasterOpen: true,
-            toasterHeadline: this.state.pfbToWorkspaceSuccessText,
-            exportPFBToWorkspaceStatus: status,
-          });
-          return;
-        default:
-          this.setState({
-            exportingPFBToWorkspace: false,
-            exportPFBToWorkspaceGUID: '',
-            toasterOpen: true,
-            toasterHeadline: `There was an error exporting your cohort (${status}). ${errorMsg}`,
-            exportPFBToWorkspaceStatus: status,
-          });
-        }
-      },
-    );
+      .then(
+        ({ status, data }) => {
+          const errorMsg = (data.error ? data.error : '');
+          switch (status) {
+          case 200:
+            this.setState({
+              exportingPFBToWorkspace: false,
+              exportPFBToWorkspaceGUID: pfbGUID,
+              toasterOpen: true,
+              toasterHeadline: this.state.pfbToWorkspaceSuccessText,
+              exportPFBToWorkspaceStatus: status,
+            });
+            return;
+          default:
+            this.setState({
+              exportingPFBToWorkspace: false,
+              exportPFBToWorkspaceGUID: '',
+              toasterOpen: true,
+              toasterHeadline: `There was an error exporting your cohort (${status}). ${errorMsg}`,
+              exportPFBToWorkspaceStatus: status,
+            });
+          }
+        },
+      );
   }
 
   sendPFBToSevenBridges = () => {
