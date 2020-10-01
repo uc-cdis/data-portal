@@ -24,7 +24,7 @@ export const submitFiles = (program, project, params) => {
 const ReduxMapDataModel = (() => {
   const mapStateToProps = (state) => ({
     filesToMap: state.submission.filesToMap,
-    projects: state.homepage.projectsByName,
+    projects: state.submission.projectsByName,
     nodeTypes: state.submission.nodeTypes,
     dictionary: state.submission.dictionary,
   });

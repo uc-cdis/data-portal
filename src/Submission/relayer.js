@@ -7,8 +7,8 @@ import { config } from '../params';
 const updateReduxTransactionList = async (transactionList) =>
   getReduxStore().then(
     (store) => {
-      const homeState = store.getState().homepage || {};
-      if (homeState) {
+      const submissionState = store.getState().submission || {};
+      if (submissionState) {
         store.dispatch({
           type: 'RECEIVE_TRANSACTION_LIST',
           data: transactionList,
@@ -57,8 +57,8 @@ const gqlHelper = GQLHelper.getGQLHelper();
 const updateReduxProjectList = async ({ projectList, summaryCounts }) =>
   getReduxStore().then(
     (store) => {
-      const homeState = store.getState().homepage || {};
-      if (!homeState.projectsByName) {
+      const submissionState = store.getState().submission || {};
+      if (!submissionState.projectsByName) {
         store.dispatch({
           type: 'RECEIVE_PROJECT_LIST',
           data: { projectList, summaryCounts },
@@ -150,15 +150,15 @@ const getProjectDetail = (projectList) => {
   });
 };
 
-const checkHomepageState = (stateName) =>
+const checkSubmissionPageState = (stateName) =>
   getReduxStore().then(
     (store) => {
-      const homeState = store.getState().homepage || {};
+      const submissionState = store.getState().submission || {};
       const nowMs = Date.now();
       if (
-        !Object.prototype.hasOwnProperty.call(homeState, stateName) ||
-        (Object.prototype.hasOwnProperty.call(homeState, stateName) &&
-          nowMs - homeState[stateName] > 300000)
+        !Object.prototype.hasOwnProperty.call(submissionState, stateName) ||
+        (Object.prototype.hasOwnProperty.call(submissionState, stateName) &&
+          nowMs - submissionState[stateName] > 300000)
       ) {
         return 'OLD';
       }
@@ -172,7 +172,7 @@ const checkHomepageState = (stateName) =>
   );
 
 export const getProjectsList = () => {
-  checkHomepageState('lastestListUpdating').then(
+  checkSubmissionPageState('lastestListUpdating').then(
     (res) => {
       if (res === 'OLD') {
         fetchQuery(environment, gqlHelper.homepageQuery, {}).then(

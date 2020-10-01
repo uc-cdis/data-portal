@@ -4,9 +4,9 @@ import { createMemoryHistory } from 'history';
 import { StaticRouter } from 'react-router-dom';
 import MapDataModel from './MapDataModel';
 import * as testData from './__test__/data.json';
-import { getProjectsList } from '../Homepage/relayer';
+import { getProjectsList } from './relayer';
 
-jest.mock('../Homepage/relayer');
+jest.mock('./relayer');
 getProjectsList.mockImplementation(() => jest.fn());
 
 describe('MapDataModel', () => {

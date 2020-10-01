@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ReduxProjectDashboard, ReduxTransaction } from './reduxer';
+import ReduxProjectDashboard from './ReduxProjectDashboard';
+import ReduxTransaction from './ReduxTransaction';
 import { getTransactionList, getProjectsList } from './relayer';
 
-class HomePage extends React.Component {
+class SubmissionPage extends React.Component {
   constructor(props) {
-    super(props);
+    super();
     getProjectsList();
     getTransactionList();
   }
@@ -20,8 +21,8 @@ class HomePage extends React.Component {
   }
 }
 
-HomePage.propTypes = {
+SubmissionPage.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-export default HomePage;
+export default SubmissionPage;

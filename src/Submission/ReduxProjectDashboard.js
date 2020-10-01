@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { components } from '../params';
-import ProjectDashboard from '../Submission/ProjectDashboard';
-import TransactionLogTable from '../components/tables/TransactionLogTable';
+import ProjectDashboard from './ProjectDashboard';
 
 const extractData = (summaryCounts) => {
   const summaries = Object.keys(summaryCounts).map((key) => ({
@@ -15,13 +14,13 @@ const extractData = (summaryCounts) => {
   return { summaries, details };
 };
 
-export const ReduxProjectDashboard = (() => {
+const ReduxProjectDashboard = (() => {
   const mapStateToProps = (state) => {
-    if (state.homepage && state.homepage.projectsByName) {
-      const projectList = Object.values(state.homepage.projectsByName);
+    if (state.submission && state.submission.projectsByName) {
+      const projectList = Object.values(state.submission.projectsByName);
       const summaryCounts = Object.assign(
         [],
-        state.homepage.summaryCounts || []
+        state.submission.summaryCounts || []
       );
       const extractedData = extractData(summaryCounts);
       return { projectList, ...extractedData };
@@ -36,20 +35,4 @@ export const ReduxProjectDashboard = (() => {
   return connect(mapStateToProps, mapDispatchToProps)(ProjectDashboard);
 })();
 
-export const ReduxTransaction = (() => {
-  const mapStateToProps = (state) => {
-    if (state.homepage && state.homepage.transactions) {
-      return {
-        log: state.homepage.transactions,
-        userAuthMapping: state.userAuthMapping,
-      };
-    }
-
-    return { log: [], userAuthMapping: state.userAuthMapping };
-  };
-
-  // Table does not dispatch anything
-  const mapDispatchToProps = null;
-
-  return connect(mapStateToProps, mapDispatchToProps)(TransactionLogTable);
-})();
+export default ReduxProjectDashboard;
