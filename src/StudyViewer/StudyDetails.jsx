@@ -33,6 +33,8 @@ class StudyDetails extends React.Component {
     super(props);
     this.state = {
       downloadModalVisible: false,
+      redirectModalVisible: false,
+      redirectUrl: undefined,
     };
   }
 
@@ -73,7 +75,10 @@ class StudyDetails extends React.Component {
                 message
                   .success('A request has been sent', 3);
                 if (data && data.redirect_url) {
-                  window.open(data.redirect_url);
+                  this.setState({
+                    redirectUrl: data.redirect_url,
+                    redirectModalVisible: true,
+                  });
                 }
               } else {
                 message
@@ -101,19 +106,30 @@ class StudyDetails extends React.Component {
     return capitalizeFirstLetter(label);
   };
 
+  handleRedirectModalCancel = () => {
+    this.setState({
+      redirectModalVisible: false,
+      redirectUrl: undefined,
+    });
+  };
+
+  handleRedirectModalOk = () => {
+    if (this.state.redirectUrl) {
+      window.open(this.state.redirectUrl);
+    }
+    this.setState({
+      redirectModalVisible: false,
+      redirectUrl: undefined,
+    });
+  };
+
   showDownloadModal = () => {
     this.setState({
       downloadModalVisible: true,
     });
   };
 
-  handleOk = () => {
-    this.setState({
-      downloadModalVisible: false,
-    });
-  };
-
-  handleCancel = () => {
+  handleDownloadModalCancel = () => {
     this.setState({
       downloadModalVisible: false,
     });
@@ -140,6 +156,8 @@ class StudyDetails extends React.Component {
 
      const displayRequestAccessButton = !userHasLoggedIn
      || !this.isDataAccessible(this.props.data.accessibleValidationValue);
+     let requestAccessButtonText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
+     requestAccessButtonText = this.props.data.accessRequested ? 'Access Requested' : requestAccessButtonText;
 
      return (
        <div className='study-details'>
@@ -164,25 +182,45 @@ class StudyDetails extends React.Component {
                {(displayRequestAccessButton) ?
                  <Button
                    enabled={!this.props.data.accessRequested}
-                   label={(this.props.data.accessRequested) ? 'Access Requested' : 'Request Access'}
+                   label={requestAccessButtonText}
                    buttonType='primary'
                    onClick={onRequestAccess}
-                   tooltipEnabled={!userHasLoggedIn}
-                   tooltipText={'Note that you will be prompted to log in'}
                  /> : null}
              </Space>) : null
            }
            <Modal
+             title='Redirection'
+             visible={this.state.redirectModalVisible}
+             closable={false}
+             onCancel={this.handleRedirectModalCancel}
+             footer={[
+               <Button
+                 key='modal-refuse-button'
+                 label={'Refuse'}
+                 buttonType='default'
+                 onClick={this.handleRedirectModalCancel}
+               />,
+               <Button
+                 key='modal-accept-button'
+                 label={'Accept'}
+                 buttonType='primary'
+                 onClick={this.handleRedirectModalOk}
+               />,
+             ]}
+           >
+             <p>You will now be redirected to <a href={this.state.redirectUrl}>{this.state.redirectUrl}</a> for the next step.</p>
+           </Modal>
+           <Modal
              title='Download Files'
              visible={this.state.downloadModalVisible}
              closable={false}
-             onCancel={this.handleCancel}
+             onCancel={this.handleDownloadModalCancel}
              footer={[
                <Button
                  key='modal-close-button'
                  label={'Close'}
                  buttonType='primary'
-                 onClick={this.handleCancel}
+                 onClick={this.handleDownloadModalCancel}
                />,
              ]}
            >
@@ -201,7 +239,7 @@ class StudyDetails extends React.Component {
                }}
              />
            </Modal>
-           {(displayRequestAccessButton && !this.props.data.accessRequested) ?
+           {(!userHasLoggedIn && !this.props.data.accessRequested) ?
              <Alert
                message='Please note that researchers are required to log in upon clicking the Request Access button and you will be prompted to login if you have not already done so.'
                type='info'
