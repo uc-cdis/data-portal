@@ -94,32 +94,30 @@ class StudyDetails extends React.Component {
   }
 
   getButton = (key, buttonConfig, userHasLoggedIn) => {
-    // if this button is explicitly disabled in this view, return null
+    // if this button is explicitly disabled in this view, return nothing
     if (this.props.isSingleItemView && buttonConfig.singleItemView === false) {
-      return;
+      return null;
     }
     if (!this.props.isSingleItemView && buttonConfig.listView === false) {
-      return;
+      return null;
     }
 
     let button;
 
-    // 'Download' button
     if (buttonConfig.type === 'download') {
+      // 'Download' button
       const displayDownloadButton = userHasLoggedIn
       && this.isDataAccessible(this.props.data.accessibleValidationValue)
       && this.props.fileData.length > 0;
 
-      button = displayDownloadButton ? <Button
+      button = displayDownloadButton ? (<Button
         key={key}
         label={'Download'}
         buttonType='primary'
         onClick={this.showDownloadModal}
-      /> : null;
-    }
-
-    // 'Request Access' and 'Login to Request Access' buttons
-    else if (buttonConfig.type === 'request_access') {
+      />) : null;
+    } else if (buttonConfig.type === 'request_access') {
+      // 'Request Access' and 'Login to Request Access' buttons
       const onRequestAccess = () => this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
       const onNotLoggedInRequestAccess = () => this.props.history.push('/login', { from: this.props.location.pathname });
       let requestAccessButton;
@@ -133,17 +131,15 @@ class StudyDetails extends React.Component {
       const displayRequestAccessButton = !userHasLoggedIn
       || !this.isDataAccessible(this.props.data.accessibleValidationValue);
 
-      button = displayRequestAccessButton ? <Button
+      button = displayRequestAccessButton ? (<Button
         key={key}
         label={requestAccessText}
         buttonType='primary'
         onClick={requestAccessButton}
         enabled={!this.props.data.accessRequested}
-      /> : null;
-    }
-
-    else {
-      console.warn(`Study viewer button type '${buttonConfig.type}' unknown`);
+      />) : null;
+    } else {
+      console.warn(`Study viewer button type '${buttonConfig.type}' unknown`); // eslint-disable-line no-console
     }
 
     return button;
@@ -207,19 +203,19 @@ class StudyDetails extends React.Component {
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
            <Space>
-            {this.props.isSingleItemView ?
-              <Button
-                label={'Learn More'}
-                buttonType='primary'
-                onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
-              />
-              : null
-            }
-            {
-              this.props.studyViewerConfig.buttons.map(
-                (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn)
-              )
-            }
+             {this.props.isSingleItemView ?
+               <Button
+                 label={'Learn More'}
+                 buttonType='primary'
+                 onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
+               />
+               : null
+             }
+             {
+               this.props.studyViewerConfig.buttons.map(
+                 (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
+               )
+             }
            </Space>
            <Modal
              title='Redirection'
