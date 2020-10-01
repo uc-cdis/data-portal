@@ -430,8 +430,6 @@ class ExplorerButtonGroup extends React.Component {
 
 
   sendPFBToWorkspace = (pfbGUID) => {
-    console.log('433 pfbGUID: ', pfbGUID);
-
     const JSONBody = { cohort_guid: pfbGUID };
     fetchWithCreds({
       path: `${manifestServiceApiPath}cohorts`,
@@ -789,7 +787,6 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       tooltipEnabled = true;
       btnTooltipText = 'Currently you cannot export files with different Data Types. Please choose a single Data Type from the Data Type filter on the left.';
     }
-    console.log('received buttonConfig: ', buttonConfig)
 
     return (
       <Button
