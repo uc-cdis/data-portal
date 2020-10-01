@@ -17,6 +17,7 @@
 
 .explorer-survival-analysis__column-left {
   display: flex;
+  min-width: 400px;
   max-width: 600px;
 }
 
