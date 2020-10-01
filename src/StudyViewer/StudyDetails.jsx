@@ -31,6 +31,7 @@ const stringIsAValidUrl = (s) => {
 class StudyDetails extends React.Component {
   constructor(props) {
     super(props);
+    // track if there is at least 1 displayed request_access button:
     this.requestAccessButtonVisible = false;
     this.state = {
       downloadModalVisible: false,
@@ -273,7 +274,7 @@ class StudyDetails extends React.Component {
                }}
              />
            </Modal>
-           {this.requestAccessButtonVisible ?
+           {this.requestAccessButtonVisible && !userHasLoggedIn && !this.props.data.accessRequested ?
              <Alert
                message='Please note that researchers are required to log in before requesting access.'
                type='info'
