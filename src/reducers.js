@@ -5,7 +5,6 @@ import coreMetadata from './CoreMetadata/reducers';
 import certificate from './UserAgreement/reducers';
 import submission from './Submission/reducers';
 import analysis from './Analysis/reducers';
-import homepage from './Homepage/reducers';
 import index from './Index/reducers';
 import queryNodes from './QueryNode/reducers';
 import popups from './Popup/reducers';
@@ -94,7 +93,6 @@ export const removeDeletedNode = (state, id) => {
 const reducers = combineReducers({
   privacyPolicy,
   bar,
-  homepage,
   index,
   popups,
   user,
