@@ -68,7 +68,6 @@ class Login extends React.Component {
     //   components.login.image
     //   : 'gene';
     // const customImageStyle = { backgroundImage: `url(/src/img/icons/${customImage}.svg)` };
-    next = next.replace('?request_access', '?request_access_logged_in');
 
     let loginComponent = (
       <React.Fragment key='login-component'>
