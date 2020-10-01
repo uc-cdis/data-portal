@@ -14,7 +14,7 @@ Example configuration:
             // displayed in table:
             "tableFields": ["condition", ...],
         },
-        "singleItemConfig": { //optional, if omitted, "listItemConfig" block will be used for both pages
+        "singleItemConfig": { // optional, if omitted, "listItemConfig" block will be used for both pages
             // displayed outside of table:
             "blockFields": ["long_description"],
             // displayed in table:
@@ -29,13 +29,14 @@ Example configuration:
         "buttons": [
             {
                 "type": "download",
-                "downloadField": "object_id", // GUID - Note: unused for now, hardcoded to "object_id"
-                "singleItemView": false // whether to display in the single item view (default: true)
-                "listView": true // whether to display in the list view (default: true)
+                "downloadField": "object_id", // GUID - Note: unused for now, hardcoded to "object_id" (TODO)
+                "singleItemView": false, // whether to display this button in the single item view (default: true)
+                "listView": true, // whether to display this button in the list view (default: true)
             },
             {
                 "type": "request_access",
-                "resourceDisplayNameField": "title"
+                "resourceDisplayNameField": "title",
+                "redirectModalText": "", // optional, link label for the URL in "You will now be sent to <URL>"
             }
         ]
     },

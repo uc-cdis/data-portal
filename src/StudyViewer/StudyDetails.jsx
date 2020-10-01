@@ -31,6 +31,7 @@ const stringIsAValidUrl = (s) => {
 class StudyDetails extends React.Component {
   constructor(props) {
     super(props);
+    this.requestAccessConfig = {};
     this.state = {
       downloadModalVisible: false,
       redirectModalVisible: false,
@@ -62,7 +63,7 @@ class StudyDetails extends React.Component {
             username: this.props.user.username,
             resource_path: this.props.data.accessibleValidationValue,
             resource_id: this.props.data.rowAccessorValue,
-            resource_display_name: this.props.data.title,
+            resource_display_name: this.props.data[this.requestAccessConfig.resourceDisplayNameField],
           };
           fetchWithCreds({
             path: `${requestorPath}request`,
@@ -72,8 +73,6 @@ class StudyDetails extends React.Component {
             ({ data, status }) => {
               if (status === 201) {
                 // if a redirect is configured, Requestor returns a redirect URL
-                message
-                  .success('A request has been sent', 3);
                 if (data && data.redirect_url) {
                   this.setState({
                     redirectUrl: data.redirect_url,
@@ -118,7 +117,10 @@ class StudyDetails extends React.Component {
       />) : null;
     } else if (buttonConfig.type === 'request_access') {
       // 'Request Access' and 'Login to Request Access' buttons
-      const onRequestAccess = () => this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
+      const onRequestAccess = () => {
+        this.requestAccessConfig = buttonConfig;
+        this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
+      };
       const onNotLoggedInRequestAccess = () => this.props.history.push('/login', { from: this.props.location.pathname });
       let requestAccessButton;
       if (!userHasLoggedIn) {
@@ -218,26 +220,26 @@ class StudyDetails extends React.Component {
              }
            </Space>
            <Modal
-             title='Redirection'
+             title='Request Access'
              visible={this.state.redirectModalVisible}
              closable={false}
              onCancel={this.handleRedirectModalCancel}
              footer={[
+                <Button
+                  key='modal-accept-button'
+                  label={'Confirm'}
+                  buttonType='primary'
+                  onClick={this.handleRedirectModalOk}
+                />,
                <Button
                  key='modal-refuse-button'
-                 label={'Refuse'}
+                 label={'Cancel'}
                  buttonType='default'
                  onClick={this.handleRedirectModalCancel}
                />,
-               <Button
-                 key='modal-accept-button'
-                 label={'Accept'}
-                 buttonType='primary'
-                 onClick={this.handleRedirectModalOk}
-               />,
              ]}
            >
-             <p>You will now be redirected to <a href={this.state.redirectUrl}>{this.state.redirectUrl}</a> for the next step</p>
+             <p>You will now be sent to <a href={this.state.redirectUrl}>{this.requestAccessConfig.redirectModalText || this.state.redirectUrl}.</a></p>
            </Modal>
            <Modal
              title='Download Files'
