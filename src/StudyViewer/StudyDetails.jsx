@@ -208,7 +208,7 @@ class StudyDetails extends React.Component {
                />,
              ]}
            >
-             <p>You will now be redirected to <a href={this.state.redirectUrl}>{this.state.redirectUrl}</a> for the next step.</p>
+             <p>You will now be redirected to <a href={this.state.redirectUrl}>{this.state.redirectUrl}</a> for the next step</p>
            </Modal>
            <Modal
              title='Download Files'
