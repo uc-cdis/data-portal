@@ -56,7 +56,7 @@ class StudyDetails extends React.Component {
       // it means we haven't finished check yet
       // next is to check if user has access to the resource
       if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-        // if the user haven't have a request in `SUBMITTED` state for this resource yet
+        // if the user has not requested access to this resource yet
         if (!this.props.data.accessRequested) {
           const body = {
             username: this.props.user.username,
@@ -91,6 +91,62 @@ class StudyDetails extends React.Component {
       // we are done here, remove the query string from URL
       this.props.history.push(`${this.props.location.pathname}`, { from: this.props.location.pathname });
     }
+  }
+
+  getButton = (key, buttonConfig, userHasLoggedIn) => {
+    // if this button is explicitly disabled in this view, return null
+    if (this.props.isSingleItemView && buttonConfig.singleItemView === false) {
+      return;
+    }
+    if (!this.props.isSingleItemView && buttonConfig.listView === false) {
+      return;
+    }
+
+    let button;
+
+    // 'Download' button
+    if (buttonConfig.type === 'download') {
+      const displayDownloadButton = userHasLoggedIn
+      && this.isDataAccessible(this.props.data.accessibleValidationValue)
+      && this.props.fileData.length > 0;
+
+      button = displayDownloadButton ? <Button
+        key={key}
+        label={'Download'}
+        buttonType='primary'
+        onClick={this.showDownloadModal}
+      /> : null;
+    }
+
+    // 'Request Access' and 'Login to Request Access' buttons
+    else if (buttonConfig.type === 'request_access') {
+      const onRequestAccess = () => this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
+      const onNotLoggedInRequestAccess = () => this.props.history.push('/login', { from: this.props.location.pathname });
+      let requestAccessButton;
+      if (!userHasLoggedIn) {
+        requestAccessButton = onNotLoggedInRequestAccess;
+      } else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
+        requestAccessButton = onRequestAccess;
+      }
+      let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
+      requestAccessText = this.props.data.accessRequested ? 'Access Requested' : requestAccessText;
+      const displayRequestAccessButton = !userHasLoggedIn
+      || !this.isDataAccessible(this.props.data.accessibleValidationValue);
+
+      button = displayRequestAccessButton ? <Button
+        key={key}
+        label={requestAccessText}
+        buttonType='primary'
+        onClick={requestAccessButton}
+        enabled={!this.props.data.accessRequested}
+      /> : null;
+    }
+
+    else {
+      console.warn(`Study viewer button type '${buttonConfig.type}' unknown`);
+    }
+
+    return button;
   }
 
   getLabel = (label) => {
@@ -146,48 +202,25 @@ class StudyDetails extends React.Component {
    };
 
    render() {
-     const onRequestAccess = () => this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
      const userHasLoggedIn = !!this.props.user.username;
-
-     const displayDownloadButton = userHasLoggedIn
-     && this.isDataAccessible(this.props.data.accessibleValidationValue)
-     && this.props.fileData.length > 0;
-     const downloadButtonFunc = this.showDownloadModal;
-
-     const displayRequestAccessButton = !userHasLoggedIn
-     || !this.isDataAccessible(this.props.data.accessibleValidationValue);
-     let requestAccessButtonText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
-     requestAccessButtonText = this.props.data.accessRequested ? 'Access Requested' : requestAccessButtonText;
-
      return (
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
-           { (this.props.displayLearnMoreBtn
-           || displayDownloadButton
-           || displayRequestAccessButton) ?
-             (<Space>
-               {(this.props.displayLearnMoreBtn) ?
-                 <Button
-                   label={'Learn More'}
-                   buttonType='primary'
-                   onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
-                 />
-                 : null}
-               {(displayDownloadButton) ?
-                 <Button
-                   label={'Download'}
-                   buttonType='primary'
-                   onClick={downloadButtonFunc}
-                 /> : null}
-               {(displayRequestAccessButton) ?
-                 <Button
-                   enabled={!this.props.data.accessRequested}
-                   label={requestAccessButtonText}
-                   buttonType='primary'
-                   onClick={onRequestAccess}
-                 /> : null}
-             </Space>) : null
-           }
+           <Space>
+            {this.props.isSingleItemView ?
+              <Button
+                label={'Learn More'}
+                buttonType='primary'
+                onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
+              />
+              : null
+            }
+            {
+              this.props.studyViewerConfig.buttons.map(
+                (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn)
+              )
+            }
+           </Space>
            <Modal
              title='Redirection'
              visible={this.state.redirectModalVisible}
@@ -336,13 +369,12 @@ StudyDetails.propTypes = {
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  displayLearnMoreBtn: PropTypes.bool,
+  isSingleItemView: PropTypes.bool.isRequired,
   userAuthMapping: PropTypes.object.isRequired,
   studyViewerConfig: PropTypes.object,
 };
 
 StudyDetails.defaultProps = {
-  displayLearnMoreBtn: false,
   fileData: [],
   studyViewerConfig: {},
 };

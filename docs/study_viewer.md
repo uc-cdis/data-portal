@@ -22,11 +22,22 @@ Example configuration:
         },
         "fieldMapping": [...],
         "rowAccessor": "project_id", // rows unique ID
-        "downloadField": "object_id", // GUID
         "fileDataType": "clinicalTrialFile", // ES index of the clinical trial object files, optional
         "docDataType": "openAccessFile", // ES index of the open access documents, optional
         "openMode": "open-first", // optional, configure how the study viewer list do with each collapsible card on initial loading, see details in notes
         "openFirstRowAccessor": "", // optional, only works if `openMode` is `open-first`
+        "buttons": [
+            {
+                "type": "download",
+                "downloadField": "object_id", // GUID - Note: unused for now, hardcoded to "object_id"
+                "singleItemView": false // whether to display in the single item view (default: true)
+                "listView": true // whether to display in the list view (default: true)
+            },
+            {
+                "type": "request_access",
+                "resourceDisplayNameField": "title"
+            }
+        ]
     },
     {
         ....another study viewer config
