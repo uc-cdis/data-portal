@@ -31,7 +31,6 @@ const stringIsAValidUrl = (s) => {
 class StudyDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.requestAccessConfig = {};
     this.state = {
       downloadModalVisible: false,
       redirectModalVisible: false,
@@ -58,12 +57,17 @@ class StudyDetails extends React.Component {
       // next is to check if user has access to the resource
       if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
         // if the user has not requested access to this resource yet
+
+        // this defaults to the config of the 1st configured request_access
+        // button. if there are more than 1 with different configs, TODO fix
+        const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find(e => e.type === 'request_access');
+
         if (!this.props.data.accessRequested) {
           const body = {
             username: this.props.user.username,
             resource_path: this.props.data.accessibleValidationValue,
             resource_id: this.props.data.rowAccessorValue,
-            resource_display_name: this.props.data[this.requestAccessConfig.resourceDisplayNameField],
+            resource_display_name: this.props.data[requestAccessConfig.resourceDisplayNameField],
           };
           fetchWithCreds({
             path: `${requestorPath}request`,
@@ -118,16 +122,8 @@ class StudyDetails extends React.Component {
     } else if (buttonConfig.type === 'request_access') {
       // 'Request Access' and 'Login to Request Access' buttons
       const onRequestAccess = () => {
-        this.requestAccessConfig = buttonConfig;
         this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
       };
-      const onNotLoggedInRequestAccess = () => this.props.history.push('/login', { from: this.props.location.pathname });
-      let requestAccessButton;
-      if (!userHasLoggedIn) {
-        requestAccessButton = onNotLoggedInRequestAccess;
-      } else if (!this.isDataAccessible(this.props.data.accessibleValidationValue)) {
-        requestAccessButton = onRequestAccess;
-      }
       let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
       requestAccessText = this.props.data.accessRequested ? 'Access Requested' : requestAccessText;
       const displayRequestAccessButton = !userHasLoggedIn
@@ -137,7 +133,7 @@ class StudyDetails extends React.Component {
         key={key}
         label={requestAccessText}
         buttonType='primary'
-        onClick={requestAccessButton}
+        onClick={onRequestAccess}
         enabled={!this.props.data.accessRequested}
       />) : null;
     } else {
@@ -201,6 +197,11 @@ class StudyDetails extends React.Component {
 
    render() {
      const userHasLoggedIn = !!this.props.user.username;
+
+     // this defaults to the config of the 1st configured request_access
+     // button. if there are more than 1 with different configs, TODO fix
+     const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find(e => e.type === 'request_access');
+
      return (
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
@@ -225,12 +226,12 @@ class StudyDetails extends React.Component {
              closable={false}
              onCancel={this.handleRedirectModalCancel}
              footer={[
-                <Button
-                  key='modal-accept-button'
-                  label={'Confirm'}
-                  buttonType='primary'
-                  onClick={this.handleRedirectModalOk}
-                />,
+               <Button
+                 key='modal-accept-button'
+                 label={'Confirm'}
+                 buttonType='primary'
+                 onClick={this.handleRedirectModalOk}
+               />,
                <Button
                  key='modal-refuse-button'
                  label={'Cancel'}
@@ -239,7 +240,7 @@ class StudyDetails extends React.Component {
                />,
              ]}
            >
-             <p>You will now be sent to <a href={this.state.redirectUrl}>{this.requestAccessConfig.redirectModalText || this.state.redirectUrl}.</a></p>
+             <p>You will now be sent to <a href={this.state.redirectUrl}>{requestAccessConfig.redirectModalText || this.state.redirectUrl}.</a></p>
            </Modal>
            <Modal
              title='Download Files'
