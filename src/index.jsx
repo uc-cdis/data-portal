@@ -21,7 +21,7 @@ import {
 } from './actions';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
-import HomePage from './Homepage/page';
+import SubmissionPage from './Submission/page';
 import DocumentPage from './Document/page';
 import CoreMetadataPage from './CoreMetadata/page';
 import { fetchCoreMetadata } from './CoreMetadata/reduxer';
@@ -124,7 +124,10 @@ async function init() {
                       exact
                       path='/submission'
                       component={(props) => (
-                        <ProtectedContent component={HomePage} {...props} />
+                        <ProtectedContent
+                          component={SubmissionPage}
+                          {...props}
+                        />
                       )}
                     />
                     <Route
