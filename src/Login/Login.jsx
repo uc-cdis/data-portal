@@ -64,6 +64,7 @@ class Login extends React.Component {
     if (queryParams.next) {
       next = basename === '/' ? queryParams.next : basename + queryParams.next;
     }
+    next = next.replace('?request_access', '?request_access_logged_in');
     const customImage = components.login && components.login.image ?
       components.login.image
       : 'gene';
