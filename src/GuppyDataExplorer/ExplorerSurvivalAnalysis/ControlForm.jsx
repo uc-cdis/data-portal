@@ -171,6 +171,7 @@ const ControlForm = ({
         value={endTime}
       />
       <ControlFormSelect
+        disabled
         label='Survival type'
         options={[
           { label: 'All Survival', value: 'all' },
