@@ -22,9 +22,13 @@ const Plot = ({ data, timeInterval }) => {
   const [opacity, setOpacity] = useState({});
   useEffect(() => {
     const initOpacity = {};
-    for (const { name } of data) initOpacity[name] = 1;
+    for (const { name } of data) initOpacity[formatName(name)] = 1;
     setOpacity(initOpacity);
   }, [data]);
+
+  function formatName(name) {
+    return name === 'All' ? name : name.split('=')[1];
+  }
 
   function handleLegendMouseEnter({ value: lineName }) {
     const newOpacity = { ...opacity };
@@ -72,10 +76,10 @@ const Plot = ({ data, timeInterval }) => {
             data={data}
             dataKey='prob'
             dot={false}
-            name={name === 'All' ? name : name.split('=')[1]}
+            name={formatName(name)}
             type='stepAfter'
             stroke={schemeCategory10[i]}
-            strokeOpacity={opacity[name]}
+            strokeOpacity={opacity[formatName(name)]}
           />
         ))}
       </LineChart>
