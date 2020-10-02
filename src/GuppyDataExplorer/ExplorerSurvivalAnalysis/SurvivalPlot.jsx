@@ -66,16 +66,16 @@ const Plot = ({ data, timeInterval }) => {
           onMouseEnter={handleLegendMouseEnter}
           onMouseLeave={handleLegendMouseLeave}
         />
-        {data.map((series, i) => (
+        {data.map(({ data, name }, i) => (
           <Line
-            key={series.name}
-            data={series.data}
+            key={name}
+            data={data}
             dataKey='prob'
             dot={false}
-            name={series.name}
+            name={name}
             type='stepAfter'
             stroke={schemeCategory10[i]}
-            strokeOpacity={opacity[series.name]}
+            strokeOpacity={opacity[name]}
           />
         ))}
       </LineChart>
