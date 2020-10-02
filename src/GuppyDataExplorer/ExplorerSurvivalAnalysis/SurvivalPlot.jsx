@@ -72,7 +72,7 @@ const Plot = ({ data, timeInterval }) => {
             data={data}
             dataKey='prob'
             dot={false}
-            name={name}
+            name={name === 'All' ? name : name.split('=')[1]}
             type='stepAfter'
             stroke={schemeCategory10[i]}
             strokeOpacity={opacity[name]}
@@ -109,7 +109,9 @@ const SurvivalPlot = ({ data, notStratified, timeInterval }) => (
         }, {})
       ).map(([key, data]) => (
         <Fragment key={key}>
-          <div className='explorer-survival-analysis__figure-title'>{key}</div>
+          <div className='explorer-survival-analysis__figure-title'>
+            {key.split('=')[1]}
+          </div>
           <Plot data={data} timeInterval={timeInterval} />
         </Fragment>
       ))
