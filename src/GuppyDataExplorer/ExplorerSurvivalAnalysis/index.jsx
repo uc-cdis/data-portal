@@ -90,7 +90,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
             </div>
             <SurvivalPlot
               data={survival}
-              stratificationVariable={stratificationVariable}
+              notStratified={stratificationVariable === ''}
               timeInterval={timeInterval}
             />
             <RiskTable data={risktable} timeInterval={timeInterval} />

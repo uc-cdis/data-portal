@@ -86,16 +86,16 @@ const Plot = ({ data, timeInterval }) => {
 /**
  * @param {Object} prop
  * @param {SurvivalData[]} prop.data
- * @param {string} prop.stratificationVariable
+ * @param {boolean} prop.notStratified
  * @param {number} prop.timeInterval
  */
-const SurvivalPlot = ({ data, stratificationVariable, timeInterval }) => (
+const SurvivalPlot = ({ data, notStratified, timeInterval }) => (
   <div className='explorer-survival-analysis__survival-plot'>
     {data.length === 0 ? (
       <div className='explorer-survival-analysis__figure-placeholder'>
         Survival plot here
       </div>
-    ) : stratificationVariable === '' ? (
+    ) : notStratified ? (
       <Plot data={data} timeInterval={timeInterval} />
     ) : (
       Object.entries(
@@ -129,7 +129,7 @@ SurvivalPlot.propTypes = {
       name: PropTypes.string,
     })
   ).isRequired,
-  stratificationVariable: PropTypes.string.isRequired,
+  notStratified: PropTypes.bool.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
