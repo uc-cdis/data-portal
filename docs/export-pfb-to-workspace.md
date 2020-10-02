@@ -30,25 +30,22 @@ Windmill then makes a POST to the manifestservice at a new route, /manifests/coh
 
  The manifestservice will create a new file named with the value of the GUID for the PFB in the user's s3 folder: 
 ```
-s3://<manifest_service_bucket>
-/user-<user_id>
-/cohorts
-/<GUID>
+s3://<manifest_service_bucket>/user-<user_id>/cohorts/<GUID>
 ```
 
 Note that we create empty files using the PFB GUID as filename. The manifest service's GET / handler will return the filenames at `/user-<user-id>/cohorts` within a new "cohorts" key in its returned JSON. 
 ```
 GET /
+
 Response: { 
-"manifests" : [ 
-   { "filename" :     
-"manifest-2019-02-27T11-44-20.548126.json", 
-"last_modified" : "2019-02-27 17:44:21" }, ... ], 
-"cohorts": [ 
-    { "filename": 
-       "<GUID>", ... } 
-] 
-    }
+    "manifests" : [ 
+        { "filename" : "manifest-2019-02-27T11-44-20.548126.json", 
+           "last_modified" : "2019-02-27 17:44:21" }, 
+        ... ], 
+    "cohorts": [ 
+        { "filename": "<GUID>", ... },
+        ...] 
+}
 ```
 
 The fuse-sidecar listens polls this endpoint. When a new GUID is found, the fuse-sidecar creates a presigned URL for the new PFB should be obtained by querying Fence at /data/download/{GUID}. It is downloaded locally to `pd/data/<hostname>/cohort-<GUID>.pfb`. 
