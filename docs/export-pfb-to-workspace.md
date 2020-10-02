@@ -2,10 +2,18 @@
 ------------------------
 The Export PFB To Workspace button applies PFB as a handoff mechanism to send user-created virtual cohorts from the Data Explorer to the Workspace for programmatic user analysis. The design doc for this feature can be viewed here: https://docs.google.com/document/d/1954SSzVgDDM41uBksIt9RY7_MRAcCzoaMfmwHtfpFG4
 
+-------
+To enable the Export PFB to Workspace button in your commons, modify the explorerConfig (or dataExplorerConfig) block in your gitops.json file. Add a new button object to the list of buttons for that explorer tab.
+```
+{
+    "enabled": true,
+    "type": "export-to-pfb",
+    "title": "Export to PFB"
+},
+```
+
 Note: this button is not to be enabled in any commons without the appropriate versions of the fuse-sidecar, the manifestservice, and pelican. Some of these microservice versions are still pending merge. This document will be updated when all requirements have been merged and versioned.
-
-------
-
+-------
 The advantages of using PFB as a handoff mechanism include: 
 - Built-in support for packaging of clinical data with the exported files -- researchers will be able to analyze the clinical data related to their virtual cohort in the same location as the mounted object files
 - Adherence to a consistent interoperable file format -- PFB demonstrates versatility and convenience through integration across services
