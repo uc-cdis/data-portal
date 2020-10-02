@@ -48,10 +48,10 @@ Response: {
 }
 ```
 
-The fuse-sidecar listens polls this endpoint. When a new GUID is found, the fuse-sidecar creates a presigned URL for the new PFB should be obtained by querying Fence at /data/download/{GUID}. It is downloaded locally to `pd/data/<hostname>/cohort-<GUID>.pfb`. 
+The fuse-sidecar listens polls this endpoint. When a new GUID is found, the fuse-sidecar creates a presigned URL for the new PFB by querying Fence at /data/download/{GUID}. It is downloaded locally to `pd/data/<hostname>/cohort-<GUID>.pfb`. 
 
 The fuse-sidecar transforms the retrieved PFB file by applying the tools in the  pyPFB repo (https://github.com/uc-cdis/pypfb) to extract a list of GUIDs corresponding to object files to be mounted from the PFB in the usual manifest.json format that gen3-fuse expects. gen3-fuse then mounts the manifest to pd/data in the usual manner, this time to a mounted directory named like `pd/data/<hostname>/cohort-<GUID>-files/`
 
 Note that in the resulting set of files, the original PFB is not a mounted file, but a file in local storage, just as the manifests themselves in the original flow are locally stored files. The folder `pd/data/<hostname>/cohort-<GUID>-files/` is the mounted folder.
 
-The fuse-sidecar enforces no limit on the number of PFBs downloaded to a user’s notebook, although the number of mounts should still be limited to 5. PFBs persist on the user volume at the discretion of the user even after their deletion from indexd.
+The fuse-sidecar enforces no limit on the number of PFBs downloaded to a user’s notebook, although the number of mounts is still limited to 5. PFBs persist on the user volume at the discretion of the user even after their deletion from indexd.
