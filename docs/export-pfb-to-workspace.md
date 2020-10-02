@@ -12,7 +12,10 @@ To enable the Export PFB to Workspace button in your commons, modify the explore
 },
 ```
 
+
 Note: this button is not to be enabled in any commons without the appropriate versions of the fuse-sidecar, the manifestservice, and pelican. Some of these microservice versions are still pending merge. This document will be updated when all requirements have been merged and versioned.
+
+
 -------
 The advantages of using PFB as a handoff mechanism include: 
 - Built-in support for packaging of clinical data with the exported files -- researchers will be able to analyze the clinical data related to their virtual cohort in the same location as the mounted object files
