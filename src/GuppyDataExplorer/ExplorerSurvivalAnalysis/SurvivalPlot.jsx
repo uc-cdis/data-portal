@@ -14,6 +14,15 @@ import { getXAxisTicks } from './utils';
 import './typedef';
 
 /**
+ * @param {SurvivalData[]} data
+ */
+const formatNames = (data) =>
+  data.map(({ data, name }) => ({
+    name: name === 'All' ? name : name.split('=')[1],
+    data,
+  }));
+
+/**
  * @param {Object} prop
  * @param {SurvivalData[]} prop.data
  * @param {number} prop.timeInterval
@@ -22,13 +31,9 @@ const Plot = ({ data, timeInterval }) => {
   const [opacity, setOpacity] = useState({});
   useEffect(() => {
     const initOpacity = {};
-    for (const { name } of data) initOpacity[formatName(name)] = 1;
+    for (const { name } of data) initOpacity[name] = 1;
     setOpacity(initOpacity);
   }, [data]);
-
-  function formatName(name) {
-    return name === 'All' ? name : name.split('=')[1];
-  }
 
   function handleLegendMouseEnter({ value: lineName }) {
     const newOpacity = { ...opacity };
@@ -76,10 +81,10 @@ const Plot = ({ data, timeInterval }) => {
             data={data}
             dataKey='prob'
             dot={false}
-            name={formatName(name)}
+            name={name}
             type='stepAfter'
             stroke={schemeCategory10[i]}
-            strokeOpacity={opacity[formatName(name)]}
+            strokeOpacity={opacity[name]}
           />
         ))}
       </LineChart>
@@ -100,7 +105,7 @@ const SurvivalPlot = ({ data, notStratified, timeInterval }) => (
         Survival plot here
       </div>
     ) : notStratified ? (
-      <Plot data={data} timeInterval={timeInterval} />
+      <Plot data={formatNames(data)} timeInterval={timeInterval} />
     ) : (
       Object.entries(
         data.reduce((acc, { name, data }) => {
@@ -116,7 +121,7 @@ const SurvivalPlot = ({ data, notStratified, timeInterval }) => (
           <div className='explorer-survival-analysis__figure-title'>
             {key.split('=')[1]}
           </div>
-          <Plot data={data} timeInterval={timeInterval} />
+          <Plot data={formatNames(data)} timeInterval={timeInterval} />
         </Fragment>
       ))
     )}
