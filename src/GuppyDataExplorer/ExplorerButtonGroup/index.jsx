@@ -34,7 +34,7 @@ class ExplorerButtonGroup extends React.Component {
       pfbStartText: 'Your export is in progress.',
       pfbWarning: 'Please do not navigate away from this page until your export is finished.',
       pfbSuccessText: 'Your cohort has been exported to PFB.',
-      pfbToWorkspaceSuccessText: 'A PFB for this cohort will be saved to your workspace. The GUID for your PFB is displayed below.',
+      pfbToWorkspaceSuccessText: 'A PFB for this cohort will be saved to your workspace. The PFB\'s GUID is ',
       exportPFBToWorkspaceStatus: null,
       // for export to PFB in Files tab
       sourceNodesInCohort: [],
