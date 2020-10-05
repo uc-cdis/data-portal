@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { schemeCategory10 } from 'd3-scale-chromatic';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
@@ -28,6 +29,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
+  const [factorVariable, setFactorVariable] = useState('');
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
 
@@ -49,6 +51,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
    */
   const handleSubmit = ({ timeInterval, ...requestBody }) => {
     if (isError) setIsError(false);
+    setFactorVariable(requestBody.factorVariable);
     setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
 
@@ -60,6 +63,19 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
       })
       .catch((e) => setIsError(true));
   };
+
+  const [colorScheme, setColorScheme] = useState({ All: schemeCategory10[0] });
+  useEffect(() => {
+    const newScheme = {};
+    if (factorVariable === '') {
+      newScheme['All'] = schemeCategory10[0];
+    } else {
+      const factorValues = aggsData[factorVariable].histogram.map((x) => x.key);
+      for (let i = 0; i < factorValues.length; i++)
+        newScheme[factorValues[i]] = schemeCategory10[i % 9];
+    }
+    setColorScheme(newScheme);
+  }, [aggsData, factorVariable]);
 
   return (
     <div className='explorer-survival-analysis'>
@@ -89,6 +105,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
               {pval >= 0 && `Log-rank test p-value: ${pval}`}
             </div>
             <SurvivalPlot
+              colorScheme={colorScheme}
               data={survival}
               notStratified={stratificationVariable === ''}
               timeInterval={timeInterval}

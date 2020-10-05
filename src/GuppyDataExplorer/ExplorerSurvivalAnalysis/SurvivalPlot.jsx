@@ -9,7 +9,6 @@ import {
   CartesianGrid,
   Legend,
 } from 'recharts';
-import { schemeCategory10 } from 'd3-scale-chromatic';
 import { getXAxisTicks } from './utils';
 import './typedef';
 
@@ -24,10 +23,11 @@ const formatNames = (data) =>
 
 /**
  * @param {Object} prop
+ * @param {Object} prop.colorScheme
  * @param {SurvivalData[]} prop.data
  * @param {number} prop.timeInterval
  */
-const Plot = ({ data, timeInterval }) => {
+const Plot = ({ colorScheme, data, timeInterval }) => {
   const [opacity, setOpacity] = useState({});
   useEffect(() => {
     const initOpacity = {};
@@ -83,7 +83,7 @@ const Plot = ({ data, timeInterval }) => {
             dot={false}
             name={name}
             type='stepAfter'
-            stroke={schemeCategory10[i]}
+            stroke={colorScheme[name]}
             strokeOpacity={opacity[name]}
           />
         ))}
@@ -94,18 +94,23 @@ const Plot = ({ data, timeInterval }) => {
 
 /**
  * @param {Object} prop
+ * @param {Object} prop.colorScheme
  * @param {SurvivalData[]} prop.data
  * @param {boolean} prop.notStratified
  * @param {number} prop.timeInterval
  */
-const SurvivalPlot = ({ data, notStratified, timeInterval }) => (
+const SurvivalPlot = ({ colorScheme, data, notStratified, timeInterval }) => (
   <div className='explorer-survival-analysis__survival-plot'>
     {data.length === 0 ? (
       <div className='explorer-survival-analysis__figure-placeholder'>
         Survival plot here
       </div>
     ) : notStratified ? (
-      <Plot data={formatNames(data)} timeInterval={timeInterval} />
+      <Plot
+        colorScheme={colorScheme}
+        data={formatNames(data)}
+        timeInterval={timeInterval}
+      />
     ) : (
       Object.entries(
         data.reduce((acc, { name, data }) => {
@@ -121,7 +126,11 @@ const SurvivalPlot = ({ data, notStratified, timeInterval }) => (
           <div className='explorer-survival-analysis__figure-title'>
             {key.split('=')[1]}
           </div>
-          <Plot data={formatNames(data)} timeInterval={timeInterval} />
+          <Plot
+            colorScheme={colorScheme}
+            data={formatNames(data)}
+            timeInterval={timeInterval}
+          />
         </Fragment>
       ))
     )}
