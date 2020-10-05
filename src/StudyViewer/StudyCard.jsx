@@ -42,7 +42,7 @@ class StudyCard extends React.Component {
                 data={this.props.data}
                 fileData={this.props.fileData}
                 studyViewerConfig={this.props.studyViewerConfig}
-                displayLearnMoreBtn
+                isSingleItemView
               />
             </Panel>
           </Collapse>
