@@ -79,12 +79,6 @@ gitops_config() {
     return 1
   fi
   echo "INFO: gitops_config - setting APP=$portalApp"
-  iframeApplicationUrls="$(jq -r .portal.iframe_application_urls < $manifestFile)"
-  if [[ "$iframeApplicationUrls" != "null" ]]; then
-    echo "INFO: gitops_config - setting IFRAME_APPLICATION_URLS=$iframeApplicationUrls"
-    export IFRAME_APPLICATION_URLS="$iframeApplicationUrls"
-
-  fi
   export HOSTNAME="$hostname"
   export APP="$portalApp"
   if [[ "$portalApp" == "gitops" ]]; then
