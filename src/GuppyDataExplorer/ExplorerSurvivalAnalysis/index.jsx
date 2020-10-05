@@ -51,8 +51,6 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
    */
   const handleSubmit = ({ timeInterval, ...requestBody }) => {
     if (isError) setIsError(false);
-    setFactorVariable(requestBody.factorVariable);
-    setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
 
     fetchResult({ filter: transformedFilter, ...requestBody })
@@ -60,6 +58,8 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
         setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
         setRisktable(result.risktable);
         setSurvival(result.survival);
+        setFactorVariable(requestBody.factorVariable);
+        setStratificationVariable(requestBody.stratificationVariable);
       })
       .catch((e) => setIsError(true));
   };
