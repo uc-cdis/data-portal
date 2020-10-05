@@ -26,6 +26,7 @@ function buildConfig(opts) {
     wtsURL: process.env.WTS_URL,
     workspaceURL: process.env.WORKSPACE_URL,
     manifestServiceURL: process.env.MANIFEST_SERVICE_URL,
+    requestorURL: process.env.REQUESTOR_URL,
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
@@ -54,6 +55,7 @@ function buildConfig(opts) {
     wtsURL,
     workspaceURL,
     manifestServiceURL,
+    requestorURL,
     gaDebug,
     tierAccessLevel,
     tierAccessLimit,
@@ -73,7 +75,6 @@ function buildConfig(opts) {
   const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
-  const arrangerGraphqlPath = `${hostname}api/v0/flat-search/search/graphql`;
   let userapiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
   const jobapiPath = `${hostname}job/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
@@ -103,6 +104,7 @@ function buildConfig(opts) {
   const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
   const guppyDownloadUrl = `${guppyUrl}/download`;
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
+  const requestorPath = typeof requestorURL === 'undefined' ? `${hostname}requestor/` : ensureTrailingSlash(requestorURL);
   const auspiceUrl = `${protocol}//auspice.${hostnameOnly}/covid19`;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
@@ -111,7 +113,17 @@ function buildConfig(opts) {
     indexPublic = false;
   }
 
-  let useGuppyForExplorer = false;
+  let studyViewerConfig = [];
+  if (config.studyViewerConfig) {
+    studyViewerConfig = [...config.studyViewerConfig];
+    const validOpenOptions = ['open-first', 'open-all', 'close-all'];
+    studyViewerConfig.forEach((cfg, i) => {
+      if (cfg.openMode
+      && !validOpenOptions.includes(cfg.openMode)) {
+        studyViewerConfig[i].openMode = 'open-all';
+      }
+    });
+  }
 
   let explorerConfig = [];
   let useNewExplorerConfigFormat = false;
@@ -123,9 +135,6 @@ function buildConfig(opts) {
         ...config.dataExplorerConfig,
       },
     );
-    if (config.dataExplorerConfig.guppyConfig) {
-      useGuppyForExplorer = true;
-    }
   }
   if (config.fileExplorerConfig) {
     explorerConfig.push(
@@ -134,12 +143,10 @@ function buildConfig(opts) {
         ...config.fileExplorerConfig,
       },
     );
-    useGuppyForExplorer = true;
   }
 
   // new explorer config format
   if (config.explorerConfig) {
-    useGuppyForExplorer = true;
     useNewExplorerConfigFormat = true;
     explorerConfig = config.explorerConfig;
   }
@@ -318,7 +325,6 @@ function buildConfig(opts) {
     indexdPath,
     graphqlPath,
     dataDictionaryTemplatePath,
-    arrangerGraphqlPath,
     graphqlSchemaUrl,
     appname: components.appName,
     mockStore,
@@ -348,7 +354,6 @@ function buildConfig(opts) {
     manifestServiceApiPath,
     wtsPath,
     externalLoginOptionsUrl,
-    useGuppyForExplorer,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
     useArboristUI,
@@ -365,6 +370,8 @@ function buildConfig(opts) {
     explorerConfig,
     useNewExplorerConfigFormat,
     dataAvailabilityToolConfig,
+    requestorPath,
+    studyViewerConfig,
     covid19DashboardConfig,
     mapboxAPIToken,
     auspiceUrl,

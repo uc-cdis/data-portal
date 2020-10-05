@@ -11,12 +11,12 @@ import { Helmet } from 'react-helmet';
 
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
+import { fetchAndSetCsrfToken } from './configs';
 import { fetchDictionary, fetchSchema, fetchVersionInfo, fetchUserAccess, fetchUserAuthMapping } from './actions';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 import HomePage from './Homepage/page';
 import DocumentPage from './Document/page';
-import ExplorerPage from './Explorer/ExplorerPage';
 import { fetchCoreMetadata, ReduxCoreMetadataPage } from './CoreMetadata/reduxer';
 import Indexing from './Indexing/Indexing';
 import IndexPage from './Index/page';
@@ -33,19 +33,19 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
-  indexPublic, useGuppyForExplorer, explorerPublic, enableResourceBrowser, resourceBrowserPublic,
+  indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
-import DataExplorer from './DataExplorer/.';
 import GuppyDataExplorer from './GuppyDataExplorer/.';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
+import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import './index.less';
 import NotFound from './components/NotFound';
 
@@ -68,6 +68,8 @@ async function init() {
       // resources can be open to anonymous users, so fetch access:
       store.dispatch(fetchUserAccess),
       store.dispatch(fetchUserAuthMapping),
+      // eslint-disable-next-line no-console
+      fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); }),
     ],
   );
   // FontAwesome icons
@@ -269,7 +271,7 @@ async function init() {
                       props => (
                         <ProtectedContent
                           public={explorerPublic}
-                          component={useGuppyForExplorer ? GuppyDataExplorer : ExplorerPage}
+                          component={GuppyDataExplorer}
                           {...props}
                         />
                       )
@@ -327,7 +329,7 @@ async function init() {
                         props => (
                           <ProtectedContent
                             public={explorerPublic}
-                            component={useGuppyForExplorer ? GuppyDataExplorer : DataExplorer}
+                            component={GuppyDataExplorer}
                             {...props}
                           />
                         )
@@ -358,6 +360,28 @@ async function init() {
                     />
                     : null
                   }
+                  <Route
+                    exact
+                    path='/study-viewer/:dataType'
+                    component={
+                      props => (<ProtectedContent
+                        public
+                        component={ReduxStudyViewer}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/study-viewer/:dataType/:rowAccessor'
+                    component={
+                      props => (<ProtectedContent
+                        public
+                        component={ReduxSingleStudyViewer}
+                        {...props}
+                      />)
+                    }
+                  />
                   <Route
                     path='/not-found'
                     component={NotFound}

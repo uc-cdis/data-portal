@@ -26,7 +26,6 @@ const plugins = [
   new webpack.EnvironmentPlugin(['LOGOUT_INACTIVE_USERS']),
   new webpack.EnvironmentPlugin(['WORKSPACE_TIMEOUT_IN_MINUTES']),
   new webpack.EnvironmentPlugin(['REACT_APP_PROJECT_ID']),
-  new webpack.EnvironmentPlugin(['REACT_APP_ARRANGER_API']),
   new webpack.EnvironmentPlugin(['REACT_APP_DISABLE_SOCKET']),
   new webpack.EnvironmentPlugin(['TIER_ACCESS_LEVEL']),
   new webpack.EnvironmentPlugin(['TIER_ACCESS_LIMIT']),
@@ -43,7 +42,6 @@ const plugins = [
       LOGOUT_INACTIVE_USERS: !(process.env.LOGOUT_INACTIVE_USERS === 'false'),
       WORKSPACE_TIMEOUT_IN_MINUTES: process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480,
       REACT_APP_PROJECT_ID: JSON.stringify(process.env.REACT_APP_PROJECT_ID || 'search'),
-      REACT_APP_ARRANGER_API: JSON.stringify(process.env.REACT_APP_ARRANGER_API || '/api/v0/flat-search'),
       REACT_APP_DISABLE_SOCKET: JSON.stringify(process.env.REACT_APP_DISABLE_SOCKET || 'true'),
     }
   }),
