@@ -8,9 +8,7 @@ import {
   submissionApiPath,
   graphqlPath,
   guppyGraphQLUrl,
-  arrangerGraphqlPath,
   graphqlSchemaUrl,
-  useGuppyForExplorer,
   authzPath,
   authzMappingPath,
 } from './configs';
@@ -210,7 +208,7 @@ export const fetchFlatGraphQL = graphQLParams => sessionMonitor.updateSession().
     body: JSON.stringify(graphQLParams),
   };
 
-  const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
+  const graphqlUrl = guppyGraphQLUrl;
   return fetch(graphqlUrl, request)
     .then(response => response.text())
     .then((responseBody) => {
