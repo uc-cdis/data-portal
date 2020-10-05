@@ -30,6 +30,23 @@ const getMaxTime = (data) =>
 
 /**
  * @param {Object} prop
+ */
+const CustomYAxisTick = ({ x, y, payload }) => {
+  const name =
+    payload.value === 'All' ? payload.value : payload.value.split('=')[1];
+
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <title>{name}</title>
+      <text dx={-15} dy={4} fill='#666' textAnchor='end'>
+        <tspan>{name.length > 10 ? name.substring(0, 9) + '..' : name}</tspan>
+      </text>
+    </g>
+  );
+};
+
+/**
+ * @param {Object} prop
  * @param {RisktableData[]} prop.data
  * @param {boolean} prop.isLast
  * @param {number} prop.timeInterval
@@ -62,7 +79,7 @@ const Table = ({ data, isLast, timeInterval }) => (
         axisLine={false}
         reversed
         tickSize={0}
-        tick={{ dx: -20 }}
+        tick={<CustomYAxisTick />}
       />
       <Scatter data={parseRisktable(data, timeInterval)} fill='transparent'>
         <LabelList dataKey='nrisk' />
