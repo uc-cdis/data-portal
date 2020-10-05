@@ -18,8 +18,9 @@ const title = {
   ndh: 'NIAID Data Hub',
 } [app];
 
+const configFileName = (app === 'dev') ? 'default' : app;
 // eslint-disable-next-line import/no-dynamic-require
-const configFile = require(`./data/config/${app}.json`);
+const configFile = require(`./data/config/${configFileName}.json`);
 const iFrameApplicationURLs = [];
 if (configFile && configFile.analysisTools) {
   configFile.analysisTools.forEach((e) => {
