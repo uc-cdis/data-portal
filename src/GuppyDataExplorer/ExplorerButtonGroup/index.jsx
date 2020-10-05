@@ -30,9 +30,12 @@ class ExplorerButtonGroup extends React.Component {
       // for export to PFB
       exportPFBStatus: null,
       exportPFBURL: '',
+      exportPFBToWorkspaceGUID: '',
       pfbStartText: 'Your export is in progress.',
       pfbWarning: 'Please do not navigate away from this page until your export is finished.',
       pfbSuccessText: 'Your cohort has been exported to PFB.',
+      pfbToWorkspaceSuccessText: 'A PFB for this cohort will be saved to your workspace. The GUID for your PFB is displayed below.',
+      exportPFBToWorkspaceStatus: null,
       // for export to PFB in Files tab
       sourceNodesInCohort: [],
       // for export to workspace
@@ -84,6 +87,9 @@ class ExplorerButtonGroup extends React.Component {
             }, () => {
               this.sendPFBToSevenBridges();
             });
+          } else if (this.state.exportingPFBToWorkspace) {
+            const pfbGUID = `${res.data.output}`.split('\n')[0];
+            this.sendPFBToWorkspace(pfbGUID);
           } else {
             this.setState({
               exportPFBURL: `${res.data.output}`.split('\n'),
@@ -159,6 +165,9 @@ class ExplorerButtonGroup extends React.Component {
     }
     if (buttonConfig.type === 'export-files-to-workspace') {
       clickFunc = () => this.exportToWorkspace('file');
+    }
+    if (buttonConfig.type === 'export-pfb-to-workspace') {
+      clickFunc = this.exportPFBToWorkspace;
     }
     return clickFunc;
   };
@@ -250,7 +259,8 @@ class ExplorerButtonGroup extends React.Component {
         buttonType='primary'
         enabled
       />
-      { (this.state.exportWorkspaceStatus === 200) ?
+      { (this.state.exportWorkspaceStatus === 200
+        || this.state.exportPFBToWorkspaceStatus === 200) ?
         <Button
           className='explorer-button-group__toaster-button'
           label='Go To Workspace'
@@ -269,6 +279,10 @@ class ExplorerButtonGroup extends React.Component {
           }
           { (this.state.exportPFBURL) ?
             <a className='explorer-button-group__toaster-dl-link' href={this.state.exportPFBURL} download>Click here to download your PFB.</a>
+            : null
+          }
+          { (this.state.exportPFBToWorkspaceGUID) ?
+            <div>{ this.state.exportPFBToWorkspaceGUID } </div>
             : null
           }
           { (this.state.toasterError) ?
@@ -414,6 +428,40 @@ class ExplorerButtonGroup extends React.Component {
     window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
   }
 
+
+  sendPFBToWorkspace = (pfbGUID) => {
+    const JSONBody = { cohort_guid: pfbGUID };
+    fetchWithCreds({
+      path: `${manifestServiceApiPath}cohorts`,
+      body: JSON.stringify(JSONBody),
+      method: 'POST',
+    })
+      .then(
+        ({ status, data }) => {
+          const errorMsg = (data.error ? data.error : '');
+          switch (status) {
+          case 200:
+            this.setState({
+              exportingPFBToWorkspace: false,
+              exportPFBToWorkspaceGUID: pfbGUID,
+              toasterOpen: true,
+              toasterHeadline: this.state.pfbToWorkspaceSuccessText,
+              exportPFBToWorkspaceStatus: status,
+            });
+            return;
+          default:
+            this.setState({
+              exportingPFBToWorkspace: false,
+              exportPFBToWorkspaceGUID: '',
+              toasterOpen: true,
+              toasterHeadline: `There was an error exporting your cohort (${status}). ${errorMsg}`,
+              exportPFBToWorkspaceStatus: status,
+            });
+          }
+        },
+      );
+  }
+
   sendPFBToSevenBridges = () => {
     const url = encodeURIComponent(this.state.exportPFBURL);
     window.location = `${this.props.buttonConfig.sevenBridgesExportURL}?format=PFB&url=${url}`;
@@ -452,6 +500,16 @@ class ExplorerButtonGroup extends React.Component {
 Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be set in the portal config.`);
     }
   };
+
+  exportPFBToWorkspace = () => {
+    this.props.submitJob({ action: 'export', access_format: 'guid', input: { filter: getGQLFilter(this.props.filter) } });
+    this.props.checkJobStatus();
+    this.setState({
+      toasterOpen: true,
+      toasterHeadline: this.state.pfbStartText,
+      exportingPFBToWorkspace: true,
+    });
+  }
 
   exportToWorkspace = async (indexType) => {
     this.setState({ exportingToWorkspace: true });
@@ -510,7 +568,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     buttonConfig.type === 'export' ||
     buttonConfig.type === 'export-to-seven-bridges' ||
     buttonConfig.type === 'export-to-workspace' ||
-    buttonConfig.type === 'export-to-pfb';
+    buttonConfig.type === 'export-to-pfb' ||
+    buttonConfig.type === 'export-pfb-to-workspace';
 
   refreshManifestEntryCount = async () => {
     if (this.props.isLocked || !this.props.guppyConfig.manifestMapping
@@ -626,6 +685,9 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       if (this.props.buttonConfig.enableLimitedFilePFBExport) {
         return this.state.sourceNodesInCohort.length === 1;
       }
+    }
+    if (buttonConfig.type === 'export-pfb-to-workspace') {
+      return !this.state.exportingToCloud;
     }
     if (buttonConfig.type === 'export') {
       // disable the terra export button if any of the

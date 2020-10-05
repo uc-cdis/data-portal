@@ -245,6 +245,9 @@
     "dropdowns": {
       "download": {
         "title": "Download"
+      },
+      "export": {
+        "title": "Export"
       }
     },
     "buttons": [
@@ -252,8 +255,6 @@
         "enabled": true,
         "type": "data",
         "title": "Download All Clinical",
-        "leftIcon": "user",
-        "rightIcon": "download",
         "fileName": "clinical.json",
         "dropdownId": "download"
       },
@@ -261,30 +262,32 @@
         "enabled": true,
         "type": "manifest",
         "title": "Download Manifest",
-        "leftIcon": "datafile",
-        "rightIcon": "download",
         "fileName": "manifest.json",
         "dropdownId": "download"
       },
       {
         "enabled": true,
         "type": "export",
-        "title": "Export All to Terra",
-        "rightIcon": "external-link"
+        "title": "Export to Terra",
+        "dropdownId": "export"
       },
       {
         "enabled": true,
         "type": "export-to-pfb",
         "title": "Export to PFB",
-        "leftIcon": "datafile",
-        "rightIcon": "download"
+        "dropdownId": "export"
       },
       {
         "enabled": true,
         "type": "export-to-workspace",
         "title": "Export to Workspace",
-        "leftIcon": "datafile",
-        "rightIcon": "download"
+        "dropdownId": "export"
+      },
+      {
+        "enabled": true,
+        "type": "export-pfb-to-workspace",
+        "title": "Export PFB to Workspace",
+        "dropdownId": "export"
       }
     ],
     "guppyConfig": {
