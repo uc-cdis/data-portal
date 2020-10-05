@@ -188,12 +188,6 @@
     "analysis": false
   },
   "dataExplorerConfig": {
-    "arrangerConfig": {
-      "projectId": "search",
-      "graphqlField": "subject",
-      "index": "",
-      "nodeCountField": "node_id"
-    },
     "charts": {
       "project": {
         "chartType": "count",
