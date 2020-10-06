@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
+import Spinner from '../../components/Spinner';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
@@ -45,12 +46,16 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
     setFactors(getFactors(aggsData));
   }, [aggsData]);
 
+  const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(true);
   /**
    * @type {UserInputSubmitHandler}
    */
   const handleSubmit = ({ timeInterval, ...requestBody }) => {
     if (isError) setIsError(false);
+    setIsFetching(true);
+    setFactorVariable(requestBody.factorVariable);
+    setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
 
     fetchResult({ filter: transformedFilter, ...requestBody })
@@ -58,10 +63,9 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
         setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
         setRisktable(result.risktable);
         setSurvival(result.survival);
-        setFactorVariable(requestBody.factorVariable);
-        setStratificationVariable(requestBody.stratificationVariable);
       })
-      .catch((e) => setIsError(true));
+      .catch((e) => setIsError(true))
+      .finally(() => setIsFetching(false));
   };
 
   const [colorScheme, setColorScheme] = useState({ All: schemeCategory10[0] });
@@ -90,7 +94,9 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
         />
       </div>
       <div className='explorer-survival-analysis__column-right'>
-        {isError ? (
+        {isFetching ? (
+          <Spinner />
+        ) : isError ? (
           <div className='explorer-survival-analysis__error'>
             <h1>Error obtaining survival analysis result...</h1>
             <p>
