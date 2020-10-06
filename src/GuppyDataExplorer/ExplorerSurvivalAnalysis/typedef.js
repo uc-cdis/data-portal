@@ -43,3 +43,7 @@
  * @property {string} label
  * @property {string} value
  */
+
+/**
+ * @typedef {{ [key: string]: string }} ColorScheme
+ */

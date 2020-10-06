@@ -74,10 +74,9 @@ const ControlForm = ({
     if (!isInputChanged && isError) setIsInputChanged(true);
   }, [isInputChanged, isError]);
 
-  /**
-   * @param {{ target: { value: string, min: string, max: string }}} e
-   */
-  const validateNumberInput = (e) => {
+  const validateNumberInput = (
+    /** @type {{ target: { value: string, min: string, max: string }}} */ e
+  ) => {
     const value = Number.parseInt(e.target.value);
     const min = Number.parseInt(e.target.min);
     const max = Number.parseInt(e.target.max);
@@ -85,13 +84,9 @@ const ControlForm = ({
     else if (max && max < value) setLocalTimeInterval(max);
   };
 
-  /**
-   * @param {{ label: string, value: string }[]} options
-   */
-  const withEmptyOption = (options) => [
-    { label: 'Select...', value: '' },
-    ...options,
-  ];
+  const withEmptyOption = (
+    /** @type {{ label: string, value: string }[]} */ options
+  ) => [{ label: 'Select...', value: '' }, ...options];
 
   const submitUserInput = () => {
     onSubmit({

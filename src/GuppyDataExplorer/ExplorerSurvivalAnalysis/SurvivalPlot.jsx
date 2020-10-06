@@ -9,16 +9,22 @@ import {
   CartesianGrid,
   Legend,
 } from 'recharts';
-import { schemeCategory10 } from 'd3-scale-chromatic';
 import { getXAxisTicks } from './utils';
 import './typedef';
 
+const formatNames = (/** @type {SurvivalData[]} */ data) =>
+  data.map(({ data, name }) => ({
+    name: name === 'All' ? name : name.split('=')[1],
+    data,
+  }));
+
 /**
  * @param {Object} prop
+ * @param {Object} prop.colorScheme
  * @param {SurvivalData[]} prop.data
  * @param {number} prop.timeInterval
  */
-const Plot = ({ data, timeInterval }) => {
+const Plot = ({ colorScheme, data, timeInterval }) => {
   const [opacity, setOpacity] = useState({});
   useEffect(() => {
     const initOpacity = {};
@@ -66,16 +72,16 @@ const Plot = ({ data, timeInterval }) => {
           onMouseEnter={handleLegendMouseEnter}
           onMouseLeave={handleLegendMouseLeave}
         />
-        {data.map((series, i) => (
+        {data.map(({ data, name }, i) => (
           <Line
-            key={series.name}
-            data={series.data}
+            key={name}
+            data={data}
             dataKey='prob'
             dot={false}
-            name={series.name}
+            name={name}
             type='stepAfter'
-            stroke={schemeCategory10[i]}
-            strokeOpacity={opacity[series.name]}
+            stroke={colorScheme[name]}
+            strokeOpacity={opacity[name]}
           />
         ))}
       </LineChart>
@@ -85,18 +91,23 @@ const Plot = ({ data, timeInterval }) => {
 
 /**
  * @param {Object} prop
+ * @param {Object} prop.colorScheme
  * @param {SurvivalData[]} prop.data
- * @param {string} prop.stratificationVariable
+ * @param {boolean} prop.notStratified
  * @param {number} prop.timeInterval
  */
-const SurvivalPlot = ({ data, stratificationVariable, timeInterval }) => (
+const SurvivalPlot = ({ colorScheme, data, notStratified, timeInterval }) => (
   <div className='explorer-survival-analysis__survival-plot'>
     {data.length === 0 ? (
       <div className='explorer-survival-analysis__figure-placeholder'>
         Survival plot here
       </div>
-    ) : stratificationVariable === '' ? (
-      <Plot data={data} timeInterval={timeInterval} />
+    ) : notStratified ? (
+      <Plot
+        colorScheme={colorScheme}
+        data={formatNames(data)}
+        timeInterval={timeInterval}
+      />
     ) : (
       Object.entries(
         data.reduce((acc, { name, data }) => {
@@ -109,8 +120,14 @@ const SurvivalPlot = ({ data, stratificationVariable, timeInterval }) => (
         }, {})
       ).map(([key, data]) => (
         <Fragment key={key}>
-          <div className='explorer-survival-analysis__figure-title'>{key}</div>
-          <Plot data={data} timeInterval={timeInterval} />
+          <div className='explorer-survival-analysis__figure-title'>
+            {key.split('=')[1]}
+          </div>
+          <Plot
+            colorScheme={colorScheme}
+            data={formatNames(data)}
+            timeInterval={timeInterval}
+          />
         </Fragment>
       ))
     )}
@@ -129,7 +146,7 @@ SurvivalPlot.propTypes = {
       name: PropTypes.string,
     })
   ).isRequired,
-  stratificationVariable: PropTypes.string.isRequired,
+  notStratified: PropTypes.bool.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 

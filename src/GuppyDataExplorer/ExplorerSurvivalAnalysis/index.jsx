@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { schemeCategory10 } from 'd3-scale-chromatic';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
+import Spinner from '../../components/Spinner';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
@@ -43,12 +45,27 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
     setFactors(getFactors(aggsData));
   }, [aggsData]);
 
+  /** @type {ColorScheme} */
+  const initColorScheme = { All: schemeCategory10[0] };
+  const [colorScheme, setColorScheme] = useState(initColorScheme);
+  const getNewColorScheme = (/** @type {string} */ factorVariable) => {
+    if (factorVariable === '') return initColorScheme;
+
+    /** @type {ColorScheme} */
+    const newScheme = {};
+    const factorValues = aggsData[factorVariable].histogram.map((x) => x.key);
+    for (let i = 0; i < factorValues.length; i++)
+      newScheme[factorValues[i]] = schemeCategory10[i % 9];
+    return newScheme;
+  };
+
+  const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(true);
-  /**
-   * @type {UserInputSubmitHandler}
-   */
+  /** @type {UserInputSubmitHandler} */
   const handleSubmit = ({ timeInterval, ...requestBody }) => {
     if (isError) setIsError(false);
+    setIsFetching(true);
+    setColorScheme(getNewColorScheme(requestBody.factorVariable));
     setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
 
@@ -58,7 +75,8 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
         setRisktable(result.risktable);
         setSurvival(result.survival);
       })
-      .catch((e) => setIsError(true));
+      .catch((e) => setIsError(true))
+      .finally(() => setIsFetching(false));
   };
 
   return (
@@ -74,7 +92,9 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
         />
       </div>
       <div className='explorer-survival-analysis__column-right'>
-        {isError ? (
+        {isFetching ? (
+          <Spinner />
+        ) : isError ? (
           <div className='explorer-survival-analysis__error'>
             <h1>Error obtaining survival analysis result...</h1>
             <p>
@@ -89,11 +109,16 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
               {pval >= 0 && `Log-rank test p-value: ${pval}`}
             </div>
             <SurvivalPlot
+              colorScheme={colorScheme}
               data={survival}
-              stratificationVariable={stratificationVariable}
+              notStratified={stratificationVariable === ''}
               timeInterval={timeInterval}
             />
-            <RiskTable data={risktable} timeInterval={timeInterval} />
+            <RiskTable
+              data={risktable}
+              notStratified={stratificationVariable === ''}
+              timeInterval={timeInterval}
+            />
           </>
         )}
       </div>

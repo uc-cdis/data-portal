@@ -10,7 +10,11 @@ export const getFactors = (aggsData) => {
   const factors = [];
 
   for (const [key, value] of Object.entries(aggsData))
-    if (value.histogram.length > 0 && isString(value.histogram[0].key))
+    if (
+      key !== 'project_id' &&
+      value.histogram.length > 0 &&
+      isString(value.histogram[0].key)
+    )
       factors.push({
         label: key
           .toLowerCase()
