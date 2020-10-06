@@ -22,16 +22,10 @@ const parseRisktable = (data, timeInterval) => {
     .filter(({ time }) => (time - minTime) % timeInterval === 0);
 };
 
-/**
- * @param {RisktableData[]} data
- */
-const getMaxTime = (data) =>
+const getMaxTime = (/** @type {RisktableData[]} */ data) =>
   Math.max(...data.flatMap(({ data }) => data.map(({ time }) => time)));
 
-/**
- * @param {Object} prop
- */
-const CustomYAxisTick = ({ x, y, payload }) => {
+const CustomYAxisTick = (/** @type {Object} */ { x, y, payload }) => {
   const name =
     payload.value === 'All' ? payload.value : payload.value.split('=')[1];
 

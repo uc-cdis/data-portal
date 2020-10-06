@@ -12,10 +12,7 @@ import {
 import { getXAxisTicks } from './utils';
 import './typedef';
 
-/**
- * @param {SurvivalData[]} data
- */
-const formatNames = (data) =>
+const formatNames = (/** @type {SurvivalData[]} */ data) =>
   data.map(({ data, name }) => ({
     name: name === 'All' ? name : name.split('=')[1],
     data,

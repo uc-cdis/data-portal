@@ -61,9 +61,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
 
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(true);
-  /**
-   * @type {UserInputSubmitHandler}
-   */
+  /** @type {UserInputSubmitHandler} */
   const handleSubmit = ({ timeInterval, ...requestBody }) => {
     if (isError) setIsError(false);
     setIsFetching(true);
