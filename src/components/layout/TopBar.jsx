@@ -39,7 +39,7 @@ class TopBar extends Component {
                     return (
                       <a
                         className='top-bar__link'
-                        key={item.link}
+                        key={itemHref}
                         href={itemHref}
                         target='_blank'
                         rel='noopener noreferrer'
