@@ -79,7 +79,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
         newScheme[factorValues[i]] = schemeCategory10[i % 9];
     }
     setColorScheme(newScheme);
-  }, [aggsData, factorVariable]);
+  }, [factorVariable]);
 
   return (
     <div className='explorer-survival-analysis'>
