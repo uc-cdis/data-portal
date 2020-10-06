@@ -8,9 +8,16 @@ class AppCard extends React.Component {
       <div className='app-card'>
         <h2>{this.props.title}</h2>
         <div className='app-card__description'>
-          <p>{this.props.description}</p>
+          {(this.props.description) ?
+            <p>{this.props.description}</p>
+            : null
+          }
         </div>
-        <img className='app-card__image' src={this.props.imageUrl} alt={`${this.props.title}`} />
+        <img
+          className='app-card__image'
+          src={(this.props.imageUrl) ? this.props.imageUrl : '/src/img/analysis-icons/default-app.png'}
+          alt={`${this.props.title}`}
+        />
       </div>
     );
   }
@@ -18,8 +25,13 @@ class AppCard extends React.Component {
 
 AppCard.propTypes = {
   title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  imageUrl: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  imageUrl: PropTypes.string,
+};
+
+AppCard.defaultProps = {
+  description: undefined,
+  imageUrl: undefined,
 };
 
 export default AppCard;

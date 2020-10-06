@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select from 'react-select';
+import { Spin } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
-import Spinner from '../components/Spinner';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
@@ -61,11 +61,24 @@ class AnalysisApp extends React.Component {
       return (
         <HIVCohortFilter />
       );
-    default:
+    case 'ndhVirus':
       return (
         <React.Fragment>
           <input className='text-input' type='text' placeholder='input data' name='input' />
           <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+        </React.Fragment>
+      );
+    default:
+      return (
+        <React.Fragment>
+          <div className='analysis-app__iframe-wrapper'>
+            <iframe
+              className='analysis-app__iframe'
+              title='Analysis App'
+              frameBorder='0'
+              src={`${this.state.app.applicationUrl}`}
+            />
+          </div>
         </React.Fragment>
       );
     }
@@ -92,7 +105,7 @@ class AnalysisApp extends React.Component {
 
   updateApp = async () => {
     this.setState({
-      app: analysisApps[this.props.params.app],
+      app: analysisApps[decodeURIComponent(this.props.params.app)],
       loaded: true,
     });
   }
@@ -100,7 +113,14 @@ class AnalysisApp extends React.Component {
   render() {
     const { job, params } = this.props;
     const { loaded, app, results } = this.state;
-    const appContent = this.getAppContent(params.app);
+    if (!app) {
+      return <Spin size='large' tip='Loading App...' />;
+    }
+    const appContent = this.getAppContent(decodeURIComponent(params.app));
+    let showJobStatus = false;
+    if (!app.applicationUrl) {
+      showJobStatus = true;
+    }
 
     return (
       <div className='analysis-app-wrapper'>
@@ -113,12 +133,15 @@ class AnalysisApp extends React.Component {
               <div className='analysis-app__actions'>
                 { appContent }
               </div>
-              <div className='analysis-app__job-status'>
-                { this.isJobRunning() ? <Spinner text='Job in progress...' /> : null }
-                { job && job.status === 'Completed' ? <h3>Job Completed</h3> : null }
-                { job && job.status === 'Failed' ? <h3>Job Failed</h3> : null }
-                { results ? results.map((line, i) => <p key={i}>{line}</p>) : null }
-              </div>
+              {(showJobStatus) ?
+                <div className='analysis-app__job-status'>
+                  { this.isJobRunning() ? <Spin size='large' tip='Job in progress...' /> : null }
+                  { job && job.status === 'Completed' ? <h3>Job Completed</h3> : null }
+                  { job && job.status === 'Failed' ? <h3>Job Failed</h3> : null }
+                  { results ? results.map((line, i) => <p key={i}>{line}</p>) : null }
+                </div>
+                : null
+              }
             </div>
             : null
         }

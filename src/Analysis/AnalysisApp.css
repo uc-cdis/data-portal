@@ -30,3 +30,13 @@
   flex-flow: column;
   margin: 10px 0;
 }
+
+.analysis-app__iframe-wrapper {
+  width: 100%;
+  height: 80vh;
+}
+
+.analysis-app__iframe {
+  width: 100%;
+  height: 100%;
+}
