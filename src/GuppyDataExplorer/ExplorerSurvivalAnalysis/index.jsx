@@ -30,7 +30,6 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
-  const [factorVariable, setFactorVariable] = useState('');
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
 
@@ -46,6 +45,19 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
     setFactors(getFactors(aggsData));
   }, [aggsData]);
 
+  const [colorScheme, setColorScheme] = useState({ All: schemeCategory10[0] });
+  const getNewColorScheme = (factorVariable) => {
+    const newScheme = {};
+    if (factorVariable === '') {
+      newScheme['All'] = schemeCategory10[0];
+    } else {
+      const factorValues = aggsData[factorVariable].histogram.map((x) => x.key);
+      for (let i = 0; i < factorValues.length; i++)
+        newScheme[factorValues[i]] = schemeCategory10[i % 9];
+    }
+    return newScheme;
+  };
+
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(true);
   /**
@@ -54,7 +66,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
   const handleSubmit = ({ timeInterval, ...requestBody }) => {
     if (isError) setIsError(false);
     setIsFetching(true);
-    setFactorVariable(requestBody.factorVariable);
+    setColorScheme(getNewColorScheme(requestBody.factorVariable));
     setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
 
@@ -67,19 +79,6 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
       .catch((e) => setIsError(true))
       .finally(() => setIsFetching(false));
   };
-
-  const [colorScheme, setColorScheme] = useState({ All: schemeCategory10[0] });
-  useEffect(() => {
-    const newScheme = {};
-    if (factorVariable === '') {
-      newScheme['All'] = schemeCategory10[0];
-    } else {
-      const factorValues = aggsData[factorVariable].histogram.map((x) => x.key);
-      for (let i = 0; i < factorValues.length; i++)
-        newScheme[factorValues[i]] = schemeCategory10[i % 9];
-    }
-    setColorScheme(newScheme);
-  }, [factorVariable]);
 
   return (
     <div className='explorer-survival-analysis'>
