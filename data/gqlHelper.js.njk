@@ -27,6 +27,17 @@ const helperSingleton = {
     {% endfor %}
   }`,
 
+  submissionPageQuery: graphql`query gqlHelperSubmissionPageQuery {
+    projectList: project(first: 10000) {
+      name: project_id
+      code
+    }
+    {% for count in boardCounts %}count{{ loop.index }}: {{ count }}
+    {% endfor %}
+    {% for fType in fileTypeList %}fileCount{{ loop.index }}: _{{ fType }}_count
+    {% endfor %}
+  }`,
+
   projectDetailQuery: graphql`query gqlHelperProjectDetailQuery( $name: [String] ) {
     project( project_id:$name ) {
       name: project_id
