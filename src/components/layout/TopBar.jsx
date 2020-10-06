@@ -34,8 +34,9 @@ class TopBar extends Component {
                       buttonText = 'Browse Data';
                     }
                   }
-                  if (isEmailAddress(item.link) || item.link.startsWith('http')) {
-                    const itemHref = (isEmailAddress(item.link)) ? `mailto:${item.link}` : item.link;
+                  const isLinkEmailAddress = isEmailAddress(item.link);
+                  if (isLinkEmailAddress || item.link.startsWith('http')) {
+                    const itemHref = (isLinkEmailAddress) ? `mailto:${item.link}` : item.link;
                     return (
                       <a
                         className='top-bar__link'
