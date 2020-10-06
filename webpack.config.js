@@ -18,6 +18,18 @@ const title = {
   ndh: 'NIAID Data Hub',
 } [app];
 
+const configFileName = (app === 'dev') ? 'default' : app;
+// eslint-disable-next-line import/no-dynamic-require
+const configFile = require(`./data/config/${configFileName}.json`);
+const iFrameApplicationURLs = [];
+if (configFile && configFile.analysisTools) {
+  configFile.analysisTools.forEach((e) => {
+    if (e.applicationUrl) {
+      iFrameApplicationURLs.push(e.applicationUrl);
+    }
+  });
+}
+
 const plugins = [
   new webpack.EnvironmentPlugin(['NODE_ENV']),
   new webpack.EnvironmentPlugin({'MOCK_STORE': null}),
@@ -50,7 +62,7 @@ const plugins = [
     basename: pathPrefix,
     template: 'src/index.ejs',
     connect_src: (function () {
-      let rv = {};
+      const rv = {};
       if (typeof process.env.FENCE_URL !== 'undefined') {
         rv[(new URL(process.env.FENCE_URL)).origin] = true;
       }
@@ -65,6 +77,11 @@ const plugins = [
       }
       if (typeof process.env.MANIFEST_SERVICE_URL !== 'undefined') {
         rv[(new URL(process.env.MANIFEST_SERVICE_URL)).origin] = true;
+      }
+      if (iFrameApplicationURLs.length > 0) {
+        iFrameApplicationURLs.forEach((url) => {
+          rv[(new URL(url)).origin] = true;
+        });
       }
       return Object.keys(rv).join(' ');
     })(),
