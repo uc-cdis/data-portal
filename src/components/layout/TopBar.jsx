@@ -6,6 +6,12 @@ import './TopBar.less';
 import { useArboristUI } from '../../configs';
 import { userHasMethodOnAnyProject } from '../../authMappingUtils';
 
+const isEmailAddress = (input) => {
+  // regexp for checking if a string is possibly an email address, got from https://www.w3resource.com/javascript/form/email-validation.php
+  const regexp = '^[a-zA-Z0-9.!#$%&\'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$';
+  return new RegExp(regexp).test(input);
+};
+
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
  */
@@ -28,21 +34,26 @@ class TopBar extends Component {
                       buttonText = 'Browse Data';
                     }
                   }
-                  return (item.link.startsWith('http')) ?
-                    <a
-                      className='top-bar__link'
-                      key={item.link}
-                      href={item.link}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                    >
-                      <TopIconButton
-                        name={buttonText}
-                        icon={item.icon}
-                        isActive={this.isActive(item.link)}
-                        onActiveTab={() => this.props.onActiveTab(item.link)}
-                      />
-                    </a> :
+                  if (isEmailAddress(item.link) || item.link.startsWith('http')) {
+                    const itemHref = (isEmailAddress(item.link)) ? `mailto:${item.link}` : item.link;
+                    return (
+                      <a
+                        className='top-bar__link'
+                        key={item.link}
+                        href={itemHref}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        <TopIconButton
+                          name={buttonText}
+                          icon={item.icon}
+                          isActive={this.isActive(itemHref)}
+                          onActiveTab={() => this.props.onActiveTab(itemHref)}
+                        />
+                      </a>
+                    );
+                  }
+                  return (
                     <Link
                       className='top-bar__link'
                       key={item.link}
@@ -54,7 +65,8 @@ class TopBar extends Component {
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
                       />
-                    </Link>;
+                    </Link>
+                  );
                 },
               )
             }
