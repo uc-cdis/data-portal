@@ -45,16 +45,17 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
     setFactors(getFactors(aggsData));
   }, [aggsData]);
 
-  const [colorScheme, setColorScheme] = useState({ All: schemeCategory10[0] });
-  const getNewColorScheme = (factorVariable) => {
+  /** @type {ColorScheme} */
+  const initColorScheme = { All: schemeCategory10[0] };
+  const [colorScheme, setColorScheme] = useState(initColorScheme);
+  const getNewColorScheme = (/** @type {string} */ factorVariable) => {
+    if (factorVariable === '') return initColorScheme;
+
+    /** @type {ColorScheme} */
     const newScheme = {};
-    if (factorVariable === '') {
-      newScheme['All'] = schemeCategory10[0];
-    } else {
-      const factorValues = aggsData[factorVariable].histogram.map((x) => x.key);
-      for (let i = 0; i < factorValues.length; i++)
-        newScheme[factorValues[i]] = schemeCategory10[i % 9];
-    }
+    const factorValues = aggsData[factorVariable].histogram.map((x) => x.key);
+    for (let i = 0; i < factorValues.length; i++)
+      newScheme[factorValues[i]] = schemeCategory10[i % 9];
     return newScheme;
   };
 
