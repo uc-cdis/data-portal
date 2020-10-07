@@ -14,7 +14,7 @@ class InputWithIcon extends React.Component {
             this.props.inputOptions ? (
               <Select
                 styles={{ control: provided => ({ ...provided, width: '100%' }) }}
-                className={`${this.props.inputClassName} .Select-arrow`}
+                className={`${this.props.inputClassName} Select-arrow`}
                 value={{ value: this.props.inputValue, label: this.props.inputValue }}
                 placeholder={this.props.inputPlaceholderText}
                 options={this.props.inputOptions}
