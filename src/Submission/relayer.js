@@ -175,7 +175,7 @@ export const getProjectsList = () => {
   checkSubmissionPageState('lastestListUpdating').then(
     (res) => {
       if (res === 'OLD') {
-        fetchQuery(environment, gqlHelper.homepageQuery, {}).then(
+        fetchQuery(environment, gqlHelper.submissionPageQuery, {}).then(
           (data) => {
             const { projectList, summaryCounts } = transformRelayProps(data);
             updateReduxProjectList({ projectList, summaryCounts }).then(() =>

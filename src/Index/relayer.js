@@ -135,7 +135,7 @@ const getHomepageChartProjectsList = () => {
   checkIndexState('lastestListUpdating').then(
     (res) => {
       if (res === 'OLD') {
-        fetchQuery(environment, gqlHelper.homepageQuery, {}).then(
+        fetchQuery(environment, gqlHelper.indexPageQuery, {}).then(
           (data) => {
             const { projectList, summaryCounts } = transformRelayProps(data);
             updateRedux({ projectList, summaryCounts }).then(() =>
