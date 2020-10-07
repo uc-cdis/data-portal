@@ -5,7 +5,6 @@
   "main": "index.js",
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
-    "@arranger/components": "^0.4.15",
     "@babel/core": "^7.8.3",
     "@babel/polyfill": "^7.8.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.2",
@@ -13,7 +12,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.0",
     "@gen3/guppy": "^0.7.0",
-    "@gen3/ui-component": "^0.5.4",
+    "@gen3/ui-component": "^0.5.5",
     "@storybook/addon-actions": "^5.0.0",
     "@storybook/react": "^5.0.0",
     "antd": "^4.5.4",
@@ -143,12 +142,12 @@
   },
   "scripts": {
     "test": "jest",
-    "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' '**/Explorer/**' --schema ./data/schema.json --extensions js jsx",
+    "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' --schema ./data/schema.json --extensions js jsx",
     "schema": "node ./data/getSchema",
     "params": "node ./data/getTexts > src/params.js",
     "eslint": "./node_modules/.bin/eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --fix src data",
     "elint": "./node_modules/.bin/eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'",
-    "storybook": "STORYBOOK_PROJECT_ID=search STORYBOOK_ARRANGER_API=http://localhost:3000 start-storybook -p 9001 -c .storybook",
+    "storybook": "STORYBOOK_PROJECT_ID=search start-storybook -p 9001 -c .storybook",
     "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --config .stylelintrc.js --fix",
     "sanity-check": "node ./sanity-check"
   },

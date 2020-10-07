@@ -18,6 +18,18 @@ const title = {
   ndh: 'NIAID Data Hub',
 } [app];
 
+const configFileName = (app === 'dev') ? 'default' : app;
+// eslint-disable-next-line import/no-dynamic-require
+const configFile = require(`./data/config/${configFileName}.json`);
+const iFrameApplicationURLs = [];
+if (configFile && configFile.analysisTools) {
+  configFile.analysisTools.forEach((e) => {
+    if (e.applicationUrl) {
+      iFrameApplicationURLs.push(e.applicationUrl);
+    }
+  });
+}
+
 const plugins = [
   new webpack.EnvironmentPlugin(['NODE_ENV']),
   new webpack.EnvironmentPlugin({'MOCK_STORE': null}),
@@ -26,7 +38,6 @@ const plugins = [
   new webpack.EnvironmentPlugin(['LOGOUT_INACTIVE_USERS']),
   new webpack.EnvironmentPlugin(['WORKSPACE_TIMEOUT_IN_MINUTES']),
   new webpack.EnvironmentPlugin(['REACT_APP_PROJECT_ID']),
-  new webpack.EnvironmentPlugin(['REACT_APP_ARRANGER_API']),
   new webpack.EnvironmentPlugin(['REACT_APP_DISABLE_SOCKET']),
   new webpack.EnvironmentPlugin(['TIER_ACCESS_LEVEL']),
   new webpack.EnvironmentPlugin(['TIER_ACCESS_LIMIT']),
@@ -43,7 +54,6 @@ const plugins = [
       LOGOUT_INACTIVE_USERS: !(process.env.LOGOUT_INACTIVE_USERS === 'false'),
       WORKSPACE_TIMEOUT_IN_MINUTES: process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480,
       REACT_APP_PROJECT_ID: JSON.stringify(process.env.REACT_APP_PROJECT_ID || 'search'),
-      REACT_APP_ARRANGER_API: JSON.stringify(process.env.REACT_APP_ARRANGER_API || '/api/v0/flat-search'),
       REACT_APP_DISABLE_SOCKET: JSON.stringify(process.env.REACT_APP_DISABLE_SOCKET || 'true'),
     }
   }),
@@ -52,7 +62,7 @@ const plugins = [
     basename: pathPrefix,
     template: 'src/index.ejs',
     connect_src: (function () {
-      let rv = {};
+      const rv = {};
       if (typeof process.env.FENCE_URL !== 'undefined') {
         rv[(new URL(process.env.FENCE_URL)).origin] = true;
       }
@@ -67,6 +77,11 @@ const plugins = [
       }
       if (typeof process.env.MANIFEST_SERVICE_URL !== 'undefined') {
         rv[(new URL(process.env.MANIFEST_SERVICE_URL)).origin] = true;
+      }
+      if (iFrameApplicationURLs.length > 0) {
+        iFrameApplicationURLs.forEach((url) => {
+          rv[(new URL(url)).origin] = true;
+        });
       }
       return Object.keys(rv).join(' ');
     })(),

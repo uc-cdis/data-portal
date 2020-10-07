@@ -1,18 +1,9 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import DataExplorer from '../DataExplorer/.';
 import GuppyDataExplorer from '../GuppyDataExplorer/GuppyDataExplorer';
 import config from './explorerConfig';
 
-storiesOf('Data Explorer', module)
-  .add('Data Explorer', () => {
-    library.add(faAngleDown, faAngleUp);
-    return (
-      <DataExplorer />
-    );
-  })
+storiesOf('Guppy Data Explorer', module)
   .add('Guppy Data Explorer', () => {
     const guppyServerPath = 'http://localhost:3000';
     return (

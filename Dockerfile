@@ -5,7 +5,6 @@ FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV REACT_APP_PROJECT_ID=search
-ENV REACT_APP_ARRANGER_API=/api/v0/flat-search
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \

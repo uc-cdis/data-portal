@@ -11,7 +11,6 @@ import index from './Index/reducers';
 import queryNodes from './QueryNode/reducers';
 import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
-import explorer from './Explorer/reducers';
 import login from './Login/reducers';
 import bar from './Layout/reducers';
 import ddgraph from './DataDictionary/reducers';
@@ -92,7 +91,6 @@ export const removeDeletedNode = (state, id) => {
 };
 
 const reducers = combineReducers({
-  explorer,
   study,
   privacyPolicy,
   bar,
