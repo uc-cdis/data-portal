@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import './InputWithIcon.less';
+
+// HACK (@mpingram) Use a custom option class just to apply the '.Select-option'
+// class to the option components, so that the dataUpload integration tests work (which expect
+// this class to be present)
+const Option = props => (<components.Option className={'Select-option'} {...props} />);
 
 class InputWithIcon extends React.Component {
   render() {
@@ -9,13 +14,15 @@ class InputWithIcon extends React.Component {
       <React.Fragment>
         <div className={'input-with-icon'.concat(this.props.className ? ` ${this.props.className}` : '')}>
           {
-            // Include the `.Select-arrow` class here due to integration tests expecting a clickable
-            // element with this class to be present here.
+            // HACK (@mpingram) Include the `.Select-arrow` and `.Select-menu-outer` classes here,
+            // in addition to the custom Option class, due to integration tests expecting
+            // a clickable element with this class to be present here.
             this.props.inputOptions ? (
               <Select
                 styles={{ control: provided => ({ ...provided, width: '100%' }) }}
-                className={`${this.props.inputClassName} Select-arrow`}
+                className={`${this.props.inputClassName} Select-menu-outer Select-arrow`}
                 value={{ value: this.props.inputValue, label: this.props.inputValue }}
+                components={{ Option }}
                 placeholder={this.props.inputPlaceholderText}
                 options={this.props.inputOptions}
                 onChange={this.props.inputOnChange}
