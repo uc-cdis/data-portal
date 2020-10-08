@@ -102,7 +102,7 @@ async function init() {
                       path='/login'
                       component={(props) => (
                         <ProtectedContent
-                          public
+                          isPublic
                           filter={() => store.dispatch(fetchLogin())}
                           component={ReduxLogin}
                           {...props}
@@ -114,7 +114,7 @@ async function init() {
                       path='/'
                       component={(props) => (
                         <ProtectedContent
-                          public={indexPublic}
+                          isPublic={indexPublic}
                           component={IndexPage}
                           {...props}
                         />
@@ -125,6 +125,7 @@ async function init() {
                       path='/submission'
                       component={(props) => (
                         <ProtectedContent
+                          isAdminOnly
                           component={SubmissionPage}
                           {...props}
                         />
@@ -135,6 +136,7 @@ async function init() {
                       path='/submission/files'
                       component={(props) => (
                         <ProtectedContent
+                          isAdminOnly
                           component={ReduxMapFiles}
                           {...props}
                         />
@@ -145,6 +147,7 @@ async function init() {
                       path='/submission/map'
                       component={(props) => (
                         <ProtectedContent
+                          isAdminOnly
                           component={ReduxMapDataModel}
                           {...props}
                         />
@@ -192,7 +195,7 @@ async function init() {
                       path='/dd/:node'
                       component={(props) => (
                         <ProtectedContent
-                          public
+                          isPublic
                           component={DataDictionary}
                           {...props}
                         />
@@ -202,7 +205,7 @@ async function init() {
                       path='/dd'
                       component={(props) => (
                         <ProtectedContent
-                          public
+                          isPublic
                           component={DataDictionary}
                           {...props}
                         />
@@ -227,7 +230,7 @@ async function init() {
                       path='/files'
                       component={(props) => (
                         <ProtectedContent
-                          public={explorerPublic}
+                          isPublic={explorerPublic}
                           component={GuppyDataExplorer}
                           {...props}
                         />
@@ -283,7 +286,7 @@ async function init() {
                         path='/explorer'
                         component={(props) => (
                           <ProtectedContent
-                            public={explorerPublic}
+                            isPublic={explorerPublic}
                             component={GuppyDataExplorer}
                             {...props}
                           />
@@ -303,7 +306,7 @@ async function init() {
                         path='/resource-browser'
                         component={(props) => (
                           <ProtectedContent
-                            public={resourceBrowserPublic}
+                            isPublic={resourceBrowserPublic}
                             component={ResourceBrowser}
                             {...props}
                           />

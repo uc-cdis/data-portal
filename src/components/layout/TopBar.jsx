@@ -37,6 +37,15 @@ class TopBar extends Component {
             </div>
             <div className='top-bar__nav--flex-center'>
               {this.props.topItems.map((item) => {
+                if (item.link === '/submission') {
+                  const resourcePath = '/services/sheepdog/submission/project';
+                  const isAdminUser =
+                    this.props.user.authz &&
+                    this.props.user.authz.hasOwnProperty(resourcePath) &&
+                    this.props.user.authz[resourcePath][0].method === '*';
+                  if (!isAdminUser) return undefined;
+                }
+
                 let buttonText = item.name;
                 if (item.name === 'Submit Data' && useArboristUI) {
                   if (
@@ -50,6 +59,7 @@ class TopBar extends Component {
                     buttonText = 'Browse Data';
                   }
                 }
+
                 return item.link.startsWith('http') ? (
                   <a
                     className='top-bar__link'
