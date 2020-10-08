@@ -287,13 +287,12 @@ class ProtectedContent extends React.Component {
     if (this.state.redirectTo) {
       return (
         <Redirect
-          to={{
-            pathname: this.state.redirectTo,
-            from:
-              this.state.from && this.state.from.pathname
-                ? this.state.from.pathname
-                : '/',
-          }} // send previous location to redirect
+          to={{ pathname: this.state.redirectTo }} // send previous location to redirect
+          from={
+            this.state.from && this.state.from.pathname
+              ? this.state.from.pathname
+              : '/'
+          }
         />
       );
     } else if (
