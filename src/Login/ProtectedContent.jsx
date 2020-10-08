@@ -170,36 +170,25 @@ class ProtectedContent extends React.Component {
    * @return newState passed through
    */
   checkApiToken = (store, initialState) => {
-    const nowMs = Date.now();
-    const newState = Object.assign({}, initialState);
+    if (!initialState.authenticated || Date.now() - lastTokenRefreshMs < 41000)
+      return Promise.resolve(initialState);
 
-    if (!newState.authenticated) {
-      return Promise.resolve(newState);
-    }
-    if (nowMs - lastTokenRefreshMs < 41000) {
-      return Promise.resolve(newState);
-    }
+    // Assume fetchProjects either succeeds or fails.
+    // If fails (no project data), then refresh api token.
     return store.dispatch(fetchProjects()).then((info) => {
-      //
-      // The assumption here is that fetchProjects either succeeds or fails.
-      // If it fails (we won't have any project data), then we need to refresh our api token ...
-      //
-      const projects = store.getState().submission.projects;
-      if (projects) {
+      if (
         // user already has a valid token
-        return Promise.resolve(newState);
-      } else if (info.status !== 403 || info.status !== 401) {
-        // do not authenticate unless we have a 403 or 401
-        // should only check 401 after we fix fence to return correct
-        // error code for all cases
-        // there may be no tables at startup time,
-        // or some other weirdness ...
-        // The oauth dance below is only relevant for legacy commons - pre jwt
-        return Promise.resolve(newState);
-      }
-      // else do the oauth dance
-      // NOTE: this is DEPRECATED now - jwt access token
-      //      works across all services
+        store.getState().submission.projects ||
+        // or, do not authenticate unless we have a 403 or 401
+        // should only check 401 after we fix fence to return correct error code for all cases
+        // there may be no tables at startup time, or some other weirdness ...
+        info.status !== 403 ||
+        info.status !== 401
+      )
+        return Promise.resolve(initialState);
+
+      // NOW DEPRECATED: jwt access token works across all services
+      // The oauth dance below is only relevant for legacy commons - pre jwt
       return store
         .dispatch(fetchOAuthURL(submissionApiOauthPath))
         .then((oauthUrl) =>
@@ -232,10 +221,11 @@ class ProtectedContent extends React.Component {
         .then(
           () => {
             lastTokenRefreshMs = Date.now();
-            return newState;
+            return initialState;
           },
           () => {
             // something went wrong - better just re-login
+            const newState = Object.assign({}, initialState);
             newState.authenticated = false;
             newState.redirectTo = '/login';
             newState.from = this.props.location;
