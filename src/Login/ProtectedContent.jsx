@@ -38,7 +38,7 @@ export function logoutListener(state = {}, action) {
  * @param location from react-router
  * @param history from react-router
  * @param match from react-router.match
- * @param public default false - set true to disable auth-guard
+ * @param isPublic default false - set true to disable auth-guard
  * @param filter {() => Promise} optional filter to apply before rendering the child component
  */
 class ProtectedContent extends React.Component {
@@ -50,12 +50,12 @@ class ProtectedContent extends React.Component {
       params: PropTypes.object,
       path: PropTypes.string,
     }).isRequired,
-    public: PropTypes.bool,
+    isPublic: PropTypes.bool,
     filter: PropTypes.func,
   };
 
   static defaultProps = {
-    public: false,
+    isPublic: false,
     filter: null,
   };
 
@@ -83,7 +83,7 @@ class ProtectedContent extends React.Component {
       ]).then(() => {
         const { filter } = this.props;
 
-        if (this.props.public) {
+        if (this.props.isPublic) {
           const latestState = { ...store, dataLoaded: true };
 
           if (typeof filter === 'function') {
@@ -267,13 +267,13 @@ class ProtectedContent extends React.Component {
 
     let content = <Spinner />;
     if (
-      this.props.public &&
+      this.props.isPublic &&
       (this.state.dataLoaded ||
         !this.props.filter ||
         typeof this.props.filter !== 'function')
     )
       content = <ComponentWithProps />;
-    else if (!this.props.public && this.state.authenticated)
+    else if (!this.props.isPublic && this.state.authenticated)
       content = (
         <>
           <ReduxAuthTimeoutPopup />
