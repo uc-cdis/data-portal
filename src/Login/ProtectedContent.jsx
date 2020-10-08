@@ -75,6 +75,7 @@ class ProtectedContent extends React.Component {
    * in the various ways we want it to be.
    */
   componentDidMount() {
+    window.scrollTo(0, 0);
     getReduxStore().then((store) =>
       Promise.all([
         store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
@@ -273,8 +274,6 @@ class ProtectedContent extends React.Component {
   };
 
   render() {
-    window.scrollTo(0, 0);
-
     if (this.state.redirectTo)
       return (
         <Redirect
