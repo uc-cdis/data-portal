@@ -251,22 +251,22 @@ class ProtectedContent extends React.Component {
    * something like that
    */
   checkQuizStatus = (initialState) => {
-    const newState = Object.assign(initialState);
+    const isUserAuthenticated =
+      initialState.authenticated &&
+      initialState.user &&
+      initialState.user.username;
+    if (!isUserAuthenticated) return initialState;
 
-    if (!(newState.authenticated && newState.user && newState.user.username)) {
-      return newState; // NOOP for unauthenticated session
-    }
-    const { user } = newState;
-    // user is authenticated - now check if he has certs
-    const isMissingCerts =
-      intersection(requiredCerts, user.certificates_uploaded).length !==
-      requiredCerts.length;
+    const newState = Object.assign(initialState);
+    const userCerts = newState.user.certificates_uploaded;
+    const isUserMissingCerts =
+      intersection(requiredCerts, userCerts).length !== requiredCerts.length;
     // take quiz if this user doesn't have required certificate
-    if (this.props.match.path !== '/quiz' && isMissingCerts) {
+    if (this.props.match.path !== '/quiz' && isUserMissingCerts) {
       newState.redirectTo = '/quiz';
       newState.from = this.props.location;
       // do not update lastAuthMs (indicates time of last successful auth)
-    } else if (this.props.match.path === '/quiz' && !isMissingCerts) {
+    } else if (this.props.match.path === '/quiz' && !isUserMissingCerts) {
       newState.redirectTo = '/';
       newState.from = this.props.location;
     }
