@@ -128,28 +128,24 @@ class ProtectedContent extends React.Component {
    * Start filter the 'newState' for the checkLoginStatus component.
    * Check if the user is logged in, and update state accordingly.
    * @method checkLoginStatus
-   * @param {store} store
-   * @param {initialState} initialState
+   * @param store
+   * @param initialState
    * @return Promise<{redirectTo, authenticated, user}>
    */
   checkLoginStatus = (store, initialState) => {
     const newState = Object.assign({}, initialState);
-    const nowMs = Date.now();
     newState.authenticated = true;
     newState.redirectTo = null;
     newState.user = store.getState().user;
 
-    if (nowMs - lastAuthMs < 60000) {
-      // assume we're still logged in after 1 minute ...
-      return Promise.resolve(newState);
-    }
+    // assume we're still logged in after 1 minute ...
+    if (Date.now() - lastAuthMs < 60000) return Promise.resolve(newState);
 
     return store
       .dispatch(fetchUser) // make an API call to see if we're still logged in ...
       .then((response) => {
-        const { user } = store.getState();
-        newState.user = user;
-        if (!user.username) {
+        newState.user = store.getState().user;
+        if (!newState.user.username) {
           // not authenticated
           newState.redirectTo = '/login';
           newState.authenticated = false;
