@@ -127,7 +127,15 @@ class StudyDetails extends React.Component {
         this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
       };
       let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
-      requestAccessText = this.props.data.accessRequested ? 'Access Requested' : requestAccessText;
+      let tooltipEnabled = false;
+      let tooltipText = '';
+      if (this.props.data.accessRequested) {
+        requestAccessText = (buttonConfig.accessRequestedText) ? buttonConfig.accessRequestedText : 'Access Requested';
+        if (buttonConfig.accessRequestedTooltipText) {
+          tooltipEnabled = true;
+          tooltipText = buttonConfig.accessRequestedTooltipText;
+        }
+      }
       const displayRequestAccessButton = !userHasLoggedIn
       || !this.isDataAccessible(this.props.data.accessibleValidationValue);
       this.requestAccessButtonVisible = displayRequestAccessButton;
@@ -138,6 +146,8 @@ class StudyDetails extends React.Component {
         buttonType='primary'
         onClick={onRequestAccess}
         enabled={!this.props.data.accessRequested}
+        tooltipEnabled={tooltipEnabled}
+        tooltipText={tooltipText}
       />) : null;
     } else {
       console.warn(`Study viewer button type '${buttonConfig.type}' unknown`); // eslint-disable-line no-console
@@ -218,9 +228,9 @@ class StudyDetails extends React.Component {
                : null
              }
              {
-               this.props.studyViewerConfig.buttons.map(
+               (this.props.studyViewerConfig.buttons) ? this.props.studyViewerConfig.buttons.map(
                  (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
-               )
+               ) : null
              }
            </Space>
            <Modal
