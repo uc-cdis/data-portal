@@ -14,6 +14,16 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 import { intersection, isPageFullScreen } from '../utils';
 import './ProtectedContent.css';
 
+/** @typedef {Object} ComponentState
+ * @property {boolean} authenticated
+ * @property {boolean} dataLoaded
+ * @property {?string} redirectTo
+ * @property {?string} from
+ * @property {?Object} user
+ */
+
+/** @typedef {Object} ReduxStore */
+
 let lastAuthMs = 0;
 let lastTokenRefreshMs = 0;
 
@@ -64,11 +74,13 @@ class ProtectedContent extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = {
+
+    this.state = /** @type {ComponentState} */ {
       authenticated: false,
       dataLoaded: false,
       redirectTo: null,
       from: null,
+      user: null,
     };
   }
 
@@ -115,16 +127,17 @@ class ProtectedContent extends React.Component {
   /**
    * Start filter the 'newState' for the checkLoginStatus component.
    * Check if the user is logged in, and update state accordingly.
-   * @method checkLoginStatus
-   * @param store
-   * @param initialState
-   * @return Promise<{redirectTo, authenticated, user}>
+   * @param {ReduxStore} store
+   * @param {ComponentState} initialState
+   * @returns {Promise<ComponentState>}
    */
   checkLoginStatus = (store, initialState) => {
-    const newState = Object.assign({}, initialState);
-    newState.authenticated = true;
-    newState.redirectTo = null;
-    newState.user = store.getState().user;
+    const newState = {
+      ...initialState,
+      authenticated: true,
+      redirectTo: null,
+      user: store.getState().user,
+    };
 
     // assume we're still logged in after 1 minute ...
     if (Date.now() - lastAuthMs < 60000) return Promise.resolve(newState);
@@ -148,27 +161,25 @@ class ProtectedContent extends React.Component {
 
   /**
    * Check if user is admin if needed, and update state accordingly.
-   * @param initialState
+   * @param {ComponentState} initialState
+   * @returns {ComponentState}
    */
   checkIfAdmin = (initialState) => {
-    if (!this.props.isAdminOnly) return Promise.resolve(initialState);
+    if (!this.props.isAdminOnly) return initialState;
 
     const resourcePath = '/services/sheepdog/submission/project';
     const isAdminUser =
       initialState.user.authz &&
       initialState.user.authz.hasOwnProperty(resourcePath) &&
       initialState.user.authz[resourcePath][0].method === '*';
-    return Promise.resolve(
-      isAdminUser ? initialState : { ...initialState, redirectTo: '/' }
-    );
+    return isAdminUser ? initialState : { ...initialState, redirectTo: '/' };
   };
 
   /**
    * Filter refreshes the gdc-api token (acquired via oauth with user-api) if necessary.
-   * @method checkApiToken
-   * @param store Redux store
-   * @param initialState
-   * @return newState passed through
+   * @param {ReduxStore} store
+   * @param {ComponentState} initialState
+   * @returns {Promise<ComponentState>}
    */
   checkApiToken = (store, initialState) => {
     if (!initialState.authenticated || Date.now() - lastTokenRefreshMs < 41000)
@@ -190,56 +201,56 @@ class ProtectedContent extends React.Component {
 
       // NOW DEPRECATED: jwt access token works across all services
       // The oauth dance below is only relevant for legacy commons - pre jwt
-      return store
-        .dispatch(fetchOAuthURL(submissionApiOauthPath))
-        .then((oauthUrl) =>
-          fetchWithCreds({
-            path: oauthUrl,
-            dispatch: store.dispatch.bind(store),
-          })
-        )
-        .then(({ status, data }) => {
-          switch (status) {
-            case 200:
-              return {
-                type: 'RECEIVE_SUBMISSION_LOGIN',
-                result: true,
-              };
-            default: {
-              return {
-                type: 'RECEIVE_SUBMISSION_LOGIN',
-                result: false,
-                error: data,
-              };
+      return (
+        store
+          .dispatch(fetchOAuthURL(submissionApiOauthPath))
+          .then((oauthUrl) =>
+            fetchWithCreds({
+              path: oauthUrl,
+              dispatch: store.dispatch.bind(store),
+            })
+          )
+          .then(({ status, data }) => {
+            switch (status) {
+              case 200:
+                return {
+                  type: 'RECEIVE_SUBMISSION_LOGIN',
+                  result: true,
+                };
+              default: {
+                return {
+                  type: 'RECEIVE_SUBMISSION_LOGIN',
+                  result: false,
+                  error: data,
+                };
+              }
             }
-          }
-        })
-        .then((msg) => store.dispatch(msg))
-        .then(
-          // refetch the tables - since the earlier call failed with an invalid token ...
-          () => store.dispatch(fetchProjects())
-        )
-        .then(
-          () => {
-            lastTokenRefreshMs = Date.now();
-            return initialState;
-          },
-          () => {
-            // something went wrong - better just re-login
-            const newState = Object.assign({}, initialState);
-            newState.authenticated = false;
-            newState.redirectTo = '/login';
-            newState.from = this.props.location;
-            return newState;
-          }
-        );
+          })
+          .then((msg) => store.dispatch(msg))
+          // refetch the tables - since the earlier call failed with an invalid token
+          .then(() => store.dispatch(fetchProjects()))
+          .then(
+            () => {
+              lastTokenRefreshMs = Date.now();
+              return initialState;
+            },
+            // re-login if something went wrong
+            () => ({
+              ...initialState,
+              authenticated: false,
+              redirectTo: '/login',
+              from: this.props.location,
+            })
+          )
+      );
     });
   };
 
   /**
    * Filter the 'newState' for the ProtectedComponent.
-   * User needs to take a security quiz before he/she can acquire tokens ...
-   * something like that
+   * User needs to take a security quiz before he/she can acquire tokens
+   * @param {ComponentState} initialState
+   * @returns {ComponentState}
    */
   checkQuizStatus = (initialState) => {
     const isUserAuthenticated =
@@ -248,7 +259,7 @@ class ProtectedContent extends React.Component {
       initialState.user.username;
     if (!isUserAuthenticated) return initialState;
 
-    const newState = Object.assign(initialState);
+    const newState = { ...initialState };
     const userCerts = newState.user.certificates_uploaded;
     const isUserMissingCerts =
       intersection(requiredCerts, userCerts).length !== requiredCerts.length;
