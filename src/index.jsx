@@ -125,6 +125,7 @@ async function init() {
                       path='/submission'
                       component={(props) => (
                         <ProtectedContent
+                          isAdminOnly
                           component={SubmissionPage}
                           {...props}
                         />
@@ -135,6 +136,7 @@ async function init() {
                       path='/submission/files'
                       component={(props) => (
                         <ProtectedContent
+                          isAdminOnly
                           component={ReduxMapFiles}
                           {...props}
                         />
@@ -145,6 +147,7 @@ async function init() {
                       path='/submission/map'
                       component={(props) => (
                         <ProtectedContent
+                          isAdminOnly
                           component={ReduxMapDataModel}
                           {...props}
                         />
