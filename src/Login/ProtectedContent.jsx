@@ -70,58 +70,42 @@ class ProtectedContent extends React.Component {
   }
 
   /**
-   * We start out in an unauthenticated state - after mount do
-   * the checks to see if the current session is authenticated
-   * in the various ways we want it to be.
+   * We start out in an unauthenticated state
+   * After mount, checks if the current session is authenticated
    */
   componentDidMount() {
     window.scrollTo(0, 0);
+
     getReduxStore().then((store) =>
       Promise.all([
         store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
         store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
-      ])
-        .then(() =>
-          this.checkLoginStatus(store, this.state)
-            .then(
-              (newState) => this.props.public || this.checkQuizStatus(newState)
-            )
-            .then(
-              (newState) =>
-                this.props.public || this.checkApiToken(store, newState)
-            )
-        )
-        .then((newState) => {
-          const filterPromise =
-            !this.props.public &&
-            newState.authenticated &&
-            typeof this.props.filter === 'function'
-              ? this.props.filter()
-              : Promise.resolve('ok');
-          // finally update the component state
-          const finish = () => {
-            const latestState = Object.assign({}, newState);
-            latestState.dataLoaded = true;
+      ]).then(() => {
+        const { filter } = this.props;
+
+        if (this.props.public) {
+          const latestState = { ...store, dataLoaded: true };
+
+          if (typeof filter === 'function') {
+            filter().finally(() => this.setState(latestState));
+          } else {
             this.setState(latestState);
-          };
-          return filterPromise.then(finish, finish);
-        })
+          }
+        } else
+          this.checkLoginStatus(store, this.state)
+            .then((newState) => this.checkQuizStatus(newState))
+            .then((newState) => this.checkApiToken(store, newState))
+            .then((newState) => {
+              const latestState = { ...newState, dataLoaded: true };
+
+              if (newState.authenticated && typeof filter === 'function') {
+                filter().finally(() => this.setState(latestState));
+              } else {
+                this.setState(latestState);
+              }
+            });
+      })
     );
-    if (this.props.public) {
-      getReduxStore().then((store) => {
-        const filterPromise =
-          typeof this.props.filter === 'function'
-            ? this.props.filter()
-            : Promise.resolve('ok');
-        // finally update the component state
-        const finish = () => {
-          const latestState = Object.assign({}, store);
-          latestState.dataLoaded = true;
-          this.setState(latestState);
-        };
-        return filterPromise.then(finish, finish);
-      });
-    }
   }
 
   /**
