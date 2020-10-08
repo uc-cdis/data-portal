@@ -38,6 +38,7 @@ export function logoutListener(state = {}, action) {
  * @param location from react-router
  * @param history from react-router
  * @param match from react-router.match
+ * @param isAdminOnly default false - if true, redirect to index page
  * @param isPublic default false - set true to disable auth-guard
  * @param filter {() => Promise} optional filter to apply before rendering the child component
  */
@@ -50,11 +51,13 @@ class ProtectedContent extends React.Component {
       params: PropTypes.object,
       path: PropTypes.string,
     }).isRequired,
+    isAdminOnly: PropTypes.bool,
     isPublic: PropTypes.bool,
     filter: PropTypes.func,
   };
 
   static defaultProps = {
+    isAdminOnly: false,
     isPublic: false,
     filter: null,
   };
@@ -93,6 +96,7 @@ class ProtectedContent extends React.Component {
           }
         } else
           this.checkLoginStatus(store, this.state)
+            .then((newState) => this.checkIfAdmin(newState))
             .then((newState) => this.checkQuizStatus(newState))
             .then((newState) => this.checkApiToken(store, newState))
             .then((newState) => {
@@ -140,6 +144,23 @@ class ProtectedContent extends React.Component {
         }
         return newState;
       });
+  };
+
+  /**
+   * Check if user is admin if needed, and update state accordingly.
+   * @param initialState
+   */
+  checkIfAdmin = (initialState) => {
+    if (!this.props.isAdminOnly) return Promise.resolve(initialState);
+
+    const resourcePath = '/services/sheepdog/submission/project';
+    const isAdminUser =
+      initialState.user.authz &&
+      initialState.user.authz.hasOwnProperty(resourcePath) &&
+      initialState.user.authz[resourcePath][0].method === '*';
+    return Promise.resolve(
+      isAdminUser ? initialState : { ...initialState, redirectTo: '/' }
+    );
   };
 
   /**
