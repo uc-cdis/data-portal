@@ -273,18 +273,9 @@ class ProtectedContent extends React.Component {
   };
 
   render() {
-    const Component = this.props.component;
-    let params = {}; // router params
-    if (this.props.match) {
-      params = this.props.match.params || {};
-    }
     window.scrollTo(0, 0);
-    const pageFullWidthClassModifier = isPageFullScreen(
-      this.props.location.pathname
-    )
-      ? 'protected-content--full-screen'
-      : '';
-    if (this.state.redirectTo) {
+
+    if (this.state.redirectTo)
       return (
         <Redirect
           to={{ pathname: this.state.redirectTo }} // send previous location to redirect
@@ -295,46 +286,36 @@ class ProtectedContent extends React.Component {
           }
         />
       );
-    } else if (
-      this.props.public &&
-      (!this.props.filter || typeof this.props.filter !== 'function')
-    ) {
-      return (
-        <div className={`protected-content ${pageFullWidthClassModifier}`}>
-          <Component
-            params={params}
-            location={this.props.location}
-            history={this.props.history}
-          />
-        </div>
-      );
-    } else if (!this.props.public && this.state.authenticated) {
-      return (
-        <div className={`protected-content ${pageFullWidthClassModifier}`}>
-          <ReduxAuthTimeoutPopup />
-          <Component
-            params={params}
-            location={this.props.location}
-            history={this.props.history}
-          />
-        </div>
-      );
-    } else if (this.props.public && this.state.dataLoaded) {
-      return (
-        <div className={`protected-content ${pageFullWidthClassModifier}`}>
-          <Component
-            params={params}
-            location={this.props.location}
-            history={this.props.history}
-          />
-        </div>
-      );
-    }
-    return (
-      <div className={`protected-content ${pageFullWidthClassModifier}`}>
-        <Spinner />
-      </div>
+
+    const Component = this.props.component;
+    const ComponentWithProps = () => (
+      <Component
+        params={this.props.match ? this.props.match.params : {}} // router params
+        location={this.props.location}
+        history={this.props.history}
+      />
     );
+
+    let content = <Spinner />;
+    if (
+      this.props.public &&
+      (this.state.dataLoaded ||
+        !this.props.filter ||
+        typeof this.props.filter !== 'function')
+    )
+      content = <ComponentWithProps />;
+    else if (!this.props.public && this.state.authenticated)
+      content = (
+        <>
+          <ReduxAuthTimeoutPopup />
+          <ComponentWithProps />
+        </>
+      );
+
+    const pageClassName = isPageFullScreen(this.props.location.pathname)
+      ? 'protected-content protected-content--full-screen'
+      : 'protected-content';
+    return <div className={pageClassName}>{content}</div>;
   }
 }
 
