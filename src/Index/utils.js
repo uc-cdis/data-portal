@@ -3,8 +3,6 @@ import { homepageChartNodes, datasetUrl } from '../localconf';
 import getReduxStore from '../reduxStore';
 import getHomepageChartProjectsList from './relayer';
 
-const union = (a, b) => [...new Set([...a, ...b])];
-
 const updateRedux = async (projectNodeCounts) =>
   getReduxStore().then(
     (store) => {
@@ -12,7 +10,6 @@ const updateRedux = async (projectNodeCounts) =>
         type: 'RECEIVE_INDEX_PAGE_CHART_DATASETS',
         projectNodeCounts,
         homepageChartNodes,
-        fileNodes: store.getState().submission.file_nodes,
       });
     },
     (err) => {
@@ -30,10 +27,7 @@ const updateRedux = async (projectNodeCounts) =>
 export const loadHomepageChartDataFromDatasets = async (callback) => {
   const resultStatus = { needLogin: false };
 
-  const store = await getReduxStore();
-  const fileNodes = store.getState().submission.file_nodes;
-  const nodesForIndexChart = homepageChartNodes.map((item) => item.node);
-  const nodesToRequest = union(fileNodes, nodesForIndexChart);
+  const nodesToRequest = homepageChartNodes.map((item) => item.node);
   const url = `${datasetUrl}?nodes=${nodesToRequest.join(',')}`;
 
   fetchWithCreds({
