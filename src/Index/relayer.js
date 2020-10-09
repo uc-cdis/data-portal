@@ -2,7 +2,6 @@ import { fetchQuery } from 'relay-runtime';
 import environment from '../environment';
 import { GQLHelper } from '../gqlHelper';
 import getReduxStore from '../reduxStore';
-import { config } from '../params';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
@@ -38,7 +37,7 @@ const updateReduxError = async (error) =>
  * @return {projectList, summaryCounts}
  */
 const transformRelayProps = (data) => {
-  const nodeCount = config.graphql.boardCounts.length;
+  const nodeCount = Object.keys(data).length - 1;
   const projectList = (data.projectList || []).map((proj) =>
     // fill in missing properties
     Object.assign(
