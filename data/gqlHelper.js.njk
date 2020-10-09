@@ -27,6 +27,12 @@ const helperSingleton = {
     {% endfor %}
   }`,
 
+  indexPageCountsQuery: graphql`query gqlHelperIndexPageCountsQuery {
+    count_total: _subject_count
+    {% for id in dataContributorIdList %}count_{{ loop.index }}: _subject_count(data_contributor_id: "{{ id }}")
+    {% endfor %}
+  }`,
+
   submissionPageQuery: graphql`query gqlHelperSubmissionPageQuery {
     projectList: project(first: 10000) {
       name: project_id
