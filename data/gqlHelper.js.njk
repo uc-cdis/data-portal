@@ -193,6 +193,13 @@ export class GQLHelper {
     );
   }
 
+  static getDataContributorIdList() {
+    return [
+      {% for id in dataContributorIdList %}'{{ id }}',
+      {% endfor %}
+    ]
+  }
+
   static updateOffset(data, cursors) {
     const fileLengthData = Object.keys(data).filter(key => key.indexOf('fileData') === 0).reduce(
       (map, key) => {
