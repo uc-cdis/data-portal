@@ -12,7 +12,7 @@ const updateRedux = async ({ projectList, summaryCounts }) =>
       const indexState = store.getState().index || {};
       if (!indexState.projectsByName) {
         store.dispatch({
-          type: 'RECEIVE_HOMEPAGE_CHART_PROJECT_LIST',
+          type: 'RECEIVE_INDEX_PAGE_CHART_PROJECT_LIST',
           data: { projectList, summaryCounts },
         });
         return 'dispatch';
@@ -85,7 +85,7 @@ const updateProjectDetailToRedux = (projInfo) => {
   getReduxStore()
     .then((store) => {
       store.dispatch({
-        type: 'RECEIVE_HOMEPAGE_CHART_PROJECT_DETAIL',
+        type: 'RECEIVE_INDEX_PAGE_CHART_PROJECT_DETAIL',
         data: projInfo,
       });
     })

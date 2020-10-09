@@ -9,7 +9,7 @@ const updateRedux = async (projectNodeCounts) =>
   getReduxStore().then(
     (store) => {
       store.dispatch({
-        type: 'RECEIVE_HOMEPAGE_CHART_DATASETS',
+        type: 'RECEIVE_INDEX_PAGE_CHART_DATASETS',
         projectNodeCounts,
         homepageChartNodes,
         fileNodes: store.getState().submission.file_nodes,

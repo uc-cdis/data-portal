@@ -2,7 +2,7 @@ import { components } from '../params';
 
 const index = (state = {}, action) => {
   switch (action.type) {
-    case 'RECEIVE_HOMEPAGE_CHART_DATASETS': {
+    case 'RECEIVE_INDEX_PAGE_CHART_DATASETS': {
       const { projectNodeCounts, homepageChartNodes, fileNodes } = action;
       const nodesForIndexChart = homepageChartNodes.map((item) => item.node);
 
@@ -45,7 +45,7 @@ const index = (state = {}, action) => {
       }
       return { ...state, projectsByName, countNames };
     }
-    case 'RECEIVE_HOMEPAGE_CHART_PROJECT_LIST': {
+    case 'RECEIVE_INDEX_PAGE_CHART_PROJECT_LIST': {
       //
       // Note - save projectsByName, b/c we acquire more data for individual tables
       // over time
@@ -70,7 +70,7 @@ const index = (state = {}, action) => {
         countNames: components.charts.indexChartNames,
       };
     }
-    case 'RECEIVE_HOMEPAGE_CHART_PROJECT_DETAIL': {
+    case 'RECEIVE_INDEX_PAGE_CHART_PROJECT_DETAIL': {
       const projectsByName = Object.assign({}, state.projectsByName || {});
       projectsByName[action.data.name] = action.data;
       const lastestDetailsUpdating = Date.now();
