@@ -1,5 +1,3 @@
-import { components } from '../params';
-
 const index = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_INDEX_PAGE_CHART_DATASETS': {
@@ -67,7 +65,7 @@ const index = (state = {}, action) => {
         projectsByName,
         summaryCounts,
         lastestListUpdating,
-        countNames: components.charts.indexChartNames,
+        countNames: ['Persons', 'Subjects'],
       };
     }
     case 'RECEIVE_INDEX_PAGE_CHART_PROJECT_DETAIL': {
