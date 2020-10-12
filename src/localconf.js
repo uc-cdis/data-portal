@@ -119,12 +119,6 @@ function buildConfig(opts) {
     typeof manifestServiceURL === 'undefined'
       ? `${hostname}manifests/`
       : ensureTrailingSlash(manifestServiceURL);
-  // backward compatible: homepageChartNodes not set means using graphql query,
-  // which will return 401 UNAUTHORIZED if not logged in, thus not making public
-  let indexPublic = true;
-  if (typeof components.index.homepageChartNodes === 'undefined') {
-    indexPublic = false;
-  }
 
   let explorerConfig = [];
   // for backward compatibilities
@@ -264,9 +258,7 @@ function buildConfig(opts) {
     workspaceStatusUrl,
     workspaceLaunchUrl,
     workspaceTerminateUrl,
-    homepageChartNodes: components.index.homepageChartNodes,
     datasetUrl,
-    indexPublic,
     fenceDownloadPath,
     guppyUrl,
     guppyGraphQLUrl,
