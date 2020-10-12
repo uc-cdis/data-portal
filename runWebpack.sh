@@ -152,10 +152,7 @@ if [[ "$GEN3_BUNDLE" != "workspace" ]]; then
   npm run sanity-check
 fi
 
-# try to keep the arranger components in line
-#export STORYBOOK_ARRANGER_API=localhost:3000
 export STORYBOOK_PROJECT_ID=search
-export REACT_APP_ARRANGER_API=/api/v0/flat-search
 export REACT_APP_PROJECT_ID=search
 export REACT_APP_DISABLE_SOCKET=true
 

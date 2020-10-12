@@ -14,7 +14,7 @@ Example configuration:
             // displayed in table:
             "tableFields": ["condition", ...],
         },
-        "singleItemConfig": { //optional, if omitted, "listItemConfig" block will be used for both pages
+        "singleItemConfig": { // optional, if omitted, "listItemConfig" block will be used for both pages
             // displayed outside of table:
             "blockFields": ["long_description"],
             // displayed in table:
@@ -22,11 +22,25 @@ Example configuration:
         },
         "fieldMapping": [...],
         "rowAccessor": "project_id", // rows unique ID
-        "downloadField": "object_id", // GUID
         "fileDataType": "clinicalTrialFile", // ES index of the clinical trial object files, optional
         "docDataType": "openAccessFile", // ES index of the open access documents, optional
         "openMode": "open-first", // optional, configure how the study viewer list do with each collapsible card on initial loading, see details in notes
         "openFirstRowAccessor": "", // optional, only works if `openMode` is `open-first`
+        "buttons": [
+            {
+                "type": "download",
+                "downloadField": "object_id", // GUID - Note: unused for now, hardcoded to "object_id" (TODO)
+                "singleItemView": false, // whether to display this button in the single item view (default: true)
+                "listView": true, // whether to display this button in the list view (default: true)
+            },
+            {
+                "type": "request_access",
+                "resourceDisplayNameField": "title",
+                "redirectModalText": "", // optional, link label for the URL in "You will now be sent to <URL>"
+                "accessRequestedText": "DAR In Progress", // optional, button text that will be overridden for the disabled button when user already has a request in SUBMITTED state. If omitted, the default text will be "Access Requested"
+                "accessRequestedTooltipText": "Your recently submitted DAR is being reviewed" // optional, button tooltip that will be displayed for the disabled button when user already has a request in SUBMITTED state. If omitted, there will be no tooltip showing up by default
+            }
+        ]
     },
     {
         ....another study viewer config
