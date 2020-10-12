@@ -8,10 +8,6 @@ import { studyViewerConfig } from '../localconf';
 import './Introduction.less';
 
 class IntroductionNIAID extends Component {
-  static propTypes = {
-    data: PropTypes.object.isRequired,
-  };
-
   render() {
     const buttonURL = `/study-viewer/${studyViewerConfig && studyViewerConfig[0] && studyViewerConfig[0].dataType}`;
     return (
@@ -41,6 +37,7 @@ class IntroductionNIAID extends Component {
 }
 
 IntroductionNIAID.propTypes = {
+  data: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
 };
 

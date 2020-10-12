@@ -7,11 +7,6 @@ import { useArboristUI } from '../configs';
 import { userHasMethodOnAnyProject } from '../authMappingUtils';
 
 class Introduction extends Component {
-  static propTypes = {
-    data: PropTypes.object.isRequired,
-    dictIcons: PropTypes.object.isRequired,
-  };
-
   render() {
     let buttonText = 'Submit Data';
     if (useArboristUI) {
@@ -50,6 +45,8 @@ class Introduction extends Component {
 }
 
 Introduction.propTypes = {
+  data: PropTypes.object.isRequired,
+  dictIcons: PropTypes.object.isRequired,
   userAuthMapping: PropTypes.object.isRequired,
 };
 

@@ -22,6 +22,7 @@ const configFileName = (app === 'dev') ? 'default' : app;
 // eslint-disable-next-line import/no-dynamic-require
 const configFile = require(`./data/config/${configFileName}.json`);
 const iFrameApplicationURLs = [];
+const injectDAPTag = configFile.injectDAPTag;
 if (configFile && configFile.analysisTools) {
   configFile.analysisTools.forEach((e) => {
     if (e.applicationUrl) {
@@ -55,7 +56,7 @@ const plugins = [
       WORKSPACE_TIMEOUT_IN_MINUTES: process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480,
       REACT_APP_PROJECT_ID: JSON.stringify(process.env.REACT_APP_PROJECT_ID || 'search'),
       REACT_APP_DISABLE_SOCKET: JSON.stringify(process.env.REACT_APP_DISABLE_SOCKET || 'true'),
-    }
+    },
   }),
   new HtmlWebpackPlugin({
     title: title,
@@ -85,9 +86,9 @@ const plugins = [
       }
       return Object.keys(rv).join(' ');
     })(),
-    dap_tag: (process.env.HOSTNAME === 'accessclinicaldata.niaid.nih.gov' || process.env.HOSTNAME === 'mingfei.planx-pla.net'),
+    dap_tag: injectDAPTag,
     hash: true,
-    chunks: ['vendors~bundle', 'bundle']
+    chunks: ['vendors~bundle', 'bundle'],
   }),
   /*
   Can do this kind of thing to deploy multi-page apps in the future ...
