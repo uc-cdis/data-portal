@@ -1,5 +1,7 @@
 .protected-content {
   width: 100%;
+  margin: auto;
+  min-height: calc(100vh - 221px);
   background-color: var(--g3-color__bg-cloud);
 }
 

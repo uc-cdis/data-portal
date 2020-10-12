@@ -29,7 +29,6 @@ import GA, { RouteTracker } from './components/GoogleAnalytics';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
-import './index.css';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 
 

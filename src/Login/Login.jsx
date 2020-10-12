@@ -5,7 +5,7 @@ import Select from 'react-select';
 import createFilterOptions from 'react-select-fast-filter-options';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { basename } from '../localconf';
-// import { components } from '../params';
+import { components } from '../params';
 
 import './Login.less';
 
@@ -64,10 +64,17 @@ class Login extends React.Component {
     if (queryParams.next) {
       next = basename === '/' ? queryParams.next : basename + queryParams.next;
     }
-    // const customImage = components.login && components.login.image ?
-    //   components.login.image
-    //   : 'gene';
-    // const customImageStyle = { backgroundImage: `url(/src/img/icons/${customImage}.svg)` };
+
+    let customImage = 'gene';
+    let displaySideBoxImages = true;
+    if (components.login && components.login.image !== undefined) {
+      if (components.login.image !== '') {
+        customImage = components.login.image;
+      } else {
+        displaySideBoxImages = false;
+      }
+    }
+    const customImageStyle = { backgroundImage: `url(/src/img/icons/${customImage}.svg)` };
     next = next.replace('?request_access', '?request_access_logged_in');
 
     let loginComponent = (
@@ -168,6 +175,11 @@ class Login extends React.Component {
 
     return (
       <div className='login-page'>
+        {
+          (displaySideBoxImages) ?
+            <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
+            : null
+        }
         <div className='login-page__central-content'>
           <div className='h1-typo login-page__title'>
             {this.props.data.title}
@@ -196,6 +208,11 @@ class Login extends React.Component {
             {'.'}
           </div>
         </div>
+        {
+          (displaySideBoxImages) ?
+            <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
+            : null
+        }
       </div>
     );
   }

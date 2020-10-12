@@ -70,10 +70,8 @@ class IndexPageComponent extends React.Component {
       });
     }
 
-    if (indexPublic && homepageChartNodes.length > 0) {
-      homepageCharts.push(<div className='index-page__slider-chart'><ReduxIndexBarChart /></div>);
-    } else if (!indexPublic) {
-      homepageCharts.push(<div className='index-page__slider-chart'><ReduxIndexBarChart /></div>);
+    if (homepageChartNodes.length > 0) {
+      homepageCharts.push(<div key={homepageCharts.length} className='index-page__slider-chart'><ReduxIndexBarChart /></div>);
     }
 
     return (

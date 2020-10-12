@@ -44,7 +44,6 @@ import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
-import './index.css';
 import NotFound from './components/NotFound';
 
 

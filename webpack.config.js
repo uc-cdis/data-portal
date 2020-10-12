@@ -120,7 +120,8 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
 const entry = {
   "bundle": ['babel-polyfill', './src/index.jsx'],
   "workspaceBundle": ['babel-polyfill', './src/workspaceIndex.jsx'],
-  "covid19Bundle": ['babel-polyfill', './src/covid19Index.jsx']
+  "covid19Bundle": ['babel-polyfill', './src/covid19Index.jsx'],
+  "nctBundle": ['babel-polyfill', './src/nctIndex.jsx']
 };
 
 if (process.env.GEN3_BUNDLE === 'workspace') {
@@ -128,14 +129,22 @@ if (process.env.GEN3_BUNDLE === 'workspace') {
   entry.bundle = entry.workspaceBundle;
   delete entry.workspaceBundle;
   delete entry.covid19Bundle;
+  delete entry.nctBundle;
 } else if (process.env.GEN3_BUNDLE === 'covid19') {
   entry.bundle = entry.covid19Bundle;
   delete entry.workspaceBundle;
   delete entry.covid19Bundle;
+  delete entry.nctBundle;
+} else if (process.env.GEN3_BUNDLE === 'nct') {
+  entry.bundle = entry.nctBundle;
+  delete entry.workspaceBundle;
+  delete entry.covid19Bundle;
+  delete entry.nctBundle;
 } else if (process.env.GEN3_BUNDLE === 'commons') {
   // optimize webpack build
   delete entry.workspaceBundle;
   delete entry.covid19Bundle;
+  delete entry.nctBundle;
 }
 // else - by default build all entry points
 //    note that runWebpack ensures GEN3_BUNDLE is set,
