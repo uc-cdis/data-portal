@@ -6,14 +6,14 @@ import { GQLHelper } from '../gqlHelper';
 import getReduxStore from '../reduxStore';
 
 const { indexPageQuery } = GQLHelper.getGQLHelper();
-const dataContributorIdList = GQLHelper.getDataContributorIdList();
+const consortiumList = GQLHelper.getConsortiumList();
 
 export const getIndexPageChartData = () =>
   checkIfNeedsUpdate().then(
     (needsUpdate) => {
       if (needsUpdate)
         fetchQuery(environment, indexPageQuery, {}).then((data) =>
-          updateRedux({ ...data, names: dataContributorIdList })
+          updateRedux({ ...data, names: consortiumList })
         );
     },
     (error) => updateReduxError(error)

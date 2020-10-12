@@ -18,7 +18,7 @@ const helperSingleton = {
    */
   indexPageQuery: graphql`query gqlHelperIndexPageQuery {
     count_total: _subject_count
-    {% for id in dataContributorIdList %}count_{{ loop.index }}: _subject_count(data_contributor_id: "{{ id }}")
+    {% for id in consortiumList %}count_{{ loop.index }}: _subject_count(consortium: "{{ id }}")
     {% endfor %}
   }`,
 
@@ -188,9 +188,9 @@ export class GQLHelper {
     );
   }
 
-  static getDataContributorIdList() {
+  static getConsortiumList() {
     return [
-      {% for id in dataContributorIdList %}'{{ id }}',
+      {% for id in consortiumList %}'{{ id }}',
       {% endfor %}
     ]
   }
