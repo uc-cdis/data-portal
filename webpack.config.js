@@ -85,6 +85,7 @@ const plugins = [
       }
       return Object.keys(rv).join(' ');
     })(),
+    dap_tag: (process.env.GEN3_BUNDLE === 'nct'),
     hash: true,
     chunks: ['vendors~bundle', 'bundle']
   }),
