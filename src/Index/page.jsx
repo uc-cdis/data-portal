@@ -13,7 +13,7 @@ import { components } from '../params';
 import { breakpoints } from '../localconf';
 import './page.less';
 
-function IndexPage(props) {
+function IndexPage({ history }) {
   useEffect(() => {
     getIndexPageChartData();
   }, []);
@@ -36,7 +36,7 @@ function IndexPage(props) {
           </MediaQuery>
         </div>
       </div>
-      <ReduxIndexButtonBar {...props} />
+      <ReduxIndexButtonBar history={history} />
     </div>
   );
 }
