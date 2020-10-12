@@ -85,7 +85,7 @@ const plugins = [
       }
       return Object.keys(rv).join(' ');
     })(),
-    dap_tag: (process.env.GEN3_BUNDLE === 'nct'),
+    dap_tag: (process.env.HOSTNAME === 'accessclinicaldata.niaid.nih.gov' || process.env.HOSTNAME === 'mingfei.planx-pla.net'),
     hash: true,
     chunks: ['vendors~bundle', 'bundle']
   }),
