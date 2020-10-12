@@ -5,14 +5,14 @@ import environment from '../environment';
 import { GQLHelper } from '../gqlHelper';
 import getReduxStore from '../reduxStore';
 
-const { indexPageCountsQuery } = GQLHelper.getGQLHelper();
+const { indexPageQuery } = GQLHelper.getGQLHelper();
 const dataContributorIdList = GQLHelper.getDataContributorIdList();
 
 export const getIndexPageChartData = () =>
   checkIfNeedsUpdate().then(
     (needsUpdate) => {
       if (needsUpdate)
-        fetchQuery(environment, indexPageCountsQuery, {}).then((data) =>
+        fetchQuery(environment, indexPageQuery, {}).then((data) =>
           updateRedux({ ...data, names: dataContributorIdList })
         );
     },
