@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import {
   ReduxIndexButtonBar,
   ReduxIndexBarChart,
@@ -37,14 +34,6 @@ class IndexPageComponent extends React.Component {
   }
 
   render() {
-    const sliderSettings = {
-      dots: true,
-      infinite: false,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      arrows: true,
-    };
     return (
       <div className='index-page'>
         <div className='index-page__top'>
@@ -59,11 +48,7 @@ class IndexPageComponent extends React.Component {
           </div>
           <div className='index-page__bar-chart'>
             <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-              <Slider {...sliderSettings}>
-                <div className='index-page__slider-chart'>
-                  <ReduxIndexBarChart />
-                </div>
-              </Slider>
+              <ReduxIndexBarChart />
             </MediaQuery>
           </div>
         </div>
