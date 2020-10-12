@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import {
@@ -13,34 +13,32 @@ import { components } from '../params';
 import { breakpoints } from '../localconf';
 import './page.less';
 
-class IndexPage extends React.Component {
-  componentDidMount() {
+function IndexPage(props) {
+  useEffect(() => {
     getIndexPageChartData();
-  }
+  }, []);
 
-  render() {
-    return (
-      <div className='index-page'>
-        <div className='index-page__top'>
-          <div className='index-page__introduction'>
-            <ReduxIntroduction
-              data={components.index.introduction}
-              dictIcons={dictIcons}
-            />
-            <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
-              <ReduxIndexCounts />
-            </MediaQuery>
-          </div>
-          <div className='index-page__bar-chart'>
-            <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-              <ReduxIndexBarChart />
-            </MediaQuery>
-          </div>
+  return (
+    <div className='index-page'>
+      <div className='index-page__top'>
+        <div className='index-page__introduction'>
+          <ReduxIntroduction
+            data={components.index.introduction}
+            dictIcons={dictIcons}
+          />
+          <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
+            <ReduxIndexCounts />
+          </MediaQuery>
         </div>
-        <ReduxIndexButtonBar {...this.props} />
+        <div className='index-page__bar-chart'>
+          <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
+            <ReduxIndexBarChart />
+          </MediaQuery>
+        </div>
       </div>
-    );
-  }
+      <ReduxIndexButtonBar {...props} />
+    </div>
+  );
 }
 
 IndexPage.propTypes = {
