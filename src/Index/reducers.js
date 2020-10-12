@@ -5,7 +5,7 @@ const index = (state = {}, action) => {
 
       const projectsByName = {};
       for (const [key, count] of Object.entries(counts)) {
-        const index = parseInt(key.split('_')[1]);
+        const index = parseInt(key.split('_')[1]) - 1;
         const name = names[index];
         projectsByName[name] = { code: name, counts: [count], name };
       }
