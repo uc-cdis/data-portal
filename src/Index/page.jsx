@@ -10,12 +10,10 @@ import {
   ReduxIndexCounts,
   ReduxIntroduction,
 } from './reduxer';
+import { getIndexPageChartData } from './relayer';
 import dictIcons from '../img/icons';
 import { components } from '../params';
-import {
-  loadHomepageChartDataFromDatasets,
-  loadHomepageChartDataFromGraphQL,
-} from './utils';
+import { loadHomepageChartDataFromDatasets } from './utils';
 import { breakpoints, indexPublic } from '../localconf';
 import './page.less';
 
@@ -34,11 +32,7 @@ class IndexPageComponent extends React.Component {
         }
       });
     } else {
-      // If homepageChartNodes is not enabled in the config, we will only load
-      // the summary data for projects users have access to. We will still show
-      // charts on the homepage, but the charts will only contain data from projects
-      // the user has access to.
-      loadHomepageChartDataFromGraphQL();
+      getIndexPageChartData();
     }
   }
 
