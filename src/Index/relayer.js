@@ -1,17 +1,19 @@
+/* eslint no-console: ["error", { allow: ["error"] }] */
+
 import { fetchQuery } from 'relay-runtime';
 import environment from '../environment';
 import { GQLHelper } from '../gqlHelper';
 import getReduxStore from '../reduxStore';
 
-const gqlHelper = GQLHelper.getGQLHelper();
+const { indexPageCountsQuery } = GQLHelper.getGQLHelper();
 const dataContributorIdList = GQLHelper.getDataContributorIdList();
 
 export const getIndexPageChartData = () =>
   checkIfNeedsUpdate().then(
     (needsUpdate) => {
       if (needsUpdate)
-        fetchQuery(environment, gqlHelper.indexPageCountsQuery, {}).then(
-          updateRedux
+        fetchQuery(environment, indexPageCountsQuery, {}).then((data) =>
+          updateRedux({ ...data, names: dataContributorIdList })
         );
     },
     (error) => updateReduxError(error)
@@ -25,30 +27,18 @@ const checkIfNeedsUpdate = () =>
       // true if never updated or last updated at >5 mins
       return updatedAt === undefined || Date.now() - updatedAt > 300000;
     },
-    (err) => {
-      /* eslint no-console: ["error", { allow: ["error"] }] */
-      console.error('WARNING: failed to load redux store', err);
-      return 'ERR';
-    }
+    (err) => console.error('WARNING: failed to load redux store', err)
   );
 
 const updateRedux = (data) =>
   getReduxStore().then(
     (store) => {
-      const indexState = store.getState().index || {};
-      if (!indexState.projectsByName) {
-        store.dispatch({
-          type: 'RECEIVE_INDEX_PAGE_COUNTS',
-          data: { ...data, names: dataContributorIdList },
-        });
-        return 'dispatch';
-      }
-      return 'NOOP';
+      const { projectsByName } = store.getState().index;
+
+      if (projectsByName === undefined)
+        store.dispatch({ type: 'RECEIVE_INDEX_PAGE_COUNTS', data });
     },
-    (err) => {
-      console.error('WARNING: failed to load redux store', err);
-      return 'ERR';
-    }
+    (err) => console.error('WARNING: failed to load redux store', err)
   );
 
 const updateReduxError = (error) =>
