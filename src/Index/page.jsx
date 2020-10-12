@@ -13,7 +13,7 @@ import { components } from '../params';
 import { breakpoints } from '../localconf';
 import './page.less';
 
-class IndexPageComponent extends React.Component {
+class IndexPage extends React.Component {
   componentDidMount() {
     getIndexPageChartData();
   }
@@ -43,10 +43,8 @@ class IndexPageComponent extends React.Component {
   }
 }
 
-IndexPageComponent.propTypes = {
+IndexPage.propTypes = {
   history: PropTypes.object.isRequired,
 };
-
-const IndexPage = IndexPageComponent;
 
 export default IndexPage;
