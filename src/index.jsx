@@ -45,7 +45,6 @@ import {
   gaDebug,
   workspaceUrl,
   workspaceErrorUrl,
-  indexPublic,
   explorerPublic,
   enableResourceBrowser,
   resourceBrowserPublic,
@@ -113,11 +112,7 @@ async function init() {
                       exact
                       path='/'
                       component={(props) => (
-                        <ProtectedContent
-                          isPublic={indexPublic}
-                          component={IndexPage}
-                          {...props}
-                        />
+                        <ProtectedContent component={IndexPage} {...props} />
                       )}
                     />
                     <Route
