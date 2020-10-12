@@ -145,4 +145,24 @@ const getHomepageChartProjectsList = () => {
   );
 };
 
+export const getIndexPageChartData = () => {
+  fetchQuery(environment, gqlHelper.indexPageCountsQuery, {}).then(
+    (data) =>
+      getReduxStore().then(
+        (store) => {
+          store.dispatch({
+            type: 'RECEIVE_INDEX_PAGE_COUNTS',
+            data: { ...data, names: GQLHelper.getDataContributorIdList() },
+          });
+          return 'dispatch';
+        },
+        (err) => {
+          console.error('WARNING: failed to load redux store', err);
+          return 'ERR';
+        }
+      ),
+    (error) => console.error(error)
+  );
+};
+
 export default getHomepageChartProjectsList;
