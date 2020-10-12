@@ -21,7 +21,7 @@ import HomePage from './Homepage/page';
 import DocumentPage from './Document/page';
 import { fetchCoreMetadata, ReduxCoreMetadataPage } from './CoreMetadata/reduxer';
 import Indexing from './Indexing/Indexing';
-import IndexPage from './Index/page';
+import NCTIndexPage from './Index/nctPage';
 import DataDictionary from './DataDictionary';
 import ReduxPrivacyPolicy from './PrivacyPolicy/ReduxPrivacyPolicy';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
@@ -148,7 +148,7 @@ async function init() {
                       props => (
                         <ProtectedContent
                           public={indexPublic}
-                          component={IndexPage}
+                          component={NCTIndexPage}
                           {...props}
                         />
                       )

@@ -1,19 +1,27 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import parse from 'html-react-parser';
-import { withRouter } from 'react-router-dom';
-import { Space } from 'antd';
-import Button from '@gen3/ui-component/dist/components/Button';
-import { studyViewerConfig } from '../localconf';
+import IconicLink from './buttons/IconicLink';
 import './Introduction.less';
+import { useArboristUI } from '../configs';
+import { userHasMethodOnAnyProject } from '../authMappingUtils';
 
 class Introduction extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired,
+    dictIcons: PropTypes.object.isRequired,
   };
 
   render() {
-    const buttonURL = `/study-viewer/${studyViewerConfig && studyViewerConfig[0] && studyViewerConfig[0].dataType}`;
+    let buttonText = 'Submit Data';
+    if (useArboristUI) {
+      if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
+        buttonText = 'Submit/Browse Data';
+      } else {
+        buttonText = 'Browse Data';
+      }
+    }
+
     return (
       <div className='introduction'>
         <h1>
@@ -26,22 +34,23 @@ class Introduction extends Component {
           {(this.props.data.multiLineTexts) ?
             (this.props.data.multiLineTexts.map((text, i) => <p key={i}>{parse(text)}</p>)) : null}
         </div>
-        <div className='introduction__button-area'>
-          <Space>
-            <Button
-              label={'View Clinical Trials'}
-              buttonType='primary'
-              onClick={() => this.props.history.push(buttonURL)}
-            />
-          </Space>
-        </div>
+        {(this.props.data.link) ?
+          (<IconicLink
+            link={this.props.data.link}
+            dictIcons={this.props.dictIcons}
+            className='introduction__icon'
+            icon='upload'
+            iconColor='#'
+            caption={buttonText}
+          />)
+          : null}
       </div>
     );
   }
 }
 
 Introduction.propTypes = {
-  history: PropTypes.object.isRequired,
+  userAuthMapping: PropTypes.object.isRequired,
 };
 
-export default withRouter(Introduction);
+export default Introduction;
