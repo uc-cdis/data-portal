@@ -14,7 +14,7 @@ const index = (state = {}, action) => {
         ...state,
         projectsByName,
         summaryCounts: { 0: count_total },
-        lastestListUpdating: Date.now(),
+        updatedAt: Date.now(),
         countNames: ['Subjects'],
       };
     }

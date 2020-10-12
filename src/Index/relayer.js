@@ -6,31 +6,24 @@ import getReduxStore from '../reduxStore';
 const gqlHelper = GQLHelper.getGQLHelper();
 const dataContributorIdList = GQLHelper.getDataContributorIdList();
 
-export const getIndexPageChartData = () => {
-  checkIndexState('lastestListUpdating').then(
-    (res) => {
-      if (res === 'OLD')
+export const getIndexPageChartData = () =>
+  checkIfNeedsUpdate().then(
+    (needsUpdate) => {
+      if (needsUpdate)
         fetchQuery(environment, gqlHelper.indexPageCountsQuery, {}).then(
           updateRedux
         );
     },
     (error) => updateReduxError(error)
   );
-};
 
-const checkIndexState = (stateName) =>
+const checkIfNeedsUpdate = () =>
   getReduxStore().then(
     (store) => {
-      const indexState = store.getState().index || {};
-      const nowMs = Date.now();
-      if (
-        !Object.prototype.hasOwnProperty.call(indexState, stateName) ||
-        (Object.prototype.hasOwnProperty.call(indexState, stateName) &&
-          nowMs - indexState[stateName] > 300000)
-      ) {
-        return 'OLD';
-      }
-      return 'FRESH';
+      const { updatedAt } = store.getState().index;
+
+      // true if never updated or last updated at >5 mins
+      return updatedAt === undefined || Date.now() - updatedAt > 300000;
     },
     (err) => {
       /* eslint no-console: ["error", { allow: ["error"] }] */
