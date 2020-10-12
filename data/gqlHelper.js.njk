@@ -17,13 +17,8 @@ const helperSingleton = {
    * Fetch the initial list of projects and global node counts
    */
   indexPageQuery: graphql`query gqlHelperIndexPageQuery {
-    projectList: project(first: 10000) {
-      name: project_id
-      code
-    }
-    {% for count in boardCounts %}count{{ loop.index }}: {{ count }}
-    {% endfor %}
-    {% for fType in fileTypeList %}fileCount{{ loop.index }}: _{{ fType }}_count
+    count_total: _subject_count
+    {% for id in consortiumList %}count_{{ loop.index }}: _subject_count(consortium: "{{ id }}")
     {% endfor %}
   }`,
 
@@ -191,6 +186,13 @@ export class GQLHelper {
         return res;
       }, {},
     );
+  }
+
+  static getConsortiumList() {
+    return [
+      {% for id in consortiumList %}'{{ id }}',
+      {% endfor %}
+    ]
   }
 
   static updateOffset(data, cursors) {
