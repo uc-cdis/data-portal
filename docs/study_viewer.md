@@ -19,6 +19,33 @@ Example configuration:
             "blockFields": ["long_description"],
             // displayed in table:
             "tableFields": ["condition", ...],
+            // optional configs for side boxes, only for single study viewer
+            "sideBoxes": [
+                {
+                "title": "Test Box",
+                "items": [
+                    {
+                        "type": "pdf",
+                        "link": "https://aaa",
+                        "name": "This is a PDF file"
+                    },
+                    {
+                        "type": "file",
+                        "link": "https://bbb",
+                        "name": "This is a file"
+                    },
+                    {
+                        "type": "link",
+                        "link": "https://ccc",
+                        "name": "This is a link"
+                    },
+                    {
+                        "link": "https://ddd",
+                        "name": "This is a default type file"
+                    }
+                ]
+                }
+            ]
         },
         "fieldMapping": [...],
         "rowAccessor": "project_id", // rows unique ID
