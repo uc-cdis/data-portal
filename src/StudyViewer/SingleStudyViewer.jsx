@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Space, Typography, Spin, Result } from 'antd';
-import { FileOutlined, FilePdfOutlined } from '@ant-design/icons';
+import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
 import { humanFileSize } from '../utils.js';
 import { ReduxStudyDetails, fetchDataset, fetchFiles, resetMultipleStudyData, fetchStudyViewerConfig } from './reduxer';
@@ -10,6 +10,28 @@ import getReduxStore from '../reduxStore';
 import './StudyViewer.css';
 
 const { Title } = Typography;
+
+const getSideBoxItem = (itemConfig) => {
+  let itemIcon = <FileOutlined />;
+  if (itemConfig.type) {
+    switch (itemConfig.type.toLowerCase()) {
+    case 'pdf':
+      itemIcon = <FilePdfOutlined />;
+      break;
+    case 'link':
+      itemIcon = <LinkOutlined />;
+      break;
+    default:
+      break;
+    }
+  }
+  return (
+    <div>
+      {itemIcon}
+      <a href={itemConfig.link}>{itemConfig.name}</a>
+    </div>
+  );
+};
 
 class SingleStudyViewer extends React.Component {
   constructor(props) {
@@ -73,6 +95,10 @@ class SingleStudyViewer extends React.Component {
         </div>
       );
     }
+    const sideBoxesConfig = (studyViewerConfig
+      && studyViewerConfig.singleItemConfig
+      && studyViewerConfig.singleItemConfig.sideBoxes)
+      ? studyViewerConfig.singleItemConfig.sideBoxes : null;
     return (
       <div className='study-viewer'>
         <BackLink url={backURL} label='Back' />
@@ -89,6 +115,23 @@ class SingleStudyViewer extends React.Component {
             />
             <div className='study-viewer__details-sidebar'>
               <Space direction='vertical' style={{ width: '100%' }}>
+                {(sideBoxesConfig && sideBoxesConfig.length > 0) ?
+                  (sideBoxesConfig.map((sbConfigItem, sbConfigIndex) => (
+                    <div className='study-viewer__details-sidebar-box' key={`side_box_item_${sbConfigIndex}`}>
+                      <Space className='study-viewer__details-sidebar-space' direction='vertical'>
+                        <div className='h3-typo'>{sbConfigItem.title}</div>
+                        {(sbConfigItem.items) ?
+                          (sbConfigItem.items.map((it, itIndex) => (
+                            <div key={`side_box_item_${itIndex}`}>
+                              {getSideBoxItem(it)}
+                            </div>
+                          )))
+                          : null}
+                      </Space>
+                    </div>
+                  )))
+                  : null
+                }
                 {(this.props.docData.length > 0) ?
                   <div className='study-viewer__details-sidebar-box'>
                     <Space className='study-viewer__details-sidebar-space' direction='vertical'>
