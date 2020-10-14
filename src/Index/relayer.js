@@ -5,7 +5,7 @@ import environment from '../environment';
 import { GQLHelper } from '../gqlHelper';
 import getReduxStore from '../reduxStore';
 
-const { indexPageQuery } = GQLHelper.getGQLHelper();
+const { indexPageQuery, indexPageOverviewQuery } = GQLHelper.getGQLHelper();
 const consortiumList = GQLHelper.getConsortiumList();
 
 export const getIndexPageChartData = () =>
@@ -17,6 +17,26 @@ export const getIndexPageChartData = () =>
         );
     },
     (error) => updateReduxError(error)
+  );
+
+export const getIndexPageOverviewData = () =>
+  getReduxStore().then(
+    (store) => {
+      const { overviewCounts } = store.getState().index;
+      const needsUpdate =
+        overviewCounts === undefined ||
+        Date.now() - overviewCounts.updatedAt > 300000;
+      if (needsUpdate)
+        fetchQuery(environment, indexPageOverviewQuery, {}).then(
+          (data) =>
+            store.dispatch({
+              type: 'RECEIVE_INDEX_PAGE_OVERVIEW_COUNTS',
+              data: { ...data, names: consortiumList },
+            }),
+          (error) => updateReduxError(error)
+        );
+    },
+    (err) => console.error('WARNING: failed to load redux store', err)
   );
 
 const checkIfNeedsUpdate = () =>
