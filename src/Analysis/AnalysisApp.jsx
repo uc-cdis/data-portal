@@ -39,7 +39,7 @@ class AnalysisApp extends React.Component {
   onSubmitJob = (e) => {
     e.preventDefault();
     this.clearResult();
-    this.props.submitJob({ organ: this.state.jobInput });
+    this.props.submitJob({ organ: this.state.jobInput ? this.state.jobInput.value : null });
     this.props.checkJobStatus();
   }
 
@@ -88,7 +88,7 @@ class AnalysisApp extends React.Component {
 
   selectChange = (option) => {
     this.setState({
-      jobInput: option ? option.value : null,
+      jobInput: option,
       results: null,
     }, () => {
       if (option === null || this.props.job) {
