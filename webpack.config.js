@@ -111,9 +111,9 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
   // optimization for production mode
   optimization = {
     splitChunks: {
-      chunks: 'all'
-    }
-  }
+      chunks: 'all',
+    },
+  };
 } else {
   // add sourcemap tools for development mode
   devtool = 'eval-source-map';
@@ -126,29 +126,37 @@ const entry = {
   "nctBundle": ['babel-polyfill', './src/nctIndex.jsx']
 };
 
-if (process.env.GEN3_BUNDLE === 'workspace') {
-  // Just build the workspace bundle as bundle.js
-  entry.bundle = entry.workspaceBundle;
-  delete entry.workspaceBundle;
-  delete entry.covid19Bundle;
-  delete entry.nctBundle;
-} else if (process.env.GEN3_BUNDLE === 'covid19') {
-  entry.bundle = entry.covid19Bundle;
-  delete entry.workspaceBundle;
-  delete entry.covid19Bundle;
-  delete entry.nctBundle;
-} else if (process.env.GEN3_BUNDLE === 'nct') {
-  entry.bundle = entry.nctBundle;
-  delete entry.workspaceBundle;
-  delete entry.covid19Bundle;
-  delete entry.nctBundle;
-} else if (process.env.GEN3_BUNDLE === 'commons') {
-  // optimize webpack build
-  delete entry.workspaceBundle;
-  delete entry.covid19Bundle;
-  delete entry.nctBundle;
+// if GEN3_BUNDLE is set with a value
+if (process.env.GEN3_BUNDLE) {
+  switch (process.env.GEN3_BUNDLE) {
+  case 'workspace':
+    // Just build the workspace bundle as bundle.js
+    entry.bundle = entry.workspaceBundle;
+    delete entry.workspaceBundle;
+    delete entry.covid19Bundle;
+    delete entry.nctBundle;
+    break;
+  case 'covid19':
+    entry.bundle = entry.covid19Bundle;
+    delete entry.workspaceBundle;
+    delete entry.covid19Bundle;
+    delete entry.nctBundle;
+    break;
+  case 'nct':
+    entry.bundle = entry.nctBundle;
+    delete entry.workspaceBundle;
+    delete entry.covid19Bundle;
+    delete entry.nctBundle;
+    break;
+  default:
+    // by default we build for commons bundle
+    delete entry.workspaceBundle;
+    delete entry.covid19Bundle;
+    delete entry.nctBundle;
+    break;
+  }
 }
-// else - by default build all entry points
+// else - if GEN3_BUNDLE is NOT set then build all entry points
 //    note that runWebpack ensures GEN3_BUNDLE is set,
 //    and the Dockerfile leaves it unset ...
 
@@ -161,8 +169,8 @@ module.exports = {
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
     path: __dirname,
-	  filename: '[name].js',
-	  publicPath: basename,
+    filename: '[name].js',
+    publicPath: basename,
   },
   optimization,
   devtool,
@@ -178,52 +186,52 @@ module.exports = {
   },
   module: {
     rules: [{
-        test: /\.jsx?$/,
-        exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
-        use: {
-          loader: 'babel-loader',
-        },
+      test: /\.jsx?$/,
+      exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
+      use: {
+        loader: 'babel-loader',
       },
-      {
-        test: /\.less$/,
-        loaders: [
-          'style-loader',
-          'css-loader',
-          'less-loader',
-        ]
+    },
+    {
+      test: /\.less$/,
+      loaders: [
+        'style-loader',
+        'css-loader',
+        'less-loader',
+      ],
+    },
+    {
+      test: /\.css$/,
+      loader: 'style-loader!css-loader',
+    },
+    {
+      test: /\.svg$/,
+      loaders: ['babel-loader', 'react-svg-loader'],
+    },
+    {
+      test: /\.(png|jpg|gif|woff|ttf|eot)$/,
+      loaders: 'url-loader',
+      query: {
+        limit: 8192,
       },
-      {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader',
-      },
-      {
-        test: /\.svg$/,
-        loaders: ['babel-loader', 'react-svg-loader'],
-      },
-      {
-        test: /\.(png|jpg|gif|woff|ttf|eot)$/,
-        loaders: 'url-loader',
-        query: {
-          limit: 8192
-        }
-      },
-      {
-        test: /\.flow$/,
-        loader: 'ignore-loader'
-      }
-    ]
+    },
+    {
+      test: /\.flow$/,
+      loader: 'ignore-loader',
+    },
+    ],
   },
   resolve: {
     alias: {
       graphql: path.resolve('./node_modules/graphql'),
       react: path.resolve('./node_modules/react'), // Same issue.
       graphiql: path.resolve('./node_modules/graphiql'),
-      'graphql-language-service-parser': path.resolve('./node_modules/graphql-language-service-parser')
+      'graphql-language-service-parser': path.resolve('./node_modules/graphql-language-service-parser'),
     },
-    extensions: ['.mjs', '.js', '.jsx', '.json',]
+    extensions: ['.mjs', '.js', '.jsx', '.json'],
   },
   plugins,
   externals: [{
-    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'
-  }]
+    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}',
+  }],
 };
