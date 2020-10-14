@@ -1,13 +1,9 @@
 Tube 0.4.1 has a breaking change that causes all fields named `{index}_id` to be replaced with `_{index}_id`.
 https://github.com/uc-cdis/tube/commit/dfcfd512f5cbe69e0a0ead84b0151417c88ebc40#diff-c03e4605886891e20137f944855ecd8cR202
 
-If the Data index is of data type `subject`, then this causes all commons' `subject_id` fields to become `_subject_id`, requiring changes to the portal config where those fields are referenced.
+E.g. If the `data` index has data type `subject`, then this causes the `subject.subject_id` fields to become `subject._subject_id`. Likewise if the data type is `case`, `case.case_id` -> `case._case_id`. If the data type is `file`, `file.file_id` -> `file._file_id`. You get the idea.
 
-Changes required:
-> NOTE Assumes data type is `subject`, if it is `case` do `case_id` -> `_case_id` instead
-- Any references to `subject_id` as a field in the `dataExplorerConfig.charts` or `dataExplorerConfig.filters` block should be changed from `subject_id` -> `_subject_id`
-- `dataExplorerConfig.manifestMapping.referenceIdFieldInDataIndex` should be changed from `subject_id` -> `_subject_id`
-> NOTE **huge gotcha**: `dataExplorerConfig.manifestMapping.referenceIdFieldInResourceIndex`, should NOT change from `subject_id` -> `_subject_id` -- it should remain as `subject_id`. This is because this is actually referring to the *subject_id field in the File index*, which remains unchanged as `subject_id`.
-- `fileExplorerConfig.manifestMapping.resourceIdField` should be changed from `subject_id` -> `_subject_id`
-
-If there are any other instances of `subject_id` that show up in the portal config, you may also need to change those if they refer to `subject._subject_id` and not `file.subject_id`.
+To migrate a commons to the new version of tube, follow these steps:
+1. Make a list of all the `doc_type` fields in etlMapping.yaml.
+2. Change any instance of `{doc_type}_id` to `_{doc_type}_id` in gitops.json and etlMapping.yaml. (E.g. if `doc_type` is `subject`, replace all instances of `subject_id` in etlMapping.yaml and gitops.json with `_subject_id` )
+3. If there is no change to the etlMapping in the PR, manually add a comment to the etlMapping or change the order of two props in order to force gitops-sync to run the ETL.

@@ -3,7 +3,6 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import 'react-select/dist/react-select.css';
 import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
