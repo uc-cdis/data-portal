@@ -40,7 +40,8 @@ export default class SelectComponent extends Component {
     this.setState(makeDefaultSelectedState(this.props.selectedValue));
   }
 
-  doChangeSelectedValue(value) {
+  doChangeSelectedValue(option) {
+    const value = option ? option.value : null;
     this.setState({ selectedValue: value });
     this.props.onChange(value);
   }
@@ -55,9 +56,9 @@ export default class SelectComponent extends Component {
           className='selection__select'
           name={this.props.title}
           options={options}
-          value={this.state.selectedValue}
+          value={{ value: this.state.selectedValue, lable: this.state.selectedValue }}
           placeholder={this.props.placeholder}
-          onChange={event => this.doChangeSelectedValue(event.value)}
+          onChange={option => this.doChangeSelectedValue(option)}
           clearable={false}
         />
       </div>
