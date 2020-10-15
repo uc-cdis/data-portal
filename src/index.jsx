@@ -7,7 +7,12 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import 'react-select/dist/react-select.css';
 import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAngleUp,
+  faAngleDown,
+  faFlask,
+  faMicroscope,
+} from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 
@@ -78,7 +83,7 @@ async function init() {
     store.dispatch(fetchUserAuthMapping),
   ]);
   // FontAwesome icons
-  library.add(faAngleUp, faAngleDown);
+  library.add(faAngleUp, faAngleDown, faFlask, faMicroscope);
 
   render(
     <div>
