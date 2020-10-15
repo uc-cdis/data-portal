@@ -5,9 +5,10 @@ import {
   ReduxIndexButtonBar,
   ReduxIndexBarChart,
   ReduxIndexCounts,
+  ReduxIndexOverview,
   ReduxIntroduction,
 } from './reduxer';
-import { getIndexPageChartData } from './relayer';
+import { getIndexPageChartData, getIndexPageOverviewData } from './relayer';
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { breakpoints } from '../localconf';
@@ -16,6 +17,7 @@ import './page.less';
 function IndexPage({ history }) {
   useEffect(() => {
     getIndexPageChartData();
+    getIndexPageOverviewData();
   }, []);
 
   return (
@@ -36,6 +38,7 @@ function IndexPage({ history }) {
           </MediaQuery>
         </div>
       </div>
+      <ReduxIndexOverview />
       <ReduxIndexButtonBar history={history} />
     </div>
   );
