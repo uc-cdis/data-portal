@@ -188,13 +188,6 @@ export class GQLHelper {
     );
   }
 
-  static getConsortiumList() {
-    return [
-      {% for id in consortiumList %}'{{ id }}',
-      {% endfor %}
-    ]
-  }
-
   static updateOffset(data, cursors) {
     const fileLengthData = Object.keys(data).filter(key => key.indexOf('fileData') === 0).reduce(
       (map, key) => {
