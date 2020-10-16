@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import MediaQuery from 'react-responsive';
 import Select from 'react-select';
 import Spinner from '../components/Spinner';
+import Button from '@gen3/ui-component/dist/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GQLHelper } from '../gqlHelper';
+import { breakpoints } from '../localconf';
 import './IndexOverview.css';
 
 const consortiumList = GQLHelper.getConsortiumList();
@@ -13,6 +17,27 @@ function IndexOverview({ overviewCounts }) {
     { label: 'All PCDC', value: 'total' },
     ...consortiumList.map((option) => ({ label: option, value: option })),
   ];
+
+  let history = useHistory();
+  function ButtonToExplorer() {
+    const filter =
+      consortium === 'total'
+        ? {}
+        : { consortium: { selectedValues: [consortium] } };
+
+    return (
+      <Button
+        label='Explore more'
+        buttonType='primary'
+        onClick={() =>
+          history.push({
+            pathname: '/explorer',
+            state: { filter },
+          })
+        }
+      />
+    );
+  }
 
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   useEffect(() => {
@@ -39,14 +64,19 @@ function IndexOverview({ overviewCounts }) {
     <div className='index-overview'>
       <div className='index-overview__title'>
         <h2>Overview</h2>
-        <div className='index-overview__select'>
-          <label>Consortium</label>
-          <Select
-            clearable={false}
-            options={consortiumOptions}
-            value={consortium}
-            onChange={({ value }) => setConsortium(value)}
-          />
+        <div className='index-overview__actions'>
+          <div className='index-overview__select'>
+            <label>Consortium</label>
+            <Select
+              clearable={false}
+              options={consortiumOptions}
+              value={consortium}
+              onChange={({ value }) => setConsortium(value)}
+            />
+          </div>
+          <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
+            <ButtonToExplorer />
+          </MediaQuery>
         </div>
       </div>
       <div className='index-overview__body'>
@@ -64,6 +94,11 @@ function IndexOverview({ overviewCounts }) {
           <Spinner />
         )}
       </div>
+      <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
+        <div className='index-overview__footer'>
+          <ButtonToExplorer />
+        </div>
+      </MediaQuery>
     </div>
   );
 }
