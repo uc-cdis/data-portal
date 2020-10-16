@@ -22,18 +22,6 @@ const helperSingleton = {
     {% endfor %}
   }`,
 
-  indexPageOverviewQuery: graphql`query gqlHelperIndexPageOverviewQuery {
-    counts_total: subject(first: 10000) {
-      study: _studys_count
-      molecular_analysis: _molecular_analysiss_count
-    }
-    {% for id in consortiumList %}counts_{{ loop.index }}: subject(first: 10000, consortium: "{{ id }}") {
-      study: _studys_count
-      molecular_analysis: _molecular_analysiss_count
-    }
-    {% endfor %}
-  }`,
-
   submissionPageQuery: graphql`query gqlHelperSubmissionPageQuery {
     projectList: project(first: 10000) {
       name: project_id
