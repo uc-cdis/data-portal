@@ -46,6 +46,11 @@ function IndexOverview({ overviewCounts }) {
 
   const getCountDataList = () => [
     {
+      count: overviewCounts[consortium].subject,
+      faIcon: 'user',
+      name: { singular: 'Subject', plural: 'Subjects' },
+    },
+    {
       count: overviewCounts[consortium].study,
       faIcon: 'flask',
       name: { singular: 'Study', plural: 'Studies' },
