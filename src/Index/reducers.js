@@ -18,6 +18,12 @@ const index = (state = {}, action) => {
         countNames: ['Subjects'],
       };
     }
+    case 'RECEIVE_INDEX_PAGE_OVERVIEW_COUNTS': {
+      return {
+        ...state,
+        overviewCounts: { ...action.data, updatedAt: Date.now() },
+      };
+    }
     default:
       return state;
   }

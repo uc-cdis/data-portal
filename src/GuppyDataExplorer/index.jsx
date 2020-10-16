@@ -71,6 +71,10 @@ class Explorer extends React.Component {
       </React.Fragment>
     );
 
+    const overviewFilter = this.props.history.location.state.filter
+      ? this.props.history.location.state.filter
+      : {};
+
     return (
       <div className='guppy-explorer'>
         {explorerConfig.length > 1 ? tabFragment : null}
@@ -78,9 +82,10 @@ class Explorer extends React.Component {
           className={explorerConfig.length > 1 ? 'guppy-explorer__main' : ''}
         >
           <GuppyDataExplorer
-            adminAppliedPreFilters={
-              explorerConfig[this.state.tab].adminAppliedPreFilters
-            }
+            adminAppliedPreFilters={{
+              ...explorerConfig[this.state.tab].adminAppliedPreFilters,
+              ...overviewFilter,
+            }}
             chartConfig={explorerConfig[this.state.tab].charts}
             filterConfig={explorerConfig[this.state.tab].filters}
             tableConfig={explorerConfig[this.state.tab].table}

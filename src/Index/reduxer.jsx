@@ -6,6 +6,7 @@ import IndexBarChart from '../components/charts/IndexBarChart/.';
 import IndexCounts from '../components/cards/IndexCounts/.';
 import IndexButtonBar from '../components/IndexButtonBar';
 import Introduction from '../components/Introduction';
+import IndexOverview from './IndexOverview';
 import { components } from '../params';
 
 export const ReduxIndexBarChart = (() => {
@@ -49,6 +50,15 @@ export const ReduxIndexCounts = (() => {
     return {};
   };
   return connect(mapStateToProps, mapDispatchToProps)(IndexCounts);
+})();
+
+export const ReduxIndexOverview = (() => {
+  const mapStateToProps = (state) =>
+    state.index && state.index.overviewCounts
+      ? { overviewCounts: state.index.overviewCounts }
+      : {};
+
+  return connect(mapStateToProps)(IndexOverview);
 })();
 
 export const ReduxIndexButtonBar = (() => {
