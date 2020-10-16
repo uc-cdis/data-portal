@@ -4,9 +4,9 @@ import { fetchQuery } from 'relay-runtime';
 import environment from '../environment';
 import { GQLHelper } from '../gqlHelper';
 import getReduxStore from '../reduxStore';
+import { consortiumList } from '../params';
 
 const { indexPageQuery } = GQLHelper.getGQLHelper();
-const consortiumList = GQLHelper.getConsortiumList();
 
 export const getIndexPageChartData = () =>
   checkIfNeedsUpdate().then(

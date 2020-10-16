@@ -1,9 +1,7 @@
 import { fetchWithCreds } from '../actions';
 import { guppyDownloadUrl } from '../localconf';
 import getReduxStore from '../reduxStore';
-import { GQLHelper } from '../gqlHelper';
-
-const consortiumList = GQLHelper.getConsortiumList();
+import { consortiumList } from '../params';
 
 export function getIndexPageOverviewData() {
   const fetchOpts = {

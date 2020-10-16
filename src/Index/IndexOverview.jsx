@@ -5,11 +5,9 @@ import Select from 'react-select';
 import Spinner from '../components/Spinner';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { GQLHelper } from '../gqlHelper';
+import { consortiumList } from '../params';
 import { breakpoints } from '../localconf';
 import './IndexOverview.css';
-
-const consortiumList = GQLHelper.getConsortiumList();
 
 function IndexOverview({ overviewCounts }) {
   const [consortium, setConsortium] = useState('total');
