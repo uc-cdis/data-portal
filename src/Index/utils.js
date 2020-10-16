@@ -3,32 +3,32 @@ import { guppyDownloadUrl } from '../localconf';
 import getReduxStore from '../reduxStore';
 import { consortiumList } from '../params';
 
-export function getIndexPageOverviewData() {
-  const fetchOpts = {
-    path: guppyDownloadUrl,
-    method: 'POST',
-    body: JSON.stringify({
-      type: 'subject',
-      fields: ['consortium', 'study_id', '_molecular_analysis_count'],
-    }),
-    customHeaders: {
-      Accept: 'application/json',
-      Signature: 'signature token',
-    },
-  };
+const fetchOpts = {
+  path: guppyDownloadUrl,
+  method: 'POST',
+  body: JSON.stringify({
+    type: 'subject',
+    fields: ['consortium', 'study_id', '_molecular_analysis_count'],
+  }),
+  customHeaders: {
+    Accept: 'application/json',
+    Signature: 'signature token',
+  },
+};
 
+export function getIndexPageCounts() {
   getReduxStore().then(
     (store) => {
-      const { overviewCounts } = store.getState().index;
+      const { updatedAt } = store.getState().index;
       const needsUpdate =
-        overviewCounts === undefined ||
-        Date.now() - overviewCounts.updatedAt > 300000;
+        updatedAt === undefined || Date.now() - updatedAt > 300000;
+
       if (needsUpdate)
         fetchWithCreds(fetchOpts).then(({ data, response }) => {
           if (response.status === 200) {
             store.dispatch({
-              type: 'RECEIVE_INDEX_PAGE_OVERVIEW_COUNTS',
-              data: getCountsData(data),
+              type: 'RECEIVE_INDEX_PAGE_COUNTS',
+              data: parseCounts(data),
             });
           } else
             console.error(
@@ -41,7 +41,7 @@ export function getIndexPageOverviewData() {
   );
 }
 
-function getCountsData(rawData) {
+function parseCounts(rawData) {
   const data = [];
   for (const { consortium, study_id, _molecular_analysis_count } of rawData)
     data.push({
@@ -50,13 +50,25 @@ function getCountsData(rawData) {
       study_id,
     });
 
-  const counts = { total: getCountObject(data) };
-  for (const consortium of consortiumList)
-    counts[consortium] = getCountObject(data, consortium);
+  const totalCounts = getCountObject(data);
 
-  return { ...counts, names: consortiumList };
+  const projectList = [];
+  const overviewCounts = { total: totalCounts, names: consortiumList };
+  for (const consortium of consortiumList) {
+    const consortiumCounts = getCountObject(data, consortium);
+    projectList.push({
+      code: consortium,
+      counts: [consortiumCounts.subject, consortiumCounts.molecular_analysis],
+    });
+    overviewCounts[consortium] = consortiumCounts;
+  }
+
+  return {
+    countNames: ['Subjects', 'Molecular Analyses'],
+    projectList,
+    overviewCounts,
+  };
 }
-
 function getCountObject(data, whichConsortium) {
   let molecularAnalysisCount = 0;
   let studySet = new Set();

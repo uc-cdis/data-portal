@@ -4,12 +4,11 @@ import MediaQuery from 'react-responsive';
 import {
   ReduxIndexButtonBar,
   ReduxIndexBarChart,
-  ReduxIndexCounts,
+  // ReduxIndexCounts,
   ReduxIndexOverview,
   ReduxIntroduction,
 } from './reduxer';
-import { getIndexPageChartData } from './relayer';
-import { getIndexPageOverviewData } from './utils';
+import { getIndexPageCounts } from './utils';
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { breakpoints } from '../localconf';
@@ -17,8 +16,7 @@ import './page.less';
 
 function IndexPage({ history }) {
   useEffect(() => {
-    getIndexPageChartData();
-    getIndexPageOverviewData();
+    getIndexPageCounts();
   }, []);
 
   return (
@@ -29,9 +27,9 @@ function IndexPage({ history }) {
             data={components.index.introduction}
             dictIcons={dictIcons}
           />
-          <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
+          {/* <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
             <ReduxIndexCounts />
-          </MediaQuery>
+          </MediaQuery> */}
         </div>
         <div className='index-page__bar-chart'>
           <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>

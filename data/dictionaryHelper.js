@@ -35,13 +35,10 @@ function dictToGQLSetup(dict) {
     Object.prototype.hasOwnProperty.call(dict, name)
   );
 
-  const consortiumList = dict['subject'].properties.consortium.enum || [];
-
   return {
     fileTypeList,
     adminTypeList,
     experimentType,
-    consortiumList,
   };
 }
 
