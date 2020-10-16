@@ -8,7 +8,8 @@ import {
   ReduxIndexOverview,
   ReduxIntroduction,
 } from './reduxer';
-import { getIndexPageChartData, getIndexPageOverviewData } from './relayer';
+import { getIndexPageChartData } from './relayer';
+import { getIndexPageOverviewData } from './utils';
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { breakpoints } from '../localconf';
