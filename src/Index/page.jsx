@@ -8,8 +8,7 @@ import {
   ReduxIndexOverview,
   ReduxIntroduction,
 } from './reduxer';
-import { getIndexPageChartData } from './relayer';
-import { getIndexPageOverviewData } from './utils';
+import { getIndexPageCounts } from './utils';
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { breakpoints } from '../localconf';
@@ -17,8 +16,7 @@ import './page.less';
 
 function IndexPage({ history }) {
   useEffect(() => {
-    getIndexPageChartData();
-    getIndexPageOverviewData();
+    getIndexPageCounts();
   }, []);
 
   return (
