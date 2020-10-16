@@ -162,7 +162,7 @@ IndexBarChart.defaultProps = {
     margins: {
       top: 20,
       right: 20,
-      left: 80,
+      left: 160,
       bottom: 5,
     },
     layout: 'vertical',
