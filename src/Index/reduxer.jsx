@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { sortCompare } from '../utils';
 import dictIcons from '../img/icons';
 import { setActive } from '../Layout/reduxer';
 import IndexBarChart from '../components/charts/IndexBarChart/.';
@@ -10,18 +9,13 @@ import IndexOverview from './IndexOverview';
 import { components } from '../params';
 
 export const ReduxIndexBarChart = (() => {
-  const mapStateToProps = (state) => {
-    if (state.index && state.index.projectsByName) {
-      const projectList = Object.values(state.index.projectsByName).sort(
-        sortCompare
-      );
-      return {
-        projectList,
-        countNames: state.index.countNames,
-      };
-    }
-    return {};
-  };
+  const mapStateToProps = (state) =>
+    state.index && state.index.projectList
+      ? {
+          projectList: state.index.projectList,
+          countNames: state.index.countNames,
+        }
+      : {};
 
   // Bar chart does not dispatch anything
   const mapDispatchToProps = function mapDispatch() {
@@ -32,18 +26,13 @@ export const ReduxIndexBarChart = (() => {
 })();
 
 export const ReduxIndexCounts = (() => {
-  const mapStateToProps = (state) => {
-    if (state.index && state.index.projectsByName) {
-      const projectList = Object.values(state.index.projectsByName).sort(
-        sortCompare
-      );
-      return {
-        projectList,
-        countNames: state.index.countNames,
-      };
-    }
-    return {};
-  };
+  const mapStateToProps = (state) =>
+    state.index && state.index.projectList
+      ? {
+          projectList: state.index.projectList,
+          countNames: state.index.countNames,
+        }
+      : {};
 
   // Bar chart does not dispatch anything
   const mapDispatchToProps = function mapDispatch() {
