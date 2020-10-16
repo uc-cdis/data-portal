@@ -4,7 +4,7 @@ import MediaQuery from 'react-responsive';
 import {
   ReduxIndexButtonBar,
   ReduxIndexBarChart,
-  ReduxIndexCounts,
+  // ReduxIndexCounts,
   ReduxIndexOverview,
   ReduxIntroduction,
 } from './reduxer';
@@ -27,9 +27,9 @@ function IndexPage({ history }) {
             data={components.index.introduction}
             dictIcons={dictIcons}
           />
-          <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
+          {/* <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
             <ReduxIndexCounts />
-          </MediaQuery>
+          </MediaQuery> */}
         </div>
         <div className='index-page__bar-chart'>
           <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
