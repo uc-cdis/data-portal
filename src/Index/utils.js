@@ -51,11 +51,6 @@ function parseCounts(rawData) {
     });
 
   const totalCounts = getCountObject(data);
-  const summaryCounts = {
-    0: totalCounts.subject,
-    1: totalCounts.study,
-    2: totalCounts.molecular_analysis,
-  };
 
   const projectsByName = {};
   const overviewCounts = { total: totalCounts, names: consortiumList };
@@ -75,7 +70,6 @@ function parseCounts(rawData) {
 
   return {
     countNames: ['Subjects', 'Studies', 'Molecular Analyses'],
-    summaryCounts,
     projectsByName,
     overviewCounts,
   };
