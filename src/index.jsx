@@ -12,6 +12,7 @@ import {
   faAngleDown,
   faFlask,
   faMicroscope,
+  faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
@@ -83,7 +84,7 @@ async function init() {
     store.dispatch(fetchUserAuthMapping),
   ]);
   // FontAwesome icons
-  library.add(faAngleUp, faAngleDown, faFlask, faMicroscope);
+  library.add(faAngleUp, faAngleDown, faFlask, faMicroscope, faUser);
 
   render(
     <div>
