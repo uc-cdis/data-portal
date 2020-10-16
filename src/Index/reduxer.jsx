@@ -17,12 +17,7 @@ export const ReduxIndexBarChart = (() => {
         }
       : {};
 
-  // Bar chart does not dispatch anything
-  const mapDispatchToProps = function mapDispatch() {
-    return {};
-  };
-
-  return connect(mapStateToProps, mapDispatchToProps)(IndexBarChart);
+  return connect(mapStateToProps)(IndexBarChart);
 })();
 
 export const ReduxIndexCounts = (() => {
@@ -34,11 +29,7 @@ export const ReduxIndexCounts = (() => {
         }
       : {};
 
-  // Bar chart does not dispatch anything
-  const mapDispatchToProps = function mapDispatch() {
-    return {};
-  };
-  return connect(mapStateToProps, mapDispatchToProps)(IndexCounts);
+  return connect(mapStateToProps)(IndexCounts);
 })();
 
 export const ReduxIndexOverview = (() => {
