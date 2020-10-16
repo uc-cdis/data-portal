@@ -7,12 +7,6 @@ const index = (state = {}, action) => {
         updatedAt: Date.now(),
       };
     }
-    case 'RECEIVE_INDEX_PAGE_OVERVIEW_COUNTS': {
-      return {
-        ...state,
-        overviewCounts: { ...action.data, updatedAt: Date.now() },
-      };
-    }
     default:
       return state;
   }
