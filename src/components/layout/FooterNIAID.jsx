@@ -109,7 +109,11 @@ class FooterNIAID extends Component {
                       {
                         footerSocialIconLinks.map((item, i) => (
                           <Col className='gutter-row' span={4} key={`icon_${i}`}>
-                            <a href={item.href}>
+                            <a
+                              href={item.href}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                            >
                               <FontAwesomeIcon
                                 icon={item.icon}
                                 size='2x'
@@ -135,7 +139,12 @@ class FooterNIAID extends Component {
               <Space direction='vertical'>
                 <div className='footer__title'>Related Government Websites</div>
                 {footerGovLinks.map((item, i) => (
-                  <a key={`gov_link_${i}`} href={item.href}>
+                  <a
+                    key={`gov_link_${i}`}
+                    href={item.href}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
                     <Space>
                       {item.text}
                       <Tooltip title='This link is external'>
