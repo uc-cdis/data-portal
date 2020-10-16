@@ -49,7 +49,6 @@ export const ReduxIndexButtonBar = (() => {
     userAccess: state.userAccess.access,
   });
 
-  // Bar chart does not dispatch anything
   const mapDispatchToProps = (dispatch) => ({
     onActiveTab: (link) => dispatch(setActive(link)),
   });
