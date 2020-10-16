@@ -59,17 +59,13 @@ function parseCounts(rawData) {
     projectsByName[consortium] = {
       code: consortium,
       name: consortium,
-      counts: [
-        consortiumCounts.subject,
-        consortiumCounts.study,
-        consortiumCounts.molecular_analysis,
-      ],
+      counts: [consortiumCounts.subject, consortiumCounts.molecular_analysis],
     };
     overviewCounts[consortium] = consortiumCounts;
   }
 
   return {
-    countNames: ['Subjects', 'Studies', 'Molecular Analyses'],
+    countNames: ['Subjects', 'Molecular Analyses'],
     projectsByName,
     overviewCounts,
   };
