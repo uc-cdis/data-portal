@@ -8,16 +8,14 @@ import {
   submissionApiPath,
   graphqlPath,
   guppyGraphQLUrl,
-  arrangerGraphqlPath,
   graphqlSchemaUrl,
-  useGuppyForExplorer,
   authzPath,
   authzMappingPath,
-} from './configs';
+} from './localconf';
 import { config } from './params';
 import sessionMonitor from './SessionMonitor';
 
-export const updatePopup = state => ({
+export const updatePopup = (state) => ({
   type: 'UPDATE_POPUP',
   data: state,
 });
@@ -30,11 +28,10 @@ export const connectionError = () => {
   };
 };
 
-
 const fetchCache = {};
 
-const getJsonOrText = (path, response, useCache, method = 'GET') => response.text().then(
-  (textData) => {
+const getJsonOrText = (path, response, useCache, method = 'GET') =>
+  response.text().then((textData) => {
     let data = textData;
     if (data) {
       try {
@@ -46,12 +43,19 @@ const getJsonOrText = (path, response, useCache, method = 'GET') => response.tex
         // # do nothing
       }
     }
-    return { response, data, status: response.status, headers: response.headers };
+    return {
+      response,
+      data,
+      status: response.status,
+      headers: response.headers,
+    };
   });
 
 let pendingRequest = null;
 export const fetchCreds = (opts) => {
-  if (pendingRequest) { return pendingRequest; }
+  if (pendingRequest) {
+    return pendingRequest;
+  }
   const { path = `${userapiPath}user/`, method = 'GET', dispatch } = opts;
   const request = {
     credentials: 'include',
@@ -65,9 +69,11 @@ export const fetchCreds = (opts) => {
     },
     (error) => {
       pendingRequest = null;
-      if (dispatch) { dispatch(connectionError()); }
+      if (dispatch) {
+        dispatch(connectionError());
+      }
       return Promise.reject(error);
-    },
+    }
   );
   return pendingRequest;
 };
@@ -87,8 +93,15 @@ export const fetchCreds = (opts) => {
  * @return Promise<{response,data,status,headers}> or Promise<{data,status}> if useCache specified
  */
 export const fetchWithCreds = (opts) => {
-  const { path, method = 'GET', body = null, customHeaders, dispatch, useCache } = opts;
-  if (useCache && (method === 'GET') && fetchCache[path]) {
+  const {
+    path,
+    method = 'GET',
+    body = null,
+    customHeaders,
+    dispatch,
+    useCache,
+  } = opts;
+  if (useCache && method === 'GET' && fetchCache[path]) {
     return Promise.resolve({ status: 200, data: JSON.parse(fetchCache[path]) });
   }
   const request = {
@@ -97,60 +110,64 @@ export const fetchWithCreds = (opts) => {
     method,
     body,
   };
-  return fetch(path, request,
-  ).then(
+  return fetch(path, request).then(
     (response) => {
       if (response.status !== 403 && response.status !== 401) {
         return Promise.resolve(getJsonOrText(path, response, useCache, method));
       }
-      return Promise.resolve(fetchCreds({ dispatch }).then(
-        (resp) => {
+      return Promise.resolve(
+        fetchCreds({ dispatch }).then((resp) => {
           switch (resp.status) {
-          case 200:
-            return Promise.resolve(fetch(path, request).then(
-              res => getJsonOrText(path, res, useCache, method),
-            ));
-          default:
-            return {
-              response: resp,
-              data: { data: {} },
-              status: resp.status,
-              headers: resp.headers,
-            };
+            case 200:
+              return Promise.resolve(
+                fetch(path, request).then((res) =>
+                  getJsonOrText(path, res, useCache, method)
+                )
+              );
+            default:
+              return {
+                response: resp,
+                data: { data: {} },
+                status: resp.status,
+                headers: resp.headers,
+              };
           }
-        },
-      ));
+        })
+      );
     },
     (error) => {
-      if (dispatch) { dispatch(connectionError()); }
+      if (dispatch) {
+        dispatch(connectionError());
+      }
       return Promise.reject(error);
-    },
+    }
   );
 };
 
 export const fetchWithCredsAndTimeout = (opts, timeoutInMS) => {
   let didTimeOut = false;
 
-  return new Promise(((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
       didTimeOut = true;
       reject(new Error('Request timed out'));
     }, timeoutInMS);
 
-    fetchWithCreds(opts).then((response) => {
-      // Clear the timeout as cleanup
-      clearTimeout(timeout);
-      if (!didTimeOut) {
-        resolve(response);
-      }
-    })
+    fetchWithCreds(opts)
+      .then((response) => {
+        // Clear the timeout as cleanup
+        clearTimeout(timeout);
+        if (!didTimeOut) {
+          resolve(response);
+        }
+      })
       .catch((err) => {
         // Rejection already happened with setTimeout
         if (didTimeOut) return;
         // Reject with error
         reject(err);
       });
-  }));
+  });
 };
 
 /**
@@ -164,22 +181,33 @@ export const fetchWithCredsAndTimeout = (opts, timeoutInMS) => {
  * @param { path, method=GET, body=null, customerHeaders, handler, callback } opts
  * @return Promise
  */
-export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders, handler, callback = () => (null) }) =>
-  dispatch => fetchWithCreds({ path, method, body, customHeaders, dispatch },
-  ).then(
+export const fetchWrapper = ({
+  path,
+  method = 'GET',
+  body = null,
+  customHeaders,
+  handler,
+  callback = () => null,
+}) => (dispatch) =>
+  fetchWithCreds({ path, method, body, customHeaders, dispatch }).then(
     ({ response, data }) => {
-      const result = { response, data, status: response.status, headers: response.headers };
-      const dispatchPromise = handler ? Promise.resolve(dispatch(handler(result))) : Promise.resolve('ok');
-      return dispatchPromise.then(
-        () => {
-          callback();
-          return result;
-        },
-      );
-    },
+      const result = {
+        response,
+        data,
+        status: response.status,
+        headers: response.headers,
+      };
+      const dispatchPromise = handler
+        ? Promise.resolve(dispatch(handler(result)))
+        : Promise.resolve('ok');
+      return dispatchPromise.then(() => {
+        callback();
+        return result;
+      });
+    }
   );
 
-export const fetchGraphQL = graphQLParams =>
+export const fetchGraphQL = (graphQLParams) =>
   // We first update the session so that the user will be notified
   // if their auth is insufficient to perform the query.
   sessionMonitor.updateSession().then(() => {
@@ -191,7 +219,7 @@ export const fetchGraphQL = graphQLParams =>
     };
 
     return fetch(graphqlPath, request)
-      .then(response => response.text())
+      .then((response) => response.text())
       .then((responseBody) => {
         try {
           return JSON.parse(responseBody);
@@ -199,69 +227,70 @@ export const fetchGraphQL = graphQLParams =>
           return responseBody;
         }
       });
-  })
-;
+  });
 
-export const fetchFlatGraphQL = graphQLParams => sessionMonitor.updateSession().then(() => {
-  const request = {
-    credentials: 'include',
-    headers: { ...headers },
-    method: 'POST',
-    body: JSON.stringify(graphQLParams),
-  };
+export const fetchFlatGraphQL = (graphQLParams) =>
+  sessionMonitor.updateSession().then(() => {
+    const request = {
+      credentials: 'include',
+      headers: { ...headers },
+      method: 'POST',
+      body: JSON.stringify(graphQLParams),
+    };
 
-  const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
-  return fetch(graphqlUrl, request)
-    .then(response => response.text())
-    .then((responseBody) => {
-      try {
-        return JSON.parse(responseBody);
-      } catch (error) {
-        return responseBody;
-      }
-    });
-});
+    const graphqlUrl = guppyGraphQLUrl;
+    return fetch(graphqlUrl, request)
+      .then((response) => response.text())
+      .then((responseBody) => {
+        try {
+          return JSON.parse(responseBody);
+        } catch (error) {
+          return responseBody;
+        }
+      });
+  });
 
-export const handleResponse = type => ({ data, status }) => {
+export const handleResponse = (type) => ({ data, status }) => {
   switch (status) {
-  case 200:
-    return {
-      type,
-      data,
-    };
-  default:
-    return {
-      type: 'FETCH_ERROR',
-      error: data,
-    };
+    case 200:
+      return {
+        type,
+        data,
+      };
+    default:
+      return {
+        type: 'FETCH_ERROR',
+        error: data,
+      };
   }
 };
 
 const handleFetchUser = ({ status, data }) => {
   switch (status) {
-  case 200:
-    return {
-      type: 'RECEIVE_USER',
-      user: data,
-    };
-  case 401:
-    return {
-      type: 'UPDATE_POPUP',
-      data: { authPopup: true },
-    };
-  default:
-    return {
-      type: 'FETCH_ERROR',
-      error: data.error,
-    };
+    case 200:
+      return {
+        type: 'RECEIVE_USER',
+        user: data,
+      };
+    case 401:
+      return {
+        type: 'UPDATE_POPUP',
+        data: { authPopup: true },
+      };
+    default:
+      return {
+        type: 'FETCH_ERROR',
+        error: data.error,
+      };
   }
 };
 
-export const fetchUser = dispatch => fetchCreds({
-  dispatch,
-}).then(
-  (status, data) => handleFetchUser(status, data),
-).then(msg => dispatch(msg));
+export const fetchUser = (dispatch) =>
+  fetchCreds({
+    dispatch,
+  })
+    .then((status, data) => handleFetchUser(status, data))
+    .then((msg) => dispatch(msg));
 
 export const refreshUser = () => fetchUser;
 
@@ -271,9 +300,9 @@ export const logoutAPI = () => (dispatch) => {
     dispatch,
   })
     .then(handleResponse('RECEIVE_API_LOGOUT'))
-    .then(msg => dispatch(msg))
-    .then(
-      () => document.location.replace(`${userapiPath}/logout?next=${hostname}`),
+    .then((msg) => dispatch(msg))
+    .then(() =>
+      document.location.replace(`${userapiPath}/logout?next=${hostname}`)
     );
 };
 
@@ -291,18 +320,21 @@ export const fetchIsUserLoggedInNoRefresh = (opts) => {
     },
     (error) => {
       requestPromise = null;
-      if (dispatch) { dispatch(connectionError()); }
+      if (dispatch) {
+        dispatch(connectionError());
+      }
       return Promise.reject(error);
-    },
+    }
   );
   return requestPromise;
 };
 
-export const fetchUserNoRefresh = dispatch => fetchIsUserLoggedInNoRefresh({
-  dispatch,
-}).then(
-  (status, data) => handleFetchUser(status, data),
-).then(msg => dispatch(msg));
+export const fetchUserNoRefresh = (dispatch) =>
+  fetchIsUserLoggedInNoRefresh({
+    dispatch,
+  })
+    .then((status, data) => handleFetchUser(status, data))
+    .then((msg) => dispatch(msg));
 
 /**
  * Retrieve the oath endpoint for the service under the given oathPath
@@ -310,15 +342,14 @@ export const fetchUserNoRefresh = dispatch => fetchIsUserLoggedInNoRefresh({
  * @param {String} oauthPath
  * @return {(dispatch) => Promise<string>} dispatch function
  */
-export const fetchOAuthURL = oauthPath => dispatch =>
+export const fetchOAuthURL = (oauthPath) => (dispatch) =>
   fetchWithCreds({
     path: `${oauthPath}authorization_url`,
     dispatch,
     useCache: true,
   })
-    .then(
-      ({ status, data }) => {
-        switch (status) {
+    .then(({ status, data }) => {
+      switch (status) {
         case 200:
           return {
             type: 'RECEIVE_AUTHORIZATION_URL',
@@ -329,25 +360,22 @@ export const fetchOAuthURL = oauthPath => dispatch =>
             type: 'FETCH_ERROR',
             error: data.error,
           };
-        }
-      },
-    )
-    .then(
-      (msg) => {
-        dispatch(msg);
-        if (msg.url) {
-          return msg.url;
-        }
-        throw new Error('OAuth authorization failed');
-      },
-    );
+      }
+    })
+    .then((msg) => {
+      dispatch(msg);
+      if (msg.url) {
+        return msg.url;
+      }
+      throw new Error('OAuth authorization failed');
+    });
 
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -
  * lambdas that accept dispatch and getState functions as arguments
  */
 
-export const fetchProjects = () => dispatch =>
+export const fetchProjects = () => (dispatch) =>
   fetchWithCreds({
     path: `${submissionApiPath}graphql`,
     body: JSON.stringify({
@@ -355,9 +383,8 @@ export const fetchProjects = () => dispatch =>
     }),
     method: 'POST',
   })
-    .then(
-      ({ status, data }) => {
-        switch (status) {
+    .then(({ status, data }) => {
+      switch (status) {
         case 200:
           return {
             type: 'RECEIVE_PROJECTS',
@@ -370,42 +397,37 @@ export const fetchProjects = () => dispatch =>
             error: data,
             status,
           };
-        }
-      })
-    .then(msg => dispatch(msg));
-
+      }
+    })
+    .then((msg) => dispatch(msg));
 
 /**
  * Fetch the schema for graphi, and stuff it into redux -
  * handled by router
  */
-export const fetchSchema = dispatch => fetchWithCreds({ path: graphqlSchemaUrl, dispatch })
-  .then(
+export const fetchSchema = (dispatch) =>
+  fetchWithCreds({ path: graphqlSchemaUrl, dispatch }).then(
     ({ status, data }) => {
       switch (status) {
-      case 200:
-        return dispatch(
-          {
+        case 200:
+          return dispatch({
             type: 'RECEIVE_SCHEMA_LOGIN',
             schema: data,
-          },
-        );
-      default:
-        return Promise.resolve('NOOP');
+          });
+        default:
+          return Promise.resolve('NOOP');
       }
-    },
+    }
   );
 
-
-export const fetchDictionary = dispatch =>
+export const fetchDictionary = (dispatch) =>
   fetchWithCreds({
     path: `${submissionApiPath}_dictionary/_all`,
     method: 'GET',
     useCache: true,
   })
-    .then(
-      ({ status, data }) => {
-        switch (status) {
+    .then(({ status, data }) => {
+      switch (status) {
         case 200:
           return {
             type: 'RECEIVE_DICTIONARY',
@@ -416,20 +438,18 @@ export const fetchDictionary = dispatch =>
             type: 'FETCH_ERROR',
             error: data,
           };
-        }
-      })
-    .then(msg => dispatch(msg));
+      }
+    })
+    .then((msg) => dispatch(msg));
 
-
-export const fetchVersionInfo = dispatch =>
+export const fetchVersionInfo = (dispatch) =>
   fetchWithCreds({
     path: `${apiPath}_version`,
     method: 'GET',
     useCache: true,
   })
-    .then(
-      ({ status, data }) => {
-        switch (status) {
+    .then(({ status, data }) => {
+      switch (status) {
         case 200:
           return {
             type: 'RECEIVE_VERSION_INFO',
@@ -440,10 +460,9 @@ export const fetchVersionInfo = dispatch =>
             type: 'FETCH_ERROR',
             error: data,
           };
-        }
-      },
-    ).then(msg => dispatch(msg));
-
+      }
+    })
+    .then((msg) => dispatch(msg));
 
 // asks arborist which restricted access components the user has access to
 export const fetchUserAccess = async (dispatch) => {
@@ -457,20 +476,21 @@ export const fetchUserAccess = async (dispatch) => {
     // makes a call to arborist's auth/proxy endpoint
     // returns true if the user has access to the resource, false otherwise
     dict[name] = await fetch(
-      `${authzPath}?resource=${e.resource}&method=${e.method}&service=${e.service}`,
-    )
-      .then((fetchRes) => {
-        switch (fetchRes.status) {
+      `${authzPath}?resource=${e.resource}&method=${e.method}&service=${e.service}`
+    ).then((fetchRes) => {
+      switch (fetchRes.status) {
         case 401: // user is not logged in
         case 403: // user is not allowed to access the resource
           return false;
         case 200: // valid input -> check "ok" field for authorization
           return fetchRes.ok;
         default:
-          console.error(`Unknown status "${fetchRes.status}" returned by arborist call`);
+          console.error(
+            `Unknown status "${fetchRes.status}" returned by arborist call`
+          );
           return false;
-        }
-      });
+      }
+    });
     return dict;
   }, {});
 
@@ -487,17 +507,15 @@ export const fetchUserAuthMapping = async (dispatch) => {
   }
 
   // Arborist will get the username from the jwt
-  const authMapping = await fetch(
-    `${authzMappingPath}`,
-  ).then((fetchRes) => {
+  const authMapping = await fetch(`${authzMappingPath}`).then((fetchRes) => {
     switch (fetchRes.status) {
-    case 200:
-      return fetchRes.json();
-    default:
-      // This is dispatched on app init and on user login.
-      // Could be not logged in -> no username -> 404; this is ok
-      // There may be plans to update Arborist to return anonymous access when username not found
-      return {};
+      case 200:
+        return fetchRes.json();
+      default:
+        // This is dispatched on app init and on user login.
+        // Could be not logged in -> no username -> 404; this is ok
+        // There may be plans to update Arborist to return anonymous access when username not found
+        return {};
     }
   });
 

@@ -105,6 +105,7 @@
   background-color: var(--g3-color__gray);
 }
 
-.data-dictionary-node__property-close:hover .data-dictionary-node__property-close-icon {
+.data-dictionary-node__property-close:hover
+  .data-dictionary-node__property-close-icon {
   background-color: var(--g3-color__black);
 }

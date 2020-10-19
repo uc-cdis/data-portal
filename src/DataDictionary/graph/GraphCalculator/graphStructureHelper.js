@@ -19,14 +19,15 @@
  */
 export const getAllChildrenNodeIDs = (startingNodeID, wholeGraphNodes) => {
   const relatedNodeIDs = [];
-  const startingNode = wholeGraphNodes.find(n => n.id === startingNodeID);
+  const startingNode = wholeGraphNodes.find((n) => n.id === startingNodeID);
   let currentLevelNodeIDs = startingNode.outLinks;
   while (currentLevelNodeIDs && currentLevelNodeIDs.length > 0) {
     const nextLevelNodeIDs = [];
     currentLevelNodeIDs.forEach((nodeId) => {
-      if (relatedNodeIDs.includes(nodeId) || nextLevelNodeIDs.includes(nodeId)) return;
+      if (relatedNodeIDs.includes(nodeId) || nextLevelNodeIDs.includes(nodeId))
+        return;
       relatedNodeIDs.push(nodeId);
-      const originNode = wholeGraphNodes.find(n => (n.id === nodeId));
+      const originNode = wholeGraphNodes.find((n) => n.id === nodeId);
       const nextLevel = originNode.outLinks;
       nextLevel.forEach((outNodeId) => {
         nextLevelNodeIDs.push(outNodeId);
@@ -44,9 +45,9 @@ export const getAllChildrenNodeIDs = (startingNodeID, wholeGraphNodes) => {
  * @returns {Edge[]} array of descendent links
  */
 export const getAllChildrenLinks = (startingNodeID, wholeGraphNodes) => {
-  const startingNode = wholeGraphNodes.find(n => n.id === startingNodeID);
+  const startingNode = wholeGraphNodes.find((n) => n.id === startingNodeID);
   let currentLevelNodeIDs = startingNode.outLinks;
-  const relatedLinks = currentLevelNodeIDs.map(outID => ({
+  const relatedLinks = currentLevelNodeIDs.map((outID) => ({
     source: startingNode.id,
     target: outID,
   }));
@@ -56,7 +57,7 @@ export const getAllChildrenLinks = (startingNodeID, wholeGraphNodes) => {
     for (let i = 0; i < currentLevelNodeIDs.length; i += 1) {
       const nodeID = currentLevelNodeIDs[i];
       if (sourceNodeHistory[nodeID]) continue; // eslint-disable-line no-continue
-      const originNode = wholeGraphNodes.find(n => (n.id === nodeID));
+      const originNode = wholeGraphNodes.find((n) => n.id === nodeID);
       const nextLevel = originNode.outLinks;
       for (let j = 0; j < nextLevel.length; j += 1) {
         const outNodeID = nextLevel[j];
@@ -87,22 +88,27 @@ const inOrOutLinksFromGivenNode = (
   inOrOut,
   subgraphNodeIDs,
   subgraphEdges,
-  wholeGraphNodes,
+  wholeGraphNodes
 ) => {
-  const node = wholeGraphNodes.find(n => n.id === nodeID);
+  const node = wholeGraphNodes.find((n) => n.id === nodeID);
   const links = inOrOut ? node.inLinks : node.outLinks;
-  const inLinksFilterFunc = (e, neighborNodeID) => (e.target === nodeID
-    && e.source === neighborNodeID
-    && subgraphNodeIDs.includes(e.source));
-  const outLinksFilterFunc = (e, neighborNodeID) => (e.source === nodeID
-    && e.target === neighborNodeID
-    && subgraphNodeIDs.includes(e.target));
-  return links.filter(neighborNodeID => subgraphNodeIDs.includes(neighborNodeID))
-    .filter(neighborNodeID => subgraphEdges.find((e) => {
-      if (inOrOut) return inLinksFilterFunc(e, neighborNodeID);
-      return outLinksFilterFunc(e, neighborNodeID);
-    }))
-    .filter(neighborNodeID => (neighborNodeID !== nodeID));
+  const inLinksFilterFunc = (e, neighborNodeID) =>
+    e.target === nodeID &&
+    e.source === neighborNodeID &&
+    subgraphNodeIDs.includes(e.source);
+  const outLinksFilterFunc = (e, neighborNodeID) =>
+    e.source === nodeID &&
+    e.target === neighborNodeID &&
+    subgraphNodeIDs.includes(e.target);
+  return links
+    .filter((neighborNodeID) => subgraphNodeIDs.includes(neighborNodeID))
+    .filter((neighborNodeID) =>
+      subgraphEdges.find((e) => {
+        if (inOrOut) return inLinksFilterFunc(e, neighborNodeID);
+        return outLinksFilterFunc(e, neighborNodeID);
+      })
+    )
+    .filter((neighborNodeID) => neighborNodeID !== nodeID);
 };
 
 /**
@@ -121,7 +127,7 @@ export const getNodeIDsThatHaveNoInOrOutLinks = (
   inOrOut,
   subgraphNodeIDs,
   subgraphEdges,
-  wholeGraphNodes,
+  wholeGraphNodes
 ) => {
   const resultIDs = [];
   subgraphNodeIDs.forEach((nodeID) => {
@@ -130,7 +136,7 @@ export const getNodeIDsThatHaveNoInOrOutLinks = (
       inOrOut,
       subgraphNodeIDs,
       subgraphEdges,
-      wholeGraphNodes,
+      wholeGraphNodes
     );
     if (!links || links.length === 0) {
       resultIDs.push(nodeID);
@@ -152,14 +158,14 @@ export const isArticulationNodeInSubgraph = (
   targetNodeID,
   subgraphNodeIDs,
   subgraphEdges,
-  wholeGraphNodes,
+  wholeGraphNodes
 ) => {
   // step.1: calculate connected node count if there's no target node in subgraph
   const nodeIdsWithoutInLinks = getNodeIDsThatHaveNoInOrOutLinks(
     true,
     subgraphNodeIDs,
     subgraphEdges,
-    wholeGraphNodes,
+    wholeGraphNodes
   );
   if (nodeIdsWithoutInLinks.includes(targetNodeID)) return false;
   let currentLevelNodeIDs = nodeIdsWithoutInLinks;
@@ -167,18 +173,23 @@ export const isArticulationNodeInSubgraph = (
   while (currentLevelNodeIDs.length > 0) {
     const nextLevelNodeIDs = [];
     currentLevelNodeIDs.forEach((nodeID) => {
-      if (nodeIDsInSubgraphWithoutTargetNode.includes(nodeID)
-        || nextLevelNodeIDs.includes(nodeID)) return;
+      if (
+        nodeIDsInSubgraphWithoutTargetNode.includes(nodeID) ||
+        nextLevelNodeIDs.includes(nodeID)
+      )
+        return;
       nodeIDsInSubgraphWithoutTargetNode.push(nodeID);
-      const node = wholeGraphNodes.find(n => n.id === nodeID);
-      const inNeighbors = node.inLinks
-        .filter(inNodeID => subgraphEdges.find(e => e.source === inNodeID && e.target === nodeID));
-      const outNeighbors = node.outLinks.filter(outNodeID =>
-        subgraphEdges.find(e => e.target === outNodeID && e.source === nodeID));
+      const node = wholeGraphNodes.find((n) => n.id === nodeID);
+      const inNeighbors = node.inLinks.filter((inNodeID) =>
+        subgraphEdges.find((e) => e.source === inNodeID && e.target === nodeID)
+      );
+      const outNeighbors = node.outLinks.filter((outNodeID) =>
+        subgraphEdges.find((e) => e.target === outNodeID && e.source === nodeID)
+      );
       const neighborNodeIDs = [...inNeighbors, ...outNeighbors];
       neighborNodeIDs
-        .filter(nid => subgraphNodeIDs.includes(nid))
-        .filter(nid => (nid !== targetNodeID))
+        .filter((nid) => subgraphNodeIDs.includes(nid))
+        .filter((nid) => nid !== targetNodeID)
         .forEach((nid) => {
           nextLevelNodeIDs.push(nid);
         });
@@ -187,7 +198,9 @@ export const isArticulationNodeInSubgraph = (
   }
 
   // step.2: if node count equals subgraph's node count - 1, then not articulation node
-  return (nodeIDsInSubgraphWithoutTargetNode.length !== subgraphNodeIDs.length - 1);
+  return (
+    nodeIDsInSubgraphWithoutTargetNode.length !== subgraphNodeIDs.length - 1
+  );
 };
 
 /**
@@ -201,16 +214,18 @@ export const isArticulationNodeInSubgraph = (
 export const getArticulationNodesInSubgraph = (
   subgraphNodeIDs,
   subgraphEdges,
-  wholeGraphNodes,
+  wholeGraphNodes
 ) => {
   const articulationNodeIDs = [];
   subgraphNodeIDs.forEach((nodeID) => {
-    if (isArticulationNodeInSubgraph(
-      nodeID,
-      subgraphNodeIDs,
-      subgraphEdges,
-      wholeGraphNodes,
-    )) {
+    if (
+      isArticulationNodeInSubgraph(
+        nodeID,
+        subgraphNodeIDs,
+        subgraphEdges,
+        wholeGraphNodes
+      )
+    ) {
       articulationNodeIDs.push(nodeID);
     }
   });
@@ -231,13 +246,13 @@ export const BFSTraverseSubgraph = (
   alongLinkDirection,
   subgraphNodeIDs,
   subgraphEdges,
-  wholeGraphNodes,
+  wholeGraphNodes
 ) => {
   let currentLevelNodeIDs = getNodeIDsThatHaveNoInOrOutLinks(
     alongLinkDirection,
     subgraphNodeIDs,
     subgraphEdges,
-    wholeGraphNodes,
+    wholeGraphNodes
   );
   const resultNodeIDs = [];
   while (currentLevelNodeIDs.length > 0) {
@@ -245,21 +260,27 @@ export const BFSTraverseSubgraph = (
     for (let i = 0; i < currentLevelNodeIDs.length; i += 1) {
       const nodeID = currentLevelNodeIDs[i];
       if (!resultNodeIDs.includes(nodeID)) resultNodeIDs.push(nodeID);
-      const node = wholeGraphNodes.find(n => n.id === nodeID);
+      const node = wholeGraphNodes.find((n) => n.id === nodeID);
       if (node) {
         const links = alongLinkDirection ? node.outLinks : node.inLinks;
         const linkNeighbors = links.filter((neighborNodeID) => {
           if (!subgraphNodeIDs.includes(neighborNodeID)) return false;
           if (alongLinkDirection) {
-            return subgraphEdges.find(e => e.source === nodeID && neighborNodeID === e.target);
+            return subgraphEdges.find(
+              (e) => e.source === nodeID && neighborNodeID === e.target
+            );
           }
 
-          return subgraphEdges.find(e => e.target === nodeID && neighborNodeID === e.source);
+          return subgraphEdges.find(
+            (e) => e.target === nodeID && neighborNodeID === e.source
+          );
         });
         for (let j = 0; j < linkNeighbors.length; j += 1) {
           const neighborNodeID = linkNeighbors[j];
-          if (!currentLevelNodeIDs.includes(neighborNodeID)
-            && !nextLevelNodeIDs.includes(neighborNodeID)) {
+          if (
+            !currentLevelNodeIDs.includes(neighborNodeID) &&
+            !nextLevelNodeIDs.includes(neighborNodeID)
+          ) {
             nextLevelNodeIDs.push(neighborNodeID);
           }
         }
@@ -283,18 +304,19 @@ export const sortNodesByTopology = (
   nodeIDsToSort,
   subgraphNodeIDs,
   subgraphEdges,
-  wholeGraphNodes,
+  wholeGraphNodes
 ) => {
   const graphBFSTraverse = BFSTraverseSubgraph(
     true,
     subgraphNodeIDs,
     subgraphEdges,
-    wholeGraphNodes,
+    wholeGraphNodes
   );
-  const sortedNodeIDs = graphBFSTraverse.filter(nodeID => nodeIDsToSort.includes(nodeID));
+  const sortedNodeIDs = graphBFSTraverse.filter((nodeID) =>
+    nodeIDsToSort.includes(nodeID)
+  );
   return sortedNodeIDs;
 };
-
 
 /**
  * Find a node that is descendent of all other nodes inside subgraph
@@ -306,13 +328,13 @@ export const sortNodesByTopology = (
 export const getSingleEndDescendentNodeID = (
   subgraphNodeIDs,
   subgraphEdges,
-  wholeGraphNodes,
+  wholeGraphNodes
 ) => {
   const nodeIDs = getNodeIDsThatHaveNoInOrOutLinks(
     false,
     subgraphNodeIDs,
     subgraphEdges,
-    wholeGraphNodes,
+    wholeGraphNodes
   );
   if (nodeIDs.length === 1) return nodeIDs[0];
   return null;
@@ -338,30 +360,40 @@ export const getNodesAndLinksSummaryBetweenNodesInSubgraph = (
   endingNodeID,
   subgraphNodeIDs,
   subgraphEdges,
-  wholeGraphNodes,
+  wholeGraphNodes
 ) => {
-  const startingNode = wholeGraphNodes.find(node => node.id === startingNodeID);
+  const startingNode = wholeGraphNodes.find(
+    (node) => node.id === startingNodeID
+  );
   const betweenNodeIDs = [];
-  const firstLevelOutNodeIDs = startingNode.outLinks.filter(outNodeID =>
-    subgraphEdges.find(e => e.source === startingNodeID && e.target === outNodeID));
+  const firstLevelOutNodeIDs = startingNode.outLinks.filter((outNodeID) =>
+    subgraphEdges.find(
+      (e) => e.source === startingNodeID && e.target === outNodeID
+    )
+  );
   let currentLevelNodeIDs = firstLevelOutNodeIDs;
-  const betweenLinks = firstLevelOutNodeIDs.map(outID => ({
+  const betweenLinks = firstLevelOutNodeIDs.map((outID) => ({
     source: startingNodeID,
     target: outID,
   }));
   while (currentLevelNodeIDs.length > 0) {
     const nextLevelNodeIDs = [];
     currentLevelNodeIDs.forEach((nodeID) => {
-      if (betweenNodeIDs.includes(nodeID)
-        || nextLevelNodeIDs.includes(nodeID)
-        || nodeID === endingNodeID
-      ) return;
+      if (
+        betweenNodeIDs.includes(nodeID) ||
+        nextLevelNodeIDs.includes(nodeID) ||
+        nodeID === endingNodeID
+      )
+        return;
       betweenNodeIDs.push(nodeID);
-      const node = wholeGraphNodes.find(n => (n.id === nodeID));
+      const node = wholeGraphNodes.find((n) => n.id === nodeID);
       const outNOdeIDsInSubgraph = node.outLinks
-        .filter(outNodeID => subgraphNodeIDs.includes(outNodeID))
-        .filter(outNodeID => subgraphEdges.find(e =>
-          e.source === nodeID && e.target === outNodeID));
+        .filter((outNodeID) => subgraphNodeIDs.includes(outNodeID))
+        .filter((outNodeID) =>
+          subgraphEdges.find(
+            (e) => e.source === nodeID && e.target === outNodeID
+          )
+        );
       outNOdeIDsInSubgraph.forEach((outNodeID) => {
         betweenLinks.push({
           source: nodeID,
@@ -369,7 +401,7 @@ export const getNodesAndLinksSummaryBetweenNodesInSubgraph = (
         });
       });
       outNOdeIDsInSubgraph
-        .filter(outNodeID => outNodeID !== endingNodeID)
+        .filter((outNodeID) => outNodeID !== endingNodeID)
         .forEach((outNodeID) => {
           nextLevelNodeIDs.push(outNodeID);
         });
@@ -380,7 +412,7 @@ export const getNodesAndLinksSummaryBetweenNodesInSubgraph = (
     false,
     betweenNodeIDs,
     subgraphEdges,
-    wholeGraphNodes,
+    wholeGraphNodes
   );
   return {
     nodeIDs: sortedBetweenNodeIDs,
@@ -393,7 +425,7 @@ export const getAllRoutesBetweenTwoNodes = (
   endingNodeID,
   subgraphNodeIDs,
   subgraphEdges,
-  wholeGraphNodes,
+  wholeGraphNodes
 ) => {
   const resultRoutes = [];
   const takeOneStep = (curID, curPath) => {
@@ -403,11 +435,12 @@ export const getAllRoutesBetweenTwoNodes = (
       resultRoutes.push(resultPath);
       return;
     }
-    const curNode = wholeGraphNodes.find(n => n.id === curID);
+    const curNode = wholeGraphNodes.find((n) => n.id === curID);
     curNode.outLinks.forEach((oid) => {
       if (curPath.has(oid)) return; // avoid loop
       if (!subgraphNodeIDs.includes(oid)) return;
-      if (!subgraphEdges.find(e => e.target === oid && e.source === curID)) return;
+      if (!subgraphEdges.find((e) => e.target === oid && e.source === curID))
+        return;
       curPath.add(oid);
       takeOneStep(oid, curPath);
       curPath.delete(oid);
@@ -416,4 +449,3 @@ export const getAllRoutesBetweenTwoNodes = (
   takeOneStep(startingNodeID, new Set([startingNodeID]));
   return resultRoutes;
 };
-

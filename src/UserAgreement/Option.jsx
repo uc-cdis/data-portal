@@ -23,8 +23,12 @@ class Option extends Component {
     let frameClassModifier = '';
     let bulletClassModifier = '';
     if (this.props.selected) {
-      frameClassModifier = this.props.isCorrectAnswer ? 'option__frame--correct' : 'option__frame--incorrect';
-      bulletClassModifier = this.props.isCorrectAnswer ? 'option__bullet--correct' : 'option__bullet--incorrect';
+      frameClassModifier = this.props.isCorrectAnswer
+        ? 'option__frame--correct'
+        : 'option__frame--incorrect';
+      bulletClassModifier = this.props.isCorrectAnswer
+        ? 'option__bullet--correct'
+        : 'option__bullet--incorrect';
     }
     return (
       <div
@@ -34,16 +38,14 @@ class Option extends Component {
         onKeyDown={this.handleKeyDown}
         tabIndex={-10}
       >
-        {
-          this.props.hasCorrectAnswers ?
-            <div
-              className={`option__bullet body ${bulletClassModifier}`}
-              key={this.props.option}
-            >
-              {getCharFromA(this.props.idx)}
-            </div>
-            : null
-        }
+        {this.props.hasCorrectAnswers ? (
+          <div
+            className={`option__bullet body ${bulletClassModifier}`}
+            key={this.props.option}
+          >
+            {getCharFromA(this.props.idx)}
+          </div>
+        ) : null}
         <div className='option__content body'>{this.props.option}</div>
       </div>
     );

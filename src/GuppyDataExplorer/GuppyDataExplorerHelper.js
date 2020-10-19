@@ -1,22 +1,31 @@
-import _ from 'lodash';
+function difference(a, b) {
+  const setA = new Set(a);
+  const setB = new Set(b);
+  return [...new Set([...setA].filter((x) => !setB.has(x)))];
+}
 
 // if true, means user has unaccessible fields in aggsData
 export function checkForAnySelectedUnaccessibleField(
   aggsData,
   accessibleFieldObject,
-  fieldToCheck) {
+  fieldToCheck
+) {
   let accessValuesInAggregationList = [];
   if (!accessibleFieldObject || !accessibleFieldObject[fieldToCheck]) {
     return false;
   }
 
   const accessibleValues = accessibleFieldObject[fieldToCheck];
-  if (aggsData
-      && aggsData[fieldToCheck]
-      && aggsData[fieldToCheck].histogram) {
-    accessValuesInAggregationList = aggsData[fieldToCheck].histogram.map(entry => entry.key);
-    const outOfScopeValues = _.difference(accessValuesInAggregationList, accessibleValues);
-    if (outOfScopeValues.length > 0) { // trying to get unaccessible data is forbidden
+  if (aggsData && aggsData[fieldToCheck] && aggsData[fieldToCheck].histogram) {
+    accessValuesInAggregationList = aggsData[fieldToCheck].histogram.map(
+      (entry) => entry.key
+    );
+    const outOfScopeValues = difference(
+      accessValuesInAggregationList,
+      accessibleValues
+    );
+    if (outOfScopeValues.length > 0) {
+      // trying to get unaccessible data is forbidden
       return true;
     }
     return false;
@@ -27,19 +36,21 @@ export function checkForAnySelectedUnaccessibleField(
 // if true, means user don't have access to any project
 export function checkForNoAccessibleProject(
   accessibleFieldObject,
-  fieldToCheck) {
+  fieldToCheck
+) {
   if (!accessibleFieldObject || !accessibleFieldObject[fieldToCheck]) {
     return false;
   }
-  return (accessibleFieldObject[fieldToCheck].length === 0);
+  return accessibleFieldObject[fieldToCheck].length === 0;
 }
 
 // if true, means user have full access to all projects
 export function checkForFullAccessibleProject(
   unaccessibleFieldObject,
-  fieldToCheck) {
+  fieldToCheck
+) {
   if (!unaccessibleFieldObject || !unaccessibleFieldObject[fieldToCheck]) {
     return false;
   }
-  return (unaccessibleFieldObject[fieldToCheck].length === 0);
+  return unaccessibleFieldObject[fieldToCheck].length === 0;
 }

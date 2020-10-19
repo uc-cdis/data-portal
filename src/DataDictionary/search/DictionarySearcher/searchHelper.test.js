@@ -76,7 +76,10 @@ describe('dictionary search helper', () => {
   });
 
   it('can output error if keyword too long', () => {
-    const { result, errorMsg } = searchKeyword(searchData, '1234567890123456789012345678901234567890');
+    const { result, errorMsg } = searchKeyword(
+      searchData,
+      '1234567890123456789012345678901234567890'
+    );
     expect(result).toEqual([]);
     expect(errorMsg).toEqual(ERR_KEYWORD_TOO_LONG);
   });

@@ -15,7 +15,7 @@ describe('DataDictionaryCategory', () => {
       nodes={nodes}
       highlightingNodeID={null}
       onExpandNode={expandFunc}
-    />,
+    />
   );
 
   it('can render', () => {

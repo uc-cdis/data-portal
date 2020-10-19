@@ -7,11 +7,11 @@ class TableFoot extends Component {
     return (
       <tfoot className='base-table__foot'>
         <tr>
-          {
-            this.props.cols.map((col, i) => (
-              <td className='base-table__cell' key={`col_${col.name}_${i}`}>{col.name}</td>
-            ))
-          }
+          {this.props.cols.map((col, i) => (
+            <td className='base-table__cell' key={`col_${col.name}_${i}`}>
+              {col.name}
+            </td>
+          ))}
         </tr>
       </tfoot>
     );

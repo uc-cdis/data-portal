@@ -1,5 +1,5 @@
 .gql-editor {
-  height: calc(~"100vh - 181px");
+  height: calc(~'100vh - 181px');
   padding: 20px 20px;
 }
 
@@ -17,10 +17,25 @@
 }
 
 .gql-editor .graphiql-container {
-  height: calc(~"100vh - 191px - 100px");
+  height: calc(~'100vh - 191px - 100px');
 }
 
 .gql-editor__button {
   float: right;
   margin-top: 10px;
+}
+
+.graphiql-container button.docExplorerShow,
+.graphiql-container .docExplorerWrap button,
+.graphiql-container .historyPaneWrap button,
+.graphiql-container .toolbar button {
+  width: auto;
+  height: inherit;
+  font-weight: normal;
+}
+
+.graphiql-container .topBar,
+.graphiql-container .doc-explorer-title-bar,
+.graphiql-container .history-title-bar {
+  box-sizing: content-box;
 }

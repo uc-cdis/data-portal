@@ -40,9 +40,11 @@ describe('the UserProfile component', () => {
           onRequestDeleteKey={noop}
           onClearDeleteSession={noop}
         />
-      </StaticRouter>,
+      </StaticRouter>
     );
-    expect($vdom.find('tbody tr')).toHaveLength(testProps.userProfile.jtis.length + 1);
+    expect($vdom.find('tbody tr')).toHaveLength(
+      testProps.userProfile.jtis.length + 1
+    );
   });
 
   it('triggers create-key events', (done) => {
@@ -50,14 +52,17 @@ describe('the UserProfile component', () => {
       <StaticRouter location={{ pathname: '/identity' }} context={{}}>
         <UserProfile
           {...testProps}
-          onCreateKey={() => { done(); }}
+          onCreateKey={() => {
+            done();
+          }}
           onClearCreationSession={noop}
           onUpdatePopup={noop}
           onDeleteKey={noop}
           onRequestDeleteKey={noop}
           onClearDeleteSession={noop}
         />
-      </StaticRouter>);
+      </StaticRouter>
+    );
     const $createBtn = $vdom.find('.g3-button');
     expect($createBtn).toHaveLength(1);
     $createBtn.simulate('click');
@@ -73,10 +78,12 @@ describe('the UserProfile component', () => {
           onClearCreationSession={noop}
           onUpdatePopup={noop}
           onDeleteKey={noop}
-          onRequestDeleteKey={() => { done(); }}
+          onRequestDeleteKey={() => {
+            done();
+          }}
           onClearDeleteSession={noop}
         />
-      </StaticRouter>,
+      </StaticRouter>
     );
     const $deleteBtn = $vdom.find(`button[name="${DELETE_BTN}"]`);
     expect($deleteBtn).toHaveLength(2);

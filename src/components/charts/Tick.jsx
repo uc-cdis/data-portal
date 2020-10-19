@@ -8,7 +8,10 @@ class Tick extends React.Component {
     return (
       <g>
         <text textAnchor='end' x={x} y={y} dy={0}>
-          <tspan className='special-number' fill='#3283C8'>{`${texts[0]} `}</tspan>
+          <tspan
+            className='special-number'
+            fill='#3283C8'
+          >{`${texts[0]} `}</tspan>
           <tspan className='h4-typo'>{`${texts[1]}`}</tspan>
         </text>
       </g>

@@ -13,10 +13,7 @@ import { graphql } from 'react-relay';
  * gql database
  */
 const helperSingleton = {
-  /**
-   * Fetch the initial list of projects and global node counts
-   */
-  homepageQuery: graphql`query gqlHelperHomepageQuery {
+  submissionPageQuery: graphql`query gqlHelperSubmissionPageQuery {
     projectList: project(first: 10000) {
       name: project_id
       code

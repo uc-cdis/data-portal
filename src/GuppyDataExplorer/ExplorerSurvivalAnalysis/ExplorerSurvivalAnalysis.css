@@ -1,0 +1,119 @@
+.explorer-survival-analysis {
+  background-color: var(--g3-color__white);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 10px;
+  padding: 12px;
+}
+
+.explorer-survival-analysis__warning {
+  color: #e74c3c;
+  font-style: italic;
+  padding: 0.5rem 0;
+  text-align: center;
+  width: 100%;
+}
+
+.explorer-survival-analysis__column-left {
+  display: flex;
+  min-width: 400px;
+  max-width: 600px;
+}
+
+.explorer-survival-analysis__column-right {
+  display: flex;
+  flex-direction: column;
+  min-width: 50%;
+  max-width: 600px;
+}
+
+.explorer-survival-analysis__error {
+  text-align: center;
+  margin: 1rem auto;
+}
+
+.explorer-survival-analysis__control-form {
+  margin: 12px;
+  min-height: 300px;
+  text-align: center;
+  width: 100%;
+}
+
+.explorer-survival-analysis__field-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+}
+
+.explorer-survival-analysis__field-label {
+  text-align: right;
+  margin-right: 10px;
+  width: 30%;
+}
+
+.explorer-survival-analysis__field-input {
+  width: 60%;
+}
+
+.explorer-survival-analysis__field_input__input {
+  border-color: #d9d9d9 #ccc #b3b3b3;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  color: #333;
+  cursor: default;
+  border-spacing: 0;
+  border-collapse: separate;
+  height: 36px;
+  outline: none;
+  overflow: hidden;
+  width: 100%;
+  text-align: center;
+}
+
+.explorer-survival-analysis__button-group {
+  max-width: 200px;
+  min-height: 100px;
+  margin: 3rem auto 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.explorer-survival-analysis__pval {
+  margin-left: 12px;
+  padding: 0.5rem 1rem;
+  height: 1.25rem;
+  font-size: 1rem;
+}
+
+.explorer-survival-analysis__survival-plot {
+  margin: 12px;
+  min-height: 300px;
+}
+
+.explorer-survival-analysis__risk-table {
+  margin: 12px;
+  min-height: 150px;
+}
+
+.explorer-survival-analysis__risk-table .yAxis tspan {
+  font-size: 0.8rem;
+}
+
+.explorer-survival-analysis__figure-title {
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.5rem 1rem 0;
+}
+.explorer-survival-analysis__figure-placeholder {
+  border: 1px dashed lightgray;
+  color: gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 90%;
+  margin: auto;
+}

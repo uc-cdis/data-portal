@@ -56,7 +56,7 @@ describe('DictionarySearcher', () => {
       onSearchHistoryItemCreated={createHistoryFunc}
       onSaveCurrentSearchKeyword={saveResultFunc}
       setIsSearching={setSearchFunc}
-    />,
+    />
   );
   const dictionarySearcherInstance = wrapper.instance();
 

@@ -16,24 +16,39 @@ class GraphNode extends React.Component {
   }
 
   render() {
-    if (!(this.props.node.id !== undefined && this.props.node.type !== undefined
-      && this.props.node.textPadding !== undefined && this.props.node.topCenterX !== undefined
-      && this.props.node.topCenterY !== undefined && this.props.node.width !== undefined
-      && this.props.node.height !== undefined && this.props.node.color !== undefined
-      && this.props.node.names !== undefined && this.props.node.iconRadius !== undefined)
-      && this.props.node.textLineGap !== undefined && this.props.node.fontSize !== undefined) {
+    if (
+      !(
+        this.props.node.id !== undefined &&
+        this.props.node.type !== undefined &&
+        this.props.node.textPadding !== undefined &&
+        this.props.node.topCenterX !== undefined &&
+        this.props.node.topCenterY !== undefined &&
+        this.props.node.width !== undefined &&
+        this.props.node.height !== undefined &&
+        this.props.node.color !== undefined &&
+        this.props.node.names !== undefined &&
+        this.props.node.iconRadius !== undefined
+      ) &&
+      this.props.node.textLineGap !== undefined &&
+      this.props.node.fontSize !== undefined
+    ) {
       return null;
     }
     const nodeFadedClassModifier = this.props.isFaded
-      ? 'graph-node--faded' : '';
+      ? 'graph-node--faded'
+      : '';
     const nodeHalfFadedClassModifier = this.props.isHalfFaded
-      ? 'graph-node--half-faded' : '';
+      ? 'graph-node--half-faded'
+      : '';
     const nodeDashedClassModifier = this.props.isDashed
-      ? 'graph-node--dashed' : '';
+      ? 'graph-node--dashed'
+      : '';
     const nodeClickableClassModifier = this.props.isClickable
-      ? 'graph-node--clickable' : 'graph-node--not-clickable';
+      ? 'graph-node--clickable'
+      : 'graph-node--not-clickable';
     const nodeIsCurrentHighlightingClassModifier = this.props.isHighlightingNode
-      ? 'graph-drawer__node--current-highlighting' : '';
+      ? 'graph-drawer__node--current-highlighting'
+      : '';
     const IconSVG = getCategoryIconSVG(this.props.node.type);
     return (
       <g
@@ -61,29 +76,28 @@ class GraphNode extends React.Component {
           ry={4}
           stroke={this.props.node.color}
         />
-        {
-          getNodeTitleSVGFragment(
-            this.props.node.names,
-            this.props.matchedNodeNameIndices,
-            this.props.node.fontSize,
-            this.props.node.textPadding,
-            this.props.node.textLineGap,
-          )
-        }
+        {getNodeTitleSVGFragment(
+          this.props.node.names,
+          this.props.matchedNodeNameIndices,
+          this.props.node.fontSize,
+          this.props.node.textPadding,
+          this.props.node.textLineGap
+        )}
         {
           <g
-            transform={`translate(${-this.props.node.iconRadius}, ${-this.props.node.iconRadius})`}
+            transform={`translate(${-this.props.node.iconRadius}, ${-this.props
+              .node.iconRadius})`}
           >
-            {
-              IconSVG ? <IconSVG /> : (
-                <circle
-                  cx={this.props.node.iconRadius}
-                  cy={this.props.node.iconRadius}
-                  r={this.props.node.iconRadius}
-                  fill={this.props.node.color}
-                />
-              )
-            }
+            {IconSVG ? (
+              <IconSVG />
+            ) : (
+              <circle
+                cx={this.props.node.iconRadius}
+                cy={this.props.node.iconRadius}
+                r={this.props.node.iconRadius}
+                fill={this.props.node.color}
+              />
+            )}
           </g>
         }
       </g>
@@ -127,4 +141,3 @@ GraphNode.defaultProps = {
 };
 
 export default GraphNode;
-

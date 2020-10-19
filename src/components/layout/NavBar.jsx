@@ -33,21 +33,24 @@ class NavBar extends Component {
       this.navButtonRefs[itemUniqueId] = React.createRef();
     }
     return this.navButtonRefs[itemUniqueId];
-  }
+  };
 
   canUserSeeComponent = (componentName) => {
     const authResult = this.props.userAccess[componentName];
     return typeof authResult !== 'undefined' ? authResult : true;
-  }
+  };
 
   isActive = (id) => {
-    const toCompare = this.props.activeTab.split('/').filter(x => x !== 'dev.html').join('/');
+    const toCompare = this.props.activeTab
+      .split('/')
+      .filter((x) => x !== 'dev.html')
+      .join('/');
     return toCompare.startsWith(id);
-  }
+  };
 
   toggleMenu = () => {
-    this.setState(prevState => ({ menuOpen: !prevState.menuOpen }));
-  }
+    this.setState((prevState) => ({ menuOpen: !prevState.menuOpen }));
+  };
 
   updateTooltip(item) {
     /*
@@ -57,9 +60,11 @@ class NavBar extends Component {
     */
     let tooltipDetails = { content: '' };
     if (item && item.tooltip) {
-      const boundsRect = this.navButtonRefs[item.link].current.getBoundingClientRect();
+      const boundsRect = this.navButtonRefs[
+        item.link
+      ].current.getBoundingClientRect();
       const bottomY = boundsRect.bottom + window.scrollY;
-      const centerX = boundsRect.x + (boundsRect.width / 2);
+      const centerX = boundsRect.x + boundsRect.width / 2;
       tooltipDetails = {
         content: item.tooltip,
         x: centerX,
@@ -73,17 +78,17 @@ class NavBar extends Component {
   }
 
   render() {
-    const navItems = this.props.navItems.map(
-      (item, index) => {
-        const navButton = (<div
+    const navItems = this.props.navItems.map((item, index) => {
+      const navButton = (
+        <div
           key={item.link}
           ref={this.getNavButtonRef(item.link)}
           className='nav-bar__link nav-bar__link--right'
           onMouseOver={() => this.updateTooltip(item)}
           onMouseLeave={() => this.updateTooltip(null)}
         >
-          { item.link.startsWith('http') ?
-            (<a href={item.link}>
+          {item.link.startsWith('http') ? (
+            <a href={item.link}>
               <NavButton
                 item={item}
                 dictIcons={this.props.dictIcons}
@@ -91,9 +96,9 @@ class NavBar extends Component {
                 onActiveTab={() => this.props.onActiveTab(item.link)}
                 tabIndex={index + 1}
               />
-            </a>)
-            :
-            (<Link to={item.link}>
+            </a>
+          ) : (
+            <Link to={item.link}>
               <NavButton
                 item={item}
                 dictIcons={this.props.dictIcons}
@@ -101,11 +106,12 @@ class NavBar extends Component {
                 onActiveTab={() => this.props.onActiveTab(item.link)}
                 tabIndex={index + 1}
               />
-            </Link>)
-          }
-        </div>);
-        return this.canUserSeeComponent(item.name) ? navButton : null;
-      });
+            </Link>
+          )}
+        </div>
+      );
+      return this.canUserSeeComponent(item.name) ? navButton : null;
+    });
 
     return (
       <div className='nav-bar'>
@@ -132,24 +138,24 @@ class NavBar extends Component {
                     alt=''
                   />
                 </Link>
-              )
-              }
+              )}
             </div>
-            {
-              this.props.navTitle && (
-                <div
-                  role='button'
-                  tabIndex={0}
-                  className='nav-bar__home-button'
-                  onClick={() => this.props.onActiveTab('')}
-                  onKeyPress={() => this.props.onActiveTab('')}
+            {this.props.navTitle && (
+              <div
+                role='button'
+                tabIndex={0}
+                className='nav-bar__home-button'
+                onClick={() => this.props.onActiveTab('')}
+                onKeyPress={() => this.props.onActiveTab('')}
+              >
+                <Link
+                  className='h3-typo nav-bar__link nav-bar__link--home'
+                  to=''
                 >
-                  <Link className='h3-typo nav-bar__link nav-bar__link--home' to=''>
-                    {this.props.navTitle}
-                  </Link>
-                </div>
-              )
-            }
+                  {this.props.navTitle}
+                </Link>
+              </div>
+            )}
           </nav>
           <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
             <div
@@ -165,21 +171,15 @@ class NavBar extends Component {
                 size='lg'
               />
             </div>
-            {
-              this.state.menuOpen ? (
-                <nav className='nav-bar__nav--items'>
-                  { navItems }
-                </nav>
-              ) : null
-            }
+            {this.state.menuOpen ? (
+              <nav className='nav-bar__nav--items'>{navItems}</nav>
+            ) : null}
           </MediaQuery>
           <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-            <nav className='nav-bar__nav--items'>
-              { navItems }
-            </nav>
-            { this.state.tooltipDetails.content !== '' ?
+            <nav className='nav-bar__nav--items'>{navItems}</nav>
+            {this.state.tooltipDetails.content !== '' ? (
               <NavBarTooltip {...this.state.tooltipDetails} />
-              : null }
+            ) : null}
           </MediaQuery>
         </header>
       </div>

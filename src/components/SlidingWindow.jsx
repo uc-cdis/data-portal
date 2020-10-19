@@ -1,9 +1,13 @@
 import PropTypes from 'prop-types';
 
 const SlidingWindow = ({
-  dictIcons, iconName,
-  height, width,
-  scrollX, scrollY, svgStyles,
+  dictIcons,
+  iconName,
+  height,
+  width,
+  scrollX,
+  scrollY,
+  svgStyles,
 }) => dictIcons[iconName](height, width, scrollX, scrollY, svgStyles);
 
 SlidingWindow.propTypes = {

@@ -1,76 +1,92 @@
-import _ from 'underscore';
 import { fetchWithCreds } from '../actions';
-import { homepageChartNodes, datasetUrl } from '../localconf';
+import { guppyDownloadUrl } from '../localconf';
 import getReduxStore from '../reduxStore';
-import getHomepageChartProjectsList from './relayer';
+import { consortiumList } from '../params';
 
-const updateRedux = async projectNodeCounts => getReduxStore().then(
-  (store) => {
-    store.dispatch({
-      type: 'RECEIVE_HOMEPAGE_CHART_DATASETS',
-      projectNodeCounts,
-      homepageChartNodes,
-      fileNodes: store.getState().submission.file_nodes,
+const fetchOpts = {
+  path: guppyDownloadUrl,
+  method: 'POST',
+  body: JSON.stringify({
+    type: 'subject',
+    fields: ['consortium', 'study_id', '_molecular_analysis_count'],
+  }),
+  customHeaders: {
+    Accept: 'application/json',
+    Signature: 'signature token',
+  },
+};
+
+export function getIndexPageCounts() {
+  getReduxStore().then(
+    (store) => {
+      const { updatedAt } = store.getState().index;
+      const needsUpdate =
+        updatedAt === undefined || Date.now() - updatedAt > 300000;
+
+      if (needsUpdate)
+        fetchWithCreds(fetchOpts).then(({ data, response }) => {
+          if (response.status === 200) {
+            store.dispatch({
+              type: 'RECEIVE_INDEX_PAGE_COUNTS',
+              data: parseCounts(data),
+            });
+          } else
+            console.error(
+              'WARNING: failed to with status',
+              response.statusText
+            );
+        });
+    },
+    (err) => console.error('WARNING: failed to load redux store', err)
+  );
+}
+
+function parseCounts(rawData) {
+  const data = [];
+  for (const { consortium, study_id, _molecular_analysis_count } of rawData)
+    data.push({
+      consortium,
+      molecular_analysis_count: _molecular_analysis_count,
+      study_id,
     });
-  },
-  (err) => {
-    console.error('WARNING: failed to load redux store', err);
-    return 'ERR';
-  },
-);
 
-// loadHomepageChartdataFromDatasets queries Peregrine's /datasets endpoint for
-// summary data (counts of projects, counts of subjects, etc).
-// If `public_datasets` is enabled in Peregrine's config, the /datasets endpoint
-// is publicly available, and can be accessed by logged-out users. Otherwise, the
-// request will fail for logged-out users. If the request fails because the user
-// is logged out, this function will return {needsLogin: true}.
-export const loadHomepageChartDataFromDatasets = async (callback) => {
-  const resultStatus = { needLogin: false };
+  const totalCounts = getCountObject(data);
 
-  const store = await getReduxStore();
-  const fileNodes = store.getState().submission.file_nodes;
-  const nodesForIndexChart = homepageChartNodes.map(item => item.node);
-  const nodesToRequest = _.union(fileNodes, nodesForIndexChart);
-  const url = `${datasetUrl}?nodes=${nodesToRequest.join(',')}`;
+  const projectList = [];
+  const overviewCounts = { total: totalCounts, names: consortiumList };
+  for (const consortium of consortiumList) {
+    const consortiumCounts = getCountObject(data, consortium);
+    projectList.push({
+      code: consortium,
+      counts: [consortiumCounts.subject, consortiumCounts.molecular_analysis],
+    });
+    overviewCounts[consortium] = consortiumCounts;
+  }
 
-  fetchWithCreds({
-    path: url,
-  }).then((res) => {
-    switch (res.status) {
-    case 200:
-      updateRedux(res.data);
-      if (callback) {
-        callback(resultStatus);
-      }
-      break;
-    case 404:
-      // Shouldn't happen, this means peregrine datasets endpoint not enabled
-      console.error(`REST endpoint ${datasetUrl} not enabled in Peregrine yet.`);
-      resultStatus.needLogin = true;
-      if (callback) {
-        callback(resultStatus);
-      }
-      break;
-    case 401:
-    case 403:
-      resultStatus.needLogin = true;
-      if (callback) {
-        callback(resultStatus);
-      }
-      break;
-    default:
-      break;
+  return {
+    countNames: ['Subjects', 'Molecular Analyses'],
+    projectList,
+    overviewCounts,
+  };
+}
+function getCountObject(data, whichConsortium) {
+  let molecularAnalysisCount = 0;
+  let studySet = new Set();
+  let subjectCount = whichConsortium === undefined ? data.length : 0;
+
+  for (const { consortium, study_id, molecular_analysis_count } of data)
+    if (whichConsortium === undefined) {
+      molecularAnalysisCount += molecular_analysis_count;
+      for (const id of study_id) studySet.add(id);
+    } else if (whichConsortium === consortium) {
+      molecularAnalysisCount += molecular_analysis_count;
+      for (const id of study_id) studySet.add(id);
+      subjectCount++;
     }
-  })
-    .catch((err) => {
-      console.log(err);
-    });
-};
 
-// loadHomepageChartDataFromGraphQL will load the same data as the
-// loadHomepageChartsFromDatasets function above, but will do it through
-// multiple queries to Peregrine's GraphQL endpoint instead.
-export const loadHomepageChartDataFromGraphQL = () => {
-  getHomepageChartProjectsList();
-};
+  return {
+    molecular_analysis: molecularAnalysisCount,
+    study: studySet.size,
+    subject: subjectCount,
+  };
+}

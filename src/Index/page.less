@@ -20,56 +20,11 @@
 
 .index-page__bar-chart {
   width: 770px;
-  padding: 0 20px 0 40px;
-}
-
-.index-page__slider-chart {
-  outline: none;
+  padding: 0 40px;
 }
 
 @media screen and (max-width: 1290px) {
   .index-page__bar-chart {
-    width: 500px;
+    width: 660px;
   }
-}
-
-/** override some style for carousel's arrow and dots **/
-
-.slick-dots li button:before {
-  font-size: 20px;
-}
-
-.slick-prev, .slick-next {
-  background: var(--g3-color__smoke);
-  border-radius: 50%;
-  transition: background-color 300ms;
-  -webkit-transition: background-color 300ms;
-}
-
-.slick-prev:before, .slick-next:before {
-  font-size: 10px;
-  content: ' ';
-  border: solid;
-  border-width: 0 3px 3px 0;
-  display: inline-block;
-  padding: 3px; 
-}
-
-.slick-prev:hover, .slick-prev:focus, .slick-next:hover, .slick-next:focus {
-  opacity: 0.9;
-  background-color: var(--g3-color__smoke);
-}
-
-.slick-prev:before {
-  transform: rotate(135deg);
-  -webkit-transform: rotate(135deg);
-}
-
-.slick-next:before {
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-}
-
-.slick-arrow.slick-disabled {
-  opacity: 0;
 }

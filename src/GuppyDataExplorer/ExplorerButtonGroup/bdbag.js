@@ -1,23 +1,31 @@
 /**
-* This demo feature is depending on Peregrine's bdbag branch.
-* We do following steps:
-* 1. Hit Peregrine's bdbag endpoint using a set of submitter IDs
-* 2. Get reponse url (which relates to an s3 bucket resource) from Peregrine
-* 3. HIt Saturn's "import data" endpoint using this url as argument
-*/
+ * This demo feature is depending on Peregrine's bdbag branch.
+ * We do following steps:
+ * 1. Hit Peregrine's bdbag endpoint using a set of submitter IDs
+ * 2. Get reponse url (which relates to an s3 bucket resource) from Peregrine
+ * 3. HIt Saturn's "import data" endpoint using this url as argument
+ */
 
 import { fetchWithCreds } from '../../actions';
 
-export const getBDBagQuery = referenceIDList => `{
+export const getBDBagQuery = (referenceIDList) => `{
   participants:
-    case(first:0${referenceIDList !== undefined ? `,submitter_id: ["${referenceIDList.join('","')}"]` : ''})
+    case(first:0${
+      referenceIDList !== undefined
+        ? `,submitter_id: ["${referenceIDList.join('","')}"]`
+        : ''
+    })
     {
        _participant_id:id
     }
     samples:sample(first:0
-    ${referenceIDList !== undefined ? `, with_path_to_any:[
-    ${referenceIDList.map(item => (`{type: "case", submitter_id: "${item}"}`))}
-    ]` : ''}
+    ${
+      referenceIDList !== undefined
+        ? `, with_path_to_any:[
+    ${referenceIDList.map((item) => `{type: "case", submitter_id: "${item}"}`)}
+    ]`
+        : ''
+    }
     ) {
       composition
       submitter_specimen_type:biospecimen_anatomic_site
@@ -64,11 +72,9 @@ export const getBDBagQuery = referenceIDList => `{
   }`;
 
 /**
-*   referenceIdList - a list of IDs for filtering
-*/
-const exportToSaturnByIDList = async (
-  referenceIDList,
-) => {
+ *   referenceIdList - a list of IDs for filtering
+ */
+const exportToSaturnByIDList = async (referenceIDList) => {
   const BDBAG_ENDPOINT = '/api/v0/submission/graphql/';
   const SATURN_ENDPOINT = 'https://bvdp-saturn-prod.appspot.com/#import-data';
   const MSG_EXPORT_SATURN_FAIL = 'Error while export data to Saturn';
@@ -84,21 +90,19 @@ const exportToSaturnByIDList = async (
     path: BDBAG_ENDPOINT,
     method: 'POST',
     body: JSON.stringify(body),
-  })
-    .then((r) => {
-      if (!r || r.status !== 200) {
-        throw MSG_EXPORT_SATURN_FAIL;
-      }
-      const url = encodeURIComponent(r.data);
-      window.location = `${SATURN_ENDPOINT}?url=${url}`;
-    });
+  }).then((r) => {
+    if (!r || r.status !== 200) {
+      throw MSG_EXPORT_SATURN_FAIL;
+    }
+    const url = encodeURIComponent(r.data);
+    window.location = `${SATURN_ENDPOINT}?url=${url}`;
+  });
 };
 
-export const exportAllSelectedDataToCloud = async (
-  downloadFieldsFunc,
-) => {
+export const exportAllSelectedDataToCloud = async (downloadFieldsFunc) => {
   const referenceID = 'submitter_id';
-  const idList = await downloadFieldsFunc({ fields: [referenceID] })
-    .then(res => res.map(i => i[referenceID]));
+  const idList = await downloadFieldsFunc({
+    fields: [referenceID],
+  }).then((res) => res.map((i) => i[referenceID]));
   exportToSaturnByIDList(idList);
 };

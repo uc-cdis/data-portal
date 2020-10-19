@@ -10,7 +10,7 @@ class PrivacyPolicy extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return (!this.props.loaded && nextProps.loaded);
+    return !this.props.loaded && nextProps.loaded;
   }
 
   /* eslint-disable react/no-danger */

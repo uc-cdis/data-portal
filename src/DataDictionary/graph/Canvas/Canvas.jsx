@@ -14,7 +14,9 @@ const d3 = {
   zoomIdentity,
   transition,
   easeLinear,
-  get event() { return event; }, // https://stackoverflow.com/a/40048292
+  get event() {
+    return event;
+  }, // https://stackoverflow.com/a/40048292
 };
 
 class Canvas extends React.Component {
@@ -27,22 +29,24 @@ class Canvas extends React.Component {
     this.canvasElement = React.createRef();
     this.svgElement = React.createRef();
     this.containerElement = React.createRef();
-    this.transition = d3.transition()
-      .duration(150)
-      .ease(d3.easeLinear);
+    this.transition = d3.transition().duration(150).ease(d3.easeLinear);
   }
 
   componentDidMount() {
-    this.zoomBehavior = d3.zoom()
+    this.zoomBehavior = d3
+      .zoom()
       .scaleExtent([this.props.minZoom, this.props.maxZoom])
-      .translateExtent([this.props.topLeftTranslateLimit, this.props.bottomRightTranslateLimit])
+      .translateExtent([
+        this.props.topLeftTranslateLimit,
+        this.props.bottomRightTranslateLimit,
+      ])
       .on('zoom', () => {
         this.handleCanvasUpdate();
-        this.zoomTarget
-          .attr('transform', d3.event.transform);
+        this.zoomTarget.attr('transform', d3.event.transform);
       });
     this.zoomTarget = d3.select('.canvas__container');
-    this.zoomCatcher = d3.select('.canvas__overlay')
+    this.zoomCatcher = d3
+      .select('.canvas__overlay')
       .style('fill', 'none')
       .style('pointer-events', 'all')
       .call(this.zoomBehavior);
@@ -58,8 +62,7 @@ class Canvas extends React.Component {
   }
 
   componentWillUnmount() {
-    d3.select('.canvas__overlay')
-      .on('.zoom', null);
+    d3.select('.canvas__overlay').on('.zoom', null);
     window.removeEventListener('resize', this.handleResize);
   }
 
@@ -67,7 +70,7 @@ class Canvas extends React.Component {
     if (this.props.isGraphView) {
       this.updateCanvasSize();
     }
-  }
+  };
 
   updateCanvasSize() {
     this.setState({
@@ -80,11 +83,11 @@ class Canvas extends React.Component {
   handleCanvasUpdate = () => {
     const canvasBoundingRect = this.canvasElement.current.getBoundingClientRect();
     this.props.onCanvasBoundingBoxUpdate(canvasBoundingRect);
-  }
+  };
 
   handleClick = () => {
     this.props.onClickBlankSpace();
-  }
+  };
 
   zoomAction = (k) => {
     const transform = d3.zoomTransform(this.zoomCatcher.node());
@@ -99,29 +102,33 @@ class Canvas extends React.Component {
         transform
           .translate(
             translateSign * (this.state.canvasWidth / 2) * Math.abs(k - 1),
-            translateSign * (this.state.canvasHeight / 2) * Math.abs(k - 1),
+            translateSign * (this.state.canvasHeight / 2) * Math.abs(k - 1)
           )
-          .scale(k),
+          .scale(k)
       );
-  }
+  };
 
   handleZoomIn = () => {
     this.zoomAction(1.2);
-  }
+  };
 
   handleZoomOut = () => {
     this.zoomAction(0.8);
-  }
+  };
 
   handleReset = () => {
     this.zoomCatcher
       .transition(this.transition)
       .call(this.zoomBehavior.transform, d3.zoomIdentity);
-  }
+  };
 
   render() {
     return (
-      <div className='canvas' ref={this.canvasElement} style={{ width: '100%', height: '100%' }}>
+      <div
+        className='canvas'
+        ref={this.canvasElement}
+        style={{ width: '100%', height: '100%' }}
+      >
         <div className='canvas__zoom-button-group'>
           <div
             className='canvas__zoom-button canvas__zoom-button--reset'
@@ -163,17 +170,13 @@ class Canvas extends React.Component {
             height={this.state.canvasHeight}
             onClick={this.handleClick}
           />
-          <g
-            className='canvas__container'
-            ref={this.containerElement}
-          >
-            {
-              React.Children.map(this.props.children, child => React.cloneElement(child, {
+          <g className='canvas__container' ref={this.containerElement}>
+            {React.Children.map(this.props.children, (child) =>
+              React.cloneElement(child, {
                 canvasWidth: this.state.canvasWidth,
                 canvasHeight: this.state.canvasHeight,
-              }),
-              )
-            }
+              })
+            )}
           </g>
         </svg>
       </div>

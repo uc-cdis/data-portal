@@ -29,7 +29,7 @@
     ],
     "projectDetails": "boardCounts"
   },
-   "components": {
+  "components": {
     "appName": "IBDGC Portal",
     "index": {
       "introduction": {

@@ -176,6 +176,7 @@ The Data Availability Tool (DAT) is a visualization tool to show data availabili
 In the past, in order to enable the DAT in data explorer, the portal config file must contain a `dataAvailabilityToolConfig` block. To migrate this DAT config so it can work with the new `explorerConfig`, simple copy the entire `dataAvailabilityToolConfig` block into the configuration block of the tab what the DAT will be put into.
 
 Example:
+
 ```
 "explorerConfig":[
     {                                       ---> 1st tab (with DAT)

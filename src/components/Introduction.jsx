@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import IconicLink from './buttons/IconicLink';
 import './Introduction.less';
-import { useArboristUI } from '../configs';
+import { useArboristUI } from '../localconf';
 import { userHasMethodOnAnyProject } from '../authMappingUtils';
 
 class Introduction extends Component {
@@ -23,22 +23,29 @@ class Introduction extends Component {
 
     return (
       <div className='introduction'>
-        <div className='h1-typo introduction__title'>{this.props.data.heading}</div>
-        <div className='high-light introduction__text'>{this.props.data.text}</div>
-        <IconicLink
-          link={this.props.data.link}
-          dictIcons={this.props.dictIcons}
-          className='introduction__icon'
-          icon='upload'
-          iconColor='#'
-          caption={buttonText}
-        />
+        <div className='h1-typo introduction__title'>
+          {this.props.data.heading}
+        </div>
+        <div className='high-light introduction__text'>
+          {this.props.data.text}
+        </div>
+        {this.props.isAdminUser && (
+          <IconicLink
+            link={this.props.data.link}
+            dictIcons={this.props.dictIcons}
+            className='introduction__icon'
+            icon='upload'
+            iconColor='#'
+            caption={buttonText}
+          />
+        )}
       </div>
     );
   }
 }
 
 Introduction.propTypes = {
+  isAdminUser: PropTypes.bool,
   userAuthMapping: PropTypes.object.isRequired,
 };
 

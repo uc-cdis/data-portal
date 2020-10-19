@@ -7,16 +7,11 @@ class TableHead extends Component {
     return (
       <thead className='base-table__head'>
         <tr>
-          {
-            this.props.cols.map((col, i) => (
-              <th
-                className='base-table__column-head'
-                key={`col_${col}_${i}`}
-              >
-                {col}
-              </th>
-            ))
-          }
+          {this.props.cols.map((col, i) => (
+            <th className='base-table__column-head' key={`col_${col}_${i}`}>
+              {col}
+            </th>
+          ))}
         </tr>
       </thead>
     );

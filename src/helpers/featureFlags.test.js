@@ -2,8 +2,7 @@ import isEnabled from './featureFlags';
 import { config } from '../params';
 
 jest.mock('../params', () => ({
-  components: {
-  },
+  components: {},
   config: {
     featureFlags: {
       testFlag: false,
@@ -23,7 +22,10 @@ describe('featureFlags', () => {
 
   it('returns true if the flag has been enabled in browser', () => {
     expect(isEnabled('testFlag')).toBe(false);
-    global.sessionStorage.setItem('gen3Features', JSON.stringify({ testFlag: true }));
+    global.sessionStorage.setItem(
+      'gen3Features',
+      JSON.stringify({ testFlag: true })
+    );
     expect(isEnabled('testFlag')).toBe(true);
   });
 

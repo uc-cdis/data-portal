@@ -41,10 +41,8 @@ import IcoAnvilPlanning from './anvil-icons/anvil-planning.svg';
 
 const dictIcons = {
   analysis: (height, customedStyles) => (
-    <IcoAnalysis
-      height={height}
-      style={{ ...customedStyles }}
-    />),
+    <IcoAnalysis height={height} style={{ ...customedStyles }} />
+  ),
   back: (height, customedStyles) => (
     <IcoBack height={height} style={{ ...customedStyles }} />
   ),
@@ -99,15 +97,11 @@ const dictIcons = {
   files: (height, customedStyles) => (
     <IcoFiles height={height} style={{ ...customedStyles }} />
   ),
-  gen3: (height, customedStyles) => (<IcoGen3
-    height={height}
-    style={{ ...customedStyles }}
-  />),
+  gen3: (height, customedStyles) => (
+    <IcoGen3 height={height} style={{ ...customedStyles }} />
+  ),
   gene: (height, customedStyles) => (
-    <IcoGene
-      height={height}
-      style={{ ...customedStyles }}
-    />
+    <IcoGene height={height} style={{ ...customedStyles }} />
   ),
   key: (height, customedStyles) => (
     <IcoKey height={height} style={{ ...customedStyles }} />
@@ -161,10 +155,7 @@ const dictIcons = {
     <IcoWorkspace height={height} style={{ ...customedStyles }} />
   ),
   uchicago: (height, customedStyles) => (
-    <IcoSignature
-      height={height}
-      style={{ ...customedStyles }}
-    />
+    <IcoSignature height={height} style={{ ...customedStyles }} />
   ),
 };
 

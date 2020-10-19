@@ -14,22 +14,20 @@ class Resource extends React.Component {
           rel='noopener noreferrer'
         >
           <div className='resource__text-contents'>
-            <h3 className='resource__title'>
-              {this.props.title}
-            </h3>
-            {this.props.description ?
+            <h3 className='resource__title'>{this.props.title}</h3>
+            {this.props.description ? (
               <div className='resource__description'>
                 {this.props.description}
               </div>
-              : null}
+            ) : null}
           </div>
-          {this.props.imageUrl ?
+          {this.props.imageUrl ? (
             <img
               className='resource__image'
               src={this.props.imageUrl}
               alt={this.props.title}
             />
-            : null}
+          ) : null}
         </a>
       </div>
     );
@@ -47,6 +45,5 @@ Resource.defaultProps = {
   description: '',
   imageUrl: '',
 };
-
 
 export default Resource;

@@ -10,7 +10,7 @@ import {
 } from '../../action';
 
 const ReduxGraphCalculator = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     dictionary: state.submission.dictionary,
     countsSearch: state.submission.counts_search,
     linksSearch: state.submission.links_search,
@@ -21,25 +21,40 @@ const ReduxGraphCalculator = (() => {
     layoutInitialized: state.ddgraph.layoutInitialized,
   });
 
-  const mapDispatchToProps = dispatch => ({
-    onGraphLayoutCalculated: layout => dispatch(setGraphLayout(layout)),
-    onGraphLegendCalculated: legendItems => dispatch(setGraphLegend(legendItems)),
-    onHighlightRelatedNodesCalculated: relatedNodeIDs =>
+  const mapDispatchToProps = (dispatch) => ({
+    onGraphLayoutCalculated: (layout) => dispatch(setGraphLayout(layout)),
+    onGraphLegendCalculated: (legendItems) =>
+      dispatch(setGraphLegend(legendItems)),
+    onHighlightRelatedNodesCalculated: (relatedNodeIDs) =>
       dispatch(setRelatedNodeIDs(relatedNodeIDs)),
-    onSecondHighlightingNodeCandidateIDsCalculated: secondHighlightingNodeCandidateIDs =>
-      dispatch(setSecondHighlightingNodeCandidateIDs(secondHighlightingNodeCandidateIDs)),
-    onPathRelatedToSecondHighlightingNodeCalculated: pathRelatedToSecondHighlightingNode =>
-      dispatch(setPathRelatedToSecondHighlightingNode(pathRelatedToSecondHighlightingNode)),
+    onSecondHighlightingNodeCandidateIDsCalculated: (
+      secondHighlightingNodeCandidateIDs
+    ) =>
+      dispatch(
+        setSecondHighlightingNodeCandidateIDs(
+          secondHighlightingNodeCandidateIDs
+        )
+      ),
+    onPathRelatedToSecondHighlightingNodeCalculated: (
+      pathRelatedToSecondHighlightingNode
+    ) =>
+      dispatch(
+        setPathRelatedToSecondHighlightingNode(
+          pathRelatedToSecondHighlightingNode
+        )
+      ),
     onDataModelStructureCalculated: (
       dataModelStructure,
       dataModelStructureRelatedNodeIDs,
-      routesBetweenStartEndNodes,
+      routesBetweenStartEndNodes
     ) =>
-      dispatch(setDataModelStructure(
-        dataModelStructure,
-        dataModelStructureRelatedNodeIDs,
-        routesBetweenStartEndNodes,
-      )),
+      dispatch(
+        setDataModelStructure(
+          dataModelStructure,
+          dataModelStructureRelatedNodeIDs,
+          routesBetweenStartEndNodes
+        )
+      ),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(GraphCalculator);

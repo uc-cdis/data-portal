@@ -10,13 +10,12 @@ const https = require('https');
 const http = require('http');
 const fetch = require('node-fetch');
 const fs = require('fs');
-const {
-  buildClientSchema,
-  printSchema,
-} = require('graphql/utilities/index');
+const { buildClientSchema, printSchema } = require('graphql/utilities/index');
 
 const { gdcSubPath } = (function () {
-  function addSlash(path) { return (`${path}/`).replace(/\/+$/, '/'); }
+  function addSlash(path) {
+    return `${path}/`.replace(/\/+$/, '/');
+  }
 
   if (process.argv.length < 3) {
     let gdcDefaultPath = 'http://localhost:5000/v0/submission/';
@@ -27,7 +26,10 @@ const { gdcSubPath } = (function () {
         gdcDefaultPath = `http://${process.env.HOSTNAME}/api/v0/submission/`;
       }
     }
-    return { status: 'ok', gdcSubPath: addSlash(process.env.GDC_SUBPATH || gdcDefaultPath) };
+    return {
+      status: 'ok',
+      gdcSubPath: addSlash(process.env.GDC_SUBPATH || gdcDefaultPath),
+    };
   }
   const arg1 = process.argv[2];
   if (!arg1.match(/^https?:\/\//)) {
@@ -46,7 +48,7 @@ const { gdcSubPath } = (function () {
     return { status: 'exit' };
   }
   return { status: 'ok', gdcSubPath: addSlash(arg1) };
-}());
+})();
 
 if (!gdcSubPath) {
   process.exit(1);
@@ -78,37 +80,41 @@ async function fetchJsonRetry(urlStr, opts) {
 
   async function doRetry(reason) {
     if (retryCount > retryBackoff.length) {
-      return Promise.reject(`failed fetch ${reason}, max retries ${retryBackoff.length} exceeded for ${urlStr}`);
+      return Promise.reject(
+        `failed fetch ${reason}, max retries ${retryBackoff.length} exceeded for ${urlStr}`
+      );
     }
 
-    return new Promise(((resolve) => {
+    return new Promise((resolve) => {
       // sleep and try again ...
       const retryIndex = Math.min(retryCount, retryBackoff.length - 1);
-      const sleepMs = retryBackoff[retryIndex] + Math.floor(Math.random() * 2000);
+      const sleepMs =
+        retryBackoff[retryIndex] + Math.floor(Math.random() * 2000);
       retryCount += 1;
-      console.log(`failed fetch - ${reason}, sleeping ${sleepMs} then retry ${urlStr}`);
+      console.log(
+        `failed fetch - ${reason}, sleeping ${sleepMs} then retry ${urlStr}`
+      );
       setTimeout(() => {
         resolve('ok');
         console.log(`Retrying ${urlStr} after sleep - ${retryCount}`);
       }, sleepMs);
-    })).then(doRequest);
+    }).then(doRequest);
   }
 
   doRequest = async function () {
     if (retryCount > 0) {
       console.log(`Re-fetching ${urlStr} - retry no ${retryCount}`);
     }
-    return fetch(urlStr, opts,
-    ).then(
+    return fetch(urlStr, opts).then(
       (res) => {
         if (res.status === 200) {
-          return res.json().catch(
-            err => doRetry(`failed json parse - ${err}`),
-          );
+          return res
+            .json()
+            .catch((err) => doRetry(`failed json parse - ${err}`));
         }
         return doRetry(`non-200 from server: ${res.status}`);
       },
-      err => doRetry(err),
+      (err) => doRetry(err)
     );
   };
 
@@ -137,15 +143,13 @@ actionList.push(
     // Save user readable type system shorthand of schema
     const graphQLSchema = buildClientSchema(schema.data);
     fs.writeFileSync(`${__dirname}/schema.graphql`, printSchema(graphQLSchema));
-  }),
+  })
 );
 
 actionList.push(
-  fetchJson(dictUrl).then(
-    (dict) => {
-      fs.writeFileSync(dictPath, JSON.stringify(dict, null, 2));
-    },
-  ),
+  fetchJson(dictUrl).then((dict) => {
+    fs.writeFileSync(dictPath, JSON.stringify(dict, null, 2));
+  })
 );
 
 Promise.all(actionList).then(
@@ -156,5 +160,5 @@ Promise.all(actionList).then(
   (err) => {
     console.error('Error: ', err);
     process.exit(2);
-  },
+  }
 );

@@ -5,14 +5,17 @@ import './DictionarySearchHistory.css';
 class DictionarySearchHistory extends React.Component {
   handleClick = (keyword) => {
     this.props.onClickSearchHistoryItem(keyword);
-  }
+  };
 
   handleClearHistory = () => {
     this.props.onClearSearchHistoryItems();
-  }
+  };
 
   render() {
-    if (this.props.searchHistoryItems && this.props.searchHistoryItems.length > 0) {
+    if (
+      this.props.searchHistoryItems &&
+      this.props.searchHistoryItems.length > 0
+    ) {
       return (
         <div className='dictionary-search-history'>
           <div className='dictionary-search-history__title'>
@@ -30,9 +33,12 @@ class DictionarySearchHistory extends React.Component {
             </span>
           </div>
           <div>
-            {
-              this.props.searchHistoryItems && this.props.searchHistoryItems.map((item) => {
-                const zeroCountModifier = item.matchedCount === 0 ? 'dictionary-search-history__item-badge--zero' : '';
+            {this.props.searchHistoryItems &&
+              this.props.searchHistoryItems.map((item) => {
+                const zeroCountModifier =
+                  item.matchedCount === 0
+                    ? 'dictionary-search-history__item-badge--zero'
+                    : '';
                 return (
                   <div
                     className='dictionary-search-history__item'
@@ -42,12 +48,17 @@ class DictionarySearchHistory extends React.Component {
                     onKeyPress={() => this.handleClick(item.keywordStr)}
                     tabIndex={0}
                   >
-                    <span className='dictionary-search-history__item-keyword'>{item.keywordStr}</span>
-                    <span className={`dictionary-search-history__item-badge ${zeroCountModifier}`}>{item.matchedCount}</span>
+                    <span className='dictionary-search-history__item-keyword'>
+                      {item.keywordStr}
+                    </span>
+                    <span
+                      className={`dictionary-search-history__item-badge ${zeroCountModifier}`}
+                    >
+                      {item.matchedCount}
+                    </span>
                   </div>
                 );
-              })
-            }
+              })}
           </div>
         </div>
       );

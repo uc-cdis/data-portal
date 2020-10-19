@@ -20,7 +20,7 @@ describe('NodePopup', () => {
         graphNodesSVGElements={svgElems}
         onClosePopup={closeFunc}
         onOpenOverlayPropertyTable={openFunc}
-      />,
+      />
     );
     expect(popup.find('.node-popup__wrapper').length).toBe(1);
     const openPropertyButtonElem = popup.find('.node-popup__button').first();

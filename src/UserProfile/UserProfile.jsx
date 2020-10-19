@@ -5,16 +5,21 @@ import copy from 'clipboard-plus';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
-import { credentialCdisPath } from '../localconf';
+import {
+  credentialCdisPath,
+  showArboristAuthzOnProfile,
+  showFenceAuthzOnProfile,
+} from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
 import AccessTable from '../components/tables/AccessTable';
-import { showArboristAuthzOnProfile, showFenceAuthzOnProfile } from '../configs';
 import './UserProfile.less';
 
-const NO_ACCESS_MSG = 'You have no access to storage service. Please contact an admin to get it!';
-const NO_API_KEY = 'You don\'t have any API key. Please create one!';
+const NO_ACCESS_MSG =
+  'You have no access to storage service. Please contact an admin to get it!';
+const NO_API_KEY = "You don't have any API key. Please create one!";
 const CONFIRM_DELETE_MSG = 'Are you sure you want to make this key inactive?';
-const SECRET_KEY_MSG = 'This secret key is only displayed this time. Please save it!';
+const SECRET_KEY_MSG =
+  'This secret key is only displayed this time. Please save it!';
 export const CREATE_API_KEY_BTN = 'Create API key';
 
 export const saveToFile = (savingStr, filename) => {
@@ -22,9 +27,19 @@ export const saveToFile = (savingStr, filename) => {
   FileSaver.saveAs(blob, filename);
 };
 
-const UserProfile = ({ user, userProfile, userAuthMapping, popups, submission, onCreateKey,
-  onClearCreationSession, onUpdatePopup, onDeleteKey,
-  onRequestDeleteKey, onClearDeleteSession }) => {
+const UserProfile = ({
+  user,
+  userProfile,
+  userAuthMapping,
+  popups,
+  submission,
+  onCreateKey,
+  onClearCreationSession,
+  onUpdatePopup,
+  onDeleteKey,
+  onRequestDeleteKey,
+  onClearDeleteSession,
+}) => {
   const onCreate = () => {
     onCreateKey(credentialCdisPath);
   };
@@ -41,17 +56,10 @@ const UserProfile = ({ user, userProfile, userAuthMapping, popups, submission, o
 
   return (
     <div className='user-profile'>
-      {
-        userProfile.jtis === undefined &&
-        <div>
-          {NO_ACCESS_MSG}
-        </div>
-      }
-      {
-        userProfile.jtis !== undefined && userProfile.jtis !== [] &&
+      {userProfile.jtis === undefined && <div>{NO_ACCESS_MSG}</div>}
+      {userProfile.jtis !== undefined && userProfile.jtis !== [] && (
         <ul className='user-profile__key-pair-table'>
-          {
-            popups.deleteTokenPopup === true &&
+          {popups.deleteTokenPopup === true && (
             <Popup
               message={CONFIRM_DELETE_MSG}
               error={jsonToString(userProfile.delete_error)}
@@ -66,18 +74,18 @@ const UserProfile = ({ user, userProfile, userAuthMapping, popups, submission, o
               rightButtons={[
                 {
                   caption: 'Confirm',
-                  fn: () => onDeleteKey(
-                    userProfile.requestDeleteJTI,
-                    userProfile.requestDeleteExp,
-                    popups.keypairsApi,
-                  ),
+                  fn: () =>
+                    onDeleteKey(
+                      userProfile.requestDeleteJTI,
+                      userProfile.requestDeleteExp,
+                      popups.keypairsApi
+                    ),
                 },
               ]}
               onClose={createPopupClose}
             />
-          }
-          {
-            popups.saveTokenPopup === true &&
+          )}
+          {popups.saveTokenPopup === true && (
             <Popup
               message={SECRET_KEY_MSG}
               error={jsonToString(userProfile.create_error)}
@@ -99,7 +107,8 @@ const UserProfile = ({ user, userProfile, userAuthMapping, popups, submission, o
               rightButtons={[
                 {
                   caption: 'Download json',
-                  fn: () => saveToFile(userProfile.strRefreshCred, 'credentials.json'),
+                  fn: () =>
+                    saveToFile(userProfile.strRefreshCred, 'credentials.json'),
                   icon: 'download',
                 },
                 {
@@ -110,41 +119,40 @@ const UserProfile = ({ user, userProfile, userAuthMapping, popups, submission, o
               ]}
               onClose={savePopupClose}
             />
-          }
+          )}
           <Button
             onClick={onCreate}
             label={CREATE_API_KEY_BTN}
             buttonType='primary'
             rightIcon='key'
           />
-          {
-            userProfile.jtis.length === 0 &&
-            <div>
-              {NO_API_KEY}
-            </div>
-          }
-          {
-            userProfile.jtis &&
+          {userProfile.jtis.length === 0 && <div>{NO_API_KEY}</div>}
+          {userProfile.jtis && (
             <KeyTable
               jtis={userProfile.jtis}
-              onDelete={
-                (jti) => {
-                  onRequestDeleteKey(jti.jti, jti.exp, credentialCdisPath);
-                  onUpdatePopup({ deleteTokenPopup: true, keypairsApi: credentialCdisPath });
-                }
-              }
+              onDelete={(jti) => {
+                onRequestDeleteKey(jti.jti, jti.exp, credentialCdisPath);
+                onUpdatePopup({
+                  deleteTokenPopup: true,
+                  keypairsApi: credentialCdisPath,
+                });
+              }}
             />
-          }
+          )}
         </ul>
-      }
-      {
-        showFenceAuthzOnProfile &&
-        <AccessTable projects={submission.projects} projectsAccesses={user.project_access} />
-      }
-      {
-        showArboristAuthzOnProfile &&
-        <AccessTable projects={submission.projects} userAuthMapping={userAuthMapping} />
-      }
+      )}
+      {showFenceAuthzOnProfile && (
+        <AccessTable
+          projects={submission.projects}
+          projectsAccesses={user.project_access}
+        />
+      )}
+      {showArboristAuthzOnProfile && (
+        <AccessTable
+          projects={submission.projects}
+          userAuthMapping={userAuthMapping}
+        />
+      )}
     </div>
   );
 };

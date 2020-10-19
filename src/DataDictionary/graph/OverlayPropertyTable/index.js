@@ -8,7 +8,9 @@ import OverlayPropertyTable from './OverlayPropertyTable';
 const getNode = (state) => {
   if (state.ddgraph.isSearchMode) {
     if (state.ddgraph.highlightingMatchedNodeID) {
-      return state.submission.dictionary[state.ddgraph.highlightingMatchedNodeID];
+      return state.submission.dictionary[
+        state.ddgraph.highlightingMatchedNodeID
+      ];
     }
 
     return null;
@@ -21,14 +23,15 @@ const getNode = (state) => {
 
 const getSearchResultItem = (state) => {
   if (state.ddgraph.isSearchMode) {
-    return state.ddgraph.searchResult
-      .find(resItem => resItem.item.id === state.ddgraph.highlightingMatchedNodeID);
+    return state.ddgraph.searchResult.find(
+      (resItem) => resItem.item.id === state.ddgraph.highlightingMatchedNodeID
+    );
   }
   return null;
 };
 
 const ReduxOverlayPropertyTable = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     hidden: state.ddgraph.overlayPropertyHidden,
     node: getNode(state),
     isSearchMode: state.ddgraph.isSearchMode,
@@ -36,10 +39,13 @@ const ReduxOverlayPropertyTable = (() => {
     isSearchResultNodeOpened: state.ddgraph.highlightingMatchedNodeOpened,
   });
 
-  const mapDispatchToProps = dispatch => ({
-    onCloseOverlayPropertyTable: () => dispatch(setOverlayPropertyTableHidden(true)),
-    onOpenMatchedProperties: () => dispatch(setHighlightingMatchedNodeOpened(true)),
-    onCloseMatchedProperties: () => dispatch(setHighlightingMatchedNodeOpened(false)),
+  const mapDispatchToProps = (dispatch) => ({
+    onCloseOverlayPropertyTable: () =>
+      dispatch(setOverlayPropertyTableHidden(true)),
+    onOpenMatchedProperties: () =>
+      dispatch(setHighlightingMatchedNodeOpened(true)),
+    onCloseMatchedProperties: () =>
+      dispatch(setHighlightingMatchedNodeOpened(false)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(OverlayPropertyTable);

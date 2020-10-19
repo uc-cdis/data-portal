@@ -12,11 +12,13 @@ describe('DataDictionaryPropertyTable', () => {
     <DataDictionaryPropertyTable
       properties={properties}
       requiredProperties={requiredProps}
-    />,
+    />
   );
 
   it('can render', () => {
     expect(wrapper.find(DataDictionaryPropertyTable).length).toBe(1);
-    expect(wrapper.find('.data-dictionary-property-table__required').length).toBe(requiredProps.length);
+    expect(
+      wrapper.find('.data-dictionary-property-table__required').length
+    ).toBe(requiredProps.length);
   });
 });

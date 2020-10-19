@@ -8,7 +8,7 @@ const escapeReturnChar = (str, newlineClassName) => {
   return pieces.map((piece, i) => (
     <span
       key={`span-${i}`}
-      className={(i === 0 || i === pieces.length) ? '' : newlineClassName}
+      className={i === 0 || i === pieces.length ? '' : newlineClassName}
     >
       {piece}
     </span>
@@ -24,140 +24,134 @@ const addHighlightingSpans = (str, indices, spanClassName) => {
   while (currentIndices < indices.length) {
     if (cursor < indices[currentIndices][0]) {
       resultFragments.push(
-        (
-          <div
-            key={cursor}
-            className={spanClassName}
-          >
-            {escapeReturnChar(str.substring(cursor, indices[currentIndices][0]), newlineClassName)}
-          </div>
-        ),
+        <div key={cursor} className={spanClassName}>
+          {escapeReturnChar(
+            str.substring(cursor, indices[currentIndices][0]),
+            newlineClassName
+          )}
+        </div>
       );
     }
     resultFragments.push(
-      (
-        <div
-          key={indices[currentIndices][0]}
-          className={`${spanClassName} ${highlightSpanClassName}`}
-        >
-          {
-            escapeReturnChar(
-              str.substring(
-                indices[currentIndices][0],
-                indices[currentIndices][1] + 1),
-              newlineClassName,
-            )
-          }
-        </div>
-      ),
+      <div
+        key={indices[currentIndices][0]}
+        className={`${spanClassName} ${highlightSpanClassName}`}
+      >
+        {escapeReturnChar(
+          str.substring(
+            indices[currentIndices][0],
+            indices[currentIndices][1] + 1
+          ),
+          newlineClassName
+        )}
+      </div>
     );
     cursor = indices[currentIndices][1] + 1;
     currentIndices += 1;
   }
   if (cursor < str.length) {
     resultFragments.push(
-      (
-        <div
-          key={cursor}
-          className={spanClassName}
-        >
-          {escapeReturnChar(str.substring(cursor), newlineClassName)}
-        </div>
-      ),
+      <div key={cursor} className={spanClassName}>
+        {escapeReturnChar(str.substring(cursor), newlineClassName)}
+      </div>
     );
   }
   return resultFragments;
 };
 
-export const getPropertyNameFragment = (propertyName, matchedItem, spanClassName) => {
+export const getPropertyNameFragment = (
+  propertyName,
+  matchedItem,
+  spanClassName
+) => {
   const propertyNameFragment = addHighlightingSpans(
     propertyName,
     matchedItem ? matchedItem.indices : [],
-    spanClassName,
+    spanClassName
   );
   return propertyNameFragment;
 };
 
-export const getPropertyTypeFragment = (property, typeMatchList, spanClassName) => {
+export const getPropertyTypeFragment = (
+  property,
+  typeMatchList,
+  spanClassName
+) => {
   const type = getType(property);
   let propertyTypeFragment;
   if (typeof type === 'string') {
     propertyTypeFragment = (
       <li>
-        {
-          addHighlightingSpans(
-            type,
-            (typeMatchList && typeMatchList[0]) ? typeMatchList[0].indices : [],
-            spanClassName,
-          )
-        }
+        {addHighlightingSpans(
+          type,
+          typeMatchList && typeMatchList[0] ? typeMatchList[0].indices : [],
+          spanClassName
+        )}
       </li>
     );
   } else {
     propertyTypeFragment = type.map((t, i) => {
-      const matchedTypeItem = typeMatchList && typeMatchList.find(
-        matchItem => matchItem.value === t);
+      const matchedTypeItem =
+        typeMatchList &&
+        typeMatchList.find((matchItem) => matchItem.value === t);
       if (matchedTypeItem) {
         return (
           <li key={i}>
-            {
-              addHighlightingSpans(
-                t,
-                matchedTypeItem.indices,
-                spanClassName,
-              )
-            }
+            {addHighlightingSpans(t, matchedTypeItem.indices, spanClassName)}
           </li>
         );
       }
-      return (
-        <li key={i}>
-          {
-            addHighlightingSpans(
-              t,
-              [],
-              spanClassName,
-            )
-          }
-        </li>
-      );
+      return <li key={i}>{addHighlightingSpans(t, [], spanClassName)}</li>;
     });
   }
   return propertyTypeFragment;
 };
 
-export const getPropertyDescriptionFragment = (property, matchedItem, spanClassName) => {
+export const getPropertyDescriptionFragment = (
+  property,
+  matchedItem,
+  spanClassName
+) => {
   let descriptionStr = getPropertyDescription(property);
   if (!descriptionStr) descriptionStr = 'No Description';
   const propertyDescriptionFragment = addHighlightingSpans(
     descriptionStr,
     matchedItem ? matchedItem.indices : [],
-    spanClassName,
+    spanClassName
   );
   return propertyDescriptionFragment;
 };
 
 export const getNodeTitleFragment = (allMatches, title, spanClassName) => {
-  const matchedItem = allMatches.find(item => item.key === 'title');
+  const matchedItem = allMatches.find((item) => item.key === 'title');
   const nodeTitleFragment = addHighlightingSpans(
     title,
     matchedItem ? matchedItem.indices : [],
-    spanClassName,
+    spanClassName
   );
   return nodeTitleFragment;
 };
 
-export const getNodeDescriptionFragment = (allMatches, description, spanClassName) => {
-  const matchedItem = allMatches.find(item => item.key === 'description');
+export const getNodeDescriptionFragment = (
+  allMatches,
+  description,
+  spanClassName
+) => {
+  const matchedItem = allMatches.find((item) => item.key === 'description');
   const nodeDescriptionFragment = addHighlightingSpans(
     description,
     matchedItem ? matchedItem.indices : [],
-    spanClassName,
+    spanClassName
   );
   return nodeDescriptionFragment;
 };
 
-export const getMatchInsideProperty = (propertyIndex, propertyKey, property, allMatches) => {
+export const getMatchInsideProperty = (
+  propertyIndex,
+  propertyKey,
+  property,
+  allMatches
+) => {
   let nameMatch = null;
   let descriptionMatch = null;
   const typeMatchList = [];
@@ -197,7 +191,12 @@ export const getMatchesSummaryForProperties = (allProperties, allMatches) => {
       nameMatch,
       descriptionMatch,
       typeMatchList,
-    } = getMatchInsideProperty(propertyIndex, propertyKey, property, allMatches);
+    } = getMatchInsideProperty(
+      propertyIndex,
+      propertyKey,
+      property,
+      allMatches
+    );
     const summaryItem = {
       propertyKey,
       property,
@@ -217,7 +216,7 @@ export const getNodeTitleSVGFragment = (
   matchedNodeNameIndices,
   fontSize,
   textPadding,
-  textLineGap,
+  textLineGap
 ) => {
   const nodeTitleFragment = [];
   let currentRowIndex = 0;
@@ -245,11 +244,11 @@ export const getNodeTitleSVGFragment = (
     ...tspanAttrBase,
     className: 'graph-node__tspan graph-node__tspan--highlight',
   };
-  while (currentRowIndex < nodeNameRows.length) { // for each row
+  while (currentRowIndex < nodeNameRows.length) {
+    // for each row
     const currentRowStr = nodeNameRows[currentRowIndex];
     rowEndIndex = rowStartIndex + currentRowStr.length;
-    const textY = textPadding +
-      (currentRowIndex * (fontSize + textLineGap));
+    const textY = textPadding + currentRowIndex * (fontSize + textLineGap);
     const textAttr = {
       ...textAttrBase,
       key: currentRowIndex,
@@ -260,41 +259,43 @@ export const getNodeTitleSVGFragment = (
 
     // Go over all highlighted text in current row
     while (currentHighlightIndex < matchedNodeNameIndices.length) {
-      const highlightStartIndex = matchedNodeNameIndices[currentHighlightIndex][0];
-      const highlightEndIndex = matchedNodeNameIndices[currentHighlightIndex][1] + 1;
+      const highlightStartIndex =
+        matchedNodeNameIndices[currentHighlightIndex][0];
+      const highlightEndIndex =
+        matchedNodeNameIndices[currentHighlightIndex][1] + 1;
       if (highlightStartIndex > rowEndIndex) {
-        currentRowFragment.push((
+        currentRowFragment.push(
           <tspan key={cursorInRow} {...tspanAttr}>
             {currentRowStr.substring(cursorInRow)}
           </tspan>
-        ));
+        );
         cursorInRow = currentRowStr.length;
         break;
       }
       const highlightStartIndexInRow = highlightStartIndex - rowStartIndex;
       const highlightEndIndexInRow = highlightEndIndex - rowStartIndex;
       if (cursorInRow < highlightStartIndexInRow) {
-        currentRowFragment.push((
+        currentRowFragment.push(
           <tspan key={cursorInRow} {...tspanAttr}>
             {currentRowStr.substring(cursorInRow, highlightStartIndexInRow)}
           </tspan>
-        ));
+        );
         cursorInRow = highlightStartIndexInRow;
       }
       if (highlightEndIndex <= rowEndIndex) {
-        currentRowFragment.push((
+        currentRowFragment.push(
           <tspan key={cursorInRow} {...tspanHighlightAttr}>
             {currentRowStr.substring(cursorInRow, highlightEndIndexInRow)}
           </tspan>
-        ));
+        );
         cursorInRow = highlightEndIndexInRow;
         currentHighlightIndex += 1;
       } else {
-        currentRowFragment.push((
+        currentRowFragment.push(
           <tspan key={cursorInRow} {...tspanHighlightAttr}>
             {currentRowStr.substring(cursorInRow)}
           </tspan>
-        ));
+        );
         cursorInRow = currentRowStr.lenght;
         break;
       }
@@ -302,15 +303,15 @@ export const getNodeTitleSVGFragment = (
 
     // Check text in the current row are all added to the list
     if (cursorInRow < currentRowStr.length) {
-      currentRowFragment.push((
-        <tspan key={cursorInRow} {...tspanAttr}>{currentRowStr.substring(cursorInRow)}</tspan>
-      ));
+      currentRowFragment.push(
+        <tspan key={cursorInRow} {...tspanAttr}>
+          {currentRowStr.substring(cursorInRow)}
+        </tspan>
+      );
     }
 
     // Add all fragment of current line to the node title fragment list
-    nodeTitleFragment.push((
-      <text {...textAttr}>{currentRowFragment}</text>
-    ));
+    nodeTitleFragment.push(<text {...textAttr}>{currentRowFragment}</text>);
     currentRowIndex += 1;
     rowStartIndex += currentRowStr.length + 1;
   } // end of while, go to the next row

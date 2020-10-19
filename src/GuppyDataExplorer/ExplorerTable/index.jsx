@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import pluralize from 'pluralize';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
@@ -10,6 +9,16 @@ import { capitalizeFirstLetter, humanFileSize } from '../../utils';
 import './ExplorerTable.css';
 import LockIcon from '../../img/icons/lock.svg';
 import dictIcons from '../../img/icons/index';
+
+/**
+ * A simplified alternative to lodash/get using string path of property names only.
+ * @param {object} object The object to query.
+ * @param {string} path Path to the property to get, e.g. 'a.b.c'
+ * @param {any} defaultValue The value returned if the resolved value is undefined.
+ * @return Returns the resolved value.
+ */
+const get = (object, path, defaultValue) =>
+  path.split('.').reduce((obj, key) => obj && obj[key], object) || defaultValue;
 
 class ExplorerTable extends React.Component {
   constructor(props) {
@@ -37,19 +46,23 @@ class ExplorerTable extends React.Component {
     let maxLetterLen = columnName.length;
     const fieldStringsArray = field.split('.');
     this.props.rawData.forEach((d) => {
-      if (d[fieldStringsArray[0]] === null || typeof d[fieldStringsArray[0]] === 'undefined') {
+      if (
+        d[fieldStringsArray[0]] === null ||
+        typeof d[fieldStringsArray[0]] === 'undefined'
+      ) {
         return;
       }
       // the calculation logic here is a bit wild if it is a nested array field
       // it would convert the whole array to string and calculate
       // which in most cases would exceed the maxWidth so just use maxWidth
-      const str = d[fieldStringsArray[0]].toString && d[fieldStringsArray[0]].toString();
+      const str =
+        d[fieldStringsArray[0]].toString && d[fieldStringsArray[0]].toString();
       const len = str ? str.length : 0;
       maxLetterLen = len > maxLetterLen ? len : maxLetterLen;
     });
-    const resWidth = Math.min((maxLetterLen * letterWidth) + spacing, maxWidth);
+    const resWidth = Math.min(maxLetterLen * letterWidth + spacing, maxWidth);
     return resWidth;
-  }
+  };
 
   /**
    * Build column configs for each table according to their locations and fields
@@ -61,13 +74,18 @@ class ExplorerTable extends React.Component {
    * @returns: a column config for the input field which can be used by react-table
    */
   buildColumnConfig = (field, isNestedTableColumn, isDetailedColumn) => {
-    const fieldMappingEntry = this.props.guppyConfig.fieldMapping
-    && this.props.guppyConfig.fieldMapping.find(i => i.field === field);
+    const fieldMappingEntry =
+      this.props.guppyConfig.fieldMapping &&
+      this.props.guppyConfig.fieldMapping.find((i) => i.field === field);
     const overrideName = fieldMappingEntry ? fieldMappingEntry.name : undefined;
     const fieldStringsArray = field.split('.');
     // for nested table, we only display the children names in column header
     // i.e.: visits.follow_ups.follow_up_label => follow_ups.follow_up_label
-    const fieldName = isNestedTableColumn ? capitalizeFirstLetter(fieldStringsArray.slice(1, fieldStringsArray.length).join('.')) : capitalizeFirstLetter(field);
+    const fieldName = isNestedTableColumn
+      ? capitalizeFirstLetter(
+          fieldStringsArray.slice(1, fieldStringsArray.length).join('.')
+        )
+      : capitalizeFirstLetter(field);
 
     const columnConfig = {
       Header: overrideName || fieldName,
@@ -75,44 +93,52 @@ class ExplorerTable extends React.Component {
       maxWidth: 600,
       // for nested table we set the width arbitrary wrt view width
       // because the width of its parent row is too big
-      width: isNestedTableColumn ? '70vw' : this.getWidthForColumn(field, overrideName || fieldName),
-      accessor: d => d[fieldStringsArray[0]],
+      width: isNestedTableColumn
+        ? '70vw'
+        : this.getWidthForColumn(field, overrideName || fieldName),
+      accessor: (d) => d[fieldStringsArray[0]],
       Cell: (row) => {
         let valueStr = '';
         if (fieldStringsArray.length === 1) {
           valueStr = row.value;
         } else {
-          const nestedChildFieldName = fieldStringsArray.slice(1, fieldStringsArray.length).join('.');
+          const nestedChildFieldName = fieldStringsArray
+            .slice(1, fieldStringsArray.length)
+            .join('.');
           // some logic to handle depends on wether the child field in raw data is an array or not
-          if (_.isArray(row.value)) {
-            valueStr = row.value.map(x => _.get(x, nestedChildFieldName)).join(', ');
+          if (Array.isArray(row.value)) {
+            valueStr = row.value
+              .map((x) => get(x, nestedChildFieldName))
+              .join(', ');
           } else {
-            valueStr = _.get(row.value, nestedChildFieldName);
+            valueStr = get(row.value, nestedChildFieldName);
           }
           // for inner most detailed table, 1 value per row
           if (isDetailedColumn) {
             const rowComp = (
               <div className='rt-tbody'>
                 <div className='rt-tr-group'>
-                  {row.value.map((element, i) => (i % 2 !== 0 ? (
-                    <div className='rt-tr -odd' key={i}>
-                      <div className='rt-td'>
-                        <span>
-                          {_.get(element, nestedChildFieldName)}
-                          <br />
-                        </span>
+                  {row.value.map((element, i) =>
+                    i % 2 !== 0 ? (
+                      <div className='rt-tr -odd' key={i}>
+                        <div className='rt-td'>
+                          <span>
+                            {get(element, nestedChildFieldName)}
+                            <br />
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className='rt-tr -even' key={i}>
-                      <div className='rt-td'>
-                        <span>
-                          {_.get(element, nestedChildFieldName)}
-                          <br />
-                        </span>
+                    ) : (
+                      <div className='rt-tr -even' key={i}>
+                        <div className='rt-td'>
+                          <span>
+                            {get(element, nestedChildFieldName)}
+                            <br />
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  )))}
+                    )
+                  )}
                 </div>
               </div>
             );
@@ -121,25 +147,39 @@ class ExplorerTable extends React.Component {
         }
         // handling some special field types
         switch (field) {
-        case this.props.guppyConfig.downloadAccessor:
-          return (<div><span title={valueStr}><a href={`/files/${valueStr}`}>{valueStr}</a></span></div>);
-        case 'file_size':
-          return (<div><span title={valueStr}>{humanFileSize(valueStr)}</span></div>);
-        case this.props.tableConfig.linkFields.includes(field) && field:
-          return valueStr ?
-            <IconicLink
-              link={valueStr}
-              className='explorer-table-link'
-              buttonClassName='explorer-table-link-button'
-              icon='exit'
-              dictIcons={dictIcons}
-              iconColor='#606060'
-              target='_blank'
-              isExternal
-            />
-            : null;
-        default:
-          return (<div><span title={valueStr}>{valueStr}</span></div>);
+          case this.props.guppyConfig.downloadAccessor:
+            return (
+              <div>
+                <span title={valueStr}>
+                  <a href={`/files/${valueStr}`}>{valueStr}</a>
+                </span>
+              </div>
+            );
+          case 'file_size':
+            return (
+              <div>
+                <span title={valueStr}>{humanFileSize(valueStr)}</span>
+              </div>
+            );
+          case this.props.tableConfig.linkFields.includes(field) && field:
+            return valueStr ? (
+              <IconicLink
+                link={valueStr}
+                className='explorer-table-link'
+                buttonClassName='explorer-table-link-button'
+                icon='exit'
+                dictIcons={dictIcons}
+                iconColor='#606060'
+                target='_blank'
+                isExternal
+              />
+            ) : null;
+          default:
+            return (
+              <div>
+                <span title={valueStr}>{valueStr}</span>
+              </div>
+            );
         }
       },
     };
@@ -179,15 +219,17 @@ class ExplorerTable extends React.Component {
       if (!nestedArrayFieldColumnConfigs[key]) {
         nestedArrayFieldColumnConfigs[key] = [];
       }
-      const firstLevelColumns = nestedArrayFieldNames[key].map(field =>
-        this.buildColumnConfig(`${key}.${field}`, true, false));
+      const firstLevelColumns = nestedArrayFieldNames[key].map((field) =>
+        this.buildColumnConfig(`${key}.${field}`, true, false)
+      );
       const firstLevelColumnsConfig = [];
       firstLevelColumnsConfig.push({
         Header: key,
         columns: firstLevelColumns,
       });
-      const secondLevelColumns = nestedArrayFieldNames[key].map(field =>
-        this.buildColumnConfig(`${key}.${field}`, true, true));
+      const secondLevelColumns = nestedArrayFieldNames[key].map((field) =>
+        this.buildColumnConfig(`${key}.${field}`, true, true)
+      );
       const secondLevelColumnsConfig = [];
       secondLevelColumnsConfig.push({
         Header: key,
@@ -197,46 +239,57 @@ class ExplorerTable extends React.Component {
       nestedArrayFieldColumnConfigs[key].push(secondLevelColumnsConfig);
     });
     return nestedArrayFieldColumnConfigs;
-  }
+  };
 
   fetchData = (state) => {
     this.setState({ loading: true });
     const offset = state.page * state.pageSize;
-    const sort = state.sorted.map(i => ({
+    const sort = state.sorted.map((i) => ({
       [i.id]: i.desc ? 'desc' : 'asc',
     }));
     const size = state.pageSize;
-    this.props.fetchAndUpdateRawData({
-      offset,
-      size,
-      sort,
-    }).then(() => {
-      // Guppy fetched and loaded raw data into "this.props.rawData" already
-      this.setState({
-        loading: false,
-        pageSize: size,
-        currentPage: state.page,
+    this.props
+      .fetchAndUpdateRawData({
+        offset,
+        size,
+        sort,
+      })
+      .then(() => {
+        // Guppy fetched and loaded raw data into "this.props.rawData" already
+        this.setState({
+          loading: false,
+          pageSize: size,
+          currentPage: state.page,
+        });
       });
-    });
   };
 
   render() {
-    if (!this.props.tableConfig.fields || this.props.tableConfig.fields.length === 0) {
+    if (
+      !this.props.tableConfig.fields ||
+      this.props.tableConfig.fields.length === 0
+    ) {
       return null;
     }
     // build column configs for root table first
-    const rootColumnsConfig = this.props.tableConfig.fields.map(field =>
-      this.buildColumnConfig(field, false, false));
+    const rootColumnsConfig = this.props.tableConfig.fields.map((field) =>
+      this.buildColumnConfig(field, false, false)
+    );
     const nestedArrayFieldNames = {};
     this.props.tableConfig.fields.forEach((field) => {
       if (field.includes('.')) {
         const fieldStringsArray = field.split('.');
-        if (this.props.rawData && this.props.rawData.length > 0
-          && _.isArray(this.props.rawData[0][fieldStringsArray[0]])) {
+        if (
+          this.props.rawData &&
+          this.props.rawData.length > 0 &&
+          Array.isArray(this.props.rawData[0][fieldStringsArray[0]])
+        ) {
           if (!nestedArrayFieldNames[fieldStringsArray[0]]) {
             nestedArrayFieldNames[fieldStringsArray[0]] = [];
           }
-          nestedArrayFieldNames[fieldStringsArray[0]].push(fieldStringsArray.slice(1, fieldStringsArray.length).join('.'));
+          nestedArrayFieldNames[fieldStringsArray[0]].push(
+            fieldStringsArray.slice(1, fieldStringsArray.length).join('.')
+          );
         }
       }
     });
@@ -244,72 +297,96 @@ class ExplorerTable extends React.Component {
     let subComponent = null;
     if (Object.keys(nestedArrayFieldNames).length > 0) {
       // eslint-disable-next-line max-len
-      nestedArrayFieldColumnConfigs = this.buildNestedArrayFieldColumnConfigs(nestedArrayFieldNames);
+      nestedArrayFieldColumnConfigs = this.buildNestedArrayFieldColumnConfigs(
+        nestedArrayFieldNames
+      );
       // this is the subComponent of the two-level nested tables
-      subComponent = row => Object.keys(nestedArrayFieldColumnConfigs).map((key) => {
-        const rowData = (this.props.isLocked || !this.props.rawData) ?
-          [] : _.slice(this.props.rawData, row.index, row.index + 1);
-        return (<div className='explorer-nested-table' key={key}>
-          <ReactTable
-            data={(this.props.isLocked || !rowData) ? [] : rowData}
-            columns={nestedArrayFieldColumnConfigs[key][0]}
-            defaultPageSize={1}
-            showPagination={false}
-            SubComponent={() => (
-              <div className='explorer-nested-table'>
-                <ReactTable
-                  data={(this.props.isLocked || !rowData) ? [] : rowData}
-                  columns={nestedArrayFieldColumnConfigs[key][1]}
-                  defaultPageSize={1}
-                  showPagination={false}
-                />
-              </div>
-            )}
-          />
-        </div>);
-      });
+      subComponent = (row) =>
+        Object.keys(nestedArrayFieldColumnConfigs).map((key) => {
+          const rowData =
+            this.props.isLocked || !this.props.rawData
+              ? []
+              : this.props.rawData.slice(row.index, row.index + 1);
+          return (
+            <div className='explorer-nested-table' key={key}>
+              <ReactTable
+                data={this.props.isLocked || !rowData ? [] : rowData}
+                columns={nestedArrayFieldColumnConfigs[key][0]}
+                defaultPageSize={1}
+                showPagination={false}
+                SubComponent={() => (
+                  <div className='explorer-nested-table'>
+                    <ReactTable
+                      data={this.props.isLocked || !rowData ? [] : rowData}
+                      columns={nestedArrayFieldColumnConfigs[key][1]}
+                      defaultPageSize={1}
+                      showPagination={false}
+                    />
+                  </div>
+                )}
+              />
+            </div>
+          );
+        });
     }
 
     const { totalCount } = this.props;
     const { pageSize } = this.state;
-    const totalPages = Math.floor(totalCount / pageSize) + ((totalCount % pageSize === 0) ? 0 : 1);
+    const totalPages =
+      Math.floor(totalCount / pageSize) + (totalCount % pageSize === 0 ? 0 : 1);
     const SCROLL_SIZE = 10000;
-    const visiblePages = Math.min(totalPages, Math.round((SCROLL_SIZE / pageSize) + 0.49));
-    const start = (this.state.currentPage * this.state.pageSize) + 1;
+    const visiblePages = Math.min(
+      totalPages,
+      Math.round(SCROLL_SIZE / pageSize + 0.49)
+    );
+    const start = this.state.currentPage * this.state.pageSize + 1;
     const end = (this.state.currentPage + 1) * this.state.pageSize;
-    let explorerTableCaption = `Showing ${start} - ${end} of ${totalCount} ${pluralize(this.props.guppyConfig.dataType)}`;
+    let explorerTableCaption = `Showing ${start} - ${end} of ${totalCount} ${pluralize(
+      this.props.guppyConfig.dataType
+    )}`;
     if (totalCount < end && totalCount < 2) {
-      explorerTableCaption = `Showing ${totalCount} of ${totalCount} ${pluralize(this.props.guppyConfig.dataType)}`;
+      explorerTableCaption = `Showing ${totalCount} of ${totalCount} ${pluralize(
+        this.props.guppyConfig.dataType
+      )}`;
     } else if (totalCount < end && totalCount >= 2) {
-      explorerTableCaption = `Showing ${start} - ${totalCount} of ${totalCount} ${pluralize(this.props.guppyConfig.dataType)}`;
+      explorerTableCaption = `Showing ${start} - ${totalCount} of ${totalCount} ${pluralize(
+        this.props.guppyConfig.dataType
+      )}`;
     }
 
     return (
       <div className={`explorer-table ${this.props.className}`}>
-        {(this.props.isLocked) ? <React.Fragment />
-          : <p className='explorer-table__description'>{explorerTableCaption}</p> }
+        {this.props.isLocked ? (
+          <React.Fragment />
+        ) : (
+          <p className='explorer-table__description'>{explorerTableCaption}</p>
+        )}
         <ReactTable
           columns={rootColumnsConfig}
           manual
-          data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
+          data={
+            this.props.isLocked || !this.props.rawData ? [] : this.props.rawData
+          }
           showPageSizeOptions={!this.props.isLocked}
           // eslint-disable-next-line max-len
-          pages={(this.props.isLocked) ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
+          pages={this.props.isLocked ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}
           onFetchData={this.fetchData}
           defaultPageSize={this.props.defaultPageSize}
           className={'-striped -highlight '}
           minRows={3} // make room for no data component
           resizable={false}
-          NoDataComponent={() => (this.props.isLocked ? (
-            <div className='rt-noData'>
-              <LockIcon width={30} />
-              <p>You only have access to summary data</p>
-            </div>
-          ) : (
-            <div className='rt-noData'>No data to display</div>
-          ))}
-          SubComponent={(this.props.isLocked) ? null : subComponent}
+          NoDataComponent={() =>
+            this.props.isLocked ? (
+              <div className='rt-noData'>
+                <LockIcon width={30} />
+                <p>You only have access to summary data</p>
+              </div>
+            ) : (
+              <div className='rt-noData'>No data to display</div>
+            )
+          }
+          SubComponent={this.props.isLocked ? null : subComponent}
         />
       </div>
     );

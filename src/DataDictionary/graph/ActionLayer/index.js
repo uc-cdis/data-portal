@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import ActionLayer from './ActionLayer';
 
 const ReduxActionLayer = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     isSearchMode: state.ddgraph.isSearchMode,
   });
 

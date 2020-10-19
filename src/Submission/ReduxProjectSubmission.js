@@ -3,7 +3,9 @@ import ProjectSubmission from './ProjectSubmission';
 import SubmitTSV from './SubmitTSV';
 import SubmitForm from './SubmitForm';
 import sessionMonitor from '../SessionMonitor';
-import ReduxDataModelGraph, { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
+import ReduxDataModelGraph, {
+  getCounts,
+} from '../DataModelGraph/ReduxDataModelGraph';
 
 import { fetchWithCreds } from '../actions';
 import { predictFileType } from '../utils';
@@ -13,17 +15,23 @@ export const uploadTSV = (value, type) => (dispatch) => {
   dispatch({ type: 'REQUEST_UPLOAD', file: value, file_type: type });
 };
 
-export const updateFormSchema = formSchema => ({
+export const updateFormSchema = (formSchema) => ({
   type: 'UPDATE_FORM_SCHEMA',
   formSchema,
 });
 
 export const updateFileContent = (value, fileType) => (dispatch) => {
-  dispatch({ type: 'UPDATE_FILE', file: value, file_type: predictFileType(value, fileType) });
+  dispatch({
+    type: 'UPDATE_FILE',
+    file: value,
+    file_type: predictFileType(value, fileType),
+  });
 };
 
-
-const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) => {
+const submitToServer = (fullProject, methodIn = 'PUT') => (
+  dispatch,
+  getState
+) => {
   const fileArray = [];
   const path = fullProject.split('-');
   const program = path[0];
@@ -89,15 +97,15 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
       customHeaders: { 'Content-Type': submission.file_type },
       body: chunkArray.shift(),
       dispatch,
-    }).then(recursiveFetch(chunkArray)).then(
-      ({ status, data }) => (
-        {
-          type: 'RECEIVE_SUBMISSION',
-          submit_status: status,
-          data,
-          total: totalChunk,
-        }),
-    ).then(msg => dispatch(msg))
+    })
+      .then(recursiveFetch(chunkArray))
+      .then(({ status, data }) => ({
+        type: 'RECEIVE_SUBMISSION',
+        submit_status: status,
+        data,
+        total: totalChunk,
+      }))
+      .then((msg) => dispatch(msg))
       .then(sessionMonitor.updateUserActivity());
   }
 
@@ -105,15 +113,15 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
 };
 
 const ReduxSubmitTSV = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     submission: state.submission,
     dictionary: state.dictionary,
   });
 
-  const mapDispatchToProps = dispatch => ({
+  const mapDispatchToProps = (dispatch) => ({
     onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-    onSubmitClick: project => dispatch(submitToServer(project)),
-    onFileChange: value => dispatch(updateFileContent(value)),
+    onSubmitClick: (project) => dispatch(submitToServer(project)),
+    onFileChange: (value) => dispatch(updateFileContent(value)),
     onFinish: (type, project, dictionary) =>
       dispatch(getCounts(type, project, dictionary)),
   });
@@ -121,20 +129,18 @@ const ReduxSubmitTSV = (() => {
   return connect(mapStateToProps, mapDispatchToProps)(SubmitTSV);
 })();
 
-
 const ReduxSubmitForm = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     submission: state.submission,
   });
 
-  const mapDispatchToProps = dispatch => ({
+  const mapDispatchToProps = (dispatch) => ({
     onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-    onUpdateFormSchema: (formSchema => dispatch(updateFormSchema(formSchema))),
+    onUpdateFormSchema: (formSchema) => dispatch(updateFormSchema(formSchema)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(SubmitForm);
 })();
-
 
 const ReduxProjectSubmission = (() => {
   const mapStateToProps = (state, ownProps) => ({
@@ -148,7 +154,7 @@ const ReduxProjectSubmission = (() => {
     userAuthMapping: state.userAuthMapping,
   });
 
-  const mapDispatchToProps = dispatch => ({
+  const mapDispatchToProps = (dispatch) => ({
     onGetCounts: (typeList, project, dictionary) =>
       dispatch(getCounts(typeList, project, dictionary)),
   });

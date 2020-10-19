@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import MapDataModel from './MapDataModel';
-import { headers, submissionApiPath } from '../configs';
+import { headers, submissionApiPath } from '../localconf';
 
 export const submitFiles = (program, project, params) => {
   const request = {
@@ -11,7 +11,7 @@ export const submitFiles = (program, project, params) => {
   };
 
   return fetch(`${submissionApiPath}${program}/${project}`, request)
-    .then(response => response.text())
+    .then((response) => response.text())
     .then((responseBody) => {
       try {
         return JSON.parse(responseBody);
@@ -22,15 +22,16 @@ export const submitFiles = (program, project, params) => {
 };
 
 const ReduxMapDataModel = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     filesToMap: state.submission.filesToMap,
-    projects: state.homepage.projectsByName,
+    projects: state.submission.projectsByName,
     nodeTypes: state.submission.nodeTypes,
     dictionary: state.submission.dictionary,
   });
 
   const mapDispatchToProps = () => ({
-    submitFiles: (program, project, params) => submitFiles(program, project, params),
+    submitFiles: (program, project, params) =>
+      submitFiles(program, project, params),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(MapDataModel);

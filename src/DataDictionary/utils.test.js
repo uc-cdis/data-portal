@@ -71,7 +71,8 @@ describe('the DataDictionaryNode', () => {
     ];
     expect(truncateLines(longStr)).toEqual(longStrBreakResult);
 
-    const testStrWithALongWord = 'The quick brown fox jumps over a lazyyyyyyyyyy dog';
+    const testStrWithALongWord =
+      'The quick brown fox jumps over a lazyyyyyyyyyy dog';
     const withALongWordResult = [
       'The quick',
       'brown fox',
@@ -108,4 +109,3 @@ describe('the DataDictionaryNode', () => {
     expect(clearSearchHistoryItems()).toEqual([]);
   });
 });
-

@@ -51,9 +51,7 @@ describe('the DataDictionaryTable component', () => {
   });
 
   it('renders', () => {
-    const wrapper = mount(
-      <DataDictionaryTable dictionary={testDict} />,
-    );
+    const wrapper = mount(<DataDictionaryTable dictionary={testDict} />);
     expect(wrapper.find(DataDictionaryTable).length).toBe(1);
   });
 });

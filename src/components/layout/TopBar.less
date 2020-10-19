@@ -13,14 +13,22 @@
 
 .top-bar__nav {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   color: white;
   overflow: hidden;
+}
+
+.top-bar__nav--flex-center {
+  display: flex;
+  justify-content: center;
 }
 
 @media screen and (max-width: 1090px) {
   .top-bar__nav {
     justify-content: center;
+  }
+  .top-bar__nav--hidden-lg-and-down {
+    display: none;
   }
 }
 

@@ -33,11 +33,16 @@ class GuppyDataExplorer extends React.Component {
         <GuppyWrapper
           adminAppliedPreFilters={this.props.adminAppliedPreFilters}
           filterConfig={this.props.filterConfig}
-          guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
+          guppyConfig={{
+            type: this.props.guppyConfig.dataType,
+            ...this.props.guppyConfig,
+          }}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
           onFilterChange={this.handleFilterChange}
           rawDataFields={this.props.tableConfig.fields}
-          accessibleFieldCheckList={this.props.guppyConfig.accessibleFieldCheckList}
+          accessibleFieldCheckList={
+            this.props.guppyConfig.accessibleFieldCheckList
+          }
         >
           <ExplorerTopMessageBanner
             className='guppy-data-explorer__top-banner'
@@ -60,11 +65,12 @@ class GuppyDataExplorer extends React.Component {
             chartConfig={this.props.chartConfig}
             tableConfig={this.props.tableConfig}
             buttonConfig={this.props.buttonConfig}
-            heatMapConfig={this.props.heatMapConfig}
             guppyConfig={this.props.guppyConfig}
             history={this.props.history}
-            nodeCountTitle={this.props.guppyConfig.nodeCountTitle || capitalizeFirstLetter(
-              this.props.guppyConfig.dataType)}
+            nodeCountTitle={
+              this.props.guppyConfig.nodeCountTitle ||
+              capitalizeFirstLetter(this.props.guppyConfig.dataType)
+            }
             tierAccessLimit={this.props.tierAccessLimit}
           />
         </GuppyWrapper>
@@ -79,7 +85,6 @@ GuppyDataExplorer.propTypes = {
   tableConfig: TableConfigType.isRequired,
   chartConfig: ChartConfigType.isRequired,
   buttonConfig: ButtonConfigType.isRequired,
-  heatMapConfig: PropTypes.object,
   nodeCountTitle: PropTypes.string,
   history: PropTypes.object.isRequired,
   tierAccessLevel: PropTypes.string.isRequired,
@@ -90,7 +95,6 @@ GuppyDataExplorer.propTypes = {
 };
 
 GuppyDataExplorer.defaultProps = {
-  heatMapConfig: {},
   nodeCountTitle: undefined,
   getAccessButtonLink: undefined,
   hideGetAccessButton: false,

@@ -10,7 +10,7 @@ describe('SubmissionHeader', () => {
 
   it('renders', () => {
     const component = mount(
-      <SubmissionHeader user={user} fetchUnmappedFileStats={mockFetch} />,
+      <SubmissionHeader user={user} fetchUnmappedFileStats={mockFetch} />
     );
     expect(component.find(SubmissionHeader).length).toBe(1);
   });

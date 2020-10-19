@@ -20,7 +20,7 @@ class GraphCalculator extends React.Component {
       calculateGraphLayout(
         this.props.dictionary,
         this.props.countsSearch,
-        this.props.linksSearch,
+        this.props.linksSearch
       ).then((layoutResult) => {
         this.props.onGraphLayoutCalculated(layoutResult);
         const legendItems = getAllTypes(layoutResult.nodes);
@@ -36,12 +36,15 @@ class GraphCalculator extends React.Component {
     if (this.oldHighlightingNode !== newHighlightingNode) {
       const relatedHighlightedNodeIDs = calculateHighlightRelatedNodeIDs(
         newHighlightingNode,
-        this.props.nodes,
+        this.props.nodes
       );
       this.props.onHighlightRelatedNodesCalculated(relatedHighlightedNodeIDs);
       const secondHighlightingNodeCandidateIDs = newHighlightingNode
-        ? newHighlightingNode.outLinks : [];
-      this.props.onSecondHighlightingNodeCandidateIDsCalculated(secondHighlightingNodeCandidateIDs);
+        ? newHighlightingNode.outLinks
+        : [];
+      this.props.onSecondHighlightingNodeCandidateIDsCalculated(
+        secondHighlightingNodeCandidateIDs
+      );
     }
 
     // if the second highlighting node is updated, calculate related highlighting nodes
@@ -49,15 +52,17 @@ class GraphCalculator extends React.Component {
       const pathRelatedToSecondHighlightingNode = calculatePathRelatedToSecondHighlightingNode(
         newHighlightingNode,
         newSecondHighlightingNodeID,
-        this.props.nodes,
+        this.props.nodes
       );
       this.props.onPathRelatedToSecondHighlightingNodeCalculated(
-        pathRelatedToSecondHighlightingNode);
+        pathRelatedToSecondHighlightingNode
+      );
     }
 
     // update data model structure if update highlighting/secondHighlighting node
-    if (this.oldHighlightingNode !== newHighlightingNode
-      || this.oldSecondHighlightingNodeID !== newSecondHighlightingNodeID
+    if (
+      this.oldHighlightingNode !== newHighlightingNode ||
+      this.oldSecondHighlightingNodeID !== newSecondHighlightingNodeID
     ) {
       if (newSecondHighlightingNodeID) {
         const {
@@ -66,25 +71,23 @@ class GraphCalculator extends React.Component {
           routesBetweenStartEndNodes,
         } = this.getDataModelStructureForSecondHighlightingNodes(
           newHighlightingNode,
-          newSecondHighlightingNodeID,
+          newSecondHighlightingNodeID
         );
         this.props.onDataModelStructureCalculated(
           dataModelStructure,
           dataModelStructureRelatedNodeIDs,
-          routesBetweenStartEndNodes,
+          routesBetweenStartEndNodes
         );
       } else if (newHighlightingNode) {
         const {
           dataModelStructure,
           dataModelStructureRelatedNodeIDs,
           routesBetweenStartEndNodes,
-        } = this.getDataModelStructureForHighlightedNodes(
-          newHighlightingNode,
-        );
+        } = this.getDataModelStructureForHighlightedNodes(newHighlightingNode);
         this.props.onDataModelStructureCalculated(
           dataModelStructure,
           dataModelStructureRelatedNodeIDs,
-          routesBetweenStartEndNodes,
+          routesBetweenStartEndNodes
         );
       } else {
         this.props.onDataModelStructureCalculated(null);
@@ -98,12 +101,15 @@ class GraphCalculator extends React.Component {
   getDataModelStructureForHighlightedNodes(newHighlightingNode) {
     const relatedHighlightedNodeIDs = calculateHighlightRelatedNodeIDs(
       newHighlightingNode,
-      this.props.nodes,
+      this.props.nodes
     );
     const subgraphEdges = this.props.edges
-      .filter(e => (relatedHighlightedNodeIDs.includes(e.source)
-        && relatedHighlightedNodeIDs.includes(e.target)))
-      .map(e => ({ source: e.source, target: e.target }));
+      .filter(
+        (e) =>
+          relatedHighlightedNodeIDs.includes(e.source) &&
+          relatedHighlightedNodeIDs.includes(e.target)
+      )
+      .map((e) => ({ source: e.source, target: e.target }));
     const {
       dataModelStructure,
       routesBetweenStartEndNodes,
@@ -111,7 +117,7 @@ class GraphCalculator extends React.Component {
       newHighlightingNode,
       relatedHighlightedNodeIDs,
       subgraphEdges,
-      this.props.nodes,
+      this.props.nodes
     );
     return {
       dataModelStructure,
@@ -122,13 +128,13 @@ class GraphCalculator extends React.Component {
 
   getDataModelStructureForSecondHighlightingNodes(
     newHighlightingNode,
-    newSecondHighlightingNodeID,
+    newSecondHighlightingNodeID
   ) {
     const subgraphNodeIDs = [];
     const pathRelatedToSecondHighlightingNode = calculatePathRelatedToSecondHighlightingNode(
       newHighlightingNode,
       newSecondHighlightingNodeID,
-      this.props.nodes,
+      this.props.nodes
     );
     pathRelatedToSecondHighlightingNode.forEach((e) => {
       if (!subgraphNodeIDs.includes(e.source)) subgraphNodeIDs.push(e.source);
@@ -141,7 +147,7 @@ class GraphCalculator extends React.Component {
       newHighlightingNode,
       subgraphNodeIDs,
       pathRelatedToSecondHighlightingNode,
-      this.props.nodes,
+      this.props.nodes
     );
     return {
       dataModelStructure,
@@ -151,7 +157,7 @@ class GraphCalculator extends React.Component {
   }
 
   render() {
-    return (<React.Fragment />);
+    return <React.Fragment />;
   }
 }
 

@@ -2,11 +2,7 @@ import React from 'react';
 
 class DocumentPage extends React.Component {
   render() {
-    return (
-      <div>
-        Coming soon
-      </div>
-    );
+    return <div>Coming soon</div>;
   }
 }
 

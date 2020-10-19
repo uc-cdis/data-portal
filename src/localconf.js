@@ -12,7 +12,10 @@ function buildConfig(opts) {
     mockStore: !!(process.env.MOCK_STORE && process.env.MOCK_STORE === 'true'),
     app: process.env.APP || 'generic',
     basename: process.env.BASENAME || '/',
-    hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
+    hostname:
+      typeof window !== 'undefined'
+        ? `${window.location.protocol}//${window.location.hostname}/`
+        : 'http://localhost/',
     fenceURL: process.env.FENCE_URL,
     indexdURL: process.env.INDEXD_URL,
     arboristURL: process.env.ARBORIST_URL,
@@ -28,7 +31,10 @@ function buildConfig(opts) {
   // Override default basename if loading via /dev.html
   // dev.html loads bundle.js via https://localhost...
   //
-  if (typeof location !== 'undefined' && location.pathname.indexOf(`${defaults.basename}dev.html`) === 0) {
+  if (
+    typeof location !== 'undefined' &&
+    location.pathname.indexOf(`${defaults.basename}dev.html`) === 0
+  ) {
     defaults.basename += 'dev.html';
   }
 
@@ -62,26 +68,44 @@ function buildConfig(opts) {
   const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
-  const arrangerGraphqlPath = `${hostname}api/v0/flat-search/search/graphql`;
-  let userapiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
+  let userapiPath =
+    typeof fenceURL === 'undefined'
+      ? `${hostname}user/`
+      : ensureTrailingSlash(fenceURL);
   const jobapiPath = `${hostname}job/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
-  const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
-  const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
+  const indexdPath =
+    typeof indexdURL === 'undefined'
+      ? `${hostname}index/`
+      : ensureTrailingSlash(indexdURL);
+  const wtsPath =
+    typeof wtsURL === 'undefined'
+      ? `${hostname}wts/oauth2/`
+      : ensureTrailingSlash(wtsURL);
   const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
   let login = {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',
   };
-  const authzPath = typeof arboristURL === 'undefined' ? `${hostname}authz` : `${arboristURL}authz`;
-  const authzMappingPath = typeof arboristURL === 'undefined' ? `${hostname}authz/mapping` : `${arboristURL}authz/mapping`;
+  const authzPath =
+    typeof arboristURL === 'undefined'
+      ? `${hostname}authz`
+      : `${arboristURL}authz`;
+  const authzMappingPath =
+    typeof arboristURL === 'undefined'
+      ? `${hostname}authz/mapping`
+      : `${arboristURL}authz/mapping`;
   const loginPath = `${userapiPath}login/`;
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
-  const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
+  const workspaceTimeoutInMinutes =
+    process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
-  const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);
+  const workspaceUrl =
+    typeof workspaceURL === 'undefined'
+      ? '/lw-workspace/'
+      : ensureTrailingSlash(workspaceURL);
   const workspaceErrorUrl = '/no-workspace-access/';
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
@@ -91,48 +115,30 @@ function buildConfig(opts) {
   const guppyUrl = `${hostname}guppy`;
   const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
   const guppyDownloadUrl = `${guppyUrl}/download`;
-  const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
-  // backward compatible: homepageChartNodes not set means using graphql query,
-  // which will return 401 UNAUTHORIZED if not logged in, thus not making public
-  let indexPublic = true;
-  if (typeof components.index.homepageChartNodes === 'undefined') {
-    indexPublic = false;
-  }
-
-  let useGuppyForExplorer = false;
+  const manifestServiceApiPath =
+    typeof manifestServiceURL === 'undefined'
+      ? `${hostname}manifests/`
+      : ensureTrailingSlash(manifestServiceURL);
 
   let explorerConfig = [];
-  let useNewExplorerConfigFormat = false;
   // for backward compatibilities
   if (config.dataExplorerConfig) {
-    explorerConfig.push(
-      {
-        tabTitle: 'Data',
-        ...config.dataExplorerConfig,
-      },
-    );
-    if (config.dataExplorerConfig.guppyConfig) {
-      useGuppyForExplorer = true;
-    }
+    explorerConfig.push({
+      tabTitle: 'Data',
+      ...config.dataExplorerConfig,
+    });
   }
   if (config.fileExplorerConfig) {
-    explorerConfig.push(
-      {
-        tabTitle: 'File',
-        ...config.fileExplorerConfig,
-      },
-    );
-    useGuppyForExplorer = true;
+    explorerConfig.push({
+      tabTitle: 'File',
+      ...config.fileExplorerConfig,
+    });
   }
 
   // new explorer config format
   if (config.explorerConfig) {
-    useGuppyForExplorer = true;
-    useNewExplorerConfigFormat = true;
     explorerConfig = config.explorerConfig;
   }
-
-  const dataAvailabilityToolConfig = config.dataAvailabilityToolConfig;
 
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
@@ -170,112 +176,51 @@ function buildConfig(opts) {
   }
 
   const colorsForCharts = {
-    categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
-      '#3283c8',
-      '#7ec500',
-      '#ad91ff',
-      '#f4b940',
-      '#e74c3c',
-      '#05b8ee',
-      '#ff7abc',
-      '#ef8523',
-      '#26d9b1',
-    ],
-    categorical2Colors: components.categorical2Colors ? components.categorical2Colors : [
-      '#3283c8',
-      '#e7e7e7',
-    ],
+    categorical9Colors: components.categorical9Colors
+      ? components.categorical9Colors
+      : [
+          '#3283c8',
+          '#7ec500',
+          '#ad91ff',
+          '#f4b940',
+          '#e74c3c',
+          '#05b8ee',
+          '#ff7abc',
+          '#ef8523',
+          '#26d9b1',
+        ],
+    categorical2Colors: components.categorical2Colors
+      ? components.categorical2Colors
+      : ['#3283c8', '#e7e7e7'],
   };
 
   if (app === 'gdc' && typeof fenceURL === 'undefined') {
     userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
     login = {
-      url: 'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',
+      url:
+        'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',
       title: 'Login from NIH',
     };
   }
   const fenceDownloadPath = `${userapiPath}data/download`;
 
   const defaultLineLimit = 30;
-  const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;
-
-  const analysisApps = {
-    ndhHIV: {
-      title: 'NDH HIV Classifier',
-      description: 'Classify stored clinical data based on controller status.',
-      image: '/src/img/analysis-icons/hiv-classifier.svg',
-      visitIndexTypeName: config.HIVAppIndexTypeName || 'follow_up',
-    },
-    ndhVirus: {
-      title: 'NDH Virulence Simulation',
-      description: `This simulation runs a docker version of the Hypothesis Testing
-          using Phylogenies (HyPhy) tool over data submitted in the NIAID Data Hub. \n
-          The simulation is focused on modeling a Bayesian Graph Model (BGM) based on a binary matrix input.
-          The implemented example predicts the virulence status of different influenza strains based on their mutations
-          (the mutation panel is represented as the input binary matrix).`,
-      image: '/src/img/analysis-icons/virulence.png',
-    },
-    vaGWAS: {
-      title: 'eGWAS',
-      description: 'Expression-based Genome-Wide Association Study',
-      image: '/src/img/analysis-icons/gwas.svg',
-      options: [
-        {
-          label: 'Lung',
-          value: 'Lung',
-        },
-        {
-          label: 'Gastrointestina',
-          value: 'Gastrointestina',
-        },
-        {
-          label: 'Prostate',
-          value: 'Prostate',
-        },
-        {
-          label: 'Head and Neck',
-          value: 'Head and Neck',
-        },
-        {
-          label: 'Skin',
-          value: 'Skin',
-        },
-        {
-          label: 'NULL',
-          value: 'NULL',
-        },
-        {
-          label: 'Lymph Node',
-          value: 'Lymph Node',
-        },
-        {
-          label: 'Liver',
-          value: 'Liver',
-        },
-        {
-          label: 'Musculoskeleta',
-          value: 'Musculoskeleta',
-        },
-        {
-          label: 'Occipital Mass',
-          value: 'Occipital Mass',
-        },
-        {
-          label: 'Brain',
-          value: 'Brain',
-        },
-        {
-          label: 'BxType',
-          value: 'BxType',
-        },
-      ],
-    },
-  };
+  const lineLimit =
+    config.lineLimit == null ? defaultLineLimit : config.lineLimit;
 
   const breakpoints = {
     laptop: 1024,
     tablet: 820,
     mobile: 480,
+  };
+
+  const headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    'x-csrf-token': document.cookie.replace(
+      /(?:(?:^|.*;\s*)csrftoken\s*=\s*([^;]*).*$)|^.*$/,
+      '$1'
+    ),
   };
 
   return {
@@ -296,7 +241,6 @@ function buildConfig(opts) {
     indexdPath,
     graphqlPath,
     dataDictionaryTemplatePath,
-    arrangerGraphqlPath,
     graphqlSchemaUrl,
     appname: components.appName,
     mockStore,
@@ -314,10 +258,7 @@ function buildConfig(opts) {
     workspaceStatusUrl,
     workspaceLaunchUrl,
     workspaceTerminateUrl,
-    homepageChartNodes: components.index.homepageChartNodes,
-    customHomepageChartConfig: components.index.customHomepageChartConfig,
     datasetUrl,
-    indexPublic,
     fenceDownloadPath,
     guppyUrl,
     guppyGraphQLUrl,
@@ -325,12 +266,10 @@ function buildConfig(opts) {
     manifestServiceApiPath,
     wtsPath,
     externalLoginOptionsUrl,
-    useGuppyForExplorer,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
     useArboristUI,
     terraExportWarning,
-    analysisApps,
     tierAccessLevel,
     tierAccessLimit,
     useIndexdAuthz,
@@ -340,8 +279,7 @@ function buildConfig(opts) {
     enableResourceBrowser,
     resourceBrowserPublic,
     explorerConfig,
-    useNewExplorerConfigFormat,
-    dataAvailabilityToolConfig,
+    headers,
   };
 }
 

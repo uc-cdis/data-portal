@@ -8,10 +8,7 @@ import IconicLink from '../components/buttons/IconicLink';
 
 storiesOf('IconicButton', module)
   .add('with caption', () => (
-    <IconicButton
-      onClick={action('clicked')}
-      caption='Hello Button'
-    />
+    <IconicButton onClick={action('clicked')} caption='Hello Button' />
   ))
   .add('with color', () => (
     <IconicButton

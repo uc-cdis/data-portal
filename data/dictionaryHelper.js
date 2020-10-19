@@ -4,27 +4,35 @@
  * @return {experimentType, fileTypeList} gqlSetup object used by data/gqlSetup.js
  */
 function dictToGQLSetup(dict) {
-  const fileTypeList = Object.keys(dict).filter(key => typeof dict[key] === 'object' && dict[key].category === 'data_file');
+  const fileTypeList = Object.keys(dict).filter(
+    (key) => typeof dict[key] === 'object' && dict[key].category === 'data_file'
+  );
   // admin types that link to the 'project' level and are not project or program
-  const adminTypeList = Object.keys(dict).filter(
-    (key) => {
+  const adminTypeList = Object.keys(dict)
+    .filter((key) => {
       const entry = dict[key];
-      return key !== 'program' && key !== 'project' && typeof entry === 'object' && entry.category === 'administrative'
-        && Array.isArray(entry.links) && entry.links.length > 0;
-    },
-  ).map(
-    (key) => {
+      return (
+        key !== 'program' &&
+        key !== 'project' &&
+        typeof entry === 'object' &&
+        entry.category === 'administrative' &&
+        Array.isArray(entry.links) &&
+        entry.links.length > 0
+      );
+    })
+    .map((key) => {
       const entry = dict[key];
       return {
         typeName: key,
         entry,
-        projectLink: entry.links.find(link => link.target_type === 'project' && link.required),
+        projectLink: entry.links.find(
+          (link) => link.target_type === 'project' && link.required
+        ),
       };
-    },
-  );
+    });
 
-  const experimentType = ['experiment', 'study', 'trio'].find(
-    name => Object.prototype.hasOwnProperty.call(dict, name),
+  const experimentType = ['experiment', 'study', 'trio'].find((name) =>
+    Object.prototype.hasOwnProperty.call(dict, name)
   );
 
   return {
@@ -36,8 +44,11 @@ function dictToGQLSetup(dict) {
 
 function paramByApp(params, key) {
   let app = 'default';
-  if (process.env.APP && (Object.keys(params).includes(process.env.APP)
-    && Object.keys(params[process.env.APP]).includes(key))) {
+  if (
+    process.env.APP &&
+    Object.keys(params).includes(process.env.APP) &&
+    Object.keys(params[process.env.APP]).includes(key)
+  ) {
     app = process.env.APP;
   }
   return params[app][key];
@@ -62,9 +73,9 @@ const { params } = require('./parameters');
 function paramSetup() {
   const countsAndDetails = getGraphQL(paramByApp(params, 'graphql'));
   return {
-    boardCounts: countsAndDetails.boardCounts.map(item => item.graphql),
-    chartCounts: countsAndDetails.chartCounts.map(item => item.graphql),
-    projectDetails: countsAndDetails.projectDetails.map(item => item.graphql),
+    boardCounts: countsAndDetails.boardCounts.map((item) => item.graphql),
+    chartCounts: countsAndDetails.chartCounts.map((item) => item.graphql),
+    projectDetails: countsAndDetails.projectDetails.map((item) => item.graphql),
   };
 }
 

@@ -23,7 +23,6 @@
   color: var(--g3-color__base-blue);
   cursor: pointer;
   float: right;
-
 }
 
 .dictionary-searcher__result-clear:hover {

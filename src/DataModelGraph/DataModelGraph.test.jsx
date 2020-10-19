@@ -14,7 +14,7 @@ describe('the DataModelGraph', () => {
         dictionary={data.dictionary}
         counts_search={data.counts_search}
         links_search={data.links_search}
-      />,
+      />
     );
 
     const $graph = $dom; // .find('DataModelGraph');

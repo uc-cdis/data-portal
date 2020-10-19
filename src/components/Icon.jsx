@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 
-const IconComponent = ({ dictIcons, iconName, height, svgStyles }) => (
-  dictIcons[iconName](height, svgStyles)
-);
+const IconComponent = ({ dictIcons, iconName, height, svgStyles }) =>
+  dictIcons[iconName](height, svgStyles);
 
 IconComponent.propTypes = {
   iconName: PropTypes.string.isRequired,

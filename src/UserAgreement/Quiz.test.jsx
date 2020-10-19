@@ -12,7 +12,8 @@ describe('the User Agreement component', () => {
     questions: [
       {
         name: 'The first question',
-        question: 'As a registered user, I can do the following things without any problem. Is it true or not:',
+        question:
+          'As a registered user, I can do the following things without any problem. Is it true or not:',
         options: [
           'Browse public Project',
           'Upload file',
@@ -24,7 +25,8 @@ describe('the User Agreement component', () => {
       },
       {
         name: 'The second question',
-        question: 'In order to be a register user, I must do the following things otherwise:',
+        question:
+          'In order to be a register user, I must do the following things otherwise:',
         options: [
           'Agree the user agreement',
           'accept a consent',
@@ -36,7 +38,8 @@ describe('the User Agreement component', () => {
       },
       {
         name: 'The third question',
-        question: 'How can I share data with other people according to the policy of the commons',
+        question:
+          'How can I share data with other people according to the policy of the commons',
         options: [
           'I can not share data',
           'I can only share data with BPA memebers',
@@ -61,16 +64,23 @@ describe('the User Agreement component', () => {
           questionList={quiz.questions}
           onSubmit={noop}
         />
-      </StaticRouter>,
+      </StaticRouter>
     );
     const optionLength = quiz.questions.reduce(
-      (res, item) => (res + item.options.length), 0,
+      (res, item) => res + item.options.length,
+      0
     );
     expect($vdom.find('.quiz__content')).toHaveLength(1);
-    expect($vdom.find('.question__content')).toHaveLength(quiz.questions.length);
-    expect($vdom.find('.question__name.h4')).toHaveLength(quiz.questions.length);
+    expect($vdom.find('.question__content')).toHaveLength(
+      quiz.questions.length
+    );
+    expect($vdom.find('.question__name.h4')).toHaveLength(
+      quiz.questions.length
+    );
     expect($vdom.find('.option__bullet')).toHaveLength(optionLength);
-    expect($vdom.find('.quiz__menu-bullet')).toHaveLength(quiz.questions.length);
+    expect($vdom.find('.quiz__menu-bullet')).toHaveLength(
+      quiz.questions.length
+    );
     expect($vdom.find('.quiz__menu-bullet--active')).toHaveLength(1);
   });
 });
