@@ -33,7 +33,9 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
 
-  const [transformedFilter, setTransformedFilter] = useState({});
+  const [transformedFilter, setTransformedFilter] = useState(
+    getGQLFilter(filter)
+  );
   const [isFilterChanged, setIsFilterChanged] = useState(false);
   useEffect(() => {
     setTransformedFilter(getGQLFilter(filter));
