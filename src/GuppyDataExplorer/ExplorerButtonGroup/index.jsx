@@ -430,7 +430,7 @@ class ExplorerButtonGroup extends React.Component {
 
 
   sendPFBToWorkspace = (pfbGUID) => {
-    const JSONBody = { cohort_guid: pfbGUID };
+    const JSONBody = { guid: pfbGUID };
     fetchWithCreds({
       path: `${manifestServiceApiPath}cohorts`,
       body: JSON.stringify(JSONBody),
