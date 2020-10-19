@@ -45,15 +45,10 @@ export const ReduxIndexButtonBar = (() => {
   const mapStateToProps = (state) => ({
     buttons: components.index.buttons,
     dictIcons,
-    activeTab: state.bar.active,
     userAccess: state.userAccess.access,
   });
 
-  const mapDispatchToProps = (dispatch) => ({
-    onActiveTab: (link) => dispatch(setActive(link)),
-  });
-
-  return connect(mapStateToProps, mapDispatchToProps)(IndexButtonBar);
+  return connect(mapStateToProps)(IndexButtonBar);
 })();
 
 export const ReduxIntroduction = (() => {
