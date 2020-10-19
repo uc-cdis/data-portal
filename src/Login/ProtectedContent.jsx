@@ -108,6 +108,7 @@ class ProtectedContent extends React.Component {
           }
         } else
           this.checkLoginStatus(store, this.state)
+            .then((newState) => this.checkIfRegisterd(newState))
             .then((newState) => this.checkIfAdmin(newState))
             .then((newState) => this.checkQuizStatus(newState))
             .then((newState) => this.checkApiToken(store, newState))
@@ -157,6 +158,21 @@ class ProtectedContent extends React.Component {
         }
         return newState;
       });
+  };
+
+  /**
+   * Check if user is registered, and update state accordingly.
+   * @param {ComponentState} initialState
+   * @returns {ComponentState}
+   */
+  checkIfRegisterd = (initialState) => {
+    let isUserRegistered = false;
+    if (initialState.user.authz !== undefined)
+      for (const i in initialState.user.authz) isUserRegistered = true;
+
+    return this.props.location.pathname === '/' || isUserRegistered
+      ? initialState
+      : { ...initialState, redirectTo: '/' };
   };
 
   /**
