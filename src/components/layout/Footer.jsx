@@ -1,78 +1,83 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { useRouteMatch } from 'react-router-dom';
 import './Footer.less';
 
-class Footer extends Component {
-  render() {
-    if (this.props.hidden) {
-      return <React.Fragment />;
-    }
-    return (
-      <footer className='footer-container'>
-        <nav className='footer__nav'>
-          <div className='footer__version-area'>
-            {[
-              { name: 'Dictionary', version: this.props.dictionaryVersion },
-              { name: 'Submission', version: this.props.apiVersion },
-              { name: 'Portal', version: this.props.portalVersion },
-            ].map((item) => (
-              <div className='footer__version' key={item.name}>
-                <div className='h4-typo footer__version-name'>{item.name}</div>
-                <div className='body-typo footer__version-value'>
-                  v{item.version}
-                </div>
+function Footer({
+  dictionaryVersion,
+  apiVersion,
+  portalVersion,
+  links,
+  logos,
+  privacyPolicy,
+}) {
+  const isFooterHidden = useRouteMatch('/dd');
+
+  return isFooterHidden ? null : (
+    <footer className='footer-container'>
+      <nav className='footer__nav'>
+        <div className='footer__version-area'>
+          {[
+            { name: 'Dictionary', version: dictionaryVersion },
+            { name: 'Submission', version: apiVersion },
+            { name: 'Portal', version: portalVersion },
+          ].map((item) => (
+            <div className='footer__version' key={item.name}>
+              <div className='h4-typo footer__version-name'>{item.name}</div>
+              <div className='body-typo footer__version-value'>
+                v{item.version}
               </div>
-            ))}
-          </div>
-          {this.props.privacyPolicy && this.props.privacyPolicy.text ? (
-            <div className='footer__privacy-policy-area'>
-              <a
-                className='h4-typo footer__privacy-policy'
-                href={this.props.privacyPolicy.footerHref}
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                {this.props.privacyPolicy.text}
-              </a>
             </div>
-          ) : null}
-          <div className='footer__logo-area'>
-            {this.props.logos.map((logoObj, i) => (
+          ))}
+        </div>
+        {privacyPolicy && privacyPolicy.text ? (
+          <div className='footer__privacy-policy-area'>
+            <a
+              className='h4-typo footer__privacy-policy'
+              href={privacyPolicy.footerHref}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              {privacyPolicy.text}
+            </a>
+          </div>
+        ) : null}
+        <div className='footer__logo-area'>
+          {logos.map((logoObj, i) => (
+            <a
+              key={i}
+              target='_blank'
+              href={logoObj.href}
+              className='footer__icon'
+              rel='noopener noreferrer'
+            >
+              <img
+                className='footer__img'
+                src={logoObj.src}
+                alt={logoObj.alt}
+                style={{ height: logoObj.height ? logoObj.height : 60 }}
+              />
+            </a>
+          ))}
+        </div>
+        <div className='footer__link-area'>
+          {links.map((link, i) => (
+            <React.Fragment key={link.href}>
               <a
-                key={i}
+                href={link.href}
+                className='footer__link'
                 target='_blank'
-                href={logoObj.href}
-                className='footer__icon'
                 rel='noopener noreferrer'
               >
-                <img
-                  className='footer__img'
-                  src={logoObj.src}
-                  alt={logoObj.alt}
-                  style={{ height: logoObj.height ? logoObj.height : 60 }}
-                />
+                {link.text ? link.text : link.href}
               </a>
-            ))}
-          </div>
-          <div className='footer__link-area'>
-            {this.props.links.map((link, i) => (
-              <React.Fragment key={link.href}>
-                <a
-                  href={link.href}
-                  className='footer__link'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  {link.text ? link.text : link.href}
-                </a>
-                {i !== this.props.links.length - 1 && <span> | </span>}
-              </React.Fragment>
-            ))}
-          </div>
-        </nav>
-      </footer>
-    );
-  }
+              {i !== links.length - 1 && <span> | </span>}
+            </React.Fragment>
+          ))}
+        </div>
+      </nav>
+    </footer>
+  );
 }
 
 const LogoObject = PropTypes.shape({
@@ -90,7 +95,6 @@ const FooterLink = PropTypes.shape({
 Footer.propTypes = {
   dictionaryVersion: PropTypes.string,
   apiVersion: PropTypes.string,
-  hidden: PropTypes.bool,
   portalVersion: PropTypes.string,
   links: PropTypes.arrayOf(FooterLink),
   logos: PropTypes.arrayOf(LogoObject).isRequired,
@@ -103,7 +107,6 @@ Footer.propTypes = {
 Footer.defaultProps = {
   dictionaryVersion: 'Unknown',
   apiVersion: 'Unknown',
-  hidden: false,
   portalVersion: 'Unknown',
   links: [],
   privacyPolicy: null,
