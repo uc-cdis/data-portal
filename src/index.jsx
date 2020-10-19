@@ -51,9 +51,7 @@ import {
   gaDebug,
   workspaceUrl,
   workspaceErrorUrl,
-  explorerPublic,
   enableResourceBrowser,
-  resourceBrowserPublic,
 } from './localconf';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
@@ -196,7 +194,6 @@ async function init() {
                       path='/dd/:node'
                       component={(props) => (
                         <ProtectedContent
-                          isPublic
                           component={DataDictionary}
                           {...props}
                         />
@@ -206,7 +203,6 @@ async function init() {
                       path='/dd'
                       component={(props) => (
                         <ProtectedContent
-                          isPublic
                           component={DataDictionary}
                           {...props}
                         />
@@ -231,7 +227,6 @@ async function init() {
                       path='/files'
                       component={(props) => (
                         <ProtectedContent
-                          isPublic={explorerPublic}
                           component={GuppyDataExplorer}
                           {...props}
                         />
@@ -287,7 +282,6 @@ async function init() {
                         path='/explorer'
                         component={(props) => (
                           <ProtectedContent
-                            isPublic={explorerPublic}
                             component={GuppyDataExplorer}
                             {...props}
                           />
@@ -307,7 +301,6 @@ async function init() {
                         path='/resource-browser'
                         component={(props) => (
                           <ProtectedContent
-                            isPublic={resourceBrowserPublic}
                             component={ResourceBrowser}
                             {...props}
                           />
