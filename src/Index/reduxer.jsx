@@ -57,9 +57,18 @@ export const ReduxIndexButtonBar = (() => {
 })();
 
 export const ReduxIntroduction = (() => {
-  const mapStateToProps = (state) => ({
-    userAuthMapping: state.userAuthMapping,
-  });
+  const mapStateToProps = (state) => {
+    const resourcePath = '/services/sheepdog/submission/project';
+    const isAdminUser =
+      state.user.authz &&
+      state.user.authz.hasOwnProperty(resourcePath) &&
+      state.user.authz[resourcePath][0].method === '*';
+
+    return {
+      isAdminUser,
+      userAuthMapping: state.userAuthMapping,
+    };
+  };
 
   return connect(mapStateToProps)(Introduction);
 })();
