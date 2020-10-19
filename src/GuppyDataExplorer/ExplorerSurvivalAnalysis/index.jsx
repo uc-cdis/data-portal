@@ -38,8 +38,11 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
   );
   const [isFilterChanged, setIsFilterChanged] = useState(false);
   useEffect(() => {
-    setTransformedFilter(getGQLFilter(filter));
-    setIsFilterChanged(true);
+    const updatedFilter = getGQLFilter(filter);
+    if (JSON.stringify(updatedFilter) !== JSON.stringify(transformedFilter)) {
+      setTransformedFilter(updatedFilter);
+      setIsFilterChanged(true);
+    }
   }, [filter]);
 
   const [factors, setFactors] = useState(getFactors(aggsData));
