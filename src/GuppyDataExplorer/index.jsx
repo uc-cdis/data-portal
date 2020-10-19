@@ -71,9 +71,11 @@ class Explorer extends React.Component {
       </React.Fragment>
     );
 
-    const overviewFilter = this.props.history.location.state.filter
-      ? this.props.history.location.state.filter
-      : {};
+    const overviewFilter =
+      this.props.history.location.state &&
+      this.props.history.location.state.filter
+        ? this.props.history.location.state.filter
+        : {};
 
     return (
       <div className='guppy-explorer'>
