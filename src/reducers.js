@@ -10,7 +10,6 @@ import queryNodes from './QueryNode/reducers';
 import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import login from './Login/reducers';
-import bar from './Layout/reducers';
 import ddgraph from './DataDictionary/reducers';
 import privacyPolicy from './PrivacyPolicy/reducers';
 import { logoutListener } from './Login/ProtectedContent';
@@ -92,7 +91,6 @@ export const removeDeletedNode = (state, id) => {
 
 const reducers = combineReducers({
   privacyPolicy,
-  bar,
   index,
   popups,
   user,
