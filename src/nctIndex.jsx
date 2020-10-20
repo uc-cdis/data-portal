@@ -5,7 +5,8 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { faAngleUp, faAngleDown, faEnvelopeSquare, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faFacebookSquare, faTwitterSquare, faLinkedin, faYoutubeSquare, faFlickr, faInstagramSquare, faPinterestSquare } from '@fortawesome/free-brands-svg-icons';
 import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 
@@ -19,7 +20,7 @@ import HomePage from './Homepage/page';
 import DocumentPage from './Document/page';
 import { fetchCoreMetadata, ReduxCoreMetadataPage } from './CoreMetadata/reduxer';
 import Indexing from './Indexing/Indexing';
-import Covid19IndexPage from './Index/covid19Page';
+import NCTIndexPage from './Index/nctPage';
 import DataDictionary from './DataDictionary';
 import ReduxPrivacyPolicy from './PrivacyPolicy/ReduxPrivacyPolicy';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
@@ -30,11 +31,13 @@ import UserAgreementCert from './UserAgreement/ReduxCertPopup';
 import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
 import getReduxStore from './reduxStore';
-import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
+import { ReduxNavBar, ReduxTopBar } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic,
 } from './localconf';
+import Analysis from './Analysis/Analysis';
+import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import GuppyDataExplorer from './GuppyDataExplorer';
@@ -43,7 +46,10 @@ import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
+import './nctIndex.css';
+import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import NotFound from './components/NotFound';
+import FooterNIAID from './components/layout/FooterNIAID';
 
 
 // monitor user's session
@@ -69,14 +75,24 @@ async function init() {
     ],
   );
   // FontAwesome icons
-  library.add(faAngleUp, faAngleDown);
+  library.add(faAngleUp,
+    faAngleDown,
+    faEnvelopeSquare,
+    faFacebookSquare,
+    faTwitterSquare,
+    faLinkedin,
+    faYoutubeSquare,
+    faFlickr,
+    faInstagramSquare,
+    faPinterestSquare,
+    faExternalLinkAlt);
 
   render(
     <div>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <BrowserRouter basename={basename}>
-            <div>
+            <div className='main-page'>
               {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
               {isEnabled('noIndex') ?
                 <Helmet>
@@ -131,7 +147,7 @@ async function init() {
                       props => (
                         <ProtectedContent
                           public={indexPublic}
-                          component={Covid19IndexPage}
+                          component={NCTIndexPage}
                           {...props}
                         />
                       )
@@ -172,6 +188,28 @@ async function init() {
                       props => <ProtectedContent component={GraphQLQuery} {...props} />
                     }
                   />
+                  {
+                    isEnabled('analysis') ?
+                      <Route
+                        exact
+                        path='/analysis/:app'
+                        component={
+                          props => <ProtectedContent component={ReduxAnalysisApp} {...props} />
+                        }
+                      />
+                      : null
+                  }
+                  {
+                    isEnabled('analysis') ?
+                      <Route
+                        exact
+                        path='/analysis'
+                        component={
+                          props => <ProtectedContent component={Analysis} {...props} />
+                        }
+                      />
+                      : null
+                  }
                   <Route
                     exact
                     path='/identity'
@@ -335,6 +373,28 @@ async function init() {
                     : null
                   }
                   <Route
+                    exact
+                    path='/study-viewer/:dataType'
+                    component={
+                      props => (<ProtectedContent
+                        public
+                        component={ReduxStudyViewer}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/study-viewer/:dataType/:rowAccessor'
+                    component={
+                      props => (<ProtectedContent
+                        public
+                        component={ReduxSingleStudyViewer}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
                     path='/not-found'
                     component={NotFound}
                   />
@@ -357,9 +417,8 @@ async function init() {
                   />
                 </Switch>
               </div>
-              <ReduxFooter
+              <FooterNIAID
                 logos={components.footerLogos}
-                privacyPolicy={components.privacyPolicy}
               />
             </div>
           </BrowserRouter>

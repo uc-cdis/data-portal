@@ -46,7 +46,6 @@ import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
-import './index.less';
 import NotFound from './components/NotFound';
 
 

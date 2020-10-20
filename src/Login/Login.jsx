@@ -63,11 +63,18 @@ class Login extends React.Component {
     if (queryParams.next) {
       next = basename === '/' ? queryParams.next : basename + queryParams.next;
     }
-    next = next.replace('?request_access', '?request_access_logged_in');
-    const customImage = components.login && components.login.image ?
-      components.login.image
-      : 'gene';
+
+    let customImage = 'gene';
+    let displaySideBoxImages = true;
+    if (components.login && components.login.image !== undefined) {
+      if (components.login.image !== '') {
+        customImage = components.login.image;
+      } else {
+        displaySideBoxImages = false;
+      }
+    }
     const customImageStyle = { backgroundImage: `url(/src/img/icons/${customImage}.svg)` };
+    next = next.replace('?request_access', '?request_access_logged_in');
 
     let loginComponent = (
       <React.Fragment key='login-component'>
@@ -161,7 +168,11 @@ class Login extends React.Component {
 
     return (
       <div className='login-page'>
-        <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
+        {
+          (displaySideBoxImages) ?
+            <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
+            : null
+        }
         <div className='login-page__central-content'>
           <div className='h1-typo login-page__title'>
             {this.props.data.title}
@@ -190,7 +201,11 @@ class Login extends React.Component {
             {'.'}
           </div>
         </div>
-        <div className='login-page__side-box login-page__side-box--right' style={customImageStyle} />
+        {
+          (displaySideBoxImages) ?
+            <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
+            : null
+        }
       </div>
     );
   }

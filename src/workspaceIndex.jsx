@@ -29,7 +29,6 @@ import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
-import './index.less';
 
 
 // monitor user's session

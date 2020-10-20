@@ -14,6 +14,9 @@ class PlotChartAxisTick extends React.Component {
   render() {
     // type is one of ['date', 'string', 'number']
     const { x, y, payload, axis, type } = this.props;
+    if (!x || !y || !payload) {
+      return null;
+    }
 
     let formattedValue = payload.value;
     if (type === 'date') {
@@ -47,11 +50,17 @@ class PlotChartAxisTick extends React.Component {
 }
 
 PlotChartAxisTick.propTypes = {
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
-  payload: PropTypes.object.isRequired,
+  x: PropTypes.number,
+  y: PropTypes.number,
+  payload: PropTypes.object,
   axis: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+};
+
+PlotChartAxisTick.defaultProps = {
+  x: undefined,
+  y: undefined,
+  payload: undefined,
 };
 
 function getDates(startDate, endDate, days) {
