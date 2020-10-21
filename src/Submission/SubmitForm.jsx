@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Toggle } from 'material-ui';
 import PropTypes from 'prop-types';
+import Switch from '@material-ui/core/Switch';
 import Select from 'react-select';
 import { jsonToString } from '../utils';
 import SubmitNodeForm from './SubmitNodeForm';
@@ -113,11 +113,11 @@ class SubmitForm extends Component {
     return (
       <div>
         <form>
-          <Toggle
-            label='Use Form Submission'
-            labelStyle={{ width: '' }}
-            onToggle={this.onFormToggle}
-          />
+          <label style={{ display: 'block' }}>
+            Use Form Submission
+            <Switch onChange={this.onFormToggle} />
+          </label>
+
           {this.state.fill_form && (
             <Select
               name='nodeType'
