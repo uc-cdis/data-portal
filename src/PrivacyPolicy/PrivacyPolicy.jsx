@@ -1,44 +1,46 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import MarkdownIt from 'markdown-it';
 import Spinner from '../components/Spinner';
 import { components } from '../params';
 import './PrivacyPolicy.less';
 
-class PrivacyPolicy extends React.Component {
-  componentDidMount() {
-    this.props.loadPrivacyPolicy();
-  }
+const { privacyPolicy } = components;
+const usePrivacyPolicyFile =
+  privacyPolicy.file !== undefined && privacyPolicy.file !== '';
 
-  shouldComponentUpdate(nextProps) {
-    return !this.props.loaded && nextProps.loaded;
-  }
+const md = new MarkdownIt();
+
+function PrivacyPolicy() {
+  const [text, setText] = useState('');
+  useEffect(() => {
+    if (usePrivacyPolicyFile)
+      fetch(privacyPolicy.file)
+        .then((response) => {
+          if (response.ok) return response.text();
+          throw Error(response.text);
+        })
+        .then((responseText) => setText(responseText))
+        .catch(console.error);
+  }, []);
 
   /* eslint-disable react/no-danger */
-  render() {
-    if (!this.props.loaded) {
-      return <Spinner />;
-    } else if (this.props.text) {
-      return (
-        <div className='privacy-policy'>
-          <p dangerouslySetInnerHTML={{ __html: this.props.text }} />
-        </div>
-      );
-    }
-    // otherwise we'll try to redirect to the url according to the environment variable
-    const url = components.privacyPolicy.routeHref;
-    if (url) {
-      // redirect to given URL
-      this.props.history.push(url);
-    }
-    return null;
+  if (usePrivacyPolicyFile) {
+    return text === '' ? (
+      <Spinner />
+    ) : (
+      <div className='privacy-policy'>
+        <p dangerouslySetInnerHTML={{ __html: md.render(text) }} />
+      </div>
+    );
   }
-}
 
-PrivacyPolicy.propTypes = {
-  loadPrivacyPolicy: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
-  text: PropTypes.string.isRequired,
-  loaded: PropTypes.bool.isRequired,
-};
+  const history = useHistory();
+  if (privacyPolicy.routeHref) {
+    history.push(privacyPolicy.routeHref);
+  }
+
+  return null;
+}
 
 export default PrivacyPolicy;
