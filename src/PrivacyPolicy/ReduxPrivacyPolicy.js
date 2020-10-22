@@ -1,7 +1,9 @@
 import { connect } from 'react-redux';
-import showdown from 'showdown';
+import MarkdownIt from 'markdown-it';
 import { components } from '../params';
 import PrivacyPolicy from './PrivacyPolicy';
+
+const md = new MarkdownIt();
 
 const mapStateToProps = (state) => ({
   text: state.privacyPolicy,
@@ -14,11 +16,9 @@ const mapDispatchToProps = (dispatch) => ({
       (response) => {
         if (response.ok) {
           response.text().then((text) => {
-            const converter = new showdown.Converter();
-            const html = converter.makeHtml(text);
             dispatch({
               type: 'LOAD_PRIVACY_POLICY',
-              value: html,
+              value: md.render(text),
             });
           });
         }
