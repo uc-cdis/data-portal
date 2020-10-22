@@ -8,10 +8,11 @@ const isString = (x) => Object.prototype.toString.call(x) === '[object String]';
  */
 export const getFactors = (aggsData) => {
   const factors = [];
+  const exceptions = ['project_id', 'data_contributor_id'];
 
   for (const [key, value] of Object.entries(aggsData))
     if (
-      key !== 'project_id' &&
+      !exceptions.includes(key) &&
       value.histogram.length > 0 &&
       isString(value.histogram[0].key)
     )
