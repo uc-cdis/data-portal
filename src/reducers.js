@@ -11,7 +11,6 @@ import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import login from './Login/reducers';
 import ddgraph from './DataDictionary/reducers';
-import privacyPolicy from './PrivacyPolicy/reducers';
 import { logoutListener } from './Login/ProtectedContent';
 import { fetchUserAccess, fetchUserAuthMapping } from './actions';
 import getReduxStore from './reduxStore';
@@ -90,7 +89,6 @@ export const removeDeletedNode = (state, id) => {
 };
 
 const reducers = combineReducers({
-  privacyPolicy,
   index,
   popups,
   user,

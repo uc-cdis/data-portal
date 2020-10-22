@@ -33,7 +33,7 @@ import { fetchCoreMetadata } from './CoreMetadata/reduxer';
 import Indexing from './Indexing/Indexing';
 import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary/.';
-import ReduxPrivacyPolicy from './PrivacyPolicy/ReduxPrivacyPolicy';
+import PrivacyPolicy from './PrivacyPolicy/PrivacyPolicy';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
 import ReduxMapFiles from './Submission/ReduxMapFiles';
 import ReduxMapDataModel from './Submission/ReduxMapDataModel';
@@ -283,10 +283,7 @@ async function init() {
                   {components.privacyPolicy &&
                   (!!components.privacyPolicy.file ||
                     !!components.privacyPolicy.routeHref) ? (
-                    <Route
-                      path='/privacy-policy'
-                      component={ReduxPrivacyPolicy}
-                    />
+                    <Route path='/privacy-policy' component={PrivacyPolicy} />
                   ) : null}
                   {enableResourceBrowser ? (
                     <Route
