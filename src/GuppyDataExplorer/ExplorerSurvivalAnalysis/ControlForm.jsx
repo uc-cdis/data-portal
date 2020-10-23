@@ -169,7 +169,7 @@ const ControlForm = ({
         disabled
         label='Survival type'
         options={[
-          { label: 'All Survival', value: 'all' },
+          { label: 'Overall Survival', value: 'all' },
           { label: 'Event-Free Survival (EFS)', value: 'efs' },
         ]}
         onChange={({ value }) => setSurvivalType(value)}
