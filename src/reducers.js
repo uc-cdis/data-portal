@@ -1,4 +1,3 @@
-import { reducer as formReducer } from 'redux-form';
 import { combineReducers } from 'redux';
 import userProfile from './UserProfile/reducers';
 import coreMetadata from './CoreMetadata/reducers';
@@ -102,7 +101,6 @@ const reducers = combineReducers({
   certificate,
   graphiql,
   login,
-  form: formReducer,
   auth: logoutListener,
   ddgraph,
   userAccess,
