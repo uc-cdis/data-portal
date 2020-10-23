@@ -50,7 +50,6 @@
     "react-virtualized": "^9.21.0",
     "recharts": "^1.0.0-beta.10",
     "redux": "^3.7.0",
-    "redux-form": "^6.5.0",
     "redux-persist": "^4.7.1",
     "redux-thunk": "^2.2.0",
     "relay-compiler": "^1.6.0",
