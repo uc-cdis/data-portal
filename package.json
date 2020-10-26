@@ -137,7 +137,6 @@
     "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --config .stylelintrc.js --fix",
     "sanity-check": "node ./sanity-check",
     "develop:inrg": "HOSTNAME=portal.pedscommons.org NODE_ENV=dev APP=inrg bash ./runWebpack.sh",
-    "develop:inrg_compat": "HOSTNAME=portal.pedscommons.org NODE_ENV=dev APP=inrg_compat bash ./runWebpack.sh",
     "format": "prettier --write ."
   },
   "graphql": {
