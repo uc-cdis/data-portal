@@ -104,7 +104,7 @@ class StudyDetails extends React.Component {
     }
   }
 
-  getButton = (key, buttonConfig, userHasLoggedIn) => {
+  getButton = (key, buttonConfig, userHasLoggedIn, displayButtonsData) => {
     // if this button is explicitly disabled in this view, return nothing
     if (this.props.isSingleItemView && buttonConfig.singleItemView === false) {
       return null;
@@ -114,6 +114,15 @@ class StudyDetails extends React.Component {
     }
 
     let button;
+
+    const enableButton = buttonConfig.enableButtonField && displayButtonsData[buttonConfig.enableButtonField] ?
+      displayButtonsData[buttonConfig.enableButtonField] === 'true' : true;
+    let tooltipEnabled = false;
+    let tooltipText = '';
+    if (!enableButton && buttonConfig.disableButtonTooltipText) {
+      tooltipEnabled = true;
+      tooltipText = buttonConfig.disableButtonTooltipText;
+    }
 
     if (buttonConfig.type === 'download') {
       // 'Download' button
@@ -126,6 +135,9 @@ class StudyDetails extends React.Component {
         label={'Download'}
         buttonType='primary'
         onClick={this.showDownloadModal}
+        enabled={enableButton}
+        tooltipEnabled={tooltipEnabled}
+        tooltipText={tooltipText}
       />) : null;
     } else if (buttonConfig.type === 'request_access') {
       // 'Request Access' and 'Login to Request Access' buttons
@@ -133,9 +145,8 @@ class StudyDetails extends React.Component {
         this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
       };
       let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
-      let tooltipEnabled = false;
-      let tooltipText = '';
-      if (this.state.accessRequested) {
+      if (enableButton && this.state.accessRequested) {
+        // the button is disabled because the user has already requested access
         requestAccessText = (buttonConfig.accessRequestedText) ? buttonConfig.accessRequestedText : 'Access Requested';
         if (buttonConfig.accessRequestedTooltipText) {
           tooltipEnabled = true;
@@ -151,7 +162,7 @@ class StudyDetails extends React.Component {
         label={requestAccessText}
         buttonType='primary'
         onClick={onRequestAccess}
-        enabled={!this.state.accessRequested}
+        enabled={enableButton && !this.state.accessRequested}
         tooltipEnabled={tooltipEnabled}
         tooltipText={tooltipText}
       />) : null;
@@ -235,7 +246,7 @@ class StudyDetails extends React.Component {
              }
              {
                (this.props.studyViewerConfig.buttons) ? this.props.studyViewerConfig.buttons.map(
-                 (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
+                 (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn, this.props.data.displayButtonsData),
                ) : null
              }
            </Space>
@@ -375,6 +386,7 @@ StudyDetails.propTypes = {
     rowAccessorValue: PropTypes.string.isRequired,
     blockData: PropTypes.object,
     tableData: PropTypes.object,
+    displayButtonsData: PropTypes.object,
     accessibleValidationValue: PropTypes.string,
   }).isRequired,
   fileData: PropTypes.arrayOf(
