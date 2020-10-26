@@ -19,6 +19,7 @@ import { Helmet } from 'react-helmet';
 import '@gen3/ui-component/dist/css/base.less';
 import {
   fetchDictionary,
+  fetchProjects,
   fetchSchema,
   fetchVersionInfo,
   fetchUserAccess,
@@ -79,6 +80,7 @@ async function init() {
     // resources can be open to anonymous users, so fetch access:
     store.dispatch(fetchUserAccess),
     store.dispatch(fetchUserAuthMapping),
+    store.dispatch(fetchProjects()),
   ]);
   // FontAwesome icons
   library.add(faAngleUp, faAngleDown, faFlask, faMicroscope, faUser);
