@@ -52,8 +52,6 @@ const user = (state = {}, action) => {
         ...state,
         vpc: action.vpc,
       };
-    case 'RECEIVE_AUTHORIZATION_URL':
-      return { ...state, oauth_url: action.url };
     case 'FETCH_ERROR':
       return { ...state, fetched_user: true, fetch_error: action.error };
     default:

@@ -73,10 +73,6 @@ const submission = (state = {}, action) => {
         nodeTypes: getNodeTypes(action.data),
         file_nodes: getFileNodes(action.data),
       };
-    case 'RECEIVE_AUTHORIZATION_URL':
-      return { ...state, oauth_url: action.url };
-    case 'RECEIVE_SUBMISSION_LOGIN':
-      return { ...state, login: state.result, error: state.error };
     case 'RECEIVE_SUBMISSION': {
       const prevCounts =
         'submit_entity_counts' in state ? state.submit_entity_counts : {};
