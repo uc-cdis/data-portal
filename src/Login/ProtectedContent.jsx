@@ -1,15 +1,10 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {
-  fetchUser,
-  fetchOAuthURL,
-  fetchWithCreds,
-  fetchProjects,
-} from '../actions';
+import { fetchUser } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
-import { requiredCerts, submissionApiOauthPath } from '../localconf';
+import { requiredCerts } from '../localconf';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 import { intersection, isPageFullScreen } from '../utils';
 import './ProtectedContent.css';
