@@ -25,7 +25,6 @@ import './ProtectedContent.css';
 /** @typedef {Object} ReduxStore */
 
 let lastAuthMs = 0;
-let lastTokenRefreshMs = 0;
 
 /**
  * Redux listener - just clears auth-cache on logout
@@ -34,7 +33,6 @@ export function logoutListener(state = {}, action) {
   switch (action.type) {
     case 'RECEIVE_API_LOGOUT':
       lastAuthMs = 0;
-      lastTokenRefreshMs = 0;
       break;
     default: // noop
   }
