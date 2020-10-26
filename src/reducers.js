@@ -80,19 +80,13 @@ const userAuthMapping = (state = {}, action) => {
 const project = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_PROJECTS':
-      return {
-        ...state,
-        projects: action.data.reduce((map, p) => {
-          const res = map;
-          res[p.code] = p.project_id;
-          return res;
-        }, {}),
-        projectAvail: action.data.reduce((map, p) => {
-          const res = map;
-          res[p.project_id] = p.availability_type;
-          return res;
-        }, {}),
-      };
+      const projects = {};
+      const projectAvail = {};
+      for (const { code, project_id, availability_type } of action.data) {
+        projects[code] = project_id;
+        projectAvail[project_id] = availability_type;
+      }
+      return { ...state, projects, projectAvail };
     default:
       return state;
   }
