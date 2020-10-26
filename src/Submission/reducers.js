@@ -13,20 +13,6 @@ const submission = (state = {}, action) => {
         ...state,
         formSchema: { ...state.formSchema, ...action.formSchema },
       };
-    case 'RECEIVE_PROJECTS':
-      return {
-        ...state,
-        projects: action.data.reduce((map, p) => {
-          const res = map;
-          res[p.code] = p.project_id;
-          return res;
-        }, {}),
-        projectAvail: action.data.reduce((map, p) => {
-          const res = map;
-          res[p.project_id] = p.availability_type;
-          return res;
-        }, {}),
-      };
     case 'RECEIVE_PROJECT_LIST': {
       //
       // Note - save projectsByName, b/c we acquire more data for individual tables

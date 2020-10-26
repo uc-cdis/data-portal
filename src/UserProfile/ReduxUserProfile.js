@@ -102,7 +102,7 @@ const mapStateToProps = (state) => ({
   userProfile: state.userProfile,
   userAuthMapping: state.userAuthMapping,
   popups: state.popups,
-  projects: state.submission.projects,
+  projects: state.project.projects,
 });
 
 const mapDispatchToProps = (dispatch) => ({

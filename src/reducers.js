@@ -77,6 +77,27 @@ const userAuthMapping = (state = {}, action) => {
   }
 };
 
+const project = (state = {}, action) => {
+  switch (action.type) {
+    case 'RECEIVE_PROJECTS':
+      return {
+        ...state,
+        projects: action.data.reduce((map, p) => {
+          const res = map;
+          res[p.code] = p.project_id;
+          return res;
+        }, {}),
+        projectAvail: action.data.reduce((map, p) => {
+          const res = map;
+          res[p.project_id] = p.availability_type;
+          return res;
+        }, {}),
+      };
+    default:
+      return state;
+  }
+};
+
 export const removeDeletedNode = (state, id) => {
   const searchResult = state.search_result;
   const nodeType = Object.keys(searchResult.data)[0];
@@ -87,6 +108,7 @@ export const removeDeletedNode = (state, id) => {
 
 const reducers = combineReducers({
   index,
+  project,
   popups,
   user,
   status,
