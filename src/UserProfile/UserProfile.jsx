@@ -32,7 +32,7 @@ const UserProfile = ({
   userProfile,
   userAuthMapping,
   popups,
-  submission,
+  projects,
   onCreateKey,
   onClearCreationSession,
   onUpdatePopup,
@@ -143,15 +143,12 @@ const UserProfile = ({
       )}
       {showFenceAuthzOnProfile && (
         <AccessTable
-          projects={submission.projects}
+          projects={projects}
           projectsAccesses={user.project_access}
         />
       )}
       {showArboristAuthzOnProfile && (
-        <AccessTable
-          projects={submission.projects}
-          userAuthMapping={userAuthMapping}
-        />
+        <AccessTable projects={projects} userAuthMapping={userAuthMapping} />
       )}
     </div>
   );
@@ -162,7 +159,7 @@ UserProfile.propTypes = {
   userProfile: PropTypes.object.isRequired,
   userAuthMapping: PropTypes.object.isRequired,
   popups: PropTypes.object.isRequired,
-  submission: PropTypes.object,
+  projects: PropTypes.object,
   onClearCreationSession: PropTypes.func.isRequired,
   onCreateKey: PropTypes.func.isRequired,
   onUpdatePopup: PropTypes.func.isRequired,
@@ -172,7 +169,7 @@ UserProfile.propTypes = {
 };
 
 UserProfile.defaultProps = {
-  submission: {},
+  projects: {},
 };
 
 export default UserProfile;

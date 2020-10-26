@@ -52,8 +52,6 @@ const user = (state = {}, action) => {
         ...state,
         vpc: action.vpc,
       };
-    case 'RECEIVE_AUTHORIZATION_URL':
-      return { ...state, oauth_url: action.url };
     case 'FETCH_ERROR':
       return { ...state, fetched_user: true, fetch_error: action.error };
     default:
@@ -79,6 +77,21 @@ const userAuthMapping = (state = {}, action) => {
   }
 };
 
+const project = (state = {}, action) => {
+  switch (action.type) {
+    case 'RECEIVE_PROJECTS':
+      const projects = {};
+      const projectAvail = {};
+      for (const { code, project_id, availability_type } of action.data) {
+        projects[code] = project_id;
+        projectAvail[project_id] = availability_type;
+      }
+      return { ...state, projects, projectAvail };
+    default:
+      return state;
+  }
+};
+
 export const removeDeletedNode = (state, id) => {
   const searchResult = state.search_result;
   const nodeType = Object.keys(searchResult.data)[0];
@@ -89,6 +102,7 @@ export const removeDeletedNode = (state, id) => {
 
 const reducers = combineReducers({
   index,
+  project,
   popups,
   user,
   status,

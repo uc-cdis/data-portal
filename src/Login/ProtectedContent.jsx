@@ -1,15 +1,10 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {
-  fetchUser,
-  fetchOAuthURL,
-  fetchWithCreds,
-  fetchProjects,
-} from '../actions';
+import { fetchUser } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
-import { requiredCerts, submissionApiOauthPath } from '../localconf';
+import { requiredCerts } from '../localconf';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 import { intersection, isPageFullScreen } from '../utils';
 import './ProtectedContent.css';
@@ -25,7 +20,6 @@ import './ProtectedContent.css';
 /** @typedef {Object} ReduxStore */
 
 let lastAuthMs = 0;
-let lastTokenRefreshMs = 0;
 
 /**
  * Redux listener - just clears auth-cache on logout
@@ -34,7 +28,6 @@ export function logoutListener(state = {}, action) {
   switch (action.type) {
     case 'RECEIVE_API_LOGOUT':
       lastAuthMs = 0;
-      lastTokenRefreshMs = 0;
       break;
     default: // noop
   }
@@ -111,7 +104,6 @@ class ProtectedContent extends React.Component {
             .then((newState) => this.checkIfRegisterd(newState))
             .then((newState) => this.checkIfAdmin(newState))
             .then((newState) => this.checkQuizStatus(newState))
-            .then((newState) => this.checkApiToken(store, newState))
             .then((newState) => {
               const latestState = { ...newState, dataLoaded: true };
 
@@ -189,77 +181,6 @@ class ProtectedContent extends React.Component {
       initialState.user.authz.hasOwnProperty(resourcePath) &&
       initialState.user.authz[resourcePath][0].method === '*';
     return isAdminUser ? initialState : { ...initialState, redirectTo: '/' };
-  };
-
-  /**
-   * Filter refreshes the gdc-api token (acquired via oauth with user-api) if necessary.
-   * @param {ReduxStore} store
-   * @param {ComponentState} initialState
-   * @returns {Promise<ComponentState>}
-   */
-  checkApiToken = (store, initialState) => {
-    if (!initialState.authenticated || Date.now() - lastTokenRefreshMs < 41000)
-      return Promise.resolve(initialState);
-
-    // Assume fetchProjects either succeeds or fails.
-    // If fails (no project data), then refresh api token.
-    return store.dispatch(fetchProjects()).then((info) => {
-      if (
-        // user already has a valid token
-        store.getState().submission.projects ||
-        // or, do not authenticate unless we have a 403 or 401
-        // should only check 401 after we fix fence to return correct error code for all cases
-        // there may be no tables at startup time, or some other weirdness ...
-        info.status !== 403 ||
-        info.status !== 401
-      )
-        return Promise.resolve(initialState);
-
-      // NOW DEPRECATED: jwt access token works across all services
-      // The oauth dance below is only relevant for legacy commons - pre jwt
-      return (
-        store
-          .dispatch(fetchOAuthURL(submissionApiOauthPath))
-          .then((oauthUrl) =>
-            fetchWithCreds({
-              path: oauthUrl,
-              dispatch: store.dispatch.bind(store),
-            })
-          )
-          .then(({ status, data }) => {
-            switch (status) {
-              case 200:
-                return {
-                  type: 'RECEIVE_SUBMISSION_LOGIN',
-                  result: true,
-                };
-              default: {
-                return {
-                  type: 'RECEIVE_SUBMISSION_LOGIN',
-                  result: false,
-                  error: data,
-                };
-              }
-            }
-          })
-          .then((msg) => store.dispatch(msg))
-          // refetch the tables - since the earlier call failed with an invalid token
-          .then(() => store.dispatch(fetchProjects()))
-          .then(
-            () => {
-              lastTokenRefreshMs = Date.now();
-              return initialState;
-            },
-            // re-login if something went wrong
-            () => ({
-              ...initialState,
-              authenticated: false,
-              redirectTo: '/login',
-              from: this.props.location,
-            })
-          )
-      );
-    });
   };
 
   /**
