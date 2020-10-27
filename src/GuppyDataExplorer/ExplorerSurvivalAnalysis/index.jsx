@@ -24,9 +24,10 @@ const fetchResult = (body) =>
 /**
  * @param {Object} prop
  * @param {Object} prop.aggsData
+ * @param {Array} prop.fieldMapping
  * @param {Object} prop.filter
  */
-function ExplorerSurvivalAnalysis({ aggsData, filter }) {
+function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
@@ -45,10 +46,10 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
     }
   }, [filter]);
 
-  const [factors, setFactors] = useState(getFactors(aggsData));
+  const [factors, setFactors] = useState(getFactors(aggsData, fieldMapping));
   useEffect(() => {
-    setFactors(getFactors(aggsData));
-  }, [aggsData]);
+    setFactors(getFactors(aggsData, fieldMapping));
+  }, [aggsData, fieldMapping]);
 
   /** @type {ColorScheme} */
   const initColorScheme = { All: schemeCategory10[0] };
@@ -133,7 +134,12 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
 
 ExplorerSurvivalAnalysis.propTypes = {
   aggsData: PropTypes.object,
+  fieldMapping: PropTypes.array,
   filter: PropTypes.object,
+};
+
+ExplorerSurvivalAnalysis.defaultProps = {
+  fieldMapping: [],
 };
 
 export default React.memo(ExplorerSurvivalAnalysis);

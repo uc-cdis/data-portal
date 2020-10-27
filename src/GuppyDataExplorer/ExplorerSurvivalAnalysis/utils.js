@@ -4,11 +4,16 @@ const isString = (x) => Object.prototype.toString.call(x) === '[object String]';
 
 /**
  * Get factor variables to use for survival analysis
- * @param {{ histogram: { key: any }[] }[]} aggsData
+ * @param {{ [key: string]: { histogram: { key: any }[] }}} aggsData
+ * @param {{ field: string; name: string }[]} fieldMapping
  */
-export const getFactors = (aggsData) => {
+export const getFactors = (aggsData, fieldMapping) => {
   const factors = [];
   const exceptions = ['project_id', 'data_contributor_id'];
+
+  /** @type {{ [key: string]: string }} */
+  const fieldNameMap = {};
+  for (const { field, name } of fieldMapping) fieldNameMap[field] = name;
 
   for (const [key, value] of Object.entries(aggsData))
     if (
@@ -17,11 +22,13 @@ export const getFactors = (aggsData) => {
       isString(value.histogram[0].key)
     )
       factors.push({
-        label: key
-          .toLowerCase()
-          .replace(/_|\./gi, ' ')
-          .replace(/\b\w/g, (c) => c.toUpperCase())
-          .trim(),
+        label: fieldNameMap.hasOwnProperty(key)
+          ? fieldNameMap[key]
+          : key
+              .toLowerCase()
+              .replace(/_|\./gi, ' ')
+              .replace(/\b\w/g, (c) => c.toUpperCase())
+              .trim(),
         value: key,
       });
 

@@ -221,6 +221,7 @@ class ExplorerVisualization extends React.Component {
         <ViewContainer showIf={this.state.explorerView === 'survival analysis'}>
           <ExplorerSurvivalAnalysis
             aggsData={this.props.aggsData}
+            fieldMapping={this.props.guppyConfig.fieldMapping}
             filter={this.props.filter}
           />
         </ViewContainer>
