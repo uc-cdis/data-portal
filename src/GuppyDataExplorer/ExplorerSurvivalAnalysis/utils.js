@@ -4,7 +4,7 @@ const isString = (x) => Object.prototype.toString.call(x) === '[object String]';
 
 /**
  * Get factor variables to use for survival analysis
- * @param {{ histogram: { key: any }[] }[]} aggsData
+ * @param {{ [key: string]: { histogram: { key: any }[] }}} aggsData
  * @param {{ field: string; name: string }[]} fieldMapping
  */
 export const getFactors = (aggsData, fieldMapping) => {
