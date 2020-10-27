@@ -4,9 +4,6 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-kuroir';
 import Button from '@gen3/ui-component/dist/components/Button';
-import ReduxDataModelGraph, {
-  getCounts,
-} from '../DataModelGraph/ReduxDataModelGraph';
 import './SubmissionResult.less';
 
 /**
