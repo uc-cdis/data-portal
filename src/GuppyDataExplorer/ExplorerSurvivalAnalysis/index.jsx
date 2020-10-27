@@ -138,4 +138,8 @@ ExplorerSurvivalAnalysis.propTypes = {
   filter: PropTypes.object,
 };
 
+ExplorerSurvivalAnalysis.defaultProps = {
+  fieldMapping: [],
+};
+
 export default React.memo(ExplorerSurvivalAnalysis);
