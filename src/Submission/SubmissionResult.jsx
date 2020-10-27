@@ -1,13 +1,9 @@
 import React from 'react';
-import brace from 'brace'; // needed by AceEditor
-import 'brace/mode/json';
-import 'brace/theme/kuroir';
-import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
+import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/theme-kuroir';
 import Button from '@gen3/ui-component/dist/components/Button';
-import ReduxDataModelGraph, {
-  getCounts,
-} from '../DataModelGraph/ReduxDataModelGraph';
 import './SubmissionResult.less';
 
 /**
@@ -29,15 +25,7 @@ class SubmissionResult extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      status,
-      data,
-      dataString,
-      entityCounts,
-      counter,
-      total,
-      onFinish,
-    } = this.props;
+    const { counter, total, onFinish } = this.props;
     if (counter !== prevProps.counter && counter === total) {
       onFinish();
     }
@@ -53,33 +41,6 @@ class SubmissionResult extends React.Component {
       total,
     } = this.props;
     let summary = null;
-    const fullResponse = (() => {
-      if (this.state.showFullResponse) {
-        return (
-          <div>
-            <p>Details:</p>
-            <AceEditor
-              width='100%'
-              height='300px'
-              style={{ marginBottom: '1em' }}
-              mode='json'
-              theme='kuroir'
-              readOnly
-              value={dataString}
-            />
-          </div>
-        );
-      }
-      return (
-        <div>
-          <Button
-            buttonType='secondary'
-            onClick={() => this.setState({ showFullResponse: true })}
-            label='Details'
-          />
-        </div>
-      );
-    })();
 
     if (status === 200) {
       // List number of entites of each type created
@@ -97,10 +58,8 @@ class SubmissionResult extends React.Component {
           </ul>
         </div>
       );
-    } else if (status >= 400 && status < 500) {
-      const errorList = (data || []).filter(
-        (ent) => ent.errors && ent.errors.length
-      );
+    } else if (status >= 400 && status < 500 && Array.isArray(data)) {
+      const errorList = data.filter((ent) => ent.errors && ent.errors.length);
       if (errorList.length > 0) {
         summary = (
           <div id='cd-summary__result_400'>
@@ -134,7 +93,6 @@ class SubmissionResult extends React.Component {
           className={`submission-result__status submission-result__status--${
             status === 200 ? 'succeeded' : 'failed'
           }`}
-          status={status}
         >
           {status === 200 ? `Succeeded: ${status}` : `Failed: ${status}`}
           <p>
@@ -142,7 +100,28 @@ class SubmissionResult extends React.Component {
           </p>
         </div>
         {summary}
-        {fullResponse}
+        {this.state.showFullResponse ? (
+          <div>
+            <p>Details:</p>
+            <AceEditor
+              width='100%'
+              height='300px'
+              style={{ marginBottom: '1em' }}
+              mode='json'
+              theme='kuroir'
+              readOnly
+              value={dataString}
+            />
+          </div>
+        ) : (
+          <div>
+            <Button
+              buttonType='secondary'
+              onClick={() => this.setState({ showFullResponse: true })}
+              label='Details'
+            />
+          </div>
+        )}
       </div>
     );
   }
