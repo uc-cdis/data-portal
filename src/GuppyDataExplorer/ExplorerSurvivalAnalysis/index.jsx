@@ -24,9 +24,10 @@ const fetchResult = (body) =>
 /**
  * @param {Object} prop
  * @param {Object} prop.aggsData
+ * @param {Array} prop.fieldMapping
  * @param {Object} prop.filter
  */
-function ExplorerSurvivalAnalysis({ aggsData, filter }) {
+function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
@@ -133,6 +134,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
 
 ExplorerSurvivalAnalysis.propTypes = {
   aggsData: PropTypes.object,
+  fieldMapping: PropTypes.array,
   filter: PropTypes.object,
 };
 
