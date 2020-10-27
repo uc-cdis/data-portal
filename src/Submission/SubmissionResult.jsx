@@ -93,7 +93,6 @@ class SubmissionResult extends React.Component {
           className={`submission-result__status submission-result__status--${
             status === 200 ? 'succeeded' : 'failed'
           }`}
-          status={status}
         >
           {status === 200 ? `Succeeded: ${status}` : `Failed: ${status}`}
           <p>
