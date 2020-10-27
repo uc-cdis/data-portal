@@ -46,10 +46,10 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
     }
   }, [filter]);
 
-  const [factors, setFactors] = useState(getFactors(aggsData));
+  const [factors, setFactors] = useState(getFactors(aggsData, fieldMapping));
   useEffect(() => {
-    setFactors(getFactors(aggsData));
-  }, [aggsData]);
+    setFactors(getFactors(aggsData, fieldMapping));
+  }, [aggsData, fieldMapping]);
 
   /** @type {ColorScheme} */
   const initColorScheme = { All: schemeCategory10[0] };
