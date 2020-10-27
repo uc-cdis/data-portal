@@ -25,15 +25,7 @@ class SubmissionResult extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      status,
-      data,
-      dataString,
-      entityCounts,
-      counter,
-      total,
-      onFinish,
-    } = this.props;
+    const { counter, total, onFinish } = this.props;
     if (counter !== prevProps.counter && counter === total) {
       onFinish();
     }
