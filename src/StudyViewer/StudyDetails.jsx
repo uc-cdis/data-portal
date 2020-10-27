@@ -115,6 +115,17 @@ class StudyDetails extends React.Component {
 
     let button;
 
+    const enableButton = buttonConfig.enableButtonField
+      && this.props.data.displayButtonsData[buttonConfig.enableButtonField] ?
+      this.props.data.displayButtonsData[buttonConfig.enableButtonField] === 'true'
+      : true;
+    let tooltipEnabled = false;
+    let tooltipText = '';
+    if (!enableButton && buttonConfig.disableButtonTooltipText) {
+      tooltipEnabled = true;
+      tooltipText = buttonConfig.disableButtonTooltipText;
+    }
+
     if (buttonConfig.type === 'download') {
       // 'Download' button
       const displayDownloadButton = userHasLoggedIn
@@ -126,6 +137,9 @@ class StudyDetails extends React.Component {
         label={'Download'}
         buttonType='primary'
         onClick={this.showDownloadModal}
+        enabled={enableButton}
+        tooltipEnabled={tooltipEnabled}
+        tooltipText={tooltipText}
       />) : null;
     } else if (buttonConfig.type === 'request_access') {
       // 'Request Access' and 'Login to Request Access' buttons
@@ -133,9 +147,8 @@ class StudyDetails extends React.Component {
         this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
       };
       let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
-      let tooltipEnabled = false;
-      let tooltipText = '';
-      if (this.state.accessRequested) {
+      if (enableButton && this.state.accessRequested) {
+        // the button is disabled because the user has already requested access
         requestAccessText = (buttonConfig.accessRequestedText) ? buttonConfig.accessRequestedText : 'Access Requested';
         if (buttonConfig.accessRequestedTooltipText) {
           tooltipEnabled = true;
@@ -151,7 +164,7 @@ class StudyDetails extends React.Component {
         label={requestAccessText}
         buttonType='primary'
         onClick={onRequestAccess}
-        enabled={!this.state.accessRequested}
+        enabled={enableButton && !this.state.accessRequested}
         tooltipEnabled={tooltipEnabled}
         tooltipText={tooltipText}
       />) : null;
@@ -375,6 +388,7 @@ StudyDetails.propTypes = {
     rowAccessorValue: PropTypes.string.isRequired,
     blockData: PropTypes.object,
     tableData: PropTypes.object,
+    displayButtonsData: PropTypes.object,
     accessibleValidationValue: PropTypes.string,
   }).isRequired,
   fileData: PropTypes.arrayOf(
