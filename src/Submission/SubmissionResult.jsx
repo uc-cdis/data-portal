@@ -58,10 +58,8 @@ class SubmissionResult extends React.Component {
           </ul>
         </div>
       );
-    } else if (status >= 400 && status < 500) {
-      const errorList = (data || []).filter(
-        (ent) => ent.errors && ent.errors.length
-      );
+    } else if (status >= 400 && status < 500 && Array.isArray(data)) {
+      const errorList = data.filter((ent) => ent.errors && ent.errors.length);
       if (errorList.length > 0) {
         summary = (
           <div id='cd-summary__result_400'>
