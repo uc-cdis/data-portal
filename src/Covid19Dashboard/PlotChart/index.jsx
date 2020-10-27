@@ -131,8 +131,9 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
     const fields = [this.props.guppyConfig.xAxisProp, this.props.guppyConfig.yAxisProp];
     downloadFromGuppy(this.props.guppyConfig.dataType, filter, fields)
       .then((res) => {
-        if (res.data && res.data.error) {
-          console.error(`Guppy error while fetching chart data: ${res.data.error}`); // eslint-disable-line no-console
+        if (res.status !== 200 || (res.data && res.data.error)) {
+          const msg = `Guppy error while fetching chart data, status ${res.status}${res.data && res.data.error ? `: ${res.data.error}` : ''}`;
+          console.error(msg); // eslint-disable-line no-console
         } else {
           this.setState({ guppyData: res.data });
         }
