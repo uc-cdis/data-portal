@@ -41,33 +41,6 @@ class SubmissionResult extends React.Component {
       total,
     } = this.props;
     let summary = null;
-    const fullResponse = (() => {
-      if (this.state.showFullResponse) {
-        return (
-          <div>
-            <p>Details:</p>
-            <AceEditor
-              width='100%'
-              height='300px'
-              style={{ marginBottom: '1em' }}
-              mode='json'
-              theme='kuroir'
-              readOnly
-              value={dataString}
-            />
-          </div>
-        );
-      }
-      return (
-        <div>
-          <Button
-            buttonType='secondary'
-            onClick={() => this.setState({ showFullResponse: true })}
-            label='Details'
-          />
-        </div>
-      );
-    })();
 
     if (status === 200) {
       // List number of entites of each type created
@@ -130,7 +103,28 @@ class SubmissionResult extends React.Component {
           </p>
         </div>
         {summary}
-        {fullResponse}
+        {this.state.showFullResponse ? (
+          <div>
+            <p>Details:</p>
+            <AceEditor
+              width='100%'
+              height='300px'
+              style={{ marginBottom: '1em' }}
+              mode='json'
+              theme='kuroir'
+              readOnly
+              value={dataString}
+            />
+          </div>
+        ) : (
+          <div>
+            <Button
+              buttonType='secondary'
+              onClick={() => this.setState({ showFullResponse: true })}
+              label='Details'
+            />
+          </div>
+        )}
       </div>
     );
   }
