@@ -104,7 +104,7 @@ class StudyDetails extends React.Component {
     }
   }
 
-  getButton = (key, buttonConfig, userHasLoggedIn, displayButtonsData) => {
+  getButton = (key, buttonConfig, userHasLoggedIn) => {
     // if this button is explicitly disabled in this view, return nothing
     if (this.props.isSingleItemView && buttonConfig.singleItemView === false) {
       return null;
@@ -115,8 +115,10 @@ class StudyDetails extends React.Component {
 
     let button;
 
-    const enableButton = buttonConfig.enableButtonField && displayButtonsData[buttonConfig.enableButtonField] ?
-      displayButtonsData[buttonConfig.enableButtonField] === 'true' : true;
+    const enableButton = buttonConfig.enableButtonField
+      && this.props.data.displayButtonsData[buttonConfig.enableButtonField] ?
+      this.props.data.displayButtonsData[buttonConfig.enableButtonField] === 'true'
+      : true;
     let tooltipEnabled = false;
     let tooltipText = '';
     if (!enableButton && buttonConfig.disableButtonTooltipText) {
@@ -246,7 +248,7 @@ class StudyDetails extends React.Component {
              }
              {
                (this.props.studyViewerConfig.buttons) ? this.props.studyViewerConfig.buttons.map(
-                 (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn, this.props.data.displayButtonsData),
+                 (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
                ) : null
              }
            </Space>
