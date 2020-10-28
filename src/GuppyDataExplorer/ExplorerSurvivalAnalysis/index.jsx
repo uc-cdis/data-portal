@@ -78,6 +78,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
     timeInterval,
     startTime,
     endTime,
+    shouldUpdateResults,
     ...requestBody
   }) => {
     if (isError) setIsError(false);
@@ -88,14 +89,16 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
     setStartTime(startTime);
     setEndTime(endTime);
 
-    fetchResult({ filter: transformedFilter, ...requestBody })
-      .then((result) => {
-        setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-        setRisktable(result.risktable);
-        setSurvival(result.survival);
-      })
-      .catch((e) => setIsError(true))
-      .finally(() => setIsFetching(false));
+    if (shouldUpdateResults || isFilterChanged)
+      fetchResult({ filter: transformedFilter, ...requestBody })
+        .then((result) => {
+          setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
+          setRisktable(result.risktable);
+          setSurvival(result.survival);
+        })
+        .catch((e) => setIsError(true))
+        .finally(() => setIsFetching(false));
+    else setIsFetching(false);
   };
 
   return (
