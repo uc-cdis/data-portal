@@ -156,6 +156,7 @@ const ControlForm = ({
         value={localTimeInterval}
       />
       <ControlFormInput
+        disabled
         label='Start time (year)'
         type='number'
         min={0}
