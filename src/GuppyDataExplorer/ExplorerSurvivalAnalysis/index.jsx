@@ -71,7 +71,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
     return newScheme;
   };
 
-  const [isFetching, setIsFetching] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [isError, setIsError] = useState(true);
   /** @type {UserInputSubmitHandler} */
   const handleSubmit = ({
@@ -82,7 +82,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
     ...requestBody
   }) => {
     if (isError) setIsError(false);
-    setIsFetching(true);
+    setIsUpdating(true);
     setColorScheme(getNewColorScheme(requestBody.factorVariable));
     setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
@@ -97,8 +97,8 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
           setSurvival(result.survival);
         })
         .catch((e) => setIsError(true))
-        .finally(() => setIsFetching(false));
-    else setIsFetching(false);
+        .finally(() => setIsUpdating(false));
+    else setIsUpdating(false);
   };
 
   return (
@@ -114,7 +114,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
         />
       </div>
       <div className='explorer-survival-analysis__column-right'>
-        {isFetching ? (
+        {isUpdating ? (
           <Spinner />
         ) : isError ? (
           <div className='explorer-survival-analysis__error'>
