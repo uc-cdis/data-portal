@@ -41,16 +41,7 @@ class ExplorerTopMessageBanner extends React.Component {
               </div>
               <div className='top-message-banner__text-wrapper'>
                 <span className='top-message-banner__normal-text'>
-                  Due to lack of access, you are only able to narrow the cohort
-                  down to{' '}
-                </span>
-                <span className='top-message-banner__bold-text'>
-                  {this.props.tierAccessLimit}{' '}
-                </span>
-                <span className='top-message-banner__normal-text'>
-                  {this.props.guppyConfig.nodeCountTitle.toLowerCase() ||
-                    this.props.guppyConfig.dataType}
-                  . Please request additional access if necessary.
+                  You do not have permissions to view line-level data.  To request access please reach out to the PCDC team.
                 </span>
               </div>
             </div>
