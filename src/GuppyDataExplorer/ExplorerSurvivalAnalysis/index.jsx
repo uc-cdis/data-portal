@@ -6,7 +6,11 @@ import Spinner from '../../components/Spinner';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
-import { getFactors } from './utils';
+import {
+  filterRisktableByTime,
+  filterSurvivalByTime,
+  getFactors,
+} from './utils';
 import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
@@ -33,6 +37,8 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   const [survival, setSurvival] = useState([]);
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
 
   const [transformedFilter, setTransformedFilter] = useState(
     getGQLFilter(filter)
@@ -68,12 +74,19 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(true);
   /** @type {UserInputSubmitHandler} */
-  const handleSubmit = ({ timeInterval, ...requestBody }) => {
+  const handleSubmit = ({
+    timeInterval,
+    startTime,
+    endTime,
+    ...requestBody
+  }) => {
     if (isError) setIsError(false);
     setIsFetching(true);
     setColorScheme(getNewColorScheme(requestBody.factorVariable));
     setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
+    setStartTime(startTime);
+    setEndTime(endTime);
 
     fetchResult({ filter: transformedFilter, ...requestBody })
       .then((result) => {
@@ -116,12 +129,12 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
             </div>
             <SurvivalPlot
               colorScheme={colorScheme}
-              data={survival}
+              data={filterSurvivalByTime(survival, startTime, endTime)}
               notStratified={stratificationVariable === ''}
               timeInterval={timeInterval}
             />
             <RiskTable
-              data={risktable}
+              data={filterRisktableByTime(risktable, startTime, endTime)}
               notStratified={stratificationVariable === ''}
               timeInterval={timeInterval}
             />
