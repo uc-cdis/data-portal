@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
+import { enumFilterList } from '../../params';
 import Spinner from '../../components/Spinner';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
@@ -53,9 +54,11 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
     }
   }, [filter]);
 
-  const [factors, setFactors] = useState(getFactors(aggsData, fieldMapping));
+  const [factors, setFactors] = useState(
+    getFactors(aggsData, fieldMapping, enumFilterList)
+  );
   useEffect(() => {
-    setFactors(getFactors(aggsData, fieldMapping));
+    setFactors(getFactors(aggsData, fieldMapping, enumFilterList));
   }, [aggsData, fieldMapping]);
 
   /** @type {ColorScheme} */

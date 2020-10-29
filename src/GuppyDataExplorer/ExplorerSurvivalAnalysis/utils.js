@@ -1,13 +1,11 @@
 import './typedef';
 
-const isString = (x) => Object.prototype.toString.call(x) === '[object String]';
-
 /**
  * Get factor variables to use for survival analysis
- * @param {{ [key: string]: { histogram: { key: any }[] }}} aggsData
+ * @param {{ [key: string]: any }} aggsData
  * @param {{ field: string; name: string }[]} fieldMapping
  */
-export const getFactors = (aggsData, fieldMapping) => {
+export const getFactors = (aggsData, fieldMapping, enumFilterList) => {
   const factors = [];
   const exceptions = ['project_id', 'data_contributor_id'];
 
@@ -15,21 +13,18 @@ export const getFactors = (aggsData, fieldMapping) => {
   const fieldNameMap = {};
   for (const { field, name } of fieldMapping) fieldNameMap[field] = name;
 
-  for (const [key, value] of Object.entries(aggsData))
-    if (
-      !exceptions.includes(key) &&
-      value.histogram.length > 0 &&
-      isString(value.histogram[0].key)
-    )
+  const fields = Object.keys(aggsData);
+  for (const field of fields)
+    if (enumFilterList.includes(field) && !exceptions.includes(field))
       factors.push({
-        label: fieldNameMap.hasOwnProperty(key)
-          ? fieldNameMap[key]
-          : key
+        label: fieldNameMap.hasOwnProperty(field)
+          ? fieldNameMap[field]
+          : field
               .toLowerCase()
               .replace(/_|\./gi, ' ')
               .replace(/\b\w/g, (c) => c.toUpperCase())
               .trim(),
-        value: key,
+        value: field,
       });
 
   return factors;
