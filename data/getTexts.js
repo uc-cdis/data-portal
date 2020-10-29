@@ -146,13 +146,14 @@ function buildConfig(appIn, data) {
   });
   return result;
 }
-function getConsortiumList() {
-  const dict = require(`${__dirname}/dictionary.json`);
+
+function getConsortiumList(dict) {
   const consortiumList = dict['subject'].properties.consortium.enum || [];
   return JSON.stringify(consortiumList);
 }
 
 const config = buildConfig(process.env.app, params);
+const dict = require(`${__dirname}/dictionary.json`);
 console.log(`const gaTracking = '${defaultGA}';`);
 console.log(
   "const hostname = typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/';"
@@ -168,7 +169,7 @@ console.log(`const config = ${JSON.stringify(config, null, '  ')};`);
 console.log(
   `const requiredCerts = [${defaultRequiredCerts.map((item) => `'${item}'`)}];`
 );
-console.log(`const consortiumList = ${getConsortiumList()};`);
+console.log(`const consortiumList = ${getConsortiumList(dict)};`);
 console.log(
   'module.exports = { components, config, gaTracking, requiredCerts, consortiumList };'
 );
