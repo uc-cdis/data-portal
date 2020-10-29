@@ -4,6 +4,7 @@ import './typedef';
  * Get factor variables to use for survival analysis
  * @param {{ [key: string]: any }} aggsData
  * @param {{ field: string; name: string }[]} fieldMapping
+ * @param {string[]} enumFilterList
  */
 export const getFactors = (aggsData, fieldMapping, enumFilterList) => {
   const factors = [];
