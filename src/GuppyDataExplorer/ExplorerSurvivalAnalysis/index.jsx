@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import cloneDeep from 'lodash.clonedeep';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
 import Spinner from '../../components/Spinner';
@@ -45,7 +46,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   );
   const [isFilterChanged, setIsFilterChanged] = useState(false);
   useEffect(() => {
-    const updatedFilter = getGQLFilter(filter);
+    const updatedFilter = getGQLFilter(cloneDeep(filter));
     if (JSON.stringify(updatedFilter) !== JSON.stringify(transformedFilter)) {
       setTransformedFilter(updatedFilter);
       setIsFilterChanged(true);
