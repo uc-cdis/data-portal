@@ -149,7 +149,7 @@ function buildConfig(appIn, data) {
 
 function getConsortiumList(dict) {
   const consortiumList = dict['subject'].properties.consortium.enum || [];
-  return JSON.stringify(consortiumList);
+  return JSON.stringify(consortiumList, null, 2);
 }
 
 const config = buildConfig(process.env.app, params);
