@@ -60,7 +60,6 @@ const ControlForm = ({
   const [survivalType, setSurvivalType] = useState('all');
 
   const [isInputChanged, setIsInputChanged] = useState(false);
-  const [shouldUpdateResults, setShouldUpdateResults] = useState(true);
   useEffect(() => {
     setIsInputChanged(true);
   }, [
@@ -74,6 +73,11 @@ const ControlForm = ({
   useEffect(() => {
     if (!isInputChanged && isError) setIsInputChanged(true);
   }, [isInputChanged, isError]);
+
+  const [shouldUpdateResults, setShouldUpdateResults] = useState(true);
+  useEffect(() => {
+    if (isFilterChanged) setShouldUpdateResults(true);
+  }, [isFilterChanged]);
 
   const validateNumberInput = (
     /** @type {{ target: { value: string, min: string, max: string }}} */ e

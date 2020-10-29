@@ -89,7 +89,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
     setStartTime(startTime);
     setEndTime(endTime);
 
-    if (shouldUpdateResults || isFilterChanged)
+    if (shouldUpdateResults)
       fetchResult({ filter: transformedFilter, ...requestBody })
         .then((result) => {
           setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
