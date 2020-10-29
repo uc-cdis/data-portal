@@ -50,3 +50,29 @@ export const getXAxisTicks = (data, step = 2) => {
 
   return ticks;
 };
+
+/**
+ * Filter survival by start/end time
+ * @param {SurvivalData[]} data
+ * @param {number} startTime
+ * @param {number} endTime
+ * @returns {SurvivalData[]}
+ */
+export const filterSurvivalByTime = (data, startTime, endTime) =>
+  data.map(({ data, name }) => ({
+    data: data.filter(({ time }) => time >= startTime && time <= endTime),
+    name,
+  }));
+
+/**
+ * Filter risktable by start/end time
+ * @param {RisktableData[]} data
+ * @param {number} startTime
+ * @param {number} endTime
+ * @returns {RisktableData[]}
+ */
+export const filterRisktableByTime = (data, startTime, endTime) =>
+  data.map(({ data, name }) => ({
+    data: data.filter(({ time }) => time >= startTime && time <= endTime),
+    name,
+  }));

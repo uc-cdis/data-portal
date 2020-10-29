@@ -6,7 +6,11 @@ import Spinner from '../../components/Spinner';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
-import { getFactors } from './utils';
+import {
+  filterRisktableByTime,
+  filterSurvivalByTime,
+  getFactors,
+} from './utils';
 import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
@@ -33,6 +37,8 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   const [survival, setSurvival] = useState([]);
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
 
   const [transformedFilter, setTransformedFilter] = useState(
     getGQLFilter(filter)
@@ -65,24 +71,34 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
     return newScheme;
   };
 
-  const [isFetching, setIsFetching] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [isError, setIsError] = useState(true);
   /** @type {UserInputSubmitHandler} */
-  const handleSubmit = ({ timeInterval, ...requestBody }) => {
+  const handleSubmit = ({
+    timeInterval,
+    startTime,
+    endTime,
+    shouldUpdateResults,
+    ...requestBody
+  }) => {
     if (isError) setIsError(false);
-    setIsFetching(true);
+    setIsUpdating(true);
     setColorScheme(getNewColorScheme(requestBody.factorVariable));
     setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
+    setStartTime(startTime);
+    setEndTime(endTime);
 
-    fetchResult({ filter: transformedFilter, ...requestBody })
-      .then((result) => {
-        setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-        setRisktable(result.risktable);
-        setSurvival(result.survival);
-      })
-      .catch((e) => setIsError(true))
-      .finally(() => setIsFetching(false));
+    if (shouldUpdateResults)
+      fetchResult({ filter: transformedFilter, ...requestBody })
+        .then((result) => {
+          setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
+          setRisktable(result.risktable);
+          setSurvival(result.survival);
+        })
+        .catch((e) => setIsError(true))
+        .finally(() => setIsUpdating(false));
+    else setIsUpdating(false);
   };
 
   return (
@@ -98,7 +114,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
         />
       </div>
       <div className='explorer-survival-analysis__column-right'>
-        {isFetching ? (
+        {isUpdating ? (
           <Spinner />
         ) : isError ? (
           <div className='explorer-survival-analysis__error'>
@@ -116,12 +132,12 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
             </div>
             <SurvivalPlot
               colorScheme={colorScheme}
-              data={survival}
+              data={filterSurvivalByTime(survival, startTime, endTime)}
               notStratified={stratificationVariable === ''}
               timeInterval={timeInterval}
             />
             <RiskTable
-              data={risktable}
+              data={filterRisktableByTime(risktable, startTime, endTime)}
               notStratified={stratificationVariable === ''}
               timeInterval={timeInterval}
             />

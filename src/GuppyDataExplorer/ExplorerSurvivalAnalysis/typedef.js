@@ -30,6 +30,7 @@
  * @property {number} startTime
  * @property {number} endTime
  * @property {boolean} efsFlag
+ * @property {boolean} shouldUpdateResults
  */
 
 /**

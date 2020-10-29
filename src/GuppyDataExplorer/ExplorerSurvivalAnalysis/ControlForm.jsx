@@ -74,6 +74,11 @@ const ControlForm = ({
     if (!isInputChanged && isError) setIsInputChanged(true);
   }, [isInputChanged, isError]);
 
+  const [shouldUpdateResults, setShouldUpdateResults] = useState(true);
+  useEffect(() => {
+    if (isFilterChanged) setShouldUpdateResults(true);
+  }, [isFilterChanged]);
+
   const validateNumberInput = (
     /** @type {{ target: { value: string, min: string, max: string }}} */ e
   ) => {
@@ -96,15 +101,20 @@ const ControlForm = ({
       startTime,
       endTime,
       efsFlag: survivalType === 'efs',
+      shouldUpdateResults,
     });
     setIsInputChanged(false);
     setIsFilterChanged(false);
+    setShouldUpdateResults(false);
   };
   useEffect(() => {
     submitUserInput();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const resetUserInput = () => {
+    if (factorVariable !== '' || stratificationVariable !== '')
+      setShouldUpdateResults(true);
+
     setFactorVariable('');
     setStratificationVariable('');
     setLocalTimeInterval(2);
@@ -123,6 +133,7 @@ const ControlForm = ({
             setStratificationVariable('');
 
           setFactorVariable(value);
+          setShouldUpdateResults(true);
         }}
         value={factorVariable}
       />
@@ -132,7 +143,10 @@ const ControlForm = ({
           factors.filter(({ value }) => value !== factorVariable)
         )}
         disabled={factorVariable === ''}
-        onChange={({ value }) => setStratificationVariable(value)}
+        onChange={({ value }) => {
+          setStratificationVariable(value);
+          setShouldUpdateResults(true);
+        }}
         value={stratificationVariable}
       />
       <ControlFormInput
@@ -146,6 +160,7 @@ const ControlForm = ({
         value={localTimeInterval}
       />
       <ControlFormInput
+        disabled
         label='Start time (year)'
         type='number'
         min={0}
@@ -172,7 +187,10 @@ const ControlForm = ({
           { label: 'Overall Survival', value: 'all' },
           { label: 'Event-Free Survival (EFS)', value: 'efs' },
         ]}
-        onChange={({ value }) => setSurvivalType(value)}
+        onChange={({ value }) => {
+          setSurvivalType(value);
+          setShouldUpdateResults(true);
+        }}
         value={survivalType}
       />
       <div className='explorer-survival-analysis__button-group'>
