@@ -27,7 +27,14 @@ export const getFactors = (aggsData, fieldMapping, enumFilterList) => {
         value: field,
       });
 
-  return factors;
+  return factors.sort((a, b) => {
+    var labelA = a.label.toUpperCase();
+    var labalB = b.label.toUpperCase();
+
+    if (labelA < labalB) return -1;
+    if (labelA > labalB) return 1;
+    return 0;
+  });
 };
 
 /**
