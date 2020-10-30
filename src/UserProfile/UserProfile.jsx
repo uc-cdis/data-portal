@@ -141,15 +141,6 @@ const UserProfile = ({
           )}
         </ul>
       )}
-      {showFenceAuthzOnProfile && (
-        <AccessTable
-          projects={projects}
-          projectsAccesses={user.project_access}
-        />
-      )}
-      {showArboristAuthzOnProfile && (
-        <AccessTable projects={projects} userAuthMapping={userAuthMapping} />
-      )}
     </div>
   );
 };
