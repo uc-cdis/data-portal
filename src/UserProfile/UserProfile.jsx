@@ -5,13 +5,8 @@ import copy from 'clipboard-plus';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
-import {
-  credentialCdisPath,
-  showArboristAuthzOnProfile,
-  showFenceAuthzOnProfile,
-} from '../localconf';
+import { credentialCdisPath } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
-import AccessTable from '../components/tables/AccessTable';
 import './UserProfile.less';
 
 const NO_ACCESS_MSG =
