@@ -5,13 +5,8 @@ import copy from 'clipboard-plus';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
-import {
-  credentialCdisPath,
-  showArboristAuthzOnProfile,
-  showFenceAuthzOnProfile,
-} from '../localconf';
+import { credentialCdisPath } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
-import AccessTable from '../components/tables/AccessTable';
 import './UserProfile.less';
 
 const NO_ACCESS_MSG =
@@ -28,11 +23,8 @@ export const saveToFile = (savingStr, filename) => {
 };
 
 const UserProfile = ({
-  user,
   userProfile,
-  userAuthMapping,
   popups,
-  projects,
   onCreateKey,
   onClearCreationSession,
   onUpdatePopup,
@@ -141,35 +133,19 @@ const UserProfile = ({
           )}
         </ul>
       )}
-      {showFenceAuthzOnProfile && (
-        <AccessTable
-          projects={projects}
-          projectsAccesses={user.project_access}
-        />
-      )}
-      {showArboristAuthzOnProfile && (
-        <AccessTable projects={projects} userAuthMapping={userAuthMapping} />
-      )}
     </div>
   );
 };
 
 UserProfile.propTypes = {
-  user: PropTypes.object.isRequired,
   userProfile: PropTypes.object.isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
   popups: PropTypes.object.isRequired,
-  projects: PropTypes.object,
   onClearCreationSession: PropTypes.func.isRequired,
   onCreateKey: PropTypes.func.isRequired,
   onUpdatePopup: PropTypes.func.isRequired,
   onDeleteKey: PropTypes.func.isRequired,
   onRequestDeleteKey: PropTypes.func.isRequired,
   onClearDeleteSession: PropTypes.func.isRequired,
-};
-
-UserProfile.defaultProps = {
-  projects: {},
 };
 
 export default UserProfile;
