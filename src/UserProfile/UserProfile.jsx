@@ -23,11 +23,8 @@ export const saveToFile = (savingStr, filename) => {
 };
 
 const UserProfile = ({
-  user,
   userProfile,
-  userAuthMapping,
   popups,
-  projects,
   onCreateKey,
   onClearCreationSession,
   onUpdatePopup,
@@ -141,21 +138,14 @@ const UserProfile = ({
 };
 
 UserProfile.propTypes = {
-  user: PropTypes.object.isRequired,
   userProfile: PropTypes.object.isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
   popups: PropTypes.object.isRequired,
-  projects: PropTypes.object,
   onClearCreationSession: PropTypes.func.isRequired,
   onCreateKey: PropTypes.func.isRequired,
   onUpdatePopup: PropTypes.func.isRequired,
   onDeleteKey: PropTypes.func.isRequired,
   onRequestDeleteKey: PropTypes.func.isRequired,
   onClearDeleteSession: PropTypes.func.isRequired,
-};
-
-UserProfile.defaultProps = {
-  projects: {},
 };
 
 export default UserProfile;
