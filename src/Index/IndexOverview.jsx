@@ -73,6 +73,7 @@ function IndexOverview({ overviewCounts }) {
           <div className='index-overview__select'>
             <label>Consortium</label>
             <Select
+              id='index-overview-select'
               clearable={false}
               options={consortiumOptions}
               value={consortium}
