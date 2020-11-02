@@ -150,7 +150,7 @@ const ControlForm = ({
         options={withEmptyOption(
           factors.filter(({ value }) => value !== factorVariable.value)
         )}
-        disabled={factorVariable.value === ''}
+        isDisabled={factorVariable.value === ''}
         onChange={(e) => {
           setStratificationVariable(e);
           setShouldUpdateResults(true);
@@ -189,7 +189,7 @@ const ControlForm = ({
         value={endTime}
       />
       <ControlFormSelect
-        disabled
+        isDisabled
         label='Survival type'
         options={[
           { label: 'Overall Survival', value: 'all' },
