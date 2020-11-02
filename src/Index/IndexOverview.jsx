@@ -74,7 +74,6 @@ function IndexOverview({ overviewCounts }) {
             <label>Consortium</label>
             <Select
               id='index-overview-select'
-              clearable={false}
               options={consortiumOptions}
               value={consortium}
               onChange={setConsortium}
