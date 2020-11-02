@@ -9,10 +9,12 @@ import { consortiumList } from '../params';
 import { breakpoints } from '../localconf';
 import './IndexOverview.css';
 
+const defaultConsortiumOption = { label: 'All PCDC', value: 'total' };
+
 function IndexOverview({ overviewCounts }) {
-  const [consortium, setConsortium] = useState('total');
+  const [consortium, setConsortium] = useState(defaultConsortiumOption);
   const consortiumOptions = [
-    { label: 'All PCDC', value: 'total' },
+    defaultConsortiumOption,
     ...consortiumList.map((option) => ({ label: option, value: option })),
   ];
 
@@ -21,7 +23,7 @@ function IndexOverview({ overviewCounts }) {
     const filter =
       consortium === 'total'
         ? {}
-        : { consortium: { selectedValues: [consortium] } };
+        : { consortium: { selectedValues: [consortium.value] } };
 
     return (
       <Button
@@ -44,17 +46,17 @@ function IndexOverview({ overviewCounts }) {
 
   const getCountDataList = () => [
     {
-      count: overviewCounts[consortium].subject,
+      count: overviewCounts[consortium.value].subject,
       faIcon: 'user',
       name: { singular: 'Subject', plural: 'Subjects' },
     },
     {
-      count: overviewCounts[consortium].study,
+      count: overviewCounts[consortium.value].study,
       faIcon: 'flask',
       name: { singular: 'Study', plural: 'Studies' },
     },
     {
-      count: overviewCounts[consortium].molecular_analysis,
+      count: overviewCounts[consortium.value].molecular_analysis,
       faIcon: 'microscope',
       name: {
         singular: 'Molecular analysis',
@@ -74,7 +76,7 @@ function IndexOverview({ overviewCounts }) {
               clearable={false}
               options={consortiumOptions}
               value={consortium}
-              onChange={({ value }) => setConsortium(value)}
+              onChange={setConsortium}
             />
           </div>
           <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
