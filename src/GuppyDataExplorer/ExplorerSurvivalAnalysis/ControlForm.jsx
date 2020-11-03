@@ -35,6 +35,12 @@ const ControlFormInput = ({ label, ...inputAttrs }) => (
   />
 );
 
+const emptySelectOption = { label: 'Select...', value: '' };
+const survivalTypeOptions = [
+  { label: 'Overall Survival', value: 'all' },
+  { label: 'Event-Free Survival (EFS)', value: 'efs' },
+];
+
 /**
  * @param {Object} prop
  * @param {FactorItem[]} prop.factors
@@ -52,19 +58,21 @@ const ControlForm = ({
   isFilterChanged,
   setIsFilterChanged,
 }) => {
-  const [factorVariable, setFactorVariable] = useState('');
-  const [stratificationVariable, setStratificationVariable] = useState('');
+  const [factorVariable, setFactorVariable] = useState(emptySelectOption);
+  const [stratificationVariable, setStratificationVariable] = useState(
+    emptySelectOption
+  );
   const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(20);
-  const [survivalType, setSurvivalType] = useState('all');
+  const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
 
   const [isInputChanged, setIsInputChanged] = useState(false);
   useEffect(() => {
     setIsInputChanged(true);
   }, [
-    factorVariable,
-    stratificationVariable,
+    factorVariable.value,
+    stratificationVariable.value,
     localTimeInterval,
     startTime,
     endTime,
@@ -91,16 +99,16 @@ const ControlForm = ({
 
   const withEmptyOption = (
     /** @type {{ label: string, value: string }[]} */ options
-  ) => [{ label: 'Select...', value: '' }, ...options];
+  ) => [emptySelectOption, ...options];
 
   const submitUserInput = () => {
     onSubmit({
-      factorVariable,
-      stratificationVariable,
+      factorVariable: factorVariable.value,
+      stratificationVariable: stratificationVariable.value,
       timeInterval: localTimeInterval,
       startTime,
       endTime,
-      efsFlag: survivalType === 'efs',
+      efsFlag: survivalType.value === 'efs',
       shouldUpdateResults,
     });
     setIsInputChanged(false);
@@ -112,15 +120,15 @@ const ControlForm = ({
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const resetUserInput = () => {
-    if (factorVariable !== '' || stratificationVariable !== '')
+    if (factorVariable.value !== '' || stratificationVariable.value !== '')
       setShouldUpdateResults(true);
 
-    setFactorVariable('');
-    setStratificationVariable('');
+    setFactorVariable(emptySelectOption);
+    setStratificationVariable(emptySelectOption);
     setLocalTimeInterval(2);
     setStartTime(0);
     setEndTime(20);
-    setSurvivalType('all');
+    setSurvivalType(survivalTypeOptions[0]);
   };
 
   return (
@@ -128,11 +136,11 @@ const ControlForm = ({
       <ControlFormSelect
         label='Factor variable'
         options={withEmptyOption(factors)}
-        onChange={({ value }) => {
-          if (value === '' || value === stratificationVariable)
-            setStratificationVariable('');
+        onChange={(e) => {
+          if (e.value === '' || e.value === stratificationVariable)
+            setStratificationVariable(emptySelectOption);
 
-          setFactorVariable(value);
+          setFactorVariable(e);
           setShouldUpdateResults(true);
         }}
         value={factorVariable}
@@ -140,11 +148,11 @@ const ControlForm = ({
       <ControlFormSelect
         label='Stratification variable'
         options={withEmptyOption(
-          factors.filter(({ value }) => value !== factorVariable)
+          factors.filter(({ value }) => value !== factorVariable.value)
         )}
-        disabled={factorVariable === ''}
-        onChange={({ value }) => {
-          setStratificationVariable(value);
+        isDisabled={factorVariable.value === ''}
+        onChange={(e) => {
+          setStratificationVariable(e);
           setShouldUpdateResults(true);
         }}
         value={stratificationVariable}
@@ -181,14 +189,14 @@ const ControlForm = ({
         value={endTime}
       />
       <ControlFormSelect
-        disabled
+        isDisabled
         label='Survival type'
         options={[
           { label: 'Overall Survival', value: 'all' },
           { label: 'Event-Free Survival (EFS)', value: 'efs' },
         ]}
-        onChange={({ value }) => {
-          setSurvivalType(value);
+        onChange={(e) => {
+          setSurvivalType(e);
           setShouldUpdateResults(true);
         }}
         value={survivalType}
