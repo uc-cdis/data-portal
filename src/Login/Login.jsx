@@ -159,7 +159,7 @@ class Login extends React.Component {
                       isSearchable
                       components={{ MenuList: FastMenuList }}
                       options={loginOptions[i]}
-                      filterOption={createFilter({ ignoreAccents: false, ignoreCase: false })}
+                      filterOption={createFilter({ ignoreAccents: false, matchFrom: 'any', stringify: option => `${option.label}` })}
                       onChange={option => this.selectChange(option, i)}
                       value={this.state.selectedLoginOption &&
                         this.state.selectedLoginOption[i]}
