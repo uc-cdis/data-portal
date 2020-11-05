@@ -2,6 +2,7 @@ import React from 'react';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select, { createFilter } from 'react-select';
+import { FixedSizeList } from 'react-window';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { basename } from '../localconf';
 import { components } from '../params';
@@ -14,6 +15,24 @@ const getLoginUrl = (providerLoginUrl, next) => {
   const queryChar = providerLoginUrl.includes('?') ? '&' : '?';
   return `${providerLoginUrl}${queryChar}redirect=${window.location.origin}${next}`;
 };
+
+// FastMenuList for login dropdown allows us to quickly filter over 400k+ login
+// options without loading all 400k login options into the DOM (uses react-window library)
+const FastMenuList = ({ options, children, maxHeight, getValue }) => {
+  const height = 40; // px
+  const [value] = getValue();
+  const initialOffset = options.indexOf(value) * height;
+  return (
+    <FixedSizeList
+      height={maxHeight}
+      itemCount={children ? children.length : 0}
+      itemSize={height}
+      initialScrollOffset={initialOffset}
+    >
+      {({ index, style }) => <div style={style}>{children[index]}</div>}
+    </FixedSizeList>
+  );
+}
 
 class Login extends React.Component {
   constructor(props) {
@@ -82,7 +101,7 @@ class Login extends React.Component {
           <div className='login-page__entry-login'>
             <Button
               className='login-page__entry-button'
-              onClick={() => {}}
+              onClick={() => { }}
               buttonType='primary'
               isPending
               enabled={false}
@@ -98,8 +117,8 @@ class Login extends React.Component {
     if (this.props.providers.length > 0) {
       const loginOptions = {}; // one for each login provider
       this.props.providers.forEach((provider, i) => {
-      // for backwards compatibility, if "urls" does not exist
-      // (fence < 4.8.0), generate it from the deprecated "url" field
+        // for backwards compatibility, if "urls" does not exist
+        // (fence < 4.8.0), generate it from the deprecated "url" field
         let loginUrls = provider.urls;
         if (typeof loginUrls === 'undefined') {
           loginUrls = [{
@@ -129,7 +148,7 @@ class Login extends React.Component {
         (p, i) => (
           <React.Fragment key={i}>
             <div className='login-page__entries'>
-              { p.desc }
+              {p.desc}
               <div className='login-page__entry-login'>
                 {
                   // if there are multiple URLs, display a dropdown next
@@ -138,8 +157,9 @@ class Login extends React.Component {
                     <Select
                       isClearable
                       isSearchable
+                      components={{ MenuList: FastMenuList }}
                       options={loginOptions[i]}
-                      filterOption={createFilter({ ignoreAccents: true, ignoreCase: true })}
+                      filterOption={createFilter({ ignoreAccents: false, ignoreCase: false })}
                       onChange={option => this.selectChange(option, i)}
                       value={this.state.selectedLoginOption &&
                         this.state.selectedLoginOption[i]}
@@ -182,10 +202,10 @@ class Login extends React.Component {
           </div>
           <hr className='login-page__separator' />
           <div className='body-typo'>{this.props.data.text}</div>
-          { loginComponent }
+          {loginComponent}
           <div>
             {this.props.data.contact}
-            { (this.props.data.email && !this.props.data.contact_link) &&
+            {(this.props.data.email && !this.props.data.contact_link) &&
               <a href={`mailto:${this.props.data.email}`}>
                 {this.props.data.email}
               </a>
