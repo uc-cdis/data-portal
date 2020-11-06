@@ -53,6 +53,7 @@ Example configuration:
         "docDataType": "openAccessFile", // ES index of the open access documents, optional
         "openMode": "open-first", // optional, configure how the study viewer list do with each collapsible card on initial loading, see details in notes
         "openFirstRowAccessor": "", // optional, only works if `openMode` is `open-first`
+        "defaultOrderBy": [<field name (eg "title", or from listItemConfig.blockFields/tableFields)>, <"asc" (default) or "desc">] // optional, overrides `openFirstRowAccessor`
         "buttons": [
             {
                 // configuration common to all buttons
