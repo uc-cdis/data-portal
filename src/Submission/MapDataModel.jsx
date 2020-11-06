@@ -212,8 +212,8 @@ class MapDataModel extends React.Component {
   };
 
   isValidSubmission = () => !!this.state.projectId && !!this.state.nodeType &&
-      !!this.state.parentNodeType && !!this.state.parentNodeId &&
-      Object.values(this.state.requiredFields).filter(value => (value === null || value === '')).length === 0;
+    !!this.state.parentNodeType && !!this.state.parentNodeId &&
+    Object.values(this.state.requiredFields).filter(value => (value === null || value === '')).length === 0;
 
   render() {
     const projectList = this.props.projects ? Object.keys(this.props.projects) : [];
@@ -294,8 +294,8 @@ class MapDataModel extends React.Component {
                                 inputOnChange={e => this.selectRequiredField(e, prop)}
                                 iconSvg={CheckmarkIcon}
                                 shouldDisplayIcon={!!this.state.requiredFields[prop]}
-                              />
-                              : <InputWithIcon
+                              /> :
+                              <InputWithIcon
                                 inputClassName='map-data-model__input introduction'
                                 inputValue={inputValue}
                                 inputOnChange={e => this.selectRequiredField(e, prop)}
