@@ -55,12 +55,20 @@ Example configuration:
         "openFirstRowAccessor": "", // optional, only works if `openMode` is `open-first`
         "buttons": [
             {
-                "type": "download",
-                "downloadField": "object_id", // GUID - Note: unused for now, hardcoded to "object_id" (TODO)
+                // configuration common to all buttons
+                "type": "",
                 "singleItemView": false, // whether to display this button in the single item view (default: true)
                 "listView": true, // whether to display this button in the list view (default: true)
+                "enableButtonField": "data_available_for_request", // optional, name of a boolean field. If the value is false for this row, the button will not be displayed
+                "disableButtonTooltipText": "Coming soon" // optional, tooltip text to display when the "enableButtonField" value is false
             },
             {
+                // configuration specific to the "Download" button
+                "type": "download",
+                "downloadField": "object_id" // GUID - Note: unused for now, hardcoded to "object_id" (TODO)
+            },
+            {
+                // configuration specific to the "Request Access" button
                 "type": "request_access",
                 "resourceDisplayNameField": "title",
                 "redirectModalText": "", // optional, link label for the URL in "You will now be sent to <URL>"
