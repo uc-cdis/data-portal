@@ -1,5 +1,5 @@
 import React from 'react';
-import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Switch, Select, Input } from 'antd';
+import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Switch, Select, Input, Form, message } from 'antd';
 import { humanFileSize } from '../utils.js';
 import './VAGWASMockup.css';
 
@@ -507,16 +507,31 @@ class VAGWASMockup extends React.Component {
       );
     }
     case 3: {
+      const layout = {
+        labelCol: { span: 8 },
+        wrapperCol: { span: 16 },
+      };
+      const tailLayout = {
+        wrapperCol: { offset: 8, span: 16 },
+      };
       return (
         <div className='vaGWAS__mainArea'>
-          <Space direction={'vertical'} style={{ width: '100%' }} >
-            <Input addonBefore='GWAS_job' placeholder='1234-1245-12345' />
-            <Space>
-              <Button>Estimate</Button>
-              <Text >Or</Text>
-              <Button>Submit</Button>
-            </Space>
-          </Space>
+          <Form {...layout} name='control-hooks'>
+            <Form.Item name='GWAS_job_id' label='GWAS Job ID' rules={[{ required: true }]}>
+              <Input addonBefore='GWAS_job' placeholder='1234-1245-12345' />
+            </Form.Item>
+            <Form.Item {...tailLayout}>
+              <Space>
+                <Button htmlType='button' onClick={() => { message.warning('Estimating...'); }}>
+              Estimate
+                </Button>
+                <Text >Or</Text>
+                <Button htmlType='submit' type='primary' onClick={() => { message.success('Job submitted!'); }}>
+              Submit
+                </Button>
+              </Space>
+            </Form.Item>
+          </Form>
         </div>
       );
     }
