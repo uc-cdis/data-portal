@@ -132,13 +132,15 @@ class Login extends React.Component {
               {p.desc}
               <div className='login-page__entry-login'>
                 {
-                  // If there are multiple URLs, display a dropdown next
-                  // to the login button
-                  // We use createFilter here with `ignoreAccents: false` to increase performance when dealing
-                  // with large numbers of IDPs (Incommon logins can have 3k+ options!). 
-                  // The `stringify` option to createFilter here ensures that react-select only searches over 
-                  // the login options' names (e.g. "The University of Chicago") and not the actual option values, 
-                  // which are URLs.
+                  // If there are multiple URLs, display a dropdown next to
+                  // the login button We use createFilter here with
+                  // `ignoreAccents: false` to increase performance when
+                  // dealing with large numbers of IDPs (Incommon logins can
+                  // have 3k+ options!). The `stringify` option to
+                  // createFilter here ensures that react-select only searches
+                  // over the login options' names (e.g. "The University of
+                  // Chicago") and not the actual option values, which are
+                  // URLs.
                   loginOptions[i].length > 1 && (
                     <Select
                       isClearable
