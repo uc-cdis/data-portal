@@ -109,3 +109,11 @@
   .data-dictionary-node__property-close-icon {
   background-color: var(--g3-color__black);
 }
+
+/* Less than tablet width */
+@media (max-width: 819px) {
+  .data-dictionary-category__download_template,
+  .data-dictionary-node__download-group {
+    display: none;
+  }
+}
