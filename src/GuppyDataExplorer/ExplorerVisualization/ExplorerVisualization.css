@@ -38,6 +38,13 @@
   color: var(--g3-color__highlight-orange);
 }
 
+/* Less than tablet width */
+@media (max-width: 819px) {
+  .guppy-explorer-visualization__button-group {
+    display: none;
+  }
+}
+
 /* Overrides */
 .recharts-tooltip-wrapper {
   z-index: 1000;
