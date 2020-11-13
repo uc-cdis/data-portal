@@ -63,3 +63,11 @@
 .data-dictionary-property-table__span--new-line {
   display: block;
 }
+
+/* Less than tablet width */
+@media (max-width: 819px) {
+  .data-dictionary-property-table__table
+    .data-dictionary-property-table__data:nth-last-child(-n + 2) {
+    display: none;
+  }
+}
