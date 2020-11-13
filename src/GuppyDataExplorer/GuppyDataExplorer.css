@@ -19,3 +19,19 @@
   width: 100%;
   margin-top: 10px;
 }
+
+/* Less than tablet width */
+@media (max-width: 819px) {
+  .guppy-data-explorer {
+    padding: 0;
+  }
+
+  .guppy-data-explorer__filter {
+    display: none;
+  }
+
+  .guppy-data-explorer__visualization {
+    width: 100%;
+    padding: 0;
+  }
+}
