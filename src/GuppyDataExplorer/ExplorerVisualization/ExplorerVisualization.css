@@ -46,3 +46,31 @@
 .g3-single-select-filter__label {
   word-break: break-all;
 }
+
+.guppy-explorer-visualization__charts > .summary-chart-group {
+  flex-wrap: wrap;
+}
+
+.guppy-explorer-visualization__charts
+  > .summary-chart-group
+  > .summary-chart-group__column {
+  flex: 1 1 50%;
+  min-width: 400px;
+  margin: 0 auto;
+}
+
+.guppy-explorer-visualization__charts
+  > .summary-chart-group
+  > .summary-chart-group__column
+  > .summary-chart-group__column-left-border {
+  display: none;
+}
+
+/* Less than tablet width */
+@media (max-width: 819px) {
+  .guppy-explorer-visualization__charts
+    > .summary-chart-group
+    > .summary-chart-group__column {
+    min-width: 100%;
+  }
+}
