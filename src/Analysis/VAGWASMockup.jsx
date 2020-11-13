@@ -1,5 +1,5 @@
 import React from 'react';
-import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Switch, Select, Input, Form, message } from 'antd';
+import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Switch, Select, Input, Form, Result } from 'antd';
 import { humanFileSize } from '../utils.js';
 import './VAGWASMockup.css';
 
@@ -25,184 +25,60 @@ const steps = [
 const data = [
   {
     key: 'data1',
-    fileName: 'covariant.tsv',
-    fileSize: 301,
-    createDate: '2020-10-20',
-    fileData: [
-      {
-        '#FID': '1334',
-        IID: 'NA12144',
-        TCELL_FH: '0.089589121751',
-        VITAL_STATUS: '2',
-      },
-      {
-        '#FID': '1334',
-        IID: 'NA12145',
-        TCELL_FH: '0.801026947046',
-        VITAL_STATUS: '1',
-      },
-      {
-        '#FID': '1334',
-        IID: 'NA12146',
-        TCELL_FH: '0.813497757167',
-        VITAL_STATUS: '2',
-      },
-      {
-        '#FID': '1334',
-        IID: 'NA12239',
-        TCELL_FH: '0.101904839219',
-        VITAL_STATUS: '1',
-      },
-      {
-        '#FID': '1340',
-        IID: 'NA06994',
-        TCELL_FH: '0.667869278066',
-        VITAL_STATUS: '1',
-      },
-      {
-        '#FID': '1340',
-        IID: 'NA07000',
-        TCELL_FH: '0.255018302544',
-        VITAL_STATUS: '1',
-      },
-      {
-        '#FID': '1340',
-        IID: 'NA07022',
-        TCELL_FH: '0.774015640282',
-        VITAL_STATUS: '2',
-      },
-      {
-        '#FID': '1340',
-        IID: 'NA07056',
-        TCELL_FH: '0.479203782968',
-        VITAL_STATUS: '2',
-      },
-      {
-        '#FID': '1341',
-        IID: 'NA07034',
-        TCELL_FH: '0.270902090036',
-        VITAL_STATUS: '1',
-      },
-    ],
-  },
-  {
-    key: 'data2',
-    fileName: 'phenotype.tsv',
-    fileSize: 301,
-    createDate: '2020-10-20',
-    fileData: [
-      {
-        '#FID': '1334',
-        IID: 'NA12144',
-        TCELL_FH: '1.089589121751',
-        VITAL_STATUS: '2',
-      },
-      {
-        '#FID': '1334',
-        IID: 'NA12145',
-        TCELL_FH: '1.801026947046',
-        VITAL_STATUS: '1',
-      },
-      {
-        '#FID': '1334',
-        IID: 'NA12146',
-        TCELL_FH: '1.813497757167',
-        VITAL_STATUS: '2',
-      },
-      {
-        '#FID': '1334',
-        IID: 'NA12239',
-        TCELL_FH: '1.101904839219',
-        VITAL_STATUS: '1',
-      },
-      {
-        '#FID': '1340',
-        IID: 'NA06994',
-        TCELL_FH: '1.667869278066',
-        VITAL_STATUS: '1',
-      },
-      {
-        '#FID': '1340',
-        IID: 'NA07000',
-        TCELL_FH: '1.255018302544',
-        VITAL_STATUS: '1',
-      },
-      {
-        '#FID': '1340',
-        IID: 'NA07022',
-        TCELL_FH: '1.774015640282',
-        VITAL_STATUS: '2',
-      },
-      {
-        '#FID': '1340',
-        IID: 'NA07056',
-        TCELL_FH: '1.479203782968',
-        VITAL_STATUS: '2',
-      },
-      {
-        '#FID': '1341',
-        IID: 'NA07034',
-        TCELL_FH: '1.270902090036',
-        VITAL_STATUS: '1',
-      },
-    ],
-  },
-  {
-    key: 'data3',
-    fileName: 'combined.tsv',
+    fileName: 'demo.variables.20201110.tsv',
     fileSize: 298,
-    createDate: '2020-10-20',
+    createDate: '2020-11-10',
     fileData: [
       {
-        '#FID': '1334',
+        FID: '1334',
         IID: 'NA12144',
         TCELL_FH: '0.089589121751',
         TCELL_FH2: '2',
       },
       {
-        '#FID': '1334',
+        FID: '1334',
         IID: 'NA12145',
         TCELL_FH: '0.801026947046',
         TCELL_FH2: '1',
       },
       {
-        '#FID': '1334',
+        FID: '1334',
         IID: 'NA12146',
         TCELL_FH: '0.813497757167',
         TCELL_FH2: '2',
       },
       {
-        '#FID': '1334',
+        FID: '1334',
         IID: 'NA12239',
         TCELL_FH: '0.101904839219',
         TCELL_FH2: '1',
       },
       {
-        '#FID': '1340',
+        FID: '1340',
         IID: 'NA06994',
         TCELL_FH: '0.667869278066',
         TCELL_FH2: '1',
       },
       {
-        '#FID': '1340',
+        FID: '1340',
         IID: 'NA07000',
         TCELL_FH: '0.255018302544',
         TCELL_FH2: '1',
       },
       {
-        '#FID': '1340',
+        FID: '1340',
         IID: 'NA07022',
         TCELL_FH: '0.774015640282',
         TCELL_FH2: '2',
       },
       {
-        '#FID': '1340',
+        FID: '1340',
         IID: 'NA07056',
         TCELL_FH: '0.479203782968',
         TCELL_FH2: '2',
       },
       {
-        '#FID': '1341',
+        FID: '1341',
         IID: 'NA07034',
         TCELL_FH: '0.270902090036',
         TCELL_FH2: '1',
@@ -224,6 +100,8 @@ class VAGWASMockup extends React.Component {
       showStep1SelectionTable: false,
       showStep1SpecifyTable: false,
       step1SelectedData: undefined,
+      jobName: undefined,
+      jobSubmitted: false,
     };
   }
 
@@ -312,7 +190,7 @@ class VAGWASMockup extends React.Component {
     case 0: {
       let modalTableColumnConfig;
       if (this.state.previewModalData && this.state.previewModalData.length > 0) {
-        modalTableColumnConfig = Object.keys(this.state.previewModalData[0]).map(key => ({
+        modalTableColumnConfig = Object.keys(this.state.previewModalData[0]).filter(element => element !== 'key').map(key => ({
           title: key,
           dataIndex: key,
           key,
@@ -326,6 +204,7 @@ class VAGWASMockup extends React.Component {
           >
             Select File
           </Button>
+          <Text type='secondary'>(The phenotype and covariants with the genotype file will be matched using the IID column)</Text>
           {(this.state.showStep0Table) ?
             <div className='vaGWAS__mainTable'>
               <Table
@@ -355,6 +234,7 @@ class VAGWASMockup extends React.Component {
       let specifyDataCols;
       if (this.state.step1SelectedData) {
         specifyDataCols = Object.keys(this.state.step1SelectedData[0].fileData[0])
+          .filter(element => element !== 'IID')
           .map(colKey => colKey);
       }
       let modalTableColumnConfig;
@@ -514,24 +394,60 @@ class VAGWASMockup extends React.Component {
       const tailLayout = {
         wrapperCol: { offset: 8, span: 16 },
       };
+
       return (
         <div className='vaGWAS__mainArea'>
-          <Form {...layout} name='control-hooks'>
-            <Form.Item name='GWAS_job_id' label='GWAS Job ID' rules={[{ required: true }]}>
-              <Input addonBefore='GWAS_job' placeholder='1234-1245-12345' />
-            </Form.Item>
-            <Form.Item {...tailLayout}>
-              <Space>
-                <Button htmlType='button' onClick={() => { message.warning('Estimating...'); }}>
-              Estimate
-                </Button>
-                <Text >Or</Text>
-                <Button htmlType='submit' type='primary' onClick={() => { message.success('Job submitted!'); }}>
+          {(this.state.jobSubmitted) ?
+            <Result
+              status='success'
+              title='GWAS Job Submitted Successfully'
+              subTitle={`GWAS Job Name: ${this.state.jobName}`}
+              extra={[
+                <Button
+                  key='done'
+                  onClick={() => {
+                    this.setState({
+                      current: 0,
+                      showStep0Table: false,
+                      showPreviewModal: false,
+                      previewModalData: undefined,
+                      previewModalFileName: undefined,
+                      step0SelectedData: undefined,
+                      showStep1SelectionTable: false,
+                      showStep1SpecifyTable: false,
+                      step1SelectedData: undefined,
+                      jobName: undefined,
+                      jobSubmitted: false,
+                    });
+                  }}
+                >
+                  Done
+                </Button>,
+              ]}
+            /> :
+            <Form
+              {...layout}
+              name='control-hooks'
+              onFinish={(values) => {
+                this.setState({
+                  jobName: values.GWASJobName,
+                  jobSubmitted: true,
+                });
+              }}
+            >
+              <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name for GWAS job!' }]}>
+                <Input placeholder='my_gwas_20201101_1' />
+              </Form.Item>
+              <Form.Item {...tailLayout}>
+                <Button
+                  htmlType='submit'
+                  type='primary'
+                >
               Submit
                 </Button>
-              </Space>
-            </Form.Item>
-          </Form>
+              </Form.Item>
+            </Form>
+          }
         </div>
       );
     }
@@ -565,7 +481,7 @@ class VAGWASMockup extends React.Component {
               Next
             </Button>
           )}
-          {current > 0 && (
+          {current > 0 && !this.state.jobSubmitted && (
             <Button className='vaGWAS__step0-navBtn' style={{ margin: '0 8px' }} onClick={() => this.prev()}>
               Previous
             </Button>
