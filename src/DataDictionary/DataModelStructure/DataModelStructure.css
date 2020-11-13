@@ -56,3 +56,10 @@
 .data-model-structure__template-download-dropdown {
   margin: 0 15px 15px 15px;
 }
+
+/* Less than tablet width */
+@media (max-width: 819px) {
+  .data-model-structure {
+    display: none;
+  }
+}
