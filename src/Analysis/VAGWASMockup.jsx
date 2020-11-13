@@ -1,5 +1,5 @@
 import React from 'react';
-import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Switch, Select, Input, Form, Result } from 'antd';
+import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result } from 'antd';
 import { humanFileSize } from '../utils.js';
 import './VAGWASMockup.css';
 
@@ -234,7 +234,7 @@ class VAGWASMockup extends React.Component {
       let specifyDataCols;
       if (this.state.step1SelectedData) {
         specifyDataCols = Object.keys(this.state.step1SelectedData[0].fileData[0])
-          .filter(element => element !== 'IID')
+          .filter(element => element !== 'IID' && element !== 'FID')
           .map(colKey => colKey);
       }
       let modalTableColumnConfig;
@@ -345,11 +345,6 @@ class VAGWASMockup extends React.Component {
     case 2: {
       return (
         <div className='vaGWAS__mainArea'>
-          <Space>
-            <Switch style={{ width: '30px' }} />
-            <Text>Dichotomic phenotype</Text>
-          </Space>
-          <Divider />
           <Space>
             <Space direction={'vertical'}>
               <Text strong>Min Allele Frequency</Text>
