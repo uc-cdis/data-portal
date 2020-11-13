@@ -64,3 +64,10 @@
 .dictionary-search-history__clear:hover {
   color: var(--g3-color__base-blue-light);
 }
+
+/* Less than laptop width */
+@media (max-width: 1023px) {
+  .dictionary-search-history {
+    display: none;
+  }
+}
