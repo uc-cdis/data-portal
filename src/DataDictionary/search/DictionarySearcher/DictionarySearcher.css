@@ -28,3 +28,10 @@
 .dictionary-searcher__result-clear:hover {
   color: var(--g3-color__base-blue-light);
 }
+
+/* Less than tablet width */
+@media (max-width: 819px) {
+  .data-dictionary-searcher {
+    display: none;
+  }
+}
