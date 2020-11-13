@@ -45,6 +45,17 @@
   }
 }
 
+/* Less than mobile width */
+@media (max-width: 479px) {
+  .guppy-explorer-visualization__view-group {
+    display: flex;
+    flex-direction: column;
+  }
+  .guppy-explorer-visualization__view-group > button {
+    text-align: left;
+  }
+}
+
 /* Overrides */
 .recharts-tooltip-wrapper {
   z-index: 1000;
