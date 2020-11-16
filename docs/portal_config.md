@@ -128,7 +128,8 @@ Below is an example, with inline comments describing what each JSON block config
           "link": "https://gen3.org/resources/user/",
           "name": "Documentation"
         }
-      ]
+      ],
+      "useProfileDropdown": false // optional; enables expiremental profile UI; defaults false, may change in future releases
     },
     "login": { // required; what is displayed on the login page (/login)
       "title": "Gen3 Generic Data Commons", // optional; title for the login page
