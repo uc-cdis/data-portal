@@ -7,9 +7,12 @@
 
 .index-page__top {
   display: inline-flex;
+  max-width: 1280px;
+  width: 90%;
+  justify-content: space-between;
 }
 
-@media screen and (max-width: 1290px) {
+@media screen and (max-width: 1090px) {
   .index-page__top {
     display: flex;
     flex-flow: column;
@@ -21,10 +24,4 @@
 .index-page__bar-chart {
   width: 770px;
   padding: 0 40px;
-}
-
-@media screen and (max-width: 1290px) {
-  .index-page__bar-chart {
-    width: 660px;
-  }
 }
