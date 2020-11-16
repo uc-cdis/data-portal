@@ -38,15 +38,15 @@
   color: var(--g3-color__highlight-orange);
 }
 
-/* Less than tablet width */
-@media (max-width: 819px) {
+/* Tablet width and less */
+@media screen and (max-width: 820px) {
   .guppy-explorer-visualization__button-group {
     display: none;
   }
 }
 
-/* Less than mobile width */
-@media (max-width: 479px) {
+/* Mobile width and less */
+@media screen and (max-width: 480px) {
   .guppy-explorer-visualization__view-group {
     display: flex;
     flex-direction: column;
@@ -84,8 +84,8 @@
   display: none;
 }
 
-/* Less than tablet width */
-@media (max-width: 819px) {
+/* Tablet width and less */
+@media screen and (max-width: 820px) {
   .guppy-explorer-visualization__charts
     > .summary-chart-group
     > .summary-chart-group__column {

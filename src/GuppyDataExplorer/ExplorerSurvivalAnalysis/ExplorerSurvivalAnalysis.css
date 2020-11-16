@@ -118,8 +118,8 @@
   margin: auto;
 }
 
-/* Less than laptop width */
-@media (max-width: 1023px) {
+/* Medium screen and less */
+@media screen and (max-width: 1023px) {
   .explorer-survival-analysis__column-left,
   .explorer-survival-analysis__column-right {
     min-width: 100%;
