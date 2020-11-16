@@ -39,6 +39,7 @@ import isEnabled from './helpers/featureFlags';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
+import ScreenSizeWarning from './components/ScreenSizeWarning';
 
 function App({ store }) {
   return (
@@ -243,6 +244,7 @@ function App({ store }) {
             logos={components.footerLogos}
             privacyPolicy={components.privacyPolicy}
           />
+          <ScreenSizeWarning />
         </BrowserRouter>
       </ThemeProvider>
     </Provider>
