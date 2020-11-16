@@ -64,8 +64,8 @@
   display: block;
 }
 
-/* Less than tablet width */
-@media (max-width: 819px) {
+/* Tablet width and less */
+@media screen and (max-width: 820px) {
   .data-dictionary-property-table__table
     .data-dictionary-property-table__data:nth-last-child(-n + 2) {
     display: none;

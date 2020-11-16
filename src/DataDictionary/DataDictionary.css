@@ -76,8 +76,8 @@
   color: var(--g3-color__white);
 }
 
-/* Less than laptop width */
-@media (max-width: 1023px) {
+/* Medium screen and less */
+@media screen and (max-width: 1090px) {
   .data-dictionary {
     flex-wrap: wrap;
     height: 100vh;
@@ -99,8 +99,8 @@
   }
 }
 
-/* Less than tablet width */
-@media (max-width: 819px) {
+/* Tablet width and less */
+@media screen and (max-width: 820px) {
   .data-dictionary__main {
     max-height: 90%;
   }

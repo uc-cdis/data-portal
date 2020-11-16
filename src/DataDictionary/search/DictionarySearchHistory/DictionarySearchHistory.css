@@ -65,8 +65,8 @@
   color: var(--g3-color__base-blue-light);
 }
 
-/* Less than laptop width */
-@media (max-width: 1023px) {
+/* Medium screen and less */
+@media screen and (max-width: 1090px) {
   .dictionary-search-history {
     display: none;
   }

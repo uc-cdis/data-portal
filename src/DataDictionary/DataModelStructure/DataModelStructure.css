@@ -57,8 +57,8 @@
   margin: 0 15px 15px 15px;
 }
 
-/* Less than tablet width */
-@media (max-width: 819px) {
+/* Tablet width and less */
+@media screen and (max-width: 820px) {
   .data-model-structure {
     display: none;
   }
