@@ -1,0 +1,21 @@
+.screen-size-warning__container {
+  position: fixed;
+  bottom: 0;
+  background-color: var(--g3-color__bg-coal);
+  color: var(--g3-color__white);
+  opacity: 0.9;
+  padding: 12px;
+  text-align: center;
+  width: 100%;
+  z-index: 1000;
+}
+
+@media screen and (min-width: 1091px) {
+  .screen-size-warning__container {
+    display: none;
+  }
+}
+
+.screen-size-warning__icon {
+  margin-right: 0.25rem;
+}
