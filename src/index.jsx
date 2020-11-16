@@ -65,13 +65,18 @@ import './index.less';
 // monitor user's session
 sessionMonitor.start();
 
+// Google Analytics
+ReactGA.initialize(gaTracking);
+ReactGA.pageview(window.location.pathname + window.location.search);
+
+// FontAwesome icons
+library.add(faAngleUp, faAngleDown, faFlask, faMicroscope, faUser);
+
 // render the app after the store is configured
 async function init() {
   const store = await getReduxStore();
 
   // asyncSetInterval(() => store.dispatch(fetchUser), 60000);
-  ReactGA.initialize(gaTracking);
-  ReactGA.pageview(window.location.pathname + window.location.search);
   await Promise.all([
     store.dispatch(fetchSchema),
     store.dispatch(fetchDictionary),
@@ -81,8 +86,6 @@ async function init() {
     store.dispatch(fetchUserAuthMapping),
     store.dispatch(fetchProjects()),
   ]);
-  // FontAwesome icons
-  library.add(faAngleUp, faAngleDown, faFlask, faMicroscope, faUser);
 
   render(
     <div>
