@@ -38,6 +38,24 @@
   color: var(--g3-color__highlight-orange);
 }
 
+/* Tablet width and less */
+@media screen and (max-width: 820px) {
+  .guppy-explorer-visualization__button-group {
+    display: none;
+  }
+}
+
+/* Mobile width and less */
+@media screen and (max-width: 480px) {
+  .guppy-explorer-visualization__view-group {
+    display: flex;
+    flex-direction: column;
+  }
+  .guppy-explorer-visualization__view-group > button {
+    text-align: left;
+  }
+}
+
 /* Overrides */
 .recharts-tooltip-wrapper {
   z-index: 1000;
@@ -45,4 +63,32 @@
 
 .g3-single-select-filter__label {
   word-break: break-all;
+}
+
+.guppy-explorer-visualization__charts > .summary-chart-group {
+  flex-wrap: wrap;
+}
+
+.guppy-explorer-visualization__charts
+  > .summary-chart-group
+  > .summary-chart-group__column {
+  flex: 1 1 50%;
+  min-width: 400px;
+  margin: 0 auto;
+}
+
+.guppy-explorer-visualization__charts
+  > .summary-chart-group
+  > .summary-chart-group__column
+  > .summary-chart-group__column-left-border {
+  display: none;
+}
+
+/* Tablet width and less */
+@media screen and (max-width: 820px) {
+  .guppy-explorer-visualization__charts
+    > .summary-chart-group
+    > .summary-chart-group__column {
+    min-width: 100%;
+  }
 }
