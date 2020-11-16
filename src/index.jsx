@@ -92,11 +92,11 @@ async function init() {
       <ThemeProvider theme={theme}>
         <BrowserRouter basename={basename}>
           {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
-          {isEnabled('noIndex') ? (
+          {isEnabled('noIndex') && (
             <Helmet>
               <meta name='robots' content='noindex,nofollow' />
             </Helmet>
-          ) : null}
+          )}
           <ReduxTopBar />
           <ReduxNavBar />
           <Switch>
@@ -257,27 +257,27 @@ async function init() {
                 );
               }}
             />
-            {isEnabled('explorer') ? (
+            {isEnabled('explorer') && (
               <Route
                 path='/explorer'
                 component={(props) => (
                   <ProtectedContent component={GuppyDataExplorer} {...props} />
                 )}
               />
-            ) : null}
+            )}
             {components.privacyPolicy &&
-            (!!components.privacyPolicy.file ||
-              !!components.privacyPolicy.routeHref) ? (
-              <Route path='/privacy-policy' component={PrivacyPolicy} />
-            ) : null}
-            {enableResourceBrowser ? (
+              (!!components.privacyPolicy.file ||
+                !!components.privacyPolicy.routeHref) && (
+                <Route path='/privacy-policy' component={PrivacyPolicy} />
+              )}
+            {enableResourceBrowser && (
               <Route
                 path='/resource-browser'
                 component={(props) => (
                   <ProtectedContent component={ResourceBrowser} {...props} />
                 )}
               />
-            ) : null}
+            )}
             <Route
               path='/:project'
               component={(props) => (
