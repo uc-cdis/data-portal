@@ -1,5 +1,6 @@
 .top-bar {
   width: 100%;
+  min-height: 40px;
   background-color: var(--g3-color__base-blue);
 }
 
@@ -25,7 +26,7 @@
 
 @media screen and (max-width: 1090px) {
   .top-bar__nav {
-    justify-content: center;
+    justify-content: right;
   }
   .top-bar__nav--hidden-lg-and-down {
     display: none;
@@ -59,4 +60,10 @@
 
 .top-bar__link:last-child {
   border-right: 0;
+}
+
+@media screen and (max-width: 820px) {
+  .top-bar__link:nth-child(-n + 2) {
+    display: none;
+  }
 }
