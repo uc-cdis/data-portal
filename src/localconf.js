@@ -198,6 +198,8 @@ function buildConfig(opts) {
     covid19DashboardConfig.dataUrl = ensureTrailingSlash(covid19DashboardConfig.dataUrl || '');
   }
 
+  const workspacePageDescription = config.workspacePageDescription;
+
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
       '#3283c8',
@@ -393,6 +395,7 @@ function buildConfig(opts) {
     covid19DashboardConfig,
     mapboxAPIToken,
     auspiceUrl,
+    workspacePageDescription,
   };
 }
 
