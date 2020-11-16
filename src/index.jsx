@@ -22,7 +22,6 @@ import getReduxStore from './reduxStore';
 import { gaTracking } from './params';
 import App from './App';
 import sessionMonitor from './SessionMonitor';
-import './index.less';
 
 // monitor user's session
 sessionMonitor.start();
