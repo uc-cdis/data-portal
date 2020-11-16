@@ -4,6 +4,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faAngleUp,
   faAngleDown,
+  faExclamationTriangle,
   faFlask,
   faMicroscope,
   faUser,
@@ -31,7 +32,14 @@ ReactGA.initialize(gaTracking);
 ReactGA.pageview(window.location.pathname + window.location.search);
 
 // FontAwesome icons
-library.add(faAngleUp, faAngleDown, faFlask, faMicroscope, faUser);
+library.add(
+  faAngleUp,
+  faAngleDown,
+  faExclamationTriangle,
+  faFlask,
+  faMicroscope,
+  faUser
+);
 
 // render the app after the store is configured
 async function init() {
