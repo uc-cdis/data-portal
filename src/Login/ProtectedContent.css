@@ -5,12 +5,6 @@
   background-color: var(--g3-color__bg-cloud);
 }
 
-@media screen and (max-width: 820px) {
-  .protected-content {
-    min-height: unset;
-  }
-}
-
 .protected-content--full-screen {
   width: 100%;
   height: calc(100vh - 121px);
