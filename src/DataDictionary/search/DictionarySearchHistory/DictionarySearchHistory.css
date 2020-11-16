@@ -64,3 +64,10 @@
 .dictionary-search-history__clear:hover {
   color: var(--g3-color__base-blue-light);
 }
+
+/* Medium screen and less */
+@media screen and (max-width: 1090px) {
+  .dictionary-search-history {
+    display: none;
+  }
+}

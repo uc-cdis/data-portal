@@ -20,7 +20,6 @@
 
 .data-dictionary__main {
   width: calc(100vw - var(--data-dictionary__sidebar-width));
-  min-width: 900px;
   overflow-y: scroll;
 }
 
@@ -44,7 +43,6 @@
   border: 1px solid var(--data-dictionary__switch-border-color);
   border-radius: var(--data-dictionary__switch-border-radius);
   cursor: pointer;
-  font-size: 18px;
   font-weight: 600;
   letter-spacing: 0.02rem;
   margin: 15px;
@@ -76,4 +74,34 @@
 .data-dictionary__switch-button--active {
   background-color: var(--g3-color__base-blue);
   color: var(--g3-color__white);
+}
+
+/* Medium screen and less */
+@media screen and (max-width: 1090px) {
+  .data-dictionary {
+    flex-wrap: wrap;
+    height: 100vh;
+  }
+
+  .data-dictionary__sidebar {
+    width: 100%;
+    height: auto;
+  }
+
+  .data-dictionary__main {
+    width: 100%;
+    height: 100%;
+    max-height: 80%;
+  }
+
+  .data-dictionary__searcher {
+    display: hidden;
+  }
+}
+
+/* Tablet width and less */
+@media screen and (max-width: 820px) {
+  .data-dictionary__main {
+    max-height: 90%;
+  }
 }

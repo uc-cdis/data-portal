@@ -74,7 +74,6 @@ class DataDictionary extends React.Component {
           <ReduxDictionarySearchHistory
             onClickSearchHistoryItem={this.handleClickSearchHistoryItem}
           />
-          <div className='data-dictionary__search-history' />
         </div>
         <div className='data-dictionary__main'>
           {this.props.isGraphView ? (
