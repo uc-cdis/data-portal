@@ -100,7 +100,7 @@ class TopBar extends Component {
               (
                 <Popover
                   title={this.props.user.username}
-                  placement='bottom'
+                  placement='bottomRight'
                   content={
                     <React.Fragment>
                       <Link to='/identity'>View Profile</Link>
