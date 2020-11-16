@@ -88,238 +88,210 @@ async function init() {
   ]);
 
   render(
-    <div>
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <BrowserRouter basename={basename}>
-            <div>
-              {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
-              {isEnabled('noIndex') ? (
-                <Helmet>
-                  <meta name='robots' content='noindex,nofollow' />
-                </Helmet>
-              ) : null}
-              <ReduxTopBar />
-              <ReduxNavBar />
-              <div className='main-content'>
-                <Switch>
-                  <Route
-                    path='/login'
-                    component={(props) => (
-                      <ProtectedContent
-                        isPublic
-                        filter={() => store.dispatch(fetchLogin())}
-                        component={ReduxLogin}
-                        {...props}
-                      />
-                    )}
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter basename={basename}>
+          {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+          {isEnabled('noIndex') ? (
+            <Helmet>
+              <meta name='robots' content='noindex,nofollow' />
+            </Helmet>
+          ) : null}
+          <ReduxTopBar />
+          <ReduxNavBar />
+          <Switch>
+            <Route
+              path='/login'
+              component={(props) => (
+                <ProtectedContent
+                  isPublic
+                  filter={() => store.dispatch(fetchLogin())}
+                  component={ReduxLogin}
+                  {...props}
+                />
+              )}
+            />
+            <Route
+              exact
+              path='/'
+              component={(props) => (
+                <ProtectedContent component={IndexPage} {...props} />
+              )}
+            />
+            <Route
+              exact
+              path='/submission'
+              component={(props) => (
+                <ProtectedContent
+                  isAdminOnly
+                  component={SubmissionPage}
+                  {...props}
+                />
+              )}
+            />
+            <Route
+              exact
+              path='/submission/files'
+              component={(props) => (
+                <ProtectedContent
+                  isAdminOnly
+                  component={ReduxMapFiles}
+                  {...props}
+                />
+              )}
+            />
+            <Route
+              exact
+              path='/submission/map'
+              component={(props) => (
+                <ProtectedContent
+                  isAdminOnly
+                  component={ReduxMapDataModel}
+                  {...props}
+                />
+              )}
+            />
+            <Route
+              exact
+              path='/document'
+              component={(props) => (
+                <ProtectedContent component={DocumentPage} {...props} />
+              )}
+            />
+            <Route
+              path='/query'
+              component={(props) => (
+                <ProtectedContent component={GraphQLQuery} {...props} />
+              )}
+            />
+            <Route
+              path='/identity'
+              component={(props) => (
+                <ProtectedContent
+                  filter={() => store.dispatch(fetchAccess())}
+                  component={UserProfile}
+                  {...props}
+                />
+              )}
+            />
+            <Route
+              path='/indexing'
+              component={(props) => (
+                <ProtectedContent component={Indexing} {...props} />
+              )}
+            />
+            <Route
+              path='/quiz'
+              component={(props) => (
+                <ProtectedContent component={UserAgreementCert} {...props} />
+              )}
+            />
+            <Route
+              path='/dd/:node'
+              component={(props) => (
+                <ProtectedContent component={DataDictionary} {...props} />
+              )}
+            />
+            <Route
+              path='/dd'
+              component={(props) => (
+                <ProtectedContent component={DataDictionary} {...props} />
+              )}
+            />
+            <Route
+              exact
+              path='/files/*'
+              component={(props) => (
+                <ProtectedContent
+                  filter={() =>
+                    store.dispatch(fetchCoreMetadata(props.match.params[0]))
+                  }
+                  component={CoreMetadataPage}
+                  {...props}
+                />
+              )}
+            />
+            <Route
+              path='/files'
+              component={(props) => (
+                <ProtectedContent component={GuppyDataExplorer} {...props} />
+              )}
+            />
+            <Route
+              path='/workspace'
+              component={(props) => (
+                <ProtectedContent component={Workspace} {...props} />
+              )}
+            />
+            <Route path={workspaceUrl} component={ErrorWorkspacePlaceholder} />
+            <Route
+              path={workspaceErrorUrl}
+              component={ErrorWorkspacePlaceholder}
+            />
+            <Route
+              path='/:project/search'
+              component={(props) => {
+                const queryFilter = () => {
+                  const location = props.location;
+                  const queryParams = querystring.parse(
+                    location.search ? location.search.replace(/^\?+/, '') : ''
+                  );
+                  if (Object.keys(queryParams).length > 0) {
+                    // Linking directly to a search result,
+                    // so kick-off search here (rather than on button click)
+                    return store.dispatch(
+                      submitSearchForm({
+                        project: props.match.params.project,
+                        ...queryParams,
+                      })
+                    );
+                  }
+                  return Promise.resolve('ok');
+                };
+                return (
+                  <ProtectedContent
+                    filter={queryFilter}
+                    component={ReduxQueryNode}
+                    {...props}
                   />
-                  <Route
-                    exact
-                    path='/'
-                    component={(props) => (
-                      <ProtectedContent component={IndexPage} {...props} />
-                    )}
-                  />
-                  <Route
-                    exact
-                    path='/submission'
-                    component={(props) => (
-                      <ProtectedContent
-                        isAdminOnly
-                        component={SubmissionPage}
-                        {...props}
-                      />
-                    )}
-                  />
-                  <Route
-                    exact
-                    path='/submission/files'
-                    component={(props) => (
-                      <ProtectedContent
-                        isAdminOnly
-                        component={ReduxMapFiles}
-                        {...props}
-                      />
-                    )}
-                  />
-                  <Route
-                    exact
-                    path='/submission/map'
-                    component={(props) => (
-                      <ProtectedContent
-                        isAdminOnly
-                        component={ReduxMapDataModel}
-                        {...props}
-                      />
-                    )}
-                  />
-                  <Route
-                    exact
-                    path='/document'
-                    component={(props) => (
-                      <ProtectedContent component={DocumentPage} {...props} />
-                    )}
-                  />
-                  <Route
-                    path='/query'
-                    component={(props) => (
-                      <ProtectedContent component={GraphQLQuery} {...props} />
-                    )}
-                  />
-                  <Route
-                    path='/identity'
-                    component={(props) => (
-                      <ProtectedContent
-                        filter={() => store.dispatch(fetchAccess())}
-                        component={UserProfile}
-                        {...props}
-                      />
-                    )}
-                  />
-                  <Route
-                    path='/indexing'
-                    component={(props) => (
-                      <ProtectedContent component={Indexing} {...props} />
-                    )}
-                  />
-                  <Route
-                    path='/quiz'
-                    component={(props) => (
-                      <ProtectedContent
-                        component={UserAgreementCert}
-                        {...props}
-                      />
-                    )}
-                  />
-                  <Route
-                    path='/dd/:node'
-                    component={(props) => (
-                      <ProtectedContent component={DataDictionary} {...props} />
-                    )}
-                  />
-                  <Route
-                    path='/dd'
-                    component={(props) => (
-                      <ProtectedContent component={DataDictionary} {...props} />
-                    )}
-                  />
-                  <Route
-                    exact
-                    path='/files/*'
-                    component={(props) => (
-                      <ProtectedContent
-                        filter={() =>
-                          store.dispatch(
-                            fetchCoreMetadata(props.match.params[0])
-                          )
-                        }
-                        component={CoreMetadataPage}
-                        {...props}
-                      />
-                    )}
-                  />
-                  <Route
-                    path='/files'
-                    component={(props) => (
-                      <ProtectedContent
-                        component={GuppyDataExplorer}
-                        {...props}
-                      />
-                    )}
-                  />
-                  <Route
-                    path='/workspace'
-                    component={(props) => (
-                      <ProtectedContent component={Workspace} {...props} />
-                    )}
-                  />
-                  <Route
-                    path={workspaceUrl}
-                    component={ErrorWorkspacePlaceholder}
-                  />
-                  <Route
-                    path={workspaceErrorUrl}
-                    component={ErrorWorkspacePlaceholder}
-                  />
-                  <Route
-                    path='/:project/search'
-                    component={(props) => {
-                      const queryFilter = () => {
-                        const location = props.location;
-                        const queryParams = querystring.parse(
-                          location.search
-                            ? location.search.replace(/^\?+/, '')
-                            : ''
-                        );
-                        if (Object.keys(queryParams).length > 0) {
-                          // Linking directly to a search result,
-                          // so kick-off search here (rather than on button click)
-                          return store.dispatch(
-                            submitSearchForm({
-                              project: props.match.params.project,
-                              ...queryParams,
-                            })
-                          );
-                        }
-                        return Promise.resolve('ok');
-                      };
-                      return (
-                        <ProtectedContent
-                          filter={queryFilter}
-                          component={ReduxQueryNode}
-                          {...props}
-                        />
-                      );
-                    }}
-                  />
-                  {isEnabled('explorer') ? (
-                    <Route
-                      path='/explorer'
-                      component={(props) => (
-                        <ProtectedContent
-                          component={GuppyDataExplorer}
-                          {...props}
-                        />
-                      )}
-                    />
-                  ) : null}
-                  {components.privacyPolicy &&
-                  (!!components.privacyPolicy.file ||
-                    !!components.privacyPolicy.routeHref) ? (
-                    <Route path='/privacy-policy' component={PrivacyPolicy} />
-                  ) : null}
-                  {enableResourceBrowser ? (
-                    <Route
-                      path='/resource-browser'
-                      component={(props) => (
-                        <ProtectedContent
-                          component={ResourceBrowser}
-                          {...props}
-                        />
-                      )}
-                    />
-                  ) : null}
-                  <Route
-                    path='/:project'
-                    component={(props) => (
-                      <ProtectedContent
-                        component={ProjectSubmission}
-                        {...props}
-                      />
-                    )}
-                  />
-                </Switch>
-              </div>
-              <ReduxFooter
-                logos={components.footerLogos}
-                privacyPolicy={components.privacyPolicy}
+                );
+              }}
+            />
+            {isEnabled('explorer') ? (
+              <Route
+                path='/explorer'
+                component={(props) => (
+                  <ProtectedContent component={GuppyDataExplorer} {...props} />
+                )}
               />
-            </div>
-          </BrowserRouter>
-        </ThemeProvider>
-      </Provider>
-    </div>,
+            ) : null}
+            {components.privacyPolicy &&
+            (!!components.privacyPolicy.file ||
+              !!components.privacyPolicy.routeHref) ? (
+              <Route path='/privacy-policy' component={PrivacyPolicy} />
+            ) : null}
+            {enableResourceBrowser ? (
+              <Route
+                path='/resource-browser'
+                component={(props) => (
+                  <ProtectedContent component={ResourceBrowser} {...props} />
+                )}
+              />
+            ) : null}
+            <Route
+              path='/:project'
+              component={(props) => (
+                <ProtectedContent component={ProjectSubmission} {...props} />
+              )}
+            />
+          </Switch>
+          <ReduxFooter
+            logos={components.footerLogos}
+            privacyPolicy={components.privacyPolicy}
+          />
+        </BrowserRouter>
+      </ThemeProvider>
+    </Provider>,
     document.getElementById('root')
   );
 }
