@@ -55,6 +55,7 @@ function RegistrationForm({ onClose }) {
             type='text'
             value={firstName}
             autoFocus
+            placeholder='Enter your first name'
             required
             onChange={(e) => setFirstName(e.target.value)}
           />
@@ -66,6 +67,7 @@ function RegistrationForm({ onClose }) {
           <input
             type='text'
             value={lastName}
+            placeholder='Enter your last name'
             required
             onChange={(e) => setLastName(e.target.value)}
           />
@@ -77,6 +79,7 @@ function RegistrationForm({ onClose }) {
           <input
             type='text'
             value={affiliation}
+            placeholder='e.g. University of Chicago'
             required
             onChange={(e) => setAffiliation(e.target.value)}
           />
