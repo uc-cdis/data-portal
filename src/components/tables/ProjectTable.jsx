@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Table from './base/Table';
@@ -31,14 +32,15 @@ class ProjectTable extends React.Component {
     return [
       proj.name,
       ...proj.counts,
-      <Button
-        className='project-table__submit-button'
-        key={i}
-        onClick={() => this.props.history.push(`/${proj.name}`)}
-        label={buttonText}
-        buttonType='primary'
-        rightIcon='upload'
-      />,
+      <Link to={`/${proj.name}`}>
+        <Button
+          className='project-table__submit-button'
+          key={i}
+          label={buttonText}
+          buttonType='primary'
+          rightIcon='upload'
+        />
+      </Link>,
     ];
   });
 
@@ -66,7 +68,6 @@ class ProjectTable extends React.Component {
 ProjectTable.propTypes = {
   projectList: PropTypes.array,
   summaries: PropTypes.array,
-  history: PropTypes.object.isRequired,
   userAuthMapping: PropTypes.object.isRequired,
 };
 
