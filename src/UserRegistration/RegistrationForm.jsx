@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@gen3/ui-component/dist/components/Button';
 
@@ -15,21 +14,13 @@ const RegistrationFormField = ({ label, input }) => (
   </div>
 );
 
-const affiliations = ['University of Chicago'];
-const affiliationOptions = affiliations.map((option) => ({
-  label: option,
-  value: option,
-}));
-
 function RegistrationForm({ onClose }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [affiliation, setAffiliation] = useState(null);
+  const [affiliation, setAffiliation] = useState('');
   const [isValidInput, setIsValidInput] = useState(false);
   useEffect(() => {
-    setIsValidInput(
-      firstName !== '' && lastName !== '' && affiliation !== null
-    );
+    setIsValidInput(firstName !== '' && lastName !== '' && affiliation !== '');
   }, [firstName, lastName, affiliation]);
 
   const [isDone, setIsDone] = useState(false);
@@ -83,11 +74,11 @@ function RegistrationForm({ onClose }) {
       <RegistrationFormField
         label='Affiliation'
         input={
-          <Select
+          <input
+            type='text'
             value={affiliation}
-            onChange={(e) => setAffiliation(e)}
-            options={affiliationOptions}
-            isClearable
+            required
+            onChange={(e) => setAffiliation(e.target.value)}
           />
         }
       />
