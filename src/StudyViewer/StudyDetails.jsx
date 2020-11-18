@@ -224,7 +224,7 @@ class StudyDetails extends React.Component {
      if (!accessibleValidationValue) {
        return false;
      }
-     return (userHasMethodForServiceOnResource('read-storage', '*', accessibleValidationValue, this.props.userAuthMapping));
+     return (userHasMethodForServiceOnResource('read-storage', 'fence', accessibleValidationValue, this.props.userAuthMapping));
    };
 
    render() {

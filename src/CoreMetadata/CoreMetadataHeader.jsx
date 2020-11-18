@@ -52,7 +52,7 @@ class CoreMetadataHeader extends Component {
       // downloadButton should always render if useArboristUI false. Otherwise according to authz.
       if (
         !useArboristUI
-        || userHasMethodForServiceOnProject('read-storage', '*', projectId, this.props.userAuthMapping)
+        || userHasMethodForServiceOnProject('read-storage', 'fence', projectId, this.props.userAuthMapping)
         || projectIsOpenData(projectAvail, projectId)
       ) {
         const downloadLink = `${userapiPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;

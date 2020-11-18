@@ -236,7 +236,7 @@ class QueryNode extends React.Component {
           (value) => {
             let showDelete = true;
             if (useArboristUI) {
-              showDelete = userHasMethodForServiceOnProject('delete', '*', this.props.params.project, this.props.userAuthMapping);
+              showDelete = userHasMethodForServiceOnProject('delete', 'sheepdog', this.props.params.project, this.props.userAuthMapping);
             }
             return (
               <Entities

@@ -62,7 +62,16 @@ export const userHasDataUpload = (userAuthMapping = {}) => {
 export const userHasMethodForServiceOnResource =
 (method, service, resourcePath, userAuthMapping = {}) => {
   const actions = userAuthMapping[resourcePath];
-  return actions !== undefined && actions.some(x => (x.service === service && x.method === method));
+  // accommodate for '*' logic
+  // if we need to check for a specific service/method pair for a resource,
+  // e.g.: {service: sheepdog, method: update}
+  // then this function should return true if the user has either of
+  // the following pair for this policy
+  // 1. {service: sheepdog, method: update}
+  // 1. {service: sheepdog, method: *}
+  // 1. {service: *, method: update}
+  // 1. {service: *, method: *}
+  return actions !== undefined && actions.some(x => ((x.service === service || x.service === '*') && (x.method === method || x.method === '*')));
 };
 
 export const userHasMethodForServiceOnProject =

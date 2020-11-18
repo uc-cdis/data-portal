@@ -81,9 +81,8 @@ class ProjectSubmission extends React.Component {
         !useArboristUI
         || (isRootUrl(project) && userHasSheepdogProgramAdmin(userAuthMapping))
         || (isProgramUrl(project) && userHasSheepdogProjectAdmin(userAuthMapping))
-        || userHasMethodForServiceOnProject('create', '*', project, userAuthMapping)
-        || userHasMethodForServiceOnProject('update', '*', project, userAuthMapping)
-        || userHasMethodForServiceOnProject('*', '*', project, userAuthMapping)
+        || userHasMethodForServiceOnProject('create', 'sheepdog', project, userAuthMapping)
+        || userHasMethodForServiceOnProject('update', 'sheepdog', project, userAuthMapping)
       ) {
         return (
           <React.Fragment>

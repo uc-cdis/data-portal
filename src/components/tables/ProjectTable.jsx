@@ -27,7 +27,7 @@ class ProjectTable extends React.Component {
   getData = projectList => projectList.map((proj, i) => {
     let buttonText = 'Submit Data';
     if (useArboristUI) {
-      buttonText = userHasMethodForServiceOnProject('create', '*', proj.name, this.props.userAuthMapping) ? 'Submit/Browse Data' : 'Browse Data';
+      buttonText = userHasMethodForServiceOnProject('create', 'sheepdog', proj.name, this.props.userAuthMapping) ? 'Submit/Browse Data' : 'Browse Data';
     }
     return [
       proj.name,
