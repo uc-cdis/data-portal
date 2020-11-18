@@ -227,7 +227,6 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
         tick={<PlotChartAxisTick
           axis='x'
           type='date'
-          labelMaxLength={axisLabelMaxLength}
           labelFontSize={axisLabelFontSize}
         />}
         ticks={chartData.ticks}
@@ -245,7 +244,6 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
         tick={<PlotChartAxisTick
           axis='y'
           type='number'
-          labelMaxLength={axisLabelMaxLength}
           labelFontSize={axisLabelFontSize}
         />}
       />
@@ -368,7 +366,7 @@ PlotChart.defaultProps = {
   xTitle: undefined,
   yTitle: undefined,
   axisLabelMaxLength: undefined,
-  axisLabelFontSize: undefined,
+  axisLabelFontSize: 10,
   layout: 'horizontal',
   maxItems: undefined,
   barColor: undefined,
