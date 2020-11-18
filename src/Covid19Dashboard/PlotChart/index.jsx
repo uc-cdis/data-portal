@@ -208,7 +208,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
   }
 
   getLineChartComponent = (chartData, width) => {
-    const { yTitle, axisLabelMaxLength, axisLabelFontSize } = this.props;
+    const { yTitle, axisLabelFontSize } = this.props;
     if (!Object.keys(this.props.plots).length) {
       return null;
     }
