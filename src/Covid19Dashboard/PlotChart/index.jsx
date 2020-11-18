@@ -208,6 +208,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
   }
 
   getLineChartComponent = (chartData, width) => {
+    const { yTitle, axisLabelMaxLength, axisLabelFontSize } = this.props;
     if (!Object.keys(this.props.plots).length) {
       return null;
     }
@@ -223,20 +224,30 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
       />
       <XAxis
         dataKey='date'
-        tick={<PlotChartAxisTick axis='x' type='date' />}
+        tick={<PlotChartAxisTick
+          axis='x'
+          type='date'
+          labelMaxLength={axisLabelMaxLength}
+          labelFontSize={axisLabelFontSize}
+        />}
         ticks={chartData.ticks}
         interval={0}
       />
       <YAxis
         label={{
           className: 'plot-chart__y-title',
-          value: this.props.yTitle,
+          value: yTitle,
           angle: -90,
           position: 'insideLeft',
           offset: -10,
         }}
         type='number'
-        tick={<PlotChartAxisTick axis='y' type='number' />}
+        tick={<PlotChartAxisTick
+          axis='y'
+          type='number'
+          labelMaxLength={axisLabelMaxLength}
+          labelFontSize={axisLabelFontSize}
+        />}
       />
       <Tooltip
         content={this.renderTooltip}
@@ -344,10 +355,10 @@ PlotChart.propTypes = {
   title: PropTypes.string.isRequired,
   xTitle: PropTypes.string,
   yTitle: PropTypes.string,
-  layout: PropTypes.string,
-  maxItems: PropTypes.number,
   axisLabelMaxLength: PropTypes.number,
   axisLabelFontSize: PropTypes.number,
+  layout: PropTypes.string,
+  maxItems: PropTypes.number,
   barColor: PropTypes.string,
   guppyConfig: PropTypes.object,
 };
@@ -356,10 +367,10 @@ PlotChart.defaultProps = {
   plots: [],
   xTitle: undefined,
   yTitle: undefined,
-  layout: 'horizontal',
-  maxItems: undefined,
   axisLabelMaxLength: undefined,
   axisLabelFontSize: undefined,
+  layout: 'horizontal',
+  maxItems: undefined,
   barColor: undefined,
   guppyConfig: {},
 };
