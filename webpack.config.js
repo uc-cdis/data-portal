@@ -101,7 +101,10 @@ module.exports = {
   output: {
     path: __dirname,
     filename: 'bundle.js',
-    publicPath: basename,
+    publicPath:
+      process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto'
+        ? basename
+        : 'https://localhost:9443/',
   },
   optimization,
   devtool,
