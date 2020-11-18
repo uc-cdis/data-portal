@@ -14,7 +14,7 @@ const RegistrationFormField = ({ label, input }) => (
   </div>
 );
 
-function RegistrationForm({ onClose }) {
+function RegistrationForm({ onClose, onRegister, onSubscribe }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [affiliation, setAffiliation] = useState('');
@@ -27,12 +27,12 @@ function RegistrationForm({ onClose }) {
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   function handleRegister() {
-    alert('Registered!');
+    onRegister();
     setIsDone(true);
   }
 
   function handleClose() {
-    if (isSubscribed) alert('Subscribed!');
+    if (isSubscribed) onSubscribe();
     onClose();
   }
 

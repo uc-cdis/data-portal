@@ -10,7 +10,11 @@ function UserRegistration({ shouldRegister }) {
   return show
     ? ReactDOM.createPortal(
         <div className='user-registration__container'>
-          <RegistrationForm onClose={() => setShow(false)} />
+          <RegistrationForm
+            onClose={() => setShow(false)}
+            onRegister={() => alert('Registered!')}
+            onSubscribe={() => alert('Subscribed!')}
+          />
         </div>,
         document.getElementById('root')
       )
