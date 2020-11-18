@@ -68,9 +68,9 @@ export const userHasMethodForServiceOnResource =
   // then this function should return true if the user has either of
   // the following pair for this policy
   // 1. {service: sheepdog, method: update}
-  // 1. {service: sheepdog, method: *}
-  // 1. {service: *, method: update}
-  // 1. {service: *, method: *}
+  // 2. {service: sheepdog, method: *}
+  // 3. {service: *, method: update}
+  // 4. {service: *, method: *}
   return actions !== undefined && actions.some(x => ((x.service === service || x.service === '*') && (x.method === method || x.method === '*')));
 };
 
