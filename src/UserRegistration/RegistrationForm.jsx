@@ -15,6 +15,12 @@ const RegistrationFormField = ({ label, input }) => (
   </div>
 );
 
+/**
+ * @param {Object} prop
+ * @param {() => void} prop.onClose
+ * @param {() => void} prop.onRegister
+ * @param {() => void} prop.onSubscribe
+ */
 function RegistrationForm({ onClose, onRegister, onSubscribe }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');

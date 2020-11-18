@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 import RegistrationForm from './RegistrationForm';
 import './UserRegistration.css';
 
+/**
+ * @param {Object} prop
+ * @param {boolean} prop.shouldRegister
+ */
 function UserRegistration({ shouldRegister }) {
   const [show, setShow] = useState(shouldRegister);
 
