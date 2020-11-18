@@ -13,7 +13,7 @@ import './PlotChart.less';
 class PlotChartAxisTick extends React.Component {
   render() {
     // type is one of ['date', 'string', 'number']
-    const { x, y, payload, axis, type } = this.props;
+    const { x, y, payload, axis, type, labelMaxLength } = this.props;
     if (!x || !y || !payload) {
       return null;
     }
@@ -23,13 +23,11 @@ class PlotChartAxisTick extends React.Component {
       formattedValue = `${moment(formattedValue).month() + 1}/${moment(formattedValue).date()}`;
     } else if (type === 'number') {
       formattedValue = numberWithCommas(formattedValue);
+    } else if (type === 'string' && labelMaxLength) {
+      // truncate long labels and add "..."
+      formattedValue = formattedValue.slice(0, labelMaxLength)
+        + (formattedValue.length > labelMaxLength ? '...' : '');
     }
-    // else { // type === 'string'
-    //   // TODO: make maxLength configurable per chart to allow truncating labels
-    //   const maxLength = ?;
-    //   formattedValue = formattedValue.slice(0, maxLength)
-    //     + (formattedValue.length > maxLength ? '.' : '');
-    // }
 
     return (
       <g transform={`translate(${x},${y})`}>
@@ -55,12 +53,14 @@ PlotChartAxisTick.propTypes = {
   payload: PropTypes.object,
   axis: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  labelMaxLength: PropTypes.number,
 };
 
 PlotChartAxisTick.defaultProps = {
   x: undefined,
   y: undefined,
   payload: undefined,
+  labelMaxLength: undefined,
 };
 
 function getDates(startDate, endDate, days) {
@@ -141,7 +141,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
   }
 
   getGuppyBarChartComponent = (data) => {
-    const { xTitle, yTitle, layout, barColor, guppyConfig } = this.props;
+    const { xTitle, yTitle, layout, axisLabelMaxLength, barColor, guppyConfig } = this.props;
     if (!data.length) {
       return null;
     }
@@ -167,7 +167,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
         dataKey={layout === 'horizontal' ? guppyConfig.xAxisProp : null}
         type={layout === 'horizontal' ? 'category' : 'number'}
         tickLine={layout === 'horizontal' && false}
-        tick={<PlotChartAxisTick axis='x' type={layout === 'vertical' ? 'number' : 'string'} />}
+        tick={<PlotChartAxisTick axis='x' type={layout === 'vertical' ? 'number' : 'string'} labelMaxLength={axisLabelMaxLength} />}
       />
       <YAxis
         label={{
@@ -180,7 +180,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
         dataKey={layout === 'vertical' ? guppyConfig.xAxisProp : null}
         type={layout === 'horizontal' ? 'number' : 'category'}
         tickLine={layout === 'vertical' && false}
-        tick={<PlotChartAxisTick axis='y' type={layout === 'horizontal' ? 'number' : 'string'} />}
+        tick={<PlotChartAxisTick axis='y' type={layout === 'horizontal' ? 'number' : 'string'} labelMaxLength={axisLabelMaxLength} />}
       />
       <Tooltip
         formatter={
@@ -333,17 +333,19 @@ PlotChart.propTypes = {
   yTitle: PropTypes.string,
   layout: PropTypes.string,
   maxItems: PropTypes.number,
+  axisLabelMaxLength: PropTypes.number,
   barColor: PropTypes.string,
   guppyConfig: PropTypes.object,
 };
 
 PlotChart.defaultProps = {
   plots: [],
-  xTitle: null,
-  yTitle: null,
+  xTitle: undefined,
+  yTitle: undefined,
   layout: 'horizontal',
-  maxItems: null,
-  barColor: null,
+  maxItems: undefined,
+  axisLabelMaxLength: undefined,
+  barColor: undefined,
   guppyConfig: {},
 };
 

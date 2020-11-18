@@ -47,6 +47,7 @@ And each chart configuration is:
     path (str, optional): if type==image, path can specified instead of prop
     layout (str, optional): one of [vertical, horizontal] for bar charts,
     maxItems (int, optional): for bar charts,
+    axisLabelMaxLength (int, optional): for bar charts, labels longer than this will be truncated,
     barColor (str, optional): for bar charts,
     guppyConfig (optional): {
         dataType (str),
