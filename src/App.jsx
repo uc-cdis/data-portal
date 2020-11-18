@@ -67,7 +67,13 @@ function App({ store }) {
           )}
           <ReduxTopBar />
           <ReduxNavBar />
-          <Suspense fallback={<Spinner />}>
+          <Suspense
+            fallback={
+              <div style={{ height: '100vh' }}>
+                <Spinner />
+              </div>
+            }
+          >
             <Switch>
               <Route
                 path='/login'
