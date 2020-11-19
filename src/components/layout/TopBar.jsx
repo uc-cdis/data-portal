@@ -104,7 +104,7 @@ class TopBar extends Component {
                   content={
                     <React.Fragment>
                       <Link to='/identity'>View Profile</Link>
-                      <br/>
+                      <br />
                       <Link to='#' onClick={this.props.onLogoutClick}>Logout</Link>
                     </React.Fragment>
                   }
