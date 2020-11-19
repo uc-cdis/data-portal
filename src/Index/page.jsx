@@ -70,9 +70,14 @@ class IndexPageComponent extends React.Component {
       });
     }
 
-    if (homepageChartNodes && homepageChartNodes.length > 0) {
+    /* eslint-disable max-len */
+    if ((homepageChartNodes && homepageChartNodes.length > 0)
+    || (components.charts && components.charts.indexChartNames && components.charts.indexChartNames.length > 0)
+    || (components.charts && components.charts.chartNames && components.charts.chartNames.length > 0)
+    ) {
       homepageCharts.push(<div key={homepageCharts.length} className='index-page__slider-chart'><ReduxIndexBarChart /></div>);
     }
+    /* eslint-enable max-len */
 
     return (
       <div className='index-page'>

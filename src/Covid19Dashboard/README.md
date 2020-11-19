@@ -45,8 +45,10 @@ And each chart configuration is:
     type (str): one of [lineChart, barChart, image],
     prop (str, optional): name of a Covid19Dashboard property
     path (str, optional): if type==image, path can specified instead of prop
-    layout (str, optional): one of [vertical, horizontal] for bar charts,
-    maxItems (int, optional): for bar charts,
+    axisLabelMaxLength (int, optional, default: none): for bar/line charts, labels longer than this will be truncated,
+    axisLabelFontSize (int, optional, default: 10): for bar/line charts, font size to use for axis labels,
+    layout (str, optional, default: horizontal): one of [vertical, horizontal] for bar charts,
+    maxItems (int, optional, default: none): for bar charts,
     barColor (str, optional): for bar charts,
     guppyConfig (optional): {
         dataType (str),
