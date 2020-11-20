@@ -11,13 +11,25 @@ import './UserRegistration.css';
 function UserRegistration({ shouldRegister }) {
   const [show, setShow] = useState(shouldRegister);
 
+  function handleClose() {
+    setShow(false);
+  }
+
+  function handleRegister() {
+    alert('Registered!');
+  }
+
+  function handleSubscribe() {
+    alert('Subscribed!');
+  }
+
   return show
     ? ReactDOM.createPortal(
         <div className='user-registration__overlay'>
           <RegistrationForm
-            onClose={() => setShow(false)}
-            onRegister={() => alert('Registered!')}
-            onSubscribe={() => alert('Subscribed!')}
+            onClose={handleClose}
+            onRegister={handleRegister}
+            onSubscribe={handleSubscribe}
           />
         </div>,
         document.getElementById('root')
