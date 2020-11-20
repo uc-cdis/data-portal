@@ -50,7 +50,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
     onClose();
   }
 
-  const stepInput = (
+  const viewInput = (
     <div className='user-registration__step-input'>
       <p>
         <FontAwesomeIcon
@@ -102,7 +102,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
     </div>
   );
 
-  const stepSuccess = (
+  const viewSuccess = (
     <div className='user-registration__step-done'>
       <h2>Thank you for registering!</h2>
       <p>
@@ -123,7 +123,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
 
   return (
     <form className='user-registration__form'>
-      {isSuccess ? stepSuccess : stepInput}
+      {isSuccess ? viewSuccess : viewInput}
       <div>
         <Button
           label='Back to page'

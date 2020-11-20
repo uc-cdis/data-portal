@@ -39,11 +39,11 @@
   margin-bottom: 0.5rem;
 }
 
-.user-registration__step-input svg {
+.user-registration__view-input svg {
   margin-right: 0.25rem;
 }
 
-.user-registration__step-input label {
+.user-registration__view-input label {
   text-align: right;
   margin-right: 10px;
   width: 30%;
