@@ -37,12 +37,12 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
     setIsValidInput(firstName !== '' && lastName !== '' && institution !== '');
   }, [firstName, lastName, institution]);
 
-  const [isDone, setIsDone] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   function handleRegister() {
     onRegister({ firstName, lastName, institution });
-    setIsDone(true);
+    setIsSuccess(true);
   }
 
   function handleClose() {
@@ -102,7 +102,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
     </div>
   );
 
-  const stepDone = (
+  const stepSuccess = (
     <div className='user-registration__step-done'>
       <h2>Thank you for registering!</h2>
       <p>
@@ -123,14 +123,14 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
 
   return (
     <form className='user-registration__form'>
-      {isDone ? stepDone : stepInput}
+      {isSuccess ? stepSuccess : stepInput}
       <div>
         <Button
           label='Back to page'
           buttonType='default'
           onClick={handleClose}
         />
-        {!isDone && (
+        {!isSuccess && (
           <Button
             type='submit'
             label='Register'
