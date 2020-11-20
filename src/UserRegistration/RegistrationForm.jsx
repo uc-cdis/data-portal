@@ -22,6 +22,8 @@ const RegistrationFormField = ({ label, input }) => (
  * @property {string} institution
  */
 
+/** @typedef {('input' | 'success')} UserRegistrationView  */
+
 /**
  * @param {Object} prop
  * @param {() => void} prop.onClose
@@ -37,12 +39,13 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
     setIsValidInput(firstName !== '' && lastName !== '' && institution !== '');
   }, [firstName, lastName, institution]);
 
-  const [isSuccess, setIsSuccess] = useState(false);
+  /** @type {[UserRegistrationView, React.Dispatch<React.SetStateAction<UserRegistrationView>>]} */
+  const [currentView, setCurrentView] = useState('input');
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   function handleRegister() {
     onRegister({ firstName, lastName, institution });
-    setIsSuccess(true);
+    setCurrentView('success');
   }
 
   function handleClose() {
@@ -123,14 +126,14 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
 
   return (
     <form className='user-registration__form'>
-      {isSuccess ? viewSuccess : viewInput}
+      {currentView === 'success' ? viewSuccess : viewInput}
       <div>
         <Button
           label='Back to page'
           buttonType='default'
           onClick={handleClose}
         />
-        {!isSuccess && (
+        {currentView === 'input' && (
           <Button
             type='submit'
             label='Register'
