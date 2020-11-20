@@ -16,10 +16,17 @@ const RegistrationFormField = ({ label, input }) => (
 );
 
 /**
+ * @typedef {Object} UserRegistrationInput
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} institution
+ */
+
+/**
  * @param {Object} prop
  * @param {() => void} prop.onClose
- * @param {() => void} prop.onRegister
- * @param {() => void} prop.onSubscribe
+ * @param {(userInput: UserRegistrationInput) => void} prop.onRegister
+ * @param {(userInput: UserRegistrationInput) => void} prop.onSubscribe
  */
 function RegistrationForm({ onClose, onRegister, onSubscribe }) {
   const [firstName, setFirstName] = useState('');
@@ -34,12 +41,12 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   function handleRegister() {
-    onRegister();
+    onRegister({ firstName, lastName, institution });
     setIsDone(true);
   }
 
   function handleClose() {
-    if (isSubscribed) onSubscribe();
+    if (isSubscribed) onSubscribe({ firstName, lastName, institution });
     onClose();
   }
 

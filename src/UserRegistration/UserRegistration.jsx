@@ -5,6 +5,13 @@ import RegistrationForm from './RegistrationForm';
 import './UserRegistration.css';
 
 /**
+ * @typedef {Object} UserRegistrationInput
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} institution
+ */
+
+/**
  * @param {Object} prop
  * @param {boolean} prop.shouldRegister
  */
@@ -15,12 +22,12 @@ function UserRegistration({ shouldRegister }) {
     setShow(false);
   }
 
-  function handleRegister() {
-    alert('Registered!');
+  function handleRegister(/** @type {UserRegistrationInput} */ userInput) {
+    alert(`Registered!\n\n${JSON.stringify(userInput, null, 4)}`);
   }
 
-  function handleSubscribe() {
-    alert('Subscribed!');
+  function handleSubscribe(/** @type {UserRegistrationInput} */ userInput) {
+    alert(`Subscribed!\n\n${JSON.stringify(userInput, null, 4)}`);
   }
 
   return show
