@@ -43,12 +43,6 @@
   margin-right: 0.25rem;
 }
 
-.user-registration__view-input label {
-  text-align: right;
-  margin-right: 10px;
-  width: 30%;
-}
-
 .user-registration__subscribe {
   font-weight: bold;
   margin: 2rem 0 1rem;
