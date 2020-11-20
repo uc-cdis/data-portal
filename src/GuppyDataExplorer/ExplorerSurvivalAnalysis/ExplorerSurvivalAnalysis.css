@@ -17,15 +17,14 @@
 
 .explorer-survival-analysis__column-left {
   display: flex;
-  min-width: 400px;
+  flex-grow: 1;
   max-width: 600px;
 }
 
 .explorer-survival-analysis__column-right {
   display: flex;
   flex-direction: column;
-  min-width: 50%;
-  max-width: 600px;
+  width: 600px;
 }
 
 .explorer-survival-analysis__error {
@@ -107,6 +106,7 @@
   font-weight: bold;
   padding: 0.5rem 1rem 0;
 }
+
 .explorer-survival-analysis__figure-placeholder {
   border: 1px dashed lightgray;
   color: gray;
@@ -116,4 +116,13 @@
   height: 100%;
   width: 90%;
   margin: auto;
+}
+
+/* Medium screen and less */
+@media screen and (max-width: 1023px) {
+  .explorer-survival-analysis__column-left,
+  .explorer-survival-analysis__column-right {
+    min-width: 100%;
+    max-width: auto;
+  }
 }

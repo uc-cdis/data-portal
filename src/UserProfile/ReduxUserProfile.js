@@ -98,11 +98,8 @@ const clearCreationSession = () => ({
 });
 
 const mapStateToProps = (state) => ({
-  user: state.user,
   userProfile: state.userProfile,
-  userAuthMapping: state.userAuthMapping,
   popups: state.popups,
-  submission: state.submission,
 });
 
 const mapDispatchToProps = (dispatch) => ({

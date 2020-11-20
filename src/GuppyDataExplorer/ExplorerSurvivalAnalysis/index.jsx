@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import cloneDeep from 'lodash.clonedeep';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
+import { enumFilterList } from '../../params';
 import Spinner from '../../components/Spinner';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
-import { getFactors } from './utils';
+import {
+  filterRisktableByTime,
+  filterSurvivalByTime,
+  getFactors,
+} from './utils';
 import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
@@ -24,31 +30,36 @@ const fetchResult = (body) =>
 /**
  * @param {Object} prop
  * @param {Object} prop.aggsData
+ * @param {Array} prop.fieldMapping
  * @param {Object} prop.filter
  */
-function ExplorerSurvivalAnalysis({ aggsData, filter }) {
+function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
 
   const [transformedFilter, setTransformedFilter] = useState(
     getGQLFilter(filter)
   );
   const [isFilterChanged, setIsFilterChanged] = useState(false);
   useEffect(() => {
-    const updatedFilter = getGQLFilter(filter);
+    const updatedFilter = getGQLFilter(cloneDeep(filter));
     if (JSON.stringify(updatedFilter) !== JSON.stringify(transformedFilter)) {
       setTransformedFilter(updatedFilter);
       setIsFilterChanged(true);
     }
   }, [filter]);
 
-  const [factors, setFactors] = useState(getFactors(aggsData));
+  const [factors, setFactors] = useState(
+    getFactors(aggsData, fieldMapping, enumFilterList)
+  );
   useEffect(() => {
-    setFactors(getFactors(aggsData));
-  }, [aggsData]);
+    setFactors(getFactors(aggsData, fieldMapping, enumFilterList));
+  }, [aggsData, fieldMapping]);
 
   /** @type {ColorScheme} */
   const initColorScheme = { All: schemeCategory10[0] };
@@ -64,24 +75,34 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
     return newScheme;
   };
 
-  const [isFetching, setIsFetching] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [isError, setIsError] = useState(true);
   /** @type {UserInputSubmitHandler} */
-  const handleSubmit = ({ timeInterval, ...requestBody }) => {
+  const handleSubmit = ({
+    timeInterval,
+    startTime,
+    endTime,
+    shouldUpdateResults,
+    ...requestBody
+  }) => {
     if (isError) setIsError(false);
-    setIsFetching(true);
+    setIsUpdating(true);
     setColorScheme(getNewColorScheme(requestBody.factorVariable));
     setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
+    setStartTime(startTime);
+    setEndTime(endTime);
 
-    fetchResult({ filter: transformedFilter, ...requestBody })
-      .then((result) => {
-        setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-        setRisktable(result.risktable);
-        setSurvival(result.survival);
-      })
-      .catch((e) => setIsError(true))
-      .finally(() => setIsFetching(false));
+    if (shouldUpdateResults)
+      fetchResult({ filter: transformedFilter, ...requestBody })
+        .then((result) => {
+          setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
+          setRisktable(result.risktable);
+          setSurvival(result.survival);
+        })
+        .catch((e) => setIsError(true))
+        .finally(() => setIsUpdating(false));
+    else setIsUpdating(false);
   };
 
   return (
@@ -97,7 +118,7 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
         />
       </div>
       <div className='explorer-survival-analysis__column-right'>
-        {isFetching ? (
+        {isUpdating ? (
           <Spinner />
         ) : isError ? (
           <div className='explorer-survival-analysis__error'>
@@ -115,12 +136,12 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
             </div>
             <SurvivalPlot
               colorScheme={colorScheme}
-              data={survival}
+              data={filterSurvivalByTime(survival, startTime, endTime)}
               notStratified={stratificationVariable === ''}
               timeInterval={timeInterval}
             />
             <RiskTable
-              data={risktable}
+              data={filterRisktableByTime(risktable, startTime, endTime)}
               notStratified={stratificationVariable === ''}
               timeInterval={timeInterval}
             />
@@ -133,7 +154,12 @@ function ExplorerSurvivalAnalysis({ aggsData, filter }) {
 
 ExplorerSurvivalAnalysis.propTypes = {
   aggsData: PropTypes.object,
+  fieldMapping: PropTypes.array,
   filter: PropTypes.object,
+};
+
+ExplorerSurvivalAnalysis.defaultProps = {
+  fieldMapping: [],
 };
 
 export default React.memo(ExplorerSurvivalAnalysis);

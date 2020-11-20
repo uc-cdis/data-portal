@@ -146,13 +146,38 @@ function buildConfig(appIn, data) {
   });
   return result;
 }
-function getConsortiumList() {
-  const dict = require(`${__dirname}/dictionary.json`);
+
+function getConsortiumList(dict) {
   const consortiumList = dict['subject'].properties.consortium.enum || [];
-  return JSON.stringify(consortiumList);
+  return JSON.stringify(consortiumList, null, 2);
+}
+
+function getEnumFilterList(config, dict) {
+  const filterSet = new Set();
+  if (
+    config.hasOwnProperty('dataExplorerConfig') &&
+    config.dataExplorerConfig.hasOwnProperty('filters') &&
+    config.dataExplorerConfig.filters.hasOwnProperty('tabs')
+  )
+    for (const { fields } of config.dataExplorerConfig.filters.tabs)
+      for (const field of fields) filterSet.add(field);
+
+  const enumPropSet = new Set();
+  for (const value of Object.values(dict))
+    if (value.hasOwnProperty('properties'))
+      for (const [propName, propValue] of Object.entries(value.properties))
+        if (propValue.hasOwnProperty('enum')) enumPropSet.add(propName);
+
+  const filterList = Array.from(filterSet);
+  const enumFilterSet = new Set();
+  for (const filter of filterList)
+    if (enumPropSet.has(filter)) enumFilterSet.add(filter);
+
+  return JSON.stringify(Array.from(enumFilterSet), null, 2);
 }
 
 const config = buildConfig(process.env.app, params);
+const dict = require(`${__dirname}/dictionary.json`);
 console.log(`const gaTracking = '${defaultGA}';`);
 console.log(
   "const hostname = typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/';"
@@ -168,7 +193,8 @@ console.log(`const config = ${JSON.stringify(config, null, '  ')};`);
 console.log(
   `const requiredCerts = [${defaultRequiredCerts.map((item) => `'${item}'`)}];`
 );
-console.log(`const consortiumList = ${getConsortiumList()};`);
+console.log(`const consortiumList = ${getConsortiumList(dict)};`);
+console.log(`const enumFilterList = ${getEnumFilterList(config, dict)};`);
 console.log(
-  'module.exports = { components, config, gaTracking, requiredCerts, consortiumList };'
+  'module.exports = { components, config, gaTracking, requiredCerts, consortiumList, enumFilterList };'
 );

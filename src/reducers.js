@@ -1,4 +1,3 @@
-import { reducer as formReducer } from 'redux-form';
 import { combineReducers } from 'redux';
 import userProfile from './UserProfile/reducers';
 import coreMetadata from './CoreMetadata/reducers';
@@ -10,9 +9,7 @@ import queryNodes from './QueryNode/reducers';
 import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import login from './Login/reducers';
-import bar from './Layout/reducers';
 import ddgraph from './DataDictionary/reducers';
-import privacyPolicy from './PrivacyPolicy/reducers';
 import { logoutListener } from './Login/ProtectedContent';
 import { fetchUserAccess, fetchUserAuthMapping } from './actions';
 import getReduxStore from './reduxStore';
@@ -55,8 +52,6 @@ const user = (state = {}, action) => {
         ...state,
         vpc: action.vpc,
       };
-    case 'RECEIVE_AUTHORIZATION_URL':
-      return { ...state, oauth_url: action.url };
     case 'FETCH_ERROR':
       return { ...state, fetched_user: true, fetch_error: action.error };
     default:
@@ -82,6 +77,21 @@ const userAuthMapping = (state = {}, action) => {
   }
 };
 
+const project = (state = {}, action) => {
+  switch (action.type) {
+    case 'RECEIVE_PROJECTS':
+      const projects = {};
+      const projectAvail = {};
+      for (const { code, project_id, availability_type } of action.data) {
+        projects[code] = project_id;
+        projectAvail[project_id] = availability_type;
+      }
+      return { ...state, projects, projectAvail };
+    default:
+      return state;
+  }
+};
+
 export const removeDeletedNode = (state, id) => {
   const searchResult = state.search_result;
   const nodeType = Object.keys(searchResult.data)[0];
@@ -91,9 +101,8 @@ export const removeDeletedNode = (state, id) => {
 };
 
 const reducers = combineReducers({
-  privacyPolicy,
-  bar,
   index,
+  project,
   popups,
   user,
   status,
@@ -106,7 +115,6 @@ const reducers = combineReducers({
   certificate,
   graphiql,
   login,
-  form: formReducer,
   auth: logoutListener,
   ddgraph,
   userAccess,

@@ -1,9 +1,8 @@
 import React from 'react';
-import brace from 'brace'; // needed by AceEditor
-import 'brace/mode/json';
-import 'brace/theme/kuroir';
-import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
+import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/theme-kuroir';
 import { predictFileType } from '../utils';
 import SubmissionResult from './SubmissionResult';
 import './SubmitTSV.less';

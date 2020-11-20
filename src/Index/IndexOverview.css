@@ -27,7 +27,7 @@
   width: 250px;
 }
 
-.index-overview__select .Select {
+#index-overview-select {
   margin-left: 0.5rem;
   width: 150px;
 }

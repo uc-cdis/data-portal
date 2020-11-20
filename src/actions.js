@@ -336,40 +336,6 @@ export const fetchUserNoRefresh = (dispatch) =>
     .then((status, data) => handleFetchUser(status, data))
     .then((msg) => dispatch(msg));
 
-/**
- * Retrieve the oath endpoint for the service under the given oathPath
- *
- * @param {String} oauthPath
- * @return {(dispatch) => Promise<string>} dispatch function
- */
-export const fetchOAuthURL = (oauthPath) => (dispatch) =>
-  fetchWithCreds({
-    path: `${oauthPath}authorization_url`,
-    dispatch,
-    useCache: true,
-  })
-    .then(({ status, data }) => {
-      switch (status) {
-        case 200:
-          return {
-            type: 'RECEIVE_AUTHORIZATION_URL',
-            url: data,
-          };
-        default:
-          return {
-            type: 'FETCH_ERROR',
-            error: data.error,
-          };
-      }
-    })
-    .then((msg) => {
-      dispatch(msg);
-      if (msg.url) {
-        return msg.url;
-      }
-      throw new Error('OAuth authorization failed');
-    });
-
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -
  * lambdas that accept dispatch and getState functions as arguments

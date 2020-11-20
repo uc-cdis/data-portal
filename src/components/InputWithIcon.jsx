@@ -14,12 +14,18 @@ class InputWithIcon extends React.Component {
         >
           {this.props.inputOptions ? (
             <Select
-              className={this.props.inputClassName}
-              value={this.props.inputValue}
+              styles={{
+                control: (provided) => ({ ...provided, width: '100%' }),
+              }}
+              className={`${this.props.inputClassName}`}
+              classNamePrefix={'react-select'}
+              value={{
+                value: this.props.inputValue,
+                label: this.props.inputValue,
+              }}
               placeholder={this.props.inputPlaceholderText}
               options={this.props.inputOptions}
               onChange={this.props.inputOnChange}
-              multi={this.props.isMulti}
             />
           ) : (
             <input
@@ -53,17 +59,12 @@ class InputWithIcon extends React.Component {
 InputWithIcon.propTypes = {
   className: PropTypes.string,
   inputClassName: PropTypes.string,
-  inputValue: PropTypes.oneOfType([
-    PropTypes.array,
-    PropTypes.object,
-    PropTypes.string,
-  ]),
+  inputValue: PropTypes.string,
   inputPlaceholderText: PropTypes.string,
   inputOptions: PropTypes.array,
   inputOnChange: PropTypes.func.isRequired,
   iconSvg: PropTypes.func.isRequired,
   iconClassName: PropTypes.string,
-  isMulti: PropTypes.bool,
   shouldDisplayIcon: PropTypes.bool,
   shouldDisplayText: PropTypes.bool,
   text: PropTypes.string,
@@ -75,9 +76,8 @@ InputWithIcon.defaultProps = {
   inputClassName: '',
   inputPlaceholderText: '',
   inputOptions: null,
-  inputValue: {},
+  inputValue: '',
   iconClassName: '',
-  isMulti: false,
   shouldDisplayIcon: false,
   shouldDisplayText: false,
   text: null,

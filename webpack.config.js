@@ -6,19 +6,6 @@ const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/')
   ? basename.slice(0, basename.length - 1)
   : basename;
-const app = process.env.APP || 'dev';
-const title = {
-  acct: 'ACCOuNT Data Commons',
-  bhc: 'Brain Commons',
-  bpa: 'BPA Data Commons',
-  dcf: 'National Cancer Institue Data Commons Framework',
-  gtex: 'GTEx & TOPMed Data Commons Submission Portal',
-  dev: 'Generic Data Commons',
-  edc: 'Environmental Data Commons',
-  gdc: 'Jamboree Data Access',
-  kf: 'Kids First Data Coordinating Center Portal',
-  ndh: 'NIAID Data Hub',
-}[app];
 
 const plugins = [
   new webpack.EnvironmentPlugin(['NODE_ENV']),
@@ -57,7 +44,7 @@ const plugins = [
     },
   }),
   new HtmlWebpackPlugin({
-    title: title,
+    title: process.env.TITLE || 'PCDC Data Portal',
     basename: pathPrefix,
     template: 'src/index.ejs',
     connect_src: (function () {

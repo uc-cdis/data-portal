@@ -46,7 +46,7 @@ const Plot = ({ colorScheme, data, timeInterval }) => {
   }
 
   return (
-    <ResponsiveContainer height={300}>
+    <ResponsiveContainer height={300 + Math.floor(data.length / 5) * 25}>
       <LineChart data={data} margin={{ left: 20, bottom: 10, right: 20 }}>
         <XAxis
           dataKey='time'

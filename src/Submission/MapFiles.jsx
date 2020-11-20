@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 import Button from '@gen3/ui-component/dist/components/Button';
@@ -17,6 +18,8 @@ import './MapFiles.less';
 const SET_KEY = 'did';
 const ROW_HEIGHT = 70;
 const HEADER_HEIGHT = 70;
+
+dayjs.extend(customParseFormat);
 
 class MapFiles extends React.Component {
   constructor(props) {
@@ -67,7 +70,7 @@ class MapFiles extends React.Component {
   getSetSize = (set) => Object.keys(set).length;
 
   getTableHeaderText = (files) => {
-    const date = moment(files[0].created_date).format('MM/DD/YY');
+    const date = dayjs(files[0].created_date).format('MM/DD/YY');
     return `uploaded on ${date}, ${files.length} ${
       files.length > 1 ? 'files' : 'file'
     }`;
@@ -163,7 +166,7 @@ class MapFiles extends React.Component {
   groupUnmappedFiles = () => {
     const groupedFiles = {};
     this.props.unmappedFiles.forEach((file) => {
-      const fileDate = moment(file.created_date).format('MM/DD/YY');
+      const fileDate = dayjs(file.created_date).format('MM/DD/YY');
       if (groupedFiles[fileDate]) {
         groupedFiles[fileDate].push(file);
       } else {
@@ -171,7 +174,7 @@ class MapFiles extends React.Component {
       }
     });
     const sortedDates = Object.keys(groupedFiles).sort(
-      (a, b) => moment(b, 'MM/DD/YY') - moment(a, 'MM/DD/YY')
+      (a, b) => dayjs(b, 'MM/DD/YY') - dayjs(a, 'MM/DD/YY')
     );
     this.setState({ sortedDates });
     return groupedFiles;
@@ -357,7 +360,7 @@ class MapFiles extends React.Component {
                         width={300}
                         cellRenderer={({ cellData }) => (
                           <div>
-                            {moment(cellData).format(
+                            {dayjs(cellData).format(
                               'MM/DD/YY, hh:mm:ss a [UTC]Z'
                             )}
                           </div>

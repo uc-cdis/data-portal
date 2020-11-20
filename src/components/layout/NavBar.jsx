@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,10 +24,6 @@ class NavBar extends Component {
     };
   }
 
-  componentDidMount() {
-    this.props.onInitActive();
-  }
-
   getNavButtonRef = (itemUniqueId) => {
     if (!this.navButtonRefs[itemUniqueId]) {
       this.navButtonRefs[itemUniqueId] = React.createRef();
@@ -40,13 +36,12 @@ class NavBar extends Component {
     return typeof authResult !== 'undefined' ? authResult : true;
   };
 
-  isActive = (id) => {
-    const toCompare = this.props.activeTab
+  isActive = (id) =>
+    this.props.location.pathname
       .split('/')
       .filter((x) => x !== 'dev.html')
-      .join('/');
-    return toCompare.startsWith(id);
-  };
+      .join('/')
+      .startsWith(id);
 
   toggleMenu = () => {
     this.setState((prevState) => ({ menuOpen: !prevState.menuOpen }));
@@ -93,7 +88,6 @@ class NavBar extends Component {
                 item={item}
                 dictIcons={this.props.dictIcons}
                 isActive={this.isActive(item.link)}
-                onActiveTab={() => this.props.onActiveTab(item.link)}
                 tabIndex={index + 1}
               />
             </a>
@@ -103,7 +97,6 @@ class NavBar extends Component {
                 item={item}
                 dictIcons={this.props.dictIcons}
                 isActive={this.isActive(item.link)}
-                onActiveTab={() => this.props.onActiveTab(item.link)}
                 tabIndex={index + 1}
               />
             </Link>
@@ -127,11 +120,7 @@ class NavBar extends Component {
                   />
                 </a>
               ) : (
-                <Link
-                  to=''
-                  onClick={() => this.props.onActiveTab('')}
-                  onKeyPress={() => this.props.onActiveTab('')}
-                >
+                <Link to=''>
                   <img
                     className='nav-bar__logo-img'
                     src='/src/img/logo.png'
@@ -141,13 +130,7 @@ class NavBar extends Component {
               )}
             </div>
             {this.props.navTitle && (
-              <div
-                role='button'
-                tabIndex={0}
-                className='nav-bar__home-button'
-                onClick={() => this.props.onActiveTab('')}
-                onKeyPress={() => this.props.onActiveTab('')}
-              >
+              <div role='button' tabIndex={0} className='nav-bar__home-button'>
                 <Link
                   className='h3-typo nav-bar__link nav-bar__link--home'
                   to=''
@@ -192,16 +175,13 @@ NavBar.propTypes = {
   userAccess: PropTypes.object.isRequired,
   dictIcons: PropTypes.object.isRequired,
   navTitle: PropTypes.string,
-  activeTab: PropTypes.string,
-  onActiveTab: PropTypes.func,
-  onInitActive: PropTypes.func,
+  match: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 NavBar.defaultProps = {
-  activeTab: '',
-  onActiveTab: () => {},
-  onInitActive: () => {},
   navTitle: null,
 };
 
-export default NavBar;
+export default withRouter(NavBar);

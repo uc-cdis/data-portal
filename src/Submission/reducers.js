@@ -13,20 +13,6 @@ const submission = (state = {}, action) => {
         ...state,
         formSchema: { ...state.formSchema, ...action.formSchema },
       };
-    case 'RECEIVE_PROJECTS':
-      return {
-        ...state,
-        projects: action.data.reduce((map, p) => {
-          const res = map;
-          res[p.code] = p.project_id;
-          return res;
-        }, {}),
-        projectAvail: action.data.reduce((map, p) => {
-          const res = map;
-          res[p.project_id] = p.availability_type;
-          return res;
-        }, {}),
-      };
     case 'RECEIVE_PROJECT_LIST': {
       //
       // Note - save projectsByName, b/c we acquire more data for individual tables
@@ -73,10 +59,6 @@ const submission = (state = {}, action) => {
         nodeTypes: getNodeTypes(action.data),
         file_nodes: getFileNodes(action.data),
       };
-    case 'RECEIVE_AUTHORIZATION_URL':
-      return { ...state, oauth_url: action.url };
-    case 'RECEIVE_SUBMISSION_LOGIN':
-      return { ...state, login: state.result, error: state.error };
     case 'RECEIVE_SUBMISSION': {
       const prevCounts =
         'submit_entity_counts' in state ? state.submit_entity_counts : {};
