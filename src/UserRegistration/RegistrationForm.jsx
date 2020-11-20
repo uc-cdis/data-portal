@@ -24,11 +24,11 @@ const RegistrationFormField = ({ label, input }) => (
 function RegistrationForm({ onClose, onRegister, onSubscribe }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [affiliation, setAffiliation] = useState('');
+  const [institution, setInstitution] = useState('');
   const [isValidInput, setIsValidInput] = useState(false);
   useEffect(() => {
-    setIsValidInput(firstName !== '' && lastName !== '' && affiliation !== '');
-  }, [firstName, lastName, affiliation]);
+    setIsValidInput(firstName !== '' && lastName !== '' && institution !== '');
+  }, [firstName, lastName, institution]);
 
   const [isDone, setIsDone] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -81,14 +81,14 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
         }
       />
       <RegistrationFormField
-        label='Affiliation'
+        label='Institution'
         input={
           <input
             type='text'
-            value={affiliation}
+            value={institution}
             placeholder='e.g. University of Chicago'
             required
-            onChange={(e) => setAffiliation(e.target.value)}
+            onChange={(e) => setInstitution(e.target.value)}
           />
         }
       />
