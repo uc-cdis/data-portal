@@ -22,10 +22,12 @@ const configFileName = (app === 'dev') ? 'default' : app;
 // eslint-disable-next-line import/no-dynamic-require
 const configFile = require(`./data/config/${configFileName}.json`);
 const injectDAPTag = !!configFile.injectDAPTag;
-const scriptURLs = [];
+const scriptSrcURLs = [];
+const connectSrcURLs = [];
 if (injectDAPTag) {
-  scriptURLs.push('https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIH&subagency=NIAID');
-  scriptURLs.push('https://www.google-analytics.com');
+  scriptSrcURLs.push('https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIH&subagency=NIAID');
+  connectSrcURLs.push('https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIH&subagency=NIAID');
+  connectSrcURLs.push('https://www.google-analytics.com');
 }
 const iFrameApplicationURLs = [];
 if (configFile && configFile.analysisTools) {
@@ -89,8 +91,8 @@ const plugins = [
           rv[(new URL(url)).origin] = true;
         });
       }
-      if (scriptURLs.length > 0) {
-        scriptURLs.forEach((url) => {
+      if (connectSrcURLs.length > 0) {
+        connectSrcURLs.forEach((url) => {
           rv[(new URL(url)).origin] = true;
         });
       }
