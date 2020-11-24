@@ -34,7 +34,7 @@ function UserRegistration({ shouldRegister, updateAccess }) {
   }
 
   function handleSubscribe(/** @type {UserRegistrationInput} */ userInput) {
-    alert(`Subscribed!\n\n${JSON.stringify(userInput, null, 4)}`);
+    window.open('http://sam.am/PCDCnews', '_blank');
   }
 
   return show
