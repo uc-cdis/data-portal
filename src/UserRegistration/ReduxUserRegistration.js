@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { getIndexPageCounts } from '../index/utils';
 import UserRegistration from './UserRegistration';
 
 const mapStateToProps = (state) => ({
@@ -15,6 +16,7 @@ const mapDispatchToProps = (dispatch) => ({
       ? response.json().then((user) => {
           if (user.authz.hasOwnProperty('/portal')) {
             dispatch({ type: 'RECEIVE_USER', user });
+            getIndexPageCounts();
             return 'success';
           } else {
             return 'error';
