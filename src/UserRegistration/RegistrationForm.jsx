@@ -57,7 +57,6 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
     <div className='user-registration__view-input'>
       <p>
         <FontAwesomeIcon
-          className='screen-size-warning__icon'
           icon='exclamation-triangle'
           color='#EF8523' // g3-color__highlight-orange
         />
