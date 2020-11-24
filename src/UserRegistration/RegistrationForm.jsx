@@ -54,7 +54,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
   }
 
   const viewInput = (
-    <div className='user-registration__step-input'>
+    <div className='user-registration__view-input'>
       <p>
         <FontAwesomeIcon
           className='screen-size-warning__icon'
@@ -106,7 +106,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
   );
 
   const viewSuccess = (
-    <div className='user-registration__step-done'>
+    <div className='user-registration__view-success'>
       <h2>Thank you for registering!</h2>
       <p>
         You now have access to PCDC data based on your institutional
