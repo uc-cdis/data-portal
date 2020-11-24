@@ -41,10 +41,12 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
 
   /** @type {[UserRegistrationView, React.Dispatch<React.SetStateAction<UserRegistrationView>>]} */
   const [currentView, setCurrentView] = useState('input');
+  const [isRegistering, setIsRegistering] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
-
   function handleRegister() {
+    setIsRegistering(true);
     onRegister({ firstName, lastName, institution }).then((status) => {
+      setIsRegistering(false);
       setCurrentView(status);
     });
   }
@@ -72,6 +74,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
             type='text'
             value={firstName}
             autoFocus
+            disabled={isRegistering}
             placeholder='Enter your first name'
             required
             onChange={(e) => setFirstName(e.target.value)}
@@ -84,6 +87,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
           <input
             type='text'
             value={lastName}
+            disabled={isRegistering}
             placeholder='Enter your last name'
             required
             onChange={(e) => setLastName(e.target.value)}
@@ -96,6 +100,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
           <input
             type='text'
             value={institution}
+            disabled={isRegistering}
             placeholder='e.g. University of Chicago'
             required
             onChange={(e) => setInstitution(e.target.value)}
@@ -155,7 +160,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
           <Button
             type='submit'
             label='Register'
-            enabled={isValidInput}
+            enabled={isValidInput && !isRegistering}
             onClick={handleRegister}
           />
         )}
