@@ -25,6 +25,7 @@ const injectDAPTag = !!configFile.injectDAPTag;
 const scriptURLs = [];
 if (injectDAPTag) {
   scriptURLs.push('https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIH&subagency=NIAID');
+  scriptURLs.push('https://www.google-analytics.com');
 }
 const iFrameApplicationURLs = [];
 if (configFile && configFile.analysisTools) {
@@ -85,6 +86,11 @@ const plugins = [
       }
       if (iFrameApplicationURLs.length > 0) {
         iFrameApplicationURLs.forEach((url) => {
+          rv[(new URL(url)).origin] = true;
+        });
+      }
+      if (scriptURLs.length > 0) {
+        scriptURLs.forEach((url) => {
           rv[(new URL(url)).origin] = true;
         });
       }
