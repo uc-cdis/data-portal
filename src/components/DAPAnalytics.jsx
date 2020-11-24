@@ -1,3 +1,5 @@
+/* Component for handling DAP "virtual pageview" tracking mechanism */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
@@ -7,15 +9,11 @@ const scriptExists = url => document.querySelectorAll(`script[src="${url}"]`).le
 const logPageChange = (pathname, search = '') => {
   const page = pathname + search;
   const { location } = window;
+  // check if DAP script has been loaded
   if (scriptExists('https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIH&subagency=NIAID')) {
+    // apply virtual pageview using DAP function
     window.gas('send', 'pageview', `${location.origin}${page}`);
   }
-  // ReactGA.set({
-  //   page,
-  //   location: `${location.origin}${page}`,
-  //   ...this.props.options,
-  // });
-  // ReactGA.pageview(page);
 };
 
 class DAPAnalytics extends Component {
