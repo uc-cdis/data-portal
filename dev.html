@@ -17,7 +17,10 @@
     <link rel="stylesheet" type="text/css" media="all" href="/src/css/graphiql.css" />
     <link rel="icon" type="image/png" href="/src/img/favicon.ico">
     <title>Generic Data Commons</title>
-
+    <% if(htmlWebpackPlugin.options.dap_tag) { %>
+      <!-- We participate in the US government's analytics program. See the data at analytics.usa.gov. -->
+      <script async type="text/javascript" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIH&subagency=NIAID" id="_fed_an_ua_tag"></script>
+    <% } %>
   </head>
   <body>
     <div id="root"></div>
