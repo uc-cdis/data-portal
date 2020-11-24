@@ -27,7 +27,7 @@ const RegistrationFormField = ({ label, input }) => (
 /**
  * @param {Object} prop
  * @param {() => void} prop.onClose
- * @param {(userInput: UserRegistrationInput) => void} prop.onRegister
+ * @param {(userInput: UserRegistrationInput) => ('success' | 'error')} prop.onRegister
  * @param {(userInput: UserRegistrationInput) => void} prop.onSubscribe
  */
 function RegistrationForm({ onClose, onRegister, onSubscribe }) {
@@ -44,8 +44,8 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   function handleRegister() {
-    onRegister({ firstName, lastName, institution });
-    setCurrentView('success');
+    const status = onRegister({ firstName, lastName, institution });
+    setCurrentView(status);
   }
 
   function handleClose() {

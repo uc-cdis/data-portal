@@ -24,6 +24,7 @@ function UserRegistration({ shouldRegister }) {
 
   function handleRegister(/** @type {UserRegistrationInput} */ userInput) {
     alert(`Registered!\n\n${JSON.stringify(userInput, null, 4)}`);
+    return 'success';
   }
 
   function handleSubscribe(/** @type {UserRegistrationInput} */ userInput) {
