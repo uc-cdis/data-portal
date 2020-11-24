@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { headers, userapiPath } from '../localconf';
 import RegistrationForm from './RegistrationForm';
 import './UserRegistration.css';
 
@@ -14,8 +15,9 @@ import './UserRegistration.css';
 /**
  * @param {Object} prop
  * @param {boolean} prop.shouldRegister
+ * @param {(response: Response) => Promise<('success' | 'error')>} prop.updateAccess
  */
-function UserRegistration({ shouldRegister }) {
+function UserRegistration({ shouldRegister, updateAccess }) {
   const [show, setShow] = useState(shouldRegister);
 
   function handleClose() {
@@ -23,10 +25,12 @@ function UserRegistration({ shouldRegister }) {
   }
 
   function handleRegister(/** @type {UserRegistrationInput} */ userInput) {
-    return new Promise((resolve, _) => {
-      alert(`Registered!\n\n${JSON.stringify(userInput, null, 4)}`);
-      resolve('success');
-    });
+    return fetch(`${userapiPath}user/`, {
+      body: JSON.stringify(userInput),
+      credentials: 'include',
+      headers,
+      method: 'PUT',
+    }).then(updateAccess);
   }
 
   function handleSubscribe(/** @type {UserRegistrationInput} */ userInput) {
@@ -49,6 +53,7 @@ function UserRegistration({ shouldRegister }) {
 
 UserRegistration.propTypes = {
   shouldRegister: PropTypes.bool.isRequired,
+  updateAccess: PropTypes.func.isRequired,
 };
 
 export default UserRegistration;
