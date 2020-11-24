@@ -22,7 +22,7 @@ const RegistrationFormField = ({ label, input }) => (
  * @property {string} institution
  */
 
-/** @typedef {('input' | 'success')} UserRegistrationView  */
+/** @typedef {('input' | 'success' | 'error')} UserRegistrationView  */
 
 /**
  * @param {Object} prop
@@ -123,9 +123,27 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
     </div>
   );
 
+  const viewError = (
+    <div className='user-registration__view-error'>
+      <FontAwesomeIcon
+        icon='exclamation-triangle'
+        color='#E74C3C' // g3-color__highlight-rose
+      />
+      <h2>Error registering to gain access...</h2>
+      <p>
+        Please retry or refreshing the page. If the problem persists, please
+        contact administrator for more information.
+      </p>
+    </div>
+  );
+
   return (
     <form className='user-registration__form'>
-      {currentView === 'success' ? viewSuccess : viewInput}
+      {currentView === 'input'
+        ? viewInput
+        : currentView === 'success'
+        ? viewSuccess
+        : viewError}
       <div>
         <Button
           label='Back to page'
