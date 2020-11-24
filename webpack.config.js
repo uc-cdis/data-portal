@@ -88,7 +88,10 @@ const plugins = [
           rv[(new URL(url)).origin] = true;
         });
       }
-      return Object.keys(rv).join(' ');
+      if (Object.keys(rv).length > 0) {
+        return Object.keys(rv).join(' ');
+      }
+      return '';
     })(),
     dap_tag: injectDAPTag,
     script_src: (function () {
@@ -98,7 +101,10 @@ const plugins = [
           rv[(new URL(url)).origin] = true;
         });
       }
-      return Object.keys(rv).join(' ');
+      if (Object.keys(rv).length > 0) {
+        return Object.keys(rv).join(' ');
+      }
+      return '';
     })(),
     hash: true,
     chunks: ['vendors~bundle', 'bundle'],
