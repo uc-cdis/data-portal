@@ -104,8 +104,8 @@ const plugins = [
     dap_tag: injectDAPTag,
     script_src: (function () {
       const rv = {};
-      if (scriptURLs.length > 0) {
-        scriptURLs.forEach((url) => {
+      if (scriptSrcURLs.length > 0) {
+        scriptSrcURLs.forEach((url) => {
           rv[(new URL(url)).origin] = true;
         });
       }
