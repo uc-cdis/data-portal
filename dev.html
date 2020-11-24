@@ -8,7 +8,7 @@
     frame-src:
       - https://auspice.planx-pla.net and https://auspice.pandemicresponsecommons.org for COVID-19 Auspice app in iframe
     -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://login.bionimbus.org https://wayf.incommonfederation.org; child-src blob:; connect-src 'self' blob: localhost https://localhost:9443 wss://localhost:9443 https://*.s3.amazonaws.com https://*.mapbox.com https://opendata.datacommons.io https://static.planx-pla.net ; img-src 'self' https://opendata.datacommons.io https://static.planx-pla.net data: https://*.s3.amazonaws.com https://www.google-analytics.com; script-src 'self' 'unsafe-eval' https://www.google-analytics.com localhost https://localhost:9443; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com localhost https://localhost:9443; object-src 'none'; font-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://auspice.planx-pla.net https://auspice.pandemicresponsecommons.org;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://login.bionimbus.org https://wayf.incommonfederation.org; child-src blob:; connect-src 'self' blob: localhost https://localhost:9443 wss://localhost:9443 https://*.s3.amazonaws.com https://*.mapbox.com https://opendata.datacommons.io https://static.planx-pla.net ; img-src 'self' https://opendata.datacommons.io https://static.planx-pla.net data: https://*.s3.amazonaws.com https://www.google-analytics.com; script-src 'self' 'unsafe-eval' https://www.google-analytics.com localhost https://localhost:9443 https://dap.digitalgov.gov; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com localhost https://localhost:9443; object-src 'none'; font-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'self' https://auspice.planx-pla.net https://auspice.pandemicresponsecommons.org;">
     <meta name="viewport" content="width=device-width" />
     <link href="https://fonts.googleapis.com/icon?family=Source+Sans+Pro" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
@@ -17,10 +17,8 @@
     <link rel="stylesheet" type="text/css" media="all" href="/src/css/graphiql.css" />
     <link rel="icon" type="image/png" href="/src/img/favicon.ico">
     <title>Generic Data Commons</title>
-    <% if(htmlWebpackPlugin.options.dap_tag) { %>
       <!-- We participate in the US government's analytics program. See the data at analytics.usa.gov. -->
       <script async type="text/javascript" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIH&subagency=NIAID" id="_fed_an_ua_tag"></script>
-    <% } %>
   </head>
   <body>
     <div id="root"></div>
