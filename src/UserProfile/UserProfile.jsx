@@ -23,6 +23,7 @@ export const saveToFile = (savingStr, filename) => {
 };
 
 const UserProfile = ({
+  userInformation,
   userProfile,
   popups,
   onCreateKey,
@@ -138,6 +139,7 @@ const UserProfile = ({
 };
 
 UserProfile.propTypes = {
+  userInformation: PropTypes.object.isRequired,
   userProfile: PropTypes.object.isRequired,
   popups: PropTypes.object.isRequired,
   onClearCreationSession: PropTypes.func.isRequired,
