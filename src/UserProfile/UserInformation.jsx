@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import SimpleInputField from '../components/SimpleInputField';
 
 /**
  * @param {Object} props
@@ -12,10 +13,22 @@ function UserInformation({ email, firstName, lastName, institution }) {
   return (
     <div>
       <h2>Your information</h2>
-      <div>Email: {email}</div>
-      <div>First name: {firstName || 'N/A'}</div>
-      <div>Last name: {lastName || 'N/A'}</div>
-      <div>Institutional affiliation: {institution || 'N/A'}</div>
+      <SimpleInputField
+        label='Email:'
+        input={<input readOnly value={email} />}
+      />
+      <SimpleInputField
+        label='First name:'
+        input={<input readOnly value={firstName || 'N/A'} />}
+      />
+      <SimpleInputField
+        label='Last name:'
+        input={<input readOnly value={lastName || 'N/A'} />}
+      />
+      <SimpleInputField
+        label='Institutional affiliation:'
+        input={<input readOnly value={institution || 'N/A'} />}
+      />
     </div>
   );
 }
