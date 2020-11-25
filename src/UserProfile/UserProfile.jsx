@@ -7,6 +7,7 @@ import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
 import { credentialCdisPath } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
+import UserInformation from './UserInformation';
 import './UserProfile.less';
 
 const NO_ACCESS_MSG =
@@ -113,6 +114,7 @@ const UserProfile = ({
               onClose={savePopupClose}
             />
           )}
+          <UserInformation {...userInformation} />
           <Button
             onClick={onCreate}
             label={CREATE_API_KEY_BTN}
