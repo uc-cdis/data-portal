@@ -2,37 +2,18 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
+import SimpleInputField from '../../components/SimpleInputField';
 import './typedef';
 
-/**
- * @param {Object} prop
- * @param {string} prop.label
- * @param {JSX.Element} prop.input
- */
-const ControlFormField = ({ label, input }) => (
-  <div className='explorer-survival-analysis__field-container'>
-    <label className='explorer-survival-analysis__field-label'>{label}</label>
-    <div className='explorer-survival-analysis__field-input'>{input}</div>
-  </div>
-);
-
 const ControlFormSelect = ({ label, ...selectProps }) => (
-  <ControlFormField
+  <SimpleInputField
     label={label}
     input={<Select clearable={false} {...selectProps} />}
   />
 );
 
 const ControlFormInput = ({ label, ...inputAttrs }) => (
-  <ControlFormField
-    label={label}
-    input={
-      <input
-        className='explorer-survival-analysis__field_input__input'
-        {...inputAttrs}
-      />
-    }
-  />
+  <SimpleInputField label={label} input={<input {...inputAttrs} />} />
 );
 
 const emptySelectOption = { label: 'Select...', value: '' };
