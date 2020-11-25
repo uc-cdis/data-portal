@@ -2,18 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@gen3/ui-component/dist/components/Button';
-
-/**
- * @param {Object} prop
- * @param {string} prop.label
- * @param {JSX.Element} prop.input
- */
-const RegistrationFormField = ({ label, input }) => (
-  <div className='user-registration__form__field-container'>
-    <label className='user-registration__form__field-label'>{label}</label>
-    <div className='user-registration__form__field-input'>{input}</div>
-  </div>
-);
+import SimpleInputField from '../components/SimpleInputField';
 
 /**
  * @typedef {Object} UserRegistrationInput
@@ -67,7 +56,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
         <br />
         Please register to gain access.
       </p>
-      <RegistrationFormField
+      <SimpleInputField
         label='First name'
         input={
           <input
@@ -81,7 +70,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
           />
         }
       />
-      <RegistrationFormField
+      <SimpleInputField
         label='Last name'
         input={
           <input
@@ -94,7 +83,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
           />
         }
       />
-      <RegistrationFormField
+      <SimpleInputField
         label='Institution'
         input={
           <input
