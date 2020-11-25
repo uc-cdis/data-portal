@@ -8,7 +8,19 @@ import './typedef';
 const ControlFormSelect = ({ label, ...selectProps }) => (
   <SimpleInputField
     label={label}
-    input={<Select clearable={false} {...selectProps} />}
+    input={
+      <Select
+        {...selectProps}
+        clearable={false}
+        theme={(theme) => ({
+          ...theme,
+          colors: {
+            ...theme.colors,
+            primary: 'var(--g3-color__base-blue)',
+          },
+        })}
+      />
+    }
   />
 );
 
