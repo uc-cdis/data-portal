@@ -1,0 +1,20 @@
+.user-information__container {
+  max-width: 480px;
+  margin-bottom: 4rem;
+}
+
+.user-information__container .simple-input-field__container {
+  justify-content: flex-start;
+}
+
+.user-information__container .simple-input-field__container:first-of-type {
+  margin-top: 0.5rem;
+}
+
+.user-information__container .simple-input-field__label {
+  width: 20%;
+}
+
+.user-information__container .simple-input-field__input {
+  width: 80%;
+}

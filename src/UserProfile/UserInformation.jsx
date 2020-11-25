@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SimpleInputField from '../components/SimpleInputField';
+import './UserInformation.css';
 
 /**
  * @param {Object} props
@@ -11,7 +12,7 @@ import SimpleInputField from '../components/SimpleInputField';
  */
 function UserInformation({ email, firstName, lastName, institution }) {
   return (
-    <div>
+    <div className='user-information__container'>
       <h2>Your information</h2>
       <SimpleInputField
         label='Email:'
