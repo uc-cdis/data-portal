@@ -28,11 +28,11 @@ function UserInformation({ email, firstName, lastName, institution }) {
   return (
     <div className='user-information__container'>
       <h2>Your information</h2>
-      <UserInformationField label='Email:' value={email} />
-      <UserInformationField label='First name:' value={firstName} />
-      <UserInformationField label='Last name:' value={lastName} />
+      <UserInformationField label='Email' value={email} />
+      <UserInformationField label='First name' value={firstName} />
+      <UserInformationField label='Last name' value={lastName} />
       <UserInformationField
-        label='Institutional affiliation:'
+        label='Institutional affiliation'
         value={institution}
       />
     </div>
