@@ -4,6 +4,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faAngleUp,
   faAngleDown,
+  faCheckCircle,
   faExclamationTriangle,
   faFlask,
   faMicroscope,
@@ -35,6 +36,7 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 library.add(
   faAngleUp,
   faAngleDown,
+  faCheckCircle,
   faExclamationTriangle,
   faFlask,
   faMicroscope,
