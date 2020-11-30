@@ -10,8 +10,9 @@ import './UserInformation.css';
  * @param {string} [props.value]
  * @param {boolean} [props.isEditable]
  */
-function UserInformationField({ label, value, isEditable }) {
+function UserInformationField({ label, value = '', isEditable }) {
   const inputEl = useRef(null);
+  const [inputValue, setInputValue] = useState(value);
   const [isEditing, setIsEditing] = useState(false);
   return (
     <div className='user-information__field'>
@@ -21,7 +22,8 @@ function UserInformationField({ label, value, isEditable }) {
           <input
             ref={inputEl}
             readOnly={!isEditing}
-            value={value}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
             placeholder='N/A'
           />
         }
@@ -33,7 +35,10 @@ function UserInformationField({ label, value, isEditable }) {
               <Button
                 label='Cancel'
                 buttonType='default'
-                onClick={() => setIsEditing(false)}
+                onClick={() => {
+                  setIsEditing(false);
+                  setInputValue(value);
+                }}
               />
               <Button
                 label='Submit'
