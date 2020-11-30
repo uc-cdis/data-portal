@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { headers, userapiPath } from '../localconf';
 import SimpleInputField from '../components/SimpleInputField';
@@ -23,6 +24,13 @@ function UserInformationField({
   const inputEl = useRef(null);
   const [inputValue, setInputValue] = useState(value);
   const [isEditing, setIsEditing] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
+  useEffect(() => {
+    if (submitStatus !== null) {
+      const timeout = setTimeout(() => setSubmitStatus(null), 1500);
+      return () => clearTimeout(timeout);
+    }
+  }, [submitStatus]);
 
   function handleChange(e) {
     setInputValue(e.target.value);
@@ -34,6 +42,7 @@ function UserInformationField({
   function handleSubmit() {
     onSubmit({ [name]: inputValue }).then((status) => {
       if (status === 'error') setInputValue(value);
+      setSubmitStatus(status);
       setIsEditing(false);
     });
   }
@@ -81,6 +90,24 @@ function UserInformationField({
           )}
         </div>
       )}
+      {submitStatus &&
+        (submitStatus === 'success' ? (
+          <div className='user-information__submit-message'>
+            <FontAwesomeIcon
+              icon='check-circle'
+              color='#7EC500' // g3-color__lime
+            />
+            Updated successfully!
+          </div>
+        ) : (
+          <div className='user-information__submit-message'>
+            <FontAwesomeIcon
+              icon='exclamation-triangle'
+              color='#E74C3C' // g3-color__rose
+            />
+            Update failed! Please try again.
+          </div>
+        ))}
     </div>
   );
 }

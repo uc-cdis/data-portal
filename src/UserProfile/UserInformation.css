@@ -38,3 +38,7 @@
   height: 36px;
   margin: auto 0.5rem;
 }
+
+.user-information__submit-message > svg {
+  margin-right: 0.25rem;
+}
