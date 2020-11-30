@@ -24,6 +24,7 @@ function UserInformationField({
   const inputEl = useRef(null);
   const [inputValue, setInputValue] = useState(value);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   useEffect(() => {
     if (submitStatus !== null) {
@@ -40,7 +41,9 @@ function UserInformationField({
     setInputValue(value);
   }
   function handleSubmit() {
+    setIsSubmitting(true);
     onSubmit({ [name]: inputValue }).then((status) => {
+      setIsSubmitting(false);
       if (status === 'error') setInputValue(value);
       setSubmitStatus(status);
       setIsEditing(false);
@@ -81,7 +84,7 @@ function UserInformationField({
               <Button
                 label='Submit'
                 buttonType='primary'
-                enabled={value !== inputValue}
+                enabled={value !== inputValue && !isSubmitting}
                 onClick={handleSubmit}
               />
             </>
