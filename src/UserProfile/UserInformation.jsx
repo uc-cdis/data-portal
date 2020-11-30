@@ -8,8 +8,9 @@ import './UserInformation.css';
  * @param {Object} props
  * @param {string} props.label
  * @param {string} [props.value]
+ * @param {boolean} [props.isEditable]
  */
-function UserInformationField({ label, value }) {
+function UserInformationField({ label, value, isEditable }) {
   const [isEditing, setIsEditing] = useState(false);
   return (
     <div className='user-information__field'>
@@ -17,28 +18,30 @@ function UserInformationField({ label, value }) {
         label={label}
         input={<input readOnly={!isEditing} value={value} placeholder='N/A' />}
       />
-      <div className='user-information__button-group'>
-        {isEditing ? (
-          <>
+      {isEditable && (
+        <div className='user-information__button-group'>
+          {isEditing ? (
+            <>
+              <Button
+                label='Cancel'
+                buttonType='default'
+                onClick={() => setIsEditing(false)}
+              />
+              <Button
+                label='Submit'
+                buttonType='primary'
+                onClick={() => setIsEditing(false)}
+              />
+            </>
+          ) : (
             <Button
-              label='Cancel'
+              label='Edit'
               buttonType='default'
-              onClick={() => setIsEditing(false)}
+              onClick={() => setIsEditing(true)}
             />
-            <Button
-              label='Submit'
-              buttonType='primary'
-              onClick={() => setIsEditing(false)}
-            />
-          </>
-        ) : (
-          <Button
-            label='Edit'
-            buttonType='default'
-            onClick={() => setIsEditing(true)}
-          />
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -55,11 +58,12 @@ function UserInformation({ email, firstName, lastName, institution }) {
     <div className='user-information__container'>
       <h2>Your information</h2>
       <UserInformationField label='Email' value={email} />
-      <UserInformationField label='First name' value={firstName} />
-      <UserInformationField label='Last name' value={lastName} />
+      <UserInformationField label='First name' value={firstName} isEditable />
+      <UserInformationField label='Last name' value={lastName} isEditable />
       <UserInformationField
         label='Institutional affiliation'
         value={institution}
+        isEditable
       />
     </div>
   );
