@@ -14,6 +14,22 @@ function UserInformationField({ label, value = '', isEditable }) {
   const inputEl = useRef(null);
   const [inputValue, setInputValue] = useState(value);
   const [isEditing, setIsEditing] = useState(false);
+
+  function handleChange(e) {
+    setInputValue(e.target.value);
+  }
+  function handleCancel() {
+    setIsEditing(false);
+    setInputValue(value);
+  }
+  function handleSubmit() {
+    setIsEditing(false);
+  }
+  function handleEdit() {
+    setIsEditing(true);
+    inputEl.current.focus();
+  }
+
   return (
     <div className='user-information__field'>
       <SimpleInputField
@@ -23,7 +39,7 @@ function UserInformationField({ label, value = '', isEditable }) {
             ref={inputEl}
             readOnly={!isEditing}
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={handleChange}
             placeholder='N/A'
           />
         }
@@ -35,26 +51,16 @@ function UserInformationField({ label, value = '', isEditable }) {
               <Button
                 label='Cancel'
                 buttonType='default'
-                onClick={() => {
-                  setIsEditing(false);
-                  setInputValue(value);
-                }}
+                onClick={handleCancel}
               />
               <Button
                 label='Submit'
                 buttonType='primary'
-                onClick={() => setIsEditing(false)}
+                onClick={handleSubmit}
               />
             </>
           ) : (
-            <Button
-              label='Edit'
-              buttonType='default'
-              onClick={() => {
-                setIsEditing(true);
-                inputEl.current.focus();
-              }}
-            />
+            <Button label='Edit' buttonType='default' onClick={handleEdit} />
           )}
         </div>
       )}
