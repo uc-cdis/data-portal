@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import Button from '@gen3/ui-component/dist/components/Button';
 import SimpleInputField from '../components/SimpleInputField';
 import './UserInformation.css';
 
@@ -9,11 +10,36 @@ import './UserInformation.css';
  * @param {string} [props.value]
  */
 function UserInformationField({ label, value }) {
+  const [isEditing, setIsEditing] = useState(false);
   return (
-    <SimpleInputField
-      label={label}
-      input={<input readOnly value={value} placeholder='N/A' />}
-    />
+    <div className='user-information__field'>
+      <SimpleInputField
+        label={label}
+        input={<input readOnly={!isEditing} value={value} placeholder='N/A' />}
+      />
+      <div className='user-information__button-group'>
+        {isEditing ? (
+          <>
+            <Button
+              label='Cancel'
+              buttonType='default'
+              onClick={() => setIsEditing(false)}
+            />
+            <Button
+              label='Submit'
+              buttonType='primary'
+              onClick={() => setIsEditing(false)}
+            />
+          </>
+        ) : (
+          <Button
+            label='Edit'
+            buttonType='default'
+            onClick={() => setIsEditing(true)}
+          />
+        )}
+      </div>
+    </div>
   );
 }
 

@@ -1,20 +1,40 @@
 .user-information__container {
-  max-width: 480px;
   margin-bottom: 4rem;
 }
 
-.user-information__container .simple-input-field__container {
-  justify-content: flex-start;
+.user-information__field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-.user-information__container .simple-input-field__container:first-of-type {
-  margin-top: 0.5rem;
+.user-information__field .simple-input-field__container {
+  margin: 0.5rem 1rem;
+  width: 480px;
 }
 
-.user-information__container .simple-input-field__label {
+@media screen and (max-width: 820px) {
+  .user-information__field .simple-input-field__container {
+    min-width: 240px;
+  }
+}
+
+.user-information__field .simple-input-field__label {
   width: 20%;
 }
 
-.user-information__container .simple-input-field__input {
+.user-information__field .simple-input-field__input {
   width: 80%;
+}
+
+@media screen and (max-width: 820px) {
+  .user-information__field .user-information__button-group {
+    display: none;
+  }
+}
+
+.user-information__button-group > button {
+  min-width: 88px;
+  height: 36px;
+  margin: auto 0.5rem;
 }
