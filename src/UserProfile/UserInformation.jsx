@@ -32,8 +32,8 @@ function UserInformationField({
     setInputValue(value);
   }
   function handleSubmit() {
-    onSubmit({ [name]: inputValue }).then((state) => {
-      if (state === 'error') setInputValue(value);
+    onSubmit({ [name]: inputValue }).then((status) => {
+      if (status === 'error') setInputValue(value);
       setIsEditing(false);
     });
   }
