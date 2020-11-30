@@ -5,6 +5,20 @@ import './UserInformation.css';
 
 /**
  * @param {Object} props
+ * @param {string} props.label
+ * @param {string} [props.value]
+ */
+function UserInformationField({ label, value }) {
+  return (
+    <SimpleInputField
+      label={label}
+      input={<input readOnly value={value} placeholder='N/A' />}
+    />
+  );
+}
+
+/**
+ * @param {Object} props
  * @param {string} props.email
  * @param {string} [props.firstName]
  * @param {string} [props.lastName]
@@ -14,21 +28,12 @@ function UserInformation({ email, firstName, lastName, institution }) {
   return (
     <div className='user-information__container'>
       <h2>Your information</h2>
-      <SimpleInputField
-        label='Email:'
-        input={<input readOnly value={email} />}
-      />
-      <SimpleInputField
-        label='First name:'
-        input={<input readOnly value={firstName || 'N/A'} />}
-      />
-      <SimpleInputField
-        label='Last name:'
-        input={<input readOnly value={lastName || 'N/A'} />}
-      />
-      <SimpleInputField
+      <UserInformationField label='Email:' value={email} />
+      <UserInformationField label='First name:' value={firstName} />
+      <UserInformationField label='Last name:' value={lastName} />
+      <UserInformationField
         label='Institutional affiliation:'
-        input={<input readOnly value={institution || 'N/A'} />}
+        value={institution}
       />
     </div>
   );
