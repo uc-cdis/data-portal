@@ -72,6 +72,7 @@ function UserInformationField({
               <Button
                 label='Submit'
                 buttonType='primary'
+                enabled={value !== inputValue}
                 onClick={handleSubmit}
               />
             </>
