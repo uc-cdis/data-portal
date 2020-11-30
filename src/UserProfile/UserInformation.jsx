@@ -7,10 +7,11 @@ import './UserInformation.css';
 /**
  * @param {Object} props
  * @param {string} props.label
+ * @param {string} props.name
  * @param {string} [props.value]
  * @param {boolean} [props.isEditable]
  */
-function UserInformationField({ label, value = '', isEditable }) {
+function UserInformationField({ label, name, value = '', isEditable }) {
   const inputEl = useRef(null);
   const [inputValue, setInputValue] = useState(value);
   const [isEditing, setIsEditing] = useState(false);
@@ -38,6 +39,7 @@ function UserInformationField({ label, value = '', isEditable }) {
           <input
             ref={inputEl}
             readOnly={!isEditing}
+            name={name}
             value={inputValue}
             onChange={handleChange}
             placeholder='N/A'
@@ -79,11 +81,22 @@ function UserInformation({ email, firstName, lastName, institution }) {
   return (
     <div className='user-information__container'>
       <h2>Your information</h2>
-      <UserInformationField label='Email' value={email} />
-      <UserInformationField label='First name' value={firstName} isEditable />
-      <UserInformationField label='Last name' value={lastName} isEditable />
+      <UserInformationField label='Email' name='email' value={email} />
+      <UserInformationField
+        label='First name'
+        name='firstName'
+        value={firstName}
+        isEditable
+      />
+      <UserInformationField
+        label='Last name'
+        name='lastName'
+        value={lastName}
+        isEditable
+      />
       <UserInformationField
         label='Institutional affiliation'
+        name='institution'
         value={institution}
         isEditable
       />
