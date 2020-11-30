@@ -14,6 +14,9 @@ class PlotChartAxisTick extends React.Component {
   render() {
     // type is one of ['date', 'string', 'number']
     const { x, y, payload, axis, type } = this.props;
+    if (!x || !y || !payload) {
+      return null;
+    }
 
     let formattedValue = payload.value;
     if (type === 'date') {
@@ -47,11 +50,17 @@ class PlotChartAxisTick extends React.Component {
 }
 
 PlotChartAxisTick.propTypes = {
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
-  payload: PropTypes.object.isRequired,
+  x: PropTypes.number,
+  y: PropTypes.number,
+  payload: PropTypes.object,
   axis: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+};
+
+PlotChartAxisTick.defaultProps = {
+  x: undefined,
+  y: undefined,
+  payload: undefined,
 };
 
 function getDates(startDate, endDate, days) {
@@ -122,8 +131,9 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
     const fields = [this.props.guppyConfig.xAxisProp, this.props.guppyConfig.yAxisProp];
     downloadFromGuppy(this.props.guppyConfig.dataType, filter, fields)
       .then((res) => {
-        if (res.data && res.data.error) {
-          console.error(`Guppy error while fetching chart data: ${res.data.error}`); // eslint-disable-line no-console
+        if (res.status !== 200 || (res.data && res.data.error)) {
+          const msg = `Guppy error while fetching chart data, status ${res.status}${res.data && res.data.error ? `: ${res.data.error}` : ''}`;
+          console.error(msg); // eslint-disable-line no-console
         } else {
           this.setState({ guppyData: res.data });
         }

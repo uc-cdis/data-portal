@@ -59,6 +59,7 @@ class StudyViewer extends React.Component {
 
     const studyViewerConfig = fetchStudyViewerConfig(this.state.dataType);
     const datasets = this.props.datasets;
+    const order = studyViewerConfig.defaultOrderBy;
     if (datasets.length === 0) {
       return (
         <div className='study-viewer'>
@@ -68,14 +69,42 @@ class StudyViewer extends React.Component {
         </div>
       );
     }
+
+    // handle openFirstRowAccessor
     if (datasets.length > 0
       && studyViewerConfig.openMode === 'open-first'
-      && studyViewerConfig.openFirstRowAccessor !== '') {
+      && studyViewerConfig.openFirstRowAccessor !== ''
+      && !order // defaultOrderBy overrides openFirstRowAccessor
+    ) {
       datasets.forEach((item, i) => {
         if (item.rowAccessorValue === studyViewerConfig.openFirstRowAccessor) {
           datasets.splice(i, 1);
           datasets.unshift(item);
         }
+      });
+    }
+
+    // sort items - order = [<field name>, <"asc" (default) or "desc">]
+    if (order) {
+      const field = order[0];
+      const desc = (order.length > 1 && order[1] === 'desc') || false;
+      datasets.sort((a, b) => {
+        // find the field...
+        let aVal = a[field]; // eg 'title', 'rowAccessorValue'...
+        let bVal = b[field];
+        if (!aVal || !bVal) {
+          // eg a field from blockFields or tableFields
+          Object.entries(a).forEach(([key, value]) => {
+            if (value && value[field]) {
+              aVal = value[field];
+              bVal = b[key][field];
+            }
+          });
+        }
+        if (desc) {
+          return (bVal > aVal) ? 1 : -1;
+        }
+        return (aVal > bVal) ? 1 : -1; // asc by default
       });
     }
 

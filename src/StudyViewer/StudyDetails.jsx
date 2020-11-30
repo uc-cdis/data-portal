@@ -34,6 +34,7 @@ class StudyDetails extends React.Component {
     // track if there is at least 1 displayed request_access button:
     this.requestAccessButtonVisible = false;
     this.state = {
+      accessRequested: props.data.accessRequested,
       downloadModalVisible: false,
       redirectModalVisible: false,
       redirectUrl: undefined,
@@ -64,7 +65,7 @@ class StudyDetails extends React.Component {
         // button. if there are more than 1 with different configs, TODO fix
         const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find(e => e.type === 'request_access');
 
-        if (!this.props.data.accessRequested) {
+        if (!this.state.accessRequested) {
           const body = {
             username: this.props.user.username,
             resource_path: this.props.data.accessibleValidationValue,
@@ -85,9 +86,14 @@ class StudyDetails extends React.Component {
                     redirectModalVisible: true,
                   });
                 }
+              } else if (status === 409) {
+                // the request status was updated between the page
+                // loading and the user clicking the button. assume
+                // the user already requested access; disable button
+                this.setState({ accessRequested: true });
               } else {
                 message
-                  .error(`Something went wrong when talking to Requestor service, status ${status}`, 3);
+                  .error(`Something went wrong while creating an access request (status: ${status}). Please try again later`, 5);
               }
             },
           );
@@ -109,6 +115,17 @@ class StudyDetails extends React.Component {
 
     let button;
 
+    const enableButton = buttonConfig.enableButtonField
+      && this.props.data.displayButtonsData[buttonConfig.enableButtonField] ?
+      this.props.data.displayButtonsData[buttonConfig.enableButtonField] === 'true'
+      : true;
+    let tooltipEnabled = false;
+    let tooltipText = '';
+    if (!enableButton && buttonConfig.disableButtonTooltipText) {
+      tooltipEnabled = true;
+      tooltipText = buttonConfig.disableButtonTooltipText;
+    }
+
     if (buttonConfig.type === 'download') {
       // 'Download' button
       const displayDownloadButton = userHasLoggedIn
@@ -120,6 +137,9 @@ class StudyDetails extends React.Component {
         label={'Download'}
         buttonType='primary'
         onClick={this.showDownloadModal}
+        enabled={enableButton}
+        tooltipEnabled={tooltipEnabled}
+        tooltipText={tooltipText}
       />) : null;
     } else if (buttonConfig.type === 'request_access') {
       // 'Request Access' and 'Login to Request Access' buttons
@@ -127,9 +147,8 @@ class StudyDetails extends React.Component {
         this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
       };
       let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
-      let tooltipEnabled = false;
-      let tooltipText = '';
-      if (this.props.data.accessRequested) {
+      if (enableButton && this.state.accessRequested) {
+        // the button is disabled because the user has already requested access
         requestAccessText = (buttonConfig.accessRequestedText) ? buttonConfig.accessRequestedText : 'Access Requested';
         if (buttonConfig.accessRequestedTooltipText) {
           tooltipEnabled = true;
@@ -145,7 +164,7 @@ class StudyDetails extends React.Component {
         label={requestAccessText}
         buttonType='primary'
         onClick={onRequestAccess}
-        enabled={!this.props.data.accessRequested}
+        enabled={enableButton && !this.state.accessRequested}
         tooltipEnabled={tooltipEnabled}
         tooltipText={tooltipText}
       />) : null;
@@ -253,7 +272,7 @@ class StudyDetails extends React.Component {
                />,
              ]}
            >
-             <p>You will now be sent to <a href={this.state.redirectUrl}>{requestAccessConfig.redirectModalText || this.state.redirectUrl}.</a></p>
+             <p>You will now be sent to <a href={this.state.redirectUrl}>{requestAccessConfig.redirectModalText || this.state.redirectUrl}</a>.</p>
            </Modal>
            <Modal
              title='Download Files'
@@ -284,7 +303,7 @@ class StudyDetails extends React.Component {
                }}
              />
            </Modal>
-           {this.requestAccessButtonVisible && !userHasLoggedIn && !this.props.data.accessRequested ?
+           {this.requestAccessButtonVisible && !userHasLoggedIn && !this.state.accessRequested ?
              <Alert
                message='Please note that researchers are required to log in before requesting access.'
                type='info'
@@ -369,6 +388,7 @@ StudyDetails.propTypes = {
     rowAccessorValue: PropTypes.string.isRequired,
     blockData: PropTypes.object,
     tableData: PropTypes.object,
+    displayButtonsData: PropTypes.object,
     accessibleValidationValue: PropTypes.string,
   }).isRequired,
   fileData: PropTypes.arrayOf(

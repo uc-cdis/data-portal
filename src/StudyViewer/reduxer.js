@@ -109,7 +109,7 @@ const fetchRequestedAccess = (receivedData) => {
   );
 };
 
-const processDataset = (nameOfIndex, receivedData, itemConfig) => {
+const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFields) => {
   const targetStudyViewerConfig = fetchStudyViewerConfig(nameOfIndex);
   const processedDataset = [];
   if (receivedData) {
@@ -121,6 +121,7 @@ const processDataset = (nameOfIndex, receivedData, itemConfig) => {
           processedItem.rowAccessorValue = dataElement[targetStudyViewerConfig.rowAccessor];
           processedItem.blockData = _.pick(dataElement, itemConfig.blockFields);
           processedItem.tableData = _.pick(dataElement, itemConfig.tableFields);
+          processedItem.displayButtonsData = _.pick(dataElement, displayButtonsFields);
           processedItem.accessibleValidationValue = dataElement.auth_resource_path;
           processedItem.accessRequested = !!(requestedAccess
           && requestedAccess[dataElement.auth_resource_path]);
@@ -156,9 +157,14 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
   fieldsToFetch.push('auth_resource_path');
   fieldsToFetch.push(targetStudyViewerConfig.titleField);
   fieldsToFetch.push(targetStudyViewerConfig.rowAccessor);
-  fieldsToFetch = [...fieldsToFetch,
+  const displayButtonsFields = targetStudyViewerConfig.buttons ?
+    targetStudyViewerConfig.buttons.map(b => b.enableButtonField) : [];
+  fieldsToFetch = [
+    ...fieldsToFetch,
     ...itemConfig.blockFields,
-    ...itemConfig.tableFields];
+    ...itemConfig.tableFields,
+    ...displayButtonsFields,
+  ];
   fieldsToFetch = _.uniq(fieldsToFetch);
 
   const body = generateGQLQuery(
@@ -166,6 +172,7 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
     fieldsToFetch,
     targetStudyViewerConfig.rowAccessor,
     rowAccessorValue);
+
   return dispatch =>
     fetchWithCreds({
       path: guppyGraphQLUrl,
@@ -181,7 +188,9 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
               return processDataset(
                 dataType,
                 data.data[dataType],
-                itemConfig).then(pd => ({
+                itemConfig,
+                displayButtonsFields,
+              ).then(pd => ({
                 type: 'RECEIVE_SINGLE_STUDY_DATASET',
                 datasets: pd,
               })).then(msg => msg);
@@ -189,7 +198,9 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
             return processDataset(
               dataType,
               data.data[dataType],
-              itemConfig).then(pd => ({
+              itemConfig,
+              displayButtonsFields,
+            ).then(pd => ({
               type: 'RECEIVE_STUDY_DATASET_LIST',
               datasets: pd,
             })).then(msg => msg);

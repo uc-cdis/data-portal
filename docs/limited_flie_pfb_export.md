@@ -6,7 +6,7 @@ Limited File PFB export adds a limited ability to export PFBs of data files from
 - Link to manual test plan: https://github.com/uc-cdis/gen3-qa/pull/454
 
 ### How to deploy
-- Limited File PFB Export requires Pelican >= 0.5.0, Tube >= 0.4.1
+- Limited File PFB Export requires Pelican >= 0.5.1 / 2020.10, Tube >= 0.4.2 / 2020.10
 - Limited File PFB Export is enabled by setting `fileExplorerConfig.enableLimitedFilePFBExport: { sourceNodeField: "source_node" }` and by adding buttons of buttonType `export-files` (Export to Terra), `export-files-to-pfb` (Download PFB), or `export-files-to-seven-bridges` (Export to Seven Bridges) to `fileExplorerConfig.buttons`. Example:
 ```
   "fileExplorerConfig": {
@@ -50,7 +50,7 @@ Limited File PFB export adds a limited ability to export PFBs of data files from
       "action": "export-files",
       "container": {
         "name": "job-task",
-        "image": "quay.io/cdis/pelican-export:0.5.0",
+        "image": "quay.io/cdis/pelican-export:0.5.1",
         "pull_policy": "Always",
         "env": [
           {

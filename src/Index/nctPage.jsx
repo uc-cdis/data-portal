@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import { Carousel } from 'antd';
-import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntroduction } from './reduxer';
-import dictIcons from '../img/icons';
+import { ReduxIndexBarChart } from './reduxer';
 import { components } from '../params';
 import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
 import { breakpoints, customHomepageChartConfig, indexPublic, homepageChartNodes } from '../localconf';
+import IntroductionNIAID from '../components/IntroductionNIAID';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
 import './page.less';
 
@@ -78,10 +78,7 @@ class IndexPageComponent extends React.Component {
       <div className='index-page'>
         <div className='index-page__top'>
           <div className='index-page__introduction'>
-            <ReduxIntroduction data={components.index.introduction} dictIcons={dictIcons} />
-            <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
-              <ReduxIndexCounts />
-            </MediaQuery>
+            <IntroductionNIAID data={components.index.introduction} />
           </div>
           <div className='index-page__bar-chart'>
             <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
@@ -91,7 +88,6 @@ class IndexPageComponent extends React.Component {
             </MediaQuery>
           </div>
         </div>
-        <ReduxIndexButtonBar {...this.props} />
       </div>
     );
   }
@@ -101,6 +97,6 @@ IndexPageComponent.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-const IndexPage = IndexPageComponent;
+const NCTIndexPage = IndexPageComponent;
 
-export default IndexPage;
+export default NCTIndexPage;

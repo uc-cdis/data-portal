@@ -19,6 +19,33 @@ Example configuration:
             "blockFields": ["long_description"],
             // displayed in table:
             "tableFields": ["condition", ...],
+            // optional configs for side boxes, only for single study viewer
+            "sideBoxes": [
+                {
+                "title": "Test Box",
+                "items": [
+                    {
+                        "type": "pdf",
+                        "link": "https://aaa",
+                        "name": "This is a PDF file"
+                    },
+                    {
+                        "type": "file",
+                        "link": "https://bbb",
+                        "name": "This is a file"
+                    },
+                    {
+                        "type": "link",
+                        "link": "https://ccc",
+                        "name": "This is a link"
+                    },
+                    {
+                        "link": "https://ddd",
+                        "name": "This is a default type file"
+                    }
+                ]
+                }
+            ]
         },
         "fieldMapping": [...],
         "rowAccessor": "project_id", // rows unique ID
@@ -26,14 +53,23 @@ Example configuration:
         "docDataType": "openAccessFile", // ES index of the open access documents, optional
         "openMode": "open-first", // optional, configure how the study viewer list do with each collapsible card on initial loading, see details in notes
         "openFirstRowAccessor": "", // optional, only works if `openMode` is `open-first`
+        "defaultOrderBy": [<field name (eg "title", or from listItemConfig.blockFields/tableFields)>, <"asc" (default) or "desc">] // optional, overrides `openFirstRowAccessor`
         "buttons": [
             {
-                "type": "download",
-                "downloadField": "object_id", // GUID - Note: unused for now, hardcoded to "object_id" (TODO)
+                // configuration common to all buttons
+                "type": "",
                 "singleItemView": false, // whether to display this button in the single item view (default: true)
                 "listView": true, // whether to display this button in the list view (default: true)
+                "enableButtonField": "data_available_for_request", // optional, name of a boolean field. If the value is false for this row, the button will not be displayed
+                "disableButtonTooltipText": "Coming soon" // optional, tooltip text to display when the "enableButtonField" value is false
             },
             {
+                // configuration specific to the "Download" button
+                "type": "download",
+                "downloadField": "object_id" // GUID - Note: unused for now, hardcoded to "object_id" (TODO)
+            },
+            {
+                // configuration specific to the "Request Access" button
                 "type": "request_access",
                 "resourceDisplayNameField": "title",
                 "redirectModalText": "", // optional, link label for the URL in "You will now be sent to <URL>"
