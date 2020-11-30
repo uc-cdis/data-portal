@@ -52,6 +52,9 @@ function UserInformationField({
             readOnly={!isEditing}
             name={name}
             value={inputValue}
+            onClick={() => {
+              if (isEditable) handleEdit();
+            }}
             onChange={handleChange}
             placeholder='N/A'
           />
