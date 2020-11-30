@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
 import SimpleInputField from '../components/SimpleInputField';
@@ -11,12 +11,20 @@ import './UserInformation.css';
  * @param {boolean} [props.isEditable]
  */
 function UserInformationField({ label, value, isEditable }) {
+  const inputEl = useRef(null);
   const [isEditing, setIsEditing] = useState(false);
   return (
     <div className='user-information__field'>
       <SimpleInputField
         label={label}
-        input={<input readOnly={!isEditing} value={value} placeholder='N/A' />}
+        input={
+          <input
+            ref={inputEl}
+            readOnly={!isEditing}
+            value={value}
+            placeholder='N/A'
+          />
+        }
       />
       {isEditable && (
         <div className='user-information__button-group'>
@@ -37,7 +45,10 @@ function UserInformationField({ label, value, isEditable }) {
             <Button
               label='Edit'
               buttonType='default'
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                setIsEditing(true);
+                inputEl.current.focus();
+              }}
             />
           )}
         </div>
