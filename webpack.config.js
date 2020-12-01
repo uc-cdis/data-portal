@@ -27,7 +27,6 @@ const connectSrcURLs = [];
 if (DAPTrackingURL) {
   scriptSrcURLs.push(DAPTrackingURL);
   connectSrcURLs.push(DAPTrackingURL);
-  connectSrcURLs.push('https://www.google-analytics.com');
 }
 const iFrameApplicationURLs = [];
 if (configFile && configFile.analysisTools) {
