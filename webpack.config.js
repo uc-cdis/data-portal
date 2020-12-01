@@ -21,12 +21,12 @@ const title = {
 const configFileName = (app === 'dev') ? 'default' : app;
 // eslint-disable-next-line import/no-dynamic-require
 const configFile = require(`./data/config/${configFileName}.json`);
-const injectDAPTag = !!configFile.injectDAPTag;
+const DAPTrackingURL = configFile.DAPTrackingURL;
 const scriptSrcURLs = [];
 const connectSrcURLs = [];
-if (injectDAPTag) {
-  scriptSrcURLs.push('https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIH&subagency=NIAID');
-  connectSrcURLs.push('https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIH&subagency=NIAID');
+if (DAPTrackingURL) {
+  scriptSrcURLs.push(DAPTrackingURL);
+  connectSrcURLs.push(DAPTrackingURL);
   connectSrcURLs.push('https://www.google-analytics.com');
 }
 const iFrameApplicationURLs = [];
@@ -96,12 +96,9 @@ const plugins = [
           rv[(new URL(url)).origin] = true;
         });
       }
-      if (Object.keys(rv).length > 0) {
-        return Object.keys(rv).join(' ');
-      }
-      return '';
+      return Object.keys(rv).join(' ');
     })(),
-    dap_tag: injectDAPTag,
+    dap_tag: !!DAPTrackingURL,
     script_src: (function () {
       const rv = {};
       if (scriptSrcURLs.length > 0) {
@@ -109,10 +106,7 @@ const plugins = [
           rv[(new URL(url)).origin] = true;
         });
       }
-      if (Object.keys(rv).length > 0) {
-        return Object.keys(rv).join(' ');
-      }
-      return '';
+      return Object.keys(rv).join(' ');
     })(),
     hash: true,
     chunks: ['vendors~bundle', 'bundle'],

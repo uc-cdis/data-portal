@@ -106,7 +106,7 @@ function buildConfig(opts) {
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
   const requestorPath = typeof requestorURL === 'undefined' ? `${hostname}requestor/` : ensureTrailingSlash(requestorURL);
   const auspiceUrl = `${protocol}//auspice.${hostnameOnly}/covid19`;
-  const injectDAPTag = !!config.injectDAPTag;
+  const enableDAPTracker = !!config.DAPTrackingURL;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -397,7 +397,7 @@ function buildConfig(opts) {
     mapboxAPIToken,
     auspiceUrl,
     workspacePageDescription,
-    injectDAPTag,
+    enableDAPTracker,
   };
 }
 

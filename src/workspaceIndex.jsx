@@ -22,9 +22,10 @@ import theme from './theme';
 import getReduxStore from './reduxStore';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
-import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl } from './localconf';
+import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, enableDAPTracker } from './localconf';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
+import { DAPRouteTracker } from './components/DAPAnalytics';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
@@ -61,6 +62,7 @@ async function init() {
           <BrowserRouter basename={basename}>
             <div>
               {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+              {enableDAPTracker && <DAPRouteTracker />}
               {isEnabled('noIndex') ?
                 <Helmet>
                   <meta name='robots' content='noindex,nofollow' />

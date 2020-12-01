@@ -34,7 +34,7 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
-  indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, injectDAPTag,
+  indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
@@ -95,7 +95,7 @@ async function init() {
           <BrowserRouter basename={basename}>
             <div className='main-page'>
               {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
-              {injectDAPTag && <DAPRouteTracker />}
+              {enableDAPTracker && <DAPRouteTracker />}
               {isEnabled('noIndex') ?
                 <Helmet>
                   <meta name='robots' content='noindex,nofollow' />
