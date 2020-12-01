@@ -16,6 +16,7 @@ class AnalysisApp extends React.Component {
       loaded: false,
       app: null,
       results: null,
+      analysisIsFullscreen: false,
     };
   }
 
@@ -110,12 +111,28 @@ class AnalysisApp extends React.Component {
     });
   }
 
+  handleFullscreenButtonClick = () => {
+    this.setState({
+      analysisIsFullscreen: !this.state.analysisIsFullscreen,
+    });
+  }
+
   render() {
     const { job, params } = this.props;
     const { loaded, app, results } = this.state;
     if (!app) {
       return <Spin size='large' tip='Loading App...' />;
     }
+
+    const fullscreenButton = (
+      <Button
+        className='analysis-app__button'
+        onClick={this.handleFullscreenButtonClick}
+        label={this.state.analysisIsFullscreen ? 'Exit Fullscreen' : 'Make Fullscreen'}
+        buttonType='secondary'
+        rightIcon={this.state.analysisIsFullscreen ? 'back' : 'external-link'}
+      />
+    );
     const appContent = this.getAppContent(decodeURIComponent(params.app));
     let showJobStatus = false;
     if (!app.applicationUrl) {
@@ -130,8 +147,13 @@ class AnalysisApp extends React.Component {
             <div className='analysis-app'>
               <h2 className='analysis-app__title'>{app.title}</h2>
               <p className='analysis-app__description'>{app.description}</p>
-              <div className='analysis-app__actions'>
-                { appContent }
+              <div className={`${this.state.analysisIsFullscreen ? 'analysis-app__fullscreen' : ''}`}>
+                <div className='analysis-app__actions'>
+                  { appContent }
+                </div>
+                <div className='analysis-app__buttongroup'>
+                  { fullscreenButton }
+                </div>
               </div>
               {(showJobStatus) ?
                 <div className='analysis-app__job-status'>
