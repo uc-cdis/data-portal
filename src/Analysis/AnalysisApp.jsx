@@ -17,6 +17,7 @@ class AnalysisApp extends React.Component {
       app: null,
       results: null,
       analysisIsFullscreen: false,
+      isIframeApp: false,
     };
   }
 
@@ -70,6 +71,7 @@ class AnalysisApp extends React.Component {
         </React.Fragment>
       );
     default:
+      this.isIframeApp = true;
       return (
         <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
@@ -151,9 +153,11 @@ class AnalysisApp extends React.Component {
                 <div className='analysis-app__actions'>
                   { appContent }
                 </div>
-                <div className='analysis-app__buttongroup'>
-                  { fullscreenButton }
-                </div>
+                { this.isIframeApp ?
+                  <div className='analysis-app__buttongroup'>
+                    {fullscreenButton}
+                  </div> : null
+                }
               </div>
               {(showJobStatus) ?
                 <div className='analysis-app__job-status'>
