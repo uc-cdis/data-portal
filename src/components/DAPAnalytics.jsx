@@ -8,11 +8,10 @@ const scriptExists = url => document.querySelectorAll(`script[src="${url}"]`).le
 
 const logPageChange = (pathname, search = '') => {
   const page = pathname + search;
-  const { location } = window;
   // check if DAP script has been loaded
   if (scriptExists('https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIH&subagency=NIAID')) {
     // apply virtual pageview using DAP function
-    window.gas('send', 'pageview', `${location.origin}${page}`);
+    window.gas('send', 'pageview', `${page}`);
   }
 };
 
