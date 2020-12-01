@@ -11,7 +11,7 @@ const logPageChange = (pathname, search = '') => {
   // check if DAP script has been loaded
   if (scriptExists('https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIH&subagency=NIAID')) {
     // apply virtual pageview using DAP function
-    window.gas('send', 'pageview', `${page}`);
+    window.gas('send', 'pageview', page);
   }
 };
 
