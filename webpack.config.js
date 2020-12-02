@@ -97,7 +97,7 @@ const plugins = [
       }
       return Object.keys(rv).join(' ');
     })(),
-    dap_tag: !!DAPTrackingURL,
+    dap_url: DAPTrackingURL,
     script_src: (function () {
       const rv = {};
       if (scriptSrcURLs.length > 0) {
