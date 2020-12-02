@@ -25,10 +25,15 @@ function IndexOverview({ overviewCounts }) {
         ? {}
         : { consortium: { selectedValues: [consortium.value] } };
 
+    const enabled =
+      overviewCounts !== undefined &&
+      overviewCounts[consortium.value].subject !== 0;
+
     return (
       <Button
         label='Explore more'
         buttonType='primary'
+        enabled={enabled}
         onClick={() =>
           history.push({
             pathname: '/explorer',
