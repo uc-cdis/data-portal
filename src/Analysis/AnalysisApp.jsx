@@ -71,7 +71,6 @@ class AnalysisApp extends React.Component {
         </React.Fragment>
       );
     default:
-      this.state.isIframeApp = true;
       return (
         <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
@@ -80,6 +79,7 @@ class AnalysisApp extends React.Component {
               title='Analysis App'
               frameBorder='0'
               src={`${this.state.app.applicationUrl}`}
+              onLoad={this.handleIframeApp}
             />
           </div>
         </React.Fragment>
@@ -116,6 +116,12 @@ class AnalysisApp extends React.Component {
   handleFullscreenButtonClick = () => {
     this.setState({
       analysisIsFullscreen: !this.state.analysisIsFullscreen,
+    });
+  }
+
+  handleIframeApp = () => {
+    this.setState({
+      isIframeApp: true,
     });
   }
 
