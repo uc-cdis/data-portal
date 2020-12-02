@@ -21,7 +21,7 @@ function IndexOverview({ overviewCounts }) {
   let history = useHistory();
   function ButtonToExplorer() {
     const filter =
-      consortium === 'total'
+      consortium.value === 'total'
         ? {}
         : { consortium: { selectedValues: [consortium.value] } };
 
