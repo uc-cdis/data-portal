@@ -73,7 +73,7 @@
     "redux-form": "^6.5.0",
     "redux-persist": "^4.7.1",
     "redux-thunk": "^2.2.0",
-    "relay-compiler": "^1.6.0",
+    "relay-compiler": "^8.0.0",
     "relay-runtime": "^1.6.0",
     "showdown": "^1.9.0",
     "slick-carousel": "^1.8.1",
