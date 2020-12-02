@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { getIndexPageCounts } from '../index/utils';
+import { getIndexPageCounts } from '../Index/utils';
 import UserRegistration from './UserRegistration';
 
 const mapStateToProps = (state) => ({
