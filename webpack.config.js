@@ -21,8 +21,14 @@ const title = {
 const configFileName = (app === 'dev') ? 'default' : app;
 // eslint-disable-next-line import/no-dynamic-require
 const configFile = require(`./data/config/${configFileName}.json`);
+const DAPTrackingURL = configFile.DAPTrackingURL;
+const scriptSrcURLs = [];
+const connectSrcURLs = [];
+if (DAPTrackingURL) {
+  scriptSrcURLs.push(DAPTrackingURL);
+  connectSrcURLs.push(DAPTrackingURL);
+}
 const iFrameApplicationURLs = [];
-const injectDAPTag = configFile.injectDAPTag;
 if (configFile && configFile.analysisTools) {
   configFile.analysisTools.forEach((e) => {
     if (e.applicationUrl) {
@@ -84,9 +90,23 @@ const plugins = [
           rv[(new URL(url)).origin] = true;
         });
       }
+      if (connectSrcURLs.length > 0) {
+        connectSrcURLs.forEach((url) => {
+          rv[(new URL(url)).origin] = true;
+        });
+      }
       return Object.keys(rv).join(' ');
     })(),
-    dap_tag: injectDAPTag,
+    dap_url: DAPTrackingURL,
+    script_src: (function () {
+      const rv = {};
+      if (scriptSrcURLs.length > 0) {
+        scriptSrcURLs.forEach((url) => {
+          rv[(new URL(url)).origin] = true;
+        });
+      }
+      return Object.keys(rv).join(' ');
+    })(),
     hash: true,
     chunks: ['vendors~bundle', 'bundle'],
   }),
