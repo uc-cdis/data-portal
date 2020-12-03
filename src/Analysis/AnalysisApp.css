@@ -1,10 +1,12 @@
 .analysis-app-wrapper {
   padding: 20px 20px;
+  background: inherit;
 }
 
 .analysis-app {
   display: flex;
   flex-flow: column;
+  background: inherit;
 }
 
 .analysis-app__title {
@@ -33,10 +35,34 @@
 
 .analysis-app__iframe-wrapper {
   width: 100%;
-  height: 80vh;
+  height: 90vh;
 }
 
 .analysis-app__iframe {
   width: 100%;
   height: 100%;
+}
+
+.analysis-app__button {
+  width: max-content;
+  margin: 20px auto;
+}
+
+.analysis-app__buttongroup {
+  height: 60px;
+  flex: 0 0 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.analysis-app__fullscreen {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  background: inherit;
 }
