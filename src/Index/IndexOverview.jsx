@@ -21,14 +21,19 @@ function IndexOverview({ overviewCounts }) {
   let history = useHistory();
   function ButtonToExplorer() {
     const filter =
-      consortium === 'total'
+      consortium.value === 'total'
         ? {}
         : { consortium: { selectedValues: [consortium.value] } };
+
+    const enabled =
+      overviewCounts !== undefined &&
+      overviewCounts[consortium.value].subject !== 0;
 
     return (
       <Button
         label='Explore more'
         buttonType='primary'
+        enabled={enabled}
         onClick={() =>
           history.push({
             pathname: '/explorer',
