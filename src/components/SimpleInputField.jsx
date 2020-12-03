@@ -18,7 +18,7 @@ function SimpleInputField({ label, input }) {
 
 SimpleInputField.propTypes = {
   label: PropTypes.string,
-  input: PropTypes.string,
+  input: PropTypes.object,
 };
 
 export default SimpleInputField;
