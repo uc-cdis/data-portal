@@ -13,7 +13,7 @@ import { capitalizeFirstLetter, humanFileSize } from '../utils';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI, requestorPath, userapiPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
-import './StudyViewer.less';
+import './StudyViewer.css';
 
 const { Paragraph } = Typography;
 

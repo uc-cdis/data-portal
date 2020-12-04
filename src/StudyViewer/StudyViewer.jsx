@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Space, Spin, Result } from 'antd';
 import getReduxStore from '../reduxStore';
 import { fetchDataset, fetchFiles, resetSingleStudyData, fetchStudyViewerConfig } from './reduxer';
-import './StudyViewer.less';
+import './StudyViewer.css';
 import StudyCard from './StudyCard';
 
 
