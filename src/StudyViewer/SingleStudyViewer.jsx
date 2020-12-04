@@ -7,7 +7,7 @@ import BackLink from '../components/BackLink';
 import { humanFileSize } from '../utils.js';
 import { ReduxStudyDetails, fetchDataset, fetchFiles, resetMultipleStudyData, fetchStudyViewerConfig } from './reduxer';
 import getReduxStore from '../reduxStore';
-import './StudyViewer.css';
+import './StudyViewer.less';
 
 const { Title } = Typography;
 

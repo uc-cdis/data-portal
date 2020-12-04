@@ -101,11 +101,14 @@ function buildConfig(opts) {
   const workspaceLaunchUrl = `${workspaceUrl}launch`;
   const datasetUrl = `${hostname}api/search/datasets`;
   const guppyUrl = `${hostname}guppy`;
-  const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
+  const guppyGraphQLUrl = `${guppyUrl}/graphql`;
   const guppyDownloadUrl = `${guppyUrl}/download`;
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
   const requestorPath = typeof requestorURL === 'undefined' ? `${hostname}requestor/` : ensureTrailingSlash(requestorURL);
   const auspiceUrl = `${protocol}//auspice.${hostnameOnly}/covid19`;
+  const workspaceStorageUrl = `${hostname}ws-storage`;
+  const workspaceStorageListUrl = `${workspaceStorageUrl}/list`;
+  const workspaceStorageDownloadUrl = `${workspaceStorageUrl}/download`;
   const enableDAPTracker = !!config.DAPTrackingURL;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
@@ -405,6 +408,9 @@ function buildConfig(opts) {
     auspiceUrl,
     workspacePageDescription,
     enableDAPTracker,
+    workspaceStorageUrl,
+    workspaceStorageListUrl,
+    workspaceStorageDownloadUrl,
   };
 }
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result } from 'antd';
+import PropTypes from 'prop-types';
+import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin } from 'antd';
 import { humanFileSize } from '../utils.js';
 import './VAGWASMockup.css';
 
@@ -22,71 +23,6 @@ const steps = [
   },
 ];
 
-const data = [
-  {
-    key: 'data1',
-    fileName: 'demo.variables.20201110.tsv',
-    fileSize: 298,
-    createDate: '2020-11-10',
-    fileData: [
-      {
-        FID: '1334',
-        IID: 'NA12144',
-        TCELL_FH: '0.089589121751',
-        Phenotype_1: '2',
-      },
-      {
-        FID: '1334',
-        IID: 'NA12145',
-        TCELL_FH: '0.801026947046',
-        Phenotype_1: '1',
-      },
-      {
-        FID: '1334',
-        IID: 'NA12146',
-        TCELL_FH: '0.813497757167',
-        Phenotype_1: '2',
-      },
-      {
-        FID: '1334',
-        IID: 'NA12239',
-        TCELL_FH: '0.101904839219',
-        Phenotype_1: '1',
-      },
-      {
-        FID: '1340',
-        IID: 'NA06994',
-        TCELL_FH: '0.667869278066',
-        Phenotype_1: '1',
-      },
-      {
-        FID: '1340',
-        IID: 'NA07000',
-        TCELL_FH: '0.255018302544',
-        Phenotype_1: '1',
-      },
-      {
-        FID: '1340',
-        IID: 'NA07022',
-        TCELL_FH: '0.774015640282',
-        Phenotype_1: '2',
-      },
-      {
-        FID: '1340',
-        IID: 'NA07056',
-        TCELL_FH: '0.479203782968',
-        Phenotype_1: '2',
-      },
-      {
-        FID: '1341',
-        IID: 'NA07034',
-        TCELL_FH: '0.270902090036',
-        Phenotype_1: '1',
-      },
-    ],
-  },
-];
-
 class VAGWASMockup extends React.Component {
   constructor(props) {
     super(props);
@@ -94,48 +30,51 @@ class VAGWASMockup extends React.Component {
       current: 0,
       showStep0Table: false,
       showPreviewModal: false,
-      previewModalData: undefined,
-      previewModalFileName: undefined,
-      step0SelectedData: undefined,
-      showStep1SelectionTable: false,
-      showStep1SpecifyTable: false,
-      step1SelectedData: undefined,
+      previewModalDataKey: undefined,
+      step0SelectedDataKey: undefined,
+      // showStep1SelectionTable: false,
+      // showStep1SpecifyTable: false,
+      // step1SelectedData: undefined,
       jobName: undefined,
       jobSubmitted: false,
     };
   }
 
+  componentDidMount() {
+    this.props.onLoadWorkspaceStorageFileList();
+  }
+
   mainTableRowSelection = {
     type: 'radio',
     onChange: (_, selectedRows) => {
-      if (this.state.current === 0) {
-        this.setState({
-          step0SelectedData: selectedRows,
-        });
-      } else if (this.state.current === 1) {
-        this.setState({
-          step1SelectedData: selectedRows,
-        });
-      }
+      // if (this.state.current === 0) {
+      this.setState({
+        step0SelectedDataKey: selectedRows[0].WorkspaceKey,
+      });
+      // } else if (this.state.current === 1) {
+      //   this.setState({
+      //     step1SelectedData: selectedRows[0].WorkspaceKey,
+      //   });
+      // }
     },
   };
 
   mainTableConfig = [
     {
       title: 'File Name',
-      dataIndex: 'fileName',
-      key: 'fileName',
+      dataIndex: 'WorkspaceKey',
+      key: 'WorkspaceKey',
     },
     {
       title: 'File Size',
-      dataIndex: 'fileSize',
-      key: 'fileSize',
+      dataIndex: 'SizeBytes',
+      key: 'SizeBytes',
       render: text => humanFileSize(text),
     },
     {
-      title: 'Create Date',
-      dataIndex: 'createDate',
-      key: 'createDate',
+      title: 'Last Modified Date',
+      dataIndex: 'LastModified',
+      key: 'LastModified',
     },
     {
       title: 'Action',
@@ -145,10 +84,12 @@ class VAGWASMockup extends React.Component {
           size='small'
           type='link'
           onClick={() => {
+            if (record.WorkspaceKey !== this.state.previewModalDataKey) {
+              this.props.onLoadWorkspaceStorageFile(record.WorkspaceKey);
+            }
             this.setState({
               showPreviewModal: true,
-              previewModalData: record.fileData.map((d, i) => ({ key: `dataIndex${i}`, ...d })),
-              previewModalFileName: record.fileName,
+              previewModalDataKey: record.WorkspaceKey,
             });
           }}
         >
@@ -162,13 +103,17 @@ class VAGWASMockup extends React.Component {
   handlePreviewModalCancel = () => {
     this.setState({
       showPreviewModal: false,
-      previewModalData: undefined,
-      previewModalFileName: undefined,
     });
   };
 
   next() {
     const current = this.state.current + 1;
+    if (current === 1) {
+      if (!this.props.wssFileData
+        || this.props.wssFileData.WorkspaceKey !== this.state.step0SelectedDataKey) {
+        this.props.onLoadWorkspaceStorageFile(this.state.step0SelectedDataKey);
+      }
+    }
     this.setState({
       current,
       showPreviewModal: (current === 0),
@@ -178,10 +123,10 @@ class VAGWASMockup extends React.Component {
 
   prev() {
     const current = this.state.current - 1;
-    const step0SelectedData = (current === 0) ? undefined : this.state.step0SelectedData;
+    const step0SelectedDataKey = (current === 0) ? undefined : this.state.step0SelectedDataKey;
     this.setState({
       current,
-      step0SelectedData,
+      step0SelectedDataKey,
     });
   }
 
@@ -189,12 +134,18 @@ class VAGWASMockup extends React.Component {
     switch (stepIndex) {
     case 0: {
       let modalTableColumnConfig;
-      if (this.state.previewModalData && this.state.previewModalData.length > 0) {
-        modalTableColumnConfig = Object.keys(this.state.previewModalData[0]).filter(element => element !== 'key').map(key => ({
+      if (this.props.wssFileData) {
+        modalTableColumnConfig = Object.keys(this.props.wssFileData[0]).filter(element => element !== 'key').map(key => ({
           title: key,
           dataIndex: key,
           key,
         }));
+      }
+      if (!this.props.wssFileObjects) {
+        return (
+          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+            <Spin size='large' tip='Loading data from workspace storage...' />
+          </Space>);
       }
       return (
         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
@@ -210,14 +161,14 @@ class VAGWASMockup extends React.Component {
               <Table
                 rowSelection={this.mainTableRowSelection}
                 columns={this.mainTableConfig}
-                dataSource={data}
+                dataSource={this.props.wssFileObjects}
               />
             </div>
             : null}
           <Modal
             visible={this.state.showPreviewModal}
             closable={false}
-            title={`Preview File Content: ${this.state.previewModalFileName}`}
+            title={`Preview File Content: ${this.state.previewModalDataKey}`}
             footer={[
               <Button key='close' onClick={this.handlePreviewModalCancel}>
               Close
@@ -225,29 +176,32 @@ class VAGWASMockup extends React.Component {
             ]}
           >
             {(modalTableColumnConfig) ?
-              <Table size={'small'} columns={modalTableColumnConfig} dataSource={this.state.previewModalData} /> : null}
+              <Table size={'small'} columns={modalTableColumnConfig} dataSource={this.props.wssFileData} /> :
+              (<Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                <Spin size='large' tip='Loading data from workspace storage...' />
+              </Space>)}
           </Modal>
         </Space>
       );
     }
     case 1: {
       let specifyDataCols;
-      if (this.state.step1SelectedData) {
-        specifyDataCols = Object.keys(this.state.step1SelectedData[0].fileData[0])
+      if (this.props.wssFileData) {
+        specifyDataCols = Object.keys(this.props.wssFileData[0])
           .filter(element => element !== 'IID' && element !== 'FID')
           .map(colKey => colKey);
       }
-      let modalTableColumnConfig;
-      if (this.state.previewModalData && this.state.previewModalData.length > 0) {
-        modalTableColumnConfig = Object.keys(this.state.previewModalData[0]).map(key => ({
-          title: key,
-          dataIndex: key,
-          key,
-        }));
-      }
+      // let modalTableColumnConfig;
+      // if (this.props.wssFileData) {
+      //   modalTableColumnConfig = Object.keys(this.props.wssFileData[0]).map(key => ({
+      //     title: key,
+      //     dataIndex: key,
+      //     key,
+      //   }));
+      // }
       return (
         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-          <Space>
+          {/* <Space>
             <Button
               onClick={() => {
                 this.setState({
@@ -263,27 +217,27 @@ class VAGWASMockup extends React.Component {
             <Button
               onClick={() => {
                 this.setState({
-                  step1SelectedData: this.state.step0SelectedData,
+                  step1SelectedData: this.state.step0SelectedDataKey,
                   showStep1SelectionTable: false,
                 });
               }}
             >
             Specify from File Selected in Previous Step
             </Button>
-          </Space>
-          {(this.state.showStep1SelectionTable) ?
+          </Space> */}
+          {/* {(this.state.showStep1SelectionTable) ?
             <div className='vaGWAS__mainTable'>
               <Table
                 rowSelection={this.mainTableRowSelection}
                 columns={this.mainTableConfig}
-                dataSource={data}
+                dataSource={this.props.wssFileObjects}
               />
             </div>
             : null}
           <Modal
             visible={this.state.showPreviewModal}
             closable={false}
-            title={`Preview File Content: ${this.state.previewModalFileName}`}
+            title={`Preview File Content: ${this.state.previewModalDataKey}`}
             footer={[
               <Button key='close' onClick={this.handlePreviewModalCancel}>
               Close
@@ -291,9 +245,9 @@ class VAGWASMockup extends React.Component {
             ]}
           >
             {(modalTableColumnConfig) ?
-              <Table size={'small'} columns={modalTableColumnConfig} dataSource={this.state.previewModalData} /> : null}
-          </Modal>
-          {(this.state.step1SelectedData && specifyDataCols) ?
+              <Table size={'small'} columns={modalTableColumnConfig} dataSource={this.props.wssFileData} /> : null}
+          </Modal> */}
+          {(this.props.wssFileData && specifyDataCols) ?
             <div className='vaGWAS__step1-specifyTable'>
               <Space className='vaGWAS__step1-specifyTable_innerSpace'>
                 <Space direction={'vertical'}>
@@ -405,12 +359,11 @@ class VAGWASMockup extends React.Component {
                       current: 0,
                       showStep0Table: false,
                       showPreviewModal: false,
-                      previewModalData: undefined,
-                      previewModalFileName: undefined,
-                      step0SelectedData: undefined,
-                      showStep1SelectionTable: false,
-                      showStep1SpecifyTable: false,
-                      step1SelectedData: undefined,
+                      previewModalDataKey: undefined,
+                      step0SelectedDataKey: undefined,
+                      // showStep1SelectionTable: false,
+                      // showStep1SpecifyTable: false,
+                      // step1SelectedData: undefined,
                       jobName: undefined,
                       jobSubmitted: false,
                     });
@@ -453,7 +406,7 @@ class VAGWASMockup extends React.Component {
 
   render() {
     const { current } = this.state;
-    const nextButtonEnabled = (current === 0 && this.state.step0SelectedData)
+    const nextButtonEnabled = (current === 0 && this.state.step0SelectedDataKey)
     || (current === 1 && this.state.step1SelectedData)
     || (current === 2);
 
@@ -486,5 +439,21 @@ class VAGWASMockup extends React.Component {
     );
   }
 }
+
+VAGWASMockup.propTypes = {
+  wssFileObjects: PropTypes.array,
+  wssFilePrefix: PropTypes.string,
+  wssListFileError: PropTypes.string,
+  wssFileData: PropTypes.array,
+  onLoadWorkspaceStorageFileList: PropTypes.func.isRequired,
+  onLoadWorkspaceStorageFile: PropTypes.func.isRequired,
+};
+
+VAGWASMockup.defaultProps = {
+  wssFileObjects: undefined,
+  wssFilePrefix: undefined,
+  wssFileData: undefined,
+  wssListFileError: undefined,
+};
 
 export default VAGWASMockup;

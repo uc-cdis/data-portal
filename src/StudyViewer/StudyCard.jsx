@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Card, Collapse } from 'antd';
 import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { ReduxStudyDetails } from './reduxer';
-import './StudyViewer.css';
+import './StudyViewer.less';
 
 const { Panel } = Collapse;
 
