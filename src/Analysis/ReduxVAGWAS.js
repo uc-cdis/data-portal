@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { workspaceStorageListUrl, workspaceStorageDownloadUrl } from '../localconf';
 import { fetchWithCreds } from '../actions';
-import VAGWASMockup from './VAGWASMockup';
+import VAGWAS from './VAGWAS';
 
 const papaparse = require('papaparse');
 
@@ -101,5 +101,5 @@ const mapDispatchToProps = dispatch => ({
   onLoadWorkspaceStorageFile: (workspaceKey => dispatch(fetchWorkspaceStorageFile(workspaceKey))),
 });
 
-const ReduxVAGWASMockup = connect(mapStateToProps, mapDispatchToProps)(VAGWASMockup);
-export default ReduxVAGWASMockup;
+const ReduxVAGWAS = connect(mapStateToProps, mapDispatchToProps)(VAGWAS);
+export default ReduxVAGWAS;

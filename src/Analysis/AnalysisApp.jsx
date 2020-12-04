@@ -5,7 +5,7 @@ import { Spin } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
-import ReduxVAGWASMockup from './ReduxVAGWASMockup';
+import ReduxVAGWAS from './ReduxVAGWAS';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 
@@ -71,10 +71,10 @@ class AnalysisApp extends React.Component {
           <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
         </React.Fragment>
       );
-    case 'vaGWASMockup':
+    case 'vaGWAS':
       return (
         <React.Fragment>
-          <ReduxVAGWASMockup />
+          <ReduxVAGWAS />
         </React.Fragment>
       );
     default:

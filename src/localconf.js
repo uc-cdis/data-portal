@@ -316,10 +316,10 @@ function buildConfig(opts) {
             ],
           };
           break;
-        case 'vaGWASMockup':
-          analysisApps.vaGWASMockup = {
-            title: 'VA GWAS Mockup',
-            description: 'Mockup for VA GWAS App',
+        case 'vaGWAS':
+          analysisApps.vaGWAS = {
+            title: 'VA GWAS',
+            description: 'VA GWAS App',
             image: '/src/img/analysis-icons/gwas.svg',
           };
           break;

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin } from 'antd';
 import { humanFileSize } from '../utils.js';
-import './VAGWASMockup.css';
+import './VAGWAS.css';
 
 const { Step } = Steps;
 const { Text } = Typography;
@@ -23,7 +23,7 @@ const steps = [
   },
 ];
 
-class VAGWASMockup extends React.Component {
+class VAGWAS extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -457,7 +457,7 @@ class VAGWASMockup extends React.Component {
   }
 }
 
-VAGWASMockup.propTypes = {
+VAGWAS.propTypes = {
   wssFileObjects: PropTypes.array,
   wssFilePrefix: PropTypes.string,
   wssListFileError: PropTypes.string,
@@ -469,11 +469,11 @@ VAGWASMockup.propTypes = {
   onLoadWorkspaceStorageFile: PropTypes.func.isRequired,
 };
 
-VAGWASMockup.defaultProps = {
+VAGWAS.defaultProps = {
   wssFileObjects: undefined,
   wssFilePrefix: undefined,
   wssFileData: undefined,
   wssListFileError: undefined,
 };
 
-export default VAGWASMockup;
+export default VAGWAS;
