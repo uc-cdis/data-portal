@@ -294,7 +294,8 @@ class MapDataModel extends React.Component {
                                 inputOnChange={e => this.selectRequiredField(e, prop)}
                                 iconSvg={CheckmarkIcon}
                                 shouldDisplayIcon={!!this.state.requiredFields[prop]}
-                              /> :
+                              />
+                              :
                               <InputWithIcon
                                 inputClassName='map-data-model__input introduction'
                                 inputValue={inputValue}
