@@ -200,7 +200,7 @@ class VAGWASMockup extends React.Component {
         && this.props.wssFileData.workspaceKey === this.state.selectedDataKey
         && this.props.wssFileData.fileData) {
         specifyDataCols = Object.keys(this.props.wssFileData.fileData[0])
-          .filter(element => element !== 'IID' && element !== 'FID')
+          .filter(element => element !== 'IID' && element !== 'FID' && element !== 'key')
           .map(colKey => colKey);
       } else {
         return (
