@@ -31,7 +31,7 @@ class VAGWASMockup extends React.Component {
       showStep0Table: false,
       showPreviewModal: false,
       previewModalDataKey: undefined,
-      step0SelectedDataKey: undefined,
+      selectedDataKey: undefined,
       // showStep1SelectionTable: false,
       // showStep1SpecifyTable: false,
       // step1SelectedData: undefined,
@@ -49,7 +49,7 @@ class VAGWASMockup extends React.Component {
     onChange: (_, selectedRows) => {
       // if (this.state.current === 0) {
       this.setState({
-        step0SelectedDataKey: selectedRows[0].WorkspaceKey,
+        selectedDataKey: selectedRows[0].WorkspaceKey,
       });
       // } else if (this.state.current === 1) {
       //   this.setState({
@@ -110,8 +110,8 @@ class VAGWASMockup extends React.Component {
     const current = this.state.current + 1;
     if (current === 1) {
       if (!this.props.wssFileData
-        || this.props.wssFileData.WorkspaceKey !== this.state.step0SelectedDataKey) {
-        this.props.onLoadWorkspaceStorageFile(this.state.step0SelectedDataKey);
+        || this.props.wssFileData.workspaceKey !== this.state.selectedDataKey) {
+        this.props.onLoadWorkspaceStorageFile(this.state.selectedDataKey);
       }
     }
     this.setState({
@@ -123,19 +123,29 @@ class VAGWASMockup extends React.Component {
 
   prev() {
     const current = this.state.current - 1;
-    const step0SelectedDataKey = (current === 0) ? undefined : this.state.step0SelectedDataKey;
+    const selectedDataKey = (current === 0) ? undefined : this.state.selectedDataKey;
     this.setState({
       current,
-      step0SelectedDataKey,
+      selectedDataKey,
     });
   }
 
   generateContentForStep = (stepIndex) => {
     switch (stepIndex) {
     case 0: {
+      if (this.props.wssListFileError) {
+        return (
+          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+            <Result
+              status='warning'
+              title={this.props.wssListFileError}
+            />
+          </Space>
+        );
+      }
       let modalTableColumnConfig;
-      if (this.props.wssFileData) {
-        modalTableColumnConfig = Object.keys(this.props.wssFileData[0]).filter(element => element !== 'key').map(key => ({
+      if (this.props.wssFileData && this.props.wssFileData.fileData) {
+        modalTableColumnConfig = Object.keys(this.props.wssFileData.fileData[0]).filter(element => element !== 'key').map(key => ({
           title: key,
           dataIndex: key,
           key,
@@ -176,7 +186,7 @@ class VAGWASMockup extends React.Component {
             ]}
           >
             {(modalTableColumnConfig) ?
-              <Table size={'small'} columns={modalTableColumnConfig} dataSource={this.props.wssFileData} /> :
+              <Table size={'small'} columns={modalTableColumnConfig} dataSource={this.props.wssFileData.fileData} /> :
               (<Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                 <Spin size='large' tip='Loading data from workspace storage...' />
               </Space>)}
@@ -186,10 +196,17 @@ class VAGWASMockup extends React.Component {
     }
     case 1: {
       let specifyDataCols;
-      if (this.props.wssFileData) {
-        specifyDataCols = Object.keys(this.props.wssFileData[0])
+      if (this.props.wssFileData
+        && this.props.wssFileData.workspaceKey === this.state.selectedDataKey
+        && this.props.wssFileData.fileData) {
+        specifyDataCols = Object.keys(this.props.wssFileData.fileData[0])
           .filter(element => element !== 'IID' && element !== 'FID')
           .map(colKey => colKey);
+      } else {
+        return (
+          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+            <Spin size='large' tip='Loading data from workspace storage...' />
+          </Space>);
       }
       // let modalTableColumnConfig;
       // if (this.props.wssFileData) {
@@ -199,6 +216,7 @@ class VAGWASMockup extends React.Component {
       //     key,
       //   }));
       // }
+      /* eslint-disable max-len */
       return (
         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
           {/* <Space>
@@ -217,7 +235,7 @@ class VAGWASMockup extends React.Component {
             <Button
               onClick={() => {
                 this.setState({
-                  step1SelectedData: this.state.step0SelectedDataKey,
+                  step1SelectedData: this.state.selectedDataKey,
                   showStep1SelectionTable: false,
                 });
               }}
@@ -247,7 +265,7 @@ class VAGWASMockup extends React.Component {
             {(modalTableColumnConfig) ?
               <Table size={'small'} columns={modalTableColumnConfig} dataSource={this.props.wssFileData} /> : null}
           </Modal> */}
-          {(this.props.wssFileData && specifyDataCols) ?
+          {(specifyDataCols) ?
             <div className='vaGWAS__step1-specifyTable'>
               <Space className='vaGWAS__step1-specifyTable_innerSpace'>
                 <Space direction={'vertical'}>
@@ -295,6 +313,7 @@ class VAGWASMockup extends React.Component {
             : null}
         </Space>
       );
+      /* eslint-enable max-len */
     }
     case 2: {
       return (
@@ -360,7 +379,7 @@ class VAGWASMockup extends React.Component {
                       showStep0Table: false,
                       showPreviewModal: false,
                       previewModalDataKey: undefined,
-                      step0SelectedDataKey: undefined,
+                      selectedDataKey: undefined,
                       // showStep1SelectionTable: false,
                       // showStep1SpecifyTable: false,
                       // step1SelectedData: undefined,
@@ -406,9 +425,7 @@ class VAGWASMockup extends React.Component {
 
   render() {
     const { current } = this.state;
-    const nextButtonEnabled = (current === 0 && this.state.step0SelectedDataKey)
-    || (current === 1 && this.state.step1SelectedData)
-    || (current === 2);
+    const nextButtonEnabled = current || this.state.selectedDataKey;
 
     return (
       <Space direction={'vertical'} style={{ width: '100%' }}>
@@ -444,7 +461,10 @@ VAGWASMockup.propTypes = {
   wssFileObjects: PropTypes.array,
   wssFilePrefix: PropTypes.string,
   wssListFileError: PropTypes.string,
-  wssFileData: PropTypes.array,
+  wssFileData: PropTypes.shape({
+    workspaceKey: PropTypes.string.isRequired,
+    fileData: PropTypes.array,
+  }),
   onLoadWorkspaceStorageFileList: PropTypes.func.isRequired,
   onLoadWorkspaceStorageFile: PropTypes.func.isRequired,
 };

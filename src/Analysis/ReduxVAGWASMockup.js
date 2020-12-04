@@ -64,7 +64,7 @@ const fetchWorkspaceStorageFile = workspaceKey => dispatch => fetchWithCreds({
             response.text().then((text) => {
               readTSV(text).then(parsedData => ({
                 type: 'RECEIVE_WSS_FILE',
-                wssFileData: parsedData,
+                wssFileData: { workspaceKey, fileData: parsedData },
               })).then(msg => dispatch(msg));
             });
             return null;
