@@ -144,7 +144,9 @@ class VAGWAS extends React.Component {
         );
       }
       let modalTableColumnConfig;
-      if (this.props.wssFileData && this.props.wssFileData.fileData) {
+      if (this.props.wssFileData
+        && this.props.wssFileData.fileData
+        && this.props.wssFileData.fileData.length > 0) {
         modalTableColumnConfig = Object.keys(this.props.wssFileData.fileData[0]).filter(element => element !== 'key').map(key => ({
           title: key,
           dataIndex: key,
@@ -198,7 +200,8 @@ class VAGWAS extends React.Component {
       let specifyDataCols;
       if (this.props.wssFileData
         && this.props.wssFileData.workspaceKey === this.state.selectedDataKey
-        && this.props.wssFileData.fileData) {
+        && this.props.wssFileData.fileData
+        && this.props.wssFileData.fileData.length > 0) {
         specifyDataCols = Object.keys(this.props.wssFileData.fileData[0])
           .filter(element => element !== 'IID' && element !== 'FID' && element !== 'key')
           .map(colKey => colKey);
