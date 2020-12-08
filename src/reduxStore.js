@@ -3,7 +3,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 
-import dict from './dictionary';
+import dictionary from './dictionary';
 import { mockStore, dev, requiredCerts } from './localconf';
 import reducers from './reducers';
 
@@ -19,6 +19,15 @@ const composeEnhancers =
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     : compose;
 const enhancer = composeEnhancers(applyMiddleware(thunk));
+
+let preloadedState = {};
+if (!dev) preloadedState = { user: {}, status: {} };
+else if (mockStore)
+  preloadedState = {
+    user: { username: 'test', certificates_uploaded: requiredCerts },
+    submission: { dictionary, nodeTypes: Object.keys(dictionary).slice(2) },
+    status: {},
+  };
 
 let store;
 let storePromise;
@@ -43,19 +52,6 @@ const getReduxStore = () => {
   }
   storePromise = new Promise((resolve, reject) => {
     try {
-      let preloadedState = {};
-
-      if (!dev) preloadedState = { user: {}, status: {} };
-      else if (mockStore)
-        preloadedState = {
-          user: { username: 'test', certificates_uploaded: requiredCerts },
-          submission: {
-            dictionary: dict,
-            nodeTypes: Object.keys(dict).slice(2),
-          },
-          status: {},
-        };
-
       store = createStore(reducer, preloadedState, enhancer);
       persistStore(store, null, () => resolve(store));
     } catch (e) {
