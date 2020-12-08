@@ -27,9 +27,9 @@ const ReduxDictionarySearcher = (() => {
     onStartSearching: () => dispatch(resetGraphHighlight()),
   });
 
-  return connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(
-    DictionarySearcher
-  );
+  return connect(mapStateToProps, mapDispatchToProps, null, {
+    forwardRef: true,
+  })(DictionarySearcher);
 })();
 
 export default ReduxDictionarySearcher;
