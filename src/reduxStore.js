@@ -29,37 +29,30 @@ const getReduxStore = () => {
   }
   storePromise = new Promise((resolve, reject) => {
     try {
-      if (dev === true) {
-        let data = {};
-        if (mockStore) {
-          data = {
-            user: { username: 'test', certificates_uploaded: requiredCerts },
-            submission: {
-              dictionary: dict,
-              nodeTypes: Object.keys(dict).slice(2),
-            },
-            status: {},
-          };
-        }
-        store = compose(
-          applyMiddleware(thunk), // routerMiddleware(browserHistory)),
-          autoRehydrate()
-        )(createStore)(
-          reducers,
-          data,
-          window.__REDUX_DEVTOOLS_EXTENSION__ &&
-            window.__REDUX_DEVTOOLS_EXTENSION__()
-        );
-      } else {
-        store = compose(
-          applyMiddleware(thunk), // routerMiddleware(browserHistory)),
-          autoRehydrate()
-        )(createStore)(reducers, { user: {}, status: {} }, autoRehydrate());
-      }
+      let data = {};
 
-      persistStore(store, { whitelist: ['certificate'] }, () => {
-        resolve(store);
-      });
+      if (!dev) data = { user: {}, status: {} };
+      else if (mockStore)
+        data = {
+          user: { username: 'test', certificates_uploaded: requiredCerts },
+          submission: {
+            dictionary: dict,
+            nodeTypes: Object.keys(dict).slice(2),
+          },
+          status: {},
+        };
+
+      const composeEnhancers =
+        typeof window !== 'undefined'
+          ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+          : compose;
+
+      store = createStore(
+        reducers,
+        data,
+        composeEnhancers(applyMiddleware(thunk), autoRehydrate())
+      );
+      persistStore(store, { whitelist: ['certificate'] }, () => resolve(store));
     } catch (e) {
       reject(e);
     }
