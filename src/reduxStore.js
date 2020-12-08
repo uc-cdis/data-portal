@@ -29,11 +29,11 @@ const getReduxStore = () => {
   }
   storePromise = new Promise((resolve, reject) => {
     try {
-      let data = {};
+      let preloadedState = {};
 
-      if (!dev) data = { user: {}, status: {} };
+      if (!dev) preloadedState = { user: {}, status: {} };
       else if (mockStore)
-        data = {
+        preloadedState = {
           user: { username: 'test', certificates_uploaded: requiredCerts },
           submission: {
             dictionary: dict,
@@ -49,7 +49,7 @@ const getReduxStore = () => {
 
       store = createStore(
         reducers,
-        data,
+        preloadedState,
         composeEnhancers(applyMiddleware(thunk), autoRehydrate())
       );
       persistStore(store, { whitelist: ['certificate'] }, () => resolve(store));
