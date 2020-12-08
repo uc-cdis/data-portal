@@ -50,7 +50,8 @@ const getReduxStore = () => {
         };
 
       const composeEnhancers =
-        typeof window !== 'undefined'
+        typeof window === 'object' &&
+        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
           ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
           : compose;
 
