@@ -12,10 +12,13 @@ const persistConfig = {
   storage,
   whitelist: ['certificate'],
 };
+const reducer = persistReducer(persistConfig, reducers);
+
 const composeEnhancers =
   typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     : compose;
+const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 let store;
 let storePromise;
@@ -53,11 +56,7 @@ const getReduxStore = () => {
           status: {},
         };
 
-      store = createStore(
-        persistReducer(persistConfig, reducers),
-        preloadedState,
-        composeEnhancers(applyMiddleware(thunk))
-      );
+      store = createStore(reducer, preloadedState, enhancer);
       persistStore(store, null, () => resolve(store));
     } catch (e) {
       reject(e);
