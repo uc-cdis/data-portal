@@ -1,10 +1,17 @@
-import { persistStore, autoRehydrate } from 'redux-persist';
 import { createStore, applyMiddleware, compose } from 'redux';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 
 import dict from './dictionary';
 import { mockStore, dev, requiredCerts } from './localconf';
 import reducers from './reducers';
+
+const persistConfig = {
+  key: 'primary',
+  storage,
+  whitelist: ['certificate'],
+};
 
 let store;
 let storePromise;
@@ -48,11 +55,11 @@ const getReduxStore = () => {
           : compose;
 
       store = createStore(
-        reducers,
+        persistReducer(persistConfig, reducers),
         preloadedState,
-        composeEnhancers(applyMiddleware(thunk), autoRehydrate())
+        composeEnhancers(applyMiddleware(thunk))
       );
-      persistStore(store, { whitelist: ['certificate'] }, () => resolve(store));
+      persistStore(store, null, () => resolve(store));
     } catch (e) {
       reject(e);
     }
