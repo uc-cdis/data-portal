@@ -23,7 +23,7 @@ let storePromise;
  * so it's handy to be able to access the store outside of
  * the normal react-redux 'connect' mechanism.
  *
- * @return Promise<Store>
+ * @return {Promise<any>} Promisified Redux store
  */
 const getReduxStore = () => {
   if (store) {
