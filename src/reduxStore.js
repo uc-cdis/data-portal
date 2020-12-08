@@ -12,6 +12,10 @@ const persistConfig = {
   storage,
   whitelist: ['certificate'],
 };
+const composeEnhancers =
+  typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    : compose;
 
 let store;
 let storePromise;
@@ -48,12 +52,6 @@ const getReduxStore = () => {
           },
           status: {},
         };
-
-      const composeEnhancers =
-        typeof window === 'object' &&
-        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-          ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-          : compose;
 
       store = createStore(
         persistReducer(persistConfig, reducers),
