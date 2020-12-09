@@ -98,6 +98,13 @@ function addDataToGeoJsonBase(data, dataLevel) {
   return geoJson;
 }
 
+function filterCountyGeoJson(selectedFips) {
+  return {
+    ...countyData,
+    features: countyData.features.filter(f => f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
+  };
+}
+
 class WorldMapChart extends React.Component {
   constructor(props) {
     super(props);
@@ -271,6 +278,7 @@ class WorldMapChart extends React.Component {
         'county',
       );
     }
+    const modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
 
     let colors;
     let dotSizes;
@@ -444,6 +452,21 @@ class WorldMapChart extends React.Component {
                   ...colorsAsList,
                 ],
                 'fill-opacity': 0.6,
+              }}
+              minzoom={countyZoomThreshold}
+            />
+          </ReactMapGL.Source>
+
+          {/* Outline a set of counties */}
+          <ReactMapGL.Source type='geojson' data={modeledCountyGeoJson}>
+            <ReactMapGL.Layer
+              id='county-outline'
+              layout={{ visibility: this.isVisible('confirmed-choropleth') }}
+              type='line'
+              beforeId='waterway-label'
+              paint={{
+                'line-color': '#421C52',
+                'line-width': 1.5,
               }}
               minzoom={countyZoomThreshold}
             />
