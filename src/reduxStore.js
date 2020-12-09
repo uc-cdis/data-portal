@@ -1,10 +1,32 @@
-import { persistStore, autoRehydrate } from 'redux-persist';
 import { createStore, applyMiddleware, compose } from 'redux';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 
-import dict from './dictionary';
-import { mockStore, dev, requiredCerts } from './localconf';
+import dictionary from './dictionary';
+import { mockStore, requiredCerts } from './localconf';
 import reducers from './reducers';
+
+const persistConfig = {
+  key: 'primary',
+  storage,
+  whitelist: ['certificate'],
+};
+const reducer = persistReducer(persistConfig, reducers);
+
+const preloadedState = mockStore
+  ? {
+      user: { username: 'test', certificates_uploaded: requiredCerts },
+      submission: { dictionary, nodeTypes: Object.keys(dictionary).slice(2) },
+      status: {},
+    }
+  : { user: {}, status: {} };
+
+const composeEnhancers =
+  typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    : compose;
+const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 let store;
 let storePromise;
@@ -16,7 +38,7 @@ let storePromise;
  * so it's handy to be able to access the store outside of
  * the normal react-redux 'connect' mechanism.
  *
- * @return Promise<Store>
+ * @return {Promise<any>} Promisified Redux store
  */
 const getReduxStore = () => {
   if (store) {
@@ -29,37 +51,8 @@ const getReduxStore = () => {
   }
   storePromise = new Promise((resolve, reject) => {
     try {
-      if (dev === true) {
-        let data = {};
-        if (mockStore) {
-          data = {
-            user: { username: 'test', certificates_uploaded: requiredCerts },
-            submission: {
-              dictionary: dict,
-              nodeTypes: Object.keys(dict).slice(2),
-            },
-            status: {},
-          };
-        }
-        store = compose(
-          applyMiddleware(thunk), // routerMiddleware(browserHistory)),
-          autoRehydrate()
-        )(createStore)(
-          reducers,
-          data,
-          window.__REDUX_DEVTOOLS_EXTENSION__ &&
-            window.__REDUX_DEVTOOLS_EXTENSION__()
-        );
-      } else {
-        store = compose(
-          applyMiddleware(thunk), // routerMiddleware(browserHistory)),
-          autoRehydrate()
-        )(createStore)(reducers, { user: {}, status: {} }, autoRehydrate());
-      }
-
-      persistStore(store, { whitelist: ['certificate'] }, () => {
-        resolve(store);
-      });
+      store = createStore(reducer, preloadedState, enhancer);
+      persistStore(store, null, () => resolve(store));
     } catch (e) {
       reject(e);
     }
