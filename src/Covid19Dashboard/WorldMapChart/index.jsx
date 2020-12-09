@@ -154,6 +154,9 @@ class WorldMapChart extends React.Component {
       hoverInfo = {
         lngLat: event.lngLat,
         locationName,
+        // density map data contains fips;
+        // choropleth map data contains FIPS.
+        FIPS: `${feature.properties.FIPS || feature.properties.fips}`,
         values: {
           'confirmed cases': numberWithCommas(confirmed),
           deaths: numberWithCommas(deaths),
@@ -183,7 +186,7 @@ class WorldMapChart extends React.Component {
 
       // density map data contains fips and iso3;
       // choropleth map data contains FIPS and iso_a3.
-      const fips = feature.properties.FIPS || feature.properties.fips;
+      const fips = `${feature.properties.FIPS || feature.properties.fips}`;
       const state = feature.properties.province_state;
       const iso3 = feature.properties.iso_a3 || feature.properties.iso3;
       const isUS = iso3 === 'USA' || feature.properties.country_region === 'US';
@@ -206,7 +209,8 @@ class WorldMapChart extends React.Component {
     });
 
     if (dataLevel) {
-      this.props.fetchTimeSeriesData(dataLevel, locationId, title);
+      const withSimulation = dataLevel === 'county' && this.props.modeledFipsList.includes(locationId);
+      this.props.fetchTimeSeriesData(dataLevel, locationId, title, withSimulation);
     }
   }
 
@@ -241,7 +245,9 @@ class WorldMapChart extends React.Component {
                 (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>,
               )
             }
-            <p className='covid19-dashboard__location-info__details'>Click for more details</p>
+            <p className='covid19-dashboard__location-info__click'>
+              Click for real time plotting {this.props.modeledFipsList.includes(hoverInfo.FIPS) ? '\nand simulations' : ''}
+            </p>
           </div>
         </ReactMapGL.Popup>
       );
@@ -451,6 +457,7 @@ class WorldMapChart extends React.Component {
 WorldMapChart.propTypes = {
   geoJson: PropTypes.object.isRequired,
   jsonByLevel: PropTypes.object.isRequired,
+  modeledFipsList: PropTypes.array.isRequired,
   fetchTimeSeriesData: PropTypes.func.isRequired,
 };
 
