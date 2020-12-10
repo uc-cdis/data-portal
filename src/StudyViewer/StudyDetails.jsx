@@ -252,7 +252,7 @@ class StudyDetails extends React.Component {
                ) : null
              }
            </Space>
-           <Modal
+           {(requestAccessConfig) ? (<Modal
              title='Request Access'
              visible={this.state.redirectModalVisible}
              closable={false}
@@ -273,7 +273,7 @@ class StudyDetails extends React.Component {
              ]}
            >
              <p>You will now be sent to <a href={this.state.redirectUrl}>{requestAccessConfig.redirectModalText || this.state.redirectUrl}</a>.</p>
-           </Modal>
+           </Modal>) : null}
            <Modal
              title='Download Files'
              visible={this.state.downloadModalVisible}
