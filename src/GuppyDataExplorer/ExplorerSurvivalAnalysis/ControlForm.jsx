@@ -108,9 +108,6 @@ const ControlForm = ({
     setIsFilterChanged(false);
     setShouldUpdateResults(false);
   };
-  useEffect(() => {
-    submitUserInput();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const resetUserInput = () => {
     if (factorVariable.value !== '' || stratificationVariable.value !== '')
