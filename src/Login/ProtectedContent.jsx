@@ -75,6 +75,8 @@ class ProtectedContent extends React.Component {
       from: null,
       user: null,
     };
+
+    this._isMounted = false;
   }
 
   /**
@@ -82,39 +84,49 @@ class ProtectedContent extends React.Component {
    * After mount, checks if the current session is authenticated
    */
   componentDidMount() {
+    this._isMounted = true;
     window.scrollTo(0, 0);
 
-    getReduxStore().then((store) =>
-      Promise.all([
-        store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
-        store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
-      ]).then(() => {
-        const { filter } = this.props;
+    if (this._isMounted)
+      getReduxStore().then((store) =>
+        Promise.all([
+          store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
+          store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
+        ]).then(() => {
+          const { filter } = this.props;
 
-        if (this.props.isPublic) {
-          const latestState = { ...store, dataLoaded: true };
+          if (this.props.isPublic) {
+            const latestState = { ...store, dataLoaded: true };
 
-          if (typeof filter === 'function') {
-            filter().finally(() => this.setState(latestState));
-          } else {
-            this.setState(latestState);
-          }
-        } else
-          this.checkLoginStatus(store, this.state)
-            .then((newState) => this.checkIfRegisterd(newState))
-            .then((newState) => this.checkIfAdmin(newState))
-            .then((newState) => this.checkQuizStatus(newState))
-            .then((newState) => {
-              const latestState = { ...newState, dataLoaded: true };
+            if (typeof filter === 'function') {
+              filter().finally(
+                () => this._isMounted && this.setState(latestState)
+              );
+            } else {
+              this._isMounted && this.setState(latestState);
+            }
+          } else
+            this.checkLoginStatus(store, this.state)
+              .then((newState) => this.checkIfRegisterd(newState))
+              .then((newState) => this.checkIfAdmin(newState))
+              .then((newState) => this.checkQuizStatus(newState))
+              .then((newState) => {
+                const latestState = { ...newState, dataLoaded: true };
 
-              if (newState.authenticated && typeof filter === 'function') {
-                filter().finally(() => this.setState(latestState));
-              } else {
-                this.setState(latestState);
-              }
-            });
-      })
-    );
+                if (newState.authenticated && typeof filter === 'function') {
+                  filter().finally(
+                    () => this._isMounted && this.setState(latestState)
+                  );
+                } else {
+                  this._isMounted && this.setState(latestState);
+                }
+              });
+        })
+      );
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   /**
