@@ -9,7 +9,8 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 import { intersection, isPageFullScreen } from '../utils';
 import './ProtectedContent.css';
 
-/** @typedef {Object} ComponentState
+/**
+ * @typedef {Object} ComponentState
  * @property {boolean} authenticated
  * @property {boolean} dataLoaded
  * @property {?string} redirectTo
@@ -37,13 +38,15 @@ export function logoutListener(state = {}, action) {
 /**
  * Container for components that require authentication to access.
  * Takes a few properties
- * @param component required child component
- * @param location from react-router
- * @param history from react-router
- * @param match from react-router.match
- * @param isAdminOnly default false - if true, redirect to index page
- * @param isPublic default false - set true to disable auth-guard
- * @param filter {() => Promise} optional filter to apply before rendering the child component
+ * @typedef {object} Props
+ * @property {React.ComponentType<*>} component required child component
+ * @property {*} location from react-router
+ * @property {*} history from react-router
+ * @property {*} match from react-router.match
+ * @property {boolean} isAdminOnly default false - if true, redirect to index page
+ * @property {boolean} isPublic default false - set true to disable auth-guard
+ * @property {() => Promise} filter optional filter to apply before rendering the child component
+ * @extends {React.Component<Props>}
  */
 class ProtectedContent extends React.Component {
   static propTypes = {
