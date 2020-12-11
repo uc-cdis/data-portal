@@ -40,7 +40,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
   const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(0);
+  const [endTime, setEndTime] = useState(20);
 
   const [transformedFilter, setTransformedFilter] = useState(
     getGQLFilter(filter)
