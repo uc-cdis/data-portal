@@ -98,6 +98,13 @@ function addDataToGeoJsonBase(data, dataLevel) {
   return geoJson;
 }
 
+function filterCountyGeoJson(selectedFips) {
+  return {
+    ...countyData,
+    features: countyData.features.filter(f => f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
+  };
+}
+
 class WorldMapChart extends React.Component {
   constructor(props) {
     super(props);
@@ -154,6 +161,9 @@ class WorldMapChart extends React.Component {
       hoverInfo = {
         lngLat: event.lngLat,
         locationName,
+        // density map data contains fips;
+        // choropleth map data contains FIPS.
+        FIPS: `${feature.properties.FIPS || feature.properties.fips}`,
         values: {
           'confirmed cases': numberWithCommas(confirmed),
           deaths: numberWithCommas(deaths),
@@ -183,7 +193,7 @@ class WorldMapChart extends React.Component {
 
       // density map data contains fips and iso3;
       // choropleth map data contains FIPS and iso_a3.
-      const fips = feature.properties.FIPS || feature.properties.fips;
+      const fips = `${feature.properties.FIPS || feature.properties.fips}`;
       const state = feature.properties.province_state;
       const iso3 = feature.properties.iso_a3 || feature.properties.iso3;
       const isUS = iso3 === 'USA' || feature.properties.country_region === 'US';
@@ -206,7 +216,8 @@ class WorldMapChart extends React.Component {
     });
 
     if (dataLevel) {
-      this.props.fetchTimeSeriesData(dataLevel, locationId, title);
+      const withSimulation = dataLevel === 'county' && this.props.modeledFipsList.includes(locationId);
+      this.props.fetchTimeSeriesData(dataLevel, locationId, title, withSimulation);
     }
   }
 
@@ -241,7 +252,9 @@ class WorldMapChart extends React.Component {
                 (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>,
               )
             }
-            <p className='covid19-dashboard__location-info__details'>Click for more details</p>
+            <p className='covid19-dashboard__location-info__click'>
+              Click for real time plotting {this.props.modeledFipsList.includes(hoverInfo.FIPS) ? '\nand simulations' : ''}
+            </p>
           </div>
         </ReactMapGL.Popup>
       );
@@ -265,6 +278,7 @@ class WorldMapChart extends React.Component {
         'county',
       );
     }
+    const modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
 
     let colors;
     let dotSizes;
@@ -442,6 +456,21 @@ class WorldMapChart extends React.Component {
               minzoom={countyZoomThreshold}
             />
           </ReactMapGL.Source>
+
+          {/* Outline a set of counties */}
+          <ReactMapGL.Source type='geojson' data={modeledCountyGeoJson}>
+            <ReactMapGL.Layer
+              id='county-outline'
+              layout={{ visibility: this.isVisible('confirmed-choropleth') }}
+              type='line'
+              beforeId='waterway-label'
+              paint={{
+                'line-color': '#421C52',
+                'line-width': 1.5,
+              }}
+              minzoom={countyZoomThreshold}
+            />
+          </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
       </div>
     );
@@ -451,6 +480,7 @@ class WorldMapChart extends React.Component {
 WorldMapChart.propTypes = {
   geoJson: PropTypes.object.isRequired,
   jsonByLevel: PropTypes.object.isRequired,
+  modeledFipsList: PropTypes.array.isRequired,
   fetchTimeSeriesData: PropTypes.func.isRequired,
 };
 

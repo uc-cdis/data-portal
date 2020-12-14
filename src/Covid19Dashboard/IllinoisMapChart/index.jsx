@@ -137,7 +137,7 @@ class IllinoisMapChart extends React.Component {
     });
   }
 
-  renderPopup() {
+  renderHoverPopup() {
     const { hoverInfo } = this.state;
     if (hoverInfo) {
       return (
@@ -208,7 +208,7 @@ class IllinoisMapChart extends React.Component {
           dragRotate={false}
           touchRotate={false}
         >
-          {this.renderPopup()}
+          {this.renderHoverPopup()}
 
           <ReactMapGL.Source type='geojson' data={this.choroCountyGeoJson}>
             <ReactMapGL.Layer
