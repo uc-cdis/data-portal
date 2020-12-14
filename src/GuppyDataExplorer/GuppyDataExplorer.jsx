@@ -21,10 +21,19 @@ class GuppyDataExplorer extends React.Component {
       aggsData: {},
       filter: {},
     };
+    this._isMounted = false;
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleReceiveNewAggsData = (newAggsData) => {
-    this.setState({ aggsData: newAggsData });
+    this._isMounted && this.setState({ aggsData: newAggsData });
   };
 
   render() {
