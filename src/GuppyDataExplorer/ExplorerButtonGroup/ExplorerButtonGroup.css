@@ -22,3 +22,8 @@
   width: unset;
   font-size: medium;
 }
+
+.explorer-button-group__toaster-dl-link {
+  color: var(--g3-color__white);
+  text-decoration: underline;
+}

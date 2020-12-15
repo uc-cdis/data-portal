@@ -7,11 +7,18 @@ const { components, requiredCerts, config } = require('./params');
  * @param {app, dev, basename, mockStore, hostname} opts overrides for defaults
  */
 function buildConfig(opts) {
+  const hostnameValue = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+  const hostnameParts = hostnameValue.split('.');
+  const hLen = hostnameParts.length;
+  const hostnameNoSubdomain = (hLen > 2) ? hostnameParts.splice(hLen - 2).join('.') : hostnameValue;
+
   const defaults = {
     dev: !!(process.env.NODE_ENV && process.env.NODE_ENV === 'dev'),
     mockStore: !!(process.env.MOCK_STORE && process.env.MOCK_STORE === 'true'),
     app: process.env.APP || 'generic',
     basename: process.env.BASENAME || '/',
+    protocol: typeof window !== 'undefined' ? `${window.location.protocol}` : 'http:',
+    hostnameOnly: typeof window !== 'undefined' ? hostnameNoSubdomain : 'localhost',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
     fenceURL: process.env.FENCE_URL,
     indexdURL: process.env.INDEXD_URL,
@@ -19,9 +26,11 @@ function buildConfig(opts) {
     wtsURL: process.env.WTS_URL,
     workspaceURL: process.env.WORKSPACE_URL,
     manifestServiceURL: process.env.MANIFEST_SERVICE_URL,
+    requestorURL: process.env.REQUESTOR_URL,
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
+    mapboxAPIToken: process.env.MAPBOX_API_TOKEN,
   };
 
   //
@@ -37,6 +46,8 @@ function buildConfig(opts) {
     mockStore,
     app,
     basename,
+    protocol,
+    hostnameOnly,
     hostname,
     fenceURL,
     indexdURL,
@@ -44,9 +55,11 @@ function buildConfig(opts) {
     wtsURL,
     workspaceURL,
     manifestServiceURL,
+    requestorURL,
     gaDebug,
     tierAccessLevel,
     tierAccessLimit,
+    mapboxAPIToken,
   } = Object.assign({}, defaults, opts);
 
   function ensureTrailingSlash(url) {
@@ -62,7 +75,6 @@ function buildConfig(opts) {
   const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
-  const arrangerGraphqlPath = `${hostname}api/v0/flat-search/search/graphql`;
   let userapiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
   const jobapiPath = `${hostname}job/`;
   const credentialCdisPath = `${userapiPath}credentials/cdis/`;
@@ -92,6 +104,9 @@ function buildConfig(opts) {
   const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
   const guppyDownloadUrl = `${guppyUrl}/download`;
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
+  const requestorPath = typeof requestorURL === 'undefined' ? `${hostname}requestor/` : ensureTrailingSlash(requestorURL);
+  const auspiceUrl = `${protocol}//auspice.${hostnameOnly}/covid19`;
+  const enableDAPTracker = !!config.DAPTrackingURL;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -99,7 +114,17 @@ function buildConfig(opts) {
     indexPublic = false;
   }
 
-  let useGuppyForExplorer = false;
+  let studyViewerConfig = [];
+  if (config.studyViewerConfig) {
+    studyViewerConfig = [...config.studyViewerConfig];
+    const validOpenOptions = ['open-first', 'open-all', 'close-all'];
+    studyViewerConfig.forEach((cfg, i) => {
+      if (cfg.openMode
+      && !validOpenOptions.includes(cfg.openMode)) {
+        studyViewerConfig[i].openMode = 'open-all';
+      }
+    });
+  }
 
   let explorerConfig = [];
   let useNewExplorerConfigFormat = false;
@@ -111,9 +136,6 @@ function buildConfig(opts) {
         ...config.dataExplorerConfig,
       },
     );
-    if (config.dataExplorerConfig.guppyConfig) {
-      useGuppyForExplorer = true;
-    }
   }
   if (config.fileExplorerConfig) {
     explorerConfig.push(
@@ -122,12 +144,10 @@ function buildConfig(opts) {
         ...config.fileExplorerConfig,
       },
     );
-    useGuppyForExplorer = true;
   }
 
   // new explorer config format
   if (config.explorerConfig) {
-    useGuppyForExplorer = true;
     useNewExplorerConfigFormat = true;
     explorerConfig = config.explorerConfig;
   }
@@ -174,6 +194,13 @@ function buildConfig(opts) {
     resourceBrowserPublic = true;
   }
 
+  const covid19DashboardConfig = config.covid19DashboardConfig;
+  if (covid19DashboardConfig) {
+    covid19DashboardConfig.dataUrl = ensureTrailingSlash(covid19DashboardConfig.dataUrl || '');
+  }
+
+  const workspacePageDescription = config.workspacePageDescription;
+
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
       '#3283c8',
@@ -206,78 +233,96 @@ function buildConfig(opts) {
   const defaultLineLimit = 30;
   const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;
 
-  const analysisApps = {
-    ndhHIV: {
-      title: 'NDH HIV Classifier',
-      description: 'Classify stored clinical data based on controller status.',
-      image: '/src/img/analysis-icons/hiv-classifier.svg',
-      visitIndexTypeName: config.HIVAppIndexTypeName || 'follow_up',
-    },
-    ndhVirus: {
-      title: 'NDH Virulence Simulation',
-      description: `This simulation runs a docker version of the Hypothesis Testing
+  const analysisTools = config.analysisTools;
+  const analysisApps = {};
+  if (analysisTools) {
+    analysisTools.forEach((at) => {
+      if (typeof at === 'string' || at instanceof String) {
+        switch (at) {
+        case 'ndhHIV':
+          analysisApps.ndhHIV = {
+            title: 'NDH HIV Classifier',
+            description: 'Classify stored clinical data based on controller status.',
+            image: '/src/img/analysis-icons/hiv-classifier.svg',
+            visitIndexTypeName: config.HIVAppIndexTypeName || 'follow_up',
+          };
+          break;
+        case 'ndhVirus':
+          analysisApps.ndhVirus = {
+            title: 'NDH Virulence Simulation',
+            description: `This simulation runs a docker version of the Hypothesis Testing
           using Phylogenies (HyPhy) tool over data submitted in the NIAID Data Hub. \n
           The simulation is focused on modeling a Bayesian Graph Model (BGM) based on a binary matrix input.
           The implemented example predicts the virulence status of different influenza strains based on their mutations
           (the mutation panel is represented as the input binary matrix).`,
-      image: '/src/img/analysis-icons/virulence.png',
-    },
-    vaGWAS: {
-      title: 'eGWAS',
-      description: 'Expression-based Genome-Wide Association Study',
-      image: '/src/img/analysis-icons/gwas.svg',
-      options: [
-        {
-          label: 'Lung',
-          value: 'Lung',
-        },
-        {
-          label: 'Gastrointestina',
-          value: 'Gastrointestina',
-        },
-        {
-          label: 'Prostate',
-          value: 'Prostate',
-        },
-        {
-          label: 'Head and Neck',
-          value: 'Head and Neck',
-        },
-        {
-          label: 'Skin',
-          value: 'Skin',
-        },
-        {
-          label: 'NULL',
-          value: 'NULL',
-        },
-        {
-          label: 'Lymph Node',
-          value: 'Lymph Node',
-        },
-        {
-          label: 'Liver',
-          value: 'Liver',
-        },
-        {
-          label: 'Musculoskeleta',
-          value: 'Musculoskeleta',
-        },
-        {
-          label: 'Occipital Mass',
-          value: 'Occipital Mass',
-        },
-        {
-          label: 'Brain',
-          value: 'Brain',
-        },
-        {
-          label: 'BxType',
-          value: 'BxType',
-        },
-      ],
-    },
-  };
+            image: '/src/img/analysis-icons/virulence.png',
+          };
+          break;
+        case 'vaGWAS':
+          analysisApps.vaGWAS = {
+            title: 'eGWAS',
+            description: 'Expression-based Genome-Wide Association Study',
+            image: '/src/img/analysis-icons/gwas.svg',
+            options: [
+              {
+                label: 'Lung',
+                value: 'Lung',
+              },
+              {
+                label: 'Gastrointestina',
+                value: 'Gastrointestina',
+              },
+              {
+                label: 'Prostate',
+                value: 'Prostate',
+              },
+              {
+                label: 'Head and Neck',
+                value: 'Head and Neck',
+              },
+              {
+                label: 'Skin',
+                value: 'Skin',
+              },
+              {
+                label: 'NULL',
+                value: 'NULL',
+              },
+              {
+                label: 'Lymph Node',
+                value: 'Lymph Node',
+              },
+              {
+                label: 'Liver',
+                value: 'Liver',
+              },
+              {
+                label: 'Musculoskeleta',
+                value: 'Musculoskeleta',
+              },
+              {
+                label: 'Occipital Mass',
+                value: 'Occipital Mass',
+              },
+              {
+                label: 'Brain',
+                value: 'Brain',
+              },
+              {
+                label: 'BxType',
+                value: 'BxType',
+              },
+            ],
+          };
+          break;
+        default:
+          break;
+        }
+      } else if (at.title) {
+        analysisApps[at.title] = at;
+      }
+    });
+  }
 
   const breakpoints = {
     laptop: 1024,
@@ -303,7 +348,6 @@ function buildConfig(opts) {
     indexdPath,
     graphqlPath,
     dataDictionaryTemplatePath,
-    arrangerGraphqlPath,
     graphqlSchemaUrl,
     appname: components.appName,
     mockStore,
@@ -334,7 +378,6 @@ function buildConfig(opts) {
     manifestServiceApiPath,
     wtsPath,
     externalLoginOptionsUrl,
-    useGuppyForExplorer,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
     useArboristUI,
@@ -351,6 +394,13 @@ function buildConfig(opts) {
     explorerConfig,
     useNewExplorerConfigFormat,
     dataAvailabilityToolConfig,
+    requestorPath,
+    studyViewerConfig,
+    covid19DashboardConfig,
+    mapboxAPIToken,
+    auspiceUrl,
+    workspacePageDescription,
+    enableDAPTracker,
   };
 }
 

@@ -152,10 +152,7 @@ if [[ "$GEN3_BUNDLE" != "workspace" ]]; then
   npm run sanity-check
 fi
 
-# try to keep the arranger components in line
-#export STORYBOOK_ARRANGER_API=localhost:3000
 export STORYBOOK_PROJECT_ID=search
-export REACT_APP_ARRANGER_API=/api/v0/flat-search
 export REACT_APP_PROJECT_ID=search
 export REACT_APP_DISABLE_SOCKET=true
 
@@ -167,6 +164,7 @@ if [[ "$NODE_ENV" == "dev" || "$NODE_ENV" == "auto" ]]; then
   echo ./node_modules/.bin/webpack-dev-server
   ./node_modules/.bin/webpack-dev-server
 else
+  export NODE_OPTIONS='--max-old-space-size=4096'
   export NODE_ENV="production"
   echo ./node_modules/.bin/webpack --bail
   ./node_modules/.bin/webpack --bail

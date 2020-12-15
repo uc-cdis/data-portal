@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { Carousel } from 'antd';
 import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntroduction } from './reduxer';
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
-import { breakpoints, customHomepageChartConfig, indexPublic } from '../localconf';
+import { breakpoints, customHomepageChartConfig, indexPublic, homepageChartNodes } from '../localconf';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
 import './page.less';
 
@@ -36,32 +34,53 @@ class IndexPageComponent extends React.Component {
   }
 
   render() {
-    const sliderSettings = {
-      dots: true,
-      infinite: false,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      arrows: true,
-    };
-    let customCharts = null;
+    let homepageCharts = [];
     if (customHomepageChartConfig) {
-      customCharts = customHomepageChartConfig.map((conf, i) => (
-        <div key={i} className='index-page__slider-chart'>
-          <HomepageCustomCharts
-            chartType={conf.chartType}
-            dataType={conf.dataType}
-            yAxisProp={conf.yAxisProp}
-            xAxisProp={conf.xAxisProp}
-            constrains={conf.constrains}
-            chartTitle={conf.chartTitle}
-            logBase={conf.logBase}
-            initialUnselectedKeys={conf.initialUnselectedKeys}
-            dataTypePlural={conf.dataTypePlural}
-          />
-        </div>
-      ));
+      homepageCharts = customHomepageChartConfig.map((conf, i) => {
+        switch (conf.chartType) {
+        case 'horizontalGroupedBar':
+          return (
+            <div key={i} className='index-page__slider-chart'>
+              <HomepageCustomCharts
+                chartType={conf.chartType}
+                dataType={conf.dataType}
+                yAxisProp={conf.yAxisProp}
+                xAxisProp={conf.xAxisProp}
+                constrains={conf.constrains}
+                chartTitle={conf.chartTitle}
+                logBase={conf.logBase}
+                initialUnselectedKeys={conf.initialUnselectedKeys}
+                dataTypePlural={conf.dataTypePlural}
+              />
+            </div>
+          );
+        case 'image':
+          return (
+            <div key={i} className='index-page__slider-chart'>
+              <img
+                className='index-page__slider-chart-image'
+                src={conf.imageLink}
+                alt='homepage carousel item'
+              />
+            </div>
+          );
+        default:
+          return null;
+        }
+      });
     }
+
+    /* eslint-disable max-len */
+    // indexChartNames and chartNames has to > 1 in here since by default we push in 'Files' as chart if there is less than 4 chart fields
+    // FIXME: remove this fix once we get rid of the pushing 'Files' into charts by default logic
+    if ((homepageChartNodes && homepageChartNodes.length > 0)
+    || (components.charts && components.charts.indexChartNames && components.charts.indexChartNames.length > 1)
+    || (components.charts && components.charts.chartNames && components.charts.chartNames.length > 1)
+    ) {
+      homepageCharts.push(<div key={homepageCharts.length} className='index-page__slider-chart'><ReduxIndexBarChart /></div>);
+    }
+    /* eslint-enable max-len */
+
     return (
       <div className='index-page'>
         <div className='index-page__top'>
@@ -73,10 +92,9 @@ class IndexPageComponent extends React.Component {
           </div>
           <div className='index-page__bar-chart'>
             <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-              <Slider {...sliderSettings}>
-                <div className='index-page__slider-chart'><ReduxIndexBarChart /></div>
-                {customCharts}
-              </Slider>
+              <Carousel>
+                {homepageCharts}
+              </Carousel>
             </MediaQuery>
           </div>
         </div>

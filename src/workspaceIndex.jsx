@@ -7,7 +7,6 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import 'react-select/dist/react-select.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
@@ -15,6 +14,7 @@ import { Helmet } from 'react-helmet';
 
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
+import { fetchAndSetCsrfToken } from './configs';
 import { fetchUserAccess, fetchUserAuthMapping } from './actions';
 import ProtectedContent from './Login/ProtectedContent';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
@@ -22,13 +22,14 @@ import theme from './theme';
 import getReduxStore from './reduxStore';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
-import { basename, dev, gaDebug } from './localconf';
+import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, enableDAPTracker } from './localconf';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
+import { DAPRouteTracker } from './components/DAPAnalytics';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
-import './index.less';
+import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 
 
 // monitor user's session
@@ -49,6 +50,8 @@ async function init() {
       // resources can be open to anonymous users, so fetch access:
       store.dispatch(fetchUserAccess),
       store.dispatch(fetchUserAuthMapping),
+      // eslint-disable-next-line no-console
+      fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); }),
     ],
   );
 
@@ -59,6 +62,7 @@ async function init() {
           <BrowserRouter basename={basename}>
             <div>
               {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+              {enableDAPTracker && <DAPRouteTracker />}
               {isEnabled('noIndex') ?
                 <Helmet>
                   <meta name='robots' content='noindex,nofollow' />
@@ -122,6 +126,16 @@ async function init() {
                     component={
                       props => <ProtectedContent component={Workspace} {...props} />
                     }
+                  />
+                  <Route
+                    exact
+                    path={workspaceUrl}
+                    component={ErrorWorkspacePlaceholder}
+                  />
+                  <Route
+                    exact
+                    path={workspaceErrorUrl}
+                    component={ErrorWorkspacePlaceholder}
                   />
                   <Route
                     path='*'

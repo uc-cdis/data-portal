@@ -1,11 +1,12 @@
 import React from 'react';
 import FileSaver from 'file-saver';
+import _ from 'lodash';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import Toaster from '@gen3/ui-component/dist/components/Toaster';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
 import PropTypes from 'prop-types';
-import { calculateDropdownButtonConfigs, humanizeNumber } from '../../DataExplorer/utils';
+import { calculateDropdownButtonConfigs, humanizeNumber } from '../utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
 import { fetchWithCreds } from '../../actions';
 import { manifestServiceApiPath, guppyGraphQLUrl, terraExportWarning } from '../../localconf';
@@ -29,18 +30,44 @@ class ExplorerButtonGroup extends React.Component {
       // for export to PFB
       exportPFBStatus: null,
       exportPFBURL: '',
+      exportPFBToWorkspaceGUID: '',
       pfbStartText: 'Your export is in progress.',
       pfbWarning: 'Please do not navigate away from this page until your export is finished.',
-      pfbSuccessText: 'Your cohort has been exported to PFB! The URL is displayed below.',
+      pfbSuccessText: 'Your cohort has been exported to PFB.',
+      pfbToWorkspaceSuccessText: 'A PFB for this cohort will be saved to your workspace. The GUID for your PFB is displayed below.',
+      exportPFBToWorkspaceStatus: null,
+      // for export to PFB in Files tab
+      sourceNodesInCohort: [],
       // for export to workspace
       exportingToWorkspace: false,
       exportWorkspaceFileName: null,
       exportWorkspaceStatus: null,
       workspaceSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
     };
+
+    // Display misconfiguration warnings if Export PFB to Terra/SBG buttons are present
+    // but no URL was configured to send the PFBs to.
+    const exportToTerraButtonPresent =
+      props.buttonConfig && props.buttonConfig.buttons &&
+      props.buttonConfig.buttons.some(btn => btn.type === 'export' || btn.type === 'export-files');
+    if (exportToTerraButtonPresent && !this.props.buttonConfig.terraExportURL) {
+      console.error('Misconfiguration error: Export to Terra button is present, but there is no `terraExportURL` specified in the portal config.'); // eslint-disable-line no-console
+    }
+    const exportToSevenBridgesButtonPresent =
+      props.buttonConfig && props.buttonConfig.buttons &&
+      props.buttonConfig.buttons.some(btn => btn.type === 'export-to-seven-bridges' || btn.type === 'export-files-to-seven-bridges');
+    if (exportToSevenBridgesButtonPresent && !this.props.buttonConfig.sevenBridgesExportURL) {
+      console.error('Misconfiguration error: Export to Seven Bridges button is present, but there is no `sevenBridgesExportURL` specified in the portal config.'); // eslint-disable-line no-console
+    }
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.job && nextProps.job.status === 'Failed' && this.props.job.status !== 'Failed') {
+      this.setState(prevState => ({
+        toasterOpen: true,
+        toasterHeadline: prevState.toasterErrorText,
+      }));
+    }
     if (nextProps.job && nextProps.job.status === 'Completed' && this.props.job.status !== 'Completed') {
       this.fetchJobResult()
         .then((res) => {
@@ -60,6 +87,9 @@ class ExplorerButtonGroup extends React.Component {
             }, () => {
               this.sendPFBToSevenBridges();
             });
+          } else if (this.state.exportingPFBToWorkspace) {
+            const pfbGUID = `${res.data.output}`.split('\n')[0];
+            this.sendPFBToWorkspace(pfbGUID);
           } else {
             this.setState({
               exportPFBURL: `${res.data.output}`.split('\n'),
@@ -72,6 +102,14 @@ class ExplorerButtonGroup extends React.Component {
     if (nextProps.totalCount !== this.props.totalCount
       && nextProps.totalCount) {
       this.refreshManifestEntryCount();
+    }
+    if (this.props.buttonConfig.enableLimitedFilePFBExport
+      && nextProps.filter !== this.props.filter) {
+      const sourceNodeField = this.props.buttonConfig.enableLimitedFilePFBExport.sourceNodeField;
+      if (!sourceNodeField) {
+        throw new Error('Limited File PFB Export is enabled, but \'sourceNodeField\' has not been specified. Check the portal config.');
+      }
+      this.refreshSourceNodes(nextProps.filter, sourceNodeField);
     }
   }
 
@@ -100,11 +138,27 @@ class ExplorerButtonGroup extends React.Component {
         clickFunc = this.exportToTerra;
       }
     }
+    if (buttonConfig.type === 'export-files') {
+      // REMOVE THIS CODE WHEN TERRA EXPORT WORKS
+      // =======================================
+      if (terraExportWarning) {
+        clickFunc = this.exportFilesToTerraWithWarning;
+      } else {
+      // =======================================
+        clickFunc = this.exportFilesToTerra;
+      }
+    }
     if (buttonConfig.type === 'export-to-seven-bridges') {
       clickFunc = this.exportToSevenBridges;
     }
+    if (buttonConfig.type === 'export-files-to-seven-bridges') {
+      clickFunc = this.exportFilesToSevenBridges;
+    }
     if (buttonConfig.type === 'export-to-pfb') {
       clickFunc = this.exportToPFB;
+    }
+    if (buttonConfig.type === 'export-files-to-pfb') {
+      clickFunc = this.exportFilesToPFB;
     }
     if (buttonConfig.type === 'export-to-workspace') {
       clickFunc = this.exportToWorkspace;
@@ -112,9 +166,11 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export-files-to-workspace') {
       clickFunc = () => this.exportToWorkspace('file');
     }
+    if (buttonConfig.type === 'export-pfb-to-workspace') {
+      clickFunc = this.exportPFBToWorkspace;
+    }
     return clickFunc;
   };
-
   getManifest = async (indexType) => {
     if (!this.props.guppyConfig.manifestMapping
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex) {
@@ -146,8 +202,9 @@ class ExplorerButtonGroup extends React.Component {
       }
       return rawData;
     }
-    const refIDList = await this.props.downloadRawDataByFields({ fields: [refField] })
+    let refIDList = await this.props.downloadRawDataByFields({ fields: [refField] })
       .then(res => res.map(i => i[refField]));
+    refIDList = _.uniq(refIDList);
     const refFieldInResourceIndex =
       this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
     const resourceFieldInResourceIndex = this.props.guppyConfig.manifestMapping.resourceIdField;
@@ -202,7 +259,8 @@ class ExplorerButtonGroup extends React.Component {
         buttonType='primary'
         enabled
       />
-      { (this.state.exportWorkspaceStatus === 200) ?
+      { (this.state.exportWorkspaceStatus === 200
+        || this.state.exportPFBToWorkspaceStatus === 200) ?
         <Button
           className='explorer-button-group__toaster-button'
           label='Go To Workspace'
@@ -220,7 +278,11 @@ class ExplorerButtonGroup extends React.Component {
             : null
           }
           { (this.state.exportPFBURL) ?
-            <div> Most recent PFB URL: { this.state.exportPFBURL } </div>
+            <a className='explorer-button-group__toaster-dl-link' href={this.state.exportPFBURL} download>Click here to download your PFB.</a>
+            : null
+          }
+          { (this.state.exportPFBToWorkspaceGUID) ?
+            <div>{ this.state.exportPFBToWorkspaceGUID } </div>
             : null
           }
           { (this.state.toasterError) ?
@@ -318,6 +380,16 @@ class ExplorerButtonGroup extends React.Component {
       this.exportToTerra();
     }
   }
+  exportFilesToTerraWithWarning = () => {
+    // If the number of subjects is over the threshold, warn the user that their
+    // export to Terra job might fail.
+    if (this.props.totalCount >= terraExportWarning.subjectThreshold) {
+      this.setState({ enableTerraWarningPopup: true });
+    } else {
+      // If the number is below the threshold, proceed as normal
+      this.exportFilesToTerra();
+    }
+  }
   // ==========================================
 
   exportToTerra = () => {
@@ -326,9 +398,21 @@ class ExplorerButtonGroup extends React.Component {
     });
   };
 
+  exportFilesToTerra = () => {
+    this.setState({ exportingToTerra: true }, () => {
+      this.exportFilesToPFB();
+    });
+  };
+
   exportToSevenBridges = () => {
     this.setState({ exportingToSevenBridges: true }, () => {
       this.exportToPFB();
+    });
+  }
+
+  exportFilesToSevenBridges = () => {
+    this.setState({ exportingToSevenBridges: true }, () => {
+      this.exportFilesToPFB();
     });
   }
 
@@ -344,6 +428,40 @@ class ExplorerButtonGroup extends React.Component {
     window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
   }
 
+
+  sendPFBToWorkspace = (pfbGUID) => {
+    const JSONBody = { cohort_guid: pfbGUID };
+    fetchWithCreds({
+      path: `${manifestServiceApiPath}cohorts`,
+      body: JSON.stringify(JSONBody),
+      method: 'POST',
+    })
+      .then(
+        ({ status, data }) => {
+          const errorMsg = (data.error ? data.error : '');
+          switch (status) {
+          case 200:
+            this.setState({
+              exportingPFBToWorkspace: false,
+              exportPFBToWorkspaceGUID: pfbGUID,
+              toasterOpen: true,
+              toasterHeadline: this.state.pfbToWorkspaceSuccessText,
+              exportPFBToWorkspaceStatus: status,
+            });
+            return;
+          default:
+            this.setState({
+              exportingPFBToWorkspace: false,
+              exportPFBToWorkspaceGUID: '',
+              toasterOpen: true,
+              toasterHeadline: `There was an error exporting your cohort (${status}). ${errorMsg}`,
+              exportPFBToWorkspaceStatus: status,
+            });
+          }
+        },
+      );
+  }
+
   sendPFBToSevenBridges = () => {
     const url = encodeURIComponent(this.state.exportPFBURL);
     window.location = `${this.props.buttonConfig.sevenBridgesExportURL}?format=PFB&url=${url}`;
@@ -352,11 +470,46 @@ class ExplorerButtonGroup extends React.Component {
   exportToPFB = () => {
     this.props.submitJob({ action: 'export', input: { filter: getGQLFilter(this.props.filter) } });
     this.props.checkJobStatus();
+    this.setState(prevState => ({
+      toasterOpen: true,
+      toasterHeadline: prevState.pfbStartText,
+    }));
+  };
+
+  exportFilesToPFB = () => {
+    if (this.props.buttonConfig.enableLimitedFilePFBExport) {
+      if (!this.state.sourceNodesInCohort || this.state.sourceNodesInCohort.length !== 1) {
+        return;
+      }
+      const rootNode = this.state.sourceNodesInCohort[0];
+      this.props.submitJob({
+        action: 'export-files',
+        input: {
+          filter: getGQLFilter(this.props.filter),
+          root_node: rootNode,
+        },
+      });
+      this.props.checkJobStatus();
+      this.setState({
+        toasterOpen: true,
+        toasterHeadline: this.state.pfbStartText,
+      });
+    } else {
+      /* eslint-disable no-console */
+      console.error(`Error: Missing \`enableLimitedFilePFBExport\` in the portal config.
+Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be set in the portal config.`);
+    }
+  };
+
+  exportPFBToWorkspace = () => {
+    this.props.submitJob({ action: 'export', access_format: 'guid', input: { filter: getGQLFilter(this.props.filter) } });
+    this.props.checkJobStatus();
     this.setState({
       toasterOpen: true,
       toasterHeadline: this.state.pfbStartText,
+      exportingPFBToWorkspace: true,
     });
-  };
+  }
 
   exportToWorkspace = async (indexType) => {
     this.setState({ exportingToWorkspace: true });
@@ -394,12 +547,12 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   exportToWorkspaceErrorHandler = (status) => {
-    this.setState({
+    this.setState(prevState => ({
       toasterOpen: true,
-      toasterHeadline: this.state.toasterErrorText,
+      toasterHeadline: prevState.toasterErrorText,
       exportWorkspaceStatus: status,
       exportingToWorkspace: false,
-    });
+    }));
   };
 
   exportToWorkspaceMessageHandler = (status, message) => {
@@ -415,7 +568,8 @@ class ExplorerButtonGroup extends React.Component {
     buttonConfig.type === 'export' ||
     buttonConfig.type === 'export-to-seven-bridges' ||
     buttonConfig.type === 'export-to-workspace' ||
-    buttonConfig.type === 'export-to-pfb';
+    buttonConfig.type === 'export-to-pfb' ||
+    buttonConfig.type === 'export-pfb-to-workspace';
 
   refreshManifestEntryCount = async () => {
     if (this.props.isLocked || !this.props.guppyConfig.manifestMapping
@@ -442,7 +596,8 @@ class ExplorerButtonGroup extends React.Component {
         });
         const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
         if (caseIDResult) {
-          const caseIDList = caseIDResult.map(i => i[caseField]);
+          let caseIDList = caseIDResult.map(i => i[caseField]);
+          caseIDList = _.uniq(caseIDList);
           const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
           const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
             [caseFieldInFileIndex]: {
@@ -456,6 +611,43 @@ class ExplorerButtonGroup extends React.Component {
           throw Error('Error when downloading data');
         }
       }
+    }
+  };
+
+  refreshSourceNodes = async (filter, sourceNodeField) => {
+    try {
+      const indexType = this.props.guppyConfig.dataType;
+      const query = `query ($filter: JSON) {
+        _aggregation {
+          ${indexType} (filter: $filter) {
+            ${sourceNodeField} {
+              histogram {
+                key
+                count
+              }
+            }
+          }
+        }
+      }`;
+      const body = { query, variables: { filter: getGQLFilter(filter) } };
+      const res = await fetchWithCreds({
+        path: guppyGraphQLUrl,
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      // eslint-disable-next-line no-underscore-dangle
+      const sourceNodesHistogram = res.data.data._aggregation[indexType][sourceNodeField].histogram;
+      const sourceNodes = [];
+      sourceNodesHistogram.forEach(({ key, count }) => {
+        if (count > 0) {
+          sourceNodes.push(key);
+        }
+      });
+      this.setState({
+        sourceNodesInCohort: sourceNodes,
+      });
+    } catch (err) {
+      throw Error(`Error when getting data types: ${err}`);
     }
   };
 
@@ -476,31 +668,60 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'manifest') {
       return this.state.manifestEntryCount > 0;
     }
+    const pfbJobIsRunning = this.state.exportingToTerra
+    || this.state.exportingToSevenBridges
+    || this.isPFBRunning();
     if (buttonConfig.type === 'export-to-pfb') {
       // disable the pfb export button if any other pfb export jobs are running
-      return !(this.state.exportingToTerra || this.state.exportingToSevenBridges);
+      return !pfbJobIsRunning;
+    }
+    if (buttonConfig.type === 'export-files-to-pfb') {
+      // disable the pfb export button if any other pfb export jobs are running
+      if (pfbJobIsRunning) {
+        return false;
+      }
+      // If limited file PFB export is enabled, disable the button if the selected
+      // data files are on more than one source node. (See https://github.com/uc-cdis/data-portal/pull/729)
+      if (this.props.buttonConfig.enableLimitedFilePFBExport) {
+        return this.state.sourceNodesInCohort.length === 1;
+      }
+    }
+    if (buttonConfig.type === 'export-pfb-to-workspace') {
+      return !this.state.exportingToCloud;
     }
     if (buttonConfig.type === 'export') {
-      if (!this.props.buttonConfig.terraExportURL) {
-        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.'); // eslint-disable-line no-console
-        return false;
-      }
       // disable the terra export button if any of the
       // pfb export operations are running.
-      return !(this.state.exportingToTerra
-        || this.state.exportingToSevenBridges
-        || this.isPFBRunning());
+      return !pfbJobIsRunning;
     }
-    if (buttonConfig.type === 'export-to-seven-bridges') {
-      if (!this.props.buttonConfig.sevenBridgesExportURL) {
-        console.error('Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.'); // eslint-disable-line no-console
+    if (buttonConfig.type === 'export-files') {
+      // disable the terra export button if any of the
+      // pfb export operations are running.
+      if (pfbJobIsRunning) {
         return false;
       }
+      // If limited file PFB export is enabled, disable the button if the selected
+      // data files are on more than one source node. (See https://github.com/uc-cdis/data-portal/pull/729)
+      if (this.props.buttonConfig.enableLimitedFilePFBExport) {
+        return this.state.sourceNodesInCohort.length === 1;
+      }
+    }
+    if (buttonConfig.type === 'export-to-seven-bridges') {
       // disable the seven bridges export buttons if any of the
       // pfb export operations are running.
-      return !(this.state.exportingToTerra
-        || this.state.exportingToSevenBridges
-        || this.isPFBRunning());
+      return !pfbJobIsRunning;
+    }
+    if (buttonConfig.type === 'export-files-to-seven-bridges') {
+      // disable the seven bridges export buttons if any of the
+      // pfb export operations are running.
+      if (pfbJobIsRunning) {
+        return false;
+      }
+      // If limited file PFB export is enabled, disable the button if the selected
+      // data files are on more than one source node. (See https://github.com/uc-cdis/data-portal/pull/729)
+      if (this.props.buttonConfig.enableLimitedFilePFBExport) {
+        return this.state.sourceNodesInCohort.length === 1;
+      }
     }
     if (buttonConfig.type === 'export-to-workspace') {
       return this.state.manifestEntryCount > 0;
@@ -516,19 +737,19 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
       return this.state.exportingToWorkspace;
     }
-    if (buttonConfig.type === 'export-to-pfb') {
+    if (buttonConfig.type === 'export-to-pfb' || buttonConfig.type === 'export-files-to-pfb') {
       // export to pfb button is pending if a pfb export job is running and it's
       // neither an export to terra job or an export to seven bridges job.
       return this.isPFBRunning()
         && !(this.state.exportingToTerra || this.state.exportingToSevenBridges);
     }
-    if (buttonConfig.type === 'export') {
+    if (buttonConfig.type === 'export' || buttonConfig.type === 'export-files') {
       // export to terra button is pending if a pfb export job is running and
       // it's an exporting to terra job.
       return this.isPFBRunning()
         && this.state.exportingToTerra;
     }
-    if (buttonConfig.type === 'export-to-seven-bridges') {
+    if (buttonConfig.type === 'export-to-seven-bridges' || buttonConfig.type === 'export-files-to-seven-bridges') {
       // export to seven bridges button is pending if a pfb export job is running
       // and it's an export to seven bridges job.
       return this.isPFBRunning()
@@ -550,7 +771,22 @@ class ExplorerButtonGroup extends React.Component {
     } else if (buttonConfig.type === 'manifest' && this.state.manifestEntryCount > 0) {
       buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
     }
-    const btnTooltipText = (this.props.isLocked) ? 'You only have access to summary data' : buttonConfig.tooltipText;
+
+    let tooltipEnabled = buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false;
+    let btnTooltipText = (this.props.isLocked) ? 'You only have access to summary data' : buttonConfig.tooltipText;
+
+    // If limited file PFB export is enabled, PFB export buttons will be disabled
+    // if the user selects multiple files that are on different nodes in the graph.
+    // (See https://github.com/uc-cdis/data-portal/pull/729).
+    // If the user has selected multiple files on different nodes, display a
+    // tooltip explaining that the user can only export files of the same type.
+    const isFilePFBButton = buttonConfig.type === 'export-files' || buttonConfig.type === 'export-files-to-pfb' || buttonConfig.type === 'export-files-to-seven-bridges';
+    if (this.props.buttonConfig.enableLimitedFilePFBExport
+      && isFilePFBButton
+      && this.state.sourceNodesInCohort.length > 1) {
+      tooltipEnabled = true;
+      btnTooltipText = 'Currently you cannot export files with different Data Types. Please choose a single Data Type from the Data Type filter on the left.';
+    }
 
     return (
       <Button
@@ -562,7 +798,7 @@ class ExplorerButtonGroup extends React.Component {
         className='explorer-button-group__download-button'
         buttonType='primary'
         enabled={this.isButtonEnabled(buttonConfig)}
-        tooltipEnabled={buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false}
+        tooltipEnabled={tooltipEnabled}
         tooltipText={btnTooltipText}
         isPending={this.isButtonPending(buttonConfig)}
       />
