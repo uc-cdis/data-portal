@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin } from 'antd';
+import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber } from 'antd';
 import { humanFileSize } from '../utils.js';
 import './VAGWAS.css';
 
 const { Step } = Steps;
 const { Text } = Typography;
-const { Option } = Select;
 
 const steps = [
   {
@@ -32,11 +31,9 @@ class VAGWAS extends React.Component {
       showPreviewModal: false,
       previewModalDataKey: undefined,
       selectedDataKey: undefined,
-      // showStep1SelectionTable: false,
-      // showStep1SpecifyTable: false,
-      // step1SelectedData: undefined,
       jobName: undefined,
       jobSubmitted: false,
+      enableStep2NextButton: false,
     };
   }
 
@@ -47,15 +44,9 @@ class VAGWAS extends React.Component {
   mainTableRowSelection = {
     type: 'radio',
     onChange: (_, selectedRows) => {
-      // if (this.state.current === 0) {
       this.setState({
         selectedDataKey: selectedRows[0].WorkspaceKey,
       });
-      // } else if (this.state.current === 1) {
-      //   this.setState({
-      //     step1SelectedData: selectedRows[0].WorkspaceKey,
-      //   });
-      // }
     },
   };
 
@@ -130,7 +121,7 @@ class VAGWAS extends React.Component {
     });
   }
 
-  generateContentForStep = (stepIndex) => {
+  generateContentForStep = (stepIndex, form) => {
     switch (stepIndex) {
     case 0: {
       if (this.props.wssListFileError) {
@@ -211,63 +202,8 @@ class VAGWAS extends React.Component {
             <Spin size='large' tip='Loading data from workspace storage...' />
           </Space>);
       }
-      // let modalTableColumnConfig;
-      // if (this.props.wssFileData) {
-      //   modalTableColumnConfig = Object.keys(this.props.wssFileData[0]).map(key => ({
-      //     title: key,
-      //     dataIndex: key,
-      //     key,
-      //   }));
-      // }
-      /* eslint-disable max-len */
       return (
         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-          {/* <Space>
-            <Button
-              onClick={() => {
-                this.setState({
-                  showStep1SelectionTable: true,
-                  step1SelectedData: undefined,
-                });
-              }}
-              disabled={this.state.showStep1SelectionTable}
-            >
-            Select File
-            </Button>
-            <Text>Or</Text>
-            <Button
-              onClick={() => {
-                this.setState({
-                  step1SelectedData: this.state.selectedDataKey,
-                  showStep1SelectionTable: false,
-                });
-              }}
-            >
-            Specify from File Selected in Previous Step
-            </Button>
-          </Space> */}
-          {/* {(this.state.showStep1SelectionTable) ?
-            <div className='vaGWAS__mainTable'>
-              <Table
-                rowSelection={this.mainTableRowSelection}
-                columns={this.mainTableConfig}
-                dataSource={this.props.wssFileObjects}
-              />
-            </div>
-            : null}
-          <Modal
-            visible={this.state.showPreviewModal}
-            closable={false}
-            title={`Preview File Content: ${this.state.previewModalDataKey}`}
-            footer={[
-              <Button key='close' onClick={this.handlePreviewModalCancel}>
-              Close
-              </Button>,
-            ]}
-          >
-            {(modalTableColumnConfig) ?
-              <Table size={'small'} columns={modalTableColumnConfig} dataSource={this.props.wssFileData} /> : null}
-          </Modal> */}
           {(specifyDataCols) ?
             <div className='vaGWAS__step1-specifyTable'>
               <Space className='vaGWAS__step1-specifyTable_innerSpace'>
@@ -316,44 +252,82 @@ class VAGWAS extends React.Component {
             : null}
         </Space>
       );
-      /* eslint-enable max-len */
     }
     case 2: {
       return (
         <div className='vaGWAS__mainArea'>
-          <Space>
-            <Space direction={'vertical'}>
-              <Text strong>Min Allele Frequency</Text>
-              <Select defaultValue='0.01'>
-                <Option value='0.001'>0.001</Option>
-                <Option value='0.002'>0.002</Option>
-                <Option value='0.005'>0.005</Option>
-                <Option value='0.01'>0.01</Option>
-                <Option value='0.02'>0.02</Option>
-                <Option value='0.05'>0.05</Option>
-              </Select>
+          <Form
+            form={form}
+            layout='vertical'
+            initialValues={{
+              'genotype-cutoff': 0.2,
+              'sample-cutoff': 0.04,
+              'maf-cutoff': 0.05,
+            }}
+            onFieldsChange={(_, allFields) => {
+              if (allFields.some(field => !field.validating && field.errors.length > 0)) {
+                this.setState({ enableStep2NextButton: false });
+              } else if (allFields.every(field => !field.validating && field.errors.length === 0)) {
+                this.setState({ enableStep2NextButton: true });
+              }
+            }}
+            // onFinish={onFinish}
+            // onFinishFailed={console.log('sss')}
+          >
+            <Space className='vaGWAS__step1-specifyTable_innerSpace' split={<Divider type='vertical' />} >
+              <Form.Item
+                className='vaGWAS__step1-specifyTable_formItem'
+                label={<Text strong>Genotype Cutoff</Text>}
+                name='genotype-cutoff'
+                rules={[
+                  () => ({
+                    validator(_, value) {
+                      if (value && value <= 1 && value >= 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject('Must be a numeric value between 0 and 1');
+                    },
+                  }),
+                ]}
+              >
+                <InputNumber min={0} max={1} step={0.01} />
+              </Form.Item>
+              <Form.Item
+                className='vaGWAS__step1-specifyTable_formItem'
+                label={<Text strong>Sample Cutoff</Text>}
+                name='sample-cutoff'
+                rules={[
+                  () => ({
+                    validator(_, value) {
+                      if (value && value <= 1 && value >= 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject('Must be a numeric value between 0 and 1');
+                    },
+                  }),
+                ]}
+              >
+                <InputNumber min={0} max={1} step={0.01} />
+              </Form.Item>
+              <Form.Item
+                className='vaGWAS__step1-specifyTable_formItem'
+                label={<Text strong>MAF Cutoff</Text>}
+                name='maf-cutoff'
+                rules={[
+                  () => ({
+                    validator(_, value) {
+                      if (value && value <= 1 && value >= 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject('Must be a numeric value between 0 and 1');
+                    },
+                  }),
+                ]}
+              >
+                <InputNumber min={0} max={1} step={0.01} />
+              </Form.Item>
             </Space>
-            <Divider type='vertical' />
-            <Space direction={'vertical'}>
-              <Text strong>Association Model</Text>
-              <Select defaultValue='linear'>
-                <Option value='linear'>Linear</Option>
-                <Option value='modelA'>Model A</Option>
-                <Option value='modelB'>Model B</Option>
-                <Option value='modelC'>Model C</Option>
-              </Select>
-            </Space>
-            <Divider type='vertical' />
-            <Space direction={'vertical'}>
-              <Text strong>Parameter 1</Text>
-              <Select />
-            </Space>
-            <Divider type='vertical' />
-            <Space direction={'vertical'}>
-              <Text strong>Parameter 2</Text>
-              <Select />
-            </Space>
-          </Space>
+          </Form>
         </div>
       );
     }
@@ -383,11 +357,9 @@ class VAGWAS extends React.Component {
                       showPreviewModal: false,
                       previewModalDataKey: undefined,
                       selectedDataKey: undefined,
-                      // showStep1SelectionTable: false,
-                      // showStep1SpecifyTable: false,
-                      // step1SelectedData: undefined,
                       jobName: undefined,
                       jobSubmitted: false,
+                      enableStep2NextButton: false,
                     });
                   }}
                 >
@@ -428,8 +400,18 @@ class VAGWAS extends React.Component {
 
   render() {
     const { current } = this.state;
-    const nextButtonEnabled = current || this.state.selectedDataKey;
+    let nextButtonEnabled = true;
+    if (current === 0 && !this.state.selectedDataKey) {
+      nextButtonEnabled = false;
+    } else if (current === 1 && !(this.props.wssFileData
+      && this.props.wssFileData.fileData
+      && this.props.wssFileData.fileData.length > 0)) {
+      nextButtonEnabled = false;
+    } else if (current === 2) {
+      nextButtonEnabled = this.state.enableStep2NextButton;
+    }
 
+    const [form] = Form.useForm();
     return (
       <Space direction={'vertical'} style={{ width: '100%' }}>
         <Steps current={current}>
@@ -437,7 +419,7 @@ class VAGWAS extends React.Component {
             <Step key={item.title} title={item.title} />
           ))}
         </Steps>
-        <div className='steps-content'>{this.generateContentForStep(current)}</div>
+        <div className='steps-content'>{this.generateContentForStep(current, form)}</div>
         <div className='steps-action'>
           {current < steps.length - 1 && (
             <Button
