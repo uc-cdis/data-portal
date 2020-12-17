@@ -1,14 +1,4 @@
-const path = require('path');
-const basename = process.env.BASENAME || '/';
-const webpack = require('webpack');
-
 module.exports = {
-  entry: ['babel-polyfill', '../src/index.jsx'],
-  output: {
-    path: __dirname,
-    filename: 'bundle.js',
-    publicPath: basename,
-  },
   module: {
     rules: [
       {
@@ -34,12 +24,5 @@ module.exports = {
       },
       { test: /\.flow$/, loader: 'ignore-loader' },
     ],
-  },
-  resolve: {
-    alias: {
-      graphql: path.resolve('./node_modules/graphql'),
-      react: path.resolve('./node_modules/react'), // Same issue.
-    },
-    extensions: ['.js', '.jsx', '.json'],
   },
 };
