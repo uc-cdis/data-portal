@@ -17,10 +17,6 @@ module.exports = {
         loaders: ['babel-loader'],
       },
       {
-        test: /\.json$/,
-        loader: 'json',
-      },
-      {
         test: /\.less$/,
         loaders: ['style-loader', 'css-loader', 'less-loader'],
       },
