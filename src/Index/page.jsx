@@ -8,6 +8,7 @@ import {
   ReduxIndexOverview,
   ReduxIntroduction,
 } from './reduxer';
+import ReduxUserRegistration from '../UserRegistration/ReduxUserRegistration';
 import { getIndexPageCounts } from './utils';
 import dictIcons from '../img/icons';
 import { components } from '../params';
@@ -39,6 +40,7 @@ function IndexPage({ history }) {
       </div>
       <ReduxIndexOverview />
       <ReduxIndexButtonBar history={history} />
+      <ReduxUserRegistration />
     </div>
   );
 }

@@ -98,6 +98,10 @@ const clearCreationSession = () => ({
 });
 
 const mapStateToProps = (state) => ({
+  userInformation: {
+    ...state.user.additional_info,
+    email: state.user.username,
+  },
   userProfile: state.userProfile,
   popups: state.popups,
 });

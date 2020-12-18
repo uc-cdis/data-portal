@@ -1,7 +1,7 @@
 # To run: docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal
 # To check running container: docker exec -it dataportal /bin/bash
 
-FROM ubuntu:18.04
+FROM quay.io/cdis/ubuntu:18.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV REACT_APP_PROJECT_ID=search
@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     time \
     vim \
-    && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+    && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \

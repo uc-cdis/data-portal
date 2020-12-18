@@ -40,7 +40,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
   const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(0);
+  const [endTime, setEndTime] = useState(20);
 
   const [transformedFilter, setTransformedFilter] = useState(
     getGQLFilter(filter)
@@ -104,6 +104,31 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
         .finally(() => setIsUpdating(false));
     else setIsUpdating(false);
   };
+  useEffect(() => {
+    let isMounted = true;
+
+    if (isMounted) {
+      setIsError(false);
+      setIsUpdating(true);
+      fetchResult({
+        filter: transformedFilter,
+        factorVariable: '',
+        stratificationVariable: '',
+        efsFlag: false,
+      })
+        .then((result) => {
+          if (isMounted) {
+            setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
+            setRisktable(result.risktable);
+            setSurvival(result.survival);
+          }
+        })
+        .catch((e) => isMounted && setIsError(true))
+        .finally(() => isMounted && setIsUpdating(false));
+    }
+
+    return () => (isMounted = false);
+  }, []);
 
   return (
     <div className='explorer-survival-analysis'>

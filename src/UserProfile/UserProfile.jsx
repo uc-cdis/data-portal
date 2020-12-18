@@ -7,6 +7,7 @@ import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
 import { credentialCdisPath } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
+import ReduxUserInformation from './ReduxUserInformation';
 import './UserProfile.less';
 
 const NO_ACCESS_MSG =
@@ -23,6 +24,7 @@ export const saveToFile = (savingStr, filename) => {
 };
 
 const UserProfile = ({
+  userInformation,
   userProfile,
   popups,
   onCreateKey,
@@ -112,6 +114,7 @@ const UserProfile = ({
               onClose={savePopupClose}
             />
           )}
+          <ReduxUserInformation {...userInformation} />
           <Button
             onClick={onCreate}
             label={CREATE_API_KEY_BTN}
@@ -138,6 +141,7 @@ const UserProfile = ({
 };
 
 UserProfile.propTypes = {
+  userInformation: PropTypes.object.isRequired,
   userProfile: PropTypes.object.isRequired,
   popups: PropTypes.object.isRequired,
   onClearCreationSession: PropTypes.func.isRequired,
