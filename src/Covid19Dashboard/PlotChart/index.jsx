@@ -6,7 +6,7 @@ import {
 } from 'recharts';
 
 import Spinner from '../../components/Spinner';
-import downloadFromGuppy from '../dataUtils.js';
+import { downloadFromGuppy } from '../dataUtils.js';
 import './PlotChart.less';
 
 
