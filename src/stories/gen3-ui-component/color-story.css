@@ -1,0 +1,73 @@
+@import '../src/css/base.css';
+
+.g3-color__base-blue {
+  background-color: var(--g3-color__base-blue);
+}
+
+.g3-color__base-blue-light {
+  background-color: var(--g3-color__base-blue-light);
+}
+
+.g3-color__lime {
+  background-color: var(--g3-color__lime);
+}
+
+.g3-color__iris {
+  background-color: var(--g3-color__iris);
+}
+
+.g3-color__rose {
+  background-color: var(--g3-color__rose);
+}
+
+.g3-color__bee {
+  background-color: var(--g3-color__bee);
+}
+
+.g3-color__pink {
+  background-color: var(--g3-color__pink);
+}
+
+.g3-color__highlight-orange {
+  background-color: var(--g3-color__highlight-orange);
+}
+
+.g3-color__highlight-orange-light {
+  background-color: var(--g3-color__highlight-orange-light);
+}
+
+.g3-color__mint {
+  background-color: var(--g3-color__mint);
+}
+
+.g3-color__bg-coal {
+  background-color: var(--g3-color__bg-coal);
+}
+
+.g3-color__bg-cloud {
+  background-color: var(--g3-color__bg-cloud);
+}
+
+.g3-color__gray {
+  background-color: var(--g3-color__gray);
+}
+
+.g3-color__lightgray {
+  background-color: var(--g3-color__lightgray);
+}
+
+.g3-color__smoke {
+  background-color: var(--g3-color__smoke);
+}
+
+.g3-color__silver {
+  background-color: var(--g3-color__silver);
+}
+
+.g3-color__black {
+  background-color: var(--g3-color__black);
+}
+
+.g3-color__white {
+  background-color: var(--g3-color__white);
+}

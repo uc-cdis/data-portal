@@ -1,0 +1,8 @@
+@import '../src/css/base.css';
+
+.typo-demo-block {
+  height: 80px;
+  border-bottom: solid gray 1px;
+  padding-top: 10px;
+  padding-left: 10px;
+}
