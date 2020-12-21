@@ -1,0 +1,106 @@
+@import "../../css/base.css";
+@import '../../css/icon.css';
+
+.g3-dropdown {
+  display: inline-block;
+  position: relative;
+  min-width: 152px;
+  border-radius: 4px;
+}
+
+.g3-dropdown__menu {
+  display: none;
+  background-color: white;
+  border-radius: 4px;
+  margin-top: 1px;
+  border: 1px solid var(--g3-dropdown-menu__border-color);
+  z-index: 2;
+  width: calc(100% + 60px);
+}
+
+.g3-dropdown__menu--opened {
+  display: block;
+  position: absolute;
+}
+
+.g3-dropdown__item {
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+  padding: 1px 0;
+  margin: 0;
+  position: relative;
+}
+
+.g3-dropdown__item:hover,
+.g3-dropdown__item:active {
+  background-color: var(--g3-dropdown-item__bg-color);
+  color: var(--g3-dropdown-item__color);
+}
+
+.g3-dropdown__item--disabled {
+  background-color: var(--g3-disabled-btn__bg-color);
+  color: var(--g3-disabled-btn__color);
+  cursor: not-allowed;
+}
+
+.g3-dropdown__item--disabled:hover,
+.g3-dropdown__item--disabled:active {
+  background-color: var(--g3-disabled-btn__bg-color);
+  color: var(--g3-disabled-btn__color);
+  cursor: not-allowed;
+}
+
+.g3-dropdown__menu-divider {
+  margin: 0;
+  border-width: 1px 0 0 0;
+}
+
+.g3-dropdown-button__button .g3-icon {
+  background-color: var(--g3-color__white);
+  position: absolute;
+  top: 13px;
+  right: 10px;
+}
+
+.g3-dropdown__menu .g3-icon {
+  background-color: var(--g3-color__lightgray);
+}
+
+
+
+.g3-dropdown__item-icon {
+  position: absolute;
+  top: 15px;
+}
+
+.g3-dropdown__item-icon--left {
+  left: 15px;
+}
+
+.g3-dropdown__item-icon--right {
+  right: 15px;
+}
+
+.g3-dropdown__item--disabled .g3-dropdown__item-icon,
+.g3-dropdown__item--disabled .g3-icon {
+  background-color: var(--g3-disabled-btn__color);
+}
+
+.g3-dropdown__item:hover .g3-dropdown__item-icon,
+.g3-dropdown__item:hover .g3-icon {
+  background-color: var(--g3-dropdown-item__color);
+}
+
+.g3-dropdown__item--disabled:hover .g3-dropdown__item-icon,
+.g3-dropdown__item--disabled:hover .g3-icon {
+  background-color: var(--g3-disabled-btn__color);
+}
+
+.g3-dropdown--secondary .g3-dropdown__item:hover,
+.g3-dropdown--secondary .g3-dropdown__item:active {
+  background-color: var(--g3-secondary-btn__bg-color--hover);
+}

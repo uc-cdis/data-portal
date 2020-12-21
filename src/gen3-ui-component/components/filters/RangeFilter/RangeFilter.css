@@ -1,0 +1,49 @@
+@import "../../../css/base.css";
+
+.g3-range-filter {
+  width: 100%;
+  padding: 14px 14px;
+  box-sizing: border-box;
+}
+
+.g3-range-filter__title {
+  margin: 0;
+}
+
+.g3-range-filter__bounds {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 14px 0;
+}
+
+.g3-range-filter__bound {
+  margin: 0;
+  /* if no max-width this thing will take full length in FF */
+  max-width: 6em;
+}
+
+/* Overrides for rc-slider */
+.rc-slider-handle {
+  border-radius: 0;
+  width: 10px;
+  border: 1px solid var(--g3-color__lightgray);
+}
+
+.rc-slider-handle:hover {
+  border: 1px solid var(--g3-color__base-blue);
+}
+
+.rc-slider-handle:active {
+  border: 1px solid var(--g3-color__base-blue);
+  box-shadow: 0 0 5px var(--g3-color__base-blue);
+}
+
+.rc-slider-track {
+  background-color: var(--g3-color__highlight-orange);
+  border-radius: 2px;
+}
+
+.g3-range-filter__slider--inactive .rc-slider-track {
+  background-color: var(--g3-color__lightgray);
+}

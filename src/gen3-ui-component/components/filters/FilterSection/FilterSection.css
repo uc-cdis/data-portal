@@ -1,0 +1,276 @@
+@import "../../../css/base.css";
+@import "../../../css/icon.css";
+
+.g3-filter-section {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 14px 14px;
+  background-color: var(--g3-color__white);
+  border-left: 1px solid var(--g3-color__silver);
+  border-right: 1px solid var(--g3-color__silver);
+  border-bottom: 1px solid var(--g3-color__silver);
+}
+
+.g3-filter-section:first-child {
+  border-top: 1px solid var(--g3-color__silver);
+}
+
+
+.g3-filter-section__header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 25px;
+  width: 100%;
+}
+
+
+.g3-filter-section__title-container {
+  user-select: none;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.g3-filter-section__title {
+  font-size: 14px;
+  font-weight: var(--g3-font__semi-bold-weight);
+  color: var(--g3-color__bg-coal);
+  border-bottom: 2px solid transparent;
+  max-height: 25px;
+  min-width: 20px;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.g3-filter-section__title:hover {
+  min-width: fit-content;
+}
+
+.g3-filter-section__title--active {
+  border-bottom: 2px solid var(--g3-primary-btn__bg-color);
+}
+
+.g3-filter-section__selected-count-chip {
+  margin-left: 10px;
+}
+
+.g3-filter-section__selected-count-chip-text-emphasis {
+  color: var(--g3-color__gray);
+  font-weight: 800;
+}
+
+.g3-filter-section__options {
+  font-size: 14px;
+  color: var(--g3-color__gray);
+}
+
+.g3-filter-section__toggle-icon-container {
+  margin-right: 5px;
+}
+
+.g3-filter-section__toggle-icon,
+.g3-filter-section__search-icon {
+  background-color: var(--g3-color__gray);
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.g3-filter-section__show-more {
+  border: none;
+  color: var(--g3-color__base-blue);
+  cursor: pointer;
+  margin-top: 15px;
+  text-align: right;
+}
+
+.rc-tooltip-inner {
+  min-height: unset;
+  max-width: unset;
+  border: 1px solid var(--g3-color__silver);
+  border-radius: 4px;
+}
+
+.g3-filter-section .rc-tooltip-placement-top .rc-tooltip-arrow,
+.g3-filter-section .rc-tooltip-placement-topLeft .rc-tooltip-arrow,
+.g3-filter-section .rc-tooltip-placement-topRight .rc-tooltip-arrow {
+  border-top-color: var(--g3-color__silver);
+}
+
+.g3-filter-section__search-input {
+  border: 1px solid var(--g3-color__lightgray);
+  border-radius: var(--g3-auto-complete__border-radius);
+  padding: 5px 8px;
+  position: relative;
+  display: flex;
+  margin-top: 8px;
+}
+
+.g3-filter-section__and-or-toggle {
+  font-size: 12px;
+  padding: 5px 0 5px 8px;
+}
+
+.g3-filter-section__combine_label {
+  text-overflow: ellipsis;
+}
+
+.g3-filter-section__and-or-toggle button {
+  background: none;
+  border-radius: 3px;
+  margin: 0 4px;
+  cursor: pointer;
+  border: 1px solid var(--g3-color__lightgray);
+  text-align: center;
+  width: 40px;
+  padding: 2px 3px;
+  font-weight: 200;
+  color: #333;
+}
+
+.g3-filter-section__and-or-toggle .ant-radio-button-wrapper {
+  text-align: center;
+}
+
+.ant-radio-button-wrapper:hover {
+  color: var(--g3-primary-btn__bg-color) !important; /* stylelint-disable-line declaration-no-important */
+}
+
+.ant-radio-button-wrapper.ant-radio-button-wrapper-checked:hover {
+  color: white !important; /* stylelint-disable-line declaration-no-important */
+}
+
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before {
+  background-color: #d9d9d9 !important; /* stylelint-disable-line declaration-no-important */
+}
+
+.ant-radio-button-wrapper-checked {
+  background-color: var(--g3-primary-btn__bg-color);
+}
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  background-color: var(--g3-primary-btn__bg-color);
+  color: white;
+  border-color: var(--g3-primary-btn__bg-color);
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  background: var(--g3-primary-btn__bg-color) !important; /* stylelint-disable-line declaration-no-important */
+  color: white;
+  border-color: var(--g3-primary-btn__bg-color) !important; /* stylelint-disable-line declaration-no-important */
+}
+
+.g3-filter-section__search-input-box {
+  border: none;
+  width: 100%;
+}
+
+.g3-filter-section__search-input:active {
+  border-color: var(--g3-color__base-blue);
+}
+
+.g3-filter-section__hidden {
+  display: none;
+}
+
+.g3-filter-section__search-input-close {
+  width: 10px;
+  height: 10px;
+  position: relative;
+  top: 6px;
+  right: 6px;
+  background-color: var(--g3-color__gray);
+  cursor: pointer;
+}
+
+.g3-filter-section__search-input-spinner {
+  width: 20px;
+  height: 10px;
+  position: relative;
+  top: 10px;
+  right: 6px;
+  cursor: pointer;
+}
+
+.g3-filter-section__search-input-separator {
+  width: 1px;
+  border-left: 1px solid var(--g3-color__lightgray);
+  margin: 0 10px;
+}
+
+.g3-filter-section__search-input-icon {
+  background-color: var(--g3-color__gray);
+  position: relative;
+  top: 3px;
+  cursor: pointer;
+}
+
+.g3-filter-section__search-filter--hidden {
+  display: none;
+}
+
+.g3-filter-section__range-filter-clear-btn {
+  box-sizing: border-box;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  color: var(--g3-color__lightgray);
+  background-color: var(--g3-color__bg-cloud);
+  border-radius: 4px;
+}
+
+.g3-filter-section__range-filter-clear-btn:hover {
+  background-color: var(--g3-color__silver);
+}
+
+
+.g3-filter-section__range-filter-clear-btn * {
+  box-sizing: inherit;
+}
+
+.g3-filter-section__range-filter-clear-btn-text {
+  margin: 4px;
+  text-align: center
+}
+
+.g3-filter-section__range-filter-clear-btn-icon {
+  flex: 0 0 18px;
+  padding: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.g3-icon--question-mark-bootstrap.help-tooltip-icon {
+  background-color: black;
+  top: 2px;
+  opacity: 0.9;
+  width: 14px;
+  height: 14px;
+  position: relative;
+}
+
+.g3-helper-tooltip {
+  margin-left: 10px;
+  position: relative;
+  display: inline-block;
+}
+
+.g3-filter-section__and-or-toggle-helper-tooltip {
+  width: 300px;
+  background: none;
+}
+
+.g3-filter-section__and-or-toggle-helper-tooltip .rc-tooltip-content {
+  top: -1px;
+  position: relative;
+}

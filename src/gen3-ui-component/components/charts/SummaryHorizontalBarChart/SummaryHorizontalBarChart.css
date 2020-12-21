@@ -1,0 +1,72 @@
+@import "../../../css/base.css";
+
+.summary-horizontal-bar-chart {
+  padding: 12px;
+  background-color: var(--g3-color__white);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.summary-horizontal-bar-chart svg {
+  overflow: visible;
+  line-height: 1em;
+}
+
+.summary-horizontal-bar-chart__item {
+  margin: 6px 0;
+  line-height: 15px;
+  position: relative;
+}
+
+.summary-horizontal-bar-chart__item-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: .03rem;
+  color: var(--g3-color__gray);
+}
+
+.summary-horizontal-bar-chart__item-value {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .02rem;
+  color: var(--g3-color__base-blue);
+  position: relative;
+  top: 1px;
+}
+
+.summary-horizontal-bar-chart__item-label,
+.summary-horizontal-bar-chart__item-value {
+  user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+}
+
+.summary-horizontal-bar-chart__item-block-wrapper {
+  display: flex;
+}
+
+.summary-horizontal-bar-chart__item-block {
+  height: 11px;
+  position: relative;
+  top: 2px;
+  margin-right: 10px;
+}
+
+.summary-horizontal-bar-chart__title-box {
+  text-align: center;
+  border-bottom: solid var(--g3-color__black) 1px;
+  height: 22px;
+}
+
+.summary-horizontal-bar-chart__title {
+  line-height: 10px;
+  margin-bottom: 12px;
+}
+
+.summary-horizontal-bar-chart__toggle {
+  font-size: 14px;
+}

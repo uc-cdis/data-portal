@@ -1,0 +1,65 @@
+@import "../../../css/base.css";
+
+.summary-pie-chart {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--g3-color__white);
+  box-sizing: border-box;
+}
+
+.summary-pie-chart__title-box {
+  text-align: center;
+  border-bottom: solid var(--g3-color__black) 1px;
+}
+
+.summary-pie-chart__title {
+  line-height: 10px;
+  margin-bottom: 12px;
+}
+
+.summary-pie-chart__body {
+  display: flex;
+  flex-direction: row;
+}
+
+.summary-pie-chart__legend {
+  width: 40%;
+  flex-grow: 0;
+  padding-top: 8px;
+}
+
+.summary-pie-chart__legend-item {
+  text-align: right;
+  margin-bottom: 22px;
+  font-size: 14px;
+  line-height: 1em;
+  letter-spacing: .03rem;
+  color: var(--g3-color__gray);
+}
+
+.summary-pie-chart__legend-item-value {
+  margin-top: 8px;
+}
+
+.summary-pie-chart__legend-item-value-number {
+  font-weight: 900;
+}
+
+.summary-pie-chart__legend-item-value-percentage {
+  font-weight: 100;
+}
+
+.summary-pie-chart__legend-item-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#recharts_measurement_span {
+  display: none;
+}
+
+.summary-pie-chart__toggle {
+  text-align: right;
+  font-size: 14px;
+}

@@ -1,0 +1,6 @@
+@import "../../../css/base.css";
+
+.g3-filter-list {
+  width: 100%;
+  background-color: var(--g3-color__white);
+}

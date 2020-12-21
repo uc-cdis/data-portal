@@ -1,0 +1,14 @@
+@import "../../css/base.css";
+
+.g3-footer {
+  width: calc(100% - 20px);
+  padding: 10px;
+  height: 80px;
+  background-color: var(--g3-footer-color);
+}
+
+.g3-footer__image {
+  height: 80px;
+  float: right;
+  margin-right: 20px;
+}

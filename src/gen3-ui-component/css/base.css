@@ -1,0 +1,191 @@
+:root {
+  --g3-color__base-blue: #3283C8;
+  --g3-color__base-blue-light: #05B8EE;
+  --g3-color__lime: #7EC500;
+  --g3-color__iris: #AD91FF;
+  --g3-color__rose: #E74C3C;
+  --g3-color__bee: #F4B940;
+  --g3-color__pink: #FF7ABC;
+  --g3-color__highlight-orange: #EF8523;
+  --g3-color__highlight-orange-light: #FF9635;
+  --g3-color__mint: #26D9B1;
+  --g3-color__bg-coal: #4A4A4A;
+  --g3-color__bg-cloud: #F5F5F5;
+  --g3-color__gray: #606060;
+  --g3-color__lightgray: #9B9B9B;
+  --g3-color__smoke: #D1D1D1;
+  --g3-color__silver: #E7E7E7;
+  --g3-color__black: #000000;
+  --g3-color__white: #FFFFFF;
+
+  --g3-primary-btn__color: var(--g3-color__white);
+  --g3-primary-btn__bg-color: var(--g3-color__highlight-orange);
+  --g3-primary-btn__bg-color--hover: var(--g3-color__highlight-orange-light);
+  --g3-primary-btn__border-color: var(--g3-color__lightgray);
+  --g3-primary-btn__border-color--hover: var(--g3-color__gray);
+  --g3-primary-btn__border-color--active: var(--g3-color__lightgray);
+
+  --g3-secondary-btn__color: var(--g3-color__white);
+  --g3-secondary-btn__bg-color: var(--g3-color__base-blue);
+  --g3-secondary-btn__bg-color--hover: var(--g3-color__base-blue-light);
+  --g3-secondary-btn__border-color: var(--g3-color__lightgray);
+  --g3-secondary-btn__border-color--hover: var(--g3-color__gray);
+  --g3-secondary-btn__border-color--active: var(--g3-color__lightgray);
+
+  --g3-default-btn__color: var(--g3-color__gray);
+  --g3-default-btn__color--hover: var(--g3-color__black);
+  --g3-default-btn__color--active: var(--g3-color__highlight-orange-light);
+  --g3-default-btn__bg-color: var(--g3-color__white);
+  --g3-default-btn__border-color: var(--g3-color__gray);
+  --g3-default-btn__border-color--hover: var(--g3-color__black);
+  --g3-default-btn__border-color--active: var(--g3-color__highlight-orange-light);
+
+  --g3-disabled-btn__color: var(--g3-color__lightgray);
+  --g3-disabled-btn__bg-color: var(--g3-color__white);
+  --g3-disabled-btn__border-color: var(--g3-color__silver);
+
+  --g3-dropdown-item__bg-color: var(--g3-color__gray);
+  --g3-dropdown-item__color: var(--g3-color__white);
+  --g3-dropdown-menu__border-color: var(--g3-color__gray);
+
+  --g3-footer-color: var(--g3-color__bg-coal);
+
+  --g3-font__medium-weight: 500;
+  --g3-font__semi-bold-weight: 600;
+}
+
+h1, h2, h3, h4,
+body,
+.introduction,
+.body,
+.caption,
+.special-number,
+.form-body,
+.form-h1, .form-h2, .form-caption,
+.form-special-number {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 600;
+  line-height: 2em;
+  color: var(--g3-color__black);
+}
+
+h1 {
+  font-size: 32px;
+  letter-spacing: 0;
+}
+
+h2 {
+  font-size: 24px;
+  letter-spacing: .02rem;
+}
+
+h3 {
+  font-size: 18px;
+  letter-spacing: .02rem;
+}
+
+h4 {
+  font-size: 14px;
+  letter-spacing: .02rem;
+}
+
+a {
+  text-decoration: none;
+}
+
+.introduction {
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 1.6em;
+  letter-spacing: .03rem;
+  color: var(--g3-color__black);
+}
+
+.body {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.6em;
+  letter-spacing: .02rem;
+  color: var(--g3-color__gray);
+}
+
+.caption {
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.6em;
+  letter-spacing: .02rem;
+  color: var(--g3-color__gray);
+}
+
+.special-number {
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: .03rem;
+  color: var(--g3-color__base-blue);
+}
+
+.form-body {
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1em;
+  letter-spacing: .03rem;
+  color: var(--g3-color__gray);
+}
+
+.form-h1 {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2em;
+  letter-spacing: .02rem;
+  color: var(--g3-color__black);
+}
+
+.form-h2 {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2em;
+  letter-spacing: .03rem;
+  color: var(--g3-color__black);
+}
+
+.form-caption {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1em;
+  letter-spacing: .03rem;
+  color: var(--g3-color__base-blue);
+}
+
+.form-special-number {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1em;
+  letter-spacing: .02rem;
+  color: var(--g3-color__base-blue);
+}
+
+.g3-badge {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--g3-color__base-blue);
+  background-color: var(--g3-color__silver);
+  border-radius: 2px;
+  padding: 0;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 0 5px;
+}
+
+.g3-link {
+  color: var(--g3-color__base-blue);
+  cursor: pointer;
+}
+
+.g3-link:hover {
+  color: var(--g3-color__base-blue-light);
+}

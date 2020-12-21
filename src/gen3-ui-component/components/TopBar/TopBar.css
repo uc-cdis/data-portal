@@ -1,0 +1,43 @@
+@import '../../css/base.css';
+@import '../../css/icon.css';
+
+.top-bar {
+  width: 100%;
+  background-color: var(--g3-color__base-blue);
+  display: flex;
+  align-items: center;
+}
+
+.top-bar__header {
+  background-color: var(--g3-color__base-blue);
+  overflow: hidden;
+  vertical-align: middle;
+  margin: auto;
+  width: 1216px;
+}
+
+.top-bar__nav {
+  float: right;
+  color: var(--g3-color__white);
+  overflow: hidden;
+}
+
+.top-bar__link {
+  border-left: none;
+  border-top: none;
+  border-bottom: none;
+  border-right: 2px solid #6896c6;
+  background-color: var(--gen3-color__base-blue);
+  height: 20px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  padding: 0 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.top-bar__link:last-child {
+  border-right: 0;
+}

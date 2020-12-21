@@ -1,0 +1,32 @@
+.g3-chip {
+  box-sizing: border-box;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  color: var(--g3-color__lightgray);
+  background-color: var(--g3-color__bg-cloud);
+  border-radius: 4px;
+}
+
+.g3-chip * {
+  box-sizing: inherit;
+}
+
+.g3-chip__text {
+  margin: 4px;
+  text-align: center;
+}
+
+.g3-chip__clear-btn {
+  flex: 0 0 18px;
+  border-left: 1px solid var(--g3-color__silver);
+  padding: 4px 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.g3-chip__clear-btn:hover {
+  background-color: var(--g3-color__silver);
+}

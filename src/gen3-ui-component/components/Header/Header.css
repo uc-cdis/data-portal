@@ -1,0 +1,23 @@
+.header {
+  width: 100%;
+  background-color: var(--g3-color__base-blue-light);
+  height: 100px;
+  align-items: center;
+}
+
+.header__logo-container {
+  position: absolute;
+}
+
+.header__logo {
+  height: 80px;
+  padding: 10px 20px;
+}
+
+.header__title {
+  color: var(--g3-color__white);
+  text-align: center;
+  margin: 0;
+  line-height: 100px;
+
+}

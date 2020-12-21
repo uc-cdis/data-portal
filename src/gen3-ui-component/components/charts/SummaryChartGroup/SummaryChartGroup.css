@@ -1,0 +1,23 @@
+@import "../../../css/base.css";
+
+.summary-chart-group {
+  padding: 12px 12px;
+  display: flex;
+  flex-direction: row;
+  background-color: var(--g3-color__white);
+}
+
+.summary-chart-group__column {
+  display: inline-block;
+  flex-basis: 0;
+  flex-grow: 1;
+  margin: 0;
+  position: relative;
+}
+
+.summary-chart-group__column-left-border {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  border-left: solid var(--g3-color__silver) 1px;
+}
