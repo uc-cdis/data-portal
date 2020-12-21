@@ -1,4 +1,4 @@
-@import '../src/css/base.css';
+@import '../../gen3-ui-component/css/base.css';
 
 .typo-demo-block {
   height: 80px;

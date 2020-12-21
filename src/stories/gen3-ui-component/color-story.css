@@ -1,4 +1,4 @@
-@import '../src/css/base.css';
+@import '../../gen3-ui-component/css/base.css';
 
 .g3-color__base-blue {
   background-color: var(--g3-color__base-blue);

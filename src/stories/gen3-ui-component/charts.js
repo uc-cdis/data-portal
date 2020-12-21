@@ -1,9 +1,9 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import SummaryHorizontalBarChart from '../src/components/charts/SummaryHorizontalBarChart';
-import SummaryPieChart from '../src/components/charts/SummaryPieChart';
-import SummaryChartGroup from '../src/components/charts/SummaryChartGroup';
-import PercentageStackedBarChart from '../src/components/charts/PercentageStackedBarChart';
+import SummaryHorizontalBarChart from '../../gen3-ui-component/components/charts/SummaryHorizontalBarChart';
+import SummaryPieChart from '../../gen3-ui-component/components/charts/SummaryPieChart';
+import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
+import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 
 const virusData = [
   { name: 'H1N1', value: 4000 },
@@ -90,34 +90,70 @@ const customizedColorMap = [
 
 storiesOf('Chart', module)
   .add('SummaryHorizontalBarChart', () => (
-    <SummaryHorizontalBarChart data={virusData} title='bar chart title' showPercentage={false} />
+    <SummaryHorizontalBarChart
+      data={virusData}
+      title='bar chart title'
+      showPercentage={false}
+    />
   ))
   .add('SummaryHorizontalBarChart with single color and percentage', () => (
-    <SummaryHorizontalBarChart data={virusData} title='bar chart title' color='#3283c8' />
+    <SummaryHorizontalBarChart
+      data={virusData}
+      title='bar chart title'
+      color='#3283c8'
+    />
   ))
   .add('SummaryHorizontalBarChart with customized colors', () => (
-    <SummaryHorizontalBarChart data={virusData} title='bar chart title' showPercentage={false} useCustomizedColorMap customizedColorMap={customizedColorMap} />
+    <SummaryHorizontalBarChart
+      data={virusData}
+      title='bar chart title'
+      showPercentage={false}
+      useCustomizedColorMap
+      customizedColorMap={customizedColorMap}
+    />
   ))
   .add('SummaryPieChart', () => (
     <SummaryPieChart data={virusData} title='pie chart title' showPercentage />
   ))
   .add('SummaryPieChart with customized colors', () => (
-    <SummaryPieChart data={virusData} title='pie chart title' showPercentage useCustomizedColorMap customizedColorMap={customizedColorMap} />
+    <SummaryPieChart
+      data={virusData}
+      title='pie chart title'
+      showPercentage
+      useCustomizedColorMap
+      customizedColorMap={customizedColorMap}
+    />
   ))
   .add('SummaryChartGroup', () => (
     <SummaryChartGroup summaries={summaries} width={1010} />
   ))
   .add('SummaryChartGroup with only showing 2 at first', () => (
-    <SummaryChartGroup summaries={summaries} width={1010} maximumDisplayItem={2} />
+    <SummaryChartGroup
+      summaries={summaries}
+      width={1010}
+      maximumDisplayItem={2}
+    />
   ))
   .add('SummaryChartGroup with a Locked Chart', () => (
-    <SummaryChartGroup summaries={lockedSummaries} width={1010} lockValue={-1} lockMessage='This chart is locked!' />
+    <SummaryChartGroup
+      summaries={lockedSummaries}
+      width={1010}
+      lockValue={-1}
+      lockMessage='This chart is locked!'
+    />
   ))
   .add('SummaryChartGroup with an Empty Chart', () => (
-    <SummaryChartGroup summaries={summariesWithOneEmpty} width={1010} chartEmptyMessage='This chart is empty!' />
+    <SummaryChartGroup
+      summaries={summariesWithOneEmpty}
+      width={1010}
+      chartEmptyMessage='This chart is empty!'
+    />
   ))
   .add('PercentageStackedBarChart', () => (
-    <PercentageStackedBarChart data={virusData} title='percentage stacked bar chart title' />
+    <PercentageStackedBarChart
+      data={virusData}
+      title='percentage stacked bar chart title'
+    />
   ))
   .add('PercentageStackedBarChart with customized colors', () => (
     <PercentageStackedBarChart
@@ -128,5 +164,8 @@ storiesOf('Chart', module)
     />
   ))
   .add('PercentageStackedBarChart Locked', () => (
-    <PercentageStackedBarChart data={lockedVirus} title='percentage stacked bar chart title' />
+    <PercentageStackedBarChart
+      data={lockedVirus}
+      title='percentage stacked bar chart title'
+    />
   ));

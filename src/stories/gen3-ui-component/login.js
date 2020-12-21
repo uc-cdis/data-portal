@@ -1,8 +1,8 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import CommonsLogin from '../src/components/CommonsLogin/.';
-import kfLogo from '../src/images/logos/kf-logo.png';
+import CommonsLogin from '../../gen3-ui-component/components/CommonsLogin/.';
+import kfLogo from '../../gen3-ui-component/images/logos/kf-logo.png';
 
 storiesOf('Login', module)
   .add('CommonsLogin', () => (

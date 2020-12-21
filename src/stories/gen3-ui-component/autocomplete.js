@@ -1,8 +1,8 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import AutoComplete from '../src/components/AutoComplete';
-import Button from '../src/components/Button';
+import AutoComplete from '../../gen3-ui-component/components/AutoComplete';
+import Button from '../../gen3-ui-component/components/Button';
 
 const suggestionItem1 = {
   fullString: 'abcdea',
@@ -20,10 +20,7 @@ const suggestionItem2 = {
   ],
 };
 
-const suggestionList = [
-  suggestionItem1,
-  suggestionItem2,
-];
+const suggestionList = [suggestionItem1, suggestionItem2];
 
 const clearInputFunc = (ref) => {
   ref.current.clearInput();
@@ -31,29 +28,28 @@ const clearInputFunc = (ref) => {
 
 const setInputFunc = (ref) => {
   ref.current.setInputText('some new content');
-}
+};
 
-storiesOf('AutoComplete', module)
-  .add('autocomplete', () => {
-    const autoCompleteRef = React.createRef();
-    return (
-      <div>
-        <AutoComplete
-          ref={autoCompleteRef}
-          suggestionList={suggestionList}
-          inputPlaceHolderText='Search in Dictionary'
-          onSuggestionItemClick={action('click suggestion item')}
-          onInputChange={action('input change')}
-          onSubmitInput={action('submit input')}
-        />
-        <Button
-          label='call clearInput from outside'
-          onClick={() => clearInputFunc(autoCompleteRef)}
-        />
-        <Button
-          label='call setInputText from outside'
-          onClick={() => setInputFunc(autoCompleteRef)}
-        />
-      </div>
-    );
-  });
+storiesOf('AutoComplete', module).add('autocomplete', () => {
+  const autoCompleteRef = React.createRef();
+  return (
+    <div>
+      <AutoComplete
+        ref={autoCompleteRef}
+        suggestionList={suggestionList}
+        inputPlaceHolderText='Search in Dictionary'
+        onSuggestionItemClick={action('click suggestion item')}
+        onInputChange={action('input change')}
+        onSubmitInput={action('submit input')}
+      />
+      <Button
+        label='call clearInput from outside'
+        onClick={() => clearInputFunc(autoCompleteRef)}
+      />
+      <Button
+        label='call setInputText from outside'
+        onClick={() => setInputFunc(autoCompleteRef)}
+      />
+    </div>
+  );
+});

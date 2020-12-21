@@ -1,11 +1,11 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import SingleSelectFilter from '../src/components/filters/SingleSelectFilter';
-import RangeFilter from '../src/components/filters/RangeFilter';
-import FilterSection from '../src/components/filters/FilterSection';
-import FilterList from '../src/components/filters/FilterList';
-import FilterGroup from '../src/components/filters/FilterGroup';
+import SingleSelectFilter from '../../gen3-ui-component/components/filters/SingleSelectFilter';
+import RangeFilter from '../../gen3-ui-component/components/filters/RangeFilter';
+import FilterSection from '../../gen3-ui-component/components/filters/FilterSection';
+import FilterList from '../../gen3-ui-component/components/filters/FilterList';
+import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
 
 const projectOptions = [
   { text: 'ndh-CHARLIE', filterType: 'singleSelect', count: 123 },
@@ -51,43 +51,71 @@ for (let i = 0; i < NUM_GUID_OPTIONS; i += 1) {
 
 const ethnicityOptions = [
   {
-    text: 'Hispanic or Latino', filterType: 'singleSelect', count: 123, accessible: true,
+    text: 'Hispanic or Latino',
+    filterType: 'singleSelect',
+    count: 123,
+    accessible: true,
   },
   {
-    text: 'Not Hispanic or Latino', filterType: 'singleSelect', count: 123, accessible: false,
+    text: 'Not Hispanic or Latino',
+    filterType: 'singleSelect',
+    count: 123,
+    accessible: false,
   },
   {
-    text: 'Unknown', filterType: 'singleSelect', count: 123, accessible: true,
+    text: 'Unknown',
+    filterType: 'singleSelect',
+    count: 123,
+    accessible: true,
   },
   {
-    text: 'Not Specified', filterType: 'singleSelect', count: -1, accessible: true,
+    text: 'Not Specified',
+    filterType: 'singleSelect',
+    count: -1,
+    accessible: true,
   },
   {
-    text: 'Test Value', filterType: 'singleSelect', count: -1, accessible: false,
+    text: 'Test Value',
+    filterType: 'singleSelect',
+    count: -1,
+    accessible: false,
   },
 ];
 
 const consentCodeOptions = [
   {
-    text: 'ABC', filterType: 'singleSelect', count: 15, accessible: true,
+    text: 'ABC',
+    filterType: 'singleSelect',
+    count: 15,
+    accessible: true,
   },
   {
-    text: '123', filterType: 'singleSelect', count: 7, accessible: false,
+    text: '123',
+    filterType: 'singleSelect',
+    count: 7,
+    accessible: false,
   },
   {
-    text: 'HAL', filterType: 'singleSelect', count: 2, accessible: true,
+    text: 'HAL',
+    filterType: 'singleSelect',
+    count: 2,
+    accessible: true,
   },
   {
-    text: 'IRS', filterType: 'singleSelect', count: 1, accessible: true,
+    text: 'IRS',
+    filterType: 'singleSelect',
+    count: 1,
+    accessible: true,
   },
   {
-    text: 'SOS', filterType: 'singleSelect', count: -1, accessible: false,
+    text: 'SOS',
+    filterType: 'singleSelect',
+    count: -1,
+    accessible: false,
   },
 ];
 
-const ageOptions = [
-  { min: 2, max: 97, filterType: 'range' },
-];
+const ageOptions = [{ min: 2, max: 97, filterType: 'range' }];
 
 const fileTypeOptions = [
   { text: 'mRNA Array', filterType: 'singleSelect', count: 123 },
@@ -97,9 +125,7 @@ const fileTypeOptions = [
   { text: 'Metabolomic MS', filterType: 'singleSelect', count: 123 },
 ];
 
-const fileCountOptions = [
-  { min: 2, max: 97, filterType: 'range' },
-];
+const fileCountOptions = [{ min: 2, max: 97, filterType: 'range' }];
 
 const projectSections = [
   { title: 'Project', options: projectOptions },
@@ -126,13 +152,25 @@ const projectSectionsWithTooltips = [
 const subjectSectionsWithTooltips = [
   { title: 'Gender', options: genderOptions, tooltip: 'Gender of subject' },
   { title: 'Race', options: raceOptions, tooltip: 'Race of subject' },
-  { title: 'Ethnicity', options: ethnicityOptions, tooltip: 'Ethnicity of subject' },
+  {
+    title: 'Ethnicity',
+    options: ethnicityOptions,
+    tooltip: 'Ethnicity of subject',
+  },
   { title: 'Age', options: ageOptions, tooltip: 'Age at visit' },
 ];
 
 const fileSectionsWithTooltips = [
-  { title: 'File Types', options: fileTypeOptions, tooltip: 'File type of the data' },
-  { title: 'File Counts', options: fileCountOptions, tooltip: 'File counts of the subjects' },
+  {
+    title: 'File Types',
+    options: fileTypeOptions,
+    tooltip: 'File type of the data',
+  },
+  {
+    title: 'File Counts',
+    options: fileCountOptions,
+    tooltip: 'File counts of the subjects',
+  },
 ];
 
 const tabs = [
@@ -142,45 +180,75 @@ const tabs = [
 ];
 
 const tabsWithTooltips = [
-  <FilterList key={0} sections={projectSectionsWithTooltips} tierAccessLimit={1000} />,
-  <FilterList key={1} sections={subjectSectionsWithTooltips} tierAccessLimit={1000} />,
-  <FilterList key={2} sections={fileSectionsWithTooltips} tierAccessLimit={1000} />,
+  <FilterList
+    key={0}
+    sections={projectSectionsWithTooltips}
+    tierAccessLimit={1000}
+  />,
+  <FilterList
+    key={1}
+    sections={subjectSectionsWithTooltips}
+    tierAccessLimit={1000}
+  />,
+  <FilterList
+    key={2}
+    sections={fileSectionsWithTooltips}
+    tierAccessLimit={1000}
+  />,
 ];
 
 const filterConfig = {
-  tabs: [{
-    title: 'Project',
-    fields: [
-      'project',
-      'study',
-    ],
-  },
-  {
-    title: 'Subject',
-    fields: [
-      'race',
-      'ethnicity',
-      'gender',
-      'age',
-    ],
-  },
-  {
-    title: 'File',
-    fields: [
-      'file_type',
-      'file_count',
-    ],
-  }],
+  tabs: [
+    {
+      title: 'Project',
+      fields: ['project', 'study'],
+    },
+    {
+      title: 'Subject',
+      fields: ['race', 'ethnicity', 'gender', 'age'],
+    },
+    {
+      title: 'File',
+      fields: ['file_type', 'file_count'],
+    },
+  ],
 };
 
 storiesOf('Filters', module)
   .add('SingleSelectFilter', () => (
     <div>
-      <SingleSelectFilter label='Male' onSelect={action('checked')} count={1} accessible />
-      <SingleSelectFilter label='Female' onSelect={action('checked')} count={2} accessible />
-      <SingleSelectFilter label='Option3' onSelect={action('checked')} count={-1} accessible tierAccessLimit={1000} />
-      <SingleSelectFilter label='Option4' onSelect={action('checked')} count={4} accessible={false} />
-      <SingleSelectFilter label='Option5' onSelect={action('checked')} count={-1} accessible={false} tierAccessLimit={1000} />
+      <SingleSelectFilter
+        label='Male'
+        onSelect={action('checked')}
+        count={1}
+        accessible
+      />
+      <SingleSelectFilter
+        label='Female'
+        onSelect={action('checked')}
+        count={2}
+        accessible
+      />
+      <SingleSelectFilter
+        label='Option3'
+        onSelect={action('checked')}
+        count={-1}
+        accessible
+        tierAccessLimit={1000}
+      />
+      <SingleSelectFilter
+        label='Option4'
+        onSelect={action('checked')}
+        count={4}
+        accessible={false}
+      />
+      <SingleSelectFilter
+        label='Option5'
+        onSelect={action('checked')}
+        count={-1}
+        accessible={false}
+        tierAccessLimit={1000}
+      />
     </div>
   ))
   .add('RangeFilter', () => (
@@ -227,19 +295,25 @@ storiesOf('Filters', module)
       onAfterDrag={action('range change')}
       tierAccessLimit={1000}
       isSearchFilter={true}
-      onSearchFilterLoadOptions={(searchString, offset=0) => {
+      onSearchFilterLoadOptions={(searchString, offset = 0) => {
         const pageSize = 20;
         if (!searchString) {
           return {
-            options: guidOptions.slice(offset,offset+pageSize).map(option => ({value: option.text, label: option.text})),
+            options: guidOptions
+              .slice(offset, offset + pageSize)
+              .map((option) => ({ value: option.text, label: option.text })),
             hasMore: guidOptions.length > offset + pageSize,
-          }
+          };
         }
-        const filteredOptions = guidOptions.filter(option => option.text.indexOf(searchString) !== -1);
+        const filteredOptions = guidOptions.filter(
+          (option) => option.text.indexOf(searchString) !== -1
+        );
         return {
-          options: filteredOptions.slice(offset, offset+pageSize).map(option => ({value: option.text, label: option.text})),
-          hasMore: filteredOptions.length > offset + pageSize
-        }
+          options: filteredOptions
+            .slice(offset, offset + pageSize)
+            .map((option) => ({ value: option.text, label: option.text })),
+          hasMore: filteredOptions.length > offset + pageSize,
+        };
       }}
     />
   ))
