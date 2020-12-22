@@ -46,7 +46,7 @@
     "react-responsive": "^6.1.1",
     "react-router-dom": "^5.2.0",
     "react-select": "^3.1.0",
-    "react-select-async-paginate": "^0.5.1",
+    "react-select-async-paginate": "^0.4.1",
     "react-svg-loader": "^3.0.3",
     "react-table": "^6.9.2",
     "react-virtualized": "^9.22.2",
