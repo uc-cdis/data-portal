@@ -3,7 +3,8 @@ import { getIndexPageCounts } from '../Index/utils';
 import UserRegistration from './UserRegistration';
 
 const mapStateToProps = (state) => ({
-  shouldRegister: Object.keys(state.user.authz).length === 0,
+  shouldRegister:
+    !state.user.authz || Object.keys(state.user.authz).length === 0,
 });
 
 const mapDispatchToProps = (dispatch) => ({
