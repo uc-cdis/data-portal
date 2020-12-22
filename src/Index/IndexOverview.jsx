@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
 import Select from 'react-select';
 import Spinner from '../components/Spinner';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../gen3-ui-component/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { consortiumList } from '../params';
 import { breakpoints } from '../localconf';

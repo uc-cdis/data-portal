@@ -1,8 +1,8 @@
 import React from 'react';
 import FileSaver from 'file-saver';
-import Button from '@gen3/ui-component/dist/components/Button';
-import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
-import Toaster from '@gen3/ui-component/dist/components/Toaster';
+import Button from '../../gen3-ui-component/components/Button';
+import Dropdown from '../../gen3-ui-component/components/Dropdown';
+import Toaster from '../../gen3-ui-component/components/Toaster';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
 import PropTypes from 'prop-types';
 import { calculateDropdownButtonConfigs, humanizeNumber } from '../utils';

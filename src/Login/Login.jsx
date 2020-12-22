@@ -2,7 +2,7 @@ import React from 'react';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select, { createFilter } from 'react-select';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../gen3-ui-component/components/Button';
 import { basename, loginPath } from '../localconf';
 import { components } from '../params';
 

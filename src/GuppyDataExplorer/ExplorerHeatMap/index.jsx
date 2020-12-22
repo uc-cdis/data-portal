@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactEcharts from 'echarts-for-react';
-import LockedContent from '@gen3/ui-component/dist/components/charts/LockedContent';
+import LockedContent from '../../gen3-ui-component/components/charts/LockedContent';
 import { capitalizeFirstLetter } from '../../utils';
 import { GuppyConfigType } from '../configTypeDef';
 import './ExplorerHeatMap.less';

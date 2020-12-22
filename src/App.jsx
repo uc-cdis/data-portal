@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import querystring from 'querystring';
 import { Helmet } from 'react-helmet';
-import Spinner from '@gen3/ui-component/dist/components/Spinner/Spinner';
+import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';

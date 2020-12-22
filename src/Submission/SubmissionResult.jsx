@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-kuroir';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../gen3-ui-component/components/Button';
 import './SubmissionResult.less';
 
 /**

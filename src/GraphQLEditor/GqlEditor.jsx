@@ -1,6 +1,6 @@
 import GraphiQL from 'graphiql';
 import { buildClientSchema } from 'graphql/utilities';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../gen3-ui-component/components/Button';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fetchGraphQL, fetchFlatGraphQL } from '../actions';

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select from 'react-select';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../gen3-ui-component/components/Button';
 import BackLink from '../components/BackLink';
 import Spinner from '../components/Spinner';
 import { analysisApps } from '../localconf';

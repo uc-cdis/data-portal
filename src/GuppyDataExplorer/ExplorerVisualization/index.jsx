@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
-import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
+import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
+import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 import { components } from '../../params';
 import { tierAccessLevel } from '../../localconf';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';

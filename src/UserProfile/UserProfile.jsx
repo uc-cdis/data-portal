@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FileSaver from 'file-saver';
 import copy from 'clipboard-plus';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../gen3-ui-component/components/Button';
 import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
 import { credentialCdisPath } from '../localconf';

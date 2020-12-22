@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import querystring from 'querystring';
 import Select from 'react-select';
-import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import Dropdown from '../gen3-ui-component/components/Dropdown';
 import { getSubmitPath } from '../utils';
 import './QueryForm.less';
 
