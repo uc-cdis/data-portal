@@ -39,10 +39,10 @@ class ExplorerTopMessageBanner extends React.Component {
                   <span className='top-message-banner__normal-text'>Due to lack of access, you are only able to narrow the cohort down to </span>
                   <span className='top-message-banner__bold-text'>{ this.props.tierAccessLimit } </span>
                   <span className='top-message-banner__normal-text'>
-                    {this.props.guppyConfig.nodeCountTitle? 
-                      this.props.guppyConfig.nodeCountTitle.toLowerCase() : 
+                    {this.props.guppyConfig.nodeCountTitle ?
+                      this.props.guppyConfig.nodeCountTitle.toLowerCase() :
                       labelToTitle(this.props.guppyConfig.dataType, false)
-                  }.
+                    }.
                   Please request additional access if necessary.
                   </span>
                 </div>

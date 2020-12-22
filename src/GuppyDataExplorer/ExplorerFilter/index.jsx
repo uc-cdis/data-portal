@@ -129,10 +129,10 @@ class ExplorerFilter extends React.Component {
       adminAppliedPreFilters: this.props.adminAppliedPreFilters,
       lockedTooltipMessage: this.props.tierAccessLevel === 'regular' ? `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.` : '',
       disabledTooltipMessage: this.props.tierAccessLevel === 'regular' ? `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${this.props.tierAccessLimit} ${
-        this.props.guppyConfig.nodeCountTitle? 
-          this.props.guppyConfig.nodeCountTitle.toLowerCase() : 
+        this.props.guppyConfig.nodeCountTitle ?
+          this.props.guppyConfig.nodeCountTitle.toLowerCase() :
           labelToTitle(this.props.guppyConfig.dataType, false)
-        } or more.` : '',
+      } or more.` : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
     };
     let filterFragment;

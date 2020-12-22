@@ -63,7 +63,9 @@ class GuppyDataExplorer extends React.Component {
             heatMapConfig={this.props.heatMapConfig}
             guppyConfig={this.props.guppyConfig}
             history={this.props.history}
-            nodeCountTitle={this.props.guppyConfig.nodeCountTitle || labelToTitle(this.props.guppyConfig.dataType)}
+            nodeCountTitle={
+              this.props.guppyConfig.nodeCountTitle
+              || labelToTitle(this.props.guppyConfig.dataType)}
             tierAccessLimit={this.props.tierAccessLimit}
           />
         </GuppyWrapper>

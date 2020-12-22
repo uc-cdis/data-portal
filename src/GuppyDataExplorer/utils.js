@@ -6,6 +6,8 @@
 *   dropdownConfig: infos for this dropdown, e.g. "title"
 *   buttonConfigs: a list of button configs (includes buttion title, button type, etc.)
 */
+import pluralize from 'pluralize';
+
 export const calculateDropdownButtonConfigs = (config) => {
   const dropdownConfig = config
     && config.dropdowns
@@ -61,10 +63,9 @@ export const humanizeNumber = (number, fixedPoint = 2) => {
 /*
 * Convert label to pluralized Title
 * @param {label} string - a label to convert to title
-* @param {titleCase} boolean - Should first letter be capitalized 
+* @param {titleCase} boolean - Should first letter be capitalized
 * @returns {string} Pluralized formatted word
 */
-import pluralize from 'pluralize';
 export const labelToTitle = (label, titleCase = true) => {
   const pluralizedLabel = pluralize(label);
   if (titleCase) {
