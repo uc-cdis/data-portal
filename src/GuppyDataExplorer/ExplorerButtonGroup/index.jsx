@@ -120,7 +120,7 @@ class ExplorerButtonGroup extends React.Component {
   getOnClickFunction = (buttonConfig) => {
     let clickFunc = () => {};
     if (buttonConfig.type === 'data') {
-      clickFunc = this.downloadData(buttonConfig.fileName);
+      clickFunc = this.downloadData(buttonConfig.fileName, buttonConfig.title);
     }
     if (buttonConfig.type === 'manifest') {
       clickFunc = this.downloadManifest(buttonConfig.fileName, null);
@@ -343,10 +343,11 @@ class ExplorerButtonGroup extends React.Component {
     });
   };
 
-  downloadData = filename => () => {
-    this.props.downloadRawData().then((res) => {
+  downloadData = (filename, fileFormat) => () => {
+    const isJsonFormat = fileFormat === 'JSON' || typeof fileFormat === 'undefined';
+    this.props.downloadRawData({ format: fileFormat }).then((res) => {
       if (res) {
-        const blob = new Blob([JSON.stringify(res, null, 2)], { type: 'text/json' });
+        const blob = new Blob([isJsonFormat ? JSON.stringify(res, null, 2) : res], { type: `text/${isJsonFormat ? 'json' : fileFormat.toLowerCase()}` });
         FileSaver.saveAs(blob, filename);
       } else {
         throw Error('Error when downloading data');
