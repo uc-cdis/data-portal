@@ -1,5 +1,3 @@
-@import "../../css/base.css";
-
 .g3-dropdown-button__wrapper {
   height: 40px;
   z-index: 1;
@@ -163,7 +161,6 @@
 .g3-dropdown-button__wrapper--disabled .g3-dropdown-button__menu-trigger {
   border-left: none;
 }
-
 
 .g3-dropdown-button__icon--menu-opened {
   mask-image: svg-load(../../images/icons/chevron-up.svg);

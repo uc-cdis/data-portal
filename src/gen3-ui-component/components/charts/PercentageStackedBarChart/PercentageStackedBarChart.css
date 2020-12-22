@@ -1,12 +1,10 @@
-@import "../../../css/base.css";
-
 .percentage-bar-chart {
   box-sizing: border-box;
   background-color: var(--g3-color__white);
   padding: 12px 12px;
   font-size: 14px;
   line-height: 1em;
-  letter-spacing: .03rem;
+  letter-spacing: 0.03rem;
   color: var(--g3-color__gray);
 }
 

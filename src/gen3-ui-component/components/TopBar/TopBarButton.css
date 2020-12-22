@@ -1,5 +1,3 @@
-@import '../../css/base.css';
-
 .top-bar-button.body {
   color: var(--g3-color__white);
   margin: auto 20px;
@@ -8,7 +6,8 @@
   align-items: baseline;
 }
 
-.top-bar-button--active, .top-bar-button:hover {
+.top-bar-button--active,
+.top-bar-button:hover {
   border-bottom: 1px solid var(--g3-color__white);
 }
 

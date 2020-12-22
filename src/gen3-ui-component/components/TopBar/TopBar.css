@@ -1,6 +1,3 @@
-@import '../../css/base.css';
-@import '../../css/icon.css';
-
 .top-bar {
   width: 100%;
   background-color: var(--g3-color__base-blue);
