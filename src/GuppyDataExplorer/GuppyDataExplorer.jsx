@@ -4,7 +4,7 @@ import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
-import { labelToTitle } from '../utils';
+import { labelToTitle } from './utils';
 import {
   GuppyConfigType,
   FilterConfigType,
