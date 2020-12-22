@@ -1,4 +1,4 @@
-import { calculateDropdownButtonConfigs, humanizeNumber } from './utils';
+import { labelToTitle, calculateDropdownButtonConfigs, humanizeNumber } from './utils';
 
 describe('utils for data visualization explorer', () => {
   it('calculate dropdown button configurations correctly', () => {
@@ -67,5 +67,15 @@ describe('utils for data visualization explorer', () => {
     expect(humanizeNumber(1200000000, 1)).toBe('1.2B');
     expect(humanizeNumber(1200000000000, 1)).toBe('1.2T');
     expect(humanizeNumber(1200000000000000, 1)).toBe('1.2Qa');
+  });
+
+  it('Convert label to Title', () => {
+    expect(labelToTitle('test')).toBe('Tests');
+    expect(labelToTitle('case')).toBe('Cases');
+    expect(labelToTitle('file')).toBe('Files');
+    expect(labelToTitle('test', false)).toBe('tests');
+    expect(labelToTitle('case', false)).toBe('cases');
+    expect(labelToTitle('file', false)).toBe('files');
+    expect(labelToTitle('test case with odd stuff_21file')).toBe('Test case with odd stuff_21files');
   });
 });

@@ -57,3 +57,18 @@ export const humanizeNumber = (number, fixedPoint = 2) => {
   // 10^15+, number is too large
   return Number.parseFloat(number).toExponential(fixedPoint);
 };
+
+/*
+* Convert label to pluralized Title
+* @param {label} string - a label to convert to title
+* @param {titleCase} boolean - Should first letter be capitalized 
+* @returns {string} Pluralized formatted word
+*/
+import pluralize from 'pluralize';
+export const labelToTitle = (label, titleCase = true) => {
+  const pluralizedLabel = pluralize(label);
+  if (titleCase) {
+    return pluralizedLabel.charAt(0).toUpperCase() + pluralizedLabel.slice(1);
+  }
+  return pluralizedLabel.toLowerCase();
+};

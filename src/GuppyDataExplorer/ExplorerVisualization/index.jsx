@@ -18,6 +18,7 @@ import {
 } from '../configTypeDef';
 import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper';
 import './ExplorerVisualization.css';
+import { labelToTitle } from '../utils';
 
 
 class ExplorerVisualization extends React.Component {
@@ -31,7 +32,7 @@ class ExplorerVisualization extends React.Component {
     let countItems = [];
     const stackedBarCharts = [];
     countItems.push({
-      label: this.props.nodeCountTitle,
+      label: this.props.nodeCountTitle || labelToTitle(this.props.dataType),
       value: this.props.totalCount,
     });
     Object.keys(chartConfig).forEach((field) => {
@@ -102,7 +103,11 @@ class ExplorerVisualization extends React.Component {
     // don't lock components for libre commons
     const isComponentLocked = (tierAccessLevel !== 'regular') ? false : checkForAnySelectedUnaccessibleField(this.props.aggsData,
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
-    const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${this.props.tierAccessLimit} ${this.props.guppyConfig.nodeCountTitle.toLowerCase() || this.props.guppyConfig.dataType}.`;
+    const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${this.props.tierAccessLimit} ${
+      this.props.guppyConfig.nodeCountTitle? 
+        this.props.guppyConfig.nodeCountTitle.toLowerCase() : 
+        labelToTitle(this.props.guppyConfig.dataType, false)
+      }.`;
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
 
     // heatmap config
@@ -264,7 +269,7 @@ ExplorerVisualization.propTypes = {
   buttonConfig: ButtonConfigType,
   heatMapConfig: PropTypes.object,
   guppyConfig: GuppyConfigType,
-  nodeCountTitle: PropTypes.string.isRequired,
+  nodeCountTitle: PropTypes.string,
   tierAccessLimit: PropTypes.number.isRequired,
 };
 

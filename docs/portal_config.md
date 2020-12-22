@@ -265,7 +265,7 @@ Below is an example, with inline comments describing what each JSON block config
     ],
     "guppyConfig": { // required; how to configure Guppy to work with the Data Explorer
       "dataType": "case", // required; must match the index “type” in the guppy configuration block in the manifest.json
-      "nodeCountTitle": "Cases", // required; plural of root node
+      "nodeCountTitle": "Cases", // optional; plural of root node
       "fieldMapping": [ // optional; a way to rename GraphQL fields to be more human readable
         { "field": "consent_codes", "name": "Data Use Restriction" },
         { "field": "bmi", "name": "BMI" }
@@ -319,7 +319,7 @@ Below is an example, with inline comments describing what each JSON block config
       "fieldMapping": [ // optional; a way to rename GraphQL fields to be more human readable
         { "field": "object_id", "name": "GUID" } // required; the file index should always include this one
       ],
-      "nodeCountTitle": "Files", // required; plural of root node
+      "nodeCountTitle": "Files", // optional; plural of root node
       "manifestMapping": { // optional; how to configure the mapping between cases/subjects/participants and files. This is used to export or download files that are associated with a cohort. It is basically joining two indices on specific GraphQL fields
         "resourceIndexType": "case", // required; joining this index with the case index
         "resourceIdField": "case_id", // required; which field should is the main identifier in the other index?
