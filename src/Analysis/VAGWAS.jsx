@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber, Collapse, List, Tag } from 'antd';
+import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber, Collapse, List, Tag, Popconfirm } from 'antd';
 import {
   CheckCircleOutlined,
   SyncOutlined,
@@ -17,6 +17,7 @@ import './VAGWAS.css';
 const { Step } = Steps;
 const { Text } = Typography;
 const { Panel } = Collapse;
+const { TextArea } = Input;
 
 const steps = [
   {
@@ -43,7 +44,8 @@ class VAGWAS extends React.Component {
       previewModalDataKey: undefined,
       selectedDataKey: undefined,
       jobName: undefined,
-      jobSubmitted: false,
+      showJobSubmissionResult: false,
+      jobSubmittedRunID: undefined,
       enableStep2NextButton: true,
       step2ConfigValues: {
         workflow: 'demo',
@@ -52,6 +54,8 @@ class VAGWAS extends React.Component {
         maf_cutoff: 0.05,
       },
       marinerJobStatus: [],
+      showJobStatusModal: false,
+      jobStatusModalData: '',
     };
   }
 
@@ -89,10 +93,10 @@ class VAGWAS extends React.Component {
                   && data.log
                   && data.log.main
                   && data.log.main.status) {
-                  if (data.request && data.request.tags && data.request.tags.jobName) {
+                  if (data.log.request && data.log.request.tags && data.log.request.tags.jobName) {
                     return ({
                       runID: rID,
-                      jobName: data.request.tags.jobName,
+                      jobName: data.log.request.tags.jobName,
                       status: data.log.main.status,
                     });
                   }
@@ -111,7 +115,6 @@ class VAGWAS extends React.Component {
         },
       );
   }
-
 
   getStatusTag = (jobStatus) => {
     if (!jobStatus) {
@@ -153,6 +156,13 @@ class VAGWAS extends React.Component {
         </Tag>
       );
     }
+  }
+
+  cancelMarinerJob = (runID) => {
+    fetchWithCreds({
+      path: `${marinerUrl}/${runID}/cancel`,
+      method: 'POST',
+    }).then(this.getMarinerJobStatus());
   }
 
   mainTableRowSelection = {
@@ -209,6 +219,25 @@ class VAGWAS extends React.Component {
     this.setState({
       showPreviewModal: false,
     });
+  };
+
+  handleJobStatusModalCancel = () => {
+    this.setState({
+      showJobStatusModal: false,
+    });
+  };
+
+  handleJobStatusModalShow = (runID) => {
+    fetchWithCreds({
+      path: `${marinerUrl}/${runID}`,
+      method: 'GET',
+    })
+      .then(({ data }) => {
+        this.setState({
+          jobStatusModalData: JSON.stringify(data, undefined, 2),
+          showJobStatusModal: true,
+        });
+      });
   };
 
   next() {
@@ -465,74 +494,96 @@ class VAGWAS extends React.Component {
         wrapperCol: { offset: 8, span: 16 },
       };
 
+      if (this.state.showJobSubmissionResult) {
+        return (<div className='vaGWAS__mainArea'>
+          <Result
+            status={(this.state.jobSubmittedRunID) ? 'success' : 'error'}
+            title={(this.state.jobSubmittedRunID) ? 'GWAS Job Submitted Successfully' : 'GWAS Job Submission Failed'}
+            subTitle={`GWAS Job Name: ${this.state.jobName}, run ID: ${this.state.jobSubmittedRunID}`}
+            extra={[
+              <Button
+                key='done'
+                onClick={() => {
+                  this.setState({
+                    current: 0,
+                    showStep0Table: false,
+                    showPreviewModal: false,
+                    previewModalDataKey: undefined,
+                    selectedDataKey: undefined,
+                    jobName: undefined,
+                    showJobSubmissionResult: false,
+                    jobSubmittedRunID: undefined,
+                    enableStep2NextButton: true,
+                    step2ConfigValues: {
+                      workflow: 'demo',
+                      genotype_cutoff: 0.2,
+                      sample_cutoff: 0.04,
+                      maf_cutoff: 0.05,
+                    },
+                    showJobStatusModal: false,
+                    jobStatusModalData: '',
+                  });
+                }}
+              >
+                Done
+              </Button>,
+            ]}
+          />
+        </div>);
+      }
+
       return (
         <div className='vaGWAS__mainArea'>
-          {(this.state.jobSubmitted) ?
-            <Result
-              status='success'
-              title='GWAS Job Submitted Successfully'
-              subTitle={`GWAS Job Name: ${this.state.jobName}`}
-              extra={[
-                <Button
-                  key='done'
-                  onClick={() => {
+          <Form
+            {...layout}
+            name='control-hooks'
+            onFinish={(values) => {
+              const requestBody = marinerRequestBody[this.state.step2ConfigValues.workflow];
+              Object.keys(this.state.step2ConfigValues)
+                .filter(cfgKey => cfgKey !== 'workflow')
+              // eslint-disable-next-line no-return-assign
+                .map(cfgKey =>
+                  requestBody.input[cfgKey] = this.state.step2ConfigValues[cfgKey].toString());
+              requestBody.input.phenotype_file.location = `USER/${this.state.selectedDataKey}`;
+              if (!requestBody.tags) {
+                requestBody.tags = {};
+              }
+              requestBody.tags.jobName = values.GWASJobName;
+              fetchWithCreds({
+                path: `${marinerUrl}`,
+                method: 'POST',
+                body: JSON.stringify(requestBody),
+              })
+                .then(({ data }) => {
+                  if (data && data.runID) {
+                    this.getMarinerJobStatus();
                     this.setState({
-                      current: 0,
-                      showStep0Table: false,
-                      showPreviewModal: false,
-                      previewModalDataKey: undefined,
-                      selectedDataKey: undefined,
-                      jobName: undefined,
-                      jobSubmitted: false,
-                      enableStep2NextButton: true,
-                      step2ConfigValues: {
-                        workflow: 'demo',
-                        genotype_cutoff: 0.2,
-                        sample_cutoff: 0.04,
-                        maf_cutoff: 0.05,
-                      },
+                      jobName: values.GWASJobName,
+                      jobSubmittedRunID: data.runID,
+                      showJobSubmissionResult: true,
                     });
-                  }}
-                >
-                  Done
-                </Button>,
-              ]}
-            /> :
-            <Form
-              {...layout}
-              name='control-hooks'
-              onFinish={(values) => {
-                const requestBody = marinerRequestBody[this.state.step2ConfigValues.workflow];
-                Object.keys(this.state.step2ConfigValues)
-                  .filter(cfgKey => cfgKey !== 'workflow')
-                  // eslint-disable-next-line no-return-assign
-                  .map(cfgKey =>
-                    requestBody.input[cfgKey] = this.state.step2ConfigValues[cfgKey].toString());
-                requestBody.input.phenotype_file.location = `USER/${this.state.selectedDataKey}`;
-                if (!requestBody.tags) {
-                  requestBody.tags = {};
-                }
-                requestBody.tags.jobName = values.GWASJobName;
-                console.log(requestBody);
-                this.setState({
-                  jobName: values.GWASJobName,
-                  jobSubmitted: true,
+                  } else {
+                    this.setState({
+                      jobName: values.GWASJobName,
+                      jobSubmittedRunID: undefined,
+                      showJobSubmissionResult: true,
+                    });
+                  }
                 });
-              }}
-            >
-              <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name for GWAS job!' }]}>
-                <Input placeholder='my_gwas_20201101_1' />
-              </Form.Item>
-              <Form.Item {...tailLayout}>
-                <Button
-                  htmlType='submit'
-                  type='primary'
-                >
+            }}
+          >
+            <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name for GWAS job!' }]}>
+              <Input placeholder='my_gwas_20201101_1' />
+            </Form.Item>
+            <Form.Item {...tailLayout}>
+              <Button
+                htmlType='submit'
+                type='primary'
+              >
               Submit
-                </Button>
-              </Form.Item>
-            </Form>
-          }
+              </Button>
+            </Form.Item>
+          </Form>
         </div>
       );
     }
@@ -554,35 +605,59 @@ class VAGWAS extends React.Component {
       nextButtonEnabled = this.state.enableStep2NextButton;
     }
 
-    if (this.state.marinerJobStatus.length > 0) {
-      console.log(this.state.marinerJobStatus);
-    }
+    console.log(this.state.marinerJobStatus);
 
     return (
       <Space direction={'vertical'} style={{ width: '100%' }}>
         {(this.state.marinerJobStatus.length > 0) ?
-          (<Collapse>
-            <Panel header='Submitted Job Status' key='1'>
-              <List
-                className='vaGWAS__jobStatusList'
-                itemLayout='horizontal'
-                dataSource={this.state.marinerJobStatus}
-                renderItem={item => (
-                  <List.Item
-                    actions={(item.status === 'running') ?
-                      [<Button type='link' size='small' danger>cancel job</Button>, <Button type='link' size='small'>show logs</Button>]
-                      : [<Button type='link' size='small'>show logs</Button>]}
-                  >
-                    <List.Item.Meta
-                      title={`Run ID: ${item.runID}`}
-                      description={(item.jobName) ? `GWAS Job Name: ${item.jobName}` : null}
-                    />
-                    <div>{this.getStatusTag(item.status)}</div>
-                  </List.Item>
-                )}
-              />
-            </Panel>
-          </Collapse>)
+          (<div>
+            <Collapse onClick={event => event.stopPropagation()}>
+              <Panel header='Submitted Job Status' key='1'>
+                <List
+                  className='vaGWAS__jobStatusList'
+                  itemLayout='horizontal'
+                  dataSource={this.state.marinerJobStatus}
+                  renderItem={item => (
+                    <List.Item
+                      actions={(item.status === 'running') ?
+                        [<Popconfirm
+                          title='Are you sure to cancel this job?'
+                          onConfirm={(event) => {
+                            event.stopPropagation();
+                            this.cancelMarinerJob(item.runID);
+                          }}
+                          okText='Yes'
+                          cancelText='No'
+                        >
+                          <Button type='link' size='small' danger>cancel job</Button>
+                        </Popconfirm>,
+                        <Button type='link' size='small' onClick={(event) => { event.stopPropagation(); this.handleJobStatusModalShow(item.runID); }}>show logs</Button>]
+                        : [<Button type='link' size='small' onClick={(event) => { event.stopPropagation(); this.handleJobStatusModalShow(item.runID); }}>show logs</Button>]}
+                    >
+                      <List.Item.Meta
+                        title={`Run ID: ${item.runID}`}
+                        description={(item.jobName) ? `GWAS Job Name: ${item.jobName}` : null}
+                      />
+                      <div>{this.getStatusTag(item.status)}</div>
+                    </List.Item>
+                  )}
+                />
+              </Panel>
+            </Collapse>
+            <Modal
+              visible={this.state.showJobStatusModal}
+              closable={false}
+              title={'Show job logs'}
+              footer={[
+                <Button key='close' onClick={this.handleJobStatusModalCancel}>
+              Close
+                </Button>,
+              ]}
+            >
+              <TextArea rows={10} value={this.state.jobStatusModalData} readOnly />
+            </Modal>
+          </div>
+          )
           : null}
         <Steps current={current}>
           {steps.map(item => (
@@ -601,7 +676,7 @@ class VAGWAS extends React.Component {
               Next
             </Button>
           )}
-          {current > 0 && !this.state.jobSubmitted && (
+          {current > 0 && !this.state.showJobSubmissionResult && (
             <Button className='vaGWAS__step0-navBtn' style={{ margin: '0 8px' }} onClick={() => this.prev()}>
               Previous
             </Button>
