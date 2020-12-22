@@ -87,22 +87,28 @@ class VAGWAS extends React.Component {
             method: 'GET',
           })
             .then(
-              // eslint-disable-next-line no-shadow
-              ({ data }) => {
-                if (data
-                  && data.log
-                  && data.log.main
-                  && data.log.main.status) {
-                  if (data.log.request && data.log.request.tags && data.log.request.tags.jobName) {
+              (res) => {
+                if (res.status !== 200) {
+                  return ({
+                    runID: rID,
+                  });
+                }
+                const d = res.data;
+                if (d
+                  && d.log
+                  && d.log.main
+                  && d.log.main.status) {
+                  if (d.log.request && d.log.request.tags && d.log.request.tags.jobName) {
+                    // if the job has a tag
                     return ({
                       runID: rID,
-                      jobName: data.log.request.tags.jobName,
-                      status: data.log.main.status,
+                      jobName: d.log.request.tags.jobName,
+                      status: d.log.main.status,
                     });
                   }
                   return ({
                     runID: rID,
-                    status: data.log.main.status,
+                    status: d.log.main.status,
                   });
                 }
                 return ({
@@ -541,9 +547,10 @@ class VAGWAS extends React.Component {
               const requestBody = marinerRequestBody[this.state.step2ConfigValues.workflow];
               Object.keys(this.state.step2ConfigValues)
                 .filter(cfgKey => cfgKey !== 'workflow')
-              // eslint-disable-next-line no-return-assign
-                .map(cfgKey =>
-                  requestBody.input[cfgKey] = this.state.step2ConfigValues[cfgKey].toString());
+                .forEach((cfgKey) => {
+                  requestBody.input[cfgKey] = this.state.step2ConfigValues[cfgKey].toString();
+                  return null;
+                });
               requestBody.input.phenotype_file.location = `USER/${this.state.selectedDataKey}`;
               if (!requestBody.tags) {
                 requestBody.tags = {};
@@ -604,8 +611,6 @@ class VAGWAS extends React.Component {
     } else if (current === 2) {
       nextButtonEnabled = this.state.enableStep2NextButton;
     }
-
-    console.log(this.state.marinerJobStatus);
 
     return (
       <Space direction={'vertical'} style={{ width: '100%' }}>
