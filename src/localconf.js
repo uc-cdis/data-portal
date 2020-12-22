@@ -109,6 +109,7 @@ function buildConfig(opts) {
   const workspaceStorageUrl = `${hostname}ws-storage`;
   const workspaceStorageListUrl = `${workspaceStorageUrl}/list`;
   const workspaceStorageDownloadUrl = `${workspaceStorageUrl}/download`;
+  const marinerUrl = `${hostname}/ga4gh/wes/v1/runs`;
   const enableDAPTracker = !!config.DAPTrackingURL;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
@@ -411,6 +412,7 @@ function buildConfig(opts) {
     workspaceStorageUrl,
     workspaceStorageListUrl,
     workspaceStorageDownloadUrl,
+    marinerUrl,
   };
 }
 

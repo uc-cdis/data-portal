@@ -1,11 +1,22 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber } from 'antd';
+import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber, Collapse, List, Tag } from 'antd';
+import {
+  CheckCircleOutlined,
+  SyncOutlined,
+  CloseCircleOutlined,
+  QuestionCircleOutlined,
+  MinusCircleOutlined,
+} from '@ant-design/icons';
 import { humanFileSize } from '../utils.js';
+import { fetchWithCreds } from '../actions';
+import { marinerUrl } from '../localconf';
+import marinerRequestBody from './utils.js';
 import './VAGWAS.css';
 
 const { Step } = Steps;
 const { Text } = Typography;
+const { Panel } = Collapse;
 
 const steps = [
   {
@@ -33,12 +44,115 @@ class VAGWAS extends React.Component {
       selectedDataKey: undefined,
       jobName: undefined,
       jobSubmitted: false,
-      enableStep2NextButton: false,
+      enableStep2NextButton: true,
+      step2ConfigValues: {
+        workflow: 'demo',
+        genotype_cutoff: 0.2,
+        sample_cutoff: 0.04,
+        maf_cutoff: 0.05,
+      },
+      marinerJobStatus: [],
     };
   }
 
   componentDidMount() {
     this.props.onLoadWorkspaceStorageFileList();
+    this.getMarinerJobStatus();
+    this.intervalId = setInterval(async () => {
+      await this.getMarinerJobStatus();
+    }, 60000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
+  }
+
+  getMarinerJobStatus = async () => {
+    fetchWithCreds({
+      path: `${marinerUrl}`,
+      method: 'GET',
+    })
+      .then(
+        ({ status, data }) => {
+          if (status !== 200 || !data || !data.runIDs) {
+            return [];
+          }
+          const runIDs = data.runIDs;
+          Promise.all(runIDs.map(rID => fetchWithCreds({
+            path: `${marinerUrl}/${rID}`,
+            method: 'GET',
+          })
+            .then(
+              // eslint-disable-next-line no-shadow
+              ({ data }) => {
+                if (data
+                  && data.log
+                  && data.log.main
+                  && data.log.main.status) {
+                  if (data.request && data.request.tags && data.request.tags.jobName) {
+                    return ({
+                      runID: rID,
+                      jobName: data.request.tags.jobName,
+                      status: data.log.main.status,
+                    });
+                  }
+                  return ({
+                    runID: rID,
+                    status: data.log.main.status,
+                  });
+                }
+                return ({
+                  runID: rID,
+                });
+              },
+            )))
+            .then(values => this.setState({ marinerJobStatus: values }));
+          return runIDs;
+        },
+      );
+  }
+
+
+  getStatusTag = (jobStatus) => {
+    if (!jobStatus) {
+      return (
+        <Tag icon={<QuestionCircleOutlined />} color='default'>
+        Unknown
+        </Tag>
+      );
+    }
+    switch (jobStatus) {
+    case 'running':
+      return (
+        <Tag icon={<SyncOutlined spin />} color='processing'>
+        In Progress
+        </Tag>
+      );
+    case 'completed':
+      return (
+        <Tag icon={<CheckCircleOutlined />} color='success'>
+        Completed
+        </Tag>
+      );
+    case 'failed':
+      return (
+        <Tag icon={<CloseCircleOutlined />} color='error'>
+        Failed
+        </Tag>
+      );
+    case 'cancelled':
+      return (
+        <Tag icon={<MinusCircleOutlined />} color='warning'>
+        Cancelled
+        </Tag>
+      );
+    default:
+      return (
+        <Tag icon={<QuestionCircleOutlined />} color='default'>
+            Unknown
+        </Tag>
+      );
+    }
   }
 
   mainTableRowSelection = {
@@ -121,7 +235,7 @@ class VAGWAS extends React.Component {
     });
   }
 
-  generateContentForStep = (stepIndex, form) => {
+  generateContentForStep = (stepIndex) => {
     switch (stepIndex) {
     case 0: {
       if (this.props.wssListFileError) {
@@ -257,28 +371,39 @@ class VAGWAS extends React.Component {
       return (
         <div className='vaGWAS__mainArea'>
           <Form
-            form={form}
             layout='vertical'
             initialValues={{
-              'genotype-cutoff': 0.2,
-              'sample-cutoff': 0.04,
-              'maf-cutoff': 0.05,
+              ...this.state.step2ConfigValues,
             }}
             onFieldsChange={(_, allFields) => {
               if (allFields.some(field => !field.validating && field.errors.length > 0)) {
                 this.setState({ enableStep2NextButton: false });
               } else if (allFields.every(field => !field.validating && field.errors.length === 0)) {
-                this.setState({ enableStep2NextButton: true });
+                const step2ConfigValues = {};
+                allFields.forEach((field) => {
+                  step2ConfigValues[field.name[0]] = field.value;
+                });
+                this.setState({
+                  enableStep2NextButton: true,
+                  step2ConfigValues,
+                });
               }
             }}
-            // onFinish={onFinish}
-            // onFinishFailed={console.log('sss')}
           >
             <Space className='vaGWAS__step1-specifyTable_innerSpace' split={<Divider type='vertical' />} >
               <Form.Item
                 className='vaGWAS__step1-specifyTable_formItem'
+                label={<Text strong>Workflow</Text>}
+                name='workflow'
+              >
+                <Select>
+                  <Select.Option value='demo'>Demo</Select.Option>
+                </Select>
+              </Form.Item>
+              <Form.Item
+                className='vaGWAS__step1-specifyTable_formItem'
                 label={<Text strong>Genotype Cutoff</Text>}
-                name='genotype-cutoff'
+                name='genotype_cutoff'
                 rules={[
                   () => ({
                     validator(_, value) {
@@ -295,7 +420,7 @@ class VAGWAS extends React.Component {
               <Form.Item
                 className='vaGWAS__step1-specifyTable_formItem'
                 label={<Text strong>Sample Cutoff</Text>}
-                name='sample-cutoff'
+                name='sample_cutoff'
                 rules={[
                   () => ({
                     validator(_, value) {
@@ -312,7 +437,7 @@ class VAGWAS extends React.Component {
               <Form.Item
                 className='vaGWAS__step1-specifyTable_formItem'
                 label={<Text strong>MAF Cutoff</Text>}
-                name='maf-cutoff'
+                name='maf_cutoff'
                 rules={[
                   () => ({
                     validator(_, value) {
@@ -359,7 +484,13 @@ class VAGWAS extends React.Component {
                       selectedDataKey: undefined,
                       jobName: undefined,
                       jobSubmitted: false,
-                      enableStep2NextButton: false,
+                      enableStep2NextButton: true,
+                      step2ConfigValues: {
+                        workflow: 'demo',
+                        genotype_cutoff: 0.2,
+                        sample_cutoff: 0.04,
+                        maf_cutoff: 0.05,
+                      },
                     });
                   }}
                 >
@@ -371,6 +502,18 @@ class VAGWAS extends React.Component {
               {...layout}
               name='control-hooks'
               onFinish={(values) => {
+                const requestBody = marinerRequestBody[this.state.step2ConfigValues.workflow];
+                Object.keys(this.state.step2ConfigValues)
+                  .filter(cfgKey => cfgKey !== 'workflow')
+                  // eslint-disable-next-line no-return-assign
+                  .map(cfgKey =>
+                    requestBody.input[cfgKey] = this.state.step2ConfigValues[cfgKey].toString());
+                requestBody.input.phenotype_file.location = `USER/${this.state.selectedDataKey}`;
+                if (!requestBody.tags) {
+                  requestBody.tags = {};
+                }
+                requestBody.tags.jobName = values.GWASJobName;
+                console.log(requestBody);
                 this.setState({
                   jobName: values.GWASJobName,
                   jobSubmitted: true,
@@ -411,15 +554,42 @@ class VAGWAS extends React.Component {
       nextButtonEnabled = this.state.enableStep2NextButton;
     }
 
-    const [form] = Form.useForm();
+    if (this.state.marinerJobStatus.length > 0) {
+      console.log(this.state.marinerJobStatus);
+    }
+
     return (
       <Space direction={'vertical'} style={{ width: '100%' }}>
+        {(this.state.marinerJobStatus.length > 0) ?
+          (<Collapse>
+            <Panel header='Submitted Job Status' key='1'>
+              <List
+                className='vaGWAS__jobStatusList'
+                itemLayout='horizontal'
+                dataSource={this.state.marinerJobStatus}
+                renderItem={item => (
+                  <List.Item
+                    actions={(item.status === 'running') ?
+                      [<Button type='link' size='small' danger>cancel job</Button>, <Button type='link' size='small'>show logs</Button>]
+                      : [<Button type='link' size='small'>show logs</Button>]}
+                  >
+                    <List.Item.Meta
+                      title={`Run ID: ${item.runID}`}
+                      description={(item.jobName) ? `GWAS Job Name: ${item.jobName}` : null}
+                    />
+                    <div>{this.getStatusTag(item.status)}</div>
+                  </List.Item>
+                )}
+              />
+            </Panel>
+          </Collapse>)
+          : null}
         <Steps current={current}>
           {steps.map(item => (
             <Step key={item.title} title={item.title} />
           ))}
         </Steps>
-        <div className='steps-content'>{this.generateContentForStep(current, form)}</div>
+        <div className='steps-content'>{this.generateContentForStep(current)}</div>
         <div className='steps-action'>
           {current < steps.length - 1 && (
             <Button
