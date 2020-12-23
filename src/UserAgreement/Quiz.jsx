@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../gen3-ui-component/components/Button';
 import Question from './Question';
 import QuizSummary from './QuizSummary';
 import './Quiz.less';

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@gen3/ui-component/dist/components/Button';
-import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import Button from '../../gen3-ui-component/components/Button';
+import Dropdown from '../../gen3-ui-component/components/Dropdown';
 import { getCategoryIconSVG } from '../NodeCategories/helper';
 import { downloadMultiTemplate } from '../utils';
 import { intersection } from '../../utils';

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../gen3-ui-component/components/Button';
 import Gen3ClientSvg from '../img/gen3client.svg';
 import MapFilesSvg from '../img/mapfiles.svg';
 import { humanFileSize } from '../utils.js';

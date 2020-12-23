@@ -1,0 +1,167 @@
+.g3-dropdown-button__wrapper {
+  height: 40px;
+  z-index: 1;
+  position: relative;
+}
+
+.g3-dropdown-button__button {
+  height: 100%;
+  border-radius: 4px;
+  font-size: 14px;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  padding: 1px 30px 1px 20px;
+  margin: 0;
+  position: relative;
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.g3-dropdown-button__icon {
+  display: inline-block;
+  mask-size: 100% 100%;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  width: 12px;
+  height: 12px;
+  mask-image: svg-load(../../images/icons/chevron-down.svg);
+}
+
+.g3-dropdown-button__button--without-split-trigger .g3-dropdown-button__icon {
+  width: 18px;
+  height: 18px;
+  background-color: white;
+  mask-size: 100% 100%;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-image: svg-load(../../images/icons/more.svg);
+  position: absolute;
+  right: 0;
+}
+
+.g3-dropdown-button__button--primary,
+.g3-dropdown-button__menu-trigger--primary {
+  border: 1px solid var(--g3-primary-btn__border-color);
+  background-color: var(--g3-primary-btn__bg-color);
+  color: var(--g3-primary-btn__color);
+  fill: var(--g3-primary-btn__color);
+}
+
+.g3-dropdown-button__button--primary:hover,
+.g3-dropdown-button__button--primary:hover svg path,
+.g3-dropdown-button__menu-trigger--primary:hover,
+.g3-dropdown-button__menu-trigger--primary:hover svg path {
+  border: 1px solid var(--g3-primary-btn__border-color--hover);
+  background-color: var(--g3-primary-btn__bg-color--hover);
+}
+
+.g3-dropdown-button__button--primary:active {
+  border: 1px solid var(--g3-primary-btn__border-color--active);
+}
+
+.g3-dropdown-button__button--primary .g3-button__icon,
+.g3-dropdown-button__button--primary .g3-dropdown-button__icon,
+.g3-dropdown-button__menu-trigger--primary .g3-dropdown-button__icon {
+  background-color: var(--g3-primary-btn__color);
+}
+
+.g3-dropdown-button__button--secondary,
+.g3-dropdown-button__menu-trigger--secondary {
+  border: 1px solid var(--g3-secondary-btn__border-color);
+  background-color: var(--g3-secondary-btn__bg-color);
+  color: var(--g3-secondary-btn__color);
+  fill: var(--g3-secondary-btn__color);
+}
+
+.g3-dropdown-button__button--secondary:hover,
+.g3-dropdown-button__button--secondary:hover svg path,
+.g3-dropdown-button__menu-trigger--secondary:hover,
+.g3-dropdown-button__menu-trigger--secondary:hover svg path {
+  border: 1px solid var(--g3-secondary-btn__border-color--hover);
+  background-color: var(--g3-secondary-btn__bg-color--hover);
+}
+
+.g3-dropdown-button__button--secondary:active {
+  border: 1px solid var(--g3-secondary-btn__border-color--active);
+}
+
+.g3-dropdown-button__button--secondary .g3-button__icon,
+.g3-dropdown-button__button--secondary .g3-dropdown-button__icon,
+.g3-dropdown-button__menu-trigger--secondary .g3-dropdown-button__icon {
+  background-color: var(--g3-secondary-btn__color);
+}
+
+.g3-dropdown-button__button--default,
+.g3-dropdown-button__menu-trigger--default {
+  border: 1px solid var(--g3-default-btn__border-color);
+  background-color: var(--g3-default-btn__bg-color);
+  color: var(--g3-default-btn__color);
+  fill: var(--g3-default-btn__color);
+}
+
+.g3-dropdown-button__button--default:hover,
+.g3-dropdown-button__button--default:hover svg path,
+.g3-dropdown-button__menu-trigger--default:hover,
+.g3-dropdown-button__menu-trigger--default:hover svg path {
+  border: 1px solid var(--g3-default-btn__border-color--hover);
+  color: var(--g3-default-btn__color--hover);
+  fill: var(--g3-default-btn__color--hover);
+}
+
+.g3-dropdown-button__button--default:active,
+.g3-dropdown-button__button--default:active svg path {
+  border: 1px solid var(--g3-default-btn__border-color--active);
+  color: var(--g3-default-btn__color--active);
+  fill: var(--g3-default-btn__color--active);
+}
+
+.g3-dropdown-button__button--default .g3-button__icon,
+.g3-dropdown-button__button--default .g3-dropdown-button__icon,
+.g3-dropdown-button__menu-trigger--default .g3-dropdown-button__icon {
+  background-color: var(--g3-default-btn__color);
+}
+
+.g3-dropdown-button__button--with-split-trigger {
+  border-radius: 4px 0 0 4px;
+  width: calc(100% - 30px);
+}
+
+.g3-dropdown-button__button--without-split-trigger {
+  width: 100%;
+}
+
+.g3-dropdown-button__menu-trigger {
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  vertical-align: middle;
+  cursor: pointer;
+  margin: 0;
+  border-left: none;
+  width: 30px;
+}
+
+.g3-dropdown-button__menu-trigger:hover {
+  border-left: none;
+}
+
+.g3-dropdown-button__wrapper--disabled .g3-dropdown-button__button,
+.g3-dropdown-button__wrapper--disabled .g3-dropdown-button__menu-trigger {
+  background-color: var(--g3-disabled-btn__bg-color);
+  color: var(--g3-disabled-btn__color);
+  border: 1px solid var(--g3-disabled-btn__border-color);
+  cursor: not-allowed;
+}
+
+.g3-dropdown-button__wrapper--disabled .g3-dropdown-button__icon {
+  background-color: var(--g3-disabled-btn__color);
+}
+
+.g3-dropdown-button__wrapper--disabled .g3-dropdown-button__menu-trigger {
+  border-left: none;
+}
+
+.g3-dropdown-button__icon--menu-opened {
+  mask-image: svg-load(../../images/icons/chevron-up.svg);
+}

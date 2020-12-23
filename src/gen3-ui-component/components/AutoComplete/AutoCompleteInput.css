@@ -1,0 +1,46 @@
+.auto-complete-input {
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  display: flex;
+}
+
+.auto-complete-input__input-box {
+  border: none;
+  width: 100%;
+}
+
+.auto-complete-input__form {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.auto-complete-input:active {
+  border-color: var(--g3-color__base-blue);
+}
+
+
+.auto-complete-input__close {
+  width: 14px;
+  height: 14px;
+  position: relative;
+  top: 4px;
+  background-color: var(--g3-color__gray);
+  cursor: pointer;
+}
+
+.auto-complete-input__separator {
+  width: 1px;
+  border-left: 1px solid var(--g3-color__lightgray);
+  margin: 0 10px;
+}
+
+.auto-complete-input__icon {
+  background-color: var(--g3-color__gray);
+  position: relative;
+  top: 3px;
+  cursor: pointer;
+}
+
+

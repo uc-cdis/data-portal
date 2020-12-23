@@ -1,0 +1,30 @@
+.auto-complete-suggestions__item {
+  box-sizing: border-box; /* include padding from height*/
+  height: var(--g3-auto-complete__height);
+  color: var(--g3-auto-complete__suggestion-color);
+  border-top: 1px solid var(--g3-color__gray);
+  padding: var(--g3-auto-complete__padding);
+  background-color: var(--g3-auto-complete__suggestion-bg-color);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.auto-complete-suggestions__item:last-child {
+  border-bottom-left-radius: var(--g3-auto-complete__border-radius);
+  border-bottom-right-radius: var(--g3-auto-complete__border-radius);
+}
+
+.auto-complete-suggestions__item:hover {
+  color: var(--g3-auto-complete__suggestion-color--hover);
+  background-color: var(--g3-auto-complete__suggestion-bg-color--hover);
+}
+
+.auto-complete-suggestions__highlight {
+  color: var(--g3-auto-complete__suggestion-color--highlight);
+}
+
+.auto-complete-suggestions__item:hover .auto-complete-suggestions__highlight {
+  color: var(--g3-auto-complete__suggestion-color--hover-higlight);
+}

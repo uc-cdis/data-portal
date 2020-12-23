@@ -1,0 +1,23 @@
+:root {
+  --g3-auto-complete__height: 45px;
+  --g3-auto-complete__padding: 10px;
+  --g3-auto-complete__suggestion-color: var(--g3-color__black);
+  --g3-auto-complete__suggestion-color--highlight: var(--g3-color__base-blue);
+  --g3-auto-complete__suggestion-color--hover: var(--g3-color__white);
+  --g3-auto-complete__suggestion-color--hover-higlight: var(--g3-color__highlight-orange);
+  --g3-auto-complete__suggestion-bg-color: var(--g3-color__white);
+  --g3-auto-complete__suggestion-bg-color--hover: var(--g3-color__base-blue);
+  --g3-auto-complete__border-radius: 4px;
+}
+
+.auto-complete {
+  border: 1px solid var(--g3-color__lightgray);
+  border-radius: var(--g3-auto-complete__border-radius);
+}
+
+.auto-complete__input-wrapper {
+  height: var(--g3-auto-complete__height);
+  box-sizing: border-box; /* include padding from height*/
+  width: calc(100% - 2px); /* for borders and paddings */
+  padding: var(--g3-auto-complete__padding);
+}
