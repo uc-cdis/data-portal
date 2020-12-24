@@ -7,12 +7,7 @@ import { enumFilterList } from '../../params';
 import Spinner from '../../components/Spinner';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
-import RiskTable from './RiskTable';
-import {
-  filterRisktableByTime,
-  filterSurvivalByTime,
-  getFactors,
-} from './utils';
+import { filterSurvivalByTime, getFactors } from './utils';
 import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
@@ -34,7 +29,6 @@ const fetchResult = (body) =>
  * @param {Object} prop.filter
  */
 function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
-  const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
@@ -94,10 +88,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
 
     if (shouldUpdateResults)
       fetchResult({ filter: transformedFilter, ...requestBody })
-        .then((result) => {
-          setRisktable(result.risktable);
-          setSurvival(result.survival);
-        })
+        .then((result) => setSurvival(result.survival))
         .catch((e) => setIsError(true))
         .finally(() => setIsUpdating(false));
     else setIsUpdating(false);
@@ -115,10 +106,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
         efsFlag: false,
       })
         .then((result) => {
-          if (isMounted) {
-            setRisktable(result.risktable);
-            setSurvival(result.survival);
-          }
+          if (isMounted) setSurvival(result.survival);
         })
         .catch((e) => isMounted && setIsError(true))
         .finally(() => isMounted && setIsUpdating(false));
@@ -152,19 +140,12 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
             </p>
           </div>
         ) : (
-          <>
-            <SurvivalPlot
-              colorScheme={colorScheme}
-              data={filterSurvivalByTime(survival, startTime, endTime)}
-              notStratified={stratificationVariable === ''}
-              timeInterval={timeInterval}
-            />
-            <RiskTable
-              data={filterRisktableByTime(risktable, startTime, endTime)}
-              notStratified={stratificationVariable === ''}
-              timeInterval={timeInterval}
-            />
-          </>
+          <SurvivalPlot
+            colorScheme={colorScheme}
+            data={filterSurvivalByTime(survival, startTime, endTime)}
+            notStratified={stratificationVariable === ''}
+            timeInterval={timeInterval}
+          />
         )}
       </div>
     </div>
