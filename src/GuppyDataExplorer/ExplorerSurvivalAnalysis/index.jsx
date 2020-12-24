@@ -34,7 +34,6 @@ const fetchResult = (body) =>
  * @param {Object} prop.filter
  */
 function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
-  const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
   const [stratificationVariable, setStratificationVariable] = useState('');
@@ -96,7 +95,6 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
     if (shouldUpdateResults)
       fetchResult({ filter: transformedFilter, ...requestBody })
         .then((result) => {
-          setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
           setRisktable(result.risktable);
           setSurvival(result.survival);
         })
@@ -118,7 +116,6 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
       })
         .then((result) => {
           if (isMounted) {
-            setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
             setRisktable(result.risktable);
             setSurvival(result.survival);
           }
@@ -156,9 +153,6 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
           </div>
         ) : (
           <>
-            <div className='explorer-survival-analysis__pval'>
-              {pval >= 0 && `Log-rank test p-value: ${pval}`}
-            </div>
             <SurvivalPlot
               colorScheme={colorScheme}
               data={filterSurvivalByTime(survival, startTime, endTime)}
