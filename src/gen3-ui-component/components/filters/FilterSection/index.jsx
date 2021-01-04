@@ -98,45 +98,40 @@ class FilterSection extends React.Component {
       'If AND is set, records must match all checked filter options. ' +
       'If OR is set, records must match at least one checked option.';
     return (
-      <React.Fragment>
-        <div
-          className={`g3-filter-section__and-or-toggle ${
-            isHidden && 'g3-filter-section__hidden'
-          }`}
-        >
-          <span style={{ marginRight: '5px' }}>Combine with </span>
-          <Radio.Group
-            defaultValue={this.state.combineMode}
-            buttonStyle='solid'
+      <div
+        className={`g3-filter-section__and-or-toggle ${
+          isHidden && 'g3-filter-section__hidden'
+        }`}
+      >
+        <span style={{ marginRight: '5px' }}>Combine with </span>
+        <Radio.Group defaultValue={this.state.combineMode} buttonStyle='solid'>
+          <Radio.Button
+            value='AND'
+            onChange={() => this.handleSetCombineModeOption('AND')}
           >
-            <Radio.Button
-              value='AND'
-              onChange={() => this.handleSetCombineModeOption('AND')}
-            >
-              AND
-            </Radio.Button>
-            <Radio.Button
-              value='OR'
-              onChange={() => this.handleSetCombineModeOption('OR')}
-            >
-              OR
-            </Radio.Button>
-          </Radio.Group>
+            AND
+          </Radio.Button>
+          <Radio.Button
+            value='OR'
+            onChange={() => this.handleSetCombineModeOption('OR')}
+          >
+            OR
+          </Radio.Button>
+        </Radio.Group>
 
-          <Tooltip
-            placement='right'
-            overlay={tooltipText}
-            overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
-            arrowContent={<div className='rc-tooltip-arrow-inner' />}
-            width='300px'
-            trigger={['hover', 'focus']}
-          >
-            <span className='g3-helper-tooltip'>
-              <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
-            </span>
-          </Tooltip>
-        </div>
-      </React.Fragment>
+        <Tooltip
+          placement='right'
+          overlay={tooltipText}
+          overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
+          arrowContent={<div className='rc-tooltip-arrow-inner' />}
+          width='300px'
+          trigger={['hover', 'focus']}
+        >
+          <span className='g3-helper-tooltip'>
+            <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
+          </span>
+        </Tooltip>
+      </div>
     );
   }
 
