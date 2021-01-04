@@ -19,7 +19,7 @@ class EnumInput extends Component {
     propertyType: null,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (this.props.onUpdateFormSchema !== undefined) {
       this.props.onUpdateFormSchema({ [this.props.name]: this.props.propertyType });
     }

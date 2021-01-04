@@ -21,8 +21,8 @@ class DataModelGraph extends React.Component {
     this.state = { fullToggle: false, ...DataModelGraph.buildGraphState(props) };
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ ...DataModelGraph.buildGraphState(nextProps) });
+  getDerivedStateFromProps(props) {
+    return ({ ...DataModelGraph.buildGraphState(props) });
   }
 
   handleToggleClick() {

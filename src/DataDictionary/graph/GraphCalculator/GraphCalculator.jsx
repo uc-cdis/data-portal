@@ -11,8 +11,10 @@ import {
 class GraphCalculator extends React.Component {
   constructor(props) {
     super(props);
-    this.oldHighlightingNode = null;
-    this.oldSecondHighlightingNodeID = null;
+    this.state = {
+      oldHighlightingNode: null,
+      oldSecondHighlightingNodeID: null,
+    };
   }
 
   componentDidMount() {
@@ -29,11 +31,11 @@ class GraphCalculator extends React.Component {
     }
   }
 
-  componentWillUpdate(nextProps) {
+  getDerivedStateFromProps(props) {
     // if the highlighted node is updated, calculate related highlighted nodes
-    const newHighlightingNode = nextProps.highlightingNode;
-    const newSecondHighlightingNodeID = nextProps.secondHighlightingNodeID;
-    if (this.oldHighlightingNode !== newHighlightingNode) {
+    const newHighlightingNode = props.highlightingNode;
+    const newSecondHighlightingNodeID = props.secondHighlightingNodeID;
+    if (this.state.oldHighlightingNode !== newHighlightingNode) {
       const relatedHighlightedNodeIDs = calculateHighlightRelatedNodeIDs(
         newHighlightingNode,
         this.props.nodes,
@@ -45,7 +47,7 @@ class GraphCalculator extends React.Component {
     }
 
     // if the second highlighting node is updated, calculate related highlighting nodes
-    if (this.oldSecondHighlightingNodeID !== newSecondHighlightingNodeID) {
+    if (this.state.oldSecondHighlightingNodeID !== newSecondHighlightingNodeID) {
       const pathRelatedToSecondHighlightingNode = calculatePathRelatedToSecondHighlightingNode(
         newHighlightingNode,
         newSecondHighlightingNodeID,
@@ -56,8 +58,8 @@ class GraphCalculator extends React.Component {
     }
 
     // update data model structure if update highlighting/secondHighlighting node
-    if (this.oldHighlightingNode !== newHighlightingNode
-      || this.oldSecondHighlightingNodeID !== newSecondHighlightingNodeID
+    if (this.state.oldHighlightingNode !== newHighlightingNode
+      || this.state.oldSecondHighlightingNodeID !== newSecondHighlightingNodeID
     ) {
       if (newSecondHighlightingNodeID) {
         const {
@@ -91,8 +93,10 @@ class GraphCalculator extends React.Component {
       }
     }
 
-    this.oldHighlightingNode = newHighlightingNode;
-    this.oldSecondHighlightingNodeID = newSecondHighlightingNodeID;
+    return ({
+      oldHighlightingNode: newHighlightingNode,
+      oldSecondHighlightingNodeID: newSecondHighlightingNodeID,
+    });
   }
 
   getDataModelStructureForHighlightedNodes(newHighlightingNode) {

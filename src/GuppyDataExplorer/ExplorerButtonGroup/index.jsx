@@ -61,7 +61,7 @@ class ExplorerButtonGroup extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.job && nextProps.job.status === 'Failed' && this.props.job.status !== 'Failed') {
       this.setState(prevState => ({
         toasterOpen: true,

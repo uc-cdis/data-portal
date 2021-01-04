@@ -1,6 +1,12 @@
 module.exports = {
   //"extends": "eslint:recommended",
   "extends": "airbnb",
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "16.14"
+    },
+  },
   "root":true,
   "env": {
       "browser": true,

@@ -20,7 +20,7 @@ class TextInput extends Component {
     value: undefined,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (this.props.onUpdateFormSchema !== undefined) {
       this.props.onUpdateFormSchema({ [this.props.name]: this.props.propertyType });
     }
