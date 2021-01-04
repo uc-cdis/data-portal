@@ -22,17 +22,12 @@ const filterVisibleStatusObj = (optionList, inputText) => {
 };
 
 const getNumValuesSelected = (filterStatus) => {
+  if (Array.isArray(filterStatus)) return 1;
+
   let numSelected = 0;
-  if (Array.isArray(filterStatus)) {
-    numSelected = 1;
-    return numSelected;
+  for (const status in Object.values(filterStatus)) {
+    if (status === true || Array.isArray(status)) numSelected += 1;
   }
-  const statuses = Object.values(filterStatus);
-  statuses.forEach((status) => {
-    if (status === true || Array.isArray(status)) {
-      numSelected += 1;
-    }
-  });
   return numSelected;
 };
 
