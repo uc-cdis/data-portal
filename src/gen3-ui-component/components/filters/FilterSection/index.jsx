@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { Radio } from 'antd';
-import 'antd/dist/antd.css';
+import 'antd/lib/radio/style/index.css';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import SingleSelectFilter from '../SingleSelectFilter';
 import Chip from '../Chip';
