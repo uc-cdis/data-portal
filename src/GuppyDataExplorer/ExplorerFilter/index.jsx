@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
-import AccessibleFilter from '@gen3/guppy/dist/components/ConnectedFilter/AccessibleFilter';
-import UnaccessibleFilter from '@gen3/guppy/dist/components/ConnectedFilter/UnaccessibleFilter';
+import ConnectedFilter from '@pcdc/guppy/dist/components/ConnectedFilter';
+import AccessibleFilter from '@pcdc/guppy/dist/components/ConnectedFilter/AccessibleFilter';
+import UnaccessibleFilter from '@pcdc/guppy/dist/components/ConnectedFilter/UnaccessibleFilter';
 import TierAccessSelector from '../TierAccessSelector';
 import { FilterConfigType, GuppyConfigType } from '../configTypeDef';
 import {
   checkForNoAccessibleProject,
   checkForFullAccessibleProject,
 } from '../GuppyDataExplorerHelper';
+import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
+import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 
 /**
  * For selectedAccessFilter the default value is 'Data with Access'
@@ -152,6 +154,10 @@ class ExplorerFilter extends React.Component {
             } or more.`
           : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
+      filterComponents: {
+        FilterGroup,
+        FilterList,
+      },
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {

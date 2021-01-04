@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
+import GuppyWrapper from '@pcdc/guppy/dist/components/GuppyWrapper';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
