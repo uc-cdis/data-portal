@@ -9,6 +9,8 @@ import {
   checkForNoAccessibleProject,
   checkForFullAccessibleProject,
 } from '../GuppyDataExplorerHelper';
+import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
+import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 
 /**
  * For selectedAccessFilter the default value is 'Data with Access'
@@ -152,6 +154,10 @@ class ExplorerFilter extends React.Component {
             } or more.`
           : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
+      filterComponents: {
+        FilterGroup,
+        FilterList,
+      },
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
