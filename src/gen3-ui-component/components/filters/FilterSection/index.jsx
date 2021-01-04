@@ -12,15 +12,12 @@ import './FilterSection.css';
 
 const filterVisibleStatusObj = (optionList, inputText) => {
   const res = {};
-  optionList.forEach((o) => {
-    if (typeof inputText === 'undefined') {
-      res[o.text] = true;
-    } else {
-      const matched =
-        o.text.toLowerCase().indexOf(inputText.toLowerCase()) >= 0;
-      res[o.text] = matched;
-    }
-  });
+  for (const o in optionList) {
+    res[o.text] =
+      typeof inputText === 'undefined'
+        ? true
+        : o.text.toLowerCase().indexOf(inputText.toLowerCase()) >= 0;
+  }
   return res;
 };
 
