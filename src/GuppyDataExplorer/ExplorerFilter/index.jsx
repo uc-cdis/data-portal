@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
-import AccessibleFilter from '@gen3/guppy/dist/components/ConnectedFilter/AccessibleFilter';
-import UnaccessibleFilter from '@gen3/guppy/dist/components/ConnectedFilter/UnaccessibleFilter';
+import ConnectedFilter from '@pcdc/guppy/dist/components/ConnectedFilter';
+import AccessibleFilter from '@pcdc/guppy/dist/components/ConnectedFilter/AccessibleFilter';
+import UnaccessibleFilter from '@pcdc/guppy/dist/components/ConnectedFilter/UnaccessibleFilter';
 import TierAccessSelector from '../TierAccessSelector';
 import { FilterConfigType, GuppyConfigType } from '../configTypeDef';
 import {

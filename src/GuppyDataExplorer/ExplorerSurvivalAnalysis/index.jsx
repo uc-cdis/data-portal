@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
+import { getGQLFilter } from '@pcdc/guppy/dist/components/Utils/queries';
 import { enumFilterList } from '../../params';
 import Spinner from '../../components/Spinner';
 import SurvivalPlot from './SurvivalPlot';
