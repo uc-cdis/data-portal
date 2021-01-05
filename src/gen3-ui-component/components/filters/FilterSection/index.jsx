@@ -135,11 +135,11 @@ class FilterSection extends React.Component {
       .map((kv) => ({ value: kv[0], label: kv[0] }));
     return (
       <AsyncPaginate
-        className={`${
+        className={
           this.state.isExpanded
             ? ''
             : 'g3-filter-section__search-filter--hidden'
-        }`}
+        }
         cacheOptions
         controlShouldRenderValue={false}
         defaultOptions
