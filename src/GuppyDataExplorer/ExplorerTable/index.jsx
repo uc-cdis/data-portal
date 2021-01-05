@@ -232,6 +232,11 @@ class ExplorerTable extends React.Component {
     // build column configs for root table first
     const rootColumnsConfig = this.props.tableConfig.fields.map(field =>
       this.buildColumnConfig(field, false, false));
+
+    // if not ordered sort alphabetically by Header
+    if (!this.props.tableConfig.ordered) {
+      rootColumnsConfig.sort((a, b) => a.Header.localeCompare(b.Header));
+    }
     const nestedArrayFieldNames = {};
     this.props.tableConfig.fields.forEach((field) => {
       if (field.includes('.')) {
