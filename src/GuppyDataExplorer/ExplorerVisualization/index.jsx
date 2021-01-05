@@ -18,7 +18,7 @@ import {
 } from '../configTypeDef';
 import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper';
 import './ExplorerVisualization.css';
-import { labelToTitle } from '../utils';
+import { labelToPlural } from '../utils';
 
 
 class ExplorerVisualization extends React.Component {
@@ -32,7 +32,7 @@ class ExplorerVisualization extends React.Component {
     let countItems = [];
     const stackedBarCharts = [];
     countItems.push({
-      label: this.props.nodeCountTitle || labelToTitle(this.props.guppyConfig.dataType),
+      label: this.props.nodeCountTitle || labelToPlural(this.props.guppyConfig.dataType, true),
       value: this.props.totalCount,
     });
     Object.keys(chartConfig).forEach((field) => {
@@ -106,7 +106,7 @@ class ExplorerVisualization extends React.Component {
     const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${this.props.tierAccessLimit} ${
       this.props.guppyConfig.nodeCountTitle ?
         this.props.guppyConfig.nodeCountTitle.toLowerCase() :
-        labelToTitle(this.props.guppyConfig.dataType, false)
+        labelToPlural(this.props.guppyConfig.dataType)
     }.`;
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
 

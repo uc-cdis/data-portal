@@ -4,7 +4,7 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import './ExplorerTopMessageBanner.css';
 import { checkForNoAccessibleProject } from '../GuppyDataExplorerHelper';
 import { GuppyConfigType } from '../configTypeDef';
-import { labelToTitle } from '../utils';
+import { labelToPlural } from '../utils';
 
 class ExplorerTopMessageBanner extends React.Component {
   render() {
@@ -41,7 +41,7 @@ class ExplorerTopMessageBanner extends React.Component {
                   <span className='top-message-banner__normal-text'>
                     {this.props.guppyConfig.nodeCountTitle ?
                       this.props.guppyConfig.nodeCountTitle.toLowerCase() :
-                      labelToTitle(this.props.guppyConfig.dataType, false)
+                      labelToPlural(this.props.guppyConfig.dataType)
                     }.
                   Please request additional access if necessary.
                   </span>

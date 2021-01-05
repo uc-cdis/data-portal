@@ -61,12 +61,12 @@ export const humanizeNumber = (number, fixedPoint = 2) => {
 };
 
 /*
-* Convert label to pluralized Title
+* Convert label to pluralized (optional title case)
 * @param {label} string - a label to convert to title
-* @param {titleCase} boolean - Should first letter be capitalized
+* @param {titleCase} boolean - Should first letter be capitalized default false
 * @returns {string} Pluralized formatted word
 */
-export const labelToTitle = (label, titleCase = true) => {
+export const labelToPlural = (label, titleCase = false) => {
   const pluralizedLabel = pluralize(label);
   if (titleCase) {
     return pluralizedLabel.charAt(0).toUpperCase() + pluralizedLabel.slice(1);

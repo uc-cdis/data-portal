@@ -9,7 +9,7 @@ import {
   GuppyConfigType,
 } from '../configTypeDef';
 import { checkForNoAccessibleProject, checkForFullAccessibleProject } from '../GuppyDataExplorerHelper';
-import { labelToTitle } from '../utils';
+import { labelToPlural } from '../utils';
 
 /**
  * For selectedAccessFilter the default value is 'Data with Access'
@@ -131,7 +131,7 @@ class ExplorerFilter extends React.Component {
       disabledTooltipMessage: this.props.tierAccessLevel === 'regular' ? `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${this.props.tierAccessLimit} ${
         this.props.guppyConfig.nodeCountTitle ?
           this.props.guppyConfig.nodeCountTitle.toLowerCase() :
-          labelToTitle(this.props.guppyConfig.dataType, false)
+          labelToPlural(this.props.guppyConfig.dataType)
       } or more.` : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
     };

@@ -1,4 +1,4 @@
-import { labelToTitle, calculateDropdownButtonConfigs, humanizeNumber } from './utils';
+import { labelToPlural, calculateDropdownButtonConfigs, humanizeNumber } from './utils';
 
 describe('utils for data visualization explorer', () => {
   it('calculate dropdown button configurations correctly', () => {
@@ -70,12 +70,12 @@ describe('utils for data visualization explorer', () => {
   });
 
   it('Convert label to Title', () => {
-    expect(labelToTitle('test')).toBe('Tests');
-    expect(labelToTitle('case')).toBe('Cases');
-    expect(labelToTitle('file')).toBe('Files');
-    expect(labelToTitle('test', false)).toBe('tests');
-    expect(labelToTitle('case', false)).toBe('cases');
-    expect(labelToTitle('file', false)).toBe('files');
-    expect(labelToTitle('test case with odd stuff_21file')).toBe('Test case with odd stuff_21files');
+    expect(labelToPlural('test', true)).toBe('Tests', true);
+    expect(labelToPlural('case', true)).toBe('Cases');
+    expect(labelToPlural('file', true)).toBe('Files');
+    expect(labelToPlural('test', false)).toBe('tests');
+    expect(labelToPlural('case')).toBe('cases');
+    expect(labelToPlural('file')).toBe('files');
+    expect(labelToPlural('test case with odd stuff_21file', true)).toBe('Test case with odd stuff_21files');
   });
 });

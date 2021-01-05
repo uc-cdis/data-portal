@@ -4,7 +4,7 @@ import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
-import { labelToTitle } from './utils';
+import { labelToPlural } from './utils';
 import {
   GuppyConfigType,
   FilterConfigType,
@@ -65,7 +65,7 @@ class GuppyDataExplorer extends React.Component {
             history={this.props.history}
             nodeCountTitle={
               this.props.guppyConfig.nodeCountTitle
-              || labelToTitle(this.props.guppyConfig.dataType)}
+              || labelToPlural(this.props.guppyConfig.dataType, true)}
             tierAccessLimit={this.props.tierAccessLimit}
           />
         </GuppyWrapper>
