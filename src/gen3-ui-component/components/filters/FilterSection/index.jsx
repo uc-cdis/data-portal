@@ -410,95 +410,87 @@ class FilterSection extends React.Component {
         <div className='g3-filter-section__options'>
           {(isTextFilter || isSearchFilter) &&
             this.state.isExpanded &&
-            this.props.options
-              .filter((option) => {
-                if (isSearchFilter) {
-                  // For searchFilters, options are treated differently -- the only
-                  // options passed are the already selected options, as opposed
-                  // to all available options in textfilters. So don't filter out
-                  // any options based on `optionsVisibleStatus`.
-                  return true;
-                }
-                return this.state.optionsVisibleStatus[option.text];
-              })
-              .map((option, index) => {
-                if (
-                  index >= this.props.initVisibleItemNumber &&
-                  !this.state.showingMore
-                ) {
-                  return null;
-                }
-                return (
-                  // We use the 'key' prop to force the SingleSelectFilter
-                  // to rerender on filterStatus change.
-                  // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
-                  <SingleSelectFilter
-                    key={`${option.text}-${
-                      filterStatus[option.text] ? 'enabled' : 'disabled'
-                    }`}
-                    label={option.text}
-                    onSelect={(label) =>
-                      this.handleSelectSingleSelectFilter(label)
-                    }
-                    selected={filterStatus[option.text]}
-                    count={isSearchFilter ? null : option.count}
-                    hideZero={this.props.hideZero}
-                    accessible={option.accessible}
-                    tierAccessLimit={this.props.tierAccessLimit}
-                    disabled={option.disabled}
-                    lockedTooltipMessage={this.props.lockedTooltipMessage}
-                    disabledTooltipMessage={this.props.disabledTooltipMessage}
-                  />
-                );
-              })}
+            this.props.options.map((option, index) => {
+              if (
+                // For searchFilters, options are treated differently -- the only
+                // options passed are the already selected options, as opposed
+                // to all available options in textfilters. So don't filter out
+                // any options based on `optionsVisibleStatus`.
+                !isSearchFilter ||
+                !this.state.optionsVisibleStatus[option.text] ||
+                (index >= this.props.initVisibleItemNumber &&
+                  !this.state.showingMore)
+              ) {
+                return null;
+              }
+              return (
+                // We use the 'key' prop to force the SingleSelectFilter
+                // to rerender on filterStatus change.
+                // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
+                <SingleSelectFilter
+                  key={`${option.text}-${
+                    filterStatus[option.text] ? 'enabled' : 'disabled'
+                  }`}
+                  label={option.text}
+                  onSelect={(label) =>
+                    this.handleSelectSingleSelectFilter(label)
+                  }
+                  selected={filterStatus[option.text]}
+                  count={isSearchFilter ? null : option.count}
+                  hideZero={this.props.hideZero}
+                  accessible={option.accessible}
+                  tierAccessLimit={this.props.tierAccessLimit}
+                  disabled={option.disabled}
+                  lockedTooltipMessage={this.props.lockedTooltipMessage}
+                  disabledTooltipMessage={this.props.disabledTooltipMessage}
+                />
+              );
+            })}
           {isRangeFilter &&
             this.state.isExpanded &&
-            this.props.options
-              .filter((option) => this.state.optionsVisibleStatus[option.text])
-              .map((option, index) => {
-                if (
-                  index >= this.props.initVisibleItemNumber &&
-                  !this.state.showingMore
-                ) {
-                  return null;
-                }
-                const lowerBound =
-                  typeof filterStatus === 'undefined' ||
-                  filterStatus.length !== 2
-                    ? undefined
-                    : filterStatus[0];
-                const upperBound =
-                  typeof filterStatus === 'undefined' ||
-                  filterStatus.length !== 2
-                    ? undefined
-                    : filterStatus[1];
-                // We use the 'key' prop to force the SingleSelectFilter
-                // to rerender if the `reset` button is clicked.
-                // Each reset button click increments the counter and changes the key.
-                // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
-                const key = `${option.text}-${option.min}-${option.max}-${lowerBound}-${upperBound}-${this.state.resetClickCounter}`;
-                // NOTE: We set hideValue={-1} here because Guppy returns a count of -1
-                // when the count is hidden from the end user.
-                const hideValue = -1;
-                return (
-                  <RangeFilter
-                    key={key}
-                    label={option.text}
-                    min={option.min}
-                    max={option.max}
-                    onAfterDrag={(lb, ub, min, max, step) =>
-                      this.handleDragRangeFilter(lb, ub, min, max, step)
-                    }
-                    lowerBound={lowerBound}
-                    upperBound={upperBound}
-                    inactive={
-                      lowerBound === undefined && upperBound === undefined
-                    }
-                    count={option.count}
-                    hideValue={hideValue}
-                  />
-                );
-              })}
+            this.props.options.map((option, index) => {
+              if (
+                !this.state.optionsVisibleStatus[option.text] ||
+                (index >= this.props.initVisibleItemNumber &&
+                  !this.state.showingMore)
+              ) {
+                return null;
+              }
+              const lowerBound =
+                typeof filterStatus === 'undefined' || filterStatus.length !== 2
+                  ? undefined
+                  : filterStatus[0];
+              const upperBound =
+                typeof filterStatus === 'undefined' || filterStatus.length !== 2
+                  ? undefined
+                  : filterStatus[1];
+              // We use the 'key' prop to force the SingleSelectFilter
+              // to rerender if the `reset` button is clicked.
+              // Each reset button click increments the counter and changes the key.
+              // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
+              const key = `${option.text}-${option.min}-${option.max}-${lowerBound}-${upperBound}-${this.state.resetClickCounter}`;
+              // NOTE: We set hideValue={-1} here because Guppy returns a count of -1
+              // when the count is hidden from the end user.
+              const hideValue = -1;
+              return (
+                <RangeFilter
+                  key={key}
+                  label={option.text}
+                  min={option.min}
+                  max={option.max}
+                  onAfterDrag={(lb, ub, min, max, step) =>
+                    this.handleDragRangeFilter(lb, ub, min, max, step)
+                  }
+                  lowerBound={lowerBound}
+                  upperBound={upperBound}
+                  inactive={
+                    lowerBound === undefined && upperBound === undefined
+                  }
+                  count={option.count}
+                  hideValue={hideValue}
+                />
+              );
+            })}
           {isTextFilter && this.state.isExpanded && this.getShowMoreButton()}
         </div>
       </div>
