@@ -12,7 +12,7 @@ import './FilterSection.css';
 
 const filterVisibleStatusObj = (optionList, inputText) => {
   const res = {};
-  for (const o in optionList) {
+  for (const o of optionList) {
     res[o.text] =
       typeof inputText === 'undefined'
         ? true
