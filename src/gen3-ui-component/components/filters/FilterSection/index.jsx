@@ -154,41 +154,26 @@ class FilterSection extends React.Component {
   }
 
   getShowMoreButton() {
-    if (this.state.isExpanded) {
-      const totalCount = this.props.options
-        .filter((o) => o.count > 0 || !this.props.hideZero || o.count === -1)
-        .filter((o) => this.state.optionsVisibleStatus[o.text]).length;
-      if (totalCount > this.props.initVisibleItemNumber) {
-        if (this.state.showingMore) {
-          return (
-            <div
-              className='g3-filter-section__show-more'
-              role='button'
-              onClick={() => this.toggleShowMore()}
-              onKeyPress={() => this.toggleShowMore()}
-              tabIndex={0}
-            >
-              less
-            </div>
-          );
-        }
-        const moreCount = totalCount - this.props.initVisibleItemNumber;
-        return (
-          <div
-            className='g3-filter-section__show-more'
-            role='button'
-            onClick={() => this.toggleShowMore()}
-            onKeyPress={() => this.toggleShowMore()}
-            tabIndex={0}
-          >
-            {moreCount}
-            &nbsp;more
-          </div>
-        );
-      }
-      return null;
+    let totalCount = 0;
+    for (const o of this.props.options) {
+      if (o.count > 0 || !this.props.hideZero || o.count === -1)
+        if (this.state.optionsVisibleStatus[o.text]) totalCount += 1;
     }
-    return null;
+    return (
+      totalCount > this.props.initVisibleItemNumber && (
+        <div
+          className='g3-filter-section__show-more'
+          role='button'
+          onClick={() => this.toggleShowMore()}
+          onKeyPress={() => this.toggleShowMore()}
+          tabIndex={0}
+        >
+          {this.state.showingMore
+            ? 'less'
+            : `${totalCount - this.props.initVisibleItemNumber} more`}
+        </div>
+      )
+    );
   }
 
   handleSetCombineModeOption(combineModeIn) {
@@ -516,7 +501,7 @@ class FilterSection extends React.Component {
                   );
                 })
             : null}
-          {isTextFilter && this.getShowMoreButton()}
+          {isTextFilter && this.state.isExpanded && this.getShowMoreButton()}
         </div>
       </div>
     );
