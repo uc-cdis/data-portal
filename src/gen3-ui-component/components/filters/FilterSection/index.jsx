@@ -54,12 +54,13 @@ class FilterSection extends React.Component {
   }
 
   getSearchInput() {
-    const isHidden = !this.state.showingSearch || !this.state.isExpanded;
     return (
       <div
-        className={`g3-filter-section__search-input ${
-          isHidden && 'g3-filter-section__hidden'
-        }`}
+        className={
+          this.state.isExpanded && this.state.showingSearch
+            ? 'g3-filter-section__search-input'
+            : 'g3-filter-section__hidden'
+        }
       >
         <input
           className='g3-filter-section__search-input-box body'
@@ -84,16 +85,17 @@ class FilterSection extends React.Component {
   }
 
   getAndOrToggle() {
-    const isHidden = !this.state.showingAndOrToggle || !this.state.isExpanded;
     const tooltipText =
       'This toggle selects the logical operator used to combine checked filter options. ' +
       'If AND is set, records must match all checked filter options. ' +
       'If OR is set, records must match at least one checked option.';
     return (
       <div
-        className={`g3-filter-section__and-or-toggle ${
-          isHidden && 'g3-filter-section__hidden'
-        }`}
+        className={
+          this.state.isExpanded && this.state.showingAndOrToggle
+            ? 'g3-filter-section__and-or-toggle'
+            : 'g3-filter-section__hidden'
+        }
       >
         <span style={{ marginRight: '5px' }}>Combine with </span>
         <Radio.Group defaultValue={this.state.combineMode} buttonStyle='solid'>
