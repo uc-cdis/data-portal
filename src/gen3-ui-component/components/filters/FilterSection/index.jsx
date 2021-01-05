@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { Radio } from 'antd';
-import 'antd/dist/antd.css';
+import 'antd/lib/radio/style/index.css';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import SingleSelectFilter from '../SingleSelectFilter';
 import Chip from '../Chip';
@@ -12,29 +12,22 @@ import './FilterSection.css';
 
 const filterVisibleStatusObj = (optionList, inputText) => {
   const res = {};
-  optionList.forEach((o) => {
-    if (typeof inputText === 'undefined') {
-      res[o.text] = true;
-    } else {
-      const matched = o.text.toLowerCase().indexOf(inputText.toLowerCase()) >= 0;
-      res[o.text] = matched;
-    }
-  });
+  for (const o of optionList) {
+    res[o.text] =
+      typeof inputText === 'undefined'
+        ? true
+        : o.text.toLowerCase().indexOf(inputText.toLowerCase()) >= 0;
+  }
   return res;
 };
 
 const getNumValuesSelected = (filterStatus) => {
+  if (Array.isArray(filterStatus)) return 1;
+
   let numSelected = 0;
-  if (Array.isArray(filterStatus)) {
-    numSelected = 1;
-    return numSelected;
+  for (const status in Object.values(filterStatus)) {
+    if (status === true || Array.isArray(status)) numSelected += 1;
   }
-  const statuses = Object.values(filterStatus);
-  statuses.forEach((status) => {
-    if (status === true || Array.isArray(status)) {
-      numSelected += 1;
-    }
-  });
   return numSelected;
 };
 
@@ -61,18 +54,29 @@ class FilterSection extends React.Component {
   }
 
   getSearchInput() {
-    const isHidden = !this.state.showingSearch || !this.state.isExpanded;
     return (
-      <div className={`g3-filter-section__search-input ${isHidden && 'g3-filter-section__hidden'}`}>
+      <div
+        className={
+          this.state.isExpanded && this.state.showingSearch
+            ? 'g3-filter-section__search-input'
+            : 'g3-filter-section__hidden'
+        }
+      >
         <input
           className='g3-filter-section__search-input-box body'
-          onChange={() => { this.handleSearchInputChange(); }}
+          onChange={() => {
+            this.handleSearchInputChange();
+          }}
           ref={this.inputElem}
         />
         <i
-          className={`g3-icon g3-icon--${this.state.searchInputEmpty ? 'search' : 'cross'} g3-filter-section__search-input-close`}
+          className={`g3-icon g3-icon--${
+            this.state.searchInputEmpty ? 'search' : 'cross'
+          } g3-filter-section__search-input-close`}
           onClick={() => this.state.searchInputEmpty || this.clearSearchInput()}
-          onKeyPress={() => this.state.searchInputEmpty || this.clearSearchInput()}
+          onKeyPress={() =>
+            this.state.searchInputEmpty || this.clearSearchInput()
+          }
           role='button'
           tabIndex={0}
         />
@@ -81,98 +85,95 @@ class FilterSection extends React.Component {
   }
 
   getAndOrToggle() {
-    const isHidden = !this.state.showingAndOrToggle || !this.state.isExpanded;
-    const tooltipText = 'This toggle selects the logical operator used to combine checked filter options. '
-      + 'If AND is set, records must match all checked filter options. '
-      + 'If OR is set, records must match at least one checked option.';
+    const tooltipText =
+      'This toggle selects the logical operator used to combine checked filter options. ' +
+      'If AND is set, records must match all checked filter options. ' +
+      'If OR is set, records must match at least one checked option.';
     return (
-      <React.Fragment>
-        <div className={`g3-filter-section__and-or-toggle ${isHidden && 'g3-filter-section__hidden'}`}>
-          <span style={{ marginRight: '5px' }}>Combine with </span>
-          <Radio.Group defaultValue={this.state.combineMode} buttonStyle='solid'>
-            <Radio.Button value='AND' onChange={() => this.handleSetCombineModeOption('AND')}>
-            AND
-            </Radio.Button>
-            <Radio.Button value='OR' onChange={() => this.handleSetCombineModeOption('OR')}>
-              OR
-            </Radio.Button>
-          </Radio.Group>
-
-          <Tooltip
-            placement='right'
-            overlay={tooltipText}
-            overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
-            arrowContent={<div className='rc-tooltip-arrow-inner' />}
-            width='300px'
-            trigger={['hover', 'focus']}
+      <div
+        className={
+          this.state.isExpanded && this.state.showingAndOrToggle
+            ? 'g3-filter-section__and-or-toggle'
+            : 'g3-filter-section__hidden'
+        }
+      >
+        <span style={{ marginRight: '5px' }}>Combine with </span>
+        <Radio.Group defaultValue={this.state.combineMode} buttonStyle='solid'>
+          <Radio.Button
+            value='AND'
+            onChange={() => this.handleSetCombineModeOption('AND')}
           >
-            <span className='g3-helper-tooltip'>
-              <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
-            </span>
-          </Tooltip>
+            AND
+          </Radio.Button>
+          <Radio.Button
+            value='OR'
+            onChange={() => this.handleSetCombineModeOption('OR')}
+          >
+            OR
+          </Radio.Button>
+        </Radio.Group>
 
-        </div>
-      </React.Fragment>
+        <Tooltip
+          placement='right'
+          overlay={tooltipText}
+          overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
+          arrowContent={<div className='rc-tooltip-arrow-inner' />}
+          width='300px'
+          trigger={['hover', 'focus']}
+        >
+          <span className='g3-helper-tooltip'>
+            <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
+          </span>
+        </Tooltip>
+      </div>
     );
   }
 
   getSearchFilter() {
     const selectedOptions = Object.entries(this.state.filterStatus)
-      .filter(kv => kv[1] === true)
-      .map(kv => ({ value: kv[0], label: kv[0] }));
+      .filter((kv) => kv[1] === true)
+      .map((kv) => ({ value: kv[0], label: kv[0] }));
     return (
       <AsyncPaginate
-        className={`${this.state.isExpanded ? '' : 'g3-filter-section__search-filter--hidden'}`}
+        className={
+          this.state.isExpanded
+            ? ''
+            : 'g3-filter-section__search-filter--hidden'
+        }
         cacheOptions
         controlShouldRenderValue={false}
         defaultOptions
         debounceTimeout={250}
         value={selectedOptions}
-        loadOptions={(input, loadedOptions) => this.props.onSearchFilterLoadOptions(
-          input, loadedOptions.length)}
-        onChange={option => this.handleSelectSingleSelectFilter(option.value)}
+        loadOptions={(input, loadedOptions) =>
+          this.props.onSearchFilterLoadOptions(input, loadedOptions.length)
+        }
+        onChange={(option) => this.handleSelectSingleSelectFilter(option.value)}
       />
     );
   }
 
-
   getShowMoreButton() {
-    if (this.state.isExpanded) {
-      const totalCount = this.props.options
-        .filter(o => (o.count > 0 || !this.props.hideZero || o.count === -1))
-        .filter(o => this.state.optionsVisibleStatus[o.text])
-        .length;
-      if ((totalCount > this.props.initVisibleItemNumber)) {
-        if (this.state.showingMore) {
-          return (
-            <div
-              className='g3-filter-section__show-more'
-              role='button'
-              onClick={() => this.toggleShowMore()}
-              onKeyPress={() => this.toggleShowMore()}
-              tabIndex={0}
-            >
-              less
-            </div>
-          );
-        }
-        const moreCount = totalCount - this.props.initVisibleItemNumber;
-        return (
-          <div
-            className='g3-filter-section__show-more'
-            role='button'
-            onClick={() => this.toggleShowMore()}
-            onKeyPress={() => this.toggleShowMore()}
-            tabIndex={0}
-          >
-            {moreCount}
-            &nbsp;more
-          </div>
-        );
-      }
-      return null;
+    let totalCount = 0;
+    for (const o of this.props.options) {
+      if (o.count > 0 || !this.props.hideZero || o.count === -1)
+        if (this.state.optionsVisibleStatus[o.text]) totalCount += 1;
     }
-    return null;
+    return (
+      totalCount > this.props.initVisibleItemNumber && (
+        <div
+          className='g3-filter-section__show-more'
+          role='button'
+          onClick={() => this.toggleShowMore()}
+          onKeyPress={() => this.toggleShowMore()}
+          tabIndex={0}
+        >
+          {this.state.showingMore
+            ? 'less'
+            : `${totalCount - this.props.initVisibleItemNumber} more`}
+        </div>
+      )
+    );
   }
 
   handleSetCombineModeOption(combineModeIn) {
@@ -181,12 +182,11 @@ class FilterSection extends React.Component {
     this.props.onCombineOptionToggle(this.combineModeFieldName, combineModeIn);
   }
 
-
   handleClearButtonClick(ev) {
     // Prevent this click from triggering any onClick events in parent component
     ev.stopPropagation();
     // Clear the filters
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       filterStatus: {},
       resetClickCounter: prevState.resetClickCounter + 1,
     }));
@@ -219,7 +219,10 @@ class FilterSection extends React.Component {
 
     // if not empty, filter out those matched
     this.setState({
-      optionsVisibleStatus: filterVisibleStatusObj(this.props.options, inputText),
+      optionsVisibleStatus: filterVisibleStatusObj(
+        this.props.options,
+        inputText
+      ),
     });
   }
 
@@ -238,7 +241,8 @@ class FilterSection extends React.Component {
     this.setState((prevState) => {
       const newFilterStatus = Object.assign({}, prevState.filterStatus);
       const oldSelected = newFilterStatus[label];
-      const newSelected = typeof oldSelected === 'undefined' ? true : !oldSelected;
+      const newSelected =
+        typeof oldSelected === 'undefined' ? true : !oldSelected;
       newFilterStatus[label] = newSelected;
       return {
         filterStatus: newFilterStatus,
@@ -254,38 +258,49 @@ class FilterSection extends React.Component {
         filterStatus: newFilterStatus,
       };
     });
-    this.props.onAfterDrag(lowerBound, upperBound, minValue, maxValue, rangeStep);
+    this.props.onAfterDrag(
+      lowerBound,
+      upperBound,
+      minValue,
+      maxValue,
+      rangeStep
+    );
   }
 
   toggleShowSearch() {
     // If and/or toggle is shown, hide it before showing the search input.
-    this.setState(prevState => (
-      { showingSearch: !prevState.showingSearch, showingAndOrToggle: false }),
-    );
+    this.setState((prevState) => ({
+      showingSearch: !prevState.showingSearch,
+      showingAndOrToggle: false,
+    }));
   }
 
   toggleShowAndOrToggle() {
     // If search input is shown, hide it before showing the and/or toggle.
-    this.setState(prevState => (
-      { showingAndOrToggle: !prevState.showingAndOrToggle, showingSearch: false }),
-    );
+    this.setState((prevState) => ({
+      showingAndOrToggle: !prevState.showingAndOrToggle,
+      showingSearch: false,
+    }));
   }
 
   toggleShowMore() {
-    this.setState(prevState => ({ showingMore: !prevState.showingMore }));
+    this.setState((prevState) => ({ showingMore: !prevState.showingMore }));
   }
-
 
   render() {
     // Takes in parent component's filterStatus or self state's filterStatus
     const filterStatus = this.props.filterStatus
-      ? this.props.filterStatus : this.state.filterStatus;
+      ? this.props.filterStatus
+      : this.state.filterStatus;
     let isSearchFilter = false;
     let isTextFilter = false;
     let isRangeFilter = false;
     if (this.props.isSearchFilter) {
       isSearchFilter = true;
-    } else if (this.props.options.length > 0 && this.props.options[0].filterType === 'singleSelect') {
+    } else if (
+      this.props.options.length > 0 &&
+      this.props.options[0].filterType === 'singleSelect'
+    ) {
       isTextFilter = true;
     } else {
       isRangeFilter = true;
@@ -300,7 +315,9 @@ class FilterSection extends React.Component {
             tabIndex={0}
             role='button'
             className={`g3-filter-section__toggle-icon g3-icon g3-icon-color__coal 
-                g3-icon--sm g3-icon--chevron-${this.state.isExpanded ? 'down' : 'right'}`}
+                g3-icon--sm g3-icon--chevron-${
+                  this.state.isExpanded ? 'down' : 'right'
+                }`}
           />
         </div>
         <div
@@ -310,182 +327,171 @@ class FilterSection extends React.Component {
           tabIndex={0}
           role='button'
         >
-          <div className={`g3-filter-section__title ${numSelected !== 0 ? 'g3-filter-section__title--active' : ''}`}>
+          <div
+            className={`g3-filter-section__title ${
+              numSelected !== 0 ? 'g3-filter-section__title--active' : ''
+            }`}
+          >
             {this.props.title}
           </div>
-          { (isRangeFilter && numSelected !== 0)
-            && (
-              <div className='g3-filter-section__selected-count-chip'>
-                <div
-                  tabIndex={0}
-                  role='button'
-                  onClick={ev => this.handleClearButtonClick(ev)}
-                  onKeyPress={ev => this.handleClearButtonClick(ev)}
-                  className='g3-filter-section__range-filter-clear-btn'
-                >
-                  <div
-                    className='g3-filter-section__range-filter-clear-btn-text'
-                  >
-                    reset
-                  </div>
-                  <div
-                    className='g3-filter-section__range-filter-clear-btn-icon'
-                  >
-                    <i className='g3-icon g3-icon--sm g3-icon-color__lightgray g3-icon--sm g3-icon--undo' />
-                  </div>
+          {isRangeFilter && numSelected !== 0 && (
+            <div className='g3-filter-section__selected-count-chip'>
+              <div
+                tabIndex={0}
+                role='button'
+                onClick={(ev) => this.handleClearButtonClick(ev)}
+                onKeyPress={(ev) => this.handleClearButtonClick(ev)}
+                className='g3-filter-section__range-filter-clear-btn'
+              >
+                <div className='g3-filter-section__range-filter-clear-btn-text'>
+                  reset
+                </div>
+                <div className='g3-filter-section__range-filter-clear-btn-icon'>
+                  <i className='g3-icon g3-icon--sm g3-icon-color__lightgray g3-icon--sm g3-icon--undo' />
                 </div>
               </div>
-            )
-          }
-          { ((isTextFilter || isSearchFilter) && numSelected !== 0)
-            && (
-              <div className='g3-filter-section__selected-count-chip'>
-                <Chip
-                  text={
-                    (
-                      <React.Fragment>
-                        <span className='g3-filter-section__selected-count-chip-text-emphasis'>{numSelected}</span>
-                        &nbsp;selected
-                      </React.Fragment>
-                    )
-                  }
-                  onClearButtonClick={ev => this.handleClearButtonClick(ev)}
-                />
-              </div>
-            )
-          }
+            </div>
+          )}
+          {(isTextFilter || isSearchFilter) && numSelected !== 0 && (
+            <div className='g3-filter-section__selected-count-chip'>
+              <Chip
+                text={
+                  <React.Fragment>
+                    <span className='g3-filter-section__selected-count-chip-text-emphasis'>
+                      {numSelected}
+                    </span>
+                    &nbsp;selected
+                  </React.Fragment>
+                }
+                onClearButtonClick={(ev) => this.handleClearButtonClick(ev)}
+              />
+            </div>
+          )}
         </div>
-        {
-          isTextFilter && this.props.isArrayField && (
-            <div
-              tabIndex={0}
-              role='button'
-              onClick={() => this.toggleShowAndOrToggle()}
-              onKeyPress={() => this.toggleShowAndOrToggle()}
-            >
-              <i
-                className='g3-filter-section__toggle-icon g3-icon g3-icon--sm g3-icon--gear'
-              />
-            </div>
-          )
-        }
-        {
-          isTextFilter && (
-            <div
-              tabIndex={0}
-              role='button'
-              onClick={() => this.toggleShowSearch()}
-              onKeyPress={() => this.toggleShowSearch()}
-            >
-              <i
-                className='g3-filter-section__search-icon g3-icon g3-icon--sm g3-icon--search'
-              />
-            </div>
-          )
-        }
+        {isTextFilter && this.props.isArrayField && (
+          <div
+            tabIndex={0}
+            role='button'
+            onClick={() => this.toggleShowAndOrToggle()}
+            onKeyPress={() => this.toggleShowAndOrToggle()}
+          >
+            <i className='g3-filter-section__toggle-icon g3-icon g3-icon--sm g3-icon--gear' />
+          </div>
+        )}
+        {isTextFilter && (
+          <div
+            tabIndex={0}
+            role='button'
+            onClick={() => this.toggleShowSearch()}
+            onKeyPress={() => this.toggleShowSearch()}
+          >
+            <i className='g3-filter-section__search-icon g3-icon g3-icon--sm g3-icon--search' />
+          </div>
+        )}
       </div>
     );
     return (
       <div className='g3-filter-section'>
-        {
-          this.props.tooltip ? (
-            <Tooltip
-              placement='topLeft'
-              overlay={(<span>{this.props.tooltip}</span>)}
-              arrowContent={<div className='rc-tooltip-arrow-inner' />}
-              overlayClassName='g3-filter-section__tooltip'
-            >
-              {sectionHeader}
-            </Tooltip>
-          ) : sectionHeader
-        }
-        {
-          isTextFilter && this.getSearchInput()
-        }
-        {
-          this.props.isArrayField && this.getAndOrToggle()
-        }
-        {
-          isSearchFilter && this.getSearchFilter(Option)
-        }
+        {this.props.tooltip ? (
+          <Tooltip
+            placement='topLeft'
+            overlay={<span>{this.props.tooltip}</span>}
+            arrowContent={<div className='rc-tooltip-arrow-inner' />}
+            overlayClassName='g3-filter-section__tooltip'
+          >
+            {sectionHeader}
+          </Tooltip>
+        ) : (
+          sectionHeader
+        )}
+        {isTextFilter && this.getSearchInput()}
+        {this.props.isArrayField && this.getAndOrToggle()}
+        {isSearchFilter && this.getSearchFilter(Option)}
         <div className='g3-filter-section__options'>
-          {
-            ((isTextFilter || isSearchFilter) && this.state.isExpanded)
-              ? this.props.options
-                .filter((option) => {
-                  if (isSearchFilter) {
-                    // For searchFilters, options are treated differently -- the only
-                    // options passed are the already selected options, as opposed
-                    // to all available options in textfilters. So don't filter out
-                    // any options based on `optionsVisibleStatus`.
-                    return true;
+          {(isTextFilter || isSearchFilter) &&
+            this.state.isExpanded &&
+            this.props.options.map((option, index) => {
+              if (
+                // For searchFilters, options are treated differently -- the only
+                // options passed are the already selected options, as opposed
+                // to all available options in textfilters. So don't filter out
+                // any options based on `optionsVisibleStatus`.
+                !isSearchFilter ||
+                !this.state.optionsVisibleStatus[option.text] ||
+                (index >= this.props.initVisibleItemNumber &&
+                  !this.state.showingMore)
+              ) {
+                return null;
+              }
+              return (
+                // We use the 'key' prop to force the SingleSelectFilter
+                // to rerender on filterStatus change.
+                // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
+                <SingleSelectFilter
+                  key={`${option.text}-${
+                    filterStatus[option.text] ? 'enabled' : 'disabled'
+                  }`}
+                  label={option.text}
+                  onSelect={(label) =>
+                    this.handleSelectSingleSelectFilter(label)
                   }
-                  return this.state.optionsVisibleStatus[option.text];
-                })
-                .map((option, index) => {
-                  if (index >= this.props.initVisibleItemNumber && !this.state.showingMore) {
-                    return null;
+                  selected={filterStatus[option.text]}
+                  count={isSearchFilter ? null : option.count}
+                  hideZero={this.props.hideZero}
+                  accessible={option.accessible}
+                  tierAccessLimit={this.props.tierAccessLimit}
+                  disabled={option.disabled}
+                  lockedTooltipMessage={this.props.lockedTooltipMessage}
+                  disabledTooltipMessage={this.props.disabledTooltipMessage}
+                />
+              );
+            })}
+          {isRangeFilter &&
+            this.state.isExpanded &&
+            this.props.options.map((option, index) => {
+              if (
+                !this.state.optionsVisibleStatus[option.text] ||
+                (index >= this.props.initVisibleItemNumber &&
+                  !this.state.showingMore)
+              ) {
+                return null;
+              }
+              const lowerBound =
+                typeof filterStatus === 'undefined' || filterStatus.length !== 2
+                  ? undefined
+                  : filterStatus[0];
+              const upperBound =
+                typeof filterStatus === 'undefined' || filterStatus.length !== 2
+                  ? undefined
+                  : filterStatus[1];
+              // We use the 'key' prop to force the SingleSelectFilter
+              // to rerender if the `reset` button is clicked.
+              // Each reset button click increments the counter and changes the key.
+              // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
+              const key = `${option.text}-${option.min}-${option.max}-${lowerBound}-${upperBound}-${this.state.resetClickCounter}`;
+              // NOTE: We set hideValue={-1} here because Guppy returns a count of -1
+              // when the count is hidden from the end user.
+              const hideValue = -1;
+              return (
+                <RangeFilter
+                  key={key}
+                  label={option.text}
+                  min={option.min}
+                  max={option.max}
+                  onAfterDrag={(lb, ub, min, max, step) =>
+                    this.handleDragRangeFilter(lb, ub, min, max, step)
                   }
-                  return (
-                    // We use the 'key' prop to force the SingleSelectFilter
-                    // to rerender on filterStatus change.
-                    // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
-                    <SingleSelectFilter
-                      key={`${option.text}-${filterStatus[option.text] ? 'enabled' : 'disabled'}`}
-                      label={option.text}
-                      onSelect={label => this.handleSelectSingleSelectFilter(label)}
-                      selected={filterStatus[option.text]}
-                      count={isSearchFilter ? null : option.count}
-                      hideZero={this.props.hideZero}
-                      accessible={option.accessible}
-                      tierAccessLimit={this.props.tierAccessLimit}
-                      disabled={option.disabled}
-                      lockedTooltipMessage={this.props.lockedTooltipMessage}
-                      disabledTooltipMessage={this.props.disabledTooltipMessage}
-                    />
-                  );
-                }) : null
-          }
-          {
-            (isRangeFilter && this.state.isExpanded)
-              ? this.props.options
-                .filter(option => this.state.optionsVisibleStatus[option.text])
-                .map((option, index) => {
-                  if (index >= this.props.initVisibleItemNumber && !this.state.showingMore) {
-                    return null;
+                  lowerBound={lowerBound}
+                  upperBound={upperBound}
+                  inactive={
+                    lowerBound === undefined && upperBound === undefined
                   }
-                  const lowerBound = (typeof filterStatus === 'undefined'
-                  || filterStatus.length !== 2)
-                    ? undefined : filterStatus[0];
-                  const upperBound = (typeof filterStatus === 'undefined'
-                  || filterStatus.length !== 2)
-                    ? undefined : filterStatus[1];
-                  // We use the 'key' prop to force the SingleSelectFilter
-                  // to rerender if the `reset` button is clicked.
-                  // Each reset button click increments the counter and changes the key.
-                  // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
-                  const key = `${option.text}-${option.min}-${option.max}-${lowerBound}-${upperBound}-${this.state.resetClickCounter}`;
-                  // NOTE: We set hideValue={-1} here because Guppy returns a count of -1
-                  // when the count is hidden from the end user.
-                  const hideValue = -1;
-                  return (
-                    <RangeFilter
-                      key={key}
-                      label={option.text}
-                      min={option.min}
-                      max={option.max}
-                      onAfterDrag={(lb, ub, min, max, step) => this.handleDragRangeFilter(
-                        lb, ub, min, max, step)}
-                      lowerBound={lowerBound}
-                      upperBound={upperBound}
-                      inactive={lowerBound === undefined && upperBound === undefined}
-                      count={option.count}
-                      hideValue={hideValue}
-                    />
-                  );
-                }) : null
-          }
-          {isTextFilter && this.getShowMoreButton()}
+                  count={option.count}
+                  hideValue={hideValue}
+                />
+              );
+            })}
+          {isTextFilter && this.state.isExpanded && this.getShowMoreButton()}
         </div>
       </div>
     );
@@ -495,21 +501,22 @@ class FilterSection extends React.Component {
 FilterSection.propTypes = {
   title: PropTypes.string,
   tooltip: PropTypes.string,
-  options: PropTypes.arrayOf(PropTypes.shape({
-    filterType: PropTypes.oneOf(['singleSelect', 'range']).isRequired,
-    text: PropTypes.string,
-    count: PropTypes.number, // both filters need this for access control
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      filterType: PropTypes.oneOf(['singleSelect', 'range']).isRequired,
+      text: PropTypes.string,
+      count: PropTypes.number, // both filters need this for access control
 
-    // for single select filter
-    accessible: PropTypes.bool,
-    disabled: PropTypes.bool,
+      // for single select filter
+      accessible: PropTypes.bool,
+      disabled: PropTypes.bool,
 
-    // for range filter
-    min: PropTypes.number,
-    max: PropTypes.number,
-    rangeStep: PropTypes.number, // by default 1
-
-  })),
+      // for range filter
+      min: PropTypes.number,
+      max: PropTypes.number,
+      rangeStep: PropTypes.number, // by default 1
+    })
+  ),
   onSelect: PropTypes.func.isRequired,
   onCombineOptionToggle: PropTypes.func,
   onAfterDrag: PropTypes.func.isRequired,
