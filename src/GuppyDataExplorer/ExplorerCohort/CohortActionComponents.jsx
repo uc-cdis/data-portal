@@ -46,6 +46,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
             <Select
               options={[emptyOption, ...options]}
               value={selected}
+              autoFocus
               clearable={false}
               theme={(theme) => ({
                 ...theme,
@@ -88,6 +89,7 @@ function CohortSaveForm({ currentCohort, onAction, onClose }) {
           label='Name'
           input={
             <input
+              autoFocus
               value={cohort.name}
               onChange={(e) => {
                 e.persist();
@@ -135,6 +137,7 @@ function CohortUpdateForm({ currentCohort, onAction, onClose }) {
           label='Description'
           input={
             <textarea
+              autoFocus
               value={description}
               onChange={(e) => {
                 e.persist();
