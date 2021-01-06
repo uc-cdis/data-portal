@@ -226,11 +226,38 @@ Below is an example, with inline comments describing what each JSON block config
     "buttons": [ // required; buttons for Data Explorer
       {
         "enabled": true, // required; if the button is enabled or disabled
-        "type": "data", // required; button type - what should it do? Data = downloading clinical data
+        "type": "data", // required; button data type sub-options: ["data" (default), "data-TSV", "data-CSV", "data-JSON"] - what should it do? Data = downloading default clinical JSON data
         "title": "Download All Clinical", // required; title of button
         "leftIcon": "user", // optional; icon on left from /img/icons
         "rightIcon": "download", // optional; icon on right from /img/icons
-        "fileName": "clinical.json", // required; file name when it is downloaded
+        "fileName": "clinical.json", // required; file name when it is downloaded (set file ext. to default json)
+        "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
+      },
+      {
+        "enabled": true, // required; if the button is enabled or disabled
+        "type": "data-TSV", // required; button data type - what should it do? Data = downloading clinical TSV data
+        "title": "TSV", // required; title of button
+        "leftIcon": "datafile", // optional; icon on left from /img/icons
+        "rightIcon": "download", // optional; icon on right from /img/icons
+        "fileName": "clinical.tsv", // required; file name when it is downloaded (file ext. should match data type)
+        "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
+      },
+      {
+        "enabled": true, // required; if the button is enabled or disabled
+        "type": "data-CSV", // required; button data type - what should it do? Data = downloading clinical CSV data
+        "title": "CSV", // required; title of button
+        "leftIcon": "datafile", // optional; icon on left from /img/icons
+        "rightIcon": "download", // optional; icon on right from /img/icons
+        "fileName": "clinical.csv", // required; file name when it is downloaded (file ext. should match data type)
+        "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
+      },
+      {
+        "enabled": true, // required; if the button is enabled or disabled
+        "type": "data-JSON", // required; (equivalent to just "data" but we add it for consistency) button data type - what should it do? Data = downloading clinical JSON data
+        "title": "JSON", // required; title of button
+        "leftIcon": "datafile", // optional; icon on left from /img/icons
+        "rightIcon": "download", // optional; icon on right from /img/icons
+        "fileName": "clinical.json", // required; file name when it is downloaded (file ext. should match data type)
         "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
       },
       {
