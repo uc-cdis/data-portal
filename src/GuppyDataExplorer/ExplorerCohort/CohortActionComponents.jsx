@@ -137,7 +137,7 @@ function CohortSaveForm({ currentCohort, cohorts, onAction, onClose }) {
           onClick={onClose}
         />
         <CohortButton
-          enabled={!error.isError}
+          enabled={cohort.name !== currentCohort.name && !error.isError}
           label='Save Cohort'
           onClick={() => onAction(cohort)}
         />
@@ -179,6 +179,7 @@ function CohortUpdateForm({ currentCohort, onAction, onClose }) {
         />
         <CohortButton
           label='Update Cohort'
+          enabled={description !== currentCohort.description}
           onClick={() =>
             onAction({
               ...currentCohort,
