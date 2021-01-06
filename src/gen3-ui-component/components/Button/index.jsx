@@ -65,7 +65,7 @@ class Button extends Component {
 }
 
 Button.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
   buttonType: PropTypes.oneOf(['primary', 'secondary', 'default']),
   enabled: PropTypes.bool,
   className: PropTypes.string,
