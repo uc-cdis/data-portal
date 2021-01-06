@@ -5,19 +5,21 @@ import moment from 'moment';
 import pLimit from 'p-limit';
 import _ from 'lodash';
 import { AutoSizer, Column, Table } from 'react-virtualized';
-import { Switch } from 'antd';
+import { Switch, Modal, Typography, Space, Collapse, List } from 'antd';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
 import CheckBox from '../components/CheckBox';
-import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
 import StatusReadyIcon from '../img/icons/status_ready.svg';
 import CloseIcon from '../img/icons/cross.svg';
 import sessionMonitor from '../SessionMonitor';
 import { humanFileSize } from '../utils.js';
 import './MapFiles.less';
+
+const { Text } = Typography;
+const { Panel } = Collapse;
 
 const SET_KEY = 'did';
 const ROW_HEIGHT = 70;
@@ -38,10 +40,10 @@ class MapFiles extends React.Component {
       message,
       loading: true,
       deleteFeature: false,
-      deleting: false,
+      deletionTotalCount: 0,
       deletionCounter: 0,
-      deletionText: '',
-      deletionErrorText: '',
+      deletionFailCounter: 0,
+      deletionErrorList: [],
       showDeletePopup: false,
     };
   }
@@ -70,39 +72,39 @@ class MapFiles extends React.Component {
     const flatFiles = this.flattenFiles(this.state.selectedFilesByGroup);
     const limit = pLimit(CONCURRENCY_LIMIT);
     const promises = [];
-    this.setState({ deleting: true, showDeletePopup: true, deletionCounter: 0 }, () => {
+    this.setState({
+      showDeletePopup: true,
+      deletionCounter: 0,
+      deletionFailCounter: 0,
+      deletionTotalCount: flatFiles.length },
+    () => {
       flatFiles.forEach((file) => {
         limit(() => {
           const promise = this.props.deleteFile(file).catch((error) => {
-            this.setState({ deletionErrorText: (this.state.deletionErrorText) ?
-              this.state.deletionErrorText.concat('\n').concat(error.message) : error.message });
+            this.setState(prevState => ({
+              deletionErrorList: [...prevState.deletionErrorList, error.message],
+              deletionFailCounter: prevState.deletionFailCounter + 1,
+            }));
           });
           this.setState(prevState => ({
             deletionCounter: prevState.deletionCounter + 1,
-          }), () => {
-            this.setState({ deletionText: `Deleting ${this.state.deletionCounter} of ${flatFiles.length} files...` });
-          });
+          }));
           sessionMonitor.updateUserActivity();
           promises.push(promise);
         });
       });
     });
-    Promise.all(promises).then(() => {
-      this.setState({
-        deleting: false,
-        deletionText: (this.state.deletionText) ?
-          this.state.deletionText.concat('\nDone!') : 'Done!',
-      });
-    });
+    Promise.all(promises);
   }
 
   onClosePopup = () => {
     this.props.fetchUnmappedFiles(this.props.user.username);
     this.setState({
       showDeletePopup: false,
+      deletionTotalCount: 0,
       deletionCounter: 0,
-      deletionText: '',
-      deletionErrorText: '',
+      deletionFailCounter: 0,
+      deletionErrorList: [],
     });
   }
 
@@ -313,18 +315,40 @@ class MapFiles extends React.Component {
         />
         {
           this.state.showDeletePopup &&
-                  (<Popup
-                    message={this.state.deletionText}
-                    error={this.state.deletionErrorText}
-                    title='Deleting File Records'
-                    rightButtons={[
-                      {
-                        caption: 'Close',
-                        fn: () => this.onClosePopup(),
-                      },
-                    ]}
-                    onClose={() => this.onClosePopup()}
-                  />)
+          (
+            <Modal
+              title='Deleting File Records'
+              visible={this.state.showDeletePopup}
+              closable={false}
+              onCancel={this.onClosePopup}
+              footer={[
+                <Button
+                  key='modal-close-button'
+                  label={'Close'}
+                  buttonType='primary'
+                  onClick={this.onClosePopup}
+                />,
+              ]}
+            >
+              <Space direction='vertical' style={{ width: '100%' }}>
+                <Text>{`Deleting ${this.state.deletionCounter} of ${this.state.deletionTotalCount} file(s)`}</Text>
+                <Text type='success'>{`Succeeded: ${this.state.deletionTotalCount - this.state.deletionFailCounter}`}</Text>
+                <Text type='danger'>{`Failed: ${this.state.deletionFailCounter}`}</Text>
+                {(this.state.deletionErrorList.length > 0) &&
+                (
+                  <Collapse style={{ width: '100%' }}>
+                    <Panel header='Error messages for failed deletions' key='1'>
+                      <List
+                        size='small'
+                        dataSource={this.state.deletionErrorList}
+                        renderItem={item => <List.Item>{item}</List.Item>}
+                      />
+                    </Panel>
+                  </Collapse>
+                )}
+              </Space>
+            </Modal>
+          )
         }
         <div className={'map-files__tables'.concat(this.state.isScrolling ? ' map-files__tables--scrolling' : '')}>
           { this.state.loading ? <Spinner /> : null }
