@@ -4,7 +4,7 @@ import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
 import './ExplorerCohort.css';
 
 function ExplorerCohort({ className }) {
-  const [cohort, setCohort] = useState({ name: '', descripton: '' });
+  const [cohort, setCohort] = useState({ name: '', description: '' });
   const [cohorts, setCohorts] = useState([]);
 
   const [actionType, setActionType] = useState('');
