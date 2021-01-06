@@ -85,8 +85,17 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
   );
 }
 
-function CohortSaveForm({ currentCohort, onAction, onClose }) {
+function CohortSaveForm({ currentCohort, cohorts, onAction, onClose }) {
   const [cohort, setCohort] = useState(currentCohort);
+  const [error, setError] = useState({ isError: false, message: '' });
+  function validate() {
+    if (cohort.name === '')
+      setError({ isError: true, message: 'Name is required!' });
+    else if (cohorts.filter((c) => c.name === cohort.name).length > 0)
+      setError({ isError: true, message: 'Name is already in use!' });
+    else setError({ isError: false, message: '' });
+  }
+
   return (
     <div className='guppy-explorer-cohort__form'>
       <h4>Save as a new Cohort</h4>
@@ -98,12 +107,14 @@ function CohortSaveForm({ currentCohort, onAction, onClose }) {
               autoFocus
               placeholder='Enter the cohort name'
               value={cohort.name}
+              onBlur={validate}
               onChange={(e) => {
                 e.persist();
                 setCohort((prev) => ({ ...prev, name: e.target.value }));
               }}
             />
           }
+          error={error}
         />
         <SimpleInputField
           label='Description'
@@ -125,7 +136,11 @@ function CohortSaveForm({ currentCohort, onAction, onClose }) {
           label='Back to page'
           onClick={onClose}
         />
-        <CohortButton label='Save Cohort' onClick={() => onAction(cohort)} />
+        <CohortButton
+          enabled={!error.isError}
+          label='Save Cohort'
+          onClick={() => onAction(cohort)}
+        />
       </div>
     </div>
   );
@@ -223,6 +238,7 @@ export function CohortActionForm({
       return (
         <CohortSaveForm
           currentCohort={currentCohort}
+          cohorts={cohorts}
           onAction={handleSave}
           onClose={handleClose}
         />
