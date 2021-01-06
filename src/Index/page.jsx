@@ -70,9 +70,16 @@ class IndexPageComponent extends React.Component {
       });
     }
 
-    if (homepageChartNodes && homepageChartNodes.length > 0) {
+    /* eslint-disable max-len */
+    // indexChartNames and chartNames has to > 1 in here since by default we push in 'Files' as chart if there is less than 4 chart fields
+    // FIXME: remove this fix once we get rid of the pushing 'Files' into charts by default logic
+    if ((homepageChartNodes && homepageChartNodes.length > 0)
+    || (components.charts && components.charts.indexChartNames && components.charts.indexChartNames.length > 1)
+    || (components.charts && components.charts.chartNames && components.charts.chartNames.length > 1)
+    ) {
       homepageCharts.push(<div key={homepageCharts.length} className='index-page__slider-chart'><ReduxIndexBarChart /></div>);
     }
+    /* eslint-enable max-len */
 
     return (
       <div className='index-page'>

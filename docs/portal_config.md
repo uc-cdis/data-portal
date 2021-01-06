@@ -11,6 +11,7 @@ Below is an example, with inline comments describing what each JSON block config
 ```
 {
   "gaTrackingId": "xx-xxxxxxxxx-xxx", // required; the Google Analytics ID to track statistics
+  "DAPTrackingURL": "https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=AGENCY&subagency=SUB", // optional, for adding DAP tracking feature if specified (see https://github.com/digital-analytics-program/gov-wide-code#participating-in-the-dap)
   "graphql": { // required; start of query section - these attributes must be in the dictionary
     "boardCounts": [ // required; graphQL fields to query for the homepage chart
       {
@@ -128,7 +129,8 @@ Below is an example, with inline comments describing what each JSON block config
           "link": "https://gen3.org/resources/user/",
           "name": "Documentation"
         }
-      ]
+      ],
+      "useProfileDropdown": false // optional; enables expiremental profile UI; defaults false, may change in future releases
     },
     "login": { // required; what is displayed on the login page (/login)
       "title": "Gen3 Generic Data Commons", // optional; title for the login page
@@ -347,6 +349,8 @@ Below is an example, with inline comments describing what each JSON block config
     ],
     "dropdowns": {} // optional; dropdown groupings for buttons
   },
+  "resourceBrowser": {), // see Resource Browser documentation
+  "workspacePageDescription": "", // text to display above the workspace options
   "useArboristUI": false, // optional; set true to enable arborist UI; defaults to false if absent
   "showArboristAuthzOnProfile": false, // optional; set true to list arborist resources on profile page
   "showFenceAuthzOnProfile": true, // optional; set false to not list fence project access on profile page

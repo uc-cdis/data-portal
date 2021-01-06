@@ -1,4 +1,5 @@
 import React from 'react';
+import parse from 'html-react-parser';
 
 import Resource from './Resource';
 import { config } from '../params';
@@ -21,7 +22,7 @@ class ResourceBrowser extends React.Component {
         </h2>
         {settings.description ?
           <p className='resource-browser__description'>
-            {settings.description}
+            {parse(settings.description)}
           </p>
           : null}
         <div className='resource-browser__resources'>

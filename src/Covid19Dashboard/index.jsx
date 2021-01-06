@@ -280,6 +280,7 @@ class Covid19Dashboard extends React.Component {
                   <WorldMapChart
                     geoJson={this.props.jhuGeojsonLatest}
                     jsonByLevel={this.props.jhuJsonByLevelLatest}
+                    modeledFipsList={this.props.modeledFipsList}
                     fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                   />
                 }

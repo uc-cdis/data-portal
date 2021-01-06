@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Popover } from 'antd';
 import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
@@ -72,7 +73,7 @@ class TopBar extends Component {
               )
             }
             {
-              this.props.user.username !== undefined
+              this.props.user.username !== undefined && this.props.useProfileDropdown !== true
               &&
               (
                 <React.Fragment>
@@ -91,6 +92,32 @@ class TopBar extends Component {
                     />
                   </Link>
                 </React.Fragment>
+              )
+            }
+            {
+              this.props.user.username !== undefined && this.props.useProfileDropdown === true
+              &&
+              (
+                <Popover
+                  title={this.props.user.username}
+                  placement='bottomRight'
+                  content={
+                    <React.Fragment>
+                      <Link to='/identity'>View Profile</Link>
+                      <br />
+                      <Link to='#' onClick={this.props.onLogoutClick}>Logout</Link>
+                    </React.Fragment>
+                  }
+                >
+                  <Link className='top-bar__link' to='#'>
+                    <TopIconButton
+                      icon='user-circle'
+                      name=''
+                      isActive={this.isActive('/identity')}
+                      onActiveTab={() => this.props.onActiveTab('/identity')}
+                    />
+                  </Link>
+                </Popover>
               )
             }
             {
@@ -116,6 +143,7 @@ class TopBar extends Component {
 
 TopBar.propTypes = {
   topItems: PropTypes.array.isRequired,
+  useProfileDropdown: PropTypes.bool,
   user: PropTypes.shape({ username: PropTypes.string }).isRequired,
   userAuthMapping: PropTypes.object.isRequired,
   activeTab: PropTypes.string,
@@ -124,6 +152,7 @@ TopBar.propTypes = {
 };
 
 TopBar.defaultProps = {
+  useProfileDropdown: false,
   activeTab: '',
   onActiveTab: () => {},
 };

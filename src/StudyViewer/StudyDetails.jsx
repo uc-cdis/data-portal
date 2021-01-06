@@ -10,7 +10,7 @@ import {
   // FilePdfOutlined,
   LinkOutlined } from '@ant-design/icons';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
-import { userHasMethodOnResource } from '../authMappingUtils';
+import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI, requestorPath, userapiPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './StudyViewer.css';
@@ -224,7 +224,7 @@ class StudyDetails extends React.Component {
      if (!accessibleValidationValue) {
        return false;
      }
-     return (userHasMethodOnResource('read-storage', accessibleValidationValue, this.props.userAuthMapping));
+     return (userHasMethodForServiceOnResource('read-storage', 'fence', accessibleValidationValue, this.props.userAuthMapping));
    };
 
    render() {
@@ -252,7 +252,7 @@ class StudyDetails extends React.Component {
                ) : null
              }
            </Space>
-           <Modal
+           {(requestAccessConfig) ? (<Modal
              title='Request Access'
              visible={this.state.redirectModalVisible}
              closable={false}
@@ -273,7 +273,7 @@ class StudyDetails extends React.Component {
              ]}
            >
              <p>You will now be sent to <a href={this.state.redirectUrl}>{requestAccessConfig.redirectModalText || this.state.redirectUrl}</a>.</p>
-           </Modal>
+           </Modal>) : null}
            <Modal
              title='Download Files'
              visible={this.state.downloadModalVisible}

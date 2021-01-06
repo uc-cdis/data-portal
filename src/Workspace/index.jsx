@@ -1,5 +1,7 @@
 import React from 'react';
+import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
+
 import {
   workspaceUrl,
   wtsPath,
@@ -8,6 +10,7 @@ import {
   workspaceLaunchUrl,
   workspaceTerminateUrl,
   workspaceStatusUrl,
+  workspacePageDescription,
 } from '../localconf';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
@@ -245,7 +248,7 @@ class Workspace extends React.Component {
             this.state.notebookStatus === 'Launching' ?
               <React.Fragment>
                 <div className='workspace__spinner-container'>
-                  <Spinner text='Launching workspace...' />
+                  <Spinner text='Launching Workspace, this process may take several minutes' />
                 </div>
                 <div className='workspace__buttongroup'>
                   { cancelButton }
@@ -266,6 +269,11 @@ class Workspace extends React.Component {
             this.state.notebookStatus !== 'Running' &&
             this.state.notebookStatus !== 'Stopped' ?
               <div>
+                {workspacePageDescription ?
+                  <p className='workspace__description'>
+                    {parse(workspacePageDescription)}
+                  </p>
+                  : null}
                 <div className='workspace__options'>
                   {
                     this.state.options.map((option, i) => {

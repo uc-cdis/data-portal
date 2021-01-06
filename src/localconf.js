@@ -106,6 +106,7 @@ function buildConfig(opts) {
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
   const requestorPath = typeof requestorURL === 'undefined' ? `${hostname}requestor/` : ensureTrailingSlash(requestorURL);
   const auspiceUrl = `${protocol}//auspice.${hostnameOnly}/covid19`;
+  const enableDAPTracker = !!config.DAPTrackingURL;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -197,6 +198,8 @@ function buildConfig(opts) {
   if (covid19DashboardConfig) {
     covid19DashboardConfig.dataUrl = ensureTrailingSlash(covid19DashboardConfig.dataUrl || '');
   }
+
+  const workspacePageDescription = config.workspacePageDescription;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -393,6 +396,8 @@ function buildConfig(opts) {
     covid19DashboardConfig,
     mapboxAPIToken,
     auspiceUrl,
+    workspacePageDescription,
+    enableDAPTracker,
   };
 }
 
