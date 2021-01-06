@@ -46,20 +46,16 @@ class Button extends Component {
       </button>
     );
 
-    return (
-      <React.Fragment>
-        {this.props.tooltipEnabled ? (
-          <Tooltip
-            placement='bottom'
-            overlay={this.props.tooltipText}
-            arrowContent={<div className='rc-tooltip-arrow-inner' />}
-          >
-            {button}
-          </Tooltip>
-        ) : (
-          button
-        )}
-      </React.Fragment>
+    return this.props.tooltipEnabled ? (
+      <Tooltip
+        placement='bottom'
+        overlay={this.props.tooltipText}
+        arrowContent={<div className='rc-tooltip-arrow-inner' />}
+      >
+        {button}
+      </Tooltip>
+    ) : (
+      button
     );
   }
 }
