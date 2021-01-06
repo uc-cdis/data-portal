@@ -4,6 +4,7 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import './ExplorerTopMessageBanner.css';
 import { checkForNoAccessibleProject } from '../GuppyDataExplorerHelper';
 import { GuppyConfigType } from '../configTypeDef';
+import { labelToPlural } from '../utils';
 
 class ExplorerTopMessageBanner extends React.Component {
   render() {
@@ -38,8 +39,10 @@ class ExplorerTopMessageBanner extends React.Component {
                   <span className='top-message-banner__normal-text'>Due to lack of access, you are only able to narrow the cohort down to </span>
                   <span className='top-message-banner__bold-text'>{ this.props.tierAccessLimit } </span>
                   <span className='top-message-banner__normal-text'>
-                    {this.props.guppyConfig.nodeCountTitle.toLowerCase()
-                  || this.props.guppyConfig.dataType}.
+                    {this.props.guppyConfig.nodeCountTitle ?
+                      this.props.guppyConfig.nodeCountTitle.toLowerCase() :
+                      labelToPlural(this.props.guppyConfig.dataType)
+                    }.
                   Please request additional access if necessary.
                   </span>
                 </div>
