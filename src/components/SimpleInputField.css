@@ -1,5 +1,6 @@
 .simple-input-field__container {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   margin: 1rem;
@@ -29,8 +30,21 @@
   width: 100%;
 }
 
+.simple-input-field__input--error > input {
+  border-color: red;
+}
+
 .simple-input-field__input > textarea {
   min-height: 72px;
   padding: 10px;
   overflow: scroll;
+}
+
+.simple-input-field__error-message {
+  color: red;
+  font-size: 0.8rem;
+  font-family: inherit;
+  margin-left: 36%;
+  text-align: left;
+  width: 100%;
 }
