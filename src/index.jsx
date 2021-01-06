@@ -9,6 +9,10 @@ import {
   faFlask,
   faMicroscope,
   faUser,
+  faFolderOpen,
+  faSave,
+  faPen,
+  faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import {
@@ -42,7 +46,11 @@ library.add(
   faExclamationTriangle,
   faFlask,
   faMicroscope,
-  faUser
+  faUser,
+  faFolderOpen,
+  faSave,
+  faPen,
+  faTrashAlt
 );
 
 // render the app after the store is configured
