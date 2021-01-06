@@ -152,7 +152,7 @@ An example of this new `explorerConfig` is (some contents are omitted for concis
 - `filters`: Required.
 - `guppyConfig`: Required.
   - `dataType`: Required. Must match the index “type” in the guppy configuration block in the manifest.json.
-  - `nodeCountTitle`: Required. Plural of root node.
+  - `nodeCountTitle`: Optional. If omitted, will default to use plural of `guppyConfig.dataType` of this tab.
 
 For a complete list of required and optional fields for a tab configuration object, please refer to [Portal Config](https://github.com/uc-cdis/data-portal/blob/master/docs/portal_config.md).
 
