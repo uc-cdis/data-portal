@@ -33,16 +33,16 @@ class Button extends Component {
           />
         )}
         {this.props.label}
-        {this.props.rightIcon && !this.props.isPending ? (
+        {this.props.rightIcon && !this.props.isPending && (
           <i
             className={`g3-icon g3-icon--sm g3-icon--${this.props.rightIcon} g3-button__icon g3-button__icon--right`}
           />
-        ) : null}
-        {this.props.isPending ? (
+        )}
+        {this.props.isPending && (
           <div className='g3-button__spinner g3-button__icon--right'>
             <Spinner />
           </div>
-        ) : null}
+        )}
       </button>
     );
 
