@@ -61,7 +61,13 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
         />
         <SimpleInputField
           label='Description'
-          input={<textarea disabled value={selected.value.description} />}
+          input={
+            <textarea
+              disabled
+              placeholder='No description'
+              value={selected.value.description}
+            />
+          }
         />
       </form>
       <div>
@@ -90,6 +96,7 @@ function CohortSaveForm({ currentCohort, onAction, onClose }) {
           input={
             <input
               autoFocus
+              placeholder='Enter the cohort name'
               value={cohort.name}
               onChange={(e) => {
                 e.persist();
@@ -102,6 +109,7 @@ function CohortSaveForm({ currentCohort, onAction, onClose }) {
           label='Description'
           input={
             <textarea
+              placeholder='Describe the cohort (optional)'
               value={cohort.description}
               onChange={(e) => {
                 e.persist();
@@ -138,6 +146,7 @@ function CohortUpdateForm({ currentCohort, onAction, onClose }) {
           input={
             <textarea
               autoFocus
+              placeholder='Describe the cohort (optional)'
               value={description}
               onChange={(e) => {
                 e.persist();
