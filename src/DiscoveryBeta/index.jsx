@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Input, Table, Tag, Space } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 import './DiscoveryBeta.css';
 
@@ -77,8 +78,6 @@ const data = [
   },
 ];
 
-const { Search } = Input;
-
 class DiscoveryBeta extends React.PureComponent {
   render() {
     return (<div className='discovery-container'>
@@ -142,7 +141,7 @@ class DiscoveryBeta extends React.PureComponent {
         </div>
       </div>
       <div className='discovery-table-container'>
-        <Search className='discovery-table-search' />
+        <Input className='discovery-table-search' prefix={<SearchOutlined />} />
         <Table className='discovery-table' columns={columns} dataSource={data} />
       </div>
     </div>);

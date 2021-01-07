@@ -85,6 +85,7 @@
 .discovery-table-search {
     width: 500px;
     margin-bottom: 20px;
+    border-radius: 5px;
 }
 
 .discovery-table {
