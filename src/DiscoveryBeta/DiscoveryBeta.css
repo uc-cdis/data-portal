@@ -1,0 +1,66 @@
+.discovery-container {
+    background-color: #f2f2f2;
+}
+
+.discovery-header {
+    border-radius: 10;
+    background-color: #fff;
+    margin-bottom: 36px;
+    height: 191px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.discovery-header__stats-container {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.discovery-header__stat {
+    text-align: center;
+}
+
+.discovery-header__stat-number {
+    color: #169bd5;
+    font-size: 40px;
+    margin-bottom: 7px;
+}
+
+.discovery-header__stat-label {
+    font-size: 20px;
+}
+
+.discovery-list-container {
+    border-radius: 10;
+    background-color: #fff;
+}
+
+.discovery-header__tags-container {
+    flex: 1 0 auto;
+}
+
+.discovery-header__tags-header {
+    font-weight: normal;
+    font-size: 18px;
+    color: #555;
+}
+
+.discovery-header__tags {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.discovery-header__tag-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.discovery-header__tag {
+    margin-bottom: 4px;
+}
