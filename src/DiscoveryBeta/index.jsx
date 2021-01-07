@@ -82,7 +82,7 @@ const { Search } = Input;
 class DiscoveryBeta extends React.PureComponent {
   render() {
     return (<div className='discovery-container'>
-      <h1>Discovery</h1>
+      <h1 className='discovery-page-title'>DISCOVERY</h1>
       <div className='discovery-header'>
         <div className='discovery-header__stats-container'>
           <div className='discovery-header__stat'>
@@ -123,7 +123,7 @@ class DiscoveryBeta extends React.PureComponent {
           <div className='discovery-header__tags'>
             <div className='discovery-header__tag-group'>
               <h5>Program</h5>
-              <Tag className='discovery-header__tag' color={'rgba(129, 211, 248)'}>TOPMed</Tag>
+              <Tag className='discovery-header__tag' color={'rgba(129, 211, 248, 0.5)'}>TOPMed</Tag>
               <Tag className='discovery-header__tag' color={'rgba(129, 211, 248)'}>COVID 19</Tag>
             </div>
             <div className='discovery-header__tag-group'>
@@ -141,9 +141,9 @@ class DiscoveryBeta extends React.PureComponent {
           </div>
         </div>
       </div>
-      <div className='discovery-list-container'>
-        <Search style={{ width: '300px' }} />
-        <Table columns={columns} dataSource={data} />
+      <div className='discovery-table-container'>
+        <Search className='discovery-table-search' />
+        <Table className='discovery-table' columns={columns} dataSource={data} />
       </div>
     </div>);
   }

@@ -1,5 +1,14 @@
 .discovery-container {
     background-color: #f2f2f2;
+    padding: 40px 80px;
+}
+
+.discovery-page-title {
+    font-weight: normal;
+    font-size: 30px;
+    line-height: 30px;
+    color: #555;
+    margin-bottom: 16px;
 }
 
 .discovery-header {
@@ -27,16 +36,11 @@
 .discovery-header__stat-number {
     color: #169bd5;
     font-size: 40px;
-    margin-bottom: 7px;
+    line-height: 50px;
 }
 
 .discovery-header__stat-label {
     font-size: 20px;
-}
-
-.discovery-list-container {
-    border-radius: 10;
-    background-color: #fff;
 }
 
 .discovery-header__tags-container {
@@ -63,4 +67,26 @@
 
 .discovery-header__tag {
     margin-bottom: 4px;
+    height: 30px;
+    width: 154px;
+    line-height: 30px;
+    font-size: 24px;
+    text-align: center;
+    color: #333;
+}
+
+/* Table */
+.discovery-table-container {
+    border-radius: 10;
+    background-color: #fff;
+    padding: 20px;
+}
+
+.discovery-table-search {
+    width: 500px;
+    margin-bottom: 20px;
+}
+
+.discovery-table {
+    /* workin on it */
 }
