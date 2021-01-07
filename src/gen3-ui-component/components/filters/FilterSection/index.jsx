@@ -416,8 +416,8 @@ class FilterSection extends React.Component {
                 // options passed are the already selected options, as opposed
                 // to all available options in textfilters. So don't filter out
                 // any options based on `optionsVisibleStatus`.
-                !isSearchFilter ||
-                !this.state.optionsVisibleStatus[option.text] ||
+                (!isSearchFilter &&
+                  !this.state.optionsVisibleStatus[option.text]) ||
                 (index >= this.props.initVisibleItemNumber &&
                   !this.state.showingMore)
               ) {
