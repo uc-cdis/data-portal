@@ -281,17 +281,18 @@ class ExplorerTable extends React.Component {
     }
 
     const { totalCount } = this.props;
+    const totalCountDisplay = totalCount.toLocaleString();
     const { pageSize } = this.state;
     const totalPages = Math.floor(totalCount / pageSize) + ((totalCount % pageSize === 0) ? 0 : 1);
     const SCROLL_SIZE = 10000;
     const visiblePages = Math.min(totalPages, Math.round((SCROLL_SIZE / pageSize) + 0.49));
     const start = (this.state.currentPage * this.state.pageSize) + 1;
     const end = (this.state.currentPage + 1) * this.state.pageSize;
-    let explorerTableCaption = `Showing ${start} - ${end} of ${totalCount} ${pluralize(this.props.guppyConfig.dataType)}`;
+    let explorerTableCaption = `Showing ${start.toLocaleString()} - ${end.toLocaleString()} of ${totalCountDisplay} ${pluralize(this.props.guppyConfig.dataType)}`;
     if (totalCount < end && totalCount < 2) {
-      explorerTableCaption = `Showing ${totalCount} of ${totalCount} ${pluralize(this.props.guppyConfig.dataType)}`;
+      explorerTableCaption = `Showing ${totalCountDisplay} of ${totalCountDisplay} ${pluralize(this.props.guppyConfig.dataType)}`;
     } else if (totalCount < end && totalCount >= 2) {
-      explorerTableCaption = `Showing ${start} - ${totalCount} of ${totalCount} ${pluralize(this.props.guppyConfig.dataType)}`;
+      explorerTableCaption = `Showing ${start.toLocaleString()} - ${totalCountDisplay} of ${totalCountDisplay} ${pluralize(this.props.guppyConfig.dataType)}`;
     }
 
     return (
