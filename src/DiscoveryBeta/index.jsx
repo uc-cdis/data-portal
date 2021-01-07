@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Input, Table, Tag, Space } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Input, Table, Tag, Space, Radio, Checkbox } from 'antd';
+import { LockOutlined, SearchOutlined, UnlockOutlined } from '@ant-design/icons';
 
 import './DiscoveryBeta.css';
 
@@ -141,8 +141,22 @@ class DiscoveryBeta extends React.PureComponent {
         </div>
       </div>
       <div className='discovery-table-container'>
-        <Input className='discovery-table-search' prefix={<SearchOutlined />} />
-        <Table className='discovery-table' columns={columns} dataSource={data} />
+        <div className='discovery-table__header'>
+          <Input className='discovery-table__search' prefix={<SearchOutlined />} />
+          <div className='disvovery-table__controls'>
+            <Checkbox className='discovery-table__show-favorites'>Show Favorites</Checkbox>
+            <Radio.Group
+              className='discovery-table__access-button'
+              defaultValue='both'
+              buttonStyle='solid'
+            >
+              <Radio.Button value='both'>Both</Radio.Button>
+              <Radio.Button value='access'><LockOutlined /></Radio.Button>
+              <Radio.Button value='no-access'><UnlockOutlined /></Radio.Button>
+            </Radio.Group>
+          </div>
+        </div>
+        <Table className='discovery-table__table' columns={columns} dataSource={data} />
       </div>
     </div>);
   }

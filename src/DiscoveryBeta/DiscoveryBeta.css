@@ -82,12 +82,24 @@
     padding: 20px;
 }
 
-.discovery-table-search {
-    width: 500px;
-    margin-bottom: 20px;
-    border-radius: 5px;
+.discovery-table__header {
+    width: 100%;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
 }
 
-.discovery-table {
+.discovery-table__search {
+    border-radius: 5px;
+    max-width: 500px;
+}
+
+.discovery-table__controls  {
+    flex: 0 0 auto;
+    justify-self: flex-end;
+}
+
+.discovery-table__table {
     /* workin on it */
 }
