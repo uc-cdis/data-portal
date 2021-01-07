@@ -1,11 +1,16 @@
 import React from 'react';
 
-import { Input, Table, Tag, Space, Radio, Checkbox } from 'antd';
-import { LockOutlined, SearchOutlined, UnlockOutlined } from '@ant-design/icons';
+import { Input, Table, Tag, Radio, Checkbox } from 'antd';
+import { LockOutlined, LockFilled, UnlockOutlined, SearchOutlined, StarOutlined, StarFilled, StarTwoTone } from '@ant-design/icons';
 
 import './DiscoveryBeta.css';
 
 const columns = [
+  {
+    dataIndex: 'favorite',
+    key: 'favorite',
+    render: fav => (fav ? <StarTwoTone twoToneColor={'#797979'} /> : <StarOutlined />),
+  },
   {
     title: 'STUDY NAME',
     dataIndex: 'name',
@@ -14,13 +19,13 @@ const columns = [
   },
   {
     title: 'dbGaP ACCESSION NUMBER',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'phs_id',
+    key: 'phs_id',
   },
   {
     title: 'NUMBER OF SUBJECTS',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'num_subjects',
+    key: 'num_subjects',
   },
   {
     title: 'TAGS',
@@ -44,37 +49,41 @@ const columns = [
   },
   {
     title: 'ACCESS',
-    key: 'action',
-    render: (text, record) => (
-      <Space size='middle'>
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
+    key: 'accessible',
+    render: accessible => (accessible ? <UnlockOutlined /> : <LockFilled />),
   },
 ];
 
 const data = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
+    name: 'TOPMED_HMB_IRB_NPU',
+    phs_id: 'phs000123.v1.p1',
+    favorite: true,
+    accessible: true,
+    num_subjects: 500000,
+    tags: ['TOPMed', 'Heart Disease'],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
+    name: 'topmed-SAPPHIRE_asthma_DS-ASTHMA-IRB-COL',
+    phs_id: 'phs000234.v1.p1',
+    num_subjects: 1,
+    favorite: false,
+    accessible: true,
+    tags: ['TOPMed', 'Lung Disease'],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
   },
   {
     key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
+    name: 'parent-SAPPHIRE_asthma_DS-ASTHMA-IRB-COL',
+    phs_id: 'phs000121.v1.p1',
+    num_subjects: 1100,
+    favorite: true,
+    accessible: false,
+    tags: ['Parent', 'Lung Disease'],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
   },
 ];
 
@@ -151,7 +160,7 @@ class DiscoveryBeta extends React.PureComponent {
               buttonStyle='solid'
             >
               <Radio.Button value='both'>Both</Radio.Button>
-              <Radio.Button value='access'><LockOutlined /></Radio.Button>
+              <Radio.Button value='access'><LockFilled /></Radio.Button>
               <Radio.Button value='no-access'><UnlockOutlined /></Radio.Button>
             </Radio.Group>
           </div>
