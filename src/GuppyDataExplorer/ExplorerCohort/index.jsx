@@ -51,7 +51,7 @@ function ExplorerCohort({ className, filter, onOpenCohort }) {
       if (name === deleted.name) continue;
       else updatedCohorts.push({ name, description });
     }
-    setCohort({ name: '', description: '' });
+    setCohort({ name: '', description: '', filter: {} });
     setCohorts(updatedCohorts);
     closeActionForm();
   }
