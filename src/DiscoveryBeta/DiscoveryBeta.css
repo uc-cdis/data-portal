@@ -75,7 +75,6 @@
     color: #333;
 }
 
-/* Table */
 .discovery-table-container {
     border-radius: 10;
     background-color: #fff;
@@ -105,4 +104,24 @@
     background-color: #fff;
     top: -15px;
     color: #7f7f7f;
+}
+
+.discovery-modal {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.discovery-modal__header {
+    width: 100%;
+}
+
+.discovery-modal__header-text {
+    display: inline-block;
+}
+
+.discovery-modal__header-close-btn {
+    float: right;
 }
