@@ -79,7 +79,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
         />
         <CohortButton
           label='Open Cohort'
-          onClick={() => onAction(selected.value)}
+          onClick={() => onAction(cloneDeep(selected.value))}
         />
       </div>
     </div>
