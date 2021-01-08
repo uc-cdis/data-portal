@@ -3,8 +3,12 @@ import ReactDOM from 'react-dom';
 import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
 import './ExplorerCohort.css';
 
-function ExplorerCohort({ className }) {
-  const [cohort, setCohort] = useState({ name: '', description: '' });
+function ExplorerCohort({ className, filter }) {
+  const [cohort, setCohort] = useState({
+    name: '',
+    description: '',
+    filter: {},
+  });
   const [cohorts, setCohorts] = useState([]);
 
   const [actionType, setActionType] = useState('');
@@ -103,6 +107,7 @@ function ExplorerCohort({ className }) {
             <CohortActionForm
               actionType={actionType}
               currentCohort={cohort}
+              currentFilter={filter}
               cohorts={cohorts}
               handlers={{
                 handleOpen,

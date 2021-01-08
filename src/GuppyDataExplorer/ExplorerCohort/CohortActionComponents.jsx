@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import cloneDeep from 'lodash.clonedeep';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import './ExplorerCohort.css';
@@ -26,7 +27,7 @@ export function CohortActionButton({ labelIcon, labelText, ...attrs }) {
 function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
   const emptyOption = {
     label: 'Open New (no cohort)',
-    value: { name: '', description: '' },
+    value: { name: '', description: '', filter: {} },
   };
   const options = cohorts.map((cohort) => ({
     label: cohort.name,
@@ -85,7 +86,13 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
   );
 }
 
-function CohortSaveForm({ currentCohort, cohorts, onAction, onClose }) {
+function CohortSaveForm({
+  currentCohort,
+  currentFilter,
+  cohorts,
+  onAction,
+  onClose,
+}) {
   const [cohort, setCohort] = useState(currentCohort);
   const [error, setError] = useState({ isError: false, message: '' });
   function validate() {
@@ -139,14 +146,16 @@ function CohortSaveForm({ currentCohort, cohorts, onAction, onClose }) {
         <CohortButton
           enabled={cohort.name !== currentCohort.name && !error.isError}
           label='Save Cohort'
-          onClick={() => onAction(cohort)}
+          onClick={() =>
+            onAction({ ...cohort, filter: cloneDeep(currentFilter) })
+          }
         />
       </div>
     </div>
   );
 }
 
-function CohortUpdateForm({ currentCohort, onAction, onClose }) {
+function CohortUpdateForm({ currentCohort, currentFilter, onAction, onClose }) {
   const [description, setDescription] = useState(currentCohort.description);
   return (
     <div className='guppy-explorer-cohort__form'>
@@ -184,6 +193,7 @@ function CohortUpdateForm({ currentCohort, onAction, onClose }) {
             onAction({
               ...currentCohort,
               description,
+              filter: cloneDeep(currentFilter),
             })
           }
         />
@@ -214,6 +224,7 @@ function CohortDeleteForm({ currentCohort, onAction, onClose }) {
 export function CohortActionForm({
   actionType,
   currentCohort,
+  currentFilter,
   cohorts,
   handlers,
 }) {
@@ -239,6 +250,7 @@ export function CohortActionForm({
       return (
         <CohortSaveForm
           currentCohort={currentCohort}
+          currentFilter={currentFilter}
           cohorts={cohorts}
           onAction={handleSave}
           onClose={handleClose}
@@ -248,6 +260,7 @@ export function CohortActionForm({
       return (
         <CohortUpdateForm
           currentCohort={currentCohort}
+          currentFilter={currentFilter}
           onAction={handleUpdate}
           onClose={handleClose}
         />
