@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { Input, Table, Tag, Radio, Checkbox } from 'antd';
-import { LockOutlined, LockFilled, UnlockOutlined, SearchOutlined, StarOutlined, StarFilled, StarTwoTone } from '@ant-design/icons';
+import { Input, Table, Tag, Radio, Checkbox, Button } from 'antd';
+import { LockOutlined, LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, StarOutlined, StarFilled, StarTwoTone, CloseOutlined } from '@ant-design/icons';
 
 import './DiscoveryBeta.css';
+import Modal from 'antd/lib/modal/Modal';
 
 const getTagColor = (tag) => {
   const TAG_BLUE = 'rgba(129, 211, 248)';
@@ -191,6 +192,19 @@ class DiscoveryBeta extends React.PureComponent {
           }}
         />
       </div>
+      <Modal
+        modalRender={() => (
+          <div className='discovery-modal'>
+            <div className='discovery-modal__header'>
+              <h3>topmed-SAPPHIRE_asthma_DS-ASTHMA-IRB-COL</h3>
+              <StarOutlined />
+              <LinkOutlined />
+              <Button shape='circle' icon={<CloseOutlined />} />
+            </div>
+          </div>
+        )}
+        visible
+      />
     </div>);
   }
 }
