@@ -105,7 +105,28 @@ class FilterGroup extends React.Component {
       JSON.stringify(this.props.initialAppliedFilters) !==
       JSON.stringify(prevProps.initialAppliedFilters)
     ) {
-      this.callOnFilterChange();
+      const newFilterResults = this.props.initialAppliedFilters;
+      const newFilterStatus = this.props.filterConfig.tabs.map((t) =>
+        t.fields.map((field) => {
+          if (Object.keys(newFilterResults).includes(field)) {
+            const { selectedValues, lowerBound, upperBound } = newFilterResults[
+              field
+            ];
+            if (selectedValues === undefined) {
+              return [lowerBound, upperBound];
+            } else {
+              const status = {};
+              for (const selected of selectedValues) status[selected] = true;
+              return status;
+            }
+          }
+          return {};
+        })
+      );
+      this.setState(
+        { filterStatus: newFilterStatus, filterResults: newFilterResults },
+        () => this.callOnFilterChange()
+      );
     }
   }
 
