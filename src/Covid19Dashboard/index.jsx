@@ -7,7 +7,6 @@ import 'react-tabs/style/react-tabs.less';
 import { covid19DashboardConfig, mapboxAPIToken, auspiceUrl } from '../localconf';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
-import { numberWithCommas } from './dataUtils.js';
 import WorldMapChart from './WorldMapChart';
 import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
@@ -119,7 +118,7 @@ class Covid19Dashboard extends React.Component {
           <YAxis
             type='number'
             domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
-            tickFormatter={val => numberWithCommas(val)}
+            tickFormatter={val => Number(val).toLocaleString()}
             fontSize={10}
           />
           <Tooltip content={this.renderLocationPopupTooltip} />
@@ -192,7 +191,7 @@ class Covid19Dashboard extends React.Component {
         <p>{monthNames[date.getUTCMonth()]} {date.getUTCDate()}, {date.getUTCFullYear()}</p>
         {
           props.payload.map((data, i) => {
-            const val = typeof (rawData[data.name]) === 'number' ? numberWithCommas(rawData[data.name]) : rawData[data.name];
+            const val = typeof (rawData[data.name]) === 'number' ? rawData[data.name].toLocaleString() : rawData[data.name];
             return (
               <p
                 style={{ color: data.stroke }}

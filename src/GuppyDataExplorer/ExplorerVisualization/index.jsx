@@ -98,8 +98,9 @@ class ExplorerVisualization extends React.Component {
 
   render() {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
-    const tableColumns = (this.props.tableConfig.fields && this.props.tableConfig.fields.length > 0)
-      ? this.props.tableConfig.fields : this.props.allFields;
+    const tableColumnsOrdered = (this.props.tableConfig.fields
+      && this.props.tableConfig.fields.length > 0);
+    const tableColumns = tableColumnsOrdered ? this.props.tableConfig.fields : this.props.allFields;
     // don't lock components for libre commons
     const isComponentLocked = (tierAccessLevel !== 'regular') ? false : checkForAnySelectedUnaccessibleField(this.props.aggsData,
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
@@ -234,6 +235,7 @@ class ExplorerVisualization extends React.Component {
               className='guppy-explorer-visualization__table'
               tableConfig={{
                 fields: tableColumns,
+                ordered: tableColumnsOrdered,
                 linkFields: this.props.tableConfig.linkFields || [],
               }}
               fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
