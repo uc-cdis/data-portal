@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
 import './ExplorerCohort.css';
 
-function ExplorerCohort({ className, filter, onOpenCohort }) {
+function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   const [cohort, setCohort] = useState({
     name: '',
     description: '',
@@ -53,6 +53,7 @@ function ExplorerCohort({ className, filter, onOpenCohort }) {
     }
     setCohort({ name: '', description: '', filter: {} });
     setCohorts(updatedCohorts);
+    onDeleteCohort({ name: '', description: '', filter: {} });
     closeActionForm();
   }
 
