@@ -5,6 +5,28 @@ import { LockOutlined, LockFilled, UnlockOutlined, SearchOutlined, StarOutlined,
 
 import './DiscoveryBeta.css';
 
+const getTagColor = (tag) => {
+  const TAG_BLUE = 'rgba(129, 211, 248)';
+  const TAG_RED = 'rgb(236, 128, 141)';
+  const TAG_GREEN = 'rgba(112, 182, 3)';
+  switch (tag) {
+  case 'TOPMed':
+  case 'COVID 19':
+  case 'Parent':
+    return TAG_BLUE;
+  case 'Blood Disease':
+  case 'Lung Disease':
+  case 'Heart Disease':
+    return TAG_RED;
+  case 'Freeze 5':
+  case 'Freeze 8':
+  case 'Freeze 9':
+    return TAG_GREEN;
+  default:
+    return 'gray';
+  }
+};
+
 const columns = [
   {
     dataIndex: 'favorite',
@@ -33,17 +55,9 @@ const columns = [
     dataIndex: 'tags',
     render: tags => (
       <React.Fragment>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
+        {tags.map(tag => (
+          <Tag color={getTagColor(tag)} key={tag}>{tag}</Tag>
+        ))}
       </React.Fragment>
     ),
   },
@@ -133,6 +147,7 @@ class DiscoveryBeta extends React.PureComponent {
               <h5>Program</h5>
               <Tag className='discovery-header__tag' color={'rgba(129, 211, 248, 0.5)'}>TOPMed</Tag>
               <Tag className='discovery-header__tag' color={'rgba(129, 211, 248)'}>COVID 19</Tag>
+              <Tag className='discovery-header__tag' color={'rgba(129, 211, 248)'}>Parent</Tag>
             </div>
             <div className='discovery-header__tag-group'>
               <h5>Disease</h5>
@@ -165,7 +180,16 @@ class DiscoveryBeta extends React.PureComponent {
             </Radio.Group>
           </div>
         </div>
-        <Table className='discovery-table__table' columns={columns} dataSource={data} />
+        <Table
+          columns={columns}
+          dataSource={data}
+          expandable={{
+            defaultExpandAllRows: true,
+            expandedRowClassName: () => 'discovery-table__expanded-row',
+            expandedRowRender: record => record.description,
+            expandIconColumnIndex: -1, // don't render expand icon
+          }}
+        />
       </div>
     </div>);
   }
