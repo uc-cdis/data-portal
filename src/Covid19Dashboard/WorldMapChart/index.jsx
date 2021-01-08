@@ -165,7 +165,7 @@ class WorldMapChart extends React.Component {
         FIPS: `${feature.properties.FIPS || feature.properties.fips}`,
         values: {
           'confirmed cases': confirmed,
-          deaths: deaths,
+          deaths,
         },
       };
       if (recovered) {
@@ -193,7 +193,7 @@ class WorldMapChart extends React.Component {
       // density map data contains fips and iso3;
       // choropleth map data contains FIPS and iso_a3.
       let fips = feature.properties.FIPS || feature.properties.fips;
-      fips = fips ? `${fips}` : fips; // convert to string if not undefined
+      fips = typeof fips !== 'undefined' ? `${fips}` : fips;
       const state = feature.properties.province_state;
       const iso3 = feature.properties.iso_a3 || feature.properties.iso3;
       const isUS = iso3 === 'USA' || feature.properties.country_region === 'US';
