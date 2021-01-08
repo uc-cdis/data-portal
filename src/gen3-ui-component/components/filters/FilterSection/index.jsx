@@ -25,7 +25,7 @@ const getNumValuesSelected = (filterStatus) => {
   if (Array.isArray(filterStatus)) return 1;
 
   let numSelected = 0;
-  for (const status in Object.values(filterStatus)) {
+  for (const status of Object.values(filterStatus)) {
     if (status === true || Array.isArray(status)) numSelected += 1;
   }
   return numSelected;
