@@ -100,13 +100,9 @@
     justify-self: flex-end;
 }
 
-/* some light css hacks here to override antd default expanded row styles */
+/* some light css hacks here to override antd default expanded row styles. */
 .discovery-table__expanded-row > td.ant-table-cell {
     background-color: #fff;
     top: -15px;
-    font-size: 12px;
     color: #7f7f7f;
-    line-height: 12px;
-    padding: 5px;
-    padding-left: calc(46px + 16px); /* HARDCODED to align expanded row to second column */
 }
