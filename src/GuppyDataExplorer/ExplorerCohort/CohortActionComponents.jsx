@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import cloneDeep from 'lodash.clonedeep';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import './ExplorerCohort.css';
@@ -79,7 +78,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
         />
         <CohortButton
           label='Open Cohort'
-          onClick={() => onAction(cloneDeep(selected.value))}
+          onClick={() => onAction(selected.value)}
         />
       </div>
     </div>
@@ -146,9 +145,7 @@ function CohortSaveForm({
         <CohortButton
           enabled={cohort.name !== currentCohort.name && !error.isError}
           label='Save Cohort'
-          onClick={() =>
-            onAction({ ...cohort, filter: cloneDeep(currentFilter) })
-          }
+          onClick={() => onAction({ ...cohort, filter: currentFilter })}
         />
       </div>
     </div>
@@ -193,7 +190,7 @@ function CohortUpdateForm({ currentCohort, currentFilter, onAction, onClose }) {
             onAction({
               ...currentCohort,
               description,
-              filter: cloneDeep(currentFilter),
+              filter: currentFilter,
             })
           }
         />

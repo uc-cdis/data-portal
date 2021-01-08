@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import cloneDeep from 'lodash.clonedeep';
 import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
 import './ExplorerCohort.css';
 
@@ -27,24 +28,24 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
 
   function handleOpen(opened) {
     console.log('Cohort action: open');
-    setCohort(opened);
-    onOpenCohort(opened);
+    setCohort(cloneDeep(opened));
+    onOpenCohort(cloneDeep(opened));
     closeActionForm();
   }
   function handleSave(saved) {
     console.log('Cohort action: save');
-    setCohort(saved);
-    setCohorts([...cohorts, saved]);
+    setCohort(cloneDeep(saved));
+    setCohorts([...cohorts, cloneDeep(saved)]);
     closeActionForm();
   }
   function handleUpdate(updated) {
     console.log('Cohort action: update');
     const updatedCohorts = [];
     for (const { name, description } of cohorts) {
-      if (name === updated.name) updatedCohorts.push(updated);
+      if (name === updated.name) updatedCohorts.push(cloneDeep(updated));
       else updatedCohorts.push({ name, description });
     }
-    setCohort(updated);
+    setCohort(cloneDeep(updated));
     setCohorts(updatedCohorts);
     closeActionForm();
   }
