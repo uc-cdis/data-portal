@@ -3,6 +3,22 @@
     padding: 40px 80px;
 }
 
+/* This is a fix for the global 'button' element style override in portal
+ * https://github.com/uc-cdis/gen3-ui-component/blob/6b0aa10f63f0a325f58200148cd5ffbb6e4c2c46/src/css/base.less#L180
+ * We use .ant-modal-root here to apply this reset style to Ant design modals, which
+ * are not children of .discovery-container.
+ */
+.discovery-container button, .ant-modal-root button {
+    border-radius: initial;
+    width: initial;
+    height: initial;
+    font-size: initial;
+    font-weight: initial;
+    display: initial;
+    vertical-align: initial;
+    cursor: initial;
+}
+
 .discovery-page-title {
     font-weight: normal;
     font-size: 30px;
@@ -114,9 +130,8 @@
     flex-direction: column;
 }
 
-.discovery-modal__header {
-    width: 100%;
-}
+/* .discovery-modal__header {
+} */
 
 .discovery-modal__header-text {
     display: inline-block;
@@ -124,4 +139,8 @@
 
 .discovery-modal__header-close-btn {
     float: right;
+}
+
+.discovery-modal__attribute-name {
+
 }

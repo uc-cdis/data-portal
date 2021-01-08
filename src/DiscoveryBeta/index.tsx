@@ -103,7 +103,7 @@ const data = [
 ];
 
 const DiscoveryBeta: React.FunctionComponent = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(true); // default val is true for development only
 
   return (<div className='discovery-container'>
     <h1 className='discovery-page-title'>DISCOVERY</h1>
@@ -199,21 +199,18 @@ const DiscoveryBeta: React.FunctionComponent = () => {
       />
     </div>
     <Modal
-      width='80vw'
       visible={modalVisible}
+      onOk={() => setModalVisible(false)}
       onCancel={() => setModalVisible(false)}
-      modalRender={() => (
-        <div className='discovery-modal'>
-
-          <div className='discovery-modal__header'>
-            <Space align='baseline'>
-              <h3 className='discovery-modal__header-text'>topmed-SAPPHIRE_asthma_DS-ASTHMA-IRB-COL</h3>
-              <StarOutlined />
-              <LinkOutlined />
-            </Space>
-            <Button className='discovery-modal__header-close-btn' shape='circle' icon={<CloseOutlined />} />
-          </div>
-
+      title={
+        <Space align='baseline'>
+          <h3 className='discovery-modal__header-text'>topmed-SAPPHIRE_asthma_DS-ASTHMA-IRB-COL</h3>
+          <StarOutlined />
+          <LinkOutlined />
+        </Space>
+      }
+      footer={false}
+    >
           <Space direction='vertical' size='large'>
             <Space direction='vertical' className='discovery-modal__attribute-group'>
               <Space className='discovery-modal__attribute'>
@@ -245,12 +242,7 @@ const DiscoveryBeta: React.FunctionComponent = () => {
               </Space>
             </Space>
           </Space>
-
-
-        </div>
-      )}
-
-    />
+    </Modal>
   </div>);
 }
 
