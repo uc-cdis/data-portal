@@ -3,12 +3,16 @@ import ReactDOM from 'react-dom';
 import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
 import './ExplorerCohort.css';
 
-function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
-  const [cohort, setCohort] = useState({
+function createEmptyCohort() {
+  return {
     name: '',
     description: '',
     filter: {},
-  });
+  };
+}
+
+function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
+  const [cohort, setCohort] = useState(createEmptyCohort());
   const [cohorts, setCohorts] = useState([]);
 
   const [actionType, setActionType] = useState('');
@@ -51,9 +55,9 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
       if (name === deleted.name) continue;
       else updatedCohorts.push({ name, description });
     }
-    setCohort({ name: '', description: '', filter: {} });
+    setCohort(createEmptyCohort());
     setCohorts(updatedCohorts);
-    onDeleteCohort({ name: '', description: '', filter: {} });
+    onDeleteCohort(createEmptyCohort());
     closeActionForm();
   }
 
