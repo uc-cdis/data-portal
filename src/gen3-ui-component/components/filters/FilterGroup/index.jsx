@@ -100,6 +100,15 @@ class FilterGroup extends React.Component {
     this.currentFilterListRef = React.createRef();
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(this.props.initialAppliedFilters) !==
+      JSON.stringify(prevProps.initialAppliedFilters)
+    ) {
+      this.callOnFilterChange();
+    }
+  }
+
   selectTab(index) {
     this.setState({ selectedTabIndex: index });
   }
