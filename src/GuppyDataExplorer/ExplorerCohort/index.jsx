@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
 import './ExplorerCohort.css';
 
-function ExplorerCohort({ className, filter }) {
+function ExplorerCohort({ className, filter, onOpenCohort }) {
   const [cohort, setCohort] = useState({
     name: '',
     description: '',
@@ -24,6 +24,7 @@ function ExplorerCohort({ className, filter }) {
   function handleOpen(opened) {
     console.log('Cohort action: open');
     setCohort(opened);
+    onOpenCohort(opened);
     closeActionForm();
   }
   function handleSave(saved) {
