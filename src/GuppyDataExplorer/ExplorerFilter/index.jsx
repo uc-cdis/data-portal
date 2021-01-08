@@ -140,6 +140,7 @@ class ExplorerFilter extends React.Component {
       onProcessFilterAggsData: this.onProcessFilterAggsData,
       onUpdateAccessLevel: this.props.onUpdateAccessLevel,
       adminAppliedPreFilters: this.props.adminAppliedPreFilters,
+      initialAppliedFilters: this.props.initialAppliedFilters,
       lockedTooltipMessage:
         this.props.tierAccessLevel === 'regular'
           ? `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.`
@@ -219,6 +220,7 @@ ExplorerFilter.propTypes = {
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
   unaccessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
   adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
+  initialAppliedFilters: PropTypes.object,
   accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
   getAccessButtonLink: PropTypes.string,
   hideGetAccessButton: PropTypes.bool,
@@ -236,6 +238,7 @@ ExplorerFilter.defaultProps = {
   accessibleFieldObject: {},
   unaccessibleFieldObject: {},
   adminAppliedPreFilters: {},
+  initialAppliedFilters: {},
   accessibleFieldCheckList: [],
   getAccessButtonLink: undefined,
   hideGetAccessButton: false,
