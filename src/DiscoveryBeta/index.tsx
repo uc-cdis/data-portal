@@ -166,9 +166,11 @@ const DiscoveryBeta: React.FunctionComponent = () => {
                   const tags = getTagsInCategory(category.name, resources);
                   return (<div className='discovery-header__tag-group' key={category.name}>
                     <h5>{category.name}</h5>
+                    <Space direction='vertical' size={4}>
                     { tags.map( tag =>
                       <Tag className='discovery-header__tag' color={category.color} key={category.name + tag}>{tag}</Tag>
                     )}
+                    </Space>
                   </div>)
                 })
               }
