@@ -94,57 +94,53 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   }
 
   return (
-    <>
-      <div className={className}>
-        <div>
-          <h1 className='guppy-explorer-cohort__name'>
-            Cohort:{' '}
-            {cohort.name ? (
-              <>
-                {truncateWithEllipsis(cohort.name, 30)}{' '}
-                {isFilterChanged && <FilterChangedWarning />}
-              </>
-            ) : (
-              <span className='guppy-explorer-cohort__placeholder'>
-                untitled
-              </span>
-            )}
-          </h1>
-          <p>
-            {cohort.description ? (
-              truncateWithEllipsis(cohort.description, 80)
-            ) : (
-              <span className='guppy-explorer-cohort__placeholder'>
-                No description
-              </span>
-            )}
-          </p>
-        </div>
-        <div>
-          <CohortActionButton
-            labelIcon='folder-open'
-            labelText='Open Cohort'
-            enabled={cohorts.length > 0}
-            onClick={() => openActionForm('open')}
-          />
-          <CohortActionButton
-            labelIcon='save'
-            labelText={`Save ${cohort.name === '' ? 'New' : 'As'}`}
-            onClick={() => openActionForm('save')}
-          />
-          <CohortActionButton
-            labelIcon='pen'
-            labelText='Update Cohort'
-            enabled={cohort.name !== ''}
-            onClick={() => openActionForm('update')}
-          />
-          <CohortActionButton
-            labelIcon='trash-alt'
-            labelText='Delete Cohort'
-            enabled={cohort.name !== ''}
-            onClick={() => openActionForm('delete')}
-          />
-        </div>
+    <div className={className}>
+      <div>
+        <h1 className='guppy-explorer-cohort__name'>
+          Cohort:{' '}
+          {cohort.name ? (
+            <>
+              {truncateWithEllipsis(cohort.name, 30)}{' '}
+              {isFilterChanged && <FilterChangedWarning />}
+            </>
+          ) : (
+            <span className='guppy-explorer-cohort__placeholder'>untitled</span>
+          )}
+        </h1>
+        <p>
+          {cohort.description ? (
+            truncateWithEllipsis(cohort.description, 80)
+          ) : (
+            <span className='guppy-explorer-cohort__placeholder'>
+              No description
+            </span>
+          )}
+        </p>
+      </div>
+      <div>
+        <CohortActionButton
+          labelIcon='folder-open'
+          labelText='Open Cohort'
+          enabled={cohorts.length > 0}
+          onClick={() => openActionForm('open')}
+        />
+        <CohortActionButton
+          labelIcon='save'
+          labelText={`Save ${cohort.name === '' ? 'New' : 'As'}`}
+          onClick={() => openActionForm('save')}
+        />
+        <CohortActionButton
+          labelIcon='pen'
+          labelText='Update Cohort'
+          enabled={cohort.name !== ''}
+          onClick={() => openActionForm('update')}
+        />
+        <CohortActionButton
+          labelIcon='trash-alt'
+          labelText='Delete Cohort'
+          enabled={cohort.name !== ''}
+          onClick={() => openActionForm('delete')}
+        />
       </div>
       {showActionForm &&
         ReactDOM.createPortal(
@@ -166,7 +162,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
           </div>,
           document.getElementById('root')
         )}
-    </>
+    </div>
   );
 }
 
