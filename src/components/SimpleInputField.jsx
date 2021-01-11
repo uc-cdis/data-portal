@@ -6,7 +6,7 @@ import './SimpleInputField.css';
  * @param {Object} prop
  * @param {string} prop.label
  * @param {JSX.Element} prop.input
- * @param {{ isError: boolean; message: string }} prop.error
+ * @param {?{ isError: boolean; message: string }} [prop.error]
  */
 function SimpleInputField({ label, input, error }) {
   return (
