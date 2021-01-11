@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import './ExplorerCohort.css';
@@ -10,6 +11,9 @@ function CohortButton(props) {
   return <Button className='guppy-explorer-cohort__button' {...props} />;
 }
 
+/**
+ * @param {{ labelIcon: IconProp; labelText: string; [x: string]: * }} prop
+ */
 export function CohortActionButton({ labelIcon, labelText, ...attrs }) {
   return (
     <CohortButton
