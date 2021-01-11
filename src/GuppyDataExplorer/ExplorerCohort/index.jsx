@@ -6,7 +6,11 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
 import './ExplorerCohort.css';
+import './typedef';
 
+/**
+ * @return {ExplorerCohort}
+ */
 function createEmptyCohort() {
   return {
     name: '',
@@ -15,15 +19,29 @@ function createEmptyCohort() {
   };
 }
 
+/**
+ * @param {string} string
+ * @param {number} maxLength
+ */
 function truncateWithEllipsis(string, maxLength) {
   return string.length > maxLength
     ? string.slice(0, maxLength - 3) + '...'
     : string;
 }
 
+/**
+ * @param {Object} prop
+ * @param {string} prop.className
+ * @param {ExplorerFilter} prop.filter
+ * @param {({ filter }: { filter: ExplorerFilter }) => void} prop.onOpenCohort
+ * @param {({ filter }: { filter: ExplorerFilter }) => void} prop.onDeleteCohort
+ */
 function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   const [cohort, setCohort] = useState(createEmptyCohort());
-  const [cohorts, setCohorts] = useState([]);
+
+  /** @type {ExplorerCohort[]} */
+  const emptyCohorts = [];
+  const [cohorts, setCohorts] = useState(emptyCohorts);
 
   const [actionType, setActionType] = useState('');
   const [showActionForm, setShowActionForm] = useState(false);
@@ -35,17 +53,17 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     setShowActionForm(false);
   }
 
-  function handleOpen(opened) {
+  function handleOpen(/** @type {ExplorerCohort} */ opened) {
     setCohort(cloneDeep(opened));
     onOpenCohort(cloneDeep(opened));
     closeActionForm();
   }
-  function handleSave(saved) {
+  function handleSave(/** @type {ExplorerCohort} */ saved) {
     setCohort(cloneDeep(saved));
     setCohorts([...cohorts, cloneDeep(saved)]);
     closeActionForm();
   }
-  function handleUpdate(updated) {
+  function handleUpdate(/** @type {ExplorerCohort} */ updated) {
     const updatedCohorts = [];
     for (const { name, description } of cohorts) {
       if (name === updated.name) updatedCohorts.push(cloneDeep(updated));
@@ -55,7 +73,8 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     setCohorts(updatedCohorts);
     closeActionForm();
   }
-  function handleDelete(deleted) {
+  function handleDelete(/** @type {ExplorerCohort} */ deleted) {
+    /** @type {ExplorerCohort[]} */
     const updatedCohorts = [];
     for (const { name, description } of cohorts) {
       if (name === deleted.name) continue;

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import './ExplorerCohort.css';
+import './typedef';
 
 function CohortButton(props) {
   return <Button className='guppy-explorer-cohort__button' {...props} />;
@@ -23,6 +24,13 @@ export function CohortActionButton({ labelIcon, labelText, ...attrs }) {
   );
 }
 
+/**
+ * @param {Object} prop
+ * @param {ExplorerCohort} prop.currentCohort
+ * @param {ExplorerCohort[]} prop.cohorts
+ * @param {(opened: ExplorerCohort) => void} prop.onAction
+ * @param {() => void} prop.onClose
+ */
 function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
   const emptyOption = {
     label: 'Open New (no cohort)',
@@ -85,6 +93,15 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
   );
 }
 
+/**
+ * @param {Object} prop
+ * @param {ExplorerCohort} prop.currentCohort
+ * @param {ExplorerFilter} prop.currentFilter
+ * @param {ExplorerCohort[]} prop.cohorts
+ * @param {boolean} prop.isFilterChanged
+ * @param {(saved: ExplorerCohort) => void} prop.onAction
+ * @param {() => void} prop.onClose
+ */
 function CohortSaveForm({
   currentCohort,
   currentFilter,
@@ -161,6 +178,14 @@ function CohortSaveForm({
   );
 }
 
+/**
+ * @param {Object} prop
+ * @param {ExplorerCohort} prop.currentCohort
+ * @param {ExplorerFilter} prop.currentFilter
+ * @param {boolean} prop.isFilterChanged
+ * @param {(updated: ExplorerCohort) => void} prop.onAction
+ * @param {() => void} prop.onClose
+ */
 function CohortUpdateForm({
   currentCohort,
   currentFilter,
@@ -223,6 +248,12 @@ function CohortUpdateForm({
   );
 }
 
+/**
+ * @param {Object} prop
+ * @param {ExplorerCohort} prop.currentCohort
+ * @param {(deleted: ExplorerCohort) => void} prop.onAction
+ * @param {() => void} prop.onClose
+ */
 function CohortDeleteForm({ currentCohort, onAction, onClose }) {
   return (
     <div className='guppy-explorer-cohort__form'>
@@ -242,6 +273,20 @@ function CohortDeleteForm({ currentCohort, onAction, onClose }) {
   );
 }
 
+/**
+ * @param {Object} prop
+ * @param {'open' | 'save' | 'update' | 'delete'} prop.actionType
+ * @param {ExplorerCohort} prop.currentCohort
+ * @param {ExplorerFilter} prop.currentFilter
+ * @param {ExplorerCohort[]} prop.cohorts
+ * @param {object} prop.handlers
+ * @param {(opened: ExplorerCohort) => void} prop.handlers.handleOpen
+ * @param {(saved: ExplorerCohort) => void} prop.handlers.handleSave
+ * @param {(updated: ExplorerCohort) => void} prop.handlers.handleUpdate
+ * @param {(deleted: ExplorerCohort) => void} prop.handlers.handleDelete
+ * @param {() => void} prop.handlers.handleClose
+ * @param {boolean} isFilterChanged
+ */
 export function CohortActionForm({
   actionType,
   currentCohort,
