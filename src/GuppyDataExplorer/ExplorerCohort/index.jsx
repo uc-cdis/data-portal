@@ -65,9 +65,9 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   }
   function handleUpdate(/** @type {ExplorerCohort} */ updated) {
     const updatedCohorts = [];
-    for (const { name, description } of cohorts) {
+    for (const { name, description, filter } of cohorts) {
       if (name === updated.name) updatedCohorts.push(cloneDeep(updated));
-      else updatedCohorts.push({ name, description });
+      else updatedCohorts.push({ name, description, filter });
     }
     setCohort(cloneDeep(updated));
     setCohorts(updatedCohorts);
@@ -76,9 +76,9 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   function handleDelete(/** @type {ExplorerCohort} */ deleted) {
     /** @type {ExplorerCohort[]} */
     const updatedCohorts = [];
-    for (const { name, description } of cohorts) {
+    for (const { name, description, filter } of cohorts) {
       if (name === deleted.name) continue;
-      else updatedCohorts.push({ name, description });
+      else updatedCohorts.push({ name, description, filter });
     }
     setCohort(createEmptyCohort());
     setCohorts(updatedCohorts);
