@@ -15,6 +15,12 @@ function createEmptyCohort() {
   };
 }
 
+function truncateWithEllipsis(string, maxLength) {
+  return string.length > maxLength
+    ? string.slice(0, maxLength - 3) + '...'
+    : string;
+}
+
 function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   const [cohort, setCohort] = useState(createEmptyCohort());
   const [cohorts, setCohorts] = useState([]);
@@ -95,7 +101,8 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
             Cohort:{' '}
             {cohort.name ? (
               <>
-                {cohort.name} {isFilterChanged && <FilterChangedWarning />}
+                {truncateWithEllipsis(cohort.name, 30)}{' '}
+                {isFilterChanged && <FilterChangedWarning />}
               </>
             ) : (
               <span className='guppy-explorer-cohort__placeholder'>
@@ -104,7 +111,9 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
             )}
           </h1>
           <p>
-            {cohort.description || (
+            {cohort.description ? (
+              truncateWithEllipsis(cohort.description, 80)
+            ) : (
               <span className='guppy-explorer-cohort__placeholder'>
                 No description
               </span>
