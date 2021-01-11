@@ -1,0 +1,141 @@
+{
+    "features": {
+      "exploration_integration": {
+        "enabled": false
+      },
+      "views": {
+        "grid_view": {
+          "enabled": false
+        }
+      },
+      "search": {
+        "search_bar": {
+          "enabled": true,
+          "search_tags": true,
+          "searchable_text_fields": [
+            "study_name",
+            "study_description",
+            "dbgap_accession"
+          ]
+        }
+      },
+      "authorization": {
+        "enabled": true,
+        "request_access": {
+          "enabled": true,
+          "type": "global|per_study|both",
+          "global": {
+            "string": "You can request access by going to dbGaP, unless otherwise instructed below. \nThis is a new line."
+          },
+          "per_study": {
+            "content_type": "string",
+            "field": "access_instructions"
+          }
+        }
+      }
+    },
+    "aggregations": {
+      "aggregate_study_count": true,
+      "additional_aggregations": [
+        {
+          "name": "Total Subjects",
+          "field": "num_subjects",
+          "type": "sum"
+        }
+      ]
+    },
+    "tag_selector": {
+      "title": "Associated tags organized by category"
+    },
+    "study_columns": [
+      {
+        "name": "Name",
+        "field": "study_name",
+        "error_if_not_available": true
+      },
+      {
+        "name": "Number Subjects",
+        "field": "num_subjects",
+        "error_if_not_available": false,
+        "value_if_not_available": "0"
+      }
+    ],
+    "study_preview_fields": {
+      "fields_to_show": [
+        {
+          "name": "Description",
+          "field": "study_description",
+          "content_type": "string",
+          "include_name": false,
+          "include_if_not_available": true,
+          "value_if_not_available": "No description has been provided for this study."
+        }
+      ]
+    },
+    "study_page_fields": {
+      "show_all_available_fields": false,
+      "fields_to_show": [
+        {
+          "group_name": "In-depth Study Info",
+          "include_name": false,
+          "fields": [
+            {
+              "name": "Description",
+              "field": "study_description",
+              "content_type": "string",
+              "include_name": false,
+              "include_if_not_available": true,
+              "value_if_not_available": "No description has been provided for this study."
+            }
+          ]
+        },
+        {
+          "group_name": "Study Identifiers",
+          "include_name": true,
+          "fields": [
+            {
+              "name": "Short Name",
+              "field": "short_name",
+              "content_type": "string",
+              "include_name": true,
+              "include_if_not_available": true,
+              "value_if_not_available": "N/A"
+            },
+            {
+              "name": "dbGaP Study Accession",
+              "field": "dbgap_accession",
+              "content_type": "string",
+              "include_name": true,
+              "include_if_not_available": false
+            }
+          ]
+        }
+      ]
+    },
+    "minimal_field_mapping": {
+      "tags_list_field_name": "tags",
+      "authz_field": "authz"
+    },
+    "categories": [
+      {
+        "name": "Study Type",
+        "color": "#81d3f8",
+        "display": true
+      },
+      {
+        "name": "Study Registration",
+        "color": "#8125c8",
+        "display": true
+      },
+      {
+        "name": "Data Freeze",
+        "color": "#44f859",
+        "display": true
+      },
+      {
+        "name": "Variables",
+        "color": "#88f859",
+        "display": false
+      }
+    ]
+  }

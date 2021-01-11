@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { Input, Table, Tag, Radio, Checkbox, Button, Space } from 'antd';
+import { Input, Table, Tag, Radio, Checkbox, Button, Space, Modal } from 'antd';
 import { LockOutlined, LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, StarOutlined, StarFilled, StarTwoTone, CloseOutlined } from '@ant-design/icons';
 
 import './DiscoveryBeta.css';
-import Modal from 'antd/lib/modal/Modal';
+
+import { hostname } from '../localconf';
+import config from './mock_config.json';
 
 const getTagColor = (tag) => {
   const TAG_BLUE = 'rgba(129, 211, 248)';
@@ -102,8 +104,43 @@ const data = [
   },
 ];
 
+interface MDSResourceData {
+  [name: string]: {
+    gen3_discovery: any
+  }
+}
+
+const getResourceData = async (): Promise<MDSResourceData> => {
+  const RESOURCE_DATA_URL = 'mds/metadata?_guid_type=discovery_metadata&data=True';
+  const url = hostname + RESOURCE_DATA_URL;
+  let res;
+  try {
+    res = await fetch(url);
+    // handle non-200 response
+    if (res.status !== 200) {
+      // FIXME implement
+      throw new Error(`Request for resource data failed: ${JSON.stringify(res, null, 2)}`);
+    }
+    // assume successful response
+    const data = await res.json();
+    console.log(data);
+  } catch(err) {
+    // handle request failure
+    // FIXME implement
+    throw new Error(`Request for resource data failed: ${err}`);
+  }
+  return {};
+}
+
 const DiscoveryBeta: React.FunctionComponent = () => {
-  const [modalVisible, setModalVisible] = useState(true); // default val is true for development only
+
+  const [modalVisible, setModalVisible] = useState(false); // default val is true for development only
+
+  useEffect(() => {
+    getResourceData();
+    // TODO handle network error
+    // TODO transform data into state.resourcedata
+  }, [])
 
   return (<div className='discovery-container'>
     <h1 className='discovery-page-title'>DISCOVERY</h1>
