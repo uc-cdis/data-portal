@@ -154,9 +154,20 @@ function CohortSaveForm({
 
 function CohortUpdateForm({ currentCohort, currentFilter, onAction, onClose }) {
   const [description, setDescription] = useState(currentCohort.description);
+  const isFilterChanged =
+    JSON.stringify(currentFilter) !== JSON.stringify(currentCohort.filter);
   return (
     <div className='guppy-explorer-cohort__form'>
       <h4>Update the current Cohort</h4>
+      {isFilterChanged && (
+        <p>
+          <FontAwesomeIcon
+            icon='exclamation-triangle'
+            color='#EF8523' // g3-color__highlight-orange
+          />{' '}
+          You have changed filters for this Cohort.
+        </p>
+      )}
       <form>
         <SimpleInputField
           label='Name'
@@ -185,7 +196,7 @@ function CohortUpdateForm({ currentCohort, currentFilter, onAction, onClose }) {
         />
         <CohortButton
           label='Update Cohort'
-          enabled={description !== currentCohort.description}
+          enabled={description !== currentCohort.description || isFilterChanged}
           onClick={() =>
             onAction({
               ...currentCohort,
