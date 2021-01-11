@@ -275,7 +275,7 @@ function CohortDeleteForm({ currentCohort, onAction, onClose }) {
 
 /**
  * @param {Object} prop
- * @param {'open' | 'save' | 'update' | 'delete'} prop.actionType
+ * @param {ExplorerCohortActionType} prop.actionType
  * @param {ExplorerCohort} prop.currentCohort
  * @param {ExplorerFilter} prop.currentFilter
  * @param {ExplorerCohort[]} prop.cohorts
@@ -285,7 +285,7 @@ function CohortDeleteForm({ currentCohort, onAction, onClose }) {
  * @param {(updated: ExplorerCohort) => void} prop.handlers.handleUpdate
  * @param {(deleted: ExplorerCohort) => void} prop.handlers.handleDelete
  * @param {() => void} prop.handlers.handleClose
- * @param {boolean} isFilterChanged
+ * @param {boolean} prop.isFilterChanged
  */
 export function CohortActionForm({
   actionType,

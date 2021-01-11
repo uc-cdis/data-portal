@@ -43,7 +43,8 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   const emptyCohorts = [];
   const [cohorts, setCohorts] = useState(emptyCohorts);
 
-  const [actionType, setActionType] = useState('');
+  /** @type {[ExplorerCohortActionType, React.Dispatch<React.SetStateAction<ExplorerCohortActionType>>]} */
+  const [actionType, setActionType] = useState('open');
   const [showActionForm, setShowActionForm] = useState(false);
   function openActionForm(actionType) {
     setActionType(actionType);

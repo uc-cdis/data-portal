@@ -23,3 +23,7 @@
  * @property {string} description
  * @property {ExplorerFilter} filter
  */
+
+/**
+ * @typedef {'open' | 'save' | 'update' | 'delete'} ExplorerCohortActionType
+ */
