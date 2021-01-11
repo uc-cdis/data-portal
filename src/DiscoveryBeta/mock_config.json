@@ -54,10 +54,14 @@
         "error_if_not_available": true
       },
       {
-        "name": "Number Subjects",
+        "name": "Number of Subjects",
         "field": "num_subjects",
         "error_if_not_available": false,
         "value_if_not_available": "0"
+      },
+      {
+        "name": "dbGaP Accession Number",
+        "field": "phs_id"
       }
     ],
     "study_preview_fields": {
@@ -114,9 +118,10 @@
     },
     "minimal_field_mapping": {
       "tags_list_field_name": "tags",
-      "authz_field": "authz"
+      "authz_field": "authz",
+      "uid": "study_id"
     },
-    "categories": [
+    "tag_categories": [
       {
         "name": "Study Type",
         "color": "#81d3f8",

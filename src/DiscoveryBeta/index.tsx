@@ -8,138 +8,97 @@ import './DiscoveryBeta.css';
 import { hostname } from '../localconf';
 import config from './mock_config.json';
 
-const getTagColor = (tag) => {
+const getTagColor = (tagCategory: string): string => {
   const TAG_BLUE = 'rgba(129, 211, 248)';
   const TAG_RED = 'rgb(236, 128, 141)';
   const TAG_GREEN = 'rgba(112, 182, 3)';
-  switch (tag) {
-  case 'TOPMed':
-  case 'COVID 19':
-  case 'Parent':
+  switch (tagCategory) {
+  case 'Program':
     return TAG_BLUE;
-  case 'Blood Disease':
-  case 'Lung Disease':
-  case 'Heart Disease':
+  case 'Data Type':
     return TAG_RED;
-  case 'Freeze 5':
-  case 'Freeze 8':
-  case 'Freeze 9':
+  case 'Study Registration':
     return TAG_GREEN;
   default:
     return 'gray';
   }
 };
 
+// FIXME implement
+const isFavorite = (study: string): boolean => false;
+
+// FIXME implement
+const isAccessible = (study: string): boolean => false;
+
 const columns = [
   {
-    dataIndex: 'favorite',
-    key: 'favorite',
-    render: fav => (fav ? <StarTwoTone twoToneColor={'#797979'} /> : <StarOutlined />),
+    // Favorite
+    render: (_, record) => (isFavorite(record.name) ? <StarTwoTone twoToneColor={'#797979'} /> : <StarOutlined />),
   },
   {
-    title: 'STUDY NAME',
+    title: 'SHORT NAME',
     dataIndex: 'name',
-    key: 'name',
     render: text => <a>{text}</a>,
   },
   {
+    title: 'FULL NAME',
+    dataIndex: 'full_name',
+  },
+  {
     title: 'dbGaP ACCESSION NUMBER',
-    dataIndex: 'phs_id',
-    key: 'phs_id',
+    dataIndex: 'study_id',
   },
   {
     title: 'NUMBER OF SUBJECTS',
-    dataIndex: 'num_subjects',
-    key: 'num_subjects',
+    dataIndex: '_subjects_count',
   },
   {
     title: 'TAGS',
-    key: 'tags',
     dataIndex: 'tags',
-    render: tags => (
+    render: (_, record) => (
       <React.Fragment>
-        {tags.map(tag => (
-          <Tag color={getTagColor(tag)} key={tag}>{tag}</Tag>
+        {record.tags.map( ({name, category}) => (
+          <Tag color={getTagColor(category)} key={record.name + name}>{name}</Tag>
         ))}
       </React.Fragment>
     ),
   },
   {
     title: 'ACCESS',
-    key: 'accessible',
-    render: accessible => (accessible ? <UnlockOutlined /> : <LockFilled />),
+    render: (_, record) => (isAccessible(record.name) ? <UnlockOutlined /> : <LockFilled />),
   },
 ];
 
-const data = [
-  {
-    key: '1',
-    name: 'TOPMED_HMB_IRB_NPU',
-    phs_id: 'phs000123.v1.p1',
-    favorite: true,
-    accessible: true,
-    num_subjects: 500000,
-    tags: ['TOPMed', 'Heart Disease'],
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
-  },
-  {
-    key: '2',
-    name: 'topmed-SAPPHIRE_asthma_DS-ASTHMA-IRB-COL',
-    phs_id: 'phs000234.v1.p1',
-    num_subjects: 1,
-    favorite: false,
-    accessible: true,
-    tags: ['TOPMed', 'Lung Disease'],
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
-  },
-  {
-    key: '3',
-    name: 'parent-SAPPHIRE_asthma_DS-ASTHMA-IRB-COL',
-    phs_id: 'phs000121.v1.p1',
-    num_subjects: 1100,
-    favorite: true,
-    accessible: false,
-    tags: ['Parent', 'Lung Disease'],
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
-  },
-];
-
-interface MDSResourceData {
-  [name: string]: {
-    gen3_discovery: any
-  }
-}
-
-const getResourceData = async (): Promise<MDSResourceData> => {
+const loadResources = async (): Promise<any> => {
   const RESOURCE_DATA_URL = 'mds/metadata?_guid_type=discovery_metadata&data=True';
   const url = hostname + RESOURCE_DATA_URL;
-  let res;
   try {
-    res = await fetch(url);
-    // handle non-200 response
+    const res = await fetch(url);
     if (res.status !== 200) {
-      // FIXME implement
       throw new Error(`Request for resource data failed: ${JSON.stringify(res, null, 2)}`);
     }
-    // assume successful response
-    const data = await res.json();
-    console.log(data);
+    const jsonResponse = await res.json();
+    const resources = Object.values(jsonResponse).map( (entry: any) => entry.gen3_discovery);
+    return resources;
   } catch(err) {
-    // handle request failure
-    // FIXME implement
     throw new Error(`Request for resource data failed: ${err}`);
   }
-  return {};
 }
 
 const DiscoveryBeta: React.FunctionComponent = () => {
 
-  const [modalVisible, setModalVisible] = useState(false); // default val is true for development only
+  const [resources, setResources] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
+  // load resource data on page load
   useEffect(() => {
-    getResourceData();
-    // TODO handle network error
-    // TODO transform data into state.resourcedata
+    loadResources().then( resources => {
+      console.log('resources', resources);
+      setResources(resources);
+    }).catch(err => {
+      // FIXME how to handle this / retry?
+      throw new Error(err);
+    });
   }, [])
 
   return (<div className='discovery-container'>
@@ -203,38 +162,42 @@ const DiscoveryBeta: React.FunctionComponent = () => {
         </div>
       </div>
     </div>
-    <div className='discovery-table-container'>
-      <div className='discovery-table__header'>
-        <Input className='discovery-table__search' prefix={<SearchOutlined />} />
-        <div className='disvovery-table__controls'>
-          <Checkbox className='discovery-table__show-favorites'>Show Favorites</Checkbox>
-          <Radio.Group
-            className='discovery-table__access-button'
-            defaultValue='both'
-            buttonStyle='solid'
-          >
-            <Radio.Button value='both'>Both</Radio.Button>
-            <Radio.Button value='access'><LockFilled /></Radio.Button>
-            <Radio.Button value='no-access'><UnlockOutlined /></Radio.Button>
-          </Radio.Group>
+    { resources
+      ? (<div className='discovery-table-container'>
+        <div className='discovery-table__header'>
+          <Input className='discovery-table__search' prefix={<SearchOutlined />} />
+          <div className='disvovery-table__controls'>
+            <Checkbox className='discovery-table__show-favorites'>Show Favorites</Checkbox>
+            <Radio.Group
+              className='discovery-table__access-button'
+              defaultValue='both'
+              buttonStyle='solid'
+            >
+              <Radio.Button value='both'>Both</Radio.Button>
+              <Radio.Button value='access'><LockFilled /></Radio.Button>
+              <Radio.Button value='no-access'><UnlockOutlined /></Radio.Button>
+            </Radio.Group>
+          </div>
         </div>
-      </div>
-      <Table
-        columns={columns}
-        onRow={() => ({
-          onClick: () => {
-            setModalVisible(true);
-          }
-        })}
-        dataSource={data}
-        expandable={{
-          defaultExpandAllRows: true,
-          expandedRowClassName: () => 'discovery-table__expanded-row',
-          expandedRowRender: record => record.description,
-          expandIconColumnIndex: -1, // don't render expand icon
-        }}
-      />
-    </div>
+        <Table
+          columns={columns}
+          rowKey={config.minimal_field_mapping.uid}
+          onRow={() => ({
+            onClick: () => {
+              setModalVisible(true);
+            }
+          })}
+          dataSource={resources}
+          expandable={{
+            defaultExpandAllRows: true,
+            expandedRowClassName: () => 'discovery-table__expanded-row',
+            expandedRowRender: record => record.study_description.slice(0, 250) + '...',
+            expandIconColumnIndex: -1, // don't render expand icon
+          }}
+        />
+      </div>)
+      : <div>Loading...</div>
+    }
     <Modal
       visible={modalVisible}
       onOk={() => setModalVisible(false)}
