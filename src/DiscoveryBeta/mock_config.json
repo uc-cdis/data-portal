@@ -34,16 +34,18 @@
         }
       }
     },
-    "aggregations": {
-      "aggregate_study_count": true,
-      "additional_aggregations": [
+    "aggregations": [
         {
-          "name": "Total Subjects",
-          "field": "num_subjects",
-          "type": "sum"
+            "name": "Studies",
+            "field": "study_id",
+            "type": "count"
+        },
+        {
+            "name": "Total Subjects",
+            "field": "_subjects_count",
+            "type": "sum"
         }
-      ]
-    },
+    ],
     "tag_selector": {
       "title": "Associated tags organized by category"
     },

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { uniq, sum } from 'lodash';
 
 import { Input, Table, Tag, Radio, Checkbox, Button, Space, Modal } from 'antd';
 import { LockOutlined, LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, StarOutlined, StarFilled, StarTwoTone, CloseOutlined } from '@ant-design/icons';
@@ -85,12 +86,36 @@ const loadResources = async (): Promise<any> => {
   }
 }
 
+interface AggregationConfig {
+  name: string
+  field: string
+  type: 'sum' | 'count'
+}
+
+const renderAggregation = (aggregation: AggregationConfig, resources: any[] | null): string => {
+  if (!resources) {
+    return '';
+  }
+  const {field, type} = aggregation;
+  const fields = resources.map( r => r[field] );
+  switch(type) {
+  case 'sum':
+    return sum(fields).toLocaleString();
+  case 'count':
+    const uniqueFields = uniq(fields);
+    return uniqueFields.length.toLocaleString();
+  default:
+    throw new Error(`Misconfiguration error: Unrecognized aggregation type ${type}. Check the 'aggregations' block of the Discovery page config.`);
+  }
+
+}
+
 const DiscoveryBeta: React.FunctionComponent = () => {
 
   const [resources, setResources] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // load resource data on page load
+  // load resources on first render
   useEffect(() => {
     loadResources().then( resources => {
       console.log('resources', resources);
@@ -103,67 +128,48 @@ const DiscoveryBeta: React.FunctionComponent = () => {
 
   return (<div className='discovery-container'>
     <h1 className='discovery-page-title'>DISCOVERY</h1>
-    <div className='discovery-header'>
-      <div className='discovery-header__stats-container'>
-        <div className='discovery-header__stat'>
-          <div className='discovery-header__stat-number'>
-            137
-          </div>
-          <div className='discovery-header__stat-label'>
-            Studies
-          </div>
-        </div>
-        <div className='discovery-header__stat'>
-          <div className='discovery-header__stat-number'>
-            306,583
-          </div>
-          <div className='discovery-header__stat-label'>
-            Files
-          </div>
-        </div>
-        <div className='discovery-header__stat'>
-          <div className='discovery-header__stat-number'>
-            406,853
-          </div>
-          <div className='discovery-header__stat-label'>
-            Subjects
-          </div>
-        </div>
-        <div className='discovery-header__stat'>
-          <div className='discovery-header__stat-number'>
-            3.03 PB
-          </div>
-          <div className='discovery-header__stat-label'>
-            Data
-          </div>
-        </div>
-      </div>
-      <div className='discovery-header__tags-container' >
-        <h3 className='discovery-header__tags-header'>ASSOCIATED TAGS BY CATEGORY</h3>
-        <div className='discovery-header__tags'>
-          <div className='discovery-header__tag-group'>
-            <h5>Program</h5>
-            <Tag className='discovery-header__tag' color={'rgba(129, 211, 248, 0.5)'}>TOPMed</Tag>
-            <Tag className='discovery-header__tag' color={'rgba(129, 211, 248)'}>COVID 19</Tag>
-            <Tag className='discovery-header__tag' color={'rgba(129, 211, 248)'}>Parent</Tag>
-          </div>
-          <div className='discovery-header__tag-group'>
-            <h5>Disease</h5>
-            <Tag className='discovery-header__tag' color={'rgba(236, 128, 141)'}>Blood Disease</Tag>
-            <Tag className='discovery-header__tag' color={'rgba(236, 128, 141)'}>Lung Disease</Tag>
-            <Tag className='discovery-header__tag' color={'rgba(236, 128, 141)'}>Heart Disease</Tag>
-          </div>
-          <div className='discovery-header__tag-group'>
-            <h5>Data Freeze</h5>
-            <Tag className='discovery-header__tag' color={'rgba(112, 182, 3)'}>Freeze 5</Tag>
-            <Tag className='discovery-header__tag' color={'rgba(112, 182, 3)'}>Freeze 8</Tag>
-            <Tag className='discovery-header__tag' color={'rgba(112, 182, 3)'}>Freeze 9</Tag>
-          </div>
-        </div>
-      </div>
-    </div>
     { resources
-      ? (<div className='discovery-table-container'>
+      ? (<React.Fragment>
+        <div className='discovery-header'>
+          <div className='discovery-header__stats-container'>
+            {
+              config.aggregations.map( aggregation => (
+                <div className='discovery-header__stat' key={aggregation.name}>
+                  <div className='discovery-header__stat-number'>
+                    {renderAggregation(aggregation, resources)}
+                  </div>
+                  <div className='discovery-header__stat-label'>
+                    {aggregation.name}
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+          <div className='discovery-header__tags-container' >
+            <h3 className='discovery-header__tags-header'>ASSOCIATED TAGS BY CATEGORY</h3>
+            <div className='discovery-header__tags'>
+              <div className='discovery-header__tag-group'>
+                <h5>Program</h5>
+                <Tag className='discovery-header__tag' color={'rgba(129, 211, 248, 0.5)'}>TOPMed</Tag>
+                <Tag className='discovery-header__tag' color={'rgba(129, 211, 248)'}>COVID 19</Tag>
+                <Tag className='discovery-header__tag' color={'rgba(129, 211, 248)'}>Parent</Tag>
+              </div>
+              <div className='discovery-header__tag-group'>
+                <h5>Disease</h5>
+                <Tag className='discovery-header__tag' color={'rgba(236, 128, 141)'}>Blood Disease</Tag>
+                <Tag className='discovery-header__tag' color={'rgba(236, 128, 141)'}>Lung Disease</Tag>
+                <Tag className='discovery-header__tag' color={'rgba(236, 128, 141)'}>Heart Disease</Tag>
+              </div>
+              <div className='discovery-header__tag-group'>
+                <h5>Data Freeze</h5>
+                <Tag className='discovery-header__tag' color={'rgba(112, 182, 3)'}>Freeze 5</Tag>
+                <Tag className='discovery-header__tag' color={'rgba(112, 182, 3)'}>Freeze 8</Tag>
+                <Tag className='discovery-header__tag' color={'rgba(112, 182, 3)'}>Freeze 9</Tag>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className='discovery-table-container'>
         <div className='discovery-table__header'>
           <Input className='discovery-table__search' prefix={<SearchOutlined />} />
           <div className='disvovery-table__controls'>
@@ -195,7 +201,8 @@ const DiscoveryBeta: React.FunctionComponent = () => {
             expandIconColumnIndex: -1, // don't render expand icon
           }}
         />
-      </div>)
+      </div>
+      </React.Fragment>)
       : <div>Loading...</div>
     }
     <Modal
