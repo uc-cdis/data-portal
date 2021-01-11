@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import cloneDeep from 'lodash.clonedeep';
+import Tooltip from 'rc-tooltip';
+import 'rc-tooltip/assets/bootstrap_white.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
 import './ExplorerCohort.css';
 
@@ -62,13 +65,39 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     closeActionForm();
   }
 
+  const isFilterChanged =
+    JSON.stringify(filter) !== JSON.stringify(cohort.filter);
+  function FilterChangedWarning() {
+    return (
+      <Tooltip
+        placement='top'
+        overlay='You have changed filters for this Cohort. Click this icon to undo.'
+        arrowContent={<div className='rc-tooltip-arrow-inner' />}
+      >
+        <FontAwesomeIcon
+          icon='exclamation-triangle'
+          color='#EF8523' // g3-color__highlight-orange
+          size='xs'
+          style={{
+            cursor: 'pointer',
+          }}
+          onClick={() => onOpenCohort(cloneDeep(cohort))}
+        />
+      </Tooltip>
+    );
+  }
+
   return (
     <>
       <div className={className}>
         <div>
           <h1 className='guppy-explorer-cohort__name'>
             Cohort:{' '}
-            {cohort.name || (
+            {cohort.name ? (
+              <>
+                {cohort.name} {isFilterChanged && <FilterChangedWarning />}
+              </>
+            ) : (
               <span className='guppy-explorer-cohort__placeholder'>
                 untitled
               </span>
