@@ -1,4 +1,4 @@
-.discovery-container {
+.discover-container {
     background-color: #f2f2f2;
     padding: 40px 80px;
 }
@@ -130,17 +130,6 @@
     flex-direction: column;
 }
 
-/* .discovery-modal__header {
-} */
-
-.discovery-modal__header-text {
-    display: inline-block;
-}
-
-.discovery-modal__header-close-btn {
-    float: right;
-}
-
 .discovery-modal__attribute-name {
-
+    color: #7f7f7f;
 }

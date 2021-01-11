@@ -202,6 +202,7 @@ const DiscoveryBeta: React.FunctionComponent = () => {
       visible={modalVisible}
       onOk={() => setModalVisible(false)}
       onCancel={() => setModalVisible(false)}
+      width='80vw'
       title={
         <Space align='baseline'>
           <h3 className='discovery-modal__header-text'>topmed-SAPPHIRE_asthma_DS-ASTHMA-IRB-COL</h3>
@@ -241,6 +242,40 @@ const DiscoveryBeta: React.FunctionComponent = () => {
                 <span className='discovery-modal__attribute-value'>Northwest</span>
               </Space>
             </Space>
+
+            <Space direction='vertical' className='discovery-modal__attribute-group'>
+              <Space className='discovery-modal__attribute'>
+                <span className='discovery-modal__attribute-name'>Tags</span>
+                <Tag color={'rgba(112, 182, 3)'}>Freeze 5</Tag>
+                <Tag color={'rgba(236, 128, 141)'}>Heart Disease</Tag>
+              </Space>
+            </Space>
+
+            <Space direction='vertical' className='discovery-modal__attribute-group'>
+              <Space align='start' className='discovery-modal__attribute'>
+                <span className='discovery-modal__attribute-name'>Abstract</span>
+                <span className='discovery-modal__attribute-value'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
+              </Space>
+            </Space>
+
+            <Space direction='vertical' className='discovery-modal__attribute-group'>
+              <Space className='discovery-modal__attribute'>
+                <span className='discovery-modal__attribute-name'>Primary Outcome</span>
+                <span className='discovery-modal__attribute-value'>Intervention</span>
+              </Space>
+              <Space className='discovery-modal__attribute'>
+                <span className='discovery-modal__attribute-name'>Description of Intervention</span>
+                <span className='discovery-modal__attribute-value'>Intervention</span>
+              </Space>
+            </Space>
+
+            <Space direction='vertical' className='discovery-modal__attribute-group'>
+              <Space align='start' className='discovery-modal__attribute'>
+                <span className='discovery-modal__attribute-name'>Study Design</span>
+                <span className='discovery-modal__attribute-value'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
+              </Space>
+            </Space>
+
           </Space>
     </Modal>
   </div>);
