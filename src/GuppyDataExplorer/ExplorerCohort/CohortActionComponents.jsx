@@ -102,9 +102,21 @@ function CohortSaveForm({
     else setError({ isError: false, message: '' });
   }
 
+  const isFilterChanged =
+    JSON.stringify(currentFilter) !== JSON.stringify(currentCohort.filter);
+
   return (
     <div className='guppy-explorer-cohort__form'>
       <h4>Save as a new Cohort</h4>
+      {currentCohort.name !== '' && isFilterChanged && (
+        <p>
+          <FontAwesomeIcon
+            icon='exclamation-triangle'
+            color='#EF8523' // g3-color__highlight-orange
+          />{' '}
+          You have changed filters for this Cohort.
+        </p>
+      )}
       <form>
         <SimpleInputField
           label='Name'
