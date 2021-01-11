@@ -125,24 +125,19 @@
     },
     "tag_categories": [
       {
-        "name": "Study Type",
-        "color": "#81d3f8",
+        "name": "Program",
+        "color": "rgb(129, 211, 248)",
         "display": true
       },
       {
         "name": "Study Registration",
-        "color": "#8125c8",
+        "color": "rgb(236, 128, 141)",
         "display": true
       },
       {
-        "name": "Data Freeze",
-        "color": "#44f859",
+        "name": "Data Type",
+        "color": "rgb(112, 182, 3)",
         "display": true
-      },
-      {
-        "name": "Variables",
-        "color": "#88f859",
-        "display": false
       }
     ]
   }

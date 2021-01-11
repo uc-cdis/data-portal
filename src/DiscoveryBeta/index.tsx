@@ -10,19 +10,12 @@ import { hostname } from '../localconf';
 import config from './mock_config.json';
 
 const getTagColor = (tagCategory: string): string => {
-  const TAG_BLUE = 'rgba(129, 211, 248)';
-  const TAG_RED = 'rgb(236, 128, 141)';
-  const TAG_GREEN = 'rgba(112, 182, 3)';
-  switch (tagCategory) {
-  case 'Program':
-    return TAG_BLUE;
-  case 'Data Type':
-    return TAG_RED;
-  case 'Study Registration':
-    return TAG_GREEN;
-  default:
+  const categoryConfig = config.tag_categories.find( category => category.name === tagCategory);
+  if (categoryConfig === undefined) {
+    console.warn(`Misconfiguration error: tag category ${tagCategory} not found in config. Check the 'tag_categories' section of the Discovery page config.`)
     return 'gray';
   }
+  return categoryConfig.color;
 };
 
 // FIXME implement
@@ -107,7 +100,24 @@ const renderAggregation = (aggregation: AggregationConfig, resources: any[] | nu
   default:
     throw new Error(`Misconfiguration error: Unrecognized aggregation type ${type}. Check the 'aggregations' block of the Discovery page config.`);
   }
+}
 
+// getTagsInCategory returns a list of the unique tags in resources which belong
+// to the specified category.
+const getTagsInCategory = (category: string, resources: any[] | null): string[]  => {
+  if (!resources) {
+    return [];
+  }
+  const tagMap = {};
+  resources.forEach( resource => {
+    const tagField = config.minimal_field_mapping.tags_list_field_name;
+    resource[tagField].forEach( tag => {
+      if (tag.category === category) {
+        tagMap[tag.name] = true;
+      }
+    });
+  });
+  return Object.keys(tagMap);
 }
 
 const DiscoveryBeta: React.FunctionComponent = () => {
@@ -148,24 +158,20 @@ const DiscoveryBeta: React.FunctionComponent = () => {
           <div className='discovery-header__tags-container' >
             <h3 className='discovery-header__tags-header'>ASSOCIATED TAGS BY CATEGORY</h3>
             <div className='discovery-header__tags'>
-              <div className='discovery-header__tag-group'>
-                <h5>Program</h5>
-                <Tag className='discovery-header__tag' color={'rgba(129, 211, 248, 0.5)'}>TOPMed</Tag>
-                <Tag className='discovery-header__tag' color={'rgba(129, 211, 248)'}>COVID 19</Tag>
-                <Tag className='discovery-header__tag' color={'rgba(129, 211, 248)'}>Parent</Tag>
-              </div>
-              <div className='discovery-header__tag-group'>
-                <h5>Disease</h5>
-                <Tag className='discovery-header__tag' color={'rgba(236, 128, 141)'}>Blood Disease</Tag>
-                <Tag className='discovery-header__tag' color={'rgba(236, 128, 141)'}>Lung Disease</Tag>
-                <Tag className='discovery-header__tag' color={'rgba(236, 128, 141)'}>Heart Disease</Tag>
-              </div>
-              <div className='discovery-header__tag-group'>
-                <h5>Data Freeze</h5>
-                <Tag className='discovery-header__tag' color={'rgba(112, 182, 3)'}>Freeze 5</Tag>
-                <Tag className='discovery-header__tag' color={'rgba(112, 182, 3)'}>Freeze 8</Tag>
-                <Tag className='discovery-header__tag' color={'rgba(112, 182, 3)'}>Freeze 9</Tag>
-              </div>
+              {
+                config.tag_categories.map( category => {
+                  if (category.display === false) {
+                    return null;
+                  }
+                  const tags = getTagsInCategory(category.name, resources);
+                  return (<div className='discovery-header__tag-group' key={category.name}>
+                    <h5>{category.name}</h5>
+                    { tags.map( tag =>
+                      <Tag className='discovery-header__tag' color={category.color} key={category.name + tag}>{tag}</Tag>
+                    )}
+                  </div>)
+                })
+              }
             </div>
           </div>
         </div>
