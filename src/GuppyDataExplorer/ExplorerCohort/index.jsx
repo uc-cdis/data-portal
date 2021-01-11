@@ -36,19 +36,16 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   }
 
   function handleOpen(opened) {
-    console.log('Cohort action: open');
     setCohort(cloneDeep(opened));
     onOpenCohort(cloneDeep(opened));
     closeActionForm();
   }
   function handleSave(saved) {
-    console.log('Cohort action: save');
     setCohort(cloneDeep(saved));
     setCohorts([...cohorts, cloneDeep(saved)]);
     closeActionForm();
   }
   function handleUpdate(updated) {
-    console.log('Cohort action: update');
     const updatedCohorts = [];
     for (const { name, description } of cohorts) {
       if (name === updated.name) updatedCohorts.push(cloneDeep(updated));
@@ -59,7 +56,6 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     closeActionForm();
   }
   function handleDelete(deleted) {
-    console.log('Cohort action: delete');
     const updatedCohorts = [];
     for (const { name, description } of cohorts) {
       if (name === deleted.name) continue;
