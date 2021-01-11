@@ -89,6 +89,7 @@ function CohortSaveForm({
   currentCohort,
   currentFilter,
   cohorts,
+  isFilterChanged,
   onAction,
   onClose,
 }) {
@@ -101,10 +102,6 @@ function CohortSaveForm({
       setError({ isError: true, message: 'Name is already in use!' });
     else setError({ isError: false, message: '' });
   }
-
-  const isFilterChanged =
-    JSON.stringify(currentFilter) !== JSON.stringify(currentCohort.filter);
-
   return (
     <div className='guppy-explorer-cohort__form'>
       <h4>Save as a new Cohort</h4>
@@ -164,10 +161,14 @@ function CohortSaveForm({
   );
 }
 
-function CohortUpdateForm({ currentCohort, currentFilter, onAction, onClose }) {
+function CohortUpdateForm({
+  currentCohort,
+  currentFilter,
+  isFilterChanged,
+  onAction,
+  onClose,
+}) {
   const [description, setDescription] = useState(currentCohort.description);
-  const isFilterChanged =
-    JSON.stringify(currentFilter) !== JSON.stringify(currentCohort.filter);
   return (
     <div className='guppy-explorer-cohort__form'>
       <h4>Update the current Cohort</h4>
@@ -247,6 +248,7 @@ export function CohortActionForm({
   currentFilter,
   cohorts,
   handlers,
+  isFilterChanged,
 }) {
   const {
     handleOpen,
@@ -272,6 +274,7 @@ export function CohortActionForm({
           currentCohort={currentCohort}
           currentFilter={currentFilter}
           cohorts={cohorts}
+          isFilterChanged={isFilterChanged}
           onAction={handleSave}
           onClose={handleClose}
         />
@@ -281,6 +284,7 @@ export function CohortActionForm({
         <CohortUpdateForm
           currentCohort={currentCohort}
           currentFilter={currentFilter}
+          isFilterChanged={isFilterChanged}
           onAction={handleUpdate}
           onClose={handleClose}
         />

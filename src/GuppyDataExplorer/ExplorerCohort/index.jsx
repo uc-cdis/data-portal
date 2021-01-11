@@ -152,6 +152,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
                 handleDelete,
                 handleClose: closeActionForm,
               }}
+              isFilterChanged={isFilterChanged}
             />
           </div>,
           document.getElementById('root')
