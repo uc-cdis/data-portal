@@ -161,6 +161,6 @@ if [[ "$NODE_ENV" == "dev" || "$NODE_ENV" == "auto" ]]; then
   npx webpack serve
 else
   export NODE_ENV="production"
-  echo ./node_modules/.bin/webpack --bail
-  ./node_modules/.bin/webpack --bail
+  echo npx webpack
+  npx webpack
 fi
