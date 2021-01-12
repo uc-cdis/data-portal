@@ -13,7 +13,10 @@ class Button extends Component {
   }
 
   render() {
-    const buttonTypeClassName = !this.props.enabled || this.props.isPending ? 'g3-button--disabled' : `g3-button--${this.props.buttonType}`;
+    const buttonTypeClassName =
+      !this.props.enabled || this.props.isPending
+        ? 'g3-button--disabled'
+        : `g3-button--${this.props.buttonType}`;
     const otherAttrs = {};
     if (this.props.id) otherAttrs.id = this.props.id;
     if (this.props.value) otherAttrs.value = this.props.value;
@@ -21,49 +24,44 @@ class Button extends Component {
       <button
         type='button'
         className={`${this.props.className} g3-button ${buttonTypeClassName}`}
-        onClick={e => this.handleClick(e)}
+        onClick={(e) => this.handleClick(e)}
         {...otherAttrs}
       >
-        {
-          this.props.leftIcon && (
-            <i className={`g3-icon g3-icon--sm g3-icon--${this.props.leftIcon} g3-button__icon g3-button__icon--left`} />
-          )
-        }
-        { this.props.label }
-        {
-          this.props.rightIcon && !this.props.isPending
-            ? <i className={`g3-icon g3-icon--sm g3-icon--${this.props.rightIcon} g3-button__icon g3-button__icon--right`} />
-            : null
-        }
-        { this.props.isPending ? (
+        {this.props.leftIcon && (
+          <i
+            className={`g3-icon g3-icon--sm g3-icon--${this.props.leftIcon} g3-button__icon g3-button__icon--left`}
+          />
+        )}
+        {this.props.label}
+        {this.props.rightIcon && !this.props.isPending && (
+          <i
+            className={`g3-icon g3-icon--sm g3-icon--${this.props.rightIcon} g3-button__icon g3-button__icon--right`}
+          />
+        )}
+        {this.props.isPending && (
           <div className='g3-button__spinner g3-button__icon--right'>
             <Spinner />
           </div>
-        ) : null
-        }
+        )}
       </button>
     );
 
-    return (
-      <React.Fragment>
-        {
-          this.props.tooltipEnabled ? (
-            <Tooltip
-              placement='bottom'
-              overlay={this.props.tooltipText}
-              arrowContent={<div className='rc-tooltip-arrow-inner' />}
-            >
-              {button}
-            </Tooltip>
-          ) : button
-        }
-      </React.Fragment>
+    return this.props.tooltipEnabled ? (
+      <Tooltip
+        placement='bottom'
+        overlay={this.props.tooltipText}
+        arrowContent={<div className='rc-tooltip-arrow-inner' />}
+      >
+        {button}
+      </Tooltip>
+    ) : (
+      button
     );
   }
 }
 
 Button.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
   buttonType: PropTypes.oneOf(['primary', 'secondary', 'default']),
   enabled: PropTypes.bool,
   className: PropTypes.string,
