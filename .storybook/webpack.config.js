@@ -19,7 +19,7 @@ module.exports = {
         loaders: ['babel-loader', 'react-svg-loader'],
       },
       {
-        test: /\.(png|jpg|eot|ttf|woff)$/,
+        test: /\.(png|jpg|eot|ttf|woff|woff2)$/,
         loader: 'url-loader',
       },
       { test: /\.flow$/, loader: 'ignore-loader' },

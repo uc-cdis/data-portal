@@ -27,6 +27,7 @@ import getReduxStore from './reduxStore';
 import { gaTracking } from './params';
 import App from './App';
 import sessionMonitor from './SessionMonitor';
+import '@fontsource/source-sans-pro';
 import './gen3-ui-component/css/base.css';
 import './gen3-ui-component/css/base.less';
 import './gen3-ui-component/css/icon.css';
