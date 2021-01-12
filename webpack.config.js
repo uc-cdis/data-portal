@@ -94,7 +94,7 @@ module.exports = {
   bail: isProduction,
   externals: [
     nodeExternals({
-      whitelist: ['graphiql', 'graphql-language-service-parser'],
+      allowlist: ['graphiql', 'graphql-language-service-parser'],
     }),
   ],
   mode: isProduction ? 'production' : 'development',
