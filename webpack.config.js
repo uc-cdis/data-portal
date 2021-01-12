@@ -140,7 +140,7 @@ module.exports = {
         loaders: ['babel-loader', 'react-svg-loader'],
       },
       {
-        test: /\.(png|jpg|gif|woff|ttf|eot)$/,
+        test: /\.(png|jpg|gif|woff|ttf|eot|woff2)$/,
         loaders: 'url-loader',
         query: {
           limit: 8192,
