@@ -71,7 +71,7 @@ const ReduxMapFiles = (() => {
       fetchUnmappedFiles(user, [], STARTING_DID, FETCH_LIMIT),
     ),
     mapSelectedFiles: files => dispatch(mapSelectedFiles(files)),
-    deleteFile: files => deleteFile(files),
+    deleteFile: file => deleteFile(file),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(MapFiles);
