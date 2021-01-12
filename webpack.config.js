@@ -74,7 +74,9 @@ const plugins = [
 let optimization = {};
 let devtool = false;
 
-if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
+const isProduction =
+  process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto';
+if (isProduction) {
   // optimization for production mode
   optimization = {
     splitChunks: {
@@ -89,22 +91,17 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
 module.exports = {
   entry: ['babel-polyfill', './src/index.jsx'],
   target: 'web',
+  bail: isProduction,
   externals: [
     nodeExternals({
-      whitelist: ['graphiql', 'graphql-language-service-parser'],
+      allowlist: ['graphiql', 'graphql-language-service-parser'],
     }),
   ],
-  mode:
-    process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto'
-      ? 'production'
-      : 'development',
+  mode: isProduction ? 'production' : 'development',
   output: {
     path: __dirname,
     filename: 'bundle.js',
-    publicPath:
-      process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto'
-        ? basename
-        : 'https://localhost:9443/',
+    publicPath: isProduction ? basename : 'https://localhost:9443/',
   },
   optimization,
   devtool,
