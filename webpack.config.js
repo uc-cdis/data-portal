@@ -89,6 +89,7 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
 module.exports = {
   entry: ['babel-polyfill', './src/index.jsx'],
   target: 'web',
+  bail: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto',
   externals: [
     nodeExternals({
       whitelist: ['graphiql', 'graphql-language-service-parser'],
