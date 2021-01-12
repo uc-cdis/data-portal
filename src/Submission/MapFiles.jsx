@@ -331,7 +331,7 @@ class MapFiles extends React.Component {
               ]}
             >
               <Space direction='vertical' style={{ width: '100%' }}>
-                <Text>{`Deleting ${this.state.deletionCounter} of ${this.state.deletionTotalCount} file(s)`}</Text>
+                <Text>{`Deleting file ${this.state.deletionCounter} of ${this.state.deletionTotalCount}`}</Text>
                 <Text type='success'>{`Succeeded: ${this.state.deletionTotalCount - this.state.deletionFailCounter}`}</Text>
                 <Text type='danger'>{`Failed: ${this.state.deletionFailCounter}`}</Text>
                 {(this.state.deletionErrorList.length > 0) &&
