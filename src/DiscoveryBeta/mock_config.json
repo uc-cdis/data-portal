@@ -66,39 +66,31 @@
         "field": "phs_id"
       }
     ],
-    "study_preview_fields": {
-      "fields_to_show": [
-        {
-          "name": "Description",
-          "field": "study_description",
-          "content_type": "string",
-          "include_name": false,
-          "include_if_not_available": true,
-          "value_if_not_available": "No description has been provided for this study."
-        }
-      ]
+    "study_preview_field": {
+      "name": "Description",
+      "field": "study_description",
+      "content_type": "string",
+      "include_name": false,
+      "include_if_not_available": true,
+      "value_if_not_available": "No description has been provided for this study."
     },
     "study_page_fields": {
       "show_all_available_fields": false,
       "fields_to_show": [
         {
-          "group_name": "In-depth Study Info",
+          "group_name": "Study Identifiers",
           "include_name": false,
           "fields": [
             {
-              "name": "Description",
-              "field": "study_description",
-              "content_type": "string",
-              "include_name": false,
-              "include_if_not_available": true,
-              "value_if_not_available": "No description has been provided for this study."
-            }
-          ]
-        },
-        {
-          "group_name": "Study Identifiers",
-          "include_name": true,
-          "fields": [
+              "name": "Number of Subjects",
+              "field": "_subjects_count",
+              "content_type": "number"
+            },
+            {
+              "name": "Full Name",
+              "field": "full_name",
+              "content_type": "string"
+            },
             {
               "name": "Short Name",
               "field": "short_name",
@@ -113,6 +105,24 @@
               "content_type": "string",
               "include_name": true,
               "include_if_not_available": false
+            },
+            {
+              "name": "Project ID",
+              "field": "project_id",
+              "content_type": "string",
+              "include_if_not_available": false
+            }
+          ]
+        },
+        {
+          "fields": [
+            {
+              "name": "Description",
+              "field": "study_description",
+              "content_type": "paragraphs",
+              "include_name": false,
+              "include_if_not_available": true,
+              "value_if_not_available": "No description has been provided for this study."
             }
           ]
         }

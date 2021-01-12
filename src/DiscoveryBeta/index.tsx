@@ -120,10 +120,24 @@ const getTagsInCategory = (category: string, resources: any[] | null): string[] 
   return Object.keys(tagMap);
 }
 
+const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number' = 'string'): string => {
+  switch(contentType) {
+    case 'string':
+      return content;
+    case 'number':
+      return content.toLocaleString();
+    case 'paragraphs':
+      return content.split('\n').map( (paragraph, i) => <p key={i}>{paragraph}</p> );
+    default:
+      throw new Error(`Unrecognized content type ${contentType}. Check the 'study_page_fields' section of the Discovery config.`);
+  }
+}
+
 const DiscoveryBeta: React.FunctionComponent = () => {
 
   const [resources, setResources] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalData, setModalData] = useState(null);
 
   // load resources on first render
   useEffect(() => {
@@ -196,9 +210,10 @@ const DiscoveryBeta: React.FunctionComponent = () => {
         <Table
           columns={columns}
           rowKey={config.minimal_field_mapping.uid}
-          onRow={() => ({
+          onRow={(record) => ({
             onClick: () => {
               setModalVisible(true);
+              setModalData(record);
             }
           })}
           dataSource={resources}
@@ -228,69 +243,38 @@ const DiscoveryBeta: React.FunctionComponent = () => {
       footer={false}
     >
           <Space direction='vertical' size='large'>
-            <Space direction='vertical' className='discovery-modal__attribute-group'>
-              <Space className='discovery-modal__attribute'>
-                <span className='discovery-modal__attribute-name'>PI</span>
-                <span className='discovery-modal__attribute-value'>Jackie Slivka</span>
+            { config.study_page_fields.fields_to_show.map( (fieldGroup, i) => (
+              <Space key={i} direction='vertical' className='discovery-modal__attribute-group'>
+                { fieldGroup.include_name &&
+                  <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.group_name}</h3>
+                }
+                { fieldGroup.fields.map( field => {
+                  // display nothing if modalData isn't loaded
+                  if (!modalData) {
+                    return null;
+                  }
+                  // display nothing if modalData doesn't have this field
+                  // and this field isn't configured to show a default value
+                  if (!modalData[field.field] && !field.include_if_not_available) {
+                    return null;
+                  }
+                  // TODO support field.content_type parameter
+                  return (
+                    <Space key={field.name} align='start' className='discovery-modal__attribute'>
+                      { field.include_name !== false &&
+                        <span className='discovery-modal__attribute-name'>{field.name}</span>
+                      }
+                      <span className='discovery-modal__attribute-value'>
+                        { modalData[field.field]
+                          ? renderFieldContent(modalData[field.field], field.content_type)
+                          : (field.value_if_not_available || 'Not available')
+                        }
+                      </span>
+                    </Space>
+                  )
+                })}
               </Space>
-              <Space className='discovery-modal__attribute'>
-                <span className='discovery-modal__attribute-name'>Author</span>
-                <span className='discovery-modal__attribute-value'>CTDS</span>
-              </Space>
-            </Space>
-
-            <Space direction='vertical' className='discovery-modal__attribute-group'>
-              <Space className='discovery-modal__attribute'>
-                <span className='discovery-modal__attribute-name'>Number of Subjects</span>
-                <span className='discovery-modal__attribute-value'>100</span>
-              </Space>
-              <Space className='discovery-modal__attribute'>
-                <span className='discovery-modal__attribute-name'>Target Population</span>
-                <span className='discovery-modal__attribute-value'>Vegetarians</span>
-              </Space>
-              <Space className='discovery-modal__attribute'>
-                <span className='discovery-modal__attribute-name'>Setting</span>
-                <span className='discovery-modal__attribute-value'>At home</span>
-              </Space>
-              <Space className='discovery-modal__attribute'>
-                <span className='discovery-modal__attribute-name'>Geography</span>
-                <span className='discovery-modal__attribute-value'>Northwest</span>
-              </Space>
-            </Space>
-
-            <Space direction='vertical' className='discovery-modal__attribute-group'>
-              <Space className='discovery-modal__attribute'>
-                <span className='discovery-modal__attribute-name'>Tags</span>
-                <Tag color={'rgba(112, 182, 3)'}>Freeze 5</Tag>
-                <Tag color={'rgba(236, 128, 141)'}>Heart Disease</Tag>
-              </Space>
-            </Space>
-
-            <Space direction='vertical' className='discovery-modal__attribute-group'>
-              <Space align='start' className='discovery-modal__attribute'>
-                <span className='discovery-modal__attribute-name'>Abstract</span>
-                <span className='discovery-modal__attribute-value'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
-              </Space>
-            </Space>
-
-            <Space direction='vertical' className='discovery-modal__attribute-group'>
-              <Space className='discovery-modal__attribute'>
-                <span className='discovery-modal__attribute-name'>Primary Outcome</span>
-                <span className='discovery-modal__attribute-value'>Intervention</span>
-              </Space>
-              <Space className='discovery-modal__attribute'>
-                <span className='discovery-modal__attribute-name'>Description of Intervention</span>
-                <span className='discovery-modal__attribute-value'>Intervention</span>
-              </Space>
-            </Space>
-
-            <Space direction='vertical' className='discovery-modal__attribute-group'>
-              <Space align='start' className='discovery-modal__attribute'>
-                <span className='discovery-modal__attribute-name'>Study Design</span>
-                <span className='discovery-modal__attribute-value'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
-              </Space>
-            </Space>
-
+            ))}
           </Space>
     </Modal>
   </div>);
