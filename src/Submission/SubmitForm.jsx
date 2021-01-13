@@ -125,6 +125,13 @@ class SubmitForm extends Component {
               value={this.state.chosenNode}
               onChange={updateChosenNode}
               className='submit-form__select'
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary: 'var(--pcdc-color__primary)',
+                },
+              })}
             />
           )}
         </form>

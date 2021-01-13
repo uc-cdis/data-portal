@@ -53,6 +53,13 @@ class AnalysisApp extends React.Component {
               placeholder='Select your organ'
               options={analysisApps[app].options}
               onChange={this.selectChange}
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary: 'var(--pcdc-color__primary)',
+                },
+              })}
             />
             <Button
               label='Run Analysis'

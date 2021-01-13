@@ -137,6 +137,13 @@ class Login extends React.Component {
                           this.state.selectedLoginOption &&
                           this.state.selectedLoginOption[i]
                         }
+                        theme={(theme) => ({
+                          ...theme,
+                          colors: {
+                            ...theme.colors,
+                            primary: 'var(--pcdc-color__primary)',
+                          },
+                        })}
                       />
                     )
                   }

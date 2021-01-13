@@ -26,6 +26,13 @@ class InputWithIcon extends React.Component {
               placeholder={this.props.inputPlaceholderText}
               options={this.props.inputOptions}
               onChange={this.props.inputOnChange}
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary: 'var(--pcdc-color__primary)',
+                },
+              })}
             />
           ) : (
             <input

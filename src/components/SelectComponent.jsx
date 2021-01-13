@@ -62,6 +62,13 @@ export default class SelectComponent extends Component {
           }}
           placeholder={this.props.placeholder}
           onChange={(option) => this.doChangeSelectedValue(option)}
+          theme={(theme) => ({
+            ...theme,
+            colors: {
+              ...theme.colors,
+              primary: 'var(--pcdc-color__primary)',
+            },
+          })}
         />
       </div>
     );

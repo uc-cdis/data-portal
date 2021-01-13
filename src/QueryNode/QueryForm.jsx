@@ -76,6 +76,13 @@ class QueryForm extends React.Component {
           options={options}
           value={state.selectValue}
           onChange={this.updateValue}
+          theme={(theme) => ({
+            ...theme,
+            colors: {
+              ...theme.colors,
+              primary: 'var(--pcdc-color__primary)',
+            },
+          })}
         />
         <input
           className='query-form__input'
