@@ -1,22 +1,22 @@
 :root {
-  --g3-color__base-blue: #3283C8;
-  --g3-color__base-blue-light: #05B8EE;
-  --g3-color__lime: #7EC500;
-  --g3-color__iris: #AD91FF;
-  --g3-color__rose: #E74C3C;
-  --g3-color__bee: #F4B940;
-  --g3-color__pink: #FF7ABC;
-  --g3-color__highlight-orange: #EF8523;
-  --g3-color__highlight-orange-light: #FF9635;
-  --g3-color__mint: #26D9B1;
-  --g3-color__bg-coal: #4A4A4A;
-  --g3-color__bg-cloud: #F5F5F5;
+  --g3-color__base-blue: #3283c8;
+  --g3-color__base-blue-light: #05b8ee;
+  --g3-color__lime: #7ec500;
+  --g3-color__iris: #ad91ff;
+  --g3-color__rose: #e74c3c;
+  --g3-color__bee: #f4b940;
+  --g3-color__pink: #ff7abc;
+  --g3-color__highlight-orange: #ef8523;
+  --g3-color__highlight-orange-light: #ff9635;
+  --g3-color__mint: #26d9b1;
+  --g3-color__bg-coal: #4a4a4a;
+  --g3-color__bg-cloud: #f5f5f5;
   --g3-color__gray: #606060;
-  --g3-color__lightgray: #9B9B9B;
-  --g3-color__smoke: #D1D1D1;
-  --g3-color__silver: #E7E7E7;
+  --g3-color__lightgray: #9b9b9b;
+  --g3-color__smoke: #d1d1d1;
+  --g3-color__silver: #e7e7e7;
   --g3-color__black: #000000;
-  --g3-color__white: #FFFFFF;
+  --g3-color__white: #ffffff;
 
   --g3-primary-btn__color: var(--g3-color__white);
   --g3-primary-btn__bg-color: var(--g3-color__highlight-orange);
@@ -38,7 +38,9 @@
   --g3-default-btn__bg-color: var(--g3-color__white);
   --g3-default-btn__border-color: var(--g3-color__gray);
   --g3-default-btn__border-color--hover: var(--g3-color__black);
-  --g3-default-btn__border-color--active: var(--g3-color__highlight-orange-light);
+  --g3-default-btn__border-color--active: var(
+    --g3-color__highlight-orange-light
+  );
 
   --g3-disabled-btn__color: var(--g3-color__lightgray);
   --g3-disabled-btn__bg-color: var(--g3-color__white);
@@ -54,19 +56,27 @@
   --g3-font__semi-bold-weight: 600;
 }
 
-h1, h2, h3, h4,
+h1,
+h2,
+h3,
+h4,
 body,
 .introduction,
 .body,
 .caption,
 .special-number,
 .form-body,
-.form-h1, .form-h2, .form-caption,
+.form-h1,
+.form-h2,
+.form-caption,
 .form-special-number {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Raleway', sans-serif;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-weight: 600;
   line-height: 2em;
   color: var(--g3-color__black);
@@ -79,17 +89,17 @@ h1 {
 
 h2 {
   font-size: 24px;
-  letter-spacing: .02rem;
+  letter-spacing: 0.02rem;
 }
 
 h3 {
   font-size: 18px;
-  letter-spacing: .02rem;
+  letter-spacing: 0.02rem;
 }
 
 h4 {
   font-size: 14px;
-  letter-spacing: .02rem;
+  letter-spacing: 0.02rem;
 }
 
 a {
@@ -100,7 +110,7 @@ a {
   font-size: 18px;
   font-weight: normal;
   line-height: 1.6em;
-  letter-spacing: .03rem;
+  letter-spacing: 0.03rem;
   color: var(--g3-color__black);
 }
 
@@ -108,7 +118,7 @@ a {
   font-size: 14px;
   font-weight: normal;
   line-height: 1.6em;
-  letter-spacing: .02rem;
+  letter-spacing: 0.02rem;
   color: var(--g3-color__gray);
 }
 
@@ -116,14 +126,14 @@ a {
   font-size: 12px;
   font-weight: normal;
   line-height: 1.6em;
-  letter-spacing: .02rem;
+  letter-spacing: 0.02rem;
   color: var(--g3-color__gray);
 }
 
 .special-number {
   font-size: 32px;
   font-weight: 600;
-  letter-spacing: .03rem;
+  letter-spacing: 0.03rem;
   color: var(--g3-color__base-blue);
 }
 
@@ -131,7 +141,7 @@ a {
   font-size: 12px;
   font-weight: normal;
   line-height: 1em;
-  letter-spacing: .03rem;
+  letter-spacing: 0.03rem;
   color: var(--g3-color__gray);
 }
 
@@ -139,7 +149,7 @@ a {
   font-size: 12px;
   font-weight: 600;
   line-height: 1.2em;
-  letter-spacing: .02rem;
+  letter-spacing: 0.02rem;
   color: var(--g3-color__black);
 }
 
@@ -147,7 +157,7 @@ a {
   font-size: 10px;
   font-weight: 600;
   line-height: 1.2em;
-  letter-spacing: .03rem;
+  letter-spacing: 0.03rem;
   color: var(--g3-color__black);
 }
 
@@ -155,7 +165,7 @@ a {
   font-size: 10px;
   font-weight: 600;
   line-height: 1em;
-  letter-spacing: .03rem;
+  letter-spacing: 0.03rem;
   color: var(--g3-color__base-blue);
 }
 
@@ -163,7 +173,7 @@ a {
   font-size: 18px;
   font-weight: 600;
   line-height: 1em;
-  letter-spacing: .02rem;
+  letter-spacing: 0.02rem;
   color: var(--g3-color__base-blue);
 }
 
