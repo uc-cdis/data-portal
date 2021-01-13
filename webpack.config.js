@@ -114,6 +114,9 @@ module.exports = {
     hot: true,
     port: 9443,
     https: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
   },
   module: {
     rules: [
