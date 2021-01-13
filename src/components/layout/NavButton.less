@@ -1,5 +1,3 @@
-@import '../../gen3-ui-component/css/base.less';
-
 .nav-button {
   padding: 16px 2px;
   height: 80px;
@@ -11,9 +9,9 @@
 }
 
 .nav-button:hover {
-  color: @black;
+  color: var(--g3-color__black);
   opacity: 1;
-  border-bottom: 3px solid @orange;
+  border-bottom: 3px solid var(--g3-color__highlight-orange);
 }
 
 .nav-button__icon {
@@ -33,7 +31,7 @@
 
   .nav-button:hover,
   .nav-button.button-active {
-    border-left: 6px solid @orange;
+    border-left: 6px solid var(--g3-color__highlight-orange);
     border-bottom: none;
   }
 }
