@@ -1,4 +1,9 @@
 :root {
+  --pcdc-color__primary: #155f83;
+  --pcdc-color__primary-light: #5b8fa8;
+  --pcdc-color__secondary: #ffa319;
+  --pcdc-color__secondary-light: #ffb547;
+
   --g3-color__base-blue: #3283c8;
   --g3-color__base-blue-light: #05b8ee;
   --g3-color__lime: #7ec500;
