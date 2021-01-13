@@ -189,6 +189,12 @@ button {
   cursor: pointer;
 }
 
+button:focus,
+input:focus,
+textarea:focus {
+  outline-color: var(--pcdc-color__primary);
+}
+
 small {
   color: white;
   padding: 0;
