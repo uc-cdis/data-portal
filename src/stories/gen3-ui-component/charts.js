@@ -100,7 +100,7 @@ storiesOf('Chart', module)
     <SummaryHorizontalBarChart
       data={virusData}
       title='bar chart title'
-      color='#3283c8'
+      color='var(--pcdc-color__primary'
     />
   ))
   .add('SummaryHorizontalBarChart with customized colors', () => (

@@ -1,9 +1,29 @@
-.g3-color__base-blue {
+.pcdc-color__primary {
   background-color: var(--pcdc-color__primary);
 }
 
-.g3-color__base-blue-light {
+.pcdc-color__primary-light {
   background-color: var(--pcdc-color__primary-light);
+}
+
+.pcdc-color__primary-dark {
+  background-color: var(--pcdc-color__primary-dark);
+}
+
+.pcdc-color__secondary {
+  background-color: var(--pcdc-color__secondary);
+}
+
+.pcdc-color__secondary-light {
+  background-color: var(--pcdc-color__secondary-light);
+}
+
+.g3-color__base-blue {
+  background-color: var(--g3-color__base-blue);
+}
+
+.g3-color__base-blue-light {
+  background-color: var(--g3-color__base-blue-light);
 }
 
 .g3-color__lime {
@@ -27,11 +47,11 @@
 }
 
 .g3-color__highlight-orange {
-  background-color: var(--pcdc-color__secondary);
+  background-color: var(--g3-color__highlight-orange);
 }
 
 .g3-color__highlight-orange-light {
-  background-color: var(--pcdc-color__secondary-light);
+  background-color: var(--g3-color__highlight-orange-light);
 }
 
 .g3-color__mint {
