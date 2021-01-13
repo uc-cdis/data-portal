@@ -4,6 +4,7 @@
 
 .explorer-button-group__dropdown {
   width: 200px;
+  margin-right: 10px;
 }
 
 .explorer-button-group__toaster-div {
