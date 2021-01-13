@@ -24,44 +24,6 @@ const isFavorite = (study: string): boolean => false;
 // FIXME implement
 const isAccessible = (study: string): boolean => false;
 
-const columns = [
-  {
-    // Favorite
-    render: (_, record) => (isFavorite(record.name) ? <StarTwoTone twoToneColor={'#797979'} /> : <StarOutlined />),
-  },
-  {
-    title: 'SHORT NAME',
-    dataIndex: 'name',
-    render: text => <a>{text}</a>,
-  },
-  {
-    title: 'FULL NAME',
-    dataIndex: 'full_name',
-  },
-  {
-    title: 'dbGaP ACCESSION NUMBER',
-    dataIndex: 'study_id',
-  },
-  {
-    title: 'NUMBER OF SUBJECTS',
-    dataIndex: '_subjects_count',
-  },
-  {
-    title: 'TAGS',
-    dataIndex: 'tags',
-    render: (_, record) => (
-      <React.Fragment>
-        {record.tags.map( ({name, category}) => (
-          <Tag color={getTagColor(category)} key={record.name + name}>{name}</Tag>
-        ))}
-      </React.Fragment>
-    ),
-  },
-  {
-    title: 'ACCESS',
-    render: (_, record) => (isAccessible(record.name) ? <UnlockOutlined /> : <LockFilled />),
-  },
-];
 
 const loadResources = async (): Promise<any> => {
   const RESOURCE_DATA_URL = 'mds/metadata?_guid_type=discovery_metadata&data=True';
@@ -135,6 +97,47 @@ const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'nu
 
 const DiscoveryBeta: React.FunctionComponent = () => {
 
+  // Set up table columns
+  const columns = [{
+      // Favorite
+      render: (_, record) => (isFavorite(record.name) ? <StarTwoTone twoToneColor={'#797979'} /> : <StarOutlined />),
+    }];
+  config.study_columns.forEach( column => {
+    columns.push({
+      title: column.name,
+      render: (text, record, index) => {
+        const value = record[column.field];
+        if (value === undefined) {
+          if (column.error_if_not_available !== false) {
+            throw new Error(`Configuration error: Could not find field ${column.field} in record ${JSON.stringify(record)}. Check the 'study_columns' section of the Discovery config.`);
+          }
+          if (column.value_if_not_available) {
+            return column.value_if_not_available;
+          }
+          return 'Not available';
+        }
+        return value;
+      }
+    })
+  });
+  columns.push(
+    {
+      title: 'Tags',
+      dataIndex: 'tags',
+      render: (_, record) => (
+        <React.Fragment>
+          {record.tags.map( ({name, category}) => (
+            <Tag color={getTagColor(category)} key={record.name + name}>{name}</Tag>
+          ))}
+        </React.Fragment>
+      ),
+    },
+    {
+      title: 'Access',
+      render: (_, record) => (isAccessible(record.name) ? <UnlockOutlined /> : <LockFilled />),
+    },
+  );
+
   const [resources, setResources] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState(null);
@@ -170,7 +173,7 @@ const DiscoveryBeta: React.FunctionComponent = () => {
             }
           </div>
           <div className='discovery-header__tags-container' >
-            <h3 className='discovery-header__tags-header'>ASSOCIATED TAGS BY CATEGORY</h3>
+            <h3 className='discovery-header__tags-header'>{config.tag_selector.title}</h3>
             <div className='discovery-header__tags'>
               {
                 config.tag_categories.map( category => {
@@ -233,9 +236,9 @@ const DiscoveryBeta: React.FunctionComponent = () => {
       onOk={() => setModalVisible(false)}
       onCancel={() => setModalVisible(false)}
       width='80vw'
-      title={
+      title={ config.study_page_fields.header &&
         <Space align='baseline'>
-          <h3 className='discovery-modal__header-text'>topmed-SAPPHIRE_asthma_DS-ASTHMA-IRB-COL</h3>
+          <h3 className='discovery-modal__header-text'>{modalData && modalData[config.study_page_fields.header.field]}</h3>
           <StarOutlined />
           <LinkOutlined />
         </Space>
@@ -249,16 +252,11 @@ const DiscoveryBeta: React.FunctionComponent = () => {
                   <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.group_name}</h3>
                 }
                 { fieldGroup.fields.map( field => {
-                  // display nothing if modalData isn't loaded
-                  if (!modalData) {
-                    return null;
-                  }
-                  // display nothing if modalData doesn't have this field
+                  // display nothing if selected resource doesn't have this field
                   // and this field isn't configured to show a default value
-                  if (!modalData[field.field] && !field.include_if_not_available) {
+                  if (!modalData || (!modalData[field.field] && !field.include_if_not_available)) {
                     return null;
                   }
-                  // TODO support field.content_type parameter
                   return (
                     <Space key={field.name} align='start' className='discovery-modal__attribute'>
                       { field.include_name !== false &&

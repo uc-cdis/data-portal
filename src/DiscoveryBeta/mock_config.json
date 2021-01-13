@@ -51,19 +51,22 @@
     },
     "study_columns": [
       {
-        "name": "Name",
-        "field": "study_name",
-        "error_if_not_available": true
+        "name": "Study Name",
+        "field": "name"
+      },
+      {
+        "name": "Full Name",
+        "field": "full_name"
       },
       {
         "name": "Number of Subjects",
-        "field": "num_subjects",
+        "field": "_subjects_count",
         "error_if_not_available": false,
         "value_if_not_available": "0"
       },
       {
         "name": "dbGaP Accession Number",
-        "field": "phs_id"
+        "field": "dbgap_phs"
       }
     ],
     "study_preview_field": {
@@ -76,6 +79,9 @@
     },
     "study_page_fields": {
       "show_all_available_fields": false,
+      "header": {
+        "field": "name"
+      },
       "fields_to_show": [
         {
           "group_name": "Study Identifiers",
