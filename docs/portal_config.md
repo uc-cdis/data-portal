@@ -174,6 +174,10 @@ Below is an example, with inline comments describing what each JSON block config
         "chartType": "pie", // required; pie chart type
         "title": "Gender"
       },
+      "ethnicity": {
+        "chartType": "full-pie", // required; full pie chart type
+        "title": "Gender"
+      },
       "race": {
         "chartType": "bar", // required; bar chart type
         "title": "Race"
