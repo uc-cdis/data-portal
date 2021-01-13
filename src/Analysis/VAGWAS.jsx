@@ -621,6 +621,7 @@ class VAGWAS extends React.Component {
                 <List
                   className='vaGWAS__jobStatusList'
                   itemLayout='horizontal'
+                  pagination={{ pageSize: 5 }}
                   dataSource={this.state.marinerJobStatus}
                   renderItem={item => (
                     <List.Item
