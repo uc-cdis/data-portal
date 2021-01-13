@@ -130,7 +130,7 @@ function CohortSaveForm({
         <p>
           <FontAwesomeIcon
             icon='exclamation-triangle'
-            color='#EF8523' // g3-color__highlight-orange
+            color='var(--g3-color__highlight-orange)'
           />{' '}
           You have changed filters for this Cohort.
         </p>
@@ -205,7 +205,7 @@ function CohortUpdateForm({
         <p>
           <FontAwesomeIcon
             icon='exclamation-triangle'
-            color='#EF8523' // g3-color__highlight-orange
+            color='var(--g3-color__highlight-orange)'
           />{' '}
           You have changed filters for this Cohort.
         </p>

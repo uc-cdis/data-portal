@@ -179,7 +179,7 @@ class GroupedBarChart extends React.Component {
         right: 25,
         left: 100,
       },
-      backgroundColor: '#f5f5f5',
+      backgroundColor: 'var(--g3-color__bg-cloud)',
       series: this.state.datasets.map((d, i) => ({
         name: d.key,
         type: 'bar',

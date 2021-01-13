@@ -475,11 +475,11 @@ ul {
 
 .button-active {
   opacity: 1;
-  border-bottom: 3px solid #ef8523;
+  border-bottom: 3px solid var(--g3-color__highlight-orange);
 }
 
 .button-top-active {
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid var(--g3-color__white);
 }
 
 .right {

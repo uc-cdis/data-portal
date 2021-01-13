@@ -1,6 +1,12 @@
 import {
-  BarChart, Bar, Tooltip, XAxis, YAxis,
-  CartesianGrid, LabelList, ResponsiveContainer,
+  BarChart,
+  Bar,
+  Tooltip,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  LabelList,
+  ResponsiveContainer,
 } from 'recharts';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -8,13 +14,16 @@ import helper from '../helper';
 import './PercentageStackedBarChart.css';
 import LockedContent from '../LockedContent';
 
-const getPercentageDataLabels = chartData => chartData.map(entry => entry.name);
+const getPercentageDataLabels = (chartData) =>
+  chartData.map((entry) => entry.name);
 
 // FIXME: add back in animation (https://github.com/recharts/recharts/issues/1083)
 class PercentageStackedBarChart extends React.Component {
   getItemColor(index) {
     if (this.props.useCustomizedColorMap) {
-      return this.props.customizedColorMap[index % this.props.customizedColorMap.length];
+      return this.props.customizedColorMap[
+        index % this.props.customizedColorMap.length
+      ];
     }
     return helper.getCategoryColor(index);
   }
@@ -30,7 +39,7 @@ class PercentageStackedBarChart extends React.Component {
     } else {
       const percentageData = helper.getPercentageData(
         this.props.data,
-        this.props.percentageFixedPoint,
+        this.props.percentageFixedPoint
       );
       const percentageDataLabels = getPercentageDataLabels(this.props.data);
       const { barChartStyle, xAxisStyle, labelListStyle } = this.props;
@@ -47,49 +56,58 @@ class PercentageStackedBarChart extends React.Component {
                   tickFormatter={helper.addPercentage}
                   {...xAxisStyle}
                 />
-                <YAxis axisLine={false} tickLine={false} dataKey='name' type='category' hide />
-                {
-                  percentageDataLabels.map((name, index) => (
-                    <Bar
-                      key={name}
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  dataKey='name'
+                  type='category'
+                  hide
+                />
+                {percentageDataLabels.map((name, index) => (
+                  <Bar
+                    key={name}
+                    dataKey={name}
+                    stackId='a'
+                    isAnimationActive={false}
+                    fill={this.getItemColor(index)}
+                  >
+                    <LabelList
                       dataKey={name}
-                      stackId='a'
-                      isAnimationActive={false}
-                      fill={this.getItemColor(index)}
-                    >
-                      <LabelList
-                        dataKey={name}
-                        position={labelListStyle.position}
-                        style={labelListStyle}
-                        formatter={helper.addPercentage}
-                        className='percentage-bar-chart__label-list'
-                      />
-                    </Bar>
-                  ))
-                }
+                      position={labelListStyle.position}
+                      style={labelListStyle}
+                      formatter={helper.addPercentage}
+                      className='percentage-bar-chart__label-list'
+                    />
+                  </Bar>
+                ))}
               </BarChart>
             </ResponsiveContainer>
           </div>
           <div className='percentage-bar-chart__legend'>
             <div className='percentage-bar-chart__ul'>
-              {
-                percentageDataLabels.map((name, index) => (
-                  <li className='percentage-bar-chart__legend-item' key={`label-${name}`}>
-                    <span
-                      className='percentage-bar-chart__legend-color'
-                      style={{
-                        background: this.getItemColor(index),
-                      }}
-                    />
-                    <span className='percentage-bar-chart__legend-name'>
-                      {name}
-                    </span>
-                    <span className='percentage-bar-chart__legend-value'>
-                      {'('.concat(Number(this.props.data[index].value).toLocaleString()).concat(')')}
-                    </span>
-                  </li>
-                ))
-              }
+              {percentageDataLabels.map((name, index) => (
+                <li
+                  className='percentage-bar-chart__legend-item'
+                  key={`label-${name}`}
+                >
+                  <span
+                    className='percentage-bar-chart__legend-color'
+                    style={{
+                      background: this.getItemColor(index),
+                    }}
+                  />
+                  <span className='percentage-bar-chart__legend-name'>
+                    {name}
+                  </span>
+                  <span className='percentage-bar-chart__legend-value'>
+                    {'('
+                      .concat(
+                        Number(this.props.data[index].value).toLocaleString()
+                      )
+                      .concat(')')}
+                  </span>
+                </li>
+              ))}
             </div>
           </div>
         </div>
@@ -98,11 +116,11 @@ class PercentageStackedBarChart extends React.Component {
     return (
       <div className='percentage-bar-chart'>
         <div className='percentage-bar-chart__title-box'>
-          <p className='percentage-bar-chart__title h4-typo'>{this.props.title}</p>
+          <p className='percentage-bar-chart__title h4-typo'>
+            {this.props.title}
+          </p>
         </div>
-        <div className='percentage-bar-chart__content-box'>
-          {chart}
-        </div>
+        <div className='percentage-bar-chart__content-box'>{chart}</div>
       </div>
     );
   }
@@ -143,7 +161,7 @@ PercentageStackedBarChart.defaultProps = {
     fontWeight: 600,
     lineHeight: '1em',
     letterSpacing: '.02rem',
-    color: '#3283c8',
+    color: 'var(--g3-color__base-blue)',
     axisLine: false,
     tickLine: false,
     ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
@@ -157,9 +175,10 @@ PercentageStackedBarChart.defaultProps = {
     position: 'center',
   },
   lockValue: -1,
-  lockMessage: 'This chart is hidden because it contains fewer than 1000 subjects',
+  lockMessage:
+    'This chart is hidden because it contains fewer than 1000 subjects',
   useCustomizedColorMap: false,
-  customizedColorMap: ['#3283c8'],
+  customizedColorMap: ['var(--g3-color__base-blue)'],
 };
 
 export default PercentageStackedBarChart;

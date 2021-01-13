@@ -10,7 +10,7 @@ class Tick extends React.Component {
         <text textAnchor='end' x={x} y={y} dy={0}>
           <tspan
             className='special-number'
-            fill='#3283C8'
+            fill='var(--g3-color__base-blue)'
           >{`${texts[0]} `}</tspan>
           <tspan className='h4-typo'>{`${texts[1]}`}</tspan>
         </text>

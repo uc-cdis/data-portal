@@ -1,6 +1,4 @@
-import {
-  PieChart, Pie, Tooltip, Cell,
-} from 'recharts';
+import { PieChart, Pie, Tooltip, Cell } from 'recharts';
 import PropTypes from 'prop-types';
 import React from 'react';
 import LockedContent from '../LockedContent';
@@ -22,85 +20,93 @@ class SummaryPieChart extends React.Component {
       return helper.getCategoryColorFrom2Colors(index);
     }
     if (this.props.useCustomizedColorMap) {
-      return this.props.customizedColorMap[index % this.props.customizedColorMap.length];
+      return this.props.customizedColorMap[
+        index % this.props.customizedColorMap.length
+      ];
     }
     return helper.getCategoryColor(index);
   }
 
   toggle() {
-    this.setState(prevState => ({ showMore: !prevState.showMore }));
+    this.setState((prevState) => ({ showMore: !prevState.showMore }));
   }
 
   render() {
     const pieChartData = helper.calculateChartData(
       this.props.data,
       this.props.showPercentage,
-      this.props.percentageFixedPoint,
+      this.props.percentageFixedPoint
     );
     const dataKey = helper.getDataKey(this.props.showPercentage);
     let chart = null;
     if (this.props.chartIsEmpty) {
-      chart = (<EmptyContent message={this.props.chartEmptyMessage} />);
+      chart = <EmptyContent message={this.props.chartEmptyMessage} />;
     } else if (helper.shouldHideChart(this.props.data, this.props.lockValue)) {
       chart = <LockedContent lockMessage={this.props.lockMessage} />;
     } else {
       chart = (
         <div className='summary-pie-chart__body'>
           <div className='summary-pie-chart__legend'>
-            {
-              pieChartData.map((entry, index) => {
-                if (this.state.showMore || index < this.props.maximumDisplayItem) {
-                  return (
-                    <div className='summary-pie-chart__legend-item' key={'text'.concat(entry.name)}>
-                      <div className='summary-pie-chart__legend-item-name'>
-                        {entry.name}
-                      </div>
-                      <div className='summary-pie-chart__legend-item-value form-special-number'>
-                        <span className='summary-pie-chart__legend-item-value-number'>
-                          { helper.numberWithCommas(entry.value) }
-                        </span>
-                        <br />
-                        <span className='summary-pie-chart__legend-item-value-percentage'>
-                          (
-                          { helper.percentageFormatter(this.props.showPercentage)(entry[dataKey]) }
-                          )
-                        </span>
-                      </div>
+            {pieChartData.map((entry, index) => {
+              if (
+                this.state.showMore ||
+                index < this.props.maximumDisplayItem
+              ) {
+                return (
+                  <div
+                    className='summary-pie-chart__legend-item'
+                    key={'text'.concat(entry.name)}
+                  >
+                    <div className='summary-pie-chart__legend-item-name'>
+                      {entry.name}
                     </div>
-                  );
-                }
-                return (<React.Fragment key={'text'.concat(entry.name)} />);
-              })
-            }
-            {
-              pieChartData.length > this.props.maximumDisplayItem ? (
-                <React.Fragment>
-                  {
-                    this.state.showMore ? (
-                      <div
-                        className='summary-pie-chart__toggle g3-link'
-                        onClick={() => this.toggle()}
-                        onKeyPress={() => this.toggle()}
-                        role='button'
-                        tabIndex={0}
-                      >
-                        <span>Show less</span>
-                      </div>
-                    ) : (
-                      <div
-                        className='summary-pie-chart__toggle g3-link'
-                        onClick={() => this.toggle()}
-                        onKeyPress={() => this.toggle()}
-                        role='button'
-                        tabIndex={0}
-                      >
-                        {`And ${pieChartData.length - this.props.maximumDisplayItem} more`}
-                      </div>
-                    )
-                  }
-                </React.Fragment>
-              ) : (<React.Fragment />)
-            }
+                    <div className='summary-pie-chart__legend-item-value form-special-number'>
+                      <span className='summary-pie-chart__legend-item-value-number'>
+                        {helper.numberWithCommas(entry.value)}
+                      </span>
+                      <br />
+                      <span className='summary-pie-chart__legend-item-value-percentage'>
+                        (
+                        {helper.percentageFormatter(this.props.showPercentage)(
+                          entry[dataKey]
+                        )}
+                        )
+                      </span>
+                    </div>
+                  </div>
+                );
+              }
+              return <React.Fragment key={'text'.concat(entry.name)} />;
+            })}
+            {pieChartData.length > this.props.maximumDisplayItem ? (
+              <React.Fragment>
+                {this.state.showMore ? (
+                  <div
+                    className='summary-pie-chart__toggle g3-link'
+                    onClick={() => this.toggle()}
+                    onKeyPress={() => this.toggle()}
+                    role='button'
+                    tabIndex={0}
+                  >
+                    <span>Show less</span>
+                  </div>
+                ) : (
+                  <div
+                    className='summary-pie-chart__toggle g3-link'
+                    onClick={() => this.toggle()}
+                    onKeyPress={() => this.toggle()}
+                    role='button'
+                    tabIndex={0}
+                  >
+                    {`And ${
+                      pieChartData.length - this.props.maximumDisplayItem
+                    } more`}
+                  </div>
+                )}
+              </React.Fragment>
+            ) : (
+              <React.Fragment />
+            )}
           </div>
           <PieChart
             width={this.props.outerRadius * 2}
@@ -115,17 +121,17 @@ class SummaryPieChart extends React.Component {
               outerRadius={this.props.outerRadius}
               fill={this.props.pieChartStyle.fill}
             >
-              {
-                pieChartData.map((entry, index) => (
-                  <Cell
-                    key={dataKey}
-                    dataKey={dataKey}
-                    fill={this.getItemColor(index)}
-                  />
-                ))
-              }
+              {pieChartData.map((entry, index) => (
+                <Cell
+                  key={dataKey}
+                  dataKey={dataKey}
+                  fill={this.getItemColor(index)}
+                />
+              ))}
             </Pie>
-            <Tooltip formatter={helper.percentageFormatter(this.props.showPercentage)} />
+            <Tooltip
+              formatter={helper.percentageFormatter(this.props.showPercentage)}
+            />
           </PieChart>
         </div>
       );
@@ -177,12 +183,13 @@ SummaryPieChart.defaultProps = {
     fill: '#8884d8',
   },
   lockValue: -1,
-  lockMessage: 'This chart is hidden because it contains fewer than 1000 subjects',
+  lockMessage:
+    'This chart is hidden because it contains fewer than 1000 subjects',
   useCustomizedColorMap: false,
-  customizedColorMap: ['#3283c8'],
+  customizedColorMap: ['var(--g3-color__base-blue)'],
   maximumDisplayItem: 15,
   chartIsEmpty: false,
-  chartEmptyMessage: 'Cannot render this chart because some fields don\'t apply',
+  chartEmptyMessage: "Cannot render this chart because some fields don't apply",
 };
 
 export default SummaryPieChart;
