@@ -49,6 +49,7 @@
     "papaparse": "^5.2.0",
     "pluralize": "^8.0.0",
     "prop-types": "^15.6.0",
+    "p-limit": "2.3.0",
     "query-string": "^6.3.0",
     "rc-slider": "^8.6.1",
     "react": "16.8.6",

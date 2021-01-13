@@ -101,7 +101,7 @@ class IllinoisMapChart extends React.Component {
         FIPS: feature.properties.FIPS,
         values: {
           'confirmed cases': confirmed,
-          deaths: deaths,
+          deaths,
         },
       };
       if (recovered) {
