@@ -14,7 +14,7 @@
 .user-registration__form {
   background-color: var(--g3-color__white);
   border: 1px solid var(--g3-color__silver);
-  border-top: 4px solid var(--g3-color__base-blue);
+  border-top: 4px solid var(--pcdc-color__primary);
   border-radius: 4px;
   min-height: 360px;
   width: 100%;

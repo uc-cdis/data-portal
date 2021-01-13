@@ -109,7 +109,7 @@
 }
 
 .overlay-property-table__span--highlight {
-  color: var(--g3-color__highlight-orange);
+  color: var(--pcdc-color__secondary);
   font-weight: 600;
 }
 

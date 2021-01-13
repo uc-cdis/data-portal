@@ -140,7 +140,7 @@ SummaryBarChart.propTypes = {
 SummaryBarChart.defaultProps = {
   color: undefined,
   useCustomizedColorMap: false,
-  customizedColorMap: ['var(--g3-color__base-blue)'],
+  customizedColorMap: ['var(--pcdc-color__primary)'],
   showPercentage: true,
   percentageFixedPoint: 2,
   lockValue: -1,

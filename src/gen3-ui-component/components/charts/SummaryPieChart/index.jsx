@@ -186,7 +186,7 @@ SummaryPieChart.defaultProps = {
   lockMessage:
     'This chart is hidden because it contains fewer than 1000 subjects',
   useCustomizedColorMap: false,
-  customizedColorMap: ['var(--g3-color__base-blue)'],
+  customizedColorMap: ['var(--pcdc-color__primary)'],
   maximumDisplayItem: 15,
   chartIsEmpty: false,
   chartEmptyMessage: "Cannot render this chart because some fields don't apply",

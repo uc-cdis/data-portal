@@ -24,7 +24,7 @@
   color: #333;
   font-family: inherit;
   height: 36px;
-  outline-color: var(--g3-color__base-blue);
+  outline-color: var(--pcdc-color__primary);
   overflow: hidden;
   padding: 2px 10px;
   width: 100%;

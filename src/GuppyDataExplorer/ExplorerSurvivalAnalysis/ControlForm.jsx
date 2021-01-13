@@ -16,7 +16,7 @@ const ControlFormSelect = ({ label, ...selectProps }) => (
           ...theme,
           colors: {
             ...theme.colors,
-            primary: 'var(--g3-color__base-blue)',
+            primary: 'var(--pcdc-color__primary)',
           },
         })}
       />

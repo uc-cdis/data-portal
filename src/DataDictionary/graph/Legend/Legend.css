@@ -53,7 +53,7 @@
 }
 
 .data-dictionary-graph-legend__required-icon--required {
-  background-color: var(--g3-color__highlight-orange);
+  background-color: var(--pcdc-color__secondary);
 }
 
 .data-dictionary-graph-legend__close {
@@ -75,7 +75,7 @@
   height: 30px;
   border-radius: 50%;
   display: block;
-  background-color: var(--g3-color__base-blue);
+  background-color: var(--pcdc-color__primary);
 }
 
 .data-dictionary-graph-legend__info-icon {

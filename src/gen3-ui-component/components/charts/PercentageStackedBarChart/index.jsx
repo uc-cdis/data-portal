@@ -161,7 +161,7 @@ PercentageStackedBarChart.defaultProps = {
     fontWeight: 600,
     lineHeight: '1em',
     letterSpacing: '.02rem',
-    color: 'var(--g3-color__base-blue)',
+    color: 'var(--pcdc-color__primary)',
     axisLine: false,
     tickLine: false,
     ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
@@ -178,7 +178,7 @@ PercentageStackedBarChart.defaultProps = {
   lockMessage:
     'This chart is hidden because it contains fewer than 1000 subjects',
   useCustomizedColorMap: false,
-  customizedColorMap: ['var(--g3-color__base-blue)'],
+  customizedColorMap: ['var(--pcdc-color__primary)'],
 };
 
 export default PercentageStackedBarChart;

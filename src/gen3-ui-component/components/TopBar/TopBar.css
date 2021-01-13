@@ -1,12 +1,12 @@
 .top-bar {
   width: 100%;
-  background-color: var(--g3-color__base-blue);
+  background-color: var(--pcdc-color__primary);
   display: flex;
   align-items: center;
 }
 
 .top-bar__header {
-  background-color: var(--g3-color__base-blue);
+  background-color: var(--pcdc-color__primary);
   overflow: hidden;
   vertical-align: middle;
   margin: auto;

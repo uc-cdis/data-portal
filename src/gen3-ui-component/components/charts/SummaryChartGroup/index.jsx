@@ -67,12 +67,12 @@ SummaryChartGroup.propTypes = {
 
 SummaryChartGroup.defaultProps = {
   width: '100%',
-  barChartColor: 'var(--g3-color__base-blue)',
+  barChartColor: 'var(--pcdc-color__primary)',
   lockValue: -1,
   lockMessage:
     'This chart is hidden because it contains fewer than 1000 subjects',
   useCustomizedColorMap: false,
-  customizedColorMap: ['var(--g3-color__base-blue)'],
+  customizedColorMap: ['var(--pcdc-color__primary)'],
   maximumDisplayItem: 15,
   chartEmptyMessage: "Cannot render this chart because some fields don't apply",
 };

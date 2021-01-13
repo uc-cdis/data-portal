@@ -98,7 +98,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
       >
         <FontAwesomeIcon
           icon='exclamation-triangle'
-          color='var(--g3-color__highlight-orange)'
+          color='var(--pcdc-color__secondary)'
           size='xs'
           style={{
             cursor: 'pointer',

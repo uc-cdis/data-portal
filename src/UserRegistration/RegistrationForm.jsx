@@ -50,7 +50,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
       <p>
         <FontAwesomeIcon
           icon='exclamation-triangle'
-          color='var(--g3-color__highlight-orange)'
+          color='var(--pcdc-color__secondary)'
         />
         Your account does not have access to PCDC data.
         <br />
