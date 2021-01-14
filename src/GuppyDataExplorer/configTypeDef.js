@@ -27,6 +27,7 @@ export const FilterConfigType = PropTypes.shape({
 export const TableConfigType = PropTypes.shape({
   enabled: PropTypes.bool,
   fields: PropTypes.arrayOf(PropTypes.string),
+  ordered: PropTypes.bool,
 });
 
 export const ButtonConfigType = PropTypes.shape({

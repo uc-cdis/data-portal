@@ -5,7 +5,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
-import { numberWithCommas } from '../dataUtils.js';
 import countyData from '../data/us_counties';
 
 function addDataToGeoJsonBase(data) {
@@ -85,11 +84,11 @@ class IllinoisMapChart extends React.Component {
         return;
       }
       let confirmed = feature.properties.confirmed;
-      confirmed = confirmed && confirmed !== 'null' ? confirmed : 0;
+      confirmed = confirmed && confirmed !== 'null' ? Number(confirmed).toLocaleString() : 0;
       let deaths = feature.properties.deaths;
-      deaths = deaths && deaths !== 'null' ? deaths : 0;
+      deaths = deaths && deaths !== 'null' ? (deaths).toLocaleString() : 0;
       let recovered = feature.properties.recovered;
-      recovered = recovered && recovered !== 'null' ? recovered : 0;
+      recovered = recovered && recovered !== 'null' ? Number(recovered).toLocaleString() : 0;
 
       const state = feature.properties.STATE;
       const county = feature.properties.COUNTYNAME;
@@ -101,12 +100,12 @@ class IllinoisMapChart extends React.Component {
         locationName,
         FIPS: feature.properties.FIPS,
         values: {
-          'confirmed cases': numberWithCommas(confirmed),
-          deaths: numberWithCommas(deaths),
+          'confirmed cases': confirmed,
+          deaths,
         },
       };
       if (recovered) {
-        hoverInfo.values.recovered = numberWithCommas(recovered);
+        hoverInfo.values.recovered = recovered;
       }
     });
 
