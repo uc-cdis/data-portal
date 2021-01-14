@@ -80,7 +80,7 @@
 
 .g3-filter-section__show-more {
   border: none;
-  color: var(--g3-color__base-blue);
+  color: var(--pcdc-color__primary);
   cursor: pointer;
   margin-top: 15px;
   text-align: right;
@@ -175,7 +175,7 @@
 }
 
 .g3-filter-section__search-input:active {
-  border-color: var(--g3-color__base-blue);
+  border-color: var(--pcdc-color__primary);
 }
 
 .g3-filter-section__hidden {

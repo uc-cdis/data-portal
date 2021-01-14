@@ -16,17 +16,17 @@
 }
 
 .dictionary-searcher__result-count {
-  color: var(--g3-color__base-blue);
+  color: var(--pcdc-color__primary);
 }
 
 .dictionary-searcher__result-clear {
-  color: var(--g3-color__base-blue);
+  color: var(--pcdc-color__primary);
   cursor: pointer;
   float: right;
 }
 
 .dictionary-searcher__result-clear:hover {
-  color: var(--g3-color__base-blue-light);
+  color: var(--pcdc-color__primary-light);
 }
 
 /* Tablet width and less */

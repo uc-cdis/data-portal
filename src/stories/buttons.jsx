@@ -13,7 +13,7 @@ storiesOf('IconicButton', module)
   .add('with color', () => (
     <IconicButton
       onClick={action('clicked')}
-      iconColor='#ef8523'
+      iconColor='var(--gen3-color__highlight-orange)'
       caption="When you click me, I'm orange!"
     />
   ));
@@ -27,7 +27,7 @@ storiesOf('IconicLink', module)
         <IconicLink
           onClick={action('clicked')}
           link='test.com'
-          iconColor='#ef8523'
+          iconColor='var(--gen3-color__highlight-orange)'
           caption='Hello Link'
         />
       </Route>

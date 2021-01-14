@@ -56,7 +56,7 @@
 }
 
 .data-dictionary__switch-button:hover {
-  background-color: var(--g3-color__base-blue-light);
+  background-color: var(--pcdc-color__primary-light);
   color: var(--g3-color__white);
 }
 
@@ -72,7 +72,7 @@
 }
 
 .data-dictionary__switch-button--active {
-  background-color: var(--g3-color__base-blue);
+  background-color: var(--pcdc-color__primary);
   color: var(--g3-color__white);
 }
 

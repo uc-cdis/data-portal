@@ -23,11 +23,11 @@
 }
 
 .g3-icon-color__base-blue {
-  background-color: var(--g3-color__base-blue);
+  background-color: var(--pcdc-color__primary);
 }
 
 .g3-icon-color__base-blue-light {
-  background-color: var(--g3-color__base-blue-light);
+  background-color: var(--pcdc-color__primary-light);
 }
 
 .g3-icon-color__lime {
@@ -51,11 +51,11 @@
 }
 
 .g3-icon-color__highlight-orange {
-  background-color: var(--g3-color__highlight-orange);
+  background-color: var(--pcdc-color__secondary);
 }
 
 .g3-icon-color__highlight-orange-light {
-  background-color: var(--g3-color__highlight-orange-light);
+  background-color: var(--pcdc-color__secondary-light);
 }
 
 .g3-icon-color__mint {

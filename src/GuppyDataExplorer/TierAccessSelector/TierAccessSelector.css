@@ -50,7 +50,7 @@
   display: inline-block;
   content: '';
   border-radius: 50%;
-  background-color: var(--g3-color__highlight-orange);
+  background-color: var(--pcdc-color__secondary);
   position: relative;
   top: -2px;
   left: 2px;

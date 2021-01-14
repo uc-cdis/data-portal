@@ -17,9 +17,8 @@
 }
 
 .auto-complete-input:active {
-  border-color: var(--g3-color__base-blue);
+  border-color: var(--pcdc-color__primary);
 }
-
 
 .auto-complete-input__close {
   width: 14px;
@@ -42,5 +41,3 @@
   top: 3px;
   cursor: pointer;
 }
-
-

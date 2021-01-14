@@ -64,7 +64,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
                 ...theme,
                 colors: {
                   ...theme.colors,
-                  primary: 'var(--g3-color__base-blue)',
+                  primary: 'var(--pcdc-color__primary)',
                 },
               })}
               onChange={(e) => setSelected(e)}
@@ -130,7 +130,7 @@ function CohortSaveForm({
         <p>
           <FontAwesomeIcon
             icon='exclamation-triangle'
-            color='#EF8523' // g3-color__highlight-orange
+            color='var(--pcdc-color__secondary)'
           />{' '}
           You have changed filters for this Cohort.
         </p>
@@ -205,7 +205,7 @@ function CohortUpdateForm({
         <p>
           <FontAwesomeIcon
             icon='exclamation-triangle'
-            color='#EF8523' // g3-color__highlight-orange
+            color='var(--pcdc-color__secondary)'
           />{' '}
           You have changed filters for this Cohort.
         </p>

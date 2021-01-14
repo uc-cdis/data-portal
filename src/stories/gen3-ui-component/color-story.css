@@ -1,3 +1,23 @@
+.pcdc-color__primary {
+  background-color: var(--pcdc-color__primary);
+}
+
+.pcdc-color__primary-light {
+  background-color: var(--pcdc-color__primary-light);
+}
+
+.pcdc-color__primary-dark {
+  background-color: var(--pcdc-color__primary-dark);
+}
+
+.pcdc-color__secondary {
+  background-color: var(--pcdc-color__secondary);
+}
+
+.pcdc-color__secondary-light {
+  background-color: var(--pcdc-color__secondary-light);
+}
+
 .g3-color__base-blue {
   background-color: var(--g3-color__base-blue);
 }

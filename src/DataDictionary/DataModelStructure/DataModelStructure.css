@@ -18,7 +18,7 @@
 }
 
 .data-model-structure__node-name {
-  color: var(--g3-color__base-blue);
+  color: var(--pcdc-color__primary);
   word-break: break-all;
 }
 

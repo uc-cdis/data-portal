@@ -44,11 +44,11 @@
 }
 
 .data-dictionary-property-table__required {
-  color: var(--g3-color__highlight-orange);
+  color: var(--pcdc-color__secondary);
 }
 
 .data-dictionary-property-table__required-icon {
-  background-color: var(--g3-color__highlight-orange);
+  background-color: var(--pcdc-color__secondary);
 }
 
 .data-dictionary-property-table__span {
@@ -56,7 +56,7 @@
 }
 
 .data-dictionary-property-table__span--highlight {
-  color: var(--g3-color__highlight-orange);
+  color: var(--pcdc-color__secondary);
   font-weight: 600;
 }
 

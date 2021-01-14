@@ -10,46 +10,44 @@ class SummaryChartGroup extends Component {
     const width = helper.parseParamWidth(this.props.width);
     return (
       <div className='summary-chart-group' style={{ width }}>
-        {
-          this.props.summaries.map((item, index) => (
-            <div className='summary-chart-group__column' key={item.title}>
-              {
-                index > 0 && <div className='summary-chart-group__column-left-border' />
-              }
-              {
-                item.type === 'pie'
-                  ? (
-                    <SummaryPieChart
-                      data={item.data}
-                      title={item.title}
-                      lockValue={this.props.lockValue}
-                      lockMessage={this.props.lockMessage}
-                      useCustomizedColorMap={this.props.useCustomizedColorMap}
-                      customizedColorMap={this.props.customizedColorMap}
-                      maximumDisplayItem={this.props.maximumDisplayItem}
-                      chartIsEmpty={item.chartIsEmpty}
-                      chartEmptyMessage={this.props.chartEmptyMessage}
-                    />
-                  ) : (
-                    <SummaryHorizontalBarChart
-                      data={item.data}
-                      title={item.title}
-                      vertical
-                      color={this.props.useCustomizedColorMap ? undefined
-                        : this.props.barChartColor}
-                      lockValue={this.props.lockValue}
-                      lockMessage={this.props.lockMessage}
-                      useCustomizedColorMap={this.props.useCustomizedColorMap}
-                      customizedColorMap={this.props.customizedColorMap}
-                      maximumDisplayItem={this.props.maximumDisplayItem}
-                      chartIsEmpty={item.chartIsEmpty}
-                      chartEmptyMessage={this.props.chartEmptyMessage}
-                    />
-                  )
-              }
-            </div>
-          ))
-        }
+        {this.props.summaries.map((item, index) => (
+          <div className='summary-chart-group__column' key={item.title}>
+            {index > 0 && (
+              <div className='summary-chart-group__column-left-border' />
+            )}
+            {item.type === 'pie' ? (
+              <SummaryPieChart
+                data={item.data}
+                title={item.title}
+                lockValue={this.props.lockValue}
+                lockMessage={this.props.lockMessage}
+                useCustomizedColorMap={this.props.useCustomizedColorMap}
+                customizedColorMap={this.props.customizedColorMap}
+                maximumDisplayItem={this.props.maximumDisplayItem}
+                chartIsEmpty={item.chartIsEmpty}
+                chartEmptyMessage={this.props.chartEmptyMessage}
+              />
+            ) : (
+              <SummaryHorizontalBarChart
+                data={item.data}
+                title={item.title}
+                vertical
+                color={
+                  this.props.useCustomizedColorMap
+                    ? undefined
+                    : this.props.barChartColor
+                }
+                lockValue={this.props.lockValue}
+                lockMessage={this.props.lockMessage}
+                useCustomizedColorMap={this.props.useCustomizedColorMap}
+                customizedColorMap={this.props.customizedColorMap}
+                maximumDisplayItem={this.props.maximumDisplayItem}
+                chartIsEmpty={item.chartIsEmpty}
+                chartEmptyMessage={this.props.chartEmptyMessage}
+              />
+            )}
+          </div>
+        ))}
       </div>
     );
   }
@@ -69,13 +67,14 @@ SummaryChartGroup.propTypes = {
 
 SummaryChartGroup.defaultProps = {
   width: '100%',
-  barChartColor: '#3283c8',
+  barChartColor: 'var(--pcdc-color__primary)',
   lockValue: -1,
-  lockMessage: 'This chart is hidden because it contains fewer than 1000 subjects',
+  lockMessage:
+    'This chart is hidden because it contains fewer than 1000 subjects',
   useCustomizedColorMap: false,
-  customizedColorMap: ['#3283c8'],
+  customizedColorMap: ['var(--pcdc-color__primary)'],
   maximumDisplayItem: 15,
-  chartEmptyMessage: 'Cannot render this chart because some fields don\'t apply',
+  chartEmptyMessage: "Cannot render this chart because some fields don't apply",
 };
 
 export default SummaryChartGroup;

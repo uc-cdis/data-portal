@@ -25,7 +25,7 @@
 .guppy-explorer-visualization__view-group > button {
   background-color: transparent;
   border: none;
-  color: var(--g3-color__base-blue);
+  color: var(--pcdc-color__primary);
   font-weight: bold;
   padding-left: 20px;
   padding-right: 20px;
@@ -35,7 +35,7 @@
 
 .guppy-explorer-visualization__view-group > button.active,
 .guppy-explorer-visualization__view-group > button:hover {
-  color: var(--g3-color__highlight-orange);
+  color: var(--pcdc-color__secondary);
 }
 
 /* Tablet width and less */

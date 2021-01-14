@@ -29,16 +29,16 @@
 }
 
 .rc-slider-handle:hover {
-  border: 1px solid var(--g3-color__base-blue);
+  border: 1px solid var(--pcdc-color__primary);
 }
 
 .rc-slider-handle:active {
-  border: 1px solid var(--g3-color__base-blue);
-  box-shadow: 0 0 5px var(--g3-color__base-blue);
+  border: 1px solid var(--pcdc-color__primary);
+  box-shadow: 0 0 5px var(--pcdc-color__primary);
 }
 
 .rc-slider-track {
-  background-color: var(--g3-color__highlight-orange);
+  background-color: var(--pcdc-color__secondary);
   border-radius: 2px;
 }
 

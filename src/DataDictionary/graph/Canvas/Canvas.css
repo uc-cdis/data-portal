@@ -6,7 +6,7 @@
 }
 
 .canvas__zoom-button {
-  background-color: var(--g3-color__base-blue);
+  background-color: var(--pcdc-color__primary);
   width: 30px;
   height: 30px;
   margin-bottom: 10px;
@@ -16,7 +16,7 @@
 
 .canvas__zoom-button:hover,
 .canvas__zoom-button:active {
-  background-color: var(--g3-color__base-blue-light);
+  background-color: var(--pcdc-color__primary-light);
 }
 
 .canvas__zoom-icon {

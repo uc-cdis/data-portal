@@ -82,6 +82,13 @@ function IndexOverview({ overviewCounts }) {
               options={consortiumOptions}
               value={consortium}
               onChange={setConsortium}
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary: 'var(--pcdc-color__primary)',
+                },
+              })}
             />
           </div>
           <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>

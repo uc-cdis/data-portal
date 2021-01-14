@@ -2,11 +2,13 @@
   --g3-auto-complete__height: 45px;
   --g3-auto-complete__padding: 10px;
   --g3-auto-complete__suggestion-color: var(--g3-color__black);
-  --g3-auto-complete__suggestion-color--highlight: var(--g3-color__base-blue);
+  --g3-auto-complete__suggestion-color--highlight: var(--pcdc-color__primary);
   --g3-auto-complete__suggestion-color--hover: var(--g3-color__white);
-  --g3-auto-complete__suggestion-color--hover-higlight: var(--g3-color__highlight-orange);
+  --g3-auto-complete__suggestion-color--hover-higlight: var(
+    --pcdc-color__secondary
+  );
   --g3-auto-complete__suggestion-bg-color: var(--g3-color__white);
-  --g3-auto-complete__suggestion-bg-color--hover: var(--g3-color__base-blue);
+  --g3-auto-complete__suggestion-bg-color--hover: var(--pcdc-color__primary);
   --g3-auto-complete__border-radius: 4px;
 }
 

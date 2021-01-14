@@ -30,7 +30,7 @@
 }
 
 .graph-node:hover .graph-node__rect {
-  fill: var(--g3-color__highlight-orange);
+  fill: var(--pcdc-color__secondary);
 }
 
 .graph-node__text,
@@ -46,7 +46,7 @@
 
 .graph-node__text--highlight,
 .graph-node__tspan--highlight {
-  fill: var(--g3-color__highlight-orange);
+  fill: var(--pcdc-color__secondary);
 }
 
 .graph-node:hover .graph-node__text,

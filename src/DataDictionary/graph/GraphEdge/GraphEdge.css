@@ -5,7 +5,7 @@
 }
 
 .graph-edge--required {
-  stroke: var(--g3-color__highlight-orange);
+  stroke: var(--pcdc-color__secondary);
 }
 
 .graph-edge--highlighted {
