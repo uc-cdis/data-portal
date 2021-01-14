@@ -19,7 +19,6 @@ import {
   fetchDictionary,
   fetchProjects,
   fetchSchema,
-  fetchVersionInfo,
   fetchUserAccess,
   fetchUserAuthMapping,
 } from './actions';
@@ -61,7 +60,6 @@ async function init() {
   await Promise.all([
     store.dispatch(fetchSchema),
     store.dispatch(fetchDictionary),
-    store.dispatch(fetchVersionInfo),
     // resources can be open to anonymous users, so fetch access:
     store.dispatch(fetchUserAccess),
     store.dispatch(fetchUserAuthMapping),

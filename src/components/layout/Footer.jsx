@@ -3,33 +3,13 @@ import PropTypes from 'prop-types';
 import { useRouteMatch } from 'react-router-dom';
 import './Footer.less';
 
-function Footer({
-  dictionaryVersion,
-  apiVersion,
-  portalVersion,
-  links,
-  logos,
-  privacyPolicy,
-}) {
+function Footer({ links, logos, privacyPolicy }) {
   const isFooterHidden = useRouteMatch('/dd');
 
   return isFooterHidden ? null : (
     <footer className='footer-container'>
       <nav className='footer__nav'>
-        <div className='footer__version-area'>
-          {[
-            { name: 'Dictionary', version: dictionaryVersion },
-            { name: 'Submission', version: apiVersion },
-            { name: 'Portal', version: portalVersion },
-          ].map((item) => (
-            <div className='footer__version' key={item.name}>
-              <div className='h4-typo footer__version-name'>{item.name}</div>
-              <div className='body-typo footer__version-value'>
-                v{item.version}
-              </div>
-            </div>
-          ))}
-        </div>
+        <div className='footer__spacer-area' />
         {privacyPolicy && privacyPolicy.text ? (
           <div className='footer__privacy-policy-area'>
             <a
