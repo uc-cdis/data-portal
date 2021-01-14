@@ -1,6 +1,6 @@
 .discovery-container {
     background-color: #f2f2f2;
-    padding: 40px 80px;
+    padding: 40px 32px;
 }
 
 /* This is a fix for the global 'button' element style override in portal
@@ -79,11 +79,6 @@
 .discovery-header__tag-group {
     display: flex;
     flex-direction: column;
-}
-
-.discovery-header__tag {
-    font-size: 22px;
-    padding: 7px 10px;
 }
 
 .discovery-table-container {
