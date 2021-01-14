@@ -47,7 +47,7 @@ class ExplorerVisualization extends React.Component {
         });
         break;
       case 'pie':
-      case 'full-pie':
+      case 'fullPie':
       case 'bar':
       case 'stackedBar': {
         const dataItem = {
