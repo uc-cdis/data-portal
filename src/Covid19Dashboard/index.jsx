@@ -113,9 +113,20 @@ class Covid19Dashboard extends React.Component {
           <XAxis
             dataKey='date'
             tick={<CustomizedXAxisTick />}
-            interval={1}
+            interval={7}
           />
           <YAxis
+            label={{ value: 'confirmed/recovered', angle: -90, position: 'insideLeft' }}
+            yAxisId='left'
+            type='number'
+            domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
+            tickFormatter={val => Number(val).toLocaleString()}
+            fontSize={10}
+          />
+          <YAxis
+            label={{ value: 'deaths', angle: 90, position: 'insideRight' }}
+            yAxisId='right'
+            orientation='right'
             type='number'
             domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
             tickFormatter={val => Number(val).toLocaleString()}
@@ -124,13 +135,108 @@ class Covid19Dashboard extends React.Component {
           <Tooltip content={this.renderLocationPopupTooltip} />
           <Legend />
 
-          <Line type='monotone' dataKey='confirmed' stroke='#8884d8' dot={false} />
+          <Line
+            yAxisId='left'
+            type='monotone'
+            dataKey='confirmed'
+            stroke='#8884d8'
+            dot={false}
+          />
           { locationPopupData.maxes.recovered &&
-            <Line type='monotone' dataKey='recovered' stroke='#00B957' dot={false} />
+            <Line
+              yAxisId='left'
+              type='monotone'
+              dataKey='recovered'
+              stroke='#00B957'
+              dot={false}
+            />
           }
-          <Line type='monotone' dataKey='deaths' stroke='#aa5e79' dot={false} />
+          <Line
+            yAxisId='right'
+            type='monotone'
+            dataKey='deaths'
+            stroke='#aa5e79'
+            dot={false}
+          />
         </LineChart>
       </ResponsiveContainer>)
+      : <Spinner />;
+
+    const timeSeriesChart2 = locationPopupData ?
+      (<div className='chart-popup-sideBySide-container'>
+        <ResponsiveContainer width='49%'>
+          <LineChart
+            data={locationPopupData.data}
+            margin={{
+              top: 5, right: 30, left: 20, bottom: 5,
+            }}
+            syncId='multiChartId'
+          >
+            <CartesianGrid strokeDasharray='3 3' />
+            <XAxis
+              dataKey='date'
+              tick={<CustomizedXAxisTick />}
+              interval={7}
+            />
+            <YAxis
+              label={{ value: 'confirmed/recovered', angle: -90, position: 'insideLeft' }}
+              type='number'
+              domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
+              tickFormatter={val => Number(val).toLocaleString()}
+              fontSize={10}
+            />
+            <Tooltip content={this.renderLocationPopupTooltip} />
+            <Legend />
+
+            <Line
+              type='monotone'
+              dataKey='confirmed'
+              stroke='#8884d8'
+              dot={false}
+            />
+            { locationPopupData.maxes.recovered &&
+              <Line
+                type='monotone'
+                dataKey='recovered'
+                stroke='#00B957'
+                dot={false}
+              />
+            }
+          </LineChart>
+        </ResponsiveContainer>
+        <ResponsiveContainer width='49%'>
+          <LineChart
+            data={locationPopupData.data}
+            margin={{
+              top: 5, right: 30, left: 20, bottom: 5,
+            }}
+            syncId='multiChartId'
+          >
+            <CartesianGrid strokeDasharray='3 3' />
+            <XAxis
+              dataKey='date'
+              tick={<CustomizedXAxisTick />}
+              interval={7}
+            />
+            <YAxis
+              label={{ value: 'Deaths', angle: -90, position: 'insideLeft' }}
+              type='number'
+              domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
+              tickFormatter={val => Number(val).toLocaleString()}
+              fontSize={10}
+            />
+            <Tooltip content={this.renderLocationPopupTooltip} />
+            <Legend />
+
+            <Line
+              type='monotone'
+              dataKey='deaths'
+              stroke='#aa5e79'
+              dot={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>)
       : <Spinner />;
 
     const modeledCountyFips = this.props.selectedLocationData ?
@@ -153,6 +259,10 @@ class Covid19Dashboard extends React.Component {
         type: 'component',
         prop: 'timeSeriesChart',
       },
+      {
+        type: 'component',
+        prop: 'timeSeriesChart2',
+      },
     ];
     carouselChartsConfig = carouselChartsConfig.concat(
       Object.keys(imgProps).map(propName => ({
@@ -167,6 +277,7 @@ class Covid19Dashboard extends React.Component {
       chartsConfig={carouselChartsConfig}
       isInPopup
       timeSeriesChart={timeSeriesChart}
+      timeSeriesChart2={timeSeriesChart2}
       {...imgProps}
     />);
     return popupCarousel;
