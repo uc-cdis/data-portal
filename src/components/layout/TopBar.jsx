@@ -13,93 +13,91 @@ function TopBar({ topItems, user, userAuthMapping, onLogoutClick }) {
   const location = useLocation();
 
   return (
-    <div className='top-bar'>
-      <header className='top-bar__header'>
-        <nav className='top-bar__nav'>
-          <div className='top-bar__nav--hidden-lg-and-down'>
-            <a
-              className='top-bar__link'
-              href='https://commons.cri.uchicago.edu/pcdc-consortium/'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              <TopIconButton icon='external-link' name='About PCDC' />
-            </a>
-            <a
-              className='top-bar__link'
-              href='https://commons.cri.uchicago.edu/sponsors/'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              <TopIconButton icon='external-link' name='Our Sponsors' />
-            </a>
-          </div>
-          <div className='top-bar__nav--flex-center'>
-            {topItems.map((item) => {
-              if (item.link === '/submission') {
-                const resourcePath = '/services/sheepdog/submission/project';
-                const isAdminUser =
-                  user.authz &&
-                  user.authz.hasOwnProperty(resourcePath) &&
-                  user.authz[resourcePath][0].method === '*';
-                if (!isAdminUser) return undefined;
-              }
+    <header className='top-bar'>
+      <nav className='top-bar__nav'>
+        <div className='top-bar__nav--hidden-lg-and-down'>
+          <a
+            className='top-bar__link'
+            href='https://commons.cri.uchicago.edu/pcdc-consortium/'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <TopIconButton icon='external-link' name='About PCDC' />
+          </a>
+          <a
+            className='top-bar__link'
+            href='https://commons.cri.uchicago.edu/sponsors/'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <TopIconButton icon='external-link' name='Our Sponsors' />
+          </a>
+        </div>
+        <div className='top-bar__nav--flex-center'>
+          {topItems.map((item) => {
+            if (item.link === '/submission') {
+              const resourcePath = '/services/sheepdog/submission/project';
+              const isAdminUser =
+                user.authz &&
+                user.authz.hasOwnProperty(resourcePath) &&
+                user.authz[resourcePath][0].method === '*';
+              if (!isAdminUser) return undefined;
+            }
 
-              let buttonText = item.name;
-              if (item.name === 'Submit Data' && useArboristUI) {
-                if (userHasMethodOnAnyProject('create', userAuthMapping)) {
-                  buttonText = 'Submit/Browse Data';
-                } else {
-                  buttonText = 'Browse Data';
-                }
+            let buttonText = item.name;
+            if (item.name === 'Submit Data' && useArboristUI) {
+              if (userHasMethodOnAnyProject('create', userAuthMapping)) {
+                buttonText = 'Submit/Browse Data';
+              } else {
+                buttonText = 'Browse Data';
               }
+            }
 
-              return item.link.startsWith('http') ? (
-                <a
-                  className='top-bar__link'
-                  key={item.link}
-                  href={item.link}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  <TopIconButton
-                    name={buttonText}
-                    icon={item.icon}
-                    isActive={location.pathname === item.link}
-                  />
-                </a>
-              ) : (
-                <Link className='top-bar__link' key={item.link} to={item.link}>
-                  <TopIconButton
-                    name={buttonText}
-                    icon={item.icon}
-                    isActive={location.pathname === item.link}
-                  />
-                </Link>
-              );
-            })}
-            {user.username !== undefined ? (
-              <>
-                <Link className='top-bar__link' to='/identity'>
-                  <TopIconButton
-                    icon='user-circle'
-                    name={user.username}
-                    isActive={location.pathname === '/identity'}
-                  />
-                </Link>
-                <Link className='top-bar__link' to='#' onClick={onLogoutClick}>
-                  <TopIconButton icon='exit' name='Logout' />
-                </Link>
-              </>
+            return item.link.startsWith('http') ? (
+              <a
+                className='top-bar__link'
+                key={item.link}
+                href={item.link}
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <TopIconButton
+                  name={buttonText}
+                  icon={item.icon}
+                  isActive={location.pathname === item.link}
+                />
+              </a>
             ) : (
-              <Link className='top-bar__link' to='/login'>
-                <TopIconButton icon='exit' name='Login' />
+              <Link className='top-bar__link' key={item.link} to={item.link}>
+                <TopIconButton
+                  name={buttonText}
+                  icon={item.icon}
+                  isActive={location.pathname === item.link}
+                />
               </Link>
-            )}
-          </div>
-        </nav>
-      </header>
-    </div>
+            );
+          })}
+          {user.username !== undefined ? (
+            <>
+              <Link className='top-bar__link' to='/identity'>
+                <TopIconButton
+                  icon='user-circle'
+                  name={user.username}
+                  isActive={location.pathname === '/identity'}
+                />
+              </Link>
+              <Link className='top-bar__link' to='#' onClick={onLogoutClick}>
+                <TopIconButton icon='exit' name='Logout' />
+              </Link>
+            </>
+          ) : (
+            <Link className='top-bar__link' to='/login'>
+              <TopIconButton icon='exit' name='Login' />
+            </Link>
+          )}
+        </div>
+      </nav>
+    </header>
   );
 }
 
