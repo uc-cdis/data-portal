@@ -97,6 +97,27 @@ interface DiscoveryBetaProps {
   userAuthMapping: any
 }
 
+const highlightSearchTerm = (value: string, searchTerm: string, highlighClassName = 'matched'): {highlighted: React.ReactNode, matchIndex: number} => {
+  const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
+  const noMatchFound = matchIndex === -1;
+  if (noMatchFound) {
+    return {highlighted: value, matchIndex: -1};
+  }
+  const prev = value.slice(0, matchIndex);
+  const matched = value.slice(matchIndex, matchIndex + searchTerm.length)
+  const after = value.slice(matchIndex + searchTerm.length);
+  return {
+    highlighted: (
+      <React.Fragment>
+        {prev}
+        <span className={highlighClassName}>{matched}</span>
+        {after}
+      </React.Fragment>
+    ),
+    matchIndex
+  };
+}
+
 const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMapping}) => {
 
   // Set up table columns
@@ -119,6 +140,12 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
           }
           return 'Not available';
         }
+        if (!column.content_type || column.content_type === 'string') {
+          // Show search highlights if there's an active search term
+          if (searchTerm) {
+            return highlightSearchTerm(value, searchTerm).highlighted;
+          }
+        }
         return value;
       }
     })
@@ -139,12 +166,6 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
       title: 'Access',
       render: (_, record) => (
         isAccesible(record, userAuthMapping)
-        // userHasMethodForServiceOnResource(
-        //   'read',
-        //   '*',
-        //   record[config.minimal_field_mapping.authz_field],
-        //   userAuthMapping
-        // )
         ? <UnlockOutlined />
         : <LockFilled />
       ),
@@ -169,7 +190,9 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
     if (!jsSearch) {
       return;
     }
-    setVisibleResources(jsSearch.search(searchTerm));
+    const results = jsSearch.search(searchTerm);
+    console.log(`searching for ${searchTerm}, results:`, results);
+    setVisibleResources(results);
   };
 
 
@@ -204,7 +227,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
 
   return (<div className='discovery-container'>
     <h1 className='discovery-page-title'>DISCOVERY</h1>
-    { resources
+    { visibleResources
       ? (<React.Fragment>
         <div className='discovery-header'>
           <div className='discovery-header__stats-container'>
@@ -274,12 +297,38 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
               }
             })}
             dataSource={visibleResources}
-            expandable={{
-              defaultExpandAllRows: true,
+            expandable={config.study_preview_field && ({
+              expandedRowKeys: visibleResources.map(r => r[config.minimal_field_mapping.uid]), // expand all rows
+              expandedRowRender: record => {
+                const value = record[config.study_preview_field.field];
+                if (!value) {
+                  if (config.study_preview_field.include_if_not_available) {
+                    return config.study_preview_field.value_if_not_available;
+                  }
+                }
+                if (searchTerm) {
+                  // get index of searchTerm match
+                  const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
+                  if (matchIndex == -1) {
+                    return <div className='discovery-table__expanded-row-content'>{value}</div>;
+                  }
+                  // Scroll the text to the search term and highlight the search term.
+                  let start = matchIndex - 100;
+                  if (start < 0) {
+                    start = 0;
+                  }
+                  return (<div className='discovery-table__expanded-row-content'>
+                    { start > 0 && '...' }
+                    {value.slice(start, matchIndex)}
+                    <span className='matched'>{value.slice(matchIndex, matchIndex + searchTerm.length)}</span>
+                    {value.slice(matchIndex + searchTerm.length)}
+                  </div>);
+                }
+                return <div className='discovery-table__expanded-row-content'>{value}</div>;
+              },
               expandedRowClassName: () => 'discovery-table__expanded-row',
-              expandedRowRender: record => record.study_description.slice(0, 250) + '...',
               expandIconColumnIndex: -1, // don't render expand icon
-            }}
+            })}
           />
         </div>
       </React.Fragment>)

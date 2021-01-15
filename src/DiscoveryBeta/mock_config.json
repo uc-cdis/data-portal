@@ -68,7 +68,7 @@
       },
       {
         "name": "dbGaP Accession Number",
-        "field": "dbgap_phs"
+        "field": "study_id"
       }
     ],
     "study_preview_field": {

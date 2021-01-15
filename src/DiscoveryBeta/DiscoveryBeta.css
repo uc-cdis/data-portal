@@ -19,6 +19,13 @@
     cursor: initial;
 }
 
+/* Highlight matched search text */
+.discovery-container .matched {
+    font-weight: bold;
+    color: #000;
+    text-decoration: underline;
+}
+
 .discovery-page-title {
     font-weight: normal;
     font-size: 30px;
@@ -110,6 +117,19 @@
     background-color: #fff;
     top: -15px;
     color: #7f7f7f;
+}
+.discovery-table__expanded-row-content {
+    height: 65px;
+    width: 100%;
+    overflow: hidden;
+    /* --------- */
+    /* This css won't work in IE 11, but it's ok */
+    /* (the fallback is just no ellipsis at the end of cut-off text) */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    text-overflow: ellipsis;
+    /* --------- */
 }
 
 .discovery-modal {
