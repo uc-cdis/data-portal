@@ -47,6 +47,7 @@ class ExplorerVisualization extends React.Component {
         });
         break;
       case 'pie':
+      case 'fullPie':
       case 'bar':
       case 'stackedBar': {
         const dataItem = {
@@ -65,7 +66,7 @@ class ExplorerVisualization extends React.Component {
         throw new Error(`Invalid chartType ${chartConfig[`${field}`].chartType}`);
       }
     });
-    // sort cout items according to appearence in chart config
+    // sort cout items according to appearance in chart config
     countItems = countItems.sort((a, b) => {
       const aIndex = Object.values(chartConfig).findIndex(v => v.title === a.label);
       const bIndex = Object.values(chartConfig).findIndex(v => v.title === b.label);
