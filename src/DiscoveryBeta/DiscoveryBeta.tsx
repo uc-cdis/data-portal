@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { uniq, sum } from 'lodash';
+import * as JsSearch from 'js-search';
 import { LockOutlined, LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, StarOutlined, StarFilled, StarTwoTone, CloseOutlined } from '@ant-design/icons';
 import { Input, Table, Tag, Radio, Checkbox, Button, Space, Modal } from 'antd';
-import { uniq, sum } from 'lodash';
 
 import './DiscoveryBeta.css';
 
@@ -28,7 +29,6 @@ const getTagColor = (tagCategory: string): string => {
 const isFavorite = (study: string): boolean => false;
 
 const isAccesible = (resource: any, userAuthMapping: any): boolean => {
-  console.log('userAuthMapping', userAuthMapping);
   return userHasMethodForServiceOnResource('read', '*', resource.authz, userAuthMapping);
 }
 
@@ -100,6 +100,7 @@ interface DiscoveryBetaProps {
 const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMapping}) => {
 
   // Set up table columns
+  // -----
   const columns = [{
       // Favorite
       render: (_, record) => (isFavorite(record.name) ? <StarTwoTone twoToneColor={'#797979'} /> : <StarOutlined />),
@@ -149,16 +150,52 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
       ),
     },
   );
+  // -----
 
+  const [jsSearch, setJsSearch] = useState(null);
   const [resources, setResources] = useState(null);
+  const [visibleResources, setVisibleResources] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // load resources on first render
+  const handleSearchChange = ev => {
+    const searchTerm = ev.currentTarget.value;
+    setSearchTerm(searchTerm);
+    if (searchTerm === '') {
+      setVisibleResources(resources);
+      return;
+    }
+    if (!jsSearch) {
+      return;
+    }
+    setVisibleResources(jsSearch.search(searchTerm));
+  };
+
+
   useEffect(() => {
+    const jsSearch = new JsSearch.Search(config.minimal_field_mapping.uid);
+    // Load resources and index them
     loadResources().then( resources => {
-      console.log('resources', resources);
+      // Enable search only over text fields present in the table
+      config.study_columns.forEach( column => {
+        if (!column.content_type || column.content_type === 'string') {
+          jsSearch.addIndex(column.field);
+        }
+      });
+      // Also enable search over preview field if present
+      if (config.study_preview_field) {
+        jsSearch.addIndex(config.study_preview_field.field);
+      }
+      // Index the resources
+      jsSearch.addDocuments(resources);
+      // expose the search function
+      setJsSearch(jsSearch);
+      // DEV ONLY --
+      console.log(jsSearch);
+      // -----------
       setResources(resources);
+      setVisibleResources(resources);
     }).catch(err => {
       // FIXME how to handle this / retry?
       throw new Error(err);
@@ -207,39 +244,44 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
           </div>
         </div>
         <div className='discovery-table-container'>
-        <div className='discovery-table__header'>
-          <Input className='discovery-table__search' prefix={<SearchOutlined />} />
-          <div className='disvovery-table__controls'>
-            <Checkbox className='discovery-table__show-favorites'>Show Favorites</Checkbox>
-            <Radio.Group
-              className='discovery-table__access-button'
-              defaultValue='both'
-              buttonStyle='solid'
-            >
-              <Radio.Button value='both'>Both</Radio.Button>
-              <Radio.Button value='access'><LockFilled /></Radio.Button>
-              <Radio.Button value='no-access'><UnlockOutlined /></Radio.Button>
-            </Radio.Group>
+          <div className='discovery-table__header'>
+            <Input
+              className='discovery-table__search'
+              prefix={<SearchOutlined />}
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <div className='disvovery-table__controls'>
+              <Checkbox className='discovery-table__show-favorites'>Show Favorites</Checkbox>
+              <Radio.Group
+                className='discovery-table__access-button'
+                defaultValue='both'
+                buttonStyle='solid'
+              >
+                <Radio.Button value='both'>Both</Radio.Button>
+                <Radio.Button value='access'><LockFilled /></Radio.Button>
+                <Radio.Button value='no-access'><UnlockOutlined /></Radio.Button>
+              </Radio.Group>
+            </div>
           </div>
+          <Table
+            columns={columns}
+            rowKey={config.minimal_field_mapping.uid}
+            onRow={(record) => ({
+              onClick: () => {
+                setModalVisible(true);
+                setModalData(record);
+              }
+            })}
+            dataSource={visibleResources}
+            expandable={{
+              defaultExpandAllRows: true,
+              expandedRowClassName: () => 'discovery-table__expanded-row',
+              expandedRowRender: record => record.study_description.slice(0, 250) + '...',
+              expandIconColumnIndex: -1, // don't render expand icon
+            }}
+          />
         </div>
-        <Table
-          columns={columns}
-          rowKey={config.minimal_field_mapping.uid}
-          onRow={(record) => ({
-            onClick: () => {
-              setModalVisible(true);
-              setModalData(record);
-            }
-          })}
-          dataSource={resources}
-          expandable={{
-            defaultExpandAllRows: true,
-            expandedRowClassName: () => 'discovery-table__expanded-row',
-            expandedRowRender: record => record.study_description.slice(0, 250) + '...',
-            expandIconColumnIndex: -1, // don't render expand icon
-          }}
-        />
-      </div>
       </React.Fragment>)
       : <div>Loading...</div>
     }

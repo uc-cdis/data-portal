@@ -56,13 +56,15 @@
       },
       {
         "name": "Full Name",
-        "field": "full_name"
+        "field": "full_name",
+        "content_type": "string"
       },
       {
         "name": "Number of Subjects",
         "field": "_subjects_count",
         "error_if_not_available": false,
-        "value_if_not_available": "0"
+        "value_if_not_available": "n/a",
+        "content_type": "number"
       },
       {
         "name": "dbGaP Accession Number",
