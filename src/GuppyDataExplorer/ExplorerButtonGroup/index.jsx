@@ -344,8 +344,9 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   downloadData = (filename, fileFormat) => () => {
-    const isJsonFormat = fileFormat === 'JSON' || fileFormat === 'data';
-    this.props.downloadRawData({ format: fileFormat }).then((res) => {
+    const fileTypeKey = fileFormat.toUpperCase();
+    const isJsonFormat = fileTypeKey === 'JSON' || fileTypeKey === 'DATA';
+    this.props.downloadRawData({ format: fileTypeKey }).then((res) => {
       if (res) {
         const blob = new Blob([isJsonFormat ? JSON.stringify(res, null, 2) : res], { type: `text/${isJsonFormat ? 'json' : fileFormat.toLowerCase()}` });
         FileSaver.saveAs(blob, filename);
