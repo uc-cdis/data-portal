@@ -92,6 +92,7 @@
     border-radius: 10;
     background-color: #fff;
     padding: 20px;
+    overflow-x: auto;
 }
 
 .discovery-table__header {
