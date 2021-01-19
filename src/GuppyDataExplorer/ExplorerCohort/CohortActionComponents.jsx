@@ -51,7 +51,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
   return (
     <div className='guppy-explorer-cohort__form'>
       <h4>Select a saved Cohort to open</h4>
-      <form>
+      <form onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}>
         <SimpleInputField
           label='Name'
           input={
@@ -135,7 +135,7 @@ function CohortSaveForm({
           You have changed filters for this Cohort.
         </p>
       )}
-      <form>
+      <form onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}>
         <SimpleInputField
           label='Name'
           input={
@@ -225,7 +225,7 @@ function CohortUpdateForm({
           You have changed filters for this Cohort.
         </p>
       )}
-      <form>
+      <form onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}>
         <SimpleInputField
           label='Name'
           input={
