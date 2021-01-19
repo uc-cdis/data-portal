@@ -12,11 +12,11 @@ import './typedef';
 /**
  * @param {Object} prop
  * @param {string} prop.className
- * @param {ExplorerFilters} prop.filters
+ * @param {ExplorerFilters} prop.filter
  * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onOpenCohort
  * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onDeleteCohort
  */
-function ExplorerCohort({ className, filters, onOpenCohort, onDeleteCohort }) {
+function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   const [cohort, setCohort] = useState(createEmptyCohort());
 
   /** @type {ExplorerCohort[]} */
@@ -68,7 +68,7 @@ function ExplorerCohort({ className, filters, onOpenCohort, onDeleteCohort }) {
   }
 
   const isFiltersChanged =
-    JSON.stringify(filters) !== JSON.stringify(cohort.filters);
+    JSON.stringify(filter) !== JSON.stringify(cohort.filters);
   function FilterChangedWarning() {
     return (
       <Tooltip
@@ -144,7 +144,7 @@ function ExplorerCohort({ className, filters, onOpenCohort, onDeleteCohort }) {
             <CohortActionForm
               actionType={actionType}
               currentCohort={cohort}
-              currentFilters={filters}
+              currentFilters={filter}
               cohorts={cohorts}
               handlers={{
                 handleOpen,
