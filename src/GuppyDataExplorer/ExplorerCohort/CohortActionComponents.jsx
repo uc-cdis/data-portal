@@ -186,6 +186,7 @@ function CohortSaveForm({
  * @param {Object} prop
  * @param {ExplorerCohort} prop.currentCohort
  * @param {ExplorerFilters} prop.currentFilters
+ * @param {ExplorerCohort[]} prop.cohorts
  * @param {boolean} prop.isFiltersChanged
  * @param {(updated: ExplorerCohort) => void} prop.onAction
  * @param {() => void} prop.onClose
@@ -193,11 +194,25 @@ function CohortSaveForm({
 function CohortUpdateForm({
   currentCohort,
   currentFilters,
+  cohorts,
   isFiltersChanged,
   onAction,
   onClose,
 }) {
-  const [description, setDescription] = useState(currentCohort.description);
+  const [cohort, setCohort] = useState(currentCohort);
+  const [error, setError] = useState({ isError: false, message: '' });
+  function validate() {
+    console.log('validate!');
+    if (cohort.name === '')
+      setError({ isError: true, message: 'Name is required!' });
+    else if (
+      cohorts.filter(
+        (c) => c.name === cohort.name && c.name !== currentCohort.name
+      ).length > 0
+    )
+      setError({ isError: true, message: 'Name is already in use!' });
+    else setError({ isError: false, message: '' });
+  }
   return (
     <div className='guppy-explorer-cohort__form'>
       <h4>Update the current Cohort</h4>
@@ -213,7 +228,19 @@ function CohortUpdateForm({
       <form>
         <SimpleInputField
           label='Name'
-          input={<input disabled value={currentCohort.name} />}
+          input={
+            <input
+              autoFocus
+              placeholder='Enter the cohort name'
+              value={cohort.name}
+              onBlur={validate}
+              onChange={(e) => {
+                e.persist();
+                setCohort((prev) => ({ ...prev, name: e.target.value }));
+              }}
+            />
+          }
+          error={error}
         />
         <SimpleInputField
           label='Description'
@@ -221,10 +248,10 @@ function CohortUpdateForm({
             <textarea
               autoFocus
               placeholder='Describe the cohort (optional)'
-              value={description}
+              value={cohort.description}
               onChange={(e) => {
                 e.persist();
-                setDescription(e.target.value);
+                setCohort((prev) => ({ ...prev, description: e.target.value }));
               }}
             />
           }
@@ -239,15 +266,12 @@ function CohortUpdateForm({
         <CohortButton
           label='Update Cohort'
           enabled={
-            description !== currentCohort.description || isFiltersChanged
+            (isFiltersChanged ||
+              cohort.name !== currentCohort.name ||
+              cohort.description !== currentCohort.description) &&
+            !error.isError
           }
-          onClick={() =>
-            onAction({
-              ...currentCohort,
-              description,
-              filters: currentFilters,
-            })
-          }
+          onClick={() => onAction({ ...cohort, filters: currentFilters })}
         />
       </div>
     </div>
@@ -335,6 +359,7 @@ export function CohortActionForm({
         <CohortUpdateForm
           currentCohort={currentCohort}
           currentFilters={currentFilters}
+          cohorts={cohorts}
           isFiltersChanged={isFiltersChanged}
           onAction={handleUpdate}
           onClose={handleClose}
