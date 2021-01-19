@@ -5,29 +5,9 @@ import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
+import { createEmptyCohort, truncateWithEllipsis } from './utils';
 import './ExplorerCohort.css';
 import './typedef';
-
-/**
- * @return {ExplorerCohort}
- */
-function createEmptyCohort() {
-  return {
-    name: '',
-    description: '',
-    filter: {},
-  };
-}
-
-/**
- * @param {string} string
- * @param {number} maxLength
- */
-function truncateWithEllipsis(string, maxLength) {
-  return string.length > maxLength
-    ? string.slice(0, maxLength - 3) + '...'
-    : string;
-}
 
 /**
  * @param {Object} prop
