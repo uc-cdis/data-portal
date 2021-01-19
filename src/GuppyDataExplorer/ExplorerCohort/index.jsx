@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import cloneDeep from 'lodash.clonedeep';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
-import { createEmptyCohort, truncateWithEllipsis } from './utils';
+import {
+  createEmptyCohort,
+  truncateWithEllipsis,
+  fetchCohorts,
+  saveCohort,
+  updateCohort,
+  deleteCohort,
+} from './utils';
 import './ExplorerCohort.css';
 import './typedef';
 
@@ -22,6 +29,9 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   /** @type {ExplorerCohort[]} */
   const emptyCohorts = [];
   const [cohorts, setCohorts] = useState(emptyCohorts);
+  useEffect(() => {
+    fetchCohorts().then(setCohorts).catch(console.error);
+  }, []);
 
   /** @type {[ExplorerCohortActionType, React.Dispatch<React.SetStateAction<ExplorerCohortActionType>>]} */
   const [actionType, setActionType] = useState('open');
@@ -39,32 +49,35 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     onOpenCohort(cloneDeep(opened));
     closeActionForm();
   }
-  function handleSave(/** @type {ExplorerCohort} */ saved) {
-    setCohort(cloneDeep(saved));
-    setCohorts([...cohorts, cloneDeep(saved)]);
-    closeActionForm();
-  }
-  function handleUpdate(/** @type {ExplorerCohort} */ updated) {
-    const updatedCohorts = [];
-    for (const { name, description, filters } of cohorts) {
-      if (name === updated.name) updatedCohorts.push(cloneDeep(updated));
-      else updatedCohorts.push({ name, description, filters });
+  async function handleSave(/** @type {ExplorerCohort} */ saved) {
+    try {
+      setCohort(await saveCohort(saved));
+      setCohorts(await fetchCohorts());
+      closeActionForm();
+    } catch (e) {
+      console.error(e);
     }
-    setCohort(cloneDeep(updated));
-    setCohorts(updatedCohorts);
-    closeActionForm();
   }
-  function handleDelete(/** @type {ExplorerCohort} */ deleted) {
-    /** @type {ExplorerCohort[]} */
-    const updatedCohorts = [];
-    for (const { name, description, filters } of cohorts) {
-      if (name === deleted.name) continue;
-      else updatedCohorts.push({ name, description, filters });
+  async function handleUpdate(/** @type {ExplorerCohort} */ updated) {
+    try {
+      await updateCohort(updated);
+      setCohort(cloneDeep(updated));
+      setCohorts(await fetchCohorts());
+      closeActionForm();
+    } catch (e) {
+      console.error(e);
     }
-    setCohort(createEmptyCohort());
-    setCohorts(updatedCohorts);
-    onDeleteCohort(createEmptyCohort());
-    closeActionForm();
+  }
+  async function handleDelete(/** @type {ExplorerCohort} */ deleted) {
+    try {
+      await deleteCohort(deleted);
+      setCohort(createEmptyCohort());
+      setCohorts(await fetchCohorts());
+      onDeleteCohort(createEmptyCohort());
+      closeActionForm();
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   const isFiltersChanged =
