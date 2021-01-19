@@ -20,6 +20,13 @@
   margin-top: 10px;
 }
 
+.guppy-data-explorer__cohort {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 /* Tablet width and less */
 @media screen and (max-width: 820px) {
   .guppy-data-explorer {
