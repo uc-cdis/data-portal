@@ -149,7 +149,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
               )}
             </p>
           </div>
-          <div>
+          <div className='guppy-explorer-cohort__buttons'>
             <CohortActionButton
               labelIcon='folder-open'
               labelText='Open Cohort'

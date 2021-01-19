@@ -41,4 +41,8 @@
     width: 100%;
     padding: 0;
   }
+
+  .guppy-data-explorer__cohort {
+    display: none;
+  }
 }

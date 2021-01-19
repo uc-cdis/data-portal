@@ -2,6 +2,11 @@
   line-height: 1.25;
 }
 
+.guppy-explorer-cohort__buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .guppy-explorer-cohort__button {
   margin-right: 10px;
 }
@@ -45,4 +50,15 @@
 
 .guppy-explorer-cohort__error > p {
   margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 1170px) {
+  .guppy-explorer-cohort__buttons {
+    flex-wrap: wrap;
+    width: 360px;
+  }
+
+  .guppy-explorer-cohort__button {
+    margin-bottom: 10px;
+  }
 }
