@@ -7,7 +7,7 @@ export function createEmptyCohort() {
   return {
     name: '',
     description: '',
-    filter: {},
+    filters: {},
   };
 }
 

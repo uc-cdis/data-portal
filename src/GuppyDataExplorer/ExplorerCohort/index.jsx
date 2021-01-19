@@ -12,11 +12,11 @@ import './typedef';
 /**
  * @param {Object} prop
  * @param {string} prop.className
- * @param {ExplorerFilter} prop.filter
- * @param {({ filter }: { filter: ExplorerFilter }) => void} prop.onOpenCohort
- * @param {({ filter }: { filter: ExplorerFilter }) => void} prop.onDeleteCohort
+ * @param {ExplorerFilters} prop.filters
+ * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onOpenCohort
+ * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onDeleteCohort
  */
-function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
+function ExplorerCohort({ className, filters, onOpenCohort, onDeleteCohort }) {
   const [cohort, setCohort] = useState(createEmptyCohort());
 
   /** @type {ExplorerCohort[]} */
@@ -46,9 +46,9 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   }
   function handleUpdate(/** @type {ExplorerCohort} */ updated) {
     const updatedCohorts = [];
-    for (const { name, description, filter } of cohorts) {
+    for (const { name, description, filters } of cohorts) {
       if (name === updated.name) updatedCohorts.push(cloneDeep(updated));
-      else updatedCohorts.push({ name, description, filter });
+      else updatedCohorts.push({ name, description, filters });
     }
     setCohort(cloneDeep(updated));
     setCohorts(updatedCohorts);
@@ -57,9 +57,9 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   function handleDelete(/** @type {ExplorerCohort} */ deleted) {
     /** @type {ExplorerCohort[]} */
     const updatedCohorts = [];
-    for (const { name, description, filter } of cohorts) {
+    for (const { name, description, filters } of cohorts) {
       if (name === deleted.name) continue;
-      else updatedCohorts.push({ name, description, filter });
+      else updatedCohorts.push({ name, description, filters });
     }
     setCohort(createEmptyCohort());
     setCohorts(updatedCohorts);
@@ -67,8 +67,8 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     closeActionForm();
   }
 
-  const isFilterChanged =
-    JSON.stringify(filter) !== JSON.stringify(cohort.filter);
+  const isFiltersChanged =
+    JSON.stringify(filters) !== JSON.stringify(cohort.filters);
   function FilterChangedWarning() {
     return (
       <Tooltip
@@ -97,7 +97,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
           {cohort.name ? (
             <>
               {truncateWithEllipsis(cohort.name, 30)}{' '}
-              {isFilterChanged && <FilterChangedWarning />}
+              {isFiltersChanged && <FilterChangedWarning />}
             </>
           ) : (
             <span className='guppy-explorer-cohort__placeholder'>untitled</span>
@@ -144,7 +144,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
             <CohortActionForm
               actionType={actionType}
               currentCohort={cohort}
-              currentFilter={filter}
+              currentFilters={filters}
               cohorts={cohorts}
               handlers={{
                 handleOpen,
@@ -153,7 +153,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
                 handleDelete,
                 handleClose: closeActionForm,
               }}
-              isFilterChanged={isFilterChanged}
+              isFiltersChanged={isFiltersChanged}
             />
           </div>,
           document.getElementById('root')
