@@ -114,7 +114,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     <div className={className}>
       {isError ? (
         <div className='guppy-explorer-cohort__error'>
-          <h2>Error obtaining cohorts data...</h2>
+          <h2>Error obtaining saved cohorts data...</h2>
           <p>
             Please retry by clicking "Retry" button or refreshing the page.
             <br />
