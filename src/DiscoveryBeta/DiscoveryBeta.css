@@ -88,6 +88,22 @@
     flex-direction: column;
 }
 
+.discovery-header__tag-btn {
+    cursor: pointer;
+}
+
+.discovery-tag {
+    border-radius: 5px;
+    border-width: 2px;
+    box-sizing: border-box;
+    line-height: 18px;
+    color: #555;
+}
+
+.discovery-tag--selected {
+    color: #fff;
+}
+
 .discovery-table-container {
     border-radius: 10;
     background-color: #fff;

@@ -33,13 +33,13 @@ enum AccessLevel {
   UNACCESSIBLE = 'unaccessible',
 }
 
-const getTagColor = (tagCategory: string, selected: boolean): string => {
+const getTagColor = (tagCategory: string): string => {
   const categoryConfig = config.tag_categories.find( category => category.name === tagCategory);
   if (categoryConfig === undefined) {
-    console.warn(`Misconfiguration error: tag category ${tagCategory} not found in config. Check the 'tag_categories' section of the Discovery page config.`)
+    console.error(`Misconfiguration error: tag category ${tagCategory} not found in config. Check the 'tag_categories' section of the Discovery page config.`)
     return 'gray';
   }
-  return selected ? categoryConfig.colorSelected : categoryConfig.colorUnselected;
+  return categoryConfig.color;
 };
 
 // FIXME implement
@@ -199,8 +199,19 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
       render: (_, record) => (
         <React.Fragment>
           {record.tags.map( ({name, category}) => {
-            const selected = selectedTags[name];
-            return (<Tag color={getTagColor(category, selected)} key={record.name + name}>{name}</Tag>);
+            const isSelected = selectedTags[name] ? true : false
+            return (
+              <Tag
+                className={`discovery-header__tag-btn discovery-tag ${isSelected && 'discovery-tag--selected'}`}
+                style={{
+                  backgroundColor: isSelected ? getTagColor(category) : 'initial',
+                  borderColor: getTagColor(category)
+                }}
+                key={record.name + name}
+              >
+                {name}
+              </Tag>
+            );
           })}
         </React.Fragment>
       ),
@@ -316,25 +327,32 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
                     <h5>{category.name}</h5>
                     <Space direction='vertical' size={4}>
                     { tags.map( tag =>
-                      <Switch
+                      <Tag
                         key={category.name + tag}
+                        role='button'
+                        tabIndex={0}
+                        aria-pressed={selectedTags[tag] ? 'true' : 'false'}
+                        className={`discovery-header__tag-btn discovery-tag ${selectedTags[tag] && 'discovery-tag--selected'}`}
+                        aria-label={tag}
                         style={{
-                          backgroundColor: selectedTags[tag] ? category.colorSelected : category.colorUnselected,
-                        }}
-                        checkedChildren={tag}
-                        unCheckedChildren={tag}
-                        checked={selectedTags[tag]}
-                        onChange={ checked => checked === true
-                          ? setSelectedTags({
+                          backgroundColor: selectedTags[tag] ? category.color : 'initial',
+                          borderColor: category.color
+                         }}
+                        onKeyPress={ () => {
+                          setSelectedTags({
                             ...selectedTags,
-                            [tag]: true,
+                            [tag]: selectedTags[tag] ? undefined : true,
                           })
-                          : setSelectedTags({
+                        }}
+                        onClick={ () =>
+                          setSelectedTags({
                             ...selectedTags,
-                            [tag]: undefined ,
+                            [tag]: selectedTags[tag] ? undefined : true,
                           })
                         }
-                      />
+                      >
+                        {tag}
+                      </Tag>
                     )}
                     </Space>
                   </div>)

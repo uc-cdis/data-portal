@@ -144,20 +144,17 @@
     "tag_categories": [
       {
         "name": "Program",
-        "colorSelected": "rgba(129, 211, 248, 1)",
-        "colorUnselected": "rgba(129, 211, 248, 0.6)",
+        "color": "rgba(129, 211, 248, 1)",
         "display": true
       },
       {
         "name": "Study Registration",
-        "colorSelected": "rgba(236, 128, 141, 1)",
-        "colorUnselected": "rgba(236, 128, 141, 0.2)",
+        "color": "rgba(236, 128, 141, 1)",
         "display": true
       },
       {
         "name": "Data Type",
-        "colorSelected": "rgba(112, 182, 3, 1)",
-        "colorUnselected": "rgba(112, 182, 3, 0.2)",
+        "color": "rgba(112, 182, 3, 1)",
         "display": true
       }
     ]
