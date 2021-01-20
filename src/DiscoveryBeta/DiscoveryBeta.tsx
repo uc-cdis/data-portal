@@ -2,12 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { uniq, sum } from 'lodash';
 import * as JsSearch from 'js-search';
 import { LockOutlined, LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, StarOutlined, StarFilled, StarTwoTone, CloseOutlined } from '@ant-design/icons';
-import { Input, Table, Tag, Radio, Checkbox, Button, Space, Modal } from 'antd';
+import {
+  Input,
+  Table,
+  Tag,
+  Radio,
+  Checkbox,
+  Button,
+  Space,
+  Modal,
+  Switch,
+} from 'antd';
 
-// DEV ONLY
 if (!useArboristUI) {
   throw new Error('Arborist UI must be enabled for the Discovery page to work. Set `useArboristUI: true` in the portal config.');
 }
+// DEV ONLY
 import config from './mock_config.json';
 import mock_data from './mock_mds_studies.json';
 // END DEV ONLY
@@ -23,17 +33,13 @@ enum AccessLevel {
   UNACCESSIBLE = 'unaccessible',
 }
 
-const CheckableTag = ({checked, ...props}) => {
-  return <Tag className={`checkable-tag ${checked && 'checkable-tag--checked'}`} {...props}/>
-}
-
-const getTagColor = (tagCategory: string): string => {
+const getTagColor = (tagCategory: string, selected: boolean): string => {
   const categoryConfig = config.tag_categories.find( category => category.name === tagCategory);
   if (categoryConfig === undefined) {
     console.warn(`Misconfiguration error: tag category ${tagCategory} not found in config. Check the 'tag_categories' section of the Discovery page config.`)
     return 'gray';
   }
-  return categoryConfig.color;
+  return selected ? categoryConfig.colorSelected : categoryConfig.colorUnselected;
 };
 
 // FIXME implement
@@ -192,9 +198,10 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
       dataIndex: 'tags',
       render: (_, record) => (
         <React.Fragment>
-          {record.tags.map( ({name, category}) => (
-            <Tag color={getTagColor(category)} key={record.name + name}>{name}</Tag>
-          ))}
+          {record.tags.map( ({name, category}) => {
+            const selected = selectedTags[name];
+            return (<Tag color={getTagColor(category, selected)} key={record.name + name}>{name}</Tag>);
+          })}
         </React.Fragment>
       ),
     },
@@ -309,7 +316,13 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
                     <h5>{category.name}</h5>
                     <Space direction='vertical' size={4}>
                     { tags.map( tag =>
-                      <CheckableTag
+                      <Switch
+                        key={category.name + tag}
+                        style={{
+                          backgroundColor: selectedTags[tag] ? category.colorSelected : category.colorUnselected,
+                        }}
+                        checkedChildren={tag}
+                        unCheckedChildren={tag}
                         checked={selectedTags[tag]}
                         onChange={ checked => checked === true
                           ? setSelectedTags({
@@ -321,12 +334,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
                             [tag]: undefined ,
                           })
                         }
-                        className='discovery-header__tag'
-                        color={category.color}
-                        key={category.name + tag}
-                      >
-                        {tag}
-                      </CheckableTag>
+                      />
                     )}
                     </Space>
                   </div>)
