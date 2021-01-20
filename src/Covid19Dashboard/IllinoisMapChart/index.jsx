@@ -75,20 +75,23 @@ class IllinoisMapChart extends React.Component {
   }
 
   onHover = (event) => {
-    let hoverInfo = null;
-
     if (!event.features) { return; }
+
+    let hoverInfo = null;
+    const numToString = (rawNum) => {
+      if (rawNum && typeof rawNum === 'number') {
+        return rawNum.toLocaleString();
+      }
+      return rawNum;
+    };
 
     event.features.forEach((feature) => {
       if (feature.layer.id !== 'confirmed-choropleth') {
         return;
       }
-      let confirmed = feature.properties.confirmed;
-      confirmed = confirmed && confirmed !== 'null' ? Number(confirmed).toLocaleString() : 0;
-      let deaths = feature.properties.deaths;
-      deaths = deaths && deaths !== 'null' ? (deaths).toLocaleString() : 0;
-      let recovered = feature.properties.recovered;
-      recovered = recovered && recovered !== 'null' ? Number(recovered).toLocaleString() : 0;
+      let confirmed = numToString(feature.properties.confirmed);
+      let deaths = numToString(feature.properties.deaths);
+      let recovered = numToString(feature.properties.recovered);
 
       const state = feature.properties.STATE;
       const county = feature.properties.COUNTYNAME;
