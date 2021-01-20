@@ -1,0 +1,219 @@
+{
+  "gaTrackingId": "undefined",
+  "graphql": {
+    "boardCounts": [
+      {
+        "graphql": "_person_count",
+        "name": "Person",
+        "plural": "Persons"
+      },
+      {
+        "graphql": "_subject_count",
+        "name": "Subject",
+        "plural": "Subjects"
+      }
+    ],
+    "chartCounts": [
+      {
+        "graphql": "_person_count",
+        "name": "Person"
+      },
+      {
+        "graphql": "_subject_count",
+        "name": "Subject"
+      }
+    ],
+    "projectDetails": "boardCounts"
+  },
+  "components": {
+    "appName": "Pediatric Cancer Data Commons Portal",
+    "index": {
+      "introduction": {
+        "heading": "Pediatric Cancer Data Commons",
+        "text": "The Pediatric Cancer Data Commons supports the management, analysis and sharing of data for the research community.",
+        "link": "/submission"
+      },
+      "buttons": [
+        {
+          "name": "Define Data Field",
+          "icon": "data-field-define",
+          "body": "The Pediatric Cancer Data Commons defines the data. Please study the dictionary before you start browsing.",
+          "link": "/DD",
+          "label": "Learn more"
+        },
+        {
+          "name": "Explore Data",
+          "icon": "data-explore",
+          "body": "The Exploration Page gives you insights and a clear overview under selected factors.",
+          "link": "/explorer",
+          "label": "Explore data"
+        },
+        {
+          "name": "Access Data",
+          "icon": "data-access",
+          "body": "Use our selected tool to filter out the data you need.",
+          "link": "/query",
+          "label": "Query data"
+        }
+      ]
+    },
+    "navigation": {
+      "items": [
+        {
+          "icon": "dictionary",
+          "link": "/DD",
+          "color": "#a2a2a2",
+          "name": "Dictionary"
+        },
+        {
+          "icon": "exploration",
+          "link": "/explorer",
+          "color": "#a2a2a2",
+          "name": "Exploration"
+        },
+        {
+          "icon": "query",
+          "link": "/query",
+          "color": "#a2a2a2",
+          "name": "Query"
+        },
+        {
+          "icon": "profile",
+          "link": "/identity",
+          "color": "#a2a2a2",
+          "name": "Profile"
+        }
+      ]
+    },
+    "topBar": {
+      "items": [
+        {
+          "icon": "upload",
+          "link": "/submission",
+          "name": "Data Submission"
+        },
+        {
+          "link": "https://uc-cdis.github.io/gen3-user-doc/user-guide/guide-overview",
+          "name": "Documentation"
+        }
+      ]
+    },
+    "login": {
+      "title": "Pediatric Cancer Data Commons",
+      "subTitle": "Connect. Share. Cure.",
+      "text": "The Pediatric Cancer Data Commons (PCDC) harnesses pediatric cancer clinical data from around the globe into a single combined platform, connecting the data to other sources and making it available to clinicians and researchers everywhere. Headquartered at the University of Chicago, the PCDC team works with international leaders in pediatric cancers to develop and apply uniform data standards that facilitate the collection, combination, and analysis of data from many different sources. The PCDC currently houses the world’s largest sets of clinical data for pediatric neuroblastoma and soft tissue sarcoma and is in the process of onboarding additional pediatric cancer disease groups.",
+      "contact": "If you have any questions about access or the registration process, please contact ",
+      "email": "pcdc_root@lists.uchicago.edu"
+    },
+    "footerLogos": [
+      {
+        "src": "/src/img/gen3.png",
+        "href": "https://ctds.uchicago.edu/gen3",
+        "alt": "Gen3 Data Commons",
+        "height": 40
+      },
+      {
+        "src": "/src/img/uchicago.png",
+        "href": "https://www.uchicago.edu/",
+        "alt": "The University of Chicago",
+        "height": 40
+      }
+    ]
+  },
+  "featureFlags": {
+    "explorer": true
+  },
+  "dataExplorerConfig": {
+    "charts": {
+      "sex": {
+        "chartType": "bar",
+        "title": "Sex"
+      },
+      "race": {
+        "chartType": "bar",
+        "title": "Race"
+      },
+      "ethnicity": {
+        "chartType": "bar",
+        "title": "Ethnicity"
+      },
+      "data_contributor_id": {
+        "chartType": "bar",
+        "title": "Data Contributor"
+      }
+    },
+    "filters": {
+      "tabs": [
+        {
+          "title": "Subject",
+          "fields": [
+            "consortium",
+            "data_contributor_id",
+            "treatment_arm",
+            "project_id",
+            "ethnicity",
+            "race",
+            "sex",
+            "lkss",
+            "age_at_lkss",
+            "tumor_site",
+            "tumor_size",
+            "invasiveness",
+            "nodal_clinical",
+            "nodal_pathology",
+            "longest_diam_dim1",
+            "tumor_classification",
+            "parameningeal_extension",
+            "irs_group",
+            "tnm_finding",
+            "anaplasia",
+            "anaplasia_extent",
+            "molecular_abnormality_result",
+            "histology",
+            "margins",
+            "disease_phase",
+            "age_at_disease_phase",
+            "year_at_disease_phase"
+          ]
+        }
+      ]
+    },
+    "projectId": "search",
+    "graphqlField": "subject",
+    "index": "",
+    "buttons": [
+      {
+        "enabled": true,
+        "type": "data",
+        "title": "Download Data",
+        "leftIcon": "user",
+        "rightIcon": "download",
+        "fileName": "data.json"
+      }
+    ],
+    "table": {
+      "enabled": true
+    },
+    "guppyConfig": {
+      "dataType": "subject",
+      "nodeCountTitle": "Subjects",
+      "fieldMapping": [
+        {
+          "field": "lkss",
+          "name": "Last Known Survival Status (LKSS)"
+        },
+        {
+          "field": "project_id",
+          "name": "Data Release Version"
+        },
+        {
+          "field": "data_contributor_id",
+          "name": "Data Contributor"
+        }
+      ],
+      "accessibleFieldCheckList": ["project_id"],
+      "accessibleValidationField": "project_id"
+    },
+    "getAccessButtonLink": "https://pcdc-gen3-docs.s3.amazonaws.com/%5BDRAFT%5D+PCDC-request_form.docx"
+  }
+}
