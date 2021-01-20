@@ -1,9 +1,6 @@
 const percentageFormatter = (showPercentage) => (v) =>
   showPercentage ? `${v}%` : v;
 
-const numberWithCommas = (x) =>
-  x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
 const addPercentage = (v) => percentageFormatter(true)(v);
 
 const calculateChartData = (data, percentageFixedPoint) => {
@@ -166,7 +163,6 @@ const shouldHideChart = (data, lockValue) =>
 
 const helper = {
   percentageFormatter,
-  numberWithCommas,
   addPercentage,
   calculateChartData,
   getPercentageData,
