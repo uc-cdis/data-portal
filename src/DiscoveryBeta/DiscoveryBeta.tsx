@@ -3,11 +3,18 @@ import { uniq, sum } from 'lodash';
 import * as JsSearch from 'js-search';
 import { LockOutlined, LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, StarOutlined, StarFilled, StarTwoTone, CloseOutlined } from '@ant-design/icons';
 import { Input, Table, Tag, Radio, Checkbox, Button, Space, Modal } from 'antd';
+const { CheckableTag } = Tag;
 
 import './DiscoveryBeta.css';
 
 import { hostname, useArboristUI } from '../localconf';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
+
+enum AccessLevel {
+  BOTH = 'both',
+  ACCESSIBLE = 'accessible',
+  UNACCESSIBLE = 'unaccessible',
+}
 
 // DEV ONLY
 if (!useArboristUI) {
@@ -31,6 +38,8 @@ const isFavorite = (study: string): boolean => false;
 const isAccesible = (resource: any, userAuthMapping: any): boolean => {
   return userHasMethodForServiceOnResource('read', '*', resource.authz, userAuthMapping);
 }
+
+const accessibleFieldName = '__accessible';
 
 const loadResources = async (): Promise<any> => {
   const jsonResponse = mock_data;
@@ -92,11 +101,6 @@ const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'nu
   }
 }
 
-interface DiscoveryBetaProps {
-  // config: any
-  userAuthMapping: any
-}
-
 const highlightSearchTerm = (value: string, searchTerm: string, highlighClassName = 'matched'): {highlighted: React.ReactNode, matchIndex: number} => {
   const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
   const noMatchFound = matchIndex === -1;
@@ -116,6 +120,34 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
     ),
     matchIndex
   };
+}
+
+const filterByAccessLevel = (resources: any[], accessLevel: AccessLevel, accessibleProperty: string): any[] => {
+  switch(accessLevel) {
+    case AccessLevel.ACCESSIBLE:
+      return resources.filter(r => r[accessibleProperty]);
+    case AccessLevel.UNACCESSIBLE:
+      return resources.filter(r => !r[accessibleProperty]);
+    case AccessLevel.BOTH:
+      return resources;
+    default:
+      throw new Error(`Unrecognized access level ${accessLevel}.`);
+  }
+}
+
+const filterByTags = (resources: any[], selectedTags: any): any[] => {
+  // if no tags selected, show all resources
+  if (Object.values(selectedTags).every( selected => selected != true )) {
+    return resources;
+  }
+  return resources.filter(resource => {
+    return resource.tags.some( tag => selectedTags[tag.name]);
+  });
+}
+
+interface DiscoveryBetaProps {
+  // config: any
+  userAuthMapping: any
 }
 
 const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMapping}) => {
@@ -165,7 +197,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
     {
       title: 'Access',
       render: (_, record) => (
-        isAccesible(record, userAuthMapping)
+        record[accessibleFieldName]
         ? <UnlockOutlined />
         : <LockFilled />
       ),
@@ -179,27 +211,25 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-
-  const handleSearchChange = ev => {
-    const searchTerm = ev.currentTarget.value;
-    setSearchTerm(searchTerm);
-    if (searchTerm === '') {
-      setVisibleResources(resources);
-      return;
-    }
-    if (!jsSearch) {
-      return;
-    }
-    const results = jsSearch.search(searchTerm);
-    console.log(`searching for ${searchTerm}, results:`, results);
-    setVisibleResources(results);
-  };
-
+  const [accessLevel, setAccessLevel] = useState(AccessLevel.BOTH);
+  const [selectedTags, setSelectedTags] = useState({});
 
   useEffect(() => {
+
     const jsSearch = new JsSearch.Search(config.minimal_field_mapping.uid);
     // Load resources and index them
-    loadResources().then( resources => {
+    loadResources().then( rs => {
+
+      // Add a property to resources showing whether user has access to resources
+      const resources = rs.map( resource => {
+        return {
+          ...resource,
+          [accessibleFieldName]: isAccesible(resource, userAuthMapping)
+        }
+      });
+
+      // Initialize JS search.
+      // ------------------------
       // Enable search only over text fields present in the table
       config.study_columns.forEach( column => {
         if (!column.content_type || column.content_type === 'string') {
@@ -214,9 +244,8 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
       jsSearch.addDocuments(resources);
       // expose the search function
       setJsSearch(jsSearch);
-      // DEV ONLY --
-      console.log(jsSearch);
-      // -----------
+      // -----------------------
+
       setResources(resources);
       setVisibleResources(resources);
     }).catch(err => {
@@ -224,6 +253,25 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
       throw new Error(err);
     });
   }, [])
+
+  const handleSearchChange = ev => {
+    const searchTerm = ev.currentTarget.value;
+    setSearchTerm(searchTerm);
+    if (searchTerm === '') {
+      setVisibleResources(resources);
+      return;
+    }
+    if (!jsSearch) {
+      return;
+    }
+    const results = jsSearch.search(searchTerm);
+    setVisibleResources(results);
+  };
+
+  const handleAccessLevelChange = ev => {
+    const accessLevel = ev.target.value as AccessLevel;
+    setAccessLevel(accessLevel);
+  }
 
   return (<div className='discovery-container'>
     <h1 className='discovery-page-title'>DISCOVERY</h1>
@@ -257,7 +305,24 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
                     <h5>{category.name}</h5>
                     <Space direction='vertical' size={4}>
                     { tags.map( tag =>
-                      <Tag className='discovery-header__tag' color={category.color} key={category.name + tag}>{tag}</Tag>
+                      <CheckableTag
+                        checked={selectedTags[tag]}
+                        onChange={ checked => checked === true
+                          ? setSelectedTags({
+                            ...selectedTags,
+                            [tag]: true,
+                          })
+                          : setSelectedTags({
+                            ...selectedTags,
+                            [tag]: undefined ,
+                          })
+                        }
+                        className='discovery-header__tag'
+                        color={category.color}
+                        key={category.name + tag}
+                      >
+                        {tag}
+                      </CheckableTag>
                     )}
                     </Space>
                   </div>)
@@ -277,13 +342,15 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
             <div className='disvovery-table__controls'>
               <Checkbox className='discovery-table__show-favorites'>Show Favorites</Checkbox>
               <Radio.Group
+                onChange={handleAccessLevelChange}
+                value={accessLevel}
                 className='discovery-table__access-button'
                 defaultValue='both'
                 buttonStyle='solid'
               >
-                <Radio.Button value='both'>Both</Radio.Button>
-                <Radio.Button value='access'><LockFilled /></Radio.Button>
-                <Radio.Button value='no-access'><UnlockOutlined /></Radio.Button>
+                <Radio.Button value={AccessLevel.BOTH}>Both</Radio.Button>
+                <Radio.Button value={AccessLevel.UNACCESSIBLE}><LockFilled /></Radio.Button>
+                <Radio.Button value={AccessLevel.ACCESSIBLE}><UnlockOutlined /></Radio.Button>
               </Radio.Group>
             </div>
           </div>
@@ -296,7 +363,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
                 setModalData(record);
               }
             })}
-            dataSource={visibleResources}
+            dataSource={filterByTags(filterByAccessLevel(visibleResources, accessLevel, accessibleFieldName), selectedTags)}
             expandable={config.study_preview_field && ({
               expandedRowKeys: visibleResources.map(r => r[config.minimal_field_mapping.uid]), // expand all rows
               expandedRowRender: record => {
