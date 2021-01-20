@@ -170,7 +170,9 @@ class FilterSection extends React.Component {
         >
           {this.state.showingMore
             ? 'less'
-            : `${totalCount - this.props.initVisibleItemNumber} more`}
+            : `${(
+                totalCount - this.props.initVisibleItemNumber
+              ).toLocaleString()} more`}
         </div>
       )
     );

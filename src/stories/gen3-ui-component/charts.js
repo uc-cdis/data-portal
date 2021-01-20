@@ -37,12 +37,22 @@ const speciesData = [
   { name: 'spicies3', value: 300 },
 ];
 
+const bigSet = [];
+const NUM_OPTIONS = 2000;
+for (let i = 0; i < NUM_OPTIONS; i += 1) {
+  bigSet.push({
+    name: `item-${i}`,
+    value: Math.random(),
+  });
+}
+
 const summaries = [
   { type: 'bar', title: 'Gender', data: genderData },
   { type: 'pie', title: 'Birth-Year', data: birthData },
   { type: 'pie', title: 'Species', data: speciesData },
   { type: 'bar', title: 'Race', data: raceData },
   { type: 'bar', title: 'Virus', data: virusData },
+  { type: 'bar', title: 'Big Set', data: bigSet },
 ];
 
 const lockedVirus = [
