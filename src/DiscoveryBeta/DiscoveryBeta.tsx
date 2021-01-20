@@ -3,18 +3,6 @@ import { uniq, sum } from 'lodash';
 import * as JsSearch from 'js-search';
 import { LockOutlined, LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, StarOutlined, StarFilled, StarTwoTone, CloseOutlined } from '@ant-design/icons';
 import { Input, Table, Tag, Radio, Checkbox, Button, Space, Modal } from 'antd';
-const { CheckableTag } = Tag;
-
-import './DiscoveryBeta.css';
-
-import { hostname, useArboristUI } from '../localconf';
-import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-
-enum AccessLevel {
-  BOTH = 'both',
-  ACCESSIBLE = 'accessible',
-  UNACCESSIBLE = 'unaccessible',
-}
 
 // DEV ONLY
 if (!useArboristUI) {
@@ -22,6 +10,22 @@ if (!useArboristUI) {
 }
 import config from './mock_config.json';
 import mock_data from './mock_mds_studies.json';
+// END DEV ONLY
+
+import { hostname, useArboristUI } from '../localconf';
+import { userHasMethodForServiceOnResource } from '../authMappingUtils';
+
+import './DiscoveryBeta.css';
+
+enum AccessLevel {
+  BOTH = 'both',
+  ACCESSIBLE = 'accessible',
+  UNACCESSIBLE = 'unaccessible',
+}
+
+const CheckableTag = ({checked, ...props}) => {
+  return <Tag className={`checkable-tag ${checked && 'checkable-tag--checked'}`} {...props}/>
+}
 
 const getTagColor = (tagCategory: string): string => {
   const categoryConfig = config.tag_categories.find( category => category.name === tagCategory);
