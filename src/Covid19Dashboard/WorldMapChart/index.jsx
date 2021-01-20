@@ -136,20 +136,24 @@ class WorldMapChart extends React.Component {
     if (!event.features) { return; }
 
     let hoverInfo = null;
-    const numToString = (rawNum) => {
-      if (rawNum && typeof rawNum === 'number') {
-        return rawNum.toLocaleString();
+    const formatNumberToDisplay = (rawNum) => {
+      if (rawNum && rawNum !== 'null') {
+        if (typeof rawNum === 'number') {
+          return rawNum.toLocaleString();
+        }
+        return rawNum;
       }
-      return rawNum;
+      // Default if missing
+      return 0;
     };
 
     event.features.forEach((feature) => {
       if (!feature.layer.id.startsWith('confirmed-')) {
         return;
       }
-      let confirmed = numToString(feature.properties.confirmed);
-      let deaths = numToString(feature.properties.deaths);
-      let recovered = numToString(feature.properties.recovered);
+      let confirmed = formatNumberToDisplay(feature.properties.confirmed);
+      let deaths = formatNumberToDisplay(feature.properties.deaths);
+      let recovered = formatNumberToDisplay(feature.properties.recovered);
 
       const state = feature.properties.province_state;
       const county = feature.properties.county;
