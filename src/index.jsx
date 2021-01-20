@@ -396,6 +396,17 @@ async function init() {
                     }
                   />
                   <Route
+                    exact
+                    path='/discovery/:studyUID'
+                    component={
+                      props => (<ProtectedContent
+                        public
+                        component={DiscoveryBeta}
+                        {...props}
+                      />)
+                    }
+                  />
+                  <Route
                     path='/not-found'
                     component={NotFound}
                   />
