@@ -42,9 +42,6 @@ const getTagColor = (tagCategory: string): string => {
   return categoryConfig.color;
 };
 
-// FIXME implement
-const isFavorite = (study: string): boolean => false;
-
 const isAccesible = (resource: any, userAuthMapping: any): boolean => {
   return userHasMethodForServiceOnResource('read', '*', resource.authz, userAuthMapping);
 }
@@ -164,12 +161,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
 
   // Set up table columns
   // -----
-  const columns = [{
-      // Favorite
-      render: (_, record) => (isFavorite(record.name) ? <StarTwoTone twoToneColor={'#797979'} /> : <StarOutlined />),
-    }];
-  config.study_columns.forEach( column => {
-    columns.push({
+  const columns = config.study_columns.map( column => ({
       title: column.name,
       render: (text, record, index) => {
         const value = record[column.field];
@@ -191,7 +183,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
         return value;
       }
     })
-  });
+  );
   columns.push(
     {
       title: 'Tags',
@@ -370,7 +362,6 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
               onChange={handleSearchChange}
             />
             <div className='disvovery-table__controls'>
-              <Checkbox className='discovery-table__show-favorites'>Show Favorites</Checkbox>
               <Radio.Group
                 onChange={handleAccessLevelChange}
                 value={accessLevel}
@@ -439,7 +430,6 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
       title={ config.study_page_fields.header &&
         <Space align='baseline'>
           <h3 className='discovery-modal__header-text'>{modalData && modalData[config.study_page_fields.header.field]}</h3>
-          <StarOutlined />
           <LinkOutlined />
         </Space>
       }
