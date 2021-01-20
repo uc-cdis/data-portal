@@ -59,7 +59,7 @@ class SingleSelectFilter extends React.Component {
       inputDisabled = !selected;
       countIconComponent = this.props.tierAccessLimit ? (
         <span className='g3-badge g3-single-select-filter__count'>
-          {this.props.tierAccessLimit}
+          {Number(this.props.tierAccessLimit).toLocaleString()}
           <i className='g3-icon--under g3-icon g3-icon--sm g3-icon-color__base-blue' />
         </span>
       ) : (
@@ -88,7 +88,7 @@ class SingleSelectFilter extends React.Component {
     } else if (this.props.accessible) {
       countIconComponent = (
         <span className='g3-badge g3-single-select-filter__count'>
-          {this.props.count}
+          {Number(this.props.count).toLocaleString()}
         </span>
       );
     }
