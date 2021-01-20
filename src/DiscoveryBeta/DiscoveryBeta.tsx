@@ -155,9 +155,12 @@ const filterByTags = (resources: any[], selectedTags: any): any[] => {
 interface DiscoveryBetaProps {
   // config: any
   userAuthMapping: any
+  params: any // from React Router
 }
 
-const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMapping}) => {
+const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
+
+  const {userAuthMapping} = props;
 
   // Set up table columns
   // -----
@@ -262,6 +265,17 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
 
       setResources(resources);
       setVisibleResources(resources);
+
+      // If opening to a study by default, open that study
+      if (props.params && props.params.studyUID) {
+        const modalData = resources.find( r => r[config.minimal_field_mapping.uid] === props.params.studyUID );
+        if (modalData) {
+          setModalData(modalData);
+          setModalVisible(true);
+        } else {
+          console.error(`Could not find study with UID ${props.params.studyUID}.`)
+        }
+      }
     }).catch(err => {
       // FIXME how to handle this / retry?
       throw new Error(err);
@@ -430,7 +444,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = ({userAuthMap
       title={ config.study_page_fields.header &&
         <Space align='baseline'>
           <h3 className='discovery-modal__header-text'>{modalData && modalData[config.study_page_fields.header.field]}</h3>
-          <LinkOutlined />
+          <a href={`/discovery/${modalData && modalData[config.minimal_field_mapping.uid]}`}><LinkOutlined /> Permalink</a>
         </Space>
       }
       footer={false}
