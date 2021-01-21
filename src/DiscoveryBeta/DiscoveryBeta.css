@@ -86,6 +86,8 @@
 .discovery-header__tag-group {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
 
 .discovery-header__tag-btn {
@@ -98,6 +100,7 @@
     box-sizing: border-box;
     line-height: 18px;
     color: #555;
+    margin-bottom: 3px;
 }
 
 .discovery-tag--selected {
@@ -144,7 +147,7 @@
     /* (the fallback is just no ellipsis at the end of cut-off text) */
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     text-overflow: ellipsis;
     /* --------- */
 }

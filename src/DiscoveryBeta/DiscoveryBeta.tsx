@@ -195,14 +195,33 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
         <React.Fragment>
           {record.tags.map( ({name, category}) => {
             const isSelected = selectedTags[name] ? true : false
+            const color = getTagColor(category);
             return (
               <Tag
-                className={`discovery-header__tag-btn discovery-tag ${isSelected && 'discovery-tag--selected'}`}
-                style={{
-                  backgroundColor: isSelected ? getTagColor(category) : 'initial',
-                  borderColor: getTagColor(category)
-                }}
                 key={record.name + name}
+                role='button'
+                tabIndex={0}
+                aria-pressed={isSelected ? 'true' : 'false'}
+                className={`discovery-header__tag-btn discovery-tag ${isSelected && 'discovery-tag--selected'}`}
+                aria-label={name}
+                style={{
+                  backgroundColor: isSelected ? color : 'initial',
+                  borderColor: color
+                  }}
+                onKeyPress={ (ev) => {
+                  ev.stopPropagation();
+                  setSelectedTags({
+                    ...selectedTags,
+                    [name]: selectedTags[name] ? undefined : true,
+                  });
+                }}
+                onClick={ (ev) => {
+                  ev.stopPropagation();
+                  setSelectedTags({
+                    ...selectedTags,
+                    [name]: selectedTags[name] ? undefined : true,
+                  });
+                }}
               >
                 {name}
               </Tag>
@@ -335,7 +354,6 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
                   const tags = getTagsInCategory(category.name, resources);
                   return (<div className='discovery-header__tag-group' key={category.name}>
                     <h5>{category.name}</h5>
-                    <Space direction='vertical' size={4}>
                     { tags.map( tag =>
                       <Tag
                         key={category.name + tag}
@@ -354,17 +372,16 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
                             [tag]: selectedTags[tag] ? undefined : true,
                           })
                         }}
-                        onClick={ () =>
+                        onClick={ () => {
                           setSelectedTags({
                             ...selectedTags,
                             [tag]: selectedTags[tag] ? undefined : true,
                           })
-                        }
+                        }}
                       >
                         {tag}
                       </Tag>
                     )}
-                    </Space>
                   </div>)
                 })
               }
