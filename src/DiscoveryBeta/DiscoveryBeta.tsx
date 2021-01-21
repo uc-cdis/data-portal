@@ -487,7 +487,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
       title={ config.study_page_fields.header &&
         <Space align='baseline'>
           <h3 className='discovery-modal__header-text'>{modalData && modalData[config.study_page_fields.header.field]}</h3>
-          <a href={`/discovery/${modalData && modalData[config.minimal_field_mapping.uid]}`}><LinkOutlined /> Permalink</a>
+          <a href={`/discovery/${modalData && modalData[config.minimal_field_mapping.uid]}/`}><LinkOutlined /> Permalink</a>
         </Space>
       }
       footer={false}
