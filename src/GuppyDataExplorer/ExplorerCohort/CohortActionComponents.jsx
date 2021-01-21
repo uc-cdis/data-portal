@@ -202,7 +202,6 @@ function CohortUpdateForm({
   const [cohort, setCohort] = useState(currentCohort);
   const [error, setError] = useState({ isError: false, message: '' });
   function validate() {
-    console.log('validate!');
     if (cohort.name === '')
       setError({ isError: true, message: 'Name is required!' });
     else if (
