@@ -224,7 +224,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
 
   const [jsSearch, setJsSearch] = useState(null);
   const [resources, setResources] = useState(null);
-  const [visibleResources, setVisibleResources] = useState(null);
+  const [searchFilteredResources, setSearchFilteredResources] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -264,7 +264,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
       // -----------------------
 
       setResources(resources);
-      setVisibleResources(resources);
+      setSearchFilteredResources(resources);
 
       // If opening to a study by default, open that study
       if (props.params && props.params.studyUID) {
@@ -286,20 +286,24 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
     const searchTerm = ev.currentTarget.value;
     setSearchTerm(searchTerm);
     if (searchTerm === '') {
-      setVisibleResources(resources);
+      setSearchFilteredResources(resources);
       return;
     }
     if (!jsSearch) {
       return;
     }
     const results = jsSearch.search(searchTerm);
-    setVisibleResources(results);
+    setSearchFilteredResources(results);
   };
 
   const handleAccessLevelChange = ev => {
     const accessLevel = ev.target.value as AccessLevel;
     setAccessLevel(accessLevel);
   }
+
+  const visibleResources = searchFilteredResources !== null
+    ? filterByTags(filterByAccessLevel(searchFilteredResources, accessLevel, accessibleFieldName), selectedTags)
+    : null;
 
   return (<div className='discovery-container'>
     <h1 className='discovery-page-title'>DISCOVERY</h1>
@@ -311,7 +315,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
               config.aggregations.map( aggregation => (
                 <div className='discovery-header__stat' key={aggregation.name}>
                   <div className='discovery-header__stat-number'>
-                    {renderAggregation(aggregation, resources)}
+                    {renderAggregation(aggregation, visibleResources)}
                   </div>
                   <div className='discovery-header__stat-label'>
                     {aggregation.name}
@@ -383,7 +387,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
                 defaultValue='both'
                 buttonStyle='solid'
               >
-                <Radio.Button value={AccessLevel.BOTH}>Both</Radio.Button>
+                <Radio.Button value={AccessLevel.BOTH}>All</Radio.Button>
                 <Radio.Button value={AccessLevel.UNACCESSIBLE}><LockFilled /></Radio.Button>
                 <Radio.Button value={AccessLevel.ACCESSIBLE}><UnlockOutlined /></Radio.Button>
               </Radio.Group>
@@ -398,7 +402,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
                 setModalData(record);
               }
             })}
-            dataSource={filterByTags(filterByAccessLevel(visibleResources, accessLevel, accessibleFieldName), selectedTags)}
+            dataSource={visibleResources}
             expandable={config.study_preview_field && ({
               expandedRowKeys: visibleResources.map(r => r[config.minimal_field_mapping.uid]), // expand all rows
               expandedRowRender: record => {
