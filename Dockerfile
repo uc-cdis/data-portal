@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
-ARG APP=inrg
+ARG APP=pcdc
 ARG BASENAME
 
 RUN mkdir -p /data-portal
