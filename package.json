@@ -1,6 +1,6 @@
 {
   "name": "@pcdc/windmill",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "PCDC Data Portal",
   "dependencies": {
     "@fontsource/raleway": "^4.1.0",
