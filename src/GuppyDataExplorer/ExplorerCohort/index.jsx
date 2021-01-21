@@ -1,40 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import cloneDeep from 'lodash.clonedeep';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Button from '../../gen3-ui-component/components/Button';
 import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
+import {
+  createEmptyCohort,
+  truncateWithEllipsis,
+  fetchCohorts,
+  saveCohort,
+  updateCohort,
+  deleteCohort,
+} from './utils';
 import './ExplorerCohort.css';
 import './typedef';
 
 /**
- * @return {ExplorerCohort}
- */
-function createEmptyCohort() {
-  return {
-    name: '',
-    description: '',
-    filter: {},
-  };
-}
-
-/**
- * @param {string} string
- * @param {number} maxLength
- */
-function truncateWithEllipsis(string, maxLength) {
-  return string.length > maxLength
-    ? string.slice(0, maxLength - 3) + '...'
-    : string;
-}
-
-/**
  * @param {Object} prop
  * @param {string} prop.className
- * @param {ExplorerFilter} prop.filter
- * @param {({ filter }: { filter: ExplorerFilter }) => void} prop.onOpenCohort
- * @param {({ filter }: { filter: ExplorerFilter }) => void} prop.onDeleteCohort
+ * @param {ExplorerFilters} prop.filter
+ * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onOpenCohort
+ * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onDeleteCohort
  */
 function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   const [cohort, setCohort] = useState(createEmptyCohort());
@@ -42,6 +30,13 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   /** @type {ExplorerCohort[]} */
   const emptyCohorts = [];
   const [cohorts, setCohorts] = useState(emptyCohorts);
+  const [isError, setIsError] = useState(false);
+  useEffect(() => {
+    if (!isError)
+      fetchCohorts()
+        .then(setCohorts)
+        .catch(() => setIsError(true));
+  }, [isError]);
 
   /** @type {[ExplorerCohortActionType, React.Dispatch<React.SetStateAction<ExplorerCohortActionType>>]} */
   const [actionType, setActionType] = useState('open');
@@ -59,36 +54,42 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     onOpenCohort(cloneDeep(opened));
     closeActionForm();
   }
-  function handleSave(/** @type {ExplorerCohort} */ saved) {
-    setCohort(cloneDeep(saved));
-    setCohorts([...cohorts, cloneDeep(saved)]);
-    closeActionForm();
-  }
-  function handleUpdate(/** @type {ExplorerCohort} */ updated) {
-    const updatedCohorts = [];
-    for (const { name, description, filter } of cohorts) {
-      if (name === updated.name) updatedCohorts.push(cloneDeep(updated));
-      else updatedCohorts.push({ name, description, filter });
+  async function handleSave(/** @type {ExplorerCohort} */ saved) {
+    try {
+      setCohort(await saveCohort(saved));
+      setCohorts(await fetchCohorts());
+    } catch (e) {
+      setIsError(true);
+    } finally {
+      closeActionForm();
     }
-    setCohort(cloneDeep(updated));
-    setCohorts(updatedCohorts);
-    closeActionForm();
   }
-  function handleDelete(/** @type {ExplorerCohort} */ deleted) {
-    /** @type {ExplorerCohort[]} */
-    const updatedCohorts = [];
-    for (const { name, description, filter } of cohorts) {
-      if (name === deleted.name) continue;
-      else updatedCohorts.push({ name, description, filter });
+  async function handleUpdate(/** @type {ExplorerCohort} */ updated) {
+    try {
+      await updateCohort(updated);
+      setCohort(cloneDeep(updated));
+      setCohorts(await fetchCohorts());
+    } catch (e) {
+      setIsError(true);
+    } finally {
+      closeActionForm();
     }
-    setCohort(createEmptyCohort());
-    setCohorts(updatedCohorts);
-    onDeleteCohort(createEmptyCohort());
-    closeActionForm();
+  }
+  async function handleDelete(/** @type {ExplorerCohort} */ deleted) {
+    try {
+      await deleteCohort(deleted);
+      setCohort(createEmptyCohort());
+      setCohorts(await fetchCohorts());
+      onDeleteCohort(createEmptyCohort());
+    } catch (e) {
+      setIsError(true);
+    } finally {
+      closeActionForm();
+    }
   }
 
-  const isFilterChanged =
-    JSON.stringify(filter) !== JSON.stringify(cohort.filter);
+  const isFiltersChanged =
+    JSON.stringify(filter) !== JSON.stringify(cohort.filters);
   function FilterChangedWarning() {
     return (
       <Tooltip
@@ -111,60 +112,77 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
 
   return (
     <div className={className}>
-      <div>
-        <h1 className='guppy-explorer-cohort__name'>
-          Cohort:{' '}
-          {cohort.name ? (
-            <>
-              {truncateWithEllipsis(cohort.name, 30)}{' '}
-              {isFilterChanged && <FilterChangedWarning />}
-            </>
-          ) : (
-            <span className='guppy-explorer-cohort__placeholder'>untitled</span>
-          )}
-        </h1>
-        <p>
-          {cohort.description ? (
-            truncateWithEllipsis(cohort.description, 80)
-          ) : (
-            <span className='guppy-explorer-cohort__placeholder'>
-              No description
-            </span>
-          )}
-        </p>
-      </div>
-      <div>
-        <CohortActionButton
-          labelIcon='folder-open'
-          labelText='Open Cohort'
-          enabled={cohorts.length > 0}
-          onClick={() => openActionForm('open')}
-        />
-        <CohortActionButton
-          labelIcon='save'
-          labelText={`Save ${cohort.name === '' ? 'New' : 'As'}`}
-          onClick={() => openActionForm('save')}
-        />
-        <CohortActionButton
-          labelIcon='pen'
-          labelText='Update Cohort'
-          enabled={cohort.name !== ''}
-          onClick={() => openActionForm('update')}
-        />
-        <CohortActionButton
-          labelIcon='trash-alt'
-          labelText='Delete Cohort'
-          enabled={cohort.name !== ''}
-          onClick={() => openActionForm('delete')}
-        />
-      </div>
+      {isError ? (
+        <div className='guppy-explorer-cohort__error'>
+          <h2>Error obtaining saved cohorts data...</h2>
+          <p>
+            Please retry by clicking "Retry" button or refreshing the page.
+            <br />
+            If the problem persists, please contact administrator for more
+            information.
+          </p>
+          <Button label='Retry' onClick={() => setIsError(false)} />
+        </div>
+      ) : (
+        <>
+          <div>
+            <h1 className='guppy-explorer-cohort__name'>
+              Cohort:{' '}
+              {cohort.name ? (
+                <>
+                  {truncateWithEllipsis(cohort.name, 30)}{' '}
+                  {isFiltersChanged && <FilterChangedWarning />}
+                </>
+              ) : (
+                <span className='guppy-explorer-cohort__placeholder'>
+                  untitled
+                </span>
+              )}
+            </h1>
+            <p>
+              {cohort.description ? (
+                truncateWithEllipsis(cohort.description, 80)
+              ) : (
+                <span className='guppy-explorer-cohort__placeholder'>
+                  No description
+                </span>
+              )}
+            </p>
+          </div>
+          <div className='guppy-explorer-cohort__buttons'>
+            <CohortActionButton
+              labelIcon='folder-open'
+              labelText='Open Cohort'
+              enabled={cohorts.length > 0}
+              onClick={() => openActionForm('open')}
+            />
+            <CohortActionButton
+              labelIcon='save'
+              labelText={`Save ${cohort.name === '' ? 'New' : 'As'}`}
+              onClick={() => openActionForm('save')}
+            />
+            <CohortActionButton
+              labelIcon='pen'
+              labelText='Update Cohort'
+              enabled={cohort.name !== ''}
+              onClick={() => openActionForm('update')}
+            />
+            <CohortActionButton
+              labelIcon='trash-alt'
+              labelText='Delete Cohort'
+              enabled={cohort.name !== ''}
+              onClick={() => openActionForm('delete')}
+            />
+          </div>
+        </>
+      )}
       {showActionForm &&
         ReactDOM.createPortal(
           <div className='guppy-explorer-cohort__overlay'>
             <CohortActionForm
               actionType={actionType}
               currentCohort={cohort}
-              currentFilter={filter}
+              currentFilters={filter}
               cohorts={cohorts}
               handlers={{
                 handleOpen,
@@ -173,7 +191,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
                 handleDelete,
                 handleClose: closeActionForm,
               }}
-              isFilterChanged={isFilterChanged}
+              isFiltersChanged={isFiltersChanged}
             />
           </div>,
           document.getElementById('root')

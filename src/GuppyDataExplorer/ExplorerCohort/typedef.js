@@ -14,14 +14,15 @@
  */
 
 /**
- * @typedef {{[x: string]: ExplorerFilterItem}} ExplorerFilter
+ * @typedef {{[x: string]: ExplorerFilterItem}} ExplorerFilters
  */
 
 /**
  * @typedef {object} ExplorerCohort
  * @property {string} name
  * @property {string} description
- * @property {ExplorerFilter} filter
+ * @property {ExplorerFilters} filters
+ * @property {?number} [id]
  */
 
 /**

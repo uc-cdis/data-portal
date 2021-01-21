@@ -38,7 +38,7 @@ export function CohortActionButton({ labelIcon, labelText, ...attrs }) {
 function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
   const emptyOption = {
     label: 'Open New (no cohort)',
-    value: { name: '', description: '', filter: {} },
+    value: { name: '', description: '', filters: {} },
   };
   const options = cohorts.map((cohort) => ({
     label: cohort.name,
@@ -51,7 +51,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
   return (
     <div className='guppy-explorer-cohort__form'>
       <h4>Select a saved Cohort to open</h4>
-      <form>
+      <form onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}>
         <SimpleInputField
           label='Name'
           input={
@@ -100,17 +100,17 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
 /**
  * @param {Object} prop
  * @param {ExplorerCohort} prop.currentCohort
- * @param {ExplorerFilter} prop.currentFilter
+ * @param {ExplorerFilters} prop.currentFilters
  * @param {ExplorerCohort[]} prop.cohorts
- * @param {boolean} prop.isFilterChanged
+ * @param {boolean} prop.isFiltersChanged
  * @param {(saved: ExplorerCohort) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
 function CohortSaveForm({
   currentCohort,
-  currentFilter,
+  currentFilters,
   cohorts,
-  isFilterChanged,
+  isFiltersChanged,
   onAction,
   onClose,
 }) {
@@ -126,7 +126,7 @@ function CohortSaveForm({
   return (
     <div className='guppy-explorer-cohort__form'>
       <h4>Save as a new Cohort</h4>
-      {currentCohort.name !== '' && isFilterChanged && (
+      {currentCohort.name !== '' && isFiltersChanged && (
         <p>
           <FontAwesomeIcon
             icon='exclamation-triangle'
@@ -135,7 +135,7 @@ function CohortSaveForm({
           You have changed filters for this Cohort.
         </p>
       )}
-      <form>
+      <form onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}>
         <SimpleInputField
           label='Name'
           input={
@@ -175,7 +175,7 @@ function CohortSaveForm({
         <CohortButton
           enabled={cohort.name !== currentCohort.name && !error.isError}
           label='Save Cohort'
-          onClick={() => onAction({ ...cohort, filter: currentFilter })}
+          onClick={() => onAction({ ...cohort, filters: currentFilters })}
         />
       </div>
     </div>
@@ -185,23 +185,38 @@ function CohortSaveForm({
 /**
  * @param {Object} prop
  * @param {ExplorerCohort} prop.currentCohort
- * @param {ExplorerFilter} prop.currentFilter
- * @param {boolean} prop.isFilterChanged
+ * @param {ExplorerFilters} prop.currentFilters
+ * @param {ExplorerCohort[]} prop.cohorts
+ * @param {boolean} prop.isFiltersChanged
  * @param {(updated: ExplorerCohort) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
 function CohortUpdateForm({
   currentCohort,
-  currentFilter,
-  isFilterChanged,
+  currentFilters,
+  cohorts,
+  isFiltersChanged,
   onAction,
   onClose,
 }) {
-  const [description, setDescription] = useState(currentCohort.description);
+  const [cohort, setCohort] = useState(currentCohort);
+  const [error, setError] = useState({ isError: false, message: '' });
+  function validate() {
+    console.log('validate!');
+    if (cohort.name === '')
+      setError({ isError: true, message: 'Name is required!' });
+    else if (
+      cohorts.filter(
+        (c) => c.name === cohort.name && c.name !== currentCohort.name
+      ).length > 0
+    )
+      setError({ isError: true, message: 'Name is already in use!' });
+    else setError({ isError: false, message: '' });
+  }
   return (
     <div className='guppy-explorer-cohort__form'>
       <h4>Update the current Cohort</h4>
-      {isFilterChanged && (
+      {isFiltersChanged && (
         <p>
           <FontAwesomeIcon
             icon='exclamation-triangle'
@@ -210,10 +225,22 @@ function CohortUpdateForm({
           You have changed filters for this Cohort.
         </p>
       )}
-      <form>
+      <form onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}>
         <SimpleInputField
           label='Name'
-          input={<input disabled value={currentCohort.name} />}
+          input={
+            <input
+              autoFocus
+              placeholder='Enter the cohort name'
+              value={cohort.name}
+              onBlur={validate}
+              onChange={(e) => {
+                e.persist();
+                setCohort((prev) => ({ ...prev, name: e.target.value }));
+              }}
+            />
+          }
+          error={error}
         />
         <SimpleInputField
           label='Description'
@@ -221,10 +248,10 @@ function CohortUpdateForm({
             <textarea
               autoFocus
               placeholder='Describe the cohort (optional)'
-              value={description}
+              value={cohort.description}
               onChange={(e) => {
                 e.persist();
-                setDescription(e.target.value);
+                setCohort((prev) => ({ ...prev, description: e.target.value }));
               }}
             />
           }
@@ -238,14 +265,13 @@ function CohortUpdateForm({
         />
         <CohortButton
           label='Update Cohort'
-          enabled={description !== currentCohort.description || isFilterChanged}
-          onClick={() =>
-            onAction({
-              ...currentCohort,
-              description,
-              filter: currentFilter,
-            })
+          enabled={
+            (isFiltersChanged ||
+              cohort.name !== currentCohort.name ||
+              cohort.description !== currentCohort.description) &&
+            !error.isError
           }
+          onClick={() => onAction({ ...cohort, filters: currentFilters })}
         />
       </div>
     </div>
@@ -281,7 +307,7 @@ function CohortDeleteForm({ currentCohort, onAction, onClose }) {
  * @param {Object} prop
  * @param {ExplorerCohortActionType} prop.actionType
  * @param {ExplorerCohort} prop.currentCohort
- * @param {ExplorerFilter} prop.currentFilter
+ * @param {ExplorerFilters} prop.currentFilters
  * @param {ExplorerCohort[]} prop.cohorts
  * @param {object} prop.handlers
  * @param {(opened: ExplorerCohort) => void} prop.handlers.handleOpen
@@ -289,15 +315,15 @@ function CohortDeleteForm({ currentCohort, onAction, onClose }) {
  * @param {(updated: ExplorerCohort) => void} prop.handlers.handleUpdate
  * @param {(deleted: ExplorerCohort) => void} prop.handlers.handleDelete
  * @param {() => void} prop.handlers.handleClose
- * @param {boolean} prop.isFilterChanged
+ * @param {boolean} prop.isFiltersChanged
  */
 export function CohortActionForm({
   actionType,
   currentCohort,
-  currentFilter,
+  currentFilters,
   cohorts,
   handlers,
-  isFilterChanged,
+  isFiltersChanged,
 }) {
   const {
     handleOpen,
@@ -321,9 +347,9 @@ export function CohortActionForm({
       return (
         <CohortSaveForm
           currentCohort={currentCohort}
-          currentFilter={currentFilter}
+          currentFilters={currentFilters}
           cohorts={cohorts}
-          isFilterChanged={isFilterChanged}
+          isFiltersChanged={isFiltersChanged}
           onAction={handleSave}
           onClose={handleClose}
         />
@@ -332,8 +358,9 @@ export function CohortActionForm({
       return (
         <CohortUpdateForm
           currentCohort={currentCohort}
-          currentFilter={currentFilter}
-          isFilterChanged={isFilterChanged}
+          currentFilters={currentFilters}
+          cohorts={cohorts}
+          isFiltersChanged={isFiltersChanged}
           onAction={handleUpdate}
           onClose={handleClose}
         />
