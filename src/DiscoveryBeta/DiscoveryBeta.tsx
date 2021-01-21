@@ -252,7 +252,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
 
   useEffect(() => {
 
-    const jsSearch = new JsSearch.Search(config.minimal_field_mapping.uid);
+
     // Load resources and index them
     loadResources().then( rs => {
 
@@ -266,6 +266,8 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
 
       // Initialize JS search.
       // ------------------------
+      const jsSearch = new JsSearch.Search(config.minimal_field_mapping.uid);
+      jsSearch.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
       // Enable search only over text fields present in the table
       config.study_columns.forEach( column => {
         if (!column.content_type || column.content_type === 'string') {
