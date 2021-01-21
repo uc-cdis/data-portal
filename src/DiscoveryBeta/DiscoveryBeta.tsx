@@ -413,8 +413,13 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
           <Table
             columns={columns}
             rowKey={config.minimal_field_mapping.uid}
+            rowClassName='discovery-table__row'
             onRow={(record) => ({
               onClick: () => {
+                setModalVisible(true);
+                setModalData(record);
+              },
+              onKeyPress: () => {
                 setModalVisible(true);
                 setModalData(record);
               }
@@ -424,30 +429,45 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
               expandedRowKeys: visibleResources.map(r => r[config.minimal_field_mapping.uid]), // expand all rows
               expandedRowRender: record => {
                 const value = record[config.study_preview_field.field];
-                if (!value) {
-                  if (config.study_preview_field.include_if_not_available) {
-                    return config.study_preview_field.value_if_not_available;
+                const renderValue = (value: string | undefined): React.ReactNode => {
+                  if (!value) {
+                    if (config.study_preview_field.include_if_not_available) {
+                      return config.study_preview_field.value_if_not_available;
+                    }
                   }
+                  if (searchTerm) {
+                    // get index of searchTerm match
+                    const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
+                    if (matchIndex == -1) {
+                      // if searchterm doesn't match this record, don't highlight anything
+                      return value;
+                    }
+                    // Scroll the text to the search term and highlight the search term.
+                    let start = matchIndex - 100;
+                    if (start < 0) {
+                      start = 0;
+                    }
+                    return (<React.Fragment>
+                        { start > 0 && '...' }
+                        {value.slice(start, matchIndex)}
+                        <span className='matched'>{value.slice(matchIndex, matchIndex + searchTerm.length)}</span>
+                        {value.slice(matchIndex + searchTerm.length)}
+                      </React.Fragment>
+                    );
+                  }
+                  return value;
                 }
-                if (searchTerm) {
-                  // get index of searchTerm match
-                  const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
-                  if (matchIndex == -1) {
-                    return <div className='discovery-table__expanded-row-content'>{value}</div>;
-                  }
-                  // Scroll the text to the search term and highlight the search term.
-                  let start = matchIndex - 100;
-                  if (start < 0) {
-                    start = 0;
-                  }
-                  return (<div className='discovery-table__expanded-row-content'>
-                    { start > 0 && '...' }
-                    {value.slice(start, matchIndex)}
-                    <span className='matched'>{value.slice(matchIndex, matchIndex + searchTerm.length)}</span>
-                    {value.slice(matchIndex + searchTerm.length)}
-                  </div>);
-                }
-                return <div className='discovery-table__expanded-row-content'>{value}</div>;
+                return (
+                  <div
+                    className='discovery-table__expanded-row-content'
+                    onClick={ () => {
+                      setModalData(record);
+                      setModalVisible(true);
+                    }}
+                  >
+                    {renderValue(value)}
+                  </div>
+                );
               },
               expandedRowClassName: () => 'discovery-table__expanded-row',
               expandIconColumnIndex: -1, // don't render expand icon

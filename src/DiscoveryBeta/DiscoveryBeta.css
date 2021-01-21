@@ -132,6 +132,10 @@
     justify-self: flex-end;
 }
 
+.discovery-table__row {
+    cursor: pointer;
+}
+
 /* some light css hacks here to override antd default expanded row styles. */
 .discovery-table__expanded-row > td.ant-table-cell {
     background-color: #fff;
@@ -139,12 +143,14 @@
     color: #7f7f7f;
 }
 .discovery-table__expanded-row-content {
-    height: 65px;
+    cursor: pointer;
+    height: 40px;
     width: 100%;
     overflow: hidden;
-    /* --------- */
-    /* This css won't work in IE 11, but it's ok */
-    /* (the fallback is just no ellipsis at the end of cut-off text) */
+    /* ---------
+     * Add an ellipsis after N rows of text.
+     * This css won't work in IE 11, but it's ok, there just won't be an ellipsis.
+     **/
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
