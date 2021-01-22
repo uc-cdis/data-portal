@@ -4,7 +4,7 @@ const marinerRequestBody = {
       genotype_cutoff: '0.2',
       phenotype_file: {
         class: 'File',
-        location: 'USER/hapmap-ceu-all.both.pheno',
+        location: 'USER/hapmap-ceu-all.simulated.pheno',
       },
       threads: '2',
       bfile: {

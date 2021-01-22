@@ -19,6 +19,7 @@ const { Text } = Typography;
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
+const MAX_PREVIEW_FILE_SIZE_BYTES = 1000000;
 const steps = [
   {
     title: 'Upload Phenotype and Covariate File',
@@ -200,24 +201,29 @@ class VAGWAS extends React.Component {
     {
       title: 'Action',
       key: 'action',
-      render: record => (<Space size='small'>
-        <Button
-          size='small'
-          type='link'
-          onClick={() => {
-            if (record.WorkspaceKey !== this.state.previewModalDataKey) {
-              this.props.onLoadWorkspaceStorageFile(record.WorkspaceKey);
-            }
-            this.setState({
-              showPreviewModal: true,
-              previewModalDataKey: record.WorkspaceKey,
-            });
-          }}
-        >
+      render: (record) => {
+        if (record.SizeBytes && record.SizeBytes <= MAX_PREVIEW_FILE_SIZE_BYTES) {
+          return (<Space size='small'>
+            <Button
+              size='small'
+              type='link'
+              onClick={() => {
+                if (record.WorkspaceKey !== this.state.previewModalDataKey) {
+                  this.props.onLoadWorkspaceStorageFile(record.WorkspaceKey);
+                }
+                this.setState({
+                  showPreviewModal: true,
+                  previewModalDataKey: record.WorkspaceKey,
+                });
+              }}
+            >
           Preview
-        </Button>
-      </Space>
-      ),
+            </Button>
+          </Space>
+          );
+        }
+        return null;
+      },
     },
   ];
 
@@ -343,7 +349,7 @@ class VAGWAS extends React.Component {
         && this.props.wssFileData.fileData
         && this.props.wssFileData.fileData.length > 0) {
         specifyDataCols = Object.keys(this.props.wssFileData.fileData[0])
-          .filter(element => element !== 'IID' && element !== 'FID' && element !== 'key')
+          .filter(element => element !== 'IID' && element !== '#FID' && element !== 'key')
           .map(colKey => colKey);
       } else {
         return (
