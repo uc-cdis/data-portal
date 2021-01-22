@@ -158,6 +158,15 @@
     /* --------- */
 }
 
+.discovery-table__access-popover {
+    max-width: 500px;
+}
+
+.discovery-table__access-popover-text {
+    color: #7f7f7f;
+    font-size: 12px;
+}
+
 .discovery-modal {
     background-color: #fff;
     border-radius: 10px;

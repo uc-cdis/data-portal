@@ -13,6 +13,7 @@ import {
   Modal,
   Switch,
   Alert,
+  Popover,
 } from 'antd';
 
 if (!useArboristUI) {
@@ -21,6 +22,7 @@ if (!useArboristUI) {
 // DEV ONLY
 import config from './mock_config.json';
 import mock_data from './mock_mds_studies.json';
+const ARBORIST_READ_PRIV = 'read';
 // END DEV ONLY
 
 import { hostname, useArboristUI } from '../localconf';
@@ -235,10 +237,33 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
       title: 'Access',
       render: (_, record) => (
         record[accessibleFieldName]
-        ? <UnlockOutlined />
-        : <LockFilled />
-      ),
-    },
+        ? (
+          <Popover
+            overlayClassName='discovery-table__access-popover'
+            placement='topRight'
+            arrowPointAtCenter
+            title={`You have access to this study.`}
+            content={<div className='discovery-table__access-popover-text'>
+              You have <code>{ARBORIST_READ_PRIV}</code> access to <code>{record[config.minimal_field_mapping.authz_field]}</code>.
+            </div>}
+          >
+            <UnlockOutlined />
+          </Popover>
+        )
+        : (
+          <Popover
+            overlayClassName='discovery-table__access-popover'
+            placement='topRight'
+            arrowPointAtCenter
+            title={`You do not have access to this study.`}
+            content={<div className='discovery-table__access-popover-text'>
+              You don't have <code>{ARBORIST_READ_PRIV}</code> access to <code>{record[config.minimal_field_mapping.authz_field]}</code>.
+            </div>}
+          >
+            <LockFilled />
+          </Popover>
+        )
+      )},
   );
   // -----
 
