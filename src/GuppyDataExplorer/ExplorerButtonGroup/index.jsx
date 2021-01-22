@@ -352,7 +352,7 @@ class ExplorerButtonGroup extends React.Component {
     }
     this.props.downloadRawData(queryArgObj).then((res) => {
       if (res) {
-        const blob = new Blob([isJsonFormat ? JSON.stringify(res, null, 2) : res], { type: `text/${isJsonFormat ? 'json' : fileFormat.toLowerCase()}` });
+        const blob = new Blob([isJsonFormat ? JSON.stringify(res, null, 2) : res], { type: `text/${isJsonFormat ? 'json' : fileTypeKey}` });
         FileSaver.saveAs(blob, filename);
       } else {
         throw Error('Error when downloading data');
