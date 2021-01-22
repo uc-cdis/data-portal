@@ -313,8 +313,8 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
               title={'You do not have access to this study.'}
               content={
                 <div className='discovery-table__access-popover-text'>
-                You don&apost have <code>{ARBORIST_READ_PRIV}</code> access to
-                  <code>{record[config.minimal_field_mapping.authz_field]}</code>.
+                  <>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</>
+                  <><code>{record[config.minimal_field_mapping.authz_field]}</code>.</>
                 </div>
               }
             >
