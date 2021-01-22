@@ -1,28 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { uniq, sum } from 'lodash';
+import uniq from 'lodash/uniq';
+import sum from 'lodash/sum';
 import * as JsSearch from 'js-search';
-import { LockOutlined, LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, StarOutlined, StarFilled, StarTwoTone, CloseOutlined } from '@ant-design/icons';
+import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined } from '@ant-design/icons';
 import {
   Input,
   Table,
   Tag,
   Radio,
-  Checkbox,
-  Button,
   Space,
   Modal,
-  Switch,
   Alert,
   Popover,
 } from 'antd';
 // DEV ONLY
-import config from './mock_config.json';
-import mock_data from './mock_mds_studies.json';
+// import config from './mock_config.json';
+import mockData from './mock_mds_studies.json';
 // END DEV ONLY
 
-import { hostname, useArboristUI } from '../localconf';
+import { useArboristUI } from '../localconf';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 
+import { DiscoveryConfig } from './DiscoveryConfig';
 import './DiscoveryBeta.css';
 
 if (!useArboristUI) {
@@ -36,9 +35,10 @@ enum AccessLevel {
   UNACCESSIBLE = 'unaccessible',
 }
 
-const getTagColor = (tagCategory: string): string => {
+const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   const categoryConfig = config.tag_categories.find(category => category.name === tagCategory);
   if (categoryConfig === undefined) {
+    // eslint-disable-next-line no-console
     console.error(`Misconfiguration error: tag category ${tagCategory} not found in config. Check the 'tag_categories' section of the Discovery page config.`);
     return 'gray';
   }
@@ -50,7 +50,7 @@ const isAccesible = (resource: any, userAuthMapping: any): boolean => userHasMet
 const accessibleFieldName = '__accessible';
 
 const loadResources = async (): Promise<any> => {
-  const jsonResponse = mock_data;
+  const jsonResponse = mockData;
   const resources = Object.values(jsonResponse).map((entry: any) => entry.gen3_discovery);
   return Promise.resolve(resources);
 };
@@ -71,8 +71,7 @@ const renderAggregation = (aggregation: AggregationConfig, resources: any[] | nu
   case 'sum':
     return sum(fields).toLocaleString();
   case 'count':
-    const uniqueFields = uniq(fields);
-    return uniqueFields.length.toLocaleString();
+    return uniq(fields).length.toLocaleString();
   default:
     throw new Error(`Misconfiguration error: Unrecognized aggregation type ${type}. Check the 'aggregations' block of the Discovery page config.`);
   }
@@ -80,21 +79,22 @@ const renderAggregation = (aggregation: AggregationConfig, resources: any[] | nu
 
 // getTagsInCategory returns a list of the unique tags in resources which belong
 // to the specified category.
-const getTagsInCategory = (category: string, resources: any[] | null): string[] => {
-  if (!resources) {
-    return [];
-  }
-  const tagMap = {};
-  resources.forEach((resource) => {
-    const tagField = config.minimal_field_mapping.tags_list_field_name;
-    resource[tagField].forEach((tag) => {
-      if (tag.category === category) {
-        tagMap[tag.name] = true;
-      }
+const getTagsInCategory =
+  (category: string, resources: any[] | null, config: DiscoveryConfig): string[] => {
+    if (!resources) {
+      return [];
+    }
+    const tagMap = {};
+    resources.forEach((resource) => {
+      const tagField = config.minimal_field_mapping.tags_list_field_name;
+      resource[tagField].forEach((tag) => {
+        if (tag.category === category) {
+          tagMap[tag.name] = true;
+        }
+      });
     });
-  });
-  return Object.keys(tagMap);
-};
+    return Object.keys(tagMap);
+  };
 
 const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number' = 'string'): string => {
   switch (contentType) {
@@ -130,41 +130,101 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
   };
 };
 
-const filterByAccessLevel = (resources: any[], accessLevel: AccessLevel, accessibleProperty: string): any[] => {
-  switch (accessLevel) {
-  case AccessLevel.ACCESSIBLE:
-    return resources.filter(r => r[accessibleProperty]);
-  case AccessLevel.UNACCESSIBLE:
-    return resources.filter(r => !r[accessibleProperty]);
-  case AccessLevel.BOTH:
-    return resources;
-  default:
-    throw new Error(`Unrecognized access level ${accessLevel}.`);
-  }
-};
+const filterByAccessLevel =
+  (resources: any[], accessLevel: AccessLevel, accessibleProperty: string): any[] => {
+    switch (accessLevel) {
+    case AccessLevel.ACCESSIBLE:
+      return resources.filter(r => r[accessibleProperty]);
+    case AccessLevel.UNACCESSIBLE:
+      return resources.filter(r => !r[accessibleProperty]);
+    case AccessLevel.BOTH:
+      return resources;
+    default:
+      throw new Error(`Unrecognized access level ${accessLevel}.`);
+    }
+  };
 
 const filterByTags = (resources: any[], selectedTags: any): any[] => {
   // if no tags selected, show all resources
-  if (Object.values(selectedTags).every(selected => selected != true)) {
+  if (Object.values(selectedTags).every(selected => !selected)) {
     return resources;
   }
   return resources.filter(resource => resource.tags.some(tag => selectedTags[tag.name]));
 };
 
 interface DiscoveryBetaProps {
-  // config: any
+  config: DiscoveryConfig
   userAuthMapping: any
   params: any // from React Router
 }
 
-const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
-  const { userAuthMapping } = props;
+const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: DiscoveryBetaProps) => {
+  const { userAuthMapping, config } = props;
+
+  const [jsSearch, setJsSearch] = useState(null);
+  const [allResources, setAllResources] = useState(null);
+  const [searchFilteredResources, setSearchFilteredResources] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalData, setModalData] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [accessLevel, setAccessLevel] = useState(AccessLevel.BOTH);
+  const [selectedTags, setSelectedTags] = useState({});
+
+  useEffect(() => {
+    // Load resources and index them
+    loadResources().then((rs) => {
+      // Add a property to resources showing whether user has access to resources
+      const resources = rs.map(resource => ({
+        ...resource,
+        [accessibleFieldName]: isAccesible(resource, userAuthMapping),
+      }));
+
+      // Initialize JS search.
+      // ------------------------
+      const search = new JsSearch.Search(config.minimal_field_mapping.uid);
+      search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
+      // Enable search only over text fields present in the table
+      config.study_columns.forEach((column) => {
+        if (!column.content_type || column.content_type === 'string') {
+          search.addIndex(column.field);
+        }
+      });
+      // Also enable search over preview field if present
+      if (config.study_preview_field) {
+        search.addIndex(config.study_preview_field.field);
+      }
+      // Index the resources
+      search.addDocuments(resources);
+      // expose the search function
+      setJsSearch(search);
+      // -----------------------
+
+      setAllResources(resources);
+      setSearchFilteredResources(resources);
+
+      // If opening to a study by default, open that study
+      if (props.params && props.params.studyUID) {
+        const defaultModalData = resources.find(
+          r => r[config.minimal_field_mapping.uid] === props.params.studyUID);
+        if (defaultModalData) {
+          setModalData(defaultModalData);
+          setModalVisible(true);
+        } else {
+          // eslint-disable-next-line no-console
+          console.error(`Could not find study with UID ${props.params.studyUID}.`);
+        }
+      }
+    }).catch((err) => {
+      // FIXME how to handle this / retry?
+      throw new Error(err);
+    });
+  }, []);
 
   // Set up table columns
   // -----
   const columns = config.study_columns.map(column => ({
     title: column.name,
-    render: (text, record, index) => {
+    render: (_, record) => {
       const value = record[column.field];
       if (value === undefined) {
         if (column.error_if_not_available !== false) {
@@ -188,12 +248,11 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
   columns.push(
     {
       title: 'Tags',
-      dataIndex: 'tags',
       render: (_, record) => (
         <React.Fragment>
           {record.tags.map(({ name, category }) => {
             const isSelected = !!selectedTags[name];
-            const color = getTagColor(category);
+            const color = getTagColor(category, config);
             return (
               <Tag
                 key={record.name + name}
@@ -239,7 +298,8 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
               arrowPointAtCenter
               title={'You have access to this study.'}
               content={<div className='discovery-table__access-popover-text'>
-              You have <code>{ARBORIST_READ_PRIV}</code> access to <code>{record[config.minimal_field_mapping.authz_field]}</code>.
+                <>You have <code>{ARBORIST_READ_PRIV}</code> access to</>
+                <><code>{record[config.minimal_field_mapping.authz_field]}</code>.</>
               </div>}
             >
               <UnlockOutlined />
@@ -251,9 +311,12 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
               placement='topRight'
               arrowPointAtCenter
               title={'You do not have access to this study.'}
-              content={<div className='discovery-table__access-popover-text'>
-              You don't have <code>{ARBORIST_READ_PRIV}</code> access to <code>{record[config.minimal_field_mapping.authz_field]}</code>.
-              </div>}
+              content={
+                <div className='discovery-table__access-popover-text'>
+                You don&apost have <code>{ARBORIST_READ_PRIV}</code> access to
+                  <code>{record[config.minimal_field_mapping.authz_field]}</code>.
+                </div>
+              }
             >
               <LockFilled />
             </Popover>
@@ -262,88 +325,35 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
   );
   // -----
 
-  const [jsSearch, setJsSearch] = useState(null);
-  const [resources, setResources] = useState(null);
-  const [searchFilteredResources, setSearchFilteredResources] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalData, setModalData] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [accessLevel, setAccessLevel] = useState(AccessLevel.BOTH);
-  const [selectedTags, setSelectedTags] = useState({});
-
-  useEffect(() => {
-    // Load resources and index them
-    loadResources().then((rs) => {
-      // Add a property to resources showing whether user has access to resources
-      const resources = rs.map(resource => ({
-        ...resource,
-        [accessibleFieldName]: isAccesible(resource, userAuthMapping),
-      }));
-
-      // Initialize JS search.
-      // ------------------------
-      const jsSearch = new JsSearch.Search(config.minimal_field_mapping.uid);
-      jsSearch.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
-      // Enable search only over text fields present in the table
-      config.study_columns.forEach((column) => {
-        if (!column.content_type || column.content_type === 'string') {
-          jsSearch.addIndex(column.field);
-        }
-      });
-      // Also enable search over preview field if present
-      if (config.study_preview_field) {
-        jsSearch.addIndex(config.study_preview_field.field);
-      }
-      // Index the resources
-      jsSearch.addDocuments(resources);
-      // expose the search function
-      setJsSearch(jsSearch);
-      // -----------------------
-
-      setResources(resources);
-      setSearchFilteredResources(resources);
-
-      // If opening to a study by default, open that study
-      if (props.params && props.params.studyUID) {
-        const modalData = resources.find(r => r[config.minimal_field_mapping.uid] === props.params.studyUID);
-        if (modalData) {
-          setModalData(modalData);
-          setModalVisible(true);
-        } else {
-          console.error(`Could not find study with UID ${props.params.studyUID}.`);
-        }
-      }
-    }).catch((err) => {
-      // FIXME how to handle this / retry?
-      throw new Error(err);
-    });
-  }, []);
 
   const handleSearchChange = (ev) => {
-    const searchTerm = ev.currentTarget.value;
-    setSearchTerm(searchTerm);
-    if (searchTerm === '') {
-      setSearchFilteredResources(resources);
+    const value = ev.currentTarget.value;
+    setSearchTerm(value);
+    if (value === '') {
+      setSearchFilteredResources(allResources);
       return;
     }
     if (!jsSearch) {
       return;
     }
-    const results = jsSearch.search(searchTerm);
+    const results = jsSearch.search(value);
     setSearchFilteredResources(results);
   };
 
   const handleAccessLevelChange = (ev) => {
-    const accessLevel = ev.target.value as AccessLevel;
-    setAccessLevel(accessLevel);
+    const value = ev.target.value as AccessLevel;
+    setAccessLevel(value);
   };
 
   const visibleResources = searchFilteredResources !== null
-    ? filterByTags(filterByAccessLevel(searchFilteredResources, accessLevel, accessibleFieldName), selectedTags)
+    ? filterByTags(
+      filterByAccessLevel(searchFilteredResources, accessLevel, accessibleFieldName),
+      selectedTags,
+    )
     : null;
 
   return (<div className='discovery-container'>
-    <h1 className='discovery-page-title'>DISCOVERY</h1>
+    <h1 className='discovery-page-title'>{'Discovery'}</h1>
     { visibleResources
       ? (<React.Fragment>
         <div className='discovery-header'>
@@ -369,7 +379,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
                   if (category.display === false) {
                     return null;
                   }
-                  const tags = getTagsInCategory(category.name, resources);
+                  const tags = getTagsInCategory(category.name, allResources, config);
                   return (<div className='discovery-header__tag-group' key={category.name}>
                     <h5>{category.name}</h5>
                     { tags.map(tag =>
@@ -444,9 +454,10 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
             })}
             dataSource={visibleResources}
             expandable={config.study_preview_field && ({
-              expandedRowKeys: visibleResources.map(r => r[config.minimal_field_mapping.uid]), // expand all rows
+              // expand all rows
+              expandedRowKeys: visibleResources.map(r => r[config.minimal_field_mapping.uid]),
               expandedRowRender: (record) => {
-                const value = record[config.study_preview_field.field];
+                const studyPreviewText = record[config.study_preview_field.field];
                 const renderValue = (value: string | undefined): React.ReactNode => {
                   if (!value) {
                     if (config.study_preview_field.include_if_not_available) {
@@ -456,7 +467,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
                   if (searchTerm) {
                     // get index of searchTerm match
                     const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
-                    if (matchIndex == -1) {
+                    if (matchIndex === -1) {
                       // if searchterm doesn't match this record, don't highlight anything
                       return value;
                     }
@@ -478,12 +489,14 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
                 return (
                   <div
                     className='discovery-table__expanded-row-content'
+                    role='button'
+                    tabIndex={0}
                     onClick={() => {
                       setModalData(record);
                       setModalVisible(true);
                     }}
                   >
-                    {renderValue(value)}
+                    {renderValue(studyPreviewText)}
                   </div>
                 );
               },
@@ -510,14 +523,18 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
     >
       <Space direction='vertical' size='large'>
         { modalData && modalData[accessibleFieldName]
-          ? (<Alert
-            type='success'
+          ? (
+            <Alert
+              type='success'
               message={<><UnlockOutlined /> You have access to this study.</>}
-          />)
-          : (<Alert
+            />
+          )
+          : (
+            <Alert
               type='warning'
               message={<><LockFilled /> You do not have access to this study.</>}
-          />)
+            />
+          )
         }
         { config.study_page_fields.fields_to_show.map((fieldGroup, i) => (
           <Space key={i} direction='vertical' className='discovery-modal__attribute-group'>
