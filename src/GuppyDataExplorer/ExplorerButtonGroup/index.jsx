@@ -344,11 +344,15 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   downloadData = (filename, fileFormat) => () => {
-    const fileTypeKey = fileFormat.toUpperCase();
-    const isJsonFormat = fileTypeKey === 'JSON' || fileTypeKey === 'DATA';
-    this.props.downloadRawData({ format: fileTypeKey }).then((res) => {
+    const fileTypeKey = fileFormat.toLowerCase();
+    const isJsonFormat = fileTypeKey === 'json' || fileTypeKey === 'data';
+    const queryArgObj = {};
+    if (fileTypeKey !== 'data') {
+      queryArgObj.format = fileTypeKey;
+    }
+    this.props.downloadRawData(queryArgObj).then((res) => {
       if (res) {
-        const blob = new Blob([isJsonFormat ? JSON.stringify(res, null, 2) : res], { type: `text/${isJsonFormat ? 'json' : fileFormat.toLowerCase()}` });
+        const blob = new Blob([isJsonFormat ? JSON.stringify(res, null, 2) : res], { type: `text/${isJsonFormat ? 'json' : fileTypeKey}` });
         FileSaver.saveAs(blob, filename);
       } else {
         throw Error('Error when downloading data');
