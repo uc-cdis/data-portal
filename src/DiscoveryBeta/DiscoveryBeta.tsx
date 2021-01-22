@@ -186,7 +186,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
             return highlightSearchTerm(value, searchTerm).highlighted;
           }
         }
-        return value;
+        return renderFieldContent(value, column.content_type);
       }
     })
   );

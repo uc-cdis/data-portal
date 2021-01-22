@@ -9,11 +9,7 @@
  * are not children of .discovery-container.
  */
 .discovery-container button, .ant-modal-root button {
-    /* border-radius: initial; */
     width: initial;
-    /* height: initial; */
-    /* font-size: initial; */
-    /* font-weight: initial; */
     display: initial;
     vertical-align: initial;
     cursor: initial;
@@ -35,7 +31,7 @@
 }
 
 .discovery-header {
-    border-radius: 10;
+    border-radius: 5px;
     background-color: #fff;
     margin-bottom: 36px;
     height: 191px;
@@ -54,6 +50,7 @@
 
 .discovery-header__stat {
     text-align: center;
+    cursor: default;
 }
 
 .discovery-header__stat-number {
@@ -71,6 +68,7 @@
 }
 
 .discovery-header__tags-header {
+    cursor: default;
     font-weight: normal;
     font-size: 18px;
     color: #555;
@@ -108,7 +106,7 @@
 }
 
 .discovery-table-container {
-    border-radius: 10;
+    border-radius: 5px;
     background-color: #fff;
     padding: 20px;
     overflow-x: auto;
@@ -138,7 +136,6 @@
 
 /* some light css hacks here to override antd default expanded row styles. */
 .discovery-table__expanded-row > td.ant-table-cell {
-    background-color: #fff;
     top: -15px;
     color: #7f7f7f;
 }
