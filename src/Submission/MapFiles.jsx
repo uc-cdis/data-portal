@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import moment from 'moment';
+import pLimit from 'p-limit';
+import _ from 'lodash';
 import { AutoSizer, Column, Table } from 'react-virtualized';
+import { Switch, Modal, Typography, Space, Collapse, List } from 'antd';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
@@ -11,12 +14,17 @@ import CheckBox from '../components/CheckBox';
 import Spinner from '../components/Spinner';
 import StatusReadyIcon from '../img/icons/status_ready.svg';
 import CloseIcon from '../img/icons/cross.svg';
+import sessionMonitor from '../SessionMonitor';
 import { humanFileSize } from '../utils.js';
 import './MapFiles.less';
+
+const { Text } = Typography;
+const { Panel } = Collapse;
 
 const SET_KEY = 'did';
 const ROW_HEIGHT = 70;
 const HEADER_HEIGHT = 70;
+const CONCURRENCY_LIMIT = 10;
 
 class MapFiles extends React.Component {
   constructor(props) {
@@ -31,6 +39,12 @@ class MapFiles extends React.Component {
       sortedDates: [],
       message,
       loading: true,
+      deleteFeature: false,
+      deletionTotalCount: 0,
+      deletionCounter: 0,
+      deletionFailCounter: 0,
+      deletionErrorList: [],
+      showDeletePopup: false,
     };
   }
 
@@ -54,12 +68,58 @@ class MapFiles extends React.Component {
     this.props.history.push('/submission/map');
   }
 
+  onDeletion = () => {
+    const flatFiles = this.flattenFiles(this.state.selectedFilesByGroup);
+    const limit = pLimit(CONCURRENCY_LIMIT);
+    const promises = [];
+    this.setState({
+      showDeletePopup: true,
+      deletionCounter: 0,
+      deletionFailCounter: 0,
+      deletionTotalCount: flatFiles.length },
+    () => {
+      flatFiles.forEach((file) => {
+        limit(() => {
+          const promise = this.props.deleteFile(file).catch((error) => {
+            this.setState(prevState => ({
+              deletionErrorList: [...prevState.deletionErrorList, error.message],
+              deletionFailCounter: prevState.deletionFailCounter + 1,
+            }));
+          });
+          this.setState(prevState => ({
+            deletionCounter: prevState.deletionCounter + 1,
+          }));
+          sessionMonitor.updateUserActivity();
+          promises.push(promise);
+        });
+      });
+    });
+    Promise.all(promises);
+  }
+
+  onClosePopup = () => {
+    this.props.fetchUnmappedFiles(this.props.user.username);
+    this.setState({
+      showDeletePopup: false,
+      deletionTotalCount: 0,
+      deletionCounter: 0,
+      deletionFailCounter: 0,
+      deletionErrorList: [],
+    });
+  }
+
   onUpdate = () => {
     this.setState({
       loading: false,
       filesByDate: this.groupUnmappedFiles(),
     }, () => this.createFileMapByGroup());
   }
+
+  onFeatureToggle = () => {
+    this.setState({
+      deleteFeature: !(this.state.deleteFeature),
+    }, () => this.createFileMapByGroup());
+  };
 
   getSetSize = set => Object.keys(set).length
 
@@ -136,7 +196,8 @@ class MapFiles extends React.Component {
     const selectedMap = {};
     let index = 0;
     this.state.sortedDates.forEach((date) => {
-      const filesToAdd = this.state.filesByDate[date].filter(file => this.isFileReady(file));
+      const filesToAdd = this.state.filesByDate[date].filter(file => this.isFileReady(file)
+      || this.state.deleteFeature);
       unselectedMap[index] = this.createSet(SET_KEY, filesToAdd);
       selectedMap[index] = {};
       index += 1;
@@ -164,7 +225,8 @@ class MapFiles extends React.Component {
       this.setState(prevState => ({
         selectedFilesByGroup: this.removeFromMap(prevState.selectedFilesByGroup, index, file.did),
       }));
-    } else if (this.isFileReady(file)) { // file status == ready, so it is selectable
+    } else if (this.isFileReady(file)
+    || this.state.deleteFeature) { // file status == ready or in delete mode, so it is selectable
       this.setState(prevState => ({
         selectedFilesByGroup: this.addToMap(prevState.selectedFilesByGroup, index, file, file.did),
       }));
@@ -195,7 +257,16 @@ class MapFiles extends React.Component {
   }
 
   render() {
-    const buttons = [
+    const buttons = this.state.deleteFeature ? [
+      <Button
+        onClick={this.onDeletion}
+        label={!this.isMapEmpty(this.state.selectedFilesByGroup) ? `Delete File Records (${this.flattenFiles(this.state.selectedFilesByGroup).length})` : 'Delete File Records'}
+        rightIcon='delete'
+        buttonType='secondary'
+        className='g3-icon g3-icon--lg'
+        enabled={!this.isMapEmpty(this.state.selectedFilesByGroup)}
+      />,
+    ] : [
       <Button
         onClick={this.onCompletion}
         label={!this.isMapEmpty(this.state.selectedFilesByGroup) ? `Map Files (${this.flattenFiles(this.state.selectedFilesByGroup).length})` : 'Map Files'}
@@ -205,6 +276,18 @@ class MapFiles extends React.Component {
         enabled={!this.isMapEmpty(this.state.selectedFilesByGroup)}
       />,
     ];
+    // add a toggle before buttons
+    buttons.unshift(
+      <div className='map-files__mode-switch'>
+        Deletion Mode
+        <Switch
+          className='map-files__switch'
+          checkedChildren='on'
+          unCheckedChildren='off'
+          onChange={this.onFeatureToggle}
+        />
+      </div>,
+    );
 
     const { sortedDates, filesByDate } = this.state;
 
@@ -230,6 +313,43 @@ class MapFiles extends React.Component {
           scrollPosition={248}
           onScroll={this.onScroll}
         />
+        {
+          this.state.showDeletePopup &&
+          (
+            <Modal
+              title='Deleting File Records'
+              visible={this.state.showDeletePopup}
+              closable={false}
+              onCancel={this.onClosePopup}
+              footer={[
+                <Button
+                  key='modal-close-button'
+                  label={'Close'}
+                  buttonType='primary'
+                  onClick={this.onClosePopup}
+                />,
+              ]}
+            >
+              <Space direction='vertical' style={{ width: '100%' }}>
+                <Text>{`Deleting file ${this.state.deletionCounter} of ${this.state.deletionTotalCount}`}</Text>
+                <Text type='success'>{`Succeeded: ${this.state.deletionTotalCount - this.state.deletionFailCounter}`}</Text>
+                <Text type='danger'>{`Failed: ${this.state.deletionFailCounter}`}</Text>
+                {(this.state.deletionErrorList.length > 0) &&
+                (
+                  <Collapse style={{ width: '100%' }}>
+                    <Panel header='Error messages for failed deletions' key='1'>
+                      <List
+                        size='small'
+                        dataSource={this.state.deletionErrorList}
+                        renderItem={item => <List.Item>{item}</List.Item>}
+                      />
+                    </Panel>
+                  </Collapse>
+                )}
+              </Space>
+            </Modal>
+          )
+        }
         <div className={'map-files__tables'.concat(this.state.isScrolling ? ' map-files__tables--scrolling' : '')}>
           { this.state.loading ? <Spinner /> : null }
           {
@@ -266,6 +386,11 @@ class MapFiles extends React.Component {
                           headerRenderer={() => (
                             <CheckBox
                               id={`${groupIndex}`}
+                              // crazy logic to enable select all checkbox
+                              isEnabled={(!_.isEmpty(this.state.allFilesByGroup)
+                                && !_.isEmpty(this.state.allFilesByGroup[0]))
+                                || (!_.isEmpty(this.state.selectedFilesByGroup)
+                                && !_.isEmpty(this.state.selectedFilesByGroup[0]))}
                               isSelected={this.isSelectAll(groupIndex)}
                               onChange={() => this.toggleSelectAll(groupIndex)}
                             />
@@ -276,7 +401,7 @@ class MapFiles extends React.Component {
                               item={files[rowIndex]}
                               isSelected={this.isSelected(groupIndex, files[rowIndex].did)}
                               onChange={() => this.toggleCheckBox(groupIndex, files[rowIndex])}
-                              isEnabled={files[rowIndex].status === 'Ready'}
+                              isEnabled={this.state.deleteFeature || files[rowIndex].status === 'Ready'}
                               disabledText={'This file is not ready to be mapped yet.'}
                             />
                           )}
@@ -329,6 +454,7 @@ MapFiles.propTypes = {
   unmappedFiles: PropTypes.array,
   fetchUnmappedFiles: PropTypes.func.isRequired,
   mapSelectedFiles: PropTypes.func.isRequired,
+  deleteFile: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
