@@ -199,6 +199,8 @@ function buildConfig(opts) {
     covid19DashboardConfig.dataUrl = ensureTrailingSlash(covid19DashboardConfig.dataUrl || '');
   }
 
+  const discoveryConfig = config.discoveryConfigBETA;
+
   const workspacePageDescription = config.workspacePageDescription;
 
   const colorsForCharts = {
@@ -394,6 +396,7 @@ function buildConfig(opts) {
     requestorPath,
     studyViewerConfig,
     covid19DashboardConfig,
+    discoveryConfig,
     mapboxAPIToken,
     auspiceUrl,
     workspacePageDescription,

@@ -1,12 +1,15 @@
 import { connect } from 'react-redux';
 import DiscoveryBeta from './DiscoveryBeta';
 
-// DEV ONLY
-import mockConfig from './mock_config.json';
+import { discoveryConfig } from '../localconf';
+
+if (!discoveryConfig) {
+  throw new Error('Could not find configuration for Discovery page. Check the portal config.');
+}
 
 const mapStateToProps = state => ({
   userAuthMapping: state.userAuthMapping,
-  config: mockConfig,
+  config: discoveryConfig,
 });
 
 export default connect(mapStateToProps)(DiscoveryBeta);
