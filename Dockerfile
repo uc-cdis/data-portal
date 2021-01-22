@@ -31,7 +31,6 @@ WORKDIR /data-portal
 RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}\";" >src/versions.js \
     && VERSION=`git describe --always --tags` && echo "export const portalVersion =\"${VERSION}\";" >>src/versions.js \
     && /bin/rm -rf .git \
-    && /bin/rm -rf node_modules \
     && npm config set unsafe-perm=true && npm ci \
     && npm run relay \
     && npm run params \
