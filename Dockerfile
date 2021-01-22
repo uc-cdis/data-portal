@@ -32,10 +32,6 @@ RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}
     && VERSION=`git describe --always --tags` && echo "export const portalVersion =\"${VERSION}\";" >>src/versions.js \
     && /bin/rm -rf .git \
     && npm config set unsafe-perm=true && npm ci \
-    && npm run relay \
-    && npm run params \
-    # see https://stackoverflow.com/questions/48387040/nodejs-recommended-max-old-space-size
-    && NODE_OPTIONS=--max-old-space-size=2048 NODE_ENV=production time npx webpack \
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
 
