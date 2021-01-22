@@ -113,9 +113,24 @@ class Covid19Dashboard extends React.Component {
           <XAxis
             dataKey='date'
             tick={<CustomizedXAxisTick />}
-            interval={1}
+            interval={7}
           />
           <YAxis
+            label={{ 
+              value: locationPopupData.maxes.recovered ? 'confirmed/recovered' : 'confirmed', 
+              angle: -90, 
+              position: 'insideLeft' 
+            }}
+            yAxisId='left'
+            type='number'
+            domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
+            tickFormatter={val => Number(val).toLocaleString()}
+            fontSize={10}
+          />
+          <YAxis
+            label={{ value: 'deaths', angle: 90, position: 'insideRight' }}
+            yAxisId='right'
+            orientation='right'
             type='number'
             domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
             tickFormatter={val => Number(val).toLocaleString()}
@@ -124,11 +139,29 @@ class Covid19Dashboard extends React.Component {
           <Tooltip content={this.renderLocationPopupTooltip} />
           <Legend />
 
-          <Line type='monotone' dataKey='confirmed' stroke='#8884d8' dot={false} />
+          <Line
+            yAxisId='left'
+            type='monotone'
+            dataKey='confirmed'
+            stroke='#8884d8'
+            dot={false}
+          />
           { locationPopupData.maxes.recovered &&
-            <Line type='monotone' dataKey='recovered' stroke='#00B957' dot={false} />
+            <Line
+              yAxisId='left'
+              type='monotone'
+              dataKey='recovered'
+              stroke='#00B957'
+              dot={false}
+            />
           }
-          <Line type='monotone' dataKey='deaths' stroke='#aa5e79' dot={false} />
+          <Line
+            yAxisId='right'
+            type='monotone'
+            dataKey='deaths'
+            stroke='#aa5e79'
+            dot={false}
+          />
         </LineChart>
       </ResponsiveContainer>)
       : <Spinner />;
