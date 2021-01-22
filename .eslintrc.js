@@ -43,10 +43,10 @@ module.exports = {
       "react/jsx-indent": "off",
       "react/forbid-prop-types": "off",
       "react/prefer-stateless-function": "off",
-      "react/jsx-curly-brace-presence": ["off", "ignore"],
-      "function-paren-newline": ["off", "ignore"],
-      "react/no-array-index-key" : ["off, ignore"],
-      "react/destructuring-assignment" : ["off, ignore"],
+      "react/jsx-curly-brace-presence": ["off"],
+      "function-paren-newline": ["off"],
+      "react/no-array-index-key" : ["off"],
+      "react/destructuring-assignment" : ["off"],
   },
   "overrides": [
     {
@@ -125,6 +125,32 @@ module.exports = {
       "files": ["src/components/InputWithIcon.jsx"],
       "rules": {
         "react/no-unused-prop-types": "off"
+      }
+    },
+    // Linting settings for Typescript
+    {
+      files: ["*.ts", "*.tsx"],
+      parser: "@typescript-eslint/parser",
+      plugins: ["@typescript-eslint"],
+      // extends: [
+      //     'plugin:react/recommended',
+      //     'plugin:@typescript-eslint/recommended',
+      //     'plugin:prettier/recommended'
+      // ],
+      parserOptions: {
+          ecmaversion: 2018,
+          sourceType: 'module',
+          ecmaFeatures: {
+              jsx: true,
+          },
+      },
+      settings: {
+          react: {
+              version: 'detect',
+          },
+      },
+      rules: {
+          '@typescript-eslint/no-explicit-any': 'off'
       }
     }
   ],
