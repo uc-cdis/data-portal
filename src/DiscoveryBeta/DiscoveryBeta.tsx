@@ -423,6 +423,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
               prefix={<SearchOutlined />}
               value={searchTerm}
               onChange={handleSearchChange}
+              allowClear
             />
             <div className='disvovery-table__controls'>
               <Radio.Group
