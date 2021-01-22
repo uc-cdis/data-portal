@@ -12,6 +12,7 @@ import {
   Space,
   Modal,
   Switch,
+  Alert,
 } from 'antd';
 
 if (!useArboristUI) {
@@ -493,6 +494,16 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props) => {
       footer={false}
     >
           <Space direction='vertical' size='large'>
+            { modalData && modalData[accessibleFieldName]
+              ? (<Alert
+                type='success'
+                message={<><UnlockOutlined/> You have access to this study.</>}
+              />)
+              : (<Alert
+                type='warning'
+                message={<><LockFilled/> You do not have access to this study.</>}
+              />)
+            }
             { config.study_page_fields.fields_to_show.map( (fieldGroup, i) => (
               <Space key={i} direction='vertical' className='discovery-modal__attribute-group'>
                 { fieldGroup.include_name &&
