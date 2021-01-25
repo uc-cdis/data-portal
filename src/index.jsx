@@ -384,28 +384,31 @@ async function init() {
                       />)
                     }
                   />
-                  <Route
-                    exact
-                    path='/discovery'
-                    component={
-                      props => (<ProtectedContent
-                        public
-                        component={DiscoveryBeta}
-                        {...props}
-                      />)
-                    }
-                  />
-                  <Route
-                    exact
-                    path='/discovery/:studyUID'
-                    component={
-                      props => (<ProtectedContent
-                        public
-                        component={DiscoveryBeta}
-                        {...props}
-                      />)
-                    }
-                  />
+                  {isEnabled('discovery') && <React.Fragment>
+                    <Route
+                      exact
+                      path='/discovery'
+                      component={
+                        props => (<ProtectedContent
+                          public
+                          component={DiscoveryBeta}
+                          {...props}
+                        />)
+                      }
+                    />
+                    <Route
+                      exact
+                      path='/discovery/:studyUID'
+                      component={
+                        props => (<ProtectedContent
+                          public
+                          component={DiscoveryBeta}
+                          {...props}
+                        />)
+                      }
+                    />
+                  </React.Fragment>
+                  }
                   <Route
                     path='/not-found'
                     component={NotFound}

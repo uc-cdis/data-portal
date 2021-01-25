@@ -199,7 +199,7 @@ function buildConfig(opts) {
     covid19DashboardConfig.dataUrl = ensureTrailingSlash(covid19DashboardConfig.dataUrl || '');
   }
 
-  const discoveryConfig = config.discoveryConfigBETA;
+  const discoveryConfig = config.discoveryConfig;
 
   const workspacePageDescription = config.workspacePageDescription;
 
