@@ -10,7 +10,6 @@
     "@babel/preset-react"
   ],
   "plugins": [
-    "dev-expression",
     ["relay", { "compat": true, "schema": "data/schema.json" }],
     "@babel/plugin-transform-runtime"
   ],
