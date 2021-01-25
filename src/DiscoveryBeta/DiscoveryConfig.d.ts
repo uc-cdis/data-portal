@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 export interface DiscoveryConfig {
+    pageTitle?: string,
     features: {
         exploration_integration: {
             enabled: boolean // not supported
@@ -67,16 +68,7 @@ export interface DiscoveryConfig {
             {
                 group_name?: string
                 include_name?: boolean,
-                fields: [
-                    {
-                        name: string
-                        field: string
-                        content_type: 'string' | 'number'
-                        include_name?: boolean
-                        include_if_not_available?: boolean
-                        value_if_not_available?: string | number
-                    }
-                ]
+                fields: StudyPageFieldConfig[]
             }
         ]
     },
@@ -92,4 +84,12 @@ export interface DiscoveryConfig {
             display: boolean
         }
     ]
+}
+export interface StudyPageFieldConfig {
+    name: string
+    field: string
+    content_type: 'string' | 'number' | 'paragraphs'
+    include_name?: boolean
+    include_if_not_available?: boolean
+    value_if_not_available?: string | number
 }
