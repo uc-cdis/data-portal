@@ -12,6 +12,13 @@ export function fetchCohorts() {
     method: 'GET',
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
+    if (
+      data === null ||
+      typeof data !== 'object' ||
+      !data.hasOwnProperty('searches') ||
+      !Array.isArray(data.searches)
+    )
+      throw 'Error: Incorrect Response Data';
     return data.searches;
   });
 }
