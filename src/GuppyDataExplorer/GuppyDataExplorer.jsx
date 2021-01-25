@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
+import GuppyWrapper from '@pcdc/guppy/dist/components/GuppyWrapper';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
+import ExplorerCohort from './ExplorerCohort';
 import { capitalizeFirstLetter } from '../utils';
 import {
   GuppyConfigType,
@@ -20,6 +21,7 @@ class GuppyDataExplorer extends React.Component {
     this.state = {
       aggsData: {},
       filter: {},
+      initialAppliedFilters: {},
     };
     this._isMounted = false;
   }
@@ -34,6 +36,10 @@ class GuppyDataExplorer extends React.Component {
 
   handleReceiveNewAggsData = (newAggsData) => {
     this._isMounted && this.setState({ aggsData: newAggsData });
+  };
+
+  updateInitialAppliedFilters = ({ filters }) => {
+    this.setState({ initialAppliedFilters: filters });
   };
 
   render() {
@@ -61,6 +67,11 @@ class GuppyDataExplorer extends React.Component {
             getAccessButtonLink={this.props.getAccessButtonLink}
             hideGetAccessButton={this.props.hideGetAccessButton}
           />
+          <ExplorerCohort
+            className='guppy-data-explorer__cohort'
+            onOpenCohort={this.updateInitialAppliedFilters}
+            onDeleteCohort={this.updateInitialAppliedFilters}
+          />
           <ExplorerFilter
             className='guppy-data-explorer__filter'
             guppyConfig={this.props.guppyConfig}
@@ -68,6 +79,7 @@ class GuppyDataExplorer extends React.Component {
             hideGetAccessButton={this.props.hideGetAccessButton}
             tierAccessLevel={this.props.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
+            initialAppliedFilters={this.state.initialAppliedFilters}
           />
           <ExplorerVisualization
             className='guppy-data-explorer__visualization'

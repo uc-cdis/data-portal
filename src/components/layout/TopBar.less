@@ -1,14 +1,9 @@
 .top-bar {
-  width: 100%;
-  min-height: 40px;
-  background-color: var(--g3-color__base-blue);
-}
-
-.top-bar__header {
-  background-color: var(--g3-color__base-blue);
+  background-color: var(--pcdc-color__primary);
   overflow: hidden;
   vertical-align: middle;
   margin: auto;
+  min-height: 40px;
   width: 100%;
 }
 
@@ -26,8 +21,9 @@
 
 @media screen and (max-width: 1090px) {
   .top-bar__nav {
-    justify-content: right;
+    justify-content: flex-end;
   }
+
   .top-bar__nav--hidden-lg-and-down {
     display: none;
   }
@@ -41,7 +37,7 @@
 }
 
 .top-bar__link {
-  border-right: 2px solid #6896c6;
+  border-right: 2px solid var(--pcdc-color__primary-light);
   height: 20px;
   display: inline-block;
   text-align: center;

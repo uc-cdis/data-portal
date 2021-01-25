@@ -15,7 +15,6 @@ const plugins = [
   new webpack.EnvironmentPlugin(['LOGOUT_INACTIVE_USERS']),
   new webpack.EnvironmentPlugin(['WORKSPACE_TIMEOUT_IN_MINUTES']),
   new webpack.EnvironmentPlugin(['REACT_APP_PROJECT_ID']),
-  new webpack.EnvironmentPlugin(['REACT_APP_ARRANGER_API']),
   new webpack.EnvironmentPlugin(['REACT_APP_DISABLE_SOCKET']),
   new webpack.EnvironmentPlugin(['TIER_ACCESS_LEVEL']),
   new webpack.EnvironmentPlugin(['TIER_ACCESS_LIMIT']),
@@ -34,9 +33,6 @@ const plugins = [
         process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480,
       REACT_APP_PROJECT_ID: JSON.stringify(
         process.env.REACT_APP_PROJECT_ID || 'search'
-      ),
-      REACT_APP_ARRANGER_API: JSON.stringify(
-        process.env.REACT_APP_ARRANGER_API || '/api/v0/flat-search'
       ),
       REACT_APP_DISABLE_SOCKET: JSON.stringify(
         process.env.REACT_APP_DISABLE_SOCKET || 'true'
@@ -74,7 +70,9 @@ const plugins = [
 let optimization = {};
 let devtool = false;
 
-if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
+const isProduction =
+  process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto';
+if (isProduction) {
   // optimization for production mode
   optimization = {
     splitChunks: {
@@ -89,22 +87,17 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
 module.exports = {
   entry: ['babel-polyfill', './src/index.jsx'],
   target: 'web',
+  bail: isProduction,
   externals: [
     nodeExternals({
-      whitelist: ['graphiql', 'graphql-language-service-parser'],
+      allowlist: ['graphiql', 'graphql-language-service-parser'],
     }),
   ],
-  mode:
-    process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto'
-      ? 'production'
-      : 'development',
+  mode: isProduction ? 'production' : 'development',
   output: {
     path: __dirname,
     filename: 'bundle.js',
-    publicPath:
-      process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto'
-        ? basename
-        : 'https://localhost:9443/',
+    publicPath: isProduction ? basename : 'https://localhost:9443/',
   },
   optimization,
   devtool,
@@ -117,6 +110,9 @@ module.exports = {
     hot: true,
     port: 9443,
     https: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
   },
   module: {
     rules: [
@@ -133,14 +129,14 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader',
+        loader: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
         test: /\.svg$/,
         loaders: ['babel-loader', 'react-svg-loader'],
       },
       {
-        test: /\.(png|jpg|gif|woff|ttf|eot)$/,
+        test: /\.(png|jpg|gif|woff|ttf|eot|woff2)$/,
         loaders: 'url-loader',
         query: {
           limit: 8192,

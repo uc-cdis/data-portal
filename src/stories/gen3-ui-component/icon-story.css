@@ -1,0 +1,29 @@
+.icon-demo {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.icon-demo__card {
+  width: 150px;
+  height: 150px;
+  background-color: #fafbfc;
+  margin: 10px;
+  padding: 10px;
+}
+
+.icon-demo__icon-wrap {
+  height: 50%;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+}
+
+.icon-demo__icon {
+  margin: auto;
+  background-color: black;
+}
+
+.icon-demo__text {
+  margin: 0;
+  text-align: center;
+}

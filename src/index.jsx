@@ -9,14 +9,16 @@ import {
   faFlask,
   faMicroscope,
   faUser,
+  faFolderOpen,
+  faSave,
+  faPen,
+  faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
-import '@gen3/ui-component/dist/css/base.less';
 import {
   fetchDictionary,
   fetchProjects,
   fetchSchema,
-  fetchVersionInfo,
   fetchUserAccess,
   fetchUserAuthMapping,
 } from './actions';
@@ -24,6 +26,9 @@ import getReduxStore from './reduxStore';
 import { gaTracking } from './params';
 import App from './App';
 import sessionMonitor from './SessionMonitor';
+import '@fontsource/raleway';
+import './gen3-ui-component/css/base.css';
+import './gen3-ui-component/css/icon.css';
 
 // monitor user's session
 sessionMonitor.start();
@@ -40,7 +45,11 @@ library.add(
   faExclamationTriangle,
   faFlask,
   faMicroscope,
-  faUser
+  faUser,
+  faFolderOpen,
+  faSave,
+  faPen,
+  faTrashAlt
 );
 
 // render the app after the store is configured
@@ -51,7 +60,6 @@ async function init() {
   await Promise.all([
     store.dispatch(fetchSchema),
     store.dispatch(fetchDictionary),
-    store.dispatch(fetchVersionInfo),
     // resources can be open to anonymous users, so fetch access:
     store.dispatch(fetchUserAccess),
     store.dispatch(fetchUserAuthMapping),

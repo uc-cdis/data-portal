@@ -1,0 +1,11 @@
+.empty-content__div {
+  text-align: center;
+  margin-top: 12px;
+  color: var(--g3-color__gray);
+}
+
+.empty-content__div .g3-icon {
+  width: 30px;
+  height: 30px;
+  background-color: var(--g3-color__gray);
+}

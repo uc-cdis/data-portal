@@ -17,7 +17,14 @@
 
 .guppy-data-explorer__top-banner {
   width: 100%;
-  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.guppy-data-explorer__cohort {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* Tablet width and less */
@@ -33,5 +40,9 @@
   .guppy-data-explorer__visualization {
     width: 100%;
     padding: 0;
+  }
+
+  .guppy-data-explorer__cohort {
+    display: none;
   }
 }

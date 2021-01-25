@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>exit</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1-index-1440" transform="translate(-1312.000000, -14.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="exit-to-app-button" transform="translate(1312.000000, 14.000000)">
+                <g id="exit">
+                    <path d="M5.12777778,9.1 L6.13888889,10.1111111 L9.75,6.5 L6.13888889,2.88888889 L5.12777778,3.9 L7.00555556,5.77777778 L0,5.77777778 L0,7.22222222 L7.00555556,7.22222222 L5.12777778,9.1 Z M11.5555556,0 L1.44444444,0 C0.65,0 0,0.65 0,1.44444444 L0,4.33333333 L1.44444444,4.33333333 L1.44444444,1.44444444 L11.5555556,1.44444444 L11.5555556,11.5555556 L1.44444444,11.5555556 L1.44444444,8.66666667 L0,8.66666667 L0,11.5555556 C0,12.35 0.65,13 1.44444444,13 L11.5555556,13 C12.35,13 13,12.35 13,11.5555556 L13,1.44444444 C13,0.65 12.35,0 11.5555556,0 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

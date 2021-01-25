@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AutoComplete from '@gen3/ui-component/dist/components/AutoComplete';
+import AutoComplete from '../../../gen3-ui-component/components/AutoComplete';
 import { compareTwoStrings } from 'string-similarity';
 import {
   prepareSearchData,

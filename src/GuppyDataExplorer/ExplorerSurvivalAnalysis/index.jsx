@@ -2,17 +2,12 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
+import { getGQLFilter } from '@pcdc/guppy/dist/components/Utils/queries';
 import { enumFilterList } from '../../params';
 import Spinner from '../../components/Spinner';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
-import RiskTable from './RiskTable';
-import {
-  filterRisktableByTime,
-  filterSurvivalByTime,
-  getFactors,
-} from './utils';
+import { filterSurvivalByTime, getFactors } from './utils';
 import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
@@ -34,8 +29,6 @@ const fetchResult = (body) =>
  * @param {Object} prop.filter
  */
 function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
-  const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
-  const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
@@ -95,11 +88,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
 
     if (shouldUpdateResults)
       fetchResult({ filter: transformedFilter, ...requestBody })
-        .then((result) => {
-          setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-          setRisktable(result.risktable);
-          setSurvival(result.survival);
-        })
+        .then((result) => setSurvival(result.survival))
         .catch((e) => setIsError(true))
         .finally(() => setIsUpdating(false));
     else setIsUpdating(false);
@@ -117,11 +106,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
         efsFlag: false,
       })
         .then((result) => {
-          if (isMounted) {
-            setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-            setRisktable(result.risktable);
-            setSurvival(result.survival);
-          }
+          if (isMounted) setSurvival(result.survival);
         })
         .catch((e) => isMounted && setIsError(true))
         .finally(() => isMounted && setIsUpdating(false));
@@ -155,22 +140,12 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
             </p>
           </div>
         ) : (
-          <>
-            <div className='explorer-survival-analysis__pval'>
-              {pval >= 0 && `Log-rank test p-value: ${pval}`}
-            </div>
-            <SurvivalPlot
-              colorScheme={colorScheme}
-              data={filterSurvivalByTime(survival, startTime, endTime)}
-              notStratified={stratificationVariable === ''}
-              timeInterval={timeInterval}
-            />
-            <RiskTable
-              data={filterRisktableByTime(risktable, startTime, endTime)}
-              notStratified={stratificationVariable === ''}
-              timeInterval={timeInterval}
-            />
-          </>
+          <SurvivalPlot
+            colorScheme={colorScheme}
+            data={filterSurvivalByTime(survival, startTime, endTime)}
+            notStratified={stratificationVariable === ''}
+            timeInterval={timeInterval}
+          />
         )}
       </div>
     </div>

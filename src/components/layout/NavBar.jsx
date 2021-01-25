@@ -73,6 +73,8 @@ class NavBar extends Component {
   }
 
   render() {
+    if (this.props.location.pathname === '/login') return null;
+
     const navItems = this.props.navItems.map((item, index) => {
       const navButton = (
         <div

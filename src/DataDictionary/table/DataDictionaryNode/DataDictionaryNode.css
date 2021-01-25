@@ -22,7 +22,7 @@
 }
 
 .data-dictionary-node:hover .data-dictionary-node__title {
-  color: var(--g3-color__base-blue);
+  color: var(--pcdc-color__primary);
 }
 
 .data-dictionary-node__file-icon {

@@ -1,0 +1,128 @@
+.g3-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-around;
+  border-radius: 4px;
+  min-width: 152px;
+  width: auto;
+  height: 40px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 1px 20px;
+}
+
+.g3-button__icon--left {
+  margin: 0 8px 0 0;
+}
+
+.g3-button__icon--right {
+  margin: 0 0 0 8px;
+}
+
+.g3-button__spinner .spinner {
+  padding: 0;
+}
+
+.g3-button__spinner .spinner .spinner__svg {
+  width: 20px;
+  margin-top: 3px;
+}
+
+.g3-button--disabled {
+  background-color: var(--g3-disabled-btn__bg-color);
+  color: var(--g3-disabled-btn__color);
+  border: 1px solid var(--g3-disabled-btn__border-color);
+  cursor: not-allowed;
+}
+
+.g3-button--disabled svg path {
+  fill: var(--g3-disabled-btn__color);
+}
+
+.g3-button--disabled .g3-button__icon {
+  background-color: var(--g3-disabled-btn__color);
+}
+
+.g3-button--primary {
+  border: 1px solid var(--g3-primary-btn__border-color);
+  background-color: var(--g3-primary-btn__bg-color);
+  color: var(--g3-primary-btn__color);
+  fill: var(--g3-primary-btn__color);
+}
+
+.g3-button--primary:hover,
+.g3-button--primary:hover svg path {
+  border: 1px solid var(--g3-primary-btn__border-color--hover);
+  background-color: var(--g3-primary-btn__bg-color--hover);
+}
+
+.g3-button--primary:active {
+  border: 1px solid var(--g3-primary-btn__border-color--active);
+}
+
+.g3-button--primary .g3-button__icon {
+  background-color: var(--g3-primary-btn__color);
+}
+
+.g3-button--secondary {
+  border: 1px solid var(--g3-secondary-btn__border-color);
+  background-color: var(--g3-secondary-btn__bg-color);
+  color: var(--g3-secondary-btn__color);
+  fill: var(--g3-secondary-btn__color);
+}
+
+.g3-button--secondary:hover,
+.g3-button--secondary:hover svg path {
+  border: 1px solid var(--g3-secondary-btn__border-color--hover);
+  background-color: var(--g3-secondary-btn__bg-color--hover);
+}
+
+.g3-button--secondary:active {
+  border: 1px solid var(--g3-secondary-btn__border-color--active);
+}
+
+.g3-button--secondary .g3-button__icon {
+  background-color: var(--g3-secondary-btn__color);
+}
+
+.g3-button--default {
+  border: 1px solid var(--g3-default-btn__border-color);
+  background-color: var(--g3-default-btn__bg-color);
+  color: var(--g3-default-btn__color);
+  fill: var(--g3-default-btn__color);
+}
+
+.g3-button--default:hover,
+.g3-button--default:hover svg path {
+  border: 1px solid var(--g3-default-btn__border-color--hover);
+  color: var(--g3-default-btn__color--hover);
+  fill: var(--g3-default-btn__color--hover);
+}
+
+.g3-button--default:active,
+.g3-button--default:active svg path {
+  border: 1px solid var(--g3-default-btn__border-color--active);
+  color: var(--g3-default-btn__color--active);
+  fill: var(--g3-default-btn__color--active);
+}
+
+.g3-button--default .g3-button__icon {
+  background-color: var(--g3-default-btn__color);
+}
+
+/* Tooltip overrides */
+
+.rc-tooltip-inner {
+  border: 1px solid var(--g3-color__gray);
+  border-radius: 4px;
+}
+
+.rc-tooltip-placement-bottom .rc-tooltip-arrow {
+  border-bottom-color: var(--g3-color__gray);
+}
+
+.rc-tooltip {
+  max-width: 200px;
+  opacity: 1;
+}

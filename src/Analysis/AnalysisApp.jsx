@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select from 'react-select';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../gen3-ui-component/components/Button';
 import BackLink from '../components/BackLink';
 import Spinner from '../components/Spinner';
 import { analysisApps } from '../localconf';
@@ -53,6 +53,13 @@ class AnalysisApp extends React.Component {
               placeholder='Select your organ'
               options={analysisApps[app].options}
               onChange={this.selectChange}
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary: 'var(--pcdc-color__primary)',
+                },
+              })}
             />
             <Button
               label='Run Analysis'

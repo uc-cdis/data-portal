@@ -1,0 +1,10 @@
+.locked-content__lock-div {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--g3-color__gray);
+}
+
+.locked-content__lock-div .g3-icon {
+  background-color: var(--g3-color__gray);
+}
+  

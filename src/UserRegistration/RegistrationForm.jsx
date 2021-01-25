@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../gen3-ui-component/components/Button';
 import SimpleInputField from '../components/SimpleInputField';
 
 /**
@@ -50,7 +50,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
       <p>
         <FontAwesomeIcon
           icon='exclamation-triangle'
-          color='#EF8523' // g3-color__highlight-orange
+          color='var(--pcdc-color__secondary)'
         />
         Your account does not have access to PCDC data.
         <br />
@@ -122,7 +122,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
     <div className='user-registration__view-error'>
       <FontAwesomeIcon
         icon='exclamation-triangle'
-        color='#E74C3C' // g3-color__highlight-rose
+        color='var(--g3-color__highlight-rose)'
       />
       <h2>Error registering to gain access...</h2>
       <p>

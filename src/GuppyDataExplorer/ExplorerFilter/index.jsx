@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
-import AccessibleFilter from '@gen3/guppy/dist/components/ConnectedFilter/AccessibleFilter';
-import UnaccessibleFilter from '@gen3/guppy/dist/components/ConnectedFilter/UnaccessibleFilter';
+import ConnectedFilter from '@pcdc/guppy/dist/components/ConnectedFilter';
+import AccessibleFilter from '@pcdc/guppy/dist/components/ConnectedFilter/AccessibleFilter';
+import UnaccessibleFilter from '@pcdc/guppy/dist/components/ConnectedFilter/UnaccessibleFilter';
 import TierAccessSelector from '../TierAccessSelector';
 import { FilterConfigType, GuppyConfigType } from '../configTypeDef';
 import {
   checkForNoAccessibleProject,
   checkForFullAccessibleProject,
 } from '../GuppyDataExplorerHelper';
+import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
+import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 
 /**
  * For selectedAccessFilter the default value is 'Data with Access'
@@ -138,6 +140,7 @@ class ExplorerFilter extends React.Component {
       onProcessFilterAggsData: this.onProcessFilterAggsData,
       onUpdateAccessLevel: this.props.onUpdateAccessLevel,
       adminAppliedPreFilters: this.props.adminAppliedPreFilters,
+      initialAppliedFilters: this.props.initialAppliedFilters,
       lockedTooltipMessage:
         this.props.tierAccessLevel === 'regular'
           ? `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.`
@@ -152,6 +155,10 @@ class ExplorerFilter extends React.Component {
             } or more.`
           : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
+      filterComponents: {
+        FilterGroup,
+        FilterList,
+      },
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
@@ -213,6 +220,7 @@ ExplorerFilter.propTypes = {
   accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
   unaccessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
   adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
+  initialAppliedFilters: PropTypes.object,
   accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
   getAccessButtonLink: PropTypes.string,
   hideGetAccessButton: PropTypes.bool,
@@ -230,6 +238,7 @@ ExplorerFilter.defaultProps = {
   accessibleFieldObject: {},
   unaccessibleFieldObject: {},
   adminAppliedPreFilters: {},
+  initialAppliedFilters: {},
   accessibleFieldCheckList: [],
   getAccessButtonLink: undefined,
   hideGetAccessButton: false,

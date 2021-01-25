@@ -1,0 +1,319 @@
+.g3-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  mask-size: 100%;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+}
+
+.g3-icon--lg {
+  width: 40px;
+  height: 40px;
+}
+
+.g3-icon--md {
+  width: 18px;
+  height: 18px;
+}
+
+.g3-icon--sm {
+  width: 12px;
+  height: 12px;
+}
+
+.g3-icon-color__base-blue {
+  background-color: var(--pcdc-color__primary);
+}
+
+.g3-icon-color__base-blue-light {
+  background-color: var(--pcdc-color__primary-light);
+}
+
+.g3-icon-color__lime {
+  background-color: var(--g3-color__lime);
+}
+
+.g3-icon-color__iris {
+  background-color: var(--g3-color__iris);
+}
+
+.g3-icon-color__rose {
+  background-color: var(--g3-color__rose);
+}
+
+.g3-icon-color__bee {
+  background-color: var(--g3-color__bee);
+}
+
+.g3-icon-color__pink {
+  background-color: var(--g3-color__pink);
+}
+
+.g3-icon-color__highlight-orange {
+  background-color: var(--pcdc-color__secondary);
+}
+
+.g3-icon-color__highlight-orange-light {
+  background-color: var(--pcdc-color__secondary-light);
+}
+
+.g3-icon-color__mint {
+  background-color: var(--g3-color__mint);
+}
+
+.g3-icon-color__bg-coal {
+  background-color: var(--g3-color__bg-coal);
+}
+
+.g3-icon-color__bg-cloud {
+  background-color: var(--g3-color__bg-cloud);
+}
+
+.g3-icon-color__gray {
+  background-color: var(--g3-color__gray);
+}
+
+.g3-icon-color__lightgray {
+  background-color: var(--g3-color__lightgray);
+}
+
+.g3-icon-color__smoke {
+  background-color: var(--g3-color__smoke);
+}
+
+.g3-icon-color__silver {
+  background-color: var(--g3-color__silver);
+}
+
+.g3-icon-color__black {
+  background-color: var(--g3-color__black);
+}
+
+.g3-icon-color__white {
+  background-color: var(--g3-color__white);
+}
+
+.g3-icon--analysis {
+  mask-image: svg-load(../images/icons/analysis.svg);
+}
+
+.g3-icon--back {
+  mask-image: svg-load(../images/icons/back.svg);
+}
+
+.g3-icon--copy {
+  mask-image: svg-load(../images/icons/copy.svg);
+}
+
+.g3-icon--cross-key {
+  mask-image: svg-load(../images/icons/cross-key.svg);
+}
+
+.g3-icon--cross {
+  mask-image: svg-load(../images/icons/cross.svg);
+}
+
+.g3-icon--delete {
+  mask-image: svg-load(../images/icons/delete.svg);
+}
+
+.g3-icon--dictionary {
+  mask-image: svg-load(../images/icons/dictionary.svg);
+}
+
+.g3-icon--download {
+  mask-image: svg-load(../images/icons/download.svg);
+}
+
+.g3-icon--exit {
+  mask-image: svg-load(../images/icons/exit.svg);
+}
+
+.g3-icon--exploration {
+  mask-image: svg-load(../images/icons/exploration.svg);
+}
+
+.g3-icon--files {
+  mask-image: svg-load(../images/icons/files.svg);
+}
+
+.g3-icon--gear {
+  mask-image: svg-load(../images/icons/gear.svg);
+}
+
+.g3-icon--graph {
+  mask-image: svg-load(../images/icons/graph.svg);
+}
+
+.g3-icon--key {
+  mask-image: svg-load(../images/icons/key.svg);
+}
+
+.g3-icon--link {
+  mask-image: svg-load(../images/icons/link.svg);
+}
+
+.g3-icon--profile {
+  mask-image: svg-load(../images/icons/profile.svg);
+}
+
+.g3-icon--query {
+  mask-image: svg-load(../images/icons/query.svg);
+}
+
+.g3-icon--upload {
+  mask-image: svg-load(../images/icons/upload.svg);
+}
+
+.g3-icon--workspace {
+  mask-image: svg-load(../images/icons/workspace.svg);
+}
+
+.g3-icon--doctor {
+  mask-image: svg-load(../images/icons/doctor.svg);
+}
+
+.g3-icon--datafile {
+  mask-image: svg-load(../images/icons/datafile.svg);
+}
+
+.g3-icon--user {
+  mask-image: svg-load(../images/icons/user.svg);
+}
+
+.g3-icon--user-circle {
+  mask-image: svg-load(../images/icons/user-circle.svg);
+}
+
+.g3-icon--chevron-left {
+  mask-image: svg-load(../images/icons/chevron-left.svg);
+}
+
+.g3-icon--chevron-right {
+  mask-image: svg-load(../images/icons/chevron-right.svg);
+}
+
+.g3-icon--chevron-up {
+  mask-image: svg-load(../images/icons/chevron-up.svg);
+}
+
+.g3-icon--chevron-down {
+  mask-image: svg-load(../images/icons/chevron-down.svg);
+}
+
+.g3-icon--dropdown {
+  mask-image: svg-load(../images/icons/dropdown.svg);
+}
+
+.g3-icon--more {
+  mask-image: svg-load(../images/icons/more.svg);
+}
+
+.g3-icon--planet {
+  mask-image: svg-load(../images/icons/planet.svg);
+}
+
+.g3-icon--external-link {
+  mask-image: svg-load(../images/icons/external-link.svg);
+}
+
+.g3-icon--folder {
+  mask-image: svg-load(../images/icons/folder.svg);
+}
+
+.g3-icon--forward {
+  mask-image: svg-load(../images/icons/forward.svg);
+}
+
+.g3-icon--eye {
+  mask-image: svg-load(../images/icons/eye.svg);
+}
+
+.g3-icon--eye-close {
+  mask-image: svg-load(../images/icons/eye-close.svg);
+}
+
+.g3-icon--minus {
+  mask-image: svg-load(../images/icons/minus.svg);
+}
+
+.g3-icon--plus {
+  mask-image: svg-load(../images/icons/plus.svg);
+}
+
+.g3-icon--question-mark {
+  mask-image: svg-load(../images/icons/question-mark.svg);
+}
+
+.g3-icon--question-mark-bootstrap {
+  mask-image: svg-load(../images/icons/question-mark-bootstrap.svg);
+}
+
+.g3-icon--reset {
+  mask-image: svg-load(../images/icons/reset.svg);
+}
+
+.g3-icon--search {
+  mask-image: svg-load(../images/icons/search.svg);
+}
+
+.g3-icon--star {
+  mask-image: svg-load(../images/icons/star.svg);
+}
+
+.g3-icon--bar-chart {
+  mask-image: svg-load(../images/icons/bar-chart.svg);
+}
+
+.g3-icon--book {
+  mask-image: svg-load(../images/icons/book.svg);
+}
+
+.g3-icon--clipboard {
+  mask-image: svg-load(../images/icons/clipboard.svg);
+}
+
+.g3-icon--clinical {
+  mask-image: svg-load(../images/icons/clinical.svg);
+}
+
+.g3-icon--file {
+  mask-image: svg-load(../images/icons/file.svg);
+}
+
+.g3-icon--lab {
+  mask-image: svg-load(../images/icons/lab.svg);
+}
+
+.g3-icon--notation {
+  mask-image: svg-load(../images/icons/notation.svg);
+}
+
+.g3-icon--stacked-bar {
+  mask-image: svg-load(../images/icons/stacked-bar.svg);
+}
+
+.g3-icon--undefined {
+  mask-image: svg-load(../images/icons/undefined.svg);
+}
+
+.g3-icon--list {
+  mask-image: svg-load(../images/icons/list.svg);
+}
+
+.g3-icon--lock {
+  mask-image: svg-load(../images/icons/lock.svg);
+}
+
+.g3-icon--under {
+  mask-image: svg-load(../images/icons/under.svg);
+}
+
+.g3-icon--not-apply {
+  mask-image: svg-load(../images/icons/na.svg);
+}
+
+.g3-icon--undo {
+  mask-image: svg-load(../images/icons/undo.svg);
+}

@@ -2,9 +2,8 @@ import React from 'react';
 import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select, { createFilter } from 'react-select';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../gen3-ui-component/components/Button';
 import { basename, loginPath } from '../localconf';
-import { components } from '../params';
 
 import './Login.less';
 
@@ -62,13 +61,6 @@ class Login extends React.Component {
     if (queryParams.next) {
       next = basename === '/' ? queryParams.next : basename + queryParams.next;
     }
-    const customImage =
-      components.login && components.login.image
-        ? components.login.image
-        : 'gene';
-    const customImageStyle = {
-      backgroundImage: `url(/src/img/icons/${customImage}.svg)`,
-    };
 
     const loginOptions = {}; // one for each login provider
     this.props.providers.forEach((provider, i) => {
@@ -102,10 +94,7 @@ class Login extends React.Component {
 
     return (
       <div className='login-page'>
-        <div
-          className='login-page__side-box login-page__side-box--left'
-          style={customImageStyle}
-        />
+        <div className='login-page__spacer'></div>
         <div className='login-page__central-content'>
           <div className='h1-typo login-page__title'>
             {this.props.data.title}
@@ -137,6 +126,13 @@ class Login extends React.Component {
                           this.state.selectedLoginOption &&
                           this.state.selectedLoginOption[i]
                         }
+                        theme={(theme) => ({
+                          ...theme,
+                          colors: {
+                            ...theme.colors,
+                            primary: 'var(--pcdc-color__primary)',
+                          },
+                        })}
                       />
                     )
                   }
@@ -174,10 +170,20 @@ class Login extends React.Component {
             {'.'}
           </div>
         </div>
-        <div
-          className='login-page__side-box login-page__side-box--right'
-          style={customImageStyle}
-        />
+        <div className='login-page__side-bars'>
+          <div
+            className='login-page__side-bar'
+            style={{ background: 'var(--pcdc-color__primary-light)' }}
+          />
+          <div
+            className='login-page__side-bar'
+            style={{ background: 'var(--pcdc-color__primary-dark)' }}
+          />
+          <div
+            className='login-page__side-bar'
+            style={{ background: 'var(--pcdc-color__secondary)' }}
+          />
+        </div>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../gen3-ui-component/components/Button';
 import { headers, userapiPath } from '../localconf';
 import SimpleInputField from '../components/SimpleInputField';
 import './UserInformation.css';
@@ -95,7 +95,7 @@ function UserInformationField({
           <div className='user-information__submit-message'>
             <FontAwesomeIcon
               icon='check-circle'
-              color='#7EC500' // g3-color__lime
+              color='var(--g3-color__lime)'
             />
             Updated successfully!
           </div>
@@ -103,7 +103,7 @@ function UserInformationField({
           <div className='user-information__submit-message'>
             <FontAwesomeIcon
               icon='exclamation-triangle'
-              color='#E74C3C' // g3-color__rose
+              color='var(--g3-color__rose)'
             />
             Update failed! Please try again.
           </div>

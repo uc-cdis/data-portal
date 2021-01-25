@@ -59,34 +59,6 @@ HOSTNAME=qa.planx-pla.net NODE_ENV=dev APP=dev bash ./runWebpack.sh
 To run Storybook:
 `npm run storybook`
 
-To run with Arranger components _(DEPRECATED: we use Guppy powered explorer page and stop maintaining arranger powered version.)_:
-
-1. Set local environment variables:
-
-- \$STORYBOOK_ARRANGER_API: localhost:3000
-- \$STORYBOOK_PROJECT_ID: search
-- \$REACT_APP_ARRANGER_API: /api/v0/flat-search
-- \$REACT_APP_PROJECT_ID: search
-
-2. Run ElasticSearch at localhost:9200
-3. Clone and `cd` into `gen3-arranger`. Run:
-
-```cd Docker/Stacks
-docker-compose -f esearch.yml up -d
-export ESHOST=localhost:9200
-source esearch/indexSetup.sh
-es_indices
-es_delete_all
-es_setup_index
-es_gen_data 0 20
-```
-
-4. Follow the [Arranger](https://github.com/overture-stack/arranger) setup steps - run the server and the dashboard.
-5. At the Arranger Dashboard (localhost:6060), add a new version called 'dev'.
-6. Click on 'dev' and add a new index. Name: subject, Index: gen3-dev-subject, ES Type: subject.
-7. Go back to Versions and hit the lightning bolt. The endpoint should go from a red arrow to a green arrow.
-8. At this point, running the Data Portal from our Storybook should work.
-
 ### Run Windmill using Docker
 
 Build the container image first
@@ -304,4 +276,3 @@ class Component extends React.Component {
   }
 }
 ```
-

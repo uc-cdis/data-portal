@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fetchQuery } from 'relay-runtime';
-import Button from '@gen3/ui-component/dist/components/Button';
-import Toaster from '@gen3/ui-component/dist/components/Toaster';
+import Button from '../gen3-ui-component/components/Button';
+import Toaster from '../gen3-ui-component/components/Toaster';
 import BackLink from '../components/BackLink';
 import { getProjectsList } from './relayer';
 import CheckmarkIcon from '../img/icons/status_confirm.svg';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../../gen3-ui-component/components/Button';
 import SimpleInputField from '../../components/SimpleInputField';
 import './typedef';
 
@@ -16,7 +16,7 @@ const ControlFormSelect = ({ label, ...selectProps }) => (
           ...theme,
           colors: {
             ...theme.colors,
-            primary: 'var(--g3-color__base-blue)',
+            primary: 'var(--pcdc-color__primary)',
           },
         })}
       />
