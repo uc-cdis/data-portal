@@ -3,20 +3,16 @@
     [
       "@babel/preset-env",
       {
-        "targets": "> 0.25%, not dead"
+        "targets": "> 0.25%, not dead",
+        "shippedProposals": true
       }
     ],
     "@babel/preset-react"
   ],
   "plugins": [
     "dev-expression",
-    "transform-class-properties",
     ["relay", { "compat": true, "schema": "data/schema.json" }],
-    "@babel/plugin-transform-runtime",
-    [
-      "@babel/plugin-proposal-object-rest-spread",
-      { "loose": true, "useBuiltIns": true }
-    ]
+    "@babel/plugin-transform-runtime"
   ],
   "sourceType": "unambiguous"
 }
