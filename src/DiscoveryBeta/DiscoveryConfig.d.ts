@@ -2,23 +2,23 @@
 export interface DiscoveryConfig {
     features: {
         exploration_integration: {
-            enabled: boolean
+            enabled: boolean // not supported
         },
         views: {
             grid_view: {
-                enabled: boolean
+                enabled: boolean // not supported
             }
         },
         search: {
             search_bar: {
                 enabled: boolean,
-                search_tags: boolean,
-                searchable_text_fields: string[],
+                search_tags: boolean, // not supported, consider removing
+                searchable_text_fields: string[], // not supported, consider removing
             }
         },
         authorization: {
             enabled: boolean,
-            request_access: {
+            request_access: { // not supported
                 enabled: boolean,
                 type: 'global' | 'per_study' | 'both',
                 global: {
@@ -59,7 +59,7 @@ export interface DiscoveryConfig {
         value_if_not_available: string
     },
     study_page_fields: {
-        show_all_available_fields: boolean,
+        show_all_available_fields: boolean, // not supported
         header: {
             field: string
         },

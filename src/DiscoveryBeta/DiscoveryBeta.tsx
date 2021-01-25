@@ -13,8 +13,8 @@ import {
   Alert,
   Popover,
 } from 'antd';
+
 // DEV ONLY
-// import config from './mock_config.json';
 import mockData from './mock_mds_studies.json';
 // END DEV ONLY
 
@@ -28,7 +28,6 @@ if (!useArboristUI) {
   throw new Error('Arborist UI must be enabled for the Discovery page to work. Set `useArboristUI: true` in the portal config.');
 }
 const ARBORIST_READ_PRIV = 'read';
-
 enum AccessLevel {
   BOTH = 'both',
   ACCESSIBLE = 'accessible',
@@ -45,7 +44,7 @@ const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   return categoryConfig.color;
 };
 
-const isAccesible = (resource: any, userAuthMapping: any): boolean => userHasMethodForServiceOnResource('read', '*', resource.authz, userAuthMapping);
+const isAccesible = (resource: {authz: string}, userAuthMapping: any): boolean => userHasMethodForServiceOnResource('read', '*', resource.authz, userAuthMapping);
 
 const accessibleFieldName = '__accessible';
 
@@ -287,7 +286,10 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
         </React.Fragment>
       ),
     },
-    {
+  );
+
+  if (config.features.authorization.enabled) {
+    columns.push({
       title: 'Access',
       render: (_, record) => (
         record[accessibleFieldName]
@@ -321,8 +323,9 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
               <LockFilled />
             </Popover>
           )
-      ) },
-  );
+      ),
+    });
+  }
   // -----
 
 
@@ -418,6 +421,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
         </div>
         <div className='discovery-table-container'>
           <div className='discovery-table__header'>
+            { config.features.search.search_bar.enabled &&
             <Input
               className='discovery-table__search'
               prefix={<SearchOutlined />}
@@ -425,6 +429,8 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
               onChange={handleSearchChange}
               allowClear
             />
+            }
+            { config.features.authorization.enabled &&
             <div className='disvovery-table__controls'>
               <Radio.Group
                 onChange={handleAccessLevelChange}
@@ -438,6 +444,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
                 <Radio.Button value={AccessLevel.ACCESSIBLE}><UnlockOutlined /></Radio.Button>
               </Radio.Group>
             </div>
+            }
           </div>
           <Table
             columns={columns}
