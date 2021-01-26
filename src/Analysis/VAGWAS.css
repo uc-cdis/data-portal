@@ -12,6 +12,8 @@
 
 .steps-action {
   margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .ant-btn {
