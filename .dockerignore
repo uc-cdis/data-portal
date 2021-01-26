@@ -1,1 +1,6 @@
+__mocks__
+.storybook
+docs
 node_modules
+src/**/__generated__
+src/stories
