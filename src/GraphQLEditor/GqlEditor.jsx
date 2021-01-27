@@ -3,7 +3,8 @@ import { buildClientSchema } from 'graphql/utilities';
 import Button from '../gen3-ui-component/components/Button';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { fetchGraphQL, fetchFlatGraphQL } from '../actions';
+import getReduxStore from '../reduxStore';
+import { fetchGraphQL, fetchFlatGraphQL, fetchSchema } from '../actions';
 import Spinner from '../components/Spinner';
 import { config } from '../params';
 import './GqlEditor.less';
@@ -21,6 +22,9 @@ class GqlEditor extends React.Component {
   }
 
   componentDidMount() {
+    if (!this.props.schema)
+      getReduxStore().then(({ dispatch }) => dispatch(fetchSchema));
+
     if (
       this.props.endpointIndex &&
       this.state.selectedEndpointIndex !== this.props.endpointIndex
@@ -108,7 +112,7 @@ class GqlEditor extends React.Component {
 }
 
 GqlEditor.propTypes = {
-  schema: PropTypes.object.isRequired,
+  schema: PropTypes.object,
   endpointIndex: PropTypes.number,
 };
 
