@@ -18,7 +18,6 @@ import ReactGA from 'react-ga';
 import {
   fetchDictionary,
   fetchProjects,
-  fetchSchema,
   fetchUserAccess,
   fetchUserAuthMapping,
 } from './actions';
@@ -58,7 +57,6 @@ async function init() {
 
   // asyncSetInterval(() => store.dispatch(fetchUser), 60000);
   await Promise.all([
-    store.dispatch(fetchSchema),
     store.dispatch(fetchDictionary),
     // resources can be open to anonymous users, so fetch access:
     store.dispatch(fetchUserAccess),
