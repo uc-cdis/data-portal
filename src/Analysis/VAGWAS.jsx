@@ -179,6 +179,9 @@ class VAGWAS extends React.Component {
         selectedDataKey: selectedRows[0].WorkspaceKey,
       });
     },
+    getCheckboxProps: record => ({
+      disabled: !(record.SizeBytes && record.SizeBytes <= MAX_PREVIEW_FILE_SIZE_BYTES),
+    }),
   };
 
   mainTableConfig = [
@@ -315,7 +318,7 @@ class VAGWAS extends React.Component {
           </Button>
           <Text type='secondary'>(The phenotype and covariants with the genotype file will be matched using the IID column)</Text>
           {(this.state.showStep0Table) ?
-            <div className='vaGWAS__mainTable'>
+            <div className='vaGWAS-mainTable'>
               <Table
                 rowSelection={this.mainTableRowSelection}
                 columns={this.mainTableConfig}
@@ -360,8 +363,8 @@ class VAGWAS extends React.Component {
       return (
         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
           {(specifyDataCols) ?
-            <div className='vaGWAS__step1-specifyTable'>
-              <Space className='vaGWAS__step1-specifyTable_innerSpace'>
+            <div className='vaGWAS-specifyTable'>
+              <Space className='vaGWAS-specifyTable__innerSpace'>
                 <Space direction={'vertical'}>
                   <Text strong>Existing Clinical Variables</Text>
                   <Checkbox.Group defaultValue={['gender', 'age']}>
@@ -410,7 +413,7 @@ class VAGWAS extends React.Component {
     }
     case 2: {
       return (
-        <div className='vaGWAS__mainArea'>
+        <div className='vaGWAS-mainArea'>
           <Form
             layout='vertical'
             initialValues={{
@@ -431,9 +434,9 @@ class VAGWAS extends React.Component {
               }
             }}
           >
-            <Space className='vaGWAS__step1-specifyTable_innerSpace' split={<Divider type='vertical' />} >
+            <Space className='vaGWAS-specifyTable__innerSpace' split={<Divider type='vertical' />} >
               <Form.Item
-                className='vaGWAS__step1-specifyTable_formItem'
+                className='vaGWAS-specifyTable__formItem'
                 label={<Text strong>Workflow</Text>}
                 name='workflow'
               >
@@ -442,7 +445,7 @@ class VAGWAS extends React.Component {
                 </Select>
               </Form.Item>
               <Form.Item
-                className='vaGWAS__step1-specifyTable_formItem'
+                className='vaGWAS-specifyTable__formItem'
                 label={<Text strong>Genotype Cutoff</Text>}
                 name='genotype_cutoff'
                 rules={[
@@ -459,7 +462,7 @@ class VAGWAS extends React.Component {
                 <InputNumber min={0} max={1} step={0.01} />
               </Form.Item>
               <Form.Item
-                className='vaGWAS__step1-specifyTable_formItem'
+                className='vaGWAS-specifyTable__formItem'
                 label={<Text strong>Sample Cutoff</Text>}
                 name='sample_cutoff'
                 rules={[
@@ -476,7 +479,7 @@ class VAGWAS extends React.Component {
                 <InputNumber min={0} max={1} step={0.01} />
               </Form.Item>
               <Form.Item
-                className='vaGWAS__step1-specifyTable_formItem'
+                className='vaGWAS-specifyTable__formItem'
                 label={<Text strong>MAF Cutoff</Text>}
                 name='maf_cutoff'
                 rules={[
@@ -507,7 +510,7 @@ class VAGWAS extends React.Component {
       };
 
       if (this.state.showJobSubmissionResult) {
-        return (<div className='vaGWAS__mainArea'>
+        return (<div className='vaGWAS-mainArea'>
           <Result
             status={(this.state.jobSubmittedRunID) ? 'success' : 'error'}
             title={(this.state.jobSubmittedRunID) ? 'GWAS Job Submitted Successfully' : 'GWAS Job Submission Failed'}
@@ -545,7 +548,7 @@ class VAGWAS extends React.Component {
       }
 
       return (
-        <div className='vaGWAS__mainArea'>
+        <div className='vaGWAS-mainArea'>
           <Form
             {...layout}
             name='control-hooks'
@@ -621,7 +624,7 @@ class VAGWAS extends React.Component {
     return (
       <Space direction={'vertical'} style={{ width: '100%' }}>
         {(this.state.marinerJobStatus.length > 0) ?
-          (<div>
+          (<div className='vaGWAS-jobStatus'>
             <Collapse onClick={event => event.stopPropagation()}>
               <Panel header='Submitted Job Status' key='1'>
                 <List
@@ -679,13 +682,13 @@ class VAGWAS extends React.Component {
         <div className='steps-content'>{this.generateContentForStep(current)}</div>
         <div className='steps-action'>
           {current > 0 && !this.state.showJobSubmissionResult && (
-            <Button className='vaGWAS__step0-navBtn vaGWAS__step0-navBtn-previous' style={{ margin: '0 8px' }} onClick={() => this.prev()}>
+            <Button className='vaGWAS-navBtn vaGWAS-navBtn__previous' style={{ margin: '0 8px' }} onClick={() => this.prev()}>
               Previous
             </Button>
           )}
           {current < steps.length - 1 && (
             <Button
-              className='vaGWAS__step0-navBtn vaGWAS__step0-navBtn-next'
+              className='vaGWAS-navBtn vaGWAS-navBtn__next'
               type='primary'
               onClick={() => this.next()}
               disabled={!nextButtonEnabled}

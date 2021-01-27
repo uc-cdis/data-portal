@@ -20,47 +20,51 @@
   width: auto;
 }
 
-.vaGWAS__mainTable {
+.vaGWAS-mainTable {
   padding: 0 8px;
   border: 1px solid #e9e9e9;
 }
 
-.vaGWAS__step0-navBtn {
+.vaGWAS-jobStatus {
+  margin-bottom: 16px;
+}
+
+.vaGWAS-navBtn {
   width: 100px;
 }
 
-.vaGWAS__step0-navBtn-previous {
+.vaGWAS-navBtn__previous {
   align-self: flex-start;
 }
 
-.vaGWAS__step0-navBtn-next {
+.vaGWAS-navBtn__next {
   align-self: flex-end;
 }
 
-.vaGWAS__step1-specifyTable {
+.vaGWAS-specifyTable {
   padding: 8px;
   border: 1px solid #e9e9e9;
 }
 
-.vaGWAS__step1-specifyTable_innerSpace {
+.vaGWAS-specifyTable__innerSpace {
   width: 100%;
   align-items: baseline;
   justify-content: space-between;
 }
 
-.vaGWAS__step1-specifyTable_formItem {
+.vaGWAS-specifyTable__formItem {
   width: 200px;
   padding-bottom: 0;
   margin-bottom: 0;
   align-items: center;
 }
 
-.vaGWAS__step1-specifyTable_formItem > .ant-form-item-control {
+.vaGWAS-specifyTable__formItem > .ant-form-item-control {
   align-items: center;
   text-align: center;
 }
 
-.vaGWAS__mainArea {
+.vaGWAS-mainArea {
   min-width: 400px;
   padding: 8px;
   border: 1px solid #e9e9e9;
