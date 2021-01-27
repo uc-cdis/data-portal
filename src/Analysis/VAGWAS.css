@@ -13,7 +13,7 @@
 .steps-action {
   margin-top: 24px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
 }
 
 .ant-btn {
@@ -27,6 +27,14 @@
 
 .vaGWAS__step0-navBtn {
   width: 100px;
+}
+
+.vaGWAS__step0-navBtn-previous {
+  align-self: flex-start;
+}
+
+.vaGWAS__step0-navBtn-next {
+  align-self: flex-end;
 }
 
 .vaGWAS__step1-specifyTable {
