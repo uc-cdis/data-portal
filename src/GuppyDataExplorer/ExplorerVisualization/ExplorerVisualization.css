@@ -21,7 +21,3 @@
 .recharts-tooltip-wrapper {
   z-index: 1000;
 }
-
-.g3-single-select-filter__label {
-  word-break: break-all;
-}
