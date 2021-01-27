@@ -377,7 +377,7 @@ export const fetchSchema = (dispatch) =>
       switch (status) {
         case 200:
           return dispatch({
-            type: 'RECEIVE_SCHEMA_LOGIN',
+            type: 'RECEIVE_SCHEMA',
             schema: data,
           });
         default:
