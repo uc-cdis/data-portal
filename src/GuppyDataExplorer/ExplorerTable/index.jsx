@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import pluralize from 'pluralize';
 import ReactTable from 'react-table';
+import { Switch } from 'antd';
 import 'react-table/react-table.css';
 import IconicLink from '../../components/buttons/IconicLink';
 import { GuppyConfigType, TableConfigType } from '../configTypeDef';
@@ -18,6 +19,7 @@ class ExplorerTable extends React.Component {
       loading: false,
       pageSize: props.defaultPageSize,
       currentPage: 0,
+      showEmptyColumns: false,
     };
   }
 
@@ -224,6 +226,45 @@ class ExplorerTable extends React.Component {
       });
     });
   };
+  /**
+   * Sets empty coumns visability to state showEmptyColumns
+   * @param colList: column configs for root table
+   * @returns column configs for root table with
+   * empty coumns visability set to state showEmptyColumns
+   */
+  markEmptyColums = (colList) => {
+    if (!this.props.rawData || this.props.rawData.length === 0) {
+      return colList;
+    }
+    // Go through each column and see if it has any current data
+    return colList.map((obj) => {
+      const tempObj = obj;
+      let columnIsEmpty = true;
+      // see if any item has data in current column
+      for (let i = 0; i < this.props.rawData.length; i += 1) {
+        // if it has data stop loop
+        if (this.props.rawData[i][obj.id]) {
+          columnIsEmpty = false;
+          break;
+        }
+      }
+      // hide column if it is empty
+      if (columnIsEmpty) {
+        tempObj.show = this.state.showEmptyColumns;
+      }
+      return tempObj;
+    });
+  };
+
+  /**
+   * Toggles the visibility of empty columns in the table
+   * @param checked: a boolean of showing/ hiding empty columns
+   * @sets: the state of showEmptyColumns
+   */
+  hideEmptyColumnToggle = (checked) => {
+    this.setState({ showEmptyColumns: checked });
+  };
+
 
   render() {
     if (!this.props.tableConfig.fields || this.props.tableConfig.fields.length === 0) {
@@ -237,6 +278,9 @@ class ExplorerTable extends React.Component {
     if (!this.props.tableConfig.ordered) {
       rootColumnsConfig.sort((a, b) => a.Header.localeCompare(b.Header));
     }
+
+    const rootColumnsConfigEmtysMarked = this.markEmptyColums(rootColumnsConfig);
+
     const nestedArrayFieldNames = {};
     this.props.tableConfig.fields.forEach((field) => {
       if (field.includes('.')) {
@@ -298,9 +342,21 @@ class ExplorerTable extends React.Component {
     return (
       <div className={`explorer-table ${this.props.className}`}>
         {(this.props.isLocked) ? <React.Fragment />
-          : <p className='explorer-table__description'>{explorerTableCaption}</p> }
+          : <div className='explorer-table__description'>
+            <span>
+              {explorerTableCaption}
+            </span>
+            <label className={`explorer-table__hide_empty_column_toggle ${this.props.rawData ? '' : 'ant-switch-disabled'}`}>
+                Show Empty Columns
+              <Switch
+                onChange={this.hideEmptyColumnToggle}
+                disabled={!this.props.rawData}
+              />
+            </label>
+          </div>}
+
         <ReactTable
-          columns={rootColumnsConfig}
+          columns={rootColumnsConfigEmtysMarked}
           manual
           data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
           showPageSizeOptions={!this.props.isLocked}
