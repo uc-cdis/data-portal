@@ -243,16 +243,19 @@ class ProtectedContent extends React.Component {
   };
 
   /**
+   * Fetch resources on demand based on path
    * @param {ReduxStore} store
    */
-  fetchResources(store) {
-    const { graphiql, project, submission } = store.getState();
-    if (LOCATIONS_DICTIONARY.includes(this.props.match.path)) {
-      if (!submission.dictionary) store.dispatch(fetchDictionary);
-    } else if (LOCATIONS_PROJECTS.includes(this.props.match.path)) {
-      if (!project.projects) store.dispatch(fetchProjects);
-    } else if (LOCATIONS_SCHEMA.includes(this.props.match.path)) {
-      if (!graphiql.schema) store.dispatch(fetchSchema);
+  fetchResources({ dispatch, getState }) {
+    const { graphiql, project, submission } = getState();
+    const path = this.props.match.path;
+
+    if (LOCATIONS_DICTIONARY.includes(path) && !submission.dictionary) {
+      dispatch(fetchDictionary);
+    } else if (LOCATIONS_PROJECTS.includes(path) && !project.projects) {
+      dispatch(fetchProjects);
+    } else if (LOCATIONS_SCHEMA.includes(path) && !graphiql.schema) {
+      dispatch(fetchSchema);
     }
   }
 
