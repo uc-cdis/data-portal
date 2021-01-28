@@ -106,11 +106,11 @@ function buildConfig(opts) {
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
   const requestorPath = typeof requestorURL === 'undefined' ? `${hostname}requestor/` : ensureTrailingSlash(requestorURL);
   const auspiceUrl = `${protocol}//auspice.${hostnameOnly}/covid19`;
+  const auspiceUrlIL = `${protocol}//auspice.${hostnameOnly}/covid19/il`;
   const workspaceStorageUrl = `${hostname}ws-storage`;
   const workspaceStorageListUrl = `${workspaceStorageUrl}/list`;
   const workspaceStorageDownloadUrl = `${workspaceStorageUrl}/download`;
-  const marinerUrl = `${hostname}/ga4gh/wes/v1/runs`;
-  const auspiceUrlIL = `${protocol}//auspice.${hostnameOnly}/covid19/il`;
+  const marinerUrl = `${hostname}ga4gh/wes/v1/runs`;
   const enableDAPTracker = !!config.DAPTrackingURL;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public

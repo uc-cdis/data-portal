@@ -636,7 +636,7 @@ class VAGWAS extends React.Component {
                     <List.Item
                       actions={(item.status === 'running') ?
                         [<Popconfirm
-                          title='Are you sure to cancel this job?'
+                          title='Are you sure you want to cancel this job?'
                           onConfirm={(event) => {
                             event.stopPropagation();
                             this.cancelMarinerJob(item.runID);
