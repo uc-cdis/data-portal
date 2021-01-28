@@ -1,7 +1,12 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchDictionary, fetchProjects, fetchUser } from '../actions';
+import {
+  fetchDictionary,
+  fetchProjects,
+  fetchSchema,
+  fetchUser,
+} from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import { requiredCerts } from '../localconf';
@@ -28,6 +33,7 @@ const LOCATIONS_DICTIONARY = [
   '/:project',
 ];
 const LOCATIONS_PROJECTS = ['/files/*'];
+const LOCATIONS_SCHEMA = ['/query'];
 
 /**
  * Redux listener - just clears auth-cache on logout
@@ -240,11 +246,13 @@ class ProtectedContent extends React.Component {
    * @param {ReduxStore} store
    */
   fetchResources(store) {
-    const { project, submission } = store.getState();
+    const { graphiql, project, submission } = store.getState();
     if (LOCATIONS_DICTIONARY.includes(this.props.match.path)) {
       if (!submission.dictionary) store.dispatch(fetchDictionary);
     } else if (LOCATIONS_PROJECTS.includes(this.props.match.path)) {
       if (!project.projects) store.dispatch(fetchProjects);
+    } else if (LOCATIONS_SCHEMA.includes(this.props.match.path)) {
+      if (!graphiql.schema) store.dispatch(fetchSchema);
     }
   }
 
