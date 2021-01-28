@@ -30,10 +30,10 @@ export default class SelectComponent extends Component {
     this.resetState = this.resetState.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.selectedValue !== nextProps.selectedValue) {
-      this.setState({ selectedValue: nextProps.selectedValue });
-    }
+  static getDerivedStateFromProps(props, state) {
+    return props.selectedValue !== state.selectedValue
+      ? { selectedValue: props.selectedValue }
+      : null;
   }
 
   resetState() {
