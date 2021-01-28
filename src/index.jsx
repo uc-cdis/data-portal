@@ -16,7 +16,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import {
-  fetchDictionary,
   fetchProjects,
   fetchUserAccess,
   fetchUserAuthMapping,
@@ -57,7 +56,6 @@ async function init() {
 
   // asyncSetInterval(() => store.dispatch(fetchUser), 60000);
   await Promise.all([
-    store.dispatch(fetchDictionary),
     // resources can be open to anonymous users, so fetch access:
     store.dispatch(fetchUserAccess),
     store.dispatch(fetchUserAuthMapping),

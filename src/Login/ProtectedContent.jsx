@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchUser } from '../actions';
+import { fetchDictionary, fetchUser } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import { requiredCerts } from '../localconf';
@@ -21,6 +21,12 @@ import './ProtectedContent.css';
 /** @typedef {Object} ReduxStore */
 
 let lastAuthMs = 0;
+const LOCATIONS_DICTIONARY = [
+  '/dd',
+  '/dd/:node',
+  '/submission/map',
+  '/:project',
+];
 
 /**
  * Redux listener - just clears auth-cache on logout
@@ -117,11 +123,13 @@ class ProtectedContent extends React.Component {
                 const latestState = { ...newState, dataLoaded: true };
 
                 if (newState.authenticated && typeof filter === 'function') {
-                  filter().finally(
-                    () => this._isMounted && this.setState(latestState)
-                  );
+                  filter().finally(() => {
+                    this._isMounted && this.setState(latestState);
+                    this.fetchResources(store);
+                  });
                 } else {
                   this._isMounted && this.setState(latestState);
+                  this.fetchResources(store);
                 }
               });
         })
@@ -226,6 +234,15 @@ class ProtectedContent extends React.Component {
     }
     return newState;
   };
+
+  /**
+   * @param {ReduxStore} store
+   */
+  fetchResources(store) {
+    const { submission } = store.getState();
+    if (LOCATIONS_DICTIONARY.includes(this.props.match.path))
+      if (!submission.dictionary) store.dispatch(fetchDictionary);
+  }
 
   render() {
     if (this.state.redirectTo)
