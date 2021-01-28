@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import DataModelGraph from './DataModelGraph';
-
+import { createNodesAndEdges } from '../GraphUtils/utils';
 import { fetchWithCreds } from '../actions';
 import { submissionApiPath } from '../localconf';
 
@@ -133,11 +133,17 @@ export const getCounts = (typeList, project, dictionary) => {
       });
 };
 
-const mapStateToProps = (state) => ({
-  dictionary: state.submission.dictionary,
-  counts_search: state.submission.counts_search,
-  links_search: state.submission.links_search,
-});
+const mapStateToProps = (state) => {
+  const props = {
+    dictionary: state.submission.dictionary,
+    counts_search: state.submission.counts_search,
+    links_search: state.submission.links_search,
+  };
+  return {
+    full: createNodesAndEdges(props, true),
+    compact: createNodesAndEdges(props, false),
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
   onGetCounts: (type, project) => dispatch(getCounts(type, project)),
