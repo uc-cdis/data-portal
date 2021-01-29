@@ -226,35 +226,6 @@ class ExplorerTable extends React.Component {
       });
     });
   };
-  /**
-   * Sets empty coumns visability to state showEmptyColumns
-   * @param colList: column configs for root table
-   * @returns column configs for root table with
-   * empty coumns visability set to state showEmptyColumns
-   */
-  markEmptyColums = (colList) => {
-    if (!this.props.rawData || this.props.rawData.length === 0) {
-      return colList;
-    }
-    // Go through each column and see if it has any current data
-    return colList.map((obj) => {
-      const tempObj = obj;
-      let columnIsEmpty = true;
-      // see if any item has data in current column
-      for (let i = 0; i < this.props.rawData.length; i += 1) {
-        // if it has data stop loop
-        if (this.props.rawData[i][obj.id]) {
-          columnIsEmpty = false;
-          break;
-        }
-      }
-      // hide column if it is empty
-      if (columnIsEmpty) {
-        tempObj.show = this.state.showEmptyColumns;
-      }
-      return tempObj;
-    });
-  };
 
   /**
    * Toggles the visibility of empty columns in the table
@@ -271,15 +242,41 @@ class ExplorerTable extends React.Component {
       return null;
     }
     // build column configs for root table first
-    const rootColumnsConfig = this.props.tableConfig.fields.map(field =>
-      this.buildColumnConfig(field, false, false));
+    const rootColumnsConfig = this.props.tableConfig.fields.map((field) => {
+      const tempColumnConfig = this.buildColumnConfig(field, false, false);
+
+      // Sets empty columns visibility to state showEmptyColumns
+      if (this.props.rawData && this.props.rawData.length > 0) {
+        // see if any item has data in current column
+        const columnIsEmpty = this.props.rawData.every((colItem) => {
+          const colData = colItem[tempColumnConfig.id];
+          // if normal id it should have data, additional check for empty arrays
+          if (colData && (typeof colData === 'number' || colData.length > 0)) {
+            return false;
+          }
+          // check if special id with period
+          const splitIndexArr = tempColumnConfig.id.split('.');
+          if (splitIndexArr.length > 1) {
+            // check if first part matches
+            const splitColData = colItem[splitIndexArr[0]];
+            return !(splitColData && splitColData.length > 0);
+          }
+          // default true if nothing found
+          return true;
+        });
+        // hide column if it is empty
+        if (columnIsEmpty) {
+          tempColumnConfig.show = this.state.showEmptyColumns;
+        }
+      }
+      return tempColumnConfig;
+    });
+
 
     // if not ordered sort alphabetically by Header
     if (!this.props.tableConfig.ordered) {
       rootColumnsConfig.sort((a, b) => a.Header.localeCompare(b.Header));
     }
-
-    const rootColumnsConfigEmtysMarked = this.markEmptyColums(rootColumnsConfig);
 
     const nestedArrayFieldNames = {};
     this.props.tableConfig.fields.forEach((field) => {
@@ -356,7 +353,7 @@ class ExplorerTable extends React.Component {
           </div>}
 
         <ReactTable
-          columns={rootColumnsConfigEmtysMarked}
+          columns={rootColumnsConfig}
           manual
           data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
           showPageSizeOptions={!this.props.isLocked}
