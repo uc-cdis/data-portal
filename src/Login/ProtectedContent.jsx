@@ -1,7 +1,12 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchUser } from '../actions';
+import {
+  fetchDictionary,
+  fetchProjects,
+  fetchSchema,
+  fetchUser,
+} from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import { requiredCerts } from '../localconf';
@@ -21,6 +26,14 @@ import './ProtectedContent.css';
 /** @typedef {Object} ReduxStore */
 
 let lastAuthMs = 0;
+const LOCATIONS_DICTIONARY = [
+  '/dd',
+  '/dd/:node',
+  '/submission/map',
+  '/:project',
+];
+const LOCATIONS_PROJECTS = ['/files/*'];
+const LOCATIONS_SCHEMA = ['/query'];
 
 /**
  * Redux listener - just clears auth-cache on logout
@@ -117,11 +130,13 @@ class ProtectedContent extends React.Component {
                 const latestState = { ...newState, dataLoaded: true };
 
                 if (newState.authenticated && typeof filter === 'function') {
-                  filter().finally(
-                    () => this._isMounted && this.setState(latestState)
-                  );
+                  filter().finally(() => {
+                    this._isMounted && this.setState(latestState);
+                    this.fetchResources(store);
+                  });
                 } else {
                   this._isMounted && this.setState(latestState);
+                  this.fetchResources(store);
                 }
               });
         })
@@ -226,6 +241,23 @@ class ProtectedContent extends React.Component {
     }
     return newState;
   };
+
+  /**
+   * Fetch resources on demand based on path
+   * @param {ReduxStore} store
+   */
+  fetchResources({ dispatch, getState }) {
+    const { graphiql, project, submission } = getState();
+    const path = this.props.match.path;
+
+    if (LOCATIONS_DICTIONARY.includes(path) && !submission.dictionary) {
+      dispatch(fetchDictionary);
+    } else if (LOCATIONS_PROJECTS.includes(path) && !project.projects) {
+      dispatch(fetchProjects);
+    } else if (LOCATIONS_SCHEMA.includes(path) && !graphiql.schema) {
+      dispatch(fetchSchema);
+    }
+  }
 
   render() {
     if (this.state.redirectTo)

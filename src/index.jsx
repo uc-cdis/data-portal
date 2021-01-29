@@ -15,12 +15,6 @@ import {
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
-import {
-  fetchDictionary,
-  fetchProjects,
-  fetchUserAccess,
-  fetchUserAuthMapping,
-} from './actions';
 import getReduxStore from './reduxStore';
 import { gaTracking } from './params';
 import App from './App';
@@ -54,16 +48,6 @@ library.add(
 // render the app after the store is configured
 async function init() {
   const store = await getReduxStore();
-
-  // asyncSetInterval(() => store.dispatch(fetchUser), 60000);
-  await Promise.all([
-    store.dispatch(fetchDictionary),
-    // resources can be open to anonymous users, so fetch access:
-    store.dispatch(fetchUserAccess),
-    store.dispatch(fetchUserAuthMapping),
-    store.dispatch(fetchProjects()),
-  ]);
-
   render(<App store={store} />, document.getElementById('root'));
 }
 
