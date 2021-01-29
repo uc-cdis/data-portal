@@ -12,7 +12,7 @@ import { humanFileSize } from '../utils.js';
 import { fetchWithCreds } from '../actions';
 import { marinerUrl } from '../localconf';
 import marinerRequestBody from './utils.js';
-import './VAGWAS.css';
+import './GWASApp.css';
 
 const { Step } = Steps;
 const { Text } = Typography;
@@ -35,7 +35,7 @@ const steps = [
   },
 ];
 
-class VAGWAS extends React.Component {
+class GWASApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -318,7 +318,7 @@ class VAGWAS extends React.Component {
           </Button>
           <Text type='secondary'>(The phenotype and covariants with the genotype file will be matched using the IID column)</Text>
           {(this.state.showStep0Table) ?
-            <div className='vaGWAS-mainTable'>
+            <div className='GWASApp-mainTable'>
               <Table
                 rowSelection={this.mainTableRowSelection}
                 columns={this.mainTableConfig}
@@ -363,8 +363,8 @@ class VAGWAS extends React.Component {
       return (
         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
           {(specifyDataCols) ?
-            <div className='vaGWAS-specifyTable'>
-              <Space className='vaGWAS-specifyTable__innerSpace'>
+            <div className='GWASApp-specifyTable'>
+              <Space className='GWASApp-specifyTable__innerSpace'>
                 <Space direction={'vertical'}>
                   <Text strong>Existing Clinical Variables</Text>
                   <Checkbox.Group defaultValue={['gender', 'age']}>
@@ -413,7 +413,7 @@ class VAGWAS extends React.Component {
     }
     case 2: {
       return (
-        <div className='vaGWAS-mainArea'>
+        <div className='GWASApp-mainArea'>
           <Form
             layout='vertical'
             initialValues={{
@@ -434,9 +434,9 @@ class VAGWAS extends React.Component {
               }
             }}
           >
-            <Space className='vaGWAS-specifyTable__innerSpace' split={<Divider type='vertical' />} >
+            <Space className='GWASApp-specifyTable__innerSpace' split={<Divider type='vertical' />} >
               <Form.Item
-                className='vaGWAS-specifyTable__formItem'
+                className='GWASApp-specifyTable__formItem'
                 label={<Text strong>Workflow</Text>}
                 name='workflow'
               >
@@ -445,7 +445,7 @@ class VAGWAS extends React.Component {
                 </Select>
               </Form.Item>
               <Form.Item
-                className='vaGWAS-specifyTable__formItem'
+                className='GWASApp-specifyTable__formItem'
                 label={<Text strong>Genotype Cutoff</Text>}
                 name='genotype_cutoff'
                 rules={[
@@ -462,7 +462,7 @@ class VAGWAS extends React.Component {
                 <InputNumber min={0} max={1} step={0.01} />
               </Form.Item>
               <Form.Item
-                className='vaGWAS-specifyTable__formItem'
+                className='GWASApp-specifyTable__formItem'
                 label={<Text strong>Sample Cutoff</Text>}
                 name='sample_cutoff'
                 rules={[
@@ -479,7 +479,7 @@ class VAGWAS extends React.Component {
                 <InputNumber min={0} max={1} step={0.01} />
               </Form.Item>
               <Form.Item
-                className='vaGWAS-specifyTable__formItem'
+                className='GWASApp-specifyTable__formItem'
                 label={<Text strong>MAF Cutoff</Text>}
                 name='maf_cutoff'
                 rules={[
@@ -510,7 +510,7 @@ class VAGWAS extends React.Component {
       };
 
       if (this.state.showJobSubmissionResult) {
-        return (<div className='vaGWAS-mainArea'>
+        return (<div className='GWASApp-mainArea'>
           <Result
             status={(this.state.jobSubmittedRunID) ? 'success' : 'error'}
             title={(this.state.jobSubmittedRunID) ? 'GWAS Job Submitted Successfully' : 'GWAS Job Submission Failed'}
@@ -548,7 +548,7 @@ class VAGWAS extends React.Component {
       }
 
       return (
-        <div className='vaGWAS-mainArea'>
+        <div className='GWASApp-mainArea'>
           <Form
             {...layout}
             name='control-hooks'
@@ -624,11 +624,11 @@ class VAGWAS extends React.Component {
     return (
       <Space direction={'vertical'} style={{ width: '100%' }}>
         {(this.state.marinerJobStatus.length > 0) ?
-          (<div className='vaGWAS-jobStatus'>
+          (<div className='GWASApp-jobStatus'>
             <Collapse onClick={event => event.stopPropagation()}>
               <Panel header='Submitted Job Status' key='1'>
                 <List
-                  className='vaGWAS__jobStatusList'
+                  className='GWASApp__jobStatusList'
                   itemLayout='horizontal'
                   pagination={{ pageSize: 5 }}
                   dataSource={this.state.marinerJobStatus}
@@ -682,13 +682,13 @@ class VAGWAS extends React.Component {
         <div className='steps-content'>{this.generateContentForStep(current)}</div>
         <div className='steps-action'>
           {current > 0 && !this.state.showJobSubmissionResult && (
-            <Button className='vaGWAS-navBtn' style={{ margin: '0 8px' }} onClick={() => this.prev()}>
+            <Button className='GWASApp-navBtn' style={{ margin: '0 8px' }} onClick={() => this.prev()}>
               Previous
             </Button>
           )}
           {current < steps.length - 1 && (
             <Button
-              className='vaGWAS-navBtn vaGWAS-navBtn__next'
+              className='GWASApp-navBtn GWASApp-navBtn__next'
               type='primary'
               onClick={() => this.next()}
               disabled={!nextButtonEnabled}
@@ -702,7 +702,7 @@ class VAGWAS extends React.Component {
   }
 }
 
-VAGWAS.propTypes = {
+GWASApp.propTypes = {
   wssFileObjects: PropTypes.array,
   wssFilePrefix: PropTypes.string,
   wssListFileError: PropTypes.string,
@@ -714,11 +714,11 @@ VAGWAS.propTypes = {
   onLoadWorkspaceStorageFile: PropTypes.func.isRequired,
 };
 
-VAGWAS.defaultProps = {
+GWASApp.defaultProps = {
   wssFileObjects: undefined,
   wssFilePrefix: undefined,
   wssFileData: undefined,
   wssListFileError: undefined,
 };
 
-export default VAGWAS;
+export default GWASApp;

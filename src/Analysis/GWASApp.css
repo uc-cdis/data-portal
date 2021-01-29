@@ -20,47 +20,47 @@
   width: auto;
 }
 
-.vaGWAS-mainTable {
+.GWASApp-mainTable {
   padding: 0 8px;
   border: 1px solid #e9e9e9;
 }
 
-.vaGWAS-jobStatus {
+.GWASApp-jobStatus {
   margin-bottom: 16px;
 }
 
-.vaGWAS-navBtn {
+.GWASApp-navBtn {
   width: 150px;
 }
 
-.vaGWAS-navBtn__next {
+.GWASApp-navBtn__next {
   margin-left: auto;
 }
 
-.vaGWAS-specifyTable {
+.GWASApp-specifyTable {
   padding: 8px;
   border: 1px solid #e9e9e9;
 }
 
-.vaGWAS-specifyTable__innerSpace {
+.GWASApp-specifyTable__innerSpace {
   width: 100%;
   align-items: baseline;
   justify-content: space-between;
 }
 
-.vaGWAS-specifyTable__formItem {
+.GWASApp-specifyTable__formItem {
   width: 200px;
   padding-bottom: 0;
   margin-bottom: 0;
   align-items: center;
 }
 
-.vaGWAS-specifyTable__formItem > .ant-form-item-control {
+.GWASApp-specifyTable__formItem > .ant-form-item-control {
   align-items: center;
   text-align: center;
 }
 
-.vaGWAS-mainArea {
+.GWASApp-mainArea {
   min-width: 400px;
   padding: 8px;
   border: 1px solid #e9e9e9;

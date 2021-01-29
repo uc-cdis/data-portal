@@ -5,7 +5,7 @@ import { Spin } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
-import ReduxVAGWAS from './ReduxVAGWAS';
+import ReduxGWASApp from './ReduxGWASApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 
@@ -48,7 +48,7 @@ class AnalysisApp extends React.Component {
 
   getAppContent = (app) => {
     switch (app) {
-    case 'eGWAS':
+    case 'vaGWAS':
       return (
         <React.Fragment>
           <Select
@@ -71,10 +71,10 @@ class AnalysisApp extends React.Component {
           <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
         </React.Fragment>
       );
-    case 'vaGWAS':
+    case 'GWASApp':
       return (
         <React.Fragment>
-          <ReduxVAGWAS />
+          <ReduxGWASApp />
         </React.Fragment>
       );
     default:

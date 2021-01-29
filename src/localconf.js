@@ -263,9 +263,9 @@ function buildConfig(opts) {
             image: '/src/img/analysis-icons/virulence.png',
           };
           break;
-        case 'eGWAS':
-          analysisApps.eGWAS = {
-            title: 'eGWAS',
+        case 'vaGWAS':
+          analysisApps.vaGWAS = {
+            title: 'vaGWAS',
             description: 'Expression-based Genome-Wide Association Study',
             image: '/src/img/analysis-icons/gwas.svg',
             options: [
@@ -320,10 +320,10 @@ function buildConfig(opts) {
             ],
           };
           break;
-        case 'vaGWAS':
-          analysisApps.vaGWAS = {
-            title: 'VA GWAS',
-            description: 'VA GWAS App',
+        case 'GWASApp':
+          analysisApps.GWASApp = {
+            title: 'GWAS',
+            description: 'GWAS App',
             image: '/src/img/analysis-icons/gwas.svg',
           };
           break;

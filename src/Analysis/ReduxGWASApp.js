@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { workspaceStorageListUrl, workspaceStorageDownloadUrl } from '../localconf';
 import { fetchWithCreds } from '../actions';
-import VAGWAS from './VAGWAS';
+import GWASApp from './GWASApp';
 
 const papaparse = require('papaparse');
 
@@ -101,5 +101,5 @@ const mapDispatchToProps = dispatch => ({
   onLoadWorkspaceStorageFile: (workspaceKey => dispatch(fetchWorkspaceStorageFile(workspaceKey))),
 });
 
-const ReduxVAGWAS = connect(mapStateToProps, mapDispatchToProps)(VAGWAS);
-export default ReduxVAGWAS;
+const ReduxGWASApp = connect(mapStateToProps, mapDispatchToProps)(GWASApp);
+export default ReduxGWASApp;
