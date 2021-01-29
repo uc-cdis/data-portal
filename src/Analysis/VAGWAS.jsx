@@ -682,7 +682,7 @@ class VAGWAS extends React.Component {
         <div className='steps-content'>{this.generateContentForStep(current)}</div>
         <div className='steps-action'>
           {current > 0 && !this.state.showJobSubmissionResult && (
-            <Button className='vaGWAS-navBtn vaGWAS-navBtn__previous' style={{ margin: '0 8px' }} onClick={() => this.prev()}>
+            <Button className='vaGWAS-navBtn' style={{ margin: '0 8px' }} onClick={() => this.prev()}>
               Previous
             </Button>
           )}

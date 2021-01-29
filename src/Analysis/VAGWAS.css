@@ -33,12 +33,8 @@
   width: 100px;
 }
 
-.vaGWAS-navBtn__previous {
-  align-self: flex-start;
-}
-
 .vaGWAS-navBtn__next {
-  align-self: flex-end;
+  margin-left: auto;
 }
 
 .vaGWAS-specifyTable {
