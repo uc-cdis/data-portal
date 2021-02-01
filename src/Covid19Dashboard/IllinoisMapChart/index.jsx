@@ -93,9 +93,9 @@ class IllinoisMapChart extends React.Component {
       if (feature.layer.id !== 'confirmed-choropleth') {
         return;
       }
-      let confirmed = formatNumberToDisplay(feature.properties.confirmed);
-      let deaths = formatNumberToDisplay(feature.properties.deaths);
-      let recovered = formatNumberToDisplay(feature.properties.recovered);
+      const confirmed = formatNumberToDisplay(feature.properties.confirmed);
+      const deaths = formatNumberToDisplay(feature.properties.deaths);
+      const recovered = formatNumberToDisplay(feature.properties.recovered);
 
       const state = feature.properties.STATE;
       const county = feature.properties.COUNTYNAME;
