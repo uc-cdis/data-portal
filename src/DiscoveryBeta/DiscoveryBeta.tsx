@@ -1,16 +1,6 @@
 import React from 'react';
 import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined } from '@ant-design/icons';
-import {
-  Input,
-  Table,
-  Tag,
-  Radio,
-  Space,
-  Modal,
-  Alert,
-  Popover,
-} from 'antd';
-
+import { Input, Table, Tag, Radio, Space, Modal, Alert, Popover } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
@@ -18,6 +8,37 @@ import { AccessLevel } from './consts';
 
 import './DiscoveryBeta.css';
 
+export const DiscoveryTag = ({ selected, onSelect, color, name }) => (
+  <Tag
+    role='button'
+    tabIndex={0}
+    aria-pressed={selected ? 'true' : 'false'}
+    className={`discovery-header__tag-btn discovery-tag ${selected && 'discovery-tag--selected'}`}
+    aria-label={name}
+    style={{
+      backgroundColor: selected ? color : 'initial',
+      borderColor: color,
+    }}
+    onKeyPress={onSelect}
+    onClick={onSelect}
+  >
+    {name}
+  </Tag>
+);
+
+export const DiscoveryAccessPopover = ({ title, content, accessible }) => (
+  <Popover
+    overlayClassName='discovery-table__access-popover'
+    placement='topRight'
+    arrowPointAtCenter
+    title={title}
+    content={<div className='discovery-table__access-popover-text'>
+      {content}
+    </div>}
+  >
+    { accessible ? <UnlockOutlined /> : <LockFilled /> }
+  </Popover>
+);
 interface DiscoveryBetaProps {
   pageTitle: string
 
@@ -47,7 +68,7 @@ interface DiscoveryBetaProps {
   tableShowExpandedRow: boolean
   // eslint-disable-next-line react/no-unused-prop-types
   tableExpandedRowRender?: (rowData: any) => React.ReactNode
-  onTableRowSelect: (rowData: any) => void
+  onTableSelect: (record: any) => void
 
   // modal
   modalVisible: boolean
@@ -94,24 +115,14 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
           {
             props.headerTagsByCategory.map(({ categoryName, tags }) => (<div className='discovery-header__tag-group' key={categoryName}>
               <h5>{categoryName}</h5>
-              { tags.map(tag =>
-                (<Tag
-                  key={categoryName + tag.name}
-                  role='button'
-                  tabIndex={0}
-                  aria-pressed={tag.selected ? 'true' : 'false'}
-                  className={`discovery-header__tag-btn discovery-tag ${tag.selected && 'discovery-tag--selected'}`}
-                  aria-label={tag.name}
-                  style={{
-                    backgroundColor: tag.selected ? tag.color : 'initial',
-                    borderColor: tag.color,
-                  }}
-                  onKeyPress={() => props.onTagSelect(tag.name)}
-                  onClick={() => props.onTagSelect(tag.name)}
-                >
-                  {tag.name}
-                </Tag>),
-              )}
+              { tags.map(tag => (<DiscoveryTag
+                key={categoryName + tag.name}
+                selected={tag.selected}
+                name={tag.name}
+                onSelect={() => props.onTagSelect(tag.name)}
+                color={tag.color}
+              />))
+              }
             </div>))
           }
         </div>
@@ -149,8 +160,8 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
         rowKey={props.tableRowKey}
         rowClassName='discovery-table__row'
         onRow={record => ({
-          onClick: () => props.onTableRowSelect(record),
-          onKeyPress: () => props.onTableRowSelect(record),
+          onClick: () => props.onTableSelect(record),
+          onKeyPress: () => props.onTableSelect(record),
         })}
         dataSource={props.tableData}
         expandable={props.tableShowExpandedRow && ({
@@ -160,7 +171,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
             className='discovery-table__expanded-row-content'
             role='button'
             tabIndex={0}
-            onClick={() => props.onTableRowSelect(record)}
+            onClick={() => props.onTableSelect(record)}
           >
             {props.tableExpandedRowRender(record)}
           </div>),
@@ -223,35 +234,3 @@ DiscoveryBeta.defaultProps = {
 };
 
 export default DiscoveryBeta;
-
-export const DiscoveryTag = ({ selected, onSelect, color, name }) => (
-  <Tag
-    role='button'
-    tabIndex={0}
-    aria-pressed={selected ? 'true' : 'false'}
-    className={`discovery-header__tag-btn discovery-tag ${selected && 'discovery-tag--selected'}`}
-    aria-label={name}
-    style={{
-      backgroundColor: selected ? color : 'initial',
-      borderColor: color,
-    }}
-    onKeyPress={onSelect}
-    onClick={onSelect}
-  >
-    {name}
-  </Tag>
-);
-
-export const DiscoveryAccessPopover = ({ title, content, accessible }) => (
-  <Popover
-    overlayClassName='discovery-table__access-popover'
-    placement='topRight'
-    arrowPointAtCenter
-    title={title}
-    content={<div className='discovery-table__access-popover-text'>
-      {content}
-    </div>}
-  >
-    { accessible ? <UnlockOutlined /> : <LockFilled /> }
-  </Popover>
-);

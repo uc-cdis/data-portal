@@ -2,7 +2,7 @@ import React from 'react';
 import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
 
-import { DiscoveryConfig } from './DiscoveryConfig';
+import { DiscoveryConfig, AggregationConfig } from './DiscoveryConfig';
 import { AccessLevel } from './consts';
 
 export const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
@@ -15,11 +15,6 @@ export const getTagColor = (tagCategory: string, config: DiscoveryConfig): strin
   return categoryConfig.color;
 };
 
-interface AggregationConfig {
-  name: string
-  field: string
-  type: 'sum' | 'count'
-}
 
 export const formatValue = (value: any, contentType: 'string' | 'number' | 'paragraphs'): React.ReactNode => {
   switch (contentType) {
@@ -70,7 +65,6 @@ export const getTagsInCategory =
     return Object.keys(tagMap);
   };
 
-// FIXME single-purpose, consider refactoring out
 export const highlightSearchTerm = (value: string, searchTerm: string, highlighClassName = 'matched'): {highlighted: React.ReactNode, matchIndex: number} => {
   const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
   const noMatchFound = matchIndex === -1;

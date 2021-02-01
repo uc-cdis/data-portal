@@ -19,7 +19,7 @@ import { AccessLevel, accessibleFieldName, ARBORIST_READ_PRIV } from './consts';
 import { discoveryConfig, useArboristUI } from '../localconf';
 
 // DEV ONLY
-import mockData from './mock_mds_studies.json';
+import mockData from './__mocks__/mock_mds_studies.json';
 
 if (!discoveryConfig) {
   throw new Error('Could not find configuration for Discovery page. Check the portal config.');
@@ -35,12 +35,14 @@ const loadResources = async (): Promise<any> => {
   return Promise.resolve(resources);
   // END DEV ONLY
 };
+
 interface DiscoveryContainerProps {
-  userAuthMapping: any
+  userAuthMapping: {[resource: string]: [{service: string, method: string}]}
   config: DiscoveryConfig,
-  params: any // from React Router
+  loadResources: () => Promise<any[]>
+  params?: {studyUID?: string} // from React Router
 }
-const DiscoveryContainer: React.FunctionComponent<DiscoveryContainerProps> = (props) => {
+export const DiscoveryContainer: React.FunctionComponent<DiscoveryContainerProps> = (props) => {
   const { userAuthMapping, config, params } = props;
 
   const [jsSearch, setJsSearch] = useState(null);
@@ -262,7 +264,7 @@ const DiscoveryContainer: React.FunctionComponent<DiscoveryContainerProps> = (pr
 
   const resourcesLoading = visibleResources === null;
   if (resourcesLoading) {
-    return <div>Loading</div>;
+    return <div>Loading</div>; // FIXME do something fancier?
   }
   return (<DiscoveryBeta
     pageTitle={config.pageTitle || 'Discovery'}
@@ -293,6 +295,7 @@ const DiscoveryContainer: React.FunctionComponent<DiscoveryContainerProps> = (pr
     tableData={visibleResources}
     tableRowKey={config.minimal_field_mapping.uid}
     tableShowExpandedRow={!!config.study_preview_field}
+    onTableSelect={handleTableRowSelect}
     tableExpandedRowRender={(record) => {
       const previewField = record[config.study_preview_field.field];
       if (!previewField) {
@@ -322,7 +325,6 @@ const DiscoveryContainer: React.FunctionComponent<DiscoveryContainerProps> = (pr
       }
       return previewField;
     }}
-    onTableRowSelect={handleTableRowSelect}
 
     // modal
     modalVisible={modalVisible}
@@ -338,6 +340,7 @@ const DiscoveryContainer: React.FunctionComponent<DiscoveryContainerProps> = (pr
 const mapStateToProps = state => ({
   userAuthMapping: state.userAuthMapping,
   config: discoveryConfig,
+  loadResources,
 });
 
 export default connect(mapStateToProps)(DiscoveryContainer);
