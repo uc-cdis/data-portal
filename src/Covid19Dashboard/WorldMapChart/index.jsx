@@ -151,9 +151,9 @@ class WorldMapChart extends React.Component {
       if (!feature.layer.id.startsWith('confirmed-')) {
         return;
       }
-      let confirmed = formatNumberToDisplay(feature.properties.confirmed);
-      let deaths = formatNumberToDisplay(feature.properties.deaths);
-      let recovered = formatNumberToDisplay(feature.properties.recovered);
+      const confirmed = formatNumberToDisplay(feature.properties.confirmed);
+      const deaths = formatNumberToDisplay(feature.properties.deaths);
+      const recovered = formatNumberToDisplay(feature.properties.recovered);
 
       const state = feature.properties.province_state;
       const county = feature.properties.county;

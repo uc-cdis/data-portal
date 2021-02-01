@@ -116,10 +116,10 @@ class Covid19Dashboard extends React.Component {
             interval={7}
           />
           <YAxis
-            label={{ 
-              value: locationPopupData.maxes.recovered ? 'confirmed/recovered' : 'confirmed', 
-              angle: -90, 
-              position: 'insideLeft' 
+            label={{
+              value: locationPopupData.maxes.recovered ? 'confirmed/recovered' : 'confirmed',
+              angle: -90,
+              position: 'insideLeft',
             }}
             yAxisId='left'
             type='number'
