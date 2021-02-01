@@ -54,7 +54,7 @@
 
 /* antd modal style override */
 .ant-modal-header {
-  background-color: var(--secondary-color);
+  background-color: var(--g3-color__base-blue);
 }
 
 .ant-modal-title {
