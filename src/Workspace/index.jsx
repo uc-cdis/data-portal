@@ -1,6 +1,7 @@
 import React from 'react';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
+import { Popconfirm} from 'antd';
 
 import {
   workspaceUrl,
@@ -188,13 +189,20 @@ class Workspace extends React.Component {
 
   render() {
     const terminateButton = (
-      <Button
-        className='workspace__button'
-        onClick={this.handleTerminateButtonClick}
-        label='Terminate Workspace'
-        buttonType='primary'
-        isPending={this.state.notebookStatus === 'Terminating'}
-      />
+      //wrap up termate button with Popconfirm
+      <Popconfirm
+        title="Are you sure to terminate your workspce?"
+        onConfirm={this.handleTerminateButtonClick}
+        okText="Yes"
+        cancelText="No"
+      >
+        <Button
+          className='workspace__button'
+          label='Terminate Workspace'
+          buttonType='primary'
+          isPending={this.state.notebookStatus === 'Terminating'}
+        />
+      </Popconfirm>
     );
 
     const cancelButton = (
