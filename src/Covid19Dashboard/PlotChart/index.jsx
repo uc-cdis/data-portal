@@ -230,7 +230,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
           labelFontSize={axisLabelFontSize}
         />}
         ticks={chartData.ticks}
-        interval={0}
+        interval={Math.round(chartData.ticks.length / 25)}
       />
       <YAxis
         label={{
