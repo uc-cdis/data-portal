@@ -113,7 +113,7 @@ class Covid19Dashboard extends React.Component {
           <XAxis
             dataKey='date'
             tick={<CustomizedXAxisTick />}
-            interval={7}
+            interval={Math.round(locationPopupData.data.length / 50)}
           />
           <YAxis
             label={{
