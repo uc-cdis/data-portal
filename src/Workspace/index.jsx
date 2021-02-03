@@ -189,7 +189,7 @@ class Workspace extends React.Component {
 
   render() {
     const terminateButton = (
-      //wrap up termate button with Popconfirm
+      // wrap up terminate button with Popconfirm
       <Popconfirm
         title="Are you sure to terminate your workspce?"
         onConfirm={this.handleTerminateButtonClick}
