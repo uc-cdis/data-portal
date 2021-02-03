@@ -194,7 +194,7 @@ class Workspace extends React.Component {
         title='Are you sure to terminate your workspace?'
         onConfirm={this.handleTerminateButtonClick}
         okText='Yes'
-        cancelText="No"
+        cancelText='No'
       >
         <Button
           className='workspace__button'
