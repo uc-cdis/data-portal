@@ -193,7 +193,7 @@ class Workspace extends React.Component {
       <Popconfirm
         title='Are you sure to terminate your workspace?'
         onConfirm={this.handleTerminateButtonClick}
-        okText="Yes"
+        okText='Yes'
         cancelText="No"
       >
         <Button
