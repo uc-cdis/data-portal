@@ -6,7 +6,7 @@ import {
 } from 'recharts';
 
 import Spinner from '../../components/Spinner';
-import { numberWithCommas, downloadFromGuppy } from '../dataUtils.js';
+import { downloadFromGuppy } from '../dataUtils.js';
 import './PlotChart.less';
 
 
@@ -22,7 +22,7 @@ class PlotChartAxisTick extends React.Component {
     if (type === 'date') {
       formattedValue = `${moment(formattedValue).month() + 1}/${moment(formattedValue).date()}`;
     } else if (type === 'number') {
-      formattedValue = numberWithCommas(formattedValue);
+      formattedValue = Number(formattedValue).toLocaleString();
     } else if (type === 'string' && labelMaxLength) {
       // truncate long labels and add "..."
       formattedValue = formattedValue.slice(0, labelMaxLength)
@@ -197,7 +197,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
       />
       <Tooltip
         formatter={
-          value => [numberWithCommas(value), yTitle || 'Value']
+          value => [Number(value).toLocaleString(), yTitle || 'Value']
         }
       />
       <Bar
@@ -230,7 +230,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
           labelFontSize={axisLabelFontSize}
         />}
         ticks={chartData.ticks}
-        interval={0}
+        interval={Math.round(chartData.ticks.length / 25)}
       />
       <YAxis
         label={{
@@ -310,7 +310,7 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
                 style={{ color: data.stroke }}
                 key={i}
               >
-                {data.name}: {numberWithCommas(data.value)}
+                {data.name}: {Number(data.value).toLocaleString()}
               </p>
             ))
           }

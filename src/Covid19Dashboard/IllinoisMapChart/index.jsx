@@ -5,7 +5,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
-import { numberWithCommas } from '../dataUtils.js';
 import countyData from '../data/us_counties';
 
 function addDataToGeoJsonBase(data) {
@@ -76,20 +75,27 @@ class IllinoisMapChart extends React.Component {
   }
 
   onHover = (event) => {
-    let hoverInfo = null;
-
     if (!event.features) { return; }
+
+    let hoverInfo = null;
+    const formatNumberToDisplay = (rawNum) => {
+      if (rawNum && rawNum !== 'null') {
+        if (typeof rawNum === 'number') {
+          return rawNum.toLocaleString();
+        }
+        return rawNum;
+      }
+      // Default if missing
+      return 0;
+    };
 
     event.features.forEach((feature) => {
       if (feature.layer.id !== 'confirmed-choropleth') {
         return;
       }
-      let confirmed = feature.properties.confirmed;
-      confirmed = confirmed && confirmed !== 'null' ? confirmed : 0;
-      let deaths = feature.properties.deaths;
-      deaths = deaths && deaths !== 'null' ? deaths : 0;
-      let recovered = feature.properties.recovered;
-      recovered = recovered && recovered !== 'null' ? recovered : 0;
+      const confirmed = formatNumberToDisplay(feature.properties.confirmed);
+      const deaths = formatNumberToDisplay(feature.properties.deaths);
+      const recovered = formatNumberToDisplay(feature.properties.recovered);
 
       const state = feature.properties.STATE;
       const county = feature.properties.COUNTYNAME;
@@ -101,12 +107,12 @@ class IllinoisMapChart extends React.Component {
         locationName,
         FIPS: feature.properties.FIPS,
         values: {
-          'confirmed cases': numberWithCommas(confirmed),
-          deaths: numberWithCommas(deaths),
+          'confirmed cases': confirmed,
+          deaths,
         },
       };
       if (recovered) {
-        hoverInfo.values.recovered = numberWithCommas(recovered);
+        hoverInfo.values.recovered = recovered;
       }
     });
 

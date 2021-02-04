@@ -5,7 +5,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
-import { numberWithCommas } from '../dataUtils.js';
 import worldData from '../data/world_50m'; // from https://geojson-maps.ash.ms
 import stateData from '../data/us_states_20m.json'; // from https://eric.clst.org/tech/usgeojson/
 import countyData from '../data/us_counties';
@@ -134,20 +133,27 @@ class WorldMapChart extends React.Component {
   }
 
   onHover = (event) => {
-    let hoverInfo = null;
-
     if (!event.features) { return; }
+
+    let hoverInfo = null;
+    const formatNumberToDisplay = (rawNum) => {
+      if (rawNum && rawNum !== 'null') {
+        if (typeof rawNum === 'number') {
+          return rawNum.toLocaleString();
+        }
+        return rawNum;
+      }
+      // Default if missing
+      return 0;
+    };
 
     event.features.forEach((feature) => {
       if (!feature.layer.id.startsWith('confirmed-')) {
         return;
       }
-      let confirmed = feature.properties.confirmed;
-      confirmed = confirmed && confirmed !== 'null' ? confirmed : 0;
-      let deaths = feature.properties.deaths;
-      deaths = deaths && deaths !== 'null' ? deaths : 0;
-      let recovered = feature.properties.recovered;
-      recovered = recovered && recovered !== 'null' ? recovered : 0;
+      const confirmed = formatNumberToDisplay(feature.properties.confirmed);
+      const deaths = formatNumberToDisplay(feature.properties.deaths);
+      const recovered = formatNumberToDisplay(feature.properties.recovered);
 
       const state = feature.properties.province_state;
       const county = feature.properties.county;
@@ -165,12 +171,12 @@ class WorldMapChart extends React.Component {
         // choropleth map data contains FIPS.
         FIPS: `${feature.properties.FIPS || feature.properties.fips}`,
         values: {
-          'confirmed cases': numberWithCommas(confirmed),
-          deaths: numberWithCommas(deaths),
+          'confirmed cases': confirmed,
+          deaths,
         },
       };
       if (recovered) {
-        hoverInfo.values.recovered = numberWithCommas(recovered);
+        hoverInfo.values.recovered = recovered;
       }
     });
 
@@ -193,7 +199,8 @@ class WorldMapChart extends React.Component {
 
       // density map data contains fips and iso3;
       // choropleth map data contains FIPS and iso_a3.
-      const fips = `${feature.properties.FIPS || feature.properties.fips}`;
+      let fips = feature.properties.FIPS || feature.properties.fips;
+      fips = typeof fips !== 'undefined' ? `${fips}` : fips;
       const state = feature.properties.province_state;
       const iso3 = feature.properties.iso_a3 || feature.properties.iso3;
       const isUS = iso3 === 'USA' || feature.properties.country_region === 'US';

@@ -43,6 +43,12 @@ module.exports = {
           "error",
           "always"
       ],
+      // fixed in newer version of jsx-a11y remove if we upgrade
+      "jsx-a11y/label-has-for": [ "error", {
+        "required": {
+          "some": [ "nesting", "id" ]
+        }
+      }],
       // see https://github.com/clayne11/eslint-import-resolver-meteor/issues/17
       // - seems to affect Codacy :-(
       "import/extensions": ["off", "never"],

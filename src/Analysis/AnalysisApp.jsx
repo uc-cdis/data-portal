@@ -5,6 +5,7 @@ import { Spin } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
+import ReduxGWASApp from './ReduxGWASApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 
@@ -66,6 +67,12 @@ class AnalysisApp extends React.Component {
         <React.Fragment>
           <input className='text-input' type='text' placeholder='input data' name='input' />
           <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+        </React.Fragment>
+      );
+    case 'GWASApp':
+      return (
+        <React.Fragment>
+          <ReduxGWASApp />
         </React.Fragment>
       );
     default:
