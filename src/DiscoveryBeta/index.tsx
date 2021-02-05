@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import DiscoveryBeta from './DiscoveryBeta';
+import Discovery from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { discoveryConfig, useArboristUI } from '../localconf';
@@ -47,9 +47,8 @@ const DiscoveryWithMDSBackend: React.FC<{
     });
   }, []);
 
-  return (<DiscoveryBeta
-    isLoading={studies === null}
-    resources={studies === null ? [] : studies}
+  return (<Discovery
+    studies={studies === null ? [] : studies}
     {...props}
   />);
 };

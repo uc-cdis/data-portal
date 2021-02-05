@@ -15,7 +15,7 @@ import {
 } from 'antd';
 
 import { DiscoveryConfig } from './DiscoveryConfig';
-import './DiscoveryBeta.css';
+import './Discovery.css';
 
 
 const accessibleFieldName = '__accessible';
@@ -42,12 +42,12 @@ interface AggregationConfig {
   type: 'sum' | 'count'
 }
 
-const renderAggregation = (aggregation: AggregationConfig, resources: any[] | null): string => {
-  if (!resources) {
+const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null): string => {
+  if (!studies) {
     return '';
   }
   const { field, type } = aggregation;
-  const fields = resources.map(r => r[field]);
+  const fields = studies.map(s => s[field]);
   switch (type) {
   case 'sum':
     return sum(fields).toLocaleString();
@@ -58,17 +58,17 @@ const renderAggregation = (aggregation: AggregationConfig, resources: any[] | nu
   }
 };
 
-// getTagsInCategory returns a list of the unique tags in resources which belong
+// getTagsInCategory returns a list of the unique tags in studies which belong
 // to the specified category.
 const getTagsInCategory =
-  (category: string, resources: any[] | null, config: DiscoveryConfig): string[] => {
-    if (!resources) {
+  (category: string, studies: any[] | null, config: DiscoveryConfig): string[] => {
+    if (!studies) {
       return [];
     }
     const tagMap = {};
-    resources.forEach((resource) => {
+    studies.forEach((study) => {
       const tagField = config.minimal_field_mapping.tags_list_field_name;
-      resource[tagField].forEach((tag) => {
+      study[tagField].forEach((tag) => {
         if (tag.category === category) {
           tagMap[tag.name] = true;
         }
@@ -112,34 +112,34 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
 };
 
 const filterByAccessLevel =
-  (resources: any[], accessLevel: AccessLevel, accessibleProperty: string): any[] => {
+  (studies: any[], accessLevel: AccessLevel, accessibleProperty: string): any[] => {
     switch (accessLevel) {
     case AccessLevel.ACCESSIBLE:
-      return resources.filter(r => r[accessibleProperty]);
+      return studies.filter(r => r[accessibleProperty]);
     case AccessLevel.UNACCESSIBLE:
-      return resources.filter(r => !r[accessibleProperty]);
+      return studies.filter(r => !r[accessibleProperty]);
     case AccessLevel.BOTH:
-      return resources;
+      return studies;
     default:
       throw new Error(`Unrecognized access level ${accessLevel}.`);
     }
   };
 
-const filterByTags = (resources: any[], selectedTags: any): any[] => {
-  // if no tags selected, show all resources
+const filterByTags = (studies: any[], selectedTags: any): any[] => {
+  // if no tags selected, show all studies
   if (Object.values(selectedTags).every(selected => !selected)) {
-    return resources;
+    return studies;
   }
-  return resources.filter(resource => resource.tags.some(tag => selectedTags[tag.name]));
+  return studies.filter(study => study.tags.some(tag => selectedTags[tag.name]));
 };
 
 interface DiscoveryBetaProps {
   config: DiscoveryConfig
-  resources: {__accessible: boolean, [any: string]: any}[]
+  studies: {__accessible: boolean, [any: string]: any}[]
   params?: {studyUID: string} // from React Router
 }
 
-const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: DiscoveryBetaProps) => {
+const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: DiscoveryBetaProps) => {
   const { config } = props;
 
   const [jsSearch, setJsSearch] = useState(null);
@@ -151,7 +151,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
   const [selectedTags, setSelectedTags] = useState({});
 
   useEffect(() => {
-    // Load resources into JS Search.
+    // Load studies into JS Search.
     const search = new JsSearch.Search(config.minimal_field_mapping.uid);
     search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
     // Enable search only over text fields present in the table
@@ -164,19 +164,19 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
     if (config.study_preview_field) {
       search.addIndex(config.study_preview_field.field);
     }
-    // Index the resources
-    search.addDocuments(props.resources);
+    // Index the studies
+    search.addDocuments(props.studies);
     // expose the search function
     setJsSearch(search);
     // -----------------------
-    setSearchFilteredResources(props.resources);
-  }, [props.resources]);
+    setSearchFilteredResources(props.studies);
+  }, [props.studies]);
 
   useEffect(() => {
     // If opening to a study by default, open that study
     if (props.params.studyUID) {
       const studyID = props.params.studyUID;
-      const defaultModalData = props.resources.find(
+      const defaultModalData = props.studies.find(
         r => r[config.minimal_field_mapping.uid] === studyID);
       if (defaultModalData) {
         setModalData(defaultModalData);
@@ -186,7 +186,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
         console.error(`Could not find study with UID ${studyID}.`);
       }
     }
-  }, [props.params.studyUID, props.resources]);
+  }, [props.params.studyUID, props.studies]);
 
   // Set up table columns
   // -----
@@ -300,7 +300,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
     const value = ev.currentTarget.value;
     setSearchTerm(value);
     if (value === '') {
-      setSearchFilteredResources(props.resources);
+      setSearchFilteredResources(props.studies);
       return;
     }
     if (!jsSearch) {
@@ -345,7 +345,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
               if (category.display === false) {
                 return null;
               }
-              const tags = getTagsInCategory(category.name, props.resources, config);
+              const tags = getTagsInCategory(category.name, props.studies, config);
               return (<div className='discovery-header__tag-group' key={category.name}>
                 <h5>{category.name}</h5>
                 { tags.map(tag =>
@@ -510,7 +510,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
                   <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.group_name}</h3>
             }
             { fieldGroup.fields.map((field) => {
-              // display nothing if selected resource doesn't have this field
+              // display nothing if selected study doesn't have this field
               // and this field isn't configured to show a default value
               if (!modalData[field.field] && !field.include_if_not_available) {
                 return null;
@@ -536,8 +536,8 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
   </div>);
 };
 
-DiscoveryBeta.defaultProps = {
+Discovery.defaultProps = {
   params: { studyUID: undefined },
 };
 
-export default DiscoveryBeta;
+export default Discovery;
