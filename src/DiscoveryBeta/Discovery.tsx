@@ -321,7 +321,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   );
 
   return (<div className='discovery-container'>
-    <h1 className='discovery-page-title'>{'Discovery'}</h1>
+    <h1 className='discovery-page-title'>{config.pageTitle || 'Discovery'}</h1>
     <div className='discovery-header'>
       <div className='discovery-header__stats-container'>
         {
