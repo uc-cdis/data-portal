@@ -14,19 +14,12 @@ import {
   Popover,
 } from 'antd';
 
-// DEV ONLY
-import mockData from './mock_mds_studies.json';
-// END DEV ONLY
-
-import { useArboristUI } from '../localconf';
-import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './DiscoveryBeta.css';
 
-if (!useArboristUI) {
-  throw new Error('Arborist UI must be enabled for the Discovery page to work. Set `useArboristUI: true` in the portal config.');
-}
+
+const accessibleFieldName = '__accessible';
+
 const ARBORIST_READ_PRIV = 'read';
 enum AccessLevel {
   BOTH = 'both',
@@ -43,17 +36,6 @@ const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   }
   return categoryConfig.color;
 };
-
-const isAccesible = (resource: {authz: string}, userAuthMapping: any): boolean => userHasMethodForServiceOnResource('read', '*', resource.authz, userAuthMapping);
-
-const accessibleFieldName = '__accessible';
-
-const loadResources = async (): Promise<any> => {
-  const jsonResponse = mockData;
-  const resources = Object.values(jsonResponse).map((entry: any) => entry.gen3_discovery);
-  return Promise.resolve(resources);
-};
-
 interface AggregationConfig {
   name: string
   field: string
@@ -153,71 +135,58 @@ const filterByTags = (resources: any[], selectedTags: any): any[] => {
 
 interface DiscoveryBetaProps {
   config: DiscoveryConfig
-  userAuthMapping: any
-  params: any // from React Router
+  resources: {__accessible: boolean, [any: string]: any}[]
+  params?: {studyUID: string} // from React Router
 }
 
 const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: DiscoveryBetaProps) => {
-  const { userAuthMapping, config } = props;
+  const { config } = props;
 
   const [jsSearch, setJsSearch] = useState(null);
-  const [allResources, setAllResources] = useState(null);
-  const [searchFilteredResources, setSearchFilteredResources] = useState(null);
+  const [searchFilteredResources, setSearchFilteredResources] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalData, setModalData] = useState(null);
+  const [modalData, setModalData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [accessLevel, setAccessLevel] = useState(AccessLevel.BOTH);
   const [selectedTags, setSelectedTags] = useState({});
 
   useEffect(() => {
-    // Load resources and index them
-    loadResources().then((rs) => {
-      // Add a property to resources showing whether user has access to resources
-      const resources = rs.map(resource => ({
-        ...resource,
-        [accessibleFieldName]: isAccesible(resource, userAuthMapping),
-      }));
-
-      // Initialize JS search.
-      // ------------------------
-      const search = new JsSearch.Search(config.minimal_field_mapping.uid);
-      search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
-      // Enable search only over text fields present in the table
-      config.study_columns.forEach((column) => {
-        if (!column.content_type || column.content_type === 'string') {
-          search.addIndex(column.field);
-        }
-      });
-      // Also enable search over preview field if present
-      if (config.study_preview_field) {
-        search.addIndex(config.study_preview_field.field);
+    // Load resources into JS Search.
+    const search = new JsSearch.Search(config.minimal_field_mapping.uid);
+    search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
+    // Enable search only over text fields present in the table
+    config.study_columns.forEach((column) => {
+      if (!column.content_type || column.content_type === 'string') {
+        search.addIndex(column.field);
       }
-      // Index the resources
-      search.addDocuments(resources);
-      // expose the search function
-      setJsSearch(search);
-      // -----------------------
-
-      setAllResources(resources);
-      setSearchFilteredResources(resources);
-
-      // If opening to a study by default, open that study
-      if (props.params && props.params.studyUID) {
-        const defaultModalData = resources.find(
-          r => r[config.minimal_field_mapping.uid] === props.params.studyUID);
-        if (defaultModalData) {
-          setModalData(defaultModalData);
-          setModalVisible(true);
-        } else {
-          // eslint-disable-next-line no-console
-          console.error(`Could not find study with UID ${props.params.studyUID}.`);
-        }
-      }
-    }).catch((err) => {
-      // FIXME how to handle this / retry?
-      throw new Error(err);
     });
-  }, []);
+    // Also enable search over preview field if present
+    if (config.study_preview_field) {
+      search.addIndex(config.study_preview_field.field);
+    }
+    // Index the resources
+    search.addDocuments(props.resources);
+    // expose the search function
+    setJsSearch(search);
+    // -----------------------
+    setSearchFilteredResources(props.resources);
+  }, [props.resources]);
+
+  useEffect(() => {
+    // If opening to a study by default, open that study
+    if (props.params.studyUID) {
+      const studyID = props.params.studyUID;
+      const defaultModalData = props.resources.find(
+        r => r[config.minimal_field_mapping.uid] === studyID);
+      if (defaultModalData) {
+        setModalData(defaultModalData);
+        setModalVisible(true);
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(`Could not find study with UID ${studyID}.`);
+      }
+    }
+  }, [props.params.studyUID, props.resources]);
 
   // Set up table columns
   // -----
@@ -287,7 +256,6 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
       ),
     },
   );
-
   if (config.features.authorization.enabled) {
     columns.push({
       title: 'Access',
@@ -328,12 +296,11 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
   }
   // -----
 
-
   const handleSearchChange = (ev) => {
     const value = ev.currentTarget.value;
     setSearchTerm(value);
     if (value === '') {
-      setSearchFilteredResources(allResources);
+      setSearchFilteredResources(props.resources);
       return;
     }
     if (!jsSearch) {
@@ -348,80 +315,76 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
     setAccessLevel(value);
   };
 
-  const visibleResources = searchFilteredResources !== null
-    ? filterByTags(
-      filterByAccessLevel(searchFilteredResources, accessLevel, accessibleFieldName),
-      selectedTags,
-    )
-    : null;
+  const visibleResources = filterByTags(
+    filterByAccessLevel(searchFilteredResources, accessLevel, accessibleFieldName),
+    selectedTags,
+  );
 
   return (<div className='discovery-container'>
     <h1 className='discovery-page-title'>{'Discovery'}</h1>
-    { visibleResources
-      ? (<React.Fragment>
-        <div className='discovery-header'>
-          <div className='discovery-header__stats-container'>
-            {
-              config.aggregations.map(aggregation => (
-                <div className='discovery-header__stat' key={aggregation.name}>
-                  <div className='discovery-header__stat-number'>
-                    {renderAggregation(aggregation, visibleResources)}
-                  </div>
-                  <div className='discovery-header__stat-label'>
-                    {aggregation.name}
-                  </div>
-                </div>
-              ))
-            }
-          </div>
-          <div className='discovery-header__tags-container' >
-            <h3 className='discovery-header__tags-header'>{config.tag_selector.title}</h3>
-            <div className='discovery-header__tags'>
-              {
-                config.tag_categories.map((category) => {
-                  if (category.display === false) {
-                    return null;
-                  }
-                  const tags = getTagsInCategory(category.name, allResources, config);
-                  return (<div className='discovery-header__tag-group' key={category.name}>
-                    <h5>{category.name}</h5>
-                    { tags.map(tag =>
-                      (<Tag
-                        key={category.name + tag}
-                        role='button'
-                        tabIndex={0}
-                        aria-pressed={selectedTags[tag] ? 'true' : 'false'}
-                        className={`discovery-header__tag-btn discovery-tag ${selectedTags[tag] && 'discovery-tag--selected'}`}
-                        aria-label={tag}
-                        style={{
-                          backgroundColor: selectedTags[tag] ? category.color : 'initial',
-                          borderColor: category.color,
-                        }}
-                        onKeyPress={() => {
-                          setSelectedTags({
-                            ...selectedTags,
-                            [tag]: selectedTags[tag] ? undefined : true,
-                          });
-                        }}
-                        onClick={() => {
-                          setSelectedTags({
-                            ...selectedTags,
-                            [tag]: selectedTags[tag] ? undefined : true,
-                          });
-                        }}
-                      >
-                        {tag}
-                      </Tag>),
-                    )}
-                  </div>);
-                })
-              }
+    <div className='discovery-header'>
+      <div className='discovery-header__stats-container'>
+        {
+          config.aggregations.map(aggregation => (
+            <div className='discovery-header__stat' key={aggregation.name}>
+              <div className='discovery-header__stat-number'>
+                {renderAggregation(aggregation, visibleResources)}
+              </div>
+              <div className='discovery-header__stat-label'>
+                {aggregation.name}
+              </div>
             </div>
-          </div>
+          ))
+        }
+      </div>
+      <div className='discovery-header__tags-container' >
+        <h3 className='discovery-header__tags-header'>{config.tag_selector.title}</h3>
+        <div className='discovery-header__tags'>
+          {
+            config.tag_categories.map((category) => {
+              if (category.display === false) {
+                return null;
+              }
+              const tags = getTagsInCategory(category.name, props.resources, config);
+              return (<div className='discovery-header__tag-group' key={category.name}>
+                <h5>{category.name}</h5>
+                { tags.map(tag =>
+                  (<Tag
+                    key={category.name + tag}
+                    role='button'
+                    tabIndex={0}
+                    aria-pressed={selectedTags[tag] ? 'true' : 'false'}
+                    className={`discovery-header__tag-btn discovery-tag ${selectedTags[tag] && 'discovery-tag--selected'}`}
+                    aria-label={tag}
+                    style={{
+                      backgroundColor: selectedTags[tag] ? category.color : 'initial',
+                      borderColor: category.color,
+                    }}
+                    onKeyPress={() => {
+                      setSelectedTags({
+                        ...selectedTags,
+                        [tag]: selectedTags[tag] ? undefined : true,
+                      });
+                    }}
+                    onClick={() => {
+                      setSelectedTags({
+                        ...selectedTags,
+                        [tag]: selectedTags[tag] ? undefined : true,
+                      });
+                    }}
+                  >
+                    {tag}
+                  </Tag>),
+                )}
+              </div>);
+            })
+          }
         </div>
-        <div className='discovery-table-container'>
-          <div className='discovery-table__header'>
-            { config.features.search.search_bar.enabled &&
+      </div>
+    </div>
+    <div className='discovery-table-container'>
+      <div className='discovery-table__header'>
+        { config.features.search.search_bar.enabled &&
             <Input
               className='discovery-table__search'
               prefix={<SearchOutlined />}
@@ -429,8 +392,8 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
               onChange={handleSearchChange}
               allowClear
             />
-            }
-            { config.features.authorization.enabled &&
+        }
+        { config.features.authorization.enabled &&
             <div className='disvovery-table__controls'>
               <Radio.Group
                 onChange={handleAccessLevelChange}
@@ -444,93 +407,90 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
                 <Radio.Button value={AccessLevel.ACCESSIBLE}><UnlockOutlined /></Radio.Button>
               </Radio.Group>
             </div>
-            }
-          </div>
-          <Table
-            columns={columns}
-            rowKey={config.minimal_field_mapping.uid}
-            rowClassName='discovery-table__row'
-            onRow={record => ({
-              onClick: () => {
-                setModalVisible(true);
-                setModalData(record);
-              },
-              onKeyPress: () => {
-                setModalVisible(true);
-                setModalData(record);
-              },
-            })}
-            dataSource={visibleResources}
-            expandable={config.study_preview_field && ({
-              // expand all rows
-              expandedRowKeys: visibleResources.map(r => r[config.minimal_field_mapping.uid]),
-              expandedRowRender: (record) => {
-                const studyPreviewText = record[config.study_preview_field.field];
-                const renderValue = (value: string | undefined): React.ReactNode => {
-                  if (!value) {
-                    if (config.study_preview_field.include_if_not_available) {
-                      return config.study_preview_field.value_if_not_available;
-                    }
-                  }
-                  if (searchTerm) {
-                    // get index of searchTerm match
-                    const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
-                    if (matchIndex === -1) {
-                      // if searchterm doesn't match this record, don't highlight anything
-                      return value;
-                    }
-                    // Scroll the text to the search term and highlight the search term.
-                    let start = matchIndex - 100;
-                    if (start < 0) {
-                      start = 0;
-                    }
-                    return (<React.Fragment>
-                      { start > 0 && '...' }
-                      {value.slice(start, matchIndex)}
-                      <span className='matched'>{value.slice(matchIndex, matchIndex + searchTerm.length)}</span>
-                      {value.slice(matchIndex + searchTerm.length)}
-                    </React.Fragment>
-                    );
-                  }
+        }
+      </div>
+      <Table
+        columns={columns}
+        rowKey={config.minimal_field_mapping.uid}
+        rowClassName='discovery-table__row'
+        onRow={record => ({
+          onClick: () => {
+            setModalVisible(true);
+            setModalData(record);
+          },
+          onKeyPress: () => {
+            setModalVisible(true);
+            setModalData(record);
+          },
+        })}
+        dataSource={visibleResources}
+        expandable={config.study_preview_field && ({
+          // expand all rows
+          expandedRowKeys: visibleResources.map(r => r[config.minimal_field_mapping.uid]),
+          expandedRowRender: (record) => {
+            const studyPreviewText = record[config.study_preview_field.field];
+            const renderValue = (value: string | undefined): React.ReactNode => {
+              if (!value) {
+                if (config.study_preview_field.include_if_not_available) {
+                  return config.study_preview_field.value_if_not_available;
+                }
+              }
+              if (searchTerm) {
+                // get index of searchTerm match
+                const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
+                if (matchIndex === -1) {
+                  // if searchterm doesn't match this record, don't highlight anything
                   return value;
-                };
-                return (
-                  <div
-                    className='discovery-table__expanded-row-content'
-                    role='button'
-                    tabIndex={0}
-                    onClick={() => {
-                      setModalData(record);
-                      setModalVisible(true);
-                    }}
-                  >
-                    {renderValue(studyPreviewText)}
-                  </div>
+                }
+                // Scroll the text to the search term and highlight the search term.
+                let start = matchIndex - 100;
+                if (start < 0) {
+                  start = 0;
+                }
+                return (<React.Fragment>
+                  { start > 0 && '...' }
+                  {value.slice(start, matchIndex)}
+                  <span className='matched'>{value.slice(matchIndex, matchIndex + searchTerm.length)}</span>
+                  {value.slice(matchIndex + searchTerm.length)}
+                </React.Fragment>
                 );
-              },
-              expandedRowClassName: () => 'discovery-table__expanded-row',
-              expandIconColumnIndex: -1, // don't render expand icon
-            })}
-          />
-        </div>
-      </React.Fragment>)
-      : <div>Loading...</div>
-    }
+              }
+              return value;
+            };
+            return (
+              <div
+                className='discovery-table__expanded-row-content'
+                role='button'
+                tabIndex={0}
+                onClick={() => {
+                  setModalData(record);
+                  setModalVisible(true);
+                }}
+              >
+                {renderValue(studyPreviewText)}
+              </div>
+            );
+          },
+          expandedRowClassName: () => 'discovery-table__expanded-row',
+          expandIconColumnIndex: -1, // don't render expand icon
+        })}
+      />
+    </div>
     <Modal
       visible={modalVisible}
       onOk={() => setModalVisible(false)}
       onCancel={() => setModalVisible(false)}
       width='80vw'
-      title={config.study_page_fields.header &&
-        <Space align='baseline'>
-          <h3 className='discovery-modal__header-text'>{modalData && modalData[config.study_page_fields.header.field]}</h3>
-          <a href={`/discovery/${modalData && modalData[config.minimal_field_mapping.uid]}/`}><LinkOutlined /> Permalink</a>
-        </Space>
-      }
       footer={false}
     >
       <Space direction='vertical' size='large'>
-        { modalData && modalData[accessibleFieldName]
+        {config.study_page_fields.header &&
+          <Space align='baseline'>
+            <h3 className='discovery-modal__header-text'>{modalData[config.study_page_fields.header.field]}</h3>
+            <a href={`/discovery/${modalData[config.minimal_field_mapping.uid]}/`}><LinkOutlined /> Permalink</a>
+          </Space>
+        }
+        { modalData[accessibleFieldName]
           ? (
             <Alert
               type='success'
@@ -552,7 +512,7 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
             { fieldGroup.fields.map((field) => {
               // display nothing if selected resource doesn't have this field
               // and this field isn't configured to show a default value
-              if (!modalData || (!modalData[field.field] && !field.include_if_not_available)) {
+              if (!modalData[field.field] && !field.include_if_not_available) {
                 return null;
               }
               return (
@@ -574,6 +534,10 @@ const DiscoveryBeta: React.FunctionComponent<DiscoveryBetaProps> = (props: Disco
       </Space>
     </Modal>
   </div>);
+};
+
+DiscoveryBeta.defaultProps = {
+  params: { studyUID: undefined },
 };
 
 export default DiscoveryBeta;
