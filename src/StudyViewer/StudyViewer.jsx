@@ -136,6 +136,12 @@ StudyViewer.propTypes = {
   fileData: PropTypes.array,
   noConfigError: PropTypes.string,
   history: PropTypes.object.isRequired,
+  match: PropTypes.shape(
+    {
+      params: PropTypes.object,
+      path: PropTypes.string,
+    },
+  ).isRequired,
 };
 
 StudyViewer.defaultProps = {

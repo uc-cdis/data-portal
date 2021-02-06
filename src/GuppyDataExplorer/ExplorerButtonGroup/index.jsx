@@ -19,7 +19,6 @@ class ExplorerButtonGroup extends React.Component {
     this.state = {
       // for manifest
       manifestEntryCount: 0,
-
       // for exports
       toasterOpen: false,
       toasterHeadline: '',
@@ -43,6 +42,10 @@ class ExplorerButtonGroup extends React.Component {
       exportWorkspaceFileName: null,
       exportWorkspaceStatus: null,
       workspaceSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
+      // miscellaneous
+      lastJobState: undefined,
+      lastTotalCount: undefined,
+      lastFilter: undefined,
     };
 
     // Display misconfiguration warnings if Export PFB to Terra/SBG buttons are present
@@ -61,14 +64,11 @@ class ExplorerButtonGroup extends React.Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.job && nextProps.job.status === 'Failed' && this.props.job.status !== 'Failed') {
-      this.setState(prevState => ({
-        toasterOpen: true,
-        toasterHeadline: prevState.toasterErrorText,
-      }));
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.job && this.props.job.status === 'Failed' && prevProps.job && prevProps.job.status !== 'Failed') {
+      this.onJobFailed(prevState.toasterErrorText);
     }
-    if (nextProps.job && nextProps.job.status === 'Completed' && this.props.job.status !== 'Completed') {
+    if (this.props.job && this.props.job.status === 'Completed' && prevProps.job && prevProps.job.status !== 'Completed') {
       this.fetchJobResult()
         .then((res) => {
           if (this.state.exportingToTerra) {
@@ -99,22 +99,29 @@ class ExplorerButtonGroup extends React.Component {
           }
         });
     }
-    if (nextProps.totalCount !== this.props.totalCount
-      && nextProps.totalCount) {
+    if (prevProps.totalCount !== this.props.totalCount
+      && this.props.totalCount) {
       this.refreshManifestEntryCount();
     }
-    if (this.props.buttonConfig.enableLimitedFilePFBExport
-      && nextProps.filter !== this.props.filter) {
-      const sourceNodeField = this.props.buttonConfig.enableLimitedFilePFBExport.sourceNodeField;
+    if (prevProps.buttonConfig.enableLimitedFilePFBExport
+      && prevProps.filter !== this.props.filter) {
+      const sourceNodeField = prevProps.buttonConfig.enableLimitedFilePFBExport.sourceNodeField;
       if (!sourceNodeField) {
         throw new Error('Limited File PFB Export is enabled, but \'sourceNodeField\' has not been specified. Check the portal config.');
       }
-      this.refreshSourceNodes(nextProps.filter, sourceNodeField);
+      this.refreshSourceNodes(this.props.filter, sourceNodeField);
     }
   }
 
   componentWillUnmount() {
     this.props.resetJobState();
+  }
+
+  onJobFailed = (toasterHeadline) => {
+    this.setState({
+      toasterOpen: true,
+      toasterHeadline,
+    });
   }
 
   getOnClickFunction = (buttonConfig) => {

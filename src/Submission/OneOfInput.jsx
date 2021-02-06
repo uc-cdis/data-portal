@@ -24,7 +24,7 @@ class OneOfInput extends Component {
   state = {
     selectedOption: 'Text',
   };
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
     if (this.state.selectedOption === 'Number') {
       this.props.onUpdateFormSchema({ [this.props.name]: 'number' });
     } else {

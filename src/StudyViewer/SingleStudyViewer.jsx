@@ -165,6 +165,12 @@ SingleStudyViewer.propTypes = {
   noConfigError: PropTypes.string,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
+  match: PropTypes.shape(
+    {
+      params: PropTypes.object,
+      path: PropTypes.string,
+    },
+  ).isRequired,
 };
 
 SingleStudyViewer.defaultProps = {

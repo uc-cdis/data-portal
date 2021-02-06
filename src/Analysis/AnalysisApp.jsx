@@ -26,7 +26,7 @@ class AnalysisApp extends React.Component {
     this.updateApp();
   }
 
-  getDerivedStateFromProps(props) {
+  static getDerivedStateFromProps(props) {
     if (props.job && props.job.status === 'Completed') {
       this.fetchJobResult()
         .then(res => ({ results: `${res.data.output}`.split('\n') }));

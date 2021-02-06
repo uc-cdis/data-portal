@@ -12,8 +12,8 @@ class GraphCalculator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      oldHighlightingNode: null,
-      oldSecondHighlightingNodeID: null,
+      highlightingNode: null,
+      secondHighlightingNodeID: null,
     };
   }
 
@@ -31,14 +31,14 @@ class GraphCalculator extends React.Component {
     }
   }
 
-  getDerivedStateFromProps(props) {
+  componentDidUpdate(prevProps) {
     // if the highlighted node is updated, calculate related highlighted nodes
-    const newHighlightingNode = props.highlightingNode;
-    const newSecondHighlightingNodeID = props.secondHighlightingNodeID;
-    if (this.state.oldHighlightingNode !== newHighlightingNode) {
+    const newHighlightingNode = this.props.highlightingNode;
+    const newSecondHighlightingNodeID = this.props.secondHighlightingNodeID;
+    if (this.state.highlightingNode !== newHighlightingNode) {
       const relatedHighlightedNodeIDs = calculateHighlightRelatedNodeIDs(
         newHighlightingNode,
-        this.props.nodes,
+        prevProps.nodes,
       );
       this.props.onHighlightRelatedNodesCalculated(relatedHighlightedNodeIDs);
       const secondHighlightingNodeCandidateIDs = newHighlightingNode
@@ -47,7 +47,7 @@ class GraphCalculator extends React.Component {
     }
 
     // if the second highlighting node is updated, calculate related highlighting nodes
-    if (this.state.oldSecondHighlightingNodeID !== newSecondHighlightingNodeID) {
+    if (this.state.secondHighlightingNodeID !== newSecondHighlightingNodeID) {
       const pathRelatedToSecondHighlightingNode = calculatePathRelatedToSecondHighlightingNode(
         newHighlightingNode,
         newSecondHighlightingNodeID,
@@ -58,8 +58,8 @@ class GraphCalculator extends React.Component {
     }
 
     // update data model structure if update highlighting/secondHighlighting node
-    if (this.state.oldHighlightingNode !== newHighlightingNode
-      || this.state.oldSecondHighlightingNodeID !== newSecondHighlightingNodeID
+    if (this.state.highlightingNode !== newHighlightingNode
+      || this.state.secondHighlightingNodeID !== newSecondHighlightingNodeID
     ) {
       if (newSecondHighlightingNodeID) {
         const {
@@ -91,11 +91,14 @@ class GraphCalculator extends React.Component {
       } else {
         this.props.onDataModelStructureCalculated(null);
       }
+      this.onFinishUpdateDataModelStructure(newHighlightingNode, newSecondHighlightingNodeID);
     }
+  }
 
-    return ({
-      oldHighlightingNode: newHighlightingNode,
-      oldSecondHighlightingNodeID: newSecondHighlightingNodeID,
+  onFinishUpdateDataModelStructure(newHighlightingNode, newSecondHighlightingNodeID) {
+    this.setState({
+      highlightingNode: newHighlightingNode,
+      secondHighlightingNodeID: newSecondHighlightingNodeID,
     });
   }
 
