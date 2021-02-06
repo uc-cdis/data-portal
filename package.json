@@ -61,7 +61,7 @@
     "react-redux": "^5.0.7",
     "react-relay": "^1.6.0",
     "react-responsive": "^6.1.1",
-    "react-router-dom": "^4.2.2",
+    "react-router-dom": "^5.0.0",
     "react-select": "^3.1.0",
     "react-slick": "^0.25.2",
     "react-svg-loader": "^3.0.3",
@@ -80,7 +80,7 @@
     "slick-carousel": "^1.8.1",
     "string-similarity": "^3.0.0",
     "style-loader": "^0.21.0",
-    "styled-components": "^3.2.6",
+    "styled-components": "^5.0.0",
     "underscore": "^1.8.3",
     "url-join": "^4.0.0",
     "viz.js": "2.0.0"
