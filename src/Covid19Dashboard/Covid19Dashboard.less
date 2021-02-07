@@ -101,3 +101,18 @@
   justify-content: center;
   align-items: center;
 }
+
+// for ant design carousel
+.ant-carousel .slick-prev, .ant-carousel .slick-next {
+  color: black;
+  background-color: var(--g3-color__smoke);
+}
+
+.ant-carousel .slick-prev:hover, .ant-carousel .slick-next:hover, .ant-carousel .slick-prev:focus, .ant-carousel .slick-next:focus {
+  color: rgba(0,0,0,0.3);
+  background-color: var(--g3-color__smoke);
+}
+
+.ant-carousel .slick-prev::before, .ant-carousel .slick-next::before {
+  content: '';
+}

@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { Carousel } from 'antd';
 
 import { covid19DashboardConfig } from '../../localconf';
 import Spinner from '../../components/Spinner';
@@ -35,14 +33,14 @@ class ChartCarousel extends PureComponent {
       return null;
     }
 
-    const sliderSettings = {
-      dots: true,
-      infinite: false,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      arrows: true,
-    };
+    // const sliderSettings = {
+    //   dots: true,
+    //   infinite: false,
+    //   speed: 500,
+    //   slidesToShow: 1,
+    //   slidesToScroll: 1,
+    //   arrows: true,
+    // };
 
     const charts = [];
     this.props.chartsConfig.forEach((chartConfig, i) => {
@@ -125,9 +123,9 @@ class ChartCarousel extends PureComponent {
             // match the popup width...
             style={this.props.isInPopup ? { width: '70vw' } : {}}
           >
-            <Slider {...sliderSettings}>
+            <Carousel arrows dots infinite={false}>
               {charts}
-            </Slider>
+            </Carousel>
           </div>
 
           { showDescriptionHover &&
