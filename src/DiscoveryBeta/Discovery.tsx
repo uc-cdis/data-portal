@@ -272,7 +272,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 <><code>{record[config.minimal_field_mapping.authz_field]}</code>.</>
               </div>}
             >
-              <UnlockOutlined />
+              <UnlockOutlined className='discovery-table__access-icon' />
             </Popover>
           )
           : (
@@ -288,7 +288,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 </div>
               }
             >
-              <LockFilled />
+              <LockFilled className='discovery-table__access-icon' />
             </Popover>
           )
       ),
@@ -386,7 +386,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       <div className='discovery-table__header'>
         { config.features.search.search_bar.enabled &&
             <Input
-              className='discovery-table__search'
+              className='discovery-search'
               prefix={<SearchOutlined />}
               value={searchTerm}
               onChange={handleSearchChange}
@@ -398,7 +398,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               <Radio.Group
                 onChange={handleAccessLevelChange}
                 value={accessLevel}
-                className='discovery-table__access-button'
+                className='discovery-access-selector'
                 defaultValue='both'
                 buttonStyle='solid'
               >
@@ -484,24 +484,28 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       footer={false}
     >
       <Space direction='vertical' size='large'>
-        {config.study_page_fields.header &&
+        { config.study_page_fields.header &&
           <Space align='baseline'>
             <h3 className='discovery-modal__header-text'>{modalData[config.study_page_fields.header.field]}</h3>
             <a href={`/discovery/${modalData[config.minimal_field_mapping.uid]}/`}><LinkOutlined /> Permalink</a>
           </Space>
         }
-        { modalData[accessibleFieldName]
-          ? (
-            <Alert
-              type='success'
-              message={<><UnlockOutlined /> You have access to this study.</>}
-            />
-          )
-          : (
-            <Alert
-              type='warning'
-              message={<><LockFilled /> You do not have access to this study.</>}
-            />
+        { config.features.authorization.enabled &&
+          (modalData[accessibleFieldName]
+            ? (
+              <Alert
+                className='discovery-modal__access-alert'
+                type='success'
+                message={<><UnlockOutlined /> You have access to this study.</>}
+              />
+            )
+            : (
+              <Alert
+                className='discovery-modal__access-alert'
+                type='warning'
+                message={<><LockFilled /> You do not have access to this study.</>}
+              />
+            )
           )
         }
         { config.study_page_fields.fields_to_show.map((fieldGroup, i) => (

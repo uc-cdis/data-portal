@@ -1,6 +1,5 @@
 import React from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
-import { act } from 'react-dom/test-utils';
+import { mount } from 'enzyme';
 
 import Discovery from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
@@ -8,12 +7,14 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import mockData from './__mocks__/mock_mds_studies.json';
 import mockConfig from './__mocks__/mock_config.json';
 
-const testConfig = mockConfig as DiscoveryConfig;
-const testStudies = mockData.map(study => ({ ...study, __accessible: true }));
+// const testConfig = mockConfig as DiscoveryConfig;
+const testStudiesAccessible = mockData.map(study => ({ ...study, __accessible: true }));
+const testStudiesUnaccessible = mockData.map(study => ({ ...study, __accessible: false }));
+const testStudiesMixedAccessibility = mockData.map(
+  (study, i) => ({ ...study, __accessible: i % 2 === 0 }));
 
-// Mocks window.matchMedia which is used by antd components.
-// This is required to avoid errors when jsdom rendering the Discovery page,
-// which uses antd components.
+// This mock is required to avoid errors when rendering the Discovery page
+// with enzyme's `mount` method (which uses jsdom). (antd components use window.matchMedia)
 // See https://jestjs.io/docs/en/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -29,26 +30,52 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-let container = null;
+let testConfig: DiscoveryConfig;
 beforeEach(() => {
-  // setup a DOM element as a render target
-  container = document.createElement('div');
-  document.body.appendChild(container);
+  testConfig = mockConfig as DiscoveryConfig;
 });
 
-afterEach(() => {
-  // cleanup on exiting
-  unmountComponentAtNode(container);
-  container.remove();
-  container = null;
-});
-
-test('Page header is configurable', () => {
-  act(() => {
-    render(<Discovery
+describe('Configuration', () => {
+  test('Page header is configurable', () => {
+    const wrapper = mount(<Discovery
       config={testConfig}
-      studies={testStudies}
-    />, container);
+      studies={testStudiesAccessible}
+    />);
+    expect(wrapper.find('.discovery-page-title').text()).toBe(testConfig.pageTitle);
+
+    wrapper.unmount();
   });
-  expect(container.querySelector('.discovery-page-title').textContent).toBe(testConfig.pageTitle);
+
+  test('Search bar can be enabled/disabled', () => {
+    [true, false].forEach((enabled) => {
+      testConfig.features.search.search_bar.enabled = enabled;
+      const wrapper = mount(<Discovery
+        config={testConfig}
+        studies={testStudiesAccessible}
+      />);
+      expect(wrapper.exists('.discovery-search')).toBe(enabled);
+
+      wrapper.unmount();
+    });
+  });
+
+  test('Authorization checking can be enabled/disabled', () => {
+    [true, false].forEach((enabled) => {
+      testConfig.features.authorization.enabled = enabled;
+      const wrapper = mount(<Discovery
+        config={testConfig}
+        studies={testStudiesAccessible}
+      />);
+      // access filter should be present/hidden
+      expect(wrapper.exists('.discovery-access-selector')).toBe(enabled);
+      // accessible column in table should be present/hidden
+      expect(wrapper.exists('.discovery-table__access-icon')).toBe(enabled);
+      // access info in modal should be present/hidden
+      // Open modal to a study by clicking on the first row
+      wrapper.find('.discovery-table__row').first().simulate('click');
+      expect(wrapper.exists('.discovery-modal__access-alert')).toBe(enabled);
+
+      wrapper.unmount();
+    });
+  });
 });
