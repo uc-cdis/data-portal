@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import { fetchWithCreds } from '../actions';
 import { homepageChartNodes, homepageChartNodesChunkSize, datasetUrl } from '../localconf';
 import getReduxStore from '../reduxStore';

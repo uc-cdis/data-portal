@@ -58,7 +58,7 @@
     "react-ga": "^2.5.3",
     "react-helmet": "^5.2.0",
     "react-map-gl": "^5.2.3",
-    "react-redux": "^5.0.7",
+    "react-redux": "^6.0.0",
     "react-relay": "^1.6.0",
     "react-responsive": "^6.1.1",
     "react-router-dom": "^5.0.0",
@@ -71,7 +71,7 @@
     "recharts": "^1.0.0-beta.10",
     "redux": "^3.7.0",
     "redux-devtools": "^3.3.1",
-    "redux-form": "^6.5.0",
+    "redux-form": "^8.0.0",
     "redux-persist": "^4.7.1",
     "redux-thunk": "^2.2.0",
     "relay-compiler": "^1.6.0",
@@ -81,8 +81,6 @@
     "string-similarity": "^3.0.0",
     "style-loader": "^0.21.0",
     "styled-components": "^5.0.0",
-    "underscore": "^1.8.3",
-    "url-join": "^4.0.0",
     "viz.js": "2.0.0"
   },
   "devDependencies": {
