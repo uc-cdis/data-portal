@@ -21,7 +21,7 @@ import './Discovery.css';
 const accessibleFieldName = '__accessible';
 
 const ARBORIST_READ_PRIV = 'read';
-enum AccessLevel {
+export enum AccessLevel {
   BOTH = 'both',
   ACCESSIBLE = 'accessible',
   UNACCESSIBLE = 'unaccessible',
@@ -149,6 +149,8 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   const [searchTerm, setSearchTerm] = useState('');
   const [accessLevel, setAccessLevel] = useState(AccessLevel.BOTH);
   const [selectedTags, setSelectedTags] = useState({});
+
+  // console.log('accessLevel', accessLevel);
 
   useEffect(() => {
     // Load studies into JS Search.

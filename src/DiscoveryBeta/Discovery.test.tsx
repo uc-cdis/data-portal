@@ -1,14 +1,15 @@
 import React from 'react';
+// import { act } from 'react-test-renderer';
 import { mount } from 'enzyme';
 
-import Discovery from './Discovery';
+import Discovery, { AccessLevel } from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 
 import mockData from './__mocks__/mock_mds_studies.json';
 import mockConfig from './__mocks__/mock_config.json';
 
 // const testConfig = mockConfig as DiscoveryConfig;
-const testStudies = mockData.map(study => ({ ...study, __accessible: true }));
+const testStudies = mockData.map((study, i) => ({ ...study, __accessible: i % 2 === 0 }));
 
 // This mock is required to avoid errors when rendering the Discovery page
 // with enzyme's `mount` method (which uses jsdom). (antd components use window.matchMedia)
@@ -187,5 +188,32 @@ describe('Modal', () => {
 
     // Check to see if the modal header shows the study's UID; other tests already test the fields.
     expect(modal.find('.discovery-modal__header-text').first().text()).toBe(permalinkStudyUID);
+  });
+});
+
+
+describe('Table', () => {
+  test('Table filters records by access level', () => {
+    testConfig.features.authorization.enabled = true;
+    const wrapper = mount(<Discovery
+      config={testConfig}
+      studies={testStudies}
+    />);
+
+    const accessSelector = wrapper.find('.discovery-access-selector').first();
+    accessSelector.invoke('onChange')({ target: { value: AccessLevel.ACCESSIBLE } });
+    let rows = wrapper.find('.discovery-table__row');
+    // all rows should have an unlock icon (accessible)
+    expect(rows.everyWhere(r => r.exists('[aria-label="unlock"]'))).toBe(true);
+
+    accessSelector.invoke('onChange')({ target: { value: AccessLevel.UNACCESSIBLE } });
+    rows = wrapper.find('.discovery-table__row');
+    // all rows should have an lock icon (unaccessible)
+    expect(rows.everyWhere(r => r.exists('[aria-label="lock"]'))).toBe(true);
+
+    accessSelector.invoke('onChange')({ target: { value: AccessLevel.BOTH } });
+    rows = wrapper.find('.discovery-table__row');
+    // all rows should have either a lock or an unlock icon
+    expect(rows.everyWhere(r => r.exists('[aria-label="unlock"]') || r.exists('[aria-label="lock"]'))).toBe(true);
   });
 });
