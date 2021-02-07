@@ -88,7 +88,7 @@
       "fields_to_show": [
         {
           "group_name": "Study Identifiers",
-          "include_name": false,
+          "include_name": true,
           "fields": [
             {
               "name": "Number of Subjects",

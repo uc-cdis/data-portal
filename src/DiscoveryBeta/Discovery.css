@@ -164,14 +164,12 @@
     font-size: 12px;
 }
 
-.discovery-modal {
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 30px 50px;
+.discovery-modal__attribute-group {
     display: flex;
     flex-direction: column;
 }
 
 .discovery-modal__attribute-name {
     color: #7f7f7f;
+    margin-right: 7px;
 }

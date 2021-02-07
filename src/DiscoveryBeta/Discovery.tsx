@@ -510,7 +510,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           )
         }
         { config.study_page_fields.fields_to_show.map((fieldGroup, i) => (
-          <Space key={i} direction='vertical' className='discovery-modal__attribute-group'>
+          <div key={i} className='discovery-modal__attribute-group'>
             { fieldGroup.include_name &&
                   <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.group_name}</h3>
             }
@@ -521,7 +521,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 return null;
               }
               return (
-                <Space key={field.name} align='start' className='discovery-modal__attribute'>
+                <div key={field.name} className='discovery-modal__attribute'>
                   { field.include_name !== false &&
                         <span className='discovery-modal__attribute-name'>{field.name}</span>
                   }
@@ -531,10 +531,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                       : (field.value_if_not_available || 'Not available')
                     }
                   </span>
-                </Space>
+                </div>
               );
             })}
-          </Space>
+          </div>
         ))}
       </Space>
     </Modal>

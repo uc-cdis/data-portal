@@ -8,10 +8,7 @@ import mockData from './__mocks__/mock_mds_studies.json';
 import mockConfig from './__mocks__/mock_config.json';
 
 // const testConfig = mockConfig as DiscoveryConfig;
-const testStudiesAccessible = mockData.map(study => ({ ...study, __accessible: true }));
-const testStudiesUnaccessible = mockData.map(study => ({ ...study, __accessible: false }));
-const testStudiesMixedAccessibility = mockData.map(
-  (study, i) => ({ ...study, __accessible: i % 2 === 0 }));
+const testStudies = mockData.map(study => ({ ...study, __accessible: true }));
 
 // This mock is required to avoid errors when rendering the Discovery page
 // with enzyme's `mount` method (which uses jsdom). (antd components use window.matchMedia)
@@ -39,7 +36,7 @@ describe('Configuration', () => {
   test('Page header is configurable', () => {
     const wrapper = mount(<Discovery
       config={testConfig}
-      studies={testStudiesAccessible}
+      studies={testStudies}
     />);
     expect(wrapper.find('.discovery-page-title').text()).toBe(testConfig.pageTitle);
 
@@ -51,7 +48,7 @@ describe('Configuration', () => {
       testConfig.features.search.search_bar.enabled = enabled;
       const wrapper = mount(<Discovery
         config={testConfig}
-        studies={testStudiesAccessible}
+        studies={testStudies}
       />);
       expect(wrapper.exists('.discovery-search')).toBe(enabled);
 
@@ -64,7 +61,7 @@ describe('Configuration', () => {
       testConfig.features.authorization.enabled = enabled;
       const wrapper = mount(<Discovery
         config={testConfig}
-        studies={testStudiesAccessible}
+        studies={testStudies}
       />);
       // access filter should be present/hidden
       expect(wrapper.exists('.discovery-access-selector')).toBe(enabled);
@@ -81,37 +78,15 @@ describe('Configuration', () => {
 });
 
 describe('Modal', () => {
-  // let wrapper;
-  // let modal;
-  // let modalData;
-  const modalDataIndex = 2;
-
-  // beforeEach(() => {
-  //   // Click on the Nth study in the table and expect the modal to appear
-  //   // containing the Nth study's data.
-  //   // Assumes that the Nth study in the table is the same as the Nth study
-  //   // in testStudies. (This should be true if no filtering has been applied.)
-  //   wrapper = mount(<Discovery
-  //     config={testConfig}
-  //     studies={testStudiesAccessible}
-  //   />);
-  //   wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
-  //   modal = wrapper.find('.discovery-modal').first();
-  //   modalData = testStudiesAccessible[modalDataIndex];
-  // });
-
-  // afterEach(() => {
-  //   wrapper.unmount();
-  // });
-
   test('Modal header field is enabled/disabled', () => {
+    const modalDataIndex = 2;
     [true, false].forEach((enabled) => {
       testConfig.study_page_fields.header = enabled
-        ? { field: 'study_id' }
+        ? { field: testConfig.minimal_field_mapping.uid }
         : undefined;
       const wrapper = mount(<Discovery
         config={testConfig}
-        studies={testStudiesAccessible}
+        studies={testStudies}
       />);
       wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
       const modal = wrapper.find('.discovery-modal').first();
@@ -120,15 +95,97 @@ describe('Modal', () => {
   });
 
   test('Modal header field shows configured field', () => {
-    const headerField = 'study_id';
+    const modalDataIndex = 2;
+    const headerField = testConfig.minimal_field_mapping.uid;
     testConfig.study_page_fields.header = { field: headerField };
     const wrapper = mount(<Discovery
       config={testConfig}
-      studies={testStudiesAccessible}
+      studies={testStudies}
     />);
     wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
     const modal = wrapper.find('.discovery-modal').first();
-    const modalData = testStudiesAccessible[modalDataIndex];
+    const modalData = testStudies[modalDataIndex];
     expect(modal.find('.discovery-modal__header-text').first().text()).toBe(modalData[headerField]);
+  });
+
+  test('Modal fields show selected study\'s data with correct configuration', () => {
+    const modalDataIndex = 2;
+    const wrapper = mount(<Discovery
+      config={testConfig}
+      studies={testStudies}
+    />);
+    wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
+    const modal = wrapper.find('.discovery-modal').first();
+    const modalData = testStudies[modalDataIndex];
+
+    testConfig.study_page_fields.fields_to_show.forEach((fieldGroupCfg, i) => {
+      const group = modal.find('.discovery-modal__attribute-group').at(i);
+      if (fieldGroupCfg.include_name) {
+        expect(group.find('.discovery-modal__attribute-group-name').first().text()).toBe(fieldGroupCfg.group_name);
+      }
+
+      let fieldIdx = 0;
+      fieldGroupCfg.fields.forEach((fieldCfg) => {
+        const fieldIsHidden = !modalData[fieldCfg.field] && !fieldCfg.include_if_not_available;
+        if (fieldIsHidden) {
+          // Field is hidden if it's missing data and configured to hide missing data
+          // In that case because this field isn't displayed, skip over this field and
+          // don't increment fieldIdx.
+          return;
+        }
+
+        const field = group.find('.discovery-modal__attribute').at(fieldIdx);
+
+        // expect field to show correct field name, if configured to show a field name.
+        if (fieldCfg.include_name !== false) {
+          expect(field.find('.discovery-modal__attribute-name').first().text()).toBe(fieldCfg.name);
+        } else {
+          expect(field.exists('.discovery-modal__attribute-name')).toBe(false);
+        }
+
+        // expect field to display default value if field is missing data
+        if (!modalData[fieldCfg.field]) {
+          if (fieldCfg.include_if_not_available) {
+            expect(field.find('.discovery-modal__attribute-value').first().text()).toBe(fieldCfg.value_if_not_available);
+          }
+        } else {
+          // expect field to display the correct data, formatted according to content_type.
+          let expectedFieldData;
+          switch (fieldCfg.content_type) {
+          case 'string':
+            expectedFieldData = modalData[fieldCfg.field];
+            break;
+          case 'paragraphs':
+            expectedFieldData = modalData[fieldCfg.field].replace(/\n/g, '');
+            break;
+          case 'number':
+            expectedFieldData = modalData[fieldCfg.field].toLocaleString();
+            break;
+          default:
+            throw new Error(`Unrecognized content_type ${fieldCfg.content_type}.`);
+          }
+
+          expect(field.find('.discovery-modal__attribute-value').first().text()).toBe(expectedFieldData);
+        }
+        fieldIdx += 1;
+      });
+    });
+  });
+
+  test('Discovery page opens modal with correct data on permalink', () => {
+    const permalinkStudyIndex = 5;
+    const permalinkStudyData = testStudies[permalinkStudyIndex];
+    const permalinkStudyUID = permalinkStudyData[testConfig.minimal_field_mapping.uid];
+    const wrapper = mount(<Discovery
+      config={testConfig}
+      studies={testStudies}
+      params={{ studyUID: permalinkStudyUID }}
+    />);
+
+    testConfig.study_page_fields.header = { field: testConfig.minimal_field_mapping.uid };
+    const modal = wrapper.find('.discovery-modal').first();
+
+    // Check to see if the modal header shows the study's UID; other tests already test the fields.
+    expect(modal.find('.discovery-modal__header-text').first().text()).toBe(permalinkStudyUID);
   });
 });
