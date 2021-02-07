@@ -1,4 +1,5 @@
 {
+    "pageTitle": "My Special Test Discovery Page",
     "features": {
       "exploration_integration": {
         "enabled": false
