@@ -79,3 +79,56 @@ describe('Configuration', () => {
     });
   });
 });
+
+describe('Modal', () => {
+  // let wrapper;
+  // let modal;
+  // let modalData;
+  const modalDataIndex = 2;
+
+  // beforeEach(() => {
+  //   // Click on the Nth study in the table and expect the modal to appear
+  //   // containing the Nth study's data.
+  //   // Assumes that the Nth study in the table is the same as the Nth study
+  //   // in testStudies. (This should be true if no filtering has been applied.)
+  //   wrapper = mount(<Discovery
+  //     config={testConfig}
+  //     studies={testStudiesAccessible}
+  //   />);
+  //   wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
+  //   modal = wrapper.find('.discovery-modal').first();
+  //   modalData = testStudiesAccessible[modalDataIndex];
+  // });
+
+  // afterEach(() => {
+  //   wrapper.unmount();
+  // });
+
+  test('Modal header field is enabled/disabled', () => {
+    [true, false].forEach((enabled) => {
+      testConfig.study_page_fields.header = enabled
+        ? { field: 'study_id' }
+        : undefined;
+      const wrapper = mount(<Discovery
+        config={testConfig}
+        studies={testStudiesAccessible}
+      />);
+      wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
+      const modal = wrapper.find('.discovery-modal').first();
+      expect(modal.exists('.discovery-modal__header-text')).toBe(enabled);
+    });
+  });
+
+  test('Modal header field shows configured field', () => {
+    const headerField = 'study_id';
+    testConfig.study_page_fields.header = { field: headerField };
+    const wrapper = mount(<Discovery
+      config={testConfig}
+      studies={testStudiesAccessible}
+    />);
+    wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
+    const modal = wrapper.find('.discovery-modal').first();
+    const modalData = testStudiesAccessible[modalDataIndex];
+    expect(modal.find('.discovery-modal__header-text').first().text()).toBe(modalData[headerField]);
+  });
+});

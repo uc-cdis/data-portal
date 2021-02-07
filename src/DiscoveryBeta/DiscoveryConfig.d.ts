@@ -53,7 +53,7 @@ export interface DiscoveryConfig {
     },
     study_page_fields: {
         // show_all_available_fields: boolean, // not supported
-        header: {
+        header?: {
             field: string
         },
         fields_to_show: {

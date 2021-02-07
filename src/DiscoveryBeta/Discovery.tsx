@@ -477,6 +477,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       />
     </div>
     <Modal
+      className='discovery-modal'
       visible={modalVisible}
       onOk={() => setModalVisible(false)}
       onCancel={() => setModalVisible(false)}
