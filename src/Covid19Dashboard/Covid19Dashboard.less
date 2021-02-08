@@ -32,13 +32,12 @@
 .covid19-dashboard_visualizations {
   padding: 10px;
   padding-top: 0; // counts above visualizations already padded
-  display: grid;
-  grid-auto-columns: 1fr 550px;
+  display: flex;
 }
 
 .covid19-dashboard_charts {
-  grid-column: 2;
-  display: grid;
+  width: 100%;
+  min-width: 550px;
 }
 
 .covid19-dashboard__location-info__click {
@@ -76,8 +75,9 @@
 // end location popup
 
 .map-chart {
-  grid-column: 1;
   width: 100%;
+  flex-basis: 200%;
+  max-width: 1080px;
 }
 
 .map-chart__mapgl-map {
