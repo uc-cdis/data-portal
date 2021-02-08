@@ -68,12 +68,13 @@ class ProjectTable extends React.Component {
 ProjectTable.propTypes = {
   projectList: PropTypes.array,
   summaries: PropTypes.array,
-  userAuthMapping: PropTypes.object.isRequired,
+  userAuthMapping: PropTypes.object,
 };
 
 ProjectTable.defaultProps = {
   summaries: [],
   projectList: [],
+  userAuthMapping: {},
 };
 
 export default ProjectTable;

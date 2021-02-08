@@ -88,12 +88,13 @@ SubmissionHeader.propTypes = {
   unmappedFileCount: PropTypes.number,
   fetchUnmappedFileStats: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
+  userAuthMapping: PropTypes.object,
 };
 
 SubmissionHeader.defaultProps = {
   unmappedFileSize: 0,
   unmappedFileCount: 0,
+  userAuthMapping: {},
 };
 
 export default SubmissionHeader;

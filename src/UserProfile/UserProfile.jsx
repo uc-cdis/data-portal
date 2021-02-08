@@ -152,7 +152,7 @@ const UserProfile = ({ user, userProfile, userAuthMapping, popups, submission, o
 UserProfile.propTypes = {
   user: PropTypes.object.isRequired,
   userProfile: PropTypes.object.isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
+  userAuthMapping: PropTypes.object,
   popups: PropTypes.object.isRequired,
   submission: PropTypes.object,
   onClearCreationSession: PropTypes.func.isRequired,
@@ -165,6 +165,7 @@ UserProfile.propTypes = {
 
 UserProfile.defaultProps = {
   submission: {},
+  userAuthMapping: undefined,
 };
 
 export default UserProfile;

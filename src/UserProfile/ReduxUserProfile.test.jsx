@@ -1,6 +1,7 @@
 import React from 'react';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
 import { mount } from 'enzyme';
 
 import ReduxUserProfile, { createKey, deleteKey } from './ReduxUserProfile';
@@ -55,7 +56,11 @@ describe('the userProfile component', () => {
     fetch.mockResponseOnce(JSON.stringify(expectedData), { status: 200 });
     fetch.mockResponseOnce(JSON.stringify(expectedListKey), { status: 200 });
 
-    const userProfilePage = mount(<ReduxUserProfile />, { context: { store } });
+    const userProfilePage = mount(
+      <Provider store={store}>
+        <ReduxUserProfile />
+      </Provider>,
+    );
     const btn = userProfilePage.find('.g3-button');
     expect(btn).toHaveLength(1);
     btn.simulate('click');

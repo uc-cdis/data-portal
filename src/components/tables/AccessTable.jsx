@@ -71,12 +71,13 @@ class AccessTable extends React.Component {
 AccessTable.propTypes = {
   projects: PropTypes.object,
   projectsAccesses: PropTypes.object,
-  userAuthMapping: PropTypes.object.isRequired,
+  userAuthMapping: PropTypes.object,
 };
 
 AccessTable.defaultProps = {
   projects: {},
   projectsAccesses: {},
+  userAuthMapping: undefined,
 };
 
 export default AccessTable;

@@ -42,7 +42,8 @@ describe('the UserProfile component', () => {
         />
       </StaticRouter>,
     );
-    expect($vdom.find('tbody tr')).toHaveLength(testProps.userProfile.jtis.length + 1);
+    console.log($vdom.find('tbody tr').debug());
+    expect($vdom.find('tbody tr')).toHaveLength(testProps.userProfile.jtis.length);
   });
 
   it('triggers create-key events', (done) => {
