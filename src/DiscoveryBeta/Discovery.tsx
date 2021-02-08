@@ -229,7 +229,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 role='button'
                 tabIndex={0}
                 aria-pressed={isSelected ? 'true' : 'false'}
-                className={`discovery-header__tag-btn discovery-tag ${isSelected && 'discovery-tag--selected'}`}
+                className={`discovery-header__tag-btn discovery-tag ${isSelected ? 'discovery-tag--selected' : ''}`}
                 aria-label={name}
                 style={{
                   backgroundColor: isSelected ? color : 'initial',
