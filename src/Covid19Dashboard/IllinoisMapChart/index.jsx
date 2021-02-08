@@ -51,12 +51,11 @@ function filterCountyGeoJson(selectedFips) {
 class IllinoisMapChart extends React.Component {
   constructor(props) {
     super(props);
-    this.updateDimensions = this.updateDimensions.bind(this);
     this.choroCountyGeoJson = null;
     this.state = {
       mapSize: {
         width: '100%',
-        height: window.innerHeight - 221,
+        height: '100%',
       },
       viewport: {
         // start centered on Chicago
@@ -68,10 +67,6 @@ class IllinoisMapChart extends React.Component {
       },
       hoverInfo: null,
     };
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.updateDimensions);
   }
 
   onHover = (event) => {
@@ -134,12 +129,6 @@ class IllinoisMapChart extends React.Component {
           this.props.modeledFipsList.includes(feature.properties.FIPS),
         );
       }
-    });
-  }
-
-  updateDimensions() {
-    this.setState({
-      mapSize: { width: '100%', height: window.innerHeight - 221 },
     });
   }
 

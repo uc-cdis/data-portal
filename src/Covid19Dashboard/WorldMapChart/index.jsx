@@ -107,7 +107,6 @@ function filterCountyGeoJson(selectedFips) {
 class WorldMapChart extends React.Component {
   constructor(props) {
     super(props);
-    this.updateDimensions = this.updateDimensions.bind(this);
     this.choroCountryGeoJson = null;
     this.choroStateGeoJson = null;
     this.choroCountyGeoJson = null;
@@ -115,7 +114,7 @@ class WorldMapChart extends React.Component {
       selectedLayer: 'confirmed-dots',
       mapSize: {
         width: '100%',
-        height: window.innerHeight - 221,
+        height: '100%',
       },
       viewport: {
         longitude: 0,
@@ -126,10 +125,6 @@ class WorldMapChart extends React.Component {
       },
       hoverInfo: null,
     };
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.updateDimensions);
   }
 
   onHover = (event) => {
@@ -233,12 +228,6 @@ class WorldMapChart extends React.Component {
       return 'visible';
     }
     return 'none';
-  }
-
-  updateDimensions() {
-    this.setState({
-      mapSize: { width: '100%', height: window.innerHeight - 221 },
-    });
   }
 
   renderHoverPopup() {
