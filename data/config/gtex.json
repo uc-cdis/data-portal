@@ -292,6 +292,7 @@
     ],
     "guppyConfig": {
       "dataType": "subject",
+      "tierAccessLevel": "regular",
       "nodeCountTitle": "Subjects",
       "fieldMapping": [
         { "field": "consent_codes", "name": "Data Use Restriction" },
@@ -371,6 +372,7 @@
     },
     "guppyConfig": {
       "dataType": "file",
+      "tierAccessLevel": "regular",
       "fieldMapping": [
         { "field": "object_id", "name": "GUID" }
       ],

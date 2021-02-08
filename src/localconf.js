@@ -157,6 +157,15 @@ function buildConfig(opts) {
     explorerConfig = config.explorerConfig;
   }
 
+  // Two tiered-access options: site-wide and index-scoped.
+  // Tiered access is index-scoped if all guppyConfigs contain a tierAccessLevel.
+  let indexScopedTierAccessMode = true;
+  explorerConfig.forEach((item) => {
+    if (!item.guppyConfig.tierAccessLevel) {
+      indexScopedTierAccessMode = false;
+    }
+  });
+
   const dataAvailabilityToolConfig = config.dataAvailabilityToolConfig;
 
   let showArboristAuthzOnProfile = false;
@@ -397,6 +406,7 @@ function buildConfig(opts) {
     analysisApps,
     tierAccessLevel,
     tierAccessLimit,
+    indexScopedTierAccessMode,
     useIndexdAuthz,
     explorerPublic,
     authzPath,

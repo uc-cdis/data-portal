@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import GuppyDataExplorer from './GuppyDataExplorer';
-import { guppyUrl, tierAccessLevel, tierAccessLimit, explorerConfig, dataAvailabilityToolConfig, useNewExplorerConfigFormat } from '../localconf';
+import { guppyUrl, tierAccessLevel, tierAccessLimit, explorerConfig, dataAvailabilityToolConfig, useNewExplorerConfigFormat, indexScopedTierAccessMode } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 import './GuppyExplorer.css';
 
@@ -70,6 +70,8 @@ class Explorer extends React.Component {
     if (!useNewExplorerConfigFormat && dataAvailabilityToolConfig) {
       heatMapConfig = this.state.tab === 0 ? dataAvailabilityToolConfig : null;
     }
+
+    let tierAccessLevelCalculated = indexScopedTierAccessMode ? explorerConfig[this.state.tab].guppyConfig.tierAccessLevel : this.props.tierAccessLevel;
 
     return (
       <div className='guppy-explorer'>

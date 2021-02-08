@@ -13,10 +13,12 @@ import {
   ChartConfigType,
 } from './configTypeDef';
 import './GuppyDataExplorer.css';
+import { indexScopedTierAccessMode } from '../localconf';
 
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
+    this.tierAccessLevel = indexScopedTierAccessMode ? this.props.guppyConfig.tierAccessLevel : this.props.tierAccessLevel;
     this.state = {
       aggsData: {},
       filter: {},
@@ -41,7 +43,7 @@ class GuppyDataExplorer extends React.Component {
         >
           <ExplorerTopMessageBanner
             className='guppy-data-explorer__top-banner'
-            tierAccessLevel={this.props.tierAccessLevel}
+            tierAccessLevel={this.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
             guppyConfig={this.props.guppyConfig}
             getAccessButtonLink={this.props.getAccessButtonLink}
@@ -52,9 +54,9 @@ class GuppyDataExplorer extends React.Component {
             guppyConfig={this.props.guppyConfig}
             getAccessButtonLink={this.props.getAccessButtonLink}
             hideGetAccessButton={this.props.hideGetAccessButton}
-            tierAccessLevel={this.props.tierAccessLevel}
+            tierAccessLevel={this.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
-          />
+          />s
           <ExplorerVisualization
             className='guppy-data-explorer__visualization'
             chartConfig={this.props.chartConfig}
