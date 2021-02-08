@@ -61,6 +61,16 @@ class Workspace extends React.Component {
       );
   }
 
+  componentDidUpdate() {
+    // force workspace iframe acquire focus if it does not have yet
+    // to fix the noVNC workspace doesn't respond to keyboard event when came up
+    if (document.getElementsByClassName('workspace')
+    && document.getElementsByClassName('workspace')[1]
+    && document.getElementsByClassName('workspace')[1] !== document.activeElement) {
+      document.getElementsByClassName('workspace')[1].focus();
+    }
+  }
+
   componentWillUnmount() {
     if (this.state.interval) {
       clearInterval(this.state.interval);
