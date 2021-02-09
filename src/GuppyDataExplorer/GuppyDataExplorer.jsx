@@ -56,7 +56,7 @@ class GuppyDataExplorer extends React.Component {
             hideGetAccessButton={this.props.hideGetAccessButton}
             tierAccessLevel={this.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
-          />s
+          />
           <ExplorerVisualization
             className='guppy-data-explorer__visualization'
             chartConfig={this.props.chartConfig}
