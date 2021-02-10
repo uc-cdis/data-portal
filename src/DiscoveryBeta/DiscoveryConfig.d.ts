@@ -13,6 +13,7 @@ export interface DiscoveryConfig {
         search: {
             search_bar: {
                 enabled: boolean,
+                placeholder?: string
                 // search_tags: boolean, // not supported, consider removing
                 // searchable_text_fields: string[], // not supported, consider removing
             }

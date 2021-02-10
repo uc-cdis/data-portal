@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React from 'react';
 // import { act } from 'react-test-renderer';
 import { mount } from 'enzyme';
 

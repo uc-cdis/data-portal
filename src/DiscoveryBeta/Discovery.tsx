@@ -390,8 +390,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
             <Input
               className='discovery-search'
               prefix={<SearchOutlined />}
+              placeholder={config.features.search.search_bar.placeholder}
               value={searchTerm}
               onChange={handleSearchChange}
+              size='large'
               allowClear
             />
         }
