@@ -13,7 +13,6 @@ import {
   ChartConfigType,
 } from './configTypeDef';
 import './GuppyDataExplorer.css';
-import { indexScopedTierAccessMode } from '../localconf';
 
 class GuppyDataExplorer extends React.Component {
   constructor(props) {

@@ -71,7 +71,8 @@ class Explorer extends React.Component {
       heatMapConfig = this.state.tab === 0 ? dataAvailabilityToolConfig : null;
     }
 
-    let tierAccessLevelCalculated = indexScopedTierAccessMode ? explorerConfig[this.state.tab].guppyConfig.tierAccessLevel : tierAccessLevel;
+    const tierAccessLevelCalculated = indexScopedTierAccessMode ?
+      explorerConfig[this.state.tab].guppyConfig.tierAccessLevel : tierAccessLevel;
 
     return (
       <div className='guppy-explorer'>

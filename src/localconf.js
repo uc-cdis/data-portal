@@ -158,10 +158,11 @@ function buildConfig(opts) {
   }
 
   // Two tiered-access options: site-wide and index-scoped.
-  // Tiered access is index-scoped if all guppyConfigs in the portal config contain a tierAccessLevel.
+  // Tiered access is index-scoped if all guppyConfigs in the portal config
+  // contain a tierAccessLevel.
   let indexScopedTierAccessMode = true;
   explorerConfig.forEach((item) => {
-    if (!item.guppyConfig.tierAccessLevel) {
+    if (!item.guppyConfig || !item.guppyConfig.tierAccessLevel) {
       indexScopedTierAccessMode = false;
     }
   });
