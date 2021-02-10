@@ -1,5 +1,4 @@
 import React from 'react';
-// import { act } from 'react-test-renderer';
 import { mount } from 'enzyme';
 
 import Discovery, { AccessLevel } from './Discovery';
@@ -8,7 +7,6 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import mockData from './__mocks__/mock_mds_studies.json';
 import mockConfig from './__mocks__/mock_config.json';
 
-// const testConfig = mockConfig as DiscoveryConfig;
 const testStudies = mockData.map((study, i) => ({ ...study, __accessible: i % 2 === 0 }));
 
 // This mock is required to avoid errors when rendering the Discovery page

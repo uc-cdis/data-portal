@@ -150,8 +150,6 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   const [accessLevel, setAccessLevel] = useState(AccessLevel.BOTH);
   const [selectedTags, setSelectedTags] = useState({});
 
-  // console.log('accessLevel', accessLevel);
-
   useEffect(() => {
     // Load studies into JS Search.
     const search = new JsSearch.Search(config.minimal_field_mapping.uid);
