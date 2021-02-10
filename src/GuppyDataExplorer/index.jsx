@@ -71,7 +71,7 @@ class Explorer extends React.Component {
       heatMapConfig = this.state.tab === 0 ? dataAvailabilityToolConfig : null;
     }
 
-    let tierAccessLevelCalculated = indexScopedTierAccessMode ? explorerConfig[this.state.tab].guppyConfig.tierAccessLevel : this.props.tierAccessLevel;
+    let tierAccessLevelCalculated = indexScopedTierAccessMode ? explorerConfig[this.state.tab].guppyConfig.tierAccessLevel : tierAccessLevel;
 
     return (
       <div className='guppy-explorer'>
@@ -97,7 +97,7 @@ class Explorer extends React.Component {
               enableLimitedFilePFBExport: explorerConfig[this.state.tab].enableLimitedFilePFBExport,
             }}
             history={this.props.history}
-            tierAccessLevel={tierAccessLevel}
+            tierAccessLevel={tierAccessLevelCalculated}
             tierAccessLimit={tierAccessLimit}
             getAccessButtonLink={explorerConfig[this.state.tab].getAccessButtonLink}
             hideGetAccessButton={explorerConfig[this.state.tab].hideGetAccessButton}
