@@ -28,6 +28,13 @@ class GuppyDataExplorer extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
+
+    const overviewFilter =
+      this.props.history.location.state &&
+      this.props.history.location.state.filter
+        ? this.props.history.location.state.filter
+        : {};
+    this.updateInitialAppliedFilters({ filters: overviewFilter });
   }
 
   componentWillUnmount() {
