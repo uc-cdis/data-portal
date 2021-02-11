@@ -1,38 +1,16 @@
 {
-    "page_title": "My Special Test Discovery Page",
     "features": {
-      "exploration_integration": {
-        "enabled": false
-      },
-      "views": {
-        "grid_view": {
-          "enabled": false
-        }
+      "page_title": {
+        "enabled": true,
+        "text": "My Special Test Discovery Page"
       },
       "search": {
         "search_bar": {
-          "enabled": true,
-          "search_tags": true,
-          "searchable_text_fields": [
-            "study_name",
-            "study_description",
-            "dbgap_accession"
-          ]
+          "enabled": true
         }
       },
       "authorization": {
-        "enabled": true,
-        "request_access": {
-          "enabled": true,
-          "type": "global|per_study|both",
-          "global": {
-            "string": "You can request access by going to dbGaP, unless otherwise instructed below. \nThis is a new line."
-          },
-          "per_study": {
-            "content_type": "string",
-            "field": "access_instructions"
-          }
-        }
+        "enabled": true
       }
     },
     "aggregations": [

@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
 export interface DiscoveryConfig {
-    page_title?: string
     features: {
         // exploration_integration: {
         //     enabled: boolean // not supported
@@ -10,6 +9,10 @@ export interface DiscoveryConfig {
         //         enabled: boolean // not supported
         //     }
         // },
+        page_title: {
+            enabled: boolean
+            text: string
+        }
         search: {
             search_bar: {
                 enabled: boolean,

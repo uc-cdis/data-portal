@@ -33,12 +33,21 @@ beforeEach(() => {
 
 describe('Configuration', () => {
   test('Page header is configurable', () => {
-    const wrapper = mount(<Discovery
+    const titleText = 'test title text';
+    testConfig.features.page_title = { enabled: true, text: titleText };
+    let wrapper = mount(<Discovery
       config={testConfig}
       studies={testStudies}
     />);
-    expect(wrapper.find('.discovery-page-title').text()).toBe(testConfig.page_title);
+    expect(wrapper.find('.discovery-page-title').text()).toBe(titleText);
+    wrapper.unmount();
 
+    testConfig.features.page_title = { enabled: false, text: titleText };
+    wrapper = mount(<Discovery
+      config={testConfig}
+      studies={testStudies}
+    />);
+    expect(wrapper.exists('.discovery-page-title')).toBe(false);
     wrapper.unmount();
   });
 

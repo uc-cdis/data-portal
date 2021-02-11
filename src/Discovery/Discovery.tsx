@@ -321,7 +321,9 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   );
 
   return (<div className='discovery-container'>
-    <h1 className='discovery-page-title'>{config.page_title || 'Discovery'}</h1>
+    { (config.features.page_title && config.features.page_title.enabled) &&
+      <h1 className='discovery-page-title'>{config.features.page_title.text || 'Discovery'}</h1>
+    }
     <div className='discovery-header'>
       <div className='discovery-header__stats-container'>
         {
