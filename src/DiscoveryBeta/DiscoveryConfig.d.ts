@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 export interface DiscoveryConfig {
-    pageTitle?: string
+    page_title?: string
     features: {
         // exploration_integration: {
         //     enabled: boolean // not supported
