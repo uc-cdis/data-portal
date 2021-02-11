@@ -37,7 +37,7 @@ describe('Configuration', () => {
       config={testConfig}
       studies={testStudies}
     />);
-    expect(wrapper.find('.discovery-page-title').text()).toBe(testConfig.pageTitle);
+    expect(wrapper.find('.discovery-page-title').text()).toBe(testConfig.page_title);
 
     wrapper.unmount();
   });
