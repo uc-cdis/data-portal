@@ -6,15 +6,6 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { hostname, discoveryConfig, useArboristUI } from '../localconf';
 
-if (!discoveryConfig) {
-  throw new Error('Could not find configuration for Discovery page. Check the portal config.');
-}
-
-if (!useArboristUI) {
-  throw new Error('Arborist UI must be enabled for the Discovery page to work. Set `useArboristUI: true` in the portal config.');
-}
-
-// loads studies from metadataservice.
 const loadStudiesFromMDS = async (): Promise<any[]> => {
   // Why `_guid_type='discovery_metadata'? We need to distinguish the discovery page studies in MDS
   // from other data in MDS. So all MDS records with `_guid_type='discovery_metadata'` should be
@@ -42,16 +33,28 @@ const DiscoveryWithMDSBackend: React.FC<{
 }> = (props) => {
   const [studies, setStudies] = useState(null);
 
+  if (!discoveryConfig) {
+    throw new Error('Could not find configuration for Discovery page. Check the portal config.');
+  }
+
   useEffect(() => {
     // attempt to load studies from MDS
     loadStudiesFromMDS().then((rawStudies) => {
-      // mark studies as accessible or inaccessible to user
-      const authzField = props.config.minimal_field_mapping.authz_field;
-      const studiesWithAccessibleField = rawStudies.map(study => ({
-        ...study,
-        __accessible: userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAuthMapping),
-      }));
-      setStudies(studiesWithAccessibleField);
+      if (props.config.features.authorization.enabled) {
+        // mark studies as accessible or inaccessible to user
+        const authzField = props.config.minimal_field_mapping.authz_field;
+        // useArboristUI=true is required for userHasMethodForServiceOnResource
+        if (!useArboristUI) {
+          throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
+        }
+        const studiesWithAccessibleField = rawStudies.map(study => ({
+          ...study,
+          __accessible: userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAuthMapping),
+        }));
+        setStudies(studiesWithAccessibleField);
+      } else {
+        setStudies(rawStudies);
+      }
     }).catch((err) => {
       // eslint-disable-next-line no-console
       console.error('Error encountered while loading studies: ', err);
