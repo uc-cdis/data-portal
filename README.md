@@ -34,7 +34,7 @@ HOSTNAME=qa-brain.planx-pla.net NODE_ENV=autoprod GEN3_BUNDLE=all bash ./runWebp
 
 Tiered-access settings can be configured through either the `TIER_ACCESS_LEVEL` environment variable (site-wide) or through the `tierAccessLevel` property on guppyConfig blocks for each Data Explorer tab in the gitops.json (index-scoped). To use the index-scoped config style, all guppyConfig blocks in the portal config must contain the `tierAccessLevel` property. See `docs/portal_config.md` for thorough example of portal config structure.
 
->**NOTE:** The additional environment variables `TIER_ACCESS_LEVEL` and `TIER_ACCESS_LIMIT` should have the same values as the server's "global.tier_access_level" and "global.tier_access_limit" properties in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest).
+>**NOTE:** To locally test site-wide Tiered Access features, the additional environment variables `TIER_ACCESS_LEVEL` and `TIER_ACCESS_LIMIT` should have the same values as the server's "global.tier_access_level" and "global.tier_access_limit" properties in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest).
 >
 > **Example**:`HOSTNAME=qa-brain.planx-pla.net TIER_ACCESS_LEVEL=regular TIER_ACCESS_LIMIT=50 NODE_ENV=auto bash ./runWebpack.sh`
 
