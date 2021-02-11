@@ -99,6 +99,8 @@ describe('Modal', () => {
       wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
       const modal = wrapper.find('.discovery-modal').first();
       expect(modal.exists('.discovery-modal__header-text')).toBe(enabled);
+
+      wrapper.unmount();
     });
   });
 
@@ -114,6 +116,8 @@ describe('Modal', () => {
     const modal = wrapper.find('.discovery-modal').first();
     const modalData = testStudies[modalDataIndex];
     expect(modal.find('.discovery-modal__header-text').first().text()).toBe(modalData[headerField]);
+
+    wrapper.unmount();
   });
 
   test('Modal fields show selected study\'s data with correct configuration', () => {
@@ -178,6 +182,8 @@ describe('Modal', () => {
         fieldIdx += 1;
       });
     });
+
+    wrapper.unmount();
   });
 
   test('Discovery page opens modal with correct data on permalink', () => {
@@ -195,6 +201,8 @@ describe('Modal', () => {
 
     // Check to see if the modal header shows the study's UID; other tests already test the fields.
     expect(modal.find('.discovery-modal__header-text').first().text()).toBe(permalinkStudyUID);
+
+    wrapper.unmount();
   });
 });
 
@@ -222,6 +230,8 @@ describe('Table', () => {
     rows = wrapper.find('.discovery-table__row');
     // all rows should have either a lock or an unlock icon
     expect(rows.everyWhere(r => r.exists('[aria-label="unlock"]') || r.exists('[aria-label="lock"]'))).toBe(true);
+
+    wrapper.unmount();
   });
 
   test('Table filters records by tags', () => {
@@ -245,5 +255,7 @@ describe('Table', () => {
     rows = wrapper.find('.discovery-table__row');
     // expect that not all rows have the 'COVID 19' tag
     expect(rows.everyWhere(r => r.findWhere(isTargetTag).exists())).toBe(false);
+
+    wrapper.unmount();
   });
 });
