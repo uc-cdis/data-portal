@@ -1,4 +1,5 @@
 import { fetchWithCreds } from '../../actions';
+import { capitalizeFirstLetter } from '../../utils';
 import './typedef';
 
 const COHORT_URL = '/amanuensis/cohort';
@@ -83,4 +84,23 @@ export function truncateWithEllipsis(string, maxLength) {
   return string.length > maxLength
     ? string.slice(0, maxLength - 3) + '...'
     : string;
+}
+
+/**
+ * @param {ExplorerFilters} filters
+ */
+export function stringifyFilters(filters) {
+  if (Object.keys(filters).length == 0) return '';
+
+  let filterStr = '';
+  for (const [key, value] of Object.entries(filters)) {
+    filterStr += `* ${capitalizeFirstLetter(key)}\n`;
+    if (value.hasOwnProperty('selectedValues'))
+      for (const selected of value.selectedValues)
+        filterStr += `\t- '${selected}'\n`;
+    else
+      filterStr += `\t- from: ${value.lowerBound}\n\t- to: ${value.upperBound}\n`;
+  }
+
+  return filterStr;
 }
