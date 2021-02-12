@@ -22,6 +22,7 @@ import galaxyIcon from '../img/icons/galaxy.svg';
 import ohifIcon from '../img/icons/ohif-viewer.svg';
 import WorkspaceOption from './WorkspaceOption';
 import WorkspaceLogin from './WorkspaceLogin';
+import sessionMonitor from '../SessionMonitor';
 
 class Workspace extends React.Component {
   constructor(props) {
@@ -59,16 +60,6 @@ class Workspace extends React.Component {
           }
         },
       );
-  }
-
-  componentDidUpdate() {
-    // force workspace iframe acquire focus if it does not have yet
-    // to fix the noVNC workspace doesn't respond to keyboard event when came up
-    if (document.getElementsByClassName('workspace')
-    && document.getElementsByClassName('workspace')[1]
-    && document.getElementsByClassName('workspace')[1] !== document.activeElement) {
-      document.getElementsByClassName('workspace')[1].focus();
-    }
   }
 
   componentWillUnmount() {
@@ -109,6 +100,19 @@ class Workspace extends React.Component {
   }).then(
     ({ data }) => data.status,
   ).catch(() => 'Error');
+
+  oniframeLoad = (e) => {
+    // force workspace iframe acquire focus if it does not have yet
+    // to fix the noVNC workspace doesn't respond to keyboard event when came up
+    e.target.focus();
+
+    // add event listeners for sessionMonitor timeout
+    const iframeContent = e.target.contentDocument;
+    if (iframeContent) {
+      iframeContent.addEventListener('mousedown', () => sessionMonitor.updateUserActivity(), false);
+      iframeContent.addEventListener('keypress', () => sessionMonitor.updateUserActivity(), false);
+    }
+  }
 
   getIcon = (notebook) => {
     if (this.regIcon(notebook, 'R Studio')) {
@@ -253,6 +257,7 @@ class Workspace extends React.Component {
                     title='Workspace'
                     frameBorder='0'
                     src={`${workspaceUrl}proxy/`}
+                    onLoad={this.oniframeLoad}
                   />
                 </div>
                 <div className='workspace__buttongroup'>
@@ -333,6 +338,7 @@ class Workspace extends React.Component {
             frameBorder='0'
             className='workspace__iframe'
             src={workspaceUrl}
+            onLoad={this.oniframeLoad}
           />
         </div>
       );
