@@ -4,17 +4,16 @@ import PropTypes from 'prop-types';
 class Tick extends React.Component {
   render() {
     const { x, y, payload } = this.props;
-    const texts = payload.value.split('#');
+    const [countNumber, countName] = payload.value.split('#');
     return (
       <g>
         <text textAnchor='end' x={x} y={y} dy={0}>
-          <tspan
-            className='special-number'
-            fill='var(--pcdc-color__primary)'
-          >{`${texts[0]} `}</tspan>
+          <tspan className='special-number' fill='var(--pcdc-color__primary)'>
+            {countNumber}
+          </tspan>
         </text>
         <text textAnchor='end' x={x} y={y} dy={20}>
-          <tspan className='h4-typo'>{`${texts[1]}`}</tspan>
+          <tspan className='h4-typo'>{countName}</tspan>
         </text>
       </g>
     );
