@@ -11,7 +11,6 @@ export class SessionMonitor {
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
     this.popupShown = false;
-    this.fetchUserAttemptCounter = 0;
   }
 
   start() {
@@ -81,19 +80,12 @@ export class SessionMonitor {
     // hitting Fence endpoint refreshes token
     return getReduxStore().then((store) => {
       store.dispatch(fetchUser).then((response) => {
-        this.fetchUserAttemptCounter = 0;
         if (response.type === 'UPDATE_POPUP') {
           this.popupShown = true;
         }
       }).catch(() => {
-        this.fetchUserAttemptCounter += 1;
-        // try again after 5 seconds only retry 9 times
-        // stop after 9 times as this will be triggered again after updateSessionTime
-        if (this.fetchUserAttemptCounter < 10) {
-          setTimeout(() => this.refreshSession(), 5 * 1000);
-        } else {
-          this.notifyUserIfTheyAreNotLoggedIn();
-        }
+        // if API failed check if user is still logged in
+        this.notifyUserIfTheyAreNotLoggedIn();
       });
     });
   }
