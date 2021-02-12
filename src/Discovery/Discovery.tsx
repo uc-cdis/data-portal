@@ -491,7 +491,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       width='80vw'
       footer={false}
     >
-      <Space direction='vertical' size='large'>
+      <Space style={{ width: '100%' }} direction='vertical' size='large'>
         { config.study_page_fields.header &&
           <Space align='baseline'>
             <h3 className='discovery-modal__header-text'>{modalData[config.study_page_fields.header.field]}</h3>
