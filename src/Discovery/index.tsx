@@ -42,7 +42,7 @@ const DiscoveryWithMDSBackend: React.FC<{
     loadStudiesFromMDS().then((rawStudies) => {
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
-        const authzField = props.config.minimal_field_mapping.authz_field;
+        const authzField = props.config.minimalFieldMapping.authzField;
         // useArboristUI=true is required for userHasMethodForServiceOnResource
         if (!useArboristUI) {
           throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');

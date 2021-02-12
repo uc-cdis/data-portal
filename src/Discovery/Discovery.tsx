@@ -28,7 +28,7 @@ export enum AccessLevel {
 }
 
 const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
-  const categoryConfig = config.tag_categories.find(category => category.name === tagCategory);
+  const categoryConfig = config.tagCategories.find(category => category.name === tagCategory);
   if (categoryConfig === undefined) {
     // eslint-disable-next-line no-console
     console.error(`Misconfiguration error: tag category ${tagCategory} not found in config. Check the 'tag_categories' section of the Discovery page config.`);
@@ -67,7 +67,7 @@ const getTagsInCategory =
     }
     const tagMap = {};
     studies.forEach((study) => {
-      const tagField = config.minimal_field_mapping.tags_list_field_name;
+      const tagField = config.minimalFieldMapping.tagsListFieldName;
       study[tagField].forEach((tag) => {
         if (tag.category === category) {
           tagMap[tag.name] = true;
@@ -152,17 +152,17 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 
   useEffect(() => {
     // Load studies into JS Search.
-    const search = new JsSearch.Search(config.minimal_field_mapping.uid);
+    const search = new JsSearch.Search(config.minimalFieldMapping.uid);
     search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
     // Enable search only over text fields present in the table
-    config.study_columns.forEach((column) => {
-      if (!column.content_type || column.content_type === 'string') {
+    config.studyColumns.forEach((column) => {
+      if (!column.contentType || column.contentType === 'string') {
         search.addIndex(column.field);
       }
     });
     // Also enable search over preview field if present
-    if (config.study_preview_field) {
-      search.addIndex(config.study_preview_field.field);
+    if (config.studyPreviewField) {
+      search.addIndex(config.studyPreviewField.field);
     }
     // Index the studies
     search.addDocuments(props.studies);
@@ -177,7 +177,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     if (props.params.studyUID) {
       const studyID = props.params.studyUID;
       const defaultModalData = props.studies.find(
-        r => r[config.minimal_field_mapping.uid] === studyID);
+        r => r[config.minimalFieldMapping.uid] === studyID);
       if (defaultModalData) {
         setModalData(defaultModalData);
         setModalVisible(true);
@@ -190,26 +190,26 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 
   // Set up table columns
   // -----
-  const columns = config.study_columns.map(column => ({
+  const columns = config.studyColumns.map(column => ({
     title: column.name,
     render: (_, record) => {
       const value = record[column.field];
       if (value === undefined) {
-        if (column.error_if_not_available !== false) {
+        if (column.errorIfNotAvailable !== false) {
           throw new Error(`Configuration error: Could not find field ${column.field} in record ${JSON.stringify(record)}. Check the 'study_columns' section of the Discovery config.`);
         }
-        if (column.value_if_not_available) {
-          return column.value_if_not_available;
+        if (column.valueIfNotAvailable) {
+          return column.valueIfNotAvailable;
         }
         return 'Not available';
       }
-      if (!column.content_type || column.content_type === 'string') {
+      if (!column.contentType || column.contentType === 'string') {
         // Show search highlights if there's an active search term
         if (searchTerm) {
           return highlightSearchTerm(value, searchTerm).highlighted;
         }
       }
-      return renderFieldContent(value, column.content_type);
+      return renderFieldContent(value, column.contentType);
     },
   }),
   );
@@ -269,7 +269,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               title={'You have access to this study.'}
               content={<div className='discovery-table__access-popover-text'>
                 <>You have <code>{ARBORIST_READ_PRIV}</code> access to</>
-                <><code>{record[config.minimal_field_mapping.authz_field]}</code>.</>
+                <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
               </div>}
             >
               <UnlockOutlined className='discovery-table__access-icon' />
@@ -284,7 +284,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               content={
                 <div className='discovery-table__access-popover-text'>
                   <>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</>
-                  <><code>{record[config.minimal_field_mapping.authz_field]}</code>.</>
+                  <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
                 </div>
               }
             >
@@ -321,8 +321,8 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   );
 
   return (<div className='discovery-container'>
-    { (config.features.page_title && config.features.page_title.enabled) &&
-      <h1 className='discovery-page-title'>{config.features.page_title.text || 'Discovery'}</h1>
+    { (config.features.pageTitle && config.features.pageTitle.enabled) &&
+      <h1 className='discovery-page-title'>{config.features.pageTitle.text || 'Discovery'}</h1>
     }
     <div className='discovery-header'>
       <div className='discovery-header__stats-container'>
@@ -343,10 +343,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         }
       </div>
       <div className='discovery-header__tags-container' >
-        <h3 className='discovery-header__tags-header'>{config.tag_selector.title}</h3>
+        <h3 className='discovery-header__tags-header'>{config.tagSelector.title}</h3>
         <div className='discovery-header__tags'>
           {
-            config.tag_categories.map((category) => {
+            config.tagCategories.map((category) => {
               if (category.display === false) {
                 return null;
               }
@@ -389,11 +389,11 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     </div>
     <div className='discovery-table-container'>
       <div className='discovery-table__header'>
-        { config.features.search.search_bar.enabled &&
+        { config.features.search.searchBar.enabled &&
             <Input
               className='discovery-search'
               prefix={<SearchOutlined />}
-              placeholder={config.features.search.search_bar.placeholder}
+              placeholder={config.features.search.searchBar.placeholder}
               value={searchTerm}
               onChange={handleSearchChange}
               size='large'
@@ -418,7 +418,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       </div>
       <Table
         columns={columns}
-        rowKey={config.minimal_field_mapping.uid}
+        rowKey={config.minimalFieldMapping.uid}
         rowClassName='discovery-table__row'
         onRow={record => ({
           onClick: () => {
@@ -431,15 +431,15 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           },
         })}
         dataSource={visibleResources}
-        expandable={config.study_preview_field && ({
+        expandable={config.studyPreviewField && ({
           // expand all rows
-          expandedRowKeys: visibleResources.map(r => r[config.minimal_field_mapping.uid]),
+          expandedRowKeys: visibleResources.map(r => r[config.minimalFieldMapping.uid]),
           expandedRowRender: (record) => {
-            const studyPreviewText = record[config.study_preview_field.field];
+            const studyPreviewText = record[config.studyPreviewField.field];
             const renderValue = (value: string | undefined): React.ReactNode => {
               if (!value) {
-                if (config.study_preview_field.include_if_not_available) {
-                  return config.study_preview_field.value_if_not_available;
+                if (config.studyPreviewField.includeIfNotAvailable) {
+                  return config.studyPreviewField.valueIfNotAvailable;
                 }
               }
               if (searchTerm) {
@@ -492,10 +492,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       footer={false}
     >
       <Space style={{ width: '100%' }} direction='vertical' size='large'>
-        { config.study_page_fields.header &&
+        { config.studyPageFields.header &&
           <Space align='baseline'>
-            <h3 className='discovery-modal__header-text'>{modalData[config.study_page_fields.header.field]}</h3>
-            <a href={`/discovery/${modalData[config.minimal_field_mapping.uid]}/`}><LinkOutlined /> Permalink</a>
+            <h3 className='discovery-modal__header-text'>{modalData[config.studyPageFields.header.field]}</h3>
+            <a href={`/discovery/${modalData[config.minimalFieldMapping.uid]}/`}><LinkOutlined /> Permalink</a>
           </Space>
         }
         { config.features.authorization.enabled &&
@@ -516,26 +516,26 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
             )
           )
         }
-        { config.study_page_fields.fields_to_show.map((fieldGroup, i) => (
+        { config.studyPageFields.fieldsToShow.map((fieldGroup, i) => (
           <div key={i} className='discovery-modal__attribute-group'>
-            { fieldGroup.include_name &&
-                  <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.group_name}</h3>
+            { fieldGroup.includeName &&
+                  <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.groupName}</h3>
             }
             { fieldGroup.fields.map((field) => {
               // display nothing if selected study doesn't have this field
               // and this field isn't configured to show a default value
-              if (!modalData[field.field] && !field.include_if_not_available) {
+              if (!modalData[field.field] && !field.includeIfNotAvailable) {
                 return null;
               }
               return (
                 <div key={field.name} className='discovery-modal__attribute'>
-                  { field.include_name !== false &&
+                  { field.includeName !== false &&
                         <span className='discovery-modal__attribute-name'>{field.name}:</span>
                   }
                   <span className='discovery-modal__attribute-value'>
                     { modalData[field.field]
-                      ? renderFieldContent(modalData[field.field], field.content_type)
-                      : (field.value_if_not_available || 'Not available')
+                      ? renderFieldContent(modalData[field.field], field.contentType)
+                      : (field.valueIfNotAvailable || 'Not available')
                     }
                   </span>
                 </div>

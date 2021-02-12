@@ -1,11 +1,11 @@
 {
     "features": {
-      "page_title": {
+      "pageTitle": {
         "enabled": true,
         "text": "My Special Test Discovery Page"
       },
       "search": {
-        "search_bar": {
+        "searchBar": {
           "enabled": true
         }
       },
@@ -25,10 +25,10 @@
             "type": "sum"
         }
     ],
-    "tag_selector": {
+    "tagSelector": {
       "title": "Associated tags organized by category"
     },
-    "study_columns": [
+    "studyColumns": [
       {
         "name": "Study Name",
         "field": "name"
@@ -36,68 +36,67 @@
       {
         "name": "Full Name",
         "field": "full_name",
-        "content_type": "string"
+        "contentType": "string"
       },
       {
         "name": "Number of Subjects",
         "field": "_subjects_count",
-        "error_if_not_available": false,
-        "value_if_not_available": "n/a",
-        "content_type": "number"
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a",
+        "contentType": "number"
       },
       {
         "name": "dbGaP Accession Number",
         "field": "study_id"
       }
     ],
-    "study_preview_field": {
+    "studyPreviewField": {
       "name": "Description",
       "field": "study_description",
-      "content_type": "string",
-      "include_name": false,
-      "include_if_not_available": true,
-      "value_if_not_available": "No description has been provided for this study."
+      "contentType": "string",
+      "includeName": false,
+      "includeIfNotAvailable": true,
+      "valueIfNotAvailable": "No description has been provided for this study."
     },
-    "study_page_fields": {
-      "show_all_available_fields": false,
+    "studyPageFields": {
       "header": {
         "field": "name"
       },
-      "fields_to_show": [
+      "fieldsToShow": [
         {
-          "group_name": "Study Identifiers",
-          "include_name": true,
+          "groupName": "Study Identifiers",
+          "includeName": true,
           "fields": [
             {
               "name": "Number of Subjects",
               "field": "_subjects_count",
-              "content_type": "number"
+              "contentType": "number"
             },
             {
               "name": "Full Name",
               "field": "full_name",
-              "content_type": "string"
+              "contentType": "string"
             },
             {
               "name": "Short Name",
               "field": "short_name",
-              "content_type": "string",
-              "include_name": true,
-              "include_if_not_available": true,
-              "value_if_not_available": "N/A"
+              "contentType": "string",
+              "includeName": true,
+              "includeIfNotAvailable": true,
+              "valueIfNotAvailable": "N/A"
             },
             {
               "name": "dbGaP Study Accession",
               "field": "dbgap_accession",
-              "content_type": "string",
-              "include_name": true,
-              "include_if_not_available": false
+              "contentType": "string",
+              "includeName": true,
+              "includeIfNotAvailable": false
             },
             {
               "name": "Project ID",
               "field": "project_id",
-              "content_type": "string",
-              "include_if_not_available": false
+              "contentType": "string",
+              "includeIfNotAvailable": false
             }
           ]
         },
@@ -106,21 +105,21 @@
             {
               "name": "Description",
               "field": "study_description",
-              "content_type": "paragraphs",
-              "include_name": false,
-              "include_if_not_available": true,
-              "value_if_not_available": "No description has been provided for this study."
+              "contentType": "paragraphs",
+              "includeName": false,
+              "includeIfNotAvailable": true,
+              "valueIfNotAvailable": "No description has been provided for this study."
             }
           ]
         }
       ]
     },
-    "minimal_field_mapping": {
-      "tags_list_field_name": "tags",
-      "authz_field": "authz",
+    "minimalFieldMapping": {
+      "tagsListFieldName": "tags",
+      "authzField": "authz",
       "uid": "study_id"
     },
-    "tag_categories": [
+    "tagCategories": [
       {
         "name": "Program",
         "color": "rgba(129, 211, 248, 1)",

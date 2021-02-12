@@ -1,35 +1,34 @@
-/* eslint-disable camelcase */
 export interface DiscoveryConfig {
     features: {
-        // exploration_integration: {
+        // explorationIntegration: {
         //     enabled: boolean // not supported
         // },
         // views: {
-        //     grid_view: {
+        //     gridView: {
         //         enabled: boolean // not supported
         //     }
         // },
-        page_title: {
+        pageTitle: {
             enabled: boolean
             text: string
         }
         search: {
-            search_bar: {
+            searchBar: {
                 enabled: boolean,
                 placeholder?: string
-                // search_tags: boolean, // not supported, consider removing
-                // searchable_text_fields: string[], // not supported, consider removing
+                // searchTags: boolean, // not supported, consider removing
+                // searchableTextFields: string[], // not supported, consider removing
             }
         },
         authorization: {
             enabled: boolean,
-            // request_access: { // not supported
+            // requestAccess: { // not supported
             //     enabled: boolean,
             //     type: 'global' | 'per_study' | 'both',
             //     global: {
             //         string: string
             //     },
-            //     per_study: {
+            //     perStudy: {
             //         content_type: 'string',
             //         field: string
             //     }
@@ -37,41 +36,41 @@ export interface DiscoveryConfig {
         }
     },
     aggregations: AggregationConfig[],
-    tag_selector: {
+    tagSelector: {
         title: string
     },
-    study_columns: {
+    studyColumns: {
         name: string
         field: string
-        content_type?: 'string' | 'number'
-        error_if_not_available?: boolean
-        value_if_not_available?: string | number
+        contentType?: 'string' | 'number'
+        errorIfNotAvailable?: boolean
+        valueIfNotAvailable?: string | number
     }[],
-    study_preview_field: {
+    studyPreviewField: {
         name: string,
         field: string,
-        content_type: 'string' | 'number' | 'paragraphs',
-        include_name: boolean,
-        include_if_not_available: boolean,
-        value_if_not_available: string
+        contentType: 'string' | 'number' | 'paragraphs',
+        includeName: boolean,
+        includeIfNotAvailable: boolean,
+        valueIfNotAvailable: string
     },
-    study_page_fields: {
+    studyPageFields: {
         // show_all_available_fields: boolean, // not supported
         header?: {
             field: string
         },
-        fields_to_show: {
-            group_name?: string
-            include_name?: boolean,
+        fieldsToShow: {
+            groupName?: string
+            includeName?: boolean,
             fields: StudyPageFieldConfig[]
         }[]
     },
-    minimal_field_mapping: {
-        tags_list_field_name: string,
-        authz_field: string,
+    minimalFieldMapping: {
+        tagsListFieldName: string,
+        authzField: string,
         uid: string
     },
-    tag_categories: {
+    tagCategories: {
         name: string,
         color: string
         display: boolean
@@ -80,10 +79,10 @@ export interface DiscoveryConfig {
 export interface StudyPageFieldConfig {
     name: string
     field: string
-    content_type: 'string' | 'number' | 'paragraphs'
-    include_name?: boolean
-    include_if_not_available?: boolean
-    value_if_not_available?: string | number
+    contentType: 'string' | 'number' | 'paragraphs'
+    includeName?: boolean
+    includeIfNotAvailable?: boolean
+    valueIfNotAvailable?: string | number
 }
 export interface AggregationConfig {
   name: string
