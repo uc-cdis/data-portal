@@ -327,15 +327,18 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     <div className='discovery-header'>
       <div className='discovery-header__stats-container'>
         {
-          config.aggregations.map(aggregation => (
-            <div className='discovery-header__stat' key={aggregation.name}>
-              <div className='discovery-header__stat-number'>
-                {renderAggregation(aggregation, visibleResources)}
+          config.aggregations.map((aggregation, i) => (
+            <>
+              { i !== 0 && <div className='discovery-header__stat-border' /> }
+              <div className='discovery-header__stat' key={aggregation.name}>
+                <div className='discovery-header__stat-number'>
+                  {renderAggregation(aggregation, visibleResources)}
+                </div>
+                <div className='discovery-header__stat-label'>
+                  {aggregation.name}
+                </div>
               </div>
-              <div className='discovery-header__stat-label'>
-                {aggregation.name}
-              </div>
-            </div>
+            </>
           ))
         }
       </div>

@@ -41,6 +41,8 @@
 }
 
 .discovery-header__stats-container {
+    height: 100%;
+    position: relative;
     flex: 1 0 auto;
     display: flex;
     flex-direction: row;
@@ -51,6 +53,13 @@
 .discovery-header__stat {
     text-align: center;
     cursor: default;
+}
+
+.discovery-header__stat-border {
+    position: absolute;
+    top: 25px;
+    bottom: 25px;
+    border-left: solid #e7e7e7 1px;
 }
 
 .discovery-header__stat-number {
