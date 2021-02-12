@@ -11,19 +11,39 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
   // from other data in MDS. So all MDS records with `_guid_type='discovery_metadata'` should be
   // the full list of studies for this commons.
   const GUID_TYPE = 'discovery_metadata';
-  const LIMIT = 10000; // required or else mds defaults to returning 10 records
-  const MDS_STUDY_DATA_URL = `mds/metadata?_guid_type=${GUID_TYPE}&data=True&limit=${LIMIT}`;
-  const url = hostname + MDS_STUDY_DATA_URL;
+  const LIMIT = 1000; // required or else mds defaults to returning 10 records
+  const MDS_URL = `${hostname}mds/metadata`;
+  const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
+
   try {
-    const res = await fetch(url);
-    if (res.status !== 200) {
-      throw new Error(`Request for study data at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
+    let allStudies = [];
+    let offset = 0;
+    // request up to LIMIT studies from MDS at a time.
+    let shouldContinue = true;
+    while (shouldContinue) {
+      const url = `${MDS_URL}?data=True&_guid_type=${GUID_TYPE}&limit=${LIMIT}&offset=${offset}`;
+      // It's OK to disable no-await-in-loop rule here -- it's telling us to refactor
+      // using Promise.all() so that we can fire multiple requests at one.
+      // But we WANT to delay sending the next request to MDS until we know we need it.
+      // eslint-disable-next-line no-await-in-loop
+      const res = await fetch(url);
+      if (res.status !== 200) {
+        throw new Error(`Request for study data at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
+      }
+      // eslint-disable-next-line no-await-in-loop
+      const jsonResponse = await res.json();
+      const studies = Object.values(jsonResponse).map(entry => entry[STUDY_DATA_FIELD]);
+      allStudies = allStudies.concat(studies);
+      const noMoreStudiesToLoad = studies.length < LIMIT;
+      if (noMoreStudiesToLoad) {
+        shouldContinue = false;
+        return allStudies;
+      }
+      offset += LIMIT;
     }
-    const jsonResponse = await res.json();
-    const studies = Object.values(jsonResponse).map((entry: any) => entry.gen3_discovery);
-    return studies;
+    return allStudies;
   } catch (err) {
-    throw new Error(`Request for study data at ${url} failed: ${err}`);
+    throw new Error(`Request for study data failed: ${err}`);
   }
 };
 
@@ -38,7 +58,6 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    // attempt to load studies from MDS
     loadStudiesFromMDS().then((rawStudies) => {
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
