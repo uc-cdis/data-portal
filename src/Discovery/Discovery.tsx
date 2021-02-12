@@ -328,9 +328,9 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       <div className='discovery-header__stats-container'>
         {
           config.aggregations.map((aggregation, i) => (
-            <>
+            <React.Fragment key={aggregation.name} >
               { i !== 0 && <div className='discovery-header__stat-border' /> }
-              <div className='discovery-header__stat' key={aggregation.name}>
+              <div className='discovery-header__stat' >
                 <div className='discovery-header__stat-number'>
                   {renderAggregation(aggregation, visibleResources)}
                 </div>
@@ -338,7 +338,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                   {aggregation.name}
                 </div>
               </div>
-            </>
+            </React.Fragment>
           ))
         }
       </div>
@@ -549,7 +549,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 };
 
 Discovery.defaultProps = {
-  params: { studyUID: undefined },
+  params: { studyUID: null },
 };
 
 export default Discovery;

@@ -56,9 +56,8 @@
 }
 
 .discovery-header__stat-border {
-    position: absolute;
-    top: 25px;
-    bottom: 25px;
+    width: 1px;
+    height: 100px;
     border-left: solid #e7e7e7 1px;
 }
 
