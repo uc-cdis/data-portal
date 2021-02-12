@@ -11,6 +11,7 @@ export class SessionMonitor {
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
     this.popupShown = false;
+    this.fetchUserAttemptCounter = 0;
   }
 
   start() {
@@ -23,6 +24,19 @@ export class SessionMonitor {
       () => this.updateSession(),
       this.updateSessionTime,
     ); // check session every X min
+  }
+  workspaceStart() {
+    const iframeContent = document.getElementsByTagName('iframe');
+
+    if (iframeContent
+      && iframeContent.length > 0
+      && iframeContent[0].contentDocument
+      && !iframeContent[0].dataset.listenersBound) {
+
+      iframeContent[0].dataset.listenersBound = true;
+      iframeContent[0].contentDocument.addEventListener('mousedown', () => this.updateUserActivity(), false);
+      iframeContent[0].contentDocument.addEventListener('keypress', () => this.updateUserActivity(), false);
+    }
   }
 
   stop() {
@@ -70,6 +84,11 @@ export class SessionMonitor {
       return Promise.resolve(0);
     }
 
+    // If on workspace start workspace specific event listeners
+    if (this.isUserOnPage('workspace')) {
+      this.workspaceStart();
+    }
+
     return this.refreshSession();
   }
 
@@ -80,8 +99,17 @@ export class SessionMonitor {
     // hitting Fence endpoint refreshes token
     return getReduxStore().then((store) => {
       store.dispatch(fetchUser).then((response) => {
+        this.fetchUserAttemptCounter = 0;
         if (response.type === 'UPDATE_POPUP') {
           this.popupShown = true;
+        }
+      }).catch(() => {
+        this.fetchUserAttemptCounter += 1;
+        // try again after 5 seconds only retry 9 times
+        if (this.fetchUserAttemptCounter < 10) {
+          setTimeout(() => this.refreshSession(), 5 * 1000);
+        } else {
+          this.notifyUserIfTheyAreNotLoggedIn();
         }
       });
     });
