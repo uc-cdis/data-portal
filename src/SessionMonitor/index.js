@@ -28,11 +28,15 @@ export class SessionMonitor {
   workspaceStart() {
     const iframeContent = document.getElementsByTagName('iframe');
 
+    // check if workspace has iframe
+    // check if listeners have already been added
+    // if it has iframe add event listeners
     if (iframeContent
       && iframeContent.length > 0
       && iframeContent[0].contentDocument
       && !iframeContent[0].dataset.listenersBound) {
-
+      // add marker to note that listeners have been set
+      // added this way so it is cleared with the event listeners if user navigates away from page and comes back
       iframeContent[0].dataset.listenersBound = true;
       iframeContent[0].contentDocument.addEventListener('mousedown', () => this.updateUserActivity(), false);
       iframeContent[0].contentDocument.addEventListener('keypress', () => this.updateUserActivity(), false);
@@ -106,6 +110,7 @@ export class SessionMonitor {
       }).catch(() => {
         this.fetchUserAttemptCounter += 1;
         // try again after 5 seconds only retry 9 times
+        // stop after 9 times as this will be triggered again after updateSessionTime
         if (this.fetchUserAttemptCounter < 10) {
           setTimeout(() => this.refreshSession(), 5 * 1000);
         } else {
