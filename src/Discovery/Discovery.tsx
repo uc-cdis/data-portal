@@ -527,7 +527,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               return (
                 <div key={field.name} className='discovery-modal__attribute'>
                   { field.include_name !== false &&
-                        <span className='discovery-modal__attribute-name'>{field.name}</span>
+                        <span className='discovery-modal__attribute-name'>{field.name}:</span>
                   }
                   <span className='discovery-modal__attribute-value'>
                     { modalData[field.field]
