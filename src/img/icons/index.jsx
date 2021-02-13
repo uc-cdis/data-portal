@@ -38,6 +38,11 @@ import IcoAnvilAccess from './anvil-icons/anvil-access.svg';
 import IcoAnvilAnalyze from './anvil-icons/anvil-analyze.svg';
 import IcoAnvilExplore from './anvil-icons/anvil-explore.svg';
 import IcoAnvilPlanning from './anvil-icons/anvil-planning.svg';
+import IcoAcctPlanning from './acct-icons/acct-planning.svg';
+import IcoAcctAccess from './acct-icons/acct-access.svg';
+import IcoAcctExplore from './acct-icons/acct-explore.svg';
+import IcoAcctAnalyze from './acct-icons/acct-analyze.svg';
+
 
 const dictIcons = {
   analysis: (height, customedStyles) => (
@@ -150,6 +155,18 @@ const dictIcons = {
   ),
   'anvil-planning': (height, customedStyles) => (
     <IcoAnvilPlanning height={height} style={{ ...customedStyles }} />
+  ),
+  'acct-access': (height, customedStyles) => (
+    <IcoAcctAccess height={height} style={{ ...customedStyles }} />
+  ),
+  'acct-explore': (height, customedStyles) => (
+    <IcoAcctExplore height={height} style={{ ...customedStyles }} />
+  ),
+  'acct-analyze': (height, customedStyles) => (
+    <IcoAcctAnalyze height={height} style={{ ...customedStyles }} />
+  ),
+  'acct-planning': (height, customedStyles) => (
+    <IcoAcctPlanning height={height} style={{ ...customedStyles }} />
   ),
   upload: (height, customedStyles) => (
     <IcoUpload height={height} style={{ ...customedStyles }} />
