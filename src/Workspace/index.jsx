@@ -68,6 +68,19 @@ class Workspace extends React.Component {
     }
   }
 
+  oniframeLoad = (e) => {
+    // force workspace iframe acquire focus if it does not have yet
+    // to fix the noVNC workspace doesn't respond to keyboard event when came up
+    e.target.focus();
+
+    // add event listeners for sessionMonitor timeout
+    const iframeContent = e.target.contentDocument;
+    if (iframeContent) {
+      iframeContent.addEventListener('mousedown', () => sessionMonitor.updateUserActivity(), false);
+      iframeContent.addEventListener('keypress', () => sessionMonitor.updateUserActivity(), false);
+    }
+  }
+
   getWorkspaceOptions = () => {
     fetchWithCreds({
       path: `${workspaceOptionsUrl}`,
@@ -100,19 +113,6 @@ class Workspace extends React.Component {
   }).then(
     ({ data }) => data.status,
   ).catch(() => 'Error');
-
-  oniframeLoad = (e) => {
-    // force workspace iframe acquire focus if it does not have yet
-    // to fix the noVNC workspace doesn't respond to keyboard event when came up
-    e.target.focus();
-
-    // add event listeners for sessionMonitor timeout
-    const iframeContent = e.target.contentDocument;
-    if (iframeContent) {
-      iframeContent.addEventListener('mousedown', () => sessionMonitor.updateUserActivity(), false);
-      iframeContent.addEventListener('keypress', () => sessionMonitor.updateUserActivity(), false);
-    }
-  }
 
   getIcon = (notebook) => {
     if (this.regIcon(notebook, 'R Studio')) {
