@@ -159,6 +159,7 @@ Below is an example, with inline comments describing what each JSON block config
   "featureFlags": { // optional; will hide certain parts of the site if needed
     "explorer": true, // required; indicates the flag and whether to hide it or not
     "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. Data explorer page would be public accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
+    "discovery": true, // optional; whether to enable the Discovery page. If true, `discoveryConfig` must be present as well.
   },
   "dataExplorerConfig": { // required; configuration for the Data Explorer (/explorer)
     "charts": { // optional; indicates which charts to display in the Data Explorer
@@ -379,6 +380,147 @@ Below is an example, with inline comments describing what each JSON block config
       }
     ],
     "dropdowns": {} // optional; dropdown groupings for buttons
+  },
+  "discoveryConfig": { // config for Discovery page. Required if 'featureFlags.discovery' is true. See src/Discovery/DiscoveryConfig.d.ts for Typescript schema.
+    "features": {
+      "pageTitle": {
+        "enabled": true,
+        "text": "My Special Test Discovery Page"
+      },
+      "search": {
+        "searchBar": {
+          "enabled": true
+        }
+      },
+      "authorization": {
+        "enabled": true // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
+      }
+    },
+    "aggregations": [ // configures the statistics at the top of the discovery page (e.g. 'XX Studies', 'XX,XXX Subjects')
+        {
+            "name": "Studies",
+            "field": "study_id",
+            "type": "count" // count of rows in data where `field` is non-empty
+        },
+        {
+            "name": "Total Subjects",
+            "field": "_subjects_count",
+            "type": "sum" // sums together all numeric values in `row[field]`. `field` must be a numeric field.
+        }
+    ],
+    "tagSelector": {
+      "title": "Associated tags organized by category"
+    },
+    "studyColumns": [ // configures the columns of the table of studies.
+      {
+        "name": "Study Name",
+        "field": "name"
+      },
+      {
+        "name": "Full Name",
+        "field": "full_name",
+        "contentType": "string" // contentType: string displays the content of the field without formatting.
+      },
+      {
+        "name": "Number of Subjects",
+        "field": "_subjects_count",
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a",
+        "contentType": "number" // contentType: number displays the content of the field formatted with Number.toLocaleString() (e.g. `72209` -> `"72,209"`)
+      },
+      {
+        "name": "dbGaP Accession Number",
+        "field": "study_id"
+      }
+    ],
+    "studyPreviewField": { // if present, studyPreviewField shows a special preview field beneath each row of data in the table, useful for study descriptions.
+      "name": "Description",
+      "field": "study_description",
+      "contentType": "string",
+      "includeName": false,
+      "includeIfNotAvailable": true,
+      "valueIfNotAvailable": "No description has been provided for this study."
+    },
+    "studyPageFields": { // studyPageFields configures the fields that are displayed when a user opens a study page by clicking on a row in the table.
+      "header": { // if present, shows a header field at the top of the study page.
+        "field": "name"
+      },
+      "fieldsToShow": [ // fields on the study page are grouped in order to separate logically distinct groups of fields
+        {
+          "groupName": "Study Identifiers",
+          "includeName": true,
+          "fields": [
+            {
+              "name": "Number of Subjects",
+              "field": "_subjects_count",
+              "contentType": "number" // contentType: number displays the content of the field formatted with Number.toLocaleString() (e.g. `72209` -> `"72,209"`)
+
+            },
+            {
+              "name": "Full Name",
+              "field": "full_name",
+              "contentType": "string" // contentType: string displays the content of the field without formatting.
+
+            },
+            {
+              "name": "Short Name",
+              "field": "short_name",
+              "contentType": "string",
+              "includeName": true,
+              "includeIfNotAvailable": true,
+              "valueIfNotAvailable": "N/A"
+            },
+            {
+              "name": "dbGaP Study Accession",
+              "field": "dbgap_accession",
+              "contentType": "string",
+              "includeName": true,
+              "includeIfNotAvailable": false
+            },
+            {
+              "name": "Project ID",
+              "field": "project_id",
+              "contentType": "string",
+              "includeIfNotAvailable": false
+            }
+          ]
+        },
+        {
+          "fields": [
+            {
+              "name": "Description",
+              "field": "study_description",
+              "contentType": "paragraphs", // contentType: paragraphs works like contentType: string except it correctly displays newline characters ('\n') as line breaks.
+              "includeName": false,
+              "includeIfNotAvailable": true,
+              "valueIfNotAvailable": "No description has been provided for this study."
+            }
+          ]
+        }
+      ]
+    },
+    "minimalFieldMapping": { // maps
+      "tagsListFieldName": "tags", // required; the field which contains the list of tags (format: [{name: string, category: string}] )
+      "authzField": "authz", // optional if features.authorization.enabled is false, otherwise required
+      "uid": "study_id" // required; a unique identifier for each study. Can be any unique value and does not have to have any special meaning (eg does not need to be a GUID)
+    },
+    "tagCategories": [ // configures the categories displayed in the tag selector. If a tag category appears in the `tagsListFieldName` field but is not configured here, it will not be displayed in the tag selector.
+      {
+        "name": "Program", // this configures the tag category name that will be shown on the tag selector
+        "color": "rgba(129, 211, 248, 1)", // color can be any vaid CSS color string, including hex, rgb, rgba, hsl
+        "display": true
+      },
+      {
+        "name": "Study Registration",
+        "color": "rgba(236, 128, 141, 1)",
+        "display": true
+      },
+      {
+        "name": "Data Type",
+        "color": "rgba(112, 182, 3, 1)",
+        "display": true
+      }
+    ]
   },
   "resourceBrowser": {), // see Resource Browser documentation
   "workspacePageDescription": "", // text to display above the workspace options

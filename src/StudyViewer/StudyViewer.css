@@ -53,15 +53,15 @@
 }
 
 /* antd modal style override */
-.ant-modal-header {
-  background-color: var(--g3-color__base-blue);
+.study-viewer .ant-modal-header {
+  background-color: var(--secondary-color);
 }
 
-.ant-modal-title {
+.study-viewer .ant-modal-title {
   color: white;
 }
 
 /* temp fix, there is an official fix coming up soon https://github.com/ant-design/ant-design/pull/26721 */
-.ant-space-item:empty {
+.study-viewer .ant-space-item:empty {
   display: none;
 }
