@@ -6,7 +6,8 @@
         "targets": "> 2%, not dead"
       }
     ],
-    "@babel/preset-react"
+    "@babel/preset-react",
+    "@babel/preset-typescript",
   ],
   "plugins": [
     "dev-expression",
