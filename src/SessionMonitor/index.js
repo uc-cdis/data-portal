@@ -83,6 +83,9 @@ export class SessionMonitor {
         if (response.type === 'UPDATE_POPUP') {
           this.popupShown = true;
         }
+      }).catch(() => {
+        // if API failed check if user is still logged in
+        this.notifyUserIfTheyAreNotLoggedIn();
       });
     });
   }
