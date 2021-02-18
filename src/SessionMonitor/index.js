@@ -1,13 +1,14 @@
 import { logoutInactiveUsers, workspaceTimeoutInMinutes } from '../localconf';
 import getReduxStore from '../reduxStore';
-import { fetchUser, fetchUserNoRefresh } from '../actions';
+import { fetchUser, logoutAPI } from '../actions';
 
-/* eslint-disable class-methods-use-this */
 export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
-    this.updateSessionTime = updateSessionTime || 5 * 60 * 1000;
-    this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
-    this.inactiveWorkspaceTimeLimit = Math.min(workspaceTimeoutInMinutes, 480) * 60 * 1000;
+    this.updateSessionTime = updateSessionTime || 1 * 60 * 1000;
+    this.updateSessionLimit = 5 * 60 * 1000;
+    this.inactiveTimeLimit = inactiveTimeLimit || 8 * 60 * 1000;
+    this.inactiveWorkspaceTimeLimit = Math.min(workspaceTimeoutInMinutes, 10) * 60 * 1000;
+    this.mostRecentSessionRefreshTimestamp = Date.now();
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
     this.popupShown = false;
@@ -33,6 +34,19 @@ export class SessionMonitor {
     }
   }
 
+  logoutUser() {
+    if (this.popupShown) {
+      return;
+    }
+
+    console.log('logging out user at: ', new Date());
+    getReduxStore().then((store) => {
+      console.log('handleInactiveUserLogout dispatched at: ', new Date());
+      store.dispatch(logoutAPI(true))
+      this.popupShown = true;
+    });
+  }
+
   updateUserActivity() {
     this.mostRecentActivityTimestamp = Date.now();
   }
@@ -47,17 +61,19 @@ export class SessionMonitor {
   }
 
   updateSession() {
-    if (this.isUserOnPage('login')) {
+    if (this.isUserOnPage('login') || this.popupShown) {
       return Promise.resolve(0);
     }
+
+    console.log('user session updated at: ', new Date());
+    console.log('last user interaction at: ', new Date(this.mostRecentActivityTimestamp));
 
     const timeSinceLastActivity = Date.now() - this.mostRecentActivityTimestamp;
     // If user has been inactive for Y min, and they are not in a workspace
     if (timeSinceLastActivity >= this.inactiveTimeLimit
         && !this.isUserOnPage('workspace')
         && logoutInactiveUsers) {
-      // Allow Fence to log out the user. If we don't refresh, Fence will mark them as inactive.
-      this.notifyUserIfTheyAreNotLoggedIn();
+      this.logoutUser();
       return Promise.resolve(0);
     }
 
@@ -66,7 +82,7 @@ export class SessionMonitor {
     if (timeSinceLastActivity >= this.inactiveWorkspaceTimeLimit
         && this.isUserOnPage('workspace')
         && logoutInactiveUsers) {
-      this.notifyUserIfTheyAreNotLoggedIn();
+      this.logoutUser();
       return Promise.resolve(0);
     }
 
@@ -74,10 +90,15 @@ export class SessionMonitor {
   }
 
   refreshSession() {
-    if (this.isUserOnPage('login')) {
+    const timeSinceLastSessionUpdate = Date.now() - this.mostRecentSessionRefreshTimestamp;
+    if (timeSinceLastSessionUpdate < this.updateSessionLimit) {
+      console.log('too soon');
       return Promise.resolve(0);
     }
+
     // hitting Fence endpoint refreshes token
+    console.log('session refreshed at: ', new Date());
+    this.mostRecentSessionRefreshTimestamp = Date.now();
     return getReduxStore().then((store) => {
       store.dispatch(fetchUser).then((response) => {
         if (response.type === 'UPDATE_POPUP') {
@@ -102,7 +123,7 @@ export class SessionMonitor {
     }
 
     getReduxStore().then((store) => {
-      store.dispatch(fetchUserNoRefresh).then((response) => {
+      store.dispatch(fetchUser).then((response) => {
         if (response.type === 'UPDATE_POPUP') {
           this.popupShown = true;
         }
