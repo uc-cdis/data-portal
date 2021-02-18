@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 export const GuppyConfigType = PropTypes.shape({
   path: PropTypes.string.isRequired,
   dataType: PropTypes.string.isRequired,
+  tierAccessLevel: PropTypes.string,
   fieldMapping: PropTypes.arrayOf(PropTypes.shape({
     field: PropTypes.string,
     name: PropTypes.string,
