@@ -20,12 +20,34 @@ class GuppyDataExplorer extends React.Component {
     this.state = {
       aggsData: {},
       filter: {},
+      encodableExplorerStateForUrl: {},
     };
   }
 
   handleReceiveNewAggsData = (newAggsData) => {
     this.setState({ aggsData: newAggsData });
   };
+
+  handleAccessibilityChangeForQueryStateUrl = (event) => {
+    console.log('accessibility change event: ', event);
+    const newExplorerState = this.state.encodableExplorerStateForUrl;
+    newExplorerState.accessibility = event;
+    this.setState({ encodableExplorerStateForUrl: newExplorerState });
+  }
+
+  handleTableViewChangeForQueryStateUrl = (event) => {
+    console.log('table view change event: ', event);
+    const newExplorerState = this.state.encodableExplorerStateForUrl;
+    newExplorerState.tableView = event;
+    this.setState({ encodableExplorerStateForUrl: newExplorerState });
+  }
+
+  handleFilterChangeForQueryStateUrl = (event) => {
+    console.log('filter change event: ', event);
+    const newExplorerState = this.state.encodableExplorerStateForUrl;
+    newExplorerState.filter = event;
+    this.setState({ encodableExplorerStateForUrl: newExplorerState });
+  }
 
   render() {
     return (
