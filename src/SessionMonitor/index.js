@@ -70,12 +70,12 @@ export class SessionMonitor {
     return paths[paths.length - 1];
   }
 
-  isUserOnPage(pageName) {
-    return this.pageFromURL(window.location.href) === pageName;
+  static isUserOnPage(pageName) {
+    return SessionMonitor.pageFromURL(window.location.href) === pageName;
   }
 
   updateSession() {
-    if (this.isUserOnPage('login') || this.popupShown) {
+    if (SessionMonitor.isUserOnPage('login') || this.popupShown) {
       return Promise.resolve(0);
     }
 
@@ -85,7 +85,7 @@ export class SessionMonitor {
     const timeSinceLastActivity = Date.now() - this.mostRecentActivityTimestamp;
     // If user has been inactive for Y min, and they are not in a workspace
     if (timeSinceLastActivity >= this.inactiveTimeLimit
-        && !this.isUserOnPage('workspace')
+        && !SessionMonitor.isUserOnPage('workspace')
         && logoutInactiveUsers) {
       this.logoutUser();
       return Promise.resolve(0);
@@ -94,7 +94,7 @@ export class SessionMonitor {
     // If the user has been inactive for this.inactiveWorkspaceTimeLimit minutes
     // and they *are* in a workspace
     if (timeSinceLastActivity >= this.inactiveWorkspaceTimeLimit
-        && this.isUserOnPage('workspace')
+        && SessionMonitor.isUserOnPage('workspace')
         && logoutInactiveUsers) {
       this.logoutUser();
       return Promise.resolve(0);
