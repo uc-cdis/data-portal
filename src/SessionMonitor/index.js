@@ -53,9 +53,7 @@ export class SessionMonitor {
       return;
     }
 
-    console.log('logging out user at: ', new Date());
     getReduxStore().then((store) => {
-      console.log('handleInactiveUserLogout dispatched at: ', new Date());
       store.dispatch(logoutAPI(true));
       this.popupShown = true;
     });
@@ -78,9 +76,6 @@ export class SessionMonitor {
     if (SessionMonitor.isUserOnPage('login') || this.popupShown) {
       return Promise.resolve(0);
     }
-
-    console.log('user session updated at: ', new Date());
-    console.log('last user interaction at: ', new Date(this.mostRecentActivityTimestamp));
 
     const timeSinceLastActivity = Date.now() - this.mostRecentActivityTimestamp;
     // If user has been inactive for Y min, and they are not in a workspace
@@ -107,12 +102,10 @@ export class SessionMonitor {
     const timeSinceLastSessionUpdate = Date.now() - this.mostRecentSessionRefreshTimestamp;
     // don't hit Fence to refresh tokens too frequently
     if (timeSinceLastSessionUpdate < this.updateSessionLimit) {
-      console.log('too soon');
       return Promise.resolve(0);
     }
 
     // hitting Fence endpoint refreshes token
-    console.log('session refreshed at: ', new Date());
     this.mostRecentSessionRefreshTimestamp = Date.now();
     return getReduxStore().then((store) => {
       store.dispatch(fetchUser).then((response) => {
