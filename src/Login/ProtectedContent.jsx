@@ -1,30 +1,16 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchUser, fetchOAuthURL, fetchWithCreds, fetchProjects } from '../actions';
+import { fetchUser, fetchProjects } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
-import { requiredCerts, submissionApiOauthPath } from '../configs';
+import { requiredCerts } from '../configs';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 import { intersection, isPageFullScreen } from '../utils';
 import './ProtectedContent.css';
 
 let lastAuthMs = 0;
 let lastTokenRefreshMs = 0;
-
-/**
- * Redux listener - just clears auth-cache on logout
- */
-export function logoutListener(state = {}, action) {
-  switch (action.type) {
-  case 'RECEIVE_API_LOGOUT':
-    lastAuthMs = 0;
-    lastTokenRefreshMs = 0;
-    break;
-  default: // noop
-  }
-  return state;
-}
 
 /**
  * Container for components that require authentication to access.
@@ -196,50 +182,6 @@ class ProtectedContent extends React.Component {
           // The oauth dance below is only relevant for legacy commons - pre jwt
           return Promise.resolve(newState);
         }
-        // else do the oauth dance
-        // NOTE: this is DEPRECATED now - jwt access token
-        //      works across all services
-        return store.dispatch(fetchOAuthURL(submissionApiOauthPath))
-          .then(
-            oauthUrl => fetchWithCreds({ path: oauthUrl, dispatch: store.dispatch.bind(store) }))
-          .then(
-            ({ status, data }) => {
-              switch (status) {
-              case 200:
-                return {
-                  type: 'RECEIVE_SUBMISSION_LOGIN',
-                  result: true,
-                };
-              default: {
-                return {
-                  type: 'RECEIVE_SUBMISSION_LOGIN',
-                  result: false,
-                  error: data,
-                };
-              }
-              }
-            },
-          )
-          .then(
-            msg => store.dispatch(msg),
-          )
-          .then(
-            // refetch the tables - since the earlier call failed with an invalid token ...
-            () => store.dispatch(fetchProjects()),
-          )
-          .then(
-            () => {
-              lastTokenRefreshMs = Date.now();
-              return newState;
-            },
-            () => {
-              // something went wrong - better just re-login
-              newState.authenticated = false;
-              newState.redirectTo = '/login';
-              newState.from = this.props.location;
-              return newState;
-            },
-          );
       });
   };
 

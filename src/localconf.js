@@ -72,7 +72,6 @@ function buildConfig(opts) {
 
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
-  const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   let userapiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
@@ -356,7 +355,6 @@ function buildConfig(opts) {
     jobapiPath,
     apiPath,
     submissionApiPath,
-    submissionApiOauthPath,
     credentialCdisPath,
     coreMetadataPath,
     indexdPath,
