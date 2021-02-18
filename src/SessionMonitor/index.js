@@ -2,12 +2,19 @@ import { logoutInactiveUsers, workspaceTimeoutInMinutes } from '../localconf';
 import getReduxStore from '../reduxStore';
 import { fetchUser, logoutAPI } from '../actions';
 
+// Updated SessionMonitor logic as of 02/18/2021
+// Before: Portal relies on Fence token expiration to decide if user has logged out (passive)
+// After: Portal will keeps tracking of user's interaction and actively log out user if the inactive time has passed the pre-set threshold
+// Why this change: in before only the Fence session token in cookie is updated when hitting `/user`, and the access token in cookie can only
+// gets updated after the current one has expired. This will result in varies ill-behaviors of Portal (eg. requests get 401 when user is still active,
+// or Portal displayed the AuthPopup to user but user can still be logged in if they just refresh the page). After the Fence patch, both session
+// and access token in cookies will get updated if user session is still valid. So Portal must actively track and log out inactive users.
 export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
-    this.updateSessionTime = updateSessionTime || 1 * 60 * 1000;
-    this.updateSessionLimit = 5 * 60 * 1000;
-    this.inactiveTimeLimit = inactiveTimeLimit || 8 * 60 * 1000;
-    this.inactiveWorkspaceTimeLimit = Math.min(workspaceTimeoutInMinutes, 10) * 60 * 1000;
+    this.updateSessionTime = updateSessionTime || 1 * 60 * 1000; // time interval for checking if user is inactive
+    this.updateSessionLimit = 5 * 60 * 1000; // time interval for calling /user to refresh user's tokens
+    this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
+    this.inactiveWorkspaceTimeLimit = Math.min(workspaceTimeoutInMinutes, 480) * 60 * 1000;
     this.mostRecentSessionRefreshTimestamp = Date.now();
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
@@ -23,7 +30,7 @@ export class SessionMonitor {
     this.interval = setInterval(
       () => this.updateSession(),
       this.updateSessionTime,
-    ); // check session every X min
+    ); // check session every X min, according to the updateSessionTime value
   }
 
   stop() {
@@ -35,6 +42,7 @@ export class SessionMonitor {
   }
 
   logoutUser() {
+    // don't hit the logout endpoint over and over if the popup is already shown
     if (this.popupShown) {
       return;
     }
@@ -91,6 +99,7 @@ export class SessionMonitor {
 
   refreshSession() {
     const timeSinceLastSessionUpdate = Date.now() - this.mostRecentSessionRefreshTimestamp;
+    // don't hit Fence to refresh tokens too frequently
     if (timeSinceLastSessionUpdate < this.updateSessionLimit) {
       console.log('too soon');
       return Promise.resolve(0);
@@ -101,33 +110,11 @@ export class SessionMonitor {
     this.mostRecentSessionRefreshTimestamp = Date.now();
     return getReduxStore().then((store) => {
       store.dispatch(fetchUser).then((response) => {
+        // usually we shouldn't get this
         if (response.type === 'UPDATE_POPUP') {
           this.popupShown = true;
         }
-      }).catch(() => {
-        // if API failed check if user is still logged in
-        this.notifyUserIfTheyAreNotLoggedIn();
-      });
-    });
-  }
-
-  notifyUserIfTheyAreNotLoggedIn() {
-    /* If a logged-out user is browsing a page with ProtectedContent, this code will
-     * display the popup that informs them their session has expired.
-     * This function is similar to refreshSession() in that it checks user
-     * auth (401/403 vs 200), but it does not refresh
-     * the access token nor extend the session.
-     */
-    if (this.popupShown) {
-      return;
-    }
-
-    getReduxStore().then((store) => {
-      store.dispatch(fetchUser).then((response) => {
-        if (response.type === 'UPDATE_POPUP') {
-          this.popupShown = true;
-        }
-      });
+      })
     });
   }
 }
