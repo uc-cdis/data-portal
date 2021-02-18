@@ -10,7 +10,6 @@ import { intersection, isPageFullScreen } from '../utils';
 import './ProtectedContent.css';
 
 let lastAuthMs = 0;
-let lastTokenRefreshMs = 0;
 
 /**
  * Container for components that require authentication to access.
@@ -154,13 +153,9 @@ class ProtectedContent extends React.Component {
    * @return newState passed through
    */
   checkApiToken = (store, initialState) => {
-    const nowMs = Date.now();
     const newState = Object.assign({}, initialState);
 
     if (!newState.authenticated) {
-      return Promise.resolve(newState);
-    }
-    if (nowMs - lastTokenRefreshMs < 41000) {
       return Promise.resolve(newState);
     }
     return store.dispatch(fetchProjects())
@@ -182,6 +177,7 @@ class ProtectedContent extends React.Component {
           // The oauth dance below is only relevant for legacy commons - pre jwt
           return Promise.resolve(newState);
         }
+        return Promise.resolve(newState);
       });
   };
 

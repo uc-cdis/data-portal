@@ -268,15 +268,14 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
       dispatch({
         type: 'UPDATE_POPUP',
         data: {
-          authPopup: true
+          authPopup: true,
         },
-      })
-    }
-    else {
+      });
+    } else {
       document.location.replace(response.url);
     }
-  })
-}
+  });
+};
 
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -

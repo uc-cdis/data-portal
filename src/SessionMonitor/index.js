@@ -4,15 +4,21 @@ import { fetchUser, logoutAPI } from '../actions';
 
 // Updated SessionMonitor logic as of 02/18/2021
 // Before: Portal relies on Fence token expiration to decide if user has logged out (passive)
-// After: Portal will keeps tracking of user's interaction and actively log out user if the inactive time has passed the pre-set threshold
-// Why this change: in before only the Fence session token in cookie is updated when hitting `/user`, and the access token in cookie can only
-// gets updated after the current one has expired. This will result in varies ill-behaviors of Portal (eg. requests get 401 when user is still active,
-// or Portal displayed the AuthPopup to user but user can still be logged in if they just refresh the page). After the Fence patch, both session
-// and access token in cookies will get updated if user session is still valid. So Portal must actively track and log out inactive users.
+// After: Portal will keeps tracking of user's interaction and actively log out user if
+// the inactive time has passed the pre-set threshold
+// Why this change: in before only the Fence session token in cookie is updated when hitting `/user`
+// and the access token in cookie can only gets updated after the current one has expired.
+// This will result in varies ill-behaviors of Portal (eg. requests get 401 when
+// user is still active, or Portal displayed the AuthPopup to user but user can still be
+// logged in if they just refresh the page). After the Fence patch, both session
+// and access token in cookies will get updated if user session is still valid.
+// So Portal must actively track and log out inactive users.
 export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
-    this.updateSessionTime = updateSessionTime || 1 * 60 * 1000; // time interval for checking if user is inactive
-    this.updateSessionLimit = 5 * 60 * 1000; // time interval for calling /user to refresh user's tokens
+    // time interval for checking if user is inactive
+    this.updateSessionTime = updateSessionTime || 1 * 60 * 1000;
+    // time interval for calling /user to refresh user's tokens
+    this.updateSessionLimit = 5 * 60 * 1000;
     this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
     this.inactiveWorkspaceTimeLimit = Math.min(workspaceTimeoutInMinutes, 480) * 60 * 1000;
     this.mostRecentSessionRefreshTimestamp = Date.now();
@@ -50,7 +56,7 @@ export class SessionMonitor {
     console.log('logging out user at: ', new Date());
     getReduxStore().then((store) => {
       console.log('handleInactiveUserLogout dispatched at: ', new Date());
-      store.dispatch(logoutAPI(true))
+      store.dispatch(logoutAPI(true));
       this.popupShown = true;
     });
   }
@@ -59,7 +65,7 @@ export class SessionMonitor {
     this.mostRecentActivityTimestamp = Date.now();
   }
 
-  pageFromURL(currentURL) {
+  static pageFromURL(currentURL) {
     const paths = currentURL.split('/').filter(x => x !== 'dev.html' && x !== '');
     return paths[paths.length - 1];
   }
@@ -114,7 +120,7 @@ export class SessionMonitor {
         if (response.type === 'UPDATE_POPUP') {
           this.popupShown = true;
         }
-      })
+      });
     });
   }
 }
