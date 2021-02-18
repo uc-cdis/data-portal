@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import GuppyDataExplorer from './GuppyDataExplorer';
-import { guppyUrl, tierAccessLevel, tierAccessLimit, explorerConfig, dataAvailabilityToolConfig, useNewExplorerConfigFormat } from '../localconf';
+import { guppyUrl, tierAccessLevel, tierAccessLimit, explorerConfig, dataAvailabilityToolConfig, useNewExplorerConfigFormat, indexScopedTierAccessMode } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 import './GuppyExplorer.css';
 
@@ -71,6 +71,9 @@ class Explorer extends React.Component {
       heatMapConfig = this.state.tab === 0 ? dataAvailabilityToolConfig : null;
     }
 
+    const tierAccessLevelCalculated = indexScopedTierAccessMode ?
+      explorerConfig[this.state.tab].guppyConfig.tierAccessLevel : tierAccessLevel;
+
     return (
       <div className='guppy-explorer'>
         {
@@ -95,7 +98,7 @@ class Explorer extends React.Component {
               enableLimitedFilePFBExport: explorerConfig[this.state.tab].enableLimitedFilePFBExport,
             }}
             history={this.props.history}
-            tierAccessLevel={tierAccessLevel}
+            tierAccessLevel={tierAccessLevelCalculated}
             tierAccessLimit={tierAccessLimit}
             getAccessButtonLink={explorerConfig[this.state.tab].getAccessButtonLink}
             hideGetAccessButton={explorerConfig[this.state.tab].hideGetAccessButton}
