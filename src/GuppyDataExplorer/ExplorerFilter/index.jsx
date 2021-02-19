@@ -134,6 +134,7 @@ class ExplorerFilter extends React.Component {
           labelToPlural(this.props.guppyConfig.dataType)
       } or more.` : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
+      hideZero: true,
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
