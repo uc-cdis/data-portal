@@ -32,10 +32,13 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   const [cohorts, setCohorts] = useState(emptyCohorts);
   const [isError, setIsError] = useState(false);
   useEffect(() => {
+    let isMounted = true;
     if (!isError)
       fetchCohorts()
-        .then(setCohorts)
+        .then((cohorts) => isMounted && setCohorts(cohorts))
         .catch(() => setIsError(true));
+
+    return () => (isMounted = false);
   }, [isError]);
 
   /** @type {[ExplorerCohortActionType, React.Dispatch<React.SetStateAction<ExplorerCohortActionType>>]} */
