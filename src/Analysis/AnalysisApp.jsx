@@ -22,8 +22,8 @@ class AnalysisApp extends React.Component {
     this.updateApp();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.job && nextProps.job.status === 'Completed') {
+  componentDidUpdate() {
+    if (this.props.job && this.props.job.status === 'Completed') {
       this.fetchJobResult().then((res) => {
         this.setState({ results: `${res.data.output}`.split('\n') });
       });

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
+import { stringifyFilters } from './utils';
 import './ExplorerCohort.css';
 import './typedef';
 
@@ -78,6 +79,16 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
               disabled
               placeholder='No description'
               value={selected.value.description}
+            />
+          }
+        />
+        <SimpleInputField
+          label='Filters'
+          input={
+            <textarea
+              disabled
+              placeholder='No filters'
+              value={stringifyFilters(selected.value.filters)}
             />
           }
         />
@@ -162,6 +173,16 @@ function CohortSaveForm({
                 e.persist();
                 setCohort((prev) => ({ ...prev, description: e.target.value }));
               }}
+            />
+          }
+        />
+        <SimpleInputField
+          label='Filters'
+          input={
+            <textarea
+              disabled
+              placeholder='No filters'
+              value={stringifyFilters(cohort.filters)}
             />
           }
         />
@@ -255,6 +276,28 @@ function CohortUpdateForm({
             />
           }
         />
+        <SimpleInputField
+          label='Filters'
+          input={
+            <textarea
+              disabled
+              placeholder='No filters'
+              value={stringifyFilters(cohort.filters)}
+            />
+          }
+        />
+        {isFiltersChanged && (
+          <SimpleInputField
+            label='Filters (changed)'
+            input={
+              <textarea
+                disabled
+                placeholder='No filters'
+                value={stringifyFilters(currentFilters)}
+              />
+            }
+          />
+        )}
       </form>
       <div>
         <CohortButton

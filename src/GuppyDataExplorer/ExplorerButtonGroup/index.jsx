@@ -47,11 +47,11 @@ class ExplorerButtonGroup extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     if (
-      nextProps.job &&
-      nextProps.job.status === 'Completed' &&
-      this.props.job.status !== 'Completed'
+      this.props.job &&
+      this.props.job.status === 'Completed' &&
+      prevProps.job.status !== 'Completed'
     ) {
       this.fetchJobResult().then((res) => {
         if (this.state.exportingToTerra) {
@@ -86,8 +86,8 @@ class ExplorerButtonGroup extends React.Component {
       });
     }
     if (
-      nextProps.totalCount !== this.props.totalCount &&
-      nextProps.totalCount
+      this.props.totalCount !== prevProps.totalCount &&
+      this.props.totalCount
     ) {
       this.refreshManifestEntryCount();
     }

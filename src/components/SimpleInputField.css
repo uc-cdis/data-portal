@@ -30,6 +30,10 @@
   width: 100%;
 }
 
+.simple-input-field__input > textarea {
+  resize: none;
+}
+
 .simple-input-field__input--error > input {
   border-color: red;
 }

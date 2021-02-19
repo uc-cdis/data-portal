@@ -108,7 +108,7 @@ class GqlEditor extends React.Component {
 }
 
 GqlEditor.propTypes = {
-  schema: PropTypes.object.isRequired,
+  schema: PropTypes.object,
   endpointIndex: PropTypes.number,
 };
 
