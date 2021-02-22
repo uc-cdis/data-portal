@@ -168,5 +168,4 @@ module.exports = {
       typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
     },
   },
-  ignorePatterns: ['src/params.js'],
 };
