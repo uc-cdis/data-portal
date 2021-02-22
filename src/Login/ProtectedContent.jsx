@@ -174,9 +174,12 @@ class ProtectedContent extends React.Component {
           // error code for all cases
           // there may be no tables at startup time,
           // or some other weirdness ...
-          // The oauth dance below is only relevant for legacy commons - pre jwt
           return Promise.resolve(newState);
         }
+        // something went wrong - better just re-login
+        newState.authenticated = false;
+        newState.redirectTo = '/login';
+        newState.from = this.props.location;
         return Promise.resolve(newState);
       });
   };
