@@ -72,7 +72,6 @@ function buildConfig(opts) {
 
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
-  const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   let userapiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
@@ -156,6 +155,16 @@ function buildConfig(opts) {
     useNewExplorerConfigFormat = true;
     explorerConfig = config.explorerConfig;
   }
+
+  // Two tiered-access options: site-wide and index-scoped.
+  // Tiered access is index-scoped if all guppyConfigs in the portal config
+  // contain a tierAccessLevel.
+  let indexScopedTierAccessMode = true;
+  explorerConfig.forEach((item) => {
+    if (!item.guppyConfig || !item.guppyConfig.tierAccessLevel) {
+      indexScopedTierAccessMode = false;
+    }
+  });
 
   const dataAvailabilityToolConfig = config.dataAvailabilityToolConfig;
 
@@ -356,7 +365,6 @@ function buildConfig(opts) {
     jobapiPath,
     apiPath,
     submissionApiPath,
-    submissionApiOauthPath,
     credentialCdisPath,
     coreMetadataPath,
     indexdPath,
@@ -399,6 +407,7 @@ function buildConfig(opts) {
     analysisApps,
     tierAccessLevel,
     tierAccessLimit,
+    indexScopedTierAccessMode,
     useIndexdAuthz,
     explorerPublic,
     authzPath,
