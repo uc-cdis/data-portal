@@ -14,7 +14,7 @@
     "@gen3/guppy": "^0.11.1",
     "@gen3/ui-component": "^0.6.4",
     "@storybook/addon-actions": "^5.0.0",
-    "@storybook/react": "^5.0.0",
+    "@storybook/react": "^6.1.20",
     "antd": "^4.10.0",
     "brace": "^0.10.0",
     "clipboard-plus": "^1.0.0",
