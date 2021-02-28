@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 
 const basename = process.env.BASENAME || '/';
@@ -141,10 +140,10 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
 }
 
 const entry = {
-  bundle: ['babel-polyfill', './src/index.jsx'],
-  workspaceBundle: ['babel-polyfill', './src/workspaceIndex.jsx'],
-  covid19Bundle: ['babel-polyfill', './src/covid19Index.jsx'],
-  nctBundle: ['babel-polyfill', './src/nctIndex.jsx'],
+  bundle: './src/index.jsx',
+  workspaceBundle: './src/workspaceIndex.jsx',
+  covid19Bundle: './src/covid19Index.jsx',
+  nctBundle: './src/nctIndex.jsx',
 };
 
 // if GEN3_BUNDLE is set with a value
@@ -184,9 +183,9 @@ if (process.env.GEN3_BUNDLE) {
 module.exports = {
   entry,
   target: 'web',
-  externals: [nodeExternals({
-    whitelist: ['graphiql', 'graphql-language-service-parser'],
-  })],
+  externals: [{
+    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}',
+  }],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
     path: __dirname,
@@ -259,7 +258,4 @@ module.exports = {
     extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
   },
   plugins,
-  externals: [{
-    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}',
-  }],
 };

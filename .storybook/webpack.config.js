@@ -3,7 +3,7 @@ const basename = process.env.BASENAME || '/';
 const webpack = require('webpack');
 
 module.exports = {
-  entry: ['babel-polyfill', '../src/index.jsx'],
+  entry: '../src/index.jsx',
   output: {
     path: __dirname,
     filename: 'bundle.js',

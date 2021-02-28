@@ -3,18 +3,38 @@
     [
       "@babel/preset-env",
       {
-        "targets": "> 2%, not dead"
+        "targets": "> 2%, not dead",
+        "useBuiltIns": "usage",
+        "corejs": 3,
+        "debug":true
       }
     ],
     "@babel/preset-react",
-    "@babel/preset-typescript",
+    "@babel/preset-typescript"
   ],
   "plugins": [
     "dev-expression",
     "transform-class-properties",
-    ["relay",
-      {"compat": true, "schema": "data/schema.json"}],
-    "@babel/plugin-transform-runtime",
-    ["@babel/plugin-proposal-object-rest-spread", { "loose": true, "useBuiltIns": true }]
+    [
+      "relay",
+      {
+        "compat": true,
+        "schema": "data/schema.json"
+      }
+    ],
+    [
+      "@babel/transform-runtime",
+      {
+        "corejs": 3
+      }
+    ],
+    [
+      "@babel/plugin-proposal-object-rest-spread",
+      {
+        "loose": true,
+        "useBuiltIns": true
+      }
+    ],
+    ["@babel/plugin-transform-modules-commonjs"]
   ]
 }
