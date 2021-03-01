@@ -149,7 +149,7 @@
     "explorer": true,
     "analysis": true
   },
-  "analysisTools": [ "vaGWAS" ],
+  "analysisTools": [ "GWASApp" ],
   "dataExplorerConfig": {
     "charts": {
       "Chicago_ID": {

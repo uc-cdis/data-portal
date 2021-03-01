@@ -51,12 +51,11 @@ function filterCountyGeoJson(selectedFips) {
 class IllinoisMapChart extends React.Component {
   constructor(props) {
     super(props);
-    this.updateDimensions = this.updateDimensions.bind(this);
     this.choroCountyGeoJson = null;
     this.state = {
       mapSize: {
         width: '100%',
-        height: window.innerHeight - 221,
+        height: '100%',
       },
       viewport: {
         // start centered on Chicago
@@ -70,25 +69,28 @@ class IllinoisMapChart extends React.Component {
     };
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.updateDimensions);
-  }
-
   onHover = (event) => {
-    let hoverInfo = null;
-
     if (!event.features) { return; }
+
+    let hoverInfo = null;
+    const formatNumberToDisplay = (rawNum) => {
+      if (rawNum && rawNum !== 'null') {
+        if (typeof rawNum === 'number') {
+          return rawNum.toLocaleString();
+        }
+        return rawNum;
+      }
+      // Default if missing
+      return 0;
+    };
 
     event.features.forEach((feature) => {
       if (feature.layer.id !== 'confirmed-choropleth') {
         return;
       }
-      let confirmed = feature.properties.confirmed;
-      confirmed = confirmed && confirmed !== 'null' ? Number(confirmed).toLocaleString() : 0;
-      let deaths = feature.properties.deaths;
-      deaths = deaths && deaths !== 'null' ? (deaths).toLocaleString() : 0;
-      let recovered = feature.properties.recovered;
-      recovered = recovered && recovered !== 'null' ? Number(recovered).toLocaleString() : 0;
+      const confirmed = formatNumberToDisplay(feature.properties.confirmed);
+      const deaths = formatNumberToDisplay(feature.properties.deaths);
+      const recovered = formatNumberToDisplay(feature.properties.recovered);
 
       const state = feature.properties.STATE;
       const county = feature.properties.COUNTYNAME;
@@ -127,12 +129,6 @@ class IllinoisMapChart extends React.Component {
           this.props.modeledFipsList.includes(feature.properties.FIPS),
         );
       }
-    });
-  }
-
-  updateDimensions() {
-    this.setState({
-      mapSize: { width: '100%', height: window.innerHeight - 221 },
     });
   }
 

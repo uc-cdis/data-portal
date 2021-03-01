@@ -1,6 +1,7 @@
 import React from 'react';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
+import { Popconfirm } from 'antd';
 
 import {
   workspaceUrl,
@@ -58,6 +59,16 @@ class Workspace extends React.Component {
           }
         },
       );
+  }
+
+  componentDidUpdate() {
+    // force workspace iframe acquire focus if it does not have yet
+    // to fix the noVNC workspace doesn't respond to keyboard event when came up
+    if (document.getElementsByClassName('workspace')
+    && document.getElementsByClassName('workspace')[1]
+    && document.getElementsByClassName('workspace')[1] !== document.activeElement) {
+      document.getElementsByClassName('workspace')[1].focus();
+    }
   }
 
   componentWillUnmount() {
@@ -188,13 +199,20 @@ class Workspace extends React.Component {
 
   render() {
     const terminateButton = (
-      <Button
-        className='workspace__button'
-        onClick={this.handleTerminateButtonClick}
-        label='Terminate Workspace'
-        buttonType='primary'
-        isPending={this.state.notebookStatus === 'Terminating'}
-      />
+      // wrap up terminate button with Popconfirm
+      <Popconfirm
+        title='Are you sure to terminate your workspace?'
+        onConfirm={this.handleTerminateButtonClick}
+        okText='Yes'
+        cancelText='No'
+      >
+        <Button
+          className='workspace__button'
+          label='Terminate Workspace'
+          buttonType='primary'
+          isPending={this.state.notebookStatus === 'Terminating'}
+        />
+      </Popconfirm>
     );
 
     const cancelButton = (

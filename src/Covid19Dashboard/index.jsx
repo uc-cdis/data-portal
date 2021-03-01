@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import 'react-tabs/style/react-tabs.less';
 
-import { covid19DashboardConfig, mapboxAPIToken, auspiceUrl } from '../localconf';
+import { covid19DashboardConfig, mapboxAPIToken, auspiceUrl, auspiceUrlIL } from '../localconf';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
 import WorldMapChart from './WorldMapChart';
@@ -113,9 +113,24 @@ class Covid19Dashboard extends React.Component {
           <XAxis
             dataKey='date'
             tick={<CustomizedXAxisTick />}
-            interval={1}
+            interval={Math.round(locationPopupData.data.length / 50)}
           />
           <YAxis
+            label={{
+              value: locationPopupData.maxes.recovered ? 'confirmed/recovered' : 'confirmed',
+              angle: -90,
+              position: 'insideLeft',
+            }}
+            yAxisId='left'
+            type='number'
+            domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
+            tickFormatter={val => Number(val).toLocaleString()}
+            fontSize={10}
+          />
+          <YAxis
+            label={{ value: 'deaths', angle: 90, position: 'insideRight' }}
+            yAxisId='right'
+            orientation='right'
             type='number'
             domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
             tickFormatter={val => Number(val).toLocaleString()}
@@ -124,11 +139,29 @@ class Covid19Dashboard extends React.Component {
           <Tooltip content={this.renderLocationPopupTooltip} />
           <Legend />
 
-          <Line type='monotone' dataKey='confirmed' stroke='#8884d8' dot={false} />
+          <Line
+            yAxisId='left'
+            type='monotone'
+            dataKey='confirmed'
+            stroke='#8884d8'
+            dot={false}
+          />
           { locationPopupData.maxes.recovered &&
-            <Line type='monotone' dataKey='recovered' stroke='#00B957' dot={false} />
+            <Line
+              yAxisId='left'
+              type='monotone'
+              dataKey='recovered'
+              stroke='#00B957'
+              dot={false}
+            />
           }
-          <Line type='monotone' dataKey='deaths' stroke='#aa5e79' dot={false} />
+          <Line
+            yAxisId='right'
+            type='monotone'
+            dataKey='deaths'
+            stroke='#aa5e79'
+            dot={false}
+          />
         </LineChart>
       </ResponsiveContainer>)
       : <Spinner />;
@@ -221,7 +254,8 @@ class Covid19Dashboard extends React.Component {
             <TabList className='covid19-dashboard_tablist'>
               <Tab>COVID-19 in Illinois</Tab>
               <Tab>COVID-19 in the world</Tab>
-              <Tab>SARS-CoV-2 Genomics</Tab>
+              <Tab>Global SARS-CoV2 Genomics</Tab>
+              <Tab>IL SARS-CoV2 Genomics</Tab>
             </TabList>
 
             {/* illinois tab */}
@@ -302,10 +336,24 @@ class Covid19Dashboard extends React.Component {
                 sure this is the COVID19 Commons and the iframe contents will load */}
                 { mapboxAPIToken &&
                   <iframe
-                    title='Auspice'
+                    title='Global SARS-CoV2 Genomics'
                     frameBorder='0'
                     className='covid19-dashboard_auspice__iframe'
                     src={auspiceUrl}
+                  />
+                }
+              </div>
+            </TabPanel>
+            <TabPanel className='covid19-dashboard_panel'>
+              <div className='covid19-dashboard_auspice'>
+                {/* this component doesn't need the mapboxAPIToken but it's a way to make
+                sure this is the COVID19 Commons and the iframe contents will load */}
+                { mapboxAPIToken &&
+                  <iframe
+                    title='IL SARS-CoV2 Genomics'
+                    frameBorder='0'
+                    className='covid19-dashboard_auspice__iframe'
+                    src={auspiceUrlIL}
                   />
                 }
               </div>

@@ -107,7 +107,6 @@ function filterCountyGeoJson(selectedFips) {
 class WorldMapChart extends React.Component {
   constructor(props) {
     super(props);
-    this.updateDimensions = this.updateDimensions.bind(this);
     this.choroCountryGeoJson = null;
     this.choroStateGeoJson = null;
     this.choroCountyGeoJson = null;
@@ -115,7 +114,7 @@ class WorldMapChart extends React.Component {
       selectedLayer: 'confirmed-dots',
       mapSize: {
         width: '100%',
-        height: window.innerHeight - 221,
+        height: '100%',
       },
       viewport: {
         longitude: 0,
@@ -128,25 +127,28 @@ class WorldMapChart extends React.Component {
     };
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.updateDimensions);
-  }
-
   onHover = (event) => {
-    let hoverInfo = null;
-
     if (!event.features) { return; }
+
+    let hoverInfo = null;
+    const formatNumberToDisplay = (rawNum) => {
+      if (rawNum && rawNum !== 'null') {
+        if (typeof rawNum === 'number') {
+          return rawNum.toLocaleString();
+        }
+        return rawNum;
+      }
+      // Default if missing
+      return 0;
+    };
 
     event.features.forEach((feature) => {
       if (!feature.layer.id.startsWith('confirmed-')) {
         return;
       }
-      let confirmed = feature.properties.confirmed;
-      confirmed = confirmed && confirmed !== 'null' ? Number(confirmed).toLocaleString() : 0;
-      let deaths = feature.properties.deaths;
-      deaths = deaths && deaths !== 'null' ? Number(deaths).toLocaleString() : 0;
-      let recovered = feature.properties.recovered;
-      recovered = recovered && recovered !== 'null' ? Number(recovered).toLocaleString() : 0;
+      const confirmed = formatNumberToDisplay(feature.properties.confirmed);
+      const deaths = formatNumberToDisplay(feature.properties.deaths);
+      const recovered = formatNumberToDisplay(feature.properties.recovered);
 
       const state = feature.properties.province_state;
       const county = feature.properties.county;
@@ -226,12 +228,6 @@ class WorldMapChart extends React.Component {
       return 'visible';
     }
     return 'none';
-  }
-
-  updateDimensions() {
-    this.setState({
-      mapSize: { width: '100%', height: window.innerHeight - 221 },
-    });
   }
 
   renderHoverPopup() {

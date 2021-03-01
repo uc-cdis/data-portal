@@ -45,6 +45,7 @@ import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
+import DiscoveryBeta from './Discovery';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import NotFound from './components/NotFound';
@@ -383,6 +384,31 @@ async function init() {
                       />)
                     }
                   />
+                  {isEnabled('discovery') && <React.Fragment>
+                    <Route
+                      exact
+                      path='/discovery'
+                      component={
+                        props => (<ProtectedContent
+                          public
+                          component={DiscoveryBeta}
+                          {...props}
+                        />)
+                      }
+                    />
+                    <Route
+                      exact
+                      path='/discovery/:studyUID'
+                      component={
+                        props => (<ProtectedContent
+                          public
+                          component={DiscoveryBeta}
+                          {...props}
+                        />)
+                      }
+                    />
+                  </React.Fragment>
+                  }
                   <Route
                     path='/not-found'
                     component={NotFound}

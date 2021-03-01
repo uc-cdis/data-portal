@@ -1,0 +1,183 @@
+.discovery-container {
+    background-color: #f2f2f2;
+    padding: 40px 32px;
+}
+
+/* This is a fix for the global 'button' element style override in portal
+ * https://github.com/uc-cdis/gen3-ui-component/blob/6b0aa10f63f0a325f58200148cd5ffbb6e4c2c46/src/css/base.less#L180
+ * We use .ant-modal-root here to apply this reset style to Ant design modals, which
+ * are not children of .discovery-container.
+ */
+.discovery-container button, .ant-modal-root button {
+    width: initial;
+    display: initial;
+    vertical-align: initial;
+    cursor: initial;
+}
+
+/* Highlight matched search text */
+.discovery-container .matched {
+    font-weight: bold;
+    color: #000;
+    text-decoration: underline;
+}
+
+.discovery-page-title {
+    font-weight: normal;
+    font-size: 30px;
+    line-height: 30px;
+    color: #555;
+    margin-bottom: 16px;
+}
+
+.discovery-header {
+    border-radius: 5px;
+    background-color: #fff;
+    margin-bottom: 36px;
+    height: 191px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.discovery-header__stats-container {
+    height: 100%;
+    position: relative;
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.discovery-header__stat {
+    text-align: center;
+    cursor: default;
+}
+
+.discovery-header__stat-border {
+    width: 1px;
+    height: 100px;
+    border-left: solid #e7e7e7 1px;
+}
+
+.discovery-header__stat-number {
+    color: #169bd5;
+    font-size: 40px;
+    line-height: 50px;
+}
+
+.discovery-header__stat-label {
+    font-size: 20px;
+}
+
+.discovery-header__tags-container {
+    flex: 1 0 auto;
+}
+
+.discovery-header__tags-header {
+    cursor: default;
+    font-weight: normal;
+    font-size: 18px;
+    color: #555;
+}
+
+.discovery-header__tags {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.discovery-header__tag-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.discovery-header__tag-btn {
+    cursor: pointer;
+}
+
+.discovery-tag {
+    border-radius: 5px;
+    border-width: 2px;
+    box-sizing: border-box;
+    line-height: 18px;
+    color: #555;
+    margin-bottom: 3px;
+}
+
+.discovery-tag--selected {
+    color: #fff;
+}
+
+.discovery-table-container {
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.discovery-table__header {
+    width: 100%;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.discovery-search {
+    border-radius: 5px;
+    max-width: 500px;
+}
+
+.discovery-table__controls  {
+    flex: 0 0 auto;
+    justify-self: flex-end;
+}
+
+.discovery-table__row {
+    cursor: pointer;
+}
+
+/* some light css hacks here to override antd default expanded row styles. */
+.discovery-table__expanded-row > td.ant-table-cell {
+    top: -15px;
+    color: #7f7f7f;
+}
+.discovery-table__expanded-row-content {
+    cursor: pointer;
+    height: 40px;
+    width: 100%;
+    overflow: hidden;
+    /* ---------
+     * Add an ellipsis after N rows of text.
+     * This css won't work in IE 11, but it's ok, there just won't be an ellipsis.
+     **/
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    /* --------- */
+}
+
+.discovery-table__access-popover {
+    max-width: 500px;
+}
+
+.discovery-table__access-popover-text {
+    color: #7f7f7f;
+    font-size: 12px;
+}
+
+.discovery-modal__attribute-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.discovery-modal__attribute-name {
+    color: #7f7f7f;
+    margin-right: 7px;
+}
