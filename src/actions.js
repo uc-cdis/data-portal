@@ -4,7 +4,6 @@ import {
   userapiPath,
   headers,
   hostname,
-  submissionApiOauthPath,
   submissionApiPath,
   graphqlPath,
   guppyGraphQLUrl,
@@ -263,82 +262,20 @@ export const fetchUser = dispatch => fetchCreds({
 
 export const refreshUser = () => fetchUser;
 
-export const logoutAPI = () => (dispatch) => {
-  fetchWithCreds({
-    path: `${submissionApiOauthPath}logout`,
-    dispatch,
-  })
-    .then(handleResponse('RECEIVE_API_LOGOUT'))
-    .then(msg => dispatch(msg))
-    .then(
-      () => document.location.replace(`${userapiPath}/logout?next=${hostname}`),
-    );
+export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
+  fetch(`${userapiPath}/logout?next=${hostname}`).then((response) => {
+    if (displayAuthPopup) {
+      dispatch({
+        type: 'UPDATE_POPUP',
+        data: {
+          authPopup: true,
+        },
+      });
+    } else {
+      document.location.replace(response.url);
+    }
+  });
 };
-
-export const fetchIsUserLoggedInNoRefresh = (opts) => {
-  const { path = `${submissionApiPath}`, method = 'GET', dispatch } = opts;
-  const request = {
-    credentials: 'include',
-    headers: { ...headers },
-    method,
-  };
-  let requestPromise = fetch(path, request).then(
-    (response) => {
-      requestPromise = null;
-      return Promise.resolve(getJsonOrText(path, response, false));
-    },
-    (error) => {
-      requestPromise = null;
-      if (dispatch) { dispatch(connectionError()); }
-      return Promise.reject(error);
-    },
-  );
-  return requestPromise;
-};
-
-export const fetchUserNoRefresh = dispatch => fetchIsUserLoggedInNoRefresh({
-  dispatch,
-}).then(
-  (status, data) => handleFetchUser(status, data),
-).then(msg => dispatch(msg));
-
-/**
- * Retrieve the oath endpoint for the service under the given oathPath
- *
- * @param {String} oauthPath
- * @return {(dispatch) => Promise<string>} dispatch function
- */
-export const fetchOAuthURL = oauthPath => dispatch =>
-  fetchWithCreds({
-    path: `${oauthPath}authorization_url`,
-    dispatch,
-    useCache: true,
-  })
-    .then(
-      ({ status, data }) => {
-        switch (status) {
-        case 200:
-          return {
-            type: 'RECEIVE_AUTHORIZATION_URL',
-            url: data,
-          };
-        default:
-          return {
-            type: 'FETCH_ERROR',
-            error: data.error,
-          };
-        }
-      },
-    )
-    .then(
-      (msg) => {
-        dispatch(msg);
-        if (msg.url) {
-          return msg.url;
-        }
-        throw new Error('OAuth authorization failed');
-      },
-    );
 
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -
