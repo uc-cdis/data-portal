@@ -4,7 +4,8 @@ import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
-import { labelToPlural } from './utils';
+import { labelToPlural, base64Encode, base64Decode, getQueryParameter, IsValidJSONString } from './utils';
+import { withRouter } from 'react-router';
 import {
   GuppyConfigType,
   FilterConfigType,
@@ -17,11 +18,27 @@ import './GuppyDataExplorer.css';
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
+    let initialFilter = {};
+
+    let filters = getQueryParameter('filters')
+    if (filters) {
+      console.log('filters: ', filters);
+      let decodedFilter = base64Decode(filters);
+      console.log('decoded filters : ', decodedFilter);
+      let isValidJSON = IsValidJSONString(decodedFilter);
+      console.log('is valid? ', isValidJSON);
+      if(isValidJSON) {
+        initialFilter = decodedFilter;
+      }
+    }
+
     this.state = {
       aggsData: {},
-      filter: {},
-      encodableExplorerStateForUrl: {},
+      filter: {}, // This value reflects Guppy-side state
+      initialFilterFromURL: initialFilter,
+      encodableExplorerStateForUrl: { filter : initialFilter },
     };
+
   }
 
   handleReceiveNewAggsData = (newAggsData) => {
@@ -36,6 +53,7 @@ class GuppyDataExplorer extends React.Component {
   }
 
   handleTableViewChangeForQueryStateUrl = (event) => {
+    // for offset, first, sort
     console.log('table view change event: ', event);
     const newExplorerState = this.state.encodableExplorerStateForUrl;
     newExplorerState.tableView = event;
@@ -49,15 +67,53 @@ class GuppyDataExplorer extends React.Component {
     this.setState({ encodableExplorerStateForUrl: newExplorerState });
   }
 
+  isExplorerStatePristine = (explorerState) => {
+    let values = Object.values(explorerState);
+    for (let i = 0; i < values.length; i+=1) {
+      if(typeof values[i] !== "object" && values[i] !== null) {
+        return false;
+      }
+      if(typeof values[i] === "object" && Object.values(values[i]).length > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  getEncodedQueryStateFromExplorer = () => {
+    let stateObj = this.state.encodableExplorerStateForUrl;
+    console.log('state? ', stateObj);
+    console.log('pristine: ', this.isExplorerStatePristine(stateObj));
+    if (this.isExplorerStatePristine(stateObj)) {
+      return '';
+    }
+    let encoded = encodeURIComponent( base64Encode( JSON.stringify(stateObj) ) );
+    return encoded;
+  }
+
+  refreshQueryStateInUrl = () => {
+    // let currentState = this.getQueryStateFromUrl();
+
+
+    let encodedState = this.getEncodedQueryStateFromExplorer();
+    if (encodedState == '') {
+      window.history.pushState(null, null, window.location.pathname);
+      return;
+    }
+    window.history.pushState('', '', '?filters=' + encodedState);
+  }
+
   render() {
+    this.refreshQueryStateInUrl();
     return (
       <div className='guppy-data-explorer'>
         <GuppyWrapper
           adminAppliedPreFilters={this.props.adminAppliedPreFilters}
+          initialFilterFromURL={this.state.initialFilterFromURL}
           filterConfig={this.props.filterConfig}
           guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
-          onFilterChange={this.handleFilterChange}
+          onFilterChange={this.handleFilterChangeForQueryStateUrl}
           rawDataFields={this.props.tableConfig.fields}
           accessibleFieldCheckList={this.props.guppyConfig.accessibleFieldCheckList}
         >
