@@ -67,6 +67,61 @@ class IllinoisMapChart extends React.Component {
       },
       hoverInfo: null,
     };
+    this.mapData = {
+      modeledCountyGeoJson: null,
+      colors: {},
+      colorsAsList: null,
+    };
+  }
+  componentDidUpdate() {
+    if (!(this.mapData.colorsAsList === null
+          && Object.keys(this.props.jsonByLevel.county).length > 0)) {
+      return;
+    }
+    if (Object.keys(this.props.jsonByLevel.country).length && !this.choroCountyGeoJson) {
+      this.choroCountyGeoJson = addDataToGeoJsonBase(
+        this.props.jsonByLevel.county,
+      );
+    }
+    this.mapData.modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
+
+    // Finds second highest value in data set then finds its base 10 exponent
+    // Second highest value is used to better balance distribution 
+    // Due to cook county being an extreme outlier 
+    const maxValExponent = Math.log10(this.mapData.modeledCountyGeoJson.features
+      .map((obj) => {
+        const confirmedCases = obj.properties.confirmed;
+        // this is to handle <5 strings in dataset, makes it 0
+        if (typeof confirmedCases === 'string') {
+          return 0;
+        }
+        return confirmedCases;
+      })
+      .sort((a, b) => b - a)[1]);// returning second highest value
+
+    // Math to calculate Index range for map
+    const colorRangeMath = (base) => {
+      // applies maxValExponent to base then rounds down to greatest place
+      const tempNum = Math.ceil(base ** maxValExponent);
+      const roundingDigits = 10 ** (tempNum.toString().length - 1);
+
+      return Math.floor(tempNum / roundingDigits) * roundingDigits;
+    };
+
+    this.mapData.colors = {
+      0: '#FFF',
+      [colorRangeMath(2)]: '#F7F787',
+      [colorRangeMath(3)]: '#EED322',
+      [colorRangeMath(4)]: '#E6B71E',
+      [colorRangeMath(5)]: '#DA9C20',
+      [colorRangeMath(6)]: '#CA8323',
+      [colorRangeMath(7)]: '#B86B25',
+      [colorRangeMath(8)]: '#A25626',
+      [colorRangeMath(9)]: '#8B4225',
+      [colorRangeMath(10)]: '#850001',
+    };
+    this.mapData.colorsAsList = Object.entries(this.mapData.colors)
+      .map(item => [+item[0], item[1]]).flat();
   }
 
   onHover = (event) => {
@@ -161,33 +216,12 @@ class IllinoisMapChart extends React.Component {
   }
 
   render() {
-    if (Object.keys(this.props.jsonByLevel.country).length && !this.choroCountyGeoJson) {
-      this.choroCountyGeoJson = addDataToGeoJsonBase(
-        this.props.jsonByLevel.county,
-      );
-    }
-    const modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
-
-    const colors = {
-      0: '#FFF',
-      5: '#F7F787',
-      20: '#EED322',
-      50: '#E6B71E',
-      100: '#DA9C20',
-      500: '#CA8323',
-      1000: '#B86B25',
-      2500: '#A25626',
-      5000: '#8B4225',
-      10000: '#850001',
-    };
-    const colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
-
     return (
       <div className='map-chart'>
         <ControlPanel
           showMapStyle={false}
           showLegend
-          colors={colors}
+          colors={this.mapData.colors}
         />
         <ReactMapGL.InteractiveMap
           className='.map-chart__mapgl-map'
@@ -210,12 +244,12 @@ class IllinoisMapChart extends React.Component {
               id='confirmed-choropleth'
               type='fill'
               beforeId='waterway-label'
-              paint={{
+              paint={this.mapData.colorsAsList === null ? {} : {
                 'fill-color': [
                   'interpolate',
                   ['linear'],
                   ['number', ['get', 'confirmed'], 0],
-                  ...colorsAsList,
+                  ...this.mapData.colorsAsList,
                 ],
                 'fill-opacity': 0.6,
               }}
@@ -223,7 +257,7 @@ class IllinoisMapChart extends React.Component {
           </ReactMapGL.Source>
 
           {/* Outline a set of counties */}
-          <ReactMapGL.Source type='geojson' data={modeledCountyGeoJson}>
+          <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountyGeoJson}>
             <ReactMapGL.Layer
               id='county-outline'
               type='line'
