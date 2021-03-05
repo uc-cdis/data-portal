@@ -524,7 +524,8 @@ Below is an example, with inline comments describing what each JSON block config
     ]
   },
   "resourceBrowser": {), // see Resource Browser documentation
-  "workspacePageDescription": "", // text to display above the workspace options
+  "workspacePageTitle": "", // title to display above workspacePageDescription
+  "workspacePageDescription": "", // html to display above the workspace options
   "useArboristUI": false, // optional; set true to enable arborist UI; defaults to false if absent
   "showArboristAuthzOnProfile": false, // optional; set true to list arborist resources on profile page
   "showFenceAuthzOnProfile": true, // optional; set false to not list fence project access on profile page

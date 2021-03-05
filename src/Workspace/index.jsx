@@ -11,6 +11,7 @@ import {
   workspaceLaunchUrl,
   workspaceTerminateUrl,
   workspaceStatusUrl,
+  workspacePageTitle,
   workspacePageDescription,
 } from '../localconf';
 import './Workspace.less';
@@ -292,10 +293,15 @@ class Workspace extends React.Component {
             this.state.notebookStatus !== 'Running' &&
             this.state.notebookStatus !== 'Stopped' ?
               <div>
+                {workspacePageTitle ?
+                  <h2 className='workspace__title'>
+                    {parse(workspacePageTitle)}
+                  </h2>
+                  : null}
                 {workspacePageDescription ?
-                  <p className='workspace__description'>
+                  <div className='workspace__description'>
                     {parse(workspacePageDescription)}
-                  </p>
+                  </div>
                   : null}
                 <div className='workspace__options'>
                   {
