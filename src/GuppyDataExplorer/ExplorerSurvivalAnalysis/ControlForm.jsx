@@ -67,18 +67,7 @@ const ControlForm = ({
 
   const [shouldUpdateResults, setShouldUpdateResults] = useState(true);
   useEffect(() => {
-    if (isFilterChanged) {
-      onSubmit({
-        factorVariable: factorVariable.value,
-        stratificationVariable: stratificationVariable.value,
-        timeInterval: localTimeInterval,
-        startTime,
-        endTime,
-        efsFlag: survivalType.value === 'efs',
-        shouldUpdateResults: true,
-      });
-      setIsFilterChanged(false);
-    }
+    if (isFilterChanged) setShouldUpdateResults(true);
   }, [isFilterChanged]);
 
   const validateNumberInput = (
@@ -106,6 +95,7 @@ const ControlForm = ({
       shouldUpdateResults,
     });
     setIsInputChanged(false);
+    setIsFilterChanged(false);
     setShouldUpdateResults(false);
   };
 
@@ -209,7 +199,7 @@ const ControlForm = ({
           label='Apply'
           buttonType='primary'
           onClick={submitUserInput}
-          enabled={isInputChanged}
+          enabled={isInputChanged || isFilterChanged}
         />
       </div>
     </form>
