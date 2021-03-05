@@ -62,16 +62,6 @@ const ControlForm = ({
 
   const [isInputChanged, setIsInputChanged] = useState(false);
   useEffect(() => {
-    setIsInputChanged(true);
-  }, [
-    factorVariable.value,
-    stratificationVariable.value,
-    localTimeInterval,
-    startTime,
-    endTime,
-    survivalType,
-  ]);
-  useEffect(() => {
     if (!isInputChanged && isError) setIsInputChanged(true);
   }, [isInputChanged, isError]);
 
@@ -132,6 +122,7 @@ const ControlForm = ({
 
           setFactorVariable(e);
           setShouldUpdateResults(true);
+          setIsInputChanged(true);
         }}
         value={factorVariable}
       />
@@ -144,6 +135,7 @@ const ControlForm = ({
         onChange={(e) => {
           setStratificationVariable(e);
           setShouldUpdateResults(true);
+          setIsInputChanged(true);
         }}
         value={stratificationVariable}
       />
@@ -154,7 +146,10 @@ const ControlForm = ({
         max={5}
         step={1}
         onBlur={validateNumberInput}
-        onChange={(e) => setLocalTimeInterval(Number.parseInt(e.target.value))}
+        onChange={(e) => {
+          setLocalTimeInterval(Number.parseInt(e.target.value));
+          setIsInputChanged(true);
+        }}
         value={localTimeInterval}
       />
       <ControlFormInput
@@ -165,7 +160,10 @@ const ControlForm = ({
         max={endTime - 1}
         step={1}
         onBlur={validateNumberInput}
-        onChange={(e) => setStartTime(Number.parseInt(e.target.value))}
+        onChange={(e) => {
+          setStartTime(Number.parseInt(e.target.value));
+          setIsInputChanged(true);
+        }}
         value={startTime}
       />
       <ControlFormInput
@@ -175,7 +173,10 @@ const ControlForm = ({
         max={99}
         step={1}
         onBlur={validateNumberInput}
-        onChange={(e) => setEndTime(Number.parseInt(e.target.value))}
+        onChange={(e) => {
+          setEndTime(Number.parseInt(e.target.value));
+          setIsInputChanged(true);
+        }}
         value={endTime}
       />
       <ControlFormSelect
@@ -188,6 +189,7 @@ const ControlForm = ({
         onChange={(e) => {
           setSurvivalType(e);
           setShouldUpdateResults(true);
+          setIsInputChanged(true);
         }}
         value={survivalType}
       />

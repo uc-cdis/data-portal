@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
+import Spinner from '../../gen3-ui-component/components/Spinner/Spinner';
 import { components } from '../../params';
 import { tierAccessLevel } from '../../localconf';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
@@ -17,8 +18,18 @@ import {
 import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper';
 import './ExplorerVisualization.css';
 
-function ViewContainer({ showIf, children }) {
-  return <div style={showIf ? null : { display: 'none' }}>{children}</div>;
+function ViewContainer({ showIf, children, isLoading }) {
+  const baseClassName = 'guppy-explorer-visualization__view';
+  return (
+    <div className={baseClassName + (showIf ? '' : '--hidden')}>
+      {isLoading && (
+        <div className={baseClassName + '__loading'}>
+          <Spinner />
+        </div>
+      )}
+      {children}
+    </div>
+  );
 }
 
 class ExplorerVisualization extends React.Component {
@@ -157,7 +168,10 @@ class ExplorerVisualization extends React.Component {
             />
           </div>
         </div>
-        <ViewContainer showIf={this.state.explorerView === 'summary view'}>
+        <ViewContainer
+          showIf={this.state.explorerView === 'summary view'}
+          isLoading={this.props.aggsDataIsLoading}
+        >
           {chartData.countItems.length > 0 && (
             <div className='guppy-explorer-visualization__summary-cards'>
               <DataSummaryCardGroup
@@ -203,7 +217,10 @@ class ExplorerVisualization extends React.Component {
           )}
         </ViewContainer>
         {this.props.tableConfig.enabled && (
-          <ViewContainer showIf={this.state.explorerView === 'table view'}>
+          <ViewContainer
+            showIf={this.state.explorerView === 'table view'}
+            isLoading={this.props.aggsDataIsLoading}
+          >
             <ExplorerTable
               className='guppy-explorer-visualization__table'
               tableConfig={{
