@@ -85,10 +85,17 @@ class IllinoisMapChart extends React.Component {
     }
     this.mapData.modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
 
-    // Finds max value in data set then finds its base 10 exponent
+    // Finds second highest value in data set then finds its base 10 exponent
     const maxValExponent = Math.log10(this.mapData.modeledCountyGeoJson.features
-      .map(obj => obj.properties.confirmed)
-      .sort((a, b) => b - a)[0]);
+      .map((obj) => {
+        const confirmedCases = obj.properties.confirmed;
+        // this is to handle <5 strings in dataset, makes it 0
+        if (typeof confirmedCases === 'string') {
+          return 0;
+        }
+        return confirmedCases;
+      })
+      .sort((a, b) => b - a)[1]);// returning second highest value
 
     // Math to calculate Index range for map
     const colorRangeMath = (base) => {

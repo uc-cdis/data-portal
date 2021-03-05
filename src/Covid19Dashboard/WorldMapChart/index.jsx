@@ -156,17 +156,16 @@ class WorldMapChart extends React.Component {
     this.mapData.modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
 
     // Finds max value in data set
-    const maxCountryVal = this.props.geoJson.features
-      .map(obj => obj.properties.confirmed)
-      .sort((a, b) => {
-        if (typeof a === 'string') {
-          return 1;
+    // returning highest value
+    const maxCountryVal = Math.max(...this.props.geoJson.features
+      .map((obj) => {
+        const confirmedCases = obj.properties.confirmed;
+        // this is to handle <5 strings in dataset, makes it 0
+        if (typeof confirmedCases === 'string') {
+          return 0;
         }
-        if (typeof b === 'string') {
-          return -1;
-        }
-        return b - a;
-      })[0];
+        return confirmedCases;
+      }));
     // Finds its base 10 exponent
     const maxValExponent = Math.log10(maxCountryVal);
 
