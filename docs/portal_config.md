@@ -208,7 +208,7 @@ Below is an example, with inline comments describing what each JSON block config
     },
     "table": { // required; configuration for Data Explorer table
       "enabled": true, // required; indicates if the table should be enabled or not by default
-      "fields": [ // required; fields (node attributes) to include to be displayed in the table
+      "fields": [ // optional; fields (node attributes) to include to be displayed in the table
         "project_id",
         "race",
         "ethnicity",
