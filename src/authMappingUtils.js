@@ -12,12 +12,10 @@ const resourcePathFromProjectID = (projectID) => {
   return resourcePath;
 };
 
-
 // Used by ProjectSubmission to determine whether the user is creating a program.
 // To create a program the user needs access to the resource
 // /services/sheepdog/submission/program, usually granted via Sheepdog admin policy.
 export const isRootUrl = urlFragment => urlFragment === '_root';
-
 
 // Used by ProjectSubmission to determine whether the user is creating a project.
 // To create a project the user needs access to the resource
@@ -25,14 +23,11 @@ export const isRootUrl = urlFragment => urlFragment === '_root';
 // A dash delimits the project code if there is one
 export const isProgramUrl = urlFragment => urlFragment !== '_root' && !urlFragment.includes('-');
 
-
 export const userHasSheepdogProgramAdmin = (userAuthMapping = {}) =>
   userAuthMapping['/services/sheepdog/submission/program'] !== undefined;
 
-
 export const userHasSheepdogProjectAdmin = (userAuthMapping = {}) =>
   userAuthMapping['/services/sheepdog/submission/project'] !== undefined;
-
 
 export const projectCodeFromResourcePath = (resourcePath) => {
   // If resourcePath is anything other than /programs/foo/projects/bar[/morestuff],
@@ -44,13 +39,11 @@ export const projectCodeFromResourcePath = (resourcePath) => {
   return (split.length < 5 || split[1] !== 'programs' || split[3] !== 'projects') ? '' : split[4];
 };
 
-
 export const listifyMethodsFromMapping = (actions) => {
   // actions is an array of objects { 'service': x, 'method': y }
   const reducer = (accumulator, currval) => accumulator.concat([currval.method]);
   return actions.reduce(reducer, []);
 };
-
 
 export const userHasDataUpload = (userAuthMapping = {}) => {
   // data_upload policy is resource data_file, method file_upload

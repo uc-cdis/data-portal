@@ -94,6 +94,7 @@ const mapStateToProps = state => ({
   wssFilePrefix: state.analysis.wssFilePrefix,
   wssListFileError: state.analysis.wssListFileError,
   wssFileData: state.analysis.wssFileData,
+  userAuthMapping: state.userAuthMapping,
 });
 
 const mapDispatchToProps = dispatch => ({
