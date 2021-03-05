@@ -111,7 +111,7 @@ class WorldMapChart extends React.Component {
     this.choroStateGeoJson = null;
     this.choroCountyGeoJson = null;
     this.state = {
-      selectedLayer: 'confirmed-dots',
+      selectedLayer: 'confirmed-choropleth',
       mapSize: {
         width: '100%',
         height: '100%',
