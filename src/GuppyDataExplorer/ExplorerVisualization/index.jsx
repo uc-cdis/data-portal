@@ -217,7 +217,10 @@ class ExplorerVisualization extends React.Component {
           )}
         </ViewContainer>
         {this.props.tableConfig.enabled && (
-          <ViewContainer showIf={this.state.explorerView === 'table view'}>
+          <ViewContainer
+            showIf={this.state.explorerView === 'table view'}
+            isLoading={this.props.aggsDataIsLoading}
+          >
             <ExplorerTable
               className='guppy-explorer-visualization__table'
               tableConfig={{

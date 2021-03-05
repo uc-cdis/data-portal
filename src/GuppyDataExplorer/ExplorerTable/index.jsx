@@ -24,7 +24,6 @@ class ExplorerTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
       pageSize: props.defaultPageSize,
       currentPage: 0,
     };
@@ -242,7 +241,6 @@ class ExplorerTable extends React.Component {
   };
 
   fetchData = (state) => {
-    this.setState({ loading: true });
     const offset = state.page * state.pageSize;
     const sort = state.sorted.map((i) => ({
       [i.id]: i.desc ? 'desc' : 'asc',
@@ -257,7 +255,6 @@ class ExplorerTable extends React.Component {
       .then(() => {
         // Guppy fetched and loaded raw data into "this.props.rawData" already
         this.setState({
-          loading: false,
           pageSize: size,
           currentPage: state.page,
         });
@@ -371,7 +368,6 @@ class ExplorerTable extends React.Component {
           showPageSizeOptions={!this.props.isLocked}
           // eslint-disable-next-line max-len
           pages={this.props.isLocked ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
-          loading={this.state.loading}
           onFetchData={this.fetchData}
           defaultPageSize={this.props.defaultPageSize}
           className={'-striped -highlight '}
