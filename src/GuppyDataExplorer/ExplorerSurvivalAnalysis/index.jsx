@@ -69,7 +69,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   };
 
   const [isUpdating, setIsUpdating] = useState(false);
-  const [isError, setIsError] = useState(true);
+  const [isError, setIsError] = useState(false);
   /** @type {UserInputSubmitHandler} */
   const handleSubmit = ({
     timeInterval,
