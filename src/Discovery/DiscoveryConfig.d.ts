@@ -1,5 +1,9 @@
 export interface DiscoveryConfig {
     features: {
+        exportToWorkspaceBETA: {
+            enabled: boolean
+            fileManifestFieldName: string
+        }
         // explorationIntegration: {
         //     enabled: boolean // not supported
         // },

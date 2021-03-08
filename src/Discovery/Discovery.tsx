@@ -417,6 +417,9 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         rowSelection={{
           selectedRowKeys: selectedResources,
           onChange: selectedRowKeys => setSelectedResources(selectedRowKeys),
+          getCheckboxProps: config.features.authorization.enabled && (record => ({
+            disabled: record[accessibleFieldName] === false,
+          })),
         }}
         rowClassName='discovery-table__row'
         onRow={record => ({
