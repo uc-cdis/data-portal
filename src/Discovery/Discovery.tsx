@@ -144,6 +144,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 
   const [jsSearch, setJsSearch] = useState(null);
   const [searchFilteredResources, setSearchFilteredResources] = useState([]);
+  const [selectedResources, setSelectedResources] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
@@ -259,6 +260,14 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   if (config.features.authorization.enabled) {
     columns.push({
       title: 'Access',
+      filters: [{
+        text: <><UnlockOutlined />Accessible</>,
+        value: true,
+      }, {
+        text: <><LockFilled />Unaccessible</>,
+        value: false,
+      }],
+      onFilter: (value, record) => record[accessibleFieldName] === value,
       render: (_, record) => (
         record[accessibleFieldName]
           ? (
@@ -400,25 +409,14 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               allowClear
             />
         }
-        { config.features.authorization.enabled &&
-            <div className='disvovery-table__controls'>
-              <Radio.Group
-                onChange={handleAccessLevelChange}
-                value={accessLevel}
-                className='discovery-access-selector'
-                defaultValue='both'
-                buttonStyle='solid'
-              >
-                <Radio.Button value={AccessLevel.BOTH}>All</Radio.Button>
-                <Radio.Button value={AccessLevel.UNACCESSIBLE}><LockFilled /></Radio.Button>
-                <Radio.Button value={AccessLevel.ACCESSIBLE}><UnlockOutlined /></Radio.Button>
-              </Radio.Group>
-            </div>
-        }
       </div>
       <Table
         columns={columns}
         rowKey={config.minimalFieldMapping.uid}
+        rowSelection={{
+          selectedRowKeys: selectedResources,
+          onChange: selectedRowKeys => setSelectedResources(selectedRowKeys),
+        }}
         rowClassName='discovery-table__row'
         onRow={record => ({
           onClick: () => {
