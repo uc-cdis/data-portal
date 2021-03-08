@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
 import * as JsSearch from 'js-search';
-import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined } from '@ant-design/icons';
+import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, ExportOutlined } from '@ant-design/icons';
 import {
   Input,
   Table,
   Tag,
-  Radio,
   Space,
   Modal,
   Alert,
   Popover,
+  Button,
 } from 'antd';
 
 import { DiscoveryConfig } from './DiscoveryConfig';
@@ -409,6 +409,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               allowClear
             />
         }
+        <Button type='primary' disabled={selectedResources.length === 0} icon={<ExportOutlined />}>Open in Workspace ({selectedResources.length} selected)</Button>
       </div>
       <Table
         columns={columns}
