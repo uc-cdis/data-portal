@@ -85,7 +85,7 @@ class IllinoisMapChart extends React.Component {
     }
     this.mapData.modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
 
-    // Finds second highest value in data set then finds its base 10 exponent
+    // Finds second highest value in data set
     // Second highest value is used to better balance distribution
     // Due to cook county being an extreme outlier
     const maxVal = this.mapData.modeledCountyGeoJson.features
