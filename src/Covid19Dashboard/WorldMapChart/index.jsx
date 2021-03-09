@@ -166,6 +166,10 @@ class WorldMapChart extends React.Component {
         }
         return confirmedCases;
       }));
+    // check if maxCountryVal is a number
+    if (typeof maxCountryVal !== 'number') {
+      return;
+    }
     // Finds its base 10 exponent
     const maxValExponent = Math.log10(maxCountryVal);
 
