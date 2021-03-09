@@ -2,6 +2,11 @@ export interface DiscoveryConfig {
     features: {
         exportToWorkspaceBETA: {
             enabled: boolean
+            enableDownloadManifest: boolean
+            documentationLinks: {
+                gen3Client: string
+                gen3Workspaces: string
+            }
             fileManifestFieldName: string
         }
         // explorationIntegration: {

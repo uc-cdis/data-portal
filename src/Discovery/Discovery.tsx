@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
 import * as JsSearch from 'js-search';
-import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, ExportOutlined } from '@ant-design/icons';
+import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, ExportOutlined, DownloadOutlined } from '@ant-design/icons';
 import {
   Input,
   Table,
@@ -12,6 +12,7 @@ import {
   Alert,
   Popover,
   Button,
+  Statistic,
 } from 'antd';
 
 import { DiscoveryConfig } from './DiscoveryConfig';
@@ -272,11 +273,11 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         record[accessibleFieldName]
           ? (
             <Popover
-              overlayClassName='discovery-table__access-popover'
+              overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
               title={'You have access to this study.'}
-              content={<div className='discovery-table__access-popover-text'>
+              content={<div className='discovery-popover__text'>
                 <>You have <code>{ARBORIST_READ_PRIV}</code> access to</>
                 <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
               </div>}
@@ -286,12 +287,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           )
           : (
             <Popover
-              overlayClassName='discovery-table__access-popover'
+              overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
               title={'You do not have access to this study.'}
               content={
-                <div className='discovery-table__access-popover-text'>
+                <div className='discovery-popover__text'>
                   <>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</>
                   <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
                 </div>
@@ -317,11 +318,6 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     }
     const results = jsSearch.search(value);
     setSearchFilteredResources(results);
-  };
-
-  const handleAccessLevelChange = (ev) => {
-    const value = ev.target.value as AccessLevel;
-    setAccessLevel(value);
   };
 
   const visibleResources = filterByTags(
@@ -398,7 +394,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     </div>
     <div className='discovery-table-container'>
       <div className='discovery-table__header'>
-        { config.features.search.searchBar.enabled &&
+        { (
+          config.features.search && config.features.search.searchBar
+            && config.features.search.searchBar.enabled
+        ) &&
             <Input
               className='discovery-search'
               prefix={<SearchOutlined />}
@@ -409,18 +408,60 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               allowClear
             />
         }
-        <Button type='primary' disabled={selectedResources.length === 0} icon={<ExportOutlined />}>Open in Workspace ({selectedResources.length} selected)</Button>
+        { (
+          config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
+        ) &&
+          <Space>
+            <span className='discovery-export__selected-ct'>{selectedResources.length} selected</span>
+            { config.features.exportToWorkspaceBETA.enableDownloadManifest &&
+              <Popover
+                className='discovery-popover'
+                arrowPointAtCenter
+                title={<>
+                  Download a Manifest File for use with the&nbsp;
+                  <a href={config.features.exportToWorkspaceBETA.documentationLinks.gen3Client}>
+                    Gen3 Client
+                  </a>.
+                </>}
+                content={(<span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
+                to download the data from the selected studies to your local computer.</span>)}
+              >
+                <Button type='text' disabled={selectedResources.length === 0} icon={<DownloadOutlined />}>
+                  Download Manifest
+                </Button>
+              </Popover>
+            }
+            <Popover
+              className='discovery-popover'
+              arrowPointAtCenter
+              content={<>
+                Open selected studies in the&nbsp;
+                <a href={config.features.exportToWorkspaceBETA.documentationLinks.gen3Workspaces}>
+                  Gen3 Workspace
+                </a>.
+              </>}
+            >
+              <Button type='primary' disabled={selectedResources.length === 0} icon={<ExportOutlined />}>
+                Open in Workspace
+              </Button>
+            </Popover>
+          </Space>
+        }
+
       </div>
       <Table
         columns={columns}
         rowKey={config.minimalFieldMapping.uid}
-        rowSelection={{
-          selectedRowKeys: selectedResources,
-          onChange: selectedRowKeys => setSelectedResources(selectedRowKeys),
-          getCheckboxProps: config.features.authorization.enabled && (record => ({
-            disabled: record[accessibleFieldName] === false,
-          })),
-        }}
+        rowSelection={(
+          config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
+        )
+          && {
+            selectedRowKeys: selectedResources,
+            onChange: selectedRowKeys => setSelectedResources(selectedRowKeys),
+            getCheckboxProps: config.features.authorization.enabled && (record => ({
+              disabled: record[accessibleFieldName] === false,
+            })),
+          }}
         rowClassName='discovery-table__row'
         onRow={record => ({
           onClick: () => {

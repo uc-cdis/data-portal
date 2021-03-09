@@ -12,7 +12,6 @@
     width: initial;
     display: initial;
     vertical-align: initial;
-    cursor: initial;
 }
 
 /* Highlight matched search text */
@@ -133,9 +132,8 @@
     max-width: 500px;
 }
 
-.discovery-table__controls  {
-    flex: 0 0 auto;
-    justify-self: flex-end;
+.discovery-export__selected-ct {
+    color:#7f7f7f;
 }
 
 .discovery-table__row {
@@ -162,11 +160,11 @@
     /* --------- */
 }
 
-.discovery-table__access-popover {
+.discovery-popover {
     max-width: 500px;
 }
 
-.discovery-table__access-popover-text {
+.discovery-popover__text {
     color: #7f7f7f;
     font-size: 12px;
 }
