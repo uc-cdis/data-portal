@@ -12,12 +12,12 @@ import {
   Alert,
   Popover,
   Button,
-  Statistic,
 } from 'antd';
 
+import { fetchWithCreds } from '../actions';
+import { manifestServiceApiPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
-
 
 const accessibleFieldName = '__accessible';
 
@@ -320,6 +320,31 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     setSearchFilteredResources(results);
   };
 
+  const handleExportToWorkspaceClick = async (ev) => {
+    const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+    if (!manifestFieldName) {
+      throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
+    }
+    // combine manifests from all selected studies
+    const manifest = [];
+    selectedResources.forEach((study) => {
+      if (study[manifestFieldName]) {
+        manifest.push(...study[manifestFieldName]);
+      }
+    });
+    // post selected resources to manifestservice
+    const res = await fetchWithCreds({
+      path: `${manifestServiceApiPath}`,
+      body: JSON.stringify(manifest),
+      method: 'POST',
+    });
+    if (res.status !== 200) {
+      throw new Error(`Encountered error while exporting to Workspace: ${JSON.stringify(res)}`);
+    }
+    // redirect to Workspaces page
+    // TODO implement
+  };
+
   const visibleResources = filterByTags(
     filterByAccessLevel(searchFilteredResources, accessLevel, accessibleFieldName),
     selectedTags,
@@ -419,8 +444,8 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 arrowPointAtCenter
                 title={<>
                   Download a Manifest File for use with the&nbsp;
-                  <a href={config.features.exportToWorkspaceBETA.documentationLinks.gen3Client}>
-                    Gen3 Client
+                  <a target='_blank' rel='noreferrer' href={config.features.exportToWorkspaceBETA.documentationLinks.gen3Client}>
+                    {'Gen3 Client'}
                   </a>.
                 </>}
                 content={(<span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
@@ -436,12 +461,17 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               arrowPointAtCenter
               content={<>
                 Open selected studies in the&nbsp;
-                <a href={config.features.exportToWorkspaceBETA.documentationLinks.gen3Workspaces}>
-                  Gen3 Workspace
+                <a target='blank' rel='noreferrer' href={config.features.exportToWorkspaceBETA.documentationLinks.gen3Workspaces}>
+                  {'Gen3 Workspace'}
                 </a>.
               </>}
             >
-              <Button type='primary' disabled={selectedResources.length === 0} icon={<ExportOutlined />}>
+              <Button
+                type='primary'
+                disabled={selectedResources.length === 0}
+                icon={<ExportOutlined />}
+                onClick={handleExportToWorkspaceClick}
+              >
                 Open in Workspace
               </Button>
             </Popover>
@@ -456,11 +486,21 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
         )
           && {
-            selectedRowKeys: selectedResources,
-            onChange: selectedRowKeys => setSelectedResources(selectedRowKeys),
-            getCheckboxProps: config.features.authorization.enabled && (record => ({
-              disabled: record[accessibleFieldName] === false,
-            })),
+            selectedRowKeys: selectedResources.map(r => r[config.minimalFieldMapping.uid]),
+            onChange: (_, selectedRows) => setSelectedResources(selectedRows),
+            getCheckboxProps: (record) => {
+              let disabled;
+              // if auth is enabled, disable checkbox if user doesn't have access
+              if (config.features.authorization.enabled) {
+                disabled = record[accessibleFieldName] === false;
+              }
+              // disable checkbox if there's no manifest found for this study
+              const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+              if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
+                disabled = true;
+              }
+              return { disabled };
+            },
           }}
         rowClassName='discovery-table__row'
         onRow={record => ({

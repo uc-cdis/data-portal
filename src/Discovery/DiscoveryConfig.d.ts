@@ -7,7 +7,7 @@ export interface DiscoveryConfig {
                 gen3Client: string
                 gen3Workspaces: string
             }
-            fileManifestFieldName: string
+            manifestFieldName: string
         }
         // explorationIntegration: {
         //     enabled: boolean // not supported
