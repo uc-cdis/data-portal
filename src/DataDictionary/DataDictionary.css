@@ -58,8 +58,8 @@
 }
 
 .data-dictionary__switch-button:hover {
-  background-color: var(--g3-color__base-blue-light);
-  color: var(--g3-color__white);
+  background-color: var(--g3-secondary-btn__bg-color--hover);
+  color: var(--g3-secondary-btn__color);
 }
 
 .data-dictionary__switch-button:first-child {
@@ -74,6 +74,6 @@
 }
 
 .data-dictionary__switch-button--active {
-  background-color: var(--g3-color__base-blue);
-  color: var(--g3-color__white);
+  background-color: var(--g3-secondary-btn__bg-color);
+  color: var(--g3-secondary-btn__color);
 }
