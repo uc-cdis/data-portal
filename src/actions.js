@@ -8,12 +8,13 @@ import {
   submissionApiPath,
   graphqlPath,
   guppyGraphQLUrl,
-  graphqlSchemaUrl,
   authzPath,
   authzMappingPath,
 } from './localconf';
 import { config } from './params';
 import sessionMonitor from './SessionMonitor';
+import dictionary from '../data/dictionary.json';
+import schema from '../data/schema.json';
 
 export const updatePopup = (state) => ({
   type: 'UPDATE_POPUP',
@@ -372,41 +373,10 @@ export const fetchProjects = () => (dispatch) =>
  * handled by router
  */
 export const fetchSchema = (dispatch) =>
-  fetchWithCreds({ path: graphqlSchemaUrl, dispatch }).then(
-    ({ status, data }) => {
-      switch (status) {
-        case 200:
-          return dispatch({
-            type: 'RECEIVE_SCHEMA',
-            schema: data,
-          });
-        default:
-          return Promise.resolve('NOOP');
-      }
-    }
-  );
+  dispatch({ type: 'RECEIVE_SCHEMA', schema });
 
 export const fetchDictionary = (dispatch) =>
-  fetchWithCreds({
-    path: `${submissionApiPath}_dictionary/_all`,
-    method: 'GET',
-    useCache: true,
-  })
-    .then(({ status, data }) => {
-      switch (status) {
-        case 200:
-          return {
-            type: 'RECEIVE_DICTIONARY',
-            data,
-          };
-        default:
-          return {
-            type: 'FETCH_ERROR',
-            error: data,
-          };
-      }
-    })
-    .then((msg) => dispatch(msg));
+  dispatch({ type: 'RECEIVE_DICTIONARY', data: dictionary });
 
 export const fetchVersionInfo = (dispatch) =>
   fetchWithCreds({
