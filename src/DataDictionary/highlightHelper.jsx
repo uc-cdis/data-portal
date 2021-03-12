@@ -296,7 +296,7 @@ export const getNodeTitleSVGFragment = (
             {currentRowStr.substring(cursorInRow)}
           </tspan>
         );
-        cursorInRow = currentRowStr.lenght;
+        cursorInRow = currentRowStr.length;
         break;
       }
     }
