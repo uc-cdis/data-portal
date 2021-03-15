@@ -18,25 +18,30 @@ import './GuppyDataExplorer.css';
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
+    let initialState = {};
     let initialFilter = {};
 
-    let filters = getQueryParameter('filters')
-    if (filters) {
-      console.log('filters: ', filters);
-      let decodedFilter = base64Decode(filters);
+    let stateFromURL = getQueryParameter('filters');
+    if (stateFromURL) {
+      console.log('filters: ', stateFromURL);
+      let decodedFilter = base64Decode(stateFromURL);
       console.log('decoded filters : ', decodedFilter);
       let isValidJSON = IsValidJSONString(decodedFilter);
       console.log('is valid? ', isValidJSON);
       if(isValidJSON) {
-        initialFilter = decodedFilter;
+        initialState = JSON.parse(decodedFilter);
+        initialFilter = initialState['filter'];
       }
     }
+
+    console.log('constructor setting initialfilterfromurl in state to ', initialFilter);
 
     this.state = {
       aggsData: {},
       filter: {}, // This value reflects Guppy-side state
       initialFilterFromURL: initialFilter,
-      encodableExplorerStateForUrl: { filter : initialFilter },
+      encodableExplorerStateForURL: { filter : initialFilter },
+      userFilterFromURL: {},
     };
 
   }
@@ -47,24 +52,25 @@ class GuppyDataExplorer extends React.Component {
 
   handleAccessibilityChangeForQueryStateUrl = (event) => {
     console.log('accessibility change event: ', event);
-    const newExplorerState = this.state.encodableExplorerStateForUrl;
+    const newExplorerState = this.state.encodableExplorerStateForURL;
     newExplorerState.accessibility = event;
-    this.setState({ encodableExplorerStateForUrl: newExplorerState });
+    this.setState({ encodableExplorerStateForURL: newExplorerState });
   }
 
   handleTableViewChangeForQueryStateUrl = (event) => {
     // for offset, first, sort
     console.log('table view change event: ', event);
-    const newExplorerState = this.state.encodableExplorerStateForUrl;
+    const newExplorerState = this.state.encodableExplorerStateForURL;
     newExplorerState.tableView = event;
-    this.setState({ encodableExplorerStateForUrl: newExplorerState });
+    this.setState({ encodableExplorerStateForURL: newExplorerState });
   }
 
   handleFilterChangeForQueryStateUrl = (event) => {
     console.log('filter change event: ', event);
-    const newExplorerState = this.state.encodableExplorerStateForUrl;
+    let newExplorerState = this.state.encodableExplorerStateForURL;
     newExplorerState.filter = event;
-    this.setState({ encodableExplorerStateForUrl: newExplorerState });
+    // todo: support other vars
+    this.setState({ encodableExplorerStateForURL: newExplorerState });
   }
 
   isExplorerStatePristine = (explorerState) => {
@@ -81,7 +87,7 @@ class GuppyDataExplorer extends React.Component {
   }
 
   getEncodedQueryStateFromExplorer = () => {
-    let stateObj = this.state.encodableExplorerStateForUrl;
+    let stateObj = this.state.encodableExplorerStateForURL;
     console.log('state? ', stateObj);
     console.log('pristine: ', this.isExplorerStatePristine(stateObj));
     if (this.isExplorerStatePristine(stateObj)) {
@@ -93,14 +99,17 @@ class GuppyDataExplorer extends React.Component {
 
   refreshQueryStateInUrl = () => {
     // let currentState = this.getQueryStateFromUrl();
-
-
     let encodedState = this.getEncodedQueryStateFromExplorer();
     if (encodedState == '') {
       window.history.pushState(null, null, window.location.pathname);
       return;
     }
     window.history.pushState('', '', '?filters=' + encodedState);
+  }
+
+  applyFilterUIChanges = (filterToApplyToUI) => {
+    console.log('madde it to applyFilterUIChanges with ', filterToApplyToUI);
+    this.setState({userFilterFromURL: filterToApplyToUI});
   }
 
   render() {
@@ -110,6 +119,7 @@ class GuppyDataExplorer extends React.Component {
         <GuppyWrapper
           adminAppliedPreFilters={this.props.adminAppliedPreFilters}
           initialFilterFromURL={this.state.initialFilterFromURL}
+          applyFilterUIChanges={this.applyFilterUIChanges}
           filterConfig={this.props.filterConfig}
           guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
@@ -132,6 +142,7 @@ class GuppyDataExplorer extends React.Component {
             hideGetAccessButton={this.props.hideGetAccessButton}
             tierAccessLevel={this.props.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
+            userFilterFromURL={this.state.userFilterFromURL}
           />
           <ExplorerVisualization
             className='guppy-data-explorer__visualization'
