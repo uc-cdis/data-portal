@@ -199,6 +199,7 @@ ExplorerFilter.propTypes = {
   accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
   getAccessButtonLink: PropTypes.string,
   hideGetAccessButton: PropTypes.bool,
+  userFilterFromURL: PropTypes.object,
 };
 
 ExplorerFilter.defaultProps = {
@@ -216,6 +217,7 @@ ExplorerFilter.defaultProps = {
   accessibleFieldCheckList: [],
   getAccessButtonLink: undefined,
   hideGetAccessButton: false,
+  userFilterFromURL: {},
 };
 
 export default ExplorerFilter;

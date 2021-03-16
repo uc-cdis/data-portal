@@ -5,7 +5,6 @@ import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
 import { labelToPlural, base64Encode, base64Decode, getQueryParameter, IsValidJSONString } from './utils';
-import { withRouter } from 'react-router';
 import {
   GuppyConfigType,
   FilterConfigType,
@@ -21,29 +20,46 @@ class GuppyDataExplorer extends React.Component {
     let initialState = {};
     let initialFilter = {};
 
-    let stateFromURL = getQueryParameter('filters');
+    const stateFromURL = getQueryParameter('filters');
     if (stateFromURL) {
-      console.log('filters: ', stateFromURL);
-      let decodedFilter = base64Decode(stateFromURL);
-      console.log('decoded filters : ', decodedFilter);
-      let isValidJSON = IsValidJSONString(decodedFilter);
-      console.log('is valid? ', isValidJSON);
-      if(isValidJSON) {
+      const decodedFilter = base64Decode(stateFromURL);
+      const isValidJSON = IsValidJSONString(decodedFilter);
+      if (isValidJSON) {
         initialState = JSON.parse(decodedFilter);
-        initialFilter = initialState['filter'];
+        initialFilter = initialState.filter;
       }
     }
-
-    console.log('constructor setting initialfilterfromurl in state to ', initialFilter);
 
     this.state = {
       aggsData: {},
       filter: {}, // This value reflects Guppy-side state
       initialFilterFromURL: initialFilter,
-      encodableExplorerStateForURL: { filter : initialFilter },
+      encodableExplorerStateForURL: { filter: initialFilter },
       userFilterFromURL: {},
     };
+  }
 
+  getEncodedQueryStateFromExplorer = () => {
+    const stateObj = this.state.encodableExplorerStateForURL;
+    if (this.isExplorerStatePristine(stateObj)) {
+      return '';
+    }
+    const encoded = encodeURIComponent(base64Encode(JSON.stringify(stateObj)));
+    return encoded;
+  }
+
+  refreshQueryStateInUrl = () => {
+    // let currentState = this.getQueryStateFromUrl();
+    const encodedState = this.getEncodedQueryStateFromExplorer();
+    if (encodedState === '') {
+      window.history.pushState(null, null, window.location.pathname);
+      return;
+    }
+    window.history.pushState('', '', `?filters=${encodedState}`);
+  }
+
+  applyFilterUIChanges = (filterToApplyToUI) => {
+    this.setState({ userFilterFromURL: filterToApplyToUI });
   }
 
   handleReceiveNewAggsData = (newAggsData) => {
@@ -51,7 +67,6 @@ class GuppyDataExplorer extends React.Component {
   };
 
   handleAccessibilityChangeForQueryStateUrl = (event) => {
-    console.log('accessibility change event: ', event);
     const newExplorerState = this.state.encodableExplorerStateForURL;
     newExplorerState.accessibility = event;
     this.setState({ encodableExplorerStateForURL: newExplorerState });
@@ -59,57 +74,29 @@ class GuppyDataExplorer extends React.Component {
 
   handleTableViewChangeForQueryStateUrl = (event) => {
     // for offset, first, sort
-    console.log('table view change event: ', event);
     const newExplorerState = this.state.encodableExplorerStateForURL;
     newExplorerState.tableView = event;
     this.setState({ encodableExplorerStateForURL: newExplorerState });
   }
 
   handleFilterChangeForQueryStateUrl = (event) => {
-    console.log('filter change event: ', event);
-    let newExplorerState = this.state.encodableExplorerStateForURL;
+    const newExplorerState = this.state.encodableExplorerStateForURL;
     newExplorerState.filter = event;
     // todo: support other vars
     this.setState({ encodableExplorerStateForURL: newExplorerState });
   }
 
   isExplorerStatePristine = (explorerState) => {
-    let values = Object.values(explorerState);
-    for (let i = 0; i < values.length; i+=1) {
-      if(typeof values[i] !== "object" && values[i] !== null) {
+    const values = Object.values(explorerState);
+    for (let i = 0; i < values.length; i += 1) {
+      if (typeof values[i] !== 'object' && values[i] !== null) {
         return false;
       }
-      if(typeof values[i] === "object" && Object.values(values[i]).length > 0) {
+      if (typeof values[i] === 'object' && Object.values(values[i]).length > 0) {
         return false;
       }
     }
     return true;
-  }
-
-  getEncodedQueryStateFromExplorer = () => {
-    let stateObj = this.state.encodableExplorerStateForURL;
-    console.log('state? ', stateObj);
-    console.log('pristine: ', this.isExplorerStatePristine(stateObj));
-    if (this.isExplorerStatePristine(stateObj)) {
-      return '';
-    }
-    let encoded = encodeURIComponent( base64Encode( JSON.stringify(stateObj) ) );
-    return encoded;
-  }
-
-  refreshQueryStateInUrl = () => {
-    // let currentState = this.getQueryStateFromUrl();
-    let encodedState = this.getEncodedQueryStateFromExplorer();
-    if (encodedState == '') {
-      window.history.pushState(null, null, window.location.pathname);
-      return;
-    }
-    window.history.pushState('', '', '?filters=' + encodedState);
-  }
-
-  applyFilterUIChanges = (filterToApplyToUI) => {
-    console.log('madde it to applyFilterUIChanges with ', filterToApplyToUI);
-    this.setState({userFilterFromURL: filterToApplyToUI});
   }
 
   render() {
