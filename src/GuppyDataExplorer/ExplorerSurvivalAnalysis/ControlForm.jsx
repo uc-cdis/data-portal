@@ -39,9 +39,9 @@ const survivalTypeOptions = [
  * @param {FactorItem[]} prop.factors
  * @param {UserInputSubmitHandler} prop.onSubmit
  * @param {number} prop.timeInterval
+ * @param {boolean} prop.isAggsDataLoading
  * @param {boolean} prop.isError
  * @param {boolean} prop.isFilterChanged
- * @param {boolean} prop.isAggsDataLoading
  * @param {Function} prop.setIsFilterChanged
  */
 const ControlForm = ({
