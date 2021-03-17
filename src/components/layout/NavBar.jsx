@@ -24,10 +24,6 @@ class NavBar extends Component {
     };
   }
 
-  componentDidMount() {
-    this.props.onInitActive();
-  }
-
   getNavButtonRef = (itemUniqueId) => {
     if (!this.navButtonRefs[itemUniqueId]) {
       this.navButtonRefs[itemUniqueId] = React.createRef();
