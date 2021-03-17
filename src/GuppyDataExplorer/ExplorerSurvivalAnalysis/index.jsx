@@ -161,7 +161,7 @@ function ExplorerSurvivalAnalysis({
 
 ExplorerSurvivalAnalysis.propTypes = {
   aggsData: PropTypes.object,
-  isGuppyDataLoading: PropTypes.bool,
+  isAggsDataLoading: PropTypes.bool,
   fieldMapping: PropTypes.array,
   filter: PropTypes.object,
 };
