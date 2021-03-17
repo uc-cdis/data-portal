@@ -4,7 +4,7 @@ const bar = (state = {}, action) => {
     return { ...state, active: action.data };
   }
   default:
-    return {...state, active: window.location.pathname};
+    return { ...state, active: window.location.pathname };
   }
 };
 
