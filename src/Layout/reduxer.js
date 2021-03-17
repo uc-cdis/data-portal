@@ -23,7 +23,7 @@ export const ReduxNavBar = (() => {
     navTitle: components.navigation.title,
     navItems: components.navigation.items,
     dictIcons,
-    activeTab: location.pathname,
+    activeTab: state.bar.active,
     userAccess: state.userAccess.access,
     isFullWidth: isPageFullScreen(state.bar.active),
   });
