@@ -88,7 +88,7 @@ Example configuration:
 
 1. All fields not marked "optional" are required.
 2. The configuration above is subject to change. After `Tube` supports generating nested ES document then we can remove the `fileDataType` and `docDataType` fields.
-3. The field `rowAccessor` should be a field that exists in all 3 ES indices. The study viewer will use that field to cross query with different ES indices.
+3. The field `rowAccessor` should be a field that exists in `dataType`, `fileDataType`, and `docDataType`. The study viewer will use that field to cross query with different ES indices.
 4. About `openMode` and `openFirstRowAccessor`, the list view of study browser supports 3 display modes on initial loading:
     - `open-all`: opens all collapsible cards by default. And this is the default option if `openMode` is omitted in the config
     - `close-all`: closes all collapsible cards by default
