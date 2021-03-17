@@ -41,12 +41,14 @@ const survivalTypeOptions = [
  * @param {number} prop.timeInterval
  * @param {boolean} prop.isError
  * @param {boolean} prop.isFilterChanged
+ * @param {boolean} prop.isAggsDataLoading
  * @param {Function} prop.setIsFilterChanged
  */
 const ControlForm = ({
   factors,
   onSubmit,
   timeInterval,
+  isAggsDataLoading,
   isError,
   isFilterChanged,
   setIsFilterChanged,
@@ -200,6 +202,7 @@ const ControlForm = ({
           buttonType='primary'
           onClick={submitUserInput}
           enabled={isInputChanged || isFilterChanged}
+          isPending={isAggsDataLoading}
         />
       </div>
     </form>
