@@ -218,6 +218,10 @@ ControlForm.propTypes = {
   ).isRequired,
   onSubmit: PropTypes.func.isRequired,
   timeInterval: PropTypes.number.isRequired,
+  isAggsDataLoading: PropTypes.bool,
+  isError: PropTypes.bool,
+  isFilterChanged: PropTypes.bool,
+  setIsFilterChanged: PropTypes.func,
 };
 
 export default ControlForm;
