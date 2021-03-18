@@ -101,6 +101,7 @@ export const fetchWithCreds = (opts) => {
     customHeaders,
     dispatch,
     useCache,
+    signal,
   } = opts;
   if (useCache && method === 'GET' && fetchCache[path]) {
     return Promise.resolve({ status: 200, data: JSON.parse(fetchCache[path]) });
@@ -110,6 +111,7 @@ export const fetchWithCreds = (opts) => {
     headers: { ...headers, ...customHeaders },
     method,
     body,
+    signal,
   };
   return fetch(path, request).then(
     (response) => {
