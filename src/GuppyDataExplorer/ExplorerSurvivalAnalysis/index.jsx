@@ -30,16 +30,10 @@ const fetchResult = (body) => {
 /**
  * @param {Object} prop
  * @param {Object} prop.aggsData
- * @param {boolean} prop.isAggsDataLoading
  * @param {Array} prop.fieldMapping
  * @param {Object} prop.filter
  */
-function ExplorerSurvivalAnalysis({
-  aggsData,
-  isAggsDataLoading,
-  fieldMapping,
-  filter,
-}) {
+function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   const [survival, setSurvival] = useState([]);
   const [stratificationVariable, setStratificationVariable] = useState('');
   const [timeInterval, setTimeInterval] = useState(2);
@@ -146,7 +140,6 @@ function ExplorerSurvivalAnalysis({
           factors={factors}
           onSubmit={handleSubmit}
           timeInterval={timeInterval}
-          isAggsDataLoading={isAggsDataLoading}
           isError={isError}
           isFilterChanged={isFilterChanged}
         />
@@ -178,7 +171,6 @@ function ExplorerSurvivalAnalysis({
 
 ExplorerSurvivalAnalysis.propTypes = {
   aggsData: PropTypes.object,
-  isAggsDataLoading: PropTypes.bool,
   fieldMapping: PropTypes.array,
   filter: PropTypes.object,
 };
