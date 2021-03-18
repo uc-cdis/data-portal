@@ -63,14 +63,19 @@ function ExplorerSurvivalAnalysis({
   /** @type {ColorScheme} */
   const initColorScheme = { All: schemeCategory10[0] };
   const [colorScheme, setColorScheme] = useState(initColorScheme);
-  const getNewColorScheme = (/** @type {string} */ factorVariable) => {
-    if (factorVariable === '') return initColorScheme;
+  const getNewColorScheme = (/** @type {SurvivalData[]} */ survival) => {
+    if (survival.length === 1) return initColorScheme;
 
     /** @type {ColorScheme} */
     const newScheme = {};
-    const factorValues = aggsData[factorVariable].histogram.map((x) => x.key);
-    for (let i = 0; i < factorValues.length; i++)
-      newScheme[factorValues[i]] = schemeCategory10[i % 9];
+    let factorValueCount = 0;
+    for (const { name } of survival) {
+      const factorValue = name.split(',')[0].split('=')[1];
+      if (!newScheme.hasOwnProperty(factorValue)) {
+        newScheme[factorValue] = schemeCategory10[factorValueCount % 9];
+        factorValueCount++;
+      }
+    }
     return newScheme;
   };
 
@@ -86,7 +91,6 @@ function ExplorerSurvivalAnalysis({
   }) => {
     if (isError) setIsError(false);
     setIsUpdating(true);
-    setColorScheme(getNewColorScheme(requestBody.factorVariable));
     setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
     setStartTime(startTime);
@@ -94,7 +98,10 @@ function ExplorerSurvivalAnalysis({
 
     if (shouldUpdateResults)
       fetchResult({ filter: transformedFilter, ...requestBody })
-        .then((result) => setSurvival(result.survival))
+        .then((result) => {
+          setSurvival(result.survival);
+          setColorScheme(getNewColorScheme(result.survival));
+        })
         .catch((e) => setIsError(true))
         .finally(() => setIsUpdating(false));
     else setIsUpdating(false);
