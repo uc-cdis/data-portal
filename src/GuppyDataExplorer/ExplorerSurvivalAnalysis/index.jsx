@@ -35,7 +35,7 @@ const fetchResult = (body) => {
  */
 function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   const [survival, setSurvival] = useState([]);
-  const [stratificationVariable, setStratificationVariable] = useState('');
+  const [isStratified, setIsStratified] = useState(true);
   const [timeInterval, setTimeInterval] = useState(2);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(20);
@@ -91,7 +91,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
     if (isError) setIsError(false);
     if (isFilterChanged) setIsFilterChanged(false);
     setIsUpdating(true);
-    setStratificationVariable(requestBody.stratificationVariable);
+    setIsStratified(requestBody.stratificationVariable !== '');
     setTimeInterval(timeInterval);
     setStartTime(startTime);
     setEndTime(endTime);
@@ -160,7 +160,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
           <SurvivalPlot
             colorScheme={colorScheme}
             data={filterSurvivalByTime(survival, startTime, endTime)}
-            notStratified={stratificationVariable === ''}
+            isStratified={isStratified}
             timeInterval={timeInterval}
           />
         )}
