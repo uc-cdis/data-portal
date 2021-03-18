@@ -13,6 +13,11 @@ export const setActive = link => ({
   data: link,
 });
 
+export const initActive = link => ({
+  type: 'ACTIVE_INIT',
+  data: link,
+});
+
 export const ReduxNavBar = (() => {
   const mapStateToProps = state => ({
     navTitle: components.navigation.title,
@@ -26,6 +31,7 @@ export const ReduxNavBar = (() => {
   // Bar chart does not dispatch anything
   const mapDispatchToProps = dispatch => ({
     onActiveTab: link => dispatch(setActive(link)),
+    onInitActive: () => dispatch(initActive()),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(NavBar);
