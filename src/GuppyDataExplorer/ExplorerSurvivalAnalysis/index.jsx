@@ -12,15 +12,20 @@ import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
 
-const fetchResult = (body) =>
-  fetchWithCreds({
+let controller = new AbortController();
+const fetchResult = (body) => {
+  controller.abort();
+  controller = new AbortController();
+  return fetchWithCreds({
     path: '/analysis/tools/survival',
     method: 'POST',
     body: JSON.stringify(body),
+    signal: controller.signal,
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
     return data;
   });
+};
 
 /**
  * @param {Object} prop
@@ -102,9 +107,14 @@ function ExplorerSurvivalAnalysis({
         .then((result) => {
           setSurvival(result.survival);
           setColorScheme(getNewColorScheme(result.survival));
+          setIsUpdating(false);
         })
-        .catch((e) => setIsError(true))
-        .finally(() => setIsUpdating(false));
+        .catch((e) => {
+          if (e.name !== 'AbortError') {
+            setIsError(true);
+            setIsUpdating(false);
+          }
+        });
     else setIsUpdating(false);
   };
   useEffect(() => {
