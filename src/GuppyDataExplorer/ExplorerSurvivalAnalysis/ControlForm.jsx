@@ -42,7 +42,6 @@ const survivalTypeOptions = [
  * @param {boolean} prop.isAggsDataLoading
  * @param {boolean} prop.isError
  * @param {boolean} prop.isFilterChanged
- * @param {Function} prop.setIsFilterChanged
  */
 const ControlForm = ({
   factors,
@@ -51,7 +50,6 @@ const ControlForm = ({
   isAggsDataLoading,
   isError,
   isFilterChanged,
-  setIsFilterChanged,
 }) => {
   const [factorVariable, setFactorVariable] = useState(emptySelectOption);
   const [stratificationVariable, setStratificationVariable] = useState(
@@ -69,7 +67,7 @@ const ControlForm = ({
 
   const [shouldUpdateResults, setShouldUpdateResults] = useState(true);
   useEffect(() => {
-    if (isFilterChanged) {
+    if (isFilterChanged)
       onSubmit({
         factorVariable: factorVariable.value,
         stratificationVariable: stratificationVariable.value,
@@ -79,8 +77,6 @@ const ControlForm = ({
         efsFlag: survivalType.value === 'efs',
         shouldUpdateResults: true,
       });
-      setIsFilterChanged(false);
-    }
   }, [isFilterChanged]);
 
   const validateNumberInput = (
@@ -108,7 +104,6 @@ const ControlForm = ({
       shouldUpdateResults,
     });
     setIsInputChanged(false);
-    setIsFilterChanged(false);
     setShouldUpdateResults(false);
   };
 
@@ -232,7 +227,6 @@ ControlForm.propTypes = {
   isAggsDataLoading: PropTypes.bool,
   isError: PropTypes.bool,
   isFilterChanged: PropTypes.bool,
-  setIsFilterChanged: PropTypes.func,
 };
 
 export default ControlForm;

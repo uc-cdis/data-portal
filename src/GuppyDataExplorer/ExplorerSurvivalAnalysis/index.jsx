@@ -90,6 +90,7 @@ function ExplorerSurvivalAnalysis({
     ...requestBody
   }) => {
     if (isError) setIsError(false);
+    if (isFilterChanged) setIsFilterChanged(false);
     setIsUpdating(true);
     setStratificationVariable(requestBody.stratificationVariable);
     setTimeInterval(timeInterval);
@@ -138,7 +139,6 @@ function ExplorerSurvivalAnalysis({
           isAggsDataLoading={isAggsDataLoading}
           isError={isError}
           isFilterChanged={isFilterChanged}
-          setIsFilterChanged={setIsFilterChanged}
         />
       </div>
       <div className='explorer-survival-analysis__column-right'>
