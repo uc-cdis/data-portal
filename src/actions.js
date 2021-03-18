@@ -89,8 +89,14 @@ export const fetchCreds = (opts) => {
  * the result promise only includes {data, status} - where JSON data is re-parsed
  * every time to avoid mutation by the client
  *
- * @method fetchWithCreds
- * @param {path,method=GET,body=null,customHeaders?, dispatch?, useCache?} opts
+ * @param {object} opts
+ * @param {string} opts.path
+ * @param {string} [opts.method] Default is "GET"
+ * @param {object} [opts.body] Default is null
+ * @param {object} [opts.customHeaders]
+ * @param {Function} [opts.dispatch] Redux store dispatch
+ * @param {boolean} [opts.useCache]
+ * @param {AbortSignal} [opts.signal]
  * @return Promise<{response,data,status,headers}> or Promise<{data,status}> if useCache specified
  */
 export const fetchWithCreds = (opts) => {
@@ -106,6 +112,7 @@ export const fetchWithCreds = (opts) => {
   if (useCache && method === 'GET' && fetchCache[path]) {
     return Promise.resolve({ status: 200, data: JSON.parse(fetchCache[path]) });
   }
+  /** @type {RequestInit} */
   const request = {
     credentials: 'include',
     headers: { ...headers, ...customHeaders },
