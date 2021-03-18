@@ -106,6 +106,15 @@ const ControlForm = ({
   };
 
   const resetUserInput = () => {
+    setIsInputChanged(
+      factorVariable.value !== emptySelectOption.value ||
+        stratificationVariable.value !== emptySelectOption.value ||
+        localTimeInterval !== 2 ||
+        startTime !== 0 ||
+        endTime !== 20 ||
+        survivalType !== survivalTypeOptions[0]
+    );
+
     if (factorVariable.value !== '' || stratificationVariable.value !== '')
       setShouldUpdateResults(true);
 
