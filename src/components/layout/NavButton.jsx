@@ -7,8 +7,19 @@ import './NavButton.less';
 const NavButton = ({
   dictIcons,
   item,
-}) => (
-  <NavLink
+}) => {
+  if (item.link.startsWith('http')) {
+    return (<a
+      href={item.link}
+      className={'body-typo nav-button'}
+    >
+      <div className='nav-button__icon'>
+        <IconComponent iconName={item.icon} dictIcons={dictIcons} />
+      </div>
+      {item.name}
+    </a>);
+  }
+  return (<NavLink
     className={'body-typo nav-button'}
     activeClassName='button-active'
     to={item.link}
@@ -17,8 +28,8 @@ const NavButton = ({
       <IconComponent iconName={item.icon} dictIcons={dictIcons} />
     </div>
     {item.name}
-  </NavLink>
-);
+  </NavLink>);
+};
 
 NavButton.propTypes = {
   item: PropTypes.object.isRequired,

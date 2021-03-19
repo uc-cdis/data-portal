@@ -90,13 +90,23 @@ class NavBar extends Component {
         <header className='nav-bar__header'>
           <nav className='nav-bar__nav--info'>
             <div className='nav-bar__logo'>
-              <NavLink exact to={homepageHref}>
-                <img
-                  className='nav-bar__logo-img'
-                  src='/src/img/logo.png'
-                  alt={components.homepageAltText || 'Gen3 portal logo'}
-                />
-              </NavLink>
+              {homepageHref ?
+                (<a href={homepageHref}>
+                  <img
+                    className='nav-bar__logo-img'
+                    src='/src/img/logo.png'
+                    alt={components.homepageAltText || 'Gen3 portal logo'}
+                  />
+                </a>)
+                :
+                (<NavLink exact to={homepageHref}>
+                  <img
+                    className='nav-bar__logo-img'
+                    src='/src/img/logo.png'
+                    alt={components.homepageAltText || 'Gen3 portal logo'}
+                  />
+                </NavLink>)
+              }
             </div>
             {
               this.props.navTitle && (
