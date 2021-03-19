@@ -39,19 +39,15 @@ const survivalTypeOptions = [
  * @param {FactorItem[]} prop.factors
  * @param {UserInputSubmitHandler} prop.onSubmit
  * @param {number} prop.timeInterval
- * @param {boolean} prop.isAggsDataLoading
  * @param {boolean} prop.isError
  * @param {boolean} prop.isFilterChanged
- * @param {Function} prop.setIsFilterChanged
  */
 const ControlForm = ({
   factors,
   onSubmit,
   timeInterval,
-  isAggsDataLoading,
   isError,
   isFilterChanged,
-  setIsFilterChanged,
 }) => {
   const [factorVariable, setFactorVariable] = useState(emptySelectOption);
   const [stratificationVariable, setStratificationVariable] = useState(
@@ -69,7 +65,16 @@ const ControlForm = ({
 
   const [shouldUpdateResults, setShouldUpdateResults] = useState(true);
   useEffect(() => {
-    if (isFilterChanged) setShouldUpdateResults(true);
+    if (isFilterChanged)
+      onSubmit({
+        factorVariable: factorVariable.value,
+        stratificationVariable: stratificationVariable.value,
+        timeInterval: localTimeInterval,
+        startTime,
+        endTime,
+        efsFlag: survivalType.value === 'efs',
+        shouldUpdateResults: true,
+      });
   }, [isFilterChanged]);
 
   const validateNumberInput = (
@@ -97,11 +102,19 @@ const ControlForm = ({
       shouldUpdateResults,
     });
     setIsInputChanged(false);
-    setIsFilterChanged(false);
     setShouldUpdateResults(false);
   };
 
   const resetUserInput = () => {
+    setIsInputChanged(
+      factorVariable.value !== emptySelectOption.value ||
+        stratificationVariable.value !== emptySelectOption.value ||
+        localTimeInterval !== 2 ||
+        startTime !== 0 ||
+        endTime !== 20 ||
+        survivalType !== survivalTypeOptions[0]
+    );
+
     if (factorVariable.value !== '' || stratificationVariable.value !== '')
       setShouldUpdateResults(true);
 
@@ -202,7 +215,6 @@ const ControlForm = ({
           buttonType='primary'
           onClick={submitUserInput}
           enabled={isInputChanged || isFilterChanged}
-          isPending={isAggsDataLoading}
         />
       </div>
     </form>
@@ -218,10 +230,8 @@ ControlForm.propTypes = {
   ).isRequired,
   onSubmit: PropTypes.func.isRequired,
   timeInterval: PropTypes.number.isRequired,
-  isAggsDataLoading: PropTypes.bool,
   isError: PropTypes.bool,
   isFilterChanged: PropTypes.bool,
-  setIsFilterChanged: PropTypes.func,
 };
 
 export default ControlForm;
