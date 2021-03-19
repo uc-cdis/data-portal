@@ -83,7 +83,7 @@ class NavBar extends Component {
 
     // added for backward compatibility
     // should always add homepageHref to components in portal config in the future
-    const homepageHref = components.homepageHref || config.homepageHref || '';
+    const homepageHref = components.homepageHref || config.homepageHref;
 
     return (
       <div className='nav-bar'>
@@ -99,7 +99,7 @@ class NavBar extends Component {
                   />
                 </a>)
                 :
-                (<NavLink exact to={homepageHref}>
+                (<NavLink exact to=''>
                   <img
                     className='nav-bar__logo-img'
                     src='/src/img/logo.png'
