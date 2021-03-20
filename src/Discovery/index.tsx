@@ -12,7 +12,7 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
   // the full list of studies for this commons.
   const GUID_TYPE = 'discovery_metadata';
   const LIMIT = 1000; // required or else mds defaults to returning 10 records
-  const MDS_URL = `${hostname}mds/metadata`;
+  const MDS_URL = 'https://staging.gen3.biodatacatalyst.nhlbi.nih.gov/mds/metadata';
   const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
 
   try {

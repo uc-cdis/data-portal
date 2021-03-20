@@ -149,4 +149,3 @@ const getHomepageChartProjectsList = () => {
 };
 
 export default getHomepageChartProjectsList;
-

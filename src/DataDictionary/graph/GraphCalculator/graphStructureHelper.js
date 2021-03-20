@@ -416,4 +416,3 @@ export const getAllRoutesBetweenTwoNodes = (
   takeOneStep(startingNodeID, new Set([startingNodeID]));
   return resultRoutes;
 };
-

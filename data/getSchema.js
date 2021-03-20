@@ -38,7 +38,7 @@ const { gdcSubPath } = (function () {
 
     Use: node getSchema.js [gdcSubmissionApiPath]
         - where gdcSubmissionApiPath defaults to: process.env.GDC_SUBPATH || 'http://localhost:5000/v0/submission/'
-        - example - if gdcSubmissionApiPath = https://dev.bionimbus.org/api/vo/submission/, 
+        - example - if gdcSubmissionApiPath = https://dev.bionimbus.org/api/vo/submission/,
             then the script loads:
             * https://dev.bionimbus.org/api/v0/submission/_dictionary/_all
             * https://dev.bionimbus.org/api/v0/submission/getschema

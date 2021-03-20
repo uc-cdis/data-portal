@@ -127,7 +127,7 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
               (targetNode.boundingBox.x1 + targetNode.boundingBox.x2) / 2,
               targetNode.boundingBox.y2,
             ];
-            pathString = `M${sourePosition[0]} ${sourePosition[1]} 
+            pathString = `M${sourePosition[0]} ${sourePosition[1]}
               L ${targetPosition[0]} ${targetPosition[1]}`;
           }
           const required = edges
