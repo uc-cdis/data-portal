@@ -430,6 +430,12 @@ Below is an example, with inline comments describing what each JSON block config
         "contentType": "number" // contentType: number displays the content of the field formatted with Number.toLocaleString() (e.g. `72209` -> `"72,209"`)
       },
       {
+        "name": "Long Text",
+        "field": "long_text",
+        "contentType": "string",
+        "ellipsis": true // optional, if set to true, long content will be truncate into ellipsis cell content
+      },
+      {
         "name": "dbGaP Accession Number",
         "field": "study_id"
       }

@@ -192,6 +192,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   // -----
   const columns = config.studyColumns.map(column => ({
     title: column.name,
+    ellipsis: !!column.ellipsis,
     render: (_, record) => {
       const value = record[column.field];
       if (value === undefined) {
@@ -216,6 +217,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   columns.push(
     {
       title: 'Tags',
+      ellipsis: false,
       render: (_, record) => (
         <React.Fragment>
           {record.tags.map(({ name, category }) => {
@@ -259,6 +261,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   if (config.features.authorization.enabled) {
     columns.push({
       title: 'Access',
+      ellipsis: false,
       render: (_, record) => (
         record[accessibleFieldName]
           ? (
