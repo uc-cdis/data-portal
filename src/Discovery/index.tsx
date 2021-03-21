@@ -6,16 +6,28 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { hostname, discoveryConfig, useArboristUI } from '../localconf';
 
-const loadStudiesFromMDS = async (): Promise<any[]> => {
-  // Why `_guid_type='discovery_metadata'? We need to distinguish the discovery page studies in MDS
-  // from other data in MDS. So all MDS records with `_guid_type='discovery_metadata'` should be
-  // the full list of studies for this commons.
-  const GUID_TYPE = 'discovery_metadata';
-  const LIMIT = 1000; // required or else mds defaults to returning 10 records
-  // const MDS_URL = 'https://staging.gen3.biodatacatalyst.nhlbi.nih.gov/mds/metadata';
-  const MDS_URL = 'https://internalstaging.theanvil.io';
-  const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
+const COMMONS = [
+  {
+    MDS_URL: 'https://staging.gen3.biodatacatalyst.nhlbi.nih.gov/mds/metadata',
+    GUID_TYPE: 'discovery_metadata',
+    STUDY_DATA_FIELD: 'gen3_discovery',
+    LIMIT: 1000,
+    COMMONS: 'BDC',
+    POPULATE_GUID: false,
+  },
+  {
+    MDS_URL: 'https://internalstaging.theanvil.io/mds/metadata',
+    GUID_TYPE: 'discovery_metadata',
+    STUDY_DATA_FIELD: 'gen3_discovery',
+    LIMIT: 1000,
+    COMMONS: 'AnVIL',
+    POPULATE_GUID: true,
+  },
+];
 
+const loadStudiesFromNamedMDS = async (MDS_URL: string, GUID_TYPE: string,
+  LIMIT: number, STUDY_DATA_FIELD: string,
+  COMMON: string, populateGUI:boolean = false): Promise<any[]> => {
   try {
     let allStudies = [];
     let offset = 0;
@@ -33,7 +45,17 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
       }
       // eslint-disable-next-line no-await-in-loop
       const jsonResponse = await res.json();
-      const studies = Object.values(jsonResponse).map(entry => entry[STUDY_DATA_FIELD]);
+      const studies = Object.values(jsonResponse).map((entry) => {
+        const x = entry[STUDY_DATA_FIELD];
+        x.commons = COMMON;
+            if (populateGUI) {
+              x.study_id = x.dbgap_accession;
+              x._unique_id = x.dbgap_accession;
+            }
+        return x;
+      },
+      );
+      // console.log(studies);
       allStudies = allStudies.concat(studies);
       const noMoreStudiesToLoad = studies.length < LIMIT;
       if (noMoreStudiesToLoad) {
@@ -48,9 +70,30 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
   }
 };
 
+const loadStudiesFromMDS = async (commons: Object[]): Promise<any[]> => {
+  try {
+    let joinedStudies = [];
+
+    for (const common of commons) {
+      const studies = await loadStudiesFromNamedMDS(
+        common['MDS_URL'],
+        common['GUID_TYPE'],
+        common['LIMIT'],
+        common['STUDY_DATA_FIELD'],
+        common['COMMONS'],
+          common['POPULATE_GUID']
+      );
+      joinedStudies = joinedStudies.concat(studies);
+    }
+    return joinedStudies;
+  } catch (err) {
+    throw new Error(`Request for joined study data failed: ${err}`);
+  }
+};
+
 const DiscoveryWithMDSBackend: React.FC<{
-  userAuthMapping: any,
-  config: DiscoveryConfig,
+    userAuthMapping: any,
+    config: DiscoveryConfig,
 }> = (props) => {
   const [studies, setStudies] = useState(null);
 
@@ -59,7 +102,7 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    loadStudiesFromMDS().then((rawStudies) => {
+    loadStudiesFromMDS(COMMONS).then((rawStudies) => {
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const authzField = props.config.minimalFieldMapping.authzField;

@@ -689,7 +689,7 @@
         "contentType": "number"
       },
       {
-        "name": "dbGaP Accession Number",
+        "name": "dbGaP Accession Number 10",
         "field": "study_id"
       }
     ],
@@ -730,7 +730,7 @@
               "valueIfNotAvailable": "N/A"
             },
             {
-              "name": "dbGaP Study Accession",
+              "name": "dbGaP Study Accession 11",
               "field": "dbgap_accession",
               "contentType": "string",
               "includeName": true,
