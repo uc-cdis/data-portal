@@ -48,9 +48,9 @@ const loadStudiesFromNamedMDS = async (MDS_URL: string, GUID_TYPE: string,
       const studies = Object.values(jsonResponse).map((entry) => {
         const x = entry[STUDY_DATA_FIELD];
         x.commons = COMMON;
-            if (populateGUI) {
-              x._unique_id = x.study_id;
-            }
+        if (populateGUI) {
+          x._unique_id = x.study_id;
+        }
         return x;
       },
       );
