@@ -49,6 +49,7 @@ const loadStudiesFromNamedMDS = async (MDS_URL: string, GUID_TYPE: string,
         const x = entry[STUDY_DATA_FIELD];
         x.commons = COMMON;
         if (populateGUI) {
+          // need to do this as in case MDS does not have _unique_id
           x._unique_id = x.study_id;
         }
         return x;
