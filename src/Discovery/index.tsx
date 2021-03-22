@@ -49,8 +49,7 @@ const loadStudiesFromNamedMDS = async (MDS_URL: string, GUID_TYPE: string,
         const x = entry[STUDY_DATA_FIELD];
         x.commons = COMMON;
             if (populateGUI) {
-              x.study_id = x.dbgap_accession;
-              x._unique_id = x.dbgap_accession;
+              x._unique_id = x.study_id;
             }
         return x;
       },
