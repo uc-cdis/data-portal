@@ -384,7 +384,7 @@ async function init() {
                       />)
                     }
                   />
-                  {isEnabled('discovery') && <React.Fragment>
+                  {isEnabled('discovery') &&
                     <Route
                       exact
                       path='/discovery'
@@ -396,6 +396,8 @@ async function init() {
                         />)
                       }
                     />
+                  }
+                  {isEnabled('discovery') &&
                     <Route
                       exact
                       path='/discovery/:studyUID'
@@ -407,7 +409,6 @@ async function init() {
                         />)
                       }
                     />
-                  </React.Fragment>
                   }
                   <Route
                     path='/not-found'
