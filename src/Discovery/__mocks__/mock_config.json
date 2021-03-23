@@ -19,7 +19,7 @@
         }
       },
       "authorization": {
-        "enabled": true
+        "enabled": false
       }
     },
     "aggregations": [

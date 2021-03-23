@@ -561,7 +561,7 @@
       }
     ],
     "authz": [
-      "/programs/topmed/projects/CAMP_DS-AST-COPD"
+      "/programs/DEV/projects/test"
     ],
     "study_id": "phs001726.v1.p1.c1",
     "dbgap_phs": "phs001726",
@@ -574,6 +574,14 @@
     "dbgap_accession": "phs001726.v1.p1.c1",
     "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nThe Childhood Asthma Management Program (CAMP) was designed to evaluate whether continuous, long-term treatment (over a period of four to six years) with either an inhaled corticosteroid (budesonide) or an inhaled noncorticosteroid drug (nedocromil) safely produces an improvement in lung growth as compared with treatment for symptoms only (with albuterol and, if necessary, prednisone, administered as needed). The primary outcome in the study was lung growth, as assessed by the change in forced expiratory volume in one second (FEV1, expressed as a percentage of the predicted value) after the administration of a bronchodilator. Secondary outcomes included the degree of airway responsiveness, morbidity, physical growth, and psychological development.\n\n Study Design: \n    \nFamily/Twin/Trios\n\n\n Study Type:\n\nParent-Offspring Trios\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
     "dbgap_consent_text": "DS-AST-COPD",
-    "dbgap_participant_set": "p1"
+    "dbgap_participant_set": "p1",
+    "__manifest": [
+      {
+        "object_id": "9a44056e-5b9e-42c3-b3f8-85bc210c7b3f",
+        "md5sum": "694b1d13b8148756442739fa2cc37fd6",
+        "file_name": "test6.csv",
+        "file_size": 8
+      }
+    ]
   }
 ]
