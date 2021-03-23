@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import FileSaver from 'file-saver';
 import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
 import * as JsSearch from 'js-search';
@@ -320,7 +321,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     setSearchFilteredResources(results);
   };
 
-  const handleExportToWorkspaceClick = async (ev) => {
+  const handleExportToWorkspaceClick = async () => {
     const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
     if (!manifestFieldName) {
       throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
@@ -343,6 +344,24 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     }
     // redirect to Workspaces page
     // TODO implement
+  };
+
+  const handleDownloadManifestClick = () => {
+    const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+    if (!manifestFieldName) {
+      throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
+    }
+    // combine manifests from all selected studies
+    const manifest = [];
+    selectedResources.forEach((study) => {
+      if (study[manifestFieldName]) {
+        manifest.push(...study[manifestFieldName]);
+      }
+    });
+    // download the manifest
+    const MANIFEST_FILENAME = 'manifest.json';
+    const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'text/json' });
+    FileSaver.saveAs(blob, MANIFEST_FILENAME);
   };
 
   const visibleResources = filterByTags(
@@ -451,7 +470,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 content={(<span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
                 to download the data from the selected studies to your local computer.</span>)}
               >
-                <Button type='text' disabled={selectedResources.length === 0} icon={<DownloadOutlined />}>
+                <Button
+                  onClick={handleDownloadManifestClick}
+                  type='text'
+                  disabled={selectedResources.length === 0}
+                  icon={<DownloadOutlined />}
+                >
                   Download Manifest
                 </Button>
               </Popover>
