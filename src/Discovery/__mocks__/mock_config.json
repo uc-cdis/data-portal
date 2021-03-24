@@ -43,6 +43,13 @@
         "field": "name"
       },
       {
+        "name": "dbGaP Link",
+        "field": "dbgap_link",
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a",
+        "contentType": "link"
+      },
+      {
         "name": "Full Name",
         "field": "full_name",
         "contentType": "string"
@@ -93,6 +100,12 @@
               "includeName": true,
               "includeIfNotAvailable": true,
               "valueIfNotAvailable": "N/A"
+            },
+            {
+              "name": "dbGaP Link",
+              "field": "dbgap_link",
+              "includeIfNotAvailable": false,
+              "contentType": "link"
             },
             {
               "name": "dbGaP Study Accession",

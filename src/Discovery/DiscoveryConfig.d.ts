@@ -51,7 +51,7 @@ export interface DiscoveryConfig {
     studyColumns: {
         name: string
         field: string
-        contentType?: 'string' | 'number'
+        contentType?: 'string' | 'number' | 'link'
         errorIfNotAvailable?: boolean
         valueIfNotAvailable?: string | number
     }[],
@@ -88,7 +88,7 @@ export interface DiscoveryConfig {
 export interface StudyPageFieldConfig {
     name: string
     field: string
-    contentType: 'string' | 'number' | 'paragraphs'
+    contentType: 'string' | 'number' | 'paragraphs' | 'link'
     includeName?: boolean
     includeIfNotAvailable?: boolean
     valueIfNotAvailable?: string | number

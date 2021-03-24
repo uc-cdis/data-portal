@@ -173,6 +173,10 @@ describe('Modal', () => {
           case 'number':
             expectedFieldData = modalData[fieldCfg.field].toLocaleString();
             break;
+          case 'link':
+            expectedFieldData =
+              (<a href={modalData[fieldCfg.field]}>{modalData[fieldCfg.field]}</a>);
+            break;
           default:
             throw new Error(`Unrecognized content_type ${fieldCfg.contentType}.`);
           }

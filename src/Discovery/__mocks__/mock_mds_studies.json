@@ -25,6 +25,7 @@
     ],
     "study_id": "phs000209.v13.p3.c1",
     "dbgap_phs": "phs000209",
+    "dbgap_link": "https://example.com/phs00209.v13.p3.c1",
     "full_name": "Multi-Ethnic Study of Atherosclerosis (MESA) Cohort",
     "project_id": "parent-MESA_HMB_",
     "short_name": "MESA",
