@@ -420,7 +420,8 @@ Below is an example, with inline comments describing what each JSON block config
       {
         "name": "Full Name",
         "field": "full_name",
-        "contentType": "string" // contentType: string displays the content of the field without formatting.
+        "contentType": "string", // contentType: string displays the content of the field without formatting.
+        "width": 300 // optional, if set with a value, will set width of this column, can be used independently or together with "ellipsis"
       },
       {
         "name": "Number of Subjects",
