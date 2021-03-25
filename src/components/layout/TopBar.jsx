@@ -4,7 +4,7 @@ import { Popover } from 'antd';
 import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
-import { useArboristUI } from '../../configs';
+import { useArboristUI, hideSubmissionIfIneligible } from '../../configs';
 import { userHasMethodOnAnyProject } from '../../authMappingUtils';
 
 const isEmailAddress = (input) => {
@@ -25,7 +25,17 @@ class TopBar extends Component {
         <header className='top-bar__header'>
           <nav className='top-bar__nav'>
             {
-              this.props.topItems.map(
+              this.props.topItems.filter(
+                (item) => {
+                  if (item.name === 'Submit Data' && useArboristUI && hideSubmissionIfIneligible) {
+                    if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
+                      return true;
+                    }
+                    return false;
+                  }
+                  return true;
+                },
+              ).map(
                 (item) => {
                   let buttonText = item.name;
                   if (item.name === 'Submit Data' && useArboristUI) {
