@@ -54,6 +54,8 @@ export interface DiscoveryConfig {
         contentType?: 'string' | 'number' | 'link'
         errorIfNotAvailable?: boolean
         valueIfNotAvailable?: string | number
+        ellipsis?: boolean
+        width?: string | number
     }[],
     studyPreviewField: {
         name: string,
