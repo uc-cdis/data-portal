@@ -10,7 +10,7 @@ Below is an example, with inline comments describing what each JSON block config
 
 ```
 {
-  "gaTrackingId": "xx-xxxxxxxxx-xxx", // required; the Google Analytics ID to track statistics
+  "gaTrackingId": "xx-xxxxxxxxx-xxx", // optional; the Google Analytics ID to track statistics
   "DAPTrackingURL": "https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=AGENCY&subagency=SUB", // optional, for adding DAP tracking feature if specified (see https://github.com/digital-analytics-program/gov-wide-code#participating-in-the-dap)
   "graphql": { // required; start of query section - these attributes must be in the dictionary
     "boardCounts": [ // required; graphQL fields to query for the homepage chart
@@ -420,7 +420,8 @@ Below is an example, with inline comments describing what each JSON block config
       {
         "name": "Full Name",
         "field": "full_name",
-        "contentType": "string" // contentType: string displays the content of the field without formatting.
+        "contentType": "string", // contentType: string displays the content of the field without formatting.
+        "width": 300 // optional, if set with a value, will set width of this column, can be used independently or together with "ellipsis"
       },
       {
         "name": "Number of Subjects",
@@ -428,6 +429,12 @@ Below is an example, with inline comments describing what each JSON block config
         "errorIfNotAvailable": false,
         "valueIfNotAvailable": "n/a",
         "contentType": "number" // contentType: number displays the content of the field formatted with Number.toLocaleString() (e.g. `72209` -> `"72,209"`)
+      },
+      {
+        "name": "Long Text",
+        "field": "long_text",
+        "contentType": "string",
+        "ellipsis": true // optional, if set to true, long content will be truncate into ellipsis cell content
       },
       {
         "name": "dbGaP Accession Number",
