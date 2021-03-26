@@ -215,6 +215,7 @@ function buildConfig(opts) {
 
   const discoveryConfig = config.discoveryConfig;
 
+  const workspacePageTitle = config.workspacePageTitle;
   const workspacePageDescription = config.workspacePageDescription;
 
   const colorsForCharts = {
@@ -424,6 +425,7 @@ function buildConfig(opts) {
     mapboxAPIToken,
     auspiceUrl,
     auspiceUrlIL,
+    workspacePageTitle,
     workspacePageDescription,
     enableDAPTracker,
     workspaceStorageUrl,

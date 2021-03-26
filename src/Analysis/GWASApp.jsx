@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber, Collapse, List, Tag, Popconfirm } from 'antd';
+import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber, Collapse, List, Tag, Popconfirm, Alert } from 'antd';
 import {
   CheckCircleOutlined,
   SyncOutlined,
@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons';
 import { humanFileSize } from '../utils.js';
 import { fetchWithCreds } from '../actions';
+import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { marinerUrl } from '../localconf';
 import marinerRequestBody from './utils.js';
 import './GWASApp.css';
@@ -278,6 +279,8 @@ class GWASApp extends React.Component {
       selectedDataKey,
     });
   }
+
+  userHasMariner = () => userHasMethodForServiceOnResource('access', 'mariner', '/mariner', this.props.userAuthMapping)
 
   generateContentForStep = (stepIndex) => {
     switch (stepIndex) {
@@ -595,6 +598,7 @@ class GWASApp extends React.Component {
               <Button
                 htmlType='submit'
                 type='primary'
+                disabled={!this.userHasMariner()}
               >
               Submit
               </Button>
@@ -623,6 +627,12 @@ class GWASApp extends React.Component {
 
     return (
       <Space direction={'vertical'} style={{ width: '100%' }}>
+        {(!this.userHasMariner()) ?
+          <Alert
+            message='Warning: You don&apos;t have required permission to submit GWAS job'
+            banner
+          />
+          : null}
         {(this.state.marinerJobStatus.length > 0) ?
           (<div className='GWASApp-jobStatus'>
             <Collapse onClick={event => event.stopPropagation()}>
@@ -712,6 +722,7 @@ GWASApp.propTypes = {
   }),
   onLoadWorkspaceStorageFileList: PropTypes.func.isRequired,
   onLoadWorkspaceStorageFile: PropTypes.func.isRequired,
+  userAuthMapping: PropTypes.object.isRequired,
 };
 
 GWASApp.defaultProps = {
