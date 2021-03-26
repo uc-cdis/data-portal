@@ -17,7 +17,7 @@ class Introduction extends Component {
       }
     }
 
-    const shouldDisplaySubmissionButton = () => {
+    const shouldDisplaySubmissionButton = (() => {
       if (!this.props.data.link) {
         return false;
       }
@@ -28,7 +28,7 @@ class Introduction extends Component {
         return false;
       }
       return true;
-    };
+    })();
 
     return (
       <div className='introduction'>
@@ -42,7 +42,7 @@ class Introduction extends Component {
           {(this.props.data.multiLineTexts) ?
             (this.props.data.multiLineTexts.map((text, i) => <p key={i}>{parse(text)}</p>)) : null}
         </div>
-        {(shouldDisplaySubmissionButton()) ?
+        {(shouldDisplaySubmissionButton) ?
           (<IconicLink
             link={this.props.data.link}
             dictIcons={this.props.dictIcons}
