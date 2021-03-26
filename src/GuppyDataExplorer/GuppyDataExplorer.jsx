@@ -13,6 +13,7 @@ import {
   ChartConfigType,
 } from './configTypeDef';
 import './GuppyDataExplorer.css';
+import isEnabled from '../helpers/featureFlags';
 
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
@@ -20,13 +21,15 @@ class GuppyDataExplorer extends React.Component {
     let initialState = {};
     let initialFilter = {};
 
-    const stateFromURL = getQueryParameter('filters');
-    if (stateFromURL) {
-      const decodedFilter = base64Decode(stateFromURL);
-      const isValidJSON = IsValidJSONString(decodedFilter);
-      if (isValidJSON) {
-        initialState = JSON.parse(decodedFilter);
-        initialFilter = initialState.filter;
+    if (isEnabled('storeExplorerStateInURL')) {
+      const stateFromURL = getQueryParameter('filters');
+      if (stateFromURL) {
+        const decodedFilter = base64Decode(stateFromURL);
+        const isValidJSON = IsValidJSONString(decodedFilter);
+        if (isValidJSON) {
+          initialState = JSON.parse(decodedFilter);
+          initialFilter = initialState.filter;
+        }
       }
     }
 
@@ -49,7 +52,6 @@ class GuppyDataExplorer extends React.Component {
   }
 
   refreshQueryStateInUrl = () => {
-    // let currentState = this.getQueryStateFromUrl();
     const encodedState = this.getEncodedQueryStateFromExplorer();
     if (encodedState === '') {
       window.history.pushState(null, null, window.location.pathname);
@@ -66,23 +68,9 @@ class GuppyDataExplorer extends React.Component {
     this.setState({ aggsData: newAggsData });
   };
 
-  handleAccessibilityChangeForQueryStateUrl = (event) => {
-    const newExplorerState = this.state.encodableExplorerStateForURL;
-    newExplorerState.accessibility = event;
-    this.setState({ encodableExplorerStateForURL: newExplorerState });
-  }
-
-  handleTableViewChangeForQueryStateUrl = (event) => {
-    // for offset, first, sort
-    const newExplorerState = this.state.encodableExplorerStateForURL;
-    newExplorerState.tableView = event;
-    this.setState({ encodableExplorerStateForURL: newExplorerState });
-  }
-
   handleFilterChangeForQueryStateUrl = (event) => {
     const newExplorerState = this.state.encodableExplorerStateForURL;
     newExplorerState.filter = event;
-    // todo: support other vars
     this.setState({ encodableExplorerStateForURL: newExplorerState });
   }
 
@@ -100,7 +88,9 @@ class GuppyDataExplorer extends React.Component {
   }
 
   render() {
-    this.refreshQueryStateInUrl();
+    if (isEnabled('storeExplorerStateInURL')) {
+      this.refreshQueryStateInUrl();
+    }
     return (
       <div className='guppy-data-explorer'>
         <GuppyWrapper
