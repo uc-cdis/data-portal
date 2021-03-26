@@ -23,6 +23,7 @@
   border: 1px solid #ccc;
   color: #333;
   font-family: inherit;
+  font-size: inherit;
   height: 36px;
   outline-color: var(--pcdc-color__primary);
   overflow: hidden;

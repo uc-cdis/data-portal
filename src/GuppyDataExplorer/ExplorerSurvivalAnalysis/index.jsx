@@ -12,15 +12,20 @@ import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
 
-const fetchResult = (body) =>
-  fetchWithCreds({
+let controller = new AbortController();
+const fetchResult = (body) => {
+  controller.abort();
+  controller = new AbortController();
+  return fetchWithCreds({
     path: '/analysis/tools/survival',
     method: 'POST',
     body: JSON.stringify(body),
+    signal: controller.signal,
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
     return data;
   });
+};
 
 /**
  * @param {Object} prop
@@ -30,7 +35,7 @@ const fetchResult = (body) =>
  */
 function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   const [survival, setSurvival] = useState([]);
-  const [stratificationVariable, setStratificationVariable] = useState('');
+  const [isStratified, setIsStratified] = useState(true);
   const [timeInterval, setTimeInterval] = useState(2);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(20);
@@ -57,19 +62,24 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
   /** @type {ColorScheme} */
   const initColorScheme = { All: schemeCategory10[0] };
   const [colorScheme, setColorScheme] = useState(initColorScheme);
-  const getNewColorScheme = (/** @type {string} */ factorVariable) => {
-    if (factorVariable === '') return initColorScheme;
+  const getNewColorScheme = (/** @type {SurvivalData[]} */ survival) => {
+    if (survival.length === 1) return initColorScheme;
 
     /** @type {ColorScheme} */
     const newScheme = {};
-    const factorValues = aggsData[factorVariable].histogram.map((x) => x.key);
-    for (let i = 0; i < factorValues.length; i++)
-      newScheme[factorValues[i]] = schemeCategory10[i % 9];
+    let factorValueCount = 0;
+    for (const { name } of survival) {
+      const factorValue = name.split(',')[0].split('=')[1];
+      if (!newScheme.hasOwnProperty(factorValue)) {
+        newScheme[factorValue] = schemeCategory10[factorValueCount % 9];
+        factorValueCount++;
+      }
+    }
     return newScheme;
   };
 
   const [isUpdating, setIsUpdating] = useState(false);
-  const [isError, setIsError] = useState(true);
+  const [isError, setIsError] = useState(false);
   /** @type {UserInputSubmitHandler} */
   const handleSubmit = ({
     timeInterval,
@@ -79,18 +89,26 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
     ...requestBody
   }) => {
     if (isError) setIsError(false);
+    if (isFilterChanged) setIsFilterChanged(false);
     setIsUpdating(true);
-    setColorScheme(getNewColorScheme(requestBody.factorVariable));
-    setStratificationVariable(requestBody.stratificationVariable);
+    setIsStratified(requestBody.stratificationVariable !== '');
     setTimeInterval(timeInterval);
     setStartTime(startTime);
     setEndTime(endTime);
 
     if (shouldUpdateResults)
       fetchResult({ filter: transformedFilter, ...requestBody })
-        .then((result) => setSurvival(result.survival))
-        .catch((e) => setIsError(true))
-        .finally(() => setIsUpdating(false));
+        .then((result) => {
+          setSurvival(result.survival);
+          setColorScheme(getNewColorScheme(result.survival));
+          setIsUpdating(false);
+        })
+        .catch((e) => {
+          if (e.name !== 'AbortError') {
+            setIsError(true);
+            setIsUpdating(false);
+          }
+        });
     else setIsUpdating(false);
   };
   useEffect(() => {
@@ -124,7 +142,6 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
           timeInterval={timeInterval}
           isError={isError}
           isFilterChanged={isFilterChanged}
-          setIsFilterChanged={setIsFilterChanged}
         />
       </div>
       <div className='explorer-survival-analysis__column-right'>
@@ -143,7 +160,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
           <SurvivalPlot
             colorScheme={colorScheme}
             data={filterSurvivalByTime(survival, startTime, endTime)}
-            notStratified={stratificationVariable === ''}
+            isStratified={isStratified}
             timeInterval={timeInterval}
           />
         )}

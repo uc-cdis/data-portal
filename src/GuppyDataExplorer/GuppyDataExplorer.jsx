@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import GuppyWrapper from '@pcdc/guppy/dist/components/GuppyWrapper';
+import ExplorerErrorBoundary from './ExplorerErrorBoundary';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
@@ -51,58 +52,60 @@ class GuppyDataExplorer extends React.Component {
 
   render() {
     return (
-      <div className='guppy-data-explorer'>
-        <GuppyWrapper
-          adminAppliedPreFilters={this.props.adminAppliedPreFilters}
-          filterConfig={this.props.filterConfig}
-          guppyConfig={{
-            type: this.props.guppyConfig.dataType,
-            ...this.props.guppyConfig,
-          }}
-          onReceiveNewAggsData={this.handleReceiveNewAggsData}
-          onFilterChange={this.handleFilterChange}
-          rawDataFields={this.props.tableConfig.fields}
-          accessibleFieldCheckList={
-            this.props.guppyConfig.accessibleFieldCheckList
-          }
-        >
-          <ExplorerTopMessageBanner
-            className='guppy-data-explorer__top-banner'
-            tierAccessLevel={this.props.tierAccessLevel}
-            tierAccessLimit={this.props.tierAccessLimit}
-            guppyConfig={this.props.guppyConfig}
-            getAccessButtonLink={this.props.getAccessButtonLink}
-            hideGetAccessButton={this.props.hideGetAccessButton}
-          />
-          <ExplorerCohort
-            className='guppy-data-explorer__cohort'
-            onOpenCohort={this.updateInitialAppliedFilters}
-            onDeleteCohort={this.updateInitialAppliedFilters}
-          />
-          <ExplorerFilter
-            className='guppy-data-explorer__filter'
-            guppyConfig={this.props.guppyConfig}
-            getAccessButtonLink={this.props.getAccessButtonLink}
-            hideGetAccessButton={this.props.hideGetAccessButton}
-            tierAccessLevel={this.props.tierAccessLevel}
-            tierAccessLimit={this.props.tierAccessLimit}
-            initialAppliedFilters={this.state.initialAppliedFilters}
-          />
-          <ExplorerVisualization
-            className='guppy-data-explorer__visualization'
-            chartConfig={this.props.chartConfig}
-            tableConfig={this.props.tableConfig}
-            buttonConfig={this.props.buttonConfig}
-            guppyConfig={this.props.guppyConfig}
-            history={this.props.history}
-            nodeCountTitle={
-              this.props.guppyConfig.nodeCountTitle ||
-              capitalizeFirstLetter(this.props.guppyConfig.dataType)
+      <ExplorerErrorBoundary>
+        <div className='guppy-data-explorer'>
+          <GuppyWrapper
+            adminAppliedPreFilters={this.props.adminAppliedPreFilters}
+            filterConfig={this.props.filterConfig}
+            guppyConfig={{
+              type: this.props.guppyConfig.dataType,
+              ...this.props.guppyConfig,
+            }}
+            onReceiveNewAggsData={this.handleReceiveNewAggsData}
+            onFilterChange={this.handleFilterChange}
+            rawDataFields={this.props.tableConfig.fields}
+            accessibleFieldCheckList={
+              this.props.guppyConfig.accessibleFieldCheckList
             }
-            tierAccessLimit={this.props.tierAccessLimit}
-          />
-        </GuppyWrapper>
-      </div>
+          >
+            <ExplorerTopMessageBanner
+              className='guppy-data-explorer__top-banner'
+              tierAccessLevel={this.props.tierAccessLevel}
+              tierAccessLimit={this.props.tierAccessLimit}
+              guppyConfig={this.props.guppyConfig}
+              getAccessButtonLink={this.props.getAccessButtonLink}
+              hideGetAccessButton={this.props.hideGetAccessButton}
+            />
+            <ExplorerCohort
+              className='guppy-data-explorer__cohort'
+              onOpenCohort={this.updateInitialAppliedFilters}
+              onDeleteCohort={this.updateInitialAppliedFilters}
+            />
+            <ExplorerFilter
+              className='guppy-data-explorer__filter'
+              guppyConfig={this.props.guppyConfig}
+              getAccessButtonLink={this.props.getAccessButtonLink}
+              hideGetAccessButton={this.props.hideGetAccessButton}
+              tierAccessLevel={this.props.tierAccessLevel}
+              tierAccessLimit={this.props.tierAccessLimit}
+              initialAppliedFilters={this.state.initialAppliedFilters}
+            />
+            <ExplorerVisualization
+              className='guppy-data-explorer__visualization'
+              chartConfig={this.props.chartConfig}
+              tableConfig={this.props.tableConfig}
+              buttonConfig={this.props.buttonConfig}
+              guppyConfig={this.props.guppyConfig}
+              history={this.props.history}
+              nodeCountTitle={
+                this.props.guppyConfig.nodeCountTitle ||
+                capitalizeFirstLetter(this.props.guppyConfig.dataType)
+              }
+              tierAccessLimit={this.props.tierAccessLimit}
+            />
+          </GuppyWrapper>
+        </div>
+      </ExplorerErrorBoundary>
     );
   }
 }

@@ -93,22 +93,16 @@ const Plot = ({ colorScheme, data, timeInterval }) => {
  * @param {Object} prop
  * @param {Object} prop.colorScheme
  * @param {SurvivalData[]} prop.data
- * @param {boolean} prop.notStratified
+ * @param {boolean} prop.isStratified
  * @param {number} prop.timeInterval
  */
-const SurvivalPlot = ({ colorScheme, data, notStratified, timeInterval }) => (
+const SurvivalPlot = ({ colorScheme, data, isStratified, timeInterval }) => (
   <div className='explorer-survival-analysis__survival-plot'>
     {data.length === 0 ? (
       <div className='explorer-survival-analysis__figure-placeholder'>
         Survival plot here
       </div>
-    ) : notStratified ? (
-      <Plot
-        colorScheme={colorScheme}
-        data={formatNames(data)}
-        timeInterval={timeInterval}
-      />
-    ) : (
+    ) : isStratified ? (
       Object.entries(
         data.reduce((acc, { name, data }) => {
           const [factorKey, stratificationKey] = name.split(',');
@@ -130,6 +124,12 @@ const SurvivalPlot = ({ colorScheme, data, notStratified, timeInterval }) => (
           />
         </Fragment>
       ))
+    ) : (
+      <Plot
+        colorScheme={colorScheme}
+        data={formatNames(data)}
+        timeInterval={timeInterval}
+      />
     )}
   </div>
 );
@@ -146,7 +146,7 @@ SurvivalPlot.propTypes = {
       name: PropTypes.string,
     })
   ).isRequired,
-  notStratified: PropTypes.bool.isRequired,
+  isStratified: PropTypes.bool.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
