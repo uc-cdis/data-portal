@@ -125,17 +125,9 @@ const plugins = [
   new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
 ];
 
-let optimization = {};
 let devtool = false;
 
-if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
-  // optimization for production mode
-  optimization = {
-    splitChunks: {
-      chunks: 'all',
-    },
-  };
-} else {
+if (process.env.NODE_ENV == 'dev' || process.env.NODE_ENV == 'auto') {
   // add sourcemap tools for development mode
   devtool = 'eval-source-map';
 }
@@ -193,7 +185,6 @@ module.exports = {
     filename: '[name].js',
     publicPath: basename,
   },
-  optimization,
   devtool,
   devServer: {
     historyApiFallback: {
