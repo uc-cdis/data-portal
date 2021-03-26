@@ -228,7 +228,7 @@ Below is an example, with inline comments describing what each JSON block config
         "title": "Download" // required; title of dropdown button
       }
     },
-    "buttons": [ // required; buttons for Data Explorer
+    "buttons": [ // optional; buttons for Data Explorer
       {
         "enabled": true, // required; if the button is enabled or disabled
         "type": "data", // required; button data type sub-options (case insensitive): ["data" (default), "data-tsv", "data-csv", "data-json"] - what should it do? Data = downloading default clinical JSON data
@@ -363,7 +363,7 @@ Below is an example, with inline comments describing what each JSON block config
       "accessibleValidationField": "project_id",
       "downloadAccessor": "object_id" // required; for downloading a file, what is the GUID? This should probably not change
     },
-    "buttons": [ // required; buttons for File Explorer
+    "buttons": [ // optional; buttons for File Explorer
       {
         "enabled": true, // required; determines if the button is enabled or disabled
         "type": "file-manifest", // required; button type - file-manifest is for downloading a manifest from the file index
