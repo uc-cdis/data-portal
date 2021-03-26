@@ -4,13 +4,13 @@ import parse from 'html-react-parser';
 import IconicLink from './buttons/IconicLink';
 import './Introduction.less';
 import { useArboristUI, hideSubmissionIfIneligible } from '../configs';
-import { userHasMethodOnAnyProject } from '../authMappingUtils';
+import { userHasCreateOrUpdateOnAnyProject } from '../authMappingUtils';
 
 class Introduction extends Component {
   render() {
     let buttonText = 'Submit Data';
     if (useArboristUI) {
-      if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
+      if (userHasCreateOrUpdateOnAnyProject(this.props.userAuthMapping)) {
         buttonText = 'Submit/Browse Data';
       } else {
         buttonText = 'Browse Data';
@@ -22,7 +22,7 @@ class Introduction extends Component {
         return false;
       }
       if (useArboristUI && hideSubmissionIfIneligible) {
-        if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
+        if (userHasCreateOrUpdateOnAnyProject(this.props.userAuthMapping)) {
           return true;
         }
         return false;

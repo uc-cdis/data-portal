@@ -82,3 +82,6 @@ export const userHasMethodOnAnyProject = (method, userAuthMapping = {}) => {
   const hasMethod = actionArrays.some(x => x.some(actionHasMethod));
   return hasMethod;
 };
+
+export const userHasCreateOrUpdateOnAnyProject = userAuthMapping => (userHasMethodOnAnyProject('create', userAuthMapping)
+      || userHasMethodOnAnyProject('update', userAuthMapping));

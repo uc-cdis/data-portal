@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
 import { useArboristUI, hideSubmissionIfIneligible } from '../../configs';
-import { userHasMethodOnAnyProject } from '../../authMappingUtils';
+import { userHasCreateOrUpdateOnAnyProject } from '../../authMappingUtils';
 
 const isEmailAddress = (input) => {
   // regexp for checking if a string is possibly an email address, got from https://www.w3resource.com/javascript/form/email-validation.php
@@ -28,7 +28,7 @@ class TopBar extends Component {
               this.props.topItems.filter(
                 (item) => {
                   if (item.name === 'Submit Data' && useArboristUI && hideSubmissionIfIneligible) {
-                    if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
+                    if (userHasCreateOrUpdateOnAnyProject(this.props.userAuthMapping)) {
                       return true;
                     }
                     return false;
@@ -39,7 +39,7 @@ class TopBar extends Component {
                 (item) => {
                   let buttonText = item.name;
                   if (item.name === 'Submit Data' && useArboristUI) {
-                    if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
+                    if (userHasCreateOrUpdateOnAnyProject(this.props.userAuthMapping)) {
                       buttonText = 'Submit/Browse Data';
                     } else {
                       buttonText = 'Browse Data';
