@@ -32,7 +32,7 @@ class GuppyDataExplorer extends React.Component {
 
     this.state = {
       aggsData: {},
-      filter: {}, // This value reflects Guppy-side state
+      filter: {},
       initialFilterFromURL: initialFilter,
       encodableExplorerStateForURL: { filter: initialFilter },
       userFilterFromURL: {},
@@ -129,7 +129,7 @@ class GuppyDataExplorer extends React.Component {
             hideGetAccessButton={this.props.hideGetAccessButton}
             tierAccessLevel={this.props.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
-            userFilterFromURL={this.state.userFilterFromURL}
+            userFilterFromURL={this.state.initialFilterFromURL}
           />
           <ExplorerVisualization
             className='guppy-data-explorer__visualization'
