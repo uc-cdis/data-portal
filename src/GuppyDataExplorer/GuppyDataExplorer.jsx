@@ -19,23 +19,21 @@ import './GuppyDataExplorer.css';
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
+    const overviewFilter =
+      props.history.location.state && props.history.location.state.filter
+        ? props.history.location.state.filter
+        : {};
+
     this.state = {
       aggsData: {},
       filter: {},
-      initialAppliedFilters: {},
+      initialAppliedFilters: { ...overviewFilter },
     };
     this._isMounted = false;
   }
 
   componentDidMount() {
     this._isMounted = true;
-
-    const overviewFilter =
-      this.props.history.location.state &&
-      this.props.history.location.state.filter
-        ? this.props.history.location.state.filter
-        : {};
-    this.updateInitialAppliedFilters({ filters: overviewFilter });
   }
 
   componentWillUnmount() {
@@ -46,16 +44,13 @@ class GuppyDataExplorer extends React.Component {
     this._isMounted && this.setState({ aggsData: newAggsData });
   };
 
-  updateInitialAppliedFilters = ({ filters }) => {
-    this.setState({ initialAppliedFilters: filters });
-  };
-
   render() {
     return (
       <ExplorerErrorBoundary>
         <div className='guppy-data-explorer'>
           <GuppyWrapper
             adminAppliedPreFilters={this.props.adminAppliedPreFilters}
+            initialAppliedFilters={this.state.initialAppliedFilters}
             filterConfig={this.props.filterConfig}
             guppyConfig={{
               type: this.props.guppyConfig.dataType,
@@ -88,7 +83,7 @@ class GuppyDataExplorer extends React.Component {
               hideGetAccessButton={this.props.hideGetAccessButton}
               tierAccessLevel={this.props.tierAccessLevel}
               tierAccessLimit={this.props.tierAccessLimit}
-              initialAppliedFilters={this.state.initialAppliedFilters}
+              initialAppliedFilters={this.props.initialAppliedFilters}
             />
             <ExplorerVisualization
               className='guppy-data-explorer__visualization'
