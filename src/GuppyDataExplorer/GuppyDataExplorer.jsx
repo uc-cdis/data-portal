@@ -37,8 +37,7 @@ class GuppyDataExplorer extends React.Component {
       aggsData: {},
       filter: {},
       initialFilterFromURL: initialFilter,
-      encodableExplorerStateForURL: { filter: initialFilter },
-      userFilterFromURL: {},
+      encodableExplorerStateForURL: { filter: initialFilter }
     };
   }
 
@@ -58,10 +57,6 @@ class GuppyDataExplorer extends React.Component {
       return;
     }
     window.history.pushState('', '', `?filters=${encodedState}`);
-  }
-
-  applyFilterUIChanges = (filterToApplyToUI) => {
-    this.setState({ userFilterFromURL: filterToApplyToUI });
   }
 
   handleReceiveNewAggsData = (newAggsData) => {
@@ -96,7 +91,6 @@ class GuppyDataExplorer extends React.Component {
         <GuppyWrapper
           adminAppliedPreFilters={this.props.adminAppliedPreFilters}
           initialFilterFromURL={this.state.initialFilterFromURL}
-          applyFilterUIChanges={this.applyFilterUIChanges}
           filterConfig={this.props.filterConfig}
           guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
