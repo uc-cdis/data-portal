@@ -37,7 +37,7 @@ class GuppyDataExplorer extends React.Component {
       aggsData: {},
       filter: {},
       initialFilterFromURL: initialFilter,
-      encodableExplorerStateForURL: { filter: initialFilter }
+      encodableExplorerStateForURL: { filter: initialFilter },
     };
   }
 
