@@ -79,7 +79,7 @@ const getTagsInCategory =
     return Object.keys(tagMap);
   };
 
-const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number' = 'string'): string => {
+const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number'|'link' = 'string'): React.ReactNode => {
   switch (contentType) {
   case 'string':
     return content;
@@ -87,6 +87,14 @@ const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'nu
     return content.toLocaleString();
   case 'paragraphs':
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
+  case 'link':
+    return (<a
+      onClick={ev => ev.stopPropagation()}
+      onKeyPress={ev => ev.stopPropagation()}
+      href={content}
+    >
+      {content}
+    </a>);
   default:
     throw new Error(`Unrecognized content type ${contentType}. Check the 'study_page_fields' section of the Discovery config.`);
   }
