@@ -14,6 +14,9 @@ cache:
 services:
     - docker
 
+before_install:
+    - npm install -g npm@7.6.3
+
 install:
     - npm install --force
 
