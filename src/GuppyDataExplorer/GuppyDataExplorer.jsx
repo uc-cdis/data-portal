@@ -4,7 +4,7 @@ import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
-import { labelToPlural, base64Encode, base64Decode, getQueryParameter, IsValidJSONString } from './utils';
+import { labelToPlural, getQueryParameter, IsValidJSONString } from './utils';
 import {
   GuppyConfigType,
   FilterConfigType,
@@ -24,7 +24,7 @@ class GuppyDataExplorer extends React.Component {
     if (isEnabled('storeExplorerStateInURL')) {
       const stateFromURL = getQueryParameter('filters');
       if (stateFromURL) {
-        const decodedFilter = base64Decode(stateFromURL);
+        const decodedFilter = atob(stateFromURL);
         const isValidJSON = IsValidJSONString(decodedFilter);
         if (isValidJSON) {
           initialState = JSON.parse(decodedFilter);
@@ -46,7 +46,7 @@ class GuppyDataExplorer extends React.Component {
     if (this.isExplorerStatePristine(stateObj)) {
       return '';
     }
-    const encoded = encodeURIComponent(base64Encode(JSON.stringify(stateObj)));
+    const encoded = encodeURIComponent(btoa(JSON.stringify(stateObj)));
     return encoded;
   }
 

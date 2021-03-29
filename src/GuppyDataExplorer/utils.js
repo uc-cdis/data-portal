@@ -74,10 +74,6 @@ export const labelToPlural = (label, titleCase = false) => {
   return pluralizedLabel.toLowerCase();
 };
 
-export const base64Encode = stringToEncode => btoa(stringToEncode);
-
-export const base64Decode = stringToDecode => atob(stringToDecode);
-
 export const getQueryParameter = (queryKey) => {
   // Stable method to get query parameter for given key
   const decoded = decodeURIComponent(window.location.search)
