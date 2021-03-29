@@ -41,6 +41,7 @@ export const ReduxTopBar = (() => {
   const mapStateToProps = state => ({
     navTitle: components.navigation.title,
     topItems: components.topBar.items,
+    useProfileDropdown: components.topBar.useProfileDropdown,
     activeTab: state.bar.active,
     user: state.user,
     userAuthMapping: state.userAuthMapping,

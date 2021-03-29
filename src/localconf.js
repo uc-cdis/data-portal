@@ -72,7 +72,6 @@ function buildConfig(opts) {
 
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
-  const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   let userapiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
@@ -101,11 +100,17 @@ function buildConfig(opts) {
   const workspaceLaunchUrl = `${workspaceUrl}launch`;
   const datasetUrl = `${hostname}api/search/datasets`;
   const guppyUrl = `${hostname}guppy`;
-  const guppyGraphQLUrl = `${guppyUrl}/graphql/`;
+  const guppyGraphQLUrl = `${guppyUrl}/graphql`;
   const guppyDownloadUrl = `${guppyUrl}/download`;
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
   const requestorPath = typeof requestorURL === 'undefined' ? `${hostname}requestor/` : ensureTrailingSlash(requestorURL);
   const auspiceUrl = `${protocol}//auspice.${hostnameOnly}/covid19`;
+  const auspiceUrlIL = `${protocol}//auspice.${hostnameOnly}/covid19/il`;
+  const workspaceStorageUrl = `${hostname}ws-storage`;
+  const workspaceStorageListUrl = `${workspaceStorageUrl}/list`;
+  const workspaceStorageDownloadUrl = `${workspaceStorageUrl}/download`;
+  const marinerUrl = `${hostname}ga4gh/wes/v1/runs`;
+  const enableDAPTracker = !!config.DAPTrackingURL;
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -150,6 +155,16 @@ function buildConfig(opts) {
     useNewExplorerConfigFormat = true;
     explorerConfig = config.explorerConfig;
   }
+
+  // Two tiered-access options: site-wide and index-scoped.
+  // Tiered access is index-scoped if all guppyConfigs in the portal config
+  // contain a tierAccessLevel.
+  let indexScopedTierAccessMode = true;
+  explorerConfig.forEach((item) => {
+    if (!item.guppyConfig || !item.guppyConfig.tierAccessLevel) {
+      indexScopedTierAccessMode = false;
+    }
+  });
 
   const dataAvailabilityToolConfig = config.dataAvailabilityToolConfig;
 
@@ -198,6 +213,11 @@ function buildConfig(opts) {
     covid19DashboardConfig.dataUrl = ensureTrailingSlash(covid19DashboardConfig.dataUrl || '');
   }
 
+  const discoveryConfig = config.discoveryConfig;
+
+  const workspacePageTitle = config.workspacePageTitle;
+  const workspacePageDescription = config.workspacePageDescription;
+
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
       '#3283c8',
@@ -223,7 +243,9 @@ function buildConfig(opts) {
       title: 'Login from NIH',
     };
   }
-  const fenceDownloadPath = `${userapiPath}data/download`;
+
+  const fenceDataPath = `${userapiPath}data/`;
+  const fenceDownloadPath = `${fenceDataPath}download`;
 
   const defaultLineLimit = 30;
   const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;
@@ -255,7 +277,7 @@ function buildConfig(opts) {
           break;
         case 'vaGWAS':
           analysisApps.vaGWAS = {
-            title: 'eGWAS',
+            title: 'vaGWAS',
             description: 'Expression-based Genome-Wide Association Study',
             image: '/src/img/analysis-icons/gwas.svg',
             options: [
@@ -310,6 +332,13 @@ function buildConfig(opts) {
             ],
           };
           break;
+        case 'GWASApp':
+          analysisApps.GWASApp = {
+            title: 'GWAS',
+            description: 'GWAS App',
+            image: '/src/img/analysis-icons/gwas.svg',
+          };
+          break;
         default:
           break;
         }
@@ -337,7 +366,6 @@ function buildConfig(opts) {
     jobapiPath,
     apiPath,
     submissionApiPath,
-    submissionApiOauthPath,
     credentialCdisPath,
     coreMetadataPath,
     indexdPath,
@@ -365,6 +393,7 @@ function buildConfig(opts) {
     customHomepageChartConfig: components.index.customHomepageChartConfig,
     datasetUrl,
     indexPublic,
+    fenceDataPath,
     fenceDownloadPath,
     guppyUrl,
     guppyGraphQLUrl,
@@ -379,6 +408,7 @@ function buildConfig(opts) {
     analysisApps,
     tierAccessLevel,
     tierAccessLimit,
+    indexScopedTierAccessMode,
     useIndexdAuthz,
     explorerPublic,
     authzPath,
@@ -391,8 +421,17 @@ function buildConfig(opts) {
     requestorPath,
     studyViewerConfig,
     covid19DashboardConfig,
+    discoveryConfig,
     mapboxAPIToken,
     auspiceUrl,
+    auspiceUrlIL,
+    workspacePageTitle,
+    workspacePageDescription,
+    enableDAPTracker,
+    workspaceStorageUrl,
+    workspaceStorageListUrl,
+    workspaceStorageDownloadUrl,
+    marinerUrl,
   };
 }
 

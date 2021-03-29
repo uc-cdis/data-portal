@@ -11,6 +11,7 @@ Below is an example, with inline comments describing what each JSON block config
 ```
 {
   "gaTrackingId": "xx-xxxxxxxxx-xxx", // required; the Google Analytics ID to track statistics
+  "DAPTrackingURL": "https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=AGENCY&subagency=SUB", // optional, for adding DAP tracking feature if specified (see https://github.com/digital-analytics-program/gov-wide-code#participating-in-the-dap)
   "graphql": { // required; start of query section - these attributes must be in the dictionary
     "boardCounts": [ // required; graphQL fields to query for the homepage chart
       {
@@ -128,7 +129,8 @@ Below is an example, with inline comments describing what each JSON block config
           "link": "https://gen3.org/resources/user/",
           "name": "Documentation"
         }
-      ]
+      ],
+      "useProfileDropdown": false // optional; enables expiremental profile UI; defaults false, may change in future releases
     },
     "login": { // required; what is displayed on the login page (/login)
       "title": "Gen3 Generic Data Commons", // optional; title for the login page
@@ -157,6 +159,7 @@ Below is an example, with inline comments describing what each JSON block config
   "featureFlags": { // optional; will hide certain parts of the site if needed
     "explorer": true, // required; indicates the flag and whether to hide it or not
     "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. Data explorer page would be public accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
+    "discovery": true, // optional; whether to enable the Discovery page. If true, `discoveryConfig` must be present as well.
   },
   "dataExplorerConfig": { // required; configuration for the Data Explorer (/explorer)
     "charts": { // optional; indicates which charts to display in the Data Explorer
@@ -171,6 +174,10 @@ Below is an example, with inline comments describing what each JSON block config
       "gender": {
         "chartType": "pie", // required; pie chart type
         "title": "Gender"
+      },
+      "ethnicity": {
+        "chartType": "fullPie", // required; full pie chart type
+        "title": "Ethnicity"
       },
       "race": {
         "chartType": "bar", // required; bar chart type
@@ -224,11 +231,38 @@ Below is an example, with inline comments describing what each JSON block config
     "buttons": [ // required; buttons for Data Explorer
       {
         "enabled": true, // required; if the button is enabled or disabled
-        "type": "data", // required; button type - what should it do? Data = downloading clinical data
+        "type": "data", // required; button data type sub-options (case insensitive): ["data" (default), "data-tsv", "data-csv", "data-json"] - what should it do? Data = downloading default clinical JSON data
         "title": "Download All Clinical", // required; title of button
         "leftIcon": "user", // optional; icon on left from /img/icons
         "rightIcon": "download", // optional; icon on right from /img/icons
-        "fileName": "clinical.json", // required; file name when it is downloaded
+        "fileName": "clinical.json", // required; file name when it is downloaded (set file ext. to default json)
+        "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
+      },
+      {
+        "enabled": true, // required; if the button is enabled or disabled
+        "type": "data-tsv", // required; button data type - what should it do? Data = downloading clinical TSV data
+        "title": "TSV", // required; title of button
+        "leftIcon": "datafile", // optional; icon on left from /img/icons
+        "rightIcon": "download", // optional; icon on right from /img/icons
+        "fileName": "clinical.tsv", // required; file name when it is downloaded (file ext. should match data type)
+        "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
+      },
+      {
+        "enabled": true, // required; if the button is enabled or disabled
+        "type": "data-csv", // required; button data type - what should it do? Data = downloading clinical CSV data
+        "title": "CSV", // required; title of button
+        "leftIcon": "datafile", // optional; icon on left from /img/icons
+        "rightIcon": "download", // optional; icon on right from /img/icons
+        "fileName": "clinical.csv", // required; file name when it is downloaded (file ext. should match data type)
+        "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
+      },
+      {
+        "enabled": true, // required; if the button is enabled or disabled
+        "type": "data-json", // required; (equivalent to just "data" but we add it for consistency) button data type - what should it do? Data = downloading clinical JSON data
+        "title": "JSON", // required; title of button
+        "leftIcon": "datafile", // optional; icon on left from /img/icons
+        "rightIcon": "download", // optional; icon on right from /img/icons
+        "fileName": "clinical.json", // required; file name when it is downloaded (file ext. should match data type)
         "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
       },
       {
@@ -263,7 +297,8 @@ Below is an example, with inline comments describing what each JSON block config
     ],
     "guppyConfig": { // required; how to configure Guppy to work with the Data Explorer
       "dataType": "case", // required; must match the index “type” in the guppy configuration block in the manifest.json
-      "nodeCountTitle": "Cases", // required; plural of root node
+      "tierAccessLevel": "regular", // optional; must match the index “tier_access_level” in the guppy configuration block in the manifest.json; see data-portal and guppy READMEs for more information
+      "nodeCountTitle": "Cases", // optional; If omitted, will default to use plural of `guppyConfig.dataType` of this tab.
       "fieldMapping": [ // optional; a way to rename GraphQL fields to be more human readable
         { "field": "consent_codes", "name": "Data Use Restriction" },
         { "field": "bmi", "name": "BMI" }
@@ -317,7 +352,7 @@ Below is an example, with inline comments describing what each JSON block config
       "fieldMapping": [ // optional; a way to rename GraphQL fields to be more human readable
         { "field": "object_id", "name": "GUID" } // required; the file index should always include this one
       ],
-      "nodeCountTitle": "Files", // required; plural of root node
+      "nodeCountTitle": "Files", // optional; If omitted, will default to use plural of `guppyConfig.dataType` of this tab.
       "manifestMapping": { // optional; how to configure the mapping between cases/subjects/participants and files. This is used to export or download files that are associated with a cohort. It is basically joining two indices on specific GraphQL fields
         "resourceIndexType": "case", // required; joining this index with the case index
         "resourceIdField": "case_id", // required; which field should is the main identifier in the other index?
@@ -347,6 +382,150 @@ Below is an example, with inline comments describing what each JSON block config
     ],
     "dropdowns": {} // optional; dropdown groupings for buttons
   },
+  "discoveryConfig": { // config for Discovery page. Required if 'featureFlags.discovery' is true. See src/Discovery/DiscoveryConfig.d.ts for Typescript schema.
+    "features": {
+      "pageTitle": {
+        "enabled": true,
+        "text": "My Special Test Discovery Page"
+      },
+      "search": {
+        "searchBar": {
+          "enabled": true
+        }
+      },
+      "authorization": {
+        "enabled": true // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
+      }
+    },
+    "aggregations": [ // configures the statistics at the top of the discovery page (e.g. 'XX Studies', 'XX,XXX Subjects')
+        {
+            "name": "Studies",
+            "field": "study_id",
+            "type": "count" // count of rows in data where `field` is non-empty
+        },
+        {
+            "name": "Total Subjects",
+            "field": "_subjects_count",
+            "type": "sum" // sums together all numeric values in `row[field]`. `field` must be a numeric field.
+        }
+    ],
+    "tagSelector": {
+      "title": "Associated tags organized by category"
+    },
+    "studyColumns": [ // configures the columns of the table of studies.
+      {
+        "name": "Study Name",
+        "field": "name"
+      },
+      {
+        "name": "Full Name",
+        "field": "full_name",
+        "contentType": "string" // contentType: string displays the content of the field without formatting.
+      },
+      {
+        "name": "Number of Subjects",
+        "field": "_subjects_count",
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a",
+        "contentType": "number" // contentType: number displays the content of the field formatted with Number.toLocaleString() (e.g. `72209` -> `"72,209"`)
+      },
+      {
+        "name": "dbGaP Accession Number",
+        "field": "study_id"
+      }
+    ],
+    "studyPreviewField": { // if present, studyPreviewField shows a special preview field beneath each row of data in the table, useful for study descriptions.
+      "name": "Description",
+      "field": "study_description",
+      "contentType": "string",
+      "includeName": false,
+      "includeIfNotAvailable": true,
+      "valueIfNotAvailable": "No description has been provided for this study."
+    },
+    "studyPageFields": { // studyPageFields configures the fields that are displayed when a user opens a study page by clicking on a row in the table.
+      "header": { // if present, shows a header field at the top of the study page.
+        "field": "name"
+      },
+      "fieldsToShow": [ // fields on the study page are grouped in order to separate logically distinct groups of fields
+        {
+          "groupName": "Study Identifiers",
+          "includeName": true,
+          "fields": [
+            {
+              "name": "Number of Subjects",
+              "field": "_subjects_count",
+              "contentType": "number" // contentType: number displays the content of the field formatted with Number.toLocaleString() (e.g. `72209` -> `"72,209"`)
+
+            },
+            {
+              "name": "Full Name",
+              "field": "full_name",
+              "contentType": "string" // contentType: string displays the content of the field without formatting.
+
+            },
+            {
+              "name": "Short Name",
+              "field": "short_name",
+              "contentType": "string",
+              "includeName": true,
+              "includeIfNotAvailable": true,
+              "valueIfNotAvailable": "N/A"
+            },
+            {
+              "name": "dbGaP Study Accession",
+              "field": "dbgap_accession",
+              "contentType": "string",
+              "includeName": true,
+              "includeIfNotAvailable": false
+            },
+            {
+              "name": "Project ID",
+              "field": "project_id",
+              "contentType": "string",
+              "includeIfNotAvailable": false
+            }
+          ]
+        },
+        {
+          "fields": [
+            {
+              "name": "Description",
+              "field": "study_description",
+              "contentType": "paragraphs", // contentType: paragraphs works like contentType: string except it correctly displays newline characters ('\n') as line breaks.
+              "includeName": false,
+              "includeIfNotAvailable": true,
+              "valueIfNotAvailable": "No description has been provided for this study."
+            }
+          ]
+        }
+      ]
+    },
+    "minimalFieldMapping": { // maps
+      "tagsListFieldName": "tags", // required; the field which contains the list of tags (format: [{name: string, category: string}] )
+      "authzField": "authz", // optional if features.authorization.enabled is false, otherwise required
+      "uid": "study_id" // required; a unique identifier for each study. Can be any unique value and does not have to have any special meaning (eg does not need to be a GUID)
+    },
+    "tagCategories": [ // configures the categories displayed in the tag selector. If a tag category appears in the `tagsListFieldName` field but is not configured here, it will not be displayed in the tag selector.
+      {
+        "name": "Program", // this configures the tag category name that will be shown on the tag selector
+        "color": "rgba(129, 211, 248, 1)", // color can be any vaid CSS color string, including hex, rgb, rgba, hsl
+        "display": true
+      },
+      {
+        "name": "Study Registration",
+        "color": "rgba(236, 128, 141, 1)",
+        "display": true
+      },
+      {
+        "name": "Data Type",
+        "color": "rgba(112, 182, 3, 1)",
+        "display": true
+      }
+    ]
+  },
+  "resourceBrowser": {), // see Resource Browser documentation
+  "workspacePageTitle": "", // title to display above workspacePageDescription
+  "workspacePageDescription": "", // html to display above the workspace options
   "useArboristUI": false, // optional; set true to enable arborist UI; defaults to false if absent
   "showArboristAuthzOnProfile": false, // optional; set true to list arborist resources on profile page
   "showFenceAuthzOnProfile": true, // optional; set false to not list fence project access on profile page

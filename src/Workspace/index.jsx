@@ -1,5 +1,8 @@
 import React from 'react';
+import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
+import { Popconfirm } from 'antd';
+
 import {
   workspaceUrl,
   wtsPath,
@@ -8,6 +11,8 @@ import {
   workspaceLaunchUrl,
   workspaceTerminateUrl,
   workspaceStatusUrl,
+  workspacePageTitle,
+  workspacePageDescription,
 } from '../localconf';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
@@ -18,6 +23,7 @@ import galaxyIcon from '../img/icons/galaxy.svg';
 import ohifIcon from '../img/icons/ohif-viewer.svg';
 import WorkspaceOption from './WorkspaceOption';
 import WorkspaceLogin from './WorkspaceLogin';
+import sessionMonitor from '../SessionMonitor';
 
 class Workspace extends React.Component {
   constructor(props) {
@@ -60,6 +66,19 @@ class Workspace extends React.Component {
   componentWillUnmount() {
     if (this.state.interval) {
       clearInterval(this.state.interval);
+    }
+  }
+
+  oniframeLoad = (e) => {
+    // force workspace iframe acquire focus if it does not have yet
+    // to fix the noVNC workspace doesn't respond to keyboard event when came up
+    e.target.focus();
+
+    // add event listeners for sessionMonitor timeout
+    const iframeContent = e.target.contentDocument;
+    if (iframeContent) {
+      iframeContent.addEventListener('mousedown', () => sessionMonitor.updateUserActivity(), false);
+      iframeContent.addEventListener('keypress', () => sessionMonitor.updateUserActivity(), false);
     }
   }
 
@@ -185,13 +204,20 @@ class Workspace extends React.Component {
 
   render() {
     const terminateButton = (
-      <Button
-        className='workspace__button'
-        onClick={this.handleTerminateButtonClick}
-        label='Terminate Workspace'
-        buttonType='primary'
-        isPending={this.state.notebookStatus === 'Terminating'}
-      />
+      // wrap up terminate button with Popconfirm
+      <Popconfirm
+        title='Are you sure to terminate your workspace?'
+        onConfirm={this.handleTerminateButtonClick}
+        okText='Yes'
+        cancelText='No'
+      >
+        <Button
+          className='workspace__button'
+          label='Terminate Workspace'
+          buttonType='primary'
+          isPending={this.state.notebookStatus === 'Terminating'}
+        />
+      </Popconfirm>
     );
 
     const cancelButton = (
@@ -232,6 +258,7 @@ class Workspace extends React.Component {
                     title='Workspace'
                     frameBorder='0'
                     src={`${workspaceUrl}proxy/`}
+                    onLoad={this.oniframeLoad}
                   />
                 </div>
                 <div className='workspace__buttongroup'>
@@ -245,7 +272,7 @@ class Workspace extends React.Component {
             this.state.notebookStatus === 'Launching' ?
               <React.Fragment>
                 <div className='workspace__spinner-container'>
-                  <Spinner text='Launching workspace...' />
+                  <Spinner text='Launching Workspace, this process may take several minutes' />
                 </div>
                 <div className='workspace__buttongroup'>
                   { cancelButton }
@@ -266,6 +293,16 @@ class Workspace extends React.Component {
             this.state.notebookStatus !== 'Running' &&
             this.state.notebookStatus !== 'Stopped' ?
               <div>
+                {workspacePageTitle ?
+                  <h2 className='workspace__title'>
+                    {parse(workspacePageTitle)}
+                  </h2>
+                  : null}
+                {workspacePageDescription ?
+                  <div className='workspace__description'>
+                    {parse(workspacePageDescription)}
+                  </div>
+                  : null}
                 <div className='workspace__options'>
                   {
                     this.state.options.map((option, i) => {
@@ -307,6 +344,7 @@ class Workspace extends React.Component {
             frameBorder='0'
             className='workspace__iframe'
             src={workspaceUrl}
+            onLoad={this.oniframeLoad}
           />
         </div>
       );

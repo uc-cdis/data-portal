@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import { numberWithCommas } from '../../dataUtils.js';
-
 import './LegendPanel.less';
 
 function dictToLegendList(colors) {
@@ -12,14 +10,14 @@ function dictToLegendList(colors) {
     const color = value[1];
     let label = Number(value[0]);
     if (i === Object.keys(colors).length - 1) {
-      label = `${label}+`;
+      label = `${label.toLocaleString()}+`;
     } else {
-      const nextLabel = Number(Object.keys(colors)[i + 1]);
-      if (nextLabel - 1 !== label) {
-        label = `${label} - ${nextLabel - 1}`;
+      const nextLabel = Number(Object.keys(colors)[i + 1]) - 1;
+      if (nextLabel !== label) {
+        label = `${label.toLocaleString()} - ${nextLabel.toLocaleString()}`;
       }
     }
-    return [numberWithCommas(label), color];
+    return [label, color];
   });
 }
 

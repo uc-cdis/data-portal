@@ -9,7 +9,6 @@ describe('The localconf', () => {
     'hostname',
     'userapiPath',
     'submissionApiPath',
-    'submissionApiOauthPath',
     'credentialCdisPath',
     'graphqlPath',
     'graphqlSchemaUrl',

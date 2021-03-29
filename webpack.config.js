@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const path = require('path');
+
 const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
 const app = process.env.APP || 'dev';
@@ -16,13 +17,19 @@ const title = {
   gdc: 'Jamboree Data Access',
   kf: 'Kids First Data Coordinating Center Portal',
   ndh: 'NIAID Data Hub',
-} [app];
+}[app];
 
 const configFileName = (app === 'dev') ? 'default' : app;
 // eslint-disable-next-line import/no-dynamic-require
 const configFile = require(`./data/config/${configFileName}.json`);
+const DAPTrackingURL = configFile.DAPTrackingURL;
+const scriptSrcURLs = [];
+const connectSrcURLs = [];
+if (DAPTrackingURL) {
+  scriptSrcURLs.push(DAPTrackingURL);
+  connectSrcURLs.push(DAPTrackingURL);
+}
 const iFrameApplicationURLs = [];
-const injectDAPTag = configFile.injectDAPTag;
 if (configFile && configFile.analysisTools) {
   configFile.analysisTools.forEach((e) => {
     if (e.applicationUrl) {
@@ -33,9 +40,9 @@ if (configFile && configFile.analysisTools) {
 
 const plugins = [
   new webpack.EnvironmentPlugin(['NODE_ENV']),
-  new webpack.EnvironmentPlugin({'MOCK_STORE': null}),
+  new webpack.EnvironmentPlugin({ MOCK_STORE: null }),
   new webpack.EnvironmentPlugin(['APP']),
-  new webpack.EnvironmentPlugin({'BASENAME': '/'}),
+  new webpack.EnvironmentPlugin({ BASENAME: '/' }),
   new webpack.EnvironmentPlugin(['LOGOUT_INACTIVE_USERS']),
   new webpack.EnvironmentPlugin(['WORKSPACE_TIMEOUT_IN_MINUTES']),
   new webpack.EnvironmentPlugin(['REACT_APP_PROJECT_ID']),
@@ -51,7 +58,7 @@ const plugins = [
   new webpack.EnvironmentPlugin(['MAPBOX_API_TOKEN']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
-      'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'dev'),
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),
       LOGOUT_INACTIVE_USERS: !(process.env.LOGOUT_INACTIVE_USERS === 'false'),
       WORKSPACE_TIMEOUT_IN_MINUTES: process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480,
       REACT_APP_PROJECT_ID: JSON.stringify(process.env.REACT_APP_PROJECT_ID || 'search'),
@@ -59,7 +66,7 @@ const plugins = [
     },
   }),
   new HtmlWebpackPlugin({
-    title: title,
+    title,
     basename: pathPrefix,
     template: 'src/index.ejs',
     connect_src: (function () {
@@ -84,9 +91,23 @@ const plugins = [
           rv[(new URL(url)).origin] = true;
         });
       }
+      if (connectSrcURLs.length > 0) {
+        connectSrcURLs.forEach((url) => {
+          rv[(new URL(url)).origin] = true;
+        });
+      }
       return Object.keys(rv).join(' ');
-    })(),
-    dap_tag: injectDAPTag,
+    }()),
+    dap_url: DAPTrackingURL,
+    script_src: (function () {
+      const rv = {};
+      if (scriptSrcURLs.length > 0) {
+        scriptSrcURLs.forEach((url) => {
+          rv[(new URL(url)).origin] = true;
+        });
+      }
+      return Object.keys(rv).join(' ');
+    }()),
     hash: true,
     chunks: ['vendors~bundle', 'bundle'],
   }),
@@ -101,7 +122,7 @@ const plugins = [
     chunks: ['vendors~bundle~workspaceBundle', 'workspaceBundle']
   }),
   */
-  new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
+  new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
 ];
 
 let optimization = {};
@@ -120,10 +141,10 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
 }
 
 const entry = {
-  "bundle": ['babel-polyfill', './src/index.jsx'],
-  "workspaceBundle": ['babel-polyfill', './src/workspaceIndex.jsx'],
-  "covid19Bundle": ['babel-polyfill', './src/covid19Index.jsx'],
-  "nctBundle": ['babel-polyfill', './src/nctIndex.jsx']
+  bundle: ['babel-polyfill', './src/index.jsx'],
+  workspaceBundle: ['babel-polyfill', './src/workspaceIndex.jsx'],
+  covid19Bundle: ['babel-polyfill', './src/covid19Index.jsx'],
+  nctBundle: ['babel-polyfill', './src/nctIndex.jsx'],
 };
 
 // if GEN3_BUNDLE is set with a value
@@ -164,7 +185,7 @@ module.exports = {
   entry,
   target: 'web',
   externals: [nodeExternals({
-    whitelist: ['graphiql', 'graphql-language-service-parser']
+    whitelist: ['graphiql', 'graphql-language-service-parser'],
   })],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
@@ -186,7 +207,14 @@ module.exports = {
   },
   module: {
     rules: [{
-      test: /\.jsx?$/,
+    //   test: /\.tsx?$/,
+    //   exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
+    //   use: {
+    //     loader: 'ts-loader',
+    //   },
+    // },
+    // {
+      test: /\.jsx?$|\.tsx?$/,
       exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
       use: {
         loader: 'babel-loader',
@@ -228,7 +256,7 @@ module.exports = {
       graphiql: path.resolve('./node_modules/graphiql'),
       'graphql-language-service-parser': path.resolve('./node_modules/graphql-language-service-parser'),
     },
-    extensions: ['.mjs', '.js', '.jsx', '.json'],
+    extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
   },
   plugins,
   externals: [{

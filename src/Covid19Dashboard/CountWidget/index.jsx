@@ -1,20 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { numberWithCommas } from '../dataUtils.js';
-
 import './CountWidget.less';
 
 class CountWidget extends React.Component {
   render() {
-    const val = this.props.value ? this.props.value : '...';
+    const val = this.props.value ? Number(this.props.value).toLocaleString() : '...';
     return (
       <div className='count-widget'>
         <div className='count-widget_label'>
           {this.props.label}
         </div>
         <div className='count-widget_value'>
-          {numberWithCommas(val)}
+          {val}
         </div>
       </div>
     );
