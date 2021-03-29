@@ -21,12 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
-    && npm install -g npm@7
-
-# The following settings are for NPM 7
-# Need to reduce maxsockets to avoid intermittent EFILE error
-RUN npm config set unsafe-perm=true \
-    && npm config set maxsockets=5
+    && npm install -g npm@7.6.3
 
 ARG APP=dev
 ARG BASENAME
@@ -38,6 +33,7 @@ RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}
     && VERSION=`git describe --always --tags` && echo "export const portalVersion =\"${VERSION}\";" >>src/versions.js \
     && /bin/rm -rf .git \
     && /bin/rm -rf node_modules \
+    && npm config set unsafe-perm=true \
     && npm ci \
     && npm run relay \
     && npm run params \
