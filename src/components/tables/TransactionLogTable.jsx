@@ -5,7 +5,7 @@ import Spinner from '../Spinner';
 import { humanFileSize } from '../../utils.js';
 import './TransactionLogTable.less';
 import { useArboristUI } from '../../configs';
-import { userHasMethodOnAnyProject } from '../../authMappingUtils';
+import { userHasCreateOrUpdateOnAnyProject } from '../../authMappingUtils';
 
 const formatText = text => text[0] + text.slice(1).toLowerCase();
 
@@ -41,11 +41,8 @@ class TransactionLogTable extends Component {
     this.stateToColor(entry.state),
   ]);
 
-  userHasCreateOrUpdateOnAnyProject = userAuthMapping => (userHasMethodOnAnyProject('create', userAuthMapping)
-      || userHasMethodOnAnyProject('update', userAuthMapping))
-
   render() {
-    if (useArboristUI && !this.userHasCreateOrUpdateOnAnyProject(this.props.userAuthMapping)) {
+    if (useArboristUI && !userHasCreateOrUpdateOnAnyProject(this.props.userAuthMapping)) {
       return null;
     }
     if (!this.props.log || this.props.log === []) { return <Spinner />; }

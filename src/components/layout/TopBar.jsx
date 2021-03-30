@@ -4,8 +4,8 @@ import { Popover } from 'antd';
 import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
-import { useArboristUI } from '../../configs';
-import { userHasMethodOnAnyProject } from '../../authMappingUtils';
+import { useArboristUI, hideSubmissionIfIneligible } from '../../configs';
+import { userHasCreateOrUpdateOnAnyProject } from '../../authMappingUtils';
 
 const isEmailAddress = (input) => {
   // regexp for checking if a string is possibly an email address, got from https://www.w3resource.com/javascript/form/email-validation.php
@@ -25,11 +25,21 @@ class TopBar extends Component {
         <header className='top-bar__header'>
           <nav className='top-bar__nav'>
             {
-              this.props.topItems.map(
+              this.props.topItems.filter(
+                (item) => {
+                  if (item.name === 'Submit Data' && useArboristUI && hideSubmissionIfIneligible) {
+                    if (userHasCreateOrUpdateOnAnyProject(this.props.userAuthMapping)) {
+                      return true;
+                    }
+                    return false;
+                  }
+                  return true;
+                },
+              ).map(
                 (item) => {
                   let buttonText = item.name;
                   if (item.name === 'Submit Data' && useArboristUI) {
-                    if (userHasMethodOnAnyProject('create', this.props.userAuthMapping)) {
+                    if (userHasCreateOrUpdateOnAnyProject(this.props.userAuthMapping)) {
                       buttonText = 'Submit/Browse Data';
                     } else {
                       buttonText = 'Browse Data';
