@@ -85,9 +85,9 @@
   },
   "devDependencies": {
     "@babel/polyfill": "^7.12.1",
-    "@storybook/addon-actions": "^6.1.0",
-    "@storybook/cli": "^5.3.21",
-    "@storybook/react": "^6.2.0",
+    "@storybook/addon-actions": "^6.2.1",
+    "@storybook/cli": "^6.2.1",
+    "@storybook/react": "^6.2.1",
     "babel-eslint": "7.2.3",
     "babel-jest": "^25.1.0",
     "enzyme": "^3.2.0",
