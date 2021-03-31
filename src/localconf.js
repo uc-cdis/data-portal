@@ -202,6 +202,11 @@ function buildConfig(opts) {
     explorerPublic = true;
   }
 
+  let explorerHideEmpty = false;
+  if (config.featureFlags && config.featureFlags.explorerHideEmpty) {
+    explorerHideEmpty = true;
+  }
+
   const enableResourceBrowser = !!config.resourceBrowser;
   let resourceBrowserPublic = false;
   if (config.resourceBrowser && config.resourceBrowser.public) {
@@ -411,6 +416,7 @@ function buildConfig(opts) {
     indexScopedTierAccessMode,
     useIndexdAuthz,
     explorerPublic,
+    explorerHideEmpty,
     authzPath,
     authzMappingPath,
     enableResourceBrowser,

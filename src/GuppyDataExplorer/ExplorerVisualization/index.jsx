@@ -19,6 +19,7 @@ import {
 import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper';
 import './ExplorerVisualization.css';
 import { labelToPlural } from '../utils';
+import { explorerHideEmpty } from './../../configs';
 
 
 class ExplorerVisualization extends React.Component {
@@ -216,6 +217,7 @@ class ExplorerVisualization extends React.Component {
                   ...heatMapGuppyConfig,
                 }}
                 filterConfig={heatMapFilterConfig}
+                hideEmptyFilterSection={explorerHideEmpty}
               />
               <ExplorerHeatMap
                 guppyConfig={{
