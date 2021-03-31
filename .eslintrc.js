@@ -6,6 +6,9 @@ module.exports = {
       pragma: 'React',
       version: '16.14',
     },
+    'import/resolver': {
+      typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
+    },
   },
   root: true,
   env: {
@@ -13,6 +16,9 @@ module.exports = {
     es6: true,
     jest: true,
   },
+  plugins: [
+    'jsx-a11y',
+  ],
   parser: 'babel-eslint',
   parserOptions: {
     sourceType: 'module',
@@ -59,7 +65,7 @@ module.exports = {
     'function-paren-newline': ['off'],
     'react/no-array-index-key': ['off'],
     'react/destructuring-assignment': ['off'],
-    'react/jsx-one-expression-per-line': [{ allow: 'literal' }],
+    'react/jsx-one-expression-per-line': ['off'],
   },
   overrides: [
     {
@@ -170,9 +176,4 @@ module.exports = {
       },
     },
   ],
-  settings: {
-    'import/resolver': {
-      typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
-    },
-  },
 };
