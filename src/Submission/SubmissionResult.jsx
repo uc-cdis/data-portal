@@ -5,7 +5,6 @@ import 'brace/theme/kuroir';
 import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 import Button from '@gen3/ui-component/dist/components/Button';
-import ReduxDataModelGraph, { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
 import './SubmissionResult.less';
 
 /**
@@ -27,7 +26,7 @@ class SubmissionResult extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { status, data, dataString, entityCounts, counter, total, onFinish } = this.props;
+    const { counter, total, onFinish } = this.props;
     if ((counter !== prevProps.counter) && (counter === total)) {
       onFinish();
     }
@@ -57,7 +56,7 @@ class SubmissionResult extends React.Component {
     })();
 
     if (status === 200) {
-      // List number of entites of each type created
+      // List number of entities of each type created
       summary = (<div id='cd-summary__result_200' className='submission-result__summary'>
         <p>Successfully created entities:</p>
         <ul className='submission-result__list'>

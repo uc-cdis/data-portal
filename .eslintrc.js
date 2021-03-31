@@ -3,8 +3,8 @@ module.exports = {
   extends: 'airbnb',
   settings: {
     react: {
-      pragma: "React",
-      version: "16.14"
+      pragma: 'React',
+      version: '16.14',
     },
   },
   root: true,
@@ -43,11 +43,11 @@ module.exports = {
       'error',
       'always',
     ],
-    // fixed in newer version of jsx-a11y remove if we upgrade
-    'jsx-a11y/label-has-for': ['error', {
-      required: {
-        some: ['nesting', 'id'],
-      },
+    'jsx-a11y/label-has-associated-control': [2, {
+      labelComponents: ['CustomInputLabel'],
+      labelAttributes: ['label'],
+      controlComponents: ['CustomInput'],
+      depth: 3,
     }],
     // see https://github.com/clayne11/eslint-import-resolver-meteor/issues/17
     // - seems to affect Codacy :-(
@@ -59,6 +59,7 @@ module.exports = {
     'function-paren-newline': ['off'],
     'react/no-array-index-key': ['off'],
     'react/destructuring-assignment': ['off'],
+    'react/jsx-one-expression-per-line': [{ allow: 'literal' }],
   },
   overrides: [
     {
