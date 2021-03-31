@@ -1,11 +1,11 @@
 env:
   - REACT_APP_DISABLE_SOCKET=true
-  
+
 language: node_js
 git:
   depth: 1
 node_js:
-  - "12"
+  - "14"
 
 cache:
   directories:
@@ -13,6 +13,9 @@ cache:
 
 services:
     - docker
+
+before_install:
+    - npm install -g npm@7.6.3
 
 install:
     - npm install --force
