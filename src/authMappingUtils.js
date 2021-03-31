@@ -50,6 +50,7 @@ export const userHasDataUpload = (userAuthMapping = {}) => {
   return resource !== undefined && resource.some(actionIsFileUpload);
 };
 
+// eslint-disable-next-line max-len
 export const userHasMethodForServiceOnResource = (method, service, resourcePath, userAuthMapping = {}) => {
   const actions = userAuthMapping[resourcePath];
   // accommodate for '*' logic
@@ -64,6 +65,7 @@ export const userHasMethodForServiceOnResource = (method, service, resourcePath,
   return actions !== undefined && actions.some((x) => ((x.service === service || x.service === '*') && (x.method === method || x.method === '*')));
 };
 
+// eslint-disable-next-line max-len
 export const userHasMethodForServiceOnProject = (method, service, projectID, userAuthMapping = {}) => {
   // method should be a string e.g. 'create'
   const resourcePath = resourcePathFromProjectID(projectID);

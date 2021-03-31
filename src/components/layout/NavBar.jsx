@@ -72,7 +72,9 @@ class NavBar extends Component {
             ref={this.getNavButtonRef(item.link)}
             className='nav-bar__link nav-bar__link--right'
             onMouseOver={() => this.updateTooltip(item)}
+            onFocus={() => this.updateTooltip(item)}
             onMouseLeave={() => this.updateTooltip(null)}
+            onBlur={() => this.updateTooltip(null)}
           >
             <NavButton
               item={item}
@@ -132,6 +134,7 @@ class NavBar extends Component {
             <div
               className='nav-bar__menu'
               onClick={this.toggleMenu}
+              onKeyPress={this.toggleMenu}
               role='button'
               tabIndex={0}
             >

@@ -197,9 +197,9 @@ class Workspace extends React.Component {
   }
 
   handleFullpageButtonClick = () => {
-    this.setState({
-      notebookIsfullpage: !this.state.notebookIsfullpage,
-    });
+    this.setState((prevState) => ({
+      notebookIsfullpage: !prevState.notebookIsfullpage,
+    }));
   }
 
   render() {

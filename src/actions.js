@@ -184,7 +184,7 @@ export const fetchWrapper = ({
   },
 );
 
-export const fetchGraphQL = (graphQLParams) =>
+export const fetchGraphQL = (graphQLParams) => {
   // We first update the session so that the user will be notified
   // if their auth is insufficient to perform the query.
   sessionMonitor.updateSession().then(() => {
@@ -205,6 +205,8 @@ export const fetchGraphQL = (graphQLParams) =>
         }
       });
   });
+};
+
 export const fetchFlatGraphQL = (graphQLParams) => sessionMonitor.updateSession().then(() => {
   const request = {
     credentials: 'include',

@@ -23,7 +23,7 @@ const TopIconButton = ({
 TopIconButton.propTypes = {
   name: PropTypes.string.isRequired,
   icon: PropTypes.string,
-  isActive: PropTypes.bool.isRequired,
+  isActive: PropTypes.bool,
   onActiveTab: PropTypes.func,
 };
 

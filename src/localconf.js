@@ -37,7 +37,7 @@ function buildConfig(opts) {
   // Override default basename if loading via /dev.html
   // dev.html loads bundle.js via https://localhost...
   //
-  if (typeof location !== 'undefined' && location.pathname.indexOf(`${defaults.basename}dev.html`) === 0) {
+  if (typeof window.location !== 'undefined' && window.location.pathname.indexOf(`${defaults.basename}dev.html`) === 0) {
     defaults.basename += 'dev.html';
   }
 

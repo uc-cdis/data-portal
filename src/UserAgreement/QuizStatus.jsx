@@ -6,14 +6,6 @@ import './QuizStatus.less';
  * Little quiz status component - properties: title, questions
  */
 class QuizStatus extends Component {
-  static propTypes = {
-    title: PropTypes.string.isRequired,
-    questions: PropTypes.arrayOf(PropTypes.number).isRequired,
-  };
-
-  static defaultProps = {
-  };
-
   render() {
     let strQuestions = '';
     let styleCls = 'quiz__status-title';
@@ -31,5 +23,10 @@ class QuizStatus extends Component {
     );
   }
 }
+
+QuizStatus.propTypes = {
+  title: PropTypes.string.isRequired,
+  questions: PropTypes.arrayOf(PropTypes.number).isRequired,
+};
 
 export default QuizStatus;

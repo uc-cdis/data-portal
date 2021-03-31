@@ -114,7 +114,8 @@ const mapDispatchToProps = (dispatch) => ({
   onCreateKey: (keypairsApi) => dispatch(createKey(keypairsApi)),
   onUpdatePopup: (state) => dispatch(updatePopup(state)),
   onDeleteKey: (jti, exp, keypairsApi) => dispatch(deleteKey(jti, exp, keypairsApi)),
-  onRequestDeleteKey: (jti, exp, keypairsApi) => dispatch(fetchAccess(keypairsApi)).then(() => dispatch(requestDeleteKey(jti, exp))),
+  onRequestDeleteKey: (jti, exp, keypairsApi) => dispatch(fetchAccess(keypairsApi))
+    .then(() => dispatch(requestDeleteKey(jti, exp))),
   onClearDeleteSession: () => dispatch(clearDeleteSession()),
   onClearCreationSession: () => dispatch(clearCreationSession()),
 });

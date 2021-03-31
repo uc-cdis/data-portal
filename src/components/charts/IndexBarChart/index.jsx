@@ -91,17 +91,6 @@ const createBarNames = (indexChart) => {
  *   ];
  */
 class IndexBarChart extends React.Component {
-  static propTypes = {
-    projectList: PropTypes.arrayOf(
-      PropTypes.objectOf(PropTypes.any),
-    ),
-    countNames: PropTypes.arrayOf(
-      PropTypes.string,
-    ),
-    xAxisStyle: PropTypes.object,
-    barChartStyle: PropTypes.object,
-  };
-
   render() {
     if (this.props.projectList.length === 0) {
       return <Spinner />;
@@ -162,6 +151,17 @@ class IndexBarChart extends React.Component {
     );
   }
 }
+
+IndexBarChart.propTypes = {
+  projectList: PropTypes.arrayOf(
+    PropTypes.objectOf(PropTypes.any),
+  ),
+  countNames: PropTypes.arrayOf(
+    PropTypes.string,
+  ),
+  xAxisStyle: PropTypes.object,
+  barChartStyle: PropTypes.object,
+};
 
 IndexBarChart.defaultProps = {
   projectList: [],

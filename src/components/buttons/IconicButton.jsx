@@ -13,6 +13,7 @@ class IconicButton extends React.Component {
             className={this.props.buttonClassName}
             onClick={this.props.onClick}
             name={this.props.caption}
+            type='button'
           >
             {this.props.caption}&ensp;
             <IconComponent
@@ -28,6 +29,7 @@ class IconicButton extends React.Component {
             className={this.props.buttonClassName}
             onClick={this.props.onClick}
             name={this.props.caption}
+            type='button'
           >
             {this.props.caption}
           </button>

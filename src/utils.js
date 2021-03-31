@@ -25,7 +25,7 @@ export const jsonToString = (data, schema = {}) => {
     }
     if (schema[key] === 'number') {
       const castedValue = Number(value);
-      if (isNaN(castedValue)) {
+      if (Number.isNaN(castedValue)) {
         return value;
       }
       return castedValue;

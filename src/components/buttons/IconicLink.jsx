@@ -10,7 +10,7 @@ class IconicLink extends React.Component {
         {
           this.props.dictIcons !== undefined
             ? (
-              <button className={this.props.buttonClassName}>
+              <button className={this.props.buttonClassName} type='button'>
                 {this.props.caption}&ensp;
                 <IconComponent
                   dictIcons={this.props.dictIcons}
@@ -21,7 +21,7 @@ class IconicLink extends React.Component {
               </button>
             )
             : (
-              <button className={this.props.buttonClassName}>
+              <button className={this.props.buttonClassName} type='button'>
                 {this.props.caption}
               </button>
             )

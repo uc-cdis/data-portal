@@ -59,9 +59,11 @@ module.exports = {
       controlComponents: ['CustomInput'],
       depth: 3,
     }],
+    'jsx-a11y/anchor-is-valid': ['off'],
     // see https://github.com/clayne11/eslint-import-resolver-meteor/issues/17
     // - seems to affect Codacy :-(
     'import/extensions': ['off', 'never'],
+    'import/no-cycle': 'off',
     'react/jsx-indent': 'off',
     'react/forbid-prop-types': 'off',
     'react/prefer-stateless-function': 'off',
@@ -70,6 +72,7 @@ module.exports = {
     'react/no-array-index-key': ['off'],
     'react/destructuring-assignment': ['off'],
     'react/jsx-one-expression-per-line': ['off'],
+    'react/jsx-props-no-spreading': ['off'],
   },
   overrides: [
     {

@@ -6,7 +6,6 @@ class StickyToolbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      scrollPos: 0,
       isScrolling: false,
     };
   }
@@ -25,7 +24,7 @@ class StickyToolbar extends React.Component {
       isScrolling = false;
     }
 
-    this.setState({ isScrolling, scrollPos: window.pageYOffset });
+    this.setState({ isScrolling });
     this.props.onScroll(isScrolling);
   }
 

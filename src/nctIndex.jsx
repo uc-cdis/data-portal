@@ -13,7 +13,13 @@ import {
   faAngleUp, faAngleDown, faEnvelopeSquare, faExternalLinkAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import {
-  faFacebookSquare, faTwitterSquare, faLinkedin, faYoutubeSquare, faFlickr, faInstagramSquare, faPinterestSquare,
+  faFacebookSquare,
+  faTwitterSquare,
+  faLinkedin,
+  faYoutubeSquare,
+  faFlickr,
+  faInstagramSquare,
+  faPinterestSquare,
 } from '@fortawesome/free-brands-svg-icons';
 import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';

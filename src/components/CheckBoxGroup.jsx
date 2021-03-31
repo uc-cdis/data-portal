@@ -3,14 +3,6 @@ import PropTypes from 'prop-types';
 import './CheckBoxGroup.less';
 
 export class CheckBoxGroup extends Component {
-  static propTypes = {
-    listItems: PropTypes.arrayOf(PropTypes.string).isRequired,
-    groupName: PropTypes.string.isRequired,
-    selectedItems: PropTypes.array.isRequired,
-    title: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -76,5 +68,13 @@ export class CheckBoxGroup extends Component {
     );
   }
 }
+
+CheckBoxGroup.propTypes = {
+  listItems: PropTypes.arrayOf(PropTypes.string).isRequired,
+  groupName: PropTypes.string.isRequired,
+  selectedItems: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 export default CheckBoxGroup;
