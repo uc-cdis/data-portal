@@ -84,8 +84,8 @@ class TopBar extends Component {
             }
             {
               this.props.user.username !== undefined && this.props.useProfileDropdown !== true
-              &&              (
-                <>
+              && (
+                <React.Fragment>
                   <Link className='top-bar__link' to='/identity'>
                     <TopIconButton
                       icon='user-circle'
@@ -100,12 +100,12 @@ class TopBar extends Component {
                       name='Logout'
                     />
                   </Link>
-                </>
+                </React.Fragment>
               )
             }
             {
               this.props.user.username !== undefined && this.props.useProfileDropdown === true
-              &&              (
+              && (
                 <Popover
                   title={this.props.user.username}
                   placement='bottomRight'
@@ -130,15 +130,15 @@ class TopBar extends Component {
             }
             {
               typeof this.props.user.username === 'undefined'
-              &&              (
-                <>
+              && (
+                <React.Fragment>
                   <Link className='top-bar__link' to='/login'>
                     <TopIconButton
                       icon='exit'
                       name='Login'
                     />
                   </Link>
-                </>
+                </React.Fragment>
               )
             }
           </nav>

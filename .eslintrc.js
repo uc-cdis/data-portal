@@ -49,6 +49,10 @@ module.exports = {
       'error',
       'always',
     ],
+    'react/jsx-fragments': [
+      'error',
+      'element',
+    ],
     'jsx-a11y/label-has-associated-control': [2, {
       labelComponents: ['CustomInputLabel'],
       labelAttributes: ['label'],

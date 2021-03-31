@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import AutoComplete from '@gen3/ui-component/dist/components/AutoComplete';
 import { compareTwoStrings } from 'string-similarity';
 import {
- prepareSearchData, searchKeyword, getSearchSummary, ZERO_RESULT_FOUND_MSG
+  prepareSearchData, searchKeyword, getSearchSummary, ZERO_RESULT_FOUND_MSG,
 } from './searchHelper';
 import './DictionarySearcher.css';
 
@@ -137,7 +137,7 @@ class DictionarySearcher extends React.Component {
         />
         {
           this.state.isSearchFinished && (
-            <>
+            <React.Fragment>
               {
                 !this.state.hasError && (
                   this.state.searchResult.matchedNodes.length > 0 ? (
@@ -150,7 +150,8 @@ class DictionarySearcher extends React.Component {
                           role='button'
                           tabIndex={0}
                           onKeyPress={this.onClearResult}
-                        >Clear Result</span>
+                        >Clear Result
+                        </span>
                       </div>
                       <li className='dictionary-searcher__result-item body'>
                         <span className='dictionary-searcher__result-count'>
@@ -173,7 +174,7 @@ class DictionarySearcher extends React.Component {
                   <p>{this.state.errorMsg}</p>
                 )
               }
-            </>
+            </React.Fragment>
           )
         }
       </div>

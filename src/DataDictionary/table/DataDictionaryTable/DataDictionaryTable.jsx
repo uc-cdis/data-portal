@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './DataDictionaryTable.css';
 import { parseDictionaryNodes } from '../../utils';
-import DataDictionaryCategory from "../DataDictionaryCategory";
+import DataDictionaryCategory from '../DataDictionaryCategory';
 
 /**
  * Just exported for testing
@@ -61,12 +61,12 @@ const getNodePropertyCount = (dictionary) => {
  * @param {dictionary} params
  */
 const DataDictionaryTable = ({
- dictionary, highlightingNodeID, onExpandNode, dictionaryName
+  dictionary, highlightingNodeID, onExpandNode, dictionaryName,
 }) => {
   const c2nl = category2NodeList(dictionary);
   const { nodesCount, propertiesCount } = getNodePropertyCount(dictionary);
   return (
-    <>
+    <React.Fragment>
       <p>
         <span>{dictionaryName}</span>
         <span> dictionary has </span>
@@ -75,15 +75,16 @@ const DataDictionaryTable = ({
         <span>{propertiesCount}</span>
         <span> properties </span>
       </p>
-      {Object.keys(c2nl).map(category =>
-        (<DataDictionaryCategory
+      {Object.keys(c2nl).map((category) => (
+        <DataDictionaryCategory
           key={category}
           nodes={c2nl[category]}
           category={category}
           highlightingNodeID={highlightingNodeID}
           onExpandNode={onExpandNode}
-        />))}
-    </>
+        />
+      ))}
+    </React.Fragment>
   );
 };
 

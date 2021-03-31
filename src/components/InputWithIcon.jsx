@@ -6,12 +6,12 @@ import './InputWithIcon.less';
 class InputWithIcon extends React.Component {
   render() {
     return (
-      <>
+      <React.Fragment>
         <div className={'input-with-icon'.concat(this.props.className ? ` ${this.props.className}` : '')}>
           {
             this.props.inputOptions ? (
               <Select
-                styles={{ control: provided => ({ ...provided, width: '100%' }) }}
+                styles={{ control: (provided) => ({ ...provided, width: '100%' }) }}
                 className={`${this.props.inputClassName}`}
                 classNamePrefix={'react-select'}
                 value={{ value: this.props.inputValue, label: this.props.inputValue }}
@@ -36,15 +36,17 @@ class InputWithIcon extends React.Component {
           }
         </div>
         {
-          this.props.shouldDisplayText ?
-            <p
-              className={'input-with-icon__text'.concat(this.props.textClassName ? ` ${this.props.textClassName}` : '')}
-            >
-              {this.props.text}
-            </p>
+          this.props.shouldDisplayText
+            ? (
+              <p
+                className={'input-with-icon__text'.concat(this.props.textClassName ? ` ${this.props.textClassName}` : '')}
+              >
+                {this.props.text}
+              </p>
+            )
             : null
         }
-      </>
+      </React.Fragment>
     );
   }
 }

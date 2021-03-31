@@ -70,16 +70,16 @@ class LTNPCase extends HIVCohortFilterCase {
       filter: {
         AND: [
           {
- '=': {
-            hiv_status: 'positive',
-          },
+            '=': {
+              hiv_status: 'positive',
+            },
           },
           {
- in: {
-            project_id: hivAppProjects,
-          },
-          }]
-},
+            in: {
+              project_id: hivAppProjects,
+            },
+          }],
+      },
     };
     return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
       if (!data
@@ -133,16 +133,16 @@ class LTNPCase extends HIVCohortFilterCase {
       filter: {
         AND: [
           {
- '=': {
-            hiv_status: 'positive',
-          },
+            '=': {
+              hiv_status: 'positive',
+            },
           },
           {
- in: {
-            project_id: hivAppProjects,
-          },
-          }]
-},
+            in: {
+              project_id: hivAppProjects,
+            },
+          }],
+      },
     };
     return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
       if (!data
@@ -199,7 +199,7 @@ class LTNPCase extends HIVCohortFilterCase {
     // CD4 counts to extract first visit that the case qualifies LTNP
     filtFollowups.forEach((item) => {
       const fhv = item[0].submitter_id;
-      const {subject_id} = item[0];
+      const { subject_id } = item[0];
       const duration = item.slice(-1)[0].visit_date - item[0].visit_date;
       if (duration < this.state.numConsecutiveYearsFromUser) {
         // The subject is neither control nor LTNP
@@ -316,7 +316,7 @@ class LTNPCase extends HIVCohortFilterCase {
 
   render() {
     return (
-      <>
+      <React.Fragment>
         <div className='hiv-cohort-filter__sidebar'>
           <form>
             <h2 className='hiv-cohort-filter__sidebar-title'>
@@ -370,7 +370,6 @@ class LTNPCase extends HIVCohortFilterCase {
             </div>
           </form>
         </div>
-
 
         <div className='hiv-cohort-filter__main'>
           <div className='hiv-cohort-filter__main-wrapper'>
@@ -478,7 +477,7 @@ class LTNPCase extends HIVCohortFilterCase {
             </div>
           </div>
         </div>
-      </>
+      </React.Fragment>
     );
   }
 }

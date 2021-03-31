@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@gen3/ui-component/dist/components/Button';
 import {
- userapiPath, fenceDownloadPath, jobapiPath, hostname
+  userapiPath, fenceDownloadPath, jobapiPath, hostname,
 } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './Indexing.less';
@@ -33,7 +33,7 @@ class Indexing extends React.Component {
       downloadManifestStatus: 'running',
       downloadManifestStatusLastUpdated: this.getCurrentTime(),
     };
-    this.state = { ...this.initialStateConfiguration};
+    this.state = { ...this.initialStateConfiguration };
   }
 
   onChange = (e) => {
@@ -327,7 +327,7 @@ class Indexing extends React.Component {
 
   render = () => {
     const indexFilesSuccessPopupBlock = (
-      <>
+      <React.Fragment>
         <div className='index-files-popup-big-icon'>
           <div className='index-files-circle-border'>
             <IconComponent iconName='checkbox' dictIcons={dictIcons} />
@@ -343,7 +343,7 @@ class Indexing extends React.Component {
             Last updated: { this.state.indexingFilesStatusLastUpdated }
           </p>
         </div>
-      </>
+      </React.Fragment>
     );
 
     const indexFilesErrorPopupBlock = (
@@ -361,7 +361,7 @@ class Indexing extends React.Component {
     );
 
     const indexFilesRunningPopupBlock = (
-      <>
+      <React.Fragment>
         <Spinner caption='' type='spinning' />
         <div className='index-files-popup-text'>
           <br />
@@ -372,9 +372,10 @@ class Indexing extends React.Component {
           <br />
           <p>It may take several minutes to complete the indexing flow.</p>
           <p>Please do not navigate away from this page until
-          the operation is complete.</p>
+          the operation is complete.
+          </p>
         </div>
-      </>
+      </React.Fragment>
     );
 
     const indexFilesPopupBlocks = {
@@ -384,7 +385,7 @@ class Indexing extends React.Component {
     };
 
     const downloadManifestSuccessPopupBlock = (
-      <>
+      <React.Fragment>
         <div className='index-files-popup-big-icon'>
           <div className='index-files-circle-border'>
             <IconComponent iconName='checkbox' dictIcons={dictIcons} />
@@ -400,7 +401,7 @@ class Indexing extends React.Component {
             Last updated: { this.state.downloadManifestStatusLastUpdated }
           </p>
         </div>
-      </>
+      </React.Fragment>
     );
 
     const downloadManifestErrorPopupBlock = (
@@ -415,7 +416,7 @@ class Indexing extends React.Component {
     );
 
     const downloadManifestRunningPopupBlock = (
-      <>
+      <React.Fragment>
         <Spinner caption='' type='spinning' />
         <div className='index-files-popup-text'>
           <br />
@@ -426,9 +427,10 @@ class Indexing extends React.Component {
           <br />
           <p>It may take several minutes to generate the file manifest.</p>
           <p>Please do not navigate away from this page until
-          the operation is complete.</p>
+          the operation is complete.
+          </p>
         </div>
-      </>
+      </React.Fragment>
     );
 
     const downloadManifestPopupBlocks = {
@@ -487,52 +489,52 @@ class Indexing extends React.Component {
           {
             this.state.showIndexFilesPopup
                   && (
-<Popup
-                    message={''}
-                    title='Indexing Files'
-                    rightButtons={this.state.indexingFilesStatus !== 'success' ? [
-                      {
-                        caption: 'Cancel',
-                        fn: () => this.onHidePopup(),
-                      },
-                    ] : [
-                      {
-                        caption: 'Download Logs',
-                        icon: 'download',
-                        value: this.state.indexingFilesLogsLink,
-                        fn: () => this.downloadJobOutput(this.state.indexingFilesLogsLink),
-                      },
-                      {
-                        caption: 'Download Manifest',
-                        icon: 'download',
-                        value: this.state.indexingFilesManifestLink,
-                        fn: () => this.downloadJobOutput(this.state.indexingFilesManifestLink),
-                      },
-                    ]}
-                    onClose={() => this.onHidePopup()}
-                  >
-                    { indexFilesPopupBlocks[this.state.indexingFilesStatus] }
-                  </Popup>
-)
+                    <Popup
+                      message={''}
+                      title='Indexing Files'
+                      rightButtons={this.state.indexingFilesStatus !== 'success' ? [
+                        {
+                          caption: 'Cancel',
+                          fn: () => this.onHidePopup(),
+                        },
+                      ] : [
+                        {
+                          caption: 'Download Logs',
+                          icon: 'download',
+                          value: this.state.indexingFilesLogsLink,
+                          fn: () => this.downloadJobOutput(this.state.indexingFilesLogsLink),
+                        },
+                        {
+                          caption: 'Download Manifest',
+                          icon: 'download',
+                          value: this.state.indexingFilesManifestLink,
+                          fn: () => this.downloadJobOutput(this.state.indexingFilesManifestLink),
+                        },
+                      ]}
+                      onClose={() => this.onHidePopup()}
+                    >
+                      { indexFilesPopupBlocks[this.state.indexingFilesStatus] }
+                    </Popup>
+                  )
           }
 
           {
             this.state.showDownloadManifestPopup
                   && (
-<Popup
-                    message={''}
-                    title='Downloading Indexing File'
-                    rightButtons={this.state.downloadManifestStatus !== 'success' ? [
-                      {
-                        caption: 'Cancel',
-                        fn: () => this.onHidePopup(),
-                      },
-                    ] : downloadManifestSuccessButtons}
-                    onClose={() => this.onHidePopup()}
-                  >
-                    { downloadManifestPopupBlocks[this.state.downloadManifestStatus] }
-                  </Popup>
-)
+                    <Popup
+                      message={''}
+                      title='Downloading Indexing File'
+                      rightButtons={this.state.downloadManifestStatus !== 'success' ? [
+                        {
+                          caption: 'Cancel',
+                          fn: () => this.onHidePopup(),
+                        },
+                      ] : downloadManifestSuccessButtons}
+                      onClose={() => this.onHidePopup()}
+                    >
+                      { downloadManifestPopupBlocks[this.state.downloadManifestStatus] }
+                    </Popup>
+                  )
           }
           <div className='action-panel'>
             <div className='action-panel-title'>

@@ -134,16 +134,18 @@ class ExplorerTable extends React.Component {
           return (<div><span title={valueStr}>{humanFileSize(valueStr)}</span></div>);
         case this.props.tableConfig.linkFields.includes(field) && field:
           return valueStr
-            ? <IconicLink
-              link={valueStr}
-              className='explorer-table-link'
-              buttonClassName='explorer-table-link-button'
-              icon='exit'
-              dictIcons={dictIcons}
-              iconColor='#606060'
-              target='_blank'
-              isExternal
-            />
+            ? (
+              <IconicLink
+                link={valueStr}
+                className='explorer-table-link'
+                buttonClassName='explorer-table-link-button'
+                icon='exit'
+                dictIcons={dictIcons}
+                iconColor='#606060'
+                target='_blank'
+                isExternal
+              />
+            )
             : null;
         default:
           return (<div><span title={valueStr}>{valueStr}</span></div>);
@@ -297,25 +299,25 @@ class ExplorerTable extends React.Component {
         const rowData = (this.props.isLocked || !this.props.rawData)
           ? [] : _.slice(this.props.rawData, row.index, row.index + 1);
         return (
-<div className='explorer-nested-table' key={key}>
-          <ReactTable
-            data={(this.props.isLocked || !rowData) ? [] : rowData}
-            columns={nestedArrayFieldColumnConfigs[key][0]}
-            defaultPageSize={1}
-            showPagination={false}
-            SubComponent={() => (
-              <div className='explorer-nested-table'>
-                <ReactTable
-                  data={(this.props.isLocked || !rowData) ? [] : rowData}
-                  columns={nestedArrayFieldColumnConfigs[key][1]}
-                  defaultPageSize={1}
-                  showPagination={false}
-                />
-              </div>
-            )}
-          />
-        </div>
-);
+          <div className='explorer-nested-table' key={key}>
+            <ReactTable
+              data={(this.props.isLocked || !rowData) ? [] : rowData}
+              columns={nestedArrayFieldColumnConfigs[key][0]}
+              defaultPageSize={1}
+              showPagination={false}
+              SubComponent={() => (
+                <div className='explorer-nested-table'>
+                  <ReactTable
+                    data={(this.props.isLocked || !rowData) ? [] : rowData}
+                    columns={nestedArrayFieldColumnConfigs[key][1]}
+                    defaultPageSize={1}
+                    showPagination={false}
+                  />
+                </div>
+              )}
+            />
+          </div>
+        );
       });
     }
 
@@ -336,21 +338,21 @@ class ExplorerTable extends React.Component {
 
     return (
       <div className={`explorer-table ${this.props.className}`}>
-        {(this.props.isLocked) ? <></>
+        {(this.props.isLocked) ? <React.Fragment />
           : (
-<div className='explorer-table__description'>
-            <span>
-              {explorerTableCaption}
-            </span>
-            <label className={`explorer-table__hide_empty_column_toggle ${this.props.rawData ? '' : 'ant-switch-disabled'}`}>
+            <div className='explorer-table__description'>
+              <span>
+                {explorerTableCaption}
+              </span>
+              <label className={`explorer-table__hide_empty_column_toggle ${this.props.rawData ? '' : 'ant-switch-disabled'}`}>
                 Show Empty Columns
-              <Switch
-                onChange={this.hideEmptyColumnToggle}
-                disabled={!this.props.rawData}
-              />
-            </label>
-          </div>
-)}
+                <Switch
+                  onChange={this.hideEmptyColumnToggle}
+                  disabled={!this.props.rawData}
+                />
+              </label>
+            </div>
+          )}
 
         <ReactTable
           columns={rootColumnsConfig}

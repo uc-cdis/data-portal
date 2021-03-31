@@ -101,11 +101,11 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
   const after = value.slice(matchIndex + searchTerm.length);
   return {
     highlighted: (
-      <>
+      <React.Fragment>
         {prev}
         <span className={highlighClassName}>{matched}</span>
         {after}
-      </>
+      </React.Fragment>
     ),
     matchIndex,
   };
@@ -220,7 +220,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       ellipsis: false,
       width: undefined,
       render: (_, record) => (
-        <>
+        <React.Fragment>
           {record.tags.map(({ name, category }) => {
             const isSelected = !!selectedTags[name];
             const color = getTagColor(category, config);
@@ -255,7 +255,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               </Tag>
             );
           })}
-        </>
+        </React.Fragment>
       ),
     },
   );
@@ -274,8 +274,8 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               title={'You have access to this study.'}
               content={(
                 <div className='discovery-table__access-popover-text'>
-                  <>You have <code>{ARBORIST_READ_PRIV}</code> access to</>
-                  <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
+                  <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
                 </div>
               )}
             >
@@ -290,8 +290,8 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               title={'You do not have access to this study.'}
               content={(
                 <div className='discovery-table__access-popover-text'>
-                  <>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</>
-                  <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
+                  <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
                 </div>
               )}
             >
@@ -467,12 +467,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                     start = 0;
                   }
                   return (
-                    <>
+                    <React.Fragment>
                       { start > 0 && '...' }
                       {value.slice(start, matchIndex)}
                       <span className='matched'>{value.slice(matchIndex, matchIndex + searchTerm.length)}</span>
                       {value.slice(matchIndex + searchTerm.length)}
-                    </>
+                    </React.Fragment>
                   );
                 }
                 return value;
@@ -518,14 +518,14 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               <Alert
                 className='discovery-modal__access-alert'
                 type='success'
-                message={<><UnlockOutlined /> You have access to this study.</>}
+                message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
               />
             )
             : (
               <Alert
                 className='discovery-modal__access-alert'
                 type='warning'
-                message={<><LockFilled /> You do not have access to this study.</>}
+                message={<React.Fragment><LockFilled /> You do not have access to this study.</React.Fragment>}
               />
             )
           )}

@@ -252,7 +252,7 @@ class Workspace extends React.Component {
             this.state.notebookStatus === 'Running'
               || this.state.notebookStatus === 'Stopped'
               ? (
-                <>
+                <React.Fragment>
                   <div className='workspace__iframe'>
                     <iframe
                       className='workspace'
@@ -266,21 +266,21 @@ class Workspace extends React.Component {
                     { terminateButton }
                     { fullpageButton }
                   </div>
-                </>
+                </React.Fragment>
               )
               : null
           }
           {
             this.state.notebookStatus === 'Launching'
               ? (
-                <>
+                <React.Fragment>
                   <div className='workspace__spinner-container'>
                     <Spinner text='Launching Workspace, this process may take several minutes' />
                   </div>
                   <div className='workspace__buttongroup'>
                     { cancelButton }
                   </div>
-                </>
+                </React.Fragment>
               )
               : null
           }

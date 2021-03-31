@@ -24,7 +24,7 @@ class Legend extends React.Component {
         {
           this.state.show
             ? (
-              <>
+              <React.Fragment>
                 <i
                   className='data-dictionary-graph-legend__close g3-icon g3-icon--cross'
                   onClick={this.toggleLegend}
@@ -64,7 +64,7 @@ class Legend extends React.Component {
                     );
                   })
                 }
-              </>
+              </React.Fragment>
             )
             : (
               <span

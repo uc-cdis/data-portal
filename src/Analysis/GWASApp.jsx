@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
- Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber, Collapse, List, Tag, Popconfirm, Alert
+  Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber, Collapse, List, Tag, Popconfirm, Alert,
 } from 'antd';
 import {
   CheckCircleOutlined,
@@ -85,7 +85,7 @@ class GWASApp extends React.Component {
           if (status !== 200 || !data || !data.runIDs) {
             return [];
           }
-          const {runIDs} = data;
+          const { runIDs } = data;
           Promise.all(runIDs.map((rID) => fetchWithCreds({
             path: `${marinerUrl}/${rID}`,
             method: 'GET',
@@ -210,23 +210,23 @@ class GWASApp extends React.Component {
       render: (record) => {
         if (record.SizeBytes && record.SizeBytes <= MAX_PREVIEW_FILE_SIZE_BYTES) {
           return (
-<Space size='small'>
-            <Button
-              size='small'
-              type='link'
-              onClick={() => {
-                if (record.WorkspaceKey !== this.state.previewModalDataKey) {
-                  this.props.onLoadWorkspaceStorageFile(record.WorkspaceKey);
-                }
-                this.setState({
-                  showPreviewModal: true,
-                  previewModalDataKey: record.WorkspaceKey,
-                });
-              }}
-            >
+            <Space size='small'>
+              <Button
+                size='small'
+                type='link'
+                onClick={() => {
+                  if (record.WorkspaceKey !== this.state.previewModalDataKey) {
+                    this.props.onLoadWorkspaceStorageFile(record.WorkspaceKey);
+                  }
+                  this.setState({
+                    showPreviewModal: true,
+                    previewModalDataKey: record.WorkspaceKey,
+                  });
+                }}
+              >
           Preview
-            </Button>
-          </Space>
+              </Button>
+            </Space>
           );
         }
         return null;
@@ -313,7 +313,7 @@ class GWASApp extends React.Component {
           <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
             <Spin size='large' tip='Loading data from workspace storage...' />
           </Space>
-);
+        );
       }
       return (
         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
@@ -325,13 +325,15 @@ class GWASApp extends React.Component {
           </Button>
           <Text type='secondary'>(The phenotype and covariants with the genotype file will be matched using the IID column)</Text>
           {(this.state.showStep0Table)
-            ? <div className='GWASApp-mainTable'>
-              <Table
-                rowSelection={this.mainTableRowSelection}
-                columns={this.mainTableConfig}
-                dataSource={this.props.wssFileObjects}
-              />
-            </div>
+            ? (
+              <div className='GWASApp-mainTable'>
+                <Table
+                  rowSelection={this.mainTableRowSelection}
+                  columns={this.mainTableConfig}
+                  dataSource={this.props.wssFileObjects}
+                />
+              </div>
+            )
             : null}
           <Modal
             visible={this.state.showPreviewModal}
@@ -346,10 +348,10 @@ class GWASApp extends React.Component {
             {(modalTableColumnConfig)
               ? <Table size={'small'} columns={modalTableColumnConfig} dataSource={this.props.wssFileData.fileData} />
               : (
-<Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                <Spin size='large' tip='Loading data from workspace storage...' />
-              </Space>
-)}
+                <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                  <Spin size='large' tip='Loading data from workspace storage...' />
+                </Space>
+              )}
           </Modal>
         </Space>
       );
@@ -368,55 +370,57 @@ class GWASApp extends React.Component {
           <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
             <Spin size='large' tip='Loading data from workspace storage...' />
           </Space>
-);
+        );
       }
       return (
         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
           {(specifyDataCols)
-            ? <div className='GWASApp-specifyTable'>
-              <Space className='GWASApp-specifyTable__innerSpace'>
-                <Space direction={'vertical'}>
-                  <Text strong>Existing Clinical Variables</Text>
-                  <Checkbox.Group defaultValue={['gender', 'age']}>
-                    <Space direction={'vertical'}>
-                      <Checkbox key='gender' value='gender'>Gender</Checkbox>
-                      <Checkbox key='age' value='age'>Age</Checkbox>
-                    </Space>
-                  </Checkbox.Group>
+            ? (
+              <div className='GWASApp-specifyTable'>
+                <Space className='GWASApp-specifyTable__innerSpace'>
+                  <Space direction={'vertical'}>
+                    <Text strong>Existing Clinical Variables</Text>
+                    <Checkbox.Group defaultValue={['gender', 'age']}>
+                      <Space direction={'vertical'}>
+                        <Checkbox key='gender' value='gender'>Gender</Checkbox>
+                        <Checkbox key='age' value='age'>Age</Checkbox>
+                      </Space>
+                    </Checkbox.Group>
+                  </Space>
+                  <Divider type='vertical' />
+                  <Space direction={'vertical'}>
+                    <Text strong>Genotype PCs</Text>
+                    <Checkbox.Group defaultValue={['pc1', 'pc2']}>
+                      <Space direction={'vertical'}>
+                        <Checkbox key='pc1' value='pc1'>PC1</Checkbox>
+                        <Checkbox key='pc2' value='pc2'>PC2</Checkbox>
+                        <Checkbox key='pc3' value='pc3'>PC3</Checkbox>
+                        <Checkbox key='pc4' value='pc4'>PC4</Checkbox>
+                        <Checkbox key='pc5' value='pc5'>PC5</Checkbox>
+                      </Space>
+                    </Checkbox.Group>
+                  </Space>
+                  <Divider type='vertical' />
+                  <Space direction={'vertical'}>
+                    <Text strong>Uploaded Clinical Variables</Text>
+                    <Checkbox.Group defaultValue={specifyDataCols}>
+                      <Space direction={'vertical'}>
+                        {specifyDataCols.map((col) => <Checkbox key={col} value={col}>{col}</Checkbox>)}
+                      </Space>
+                    </Checkbox.Group>
+                  </Space>
+                  <Divider type='vertical' />
+                  <Space direction={'vertical'}>
+                    <Text strong>Phenotype</Text>
+                    <Radio.Group defaultValue={specifyDataCols[0]}>
+                      <Space direction={'vertical'}>
+                        {specifyDataCols.map((col) => <Radio key={col} value={col}>{col}</Radio>)}
+                      </Space>
+                    </Radio.Group>
+                  </Space>
                 </Space>
-                <Divider type='vertical' />
-                <Space direction={'vertical'}>
-                  <Text strong>Genotype PCs</Text>
-                  <Checkbox.Group defaultValue={['pc1', 'pc2']}>
-                    <Space direction={'vertical'}>
-                      <Checkbox key='pc1' value='pc1'>PC1</Checkbox>
-                      <Checkbox key='pc2' value='pc2'>PC2</Checkbox>
-                      <Checkbox key='pc3' value='pc3'>PC3</Checkbox>
-                      <Checkbox key='pc4' value='pc4'>PC4</Checkbox>
-                      <Checkbox key='pc5' value='pc5'>PC5</Checkbox>
-                    </Space>
-                  </Checkbox.Group>
-                </Space>
-                <Divider type='vertical' />
-                <Space direction={'vertical'}>
-                  <Text strong>Uploaded Clinical Variables</Text>
-                  <Checkbox.Group defaultValue={specifyDataCols}>
-                    <Space direction={'vertical'}>
-                      {specifyDataCols.map((col) => <Checkbox key={col} value={col}>{col}</Checkbox>)}
-                    </Space>
-                  </Checkbox.Group>
-                </Space>
-                <Divider type='vertical' />
-                <Space direction={'vertical'}>
-                  <Text strong>Phenotype</Text>
-                  <Radio.Group defaultValue={specifyDataCols[0]}>
-                    <Space direction={'vertical'}>
-                      {specifyDataCols.map((col) => <Radio key={col} value={col}>{col}</Radio>)}
-                    </Space>
-                  </Radio.Group>
-                </Space>
-              </Space>
-            </div>
+              </div>
+            )
             : null}
         </Space>
       );
@@ -521,42 +525,42 @@ class GWASApp extends React.Component {
 
       if (this.state.showJobSubmissionResult) {
         return (
-<div className='GWASApp-mainArea'>
-          <Result
-            status={(this.state.jobSubmittedRunID) ? 'success' : 'error'}
-            title={(this.state.jobSubmittedRunID) ? 'GWAS Job Submitted Successfully' : 'GWAS Job Submission Failed'}
-            subTitle={`GWAS Job Name: ${this.state.jobName}, run ID: ${this.state.jobSubmittedRunID}`}
-            extra={[
-              <Button
-                key='done'
-                onClick={() => {
-                  this.setState({
-                    current: 0,
-                    showStep0Table: false,
-                    showPreviewModal: false,
-                    previewModalDataKey: undefined,
-                    selectedDataKey: undefined,
-                    jobName: undefined,
-                    showJobSubmissionResult: false,
-                    jobSubmittedRunID: undefined,
-                    enableStep2NextButton: true,
-                    step2ConfigValues: {
-                      workflow: 'demo',
-                      genotype_cutoff: 0.2,
-                      sample_cutoff: 0.04,
-                      maf_cutoff: 0.05,
-                    },
-                    showJobStatusModal: false,
-                    jobStatusModalData: '',
-                  });
-                }}
-              >
+          <div className='GWASApp-mainArea'>
+            <Result
+              status={(this.state.jobSubmittedRunID) ? 'success' : 'error'}
+              title={(this.state.jobSubmittedRunID) ? 'GWAS Job Submitted Successfully' : 'GWAS Job Submission Failed'}
+              subTitle={`GWAS Job Name: ${this.state.jobName}, run ID: ${this.state.jobSubmittedRunID}`}
+              extra={[
+                <Button
+                  key='done'
+                  onClick={() => {
+                    this.setState({
+                      current: 0,
+                      showStep0Table: false,
+                      showPreviewModal: false,
+                      previewModalDataKey: undefined,
+                      selectedDataKey: undefined,
+                      jobName: undefined,
+                      showJobSubmissionResult: false,
+                      jobSubmittedRunID: undefined,
+                      enableStep2NextButton: true,
+                      step2ConfigValues: {
+                        workflow: 'demo',
+                        genotype_cutoff: 0.2,
+                        sample_cutoff: 0.04,
+                        maf_cutoff: 0.05,
+                      },
+                      showJobStatusModal: false,
+                      jobStatusModalData: '',
+                    });
+                  }}
+                >
                 Done
-              </Button>,
-            ]}
-          />
-        </div>
-);
+                </Button>,
+              ]}
+            />
+          </div>
+        );
       }
 
       return (
@@ -617,7 +621,7 @@ class GWASApp extends React.Component {
       );
     }
     default:
-      return <></>;
+      return <React.Fragment />;
     }
   }
 
@@ -637,61 +641,63 @@ class GWASApp extends React.Component {
     return (
       <Space direction={'vertical'} style={{ width: '100%' }}>
         {(!this.userHasMariner())
-          ? <Alert
-            message='Warning: You don&apos;t have required permission to submit GWAS job'
-            banner
-          />
+          ? (
+            <Alert
+              message='Warning: You don&apos;t have required permission to submit GWAS job'
+              banner
+            />
+          )
           : null}
         {(this.state.marinerJobStatus.length > 0)
           ? (
-<div className='GWASApp-jobStatus'>
-            <Collapse onClick={event => event.stopPropagation()}>
-              <Panel header='Submitted Job Status' key='1'>
-                <List
-                  className='GWASApp__jobStatusList'
-                  itemLayout='horizontal'
-                  pagination={{ pageSize: 5 }}
-                  dataSource={this.state.marinerJobStatus}
-                  renderItem={item => (
-                    <List.Item
-                      actions={(item.status === 'running') ?
-                        [<Popconfirm
-                          title='Are you sure you want to cancel this job?'
-                          onConfirm={(event) => {
-                            event.stopPropagation();
-                            this.cancelMarinerJob(item.runID);
-                          }}
-                          okText='Yes'
-                          cancelText='No'
-                        >
-                          <Button type='link' size='small' danger>cancel job</Button>
-                        </Popconfirm>,
-                        <Button type='link' size='small' onClick={(event) => { event.stopPropagation(); this.handleJobStatusModalShow(item.runID); }}>show logs</Button>]
-                        : [<Button type='link' size='small' onClick={(event) => { event.stopPropagation(); this.handleJobStatusModalShow(item.runID); }}>show logs</Button>]}
-                    >
-                      <List.Item.Meta
-                        title={`Run ID: ${item.runID}`}
-                        description={(item.jobName) ? `GWAS Job Name: ${item.jobName}` : null}
-                      />
-                      <div>{this.getStatusTag(item.status)}</div>
-                    </List.Item>
-                  )}
-                />
-              </Panel>
-            </Collapse>
-            <Modal
-              visible={this.state.showJobStatusModal}
-              closable={false}
-              title={'Show job logs'}
-              footer={[
-                <Button key='close' onClick={this.handleJobStatusModalCancel}>
+            <div className='GWASApp-jobStatus'>
+              <Collapse onClick={(event) => event.stopPropagation()}>
+                <Panel header='Submitted Job Status' key='1'>
+                  <List
+                    className='GWASApp__jobStatusList'
+                    itemLayout='horizontal'
+                    pagination={{ pageSize: 5 }}
+                    dataSource={this.state.marinerJobStatus}
+                    renderItem={(item) => (
+                      <List.Item
+                        actions={(item.status === 'running')
+                          ? [<Popconfirm
+                            title='Are you sure you want to cancel this job?'
+                            onConfirm={(event) => {
+                              event.stopPropagation();
+                              this.cancelMarinerJob(item.runID);
+                            }}
+                            okText='Yes'
+                            cancelText='No'
+                          >
+                            <Button type='link' size='small' danger>cancel job</Button>
+                             </Popconfirm>,
+                          <Button type='link' size='small' onClick={(event) => { event.stopPropagation(); this.handleJobStatusModalShow(item.runID); }}>show logs</Button>]
+                          : [<Button type='link' size='small' onClick={(event) => { event.stopPropagation(); this.handleJobStatusModalShow(item.runID); }}>show logs</Button>]}
+                      >
+                        <List.Item.Meta
+                          title={`Run ID: ${item.runID}`}
+                          description={(item.jobName) ? `GWAS Job Name: ${item.jobName}` : null}
+                        />
+                        <div>{this.getStatusTag(item.status)}</div>
+                      </List.Item>
+                    )}
+                  />
+                </Panel>
+              </Collapse>
+              <Modal
+                visible={this.state.showJobStatusModal}
+                closable={false}
+                title={'Show job logs'}
+                footer={[
+                  <Button key='close' onClick={this.handleJobStatusModalCancel}>
               Close
-                </Button>,
-              ]}
-            >
-              <TextArea rows={10} value={this.state.jobStatusModalData} readOnly />
-            </Modal>
-          </div>
+                  </Button>,
+                ]}
+              >
+                <TextArea rows={10} value={this.state.jobStatusModalData} readOnly />
+              </Modal>
+            </div>
           )
           : null}
         <Steps current={current}>

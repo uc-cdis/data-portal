@@ -201,8 +201,10 @@ class PTCCase extends HIVCohortFilterCase {
           }
           if (vloadCheck && therapyCheck) {
             // Found PTC!
-            subjectWithVisits.consecutive_haart_treatments_end_at_followup                      = visitArray[(i + slidingWindowSize) - 1].submitter_id;
-            subjectWithVisits.stop_treatments_maintain_viral_load_at_followup                      = theNextVisit.submitter_id;
+            // eslint-disable-next-line max-len
+            subjectWithVisits.consecutive_haart_treatments_end_at_followup = visitArray[(i + slidingWindowSize) - 1].submitter_id;
+            // eslint-disable-next-line max-len
+            subjectWithVisits.stop_treatments_maintain_viral_load_at_followup = theNextVisit.submitter_id;
             for (let j = i + slidingWindowSize; j < visitArray.length; j += 1) {
               const nvloadCheck = (visitArray[j].viral_load > this.state.viralLoadFromUser);
               const ntherapyCheck = this.state.therapyValuesOfInterest
@@ -290,7 +292,7 @@ class PTCCase extends HIVCohortFilterCase {
 
   render() {
     return (
-      <>
+      <React.Fragment>
         <div className='hiv-cohort-filter__sidebar'>
           <form>
             <h2 className='hiv-cohort-filter__sidebar-title'>
@@ -344,7 +346,6 @@ class PTCCase extends HIVCohortFilterCase {
             </div>
           </form>
         </div>
-
 
         <div className='hiv-cohort-filter__main'>
           <div className='hiv-cohort-filter__main-wrapper'>
@@ -428,7 +429,7 @@ class PTCCase extends HIVCohortFilterCase {
             </div>
           </div>
         </div>
-      </>
+      </React.Fragment>
     );
   }
 }

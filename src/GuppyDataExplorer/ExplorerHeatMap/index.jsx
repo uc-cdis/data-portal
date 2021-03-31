@@ -160,7 +160,7 @@ class ExplorerHeatMap extends React.Component {
     const height = `${(yAxisVars.length * 20) + 80}px`; // default is 300px
 
     return (
-      <>
+      <React.Fragment>
         {
           (data && data.length) || this.props.isLocked ? (
             <div className='explorer-heat-map'>
@@ -187,7 +187,7 @@ class ExplorerHeatMap extends React.Component {
             </div>
           ) : null
         }
-      </>
+      </React.Fragment>
     );
   }
 }

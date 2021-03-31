@@ -63,17 +63,17 @@ class CoreMetadataHeader extends Component {
               {DOWNLOAD_BTN_CAPTION}
             </button>
           </a>
-);
+        );
 
         if (isEnabled('signedURLButton')) {
           signedURLButton = (
-<Button
-            onClick={() => this.onGenerateSignedURL()}
-            label={SIGNED_URL_BTN_CAPTION}
-            className='core-metadata-page__column--right--signed-url-button'
-            buttonType='primary'
-          />
-);
+            <Button
+              onClick={() => this.onGenerateSignedURL()}
+              label={SIGNED_URL_BTN_CAPTION}
+              className='core-metadata-page__column--right--signed-url-button'
+              buttonType='primary'
+            />
+          );
         }
       }
 
@@ -95,29 +95,31 @@ class CoreMetadataHeader extends Component {
           { signedURLButton }
           {
             this.props.signedURLPopup === true
-            && <Popup
-              message={(!this.props.error) ? SIGNED_URL_MSG : SIGNED_URL_ERROR_MSG}
-              error={this.props.error}
-              lines={(!this.props.error) ? [
-                { code: this.props.signedURL },
-              ] : []}
-              title='Generated Signed URL'
-              leftButtons={[
-                {
-                  caption: 'Close',
-                  fn: () => this.onSignedURLPopupClose(),
-                },
-              ]}
-              rightButtons={[
-                {
-                  caption: 'Copy',
-                  fn: () => copy(this.props.signedURL),
-                  icon: 'copy',
-                  enabled: (!this.props.error),
-                },
-              ]}
-              onClose={() => this.onSignedURLPopupClose()}
-            />
+            && (
+              <Popup
+                message={(!this.props.error) ? SIGNED_URL_MSG : SIGNED_URL_ERROR_MSG}
+                error={this.props.error}
+                lines={(!this.props.error) ? [
+                  { code: this.props.signedURL },
+                ] : []}
+                title='Generated Signed URL'
+                leftButtons={[
+                  {
+                    caption: 'Close',
+                    fn: () => this.onSignedURLPopupClose(),
+                  },
+                ]}
+                rightButtons={[
+                  {
+                    caption: 'Copy',
+                    fn: () => copy(this.props.signedURL),
+                    icon: 'copy',
+                    enabled: (!this.props.error),
+                  },
+                ]}
+                onClose={() => this.onSignedURLPopupClose()}
+              />
+            )
           }
           <div className='body-typo'>{properties}</div>
         </div>
@@ -127,7 +129,7 @@ class CoreMetadataHeader extends Component {
     // if there is no core metadata to display
 
     return (
-      <></>
+      <React.Fragment />
     );
   }
 }

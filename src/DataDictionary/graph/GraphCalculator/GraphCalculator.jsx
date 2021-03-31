@@ -158,7 +158,7 @@ class GraphCalculator extends React.Component {
   }
 
   render() {
-    return (<></>);
+    return (<React.Fragment />);
   }
 }
 

@@ -63,16 +63,16 @@ class ECCase extends HIVCohortFilterCase {
       filter: {
         AND: [
           {
- '=': {
-            hiv_status: 'positive',
-          },
+            '=': {
+              hiv_status: 'positive',
+            },
           },
           {
- in: {
-            project_id: hivAppProjects,
-          },
-          }]
-},
+            in: {
+              project_id: hivAppProjects,
+            },
+          }],
+      },
     };
     return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
       if (!data
@@ -126,16 +126,16 @@ class ECCase extends HIVCohortFilterCase {
       filter: {
         AND: [
           {
- '=': {
-            hiv_status: 'positive',
-          },
+            '=': {
+              hiv_status: 'positive',
+            },
           },
           {
- in: {
-            project_id: hivAppProjects,
-          },
-          }]
-},
+            in: {
+              project_id: hivAppProjects,
+            },
+          }],
+      },
     };
     return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
       if (!data
@@ -195,7 +195,7 @@ class ECCase extends HIVCohortFilterCase {
     const ecPeriod = {};
     let nNonsuper = 0;
     const fhv = visitArray[0].submitter_id;
-    const {subject_id} = visitArray[0];
+    const { subject_id } = visitArray[0];
     for (let i = 0; i < visitArray.length; i += 1) {
       if (visitArray[i].viral_load != null
         && visitArray[i].viral_load < this.state.suppressViralLoadFromUser) {
@@ -261,7 +261,7 @@ class ECCase extends HIVCohortFilterCase {
     // visits that match the EC criteria
     filtFollowups.forEach((item) => {
       const updateContent = this.visitsMatchECWindowCriteria(item);
-      const {ecPeriod} = updateContent;
+      const { ecPeriod } = updateContent;
       if (Object.keys(ecPeriod).length === 0) {
         subjectControl.push(item);
       } else {
@@ -340,7 +340,7 @@ class ECCase extends HIVCohortFilterCase {
 
   render() {
     return (
-      <>
+      <React.Fragment>
         <div className='hiv-cohort-filter__ec-sidebar'>
           <form>
             <h2 className='hiv-cohort-filter__sidebar-title'>
@@ -414,7 +414,6 @@ class ECCase extends HIVCohortFilterCase {
           </form>
         </div>
 
-
         <div className='hiv-cohort-filter__main'>
           <div className='hiv-cohort-filter__main-wrapper'>
             <div className='hiv-cohort-filter__svg-wrapper' id='EC-svg-wrapper'>
@@ -485,7 +484,7 @@ class ECCase extends HIVCohortFilterCase {
             </div>
           </div>
         </div>
-      </>
+      </React.Fragment>
     );
   }
 }

@@ -48,7 +48,7 @@ class AnalysisApp extends React.Component {
     switch (app) {
     case 'vaGWAS':
       return (
-        <>
+        <React.Fragment>
           <Select
             value={this.state.jobInput}
             placeholder='Select your organ'
@@ -56,7 +56,7 @@ class AnalysisApp extends React.Component {
             onChange={this.selectChange}
           />
           <Button label='Run Analysis' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
-        </>
+        </React.Fragment>
       );
     case 'ndhHIV':
       return (
@@ -64,20 +64,18 @@ class AnalysisApp extends React.Component {
       );
     case 'ndhVirus':
       return (
-        <>
+        <React.Fragment>
           <input className='text-input' type='text' placeholder='input data' name='input' />
           <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
-        </>
+        </React.Fragment>
       );
     case 'GWASApp':
       return (
-        <>
-          <ReduxGWASApp />
-        </>
+        <ReduxGWASApp />
       );
     default:
       return (
-        <>
+        <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
             <iframe
               className='analysis-app__iframe'
@@ -87,7 +85,7 @@ class AnalysisApp extends React.Component {
               onLoad={this.handleIframeApp}
             />
           </div>
-        </>
+        </React.Fragment>
       );
     }
   }
@@ -157,27 +155,33 @@ class AnalysisApp extends React.Component {
         <BackLink url='/analysis' label='Back to Apps' />
         {
           loaded
-            ? <div className='analysis-app'>
-              <h2 className='analysis-app__title'>{app.title}</h2>
-              <p className='analysis-app__description'>{app.description}</p>
-              <div className={`${this.state.analysisIsFullscreen ? 'analysis-app__fullscreen' : ''}`}>
-                <div className='analysis-app__actions'>
-                  { appContent }
+            ? (
+              <div className='analysis-app'>
+                <h2 className='analysis-app__title'>{app.title}</h2>
+                <p className='analysis-app__description'>{app.description}</p>
+                <div className={`${this.state.analysisIsFullscreen ? 'analysis-app__fullscreen' : ''}`}>
+                  <div className='analysis-app__actions'>
+                    { appContent }
+                  </div>
+                  { this.state.isIframeApp
+                    ? (
+                      <div className='analysis-app__buttongroup'>
+                        { fullscreenButton }
+                      </div>
+                    ) : null}
                 </div>
-                { this.state.isIframeApp
-                  ? <div className='analysis-app__buttongroup'>
-                    { fullscreenButton }
-                  </div> : null}
+                {(showJobStatus)
+                  ? (
+                    <div className='analysis-app__job-status'>
+                      { this.isJobRunning() ? <Spin size='large' tip='Job in progress...' /> : null }
+                      { job && job.status === 'Completed' ? <h3>Job Completed</h3> : null }
+                      { job && job.status === 'Failed' ? <h3>Job Failed</h3> : null }
+                      { results ? results.map((line, i) => <p key={i}>{line}</p>) : null }
+                    </div>
+                  )
+                  : null}
               </div>
-              {(showJobStatus)
-                ? <div className='analysis-app__job-status'>
-                  { this.isJobRunning() ? <Spin size='large' tip='Job in progress...' /> : null }
-                  { job && job.status === 'Completed' ? <h3>Job Completed</h3> : null }
-                  { job && job.status === 'Failed' ? <h3>Job Failed</h3> : null }
-                  { results ? results.map((line, i) => <p key={i}>{line}</p>) : null }
-                </div>
-                : null}
-            </div>
+            )
             : null
         }
       </div>

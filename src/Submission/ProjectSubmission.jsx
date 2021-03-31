@@ -9,7 +9,7 @@ import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 import { useArboristUI } from '../configs';
 import {
- userHasMethodForServiceOnProject, isRootUrl, isProgramUrl, userHasSheepdogProgramAdmin, userHasSheepdogProjectAdmin
+  userHasMethodForServiceOnProject, isRootUrl, isProgramUrl, userHasSheepdogProgramAdmin, userHasSheepdogProjectAdmin,
 } from '../authMappingUtils';
 
 class ProjectSubmission extends React.Component {
@@ -87,12 +87,12 @@ class ProjectSubmission extends React.Component {
         || userHasMethodForServiceOnProject('update', 'sheepdog', project, userAuthMapping)
       ) {
         return (
-          <>
+          <React.Fragment>
             <Space direction='vertical' style={{ width: '100%' }}>
               <MySubmitForm />
               <MySubmitTSV project={project} />
             </Space>
-          </>
+          </React.Fragment>
         );
       }
       return null;

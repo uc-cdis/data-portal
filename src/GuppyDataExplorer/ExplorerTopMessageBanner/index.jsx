@@ -8,7 +8,7 @@ import { labelToPlural } from '../utils';
 
 class ExplorerTopMessageBanner extends React.Component {
   render() {
-    const {hideGetAccessButton} = this.props;
+    const { hideGetAccessButton } = this.props;
     return (
       <div className={this.props.className}>
         {
@@ -17,7 +17,7 @@ class ExplorerTopMessageBanner extends React.Component {
               <div className='top-message-banner__space-column' />
               <div className='top-message-banner__text-column'>
                 <div className='top-message-banner__button-wrapper'>
-                  { (hideGetAccessButton) ? (<></>)
+                  { (hideGetAccessButton) ? (<React.Fragment />)
                     : (
                       <Button
                         label='Get Access'
@@ -46,7 +46,7 @@ class ExplorerTopMessageBanner extends React.Component {
                 </div>
               </div>
             </div>
-          ) : (<></>)
+          ) : (<React.Fragment />)
         }
       </div>
     );
