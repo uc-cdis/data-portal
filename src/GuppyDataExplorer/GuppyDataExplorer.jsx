@@ -65,7 +65,8 @@ class GuppyDataExplorer extends React.Component {
             history={this.props.history}
             nodeCountTitle={
               this.props.guppyConfig.nodeCountTitle
-              || labelToPlural(this.props.guppyConfig.dataType, true)}
+              || labelToPlural(this.props.guppyConfig.dataType, true)
+            }
             tierAccessLimit={this.props.tierAccessLimit}
           />
         </GuppyWrapper>

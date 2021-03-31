@@ -7,27 +7,31 @@ class IconicButton extends React.Component {
     let styles = {};
     if (this.props.iconColor && this.props.iconColor !== '') { styles = { fill: this.props.iconColor }; }
     return (
-      this.props.dictIcons !== undefined ?
-        <button
-          className={this.props.buttonClassName}
-          onClick={this.props.onClick}
-          name={this.props.caption}
-        >
-          {this.props.caption}&ensp;
-          <IconComponent
-            dictIcons={this.props.dictIcons}
-            iconName={this.props.icon}
-            height='14px'
-            svgStyles={{ ...styles }}
-          />
-        </button> :
-        <button
-          className={this.props.buttonClassName}
-          onClick={this.props.onClick}
-          name={this.props.caption}
-        >
-          {this.props.caption}
-        </button>
+      this.props.dictIcons !== undefined
+        ? (
+          <button
+            className={this.props.buttonClassName}
+            onClick={this.props.onClick}
+            name={this.props.caption}
+          >
+            {this.props.caption}&ensp;
+            <IconComponent
+              dictIcons={this.props.dictIcons}
+              iconName={this.props.icon}
+              height='14px'
+              svgStyles={{ ...styles }}
+            />
+          </button>
+        )
+        : (
+          <button
+            className={this.props.buttonClassName}
+            onClick={this.props.onClick}
+            name={this.props.caption}
+          >
+            {this.props.caption}
+          </button>
+        )
     );
   }
 }

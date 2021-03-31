@@ -15,7 +15,7 @@ class Analysis extends React.Component {
         <h2 className='analysis__title'>Apps</h2>
         <div className='analysis-cards'>
           {
-            Object.keys(analysisApps).map(appKey => (
+            Object.keys(analysisApps).map((appKey) => (
               <div
                 key={appKey}
                 className='analysis__app-card'

@@ -31,7 +31,8 @@ const status = (state = {}, action) => {
 const versionInfo = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_VERSION_INFO':
-    return { ...state,
+    return {
+      ...state,
       dictionaryVersion: action.data.dictionary.version || 'unknown',
       apiVersion: action.data.version || 'unknown',
     };
@@ -43,12 +44,11 @@ const versionInfo = (state = {}, action) => {
 const user = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_USER':
-    getReduxStore().then(store => store.dispatch(fetchUserAccess));
-    getReduxStore().then(store => store.dispatch(fetchUserAuthMapping));
+    getReduxStore().then((store) => store.dispatch(fetchUserAccess));
+    getReduxStore().then((store) => store.dispatch(fetchUserAuthMapping));
     return { ...state, ...action.user, fetched_user: true };
   case 'REGISTER_ROLE':
-    return {
-      ...state, role_arn: action.role_arn };
+    return { ...state, role_arn: action.role_arn };
   case 'RECEIVE_VPC':
     return {
       ...state, vpc: action.vpc,
@@ -59,7 +59,6 @@ const user = (state = {}, action) => {
     return state;
   }
 };
-
 
 const userAccess = (state = { access: {} }, action) => {
   switch (action.type) {
@@ -83,7 +82,7 @@ export const removeDeletedNode = (state, id) => {
   const searchResult = state.search_result;
   const nodeType = Object.keys(searchResult.data)[0];
   const entities = searchResult.data[nodeType];
-  searchResult.data[nodeType] = entities.filter(entity => entity.id !== id);
+  searchResult.data[nodeType] = entities.filter((entity) => entity.id !== id);
   return searchResult;
 };
 

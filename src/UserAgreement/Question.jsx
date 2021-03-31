@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './Question.less';
 import Option from './Option';
 
-const makeDefaultState = answer => ({
+const makeDefaultState = (answer) => ({
   answer,
 });
 
@@ -56,7 +56,7 @@ class Question extends Component {
               <Option
                 hasCorrectAnswers={this.props.hasCorrectAnswers}
                 option={option}
-                onChange={idx => this.onAnswerChanged(idx)}
+                onChange={(idx) => this.onAnswerChanged(idx)}
                 idx={i}
                 isCorrectAnswer={i === this.props.content.answer}
                 selected={i === this.state.answer}

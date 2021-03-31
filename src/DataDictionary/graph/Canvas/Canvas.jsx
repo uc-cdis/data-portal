@@ -168,7 +168,7 @@ class Canvas extends React.Component {
             ref={this.containerElement}
           >
             {
-              React.Children.map(this.props.children, child => React.cloneElement(child, {
+              React.Children.map(this.props.children, (child) => React.cloneElement(child, {
                 canvasWidth: this.state.canvasWidth,
                 canvasHeight: this.state.canvasHeight,
               }),

@@ -5,7 +5,7 @@ import Question from './Question';
 import QuizSummary from './QuizSummary';
 import './Quiz.less';
 
-const getQuestionSectionId = idx => `Q${idx}`;
+const getQuestionSectionId = (idx) => `Q${idx}`;
 
 const makeDefaultState = (questions) => {
   const notDone = [];
@@ -79,7 +79,7 @@ class Quiz extends Component {
   };
 
   answerQuestion(questionId, isCorrect) {
-    const notDone = this.state.notDone.filter(item => item !== questionId);
+    const notDone = this.state.notDone.filter((item) => item !== questionId);
     let { rights } = this.state;
     let { wrongs } = this.state;
     if (isCorrect) {
@@ -87,13 +87,13 @@ class Quiz extends Component {
         rights.push(questionId);
         rights.sort();
       }
-      wrongs = wrongs.filter(item => item !== questionId);
+      wrongs = wrongs.filter((item) => item !== questionId);
     } else {
       if (!wrongs.includes(questionId)) {
         wrongs.push(questionId);
         wrongs.sort();
       }
-      rights = rights.filter(item => item !== questionId);
+      rights = rights.filter((item) => item !== questionId);
     }
     this.setState({ notDone, rights, wrongs });
   }
@@ -143,12 +143,14 @@ class Quiz extends Component {
   }
 
   handleSubmit() {
-    const data = this.props.questionList.map(item => item.options[item.answer]);
+    const data = this.props.questionList.map((item) => item.options[item.answer]);
     this.props.onSubmit(data, this.props.questionList);
   }
 
   render() {
-    const { questionList, title, subtitle, description, hasCorrectAnswers } = this.props;
+    const {
+      questionList, title, subtitle, description, hasCorrectAnswers,
+    } = this.props;
     const canSubmit = this.state.notDone.length === 0;
     return (
       <div className='quiz__form'>
@@ -166,7 +168,7 @@ class Quiz extends Component {
                 return (
                   <a
                     className={`quiz__menu-bullet body${styleModifier}`}
-                    onClick={e => this.handleClick(e, i)}
+                    onClick={(e) => this.handleClick(e, i)}
                     href={`#${getQuestionSectionId(i + 1)}`}
                     key={`menuItem${i}`}
                   >
@@ -177,13 +179,15 @@ class Quiz extends Component {
             )
           }
           {
-            !hasCorrectAnswers ?
-              <Button
-                class='quiz__submit'
-                label='Submit'
-                enabled={canSubmit}
-                onClick={() => this.handleSubmit()}
-              />
+            !hasCorrectAnswers
+              ? (
+                <Button
+                  class='quiz__submit'
+                  label='Submit'
+                  enabled={canSubmit}
+                  onClick={() => this.handleSubmit()}
+                />
+              )
               : null
           }
         </div>
@@ -192,32 +196,33 @@ class Quiz extends Component {
           <div>
             {
               questionList.map(
-                (item, i) =>
-                  (
-                    <div ref={(elem) => { this.qsDom[getQuestionSectionId(i + 1)] = elem; }} key={`question${i}`}>
-                      <Question
-                        content={item}
-                        ref={(elem) => {
-                          this.qs[getQuestionSectionId(i + 1)] = elem;
-                        }}
-                        idx={i}
-                        sectionId={getQuestionSectionId(i + 1)}
-                        onChange={isCorrect => this.answerQuestion(i, isCorrect)}
-                        hasCorrectAnswers={hasCorrectAnswers}
-                      />
-                    </div>
-                  ),
+                (item, i) => (
+                  <div ref={(elem) => { this.qsDom[getQuestionSectionId(i + 1)] = elem; }} key={`question${i}`}>
+                    <Question
+                      content={item}
+                      ref={(elem) => {
+                        this.qs[getQuestionSectionId(i + 1)] = elem;
+                      }}
+                      idx={i}
+                      sectionId={getQuestionSectionId(i + 1)}
+                      onChange={(isCorrect) => this.answerQuestion(i, isCorrect)}
+                      hasCorrectAnswers={hasCorrectAnswers}
+                    />
+                  </div>
+                ),
               )
             }
           </div>
         </div>
         {
-          hasCorrectAnswers ?
-            <QuizSummary
-              notDone={this.state.notDone}
-              wrongs={this.state.wrongs}
-              onSubmit={() => this.handleSubmit()}
-            />
+          hasCorrectAnswers
+            ? (
+              <QuizSummary
+                notDone={this.state.notDone}
+                wrongs={this.state.wrongs}
+                onSubmit={() => this.handleSubmit()}
+              />
+            )
             : null
         }
       </div>

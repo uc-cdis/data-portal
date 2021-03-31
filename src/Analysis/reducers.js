@@ -9,7 +9,9 @@ const analysis = (state = {}, action) => {
   case 'JOB_STATUS_INTERVAL':
     return { ...state, jobStatusInterval: action.value };
   case 'RESET_JOB':
-    return { ...state, job: null, jobStatusInterval: null, resultURL: null };
+    return {
+      ...state, job: null, jobStatusInterval: null, resultURL: null,
+    };
   case 'RECEIVE_WSS_FILE_LIST':
     return { ...state, wssFileObjects: action.wssFileObjects, wssFilePrefix: action.wssFilePrefix };
   case 'WSS_LIST_FILE_ERROR':

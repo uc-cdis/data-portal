@@ -20,11 +20,11 @@ class ProjectTable extends React.Component {
    */
 
   getHeaders = (summaries) => {
-    const summaryFields = summaries.map(entry => entry.label);
+    const summaryFields = summaries.map((entry) => entry.label);
     return ['Project', ...summaryFields, ''];
   };
 
-  getData = projectList => projectList.map((proj, i) => {
+  getData = (projectList) => projectList.map((proj, i) => {
     let buttonText = 'Submit Data';
     if (useArboristUI) {
       buttonText = userHasMethodForServiceOnProject('create', 'sheepdog', proj.name, this.props.userAuthMapping) ? 'Submit/Browse Data' : 'Browse Data';
@@ -45,7 +45,7 @@ class ProjectTable extends React.Component {
   });
 
   getFooter = (summaries) => {
-    const totalCounts = summaries.map(entry => entry.value);
+    const totalCounts = summaries.map((entry) => entry.value);
     return ['Totals', ...totalCounts, ''];
   };
 

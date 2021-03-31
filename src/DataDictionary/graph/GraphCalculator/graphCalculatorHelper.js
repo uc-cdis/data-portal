@@ -23,7 +23,7 @@ import { getCategoryColor } from '../../NodeCategories/helper';
  * @returns {string[]} array of type names(duplicating names removed) of given nodes
  */
 export const getAllTypes = (nodes) => {
-  const types = nodes.map(node => node.type);
+  const types = nodes.map((node) => node.type);
   const uniqueTypes = _.uniq(types);
   return uniqueTypes;
 };
@@ -41,7 +41,7 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
     .then((renderedJSON) => {
       // draw nodes
       const renderedNodes = renderedJSON.objects
-        .filter(n => !n.rank)
+        .filter((n) => !n.rank)
         .map((n) => {
           const boundingBox = n._draw_[1].points.reduce((acc, cur) => {
             if (acc.x1 > cur[0]) acc.x1 = cur[0];
@@ -60,13 +60,13 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
           const topCenterY = boundingBox.y1;
           const width = boundingBox.x2 - boundingBox.x1;
           const height = boundingBox.y2 - boundingBox.y1;
-          const originNode = nodes.find(node => node.id === n.name);
+          const originNode = nodes.find((node) => node.id === n.name);
           const outLinks = edges
-            .filter(edge => edge.source.id === n.name)
-            .map(edge => edge.target.id);
+            .filter((edge) => edge.source.id === n.name)
+            .map((edge) => edge.target.id);
           const inLinks = edges
-            .filter(edge => edge.target.id === n.name)
-            .map(edge => edge.source.id);
+            .filter((edge) => edge.target.id === n.name)
+            .map((edge) => edge.source.id);
 
           const nodeType = n.type.toLowerCase();
           const nodeColor = getCategoryColor(nodeType);
@@ -80,8 +80,8 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
             (textPadding * 2) + (nodeNames.length * (fontSize + textLineGap)),
           );
           const requiredPropertiesCount = originNode.required ? originNode.required.length : 0;
-          const optionalPropertiesCount = originNode.properties ?
-            Object.keys(originNode.properties).length - requiredPropertiesCount : 0;
+          const optionalPropertiesCount = originNode.properties
+            ? Object.keys(originNode.properties).length - requiredPropertiesCount : 0;
           let nodeLevel = 0;
           if (originNode && originNode.positionIndex && originNode.positionIndex.length >= 2) {
             nodeLevel = originNode.positionIndex[1];
@@ -115,9 +115,9 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
         .map((edge) => {
           const controlPoints = edge._draw_[1].points;
           let pathString = `M${controlPoints[0].join(',')}C${controlPoints.slice(1)
-            .map(pair => `${pair[0]},${pair[1]}`).join(' ')}`;
-          const sourceNode = renderedNodes.find(node => node._gvid === edge.tail);
-          const targetNode = renderedNodes.find(node => node._gvid === edge.head);
+            .map((pair) => `${pair[0]},${pair[1]}`).join(' ')}`;
+          const sourceNode = renderedNodes.find((node) => node._gvid === edge.tail);
+          const targetNode = renderedNodes.find((node) => node._gvid === edge.head);
           if (sourceNode.level === targetNode.level + 1) {
             const sourePosition = [
               (sourceNode.boundingBox.x1 + sourceNode.boundingBox.x2) / 2,
@@ -130,9 +130,8 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
             pathString = `M${sourePosition[0]} ${sourePosition[1]}
               L ${targetPosition[0]} ${targetPosition[1]}`;
           }
-          const required = edges
-            .find(e => (e.source.id === sourceNode.id && e.target.id === targetNode.id))
-            .required;
+          const { required } = edges
+            .find((e) => (e.source.id === sourceNode.id && e.target.id === targetNode.id));
           return {
             source: sourceNode.id,
             target: targetNode.id,
@@ -143,7 +142,7 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
         });
 
       // get bounding box for whole graph
-      const graphBoundingBox = renderedJSON._draw_.find(entry => entry.op === 'P').points;
+      const graphBoundingBox = renderedJSON._draw_.find((entry) => entry.op === 'P').points;
 
       const layoutResult = {
         nodes: renderedNodes,
@@ -339,7 +338,7 @@ export const calculateDataModelStructure = (
   // step.6
   resultStructure = resultStructure.map((entry) => {
     const { nodeID, nodeIDsBefore, linksBefore } = entry;
-    const category = wholeGraphNodes.find(n => n.id === nodeID).type;
+    const category = wholeGraphNodes.find((n) => n.id === nodeID).type;
     return {
       nodeID,
       nodeIDsBefore,

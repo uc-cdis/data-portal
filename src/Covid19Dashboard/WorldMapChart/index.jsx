@@ -100,7 +100,7 @@ function addDataToGeoJsonBase(data, dataLevel) {
 function filterCountyGeoJson(selectedFips) {
   return {
     ...countyData,
-    features: countyData.features.filter(f => f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
+    features: countyData.features.filter((f) => f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
   };
 }
 
@@ -133,6 +133,7 @@ class WorldMapChart extends React.Component {
       dotSizesAsList: null,
     };
   }
+
   componentDidUpdate() {
     if (!(this.mapData.colorsAsList === null
       && Object.keys(this.props.jsonByLevel.county).length > 0)) {
@@ -194,7 +195,7 @@ class WorldMapChart extends React.Component {
       [colorRangeMath(8)]: 27,
     };
 
-    this.mapData.dotSizesAsList = Object.entries(dotSizes).map(item => [+item[0], item[1]]).flat();
+    this.mapData.dotSizesAsList = Object.entries(dotSizes).map((item) => [+item[0], item[1]]).flat();
 
     // config for choropleth map
     this.mapData.colors = {
@@ -211,7 +212,7 @@ class WorldMapChart extends React.Component {
     };
 
     this.mapData.colorsAsList = Object.entries(this.mapData.colors)
-      .map(item => [+item[0], item[1]]).flat();
+      .map((item) => [+item[0], item[1]]).flat();
   }
 
   onHover = (event) => {
@@ -238,7 +239,7 @@ class WorldMapChart extends React.Component {
       const recovered = formatNumberToDisplay(feature.properties.recovered);
 
       const state = feature.properties.province_state;
-      const county = feature.properties.county;
+      const { county } = feature.properties;
       let locationName = feature.properties.country_region;
       locationName = (state && state !== 'null' ? `${state}, ` : '') + locationName;
       locationName = (county && county !== 'null' ? `${county}, ` : '') + locationName;

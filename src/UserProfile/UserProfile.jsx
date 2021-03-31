@@ -22,9 +22,11 @@ export const saveToFile = (savingStr, filename) => {
   FileSaver.saveAs(blob, filename);
 };
 
-const UserProfile = ({ user, userProfile, userAuthMapping, popups, submission, onCreateKey,
+const UserProfile = ({
+  user, userProfile, userAuthMapping, popups, submission, onCreateKey,
   onClearCreationSession, onUpdatePopup, onDeleteKey,
-  onRequestDeleteKey, onClearDeleteSession }) => {
+  onRequestDeleteKey, onClearDeleteSession,
+}) => {
   const onCreate = () => {
     onCreateKey(credentialCdisPath);
   };
@@ -42,108 +44,120 @@ const UserProfile = ({ user, userProfile, userAuthMapping, popups, submission, o
   return (
     <div className='user-profile'>
       {
-        userProfile.jtis === undefined &&
-        <div>
-          {NO_ACCESS_MSG}
-        </div>
+        userProfile.jtis === undefined
+        && (
+          <div>
+            {NO_ACCESS_MSG}
+          </div>
+        )
       }
       {
-        userProfile.jtis !== undefined && userProfile.jtis !== [] &&
-        <ul className='user-profile__key-pair-table'>
-          {
-            popups.deleteTokenPopup === true &&
-            <Popup
-              message={CONFIRM_DELETE_MSG}
-              error={jsonToString(userProfile.delete_error)}
-              iconName='cross-key'
-              title='Inactivate API Key'
-              leftButtons={[
-                {
-                  caption: 'Cancel',
-                  fn: createPopupClose,
-                },
-              ]}
-              rightButtons={[
-                {
-                  caption: 'Confirm',
-                  fn: () => onDeleteKey(
-                    userProfile.requestDeleteJTI,
-                    userProfile.requestDeleteExp,
-                    popups.keypairsApi,
-                  ),
-                },
-              ]}
-              onClose={createPopupClose}
+        userProfile.jtis !== undefined && userProfile.jtis !== []
+        && (
+          <ul className='user-profile__key-pair-table'>
+            {
+              popups.deleteTokenPopup === true
+            && (
+              <Popup
+                message={CONFIRM_DELETE_MSG}
+                error={jsonToString(userProfile.delete_error)}
+                iconName='cross-key'
+                title='Inactivate API Key'
+                leftButtons={[
+                  {
+                    caption: 'Cancel',
+                    fn: createPopupClose,
+                  },
+                ]}
+                rightButtons={[
+                  {
+                    caption: 'Confirm',
+                    fn: () => onDeleteKey(
+                      userProfile.requestDeleteJTI,
+                      userProfile.requestDeleteExp,
+                      popups.keypairsApi,
+                    ),
+                  },
+                ]}
+                onClose={createPopupClose}
+              />
+            )
+            }
+            {
+              popups.saveTokenPopup === true
+            && (
+              <Popup
+                message={SECRET_KEY_MSG}
+                error={jsonToString(userProfile.create_error)}
+                lines={[
+                  { label: 'Key id:', code: userProfile.refreshCred.key_id },
+                  {
+                    label: 'API key:',
+                    code: userProfile.refreshCred.api_key.replace(/./g, '*'),
+                  },
+                ]}
+                iconName='key'
+                title='Created API Key'
+                leftButtons={[
+                  {
+                    caption: 'Close',
+                    fn: savePopupClose,
+                  },
+                ]}
+                rightButtons={[
+                  {
+                    caption: 'Download json',
+                    fn: () => saveToFile(userProfile.strRefreshCred, 'credentials.json'),
+                    icon: 'download',
+                  },
+                  {
+                    caption: 'Copy',
+                    fn: () => copy(userProfile.strRefreshCred),
+                    icon: 'copy',
+                  },
+                ]}
+                onClose={savePopupClose}
+              />
+            )
+            }
+            <Button
+              onClick={onCreate}
+              label={CREATE_API_KEY_BTN}
+              buttonType='primary'
+              rightIcon='key'
             />
-          }
-          {
-            popups.saveTokenPopup === true &&
-            <Popup
-              message={SECRET_KEY_MSG}
-              error={jsonToString(userProfile.create_error)}
-              lines={[
-                { label: 'Key id:', code: userProfile.refreshCred.key_id },
-                {
-                  label: 'API key:',
-                  code: userProfile.refreshCred.api_key.replace(/./g, '*'),
-                },
-              ]}
-              iconName='key'
-              title='Created API Key'
-              leftButtons={[
-                {
-                  caption: 'Close',
-                  fn: savePopupClose,
-                },
-              ]}
-              rightButtons={[
-                {
-                  caption: 'Download json',
-                  fn: () => saveToFile(userProfile.strRefreshCred, 'credentials.json'),
-                  icon: 'download',
-                },
-                {
-                  caption: 'Copy',
-                  fn: () => copy(userProfile.strRefreshCred),
-                  icon: 'copy',
-                },
-              ]}
-              onClose={savePopupClose}
-            />
-          }
-          <Button
-            onClick={onCreate}
-            label={CREATE_API_KEY_BTN}
-            buttonType='primary'
-            rightIcon='key'
-          />
-          {
-            userProfile.jtis.length === 0 &&
-            <div>
-              {NO_API_KEY}
-            </div>
-          }
-          {
-            userProfile.jtis &&
-            <KeyTable
-              jtis={userProfile.jtis}
-              onDelete={
-                (jti) => {
-                  onRequestDeleteKey(jti.jti, jti.exp, credentialCdisPath);
-                  onUpdatePopup({ deleteTokenPopup: true, keypairsApi: credentialCdisPath });
+            {
+              userProfile.jtis.length === 0
+            && (
+              <div>
+                {NO_API_KEY}
+              </div>
+            )
+            }
+            {
+              userProfile.jtis
+            && (
+              <KeyTable
+                jtis={userProfile.jtis}
+                onDelete={
+                  (jti) => {
+                    onRequestDeleteKey(jti.jti, jti.exp, credentialCdisPath);
+                    onUpdatePopup({ deleteTokenPopup: true, keypairsApi: credentialCdisPath });
+                  }
                 }
-              }
-            />
-          }
-        </ul>
+              />
+            )
+            }
+          </ul>
+        )
       }
       {
-        showFenceAuthzOnProfile &&
-        <AccessTable projects={submission.projects} projectsAccesses={user.project_access} />
+        showFenceAuthzOnProfile
+        && <AccessTable projects={submission.projects} projectsAccesses={user.project_access} />
       }
       {
-        showArboristAuthzOnProfile &&
-        <AccessTable projects={submission.projects} userAuthMapping={userAuthMapping} />
+        showArboristAuthzOnProfile
+        && <AccessTable projects={submission.projects} userAuthMapping={userAuthMapping} />
       }
     </div>
   );

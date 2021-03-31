@@ -26,8 +26,8 @@ class ExplorerHeatMap extends React.Component {
       const numberOfDecimals = 1;
       const precision = 10 ** numberOfDecimals;
       this.maxCellValue = 0;
-      const totalCount = this.props.filter[this.props.mainYAxisVar] ?
-        this.props.filter[this.props.mainYAxisVar].selectedValues.length : 0;
+      const totalCount = this.props.filter[this.props.mainYAxisVar]
+        ? this.props.filter[this.props.mainYAxisVar].selectedValues.length : 0;
 
       // convert string keys to numbers if needed (avoids 10 < 2 when sorting)
       if (this.props.guppyConfig.mainFieldIsNumeric) {
@@ -111,7 +111,7 @@ class ExplorerHeatMap extends React.Component {
     },
     yAxis: {
       type: 'category',
-      data: yAxisVars.map(field => yAxisVarsMapping[field]),
+      data: yAxisVars.map((field) => yAxisVarsMapping[field]),
       axisTick: {
         show: false,
       },
@@ -141,9 +141,9 @@ class ExplorerHeatMap extends React.Component {
     const yAxisVarsMapping = [this.props.mainYAxisVar].concat(
       this.props.guppyConfig.aggFields,
     ).reduce((res, field) => {
-      const mappingEntry = this.props.guppyConfig.fieldMapping &&
-      this.props.guppyConfig.fieldMapping.find(
-        i => i.field === field,
+      const mappingEntry = this.props.guppyConfig.fieldMapping
+      && this.props.guppyConfig.fieldMapping.find(
+        (i) => i.field === field,
       );
       res[field] = (mappingEntry && mappingEntry.name) || capitalizeFirstLetter(field);
       return res;
@@ -151,8 +151,7 @@ class ExplorerHeatMap extends React.Component {
 
     // y axis items in alpha order. mainYAxisVar (i.e. "subject_id") on top
     const yAxisVars = [this.props.mainYAxisVar].concat(
-      this.props.guppyConfig.aggFields.sort((a, b) =>
-        yAxisVarsMapping[a].localeCompare(yAxisVarsMapping[b]),
+      this.props.guppyConfig.aggFields.sort((a, b) => yAxisVarsMapping[a].localeCompare(yAxisVarsMapping[b]),
       ),
     );
 
@@ -161,7 +160,7 @@ class ExplorerHeatMap extends React.Component {
     const height = `${(yAxisVars.length * 20) + 80}px`; // default is 300px
 
     return (
-      <React.Fragment>
+      <>
         {
           (data && data.length) || this.props.isLocked ? (
             <div className='explorer-heat-map'>
@@ -188,7 +187,7 @@ class ExplorerHeatMap extends React.Component {
             </div>
           ) : null
         }
-      </React.Fragment>
+      </>
     );
   }
 }

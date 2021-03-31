@@ -1,6 +1,5 @@
 const fs = require('fs');
 
-
 /**
  * Little helper script just accumulates the .json
  * files in a given directory into an object keyed
@@ -8,7 +7,7 @@ const fs = require('fs');
  */
 function scanJsonDir(dirPath) {
   return fs.readdirSync(dirPath)
-    .filter(name => name.endsWith('.json'))
+    .filter((name) => name.endsWith('.json'))
     .map(
       (jsonName) => {
         const key = jsonName.substring(0, jsonName.length - 5); // strip .json

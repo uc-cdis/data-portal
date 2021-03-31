@@ -5,7 +5,7 @@ import './Footer.less';
 class Footer extends Component {
   render() {
     if (this.props.hidden) {
-      return (<React.Fragment />);
+      return (<></>);
     }
     return (
       <footer className='footer-container'>
@@ -15,7 +15,7 @@ class Footer extends Component {
               [{ name: 'Dictionary', version: this.props.dictionaryVersion },
                 { name: 'Submission', version: this.props.apiVersion },
                 { name: 'Portal', version: this.props.portalVersion }].map(
-                item => (
+                (item) => (
                   <div className='footer__version' key={item.name}>
                     <div className='h4-typo footer__version-name'>{item.name}</div>
                     <div className='body-typo footer__version-value'>v{item.version}</div>
@@ -24,8 +24,8 @@ class Footer extends Component {
               )
             }
           </div>
-          {this.props.privacyPolicy && this.props.privacyPolicy.text ?
-            <div className='footer__privacy-policy-area'>
+          {this.props.privacyPolicy && this.props.privacyPolicy.text
+            ? <div className='footer__privacy-policy-area'>
               <a
                 className='h4-typo footer__privacy-policy'
                 href={this.props.privacyPolicy.footerHref}
@@ -35,8 +35,7 @@ class Footer extends Component {
                 {this.props.privacyPolicy.text}
               </a>
             </div>
-            : null
-          }
+            : null}
           <div className='footer__logo-area'>
             {
               this.props.logos.map((logoObj, i) => (
@@ -57,8 +56,8 @@ class Footer extends Component {
               ))
             }
           </div>
-          { (this.props.links.length > 0) ?
-            <div className='footer__link-area'>
+          { (this.props.links.length > 0)
+            ? <div className='footer__link-area'>
               {
                 this.props.links.map((link, i) => (
                   <React.Fragment key={link.href}>
@@ -75,8 +74,7 @@ class Footer extends Component {
                 ))
               }
             </div>
-            : null
-          }
+            : null}
         </nav>
       </footer>
     );

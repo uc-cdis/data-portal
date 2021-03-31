@@ -15,7 +15,7 @@ const SIGNED_URL_ERROR_MSG = 'An error has occurred when generating signed URL:'
 
 function fileTypeTransform(type) {
   let t = type.replace(/_/g, ' '); // '-' to ' '
-  t = t.replace(/\b\w/g, l => l.toUpperCase()); // capitalize words
+  t = t.replace(/\b\w/g, (l) => l.toUpperCase()); // capitalize words
   return `| ${t} |`;
 }
 
@@ -40,7 +40,7 @@ class CoreMetadataHeader extends Component {
     this.props.onClearSignedURL();
   };
 
-  dateTransform = date => `Updated on ${date.substr(0, 10)}`;
+  dateTransform = (date) => `Updated on ${date.substr(0, 10)}`;
 
   render() {
     if (this.props.metadata) {
@@ -62,15 +62,18 @@ class CoreMetadataHeader extends Component {
             <button className='button-primary-orange'>
               {DOWNLOAD_BTN_CAPTION}
             </button>
-          </a>);
+          </a>
+);
 
         if (isEnabled('signedURLButton')) {
-          signedURLButton = (<Button
+          signedURLButton = (
+<Button
             onClick={() => this.onGenerateSignedURL()}
             label={SIGNED_URL_BTN_CAPTION}
             className='core-metadata-page__column--right--signed-url-button'
             buttonType='primary'
-          />);
+          />
+);
         }
       }
 
@@ -91,8 +94,8 @@ class CoreMetadataHeader extends Component {
           { downloadButton }
           { signedURLButton }
           {
-            this.props.signedURLPopup === true &&
-            <Popup
+            this.props.signedURLPopup === true
+            && <Popup
               message={(!this.props.error) ? SIGNED_URL_MSG : SIGNED_URL_ERROR_MSG}
               error={this.props.error}
               lines={(!this.props.error) ? [
@@ -124,7 +127,7 @@ class CoreMetadataHeader extends Component {
     // if there is no core metadata to display
 
     return (
-      <React.Fragment />
+      <></>
     );
   }
 }

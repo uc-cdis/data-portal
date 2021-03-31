@@ -8,10 +8,9 @@ class AppCard extends React.Component {
       <div className='app-card'>
         <h2>{this.props.title}</h2>
         <div className='app-card__description'>
-          {(this.props.description) ?
-            <p>{this.props.description}</p>
-            : null
-          }
+          {(this.props.description)
+            ? <p>{this.props.description}</p>
+            : null}
         </div>
         <img
           className='app-card__image'

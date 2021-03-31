@@ -5,15 +5,15 @@ const componentTexts = paramByApp(params, 'components');
 
 function getChartText() {
   const graphQL = getGraphQL(paramByApp(params, 'graphql'));
-  const boardPluralNames = graphQL.boardCounts.map(item => item.plural);
+  const boardPluralNames = graphQL.boardCounts.map((item) => item.plural);
   if (boardPluralNames.length < 4) { boardPluralNames.push('Files'); }
-  const detailPluralNames = graphQL.projectDetails.map(item => item.plural);
+  const detailPluralNames = graphQL.projectDetails.map((item) => item.plural);
   if (detailPluralNames.length < 4) { detailPluralNames.push('Files'); }
-  const indexChartNames = graphQL.boardCounts.map(item => item.plural);
+  const indexChartNames = graphQL.boardCounts.map((item) => item.plural);
   if (indexChartNames.length < 4) { indexChartNames.push('Files'); }
   return {
     boardPluralNames,
-    chartNames: graphQL.chartCounts.map(item => item.name),
+    chartNames: graphQL.chartCounts.map((item) => item.name),
     indexChartNames,
     detailPluralNames,
   };
@@ -64,7 +64,7 @@ function doStringify(value, variables, indent = 0, spaces = 0) {
   const ending = (spaces === 0) ? '' : '\n';
   if (Array.isArray(value)) {
     const objs = value.map(
-      item => `${insertSpace(indent + spaces)}${doStringify(item, variables, indent + spaces, spaces)}`,
+      (item) => `${insertSpace(indent + spaces)}${doStringify(item, variables, indent + spaces, spaces)}`,
     ).join(`,${ending}`);
     return doWrapping(objs, '[', ']', indent, spaces);
   }
@@ -82,7 +82,7 @@ function doStringify(value, variables, indent = 0, spaces = 0) {
   // but without quotes around the keys.
   const props = Object
     .keys(value)
-    .map(key => `${insertSpace(indent + spaces)}${key}:${doStringify(value[key], variables, indent + spaces, spaces)}`)
+    .map((key) => `${insertSpace(indent + spaces)}${key}:${doStringify(value[key], variables, indent + spaces, spaces)}`)
     .join(`,${ending}`);
   return doWrapping(props, '{', '}', indent, spaces);
 }
@@ -124,5 +124,5 @@ console.log(`const gaTracking = '${defaultGA}';`);
 console.log('const hostname = typeof window !== \'undefined\' ? `${window.location.protocol}//${window.location.hostname}/` : \'http://localhost/\';');
 console.log(`const components = ${stringify(fillDefaultValues(componentTexts, defaultTexts), ['hostname'], 2)};`);
 console.log(`const config = ${JSON.stringify(config, null, '  ')};`);
-console.log(`const requiredCerts = [${defaultRequiredCerts.map(item => `'${item}'`)}];`);
+console.log(`const requiredCerts = [${defaultRequiredCerts.map((item) => `'${item}'`)}];`);
 console.log('module.exports = { components, config, gaTracking, requiredCerts };');

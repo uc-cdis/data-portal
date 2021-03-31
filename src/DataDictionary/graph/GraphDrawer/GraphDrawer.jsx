@@ -19,7 +19,7 @@ class GraphDrawer extends React.Component {
     if (this.props.isGraphView
        && this.props.layoutInitialized
        && !this.nodeSVGElementInitialized) {
-      const graphNodesSVGElements = this.props.nodes.map(node => ({
+      const graphNodesSVGElements = this.props.nodes.map((node) => ({
         nodeID: node.id,
         svgElement: this.getNodeRef(node.id).current.getSVGElement(),
       }))
@@ -52,7 +52,7 @@ class GraphDrawer extends React.Component {
   }
 
   render() {
-    if (!this.props.layoutInitialized) return (<React.Fragment />);
+    if (!this.props.layoutInitialized) return (<></>);
     const boundingBoxLength = this.props.graphBoundingBox[2][0];
     const fittingScale = Math.min(
       this.props.canvasWidth,
@@ -79,13 +79,11 @@ class GraphDrawer extends React.Component {
             if (this.props.isSearchMode) {
               isEdgeFaded = true;
             } else if (this.props.highlightingNode) {
-              const isEdgeRelatedToHighlightedNode =
-                this.props.relatedNodeIDs.includes(edge.source)
+              const isEdgeRelatedToHighlightedNode =                this.props.relatedNodeIDs.includes(edge.source)
                 && this.props.relatedNodeIDs.includes(edge.target);
               if (this.props.secondHighlightingNodeID) {
-                const isEdgeAlongPathRelatedToSecondHighlightNode =
-                  !!this.props.pathRelatedToSecondHighlightingNode
-                    .find(e => (e.source === edge.source && e.target === edge.target));
+                const isEdgeAlongPathRelatedToSecondHighlightNode =                  !!this.props.pathRelatedToSecondHighlightingNode
+                    .find((e) => (e.source === edge.source && e.target === edge.target));
                 isEdgeHalfFaded = isEdgeRelatedToHighlightedNode
                   && !isEdgeAlongPathRelatedToSecondHighlightNode;
                 isEdgeFaded = !isEdgeRelatedToHighlightedNode;
@@ -121,15 +119,14 @@ class GraphDrawer extends React.Component {
               isNodeClickable = !isNodeFaded;
             } else if (this.props.highlightingNode) {
               isHighlightingNode = (this.props.highlightingNode.id === node.id);
-              isNodeClickable =
-                this.props.highlightingNode.id === node.id
+              isNodeClickable =                this.props.highlightingNode.id === node.id
                 || (this.props.secondHighlightingNodeCandidateIDs.length > 1
                   && this.props.secondHighlightingNodeCandidateIDs.includes(node.id));
 
               isNodeFaded = !this.props.relatedNodeIDs.includes(node.id);
               if (this.props.secondHighlightingNodeID) {
                 isNodeHalfFaded = !isNodeFaded && !this.props.pathRelatedToSecondHighlightingNode
-                  .find(e => (e.source === node.id || e.target === node.id));
+                  .find((e) => (e.source === node.id || e.target === node.id));
               }
             }
             let matchedNodeNameIndices = [];

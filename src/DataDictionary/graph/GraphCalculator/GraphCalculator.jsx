@@ -108,9 +108,9 @@ class GraphCalculator extends React.Component {
       this.props.nodes,
     );
     const subgraphEdges = this.props.edges
-      .filter(e => (relatedHighlightedNodeIDs.includes(e.source)
+      .filter((e) => (relatedHighlightedNodeIDs.includes(e.source)
         && relatedHighlightedNodeIDs.includes(e.target)))
-      .map(e => ({ source: e.source, target: e.target }));
+      .map((e) => ({ source: e.source, target: e.target }));
     const {
       dataModelStructure,
       routesBetweenStartEndNodes,
@@ -158,7 +158,7 @@ class GraphCalculator extends React.Component {
   }
 
   render() {
-    return (<React.Fragment />);
+    return (<></>);
   }
 }
 

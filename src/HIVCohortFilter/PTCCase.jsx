@@ -101,7 +101,7 @@ class PTCCase extends HIVCohortFilterCase {
       }
       const result = res.data._aggregation[this.state.visitIndexTypeName][bucketKey].histogram;
       const resultList = [];
-      result.forEach(item => (resultList.push({
+      result.forEach((item) => (resultList.push({
         key: item.key,
         doc_count: item.count,
       })));
@@ -172,13 +172,12 @@ class PTCCase extends HIVCohortFilterCase {
 
       // If a followup has no date-related attributes set, it is not helpful to this classifier
       visitArray = visitArray
-        .filter(x => x.visit_date !== null && x.visit_number !== null);
+        .filter((x) => x.visit_date !== null && x.visit_number !== null);
 
       if (visitArray.length < slidingWindowSize + 1) {
         subjectNeither.push(subjectWithVisits);
         return;
       }
-
 
       // The sliding window step. Window is of size this.state.numConsecutiveMonthsFromUser / 6
       for (let i = 0; i < visitArray.length - slidingWindowSize; i += 1) {
@@ -202,10 +201,8 @@ class PTCCase extends HIVCohortFilterCase {
           }
           if (vloadCheck && therapyCheck) {
             // Found PTC!
-            subjectWithVisits.consecutive_haart_treatments_end_at_followup
-                      = visitArray[(i + slidingWindowSize) - 1].submitter_id;
-            subjectWithVisits.stop_treatments_maintain_viral_load_at_followup
-                      = theNextVisit.submitter_id;
+            subjectWithVisits.consecutive_haart_treatments_end_at_followup                      = visitArray[(i + slidingWindowSize) - 1].submitter_id;
+            subjectWithVisits.stop_treatments_maintain_viral_load_at_followup                      = theNextVisit.submitter_id;
             for (let j = i + slidingWindowSize; j < visitArray.length; j += 1) {
               const nvloadCheck = (visitArray[j].viral_load > this.state.viralLoadFromUser);
               const ntherapyCheck = this.state.therapyValuesOfInterest
@@ -293,7 +290,7 @@ class PTCCase extends HIVCohortFilterCase {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <div className='hiv-cohort-filter__sidebar'>
           <form>
             <h2 className='hiv-cohort-filter__sidebar-title'>
@@ -431,7 +428,7 @@ class PTCCase extends HIVCohortFilterCase {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }

@@ -39,7 +39,7 @@ export class CheckBoxGroup extends Component {
           {'More options'}
         </a>
       );
-    } else if (this.state.collapsed === 2) {
+    } if (this.state.collapsed === 2) {
       return (
         <a href='#/' onClick={() => this.setState({ collapsed: 1 })}>
           {'Fewer options'}
@@ -50,7 +50,7 @@ export class CheckBoxGroup extends Component {
   };
 
   render() {
-    const selectedItems = this.props.selectedItems;
+    const { selectedItems } = this.props;
     const listItems = (this.state.collapsed === 1)
       ? this.props.listItems.slice(0, 3)
       : this.props.listItems;
@@ -58,7 +58,7 @@ export class CheckBoxGroup extends Component {
     return (
       <div className='checkbox-group'>
         {this.props.title}
-        {listItems.map(item => (
+        {listItems.map((item) => (
           <div key={item}>
             <input
               type='checkbox'

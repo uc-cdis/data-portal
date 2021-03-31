@@ -17,7 +17,7 @@ const isEmailAddress = (input) => {
  * NavBar renders row of nav-items of form { name, icon, link }
  */
 class TopBar extends Component {
-  isActive = id => this.props.activeTab === id;
+  isActive = (id) => this.props.activeTab === id;
 
   render() {
     return (
@@ -84,9 +84,8 @@ class TopBar extends Component {
             }
             {
               this.props.user.username !== undefined && this.props.useProfileDropdown !== true
-              &&
-              (
-                <React.Fragment>
+              &&              (
+                <>
                   <Link className='top-bar__link' to='/identity'>
                     <TopIconButton
                       icon='user-circle'
@@ -101,23 +100,22 @@ class TopBar extends Component {
                       name='Logout'
                     />
                   </Link>
-                </React.Fragment>
+                </>
               )
             }
             {
               this.props.user.username !== undefined && this.props.useProfileDropdown === true
-              &&
-              (
+              &&              (
                 <Popover
                   title={this.props.user.username}
                   placement='bottomRight'
-                  content={
+                  content={(
                     <React.Fragment>
                       <Link to='/identity'>View Profile</Link>
                       <br />
                       <Link to='#' onClick={this.props.onLogoutClick}>Logout</Link>
                     </React.Fragment>
-                  }
+                  )}
                 >
                   <Link className='top-bar__link' to='#'>
                     <TopIconButton
@@ -132,16 +130,15 @@ class TopBar extends Component {
             }
             {
               typeof this.props.user.username === 'undefined'
-              &&
-              (
-                <React.Fragment>
+              &&              (
+                <>
                   <Link className='top-bar__link' to='/login'>
                     <TopIconButton
                       icon='exit'
                       name='Login'
                     />
                   </Link>
-                </React.Fragment>
+                </>
               )
             }
           </nav>

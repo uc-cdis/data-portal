@@ -79,7 +79,7 @@ class DataDictionaryPropertyTable extends React.Component {
                 let typeMatchList = null;
                 if (this.props.needHighlightSearchResult) {
                   const matchedSummaryItem = matchedPropertiesSummary
-                    .find(item => item.propertyKey === propertyKey);
+                    .find((item) => item.propertyKey === propertyKey);
                   if (matchedSummaryItem) {
                     nameMatch = matchedSummaryItem.nameMatch;
                     descriptionMatch = matchedSummaryItem.descriptionMatch;
@@ -127,8 +127,7 @@ class DataDictionaryPropertyTable extends React.Component {
                             </span>
                           ) : (
                             <span>No</span>
-                          )
-                          }
+                          )}
                         </td>
                       )
                     }

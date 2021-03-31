@@ -14,6 +14,7 @@ class EnumInput extends Component {
     onUpdateFormSchema: PropTypes.func,
     propertyType: PropTypes.string,
   };
+
   static getDefaultProps = {
     onUpdateFormSchema: () => {},
     propertyType: null,
@@ -24,8 +25,9 @@ class EnumInput extends Component {
       this.props.onUpdateFormSchema({ [this.props.name]: this.props.propertyType });
     }
   }
+
   render() {
-    const options = this.props.options.map(option => ({ label: option, value: option }));
+    const options = this.props.options.map((option) => ({ label: option, value: option }));
 
     const onChangeEnumWrapper = (newValue) => {
       this.props.onChange(this.props.name, newValue);
@@ -43,7 +45,7 @@ class EnumInput extends Component {
           ]}
         >
           <Select onChange={onChangeEnumWrapper} size={'large'} allowClear>
-            {options.map(opt => (
+            {options.map((opt) => (
               <Option key={opt.value} value={opt.value}>{opt.label}</Option>
             ))}
           </Select>

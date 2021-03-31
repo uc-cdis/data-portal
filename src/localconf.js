@@ -60,7 +60,7 @@ function buildConfig(opts) {
     tierAccessLevel,
     tierAccessLimit,
     mapboxAPIToken,
-  } = Object.assign({}, defaults, opts);
+  } = { ...defaults, ...opts };
 
   function ensureTrailingSlash(url) {
     const u = new URL(url);
@@ -166,7 +166,7 @@ function buildConfig(opts) {
     }
   });
 
-  const dataAvailabilityToolConfig = config.dataAvailabilityToolConfig;
+  const { dataAvailabilityToolConfig } = config;
 
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
@@ -213,15 +213,15 @@ function buildConfig(opts) {
     resourceBrowserPublic = true;
   }
 
-  const covid19DashboardConfig = config.covid19DashboardConfig;
+  const { covid19DashboardConfig } = config;
   if (covid19DashboardConfig) {
     covid19DashboardConfig.dataUrl = ensureTrailingSlash(covid19DashboardConfig.dataUrl || '');
   }
 
-  const discoveryConfig = config.discoveryConfig;
+  const { discoveryConfig } = config;
 
-  const workspacePageTitle = config.workspacePageTitle;
-  const workspacePageDescription = config.workspacePageDescription;
+  const { workspacePageTitle } = config;
+  const { workspacePageDescription } = config;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -255,7 +255,7 @@ function buildConfig(opts) {
   const defaultLineLimit = 30;
   const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;
 
-  const analysisTools = config.analysisTools;
+  const { analysisTools } = config;
   const analysisApps = {};
   if (analysisTools) {
     analysisTools.forEach((at) => {

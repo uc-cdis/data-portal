@@ -32,7 +32,7 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
       }
       // eslint-disable-next-line no-await-in-loop
       const jsonResponse = await res.json();
-      const studies = Object.values(jsonResponse).map(entry => entry[STUDY_DATA_FIELD]);
+      const studies = Object.values(jsonResponse).map((entry) => entry[STUDY_DATA_FIELD]);
       allStudies = allStudies.concat(studies);
       const noMoreStudiesToLoad = studies.length < LIMIT;
       if (noMoreStudiesToLoad) {
@@ -61,12 +61,12 @@ const DiscoveryWithMDSBackend: React.FC<{
     loadStudiesFromMDS().then((rawStudies) => {
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
-        const authzField = props.config.minimalFieldMapping.authzField;
+        const { authzField } = props.config.minimalFieldMapping;
         // useArboristUI=true is required for userHasMethodForServiceOnResource
         if (!useArboristUI) {
           throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
         }
-        const studiesWithAccessibleField = rawStudies.map(study => ({
+        const studiesWithAccessibleField = rawStudies.map((study) => ({
           ...study,
           __accessible: userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAuthMapping),
         }));
@@ -80,13 +80,15 @@ const DiscoveryWithMDSBackend: React.FC<{
     });
   }, []);
 
-  return (<Discovery
-    studies={studies === null ? [] : studies}
-    {...props}
-  />);
+  return (
+    <Discovery
+      studies={studies === null ? [] : studies}
+      {...props}
+    />
+  );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   userAuthMapping: state.userAuthMapping,
   config: discoveryConfig,
 });

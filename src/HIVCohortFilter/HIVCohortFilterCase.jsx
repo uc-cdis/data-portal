@@ -88,7 +88,7 @@ class HIVCohortFilterCase extends React.Component {
       const count = keyCountMap[keyId];
       if (batchCounts + count > 5000) {
         // query this batch for follow ups
-        promiseList.push(this.getFollowupsBuckets(keyName, keyRange).then(res => res));
+        promiseList.push(this.getFollowupsBuckets(keyName, keyRange).then((res) => res));
 
         // reset batch
         batchCounts = count;
@@ -97,7 +97,7 @@ class HIVCohortFilterCase extends React.Component {
       batchCounts += count;
       keyRange.push(keyId);
     });
-    promiseList.push(this.getFollowupsBuckets(keyName, keyRange).then(res => res));
+    promiseList.push(this.getFollowupsBuckets(keyName, keyRange).then((res) => res));
 
     let mergedFollowUps = [];
     const resultList = await Promise.all(promiseList);

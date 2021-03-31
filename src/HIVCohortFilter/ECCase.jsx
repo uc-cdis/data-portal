@@ -62,14 +62,17 @@ class ECCase extends HIVCohortFilterCase {
       ],
       filter: {
         AND: [
-          { '=': {
+          {
+ '=': {
             hiv_status: 'positive',
           },
           },
-          { in: {
+          {
+ in: {
             project_id: hivAppProjects,
           },
-          }] },
+          }]
+},
     };
     return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
       if (!data
@@ -122,14 +125,17 @@ class ECCase extends HIVCohortFilterCase {
       ],
       filter: {
         AND: [
-          { '=': {
+          {
+ '=': {
             hiv_status: 'positive',
           },
           },
-          { in: {
+          {
+ in: {
             project_id: hivAppProjects,
           },
-          }] },
+          }]
+},
     };
     return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
       if (!data
@@ -163,7 +169,7 @@ class ECCase extends HIVCohortFilterCase {
         }
       }
     });
-    const filtFollowups = Object.values(filtFollowup).filter(x => (x.length !== 0));
+    const filtFollowups = Object.values(filtFollowup).filter((x) => (x.length !== 0));
     return filtFollowups;
   }
 
@@ -189,7 +195,7 @@ class ECCase extends HIVCohortFilterCase {
     const ecPeriod = {};
     let nNonsuper = 0;
     const fhv = visitArray[0].submitter_id;
-    const subject_id = visitArray[0].subject_id;
+    const {subject_id} = visitArray[0];
     for (let i = 0; i < visitArray.length; i += 1) {
       if (visitArray[i].viral_load != null
         && visitArray[i].viral_load < this.state.suppressViralLoadFromUser) {
@@ -255,7 +261,7 @@ class ECCase extends HIVCohortFilterCase {
     // visits that match the EC criteria
     filtFollowups.forEach((item) => {
       const updateContent = this.visitsMatchECWindowCriteria(item);
-      const ecPeriod = updateContent.ecPeriod;
+      const {ecPeriod} = updateContent;
       if (Object.keys(ecPeriod).length === 0) {
         subjectControl.push(item);
       } else {
@@ -310,10 +316,10 @@ class ECCase extends HIVCohortFilterCase {
     const spikeViralLoadFromUser = this.spikeViralLoadInputRef.current.valueAsNumber;
     const numConsecutiveVisitsFromUser = this.numConsecutiveVisitsInputRef.current.valueAsNumber;
     this.setState({
-      suppressViralLoadFromUser: suppressViralLoadFromUser > 0 ?
-        suppressViralLoadFromUser : undefined,
-      spikeViralLoadFromUser: spikeViralLoadFromUser > 0 ?
-        spikeViralLoadFromUser : undefined,
+      suppressViralLoadFromUser: suppressViralLoadFromUser > 0
+        ? suppressViralLoadFromUser : undefined,
+      spikeViralLoadFromUser: spikeViralLoadFromUser > 0
+        ? spikeViralLoadFromUser : undefined,
       numConsecutiveVisitsFromUser: numConsecutiveVisitsFromUser > 0
         ? numConsecutiveVisitsFromUser : undefined,
       isReadyToCalculate: (suppressViralLoadFromUser > 0
@@ -334,7 +340,7 @@ class ECCase extends HIVCohortFilterCase {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <div className='hiv-cohort-filter__ec-sidebar'>
           <form>
             <h2 className='hiv-cohort-filter__sidebar-title'>
@@ -479,7 +485,7 @@ class ECCase extends HIVCohortFilterCase {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }

@@ -14,6 +14,7 @@ class TextInput extends Component {
     onUpdateFormSchema: PropTypes.func,
     propertyType: PropTypes.string,
   };
+
   static getDefaultProps = {
     onUpdateFormSchema: () => {},
     propertyType: undefined,
@@ -25,6 +26,7 @@ class TextInput extends Component {
       this.props.onUpdateFormSchema({ [this.props.name]: this.props.propertyType });
     }
   }
+
   render() {
     return (
       <div>

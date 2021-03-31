@@ -26,7 +26,7 @@ class DataModelGraph extends React.Component {
   }
 
   handleToggleClick() {
-    this.setState(prevState => ({ fullToggle: !prevState.fullToggle }));
+    this.setState((prevState) => ({ fullToggle: !prevState.fullToggle }));
   }
 
   render() {
@@ -48,6 +48,5 @@ class DataModelGraph extends React.Component {
     return null;
   }
 }
-
 
 export default DataModelGraph;

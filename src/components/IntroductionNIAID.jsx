@@ -19,8 +19,8 @@ class IntroductionNIAID extends Component {
         </h1>
         <div className='high-light introduction__text'>
           {(this.props.data.text) ? parse(this.props.data.text) : null}
-          {(this.props.data.multiLineTexts) ?
-            (this.props.data.multiLineTexts.map((text, i) => <p key={i}>{parse(text)}</p>)) : null}
+          {(this.props.data.multiLineTexts)
+            ? (this.props.data.multiLineTexts.map((text, i) => <p key={i}>{parse(text)}</p>)) : null}
         </div>
         <div className='introduction__button-area'>
           <Space>

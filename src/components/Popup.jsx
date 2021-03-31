@@ -15,42 +15,48 @@ const Popup = ({
       <div className='popup__title'>
         <div className='popup__icon'>
           {
-            iconName !== '' &&
-            <IconComponent
-              iconName={iconName}
-              dictIcons={dictIcons}
-              svgStyles={{ verticalAlign: 'middle', marginRight: '17px', display: 'inline-flex' }}
-            />
+            iconName !== ''
+            && (
+              <IconComponent
+                iconName={iconName}
+                dictIcons={dictIcons}
+                svgStyles={{ verticalAlign: 'middle', marginRight: '17px', display: 'inline-flex' }}
+              />
+            )
           }
           <div className='h2-typo popup__title-text'>{title}</div>
         </div>
         {
-          onClose &&
-          <div role='button' tabIndex={-1} className='popup__close-button' onClick={onClose}>
-            <IconComponent
-              iconName='cross'
-              dictIcons={dictIcons}
-              svgStyles={{ verticalAlign: 'middle' }}
-            />
-          </div>
+          onClose
+          && (
+            <div role='button' tabIndex={-1} className='popup__close-button' onClick={onClose}>
+              <IconComponent
+                iconName='cross'
+                dictIcons={dictIcons}
+                svgStyles={{ verticalAlign: 'middle' }}
+              />
+            </div>
+          )
         }
       </div>
       <div className='popup__message'>
         { message && <div className='high-light'>{message}</div> }
         {
-          lines.length > 0 &&
-          <pre>
-            {
-              lines.map((l, i) => (
-                <div key={`line_${i}`}>
-                  {l.label && [<b className='h3-typo'>{l.label}</b>, <br />]}
-                  <code>
-                    {l.code} <br />
-                  </code>
-                </div>
-              ))
-            }
-          </pre>
+          lines.length > 0
+          && (
+            <pre>
+              {
+                lines.map((l, i) => (
+                  <div key={`line_${i}`}>
+                    {l.label && [<b className='h3-typo'>{l.label}</b>, <br />]}
+                    <code>
+                      {l.code} <br />
+                    </code>
+                  </div>
+                ))
+              }
+            </pre>
+          )
         }
         { children }
         { error && <h6 className='popup__error'>Error</h6> }
@@ -61,14 +67,16 @@ const Popup = ({
           {
             leftButtons.map((btn, i) => [
               i > 0 && ' ',
-              !btn.icon ? <Button
-                key={btn.caption}
-                onClick={btn.fn}
-                label={btn.caption}
-                enabled={(btn.enabled !== undefined) ? btn.enabled : true}
-                buttonType='default'
-                value={btn.value}
-              /> :
+              !btn.icon ? (
+                <Button
+                  key={btn.caption}
+                  onClick={btn.fn}
+                  label={btn.caption}
+                  enabled={(btn.enabled !== undefined) ? btn.enabled : true}
+                  buttonType='default'
+                  value={btn.value}
+                />
+              ) : (
                 <Button
                   key={btn.caption}
                   onClick={btn.fn}
@@ -77,7 +85,8 @@ const Popup = ({
                   buttonType='default'
                   rightIcon={btn.icon}
                   value={btn.value}
-                />,
+                />
+              ),
             ])
           }
         </div>
@@ -85,14 +94,16 @@ const Popup = ({
           {
             rightButtons.map((btn, i) => [
               i > 0 && ' ',
-              !btn.icon ? <Button
-                key={btn.caption}
-                onClick={btn.fn}
-                label={btn.caption}
-                enabled={(btn.enabled !== undefined) ? btn.enabled : true}
-                buttonType='primary'
-                value={btn.value}
-              /> :
+              !btn.icon ? (
+                <Button
+                  key={btn.caption}
+                  onClick={btn.fn}
+                  label={btn.caption}
+                  enabled={(btn.enabled !== undefined) ? btn.enabled : true}
+                  buttonType='primary'
+                  value={btn.value}
+                />
+              ) : (
                 <Button
                   key={btn.caption}
                   onClick={btn.fn}
@@ -101,7 +112,8 @@ const Popup = ({
                   buttonType='primary'
                   rightIcon={btn.icon}
                   value={btn.value}
-                />,
+                />
+              ),
             ])
           }
         </div>

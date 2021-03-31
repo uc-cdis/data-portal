@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import IconComponent from '../components/Icon';
+import IconComponent from './Icon';
 import './FileTypePicture.less';
 
 function dataFormatToFileType(dictIcons, dataFormat) {

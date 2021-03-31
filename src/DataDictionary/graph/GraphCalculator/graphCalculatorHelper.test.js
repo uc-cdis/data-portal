@@ -16,10 +16,10 @@ describe('graphCalculatorHelper', () => {
   it('can calculate layout', async () => {
     const layout = await calculateGraphLayout(dictionary);
     layout.nodes.forEach((n) => {
-      expect(nodes.find(testN => testN.id === n.id)).toBeDefined();
+      expect(nodes.find((testN) => testN.id === n.id)).toBeDefined();
     });
     layout.edges.forEach((e) => {
-      const found = edges.find(testE => testE.source === e.source && testE.target === e.target);
+      const found = edges.find((testE) => testE.source === e.source && testE.target === e.target);
       expect(found).toBeDefined();
     });
   });

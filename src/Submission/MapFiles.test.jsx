@@ -36,7 +36,7 @@ describe('MapFiles', () => {
       const values = instance.state.filesByDate[date];
       expect(values.length).toEqual(testGroupedData[date].length);
       values.forEach((val) => {
-        expect(testGroupedData[date].map(file => file.did).includes(val.did));
+        expect(testGroupedData[date].map((file) => file.did).includes(val.did));
       });
     });
   });
@@ -142,7 +142,6 @@ describe('MapFiles', () => {
     expect(instance.isMapEmpty({})).toEqual(true);
   });
 
-
   it('toggles a checkbox', () => {
     const groupedData = {};
     testGroupedData['09/11/18'].forEach((file) => {
@@ -159,7 +158,7 @@ describe('MapFiles', () => {
     });
 
     const date = '09/11/18';
-    const fileToToggle = testGroupedData['09/11/18'].find(file => instance.isFileReady(file));
+    const fileToToggle = testGroupedData['09/11/18'].find((file) => instance.isFileReady(file));
 
     expect(fileToToggle).toBeDefined();
     instance.toggleCheckBox(date, fileToToggle);
@@ -175,20 +174,26 @@ describe('MapFiles', () => {
         0: { },
       },
       allFilesByGroup: {
-        0: { 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' },
+        0: {
+          1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4',
+        },
       },
     });
 
     instance.toggleSelectAll('0');
     expect(instance.state.selectedFilesByGroup['0'])
-      .toEqual({ 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' });
+      .toEqual({
+        1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4',
+      });
 
     instance.setState({
       selectedFilesByGroup: {
         0: { 1: 'value1', 2: 'value2' },
       },
       allFilesByGroup: {
-        0: { 1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4' },
+        0: {
+          1: 'value1', 2: 'value2', 3: 'value3', 4: 'value4',
+        },
       },
     });
 
@@ -228,8 +233,7 @@ describe('MapFiles', () => {
   });
 
   it('returns if a file is ready to be mapped', () => {
-    const readyFiles = testData.records.filter(file =>
-      file.hashes && Object.keys(file.hashes).length > 0,
+    const readyFiles = testData.records.filter((file) => file.hashes && Object.keys(file.hashes).length > 0,
     );
     expect(readyFiles.length).toBeGreaterThan(0);
     expect(instance.isFileReady(readyFiles[0])).toBe(true);

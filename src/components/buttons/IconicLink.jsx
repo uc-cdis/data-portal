@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 import IconComponent from '../Icon';
 
-
 class IconicLink extends React.Component {
   renderButton(styles) {
     return (
-      <React.Fragment>
+      <>
         {
           this.props.dictIcons !== undefined ?
             <button className={this.props.buttonClassName}>
@@ -23,7 +22,7 @@ class IconicLink extends React.Component {
               {this.props.caption}
             </button>
         }
-      </React.Fragment>
+      </>
     );
   }
 

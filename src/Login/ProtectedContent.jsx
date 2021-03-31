@@ -58,33 +58,32 @@ class ProtectedContent extends React.Component {
    */
   componentDidMount() {
     getReduxStore().then(
-      store =>
-        Promise.all(
-          [
-            store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
-            store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
-          ],
-        ).then(
-          () => this.checkLoginStatus(store, this.state)
-            .then(newState => this.props.public || this.checkQuizStatus(newState))
-            .then(newState => this.props.public || this.checkApiToken(store, newState)),
-        ).then(
-          (newState) => {
-            const filterPromise = (!this.props.public && newState.authenticated
+      (store) => Promise.all(
+        [
+          store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
+          store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
+        ],
+      ).then(
+        () => this.checkLoginStatus(store, this.state)
+          .then((newState) => this.props.public || this.checkQuizStatus(newState))
+          .then((newState) => this.props.public || this.checkApiToken(store, newState)),
+      ).then(
+        (newState) => {
+          const filterPromise = (!this.props.public && newState.authenticated
               && typeof this.props.filter === 'function')
-              ? this.props.filter()
-              : Promise.resolve('ok');
+            ? this.props.filter()
+            : Promise.resolve('ok');
             // finally update the component state
-            const finish = () => {
-              const latestState = Object.assign({}, newState);
-              latestState.dataLoaded = true;
-              this.setState(latestState);
-            };
-            return filterPromise.then(
-              finish, finish,
-            );
-          },
-        ),
+          const finish = () => {
+            const latestState = { ...newState };
+            latestState.dataLoaded = true;
+            this.setState(latestState);
+          };
+          return filterPromise.then(
+            finish, finish,
+          );
+        },
+      ),
     );
     if (this.props.public) {
       getReduxStore().then(
@@ -95,7 +94,7 @@ class ProtectedContent extends React.Component {
             : Promise.resolve('ok');
           // finally update the component state
           const finish = () => {
-            const latestState = Object.assign({}, store);
+            const latestState = { ...store };
             latestState.dataLoaded = true;
             this.setState(latestState);
           };
@@ -116,7 +115,7 @@ class ProtectedContent extends React.Component {
    * @return Promise<{redirectTo, authenticated, user}>
    */
   checkLoginStatus = (store, initialState) => {
-    const newState = Object.assign({}, initialState);
+    const newState = { ...initialState };
     const nowMs = Date.now();
     newState.authenticated = true;
     newState.redirectTo = null;
@@ -153,7 +152,7 @@ class ProtectedContent extends React.Component {
    * @return newState passed through
    */
   checkApiToken = (store, initialState) => {
-    const newState = Object.assign({}, initialState);
+    const newState = { ...initialState };
 
     if (!newState.authenticated) {
       return Promise.resolve(newState);
@@ -164,11 +163,11 @@ class ProtectedContent extends React.Component {
         // The assumption here is that fetchProjects either succeeds or fails.
         // If it fails (we won't have any project data), then we need to refresh our api token ...
         //
-        const projects = store.getState().submission.projects;
+        const { projects } = store.getState().submission;
         if (projects) {
           // user already has a valid token
           return Promise.resolve(newState);
-        } else if (info.status !== 403 || info.status !== 401) {
+        } if (info.status !== 403 || info.status !== 401) {
           // do not authenticate unless we have a 403 or 401
           // should only check 401 after we fix fence to return correct
           // error code for all cases
@@ -197,8 +196,7 @@ class ProtectedContent extends React.Component {
     }
     const { user } = newState;
     // user is authenticated - now check if he has certs
-    const isMissingCerts =
-      intersection(requiredCerts, user.certificates_uploaded).length !== requiredCerts.length;
+    const isMissingCerts = intersection(requiredCerts, user.certificates_uploaded).length !== requiredCerts.length;
     // take quiz if this user doesn't have required certificate
     if (this.props.match.path !== '/quiz' && isMissingCerts) {
       newState.redirectTo = '/quiz';
@@ -227,24 +225,27 @@ class ProtectedContent extends React.Component {
           fromURL = fromURL.concat(this.state.from.search);
         }
       }
-      return (<Redirect to={{
-        pathname: this.state.redirectTo,
-        from: fromURL }} // send previous location to redirect
-      />);
-    } else if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
+      return (
+        <Redirect to={{
+          pathname: this.state.redirectTo,
+          from: fromURL,
+        }}
+        />
+      );
+    } if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
-    } else if (!this.props.public && this.state.authenticated) {
+    } if (!this.props.public && this.state.authenticated) {
       return (
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <ReduxAuthTimeoutPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
-    } else if (this.props.public && this.state.dataLoaded) {
+    } if (this.props.public && this.state.dataLoaded) {
       return (
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <Component params={params} location={this.props.location} history={this.props.history} />

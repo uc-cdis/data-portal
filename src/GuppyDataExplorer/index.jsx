@@ -2,7 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import GuppyDataExplorer from './GuppyDataExplorer';
-import { guppyUrl, tierAccessLevel, tierAccessLimit, explorerConfig, dataAvailabilityToolConfig, useNewExplorerConfigFormat, indexScopedTierAccessMode } from '../localconf';
+import {
+ guppyUrl, tierAccessLevel, tierAccessLimit, explorerConfig, dataAvailabilityToolConfig, useNewExplorerConfigFormat, indexScopedTierAccessMode
+} from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 import './GuppyExplorer.css';
 
@@ -29,11 +31,11 @@ class Explorer extends React.Component {
   render() {
     // if no configs or comes from '/files' but there is no file tab
     if (explorerConfig.length === 0 || this.state.tab === -1) {
-      return <React.Fragment />;
+      return <></>;
     }
 
     const tabFragment = (
-      <React.Fragment>
+      <>
         <div className='guppy-explorer__tabs'>
           {explorerConfig.map((element, index) => {
             let tabTitle = '';
@@ -57,7 +59,7 @@ class Explorer extends React.Component {
             );
           })}
         </div>
-      </React.Fragment>
+      </>
     );
 
     let heatMapConfig = null;
@@ -71,14 +73,14 @@ class Explorer extends React.Component {
       heatMapConfig = this.state.tab === 0 ? dataAvailabilityToolConfig : null;
     }
 
-    const tierAccessLevelCalculated = indexScopedTierAccessMode ?
-      explorerConfig[this.state.tab].guppyConfig.tierAccessLevel : tierAccessLevel;
+    const tierAccessLevelCalculated = indexScopedTierAccessMode
+      ? explorerConfig[this.state.tab].guppyConfig.tierAccessLevel : tierAccessLevel;
 
     return (
       <div className='guppy-explorer'>
         {
-          (explorerConfig.length > 1) ?
-            tabFragment
+          (explorerConfig.length > 1)
+            ? tabFragment
             : null
         }
         <div className={(explorerConfig.length > 1) ? 'guppy-explorer__main' : ''}>

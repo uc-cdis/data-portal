@@ -1,6 +1,8 @@
 import React from 'react';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { userapiPath, fenceDownloadPath, jobapiPath, hostname } from '../localconf';
+import {
+ userapiPath, fenceDownloadPath, jobapiPath, hostname
+} from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './Indexing.less';
 import Popup from '../components/Popup';
@@ -11,7 +13,6 @@ import dictIcons from '../img/icons/index';
 class Indexing extends React.Component {
   constructor(props) {
     super(props);
-
 
     this.initialStateConfiguration = {
       // Index Files flow
@@ -32,7 +33,7 @@ class Indexing extends React.Component {
       downloadManifestStatus: 'running',
       downloadManifestStatusLastUpdated: this.getCurrentTime(),
     };
-    this.state = Object.assign({}, this.initialStateConfiguration);
+    this.state = { ...this.initialStateConfiguration};
   }
 
   onChange = (e) => {
@@ -54,7 +55,7 @@ class Indexing extends React.Component {
   resetAllPageForms = () => {
     this.setState(this.initialStateConfiguration);
     const forms = Array.from(document.getElementsByClassName('index-flow-form'));
-    forms.map(x => x.reset());
+    forms.map((x) => x.reset());
   }
 
   createBlankIndexdRecord = () => {
@@ -221,8 +222,7 @@ class Indexing extends React.Component {
     });
   }
 
-
-  retrieveJobOutput = uid => fetchWithCreds({
+  retrieveJobOutput = (uid) => fetchWithCreds({
     path: `${jobapiPath}output?UID=${uid}`,
     method: 'GET',
     customHeaders: { 'Content-Type': 'application/json' },
@@ -256,7 +256,7 @@ class Indexing extends React.Component {
           }
         });
         return;
-      } else if (response.data && response.data.status === 'Failed') {
+      } if (response.data && response.data.status === 'Failed') {
         thisPointer.setState({
           indexingFilesStatus: 'error',
           indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
@@ -297,7 +297,7 @@ class Indexing extends React.Component {
             }
           });
         return;
-      } else if (response.data && response.data.status === 'Failed') {
+      } if (response.data && response.data.status === 'Failed') {
         thisPointer.setState({
           downloadManifestStatus: 'error',
           downloadManifestPopupMessage: 'The manifest generation job was dispatched, but failed to produce output.',
@@ -327,7 +327,7 @@ class Indexing extends React.Component {
 
   render = () => {
     const indexFilesSuccessPopupBlock = (
-      <React.Fragment>
+      <>
         <div className='index-files-popup-big-icon'>
           <div className='index-files-circle-border'>
             <IconComponent iconName='checkbox' dictIcons={dictIcons} />
@@ -343,7 +343,7 @@ class Indexing extends React.Component {
             Last updated: { this.state.indexingFilesStatusLastUpdated }
           </p>
         </div>
-      </React.Fragment>
+      </>
     );
 
     const indexFilesErrorPopupBlock = (
@@ -361,7 +361,7 @@ class Indexing extends React.Component {
     );
 
     const indexFilesRunningPopupBlock = (
-      <React.Fragment>
+      <>
         <Spinner caption='' type='spinning' />
         <div className='index-files-popup-text'>
           <br />
@@ -374,7 +374,7 @@ class Indexing extends React.Component {
           <p>Please do not navigate away from this page until
           the operation is complete.</p>
         </div>
-      </React.Fragment>
+      </>
     );
 
     const indexFilesPopupBlocks = {
@@ -383,9 +383,8 @@ class Indexing extends React.Component {
       running: indexFilesRunningPopupBlock,
     };
 
-
     const downloadManifestSuccessPopupBlock = (
-      <React.Fragment>
+      <>
         <div className='index-files-popup-big-icon'>
           <div className='index-files-circle-border'>
             <IconComponent iconName='checkbox' dictIcons={dictIcons} />
@@ -401,7 +400,7 @@ class Indexing extends React.Component {
             Last updated: { this.state.downloadManifestStatusLastUpdated }
           </p>
         </div>
-      </React.Fragment>
+      </>
     );
 
     const downloadManifestErrorPopupBlock = (
@@ -416,7 +415,7 @@ class Indexing extends React.Component {
     );
 
     const downloadManifestRunningPopupBlock = (
-      <React.Fragment>
+      <>
         <Spinner caption='' type='spinning' />
         <div className='index-files-popup-text'>
           <br />
@@ -429,7 +428,7 @@ class Indexing extends React.Component {
           <p>Please do not navigate away from this page until
           the operation is complete.</p>
         </div>
-      </React.Fragment>
+      </>
     );
 
     const downloadManifestPopupBlocks = {
@@ -454,7 +453,6 @@ class Indexing extends React.Component {
       fn: () => this.downloadJobOutput(this.state.downloadManifestManifestLink),
     });
 
-
     return (
       <div className='indexing-page'>
         <div>
@@ -466,7 +464,8 @@ class Indexing extends React.Component {
               <p>An indexing file, or file manifest, is a TSV containing information about
                   files that exist in cloud storage.
                   Rows of importance include the MD5 sum of the file,
-                  a link to the file, the filename, and its size.</p>
+                  a link to the file, the filename, and its size.
+              </p>
 
               <p>Upload an indexing file below to create records in indexd for new object files.</p>
               <br />
@@ -486,8 +485,9 @@ class Indexing extends React.Component {
             </div>
           </div>
           {
-            this.state.showIndexFilesPopup &&
-                  (<Popup
+            this.state.showIndexFilesPopup
+                  && (
+<Popup
                     message={''}
                     title='Indexing Files'
                     rightButtons={this.state.indexingFilesStatus !== 'success' ? [
@@ -512,12 +512,14 @@ class Indexing extends React.Component {
                     onClose={() => this.onHidePopup()}
                   >
                     { indexFilesPopupBlocks[this.state.indexingFilesStatus] }
-                  </Popup>)
+                  </Popup>
+)
           }
 
           {
-            this.state.showDownloadManifestPopup &&
-                  (<Popup
+            this.state.showDownloadManifestPopup
+                  && (
+<Popup
                     message={''}
                     title='Downloading Indexing File'
                     rightButtons={this.state.downloadManifestStatus !== 'success' ? [
@@ -529,7 +531,8 @@ class Indexing extends React.Component {
                     onClose={() => this.onHidePopup()}
                   >
                     { downloadManifestPopupBlocks[this.state.downloadManifestStatus] }
-                  </Popup>)
+                  </Popup>
+)
           }
           <div className='action-panel'>
             <div className='action-panel-title'>

@@ -5,7 +5,9 @@ import { forceSimulation, forceLink } from 'd3-force';
 import { extent } from 'd3-array';
 
 import { getCategoryColor } from '../DataDictionary/NodeCategories/helper';
-import { legendCreator, addArrows, addLinks, calculatePosition } from '../utils';
+import {
+  legendCreator, addArrows, addLinks, calculatePosition,
+} from '../utils';
 import { assignNodePositions } from '../GraphUtils/utils';
 
 const d3 = {
@@ -25,11 +27,11 @@ const d3 = {
 export function createSvgGraph(nodesIn, edges) {
   assignNodePositions(nodesIn, edges);
   // some nodes may not be linked under the root, so filter them out ...
-  const nodes = nodesIn.filter(nd => !!nd.position);
-  const minX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
-  const minY = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
-  const maxX = Math.round(1 / d3.extent(nodes.map(node => node.position[0]))[0]);
-  const maxY = Math.round(1 / d3.extent(nodes.map(node => node.position[1]))[0]);
+  const nodes = nodesIn.filter((nd) => !!nd.position);
+  const minX = Math.round(1 / d3.extent(nodes.map((node) => node.position[0]))[0]);
+  const minY = Math.round(1 / d3.extent(nodes.map((node) => node.position[1]))[0]);
+  const maxX = Math.round(1 / d3.extent(nodes.map((node) => node.position[0]))[0]);
+  const maxY = Math.round(1 / d3.extent(nodes.map((node) => node.position[1]))[0]);
 
   const padding = 25;
   const radius = 60;
@@ -59,8 +61,8 @@ export function createSvgGraph(nodesIn, edges) {
   const calcPosObj = calculatePosition(nodes, width, height);
   const numRows = calcPosObj.fyValsLength;
   const unclickableNodes = ['program', 'project'];
-  const nodeTypes = nodes.map(node => node.id);
-  const nodesForQuery = nodeTypes.filter(nt => !unclickableNodes.includes(nt));
+  const nodeTypes = nodes.map((node) => node.id);
+  const nodesForQuery = nodeTypes.filter((nt) => !unclickableNodes.includes(nt));
 
   // Add search on clicking a node
   const node = graph.selectAll('g.gnode')
@@ -73,7 +75,7 @@ export function createSvgGraph(nodesIn, edges) {
       }
       return '';
     })
-    .attr('id', d => d.id)
+    .attr('id', (d) => d.id)
     .on('click', (d) => {
       for (let i = 0; i < nodesForQuery.length; i += 1) {
         if (d.id === nodesForQuery[i]) {
@@ -123,7 +125,7 @@ export function createSvgGraph(nodesIn, edges) {
   });
 
   node.append('text')
-    .text(d => (d.count))
+    .text((d) => (d.count))
     .attr('text-anchor', 'middle')
     .attr('font-size', graphFontSize)
     .attr('dy', (d) => {
@@ -140,7 +142,7 @@ export function createSvgGraph(nodesIn, edges) {
       }Q${d.source.x},${d.source.y + ((height / numRows) / 3)
       } ${(d.source.x + d.target.x) / 2},${d.source.y + ((height / numRows) / 3)
       }T ${d.target.x},${d.target.y}`;
-    } else if (d.source.fx === d.target.fx && (d.target.y - d.source.y) > (radius * 2)) {
+    } if (d.source.fx === d.target.fx && (d.target.y - d.source.y) > (radius * 2)) {
       return `M${d.source.x},${d.source.y
       }Q${d.source.x + (radius * 1.25)},${d.source.y
       } ${d.source.x + (radius * 1.25)},${(d.source.y + d.target.y) / 2
@@ -164,12 +166,12 @@ export function createSvgGraph(nodesIn, edges) {
     node
       .attr('cx', (d) => { d.x = Math.max(radius, Math.min(width - radius, d.x)); return d.x; })
       .attr('cy', (d) => { d.y = Math.max(radius, Math.min(height - radius, d.y)); return d.y; })
-      .attr('transform', d => `translate(${[d.x, d.y]})`);
+      .attr('transform', (d) => `translate(${[d.x, d.y]})`);
   }
 
   // d3 "forces" layout - see http://d3indepth.com/force-layout/
   const simulation = d3.forceSimulation()
-    .force('link', d3.forceLink().id(d => d.id));
+    .force('link', d3.forceLink().id((d) => d.id));
 
   // Put the nodes and edges in the correct spots
   simulation
@@ -182,7 +184,6 @@ export function createSvgGraph(nodesIn, edges) {
   legendCreator(legend, nodes, legendWidth);
   return { minX, minY };
 }
-
 
 /**
  * SVG graph based on given nodes and edges - assumes
@@ -202,7 +203,6 @@ class SvgGraph extends React.Component {
      */
     this.onMount();
   }
-
 
   componentDidUpdate() {
     /* FIXME:
@@ -236,7 +236,9 @@ class SvgGraph extends React.Component {
         // is going on
         this.setState(
           Object.assign(this.state,
-            { minX, minY, nodes: this.props.nodes, edges: this.props.edges },
+            {
+              minX, minY, nodes: this.props.nodes, edges: this.props.edges,
+            },
           ),
         );
       }

@@ -41,9 +41,9 @@ const getSubgroupLinks = (link, nameToNode, sourceId) => {
  * @returns { nodes, edges } Object containing nodes and edges
  */
 export function createNodesAndEdges(props, createAll, nodesToHide = ['program']) {
-  const dictionary = props.dictionary;
+  const { dictionary } = props;
   const nodes = Object.keys(dictionary).filter(
-    key => !key.startsWith('_') && dictionary[key].type === 'object'
+    (key) => !key.startsWith('_') && dictionary[key].type === 'object'
       && dictionary[key].category !== 'internal' && !nodesToHide.includes(key),
   ).map(
     (key) => {
@@ -58,19 +58,21 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
       };
     },
   ).filter(
-    node => createAll || node.count !== 0,
+    (node) => createAll || node.count !== 0,
   );
 
   const nameToNode = nodes.reduce((db, node) => { db[node.id] = node; return db; }, {});
   const hideDb = nodesToHide.reduce((db, name) => { db[name] = true; return db; }, {});
 
   const edges = nodes.filter(
-    node => node.links && node.links.length > 0,
+    (node) => node.links && node.links.length > 0,
   )
     .reduce( // add each node's links to the edge list
       (list, node) => {
         const newLinks = node.links.map(
-          link => ({ source: node, target: nameToNode[link.target_type], exists: 1, ...link }),
+          (link) => ({
+            source: node, target: nameToNode[link.target_type], exists: 1, ...link,
+          }),
         );
         return list.concat(newLinks);
       }, [])
@@ -88,20 +90,20 @@ export function createNodesAndEdges(props, createAll, nodesToHide = ['program'])
       }, [])
     .filter(
     // target type exist and is not in hide list
-      link => (link.target && link.target.id in nameToNode && !(link.target.id in hideDb)))
+      (link) => (link.target && link.target.id in nameToNode && !(link.target.id in hideDb)))
     .map(
       (link) => {
       // decorate each link with its "exists" count if available
       //  (number of instances of link between source and target types in the data)
         const res = link;
         res.exists = props.links_search
-          ? props.links_search[`${res.source.id}_${res.name}_to_${res.target.id}_link`] :
-          undefined;
+          ? props.links_search[`${res.source.id}_${res.name}_to_${res.target.id}_link`]
+          : undefined;
         return res;
       })
     .filter(
     // filter out if no instances of this link exists and createAll is not specified
-      link => createAll || link.exists || link.exists === undefined,
+      (link) => createAll || link.exists || link.exists === undefined,
     );
   return {
     nodes,
@@ -130,7 +132,7 @@ export function findRoot(nodes, edges) {
     // initialize emptyDb - any node could be the root
     nodes.reduce((emptyDb, node) => { const res = emptyDb; res[node.id] = true; return res; }, {}),
   );
-  const rootNode = nodes.find(n => couldBeRoot[n.id]);
+  const rootNode = nodes.find((n) => couldBeRoot[n.id]);
   return rootNode ? rootNode.id : null;
 }
 
@@ -286,7 +288,6 @@ export function nodesBreadthFirst(nodes, edges) {
   return result;
 }
 
-
 /**
  * Decorate the nodes of a graph with a position based on the node's position in the graph
  * Exported for testing.  Decorates nodes with position property array [x,y] on a [0,1) space
@@ -300,8 +301,8 @@ export function nodesBreadthFirst(nodes, edges) {
  *          grid under the root rather than the tree structure
  */
 export function assignNodePositions(nodes, edges, opts) {
-  const breadthFirstInfo = (opts && opts.breadthFirstInfo) ?
-    opts.breadthFirstInfo : nodesBreadthFirst(nodes, edges);
+  const breadthFirstInfo = (opts && opts.breadthFirstInfo)
+    ? opts.breadthFirstInfo : nodesBreadthFirst(nodes, edges);
   const name2Node = nodes.reduce((db, node) => {
     const res = db; res[node.id] = node; return res;
   }, {});

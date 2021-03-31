@@ -1,8 +1,10 @@
-import { ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis } from 'recharts';
+import {
+  ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis,
+} from 'recharts';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
 import Spinner from '../../Spinner';
-import TooltipCDIS from '../TooltipCDIS/.';
+import TooltipCDIS from '../TooltipCDIS';
 import Tick from '../Tick';
 import './IndexBarChart.less';
 import { getCategoryColor } from '../helper';
@@ -45,15 +47,15 @@ const computeSummations = (projectList, countNames) => {
 
 const createChartData = (projectList, countNames, sumList) => {
   let indexChart = countNames.map(
-    countName => ({ name: countName }),
+    (countName) => ({ name: countName }),
   );
   projectList.forEach(
     (project, i) => {
       project.counts.forEach(
         (count, j) => {
           if (typeof indexChart[j] === 'undefined') return;
-          indexChart[j][`count${i}`] = (sumList[j] > 0) ?
-            (count * 100) / sumList[j] : 0;
+          indexChart[j][`count${i}`] = (sumList[j] > 0)
+            ? (count * 100) / sumList[j] : 0;
         },
       );
     },
@@ -72,8 +74,8 @@ const createChartData = (projectList, countNames, sumList) => {
 const createBarNames = (indexChart) => {
   let barNames = [];
   if (indexChart.length > 0) {
-    barNames = Object.keys(indexChart[0]).filter(key => key.indexOf('count') === 0).map(
-      name => name,
+    barNames = Object.keys(indexChart[0]).filter((key) => key.indexOf('count') === 0).map(
+      (name) => name,
     );
   }
   return barNames;
@@ -108,7 +110,7 @@ class IndexBarChart extends React.Component {
     const topList = (projectList.length <= 5) ? projectList : getTopList(projectList);
     const sumList = computeSummations(topList, this.props.countNames);
     const indexChart = createChartData(topList, this.props.countNames, sumList);
-    const projectNames = topList.map(project => project.code);
+    const projectNames = topList.map((project) => project.code);
     const barNames = createBarNames(indexChart);
     let countBar = 0;
     const { barChartStyle, xAxisStyle } = this.props;

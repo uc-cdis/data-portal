@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import Legend from './Legend';
 
 const ReduxLegend = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     items: state.ddgraph.legendItems,
   });
 

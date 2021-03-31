@@ -5,7 +5,9 @@ import { Carousel } from 'antd';
 import { ReduxIndexBarChart } from './reduxer';
 import { components } from '../params';
 import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
-import { breakpoints, customHomepageChartConfig, indexPublic, homepageChartNodes } from '../localconf';
+import {
+  breakpoints, customHomepageChartConfig, indexPublic, homepageChartNodes,
+} from '../localconf';
 import IntroductionNIAID from '../components/IntroductionNIAID';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
 import './page.less';

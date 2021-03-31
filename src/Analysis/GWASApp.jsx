@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber, Collapse, List, Tag, Popconfirm, Alert } from 'antd';
+import {
+ Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber, Collapse, List, Tag, Popconfirm, Alert
+} from 'antd';
 import {
   CheckCircleOutlined,
   SyncOutlined,
@@ -83,8 +85,8 @@ class GWASApp extends React.Component {
           if (status !== 200 || !data || !data.runIDs) {
             return [];
           }
-          const runIDs = data.runIDs;
-          Promise.all(runIDs.map(rID => fetchWithCreds({
+          const {runIDs} = data;
+          Promise.all(runIDs.map((rID) => fetchWithCreds({
             path: `${marinerUrl}/${rID}`,
             method: 'GET',
           })
@@ -118,7 +120,7 @@ class GWASApp extends React.Component {
                 });
               },
             )))
-            .then(values => this.setState({ marinerJobStatus: values }));
+            .then((values) => this.setState({ marinerJobStatus: values }));
           return runIDs;
         },
       );
@@ -180,7 +182,7 @@ class GWASApp extends React.Component {
         selectedDataKey: selectedRows[0].WorkspaceKey,
       });
     },
-    getCheckboxProps: record => ({
+    getCheckboxProps: (record) => ({
       disabled: !(record.SizeBytes && record.SizeBytes <= MAX_PREVIEW_FILE_SIZE_BYTES),
     }),
   };
@@ -195,7 +197,7 @@ class GWASApp extends React.Component {
       title: 'File Size',
       dataIndex: 'SizeBytes',
       key: 'SizeBytes',
-      render: text => humanFileSize(text),
+      render: (text) => humanFileSize(text),
     },
     {
       title: 'Last Modified Date',
@@ -207,7 +209,8 @@ class GWASApp extends React.Component {
       key: 'action',
       render: (record) => {
         if (record.SizeBytes && record.SizeBytes <= MAX_PREVIEW_FILE_SIZE_BYTES) {
-          return (<Space size='small'>
+          return (
+<Space size='small'>
             <Button
               size='small'
               type='link'
@@ -299,7 +302,7 @@ class GWASApp extends React.Component {
       if (this.props.wssFileData
         && this.props.wssFileData.fileData
         && this.props.wssFileData.fileData.length > 0) {
-        modalTableColumnConfig = Object.keys(this.props.wssFileData.fileData[0]).filter(element => element !== 'key').map(key => ({
+        modalTableColumnConfig = Object.keys(this.props.wssFileData.fileData[0]).filter((element) => element !== 'key').map((key) => ({
           title: key,
           dataIndex: key,
           key,
@@ -309,7 +312,8 @@ class GWASApp extends React.Component {
         return (
           <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
             <Spin size='large' tip='Loading data from workspace storage...' />
-          </Space>);
+          </Space>
+);
       }
       return (
         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
@@ -320,8 +324,8 @@ class GWASApp extends React.Component {
             Select File
           </Button>
           <Text type='secondary'>(The phenotype and covariants with the genotype file will be matched using the IID column)</Text>
-          {(this.state.showStep0Table) ?
-            <div className='GWASApp-mainTable'>
+          {(this.state.showStep0Table)
+            ? <div className='GWASApp-mainTable'>
               <Table
                 rowSelection={this.mainTableRowSelection}
                 columns={this.mainTableConfig}
@@ -339,11 +343,13 @@ class GWASApp extends React.Component {
               </Button>,
             ]}
           >
-            {(modalTableColumnConfig) ?
-              <Table size={'small'} columns={modalTableColumnConfig} dataSource={this.props.wssFileData.fileData} /> :
-              (<Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+            {(modalTableColumnConfig)
+              ? <Table size={'small'} columns={modalTableColumnConfig} dataSource={this.props.wssFileData.fileData} />
+              : (
+<Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                 <Spin size='large' tip='Loading data from workspace storage...' />
-              </Space>)}
+              </Space>
+)}
           </Modal>
         </Space>
       );
@@ -355,18 +361,19 @@ class GWASApp extends React.Component {
         && this.props.wssFileData.fileData
         && this.props.wssFileData.fileData.length > 0) {
         specifyDataCols = Object.keys(this.props.wssFileData.fileData[0])
-          .filter(element => element !== 'IID' && element !== '#FID' && element !== 'key')
-          .map(colKey => colKey);
+          .filter((element) => element !== 'IID' && element !== '#FID' && element !== 'key')
+          .map((colKey) => colKey);
       } else {
         return (
           <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
             <Spin size='large' tip='Loading data from workspace storage...' />
-          </Space>);
+          </Space>
+);
       }
       return (
         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-          {(specifyDataCols) ?
-            <div className='GWASApp-specifyTable'>
+          {(specifyDataCols)
+            ? <div className='GWASApp-specifyTable'>
               <Space className='GWASApp-specifyTable__innerSpace'>
                 <Space direction={'vertical'}>
                   <Text strong>Existing Clinical Variables</Text>
@@ -395,7 +402,7 @@ class GWASApp extends React.Component {
                   <Text strong>Uploaded Clinical Variables</Text>
                   <Checkbox.Group defaultValue={specifyDataCols}>
                     <Space direction={'vertical'}>
-                      {specifyDataCols.map(col => <Checkbox key={col} value={col}>{col}</Checkbox>)}
+                      {specifyDataCols.map((col) => <Checkbox key={col} value={col}>{col}</Checkbox>)}
                     </Space>
                   </Checkbox.Group>
                 </Space>
@@ -404,7 +411,7 @@ class GWASApp extends React.Component {
                   <Text strong>Phenotype</Text>
                   <Radio.Group defaultValue={specifyDataCols[0]}>
                     <Space direction={'vertical'}>
-                      {specifyDataCols.map(col => <Radio key={col} value={col}>{col}</Radio>)}
+                      {specifyDataCols.map((col) => <Radio key={col} value={col}>{col}</Radio>)}
                     </Space>
                   </Radio.Group>
                 </Space>
@@ -423,9 +430,9 @@ class GWASApp extends React.Component {
               ...this.state.step2ConfigValues,
             }}
             onFieldsChange={(_, allFields) => {
-              if (allFields.some(field => !field.validating && field.errors.length > 0)) {
+              if (allFields.some((field) => !field.validating && field.errors.length > 0)) {
                 this.setState({ enableStep2NextButton: false });
-              } else if (allFields.every(field => !field.validating && field.errors.length === 0)) {
+              } else if (allFields.every((field) => !field.validating && field.errors.length === 0)) {
                 const step2ConfigValues = {};
                 allFields.forEach((field) => {
                   step2ConfigValues[field.name[0]] = field.value;
@@ -437,7 +444,7 @@ class GWASApp extends React.Component {
               }
             }}
           >
-            <Space className='GWASApp-specifyTable__innerSpace' split={<Divider type='vertical' />} >
+            <Space className='GWASApp-specifyTable__innerSpace' split={<Divider type='vertical' />}>
               <Form.Item
                 className='GWASApp-specifyTable__formItem'
                 label={<Text strong>Workflow</Text>}
@@ -513,7 +520,8 @@ class GWASApp extends React.Component {
       };
 
       if (this.state.showJobSubmissionResult) {
-        return (<div className='GWASApp-mainArea'>
+        return (
+<div className='GWASApp-mainArea'>
           <Result
             status={(this.state.jobSubmittedRunID) ? 'success' : 'error'}
             title={(this.state.jobSubmittedRunID) ? 'GWAS Job Submitted Successfully' : 'GWAS Job Submission Failed'}
@@ -547,7 +555,8 @@ class GWASApp extends React.Component {
               </Button>,
             ]}
           />
-        </div>);
+        </div>
+);
       }
 
       return (
@@ -558,7 +567,7 @@ class GWASApp extends React.Component {
             onFinish={(values) => {
               const requestBody = marinerRequestBody[this.state.step2ConfigValues.workflow];
               Object.keys(this.state.step2ConfigValues)
-                .filter(cfgKey => cfgKey !== 'workflow')
+                .filter((cfgKey) => cfgKey !== 'workflow')
                 .forEach((cfgKey) => {
                   requestBody.input[cfgKey] = this.state.step2ConfigValues[cfgKey].toString();
                   return null;
@@ -608,7 +617,7 @@ class GWASApp extends React.Component {
       );
     }
     default:
-      return <React.Fragment />;
+      return <></>;
     }
   }
 
@@ -627,14 +636,15 @@ class GWASApp extends React.Component {
 
     return (
       <Space direction={'vertical'} style={{ width: '100%' }}>
-        {(!this.userHasMariner()) ?
-          <Alert
+        {(!this.userHasMariner())
+          ? <Alert
             message='Warning: You don&apos;t have required permission to submit GWAS job'
             banner
           />
           : null}
-        {(this.state.marinerJobStatus.length > 0) ?
-          (<div className='GWASApp-jobStatus'>
+        {(this.state.marinerJobStatus.length > 0)
+          ? (
+<div className='GWASApp-jobStatus'>
             <Collapse onClick={event => event.stopPropagation()}>
               <Panel header='Submitted Job Status' key='1'>
                 <List
@@ -685,7 +695,7 @@ class GWASApp extends React.Component {
           )
           : null}
         <Steps current={current}>
-          {steps.map(item => (
+          {steps.map((item) => (
             <Step key={item.title} title={item.title} />
           ))}
         </Steps>

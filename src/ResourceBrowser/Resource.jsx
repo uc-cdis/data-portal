@@ -17,18 +17,22 @@ class Resource extends React.Component {
             <h3 className='resource__title'>
               {this.props.title}
             </h3>
-            {this.props.description ?
-              <div className='resource__description'>
-                {this.props.description}
-              </div>
+            {this.props.description
+              ? (
+                <div className='resource__description'>
+                  {this.props.description}
+                </div>
+              )
               : null}
           </div>
-          {this.props.imageUrl ?
-            <img
-              className='resource__image'
-              src={this.props.imageUrl}
-              alt={this.props.title}
-            />
+          {this.props.imageUrl
+            ? (
+              <img
+                className='resource__image'
+                src={this.props.imageUrl}
+                alt={this.props.title}
+              />
+            )
             : null}
         </a>
       </div>
@@ -47,6 +51,5 @@ Resource.defaultProps = {
   description: '',
   imageUrl: '',
 };
-
 
 export default Resource;

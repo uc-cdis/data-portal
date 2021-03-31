@@ -22,7 +22,7 @@ class TierAccessSelector extends React.Component {
   };
 
   handleToggle = () => {
-    this.setState(prevState => ({ toggled: !prevState.toggled }));
+    this.setState((prevState) => ({ toggled: !prevState.toggled }));
   }
 
   render() {

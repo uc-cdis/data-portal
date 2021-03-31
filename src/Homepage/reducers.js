@@ -7,14 +7,14 @@ const homepage = (state = {}, action) => {
     // Note - save projectsByName, b/c we acquire more data for individual tables
     // over time
     //
-    const projectsByName = Object.assign({}, state.projectsByName || {});
+    const projectsByName = { ...state.projectsByName || {} };
     action.data.projectList.forEach((proj) => {
       const old = projectsByName[proj.name] || {};
       projectsByName[proj.name] = Object.assign(old, proj);
     });
-    const summaryCounts = Object.assign(
-      {}, state.summaryCounts || {}, action.data.summaryCounts,
-    );
+    const summaryCounts = {
+      ...state.summaryCounts || {}, ...action.data.summaryCounts,
+    };
     const lastestListUpdating = Date.now();
     // const { error, ...state } = state;
     return {
@@ -26,7 +26,7 @@ const homepage = (state = {}, action) => {
     };
   }
   case 'RECEIVE_PROJECT_DETAIL': {
-    const projectsByName = Object.assign({}, state.projectsByName || {});
+    const projectsByName = { ...state.projectsByName || {} };
     projectsByName[action.data.name] = action.data;
     const lastestDetailsUpdating = Date.now();
     return { ...state, projectsByName, lastestDetailsUpdating };

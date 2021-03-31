@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AutoComplete from '@gen3/ui-component/dist/components/AutoComplete';
 import { compareTwoStrings } from 'string-similarity';
-import { prepareSearchData, searchKeyword, getSearchSummary, ZERO_RESULT_FOUND_MSG } from './searchHelper';
+import {
+ prepareSearchData, searchKeyword, getSearchSummary, ZERO_RESULT_FOUND_MSG
+} from './searchHelper';
 import './DictionarySearcher.css';
 
 class DictionarySearcher extends React.Component {
@@ -97,14 +99,14 @@ class DictionarySearcher extends React.Component {
       resItem.matches.forEach((matchItem) => {
         if (!matchedStrings[matchItem.value]) {
           matchedStrings[matchItem.value] = {
-            matchedPieceIndices: matchItem.indices.map(arr => ([arr[0], arr[1] + 1])),
+            matchedPieceIndices: matchItem.indices.map((arr) => ([arr[0], arr[1] + 1])),
           };
         }
       });
     });
     const suggestionList = Object.keys(matchedStrings)
       .sort((str1, str2) => compareTwoStrings(str2, inputText) - compareTwoStrings(str1, inputText))
-      .map(str => ({
+      .map((str) => ({
         fullString: str,
         matchedPieceIndices: matchedStrings[str].matchedPieceIndices,
       }));
@@ -135,7 +137,7 @@ class DictionarySearcher extends React.Component {
         />
         {
           this.state.isSearchFinished && (
-            <React.Fragment>
+            <>
               {
                 !this.state.hasError && (
                   this.state.searchResult.matchedNodes.length > 0 ? (
@@ -171,7 +173,7 @@ class DictionarySearcher extends React.Component {
                   <p>{this.state.errorMsg}</p>
                 )
               }
-            </React.Fragment>
+            </>
           )
         }
       </div>

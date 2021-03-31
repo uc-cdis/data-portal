@@ -16,9 +16,9 @@ function sortByKey(array, key) {
 function confirmPatientIsLTNP(subjectObj) {
   const subjectID = subjectObj.subject_id;
   const followUps = sortByKey(subjectObj.visits, 'visit_date');
-  const fposdate = followUps[0].fposdate;
-  const frstdthd = followUps[0].frstdthd;
-  const indexOfFirstFollowUpInFposYear = followUps.findIndex(visit => visit.visit_date >= fposdate);
+  const { fposdate } = followUps[0];
+  const { frstdthd } = followUps[0];
+  const indexOfFirstFollowUpInFposYear = followUps.findIndex((visit) => visit.visit_date >= fposdate);
   if (indexOfFirstFollowUpInFposYear === -1) {
     console.log(`Error, subject ${subjectID} has no followup data after their fposdate.`);
     return;
@@ -46,7 +46,7 @@ function confirmPatientIsLTNP(subjectObj) {
     }
   }
 
-  const indexOfFollowupWithHAART = followUps.findIndex(visit => (visit.thrpyv != null && visit.thrpyv.includes('HAART'))
+  const indexOfFollowupWithHAART = followUps.findIndex((visit) => (visit.thrpyv != null && visit.thrpyv.includes('HAART'))
       || (visit.thrpy != null && visit.thrpy.includes('HAART')));
 
   if (indexOfFollowupWithHAART !== -1) {

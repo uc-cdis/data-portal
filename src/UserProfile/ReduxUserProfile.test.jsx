@@ -9,7 +9,6 @@ import ReduxUserProfile, { createKey, deleteKey } from './ReduxUserProfile';
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
 
-
 describe('the userProfile component', () => {
   it('can create, fetch, and list user access keys', () => {
     const expectedData = {
@@ -156,7 +155,6 @@ describe('the userProfile component', () => {
       });
   });
 
-
   it('can can delete key', () => {
     const jti = 'f8733984-8164-4689-9c25-56707962d7e0';
     const exp = 1459487258;
@@ -192,7 +190,6 @@ describe('the userProfile component', () => {
 
     fetch.mockResponseOnce(JSON.stringify(body), { status: 204 });
     fetch.mockResponseOnce(JSON.stringify({ jtis: [] }), { status: 200 });
-
 
     return store.dispatch(deleteKey(jti, exp, keypairsApi))
       .then(() => {

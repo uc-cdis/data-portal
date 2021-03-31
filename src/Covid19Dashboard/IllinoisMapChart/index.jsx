@@ -13,7 +13,7 @@ function addDataToGeoJsonBase(data) {
   // but not in JHU data. So don't display Chicago separately.
   const base = {
     ...countyData,
-    features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
+    features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
   };
   const geoJson = {
     ...base,
@@ -44,7 +44,7 @@ function addDataToGeoJsonBase(data) {
 function filterCountyGeoJson(selectedFips) {
   return {
     ...countyData,
-    features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
+    features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
   };
 }
 
@@ -73,6 +73,7 @@ class IllinoisMapChart extends React.Component {
       colorsAsList: null,
     };
   }
+
   componentDidUpdate() {
     if (!(this.mapData.colorsAsList === null
           && Object.keys(this.props.jsonByLevel.county).length > 0)) {
@@ -126,7 +127,7 @@ class IllinoisMapChart extends React.Component {
       [colorRangeMath(10)]: '#850001',
     };
     this.mapData.colorsAsList = Object.entries(this.mapData.colors)
-      .map(item => [+item[0], item[1]]).flat();
+      .map((item) => [+item[0], item[1]]).flat();
   }
 
   onHover = (event) => {

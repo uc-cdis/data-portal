@@ -37,9 +37,9 @@ class StickyToolbar extends React.Component {
         </div>
         <div className='sticky-toolbar__elts'>
           {
-            this.props.toolbarElts.map((elt, i) =>
-              React.cloneElement(elt, { key: i }),
-            )}
+            this.props.toolbarElts.map((elt, i) => React.cloneElement(elt, { key: i }),
+            )
+          }
         </div>
       </div>
     );

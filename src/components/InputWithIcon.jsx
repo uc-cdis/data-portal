@@ -6,7 +6,7 @@ import './InputWithIcon.less';
 class InputWithIcon extends React.Component {
   render() {
     return (
-      <React.Fragment>
+      <>
         <div className={'input-with-icon'.concat(this.props.className ? ` ${this.props.className}` : '')}>
           {
             this.props.inputOptions ? (
@@ -44,7 +44,7 @@ class InputWithIcon extends React.Component {
             </p>
             : null
         }
-      </React.Fragment>
+      </>
     );
   }
 }

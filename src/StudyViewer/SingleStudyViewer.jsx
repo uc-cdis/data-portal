@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Space, Typography, Spin, Result } from 'antd';
+import {
+  Space, Typography, Spin, Result,
+} from 'antd';
 import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
 import { humanFileSize } from '../utils.js';
-import { ReduxStudyDetails, fetchDataset, fetchFiles, resetMultipleStudyData, fetchStudyViewerConfig } from './reduxer';
+import {
+  ReduxStudyDetails, fetchDataset, fetchFiles, resetMultipleStudyData, fetchStudyViewerConfig,
+} from './reduxer';
 import getReduxStore from '../reduxStore';
 import './StudyViewer.css';
 
@@ -62,16 +66,15 @@ class SingleStudyViewer extends React.Component {
     if (!this.props.dataset) {
       if (this.state.dataType && this.state.rowAccessor) {
         getReduxStore().then(
-          store =>
-            Promise.allSettled(
-              [
-                store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType),
-                  decodeURIComponent(this.state.rowAccessor))),
-                store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object', decodeURIComponent(this.state.rowAccessor))),
-                store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'open-access', decodeURIComponent(this.state.rowAccessor))),
-                store.dispatch(resetMultipleStudyData()),
-              ],
-            ));
+          (store) => Promise.allSettled(
+            [
+              store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType),
+                decodeURIComponent(this.state.rowAccessor))),
+              store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object', decodeURIComponent(this.state.rowAccessor))),
+              store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'open-access', decodeURIComponent(this.state.rowAccessor))),
+              store.dispatch(resetMultipleStudyData()),
+            ],
+          ));
       }
       return (
         <div className='study-viewer'>
@@ -83,7 +86,7 @@ class SingleStudyViewer extends React.Component {
     }
 
     const studyViewerConfig = fetchStudyViewerConfig(this.state.dataType);
-    const dataset = this.props.dataset;
+    const { dataset } = this.props;
     const backURL = this.props.location.pathname.substring(0, this.props.location.pathname.lastIndexOf('/'));
     if (_.isEmpty(dataset)) {
       return (
@@ -115,13 +118,13 @@ class SingleStudyViewer extends React.Component {
             />
             <div className='study-viewer__details-sidebar'>
               <Space direction='vertical' style={{ width: '100%' }}>
-                {(sideBoxesConfig && sideBoxesConfig.length > 0) ?
-                  (sideBoxesConfig.map((sbConfigItem, sbConfigIndex) => (
+                {(sideBoxesConfig && sideBoxesConfig.length > 0)
+                  ? (sideBoxesConfig.map((sbConfigItem, sbConfigIndex) => (
                     <div className='study-viewer__details-sidebar-box' key={`side_box_item_${sbConfigIndex}`}>
                       <Space className='study-viewer__details-sidebar-space' direction='vertical'>
                         <div className='h3-typo'>{sbConfigItem.title}</div>
-                        {(sbConfigItem.items) ?
-                          (sbConfigItem.items.map((it, itIndex) => (
+                        {(sbConfigItem.items)
+                          ? (sbConfigItem.items.map((it, itIndex) => (
                             <div key={`side_box_item_${itIndex}`}>
                               {getSideBoxItem(it)}
                             </div>
@@ -130,25 +133,27 @@ class SingleStudyViewer extends React.Component {
                       </Space>
                     </div>
                   )))
-                  : null
-                }
-                {(this.props.docData.length > 0) ?
-                  <div className='study-viewer__details-sidebar-box'>
-                    <Space className='study-viewer__details-sidebar-space' direction='vertical'>
-                      <div className='h3-typo'>Study Documents</div>
-                      {this.props.docData.map((doc) => {
-                        const iconComponent = (doc.data_format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
-                        const linkText = `${doc.file_name} (${doc.data_format} - ${humanFileSize(doc.file_size)})`;
-                        const linkComponent = <a href={doc.doc_url}>{linkText}</a>;
-                        return (<div key={doc.file_name}>
-                          {iconComponent}
-                          {linkComponent}
-                        </div>);
-                      })}
-                    </Space>
-                  </div>
-                  : null
-                }
+                  : null}
+                {(this.props.docData.length > 0)
+                  ? (
+                    <div className='study-viewer__details-sidebar-box'>
+                      <Space className='study-viewer__details-sidebar-space' direction='vertical'>
+                        <div className='h3-typo'>Study Documents</div>
+                        {this.props.docData.map((doc) => {
+                          const iconComponent = (doc.data_format === 'PDF') ? <FilePdfOutlined /> : <FileOutlined />;
+                          const linkText = `${doc.file_name} (${doc.data_format} - ${humanFileSize(doc.file_size)})`;
+                          const linkComponent = <a href={doc.doc_url}>{linkText}</a>;
+                          return (
+                            <div key={doc.file_name}>
+                              {iconComponent}
+                              {linkComponent}
+                            </div>
+                          );
+                        })}
+                      </Space>
+                    </div>
+                  )
+                  : null}
               </Space>
             </div>
           </div>

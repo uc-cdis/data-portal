@@ -24,13 +24,12 @@ const generateGQLQuery = (nameOfIndex, fieldsToFetch, rowAccessorField, rowAcces
   return { query, variables };
 };
 
-export const fetchStudyViewerConfig =
-  dataType => studyViewerConfig.find(svc => svc.dataType === dataType);
+export const fetchStudyViewerConfig = (dataType) => studyViewerConfig.find((svc) => svc.dataType === dataType);
 
 export const fetchFiles = (dataType, typeOfFileIndex, rowAccessorValue) => {
   const targetStudyViewerConfig = fetchStudyViewerConfig(dataType);
   if (!targetStudyViewerConfig) {
-    return dispatch => dispatch({
+    return (dispatch) => dispatch({
       type: 'NO_CONFIG_ERROR',
       error: `No study viewer config for ${dataType} has been found`,
     });
@@ -47,14 +46,14 @@ export const fetchFiles = (dataType, typeOfFileIndex, rowAccessorValue) => {
     fieldsToFetch.push('doc_url');
     break;
   default:
-    return dispatch => dispatch({
+    return (dispatch) => dispatch({
       type: 'FILE_DATA_ERROR',
       error: 'typeOfFileIndex error',
     });
   }
 
   if (!nameOfIndex) {
-    return dispatch => dispatch({
+    return (dispatch) => dispatch({
       type: 'FILE_DATA_ERROR',
       error: `No index specified for file type: ${typeOfFileIndex}`,
     });
@@ -65,7 +64,7 @@ export const fetchFiles = (dataType, typeOfFileIndex, rowAccessorValue) => {
     fieldsToFetch,
     targetStudyViewerConfig.rowAccessor,
     rowAccessorValue);
-  return dispatch => fetchWithCreds({
+  return (dispatch) => fetchWithCreds({
     path: guppyGraphQLUrl,
     method: 'POST',
     body: JSON.stringify(body),
@@ -75,7 +74,7 @@ export const fetchFiles = (dataType, typeOfFileIndex, rowAccessorValue) => {
     case 200:
       if (data.data && data.data[nameOfIndex]) {
         const receivedFileData = data.data[nameOfIndex]
-          .map(d => ({ ...d, rowAccessorValue: d[targetStudyViewerConfig.rowAccessor] }));
+          .map((d) => ({ ...d, rowAccessorValue: d[targetStudyViewerConfig.rowAccessor] }));
         return {
           type: (typeOfFileIndex === 'object') ? 'RECEIVE_OBJECT_FILE_DATA' : 'RECEIVE_OPEN_DOC_DATA',
           fileData: receivedFileData,
@@ -92,11 +91,11 @@ export const fetchFiles = (dataType, typeOfFileIndex, rowAccessorValue) => {
       };
     }
   })
-    .then(msg => dispatch(msg));
+    .then((msg) => dispatch(msg));
 };
 
 const fetchRequestedAccess = (receivedData) => {
-  const accessibleValidationValueArray = receivedData.map(d => d.auth_resource_path);
+  const accessibleValidationValueArray = receivedData.map((d) => d.auth_resource_path);
   const body = {
     resource_paths: accessibleValidationValueArray,
   };
@@ -136,7 +135,7 @@ const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFie
 export const fetchDataset = (dataType, rowAccessorValue) => {
   const targetStudyViewerConfig = fetchStudyViewerConfig(dataType);
   if (!targetStudyViewerConfig) {
-    return dispatch => dispatch({
+    return (dispatch) => dispatch({
       type: 'NO_CONFIG_ERROR',
       error: `No study viewer config for ${dataType} has been found`,
     });
@@ -147,7 +146,7 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
   }
 
   if (!itemConfig) {
-    return dispatch => dispatch({
+    return (dispatch) => dispatch({
       type: 'STUDY_DATASET_ERROR',
       error: 'itemConfig error',
     });
@@ -157,8 +156,8 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
   fieldsToFetch.push('auth_resource_path');
   fieldsToFetch.push(targetStudyViewerConfig.titleField);
   fieldsToFetch.push(targetStudyViewerConfig.rowAccessor);
-  const displayButtonsFields = targetStudyViewerConfig.buttons ?
-    targetStudyViewerConfig.buttons.map(b => b.enableButtonField) : [];
+  const displayButtonsFields = targetStudyViewerConfig.buttons
+    ? targetStudyViewerConfig.buttons.map((b) => b.enableButtonField) : [];
   fieldsToFetch = [
     ...fieldsToFetch,
     ...itemConfig.blockFields,
@@ -173,64 +172,63 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
     targetStudyViewerConfig.rowAccessor,
     rowAccessorValue);
 
-  return dispatch =>
-    fetchWithCreds({
-      path: guppyGraphQLUrl,
-      method: 'POST',
-      body: JSON.stringify(body),
-      dispatch,
-    })
-      .then(({ status, data }) => {
-        switch (status) {
-        case 200:
-          if (data.data && data.data[dataType]) {
-            if (rowAccessorValue) {
-              return processDataset(
-                dataType,
-                data.data[dataType],
-                itemConfig,
-                displayButtonsFields,
-              ).then(pd => ({
-                type: 'RECEIVE_SINGLE_STUDY_DATASET',
-                datasets: pd,
-              })).then(msg => msg);
-            }
+  return (dispatch) => fetchWithCreds({
+    path: guppyGraphQLUrl,
+    method: 'POST',
+    body: JSON.stringify(body),
+    dispatch,
+  })
+    .then(({ status, data }) => {
+      switch (status) {
+      case 200:
+        if (data.data && data.data[dataType]) {
+          if (rowAccessorValue) {
             return processDataset(
               dataType,
               data.data[dataType],
               itemConfig,
               displayButtonsFields,
-            ).then(pd => ({
-              type: 'RECEIVE_STUDY_DATASET_LIST',
+            ).then((pd) => ({
+              type: 'RECEIVE_SINGLE_STUDY_DATASET',
               datasets: pd,
-            })).then(msg => msg);
+            })).then((msg) => msg);
           }
-          return {
-            type: 'STUDY_DATASET_ERROR',
-            error: 'Did not get correct data from Guppy',
-          };
-        default:
-          return {
-            type: 'STUDY_DATASET_ERROR',
-            error: (data && data.errors && data.errors[0] && data.errors[0].message) ? data.errors[0].message : 'Did not get correct data from Guppy',
-          };
+          return processDataset(
+            dataType,
+            data.data[dataType],
+            itemConfig,
+            displayButtonsFields,
+          ).then((pd) => ({
+            type: 'RECEIVE_STUDY_DATASET_LIST',
+            datasets: pd,
+          })).then((msg) => msg);
         }
-      })
-      .then((msg) => {
-        dispatch(msg);
-      });
+        return {
+          type: 'STUDY_DATASET_ERROR',
+          error: 'Did not get correct data from Guppy',
+        };
+      default:
+        return {
+          type: 'STUDY_DATASET_ERROR',
+          error: (data && data.errors && data.errors[0] && data.errors[0].message) ? data.errors[0].message : 'Did not get correct data from Guppy',
+        };
+      }
+    })
+    .then((msg) => {
+      dispatch(msg);
+    });
 };
 
-export const resetSingleStudyData = () => dispatch => dispatch({
+export const resetSingleStudyData = () => (dispatch) => dispatch({
   type: 'RESET_SINGLE_STUDY_DATA',
 });
 
-export const resetMultipleStudyData = () => dispatch => dispatch({
+export const resetMultipleStudyData = () => (dispatch) => dispatch({
   type: 'RESET_MULTIPLE_STUDY_DATA',
 });
 
 export const ReduxStudyDetails = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     user: state.user,
     userAuthMapping: state.userAuthMapping,
   });
@@ -238,9 +236,8 @@ export const ReduxStudyDetails = (() => {
   return withRouter(connect(mapStateToProps)(StudyDetails));
 })();
 
-
 export const ReduxStudyViewer = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     datasets: state.study.datasets,
     docData: state.study.docData,
     fileData: state.study.fileData,
@@ -251,7 +248,7 @@ export const ReduxStudyViewer = (() => {
 })();
 
 export const ReduxSingleStudyViewer = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     dataset: state.study.dataset,
     docData: state.study.docData,
     fileData: state.study.fileData,

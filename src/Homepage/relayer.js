@@ -4,7 +4,7 @@ import getReduxStore from '../reduxStore';
 import { GQLHelper } from '../gqlHelper';
 import { config } from '../params';
 
-const updateReduxTransactionList = async transactionList => getReduxStore().then(
+const updateReduxTransactionList = async (transactionList) => getReduxStore().then(
   (store) => {
     const homeState = store.getState().homepage || {};
     if (homeState) {
@@ -16,7 +16,7 @@ const updateReduxTransactionList = async transactionList => getReduxStore().then
   () => {},
 );
 
-const updateReduxError = async error => getReduxStore().then(
+const updateReduxError = async (error) => getReduxStore().then(
   (store) => {
     store.dispatch({ type: 'RECEIVE_RELAY_FAIL', data: error });
   },
@@ -39,7 +39,7 @@ export const getTransactionList = () => {
   fetchQuery(environment, query, {})
     .then(
       (data) => {
-        const transactionList = data.transactionList;
+        const { transactionList } = data;
         updateReduxTransactionList(transactionList);
       },
       (error) => {
@@ -47,7 +47,6 @@ export const getTransactionList = () => {
       },
     );
 };
-
 
 const gqlHelper = GQLHelper.getGQLHelper();
 
@@ -77,17 +76,19 @@ const transformRelayProps = (data) => {
   const { fileCount } = GQLHelper.extractFileInfo(data);
   const nodeCount = Math.min(config.graphql.boardCounts.length + 1, 4);
   const projectList = (data.projectList || []).map(
-    proj =>
+    (proj) =>
       // fill in missing properties
-      Object.assign({ name: 'unknown',
+      ({
+        name: 'unknown',
         counts: (new Array(nodeCount)).fill(0),
         charts: [0, 0],
-      }, proj),
+        ...proj,
+      }),
 
   );
   let summaryCounts = Object.keys(data).filter(
-    key => key.indexOf('count') === 0).map(key => key).sort()
-    .map(key => data[key],
+    (key) => key.indexOf('count') === 0).map((key) => key).sort()
+    .map((key) => data[key],
     );
   if (summaryCounts.length < 4) {
     summaryCounts = [...summaryCounts, fileCount];
@@ -101,9 +102,9 @@ const transformRelayProps = (data) => {
 const extractCounts = (data) => {
   const { fileCount } = GQLHelper.extractFileInfo(data);
   let counts = Object.keys(data).filter(
-    key => key.indexOf('count') === 0).map(key => key).sort()
+    (key) => key.indexOf('count') === 0).map((key) => key).sort()
     .map(
-      key => data[key],
+      (key) => data[key],
     );
   if (counts.length < 4) {
     counts = [...counts, fileCount];
@@ -111,11 +112,11 @@ const extractCounts = (data) => {
   return counts;
 };
 
-const extractCharts = data => Object.keys(data).filter(
-  key => key.indexOf('chart') === 0)
-  .map(key => key).sort()
+const extractCharts = (data) => Object.keys(data).filter(
+  (key) => key.indexOf('chart') === 0)
+  .map((key) => key).sort()
   .map(
-    key => data[key],
+    (key) => data[key],
   );
 
 const updateProjectDetailToRedux = (projInfo) => {
@@ -145,12 +146,12 @@ const getProjectDetail = (projectList) => {
   });
 };
 
-const checkHomepageState = stateName => getReduxStore().then(
+const checkHomepageState = (stateName) => getReduxStore().then(
   (store) => {
     const homeState = store.getState().homepage || {};
     const nowMs = Date.now();
-    if (!Object.prototype.hasOwnProperty.call(homeState, stateName) ||
-        (Object.prototype.hasOwnProperty.call(homeState, stateName)
+    if (!Object.prototype.hasOwnProperty.call(homeState, stateName)
+        || (Object.prototype.hasOwnProperty.call(homeState, stateName)
           && nowMs - homeState[stateName] > 300000)
     ) {
       return 'OLD';

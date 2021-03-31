@@ -64,7 +64,7 @@ export const getType = (property) => {
   } else if ('oneOf' in property) {
     // oneOf has nested type list - we want to flatten nested enums out here ...
     type = property.oneOf
-      .map(item => getType(item))
+      .map((item) => getType(item))
       .reduce(
         (flatList, it) => {
           if (Array.isArray(it)) {
@@ -77,7 +77,7 @@ export const getType = (property) => {
   } else if ('anyOf' in property) {
     // anyOf has nested type list
     type = property.anyOf
-      .map(item => getType(item))
+      .map((item) => getType(item))
       .reduce(
         (flatList, it) => {
           if (Array.isArray(it)) {
@@ -147,15 +147,15 @@ export const graphStyleConfig = {
   nodeIconRadius: 10,
 };
 
-export const parseDictionaryNodes = dictionary => Object.keys(dictionary).filter(
-  id => id.charAt(0) !== '_' && id === dictionary[id].id,
+export const parseDictionaryNodes = (dictionary) => Object.keys(dictionary).filter(
+  (id) => id.charAt(0) !== '_' && id === dictionary[id].id,
 ).map(
   (id) => {
     const originNode = dictionary[id];
     return originNode;
   },
 ).filter(
-  node => node.category && node.id,
+  (node) => node.category && node.id,
 );
 
 export const getPropertyDescription = (property) => {
@@ -198,8 +198,8 @@ export const addSearchHistoryItems = (searchHistoryItem) => {
   if (prevHistory) newHistory = prevHistory.slice(0); // clone array
 
   // if item already exists, need to remove item before adding to the beginning
-  if (prevHistory && prevHistory.find(item => item.keywordStr === keywordStr)) {
-    const index = prevHistory.findIndex(item => item.keywordStr === keywordStr);
+  if (prevHistory && prevHistory.find((item) => item.keywordStr === keywordStr)) {
+    const index = prevHistory.findIndex((item) => item.keywordStr === keywordStr);
     newHistory = prevHistory.slice(0);
     newHistory.splice(index, 1); // remove item
   }

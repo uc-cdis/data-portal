@@ -14,7 +14,7 @@ const testStudies = mockData.map((study, i) => ({ ...study, __accessible: i % 2 
 // See https://jestjs.io/docs/en/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -206,7 +206,6 @@ describe('Modal', () => {
   });
 });
 
-
 describe('Table', () => {
   test('Table filters records by access level', () => {
     testConfig.features.authorization.enabled = true;
@@ -219,17 +218,17 @@ describe('Table', () => {
     accessSelector.invoke('onChange')({ target: { value: AccessLevel.ACCESSIBLE } });
     let rows = wrapper.find('.discovery-table__row');
     // all rows should have an unlock icon (accessible)
-    expect(rows.everyWhere(r => r.exists('[aria-label="unlock"]'))).toBe(true);
+    expect(rows.everyWhere((r) => r.exists('[aria-label="unlock"]'))).toBe(true);
 
     accessSelector.invoke('onChange')({ target: { value: AccessLevel.UNACCESSIBLE } });
     rows = wrapper.find('.discovery-table__row');
     // all rows should have an lock icon (unaccessible)
-    expect(rows.everyWhere(r => r.exists('[aria-label="lock"]'))).toBe(true);
+    expect(rows.everyWhere((r) => r.exists('[aria-label="lock"]'))).toBe(true);
 
     accessSelector.invoke('onChange')({ target: { value: AccessLevel.BOTH } });
     rows = wrapper.find('.discovery-table__row');
     // all rows should have either a lock or an unlock icon
-    expect(rows.everyWhere(r => r.exists('[aria-label="unlock"]') || r.exists('[aria-label="lock"]'))).toBe(true);
+    expect(rows.everyWhere((r) => r.exists('[aria-label="unlock"]') || r.exists('[aria-label="lock"]'))).toBe(true);
 
     wrapper.unmount();
   });
@@ -243,18 +242,18 @@ describe('Table', () => {
 
     // select the `COVID 19` tag
     const targetTagValue = 'COVID 19';
-    const isTargetTag = n => n.hasClass('discovery-tag') && n.contains(targetTagValue);
+    const isTargetTag = (n) => n.hasClass('discovery-tag') && n.contains(targetTagValue);
     const tag = wrapper.findWhere(isTargetTag).first();
     tag.simulate('click');
     // expect all rows in the table to have the 'COVID 19' tag
     let rows = wrapper.find('.discovery-table__row');
-    expect(rows.everyWhere(r => r.findWhere(isTargetTag).exists())).toBe(true);
+    expect(rows.everyWhere((r) => r.findWhere(isTargetTag).exists())).toBe(true);
 
     // unselect the `COVID 19` tag
     tag.simulate('click');
     rows = wrapper.find('.discovery-table__row');
     // expect that not all rows have the 'COVID 19' tag
-    expect(rows.everyWhere(r => r.findWhere(isTargetTag).exists())).toBe(false);
+    expect(rows.everyWhere((r) => r.findWhere(isTargetTag).exists())).toBe(false);
 
     wrapper.unmount();
   });

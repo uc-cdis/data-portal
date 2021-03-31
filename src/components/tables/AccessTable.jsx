@@ -17,32 +17,38 @@ class AccessTable extends React.Component {
    * default row renderer - just delegates to ProjectTR - can be overriden by subtypes, whatever
    */
 
-  getDataFenceProjectAccess = (projectsAccesses, projects) =>
-    Object.keys(projectsAccesses).map(p => [
-      p in projects ?
+  getDataFenceProjectAccess = (projectsAccesses, projects) => Object.keys(projectsAccesses).map((p) => [
+    p in projects
+      ? (
         <Link to={`/${projects[p]}`}>
           {p}
-        </Link> :
+        </Link>
+      )
+      : (
         <div>
           {p}
-        </div>,
-      projectsAccesses[p].join(', '),
-    ]);
+        </div>
+      ),
+    projectsAccesses[p].join(', '),
+  ]);
 
-  getDataArboristAuthMapping = (userAuthMapping, projects) =>
-    Object.keys(userAuthMapping).map((r) => {
-      const projCode = projectCodeFromResourcePath(r); // will be project code or ''
-      return [
-        projCode in projects ?
+  getDataArboristAuthMapping = (userAuthMapping, projects) => Object.keys(userAuthMapping).map((r) => {
+    const projCode = projectCodeFromResourcePath(r); // will be project code or ''
+    return [
+      projCode in projects
+        ? (
           <Link to={`/${projects[projCode]}`}>
             {r}
-          </Link> :
+          </Link>
+        )
+        : (
           <div>
             {r}
-          </div>,
-        listifyMethodsFromMapping(userAuthMapping[r]).join(', '),
-      ];
-    });
+          </div>
+        ),
+      listifyMethodsFromMapping(userAuthMapping[r]).join(', '),
+    ];
+  });
 
   render() {
     if (this.props.userAuthMapping === undefined) {
