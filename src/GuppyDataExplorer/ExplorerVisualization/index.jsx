@@ -5,7 +5,7 @@ import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
 import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '@gen3/ui-component/dist/components/charts/PercentageStackedBarChart';
 import { components } from '../../params';
-import { guppyUrl, tierAccessLevel, tierAccessLimit, hideEmptyFilterSection } from '../../localconf';
+import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../../localconf';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerHeatMap from '../ExplorerHeatMap';
 import ExplorerTable from '../ExplorerTable';
@@ -216,7 +216,6 @@ class ExplorerVisualization extends React.Component {
                   ...heatMapGuppyConfig,
                 }}
                 filterConfig={heatMapFilterConfig}
-                hideEmptyFilterSection={hideEmptyFilterSection}
               />
               <ExplorerHeatMap
                 guppyConfig={{
