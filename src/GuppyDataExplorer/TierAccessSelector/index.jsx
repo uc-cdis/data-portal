@@ -31,6 +31,7 @@ class TierAccessSelector extends React.Component {
         <div
           className='tier-access-selector__dropdown'
           onClick={this.handleToggle}
+          onKeyPress={this.handleToggle}
           role='button'
           tabIndex={0}
         >

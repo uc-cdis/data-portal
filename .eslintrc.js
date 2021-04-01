@@ -58,9 +58,8 @@ module.exports = {
       'element',
     ],
     'jsx-a11y/label-has-associated-control': [2, {
-      labelComponents: ['CustomInputLabel'],
       labelAttributes: ['label'],
-      controlComponents: ['CustomInput'],
+      controlComponents: ['Switch'],
       depth: 3,
     }],
     'jsx-a11y/anchor-is-valid': ['off'],

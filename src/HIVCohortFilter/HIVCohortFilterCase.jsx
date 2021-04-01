@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 import React from 'react';
 import FileSaver from 'file-saver';
 import { fetchWithCreds } from '../actions';
@@ -70,7 +71,6 @@ class HIVCohortFilterCase extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      inLoadingState: false,
       isReadyToCalculate: false,
       resultAlreadyCalculated: false,
       therapyValuesOfInterest: ['HAART', 'Potent ART'],
@@ -155,35 +155,6 @@ class HIVCohortFilterCase extends React.Component {
     });
   }
 
-  isALargeAmountOfFollowUpDataMissing(visitArray) {
-    // Note: This function is overridden by the LTNP case
-    // If a large amount of data is missing, disqualify the subject
-    const monthSizeFromVisitDate = (visitArray[visitArray.length - 1].visit_date
-      - visitArray[0].visit_date) * 12;
-    // Visits are estimated to be 6 months apart, but this is not always the case
-    const monthSizeFromVisitNumber = (visitArray[visitArray.length - 1].visit_number
-      - visitArray[0].visit_number) * 6;
-    const maxWindowSize = this.state.numConsecutiveMonthsFromUser * 2;
-    if (Math.min(monthSizeFromVisitDate, monthSizeFromVisitNumber) >= maxWindowSize) {
-      // If the window_size is more than double, this indicates a large amount of missing data
-      return true;
-    }
-    return false;
-  }
-
-  checkReadyToCalculate = () => {
-    // Overridden by LTNP and EC case
-    const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
-    const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
-    this.setState({
-      viralLoadFromUser: viralLoadFromUser > 0 ? viralLoadFromUser : undefined,
-      numConsecutiveMonthsFromUser: numConsecutiveMonthsFromUser > 0
-        ? numConsecutiveMonthsFromUser : undefined,
-      isReadyToCalculate: (viralLoadFromUser > 0 && numConsecutiveMonthsFromUser > 0),
-      resultAlreadyCalculated: false,
-    });
-  }
-
   downloadControl = () => {
     // Overridden by LTNP
     const fileName = `control-cohort-vload-${this.state.suppressViralLoadFromUser.toString()
@@ -197,6 +168,19 @@ class HIVCohortFilterCase extends React.Component {
     event.preventDefault();
     this.setState({ inLoadingState: true });
     this.updateSubjectClassifications();
+  }
+
+  checkReadyToCalculate = () => {
+    // Overridden by LTNP and EC case
+    const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
+    const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
+    this.setState({
+      viralLoadFromUser: viralLoadFromUser > 0 ? viralLoadFromUser : undefined,
+      numConsecutiveMonthsFromUser: numConsecutiveMonthsFromUser > 0
+        ? numConsecutiveMonthsFromUser : undefined,
+      isReadyToCalculate: (viralLoadFromUser > 0 && numConsecutiveMonthsFromUser > 0),
+      resultAlreadyCalculated: false,
+    });
   }
 }
 

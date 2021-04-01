@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 import React from 'react';
 import PropTypes from 'prop-types';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
