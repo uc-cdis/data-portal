@@ -207,9 +207,9 @@ function buildConfig(opts) {
     explorerPublic = true;
   }
 
-  let hideEmptyFilterSection = false;
-  if (config.featureFlags && config.featureFlags.hideEmptyFilterSection) {
-    hideEmptyFilterSection = true;
+  let explorerHideEmptyFilterSection = false;
+  if (config.featureFlags && config.featureFlags.explorerHideEmptyFilterSection) {
+    explorerHideEmptyFilterSection = true;
   }
 
   const enableResourceBrowser = !!config.resourceBrowser;
@@ -422,7 +422,7 @@ function buildConfig(opts) {
     indexScopedTierAccessMode,
     useIndexdAuthz,
     explorerPublic,
-    hideEmptyFilterSection,
+    explorerHideEmptyFilterSection,
     authzPath,
     authzMappingPath,
     enableResourceBrowser,

@@ -160,7 +160,7 @@ Below is an example, with inline comments describing what each JSON block config
     "explorer": true, // required; indicates the flag and whether to hide it or not
     "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. Data explorer page would be public accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
     "discovery": true, // optional; whether to enable the Discovery page. If true, `discoveryConfig` must be present as well.
-    "hideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
+    "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
   },
   "dataExplorerConfig": { // required; configuration for the Data Explorer (/explorer)
     "charts": { // optional; indicates which charts to display in the Data Explorer
