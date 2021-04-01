@@ -137,10 +137,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif|woff|ttf|eot|woff2)$/,
-        loaders: 'url-loader',
-        query: {
-          limit: 8192,
-        },
+        type: 'asset/inline',
       },
       {
         test: /\.flow$/,
