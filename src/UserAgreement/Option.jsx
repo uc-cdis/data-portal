@@ -10,15 +10,6 @@ function getCharFromA(i) {
  * Little question component - properties: option, idx, isCorrectAnswer, onChange, selected
  */
 class Option extends Component {
-  static propTypes = {
-    option: PropTypes.string.isRequired,
-    idx: PropTypes.number.isRequired,
-    isCorrectAnswer: PropTypes.bool.isRequired,
-    onChange: PropTypes.func.isRequired,
-    selected: PropTypes.bool.isRequired,
-    hasCorrectAnswers: PropTypes.bool.isRequired,
-  };
-
   render() {
     let frameClassModifier = '';
     let bulletClassModifier = '';
@@ -51,5 +42,14 @@ class Option extends Component {
     );
   }
 }
+
+Option.propTypes = {
+  option: PropTypes.string.isRequired,
+  idx: PropTypes.number.isRequired,
+  isCorrectAnswer: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired,
+  selected: PropTypes.bool.isRequired,
+  hasCorrectAnswers: PropTypes.bool.isRequired,
+};
 
 export default Option;

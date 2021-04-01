@@ -26,30 +26,6 @@ const makeDefaultState = (questions) => {
  * Little quiz component - properties: questionList, title, description, onSubmit
  */
 class Quiz extends Component {
-  static propTypes = {
-    questionList: PropTypes.arrayOf(
-      PropTypes.shape(
-        {
-          name: PropTypes.string,
-          question: PropTypes.string,
-          options: PropTypes.arrayOf(PropTypes.string),
-          answer: PropTypes.number,
-          hint: PropTypes.string,
-        },
-      ),
-    ),
-    title: PropTypes.string.isRequired,
-    subtitle: PropTypes.string,
-    description: PropTypes.string.isRequired,
-    onSubmit: PropTypes.func.isRequired,
-    hasCorrectAnswers: PropTypes.bool.isRequired,
-  };
-
-  static defaultProps = {
-    questionList: [],
-    subtitle: null,
-  };
-
   constructor(props) {
     super(props);
     this.qs = {};
@@ -68,34 +44,6 @@ class Quiz extends Component {
   componentWillUnmount() {
     this.quizContent.removeEventListener('scroll',
       () => this.handleScroll(this.quizContent));
-  }
-
-  setCurrentSection(sectionIdx) {
-    this.setState({ currentSection: getQuestionSectionId(sectionIdx + 1) });
-  }
-
-  resetState = () => {
-    this.setState(makeDefaultState(this.props.questionList));
-  };
-
-  answerQuestion(questionId, isCorrect) {
-    const notDone = this.state.notDone.filter((item) => item !== questionId);
-    let { rights } = this.state;
-    let { wrongs } = this.state;
-    if (isCorrect) {
-      if (!rights.includes(questionId)) {
-        rights.push(questionId);
-        rights.sort();
-      }
-      wrongs = wrongs.filter((item) => item !== questionId);
-    } else {
-      if (!wrongs.includes(questionId)) {
-        wrongs.push(questionId);
-        wrongs.sort();
-      }
-      rights = rights.filter((item) => item !== questionId);
-    }
-    this.setState({ notDone, rights, wrongs });
   }
 
   handleScroll(ctrl) {
@@ -145,6 +93,36 @@ class Quiz extends Component {
   handleSubmit() {
     const data = this.props.questionList.map((item) => item.options[item.answer]);
     this.props.onSubmit(data, this.props.questionList);
+  }
+
+  setCurrentSection(sectionIdx) {
+    this.setState({ currentSection: getQuestionSectionId(sectionIdx + 1) });
+  }
+
+  resetState = () => {
+    this.setState(makeDefaultState(this.props.questionList));
+  };
+
+  answerQuestion(questionId, isCorrect) {
+    this.setState((prevState) => {
+      const notDone = prevState.notDone.filter((item) => item !== questionId);
+      let { rights } = prevState;
+      let { wrongs } = prevState;
+      if (isCorrect) {
+        if (!rights.includes(questionId)) {
+          rights.push(questionId);
+          rights.sort();
+        }
+        wrongs = wrongs.filter((item) => item !== questionId);
+      } else {
+        if (!wrongs.includes(questionId)) {
+          wrongs.push(questionId);
+          wrongs.sort();
+        }
+        rights = rights.filter((item) => item !== questionId);
+      }
+      return { notDone, rights, wrongs };
+    });
   }
 
   render() {
@@ -229,5 +207,29 @@ class Quiz extends Component {
     );
   }
 }
+
+Quiz.propTypes = {
+  questionList: PropTypes.arrayOf(
+    PropTypes.shape(
+      {
+        name: PropTypes.string,
+        question: PropTypes.string,
+        options: PropTypes.arrayOf(PropTypes.string),
+        answer: PropTypes.number,
+        hint: PropTypes.string,
+      },
+    ),
+  ),
+  title: PropTypes.string.isRequired,
+  subtitle: PropTypes.string,
+  description: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  hasCorrectAnswers: PropTypes.bool.isRequired,
+};
+
+Quiz.defaultProps = {
+  questionList: [],
+  subtitle: null,
+};
 
 export default Quiz;

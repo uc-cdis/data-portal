@@ -190,6 +190,7 @@ const ReduxProjectSubmission = (() => {
   });
 
   const mapDispatchToProps = (dispatch) => ({
+    // eslint-disable-next-line max-len
     onGetCounts: (typeList, project, dictionary) => dispatch(getCounts(typeList, project, dictionary)),
     fetchPrograms: () => dispatch(fetchPrograms()),
   });

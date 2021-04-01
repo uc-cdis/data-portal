@@ -4,23 +4,6 @@ import { Form, Input } from 'antd';
 import './TextInput.less';
 
 class TextInput extends Component {
-  static propTypes = {
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    value: PropTypes.string,
-    required: PropTypes.bool.isRequired,
-    description: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onUpdateFormSchema: PropTypes.func,
-    propertyType: PropTypes.string,
-  };
-
-  static getDefaultProps = {
-    onUpdateFormSchema: () => {},
-    propertyType: undefined,
-    value: undefined,
-  };
-
   componentDidMount() {
     if (this.props.onUpdateFormSchema !== undefined) {
       this.props.onUpdateFormSchema({ [this.props.name]: this.props.propertyType });
@@ -48,5 +31,22 @@ class TextInput extends Component {
     );
   }
 }
+
+TextInput.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string,
+  required: PropTypes.bool.isRequired,
+  description: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onUpdateFormSchema: PropTypes.func,
+  propertyType: PropTypes.string,
+};
+
+TextInput.getDefaultProps = {
+  onUpdateFormSchema: () => {},
+  propertyType: undefined,
+  value: undefined,
+};
 
 export default TextInput;

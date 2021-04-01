@@ -5,21 +5,6 @@ import { Form, Select } from 'antd';
 const { Option } = Select;
 
 class EnumInput extends Component {
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    options: PropTypes.array.isRequired,
-    required: PropTypes.bool.isRequired,
-    description: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onUpdateFormSchema: PropTypes.func,
-    propertyType: PropTypes.string,
-  };
-
-  static getDefaultProps = {
-    onUpdateFormSchema: () => {},
-    propertyType: null,
-  };
-
   componentDidMount() {
     if (this.props.onUpdateFormSchema !== undefined) {
       this.props.onUpdateFormSchema({ [this.props.name]: this.props.propertyType });
@@ -54,5 +39,20 @@ class EnumInput extends Component {
     );
   }
 }
+
+EnumInput.propTypes = {
+  name: PropTypes.string.isRequired,
+  options: PropTypes.array.isRequired,
+  required: PropTypes.bool.isRequired,
+  description: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onUpdateFormSchema: PropTypes.func,
+  propertyType: PropTypes.string,
+};
+
+EnumInput.getDefaultProps = {
+  onUpdateFormSchema: () => {},
+  propertyType: null,
+};
 
 export default EnumInput;

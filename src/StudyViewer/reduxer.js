@@ -24,7 +24,8 @@ const generateGQLQuery = (nameOfIndex, fieldsToFetch, rowAccessorField, rowAcces
   return { query, variables };
 };
 
-export const fetchStudyViewerConfig = (dataType) => studyViewerConfig.find((svc) => svc.dataType === dataType);
+export const fetchStudyViewerConfig = (dataType) => studyViewerConfig
+  .find((svc) => svc.dataType === dataType);
 
 export const fetchFiles = (dataType, typeOfFileIndex, rowAccessorValue) => {
   const targetStudyViewerConfig = fetchStudyViewerConfig(dataType);

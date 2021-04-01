@@ -29,7 +29,8 @@ class StudyCard extends React.Component {
         >
           <Collapse
             defaultActiveKey={(this.state.panelExpanded) ? ['1'] : []}
-            expandIcon={({ isActive }) => ((isActive) ? <MinusCircleOutlined /> : <PlusCircleOutlined />)}
+            expandIcon={({ isActive }) => ((isActive)
+              ? <MinusCircleOutlined /> : <PlusCircleOutlined />)}
             onChange={this.onCollapseChange}
             ghost
           >

@@ -71,7 +71,8 @@ class MapFiles extends React.Component {
   }
 
   onDeletion = () => {
-    const flatFiles = this.flattenFiles(this.state.selectedFilesByGroup);
+    const { selectedFilesByGroup } = this.state;
+    const flatFiles = this.flattenFiles(selectedFilesByGroup);
     const limit = pLimit(CONCURRENCY_LIMIT);
     const promises = [];
     this.setState({
@@ -119,9 +120,9 @@ class MapFiles extends React.Component {
   }
 
   onFeatureToggle = () => {
-    this.setState({
-      deleteFeature: !(this.state.deleteFeature),
-    }, () => this.createFileMapByGroup());
+    this.setState((prevState) => ({
+      deleteFeature: !(prevState.deleteFeature),
+    }), () => this.createFileMapByGroup());
   };
 
   getSetSize = (set) => Object.keys(set).length

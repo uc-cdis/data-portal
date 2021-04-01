@@ -15,74 +15,74 @@ const { Title } = Typography;
  * the same way uploaded tsv/json data is treated.
  */
 class SubmitForm extends Component {
-  static propTypes = {
-    submission: PropTypes.object.isRequired,
-    onUploadClick: PropTypes.func.isRequired,
-    onUpdateFormSchema: PropTypes.func.isRequired,
-  };
-
-  state = {
-    chosenNode: { value: null, label: '' },
-    fill_form: false,
-    form: {},
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      chosenNode: { value: null, label: '' },
+      fill_form: false,
+      form: {},
+    };
+  }
 
   onFormToggle = () => {
-    this.setState({
-      fill_form: !(this.state.fill_form),
-    });
+    this.setState((prevState) => ({
+      fill_form: !(prevState.fill_form),
+    }));
   };
 
   onChange = (event) => {
-    const { target } = event;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const { name } = target;
-    this.setState({
-      form: {
-        ...this.state.form,
-        [name]: value,
-      },
+    this.setState((prevState) => {
+      const { target } = event;
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      const { name } = target;
+      return {
+        form: {
+          ...prevState.form,
+          [name]: value,
+        },
+      };
     });
   };
 
   onChangeEnum = (name, newValue) => {
-    this.setState({
+    this.setState((prevState) => ({
       form: {
-        ...this.state.form,
+        ...prevState.form,
         [name]: newValue,
       },
-    });
+    }));
   };
 
   onChangeAnyOf = (name, event, properties) => {
-    const { target } = event;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    // get real subname because we have to change the name of each text input so they are unique
-    const subname = target.name.replace(`${name}_`, '');
+    this.setState((prevState) => {
+      const { target } = event;
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      // get real subname because we have to change the name of each text input so they are unique
+      const subname = target.name.replace(`${name}_`, '');
 
-    if (this.state.form[name] === null || this.state.form[name] === undefined) {
-      this.setState({
+      if (prevState.form[name] === null || prevState.form[name] === undefined) {
+        return {
+          form: {
+            ...prevState.form,
+            [name]: [{ [subname]: value }],
+          },
+        };
+      } if (properties.every((prop) => prop in prevState.form[name])) {
+        return {
+          form: {
+            ...prevState.form,
+            [name]: prevState.form[name].push({ [subname]: value }),
+          },
+        };
+      }
+      return {
         form: {
-          ...this.state.form,
-          [name]: [{ [subname]: value }],
+          ...prevState.form,
+          [name]: [...prevState.form[name].slice(0, prevState.form[name].length - 2),
+            { ...prevState.form[name][prevState.form[name].length - 1], [subname]: value }],
         },
-      });
-    } else if (properties.every((prop) => prop in this.state.form[name])) {
-      this.setState({
-        form: {
-          ...this.state.form,
-          [name]: this.state.form[name].push({ [subname]: value }),
-        },
-      });
-    } else {
-      this.setState({
-        form: {
-          ...this.state.form,
-          [name]: [...this.state.form[name].slice(0, this.state.form[name].length - 2),
-            { ...this.state.form[name][this.state.form[name].length - 1], [subname]: value }],
-        },
-      });
-    }
+      };
+    });
   };
 
   handleSubmit = () => {
@@ -152,5 +152,11 @@ class SubmitForm extends Component {
     );
   }
 }
+
+SubmitForm.propTypes = {
+  submission: PropTypes.object.isRequired,
+  onUploadClick: PropTypes.func.isRequired,
+  onUpdateFormSchema: PropTypes.func.isRequired,
+};
 
 export default SubmitForm;

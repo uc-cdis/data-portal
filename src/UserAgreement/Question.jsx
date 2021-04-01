@@ -11,20 +11,6 @@ const makeDefaultState = (answer) => ({
  * Little question component - properties: content, onChange, idx, sectionId
  */
 class Question extends Component {
-  static propTypes = {
-    content: PropTypes.shape({
-      name: PropTypes.string,
-      question: PropTypes.string,
-      options: PropTypes.arrayOf(PropTypes.string),
-      answer: PropTypes.number,
-      hint: PropTypes.string,
-    }).isRequired,
-    onChange: PropTypes.func.isRequired,
-    idx: PropTypes.number.isRequired,
-    sectionId: PropTypes.string.isRequired,
-    hasCorrectAnswers: PropTypes.bool.isRequired,
-  };
-
   constructor(props) {
     super(props);
     this.state = makeDefaultState(null);
@@ -69,5 +55,19 @@ class Question extends Component {
     );
   }
 }
+
+Question.propTypes = {
+  content: PropTypes.shape({
+    name: PropTypes.string,
+    question: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.string),
+    answer: PropTypes.number,
+    hint: PropTypes.string,
+  }).isRequired,
+  onChange: PropTypes.func.isRequired,
+  idx: PropTypes.number.isRequired,
+  sectionId: PropTypes.string.isRequired,
+  hasCorrectAnswers: PropTypes.bool.isRequired,
+};
 
 export default Question;

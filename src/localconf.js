@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 const { components, requiredCerts, config } = require('./params');
 
 /**

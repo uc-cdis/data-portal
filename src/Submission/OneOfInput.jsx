@@ -5,25 +5,12 @@ import EnumInput from './EnumInput';
 
 class OneOfInput extends Component {
   // couldn't make a generalized component as I would like to, so I am shortcircuiting the logic
-
-  static propTypes = {
-    property: PropTypes.array.isRequired,
-    name: PropTypes.string.isRequired,
-    value: PropTypes.any,
-    required: PropTypes.bool.isRequired,
-    description: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onChangeEnum: PropTypes.func.isRequired,
-    onUpdateFormSchema: PropTypes.func.isRequired,
-  };
-
-  static getDefaultProps = {
-    value: undefined,
-  };
-
-  state = {
-    selectedOption: 'Text',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedOption: 'Text',
+    };
+  }
 
   componentDidMount() {
     if (this.state.selectedOption === 'Number') {
@@ -120,5 +107,20 @@ class OneOfInput extends Component {
     );
   }
 }
+
+OneOfInput.propTypes = {
+  property: PropTypes.array.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.any,
+  required: PropTypes.bool.isRequired,
+  description: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onChangeEnum: PropTypes.func.isRequired,
+  onUpdateFormSchema: PropTypes.func.isRequired,
+};
+
+OneOfInput.getDefaultProps = {
+  value: undefined,
+};
 
 export default OneOfInput;

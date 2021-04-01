@@ -49,6 +49,10 @@ module.exports = {
       'error',
       'always',
     ],
+    'prefer-destructuring': [
+      'error',
+      { object: true, array: false },
+    ],
     'react/jsx-fragments': [
       'error',
       'element',
@@ -64,6 +68,7 @@ module.exports = {
     // - seems to affect Codacy :-(
     'import/extensions': ['off', 'never'],
     'import/no-cycle': 'off',
+    'prefer-promise-reject-errors': 'off',
     'react/jsx-indent': 'off',
     'react/forbid-prop-types': 'off',
     'react/prefer-stateless-function': 'off',
