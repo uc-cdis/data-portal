@@ -59,7 +59,7 @@ const deleteNode = ({ id, project }) => (dispatch) => fetchWithCreds({
   .then(
     ({ status, data }) => {
       // console.log('receive delete');
-      dispatch(updatePopup({ nodedelete_popup: false, view_popup: false }));
+      dispatch(updatePopup({ nodeDeletePopup: false, viewPopup: false }));
 
       switch (status) {
       case 200:

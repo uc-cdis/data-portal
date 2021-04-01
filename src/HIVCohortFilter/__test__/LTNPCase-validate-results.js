@@ -18,7 +18,9 @@ function confirmPatientIsLTNP(subjectObj) {
   const followUps = sortByKey(subjectObj.visits, 'visit_date');
   const { fposdate } = followUps[0];
   const { frstdthd } = followUps[0];
-  const indexOfFirstFollowUpInFposYear = followUps.findIndex((visit) => visit.visit_date >= fposdate);
+  const indexOfFirstFollowUpInFposYear = followUps.findIndex(
+    (visit) => visit.visit_date >= fposdate,
+  );
   if (indexOfFirstFollowUpInFposYear === -1) {
     console.log(`Error, subject ${subjectID} has no followup data after their fposdate.`);
     return;

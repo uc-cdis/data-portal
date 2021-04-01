@@ -38,14 +38,13 @@ const transformRelayProps = (data) => {
   const { fileCount } = GQLHelper.extractFileInfo(data);
   const nodeCount = Math.min(config.graphql.boardCounts.length + 1, 4);
   const projectList = (data.projectList || []).map(
-    (proj) =>
-      // fill in missing properties
-      ({
-        name: 'unknown',
-        counts: (new Array(nodeCount)).fill(0),
-        charts: [0, 0],
-        ...proj,
-      }),
+    // fill in missing properties
+    (proj) => ({
+      name: 'unknown',
+      counts: (new Array(nodeCount)).fill(0),
+      charts: [0, 0],
+      ...proj,
+    }),
 
   );
   let summaryCounts = Object.keys(data).filter(

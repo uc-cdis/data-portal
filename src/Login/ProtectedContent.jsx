@@ -22,25 +22,6 @@ let lastAuthMs = 0;
  * @param filter {() => Promise} optional filter to apply before rendering the child component
  */
 class ProtectedContent extends React.Component {
-  static propTypes = {
-    component: PropTypes.func.isRequired,
-    location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
-    match: PropTypes.shape(
-      {
-        params: PropTypes.object,
-        path: PropTypes.string,
-      },
-    ).isRequired,
-    public: PropTypes.bool,
-    filter: PropTypes.func,
-  };
-
-  static defaultProps = {
-    public: false,
-    filter: null,
-  };
-
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -196,6 +177,7 @@ class ProtectedContent extends React.Component {
     }
     const { user } = newState;
     // user is authenticated - now check if he has certs
+    // eslint-disable-next-line max-len
     const isMissingCerts = intersection(requiredCerts, user.certificates_uploaded).length !== requiredCerts.length;
     // take quiz if this user doesn't have required certificate
     if (this.props.match.path !== '/quiz' && isMissingCerts) {
@@ -255,5 +237,24 @@ class ProtectedContent extends React.Component {
     return (<div className={`protected-content ${pageFullWidthClassModifier}`}><Spinner /></div>);
   }
 }
+
+ProtectedContent.propTypes = {
+  component: PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  match: PropTypes.shape(
+    {
+      params: PropTypes.object,
+      path: PropTypes.string,
+    },
+  ).isRequired,
+  public: PropTypes.bool,
+  filter: PropTypes.func,
+};
+
+ProtectedContent.defaultProps = {
+  public: false,
+  filter: null,
+};
 
 export default ProtectedContent;

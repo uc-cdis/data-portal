@@ -13,19 +13,19 @@ const Entity = ({
 }) => {
   const onDelete = () => {
     onStoreNodeInfo({ project, id: value.id }).then(
-      () => onUpdatePopup({ nodedelete_popup: true }),
+      () => onUpdatePopup({ nodeDeletePopup: true }),
     );
   };
   const onView = () => {
-    onStoreNodeInfo({ project, id: value.id }).then(() => onUpdatePopup({ view_popup: true }));
+    onStoreNodeInfo({ project, id: value.id }).then(() => onUpdatePopup({ viewPopup: true }));
   };
   return (
     <li>
       <span>{value.submitter_id}</span>
       <a role='button' tabIndex={tabindexStart} className='query-node__button query-node__button--download' href={`${getSubmitPath(project)}/export?format=json&ids=${value.id}`}>Download</a>
-      <a role='button' tabIndex={tabindexStart + 1} className='query-node__button query-node__button--view' onClick={onView}>View</a>
+      <a role='button' tabIndex={tabindexStart + 1} className='query-node__button query-node__button--view' onClick={onView} onKeyPress={onView}>View</a>
       {
-        showDelete ? <a role='button' tabIndex={tabindexStart + 2} className='query-node__button query-node__button--delete' onClick={onDelete}>Delete</a> : null
+        showDelete ? <a role='button' tabIndex={tabindexStart + 2} className='query-node__button query-node__button--delete' onClick={onDelete} onKeyPress={onDelete}>Delete</a> : null
       }
     </li>
   );
@@ -41,10 +41,8 @@ Entity.propTypes = {
 };
 
 Entity.defaultProps = {
-  nodeTypes: [],
   onUpdatePopup: null,
   onStoreNodeInfo: null,
-  onSearchFormSubmit: null,
 };
 
 const Entities = ({
@@ -91,7 +89,7 @@ class QueryNode extends React.Component {
    * based on the popups and queryNodes properties attached to this component.
    *
    * @param {popups, queryNodes, onUpdatePopup} props including
-   * props.popups.view_popup and props.queryNodes state
+   * props.popups.viewPopup and props.queryNodes state
    * passed into the component by Redux
    * @return { state, popupEl } where state (just used for testing)
    * is string one of [viewNode, noPopup], and
@@ -105,12 +103,12 @@ class QueryNode extends React.Component {
     };
 
     const closeViewPopup = () => {
-      onUpdatePopup({ view_popup: false });
+      onUpdatePopup({ viewPopup: false });
     };
 
     if (
       popups
-      && popups.view_popup
+      && popups.viewPopup
       && queryNodes.query_node
     ) {
       // View node button clicked
@@ -155,10 +153,10 @@ class QueryNode extends React.Component {
     };
     const closeDelete = () => {
       onClearDeleteSession();
-      onUpdatePopup({ nodedelete_popup: false });
+      onUpdatePopup({ nodeDeletePopup: false });
     };
 
-    if (popups && popups.nodedelete_popup === true) {
+    if (popups && popups.nodeDeletePopup === true) {
       // User clicked on node 'Delete' button
       popup.state = 'confirmDelete';
       popup.popupEl = (
@@ -178,7 +176,7 @@ class QueryNode extends React.Component {
               caption: 'Confirm',
               fn: () => {
                 onDeleteNode({ project: params.project, id: queryNodes.stored_node_info });
-                onUpdatePopup({ nodedelete_popup: 'Waiting for delete to finish ...' });
+                onUpdatePopup({ nodeDeletePopup: 'Waiting for delete to finish ...' });
               },
             },
           ]}
@@ -197,14 +195,14 @@ class QueryNode extends React.Component {
           onClose={closeDelete}
         />
       );
-    } else if (popups && typeof popups.nodedelete_popup === 'string' && queryNodes && queryNodes.query_node) {
+    } else if (popups && typeof popups.nodeDeletePopup === 'string' && queryNodes && queryNodes.query_node) {
       // Waiting for node delete to finish
       popup.state = 'waitForDelete';
       popup.popupEl = (
         <Popup
           title={queryNodes.query_node.submitter_id}
-          message={popups.nodedelete_popup}
-          onClose={() => onUpdatePopup({ nodedelete_popup: false })}
+          message={popups.nodeDeletePopup}
+          onClose={() => onUpdatePopup({ nodeDeletePopup: false })}
         />
       );
     }

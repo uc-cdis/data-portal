@@ -29,7 +29,7 @@ class Indexing extends React.Component {
 
       // Download Manifest flow
       downloadManifestFileEnabled: true,
-      uidOfManifestGenerationSowerJob: null,
+      // uidOfManifestGenerationSowerJob: null,
       downloadManifestStatus: 'running',
       downloadManifestStatusLastUpdated: this.getCurrentTime(),
     };
@@ -173,7 +173,6 @@ class Indexing extends React.Component {
     }).then((response) => {
       if (response.status === 200 && response.data && response.data.uid) {
         this.setState({
-          uidOfIndexingSowerJob: response.data.uid,
           indexingFilesPopupMessage: `Indexing job is in progress. UID: ${response.data.uid}`,
         });
         this.pollForIndexJobStatus(response.data.uid);
@@ -205,7 +204,7 @@ class Indexing extends React.Component {
     }).then((response) => {
       if (response.status === 200 && response.data && response.data.uid) {
         this.setState({
-          uidOfManifestGenerationSowerJob: response.data.uid,
+          // uidOfManifestGenerationSowerJob: response.data.uid,
           downloadManifestPopupMessage: `Manifest generation job is in progress. UID: ${response.data.uid}`,
           downloadManifestStatus: 'running',
           downloadManifestStatusLastUpdated: this.getCurrentTime(),
@@ -319,7 +318,6 @@ class Indexing extends React.Component {
   download = async () => {
     this.setState({
       showDownloadManifestPopup: true,
-      downloadManifestButtonEnabled: false,
       downloadManifestPopupMessage: 'Dispatching manifest generation job...',
     });
     this.dispatchSowerGenerateManifestJob();

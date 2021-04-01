@@ -19,36 +19,34 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.resetState = this.resetState.bind(this);
-    this.updateDimensions = this.updateDimensions.bind(this);
+    // this.updateDimensions = this.updateDimensions.bind(this);
     this.state = {
-      height: window.innerHeight - 221,
+      // height: window.innerHeight - 221,
       selectedLoginOption: {}, // one for each login dropdown
     };
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.updateDimensions);
-  }
+  // componentDidMount() {
+  //   window.addEventListener('resize', this.updateDimensions);
+  // }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateDimensions);
-  }
+  // componentWillUnmount() {
+  //   window.removeEventListener('resize', this.updateDimensions);
+  // }
 
-  updateDimensions() {
-    this.setState({ height: window.innerHeight - 221 });
+  selectChange = (selectedOption, index) => {
+    const { selectedLoginOption } = this.state;
+    selectedLoginOption[index] = selectedOption;
+    this.setState({ selectedLoginOption });
   }
 
   resetState() {
     this.setState(getInitialState());
   }
 
-  selectChange = (selectedOption, index) => {
-    const selectedLoginOptionCopy = { ...this.state.selectedLoginOption };
-    selectedLoginOptionCopy[index] = selectedOption;
-    this.setState({
-      selectedLoginOption: selectedLoginOptionCopy,
-    });
-  }
+  // updateDimensions() {
+  //   this.setState({ height: window.innerHeight - 221 });
+  // }
 
   render() {
     const { location } = this.props; // this is the react-router "location"

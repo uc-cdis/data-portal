@@ -112,16 +112,16 @@ class MapDataModel extends React.Component {
   }
 
   selectRequiredField = (option, prop) => {
-    const fields = this.state.requiredFields;
-    fields[prop] = null;
+    const { requiredFields } = this.state;
+    requiredFields[prop] = null;
     let castedOption = null;
     if (option && option.target) {
       castedOption = this.castOption(option.target.value, prop);
     } else if (option && option.value) {
       castedOption = this.castOption(option.value, prop);
     }
-    fields[prop] = castedOption || null;
-    this.setState({ requiredFields: fields });
+    requiredFields[prop] = castedOption || null;
+    this.setState({ requiredFields });
   }
 
   isInteger = (prop) => {
@@ -149,7 +149,7 @@ class MapDataModel extends React.Component {
         { project_id: this.state.projectId },
       ).then((data) => {
         if (data && data[this.state.parentNodeType]) {
-          this.setState({ validParentIds: data[this.state.parentNodeType] });
+          this.setState((prevState) => ({ validParentIds: data[prevState.parentNodeType] }));
         }
       });
     } else {
@@ -194,7 +194,7 @@ class MapDataModel extends React.Component {
         const promise = this.props.submitFiles(programProject[0], programProject[1], chunk)
           .then((res) => {
             this.setState((prevState) => ({ chunkCounter: prevState.chunkCounter + 1 }), () => {
-              this.setState({ submissionText: `Submitting ${this.state.chunkCounter} of ${chunks.length} chunks...` });
+              this.setState((prevState) => ({ submissionText: `Submitting ${prevState.chunkCounter} of ${chunks.length} chunks...` }));
             });
             if (!res.success) {
               message = `Error: ${res.entities && res.entities.length > 0 && res.entities[0].errors
@@ -217,15 +217,20 @@ class MapDataModel extends React.Component {
 
   render() {
     const projectList = this.props.projects ? Object.keys(this.props.projects) : [];
-    const projectOptions = projectList.map((key) => ({ value: this.props.projects[key].name, label: this.props.projects[key].name }),
+    const projectOptions = projectList.map(
+      (key) => ({ value: this.props.projects[key].name, label: this.props.projects[key].name }
+      ),
     );
     const nodeOptions = this.props.nodeTypes
-      ? this.props.nodeTypes.filter((node) => this.props.dictionary[node] && this.props.dictionary[node].category
+      ? this.props.nodeTypes.filter(
+        (node) => this.props.dictionary[node] && this.props.dictionary[node].category
         && this.props.dictionary[node].category.endsWith('_file'))
         .map((node) => ({ value: node, label: node }))
       : [];
     const parentIdOptions = this.state.validParentIds
-      ? this.state.validParentIds.map((parent) => ({ value: parent.submitter_id, label: parent.submitter_id }),
+      ? this.state.validParentIds.map(
+        (parent) => ({ value: parent.submitter_id, label: parent.submitter_id }
+        ),
       ) : [];
 
     return (
@@ -286,7 +291,8 @@ class MapDataModel extends React.Component {
                                   inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
                                   inputValue={inputValue}
                                   inputPlaceholderText='Select your field'
-                                  inputOptions={type.enum.map((option) => ({ value: option, label: option }),
+                                  inputOptions={type.enum.map(
+                                    (option) => ({ value: option, label: option }),
                                   )}
                                   inputOnChange={(e) => this.selectRequiredField(e, prop)}
                                   iconSvg={CheckmarkIcon}
