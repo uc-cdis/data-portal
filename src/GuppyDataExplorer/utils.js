@@ -73,3 +73,26 @@ export const labelToPlural = (label, titleCase = false) => {
   }
   return pluralizedLabel.toLowerCase();
 };
+
+export const getQueryParameter = (queryKey) => {
+  // Stable method to get query parameter for given key
+  const decoded = decodeURIComponent(window.location.search)
+    .replace('?', '')
+    .split('&')
+    .map(param => param.split('='))
+    .reduce((values, [key, value]) => {
+      values[key] = value; // eslint-disable-line no-param-reassign
+      return values;
+    }, {});
+
+  return decoded[queryKey];
+};
+
+export const IsValidJSONString = (str) => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};
