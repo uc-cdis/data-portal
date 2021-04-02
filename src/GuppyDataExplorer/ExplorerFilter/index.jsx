@@ -10,6 +10,7 @@ import {
 } from '../configTypeDef';
 import { checkForNoAccessibleProject, checkForFullAccessibleProject } from '../GuppyDataExplorerHelper';
 import { labelToPlural } from '../utils';
+import { explorerHideEmptyFilterSection } from '../../localconf';
 
 /**
  * For selectedAccessFilter the default value is 'Data with Access'
@@ -135,6 +136,7 @@ class ExplorerFilter extends React.Component {
           labelToPlural(this.props.guppyConfig.dataType)
       } or more.` : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
+      hideEmptyFilterSection: explorerHideEmptyFilterSection,
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {

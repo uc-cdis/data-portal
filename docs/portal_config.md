@@ -163,6 +163,7 @@ Below is an example, with inline comments describing what each JSON block config
     "storeExplorerStateInURL": true, // optional; whether to store/load applied filters in the URL during Data Explorer use.
     This feature currently supports single select filters and range filters; it
     lacks support for search filter state, accessibility state, table state.
+    "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
   },
   "dataExplorerConfig": { // required; configuration for the Data Explorer (/explorer)
     "charts": { // optional; indicates which charts to display in the Data Explorer
