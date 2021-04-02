@@ -27,7 +27,6 @@ class ExplorerButtonGroup extends React.Component {
       exportingToTerra: false,
       exportingToSevenBridges: false,
       // for export to PFB
-      exportPFBStatus: null,
       exportPFBURL: '',
       exportPFBToWorkspaceGUID: '',
       pfbStartText: 'Your export is in progress.',
@@ -42,10 +41,6 @@ class ExplorerButtonGroup extends React.Component {
       exportWorkspaceFileName: null,
       exportWorkspaceStatus: null,
       workspaceSuccessText: 'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
-      // miscellaneous
-      lastJobState: undefined,
-      lastTotalCount: undefined,
-      lastFilter: undefined,
     };
 
     // Display misconfiguration warnings if Export PFB to Terra/SBG buttons are present
@@ -92,7 +87,7 @@ class ExplorerButtonGroup extends React.Component {
             this.setState({
               exportPFBURL: `${res.data.output}`.split('\n'),
               toasterOpen: true,
-              toasterHeadline: this.state.pfbSuccessText,
+              toasterHeadline: prevState.pfbSuccessText,
             });
           }
         });
@@ -211,6 +206,7 @@ class ExplorerButtonGroup extends React.Component {
     let refIDList = await this.props.downloadRawDataByFields({ fields: [refField] })
       .then((res) => res.map((i) => i[refField]));
     refIDList = _.uniq(refIDList);
+    // eslint-disable-next-line max-len
     const refFieldInResourceIndex = this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
     const resourceFieldInResourceIndex = this.props.guppyConfig.manifestMapping.resourceIdField;
     const resourceType = this.props.guppyConfig.manifestMapping.resourceIndexType;
@@ -339,7 +335,6 @@ class ExplorerButtonGroup extends React.Component {
       toasterOpen: false,
       toasterHeadline: '',
       toasterError: null,
-      exportPFBStatus: null,
       exportPFBURL: '',
     });
   };
@@ -448,13 +443,13 @@ class ExplorerButtonGroup extends React.Component {
           const errorMsg = (data.error ? data.error : '');
           switch (status) {
           case 200:
-            this.setState({
+            this.setState((prevState) => ({
               exportingPFBToWorkspace: false,
               exportPFBToWorkspaceGUID: pfbGUID,
               toasterOpen: true,
-              toasterHeadline: this.state.pfbToWorkspaceSuccessText,
+              toasterHeadline: prevState.pfbToWorkspaceSuccessText,
               exportPFBToWorkspaceStatus: status,
-            });
+            }));
             return;
           default:
             this.setState({
@@ -497,10 +492,10 @@ class ExplorerButtonGroup extends React.Component {
         },
       });
       this.props.checkJobStatus();
-      this.setState({
+      this.setState((prevState) => ({
         toasterOpen: true,
-        toasterHeadline: this.state.pfbStartText,
-      });
+        toasterHeadline: prevState.pfbStartText,
+      }));
     } else {
       /* eslint-disable no-console */
       console.error(`Error: Missing \`enableLimitedFilePFBExport\` in the portal config.
@@ -511,11 +506,11 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
   exportPFBToWorkspace = () => {
     this.props.submitJob({ action: 'export', access_format: 'guid', input: { filter: getGQLFilter(this.props.filter) } });
     this.props.checkJobStatus();
-    this.setState({
+    this.setState((prevState) => ({
       toasterOpen: true,
-      toasterHeadline: this.state.pfbStartText,
+      toasterHeadline: prevState.pfbStartText,
       exportingPFBToWorkspace: true,
-    });
+    }));
   }
 
   exportToWorkspace = async (indexType) => {
@@ -544,13 +539,13 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
   };
 
   exportToWorkspaceSuccessHandler = (data) => {
-    this.setState({
+    this.setState((prevState) => ({
       toasterOpen: true,
-      toasterHeadline: this.state.workspaceSuccessText,
+      toasterHeadline: prevState.workspaceSuccessText,
       exportWorkspaceStatus: 200,
       exportingToWorkspace: false,
       exportWorkspaceFileName: data.filename,
-    });
+    }));
   };
 
   exportToWorkspaceErrorHandler = (status) => {
@@ -583,6 +578,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex) return;
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
+    // eslint-disable-next-line max-len
     const caseFieldInFileIndex = this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
     if (this.props.buttonConfig
       && this.props.buttonConfig.buttons

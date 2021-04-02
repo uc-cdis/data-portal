@@ -61,6 +61,7 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
 
 // getTagsInCategory returns a list of the unique tags in studies which belong
 // to the specified category.
+// eslint-disable-next-line max-len
 const getTagsInCategory = (category: string, studies: any[] | null, config: DiscoveryConfig): string[] => {
   if (!studies) {
     return [];
@@ -111,6 +112,7 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
   };
 };
 
+// eslint-disable-next-line max-len
 const filterByAccessLevel = (studies: any[], accessLevel: AccessLevel, accessibleProperty: string): any[] => {
   switch (accessLevel) {
   case AccessLevel.ACCESSIBLE:
@@ -274,8 +276,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               title={'You have access to this study.'}
               content={(
                 <div className='discovery-table__access-popover-text'>
-                  <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
-                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
+                  <React.Fragment>
+                    You have <code>{ARBORIST_READ_PRIV}</code> access to
+                  </React.Fragment>
+                  <React.Fragment>
+                    <code>{record[config.minimalFieldMapping.authzField]}</code>.
+                  </React.Fragment>
                 </div>
               )}
             >
@@ -290,8 +296,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               title={'You do not have access to this study.'}
               content={(
                 <div className='discovery-table__access-popover-text'>
-                  <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
-                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
+                  <React.Fragment>
+                    You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to
+                  </React.Fragment>
+                  <React.Fragment>
+                    <code>{record[config.minimalFieldMapping.authzField]}</code>.
+                  </React.Fragment>
                 </div>
               )}
             >
@@ -486,6 +496,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                     setModalData(record);
                     setModalVisible(true);
                   }}
+                  onKeyPress={() => {
+                    setModalData(record);
+                    setModalVisible(true);
+                  }}
                 >
                   {renderValue(studyPreviewText)}
                 </div>
@@ -518,14 +532,22 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               <Alert
                 className='discovery-modal__access-alert'
                 type='success'
-                message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
+                message={(
+                  <React.Fragment>
+                    <UnlockOutlined /> You have access to this study.
+                  </React.Fragment>
+                )}
               />
             )
             : (
               <Alert
                 className='discovery-modal__access-alert'
                 type='warning'
-                message={<React.Fragment><LockFilled /> You do not have access to this study.</React.Fragment>}
+                message={(
+                  <React.Fragment>
+                    <LockFilled /> You do not have access to this study.
+                  </React.Fragment>
+                )}
               />
             )
           )}

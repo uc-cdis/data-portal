@@ -151,7 +151,8 @@ class ExplorerHeatMap extends React.Component {
 
     // y axis items in alpha order. mainYAxisVar (i.e. "subject_id") on top
     const yAxisVars = [this.props.mainYAxisVar].concat(
-      this.props.guppyConfig.aggFields.sort((a, b) => yAxisVarsMapping[a].localeCompare(yAxisVarsMapping[b]),
+      this.props.guppyConfig.aggFields.sort(
+        (a, b) => yAxisVarsMapping[a].localeCompare(yAxisVarsMapping[b]),
       ),
     );
 
