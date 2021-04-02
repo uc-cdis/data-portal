@@ -146,6 +146,7 @@ const filterByTags = (studies: any[], selectedTags: any): any[] => {
 interface DiscoveryBetaProps {
   config: DiscoveryConfig
   studies: {__accessible: boolean, [any: string]: any}[]
+  history?: any // from React Router
   params?: {studyUID: string} // from React Router
 }
 
@@ -357,7 +358,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       throw new Error(`Encountered error while exporting to Workspace: ${JSON.stringify(res)}`);
     }
     // redirect to Workspaces page
-    // TODO implement
+    props.history.push('/workspace');
   };
 
   const handleDownloadManifestClick = () => {
@@ -670,6 +671,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 };
 
 Discovery.defaultProps = {
+  history: [],
   params: { studyUID: null },
 };
 
