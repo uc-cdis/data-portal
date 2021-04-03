@@ -21,7 +21,6 @@ class GuppyDataExplorer extends React.Component {
     let initialState = {};
     let initialFilter = {};
 
-    // aborting URL decode
     if (isEnabled('storeExplorerStateInURL')) {
       const stateFromURL = getQueryParameter('filters');
       if (stateFromURL) {
@@ -71,7 +70,7 @@ class GuppyDataExplorer extends React.Component {
     for(let tabIndex = 0; tabIndex < this.props.filterConfig.tabs.length; tabIndex += 1) {
       let searchFields = this.props.filterConfig.tabs[tabIndex].searchFields;
       if(searchFields && searchFields.indexOf(field) !== -1) {
-        // Search fields are not supported in url-encoded explorer state at this time.
+        // Search fields are not supported in url-encoded explorer state right now
         delete event[field];
       }
     }
