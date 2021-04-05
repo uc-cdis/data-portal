@@ -12,4 +12,7 @@ module.exports = {
       module: { ...config.module, rules: customWebpackConfig.module.rules },
     };
   },
+  core: {
+    builder: 'webpack5',
+  },
 };
