@@ -33,7 +33,7 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
-  indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
+  indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker, discoveryConfig,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
@@ -390,7 +390,7 @@ async function init() {
                       path='/discovery'
                       component={
                         props => (<ProtectedContent
-                          public
+                          public={!discoveryConfig.requireLogin}
                           component={DiscoveryBeta}
                           {...props}
                         />)

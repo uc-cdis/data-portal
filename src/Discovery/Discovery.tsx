@@ -337,9 +337,9 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   };
 
   const handleExportToWorkspaceClick = async () => {
-    const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+    const manifestFieldName = config.features.exportToWorkspace.manifestFieldName;
     if (!manifestFieldName) {
-      throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
+      throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
     }
     // combine manifests from all selected studies
     const manifest = [];
@@ -362,9 +362,9 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   };
 
   const handleDownloadManifestClick = () => {
-    const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+    const manifestFieldName = config.features.exportToWorkspace.manifestFieldName;
     if (!manifestFieldName) {
-      throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
+      throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
     }
     // combine manifests from all selected studies
     const manifest = [];
@@ -468,17 +468,17 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
             />
         }
         { (
-          config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
+          config.features.exportToWorkspace && config.features.exportToWorkspace.enabled
         ) &&
           <Space>
             <span className='discovery-export__selected-ct'>{selectedResources.length} selected</span>
-            { config.features.exportToWorkspaceBETA.enableDownloadManifest &&
+            { config.features.exportToWorkspace.enableDownloadManifest &&
               <Popover
                 className='discovery-popover'
                 arrowPointAtCenter
                 title={<>
                   Download a Manifest File for use with the&nbsp;
-                  <a target='_blank' rel='noreferrer' href={config.features.exportToWorkspaceBETA.documentationLinks.gen3Client}>
+                  <a target='_blank' rel='noreferrer' href={config.features.exportToWorkspace.documentationLinks.gen3Client}>
                     {'Gen3 Client'}
                   </a>.
                 </>}
@@ -500,7 +500,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               arrowPointAtCenter
               content={<>
                 Open selected studies in the&nbsp;
-                <a target='blank' rel='noreferrer' href={config.features.exportToWorkspaceBETA.documentationLinks.gen3Workspaces}>
+                <a target='blank' rel='noreferrer' href={config.features.exportToWorkspace.documentationLinks.gen3Workspaces}>
                   {'Gen3 Workspace'}
                 </a>.
               </>}
@@ -522,7 +522,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         columns={columns}
         rowKey={config.minimalFieldMapping.uid}
         rowSelection={(
-          config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
+          config.features.exportToWorkspace && config.features.exportToWorkspace.enabled
         )
           && {
             selectedRowKeys: selectedResources.map(r => r[config.minimalFieldMapping.uid]),
@@ -534,7 +534,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 disabled = record[accessibleFieldName] === false;
               }
               // disable checkbox if there's no manifest found for this study
-              const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+              const manifestFieldName = config.features.exportToWorkspace.manifestFieldName;
               if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
                 disabled = true;
               }
