@@ -4,7 +4,9 @@
       "@babel/preset-env",
       {
         "targets": "> 0.25%, not dead",
-        "shippedProposals": true
+        "shippedProposals": true,
+        "useBuiltIns": "usage",
+        "corejs": "3.10"
       }
     ],
     "@babel/preset-react"
