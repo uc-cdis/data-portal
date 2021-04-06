@@ -85,7 +85,6 @@
     "webpack-node-externals": "^2.5.2"
   },
   "devDependencies": {
-    "@babel/polyfill": "^7.12.1",
     "@storybook/addon-actions": "^6.2.3",
     "@storybook/addon-essentials": "^6.2.3",
     "@storybook/addon-links": "^6.2.3",
