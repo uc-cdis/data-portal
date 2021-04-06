@@ -73,7 +73,7 @@ if (isProduction) {
 }
 
 module.exports = {
-  entry: ['babel-polyfill', './src/index.jsx'],
+  entry: './src/index.jsx',
   target: 'web',
   bail: isProduction,
   externals: [
