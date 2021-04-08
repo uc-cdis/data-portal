@@ -31,10 +31,9 @@ class GuppyDataExplorer extends React.Component {
             initialState = JSON.parse(decodedFilter);
             initialFilter = initialState.filter;
           }
-        }
-        catch(err) {
+        } catch (err) {
           // eslint-disable-next-line no-console
-          console.error(`Could not parse URL filters property.`);
+          console.error('Could not parse URL filters property.');
         }
       }
     }
@@ -73,12 +72,12 @@ class GuppyDataExplorer extends React.Component {
   };
 
   handleFilterChangeForQueryStateUrl = (eventIn) => {
-    let event = { ...eventIn };
+    const event = { ...eventIn };
     const newExplorerState = this.state.encodableExplorerStateForURL;
-    let field = Object.keys(event)[0];
-    for(let tabIndex = 0; tabIndex < this.props.filterConfig.tabs.length; tabIndex += 1) {
-      let searchFields = this.props.filterConfig.tabs[tabIndex].searchFields;
-      if(searchFields && searchFields.indexOf(field) !== -1) {
+    const field = Object.keys(event)[0];
+    for (let tabIndex = 0; tabIndex < this.props.filterConfig.tabs.length; tabIndex += 1) {
+      const searchFields = this.props.filterConfig.tabs[tabIndex].searchFields;
+      if (searchFields && searchFields.indexOf(field) !== -1) {
         // Search fields are not supported in url-encoded explorer state right now
         delete event[field];
       }
@@ -89,11 +88,11 @@ class GuppyDataExplorer extends React.Component {
 
   isExplorerStatePristine = (explorerState) => {
     const values = Object.values(explorerState);
-    for (const value of values) {
-      if (typeof value !== 'object' && value !== null) {
+    for (let i = 0; i < values.length; i += 1) {
+      if (typeof values[i] !== 'object' && values[i] !== null) {
         return false;
       }
-      if (typeof value === 'object' && Object.values(value).length > 0) {
+      if (typeof values[i] === 'object' && Object.values(values[i]).length > 0) {
         return false;
       }
     }

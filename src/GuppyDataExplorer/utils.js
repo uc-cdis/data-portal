@@ -75,8 +75,8 @@ export const labelToPlural = (label, titleCase = false) => {
 };
 
 export const getQueryParameter = (queryKey) => {
-  let urlArray = window.location.search.split("?");
-  let searchParams = new URLSearchParams(urlArray[urlArray.length - 1]);
+  const urlArray = window.location.search.split('?');
+  const searchParams = new URLSearchParams(urlArray[urlArray.length - 1]);
   return searchParams.get(queryKey);
 };
 
