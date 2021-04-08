@@ -15,7 +15,8 @@ services:
     - docker
 
 before_install:
-    - npm install -g npm@7.6.3
+    - npm install -g npm@7.8.0
+    - npm config set maxsockets 5
 
 install:
     - npm install --force

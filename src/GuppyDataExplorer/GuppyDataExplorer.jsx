@@ -21,14 +21,20 @@ class GuppyDataExplorer extends React.Component {
     let initialState = {};
     let initialFilter = {};
 
-    if (isEnabled('storeExplorerStateInURL')) {
+    if (isEnabled('explorerStoreFilterInURL')) {
       const stateFromURL = getQueryParameter('filters');
       if (stateFromURL) {
-        const decodedFilter = atob(stateFromURL);
-        const isValidJSON = IsValidJSONString(decodedFilter);
-        if (isValidJSON) {
-          initialState = JSON.parse(decodedFilter);
-          initialFilter = initialState.filter;
+        try {
+          const decodedFilter = atob(stateFromURL);
+          const isValidJSON = IsValidJSONString(decodedFilter);
+          if (isValidJSON) {
+            initialState = JSON.parse(decodedFilter);
+            initialFilter = initialState.filter;
+          }
+        }
+        catch(err) {
+          // eslint-disable-next-line no-console
+          console.error(`Could not parse URL filters property.`);
         }
       }
     }
@@ -42,6 +48,9 @@ class GuppyDataExplorer extends React.Component {
   }
 
   getEncodedQueryStateFromExplorer = () => {
+    // When the `explorerStoreFilterInURL` featureFlag is enabled,
+    // explorer state is stored in the URL as a base 64 encoded string.
+    // btoa() and atob() encode and decode the JSON-form filter.
     const stateObj = this.state.encodableExplorerStateForURL;
     if (this.isExplorerStatePristine(stateObj)) {
       return '';
@@ -64,7 +73,7 @@ class GuppyDataExplorer extends React.Component {
   };
 
   handleFilterChangeForQueryStateUrl = (eventIn) => {
-    let event = Object.assign({}, eventIn);
+    let event = { ...eventIn };
     const newExplorerState = this.state.encodableExplorerStateForURL;
     let field = Object.keys(event)[0];
     for(let tabIndex = 0; tabIndex < this.props.filterConfig.tabs.length; tabIndex += 1) {
@@ -80,11 +89,11 @@ class GuppyDataExplorer extends React.Component {
 
   isExplorerStatePristine = (explorerState) => {
     const values = Object.values(explorerState);
-    for (let i = 0; i < values.length; i += 1) {
-      if (typeof values[i] !== 'object' && values[i] !== null) {
+    for (const value of values) {
+      if (typeof value !== 'object' && value !== null) {
         return false;
       }
-      if (typeof values[i] === 'object' && Object.values(values[i]).length > 0) {
+      if (typeof value === 'object' && Object.values(value).length > 0) {
         return false;
       }
     }
@@ -92,7 +101,7 @@ class GuppyDataExplorer extends React.Component {
   }
 
   render() {
-    if (isEnabled('storeExplorerStateInURL')) {
+    if (isEnabled('explorerStoreFilterInURL')) {
       this.refreshQueryStateInUrl();
     }
     return (

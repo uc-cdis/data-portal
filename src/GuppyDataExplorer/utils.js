@@ -75,17 +75,9 @@ export const labelToPlural = (label, titleCase = false) => {
 };
 
 export const getQueryParameter = (queryKey) => {
-  // Stable method to get query parameter for given key
-  const decoded = decodeURIComponent(window.location.search)
-    .replace('?', '')
-    .split('&')
-    .map(param => param.split('='))
-    .reduce((values, [key, value]) => {
-      values[key] = value; // eslint-disable-line no-param-reassign
-      return values;
-    }, {});
-
-  return decoded[queryKey];
+  let urlArray = window.location.search.split("?");
+  let searchParams = new URLSearchParams(urlArray[urlArray.length - 1]);
+  return searchParams.get(queryKey);
 };
 
 export const IsValidJSONString = (str) => {

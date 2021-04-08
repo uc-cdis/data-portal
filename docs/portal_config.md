@@ -160,7 +160,7 @@ Below is an example, with inline comments describing what each JSON block config
     "explorer": true, // required; indicates the flag and whether to hide it or not
     "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. The Data Explorer page would be publicly accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
     "discovery": true, // optional; whether to enable the Discovery page. If true, `discoveryConfig` must be present as well.
-    "storeExplorerStateInURL": true, // optional; whether to store/load applied filters in the URL during Data Explorer use.
+    "explorerStoreFilterInURL": true, // optional; whether to store/load applied filters in the URL during Data Explorer use.
     This feature currently supports single select filters and range filters; it
     lacks support for search filter state, accessibility state, table state.
     "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
