@@ -173,6 +173,20 @@ class ExplorerTable extends React.Component {
                 isExternal
               />
             ) : null;
+          case 'external_links':
+            if (row.value === null) return null;
+            const [
+              resourceName,
+              resourceIconPath,
+              subjectUrl,
+            ] = row.value.split('|');
+            return (
+              <div className='explorer-table-external-links'>
+                <a href={subjectUrl} target='_blank' rel='noopenner noreferrer'>
+                  <img src={resourceIconPath} alt={resourceName} />
+                </a>
+              </div>
+            );
           default:
             return (
               <div>
