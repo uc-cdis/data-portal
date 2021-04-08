@@ -79,6 +79,10 @@
   fill: #3283c8;
 }
 
+.explorer-table-external-links img {
+  display: block;
+}
+
 .explorer-nested-table {
   padding: 10px;
   width: 75vw;
