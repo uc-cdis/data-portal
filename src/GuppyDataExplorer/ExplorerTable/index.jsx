@@ -30,6 +30,8 @@ class ExplorerTable extends React.Component {
   }
 
   getWidthForColumn = (field, columnName) => {
+    if (field === 'external_links') return 200;
+
     if (this.props.tableConfig.linkFields.includes(field)) {
       return 80;
     }
