@@ -385,7 +385,7 @@ Below is an example, with inline comments describing what each JSON block config
   "discoveryConfig": { // config for Discovery page. Required if 'featureFlags.discovery' is true. See src/Discovery/DiscoveryConfig.d.ts for Typescript schema.
     "requireLogin": false, // optional, defaults to false. If true, requires user to sign in before seeing the Discovery page
     "features": {
-      "exportToWorkspace": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
+      "exportToWorkspaceBETA": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
           "enable": boolean
           "enableDownloadManifest": boolean // enables a button which allows user to download a manifest file for gen3 client
           "documentationLinks": {
