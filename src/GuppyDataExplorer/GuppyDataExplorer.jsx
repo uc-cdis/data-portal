@@ -72,11 +72,11 @@ class GuppyDataExplorer extends React.Component {
   };
 
   handleFilterChangeForQueryStateUrl = (eventIn) => {
-    const event = {...eventIn};
+    const event = { ...eventIn };
     // Removing search fields. They are not supported in explorer state encoding right now.
     const newExplorerState = this.state.encodableExplorerStateForURL;
     for (let fieldIndex = 0; fieldIndex < Object.keys(eventIn).length; fieldIndex += 1) {
-      let field = Object.keys(eventIn)[fieldIndex];
+      const field = Object.keys(eventIn)[fieldIndex];
       for (let tabIndex = 0; tabIndex < this.props.filterConfig.tabs.length; tabIndex += 1) {
         const searchFields = this.props.filterConfig.tabs[tabIndex].searchFields;
         if (searchFields && searchFields.indexOf(field) !== -1) {
