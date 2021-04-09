@@ -1,3 +1,5 @@
+import { mapboxAPIToken } from '../../../localconf';
+
 // Global objects
 let map = null;         // Mapbox GL object
 let dateList = null;    // List of dates to filter by
@@ -26,7 +28,7 @@ const htmlElements = {
 // initializer functions -------------------------------------------------------
 // main initializer
 async function mainInit() {
-    let mapboxTokenPromise = fetch_retry(config.mapboxToken_url, FETCH_RETRY_LIMIT);
+    let mapboxTokenPromise = fetch_retry({"token": mapboxAPIToken}, FETCH_RETRY_LIMIT);
     response = await mapboxTokenPromise;
     drawBlankMap(response.token);
 

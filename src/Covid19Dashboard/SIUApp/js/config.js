@@ -5,7 +5,6 @@ config = {
     countyCases_url: "/countyCasesData",
     geoJsonData_url: "/geometryData",
     colorCodes_url: "/colorCodes",
-    mapboxToken_url: "/config/mapboxToken",
 }
 
 config['server_ip'] = config.backend_remote ? config.server_remote : config.server_local;
