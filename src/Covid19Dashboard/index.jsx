@@ -256,6 +256,7 @@ class Covid19Dashboard extends React.Component {
               <Tab>COVID-19 in the world</Tab>
               <Tab>Global SARS-CoV2 Genomics</Tab>
               <Tab>IL SARS-CoV2 Genomics</Tab>
+              <Tab>testing</Tab>
             </TabList>
 
             {/* illinois tab */}
@@ -354,6 +355,18 @@ class Covid19Dashboard extends React.Component {
                     frameBorder='0'
                     className='covid19-dashboard_auspice__iframe'
                     src={auspiceUrlIL}
+                  />
+                }
+              </div>
+            </TabPanel>
+            <TabPanel className='covid19-dashboard_panel'>
+              <div className='covid19-dashboard_auspice'>
+                { mapboxAPIToken &&
+                  <iframe
+                    title='testing'
+                    frameBorder='0'
+                    className='covid19-dashboard_auspice__iframe'
+                    src='https://localhost:9443/src/Covid19Dashboard/SIUApp/index.html'
                   />
                 }
               </div>
