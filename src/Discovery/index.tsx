@@ -23,6 +23,14 @@ const COMMONS = [
     COMMONS: 'AnVIL',
     POPULATE_GUID: true,
   },
+  {
+    MDS_URL: 'https://gen3.datacommons.io/mds/metadata',
+    GUID_TYPE: 'discovery_metadata',
+    STUDY_DATA_FIELD: 'gen3_discovery',
+    LIMIT: 1000,
+    COMMONS: 'GDC',
+    POPULATE_GUID: false,
+  },
 ];
 
 const loadStudiesFromNamedMDS = async (MDS_URL: string, GUID_TYPE: string,
