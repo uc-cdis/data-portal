@@ -2,9 +2,6 @@ config = {
     server_local: "http://localhost:5000",
     server_remote: "<remote_server_address_here>",
     backend_remote: false,
-    countyCases_url: "/countyCasesData",
-    geoJsonData_url: "/geometryData",
-    colorCodes_url: "/colorCodes",
 }
 
 config['server_ip'] = config.backend_remote ? config.server_remote : config.server_local;

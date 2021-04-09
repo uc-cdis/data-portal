@@ -1,5 +1,3 @@
-import { mapboxAPIToken } from '../../../localconf';
-
 // Global objects
 let map = null;         // Mapbox GL object
 let dateList = null;    // List of dates to filter by
@@ -28,15 +26,11 @@ const htmlElements = {
 // initializer functions -------------------------------------------------------
 // main initializer
 async function mainInit() {
-    let mapboxTokenPromise = fetch_retry({"token": mapboxAPIToken}, FETCH_RETRY_LIMIT);
+    const currentURL = new URL(window.location);
+    let mapboxTokenPromise = {"token": currentURL.searchParams.get("mapboxAPIToken")};
     response = await mapboxTokenPromise;
     drawBlankMap(response.token);
 
-    // load erics
-    let geoJsonPromise = fetch_retry(config.geoJsonData_url, FETCH_RETRY_LIMIT);
-    let countyCasesPromise = fetch_retry(config.countyCases_url, FETCH_RETRY_LIMIT);
-    let countyColorCodePromise = fetch_retry(config.colorCodes_url+"/" + colorCodeProperty, FETCH_RETRY_LIMIT)
-    let [geoJson, countyCases, colorCodes] = await Promise.all([geoJsonPromise, countyCasesPromise, countyColorCodePromise]);
     displayFooterMessage("Loading initial county data, please wait...", false);
     loadInitialData(geoJson, countyCases, colorCodes);
 }

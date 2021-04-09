@@ -366,7 +366,7 @@ class Covid19Dashboard extends React.Component {
                     title='testing'
                     frameBorder='0'
                     className='covid19-dashboard_auspice__iframe'
-                    src='/src/Covid19Dashboard/SIUApp/index.html'
+                    src={'/src/Covid19Dashboard/SIUApp/index.html?mapboxAPIToken=' + mapboxAPIToken}
                   />
                 }
               </div>
