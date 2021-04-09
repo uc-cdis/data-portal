@@ -6,7 +6,6 @@ vendors*.js
 workspaceBundle.js
 covid19Bundle.js
 nctBundle.js
-index.html
 workspaces.html
 custom/sponsors/
 custom/*/gitops*

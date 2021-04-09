@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Meta -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="google-signin-client_id" content="368312908924-tf42tdi9k7gva663qifhi4mjv1mubi59.apps.googleusercontent.com">
+
+        <!-- Styles -->
+        <link rel="icon" href="img/virus-contact-map-logo.png" type = "image/x-icon">
+        <link rel="stylesheet" type="text/css" href="css/normal.css"/>
+        <link rel='stylesheet' type="text/css" href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css'/>
+
+        <title>Virus Contact Map</title>
+    </head>
+
+    <div id="message-modal" class="message-modal-content">
+        <span class="close-footer">&times;</span>
+        <div id="modal-footer" class="modal-footer"></div>
+    </div>
+    <!-- Body Text -->
+    <body>
+        <div class="page-title">Virus Contact Map</div>
+        <!-- Map Area -->
+        <section id="map-section">
+            <div id="map" class="map"></div>
+            <div id="search-box-container" class="search-box-container">
+                <div class='search-results'>
+                    <input type="text" id="filter-box" placeholder="Search"/>
+                </div>
+                <div class='search-results' id='county-name'>No counties selected </div>
+            </div>
+            <div id="info-table-container" class="info-table-container">
+                <table class='info-table'> </table>
+            </div>
+            <div id="map-slider" class="map-slider top">
+                <div class="map-overlay-inner" id="map-overlay-inner">
+                    <h2>View number of cases by county and date</h2>
+                    <table>
+                        <tr>
+                            <td>
+                                <label class="medium-title" id="map-refrence-tense"></label>
+                                <label class="medium-title" id="map-date"></label>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <input id="slider" type="range" min="0" max="88" step="1" value="88" />
+                </div>
+            </div>
+            <div class="map-overlay-color top" id="map-color">
+                <div>Number of Cases</div>
+                <div id="legend" class="legend">
+                    <div class="bar"></div>
+                    <div class="left-align">0</div><div id="cases-max" class="right-align"></div>
+                    <p class="space"></p>
+                </div>
+            </div>
+            <div id="map-side-interface-button" class="map-side-interface-button" onclick="mapSideToggle()">
+                <i class="arrow left-arrow"></i>
+            </div>
+            <div id="map-side-menu" class="map-side-menu">
+                <div class="span-center-align">
+                    <img class="icon-logo" src="img/virus-contact-map-logo.png">
+                </div>
+                <br>
+                <br><br><br><br>
+                <div class="map-side-menu-title span-center-align">About VCM</div>
+                <div class="map-side-menu-content">
+                    <p>A Contact Tracing Tool for the COVID-19 Pandemic.<br/> <strong class="bolded-text">Version 2</strong></p>
+                </div>
+                <div class="map-side-menu-title span-center-align" style="font-size: 26px;">Credits</div>
+                <div class="map-side-menu-content">
+                    <a href="https://www.linkedin.com/in/shanmukhanvas/" target="_blank"><p><strong class="bolded-text">Sai Shanmukha Narumanchi</strong></p></a>
+                    <a href="https://www.linkedin.com/in/z-vanscoit/" target="_blank"><p><strong class="bolded-text">Zachary Vanscoit</strong></p></a>
+                    <a href="https://www.linkedin.com/in/subhas/" target="_blank"><p><strong class="bolded-text">Subhas K. Ghosh</strong></p></a>
+                    <a href="https://www.linkedin.com/in/koushik-sinha-6096766/" target="_blank"><p><strong class="bolded-text">Koushik Sinha</strong></p></a>
+                    <br><br><br>
+                </div>
+            </div>
+        </section>
+
+        <!-- Their Scripts -->
+        <script src="js/config.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
+        <!-- Our Scripts -->
+        <script src="js/google-signin.js"></script>
+        <script src="js/page-populations.js"></script>
+        <script src="js/helper.js"></script>
+        <script src="js/map_init_standalone.js"></script>
+        <!-- Hey, thanks for taking the time to look at the html code -->
+    </body>
+</html>
