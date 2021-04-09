@@ -526,6 +526,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         )
           && {
             selectedRowKeys: selectedResources.map(r => r[config.minimalFieldMapping.uid]),
+            preserveSelectedRowKeys: true,
             onChange: (_, selectedRows) => setSelectedResources(selectedRows),
             getCheckboxProps: (record) => {
               let disabled;
