@@ -44,6 +44,10 @@ class GuppyDataExplorer extends React.Component {
     this._isMounted && this.setState({ aggsData: newAggsData });
   };
 
+  updateInitialAppliedFilters = ({ filters }) => {
+    this.setState({ initialAppliedFilters: filters });
+  };
+
   render() {
     return (
       <ExplorerErrorBoundary>
