@@ -304,7 +304,7 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   downloadData = (filename) => () => {
-    this.props.downloadRawData().then((res) => {
+    this.props.downloadRawData({}).then((res) => {
       if (res) {
         const blob = new Blob([JSON.stringify(res, null, 2)], {
           type: 'text/json',
