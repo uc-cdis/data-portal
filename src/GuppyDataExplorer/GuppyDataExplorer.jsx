@@ -18,7 +18,6 @@ import isEnabled from '../helpers/featureFlags';
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
-    let initialState = {};
     let initialFilter = {};
 
     if (isEnabled('explorerStoreFilterInURL')) {
@@ -28,8 +27,7 @@ class GuppyDataExplorer extends React.Component {
           const decodedFilter = atob(stateFromURL);
           const isValidJSON = IsValidJSONString(decodedFilter);
           if (isValidJSON) {
-            initialState = JSON.parse(decodedFilter);
-            initialFilter = initialState.filter;
+            initialFilter = JSON.parse(decodedFilter).filter;
           }
         } catch (err) {
           // eslint-disable-next-line no-console
