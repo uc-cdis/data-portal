@@ -182,7 +182,7 @@ function CohortSaveForm({
             <textarea
               disabled
               placeholder='No filters'
-              value={stringifyFilters(cohort.filters)}
+              value={stringifyFilters(currentFilters)}
             />
           }
         />
