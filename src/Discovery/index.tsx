@@ -8,12 +8,22 @@ import { hostname, discoveryConfig, useArboristUI } from '../localconf';
 
 const COMMONS = [
   {
+    MDS_URL: 'https://gen3.datacommons.io/mds/metadata',
+    GUID_TYPE: 'discovery_metadata',
+    STUDY_DATA_FIELD: 'gen3_discovery',
+    LIMIT: 1000,
+    COMMONS: 'GDC',
+    POPULATE_GUID: false,
+    OFFSET: 3,
+  },
+  {
     MDS_URL: 'https://staging.gen3.biodatacatalyst.nhlbi.nih.gov/mds/metadata',
     GUID_TYPE: 'discovery_metadata',
     STUDY_DATA_FIELD: 'gen3_discovery',
     LIMIT: 1000,
     COMMONS: 'BDC',
     POPULATE_GUID: false,
+    OFFSET: 0,
   },
   {
     MDS_URL: 'https://internalstaging.theanvil.io/mds/metadata',
@@ -22,23 +32,17 @@ const COMMONS = [
     LIMIT: 1000,
     COMMONS: 'AnVIL',
     POPULATE_GUID: true,
-  },
-  {
-    MDS_URL: 'https://gen3.datacommons.io/mds/metadata',
-    GUID_TYPE: 'discovery_metadata',
-    STUDY_DATA_FIELD: 'gen3_discovery',
-    LIMIT: 1000,
-    COMMONS: 'GDC',
-    POPULATE_GUID: false,
-  },
+    OFFSET: 0,
+  }
+
 ];
 
 const loadStudiesFromNamedMDS = async (MDS_URL: string, GUID_TYPE: string,
   LIMIT: number, STUDY_DATA_FIELD: string,
-  COMMON: string, populateGUI:boolean = false): Promise<any[]> => {
+  COMMON: string, populateGUI:boolean = false, offset:number = 0): Promise<any[]> => {
   try {
     let allStudies = [];
-    let offset = 0;
+
     // request up to LIMIT studies from MDS at a time.
     let shouldContinue = true;
     while (shouldContinue) {
@@ -53,13 +57,22 @@ const loadStudiesFromNamedMDS = async (MDS_URL: string, GUID_TYPE: string,
       }
       // eslint-disable-next-line no-await-in-loop
       const jsonResponse = await res.json();
-      const studies = Object.values(jsonResponse).map((entry) => {
+      const studies = Object.values(jsonResponse).map((entry, index) => {
         const x = entry[STUDY_DATA_FIELD];
         x.commons = COMMON;
         if (populateGUI) {
           // need to do this as in case MDS does not have _unique_id
           x._unique_id = x.study_id;
         }
+       //  console.log(x);
+        if (COMMON === 'GDC') { // hacky hacky
+          x.name = x.short_name;
+          x.study_id = x.dbgap_accession_number;
+          x._subjects_count = x.subjects_count;
+          x.study_description = x.description;
+        }
+        x._unique_id = `${COMMON}_${x._unique_id}_${index}`;
+        x.tags.push(Object({category : 'Commons',name: COMMON }));
         return x;
       },
       );
@@ -89,7 +102,8 @@ const loadStudiesFromMDS = async (commons: Object[]): Promise<any[]> => {
         common['LIMIT'],
         common['STUDY_DATA_FIELD'],
         common['COMMONS'],
-          common['POPULATE_GUID']
+          common['POPULATE_GUID'],
+          common['OFFSET'],
       );
       joinedStudies = joinedStudies.concat(studies);
     }
