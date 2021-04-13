@@ -608,7 +608,7 @@ class ExplorerButtonGroup extends React.Component {
     let buttonTitle = buttonConfig.title;
     if (buttonConfig.type === 'data') {
       const buttonCount =
-        this.props.totalCount >= 0 ? this.props.totalCount : 0;
+        this.props.accessibleCount >= 0 ? this.props.accessibleCount : 0;
       buttonTitle = `${buttonConfig.title} (${buttonCount})`;
     } else if (
       buttonConfig.type === 'manifest' &&
@@ -757,6 +757,7 @@ ExplorerButtonGroup.propTypes = {
   downloadRawDataByFields: PropTypes.func.isRequired, // from GuppyWrapper
   getTotalCountsByTypeAndFilter: PropTypes.func.isRequired, // from GuppyWrapper
   downloadRawDataByTypeAndFilter: PropTypes.func.isRequired, // from GuppyWrapper
+  accessibleCount: PropTypes.number.isRequired, // from GuppyWrapper
   totalCount: PropTypes.number.isRequired, // from GuppyWrapper
   filter: PropTypes.object.isRequired, // from GuppyWrapper
   isPending: PropTypes.bool,

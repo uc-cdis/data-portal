@@ -152,6 +152,7 @@ class ExplorerVisualization extends React.Component {
             <ReduxExplorerButtonGroup
               buttonConfig={this.props.buttonConfig}
               guppyConfig={this.props.guppyConfig}
+              accessibleCount={this.props.accessibleCount}
               totalCount={this.props.totalCount}
               downloadRawData={this.props.downloadRawData}
               downloadRawDataByFields={this.props.downloadRawDataByFields}
