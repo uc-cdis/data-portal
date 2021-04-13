@@ -248,6 +248,7 @@ class ExplorerVisualization extends React.Component {
 }
 
 ExplorerVisualization.propTypes = {
+  accessibleCount: PropTypes.number, // inherited from GuppyWrapper
   totalCount: PropTypes.number, // inherited from GuppyWrapper
   aggsData: PropTypes.object, // inherited from GuppyWrapper
   aggsDataIsLoading: PropTypes.bool, // inherited from GuppyWrapper
@@ -271,6 +272,7 @@ ExplorerVisualization.propTypes = {
 };
 
 ExplorerVisualization.defaultProps = {
+  accessibleCount: 0,
   totalCount: 0,
   aggsData: {},
   aggsDataIsLoading: false,
