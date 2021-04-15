@@ -256,7 +256,7 @@ class Covid19Dashboard extends React.Component {
               <Tab>COVID-19 in the world</Tab>
               <Tab>Global SARS-CoV2 Genomics</Tab>
               <Tab>IL SARS-CoV2 Genomics</Tab>
-              <Tab>testing</Tab>
+              <Tab>CoVD-Map</Tab>
             </TabList>
 
             {/* illinois tab */}
