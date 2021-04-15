@@ -186,7 +186,10 @@ module.exports = {
   target: 'web',
   externals: [nodeExternals({
     whitelist: ['graphiql', 'graphql-language-service-parser'],
-  })],
+  }),
+  {
+    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}',
+  }],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
     path: __dirname,
@@ -259,7 +262,4 @@ module.exports = {
     extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
   },
   plugins,
-  externals: [{
-    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}',
-  }],
 };
