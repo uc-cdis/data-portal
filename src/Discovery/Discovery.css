@@ -57,7 +57,7 @@
 
 .discovery-header__stat-border {
     width: 1px;
-    height: 100px;
+    height: 150px;
     border-left: solid #e7e7e7 1px;
 }
 
@@ -65,6 +65,7 @@
     color: #169bd5;
     font-size: 40px;
     line-height: 50px;
+    padding: 10px 0 10px 0;
 }
 
 .discovery-header__stat-label {
@@ -76,7 +77,10 @@
 }
 
 .discovery-header__tags-header {
+    padding-left:50px;
     cursor: default;
+    border-bottom: solid 1px #e7e7e7;
+
     font-weight: normal;
     font-size: 18px;
     color: #555;
@@ -94,6 +98,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+    font-weight:bold;
 }
 
 .discovery-header__tag-btn {
@@ -107,6 +112,7 @@
     line-height: 18px;
     color: #555;
     margin-bottom: 3px;
+    user-select:none;
 }
 
 .discovery-tag--selected {
