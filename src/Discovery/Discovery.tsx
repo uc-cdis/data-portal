@@ -348,6 +348,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           ))
         }
       </div>
+      <div className='discovery-header__stat-border' />
       <div className='discovery-header__tags-container' >
         <h3 className='discovery-header__tags-header'>{config.tagSelector.title}</h3>
         <div className='discovery-header__tags'>
@@ -357,8 +358,15 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 return null;
               }
               const tags = getTagsInCategory(category.name, props.studies, config);
+
+              // Capitalize category name
+              let category_words = category.name.split('_').map(x => x.toLowerCase());
+              category_words[0] = category_words[0].charAt(0).toUpperCase() + category_words[0].slice(1);
+              console.log('category_words: ', category_words);
+              const capitalizedCategoryName = category_words.join(' ');
+
               return (<div className='discovery-header__tag-group' key={category.name}>
-                <h5>{category.name}</h5>
+                <h5>{capitalizedCategoryName}</h5>
                 { tags.map(tag =>
                   (<Tag
                     key={category.name + tag}

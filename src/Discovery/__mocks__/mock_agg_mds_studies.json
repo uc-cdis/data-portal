@@ -1,0 +1,113 @@
+{
+    "GDC": [
+      {
+        "tags": [
+          {
+            "name": "Blood",
+            "category": "disease_type"
+          },
+          {
+            "name": "Lung",
+            "category": "primary_site"
+          },
+          {
+            "category": "Commons",
+            "name": "GDC"
+          }
+        ],
+        "full_name": "full_name",
+        "_unique_id": "GDC_id",
+        "short_name": "id",
+        "description": "desc",
+        "files_count": 1,
+        "disease_type": [
+          "Germ Cell Neoplasms"
+        ],
+        "primary_site": [
+          "Unknown"
+        ],
+        "subjects_count": 1,
+        "dbgap_accession_number": "1",
+        "commons": "GDC",
+        "frontend_uid": "GDC_0",
+        "name": "name",
+        "study_id": "1",
+        "_subjects_count": 1,
+        "study_description": "study desc"
+      }
+    ],
+    "BDC": [
+      {
+        "tags": [
+          {
+            "category": "disease_type",
+            "name": "Blood"
+          },
+          {
+            "category": "primary_site",
+            "name": "Lung"
+          },
+          {
+            "category": "Commons",
+            "name": "BDC"
+          }
+        ],
+        "full_name": "full_name",
+        "_unique_id": "BDC_id",
+        "short_name": "id",
+        "description": "desc",
+        "files_count": 1,
+        "disease_type": [
+          "Germ Cell Neoplasms"
+        ],
+        "primary_site": [
+          "Unknown"
+        ],
+        "subjects_count": 1,
+        "dbgap_accession_number": "2",
+        "commons": "BDC",
+        "frontend_uid": "BDC_0",
+        "name": "name",
+        "study_id": "2",
+        "_subjects_count": 1,
+        "study_description": "study desc"
+      }
+    ],
+    "AnVil": [
+      {
+        "tags": [
+          {
+            "category": "disease_type",
+            "name": "Blood"
+          },
+          {
+            "category": "primary_site",
+            "name": "Lung"
+          },
+          {
+            "category": "Commons",
+            "name": "AnVil"
+          }
+        ],
+        "full_name": "full_name",
+        "_unique_id": "AnVIL_id",
+        "short_name": "id",
+        "description": "desc",
+        "files_count": 1,
+        "disease_type": [
+          "Germ Cell Neoplasms"
+        ],
+        "primary_site": [
+          "Unknown"
+        ],
+        "subjects_count": 1,
+        "dbgap_accession_number": "3",
+        "commons": "AnVIL",
+        "frontend_uid": "AnVIL_0",
+        "name": "name",
+        "study_id": "3",
+        "_subjects_count": 1,
+        "study_description": "study desc"
+      }
+    ]
+  }

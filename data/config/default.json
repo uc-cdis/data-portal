@@ -649,7 +649,8 @@
       },
       "search": {
         "searchBar": {
-          "enabled": true
+          "enabled": true,
+          "placeholder": "Search through studies by attribute..."
         }
       },
       "authorization": {
@@ -797,12 +798,12 @@
       {
         "name": "primary_site",
         "color": "rgba(112, 182, 3, 1)",
-        "display": false
+        "display": true
       },
       {
         "name": "disease_type",
         "color": "rgba(112, 182, 3, 1)",
-        "display": false
+        "display": true
       }
     ]
   },

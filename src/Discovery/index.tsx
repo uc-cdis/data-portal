@@ -4,10 +4,19 @@ import { connect } from 'react-redux';
 import Discovery from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { hostname, discoveryConfig, useArboristUI } from '../localconf';
+import { discoveryConfig, useArboristUI } from '../localconf';
 
-const COMMONS = [
-  {
+import mockAggMDSData from './__mocks__/mock_agg_mds_studies.json';
+import mockFieldMappingData from './__mocks__/mock_agg_mds_field_mapping.json';
+
+// TODO: Find out the agg MDS url.
+const aggMDSURL = '/agg-mds';
+const aggMDSDataURL = `${aggMDSURL}/metadata`;
+const fieldMappingURL = `${aggMDSURL}/field_to_columns`;
+
+// Keeping this because it has POPULATE_GUID and other options
+const COMMONS = {
+  GDC: {
     MDS_URL: 'https://gen3.datacommons.io/mds/metadata',
     GUID_TYPE: 'discovery_metadata',
     STUDY_DATA_FIELD: 'gen3_discovery',
@@ -16,7 +25,7 @@ const COMMONS = [
     POPULATE_GUID: false,
     OFFSET: 3,
   },
-  {
+  BDC: {
     MDS_URL: 'https://staging.gen3.biodatacatalyst.nhlbi.nih.gov/mds/metadata',
     GUID_TYPE: 'discovery_metadata',
     STUDY_DATA_FIELD: 'gen3_discovery',
@@ -25,7 +34,7 @@ const COMMONS = [
     POPULATE_GUID: false,
     OFFSET: 0,
   },
-  {
+  AnVil: {
     MDS_URL: 'https://internalstaging.theanvil.io/mds/metadata',
     GUID_TYPE: 'discovery_metadata',
     STUDY_DATA_FIELD: 'gen3_discovery',
@@ -33,85 +42,112 @@ const COMMONS = [
     COMMONS: 'AnVIL',
     POPULATE_GUID: true,
     OFFSET: 0,
-  }
-
-];
-
-const loadStudiesFromNamedMDS = async (MDS_URL: string, GUID_TYPE: string,
-  LIMIT: number, STUDY_DATA_FIELD: string,
-  COMMON: string, populateGUI:boolean = false, offset:number = 0): Promise<any[]> => {
-  try {
-    let allStudies = [];
-
-    // request up to LIMIT studies from MDS at a time.
-    let shouldContinue = true;
-    while (shouldContinue) {
-      const url = `${MDS_URL}?data=True&_guid_type=${GUID_TYPE}&limit=${LIMIT}&offset=${offset}`;
-      // It's OK to disable no-await-in-loop rule here -- it's telling us to refactor
-      // using Promise.all() so that we can fire multiple requests at one.
-      // But we WANT to delay sending the next request to MDS until we know we need it.
-      // eslint-disable-next-line no-await-in-loop
-      const res = await fetch(url);
-      if (res.status !== 200) {
-        throw new Error(`Request for study data at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
-      }
-      // eslint-disable-next-line no-await-in-loop
-      const jsonResponse = await res.json();
-      const studies = Object.values(jsonResponse).map((entry, index) => {
-        const x = entry[STUDY_DATA_FIELD];
-        x.commons = COMMON;
-        x.frontend_uid = `${COMMON}_${index}`;
-        if (populateGUI) {
-          // need to do this as in case MDS does not have _unique_id
-          x._unique_id = x.study_id;
-        }
-       //  console.log(x);
-        if (COMMON === 'GDC') { // hacky hacky
-          x.name = x.short_name;
-          x.study_id = x.dbgap_accession_number;
-          x._subjects_count = x.subjects_count;
-          x.study_description = x.description;
-        }
-        x._unique_id = `${COMMON}_${x._unique_id}_${index}`;
-        x.tags.push(Object({category : 'Commons',name: COMMON }));
-        return x;
-      },
-      );
-      // console.log(studies);
-      allStudies = allStudies.concat(studies);
-      const noMoreStudiesToLoad = studies.length < LIMIT;
-      if (noMoreStudiesToLoad) {
-        shouldContinue = false;
-        return allStudies;
-      }
-      offset += LIMIT;
-    }
-    return allStudies;
-  } catch (err) {
-    throw new Error(`Request for study data failed: ${err}`);
-  }
+  },
 };
 
-const loadStudiesFromMDS = async (commons: Object[]): Promise<any[]> => {
-  try {
-    let joinedStudies = [];
-
-    for (const common of commons) {
-      const studies = await loadStudiesFromNamedMDS(
-        common['MDS_URL'],
-        common['GUID_TYPE'],
-        common['LIMIT'],
-        common['STUDY_DATA_FIELD'],
-        common['COMMONS'],
-          common['POPULATE_GUID'],
-          common['OFFSET'],
-      );
-      joinedStudies = joinedStudies.concat(studies);
-    }
-    return joinedStudies;
-  } catch (err) {
-    throw new Error(`Request for joined study data failed: ${err}`);
+const retrieveFieldMapping = async (commonsName: string) => { // : Promise<any[]> => {
+  const url = `${fieldMappingURL}/${commonsName}`;
+  const res = await fetch(url);
+  if (res.status !== 200) {
+    throw new Error(`Request for study data at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
   }
+
+  // TODO: uncomment this
+  // const jsonResponse = await res.json();
+
+  // Temporarily some mock data.
+  const jsonResponse = mockFieldMappingData;
+
+  return jsonResponse;
+};
+
+const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
+  const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
+
+  const res = await fetch(url);
+  if (res.status !== 200) {
+    throw new Error(`Request for study data at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
+  }
+
+  // TODO: uncomment this
+  // const jsonResponse = await res.json();
+
+  // Temporarily: some mock data.
+  const metadataResponse = mockAggMDSData;
+
+  // According to the API: https://petstore.swagger.io/?url=https://gist.githubusercontent.com/craigrbarnes/3ac95d4d6b5dd08d280a28ec0ae2a12d/raw/58a562c9b3a343e535849ad4085a3b27942b2b57/openapi.yaml#/Query/metadata_metadata_get
+  const commons = Object.keys(metadataResponse);
+
+  let allStudies = [];
+  for (const commonsName of commons) {
+    // Now retrieve field mappings for the commons
+    const fieldMapping = await retrieveFieldMapping(commonsName);
+    console.log('The fieldMapping for ', commonsName, ' is ', fieldMapping);
+
+    const studies = metadataResponse[commonsName];
+    console.log('studies  : ', studies);
+    const editedStudies = studies.map((entry, index) => {
+    //   // const STUDY_DATA_FIELD = 'gen3_discovery'; // TODO: find out what the key is for studies
+      console.log('entry: ', entry);
+      const x = { ...entry };
+      x.commons = commonsName;
+      x.frontend_uid = `${commonsName}_${index}`;
+
+      if (COMMONS[commonsName].POPULATE_GUID) {
+        // need to do this as in case MDS does not have _unique_id
+        x._unique_id = x[fieldMapping['study_id']];
+      }
+      // if (commonsName === 'GDC') { // hacky hacky
+        // if(Object.keys(fieldMapping).includes('short_name')) {
+        //   x.name = x[fieldMapping['short_name']];
+        // } else {
+        //   x.name = x.short_name;
+        // }
+        // x.study_id = x[fieldMapping.dbgap_accession_number];
+        // x._subjects_count = x[fieldMapping.subjects_count];
+        // x.study_description = x[fieldMapping.description];
+      // }
+      x._unique_id = `${commonsName}_${x[['_unique_id']]}_${index}`;
+      x.tags = [];
+      x.tags.push(Object({ category: 'Commons', name: commonsName }));
+
+      for (let i = 0; i < discoveryConfig.tagCategories.length; i += 1) {
+        const tag = discoveryConfig.tagCategories[i];
+
+        let tagValue;
+        if(x.hasOwnProperty(tag.name)) {
+          tagValue = x[tag.name];
+        }
+        if(!tagValue) {
+          continue;
+        }
+
+        x.tags.push(Object({ category: tag.name, name: tagValue }));
+      }
+      return x;
+    });
+    console.log('edited studies  : ', editedStudies);
+    allStudies = allStudies.concat(editedStudies);
+  }
+  console.log('loadStudiesFromAggMDS returning ', allStudies);
+  return allStudies;
+};
+
+const loadStudiesFromMDS = async (): Promise<any[]> => {
+  // try {
+  // Retrieve from aggregate MDS
+
+  // TODO: connect the UI to these variables
+  const offset = 0; // For pagination
+  const limit = 100; // Total number of rows requested
+
+  const studies = await loadStudiesFromAggMDS(offset, limit);
+
+  console.log('studies retrieved: ', studies);
+  return studies;
+  // } catch (err) {
+  //   throw new Error(`Request for joined study data failed: ${err}`);
+  // }
 };
 
 const DiscoveryWithMDSBackend: React.FC<{
@@ -125,7 +161,7 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    loadStudiesFromMDS(COMMONS).then((rawStudies) => {
+    loadStudiesFromMDS().then((rawStudies) => {
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const authzField = props.config.minimalFieldMapping.authzField;
