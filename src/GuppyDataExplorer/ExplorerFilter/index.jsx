@@ -10,39 +10,43 @@ import FilterList from '../../gen3-ui-component/components/filters/FilterList';
  * if TIER_ACCESS_LEVEL is 'regular'
  * Otherwise 'All Data' is selected
  */
-class ExplorerFilter extends React.Component {
-  render() {
-    const filterProps = {
-      filterConfig: this.props.filterConfig,
-      guppyConfig: {
-        type: this.props.guppyConfig.dataType,
-        ...this.props.guppyConfig,
-      },
-      fieldMapping: this.props.guppyConfig.fieldMapping,
-      onFilterChange: this.props.onFilterChange,
-      onReceiveNewAggsData: this.props.onReceiveNewAggsData,
-      tierAccessLimit: this.props.tierAccessLimit,
-      adminAppliedPreFilters: this.props.adminAppliedPreFilters,
-      initialAppliedFilters: this.props.initialAppliedFilters,
-      lockedTooltipMessage: `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.`,
-      disabledTooltipMessage: `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${
-        this.props.tierAccessLimit
-      } ${
-        this.props.guppyConfig.nodeCountTitle.toLowerCase() ||
-        this.props.guppyConfig.dataType
-      } or more.`,
-      filterComponents: {
-        FilterGroup,
-        FilterList,
-      },
-    };
-    return (
-      <div className={this.props.className}>
-        <h4>Filters</h4>
-        <ConnectedFilter {...filterProps} />
-      </div>
-    );
-  }
+function ExplorerFilter({
+  className = '',
+  filterConfig = {},
+  guppyConfig = {},
+  onFilterChange = () => {},
+  onReceiveNewAggsData = () => {},
+  tierAccessLimit,
+  adminAppliedPreFilters = {},
+  initialAppliedFilters = {},
+}) {
+  const filterProps = {
+    filterConfig,
+    guppyConfig: {
+      type: guppyConfig.dataType,
+      ...guppyConfig,
+    },
+    fieldMapping: guppyConfig.fieldMapping,
+    onFilterChange,
+    onReceiveNewAggsData,
+    tierAccessLimit,
+    adminAppliedPreFilters,
+    initialAppliedFilters,
+    lockedTooltipMessage: `You may only view summary information for this project. You do not have ${guppyConfig.dataType}-level access.`,
+    disabledTooltipMessage: `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${tierAccessLimit} ${
+      guppyConfig.nodeCountTitle.toLowerCase() || guppyConfig.dataType
+    } or more.`,
+    filterComponents: {
+      FilterGroup,
+      FilterList,
+    },
+  };
+  return (
+    <div className={className}>
+      <h4>Filters</h4>
+      <ConnectedFilter {...filterProps} />
+    </div>
+  );
 }
 
 ExplorerFilter.propTypes = {
@@ -54,17 +58,6 @@ ExplorerFilter.propTypes = {
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
   initialAppliedFilters: PropTypes.object,
-};
-
-ExplorerFilter.defaultProps = {
-  className: '',
-  filterConfig: {},
-  guppyConfig: {},
-  onFilterChange: () => {},
-  onReceiveNewAggsData: () => {},
-  tierAccessLimit: undefined,
-  adminAppliedPreFilters: {},
-  initialAppliedFilters: {},
 };
 
 export default ExplorerFilter;
