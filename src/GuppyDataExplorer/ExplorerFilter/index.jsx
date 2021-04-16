@@ -11,20 +11,6 @@ import FilterList from '../../gen3-ui-component/components/filters/FilterList';
  * Otherwise 'All Data' is selected
  */
 class ExplorerFilter extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedAccessFilter:
-        this.props.tierAccessLevel === 'regular' ? 'with-access' : 'all-data', // default value of selectedAccessFilter
-      showTierAccessSelector: false,
-    };
-  }
-
-  handleAccessSelectorChange = (selectedAccessFilter) => {
-    // selectedAccessFilter will be one of: 'with-access', 'without-access', or 'all-data'
-    this.setState({ selectedAccessFilter });
-  };
-
   render() {
     const filterProps = {
       filterConfig: this.props.filterConfig,
