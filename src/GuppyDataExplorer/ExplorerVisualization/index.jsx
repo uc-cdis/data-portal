@@ -250,7 +250,6 @@ ExplorerVisualization.propTypes = {
   downloadRawDataByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
   allFields: PropTypes.array, // inherited from GuppyWrapper
-  accessibleFieldObject: PropTypes.object, // inherited from GuppyWrapper
   history: PropTypes.object.isRequired,
   className: PropTypes.string,
   chartConfig: ChartConfigType,
@@ -274,7 +273,6 @@ ExplorerVisualization.defaultProps = {
   downloadRawDataByTypeAndFilter: () => {},
   rawData: [],
   allFields: [],
-  accessibleFieldObject: {},
   className: '',
   chartConfig: {},
   tableConfig: {},
