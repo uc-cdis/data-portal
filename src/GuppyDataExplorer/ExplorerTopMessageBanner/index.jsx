@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../gen3-ui-component/components/Button';
 import './ExplorerTopMessageBanner.css';
-import { checkForNoAccessibleProject } from '../GuppyDataExplorerHelper';
 import { GuppyConfigType } from '../configTypeDef';
 
 class ExplorerTopMessageBanner extends React.Component {
@@ -10,11 +9,7 @@ class ExplorerTopMessageBanner extends React.Component {
     const hideGetAccessButton = this.props.hideGetAccessButton;
     return (
       <div className={this.props.className}>
-        {this.props.tierAccessLevel === 'regular' &&
-        checkForNoAccessibleProject(
-          this.props.accessibleFieldObject,
-          this.props.guppyConfig.accessibleValidationField
-        ) ? (
+        {this.props.hideBanner ? null : (
           <div className='top-message-banner'>
             <div className='top-message-banner__space-column' />
             <div className='top-message-banner__text-column'>
@@ -47,8 +42,6 @@ class ExplorerTopMessageBanner extends React.Component {
               </div>
             </div>
           </div>
-        ) : (
-          <React.Fragment />
         )}
       </div>
     );
@@ -58,6 +51,7 @@ class ExplorerTopMessageBanner extends React.Component {
 ExplorerTopMessageBanner.propTypes = {
   className: PropTypes.string,
   getAccessButtonLink: PropTypes.string,
+  hideBanner: PropTypes.bool,
   hideGetAccessButton: PropTypes.bool,
   tierAccessLevel: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number,
@@ -70,6 +64,7 @@ ExplorerTopMessageBanner.defaultProps = {
   tierAccessLimit: undefined,
   accessibleFieldObject: {},
   getAccessButtonLink: undefined,
+  hideBanner: true,
   hideGetAccessButton: false,
   guppyConfig: {},
 };
