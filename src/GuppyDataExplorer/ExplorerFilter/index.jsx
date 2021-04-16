@@ -32,7 +32,6 @@ class ExplorerFilter extends React.Component {
         this.props.guppyConfig.nodeCountTitle.toLowerCase() ||
         this.props.guppyConfig.dataType
       } or more.`,
-      accessibleFieldCheckList: this.props.accessibleFieldCheckList,
       filterComponents: {
         FilterGroup,
         FilterList,
