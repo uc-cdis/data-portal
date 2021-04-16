@@ -6,7 +6,6 @@ import { GuppyConfigType } from '../configTypeDef';
 
 class ExplorerTopMessageBanner extends React.Component {
   render() {
-    const hideGetAccessButton = this.props.hideGetAccessButton;
     return (
       <div className={this.props.className}>
         {this.props.hideBanner ? null : (
@@ -14,9 +13,7 @@ class ExplorerTopMessageBanner extends React.Component {
             <div className='top-message-banner__space-column' />
             <div className='top-message-banner__text-column'>
               <div className='top-message-banner__button-wrapper'>
-                {hideGetAccessButton ? (
-                  <React.Fragment />
-                ) : (
+                {this.props.hideGetAccessButton ? null : (
                   <Button
                     label='Get Access'
                     className='top-message-banner__button'
@@ -25,11 +22,8 @@ class ExplorerTopMessageBanner extends React.Component {
                     tooltipEnabled={!this.props.getAccessButtonLink}
                     tooltipText='Coming soon'
                     onClick={
-                      this.props.getAccessButtonLink
-                        ? () => {
-                            window.open(this.props.getAccessButtonLink);
-                          }
-                        : () => {}
+                      this.props.getAccessButtonLink &&
+                      window.open(this.props.getAccessButtonLink)
                     }
                   />
                 )}
