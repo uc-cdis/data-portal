@@ -128,6 +128,7 @@ class ExplorerFilter extends React.Component {
       onProcessFilterAggsData: this.onProcessFilterAggsData,
       onUpdateAccessLevel: this.props.onUpdateAccessLevel,
       adminAppliedPreFilters: this.props.adminAppliedPreFilters,
+      userFilterFromURL: this.props.userFilterFromURL,
       lockedTooltipMessage: this.props.tierAccessLevel === 'regular' ? `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.` : '',
       disabledTooltipMessage: this.props.tierAccessLevel === 'regular' ? `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${this.props.tierAccessLimit} ${
         this.props.guppyConfig.nodeCountTitle ?
@@ -200,6 +201,7 @@ ExplorerFilter.propTypes = {
   accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
   getAccessButtonLink: PropTypes.string,
   hideGetAccessButton: PropTypes.bool,
+  userFilterFromURL: PropTypes.object,
 };
 
 ExplorerFilter.defaultProps = {
@@ -217,6 +219,7 @@ ExplorerFilter.defaultProps = {
   accessibleFieldCheckList: [],
   getAccessButtonLink: undefined,
   hideGetAccessButton: false,
+  userFilterFromURL: {},
 };
 
 export default ExplorerFilter;
