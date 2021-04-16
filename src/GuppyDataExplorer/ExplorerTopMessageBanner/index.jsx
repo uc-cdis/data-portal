@@ -19,7 +19,7 @@ class ExplorerTopMessageBanner extends React.Component {
                   enabled={!!this.props.getAccessButtonLink}
                   tooltipEnabled={!this.props.getAccessButtonLink}
                   tooltipText='Coming soon'
-                  onClick={
+                  onClick={() =>
                     this.props.getAccessButtonLink &&
                     window.open(this.props.getAccessButtonLink)
                   }
