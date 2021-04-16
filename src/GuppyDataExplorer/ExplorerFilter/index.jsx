@@ -21,26 +21,17 @@ class ExplorerFilter extends React.Component {
       fieldMapping: this.props.guppyConfig.fieldMapping,
       onFilterChange: this.props.onFilterChange,
       onReceiveNewAggsData: this.props.onReceiveNewAggsData,
-      tierAccessLimit:
-        this.props.tierAccessLevel === 'regular'
-          ? this.props.tierAccessLimit
-          : undefined,
+      tierAccessLimit: this.props.tierAccessLimit,
       onUpdateAccessLevel: this.props.onUpdateAccessLevel,
       adminAppliedPreFilters: this.props.adminAppliedPreFilters,
       initialAppliedFilters: this.props.initialAppliedFilters,
-      lockedTooltipMessage:
-        this.props.tierAccessLevel === 'regular'
-          ? `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.`
-          : '',
-      disabledTooltipMessage:
-        this.props.tierAccessLevel === 'regular'
-          ? `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${
-              this.props.tierAccessLimit
-            } ${
-              this.props.guppyConfig.nodeCountTitle.toLowerCase() ||
-              this.props.guppyConfig.dataType
-            } or more.`
-          : '',
+      lockedTooltipMessage: `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.`,
+      disabledTooltipMessage: `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${
+        this.props.tierAccessLimit
+      } ${
+        this.props.guppyConfig.nodeCountTitle.toLowerCase() ||
+        this.props.guppyConfig.dataType
+      } or more.`,
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
       filterComponents: {
         FilterGroup,
