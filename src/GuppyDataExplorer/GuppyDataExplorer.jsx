@@ -73,6 +73,7 @@ class GuppyDataExplorer extends React.Component {
               tierAccessLimit={this.props.tierAccessLimit}
               guppyConfig={this.props.guppyConfig}
               getAccessButtonLink={this.props.getAccessButtonLink}
+              hideBanner={this.props.acccessibleCount === this.props.totalCount}
               hideGetAccessButton={this.props.hideGetAccessButton}
             />
             <ExplorerCohort
