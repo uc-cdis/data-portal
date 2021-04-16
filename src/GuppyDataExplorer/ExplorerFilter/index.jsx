@@ -5,10 +5,6 @@ import AccessibleFilter from '@pcdc/guppy/dist/components/ConnectedFilter/Access
 import UnaccessibleFilter from '@pcdc/guppy/dist/components/ConnectedFilter/UnaccessibleFilter';
 import TierAccessSelector from '../TierAccessSelector';
 import { FilterConfigType, GuppyConfigType } from '../configTypeDef';
-import {
-  checkForNoAccessibleProject,
-  checkForFullAccessibleProject,
-} from '../GuppyDataExplorerHelper';
 import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
 import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 
@@ -26,48 +22,6 @@ class ExplorerFilter extends React.Component {
       showTierAccessSelector: false,
     };
   }
-
-  getSnapshotBeforeUpdate(prevProps) {
-    if (
-      prevProps.accessibleFieldObject !== this.props.accessibleFieldObject ||
-      prevProps.unaccessibleFieldObject !== this.props.unaccessibleFieldObject
-    ) {
-      if (this.props.tierAccessLevel === 'libre') {
-        this.setState({ selectedAccessFilter: 'all-data' });
-        return null;
-      }
-      if (this.props.tierAccessLevel === 'regular') {
-        if (
-          checkForNoAccessibleProject(
-            this.props.accessibleFieldObject,
-            this.props.guppyConfig.accessibleValidationField
-          ) ||
-          checkForFullAccessibleProject(
-            this.props.unaccessibleFieldObject,
-            this.props.guppyConfig.accessibleValidationField
-          )
-        ) {
-          // don't show this selector if user have full access, or none access
-          this.setState({ showTierAccessSelector: false });
-          // if user don't have access to any projects
-          // apply 'all-data' filter so agg data is available
-          if (
-            checkForNoAccessibleProject(
-              this.props.accessibleFieldObject,
-              this.props.guppyConfig.accessibleValidationField
-            )
-          ) {
-            this.setState({ selectedAccessFilter: 'all-data' });
-          }
-        } else {
-          this.setState({ showTierAccessSelector: true });
-        }
-      }
-    }
-    return null;
-  }
-
-  componentDidUpdate() {}
 
   /**
    * For "regular" tier access level commons, we use this function parse
