@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ConnectedFilter from '@pcdc/guppy/dist/components/ConnectedFilter';
-import AccessibleFilter from '@pcdc/guppy/dist/components/ConnectedFilter/AccessibleFilter';
-import UnaccessibleFilter from '@pcdc/guppy/dist/components/ConnectedFilter/UnaccessibleFilter';
 import TierAccessSelector from '../TierAccessSelector';
 import { FilterConfigType, GuppyConfigType } from '../configTypeDef';
 import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
@@ -64,36 +62,6 @@ class ExplorerFilter extends React.Component {
         FilterList,
       },
     };
-    let filterFragment;
-    switch (this.state.selectedAccessFilter) {
-      case 'all-data':
-        filterFragment = (
-          <React.Fragment>
-            <h4>Filters</h4>
-            <ConnectedFilter {...filterProps} />
-          </React.Fragment>
-        );
-        break;
-      case 'with-access':
-        filterFragment = (
-          <React.Fragment>
-            <h4>Filters</h4>
-            <AccessibleFilter {...filterProps} />
-          </React.Fragment>
-        );
-        break;
-      case 'without-access':
-        filterFragment = (
-          <React.Fragment>
-            <h4>Filters</h4>
-            <UnaccessibleFilter {...filterProps} />
-          </React.Fragment>
-        );
-        break;
-      default:
-        filterFragment = <React.Fragment />;
-        break;
-    }
     return (
       <div className={this.props.className}>
         {this.state.showTierAccessSelector ? (
@@ -105,7 +73,8 @@ class ExplorerFilter extends React.Component {
         ) : (
           <React.Fragment />
         )}
-        {filterFragment}
+        <h4>Filters</h4>
+        <ConnectedFilter {...filterProps} />
       </div>
     );
   }
