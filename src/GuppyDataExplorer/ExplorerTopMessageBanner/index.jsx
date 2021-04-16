@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../gen3-ui-component/components/Button';
 import './ExplorerTopMessageBanner.css';
-import { GuppyConfigType } from '../configTypeDef';
 
 class ExplorerTopMessageBanner extends React.Component {
   render() {
@@ -45,20 +44,13 @@ ExplorerTopMessageBanner.propTypes = {
   getAccessButtonLink: PropTypes.string,
   hideBanner: PropTypes.bool,
   hideGetAccessButton: PropTypes.bool,
-  tierAccessLevel: PropTypes.string.isRequired,
-  tierAccessLimit: PropTypes.number,
-  accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
-  guppyConfig: GuppyConfigType,
 };
 
 ExplorerTopMessageBanner.defaultProps = {
   className: '',
-  tierAccessLimit: undefined,
-  accessibleFieldObject: {},
   getAccessButtonLink: undefined,
   hideBanner: true,
   hideGetAccessButton: false,
-  guppyConfig: {},
 };
 
 export default ExplorerTopMessageBanner;
