@@ -5,11 +5,6 @@ import { FilterConfigType, GuppyConfigType } from '../configTypeDef';
 import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
 import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 
-/**
- * For selectedAccessFilter the default value is 'Data with Access'
- * if TIER_ACCESS_LEVEL is 'regular'
- * Otherwise 'All Data' is selected
- */
 function ExplorerFilter({
   className = '',
   filterConfig = {},
