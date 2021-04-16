@@ -47,37 +47,24 @@ class ExplorerFilter extends React.Component {
 
 ExplorerFilter.propTypes = {
   className: PropTypes.string,
-  tierAccessLevel: PropTypes.string.isRequired,
   filterConfig: FilterConfigType, // inherit from GuppyWrapper
   guppyConfig: GuppyConfigType, // inherit from GuppyWrapper
-  fieldMapping: PropTypes.array, // inherit from GuppyWrapper
   onFilterChange: PropTypes.func, // inherit from GuppyWrapper
   onReceiveNewAggsData: PropTypes.func, // inherit from GuppyWrapper
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
-  accessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
-  unaccessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
   adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
   initialAppliedFilters: PropTypes.object,
-  accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
-  getAccessButtonLink: PropTypes.string,
-  hideGetAccessButton: PropTypes.bool,
 };
 
 ExplorerFilter.defaultProps = {
   className: '',
   filterConfig: {},
   guppyConfig: {},
-  fieldMapping: [],
   onFilterChange: () => {},
   onReceiveNewAggsData: () => {},
   tierAccessLimit: undefined,
-  accessibleFieldObject: {},
-  unaccessibleFieldObject: {},
   adminAppliedPreFilters: {},
   initialAppliedFilters: {},
-  accessibleFieldCheckList: [],
-  getAccessButtonLink: undefined,
-  hideGetAccessButton: false,
 };
 
 export default ExplorerFilter;
