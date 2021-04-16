@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ConnectedFilter from '@pcdc/guppy/dist/components/ConnectedFilter';
-import TierAccessSelector from '../TierAccessSelector';
 import { FilterConfigType, GuppyConfigType } from '../configTypeDef';
 import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
 import FilterList from '../../gen3-ui-component/components/filters/FilterList';
@@ -64,15 +63,6 @@ class ExplorerFilter extends React.Component {
     };
     return (
       <div className={this.props.className}>
-        {this.state.showTierAccessSelector ? (
-          <TierAccessSelector
-            onSelectorChange={this.handleAccessSelectorChange}
-            getAccessButtonLink={this.props.getAccessButtonLink}
-            hideGetAccessButton={this.props.hideGetAccessButton}
-          />
-        ) : (
-          <React.Fragment />
-        )}
         <h4>Filters</h4>
         <ConnectedFilter {...filterProps} />
       </div>
