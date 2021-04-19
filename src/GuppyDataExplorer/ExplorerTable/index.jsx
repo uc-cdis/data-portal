@@ -26,6 +26,7 @@ class ExplorerTable extends React.Component {
     this.state = {
       pageSize: props.defaultPageSize,
       currentPage: 0,
+      isInitialFetchData: true,
     };
   }
 
@@ -384,7 +385,11 @@ class ExplorerTable extends React.Component {
           showPageSizeOptions={!this.props.isLocked}
           // eslint-disable-next-line max-len
           pages={this.props.isLocked ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
-          onFetchData={this.fetchData}
+          onFetchData={
+            this.state.isInitialFetchData
+              ? () => this.setState({ isInitialFetchData: false })
+              : this.fetchData
+          }
           defaultPageSize={this.props.defaultPageSize}
           className={'-striped -highlight '}
           minRows={3} // make room for no data component
