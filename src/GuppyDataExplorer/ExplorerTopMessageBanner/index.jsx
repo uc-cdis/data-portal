@@ -6,46 +6,50 @@ import './ExplorerTopMessageBanner.css';
 function ExplorerTopMessageBanner({
   className = '',
   getAccessButtonLink,
-  hideBanner = true,
   hideGetAccessButton = false,
+  accessibleCount,
+  totalCount,
 }) {
-  return hideBanner ? null : (
-    <div className={className}>
-      <div className='top-message-banner'>
-        <div className='top-message-banner__space-column' />
-        <div className='top-message-banner__text-column'>
-          <div className='top-message-banner__button-wrapper'>
-            {hideGetAccessButton ? null : (
-              <Button
-                label='Get Access'
-                className='top-message-banner__button'
-                buttonType='default'
-                enabled={!!getAccessButtonLink}
-                tooltipEnabled={!getAccessButtonLink}
-                tooltipText='Coming soon'
-                onClick={() =>
-                  getAccessButtonLink && window.open(getAccessButtonLink)
-                }
-              />
-            )}
-          </div>
-          <div className='top-message-banner__text-wrapper'>
-            <span className='top-message-banner__normal-text'>
-              You do not have permissions to view line-level data. To request
-              access please reach out to the PCDC team.
-            </span>
+  return (
+    accessibleCount !== totalCount && (
+      <div className={className}>
+        <div className='top-message-banner'>
+          <div className='top-message-banner__space-column' />
+          <div className='top-message-banner__text-column'>
+            <div className='top-message-banner__button-wrapper'>
+              {hideGetAccessButton ? null : (
+                <Button
+                  label='Get Access'
+                  className='top-message-banner__button'
+                  buttonType='default'
+                  enabled={!!getAccessButtonLink}
+                  tooltipEnabled={!getAccessButtonLink}
+                  tooltipText='Coming soon'
+                  onClick={() =>
+                    getAccessButtonLink && window.open(getAccessButtonLink)
+                  }
+                />
+              )}
+            </div>
+            <div className='top-message-banner__text-wrapper'>
+              <span className='top-message-banner__normal-text'>
+                You do not have permissions to view line-level data. To request
+                access please reach out to the PCDC team.
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    )
   );
 }
 
 ExplorerTopMessageBanner.propTypes = {
   className: PropTypes.string,
   getAccessButtonLink: PropTypes.string,
-  hideBanner: PropTypes.bool,
   hideGetAccessButton: PropTypes.bool,
+  accessibleCount: PropTypes.number,
+  totalCount: PropTypes.number,
 };
 
 export default ExplorerTopMessageBanner;
