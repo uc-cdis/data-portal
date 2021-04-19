@@ -120,7 +120,11 @@ class ExplorerFilter extends React.Component {
   render() {
     const filterProps = {
       filterConfig: this.props.filterConfig,
-      guppyConfig: { type: this.props.guppyConfig.dataType, ...this.props.guppyConfig, explorerHideDataFilter },
+      guppyConfig: {
+        type: this.props.guppyConfig.dataType,
+        ...this.props.guppyConfig,
+        explorerHideDataFilter,
+      },
       fieldMapping: this.props.guppyConfig.fieldMapping,
       onFilterChange: this.props.onFilterChange,
       onReceiveNewAggsData: this.props.onReceiveNewAggsData,
