@@ -31,7 +31,7 @@ const COMMONS = [
     STUDY_DATA_FIELD: 'gen3_discovery',
     LIMIT: 1000,
     COMMONS: 'AnVIL',
-    POPULATE_GUID: true,
+    POPULATE_GUID: false,
     OFFSET: 0,
   }
 
@@ -59,18 +59,38 @@ const loadStudiesFromNamedMDS = async (MDS_URL: string, GUID_TYPE: string,
       const jsonResponse = await res.json();
       const studies = Object.values(jsonResponse).map((entry, index) => {
         const x = entry[STUDY_DATA_FIELD];
-        x.commons = COMMON;
+
         if (populateGUI) {
           // need to do this as in case MDS does not have _unique_id
           x._unique_id = x.study_id;
         }
-       //  console.log(x);
+
         if (COMMON === 'GDC') { // hacky hacky
+          /**
+           *  This is getting ridiculous:
+           *     The GDC metata service also contains the
+           *     Proteomic Data Commons so we need to process
+           *     this further
+           */
+          const bProtemic = (x.commons === "Proteomic Data Commons");
+          const commonName = (bProtemic) ? "Proteomic" : "GDC";
           x.name = x.short_name;
-          x.study_id = x.dbgap_accession_number;
-          x._subjects_count = x.subjects_count;
+          if (bProtemic) {
+            x.study_id = x._unique_id;
+            x._subjects_count = x.cases_count;
+          } else {
+            x.study_id = x.dbgap_accession_number;
+            x._subjects_count = x.subjects_count;
+          }
           x.study_description = x.description;
+          x._unique_id = `${commonName}_${x._unique_id}_${index}`;
+          x.tags.push(Object({category : 'Commons',name: commonName }));
+          x.commons = commonName;
+          // console.log(commonName, x);
+
+          return x; // leave early
         }
+        x.commons = COMMON;
         x._unique_id = `${COMMON}_${x._unique_id}_${index}`;
         x.tags.push(Object({category : 'Commons',name: COMMON }));
         return x;
