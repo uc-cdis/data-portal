@@ -83,7 +83,6 @@ class GuppyDataExplorer extends React.Component {
               guppyConfig={this.props.guppyConfig}
               getAccessButtonLink={this.props.getAccessButtonLink}
               hideGetAccessButton={this.props.hideGetAccessButton}
-              tierAccessLevel={this.props.tierAccessLevel}
               tierAccessLimit={this.props.tierAccessLimit}
               initialAppliedFilters={this.props.initialAppliedFilters}
             />
@@ -115,7 +114,6 @@ GuppyDataExplorer.propTypes = {
   buttonConfig: ButtonConfigType.isRequired,
   nodeCountTitle: PropTypes.string,
   history: PropTypes.object.isRequired,
-  tierAccessLevel: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number.isRequired,
   getAccessButtonLink: PropTypes.string,
   hideGetAccessButton: PropTypes.bool,
