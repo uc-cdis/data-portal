@@ -10,7 +10,7 @@ import {
 } from '../configTypeDef';
 import { checkForNoAccessibleProject, checkForFullAccessibleProject } from '../GuppyDataExplorerHelper';
 import { labelToPlural } from '../utils';
-import { explorerHideEmptyFilterSection } from '../../localconf';
+import { explorerHideEmptyFilterSection, explorerHideDataFilter } from '../../localconf';
 
 /**
  * For selectedAccessFilter the default value is 'Data with Access'
@@ -120,7 +120,7 @@ class ExplorerFilter extends React.Component {
   render() {
     const filterProps = {
       filterConfig: this.props.filterConfig,
-      guppyConfig: { type: this.props.guppyConfig.dataType, ...this.props.guppyConfig },
+      guppyConfig: { type: this.props.guppyConfig.dataType, ...this.props.guppyConfig, explorerHideDataFilter },
       fieldMapping: this.props.guppyConfig.fieldMapping,
       onFilterChange: this.props.onFilterChange,
       onReceiveNewAggsData: this.props.onReceiveNewAggsData,

@@ -164,6 +164,7 @@ Below is an example, with inline comments describing what each JSON block config
     This feature currently supports single select filters and range filters; it
     lacks support for search filter state, accessibility state, table state.
     "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
+    "explorerHideDataFilter": "string", // optional, If set guppy will not display named category in filters. Intended use is to hide missing data category from filters, for this it should be set to the same as `guppy > aggs_include_missing_data` in manifest.json
   },
   "dataExplorerConfig": { // required; configuration for the Data Explorer (/explorer)
     "charts": { // optional; indicates which charts to display in the Data Explorer
