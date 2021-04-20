@@ -8,30 +8,48 @@ import { hostname, discoveryConfig, useArboristUI } from '../localconf';
 
 const COMMONS = [
   {
-    MDS_URL: 'https://gen3.datacommons.io/mds/metadata',
+    MDS_URL: 'https://gen3.datacommons.io/mds/metadata?data=True',
     GUID_TYPE: 'discovery_metadata',
     STUDY_DATA_FIELD: 'gen3_discovery',
     LIMIT: 1000,
-    COMMONS: 'GDC',
-    POPULATE_GUID: false,
-    OFFSET: 3,
+    COMMONS: 'Genomic Data Commons',
+    FILTER: "&gen3_discovery.commons=Genomic Data Commons",
+    OFFSET: 0,
   },
   {
-    MDS_URL: 'https://staging.gen3.biodatacatalyst.nhlbi.nih.gov/mds/metadata',
+    MDS_URL: 'https://gen3.datacommons.io/mds/metadata?data=True',
+    GUID_TYPE: 'discovery_metadata',
+    STUDY_DATA_FIELD: 'gen3_discovery',
+    LIMIT: 1000,
+    COMMONS: 'Cancer Imaging Data Commons',
+    FILTER: "&gen3_discovery.commons=Cancer Imaging Data Commons",
+    OFFSET: 0,
+  },
+  {
+    MDS_URL: 'https://gen3.datacommons.io/mds/metadata?data=True',
+    GUID_TYPE: 'discovery_metadata',
+    STUDY_DATA_FIELD: 'gen3_discovery',
+    LIMIT: 1000,
+    COMMONS: 'Proteomic Data Commons',
+    FILTER: "&gen3_discovery.commons=Proteomic Data Commons",
+    OFFSET: 0,
+  },
+  {
+    MDS_URL: 'https://staging.gen3.biodatacatalyst.nhlbi.nih.gov/mds/metadata?data=True',
     GUID_TYPE: 'discovery_metadata',
     STUDY_DATA_FIELD: 'gen3_discovery',
     LIMIT: 1000,
     COMMONS: 'BDC',
-    POPULATE_GUID: false,
+    FILTER: '',
     OFFSET: 0,
   },
   {
-    MDS_URL: 'https://internalstaging.theanvil.io/mds/metadata',
+    MDS_URL: 'https://internalstaging.theanvil.io/mds/metadata?data=True',
     GUID_TYPE: 'discovery_metadata',
     STUDY_DATA_FIELD: 'gen3_discovery',
     LIMIT: 1000,
     COMMONS: 'AnVIL',
-    POPULATE_GUID: false,
+    FILTER: '',
     OFFSET: 0,
   }
 
@@ -39,14 +57,15 @@ const COMMONS = [
 
 const loadStudiesFromNamedMDS = async (MDS_URL: string, GUID_TYPE: string,
   LIMIT: number, STUDY_DATA_FIELD: string,
-  COMMON: string, populateGUI:boolean = false, offset:number = 0): Promise<any[]> => {
+  COMMON: string, FILTER:string = '', offset:number = 0): Promise<any[]> => {
   try {
     let allStudies = [];
 
     // request up to LIMIT studies from MDS at a time.
     let shouldContinue = true;
     while (shouldContinue) {
-      const url = `${MDS_URL}?data=True&_guid_type=${GUID_TYPE}&limit=${LIMIT}&offset=${offset}`;
+      const url = `${MDS_URL}&_guid_type=${GUID_TYPE}&limit=${LIMIT}&offset=${offset}${FILTER}`;
+
       // It's OK to disable no-await-in-loop rule here -- it's telling us to refactor
       // using Promise.all() so that we can fire multiple requests at one.
       // But we WANT to delay sending the next request to MDS until we know we need it.
@@ -60,28 +79,22 @@ const loadStudiesFromNamedMDS = async (MDS_URL: string, GUID_TYPE: string,
       const studies = Object.values(jsonResponse).map((entry, index) => {
         const x = entry[STUDY_DATA_FIELD];
 
-        if (populateGUI) {
-          // need to do this as in case MDS does not have _unique_id
-          x._unique_id = x.study_id;
-        }
-
-        if (COMMON === 'GDC') { // hacky hacky
-          /**
-           *  This is getting ridiculous:
-           *     The GDC metata service also contains the
-           *     Proteomic Data Commons so we need to process
-           *     this further
-           */
-          const bProtemic = (x.commons === "Proteomic Data Commons");
-          const commonName = (bProtemic) ? "Proteomic" : "GDC";
+        if (FILTER !== '') { // hacky hacky
+          const commonName = x.commons;
           x.name = x.short_name;
-          if (bProtemic) {
+          if (x.commons === "Proteomic Data Commons") {
             x.study_id = x._unique_id;
             x._subjects_count = x.cases_count;
-          } else {
+          }
+          if (x.commons === 'Genomic Data Commons') {
             x.study_id = x.dbgap_accession_number;
             x._subjects_count = x.subjects_count;
           }
+          if (x.commons === 'Cancer Imaging Data Commons') {
+            x.study_id = x.dbgap_accession_number;
+            x._subjects_count = x.subjects_count;
+          }
+
           x.study_description = x.description;
           x._unique_id = `${commonName}_${x._unique_id}_${index}`;
           x.tags.push(Object({category : 'Commons',name: commonName }));
@@ -122,7 +135,7 @@ const loadStudiesFromMDS = async (commons: Object[]): Promise<any[]> => {
         common['LIMIT'],
         common['STUDY_DATA_FIELD'],
         common['COMMONS'],
-          common['POPULATE_GUID'],
+          common['FILTER'],
           common['OFFSET'],
       );
       joinedStudies = joinedStudies.concat(studies);
