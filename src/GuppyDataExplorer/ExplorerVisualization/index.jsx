@@ -4,7 +4,6 @@ import SummaryChartGroup from '../../gen3-ui-component/components/charts/Summary
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 import Spinner from '../../gen3-ui-component/components/Spinner/Spinner';
 import { components } from '../../params';
-import { tierAccessLevel } from '../../localconf';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
@@ -15,7 +14,6 @@ import {
   ChartConfigType,
   GuppyConfigType,
 } from '../configTypeDef';
-import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper';
 import './ExplorerVisualization.css';
 
 function ViewContainer({ showIf, children, isLoading }) {
@@ -115,15 +113,7 @@ class ExplorerVisualization extends React.Component {
       this.props.tableConfig.fields && this.props.tableConfig.fields.length > 0
         ? this.props.tableConfig.fields
         : this.props.allFields;
-    // don't lock components for libre commons
-    const isComponentLocked =
-      tierAccessLevel !== 'regular'
-        ? false
-        : checkForAnySelectedUnaccessibleField(
-            this.props.aggsData,
-            this.props.accessibleFieldObject,
-            this.props.guppyConfig.accessibleValidationField
-          );
+    const isComponentLocked = this.props.accessibleCount === 0;
     const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${
       this.props.tierAccessLimit
     } ${
@@ -261,7 +251,6 @@ ExplorerVisualization.propTypes = {
   downloadRawDataByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
   allFields: PropTypes.array, // inherited from GuppyWrapper
-  accessibleFieldObject: PropTypes.object, // inherited from GuppyWrapper
   history: PropTypes.object.isRequired,
   className: PropTypes.string,
   chartConfig: ChartConfigType,
@@ -285,7 +274,6 @@ ExplorerVisualization.defaultProps = {
   downloadRawDataByTypeAndFilter: () => {},
   rawData: [],
   allFields: [],
-  accessibleFieldObject: {},
   className: '',
   chartConfig: {},
   tableConfig: {},
