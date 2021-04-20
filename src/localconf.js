@@ -211,10 +211,10 @@ function buildConfig(opts) {
   if (config.featureFlags && config.featureFlags.explorerHideEmptyFilterSection) {
     explorerHideEmptyFilterSection = true;
   }
-  
-  let explorerHideDataFilter = undefined;
-  if (config.featureFlags && config.featureFlags.explorerHideDataFilter) {
-    explorerHideDataFilter = config.featureFlags.explorerHideDataFilter;
+
+  let explorerFilterValuesToHide = [];
+  if (config.featureFlags && config.featureFlags.explorerFilterValuesToHide) {
+    explorerFilterValuesToHide = config.featureFlags.explorerFilterValuesToHide;
   }
 
   const enableResourceBrowser = !!config.resourceBrowser;
@@ -428,7 +428,7 @@ function buildConfig(opts) {
     useIndexdAuthz,
     explorerPublic,
     explorerHideEmptyFilterSection,
-    explorerHideDataFilter,
+    explorerFilterValuesToHide,
     authzPath,
     authzMappingPath,
     enableResourceBrowser,
