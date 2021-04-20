@@ -85,6 +85,7 @@ const loadStudiesFromNamedMDSDeprecated = async (MDS_URL: string, GUID_TYPE: str
         }
         x._unique_id = `${COMMON}_${x._unique_id}_${index}`;
         x.tags.push(Object({ category: 'Commons', name: COMMON }));
+
         return x;
       },
       );

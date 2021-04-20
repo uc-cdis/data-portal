@@ -675,12 +675,16 @@
     "studyColumns": [
       {
         "name": "Study Name",
-        "field": "name"
+        "field": "name",
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a"
       },
       {
         "name": "Full Name",
         "field": "full_name",
-        "contentType": "string"
+        "contentType": "string",
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a"
       },
       {
         "name": "Number of Subjects",
@@ -691,11 +695,15 @@
       },
       {
         "name": "dbGaP Accession Number",
-        "field": "study_id"
+        "field": "study_id",
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a"
       },
       {
         "name": "Data Commons",
-        "field": "commons"
+        "field": "commons",
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a"
       }
     ],
     "studyPreviewField": {
