@@ -6,7 +6,7 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { discoveryConfig, useArboristUI } from '../localconf';
 // TODO: delete this.
-import { loadStudiesFromMDSDDeprecated } from './deprecated.tsx';
+import { loadStudiesFromMDSDDeprecated } from './deprecated';
 
 import mockAggMDSData from './__mocks__/mock_agg_mds_studies.json';
 import mockFieldMappingData from './__mocks__/mock_agg_mds_field_mapping.json';
@@ -95,26 +95,26 @@ const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
 
       if (COMMONS[commonsName].POPULATE_GUID) {
         // need to do this as in case MDS does not have _unique_id
-        x._unique_id = x[fieldMapping['study_id']];
+        x._unique_id = x[fieldMapping.study_id];
       }
       if (commonsName === 'GDC') { // hacky hacky
-        if(Object.keys(fieldMapping).includes('short_name')) {
-          x.name = x[fieldMapping['short_name']];
+        if (Object.keys(fieldMapping).includes('short_name')) {
+          x.name = x[fieldMapping.short_name];
         } else {
           x.name = x.short_name;
         }
-        x.study_id = x.dbgap_accession_number // x[fieldMapping.dbgap_accession_number];
+        x.study_id = x.dbgap_accession_number; // x[fieldMapping.dbgap_accession_number];
         x.study_id = x.dbgap_accession_number;
         // Different GDC studies have different patient descriptors
-        if(x.subjects_count) {
-            x._subjects_count = x.subjects_count;
+        if (x.subjects_count) {
+          x._subjects_count = x.subjects_count;
         }
-        if(x.cases_count) {
-            x._subjects_count = x.cases_count;
+        if (x.cases_count) {
+          x._subjects_count = x.cases_count;
         }
         x.study_description = x.description; // x[fieldMapping.description];
       }
-      x._unique_id = `${commonsName}_${x[['_unique_id']]}_${index}`;
+      x._unique_id = `${commonsName}_${x['_unique_id']}_${index}`;
       x.tags = [];
       x.tags.push(Object({ category: 'Commons', name: commonsName }));
 
@@ -122,14 +122,12 @@ const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
         const tag = discoveryConfig.tagCategories[i];
 
         let tagValue;
-        if(x.hasOwnProperty(tag.name)) {
+        if (Object.prototype.hasOwnProperty.call(x, tag.name)) {
           tagValue = x[tag.name];
         }
-        if(!tagValue) {
-          continue;
+        if (tagValue) {
+          x.tags.push(Object({ category: tag.name, name: tagValue }));
         }
-
-        x.tags.push(Object({ category: tag.name, name: tagValue }));
       }
       return x;
     });
