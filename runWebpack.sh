@@ -136,9 +136,12 @@ fi
 # on the current APP environment - ugh
 #
 bash custom/customize.sh
+echo "INFO: NPM config"
+npm config list
 
 # workspace bundle does not currently deploy sheepdog
 if [[ "$GEN3_BUNDLE" != "workspace" ]]; then
+  echo "INFO: Running schema and relay for non-workspace bundle"
   # download the graphql schema for the commons from HOSTNAME
   npm run schema
   # run the relay compiler against the graphql schema
@@ -146,8 +149,10 @@ if [[ "$GEN3_BUNDLE" != "workspace" ]]; then
 fi
 
 # generate a parameters.json file by overlaying $APP.json on default.json
+echo "INFO: Generating parameters.json"
 npm run params
 if [[ "$GEN3_BUNDLE" != "workspace" ]]; then
+  echo "INFO: Running sanity-check for non-workspace bundle"
   # run a sanity check to make sure portal config works
   npm run sanity-check
 fi
@@ -160,11 +165,13 @@ export REACT_APP_DISABLE_SOCKET=true
 # finally either launch the webpack-dev-server or
 # run webpack to generate a static bundle.js
 #
+echo "INFO: Ready for webpack"
 if [[ "$NODE_ENV" == "dev" || "$NODE_ENV" == "auto" ]]; then
   echo ./node_modules/.bin/webpack-dev-server
   ./node_modules/.bin/webpack-dev-server
 else
-  export NODE_OPTIONS='--max-old-space-size=4096'
+  # see https://nodejs.org/api/cli.html#cli_max_old_space_size_size_in_megabytes
+  export NODE_OPTIONS='--max-old-space-size=3584'
   export NODE_ENV="production"
   echo ./node_modules/.bin/webpack --bail
   ./node_modules/.bin/webpack --bail

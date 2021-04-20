@@ -15,10 +15,11 @@ services:
     - docker
 
 before_install:
-    - npm install -g npm@7.6.3
+    - npm install -g npm@7.9.0
+    - npm config set maxsockets 5
 
 install:
-    - npm install --force
+    - npm install --force --legacy-peer-deps
 
 script:
     - npm run relay

@@ -158,8 +158,12 @@ Below is an example, with inline comments describing what each JSON block config
   "requiredCerts": [], // optional; do users need to take a quiz or agree to something before they can access the site?
   "featureFlags": { // optional; will hide certain parts of the site if needed
     "explorer": true, // required; indicates the flag and whether to hide it or not
-    "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. Data explorer page would be public accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
+    "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. The Data Explorer page would be publicly accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
     "discovery": true, // optional; whether to enable the Discovery page. If true, `discoveryConfig` must be present as well.
+    "explorerStoreFilterInURL": true, // optional; whether to store/load applied filters in the URL during Data Explorer use.
+    This feature currently supports single select filters and range filters; it
+    lacks support for search filter state, accessibility state, table state.
+    "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
   },
   "dataExplorerConfig": { // required; configuration for the Data Explorer (/explorer)
     "charts": { // optional; indicates which charts to display in the Data Explorer
@@ -208,7 +212,7 @@ Below is an example, with inline comments describing what each JSON block config
     },
     "table": { // required; configuration for Data Explorer table
       "enabled": true, // required; indicates if the table should be enabled or not by default
-      "fields": [ // required; fields (node attributes) to include to be displayed in the table
+      "fields": [ // optional; fields (node attributes) to include to be displayed in the table
         "project_id",
         "race",
         "ethnicity",
@@ -228,7 +232,7 @@ Below is an example, with inline comments describing what each JSON block config
         "title": "Download" // required; title of dropdown button
       }
     },
-    "buttons": [ // required; buttons for Data Explorer
+    "buttons": [ // optional; buttons for Data Explorer
       {
         "enabled": true, // required; if the button is enabled or disabled
         "type": "data", // required; button data type sub-options (case insensitive): ["data" (default), "data-tsv", "data-csv", "data-json"] - what should it do? Data = downloading default clinical JSON data
@@ -363,7 +367,7 @@ Below is an example, with inline comments describing what each JSON block config
       "accessibleValidationField": "project_id",
       "downloadAccessor": "object_id" // required; for downloading a file, what is the GUID? This should probably not change
     },
-    "buttons": [ // required; buttons for File Explorer
+    "buttons": [ // optional; buttons for File Explorer
       {
         "enabled": true, // required; determines if the button is enabled or disabled
         "type": "file-manifest", // required; button type - file-manifest is for downloading a manifest from the file index

@@ -5,7 +5,7 @@ import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
-import { labelToPlural } from './utils';
+import { labelToPlural, getQueryParameter, IsValidJSONString } from './utils';
 import {
   GuppyConfigType,
   FilterConfigType,
@@ -14,29 +14,105 @@ import {
   ChartConfigType,
 } from './configTypeDef';
 import './GuppyDataExplorer.css';
+import isEnabled from '../helpers/featureFlags';
 
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
+    let initialFilter = {};
+
+    if (isEnabled('explorerStoreFilterInURL')) {
+      const stateFromURL = getQueryParameter('filters');
+      if (stateFromURL) {
+        try {
+          const decodedFilter = atob(stateFromURL);
+          const isValidJSON = IsValidJSONString(decodedFilter);
+          if (isValidJSON) {
+            initialFilter = JSON.parse(decodedFilter).filter;
+          }
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error('Could not parse URL filters property.');
+        }
+      }
+    }
+
     this.state = {
       aggsData: {},
       filter: {},
+      initialFilterFromURL: initialFilter,
+      encodableExplorerStateForURL: { filter: initialFilter },
     };
+  }
+
+  getEncodedQueryStateFromExplorer = () => {
+    // When the `explorerStoreFilterInURL` featureFlag is enabled,
+    // explorer state is stored in the URL as a base 64 encoded string.
+    // btoa() and atob() encode and decode the JSON-form filter.
+    const stateObj = this.state.encodableExplorerStateForURL;
+    if (this.isExplorerStatePristine(stateObj)) {
+      return '';
+    }
+    const encoded = encodeURIComponent(btoa(JSON.stringify(stateObj)));
+    return encoded;
+  }
+
+  refreshQueryStateInUrl = () => {
+    const encodedState = this.getEncodedQueryStateFromExplorer();
+    if (encodedState === '') {
+      window.history.pushState(null, null, window.location.pathname);
+      return;
+    }
+    window.history.pushState('', '', `?filters=${encodedState}`);
   }
 
   handleReceiveNewAggsData = (newAggsData) => {
     this.setState({ aggsData: newAggsData });
   };
 
+  handleFilterChangeForQueryStateUrl = (eventIn) => {
+    const event = { ...eventIn };
+    // Removing search fields. They are not supported in explorer state encoding right now.
+    const newExplorerState = this.state.encodableExplorerStateForURL;
+    for (let fieldIndex = 0; fieldIndex < Object.keys(eventIn).length; fieldIndex += 1) {
+      const field = Object.keys(eventIn)[fieldIndex];
+      for (let tabIndex = 0; tabIndex < this.props.filterConfig.tabs.length; tabIndex += 1) {
+        const searchFields = this.props.filterConfig.tabs[tabIndex].searchFields;
+        if (searchFields && searchFields.indexOf(field) !== -1) {
+          delete event[field];
+        }
+      }
+    }
+    newExplorerState.filter = event;
+    this.setState({ encodableExplorerStateForURL: newExplorerState });
+  }
+
+  isExplorerStatePristine = (explorerState) => {
+    const values = Object.values(explorerState);
+    for (let i = 0; i < values.length; i += 1) {
+      if (typeof values[i] !== 'object' && values[i] !== null) {
+        return false;
+      }
+      if (typeof values[i] === 'object' && Object.values(values[i]).length > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   render() {
+    if (isEnabled('explorerStoreFilterInURL')) {
+      this.refreshQueryStateInUrl();
+    }
     return (
       <div className='guppy-data-explorer'>
         <GuppyWrapper
           adminAppliedPreFilters={this.props.adminAppliedPreFilters}
+          initialFilterFromURL={this.state.initialFilterFromURL}
           filterConfig={this.props.filterConfig}
           guppyConfig={{ type: this.props.guppyConfig.dataType, ...this.props.guppyConfig }}
           onReceiveNewAggsData={this.handleReceiveNewAggsData}
-          onFilterChange={this.handleFilterChange}
+          onFilterChange={this.handleFilterChangeForQueryStateUrl}
           rawDataFields={this.props.tableConfig.fields}
           accessibleFieldCheckList={this.props.guppyConfig.accessibleFieldCheckList}
         >
@@ -55,6 +131,7 @@ class GuppyDataExplorer extends React.Component {
             hideGetAccessButton={this.props.hideGetAccessButton}
             tierAccessLevel={this.props.tierAccessLevel}
             tierAccessLimit={this.props.tierAccessLimit}
+            userFilterFromURL={this.state.initialFilterFromURL}
           />
           <ExplorerVisualization
             className='guppy-data-explorer__visualization'
