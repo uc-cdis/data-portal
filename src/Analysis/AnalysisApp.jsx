@@ -117,9 +117,9 @@ class AnalysisApp extends React.Component {
   }
 
   handleFullscreenButtonClick = () => {
-    this.setState({
-      analysisIsFullscreen: !this.state.analysisIsFullscreen,
-    });
+    this.setState((prevState) => ({
+      analysisIsFullscreen: !prevState.analysisIsFullscreen,
+    }));
   }
 
   handleIframeApp = () => {

@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber, Collapse, List, Tag, Popconfirm, Alert,
+  Steps, Button, Space, Table, Modal,
+  Typography, Checkbox, Radio, Divider,
+  Select, Input, Form, Result, Spin, InputNumber,
+  Collapse, List, Tag, Popconfirm, Alert,
 } from 'antd';
 import {
   CheckCircleOutlined,
@@ -39,6 +42,65 @@ const steps = [
 ];
 
 class GWASApp extends React.Component {
+  mainTableRowSelection = {
+    type: 'radio',
+    onChange: (_, selectedRows) => {
+      this.setState({
+        selectedDataKey: selectedRows[0].WorkspaceKey,
+      });
+    },
+    getCheckboxProps: (record) => ({
+      disabled: !(record.SizeBytes && record.SizeBytes <= MAX_PREVIEW_FILE_SIZE_BYTES),
+    }),
+  };
+
+  mainTableConfig = [
+    {
+      title: 'File Name',
+      dataIndex: 'WorkspaceKey',
+      key: 'WorkspaceKey',
+    },
+    {
+      title: 'File Size',
+      dataIndex: 'SizeBytes',
+      key: 'SizeBytes',
+      render: (text) => humanFileSize(text),
+    },
+    {
+      title: 'Last Modified Date',
+      dataIndex: 'LastModified',
+      key: 'LastModified',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (record) => {
+        if (record.SizeBytes && record.SizeBytes <= MAX_PREVIEW_FILE_SIZE_BYTES) {
+          return (
+            <Space size='small'>
+              <Button
+                size='small'
+                type='link'
+                onClick={() => {
+                  if (record.WorkspaceKey !== this.state.previewModalDataKey) {
+                    this.props.onLoadWorkspaceStorageFile(record.WorkspaceKey);
+                  }
+                  this.setState({
+                    showPreviewModal: true,
+                    previewModalDataKey: record.WorkspaceKey,
+                  });
+                }}
+              >
+          Preview
+              </Button>
+            </Space>
+          );
+        }
+        return null;
+      },
+    },
+  ];
+
   constructor(props) {
     super(props);
     this.state = {
@@ -175,65 +237,6 @@ class GWASApp extends React.Component {
     }).then(this.getMarinerJobStatus());
   }
 
-  mainTableRowSelection = {
-    type: 'radio',
-    onChange: (_, selectedRows) => {
-      this.setState({
-        selectedDataKey: selectedRows[0].WorkspaceKey,
-      });
-    },
-    getCheckboxProps: (record) => ({
-      disabled: !(record.SizeBytes && record.SizeBytes <= MAX_PREVIEW_FILE_SIZE_BYTES),
-    }),
-  };
-
-  mainTableConfig = [
-    {
-      title: 'File Name',
-      dataIndex: 'WorkspaceKey',
-      key: 'WorkspaceKey',
-    },
-    {
-      title: 'File Size',
-      dataIndex: 'SizeBytes',
-      key: 'SizeBytes',
-      render: (text) => humanFileSize(text),
-    },
-    {
-      title: 'Last Modified Date',
-      dataIndex: 'LastModified',
-      key: 'LastModified',
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (record) => {
-        if (record.SizeBytes && record.SizeBytes <= MAX_PREVIEW_FILE_SIZE_BYTES) {
-          return (
-            <Space size='small'>
-              <Button
-                size='small'
-                type='link'
-                onClick={() => {
-                  if (record.WorkspaceKey !== this.state.previewModalDataKey) {
-                    this.props.onLoadWorkspaceStorageFile(record.WorkspaceKey);
-                  }
-                  this.setState({
-                    showPreviewModal: true,
-                    previewModalDataKey: record.WorkspaceKey,
-                  });
-                }}
-              >
-          Preview
-              </Button>
-            </Space>
-          );
-        }
-        return null;
-      },
-    },
-  ];
-
   handlePreviewModalCancel = () => {
     this.setState({
       showPreviewModal: false,
@@ -258,30 +261,6 @@ class GWASApp extends React.Component {
         });
       });
   };
-
-  next() {
-    const current = this.state.current + 1;
-    if (current === 1) {
-      if (!this.props.wssFileData
-        || this.props.wssFileData.workspaceKey !== this.state.selectedDataKey) {
-        this.props.onLoadWorkspaceStorageFile(this.state.selectedDataKey);
-      }
-    }
-    this.setState({
-      current,
-      showPreviewModal: (current === 0),
-      showStep0Table: (current === 0),
-    });
-  }
-
-  prev() {
-    const current = this.state.current - 1;
-    const selectedDataKey = (current === 0) ? undefined : this.state.selectedDataKey;
-    this.setState({
-      current,
-      selectedDataKey,
-    });
-  }
 
   userHasMariner = () => userHasMethodForServiceOnResource('access', 'mariner', '/mariner', this.props.userAuthMapping)
 
@@ -625,6 +604,34 @@ class GWASApp extends React.Component {
     }
   }
 
+  next() {
+    this.setState((prevState) => {
+      const current = prevState.current + 1;
+      if (current === 1) {
+        if (!this.props.wssFileData
+        || this.props.wssFileData.workspaceKey !== prevState.selectedDataKey) {
+          this.props.onLoadWorkspaceStorageFile(prevState.selectedDataKey);
+        }
+      }
+      return {
+        current,
+        showPreviewModal: (current === 0),
+        showStep0Table: (current === 0),
+      };
+    });
+  }
+
+  prev() {
+    this.setState((prevState) => {
+      const current = prevState.current - 1;
+      const selectedDataKey = (current === 0) ? undefined : prevState.selectedDataKey;
+      return {
+        current,
+        selectedDataKey,
+      };
+    });
+  }
+
   render() {
     const { current } = this.state;
     let nextButtonEnabled = true;
@@ -661,18 +668,20 @@ class GWASApp extends React.Component {
                     renderItem={(item) => (
                       <List.Item
                         actions={(item.status === 'running')
-                          ? [<Popconfirm
-                            title='Are you sure you want to cancel this job?'
-                            onConfirm={(event) => {
-                              event.stopPropagation();
-                              this.cancelMarinerJob(item.runID);
-                            }}
-                            okText='Yes'
-                            cancelText='No'
-                          >
-                            <Button type='link' size='small' danger>cancel job</Button>
-                             </Popconfirm>,
-                          <Button type='link' size='small' onClick={(event) => { event.stopPropagation(); this.handleJobStatusModalShow(item.runID); }}>show logs</Button>]
+                          ? [
+                            <Popconfirm
+                              title='Are you sure you want to cancel this job?'
+                              onConfirm={(event) => {
+                                event.stopPropagation();
+                                this.cancelMarinerJob(item.runID);
+                              }}
+                              okText='Yes'
+                              cancelText='No'
+                            >
+                              <Button type='link' size='small' danger>cancel job</Button>
+                            </Popconfirm>,
+                            <Button type='link' size='small' onClick={(event) => { event.stopPropagation(); this.handleJobStatusModalShow(item.runID); }}>show logs</Button>,
+                          ]
                           : [<Button type='link' size='small' onClick={(event) => { event.stopPropagation(); this.handleJobStatusModalShow(item.runID); }}>show logs</Button>]}
                       >
                         <List.Item.Meta

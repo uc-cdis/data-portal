@@ -340,7 +340,10 @@ export const getNodesAndLinksSummaryBetweenNodesInSubgraph = (
 ) => {
   const startingNode = wholeGraphNodes.find((node) => node.id === startingNodeID);
   const betweenNodeIDs = [];
-  const firstLevelOutNodeIDs = startingNode.outLinks.filter((outNodeID) => subgraphEdges.find((e) => e.source === startingNodeID && e.target === outNodeID));
+  const firstLevelOutNodeIDs = startingNode.outLinks.filter(
+    (outNodeID) => subgraphEdges.find(
+      (e) => e.source === startingNodeID && e.target === outNodeID,
+    ));
   let currentLevelNodeIDs = firstLevelOutNodeIDs;
   const betweenLinks = firstLevelOutNodeIDs.map((outID) => ({
     source: startingNodeID,

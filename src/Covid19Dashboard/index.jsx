@@ -397,7 +397,7 @@ class Covid19Dashboard extends React.Component {
   }
 }
 
-class CustomizedXAxisTick extends React.Component { // eslint-disable-line react/no-multi-comp
+class CustomizedXAxisTick extends React.Component {
   render() {
     const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
     const val = payload.value; // eslint-disable-line react/prop-types

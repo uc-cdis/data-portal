@@ -51,6 +51,7 @@ module.exports = {
       'error',
       'always',
     ],
+    'max-classes-per-file': ['error', 2],
     'max-len': [
       'error',
       {

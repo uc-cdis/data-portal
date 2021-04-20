@@ -25,8 +25,12 @@ const ReduxGraphCalculator = (() => {
     onGraphLayoutCalculated: (layout) => dispatch(setGraphLayout(layout)),
     onGraphLegendCalculated: (legendItems) => dispatch(setGraphLegend(legendItems)),
     onHighlightRelatedNodesCalculated: (relatedNodeIDs) => dispatch(setRelatedNodeIDs(relatedNodeIDs)),
-    onSecondHighlightingNodeCandidateIDsCalculated: (secondHighlightingNodeCandidateIDs) => dispatch(setSecondHighlightingNodeCandidateIDs(secondHighlightingNodeCandidateIDs)),
-    onPathRelatedToSecondHighlightingNodeCalculated: (pathRelatedToSecondHighlightingNode) => dispatch(setPathRelatedToSecondHighlightingNode(pathRelatedToSecondHighlightingNode)),
+    onSecondHighlightingNodeCandidateIDsCalculated: (
+      secondHighlightingNodeCandidateIDs,
+    ) => dispatch(setSecondHighlightingNodeCandidateIDs(secondHighlightingNodeCandidateIDs)),
+    onPathRelatedToSecondHighlightingNodeCalculated: (
+      pathRelatedToSecondHighlightingNode,
+    ) => dispatch(setPathRelatedToSecondHighlightingNode(pathRelatedToSecondHighlightingNode)),
     onDataModelStructureCalculated: (
       dataModelStructure,
       dataModelStructureRelatedNodeIDs,

@@ -20,6 +20,7 @@ class Analysis extends React.Component {
                 key={appKey}
                 className='analysis__app-card'
                 onClick={() => this.openApp(appKey)}
+                onKeyPress={() => this.openApp(appKey)}
                 role='button'
                 tabIndex={0}
               >

@@ -110,16 +110,19 @@ function formatChartDataFromProps(plots) {
 // Intense + colorblind option + hard (force vector)
 const COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
 
-class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
-  state = {
-    width: Object.fromEntries(
-      Object.entries(this.props.plots).map((e) => {
-        const value = e[1];
-        return [value.name, 1];
-      }),
-    ),
-    guppyData: [],
-  };
+class PlotChart extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      width: Object.fromEntries(
+        Object.entries(this.props.plots).map((e) => {
+          const value = e[1];
+          return [value.name, 1];
+        }),
+      ),
+      guppyData: [],
+    };
+  }
 
   componentDidMount() {
     if (!this.props.guppyConfig) {

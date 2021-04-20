@@ -34,7 +34,10 @@ class DataModelStructure extends React.Component {
       .forEach((nid) => {
         nodesToDownload[nid] = `${nid}-template.${format}`;
       }, []);
-    const allRoutes = this.props.allRoutes.map((nodeIDsInRoute) => nodeIDsInRoute.filter((nid) => !this.props.excludedNodesForTemplates.includes(nid)));
+    const allRoutes = this.props.allRoutes.map(
+      (nodeIDsInRoute) => nodeIDsInRoute.filter(
+        (nid) => !this.props.excludedNodesForTemplates.includes(nid),
+      ));
     this.props.downloadMultiTemplate(
       format,
       nodesToDownload,

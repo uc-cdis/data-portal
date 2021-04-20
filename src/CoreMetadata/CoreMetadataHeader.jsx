@@ -59,7 +59,7 @@ class CoreMetadataHeader extends Component {
 
         downloadButton = (
           <a href={downloadLink}>
-            <button className='button-primary-orange'>
+            <button className='button-primary-orange' type='button'>
               {DOWNLOAD_BTN_CAPTION}
             </button>
           </a>
