@@ -10,7 +10,7 @@ import {
 } from '../configTypeDef';
 import { checkForNoAccessibleProject, checkForFullAccessibleProject } from '../GuppyDataExplorerHelper';
 import { labelToPlural } from '../utils';
-import { explorerHideEmptyFilterSection } from '../../localconf';
+import { explorerHideEmptyFilterSection, explorerFilterValuesToHide } from '../../localconf';
 
 /**
  * For selectedAccessFilter the default value is 'Data with Access'
@@ -137,6 +137,7 @@ class ExplorerFilter extends React.Component {
       } or more.` : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
       hideEmptyFilterSection: explorerHideEmptyFilterSection,
+      filterValuesToHide: explorerFilterValuesToHide,
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
