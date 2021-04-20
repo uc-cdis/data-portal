@@ -74,6 +74,7 @@
 
 .discovery-header__tags-container {
     flex: 1 0 auto;
+    height:90%;
 }
 
 .discovery-header__tags-header {
@@ -99,6 +100,14 @@
     align-items: flex-start;
     justify-content: flex-start;
     font-weight:bold;
+    overflow-y: scroll;
+    overflow-x: visible;
+    width: 200px;
+    height: 111px;
+}
+
+.discovery-header__tag-group::-webkit-scrollbar {
+    display: none;
 }
 
 .discovery-header__tag-btn {

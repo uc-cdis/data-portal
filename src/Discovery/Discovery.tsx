@@ -47,14 +47,17 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
     return '';
   }
   const { field, type } = aggregation;
-  const fields = studies.map(s => s[field]);
+  const fields = studies.map((s) => {
+    return s[field];
+  });
+
   switch (type) {
-  case 'sum':
-    return sum(fields).toLocaleString();
-  case 'count':
-    return uniq(fields).length.toLocaleString();
-  default:
-    throw new Error(`Misconfiguration error: Unrecognized aggregation type ${type}. Check the 'aggregations' block of the Discovery page config.`);
+    case 'sum':
+      return sum(fields).toLocaleString();
+    case 'count':
+      return uniq(fields).length.toLocaleString();
+    default:
+      throw new Error(`Misconfiguration error: Unrecognized aggregation type ${type}. Check the 'aggregations' block of the Discovery page config.`);
   }
 };
 
@@ -357,17 +360,23 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               if (category.display === false) {
                 return null;
               }
-              const tags = getTagsInCategory(category.name, props.studies, config);
+              let tags = getTagsInCategory(category.name, props.studies, config);
 
               // Capitalize category name
               let category_words = category.name.split('_').map(x => x.toLowerCase());
               category_words[0] = category_words[0].charAt(0).toUpperCase() + category_words[0].slice(1);
-              console.log('category_words: ', category_words);
               const capitalizedCategoryName = category_words.join(' ');
 
+              let tagsClone = [...tags];
+              tagsClone.sort(function(a, b){
+                return a.length - b.length;
+              });
+              const uniqueTags = new Set(tagsClone);
+              tagsClone = [ ...uniqueTags ];
+
               return (<div className='discovery-header__tag-group' key={category.name}>
-                <h5>{capitalizedCategoryName}</h5>
-                { tags.map(tag =>
+                <h5 className='discovery-header__tag-group-header' >{capitalizedCategoryName}</h5>
+                { tagsClone.map(tag =>
                   (<Tag
                     key={category.name + tag}
                     role='button'
@@ -376,7 +385,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                     className={`discovery-header__tag-btn discovery-tag ${selectedTags[tag] && 'discovery-tag--selected'}`}
                     aria-label={tag}
                     style={{
-                      backgroundColor: selectedTags[tag] ? category.color : 'initial',
+                      backgroundColor: selectedTags[tag] ? category.color : 'white',
                       borderColor: category.color,
                     }}
                     onKeyPress={() => {

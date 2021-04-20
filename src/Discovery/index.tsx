@@ -5,6 +5,8 @@ import Discovery from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { discoveryConfig, useArboristUI } from '../localconf';
+// TODO: delete this.
+import { loadStudiesFromMDSDDeprecated } from './deprecated.tsx';
 
 import mockAggMDSData from './__mocks__/mock_agg_mds_studies.json';
 import mockFieldMappingData from './__mocks__/mock_agg_mds_field_mapping.json';
@@ -85,10 +87,8 @@ const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
     console.log('The fieldMapping for ', commonsName, ' is ', fieldMapping);
 
     const studies = metadataResponse[commonsName];
-    console.log('studies  : ', studies);
+
     const editedStudies = studies.map((entry, index) => {
-    //   // const STUDY_DATA_FIELD = 'gen3_discovery'; // TODO: find out what the key is for studies
-      console.log('entry: ', entry);
       const x = { ...entry };
       x.commons = commonsName;
       x.frontend_uid = `${commonsName}_${index}`;
@@ -97,16 +97,23 @@ const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
         // need to do this as in case MDS does not have _unique_id
         x._unique_id = x[fieldMapping['study_id']];
       }
-      // if (commonsName === 'GDC') { // hacky hacky
-        // if(Object.keys(fieldMapping).includes('short_name')) {
-        //   x.name = x[fieldMapping['short_name']];
-        // } else {
-        //   x.name = x.short_name;
-        // }
-        // x.study_id = x[fieldMapping.dbgap_accession_number];
-        // x._subjects_count = x[fieldMapping.subjects_count];
-        // x.study_description = x[fieldMapping.description];
-      // }
+      if (commonsName === 'GDC') { // hacky hacky
+        if(Object.keys(fieldMapping).includes('short_name')) {
+          x.name = x[fieldMapping['short_name']];
+        } else {
+          x.name = x.short_name;
+        }
+        x.study_id = x.dbgap_accession_number // x[fieldMapping.dbgap_accession_number];
+        x.study_id = x.dbgap_accession_number;
+        // Different GDC studies have different patient descriptors
+        if(x.subjects_count) {
+            x._subjects_count = x.subjects_count;
+        }
+        if(x.cases_count) {
+            x._subjects_count = x.cases_count;
+        }
+        x.study_description = x.description; // x[fieldMapping.description];
+      }
       x._unique_id = `${commonsName}_${x[['_unique_id']]}_${index}`;
       x.tags = [];
       x.tags.push(Object({ category: 'Commons', name: commonsName }));
@@ -126,10 +133,8 @@ const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
       }
       return x;
     });
-    console.log('edited studies  : ', editedStudies);
     allStudies = allStudies.concat(editedStudies);
   }
-  console.log('loadStudiesFromAggMDS returning ', allStudies);
   return allStudies;
 };
 
@@ -161,7 +166,9 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    loadStudiesFromMDS().then((rawStudies) => {
+    // loadStudiesFromMDS().then((rawStudies) => {
+    // Switching back to deprecated function to see the 500k studies dataset
+    loadStudiesFromMDSDDeprecated().then((rawStudies) => {
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const authzField = props.config.minimalFieldMapping.authzField;

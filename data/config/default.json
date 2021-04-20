@@ -660,7 +660,7 @@
     "aggregations": [
         {
             "name": "Studies",
-            "field": "study_id",
+            "field": "frontend_uid",
             "type": "count"
         },
         {
