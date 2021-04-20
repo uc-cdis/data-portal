@@ -522,9 +522,6 @@ class ExplorerButtonGroup extends React.Component {
     if (this.props.isLocked) {
       return !this.props.isLocked;
     }
-    if (buttonConfig.type === 'data') {
-      return this.props.accessibleCount > 0;
-    }
     if (buttonConfig.type === 'manifest') {
       return this.state.manifestEntryCount > 0;
     }
