@@ -17,7 +17,9 @@ module.exports = {
     jest: true,
   },
   plugins: [
+    'react',
     'jsx-a11y',
+    'import',
   ],
   parser: 'babel-eslint',
   parserOptions: {
