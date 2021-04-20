@@ -48,17 +48,13 @@ export const truncateLines = (str, maxCharInRow = 10, breakwordMinLength = 12) =
  * Export just for testing.
  * @param {Object} property one of the properties of a dictionary node
  * @return {String|Array<String>} string for scalar types, array for enums
- *                   and other listish types or 'UNDEFINED' if no
- *                   type information availabale
+ *                   and other list-ish types or 'UNDEFINED' if no
+ *                   type information available
  */
 export const getType = (property) => {
   let type = 'UNDEFINED';
   if ('type' in property) {
-    if (typeof property.type === 'string') {
-      type = property.type;
-    } else {
-      type = property.type;
-    }
+    ({ type } = property);
   } else if ('enum' in property) {
     type = property.enum;
   } else if ('oneOf' in property) {
@@ -161,10 +157,10 @@ export const parseDictionaryNodes = (dictionary) => Object.keys(dictionary).filt
 export const getPropertyDescription = (property) => {
   let description;
   if ('description' in property) {
-    description = property.description;
+    ({ description } = property);
   }
   if ('term' in property) {
-    description = property.term.description;
+    ({ description } = property.term);
   }
   return description;
 };

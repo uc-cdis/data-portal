@@ -18,6 +18,7 @@ const ReduxDictionarySearcher = (() => {
   const mapDispatchToProps = (dispatch) => ({
     setIsSearching: (isSearching) => dispatch(setIsSearching(isSearching)),
     onSearchResultUpdated: (result, summary) => dispatch(setSearchResult(result, summary)),
+    // eslint-disable-next-line max-len
     onSearchHistoryItemCreated: (searchHistoryItem) => dispatch(addSearchHistoryItem(searchHistoryItem)),
     onSearchResultCleared: () => dispatch(clearSearchResult()),
     onSaveCurrentSearchKeyword: (keyword) => dispatch(saveCurrentSearchKeyword(keyword)),

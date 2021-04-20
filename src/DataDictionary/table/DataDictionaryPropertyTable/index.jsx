@@ -81,9 +81,7 @@ class DataDictionaryPropertyTable extends React.Component {
                   const matchedSummaryItem = matchedPropertiesSummary
                     .find((item) => item.propertyKey === propertyKey);
                   if (matchedSummaryItem) {
-                    nameMatch = matchedSummaryItem.nameMatch;
-                    descriptionMatch = matchedSummaryItem.descriptionMatch;
-                    typeMatchList = matchedSummaryItem.typeMatchList;
+                    ({ nameMatch, descriptionMatch, typeMatchList } = matchedSummaryItem);
                   } else if (this.props.onlyShowMatchedProperties) {
                     return null;
                   }

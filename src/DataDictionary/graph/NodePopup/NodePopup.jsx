@@ -51,6 +51,7 @@ class NodePopup extends React.Component {
               <span className='node-popup__arrow node-popup__arrow--inner' />
               <i
                 className='node-popup__close g3-icon g3-icon--cross'
+                aria-label='Close Popup'
                 onClick={this.props.onClosePopup}
                 onKeyPress={this.props.onClosePopup}
                 role='button'

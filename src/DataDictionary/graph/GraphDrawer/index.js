@@ -28,6 +28,7 @@ const ReduxGraphDrawer = (() => {
     onHoverNode: (nodeID) => dispatch(hoverNode(nodeID)),
     onCancelHoverNode: () => dispatch(hoverNode(null)),
     onClickNode: (nodeID) => dispatch(clickNode(nodeID)),
+    // eslint-disable-next-line max-len
     onGraphNodesSVGElementsUpdated: (graphNodesSVGElements) => dispatch(setGraphNodesSVGElements(graphNodesSVGElements)),
   });
 

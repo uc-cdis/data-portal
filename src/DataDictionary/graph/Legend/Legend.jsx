@@ -27,6 +27,7 @@ class Legend extends React.Component {
               <React.Fragment>
                 <i
                   className='data-dictionary-graph-legend__close g3-icon g3-icon--cross'
+                  aria-label='Toggle Legend'
                   onClick={this.toggleLegend}
                   onKeyPress={this.toggleLegend}
                   role='button'

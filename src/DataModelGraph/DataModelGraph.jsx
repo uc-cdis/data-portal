@@ -38,6 +38,7 @@ class DataModelGraph extends React.Component {
           <button
             id='cd-dmg__toggle'
             className='button-primary-white'
+            type='button'
             onClick={this.handleToggleClick}
           >Toggle view
           </button>

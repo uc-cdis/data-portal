@@ -197,32 +197,14 @@ class SvgGraph extends React.Component {
   }
 
   componentDidMount() {
-    /* FIXME:
-     * work around to mute linting warning about setting state
-     * in componentDidMount()
-     */
-    this.onMount();
+    const { minX, minY } = createSvgGraph(this.props.nodes, this.props.edges);
+    if (minX !== this.state.minX || minY !== this.state.minY) {
+      this.setState({ minX, minY });
+    }
   }
 
   componentDidUpdate() {
-    /* FIXME:
-     * work around to mute linting warning about setting state
-     * in componentDidUpdate()
-     */
     this.onUpdate();
-  }
-
-  onMount = () => {
-    //
-    // This is crazy, because createSvgGraph is going to add nodes
-    // to the react-managed DOM via a d3 simulation ...
-    //
-    const { minX, minY } = createSvgGraph(this.props.nodes, this.props.edges);
-    if (minX !== this.state.minX || minY !== this.state.minY) {
-      // this will result eventually in this.componentDidUpdate ...
-      //    https://reactjs.org/docs/react-component.html#componentwillupdate
-      this.setState(Object.assign(this.state, { minX, minY }));
-    }
   }
 
   onUpdate = () => {
@@ -235,11 +217,9 @@ class SvgGraph extends React.Component {
         // Need to 'setState' to force a repaint when size of graph changes - something like that
         // is going on
         this.setState(
-          Object.assign(this.state,
-            {
-              minX, minY, nodes: this.props.nodes, edges: this.props.edges,
-            },
-          ),
+          {
+            minX, minY, nodes: this.props.nodes, edges: this.props.edges,
+          },
         );
       }
     }
@@ -270,8 +250,8 @@ class SvgGraph extends React.Component {
 }
 
 SvgGraph.propTypes = {
-  nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  edges: PropTypes.arrayOf(PropTypes.object).isRequired,
+  nodes: PropTypes.arrayOf(PropTypes.object),
+  edges: PropTypes.arrayOf(PropTypes.object),
 };
 
 SvgGraph.defaultProps = {

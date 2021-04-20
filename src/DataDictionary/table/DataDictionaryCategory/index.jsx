@@ -24,7 +24,8 @@ class DataDictionaryCategory extends React.Component {
                 node={node}
                 key={node.id}
                 description={node.description}
-                expanded={this.props.highlightingNodeID && this.props.highlightingNodeID === node.id}
+                expanded={this.props.highlightingNodeID
+                  && this.props.highlightingNodeID === node.id}
                 onExpandNode={this.props.onExpandNode}
               />
             ),
