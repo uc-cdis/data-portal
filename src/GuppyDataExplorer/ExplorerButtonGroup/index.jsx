@@ -206,7 +206,6 @@ class ExplorerButtonGroup extends React.Component {
     let refIDList = await this.props.downloadRawDataByFields({ fields: [refField] })
       .then((res) => res.map((i) => i[refField]));
     refIDList = _.uniq(refIDList);
-    // eslint-disable-next-line max-len
     const refFieldInResourceIndex = this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
     const resourceFieldInResourceIndex = this.props.guppyConfig.manifestMapping.resourceIdField;
     const resourceType = this.props.guppyConfig.manifestMapping.resourceIndexType;
@@ -578,7 +577,6 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex) return;
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
-    // eslint-disable-next-line max-len
     const caseFieldInFileIndex = this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
     if (this.props.buttonConfig
       && this.props.buttonConfig.buttons

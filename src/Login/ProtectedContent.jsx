@@ -177,7 +177,6 @@ class ProtectedContent extends React.Component {
     }
     const { user } = newState;
     // user is authenticated - now check if he has certs
-    // eslint-disable-next-line max-len
     const isMissingCerts = intersection(requiredCerts, user.certificates_uploaded).length !== requiredCerts.length;
     // take quiz if this user doesn't have required certificate
     if (this.props.match.path !== '/quiz' && isMissingCerts) {

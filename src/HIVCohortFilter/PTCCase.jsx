@@ -201,9 +201,7 @@ class PTCCase extends HIVCohortFilterCase {
           }
           if (vloadCheck && therapyCheck) {
             // Found PTC!
-            // eslint-disable-next-line max-len
             subjectWithVisits.consecutive_haart_treatments_end_at_followup = visitArray[(i + slidingWindowSize) - 1].submitter_id;
-            // eslint-disable-next-line max-len
             subjectWithVisits.stop_treatments_maintain_viral_load_at_followup = theNextVisit.submitter_id;
             for (let j = i + slidingWindowSize; j < visitArray.length; j += 1) {
               const nvloadCheck = (visitArray[j].viral_load > this.state.viralLoadFromUser);

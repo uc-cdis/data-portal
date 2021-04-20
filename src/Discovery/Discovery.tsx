@@ -61,7 +61,6 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
 
 // getTagsInCategory returns a list of the unique tags in studies which belong
 // to the specified category.
-// eslint-disable-next-line max-len
 const getTagsInCategory = (category: string, studies: any[] | null, config: DiscoveryConfig): string[] => {
   if (!studies) {
     return [];
@@ -112,7 +111,6 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
   };
 };
 
-// eslint-disable-next-line max-len
 const filterByAccessLevel = (studies: any[], accessLevel: AccessLevel, accessibleProperty: string): any[] => {
   switch (accessLevel) {
   case AccessLevel.ACCESSIBLE:

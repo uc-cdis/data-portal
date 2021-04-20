@@ -123,7 +123,6 @@ class StudyViewer extends React.Component {
                   fileData={this.props.fileData
                     .filter((fd) => fd.rowAccessorValue === d.rowAccessorValue)}
                   studyViewerConfig={studyViewerConfig}
-                  // eslint-disable-next-line max-len
                   initialPanelExpandStatus={this.getPanelExpandStatus(studyViewerConfig.openMode, i)}
                 />
               )))}

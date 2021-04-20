@@ -51,6 +51,17 @@ module.exports = {
       'error',
       'always',
     ],
+    'max-len': [
+      'error',
+      {
+        code: 150,
+        ignoreComments: true,
+        ignoreTrailingComments: true,
+        ignoreUrls: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+      },
+    ],
     'prefer-destructuring': [
       'error',
       { object: true, array: false },

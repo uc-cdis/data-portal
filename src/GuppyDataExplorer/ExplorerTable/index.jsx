@@ -292,7 +292,6 @@ class ExplorerTable extends React.Component {
     let nestedArrayFieldColumnConfigs = {};
     let subComponent = null;
     if (Object.keys(nestedArrayFieldNames).length > 0) {
-      // eslint-disable-next-line max-len
       nestedArrayFieldColumnConfigs = this.buildNestedArrayFieldColumnConfigs(nestedArrayFieldNames);
       // this is the subComponent of the two-level nested tables
       subComponent = (row) => Object.keys(nestedArrayFieldColumnConfigs).map((key) => {
@@ -359,7 +358,6 @@ class ExplorerTable extends React.Component {
           manual
           data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
           showPageSizeOptions={!this.props.isLocked}
-          // eslint-disable-next-line max-len
           pages={(this.props.isLocked) ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}
           onFetchData={this.fetchData}

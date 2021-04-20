@@ -64,7 +64,11 @@ class GraphDrawer extends React.Component {
     const fittingTransY = Math.abs(
       (boundingBoxLength - (this.props.canvasHeight / fittingScale)) / 2,
     );
-    if (isNaN(fittingTransX) || isNaN(fittingTransY) || isNaN(fittingScale)) return <g />;
+    if (Number.isNaN(fittingTransX)
+    || Number.isNaN(fittingTransY)
+    || Number.isNaN(fittingScale)) {
+      return <g />;
+    }
     return (
       <g
         className='graph-drawer'
