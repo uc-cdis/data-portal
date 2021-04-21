@@ -1,10 +1,10 @@
 import React from 'react';
-import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import Dropdown from '../../gen3-ui-component/components/Dropdown';
 import { filterConfig, guppyConfig, fieldMapping } from './conf';
-import ConnectedFilter from '../src/components/ConnectedFilter';
-import AccessibleFilter from '../src/components/ConnectedFilter/AccessibleFilter';
-import UnaccessibleFilter from '../src/components/ConnectedFilter/UnaccessibleFilter';
-import GuppyWrapper from '../src/components/GuppyWrapper';
+import ConnectedFilter from '../../GuppyComponents/ConnectedFilter';
+import AccessibleFilter from '../../GuppyComponents/ConnectedFilter/AccessibleFilter';
+import UnaccessibleFilter from '../../GuppyComponents/ConnectedFilter/UnaccessibleFilter';
+import GuppyWrapper from '../../GuppyComponents/GuppyWrapper';
 
 const TotalCountWidget = (props) => (
   <h4>

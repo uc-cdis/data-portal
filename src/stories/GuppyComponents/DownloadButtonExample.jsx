@@ -1,6 +1,6 @@
 import React from 'react';
 import FileSaver from 'file-saver';
-import Button from '@gen3/ui-component/dist/components/Button';
+import Button from '../../gen3-ui-component/components/Button';
 import PropTypes from 'prop-types';
 
 class DownloadButtonExample extends React.Component {

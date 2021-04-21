@@ -1,8 +1,8 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import ConnectedFilter from '../src/components/ConnectedFilter';
-import GuppyWrapper from '../src/components/GuppyWrapper';
+import ConnectedFilter from '../../GuppyComponents/ConnectedFilter';
+import GuppyWrapper from '../../GuppyComponents/GuppyWrapper';
 import TableExample from './TableExample';
 import './guppyWrapper.css';
 import { filterConfig, guppyConfig, tableConfig } from './conf';
