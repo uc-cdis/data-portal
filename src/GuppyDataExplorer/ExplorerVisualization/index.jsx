@@ -220,7 +220,7 @@ class ExplorerVisualization extends React.Component {
               }}
               fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
               rawData={this.props.rawData}
-              totalCount={this.props.accessibleCount}
+              accessibleCount={this.props.accessibleCount}
               guppyConfig={this.props.guppyConfig}
               isLocked={isComponentLocked}
             />

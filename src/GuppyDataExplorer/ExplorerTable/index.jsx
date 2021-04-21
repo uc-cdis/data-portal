@@ -346,11 +346,12 @@ class ExplorerTable extends React.Component {
         });
     }
 
-    const { totalCount } = this.props;
-    const totalCountDisplay = totalCount.toLocaleString();
+    const { accessibleCount } = this.props;
+    const accessibleCountDisplay = accessibleCount.toLocaleString();
     const { pageSize } = this.state;
     const totalPages =
-      Math.floor(totalCount / pageSize) + (totalCount % pageSize === 0 ? 0 : 1);
+      Math.floor(accessibleCount / pageSize) +
+      (accessibleCount % pageSize === 0 ? 0 : 1);
     const SCROLL_SIZE = 10000;
     const visiblePages = Math.min(
       totalPages,
@@ -358,15 +359,15 @@ class ExplorerTable extends React.Component {
     );
     const start = this.state.currentPage * this.state.pageSize + 1;
     const end = (this.state.currentPage + 1) * this.state.pageSize;
-    let explorerTableCaption = `Showing ${start.toLocaleString()} - ${end.toLocaleString()} of ${totalCountDisplay} ${pluralize(
+    let explorerTableCaption = `Showing ${start.toLocaleString()} - ${end.toLocaleString()} of ${accessibleCountDisplay} ${pluralize(
       this.props.guppyConfig.dataType
     )}`;
-    if (totalCount < end && totalCount < 2) {
-      explorerTableCaption = `Showing ${totalCountDisplay} of ${totalCountDisplay} ${pluralize(
+    if (accessibleCount < end && accessibleCount < 2) {
+      explorerTableCaption = `Showing ${accessibleCountDisplay} of ${accessibleCountDisplay} ${pluralize(
         this.props.guppyConfig.dataType
       )}`;
-    } else if (totalCount < end && totalCount >= 2) {
-      explorerTableCaption = `Showing ${start.toLocaleString()} - ${totalCountDisplay} of ${totalCountDisplay} ${pluralize(
+    } else if (accessibleCount < end && accessibleCount >= 2) {
+      explorerTableCaption = `Showing ${start.toLocaleString()} - ${accessibleCountDisplay} of ${accessibleCountDisplay} ${pluralize(
         this.props.guppyConfig.dataType
       )}`;
     }
@@ -435,7 +436,7 @@ class ExplorerTable extends React.Component {
 ExplorerTable.propTypes = {
   rawData: PropTypes.array, // from GuppyWrapper
   fetchAndUpdateRawData: PropTypes.func.isRequired, // from GuppyWrapper
-  totalCount: PropTypes.number.isRequired, // from GuppyWrapper
+  accessibleCount: PropTypes.number.isRequired, // from GuppyWrapper
   isLocked: PropTypes.bool.isRequired,
   className: PropTypes.string,
   defaultPageSize: PropTypes.number,
