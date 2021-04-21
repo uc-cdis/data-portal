@@ -633,7 +633,7 @@ class ExplorerButtonGroup extends React.Component {
         buttonType='primary'
         enabled={this.isButtonEnabled(buttonConfig)}
         tooltipEnabled={
-          buttonConfig.tooltipText ? !this.isButtonEnabled(buttonConfig) : false
+          buttonConfig.tooltipText && !this.isButtonPending(buttonConfig)
         }
         tooltipText={btnTooltipText}
         isPending={this.isButtonPending(buttonConfig)}
