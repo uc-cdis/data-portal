@@ -121,20 +121,6 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
   };
 };
 
-const filterByAccessLevel =
-  (studies: any[], accessLevel: AccessLevel, accessibleProperty: string): any[] => {
-    switch (accessLevel) {
-    case AccessLevel.ACCESSIBLE:
-      return studies.filter(r => r[accessibleProperty]);
-    case AccessLevel.UNACCESSIBLE:
-      return studies.filter(r => !r[accessibleProperty]);
-    case AccessLevel.BOTH:
-      return studies;
-    default:
-      throw new Error(`Unrecognized access level ${accessLevel}.`);
-    }
-  };
-
 const filterByTags = (studies: any[], selectedTags: any): any[] => {
   // if no tags selected, show all studies
   if (Object.values(selectedTags).every(selected => !selected)) {
@@ -159,7 +145,6 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  const [accessLevel, setAccessLevel] = useState(AccessLevel.BOTH);
   const [selectedTags, setSelectedTags] = useState({});
 
   useEffect(() => {
@@ -380,7 +365,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   };
 
   const visibleResources = filterByTags(
-    filterByAccessLevel(searchFilteredResources, accessLevel, accessibleFieldName),
+    searchFilteredResources,
     selectedTags,
   );
 
