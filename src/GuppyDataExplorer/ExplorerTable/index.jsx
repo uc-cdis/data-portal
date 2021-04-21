@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
+import Tooltip from 'rc-tooltip';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import IconicLink from '../../components/buttons/IconicLink';
 import { GuppyConfigType, TableConfigType } from '../configTypeDef';
 import { capitalizeFirstLetter, humanFileSize } from '../../utils';
@@ -344,11 +346,11 @@ class ExplorerTable extends React.Component {
         });
     }
 
-    const { totalCount } = this.props;
-    const totalCountDisplay = totalCount.toLocaleString();
+    const { accessibleCount, totalCount } = this.props;
     const { pageSize } = this.state;
     const totalPages =
-      Math.floor(totalCount / pageSize) + (totalCount % pageSize === 0 ? 0 : 1);
+      Math.floor(accessibleCount / pageSize) +
+      (accessibleCount % pageSize === 0 ? 0 : 1);
     const SCROLL_SIZE = 10000;
     const visiblePages = Math.min(
       totalPages,
@@ -356,25 +358,38 @@ class ExplorerTable extends React.Component {
     );
     const start = this.state.currentPage * this.state.pageSize + 1;
     const end = (this.state.currentPage + 1) * this.state.pageSize;
-    let explorerTableCaption = `Showing ${start.toLocaleString()} - ${end.toLocaleString()} of ${totalCountDisplay} ${pluralize(
-      this.props.guppyConfig.dataType
-    )}`;
-    if (totalCount < end && totalCount < 2) {
-      explorerTableCaption = `Showing ${totalCountDisplay} of ${totalCountDisplay} ${pluralize(
-        this.props.guppyConfig.dataType
-      )}`;
-    } else if (totalCount < end && totalCount >= 2) {
-      explorerTableCaption = `Showing ${start.toLocaleString()} - ${totalCountDisplay} of ${totalCountDisplay} ${pluralize(
-        this.props.guppyConfig.dataType
-      )}`;
-    }
+    const currentPageRange =
+      accessibleCount < end
+        ? accessibleCount < 2
+          ? accessibleCount.toLocaleString()
+          : `${start.toLocaleString()} - ${accessibleCount.toLocaleString()}`
+        : `${start.toLocaleString()} - ${end.toLocaleString()}`;
+    const dataTypeString = pluralize(this.props.guppyConfig.dataType);
+    const explorerTableCaption = `Showing ${currentPageRange} of ${accessibleCount.toLocaleString()} ${dataTypeString}`;
 
     return (
       <div className={`explorer-table ${this.props.className}`}>
-        {this.props.isLocked ? (
-          <React.Fragment />
-        ) : (
-          <p className='explorer-table__description'>{explorerTableCaption}</p>
+        {!this.props.isLocked && (
+          <p className='explorer-table__description'>
+            {explorerTableCaption}{' '}
+            {accessibleCount !== totalCount && (
+              <Tooltip
+                placement='right'
+                arrowContent={<div className='rc-tooltip-arrow-inner' />}
+                overlay={
+                  <span>
+                    This table only shows data you can access. Click "Request
+                    Access" button above for more.
+                  </span>
+                }
+              >
+                <FontAwesomeIcon
+                  icon='exclamation-triangle'
+                  color='var(--pcdc-color__secondary)'
+                />
+              </Tooltip>
+            )}
+          </p>
         )}
         <ReactTable
           columns={rootColumnsConfig}
@@ -414,7 +429,7 @@ class ExplorerTable extends React.Component {
 ExplorerTable.propTypes = {
   rawData: PropTypes.array, // from GuppyWrapper
   fetchAndUpdateRawData: PropTypes.func.isRequired, // from GuppyWrapper
-  totalCount: PropTypes.number.isRequired, // from GuppyWrapper
+  accessibleCount: PropTypes.number.isRequired, // from GuppyWrapper
   isLocked: PropTypes.bool.isRequired,
   className: PropTypes.string,
   defaultPageSize: PropTypes.number,

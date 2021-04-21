@@ -33,8 +33,9 @@ function ExplorerTopMessageBanner({
             </div>
             <div className='top-message-banner__text-wrapper'>
               <span className='top-message-banner__normal-text'>
-                You do not have permissions to view line-level data. To request
-                access please reach out to the PCDC team.
+                {accessibleCount === 0
+                  ? 'You do not have permissions to view line-level data. To request access, please reach out to the PCDC team.'
+                  : 'You have only limited access to line-level data. To request access to more data, please reach out to the PCDC team.'}
               </span>
             </div>
           </div>
