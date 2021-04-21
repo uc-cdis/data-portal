@@ -36,12 +36,14 @@ class DiscoverySummary extends React.Component {
           this.props.config.aggregations.map((aggregation, i) => (
             <React.Fragment key={aggregation.name} >
               { i !== 0 && <div className='discovery-header__stat-border' /> }
-              <div className='discovery-header__stat' >
-                <div className='discovery-header__stat-number'>
-                  {renderAggregation(aggregation, this.props.visibleResources)}
-                </div>
-                <div className='discovery-header__stat-label'>
-                  {aggregation.name}
+              <div className='discovery-header__stats-wrapper' id={aggregation.name.replace(/\s/g, '')} >
+                <div className='discovery-header__stat' >
+                  <div className='discovery-header__stat-number'>
+                    {renderAggregation(aggregation, this.props.visibleResources)}
+                  </div>
+                  <div className='discovery-header__stat-label'>
+                    {aggregation.name}
+                  </div>
                 </div>
               </div>
             </React.Fragment>

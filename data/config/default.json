@@ -677,27 +677,31 @@
         "name": "Study Name",
         "field": "name",
         "errorIfNotAvailable": false,
-        "valueIfNotAvailable": "n/a"
+        "valueIfNotAvailable": "n/a",
+        "width": "157px"
       },
       {
         "name": "Full Name",
         "field": "full_name",
         "contentType": "string",
         "errorIfNotAvailable": false,
-        "valueIfNotAvailable": "n/a"
+        "valueIfNotAvailable": "n/a",
+        "width": "400px"
       },
       {
         "name": "Number of Subjects",
         "field": "_subjects_count",
         "errorIfNotAvailable": false,
         "valueIfNotAvailable": "n/a",
-        "contentType": "number"
+        "contentType": "number",
+        "width": "98px"
       },
       {
         "name": "dbGaP Accession Number",
         "field": "study_id",
         "errorIfNotAvailable": false,
-        "valueIfNotAvailable": "n/a"
+        "valueIfNotAvailable": "n/a",
+        "width": "152px"
       },
       {
         "name": "Data Commons",
