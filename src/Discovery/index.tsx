@@ -5,13 +5,13 @@ import Discovery from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { discoveryConfig, useArboristUI } from '../localconf';
-// TODO: delete this.
+// TODO: delete this once the aggregate MDS is running.
 import { loadStudiesFromMDSDDeprecated } from './deprecated';
 
 import mockAggMDSData from './__mocks__/mock_agg_mds_studies.json';
 import mockFieldMappingData from './__mocks__/mock_agg_mds_field_mapping.json';
 
-// TODO: Find out the agg MDS url.
+// TODO: Replace this variable value with the correct agg MDS url.
 const aggMDSURL = '/agg-mds';
 const aggMDSDataURL = `${aggMDSURL}/metadata`;
 const fieldMappingURL = `${aggMDSURL}/field_to_columns`;
@@ -81,8 +81,10 @@ const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
   const commons = Object.keys(metadataResponse);
 
   let allStudies = [];
-  for (const commonsName of commons) {
+  for (let j = 0; j < commons.length; j += 1) {
+    const commonsName = commons[j];
     // Now retrieve field mappings for the commons
+    // eslint-disable-next-line no-await-in-loop
     const fieldMapping = await retrieveFieldMapping(commonsName);
     console.log('The fieldMapping for ', commonsName, ' is ', fieldMapping);
 
@@ -114,7 +116,7 @@ const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
         }
         x.study_description = x.description; // x[fieldMapping.description];
       }
-      x._unique_id = `${commonsName}_${x['_unique_id']}_${index}`;
+      x._unique_id = `${commonsName}_${x._unique_id}_${index}`;
       x.tags = [];
       x.tags.push(Object({ category: 'Commons', name: commonsName }));
 

@@ -1,6 +1,3 @@
-/* stylelint-disable declaration-no-important */
-/* Allowing !important in order to style Antd components. */
-
 .discovery-container {
   background-color: #f2f2f2;
   padding: 40px 32px;

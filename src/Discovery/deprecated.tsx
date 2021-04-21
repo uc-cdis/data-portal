@@ -39,8 +39,6 @@ const loadStudiesFromNamedMDSDeprecated = async (MDS_URL: string, GUID_TYPE: str
     let allStudies = [];
 
     // request up to LIMIT studies from MDS at a time.
-    let numGDCStudies = 0;
-    const GDCstudies = [];
     let shouldContinue = true;
     while (shouldContinue) {
       const url = `${MDS_URL}?data=True&_guid_type=${GUID_TYPE}&limit=${LIMIT}&offset=${offset}`;
@@ -65,7 +63,6 @@ const loadStudiesFromNamedMDSDeprecated = async (MDS_URL: string, GUID_TYPE: str
         }
 
         if (COMMON === 'GDC') { // hacky hacky
-          numGDCStudies += 1;
           x.name = x.short_name;
           if (x.dbgap_accession_number) {
             x.study_id = x.dbgap_accession_number;
@@ -81,7 +78,6 @@ const loadStudiesFromNamedMDSDeprecated = async (MDS_URL: string, GUID_TYPE: str
             x._subjects_count = x.cases_count;
           }
           x.study_description = x.description;
-          GDCstudies.push(x);
         }
         x._unique_id = `${COMMON}_${x._unique_id}_${index}`;
         x.tags.push(Object({ category: 'Commons', name: COMMON }));
@@ -94,24 +90,23 @@ const loadStudiesFromNamedMDSDeprecated = async (MDS_URL: string, GUID_TYPE: str
       const noMoreStudiesToLoad = studies.length < LIMIT;
       if (noMoreStudiesToLoad) {
         shouldContinue = false;
-        console.log('numGDCStudies: ', numGDCStudies);
-        console.log('all GDCstudies: ', GDCstudies);
         return allStudies;
       }
       offset += LIMIT;
     }
-    console.log('numGDCStudies: ', numGDCStudies);
     return allStudies;
   } catch (err) {
     throw new Error(`Request for study data failed: ${err}`);
   }
 };
 
-export const loadStudiesFromMDSDDeprecated = async (): Promise<any[]> => {
+const loadStudiesFromMDSDDeprecated = async (): Promise<any[]> => {
   try {
     let joinedStudies = [];
 
-    for (const common of commons) {
+    for (let k = 0; k < commons.length; k += 1) {
+      const common = commons[k];
+      // eslint-disable-next-line no-await-in-loop
       const studies = await loadStudiesFromNamedMDSDeprecated(
         common.MDS_URL,
         common.GUID_TYPE,
@@ -128,3 +123,5 @@ export const loadStudiesFromMDSDDeprecated = async (): Promise<any[]> => {
     throw new Error(`Request for joined study data failed: ${err}`);
   }
 };
+
+export default loadStudiesFromMDSDDeprecated;

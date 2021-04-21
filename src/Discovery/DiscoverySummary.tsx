@@ -16,7 +16,7 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
   const { field, type } = aggregation;
   let fields = studies.map(s => s[field]);
   // Replace any undefined fields with value 0
-  fields = fields.map(function(item) { return typeof item === 'undefined' ? 0 : item; });
+  fields = fields.map(item => (typeof item === 'undefined' ? 0 : item));
 
   switch (type) {
   case 'sum':
