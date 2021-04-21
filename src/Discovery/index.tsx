@@ -6,7 +6,7 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { discoveryConfig, useArboristUI } from '../localconf';
 // TODO: delete this once the aggregate MDS is running.
-import { loadStudiesFromMDSDDeprecated } from './deprecated';
+import loadStudiesFromMDSDDeprecated from './deprecated';
 
 import mockAggMDSData from './__mocks__/mock_agg_mds_studies.json';
 import mockFieldMappingData from './__mocks__/mock_agg_mds_field_mapping.json';
