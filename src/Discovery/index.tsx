@@ -16,37 +16,6 @@ const aggMDSURL = '/agg-mds';
 const aggMDSDataURL = `${aggMDSURL}/metadata`;
 const fieldMappingURL = `${aggMDSURL}/field_to_columns`;
 
-// Keeping this because it has POPULATE_GUID and other options
-const COMMONS = {
-  GDC: {
-    MDS_URL: 'https://gen3.datacommons.io/mds/metadata',
-    GUID_TYPE: 'discovery_metadata',
-    STUDY_DATA_FIELD: 'gen3_discovery',
-    LIMIT: 1000,
-    COMMONS: 'GDC',
-    POPULATE_GUID: false,
-    OFFSET: 3,
-  },
-  BDC: {
-    MDS_URL: 'https://staging.gen3.biodatacatalyst.nhlbi.nih.gov/mds/metadata',
-    GUID_TYPE: 'discovery_metadata',
-    STUDY_DATA_FIELD: 'gen3_discovery',
-    LIMIT: 1000,
-    COMMONS: 'BDC',
-    POPULATE_GUID: false,
-    OFFSET: 0,
-  },
-  AnVil: {
-    MDS_URL: 'https://internalstaging.theanvil.io/mds/metadata',
-    GUID_TYPE: 'discovery_metadata',
-    STUDY_DATA_FIELD: 'gen3_discovery',
-    LIMIT: 1000,
-    COMMONS: 'AnVIL',
-    POPULATE_GUID: true,
-    OFFSET: 0,
-  },
-};
-
 const retrieveFieldMapping = async (commonsName: string) => { // : Promise<any[]> => {
   const url = `${fieldMappingURL}/${commonsName}`;
   const res = await fetch(url);
@@ -83,7 +52,7 @@ const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
   let allStudies = [];
   for (let j = 0; j < commons.length; j += 1) {
     const commonsName = commons[j];
-    // Now retrieve field mappings for the commons
+    // Now retrieve field mappings for each commons
     // eslint-disable-next-line no-await-in-loop
     const fieldMapping = await retrieveFieldMapping(commonsName);
     console.log('The fieldMapping for ', commonsName, ' is ', fieldMapping);
@@ -94,28 +63,10 @@ const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
       const x = { ...entry };
       x.commons = commonsName;
       x.frontend_uid = `${commonsName}_${index}`;
-
-      if (COMMONS[commonsName].POPULATE_GUID) {
-        // need to do this as in case MDS does not have _unique_id
-        x._unique_id = x[fieldMapping.study_id];
-      }
-      if (commonsName === 'GDC') { // hacky hacky
-        if (Object.keys(fieldMapping).includes('short_name')) {
-          x.name = x[fieldMapping.short_name];
-        } else {
-          x.name = x.short_name;
-        }
-        x.study_id = x.dbgap_accession_number; // x[fieldMapping.dbgap_accession_number];
-        x.study_id = x.dbgap_accession_number;
-        // Different GDC studies have different patient descriptors
-        if (x.subjects_count) {
-          x._subjects_count = x.subjects_count;
-        }
-        if (x.cases_count) {
-          x._subjects_count = x.cases_count;
-        }
-        x.study_description = x.description; // x[fieldMapping.description];
-      }
+      x.name = x.short_name;
+      x.study_id = x[fieldMapping.study_id];
+      x._subjects_count = x[fieldMapping.subjects_count];
+      x.study_description = x[fieldMapping.description];
       x._unique_id = `${commonsName}_${x._unique_id}_${index}`;
       x.tags = [];
       x.tags.push(Object({ category: 'Commons', name: commonsName }));
