@@ -73,3 +73,18 @@ export const labelToPlural = (label, titleCase = false) => {
   }
   return pluralizedLabel.toLowerCase();
 };
+
+export const getQueryParameter = (queryKey) => {
+  const urlArray = window.location.search.split('?');
+  const searchParams = new URLSearchParams(urlArray[urlArray.length - 1]);
+  return searchParams.get(queryKey);
+};
+
+export const IsValidJSONString = (str) => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};

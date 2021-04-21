@@ -178,6 +178,11 @@ function buildConfig(opts) {
     showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
   }
 
+  let hideSubmissionIfIneligible = false;
+  if (config.hideSubmissionIfIneligible) {
+    hideSubmissionIfIneligible = config.hideSubmissionIfIneligible;
+  }
+
   let useArboristUI = false;
   if (config.useArboristUI) {
     useArboristUI = config.useArboristUI;
@@ -200,6 +205,16 @@ function buildConfig(opts) {
   }
   if (config.featureFlags && config.featureFlags.explorerPublic) {
     explorerPublic = true;
+  }
+
+  let explorerHideEmptyFilterSection = false;
+  if (config.featureFlags && config.featureFlags.explorerHideEmptyFilterSection) {
+    explorerHideEmptyFilterSection = true;
+  }
+
+  let explorerFilterValuesToHide = [];
+  if (config.featureFlags && config.featureFlags.explorerFilterValuesToHide) {
+    explorerFilterValuesToHide = config.featureFlags.explorerFilterValuesToHide;
   }
 
   const enableResourceBrowser = !!config.resourceBrowser;
@@ -403,6 +418,7 @@ function buildConfig(opts) {
     externalLoginOptionsUrl,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
+    hideSubmissionIfIneligible,
     useArboristUI,
     terraExportWarning,
     analysisApps,
@@ -411,6 +427,8 @@ function buildConfig(opts) {
     indexScopedTierAccessMode,
     useIndexdAuthz,
     explorerPublic,
+    explorerHideEmptyFilterSection,
+    explorerFilterValuesToHide,
     authzPath,
     authzMappingPath,
     enableResourceBrowser,
