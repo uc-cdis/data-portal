@@ -90,7 +90,6 @@ const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
 };
 
 const loadStudiesFromMDS = async (): Promise<any[]> => {
-  // try {
   // Retrieve from aggregate MDS
 
   // TODO: connect the UI to these variables
@@ -101,9 +100,6 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
 
   console.log('studies retrieved: ', studies);
   return studies;
-  // } catch (err) {
-  //   throw new Error(`Request for joined study data failed: ${err}`);
-  // }
 };
 
 const DiscoveryWithMDSBackend: React.FC<{
@@ -118,7 +114,7 @@ const DiscoveryWithMDSBackend: React.FC<{
 
   useEffect(() => {
     // loadStudiesFromMDS().then((rawStudies) => {
-    // Switching back to deprecated function to see the 500k studies dataset
+    // Using the deprecated functions for now so as to see the big dataset
     loadStudiesFromMDSDDeprecated().then((rawStudies) => {
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
