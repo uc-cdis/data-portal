@@ -92,12 +92,6 @@ const loadStudiesFromNamedMDSDeprecated = async (MDS_URL: string, GUID_TYPE: str
             x._subjects_count = x.subjects_count;
           }
 
-          // Different GDC studies have different patient descriptors
-          if (x.subjects_count) {
-            x._subjects_count = x.subjects_count;
-          } else if (x.cases_count) {
-            x._subjects_count = x.cases_count;
-          }
           x.study_description = x.description;
           x._unique_id = `${commonName}_${x._unique_id}_${index}`;
           x.tags.push(Object({ category: 'Commons', name: commonName }));
