@@ -71,8 +71,6 @@ describe('Configuration', () => {
         config={testConfig}
         studies={testStudies}
       />);
-      // access filter should be present/hidden
-      expect(wrapper.exists('.discovery-access-selector')).toBe(enabled);
       // accessible column in table should be present/hidden
       expect(wrapper.exists('.discovery-table__access-icon')).toBe(enabled);
       // access info in modal should be present/hidden
@@ -212,32 +210,6 @@ describe('Modal', () => {
 
 
 describe('Table', () => {
-  test('Table filters records by access level', () => {
-    testConfig.features.authorization.enabled = true;
-    const wrapper = mount(<Discovery
-      config={testConfig}
-      studies={testStudies}
-    />);
-
-    const accessSelector = wrapper.find('.discovery-access-selector').first();
-    accessSelector.invoke('onChange')({ target: { value: AccessLevel.ACCESSIBLE } });
-    let rows = wrapper.find('.discovery-table__row');
-    // all rows should have an unlock icon (accessible)
-    expect(rows.everyWhere(r => r.exists('[aria-label="unlock"]'))).toBe(true);
-
-    accessSelector.invoke('onChange')({ target: { value: AccessLevel.UNACCESSIBLE } });
-    rows = wrapper.find('.discovery-table__row');
-    // all rows should have an lock icon (unaccessible)
-    expect(rows.everyWhere(r => r.exists('[aria-label="lock"]'))).toBe(true);
-
-    accessSelector.invoke('onChange')({ target: { value: AccessLevel.BOTH } });
-    rows = wrapper.find('.discovery-table__row');
-    // all rows should have either a lock or an unlock icon
-    expect(rows.everyWhere(r => r.exists('[aria-label="unlock"]') || r.exists('[aria-label="lock"]'))).toBe(true);
-
-    wrapper.unmount();
-  });
-
   test('Table filters records by tags', () => {
     testConfig.features.authorization.enabled = true;
     const wrapper = mount(<Discovery
