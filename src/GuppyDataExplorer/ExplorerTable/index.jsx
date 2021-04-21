@@ -347,7 +347,6 @@ class ExplorerTable extends React.Component {
     }
 
     const { accessibleCount, totalCount } = this.props;
-    const accessibleCountDisplay = accessibleCount.toLocaleString();
     const { pageSize } = this.state;
     const totalPages =
       Math.floor(accessibleCount / pageSize) +
@@ -359,18 +358,14 @@ class ExplorerTable extends React.Component {
     );
     const start = this.state.currentPage * this.state.pageSize + 1;
     const end = (this.state.currentPage + 1) * this.state.pageSize;
-    let explorerTableCaption = `Showing ${start.toLocaleString()} - ${end.toLocaleString()} of ${accessibleCountDisplay} ${pluralize(
-      this.props.guppyConfig.dataType
-    )}`;
-    if (accessibleCount < end && accessibleCount < 2) {
-      explorerTableCaption = `Showing ${accessibleCountDisplay} of ${accessibleCountDisplay} ${pluralize(
-        this.props.guppyConfig.dataType
-      )}`;
-    } else if (accessibleCount < end && accessibleCount >= 2) {
-      explorerTableCaption = `Showing ${start.toLocaleString()} - ${accessibleCountDisplay} of ${accessibleCountDisplay} ${pluralize(
-        this.props.guppyConfig.dataType
-      )}`;
-    }
+    const currentPageRange =
+      accessibleCount < end
+        ? accessibleCount < 2
+          ? accessibleCount.toLocaleString()
+          : `${start.toLocaleString()} - ${accessibleCount.toLocaleString()}`
+        : `${start.toLocaleString()} - ${end.toLocaleString()}`;
+    const dataTypeString = pluralize(this.props.guppyConfig.dataType);
+    const explorerTableCaption = `Showing ${currentPageRange} of ${accessibleCount.toLocaleString()} ${dataTypeString}`;
 
     return (
       <div className={`explorer-table ${this.props.className}`}>
