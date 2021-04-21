@@ -816,6 +816,16 @@
         "name": "disease_type",
         "color": "rgba(112, 182, 3, 1)",
         "display": true
+      },
+      {
+        "name": "data_type",
+        "color": "rgba(112, 182, 3, 1)",
+        "display": false
+      },
+      {
+        "name": "clinical_study_type",
+        "color": "rgba(112, 182, 3, 1)",
+        "display": false
       }
     ]
   },
