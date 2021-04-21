@@ -221,6 +221,7 @@ class ExplorerVisualization extends React.Component {
               fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
               rawData={this.props.rawData}
               accessibleCount={this.props.accessibleCount}
+              totalCount={this.props.totalCount}
               guppyConfig={this.props.guppyConfig}
               isLocked={isComponentLocked}
             />

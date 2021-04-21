@@ -346,7 +346,7 @@ class ExplorerTable extends React.Component {
         });
     }
 
-    const { accessibleCount } = this.props;
+    const { accessibleCount, totalCount } = this.props;
     const accessibleCountDisplay = accessibleCount.toLocaleString();
     const { pageSize } = this.state;
     const totalPages =
@@ -374,12 +374,10 @@ class ExplorerTable extends React.Component {
 
     return (
       <div className={`explorer-table ${this.props.className}`}>
-        {this.props.isLocked ? (
-          <React.Fragment />
-        ) : (
+        {!this.props.isLocked && (
           <p className='explorer-table__description'>
             {explorerTableCaption}{' '}
-            {
+            {accessibleCount !== totalCount && (
               <Tooltip
                 placement='right'
                 arrowContent={<div className='rc-tooltip-arrow-inner' />}
@@ -395,7 +393,7 @@ class ExplorerTable extends React.Component {
                   color='var(--pcdc-color__secondary)'
                 />
               </Tooltip>
-            }
+            )}
           </p>
         )}
         <ReactTable
