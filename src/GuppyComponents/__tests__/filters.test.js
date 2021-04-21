@@ -1,6 +1,10 @@
 /* eslint-disable global-require,import/no-dynamic-require */
 // Tests for Utils/filters.js
-import { mergeFilters, updateCountsInInitialTabsOptions, sortTabsOptions } from '../Utils/filters';
+import {
+  mergeFilters,
+  updateCountsInInitialTabsOptions,
+  sortTabsOptions,
+} from '../Utils/filters';
 
 describe('can merge simple selectedValue filters', () => {
   const userFilter = { data_format: { selectedValues: ['VCF'] } };
@@ -13,8 +17,7 @@ describe('can merge simple selectedValue filters', () => {
 
   test('merge filters', async () => {
     const mergedFilter = mergeFilters(userFilter, adminFilter);
-    expect(mergedFilter)
-      .toEqual(mergedFilterExpected);
+    expect(mergedFilter).toEqual(mergedFilterExpected);
   });
 });
 
@@ -24,7 +27,9 @@ describe('can merge admin-provided selectedValue filters with user-provided rang
     age: { lowerBound: 26, upperBound: 33 },
     data_type: { selectedValues: ['Aligned Reads'] },
   };
-  const adminFilter = { project_id: { selectedValues: ['jnkns-jenkins', 'jnkns-jenkins2'] } };
+  const adminFilter = {
+    project_id: { selectedValues: ['jnkns-jenkins', 'jnkns-jenkins2'] },
+  };
 
   const mergedFilterExpected = {
     project_id: { selectedValues: ['jnkns-jenkins', 'jnkns-jenkins2'] },
@@ -35,8 +40,7 @@ describe('can merge admin-provided selectedValue filters with user-provided rang
 
   test('merge filters', async () => {
     const mergedFilter = mergeFilters(userFilter, adminFilter);
-    expect(mergedFilter)
-      .toEqual(mergedFilterExpected);
+    expect(mergedFilter).toEqual(mergedFilterExpected);
   });
 });
 
@@ -46,7 +50,9 @@ describe('will select user-applied filter for a given key if it is more exclusiv
     age: { lowerBound: 26, upperBound: 33 },
     data_type: { selectedValues: ['Aligned Reads'] },
   };
-  const adminFilter = { project_id: { selectedValues: ['jnkns-jenkins', 'jnkns-jenkins2'] } };
+  const adminFilter = {
+    project_id: { selectedValues: ['jnkns-jenkins', 'jnkns-jenkins2'] },
+  };
 
   const mergedFilterExpected = {
     project_id: { selectedValues: ['jnkns-jenkins2'] },
@@ -56,8 +62,7 @@ describe('will select user-applied filter for a given key if it is more exclusiv
 
   test('merge filters', async () => {
     const mergedFilter = mergeFilters(userFilter, adminFilter);
-    expect(mergedFilter)
-      .toEqual(mergedFilterExpected);
+    expect(mergedFilter).toEqual(mergedFilterExpected);
   });
 });
 
@@ -72,9 +77,7 @@ describe('can update a small set of tabs with new counts', () => {
       ],
     },
     extra_data: {
-      histogram: [
-        { key: 'a', count: 2 },
-      ],
+      histogram: [{ key: 'a', count: 2 }],
     },
   };
 
@@ -105,12 +108,13 @@ describe('can update a small set of tabs with new counts', () => {
   };
 
   const actualUpdatedTabsOptions = updateCountsInInitialTabsOptions(
-    initialTabsOptions, processedTabsOptions, filtersApplied,
+    initialTabsOptions,
+    processedTabsOptions,
+    filtersApplied
   );
 
   test('update tab counts', async () => {
-    expect(actualUpdatedTabsOptions)
-      .toEqual(expectedUpdatedTabsOptions);
+    expect(actualUpdatedTabsOptions).toEqual(expectedUpdatedTabsOptions);
   });
 });
 
@@ -125,17 +129,13 @@ describe('can update a small set of tabs with new counts, test with ranger slide
       ],
     },
     field2: {
-      histogram: [
-        { key: [0, 100], count: 100 },
-      ],
+      histogram: [{ key: [0, 100], count: 100 }],
     },
   };
 
   const processedTabsOptions = {
     field1: {
-      histogram: [
-        { key: 'option3', count: 30 },
-      ],
+      histogram: [{ key: 'option3', count: 30 }],
     },
     field2: {
       histogram: [
@@ -166,19 +166,18 @@ describe('can update a small set of tabs with new counts, test with ranger slide
       ],
     },
     field2: {
-      histogram: [
-        { key: [4, 39], count: 49 },
-      ],
+      histogram: [{ key: [4, 39], count: 49 }],
     },
   };
 
   const actualUpdatedTabsOptions = updateCountsInInitialTabsOptions(
-    initialTabsOptions, processedTabsOptions, filtersApplied,
+    initialTabsOptions,
+    processedTabsOptions,
+    filtersApplied
   );
 
   test('update tab counts', async () => {
-    expect(actualUpdatedTabsOptions)
-      .toEqual(expectedUpdatedTabsOptions);
+    expect(actualUpdatedTabsOptions).toEqual(expectedUpdatedTabsOptions);
   });
 });
 
@@ -228,7 +227,6 @@ describe('can sort tabs options', () => {
   const actualSort = sortTabsOptions(tabsOptionsOne);
 
   test('test sorting tabs options', async () => {
-    expect(actualSort)
-      .toEqual(expectedSort);
+    expect(actualSort).toEqual(expectedSort);
   });
 });

@@ -1,28 +1,18 @@
 export const filterConfig = {
-  tabs: [{
-    title: 'Project',
-    fields: [
-      'project',
-      'study',
-    ],
-  },
-  {
-    title: 'Subject',
-    fields: [
-      'race',
-      'ethnicity',
-      'gender',
-      'vital_status',
-    ],
-  },
-  {
-    title: 'File',
-    fields: [
-      'file_count',
-      'file_type',
-      'file_format',
-    ],
-  }],
+  tabs: [
+    {
+      title: 'Project',
+      fields: ['project', 'study'],
+    },
+    {
+      title: 'Subject',
+      fields: ['race', 'ethnicity', 'gender', 'vital_status'],
+    },
+    {
+      title: 'File',
+      fields: ['file_count', 'file_type', 'file_format'],
+    },
+  ],
 };
 
 export const tableConfig = [

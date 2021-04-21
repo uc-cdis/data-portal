@@ -17,27 +17,33 @@ class ConnectedTableExample extends React.Component {
   fetchData(state, instance) {
     this.setState({ loading: true });
     const offset = state.page * state.pageSize;
-    const sort = state.sorted.map(i => ({
+    const sort = state.sorted.map((i) => ({
       [i.id]: i.desc ? 'desc' : 'asc',
     }));
     const size = state.pageSize;
-    this.props.fetchAndUpdateRawData({
-      offset,
-      size,
-      sort,
-    }).then((res) => {
-      this.setState({
-        loading: false,
-        pageSize: size,
+    this.props
+      .fetchAndUpdateRawData({
+        offset,
+        size,
+        sort,
+      })
+      .then((res) => {
+        this.setState({
+          loading: false,
+          pageSize: size,
+        });
       });
-    });
   }
 
   render() {
-    const columnsConfig = tableConfig.map(c => ({ Header: c.name, accessor: c.field }));
+    const columnsConfig = tableConfig.map((c) => ({
+      Header: c.name,
+      accessor: c.field,
+    }));
     const { totalCount } = this.props;
     const { pageSize } = this.state;
-    const totalPages = Math.floor(totalCount / pageSize) + ((totalCount % pageSize === 0) ? 0 : 1);
+    const totalPages =
+      Math.floor(totalCount / pageSize) + (totalCount % pageSize === 0 ? 0 : 1);
     return (
       <ReactTable
         columns={columnsConfig}

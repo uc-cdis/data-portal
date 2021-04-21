@@ -1,10 +1,7 @@
 /* eslint react/forbid-prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  getFilterSections,
-  excludeSelfFilterFromAggsData,
-} from './utils';
+import { getFilterSections, excludeSelfFilterFromAggsData } from './utils';
 import {
   askGuppyAboutArrayTypes,
   askGuppyForAggregationData,
@@ -23,7 +20,7 @@ class ConnectedFilter extends React.Component {
     const allFields = getAllFieldsFromFilterConfigs(props.filterConfig.tabs);
     const initialFilter = mergeFilters(
       props.initialAppliedFilters,
-      props.adminAppliedPreFilters,
+      props.adminAppliedPreFilters
     );
 
     this.initialTabsOptions = {};
@@ -36,7 +33,9 @@ class ConnectedFilter extends React.Component {
       filtersApplied: { ...initialFilter },
     };
     this.filterGroupRef = React.createRef();
-    this.adminPreFiltersFrozen = JSON.stringify(this.props.adminAppliedPreFilters).slice();
+    this.adminPreFiltersFrozen = JSON.stringify(
+      this.props.adminAppliedPreFilters
+    ).slice();
     this.arrayFields = [];
     this._isMounted = false;
     this.controller = new AbortController();
@@ -52,21 +51,26 @@ class ConnectedFilter extends React.Component {
       this.props.guppyConfig.path,
       this.props.guppyConfig.type,
       this.state.allFields,
-      this.state.filter,
-    )
-      .then((res) => {
-        if (!res.data) {
-          const msg = `error querying guppy${res.errors && res.errors.length > 0 ? `: ${res.errors[0].message}` : ''}`;
-          console.error(msg); // eslint-disable-line no-console
-        }
-        this.handleReceiveNewAggsData(
-          res.data._aggregation[this.props.guppyConfig.type],
-          res.data._aggregation.accessible._totalCount,
-          res.data._aggregation.all._totalCount,
-          this.state.adminAppliedPreFilters,
-        );
-        this.saveInitialAggsData(res.data._aggregation[this.props.guppyConfig.type]);
-      });
+      this.state.filter
+    ).then((res) => {
+      if (!res.data) {
+        const msg = `error querying guppy${
+          res.errors && res.errors.length > 0
+            ? `: ${res.errors[0].message}`
+            : ''
+        }`;
+        console.error(msg); // eslint-disable-line no-console
+      }
+      this.handleReceiveNewAggsData(
+        res.data._aggregation[this.props.guppyConfig.type],
+        res.data._aggregation.accessible._totalCount,
+        res.data._aggregation.all._totalCount,
+        this.state.adminAppliedPreFilters
+      );
+      this.saveInitialAggsData(
+        res.data._aggregation[this.props.guppyConfig.type]
+      );
+    });
 
     askGuppyAboutArrayTypes(this.props.guppyConfig.path).then((res) => {
       this.arrayFields = [];
@@ -88,12 +92,19 @@ class ConnectedFilter extends React.Component {
     receivedAggsData,
     accessibleCount,
     totalCount,
-    filterResults,
+    filterResults
   ) {
     if (this._isMounted) this.setState({ receivedAggsData });
     if (this.props.onReceiveNewAggsData) {
-      const resultAggsData = excludeSelfFilterFromAggsData(receivedAggsData, filterResults);
-      this.props.onReceiveNewAggsData(resultAggsData, accessibleCount, totalCount);
+      const resultAggsData = excludeSelfFilterFromAggsData(
+        receivedAggsData,
+        filterResults
+      );
+      this.props.onReceiveNewAggsData(
+        resultAggsData,
+        accessibleCount,
+        totalCount
+      );
     }
   }
 
@@ -113,7 +124,10 @@ class ConnectedFilter extends React.Component {
     const adminAppliedPreFilters = JSON.parse(this.adminPreFiltersFrozen);
     if (this._isMounted) this.setState({ adminAppliedPreFilters });
 
-    const mergedFilterResults = mergeFilters(filterResults, adminAppliedPreFilters);
+    const mergedFilterResults = mergeFilters(
+      filterResults,
+      adminAppliedPreFilters
+    );
     if (this._isMounted) this.setState({ filtersApplied: mergedFilterResults });
 
     askGuppyForAggregationData(
@@ -121,16 +135,15 @@ class ConnectedFilter extends React.Component {
       this.props.guppyConfig.type,
       this.state.allFields,
       mergedFilterResults,
-      this.controller.signal,
-    )
-      .then((res) => {
-        this.handleReceiveNewAggsData(
-          res.data._aggregation[this.props.guppyConfig.type],
-          res.data._aggregation.accessible._totalCount,
-          res.data._aggregation.all._totalCount,
-          mergedFilterResults,
-        );
-      });
+      this.controller.signal
+    ).then((res) => {
+      this.handleReceiveNewAggsData(
+        res.data._aggregation[this.props.guppyConfig.type],
+        res.data._aggregation.accessible._totalCount,
+        res.data._aggregation.all._totalCount,
+        mergedFilterResults
+      );
+    });
 
     if (this.props.onFilterChange) {
       this.props.onFilterChange(mergedFilterResults);
@@ -153,7 +166,9 @@ class ConnectedFilter extends React.Component {
    */
   getFilterTabs() {
     if (this.props.hidden) return null;
-    let processedTabsOptions = this.props.onProcessFilterAggsData(this.state.receivedAggsData);
+    let processedTabsOptions = this.props.onProcessFilterAggsData(
+      this.state.receivedAggsData
+    );
     if (Object.keys(this.initialTabsOptions).length === 0) {
       this.initialTabsOptions = processedTabsOptions;
     }
@@ -161,28 +176,36 @@ class ConnectedFilter extends React.Component {
     processedTabsOptions = updateCountsInInitialTabsOptions(
       this.initialTabsOptions,
       processedTabsOptions,
-      this.state.filtersApplied,
+      this.state.filtersApplied
     );
 
     processedTabsOptions = sortTabsOptions(processedTabsOptions);
 
-    if (!processedTabsOptions || Object.keys(processedTabsOptions).length === 0) return null;
+    if (!processedTabsOptions || Object.keys(processedTabsOptions).length === 0)
+      return null;
     const { fieldMapping } = this.props;
     const { FilterList } = this.props.filterComponents;
-    const tabs = this.props.filterConfig.tabs.map(({ fields, searchFields }, index) => (
-      <FilterList
-        key={index}
-        sections={
-          getFilterSections(fields, searchFields, fieldMapping, processedTabsOptions,
-            this.state.initialAggsData, this.state.adminAppliedPreFilters,
-            this.props.guppyConfig, this.arrayFields)
-        }
-        tierAccessLimit={this.props.tierAccessLimit}
-        lockedTooltipMessage={this.props.lockedTooltipMessage}
-        disabledTooltipMessage={this.props.disabledTooltipMessage}
-        arrayFields={this.arrayFields}
-      />
-    ));
+    const tabs = this.props.filterConfig.tabs.map(
+      ({ fields, searchFields }, index) => (
+        <FilterList
+          key={index}
+          sections={getFilterSections(
+            fields,
+            searchFields,
+            fieldMapping,
+            processedTabsOptions,
+            this.state.initialAggsData,
+            this.state.adminAppliedPreFilters,
+            this.props.guppyConfig,
+            this.arrayFields
+          )}
+          tierAccessLimit={this.props.tierAccessLimit}
+          lockedTooltipMessage={this.props.lockedTooltipMessage}
+          disabledTooltipMessage={this.props.disabledTooltipMessage}
+          arrayFields={this.arrayFields}
+        />
+      )
+    );
     return tabs;
   }
 
@@ -203,12 +226,14 @@ class ConnectedFilter extends React.Component {
     }
     // If there are any search fields, insert them at the top of each tab's fields.
     const filterConfig = {
-      tabs: this.props.filterConfig.tabs.map(({ title, fields, searchFields }) => {
-        if (searchFields) {
-          return { title, fields: searchFields.concat(fields) };
+      tabs: this.props.filterConfig.tabs.map(
+        ({ title, fields, searchFields }) => {
+          if (searchFields) {
+            return { title, fields: searchFields.concat(fields) };
+          }
+          return { title, fields };
         }
-        return { title, fields };
-      }),
+      ),
     };
     const { FilterGroup } = this.props.filterComponents;
     return (
@@ -227,11 +252,13 @@ class ConnectedFilter extends React.Component {
 
 ConnectedFilter.propTypes = {
   filterConfig: PropTypes.shape({
-    tabs: PropTypes.arrayOf(PropTypes.shape({
-      title: PropTypes.string,
-      fields: PropTypes.arrayOf(PropTypes.string),
-      searchFields: PropTypes.arrayOf(PropTypes.string),
-    })),
+    tabs: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string,
+        fields: PropTypes.arrayOf(PropTypes.string),
+        searchFields: PropTypes.arrayOf(PropTypes.string),
+      })
+    ),
   }).isRequired,
   guppyConfig: PropTypes.shape({
     path: PropTypes.string.isRequired,
@@ -240,10 +267,12 @@ ConnectedFilter.propTypes = {
   onFilterChange: PropTypes.func,
   onReceiveNewAggsData: PropTypes.func,
   className: PropTypes.string,
-  fieldMapping: PropTypes.arrayOf(PropTypes.shape({
-    field: PropTypes.string,
-    name: PropTypes.string,
-  })),
+  fieldMapping: PropTypes.arrayOf(
+    PropTypes.shape({
+      field: PropTypes.string,
+      name: PropTypes.string,
+    })
+  ),
   tierAccessLimit: PropTypes.number,
   onProcessFilterAggsData: PropTypes.func,
   adminAppliedPreFilters: PropTypes.object,
@@ -264,7 +293,7 @@ ConnectedFilter.defaultProps = {
   className: '',
   fieldMapping: [],
   tierAccessLimit: undefined,
-  onProcessFilterAggsData: (data) => (data),
+  onProcessFilterAggsData: (data) => data,
   adminAppliedPreFilters: {},
   initialAppliedFilters: {},
   lockedTooltipMessage: '',

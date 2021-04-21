@@ -10,13 +10,22 @@ export const getFilterGroupConfig = (filterConfig) => ({
 
 const getSingleFilterOption = (histogramResult, initHistogramRes) => {
   if (!histogramResult || !histogramResult.histogram) {
-    throw new Error(`Error parsing field options ${JSON.stringify(histogramResult)}`);
+    throw new Error(
+      `Error parsing field options ${JSON.stringify(histogramResult)}`
+    );
   }
   // if this is for range slider
-  if (histogramResult.histogram.length === 1 && (typeof histogramResult.histogram[0].key) !== 'string') {
+  if (
+    histogramResult.histogram.length === 1 &&
+    typeof histogramResult.histogram[0].key !== 'string'
+  ) {
     const rangeOptions = histogramResult.histogram.map((item) => {
-      const minValue = initHistogramRes ? initHistogramRes.histogram[0].key[0] : item.key[0];
-      const maxValue = initHistogramRes ? initHistogramRes.histogram[0].key[1] : item.key[1];
+      const minValue = initHistogramRes
+        ? initHistogramRes.histogram[0].key[0]
+        : item.key[0];
+      const maxValue = initHistogramRes
+        ? initHistogramRes.histogram[0].key[1]
+        : item.key[1];
       return {
         filterType: 'range',
         min: Math.floor(minValue),
@@ -40,12 +49,18 @@ const getSingleFilterOption = (histogramResult, initHistogramRes) => {
 
 const capitalizeFirstLetter = (str) => {
   const res = str.replace(/_|\./gi, ' ');
-  return res.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  return res.replace(
+    /\w\S*/g,
+    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  );
 };
 
 // createSearchFilterLoadOptionsFn creates a handler function that loads the search filter's
 // autosuggest options as the user types in the search filter.
-const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (searchString, offset) => {
+const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (
+  searchString,
+  offset
+) => {
   const NUM_SEARCH_OPTIONS = 20;
   return new Promise((resolve, reject) => {
     // If searchString is empty return just the first NUM_SEARCH_OPTIONS options.
@@ -68,7 +83,7 @@ const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (searchString, o
       undefined,
       offset,
       NUM_SEARCH_OPTIONS,
-      true,
+      true
     )
       .then((res) => {
         if (!res.data || !res.data[guppyConfig.type]) {
@@ -78,13 +93,18 @@ const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (searchString, o
           });
         } else {
           const results = res.data[guppyConfig.type];
-          const totalCount = res.data._aggregation[guppyConfig.type]._totalCount;
+          const totalCount =
+            res.data._aggregation[guppyConfig.type]._totalCount;
           resolve({
-            options: results.map((result) => ({ value: result[field], label: result[field] })),
+            options: results.map((result) => ({
+              value: result[field],
+              label: result[field],
+            })),
             hasMore: totalCount > offset + results.length,
           });
         }
-      }).catch((err) => {
+      })
+      .catch((err) => {
         reject(err);
       });
   });
@@ -102,8 +122,14 @@ export const checkIsArrayField = (field, arrayFields) => {
 };
 
 export const getFilterSections = (
-  fields, searchFields, fieldMapping, tabsOptions,
-  initialTabsOptions, adminAppliedPreFilters, guppyConfig, arrayFields,
+  fields,
+  searchFields,
+  fieldMapping,
+  tabsOptions,
+  initialTabsOptions,
+  adminAppliedPreFilters,
+  guppyConfig,
+  arrayFields
 ) => {
   let searchFieldSections = [];
 
@@ -112,13 +138,15 @@ export const getFilterSections = (
     // to search over all options, instead of displaying all options in a list. This allows
     // guppy/portal to support filters that have too many options to be displayed in a list.
     searchFieldSections = searchFields.map((field) => {
-      const overrideName = fieldMapping.find((entry) => (entry.field === field));
-      const label = overrideName ? overrideName.name : capitalizeFirstLetter(field);
+      const overrideName = fieldMapping.find((entry) => entry.field === field);
+      const label = overrideName
+        ? overrideName.name
+        : capitalizeFirstLetter(field);
 
       const tabsOptionsFiltered = { ...tabsOptions[field] };
       if (Object.keys(adminAppliedPreFilters).includes(field)) {
         tabsOptionsFiltered.histogram = tabsOptionsFiltered.histogram.filter(
-          (x) => adminAppliedPreFilters[field].selectedValues.includes(x.key),
+          (x) => adminAppliedPreFilters[field].selectedValues.includes(x.key)
         );
       }
 
@@ -128,7 +156,7 @@ export const getFilterSections = (
       if (tabsOptionsFiltered && tabsOptionsFiltered.histogram) {
         selectedOptions = getSingleFilterOption(
           tabsOptionsFiltered,
-          initialTabsOptions ? initialTabsOptions[field] : undefined,
+          initialTabsOptions ? initialTabsOptions[field] : undefined
         );
       }
 
@@ -136,25 +164,30 @@ export const getFilterSections = (
         title: label,
         options: selectedOptions,
         isSearchFilter: true,
-        onSearchFilterLoadOptions: createSearchFilterLoadOptionsFn(field, guppyConfig),
+        onSearchFilterLoadOptions: createSearchFilterLoadOptionsFn(
+          field,
+          guppyConfig
+        ),
       };
     });
   }
 
   const sections = fields.map((field) => {
-    const overrideName = fieldMapping.find((entry) => (entry.field === field));
-    const label = overrideName ? overrideName.name : capitalizeFirstLetter(field);
+    const overrideName = fieldMapping.find((entry) => entry.field === field);
+    const label = overrideName
+      ? overrideName.name
+      : capitalizeFirstLetter(field);
 
     const tabsOptionsFiltered = { ...tabsOptions[field] };
     if (Object.keys(adminAppliedPreFilters).includes(field)) {
       tabsOptionsFiltered.histogram = tabsOptionsFiltered.histogram.filter(
-        (x) => adminAppliedPreFilters[field].selectedValues.includes(x.key),
+        (x) => adminAppliedPreFilters[field].selectedValues.includes(x.key)
       );
     }
 
     const defaultOptions = getSingleFilterOption(
       tabsOptionsFiltered,
-      initialTabsOptions ? initialTabsOptions[field] : undefined,
+      initialTabsOptions ? initialTabsOptions[field] : undefined
     );
 
     const fieldIsArrayField = checkIsArrayField(field, arrayFields);
@@ -168,7 +201,10 @@ export const getFilterSections = (
   return searchFieldSections.concat(sections);
 };
 
-export const excludeSelfFilterFromAggsData = (receivedAggsData, filterResults) => {
+export const excludeSelfFilterFromAggsData = (
+  receivedAggsData,
+  filterResults
+) => {
   if (!filterResults) return receivedAggsData;
   const resultAggsData = {};
   const flattenAggsData = flat(receivedAggsData, { safe: true });
@@ -178,13 +214,20 @@ export const excludeSelfFilterFromAggsData = (receivedAggsData, filterResults) =
     if (!histogram) return;
     if (actualFieldName in filterResults) {
       let resultHistogram = [];
-      if (typeof filterResults[`${actualFieldName}`].selectedValues !== 'undefined') {
+      if (
+        typeof filterResults[`${actualFieldName}`].selectedValues !==
+        'undefined'
+      ) {
         const { selectedValues } = filterResults[`${actualFieldName}`];
-        resultHistogram = histogram.filter((bucket) => selectedValues.includes(bucket.key));
+        resultHistogram = histogram.filter((bucket) =>
+          selectedValues.includes(bucket.key)
+        );
       }
       resultAggsData[`${actualFieldName}`] = { histogram: resultHistogram };
     } else {
-      resultAggsData[`${actualFieldName}`] = { histogram: flattenAggsData[`${field}`] };
+      resultAggsData[`${actualFieldName}`] = {
+        histogram: flattenAggsData[`${field}`],
+      };
     }
   });
   return resultAggsData;

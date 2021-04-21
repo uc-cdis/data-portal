@@ -21,14 +21,19 @@ class DownloadButtonExample extends React.Component {
   async updateManifestCount() {
     const nodeID = 'subject_id';
     const fileType = 'file';
-    const nodeIDResult = await this.props.downloadRawDataByFields({ fields: [nodeID] });
+    const nodeIDResult = await this.props.downloadRawDataByFields({
+      fields: [nodeID],
+    });
     if (nodeIDResult) {
-      const nodeIDList = nodeIDResult.map(i => i[nodeID]);
-      const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
-        [nodeID]: {
-          selectedValues: nodeIDList,
-        },
-      });
+      const nodeIDList = nodeIDResult.map((i) => i[nodeID]);
+      const countResult = await this.props.getTotalCountsByTypeAndFilter(
+        fileType,
+        {
+          [nodeID]: {
+            selectedValues: nodeIDList,
+          },
+        }
+      );
       this.setState({ manifestCount: countResult });
     } else {
       throw Error('Error when downloading data');
@@ -38,7 +43,9 @@ class DownloadButtonExample extends React.Component {
   async downloadData() {
     const res = await this.props.downloadRawData();
     if (res) {
-      const blob = new Blob([JSON.stringify(res, null, 2)], { type: 'text/json' });
+      const blob = new Blob([JSON.stringify(res, null, 2)], {
+        type: 'text/json',
+      });
       const fileName = 'download.json';
       FileSaver.saveAs(blob, fileName);
     } else {
@@ -49,17 +56,22 @@ class DownloadButtonExample extends React.Component {
   async downloadManifest() {
     const fileType = 'file';
     const nodeID = 'subject_id';
-    const nodeIDList = await this.props.downloadRawDataByFields({ fields: [nodeID] }).then(res => res.map(i => i[nodeID]));
+    const nodeIDList = await this.props
+      .downloadRawDataByFields({ fields: [nodeID] })
+      .then((res) => res.map((i) => i[nodeID]));
     const resultManifest = await this.props.downloadRawDataByTypeAndFilter(
-      fileType, {
+      fileType,
+      {
         [nodeID]: {
           selectedValues: nodeIDList,
         },
       },
-      ['file_id', 'subject_id'],
+      ['file_id', 'subject_id']
     );
     if (resultManifest) {
-      const blob = new Blob([JSON.stringify(resultManifest, null, 2)], { type: 'text/json' });
+      const blob = new Blob([JSON.stringify(resultManifest, null, 2)], {
+        type: 'text/json',
+      });
       const fileName = 'manifest.json';
       FileSaver.saveAs(blob, fileName);
     } else {

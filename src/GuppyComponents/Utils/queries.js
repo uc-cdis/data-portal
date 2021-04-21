@@ -9,18 +9,18 @@ const histogramQueryStrForEachField = (field) => {
   const splittedFieldArray = field.split('.');
   const splittedField = splittedFieldArray.shift();
   if (splittedFieldArray.length === 0) {
-    return (`
+    return `
     ${splittedField} {
       histogram {
         key
         count
       }
-    }`);
+    }`;
   }
-  return (`
+  return `
   ${splittedField} {
     ${histogramQueryStrForEachField(splittedFieldArray.join('.'))}
-  }`);
+  }`;
 };
 
 const queryGuppyForAggs = (path, type, fields, gqlFilter, signal) => {
@@ -65,14 +65,15 @@ const queryGuppyForAggs = (path, type, fields, gqlFilter, signal) => {
   }).then((response) => response.json());
 };
 
-const queryGuppyForStatus = (path) => fetch(`${path}${statusEndpoint}`, {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-}).then((response) => response.json());
+const queryGuppyForStatus = (path) =>
+  fetch(`${path}${statusEndpoint}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((response) => response.json());
 
-const nestedHistogramQueryStrForEachField = (mainField, numericAggAsText) => (`
+const nestedHistogramQueryStrForEachField = (mainField, numericAggAsText) => `
   ${mainField} {
     ${numericAggAsText ? 'asTextHistogram' : 'histogram'} {
       key
@@ -89,7 +90,7 @@ const nestedHistogramQueryStrForEachField = (mainField, numericAggAsText) => (`
         }
       }
     }
-  }`);
+  }`;
 
 const queryGuppyForSubAgg = (
   path,
@@ -99,7 +100,7 @@ const queryGuppyForSubAgg = (
   termsFields,
   missingFields,
   gqlFilter,
-  signal,
+  signal
 ) => {
   const nestedAggFields = {};
   if (termsFields) {
@@ -136,7 +137,8 @@ const queryGuppyForSubAgg = (
     },
     body: JSON.stringify(queryBody),
     signal,
-  }).then((response) => response.json())
+  })
+    .then((response) => response.json())
     .catch((err) => {
       throw new Error(`Error during queryGuppyForSubAgg ${err}`);
     });
@@ -146,14 +148,14 @@ const rawDataQueryStrForEachField = (field) => {
   const splittedFieldArray = field.split('.');
   const splittedField = splittedFieldArray.shift();
   if (splittedFieldArray.length === 0) {
-    return (`
+    return `
     ${splittedField}
-    `);
+    `;
   }
-  return (`
+  return `
   ${splittedField} {
     ${rawDataQueryStrForEachField(splittedFieldArray.join('.'))}
-  }`);
+  }`;
 };
 
 export const queryGuppyForRawData = (
@@ -166,7 +168,7 @@ export const queryGuppyForRawData = (
   size = 20,
   signal,
   format,
-  withTotalCount = false,
+  withTotalCount = false
 ) => {
   const queryArgument = [
     sort ? '$sort: JSON' : '',
@@ -203,7 +205,9 @@ export const queryGuppyForRawData = (
     }`
     : '';
 
-  const processedFields = fields.map((field) => rawDataQueryStrForEachField(field));
+  const processedFields = fields.map((field) =>
+    rawDataQueryStrForEachField(field)
+  );
   const query = `${queryLine} {
     ${dataTypeLine} {
       ${processedFields.join('\n')}
@@ -225,7 +229,8 @@ export const queryGuppyForRawData = (
       },
     }),
     signal,
-  }).then((response) => response.json())
+  })
+    .then((response) => response.json())
     .catch((err) => {
       throw new Error(`Error during queryGuppyForRawData ${err}`);
     });
@@ -238,10 +243,15 @@ export const getGQLFilter = (filterObj) => {
     const fieldSplitted = field.split('.');
     const fieldName = fieldSplitted[fieldSplitted.length - 1];
     // The combine mode defaults to OR when not set.
-    const combineMode = filterValues.__combineMode ? filterValues.__combineMode : 'OR';
+    const combineMode = filterValues.__combineMode
+      ? filterValues.__combineMode
+      : 'OR';
 
-    const hasSelectedValues = filterValues.selectedValues && filterValues.selectedValues.length > 0;
-    const hasRangeFilter = typeof filterValues.lowerBound !== 'undefined' && typeof filterValues.upperBound !== 'undefined';
+    const hasSelectedValues =
+      filterValues.selectedValues && filterValues.selectedValues.length > 0;
+    const hasRangeFilter =
+      typeof filterValues.lowerBound !== 'undefined' &&
+      typeof filterValues.upperBound !== 'undefined';
 
     let facetsPiece = {};
     if (hasSelectedValues && combineMode === 'OR') {
@@ -266,13 +276,18 @@ export const getGQLFilter = (filterObj) => {
           { '<=': { [fieldName]: filterValues.upperBound } },
         ],
       };
-    } else if (filterValues.__combineMode && !hasSelectedValues && !hasRangeFilter) {
+    } else if (
+      filterValues.__combineMode &&
+      !hasSelectedValues &&
+      !hasRangeFilter
+    ) {
       // This filter only has a combine setting so far. We can ignore it.
       return;
     } else {
       throw new Error(`Invalid filter object ${filterValues}`);
     }
-    if (fieldSplitted.length > 1) { // nested field
+    if (fieldSplitted.length > 1) {
+      // nested field
       fieldSplitted.pop();
       facetsPiece = {
         nested: {
@@ -290,9 +305,16 @@ export const getGQLFilter = (filterObj) => {
 };
 
 // eslint-disable-next-line max-len
-export const askGuppyAboutArrayTypes = (path) => queryGuppyForStatus(path).then((res) => res.indices);
+export const askGuppyAboutArrayTypes = (path) =>
+  queryGuppyForStatus(path).then((res) => res.indices);
 
-export const askGuppyForAggregationData = (path, type, fields, filter, signal) => {
+export const askGuppyForAggregationData = (
+  path,
+  type,
+  fields,
+  filter,
+  signal
+) => {
   const gqlFilter = getGQLFilter(filter);
   return queryGuppyForAggs(path, type, fields, gqlFilter, signal);
 };
@@ -316,7 +338,7 @@ export const askGuppyForSubAggregationData = ({
     termsNestedFields,
     missedNestedFields,
     gqlFilter,
-    signal,
+    signal
   );
 };
 
@@ -330,7 +352,7 @@ export const askGuppyForRawData = (
   size = 20,
   signal,
   format,
-  withTotalCount,
+  withTotalCount
 ) => {
   const gqlFilter = getGQLFilter(filter);
   return queryGuppyForRawData(
@@ -343,12 +365,12 @@ export const askGuppyForRawData = (
     size,
     signal,
     format,
-    withTotalCount,
+    withTotalCount
   );
 };
 
-export const getAllFieldsFromFilterConfigs = (filterTabConfigs) => filterTabConfigs
-  .reduce((acc, cur) => acc.concat(cur.fields), []);
+export const getAllFieldsFromFilterConfigs = (filterTabConfigs) =>
+  filterTabConfigs.reduce((acc, cur) => acc.concat(cur.fields), []);
 
 /**
  * Download all data from guppy using fields, filter, and sort args.
@@ -359,15 +381,10 @@ export const downloadDataFromGuppy = (
   path,
   type,
   size,
-  {
-    fields,
-    filter,
-    sort,
-    format,
-  },
+  { fields, filter, sort, format }
 ) => {
   const SCROLL_SIZE = 10000;
-  const JSON_FORMAT = (format === 'json' || format === undefined);
+  const JSON_FORMAT = format === 'json' || format === undefined;
   if (size > SCROLL_SIZE) {
     const queryBody = { type, accessibility: 'accessible' };
     if (fields) queryBody.fields = fields;
@@ -379,21 +396,35 @@ export const downloadDataFromGuppy = (
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(queryBody),
-    }).then((res) => (JSON_FORMAT ? res.json() : jsonToFormat(res.json(), format)));
+    }).then((res) =>
+      JSON_FORMAT ? res.json() : jsonToFormat(res.json(), format)
+    );
   }
-  return askGuppyForRawData(path, type, fields, filter, sort, 0, size, format)
-    .then((res) => {
-      if (res && res.data && res.data[type]) {
-        return JSON_FORMAT ? res.data[type] : jsonToFormat(res.data[type], format);
-      }
-      throw Error('Error downloading data from Guppy');
-    });
+  return askGuppyForRawData(
+    path,
+    type,
+    fields,
+    filter,
+    sort,
+    0,
+    size,
+    format
+  ).then((res) => {
+    if (res && res.data && res.data[type]) {
+      return JSON_FORMAT
+        ? res.data[type]
+        : jsonToFormat(res.data[type], format);
+    }
+    throw Error('Error downloading data from Guppy');
+  });
 };
 
 export const askGuppyForTotalCounts = (path, type, filter) => {
   const gqlFilter = getGQLFilter(filter);
   const queryLine = `query ${gqlFilter ? '($filter: JSON)' : ''}{`;
-  const typeAggsLine = `${type} ${gqlFilter ? '(filter: $filter, ' : '('} accessibility: all) {`;
+  const typeAggsLine = `${type} ${
+    gqlFilter ? '(filter: $filter, ' : '('
+  } accessibility: all) {`;
   const query = `${queryLine}
     _aggregation {
       ${typeAggsLine}
@@ -411,17 +442,15 @@ export const askGuppyForTotalCounts = (path, type, filter) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(queryBody),
-  }).then((response) => response.json())
+  })
+    .then((response) => response.json())
     .then((response) => response.data._aggregation[type]._totalCount)
     .catch((err) => {
       throw new Error(`Error during download ${err}`);
     });
 };
 
-export const getAllFieldsFromGuppy = (
-  path,
-  type,
-) => {
+export const getAllFieldsFromGuppy = (path, type) => {
   const query = `{
     _mapping {
       ${type}
@@ -434,7 +463,8 @@ export const getAllFieldsFromGuppy = (
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(queryBody),
-  }).then((response) => response.json())
+  })
+    .then((response) => response.json())
     .then((response) => response.data._mapping[type])
     .catch((err) => {
       throw new Error(`Error when getting fields from guppy: ${err}`);

@@ -48,6 +48,4 @@ storiesOf('ConnectedFilter', module)
       />
     );
   })
-  .add('SwitchableFilterExample', () => (
-    <SwitchableFilterExample />
-  ));
+  .add('SwitchableFilterExample', () => <SwitchableFilterExample />);
