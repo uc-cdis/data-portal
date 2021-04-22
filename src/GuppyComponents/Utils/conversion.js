@@ -8,7 +8,7 @@ import flat from 'flat';
  * non-nested data.
  * @param {JSON} json
  */
-export async function flattenJson(json) {
+export function flattenJson(json) {
   const flattenedJson = [];
   Object.keys(json).forEach((key) => {
     flattenedJson.push(flat(json[key], { delimiter: '_' }));
@@ -21,7 +21,7 @@ export async function flattenJson(json) {
  * @param {JSON} json
  * @param {Object} config
  */
-export async function conversion(json, config) {
+export function conversion(json, config) {
   return papaparse.unparse(json, config);
 }
 
@@ -31,10 +31,10 @@ export async function conversion(json, config) {
  * @param {JSON} json
  * @param {string} format
  */
-export async function jsonToFormat(json, format) {
+export function jsonToFormat(json, format) {
   if (format in FILE_DELIMITERS) {
-    const flatJson = await flattenJson(json);
-    const data = await conversion(flatJson, {
+    const flatJson = flattenJson(json);
+    const data = conversion(flatJson, {
       delimiter: FILE_DELIMITERS[format],
     });
     return data;
