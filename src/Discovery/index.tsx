@@ -4,146 +4,102 @@ import { connect } from 'react-redux';
 import Discovery from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { hostname, discoveryConfig, useArboristUI } from '../localconf';
+import { discoveryConfig, useArboristUI } from '../localconf';
+// TODO: delete this once the aggregate MDS is running.
+import loadStudiesFromMDSDDeprecated from './deprecated';
 
-const COMMONS = [
-  {
-    MDS_URL: 'https://gen3.datacommons.io/mds/metadata?data=True',
-    GUID_TYPE: 'discovery_metadata',
-    STUDY_DATA_FIELD: 'gen3_discovery',
-    LIMIT: 1000,
-    COMMONS: 'Genomic Data Commons',
-    FILTER: "&gen3_discovery.commons=Genomic Data Commons",
-    OFFSET: 0,
-  },
-  {
-    MDS_URL: 'https://gen3.datacommons.io/mds/metadata?data=True',
-    GUID_TYPE: 'discovery_metadata',
-    STUDY_DATA_FIELD: 'gen3_discovery',
-    LIMIT: 1000,
-    COMMONS: 'Cancer Imaging Data Commons',
-    FILTER: "&gen3_discovery.commons=Cancer Imaging Data Commons",
-    OFFSET: 0,
-  },
-  {
-    MDS_URL: 'https://gen3.datacommons.io/mds/metadata?data=True',
-    GUID_TYPE: 'discovery_metadata',
-    STUDY_DATA_FIELD: 'gen3_discovery',
-    LIMIT: 1000,
-    COMMONS: 'Proteomic Data Commons',
-    FILTER: "&gen3_discovery.commons=Proteomic Data Commons",
-    OFFSET: 0,
-  },
-  {
-    MDS_URL: 'https://staging.gen3.biodatacatalyst.nhlbi.nih.gov/mds/metadata?data=True',
-    GUID_TYPE: 'discovery_metadata',
-    STUDY_DATA_FIELD: 'gen3_discovery',
-    LIMIT: 1000,
-    COMMONS: 'BDC',
-    FILTER: '',
-    OFFSET: 0,
-  },
-  {
-    MDS_URL: 'https://internalstaging.theanvil.io/mds/metadata?data=True',
-    GUID_TYPE: 'discovery_metadata',
-    STUDY_DATA_FIELD: 'gen3_discovery',
-    LIMIT: 1000,
-    COMMONS: 'AnVIL',
-    FILTER: '',
-    OFFSET: 0,
+import mockAggMDSData from './__mocks__/mock_agg_mds_studies.json';
+import mockFieldMappingData from './__mocks__/mock_agg_mds_field_mapping.json';
+
+// TODO: Replace this variable value with the correct agg MDS url.
+const aggMDSURL = '/agg-mds';
+const aggMDSDataURL = `${aggMDSURL}/metadata`;
+const fieldMappingURL = `${aggMDSURL}/field_to_columns`;
+
+const retrieveFieldMapping = async (commonsName: string) => { // : Promise<any[]> => {
+  const url = `${fieldMappingURL}/${commonsName}`;
+  const res = await fetch(url);
+  if (res.status !== 200) {
+    throw new Error(`Request for study data at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
   }
 
-];
+  // TODO: uncomment this
+  // const jsonResponse = await res.json();
 
-const loadStudiesFromNamedMDS = async (MDS_URL: string, GUID_TYPE: string,
-  LIMIT: number, STUDY_DATA_FIELD: string,
-  COMMON: string, FILTER:string = '', offset:number = 0): Promise<any[]> => {
-  try {
-    let allStudies = [];
+  // Temporarily some mock data.
+  const jsonResponse = mockFieldMappingData;
 
-    // request up to LIMIT studies from MDS at a time.
-    let shouldContinue = true;
-    while (shouldContinue) {
-      const url = `${MDS_URL}&_guid_type=${GUID_TYPE}&limit=${LIMIT}&offset=${offset}${FILTER}`;
-
-      // It's OK to disable no-await-in-loop rule here -- it's telling us to refactor
-      // using Promise.all() so that we can fire multiple requests at one.
-      // But we WANT to delay sending the next request to MDS until we know we need it.
-      // eslint-disable-next-line no-await-in-loop
-      const res = await fetch(url);
-      if (res.status !== 200) {
-        throw new Error(`Request for study data at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
-      }
-      // eslint-disable-next-line no-await-in-loop
-      const jsonResponse = await res.json();
-      const studies = Object.values(jsonResponse).map((entry, index) => {
-        const x = entry[STUDY_DATA_FIELD];
-
-        if (FILTER !== '') { // hacky hacky
-          const commonName = x.commons;
-          x.name = x.short_name;
-          if (x.commons === "Proteomic Data Commons") {
-            x.study_id = x._unique_id;
-            x._subjects_count = x.cases_count;
-          }
-          if (x.commons === 'Genomic Data Commons') {
-            x.study_id = x.dbgap_accession_number;
-            x._subjects_count = x.subjects_count;
-          }
-          if (x.commons === 'Cancer Imaging Data Commons') {
-            x.study_id = x.dbgap_accession_number;
-            x._subjects_count = x.subjects_count;
-          }
-
-          x.study_description = x.description;
-          x._unique_id = `${commonName}_${x._unique_id}_${index}`;
-          x.tags.push(Object({category : 'Commons',name: commonName }));
-          x.commons = commonName;
-          // console.log(commonName, x);
-
-          return x; // leave early
-        }
-        x.commons = COMMON;
-        x._unique_id = `${COMMON}_${x._unique_id}_${index}`;
-        x.tags.push(Object({category : 'Commons',name: COMMON }));
-        return x;
-      },
-      );
-      // console.log(studies);
-      allStudies = allStudies.concat(studies);
-      const noMoreStudiesToLoad = studies.length < LIMIT;
-      if (noMoreStudiesToLoad) {
-        shouldContinue = false;
-        return allStudies;
-      }
-      offset += LIMIT;
-    }
-    return allStudies;
-  } catch (err) {
-    throw new Error(`Request for study data failed: ${err}`);
-  }
+  return jsonResponse;
 };
 
-const loadStudiesFromMDS = async (commons: Object[]): Promise<any[]> => {
-  try {
-    let joinedStudies = [];
+const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
+  const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
 
-    for (const common of commons) {
-      const studies = await loadStudiesFromNamedMDS(
-        common['MDS_URL'],
-        common['GUID_TYPE'],
-        common['LIMIT'],
-        common['STUDY_DATA_FIELD'],
-        common['COMMONS'],
-          common['FILTER'],
-          common['OFFSET'],
-      );
-      joinedStudies = joinedStudies.concat(studies);
-    }
-    return joinedStudies;
-  } catch (err) {
-    throw new Error(`Request for joined study data failed: ${err}`);
+  const res = await fetch(url);
+  if (res.status !== 200) {
+    throw new Error(`Request for study data at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
   }
+
+  // TODO: uncomment this
+  // const jsonResponse = await res.json();
+
+  // Temporarily: some mock data.
+  const metadataResponse = mockAggMDSData;
+
+  // According to the API: https://petstore.swagger.io/?url=https://gist.githubusercontent.com/craigrbarnes/3ac95d4d6b5dd08d280a28ec0ae2a12d/raw/58a562c9b3a343e535849ad4085a3b27942b2b57/openapi.yaml#/Query/metadata_metadata_get
+  const commons = Object.keys(metadataResponse);
+
+  let allStudies = [];
+  for (let j = 0; j < commons.length; j += 1) {
+    const commonsName = commons[j];
+    // Now retrieve field mappings for each commons
+    // eslint-disable-next-line no-await-in-loop
+    const fieldMapping = await retrieveFieldMapping(commonsName);
+    console.log('The fieldMapping for ', commonsName, ' is ', fieldMapping);
+
+    const studies = metadataResponse[commonsName];
+
+    const editedStudies = studies.map((entry, index) => {
+      const x = { ...entry };
+      x.commons = commonsName;
+      x.frontend_uid = `${commonsName}_${index}`;
+      x.name = x.short_name;
+      x.study_id = x[fieldMapping.study_id];
+      x._subjects_count = x[fieldMapping.subjects_count];
+      x.study_description = x[fieldMapping.description];
+      x._unique_id = `${commonsName}_${x._unique_id}_${index}`;
+      x.tags = [];
+      x.tags.push(Object({ category: 'Commons', name: commonsName }));
+
+      for (let i = 0; i < discoveryConfig.tagCategories.length; i += 1) {
+        const tag = discoveryConfig.tagCategories[i];
+
+        let tagValue;
+        if (Object.prototype.hasOwnProperty.call(x, tag.name)) {
+          tagValue = x[tag.name];
+        }
+        if (tagValue) {
+          x.tags.push(Object({ category: tag.name, name: tagValue }));
+        }
+      }
+      return x;
+    });
+    allStudies = allStudies.concat(editedStudies);
+  }
+  return allStudies;
+};
+
+const loadStudiesFromMDS = async (): Promise<any[]> => {
+  // Retrieve from aggregate MDS
+
+  // TODO: connect the UI to these variables
+  const offset = 0; // For pagination
+  const limit = 100; // Total number of rows requested
+
+  const studies = await loadStudiesFromAggMDS(offset, limit);
+
+  console.log('studies retrieved: ', studies);
+  return studies;
 };
 
 const DiscoveryWithMDSBackend: React.FC<{
@@ -157,7 +113,9 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    loadStudiesFromMDS(COMMONS).then((rawStudies) => {
+    // loadStudiesFromMDS().then((rawStudies) => {
+    // Using the deprecated functions for now so as to see the big dataset
+    loadStudiesFromMDSDDeprecated().then((rawStudies) => {
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const authzField = props.config.minimalFieldMapping.authzField;

@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import uniq from 'lodash/uniq';
-import sum from 'lodash/sum';
 import * as JsSearch from 'js-search';
-import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined } from '@ant-design/icons';
+import { LockFilled, LinkOutlined, UnlockOutlined } from '@ant-design/icons';
 import {
-  Input,
-  Table,
   Tag,
-  Radio,
   Space,
   Modal,
   Alert,
@@ -16,16 +11,13 @@ import {
 
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
-
+import DiscoverySummary from './DiscoverySummary';
+import DiscoveryTagViewer from './DiscoveryTagViewer';
+import { DiscoveryListView, AccessLevel } from './DiscoveryListView';
 
 const accessibleFieldName = '__accessible';
 
 const ARBORIST_READ_PRIV = 'read';
-export enum AccessLevel {
-  BOTH = 'both',
-  ACCESSIBLE = 'accessible',
-  UNACCESSIBLE = 'unaccessible',
-}
 
 const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   const categoryConfig = config.tagCategories.find(category => category.name === tagCategory);
@@ -36,46 +28,6 @@ const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   }
   return categoryConfig.color;
 };
-interface AggregationConfig {
-  name: string
-  field: string
-  type: 'sum' | 'count'
-}
-
-const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null): string => {
-  if (!studies) {
-    return '';
-  }
-  const { field, type } = aggregation;
-  const fields = studies.map(s => s[field]);
-  switch (type) {
-  case 'sum':
-    return sum(fields).toLocaleString();
-  case 'count':
-    return uniq(fields).length.toLocaleString();
-  default:
-    throw new Error(`Misconfiguration error: Unrecognized aggregation type ${type}. Check the 'aggregations' block of the Discovery page config.`);
-  }
-};
-
-// getTagsInCategory returns a list of the unique tags in studies which belong
-// to the specified category.
-const getTagsInCategory =
-  (category: string, studies: any[] | null, config: DiscoveryConfig): string[] => {
-    if (!studies) {
-      return [];
-    }
-    const tagMap = {};
-    studies.forEach((study) => {
-      const tagField = config.minimalFieldMapping.tagsListFieldName;
-      study[tagField].forEach((tag) => {
-        if (tag.category === category) {
-          tagMap[tag.name] = true;
-        }
-      });
-    });
-    return Object.keys(tagMap);
-  };
 
 const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number' = 'string'): string => {
   switch (contentType) {
@@ -193,6 +145,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   const columns = config.studyColumns.map(column => ({
     title: column.name,
     ellipsis: !!column.ellipsis,
+    textWrap: 'word-break',
     width: column.width,
     render: (_, record) => {
       const value = record[column.field];
@@ -218,8 +171,9 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   columns.push(
     {
       title: 'Tags',
+      textWrap: 'word-break',
       ellipsis: false,
-      width: undefined,
+      width: '362px',
       render: (_, record) => (
         <React.Fragment>
           {record.tags.map(({ name, category }) => {
@@ -264,7 +218,8 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     columns.push({
       title: 'Access',
       ellipsis: false,
-      width: undefined,
+      width: '106px',
+      textWrap: 'word-break',
       render: (_, record) => (
         record[accessibleFieldName]
           ? (
@@ -302,25 +257,6 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   }
   // -----
 
-  const handleSearchChange = (ev) => {
-    const value = ev.currentTarget.value;
-    setSearchTerm(value);
-    if (value === '') {
-      setSearchFilteredResources(props.studies);
-      return;
-    }
-    if (!jsSearch) {
-      return;
-    }
-    const results = jsSearch.search(value);
-    setSearchFilteredResources(results);
-  };
-
-  const handleAccessLevelChange = (ev) => {
-    const value = ev.target.value as AccessLevel;
-    setAccessLevel(value);
-  };
-
   const visibleResources = filterByTags(
     filterByAccessLevel(searchFilteredResources, accessLevel, accessibleFieldName),
     selectedTags,
@@ -331,164 +267,32 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       <h1 className='discovery-page-title'>{config.features.pageTitle.text || 'Discovery'}</h1>
     }
     <div className='discovery-header'>
-      <div className='discovery-header__stats-container'>
-        {
-          config.aggregations.map((aggregation, i) => (
-            <React.Fragment key={aggregation.name} >
-              { i !== 0 && <div className='discovery-header__stat-border' /> }
-              <div className='discovery-header__stat' >
-                <div className='discovery-header__stat-number'>
-                  {renderAggregation(aggregation, visibleResources)}
-                </div>
-                <div className='discovery-header__stat-label'>
-                  {aggregation.name}
-                </div>
-              </div>
-            </React.Fragment>
-          ))
-        }
-      </div>
-      <div className='discovery-header__tags-container' >
-        <h3 className='discovery-header__tags-header'>{config.tagSelector.title}</h3>
-        <div className='discovery-header__tags'>
-          {
-            config.tagCategories.map((category) => {
-              if (category.display === false) {
-                return null;
-              }
-              const tags = getTagsInCategory(category.name, props.studies, config);
-              return (<div className='discovery-header__tag-group' key={category.name}>
-                <h5>{category.name}</h5>
-                { tags.map(tag =>
-                  (<Tag
-                    key={category.name + tag}
-                    role='button'
-                    tabIndex={0}
-                    aria-pressed={selectedTags[tag] ? 'true' : 'false'}
-                    className={`discovery-header__tag-btn discovery-tag ${selectedTags[tag] && 'discovery-tag--selected'}`}
-                    aria-label={tag}
-                    style={{
-                      backgroundColor: selectedTags[tag] ? category.color : 'initial',
-                      borderColor: category.color,
-                    }}
-                    onKeyPress={() => {
-                      setSelectedTags({
-                        ...selectedTags,
-                        [tag]: selectedTags[tag] ? undefined : true,
-                      });
-                    }}
-                    onClick={() => {
-                      setSelectedTags({
-                        ...selectedTags,
-                        [tag]: selectedTags[tag] ? undefined : true,
-                      });
-                    }}
-                  >
-                    {tag}
-                  </Tag>),
-                )}
-              </div>);
-            })
-          }
-        </div>
-      </div>
-    </div>
-    <div className='discovery-table-container'>
-      <div className='discovery-table__header'>
-        { config.features.search.searchBar.enabled &&
-            <Input
-              className='discovery-search'
-              prefix={<SearchOutlined />}
-              placeholder={config.features.search.searchBar.placeholder}
-              value={searchTerm}
-              onChange={handleSearchChange}
-              size='large'
-              allowClear
-            />
-        }
-        { config.features.authorization.enabled &&
-            <div className='disvovery-table__controls'>
-              <Radio.Group
-                onChange={handleAccessLevelChange}
-                value={accessLevel}
-                className='discovery-access-selector'
-                defaultValue='both'
-                buttonStyle='solid'
-              >
-                <Radio.Button value={AccessLevel.BOTH}>All</Radio.Button>
-                <Radio.Button value={AccessLevel.UNACCESSIBLE}><LockFilled /></Radio.Button>
-                <Radio.Button value={AccessLevel.ACCESSIBLE}><UnlockOutlined /></Radio.Button>
-              </Radio.Group>
-            </div>
-        }
-      </div>
-      <Table
-        columns={columns}
-        rowKey={config.minimalFieldMapping.uid}
-        rowClassName='discovery-table__row'
-        onRow={record => ({
-          onClick: () => {
-            setModalVisible(true);
-            setModalData(record);
-          },
-          onKeyPress: () => {
-            setModalVisible(true);
-            setModalData(record);
-          },
-        })}
-        dataSource={visibleResources}
-        expandable={config.studyPreviewField && ({
-          // expand all rows
-          expandedRowKeys: visibleResources.map(r => r[config.minimalFieldMapping.uid]),
-          expandedRowRender: (record) => {
-            const studyPreviewText = record[config.studyPreviewField.field];
-            const renderValue = (value: string | undefined): React.ReactNode => {
-              if (!value) {
-                if (config.studyPreviewField.includeIfNotAvailable) {
-                  return config.studyPreviewField.valueIfNotAvailable;
-                }
-              }
-              if (searchTerm) {
-                // get index of searchTerm match
-                const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
-                if (matchIndex === -1) {
-                  // if searchterm doesn't match this record, don't highlight anything
-                  return value;
-                }
-                // Scroll the text to the search term and highlight the search term.
-                let start = matchIndex - 100;
-                if (start < 0) {
-                  start = 0;
-                }
-                return (<React.Fragment>
-                  { start > 0 && '...' }
-                  {value.slice(start, matchIndex)}
-                  <span className='matched'>{value.slice(matchIndex, matchIndex + searchTerm.length)}</span>
-                  {value.slice(matchIndex + searchTerm.length)}
-                </React.Fragment>
-                );
-              }
-              return value;
-            };
-            return (
-              <div
-                className='discovery-table__expanded-row-content'
-                role='button'
-                tabIndex={0}
-                onClick={() => {
-                  setModalData(record);
-                  setModalVisible(true);
-                }}
-              >
-                {renderValue(studyPreviewText)}
-              </div>
-            );
-          },
-          expandedRowClassName: () => 'discovery-table__expanded-row',
-          expandIconColumnIndex: -1, // don't render expand icon
-        })}
+      <DiscoverySummary
+        visibleResources={visibleResources}
+        config={config}
+      />
+      <div className='discovery-header__stat-border' />
+      <DiscoveryTagViewer
+        config={config}
+        studies={props.studies}
+        selectedTags={selectedTags}
+        setSelectedTags={setSelectedTags}
       />
     </div>
+    <DiscoveryListView
+      config={config}
+      studies={props.studies}
+      visibleResources={visibleResources}
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+      setSearchFilteredResources={setSearchFilteredResources}
+      accessLevel={accessLevel}
+      setAccessLevel={setAccessLevel}
+      jsSearch={jsSearch}
+      setModalData={setModalData}
+      setModalVisible={setModalVisible}
+      columns={columns}
+    />
     <Modal
       className='discovery-modal'
       visible={modalVisible}

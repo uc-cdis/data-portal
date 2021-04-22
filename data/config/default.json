@@ -31,18 +31,18 @@
     "projectDetails": "boardCounts"
   },
   "components": {
-    "appName": "NHLBI BioData Catalyst",
+    "appName": "Biomedical Research Hub",
     "index": {
       "introduction": {
         "heading": "",
-        "text": "NHLBI BioData Catalyst supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.",
+        "text": "Biomedical Research Hub supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.",
         "link": "/submission"
       },
       "buttons": [
         {
           "name": "Define Data Field",
           "icon": "stage-planning",
-          "body": "NHLBI BioData Catalyst define the data in a general way. Please study the dictionary before you start browsing.",
+          "body": "Biomedical Research Hub define the data in a general way. Please study the dictionary before you start browsing.",
           "link": "/DD",
           "label": "Learn more"
         },
@@ -133,7 +133,7 @@
       ]
     },
     "login": {
-      "title": "NHLBI BioData Catalyst",
+      "title": "Biomedical Research Hub",
       "subTitle": "Explore, Analyze, and Share Data",
       "text": "This website supports the management, analysis and sharing of human disease data for the research community and aims to advance basic understanding of the genetic basis of complex traits and accelerate discovery and development of therapies, diagnostic tests, and other technologies for diseases like cancer.",
       "contact": "If you have any questions about access or the registration process, please contact ",
@@ -649,7 +649,8 @@
       },
       "search": {
         "searchBar": {
-          "enabled": true
+          "enabled": true,
+          "placeholder": "Search through studies by attribute..."
         }
       },
       "authorization": {
@@ -659,7 +660,7 @@
     "aggregations": [
         {
             "name": "Studies",
-            "field": "study_id",
+            "field": "frontend_uid",
             "type": "count"
         },
         {
@@ -674,23 +675,39 @@
     "studyColumns": [
       {
         "name": "Study Name",
-        "field": "name"
+        "field": "name",
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a",
+        "width": "157px"
       },
       {
         "name": "Full Name",
         "field": "full_name",
-        "contentType": "string"
+        "contentType": "string",
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a",
+        "width": "400px"
       },
       {
         "name": "Number of Subjects",
         "field": "_subjects_count",
         "errorIfNotAvailable": false,
         "valueIfNotAvailable": "n/a",
-        "contentType": "number"
+        "contentType": "number",
+        "width": "98px"
       },
       {
-        "name": "dbGaP Accession Number 10",
-        "field": "study_id"
+        "name": "dbGaP Accession Number",
+        "field": "study_id",
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a",
+        "width": "152px"
+      },
+      {
+        "name": "Data Commons",
+        "field": "commons",
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a"
       }
     ],
     "studyPreviewField": {
@@ -730,7 +747,7 @@
               "valueIfNotAvailable": "N/A"
             },
             {
-              "name": "dbGaP Study Accession 11",
+              "name": "dbGaP Study Accession",
               "field": "dbgap_accession",
               "contentType": "string",
               "includeName": true,
@@ -739,6 +756,12 @@
             {
               "name": "Project ID",
               "field": "project_id",
+              "contentType": "string",
+              "includeIfNotAvailable": false
+            },
+            {
+              "name": "Data Commons",
+              "field": "commons",
               "contentType": "string",
               "includeIfNotAvailable": false
             }
@@ -761,23 +784,48 @@
     "minimalFieldMapping": {
       "tagsListFieldName": "tags",
       "authzField": "authz",
-      "uid": "study_id"
+      "uid": "frontend_uid"
     },
     "tagCategories": [
       {
-        "name": "Program",
+        "name": "Commons",
         "color": "rgba(129, 211, 248, 1)",
         "display": true
       },
       {
+        "name": "Program",
+        "color": "rgba(129, 211, 248, 1)",
+        "display": false
+      },
+      {
         "name": "Study Registration",
         "color": "rgba(236, 128, 141, 1)",
-        "display": true
+        "display": false
       },
       {
         "name": "Data Type",
         "color": "rgba(112, 182, 3, 1)",
+        "display": false
+      },
+      {
+        "name": "primary_site",
+        "color": "rgba(112, 182, 3, 1)",
         "display": true
+      },
+      {
+        "name": "disease_type",
+        "color": "rgba(112, 182, 3, 1)",
+        "display": true
+      },
+      {
+        "name": "data_type",
+        "color": "rgba(112, 182, 3, 1)",
+        "display": false
+      },
+      {
+        "name": "clinical_study_type",
+        "color": "rgba(112, 182, 3, 1)",
+        "display": false
       }
     ]
   },
