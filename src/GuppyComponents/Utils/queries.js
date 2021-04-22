@@ -1,9 +1,29 @@
 import fetch from 'isomorphic-fetch';
-import { jsonToFormat } from './conversion';
+import flat from 'flat';
+import papaparse from 'papaparse';
+import { FILE_DELIMITERS } from './const';
 
 const graphqlEndpoint = '/graphql';
 const downloadEndpoint = '/download';
 const statusEndpoint = '/_status';
+
+/**
+ * Converts JSON to a specified file format.
+ * Defaultes to JSON if file format is not supported.
+ * @param {Object} json
+ * @param {string} format
+ */
+function jsonToFormat(json, format) {
+  if (format in FILE_DELIMITERS) {
+    const flatJson = Object.keys(json).map((key) =>
+      flat(json[key], { delimiter: '_' })
+    );
+    return papaparse.unparse(flatJson, {
+      delimiter: FILE_DELIMITERS[format],
+    });
+  }
+  return json;
+}
 
 const histogramQueryStrForEachField = (field) => {
   const splittedFieldArray = field.split('.');
