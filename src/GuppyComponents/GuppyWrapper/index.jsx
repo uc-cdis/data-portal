@@ -40,6 +40,7 @@ import { mergeFilters } from '../Utils/filters';
  *         }
  *   - filterConfig: configuration for ConnectedFilter component
  *   - rawData: raw data records filtered (with offset, size, and sort applied)
+ *   - accessiableCount: count of raw data records user can access
  *   - totalCount: total count of raw data records
  *
  */
