@@ -1,7 +1,6 @@
 import { FILE_DELIMITERS } from './const';
-
-const papaparse = require('papaparse');
-const flatten = require('flat');
+import papaparse from 'papaparse';
+import flat from 'flat';
 
 /**
  * Flattens a deep nested JSON object skipping
@@ -12,7 +11,7 @@ const flatten = require('flat');
 export async function flattenJson(json) {
   const flattenedJson = [];
   Object.keys(json).forEach((key) => {
-    flattenedJson.push(flatten(json[key], { delimiter: '_' }));
+    flattenedJson.push(flat(json[key], { delimiter: '_' }));
   });
   return flattenedJson;
 }
