@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ConnectedFilter from '@pcdc/guppy/dist/components/ConnectedFilter';
+import ConnectedFilter from '../../GuppyComponents/ConnectedFilter';
 import { FilterConfigType, GuppyConfigType } from '../configTypeDef';
 import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
 import FilterList from '../../gen3-ui-component/components/filters/FilterList';
