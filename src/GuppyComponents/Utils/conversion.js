@@ -10,15 +10,12 @@ import flat from 'flat';
  */
 export function jsonToFormat(json, format) {
   if (format in FILE_DELIMITERS) {
-    const flatJson = [];
-    Object.keys(json).forEach((key) => {
-      flatJson.push(flat(json[key], { delimiter: '_' }));
-    });
-
-    const data = papaparse.unparse(flatJson, {
+    const flatJson = Object.keys(json).map((key) =>
+      flat(json[key], { delimiter: '_' })
+    );
+    return papaparse.unparse(flatJson, {
       delimiter: FILE_DELIMITERS[format],
     });
-    return data;
   }
   return json;
 }
