@@ -99,12 +99,7 @@ class GuppyWrapper extends React.Component {
       this.setState({ aggsData, accessibleCount, totalCount });
   }
 
-  handleFilterChange(userFilter) {
-    const filter =
-      Object.keys(this.props.adminAppliedPreFilters).length > 0
-        ? mergeFilters(userFilter, this.props.adminAppliedPreFilters)
-        : userFilter;
-
+  handleFilterChange(filter) {
     if (this.props.onFilterChange) this.props.onFilterChange(filter);
 
     if (this._isMounted) {
