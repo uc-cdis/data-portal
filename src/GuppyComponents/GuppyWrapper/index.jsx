@@ -23,8 +23,6 @@ import { excludeSelfFilterFromAggsData } from '../ConnectedFilter/utils';
  *   - guppyConfig: Guppy server config
  *   - onFilterChange: callback that takes filter as argument, will be
  * called every time filter changes
- *   - onReceiveNewAggsData: callback that takes aggregation results
- * as argument, will be called every time aggregation results updated
  *
  * This wrapper will pass following data (filters, aggs, configs) to children components via prop:
  *   - aggsData: the aggregation results, format:
@@ -102,9 +100,6 @@ class GuppyWrapper extends React.Component {
     const aggsData = excludeSelfFilterFromAggsData(receivedAggsData, filter);
     const accessibleCount = responseData._aggregation.accessible._totalCount;
     const totalCount = responseData._aggregation.all._totalCount;
-
-    if (this.props.onReceiveNewAggsData)
-      this.props.onReceiveNewAggsData(aggsData, this.filter);
 
     if (this._isMounted)
       this.setState({
@@ -368,14 +363,12 @@ GuppyWrapper.propTypes = {
     ),
   }).isRequired,
   rawDataFields: PropTypes.arrayOf(PropTypes.string),
-  onReceiveNewAggsData: PropTypes.func,
   onFilterChange: PropTypes.func,
   adminAppliedPreFilters: PropTypes.object,
   initialAppliedFilters: PropTypes.object,
 };
 
 GuppyWrapper.defaultProps = {
-  onReceiveNewAggsData: () => {},
   onFilterChange: () => {},
   rawDataFields: [],
   adminAppliedPreFilters: {},
