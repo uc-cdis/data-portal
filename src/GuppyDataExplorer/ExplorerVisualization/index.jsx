@@ -155,13 +155,13 @@ class ExplorerVisualization extends React.Component {
               filter={this.props.filter}
               history={this.props.history}
               isLocked={isComponentLocked}
-              isPending={this.props.aggsDataIsLoading}
+              isPending={this.props.isLoadingRawData}
             />
           </div>
         </div>
         <ViewContainer
           showIf={this.state.explorerView === 'summary view'}
-          isLoading={this.props.aggsDataIsLoading}
+          isLoading={this.props.isLoadingRawData}
         >
           {chartData.countItems.length > 0 && (
             <div className='guppy-explorer-visualization__summary-cards'>
@@ -210,7 +210,7 @@ class ExplorerVisualization extends React.Component {
         {this.props.tableConfig.enabled && (
           <ViewContainer
             showIf={this.state.explorerView === 'table view'}
-            isLoading={this.props.aggsDataIsLoading}
+            isLoading={this.props.isLoadingRawData}
           >
             <ExplorerTable
               className='guppy-explorer-visualization__table'
@@ -243,7 +243,7 @@ ExplorerVisualization.propTypes = {
   accessibleCount: PropTypes.number, // inherited from GuppyWrapper
   totalCount: PropTypes.number, // inherited from GuppyWrapper
   aggsData: PropTypes.object, // inherited from GuppyWrapper
-  aggsDataIsLoading: PropTypes.bool, // inherited from GuppyWrapper
+  isLoadingRawData: PropTypes.bool, // inherited from GuppyWrapper
   filter: PropTypes.object, // inherited from GuppyWrapper
   fetchAndUpdateRawData: PropTypes.func, // inherited from GuppyWrapper
   downloadRawDataByFields: PropTypes.func, // inherited from GuppyWrapper
@@ -266,7 +266,7 @@ ExplorerVisualization.defaultProps = {
   accessibleCount: 0,
   totalCount: 0,
   aggsData: {},
-  aggsDataIsLoading: false,
+  isLoadingRawData: false,
   filter: {},
   fetchAndUpdateRawData: () => {},
   downloadRawDataByFields: () => {},

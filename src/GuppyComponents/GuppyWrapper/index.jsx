@@ -56,7 +56,7 @@ class GuppyWrapper extends React.Component {
     // to avoid asynchronizations, we store another filter as private var
     this.filter = { ...initialFilter };
     this.state = {
-      gettingDataFromGuppy: false,
+      isLoadingRawData: false,
       receivedAggsData: {},
       aggsData: {},
       filter: { ...initialFilter },
@@ -242,9 +242,9 @@ class GuppyWrapper extends React.Component {
    * @param {number} size
    */
   fetchRawDataFromGuppy(fields, sort, updateDataWhenReceive, offset, size) {
-    if (this._isMounted) this.setState({ gettingDataFromGuppy: true });
+    if (this._isMounted) this.setState({ isLoadingRawData: true });
     if (!fields || fields.length === 0) {
-      if (this._isMounted) this.setState({ gettingDataFromGuppy: false });
+      if (this._isMounted) this.setState({ isLoadingRawData: false });
       return Promise.resolve({ data: [], totalCount: 0 });
     }
 
@@ -271,7 +271,7 @@ class GuppyWrapper extends React.Component {
         const parsedData = data[this.props.guppyConfig.mainField][field];
         if (this._isMounted) {
           if (updateDataWhenReceive) this.setState({ rawData: parsedData });
-          this.setState({ gettingDataFromGuppy: false });
+          this.setState({ isLoadingRawData: false });
         }
         return {
           data: res.data,
@@ -298,7 +298,7 @@ class GuppyWrapper extends React.Component {
       const parsedData = res.data[this.props.guppyConfig.type];
       if (this._isMounted) {
         if (updateDataWhenReceive) this.setState({ rawData: parsedData });
-        this.setState({ gettingDataFromGuppy: false });
+        this.setState({ isLoadingRawData: false });
       }
       return {
         data: parsedData,
@@ -312,7 +312,7 @@ class GuppyWrapper extends React.Component {
       React.cloneElement(child, {
         // pass data to children
         aggsData: this.state.aggsData,
-        aggsDataIsLoading: this.state.gettingDataFromGuppy,
+        isLoadingRawData: this.state.isLoadingRawData,
         filter: this.state.filter,
         filterConfig: this.props.filterConfig,
         rawData: this.state.rawData, // raw data (with current filter applied)
