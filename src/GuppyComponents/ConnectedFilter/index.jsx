@@ -29,7 +29,6 @@ class ConnectedFilter extends React.Component {
       initialAggsData: {},
       receivedAggsData: {},
       filter: { ...initialFilter },
-      filtersApplied: { ...initialFilter },
     };
     this.filterGroupRef = React.createRef();
     this.arrayFields = [];
@@ -113,7 +112,7 @@ class ConnectedFilter extends React.Component {
       filterResults,
       this.props.adminAppliedPreFilters
     );
-    if (this._isMounted) this.setState({ filtersApplied: mergedFilterResults });
+    if (this._isMounted) this.setState({ filter: mergedFilterResults });
 
     askGuppyForAggregationData(
       this.props.guppyConfig.path,
@@ -155,7 +154,7 @@ class ConnectedFilter extends React.Component {
       updateCountsInInitialTabsOptions(
         this.initialTabsOptions,
         tabsOptions,
-        this.state.filtersApplied
+        this.state.filter
       )
     );
     if (Object.keys(processedTabsOptions).length === 0) return null;
