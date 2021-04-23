@@ -39,7 +39,7 @@ class GuppyDataExplorer extends React.Component {
   }
 
   updateInitialAppliedFilters = ({ filters }) => {
-    this.setState({ initialAppliedFilters: filters });
+    if (this._isMounted) this.setState({ initialAppliedFilters: filters });
   };
 
   render() {
