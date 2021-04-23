@@ -159,33 +159,31 @@ class ConnectedFilter extends React.Component {
    */
   getFilterTabs() {
     if (this.props.hidden) return null;
-    let processedTabsOptions = this.props.onProcessFilterAggsData(
+
+    const tabsOptions = this.props.onProcessFilterAggsData(
       this.state.receivedAggsData
     );
-    if (Object.keys(this.initialTabsOptions).length === 0) {
-      this.initialTabsOptions = processedTabsOptions;
-    }
+    if (Object.keys(this.initialTabsOptions).length === 0)
+      this.initialTabsOptions = tabsOptions;
 
-    processedTabsOptions = updateCountsInInitialTabsOptions(
-      this.initialTabsOptions,
-      processedTabsOptions,
-      this.state.filtersApplied
+    const processedTabsOptions = sortTabsOptions(
+      updateCountsInInitialTabsOptions(
+        this.initialTabsOptions,
+        tabsOptions,
+        this.state.filtersApplied
+      )
     );
+    if (Object.keys(processedTabsOptions).length === 0) return null;
 
-    processedTabsOptions = sortTabsOptions(processedTabsOptions);
-
-    if (!processedTabsOptions || Object.keys(processedTabsOptions).length === 0)
-      return null;
-    const { fieldMapping } = this.props;
     const { FilterList } = this.props.filterComponents;
-    const tabs = this.props.filterConfig.tabs.map(
+    return this.props.filterConfig.tabs.map(
       ({ fields, searchFields }, index) => (
         <FilterList
           key={index}
           sections={getFilterSections(
             fields,
             searchFields,
-            fieldMapping,
+            this.props.fieldMapping,
             processedTabsOptions,
             this.state.initialAggsData,
             this.props.adminAppliedPreFilters,
@@ -199,7 +197,6 @@ class ConnectedFilter extends React.Component {
         />
       )
     );
-    return tabs;
   }
 
   /**
