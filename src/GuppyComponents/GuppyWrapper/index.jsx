@@ -64,6 +64,7 @@ class GuppyWrapper extends React.Component {
       accessibleCount: 0,
       totalCount: 0,
       allFields: [],
+      aggsDataFields: getAllFieldsFromFilterConfigs(props.filterConfig.tabs),
       rawDataFields: [],
     };
     this._isMounted = false;
@@ -202,7 +203,7 @@ class GuppyWrapper extends React.Component {
     askGuppyForAggregationData(
       this.props.guppyConfig.path,
       this.props.guppyConfig.type,
-      getAllFieldsFromFilterConfigs(this.props.filterConfig.tabs),
+      this.state.aggsDataFields,
       filter,
       this.controller.signal
     ).then((res) => {
