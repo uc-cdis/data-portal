@@ -54,9 +54,6 @@ class GuppyWrapper extends React.Component {
 
     // to avoid asynchronizations, we store another filter as private var
     this.filter = { ...initialFilter };
-    this.adminPreFiltersFrozen = JSON.stringify(
-      this.props.adminAppliedPreFilters
-    ).slice();
     this.state = {
       gettingDataFromGuppy: false,
       aggsData: {},
@@ -66,7 +63,6 @@ class GuppyWrapper extends React.Component {
       totalCount: 0,
       allFields: [],
       rawDataFields: [],
-      adminAppliedPreFilters: { ...this.props.adminAppliedPreFilters },
     };
     this._isMounted = false;
     this.controller = new AbortController();
@@ -104,14 +100,9 @@ class GuppyWrapper extends React.Component {
   }
 
   handleFilterChange(userFilter) {
-    if (this._isMounted)
-      this.setState({
-        adminAppliedPreFilters: JSON.parse(this.adminPreFiltersFrozen),
-      });
-
     const filter =
-      Object.keys(this.state.adminAppliedPreFilters).length > 0
-        ? mergeFilters(userFilter, this.state.adminAppliedPreFilters)
+      Object.keys(this.props.adminAppliedPreFilters).length > 0
+        ? mergeFilters(userFilter, this.props.adminAppliedPreFilters)
         : userFilter;
 
     if (this.props.onFilterChange) this.props.onFilterChange(filter);
