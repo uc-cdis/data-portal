@@ -40,23 +40,23 @@ class ConnectedFilter extends React.Component {
   componentDidMount() {
     this._isMounted = true;
 
-    if (this.props.onFilterChange) {
-      this.props.onFilterChange(this.state.filter);
-    }
+    if (this.props.onFilterChange) this.props.onFilterChange(this.state.filter);
+
     askGuppyForAggregationData(
       this.props.guppyConfig.path,
       this.props.guppyConfig.type,
       this.state.allFields,
       this.state.filter
     ).then((res) => {
-      if (!res.data) {
-        const msg = `error querying guppy${
-          res.errors && res.errors.length > 0
-            ? `: ${res.errors[0].message}`
-            : ''
-        }`;
-        console.error(msg); // eslint-disable-line no-console
-      }
+      if (!res.data)
+        console.error(
+          `error querying guppy${
+            res.errors && res.errors.length > 0
+              ? `: ${res.errors[0].message}`
+              : ''
+          }`
+        ); // eslint-disable-line no-console
+
       this.handleReceiveNewAggsData(
         res.data._aggregation[this.props.guppyConfig.type],
         res.data._aggregation.accessible._totalCount,
@@ -69,14 +69,10 @@ class ConnectedFilter extends React.Component {
     });
 
     askGuppyAboutArrayTypes(this.props.guppyConfig.path).then((res) => {
-      this.arrayFields = [];
       const keys = Object.keys(res);
-
-      for (let i = 0; i < keys.length; i += 1) {
-        if (res[keys[i]].arrayFields && res[keys[i]].arrayFields.length > 0) {
-          this.arrayFields = this.arrayFields.concat(res[keys[i]].arrayFields);
-        }
-      }
+      for (const key of keys)
+        if (res[key].arrayFields && res[key].arrayFields.length > 0)
+          this.arrayFields = this.arrayFields.concat(res[key].arrayFields);
     });
   }
 
