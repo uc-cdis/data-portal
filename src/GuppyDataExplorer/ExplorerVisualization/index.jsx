@@ -155,13 +155,13 @@ class ExplorerVisualization extends React.Component {
               filter={this.props.filter}
               history={this.props.history}
               isLocked={isComponentLocked}
-              isPending={this.props.isLoadingRawData}
+              isPending={this.props.isLoadingAggsData}
             />
           </div>
         </div>
         <ViewContainer
           showIf={this.state.explorerView === 'summary view'}
-          isLoading={this.props.isLoadingRawData}
+          isLoading={this.props.isLoadingAggsData}
         >
           {chartData.countItems.length > 0 && (
             <div className='guppy-explorer-visualization__summary-cards'>
@@ -242,14 +242,15 @@ class ExplorerVisualization extends React.Component {
 ExplorerVisualization.propTypes = {
   accessibleCount: PropTypes.number, // inherited from GuppyWrapper
   totalCount: PropTypes.number, // inherited from GuppyWrapper
+  isLoadingAggsData: PropTypes.bool, // inherited from GuppyWrapper
   aggsData: PropTypes.object, // inherited from GuppyWrapper
-  isLoadingRawData: PropTypes.bool, // inherited from GuppyWrapper
   filter: PropTypes.object, // inherited from GuppyWrapper
   fetchAndUpdateRawData: PropTypes.func, // inherited from GuppyWrapper
   downloadRawDataByFields: PropTypes.func, // inherited from GuppyWrapper
   downloadRawData: PropTypes.func, // inherited from GuppyWrapper
   getTotalCountsByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   downloadRawDataByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
+  isLoadingRawData: PropTypes.bool, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
   allFields: PropTypes.array, // inherited from GuppyWrapper
   history: PropTypes.object.isRequired,
@@ -265,14 +266,15 @@ ExplorerVisualization.propTypes = {
 ExplorerVisualization.defaultProps = {
   accessibleCount: 0,
   totalCount: 0,
+  isLoadingAggsDat: false,
   aggsData: {},
-  isLoadingRawData: false,
   filter: {},
   fetchAndUpdateRawData: () => {},
   downloadRawDataByFields: () => {},
   downloadRawData: () => {},
   getTotalCountsByTypeAndFilter: () => {},
   downloadRawDataByTypeAndFilter: () => {},
+  isLoadingRawData: false,
   rawData: [],
   allFields: [],
   className: '',

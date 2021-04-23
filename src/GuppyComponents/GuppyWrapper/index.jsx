@@ -56,10 +56,11 @@ class GuppyWrapper extends React.Component {
     // to avoid asynchronizations, we store another filter as private var
     this.filter = { ...initialFilter };
     this.state = {
-      isLoadingRawData: false,
+      isLoadingAggsData: false,
       receivedAggsData: {},
       aggsData: {},
       filter: { ...initialFilter },
+      isLoadingRawData: false,
       rawData: [],
       accessibleCount: 0,
       totalCount: 0,
@@ -200,6 +201,8 @@ class GuppyWrapper extends React.Component {
    * @param {object} filter
    */
   fetchAggsDataFromGuppy(filter) {
+    if (this._isMounted) this.setState({ isLoadingAggsData: true });
+
     askGuppyForAggregationData(
       this.props.guppyConfig.path,
       this.props.guppyConfig.type,
@@ -224,6 +227,7 @@ class GuppyWrapper extends React.Component {
 
       if (this._isMounted)
         this.setState({
+          isLoadingAggsData: false,
           receivedAggsData,
           aggsData,
           accessibleCount,
@@ -311,10 +315,11 @@ class GuppyWrapper extends React.Component {
     return React.Children.map(this.props.children, (child) =>
       React.cloneElement(child, {
         // pass data to children
+        isLoadingAggsData: this.state.isLoadingAggsData,
         aggsData: this.state.aggsData,
-        isLoadingRawData: this.state.isLoadingRawData,
         filter: this.state.filter,
         filterConfig: this.props.filterConfig,
+        isLoadingRawData: this.state.isLoadingRawData,
         rawData: this.state.rawData, // raw data (with current filter applied)
         accessibleCount: this.state.accessibleCount,
         totalCount: this.state.totalCount, // total count of raw data (current filter applied)
