@@ -94,22 +94,6 @@ class GuppyWrapper extends React.Component {
     this._isMounted = false;
   }
 
-  handleReceiveNewAggsData(responseData, filter) {
-    const receivedAggsData =
-      responseData._aggregation[this.props.guppyConfig.type];
-    const aggsData = excludeSelfFilterFromAggsData(receivedAggsData, filter);
-    const accessibleCount = responseData._aggregation.accessible._totalCount;
-    const totalCount = responseData._aggregation.all._totalCount;
-
-    if (this._isMounted)
-      this.setState({
-        receivedAggsData,
-        aggsData,
-        accessibleCount,
-        totalCount,
-      });
-  }
-
   handleFilterChange(filter) {
     if (this.props.onFilterChange) this.props.onFilterChange(filter);
 
@@ -207,7 +191,11 @@ class GuppyWrapper extends React.Component {
   /**
    * This function
    * 1. Asks guppy for aggregation data using (processed) filter
-   * 2. Pass the aggregation response and filter to this.handleReceiveNewAggsData
+   * 2. Uses the aggregation response to update the following states:
+   *   - receivedAggsData
+   *   - aggsData
+   *   - accessibleCount
+   *   - totalCount
    * @param {object} filter
    */
   fetchAggsDataFromGuppy(filter) {
@@ -227,7 +215,19 @@ class GuppyWrapper extends React.Component {
           }`
         );
 
-      this.handleReceiveNewAggsData(res.data, filter);
+      const receivedAggsData =
+        res.data._aggregation[this.props.guppyConfig.type];
+      const aggsData = excludeSelfFilterFromAggsData(receivedAggsData, filter);
+      const accessibleCount = res.data._aggregation.accessible._totalCount;
+      const totalCount = res.data._aggregation.all._totalCount;
+
+      if (this._isMounted)
+        this.setState({
+          receivedAggsData,
+          aggsData,
+          accessibleCount,
+          totalCount,
+        });
     });
   }
 
