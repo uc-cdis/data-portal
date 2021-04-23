@@ -1,7 +1,7 @@
 /* eslint react/forbid-prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getFilterSections, excludeSelfFilterFromAggsData } from './utils';
+import { getFilterSections } from './utils';
 import {
   askGuppyAboutArrayTypes,
   askGuppyForAggregationData,
@@ -54,19 +54,14 @@ class ConnectedFilter extends React.Component {
   }
 
   handleReceiveNewAggsData(responseData, filterResults) {
-    const receivedAggsData =
-      responseData._aggregation[this.props.guppyConfig.type];
-    const accessibleCount = responseData._aggregation.accessible._totalCount;
-    const totalCount = responseData._aggregation.all._totalCount;
-
-    if (this._isMounted) this.setState({ receivedAggsData });
+    if (this._isMounted)
+      this.setState({
+        receivedAggsData:
+          responseData._aggregation[this.props.guppyConfig.type],
+      });
 
     if (this.props.onReceiveNewAggsData)
-      this.props.onReceiveNewAggsData(
-        excludeSelfFilterFromAggsData(receivedAggsData, filterResults),
-        accessibleCount,
-        totalCount
-      );
+      this.props.onReceiveNewAggsData(responseData, filterResults);
   }
 
   /**

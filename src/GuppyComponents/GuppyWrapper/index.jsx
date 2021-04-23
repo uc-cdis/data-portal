@@ -11,6 +11,7 @@ import {
 } from '../Utils/queries';
 import { FILE_FORMATS } from '../Utils/const';
 import { mergeFilters } from '../Utils/filters';
+import { excludeSelfFilterFromAggsData } from '../ConnectedFilter/utils';
 
 /**
  * Wrapper that connects to Guppy server,
@@ -91,7 +92,13 @@ class GuppyWrapper extends React.Component {
     this._isMounted = false;
   }
 
-  handleReceiveNewAggsData(aggsData, accessibleCount, totalCount) {
+  handleReceiveNewAggsData(responseData, filter) {
+    const receivedAggsData =
+      responseData._aggregation[this.props.guppyConfig.type];
+    const aggsData = excludeSelfFilterFromAggsData(receivedAggsData, filter);
+    const accessibleCount = responseData._aggregation.accessible._totalCount;
+    const totalCount = responseData._aggregation.all._totalCount;
+
     if (this.props.onReceiveNewAggsData)
       this.props.onReceiveNewAggsData(aggsData, this.filter);
 
