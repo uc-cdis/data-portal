@@ -210,28 +210,25 @@ class ConnectedFilter extends React.Component {
 
   render() {
     if (this.props.hidden) return null;
+
     const filterTabs = this.getFilterTabs();
-    if (!filterTabs || filterTabs.length === 0) {
-      return null;
-    }
-    // If there are any search fields, insert them at the top of each tab's fields.
-    const filterConfig = {
-      tabs: this.props.filterConfig.tabs.map(
-        ({ title, fields, searchFields }) => {
-          if (searchFields) {
-            return { title, fields: searchFields.concat(fields) };
-          }
-          return { title, fields };
-        }
-      ),
-    };
+    if (!filterTabs || filterTabs.length === 0) return null;
+
     const { FilterGroup } = this.props.filterComponents;
     return (
       <FilterGroup
         ref={this.filterGroupRef}
         className={this.props.className}
         tabs={filterTabs}
-        filterConfig={filterConfig}
+        filterConfig={{
+          tabs: this.props.filterConfig.tabs.map(
+            ({ title, fields, searchFields }) => ({
+              title,
+              // If there are any search fields, insert them at the top of each tab's fields.
+              fields: searchFields ? searchFields.concat(fields) : fields,
+            })
+          ),
+        }}
         onFilterChange={(e) => this.handleFilterChange(e)}
         hideZero={this.props.hideZero}
         initialAppliedFilters={this.props.initialAppliedFilters}
