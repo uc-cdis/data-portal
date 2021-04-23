@@ -1,10 +1,7 @@
 /* eslint react/forbid-prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  askGuppyAboutArrayTypes,
-  getAllFieldsFromFilterConfigs,
-} from '../Utils/queries';
+import { askGuppyAboutArrayTypes } from '../Utils/queries';
 import {
   getFilterSections,
   mergeFilters,
@@ -16,7 +13,6 @@ class ConnectedFilter extends React.Component {
   constructor(props) {
     super(props);
 
-    const allFields = getAllFieldsFromFilterConfigs(props.filterConfig.tabs);
     const initialFilter = mergeFilters(
       props.initialAppliedFilters,
       props.adminAppliedPreFilters
@@ -24,7 +20,6 @@ class ConnectedFilter extends React.Component {
 
     this.initialTabsOptions = {};
     this.state = {
-      allFields,
       initialAggsData: {},
       receivedAggsData: {},
       filter: { ...initialFilter },
