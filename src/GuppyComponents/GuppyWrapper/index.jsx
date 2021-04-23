@@ -104,25 +104,25 @@ class GuppyWrapper extends React.Component {
   }
 
   handleFilterChange(userFilter) {
-    if (this._isMounted) {
+    if (this._isMounted)
       this.setState({
         adminAppliedPreFilters: JSON.parse(this.adminPreFiltersFrozen),
       });
-    }
-    let filter = { ...userFilter };
-    if (Object.keys(this.state.adminAppliedPreFilters).length > 0) {
-      filter = mergeFilters(userFilter, this.state.adminAppliedPreFilters);
-    }
-    if (this.props.onFilterChange) {
-      this.props.onFilterChange(filter);
-    }
-    this.filter = filter;
+
+    const filter =
+      Object.keys(this.state.adminAppliedPreFilters).length > 0
+        ? mergeFilters(userFilter, this.state.adminAppliedPreFilters)
+        : userFilter;
+
+    if (this.props.onFilterChange) this.props.onFilterChange(filter);
+
     if (this._isMounted) {
-      this.setState({ filter }, () => {
-        this.controller.abort();
-        this.controller = new AbortController();
-        this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
-      });
+      this.filter = filter;
+      this.setState({ filter });
+
+      this.controller.abort();
+      this.controller = new AbortController();
+      this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
     }
   }
 
