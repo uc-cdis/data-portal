@@ -135,13 +135,6 @@ class ConnectedFilter extends React.Component {
     }
   }
 
-  setFilter(filter) {
-    if (this.filterGroupRef.current) {
-      this.filterGroupRef.current.resetFilter();
-    }
-    this.handleFilterChange(filter);
-  }
-
   /**
    * This function contains partial rendering logic for filter components.
    * It transfers aggregation data (`this.state.receivedAggsData`) to items inside filters.
