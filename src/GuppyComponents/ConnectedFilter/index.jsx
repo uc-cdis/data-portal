@@ -53,12 +53,12 @@ class ConnectedFilter extends React.Component {
     this._isMounted = false;
   }
 
-  handleReceiveNewAggsData(
-    receivedAggsData,
-    accessibleCount,
-    totalCount,
-    filterResults
-  ) {
+  handleReceiveNewAggsData(responseData, filterResults) {
+    const receivedAggsData =
+      responseData._aggregation[this.props.guppyConfig.type];
+    const accessibleCount = responseData._aggregation.accessible._totalCount;
+    const totalCount = responseData._aggregation.all._totalCount;
+
     if (this._isMounted) this.setState({ receivedAggsData });
 
     if (this.props.onReceiveNewAggsData)
@@ -104,12 +104,7 @@ class ConnectedFilter extends React.Component {
           }`
         );
 
-      this.handleReceiveNewAggsData(
-        res.data._aggregation[this.props.guppyConfig.type],
-        res.data._aggregation.accessible._totalCount,
-        res.data._aggregation.all._totalCount,
-        mergedFilterResults
-      );
+      this.handleReceiveNewAggsData(res.data, mergedFilterResults);
 
       if (Object.keys(this.state.initialAggsData).length === 0)
         this.saveInitialAggsData(
