@@ -5,14 +5,14 @@ import PropTypes from 'prop-types';
 import {
   askGuppyForAggregationData,
   askGuppyForRawData,
-  downloadDataFromGuppy,
-  askGuppyForTotalCounts,
-  getAllFieldsFromGuppy,
   askGuppyForSubAggregationData,
+  askGuppyForTotalCounts,
+  downloadDataFromGuppy,
+  getAllFieldsFromFilterConfigs,
+  getAllFieldsFromGuppy,
 } from '../Utils/queries';
 import { FILE_FORMATS } from '../Utils/const';
 import { excludeSelfFilterFromAggsData, mergeFilters } from '../Utils/filters';
-import { getAllFieldsFromFilterConfigs } from '../Utils/queries';
 
 /**
  * Wrapper that connects to Guppy server,
