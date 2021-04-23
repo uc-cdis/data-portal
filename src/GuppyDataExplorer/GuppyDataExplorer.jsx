@@ -25,8 +25,6 @@ class GuppyDataExplorer extends React.Component {
         : {};
 
     this.state = {
-      aggsData: {},
-      filter: {},
       initialAppliedFilters: { ...overviewFilter },
     };
     this._isMounted = false;
@@ -39,10 +37,6 @@ class GuppyDataExplorer extends React.Component {
   componentWillUnmount() {
     this._isMounted = false;
   }
-
-  handleReceiveNewAggsData = (newAggsData) => {
-    this._isMounted && this.setState({ aggsData: newAggsData });
-  };
 
   updateInitialAppliedFilters = ({ filters }) => {
     this.setState({ initialAppliedFilters: filters });
@@ -60,7 +54,6 @@ class GuppyDataExplorer extends React.Component {
               type: this.props.guppyConfig.dataType,
               ...this.props.guppyConfig,
             }}
-            onReceiveNewAggsData={this.handleReceiveNewAggsData}
             onFilterChange={this.handleFilterChange}
             rawDataFields={this.props.tableConfig.fields}
             accessibleFieldCheckList={
