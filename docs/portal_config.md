@@ -166,7 +166,7 @@ Below is an example, with inline comments describing what each JSON block config
     "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
     "explorerFilterValuesToHide": ["array of strings"], // optional, Values set in array will be hidden in guppy filters. Intended use is to hide missing data category from filters, for this it should be set to the same as `missing_data_alias` in Guppy server config
   },
-  "dataExplorerConfig": { // required; configuration for the Data Explorer (/explorer)
+  "dataExplorerConfig": { // required only if featureFlags.explorer is true; configuration for the Data Explorer (/explorer); can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the Data Explorer
       "project_id": { // required; GraphQL field to query for a chart (ex: this one will display the number of projects, based on the project_id)
         "chartType": "count", // required; indicates this chart will display a “count”
@@ -320,7 +320,7 @@ Below is an example, with inline comments describing what each JSON block config
     "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/", // optional; for tiered access, if a user wants to get access to the data sets what site should they visit?
     "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data" // optional; if exporting to Terra which URL should we use?
   },
-  "fileExplorerConfig": { // optional; configuration for the File Explorer
+  "fileExplorerConfig": { // optional; configuration for the File Explorer; can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the File Explorer
       "data_type": { // required; GraphQL field to query for a chart (ex: this one will display a bar chart for data types of the files in the cohort)
         "chartType": "stackedBar", // required; chart type of stack bar
