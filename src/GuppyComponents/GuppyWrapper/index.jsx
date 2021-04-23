@@ -11,9 +11,8 @@ import {
   askGuppyForSubAggregationData,
 } from '../Utils/queries';
 import { FILE_FORMATS } from '../Utils/const';
-import { mergeFilters } from '../Utils/filters';
+import { excludeSelfFilterFromAggsData, mergeFilters } from '../Utils/filters';
 import { getAllFieldsFromFilterConfigs } from '../Utils/queries';
-import { excludeSelfFilterFromAggsData } from '../ConnectedFilter/utils';
 
 /**
  * Wrapper that connects to Guppy server,

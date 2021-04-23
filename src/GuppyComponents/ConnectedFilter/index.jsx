@@ -1,12 +1,12 @@
 /* eslint react/forbid-prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getFilterSections } from './utils';
 import {
   askGuppyAboutArrayTypes,
   getAllFieldsFromFilterConfigs,
 } from '../Utils/queries';
 import {
+  getFilterSections,
   mergeFilters,
   updateCountsInInitialTabsOptions,
   sortTabsOptions,
