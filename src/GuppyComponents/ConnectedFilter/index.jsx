@@ -53,23 +53,11 @@ class ConnectedFilter extends React.Component {
     this._isMounted = false;
   }
 
-  handleReceiveNewAggsData(responseData, filterResults) {
-    if (this._isMounted)
-      this.setState({
-        receivedAggsData:
-          responseData._aggregation[this.props.guppyConfig.type],
-      });
-
-    if (this.props.onReceiveNewAggsData)
-      this.props.onReceiveNewAggsData(responseData, filterResults);
-  }
-
   /**
    * Handler function that is called everytime filter changes
    * What this function does:
    * 1. Ask guppy for aggregation data using (processed) filter
-   * 2. After get aggregation response, call `handleReceiveNewAggsData` handler
-   *    to process new received agg data
+   * 2. After get aggregation response, process new received agg data
    * 3. If there's `onFilterChange` callback function from parent, call it
    * @param {object} filterResults
    */
@@ -99,7 +87,13 @@ class ConnectedFilter extends React.Component {
           }`
         );
 
-      this.handleReceiveNewAggsData(res.data, mergedFilterResults);
+      if (this._isMounted)
+        this.setState({
+          receivedAggsData: res.data._aggregation[this.props.guppyConfig.type],
+        });
+
+      if (this.props.onReceiveNewAggsData)
+        this.props.onReceiveNewAggsData(res.data, mergedFilterResults);
 
       if (Object.keys(this.state.initialAggsData).length === 0)
         this.saveInitialAggsData(
