@@ -39,33 +39,7 @@ class ConnectedFilter extends React.Component {
   componentDidMount() {
     this._isMounted = true;
 
-    if (this.props.onFilterChange) this.props.onFilterChange(this.state.filter);
-
-    askGuppyForAggregationData(
-      this.props.guppyConfig.path,
-      this.props.guppyConfig.type,
-      this.state.allFields,
-      this.state.filter
-    ).then((res) => {
-      if (!res.data)
-        console.error(
-          `error querying guppy${
-            res.errors && res.errors.length > 0
-              ? `: ${res.errors[0].message}`
-              : ''
-          }`
-        ); // eslint-disable-line no-console
-
-      this.handleReceiveNewAggsData(
-        res.data._aggregation[this.props.guppyConfig.type],
-        res.data._aggregation.accessible._totalCount,
-        res.data._aggregation.all._totalCount,
-        this.props.adminAppliedPreFilters
-      );
-      this.saveInitialAggsData(
-        res.data._aggregation[this.props.guppyConfig.type]
-      );
-    });
+    this.handleFilterChange(this.state.filter);
 
     askGuppyAboutArrayTypes(this.props.guppyConfig.path).then((res) => {
       const keys = Object.keys(res);
@@ -121,12 +95,26 @@ class ConnectedFilter extends React.Component {
       mergedFilterResults,
       this.controller.signal
     ).then((res) => {
+      if (!res.data)
+        console.error(
+          `error querying guppy${
+            res.errors && res.errors.length > 0
+              ? `: ${res.errors[0].message}`
+              : ''
+          }`
+        );
+
       this.handleReceiveNewAggsData(
         res.data._aggregation[this.props.guppyConfig.type],
         res.data._aggregation.accessible._totalCount,
         res.data._aggregation.all._totalCount,
         mergedFilterResults
       );
+
+      if (Object.keys(this.state.initialAggsData).length === 0)
+        this.saveInitialAggsData(
+          res.data._aggregation[this.props.guppyConfig.type]
+        );
     });
 
     if (this.props.onFilterChange) {
