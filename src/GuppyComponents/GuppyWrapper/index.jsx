@@ -85,9 +85,8 @@ class GuppyWrapper extends React.Component {
           : fields;
 
       if (this._isMounted) {
-        this.setState({ allFields: fields, rawDataFields }, () => {
-          this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
-        });
+        this.setState({ allFields: fields, rawDataFields });
+        this.fetchRawDataFromGuppy(rawDataFields, undefined, true);
       }
     });
   }
