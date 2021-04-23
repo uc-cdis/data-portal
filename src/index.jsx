@@ -4,51 +4,58 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import querystring from 'querystring';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
+import GA, { RouteTracker } from './components/GoogleAnalytics';
+import { DAPRouteTracker } from './components/DAPAnalytics';
 import { Helmet } from 'react-helmet';
-
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
 import { fetchAndSetCsrfToken } from './configs';
 import { fetchDictionary, fetchSchema, fetchVersionInfo, fetchUserAccess, fetchUserAuthMapping } from './actions';
-import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
-import HomePage from './Homepage/page';
-import DocumentPage from './Document/page';
-import { fetchCoreMetadata, ReduxCoreMetadataPage } from './CoreMetadata/reduxer';
-import Indexing from './Indexing/Indexing';
-import IndexPage from './Index/page';
-import DataDictionary from './DataDictionary/.';
-import ReduxPrivacyPolicy from './PrivacyPolicy/ReduxPrivacyPolicy';
-import ProjectSubmission from './Submission/ReduxProjectSubmission';
-import ReduxMapFiles from './Submission/ReduxMapFiles';
-import ReduxMapDataModel from './Submission/ReduxMapDataModel';
-import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
-import UserAgreementCert from './UserAgreement/ReduxCertPopup';
-import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
 import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
-import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
 } from './localconf';
-import Analysis from './Analysis/Analysis';
-import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
-import GA, { RouteTracker } from './components/GoogleAnalytics';
-import { DAPRouteTracker } from './components/DAPAnalytics';
-import GuppyDataExplorer from './GuppyDataExplorer/.';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
-import Workspace from './Workspace';
-import ResourceBrowser from './ResourceBrowser';
-import DiscoveryBeta from './Discovery';
-import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
+
+
+
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+
+import { fetchCoreMetadata, ReduxCoreMetadataPage } from './CoreMetadata/reduxer';
+
+
+
+const Indexing = React.lazy(() => import('./Indexing/Indexing'));
+const IndexPage = React.lazy(() => import('./Index/page'));
+const GuppyDataExplorer = React.lazy(() => import('./GuppyDataExplorer/.'));
+const HomePage = React.lazy(() => import('./Homepage/page'));
+const DocumentPage = React.lazy(() => import('./Document/page'));
+const DataDictionary = React.lazy(() => import('./DataDictionary/.'));
+const ReduxPrivacyPolicy = React.lazy(() => import('./PrivacyPolicy/ReduxPrivacyPolicy'));
+const ProjectSubmission = React.lazy(() => import('./Submission/ReduxProjectSubmission'));
+const ReduxMapFiles = React.lazy(() => import('./Submission/ReduxMapFiles'));
+const ReduxMapDataModel = React.lazy(() => import('./Submission/ReduxMapDataModel'));
+const UserAgreementCert = React.lazy(() => import('./UserAgreement/ReduxCertPopup'));
+const GraphQLQuery = React.lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
+const Analysis = React.lazy(() => import('./Analysis/Analysis'));
+const ReduxAnalysisApp = React.lazy(() => import('./Analysis/ReduxAnalysisApp'));
+const Workspace = React.lazy(() => import('./Workspace'));
+const ResourceBrowser = React.lazy(() => import('./ResourceBrowser'));
+const DiscoveryBeta = React.lazy(() => import('./Discovery'));
+const ErrorWorkspacePlaceholder = React.lazy(() => import('./Workspace/ErrorWorkspacePlaceholder'));
+const NotFound = React.lazy(() => import('./components/NotFound'));
+
+import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
+import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
-import NotFound from './components/NotFound';
 
 
 // monitor user's session
