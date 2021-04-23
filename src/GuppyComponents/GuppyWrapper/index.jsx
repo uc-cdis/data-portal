@@ -86,7 +86,7 @@ class GuppyWrapper extends React.Component {
 
       if (this._isMounted) {
         this.setState({ allFields: fields, rawDataFields }, () => {
-          this.getDataFromGuppy(this.state.rawDataFields, undefined, true);
+          this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
         });
       }
     });
@@ -122,7 +122,7 @@ class GuppyWrapper extends React.Component {
       this.setState({ filter }, () => {
         this.controller.abort();
         this.controller = new AbortController();
-        this.getDataFromGuppy(this.state.rawDataFields, undefined, true);
+        this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
       });
     }
   }
@@ -132,7 +132,7 @@ class GuppyWrapper extends React.Component {
    * This function will update this.state.rawData and this.state.totalCount
    */
   handleFetchAndUpdateRawData({ offset = 0, size = 20, sort = [] }) {
-    return this.getDataFromGuppy(
+    return this.fetchRawDataFromGuppy(
       this.state.rawDataFields,
       sort,
       true,
@@ -218,7 +218,7 @@ class GuppyWrapper extends React.Component {
    * @param {number} offset
    * @param {number} size
    */
-  getDataFromGuppy(fields, sort, updateDataWhenReceive, offset, size) {
+  fetchRawDataFromGuppy(fields, sort, updateDataWhenReceive, offset, size) {
     if (this._isMounted) this.setState({ gettingDataFromGuppy: true });
     if (!fields || fields.length === 0) {
       if (this._isMounted) this.setState({ gettingDataFromGuppy: false });
