@@ -28,14 +28,10 @@ class ConnectedFilter extends React.Component {
       allFields,
       initialAggsData: {},
       receivedAggsData: {},
-      adminAppliedPreFilters: { ...this.props.adminAppliedPreFilters },
       filter: { ...initialFilter },
       filtersApplied: { ...initialFilter },
     };
     this.filterGroupRef = React.createRef();
-    this.adminPreFiltersFrozen = JSON.stringify(
-      this.props.adminAppliedPreFilters
-    ).slice();
     this.arrayFields = [];
     this._isMounted = false;
     this.controller = new AbortController();
@@ -65,7 +61,7 @@ class ConnectedFilter extends React.Component {
         res.data._aggregation[this.props.guppyConfig.type],
         res.data._aggregation.accessible._totalCount,
         res.data._aggregation.all._totalCount,
-        this.state.adminAppliedPreFilters
+        this.props.adminAppliedPreFilters
       );
       this.saveInitialAggsData(
         res.data._aggregation[this.props.guppyConfig.type]
@@ -121,12 +117,9 @@ class ConnectedFilter extends React.Component {
     this.controller.abort();
     this.controller = new AbortController();
 
-    const adminAppliedPreFilters = JSON.parse(this.adminPreFiltersFrozen);
-    if (this._isMounted) this.setState({ adminAppliedPreFilters });
-
     const mergedFilterResults = mergeFilters(
       filterResults,
-      adminAppliedPreFilters
+      this.props.adminAppliedPreFilters
     );
     if (this._isMounted) this.setState({ filtersApplied: mergedFilterResults });
 
@@ -195,7 +188,7 @@ class ConnectedFilter extends React.Component {
             fieldMapping,
             processedTabsOptions,
             this.state.initialAggsData,
-            this.state.adminAppliedPreFilters,
+            this.props.adminAppliedPreFilters,
             this.props.guppyConfig,
             this.arrayFields
           )}
