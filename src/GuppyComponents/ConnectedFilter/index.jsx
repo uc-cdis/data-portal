@@ -47,9 +47,12 @@ class ConnectedFilter extends React.Component {
   componentDidUpdate() {
     if (
       Object.keys(this.state.initialAggsData).length === 0 &&
-      Object.keys(this.props.receivedAggsData).length !== 0
+      Object.keys(this.props.receivedAggsData).length !== 0 &&
+      this._isMounted
     )
-      this.saveInitialAggsData(this.props.receivedAggsData);
+      // Save initial aggregation data, especially for range slider
+      // so that we still have min/max values for range slider
+      this.setState({ initialAggsData: this.props.receivedAggsData });
   }
 
   /**
@@ -119,15 +122,6 @@ class ConnectedFilter extends React.Component {
         />
       )
     );
-  }
-
-  /**
-   * Save initial aggregation data, especially for range slider
-   * so that we still have min/max values for range slider
-   * @param {object} aggsData
-   */
-  saveInitialAggsData(aggsData) {
-    if (this._isMounted) this.setState({ initialAggsData: aggsData });
   }
 
   render() {
