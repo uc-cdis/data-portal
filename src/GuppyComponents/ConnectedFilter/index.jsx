@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { getFilterSections } from './utils';
 import {
   askGuppyAboutArrayTypes,
-  askGuppyForAggregationData,
   getAllFieldsFromFilterConfigs,
 } from '../Utils/queries';
 import {
@@ -33,13 +32,10 @@ class ConnectedFilter extends React.Component {
     this.filterGroupRef = React.createRef();
     this.arrayFields = [];
     this._isMounted = false;
-    this.controller = new AbortController();
   }
 
   componentDidMount() {
     this._isMounted = true;
-
-    this.handleFilterChange(this.state.filter);
 
     askGuppyAboutArrayTypes(this.props.guppyConfig.path).then((res) => {
       const keys = Object.keys(res);
@@ -53,6 +49,14 @@ class ConnectedFilter extends React.Component {
     this._isMounted = false;
   }
 
+  componentDidUpdate() {
+    if (
+      Object.keys(this.state.initialAggsData).length === 0 &&
+      Object.keys(this.props.receivedAggsData).length !== 0
+    )
+      this.saveInitialAggsData(this.props.receivedAggsData);
+  }
+
   /**
    * Handler function that is called everytime filter changes
    * What this function does:
@@ -62,44 +66,11 @@ class ConnectedFilter extends React.Component {
    * @param {object} filterResults
    */
   handleFilterChange(filterResults) {
-    this.controller.abort();
-    this.controller = new AbortController();
-
     const mergedFilterResults = mergeFilters(
       filterResults,
       this.props.adminAppliedPreFilters
     );
     if (this._isMounted) this.setState({ filter: mergedFilterResults });
-
-    askGuppyForAggregationData(
-      this.props.guppyConfig.path,
-      this.props.guppyConfig.type,
-      this.state.allFields,
-      mergedFilterResults,
-      this.controller.signal
-    ).then((res) => {
-      if (!res.data)
-        console.error(
-          `error querying guppy${
-            res.errors && res.errors.length > 0
-              ? `: ${res.errors[0].message}`
-              : ''
-          }`
-        );
-
-      if (this._isMounted)
-        this.setState({
-          receivedAggsData: res.data._aggregation[this.props.guppyConfig.type],
-        });
-
-      if (this.props.onReceiveNewAggsData)
-        this.props.onReceiveNewAggsData(res.data, mergedFilterResults);
-
-      if (Object.keys(this.state.initialAggsData).length === 0)
-        this.saveInitialAggsData(
-          res.data._aggregation[this.props.guppyConfig.type]
-        );
-    });
 
     if (this.props.onFilterChange) {
       this.props.onFilterChange(mergedFilterResults);
@@ -108,7 +79,7 @@ class ConnectedFilter extends React.Component {
 
   /**
    * This function contains partial rendering logic for filter components.
-   * It transfers aggregation data (`this.state.receivedAggsData`) to items inside filters.
+   * It transfers aggregation data (`this.props.receivedAggsData`) to items inside filters.
    * But before that, the function first calls `this.props.onProcessFilterAggsData`, which is
    * a callback function passed by `ConnectedFilter`'s parent component, so that the parent
    * component could do some pre-processing modification about filter.
@@ -117,7 +88,7 @@ class ConnectedFilter extends React.Component {
     if (this.props.hidden) return null;
 
     const tabsOptions = this.props.onProcessFilterAggsData(
-      this.state.receivedAggsData
+      this.props.receivedAggsData
     );
     if (Object.keys(this.initialTabsOptions).length === 0)
       this.initialTabsOptions = tabsOptions;
@@ -208,7 +179,6 @@ ConnectedFilter.propTypes = {
     type: PropTypes.string.isRequired,
   }).isRequired,
   onFilterChange: PropTypes.func,
-  onReceiveNewAggsData: PropTypes.func,
   className: PropTypes.string,
   fieldMapping: PropTypes.arrayOf(
     PropTypes.shape({
@@ -220,6 +190,7 @@ ConnectedFilter.propTypes = {
   onProcessFilterAggsData: PropTypes.func,
   adminAppliedPreFilters: PropTypes.object,
   initialAppliedFilters: PropTypes.object,
+  receivedAggsData: PropTypes.object,
   lockedTooltipMessage: PropTypes.string,
   disabledTooltipMessage: PropTypes.string,
   hideZero: PropTypes.bool,
@@ -232,13 +203,13 @@ ConnectedFilter.propTypes = {
 
 ConnectedFilter.defaultProps = {
   onFilterChange: () => {},
-  onReceiveNewAggsData: () => {},
   className: '',
   fieldMapping: [],
   tierAccessLimit: undefined,
   onProcessFilterAggsData: (data) => data,
   adminAppliedPreFilters: {},
   initialAppliedFilters: {},
+  receivedAggsData: {},
   lockedTooltipMessage: '',
   disabledTooltipMessage: '',
   hideZero: false,
