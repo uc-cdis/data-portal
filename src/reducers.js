@@ -16,7 +16,6 @@ import bar from './Layout/reducers';
 import ddgraph from './DataDictionary/reducers';
 import privacyPolicy from './PrivacyPolicy/reducers';
 import study from './StudyViewer/reducers';
-import { logoutListener } from './Login/ProtectedContent';
 import { fetchUserAccess, fetchUserAuthMapping } from './actions';
 import getReduxStore from './reduxStore';
 
@@ -54,8 +53,6 @@ const user = (state = {}, action) => {
     return {
       ...state, vpc: action.vpc,
     };
-  case 'RECEIVE_AUTHORIZATION_URL':
-    return { ...state, oauth_url: action.url };
   case 'FETCH_ERROR':
     return { ...state, fetched_user: true, fetch_error: action.error };
   default:
@@ -110,7 +107,6 @@ const reducers = combineReducers({
   graphiql,
   login,
   form: formReducer,
-  auth: logoutListener,
   ddgraph,
   userAccess,
   userAuthMapping,

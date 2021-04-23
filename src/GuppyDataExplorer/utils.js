@@ -6,6 +6,8 @@
 *   dropdownConfig: infos for this dropdown, e.g. "title"
 *   buttonConfigs: a list of button configs (includes buttion title, button type, etc.)
 */
+import pluralize from 'pluralize';
+
 export const calculateDropdownButtonConfigs = (config) => {
   const dropdownConfig = config
     && config.dropdowns
@@ -56,4 +58,33 @@ export const humanizeNumber = (number, fixedPoint = 2) => {
 
   // 10^15+, number is too large
   return Number.parseFloat(number).toExponential(fixedPoint);
+};
+
+/*
+* Convert label to pluralized (optional title case)
+* @param {label} string - a label to convert to title
+* @param {titleCase} boolean - Should first letter be capitalized default false
+* @returns {string} Pluralized formatted word
+*/
+export const labelToPlural = (label, titleCase = false) => {
+  const pluralizedLabel = pluralize(label);
+  if (titleCase) {
+    return pluralizedLabel.charAt(0).toUpperCase() + pluralizedLabel.slice(1);
+  }
+  return pluralizedLabel.toLowerCase();
+};
+
+export const getQueryParameter = (queryKey) => {
+  const urlArray = window.location.search.split('?');
+  const searchParams = new URLSearchParams(urlArray[urlArray.length - 1]);
+  return searchParams.get(queryKey);
+};
+
+export const IsValidJSONString = (str) => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
 };

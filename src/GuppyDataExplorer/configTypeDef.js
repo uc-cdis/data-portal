@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 export const GuppyConfigType = PropTypes.shape({
   path: PropTypes.string.isRequired,
   dataType: PropTypes.string.isRequired,
+  tierAccessLevel: PropTypes.string,
   fieldMapping: PropTypes.arrayOf(PropTypes.shape({
     field: PropTypes.string,
     name: PropTypes.string,
@@ -27,6 +28,7 @@ export const FilterConfigType = PropTypes.shape({
 export const TableConfigType = PropTypes.shape({
   enabled: PropTypes.bool,
   fields: PropTypes.arrayOf(PropTypes.string),
+  ordered: PropTypes.bool,
 });
 
 export const ButtonConfigType = PropTypes.shape({

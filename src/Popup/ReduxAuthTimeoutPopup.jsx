@@ -7,7 +7,7 @@ import Popup from '../components/Popup';
 const goToLogin = (history) => {
   history.push('/login');
   // Refresh the page.jsx.
-  window.location.reload(false);
+  window.location.reload();
 };
 
 

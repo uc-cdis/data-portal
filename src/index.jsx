@@ -33,20 +33,21 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
-  indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic,
+  indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
+import { DAPRouteTracker } from './components/DAPAnalytics';
 import GuppyDataExplorer from './GuppyDataExplorer/.';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
+import DiscoveryBeta from './Discovery';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
-import './index.less';
 import NotFound from './components/NotFound';
 
 
@@ -82,6 +83,7 @@ async function init() {
           <BrowserRouter basename={basename}>
             <div>
               {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+              {enableDAPTracker && <DAPRouteTracker />}
               {isEnabled('noIndex') ?
                 <Helmet>
                   <meta name='robots' content='noindex,nofollow' />
@@ -382,6 +384,32 @@ async function init() {
                       />)
                     }
                   />
+                  {isEnabled('discovery') &&
+                    <Route
+                      exact
+                      path='/discovery'
+                      component={
+                        props => (<ProtectedContent
+                          public
+                          component={DiscoveryBeta}
+                          {...props}
+                        />)
+                      }
+                    />
+                  }
+                  {isEnabled('discovery') &&
+                    <Route
+                      exact
+                      path='/discovery/:studyUID'
+                      component={
+                        props => (<ProtectedContent
+                          public
+                          component={DiscoveryBeta}
+                          {...props}
+                        />)
+                      }
+                    />
+                  }
                   <Route
                     path='/not-found'
                     component={NotFound}

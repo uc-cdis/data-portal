@@ -57,23 +57,26 @@ class Footer extends Component {
               ))
             }
           </div>
-          <div className='footer__link-area'>
-            {
-              this.props.links.map((link, i) => (
-                <React.Fragment key={link.href}>
-                  <a
-                    href={link.href}
-                    className='footer__link'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    {link.text ? link.text : link.href}
-                  </a>
-                  { i !== this.props.links.length - 1 && <span> | </span> }
-                </React.Fragment>
-              ))
-            }
-          </div>
+          { (this.props.links.length > 0) ?
+            <div className='footer__link-area'>
+              {
+                this.props.links.map((link, i) => (
+                  <React.Fragment key={link.href}>
+                    <a
+                      href={link.href}
+                      className='footer__link'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      {link.text ? link.text : link.href}
+                    </a>
+                    { i !== this.props.links.length - 1 && <span> | </span> }
+                  </React.Fragment>
+                ))
+              }
+            </div>
+            : null
+          }
         </nav>
       </footer>
     );

@@ -9,6 +9,7 @@ import * as testGroupedData from './__test__/expectedGroupFiles.json';
 describe('MapFiles', () => {
   const fetchUnmappedFiles = jest.fn();
   const mapSelectedFiles = jest.fn();
+  const deleteSelectedFiles = jest.fn();
   const history = createMemoryHistory('/submission/files');
   const user = { username: 'testuser' };
 
@@ -17,6 +18,7 @@ describe('MapFiles', () => {
       <MapFiles
         fetchUnmappedFiles={fetchUnmappedFiles}
         mapSelectedFiles={mapSelectedFiles}
+        deleteSelectedFiles={deleteSelectedFiles}
         history={history}
         unmappedFiles={testData.records}
         user={user}

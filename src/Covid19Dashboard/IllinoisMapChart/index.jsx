@@ -5,7 +5,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
-import { numberWithCommas } from '../dataUtils.js';
 import countyData from '../data/us_counties';
 
 function addDataToGeoJsonBase(data) {
@@ -52,12 +51,11 @@ function filterCountyGeoJson(selectedFips) {
 class IllinoisMapChart extends React.Component {
   constructor(props) {
     super(props);
-    this.updateDimensions = this.updateDimensions.bind(this);
     this.choroCountyGeoJson = null;
     this.state = {
       mapSize: {
         width: '100%',
-        height: window.innerHeight - 221,
+        height: '100%',
       },
       viewport: {
         // start centered on Chicago
@@ -69,27 +67,90 @@ class IllinoisMapChart extends React.Component {
       },
       hoverInfo: null,
     };
+    this.mapData = {
+      modeledCountyGeoJson: null,
+      colors: {},
+      colorsAsList: null,
+    };
   }
+  componentDidUpdate() {
+    if (!(this.mapData.colorsAsList === null
+          && Object.keys(this.props.jsonByLevel.county).length > 0)) {
+      return;
+    }
+    if (Object.keys(this.props.jsonByLevel.country).length && !this.choroCountyGeoJson) {
+      this.choroCountyGeoJson = addDataToGeoJsonBase(
+        this.props.jsonByLevel.county,
+      );
+    }
+    this.mapData.modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
 
-  componentDidMount() {
-    window.addEventListener('resize', this.updateDimensions);
+    // Finds second highest value in data set
+    // Second highest value is used to better balance distribution
+    // Due to cook county being an extreme outlier
+    const maxVal = this.mapData.modeledCountyGeoJson.features
+      .map((obj) => {
+        const confirmedCases = obj.properties.confirmed;
+        // this is to handle <5 strings in dataset, makes it 0
+        if (typeof confirmedCases === 'string') {
+          return 0;
+        }
+        return confirmedCases;
+      })
+      .sort((a, b) => b - a)[1];// returning second highest value
+    // check if maxVal is a number
+    if (typeof maxVal !== 'number') {
+      return;
+    }
+    const maxValExponent = Math.log10(maxVal);
+
+    // Math to calculate Index range for map
+    const colorRangeMath = (base) => {
+      // applies maxValExponent to base then rounds down to greatest place
+      const tempNum = Math.ceil(base ** maxValExponent);
+      const roundingDigits = 10 ** (tempNum.toString().length - 1);
+
+      return Math.floor(tempNum / roundingDigits) * roundingDigits;
+    };
+
+    this.mapData.colors = {
+      0: '#FFF',
+      [colorRangeMath(2)]: '#F7F787',
+      [colorRangeMath(3)]: '#EED322',
+      [colorRangeMath(4)]: '#E6B71E',
+      [colorRangeMath(5)]: '#DA9C20',
+      [colorRangeMath(6)]: '#CA8323',
+      [colorRangeMath(7)]: '#B86B25',
+      [colorRangeMath(8)]: '#A25626',
+      [colorRangeMath(9)]: '#8B4225',
+      [colorRangeMath(10)]: '#850001',
+    };
+    this.mapData.colorsAsList = Object.entries(this.mapData.colors)
+      .map(item => [+item[0], item[1]]).flat();
   }
 
   onHover = (event) => {
-    let hoverInfo = null;
-
     if (!event.features) { return; }
+
+    let hoverInfo = null;
+    const formatNumberToDisplay = (rawNum) => {
+      if (rawNum && rawNum !== 'null') {
+        if (typeof rawNum === 'number') {
+          return rawNum.toLocaleString();
+        }
+        return rawNum;
+      }
+      // Default if missing
+      return 0;
+    };
 
     event.features.forEach((feature) => {
       if (feature.layer.id !== 'confirmed-choropleth') {
         return;
       }
-      let confirmed = feature.properties.confirmed;
-      confirmed = confirmed && confirmed !== 'null' ? confirmed : 0;
-      let deaths = feature.properties.deaths;
-      deaths = deaths && deaths !== 'null' ? deaths : 0;
-      let recovered = feature.properties.recovered;
-      recovered = recovered && recovered !== 'null' ? recovered : 0;
+      const confirmed = formatNumberToDisplay(feature.properties.confirmed);
+      const deaths = formatNumberToDisplay(feature.properties.deaths);
+      const recovered = formatNumberToDisplay(feature.properties.recovered);
 
       const state = feature.properties.STATE;
       const county = feature.properties.COUNTYNAME;
@@ -101,12 +162,12 @@ class IllinoisMapChart extends React.Component {
         locationName,
         FIPS: feature.properties.FIPS,
         values: {
-          'confirmed cases': numberWithCommas(confirmed),
-          deaths: numberWithCommas(deaths),
+          'confirmed cases': confirmed,
+          deaths,
         },
       };
       if (recovered) {
-        hoverInfo.values.recovered = numberWithCommas(recovered);
+        hoverInfo.values.recovered = recovered;
       }
     });
 
@@ -131,13 +192,7 @@ class IllinoisMapChart extends React.Component {
     });
   }
 
-  updateDimensions() {
-    this.setState({
-      mapSize: { width: '100%', height: window.innerHeight - 221 },
-    });
-  }
-
-  renderPopup() {
+  renderHoverPopup() {
     const { hoverInfo } = this.state;
     if (hoverInfo) {
       return (
@@ -166,33 +221,12 @@ class IllinoisMapChart extends React.Component {
   }
 
   render() {
-    if (Object.keys(this.props.jsonByLevel.country).length && !this.choroCountyGeoJson) {
-      this.choroCountyGeoJson = addDataToGeoJsonBase(
-        this.props.jsonByLevel.county,
-      );
-    }
-    const modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
-
-    const colors = {
-      0: '#FFF',
-      5: '#F7F787',
-      20: '#EED322',
-      50: '#E6B71E',
-      100: '#DA9C20',
-      500: '#CA8323',
-      1000: '#B86B25',
-      2500: '#A25626',
-      5000: '#8B4225',
-      10000: '#850001',
-    };
-    const colorsAsList = Object.entries(colors).map(item => [+item[0], item[1]]).flat();
-
     return (
       <div className='map-chart'>
         <ControlPanel
           showMapStyle={false}
           showLegend
-          colors={colors}
+          colors={this.mapData.colors}
         />
         <ReactMapGL.InteractiveMap
           className='.map-chart__mapgl-map'
@@ -208,19 +242,19 @@ class IllinoisMapChart extends React.Component {
           dragRotate={false}
           touchRotate={false}
         >
-          {this.renderPopup()}
+          {this.renderHoverPopup()}
 
           <ReactMapGL.Source type='geojson' data={this.choroCountyGeoJson}>
             <ReactMapGL.Layer
               id='confirmed-choropleth'
               type='fill'
               beforeId='waterway-label'
-              paint={{
+              paint={this.mapData.colorsAsList === null ? {} : {
                 'fill-color': [
                   'interpolate',
                   ['linear'],
                   ['number', ['get', 'confirmed'], 0],
-                  ...colorsAsList,
+                  ...this.mapData.colorsAsList,
                 ],
                 'fill-opacity': 0.6,
               }}
@@ -228,7 +262,7 @@ class IllinoisMapChart extends React.Component {
           </ReactMapGL.Source>
 
           {/* Outline a set of counties */}
-          <ReactMapGL.Source type='geojson' data={modeledCountyGeoJson}>
+          <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountyGeoJson}>
             <ReactMapGL.Layer
               id='county-outline'
               type='line'

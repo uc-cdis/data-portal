@@ -15,6 +15,8 @@ npm install
 
 ### Local development and dev.html
 
+See [docs/guide_running_portal_locally.md](docs/guide_running_portal_locally.md) for a step-by-step guide to running portal locally.
+
 The portal's `/dev.html` path loads javascript and most css
 from `localhost`.  Test code under local development with this procedure:
 * `npm install`
@@ -32,10 +34,13 @@ You can also use the `autoprod` value for `NODE_ENV` to do the `auto` setup, the
 HOSTNAME=qa-brain.planx-pla.net NODE_ENV=autoprod GEN3_BUNDLE=all bash ./runWebpack.sh
 ```
 
+Tiered-access settings can be configured through either the `TIER_ACCESS_LEVEL` environment variable (site-wide) or through the `tierAccessLevel` property on guppyConfig blocks for each Data Explorer tab in the gitops.json (index-scoped). To use the index-scoped config style, all guppyConfig blocks in the portal config must contain the `tierAccessLevel` property. See `docs/portal_config.md` for thorough example of portal config structure.
 
->**NOTE:** To locally test Tiered Access features, you must include the additional environment variables `TIER_ACCESS_LEVEL` and `TIER_ACCESS_LIMIT`, with should have the same values as the server's "global.tier_access_level" and "global.tier_access_limit" properties in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest).
+>**NOTE:** To locally test site-wide Tiered Access features, the additional environment variables `TIER_ACCESS_LEVEL` and `TIER_ACCESS_LIMIT` should have the same values as the server's "global.tier_access_level" and "global.tier_access_limit" properties in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest).
 >
 > **Example**:`HOSTNAME=qa-brain.planx-pla.net TIER_ACCESS_LEVEL=regular TIER_ACCESS_LIMIT=50 NODE_ENV=auto bash ./runWebpack.sh`
+
+If the index-scoped tiered-access setting is used, the `tierAccessLevel` properties in the guppyConfig blocks in gitops.json should have the same values as the server's "guppyConfig[index].tier_access_level" in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest). Tabs should be configured with the same tiered-access level as the ES index they use.
 
 
 * Accept the self-signed certificate at https://localhost:9443/bundle.js

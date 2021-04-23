@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import NavBar from '../components/layout/NavBar';
 import TopBar from '../components/layout/TopBar';
 import Footer from '../components/layout/Footer';
@@ -13,34 +14,22 @@ export const setActive = link => ({
   data: link,
 });
 
-export const initActive = link => ({
-  type: 'ACTIVE_INIT',
-  data: link,
-});
-
 export const ReduxNavBar = (() => {
   const mapStateToProps = state => ({
     navTitle: components.navigation.title,
     navItems: components.navigation.items,
     dictIcons,
-    activeTab: state.bar.active,
     userAccess: state.userAccess.access,
-    isFullWidth: isPageFullScreen(state.bar.active),
   });
 
-  // Bar chart does not dispatch anything
-  const mapDispatchToProps = dispatch => ({
-    onActiveTab: link => dispatch(setActive(link)),
-    onInitActive: () => dispatch(initActive()),
-  });
-
-  return connect(mapStateToProps, mapDispatchToProps)(NavBar);
+  return withRouter(connect(mapStateToProps)(NavBar));
 })();
 
 export const ReduxTopBar = (() => {
   const mapStateToProps = state => ({
     navTitle: components.navigation.title,
     topItems: components.topBar.items,
+    useProfileDropdown: components.topBar.useProfileDropdown,
     activeTab: state.bar.active,
     user: state.user,
     userAuthMapping: state.userAuthMapping,

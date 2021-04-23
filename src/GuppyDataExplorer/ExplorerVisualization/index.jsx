@@ -18,6 +18,7 @@ import {
 } from '../configTypeDef';
 import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper';
 import './ExplorerVisualization.css';
+import { labelToPlural } from '../utils';
 
 
 class ExplorerVisualization extends React.Component {
@@ -31,7 +32,7 @@ class ExplorerVisualization extends React.Component {
     let countItems = [];
     const stackedBarCharts = [];
     countItems.push({
-      label: this.props.nodeCountTitle,
+      label: this.props.nodeCountTitle || labelToPlural(this.props.guppyConfig.dataType, true),
       value: this.props.totalCount,
     });
     Object.keys(chartConfig).forEach((field) => {
@@ -46,6 +47,7 @@ class ExplorerVisualization extends React.Component {
         });
         break;
       case 'pie':
+      case 'fullPie':
       case 'bar':
       case 'stackedBar': {
         const dataItem = {
@@ -64,7 +66,7 @@ class ExplorerVisualization extends React.Component {
         throw new Error(`Invalid chartType ${chartConfig[`${field}`].chartType}`);
       }
     });
-    // sort cout items according to appearence in chart config
+    // sort cout items according to appearance in chart config
     countItems = countItems.sort((a, b) => {
       const aIndex = Object.values(chartConfig).findIndex(v => v.title === a.label);
       const bIndex = Object.values(chartConfig).findIndex(v => v.title === b.label);
@@ -97,12 +99,17 @@ class ExplorerVisualization extends React.Component {
 
   render() {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
-    const tableColumns = (this.props.tableConfig.fields && this.props.tableConfig.fields.length > 0)
-      ? this.props.tableConfig.fields : this.props.allFields;
+    const tableColumnsOrdered = (this.props.tableConfig.fields
+      && this.props.tableConfig.fields.length > 0);
+    const tableColumns = tableColumnsOrdered ? this.props.tableConfig.fields : this.props.allFields;
     // don't lock components for libre commons
     const isComponentLocked = (tierAccessLevel !== 'regular') ? false : checkForAnySelectedUnaccessibleField(this.props.aggsData,
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
-    const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${this.props.tierAccessLimit} ${this.props.guppyConfig.nodeCountTitle.toLowerCase() || this.props.guppyConfig.dataType}.`;
+    const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${this.props.tierAccessLimit} ${
+      this.props.guppyConfig.nodeCountTitle ?
+        this.props.guppyConfig.nodeCountTitle.toLowerCase() :
+        labelToPlural(this.props.guppyConfig.dataType)
+    }.`;
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
 
     // heatmap config
@@ -229,6 +236,7 @@ class ExplorerVisualization extends React.Component {
               className='guppy-explorer-visualization__table'
               tableConfig={{
                 fields: tableColumns,
+                ordered: tableColumnsOrdered,
                 linkFields: this.props.tableConfig.linkFields || [],
               }}
               fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
@@ -264,7 +272,7 @@ ExplorerVisualization.propTypes = {
   buttonConfig: ButtonConfigType,
   heatMapConfig: PropTypes.object,
   guppyConfig: GuppyConfigType,
-  nodeCountTitle: PropTypes.string.isRequired,
+  nodeCountTitle: PropTypes.string,
   tierAccessLimit: PropTypes.number.isRequired,
 };
 
@@ -287,6 +295,7 @@ ExplorerVisualization.defaultProps = {
   buttonConfig: {},
   heatMapConfig: {},
   guppyConfig: {},
+  nodeCountTitle: '',
 };
 
 export default ExplorerVisualization;

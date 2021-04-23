@@ -63,11 +63,18 @@ class Login extends React.Component {
     if (queryParams.next) {
       next = basename === '/' ? queryParams.next : basename + queryParams.next;
     }
-    next = next.replace('?request_access', '?request_access_logged_in');
-    const customImage = components.login && components.login.image ?
-      components.login.image
-      : 'gene';
+
+    let customImage = 'gene';
+    let displaySideBoxImages = true;
+    if (components.login && components.login.image !== undefined) {
+      if (components.login.image !== '') {
+        customImage = components.login.image;
+      } else {
+        displaySideBoxImages = false;
+      }
+    }
     const customImageStyle = { backgroundImage: `url(/src/img/icons/${customImage}.svg)` };
+    next = next.replace('?request_access', '?request_access_logged_in');
 
     let loginComponent = (
       <React.Fragment key='login-component'>
@@ -75,7 +82,7 @@ class Login extends React.Component {
           <div className='login-page__entry-login'>
             <Button
               className='login-page__entry-button'
-              onClick={() => {}}
+              onClick={() => { }}
               buttonType='primary'
               isPending
               enabled={false}
@@ -91,8 +98,8 @@ class Login extends React.Component {
     if (this.props.providers.length > 0) {
       const loginOptions = {}; // one for each login provider
       this.props.providers.forEach((provider, i) => {
-      // for backwards compatibility, if "urls" does not exist
-      // (fence < 4.8.0), generate it from the deprecated "url" field
+        // for backwards compatibility, if "urls" does not exist
+        // (fence < 4.8.0), generate it from the deprecated "url" field
         let loginUrls = provider.urls;
         if (typeof loginUrls === 'undefined') {
           loginUrls = [{
@@ -122,17 +129,24 @@ class Login extends React.Component {
         (p, i) => (
           <React.Fragment key={i}>
             <div className='login-page__entries'>
-              { p.desc }
+              {p.desc}
               <div className='login-page__entry-login'>
                 {
-                  // if there are multiple URLs, display a dropdown next
-                  // to the login button
+                  // If there are multiple URLs, display a dropdown next to
+                  // the login button We use createFilter here with
+                  // `ignoreAccents: false` to increase performance when
+                  // dealing with large numbers of IDPs (Incommon logins can
+                  // have 3k+ options!). The `stringify` option to
+                  // createFilter here ensures that react-select only searches
+                  // over the login options' names (e.g. "The University of
+                  // Chicago") and not the actual option values, which are
+                  // URLs.
                   loginOptions[i].length > 1 && (
                     <Select
                       isClearable
                       isSearchable
                       options={loginOptions[i]}
-                      filterOption={createFilter({ ignoreAccents: true, ignoreCase: true })}
+                      filterOption={createFilter({ ignoreAccents: false, matchFrom: 'any', stringify: option => `${option.label}` })}
                       onChange={option => this.selectChange(option, i)}
                       value={this.state.selectedLoginOption &&
                         this.state.selectedLoginOption[i]}
@@ -161,7 +175,11 @@ class Login extends React.Component {
 
     return (
       <div className='login-page'>
-        <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
+        {
+          (displaySideBoxImages) ?
+            <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
+            : null
+        }
         <div className='login-page__central-content'>
           <div className='h1-typo login-page__title'>
             {this.props.data.title}
@@ -171,10 +189,10 @@ class Login extends React.Component {
           </div>
           <hr className='login-page__separator' />
           <div className='body-typo'>{this.props.data.text}</div>
-          { loginComponent }
+          {loginComponent}
           <div>
             {this.props.data.contact}
-            { (this.props.data.email && !this.props.data.contact_link) &&
+            {(this.props.data.email && !this.props.data.contact_link) &&
               <a href={`mailto:${this.props.data.email}`}>
                 {this.props.data.email}
               </a>
@@ -190,7 +208,11 @@ class Login extends React.Component {
             {'.'}
           </div>
         </div>
-        <div className='login-page__side-box login-page__side-box--right' style={customImageStyle} />
+        {
+          (displaySideBoxImages) ?
+            <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
+            : null
+        }
       </div>
     );
   }
