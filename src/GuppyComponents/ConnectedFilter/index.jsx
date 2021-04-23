@@ -91,17 +91,13 @@ class ConnectedFilter extends React.Component {
     filterResults
   ) {
     if (this._isMounted) this.setState({ receivedAggsData });
-    if (this.props.onReceiveNewAggsData) {
-      const resultAggsData = excludeSelfFilterFromAggsData(
-        receivedAggsData,
-        filterResults
-      );
+
+    if (this.props.onReceiveNewAggsData)
       this.props.onReceiveNewAggsData(
-        resultAggsData,
+        excludeSelfFilterFromAggsData(receivedAggsData, filterResults),
         accessibleCount,
         totalCount
       );
-    }
   }
 
   /**
