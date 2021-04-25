@@ -108,7 +108,6 @@
 }
 
 .discovery-header__tag-group {
-  display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
@@ -116,7 +115,7 @@
   overflow-y: scroll;
   overflow-x: visible;
   width: 200px;
-  height: 111px;
+  height: 100%;
 }
 
 .discovery-header__tag-group::-webkit-scrollbar {
