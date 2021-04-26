@@ -3,14 +3,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  askGuppyForAggregationData,
   askGuppyForRawData,
-  downloadDataFromGuppy,
-  askGuppyForTotalCounts,
-  getAllFieldsFromGuppy,
   askGuppyForSubAggregationData,
+  askGuppyForTotalCounts,
+  downloadDataFromGuppy,
+  getAllFieldsFromFilterConfigs,
+  getAllFieldsFromGuppy,
 } from '../Utils/queries';
 import { FILE_FORMATS } from '../Utils/const';
-import { mergeFilters } from '../Utils/filters';
+import { excludeSelfFilterFromAggsData, mergeFilters } from '../Utils/filters';
 
 /**
  * Wrapper that connects to Guppy server,
@@ -20,8 +22,6 @@ import { mergeFilters } from '../Utils/filters';
  *   - guppyConfig: Guppy server config
  *   - onFilterChange: callback that takes filter as argument, will be
  * called every time filter changes
- *   - onReceiveNewAggsData: callback that takes aggregation results
- * as argument, will be called every time aggregation results updated
  *
  * This wrapper will pass following data (filters, aggs, configs) to children components via prop:
  *   - aggsData: the aggregation results, format:
@@ -54,19 +54,18 @@ class GuppyWrapper extends React.Component {
 
     // to avoid asynchronizations, we store another filter as private var
     this.filter = { ...initialFilter };
-    this.adminPreFiltersFrozen = JSON.stringify(
-      this.props.adminAppliedPreFilters
-    ).slice();
     this.state = {
-      gettingDataFromGuppy: false,
+      isLoadingAggsData: false,
+      receivedAggsData: {},
       aggsData: {},
       filter: { ...initialFilter },
+      isLoadingRawData: false,
       rawData: [],
       accessibleCount: 0,
       totalCount: 0,
       allFields: [],
+      aggsDataFields: getAllFieldsFromFilterConfigs(props.filterConfig.tabs),
       rawDataFields: [],
-      adminAppliedPreFilters: { ...this.props.adminAppliedPreFilters },
     };
     this._isMounted = false;
     this.controller = new AbortController();
@@ -85,9 +84,9 @@ class GuppyWrapper extends React.Component {
           : fields;
 
       if (this._isMounted) {
-        this.setState({ allFields: fields, rawDataFields }, () => {
-          this.getDataFromGuppy(this.state.rawDataFields, undefined, true);
-        });
+        this.setState({ allFields: fields, rawDataFields });
+        this.fetchAggsDataFromGuppy(this.state.filter);
+        this.fetchRawDataFromGuppy(rawDataFields, undefined, true);
       }
     });
   }
@@ -96,35 +95,16 @@ class GuppyWrapper extends React.Component {
     this._isMounted = false;
   }
 
-  handleReceiveNewAggsData(aggsData, accessibleCount, totalCount) {
-    if (this.props.onReceiveNewAggsData) {
-      this.props.onReceiveNewAggsData(aggsData, this.filter);
-    }
-    if (this._isMounted)
-      this.setState({ aggsData, accessibleCount, totalCount });
-  }
+  handleFilterChange(filter) {
+    if (this.props.onFilterChange) this.props.onFilterChange(filter);
 
-  handleFilterChange(userFilter) {
-    if (this._isMounted) {
-      this.setState({
-        adminAppliedPreFilters: JSON.parse(this.adminPreFiltersFrozen),
-      });
-    }
-    let filter = { ...userFilter };
-    if (Object.keys(this.state.adminAppliedPreFilters).length > 0) {
-      filter = mergeFilters(userFilter, this.state.adminAppliedPreFilters);
-    }
-    if (this.props.onFilterChange) {
-      this.props.onFilterChange(filter);
-    }
     this.filter = filter;
-    if (this._isMounted) {
-      this.setState({ filter }, () => {
-        this.controller.abort();
-        this.controller = new AbortController();
-        this.getDataFromGuppy(this.state.rawDataFields, undefined, true);
-      });
-    }
+    if (this._isMounted) this.setState({ filter });
+
+    this.controller.abort();
+    this.controller = new AbortController();
+    this.fetchAggsDataFromGuppy(filter);
+    this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
   }
 
   /**
@@ -132,7 +112,7 @@ class GuppyWrapper extends React.Component {
    * This function will update this.state.rawData and this.state.totalCount
    */
   handleFetchAndUpdateRawData({ offset = 0, size = 20, sort = [] }) {
-    return this.getDataFromGuppy(
+    return this.fetchRawDataFromGuppy(
       this.state.rawDataFields,
       sort,
       true,
@@ -210,6 +190,52 @@ class GuppyWrapper extends React.Component {
   }
 
   /**
+   * This function
+   * 1. Asks guppy for aggregation data using (processed) filter
+   * 2. Uses the aggregation response to update the following states:
+   *   - receivedAggsData
+   *   - aggsData
+   *   - accessibleCount
+   *   - totalCount
+   * @param {object} filter
+   */
+  fetchAggsDataFromGuppy(filter) {
+    if (this._isMounted) this.setState({ isLoadingAggsData: true });
+
+    askGuppyForAggregationData(
+      this.props.guppyConfig.path,
+      this.props.guppyConfig.type,
+      this.state.aggsDataFields,
+      filter,
+      this.controller.signal
+    ).then((res) => {
+      if (!res.data)
+        console.error(
+          `error querying guppy${
+            res.errors && res.errors.length > 0
+              ? `: ${res.errors[0].message}`
+              : ''
+          }`
+        );
+
+      const receivedAggsData =
+        res.data._aggregation[this.props.guppyConfig.type];
+      const aggsData = excludeSelfFilterFromAggsData(receivedAggsData, filter);
+      const accessibleCount = res.data._aggregation.accessible._totalCount;
+      const totalCount = res.data._aggregation.all._totalCount;
+
+      if (this._isMounted)
+        this.setState({
+          isLoadingAggsData: false,
+          receivedAggsData,
+          aggsData,
+          accessibleCount,
+          totalCount,
+        });
+    });
+  }
+
+  /**
    * This function get data with current filter (if any),
    * and update this.state.rawData and this.state.totalCount
    * @param {string[]} fields
@@ -218,10 +244,10 @@ class GuppyWrapper extends React.Component {
    * @param {number} offset
    * @param {number} size
    */
-  getDataFromGuppy(fields, sort, updateDataWhenReceive, offset, size) {
-    if (this._isMounted) this.setState({ gettingDataFromGuppy: true });
+  fetchRawDataFromGuppy(fields, sort, updateDataWhenReceive, offset, size) {
+    if (this._isMounted) this.setState({ isLoadingRawData: true });
     if (!fields || fields.length === 0) {
-      if (this._isMounted) this.setState({ gettingDataFromGuppy: false });
+      if (this._isMounted) this.setState({ isLoadingRawData: false });
       return Promise.resolve({ data: [], totalCount: 0 });
     }
 
@@ -248,7 +274,7 @@ class GuppyWrapper extends React.Component {
         const parsedData = data[this.props.guppyConfig.mainField][field];
         if (this._isMounted) {
           if (updateDataWhenReceive) this.setState({ rawData: parsedData });
-          this.setState({ gettingDataFromGuppy: false });
+          this.setState({ isLoadingRawData: false });
         }
         return {
           data: res.data,
@@ -275,7 +301,7 @@ class GuppyWrapper extends React.Component {
       const parsedData = res.data[this.props.guppyConfig.type];
       if (this._isMounted) {
         if (updateDataWhenReceive) this.setState({ rawData: parsedData });
-        this.setState({ gettingDataFromGuppy: false });
+        this.setState({ isLoadingRawData: false });
       }
       return {
         data: parsedData,
@@ -288,10 +314,11 @@ class GuppyWrapper extends React.Component {
     return React.Children.map(this.props.children, (child) =>
       React.cloneElement(child, {
         // pass data to children
+        isLoadingAggsData: this.state.isLoadingAggsData,
         aggsData: this.state.aggsData,
-        aggsDataIsLoading: this.state.gettingDataFromGuppy,
         filter: this.state.filter,
         filterConfig: this.props.filterConfig,
+        isLoadingRawData: this.state.isLoadingRawData,
         rawData: this.state.rawData, // raw data (with current filter applied)
         accessibleCount: this.state.accessibleCount,
         totalCount: this.state.totalCount, // total count of raw data (current filter applied)
@@ -309,11 +336,11 @@ class GuppyWrapper extends React.Component {
         ),
 
         // below are just for ConnectedFilter component
-        onReceiveNewAggsData: this.handleReceiveNewAggsData.bind(this),
         onFilterChange: this.handleFilterChange.bind(this),
         guppyConfig: this.props.guppyConfig,
         adminAppliedPreFilters: this.props.adminAppliedPreFilters,
         initialAppliedFilters: this.props.initialAppliedFilters,
+        receivedAggsData: this.state.receivedAggsData,
       })
     );
   }
@@ -341,14 +368,12 @@ GuppyWrapper.propTypes = {
     ),
   }).isRequired,
   rawDataFields: PropTypes.arrayOf(PropTypes.string),
-  onReceiveNewAggsData: PropTypes.func,
   onFilterChange: PropTypes.func,
   adminAppliedPreFilters: PropTypes.object,
   initialAppliedFilters: PropTypes.object,
 };
 
 GuppyWrapper.defaultProps = {
-  onReceiveNewAggsData: () => {},
   onFilterChange: () => {},
   rawDataFields: [],
   adminAppliedPreFilters: {},
