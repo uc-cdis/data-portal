@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import Discovery, { AccessLevel } from './Discovery';
+import Discovery from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 
 import mockData from './__mocks__/mock_mds_studies.json';
