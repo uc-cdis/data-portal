@@ -1,5 +1,5 @@
 export interface DiscoveryConfig {
-    requireLogin?: boolean // If true, requires user to sign in before seeing the Discovery page
+    public?: boolean // If false, requires user to sign in before seeing the Discovery page
     features: {
         exportToWorkspaceBETA: {
             enabled: boolean
