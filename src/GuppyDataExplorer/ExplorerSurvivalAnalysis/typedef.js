@@ -48,3 +48,11 @@
 /**
  * @typedef {{ [key: string]: string }} ColorScheme
  */
+
+/**
+ * @typedef {Object} SurvivalAnalysisConfig
+ * @property {Object} result
+ * @property {boolean} result.pval
+ * @property {boolean} result.risktable
+ * @property {boolean} result.survival
+ */

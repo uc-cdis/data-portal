@@ -48,9 +48,25 @@
   justify-content: space-between;
 }
 
+.explorer-survival-analysis__pval {
+  margin-left: 12px;
+  padding: 0.5rem 1rem;
+  height: 1.25rem;
+  font-size: 1rem;
+}
+
 .explorer-survival-analysis__survival-plot {
   margin: 12px;
   min-height: 300px;
+}
+
+.explorer-survival-analysis__risk-table {
+  margin: 12px;
+  min-height: 150px;
+}
+
+.explorer-survival-analysis__risk-table .yAxis tspan {
+  font-size: 0.8rem;
 }
 
 .explorer-survival-analysis__figure-title {

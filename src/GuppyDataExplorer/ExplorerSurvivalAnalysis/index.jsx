@@ -5,9 +5,15 @@ import { schemeCategory10 } from 'd3-scale-chromatic';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import { enumFilterList } from '../../params';
 import Spinner from '../../components/Spinner';
+import { SurvivalAnalysisConfigType } from '../configTypeDef';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
-import { filterSurvivalByTime, getFactors } from './utils';
+import RiskTable from './RiskTable';
+import {
+  filterRisktableByTime,
+  filterSurvivalByTime,
+  getFactors,
+} from './utils';
 import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
@@ -30,10 +36,13 @@ const fetchResult = (body) => {
 /**
  * @param {Object} prop
  * @param {Object} prop.aggsData
+ * @param {SurvivalAnalysisConfig} prop.config
  * @param {Array} prop.fieldMapping
  * @param {Object} prop.filter
  */
-function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
+function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
+  const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
+  const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
   const [isStratified, setIsStratified] = useState(true);
   const [timeInterval, setTimeInterval] = useState(2);
@@ -86,21 +95,30 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
     startTime,
     endTime,
     shouldUpdateResults,
-    ...requestBody
+    ...requestParameter
   }) => {
     if (isError) setIsError(false);
     if (isFilterChanged) setIsFilterChanged(false);
     setIsUpdating(true);
-    setIsStratified(requestBody.stratificationVariable !== '');
+    setIsStratified(requestParameter.stratificationVariable !== '');
     setTimeInterval(timeInterval);
     setStartTime(startTime);
     setEndTime(endTime);
 
     if (shouldUpdateResults)
-      fetchResult({ filter: transformedFilter, ...requestBody })
+      fetchResult({
+        filter: transformedFilter,
+        parameter: requestParameter,
+        result: config.result,
+      })
         .then((result) => {
-          setSurvival(result.survival);
-          setColorScheme(getNewColorScheme(result.survival));
+          if (config.result.pval)
+            setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
+          if (config.result.risktable) setRisktable(result.risktable);
+          if (config.result.survival) {
+            setSurvival(result.survival);
+            setColorScheme(getNewColorScheme(result.survival));
+          }
           setIsUpdating(false);
         })
         .catch((e) => {
@@ -119,12 +137,20 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
       setIsUpdating(true);
       fetchResult({
         filter: transformedFilter,
-        factorVariable: '',
-        stratificationVariable: '',
-        efsFlag: false,
+        parameter: {
+          factorVariable: '',
+          stratificationVariable: '',
+          efsFlag: false,
+        },
+        result: config.result,
       })
         .then((result) => {
-          if (isMounted) setSurvival(result.survival);
+          if (isMounted) {
+            if (config.result.pval)
+              setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
+            if (config.result.risktable) setRisktable(result.risktable);
+            if (config.result.survival) setSurvival(result.survival);
+          }
         })
         .catch((e) => isMounted && setIsError(true))
         .finally(() => isMounted && setIsUpdating(false));
@@ -157,12 +183,28 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
             </p>
           </div>
         ) : (
-          <SurvivalPlot
-            colorScheme={colorScheme}
-            data={filterSurvivalByTime(survival, startTime, endTime)}
-            isStratified={isStratified}
-            timeInterval={timeInterval}
-          />
+          <>
+            {config.result.pval && (
+              <div className='explorer-survival-analysis__pval'>
+                {pval >= 0 && `Log-rank test p-value: ${pval}`}
+              </div>
+            )}
+            {config.result.survival && (
+              <SurvivalPlot
+                colorScheme={colorScheme}
+                data={filterSurvivalByTime(survival, startTime, endTime)}
+                isStratified={isStratified}
+                timeInterval={timeInterval}
+              />
+            )}
+            {config.result.risktable && (
+              <RiskTable
+                data={filterRisktableByTime(risktable, startTime, endTime)}
+                notStratified={!isStratified}
+                timeInterval={timeInterval}
+              />
+            )}
+          </>
         )}
       </div>
     </div>
@@ -171,6 +213,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
 
 ExplorerSurvivalAnalysis.propTypes = {
   aggsData: PropTypes.object,
+  config: SurvivalAnalysisConfigType,
   fieldMapping: PropTypes.array,
   filter: PropTypes.object,
 };

@@ -13,6 +13,7 @@ import {
   TableConfigType,
   ButtonConfigType,
   ChartConfigType,
+  SurvivalAnalysisConfigType,
 } from './configTypeDef';
 import './GuppyDataExplorer.css';
 
@@ -82,6 +83,7 @@ class GuppyDataExplorer extends React.Component {
               className='guppy-data-explorer__visualization'
               chartConfig={this.props.chartConfig}
               tableConfig={this.props.tableConfig}
+              survivalAnalysisConfig={this.props.survivalAnalysisConfig}
               buttonConfig={this.props.buttonConfig}
               guppyConfig={this.props.guppyConfig}
               history={this.props.history}
@@ -102,6 +104,7 @@ GuppyDataExplorer.propTypes = {
   guppyConfig: GuppyConfigType.isRequired,
   filterConfig: FilterConfigType.isRequired,
   tableConfig: TableConfigType.isRequired,
+  survivalAnalysisConfig: SurvivalAnalysisConfigType.isRequired,
   chartConfig: ChartConfigType.isRequired,
   buttonConfig: ButtonConfigType.isRequired,
   nodeCountTitle: PropTypes.string,
