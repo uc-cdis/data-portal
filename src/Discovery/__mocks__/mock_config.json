@@ -1,6 +1,6 @@
 {
     "features": {
-      "exportToWorkspace": {
+      "exportToWorkspaceBETA": {
         "enabled": true,
         "manifestFieldName": "__manifest",
         "enableDownloadManifest": true,

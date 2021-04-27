@@ -13,12 +13,15 @@ import {
   Alert,
   Popover,
   Button,
+  Menu,
+  Divider,
 } from 'antd';
 
 import { fetchWithCreds } from '../actions';
 import { manifestServiceApiPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
+import Checkbox from 'antd/lib/checkbox/Checkbox';
 
 const accessibleFieldName = '__accessible';
 
@@ -138,6 +141,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   const [searchFilteredResources, setSearchFilteredResources] = useState([]);
   const [selectedResources, setSelectedResources] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [filtersVisible, setFiltersVisible] = useState(false);
   const [modalData, setModalData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTags, setSelectedTags] = useState({});
@@ -431,8 +435,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         </div>
       </div>
     </div>
-    <div className='discovery-table-container'>
-      <div className='discovery-table__header'>
+
+    <div className='discovery-studies-container'>
+      <div className='discovery-studies__header'>
+        <Button onClick={() => setFiltersVisible(!filtersVisible)}>Advanced Search</Button>
         { (
           config.features.search && config.features.search.searchBar
             && config.features.search.searchBar.enabled
@@ -498,93 +504,108 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         }
 
       </div>
-      <Table
-        columns={columns}
-        rowKey={config.minimalFieldMapping.uid}
-        rowSelection={(
-          config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
-        )
-          && {
-            selectedRowKeys: selectedResources.map(r => r[config.minimalFieldMapping.uid]),
-            preserveSelectedRowKeys: true,
-            onChange: (_, selectedRows) => setSelectedResources(selectedRows),
-            getCheckboxProps: (record) => {
-              let disabled;
-              // if auth is enabled, disable checkbox if user doesn't have access
-              if (config.features.authorization.enabled) {
-                disabled = record[accessibleFieldName] === false;
-              }
-              // disable checkbox if there's no manifest found for this study
-              const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
-              if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
-                disabled = true;
-              }
-              return { disabled };
+
+      <div className={`discovery-filters-container ${filtersVisible ? 'discovery-filters-container--expanded' : ''}`}>
+        <div className='discovery-filters'>
+          <Checkbox>Value 1</Checkbox>
+          <Checkbox>Value 2</Checkbox>
+          <Checkbox>Value 3</Checkbox>
+          <Checkbox>Value 4</Checkbox>
+          <Divider />
+          <Checkbox>Value 1</Checkbox>
+          <Checkbox>Value 2</Checkbox>
+          <Checkbox>Value 3</Checkbox>
+          <Checkbox>Value 4</Checkbox>
+
+        </div>
+        <Table
+          columns={columns}
+          rowKey={config.minimalFieldMapping.uid}
+          rowSelection={(
+            config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
+          )
+            && {
+              selectedRowKeys: selectedResources.map(r => r[config.minimalFieldMapping.uid]),
+              preserveSelectedRowKeys: true,
+              onChange: (_, selectedRows) => setSelectedResources(selectedRows),
+              getCheckboxProps: (record) => {
+                let disabled;
+                // if auth is enabled, disable checkbox if user doesn't have access
+                if (config.features.authorization.enabled) {
+                  disabled = record[accessibleFieldName] === false;
+                }
+                // disable checkbox if there's no manifest found for this study
+                const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+                if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
+                  disabled = true;
+                }
+                return { disabled };
+              },
+            }}
+          rowClassName='discovery-table__row'
+          onRow={record => ({
+            onClick: () => {
+              setModalVisible(true);
+              setModalData(record);
             },
-          }}
-        rowClassName='discovery-table__row'
-        onRow={record => ({
-          onClick: () => {
-            setModalVisible(true);
-            setModalData(record);
-          },
-          onKeyPress: () => {
-            setModalVisible(true);
-            setModalData(record);
-          },
-        })}
-        dataSource={visibleResources}
-        expandable={config.studyPreviewField && ({
-          // expand all rows
-          expandedRowKeys: visibleResources.map(r => r[config.minimalFieldMapping.uid]),
-          expandedRowRender: (record) => {
-            const studyPreviewText = record[config.studyPreviewField.field];
-            const renderValue = (value: string | undefined): React.ReactNode => {
-              if (!value) {
-                if (config.studyPreviewField.includeIfNotAvailable) {
-                  return config.studyPreviewField.valueIfNotAvailable;
+            onKeyPress: () => {
+              setModalVisible(true);
+              setModalData(record);
+            },
+          })}
+          dataSource={visibleResources}
+          expandable={config.studyPreviewField && ({
+            // expand all rows
+            expandedRowKeys: visibleResources.map(r => r[config.minimalFieldMapping.uid]),
+            expandedRowRender: (record) => {
+              const studyPreviewText = record[config.studyPreviewField.field];
+              const renderValue = (value: string | undefined): React.ReactNode => {
+                if (!value) {
+                  if (config.studyPreviewField.includeIfNotAvailable) {
+                    return config.studyPreviewField.valueIfNotAvailable;
+                  }
                 }
-              }
-              if (searchTerm) {
-                // get index of searchTerm match
-                const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
-                if (matchIndex === -1) {
-                  // if searchterm doesn't match this record, don't highlight anything
-                  return value;
+                if (searchTerm) {
+                  // get index of searchTerm match
+                  const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
+                  if (matchIndex === -1) {
+                    // if searchterm doesn't match this record, don't highlight anything
+                    return value;
+                  }
+                  // Scroll the text to the search term and highlight the search term.
+                  let start = matchIndex - 100;
+                  if (start < 0) {
+                    start = 0;
+                  }
+                  return (<React.Fragment>
+                    { start > 0 && '...' }
+                    {value.slice(start, matchIndex)}
+                    <span className='matched'>{value.slice(matchIndex, matchIndex + searchTerm.length)}</span>
+                    {value.slice(matchIndex + searchTerm.length)}
+                  </React.Fragment>
+                  );
                 }
-                // Scroll the text to the search term and highlight the search term.
-                let start = matchIndex - 100;
-                if (start < 0) {
-                  start = 0;
-                }
-                return (<React.Fragment>
-                  { start > 0 && '...' }
-                  {value.slice(start, matchIndex)}
-                  <span className='matched'>{value.slice(matchIndex, matchIndex + searchTerm.length)}</span>
-                  {value.slice(matchIndex + searchTerm.length)}
-                </React.Fragment>
-                );
-              }
-              return value;
-            };
-            return (
-              <div
-                className='discovery-table__expanded-row-content'
-                role='button'
-                tabIndex={0}
-                onClick={() => {
-                  setModalData(record);
-                  setModalVisible(true);
-                }}
-              >
-                {renderValue(studyPreviewText)}
-              </div>
-            );
-          },
-          expandedRowClassName: () => 'discovery-table__expanded-row',
-          expandIconColumnIndex: -1, // don't render expand icon
-        })}
-      />
+                return value;
+              };
+              return (
+                <div
+                  className='discovery-table__expanded-row-content'
+                  role='button'
+                  tabIndex={0}
+                  onClick={() => {
+                    setModalData(record);
+                    setModalVisible(true);
+                  }}
+                >
+                  {renderValue(studyPreviewText)}
+                </div>
+              );
+            },
+            expandedRowClassName: () => 'discovery-table__expanded-row',
+            expandIconColumnIndex: -1, // don't render expand icon
+          })}
+        />
+      </div>
     </div>
     <Modal
       className='discovery-modal'

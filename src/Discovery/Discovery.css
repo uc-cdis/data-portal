@@ -112,19 +112,39 @@
   color: #fff;
 }
 
-.discovery-table-container {
+.discovery-studies-container {
   border-radius: 5px;
   background-color: #fff;
   padding: 20px;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
-.discovery-table__header {
+.discovery-studies__header {
   width: 100%;
   margin-bottom: 12px;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+}
+
+.discovery-filters-container {
+  width: calc(100% + 300px);
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  overflow-x: auto;
+  transform: translateX(-300px);
+  transition: transform 300ms ease;
+}
+
+.discovery-filters-container--expanded {
+  transform: translateX(0px);
+  transition: transform 300ms ease;
+}
+
+.discovery-filters {
+  flex: 0 0 300px;
+  width: 300px;
 }
 
 .discovery-search {
