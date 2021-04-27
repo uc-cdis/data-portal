@@ -458,7 +458,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 arrowPointAtCenter
                 title={<>
                   Download a Manifest File for use with the&nbsp;
-                  <a target='_blank' rel='noreferrer' href={config.features.exportToWorkspaceBETA.documentationLinks.gen3Client}>
+                  <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/' >
                     {'Gen3 Client'}
                   </a>.
                 </>}
@@ -480,7 +480,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               arrowPointAtCenter
               content={<>
                 Open selected studies in the&nbsp;
-                <a target='blank' rel='noreferrer' href={config.features.exportToWorkspaceBETA.documentationLinks.gen3Workspaces}>
+                <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
                   {'Gen3 Workspace'}
                 </a>.
               </>}

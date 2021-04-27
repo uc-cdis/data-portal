@@ -393,10 +393,6 @@ Below is an example, with inline comments describing what each JSON block config
       "exportToWorkspaceBETA": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
           "enable": boolean
           "enableDownloadManifest": boolean // enables a button which allows user to download a manifest file for gen3 client
-          "documentationLinks": {
-              "gen3Client": string // link to documentation about the gen3 client. Used for button tooltips
-              "gen3Workspaces": string // link to documentation about gen3 workspaces. Used for button tooltips.
-          }
           "manifestFieldName": string // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
       }
       "pageTitle": {
