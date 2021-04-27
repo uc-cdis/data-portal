@@ -32,6 +32,14 @@ const fetchResult = (body) => {
   });
 };
 
+const config = {
+  result: {
+    pval: true,
+    risktable: true,
+    survival: true,
+  },
+};
+
 /**
  * @param {Object} prop
  * @param {Object} prop.aggsData
@@ -107,7 +115,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
       fetchResult({
         filter: transformedFilter,
         parameter: requestParameter,
-        result: { pval: true, risktable: true, survival: true },
+        result: config.result,
       })
         .then((result) => {
           setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
@@ -137,7 +145,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
           stratificationVariable: '',
           efsFlag: false,
         },
-        result: { pval: true, risktable: true, survival: true },
+        result: config.result,
       })
         .then((result) => {
           if (isMounted) {
