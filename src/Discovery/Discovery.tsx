@@ -138,6 +138,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   const [searchFilteredResources, setSearchFilteredResources] = useState([]);
   const [selectedResources, setSelectedResources] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [modalData, setModalData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTags, setSelectedTags] = useState({});
@@ -317,6 +318,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   };
 
   const handleExportToWorkspaceClick = async () => {
+    setExportingToWorkspace(true);
     const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
     if (!manifestFieldName) {
       throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
@@ -337,6 +339,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     if (res.status !== 200) {
       throw new Error(`Encountered error while exporting to Workspace: ${JSON.stringify(res)}`);
     }
+    setExportingToWorkspace(false);
     // redirect to Workspaces page
     props.history.push('/workspace');
   };
@@ -488,6 +491,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               <Button
                 type='primary'
                 disabled={selectedResources.length === 0}
+                loading={exportingToWorkspace}
                 icon={<ExportOutlined />}
                 onClick={handleExportToWorkspaceClick}
               >
