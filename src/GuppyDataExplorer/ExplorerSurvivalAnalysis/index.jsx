@@ -112,10 +112,13 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
         result: config.result,
       })
         .then((result) => {
-          setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-          setRisktable(result.risktable);
-          setSurvival(result.survival);
-          setColorScheme(getNewColorScheme(result.survival));
+          if (config.result.pval)
+            setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
+          if (config.result.risktable) setRisktable(result.risktable);
+          if (config.result.survival) {
+            setSurvival(result.survival);
+            setColorScheme(getNewColorScheme(result.survival));
+          }
           setIsUpdating(false);
         })
         .catch((e) => {
@@ -143,9 +146,10 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
       })
         .then((result) => {
           if (isMounted) {
-            setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-            setRisktable(result.risktable);
-            setSurvival(result.survival);
+            if (config.result.pval)
+              setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
+            if (config.result.risktable) setRisktable(result.risktable);
+            if (config.result.survival) setSurvival(result.survival);
           }
         })
         .catch((e) => isMounted && setIsError(true))
