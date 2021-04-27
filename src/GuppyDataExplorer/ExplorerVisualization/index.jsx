@@ -13,6 +13,7 @@ import {
   ButtonConfigType,
   ChartConfigType,
   GuppyConfigType,
+  SurvivalAnalysisConfigType,
 } from '../configTypeDef';
 import './ExplorerVisualization.css';
 
@@ -230,6 +231,7 @@ class ExplorerVisualization extends React.Component {
         <ViewContainer showIf={this.state.explorerView === 'survival analysis'}>
           <ExplorerSurvivalAnalysis
             aggsData={this.props.aggsData}
+            config={this.props.survivalAnalysisConfig}
             fieldMapping={this.props.guppyConfig.fieldMapping}
             filter={this.props.filter}
           />
@@ -257,6 +259,7 @@ ExplorerVisualization.propTypes = {
   className: PropTypes.string,
   chartConfig: ChartConfigType,
   tableConfig: TableConfigType,
+  survivalAnalysisConfig: SurvivalAnalysisConfigType,
   buttonConfig: ButtonConfigType,
   guppyConfig: GuppyConfigType,
   nodeCountTitle: PropTypes.string.isRequired,
@@ -280,6 +283,7 @@ ExplorerVisualization.defaultProps = {
   className: '',
   chartConfig: {},
   tableConfig: {},
+  survivalAnalysisConfig: {},
   buttonConfig: {},
   guppyConfig: {},
 };

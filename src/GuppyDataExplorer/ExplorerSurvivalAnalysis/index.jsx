@@ -5,6 +5,7 @@ import { schemeCategory10 } from 'd3-scale-chromatic';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import { enumFilterList } from '../../params';
 import Spinner from '../../components/Spinner';
+import { SurvivalAnalysisConfigType } from '../configTypeDef';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
@@ -32,21 +33,14 @@ const fetchResult = (body) => {
   });
 };
 
-const config = {
-  result: {
-    pval: true,
-    risktable: true,
-    survival: true,
-  },
-};
-
 /**
  * @param {Object} prop
  * @param {Object} prop.aggsData
+ * @param {SurvivalAnalysisConfig} prop.config
  * @param {Array} prop.fieldMapping
  * @param {Object} prop.filter
  */
-function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
+function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
@@ -215,6 +209,7 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
 
 ExplorerSurvivalAnalysis.propTypes = {
   aggsData: PropTypes.object,
+  config: SurvivalAnalysisConfigType,
   fieldMapping: PropTypes.array,
   filter: PropTypes.object,
 };

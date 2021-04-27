@@ -79,6 +79,9 @@ class Explorer extends React.Component {
             chartConfig={explorerConfig[this.state.tab].charts}
             filterConfig={explorerConfig[this.state.tab].filters}
             tableConfig={explorerConfig[this.state.tab].table}
+            survivalAnalysisConfig={
+              explorerConfig[this.state.tab].survivalAnalysis
+            }
             guppyConfig={{
               path: guppyUrl,
               ...explorerConfig[this.state.tab].guppyConfig,
