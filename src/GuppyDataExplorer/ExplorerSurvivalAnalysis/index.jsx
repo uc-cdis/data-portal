@@ -186,20 +186,26 @@ function ExplorerSurvivalAnalysis({ aggsData, fieldMapping, filter }) {
           </div>
         ) : (
           <>
-            <div className='explorer-survival-analysis__pval'>
-              {pval >= 0 && `Log-rank test p-value: ${pval}`}
-            </div>
-            <SurvivalPlot
-              colorScheme={colorScheme}
-              data={filterSurvivalByTime(survival, startTime, endTime)}
-              isStratified={isStratified}
-              timeInterval={timeInterval}
-            />
-            <RiskTable
-              data={filterRisktableByTime(risktable, startTime, endTime)}
-              notStratified={!isStratified}
-              timeInterval={timeInterval}
-            />
+            {config.result.pval && (
+              <div className='explorer-survival-analysis__pval'>
+                {pval >= 0 && `Log-rank test p-value: ${pval}`}
+              </div>
+            )}
+            {config.result.survival && (
+              <SurvivalPlot
+                colorScheme={colorScheme}
+                data={filterSurvivalByTime(survival, startTime, endTime)}
+                isStratified={isStratified}
+                timeInterval={timeInterval}
+              />
+            )}
+            {config.result.risktable && (
+              <RiskTable
+                data={filterRisktableByTime(risktable, startTime, endTime)}
+                notStratified={!isStratified}
+                timeInterval={timeInterval}
+              />
+            )}
           </>
         )}
       </div>
