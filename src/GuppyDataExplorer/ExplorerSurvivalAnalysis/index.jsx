@@ -77,13 +77,12 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
     /** @type {ColorScheme} */
     const newScheme = {};
     let factorValueCount = 0;
-    for (const { name } of survival) {
-      const factorValue = name.split(',')[0].split('=')[1];
-      if (!newScheme.hasOwnProperty(factorValue)) {
-        newScheme[factorValue] = schemeCategory10[factorValueCount % 9];
+    for (const { group } of survival)
+      if (!newScheme.hasOwnProperty(group[0].value)) {
+        newScheme[group[0].value] = schemeCategory10[factorValueCount % 9];
         factorValueCount++;
       }
-    }
+
     return newScheme;
   };
 
