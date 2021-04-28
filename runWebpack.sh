@@ -14,6 +14,10 @@
 #
 set -e
 
+npm config list
+
+dig registry.npmjs.org
+
 export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-dev}"
 export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
