@@ -44,7 +44,7 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
-  const [isStratified, setIsStratified] = useState(true);
+  const [isStratified, setIsStratified] = useState(false);
   const [timeInterval, setTimeInterval] = useState(2);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(20);
@@ -199,7 +199,7 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
             {config.result.risktable && (
               <RiskTable
                 data={filterRisktableByTime(risktable, startTime, endTime)}
-                notStratified={!isStratified}
+                isStratified={isStratified}
                 timeInterval={timeInterval}
               />
             )}

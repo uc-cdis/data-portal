@@ -22,7 +22,8 @@ const Plot = ({ colorScheme, data, timeInterval }) => {
   const [opacity, setOpacity] = useState({});
   useEffect(() => {
     const initOpacity = {};
-    for (const { group } of data) initOpacity[group[0].value] = 1;
+    for (const { group } of data)
+      initOpacity[group.length === 0 ? 'All' : group[0].value] = 1;
     setOpacity(initOpacity);
   }, [data]);
 
@@ -66,18 +67,21 @@ const Plot = ({ colorScheme, data, timeInterval }) => {
           onMouseEnter={handleLegendMouseEnter}
           onMouseLeave={handleLegendMouseLeave}
         />
-        {data.map(({ group, data }) => (
-          <Line
-            key={group[0].value}
-            data={data}
-            dataKey='prob'
-            dot={false}
-            name={group[0].value}
-            type='stepAfter'
-            stroke={colorScheme[group[0].value]}
-            strokeOpacity={opacity[group[0].value]}
-          />
-        ))}
+        {data.map(({ group, data }) => {
+          const factorValue = group.length === 0 ? 'All' : group[0].value;
+          return (
+            <Line
+              key={factorValue}
+              data={data}
+              dataKey='prob'
+              dot={false}
+              name={factorValue}
+              type='stepAfter'
+              stroke={colorScheme[factorValue]}
+              strokeOpacity={opacity[factorValue]}
+            />
+          );
+        })}
       </LineChart>
     </ResponsiveContainer>
   );
