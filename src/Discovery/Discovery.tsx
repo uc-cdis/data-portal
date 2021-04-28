@@ -13,7 +13,7 @@ import {
   Alert,
   Popover,
   Button,
-  Menu,
+  Checkbox,
   Divider,
 } from 'antd';
 
@@ -21,7 +21,6 @@ import { fetchWithCreds } from '../actions';
 import { manifestServiceApiPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
-import Checkbox from 'antd/lib/checkbox/Checkbox';
 
 const accessibleFieldName = '__accessible';
 
@@ -142,6 +141,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   const [selectedResources, setSelectedResources] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
+  const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [modalData, setModalData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTags, setSelectedTags] = useState({});
@@ -321,6 +321,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   };
 
   const handleExportToWorkspaceClick = async () => {
+    setExportingToWorkspace(true);
     const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
     if (!manifestFieldName) {
       throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
@@ -341,6 +342,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     if (res.status !== 200) {
       throw new Error(`Encountered error while exporting to Workspace: ${JSON.stringify(res)}`);
     }
+    setExportingToWorkspace(false);
     // redirect to Workspaces page
     props.history.push('/workspace');
   };
@@ -464,7 +466,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 arrowPointAtCenter
                 title={<>
                   Download a Manifest File for use with the&nbsp;
-                  <a target='_blank' rel='noreferrer' href={config.features.exportToWorkspaceBETA.documentationLinks.gen3Client}>
+                  <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/' >
                     {'Gen3 Client'}
                   </a>.
                 </>}
@@ -486,7 +488,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               arrowPointAtCenter
               content={<>
                 Open selected studies in the&nbsp;
-                <a target='blank' rel='noreferrer' href={config.features.exportToWorkspaceBETA.documentationLinks.gen3Workspaces}>
+                <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
                   {'Gen3 Workspace'}
                 </a>.
               </>}
@@ -494,6 +496,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               <Button
                 type='primary'
                 disabled={selectedResources.length === 0}
+                loading={exportingToWorkspace}
                 icon={<ExportOutlined />}
                 onClick={handleExportToWorkspaceClick}
               >
