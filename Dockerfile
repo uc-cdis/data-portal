@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     time \
     vim \
+    dnsutils \
     && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean \
