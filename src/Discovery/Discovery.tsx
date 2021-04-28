@@ -5,6 +5,7 @@ import sum from 'lodash/sum';
 import * as JsSearch from 'js-search';
 import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, ExportOutlined, DownloadOutlined } from '@ant-design/icons';
 import {
+  Affix,
   Input,
   Table,
   Tag,
@@ -14,7 +15,7 @@ import {
   Popover,
   Button,
   Checkbox,
-  Divider,
+  Collapse,
 } from 'antd';
 
 import { fetchWithCreds } from '../actions';
@@ -505,23 +506,34 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
             </Popover>
           </Space>
         }
-
       </div>
-
-      <div className={`discovery-filters-container ${filtersVisible ? 'discovery-filters-container--expanded' : ''}`}>
-        <div className='discovery-filters'>
-          <Checkbox>Value 1</Checkbox>
-          <Checkbox>Value 2</Checkbox>
-          <Checkbox>Value 3</Checkbox>
-          <Checkbox>Value 4</Checkbox>
-          <Divider />
-          <Checkbox>Value 1</Checkbox>
-          <Checkbox>Value 2</Checkbox>
-          <Checkbox>Value 3</Checkbox>
-          <Checkbox>Value 4</Checkbox>
-
-        </div>
+      { filtersVisible &&
+        <Affix offsetTop={40} style={{ position: 'absolute' }}>
+          <div className='discovery-filters'>
+            <Collapse defaultActiveKey={['1', '2']}>
+              <Collapse.Panel header='Key 1' key='1'>
+                <Space direction='vertical'>
+                  <Checkbox>Value 1</Checkbox>
+                  <Checkbox>Value 2</Checkbox>
+                  <Checkbox>Value 3</Checkbox>
+                  <Checkbox>Value 4</Checkbox>
+                </Space>
+              </Collapse.Panel>
+              <Collapse.Panel header='Key 2' key='2'>
+                <Space direction='vertical'>
+                  <Checkbox>Value 1</Checkbox>
+                  <Checkbox>Value 2</Checkbox>
+                  <Checkbox>Value 3</Checkbox>
+                  <Checkbox>Value 4</Checkbox>
+                </Space>
+              </Collapse.Panel>
+            </Collapse>
+          </div>
+        </Affix>
+      }
+      <div className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--expanded' : ''}`}>
         <Table
+          scroll={{ x: true }}
           columns={columns}
           rowKey={config.minimalFieldMapping.uid}
           rowSelection={(

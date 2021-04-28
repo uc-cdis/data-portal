@@ -116,7 +116,7 @@
   border-radius: 5px;
   background-color: #fff;
   padding: 20px;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 .discovery-studies__header {
@@ -127,24 +127,9 @@
   justify-content: space-between;
 }
 
-.discovery-filters-container {
-  width: calc(100% + 300px);
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  overflow-x: auto;
-  transform: translateX(-300px);
-  transition: transform 300ms ease;
-}
-
-.discovery-filters-container--expanded {
-  transform: translateX(0px);
-  transition: transform 300ms ease;
-}
-
 .discovery-filters {
-  flex: 0 0 300px;
-  width: 300px;
+  width: 280px;
+  margin-right: 20px;
 }
 
 .discovery-search {
@@ -154,6 +139,19 @@
 
 .discovery-export__selected-ct {
   color: #7f7f7f;
+}
+
+.discovery-table-container {
+  width: 100%;
+  transform: translateX(0px);
+  /* Animate translateX change, don't animate width change but delay it */
+  transition: transform 300ms, width 0ms 150ms;
+}
+
+.discovery-table-container--expanded {
+  width: calc(100% - 300px);
+  transform: translateX(300px);
+  transition: transform 300ms, width 0ms 150ms;
 }
 
 .discovery-table__row {
