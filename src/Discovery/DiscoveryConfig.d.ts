@@ -39,6 +39,18 @@ export interface DiscoveryConfig {
             //         field: string
             //     }
             // }
+        },
+        advSearchFilters: {
+            enabled: boolean,
+            field: string,
+            filters: {
+                key: string
+                // multiSelectBehavior?: 'AND' | 'OR' // defaults to OR // not yet supported
+                displayName?: string
+                valueDisplayNames?: {
+                    [value: string]: string
+                }
+            }[]
         }
     },
     aggregations: AggregationConfig[],

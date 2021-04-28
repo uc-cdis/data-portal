@@ -128,6 +128,7 @@
 }
 
 .discovery-filters {
+  position: absolute;
   width: 280px;
   margin-right: 20px;
 }
@@ -142,14 +143,14 @@
 }
 
 .discovery-table-container {
-  width: 100%;
+  /* width: 100%; */
   transform: translateX(0px);
   /* Animate translateX change, don't animate width change but delay it */
   transition: transform 300ms, width 0ms 150ms;
 }
 
 .discovery-table-container--expanded {
-  width: calc(100% - 300px);
+  /* width: calc(100% - 300px); */
   transform: translateX(300px);
   transition: transform 300ms, width 0ms 150ms;
 }

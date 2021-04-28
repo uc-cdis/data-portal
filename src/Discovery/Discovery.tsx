@@ -77,6 +77,23 @@ const getTagsInCategory =
     return Object.keys(tagMap);
   };
 
+const getFilterValuesByKey =
+  (key: string, studies: any[] | null, config: DiscoveryConfig) => {
+    if (!studies) {
+      return [];
+    }
+    const filterValuesMap = {};
+    studies.forEach((study) => {
+      const filtersField = config.features.advSearchFilters.field;
+      study[filtersField].forEach((filterValue) => {
+        if (filterValue.key === key) {
+          filterValuesMap[filterValue.value] = true;
+        }
+      });
+    });
+    return Object.keys(filterValuesMap);
+  };
+
 const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number'|'link' = 'string'): React.ReactNode => {
   switch (contentType) {
   case 'string':
@@ -134,6 +151,10 @@ interface DiscoveryBetaProps {
   params?: {studyUID: string} // from React Router
 }
 
+interface FilterState {
+  [key: string]: { [value: string]: boolean }
+}
+
 const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: DiscoveryBetaProps) => {
   const { config } = props;
 
@@ -142,6 +163,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   const [selectedResources, setSelectedResources] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
+  const [filterState, setFilterState] = useState({} as FilterState);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [modalData, setModalData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
@@ -507,33 +529,48 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           </Space>
         }
       </div>
-      { filtersVisible &&
-        <Affix offsetTop={40} style={{ position: 'absolute' }}>
+      { (
+        config.features.advSearchFilters
+          && config.features.advSearchFilters.enabled
+          && filtersVisible
+      )
+        &&
           <div className='discovery-filters'>
-            <Collapse defaultActiveKey={['1', '2']}>
-              <Collapse.Panel header='Key 1' key='1'>
-                <Space direction='vertical'>
-                  <Checkbox>Value 1</Checkbox>
-                  <Checkbox>Value 2</Checkbox>
-                  <Checkbox>Value 3</Checkbox>
-                  <Checkbox>Value 4</Checkbox>
-                </Space>
-              </Collapse.Panel>
-              <Collapse.Panel header='Key 2' key='2'>
-                <Space direction='vertical'>
-                  <Checkbox>Value 1</Checkbox>
-                  <Checkbox>Value 2</Checkbox>
-                  <Checkbox>Value 3</Checkbox>
-                  <Checkbox>Value 4</Checkbox>
-                </Space>
-              </Collapse.Panel>
+            <Collapse bordered={false} defaultActiveKey={['1', '2', '3', '4', '5', '6']}>
+              { config.features.advSearchFilters.filters.map((filter) => {
+                const { key, displayName } = filter;
+                const values = getFilterValuesByKey(key, props.studies, config);
+                return (
+                  <Collapse.Panel header={displayName || key} key={key}>
+                    <Space direction='vertical'>
+                      { values.map((value) => {
+                        const valueDisplayName =
+                          (filter.valueDisplayNames && filter.valueDisplayNames[value])
+                            ? filter.valueDisplayNames[value]
+                            : value;
+                        return (
+                          <Checkbox
+                            checked={filterState[key][value]}
+                            onChange={ev =>
+                              setFilterState({
+                                ...filterState,
+                                [key]: { [value]: ev.target.checked },
+                              })
+                            }
+                          >
+                            {valueDisplayName}
+                          </Checkbox>
+                        );
+                      })}
+                    </Space>
+                  </Collapse.Panel>
+                );
+              })}
             </Collapse>
           </div>
-        </Affix>
       }
       <div className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--expanded' : ''}`}>
         <Table
-          scroll={{ x: true }}
           columns={columns}
           rowKey={config.minimalFieldMapping.uid}
           rowSelection={(
