@@ -12,12 +12,6 @@ import {
 import { getXAxisTicks } from './utils';
 import './typedef';
 
-const formatNames = (/** @type {SurvivalData[]} */ data) =>
-  data.map(({ data, name }) => ({
-    name: name === 'All' ? name : name.split('=')[1],
-    data,
-  }));
-
 /**
  * @param {Object} prop
  * @param {Object} prop.colorScheme
@@ -28,7 +22,7 @@ const Plot = ({ colorScheme, data, timeInterval }) => {
   const [opacity, setOpacity] = useState({});
   useEffect(() => {
     const initOpacity = {};
-    for (const { name } of data) initOpacity[name] = 1;
+    for (const { group } of data) initOpacity[group[0].value] = 1;
     setOpacity(initOpacity);
   }, [data]);
 
@@ -72,16 +66,16 @@ const Plot = ({ colorScheme, data, timeInterval }) => {
           onMouseEnter={handleLegendMouseEnter}
           onMouseLeave={handleLegendMouseLeave}
         />
-        {data.map(({ data, name }, i) => (
+        {data.map(({ group, data }) => (
           <Line
-            key={name}
+            key={group[0].value}
             data={data}
             dataKey='prob'
             dot={false}
-            name={name}
+            name={group[0].value}
             type='stepAfter'
-            stroke={colorScheme[name]}
-            strokeOpacity={opacity[name]}
+            stroke={colorScheme[group[0].value]}
+            strokeOpacity={opacity[group[0].value]}
           />
         ))}
       </LineChart>
@@ -104,32 +98,25 @@ const SurvivalPlot = ({ colorScheme, data, isStratified, timeInterval }) => (
       </div>
     ) : isStratified ? (
       Object.entries(
-        data.reduce((acc, { name, data }) => {
-          const [factorKey, stratificationKey] = name.split(',');
+        data.reduce((acc, { group, data }) => {
+          const [factor, stratification] = group;
+          const stratificationKey = JSON.stringify(stratification);
           const stratificationValue = acc.hasOwnProperty(stratificationKey)
-            ? [...acc[stratificationKey], { name: factorKey, data }]
-            : [{ name: factorKey, data }];
+            ? [...acc[stratificationKey], { group: [factor], data }]
+            : [{ group: [factor], data }];
 
           return { ...acc, [stratificationKey]: stratificationValue };
         }, {})
       ).map(([key, data]) => (
         <Fragment key={key}>
           <div className='explorer-survival-analysis__figure-title'>
-            {key.split('=')[1]}
+            {JSON.parse(key).value}
           </div>
-          <Plot
-            colorScheme={colorScheme}
-            data={formatNames(data)}
-            timeInterval={timeInterval}
-          />
+          <Plot {...{ colorScheme, data, timeInterval }} />
         </Fragment>
       ))
     ) : (
-      <Plot
-        colorScheme={colorScheme}
-        data={formatNames(data)}
-        timeInterval={timeInterval}
-      />
+      <Plot {...{ colorScheme, data, timeInterval }} />
     )}
   </div>
 );
@@ -143,7 +130,12 @@ SurvivalPlot.propTypes = {
           time: PropTypes.number,
         })
       ),
-      name: PropTypes.string,
+      group: PropTypes.arrayOf(
+        PropTypes.exact({
+          variable: PropTypes.string,
+          value: PropTypes.string,
+        })
+      ),
     })
   ).isRequired,
   isStratified: PropTypes.bool.isRequired,
