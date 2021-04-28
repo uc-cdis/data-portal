@@ -31,6 +31,14 @@ function ViewContainer({ showIf, children, isLoading }) {
   );
 }
 
+function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
+  if (survivalAnalysisConfig.hasOwnProperty('result'))
+    for (const resultOption of ['pval', 'risktable', 'survival'])
+      if (survivalAnalysisConfig.result[resultOption]) return true;
+
+  return false;
+}
+
 class ExplorerVisualization extends React.Component {
   constructor(props) {
     super(props);
@@ -38,7 +46,8 @@ class ExplorerVisualization extends React.Component {
 
     const explorerViews = ['summary view'];
     if (props.tableConfig.enabled) explorerViews.push('table view');
-    explorerViews.push('survival analysis');
+    if (isSurvivalAnalysisEnabled(props.survivalAnalysisConfig))
+      explorerViews.push('survival analysis');
 
     this.state = {
       explorerView: explorerViews[0],
@@ -228,14 +237,18 @@ class ExplorerVisualization extends React.Component {
             />
           </ViewContainer>
         )}
-        <ViewContainer showIf={this.state.explorerView === 'survival analysis'}>
-          <ExplorerSurvivalAnalysis
-            aggsData={this.props.aggsData}
-            config={this.props.survivalAnalysisConfig}
-            fieldMapping={this.props.guppyConfig.fieldMapping}
-            filter={this.props.filter}
-          />
-        </ViewContainer>
+        {isSurvivalAnalysisEnabled(this.props.survivalAnalysisConfig) && (
+          <ViewContainer
+            showIf={this.state.explorerView === 'survival analysis'}
+          >
+            <ExplorerSurvivalAnalysis
+              aggsData={this.props.aggsData}
+              config={this.props.survivalAnalysisConfig}
+              fieldMapping={this.props.guppyConfig.fieldMapping}
+              filter={this.props.filter}
+            />
+          </ViewContainer>
+        )}
       </div>
     );
   }

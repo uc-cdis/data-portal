@@ -111,10 +111,10 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
         result: config.result,
       })
         .then((result) => {
-          if (config.result.pval)
+          if (config.result?.pval)
             setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-          if (config.result.risktable) setRisktable(result.risktable);
-          if (config.result.survival) {
+          if (config.result?.risktable) setRisktable(result.risktable);
+          if (config.result?.survival) {
             setSurvival(result.survival);
             setColorScheme(getNewColorScheme(result.survival));
           }
@@ -145,10 +145,10 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
       })
         .then((result) => {
           if (isMounted) {
-            if (config.result.pval)
+            if (config.result?.pval)
               setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-            if (config.result.risktable) setRisktable(result.risktable);
-            if (config.result.survival) setSurvival(result.survival);
+            if (config.result?.risktable) setRisktable(result.risktable);
+            if (config.result?.survival) setSurvival(result.survival);
           }
         })
         .catch((e) => isMounted && setIsError(true))
@@ -183,12 +183,12 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
           </div>
         ) : (
           <>
-            {config.result.pval && (
+            {config.result?.pval && (
               <div className='explorer-survival-analysis__pval'>
                 {pval >= 0 && `Log-rank test p-value: ${pval}`}
               </div>
             )}
-            {config.result.survival && (
+            {config.result?.survival && (
               <SurvivalPlot
                 colorScheme={colorScheme}
                 data={filterSurvivalByTime(survival, startTime, endTime)}
@@ -196,7 +196,7 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
                 timeInterval={timeInterval}
               />
             )}
-            {config.result.risktable && (
+            {config.result?.risktable && (
               <RiskTable
                 data={filterRisktableByTime(risktable, startTime, endTime)}
                 isStratified={isStratified}
