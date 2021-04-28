@@ -31,6 +31,14 @@ function ViewContainer({ showIf, children, isLoading }) {
   );
 }
 
+function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
+  if (survivalAnalysisConfig.hasOwnProperty('result'))
+    for (const resultOption of ['pval', 'risktable', 'survival'])
+      if (survivalAnalysisConfig.result[resultOption]) return true;
+
+  return false;
+}
+
 class ExplorerVisualization extends React.Component {
   constructor(props) {
     super(props);
@@ -38,7 +46,7 @@ class ExplorerVisualization extends React.Component {
 
     const explorerViews = ['summary view'];
     if (props.tableConfig.enabled) explorerViews.push('table view');
-    if (props.survivalAnalysisConfig.hasOwnProperty('result'))
+    if (isSurvivalAnalysisEnabled(props.survivalAnalysisConfig))
       explorerViews.push('survival analysis');
 
     this.state = {
@@ -229,7 +237,7 @@ class ExplorerVisualization extends React.Component {
             />
           </ViewContainer>
         )}
-        {this.props.survivalAnalysisConfig.hasOwnProperty('result') && (
+        {isSurvivalAnalysisEnabled(this.props.survivalAnalysisConfig) && (
           <ViewContainer
             showIf={this.state.explorerView === 'survival analysis'}
           >
