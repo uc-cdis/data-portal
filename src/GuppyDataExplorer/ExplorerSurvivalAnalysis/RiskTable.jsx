@@ -18,7 +18,12 @@ import './typedef';
 const parseRisktable = (data, timeInterval) => {
   const minTime = data[0].data[0].time;
   return data
-    .flatMap(({ group, data }) => data.map((d) => ({ group, ...d })))
+    .flatMap(({ group, data }) =>
+      data.map((d) => ({
+        group: group.length === 0 ? 'All' : group[0].value,
+        ...d,
+      }))
+    )
     .filter(({ time }) => (time - minTime) % timeInterval === 0);
 };
 
@@ -26,7 +31,7 @@ const getMaxTime = (/** @type {RisktableData[]} */ data) =>
   Math.max(...data.flatMap(({ data }) => data.map(({ time }) => time)));
 
 const CustomYAxisTick = (/** @type {Object} */ { x, y, payload }) => {
-  const name = payload.value.length === 0 ? 'All' : payload.value[0].value;
+  const name = payload.value;
 
   return (
     <g transform={`translate(${x},${y})`}>
