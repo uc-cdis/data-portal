@@ -38,7 +38,8 @@ class ExplorerVisualization extends React.Component {
 
     const explorerViews = ['summary view'];
     if (props.tableConfig.enabled) explorerViews.push('table view');
-    explorerViews.push('survival analysis');
+    if (props.survivalAnalysisConfig.hasOwnProperty('result'))
+      explorerViews.push('survival analysis');
 
     this.state = {
       explorerView: explorerViews[0],
@@ -228,14 +229,18 @@ class ExplorerVisualization extends React.Component {
             />
           </ViewContainer>
         )}
-        <ViewContainer showIf={this.state.explorerView === 'survival analysis'}>
-          <ExplorerSurvivalAnalysis
-            aggsData={this.props.aggsData}
-            config={this.props.survivalAnalysisConfig}
-            fieldMapping={this.props.guppyConfig.fieldMapping}
-            filter={this.props.filter}
-          />
-        </ViewContainer>
+        {this.props.survivalAnalysisConfig.hasOwnProperty('result') && (
+          <ViewContainer
+            showIf={this.state.explorerView === 'survival analysis'}
+          >
+            <ExplorerSurvivalAnalysis
+              aggsData={this.props.aggsData}
+              config={this.props.survivalAnalysisConfig}
+              fieldMapping={this.props.guppyConfig.fieldMapping}
+              filter={this.props.filter}
+            />
+          </ViewContainer>
+        )}
       </div>
     );
   }
