@@ -16,7 +16,14 @@ export const getFactors = (aggsData, fieldMapping, enumFilterList) => {
 
   const fields = Object.keys(aggsData);
   for (const field of fields)
-    if (enumFilterList.includes(field) && !exceptions.includes(field))
+    if (
+      enumFilterList.includes(field) &&
+      !exceptions.includes(field) &&
+      !(
+        aggsData[field].histogram.length === 1 &&
+        aggsData[field].histogram[0].key === 'no data'
+      )
+    )
       factors.push({
         label: fieldNameMap.hasOwnProperty(field)
           ? fieldNameMap[field]
