@@ -199,7 +199,7 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
             {config.result.risktable && (
               <RiskTable
                 data={filterRisktableByTime(risktable, startTime, endTime)}
-                notStratified={!isStratified}
+                isStratified={isStratified}
                 timeInterval={timeInterval}
               />
             )}

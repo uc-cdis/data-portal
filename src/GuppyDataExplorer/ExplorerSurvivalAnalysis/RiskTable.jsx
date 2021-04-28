@@ -89,10 +89,10 @@ const Table = ({ data, isLast, timeInterval }) => (
 /**
  * @param {Object} prop
  * @param {RisktableData[]} prop.data
- * @param {boolean} prop.notStratified
+ * @param {boolean} prop.isStratified
  * @param {number} prop.timeInterval
  */
-const RiskTable = ({ data, notStratified, timeInterval }) => (
+const RiskTable = ({ data, isStratified, timeInterval }) => (
   <div className='explorer-survival-analysis__risk-table'>
     {data.length === 0 ? (
       <div className='explorer-survival-analysis__figure-placeholder'>
@@ -106,9 +106,7 @@ const RiskTable = ({ data, notStratified, timeInterval }) => (
         >
           Number at risk
         </div>
-        {notStratified ? (
-          <Table data={data} timeInterval={timeInterval} isLast />
-        ) : (
+        {isStratified ? (
           Object.entries(
             data.reduce((acc, { group, data }) => {
               const [factor, stratification] = group;
@@ -131,6 +129,8 @@ const RiskTable = ({ data, notStratified, timeInterval }) => (
               />
             </Fragment>
           ))
+        ) : (
+          <Table data={data} timeInterval={timeInterval} isLast />
         )}
       </>
     )}
@@ -154,6 +154,7 @@ RiskTable.propTypes = {
       ),
     })
   ).isRequired,
+  isStratified: PropTypes.bool.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
