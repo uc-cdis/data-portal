@@ -136,6 +136,9 @@ fi
 # on the current APP environment - ugh
 #
 bash custom/customize.sh
+
+# see https://nodejs.org/api/cli.html#cli_max_old_space_size_size_in_megabytes
+export NODE_OPTIONS='--max-old-space-size=3584'
 echo "INFO: NPM config"
 npm config list
 
@@ -170,8 +173,6 @@ if [[ "$NODE_ENV" == "dev" || "$NODE_ENV" == "auto" ]]; then
   echo ./node_modules/.bin/webpack-dev-server
   ./node_modules/.bin/webpack-dev-server
 else
-  # see https://nodejs.org/api/cli.html#cli_max_old_space_size_size_in_megabytes
-  export NODE_OPTIONS='--max-old-space-size=3584'
   export NODE_ENV="production"
   echo ./node_modules/.bin/webpack --bail
   ./node_modules/.bin/webpack --bail
