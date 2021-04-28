@@ -140,6 +140,7 @@ bash custom/customize.sh
 # see https://nodejs.org/api/cli.html#cli_max_old_space_size_size_in_megabytes
 export NODE_OPTIONS='--max-old-space-size=3584'
 echo "INFO: NPM config"
+npm config set loglevel verbose
 npm config list
 
 # workspace bundle does not currently deploy sheepdog
