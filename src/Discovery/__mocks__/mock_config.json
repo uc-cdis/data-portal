@@ -1,5 +1,14 @@
 {
     "features": {
+      "exportToWorkspace": {
+        "enabled": true,
+        "manifestFieldName": "__manifest",
+        "enableDownloadManifest": true,
+        "documentationLinks": {
+          "gen3Client": "https://gen3.org/resources/user/gen3-client/",
+          "gen3Workspaces": "https://gen3.org/resources/user/analyze-data/"
+        }
+      },
       "pageTitle": {
         "enabled": true,
         "text": "My Special Test Discovery Page"
@@ -10,7 +19,7 @@
         }
       },
       "authorization": {
-        "enabled": true
+        "enabled": false
       }
     },
     "aggregations": [
@@ -32,6 +41,13 @@
       {
         "name": "Study Name",
         "field": "name"
+      },
+      {
+        "name": "dbGaP Link",
+        "field": "dbgap_link",
+        "errorIfNotAvailable": false,
+        "valueIfNotAvailable": "n/a",
+        "contentType": "link"
       },
       {
         "name": "Full Name",
@@ -84,6 +100,12 @@
               "includeName": true,
               "includeIfNotAvailable": true,
               "valueIfNotAvailable": "N/A"
+            },
+            {
+              "name": "dbGaP Link",
+              "field": "dbgap_link",
+              "includeIfNotAvailable": false,
+              "contentType": "link"
             },
             {
               "name": "dbGaP Study Accession",
