@@ -62,9 +62,9 @@ export const getXAxisTicks = (data, step = 2) => {
  * @returns {SurvivalData[]}
  */
 export const filterSurvivalByTime = (data, startTime, endTime) =>
-  data.map(({ data, name }) => ({
+  data.map(({ data, group }) => ({
     data: data.filter(({ time }) => time >= startTime && time <= endTime),
-    name,
+    group,
   }));
 
 /**
@@ -75,7 +75,7 @@ export const filterSurvivalByTime = (data, startTime, endTime) =>
  * @returns {RisktableData[]}
  */
 export const filterRisktableByTime = (data, startTime, endTime) =>
-  data.map(({ data, name }) => ({
+  data.map(({ data, group }) => ({
     data: data.filter(({ time }) => time >= startTime && time <= endTime),
-    name,
+    group,
   }));

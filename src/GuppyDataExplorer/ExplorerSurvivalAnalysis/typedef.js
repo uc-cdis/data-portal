@@ -7,7 +7,7 @@
 /**
  * @typedef {Object} RisktableData
  * @property {RisktableDataPoint[]} data
- * @property {string} name
+ * @property {{ variable: string; value: string; }[]} group
  */
 
 /**
@@ -19,7 +19,7 @@
 /**
  * @typedef {Object} SurvivalData
  * @property {SurvivalDataPoint[]} data
- * @property {string} name
+ * @property {{ variable: string; value: string; }[]} group
  */
 
 /**

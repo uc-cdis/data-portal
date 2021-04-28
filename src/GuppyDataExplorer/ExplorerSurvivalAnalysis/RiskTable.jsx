@@ -18,7 +18,12 @@ import './typedef';
 const parseRisktable = (data, timeInterval) => {
   const minTime = data[0].data[0].time;
   return data
-    .flatMap(({ name, data }) => data.map((d) => ({ name, ...d })))
+    .flatMap(({ group, data }) =>
+      data.map((d) => ({
+        group: group.length === 0 ? 'All' : group[0].value,
+        ...d,
+      }))
+    )
     .filter(({ time }) => (time - minTime) % timeInterval === 0);
 };
 
@@ -26,8 +31,7 @@ const getMaxTime = (/** @type {RisktableData[]} */ data) =>
   Math.max(...data.flatMap(({ data }) => data.map(({ time }) => time)));
 
 const CustomYAxisTick = (/** @type {Object} */ { x, y, payload }) => {
-  const name =
-    payload.value === 'All' ? payload.value : payload.value.split('=')[1];
+  const name = payload.value;
 
   return (
     <g transform={`translate(${x},${y})`}>
@@ -67,7 +71,7 @@ const Table = ({ data, isLast, timeInterval }) => (
         ticks={getXAxisTicks(data, timeInterval)}
       />
       <YAxis
-        dataKey='name'
+        dataKey='group'
         type='category'
         allowDuplicatedCategory={false}
         axisLine={false}
@@ -85,10 +89,10 @@ const Table = ({ data, isLast, timeInterval }) => (
 /**
  * @param {Object} prop
  * @param {RisktableData[]} prop.data
- * @param {boolean} prop.notStratified
+ * @param {boolean} prop.isStratified
  * @param {number} prop.timeInterval
  */
-const RiskTable = ({ data, notStratified, timeInterval }) => (
+const RiskTable = ({ data, isStratified, timeInterval }) => (
   <div className='explorer-survival-analysis__risk-table'>
     {data.length === 0 ? (
       <div className='explorer-survival-analysis__figure-placeholder'>
@@ -102,22 +106,21 @@ const RiskTable = ({ data, notStratified, timeInterval }) => (
         >
           Number at risk
         </div>
-        {notStratified ? (
-          <Table data={data} timeInterval={timeInterval} isLast />
-        ) : (
+        {isStratified ? (
           Object.entries(
-            data.reduce((acc, { name, data }) => {
-              const [factorKey, stratificationKey] = name.split(',');
+            data.reduce((acc, { group, data }) => {
+              const [factor, stratification] = group;
+              const stratificationKey = JSON.stringify(stratification);
               const stratificationValue = acc.hasOwnProperty(stratificationKey)
-                ? [...acc[stratificationKey], { name: factorKey, data }]
-                : [{ name: factorKey, data }];
+                ? [...acc[stratificationKey], { group: [factor], data }]
+                : [{ group: [factor], data }];
 
               return { ...acc, [stratificationKey]: stratificationValue };
             }, {})
           ).map(([key, data], i, arr) => (
             <Fragment key={key}>
               <div className='explorer-survival-analysis__figure-title'>
-                {key.split('=')[1]}
+                {JSON.parse(key).value}
               </div>
               <Table
                 data={data}
@@ -126,6 +129,8 @@ const RiskTable = ({ data, notStratified, timeInterval }) => (
               />
             </Fragment>
           ))
+        ) : (
+          <Table data={data} timeInterval={timeInterval} isLast />
         )}
       </>
     )}
@@ -141,9 +146,15 @@ RiskTable.propTypes = {
           time: PropTypes.number,
         })
       ),
-      name: PropTypes.string,
+      group: PropTypes.arrayOf(
+        PropTypes.exact({
+          variable: PropTypes.string,
+          value: PropTypes.string,
+        })
+      ),
     })
   ).isRequired,
+  isStratified: PropTypes.bool.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
