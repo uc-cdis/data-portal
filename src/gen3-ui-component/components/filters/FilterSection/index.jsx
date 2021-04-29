@@ -434,16 +434,14 @@ class FilterSection extends React.Component {
         <div className='g3-filter-section__options'>
           {(isTextFilter || isSearchFilter) &&
             this.state.isExpanded &&
-            this.props.options.map((option, index) => {
+            this.props.options.map((option) => {
               if (
                 // For searchFilters, options are treated differently -- the only
                 // options passed are the already selected options, as opposed
                 // to all available options in textfilters. So don't filter out
                 // any options based on `optionsVisibleStatus`.
-                (!isSearchFilter &&
-                  !this.state.optionsVisibleStatus[option.text]) ||
-                (index >= this.props.initVisibleItemNumber &&
-                  !this.state.showingMore)
+                !isSearchFilter &&
+                !this.state.optionsVisibleStatus[option.text]
               ) {
                 return null;
               }
@@ -472,12 +470,8 @@ class FilterSection extends React.Component {
             })}
           {isRangeFilter &&
             this.state.isExpanded &&
-            this.props.options.map((option, index) => {
-              if (
-                !this.state.optionsVisibleStatus[option.text] ||
-                (index >= this.props.initVisibleItemNumber &&
-                  !this.state.showingMore)
-              ) {
+            this.props.options.map((option) => {
+              if (!this.state.optionsVisibleStatus[option.text]) {
                 return null;
               }
               const lowerBound =
