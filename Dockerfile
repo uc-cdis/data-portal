@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
-    && npm install -g npm@7.9.0 \
+    && npm install -g npm@7 \
     && npm config set maxsockets 5
 
 ARG APP=dev
@@ -42,6 +42,8 @@ RUN npm config set unsafe-perm=true \
 RUN NODE_OPTIONS=--max-old-space-size=3584 NODE_ENV=production time ./node_modules/.bin/webpack --bail
 RUN cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
+    # clear npm cache, attempt to fix portal stuck at start up issue
+RUN npm cache clean --force
 
 # In standard prod these will be overwritten by volume mounts
 # Provided here for ease of use in development and
