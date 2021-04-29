@@ -10,12 +10,17 @@ import Chip from '../Chip';
 import RangeFilter from '../RangeFilter';
 import './FilterSection.css';
 
-const filterVisibleStatusObj = (optionList, inputText) => {
+const filterVisibleStatusObj = (
+  optionList,
+  initVisibleItemNumber,
+  showingMore,
+  inputText
+) => {
   const res = {};
-  for (const o of optionList) {
+  for (const [i, o] of optionList.entries()) {
     res[o.text] =
-      typeof inputText === 'undefined'
-        ? true
+      typeof inputText === 'undefined' || inputText === ''
+        ? showingMore || i < initVisibleItemNumber
         : o.text.toLowerCase().indexOf(inputText.toLowerCase()) >= 0;
   }
   return res;
@@ -47,7 +52,11 @@ class FilterSection extends React.Component {
       resetClickCounter: 0,
 
       // option visible status filtered by the search inputbox
-      optionsVisibleStatus: filterVisibleStatusObj(this.props.options),
+      optionsVisibleStatus: filterVisibleStatusObj(
+        this.props.options,
+        this.props.initVisibleItemNumber,
+        false
+      ),
     };
     this.inputElem = React.createRef();
     this.combineModeFieldName = '__combineMode';
@@ -215,7 +224,11 @@ class FilterSection extends React.Component {
     // if empty input, all should be visible
     if (typeof inputText === 'undefined' || inputText.trim() === '') {
       this.setState({
-        optionsVisibleStatus: filterVisibleStatusObj(this.props.options),
+        optionsVisibleStatus: filterVisibleStatusObj(
+          this.props.options,
+          this.props.initVisibleItemNumber,
+          this.state.showingMore
+        ),
       });
     }
 
@@ -223,6 +236,8 @@ class FilterSection extends React.Component {
     this.setState({
       optionsVisibleStatus: filterVisibleStatusObj(
         this.props.options,
+        this.props.initVisibleItemNumber,
+        this.state.showingMore,
         inputText
       ),
     });
