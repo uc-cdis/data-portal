@@ -5,7 +5,6 @@ import sum from 'lodash/sum';
 import * as JsSearch from 'js-search';
 import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, ExportOutlined, DownloadOutlined } from '@ant-design/icons';
 import {
-  Affix,
   Input,
   Table,
   Tag,
@@ -85,6 +84,12 @@ const getFilterValuesByKey =
     const filterValuesMap = {};
     studies.forEach((study) => {
       const filtersField = config.features.advSearchFilters.field;
+      if (!filtersField) {
+        throw new Error('Misconfiguration error: missing required configuration property `discoveryConfig.features.advSearchFilters.field`');
+      }
+      if (!study[filtersField]) {
+        throw new Error(`Misconfiguration error: expected to find property '${config.features.advSearchFilters.field}' in study metadata, but could not find it! Check the study metadata.`);
+      }
       study[filtersField].forEach((filterValue) => {
         if (filterValue.key === key) {
           filterValuesMap[filterValue.value] = true;
@@ -536,12 +541,15 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       )
         &&
           <div className='discovery-filters'>
-            <Collapse bordered={false} defaultActiveKey={['1', '2', '3', '4', '5', '6']}>
+            <Collapse
+              bordered={false}
+              defaultActiveKey={config.features.advSearchFilters.filters.map(f => f.key)}
+            >
               { config.features.advSearchFilters.filters.map((filter) => {
-                const { key, displayName } = filter;
+                const { key, keyDisplayName } = filter;
                 const values = getFilterValuesByKey(key, props.studies, config);
                 return (
-                  <Collapse.Panel header={displayName || key} key={key}>
+                  <Collapse.Panel header={keyDisplayName || key} key={key}>
                     <Space direction='vertical'>
                       { values.map((value) => {
                         const valueDisplayName =
@@ -550,12 +558,16 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                             : value;
                         return (
                           <Checkbox
-                            checked={filterState[key][value]}
-                            onChange={ev =>
-                              setFilterState({
-                                ...filterState,
-                                [key]: { [value]: ev.target.checked },
-                              })
+                            key={`${key}-${value}`}
+                            checked={filterState[key] && filterState[key][value]}
+                            onChange={(ev) => {
+                              const newFilterState = Object.assign({}, filterState);
+                              if (!newFilterState[key]) {
+                                newFilterState[key] = {};
+                              }
+                              newFilterState[key][value] = ev.target.checked;
+                              setFilterState(newFilterState);
+                            }
                             }
                           >
                             {valueDisplayName}
