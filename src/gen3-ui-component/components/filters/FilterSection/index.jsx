@@ -10,12 +10,17 @@ import Chip from '../Chip';
 import RangeFilter from '../RangeFilter';
 import './FilterSection.css';
 
-const filterVisibleStatusObj = (optionList, inputText) => {
+const filterVisibleStatusObj = (
+  optionList,
+  initVisibleItemNumber,
+  showingMore,
+  inputText
+) => {
   const res = {};
-  for (const o of optionList) {
+  for (const [i, o] of optionList.entries()) {
     res[o.text] =
-      typeof inputText === 'undefined'
-        ? true
+      typeof inputText === 'undefined' || inputText === ''
+        ? showingMore || i < initVisibleItemNumber
         : o.text.toLowerCase().indexOf(inputText.toLowerCase()) >= 0;
   }
   return res;
@@ -47,7 +52,11 @@ class FilterSection extends React.Component {
       resetClickCounter: 0,
 
       // option visible status filtered by the search inputbox
-      optionsVisibleStatus: filterVisibleStatusObj(this.props.options),
+      optionsVisibleStatus: filterVisibleStatusObj(
+        this.props.options,
+        this.props.initVisibleItemNumber,
+        false
+      ),
     };
     this.inputElem = React.createRef();
     this.combineModeFieldName = '__combineMode';
@@ -157,7 +166,7 @@ class FilterSection extends React.Component {
     let totalCount = 0;
     for (const o of this.props.options) {
       if (o.count > 0 || !this.props.hideZero || o.count === -1)
-        if (this.state.optionsVisibleStatus[o.text]) totalCount += 1;
+        totalCount += 1;
     }
     return (
       totalCount > this.props.initVisibleItemNumber && (
@@ -215,7 +224,11 @@ class FilterSection extends React.Component {
     // if empty input, all should be visible
     if (typeof inputText === 'undefined' || inputText.trim() === '') {
       this.setState({
-        optionsVisibleStatus: filterVisibleStatusObj(this.props.options),
+        optionsVisibleStatus: filterVisibleStatusObj(
+          this.props.options,
+          this.props.initVisibleItemNumber,
+          this.state.showingMore
+        ),
       });
     }
 
@@ -223,6 +236,8 @@ class FilterSection extends React.Component {
     this.setState({
       optionsVisibleStatus: filterVisibleStatusObj(
         this.props.options,
+        this.props.initVisibleItemNumber,
+        this.state.showingMore,
         inputText
       ),
     });
@@ -286,7 +301,14 @@ class FilterSection extends React.Component {
   }
 
   toggleShowMore() {
-    this.setState((prevState) => ({ showingMore: !prevState.showingMore }));
+    this.setState((prevState) => ({
+      showingMore: !prevState.showingMore,
+      optionsVisibleStatus: filterVisibleStatusObj(
+        this.props.options,
+        this.props.initVisibleItemNumber,
+        !prevState.showingMore
+      ),
+    }));
   }
 
   render() {
@@ -412,16 +434,14 @@ class FilterSection extends React.Component {
         <div className='g3-filter-section__options'>
           {(isTextFilter || isSearchFilter) &&
             this.state.isExpanded &&
-            this.props.options.map((option, index) => {
+            this.props.options.map((option) => {
               if (
                 // For searchFilters, options are treated differently -- the only
                 // options passed are the already selected options, as opposed
                 // to all available options in textfilters. So don't filter out
                 // any options based on `optionsVisibleStatus`.
-                (!isSearchFilter &&
-                  !this.state.optionsVisibleStatus[option.text]) ||
-                (index >= this.props.initVisibleItemNumber &&
-                  !this.state.showingMore)
+                !isSearchFilter &&
+                !this.state.optionsVisibleStatus[option.text]
               ) {
                 return null;
               }
@@ -450,12 +470,8 @@ class FilterSection extends React.Component {
             })}
           {isRangeFilter &&
             this.state.isExpanded &&
-            this.props.options.map((option, index) => {
-              if (
-                !this.state.optionsVisibleStatus[option.text] ||
-                (index >= this.props.initVisibleItemNumber &&
-                  !this.state.showingMore)
-              ) {
+            this.props.options.map((option) => {
+              if (!this.state.optionsVisibleStatus[option.text]) {
                 return null;
               }
               const lowerBound =
