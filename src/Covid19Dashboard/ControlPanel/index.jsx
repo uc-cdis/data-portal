@@ -13,9 +13,9 @@ class ControlPanel extends PureComponent {
         <p>
           Data source: <a href='https://systems.jhu.edu'>Johns Hopkins University CSSE</a>
         </p>
-        {this.props.last_updated &&
+        {this.props.lastUpdated &&
           <p>
-            Last updated: {this.props.last_updated}
+            Last updated: {this.props.lastUpdated}
           </p>
         }
         {this.props.showMapStyle ? <MapStylePanel
@@ -36,7 +36,7 @@ ControlPanel.propTypes = {
   colors: PropTypes.object,
   showMapStyle: PropTypes.bool,
   defaultMapStyle: PropTypes.string,
-  last_updated: PropTypes.string,
+  lastUpdated: PropTypes.string,
 };
 
 ControlPanel.defaultProps = {
@@ -45,7 +45,7 @@ ControlPanel.defaultProps = {
   colors: {},
   showMapStyle: false,
   defaultMapStyle: '',
-  last_updated: '',
+  lastUpdated: '',
 };
 
 export default ControlPanel;
