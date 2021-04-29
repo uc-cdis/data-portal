@@ -166,7 +166,7 @@ class FilterSection extends React.Component {
     let totalCount = 0;
     for (const o of this.props.options) {
       if (o.count > 0 || !this.props.hideZero || o.count === -1)
-        if (this.state.optionsVisibleStatus[o.text]) totalCount += 1;
+        totalCount += 1;
     }
     return (
       totalCount > this.props.initVisibleItemNumber && (
