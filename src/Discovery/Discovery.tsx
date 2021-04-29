@@ -1,31 +1,28 @@
 import React, { useState, useEffect } from 'react';
+import FileSaver from 'file-saver';
 import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
 import * as JsSearch from 'js-search';
-import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined } from '@ant-design/icons';
+import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, ExportOutlined, DownloadOutlined } from '@ant-design/icons';
 import {
   Input,
   Table,
   Tag,
-  Radio,
   Space,
   Modal,
   Alert,
   Popover,
+  Button,
 } from 'antd';
 
+import { fetchWithCreds } from '../actions';
+import { manifestServiceApiPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
-
 
 const accessibleFieldName = '__accessible';
 
 const ARBORIST_READ_PRIV = 'read';
-export enum AccessLevel {
-  BOTH = 'both',
-  ACCESSIBLE = 'accessible',
-  UNACCESSIBLE = 'unaccessible',
-}
 
 const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   const categoryConfig = config.tagCategories.find(category => category.name === tagCategory);
@@ -77,7 +74,7 @@ const getTagsInCategory =
     return Object.keys(tagMap);
   };
 
-const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number' = 'string'): string => {
+const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number'|'link' = 'string'): React.ReactNode => {
   switch (contentType) {
   case 'string':
     return content;
@@ -85,6 +82,14 @@ const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'nu
     return content.toLocaleString();
   case 'paragraphs':
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
+  case 'link':
+    return (<a
+      onClick={ev => ev.stopPropagation()}
+      onKeyPress={ev => ev.stopPropagation()}
+      href={content}
+    >
+      {content}
+    </a>);
   default:
     throw new Error(`Unrecognized content type ${contentType}. Check the 'study_page_fields' section of the Discovery config.`);
   }
@@ -111,20 +116,6 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
   };
 };
 
-const filterByAccessLevel =
-  (studies: any[], accessLevel: AccessLevel, accessibleProperty: string): any[] => {
-    switch (accessLevel) {
-    case AccessLevel.ACCESSIBLE:
-      return studies.filter(r => r[accessibleProperty]);
-    case AccessLevel.UNACCESSIBLE:
-      return studies.filter(r => !r[accessibleProperty]);
-    case AccessLevel.BOTH:
-      return studies;
-    default:
-      throw new Error(`Unrecognized access level ${accessLevel}.`);
-    }
-  };
-
 const filterByTags = (studies: any[], selectedTags: any): any[] => {
   // if no tags selected, show all studies
   if (Object.values(selectedTags).every(selected => !selected)) {
@@ -136,6 +127,7 @@ const filterByTags = (studies: any[], selectedTags: any): any[] => {
 interface DiscoveryBetaProps {
   config: DiscoveryConfig
   studies: {__accessible: boolean, [any: string]: any}[]
+  history?: any // from React Router
   params?: {studyUID: string} // from React Router
 }
 
@@ -144,10 +136,11 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 
   const [jsSearch, setJsSearch] = useState(null);
   const [searchFilteredResources, setSearchFilteredResources] = useState([]);
+  const [selectedResources, setSelectedResources] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [modalData, setModalData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  const [accessLevel, setAccessLevel] = useState(AccessLevel.BOTH);
   const [selectedTags, setSelectedTags] = useState({});
 
   useEffect(() => {
@@ -263,17 +256,25 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   if (config.features.authorization.enabled) {
     columns.push({
       title: 'Access',
+      filters: [{
+        text: <><UnlockOutlined />Accessible</>,
+        value: true,
+      }, {
+        text: <><LockFilled />Unaccessible</>,
+        value: false,
+      }],
+      onFilter: (value, record) => record[accessibleFieldName] === value,
       ellipsis: false,
       width: undefined,
       render: (_, record) => (
         record[accessibleFieldName]
           ? (
             <Popover
-              overlayClassName='discovery-table__access-popover'
+              overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
               title={'You have access to this study.'}
-              content={<div className='discovery-table__access-popover-text'>
+              content={<div className='discovery-popover__text'>
                 <>You have <code>{ARBORIST_READ_PRIV}</code> access to</>
                 <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
               </div>}
@@ -283,12 +284,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           )
           : (
             <Popover
-              overlayClassName='discovery-table__access-popover'
+              overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
               title={'You do not have access to this study.'}
               content={
-                <div className='discovery-table__access-popover-text'>
+                <div className='discovery-popover__text'>
                   <>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</>
                   <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
                 </div>
@@ -316,13 +317,53 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     setSearchFilteredResources(results);
   };
 
-  const handleAccessLevelChange = (ev) => {
-    const value = ev.target.value as AccessLevel;
-    setAccessLevel(value);
+  const handleExportToWorkspaceClick = async () => {
+    setExportingToWorkspace(true);
+    const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+    if (!manifestFieldName) {
+      throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
+    }
+    // combine manifests from all selected studies
+    const manifest = [];
+    selectedResources.forEach((study) => {
+      if (study[manifestFieldName]) {
+        manifest.push(...study[manifestFieldName]);
+      }
+    });
+    // post selected resources to manifestservice
+    const res = await fetchWithCreds({
+      path: `${manifestServiceApiPath}`,
+      body: JSON.stringify(manifest),
+      method: 'POST',
+    });
+    if (res.status !== 200) {
+      throw new Error(`Encountered error while exporting to Workspace: ${JSON.stringify(res)}`);
+    }
+    setExportingToWorkspace(false);
+    // redirect to Workspaces page
+    props.history.push('/workspace');
+  };
+
+  const handleDownloadManifestClick = () => {
+    const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+    if (!manifestFieldName) {
+      throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
+    }
+    // combine manifests from all selected studies
+    const manifest = [];
+    selectedResources.forEach((study) => {
+      if (study[manifestFieldName]) {
+        manifest.push(...study[manifestFieldName]);
+      }
+    });
+    // download the manifest
+    const MANIFEST_FILENAME = 'manifest.json';
+    const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'text/json' });
+    FileSaver.saveAs(blob, MANIFEST_FILENAME);
   };
 
   const visibleResources = filterByTags(
-    filterByAccessLevel(searchFilteredResources, accessLevel, accessibleFieldName),
+    searchFilteredResources,
     selectedTags,
   );
 
@@ -395,7 +436,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     </div>
     <div className='discovery-table-container'>
       <div className='discovery-table__header'>
-        { config.features.search.searchBar.enabled &&
+        { (
+          config.features.search && config.features.search.searchBar
+            && config.features.search.searchBar.enabled
+        ) &&
             <Input
               className='discovery-search'
               prefix={<SearchOutlined />}
@@ -406,25 +450,82 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               allowClear
             />
         }
-        { config.features.authorization.enabled &&
-            <div className='disvovery-table__controls'>
-              <Radio.Group
-                onChange={handleAccessLevelChange}
-                value={accessLevel}
-                className='discovery-access-selector'
-                defaultValue='both'
-                buttonStyle='solid'
+        { (
+          config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
+        ) &&
+          <Space>
+            <span className='discovery-export__selected-ct'>{selectedResources.length} selected</span>
+            { config.features.exportToWorkspaceBETA.enableDownloadManifest &&
+              <Popover
+                className='discovery-popover'
+                arrowPointAtCenter
+                title={<>
+                  Download a Manifest File for use with the&nbsp;
+                  <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/' >
+                    {'Gen3 Client'}
+                  </a>.
+                </>}
+                content={(<span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
+                to download the data from the selected studies to your local computer.</span>)}
               >
-                <Radio.Button value={AccessLevel.BOTH}>All</Radio.Button>
-                <Radio.Button value={AccessLevel.UNACCESSIBLE}><LockFilled /></Radio.Button>
-                <Radio.Button value={AccessLevel.ACCESSIBLE}><UnlockOutlined /></Radio.Button>
-              </Radio.Group>
-            </div>
+                <Button
+                  onClick={handleDownloadManifestClick}
+                  type='text'
+                  disabled={selectedResources.length === 0}
+                  icon={<DownloadOutlined />}
+                >
+                  Download Manifest
+                </Button>
+              </Popover>
+            }
+            <Popover
+              className='discovery-popover'
+              arrowPointAtCenter
+              content={<>
+                Open selected studies in the&nbsp;
+                <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
+                  {'Gen3 Workspace'}
+                </a>.
+              </>}
+            >
+              <Button
+                type='primary'
+                disabled={selectedResources.length === 0}
+                loading={exportingToWorkspace}
+                icon={<ExportOutlined />}
+                onClick={handleExportToWorkspaceClick}
+              >
+                Open in Workspace
+              </Button>
+            </Popover>
+          </Space>
         }
+
       </div>
       <Table
         columns={columns}
         rowKey={config.minimalFieldMapping.uid}
+        rowSelection={(
+          config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
+        )
+          && {
+            selectedRowKeys: selectedResources.map(r => r[config.minimalFieldMapping.uid]),
+            preserveSelectedRowKeys: true,
+            onChange: (_, selectedRows) => setSelectedResources(selectedRows),
+            getCheckboxProps: (record) => {
+              let disabled;
+              // if auth is enabled, disable checkbox if user doesn't have access
+              if (config.features.authorization.enabled) {
+                disabled = record[accessibleFieldName] === false;
+              }
+              // disable checkbox if there's no manifest found for this study
+              const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+              if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
+                disabled = true;
+              }
+              return { disabled };
+            },
+          }}
         rowClassName='discovery-table__row'
         onRow={record => ({
           onClick: () => {
@@ -555,6 +656,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 };
 
 Discovery.defaultProps = {
+  history: [],
   params: { studyUID: null },
 };
 
