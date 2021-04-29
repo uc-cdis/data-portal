@@ -141,13 +141,46 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
   };
 };
 
-const filterByTags = (studies: any[], selectedTags: any): any[] => {
+const filterByTags = (studies: any[], selectedTags: any, config: DiscoveryConfig): any[] => {
   // if no tags selected, show all studies
   if (Object.values(selectedTags).every(selected => !selected)) {
     return studies;
   }
-  return studies.filter(study => study.tags.some(tag => selectedTags[tag.name]));
+  const tagField = config.minimalFieldMapping.tagsListFieldName;
+  return studies.filter(study => study[tagField].some(tag => selectedTags[tag.name]));
 };
+
+interface FilterState {
+  [key: string]: { [value: string]: boolean }
+}
+
+const filterByAdvSearch =
+  (studies: any[], advSearchFilterState: FilterState, config: DiscoveryConfig): any[] => {
+    // if no filters active, show all studies
+    const noFiltersActive = Object.values(advSearchFilterState).every((selectedValues) => {
+      if (Object.values(selectedValues).length === 0) {
+        return true;
+      }
+      if (Object.values(selectedValues).every(selected => !selected)) {
+        return true;
+      }
+      return false;
+    });
+    if (noFiltersActive) {
+      return studies;
+    }
+    const advSearchFiltersField = config.features.advSearchFilters.field;
+    return studies.filter((study) => {
+      const studyFilters = study[advSearchFiltersField];
+      for (let i = 0; i < studyFilters.length; i += 1) {
+        const { key, value } = studyFilters[i];
+        if (advSearchFilterState[key] && advSearchFilterState[key][value]) {
+          return true;
+        }
+      }
+      return false;
+    });
+  };
 
 interface DiscoveryBetaProps {
   config: DiscoveryConfig
@@ -156,9 +189,6 @@ interface DiscoveryBetaProps {
   params?: {studyUID: string} // from React Router
 }
 
-interface FilterState {
-  [key: string]: { [value: string]: boolean }
-}
 
 const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: DiscoveryBetaProps) => {
   const { config } = props;
@@ -393,9 +423,15 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     FileSaver.saveAs(blob, MANIFEST_FILENAME);
   };
 
-  const visibleResources = filterByTags(
+  let visibleResources = filterByTags(
     searchFilteredResources,
     selectedTags,
+    config,
+  );
+  visibleResources = filterByAdvSearch(
+    visibleResources,
+    filterState,
+    config,
   );
 
   return (<div className='discovery-container'>
