@@ -301,7 +301,14 @@ class FilterSection extends React.Component {
   }
 
   toggleShowMore() {
-    this.setState((prevState) => ({ showingMore: !prevState.showingMore }));
+    this.setState((prevState) => ({
+      showingMore: !prevState.showingMore,
+      optionsVisibleStatus: filterVisibleStatusObj(
+        this.props.options,
+        this.props.initVisibleItemNumber,
+        !prevState.showingMore
+      ),
+    }));
   }
 
   render() {
