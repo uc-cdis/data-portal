@@ -47,6 +47,7 @@ export interface DiscoveryConfig {
         valueIfNotAvailable?: string | number
         ellipsis?: boolean
         width?: string | number
+        hrefValueFromField?: 'string'
     }[],
     studyPreviewField: {
         name: string,

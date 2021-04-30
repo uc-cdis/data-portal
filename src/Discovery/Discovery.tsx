@@ -22,8 +22,6 @@ const ARBORIST_READ_PRIV = 'read';
 const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   const categoryConfig = config.tagCategories.find(category => category.name === tagCategory);
   if (categoryConfig === undefined) {
-    // eslint-disable-next-line no-console
-    console.error(`Misconfiguration error: tag category ${tagCategory} not found in config. Check the 'tag_categories' section of the Discovery page config.`);
     return 'gray';
   }
   return categoryConfig.color;
@@ -149,6 +147,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     width: column.width,
     render: (_, record) => {
       const value = record[column.field];
+
       if (value === undefined) {
         if (column.errorIfNotAvailable !== false) {
           throw new Error(`Configuration error: Could not find field ${column.field} in record ${JSON.stringify(record)}. Check the 'study_columns' section of the Discovery config.`);
@@ -164,7 +163,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           return highlightSearchTerm(value, searchTerm).highlighted;
         }
       }
-      return renderFieldContent(value, column.contentType);
+      if(column.hrefValueFromField) {
+        return <a href={'//' + record[column.hrefValueFromField]} target='_blank'>{ renderFieldContent(value, column.contentType) }</a>;
+      }
+      else {
+        return renderFieldContent(value, column.contentType);
+      }
     },
   }),
   );
@@ -179,6 +183,9 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           {record.tags.map(({ name, category }) => {
             const isSelected = !!selectedTags[name];
             const color = getTagColor(category, config);
+            if (typeof name !== "string") {
+              return;
+            }
             return (
               <Tag
                 key={record.name + name}

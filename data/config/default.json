@@ -707,7 +707,8 @@
         "name": "Data Commons",
         "field": "commons",
         "errorIfNotAvailable": false,
-        "valueIfNotAvailable": "n/a"
+        "valueIfNotAvailable": "n/a",
+        "hrefValueFromField": "commons_url"
       }
     ],
     "studyPreviewField": {
