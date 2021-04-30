@@ -509,7 +509,10 @@ class FilterSection extends React.Component {
                 />
               );
             })}
-          {isTextFilter && this.state.isExpanded && this.getShowMoreButton()}
+          {isTextFilter &&
+            this.state.isExpanded &&
+            this.state.searchInputEmpty &&
+            this.getShowMoreButton()}
         </div>
       </div>
     );
