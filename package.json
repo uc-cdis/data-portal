@@ -62,7 +62,7 @@
     "react-ace": "^9.4.0",
     "react-dom": "^16.14.0",
     "react-ga": "^2.5.3",
-    "react-helmet": "^5.2.0",
+    "react-helmet": "^6.1.0",
     "react-redux": "^7.2.4",
     "react-relay": "^1.6.0",
     "react-responsive": "^6.1.1",
