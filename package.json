@@ -84,7 +84,7 @@
     "viz.js": "2.0.0",
     "webpack": "^5.36.2",
     "webpack-cli": "^4.6.0",
-    "webpack-node-externals": "^2.5.2"
+    "webpack-node-externals": "^3.0.0"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^6.2.9",
