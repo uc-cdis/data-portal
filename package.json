@@ -67,7 +67,7 @@
     "react-relay": "^1.6.0",
     "react-responsive": "^8.2.0",
     "react-router-dom": "^5.2.0",
-    "react-select": "^3.2.0",
+    "react-select": "^4.3.0",
     "react-select-async-paginate": "^0.4.1",
     "react-svg-loader": "^3.0.3",
     "react-table": "^6.9.2",
