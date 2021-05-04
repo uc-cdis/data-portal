@@ -158,10 +158,15 @@ Below is an example, with inline comments describing what each JSON block config
   "requiredCerts": [], // optional; do users need to take a quiz or agree to something before they can access the site?
   "featureFlags": { // optional; will hide certain parts of the site if needed
     "explorer": true, // required; indicates the flag and whether to hide it or not
-    "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. Data explorer page would be public accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
+    "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. The Data Explorer page would be publicly accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
     "discovery": true, // optional; whether to enable the Discovery page. If true, `discoveryConfig` must be present as well.
+    "explorerStoreFilterInURL": true, // optional; whether to store/load applied filters in the URL during Data Explorer use.
+    This feature currently supports single select filters and range filters; it
+    lacks support for search filter state, accessibility state, table state.
+    "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
+    "explorerFilterValuesToHide": ["array of strings"], // optional, Values set in array will be hidden in guppy filters. Intended use is to hide missing data category from filters, for this it should be set to the same as `missing_data_alias` in Guppy server config
   },
-  "dataExplorerConfig": { // required; configuration for the Data Explorer (/explorer)
+  "dataExplorerConfig": { // required only if featureFlags.explorer is true; configuration for the Data Explorer (/explorer); can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the Data Explorer
       "project_id": { // required; GraphQL field to query for a chart (ex: this one will display the number of projects, based on the project_id)
         "chartType": "count", // required; indicates this chart will display a “count”
@@ -208,7 +213,7 @@ Below is an example, with inline comments describing what each JSON block config
     },
     "table": { // required; configuration for Data Explorer table
       "enabled": true, // required; indicates if the table should be enabled or not by default
-      "fields": [ // required; fields (node attributes) to include to be displayed in the table
+      "fields": [ // optional; fields (node attributes) to include to be displayed in the table
         "project_id",
         "race",
         "ethnicity",
@@ -228,7 +233,7 @@ Below is an example, with inline comments describing what each JSON block config
         "title": "Download" // required; title of dropdown button
       }
     },
-    "buttons": [ // required; buttons for Data Explorer
+    "buttons": [ // optional; buttons for Data Explorer
       {
         "enabled": true, // required; if the button is enabled or disabled
         "type": "data", // required; button data type sub-options (case insensitive): ["data" (default), "data-tsv", "data-csv", "data-json"] - what should it do? Data = downloading default clinical JSON data
@@ -315,7 +320,7 @@ Below is an example, with inline comments describing what each JSON block config
     "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/", // optional; for tiered access, if a user wants to get access to the data sets what site should they visit?
     "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data" // optional; if exporting to Terra which URL should we use?
   },
-  "fileExplorerConfig": { // optional; configuration for the File Explorer
+  "fileExplorerConfig": { // optional; configuration for the File Explorer; can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the File Explorer
       "data_type": { // required; GraphQL field to query for a chart (ex: this one will display a bar chart for data types of the files in the cohort)
         "chartType": "stackedBar", // required; chart type of stack bar
@@ -363,7 +368,7 @@ Below is an example, with inline comments describing what each JSON block config
       "accessibleValidationField": "project_id",
       "downloadAccessor": "object_id" // required; for downloading a file, what is the GUID? This should probably not change
     },
-    "buttons": [ // required; buttons for File Explorer
+    "buttons": [ // optional; buttons for File Explorer
       {
         "enabled": true, // required; determines if the button is enabled or disabled
         "type": "file-manifest", // required; button type - file-manifest is for downloading a manifest from the file index
@@ -383,7 +388,13 @@ Below is an example, with inline comments describing what each JSON block config
     "dropdowns": {} // optional; dropdown groupings for buttons
   },
   "discoveryConfig": { // config for Discovery page. Required if 'featureFlags.discovery' is true. See src/Discovery/DiscoveryConfig.d.ts for Typescript schema.
+    "public": true, // optional, defaults to true. If false, requires user to sign in before seeing the Discovery page
     "features": {
+      "exportToWorkspaceBETA": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
+          "enable": boolean
+          "enableDownloadManifest": boolean // enables a button which allows user to download a manifest file for gen3 client
+          "manifestFieldName": string // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
+      }
       "pageTitle": {
         "enabled": true,
         "text": "My Special Test Discovery Page"
