@@ -54,6 +54,12 @@ class GuppyDataExplorer extends React.Component {
     if (this._isMounted) this.setState({ initialAppliedFilters: filters });
   };
 
+  handleFilterChange = (e) => {
+    const search =
+      e && Object.keys(e).length > 0 ? `filter=${JSON.stringify(e)}` : '';
+    this.props.history.push({ search });
+  };
+
   render() {
     return (
       <ExplorerErrorBoundary>
