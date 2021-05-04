@@ -135,7 +135,7 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
 
   // TODO: connect the UI to these variables
   const offset = 0; // For pagination
-  const limit = 100; // Total number of rows requested
+  const limit = 1000; // Total number of rows requested
 
   const studies = await loadStudiesFromAggMDS(offset, limit);
 
