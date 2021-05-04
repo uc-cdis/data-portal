@@ -108,3 +108,4 @@ describe('the DataDictionaryNode', () => {
     expect(clearSearchHistoryItems()).toEqual([]);
   });
 });
+
