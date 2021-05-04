@@ -272,27 +272,23 @@ class ProtectedContent extends React.Component {
         />
       );
 
-    let content;
-    content = <Spinner />;
-    if (
-      this.props.isPublic &&
-      (this.state.dataLoaded ||
-        !this.props.filter ||
-        typeof this.props.filter !== 'function')
-    )
-      content = this.props.children;
-    else if (!this.props.isPublic && this.state.authenticated)
-      content = (
-        <>
-          <ReduxAuthTimeoutPopup />
-          {this.props.children}
-        </>
-      );
-
     const pageClassName = isPageFullScreen(this.props.location.pathname)
       ? 'protected-content protected-content--full-screen'
       : 'protected-content';
-    return <div className={pageClassName}>{content}</div>;
+    return (
+      <div className={pageClassName}>
+        {(this.props.isPublic
+          ? (this.state.dataLoaded ||
+              typeof this.props.filter !== 'function') &&
+            this.props.children
+          : this.state.authenticated && (
+              <>
+                <ReduxAuthTimeoutPopup />
+                {this.props.children}
+              </>
+            )) || <Spinner />}
+      </div>
+    );
   }
 }
 
