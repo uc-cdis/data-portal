@@ -6,7 +6,9 @@ import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
 import ExplorerCohort from './ExplorerCohort';
+import { mergeFilters } from '../GuppyComponents/Utils/filters';
 import { capitalizeFirstLetter } from '../utils';
+import { validateFilter } from './utils';
 import {
   GuppyConfigType,
   FilterConfigType,
@@ -20,13 +22,31 @@ import './GuppyDataExplorer.css';
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
+
+    let initialAppliedFilters = {};
+    const searchParams = new URLSearchParams(props.history.location.search);
+    if (searchParams.has('filter')) {
+      try {
+        const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
+        if (validateFilter(filterInUrl, props.filterConfig))
+          initialAppliedFilters = filterInUrl;
+        else throw undefined;
+      } catch (e) {
+        console.error('Invalid filter value in URL.', e);
+        props.history.push({ search: '' });
+      }
+    }
+
     const overviewFilter =
       props.history.location.state && props.history.location.state.filter
         ? props.history.location.state.filter
         : {};
 
     this.state = {
-      initialAppliedFilters: { ...overviewFilter },
+      initialAppliedFilters: mergeFilters(
+        initialAppliedFilters,
+        overviewFilter
+      ),
     };
     this._isMounted = false;
   }
