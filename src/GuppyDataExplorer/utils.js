@@ -62,3 +62,21 @@ export const humanizeNumber = (number, fixedPoint = 2) => {
   // 10^15+, number is too large
   return Number.parseFloat(number).toExponential(fixedPoint);
 };
+
+/**
+ * Validates the provide filter value based on configuration.
+ * Performs the following checks:
+ * - filter value is a plain object
+ * - filter keys include only fields specified in the configuration
+ * @param {*} value
+ * @param {{ tabs: { fields: string[] }[] }} filterConfig
+ */
+export function validateFilter(value, filterConfig) {
+  if (typeof value !== 'object' || value === null || Array.isArray(value))
+    return false;
+
+  const allFields = filterConfig.tabs.flatMap(({ fields }) => fields);
+  const testFieldSet = new Set(allFields);
+  for (const key of Object.keys(value)) testFieldSet.add(key);
+  return allFields.length === testFieldSet.size;
+}
