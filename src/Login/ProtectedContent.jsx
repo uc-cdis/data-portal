@@ -63,7 +63,7 @@ export function logoutListener(state = {}, action) {
  */
 class ProtectedContent extends React.Component {
   static propTypes = {
-    component: PropTypes.elementType.isRequired,
+    children: PropTypes.node.isRequired,
     location: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
     match: PropTypes.shape({
