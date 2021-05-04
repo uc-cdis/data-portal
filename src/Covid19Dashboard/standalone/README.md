@@ -49,7 +49,7 @@ is more efficient due to MapBox's render optimization. The template has an examp
 ## Installation
 
 To install the template you will need npm. Note that the version
-of npm needs to be less than version 7 or you will run into errors.
+of npm needs to be less than version 7 or else you will run into errors.
 
 To install type the following:
 ```
@@ -99,4 +99,78 @@ like:
 ### Creating a new Overlay
 
 Creating a new overlay require that you defined a GeoJson data source,
-style it and then add it to the map.
+style it and then add it to the map. To create a new overlay
+create a new directory in ```data-portal/src/Covid19Dashboard/overlays```.
+Copy ```data-portal/src/Covid19Dashboard/overlays/LayerTemplate/index.jsx```
+to your new directory.
+
+#### Add Datasource
+
+You will need to add you datasource to the layer. This can be done in
+several ways, the easiest being to add a local geojson file. NOTE:
+need official way to add S3 files.
+
+Look for the code:
+```javascript
+  render() {
+    return (
+      <ReactMapGL.Source type='geojson' data={usCounties}>
+        <ReactMapGL.Layer {...notIl} layout={{ visibility: this.props.visibility }}/>
+      </ReactMapGL.Source>
+    );
+```
+
+change the ```data=``` property to point to your data source.
+
+#### Set a Style
+
+Now that you have added the datasource, you will need to tell
+mapbox how to render it. As described above this is done by defining
+a Mapbox *style* which sets properties such as color, outlines, and what to
+draw (line, polygons, markers, etc.). A full Mapbox style can be quite
+large, you only need to define the style for the data needed for
+the overlay. One suggestion to help create style files is to either
+Mapbox studio or [Maputnik](https://maputnik.github.io/editor/#0.61/0/0)
+where you can add your data and develop the styling before
+adding to the overlay layer.
+
+Once you style is defined, you can import it as a json object
+and assign it to the layer. In the code fragment above
+the style is added using the javascript spread operator
+```javascript <ReactMapGL.Layer {...<style object here>} ```. Note
+that it need to be placed **before** the layout property.
+
+#### Add the Illinois Map
+
+The remaining step is to add the LOverlay to the Illinois map.
+To do this open ```data-portal/src/Covid19Dashboard/IllinoisMapChart/index.jsx```.
+Then do the following steps:
+1. Import your overlay.
+```javascript
+import MyOverlay from '../overlays/MyOverlay';
+```
+
+2. Add information about your overlay to the overlay_layer state.
+This is a json object with a unique id and two members, ~title~ and
+   ~visible which can be set to 'visible' or 'none'.
+
+```javascript
+ overlay_layers: {
+  ...
+  us_counties : { title: 'US Counties', visible: 'visible' },
+ }
+```
+
+3. TODO: Add you data source/loading function
+
+4. Add the imported layer to the map by going to the
+closing tag for ReactGL.InteractiveMap:
+```javascript
+        <MyOverlay visibility={this.state.overlay_layers.us_counties.visible} />
+        </ReactMapGL.InteractiveMap>
+```
+where the this.state.overlay_layers.<you added id>.visible is the
+name of the object you added in step 2.
+
+If everything is successful you should see a map with a layer selection
+as show in the image above.

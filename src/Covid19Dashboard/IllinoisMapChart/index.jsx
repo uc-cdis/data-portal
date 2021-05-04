@@ -8,7 +8,7 @@ import ControlPanel from '../ControlPanel';
 import countyData from '../data/us_counties';
 import LayerTemplate from '../overlays/LayerTemplate';
 import PopulationIL from '../overlays/PopulationIL';
-import LayerSelector from '../ControlPanel/LayerSelector';
+
 
 function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
@@ -298,12 +298,8 @@ class IllinoisMapChart extends React.Component {
               }}
             />
           </ReactMapGL.Source>
-          <LayerTemplate id={this.state.overlay_layers.us_counties}
-                         visibility={this.state.overlay_layers.us_counties.visible}
-          />
-          <PopulationIL id={this.state.overlay_layers.il_population}
-                        visibility={this.state.overlay_layers.il_population.visible}
-          />
+          <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
+          <PopulationIL visibility={this.state.overlay_layers.il_population.visible} />
         </ReactMapGL.InteractiveMap>
       </div>
     );
