@@ -7,8 +7,10 @@ To enable the Export PFB to Workspace button in your commons, modify the explore
 ```
 {
     "enabled": true,
-    "type": "export-to-pfb",
-    "title": "Export to PFB"
+    "type": "export-pfb-to-workspace",
+    "title": "Export PFB to Workspace",
+    "leftIcon": "datafile",
+    "rightIcon": "download"
 },
 ```
 
@@ -26,7 +28,7 @@ The advantages of using PFB as a handoff mechanism include:
 In contrast with the Export to Workspace button, the Export PFB to Workspace button places an additional parameter in the request to the pelican job that specifies that the PFB should be placed in indexd. This new parameter -- `access_format` -- specifies whether the generated PFB is to be returned to the caller as a presigned URL or as a GUID. This Export PFB to Workspace button sets `{ ‘access_format’: ‘<GUID>’ }` during the cohort creation step. The GUID is retrieved in a callback handler.
 
 Windmill then makes a POST to the manifestservice at a new route, /manifests/cohorts, with the POST body
-`{ 'cohort_guid' : '<cohort-guid>' }`
+`{ 'guid' : '<cohort-guid>' }`
 
  The manifestservice will create a new file named with the value of the GUID for the PFB in the user's s3 folder:
 ```

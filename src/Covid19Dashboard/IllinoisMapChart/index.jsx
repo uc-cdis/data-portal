@@ -227,6 +227,7 @@ class IllinoisMapChart extends React.Component {
           showMapStyle={false}
           showLegend
           colors={this.mapData.colors}
+          lastUpdated={this.props.jsonByLevel.last_updated}
         />
         <ReactMapGL.InteractiveMap
           className='.map-chart__mapgl-map'

@@ -24,7 +24,7 @@ const dashboardDataLocations = {
   modeledFipsList: 'bayes-by-county/CountyCodeList.txt',
   jhuGeojsonLatest: 'map_data/jhu_geojson_latest.json',
   jhuJsonByLevelLatest: 'map_data/jhu_json_by_level_latest.json',
-  top10ChartData: 'top10.txt',
+  top10ChartData: 'charts_data/top10.txt',
   idphDailyChartData: 'idph_daily.txt',
 };
 
@@ -415,7 +415,7 @@ Covid19Dashboard.propTypes = {
 Covid19Dashboard.defaultProps = {
   modeledFipsList: [],
   jhuGeojsonLatest: { type: 'FeatureCollection', features: [] },
-  jhuJsonByLevelLatest: { country: {}, state: {}, county: {} },
+  jhuJsonByLevelLatest: { country: {}, state: {}, county: {}, last_updated: '' },
   selectedLocationData: null,
   top10ChartData: [],
   idphDailyChartData: [],
