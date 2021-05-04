@@ -272,28 +272,20 @@ class ProtectedContent extends React.Component {
         />
       );
 
-    const Component = this.props.component;
-    const ComponentWithProps = () => (
-      <Component
-        params={this.props.match ? this.props.match.params : {}} // router params
-        location={this.props.location}
-        history={this.props.history}
-      />
-    );
-
-    let content = <Spinner />;
+    let content;
+    content = <Spinner />;
     if (
       this.props.isPublic &&
       (this.state.dataLoaded ||
         !this.props.filter ||
         typeof this.props.filter !== 'function')
     )
-      content = <ComponentWithProps />;
+      content = this.props.children;
     else if (!this.props.isPublic && this.state.authenticated)
       content = (
         <>
           <ReduxAuthTimeoutPopup />
-          <ComponentWithProps />
+          {this.props.children}
         </>
       );
 
