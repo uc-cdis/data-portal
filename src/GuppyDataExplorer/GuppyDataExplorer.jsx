@@ -6,7 +6,6 @@ import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
 import ExplorerCohort from './ExplorerCohort';
-import { mergeFilters } from '../GuppyComponents/Utils/filters';
 import { capitalizeFirstLetter } from '../utils';
 import { validateFilter } from './utils';
 import {
@@ -37,16 +36,8 @@ class GuppyDataExplorer extends React.Component {
       }
     }
 
-    const overviewFilter =
-      props.history.location.state && props.history.location.state.filter
-        ? props.history.location.state.filter
-        : {};
-
     this.state = {
-      initialAppliedFilters: mergeFilters(
-        initialAppliedFilters,
-        overviewFilter
-      ),
+      initialAppliedFilters,
     };
     this._isMounted = false;
   }

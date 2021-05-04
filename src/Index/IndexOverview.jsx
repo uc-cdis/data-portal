@@ -20,10 +20,12 @@ function IndexOverview({ overviewCounts }) {
 
   let history = useHistory();
   function ButtonToExplorer() {
-    const filter =
+    const search =
       consortium.value === 'total'
-        ? {}
-        : { consortium: { selectedValues: [consortium.value] } };
+        ? undefined
+        : `filter=${JSON.stringify({
+            consortium: { selectedValues: [consortium.value] },
+          })}`;
 
     const enabled =
       overviewCounts !== undefined &&
@@ -34,12 +36,7 @@ function IndexOverview({ overviewCounts }) {
         label='Explore more'
         buttonType='primary'
         enabled={enabled}
-        onClick={() =>
-          history.push({
-            pathname: '/explorer',
-            state: { filter },
-          })
-        }
+        onClick={() => history.push({ pathname: '/explorer', search })}
       />
     );
   }
