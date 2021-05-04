@@ -6,6 +6,9 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
 import countyData from '../data/us_counties';
+import LayerTemplate from '../overlays/LayerTemplate';
+import PopulationIL from '../overlays/PopulationIL';
+import LayerSelector from '../ControlPanel/LayerSelector';
 
 function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
@@ -52,6 +55,7 @@ class IllinoisMapChart extends React.Component {
   constructor(props) {
     super(props);
     this.choroCountyGeoJson = null;
+    this._map = null;
     this.state = {
       mapSize: {
         width: '100%',
@@ -66,6 +70,11 @@ class IllinoisMapChart extends React.Component {
         pitch: 0,
       },
       hoverInfo: null,
+      _map: null,
+      overlay_layers: {
+         us_counties : { title: 'US Counties', visible: 'visible' },
+         il_population : { title: 'IL Population', visible: 'visible' },
+      },
     };
     this.mapData = {
       modeledCountyGeoJson: null,
@@ -75,7 +84,7 @@ class IllinoisMapChart extends React.Component {
   }
   componentDidUpdate() {
     if (!(this.mapData.colorsAsList === null
-          && Object.keys(this.props.jsonByLevel.county).length > 0)) {
+      && Object.keys(this.props.jsonByLevel.county).length > 0)) {
       return;
     }
     if (Object.keys(this.props.jsonByLevel.country).length && !this.choroCountyGeoJson) {
@@ -128,6 +137,9 @@ class IllinoisMapChart extends React.Component {
     this.mapData.colorsAsList = Object.entries(this.mapData.colors)
       .map(item => [+item[0], item[1]]).flat();
   }
+
+
+
 
   onHover = (event) => {
     if (!event.features) { return; }
@@ -192,6 +204,12 @@ class IllinoisMapChart extends React.Component {
     });
   }
 
+  onLayerSelect = (event, id) => {
+    const newState = Object.assign({}, this.state.overlay_layers);
+    newState[id].visible = event.target.checked ? 'visible' : 'none';
+    this.setState(newState);
+  }
+
   renderHoverPopup() {
     const { hoverInfo } = this.state;
     if (hoverInfo) {
@@ -227,7 +245,14 @@ class IllinoisMapChart extends React.Component {
           showMapStyle={false}
           showLegend
           colors={this.mapData.colors}
-        />
+          lastUpdated={this.props.jsonByLevel.last_updated}
+          layers={this.state.overlay_layers}
+          onLayerSelectChange={this.onLayerSelect}
+        >
+
+
+        </ControlPanel>
+
         <ReactMapGL.InteractiveMap
           className='.map-chart__mapgl-map'
           mapboxApiAccessToken={mapboxAPIToken}
@@ -273,6 +298,12 @@ class IllinoisMapChart extends React.Component {
               }}
             />
           </ReactMapGL.Source>
+          <LayerTemplate id={this.state.overlay_layers.us_counties}
+                         visibility={this.state.overlay_layers.us_counties.visible}
+          />
+          <PopulationIL id={this.state.overlay_layers.il_population}
+                        visibility={this.state.overlay_layers.il_population.visible}
+          />
         </ReactMapGL.InteractiveMap>
       </div>
     );

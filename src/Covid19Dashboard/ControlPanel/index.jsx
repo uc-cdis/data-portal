@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import LegendPanel from './LegendPanel';
 import MapStylePanel from './MapStylePanel';
+import LayerSelector from './LayerSelector';
 
 import './ControlPanel.less';
 
@@ -20,6 +21,10 @@ class ControlPanel extends PureComponent {
         {this.props.showLegend ? <LegendPanel
           colors={this.props.colors}
         /> : null }
+        { this.props.layers ?
+          <LayerSelector layers={this.props.layers}
+                         onLayerSelectChange={this.props.onLayerSelectChange}/> : null
+        }
       </div>
     );
   }
