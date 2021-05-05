@@ -54,9 +54,26 @@ class GuppyDataExplorer extends React.Component {
     if (this._isMounted) this.setState({ initialAppliedFilters: filters });
   };
 
-  handleFilterChange = (e) => {
-    const search =
-      e && Object.keys(e).length > 0 ? `filter=${JSON.stringify(e)}` : '';
+  handleFilterChange = (filter) => {
+    let search = '';
+    if (filter && Object.keys(filter).length > 0) {
+      const allSearchFields = [];
+      for (const { searchFields } of this.props.filterConfig.tabs)
+        if (searchFields?.length > 0) allSearchFields.push(...searchFields);
+
+      if (allSearchFields.length === 0) {
+        search = `filter=${JSON.stringify(filter)}`;
+      } else {
+        const allSearchFieldSet = new Set(allSearchFields);
+        const filterWithoutSearchFields = {};
+        for (const field of Object.keys(filter))
+          if (!allSearchFieldSet.has(field))
+            filterWithoutSearchFields[field] = filter[field];
+
+        search = `filter=${JSON.stringify(filterWithoutSearchFields)}`;
+      }
+    }
+
     this.props.history.push({ search });
   };
 
