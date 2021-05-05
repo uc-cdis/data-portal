@@ -130,7 +130,8 @@ class Workspace extends React.Component {
   }
 
   getWorkspaceLaunchSteps = (workspaceStatusData) => {
-    if (!(workspaceStatusData.status !== 'Launching' || workspaceStatusData.status !== 'Stopped')) {
+    if (!(workspaceStatusData.status !== 'Launching' || workspaceStatusData.status !== 'Stopped')
+    || !workspaceStatusData.conditions || workspaceStatusData.conditions.length === 0) {
       console.log(workspaceStatusData);
       return undefined;
     }
@@ -155,46 +156,43 @@ class Workspace extends React.Component {
     if (workspaceStatusData.status === 'Stopped') {
       workspaceLaunchStepsConfig.currentStepsStatus = 'error';
     }
-    if (workspaceStatusData.conditions && workspaceStatusData.conditions.length > 0) {
-      if (workspaceStatusData.conditions.some(element => (
-        (element.type === 'PodScheduled' && element.status === 'True')
-      ))) {
-        workspaceLaunchStepsConfig.steps[0].description = 'Pod scheduled';
-      }
-      if (workspaceStatusData.conditions.some(element => (
-        (element.type === 'Initialized' && element.status === 'True')
-      ))) {
-        workspaceLaunchStepsConfig.steps[1].description = 'Pod initialized';
-      }
+    if (workspaceStatusData.conditions.some(element => (
+      (element.type === 'PodScheduled' && element.status === 'True')
+    ))) {
+      workspaceLaunchStepsConfig.steps[0].description = 'Pod scheduled';
+    }
+    if (workspaceStatusData.conditions.some(element => (
+      (element.type === 'Initialized' && element.status === 'True')
+    ))) {
+      workspaceLaunchStepsConfig.steps[1].description = 'Pod initialized';
+    }
 
-      if (workspaceStatusData.conditions.some(element => (element.type === 'PodScheduled' && element.status === 'False'))) {
-        workspaceLaunchStepsConfig.steps[0].description = 'In progress';
-        return workspaceLaunchStepsConfig;
-      }
+    if (workspaceStatusData.conditions.some(element => (element.type === 'PodScheduled' && element.status === 'False'))) {
+      workspaceLaunchStepsConfig.steps[0].description = 'In progress';
+      return workspaceLaunchStepsConfig;
+    }
 
-      if (workspaceStatusData.conditions.some(element => (element.type === 'Initialized' && element.status === 'False'))) {
-        workspaceLaunchStepsConfig.currentIndex = 1;
-        workspaceLaunchStepsConfig.steps[1].description = 'In progress';
-        return workspaceLaunchStepsConfig;
-      }
+    if (workspaceStatusData.conditions.some(element => (element.type === 'Initialized' && element.status === 'False'))) {
+      workspaceLaunchStepsConfig.currentIndex = 1;
+      workspaceLaunchStepsConfig.steps[1].description = 'In progress';
+      return workspaceLaunchStepsConfig;
+    }
 
-      if (workspaceStatusData.conditions.some(element => (
-        (element.type === 'ContainersReady' && element.status === 'True')
-      ))) {
-        workspaceLaunchStepsConfig.currentIndex = 2;
-        workspaceLaunchStepsConfig.currentStepsStatus = 'finish';
-        workspaceLaunchStepsConfig.steps[2].description = 'All containers are ready';
-        return workspaceLaunchStepsConfig;
-      }
+    if (workspaceStatusData.conditions.some(element => (
+      (element.type === 'ContainersReady' && element.status === 'True')
+    ))) {
+      workspaceLaunchStepsConfig.currentIndex = 2;
+      workspaceLaunchStepsConfig.currentStepsStatus = 'finish';
+      workspaceLaunchStepsConfig.steps[2].description = 'All containers are ready';
+      return workspaceLaunchStepsConfig;
+    }
 
-      const containerReadyStatus = workspaceStatusData.conditions.some(element => (
-        (element.type === 'ContainersReady' && element.status === 'False')
-      ));
-      if (containerReadyStatus) {
-        workspaceLaunchStepsConfig.currentIndex = 2;
-        workspaceLaunchStepsConfig.steps[2].description = 'In progress';
-        return workspaceLaunchStepsConfig;
-      }
+    const containerReadyStatus = workspaceStatusData.conditions.some(element => (
+      (element.type === 'ContainersReady' && element.status === 'False')
+    ));
+    if (containerReadyStatus) {
+      workspaceLaunchStepsConfig.currentIndex = 2;
+      workspaceLaunchStepsConfig.steps[2].description = 'In progress';
     }
     return workspaceLaunchStepsConfig;
   }
@@ -355,9 +353,6 @@ class Workspace extends React.Component {
             this.state.workspaceStatus === 'Stopped' ?
               <React.Fragment>
                 <div className='workspace__spinner-container'>
-                  {(this.state.workspaceStatus === 'Launching') ?
-                    <Spin className='workspace__spinner-spin' tip='Launching Workspace, this process may take several minutes' />
-                    : null}
                   {(this.state.workspaceLaunchStepsConfig) ?
                     <Steps
                       current={this.state.workspaceLaunchStepsConfig.currentIndex}
@@ -370,6 +365,9 @@ class Workspace extends React.Component {
                           description={step.description}
                         />))) }
                     </Steps>
+                    : null}
+                  {(this.state.workspaceStatus === 'Launching') ?
+                    <Spin className='workspace__spinner-spin' tip='Launching Workspace, this process may take several minutes' />
                     : null}
                 </div>
                 <div className='workspace__buttongroup'>
