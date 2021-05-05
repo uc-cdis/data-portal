@@ -134,7 +134,6 @@ class Workspace extends React.Component {
     || !workspaceStatusData.conditions || workspaceStatusData.conditions.length === 0) {
       // if status is not 'Launching', or 'Stopped',
       // or we don't have conditions array, don't display steps bar
-      console.log(workspaceStatusData);
       return undefined;
     }
     const workspaceLaunchStepsConfig = {
@@ -258,7 +257,6 @@ class Workspace extends React.Component {
         const data = await this.getWorkspaceStatus();
         if (this.workspaceStates.includes(data.status)) {
           const workspaceLaunchStepsConfig = this.getWorkspaceLaunchSteps(data);
-          console.log(workspaceLaunchStepsConfig);
           this.setState({
             workspaceStatus: data.status,
             workspaceLaunchStepsConfig,
