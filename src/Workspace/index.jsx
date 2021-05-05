@@ -132,6 +132,8 @@ class Workspace extends React.Component {
   getWorkspaceLaunchSteps = (workspaceStatusData) => {
     if (!(workspaceStatusData.status !== 'Launching' || workspaceStatusData.status !== 'Stopped')
     || !workspaceStatusData.conditions || workspaceStatusData.conditions.length === 0) {
+      // if status is not 'Launching', or 'Stopped',
+      // or we don't have conditions array, don't display steps bar
       console.log(workspaceStatusData);
       return undefined;
     }
@@ -153,9 +155,11 @@ class Workspace extends React.Component {
         },
       ],
     };
+    // status: 'Stopped' means the pod has errored
     if (workspaceStatusData.status === 'Stopped') {
       workspaceLaunchStepsConfig.currentStepsStatus = 'error';
     }
+    // update step description according to the condition array
     if (workspaceStatusData.conditions.some(element => (
       (element.type === 'PodScheduled' && element.status === 'True')
     ))) {
@@ -167,14 +171,25 @@ class Workspace extends React.Component {
       workspaceLaunchStepsConfig.steps[1].description = 'Pod initialized';
     }
 
+    // condition type: PodScheduled + status: false => at step 0
     if (workspaceStatusData.conditions.some(element => (element.type === 'PodScheduled' && element.status === 'False'))) {
       workspaceLaunchStepsConfig.steps[0].description = 'In progress';
       return workspaceLaunchStepsConfig;
     }
 
+    // condition type: Initialized + status: false => at step 1
     if (workspaceStatusData.conditions.some(element => (element.type === 'Initialized' && element.status === 'False'))) {
       workspaceLaunchStepsConfig.currentIndex = 1;
       workspaceLaunchStepsConfig.steps[1].description = 'In progress';
+      return workspaceLaunchStepsConfig;
+    }
+
+    // here we are at step 2
+    if (workspaceStatusData.conditions.some(element => (
+      (element.type === 'ContainersReady' && element.status === 'False')
+    ))) {
+      workspaceLaunchStepsConfig.currentIndex = 2;
+      workspaceLaunchStepsConfig.steps[2].description = 'In progress';
       return workspaceLaunchStepsConfig;
     }
 
@@ -184,15 +199,6 @@ class Workspace extends React.Component {
       workspaceLaunchStepsConfig.currentIndex = 2;
       workspaceLaunchStepsConfig.currentStepsStatus = 'finish';
       workspaceLaunchStepsConfig.steps[2].description = 'All containers are ready';
-      return workspaceLaunchStepsConfig;
-    }
-
-    const containerReadyStatus = workspaceStatusData.conditions.some(element => (
-      (element.type === 'ContainersReady' && element.status === 'False')
-    ));
-    if (containerReadyStatus) {
-      workspaceLaunchStepsConfig.currentIndex = 2;
-      workspaceLaunchStepsConfig.steps[2].description = 'In progress';
     }
     return workspaceLaunchStepsConfig;
   }
