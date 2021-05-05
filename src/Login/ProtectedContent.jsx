@@ -63,7 +63,7 @@ export function logoutListener(state = {}, action) {
  */
 class ProtectedContent extends React.Component {
   static propTypes = {
-    component: PropTypes.elementType.isRequired,
+    children: PropTypes.node.isRequired,
     location: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
     match: PropTypes.shape({
@@ -272,35 +272,23 @@ class ProtectedContent extends React.Component {
         />
       );
 
-    const Component = this.props.component;
-    const ComponentWithProps = () => (
-      <Component
-        params={this.props.match ? this.props.match.params : {}} // router params
-        location={this.props.location}
-        history={this.props.history}
-      />
-    );
-
-    let content = <Spinner />;
-    if (
-      this.props.isPublic &&
-      (this.state.dataLoaded ||
-        !this.props.filter ||
-        typeof this.props.filter !== 'function')
-    )
-      content = <ComponentWithProps />;
-    else if (!this.props.isPublic && this.state.authenticated)
-      content = (
-        <>
-          <ReduxAuthTimeoutPopup />
-          <ComponentWithProps />
-        </>
-      );
-
     const pageClassName = isPageFullScreen(this.props.location.pathname)
       ? 'protected-content protected-content--full-screen'
       : 'protected-content';
-    return <div className={pageClassName}>{content}</div>;
+    return (
+      <div className={pageClassName}>
+        {(this.props.isPublic
+          ? (this.state.dataLoaded ||
+              typeof this.props.filter !== 'function') &&
+            this.props.children
+          : this.state.authenticated && (
+              <>
+                <ReduxAuthTimeoutPopup />
+                {this.props.children}
+              </>
+            )) || <Spinner />}
+      </div>
+    );
   }
 }
 

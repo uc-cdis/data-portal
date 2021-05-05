@@ -7,6 +7,7 @@ import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
 import ExplorerCohort from './ExplorerCohort';
 import { capitalizeFirstLetter } from '../utils';
+import { validateFilter } from './utils';
 import {
   GuppyConfigType,
   FilterConfigType,
@@ -20,13 +21,23 @@ import './GuppyDataExplorer.css';
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
-    const overviewFilter =
-      props.history.location.state && props.history.location.state.filter
-        ? props.history.location.state.filter
-        : {};
+
+    let initialAppliedFilters = {};
+    const searchParams = new URLSearchParams(props.history.location.search);
+    if (searchParams.has('filter')) {
+      try {
+        const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
+        if (validateFilter(filterInUrl, props.filterConfig))
+          initialAppliedFilters = filterInUrl;
+        else throw undefined;
+      } catch (e) {
+        console.error('Invalid filter value in URL.', e);
+        props.history.push({ search: '' });
+      }
+    }
 
     this.state = {
-      initialAppliedFilters: { ...overviewFilter },
+      initialAppliedFilters,
     };
     this._isMounted = false;
   }
@@ -41,6 +52,29 @@ class GuppyDataExplorer extends React.Component {
 
   updateInitialAppliedFilters = ({ filters }) => {
     if (this._isMounted) this.setState({ initialAppliedFilters: filters });
+  };
+
+  handleFilterChange = (filter) => {
+    let search = '';
+    if (filter && Object.keys(filter).length > 0) {
+      const allSearchFields = [];
+      for (const { searchFields } of this.props.filterConfig.tabs)
+        if (searchFields?.length > 0) allSearchFields.push(...searchFields);
+
+      if (allSearchFields.length === 0) {
+        search = `filter=${JSON.stringify(filter)}`;
+      } else {
+        const allSearchFieldSet = new Set(allSearchFields);
+        const filterWithoutSearchFields = {};
+        for (const field of Object.keys(filter))
+          if (!allSearchFieldSet.has(field))
+            filterWithoutSearchFields[field] = filter[field];
+
+        search = `filter=${JSON.stringify(filterWithoutSearchFields)}`;
+      }
+    }
+
+    this.props.history.push({ search });
   };
 
   render() {

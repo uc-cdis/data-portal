@@ -78,38 +78,53 @@ function App({ store }) {
                 <ProtectedContent
                   isPublic
                   filter={() => store.dispatch(fetchLogin())}
-                  component={ReduxLogin}
                   {...props}
-                />
+                >
+                  <ReduxLogin
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
               exact
               path='/'
               component={(props) => (
-                <ProtectedContent component={IndexPage} {...props} />
+                <ProtectedContent {...props}>
+                  <IndexPage
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
               exact
               path='/submission'
               component={(props) => (
-                <ProtectedContent
-                  isAdminOnly
-                  component={SubmissionPage}
-                  {...props}
-                />
+                <ProtectedContent isAdminOnly {...props}>
+                  <SubmissionPage
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
               exact
               path='/submission/files'
               component={(props) => (
-                <ProtectedContent
-                  isAdminOnly
-                  component={ReduxMapFiles}
-                  {...props}
-                />
+                <ProtectedContent isAdminOnly {...props}>
+                  <ReduxMapFiles
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
@@ -120,20 +135,38 @@ function App({ store }) {
                   isAdminOnly
                   component={ReduxMapDataModel}
                   {...props}
-                />
+                >
+                  <ReduxMapDataModel
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
               exact
               path='/document'
               component={(props) => (
-                <ProtectedContent component={DocumentPage} {...props} />
+                <ProtectedContent {...props}>
+                  <DocumentPage
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
               path='/query'
               component={(props) => (
-                <ProtectedContent component={GraphQLQuery} {...props} />
+                <ProtectedContent {...props}>
+                  <GraphQLQuery
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
@@ -141,33 +174,62 @@ function App({ store }) {
               component={(props) => (
                 <ProtectedContent
                   filter={() => store.dispatch(fetchAccess())}
-                  component={UserProfile}
                   {...props}
-                />
+                >
+                  <UserProfile
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
               path='/indexing'
               component={(props) => (
-                <ProtectedContent component={Indexing} {...props} />
+                <ProtectedContent {...props}>
+                  <Indexing
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
               path='/quiz'
               component={(props) => (
-                <ProtectedContent component={UserAgreementCert} {...props} />
+                <ProtectedContent {...props}>
+                  <UserAgreementCert
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
               path='/dd/:node'
               component={(props) => (
-                <ProtectedContent component={DataDictionary} {...props} />
+                <ProtectedContent {...props}>
+                  <DataDictionary
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
               path='/dd'
               component={(props) => (
-                <ProtectedContent component={DataDictionary} {...props} />
+                <ProtectedContent {...props}>
+                  <DataDictionary
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
@@ -178,21 +240,38 @@ function App({ store }) {
                   filter={() =>
                     store.dispatch(fetchCoreMetadata(props.match.params[0]))
                   }
-                  component={CoreMetadataPage}
                   {...props}
-                />
+                >
+                  <CoreMetadataPage
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
               path='/files'
               component={(props) => (
-                <ProtectedContent component={GuppyDataExplorer} {...props} />
+                <ProtectedContent {...props}>
+                  <GuppyDataExplorer
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route
               path='/workspace'
               component={(props) => (
-                <ProtectedContent component={Workspace} {...props} />
+                <ProtectedContent {...props}>
+                  <Workspace
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
             <Route path={workspaceUrl} component={ErrorWorkspacePlaceholder} />
@@ -221,11 +300,13 @@ function App({ store }) {
                   return Promise.resolve('ok');
                 };
                 return (
-                  <ProtectedContent
-                    filter={queryFilter}
-                    component={ReduxQueryNode}
-                    {...props}
-                  />
+                  <ProtectedContent filter={queryFilter} {...props}>
+                    <ReduxQueryNode
+                      history={props.history}
+                      location={props.location}
+                      params={props.match.params}
+                    />
+                  </ProtectedContent>
                 );
               }}
             />
@@ -233,7 +314,13 @@ function App({ store }) {
               <Route
                 path='/explorer'
                 component={(props) => (
-                  <ProtectedContent component={GuppyDataExplorer} {...props} />
+                  <ProtectedContent {...props}>
+                    <GuppyDataExplorer
+                      history={props.history}
+                      location={props.location}
+                      params={props.match.params}
+                    />
+                  </ProtectedContent>
                 )}
               />
             )}
@@ -246,14 +333,26 @@ function App({ store }) {
               <Route
                 path='/resource-browser'
                 component={(props) => (
-                  <ProtectedContent component={ResourceBrowser} {...props} />
+                  <ProtectedContent {...props}>
+                    <ResourceBrowser
+                      history={props.history}
+                      location={props.location}
+                      params={props.match.params}
+                    />
+                  </ProtectedContent>
                 )}
               />
             )}
             <Route
               path='/:project'
               component={(props) => (
-                <ProtectedContent component={ProjectSubmission} {...props} />
+                <ProtectedContent {...props}>
+                  <ProjectSubmission
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
               )}
             />
           </Switch>
