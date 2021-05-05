@@ -170,16 +170,22 @@ const filterByAdvSearch =
       return studies;
     }
     const advSearchFiltersField = config.features.advSearchFilters.field;
-    return studies.filter((study) => {
-      const studyFilters = study[advSearchFiltersField];
-      for (let i = 0; i < studyFilters.length; i += 1) {
-        const { key, value } = studyFilters[i];
-        if (advSearchFilterState[key] && advSearchFilterState[key][value]) {
-          return true;
-        }
+    return studies.filter(study => Object.keys(advSearchFilterState).every((filterName) => {
+      const filterValues = Object.keys(advSearchFilterState[filterName]);
+      // Handle the edge case where no values in this filter are selected
+      if (filterValues.length === 0) {
+        return true;
       }
-      return false;
-    });
+      const studyFilters = study[advSearchFiltersField];
+      // combine within filters as OR
+      // return studyFilters.some(({ key, value }) =>
+      //   key === filterName && filterValues.includes(value));
+
+      // combine within filters as AND
+      const studyFilterValues = studyFilters.filter(({ key }) => key === filterName)
+        .map(({ value }) => value);
+      return filterValues.every(value => studyFilterValues.includes(value));
+    }));
   };
 
 interface DiscoveryBetaProps {
@@ -601,7 +607,11 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                               if (!newFilterState[key]) {
                                 newFilterState[key] = {};
                               }
-                              newFilterState[key][value] = ev.target.checked;
+                              if (ev.target.checked) {
+                                newFilterState[key][value] = true;
+                              } else {
+                                delete newFilterState[key][value];
+                              }
                               setFilterState(newFilterState);
                             }
                             }
