@@ -1,7 +1,7 @@
 import React from 'react';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { Popconfirm } from 'antd';
+import { Popconfirm, Spin, Steps } from 'antd';
 
 import {
   workspaceUrl,
@@ -16,7 +16,6 @@ import {
 } from '../localconf';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
-import Spinner from '../components/Spinner';
 import jupyterIcon from '../img/icons/jupyter.svg';
 import rStudioIcon from '../img/icons/rstudio.svg';
 import galaxyIcon from '../img/icons/galaxy.svg';
@@ -25,20 +24,22 @@ import WorkspaceOption from './WorkspaceOption';
 import WorkspaceLogin from './WorkspaceLogin';
 import sessionMonitor from '../SessionMonitor';
 
+const { Step } = Steps;
 class Workspace extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       connectedStatus: false,
       options: [],
-      notebookStatus: null,
+      workspaceStatus: null,
+      workspaceLaunchStepsConfig: null,
       interval: null,
-      notebookType: null,
-      defaultNotebook: false,
-      notebookIsfullpage: false,
+      workspaceType: null,
+      defaultWorkspace: false,
+      workspaceIsfullpage: false,
       externalLoginOptions: [],
     };
-    this.notebookStates = [
+    this.workspaceStates = [
       'Not Found',
       'Launching',
       'Terminating',
@@ -94,7 +95,7 @@ class Workspace extends React.Component {
         /* eslint-enable */
         this.setState({ options: sortedResults });
       },
-    ).catch(() => this.setState({ defaultNotebook: true }));
+    ).catch(() => this.setState({ defaultWorkspace: true }));
   }
 
   getExternalLoginOptions = () => {
@@ -112,28 +113,98 @@ class Workspace extends React.Component {
     path: `${workspaceStatusUrl}`,
     method: 'GET',
   }).then(
-    ({ data }) => data.status,
+    ({ data }) => data,
   ).catch(() => 'Error');
 
-  getIcon = (notebook) => {
-    if (this.regIcon(notebook, 'R Studio')) {
+  getIcon = (workspace) => {
+    if (this.regIcon(workspace, 'R Studio')) {
       return rStudioIcon;
-    } else if (this.regIcon(notebook, 'Jupyter')) {
+    } else if (this.regIcon(workspace, 'Jupyter')) {
       return jupyterIcon;
-    } else if (this.regIcon(notebook, 'Galaxy')) {
+    } else if (this.regIcon(workspace, 'Galaxy')) {
       return galaxyIcon;
-    } else if (this.regIcon(notebook, 'DICOM')) {
+    } else if (this.regIcon(workspace, 'DICOM')) {
       return ohifIcon;
     }
     return jupyterIcon;
   }
 
+  getWorkspaceLaunchSteps = (workspaceStatusData) => {
+    if (!(workspaceStatusData.status !== 'Launching' || workspaceStatusData.status !== 'Stopped')) {
+      console.log(workspaceStatusData);
+      return undefined;
+    }
+    const workspaceLaunchStepsConfig = {
+      currentIndex: 0,
+      currentStepsStatus: 'process',
+      steps: [
+        {
+          title: 'Scheduling Pod',
+          description: '',
+        },
+        {
+          title: 'Initializing Pod',
+          description: '',
+        },
+        {
+          title: 'Getting Containers Ready',
+          description: '',
+        },
+      ],
+    };
+    if (workspaceStatusData.status === 'Stopped') {
+      workspaceLaunchStepsConfig.currentStepsStatus = 'error';
+    }
+    if (workspaceStatusData.conditions && workspaceStatusData.conditions.length > 0) {
+      if (workspaceStatusData.conditions.some(element => (
+        (element.type === 'PodScheduled' && element.status === 'True')
+      ))) {
+        workspaceLaunchStepsConfig.steps[0].description = 'Pod scheduled';
+      }
+      if (workspaceStatusData.conditions.some(element => (
+        (element.type === 'Initialized' && element.status === 'True')
+      ))) {
+        workspaceLaunchStepsConfig.steps[1].description = 'Pod initialized';
+      }
+
+      if (workspaceStatusData.conditions.some(element => (element.type === 'PodScheduled' && element.status === 'False'))) {
+        workspaceLaunchStepsConfig.steps[0].description = 'In progress';
+        return workspaceLaunchStepsConfig;
+      }
+
+      if (workspaceStatusData.conditions.some(element => (element.type === 'Initialized' && element.status === 'False'))) {
+        workspaceLaunchStepsConfig.currentIndex = 1;
+        workspaceLaunchStepsConfig.steps[1].description = 'In progress';
+        return workspaceLaunchStepsConfig;
+      }
+
+      if (workspaceStatusData.conditions.some(element => (
+        (element.type === 'ContainersReady' && element.status === 'True')
+      ))) {
+        workspaceLaunchStepsConfig.currentIndex = 2;
+        workspaceLaunchStepsConfig.currentStepsStatus = 'finish';
+        workspaceLaunchStepsConfig.steps[2].description = 'All containers are ready';
+        return workspaceLaunchStepsConfig;
+      }
+
+      const containerReadyStatus = workspaceStatusData.conditions.some(element => (
+        (element.type === 'ContainersReady' && element.status === 'False')
+      ));
+      if (containerReadyStatus) {
+        workspaceLaunchStepsConfig.currentIndex = 2;
+        workspaceLaunchStepsConfig.steps[2].description = 'In progress';
+        return workspaceLaunchStepsConfig;
+      }
+    }
+    return workspaceLaunchStepsConfig;
+  }
+
   regIcon = (str, pattn) => new RegExp(pattn).test(str)
 
-  launchWorkspace = (notebook) => {
-    this.setState({ notebookType: notebook.name }, () => {
+  launchWorkspace = (workspace) => {
+    this.setState({ workspaceType: workspace.name }, () => {
       fetchWithCreds({
-        path: `${workspaceLaunchUrl}?id=${notebook.id}`,
+        path: `${workspaceLaunchUrl}?id=${workspace.id}`,
         method: 'POST',
       }).then(() => {
         this.checkWorkspaceStatus();
@@ -142,7 +213,11 @@ class Workspace extends React.Component {
   }
 
   terminateWorkspace = () => {
-    this.setState({ notebookType: null, notebookStatus: 'Terminating' }, () => {
+    this.setState({
+      workspaceType: null,
+      workspaceStatus: 'Terminating',
+      workspaceLaunchStepsConfig: null,
+    }, () => {
       fetchWithCreds({
         path: `${workspaceTerminateUrl}`,
         method: 'POST',
@@ -155,12 +230,15 @@ class Workspace extends React.Component {
   connected = () => {
     this.getWorkspaceOptions();
     this.getExternalLoginOptions();
-    if (!this.state.defaultNotebook) {
-      this.getWorkspaceStatus().then((status) => {
-        if (status === 'Launching' || status === 'Terminating' || status === 'Error') {
+    if (!this.state.defaultWorkspace) {
+      this.getWorkspaceStatus().then((data) => {
+        if (data.status === 'Launching' || data.status === 'Terminating' || data.status === 'Stopped') {
           this.checkWorkspaceStatus();
         } else {
-          this.setState({ notebookStatus: status });
+          this.setState({
+            workspaceStatus: data.status,
+            workspaceLaunchStepsConfig: null,
+          });
         }
         this.setState({ connectedStatus: true });
       });
@@ -173,16 +251,21 @@ class Workspace extends React.Component {
     }
     try {
       const interval = setInterval(async () => {
-        const status = await this.getWorkspaceStatus();
-        if (this.notebookStates.includes(status)) {
-          this.setState({ notebookStatus: status }, () => {
-            if (this.state.notebookStatus !== 'Launching' &&
-              this.state.notebookStatus !== 'Terminating') {
+        const data = await this.getWorkspaceStatus();
+        if (this.workspaceStates.includes(data.status)) {
+          const workspaceLaunchStepsConfig = this.getWorkspaceLaunchSteps(data);
+          console.log(workspaceLaunchStepsConfig);
+          this.setState({
+            workspaceStatus: data.status,
+            workspaceLaunchStepsConfig,
+          }, () => {
+            if (this.state.workspaceStatus !== 'Launching' &&
+              this.state.workspaceStatus !== 'Terminating') {
               clearInterval(this.state.interval);
             }
           });
         }
-      }, 2000);
+      }, 5000);
       this.setState({ interval });
     } catch (e) {
       console.log('Error checking workspace status:', e);
@@ -191,14 +274,14 @@ class Workspace extends React.Component {
 
   handleTerminateButtonClick = () => {
     // exit full page
-    this.setState({ notebookIsfullpage: false });
+    this.setState({ workspaceIsfullpage: false });
     // terminate workspace
     this.terminateWorkspace();
   }
 
   handleFullpageButtonClick = () => {
     this.setState({
-      notebookIsfullpage: !this.state.notebookIsfullpage,
+      workspaceIsfullpage: !this.state.workspaceIsfullpage,
     });
   }
 
@@ -215,7 +298,7 @@ class Workspace extends React.Component {
           className='workspace__button'
           label='Terminate Workspace'
           buttonType='primary'
-          isPending={this.state.notebookStatus === 'Terminating'}
+          isPending={this.state.workspaceStatus === 'Terminating'}
         />
       </Popconfirm>
     );
@@ -226,7 +309,7 @@ class Workspace extends React.Component {
         onClick={() => this.terminateWorkspace()}
         label='Cancel'
         buttonType='primary'
-        isPending={this.state.notebookStatus === 'Terminating'}
+        isPending={this.state.workspaceStatus === 'Terminating'}
       />
     );
 
@@ -234,23 +317,22 @@ class Workspace extends React.Component {
       <Button
         className='workspace__button'
         onClick={this.handleFullpageButtonClick}
-        label={this.state.notebookIsfullpage ? 'Exit Fullscreen' : 'Make Fullscreen'}
+        label={this.state.workspaceIsfullpage ? 'Exit Fullscreen' : 'Make Fullscreen'}
         buttonType='secondary'
-        rightIcon={this.state.notebookIsfullpage ? 'back' : 'external-link'}
+        rightIcon={this.state.workspaceIsfullpage ? 'back' : 'external-link'}
       />
     );
 
-    if (this.state.connectedStatus && this.state.notebookStatus && !this.state.defaultNotebook) {
+    if (this.state.connectedStatus && this.state.workspaceStatus && !this.state.defaultWorkspace) {
       // NOTE both the containing element and the iframe have class '.workspace',
       // although no styles should be shared between them. The reason for this
       // is for backwards compatibility with Jenkins integration tests that select by classname.
       return (
         <div
-          className={`workspace ${this.state.notebookIsfullpage ? 'workspace--fullpage' : ''}`}
+          className={`workspace ${this.state.workspaceIsfullpage ? 'workspace--fullpage' : ''}`}
         >
           {
-            this.state.notebookStatus === 'Running' ||
-              this.state.notebookStatus === 'Stopped' ?
+            this.state.workspaceStatus === 'Running' ?
               <React.Fragment>
                 <div className='workspace__iframe'>
                   <iframe
@@ -269,10 +351,26 @@ class Workspace extends React.Component {
               : null
           }
           {
-            this.state.notebookStatus === 'Launching' ?
+            this.state.workspaceStatus === 'Launching' ||
+            this.state.workspaceStatus === 'Stopped' ?
               <React.Fragment>
                 <div className='workspace__spinner-container'>
-                  <Spinner text='Launching Workspace, this process may take several minutes' />
+                  {(this.state.workspaceStatus === 'Launching') ?
+                    <Spin className='workspace__spinner-spin' tip='Launching Workspace, this process may take several minutes' />
+                    : null}
+                  {(this.state.workspaceLaunchStepsConfig) ?
+                    <Steps
+                      current={this.state.workspaceLaunchStepsConfig.currentIndex}
+                      status={this.state.workspaceLaunchStepsConfig.currentStepsStatus}
+                    >
+                      { (this.state.workspaceLaunchStepsConfig.steps.map(step =>
+                        (<Step
+                          key={step.title}
+                          title={step.title}
+                          description={step.description}
+                        />))) }
+                    </Steps>
+                    : null}
                 </div>
                 <div className='workspace__buttongroup'>
                   { cancelButton }
@@ -281,17 +379,17 @@ class Workspace extends React.Component {
               : null
           }
           {
-            this.state.notebookStatus === 'Terminating' ?
+            this.state.workspaceStatus === 'Terminating' ?
               <div className='workspace__spinner-container'>
-                <Spinner text='Terminating workspace...' />
+                <Spin tip='Terminating workspace...' />
               </div>
               : null
           }
           {
-            this.state.notebookStatus !== 'Launching' &&
-            this.state.notebookStatus !== 'Terminating' &&
-            this.state.notebookStatus !== 'Running' &&
-            this.state.notebookStatus !== 'Stopped' ?
+            this.state.workspaceStatus !== 'Launching' &&
+            this.state.workspaceStatus !== 'Terminating' &&
+            this.state.workspaceStatus !== 'Running' &&
+            this.state.workspaceStatus !== 'Stopped' ?
               <div>
                 {workspacePageTitle ?
                   <h2 className='workspace__title'>
@@ -316,10 +414,10 @@ class Workspace extends React.Component {
                           title={option.name}
                           description={desc}
                           onClick={() => this.launchWorkspace(option)}
-                          isPending={this.state.notebookType === option.name}
+                          isPending={this.state.workspaceType === option.name}
                           isDisabled={
-                            !!this.state.notebookType &&
-                            this.state.notebookType !== option.name
+                            !!this.state.workspaceType &&
+                            this.state.workspaceType !== option.name
                           }
                         />
                       );
@@ -334,7 +432,7 @@ class Workspace extends React.Component {
           }
         </div>
       );
-    } else if (this.state.defaultNotebook && this.state.connectedStatus) {
+    } else if (this.state.defaultWorkspace && this.state.connectedStatus) {
       // If this commons does not use Hatchery to spawn workspaces, then this
       // default workspace is shown.
       return (
@@ -349,7 +447,7 @@ class Workspace extends React.Component {
         </div>
       );
     }
-    return <Spinner />;
+    return <Spin />;
   }
 }
 
