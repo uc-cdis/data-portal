@@ -6,14 +6,14 @@ import {
   Space,
   Modal,
   Alert,
-  Popover,
+  Popover
 } from 'antd';
 
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
 import DiscoveryTagViewer from './DiscoveryTagViewer';
-import { DiscoveryListView, AccessLevel } from './DiscoveryListView';
+import { DiscoveryListView } from './DiscoveryListView';
 
 const accessibleFieldName = '__accessible';
 
@@ -27,7 +27,7 @@ const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   return categoryConfig.color;
 };
 
-const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number' = 'string'): string => {
+const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number'|'link' = 'string'): React.ReactNode => {
   switch (contentType) {
   case 'string':
     return content;
@@ -35,6 +35,14 @@ const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'nu
     return content.toLocaleString();
   case 'paragraphs':
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
+  case 'link':
+    return (<a
+      onClick={ev => ev.stopPropagation()}
+      onKeyPress={ev => ev.stopPropagation()}
+      href={content}
+    >
+      {content}
+    </a>);
   default:
     throw new Error(`Unrecognized content type ${contentType}. Check the 'study_page_fields' section of the Discovery config.`);
   }
@@ -61,20 +69,6 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
   };
 };
 
-const filterByAccessLevel =
-  (studies: any[], accessLevel: AccessLevel, accessibleProperty: string): any[] => {
-    switch (accessLevel) {
-    case AccessLevel.ACCESSIBLE:
-      return studies.filter(r => r[accessibleProperty]);
-    case AccessLevel.UNACCESSIBLE:
-      return studies.filter(r => !r[accessibleProperty]);
-    case AccessLevel.BOTH:
-      return studies;
-    default:
-      throw new Error(`Unrecognized access level ${accessLevel}.`);
-    }
-  };
-
 const filterByTags = (studies: any[], selectedTags: any): any[] => {
   // if no tags selected, show all studies
   if (Object.values(selectedTags).every(selected => !selected)) {
@@ -86,6 +80,7 @@ const filterByTags = (studies: any[], selectedTags: any): any[] => {
 interface DiscoveryBetaProps {
   config: DiscoveryConfig
   studies: {__accessible: boolean, [any: string]: any}[]
+  history?: any // from React Router
   params?: {studyUID: string} // from React Router
 }
 
@@ -94,10 +89,11 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 
   const [jsSearch, setJsSearch] = useState(null);
   const [searchFilteredResources, setSearchFilteredResources] = useState([]);
+  const [selectedResources, setSelectedResources] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [modalData, setModalData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  const [accessLevel, setAccessLevel] = useState(AccessLevel.BOTH);
   const [selectedTags, setSelectedTags] = useState({});
 
   useEffect(() => {
@@ -224,6 +220,14 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   if (config.features.authorization.enabled) {
     columns.push({
       title: 'Access',
+      filters: [{
+        text: <><UnlockOutlined />Accessible</>,
+        value: true,
+      }, {
+        text: <><LockFilled />Unaccessible</>,
+        value: false,
+      }],
+      onFilter: (value, record) => record[accessibleFieldName] === value,
       ellipsis: false,
       width: '106px',
       textWrap: 'word-break',
@@ -231,11 +235,11 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         record[accessibleFieldName]
           ? (
             <Popover
-              overlayClassName='discovery-table__access-popover'
+              overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
               title={'You have access to this study.'}
-              content={<div className='discovery-table__access-popover-text'>
+              content={<div className='discovery-popover__text'>
                 <>You have <code>{ARBORIST_READ_PRIV}</code> access to</>
                 <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
               </div>}
@@ -245,12 +249,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           )
           : (
             <Popover
-              overlayClassName='discovery-table__access-popover'
+              overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
               title={'You do not have access to this study.'}
               content={
-                <div className='discovery-table__access-popover-text'>
+                <div className='discovery-popover__text'>
                   <>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</>
                   <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
                 </div>
@@ -265,7 +269,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   // -----
 
   const visibleResources = filterByTags(
-    filterByAccessLevel(searchFilteredResources, accessLevel, accessibleFieldName),
+    searchFilteredResources,
     selectedTags,
   );
 
@@ -290,15 +294,15 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       config={config}
       studies={props.studies}
       visibleResources={visibleResources}
+      selectedResources={selectedResources}
       searchTerm={searchTerm}
       setSearchTerm={setSearchTerm}
       setSearchFilteredResources={setSearchFilteredResources}
-      accessLevel={accessLevel}
-      setAccessLevel={setAccessLevel}
       jsSearch={jsSearch}
       setModalData={setModalData}
       setModalVisible={setModalVisible}
       columns={columns}
+      setExportingToWorkspace={setExportingToWorkspace}
     />
     <Modal
       className='discovery-modal'
@@ -366,6 +370,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 };
 
 Discovery.defaultProps = {
+  history: [],
   params: { studyUID: null },
 };
 

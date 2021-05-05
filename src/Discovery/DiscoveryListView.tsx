@@ -1,11 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ExportOutlined, DownloadOutlined } from '@ant-design/icons';
 import {
-  Table,
-  Radio,
+  Space,
+  Popover,
+  Table
 } from 'antd';
-import { LockFilled, UnlockOutlined } from '@ant-design/icons';
+import FileSaver from 'file-saver';
+import './Discovery.css';
 import DiscoveryMDSSearch from './DiscoveryMDSSearch';
+import { fetchWithCreds } from '../actions';
+import { manifestServiceApiPath } from '../localconf';
 
 export enum AccessLevel {
     BOTH = 'both',
@@ -33,37 +38,139 @@ export class DiscoveryListView extends React.Component {
       this.props.setAccessLevel(value);
     };
 
+    handleExportToWorkspaceClick = async () => {
+        this.props.setExportingToWorkspace(true);
+        const manifestFieldName = this.props.config.features.exportToWorkspaceBETA.manifestFieldName;
+        if (!manifestFieldName) {
+          throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
+        }
+        // combine manifests from all selected studies
+        const manifest = [];
+        this.props.selectedResources.forEach((study) => {
+          if (study[manifestFieldName]) {
+            manifest.push(...study[manifestFieldName]);
+          }
+        });
+        // post selected resources to manifestservice
+        const res = await fetchWithCreds({
+          path: `${manifestServiceApiPath}`,
+          body: JSON.stringify(manifest),
+          method: 'POST',
+        });
+        if (res.status !== 200) {
+          throw new Error(`Encountered error while exporting to Workspace: ${JSON.stringify(res)}`);
+        }
+        this.props.setExportingToWorkspace(false);
+        // redirect to Workspaces page
+        props.history.push('/workspace');
+      };
+    
+      handleDownloadManifestClick = () => {
+        const manifestFieldName = this.props.config.features.exportToWorkspaceBETA.manifestFieldName;
+        if (!manifestFieldName) {
+          throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
+        }
+        // combine manifests from all selected studies
+        const manifest = [];
+        this.props.selectedResources.forEach((study) => {
+          if (study[manifestFieldName]) {
+            manifest.push(...study[manifestFieldName]);
+          }
+        });
+        // download the manifest
+        const MANIFEST_FILENAME = 'manifest.json';
+        const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'text/json' });
+        FileSaver.saveAs(blob, MANIFEST_FILENAME);
+      };
+
     render() {
       return (
         <div className='discovery-table-container'>
           <div className='discovery-table__header'>
-            {this.props.config.features.search.searchBar.enabled &&
+            { (
+                this.props.config.features.search && this.props.config.features.search.searchBar
+                && this.props.config.features.search.searchBar.enabled
+            ) &&
                 <DiscoveryMDSSearch
                   config={this.props.config}
                   searchTerm={this.props.searchTerm}
                   handleSearchChange={this.handleSearchChange}
                   s
                 />}
-            { this.props.config.features.authorization.enabled &&
-                    <div className='disvovery-table__controls'>
-                      <Radio.Group
-                        onChange={this.handleAccessLevelChange}
-                        value={this.props.accessLevel}
-                        className='discovery-access-selector'
-                        defaultValue='both'
-                        buttonStyle='solid'
-                      >
-                        <Radio.Button value={AccessLevel.BOTH}>All</Radio.Button>
-                        <Radio.Button value={AccessLevel.UNACCESSIBLE}><LockFilled /></Radio.Button>
-                        <Radio.Button value={AccessLevel.ACCESSIBLE}><UnlockOutlined />
-                        </Radio.Button>
-                      </Radio.Group>
-                    </div>
+            { (
+          this.props.config.features.exportToWorkspaceBETA && this.props.config.features.exportToWorkspaceBETA.enabled
+            ) &&
+            <Space>
+                <span className='discovery-export__selected-ct'>{selectedResources.length} selected</span>
+                { this.props.config.features.exportToWorkspaceBETA.enableDownloadManifest &&
+                <Popover
+                    className='discovery-popover'
+                    arrowPointAtCenter
+                    title={<>
+                    Download a Manifest File for use with the&nbsp;
+                    <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/' >
+                        {'Gen3 Client'}
+                    </a>.
+                    </>}
+                    content={(<span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
+                    to download the data from the selected studies to your local computer.</span>)}
+                >
+                    <Button
+                    onClick={handleDownloadManifestClick}
+                    type='text'
+                    disabled={selectedResources.length === 0}
+                    icon={<DownloadOutlined />}
+                    >
+                    Download Manifest
+                    </Button>
+                </Popover>
+                }
+                <Popover
+                className='discovery-popover'
+                arrowPointAtCenter
+                content={<>
+                    Open selected studies in the&nbsp;
+                    <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
+                    {'Gen3 Workspace'}
+                    </a>.
+                </>}
+                >
+                <Button
+                    type='primary'
+                    disabled={selectedResources.length === 0}
+                    loading={exportingToWorkspace}
+                    icon={<ExportOutlined />}
+                    onClick={handleExportToWorkspaceClick}
+                >
+                    Open in Workspace
+                </Button>
+                </Popover>
+            </Space>
             }
           </div>
           <Table
             columns={this.props.columns}
             rowKey={this.props.config.minimalFieldMapping.uid}
+            rowSelection={(
+                this.props.config.features.exportToWorkspaceBETA && this.props.config.features.exportToWorkspaceBETA.enabled
+              ) && {
+                selectedRowKeys: selectedResources.map(r => r[this.props.config.minimalFieldMapping.uid]),
+                preserveSelectedRowKeys: true,
+                onChange: (_, selectedRows) => setSelectedResources(selectedRows),
+                getCheckboxProps: (record) => {
+                let disabled;
+                // if auth is enabled, disable checkbox if user doesn't have access
+                if (this.props.config.features.authorization.enabled) {
+                    disabled = record[accessibleFieldName] === false;
+                }
+                // disable checkbox if there's no manifest found for this study
+                const manifestFieldName = this.props.config.features.exportToWorkspaceBETA.manifestFieldName;
+                if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
+                    disabled = true;
+                }
+                return { disabled };
+                },
+            }}
             rowClassName='discovery-table__row'
             onRow={record => ({
               onClick: () => {
@@ -143,11 +250,12 @@ DiscoveryListView.propTypes = {
   searchTerm: PropTypes.string,
   setSearchTerm: PropTypes.func,
   setSearchFilteredResources: PropTypes.func,
-  accessLevel: PropTypes.string,
   setAccessLevel: PropTypes.func,
   jsSearch: PropTypes.object,
   studies: PropTypes.array,
   columns: PropTypes.array,
+  setExportingToWorkspace: PropTypes.func,
+  selectedResources: PropTypes.any
 };
 
 DiscoveryListView.defaultProps = {
@@ -158,9 +266,10 @@ DiscoveryListView.defaultProps = {
   searchTerm: '',
   setSearchTerm: () => {},
   setSearchFilteredResources: () => {},
-  accessLevel: '',
   setAccessLevel: () => {},
   jsSearch: {},
   studies: [],
   columns: [],
+  setExportingToWorkspace: () => {},
+  selectedResources: {}
 };

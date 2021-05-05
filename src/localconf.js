@@ -207,6 +207,16 @@ function buildConfig(opts) {
     explorerPublic = true;
   }
 
+  let explorerHideEmptyFilterSection = false;
+  if (config.featureFlags && config.featureFlags.explorerHideEmptyFilterSection) {
+    explorerHideEmptyFilterSection = true;
+  }
+
+  let explorerFilterValuesToHide = [];
+  if (config.featureFlags && config.featureFlags.explorerFilterValuesToHide) {
+    explorerFilterValuesToHide = config.featureFlags.explorerFilterValuesToHide;
+  }
+
   const enableResourceBrowser = !!config.resourceBrowser;
   let resourceBrowserPublic = false;
   if (config.resourceBrowser && config.resourceBrowser.public) {
@@ -417,6 +427,8 @@ function buildConfig(opts) {
     indexScopedTierAccessMode,
     useIndexdAuthz,
     explorerPublic,
+    explorerHideEmptyFilterSection,
+    explorerFilterValuesToHide,
     authzPath,
     authzMappingPath,
     enableResourceBrowser,
