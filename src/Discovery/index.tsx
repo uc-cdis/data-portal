@@ -5,11 +5,6 @@ import Discovery from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { discoveryConfig, useArboristUI } from '../localconf';
-// TODO: delete this once the aggregate MDS is running.
-import loadStudiesFromMDSDDeprecated from './deprecated';
-
-import mockAggMDSData from './__mocks__/mock_agg_mds_studies.json';
-import mockFieldMappingData from './__mocks__/mock_agg_mds_field_mapping.json';
 
 // TODO: Replace this variable value with the correct agg MDS url.
 // const aggMDSURL = '/agg-mds';
@@ -155,8 +150,6 @@ const DiscoveryWithMDSBackend: React.FC<{
 
   useEffect(() => {
     loadStudiesFromMDS().then((rawStudies) => {
-    // Using the deprecated functions for now so as to see the big dataset
-    // loadStudiesFromMDSDDeprecated().then((rawStudies) => {
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const authzField = props.config.minimalFieldMapping.authzField;
