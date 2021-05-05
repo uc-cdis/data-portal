@@ -1,5 +1,11 @@
 export interface DiscoveryConfig {
+    public?: boolean // If false, requires user to sign in before seeing the Discovery page
     features: {
+        exportToWorkspaceBETA: {
+            enabled: boolean
+            enableDownloadManifest: boolean
+            manifestFieldName: string
+        }
         // explorationIntegration: {
         //     enabled: boolean // not supported
         // },
@@ -42,7 +48,7 @@ export interface DiscoveryConfig {
     studyColumns: {
         name: string
         field: string
-        contentType?: 'string' | 'number'
+        contentType?: 'string' | 'number' | 'link'
         errorIfNotAvailable?: boolean
         valueIfNotAvailable?: string | number
         ellipsis?: boolean
@@ -83,7 +89,7 @@ export interface DiscoveryConfig {
 export interface StudyPageFieldConfig {
     name: string
     field: string
-    contentType: 'string' | 'number' | 'paragraphs'
+    contentType: 'string' | 'number' | 'paragraphs' | 'link'
     includeName?: boolean
     includeIfNotAvailable?: boolean
     valueIfNotAvailable?: string | number
